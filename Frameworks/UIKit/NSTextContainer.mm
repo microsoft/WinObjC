@@ -17,12 +17,19 @@
 #include "Starboard.h"
 
 #include "UIKit/NSParagraphStyle.h"
-#include <CGPathInternal.h>
+#include <CGContextInternal.h>
 
+#include <vector>
+#include <algorithm>
+
+static constexpr CGFloat c_defaultPadding = 5.0f;
 @implementation NSTextContainer {
     CGSize _size;
     NSLayoutManager* _layoutManager;
     StrongId<NSArray> _exclusionPaths;
+    // TODO 1394: Remove for CGD2D
+    std::vector<woc::unique_cf<CGContextRef>> _exclusionContexts;
+    std::vector<CGRect> _exclusionPathBoundingRects;
 }
 
 /**
@@ -31,7 +38,7 @@
 
 - (instancetype)initWithSize:(CGSize)size {
     _size = size;
-    _lineFragmentPadding = 5.0f;
+    _lineFragmentPadding = c_defaultPadding;
 
     return self;
 }
@@ -54,6 +61,15 @@
 
 - (void)setExclusionPaths:(NSArray*)paths {
     _exclusionPaths.attach([paths copy]);
+    // TODO 1394: Remove for CGD2D
+    _exclusionContexts.clear();
+    _exclusionPathBoundingRects.clear();
+    for (UIBezierPath* path in static_cast<NSArray*>(_exclusionPaths)) {
+        woc::unique_cf<CGContextRef> context{ CGBitmapContextCreate(0, 1, 1, 1, 1, 0, 0) };
+        CGContextAddPath(context.get(), path.CGPath);
+        _exclusionContexts.emplace_back(std::move(context));
+        _exclusionPathBoundingRects.emplace_back(CGPathGetBoundingBox(path.CGPath));
+    }
 
     [_layoutManager textContainerChangedGeometry:self];
 }
@@ -62,11 +78,39 @@
     return _exclusionPaths;
 }
 
+// Finds the first viable region for the proposed rect given the exclusion areas based upon x positions
+// Assumes writing direction is left to right, exclusionLines is sorted and preprocessed for y positions, and all inputs are valid
+CGRect __FirstPossibleRectForProposed(CGRect proposed, const std::vector<CGRect>& exclusionLines, CGFloat padding, CGFloat maxWidth) {
+    for (auto path : exclusionLines) {
+        if (proposed.origin.x < path.origin.x) {
+            proposed.size.width = path.origin.x - proposed.origin.x - padding;
+            if (proposed.size.width > padding) {
+                break;
+            }
+        }
+        if (path.origin.x + path.size.width > proposed.origin.x) {
+            proposed.origin.x = (path.origin.x + path.size.width) + padding;
+            proposed.size.width = maxWidth - proposed.origin.x;
+        }
+    }
+
+    return proposed;
+}
+
+// Finds the first point at which the given rect intersects the given exclusionContext, moving by delta each iteration
+CGFloat __GetXPositionIntersectingZone(CGRect rect, const CGContextRef exclusionContext, CGFloat delta) {
+    while (!CGContextIsPointInPath(exclusionContext, true, rect.origin.x + delta, rect.origin.y) &&
+           !CGContextIsPointInPath(exclusionContext, true, rect.origin.x + delta, rect.origin.y + rect.size.height / 2.0) &&
+           !CGContextIsPointInPath(exclusionContext, true, rect.origin.x + delta, rect.origin.y + rect.size.height)) {
+        rect.origin.x += delta;
+    }
+
+    return rect.origin.x;
+}
+
 /**
  @Status Caveat
  @Notes writingDirection and atIndex parameters are ignored
- TODO::1123 This needs to handle multiple exclusion zones properly when creating remainingRect
-            Currently processing exclusion zones left-to-right fails to calculate properly
 */
 
 - (CGRect)lineFragmentRectForProposedRect:(CGRect)proposed
@@ -75,25 +119,69 @@
                             remainingRect:(CGRect*)remainingRect {
     CGRect totalRect = CGRectMake(0, 0, _size.width, _size.height);
     CGRect ret = CGRectIntersection(proposed, totalRect);
+    if ([_exclusionPaths count] == 0L || ret.size.width <= 0) {
+        return ret;
+    }
 
-    if (_exclusionPaths != nil) {
-        for (UIBezierPath* path in(NSArray*)_exclusionPaths) {
-            CGRect shapeRect = _CGPathFitRect(path.CGPath, ret, _size, self.lineFragmentPadding);
-            ret = CGRectIntersection(shapeRect, ret);
+    CGFloat padding = self.lineFragmentPadding;
+    if (padding <= 0.0) {
+        // If padding is invalid we will go into an infinite loop, use a default
+        padding = c_defaultPadding;
+    }
+
+    if (remainingRect) {
+        *remainingRect = CGRectZero;
+    }
+
+    std::vector<CGRect> exclusionRectsForHorizontal{};
+    for (size_t i = 0; i < _exclusionPathBoundingRects.size(); ++i) {
+        // If our proposed area doesn't intersect the bounding box of the exclusion zone at all, no need to compare against it
+        if (proposed.origin.y < _exclusionPathBoundingRects[i].origin.y + _exclusionPathBoundingRects[i].size.height &&
+            proposed.origin.y + proposed.size.height > _exclusionPathBoundingRects[i].origin.y &&
+            proposed.origin.x < _exclusionPathBoundingRects[i].origin.x + _exclusionPathBoundingRects[i].size.width) {
+            CGRect lineIntersection{ { _exclusionPathBoundingRects[i].origin.x, proposed.origin.y },
+                                     { _exclusionPathBoundingRects[i].size.width, proposed.size.height } };
+
+            // TODO 1394: Convert to CGPathContainsPoint for CGD2D
+            // Find the leftmost and rightmost points of the exclusion zone intersecting the same horizontal region as the proposed rect
+            lineIntersection.origin.x = __GetXPositionIntersectingZone(lineIntersection, _exclusionContexts[i].get(), padding);
+            lineIntersection.size.width =
+                __GetXPositionIntersectingZone({ { lineIntersection.origin.x + lineIntersection.size.width, lineIntersection.origin.y },
+                                                 lineIntersection.size },
+                                               _exclusionContexts[i].get(),
+                                               -padding) -
+                lineIntersection.origin.x;
+            exclusionRectsForHorizontal.emplace_back(lineIntersection);
         }
+    }
 
-        if (remainingRect) {
-            *remainingRect = CGRectMake(ret.origin.x + ret.size.width + self.lineFragmentPadding,
-                                        ret.origin.y,
-                                        _size.width - ret.origin.x - ret.size.width,
-                                        ret.size.height);
-            for (UIBezierPath* path in(NSArray*)_exclusionPaths) {
-                CGRect shapeRect = _CGPathFitRect(path.CGPath, *remainingRect, _size, self.lineFragmentPadding);
-                *remainingRect = CGRectIntersection(shapeRect, *remainingRect);
-            }
+    // Remove any exclusion zones not intersecting horizontal with proposed rect
+    std::remove_if(exclusionRectsForHorizontal.begin(), exclusionRectsForHorizontal.end(), [](CGRect rect) {
+        return rect.size.width <= 0;
+    });
+
+    if (exclusionRectsForHorizontal.size() == 0L) {
+        return ret;
+    }
+
+    // Sort by X origin to prevent skipping possible areas not covered by an exclusion zone
+    std::sort(exclusionRectsForHorizontal.begin(), exclusionRectsForHorizontal.end(), [](CGRect a, CGRect b) {
+        return a.origin.x < b.origin.x;
+    });
+    ret = __FirstPossibleRectForProposed(ret, exclusionRectsForHorizontal, padding, _size.width);
+
+    if (remainingRect) {
+        CGFloat newXPosition = ret.origin.x + ret.size.width + 2 * padding;
+        if (newXPosition < _size.width) {
+            *remainingRect =
+                __FirstPossibleRectForProposed(CGRectMake(newXPosition, ret.origin.y, _size.width - newXPosition, ret.size.height),
+                                               exclusionRectsForHorizontal,
+                                               padding,
+                                               _size.width);
         }
     }
 
     return ret;
 }
+
 @end
