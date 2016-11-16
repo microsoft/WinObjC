@@ -26,6 +26,7 @@
 
 #import "StarboardXaml/DisplayTexture.h"
 #import "UIApplicationInternal.h"
+#import <UIFontInternal.h>
 #import "UIResponderInternal.h"
 #import <Foundation/NSNotificationCenter.h>
 #import <Foundation/NSTimer.h>
@@ -74,6 +75,7 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
     StrongId<NSString> _text;
     StrongId<NSString> _placeHolder;
     StrongId<UIFont> _font;
+    StrongId<UIFont> _adjustedFont;
     StrongId<UIColor> _textColor;
     StrongId<UIColor> _backgroundColor;
     StrongId<UIImage> _backgroundImage;
@@ -83,6 +85,7 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 
     BOOL _secureTextMode;
     BOOL _isFirstResponder;
+    CGFloat _minimumFontSize;
 
     // backing keyboard Behavior
     UITextAutocapitalizationType _autoCapitalizatonType;
@@ -90,11 +93,14 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
     UITextAutocorrectionType _autoCorrectionType;
     UITextSpellCheckingType _spellCheckingType;
     BOOL _enablesReturnKeyAutomatically;
+    BOOL _adjustsFontSizeToFitWidth;
 
     // backing xaml textbox and passwordBox
     StrongId<UIView> _subView; // Container UIView for the Xaml textbox or passwordbox
     StrongId<WXCTextBox> _textBox; // Backing xaml textbox
     StrongId<WXCPasswordBox> _passwordBox; // Backing xaml passwordbox
+    StrongId<WXCControl> _textContentElement; // ContentElement from the TextBox template to calculate width
+    StrongId<WXCControl> _passwordContentElement; // ContentElement from the PasswordBox template to calculate width
 
     // lock use to access the properties
     StrongId<NSRecursiveLock> _secureModeLock;
@@ -129,6 +135,8 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
             _textBox.selectionLength = 0;
         }
         [_secureModeLock unlock];
+
+        [self _adjustFontSizeToFitWidthOrApply];
     }
 }
 
@@ -213,12 +221,69 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 }
 
 /**
- @Status Caveat
- @Notes Fonts can be set, but will be ignored for rendering, instead default font will be used.
+ @Status Interoperable
 */
 - (void)setFont:(UIFont*)font {
     _font = font;
-    // TODO 7374333: need map UIFont with fontFamily/FontSize/FontWeight/FontStyle on target
+    [self _adjustFontSizeToFitWidthOrApply];
+}
+
+- (void)_applyFont:(UIFont*)font {
+    _passwordBox.fontFamily = _textBox.fontFamily = [WUXMFontFamily makeInstanceWithName:[font _compatibleFamilyName]];
+
+    // The following enums map from DWrite directly to Xaml
+    _passwordBox.fontStretch = _textBox.fontStretch = (WUTFontStretch)[font _fontStretch]; 
+    _passwordBox.fontStyle = _textBox.fontStyle = (WUTFontStyle)[font _fontStyle]; 
+    _passwordBox.fontSize = _textBox.fontSize = font.pointSize;
+
+    WUTFontWeight* weight = nil;
+
+    switch ([font _fontWeight]) {
+        case DWRITE_FONT_WEIGHT_THIN:
+            weight = [WUTFontWeights thin];
+            break;
+        //case DWRITE_FONT_WEIGHT_EXTRA_LIGHT:
+        case DWRITE_FONT_WEIGHT_ULTRA_LIGHT:
+            weight = [WUTFontWeights extraLight];
+            break;
+        case DWRITE_FONT_WEIGHT_LIGHT:
+            weight = [WUTFontWeights light];
+            break;
+        case DWRITE_FONT_WEIGHT_SEMI_LIGHT:
+            weight = [WUTFontWeights semiLight];
+        //case DWRITE_FONT_WEIGHT_NORMAL:
+        case DWRITE_FONT_WEIGHT_REGULAR:
+            weight = [WUTFontWeights normal];
+            break;
+        case DWRITE_FONT_WEIGHT_MEDIUM:
+            weight = [WUTFontWeights medium];
+            break;
+        //case DWRITE_FONT_WEIGHT_DEMI_BOLD:
+        case DWRITE_FONT_WEIGHT_SEMI_BOLD:
+            weight = [WUTFontWeights semiBold];
+            break;
+        case DWRITE_FONT_WEIGHT_BOLD:
+            weight = [WUTFontWeights bold];
+            break;
+        //case DWRITE_FONT_WEIGHT_EXTRA_BOLD:
+        case DWRITE_FONT_WEIGHT_ULTRA_BOLD:
+            weight = [WUTFontWeights extraBold];
+            break;
+        //case DWRITE_FONT_WEIGHT_BLACK:
+        case DWRITE_FONT_WEIGHT_HEAVY:
+            weight = [WUTFontWeights black];
+            break;
+        // case DWRITE_FONT_WEIGHT_EXTRA_BLACK
+        case DWRITE_FONT_WEIGHT_ULTRA_BLACK:
+            weight = [WUTFontWeights extraBlack];
+            break;
+        default:
+            TraceWarning(TAG, L"Unknown font weight, using normal");
+            weight = [WUTFontWeights normal];
+            break;
+    }
+
+    _passwordBox.fontWeight = _textBox.fontWeight = weight; 
 }
 
 /**
@@ -322,43 +387,94 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 // Properties: Sizing the Text Field’s Text
 //
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)setAdjustsFontSizeToFitWidth:(BOOL)adjust {
-    UNIMPLEMENTED();
+    _adjustsFontSizeToFitWidth = adjust;
+    [self _adjustFontSizeToFitWidthOrApply];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
-- (void)adjustsFontSizeToFitWidth:(BOOL)adjust {
-    UNIMPLEMENTED();
+- (BOOL)adjustsFontSizeToFitWidth {
+    return _adjustsFontSizeToFitWidth;
+}
+
+- (void)_adjustFontSizeToFitWidthOrApply {
+    if (self.adjustsFontSizeToFitWidth && (self.minimumFontSize > 0) && (self.minimumFontSize != self.font.pointSize) && self.text && self.text.length) {
+        _adjustedFont = self.font;
+        NSString* passwordString = nil;
+        CGFloat elementWidth = 0.0f;
+        
+        // Measure using the password masking character, not the verbatim text
+        if (self->_secureTextMode) {
+            if (_passwordContentElement == nil) {
+                // Not an error, we just might not be loaded yet.
+                [self _applyFont:self.font];
+                return;
+            }
+            passwordString = [@"" stringByPaddingToLength:self.text.length withString:_passwordBox.passwordChar startingAtIndex:0];
+            elementWidth = _passwordContentElement.actualWidth - _passwordContentElement.padding.left - _passwordContentElement.padding.right;
+        } else {
+            if (_textContentElement == nil) {
+                // Not an error, we just might not be loaded yet.
+                [self _applyFont:self.font];
+                return;
+            }
+            elementWidth = _textContentElement.actualWidth - _textContentElement.padding.left - _textContentElement.padding.right;
+        }
+
+        // Try smaller and smaller fonts until it fits within the size, or mins out
+        while (_adjustedFont.pointSize > self.minimumFontSize) {
+            // Grab the width directly from the ContentElement, to allow the cancel button to be considered.
+            if (self->_secureTextMode) {
+                CGSize size = [passwordString sizeWithFont:_adjustedFont];
+                if ((_passwordContentElement == nil) || (size.width <= elementWidth)) {
+                    break;
+                }
+            } else {
+                CGSize size = [self.text sizeWithFont:_adjustedFont];
+                if ((_textContentElement == nil) || (size.width <= elementWidth)) {
+                    break;
+                }
+            }
+
+            _adjustedFont = [_adjustedFont fontWithSize:_adjustedFont.pointSize - 1];
+        }
+        [self _applyFont:_adjustedFont];
+    } else {
+        [self _applyFont:self.font];
+    }
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)setMinimumFontSize:(CGFloat)fontSize {
-    UNIMPLEMENTED();
+    _minimumFontSize = fontSize;
+    [self _adjustFontSizeToFitWidthOrApply];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (CGFloat)minimumFontSize {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return _minimumFontSize;
 }
 
 //
 // Managing the Editing Behavior
 //
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (BOOL)isEditing {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (self.secureTextEntry) {
+        return _passwordBox.focusState != WXFocusStateUnfocused;
+    } else {
+        return _textBox.focusState != WXFocusStateUnfocused;
+    }
 }
 
 /**
@@ -854,6 +970,7 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
         _isFirstResponder = NO;
 
         [self _initUITextField:nil];
+        [self _adjustFontSizeToFitWidthOrApply];
     }
 
     return self;
@@ -1134,6 +1251,10 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
                 [strongSelf sendActionsForControlEvents:UIControlEventEditingDidEnd];
                 [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidEndEditingNotification object:strongSelf];
             });
+
+            // Update the collapsed/visible state of the cancel button and adjust text size.
+            [weakControl updateLayout];
+            [strongSelf _adjustFontSizeToFitWidthOrApply];
         }
     }];
 }
@@ -1200,6 +1321,15 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
             strongSelf->_textBox.text = strongSelf.text;
             strongSelf->_textBox.placeholderText = strongSelf.placeholder;
             strongSelf->_textBox.isSpellCheckEnabled = (strongSelf.spellCheckingType == UITextSpellCheckingTypeYes);
+
+            // retrieve the ContentElement from the template
+            strongSelf->_textContentElement = rt_dynamic_cast<WXCControl>(FindTemplateChild(strongSelf->_textBox, @"ContentElement"));
+
+            if (strongSelf->_textContentElement == nullptr) {
+                TraceWarning(TAG, L"Could not find ContentElement in control template: adjustsFontSizeToFitWidth will not function");
+            }
+
+            [strongSelf _adjustFontSizeToFitWidthOrApply];
         }
     }];
 
@@ -1259,6 +1389,15 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
             strongSelf->_passwordBox.inputScope = ConvertKeyboardTypeToInputScope(strongSelf->_keyboardType, YES);
             strongSelf->_passwordBox.password = strongSelf.text;
             strongSelf->_passwordBox.placeholderText = strongSelf.placeholder;
+
+            // retrieve the ContentElement from the template
+            strongSelf->_passwordContentElement = rt_dynamic_cast<WXCControl>(FindTemplateChild(strongSelf->_passwordBox, @"ContentElement"));
+
+            if (strongSelf->_passwordContentElement == nullptr) {
+                TraceWarning(TAG, L"Could not find ContentElement in control template: adjustsFontSizeToFitWidth will not function");
+            }
+
+            [strongSelf _adjustFontSizeToFitWidthOrApply];
         }
     }];
 
