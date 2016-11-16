@@ -37,7 +37,7 @@
     <ProjectName>StoreKitLib</ProjectName>
     <RootNamespace>StoreKitLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>StoreKitLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

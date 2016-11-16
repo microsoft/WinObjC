@@ -42,7 +42,7 @@
     <ProjectName>CoreMotionLib</ProjectName>
     <RootNamespace>CoreMotionLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CoreMotionLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

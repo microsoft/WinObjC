@@ -19,13 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Foundation\dll\Foundation.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\Foundation\dll\Foundation.vcxproj">
       <Project>{86127226-9A6E-439B-A070-420A572AF0C7}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\Starboard\dll\Starboard.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\Starboard\dll\Starboard.vcxproj">
       <Project>{0AC27ECF-E2AB-420B-9359-4843FFF4CBFA}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\Accounts\lib\AccountsLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\Accounts\lib\AccountsLib.vcxproj">
       <Project>{722B449C-3656-4EF6-B3A7-D151FA54EB2E}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -39,7 +39,7 @@
     <ProjectGuid>{9E8B1145-A308-4091-A1C5-D1FF01367893}</ProjectGuid>
     <RootNamespace>Accounts</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>Accounts</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

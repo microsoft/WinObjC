@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CoreAudio\lib\CoreAudioLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreAudio\lib\CoreAudioLib.vcxproj">
       <Project>{E9AB5709-44BA-4AA0-8B5F-46FE35F143D5}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -33,7 +33,7 @@
     <ProjectGuid>{7DBBF481-D3D4-4CCC-BC3B-B14B8B99FB59}</ProjectGuid>
     <RootNamespace>CoreAudio</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CoreAudio</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

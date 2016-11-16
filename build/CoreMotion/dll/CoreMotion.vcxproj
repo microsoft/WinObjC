@@ -25,7 +25,7 @@
     <None Include="CoreMotion.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\lib\CoreMotionLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\CoreMotionLib.vcxproj">
       <Project>{af9dad32-9b21-41da-9b36-a6b53d008523}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -33,7 +33,7 @@
     <ProjectGuid>{29AE9623-4C26-4E0A-97B6-6A1E7FB2645F}</ProjectGuid>
     <RootNamespace>CoreMotion</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CoreMotion</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

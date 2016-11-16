@@ -46,7 +46,7 @@
     <ProjectName>CoreTextLib</ProjectName>
     <RootNamespace>CoreTextLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CoreTextLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

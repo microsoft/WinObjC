@@ -43,7 +43,7 @@
     <ProjectName>WebKitLib</ProjectName>
     <RootNamespace>WebKitLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>WebKitLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

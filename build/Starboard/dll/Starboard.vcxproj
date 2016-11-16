@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Starboard\lib\StarboardLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\Starboard\lib\StarboardLib.vcxproj">
       <Project>{2A00FC26-2ECF-4DF7-8ECF-2D18C5AC61C9}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -33,9 +33,8 @@
     <ProjectGuid>{0AC27ECF-E2AB-420B-9359-4843FFF4CBFA}</ProjectGuid>
     <RootNamespace>Starboard</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>Starboard</OutputName>
-    <StarboardIncludeDefaultLibs>false</StarboardIncludeDefaultLibs>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -46,6 +45,7 @@
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.props" />
   </ImportGroup>
+  <Import Project="$(MSBuildThisFileDirectory)..\..\WinObjC.Frameworks.Core\WinObjC.Frameworks.Core.Packaging.props" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <CompileAsWinRT>false</CompileAsWinRT>

@@ -31,7 +31,7 @@
     <ProjectName>CoreMIDILib</ProjectName>
     <RootNamespace>CoreMIDI</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CoreMIDILib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

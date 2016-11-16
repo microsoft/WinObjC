@@ -68,7 +68,7 @@
     <ProjectName>MapKitLib</ProjectName>
     <RootNamespace>MapKitLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>MapKitkLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

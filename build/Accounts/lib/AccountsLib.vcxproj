@@ -29,7 +29,7 @@
     <ProjectName>AccountsLib</ProjectName>
     <RootNamespace>AccountsLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>AccountsLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

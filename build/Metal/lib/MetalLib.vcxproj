@@ -55,7 +55,7 @@
     <ProjectName>MetalLib</ProjectName>
     <RootNamespace>MetalLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>MetalLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

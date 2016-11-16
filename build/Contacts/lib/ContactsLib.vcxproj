@@ -45,7 +45,7 @@
     <ProjectName>ContactsLib</ProjectName>
     <RootNamespace>ContactsLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>ContactsLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

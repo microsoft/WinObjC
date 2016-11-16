@@ -18,11 +18,16 @@
 
 #include "LoggingNative.h"
 #include "IwMalloc.h"
+
 #include <StarboardExport.h>
 
 // Interface should not be defined for Objective-C code
+#ifdef __OBJC__
+
 #ifdef interface
 #undef interface
+#endif
+
 #endif
 
 #define fatal_printf(...)

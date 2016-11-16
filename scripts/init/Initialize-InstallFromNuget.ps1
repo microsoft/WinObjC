@@ -2,7 +2,8 @@
     [Parameter(Mandatory=$true)] [string] $outDir,
     [Parameter(Mandatory=$true)] [string] $downloadFeed,
     [Parameter(Mandatory=$true)] [string] $packageName,
-    [Parameter(Mandatory=$true)] [string] $targetFileName
+    [Parameter(Mandatory=$true)] [string] $targetFileName,
+    [Parameter(Mandatory=$false)] [string] $nugetDir = $outDir
 )
 
 $ErrorActionPreference = "Stop"
@@ -12,7 +13,7 @@ $downloadDest = Join-Path $outDir $targetFileName
 $tempFolder = "$env:temp\Package-$(Get-Date -format 'yyyy-MM-dd_hh-mm-ss')"
 New-Item $tempFolder -ItemType Directory
 
-& "$outDir\nuget.exe" install $packageName -source $downloadFeed -OutputDirectory `"$tempFolder`" -Prerelease -NonInteractive
+& "$nugetDir\nuget.exe" install $packageName -source $downloadFeed -OutputDirectory `"$tempFolder`" -Prerelease -NonInteractive
 
 $authHelper = Get-ChildItem -Filter $targetFileName -Path $tempFolder -Recurse
 

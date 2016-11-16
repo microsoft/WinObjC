@@ -19,16 +19,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
       <Project>{26da08da-d0b9-4579-b168-e7f0a5f20e57}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\Foundation\dll\Foundation.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\Foundation\dll\Foundation.vcxproj">
       <Project>{86127226-9a6e-439b-a070-420a572af0c7}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\Starboard\lib\StarboardLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\Starboard\lib\StarboardLib.vcxproj">
       <Project>{2a00fc26-2ecf-4df7-8ecf-2d18c5ac61c9}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\UIKit\dll\UIKit.vcxproj">
       <Project>{8e79930b-7ef6-4a4e-b46c-efc0a49c55d9}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -62,7 +62,7 @@
     <ProjectName>CoreImageLib</ProjectName>
     <RootNamespace>CoreImageLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CoreImageLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

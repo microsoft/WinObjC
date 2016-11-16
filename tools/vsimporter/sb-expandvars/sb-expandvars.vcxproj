@@ -16,6 +16,8 @@
     <RootNamespace>sbexpandvars</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
     <IncludeOutputsInPackage>false</IncludeOutputsInPackage>
+    <IncludeFrameworkReferencesInPackage>false</IncludeFrameworkReferencesInPackage>
+    <IncludeContentInPackage>false</IncludeContentInPackage>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -107,11 +109,13 @@
     <ClCompile Include="..\src\XCVariableExpander.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\deps\3rdparty\AppInsights\Projects\AppInsights_Win32\core\core.vcxproj">
+    <ProjectReference Include="..\..\AppInsights\Projects\AppInsights_Win32\core\core.vcxproj">
       <Project>{f2377726-d69d-4a26-a3af-969fd0399427}</Project>
+      <IncludeInPackage>false</IncludeInPackage>
     </ProjectReference>
     <ProjectReference Include="..\WBITelemetry\WBITelemetry.vcxproj">
       <Project>{23a635aa-6d82-4faa-b208-11c4c51bdb9d}</Project>
+      <IncludeInPackage>false</IncludeInPackage>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -125,4 +129,11 @@
       </PackageFile>
     </ItemGroup>
   </Target>
+    <ItemDefinitionGroup>  
+    <!-- Design Time is annoying and uses a different output item group to return this. Also adjust nugetizer metadata injection here. -->
+     <_MainProjectOutput>
+       <IsPackable>$(IsPackable)</IsPackable>
+       <IsNuGetized>$(IsNuGetized)</IsNuGetized>
+     </_MainProjectOutput>
+  </ItemDefinitionGroup>
 </Project>

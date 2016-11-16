@@ -24,16 +24,16 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSString+HSTRING.mm" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
       <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\CFNetwork\dll\CFNetwork.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CFNetwork\dll\CFNetwork.vcxproj">
       <Project>{16E0E9AE-8B17-4C4A-9960-BF90FB9F3424}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\MobileCoreServices\dll\MobileCoreServicesdll.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\MobileCoreServices\dll\MobileCoreServices.vcxproj">
       <Project>{F1C44E27-6599-49C3-B4C2-D812C114B166}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\lib\FoundationLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\FoundationLib.vcxproj">
       <Project>{7D635E25-0D8D-4B9A-B9DA-53185AB8A9E5}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -47,7 +47,7 @@
     <ProjectGuid>{86127226-9A6E-439B-A070-420A572AF0C7}</ProjectGuid>
     <RootNamespace>Foundation</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>Foundation</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
@@ -57,12 +57,13 @@
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.props" />
   </ImportGroup>
+  <Import Project="$(MSBuildThisFileDirectory)..\..\WinObjC.Frameworks.Core\WinObjC.Frameworks.Core.Packaging.props" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>windowsapp.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>windowsapp.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Foundation.def</ModuleDefinitionFile>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
       <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
@@ -78,7 +79,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>windowsapp.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>windowsapp.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Foundation.def</ModuleDefinitionFile>
       <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
@@ -96,7 +97,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>windowsapp.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>windowsapp.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Foundation.def</ModuleDefinitionFile>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
       <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
@@ -112,7 +113,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>windowsapp.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>windowsapp.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Foundation.def</ModuleDefinitionFile>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
@@ -131,4 +132,19 @@
   <ItemGroup>
     <None Include="Project.json" />
   </ItemGroup>
+
+  <Target Name="AddExtraPackageItems" BeforeTargets="GetPackageContents">
+    <ItemGroup>
+
+        <!-- Include Extra Deps for this project -->
+        <_DepsFiles Include="$(StarboardBasePath)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\libxml2.dll"/>
+        <_DepsFiles Include="$(StarboardBasePath)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\icu*.dll"/>
+
+        <PackageFile Include="@(_DepsFiles)">
+            <PackagePath>build\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\%(Filename)%(Extension)</PackagePath>
+        </PackageFile>
+    </ItemGroup>
+  </Target>
+
+
 </Project>

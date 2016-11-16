@@ -19,10 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
       <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\CoreGraphics\lib\CoreGraphicsLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreGraphics\lib\CoreGraphicsLib.vcxproj">
       <Project>{6293444C-1461-4CC7-9634-44AB90B8BBC3}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -36,7 +36,7 @@
     <ProjectGuid>{26DA08DA-D0B9-4579-B168-E7F0A5F20E57}</ProjectGuid>
     <RootNamespace>CoreGraphics</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CoreGraphics</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
@@ -103,4 +103,19 @@
   <ItemGroup>
     <None Include="Project.json" />
   </ItemGroup>
+  <Target Name="AddExtraPackageItems" BeforeTargets="GetPackageContents">
+    <ItemGroup>
+
+        <!-- Include Extra Deps for this project. TODO: This would be super extra double awesome to be its own package. -->
+        <_DepsFiles Include="$(StarboardBasePath)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\cairo.dll"/>
+        <_DepsFiles Include="$(StarboardBasePath)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\freetype.dll"/>
+        <_DepsFiles Include="$(StarboardBasePath)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\libpng.dll"/>
+        <_DepsFiles Include="$(StarboardBasePath)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\libz.dll"/>
+        <_DepsFiles Include="$(StarboardBasePath)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\libjpeg.dll"/>
+
+        <PackageFile Include="@(_DepsFiles)">
+            <PackagePath>build\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\%(Filename)%(Extension)</PackagePath>
+        </PackageFile>
+    </ItemGroup>
+  </Target>
 </Project>

@@ -25,10 +25,10 @@
     <None Include="Social.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\UIKit\dll\UIKit.vcxproj">
       <Project>{8e79930b-7ef6-4a4e-b46c-efc0a49c55d9}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\lib\SocialLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\SocialLib.vcxproj">
       <Project>{96908fe1-aea3-447e-ba88-ad6b017b6858}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -36,7 +36,7 @@
     <ProjectGuid>{0CFFCCE2-9374-49BA-975F-936E9066F746}</ProjectGuid>
     <RootNamespace>Social</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>Social</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

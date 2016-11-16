@@ -19,16 +19,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Starboard\dll\Starboard.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\Starboard\dll\Starboard.vcxproj">
       <Project>{0AC27ECF-E2AB-420B-9359-4843FFF4CBFA}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\QuartzCore\dll\QuartzCore.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\QuartzCore\dll\QuartzCore.vcxproj">
       <Project>{037b568f-4104-417e-9fb8-b6899e398903}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\AVFoundation\lib\AVFoundationLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\AVFoundation\lib\AVFoundationLib.vcxproj">
       <Project>{3A523866-D9FD-4778-9BA7-4E1470F49286}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\UIKit\dll\UIKit.vcxproj">
       <Project>{8e79930b-7ef6-4a4e-b46c-efc0a49c55d9}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -42,7 +42,7 @@
     <ProjectGuid>{E887032C-8055-4E7D-B4B5-5FD6509257CA}</ProjectGuid>
     <RootNamespace>AVFoundation</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>AVFoundation</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

@@ -1,9 +1,10 @@
 ﻿{
   "dependencies": {
-    "WinObjC.Build": "0.0.1-*"
+    "ANGLE.WindowsStore": "2.1.13",
+    "WinObjC.Language": "0.2.160915-*"
   },
   "frameworks": {
-    "uap10.0": {}
+    "uap10.0": { "imports": [ "native" ] }
   },
   "runtimes": {
     "win10-arm": {},

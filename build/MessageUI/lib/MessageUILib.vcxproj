@@ -27,7 +27,7 @@
     <ProjectName>MessageUILib</ProjectName>
     <RootNamespace>MessageUILib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>MessageUILib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

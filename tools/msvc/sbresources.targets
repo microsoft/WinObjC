@@ -38,10 +38,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <!-- SBResourcesDir is not the final destination in the case we're building an AppX
-         AppxPackagePayload takes care of the copying in that case -->
-    <SBResourcesDir Condition="'$(SBResourceCopyToAPPX)' != 'true'">$(OutDir)</SBResourcesDir>
-    <SBResourcesDir Condition="'$(SBResourceCopyToAPPX)' == 'true'"></SBResourcesDir>
+    <SBResourcesDir>$(OutDir)</SBResourcesDir>
     <SBResourcesDir Condition="'$(IslandwoodConfigurationType)' == 'Bundle'">$(OutDir)\$(TargetName).bundle</SBResourcesDir>
   </PropertyGroup>
 
@@ -146,11 +143,6 @@
       Condition="'@(SBResourceCopy)' != '' and '%(SBResourceCopy.ExcludedFromBuild)' != 'true'"
       SourceFiles="@(SBResourceCopy)"
       DestinationFiles="@(SBResourceCopy->'%(OutputFile)')" />
-
-    <Exec
-      Condition="'$(StripAppContainerBit)' == 'true' and $([System.IO.Path]::GetExtension('%(SBResourceCopy.OutputFile)').ToUpper()) == '.DLL'"
-      Command="Link.exe /EDIT /NOLOGO /APPCONTAINER:NO %(SBResourceCopy.OutputFile)" />
-
   </Target>
 
   <Target

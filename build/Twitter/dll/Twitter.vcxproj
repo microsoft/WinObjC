@@ -19,10 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\UIKit\dll\UIKit.vcxproj">
       <Project>{8E79930B-7EF6-4A4E-B46C-EFC0A49C55D9}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\Twitter\lib\TwitterLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\Twitter\lib\TwitterLib.vcxproj">
       <Project>{D4B9ED18-BE9E-4FDF-B0BB-BBACF373247E}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -36,7 +36,7 @@
     <ProjectGuid>{2FE5621A-A18D-474C-8905-B740D04F56C7}</ProjectGuid>
     <RootNamespace>Twitter</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>Twitter</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

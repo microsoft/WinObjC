@@ -1,14 +1,14 @@
 ﻿{
   "dependencies": {
-    "WinObjC.Build": "0.0.1-*"
+    "WinObjC.Language": "0.2.160915-*"
   },
   "frameworks": {
-    "uap10.0": {}
+    "UAP,Version=v10.0"  : {}
   },
   "runtimes": {
-    "win10-arm": {},
-    "win10-x86": {},
-    "win10-arm-aot": {},
-    "win10-x86-aot": {}
+    "win-arm": {},
+    "win-x86": {},
+    "win-arm-aot": {},
+    "win-x86-aot": {}
   }
 }

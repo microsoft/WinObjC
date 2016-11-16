@@ -28,7 +28,7 @@
     <PackageTags>WinObjC.Tools</PackageTags>
   </PropertyGroup>
   <PropertyGroup Label="Globals">
-    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <OutputPath>$(SolutionDir)\OutputPackages\$(Configuration)\</OutputPath>
     <ProjectGuid>0a23b6b4-94bb-4b3a-ba73-a7cb5ef7d8f9</ProjectGuid>
   </PropertyGroup>
   <ItemGroup>

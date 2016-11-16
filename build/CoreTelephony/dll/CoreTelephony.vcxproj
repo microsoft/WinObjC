@@ -22,7 +22,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)\dllmain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\lib\CoreTelephonyLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\CoreTelephonyLib.vcxproj">
       <Project>{c693a263-7a21-4170-a292-32628d5d2b5b}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -33,7 +33,7 @@
     <ProjectGuid>{97032E40-90C3-4F19-B0D6-A441E599BBB7}</ProjectGuid>
     <RootNamespace>CoreTelephony</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CoreTelephony</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

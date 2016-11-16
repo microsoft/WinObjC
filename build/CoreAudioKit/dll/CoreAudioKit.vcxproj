@@ -25,10 +25,10 @@
     <None Include="CoreAudioKit.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\UIKit\dll\UIKit.vcxproj">
       <Project>{8e79930b-7ef6-4a4e-b46c-efc0a49c55d9}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\lib\CoreAudioKitLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\CoreAudioKitLib.vcxproj">
       <Project>{748ba5c7-dce6-4c96-8314-c171447ae5ba}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -36,7 +36,7 @@
     <ProjectGuid>{1BEF20E0-C754-49DB-B7E8-30F6D977B2E6}</ProjectGuid>
     <RootNamespace>CoreAudioKit</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CoreAudioKit</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

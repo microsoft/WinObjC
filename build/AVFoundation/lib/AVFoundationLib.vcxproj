@@ -158,7 +158,7 @@
     <ProjectName>AVFoundationLib</ProjectName>
     <RootNamespace>AVFoundationLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>AVFoundationLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

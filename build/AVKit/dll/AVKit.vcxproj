@@ -25,10 +25,10 @@
     <None Include="AVKit.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\UIKit\dll\UIKit.vcxproj">
       <Project>{8e79930b-7ef6-4a4e-b46c-efc0a49c55d9}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\lib\AVKitLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\AVKitLib.vcxproj">
       <Project>{FB843AF7-02DD-4DDF-B50A-808F50422F1E}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -36,7 +36,7 @@
     <ProjectGuid>{3F5E44A0-EAB8-408F-AAD9-ECF11FBD093D}</ProjectGuid>
     <RootNamespace>AVKit</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>AVKit</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

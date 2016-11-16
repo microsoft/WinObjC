@@ -25,13 +25,13 @@
     <None Include="CoreText.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
       <Project>{26da08da-d0b9-4579-b168-e7f0a5f20e57}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
       <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\lib\CoreTextLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\CoreTextLib.vcxproj">
       <Project>{39d93f30-f8f9-4d8e-a428-c188e918aa48}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -39,7 +39,7 @@
     <ProjectGuid>{36DEEC5D-F77B-4C94-A63C-86FB716833DE}</ProjectGuid>
     <RootNamespace>CoreText</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CoreText</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

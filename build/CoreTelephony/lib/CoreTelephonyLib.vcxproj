@@ -30,7 +30,7 @@
     <ProjectName>CoreTelephonyLib</ProjectName>
     <RootNamespace>CoreTelephonyLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CoreTelephonyLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

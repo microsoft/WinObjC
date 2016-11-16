@@ -25,7 +25,7 @@
     <None Include="CoreBluetooth.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\lib\CoreBluetoothLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\CoreBluetoothLib.vcxproj">
       <Project>{25269720-4cdc-407f-b54c-d1b87732ffc5}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -33,7 +33,7 @@
     <ProjectGuid>{FB55E8F6-A77C-4D74-8866-6EA9B7EA6B09}</ProjectGuid>
     <RootNamespace>CoreBluetooth</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CoreBluetooth</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

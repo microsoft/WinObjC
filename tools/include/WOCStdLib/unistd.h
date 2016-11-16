@@ -317,7 +317,10 @@ typedef __useconds_t    useconds_t;
 
 __BEGIN_DECLS
 /* 1003.1-1990 */
+#ifdef __clang__
 void     _exit(int) __dead2;
+#endif
+
 int  access(const char *, int);
 unsigned int     alarm(unsigned int);
 int  chdir(const char *);

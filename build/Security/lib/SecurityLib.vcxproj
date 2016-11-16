@@ -34,7 +34,7 @@
     <ProjectName>SecurityLib</ProjectName>
     <RootNamespace>SecurityLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>SecurityLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

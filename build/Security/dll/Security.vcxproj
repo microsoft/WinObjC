@@ -19,10 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
       <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\lib\SecurityLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\SecurityLib.vcxproj">
       <Project>{BE591B6E-DC7E-4669-9F41-4898C271C417}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -36,7 +36,7 @@
     <ProjectGuid>{1B60665D-5A2D-4F96-8D52-06B5E886F29F}</ProjectGuid>
     <RootNamespace>Security</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>Security</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
@@ -50,7 +50,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>;bcrypt.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Security.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -63,7 +63,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>;bcrypt.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Security.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -76,7 +76,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>;bcrypt.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Security.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -89,7 +89,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>;bcrypt.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Security.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>

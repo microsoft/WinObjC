@@ -205,9 +205,9 @@
     <ProjectName>CoreFoundationLib</ProjectName>
     <RootNamespace>CoreFoundationLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CoreFoundationLib</OutputName>
-    <StarboardIncludeDefaultLibs>false</StarboardIncludeDefaultLibs>
+    
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>

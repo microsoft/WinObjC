@@ -30,7 +30,7 @@
     <ProjectName>AddressBookUILib</ProjectName>
     <RootNamespace>AddressBookUILib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>AddressBookUILib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

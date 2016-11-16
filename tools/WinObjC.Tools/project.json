@@ -1,10 +1,10 @@
-{
+﻿{
   "dependencies": {
-    "GitInfo": "1.1.32",
-    "NuGet.Build.Packaging": "0.1.163-pr61"
+    "GitInfo": "1.1.39",
+    "NuGet.Build.Packaging": "0.1.186"
   },
   "frameworks": {
-    "NuGet,Version=v1.0": {
+    ".NETFramework,Version=v4.0": {
       "imports": [
         "dotnet",
         "netstandard1.0",

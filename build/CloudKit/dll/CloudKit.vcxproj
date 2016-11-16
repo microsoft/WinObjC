@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CloudKit\lib\CloudKitLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CloudKit\lib\CloudKitLib.vcxproj">
       <Project>{18BD8996-A4CD-4193-BB22-8B0FFF3218CD}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -33,7 +33,7 @@
     <ProjectGuid>{06ED4C2B-3022-442C-9AC9-CF10C4823A12}</ProjectGuid>
     <RootNamespace>CloudKit</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CloudKit</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

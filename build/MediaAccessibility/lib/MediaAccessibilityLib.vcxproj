@@ -27,7 +27,7 @@
     <ProjectName>MediaAccessibilityLib</ProjectName>
     <RootNamespace>MediaAccessibilityLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>MediaAccessibilityLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

@@ -55,7 +55,7 @@
     <ProjectName>GamePlayKitLib</ProjectName>
     <RootNamespace>GamePlayKitLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>GamePlayKitLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

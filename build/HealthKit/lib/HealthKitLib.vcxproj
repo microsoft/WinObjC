@@ -60,7 +60,7 @@
     <ProjectName>HealthKitLib</ProjectName>
     <RootNamespace>HealthKitLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>HealthKitLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

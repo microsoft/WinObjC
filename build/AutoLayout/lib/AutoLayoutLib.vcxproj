@@ -26,7 +26,7 @@
     <ProjectName>AutoLayoutLib</ProjectName>
     <RootNamespace>AutoLayoutLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>AutoLayoutLib</OutputName>
     <LinkWithIwNew>false</LinkWithIwNew>
   </PropertyGroup>

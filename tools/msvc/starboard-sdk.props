@@ -3,6 +3,5 @@
   <ImportGroup>
     <Import Project="$(MSBuildThisFileDirectory)sbclang.props" />
     <Import Project="$(MSBuildThisFileDirectory)cl-additions.props" />
-    <Import Project="$(MSBuildThisFileDirectory)sbresources.props" />
   </ImportGroup>
 </Project>

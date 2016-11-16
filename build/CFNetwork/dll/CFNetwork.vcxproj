@@ -25,10 +25,10 @@
     <None Include="CFNetwork.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
       <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\lib\CFNetworkLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\CFNetworkLib.vcxproj">
       <Project>{45C3CD35-65B9-43A7-8060-30B8EE1E4F4F}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -36,7 +36,7 @@
     <ProjectGuid>{16E0E9AE-8B17-4C4A-9960-BF90FB9F3424}</ProjectGuid>
     <RootNamespace>CFNetwork</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CFNetwork</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
@@ -46,6 +46,7 @@
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.props" />
   </ImportGroup>
+  <Import Project="$(MSBuildThisFileDirectory)..\..\WinObjC.Frameworks.Core\WinObjC.Frameworks.Core.Packaging.props" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <CompileAsWinRT>false</CompileAsWinRT>

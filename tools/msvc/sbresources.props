@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <!-- Pass all SBResourceCopy items to the APPX packager, instead of copying them ourselves -->
-    <SBResourceCopyToAPPX Condition="'$(AppContainerApplication)' == 'true'">true</SBResourceCopyToAPPX>
-  </PropertyGroup>
-</Project>

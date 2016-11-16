@@ -19,19 +19,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\UIKit\dll\UIKit.vcxproj">
       <Project>{8e79930b-7ef6-4a4e-b46c-efc0a49c55d9}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
       <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
       <Project>{26da08da-d0b9-4579-b168-e7f0a5f20e57}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\Starboard\lib\StarboardLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\Starboard\lib\StarboardLib.vcxproj">
       <Project>{2a00fc26-2ecf-4df7-8ecf-2d18c5ac61c9}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\lib\AssetsLibraryLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\AssetsLibraryLib.vcxproj">
       <Project>{a92b7f82-de95-4d29-b942-276dc21c180c}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -45,7 +45,7 @@
     <ProjectGuid>{A3A27F94-66BD-4DEC-892D-1DC8FEED2B5D}</ProjectGuid>
     <RootNamespace>AssetsLibrary</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>AssetsLibrary</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    
+  <PropertyGroup>
+      <GitThisAssembly>true</GitThisAssembly>
+      <InferLegacyPackageReferences>false</InferLegacyPackageReferences>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <_CoreCompileOverrideDependsOn Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">Pack</_CoreCompileOverrideDependsOn>
+  </PropertyGroup>
+
+  <Target Name="CoreCompile" DependsOnTargets="$(_CoreCompileOverrideDependsOn)" />
+
+  <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents" Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">
+      <ItemGroup>
+          <!-- Inlcude *all* of /include/  and /include_next/ folder.  -->
+          <_IncludeFiles Include="$(MSBuildThisFileDirectory)..\include\**\*.*"/>
+          <_IncludeFiles Include="$(MSBuildThisFileDirectory)..\include_next\**\*.*"/>
+
+          <!-- Inlcude *all* of /msvc/ folder. Almost certainly overkill at this stage. Things like the .sln     -->
+          <!-- for ClangCompile shouldn't be shipped in the package really but ok for bootstrapping the process. -->
+          <!-- Pare this down in a future version!!! -->
+          <_MSVCFiles Include="$(MSBuildThisFileDirectory)..\msvc\**\*.*"/>
+
+          <!-- Include /deps/ folder. -->
+          <_DepsFiles Include="$(MSBuildThisFileDirectory)..\deps\**\*.*"/>
+
+          <!-- Include /bin/ folder. -->
+          <_BinFiles Include="$(MSBuildThisFileDirectory)..\bin\**\*.*"/>
+
+          <PackageFile Include="@(_MSVCFiles)">
+              <PackagePath>build\msvc\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
+          </PackageFile>
+          <PackageFile Include="@(_IncludeFiles)">
+              <PackagePath>build\include\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
+          </PackageFile>
+          <PackageFile Include="@(_DepsFiles)">
+              <PackagePath>build\deps\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
+          </PackageFile>
+          <PackageFile Include="@(_BinFiles)">
+              <PackagePath>build\bin\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
+          </PackageFile>
+      </ItemGroup>
+
+      <!-- Inlcude custom .props and .targets files. These are automatically added to a consuming project. -->
+      <!-- This helps bootstrap the package and abstracts out starboard and other concepts that may change -->
+      <!-- in future versions of the package. -->
+      <ItemGroup>
+          <PackageFile Include="$(MSBuildThisFileDirectory)$(PackageId).props" Condition="Exists('$(MSBuildThisFileDirectory)$(PackageId).props')">
+              <PackagePath>build\$(PackageId).props</PackagePath>
+          </PackageFile>
+          <PackageFile Include="$(MSBuildThisFileDirectory)$(PackageId).targets" Condition="Exists('$(MSBuildThisFileDirectory)$(PackageId).targets')">
+              <PackagePath>build\$(PackageId).targets</PackagePath>
+          </PackageFile>
+      </ItemGroup>
+  </Target>
+
+    <Target Name="AddSingleConfigBuildOutput"  Returns="@(_PackageContentsForPlat)"> 
+      <MSBuild Projects="$(SolutionPath)"
+         Targets="GetSolutionConfigurationContents"
+         Properties="Configuration=$(Configuration);Platform=$(Platform)">
+        <Output TaskParameter="TargetOutputs" ItemName="_SolutionConfigurationContents" />
+      </MSBuild>
+
+      <Message Text="AddSingleConfigBuildOutput Platform: $(Platform)" Importance="High"/>
+
+      <MSBuild Projects="$(MSBuildProjectFile)"
+         Targets="GetPackageContents"
+         Properties="SkipGetPackageContentsForOtherPlatforms=true;BuildingInsideVisualStudio=false;BuildProjectReferences=true;IsPackable=false;Configuration=$(Configuration);Platform=$(Platform);CurrentSolutionConfigurationContents=%(_SolutionConfigurationContents.Identity);GetPackageContentsDependsOn=Build;$(GetPackageContentsDependsOn)">
+        <Output TaskParameter="TargetOutputs" ItemName="_PackageContentsForPlat" />
+      </MSBuild>
+    </Target>
+
+  <Target Name="AddOtherConfigsBuiltOutput" BeforeTargets="GetPackageContents" Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true' AND '$(Platform)' == 'AnyCPU'">
+
+    <ItemGroup>
+      <_PackTargetPlat Include="%(ProjectConfiguration.Platform)"
+              Condition="'%(ProjectConfiguration.Configuration)' == '$(Configuration)' AND '%(ProjectConfiguration.Platform)' != '$(Platform)'" />
+    </ItemGroup>
+    
+    <MSBuild Projects="$(MSBuildProjectFile)"
+         Targets="AddSingleConfigBuildOutput"
+         Properties="Platform=%(_PackTargetPlat.Identity)">
+      <Output TaskParameter="TargetOutputs" ItemName="_OtherPackageContents" />
+    </MSBuild>
+
+    <ItemGroup>
+      <PackageFile Include="@(_OtherPackageContents)" />
+    </ItemGroup>
+
+  </Target>
+
+  <!-- Inline task to check for timestamp file existence and creation-->  
+  <UsingTask  
+    TaskName="CreateTimestampFileIfNeeded"  
+    TaskFactory="CodeTaskFactory"  
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll" >  
+    <ParameterGroup>
+      <TimestampFile ParameterType="System.String" Required="true" />
+      <Timestamp ParameterType="System.String" Output="true" />  
+    </ParameterGroup>
+    <Task>
+      <Reference Include="System" />
+      <Reference Include="System.IO" />
+      <Reference Include="System.Threading" />
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.Threading" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+          var mutex = new Mutex(false, TimestampFile.Replace("\\", "."));
+          try
+          {
+            mutex.WaitOne();
+          } catch (AbandonedMutexException e)
+          {
+          }
+          if (!File.Exists(TimestampFile)) {
+              File.Create(TimestampFile);
+          }  
+
+          Timestamp = File.GetCreationTimeUtc(TimestampFile).ToString("yyyyMMddHHmmss");
+          mutex.ReleaseMutex();
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+  
+  <PropertyGroup>
+    <GetPackageVersionDependsOn>SetPackageVersion;$(GetPackageVersionDependsOn);</GetPackageVersionDependsOn>
+  </PropertyGroup>
+  <Target Name="SetPackageVersion" DependsOnTargets="$(GitVersionDependsOn)" >
+
+    <Error Condition="'$(GitBranch)' == ''"
+           Text="Cannot determine git branch. Please make sure GitInfo is listed in the project.json for this project and that git.exe is part of the PATH environment variable." />
+
+    <Warning Condition="'$(SolutionPath)' == ''"
+           Text="Cannot determine solution build time. Package version dependencies may be inconsistent as a result. Please make sure to build using .sln file." />
+
+    <CreateTimestampFileIfNeeded Condition="'$(SolutionDir)' != ''" 
+                                 TimestampFile="$(SolutionDir)$(PackageId).timestamp">
+        <Output PropertyName="PackageTimestamp" TaskParameter="Timestamp" />  
+    </CreateTimestampFileIfNeeded>
+
+
+
+    <PropertyGroup>
+      <PackageTimestamp Condition="'$(PackageTimestamp)' == ''">$([System.DateTime]::Now.ToString(yyyyMMddHHmmss))</PackageTimestamp>
+
+      <PackageVersion Condition="'$(PackageVersion)' == '' And '$(GitBranch)' == 'master'">$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(PackageTimestamp)</PackageVersion>
+      <PackageVersion Condition="'$(PackageVersion)' == '' And '$(GitBranch)' == 'develop'">$(GitBaseVersionMajor).$(GitBaseVersionMinor).$([MSBuild]::Add('$(GitBaseVersionPatch)', '1'))-$(PackageTimestamp).dev</PackageVersion>
+      <PackageVersion Condition="'$(PackageVersion)' == ''">$(GitBaseVersionMajor).$(GitBaseVersionMinor).$([MSBuild]::Add('$(GitBaseVersionPatch)', '1'))-$(PackageTimestamp).pr</PackageVersion>
+    </PropertyGroup>
+  </Target>
+  <Target Name="DeletePackageTimestampFile" Condition="'$(SolutionDir)' != ''" DependsOnTargets="SetPackageVersion" BeforeTargets="Pack">
+
+    <!-- This target should only run for the actual packaging project as the pack target itself should never be run on anything but a .nuproj -->
+    <Delete Files="$(SolutionDir)$(PackageId).timestamp" TreatErrorsAsWarnings="true"/>
+  </Target>
+
+</Project>

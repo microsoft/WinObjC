@@ -25,10 +25,10 @@
     <None Include="MediaPlayer.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\UIKit\dll\UIKit.vcxproj">
       <Project>{8e79930b-7ef6-4a4e-b46c-efc0a49c55d9}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\lib\MediaPlayerLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\MediaPlayerLib.vcxproj">
       <Project>{29625e50-77e9-45fa-bcbc-d855cd45a715}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -36,7 +36,7 @@
     <ProjectGuid>{9CA219D7-8268-42FA-85DC-0709A806222D}</ProjectGuid>
     <RootNamespace>MediaPlayer</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>MediaPlayer</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

@@ -25,7 +25,7 @@
     <None Include="MediaAccessibility.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\lib\MediaAccessibilityLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\MediaAccessibilityLib.vcxproj">
       <Project>{d16acdb0-4e1b-4840-8972-6845a66a7ea1}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -33,7 +33,7 @@
     <ProjectGuid>{B8C3265A-99AE-41B0-82C3-D5B36CA9CA48}</ProjectGuid>
     <RootNamespace>MediaAccessibility</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>MediaAccessibility</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

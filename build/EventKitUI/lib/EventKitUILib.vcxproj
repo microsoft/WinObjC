@@ -28,7 +28,7 @@
     <ProjectName>EventKitUILib</ProjectName>
     <RootNamespace>EventKitUILib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>EventKitUILib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

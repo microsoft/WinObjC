@@ -27,7 +27,7 @@
     <ProjectName>TwitterLib</ProjectName>
     <RootNamespace>TwitterLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>TwitterLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

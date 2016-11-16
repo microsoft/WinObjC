@@ -25,10 +25,10 @@
     <None Include="QuickLook.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\UIKit\dll\UIKit.vcxproj">
       <Project>{8e79930b-7ef6-4a4e-b46c-efc0a49c55d9}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\lib\QuickLookLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\QuickLookLib.vcxproj">
       <Project>{2b6c43d2-52a0-435b-9bd0-7539b364acba}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -36,7 +36,7 @@
     <ProjectGuid>{5680A47C-23FC-476C-8A44-1C6BB018D76C}</ProjectGuid>
     <RootNamespace>QuickLook</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>QuickLook</OutputName>
     <ProjectName>QuickLook</ProjectName>
   </PropertyGroup>

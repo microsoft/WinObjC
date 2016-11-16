@@ -25,7 +25,7 @@
     <None Include="Contacts.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\lib\ContactsLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\ContactsLib.vcxproj">
       <Project>{9a4532c3-3316-4d91-9be3-2fcfd6a82191}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -33,7 +33,7 @@
     <ProjectGuid>{F296128F-2A32-4A85-9C50-F90ED46214E4}</ProjectGuid>
     <RootNamespace>Contacts</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>Contacts</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

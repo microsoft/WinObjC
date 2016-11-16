@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\lib\CoreVideoLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\CoreVideoLib.vcxproj">
       <Project>{61F6EB66-D1EF-477D-83B1-C3C36132D49A}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -33,7 +33,7 @@
     <ProjectGuid>{13EFC783-DCEE-4649-843C-3667D2EC0913}</ProjectGuid>
     <RootNamespace>CoreVideo</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CoreVideo</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

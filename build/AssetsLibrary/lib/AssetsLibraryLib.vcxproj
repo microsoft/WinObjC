@@ -29,7 +29,7 @@
     <ProjectName>AssetsLibraryLib</ProjectName>
     <RootNamespace>AssetsLibraryLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>AssetsLibraryLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

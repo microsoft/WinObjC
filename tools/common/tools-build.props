@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
+    <!-- Extends the built-in GetTargetPathWithTargetPlatformMoniker output to signal that the project has been nugetized -->
+    <ItemDefinitionGroup>
+        <_MainProjectOutput>
+            <IsPackable>$(IsPackable)</IsPackable>
+            <IsNuGetized>$(IsNuGetized)</IsNuGetized>
+        </_MainProjectOutput>
+    </ItemDefinitionGroup>
 </Project>

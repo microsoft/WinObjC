@@ -19,13 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
       <Project>{26DA08DA-D0B9-4579-B168-E7F0A5F20E57}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
       <Project>{26DA08DA-D0B9-4579-B168-E7F0A5F20E57}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\lib\AutoLayoutLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\AutoLayoutLib.vcxproj">
       <Project>{83CD3839-6A91-4D31-9183-BF6573E016E7}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -36,7 +36,7 @@
     <ProjectGuid>{D036FDB1-F82C-40C7-B1B4-65F499EAE116}</ProjectGuid>
     <RootNamespace>AutoLayout</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>AutoLayout</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
@@ -103,4 +103,15 @@
   <ItemGroup>
     <None Include="Project.json" />
   </ItemGroup>
+  <Target Name="AddExtraPackageItems" BeforeTargets="GetPackageContents">
+    <ItemGroup>
+
+        <!-- Include Extra Deps for this project. TODO: This would be super extra double awesome to be its own package. -->
+        <_DepsFiles Include="$(StarboardBasePath)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\freetype.dll"/>
+
+        <PackageFile Include="@(_DepsFiles)">
+            <PackagePath>build\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\%(Filename)%(Extension)</PackagePath>
+        </PackageFile>
+    </ItemGroup>
+  </Target>
 </Project>

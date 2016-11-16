@@ -44,7 +44,7 @@
     <WindowsAppContainer>false</WindowsAppContainer>
     <TargetOsAndVersion>Universal Windows</TargetOsAndVersion>
     <StarboardBasePath>..\..\..\..</StarboardBasePath>
-    <IslandwoodDRT>false</IslandwoodDRT>
+    
     <OutDir>..\$(Platform)\$(Configuration)\$(RootNamespace)\</OutDir>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -97,8 +97,6 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros">
-    <CopyStarboardLibraries>true</CopyStarboardLibraries>
-    <SBResourceCopyToAPPX>false</SBResourceCopyToAPPX>
     <StripAppContainerBit>true</StripAppContainerBit>
   </PropertyGroup>
   <PropertyGroup Label="UserMacros" />

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+<Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
+
+  <PropertyGroup>
+    <HasConfigurationSpecificPackageContents Condition="'$(HasConfigurationSpecificPackageContents)' == '' ">false</HasConfigurationSpecificPackageContents>
+    <ShouldAssignPackageContentBasePath Condition="'$(PackageContentBasePath)' == ''">true</ShouldAssignPackageContentBasePath>
+    <PackageContentBasePath Condition="'$(ShouldAssignPackageContentBasePath)' == 'true'">build\lib\$(TargetOsAndVersion)\$(PlatformTarget)</PackageContentBasePath>
+    <PackageContentBasePath Condition="'$(ShouldAssignPackageContentBasePath)' == 'true' and '$(HasConfigurationSpecificPackageContents)' == 'true'">$(PackageContentBasePath)\$(Configuration)</PackageContentBasePath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(ConfigurationType)' == 'DynamicLibrary' or '$(ConfigurationType)' == 'Application'">
+      <GetPackageContentsDependsOn>$(GetPackageContentsDependsOn);$(ComputeLinkInputsTargets)</GetPackageContentsDependsOn>
+  </PropertyGroup>
+
+  <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents"  DependsOnTargets="$(GetPackageContentsDependsOn)" Condition="'$(ConfigurationType)' == 'DynamicLibrary' or '$(ConfigurationType)' == 'Application'">
+    <ItemGroup>
+      <_ImportLibraryFileNames Include="@(Link -> '%(ImportLibrary)')">
+      </_ImportLibraryFileNames>
+      
+      <PackageFile Include="@(BuiltProjectOutputGroupOutput -> '%(FinalOutputPath)')">
+        <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+      
+      <PackageFile Include="@(_ImportLibraryFileNames->Distinct())" Condition="Exists('%(FullPath)')">
+        <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+
+      <PackageFile Include="@(WinMDFullPath)" Condition="'@(WinMDFullPath)' != ''">
+        <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+    </ItemGroup>
+  </Target>
+
+</Project>

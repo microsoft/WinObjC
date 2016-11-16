@@ -19,22 +19,22 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
       <Project>{26DA08DA-D0B9-4579-B168-E7F0A5F20E57}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\OpenGLES\dll\OpenGLES.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\OpenGLES\dll\OpenGLES.vcxproj">
       <Project>{D6F6507B-0C26-4D99-889A-83BF4E313D51}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\QuartzCore\dll\QuartzCore.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\QuartzCore\dll\QuartzCore.vcxproj">
       <Project>{037B568F-4104-417E-9FB8-B6899E398903}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\UIKit\dll\UIKit.vcxproj">
       <Project>{8E79930B-7EF6-4A4E-B46C-EFC0A49C55D9}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\GLKit\lib\GLKitLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\GLKit\lib\GLKitLib.vcxproj">
       <Project>{69003FC3-4890-430D-8527-B81C99781864}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\GLKit\lib\GLKitShaderLib\GLKitShaderLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\GLKit\lib\GLKitShaderLib\GLKitShaderLib.vcxproj">
       <Project>{80B52109-9764-40D9-B55E-22CFB804CC17}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -45,7 +45,7 @@
     <ProjectGuid>{8B71325C-3153-420E-9D7A-D0D2C753481D}</ProjectGuid>
     <RootNamespace>GLKit</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>GLKit</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

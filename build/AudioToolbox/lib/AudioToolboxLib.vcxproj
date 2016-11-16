@@ -45,7 +45,7 @@
     <ProjectName>AudioToolboxLib</ProjectName>
     <RootNamespace>AudioToolboxLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>AudioToolboxLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

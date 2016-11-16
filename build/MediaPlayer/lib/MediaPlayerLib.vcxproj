@@ -62,7 +62,7 @@
     <ProjectName>MediaPlayerLib</ProjectName>
     <RootNamespace>MediaPlayerLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>MediaPlayerLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

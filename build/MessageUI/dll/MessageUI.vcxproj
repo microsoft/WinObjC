@@ -25,10 +25,10 @@
     <None Include="MessageUI.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\UIKit\dll\UIKit.vcxproj">
       <Project>{8e79930b-7ef6-4a4e-b46c-efc0a49c55d9}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\lib\MessageUILib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\MessageUILib.vcxproj">
       <Project>{b9ef64a0-e4f8-4fe5-931d-b07528f7500a}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -36,7 +36,7 @@
     <ProjectGuid>{381F59BF-5F1A-4F19-A949-C78821429E40}</ProjectGuid>
     <RootNamespace>MessageUI</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>MessageUI</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

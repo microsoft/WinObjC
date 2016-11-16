@@ -25,10 +25,10 @@
     <None Include="StoreKit.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\UIKit\dll\UIKit.vcxproj">
       <Project>{8E79930B-7EF6-4A4E-B46C-EFC0A49C55D9}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\lib\StoreKitLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\StoreKitLib.vcxproj">
       <Project>{CC5BF26B-322D-4E39-9555-39C77C1E70A4}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -36,7 +36,7 @@
     <ProjectGuid>{E3D304DB-7308-4516-808C-EC33CCC69FCF}</ProjectGuid>
     <RootNamespace>StoreKit</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>StoreKit</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

@@ -39,7 +39,7 @@
     <ProjectName>EventKitLib</ProjectName>
     <RootNamespace>EventKitLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>EventKitLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

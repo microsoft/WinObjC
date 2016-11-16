@@ -71,7 +71,7 @@
     <ProjectName>CoreGraphicsLib</ProjectName>
     <RootNamespace>CoreGraphicsLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CoreGraphicsLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

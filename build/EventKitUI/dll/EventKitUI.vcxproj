@@ -25,10 +25,10 @@
     <None Include="EventKitUI.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\UIKit\dll\UIKit.vcxproj">
       <Project>{8e79930b-7ef6-4a4e-b46c-efc0a49c55d9}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\lib\EventKitUILib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\EventKitUILib.vcxproj">
       <Project>{543d860f-b4a3-4b9f-b59a-93b825e89f7d}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -36,7 +36,7 @@
     <ProjectGuid>{BECEE6EF-68DC-4870-BEC2-FB5189D7320F}</ProjectGuid>
     <RootNamespace>EventKitUI</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>EventKitUI</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

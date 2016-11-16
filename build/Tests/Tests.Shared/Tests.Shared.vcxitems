@@ -84,4 +84,5 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\include\MockClass.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\unittests\Tests.Shared\ByteUtils.h" />
   </ItemGroup>
+  <Target Name="_GenerateRestoreGraphProjectEntry" />
 </Project>

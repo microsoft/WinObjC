@@ -25,7 +25,7 @@
     <None Include="Metal.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\lib\MetalLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\MetalLib.vcxproj">
       <Project>{7b48e9ad-b809-4919-b9ea-822a87c269bc}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -33,7 +33,7 @@
     <ProjectGuid>{BF6F340B-4EFA-4594-A0A0-CC2CEC13C9BA}</ProjectGuid>
     <RootNamespace>Metal</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>Metal</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

@@ -26,7 +26,7 @@
     <ProjectName>LocalAuthenticationLib</ProjectName>
     <RootNamespace>LocalAuthenticationLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>LocalAuthenticationLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

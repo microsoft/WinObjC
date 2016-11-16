@@ -19,14 +19,26 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\WinObjCRT\dll\WinObjCRT.vcxproj">
-      <Project>{585b4870-0d6b-43a6-8e7e-ad08f7f507b6}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\UIKit.Xaml\dll\UIKit.Xaml.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\UIKit.Xaml\dll\UIKit.Xaml.vcxproj">
       <Project>{1884D8F8-2C05-4334-A778-7D3C5A6736E8}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
-      <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\UIKit\dll\UIKit.vcxproj">
+      <Project>{8E79930B-7EF6-4A4E-B46C-EFC0A49C55D9}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\Foundation\dll\Foundation.vcxproj">
+      <Project>{86127226-9A6E-439B-A070-420A572AF0C7}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
+      <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\AssetsLibrary\dll\AssetsLibrary.vcxproj">
+      <Project>{A3A27F94-66BD-4DEC-892D-1DC8FEED2B5D}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\QuartzCore\dll\QuartzCore.vcxproj">
+      <Project>{037B568F-4104-417E-9FB8-B6899E398903}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
+      <Project>{26DA08DA-D0B9-4579-B168-E7F0A5F20E57}</Project>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -41,9 +53,7 @@
     <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
-    <WINOBJC_SDK_ROOT>..\..\..</WINOBJC_SDK_ROOT>
-    
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -69,9 +79,6 @@
     <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-    <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.props" />
-  </ImportGroup>
   <ImportGroup Label="Shared">
     <Import Project="..\Tests.Shared\Tests.Shared.vcxitems" />
   </ImportGroup>
@@ -88,8 +95,6 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros">
-    <CopyStarboardLibraries>true</CopyStarboardLibraries>
-    <SBResourceCopyToAPPX>false</SBResourceCopyToAPPX>
     <StripAppContainerBit>false</StripAppContainerBit>
   </PropertyGroup>
   <PropertyGroup />
@@ -116,22 +121,23 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>FUNCTIONAL_TEST_FRAMEWORK;INLINE_TEST_METHOD_MARKUP;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(WINOBJC_SDK_ROOT)\include;..\..\..\tests\frameworks\gtest;..\..\..\Frameworks\include;..\..\..\include\xplat;..\..\..\tests\frameworks\gtest\include;..\..\..\tests\functionaltests\Framework;$(MSBuildThisFileDirectory);..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(StarboardBasePath)\include;$(MSBuildThisFileDirectory)..\..\..\tests\frameworks\gtest;$(MSBuildThisFileDirectory)..\..\..\Frameworks\include;$(MSBuildThisFileDirectory)..\..\..\include\xplat;$(MSBuildThisFileDirectory)..\..\..\tests\frameworks\gtest\include;$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Framework;$(MSBuildThisFileDirectory);$(MSBuildThisFileDirectory)..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\..\deps\prebuilt\TAEF\lib\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Wex.Logger.lib;Wex.Common.lib;TE.Common.lib;libdispatch.lib;UIKit.Xaml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(MSBuildThisFileDirectory)..\..\..\deps\prebuilt\TAEF\lib\$(Platform);$(MSBuildThisFileDirectory)..\..\..\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Wex.Logger.lib;Wex.Common.lib;TE.Common.lib;RTObjCInterop.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <IncludePaths>..\..\..\Frameworks\include;..\..\..\Frameworks\UIKit.Xaml;..\..\..\include\xplat;..\..\..\tests\frameworks\include;..\..\..\tests\functionaltests;..\..\..\tests\frameworks\gtest;..\..\..\tests\frameworks\gtest\include;..\..\..\deps\prebuilt\include\TAEF;..\..\..\samples\XAMLCatalog;%(AdditionalIncludeDirectories)</IncludePaths>
+      <IncludePaths>$(MSBuildThisFileDirectory)..\..\..\Frameworks\include;$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml;$(MSBuildThisFileDirectory)..\..\..\include\xplat;$(MSBuildThisFileDirectory)..\..\..\tests\frameworks\include;$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests;$(MSBuildThisFileDirectory)..\..\..\tests\frameworks\gtest;$(MSBuildThisFileDirectory)..\..\..\tests\frameworks\gtest\include;$(MSBuildThisFileDirectory)..\..\..\deps\prebuilt\include\TAEF;..\..\..\samples\XAMLCatalog;%(IncludePaths)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
-      <OtherCPlusPlusFlags>-fmsvc-real-char -Wdeprecated-declarations</OtherCPlusPlusFlags>
+      <OtherCPlusPlusFlags>-Wdeprecated-declarations</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG=1;FUNCTIONAL_TEST_FRAMEWORK</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <InternalSystemIncludePaths>%(InternalSystemIncludePaths);$(MSBuildThisFileDirectory)..\..\..\include\Platform\$(TargetOsAndVersion);$(MSBuildThisFileDirectory)..\..\..\include;</InternalSystemIncludePaths>
     </ClangCompile>
     <PostBuildEvent>
       <Command>For %%f in ("$(ProjectDir)..\..\..\tests\functionaltests\Tests\AssetsLibraryTests\*.mp4") do (xcopy /y %%f "$(TargetDir)\data\")</Command>
@@ -146,7 +152,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>FUNCTIONAL_TEST_FRAMEWORK;INLINE_TEST_METHOD_MARKUP;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(WINOBJC_SDK_ROOT)\include;..\..\..\tests\frameworks\gtest;..\..\..\Frameworks\include;..\..\..\include\xplat;..\..\..\tests\frameworks\gtest\include;..\..\..\tests\functionaltests\Framework;$(MSBuildThisFileDirectory);..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(StarboardBasePath)\include;$(MSBuildThisFileDirectory)..\..\..\tests\frameworks\gtest;$(MSBuildThisFileDirectory)..\..\..\Frameworks\include;$(MSBuildThisFileDirectory)..\..\..\include\xplat;$(MSBuildThisFileDirectory)..\..\..\tests\frameworks\gtest\include;$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Framework;$(MSBuildThisFileDirectory);$(MSBuildThisFileDirectory)..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -155,15 +161,16 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\..\deps\prebuilt\TAEF\lib\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Wex.Logger.lib;Wex.Common.lib;TE.Common.lib;libdispatch.lib;UIKit.Xaml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(MSBuildThisFileDirectory)..\..\..\deps\prebuilt\TAEF\lib\$(Platform);$(MSBuildThisFileDirectory)..\..\..\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Wex.Logger.lib;Wex.Common.lib;TE.Common.lib;RTObjCInterop.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <IncludePaths>..\..\..\Frameworks\include;..\..\..\Frameworks\UIKit.Xaml;..\..\..\include\xplat;..\..\..\tests\frameworks\include;..\..\..\tests\functionaltests;..\..\..\tests\frameworks\gtest;..\..\..\tests\frameworks\gtest\include;..\..\..\deps\prebuilt\include\TAEF;..\..\..\samples\XAMLCatalog;%(AdditionalIncludeDirectories)</IncludePaths>
+      <IncludePaths>$(MSBuildThisFileDirectory)..\..\..\Frameworks\include;$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml;$(MSBuildThisFileDirectory)..\..\..\include\xplat;$(MSBuildThisFileDirectory)..\..\..\tests\frameworks\include;$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests;$(MSBuildThisFileDirectory)..\..\..\tests\frameworks\gtest;$(MSBuildThisFileDirectory)..\..\..\tests\frameworks\gtest\include;$(MSBuildThisFileDirectory)..\..\..\deps\prebuilt\include\TAEF;..\..\..\samples\XAMLCatalog;%(IncludePaths)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
-      <OtherCPlusPlusFlags>-fmsvc-real-char -Wdeprecated-declarations</OtherCPlusPlusFlags>
+      <OtherCPlusPlusFlags>-Wdeprecated-declarations</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG=1;FUNCTIONAL_TEST_FRAMEWORK</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <InternalSystemIncludePaths>%(InternalSystemIncludePaths);$(MSBuildThisFileDirectory)..\..\..\include\Platform\$(TargetOsAndVersion);$(MSBuildThisFileDirectory)..\..\..\include;</InternalSystemIncludePaths>
     </ClangCompile>
     <PostBuildEvent>
       <Command>For %%f in ("$(ProjectDir)..\..\..\tests\functionaltests\Tests\AssetsLibraryTests\*.mp4") do (xcopy /y %%f "$(TargetDir)\data\")</Command>
@@ -176,22 +183,23 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>FUNCTIONAL_TEST_FRAMEWORK;INLINE_TEST_METHOD_MARKUP;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(WINOBJC_SDK_ROOT)\include;..\..\..\tests\frameworks\gtest;..\..\..\Frameworks\include;..\..\..\include\xplat;..\..\..\tests\frameworks\gtest\include;..\..\..\tests\functionaltests\Framework;$(MSBuildThisFileDirectory);..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(StarboardBasePath)\include;$(MSBuildThisFileDirectory)..\..\..\tests\frameworks\gtest;$(MSBuildThisFileDirectory)..\..\..\Frameworks\include;$(MSBuildThisFileDirectory)..\..\..\include\xplat;$(MSBuildThisFileDirectory)..\..\..\tests\frameworks\gtest\include;$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Framework;$(MSBuildThisFileDirectory);$(MSBuildThisFileDirectory)..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\..\deps\prebuilt\TAEF\lib\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Wex.Logger.lib;Wex.Common.lib;TE.Common.lib;libdispatch.lib;UIKit.Xaml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(MSBuildThisFileDirectory)..\..\..\deps\prebuilt\TAEF\lib\$(Platform);$(MSBuildThisFileDirectory)..\..\..\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Wex.Logger.lib;Wex.Common.lib;TE.Common.lib;RTObjCInterop.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <IncludePaths>..\..\..\Frameworks\include;..\..\..\Frameworks\UIKit.Xaml;..\..\..\include\xplat;..\..\..\tests\frameworks\include;..\..\..\tests\functionaltests;..\..\..\tests\frameworks\gtest;..\..\..\tests\frameworks\gtest\include;..\..\..\deps\prebuilt\include\TAEF;..\..\..\samples\XAMLCatalog;%(AdditionalIncludeDirectories)</IncludePaths>
+      <IncludePaths>$(MSBuildThisFileDirectory)..\..\..\Frameworks\include;$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml;$(MSBuildThisFileDirectory)..\..\..\include\xplat;$(MSBuildThisFileDirectory)..\..\..\tests\frameworks\include;$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests;$(MSBuildThisFileDirectory)..\..\..\tests\frameworks\gtest;$(MSBuildThisFileDirectory)..\..\..\tests\frameworks\gtest\include;$(MSBuildThisFileDirectory)..\..\..\deps\prebuilt\include\TAEF;..\..\..\samples\XAMLCatalog;%(IncludePaths)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
-      <OtherCPlusPlusFlags>-fmsvc-real-char -Wdeprecated-declarations</OtherCPlusPlusFlags>
+      <OtherCPlusPlusFlags>-Wdeprecated-declarations</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG=1;FUNCTIONAL_TEST_FRAMEWORK</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <InternalSystemIncludePaths>%(InternalSystemIncludePaths);$(MSBuildThisFileDirectory)..\..\..\include\Platform\$(TargetOsAndVersion);$(MSBuildThisFileDirectory)..\..\..\include;</InternalSystemIncludePaths>
     </ClangCompile>
     <PostBuildEvent>
       <Command>For %%f in ("$(ProjectDir)..\..\..\tests\functionaltests\Tests\AssetsLibraryTests\*.mp4") do (xcopy /y %%f "$(TargetDir)\data\")</Command>
@@ -206,7 +214,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>FUNCTIONAL_TEST_FRAMEWORK;INLINE_TEST_METHOD_MARKUP;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(WINOBJC_SDK_ROOT)\include;..\..\..\tests\frameworks\gtest;..\..\..\Frameworks\include;..\..\..\include\xplat;..\..\..\tests\frameworks\gtest\include;..\..\..\tests\functionaltests\Framework;$(MSBuildThisFileDirectory);..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(StarboardBasePath)\include;$(MSBuildThisFileDirectory)..\..\..\tests\frameworks\gtest;$(MSBuildThisFileDirectory)..\..\..\Frameworks\include;$(MSBuildThisFileDirectory)..\..\..\include\xplat;$(MSBuildThisFileDirectory)..\..\..\tests\frameworks\gtest\include;$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Framework;$(MSBuildThisFileDirectory);$(MSBuildThisFileDirectory)..\..\..\deps\prebuilt\include\TAEF;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -215,15 +223,16 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\..\deps\prebuilt\TAEF\lib\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Wex.Logger.lib;Wex.Common.lib;TE.Common.lib;libdispatch.lib;UIKit.Xaml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(MSBuildThisFileDirectory)..\..\..\deps\prebuilt\TAEF\lib\$(Platform);$(MSBuildThisFileDirectory)..\..\..\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Wex.Logger.lib;Wex.Common.lib;TE.Common.lib;RTObjCInterop.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <IncludePaths>..\..\..\Frameworks\include;..\..\..\Frameworks\UIKit.Xaml;..\..\..\include\xplat;..\..\..\tests\frameworks\include;..\..\..\tests\functionaltests;..\..\..\tests\frameworks\gtest;..\..\..\tests\frameworks\gtest\include;..\..\..\deps\prebuilt\include\TAEF;..\..\..\samples\XAMLCatalog;%(AdditionalIncludeDirectories)</IncludePaths>
+      <IncludePaths>$(MSBuildThisFileDirectory)..\..\..\Frameworks\include;$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml;$(MSBuildThisFileDirectory)..\..\..\include\xplat;$(MSBuildThisFileDirectory)..\..\..\tests\frameworks\include;$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests;$(MSBuildThisFileDirectory)..\..\..\tests\frameworks\gtest;$(MSBuildThisFileDirectory)..\..\..\tests\frameworks\gtest\include;$(MSBuildThisFileDirectory)..\..\..\deps\prebuilt\include\TAEF;..\..\..\samples\XAMLCatalog;%(IncludePaths)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
-      <OtherCPlusPlusFlags>-fmsvc-real-char -Wdeprecated-declarations</OtherCPlusPlusFlags>
+      <OtherCPlusPlusFlags>-Wdeprecated-declarations</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG=1;FUNCTIONAL_TEST_FRAMEWORK</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <InternalSystemIncludePaths>%(InternalSystemIncludePaths);$(MSBuildThisFileDirectory)..\..\..\include\Platform\$(TargetOsAndVersion);$(MSBuildThisFileDirectory)..\..\..\include;</InternalSystemIncludePaths>
     </ClangCompile>
     <PostBuildEvent>
       <Command>For %%f in ("$(ProjectDir)..\..\..\tests\functionaltests\Tests\AssetsLibraryTests\*.mp4") do (xcopy /y %%f "$(TargetDir)\data\")</Command>
@@ -302,9 +311,7 @@
     <Copy DestinationFolder="$(OutDir)" SkipUnchangedFiles="True" SourceFiles="@(Xml)" />
   </Target>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.targets" />
-  </ImportGroup>
+  <Import Project="$(StarboardBasePath)\msvc\ut-build.props" />
   <Target Name="Build" DependsOnTargets="$(BuildDependsOn)" />
   <ItemGroup>
     <None Include="Project.json" />

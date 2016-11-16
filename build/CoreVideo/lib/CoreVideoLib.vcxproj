@@ -35,7 +35,7 @@
     <ProjectName>CoreVideoLib</ProjectName>
     <RootNamespace>CoreVideoLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CoreVideoLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

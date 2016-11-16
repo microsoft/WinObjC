@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\lib\GameControllerLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\GameControllerLib.vcxproj">
       <Project>{42C2C44C-1287-42CB-95CF-6647AD207B99}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -33,7 +33,7 @@
     <ProjectGuid>{2579905C-13D6-459A-952C-655C3071AC11}</ProjectGuid>
     <RootNamespace>GameController</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>GameController</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

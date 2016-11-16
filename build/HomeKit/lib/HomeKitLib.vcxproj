@@ -42,7 +42,7 @@
     <ProjectName>HomeKitLib</ProjectName>
     <RootNamespace>HomeKitLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>HomeKitLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

@@ -1,6 +1,8 @@
 ﻿{
   "dependencies": {
-    "WinObjC.Build": "0.0.1-*"
+    "GitInfo": "1.1.32",
+    "NuGet.Build.Packaging": "0.1.173",
+    "WinObjC.Language": "0.2.160915-*"
   },
   "frameworks": {
     "uap10.0": {}

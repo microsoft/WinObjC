@@ -55,7 +55,7 @@
     <ProjectName>QuartzCoreLib</ProjectName>
     <RootNamespace>QuartzCoreLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>QuartzCoreLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

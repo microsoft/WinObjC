@@ -25,7 +25,7 @@
     <None Include="AudioUnit.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\lib\AudioUnitLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\AudioUnitLib.vcxproj">
       <Project>{9480DE11-8D5F-4AAA-A9E7-6BB1922BF8EA}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -33,7 +33,7 @@
     <ProjectGuid>{EE23E2CA-3642-40A6-AD92-464865694A01}</ProjectGuid>
     <RootNamespace>AudioUnit</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>AudioUnit</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

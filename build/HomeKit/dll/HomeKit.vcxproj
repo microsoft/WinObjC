@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\HomeKit\lib\HomeKitLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\HomeKit\lib\HomeKitLib.vcxproj">
       <Project>{E0329C98-BDEC-4C5E-8396-ACA8771F8671}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -33,7 +33,7 @@
     <ProjectGuid>{45950D61-FE82-4094-B138-8929348215B3}</ProjectGuid>
     <RootNamespace>HomeKit</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>HomeKit</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

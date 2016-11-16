@@ -25,10 +25,10 @@
     <None Include="iAd.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\UIKit\dll\UIKit.vcxproj">
       <Project>{8e79930b-7ef6-4a4e-b46c-efc0a49c55d9}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\lib\iAdLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\iAdLib.vcxproj">
       <Project>{8a77599c-fddc-4688-8b8c-58289044dd13}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -36,7 +36,7 @@
     <ProjectGuid>{1105278c-c479-4474-ad33-e611583cdd6a}</ProjectGuid>
     <RootNamespace>iAd</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>iAd</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

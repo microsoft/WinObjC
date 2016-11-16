@@ -31,7 +31,6 @@
     <Keyword>IslandwoodProj</Keyword>
     <ProjectGuid>{DEA0BDF0-0390-4A0A-AFE0-B1BDEA3020CE}</ProjectGuid>
     <RootNamespace>WOCCatalog</RootNamespace>
-    <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">..\..\..\..</WINOBJC_SDK_ROOT>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -59,9 +58,6 @@
     <TargetName>WOCCatalog</TargetName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-    <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.props" />
-  </ImportGroup>
   <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -98,7 +94,6 @@
     </ClangCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);Accelerate.lib;AudioToolbox.lib;CoreImage.lib;CoreMotion.lib;GLKit.lib;OpenGLES.lib</AdditionalDependencies>
     </Link>
     <SBInfoPlistCopy>
       <ExcludedFromBuild>true</ExcludedFromBuild>
@@ -122,7 +117,6 @@
     </ClangCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);Accelerate.lib;AudioToolbox.lib;CoreImage.lib;CoreMotion.lib;GLKit.lib;OpenGLES.lib</AdditionalDependencies>
     </Link>
     <SBInfoPlistCopy>
       <ExcludedFromBuild>true</ExcludedFromBuild>
@@ -143,7 +137,6 @@
     </ClangCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);Accelerate.lib;AudioToolbox.lib;CoreImage.lib;CoreMotion.lib;GLKit.lib;OpenGLES.lib</AdditionalDependencies>
     </Link>
     <SBInfoPlistCopy>
       <ExcludedFromBuild>true</ExcludedFromBuild>
@@ -164,7 +157,6 @@
     </ClangCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);Accelerate.lib;AudioToolbox.lib;CoreImage.lib;CoreMotion.lib;GLKit.lib;OpenGLES.lib</AdditionalDependencies>
     </Link>
     <SBInfoPlistCopy>
       <ExcludedFromBuild>true</ExcludedFromBuild>
@@ -317,9 +309,8 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="project.json"/>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.targets" />
-  </ImportGroup>
 </Project>

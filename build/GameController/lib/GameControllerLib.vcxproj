@@ -36,7 +36,7 @@
     <ProjectName>GameControllerLib</ProjectName>
     <RootNamespace>GameControllerLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>GameControllerLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

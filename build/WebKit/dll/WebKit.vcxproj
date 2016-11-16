@@ -25,10 +25,10 @@
     <None Include="WebKit.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\UIKit\dll\UIKit.vcxproj">
       <Project>{8e79930b-7ef6-4a4e-b46c-efc0a49c55d9}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\lib\WebKitLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\WebKitLib.vcxproj">
       <Project>{cb45df6d-66ef-42cc-9bf9-f2a96c954eba}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -36,7 +36,7 @@
     <ProjectGuid>{B062D935-0F98-4F45-B3E3-EB67AE2703A2}</ProjectGuid>
     <RootNamespace>WebKit</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>WebKit</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

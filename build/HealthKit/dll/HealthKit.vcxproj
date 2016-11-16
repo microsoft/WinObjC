@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\HealthKit\lib\HealthKitLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\HealthKit\lib\HealthKitLib.vcxproj">
       <Project>{AFD46DD2-1CE7-4572-B931-E39334846AD6}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -33,7 +33,7 @@
     <ProjectGuid>{900D8A3B-A866-4A3E-8697-FF8026167E38}</ProjectGuid>
     <RootNamespace>HealthKit</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>HealthKit</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

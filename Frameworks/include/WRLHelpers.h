@@ -16,7 +16,10 @@
 
 #pragma once
 
+#ifdef __OBJC__
 #include "Starboard.h"
+#endif
+
 #include <utility>
 #include <functional>
 
@@ -125,8 +128,9 @@ HRESULT ForEach(const Microsoft::WRL::ComPtr<T>& source, Q&& functor) {
 // Helps with iterating an IPropertySet. Calls a functor on each element with the value it found.
 template <typename Q>
 HRESULT ForEach(ABI::Windows::Foundation::Collections::IPropertySet* propertySet, Q&& functor) {
-    Microsoft::WRL::ComPtr<ABI::Windows::Foundation::Collections::IIterable<
-        ABI::Windows::Foundation::Collections::IKeyValuePair<HSTRING, IInspectable*>*>> iter;
+    Microsoft::WRL::ComPtr<
+        ABI::Windows::Foundation::Collections::IIterable<ABI::Windows::Foundation::Collections::IKeyValuePair<HSTRING, IInspectable*>*>>
+        iter;
 
     RETURN_IF_FAILED(propertySet->QueryInterface(IID_PPV_ARGS(&iter)));
 
@@ -205,8 +209,7 @@ HRESULT Await(TI* pThing, TPFN pfn, Args&&... args) {
 }
 
 template <typename TI, typename... Args>
-HRESULT Await(const Microsoft::WRL::ComPtr<TI>& pThing,
-                    Args&&... args) {
+HRESULT Await(const Microsoft::WRL::ComPtr<TI>& pThing, Args&&... args) {
     return Await(pThing.Get(), std::forward<Args>(args)...);
 }
 
@@ -354,8 +357,7 @@ HRESULT AwaitResult(TI* pThing,
 }
 
 template <typename TI, typename... Args>
-HRESULT AwaitResult(const Microsoft::WRL::ComPtr<TI>& pThing,
-                    Args&&... args) {
+HRESULT AwaitResult(const Microsoft::WRL::ComPtr<TI>& pThing, Args&&... args) {
     return AwaitResult(pThing.Get(), std::forward<Args>(args)...);
 }
 
@@ -500,11 +502,9 @@ HRESULT AwaitProgressComplete(
 }
 
 template <typename TI, typename... Args>
-HRESULT AwaitProgressComplete(const Microsoft::WRL::ComPtr<TI>& pThing,
-                    Args&&... args) {
+HRESULT AwaitProgressComplete(const Microsoft::WRL::ComPtr<TI>& pThing, Args&&... args) {
     return AwaitProgressComplete(pThing.Get(), std::forward<Args>(args)...);
 }
-
 
 template <typename TDelegateInterface, typename... Args>
 ::Microsoft::WRL::ComPtr<TDelegateInterface> MakeAgileCallbackNoThrow(Args&&... args) WI_NOEXCEPT {

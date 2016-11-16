@@ -25,13 +25,13 @@
     <None Include="ImageIO.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
       <Project>{26DA08DA-D0B9-4579-B168-E7F0A5F20E57}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
         <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\lib\ImageIOLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\ImageIOLib.vcxproj">
       <Project>{ba535474-97e6-4fcf-8711-0f0374487fa9}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -39,7 +39,7 @@
     <ProjectGuid>{81B44F5A-DA8C-4699-BB4D-2C6DA20DD324}</ProjectGuid>
     <RootNamespace>ImageIO</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>ImageIO</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

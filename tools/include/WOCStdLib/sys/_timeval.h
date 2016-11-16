@@ -37,6 +37,7 @@ typedef __suseconds_t suseconds_t;
 #define _SUSECONDS_T_DECLARED
 #endif
 
+#ifdef __clang__
 #pragma push_macro("WIN32")
 
 #include <Winsock2.h>
@@ -50,5 +51,6 @@ typedef __suseconds_t suseconds_t;
 #undef OUT
 
 #pragma pop_macro("WIN32")
+#endif
 
 #endif /* !_SYS__TIMEVAL_H_ */

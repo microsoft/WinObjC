@@ -25,10 +25,10 @@
     <None Include="GameKit.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\UIKit\dll\UIKit.vcxproj">
       <Project>{8e79930b-7ef6-4a4e-b46c-efc0a49c55d9}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\lib\GameKitLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\GameKitLib.vcxproj">
       <Project>{7cb50e9b-12a0-4db0-a70c-59043a266ab4}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -36,7 +36,7 @@
     <ProjectGuid>{9E71CC6E-99C0-4F4F-8232-7505F942EF08}</ProjectGuid>
     <RootNamespace>GameKit</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>GameKit</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\LocalAuthentication\lib\LocalAuthenticationLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\LocalAuthentication\lib\LocalAuthenticationLib.vcxproj">
       <Project>{A905201C-4CF2-4FF3-8D99-9DE5EF4959FD}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -33,7 +33,7 @@
     <ProjectGuid>{4C01987C-FEE1-445A-B7E6-BA31EA229047}</ProjectGuid>
     <RootNamespace>LocalAuthentication</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>LocalAuthentication</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

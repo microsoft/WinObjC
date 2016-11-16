@@ -37,7 +37,7 @@
     <ProjectName>AudioUnitLib</ProjectName>
     <RootNamespace>AudioUnit</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>AudioUnitLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

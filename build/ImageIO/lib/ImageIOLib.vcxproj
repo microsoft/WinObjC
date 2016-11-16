@@ -28,7 +28,7 @@
     <ProjectName>ImageIOLib</ProjectName>
     <RootNamespace>ImageIOLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>ImageIOLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

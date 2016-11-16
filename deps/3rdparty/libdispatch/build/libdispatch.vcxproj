@@ -85,13 +85,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IntDir>$(SolutionDir)obj\$(Platform)\$(TargetOsAndVersion)\$(Configuration)\</IntDir>
     <IncludePath>.;$(IncludePath)</IncludePath>
-    <IslandwoodDRT>false</IslandwoodDRT>
+    
     <TargetName>libdispatch</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <IntDir>$(SolutionDir)obj\$(Platform)\$(TargetOsAndVersion)\$(Configuration)\</IntDir>
     <IncludePath>.;$(IncludePath)</IncludePath>
-    <IslandwoodDRT>false</IslandwoodDRT>
+    
     <TargetName>libdispatch</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -103,13 +103,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(SolutionDir)obj\$(Platform)\$(TargetOsAndVersion)\$(Configuration)\</IntDir>
     <IncludePath>.;$(IncludePath)</IncludePath>
-    <IslandwoodDRT>false</IslandwoodDRT>
+    
     <TargetName>libdispatch</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <IntDir>$(SolutionDir)obj\$(Platform)\$(TargetOsAndVersion)\$(Configuration)\</IntDir>
     <IncludePath>.;$(IncludePath)</IncludePath>
-    <IslandwoodDRT>false</IslandwoodDRT>
+    
     <TargetName>libdispatch</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

@@ -37,7 +37,7 @@ static const wchar_t* TAG = L"EbrFile";
 
 std::mutex EbrFile::s_fileMapLock{};
 std::map<int, std::shared_ptr<EbrFile>> EbrFile::s_fileMap{};
-int EbrFile::s_maxFileId{0};
+int EbrFile::s_maxFileId{ 0 };
 
 std::shared_ptr<EbrFile> EbrFile::GetFile(int fid) {
     std::lock_guard<std::mutex> guard(s_fileMapLock);
@@ -80,17 +80,16 @@ int EbrOpen(const char* file, int mode, int share) {
 }
 
 int EbrOpenWithPermission(const char* file, int mode, int share, int pmode) {
-
     std::shared_ptr<EbrFile> fileToAdd;
 
     // Special random number device. Just a stub.
     fileToAdd = EbrDevRandomFile::CreateInstance(file, mode, share, pmode);
-    
+
     if (!fileToAdd) {
         // Special file type for cached storage files.
         fileToAdd = EbrStorageFile::CreateInstance(file, mode, share, pmode);
-    } 
-    
+    }
+
     if (!fileToAdd) {
         // No more special types. Assume its a real file.
         fileToAdd = EbrIOFile::CreateInstance(file, mode, share, pmode);

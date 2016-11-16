@@ -18,6 +18,7 @@
 #include "Accelerate/vImage.h"
 #include "ErrorHandling.h"
 #include "LoggingNative.h"
+#include "IwMalloc.h"
 #include <algorithm>
 #include <new>
 

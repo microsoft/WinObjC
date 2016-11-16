@@ -25,13 +25,13 @@
     <None Include="AdSupport.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Foundation\dll\Foundation.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\Foundation\dll\Foundation.vcxproj">
       <Project>{86127226-9a6e-439b-a070-420a572af0c7}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\Starboard\dll\Starboard.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\Starboard\dll\Starboard.vcxproj">
       <Project>{0ac27ecf-e2ab-420b-9359-4843fff4cbfa}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\lib\AdSupportLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\AdSupportLib.vcxproj">
       <Project>{cc660634-40d3-4610-828e-88a95608f9e7}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -39,7 +39,7 @@
     <ProjectGuid>{416B5721-5517-4A63-A9CC-2D59F15D8174}</ProjectGuid>
     <RootNamespace>AdSupport</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>AdSupport</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

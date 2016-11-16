@@ -561,6 +561,6 @@
     <ResourceCompile Include="vsimporter.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="Project.json" />
   </ItemGroup>
 </Project>

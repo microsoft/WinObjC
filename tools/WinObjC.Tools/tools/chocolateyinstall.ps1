@@ -21,7 +21,7 @@ Write-Host "Installing Objective-C Visual Studio Extension ... "
 Install-ChocolateyVsixPackage -PackageName "objc-syntax-highlighting" -VsixUrl "file:///$toolsDir/objc-syntax-highlighting.vsix"
 
 Write-Host "Installing Nugetizer Visual Studio Extension ... "
-Install-ChocolateyVsixPackage -PackageName "Nugetizer3000" -VsixUrl "http://bit.ly/nugetizer3000"
+Install-ChocolateyVsixPackage -PackageName "Nugetizer3000" -VsixUrl "http://bit.ly/nugetizer2015"
 
 # if removing $url64, please remove from here
 # despite the name "Install-ChocolateyZipPackage" this also works with 7z archives

@@ -149,4 +149,7 @@
       <UniqueIdentifier>{1beaf0a2-ff8a-415b-ac31-aeb41c89f25d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Project.json" />
+  </ItemGroup>
 </Project>

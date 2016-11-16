@@ -27,7 +27,7 @@
     <ProjectName>CoreAudioKitLib</ProjectName>
     <RootNamespace>CoreAudioKitLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CoreAudioKitLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

@@ -29,7 +29,7 @@
     <ProjectName>SocialLib</ProjectName>
     <RootNamespace>SocialLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>SocialLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

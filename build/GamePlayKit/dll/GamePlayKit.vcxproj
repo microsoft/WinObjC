@@ -25,7 +25,7 @@
     <None Include="GamePlayKit.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\lib\GamePlayKitLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\GamePlayKitLib.vcxproj">
       <Project>{33cbf4b3-6d14-426b-aed4-6b674bac23b1}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -33,7 +33,7 @@
     <ProjectGuid>{3838E18C-B766-4461-8888-A9AC1E9DF998}</ProjectGuid>
     <RootNamespace>GamePlayKit</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>GamePlayKit</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
