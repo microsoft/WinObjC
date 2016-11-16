@@ -40,7 +40,7 @@ TEST(NSFileManager, GetAttributes) {
 // _stat and _wstat are MS extensions
 #if TARGET_OS_WIN32
     struct _stat fileStatus = { 0 };
-    ASSERT_TRUE(::_wstat(fullPath, &fileStatus) == 0);
+    ASSERT_TRUE(::_stat([testFileFullPath UTF8String], &fileStatus) == 0);
 #else
     struct stat fileStatus = { 0 };
     ASSERT_TRUE(stat([testFileFullPath UTF8String], &fileStatus) == 0);
