@@ -150,8 +150,7 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
     for (auto const& pointer : [gesture _getTouches]) {
         UITouch* touch = pointer.touch;
         // start direct manipulation only if active touch presents
-        if (touch.phase != UITouchPhaseCancelled && 
-            touch.phase != UITouchPhaseEnded &&
+        if (touch.phase != UITouchPhaseCancelled && touch.phase != UITouchPhaseEnded &&
             touch->_routedEventArgs.pointer.pointerDeviceType == WDIPointerDeviceTypeTouch) {
             if (![WXFrameworkElement tryStartDirectManipulation:touch->_routedEventArgs.pointer]) {
                 TraceWarning(TAG, L"DManip failed to start");
@@ -1319,7 +1318,8 @@ static void setContentOffsetKVOed(UIScrollView* self, CGPoint offs) {
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes UIScrollView does not support negative content insets. Clamped to 0 if insets values < 0.
 */
 - (void)setContentInset:(UIEdgeInsets)inset {
     if (DEBUG_VERBOSE) {
@@ -1333,6 +1333,27 @@ static void setContentOffsetKVOed(UIScrollView* self, CGPoint offs) {
 
     if (memcmp(&_contentInset, &inset, sizeof(UIEdgeInsets)) == 0) {
         return;
+    }
+
+    // Clamp inset values to 0 if they are negative
+    if (inset.top < 0.0f) {
+        TraceWarning(TAG, L"setContentInset: Clamping inset.top to 0");
+        inset.top = 0.0f;
+    }
+
+    if (inset.right < 0.0f) {
+        TraceWarning(TAG, L"setContentInset: Clamping inset.right to 0");
+        inset.right = 0.0f;
+    }
+
+    if (inset.bottom < 0.0f) {
+        TraceWarning(TAG, L"setContentInset: Clamping inset.bottom to 0");
+        inset.bottom = 0.0f;
+    }
+
+    if (inset.left < 0.0f) {
+        TraceWarning(TAG, L"setContentInset: Clamping inset.left to 0");
+        inset.left = 0.0f;
     }
 
     _contentInset = inset;

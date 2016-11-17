@@ -14,21 +14,13 @@
 //
 //******************************************************************************
 
-#import "StoryBoardViewController.h"
+#import <UIKit/UIKit.h>
+#import "PickerViewTableViewCell.h"
+#import "LayerTableViewCell.h"
 
-@implementation StoryBoardViewController
+extern const CGFloat kPadding;
+extern const CGFloat kPropertyCellHeight;
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-
-    // TODO: We should add storyboard tests that will exercise the CoreAnimation/CALayer APIs and properties. Re-enable in the future.
-
-    // Main storyboard view
-    // UIStoryboard* xamlStoryBoard = [UIStoryboard storyboardWithName:@"CoreAnimationTest" bundle:[NSBundle mainBundle]];
-
-    // CALayer
-    // UIViewController* caLayerVC = [xamlStoryBoard instantiateViewControllerWithIdentifier:@"CALayerSB"];
-    //[self addMenuItemViewController:caLayerVC andTitle:@"CALayerSB"];
-}
+@interface CALayerMultipleViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, PickerViewTableViewCellDelegate, LayerTableViewCellDelegate>
 
 @end

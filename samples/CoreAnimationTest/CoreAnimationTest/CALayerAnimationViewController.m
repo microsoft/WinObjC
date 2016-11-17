@@ -37,55 +37,53 @@
     _photo = [UIImage imageNamed:@"safe.png"];
 
     _imageViewLeftTop = [[UIImageView alloc] initWithImage:_photo];
-    _imageViewLeftTop.layer.frame = CGRectMake(self.view.frame.origin.x,
-                                              self.view.frame.origin.y,
-                                              self.view.frame.size.width/3,
-                                              self.view.frame.size.height/2);
+    _imageViewLeftTop.layer.frame =
+        CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width / 3, self.view.frame.size.height / 2);
     [_imageViewLeftTop setContentMode:UIViewContentModeScaleAspectFit];
     _imageViewLeftTop.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.view addSubview:_imageViewLeftTop];
 
     _imageViewMidTop = [[UIImageView alloc] initWithImage:_photo];
-    _imageViewMidTop.layer.frame = CGRectMake(self.view.frame.origin.x + self.view.frame.size.width/3,
-                                               self.view.frame.origin.y,
-                                               self.view.frame.size.width/3,
-                                               self.view.frame.size.height/2);
+    _imageViewMidTop.layer.frame = CGRectMake(self.view.frame.origin.x + self.view.frame.size.width / 3,
+                                              self.view.frame.origin.y,
+                                              self.view.frame.size.width / 3,
+                                              self.view.frame.size.height / 2);
     [_imageViewMidTop setContentMode:UIViewContentModeScaleAspectFit];
     _imageViewMidTop.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.view addSubview:_imageViewMidTop];
 
     _imageViewRightTop = [[UIImageView alloc] initWithImage:_photo];
-    _imageViewRightTop.layer.frame = CGRectMake(self.view.frame.origin.x + 2 * self.view.frame.size.width/3,
-                                               self.view.frame.origin.y,
-                                               self.view.frame.size.width/3,
-                                               self.view.frame.size.height/2);
+    _imageViewRightTop.layer.frame = CGRectMake(self.view.frame.origin.x + 2 * self.view.frame.size.width / 3,
+                                                self.view.frame.origin.y,
+                                                self.view.frame.size.width / 3,
+                                                self.view.frame.size.height / 2);
     [_imageViewRightTop setContentMode:UIViewContentModeScaleAspectFit];
     _imageViewRightTop.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.view addSubview:_imageViewRightTop];
 
     _imageViewLeftBottom = [[UIImageView alloc] initWithImage:_photo];
     _imageViewLeftBottom.layer.frame = CGRectMake(self.view.frame.origin.x,
-                                                 self.view.frame.origin.y + self.view.frame.size.height/2,
-                                                 self.view.frame.size.width/3,
-                                                 self.view.frame.size.width/3);
+                                                  self.view.frame.origin.y + self.view.frame.size.height / 2,
+                                                  self.view.frame.size.width / 3,
+                                                  self.view.frame.size.width / 3);
     [_imageViewLeftBottom setContentMode:UIViewContentModeScaleAspectFit];
     _imageViewLeftBottom.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.view addSubview:_imageViewLeftBottom];
 
     _imageViewMidBottom = [[UIImageView alloc] initWithImage:_photo];
-    _imageViewMidBottom.layer.frame = CGRectMake(self.view.frame.origin.x + self.view.frame.size.width/3,
-                                                 self.view.frame.origin.y + self.view.frame.size.height/2,
-                                                 self.view.frame.size.width/3,
-                                                 self.view.frame.size.width/3);
+    _imageViewMidBottom.layer.frame = CGRectMake(self.view.frame.origin.x + self.view.frame.size.width / 3,
+                                                 self.view.frame.origin.y + self.view.frame.size.height / 2,
+                                                 self.view.frame.size.width / 3,
+                                                 self.view.frame.size.width / 3);
     [_imageViewMidBottom setContentMode:UIViewContentModeScaleAspectFit];
     _imageViewMidBottom.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [self.view addSubview: _imageViewMidBottom];
+    [self.view addSubview:_imageViewMidBottom];
 
     _imageViewRightBottom = [[UIImageView alloc] initWithImage:_photo];
-    _imageViewRightBottom.layer.frame = CGRectMake(self.view.frame.origin.x + 2 * self.view.frame.size.width/3,
-                                                 self.view.frame.origin.y + self.view.frame.size.height/2,
-                                                 self.view.frame.size.width/3,
-                                                 self.view.frame.size.width/3);
+    _imageViewRightBottom.layer.frame = CGRectMake(self.view.frame.origin.x + 2 * self.view.frame.size.width / 3,
+                                                   self.view.frame.origin.y + self.view.frame.size.height / 2,
+                                                   self.view.frame.size.width / 3,
+                                                   self.view.frame.size.width / 3);
     [_imageViewRightBottom setContentMode:UIViewContentModeScaleAspectFit];
     _imageViewRightBottom.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.view addSubview:_imageViewRightBottom];
@@ -94,8 +92,11 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    CGRect fromRect = CGRectMake(0, 0, _photo.size.width/4, _photo.size.height/4);
-    CGRect byRect = CGRectMake(0, 0, _imageViewLeftTop.layer.frame.size.width/2 - _photo.size.width/4, _imageViewLeftTop.layer.frame.size.height/2 - _photo.size.width/4);
+    CGRect fromRect = CGRectMake(0, 0, _photo.size.width / 4, _photo.size.height / 4);
+    CGRect byRect = CGRectMake(0,
+                               0,
+                               _imageViewLeftTop.layer.frame.size.width / 2 - _photo.size.width / 4,
+                               _imageViewLeftTop.layer.frame.size.height / 2 - _photo.size.width / 4);
     _animation.keyPath = @"bounds";
     _animation.fromValue = [NSValue valueWithCGRect:fromRect];
     _animation.toValue = nil;
@@ -105,7 +106,7 @@
     _animation.repeatCount = HUGE_VALF;
     [_imageViewLeftTop.layer addAnimation:_animation forKey:@"boundsAnimation"];
 
-    CGRect toRect = CGRectMake(0, 0, _imageViewMidTop.layer.frame.size.width/2, _imageViewMidTop.layer.frame.size.height/2);
+    CGRect toRect = CGRectMake(0, 0, _imageViewMidTop.layer.frame.size.width / 2, _imageViewMidTop.layer.frame.size.height / 2);
     _animation.keyPath = @"bounds";
     _animation.fromValue = nil;
     _animation.toValue = [NSValue valueWithCGRect:toRect];

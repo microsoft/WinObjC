@@ -14,21 +14,12 @@
 //
 //******************************************************************************
 
-#import "StoryBoardViewController.h"
+#import <UIKit/UIKit.h>
 
-@implementation StoryBoardViewController
+@interface PropertyTableViewCell : UITableViewCell
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
+@property UILabel* titleLabel;
 
-    // TODO: We should add storyboard tests that will exercise the CoreAnimation/CALayer APIs and properties. Re-enable in the future.
-
-    // Main storyboard view
-    // UIStoryboard* xamlStoryBoard = [UIStoryboard storyboardWithName:@"CoreAnimationTest" bundle:[NSBundle mainBundle]];
-
-    // CALayer
-    // UIViewController* caLayerVC = [xamlStoryBoard instantiateViewControllerWithIdentifier:@"CALayerSB"];
-    //[self addMenuItemViewController:caLayerVC andTitle:@"CALayerSB"];
-}
+- (void)setDisabled:(BOOL)disabled;
 
 @end

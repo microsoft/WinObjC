@@ -42,11 +42,11 @@ typedef enum : NSUInteger { LineJoinMiter, LineJoinRound, LineJoinBevel } LineJo
     self.openPath = [UIBezierPath bezierPath];
     [self.openPath moveToPoint:(CGPoint){ 30.0f, 196.0f }];
     [self.openPath addCurveToPoint:(CGPoint) { 112.0f, 12.5f }
-                     controlPoint1:(CGPoint) { 110.56f, 13.79f }
-                     controlPoint2:(CGPoint){ 112.07f, 13.01f }];
+        controlPoint1:(CGPoint) { 110.56f, 13.79f }
+        controlPoint2:(CGPoint){ 112.07f, 13.01f }];
     [self.openPath addCurveToPoint:(CGPoint) { 194.0f, 196.0f }
-                     controlPoint1:(CGPoint) { 111.9f, 11.81f }
-                     controlPoint2:(CGPoint){ 194.0f, 196.0f }];
+        controlPoint1:(CGPoint) { 111.9f, 11.81f }
+        controlPoint2:(CGPoint){ 194.0f, 196.0f }];
     [self.openPath addLineToPoint:(CGPoint){ 30.0f, 85.68f }];
     [self.openPath addLineToPoint:(CGPoint){ 194.0f, 48.91f }];
     [self.openPath addLineToPoint:(CGPoint){ 30.0f, 196.0f }];

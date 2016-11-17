@@ -14,21 +14,23 @@
 //
 //******************************************************************************
 
-#import "StoryBoardViewController.h"
+#import <UIKit/UIKit.h>
+#import "PropertyTableViewCell.h"
 
-@implementation StoryBoardViewController
+@protocol PickerViewTableViewCellDelegate <NSObject>
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
+@optional
+- (void)pickerViewWithName:(NSString*)name didChangeToIndex:(NSInteger)idx;
 
-    // TODO: We should add storyboard tests that will exercise the CoreAnimation/CALayer APIs and properties. Re-enable in the future.
+@end
 
-    // Main storyboard view
-    // UIStoryboard* xamlStoryBoard = [UIStoryboard storyboardWithName:@"CoreAnimationTest" bundle:[NSBundle mainBundle]];
+@interface PickerViewTableViewCell : PropertyTableViewCell <UIPickerViewDataSource, UIPickerViewDelegate>
 
-    // CALayer
-    // UIViewController* caLayerVC = [xamlStoryBoard instantiateViewControllerWithIdentifier:@"CALayerSB"];
-    //[self addMenuItemViewController:caLayerVC andTitle:@"CALayerSB"];
-}
+@property (nonatomic, assign) id<PickerViewTableViewCellDelegate> delegate;
+
+- (void)setUpWithName:(NSString*)name
+              options:(NSArray*)options
+         currentIndex:(NSInteger)idx
+             delegate:(id<PickerViewTableViewCellDelegate>)delegate;
 
 @end

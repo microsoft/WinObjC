@@ -14,21 +14,24 @@
 //
 //******************************************************************************
 
-#import "StoryBoardViewController.h"
+#import <UIKit/UIKit.h>
 
-@implementation StoryBoardViewController
+typedef NS_ENUM(NSInteger, MoveDirection) { MoveUp = 0, MoveDown };
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
+@protocol LayerTableViewCellDelegate <NSObject>
 
-    // TODO: We should add storyboard tests that will exercise the CoreAnimation/CALayer APIs and properties. Re-enable in the future.
+@optional
+- (void) cellWithLayer:(CALayer*)layer shouldMove:(MoveDirection)direction;
 
-    // Main storyboard view
-    // UIStoryboard* xamlStoryBoard = [UIStoryboard storyboardWithName:@"CoreAnimationTest" bundle:[NSBundle mainBundle]];
+@end
 
-    // CALayer
-    // UIViewController* caLayerVC = [xamlStoryBoard instantiateViewControllerWithIdentifier:@"CALayerSB"];
-    //[self addMenuItemViewController:caLayerVC andTitle:@"CALayerSB"];
-}
+@interface LayerTableViewCell : UITableViewCell
+
+- (void)setUpWithLayer:(CALayer*)layer
+              andTitle:(NSString*)title
+    shouldShowUpButton:(BOOL)showUpButton
+  shouldShowDownButton:(BOOL)showDownButton;
+
+@property (nonatomic, assign) id<LayerTableViewCellDelegate> delegate;
 
 @end
