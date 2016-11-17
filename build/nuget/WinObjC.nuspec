@@ -39,7 +39,7 @@
     <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\libpng.dll"                                                    target="runtimes\win10-x86\native" />
     <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\libxml2.dll"                                                   target="runtimes\win10-x86\native" />
     <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\libz.dll"                                                      target="runtimes\win10-x86\native" />
-    <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\objcuwp*.dll"                                                   target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\objcuwp*.dll"                                                  target="runtimes\win10-x86\native" />
     <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\rtobjcinterop.dll"                                             target="runtimes\win10-x86\native" />
 
     <file src="$winobjc_root$\deps\prebuilt\universal windows\x86\release\libdispatch.dll"                                       target="runtimes\win10-x86\native" />
@@ -48,6 +48,7 @@
     <file src="$winobjc_root$\build\win32\release\universal windows\appinsights_win10-uap.dll"                                   target="runtimes\win10-x86\native" />
     <file src="$winobjc_root$\build\win32\release\universal windows\applicationinsights.dll"                                     target="runtimes\win10-x86\native" />
     <file src="$winobjc_root$\build\win32\release\universal windows\autolayout.dll"                                              target="runtimes\win10-x86\native" />
+    <file src="$winobjc_root$\build\win32\release\universal windows\cfnetwork.dll"                                               target="runtimes\win10-x86\native" />
     <file src="$winobjc_root$\build\win32\release\universal windows\corefoundation.dll"                                          target="runtimes\win10-x86\native" />
     <file src="$winobjc_root$\build\win32\release\universal windows\coregraphics.dll"                                            target="runtimes\win10-x86\native" />
     <file src="$winobjc_root$\build\win32\release\universal windows\coretext.dll"                                                target="runtimes\win10-x86\native" />
