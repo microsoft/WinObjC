@@ -100,11 +100,19 @@ CGFontRef CGFontRetain(CGFontRef font) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 CGFontRef CGFontCreateWithDataProvider(CGDataProviderRef cgDataProvider) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    RETURN_NULL_IF(!cgDataProvider);
+
+    size_t memSize = sizeof(struct __CGFont) - sizeof(CFRuntimeBase);
+    CGFontRef ret = static_cast<CGFontRef>(_CFRuntimeCreateInstance(kCFAllocatorDefault, CGFontGetTypeID(), memSize, NULL));
+    CFAutorelease(ret);
+    struct __CGFont* mutableRet = const_cast<struct __CGFont*>(ret);
+
+    RETURN_NULL_IF_FAILED(_DWriteCreateFontFaceWithDataProvider(cgDataProvider, &mutableRet->_dwriteFontFace));
+
+    return static_cast<CGFontRef>(CFRetain(ret));
 }
 
 /**

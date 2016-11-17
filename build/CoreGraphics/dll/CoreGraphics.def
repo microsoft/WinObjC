@@ -45,6 +45,7 @@ LIBRARY CoreGraphics
         _DWriteCreateTextFormat
         _DWriteCreateFontFamilyWithName
         _DWriteCreateFontFaceWithName
+        _DWriteCreateFontFaceWithDataProvider
         _DWriteFontCopyInformationalString
         _DWriteFontCopyTable
         _DWriteFontGetSlantDegrees

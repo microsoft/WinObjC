@@ -35,14 +35,12 @@ void assertOrderedSetContent(NSOrderedSet* set, NSObject* first, ...) {
     ASSERT_EQ(i, [set count]);
 }
 
-NSString* getModulePath() {
-    char fullPath[_MAX_PATH];
-    GetModuleFileNameA(NULL, fullPath, _MAX_PATH);
-    return [@(fullPath) stringByDeletingLastPathComponent];
-}
-
 NSString* getPathToFile(NSString* fileName) {
-    static StrongId<NSString*> refPath = getModulePath();
+    static StrongId<NSString*> refPath = []() {
+        char fullPath[_MAX_PATH];
+        GetModuleFileNameA(NULL, fullPath, _MAX_PATH);
+        return [@(fullPath) stringByDeletingLastPathComponent];
+    }();
     return [refPath stringByAppendingPathComponent:fileName];
 }
 

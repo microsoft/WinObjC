@@ -136,7 +136,7 @@ static std::unordered_map<woc::unique_cf<CFStringRef>, std::shared_ptr<_DWriteFo
 
                 if (SUCCEEDED(font->GetInformationalStrings(DWRITE_INFORMATIONAL_STRING_POSTSCRIPT_NAME, &postScriptName, &exist)) &&
                     exist) {
-                    info->postScriptName.reset(_CFStringFromLocalizedString(postScriptName.Get()));
+                    info->postScriptName.reset(static_cast<CFStringRef>(CFRetain(_CFStringFromLocalizedString(postScriptName.Get()))));
                     woc::unique_cf<CFStringRef> uppercaseNameKey(__CFStringCreateUppercaseCopy(info->postScriptName.get(), locale.get()));
                     ret.emplace(std::move(uppercaseNameKey), info);
                 }
@@ -480,3 +480,168 @@ HRESULT _DWriteFontGetBoundingBoxesForGlyphs(
 
     return ret;
 }
+
+#pragma region CGFontCreateWithDataProvider helpers
+
+/**
+ * Custom implementation of IDWriteFontFileStream that implements Read in terms of an underlying CFDataRef
+ *
+ * While IDWriteFontFileStream normally frees its underlying data bit by bit through ReleaseFileFragment(),
+ * for WinObjC purposes, it is easier to rely on existing mechanisms for CFData's destruction.
+ * Thus, this class releases its CFData all at once, at the time of its destruction.
+ */
+class DWriteFontBinaryDataStream : public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IDWriteFontFileStream> {
+protected:
+    InspectableClass(L"Windows.Bridge.DirectWrite", TrustLevel::BaseTrust);
+
+public:
+    DWriteFontBinaryDataStream() {
+    }
+
+    HRESULT RuntimeClassInitialize(CGDataProviderRef dataProvider) {
+        _data.reset(CGDataProviderCopyData(dataProvider));
+
+        // Just use current time for _lastWriteTime
+        FILETIME fileTime;
+        GetSystemTimeAsFileTime(&fileTime);
+
+        // Concat filetime into a single uint64_t
+        _lastWriteTime = 0;
+        _lastWriteTime |= static_cast<uint64_t>(fileTime.dwLowDateTime);
+        _lastWriteTime |= static_cast<uint64_t>(fileTime.dwHighDateTime) << 32;
+        return S_OK;
+    }
+
+    HRESULT STDMETHODCALLTYPE GetFileSize(_Out_ uint64_t* fileSize) {
+        RETURN_HR_IF_NULL(E_INVALIDARG, fileSize);
+        *fileSize = CFDataGetLength(_data.get());
+        return S_OK;
+    };
+
+    HRESULT STDMETHODCALLTYPE GetLastWriteTime(_Out_ uint64_t* lastWriteTime) {
+        RETURN_HR_IF_NULL(E_INVALIDARG, lastWriteTime);
+        *lastWriteTime = _lastWriteTime;
+        return S_OK;
+    };
+
+    HRESULT STDMETHODCALLTYPE ReadFileFragment(_Out_ const void** fragmentStart,
+                                               uint64_t fileOffset,
+                                               uint64_t fragmentSize,
+                                               _Out_ void** fragmentContext) {
+        if (fileOffset + fragmentSize > CFDataGetLength(_data.get())) {
+            return E_INVALIDARG;
+        }
+
+        if (fragmentStart) {
+            const uint8_t* underlyingBuffer = CFDataGetBytePtr(_data.get());
+            *fragmentStart = reinterpret_cast<const void*>(&(underlyingBuffer[fileOffset]));
+        }
+
+        if (fragmentContext) {
+            // Deliberately unused: this is meant to be passed to ReleaseFileFragment() below to free part of the data,
+            // but this stream frees all the underlying CFData at once
+            *fragmentContext = nullptr;
+        }
+
+        return S_OK;
+    };
+
+    void STDMETHODCALLTYPE ReleaseFileFragment(void* fragmentContext){
+        // Deliberate no-op: data is released alongside the _data member with the destruction of this object
+    };
+
+private:
+    woc::unique_cf<CFDataRef> _data;
+    uint64_t _lastWriteTime;
+};
+
+/**
+ * Custom implementation of IDWriteFontFileLoader that loads a CGDataProviderRef as its font file
+ */
+class DWriteFontBinaryDataLoader : public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IDWriteFontFileLoader> {
+protected:
+    InspectableClass(L"Windows.Bridge.DirectWrite", TrustLevel::BaseTrust);
+
+public:
+    DWriteFontBinaryDataLoader() {
+    }
+
+    HRESULT RuntimeClassInitialize(CGDataProviderRef dataProvider) {
+        CFRetain(dataProvider);
+        _dataProvider.reset(dataProvider);
+        return S_OK;
+    }
+
+    // Ignores first two params, just return the same kind of stream always
+    // Stream returned is dictated by dataProvider passed in at initialization time
+    HRESULT STDMETHODCALLTYPE CreateStreamFromKey(_In_ const void* fontFileReferenceKey,
+                                                  uint32_t fontFileReferenceKeySize,
+                                                  _Out_ IDWriteFontFileStream** fontFileStream) {
+        RETURN_HR_IF_NULL(E_INVALIDARG, fontFileStream);
+
+        ComPtr<DWriteFontBinaryDataStream> ret;
+        RETURN_IF_FAILED(MakeAndInitialize<DWriteFontBinaryDataStream>(&ret, _dataProvider.get()));
+
+        *fontFileStream = ret.Detach();
+        return S_OK;
+    }
+
+private:
+    woc::unique_cf<CGDataProviderRef> _dataProvider;
+};
+
+/**
+ * Creates an IDWriteFontFace by attempting to use a CGDataProviderRef as a font file
+ */
+HRESULT _DWriteCreateFontFaceWithDataProvider(CGDataProviderRef dataProvider, IDWriteFontFace** outFontFace) {
+    ComPtr<IDWriteFactory> dwriteFactory;
+    RETURN_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
+
+    ComPtr<IDWriteFontFileLoader> dwriteDataLoader;
+    RETURN_IF_FAILED(MakeAndInitialize<DWriteFontBinaryDataLoader>(&dwriteDataLoader, dataProvider));
+
+    RETURN_IF_FAILED(dwriteFactory->RegisterFontFileLoader(dwriteDataLoader.Get()));
+
+    HRESULT createdFont = [&dwriteFactory, &dwriteDataLoader, &dataProvider, outFontFace]() {
+        ComPtr<IDWriteFontFile> fontFile;
+
+        // First two params are not used (see DWriteFontBinaryDataLoader::CreateStreamFromKey())
+        // However, CreateCustomFontFileReference throws E_INVALIDARG if null is passed for the first parameter
+        // Pass in a pointer to an arbitrary, unused key, to get around this.
+        int unusedKey;
+        RETURN_IF_FAILED(dwriteFactory->CreateCustomFontFileReference(&unusedKey, sizeof(unusedKey), dwriteDataLoader.Get(), &fontFile));
+
+        // Analyze the font file for creating a font face
+        BOOL isSupportedFontType;
+        DWRITE_FONT_FILE_TYPE fontFileType;
+        DWRITE_FONT_FACE_TYPE fontFaceType;
+        uint32_t numberOfFaces;
+        RETURN_IF_FAILED(fontFile->Analyze(&isSupportedFontType, &fontFileType, &fontFaceType, &numberOfFaces));
+
+        RETURN_HR_IF(E_INVALIDARG, !isSupportedFontType);
+        RETURN_HR_IF(E_INVALIDARG, numberOfFaces == 0);
+
+        IDWriteFontFile* fontFileArray[] = { fontFile.Get() };
+
+        RETURN_IF_FAILED(dwriteFactory->CreateFontFace(fontFaceType,
+                                                       1, // number of elements in fontFileArray
+                                                       fontFileArray,
+                                                       0, // Just use the first face
+                                                       DWRITE_FONT_SIMULATIONS_NONE,
+                                                       outFontFace));
+        return S_OK;
+    }();
+
+    // Always try to unregister the font file loader, even if anything failed above
+    // Just log the failure to unregister instead of failing the whole function, though -
+    // Should be safe enough to continue even if this doesn't work out
+    if (FAILED(dwriteFactory->UnregisterFontFileLoader(dwriteDataLoader.Get()))) {
+        TraceError(TAG, L"Failed to unregister font file loader in _DWriteCreateFontFaceWithDataProvider");
+    }
+
+    RETURN_IF_FAILED(createdFont);
+
+    return S_OK;
+}
+
+#pragma endregion
