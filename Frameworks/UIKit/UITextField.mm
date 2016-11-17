@@ -43,6 +43,9 @@
 
 #import <UWP/WindowsUIXamlControls.h>
 
+// Emperically discovered global minimum font size
+static const CGFloat g_minimumFontSize = 14.0f;
+
 static const wchar_t* TAG = L"UITextField";
 
 NSString* const UITextFieldTextDidBeginEditingNotification = @"UITextFieldTextDidBeginEditingNotification";
@@ -224,7 +227,11 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
  @Status Interoperable
 */
 - (void)setFont:(UIFont*)font {
-    _font = font;
+    if (font == nil) {
+        _font = [UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]];
+    } else {
+        _font = font;
+    }
     [self _adjustFontSizeToFitWidthOrApply];
 }
 
@@ -402,10 +409,14 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 }
 
 - (void)_adjustFontSizeToFitWidthOrApply {
-    if (self.adjustsFontSizeToFitWidth && (self.minimumFontSize > 0) && (self.minimumFontSize != self.font.pointSize) && self.text && self.text.length) {
+    if (self.adjustsFontSizeToFitWidth && (self.minimumFontSize != self.font.pointSize) && self.text && self.text.length) {
         _adjustedFont = self.font;
         NSString* passwordString = nil;
         CGFloat elementWidth = 0.0f;
+
+        if (_adjustedFont == nil) {
+            _adjustedFont = [UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]];
+        }
         
         // Measure using the password masking character, not the verbatim text
         if (self->_secureTextMode) {
@@ -440,7 +451,15 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
                 }
             }
 
-            _adjustedFont = [_adjustedFont fontWithSize:_adjustedFont.pointSize - 1];
+            CGFloat newFontSize = _adjustedFont.pointSize - 1;
+            if (newFontSize < g_minimumFontSize) {
+                _adjustedFont = [_adjustedFont fontWithSize:g_minimumFontSize];
+                break;
+            } else if (newFontSize < self.minimumFontSize) {
+                _adjustedFont = [_adjustedFont fontWithSize:self.minimumFontSize];
+                break;
+            }
+            _adjustedFont = [_adjustedFont fontWithSize:newFontSize];
         }
         [self _applyFont:_adjustedFont];
     } else {
@@ -961,6 +980,10 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
         _placeHolder = [coder decodeObjectForKey:@"UIPlaceholder"];
         _textColor = [coder decodeObjectForKey:@"UITextColor"];
 
+        if (_font == nil) {
+            _font = [UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]];
+        }
+
         if (_textColor == nil) {
             _textColor = [UIColor blackColor];
         }
@@ -1190,6 +1213,7 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 
 // Handler when control GotFocus
 - (void)_setupControlGotFocusHandler:(WXCControl*)control {
+    __weak WXCControl* weakControl = control;
     __weak UITextField* weakSelf = self;
 
     [control addGotFocusEvent:^void(RTObject* sender, WXRoutedEventArgs* e) {
@@ -1216,6 +1240,10 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
                 [strongSelf sendActionsForControlEvents:UIControlEventEditingDidBegin];
                 [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidBeginEditingNotification object:strongSelf];
             });
+
+            // Update the collapsed/visible state of the cancel button and adjust text size.
+            [weakControl updateLayout];
+            [strongSelf _adjustFontSizeToFitWidthOrApply];
         }
     }];
 }
