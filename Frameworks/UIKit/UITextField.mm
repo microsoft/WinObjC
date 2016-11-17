@@ -409,20 +409,23 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 }
 
 - (void)_adjustFontSizeToFitWidthOrApply {
-    if (self.adjustsFontSizeToFitWidth && (self.minimumFontSize != self.font.pointSize) && self.text && self.text.length) {
-        _adjustedFont = self.font;
+    _adjustedFont = self.font;
+
+    if (_adjustedFont == nil) {
+        _adjustedFont = [UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]];
+    }
+
+    // If the min size is greater than our font size, the font wins out.
+    // If the font's pointsize is smaller than the global min font size, the font wins out.
+    if (self.adjustsFontSizeToFitWidth && (self.minimumFontSize < _adjustedFont.pointSize) && (_adjustedFont.pointSize > g_minimumFontSize) && self.text && self.text.length) {
         NSString* passwordString = nil;
         CGFloat elementWidth = 0.0f;
 
-        if (_adjustedFont == nil) {
-            _adjustedFont = [UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]];
-        }
-        
         // Measure using the password masking character, not the verbatim text
         if (self->_secureTextMode) {
             if (_passwordContentElement == nil) {
                 // Not an error, we just might not be loaded yet.
-                [self _applyFont:self.font];
+                [self _applyFont:_adjustedFont];
                 return;
             }
             passwordString = [@"" stringByPaddingToLength:self.text.length withString:_passwordBox.passwordChar startingAtIndex:0];
@@ -430,7 +433,7 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
         } else {
             if (_textContentElement == nil) {
                 // Not an error, we just might not be loaded yet.
-                [self _applyFont:self.font];
+                [self _applyFont:_adjustedFont];
                 return;
             }
             elementWidth = _textContentElement.actualWidth - _textContentElement.padding.left - _textContentElement.padding.right;
