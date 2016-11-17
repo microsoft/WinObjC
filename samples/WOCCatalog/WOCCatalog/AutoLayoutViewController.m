@@ -66,8 +66,9 @@
     UIButton* button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     
     [button setTitle:@"Button For Baseline" forState:UIControlStateNormal];
-    [button invalidateIntrinsicContentSize];
+    [button setTitle:@"Highlighted State Changes Intrinsic Content Size" forState:UIControlStateHighlighted];
     [button setContentHuggingPriority:251 forAxis:UILayoutConstraintAxisVertical];
+    button.contentEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10);
     button.translatesAutoresizingMaskIntoConstraints = NO;
     button.layer.cornerRadius = 5.0f;
     button.backgroundColor = [UIColor lightGrayColor];
@@ -75,8 +76,6 @@
     
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:button attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:bottomLabel attribute:NSLayoutAttributeTop multiplier:1.0 constant:-8.0f]];
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:button attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:button.superview attribute:NSLayoutAttributeLeft multiplier:1.0 constant:20.0f]];
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:button attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:button.intrinsicContentSize.width + 20]];
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:button attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:button.intrinsicContentSize.height + 20]];
     
     CenteredAutoLayoutLabel* buttonLabel = [CenteredAutoLayoutLabel new];
     
