@@ -684,7 +684,7 @@ void LayerCoordinator::AnimateValue(
 }
 
 // CALayer content support
-void LayerCoordinator::SetContent(FrameworkElement^ element, ImageSource^ source, float width, float height, float scale /* TODO: scale no longer needed?*/) {
+void LayerCoordinator::SetContent(FrameworkElement^ element, ImageSource^ source, float width, float height, float scale) {
     // Get content
     bool createIfPossible = (source != nullptr); // Only create the Image if we have a valid source to set
     Image^ contentImage = _GetContentImage(element, createIfPossible);
@@ -695,8 +695,11 @@ void LayerCoordinator::SetContent(FrameworkElement^ element, ImageSource^ source
     // Apply content source
     contentImage->Source = source;
 
-    // Store content size
-    _SetContentSize(element, Size(width, height));
+    // Store content size with the scale factor applied
+    if (scale <= 0.0) {
+        scale = 1.0f;
+    }
+    _SetContentSize(element, Size(width / scale, height / scale));
 
     // Refresh any content center settings
     _ApplyContentCenter(element, _GetContentCenter(element));
@@ -1057,7 +1060,6 @@ void LayerCoordinator::_ApplyContentGravity(FrameworkElement^ element, ContentGr
     const double elementHeight = element->Height;
 
     // Apply gravity mapping
-    double scale = 1.0; // TODO: Do we even need this anymore?  It doesn't look like it.
     HorizontalAlignment horizontalAlignment;
     VerticalAlignment verticalAlignment;
     double finalContentWidth = 0.0;
@@ -1071,8 +1073,8 @@ void LayerCoordinator::_ApplyContentGravity(FrameworkElement^ element, ContentGr
         verticalAlignment = VerticalAlignment::Center;
 
         // ContentGravity::Center does not resize the content
-        finalContentWidth = contentSize.Width * scale;
-        finalContentHeight = contentSize.Height * scale;
+        finalContentWidth = contentSize.Width;
+        finalContentHeight = contentSize.Height;
 
         // Vertically and horizontally center the content within its containing layer.
         contentLeft = (elementWidth / 2) - (contentSize.Width / 2);
@@ -1085,8 +1087,8 @@ void LayerCoordinator::_ApplyContentGravity(FrameworkElement^ element, ContentGr
         verticalAlignment = VerticalAlignment::Top;
 
         // ContentGravity::Top does not resize the content
-        finalContentWidth = contentSize.Width * scale;
-        finalContentHeight = contentSize.Height * scale;
+        finalContentWidth = contentSize.Width;
+        finalContentHeight = contentSize.Height;
 
         // Bottom-align and horizontally-center the content within its containing layer.
         // Note: This is counter-intuitive; Top/Bottom gravity is swapped for CALayer.
@@ -1100,8 +1102,8 @@ void LayerCoordinator::_ApplyContentGravity(FrameworkElement^ element, ContentGr
         verticalAlignment = VerticalAlignment::Bottom;
 
         // ContentGravity::Bottom does not resize the content
-        finalContentWidth = contentSize.Width * scale;
-        finalContentHeight = contentSize.Height * scale;
+        finalContentWidth = contentSize.Width;
+        finalContentHeight = contentSize.Height;
 
         // Top-align and horizontally-center the content within its containing layer.
         // Note: This is counter-intuitive; Top/Bottom gravity is swapped for CALayer.
@@ -1115,8 +1117,8 @@ void LayerCoordinator::_ApplyContentGravity(FrameworkElement^ element, ContentGr
         verticalAlignment = VerticalAlignment::Center;
 
         // ContentGravity::Left does not resize the content
-        finalContentWidth = contentSize.Width * scale;
-        finalContentHeight = contentSize.Height * scale;
+        finalContentWidth = contentSize.Width;
+        finalContentHeight = contentSize.Height;
 
         // Left-align and vertically-center the content within its containing layer.
         contentLeft = 0;
@@ -1129,8 +1131,8 @@ void LayerCoordinator::_ApplyContentGravity(FrameworkElement^ element, ContentGr
         verticalAlignment = VerticalAlignment::Center;
 
         // ContentGravity::Right does not resize the content
-        finalContentWidth = contentSize.Width * scale;
-        finalContentHeight = contentSize.Height * scale;
+        finalContentWidth = contentSize.Width;
+        finalContentHeight = contentSize.Height;
 
         // Right-align and vertically-center the content within its containing layer.
         contentLeft = (elementWidth - contentSize.Width);
@@ -1143,8 +1145,8 @@ void LayerCoordinator::_ApplyContentGravity(FrameworkElement^ element, ContentGr
         verticalAlignment = VerticalAlignment::Top;
 
         // ContentGravity::TopLeft does not resize the content
-        finalContentWidth = contentSize.Width * scale;
-        finalContentHeight = contentSize.Height * scale;
+        finalContentWidth = contentSize.Width;
+        finalContentHeight = contentSize.Height;
 
         // Left and *bottom* align the content within its containing layer.
         // Note: This is counter-intuitive; Top/Bottom gravity is swapped for CALayer.
@@ -1158,8 +1160,8 @@ void LayerCoordinator::_ApplyContentGravity(FrameworkElement^ element, ContentGr
         verticalAlignment = VerticalAlignment::Top;
 
         // ContentGravity::TopRight does not resize the content
-        finalContentWidth = contentSize.Width * scale;
-        finalContentHeight = contentSize.Height * scale;
+        finalContentWidth = contentSize.Width;
+        finalContentHeight = contentSize.Height;
 
         // Right and *bottom* align the content within its containing layer.
         // Note: This is counter-intuitive; Top/Bottom gravity is swapped for CALayer.
@@ -1173,8 +1175,8 @@ void LayerCoordinator::_ApplyContentGravity(FrameworkElement^ element, ContentGr
         verticalAlignment = VerticalAlignment::Bottom;
 
         // ContentGravity::BottomLeft does not resize the content
-        finalContentWidth = contentSize.Width * scale;
-        finalContentHeight = contentSize.Height * scale;
+        finalContentWidth = contentSize.Width;
+        finalContentHeight = contentSize.Height;
 
         // Left and *top* align the content within its containing layer.
         // Note: This is counter-intuitive; Top/Bottom gravity is swapped for CALayer.
@@ -1188,8 +1190,8 @@ void LayerCoordinator::_ApplyContentGravity(FrameworkElement^ element, ContentGr
         verticalAlignment = VerticalAlignment::Bottom;
 
         // ContentGravity::BottomRight does not resize the content
-        finalContentWidth = contentSize.Width * scale;
-        finalContentHeight = contentSize.Height * scale;
+        finalContentWidth = contentSize.Width;
+        finalContentHeight = contentSize.Height;
 
         // Right and *top* align the content within its containing layer.
         // Note: This is counter-intuitive; Top/Bottom gravity is swapped for CALayer.
@@ -1203,8 +1205,8 @@ void LayerCoordinator::_ApplyContentGravity(FrameworkElement^ element, ContentGr
         verticalAlignment = VerticalAlignment::Top;
 
         // Resize content to that of its containing layer
-        finalContentWidth = elementWidth * scale;
-        finalContentHeight = elementHeight * scale;
+        finalContentWidth = elementWidth;
+        finalContentHeight = elementHeight;
 
         // Completely fill/align the content within its containing layer.
         contentLeft = 0;
@@ -1222,8 +1224,8 @@ void LayerCoordinator::_ApplyContentGravity(FrameworkElement^ element, ContentGr
             const double widthAspect = elementWidth / contentSize.Width;
             const double heightAspect = elementHeight / contentSize.Height;
             const double minAspect = std::min<double>(widthAspect, heightAspect);
-            finalContentWidth = (contentSize.Width * static_cast<float>(minAspect) * scale);
-            finalContentHeight = (contentSize.Height * static_cast<float>(minAspect) * scale);
+            finalContentWidth = (contentSize.Width * static_cast<float>(minAspect));
+            finalContentHeight = (contentSize.Height * static_cast<float>(minAspect));
 
             // Vertically and horizontally center the content within its containing layer
             contentLeft = (elementWidth / 2) - (finalContentWidth / 2);
