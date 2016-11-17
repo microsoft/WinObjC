@@ -74,7 +74,7 @@ struct __CTParagraphStyle : CoreFoundation::CppBase<__CTParagraphStyle> {
             woc::unique_cf<CFTypeRef> newValue{};
             switch (specifier) {
                 case kCTParagraphStyleSpecifierTabStops:
-                 //   newValue.reset(CFArrayCreateCopy(nullptr, static_cast<CFArrayRef>(value)));
+                    newValue.reset(CFArrayCreateCopy(nullptr, static_cast<CFArrayRef>(value)));
                     break;
                 case kCTParagraphStyleSpecifierAlignment:
                 case kCTParagraphStyleSpecifierLineBreakMode: {

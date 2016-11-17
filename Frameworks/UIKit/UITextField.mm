@@ -43,7 +43,7 @@
 
 #import <UWP/WindowsUIXamlControls.h>
 
-// Emperically discovered global minimum font size
+// Empirically discovered global minimum font size
 static const CGFloat g_minimumFontSize = 14.0f;
 
 static const wchar_t* TAG = L"UITextField";
@@ -139,7 +139,7 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
         }
         [_secureModeLock unlock];
 
-        [self _adjustFontSizeToFitWidthOrApply];
+        [self _adjustFontSizeToFitWidthOrApplyCurrentFont];
     }
 }
 
@@ -232,7 +232,8 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
     } else {
         _font = font;
     }
-    [self _adjustFontSizeToFitWidthOrApply];
+
+    [self _adjustFontSizeToFitWidthOrApplyCurrentFont];
 }
 
 - (void)_applyFont:(UIFont*)font {
@@ -398,7 +399,7 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 */
 - (void)setAdjustsFontSizeToFitWidth:(BOOL)adjust {
     _adjustsFontSizeToFitWidth = adjust;
-    [self _adjustFontSizeToFitWidthOrApply];
+    [self _adjustFontSizeToFitWidthOrApplyCurrentFont];
 }
 
 /**
@@ -408,7 +409,7 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
     return _adjustsFontSizeToFitWidth;
 }
 
-- (void)_adjustFontSizeToFitWidthOrApply {
+- (void)_adjustFontSizeToFitWidthOrApplyCurrentFont {
     _adjustedFont = self.font;
 
     if (_adjustedFont == nil) {
@@ -462,6 +463,7 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
                 _adjustedFont = [_adjustedFont fontWithSize:self.minimumFontSize];
                 break;
             }
+
             _adjustedFont = [_adjustedFont fontWithSize:newFontSize];
         }
         [self _applyFont:_adjustedFont];
@@ -475,7 +477,7 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 */
 - (void)setMinimumFontSize:(CGFloat)fontSize {
     _minimumFontSize = fontSize;
-    [self _adjustFontSizeToFitWidthOrApply];
+    [self _adjustFontSizeToFitWidthOrApplyCurrentFont];
 }
 
 /**
@@ -492,7 +494,7 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
  @Status Interoperable
 */
 - (BOOL)isEditing {
-    if (self.secureTextEntry) {
+    if (_secureTextMode) {
         return _passwordBox.focusState != WXFocusStateUnfocused;
     } else {
         return _textBox.focusState != WXFocusStateUnfocused;
@@ -996,7 +998,7 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
         _isFirstResponder = NO;
 
         [self _initUITextField:nil];
-        [self _adjustFontSizeToFitWidthOrApply];
+        [self _adjustFontSizeToFitWidthOrApplyCurrentFont];
     }
 
     return self;
@@ -1246,7 +1248,7 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 
             // Update the collapsed/visible state of the cancel button and adjust text size.
             [weakControl updateLayout];
-            [strongSelf _adjustFontSizeToFitWidthOrApply];
+            [strongSelf _adjustFontSizeToFitWidthOrApplyCurrentFont];
         }
     }];
 }
@@ -1285,7 +1287,7 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 
             // Update the collapsed/visible state of the cancel button and adjust text size.
             [weakControl updateLayout];
-            [strongSelf _adjustFontSizeToFitWidthOrApply];
+            [strongSelf _adjustFontSizeToFitWidthOrApplyCurrentFont];
         }
     }];
 }
@@ -1360,7 +1362,7 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
                 TraceWarning(TAG, L"Could not find ContentElement in control template: adjustsFontSizeToFitWidth will not function");
             }
 
-            [strongSelf _adjustFontSizeToFitWidthOrApply];
+            [strongSelf _adjustFontSizeToFitWidthOrApplyCurrentFont];
         }
     }];
 
@@ -1428,7 +1430,7 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
                 TraceWarning(TAG, L"Could not find ContentElement in control template: adjustsFontSizeToFitWidth will not function");
             }
 
-            [strongSelf _adjustFontSizeToFitWidthOrApply];
+            [strongSelf _adjustFontSizeToFitWidthOrApplyCurrentFont];
         }
     }];
 
