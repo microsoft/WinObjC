@@ -20,7 +20,7 @@ if(!$Repo) {
 }
 
 $version = "0.0.1"
-$timeStamp = get-date -format yyyyMMdd-HHmm
+$timeStamp = get-date -format yyyyMMddHHmmss
 $fullVersion = "$version-$timeStamp.pr"
 
 $nuget = [System.IO.Path]::Combine($scriptPath, "nuget.exe")
