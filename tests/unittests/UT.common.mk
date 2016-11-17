@@ -28,13 +28,13 @@ OSX_VERSION_MIN := 10.10
 _UT_OBJECTS := $(addsuffix .o,$(addprefix $(_UT_OBJ_DIR)/,$(subst $(_UT_PROJECT_DIR)/,,$(UT_FILES))))
 
 # Common shims for all tests.
-_UT_OBJECTS += $(_UT_OBJ_DIR)/windows.o $(_UT_OBJ_DIR)/IwMalloc.o $(_UT_OBJ_DIR)/LoggingNative.o $(_UT_OBJ_DIR)/TestUtils.o
+_UT_OBJECTS += $(_UT_OBJ_DIR)/windows.o $(_UT_OBJ_DIR)/IwMalloc.o $(_UT_OBJ_DIR)/LoggingNative.o
 ifeq ($(strip $(filter EntryPoint.cpp,$(UT_FILES))),)
 _UT_OBJECTS += $(_UT_OBJ_DIR)/EntryPoint.o
 endif
 
 _INC := $(_UT_BASE_DIR)/../frameworks/include $(_UT_BASE_DIR)/../frameworks/gtest $(_UT_BASE_DIR)/../frameworks/gtest/include 
-_INC += $(_UT_BASE_DIR)/../frameworks/OSXShims/include $(_UT_BASE_DIR)/../../include/xplat $(_UT_BASE_DIR)/Tests.Shared
+_INC += $(_UT_BASE_DIR)/../frameworks/OSXShims/include $(_UT_BASE_DIR)/../../include/xplat
 
 _ALL_CXXFLAGS := -std=c++14
 _ALL_CXXFLAGS += $(UT_CXXFLAGS) $(UT_CCFLAGS)
@@ -73,10 +73,6 @@ $(_UT_OBJ_DIR)/windows.o : $(_UT_BASE_DIR)/../frameworks/OSXShims/src/windows.cp
 	$(ECHO_CC)$(CLANG) -c -o $@ $(_ALL_CFLAGS) $(_ALL_CXXFLAGS) $<$(ECHO_END)
 
 $(_UT_OBJ_DIR)/LoggingNative.o : $(_UT_BASE_DIR)/../frameworks/OSXShims/src/LoggingNative.mm
-	@mkdir -p $(dir $@)
-	$(ECHO_CC)$(CLANG) -c -o $@ $(_ALL_CFLAGS) $(_ALL_CXXFLAGS) -x objective-c++ $<$(ECHO_END)
-
-$(_UT_OBJ_DIR)/TestUtils.o : $(_UT_BASE_DIR)/Tests.Shared/TestUtils.mm
 	@mkdir -p $(dir $@)
 	$(ECHO_CC)$(CLANG) -c -o $@ $(_ALL_CFLAGS) $(_ALL_CXXFLAGS) -x objective-c++ $<$(ECHO_END)
 

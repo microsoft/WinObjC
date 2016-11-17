@@ -19,8 +19,6 @@
 #import <CoreFoundation/CoreFoundation.h>
 #import <Foundation/Foundation.h>
 
-#import <TestUtils.h>
-
 // CTFont functionality is generally a superset of CGFont functionality, and hits the same code path
 // Thus, CTFont unit tests can also be thought of as CGFont test coverage
 
@@ -111,7 +109,10 @@ TEST(CGFont, GetDescent) {
 }
 
 TEST(CGFont, CreateWithDataProvider) {
-    NSURL* testFileURL = [NSURL fileURLWithPath:getPathToFile(@"/data/WinObjC-Regular.ttf")];
+    char fullPath[_MAX_PATH];
+    GetModuleFileNameA(NULL, fullPath, _MAX_PATH);
+    NSURL* testFileURL = [NSURL
+        fileURLWithPath:[[@(fullPath) stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"/data/WinObjC-Regular.ttf"]];
 
     CGDataProviderRef dataProvider = CGDataProviderCreateWithURL((__bridge CFURLRef)testFileURL);
     CFAutorelease(dataProvider);

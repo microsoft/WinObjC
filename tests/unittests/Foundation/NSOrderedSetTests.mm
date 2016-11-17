@@ -16,7 +16,7 @@
 
 #import <Foundation/Foundation.h>
 #import <TestFramework.h>
-#import <TestUtils.h>
+#import "TestUtils.h"
 
 TEST(NSOrderedSet, Init) {
     NSOrderedSet* orderedSet = [[NSOrderedSet alloc] init];

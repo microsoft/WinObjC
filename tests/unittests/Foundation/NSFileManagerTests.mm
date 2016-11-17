@@ -24,7 +24,7 @@
 #include <stdlib.h>
 #include <windows.h>
 #include <Starboard/SmartTypes.h>
-#include <TestUtils.h>
+#include "TestUtils.h"
 
 TEST(NSFileManager, GetAttributes) {
     NSString* testFileFullPath = getPathToFile(@"/data/NSFileManagerUT.txt");

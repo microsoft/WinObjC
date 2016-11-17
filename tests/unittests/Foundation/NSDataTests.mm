@@ -18,7 +18,7 @@
 #import <Starboard/SmartTypes.h>
 #import <Foundation/Foundation.h>
 
-#import <TestUtils.h>
+#import "TestUtils.h"
 
 // TODO: BUG 5403859: Enable ARC on this test file once load order issue is fixed
 

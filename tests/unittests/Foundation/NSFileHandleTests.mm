@@ -18,7 +18,7 @@
 #import <Foundation/Foundation.h>
 #import <windows.h>
 #import <algorithm>
-#import <TestUtils.h>
+#import "TestUtils.h"
 
 TEST(NSFileHandle, ReadFile) {
     NSString* content = @"The Quick Brown Fox.";
