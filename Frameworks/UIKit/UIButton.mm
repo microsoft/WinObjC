@@ -213,7 +213,7 @@ struct ButtonState {
         // by XAML.
         // The size of XAML elements(for eg Image) is calculated at runtime and then the
         // intrinsicContentSize is invalidated.
-        [self invalidateIntrinsicContentSize];
+        [weakSelf invalidateIntrinsicContentSize];
         [weakSelf setNeedsLayout];
     });
 }
