@@ -17,6 +17,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddPathViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddQuadCurveToPointViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddRectViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddRoundedRectViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathApplyViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathCloseSubpathViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathContainsPointViewController.h" />

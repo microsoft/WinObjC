@@ -35,19 +35,21 @@
         CGContextSetStrokeColorWithColor(currentContext, self.options.lineColor);
         CGContextSetLineDash(currentContext, self.options.linePhase, self.options.lineDashPattern, self.options.lineDashCount);
 
+        CGAffineTransform transformation = CGAffineTransformIdentity;
+
         CGMutablePathRef thePath = CGPathCreateMutable();
 
-        CGPathMoveToPoint(thePath, NULL, 100, 50);
-        CGPathAddQuadCurveToPoint(thePath, NULL, 125, 25, 150, 50);
+        CGPathMoveToPoint(thePath, &transformation, 100, 50);
+        CGPathAddQuadCurveToPoint(thePath, &transformation, 125, 25, 150, 50);
 
-        CGPathMoveToPoint(thePath, NULL, 200, 50);
-        CGPathAddQuadCurveToPoint(thePath, NULL, 225, 25, 250, 50);
+        CGPathMoveToPoint(thePath, &transformation, 200, 50);
+        CGPathAddQuadCurveToPoint(thePath, &transformation, 225, 25, 250, 50);
 
-        CGPathMoveToPoint(thePath, NULL, 100, 150);
-        CGPathAddQuadCurveToPoint(thePath, NULL, 200, 200, 300, 100);
+        CGPathMoveToPoint(thePath, &transformation, 100, 150);
+        CGPathAddQuadCurveToPoint(thePath, &transformation, 200, 200, 300, 100);
 
-        CGPathMoveToPoint(thePath, NULL, 285, 105);
-        CGPathAddQuadCurveToPoint(thePath, NULL, 300, 90, 310, 110);
+        CGPathMoveToPoint(thePath, &transformation, 285, 105);
+        CGPathAddQuadCurveToPoint(thePath, &transformation, 300, 90, 310, 110);
 
         CGContextAddPath(currentContext, thePath);
 

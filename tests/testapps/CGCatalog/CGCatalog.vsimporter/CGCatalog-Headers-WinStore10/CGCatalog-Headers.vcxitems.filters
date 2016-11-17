@@ -99,5 +99,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddArcToPointViewController.h">
       <Filter>CGCatalog\NewSamples</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddRoundedRectViewController.h">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

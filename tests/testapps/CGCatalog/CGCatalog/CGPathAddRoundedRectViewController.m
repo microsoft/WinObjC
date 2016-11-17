@@ -14,10 +14,10 @@
 //
 //******************************************************************************
 
-#import "CGPathAddArcToPointViewController.h"
+#import "CGPathAddRoundedRectViewController.h"
 #import "CGDrawView.h"
 
-@implementation CGPathAddArcToPointViewController
+@implementation CGPathAddRoundedRectViewController
 
 - (id)initWithDrawingOptions:(CGDrawOptions*)options {
     self = [super initWithDrawingOptions:options];
@@ -40,11 +40,10 @@
 
         CGMutablePathRef thepath = CGPathCreateMutable();
         CGPathMoveToPoint(thepath, &transformation, 75, 100);
-        CGPathAddArcToPoint(thepath, &transformation, 50, 150, 100, 250, 15);
-        CGPathAddArcToPoint(thepath, &transformation, 100, 250, 150, 150, 15);
-        CGPathAddArcToPoint(thepath, &transformation, 150, 150, 100, 50, 15);
-        CGPathAddArcToPoint(thepath, &transformation, 100, 50, 50, 150, 15);
-        CGPathAddLineToPoint(thepath, &transformation, 75, 100);
+        CGRect rect = CGRectMake(75, 100, 100, 100);
+        CGPathAddRoundedRect(thepath, &transformation, rect, 25, 25);
+        rect = CGRectMake(200, 100, 100, 100);
+        CGPathAddRoundedRect(thepath, &transformation, rect, 50, 50);
 
         CGContextAddPath(currentContext, thepath);
 

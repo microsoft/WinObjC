@@ -37,10 +37,12 @@
 
         CGMutablePathRef thePath = CGPathCreateMutable();
 
-        CGPathMoveToPoint(thePath, NULL, 50, 50);
-        CGPathAddLineToPoint(thePath, NULL, 100, 100);
+        CGAffineTransform transformation = CGAffineTransformIdentity;
 
-        CGPathAddRect(thePath, NULL, CGRectMake(100, 100, 200, 100));
+        CGPathMoveToPoint(thePath, &transformation, 50, 50);
+        CGPathAddLineToPoint(thePath, &transformation, 100, 100);
+
+        CGPathAddRect(thePath, &transformation, CGRectMake(100, 100, 200, 100));
 
         CGContextAddPath(currentContext, thePath);
 

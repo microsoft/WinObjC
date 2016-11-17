@@ -35,20 +35,22 @@
         CGContextSetStrokeColorWithColor(currentContext, self.options.lineColor);
         CGContextSetLineDash(currentContext, self.options.linePhase, self.options.lineDashPattern, self.options.lineDashCount);
 
+        CGAffineTransform transformation = CGAffineTransformIdentity;
+
         CGMutablePathRef thepath = CGPathCreateMutable();
-        CGPathMoveToPoint(thepath, NULL, 200, 35);
-        CGPathAddLineToPoint(thepath, NULL, 165, 100);
-        CGPathAddLineToPoint(thepath, NULL, 100, 100);
-        CGPathAddLineToPoint(thepath, NULL, 150, 150);
-        CGPathAddLineToPoint(thepath, NULL, 135, 225);
-        CGPathAddLineToPoint(thepath, NULL, 200, 170);
-        CGPathAddLineToPoint(thepath, NULL, 265, 225);
-        CGPathAddLineToPoint(thepath, NULL, 250, 150);
-        CGPathAddLineToPoint(thepath, NULL, 300, 100);
-        CGPathAddLineToPoint(thepath, NULL, 235, 100);
+        CGPathMoveToPoint(thepath, &transformation, 200, 35);
+        CGPathAddLineToPoint(thepath, &transformation, 165, 100);
+        CGPathAddLineToPoint(thepath, &transformation, 100, 100);
+        CGPathAddLineToPoint(thepath, &transformation, 150, 150);
+        CGPathAddLineToPoint(thepath, &transformation, 135, 225);
+        CGPathAddLineToPoint(thepath, &transformation, 200, 170);
+        CGPathAddLineToPoint(thepath, &transformation, 265, 225);
+        CGPathAddLineToPoint(thepath, &transformation, 250, 150);
+        CGPathAddLineToPoint(thepath, &transformation, 300, 100);
+        CGPathAddLineToPoint(thepath, &transformation, 235, 100);
 
         // Unnecessary as close subpath will finish this line off but for the sake of consistency, have this here.
-        CGPathAddLineToPoint(thepath, NULL, 200, 35);
+        CGPathAddLineToPoint(thepath, &transformation, 200, 35);
 
         CGPathCloseSubpath(thepath);
         CGContextAddPath(currentContext, thepath);

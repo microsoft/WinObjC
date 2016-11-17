@@ -31,6 +31,7 @@
 #import "CGPathGetBoundingBoxViewController.h"
 #import "CGPathAddArcViewController.h"
 #import "CGPathAddArcToPointViewController.h"
+#import "CGPathAddRoundedRectViewController.h"
 
 @interface CGContextNewTestsController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -67,6 +68,7 @@
             [CGContextSampleRow row:@"CGPathGetBoundingBox" class:[CGPathGetBoundingBoxViewController class]],
             [CGContextSampleRow row:@"CGPathAddArc" class:[CGPathAddArcViewController class]],
             [CGContextSampleRow row:@"CGPathAddArcToPoint" class:[CGPathAddArcToPointViewController class]],
+            [CGContextSampleRow row:@"CGPathAddRoundedRect" class:[CGPathAddRoundedRectViewController class]],
         ];
     }
     return _samples;

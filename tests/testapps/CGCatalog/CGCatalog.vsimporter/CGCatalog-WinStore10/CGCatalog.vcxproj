@@ -192,6 +192,7 @@
     <ClangCompile Include="..\..\CGCatalog\CGDrawOptions.m" />
     <ClangCompile Include="..\..\CGCatalog\CGPathAddArcToPointViewController.m" />
     <ClangCompile Include="..\..\CGCatalog\CGPathAddArcViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddRoundedRectViewController.m" />
     <ClangCompile Include="..\..\CGCatalog\CGPathCloseSubpathViewController.m" />
     <ClangCompile Include="..\..\CGCatalog\Samples\CGContextNewTestsController.m" />
     <ClangCompile Include="..\..\CGCatalog\CGCRootViewController.m" />

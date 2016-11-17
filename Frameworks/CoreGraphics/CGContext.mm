@@ -25,6 +25,7 @@
 #import <CoreGraphics/CGLayer.h>
 #import <CoreGraphics/CGAffineTransform.h>
 #import <CoreGraphics/CGGradient.h>
+#import <CoreGraphics/D2DWrapper.h>
 #import "CGColorSpaceInternal.h"
 #import "CGContextInternal.h"
 #import "CGPathInternal.h"
@@ -45,16 +46,6 @@
 #import <algorithm>
 
 using namespace Microsoft::WRL;
-
-static inline D2D_RECT_F __CGRectToD2D_F(CGRect rect) {
-    return {
-        rect.origin.x, rect.origin.y, rect.origin.x + rect.size.width, rect.origin.y + rect.size.height,
-    };
-}
-
-static inline D2D1_MATRIX_3X2_F __CGAffineTransformToD2D_F(CGAffineTransform transform) {
-    return { transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty };
-}
 
 enum _CGCoordinateMode : unsigned int { _kCGCoordinateModeDeviceSpace = 0, _kCGCoordinateModeUserSpace };
 
