@@ -213,6 +213,7 @@ struct ButtonState {
         // by XAML.
         // The size of XAML elements(for eg Image) is calculated at runtime and then the
         // intrinsicContentSize is invalidated.
+        [self invalidateIntrinsicContentSize];
         [weakSelf setNeedsLayout];
     });
 }
@@ -266,6 +267,13 @@ Microsoft Extension
         _states[state].inspectableImage = [imageBrush comObj];
     }
 
+    // Update the Xaml elements immediately, so the proxies reflect reality
+    XamlButtonApplyVisuals([_xamlButton comObj],
+                           _currentInspectableTitle(self),
+                           _currentInspectableImage(self),
+                           _currentInspectableTitleColor(self));
+
+    [self invalidateIntrinsicContentSize];
     [self setNeedsLayout];
 }
 
@@ -432,6 +440,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 - (void)setBackgroundImage:(UIImage*)image forState:(UIControlState)state {
     _states[state].backgroundImage = image;
 
+    [self invalidateIntrinsicContentSize];
     [self setNeedsLayout];
 }
 
@@ -477,6 +486,13 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
         _states[state].inspectableTitle = [rtString comObj];
     }
 
+    // Update the Xaml elements immediately, so the proxies reflect reality
+    XamlButtonApplyVisuals([_xamlButton comObj],
+                           _currentInspectableTitle(self),
+                           _currentInspectableImage(self),
+                           _currentInspectableTitleColor(self));
+
+    [self invalidateIntrinsicContentSize];
     [self setNeedsLayout];
 }
 
@@ -507,6 +523,13 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
         _states[state].inspectableTitleColor = [titleColorBrush comObj];
     }
 
+    // Update the Xaml elements immediately, so the proxies reflect reality
+    XamlButtonApplyVisuals([_xamlButton comObj],
+                           _currentInspectableTitle(self),
+                           _currentInspectableImage(self),
+                           _currentInspectableTitleColor(self));
+
+    [self invalidateIntrinsicContentSize];
     [self setNeedsLayout];
 }
 
@@ -578,6 +601,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     // Relayout when new state is different than old state
     if (_curState != newState) {
         _curState = newState;
+        [self invalidateIntrinsicContentSize];
         [self setNeedsLayout];
     }
 
@@ -601,6 +625,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     // Relayout when new state is different than old state
     if (_curState != newState) {
         _curState = newState;
+        [self invalidateIntrinsicContentSize];
         [self setNeedsLayout];
     }
 
@@ -624,6 +649,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     // Relayout when new state is different than old state
     if (_curState != newState) {
         _curState = newState;
+        [self invalidateIntrinsicContentSize];
         [self setNeedsLayout];
     }
 
@@ -682,6 +708,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 */
 - (void)setTitleEdgeInsets:(UIEdgeInsets)insets {
     _titleInsets = insets;
+    [self invalidateIntrinsicContentSize];
     [self setNeedsLayout];
 }
 
@@ -690,6 +717,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 */
 - (void)setImageEdgeInsets:(UIEdgeInsets)insets {
     _imageInsets = insets;
+    [self invalidateIntrinsicContentSize];
     [self setNeedsLayout];
 }
 
@@ -698,6 +726,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 */
 - (void)setContentEdgeInsets:(UIEdgeInsets)insets {
     _contentInsets = insets;
+    [self invalidateIntrinsicContentSize];
     [self setNeedsLayout];
 }
 
