@@ -344,12 +344,10 @@
     NSMutableDictionary* attrs =
         [NSMutableDictionary dictionaryWithObjectsAndKeys:font, UITextAttributeFont, color, UITextAttributeTextColor, nil];
     CGPoint center = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
-    CGFloat radius = center.x;
+    CGFloat radius = center.x - 10.0f;
 
     for (int i = 0; i <= _textStorage.length; i++) {
         // Loop through each char in the string and place it around the center point.
-        NSString* letter = [_textStorage substringWithRange:NSMakeRange(i, 1)];
-
         CGFloat xCoord = center.x + (radius * scale * sin(angle));
         CGFloat yCoord = center.y - (radius * scale * cos(angle));
 
@@ -365,6 +363,7 @@
                 [attrs setObject:color forKey:UITextAttributeTextColor];
             }
 
+            NSString* letter = [_textStorage substringWithRange:NSMakeRange(i, 1)];
             CGSize letterSize = [letter sizeWithAttributes:attrs];
             [letter drawAtPoint:CGPointMake(xCoord - (letterSize.width / 2.0f), yCoord - (letterSize.height / 2.0f)) withAttributes:attrs];
         }
@@ -660,7 +659,7 @@
         }
 
         int spoke = (int)floor(fmod(angle, 1.0) * 36);
-        double winds = log10f(distance / (self.bounds.size.width / 2.0f) / lerp) / log10f(rotationShrinkage); // log(value, base)
+        double winds = log10f(distance / (self.bounds.size.width / 2.0f - 10.0f) / lerp) / log10f(rotationShrinkage); // log(value, base)
         spoke += (int)floor(winds) * 36;
 
         WUTCCoreTextRange* newRange = [WUTCCoreTextRange new];
@@ -751,6 +750,7 @@
     rect.width = _xamlControl.width;
     rect.height = _xamlControl.height;
     request.layoutBounds.controlBounds = rect;
+    request.layoutBounds.textBounds = rect;
 }
 
 // The following code specifies how you would apply any formatting to the specified range of text
