@@ -22,6 +22,7 @@
 #import "Wincodec.h"
 #include <COMIncludes_End.h>
 
+#import <CoreGraphics/CGAffineTransform.h>
 #import <CoreGraphics/CGGeometry.h>
 #import <CoreGraphics/CGBase.h>
 
@@ -42,4 +43,14 @@ inline CGRect _D2DRectToCGRect(D2D1_RECT_F rect) {
     CGFloat height = rect.bottom - y;
 
     return CGRectMake(x, y, width, height);
+}
+
+inline D2D1_MATRIX_3X2_F __CGAffineTransformToD2D_F(CGAffineTransform transform) {
+    return { transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty };
+}
+
+inline D2D_RECT_F __CGRectToD2D_F(CGRect rect) {
+    return {
+        rect.origin.x, rect.origin.y, rect.origin.x + rect.size.width, rect.origin.y + rect.size.height,
+    };
 }

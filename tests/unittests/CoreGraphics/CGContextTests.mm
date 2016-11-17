@@ -78,6 +78,10 @@ void cgContextPathApplierFunction(void* info, const CGPathElement* element) {
     [result addObject:@{ kTypeKey : @(element->type), kPointsKey : points }];
 }
 
+inline bool operator==(const CGPoint& lhs, const CGPoint& rhs) {
+    return ((std::abs(lhs.x - rhs.x) < 0.00001) && (std::abs(lhs.y - rhs.y) < 0.00001));
+}
+
 // Helper function that compares results from cgPathApplierFunction to expected results
 void cgContextPathCompare(NSArray* expected, NSArray* result) {
     ASSERT_EQ(expected.count, result.count) << "Counts do not match for expected and result";
@@ -274,10 +278,6 @@ DISABLED_TEST(CGPath, CGContextCopyPathCGPathAddQuadCurveToPoint) {
 
     CGContextRelease(context);
     CGColorSpaceRelease(rgbColorSpace);
-}
-
-bool operator==(const CGPoint& lhs, const CGPoint& rhs) {
-    return ((std::abs(lhs.x - rhs.x) < 0.00001) && (std::abs(lhs.y - rhs.y) < 0.00001));
 }
 
 template <typename T>
