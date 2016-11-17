@@ -74,8 +74,8 @@ struct __CTParagraphStyle : CoreFoundation::CppBase<__CTParagraphStyle> {
             woc::unique_cf<CFTypeRef> newValue{};
             switch (specifier) {
                 case kCTParagraphStyleSpecifierTabStops:
-                    newValue.reset(CFArrayCreateCopy(nullptr, static_cast<CFArrayRef>(value)));
-                    break;
+                    // Tab Stops not supported
+                    return false;
                 case kCTParagraphStyleSpecifierAlignment:
                 case kCTParagraphStyleSpecifierLineBreakMode: {
                     // CFNumber has no UInt8Type, so store all int values as standard int
@@ -106,8 +106,8 @@ struct __CTParagraphStyle : CoreFoundation::CppBase<__CTParagraphStyle> {
         if (specifier <= kCTParagraphStyleSpecifierCount && outValue != nullptr && size == __CTParagraphStyleSizeTable[specifier]) {
             switch (specifier) {
                 case kCTParagraphStyleSpecifierTabStops:
-                    *static_cast<void**>(outValue) = (void*)CFArrayGetValueAtIndex(_styles.get(), specifier);
-                    return true;
+                    // Tab Stops not supported
+                    return false;
                 case kCTParagraphStyleSpecifierAlignment:
                 case kCTParagraphStyleSpecifierLineBreakMode:
                     // CFNumber has no UInt8Type, so store all int values as standard int
