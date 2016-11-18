@@ -328,7 +328,7 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
 
 - (float)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
     // Special height for circular word display
-    if (indexPath.row == 6 || indexPath.row == 7) {
+    if (indexPath.row == 6 || indexPath.row == 7 || indexPath.row == 8) {
         //  Circular letter view and UITextView row need more height
         return 350.0f;
     } else if (indexPath.row == 12) {
