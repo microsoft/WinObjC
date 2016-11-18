@@ -16,6 +16,52 @@
 
 #include <windows.h>
 #include <TestFramework.h>
+#include <memory>
+
+#include "DrawingTestConfig.h"
+
+class CommandLineDrawingTestConfigImpl : public DrawingTestConfigImpl {
+private:
+    DrawingTestMode _mode;
+    std::string _outputPath;
+    std::string _comparisonPath;
+
+public:
+    CommandLineDrawingTestConfigImpl(int argc, char** argv)
+        : _mode(DrawingTestMode::Compare), _outputPath("."), _comparisonPath("./data/reference") {
+        for (int i = 1; i < argc; ++i) {
+            char* arg = argv[i];
+            if (!arg) {
+                break;
+            }
+
+            if (strcmp(arg, "--generate") == 0) {
+                _mode = DrawingTestMode::Generate;
+            } else if (strncmp(arg, "--out=", 6) == 0) {
+                _outputPath = std::move(std::string(arg + 6));
+            } else if (strncmp(arg, "--compare=", 10) == 0) {
+                _comparisonPath = std::move(std::string(arg + 10));
+            }
+        }
+    }
+
+    virtual DrawingTestMode GetMode() override {
+        return _mode;
+    }
+
+    virtual std::string GetOutputPath() override {
+        return _outputPath;
+    }
+
+    virtual std::string GetComparisonPath() override {
+        return _comparisonPath;
+    }
+};
+
+std::shared_ptr<DrawingTestConfigImpl> _configImpl;
+/* static */ DrawingTestConfigImpl* DrawingTestConfig::Get() {
+    return _configImpl.get();
+}
 
 #ifdef WIN32
 #include <wrl\wrappers\corewrappers.h>
@@ -34,6 +80,9 @@ int main(int argc, char** argv) {
     }
 #endif
     testing::InitGoogleTest(&argc, argv);
+
+    _configImpl = std::move(std::make_shared<CommandLineDrawingTestConfigImpl>(argc, argv));
+
     auto result = RUN_ALL_TESTS();
     return result;
 }

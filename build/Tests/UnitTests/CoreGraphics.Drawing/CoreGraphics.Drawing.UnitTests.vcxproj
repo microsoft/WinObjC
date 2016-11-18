@@ -250,10 +250,11 @@
   </ItemGroup>
   <Target Name="CopyTestResourcesToOutput" AfterTargets="AfterBuild">
     <ItemGroup>
-      <!-- No resources yet
-      <TestResourceFile Include="" /-->
+      <TestResourceFile Include="$(MSBuildThisFileDirectory)..\..\..\..\tests\unittests\CoreGraphics.Drawing\data\*" />
+      <ReferenceImageFile Include="$(MSBuildThisFileDirectory)..\..\..\..\tests\unittests\CoreGraphics.Drawing\data\reference\*" />
     </ItemGroup>
-    <Copy SourceFiles="@(TestResourceFile)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="True" />
+    <Copy SourceFiles="@(TestResourceFile)" DestinationFolder="$(OutDir)\data" SkipUnchangedFiles="True" />
+    <Copy SourceFiles="@(ReferenceImageFile)" DestinationFolder="$(OutDir)\data\reference" SkipUnchangedFiles="True" />
   </Target>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
