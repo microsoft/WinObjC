@@ -375,6 +375,11 @@ CGImageRef CGImageCreateWithMaskingColors(CGImageRef image, const CGFloat* compo
 
 #pragma region WIC_HELPERS
 
+WICPixelFormatGUID _CGImageGetWICPixelFormat(CGImageRef image) {
+    RETURN_RESULT_IF_NULL(image, GUID_WICPixelFormatUndefined);
+    return image->PixelFormat();
+}
+
 bool _CGIsValidRenderTargetPixelFormat(WICPixelFormatGUID pixelFormat) {
     auto iterator = s_ValidRenderTargetPixelFormat.find(pixelFormat);
     return iterator != s_ValidRenderTargetPixelFormat.end();
@@ -389,9 +394,11 @@ const __CGImagePixelProperties* _CGGetPixelFormatProperties(WICPixelFormatGUID p
     return &iterator->second;
 }
 
-IWICBitmap* _CGImageGetImageSource(CGImageRef image) {
-    RETURN_NULL_IF(!image);
-    return image->ImageSource().Get();
+HRESULT _CGImageGetWICImageSource(CGImageRef image, IWICBitmap** source) {
+    RETURN_HR_IF_NULL(E_INVALIDARG,image);
+	RETURN_HR_IF_NULL(E_POINTER, source);
+    *source = image->ImageSource().Get();
+	return S_OK;
 }
 
 DisplayTexture* _CGImageGetDisplayTexture(CGImageRef image) {

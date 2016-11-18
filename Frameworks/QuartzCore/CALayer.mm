@@ -375,8 +375,8 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
         releaseWritetableBitmapTexture.Dismiss();
 
         Microsoft::WRL::ComPtr<IWICBitmap> customWICBtmap =
-            Microsoft::WRL::Make<CGIWICBitmap>(displayTexture.get(), GUID_WICPixelFormat32bppPBGRA, height, width);
-        // We want to convert it to GUID_WICPixelFormat32bppPBGRA for D2D Render Target compatibility.
+            Microsoft::WRL::Make<CGIWICBitmap>(displayTexture.get(), GUID_WICPixelFormat32bppPRGBA, height, width);
+        // We want to convert it to GUID_WICPixelFormat32bppPRGBA for D2D Render Target compatibility.
         woc::unique_cf<CGImageRef> image(_CGImageCreateWithWICBitmap(customWICBtmap.Get()));
 
         Microsoft::WRL::ComPtr<ID2D1Factory> factory;
@@ -481,7 +481,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
         rect.size.width = priv->bounds.size.width * priv->contentsScale;
         rect.size.height = -priv->bounds.size.height * priv->contentsScale;
 
-        CGContextDrawImageRect(ctx, priv->contents, rect, destRect);
+        _CGContextDrawImageRect(ctx, priv->contents, rect, destRect);
     }
 
     //  Draw sublayers

@@ -449,7 +449,7 @@ static inline CGImageRef getImage(UIImage* uiImage) {
     srcRect.size.width = pos.size.width;
     srcRect.size.height = -pos.size.height;
 
-    CGContextDrawImageRect(cur, getImage(self), srcRect, pos);
+    _CGContextDrawImageRect(cur, getImage(self), srcRect, pos);
 }
 
 /**
@@ -488,7 +488,7 @@ static inline CGImageRef getImage(UIImage* uiImage) {
     srcRect.size.width = img_width;
     srcRect.size.height = -img_height;
 
-    CGContextDrawImageRect(cur, img, srcRect, pos);
+    _CGContextDrawImageRect(cur, img, srcRect, pos);
 
     CGContextRestoreGState(cur);
 }
@@ -541,7 +541,7 @@ static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* dst) 
     if (dstHeight - dstTopCap - dstBotCap > 0) {
         if (dstLeftCap) {
             // MidHeightLeft
-            CGContextDrawImageRect(context,
+            _CGContextDrawImageRect(context,
                                    cgImg,
                                    CGRectMake(0, srcHeight - srcBotCap, srcLeftCap, -(srcHeight - srcTopCap - srcBotCap)),
                                    CGRectMake(dstX, (dstY + dstBotCap), dstLeftCap, (dstHeight - dstTopCap - dstBotCap)));
@@ -549,7 +549,7 @@ static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* dst) 
 
         if (dstWidth - dstLeftCap - dstRightCap > 0) {
             // MidHeightMidWidth
-            CGContextDrawImageRect(context,
+            _CGContextDrawImageRect(context,
                                    cgImg,
                                    CGRectMake(srcLeftCap,
                                               srcHeight - srcBotCap,
@@ -568,7 +568,7 @@ static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* dst) 
 
         if (dstRightCap) {
             // MidHeightRight
-            CGContextDrawImageRect(
+            _CGContextDrawImageRect(
                 context,
                 cgImg,
                 CGRectMake((srcWidth - srcRightCap), srcHeight - srcBotCap, srcRightCap, -(srcHeight - srcTopCap - srcBotCap)),
@@ -584,7 +584,7 @@ static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* dst) 
     if (dstTopCap) {
         if (dstLeftCap) {
             // TL corner
-            CGContextDrawImageRect(context,
+            _CGContextDrawImageRect(context,
                                    cgImg,
                                    CGRectMake(0, srcTopCap, srcLeftCap, -srcTopCap),
                                    CGRectMake(dstX, (dstY + dstHeight - dstTopCap), dstLeftCap, dstTopCap));
@@ -592,7 +592,7 @@ static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* dst) 
 
         if (dstWidth - dstLeftCap - dstRightCap > 0) {
             // TCenter
-            CGContextDrawImageRect(context,
+            _CGContextDrawImageRect(context,
                                    cgImg,
                                    CGRectMake(srcLeftCap, srcTopCap, (srcWidth - srcLeftCap - srcRightCap), -srcTopCap),
                                    CGRectMake((dstX + dstLeftCap),
@@ -603,7 +603,7 @@ static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* dst) 
 
         if (dstRightCap) {
             // TR corner
-            CGContextDrawImageRect(context,
+            _CGContextDrawImageRect(context,
                                    cgImg,
                                    CGRectMake((srcWidth - srcRightCap), srcTopCap, srcRightCap, -srcTopCap),
                                    CGRectMake((dstX + dstWidth - dstRightCap), (dstY + dstHeight - dstTopCap), dstRightCap, dstTopCap));
@@ -613,7 +613,7 @@ static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* dst) 
     if (dstBotCap) {
         if (dstLeftCap) {
             // BL Corner
-            CGContextDrawImageRect(context,
+            _CGContextDrawImageRect(context,
                                    cgImg,
                                    CGRectMake(0, srcHeight, srcLeftCap, -srcBotCap),
                                    CGRectMake(dstX, dstY, dstLeftCap, dstBotCap));
@@ -621,14 +621,14 @@ static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* dst) 
 
         if (dstWidth - dstLeftCap - dstRightCap > 0) {
             // bottomMidWidth
-            CGContextDrawImageRect(context,
+            _CGContextDrawImageRect(context,
                                    cgImg,
                                    CGRectMake(srcLeftCap, srcHeight, (srcWidth - srcLeftCap - srcRightCap), -srcBotCap),
                                    CGRectMake((dstX + dstLeftCap), dstY, (dstWidth - dstLeftCap - dstRightCap), dstBotCap));
         }
 
         if (dstRightCap) {
-            CGContextDrawImageRect(context,
+            _CGContextDrawImageRect(context,
                                    cgImg,
                                    CGRectMake((srcWidth - srcRightCap), srcHeight, srcRightCap, -srcBotCap),
                                    CGRectMake((dstX + dstWidth - dstRightCap), dstY, dstRightCap, dstBotCap));

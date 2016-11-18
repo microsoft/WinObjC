@@ -226,7 +226,7 @@ LIBRARY CoreGraphics
 
         ; private exports below
         CGContextClearToColor
-        CGContextDrawImageRect
+        _CGContextDrawImageRect
         CGContextGetBlendMode
         CGContextIsDirty
         CGContextReleaseLock
@@ -360,7 +360,7 @@ LIBRARY CoreGraphics
         _CGImageCreateCopyWithPixelFormat
         _CGImageGetRawBytes
         _CGImageGetDisplayTexture
-        _CGImageGetImageSource
+        _CGImageGetWICImageSource
 
         ; private exports below
         CGImageAddDestructionListener

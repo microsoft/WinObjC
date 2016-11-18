@@ -250,8 +250,7 @@
   </ItemGroup>
   <Target Name="CopyTestResourcesToOutput" AfterTargets="AfterBuild">
     <ItemGroup>
-      <!-- No resources yet
-      <TestResourceFile Include="" /-->
+      <TestResourceFile Include="..\..\..\..\tests\unittests\CoreGraphics.drawing\data\*" />
     </ItemGroup>
     <Copy SourceFiles="@(TestResourceFile)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="True" />
   </Target>

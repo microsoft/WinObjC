@@ -282,7 +282,7 @@ WADDataPackageView* _getClipboardContent() {
     CGImageRef img = [image CGImage];
 
     // TODO #1338 - Support via encoded data from IWIC
-    woc::unique_cf<CGImageRef> imgRef(_CGImageCreateCopyWithPixelFormat(img, GUID_WICPixelFormat32bppPBGRA));
+    woc::unique_cf<CGImageRef> imgRef(_CGImageCreateCopyWithPixelFormat(img, GUID_WICPixelFormat32bppPRGBA));
     NSData* data = static_cast<NSData*>(CGImageGetDataProvider(imgRef.get()));
 
     WSSInMemoryRandomAccessStream* stream = [[WSSInMemoryRandomAccessStream make] autorelease];
