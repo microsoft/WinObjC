@@ -17,6 +17,7 @@
 #import "ProgrammaticViewController.h"
 
 #import "CALayerViewController.h"
+#import "CALayerMultipleViewController.h"
 #import "CALayerAnimationViewController.h"
 #import "CAShapeLayerViewController.h"
 
@@ -24,9 +25,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.navigationController.navigationBar.translucent = NO;
 
     // CALayer Basic
     [self addMenuItemViewController:[[CALayerViewController alloc] init] andTitle:@"CALayer Basic"];
+
+    // CALayer Animation
+    [self addMenuItemViewController:[[CALayerMultipleViewController alloc] init] andTitle:@"CALayer Multiple"];
 
     // CALayer Animation
     [self addMenuItemViewController:[[CALayerAnimationViewController alloc] init] andTitle:@"CALayer Animation (CAAnimation)"];
@@ -39,33 +45,6 @@
 
     // CAEmitterLayer
     [self addMenuItemSegue:@"CAEmitterLayer" andTitle:@"CAEmitterLayer"];
-
-    // CALayer Transactions
-    [self addMenuItemView:[[UIView alloc] init] andTitle:@"CALayer Transactions (CATransactions) - TBD"];
-
-    // CALayer Transform2D
-    [self addMenuItemView:[[UIView alloc] init] andTitle:@"CALayer Tranform2D - TBD"];
-
-    // CALayer Transform3D
-    [self addMenuItemView:[[UIView alloc] init] andTitle:@"CALayer Transform3D - TBD"];
-
-    // AVPlayerLayer
-    [self addMenuItemView:[[UIView alloc] init] andTitle:@"AVPlayerLayer - TBD"];
-
-    // CAGradientLayer
-    [self addMenuItemView:[[UIView alloc] init] andTitle:@"CAGradientLayer - TBD"];
-
-    // CATextLayer
-    [self addMenuItemView:[[UIView alloc] init] andTitle:@"CATextLayer - TBD"];
-
-    // CATiledLayer
-    [self addMenuItemView:[[UIView alloc] init] andTitle:@"CATiledLayer - TBD"];
-
-    // CAEAGLLayer
-    [self addMenuItemView:[[UIView alloc] init] andTitle:@"CAEAGLLayer - TBD"];
-
-    // CAReplicatorLayer
-    [self addMenuItemView:[[UIView alloc] init] andTitle:@"CAReplicatorLayer - TBD"];
 }
 
 - (void)didReceiveMemoryWarning {
