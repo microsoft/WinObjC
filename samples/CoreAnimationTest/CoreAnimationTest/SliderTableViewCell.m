@@ -59,7 +59,7 @@
 
 - (void)setDisabled:(BOOL)disabled {
     [super setDisabled:disabled];
-    self.slideControl.enabled = NO;
+    self.slideControl.enabled = !disabled;
 }
 
 - (void)prepareForReuse {
