@@ -276,6 +276,8 @@ struct __CGImage : CoreFoundation::CppBase<__CGImage> {
 
 //--Helpers--
 
+WICPixelFormatGUID _CGImageGetPixelFormat(CGImageRef image);
+
 COREGRAPHICS_EXPORT CGImageRef _CGImageLoadGIF(void* bytes, int length);
 
 COREGRAPHICS_EXPORT CGImageRef _CGImageLoadBMP(void* bytes, size_t length);

@@ -84,7 +84,7 @@ DRAW_TEST_F(CGPath, AddLineToPoint, UIKitMimicTest) {
     CGPathRelease(thepath);
 }
 
-DISABLED_DRAW_TEST_F(CGPath, AddPath, UIKitMimicTest) {
+DRAW_TEST_F(CGPath, AddPath, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 

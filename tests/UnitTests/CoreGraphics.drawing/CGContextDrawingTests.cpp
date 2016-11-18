@@ -14,7 +14,22 @@
 //
 //******************************************************************************
 
-#include "DrawingTest.h"
+#import "DrawingTest.h"
+#import <windows.h>
+#import "CGContextInternal.h"
+
+static woc::unique_cf<CGColorSpaceRef> rgbColorSpace(CGColorSpaceCreateDeviceRGB());
+
+static NSString* getModulePath() {
+    char fullPath[_MAX_PATH];
+    GetModuleFileNameA(NULL, fullPath, _MAX_PATH);
+    return [@(fullPath) stringByDeletingLastPathComponent];
+}
+
+static NSString* getPathToFile(NSString* fileName) {
+    static StrongId<NSString*> refPath = getModulePath();
+    return [refPath stringByAppendingPathComponent:fileName];
+}
 
 DRAW_TEST_F(CGContext, RedBox, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
@@ -22,6 +37,70 @@ DRAW_TEST_F(CGContext, RedBox, UIKitMimicTest) {
 
     CGContextSetRGBFillColor(context, 1.0, 0.0, 0.0, 1.0);
     CGContextFillRect(context, CGRectInset(bounds, 10, 10));
+}
+
+DRAW_TEST_F(CGContext, DrawIntoRect, UIKitMimicTest) {
+    // Create a context to draw the Image into
+    woc::unique_cf<CGContextRef> contextImage(CGBitmapContextCreate(
+        nullptr, 10, 10, 8, 4 * 10 /* bytesPerRow = bytesPerPixel*width*/, rgbColorSpace.get(), kCGImageAlphaPremultipliedFirst));
+    ASSERT_NE(contextImage, nullptr);
+
+    CGContextSetRGBFillColor(contextImage.get(), 1.0, 0.0, 0.0, 1.0);
+    CGContextFillRect(contextImage.get(), { 0, 0, 10, 10 });
+
+    woc::unique_cf<CGImageRef> image(CGBitmapContextCreateImage(contextImage.get()));
+    ASSERT_NE(image, nullptr);
+
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGAffineTransform flip = CGAffineTransformMakeScale(1, -1);
+    CGAffineTransform shift = CGAffineTransformTranslate(flip, 0, bounds.size.height * -1);
+    CGContextConcatCTM(context, shift);
+
+    CGContextDrawImageRect(context,
+                           image.get(),
+                           { 0, bounds.size.height, bounds.size.width, bounds.size.height },
+                           { 0, 0, bounds.size.width, bounds.size.height });
+}
+
+DRAW_TEST_F(CGContext, DrawAContextIntoAnImage, UIKitMimicTest) {
+    // Create a context to draw the Image into
+    woc::unique_cf<CGContextRef> contextImage(CGBitmapContextCreate(
+        nullptr, 10, 10, 8, 4 * 10 /* bytesPerRow = bytesPerPixel*width*/, rgbColorSpace.get(), kCGImageAlphaPremultipliedFirst));
+    ASSERT_NE(contextImage, nullptr);
+
+    CGContextSetRGBFillColor(contextImage.get(), 1.0, 0.0, 0.0, 1.0);
+    CGContextFillRect(contextImage.get(), { 0, 0, 10, 10 });
+
+    woc::unique_cf<CGImageRef> image(CGBitmapContextCreateImage(contextImage.get()));
+    ASSERT_NE(image, nullptr);
+
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGAffineTransform flip = CGAffineTransformMakeScale(1, -1);
+    CGAffineTransform shift = CGAffineTransformTranslate(flip, 0, bounds.size.height * -1);
+    CGContextConcatCTM(context, shift);
+
+    CGContextDrawImage(context, bounds, image.get());
+}
+
+DRAW_TEST_F(CGContext, DrawAnImage, UIKitMimicTest) {
+    CFDataRef data = (CFDataRef)[NSData dataWithContentsOfFile:getPathToFile(@"jpg1.jpg")];
+    woc::unique_cf<CGDataProviderRef> dataProvider(CGDataProviderCreateWithCFData(data));
+
+    woc::unique_cf<CGImageRef> cgImage(CGImageCreateWithJPEGDataProvider(dataProvider.get(), NULL, NO, kCGRenderingIntentDefault));
+    ASSERT_NE(cgImage, nullptr);
+
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGAffineTransform flip = CGAffineTransformMakeScale(1, -1);
+    CGAffineTransform shift = CGAffineTransformTranslate(flip, 0, bounds.size.height * -1);
+    CGContextConcatCTM(context, shift);
+
+    CGContextDrawImage(context, bounds, cgImage.get());
 }
 
 DRAW_TEST_F(CGContext, FillThenStrokeIsSameAsDrawFillStroke, WhiteBackgroundTest) {

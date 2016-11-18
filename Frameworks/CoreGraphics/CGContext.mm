@@ -840,7 +840,7 @@ CGRect CGContextGetClipBoundingBox(CGContextRef context) {
     auto& state = context->CurrentGState();
     if (!state.clippingGeometry) {
         D2D1_SIZE_F targetSize = context->RenderTarget()->GetSize();
-        return CGContextConvertRectToUserSpace(context, CGRect{ CGPointZero, { targetSize.width, targetSize.height }});
+        return CGContextConvertRectToUserSpace(context, CGRect{ CGPointZero, { targetSize.width, targetSize.height } });
     }
 
     D2D1_RECT_F bounds;
@@ -1393,39 +1393,6 @@ void CGContextShowGlyphsWithAdvances(CGContextRef context, const CGGlyph* glyphs
 }
 #pragma endregion
 
-#pragma region Drawing Operations - CGImage
-/// TODO(DH): GH#1078 Image Drawing
-/**
- @Status Interoperable
-*/
-void CGContextDrawImage(CGContextRef context, CGRect rect, CGImageRef image) {
-    NOISY_RETURN_IF_NULL(context);
-    if (!image) {
-        TraceWarning(TAG, L"Img == nullptr!");
-        return;
-    }
-    if (!context) {
-        TraceWarning(TAG, L"CGContextDrawImage: context == nullptr!");
-        return;
-    }
-
-    UNIMPLEMENTED();
-}
-
-void CGContextDrawImageRect(CGContextRef context, CGImageRef image, CGRect src, CGRect dst) {
-    NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
-}
-
-/**
- @Status Interoperable
-*/
-void CGContextDrawTiledImage(CGContextRef context, CGRect rect, CGImageRef image) {
-    NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
-}
-#pragma endregion
-
 #pragma region Drawing Operations - Basic Shapes
 /**
  @Status Interoperable
@@ -1808,6 +1775,80 @@ void CGContextEOFillPath(CGContextRef context) {
     RETURN_IF(!context->ShouldDraw());
 
     CGContextDrawPath(context, kCGPathEOFill); // Clears path.
+}
+#pragma endregion
+
+#pragma region Drawing Operations - CGImage
+
+/**
+ @Status Interoperable
+*/
+void CGContextDrawImage(CGContextRef context, CGRect rect, CGImageRef image) {
+    NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!image);
+
+    // Obtain the pixel format for the image
+    WICPixelFormatGUID imagePixelFormat = _CGImageGetPixelFormat(image);
+
+    CFRetain(image);
+    woc::unique_cf<CGImageRef> refImage;
+    refImage.reset(image);
+
+    if (!_CGIsValidRenderTargetPixelFormat(imagePixelFormat)) {
+        // convert it to a valid pixelformat
+        refImage.reset(_CGImageCreateCopyWithPixelFormat(image, GUID_WICPixelFormat32bppPBGRA));
+    }
+
+    ComPtr<IWICBitmap> bmap = _CGImageGetImageSource(refImage.get());
+    ComPtr<ID2D1Bitmap> d2dBitmap;
+
+    HRESULT result = context->RenderTarget()->CreateBitmapFromWicBitmap(bmap.Get(), nullptr, &d2dBitmap);
+
+    CGAffineTransform flipImage = CGAffineTransformMakeTranslation(rect.origin.x, rect.origin.y + (rect.size.height / 2.0));
+    flipImage = CGAffineTransformScale(flipImage, 1.0, -1.0);
+    flipImage = CGAffineTransformTranslate(flipImage, -rect.origin.x, -(rect.origin.y + (rect.size.height / 2.0)));
+
+    ComPtr<ID2D1CommandList> commandList;
+    HRESULT hr = __CGContextRenderToCommandList(context,
+                                                _kCGCoordinateModeUserSpace,
+                                                &flipImage,
+                                                &commandList,
+                                                [d2dBitmap, rect](CGContextRef context, ID2D1DeviceContext* deviceContext) {
+                                                    deviceContext->DrawBitmap(d2dBitmap.Get(), __CGRectToD2D_F(rect));
+                                                    return S_OK;
+                                                });
+
+    FAIL_FAST_IF_FAILED(__CGContextRenderImage(context, commandList.Get()));
+}
+
+void CGContextDrawImageRect(CGContextRef context, CGImageRef image, CGRect src, CGRect dst) {
+    NOISY_RETURN_IF_NULL(context);
+    RETURN_IF(!image);
+
+    // Default rect
+    CGRect drawRect = CGRectMake(0, 0, CGImageGetWidth(image), CGImageGetHeight(image));
+
+    if (!CGRectEqualToRect(src, dst)) {
+        float scaleX = CGRectGetWidth(dst) / CGRectGetWidth(src);
+        float scaleY = CGRectGetHeight(dst) / CGRectGetHeight(src);
+        float deltaX = CGRectGetMinX(dst) - (CGRectGetMinX(src) * scaleX);
+        float deltaY = CGRectGetMinY(dst) - (CGRectGetMinY(src) * scaleY);
+        drawRect = CGRectMake(deltaX, deltaY, (float)CGImageGetWidth(image) * scaleX, (float)CGImageGetHeight(image) * scaleY);
+    }
+
+    CGContextSaveGState(context);
+    CGContextClipToRect(context, dst);
+    CGContextDrawImage(context, drawRect, image);
+    CGContextRestoreGState(context);
+}
+
+/**
+ @Status Interoperable
+*/
+void CGContextDrawTiledImage(CGContextRef context, CGRect rect, CGImageRef image) {
+    // TODO: jejeyara: This can be combined with brushes (brush + tiled fill);
+    NOISY_RETURN_IF_NULL(context);
+    UNIMPLEMENTED();
 }
 #pragma endregion
 

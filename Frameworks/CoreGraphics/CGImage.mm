@@ -375,6 +375,11 @@ CGImageRef CGImageCreateWithMaskingColors(CGImageRef image, const CGFloat* compo
 
 #pragma region WIC_HELPERS
 
+WICPixelFormatGUID _CGImageGetPixelFormat(CGImageRef image) {
+    RETURN_RESULT_IF_NULL(image, GUID_WICPixelFormatUndefined);
+    return image->PixelFormat();
+}
+
 bool _CGIsValidRenderTargetPixelFormat(WICPixelFormatGUID pixelFormat) {
     auto iterator = s_ValidRenderTargetPixelFormat.find(pixelFormat);
     return iterator != s_ValidRenderTargetPixelFormat.end();
