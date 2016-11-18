@@ -45,27 +45,30 @@ static const _ImageInfo imagesPNG[] = {
     { @"png3.png", 795, 1197, false, 32, 8 },
 };
 
-#define EXPECT_IMAGE_DATA(image, imageInfo)                                  \
-    EXPECT_TRUE(image != NULL);                                              \
-    EXPECT_EQ(imageInfo.isMask, CGImageIsMask(image));                       \
-    EXPECT_EQ(imageInfo.height, CGImageGetHeight(image));                    \
-    EXPECT_EQ(imageInfo.width, CGImageGetWidth(image));                      \
-    EXPECT_EQ(imageInfo.bitPerPixel, CGImageGetBitsPerPixel(image));         \
-    EXPECT_EQ(imageInfo.bitPerComponent, CGImageGetBitsPerComponent(image)); \
-    EXPECT_EQ((imageInfo.bitPerPixel >> 3) * imageInfo.width, CGImageGetBytesPerRow(image));
+#define EXPECT_IMAGE_DATA(image, imageInfo)                                                  \
+    EXPECT_TRUE(image != NULL);                                                              \
+    EXPECT_EQ(imageInfo.isMask, CGImageIsMask(image));                                       \
+    EXPECT_EQ(imageInfo.height, CGImageGetHeight(image));                                    \
+    EXPECT_EQ(imageInfo.width, CGImageGetWidth(image));                                      \
+    EXPECT_EQ(imageInfo.bitPerPixel, CGImageGetBitsPerPixel(image));                         \
+    EXPECT_EQ(imageInfo.bitPerComponent, CGImageGetBitsPerComponent(image));                 \
+    EXPECT_EQ((imageInfo.bitPerPixel >> 3) * imageInfo.width, CGImageGetBytesPerRow(image)); \
+    EXPECT_NE(nullptr, CGImageGetDataProvider(image));
 
 static CGImageRef createJPEG(NSString* path) {
-    CFDataRef data = (CFDataRef)[NSData dataWithContentsOfFile:getPathToFile(path)];
+    CFDataRef data = (CFDataRef)[[NSData alloc] initWithContentsOfFile:getPathToFile(path)];
     CGDataProviderRef dataProvider = CGDataProviderCreateWithCFData(data);
     CGImageRef ret = CGImageCreateWithJPEGDataProvider(dataProvider, NULL, NO, kCGRenderingIntentDefault);
+    CFRelease(data);
     CGDataProviderRelease(dataProvider);
     return ret;
 }
 
 static CGImageRef createPNG(NSString* path) {
-    CFDataRef data = (CFDataRef)[NSData dataWithContentsOfFile:getPathToFile(path)];
+    CFDataRef data = (CFDataRef)[[NSData alloc] initWithContentsOfFile:getPathToFile(path)];
     CGDataProviderRef dataProvider = CGDataProviderCreateWithCFData(data);
     CGImageRef ret = CGImageCreateWithPNGDataProvider(dataProvider, NULL, NO, kCGRenderingIntentDefault);
+    CFRelease(data);
     CGDataProviderRelease(dataProvider);
     return ret;
 }
