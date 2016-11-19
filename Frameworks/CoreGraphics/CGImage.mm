@@ -45,6 +45,187 @@ COREGRAPHICS_EXPORT void CGImageAddDestructionListener(CGImageDestructionListene
 
 #pragma endregion OLD_CODE
 
+#pragma region CGImageImplementation
+
+struct __CGImageImpl {
+    Microsoft::WRL::ComPtr<IWICBitmap> bitmapImageSource;
+    bool isMask;
+    bool interpolate;
+    woc::unique_cf<CGColorSpaceRef> colorSpace;
+    CGImageAlphaInfo alphaInfo;
+    size_t height;
+    size_t width;
+    size_t bitsPerPixel;
+    size_t bitsPerComponent;
+    size_t bytesPerRow;
+    CGBitmapInfo bitmapInfo;
+    CGColorRenderingIntent renderingIntent;
+
+    __CGImageImpl() {
+        height = 0;
+        width = 0;
+        bitsPerComponent = 0;
+        bitsPerPixel = 0;
+        bytesPerRow = 0;
+        bitmapInfo = kCGBitmapByteOrderDefault;
+        alphaInfo = kCGImageAlphaNone;
+        isMask = false;
+        interpolate = false;
+        renderingIntent = kCGRenderingIntentDefault;
+    }
+
+    inline WICPixelFormatGUID PixelFormat() const {
+        WICPixelFormatGUID pixelFormat;
+        RETURN_RESULT_IF_FAILED(bitmapImageSource->GetPixelFormat(&pixelFormat), GUID_WICPixelFormatUndefined);
+        return pixelFormat;
+    }
+
+    inline const __CGImagePixelProperties* Properties() const {
+        WICPixelFormatGUID pixelFormat = PixelFormat();
+        return _CGGetPixelFormatProperties(pixelFormat);
+    }
+
+    inline size_t BitsPerPixel() const {
+        const __CGImagePixelProperties* properties = Properties();
+        RETURN_RESULT_IF_NULL(properties, 0);
+        return properties->bitsPerPixel;
+    }
+
+    inline size_t BitsPerComponent() const {
+        const __CGImagePixelProperties* properties = Properties();
+        RETURN_RESULT_IF_NULL(properties, 0);
+        return properties->bitsPerComponent;
+    }
+
+    inline CGBitmapInfo BitmapInfo() const {
+        const __CGImagePixelProperties* properties = Properties();
+        RETURN_RESULT_IF_NULL(properties, 0);
+        return properties->bitmapInfo;
+    }
+
+    inline CGImageAlphaInfo AlphaInfo() const {
+        return static_cast<CGImageAlphaInfo>(BitmapInfo() & kCGBitmapAlphaInfoMask);
+    }
+
+    inline CGColorSpaceRef ColorSpace() {
+        const __CGImagePixelProperties* properties = Properties();
+        RETURN_NULL_IF(!properties);
+        return _CGColorSpaceCreate(properties->colorSpaceModel);
+    }
+
+    inline void SetImageSource(Microsoft::WRL::ComPtr<IWICBitmap> source) {
+        bitmapImageSource = std::move(source);
+        // populate the image info.
+        if (FAILED(bitmapImageSource->GetSize(&width, &height))) {
+            height = 0;
+            width = 0;
+        }
+
+        bitmapInfo = BitmapInfo();
+        alphaInfo = AlphaInfo();
+        bitsPerPixel = BitsPerPixel();
+        bitsPerComponent = BitsPerComponent();
+        bytesPerRow = (bitsPerPixel >> 3) * width;
+        if (!colorSpace) {
+            colorSpace.reset(ColorSpace());
+        }
+    }
+};
+
+struct __CGImage : CoreFoundation::CppBase<__CGImage> {
+    // TODO(JJ) REMOVE THIS; Merge Impl into __CGImage.
+    __CGImageImpl _impl;
+
+    inline Microsoft::WRL::ComPtr<IWICBitmap>& ImageSource() {
+        return _impl.bitmapImageSource;
+    }
+
+    inline void* Data() const {
+        Microsoft::WRL::ComPtr<IWICBitmapLock> lock;
+        RETURN_NULL_IF_FAILED(_impl.bitmapImageSource->Lock(nullptr, WICBitmapLockWrite, &lock));
+        BYTE* data;
+        UINT size;
+        RETURN_NULL_IF_FAILED(lock->GetDataPointer(&size, &data));
+        return static_cast<void*>(data);
+    }
+
+    inline size_t Height() const {
+        return _impl.height;
+    }
+
+    inline size_t Width() const {
+        return _impl.width;
+    }
+
+    inline bool IsMask() const {
+        return _impl.isMask;
+    }
+
+    inline bool Interpolate() const {
+        return _impl.interpolate;
+    }
+
+    inline CGColorSpaceRef ColorSpace() {
+        return _impl.colorSpace.get();
+    }
+
+    inline CGColorRenderingIntent RenderingIntent() const {
+        return _impl.renderingIntent;
+    }
+
+    inline CGBitmapInfo BitmapInfo() const {
+        return _impl.bitmapInfo;
+    }
+
+    inline CGImageAlphaInfo AlphaInfo() const {
+        return _impl.alphaInfo;
+    }
+
+    inline size_t BitsPerPixel() const {
+        return _impl.bitsPerPixel;
+    }
+
+    inline size_t BytesPerRow() const {
+        return _impl.bytesPerRow;
+    }
+
+    inline size_t BitsPerComponent() const {
+        return _impl.bitsPerComponent;
+    }
+
+    inline WICPixelFormatGUID PixelFormat() const {
+        return _impl.PixelFormat();
+    }
+
+    inline __CGImage& SetImageSource(Microsoft::WRL::ComPtr<IWICBitmap> source) {
+        _impl.SetImageSource(source);
+        return *this;
+    }
+
+    inline __CGImage& SetIsMask(bool mask) {
+        _impl.isMask = mask;
+        return *this;
+    }
+
+    inline __CGImage& SetInterpolate(bool interpolate) {
+        _impl.interpolate = interpolate;
+        return *this;
+    }
+
+    inline __CGImage& SetColorSpace(CGColorSpaceRef space) {
+        _impl.colorSpace.reset(space);
+        CGColorSpaceRetain(space);
+        return *this;
+    }
+
+    inline __CGImage& SetRenderingIntent(CGColorRenderingIntent intent) {
+        _impl.renderingIntent = intent;
+        return *this;
+    }
+};
+
+#pragma endregion CGImageImplementation
+
 /**
  @Status Interoperable
 */
@@ -346,8 +527,7 @@ CGImageRef CGImageCreateCopyWithColorSpace(CGImageRef ref, CGColorSpaceRef color
  @Status Stub
  */
 CGImageRef CGImageCreateWithMask(CGImageRef image, CGImageRef mask) {
-    // TODO #1124: Given how masks are applied during rendering via D2D, we will hold onto the
-    // mask then apply it at the appropriate time.
+    // TODO  #1425 - masks are applied during rendering via D2D.
     RETURN_NULL_IF(!image);
     UNIMPLEMENTED();
     return StubReturn();
