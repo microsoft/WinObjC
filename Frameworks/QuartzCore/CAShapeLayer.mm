@@ -104,6 +104,9 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height);
 
     _shapeImage.position = bbox.origin;
 
+    // Set the sublayer's bounds so it's visible
+    _shapeImage.bounds = self.bounds;
+
     if (_fillColor) {
         CGContextAddPath(drawContext, _path);
         CGContextSetFillColorWithColor(drawContext, _fillColor);

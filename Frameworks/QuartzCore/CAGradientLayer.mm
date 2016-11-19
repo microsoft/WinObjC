@@ -13,7 +13,6 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #include "Starboard.h"
 #import <QuartzCore\CAGradientLayer.h>
 

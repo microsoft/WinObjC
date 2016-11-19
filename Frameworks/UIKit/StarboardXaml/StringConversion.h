@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,7 +14,5 @@
 //
 //******************************************************************************
 #pragma once
-
-#include "winobjc\winobjc.h"
 
 extern "C" const char* _RawBufferFromNSString(void* str);

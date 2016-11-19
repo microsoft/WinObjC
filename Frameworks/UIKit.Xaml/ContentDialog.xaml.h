@@ -24,6 +24,7 @@
 #include <windows.ui.xaml.h>
 
 namespace UIKit {
+namespace Xaml {
 
 [Windows::UI::Xaml::Data::Bindable]
 [Windows::Foundation::Metadata::WebHostHidden]
@@ -63,5 +64,6 @@ private:
     void OnSelectionChanged(Platform::Object ^sender, Windows::UI::Xaml::Controls::SelectionChangedEventArgs ^e);
 };
 
-}
+} /* Xaml*/
+} /* UIKit*/
 // clang-format on

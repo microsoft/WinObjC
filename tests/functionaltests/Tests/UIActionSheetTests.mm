@@ -31,47 +31,38 @@
 #import "UWP/WindowsUIXamlControls.h"
 
 TEST(UIActionSheet, CreateXamlElement) {
-    dispatch_sync(dispatch_get_main_queue(),
-                  ^{
-                      // TODO: Switch to UIKit.Xaml projections when they're available.
-                      Microsoft::WRL::ComPtr<IInspectable> xamlElement(XamlCreateContentDialog());
-                      ASSERT_TRUE(xamlElement);
-                  });
+    // TODO: Switch to UIKit.Xaml projections when they're available.
+    Microsoft::WRL::ComPtr<IInspectable> xamlElement(XamlCreateContentDialog());
+    ASSERT_TRUE(xamlElement);
 }
 
 TEST(UIActionSheet, GetXamlElement) {
-    dispatch_sync(dispatch_get_main_queue(),
-                  ^{
-                      UIActionSheet* actionSheet = [[[UIActionSheet alloc] init] autorelease];
-                      WXFrameworkElement* backingElement = [actionSheet xamlElement];
-                      ASSERT_TRUE(backingElement);
+    UIActionSheet* actionSheet = [[[UIActionSheet alloc] init] autorelease];
+    WXFrameworkElement* backingElement = [actionSheet xamlElement];
+    ASSERT_TRUE(backingElement);
 
-                      ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
-                  });
+    ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
 }
 
 TEST(UIActionSheet, NilParameters) {
-    dispatch_sync(dispatch_get_main_queue(),
-                  ^{
-                      UIActionSheet* actionSheet = [[[UIActionSheet alloc] initWithTitle:nil
-                                                                                delegate:nil
-                                                                       cancelButtonTitle:nil
-                                                                  destructiveButtonTitle:nil
-                                                                       otherButtonTitles:nil] autorelease];
-                      WXFrameworkElement* backingElement = [actionSheet xamlElement];
-                      ASSERT_TRUE(backingElement);
+    UIActionSheet* actionSheet = [[[UIActionSheet alloc] initWithTitle:nil
+                                                            delegate:nil
+                                                    cancelButtonTitle:nil
+                                                destructiveButtonTitle:nil
+                                                    otherButtonTitles:nil] autorelease];
+    WXFrameworkElement* backingElement = [actionSheet xamlElement];
+    ASSERT_TRUE(backingElement);
 
-                      // Check that cancel button index, destructive button index, other button index are correct
-                      NSInteger numButtons = [actionSheet numberOfButtons];
-                      ASSERT_TRUE(numButtons == 0);
+    // Check that cancel button index, destructive button index, other button index are correct
+    NSInteger numButtons = [actionSheet numberOfButtons];
+    ASSERT_TRUE(numButtons == 0);
 
-                      NSInteger cancelIndex = [actionSheet cancelButtonIndex];
-                      ASSERT_TRUE(cancelIndex == -1);
+    NSInteger cancelIndex = [actionSheet cancelButtonIndex];
+    ASSERT_TRUE(cancelIndex == -1);
                       
-                      NSInteger destructiveIndex = [actionSheet destructiveButtonIndex];
-                      ASSERT_TRUE(cancelIndex == -1);
+    NSInteger destructiveIndex = [actionSheet destructiveButtonIndex];
+    ASSERT_TRUE(cancelIndex == -1);
                       
-                      NSInteger otherIndex = [actionSheet firstOtherButtonIndex];
-                      ASSERT_TRUE(otherIndex == -1);
-                  });
+    NSInteger otherIndex = [actionSheet firstOtherButtonIndex];
+    ASSERT_TRUE(otherIndex == -1);
 }

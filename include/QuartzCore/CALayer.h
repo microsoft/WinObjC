@@ -68,40 +68,46 @@ CA_EXPORT_CLASS
 @interface CALayer : NSObject <NSCoding, CAMediaTiming> {
 }
 
+// Creation
 + (instancetype)layer;
 - (instancetype)init;
 - (instancetype)initWithLayer:(id)layer;
 
-- (id)presentationLayer;
+// Layer-related objects
+- (id)presentationLayer STUB_METHOD;
 - (id)modelLayer STUB_METHOD;
 
+// Delegates
 @property (assign) id delegate;
 
+// Content
 @property (retain) id contents;
 @property CGRect contentsRect;
 @property CGRect contentsCenter;
 - (void)display;
 - (void)drawInContext:(CGContextRef)ctx;
 
+// Appearance
 @property (copy) NSString* contentsGravity;
 @property float opacity;
 @property (getter=isHidden) BOOL hidden;
 @property BOOL masksToBounds;
-@property (retain) CALayer* mask;
+@property (retain) CALayer* mask STUB_PROPERTY;
 @property (getter=isDoubleSided) BOOL doubleSided STUB_PROPERTY;
-@property CGFloat cornerRadius;
-@property CGFloat borderWidth;
-@property CGColorRef borderColor;
+@property CGFloat cornerRadius STUB_PROPERTY;
+@property CGFloat borderWidth STUB_PROPERTY;
+@property CGColorRef borderColor STUB_PROPERTY;
 @property CGColorRef backgroundColor;
-@property float shadowOpacity;
-@property CGFloat shadowRadius;
-@property CGSize shadowOffset;
-@property CGColorRef shadowColor;
-@property CGPathRef shadowPath;
+@property float shadowOpacity STUB_PROPERTY;
+@property CGFloat shadowRadius STUB_PROPERTY;
+@property CGSize shadowOffset STUB_PROPERTY;
+@property CGColorRef shadowColor STUB_PROPERTY;
+@property CGPathRef shadowPath STUB_PROPERTY;
 @property (copy) NSDictionary* style STUB_PROPERTY;
 @property BOOL allowsEdgeAntialiasing STUB_PROPERTY;
 @property BOOL allowsGroupOpacity STUB_PROPERTY;
 
+// Filters
 @property (copy) NSArray* filters STUB_PROPERTY;
 @property (strong) id compositingFilter STUB_PROPERTY;
 @property (copy) NSArray* backgroundFilters STUB_PROPERTY;
@@ -109,25 +115,27 @@ CA_EXPORT_CLASS
 @property float minificationFilterBias STUB_PROPERTY;
 @property (copy) NSString* magnificationFilter STUB_PROPERTY;
 
+// Rendering
 @property (getter=isOpaque) BOOL opaque;
 @property CAEdgeAntialiasingMask edgeAntialiasingMask STUB_PROPERTY;
 - (BOOL)contentsAreFlipped STUB_METHOD;
 @property (getter=isGeometryFlipped) BOOL geometryFlipped STUB_PROPERTY;
-@property BOOL drawsAsynchronously;
+@property BOOL drawsAsynchronously STUB_PROPERTY;
 @property BOOL shouldRasterize;
 @property CGFloat rasterizationScale STUB_PROPERTY;
 - (void)renderInContext:(CGContextRef)ctx;
 
+// Geometry
 @property CGRect frame;
 @property CGRect bounds;
 @property CGPoint position;
-@property CGFloat zPosition;
+@property CGFloat zPosition STUB_PROPERTY;
 @property CGFloat anchorPointZ STUB_PROPERTY;
 @property CGPoint anchorPoint;
 @property CGFloat contentsScale;
 
 @property CATransform3D transform;
-@property CATransform3D sublayerTransform;
+@property CATransform3D sublayerTransform STUB_PROPERTY;
 - (CGAffineTransform)affineTransform;
 - (void)setAffineTransform:(CGAffineTransform)m;
 
@@ -167,13 +175,13 @@ CA_EXPORT_CLASS
 - (CGPoint)convertPoint:(CGPoint)aPoint toLayer:(CALayer*)layer;
 - (CGRect)convertRect:(CGRect)aRect fromLayer:(CALayer*)layer;
 - (CGRect)convertRect:(CGRect)aRect toLayer:(CALayer*)layer;
-- (CFTimeInterval)convertTime:(CFTimeInterval)timeInterval fromLayer:(CALayer*)layer;
+- (CFTimeInterval)convertTime:(CFTimeInterval)timeInterval fromLayer:(CALayer*)layer STUB_METHOD;
 - (CFTimeInterval)convertTime:(CFTimeInterval)timeInterval toLayer:(CALayer*)layer STUB_METHOD;
 
 - (CALayer*)hitTest:(CGPoint)thePoint;
 - (BOOL)containsPoint:(CGPoint)thePoint;
 
-@property (readonly) CGRect visibleRect;
+@property (readonly) CGRect visibleRect STUB_METHOD;
 - (void)scrollPoint:(CGPoint)thePoint STUB_METHOD;
 - (void)scrollRectToVisible:(CGRect)theRect STUB_METHOD;
 
@@ -191,8 +199,5 @@ CA_EXPORT_CLASS
 @property CFTimeInterval repeatDuration STUB_PROPERTY;
 @property float speed STUB_PROPERTY;
 @property CFTimeInterval timeOffset STUB_PROPERTY;
-
-// Adding by MS.
-+ (CGPoint)convertPoint:(CGPoint)point fromLayer:(CALayer*)layer toLayer:(CALayer*)layer;
 
 @end

@@ -26,7 +26,7 @@
 #import "LoggingNative.h"
 #import "UITabBarControllerInternal.h"
 #import "UITabBarInternal.h"
-#import "CACompositor.h"
+#import "StarboardXaml/DisplayProperties.h"
 
 static const wchar_t* TAG = L"UITabBarController";
 
@@ -96,7 +96,7 @@ static const wchar_t* TAG = L"UITabBarController";
 - (instancetype)initWithNibName:(NSString*)name bundle:(NSBundle*)bundle {
     _selectedIndex = -1;
 
-    CGRect frame = { 0.0f, 0.0f, GetCACompositor()->screenWidth(), 50.0f };
+    CGRect frame = { 0.0f, 0.0f, DisplayProperties::ScreenWidth(), 50.0f };
     _tabBar = [[UITabBar alloc] initWithFrame:frame];
     [_tabBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin];
     [_tabBar setDelegate:self];
@@ -237,7 +237,7 @@ static const wchar_t* TAG = L"UITabBarController";
     }
 
     if (_tabPane == nil) {
-        CGRect frame = { 0.0f, 0.0f, GetCACompositor()->screenWidth(), GetCACompositor()->screenHeight() };
+        CGRect frame = { 0.0f, 0.0f, DisplayProperties::ScreenWidth(), DisplayProperties::ScreenHeight() };
         _tabPane.attach([[UITabPane alloc] initWithFrame:frame]);
         ((UITabPane*)_tabPane)->_parent = self;
 
@@ -247,9 +247,6 @@ static const wchar_t* TAG = L"UITabBarController";
         [_tabPane addSubview:(id)_tabBar];
         [_tabPane setClipsToBounds:TRUE];
         _tabBarChanged = true;
-
-        //[_tabPane setNeedsLayout];    //  needed for SKP
-        //[_tabPane layoutIfNeeded];
     }
 
     [self setView:_tabPane];

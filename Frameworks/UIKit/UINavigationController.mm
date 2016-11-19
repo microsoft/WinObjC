@@ -23,7 +23,7 @@
 #import "UITabBarControllerInternal.h"
 #import "UINavigationBarInternal.h"
 #import "UIViewInternal.h"
-#import "CACompositor.h"
+#import "StarboardXaml/DisplayProperties.h"
 
 static const wchar_t* TAG = L"UINavigationController";
 
@@ -160,7 +160,7 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     }
 
     _navigationBar.attach(
-        [[navBarClass alloc] initWithFrame:CGRectMake(0.0f, 0.0f, GetCACompositor()->screenWidth(), UINavigationBarHeight)]);
+        [[navBarClass alloc] initWithFrame:CGRectMake(0.0f, 0.0f, DisplayProperties::ScreenWidth(), UINavigationBarHeight)]);
     [_navigationBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin];
     [_navigationBar setDelegate:self];
     _viewControllers.attach([NSMutableArray new]);
@@ -182,7 +182,7 @@ static void createMainView(UINavigationController* self, CGRect frame) {
 
     if (_navigationBar == nil) {
         _navigationBar.attach(
-            [[UINavigationBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, GetCACompositor()->screenWidth(), UINavigationBarHeight)]);
+            [[UINavigationBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, DisplayProperties::ScreenWidth(), UINavigationBarHeight)]);
         [_navigationBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin];
     }
 
@@ -210,7 +210,7 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     }
     if (_navigationBar == nil) {
         _navigationBar.attach(
-            [[UINavigationBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, GetCACompositor()->screenWidth(), UINavigationBarHeight)]);
+            [[UINavigationBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, DisplayProperties::ScreenWidth(), UINavigationBarHeight)]);
         [_navigationBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin];
     }
     [_navigationBar setDelegate:self];
@@ -475,7 +475,7 @@ static void createMainView(UINavigationController* self, CGRect frame) {
  @Status Interoperable
 */
 - (void)loadView {
-    CGRect frame = { 0.0f, 0.0f, GetCACompositor()->screenWidth(), GetCACompositor()->screenHeight() };
+    CGRect frame = { 0.0f, 0.0f, DisplayProperties::ScreenWidth(), DisplayProperties::ScreenHeight() };
     createMainView(self, frame);
 
     _navigationBar = _navigationBar;
