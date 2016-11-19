@@ -91,7 +91,6 @@ struct __CGContextDrawingState {
 
     // Userspace Coordinate Transformation
     CGAffineTransform transform{ CGAffineTransformIdentity };
-    CGAffineTransform textMatrix{ CGAffineTransformIdentity };
 
     // Alpha Blending
     CGFloat alpha = 1.0f;
@@ -127,6 +126,40 @@ struct __CGContextDrawingState {
     }
 };
 
+struct __CGContextLayer {
+    std::stack<__CGContextDrawingState> _stateStack;
+
+    // Populated only before a layer is pushed.
+    ComPtr<ID2D1Image> target;
+
+    __CGContextLayer(ID2D1Image* target) : target(target) {
+        // Each newly-pushed default-constructed layer has an empty base state.
+        _stateStack.emplace();
+    }
+
+    __CGContextLayer(ID2D1Image* target, const __CGContextDrawingState& state) : target(target) {
+        _stateStack.emplace(state);
+    }
+
+    __CGContextDrawingState& CurrentGState() {
+        return _stateStack.top();
+    }
+
+    inline HRESULT PushGState() {
+        auto& oldState = _stateStack.top();
+        _stateStack.emplace(oldState);
+        return S_OK;
+    }
+
+    inline HRESULT PopGState() {
+        if (_stateStack.size() == 1) {
+            return E_BOUNDS;
+        }
+        _stateStack.pop();
+        return S_OK;
+    }
+};
+
 struct __CGContext : CoreFoundation::CppBase<__CGContext> {
     ComPtr<ID2D1RenderTarget> renderTarget{ nullptr };
 
@@ -137,7 +170,7 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext> {
     // See the comments above _CGContextSetShadowProjectionTransform.
     CGAffineTransform shadowProjectionTransform{ CGAffineTransformIdentity };
 
-    std::stack<std::stack<__CGContextDrawingState>> layerStateStack{};
+    std::stack<__CGContextLayer> layerStack{};
 
     woc::unique_cf<CGMutablePathRef> currentPath{ nullptr };
 
@@ -147,13 +180,15 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext> {
     bool allowsFontSubpixelPositioning = false;
     bool allowsFontSubpixelQuantization = false;
 
-    CGAffineTransform textMatrix;
+    CGAffineTransform textMatrix{ CGAffineTransformIdentity };
 
-    __CGContext() {
-        // Set up a default/baseline state stack...
-        layerStateStack.emplace();
-        // ... containing a baseline state.
-        layerStateStack.top().emplace();
+    __CGContext(ID2D1RenderTarget* renderTarget) : renderTarget(renderTarget) {
+        ComPtr<ID2D1DeviceContext> deviceContext;
+        FAIL_FAST_IF_FAILED(RenderTarget().As(&deviceContext));
+        ComPtr<ID2D1Image> baselineTarget;
+        deviceContext->GetTarget(&baselineTarget);
+        // Set up the default/baseline layer.
+        layerStack.emplace(baselineTarget.Get());
     }
 
     inline ComPtr<ID2D1RenderTarget>& RenderTarget() {
@@ -161,74 +196,91 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext> {
     }
 
     inline __CGContextDrawingState& CurrentGState() {
-        return layerStateStack.top().top();
+        return layerStack.top().CurrentGState();
     }
 
-    inline void _SaveD2DDrawingState(__CGContextDrawingState& gState) {
+    inline HRESULT _SaveD2DDrawingState(__CGContextDrawingState& gState) {
         ComPtr<ID2D1DrawingStateBlock> drawingState;
-        FAIL_FAST_IF_FAILED(Factory()->CreateDrawingStateBlock(&drawingState));
+        RETURN_IF_FAILED(Factory()->CreateDrawingStateBlock(&drawingState));
 
         RenderTarget()->SaveDrawingState(drawingState.Get());
 
         gState.d2dState = drawingState;
+        return S_OK;
     }
 
-    inline void _RestoreD2DDrawingState(__CGContextDrawingState& gState) {
+    inline HRESULT _RestoreD2DDrawingState(__CGContextDrawingState& gState) {
         RenderTarget()->RestoreDrawingState(gState.d2dState.Get());
         gState.d2dState = nullptr;
+        return S_OK;
     }
 
-    inline void PushGState() {
-        auto& currentLayerStack = layerStateStack.top();
-        auto& oldState = currentLayerStack.top();
+    inline HRESULT PushGState() {
+        auto& currentLayer = layerStack.top();
+        auto& oldState = currentLayer.CurrentGState();
 
-        // This uses the drawing state's copy constructor.
-        currentLayerStack.emplace(oldState);
-
-        _SaveD2DDrawingState(oldState);
+        RETURN_IF_FAILED(currentLayer.PushGState());
+        return _SaveD2DDrawingState(oldState);
     }
 
-    inline void PopGState() {
-        auto& currentLayerStack = layerStateStack.top();
-        if (currentLayerStack.size() <= 1) {
+    inline HRESULT PopGState() {
+        auto& currentLayer = layerStack.top();
+        if (FAILED(currentLayer.PopGState())) {
             TraceError(TAG, L"Invalid attempt to pop last graphics state.");
-            return;
+            return E_BOUNDS;
         }
 
-        currentLayerStack.pop();
-        auto& newState = currentLayerStack.top();
-        _RestoreD2DDrawingState(newState);
+        return _RestoreD2DDrawingState(currentLayer.CurrentGState());
     }
 
-    inline void PushLayer(CGRect* rect = nullptr) {
+    inline HRESULT PushLayer(CGRect* rect = nullptr) {
+        auto& currentLayer = layerStack.top();
         auto& oldState = CurrentGState();
 
-        layerStateStack.emplace();
-        auto& newLayerStack = layerStateStack.top();
+        ComPtr<ID2D1DeviceContext> deviceContext;
+        RETURN_IF_FAILED(RenderTarget().As(&deviceContext));
 
-        // Copy the old state into the base state for the new layer.
-        newLayerStack.emplace(oldState);
+        ComPtr<ID2D1CommandList> commandList;
+        RETURN_IF_FAILED(deviceContext->CreateCommandList(&commandList));
 
+        // Copy the current layer's GState to the new layer.
+        layerStack.emplace(commandList.Get(), oldState);
+
+        // After the copy, save our D2D control block.
         _SaveD2DDrawingState(oldState);
 
-        D2D1_RECT_F layerRect = D2D1::InfiniteRect();
-        if (rect) {
-            layerRect = __CGRectToD2D_F(*rect);
-        }
-        RenderTarget()->PushLayer(
-            D2D1::LayerParameters(layerRect, nullptr, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE, D2D1::IdentityMatrix(), oldState.alpha), nullptr);
+        deviceContext->SetTarget(commandList.Get());
+        // TODO(DH) RECT CLIP :O :O :O
+        return S_OK;
     }
 
-    inline void PopLayer() {
-        if (layerStateStack.size() <= 1) {
+    inline HRESULT PopLayer(ID2D1Image** outImage) {
+        if (layerStack.size() <= 1) {
             TraceError(TAG, L"Invalid attempt to pop base layer.");
-            return;
+            return E_BOUNDS;
         }
-        layerStateStack.pop();
-        auto& newState = CurrentGState();
-        _RestoreD2DDrawingState(newState);
 
-        RenderTarget()->PopLayer();
+        auto& outgoingLayer = layerStack.top();
+        ComPtr<ID2D1CommandList> outgoingCommandList;
+        if (FAILED(outgoingLayer.target.As(&outgoingCommandList))) {
+            TraceError(TAG, L"Popped a layer that was NOT a command list. PANIC!");
+            return E_UNEXPECTED;
+        }
+        RETURN_IF_FAILED(outgoingCommandList->Close());
+
+        // Destroy the top layer and all its state.
+        layerStack.pop();
+
+        auto& incomingLayer = layerStack.top();
+        auto& incomingState = CurrentGState();
+
+        ComPtr<ID2D1DeviceContext> deviceContext;
+        RETURN_IF_FAILED(RenderTarget().As(&deviceContext));
+        deviceContext->SetTarget(incomingLayer.target.Get());
+        RETURN_IF_FAILED(_RestoreD2DDrawingState(incomingState));
+
+        *outImage = outgoingCommandList.Detach();
+        return S_OK;
     }
 
     inline bool HasPath() {
@@ -319,8 +371,7 @@ CFTypeID CGContextGetTypeID() {
 #pragma endregion
 
 #pragma region Global State - Lifetime
-static void __CGContextInitWithRenderTarget(CGContextRef context, ID2D1RenderTarget* renderTarget) {
-    context->renderTarget = renderTarget;
+static HRESULT __CGContextPrepareDefaults(CGContextRef context) {
     // Reference platform defaults:
     // * Fill  : fully transparent black
     // * Stroke: fully opaque black
@@ -330,15 +381,15 @@ static void __CGContextInitWithRenderTarget(CGContextRef context, ID2D1RenderTar
 
     // CG is a lower-left origin system (LLO), but D2D is upper left (ULO).
     // We have to translate the render area back onscreen and flip it up to ULO.
-    D2D1_SIZE_F targetSize = renderTarget->GetSize();
+    D2D1_SIZE_F targetSize = context->RenderTarget()->GetSize();
     context->deviceTransform = CGAffineTransformMake(1.f, 0.f, 0.f, -1.f, 0.f, targetSize.height);
+    return S_OK;
 }
 
 CGContextRef _CGContextCreateWithD2DRenderTarget(ID2D1RenderTarget* renderTarget) {
     FAIL_FAST_HR_IF_NULL(E_INVALIDARG, renderTarget);
-    CGContextRef context = __CGContext::CreateInstance(kCFAllocatorDefault);
-    __CGContextInitWithRenderTarget(context, renderTarget);
-
+    CGContextRef context = __CGContext::CreateInstance(kCFAllocatorDefault, renderTarget);
+    __CGContextPrepareDefaults(context);
     return context;
 }
 
@@ -411,6 +462,8 @@ void CGContextBeginTransparencyLayer(CGContextRef context, CFDictionaryRef auxIn
     NOISY_RETURN_IF_NULL(context);
     context->PushLayer();
     CGContextSetAlpha(context, 1.0);
+    CGContextSetShadowWithColor(context, CGSizeZero, 0, nullptr);
+    CGContextSetBlendMode(context, kCGBlendModeNormal);
 }
 
 /**
@@ -425,9 +478,12 @@ void CGContextBeginTransparencyLayerWithRect(CGContextRef context, CGRect rect, 
 /**
  @Status Interoperable
 */
+static HRESULT __CGContextRenderImage(CGContextRef context, ID2D1Image* image);
 void CGContextEndTransparencyLayer(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context);
-    context->PopLayer();
+    ComPtr<ID2D1Image> layerImage;
+    context->PopLayer(&layerImage);
+    FAIL_FAST_IF_FAILED(__CGContextRenderImage(context, layerImage.Get()));
 }
 #pragma endregion
 
@@ -2018,6 +2074,9 @@ void CGContextDrawGlyphRun(CGContextRef context, const DWRITE_GLYPH_RUN* glyphRu
 struct __CGBitmapContext : CoreFoundation::CppBase<__CGBitmapContext, __CGContext> {
     woc::unique_cf<CGImageRef> _image;
 
+    __CGBitmapContext(ID2D1RenderTarget* renderTarget) : Parent(renderTarget) {
+    }
+
     inline void SetImage(CGImageRef image) {
         _image.reset(CGImageRetain(image));
     }
@@ -2172,8 +2231,8 @@ CGImageRef CGBitmapContextGetImage(CGContextRef context) {
 
 CGContextRef _CGBitmapContextCreateWithRenderTarget(ID2D1RenderTarget* renderTarget, CGImageRef img) {
     RETURN_NULL_IF(!renderTarget);
-    __CGBitmapContext* context = __CGBitmapContext::CreateInstance(kCFAllocatorDefault);
-    __CGContextInitWithRenderTarget(context, renderTarget);
+    __CGBitmapContext* context = __CGBitmapContext::CreateInstance(kCFAllocatorDefault, renderTarget);
+    __CGContextPrepareDefaults(context);
     context->SetImage(img);
     return context;
 }
