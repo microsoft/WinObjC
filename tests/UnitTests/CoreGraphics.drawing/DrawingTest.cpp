@@ -16,6 +16,7 @@
 
 #include "DrawingTest.h"
 #include "DrawingTestConfig.h"
+#include "ImageComparison.h"
 
 #include <CoreFoundation/CoreFoundation.h>
 #include <ImageIO/ImageIO.h>
@@ -126,95 +127,6 @@ CFStringRef testing::DrawTest::CreateOutputFilename() {
     return filename.release();
 }
 
-struct pixel {};
-struct bgraPixel : pixel {
-    bgraPixel(uint8_t b, uint8_t g, uint8_t r, uint8_t a) : b(b), g(g), r(r), a(a) {
-    }
-    uint8_t b, g, r, a;
-};
-
-struct rgbaPixel : pixel {
-    rgbaPixel(uint8_t r, uint8_t g, uint8_t b, uint8_t a) : r(r), g(g), b(b), a(a) {
-    }
-    uint8_t r, g, b, a;
-};
-
-template <typename T, typename U>
-typename std::enable_if<std::is_base_of<pixel, T>::value && std::is_base_of<pixel, U>::value, bool>::type operator==(const T& t,
-                                                                                                                     const U& u) {
-    return t.r == u.r && t.g == u.g && t.b == u.b && t.a == u.a;
-}
-
-template <typename T, typename U>
-typename std::enable_if<std::is_base_of<pixel, T>::value && std::is_base_of<pixel, U>::value, bool>::type operator!=(const T& t,
-                                                                                                                     const U& u) {
-    return !(t == u);
-}
-
-CGImageRef _CreateGreenlineImage(rgbaPixel background, CGImageRef baseline, CGImageRef comparand, int& npxchg) {
-    CGDataProviderRef baselineProvider{ CGImageGetDataProvider(baseline) };
-    woc::unique_cf<CFDataRef> baselineData{ CGDataProviderCopyData(baselineProvider) };
-
-    CGDataProviderRef comparandProvider{ CGImageGetDataProvider(comparand) };
-    woc::unique_cf<CFDataRef> comparandData{ CGDataProviderCopyData(comparandProvider) };
-
-    CFIndex baselineLength = CFDataGetLength(baselineData.get());
-    if (baselineLength != CFDataGetLength(comparandData.get())) {
-        npxchg = CFDataGetLength(comparandData.get());
-        return nullptr;
-    }
-
-    woc::unique_iw<uint8_t> greenlineBuffer{ static_cast<uint8_t*>(IwCalloc(baselineLength, 1)) };
-
-    const bgraPixel* baselinePixels{ reinterpret_cast<const bgraPixel*>(CFDataGetBytePtr(baselineData.get())) };
-    const rgbaPixel* comparandPixels{ reinterpret_cast<const rgbaPixel*>(CFDataGetBytePtr(comparandData.get())) };
-    rgbaPixel* greenlinePixels{ reinterpret_cast<rgbaPixel*>(greenlineBuffer.get()) };
-
-    npxchg = 0;
-    for (off_t i = 0; i < baselineLength / sizeof(rgbaPixel); ++i) {
-        auto& bp = baselinePixels[i];
-        auto& cp = comparandPixels[i];
-        auto& gp = greenlinePixels[i];
-        if (bp != cp) {
-            ++npxchg;
-            if (cp == background) {
-                // Pixel is in EXPECTED but not ACTUAL
-                gp.r = gp.a = 255;
-            } else if (bp == background) {
-                // Pixel is in ACTUAL but not EXPECTED
-                gp.g = gp.a = 255;
-            } else {
-                // Pixel is in BOTH but DIFFERENT
-                gp.r = gp.g = gp.a = 255;
-            }
-        } else {
-            gp.r = gp.g = gp.b = 0;
-            gp.a = 255;
-        }
-    }
-
-    woc::unique_cf<CFDataRef> greenlineData{
-        CFDataCreateWithBytesNoCopy(nullptr, greenlineBuffer.release(), baselineLength, kCFAllocatorDefault)
-    };
-    woc::unique_cf<CGDataProviderRef> greenlineProvider{ CGDataProviderCreateWithCFData(greenlineData.get()) };
-
-    auto bi1 = CGImageGetBitmapInfo(comparand);
-    auto bi2 = CGImageGetBitmapInfo(baseline);
-    fprintf(stderr, "comparand %x baseline %x\n", bi1, bi2);
-
-    return CGImageCreate(CGImageGetWidth(baseline),
-                         CGImageGetHeight(baseline),
-                         8,
-                         32,
-                         CGImageGetWidth(baseline) * 4,
-                         CGImageGetColorSpace(baseline),
-                         CGImageGetBitmapInfo(baseline),
-                         greenlineProvider.get(),
-                         nullptr,
-                         FALSE,
-                         kCGRenderingIntentDefault);
-}
-
 void testing::DrawTest::TearDown() {
     CGContextRef context = GetDrawingContext();
 
@@ -237,15 +149,12 @@ void testing::DrawTest::TearDown() {
         woc::unique_cf<CGImageRef> referenceImage{ __CGImageCreateFromPNGFile(referenceFilename.get()) };
         ASSERT_NE(nullptr, referenceImage);
 
-        int npxchg = 0;
+        PixelByPixelImageComparator comparator;
+        auto result = comparator.CompareImages(referenceImage.get(), image.get());
 
-        woc::unique_cf<CGImageRef> greenlines{
-            _CreateGreenlineImage(rgbaPixel{ 255, 255, 255, 255 }, referenceImage.get(), image.get(), npxchg)
-        };
-
-        if (npxchg > 0) {
+        if (result.differences > 0) {
             woc::unique_cf<CFDataRef> actualImageData{ __CFDataCreatePNGFromCGImage(image.get()) };
-            woc::unique_cf<CFDataRef> deltaImageData{ __CFDataCreatePNGFromCGImage(greenlines.get()) };
+            woc::unique_cf<CFDataRef> deltaImageData{ __CFDataCreatePNGFromCGImage(result.deltaImage.get()) };
 
             ADD_FAILURE();
 #ifdef WINOBJC

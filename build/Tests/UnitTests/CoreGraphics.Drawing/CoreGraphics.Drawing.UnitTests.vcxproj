@@ -247,6 +247,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.Drawing\CGContextDrawing_ShadowTests.cpp" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.Drawing\CGPathDrawingTests.cpp" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.Drawing\DrawingTest.cpp" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.drawing\ImageComparison.cpp" />
   </ItemGroup>
   <Target Name="CopyTestResourcesToOutput" AfterTargets="AfterBuild">
     <ItemGroup>
