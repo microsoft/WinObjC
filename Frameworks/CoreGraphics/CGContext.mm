@@ -1632,12 +1632,10 @@ void CGContextStrokeRect(CGContextRef context, CGRect rect) {
 
     auto factory = context->Factory();
 
-    ComPtr<ID2D1Geometry> geometry;
     ComPtr<ID2D1RectangleGeometry> rectGeometry;
     FAIL_FAST_IF_FAILED(factory->CreateRectangleGeometry(__CGRectToD2D_F(rect), &rectGeometry));
-    FAIL_FAST_IF_FAILED(rectGeometry.As(&geometry));
 
-    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, _kCGCoordinateModeUserSpace, geometry.Get(), kCGPathStroke));
+    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, _kCGCoordinateModeUserSpace, rectGeometry.Get(), kCGPathStroke));
 
     context->ClearPath();
 }
@@ -1666,12 +1664,10 @@ void CGContextFillRect(CGContextRef context, CGRect rect) {
 
     auto factory = context->Factory();
 
-    ComPtr<ID2D1Geometry> geometry;
     ComPtr<ID2D1RectangleGeometry> rectGeometry;
     FAIL_FAST_IF_FAILED(factory->CreateRectangleGeometry(__CGRectToD2D_F(rect), &rectGeometry));
-    FAIL_FAST_IF_FAILED(rectGeometry.As(&geometry));
 
-    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, _kCGCoordinateModeUserSpace, geometry.Get(), kCGPathFill));
+    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, _kCGCoordinateModeUserSpace, rectGeometry.Get(), kCGPathFill));
 
     context->ClearPath();
 }
@@ -1686,14 +1682,12 @@ void CGContextStrokeEllipseInRect(CGContextRef context, CGRect rect) {
 
     auto factory = context->Factory();
 
-    ComPtr<ID2D1Geometry> geometry;
     ComPtr<ID2D1EllipseGeometry> ellipseGeometry;
     FAIL_FAST_IF_FAILED(
         factory->CreateEllipseGeometry({ { CGRectGetMidX(rect), CGRectGetMidY(rect) }, rect.size.width / 2.f, rect.size.height / 2.f },
                                        &ellipseGeometry));
-    FAIL_FAST_IF_FAILED(ellipseGeometry.As(&geometry));
 
-    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, _kCGCoordinateModeUserSpace, geometry.Get(), kCGPathStroke));
+    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, _kCGCoordinateModeUserSpace, ellipseGeometry.Get(), kCGPathStroke));
 
     context->ClearPath();
 }
@@ -1708,14 +1702,12 @@ void CGContextFillEllipseInRect(CGContextRef context, CGRect rect) {
 
     auto factory = context->Factory();
 
-    ComPtr<ID2D1Geometry> geometry;
     ComPtr<ID2D1EllipseGeometry> ellipseGeometry;
     FAIL_FAST_IF_FAILED(
         factory->CreateEllipseGeometry({ { CGRectGetMidX(rect), CGRectGetMidY(rect) }, rect.size.width / 2.f, rect.size.height / 2.f },
                                        &ellipseGeometry));
-    FAIL_FAST_IF_FAILED(ellipseGeometry.As(&geometry));
 
-    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, _kCGCoordinateModeUserSpace, geometry.Get(), kCGPathFill));
+    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, _kCGCoordinateModeUserSpace, ellipseGeometry.Get(), kCGPathFill));
 
     context->ClearPath();
 }
