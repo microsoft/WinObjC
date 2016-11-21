@@ -71,18 +71,6 @@
             [CGContextSampleRow row:@"CGPathAddArc" class:[CGPathAddArcViewController class]],
             [CGContextSampleRow row:@"CGPathAddArcToPoint" class:[CGPathAddArcToPointViewController class]],
             [CGContextSampleRow row:@"CGPathAddRoundedRect" class:[CGPathAddRoundedRectViewController class]],
-            [CGContextSampleRow row:@"" class:[CGPathAddRoundedRectViewController class]],
-            [CGContextSampleRow row:@"" class:[CGPathAddRoundedRectViewController class]],
-            [CGContextSampleRow row:@"" class:[CGPathAddRoundedRectViewController class]],
-            [CGContextSampleRow row:@"" class:[CGPathAddRoundedRectViewController class]],
-            [CGContextSampleRow row:@"" class:[CGPathAddRoundedRectViewController class]],
-            [CGContextSampleRow row:@"" class:[CGPathAddRoundedRectViewController class]],
-            [CGContextSampleRow row:@"" class:[CGPathAddRoundedRectViewController class]],
-            [CGContextSampleRow row:@"" class:[CGPathAddRoundedRectViewController class]],
-            [CGContextSampleRow row:@"" class:[CGPathAddRoundedRectViewController class]],
-            [CGContextSampleRow row:@"" class:[CGPathAddRoundedRectViewController class]],
-            [CGContextSampleRow row:@"" class:[CGPathAddRoundedRectViewController class]],
-            [CGContextSampleRow row:@"" class:[CGPathAddRoundedRectViewController class]],
         ];
     }
     return _samples;
@@ -227,12 +215,12 @@
 }
 
 - (void)rotateRight:(UIButton*)sender {
-    self.affineTransform = CGAffineTransformRotate(self.affineTransform, M_PI / 10);
+    self.affineTransform = CGAffineTransformRotate(self.affineTransform, M_PI / 36);
     [self refreshTransformText];
 }
 
 - (void)rotateLeft:(UIButton*)sender {
-    self.affineTransform = CGAffineTransformRotate(self.affineTransform, -1 * M_PI / 10);
+    self.affineTransform = CGAffineTransformRotate(self.affineTransform, -1 * M_PI / 36);
     [self refreshTransformText];
 }
 
@@ -328,7 +316,7 @@
     [rotateRightButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [rotateRightButton addTarget:self action:@selector(rotateRight:) forControlEvents:UIControlEventTouchUpInside];
     rotateRightButton.frame = CGRectMake(0, 180, 50, 30);
-    [rotateRightButton setTitle:@"RR 3" forState:UIControlStateNormal];
+    [rotateRightButton setTitle:@"+5\u00B0" forState:UIControlStateNormal];
     [self.view addSubview:rotateRightButton];
 
     UIButton* rotateLeftButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -336,7 +324,7 @@
     [rotateLeftButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [rotateLeftButton addTarget:self action:@selector(rotateLeft:) forControlEvents:UIControlEventTouchUpInside];
     rotateLeftButton.frame = CGRectMake(50, 180, 50, 30);
-    [rotateLeftButton setTitle:@"RL 3" forState:UIControlStateNormal];
+    [rotateLeftButton setTitle:@"-5\u00B0" forState:UIControlStateNormal];
     [self.view addSubview:rotateLeftButton];
 
     UIButton* moveRightButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -344,7 +332,7 @@
     [moveRightButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [moveRightButton addTarget:self action:@selector(moveRight:) forControlEvents:UIControlEventTouchUpInside];
     moveRightButton.frame = CGRectMake(100, 180, 60, 30);
-    [moveRightButton setTitle:@"MR 10" forState:UIControlStateNormal];
+    [moveRightButton setTitle:@"X+10" forState:UIControlStateNormal];
     [self.view addSubview:moveRightButton];
 
     UIButton* moveLeftButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -352,7 +340,7 @@
     [moveLeftButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [moveLeftButton addTarget:self action:@selector(moveLeft:) forControlEvents:UIControlEventTouchUpInside];
     moveLeftButton.frame = CGRectMake(160, 180, 60, 30);
-    [moveLeftButton setTitle:@"ML 10" forState:UIControlStateNormal];
+    [moveLeftButton setTitle:@"X-10" forState:UIControlStateNormal];
     [self.view addSubview:moveLeftButton];
 
     UIButton* moveUpButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -360,7 +348,7 @@
     [moveUpButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [moveUpButton addTarget:self action:@selector(moveUp:) forControlEvents:UIControlEventTouchUpInside];
     moveUpButton.frame = CGRectMake(220, 180, 60, 30);
-    [moveUpButton setTitle:@"MU 10" forState:UIControlStateNormal];
+    [moveUpButton setTitle:@"Y-10" forState:UIControlStateNormal];
     [self.view addSubview:moveUpButton];
 
     UIButton* moveDownButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -368,7 +356,7 @@
     [moveDownButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [moveDownButton addTarget:self action:@selector(moveDown:) forControlEvents:UIControlEventTouchUpInside];
     moveDownButton.frame = CGRectMake(280, 180, 60, 30);
-    [moveDownButton setTitle:@"MD 10" forState:UIControlStateNormal];
+    [moveDownButton setTitle:@"Y+10" forState:UIControlStateNormal];
     [self.view addSubview:moveDownButton];
 
     [self createTransformFromTextBoxes];
@@ -382,7 +370,8 @@
     [tableView setDataSource:self];
     CGRect viewBounds = self.view.bounds;
 
-    CGRect newTableBounds = CGRectMake(0, 210, viewBounds.origin.x + viewBounds.size.width, viewBounds.origin.y + viewBounds.size.height);
+    CGRect newTableBounds =
+        CGRectMake(0, 210, viewBounds.origin.x + viewBounds.size.width, viewBounds.origin.y + viewBounds.size.height - 260);
     [tableView setFrame:newTableBounds];
     [self.view addSubview:tableView];
 }

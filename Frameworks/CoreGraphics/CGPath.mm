@@ -82,7 +82,7 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
         startingPoint = newPoint;
     }
 
-    const void SetLastTransform(const CGAffineTransform* transform) {
+    void SetLastTransform(const CGAffineTransform* transform) {
         if (transform) {
             lastTransform = *transform;
         } else {
