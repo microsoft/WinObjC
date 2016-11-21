@@ -16,7 +16,7 @@
 
 #include "DrawingTest.h"
 
-DRAW_TEST_F(CGContext, Shadow, WhiteBackgroundTest) {
+DISABLED_DRAW_TEST_F(CGContext, Shadow, WhiteBackgroundTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -31,7 +31,7 @@ DRAW_TEST_F(CGContext, Shadow, WhiteBackgroundTest) {
     CGContextStrokeRect(context, rect);
 }
 
-DRAW_TEST_F(CGContext, ShadowWithRotatedCTM, WhiteBackgroundTest) {
+DISABLED_DRAW_TEST_F(CGContext, ShadowWithRotatedCTM, WhiteBackgroundTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
