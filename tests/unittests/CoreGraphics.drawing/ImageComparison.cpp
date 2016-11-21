@@ -16,29 +16,18 @@
 
 #include "ImageComparison.h"
 
-struct pixel {};
-struct bgraPixel : pixel {
-    bgraPixel(uint8_t b, uint8_t g, uint8_t r, uint8_t a) : b(b), g(g), r(r), a(a) {
-    }
+struct bgraPixel {
     uint8_t b, g, r, a;
 };
 
-struct rgbaPixel : pixel {
-    rgbaPixel(uint8_t r, uint8_t g, uint8_t b, uint8_t a) : r(r), g(g), b(b), a(a) {
-    }
+struct rgbaPixel {
     uint8_t r, g, b, a;
 };
 
 template <typename T, typename U>
-typename std::enable_if<std::is_base_of<pixel, T>::value && std::is_base_of<pixel, U>::value, bool>::type operator==(const T& t,
+bool operator==(const T& t,
                                                                                                                      const U& u) {
     return t.r == u.r && t.g == u.g && t.b == u.b && t.a == u.a;
-}
-
-template <typename T, typename U>
-typename std::enable_if<std::is_base_of<pixel, T>::value && std::is_base_of<pixel, U>::value, bool>::type operator!=(const T& t,
-                                                                                                                     const U& u) {
-    return !(t == u);
 }
 
 ImageComparisonResult PixelByPixelImageComparator::CompareImages(CGImageRef left, CGImageRef right) {
@@ -53,6 +42,13 @@ ImageComparisonResult PixelByPixelImageComparator::CompareImages(CGImageRef left
         CGImageGetWidth(right),
         CGImageGetHeight(right),
     };
+
+    size_t leftPixelCount = leftSize.width * leftSize.height;
+    size_t rightPixelCount = rightSize.width * rightSize.height;
+
+    if (leftPixelCount != rightPixelCount) {
+        return{ rightPixelCount, nullptr };
+    }
 
     CGDataProviderRef leftProvider{ CGImageGetDataProvider(left) };
     woc::unique_cf<CFDataRef> leftData{ CGDataProviderCopyData(leftProvider) };
@@ -71,6 +67,8 @@ ImageComparisonResult PixelByPixelImageComparator::CompareImages(CGImageRef left
     const rgbaPixel* rightPixels{ reinterpret_cast<const rgbaPixel*>(CFDataGetBytePtr(rightData.get())) };
     rgbaPixel* deltaPixels{ reinterpret_cast<rgbaPixel*>(deltaBuffer.get()) };
 
+    // ASSUMPTION: The context draw did not cover the top left pixel;
+    // we can use it as the background (to detect accidental background deletion and miscomposition.)
     auto background = leftPixels[0];
 
     size_t npxchg = 0;
@@ -78,7 +76,7 @@ ImageComparisonResult PixelByPixelImageComparator::CompareImages(CGImageRef left
         auto& bp = leftPixels[i];
         auto& cp = rightPixels[i];
         auto& gp = deltaPixels[i];
-        if (bp != cp) {
+        if (!(bp == cp)) {
             ++npxchg;
             if (cp == background) {
                 // Pixel is in EXPECTED but not ACTUAL
