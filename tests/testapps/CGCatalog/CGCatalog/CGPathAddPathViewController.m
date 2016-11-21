@@ -38,7 +38,7 @@
         CGMutablePathRef theFirstPath = CGPathCreateMutable();
         CGMutablePathRef theSecondPath = CGPathCreateMutable();
 
-        CGAffineTransform transformation = CGAffineTransformIdentity;
+        CGAffineTransform transformation = self.options.affineTransform;
 
         CGPathMoveToPoint(theFirstPath, &transformation, 200, 35);
         CGPathAddLineToPoint(theFirstPath, &transformation, 165, 100);

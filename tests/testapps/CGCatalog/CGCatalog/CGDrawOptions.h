@@ -22,7 +22,8 @@
               fillColor:(CGColorRef)fillColor
         lineDashPattern:(CGFloat*)dashPattern
               linePhase:(CGFloat)linePhase
-              dashCount:(size_t)dashCount;
+              dashCount:(size_t)dashCount
+              transform:(CGAffineTransform)transform;
 
 @property (readonly) CGFloat lineWidth;
 @property (readonly) CGColorRef lineColor;
@@ -30,4 +31,5 @@
 @property (readonly) CGFloat* lineDashPattern;
 @property (readonly) CGFloat linePhase;
 @property (readonly) size_t lineDashCount;
+@property (readonly) CGAffineTransform affineTransform;
 @end
