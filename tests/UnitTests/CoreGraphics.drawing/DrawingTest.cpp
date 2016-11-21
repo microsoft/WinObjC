@@ -17,70 +17,10 @@
 #include "DrawingTest.h"
 #include "DrawingTestConfig.h"
 #include "ImageComparison.h"
-
-#include <CoreFoundation/CoreFoundation.h>
-#include <ImageIO/ImageIO.h>
+#include "ImageHelpers.h"
 
 #include <Starboard/SmartTypes.h>
 #include <memory>
-
-static CGImageRef __CGImageCreateFromPNGFile(CFStringRef filename) {
-    woc::unique_cf<CGDataProviderRef> dataProvider{ CGDataProviderCreateWithFilename(
-        CFStringGetCStringPtr(filename, kCFStringEncodingUTF8)) };
-    if (!dataProvider) {
-        return nullptr;
-    }
-
-    woc::unique_cf<CGImageRef> image{ CGImageCreateWithPNGDataProvider(dataProvider.get(), nullptr, FALSE, kCGRenderingIntentDefault) };
-    return image.release();
-}
-
-static CFDataRef __CFDataCreatePNGFromCGImage(CGImageRef image) {
-    // Estimate the image data size to be as large as its raw pixel buffer.
-    // This will never be hit; but if it does, CFData will grow intelligently regardless.
-    size_t sizeEstimate = CGImageGetHeight(image) * CGImageGetBytesPerRow(image);
-    woc::unique_cf<CFMutableDataRef> imageData{ CFDataCreateMutable(nullptr, sizeEstimate) };
-    if (!imageData) {
-        return nullptr;
-    }
-
-    woc::unique_cf<CGImageDestinationRef> imageDest{ CGImageDestinationCreateWithData(imageData.get(), CFSTR("public.png"), 1, nullptr) };
-    if (!imageDest) {
-        return nullptr;
-    }
-
-    CGImageDestinationAddImage(imageDest.get(), image, nullptr);
-    CGImageDestinationFinalize(imageDest.get());
-
-    return imageData.release();
-}
-
-static bool __WriteCFDataToFile(CFDataRef data, CFStringRef filename) {
-    std::unique_ptr<char[]> owningFilenamePtr;
-
-    char* rawFilename = const_cast<char*>(CFStringGetCStringPtr(filename, kCFStringEncodingUTF8));
-    size_t len = 0;
-
-    if (!rawFilename) {
-        CFRange filenameRange{ 0, CFStringGetLength(filename) };
-        CFIndex requiredBufferLength = 0;
-        CFStringGetBytes(filename, filenameRange, kCFStringEncodingUTF8, 0, FALSE, nullptr, 0, &requiredBufferLength);
-        owningFilenamePtr.reset(new char[requiredBufferLength]);
-        rawFilename = owningFilenamePtr.get();
-        CFStringGetBytes(
-            filename, filenameRange, kCFStringEncodingUTF8, 0, FALSE, (UInt8*)rawFilename, requiredBufferLength, &requiredBufferLength);
-        len = requiredBufferLength;
-    } else {
-        len = strlen(rawFilename);
-    }
-
-    woc::unique_cf<CFURLRef> url{ CFURLCreateFromFileSystemRepresentation(nullptr, (UInt8*)rawFilename, len, FALSE) };
-    if (!url) {
-        return false;
-    }
-
-    return CFURLWriteDataAndPropertiesToResource(url.get(), data, nullptr, nullptr);
-}
 
 static const CGSize g_defaultCanvasSize{ 512.f, 256.f };
 
@@ -130,9 +70,11 @@ CFStringRef testing::DrawTest::CreateOutputFilename() {
 void testing::DrawTest::TearDown() {
     CGContextRef context = GetDrawingContext();
 
+    // Generate image from context.
     woc::unique_cf<CGImageRef> image{ CGBitmapContextCreateImage(context) };
     ASSERT_NE(nullptr, image);
 
+    // Generate output filename (generally, TestCase.TestName.png).
     woc::unique_cf<CFStringRef> originalFilename{ CreateOutputFilename() };
 
     woc::unique_cf<CFMutableStringRef> filename{ CFStringCreateMutableCopy(nullptr, 0, originalFilename.get()) };
@@ -142,38 +84,53 @@ void testing::DrawTest::TearDown() {
 
     auto drawingConfig = DrawingTestConfig::Get();
 
+    // Write the context image to the output file.
+    woc::unique_cf<CFDataRef> actualImageData{ _CFDataCreatePNGFromCGImage(image.get()) };
+    ASSERT_NE(nullptr, actualImageData);
+
+    woc::unique_cf<CFStringRef> outputPath{
+        CFStringCreateWithFormat(nullptr, nullptr, CFSTR("%s/%@"), drawingConfig->GetOutputPath().c_str(), filename.get())
+    };
+    ASSERT_NE(nullptr, outputPath);
+    outputPath.reset(_CFStringCreateAbsolutePath(outputPath.get()));
+
+    ASSERT_TRUE(_WriteCFDataToFile(actualImageData.get(), outputPath.get()));
+
+    // For comparisons ...
     if (drawingConfig->GetMode() == DrawingTestMode::Compare) {
+        // ... load the reference image (same name, different directory as the output image)
         woc::unique_cf<CFStringRef> referenceFilename{
             CFStringCreateWithFormat(nullptr, nullptr, CFSTR("%s/%@"), drawingConfig->GetComparisonPath().c_str(), filename.get())
         };
-        woc::unique_cf<CGImageRef> referenceImage{ __CGImageCreateFromPNGFile(referenceFilename.get()) };
+        referenceFilename.reset(_CFStringCreateAbsolutePath(referenceFilename.get()));
+
+        woc::unique_cf<CGImageRef> referenceImage{ _CGImageCreateFromPNGFile(referenceFilename.get()) };
         ASSERT_NE(nullptr, referenceImage);
 
+        // And fire off a comparator.
         PixelByPixelImageComparator comparator;
-        auto result = comparator.CompareImages(referenceImage.get(), image.get());
+        auto delta = comparator.CompareImages(referenceImage.get(), image.get());
 
-        if (result.differences > 0) {
-            woc::unique_cf<CFDataRef> actualImageData{ __CFDataCreatePNGFromCGImage(image.get()) };
-            woc::unique_cf<CFDataRef> deltaImageData{ __CFDataCreatePNGFromCGImage(result.deltaImage.get()) };
+        if (delta.result != ImageComparisonResult::Same) {
+            if (delta.result == ImageComparisonResult::Incomparable) {
+                ADD_FAILURE() << "images are incomparable due to a mismatch in dimensions, presence, or byte length";
+            } else {
+                ADD_FAILURE() << "images differ nontrivially";
+            }
 
-            ADD_FAILURE();
-#ifdef WINOBJC
-            RecordProperty("expectedImage",
-                           [[[NSData dataWithContentsOfFile:(NSString*)referenceFilename.get()] base64Encoding] UTF8String]);
-            RecordProperty("actualImage", [[static_cast<NSData*>(actualImageData.get()) base64Encoding] UTF8String]);
-            RecordProperty("deltaImage", [[static_cast<NSData*>(deltaImageData.get()) base64Encoding] UTF8String]);
-#endif
+            woc::unique_cf<CFStringRef> deltaFilename{
+                CFStringCreateWithFormat(nullptr, nullptr, CFSTR("%s/Greenline.%@"), drawingConfig->GetOutputPath().c_str(), filename.get())
+            };
+            deltaFilename.reset(_CFStringCreateAbsolutePath(deltaFilename.get()));
+
+            woc::unique_cf<CFDataRef> encodedDeltaImageData{ _CFDataCreatePNGFromCGImage(delta.deltaImage.get()) };
+
+            _WriteCFDataToFile(encodedDeltaImageData.get(), deltaFilename.get());
+
+            RecordProperty("expectedImage", CFStringGetCStringPtr(referenceFilename.get(), kCFStringEncodingUTF8));
+            RecordProperty("actualImage", CFStringGetCStringPtr(outputPath.get(), kCFStringEncodingUTF8));
+            RecordProperty("deltaImage", CFStringGetCStringPtr(deltaFilename.get(), kCFStringEncodingUTF8));
         }
-    } else if (drawingConfig->GetMode() == DrawingTestMode::Generate) {
-        woc::unique_cf<CFDataRef> actualImageData{ __CFDataCreatePNGFromCGImage(image.get()) };
-        ASSERT_NE(nullptr, actualImageData);
-
-        woc::unique_cf<CFStringRef> outputPath{
-            CFStringCreateWithFormat(nullptr, nullptr, CFSTR("%s/%@"), drawingConfig->GetOutputPath().c_str(), filename.get())
-        };
-        ASSERT_NE(nullptr, outputPath);
-
-        ASSERT_TRUE(__WriteCFDataToFile(actualImageData.get(), outputPath.get()));
     }
 }
 

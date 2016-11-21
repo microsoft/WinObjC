@@ -238,7 +238,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="$(StarboardBasePath)\tests\unittests\Framework\Framework.cpp" />
-    <ClCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.Drawing\EntryPoint.cpp" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.Drawing\EntryPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.Drawing\CGContextBlendModeTests.cpp" />
@@ -248,6 +248,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.Drawing\CGPathDrawingTests.cpp" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.Drawing\DrawingTest.cpp" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.drawing\ImageComparison.cpp" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.drawing\ImageHelpers.cpp" />
   </ItemGroup>
   <Target Name="CopyTestResourcesToOutput" AfterTargets="AfterBuild">
     <ItemGroup>

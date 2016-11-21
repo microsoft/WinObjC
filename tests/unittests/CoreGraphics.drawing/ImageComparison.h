@@ -12,24 +12,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
-//****************************************************************************** 
+//******************************************************************************
 
 #pragma once
 
 #include <CoreGraphics/CGImage.h>
 #include <Starboard/SmartTypes.h>
 
-struct ImageComparisonResult {
+enum class ImageComparisonResult : unsigned int { Unknown = 0, Incomparable, Different, Same };
+
+struct ImageDelta {
+    ImageComparisonResult result;
     size_t differences;
     woc::unique_cf<CGImageRef> deltaImage;
+
+    ImageDelta(ImageComparisonResult result) : result(result), differences(0), deltaImage(nullptr) {
+    }
+
+    ImageDelta(ImageComparisonResult result, size_t differences, CGImageRef deltaImage)
+        : result(result), differences(differences), deltaImage(CGImageRetain(deltaImage)) {
+    }
 };
 
 class ImageComparator {
 public:
-    virtual ImageComparisonResult CompareImages(CGImageRef left, CGImageRef right) = 0;
+    virtual ImageDelta CompareImages(CGImageRef left, CGImageRef right) = 0;
 };
 
 class PixelByPixelImageComparator : public ImageComparator {
 public:
-    ImageComparisonResult CompareImages(CGImageRef left, CGImageRef right) override;
+    ImageDelta CompareImages(CGImageRef left, CGImageRef right) override;
 };

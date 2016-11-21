@@ -83,9 +83,9 @@ INSTANTIATE_TEST_CASE_P(CompositionModes,
                         ::testing::Combine(::testing::ValuesIn(alphas), ::testing::ValuesIn(compositionModes)));
 
 INSTANTIATE_TEST_CASE_P(DISABLED_PorterDuffModes,
-                                 CGContextBlendMode,
-                                 ::testing::Combine(::testing::ValuesIn(alphas), ::testing::ValuesIn(porterDuffBlendModes)));
+                        CGContextBlendMode,
+                        ::testing::Combine(::testing::ValuesIn(alphas), ::testing::ValuesIn(porterDuffBlendModes)));
 
 INSTANTIATE_TEST_CASE_P(DISABLED_OperatorBlendModes,
-                                 CGContextBlendMode,
-                                 ::testing::Combine(::testing::ValuesIn(alphas), ::testing::ValuesIn(blendOperators)));
+                        CGContextBlendMode,
+                        ::testing::Combine(::testing::ValuesIn(alphas), ::testing::ValuesIn(blendOperators)));

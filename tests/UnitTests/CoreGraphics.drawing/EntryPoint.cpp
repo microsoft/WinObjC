@@ -18,7 +18,27 @@
 #include <TestFramework.h>
 #include <memory>
 
+#include <CoreFoundation/CoreFoundation.h>
+
 #include "DrawingTestConfig.h"
+
+static std::string __ModuleDirectory() {
+    static std::string modulePath = []() {
+        std::string modulePath(MAX_PATH, '\0');
+        GetModuleFileNameA(nullptr, &modulePath[0], modulePath.capacity());
+        auto pos = modulePath.rfind('\\');
+        if (pos == std::string::npos) {
+            pos = modulePath.rfind('/');
+        }
+
+        if (pos != std::string::npos) {
+            modulePath.erase(pos);
+        }
+
+        return modulePath;
+    }();
+    return modulePath;
+}
 
 class CommandLineDrawingTestConfigImpl : public DrawingTestConfigImpl {
 private:
@@ -28,7 +48,7 @@ private:
 
 public:
     CommandLineDrawingTestConfigImpl(int argc, char** argv)
-        : _mode(DrawingTestMode::Compare), _outputPath("."), _comparisonPath("./data/reference") {
+        : _mode(DrawingTestMode::Compare), _outputPath(__ModuleDirectory()), _comparisonPath(__ModuleDirectory() + "/data/reference") {
         for (int i = 1; i < argc; ++i) {
             char* arg = argv[i];
             if (!arg) {
@@ -64,7 +84,9 @@ std::shared_ptr<DrawingTestConfigImpl> _configImpl;
 }
 
 #ifdef WIN32
+#include <COMIncludes.h>
 #include <wrl\wrappers\corewrappers.h>
+#include <COMIncludes_end.h>
 using namespace Microsoft::WRL::Wrappers;
 #endif
 

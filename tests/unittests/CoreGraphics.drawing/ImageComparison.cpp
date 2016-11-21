@@ -12,9 +12,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
-//****************************************************************************** 
+//******************************************************************************
 
 #include "ImageComparison.h"
+#include "ImageHelpers.h"
+
+#include <CoreGraphics/CGGeometry.h>
 
 struct bgraPixel {
     uint8_t b, g, r, a;
@@ -25,40 +28,36 @@ struct rgbaPixel {
 };
 
 template <typename T, typename U>
-bool operator==(const T& t,
-                                                                                                                     const U& u) {
+bool operator==(const T& t, const U& u) {
     return t.r == u.r && t.g == u.g && t.b == u.b && t.a == u.a;
 }
 
-ImageComparisonResult PixelByPixelImageComparator::CompareImages(CGImageRef left, CGImageRef right) {
-    woc::unique_cf<CGImageRef> deltaImage;
+ImageDelta PixelByPixelImageComparator::CompareImages(CGImageRef left, CGImageRef right) {
+    if (!left || !right) {
+        return { ImageComparisonResult::Incomparable };
+    }
 
     CGSize leftSize{
-        CGImageGetWidth(left),
-        CGImageGetHeight(left),
+        (CGFloat)CGImageGetWidth(left), (CGFloat)CGImageGetHeight(left),
     };
 
     CGSize rightSize{
-        CGImageGetWidth(right),
-        CGImageGetHeight(right),
+        (CGFloat)CGImageGetWidth(right), (CGFloat)CGImageGetHeight(right),
     };
 
     size_t leftPixelCount = leftSize.width * leftSize.height;
     size_t rightPixelCount = rightSize.width * rightSize.height;
 
     if (leftPixelCount != rightPixelCount) {
-        return{ rightPixelCount, nullptr };
+        return { ImageComparisonResult::Incomparable };
     }
 
-    CGDataProviderRef leftProvider{ CGImageGetDataProvider(left) };
-    woc::unique_cf<CFDataRef> leftData{ CGDataProviderCopyData(leftProvider) };
-
-    CGDataProviderRef rightProvider{ CGImageGetDataProvider(right) };
-    woc::unique_cf<CFDataRef> rightData{ CGDataProviderCopyData(rightProvider) };
+    woc::unique_cf<CFDataRef> leftData{ _CFDataCreateFromCGImage(left) };
+    woc::unique_cf<CFDataRef> rightData{ _CFDataCreateFromCGImage(right) };
 
     CFIndex leftLength = CFDataGetLength(leftData.get());
     if (leftLength != CFDataGetLength(rightData.get())) {
-        return{ CFDataGetLength(rightData.get()), std::move(deltaImage) };
+        return { ImageComparisonResult::Incomparable };
     }
 
     woc::unique_iw<uint8_t> deltaBuffer{ static_cast<uint8_t*>(IwCalloc(leftLength, 1)) };
@@ -68,7 +67,7 @@ ImageComparisonResult PixelByPixelImageComparator::CompareImages(CGImageRef left
     rgbaPixel* deltaPixels{ reinterpret_cast<rgbaPixel*>(deltaBuffer.get()) };
 
     // ASSUMPTION: The context draw did not cover the top left pixel;
-    // we can use it as the background (to detect accidental background deletion and miscomposition.)
+    // We can use it as the background to detect accidental background deletion and miscomposition.
     auto background = leftPixels[0];
 
     size_t npxchg = 0;
@@ -94,27 +93,22 @@ ImageComparisonResult PixelByPixelImageComparator::CompareImages(CGImageRef left
         }
     }
 
-    woc::unique_cf<CFDataRef> deltaData{
-        CFDataCreateWithBytesNoCopy(nullptr, deltaBuffer.release(), leftLength, kCFAllocatorDefault)
-    };
+    woc::unique_cf<CFDataRef> deltaData{ CFDataCreateWithBytesNoCopy(nullptr, deltaBuffer.release(), leftLength, kCFAllocatorDefault) };
     woc::unique_cf<CGDataProviderRef> deltaProvider{ CGDataProviderCreateWithCFData(deltaData.get()) };
 
-    deltaImage.reset(
-        CGImageCreate(leftSize.width,
-                         leftSize.height,
-                         8,
-                         32,
-                         leftSize.width * 4,
-                         CGImageGetColorSpace(left),
-                         CGImageGetBitmapInfo(left),
-                         deltaProvider.get(),
-                         nullptr,
-                         FALSE,
-                         kCGRenderingIntentDefault)
-    );
+    woc::unique_cf<CGImageRef> deltaImage{ CGImageCreate(leftSize.width,
+                                                         leftSize.height,
+                                                         8,
+                                                         32,
+                                                         leftSize.width * 4,
+                                                         CGImageGetColorSpace(left),
+                                                         CGImageGetBitmapInfo(left),
+                                                         deltaProvider.get(),
+                                                         nullptr,
+                                                         FALSE,
+                                                         kCGRenderingIntentDefault) };
 
     return {
-        npxchg,
-        std::move(deltaImage),
+        npxchg == 0 ? ImageComparisonResult::Same : ImageComparisonResult::Different, npxchg, deltaImage.get(),
     };
 }
