@@ -483,14 +483,14 @@ CGImageRef _CGImageLoadImageWithWICDecoder(REFGUID decoderCls, void* bytes, int 
         RETURN_NULL_IF_FAILED(imageFactory->CreateDecoder(decoderCls, nullptr, &pDecoder));
         RETURN_NULL_IF_FAILED(pDecoder->Initialize(spStream.Get(), WICDecodeMetadataCacheOnLoad));
     } else {
-        RETURN_NULL_IF_FAILED(imageFactory->CreateDecoderFromStream(spStream.Get(), nullptr, WICDecodeMetadataCacheOnDemand, &pDecoder));
+        RETURN_NULL_IF_FAILED(imageFactory->CreateDecoderFromStream(spStream.Get(), nullptr, WICDecodeMetadataCacheOnLoad, &pDecoder));
     }
 
     ComPtr<IWICBitmapFrameDecode> bitMapFrameDecoder;
     RETURN_NULL_IF_FAILED(pDecoder->GetFrame(0, &bitMapFrameDecoder));
 
     ComPtr<IWICBitmap> bitmap;
-    RETURN_NULL_IF_FAILED(imageFactory->CreateBitmapFromSource(bitMapFrameDecoder.Get(), WICBitmapCacheOnDemand, &bitmap));
+    RETURN_NULL_IF_FAILED(imageFactory->CreateBitmapFromSource(bitMapFrameDecoder.Get(), WICBitmapCacheOnLoad, &bitmap));
 
     CGImageRef imageRef = __CGImage::CreateInstance();
     imageRef->SetImageSource(bitmap);
