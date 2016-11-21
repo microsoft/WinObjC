@@ -465,7 +465,7 @@ TEST(CGPath, CGPathContainsPointInsideRectOutsidePath) {
     EXPECT_FALSE(test);
 }
 
-TEST(CGPath, CGPathContainsPointShoulders) {
+DISABLED_TEST(CGPath, CGPathContainsPointShoulders) {
     CGFloat originX = 10.0f;
     CGFloat originY = 20.0f;
     CGFloat pathWidth = 100.0f;
@@ -502,7 +502,7 @@ TEST(CGPath, CGPathContainsPointShoulders) {
     EXPECT_TRUE(test);
 }
 
-TEST(CGPath, CGPathContainsPointWithTransform) {
+DISABLED_TEST(CGPath, CGPathContainsPointWithTransform) {
     CGFloat originX = 10.0f;
     CGFloat originY = 20.0f;
     CGFloat pathWidth = 100.0f;

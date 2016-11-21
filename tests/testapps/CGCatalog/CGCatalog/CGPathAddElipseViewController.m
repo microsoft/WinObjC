@@ -39,8 +39,7 @@
 
         CGMutablePathRef thepath = CGPathCreateMutable();
 
-        CGAffineTransform transformation = CGAffineTransformIdentity;
-        transformation = CGAffineTransformRotate(transformation, 0.1);
+        CGAffineTransform transformation = self.options.affineTransform;
 
         CGPathAddEllipseInRect(thepath, &transformation, theRectangle);
         CGPathCloseSubpath(thepath);

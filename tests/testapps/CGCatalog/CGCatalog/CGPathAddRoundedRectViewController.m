@@ -36,7 +36,7 @@
         CGContextSetStrokeColorWithColor(currentContext, self.options.lineColor);
         CGContextSetLineDash(currentContext, self.options.linePhase, self.options.lineDashPattern, self.options.lineDashCount);
 
-        CGAffineTransform transformation = CGAffineTransformIdentity;
+        CGAffineTransform transformation = self.options.affineTransform;
 
         CGMutablePathRef thepath = CGPathCreateMutable();
         CGPathMoveToPoint(thepath, &transformation, 75, 100);

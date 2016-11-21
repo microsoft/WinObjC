@@ -51,7 +51,7 @@
         CGContextSetStrokeColorWithColor(currentContext, weakSelf.options.lineColor);
         CGContextSetLineDash(currentContext, weakSelf.options.linePhase, weakSelf.options.lineDashPattern, weakSelf.options.lineDashCount);
 
-        CGAffineTransform transformation = CGAffineTransformIdentity;
+        CGAffineTransform transformation = self.options.affineTransform;
 
         weakSelf.containingPath = CGPathCreateMutable();
         CGPathMoveToPoint(weakSelf.containingPath, &transformation, 200, 35);
@@ -66,7 +66,7 @@
         CGPathAddLineToPoint(weakSelf.containingPath, &transformation, 235, 100);
 
         // Unnecessary as close subpath will finish this line off but for the sake of consistency, have this here.
-        CGPathAddLineToPoint(weakSelf.containingPath, NULL, 200, 35);
+        CGPathAddLineToPoint(weakSelf.containingPath, &transformation, 200, 35);
         CGPathCloseSubpath(weakSelf.containingPath);
 
         CGContextAddPath(currentContext, weakSelf.containingPath);

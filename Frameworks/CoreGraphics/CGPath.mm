@@ -53,9 +53,9 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
     bool figureClosed;
     CGPoint currentPoint{ 0, 0 };
     CGPoint startingPoint{ 0, 0 };
-    const CGAffineTransform* lastTransform;
+    CGAffineTransform lastTransform;
 
-    __CGPath() : figureClosed(true), lastTransform(&CGAffineTransformIdentity) {
+    __CGPath() : figureClosed(true), lastTransform(CGAffineTransformIdentity) {
     }
 
     ComPtr<ID2D1PathGeometry> GetPathGeometry() {
@@ -82,16 +82,16 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
         startingPoint = newPoint;
     }
 
-    void SetLastTransform(const CGAffineTransform* transform) {
+    const void SetLastTransform(const CGAffineTransform* transform) {
         if (transform) {
-            lastTransform = transform;
+            lastTransform = *transform;
         } else {
-            lastTransform = &CGAffineTransformIdentity;
+            lastTransform = CGAffineTransformIdentity;
         }
     }
 
     const CGAffineTransform* GetLastTransform() {
-        return lastTransform;
+        return &lastTransform;
     }
 
     // A private helper function for re-opening a path geometry. CGPath does not
