@@ -78,7 +78,7 @@ TEST_P(CGContextBlendMode, OverlappedEllipses) {
     CGContextFillEllipseInRect(context, _CGRectCenteredOnPoint({ bounds.size.height, bounds.size.height }, secondEllipseCenter));
 }
 
-INSTANTIATE_TEST_CASE_P(CompositionModes,
+INSTANTIATE_TEST_CASE_P(DISABLED_CompositionModes,
                         CGContextBlendMode,
                         ::testing::Combine(::testing::ValuesIn(alphas), ::testing::ValuesIn(compositionModes)));
 
