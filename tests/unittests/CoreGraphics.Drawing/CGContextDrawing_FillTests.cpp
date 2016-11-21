@@ -16,7 +16,7 @@
 
 #include "DrawingTest.h"
 
-DRAW_TEST_F(CGContextFill, ConcentricCirclesWinding, WhiteBackgroundTest) {
+DISABLED_DRAW_TEST_F(CGContextFill, ConcentricCirclesWinding, WhiteBackgroundTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -38,7 +38,7 @@ DRAW_TEST_F(CGContextFill, ConcentricCirclesWinding, WhiteBackgroundTest) {
     CGPathRelease(concentricCirclesPath);
 }
 
-DRAW_TEST_F(CGContextFill, ConcentricCirclesEvenOdd, WhiteBackgroundTest) {
+DISABLED_DRAW_TEST_F(CGContextFill, ConcentricCirclesEvenOdd, WhiteBackgroundTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -60,7 +60,7 @@ DRAW_TEST_F(CGContextFill, ConcentricCirclesEvenOdd, WhiteBackgroundTest) {
     CGPathRelease(concentricCirclesPath);
 }
 
-DRAW_TEST_F(CGContextFill, ConcentricRectsWinding, WhiteBackgroundTest) {
+DISABLED_DRAW_TEST_F(CGContextFill, ConcentricRectsWinding, WhiteBackgroundTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -82,7 +82,7 @@ DRAW_TEST_F(CGContextFill, ConcentricRectsWinding, WhiteBackgroundTest) {
     CGPathRelease(path);
 }
 
-DRAW_TEST_F(CGContextFill, ConcentricRectsEvenOdd, WhiteBackgroundTest) {
+DISABLED_DRAW_TEST_F(CGContextFill, ConcentricRectsEvenOdd, WhiteBackgroundTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
