@@ -32,6 +32,8 @@
 
 NSString* const XamlAutoGenNamespace = @"IslandwoodAutoGenNamespace";
 
+WUXMFontFamily* WUXFontFamilyFromUIFontName(NSString* uiFontName);
+
 // Convert UIColor to Color on windows
 WUColor* ConvertUIColorToWUColor(UIColor* uiColor);
 

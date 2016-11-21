@@ -27,10 +27,10 @@ CA_EXPORT NSString* const kCAGradientLayerAxial;
 CA_EXPORT_CLASS
 @interface CAGradientLayer : CALayer <CAMediaTiming, NSCoding>
 
-@property (copy) NSArray* colors;
-@property (copy) NSArray* locations;
-@property CGPoint endPoint;
-@property CGPoint startPoint;
+@property (copy) NSArray* colors STUB_PROPERTY;
+@property (copy) NSArray* locations STUB_PROPERTY;
+@property CGPoint endPoint STUB_PROPERTY;
+@property CGPoint startPoint STUB_PROPERTY;
 @property (copy) NSString* type STUB_PROPERTY;
 
 @end

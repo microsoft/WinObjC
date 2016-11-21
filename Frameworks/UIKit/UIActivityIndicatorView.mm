@@ -43,7 +43,7 @@ static const int c_largeSquareLength = 37;
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super initWithCoder:coder]) {
-        [self _UIActivityIndicatorView_initInternal:nil];
+        [self _initUIActivityIndicatorView:nil];
 
         if ([coder containsValueForKey:@"UIHidesWhenStopped"]) {
             [self setHidesWhenStopped:[coder decodeInt32ForKey:@"UIHidesWhenStopped"]];
@@ -96,7 +96,7 @@ static const int c_largeSquareLength = 37;
 */
 - (instancetype)initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyle)style {
     if (self = [super initWithFrame:CGRectZero]) {
-        [self _UIActivityIndicatorView_initInternal:nil];
+        [self _initUIActivityIndicatorView:nil];
         [self setActivityIndicatorViewStyle:style];
     }
 
@@ -107,12 +107,21 @@ static const int c_largeSquareLength = 37;
  @Status Interoperable
 */
 - (instancetype)initWithFrame:(CGRect)frame {
-    return [self _initWithFrame:frame xamlElement:nil];
+    if (self = [super initWithFrame:frame]) {
+        [self _initUIActivityIndicatorView:nil];
+    }
+
+    return self;
 }
 
-- (instancetype)_initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
-    if (self = [super initWithFrame:frame]) {
-        [self _UIActivityIndicatorView_initInternal:xamlElement];
+/**
+ Microsoft Extension
+*/
+- (instancetype)initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
+    // TODO: We're passing nil to initWithFrame:xamlElement: because we have to *contain* a _subview for padding/layout.
+    // Note: Pass 'xamlElement' instead, once we move to a *single* backing Xaml element for UIActivityIndicatorView.
+    if (self = [super initWithFrame:frame xamlElement:nil]) {
+        [self _initUIActivityIndicatorView:xamlElement];
     }
 
     return self;
@@ -127,16 +136,17 @@ static const int c_largeSquareLength = 37;
     _subView.center = { self.center.x - self.frame.origin.x, self.center.y - self.frame.origin.y };
 }
 
-- (void)_UIActivityIndicatorView_initInternal:(WXFrameworkElement*)xamlElement {
+- (void)_initUIActivityIndicatorView:(WXFrameworkElement*)xamlElement {
     if (xamlElement != nil && [xamlElement isKindOfClass:[WXCProgressRing class]]) {
         _progressRing = static_cast<WXCProgressRing*>(xamlElement);
     } else {
         _progressRing = [WXCProgressRing make];
     }
 
-    _subView = [[UIView alloc] initWithFrame:CGRectZero];
-
-    [_subView setXamlElement:_progressRing];
+    // TODO: We should move this over to a single Xaml element which we return from a createXamlElement implementation.
+    //       Which would also mean that we'd just reach into [self xamlElement] to get the backing _progressRing,
+    //       and we would no longer have a _subview.
+    _subView = [[UIView alloc] initWithFrame:CGRectZero xamlElement:_progressRing];
     [self addSubview:_subView];
     _isAnimating = NO;
     [self setHidesWhenStopped:YES];

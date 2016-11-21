@@ -334,7 +334,7 @@
     <ItemGroup>
       <UIKitXamlFile Include="$(StarboardLibDirs)\UIKit.Xaml\**\*.xaml" />
       <SBResourceCopy Include="%(UIKitXamlFile.Identity)">
-        <VariantDir>UIKit\%(UIKitXamlFile.RecursiveDir)</VariantDir>
+        <VariantDir>UIKit.Xaml\%(UIKitXamlFile.RecursiveDir)</VariantDir>
       </SBResourceCopy>
     </ItemGroup>
 
@@ -441,7 +441,7 @@
     <!-- UIKit.dll inherits type information from UIKit.Xaml.dll, but the build system doesn't know that, so we have to manually reference it -->
     <ItemGroup>
       <Reference Include="UIKit" Condition="'$(AppContainerApplication)' == 'true' And ('$(IslandwoodDRT)' == 'true' Or $(Link.Contains('UIKit.lib')))">
-        <HintPath>$(StarboardLibDirs)\UIKit.winmd</HintPath>
+        <HintPath>$(StarboardLibDirs)\UIKit.Xaml.winmd</HintPath>
         <CopyLocal>false</CopyLocal>
         <Implementation>UIKit.Xaml.dll</Implementation>
       </Reference>

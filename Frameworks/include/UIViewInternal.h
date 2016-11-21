@@ -55,11 +55,11 @@ public:
     UIViewAutoresizing autoresizingMask;
     CGSize _contentHuggingPriority;
     CGSize _contentCompressionResistancePriority;
+    CGSize _previousIntrinsicContentSize;
     BOOL autoresizesSubviews;
     BOOL translatesAutoresizingMaskIntoConstraints;
     CGRect _resizeRoundingError;
 
-    StrongId<WXFrameworkElement> _xamlInputElement; // The XAML element receiving touch input for this view
     EventRegistrationToken _pointerPressedEventRegistration = { 0 };
     EventRegistrationToken _pointerMovedEventRegistration = { 0 };
     EventRegistrationToken _pointerReleasedEventRegistration = { 0 };
@@ -108,7 +108,7 @@ public:
 }
 
 - (UITouchPhase)_processPointerEvent:(WUXIPointerRoutedEventArgs*)pointerEventArgs forTouchPhase:(UITouchPhase)touchPhase;
-- (void)_initPriv;
+
 + (void)_setPageTransitionForView:(UIView*)view fromLeft:(BOOL)fromLeft;
 - (void)_applyConstraints;
 - (void)_setShouldLayout;

@@ -77,11 +77,11 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, copy) NSDictionary* typingAttributes STUB_PROPERTY;
 
 // Sizing the Text Field’s Text
-@property (nonatomic) BOOL adjustsFontSizeToFitWidth STUB_PROPERTY;
-@property (nonatomic) CGFloat minimumFontSize STUB_PROPERTY;
+@property (nonatomic) BOOL adjustsFontSizeToFitWidth;
+@property (nonatomic) CGFloat minimumFontSize;
 
 // Managing the Editing Behavior
-@property (nonatomic, readonly, getter=isEditing) BOOL editing STUB_PROPERTY;
+@property (nonatomic, readonly, getter=isEditing) BOOL editing;
 @property (nonatomic) BOOL clearsOnBeginEditing STUB_PROPERTY;
 @property (nonatomic) BOOL clearsOnInsertion STUB_PROPERTY;
 @property (nonatomic) BOOL allowsEditingTextAttributes STUB_PROPERTY;

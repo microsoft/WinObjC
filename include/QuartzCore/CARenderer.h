@@ -31,11 +31,11 @@
 @property (assign) CGRect bounds STUB_PROPERTY;
 
 + (CARenderer*)rendererWithCGLContext:(void*)cglContext options:(NSDictionary*)options STUB_METHOD;
-
 - (void)beginFrameAtTime:(CFTimeInterval)currentTime timeStamp:(struct CVTimeStamp*)timeStamp STUB_METHOD;
 - (CGRect)updateBounds STUB_METHOD;
 - (void)addUpdateRect:(CGRect)aRect STUB_METHOD;
 - (void)render STUB_METHOD;
 - (CFTimeInterval)nextFrameTime STUB_METHOD;
 - (void)endFrame STUB_METHOD;
+
 @end

@@ -36,7 +36,7 @@ namespace XAMLCatalogTest
 
             // Launch the XAMLCatalog app
             DesiredCapabilities appCapabilities = new DesiredCapabilities();
-            appCapabilities.SetCapability("app", "0b75acd0-df3e-4edb-bebc-847b0ca4bffb_vddemm0nz1wmr!App");
+            appCapabilities.SetCapability("app", "49ab0ab8-f42a-485e-9f46-c1348ba16d5c_tk6g8mba0d0k4!App");
 
             XAMLCatalogSession = new IOSDriver<IOSElement>(RemoteHarnessUrl, appCapabilities);
             Assert.IsNotNull(XAMLCatalogSession);
