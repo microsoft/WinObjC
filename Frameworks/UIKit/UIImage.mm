@@ -542,23 +542,23 @@ static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* dst) 
         if (dstLeftCap) {
             // MidHeightLeft
             _CGContextDrawImageRect(context,
-                                   cgImg,
-                                   CGRectMake(0, srcHeight - srcBotCap, srcLeftCap, -(srcHeight - srcTopCap - srcBotCap)),
-                                   CGRectMake(dstX, (dstY + dstBotCap), dstLeftCap, (dstHeight - dstTopCap - dstBotCap)));
+                                    cgImg,
+                                    CGRectMake(0, srcHeight - srcBotCap, srcLeftCap, -(srcHeight - srcTopCap - srcBotCap)),
+                                    CGRectMake(dstX, (dstY + dstBotCap), dstLeftCap, (dstHeight - dstTopCap - dstBotCap)));
         }
 
         if (dstWidth - dstLeftCap - dstRightCap > 0) {
             // MidHeightMidWidth
             _CGContextDrawImageRect(context,
-                                   cgImg,
-                                   CGRectMake(srcLeftCap,
-                                              srcHeight - srcBotCap,
-                                              (srcWidth - srcLeftCap - srcRightCap),
-                                              -(srcHeight - srcTopCap - srcBotCap)),
-                                   CGRectMake((dstX + dstLeftCap),
-                                              (dstY + dstBotCap),
-                                              (dstWidth - dstLeftCap - dstRightCap),
-                                              (dstHeight - dstTopCap - dstBotCap)));
+                                    cgImg,
+                                    CGRectMake(srcLeftCap,
+                                               srcHeight - srcBotCap,
+                                               (srcWidth - srcLeftCap - srcRightCap),
+                                               -(srcHeight - srcTopCap - srcBotCap)),
+                                    CGRectMake((dstX + dstLeftCap),
+                                               (dstY + dstBotCap),
+                                               (dstWidth - dstLeftCap - dstRightCap),
+                                               (dstHeight - dstTopCap - dstBotCap)));
         } else {
             UNIMPLEMENTED_WITH_MSG(
                 "Patched draws only supported when sum of "
@@ -585,28 +585,28 @@ static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* dst) 
         if (dstLeftCap) {
             // TL corner
             _CGContextDrawImageRect(context,
-                                   cgImg,
-                                   CGRectMake(0, srcTopCap, srcLeftCap, -srcTopCap),
-                                   CGRectMake(dstX, (dstY + dstHeight - dstTopCap), dstLeftCap, dstTopCap));
+                                    cgImg,
+                                    CGRectMake(0, srcTopCap, srcLeftCap, -srcTopCap),
+                                    CGRectMake(dstX, (dstY + dstHeight - dstTopCap), dstLeftCap, dstTopCap));
         }
 
         if (dstWidth - dstLeftCap - dstRightCap > 0) {
             // TCenter
             _CGContextDrawImageRect(context,
-                                   cgImg,
-                                   CGRectMake(srcLeftCap, srcTopCap, (srcWidth - srcLeftCap - srcRightCap), -srcTopCap),
-                                   CGRectMake((dstX + dstLeftCap),
-                                              (dstY + dstHeight - dstTopCap),
-                                              (dstWidth - dstLeftCap - dstRightCap),
-                                              dstTopCap));
+                                    cgImg,
+                                    CGRectMake(srcLeftCap, srcTopCap, (srcWidth - srcLeftCap - srcRightCap), -srcTopCap),
+                                    CGRectMake((dstX + dstLeftCap),
+                                               (dstY + dstHeight - dstTopCap),
+                                               (dstWidth - dstLeftCap - dstRightCap),
+                                               dstTopCap));
         }
 
         if (dstRightCap) {
             // TR corner
             _CGContextDrawImageRect(context,
-                                   cgImg,
-                                   CGRectMake((srcWidth - srcRightCap), srcTopCap, srcRightCap, -srcTopCap),
-                                   CGRectMake((dstX + dstWidth - dstRightCap), (dstY + dstHeight - dstTopCap), dstRightCap, dstTopCap));
+                                    cgImg,
+                                    CGRectMake((srcWidth - srcRightCap), srcTopCap, srcRightCap, -srcTopCap),
+                                    CGRectMake((dstX + dstWidth - dstRightCap), (dstY + dstHeight - dstTopCap), dstRightCap, dstTopCap));
         }
     }
 
@@ -614,24 +614,24 @@ static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* dst) 
         if (dstLeftCap) {
             // BL Corner
             _CGContextDrawImageRect(context,
-                                   cgImg,
-                                   CGRectMake(0, srcHeight, srcLeftCap, -srcBotCap),
-                                   CGRectMake(dstX, dstY, dstLeftCap, dstBotCap));
+                                    cgImg,
+                                    CGRectMake(0, srcHeight, srcLeftCap, -srcBotCap),
+                                    CGRectMake(dstX, dstY, dstLeftCap, dstBotCap));
         }
 
         if (dstWidth - dstLeftCap - dstRightCap > 0) {
             // bottomMidWidth
             _CGContextDrawImageRect(context,
-                                   cgImg,
-                                   CGRectMake(srcLeftCap, srcHeight, (srcWidth - srcLeftCap - srcRightCap), -srcBotCap),
-                                   CGRectMake((dstX + dstLeftCap), dstY, (dstWidth - dstLeftCap - dstRightCap), dstBotCap));
+                                    cgImg,
+                                    CGRectMake(srcLeftCap, srcHeight, (srcWidth - srcLeftCap - srcRightCap), -srcBotCap),
+                                    CGRectMake((dstX + dstLeftCap), dstY, (dstWidth - dstLeftCap - dstRightCap), dstBotCap));
         }
 
         if (dstRightCap) {
             _CGContextDrawImageRect(context,
-                                   cgImg,
-                                   CGRectMake((srcWidth - srcRightCap), srcHeight, srcRightCap, -srcBotCap),
-                                   CGRectMake((dstX + dstWidth - dstRightCap), dstY, dstRightCap, dstBotCap));
+                                    cgImg,
+                                    CGRectMake((srcWidth - srcRightCap), srcHeight, srcRightCap, -srcBotCap),
+                                    CGRectMake((dstX + dstWidth - dstRightCap), dstY, dstRightCap, dstBotCap));
         }
     }
 }
