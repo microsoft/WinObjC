@@ -45,11 +45,9 @@ TEST(UIActionSheet, GetXamlElement) {
 }
 
 TEST(UIActionSheet, NilParameters) {
-    UIActionSheet* actionSheet = [[[UIActionSheet alloc] initWithTitle:nil
-                                                            delegate:nil
-                                                    cancelButtonTitle:nil
-                                                destructiveButtonTitle:nil
-                                                    otherButtonTitles:nil] autorelease];
+    UIActionSheet* actionSheet =
+        [[[UIActionSheet alloc] initWithTitle:nil delegate:nil cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil]
+            autorelease];
     WXFrameworkElement* backingElement = [actionSheet xamlElement];
     ASSERT_TRUE(backingElement);
 
@@ -59,10 +57,10 @@ TEST(UIActionSheet, NilParameters) {
 
     NSInteger cancelIndex = [actionSheet cancelButtonIndex];
     ASSERT_TRUE(cancelIndex == -1);
-                      
+
     NSInteger destructiveIndex = [actionSheet destructiveButtonIndex];
     ASSERT_TRUE(cancelIndex == -1);
-                      
+
     NSInteger otherIndex = [actionSheet firstOtherButtonIndex];
     ASSERT_TRUE(otherIndex == -1);
 }

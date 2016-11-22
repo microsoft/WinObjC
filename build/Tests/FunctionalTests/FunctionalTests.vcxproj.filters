@@ -94,10 +94,10 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\AssetsLibraryTests\AssetsLibraryTestHelpers.mm">
       <Filter>Tests\AssetsLibraryTests</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\..\tests\functionaltests\Tests\CoreAnimationTests\CALayerAppearanceTests.mm">
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\CoreAnimationTests\CALayerAppearanceTests.mm">
       <Filter>Tests\CoreAnimationTests</Filter>
     </ClangCompile>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIActionSheetTests.mm">
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIKitTests\UIActionSheetTests.mm">
       <Filter>Tests\UIKitTests</Filter>
     </ClangCompile>
   </ItemGroup>

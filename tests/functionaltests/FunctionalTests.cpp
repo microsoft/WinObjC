@@ -353,7 +353,6 @@ public:
 //
 // Cortana Activation Tests
 //
-
 extern void CortanaTestVoiceCommandForegroundActivation();
 extern void CortanaTestVoiceCommandForegroundActivationDelegateMethodsCalled();
 
@@ -517,6 +516,8 @@ extern void NSLayoutConstraintAddConstraints();
 class UIKitTests {
 public:
     BEGIN_TEST_CLASS(UIKitTests)
+    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
+    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
     END_TEST_CLASS()
 
     TEST_CLASS_SETUP(UIKitTestsSetup) {
@@ -773,9 +774,9 @@ extern void CALayerAppearanceBackgroundColorChanged();
 class CoreAnimationTests {
 public:
     BEGIN_TEST_CLASS(CoreAnimationTests)
-        TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
-        TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
-        END_TEST_CLASS()
+    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
+    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
+    END_TEST_CLASS()
 
     TEST_CLASS_SETUP(CoreAnimationTestsSetup) {
         return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
