@@ -23,7 +23,7 @@
     idretain _dividerImage;
     idretain _segmentFont;
     idretain _textColor[2];
-    id _tintColor;
+    StrongId<UIColor> _tintColor;
     unsigned _position;
     unsigned _type, _selected;
     unsigned _disabled;
@@ -55,6 +55,6 @@
 - (id)_setAttributes:(id)attributes forState:(DWORD)state;
 - (id)_setDividerImage:(id)image;
 - (id)_setNoDefaultImages:(BOOL)noDefault;
-- (id)_setTintColor:(id)color;
+- (id)_setTintColor:(UIColor*)color;
 + (instancetype)initialize;
 @end

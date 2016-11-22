@@ -30,7 +30,7 @@
 
 @implementation UISegmentedControl {
     StrongId<NSMutableArray> _segments;
-    id _tintColor;
+    StrongId<UIColor> _tintColor;
     idretain _backgroundImages[16];
     idretain _segmentAttributes[16];
     idretain _dividerImage;
@@ -520,7 +520,7 @@ static void positionSegments(UISegmentedControl* self) {
     _tintColor = uiColor;
 
     if (isOSTarget(@"7.0")) {
-        [[self layer] setBorderColor:(CGColorRef)_tintColor];
+        [[self layer] setBorderColor:(CGColorRef)_tintColor.get()];
     }
 }
 
@@ -586,7 +586,6 @@ static void positionSegments(UISegmentedControl* self) {
 */
 - (void)dealloc {
     _segments = nil;
-    _tintColor = nil;
     _dividerImage = nil;
 
     for (int i = 0; i < 16; i++) {

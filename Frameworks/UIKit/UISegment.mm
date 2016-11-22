@@ -36,53 +36,56 @@ static idretain _defaultTextColor[2];
 }
 
 - (instancetype)initWithCoder:(NSCoder*)coder {
-    id result = [super initWithCoder:coder];
-    id info = [[coder decodeObjectForKey:@"UISegmentInfo"] retain];
-    _position = [coder decodeInt32ForKey:@"UISegmentPosition"];
+    if (self = [super initWithCoder:coder]) {
+        id info = [[coder decodeObjectForKey:@"UISegmentInfo"] retain];
+        _position = [coder decodeInt32ForKey:@"UISegmentPosition"];
 
-    CGRect frame;
-    frame = [self bounds];
+        CGRect frame;
+        frame = [self bounds];
 
-    if ([info isKindOfClass:[NSString class]]) {
-        _title = info;
-    } else if ([info isKindOfClass:[UIImage class]]) {
-        _image = info;
-    } else {
-        assert(0);
+        if ([info isKindOfClass:[NSString class]]) {
+            _title = info;
+        } else if ([info isKindOfClass:[UIImage class]]) {
+            _image = info;
+        } else {
+            assert(0);
+        }
+        [self setOpaque:FALSE];
+        _textColor[0] = nil;
+        _textColor[1] = nil;
+        _segmentFont = [UIFont boldSystemFontOfSize:15.0f];
     }
-    [self setOpaque:FALSE];
-    _textColor[0] = nil;
-    _textColor[1] = nil;
-    _segmentFont = [UIFont boldSystemFontOfSize:15.0f];
 
     return self;
 }
 
 - (instancetype)initWithTitle:(id)title {
-    _title.attach([title copy]);
-    _position = 0;
-
     CGRect frame = { 0 };
-    [self initWithFrame:frame];
-    [self setOpaque:FALSE];
-    _textColor[0] = nil;
-    _textColor[1] = nil;
-    _segmentFont = [UIFont boldSystemFontOfSize:15.0f];
 
+    if (self = [super initWithFrame:frame]) {
+        _title.attach([title copy]);
+        _position = 0;
+
+        [self setOpaque:FALSE];
+        _textColor[0] = nil;
+        _textColor[1] = nil;
+        _segmentFont = [UIFont boldSystemFontOfSize:15.0f];
+    }
     return self;
 }
 
 - (instancetype)initWithImage:(id)image {
-    _image = image;
-    _position = 0;
-
     CGRect frame = { 0.0f, 0.0f, 0.0f, 0.0f };
 
-    [self initWithFrame:frame];
-    [self setOpaque:FALSE];
-    _textColor[0] = nil;
-    _textColor[1] = nil;
-    _segmentFont = [UIFont boldSystemFontOfSize:15.0f];
+    if (self = [super initWithFrame:frame]) {
+        _image = image;
+        _position = 0;
+
+        [self setOpaque:FALSE];
+        _textColor[0] = nil;
+        _textColor[1] = nil;
+        _segmentFont = [UIFont boldSystemFontOfSize:15.0f];
+    }
 
     return self;
 }
@@ -185,7 +188,8 @@ static idretain _defaultTextColor[2];
 
     bounds = [self bounds];
 
-    id bgColor, textColor;
+    UIColor* bgColor;
+    UIColor* textColor;
 
     if (isOSTarget(@"7.0") && _selected == 0 && _tintColor != nil) {
         textColor = _tintColor;
@@ -220,7 +224,7 @@ static idretain _defaultTextColor[2];
     if (isOSTarget(@"7.0")) {
         if (_tintColor != nil) {
             if (_selected == 1) {
-                CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), (CGColorRef)_tintColor);
+                CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), (CGColorRef)_tintColor.get());
                 CGContextFillRect(UIGraphicsGetCurrentContext(), bounds);
             }
             if ((_type & 2) == 0) {
@@ -229,7 +233,7 @@ static idretain _defaultTextColor[2];
 
                 rect.origin.x = rect.size.width - lineWidth;
                 rect.size.width = lineWidth;
-                CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), (CGColorRef)_tintColor);
+                CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), (CGColorRef)_tintColor.get());
                 CGContextFillRect(UIGraphicsGetCurrentContext(), rect);
             }
         }
@@ -383,7 +387,7 @@ static idretain _defaultTextColor[2];
     return self;
 }
 
-- (id)_setTintColor:(id)color {
+- (id)_setTintColor:(UIColor*)color {
     _tintColor = color;
     return self;
 }
