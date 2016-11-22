@@ -40,9 +40,6 @@ static idretain _defaultTextColor[2];
         id info = [[coder decodeObjectForKey:@"UISegmentInfo"] retain];
         _position = [coder decodeInt32ForKey:@"UISegmentPosition"];
 
-        CGRect frame;
-        frame = [self bounds];
-
         if ([info isKindOfClass:[NSString class]]) {
             _title = info;
         } else if ([info isKindOfClass:[UIImage class]]) {
@@ -50,7 +47,8 @@ static idretain _defaultTextColor[2];
         } else {
             assert(0);
         }
-        [self setOpaque:FALSE];
+
+        [self setOpaque:NO];
         _textColor[0] = nil;
         _textColor[1] = nil;
         _segmentFont = [UIFont boldSystemFontOfSize:15.0f];
@@ -66,7 +64,7 @@ static idretain _defaultTextColor[2];
         _title.attach([title copy]);
         _position = 0;
 
-        [self setOpaque:FALSE];
+        [self setOpaque:NO];
         _textColor[0] = nil;
         _textColor[1] = nil;
         _segmentFont = [UIFont boldSystemFontOfSize:15.0f];
@@ -81,7 +79,7 @@ static idretain _defaultTextColor[2];
         _image = image;
         _position = 0;
 
-        [self setOpaque:FALSE];
+        [self setOpaque:NO];
         _textColor[0] = nil;
         _textColor[1] = nil;
         _segmentFont = [UIFont boldSystemFontOfSize:15.0f];
@@ -160,10 +158,10 @@ static idretain _defaultTextColor[2];
 
 - (BOOL)isEnabled {
     if (_disabled) {
-        return FALSE;
+        return NO;
     }
 
-    return TRUE;
+    return YES;
 }
 
 - (id)drawRect:(CGRect)inRect {
@@ -224,7 +222,7 @@ static idretain _defaultTextColor[2];
     if (isOSTarget(@"7.0")) {
         if (_tintColor != nil) {
             if (_selected == 1) {
-                CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), (CGColorRef)_tintColor.get());
+                CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), [_tintColor CGColor]);
                 CGContextFillRect(UIGraphicsGetCurrentContext(), bounds);
             }
             if ((_type & 2) == 0) {
@@ -233,7 +231,7 @@ static idretain _defaultTextColor[2];
 
                 rect.origin.x = rect.size.width - lineWidth;
                 rect.size.width = lineWidth;
-                CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), (CGColorRef)_tintColor.get());
+                CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), [_tintColor CGColor]);
                 CGContextFillRect(UIGraphicsGetCurrentContext(), rect);
             }
         }
@@ -243,15 +241,15 @@ static idretain _defaultTextColor[2];
 
             if (_selected) {
                 // No border, just fill with background color
-                CGContextSetFillColorWithColor(ctx, (CGColorRef)bgColor);
+                CGContextSetFillColorWithColor(ctx, [bgColor CGColor]);
                 CGContextFillRect(ctx, bounds);
             } else {
                 // Fill with background color and draw border with text color
                 const CGRect borderRect = bounds;
                 const CGRect fillRect = CGRectInset(bounds, 1.0, 1.0);
-                CGContextSetFillColorWithColor(ctx, (CGColorRef)bgColor);
+                CGContextSetFillColorWithColor(ctx, [bgColor CGColor]);
                 CGContextFillRect(ctx, fillRect);
-                CGContextSetStrokeColorWithColor(ctx, (CGColorRef)textColor);
+                CGContextSetStrokeColorWithColor(ctx, [textColor CGColor]);
                 CGContextSetLineWidth(ctx, 1.0);
                 CGContextStrokeRect(ctx, borderRect);
             }
@@ -290,7 +288,7 @@ static idretain _defaultTextColor[2];
     }
 
     if (_title != nil) {
-        CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), (CGColorRef)textColor);
+        CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), [textColor CGColor]);
 
         CGSize size;
         CGRect rect;

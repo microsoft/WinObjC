@@ -54,7 +54,7 @@
         [super setFrame:frame];
 
         [[self layer] setBorderWidth:1.0f];
-        [[self layer] setBorderColor:(CGColorRef)[UIColor blackColor]];
+        [[self layer] setBorderColor:[[UIColor blackColor] CGColor]];
         [self setClipsToBounds:TRUE];
     }
 
@@ -520,7 +520,7 @@ static void positionSegments(UISegmentedControl* self) {
     _tintColor = uiColor;
 
     if (isOSTarget(@"7.0")) {
-        [[self layer] setBorderColor:(CGColorRef)_tintColor.get()];
+        [[self layer] setBorderColor:[_tintColor CGColor]];
     }
 }
 
