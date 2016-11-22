@@ -22,6 +22,12 @@
 
 #include "DrawingTestConfig.h"
 
+template <size_t N>
+static int strconstprefix(const char* left, const char (&right)[N]) {
+    // The null terminator would fail a prefix match; don't count it.
+    return strncmp(left, right, N-1);
+}
+
 static std::string __ModuleDirectory() {
     static std::string modulePath = []() {
         std::string modulePath(MAX_PATH, '\0');
@@ -57,9 +63,9 @@ public:
 
             if (strcmp(arg, "--generate") == 0) {
                 _mode = DrawingTestMode::Generate;
-            } else if (strncmp(arg, "--out=", 6) == 0) {
+            } else if (strconstprefix(arg, "--out=") == 0) {
                 _outputPath = std::move(std::string(arg + 6));
-            } else if (strncmp(arg, "--compare=", 10) == 0) {
+            } else if (strconstprefix(arg, "--compare=") == 0) {
                 _comparisonPath = std::move(std::string(arg + 10));
             }
         }

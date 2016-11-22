@@ -30,8 +30,7 @@ CGImageRef _CGImageCreateFromPNGFile(CFStringRef filename) {
         return nullptr;
     }
 
-    woc::unique_cf<CGImageRef> image{ CGImageCreateWithPNGDataProvider(dataProvider.get(), nullptr, FALSE, kCGRenderingIntentDefault) };
-    return image.release();
+    return CGImageCreateWithPNGDataProvider(dataProvider.get(), nullptr, FALSE, kCGRenderingIntentDefault);
 }
 
 CFDataRef _CFDataCreatePNGFromCGImage(CGImageRef image) {
@@ -74,16 +73,12 @@ bool _WriteCFDataToFile(CFDataRef data, CFStringRef filename) {
     }
 
     woc::unique_cf<CFURLRef> url{ CFURLCreateFromFileSystemRepresentation(nullptr, (UInt8*)rawFilename, len, FALSE) };
-    if (!url) {
-        return false;
-    }
 
-    return CFURLWriteDataAndPropertiesToResource(url.get(), data, nullptr, nullptr);
+    return url ? CFURLWriteDataAndPropertiesToResource(url.get(), data, nullptr, nullptr) : FALSE;
 }
 
 CFDataRef _CFDataCreateFromCGImage(CGImageRef image) {
-    CGDataProviderRef provider{ CGImageGetDataProvider(image) };
-    return CGDataProviderCopyData(provider);
+    return CGDataProviderCopyData(CGImageGetDataProvider(image));
 }
 
 CFStringRef _CFStringCreateAbsolutePath(CFStringRef relativePath) {

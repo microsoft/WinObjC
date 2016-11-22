@@ -109,6 +109,6 @@ ImageDelta PixelByPixelImageComparator::CompareImages(CGImageRef left, CGImageRe
                                                          kCGRenderingIntentDefault) };
 
     return {
-        npxchg == 0 ? ImageComparisonResult::Same : ImageComparisonResult::Different, npxchg, deltaImage.get(),
+        (npxchg == 0 ? ImageComparisonResult::Same : ImageComparisonResult::Different), npxchg, deltaImage.get(),
     };
 }
