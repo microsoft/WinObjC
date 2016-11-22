@@ -28,8 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WMPPlaylist;
-@protocol WMPIPlaylist
-, WMPIPlaylistStatics;
+@protocol WMPIPlaylist, WMPIPlaylistStatics;
 
 // Windows.Media.Playlists.PlaylistFormat
 enum _WMPPlaylistFormat {
@@ -57,17 +56,9 @@ OBJCUWP_WINDOWS_MEDIA_PLAYLISTS_EXPORT
 #endif
 @property (readonly) NSMutableArray* /* WSStorageFile* */ files;
 - (RTObject<WFIAsyncAction>*)saveAsync;
-- (void)saveAsAsync:(RTObject<WSIStorageFolder>*)saveLocation
-        desiredName:(NSString*)desiredName
-             option:(WSNameCollisionOption)option
-            success:(void (^)(WSStorageFile*))success
-            failure:(void (^)(NSError*))failure;
-- (void)saveAsWithFormatAsync:(RTObject<WSIStorageFolder>*)saveLocation
-                  desiredName:(NSString*)desiredName
-                       option:(WSNameCollisionOption)option
-               playlistFormat:(WMPPlaylistFormat)playlistFormat
-                      success:(void (^)(WSStorageFile*))success
-                      failure:(void (^)(NSError*))failure;
+- (void)saveAsAsync:(RTObject<WSIStorageFolder>*)saveLocation desiredName:(NSString *)desiredName option:(WSNameCollisionOption)option success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
+- (void)saveAsWithFormatAsync:(RTObject<WSIStorageFolder>*)saveLocation desiredName:(NSString *)desiredName option:(WSNameCollisionOption)option playlistFormat:(WMPPlaylistFormat)playlistFormat success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WMPPlaylist_DEFINED__
+

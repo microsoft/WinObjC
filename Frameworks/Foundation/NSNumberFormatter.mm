@@ -30,6 +30,7 @@ CFStringRef kCFNumberFormatterUsesCharacterDirectionKey = static_cast<CFStringRe
     woc::unique_cf<CFNumberFormatterRef> _cfNumberFormatter;
     BOOL _wasMaxFractionDigitsSet;
     BOOL _wasMaxIntegerDigitsSet;
+    StrongId<NSString> _nilSymbol;
 }
 
 /**
@@ -278,25 +279,17 @@ CFStringRef kCFNumberFormatterUsesCharacterDirectionKey = static_cast<CFStringRe
  @Status Interoperable
 */
 - (void)setNilSymbol:(NSString*)symbol {
-    @synchronized(self) {
-        if (self.nilSymbol != symbol) {
-            [self.nilSymbol autorelease];
-            self.nilSymbol = [symbol copy];
-        }
-    }
+    _nilSymbol.attach([symbol copy]);
 }
 
 /**
  @Status Interoperable
 */
 - (NSString*)nilSymbol {
-    @synchronized(self) {
-        if (self.nilSymbol == nil) {
-            return @"";
-        }
-
-        return self.nilSymbol;
+    if (!_nilSymbol) {
+        return @"";
     }
+    return _nilSymbol;
 }
 
 /**

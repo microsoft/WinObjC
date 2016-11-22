@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -21,19 +21,20 @@
 @implementation NSMutableParagraphStyle
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (id)copyWithZone:(NSZone*)zone {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSParagraphStyle* ret = [NSParagraphStyle new];
+    [ret _setParagraphStyle:self];
+    return ret;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (void)setParagraphStyle:(NSParagraphStyle*)obj {
-    UNIMPLEMENTED();
+    [self _setParagraphStyle:obj];
 }
 
 /**
@@ -50,57 +51,6 @@
 */
 - (void)removeTabStop:(NSTextTab*)anObject {
     UNIMPLEMENTED();
-}
-
-/**
- @Status Caveat
- @Notes Setting this property has no effect
-*/
-- (void)setLineBreakMode:(NSLineBreakMode)lineBreakMode {
-    _lineBreakMode = lineBreakMode;
-}
-
-/**
- @Status Interoperable
- @Notes
-*/
-- (NSLineBreakMode)lineBreakMode {
-    return _lineBreakMode;
-}
-
-/**
-@Status Stub
-@Notes
-*/
-- (instancetype)initWithCoder:(NSCoder*)coder {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
-@Status Stub
-@Notes
-*/
-- (void)encodeWithCoder:(NSCoder*)coder {
-    UNIMPLEMENTED();
-}
-
-/**
-@Status Stub
-@Notes
-*/
-+ (BOOL)supportsSecureCoding {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
-@Status Stub
-@Notes
-*/
-- (id)mutableCopyWithZone:(NSZone*)zone {
-    UNIMPLEMENTED();
-    return StubReturn();
 }
 
 @end

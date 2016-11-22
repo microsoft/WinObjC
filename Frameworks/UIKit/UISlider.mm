@@ -33,10 +33,6 @@ static const double c_defaultStepFrequency = 0.1;
 
 @implementation UISlider {
     BOOL _continuous;
-
-    // Since xaml Slider does not support minimumValueImage and maximumValueImage, hence we have
-    // _rootPanel, which is a panel that holds the xaml slider and minimumValueImage and maximumValueImage.
-    StrongId<WXCGrid> _rootPanel;
     StrongId<WXCSlider> _xamlSlider;
 
     EventRegistrationToken _manipulationStartingEvent;
@@ -44,22 +40,17 @@ static const double c_defaultStepFrequency = 0.1;
     EventRegistrationToken _valueChangedEvent;
 }
 
-- (void)_UISlider_initInternal:(WXFrameworkElement*)xamlElement {
-    if (xamlElement != nil && [xamlElement isKindOfClass:[WXCSlider class]]) {
-        _xamlSlider = static_cast<WXCSlider*>(xamlElement);
-    } else {
-        _xamlSlider = [WXCSlider make];
+- (void)_initUISlider {
+    // Store a strongly-typed backing slider
+    _xamlSlider = rt_dynamic_cast<WXCSlider>([self xamlElement]);
+    if (!_xamlSlider) {
+        FAIL_FAST();
     }
 
-    // BUG:7911911 - [XAMLCatalog] UISlider not rendering the right track image of XAML slider on ARM
-    _xamlSlider.requestedTheme = WXElementThemeLight;
     _xamlSlider.maximum = 1.0f;
     _xamlSlider.minimum = 0.0f;
     _xamlSlider.value = 0.0f;
 
-    _rootPanel = [WXCGrid make];
-    [_rootPanel.children addObject:_xamlSlider];
-    [self setXamlElement:_rootPanel];
     [self _updateStepFrequency];
     [self setContinuous:YES];
     [self _registerForEventsWithXaml];
@@ -89,7 +80,7 @@ static const double c_defaultStepFrequency = 0.1;
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super initWithCoder:coder]) {
-        [self _UISlider_initInternal:nil];
+        [self _initUISlider];
 
         if ([coder containsValueForKey:@"UIValue"]) {
             id valueStr = [coder decodeObjectForKey:@"UIValue"];
@@ -111,15 +102,30 @@ static const double c_defaultStepFrequency = 0.1;
  @Status Interoperable
 */
 - (instancetype)initWithFrame:(CGRect)frame {
-    return [self _initWithFrame:frame xamlElement:nil];
-}
-
-- (instancetype)_initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
     if (self = [super initWithFrame:frame]) {
-        [self _UISlider_initInternal:xamlElement];
+        [self _initUISlider];
     }
 
     return self;
+}
+
+/**
+ Microsoft Extension
+*/
+- (instancetype)initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
+    if (self = [super initWithFrame:frame xamlElement:xamlElement]) {
+        [self _initUISlider];
+    }
+
+    return self;
+}
+
+/**
+ Microsoft Extension
+*/
++ (WXFrameworkElement*)createXamlElement {
+    // No autorelease needed because we compile with ARC
+    return [WXCSlider make];
 }
 
 /**

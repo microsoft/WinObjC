@@ -288,12 +288,12 @@ double CTLineGetTypographicBounds(CTLineRef lineRef, CGFloat* ascent, CGFloat* d
     }
 
     // Created with impossible values -FLT_MAX which signify they need to be populated
-    if ((line->_ascent == -FLT_MAX || line->_descent == FLT_MAX || line->_leading == -FLT_MAX) && (ascent || descent || leading)) {
+    if ((line->_ascent == -FLT_MAX || line->_descent == -FLT_MAX || line->_leading == -FLT_MAX) && (ascent || descent || leading)) {
         for (_CTRun* run in static_cast<id<NSFastEnumeration>>(line->_runs)) {
             CGFloat newAscent, newDescent, newLeading;
             CTRunGetTypographicBounds(static_cast<CTRunRef>(run), { 0, 0 }, &newAscent, &newDescent, &newLeading);
             line->_ascent = std::max(line->_ascent, newAscent);
-            line->_descent = std::min(line->_descent, newDescent);
+            line->_descent = std::max(line->_descent, newDescent);
             line->_leading = std::max(line->_leading, newLeading);
         }
     }

@@ -21,6 +21,7 @@
 #include "ObjCXamlControls.h"
 
 namespace UIKit {
+namespace Xaml {
 
 [Windows::Foundation::Metadata::WebHostHidden]
 public ref class TextBox sealed {
@@ -32,5 +33,6 @@ private:
     // TODO : Add support for toggle - able password field when UITextField is in secure mode.
 };
 
-}
+} /* Xaml*/
+} /* UIKit*/
 // clang-format on

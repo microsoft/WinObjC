@@ -103,8 +103,7 @@ struct RowData {
 }
 
 - (void)layoutSubviews {
-    CGRect bounds;
-    bounds = [self bounds];
+    CGRect bounds = [self bounds];
 
     if (memcmp(&bounds.size, &_curSize.size, sizeof(CGSize)) != 0) {
         UIEdgeInsets inset = { 0 };

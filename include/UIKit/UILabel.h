@@ -39,7 +39,7 @@ UIKIT_EXPORT_CLASS
 @interface UILabel : UIView
 
 - (CGRect)textRectForBounds:(CGRect)bounds limitedToNumberOfLines:(NSInteger)numberOfLines;
-- (void)drawTextInRect:(CGRect)rect;
+- (void)drawTextInRect:(CGRect)rect STUB_METHOD;
 
 @property (getter=isUserInteractionEnabled, nonatomic) BOOL userInteractionEnabled;
 @property (nonatomic) BOOL adjustsFontSizeToFitWidth;

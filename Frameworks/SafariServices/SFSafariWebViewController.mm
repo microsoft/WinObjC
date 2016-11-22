@@ -90,13 +90,12 @@ static bool appCanOpenURL(NSURL* url) {
     if (openWithAppDelegate) {
         id delegate = [[UIApplication sharedApplication] delegate];
         if ([delegate respondsToSelector:@selector(application:openURL:sourceApplication:annotation:)]) {
-            dispatch_async(dispatch_get_main_queue(),
-                           ^{
-                               [delegate application:[UIApplication sharedApplication]
-                                             openURL:url
-                                   sourceApplication:[self.viewController _sourceApplication]
-                                          annotation:nil];
-                           });
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [delegate application:[UIApplication sharedApplication]
+                              openURL:url
+                    sourceApplication:[self.viewController _sourceApplication]
+                           annotation:nil];
+            });
         }
     }
 
@@ -149,13 +148,20 @@ static bool appCanOpenURL(NSURL* url) {
     CGRect frame = [[UIScreen mainScreen] applicationFrame];
     UIView* topView = [[UIView alloc] initWithFrame:frame];
 
+    topView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+
     UIImage* backArrow = [UIImage imageNamed:@"/img/backbutton@2x.png"];
     CGFloat toolbarHeight = backArrow.size.height;
 
+    // Create a toolbar at the top of the view
+    CGRect toolbarFrame = CGRectMake(0, 0, frame.size.width, toolbarHeight);
+    UIToolbar* toolbar = [[UIToolbar alloc] initWithFrame:toolbarFrame];
+    toolbar.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
+
     // Create a web view that fills most of the view
-    CGRect webFrame = frame;
-    webFrame.origin.y += toolbarHeight;
-    webFrame.size.height -= toolbarHeight;
+    CGRect webFrame = topView.bounds;
+    webFrame.origin.y += toolbar.frame.size.height;
+    webFrame.size.height -= toolbar.frame.size.height;
 
     _webView = [[UIWebView alloc] initWithFrame:webFrame];
     _webView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
@@ -170,10 +176,6 @@ static bool appCanOpenURL(NSURL* url) {
 
     [_webView loadRequest:request];
     [topView addSubview:_webView];
-
-    // Create a toolbar at the top of the view
-    CGRect toolbarFrame = CGRectMake(0, 0, frame.size.width, toolbarHeight);
-    UIToolbar* toolbar = [[UIToolbar alloc] initWithFrame:toolbarFrame];
 
     // <-
     UIBarButtonItem* backButton =

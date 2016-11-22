@@ -27,20 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WDMMidiNoteOffMessage, WDMMidiNoteOnMessage, WDMMidiPolyphonicKeyPressureMessage, WDMMidiControlChangeMessage,
-    WDMMidiProgramChangeMessage, WDMMidiChannelPressureMessage, WDMMidiPitchBendChangeMessage, WDMMidiSystemExclusiveMessage,
-    WDMMidiTimeCodeMessage, WDMMidiSongPositionPointerMessage, WDMMidiSongSelectMessage, WDMMidiTuneRequestMessage,
-    WDMMidiTimingClockMessage, WDMMidiStartMessage, WDMMidiContinueMessage, WDMMidiStopMessage, WDMMidiActiveSensingMessage,
-    WDMMidiSystemResetMessage, WDMMidiMessageReceivedEventArgs, WDMMidiInPort, WDMMidiOutPort, WDMMidiSynthesizer;
-@protocol WDMIMidiMessage
-, WDMIMidiNoteOffMessage, WDMIMidiNoteOnMessage, WDMIMidiPolyphonicKeyPressureMessage, WDMIMidiControlChangeMessage,
-    WDMIMidiProgramChangeMessage, WDMIMidiChannelPressureMessage, WDMIMidiPitchBendChangeMessage, WDMIMidiTimeCodeMessage,
-    WDMIMidiSongPositionPointerMessage, WDMIMidiSongSelectMessage, WDMIMidiNoteOffMessageFactory, WDMIMidiNoteOnMessageFactory,
-    WDMIMidiPolyphonicKeyPressureMessageFactory, WDMIMidiControlChangeMessageFactory, WDMIMidiProgramChangeMessageFactory,
-    WDMIMidiChannelPressureMessageFactory, WDMIMidiPitchBendChangeMessageFactory, WDMIMidiSystemExclusiveMessageFactory,
-    WDMIMidiTimeCodeMessageFactory, WDMIMidiSongPositionPointerMessageFactory, WDMIMidiSongSelectMessageFactory,
-    WDMIMidiMessageReceivedEventArgs, WDMIMidiInPortStatics, WDMIMidiOutPortStatics, WDMIMidiSynthesizerStatics, WDMIMidiOutPort,
-    WDMIMidiInPort, WDMIMidiSynthesizer;
+@class WDMMidiNoteOffMessage, WDMMidiNoteOnMessage, WDMMidiPolyphonicKeyPressureMessage, WDMMidiControlChangeMessage, WDMMidiProgramChangeMessage, WDMMidiChannelPressureMessage, WDMMidiPitchBendChangeMessage, WDMMidiSystemExclusiveMessage, WDMMidiTimeCodeMessage, WDMMidiSongPositionPointerMessage, WDMMidiSongSelectMessage, WDMMidiTuneRequestMessage, WDMMidiTimingClockMessage, WDMMidiStartMessage, WDMMidiContinueMessage, WDMMidiStopMessage, WDMMidiActiveSensingMessage, WDMMidiSystemResetMessage, WDMMidiMessageReceivedEventArgs, WDMMidiInPort, WDMMidiOutPort, WDMMidiSynthesizer;
+@protocol WDMIMidiMessage, WDMIMidiNoteOffMessage, WDMIMidiNoteOnMessage, WDMIMidiPolyphonicKeyPressureMessage, WDMIMidiControlChangeMessage, WDMIMidiProgramChangeMessage, WDMIMidiChannelPressureMessage, WDMIMidiPitchBendChangeMessage, WDMIMidiTimeCodeMessage, WDMIMidiSongPositionPointerMessage, WDMIMidiSongSelectMessage, WDMIMidiNoteOffMessageFactory, WDMIMidiNoteOnMessageFactory, WDMIMidiPolyphonicKeyPressureMessageFactory, WDMIMidiControlChangeMessageFactory, WDMIMidiProgramChangeMessageFactory, WDMIMidiChannelPressureMessageFactory, WDMIMidiPitchBendChangeMessageFactory, WDMIMidiSystemExclusiveMessageFactory, WDMIMidiTimeCodeMessageFactory, WDMIMidiSongPositionPointerMessageFactory, WDMIMidiSongSelectMessageFactory, WDMIMidiMessageReceivedEventArgs, WDMIMidiInPortStatics, WDMIMidiOutPortStatics, WDMIMidiSynthesizerStatics, WDMIMidiOutPort, WDMIMidiInPort, WDMIMidiSynthesizer;
 
 // Windows.Devices.Midi.MidiMessageType
 enum _WDMMidiMessageType {
@@ -57,6 +45,7 @@ enum _WDMMidiMessageType {
     WDMMidiMessageTypeSongPositionPointer = 242,
     WDMMidiMessageTypeSongSelect = 243,
     WDMMidiMessageTypeTuneRequest = 246,
+    WDMMidiMessageTypeEndSystemExclusive = 247,
     WDMMidiMessageTypeTimingClock = 248,
     WDMMidiMessageTypeStart = 250,
     WDMMidiMessageTypeContinue = 251,
@@ -107,7 +96,7 @@ OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 #define __WDMIMidiOutPort_DEFINED__
 
 @protocol WDMIMidiOutPort <WFIClosable>
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * deviceId;
 - (void)sendMessage:(RTObject<WDMIMidiMessage>*)midiMessage;
 - (void)sendBuffer:(RTObject<WSSIBuffer>*)midiData;
 - (void)close;
@@ -165,9 +154,7 @@ OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 @interface WDMMidiPolyphonicKeyPressureMessage : RTObject <WDMIMidiMessage>
-+ (WDMMidiPolyphonicKeyPressureMessage*)makeMidiPolyphonicKeyPressureMessage:(uint8_t)channel
-                                                                        note:(uint8_t)note
-                                                                    pressure:(uint8_t)pressure ACTIVATOR;
++ (WDMMidiPolyphonicKeyPressureMessage*)makeMidiPolyphonicKeyPressureMessage:(uint8_t)channel note:(uint8_t)note pressure:(uint8_t)pressure ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -187,9 +174,7 @@ OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 @interface WDMMidiControlChangeMessage : RTObject <WDMIMidiMessage>
-+ (WDMMidiControlChangeMessage*)makeMidiControlChangeMessage:(uint8_t)channel
-                                                  controller:(uint8_t)controller
-                                                controlValue:(uint8_t)controlValue ACTIVATOR;
++ (WDMMidiControlChangeMessage*)makeMidiControlChangeMessage:(uint8_t)channel controller:(uint8_t)controller controlValue:(uint8_t)controlValue ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -471,13 +456,13 @@ OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 @interface WDMMidiInPort : RTObject <WFIClosable>
-+ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDMMidiInPort*))success failure:(void (^)(NSError*))failure;
-+ (NSString*)getDeviceSelector;
++ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDMMidiInPort*))success failure:(void (^)(NSError*))failure;
++ (NSString *)getDeviceSelector;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* deviceId;
-- (EventRegistrationToken)addMessageReceivedEvent:(void (^)(WDMMidiInPort*, WDMMidiMessageReceivedEventArgs*))del;
+@property (readonly) NSString * deviceId;
+- (EventRegistrationToken)addMessageReceivedEvent:(void(^)(WDMMidiInPort*, WDMMidiMessageReceivedEventArgs*))del;
 - (void)removeMessageReceivedEvent:(EventRegistrationToken)tok;
 - (void)close;
 @end
@@ -490,12 +475,12 @@ OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 @interface WDMMidiOutPort : RTObject <WDMIMidiOutPort, WFIClosable>
-+ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(RTObject<WDMIMidiOutPort>*))success failure:(void (^)(NSError*))failure;
-+ (NSString*)getDeviceSelector;
++ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(RTObject<WDMIMidiOutPort>*))success failure:(void (^)(NSError*))failure;
++ (NSString *)getDeviceSelector;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * deviceId;
 - (void)sendMessage:(RTObject<WDMIMidiMessage>*)midiMessage;
 - (void)sendBuffer:(RTObject<WSSIBuffer>*)midiData;
 - (void)close;
@@ -510,14 +495,12 @@ OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 @interface WDMMidiSynthesizer : RTObject <WDMIMidiOutPort, WFIClosable>
 + (void)createAsyncWithSuccess:(void (^)(WDMMidiSynthesizer*))success failure:(void (^)(NSError*))failure;
-+ (void)createFromAudioDeviceAsync:(WDEDeviceInformation*)audioDevice
-                           success:(void (^)(WDMMidiSynthesizer*))success
-                           failure:(void (^)(NSError*))failure;
++ (void)createFromAudioDeviceAsync:(WDEDeviceInformation*)audioDevice success:(void (^)(WDMMidiSynthesizer*))success failure:(void (^)(NSError*))failure;
 + (BOOL)isSynthesizer:(WDEDeviceInformation*)midiDevice;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * deviceId;
 @property double volume;
 @property (readonly) WDEDeviceInformation* audioDevice;
 - (void)sendMessage:(RTObject<WDMIMidiMessage>*)midiMessage;
@@ -526,3 +509,4 @@ OBJCUWP_WINDOWS_DEVICES_MIDI_EXPORT
 @end
 
 #endif // __WDMMidiSynthesizer_DEFINED__
+

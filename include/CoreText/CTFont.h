@@ -228,7 +228,7 @@ CORETEXT_EXPORT CGFloat CTFontGetUnderlineThickness(CTFontRef font);
 CORETEXT_EXPORT CGFloat CTFontGetSlantAngle(CTFontRef font);
 CORETEXT_EXPORT CGFloat CTFontGetCapHeight(CTFontRef font);
 CORETEXT_EXPORT CGFloat CTFontGetXHeight(CTFontRef font);
-CORETEXT_EXPORT CGPathRef CTFontCreatePathForGlyph(CTFontRef font, CGGlyph glyph, const CGAffineTransform* matrix) STUB_METHOD;
+CORETEXT_EXPORT CGPathRef CTFontCreatePathForGlyph(CTFontRef font, CGGlyph glyph, const CGAffineTransform* matrix);
 CORETEXT_EXPORT CGGlyph CTFontGetGlyphWithName(CTFontRef font, CFStringRef glyphName) STUB_METHOD;
 CORETEXT_EXPORT CGRect CTFontGetBoundingRectsForGlyphs(
     CTFontRef font, CTFontOrientation orientation, const CGGlyph glyphs[], CGRect* boundingRects, CFIndex count);

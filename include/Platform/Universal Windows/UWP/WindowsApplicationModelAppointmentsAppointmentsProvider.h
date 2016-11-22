@@ -19,19 +19,16 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_APPOINTMENTSPROVIDER_EXPORT
-#define OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_APPOINTMENTSPROVIDER_EXPORT __declspec(dllimport)
+#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
 #ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Appointments_AppointmentsProvider.lib")
+#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
 
-@class WAAAAppointmentsProviderLaunchActionVerbs, WAAAAddAppointmentOperation, WAAAReplaceAppointmentOperation,
-    WAAARemoveAppointmentOperation;
-@protocol WAAAIAppointmentsProviderLaunchActionVerbsStatics
-, WAAAIAppointmentsProviderLaunchActionVerbsStatics2, WAAAIAddAppointmentOperation, WAAAIReplaceAppointmentOperation,
-    WAAAIRemoveAppointmentOperation;
+@class WAAAAppointmentsProviderLaunchActionVerbs, WAAAAddAppointmentOperation, WAAAReplaceAppointmentOperation, WAAARemoveAppointmentOperation;
+@protocol WAAAIAppointmentsProviderLaunchActionVerbsStatics, WAAAIAppointmentsProviderLaunchActionVerbsStatics2, WAAAIAddAppointmentOperation, WAAAIReplaceAppointmentOperation, WAAAIRemoveAppointmentOperation;
 
 #include "WindowsApplicationModelAppointments.h"
 #include "WindowsFoundation.h"
@@ -42,13 +39,13 @@
 #ifndef __WAAAAppointmentsProviderLaunchActionVerbs_DEFINED__
 #define __WAAAAppointmentsProviderLaunchActionVerbs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_APPOINTMENTSPROVIDER_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAAAAppointmentsProviderLaunchActionVerbs : RTObject
-+ (NSString*)addAppointment;
-+ (NSString*)removeAppointment;
-+ (NSString*)replaceAppointment;
-+ (NSString*)showTimeFrame;
-+ (NSString*)showAppointmentDetails;
++ (NSString *)addAppointment;
++ (NSString *)removeAppointment;
++ (NSString *)replaceAppointment;
++ (NSString *)showTimeFrame;
++ (NSString *)showAppointmentDetails;
 @end
 
 #endif // __WAAAAppointmentsProviderLaunchActionVerbs_DEFINED__
@@ -57,16 +54,16 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_APPOINTMENTSPROVIDER_EXPORT
 #ifndef __WAAAAddAppointmentOperation_DEFINED__
 #define __WAAAAddAppointmentOperation_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_APPOINTMENTSPROVIDER_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAAAAddAppointmentOperation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAAAppointment* appointmentInformation;
-@property (readonly) NSString* sourcePackageFamilyName;
-- (void)reportCompleted:(NSString*)itemId;
+@property (readonly) NSString * sourcePackageFamilyName;
+- (void)reportCompleted:(NSString *)itemId;
 - (void)reportCanceled;
-- (void)reportError:(NSString*)value;
+- (void)reportError:(NSString *)value;
 - (void)dismissUI;
 @end
 
@@ -76,18 +73,18 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_APPOINTMENTSPROVIDER_EXPORT
 #ifndef __WAAAReplaceAppointmentOperation_DEFINED__
 #define __WAAAReplaceAppointmentOperation_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_APPOINTMENTSPROVIDER_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAAAReplaceAppointmentOperation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* appointmentId;
+@property (readonly) NSString * appointmentId;
 @property (readonly) WAAAppointment* appointmentInformation;
 @property (readonly) id /* WFDateTime* */ instanceStartDate;
-@property (readonly) NSString* sourcePackageFamilyName;
-- (void)reportCompleted:(NSString*)itemId;
+@property (readonly) NSString * sourcePackageFamilyName;
+- (void)reportCompleted:(NSString *)itemId;
 - (void)reportCanceled;
-- (void)reportError:(NSString*)value;
+- (void)reportError:(NSString *)value;
 - (void)dismissUI;
 @end
 
@@ -97,18 +94,19 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_APPOINTMENTSPROVIDER_EXPORT
 #ifndef __WAAARemoveAppointmentOperation_DEFINED__
 #define __WAAARemoveAppointmentOperation_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_APPOINTMENTSPROVIDER_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAAARemoveAppointmentOperation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* appointmentId;
+@property (readonly) NSString * appointmentId;
 @property (readonly) id /* WFDateTime* */ instanceStartDate;
-@property (readonly) NSString* sourcePackageFamilyName;
+@property (readonly) NSString * sourcePackageFamilyName;
 - (void)reportCompleted;
 - (void)reportCanceled;
-- (void)reportError:(NSString*)value;
+- (void)reportError:(NSString *)value;
 - (void)dismissUI;
 @end
 
 #endif // __WAAARemoveAppointmentOperation_DEFINED__
+

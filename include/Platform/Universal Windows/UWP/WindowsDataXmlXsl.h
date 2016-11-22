@@ -28,8 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WDXXXsltProcessor;
-@protocol WDXXIXsltProcessor
-, WDXXIXsltProcessor2, WDXXIXsltProcessorFactory;
+@protocol WDXXIXsltProcessor, WDXXIXsltProcessor2, WDXXIXsltProcessorFactory;
 
 #include "WindowsDataXmlDom.h"
 
@@ -45,8 +44,9 @@ OBJCUWP_WINDOWS_DATA_XML_XSL_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-- (NSString*)transformToString:(RTObject<WDXDIXmlNode>*)inputNode;
+- (NSString *)transformToString:(RTObject<WDXDIXmlNode>*)inputNode;
 - (WDXDXmlDocument*)transformToDocument:(RTObject<WDXDIXmlNode>*)inputNode;
 @end
 
 #endif // __WDXXXsltProcessor_DEFINED__
+

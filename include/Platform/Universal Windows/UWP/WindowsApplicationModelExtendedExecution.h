@@ -28,8 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WAEExtendedExecutionRevokedEventArgs, WAEExtendedExecutionSession;
-@protocol WAEIExtendedExecutionRevokedEventArgs
-, WAEIExtendedExecutionSession;
+@protocol WAEIExtendedExecutionRevokedEventArgs, WAEIExtendedExecutionSession;
 
 // Windows.ApplicationModel.ExtendedExecution.ExtendedExecutionReason
 enum _WAEExtendedExecutionReason {
@@ -97,11 +96,12 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EXTENDEDEXECUTION_EXPORT
 #endif
 @property WAEExtendedExecutionReason reason;
 @property unsigned int percentProgress;
-@property (retain) NSString* Description;
-- (EventRegistrationToken)addRevokedEvent:(void (^)(RTObject*, WAEExtendedExecutionRevokedEventArgs*))del;
+@property (retain) NSString * Description;
+- (EventRegistrationToken)addRevokedEvent:(void(^)(RTObject*, WAEExtendedExecutionRevokedEventArgs*))del;
 - (void)removeRevokedEvent:(EventRegistrationToken)tok;
 - (void)requestExtensionAsyncWithSuccess:(void (^)(WAEExtendedExecutionResult))success failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
 #endif // __WAEExtendedExecutionSession_DEFINED__
+

@@ -46,6 +46,10 @@
     // UITextField
     UIViewController* textFieldVC = [xamlStoryBoard instantiateViewControllerWithIdentifier:@"UITextFieldSB"];
     [self addMenuItemViewController:textFieldVC andTitle:@"UITextFieldSB"];
+    
+    // CustomEditControlViewController
+    UIViewController* editVC = [xamlStoryBoard instantiateViewControllerWithIdentifier:@"CustomTextControlViewController"];
+    [self addMenuItemViewController:editVC andTitle:@"Custom Text View"];
 }
 
 @end

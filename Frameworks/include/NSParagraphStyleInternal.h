@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,13 +16,41 @@
 
 #pragma once
 
-#import <UIKit/NSParagraphStyle.h>
 #import <UIKit/NSMutableParagraphStyle.h>
+#import <CoreText/CTParagraphStyle.h>
 
-@interface NSParagraphStyle () {
-@protected
-    float _hyphenationFactor;
-    NSTextAlignment _alignment;
-    NSLineBreakMode _lineBreakMode;
-}
+@interface NSParagraphStyle ()
+
+- (CTParagraphStyleRef)_createCTParagraphStyle;
+- (void)_setParagraphStyle:(NSParagraphStyle*)obj;
+
+// Redeclaring properties for read/write access in mutable subclass
+@property (nonatomic, readwrite) NSTextAlignment alignment;
+@property (nonatomic, readwrite) CGFloat firstLineHeadIndent;
+@property (nonatomic, readwrite) CGFloat headIndent;
+@property (nonatomic, readwrite) CGFloat tailIndent;
+@property (nonatomic, readwrite) NSLineBreakMode lineBreakMode;
+@property (nonatomic, readwrite) CGFloat maximumLineHeight;
+@property (nonatomic, readwrite) CGFloat minimumLineHeight;
+@property (nonatomic, readwrite) CGFloat lineSpacing;
+@property (nonatomic, readwrite) CGFloat paragraphSpacing;
+@property (nonatomic, readwrite) CGFloat paragraphSpacingBefore;
+@property (nonatomic, readwrite) NSWritingDirection baseWritingDirection;
+@property (nonatomic, readwrite) CGFloat lineHeightMultiple;
+@property (copy, nonatomic, readwrite) NSArray* tabStops;
+@property (nonatomic, readwrite) CGFloat defaultTabInterval;
+@property (nonatomic, readwrite) float hyphenationFactor;
+
 @end
+
+// The values of right and center CTTextAlignment and NSTextAlignment do not correspond so they can't be simply cast
+inline CTTextAlignment _NSTextAlignmentToCTTextAlignment(NSTextAlignment alignment) {
+    switch (alignment) {
+        case NSTextAlignmentRight:
+            return kCTRightTextAlignment;
+        case NSTextAlignmentCenter:
+            return kCTCenterTextAlignment;
+        default:
+            return alignment;
+    }
+}

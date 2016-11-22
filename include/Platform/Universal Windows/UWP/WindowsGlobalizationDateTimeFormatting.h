@@ -28,8 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WGDDateTimeFormatter;
-@protocol WGDIDateTimeFormatter
-, WGDIDateTimeFormatterFactory, WGDIDateTimeFormatterStatics, WGDIDateTimeFormatter2;
+@protocol WGDIDateTimeFormatter, WGDIDateTimeFormatterFactory, WGDIDateTimeFormatterStatics, WGDIDateTimeFormatter2;
 
 // Windows.Globalization.DateTimeFormatting.YearFormat
 enum _WGDYearFormat {
@@ -97,46 +96,19 @@ typedef unsigned WGDSecondFormat;
 
 OBJCUWP_WINDOWS_GLOBALIZATION_DATETIMEFORMATTING_EXPORT
 @interface WGDDateTimeFormatter : RTObject
-+ (WGDDateTimeFormatter*)makeDateTimeFormatter:(NSString*)formatTemplate ACTIVATOR;
-+ (WGDDateTimeFormatter*)makeDateTimeFormatterLanguages:(NSString*)formatTemplate
-                                              languages:(id<NSFastEnumeration> /* NSString * */)languages ACTIVATOR;
-+ (WGDDateTimeFormatter*)makeDateTimeFormatterContext:(NSString*)formatTemplate
-                                            languages:(id<NSFastEnumeration> /* NSString * */)languages
-                                     geographicRegion:(NSString*)geographicRegion
-                                             calendar:(NSString*)calendar
-                                                clock:(NSString*)clock ACTIVATOR;
-+ (WGDDateTimeFormatter*)makeDateTimeFormatterDate:(WGDYearFormat)yearFormat
-                                       monthFormat:(WGDMonthFormat)monthFormat
-                                         dayFormat:(WGDDayFormat)dayFormat
-                                   dayOfWeekFormat:(WGDDayOfWeekFormat)dayOfWeekFormat ACTIVATOR;
-+ (WGDDateTimeFormatter*)makeDateTimeFormatterTime:(WGDHourFormat)hourFormat
-                                      minuteFormat:(WGDMinuteFormat)minuteFormat
-                                      secondFormat:(WGDSecondFormat)secondFormat ACTIVATOR;
-+ (WGDDateTimeFormatter*)makeDateTimeFormatterDateTimeLanguages:(WGDYearFormat)yearFormat
-                                                    monthFormat:(WGDMonthFormat)monthFormat
-                                                      dayFormat:(WGDDayFormat)dayFormat
-                                                dayOfWeekFormat:(WGDDayOfWeekFormat)dayOfWeekFormat
-                                                     hourFormat:(WGDHourFormat)hourFormat
-                                                   minuteFormat:(WGDMinuteFormat)minuteFormat
-                                                   secondFormat:(WGDSecondFormat)secondFormat
-                                                      languages:(id<NSFastEnumeration> /* NSString * */)languages ACTIVATOR;
-+ (WGDDateTimeFormatter*)makeDateTimeFormatterDateTimeContext:(WGDYearFormat)yearFormat
-                                                  monthFormat:(WGDMonthFormat)monthFormat
-                                                    dayFormat:(WGDDayFormat)dayFormat
-                                              dayOfWeekFormat:(WGDDayOfWeekFormat)dayOfWeekFormat
-                                                   hourFormat:(WGDHourFormat)hourFormat
-                                                 minuteFormat:(WGDMinuteFormat)minuteFormat
-                                                 secondFormat:(WGDSecondFormat)secondFormat
-                                                    languages:(id<NSFastEnumeration> /* NSString * */)languages
-                                             geographicRegion:(NSString*)geographicRegion
-                                                     calendar:(NSString*)calendar
-                                                        clock:(NSString*)clock ACTIVATOR;
++ (WGDDateTimeFormatter*)makeDateTimeFormatter:(NSString *)formatTemplate ACTIVATOR;
++ (WGDDateTimeFormatter*)makeDateTimeFormatterLanguages:(NSString *)formatTemplate languages:(id<NSFastEnumeration> /* NSString * */)languages ACTIVATOR;
++ (WGDDateTimeFormatter*)makeDateTimeFormatterContext:(NSString *)formatTemplate languages:(id<NSFastEnumeration> /* NSString * */)languages geographicRegion:(NSString *)geographicRegion calendar:(NSString *)calendar clock:(NSString *)clock ACTIVATOR;
++ (WGDDateTimeFormatter*)makeDateTimeFormatterDate:(WGDYearFormat)yearFormat monthFormat:(WGDMonthFormat)monthFormat dayFormat:(WGDDayFormat)dayFormat dayOfWeekFormat:(WGDDayOfWeekFormat)dayOfWeekFormat ACTIVATOR;
++ (WGDDateTimeFormatter*)makeDateTimeFormatterTime:(WGDHourFormat)hourFormat minuteFormat:(WGDMinuteFormat)minuteFormat secondFormat:(WGDSecondFormat)secondFormat ACTIVATOR;
++ (WGDDateTimeFormatter*)makeDateTimeFormatterDateTimeLanguages:(WGDYearFormat)yearFormat monthFormat:(WGDMonthFormat)monthFormat dayFormat:(WGDDayFormat)dayFormat dayOfWeekFormat:(WGDDayOfWeekFormat)dayOfWeekFormat hourFormat:(WGDHourFormat)hourFormat minuteFormat:(WGDMinuteFormat)minuteFormat secondFormat:(WGDSecondFormat)secondFormat languages:(id<NSFastEnumeration> /* NSString * */)languages ACTIVATOR;
++ (WGDDateTimeFormatter*)makeDateTimeFormatterDateTimeContext:(WGDYearFormat)yearFormat monthFormat:(WGDMonthFormat)monthFormat dayFormat:(WGDDayFormat)dayFormat dayOfWeekFormat:(WGDDayOfWeekFormat)dayOfWeekFormat hourFormat:(WGDHourFormat)hourFormat minuteFormat:(WGDMinuteFormat)minuteFormat secondFormat:(WGDSecondFormat)secondFormat languages:(id<NSFastEnumeration> /* NSString * */)languages geographicRegion:(NSString *)geographicRegion calendar:(NSString *)calendar clock:(NSString *)clock ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* numeralSystem;
-@property (readonly) NSString* clock;
-@property (readonly) NSString* geographicRegion;
+@property (retain) NSString * numeralSystem;
+@property (readonly) NSString * clock;
+@property (readonly) NSString * geographicRegion;
 @property (readonly) WGDDayFormat includeDay;
 @property (readonly) WGDDayOfWeekFormat includeDayOfWeek;
 @property (readonly) WGDHourFormat includeHour;
@@ -145,17 +117,18 @@ OBJCUWP_WINDOWS_GLOBALIZATION_DATETIMEFORMATTING_EXPORT
 @property (readonly) WGDSecondFormat includeSecond;
 @property (readonly) WGDYearFormat includeYear;
 @property (readonly) NSArray* /* NSString * */ languages;
-@property (readonly) NSString* calendar;
+@property (readonly) NSString * calendar;
 @property (readonly) NSArray* /* NSString * */ patterns;
-@property (readonly) NSString* resolvedGeographicRegion;
-@property (readonly) NSString* resolvedLanguage;
-@property (readonly) NSString* Template;
+@property (readonly) NSString * resolvedGeographicRegion;
+@property (readonly) NSString * resolvedLanguage;
+@property (readonly) NSString * Template;
 + (WGDDateTimeFormatter*)longDate;
 + (WGDDateTimeFormatter*)longTime;
 + (WGDDateTimeFormatter*)shortDate;
 + (WGDDateTimeFormatter*)shortTime;
-- (NSString*)format:(WFDateTime*)value;
-- (NSString*)formatUsingTimeZone:(WFDateTime*)datetime timeZoneId:(NSString*)timeZoneId;
+- (NSString *)format:(WFDateTime*)value;
+- (NSString *)formatUsingTimeZone:(WFDateTime*)datetime timeZoneId:(NSString *)timeZoneId;
 @end
 
 #endif // __WGDDateTimeFormatter_DEFINED__
+

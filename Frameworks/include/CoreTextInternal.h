@@ -77,7 +77,6 @@ inline void _SafeRelease(T** p) {
 @interface _CTLine : NSObject {
 @public
     CFRange _strRange;
-    CGPoint _lineOrigin;
     CGFloat _relativeXOffset;
     CGFloat _relativeYOffset;
     CGFloat _width;
@@ -93,52 +92,6 @@ inline void _SafeRelease(T** p) {
     woc::unique_cf<CGPathRef> _path;
     std::vector<CGPoint> _lineOrigins;
     StrongId<NSMutableArray<_CTLine*>> _lines;
-}
-@end
-
-struct _CTParagraphStyleFloatProperty {
-    bool _isDefault = true;
-    CGFloat _value = 0.0f;
-};
-
-struct _CTParagraphStyleCTTextAlignmentProperty {
-    bool _isDefault = true;
-    CTWritingDirection _value = kCTNaturalTextAlignment;
-};
-
-struct _CTParagraphStyleCTLineBreakModeProperty {
-    bool _isDefault = true;
-    CTLineBreakMode _value = kCTLineBreakByWordWrapping;
-};
-
-struct _CTParagraphStyleCTWritingDirectionProperty {
-    bool _isDefault = true;
-    CTWritingDirection _value = kCTWritingDirectionNatural;
-};
-
-struct _CTParagraphStyleProperties {
-    _CTParagraphStyleCTTextAlignmentProperty _alignment;
-    _CTParagraphStyleCTLineBreakModeProperty _lineBreakMode;
-    _CTParagraphStyleCTWritingDirectionProperty _writingDirection;
-
-    _CTParagraphStyleFloatProperty _firstLineHeadIndent;
-    _CTParagraphStyleFloatProperty _headIndent;
-    _CTParagraphStyleFloatProperty _tailIndent;
-    _CTParagraphStyleFloatProperty _tabInterval;
-    _CTParagraphStyleFloatProperty _lineHeightMultiple;
-    _CTParagraphStyleFloatProperty _maximumLineHeight;
-    _CTParagraphStyleFloatProperty _minimumLineHeight;
-    _CTParagraphStyleFloatProperty _lineSpacing;
-    _CTParagraphStyleFloatProperty _paragraphSpacing;
-    _CTParagraphStyleFloatProperty _paragraphSpacingBefore;
-    _CTParagraphStyleFloatProperty _lineSpacingAdjustment;
-    _CTParagraphStyleFloatProperty _maximumLineSpacing;
-    _CTParagraphStyleFloatProperty _minimumLineSpacing;
-};
-
-@interface _CTParagraphStyle : NSObject {
-@public
-    _CTParagraphStyleProperties _properties;
 }
 @end
 

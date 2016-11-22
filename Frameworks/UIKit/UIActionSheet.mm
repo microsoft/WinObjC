@@ -247,12 +247,12 @@ static const int s_InvalidButtonIndex = -1;
             [strongSelf _buttonClicked:_cancelButtonIndex];
         }
     }
-    failure:^void(NSError* error) {
-        __strong UIActionSheet* strongSelf = weakSelf;
+        failure:^void(NSError* error) {
+            __strong UIActionSheet* strongSelf = weakSelf;
 
-        TraceVerbose(TAG, L"Failed with error: %@", [error description]);
-        strongSelf->_isContentDialogVisible = NO;
-    }];
+            TraceVerbose(TAG, L"Failed with error: %@", [error description]);
+            strongSelf->_isContentDialogVisible = NO;
+        }];
 }
 
 /**

@@ -29,14 +29,20 @@
 #undef Nil
 #endif
 
+#ifdef __clang__
 #include <COMIncludes.h>
+#endif
+
 #include <wrl\client.h>
 #include <wrl\async.h>
 #include <wrl\event.h>
 #include <wrl\wrappers\corewrappers.h>
 #include <windows.foundation.h>
 #include <windows.foundation.collections.h>
+
+#ifdef __clang__
 #include <COMIncludes_End.h>
+#endif
 
 namespace WRLHelpers {
 
@@ -150,7 +156,7 @@ HRESULT ForEach(ABI::Windows::Foundation::Collections::IMap<K, V>* map, Q&& func
 }
 
 #pragma region Async Helpers
-struct ActionCallback : public Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::ClassicCom>,
+struct ActionCallback : public Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::WinRtClassicComMix>,
                                                             ABI::Windows::Foundation::IAsyncActionCompletedHandler> {
 public:
     HRESULT RuntimeClassInitialize() {
@@ -198,8 +204,14 @@ HRESULT Await(TI* pThing, TPFN pfn, Args&&... args) {
     return S_OK;
 }
 
+template <typename TI, typename... Args>
+HRESULT Await(const Microsoft::WRL::ComPtr<TI>& pThing,
+                    Args&&... args) {
+    return Await(pThing.Get(), std::forward<Args>(args)...);
+}
+
 template <typename T>
-struct OperationCallback : public Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::ClassicCom>,
+struct OperationCallback : public Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::WinRtClassicComMix>,
                                                                ABI::Windows::Foundation::IAsyncOperationCompletedHandler<T>> {
 public:
     HRESULT RuntimeClassInitialize() {
@@ -341,6 +353,12 @@ HRESULT AwaitResult(TI* pThing,
         out);
 }
 
+template <typename TI, typename... Args>
+HRESULT AwaitResult(const Microsoft::WRL::ComPtr<TI>& pThing,
+                    Args&&... args) {
+    return AwaitResult(pThing.Get(), std::forward<Args>(args)...);
+}
+
 template <typename OI, typename RI>
 HRESULT AwaitStaticResult(HRESULT(STDMETHODCALLTYPE* pfn)(ABI::Windows::Foundation::IAsyncOperation<OI>**), RI&& out) {
     return AwaitResultHelper<OI>([&](ABI::Windows::Foundation::IAsyncOperation<OI>** ppOp) { return (*pfn)(ppOp); }, out);
@@ -386,7 +404,7 @@ HRESULT AwaitStaticResult(HRESULT(STDMETHODCALLTYPE* pfn)(P1, P2, P3, P4, ABI::W
 
 template <typename T, typename Q>
 struct ProgressCompleteCallback
-    : public Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::ClassicCom>,
+    : public Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::WinRtClassicComMix>,
                                           ABI::Windows::Foundation::IAsyncOperationWithProgressCompletedHandler<T, Q>> {
 public:
     HRESULT RuntimeClassInitialize() {
@@ -480,6 +498,13 @@ HRESULT AwaitProgressComplete(
         },
         out);
 }
+
+template <typename TI, typename... Args>
+HRESULT AwaitProgressComplete(const Microsoft::WRL::ComPtr<TI>& pThing,
+                    Args&&... args) {
+    return AwaitProgressComplete(pThing.Get(), std::forward<Args>(args)...);
+}
+
 
 template <typename TDelegateInterface, typename... Args>
 ::Microsoft::WRL::ComPtr<TDelegateInterface> MakeAgileCallbackNoThrow(Args&&... args) WI_NOEXCEPT {

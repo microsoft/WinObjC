@@ -113,3 +113,4 @@ OBJCUWP_WINDOWS_MEDIA_CLOSEDCAPTIONING_EXPORT
 @end
 
 #endif // __WMCClosedCaptionProperties_DEFINED__
+

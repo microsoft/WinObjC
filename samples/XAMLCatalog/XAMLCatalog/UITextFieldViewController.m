@@ -75,6 +75,28 @@ placeHolder : (NSString*)placeHolder
     return textField;
 }
 
+-(UITextField*)_createTextFieldWithColor:(UIColor*)color
+placeHolder : (NSString*)placeHolder
+    borderStyle : (UITextBorderStyle)borderStyle
+    fontSize : (CGFloat)fontSize
+    minimumFontSize : (CGFloat)minFontSize {
+    CGRect frame = CGRectMake(c_originX, c_originY, c_width, c_height);
+    UITextField* textField = [[UITextField alloc] initWithFrame:frame];
+    textField.textColor = color;
+    textField.font = [UIFont systemFontOfSize: fontSize];
+    textField.placeholder = placeHolder;
+    textField.borderStyle = borderStyle;
+    textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    textField.delegate = self;
+    textField.adjustsFontSizeToFitWidth = YES;
+    textField.minimumFontSize = minFontSize;
+
+    // Set the accessibility identifier so we can access these controls via automation
+    textField.accessibilityIdentifier = [NSString stringWithFormat : @"textField_%ld", [_textFields count]];
+
+    return textField;
+}
+
 -(void)viewDidLoad {
     [super viewDidLoad];
 
@@ -197,6 +219,27 @@ placeHolder : (NSString*)placeHolder
         placeHolder : @"background image"
         borderStyle : UITextBorderStyleLine
         backgroundImage : [UIImage imageNamed : @"photo1.jpg"]]];
+
+    // Row 12. Adjusts font size to fit width (should clamp to 14.0f)
+    [_textFields addObject : [self _createTextFieldWithColor:[UIColor blackColor]
+        placeHolder : @"Adjusts font size 17pt"
+        borderStyle : UITextBorderStyleLine
+        fontSize : 17.0f 
+        minimumFontSize : 1.0f ]];
+
+    // Row 13. Should not adjust font size to width (10.0f < system min size)
+    [_textFields addObject : [self _createTextFieldWithColor:[UIColor blackColor]
+        placeHolder : @"Adjusts font size 10pt"
+        borderStyle : UITextBorderStyleLine
+        fontSize : 10.0f 
+        minimumFontSize : 1.0f ]];
+
+    // Row 14. Adjusts font size to fit width down to 17.0f
+    [_textFields addObject : [self _createTextFieldWithColor:[UIColor blackColor]
+        placeHolder : @"Adjusts font size 22pt"
+        borderStyle : UITextBorderStyleLine
+        fontSize : 22.0f 
+        minimumFontSize : 17.0f ]];
 
     [self tableView].allowsSelection = NO;
 }
