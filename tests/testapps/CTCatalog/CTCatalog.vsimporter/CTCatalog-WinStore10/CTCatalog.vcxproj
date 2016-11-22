@@ -183,6 +183,7 @@
     <ClangCompile Include="..\..\CTCatalog\Tests\CTCFrameTestViewController.mm" />
     <ClangCompile Include="..\..\CTCatalog\Tests\CTCLineTestViewController.mm" />
     <ClangCompile Include="..\..\CTCatalog\Tests\CTCParagraphStyleTestViewController.mm" />
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCPathForGlyphTestViewController.mm" />
     <ClangCompile Include="..\..\CTCatalog\Tests\CTCRunTestViewController.mm" />
     <Xml Include="default.rd.xml" />
     <None Include="CTCatalog_TemporaryKey.pfx" />

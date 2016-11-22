@@ -37,7 +37,7 @@ COREGRAPHICS_EXPORT const CFStringRef kCGFontVariationAxisDefaultValue;
 
 COREGRAPHICS_EXPORT void CGFontRelease(CGFontRef font);
 COREGRAPHICS_EXPORT CGFontRef CGFontRetain(CGFontRef font);
-COREGRAPHICS_EXPORT CGFontRef CGFontCreateWithDataProvider(CGDataProviderRef provider) STUB_METHOD;
+COREGRAPHICS_EXPORT CGFontRef CGFontCreateWithDataProvider(CGDataProviderRef provider);
 COREGRAPHICS_EXPORT CGFontRef CGFontCreateWithFontName(CFStringRef name);
 
 COREGRAPHICS_EXPORT CGFontRef CGFontCreateCopyWithVariations(CGFontRef font, CFDictionaryRef variations) STUB_METHOD;

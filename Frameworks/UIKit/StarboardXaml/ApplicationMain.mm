@@ -38,7 +38,9 @@
 #import <CACompositorClient.h>
 #import <UIApplicationInternal.h>
 #import <MainDispatcher.h>
+#import <_UIPopupViewController.h>
 #import <UWP/WindowsApplicationModelActivation.h>
+#import <UWP/WindowsUIXamlControlsPrimitives.h>
 
 using namespace Microsoft::WRL;
 
@@ -94,6 +96,11 @@ int ApplicationMainStart(const char* principalName,
     WOCDisplayMode* displayMode = [UIApplication displayMode];
     [displayMode _setWindowSize:CGSizeMake(windowWidth, windowHeight)];
 
+    if (activationType == ActivationTypeLibrary) {
+        // In library mode, honor app's native display size
+        [displayMode setDisplayPreset:WOCDisplayPresetNative];
+    }
+
     NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
 
     //  Figure out what our initial default orientation should be from Info.plist
@@ -147,6 +154,18 @@ int ApplicationMainStart(const char* principalName,
     [displayMode _updateDisplaySettings];
 
     UIApplicationMainInit(principalClassName, delegateClassName, defaultOrientation, (int)activationType, activationArgument);
+
+    if (activationType == ActivationTypeLibrary) {
+        // Create a top-level UIWindow with popup view controller, which will not normally be visible.
+        // If some other view controller tries to present to it, the popup view controller will make
+        // the desired UI visible inside a XAML Popup.
+        WFRect* appFrame = [[WXWindow current] bounds];
+        CGRect windowFrame = CGRectMake(0, 0, appFrame.width, appFrame.height);
+
+        UIWindow* keyWindow = [[UIWindow alloc] initWithFrame:windowFrame];
+        keyWindow.rootViewController = [[_UIPopupViewController alloc] init];
+        [keyWindow makeKeyWindow];
+    }
 
     // The main runloop has to be started asynchronously, so we return as soon as possible from application activate.
     // The apps can (and do) handle application launch delegate from the first tine NSRunloop run is called, and that can

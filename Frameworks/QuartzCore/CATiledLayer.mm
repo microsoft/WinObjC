@@ -13,11 +13,11 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #import <StubReturn.h>
 #import <QuartzCore/CATiledLayer.h>
 
 @implementation CATiledLayer
+
 /**
  @Status Stub
  @Notes

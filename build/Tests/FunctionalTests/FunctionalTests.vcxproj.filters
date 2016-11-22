@@ -89,8 +89,22 @@
       <Filter>Tests\AssetsLibraryTests</Filter>
     </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\ProjectionTests\CoreDispatcherTests.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\ProjectionTests\SanityTests.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIActionSheetTests.mm">
+      <Filter>Tests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\NSURLStorageFileTests.mm">
+      <Filter>Tests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\NSLayoutConstraintTests.mm">
+      <Filter>Tests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\FileActivationTests.mm">
+      <Filter>Tests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\ProjectionTests\SanityTests.mm">
+      <Filter>Tests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\ProjectionTests\SanityTestsWithARCEnabled.mm">
       <Filter>Tests</Filter>
     </ClangCompile>
   </ItemGroup>
@@ -101,6 +115,7 @@
     <Xml Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\AssetsLibraryTests\AssetsLibrary.AppxManifest.xml">
       <Filter>Tests\AssetsLibraryTests</Filter>
     </Xml>
+    <Xml Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\Default.AppxManifest.xml" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\AssetsLibraryTests\AssetsLibraryTestVideo.mp4">

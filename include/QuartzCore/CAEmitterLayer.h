@@ -43,19 +43,19 @@ CA_EXPORT_CLASS
 @interface CAEmitterLayer : CALayer <CAMediaTiming, NSCoding>
 
 @property (copy) NSArray* emitterCells;
-@property (copy) NSString* renderMode;
+@property (copy) NSString* renderMode STUB_PROPERTY;
 @property CGPoint emitterPosition;
-@property (copy) NSString* emitterShape;
-@property CGFloat emitterZPosition;
-@property CGFloat emitterDepth;
-@property CGSize emitterSize;
-@property float scale;
-@property unsigned int seed;
-@property float spin;
-@property float velocity;
-@property float birthRate;
-@property (copy) NSString* emitterMode;
-@property float lifetime;
-@property BOOL preservesDepth;
+@property (copy) NSString* emitterShape STUB_PROPERTY;
+@property CGFloat emitterZPosition STUB_PROPERTY;
+@property CGFloat emitterDepth STUB_PROPERTY;
+@property CGSize emitterSize STUB_PROPERTY;
+@property float scale STUB_PROPERTY;
+@property unsigned int seed STUB_PROPERTY;
+@property float spin STUB_PROPERTY;
+@property float velocity STUB_PROPERTY;
+@property float birthRate STUB_PROPERTY;
+@property (copy) NSString* emitterMode STUB_PROPERTY;
+@property float lifetime STUB_PROPERTY;
+@property BOOL preservesDepth STUB_PROPERTY;
 
 @end

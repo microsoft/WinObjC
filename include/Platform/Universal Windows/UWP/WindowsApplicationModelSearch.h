@@ -27,16 +27,173 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WASSearchPaneQueryLinguisticDetails, WASSearchSuggestionCollection, WASLocalContentSuggestionSettings,
-    WASSearchQueryLinguisticDetails, WASSearchSuggestionsRequestDeferral, WASSearchSuggestionsRequest;
-@protocol WASISearchPaneQueryLinguisticDetails
-, WASISearchSuggestionCollection, WASILocalContentSuggestionSettings, WASISearchQueryLinguisticDetailsFactory,
-    WASISearchQueryLinguisticDetails, WASISearchSuggestionsRequestDeferral, WASISearchSuggestionsRequest;
+@class WASSearchPaneVisibilityChangedEventArgs, WASSearchPaneQueryChangedEventArgs, WASSearchPaneQuerySubmittedEventArgs, WASSearchPaneResultSuggestionChosenEventArgs, WASSearchPaneSuggestionsRequestDeferral, WASSearchPaneSuggestionsRequest, WASSearchPaneSuggestionsRequestedEventArgs, WASSearchPane, WASSearchPaneQueryLinguisticDetails, WASSearchSuggestionCollection, WASLocalContentSuggestionSettings, WASSearchQueryLinguisticDetails, WASSearchSuggestionsRequestDeferral, WASSearchSuggestionsRequest;
+@protocol WASISearchPaneVisibilityChangedEventArgs, WASISearchPaneQueryChangedEventArgs, WASISearchPaneQuerySubmittedEventArgs, WASISearchPaneQuerySubmittedEventArgsWithLinguisticDetails, WASISearchPaneResultSuggestionChosenEventArgs, WASISearchPaneSuggestionsRequestDeferral, WASISearchPaneSuggestionsRequest, WASISearchPaneSuggestionsRequestedEventArgs, WASISearchPaneStatics, WASISearchPaneStaticsWithHideThisApplication, WASISearchPane, WASISearchPaneQueryLinguisticDetails, WASISearchSuggestionCollection, WASILocalContentSuggestionSettings, WASISearchQueryLinguisticDetailsFactory, WASISearchQueryLinguisticDetails, WASISearchSuggestionsRequestDeferral, WASISearchSuggestionsRequest;
 
+#include "WindowsFoundation.h"
 #include "WindowsStorageStreams.h"
 #include "WindowsStorage.h"
 
 #import <Foundation/Foundation.h>
+
+// Windows.ApplicationModel.Search.ISearchPaneQueryChangedEventArgs
+#ifndef __WASISearchPaneQueryChangedEventArgs_DEFINED__
+#define __WASISearchPaneQueryChangedEventArgs_DEFINED__
+
+@protocol WASISearchPaneQueryChangedEventArgs
+@property (readonly) NSString * language;
+@property (readonly) WASSearchPaneQueryLinguisticDetails* linguisticDetails;
+@property (readonly) NSString * queryText;
+@end
+
+OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
+@interface WASISearchPaneQueryChangedEventArgs : RTObject <WASISearchPaneQueryChangedEventArgs>
+@end
+
+#endif // __WASISearchPaneQueryChangedEventArgs_DEFINED__
+
+// Windows.ApplicationModel.Search.SearchPaneVisibilityChangedEventArgs
+#ifndef __WASSearchPaneVisibilityChangedEventArgs_DEFINED__
+#define __WASSearchPaneVisibilityChangedEventArgs_DEFINED__
+
+OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
+@interface WASSearchPaneVisibilityChangedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) BOOL visible;
+@end
+
+#endif // __WASSearchPaneVisibilityChangedEventArgs_DEFINED__
+
+// Windows.ApplicationModel.Search.SearchPaneQueryChangedEventArgs
+#ifndef __WASSearchPaneQueryChangedEventArgs_DEFINED__
+#define __WASSearchPaneQueryChangedEventArgs_DEFINED__
+
+OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
+@interface WASSearchPaneQueryChangedEventArgs : RTObject <WASISearchPaneQueryChangedEventArgs>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) NSString * language;
+@property (readonly) WASSearchPaneQueryLinguisticDetails* linguisticDetails;
+@property (readonly) NSString * queryText;
+@end
+
+#endif // __WASSearchPaneQueryChangedEventArgs_DEFINED__
+
+// Windows.ApplicationModel.Search.SearchPaneQuerySubmittedEventArgs
+#ifndef __WASSearchPaneQuerySubmittedEventArgs_DEFINED__
+#define __WASSearchPaneQuerySubmittedEventArgs_DEFINED__
+
+OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
+@interface WASSearchPaneQuerySubmittedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) NSString * language;
+@property (readonly) NSString * queryText;
+@property (readonly) WASSearchPaneQueryLinguisticDetails* linguisticDetails;
+@end
+
+#endif // __WASSearchPaneQuerySubmittedEventArgs_DEFINED__
+
+// Windows.ApplicationModel.Search.SearchPaneResultSuggestionChosenEventArgs
+#ifndef __WASSearchPaneResultSuggestionChosenEventArgs_DEFINED__
+#define __WASSearchPaneResultSuggestionChosenEventArgs_DEFINED__
+
+OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
+@interface WASSearchPaneResultSuggestionChosenEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) NSString * tag;
+@end
+
+#endif // __WASSearchPaneResultSuggestionChosenEventArgs_DEFINED__
+
+// Windows.ApplicationModel.Search.SearchPaneSuggestionsRequestDeferral
+#ifndef __WASSearchPaneSuggestionsRequestDeferral_DEFINED__
+#define __WASSearchPaneSuggestionsRequestDeferral_DEFINED__
+
+OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
+@interface WASSearchPaneSuggestionsRequestDeferral : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+- (void)complete;
+@end
+
+#endif // __WASSearchPaneSuggestionsRequestDeferral_DEFINED__
+
+// Windows.ApplicationModel.Search.SearchPaneSuggestionsRequest
+#ifndef __WASSearchPaneSuggestionsRequest_DEFINED__
+#define __WASSearchPaneSuggestionsRequest_DEFINED__
+
+OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
+@interface WASSearchPaneSuggestionsRequest : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) BOOL isCanceled;
+@property (readonly) WASSearchSuggestionCollection* searchSuggestionCollection;
+- (WASSearchPaneSuggestionsRequestDeferral*)getDeferral;
+@end
+
+#endif // __WASSearchPaneSuggestionsRequest_DEFINED__
+
+// Windows.ApplicationModel.Search.SearchPaneSuggestionsRequestedEventArgs
+#ifndef __WASSearchPaneSuggestionsRequestedEventArgs_DEFINED__
+#define __WASSearchPaneSuggestionsRequestedEventArgs_DEFINED__
+
+OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
+@interface WASSearchPaneSuggestionsRequestedEventArgs : RTObject <WASISearchPaneQueryChangedEventArgs>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) NSString * language;
+@property (readonly) WASSearchPaneQueryLinguisticDetails* linguisticDetails;
+@property (readonly) NSString * queryText;
+@property (readonly) WASSearchPaneSuggestionsRequest* request;
+@end
+
+#endif // __WASSearchPaneSuggestionsRequestedEventArgs_DEFINED__
+
+// Windows.ApplicationModel.Search.SearchPane
+#ifndef __WASSearchPane_DEFINED__
+#define __WASSearchPane_DEFINED__
+
+OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
+@interface WASSearchPane : RTObject
++ (void)hideThisApplication;
++ (WASSearchPane*)getForCurrentView;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property BOOL showOnKeyboardInput;
+@property BOOL searchHistoryEnabled;
+@property (retain) NSString * searchHistoryContext;
+@property (retain) NSString * placeholderText;
+@property (readonly) NSString * language;
+@property (readonly) NSString * queryText;
+@property (readonly) BOOL visible;
+- (EventRegistrationToken)addQueryChangedEvent:(void(^)(WASSearchPane*, WASSearchPaneQueryChangedEventArgs*))del;
+- (void)removeQueryChangedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addQuerySubmittedEvent:(void(^)(WASSearchPane*, WASSearchPaneQuerySubmittedEventArgs*))del;
+- (void)removeQuerySubmittedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addResultSuggestionChosenEvent:(void(^)(WASSearchPane*, WASSearchPaneResultSuggestionChosenEventArgs*))del;
+- (void)removeResultSuggestionChosenEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addSuggestionsRequestedEvent:(void(^)(WASSearchPane*, WASSearchPaneSuggestionsRequestedEventArgs*))del;
+- (void)removeSuggestionsRequestedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addVisibilityChangedEvent:(void(^)(WASSearchPane*, WASSearchPaneVisibilityChangedEventArgs*))del;
+- (void)removeVisibilityChangedEvent:(EventRegistrationToken)tok;
+- (void)setLocalContentSuggestionSettings:(WASLocalContentSuggestionSettings*)settings;
+- (void)showOverloadDefault;
+- (void)showOverloadWithQuery:(NSString *)query;
+- (BOOL)trySetQueryText:(NSString *)query;
+@end
+
+#endif // __WASSearchPane_DEFINED__
 
 // Windows.ApplicationModel.Search.SearchPaneQueryLinguisticDetails
 #ifndef __WASSearchPaneQueryLinguisticDetails_DEFINED__
@@ -64,14 +221,10 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
-- (void)appendQuerySuggestion:(NSString*)text;
+- (void)appendQuerySuggestion:(NSString *)text;
 - (void)appendQuerySuggestions:(id<NSFastEnumeration> /* NSString * */)suggestions;
-- (void)appendResultSuggestion:(NSString*)text
-                    detailText:(NSString*)detailText
-                           tag:(NSString*)tag
-                         image:(RTObject<WSSIRandomAccessStreamReference>*)image
-            imageAlternateText:(NSString*)imageAlternateText;
-- (void)appendSearchSeparator:(NSString*)label;
+- (void)appendResultSuggestion:(NSString *)text detailText:(NSString *)detailText tag:(NSString *)tag image:(RTObject<WSSIRandomAccessStreamReference>*)image imageAlternateText:(NSString *)imageAlternateText;
+- (void)appendSearchSeparator:(NSString *)label;
 @end
 
 #endif // __WASSearchSuggestionCollection_DEFINED__
@@ -87,7 +240,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL enabled;
-@property (retain) NSString* aqsFilter;
+@property (retain) NSString * aqsFilter;
 @property (readonly) NSMutableArray* /* WSStorageFolder* */ locations;
 @property (readonly) NSMutableArray* /* NSString * */ propertiesToMatch;
 @end
@@ -100,9 +253,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 
 OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 @interface WASSearchQueryLinguisticDetails : RTObject
-+ (WASSearchQueryLinguisticDetails*)makeInstance:(id<NSFastEnumeration> /* NSString * */)queryTextAlternatives
-                       queryTextCompositionStart:(unsigned int)queryTextCompositionStart
-                      queryTextCompositionLength:(unsigned int)queryTextCompositionLength ACTIVATOR;
++ (WASSearchQueryLinguisticDetails*)makeInstance:(id<NSFastEnumeration> /* NSString * */)queryTextAlternatives queryTextCompositionStart:(unsigned int)queryTextCompositionStart queryTextCompositionLength:(unsigned int)queryTextCompositionLength ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -142,3 +293,4 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 @end
 
 #endif // __WASSearchSuggestionsRequest_DEFINED__
+

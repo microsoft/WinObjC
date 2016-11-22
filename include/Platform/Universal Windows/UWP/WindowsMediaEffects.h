@@ -27,15 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WMEVideoCompositorDefinition, WMECompositeVideoFrameContext, WMEAudioEffect, WMEAudioRenderEffectsManager,
-    WMEAudioCaptureEffectsManager, WMEAudioEffectsManager, WMEVideoEffectDefinition, WMEAudioEffectDefinition, WMEProcessVideoFrameContext,
-    WMEProcessAudioFrameContext, WMEVideoTransformEffectDefinition;
-@protocol WMEIVideoCompositorDefinition
-, WMEIVideoCompositorDefinitionFactory, WMEICompositeVideoFrameContext, WMEIAudioEffect, WMEIAudioEffectsManagerStatics,
-    WMEIAudioRenderEffectsManager, WMEIAudioRenderEffectsManager2, WMEIAudioCaptureEffectsManager, WMEIVideoCompositor,
-    WMEIAudioEffectDefinition, WMEIVideoEffectDefinition, WMEIVideoEffectDefinitionFactory, WMEIAudioEffectDefinitionFactory,
-    WMEIProcessVideoFrameContext, WMEIBasicVideoEffect, WMEIProcessAudioFrameContext, WMEIBasicAudioEffect,
-    WMEIVideoTransformEffectDefinition;
+@class WMEVideoCompositorDefinition, WMECompositeVideoFrameContext, WMEAudioEffect, WMEAudioRenderEffectsManager, WMEAudioCaptureEffectsManager, WMEAudioEffectsManager, WMEVideoEffectDefinition, WMEAudioEffectDefinition, WMEProcessVideoFrameContext, WMEProcessAudioFrameContext, WMEVideoTransformEffectDefinition, WMESlowMotionEffectDefinition;
+@protocol WMEIVideoCompositorDefinition, WMEIVideoCompositorDefinitionFactory, WMEICompositeVideoFrameContext, WMEIAudioEffect, WMEIAudioEffectsManagerStatics, WMEIAudioRenderEffectsManager, WMEIAudioRenderEffectsManager2, WMEIAudioCaptureEffectsManager, WMEIVideoCompositor, WMEIAudioEffectDefinition, WMEIVideoEffectDefinition, WMEIVideoEffectDefinitionFactory, WMEIAudioEffectDefinitionFactory, WMEIProcessVideoFrameContext, WMEIBasicVideoEffect, WMEIProcessAudioFrameContext, WMEIBasicAudioEffect, WMEIVideoTransformEffectDefinition, WMEISlowMotionEffectDefinition;
 
 // Windows.Media.Effects.AudioEffectType
 enum _WMEAudioEffectType {
@@ -96,7 +89,7 @@ typedef unsigned WMEMediaEffectClosedReason;
 #define __WMEIVideoCompositorDefinition_DEFINED__
 
 @protocol WMEIVideoCompositorDefinition
-@property (readonly) NSString* activatableClassId;
+@property (readonly) NSString * activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
 
@@ -144,7 +137,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 #define __WMEIAudioEffectDefinition_DEFINED__
 
 @protocol WMEIAudioEffectDefinition
-@property (readonly) NSString* activatableClassId;
+@property (readonly) NSString * activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
 
@@ -159,7 +152,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 #define __WMEIVideoEffectDefinition_DEFINED__
 
 @protocol WMEIVideoEffectDefinition
-@property (readonly) NSString* activatableClassId;
+@property (readonly) NSString * activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
 
@@ -217,12 +210,12 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 
 OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEVideoCompositorDefinition : RTObject <WMEIVideoCompositorDefinition>
-+ (WMEVideoCompositorDefinition*)make:(NSString*)activatableClassId ACTIVATOR;
-+ (WMEVideoCompositorDefinition*)makeWithProperties:(NSString*)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
++ (WMEVideoCompositorDefinition*)make:(NSString *)activatableClassId ACTIVATOR;
++ (WMEVideoCompositorDefinition*)makeWithProperties:(NSString *)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* activatableClassId;
+@property (readonly) NSString * activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
 
@@ -268,9 +261,9 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* effectsProviderSettingsLabel;
+@property (readonly) NSString * effectsProviderSettingsLabel;
 @property (readonly) RTObject<WSSIRandomAccessStreamWithContentType>* effectsProviderThumbnail;
-- (EventRegistrationToken)addAudioRenderEffectsChangedEvent:(void (^)(WMEAudioRenderEffectsManager*, RTObject*))del;
+- (EventRegistrationToken)addAudioRenderEffectsChangedEvent:(void(^)(WMEAudioRenderEffectsManager*, RTObject*))del;
 - (void)removeAudioRenderEffectsChangedEvent:(EventRegistrationToken)tok;
 - (NSArray* /* WMEAudioEffect* */)getAudioRenderEffects;
 - (void)showSettingsUI;
@@ -287,7 +280,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-- (EventRegistrationToken)addAudioCaptureEffectsChangedEvent:(void (^)(WMEAudioCaptureEffectsManager*, RTObject*))del;
+- (EventRegistrationToken)addAudioCaptureEffectsChangedEvent:(void(^)(WMEAudioCaptureEffectsManager*, RTObject*))del;
 - (void)removeAudioCaptureEffectsChangedEvent:(EventRegistrationToken)tok;
 - (NSArray* /* WMEAudioEffect* */)getAudioCaptureEffects;
 @end
@@ -300,14 +293,10 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 
 OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEAudioEffectsManager : RTObject
-+ (WMEAudioRenderEffectsManager*)createAudioRenderEffectsManager:(NSString*)deviceId category:(WMRAudioRenderCategory)category;
-+ (WMEAudioRenderEffectsManager*)createAudioRenderEffectsManagerWithMode:(NSString*)deviceId
-                                                                category:(WMRAudioRenderCategory)category
-                                                                    mode:(WMAudioProcessing)mode;
-+ (WMEAudioCaptureEffectsManager*)createAudioCaptureEffectsManager:(NSString*)deviceId category:(WMCMediaCategory)category;
-+ (WMEAudioCaptureEffectsManager*)createAudioCaptureEffectsManagerWithMode:(NSString*)deviceId
-                                                                  category:(WMCMediaCategory)category
-                                                                      mode:(WMAudioProcessing)mode;
++ (WMEAudioRenderEffectsManager*)createAudioRenderEffectsManager:(NSString *)deviceId category:(WMRAudioRenderCategory)category;
++ (WMEAudioRenderEffectsManager*)createAudioRenderEffectsManagerWithMode:(NSString *)deviceId category:(WMRAudioRenderCategory)category mode:(WMAudioProcessing)mode;
++ (WMEAudioCaptureEffectsManager*)createAudioCaptureEffectsManager:(NSString *)deviceId category:(WMCMediaCategory)category;
++ (WMEAudioCaptureEffectsManager*)createAudioCaptureEffectsManagerWithMode:(NSString *)deviceId category:(WMCMediaCategory)category mode:(WMAudioProcessing)mode;
 @end
 
 #endif // __WMEAudioEffectsManager_DEFINED__
@@ -318,12 +307,12 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 
 OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEVideoEffectDefinition : RTObject <WMEIVideoEffectDefinition>
-+ (WMEVideoEffectDefinition*)make:(NSString*)activatableClassId ACTIVATOR;
-+ (WMEVideoEffectDefinition*)makeWithProperties:(NSString*)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
++ (WMEVideoEffectDefinition*)make:(NSString *)activatableClassId ACTIVATOR;
++ (WMEVideoEffectDefinition*)makeWithProperties:(NSString *)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* activatableClassId;
+@property (readonly) NSString * activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
 
@@ -335,12 +324,12 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 
 OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEAudioEffectDefinition : RTObject <WMEIAudioEffectDefinition>
-+ (WMEAudioEffectDefinition*)make:(NSString*)activatableClassId ACTIVATOR;
-+ (WMEAudioEffectDefinition*)makeWithProperties:(NSString*)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
++ (WMEAudioEffectDefinition*)make:(NSString *)activatableClassId ACTIVATOR;
++ (WMEAudioEffectDefinition*)makeWithProperties:(NSString *)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* activatableClassId;
+@property (readonly) NSString * activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
 
@@ -386,7 +375,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* activatableClassId;
+@property (readonly) NSString * activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @property WMMMediaRotation rotation;
 @property WMTMediaVideoProcessingAlgorithm processingAlgorithm;
@@ -397,3 +386,21 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @end
 
 #endif // __WMEVideoTransformEffectDefinition_DEFINED__
+
+// Windows.Media.Effects.SlowMotionEffectDefinition
+#ifndef __WMESlowMotionEffectDefinition_DEFINED__
+#define __WMESlowMotionEffectDefinition_DEFINED__
+
+OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+@interface WMESlowMotionEffectDefinition : RTObject <WMEIVideoEffectDefinition>
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property double timeStretchRate;
+@property (readonly) NSString * activatableClassId;
+@property (readonly) RTObject<WFCIPropertySet>* properties;
+@end
+
+#endif // __WMESlowMotionEffectDefinition_DEFINED__
+

@@ -232,13 +232,13 @@ double CTRunGetTypographicBounds(CTRunRef run, CFRange range, CGFloat* ascent, C
                                                                                 curRun->_dwriteGlyphRun.isSideways));
 
         CGFloat newAscent = -FLT_MAX;
-        CGFloat newDescent = FLT_MAX;
+        CGFloat newDescent = -FLT_MAX;
         for (size_t i = range.location - curRun->_range.location; i < range.location + range.length - curRun->_range.location; ++i) {
-            // CoreText ascent is equivalent of DWrite verticalOriginY, and descent the opposite value of bottomSideBearing
+            // CoreText ascent is equivalent of DWrite verticalOriginY, and descent the value of bottomSideBearing
             // which are in designUnits, so they need to be converted to points for CoreText
             // The ascent and descent of the run is the max and min of the respective values per glyph
             newAscent = std::max(newAscent, glyphMetrics[i].verticalOriginY * scalingFactor);
-            newDescent = std::min(newDescent, -glyphMetrics[i].bottomSideBearing * scalingFactor);
+            newDescent = std::max(newDescent, glyphMetrics[i].bottomSideBearing * scalingFactor);
         }
         if (ascent) {
             *ascent = newAscent;

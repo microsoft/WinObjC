@@ -27,9 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WNPPushNotificationChannel, WNPPushNotificationReceivedEventArgs, WNPRawNotification, WNPPushNotificationChannelManager;
-@protocol WNPIPushNotificationChannelManagerStatics
-, WNPIPushNotificationChannel, WNPIPushNotificationReceivedEventArgs, WNPIRawNotification;
+@class WNPPushNotificationChannel, WNPPushNotificationChannelManagerForUser, WNPPushNotificationReceivedEventArgs, WNPRawNotification, WNPPushNotificationChannelManager;
+@protocol WNPIPushNotificationChannelManagerStatics, WNPIPushNotificationChannelManagerStatics2, WNPIPushNotificationChannelManagerForUser, WNPIPushNotificationChannel, WNPIPushNotificationReceivedEventArgs, WNPIRawNotification;
 
 // Windows.Networking.PushNotifications.PushNotificationType
 enum _WNPPushNotificationType {
@@ -41,6 +40,7 @@ enum _WNPPushNotificationType {
 };
 typedef unsigned WNPPushNotificationType;
 
+#include "WindowsSystem.h"
 #include "WindowsFoundation.h"
 #include "WindowsUINotifications.h"
 
@@ -56,14 +56,30 @@ OBJCUWP_WINDOWS_NETWORKING_PUSHNOTIFICATIONS_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFDateTime* expirationTime;
-@property (readonly) NSString* uri;
-- (EventRegistrationToken)addPushNotificationReceivedEvent:(void (^)(WNPPushNotificationChannel*,
-                                                                     WNPPushNotificationReceivedEventArgs*))del;
+@property (readonly) NSString * uri;
+- (EventRegistrationToken)addPushNotificationReceivedEvent:(void(^)(WNPPushNotificationChannel*, WNPPushNotificationReceivedEventArgs*))del;
 - (void)removePushNotificationReceivedEvent:(EventRegistrationToken)tok;
 - (void)close;
 @end
 
 #endif // __WNPPushNotificationChannel_DEFINED__
+
+// Windows.Networking.PushNotifications.PushNotificationChannelManagerForUser
+#ifndef __WNPPushNotificationChannelManagerForUser_DEFINED__
+#define __WNPPushNotificationChannelManagerForUser_DEFINED__
+
+OBJCUWP_WINDOWS_NETWORKING_PUSHNOTIFICATIONS_EXPORT
+@interface WNPPushNotificationChannelManagerForUser : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) WSUser* user;
+- (void)createPushNotificationChannelForApplicationAsyncWithSuccess:(void (^)(WNPPushNotificationChannel*))success failure:(void (^)(NSError*))failure;
+- (void)createPushNotificationChannelForApplicationAsyncWithId:(NSString *)applicationId success:(void (^)(WNPPushNotificationChannel*))success failure:(void (^)(NSError*))failure;
+- (void)createPushNotificationChannelForSecondaryTileAsync:(NSString *)tileId success:(void (^)(WNPPushNotificationChannel*))success failure:(void (^)(NSError*))failure;
+@end
+
+#endif // __WNPPushNotificationChannelManagerForUser_DEFINED__
 
 // Windows.Networking.PushNotifications.PushNotificationReceivedEventArgs
 #ifndef __WNPPushNotificationReceivedEventArgs_DEFINED__
@@ -93,7 +109,7 @@ OBJCUWP_WINDOWS_NETWORKING_PUSHNOTIFICATIONS_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* content;
+@property (readonly) NSString * content;
 @end
 
 #endif // __WNPRawNotification_DEFINED__
@@ -104,14 +120,11 @@ OBJCUWP_WINDOWS_NETWORKING_PUSHNOTIFICATIONS_EXPORT
 
 OBJCUWP_WINDOWS_NETWORKING_PUSHNOTIFICATIONS_EXPORT
 @interface WNPPushNotificationChannelManager : RTObject
-+ (void)createPushNotificationChannelForApplicationAsyncWithSuccess:(void (^)(WNPPushNotificationChannel*))success
-                                                            failure:(void (^)(NSError*))failure;
-+ (void)createPushNotificationChannelForApplicationAsyncWithId:(NSString*)applicationId
-                                                       success:(void (^)(WNPPushNotificationChannel*))success
-                                                       failure:(void (^)(NSError*))failure;
-+ (void)createPushNotificationChannelForSecondaryTileAsync:(NSString*)tileId
-                                                   success:(void (^)(WNPPushNotificationChannel*))success
-                                                   failure:(void (^)(NSError*))failure;
++ (WNPPushNotificationChannelManagerForUser*)getForUser:(WSUser*)user;
++ (void)createPushNotificationChannelForApplicationAsyncWithSuccess:(void (^)(WNPPushNotificationChannel*))success failure:(void (^)(NSError*))failure;
++ (void)createPushNotificationChannelForApplicationAsyncWithId:(NSString *)applicationId success:(void (^)(WNPPushNotificationChannel*))success failure:(void (^)(NSError*))failure;
++ (void)createPushNotificationChannelForSecondaryTileAsync:(NSString *)tileId success:(void (^)(WNPPushNotificationChannel*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WNPPushNotificationChannelManager_DEFINED__
+

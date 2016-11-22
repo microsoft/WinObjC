@@ -29,15 +29,14 @@
 
 @class WUColorHelper, WUColors;
 @class WUColor;
-@protocol WUIColorHelper
-, WUIColorHelperStatics, WUIColors, WUIColorsStatics;
+@protocol WUIColorHelper, WUIColorHelperStatics, WUIColors, WUIColorsStatics;
 
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Color
 OBJCUWP_WINDOWS_UI_EXPORT
 @interface WUColor : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property uint8_t a;
 @property uint8_t r;
 @property uint8_t g;
@@ -211,3 +210,4 @@ OBJCUWP_WINDOWS_UI_EXPORT
 @end
 
 #endif // __WUColors_DEFINED__
+

@@ -27,18 +27,8 @@
 #endif
 #include <UWP/interopBase.h>
 
-@class WDUUsbControlRequestType, WDUUsbSetupPacket, WDUUsbDeviceClass, WDUUsbDeviceClasses, WDUUsbDevice, WDUUsbInterface,
-    WDUUsbDeviceDescriptor, WDUUsbConfiguration, WDUUsbDescriptor, WDUUsbConfigurationDescriptor, WDUUsbInterfaceDescriptor,
-    WDUUsbBulkInEndpointDescriptor, WDUUsbInterruptInEndpointDescriptor, WDUUsbBulkOutEndpointDescriptor,
-    WDUUsbInterruptOutEndpointDescriptor, WDUUsbEndpointDescriptor, WDUUsbInterruptInEventArgs, WDUUsbInterruptInPipe, WDUUsbBulkInPipe,
-    WDUUsbBulkOutPipe, WDUUsbInterruptOutPipe, WDUUsbInterfaceSetting;
-@protocol WDUIUsbControlRequestType
-, WDUIUsbSetupPacketFactory, WDUIUsbSetupPacket, WDUIUsbDeviceClass, WDUIUsbDeviceClassesStatics, WDUIUsbDeviceClasses,
-    WDUIUsbDeviceStatics, WDUIUsbDeviceDescriptor, WDUIUsbConfigurationDescriptor, WDUIUsbConfigurationDescriptorStatics,
-    WDUIUsbInterfaceDescriptor, WDUIUsbInterfaceDescriptorStatics, WDUIUsbEndpointDescriptor, WDUIUsbEndpointDescriptorStatics,
-    WDUIUsbDescriptor, WDUIUsbInterruptInEventArgs, WDUIUsbBulkInPipe, WDUIUsbInterruptInPipe, WDUIUsbBulkOutPipe, WDUIUsbInterruptOutPipe,
-    WDUIUsbConfiguration, WDUIUsbInterface, WDUIUsbInterfaceSetting, WDUIUsbBulkInEndpointDescriptor, WDUIUsbInterruptInEndpointDescriptor,
-    WDUIUsbBulkOutEndpointDescriptor, WDUIUsbInterruptOutEndpointDescriptor, WDUIUsbDevice;
+@class WDUUsbControlRequestType, WDUUsbSetupPacket, WDUUsbDeviceClass, WDUUsbDeviceClasses, WDUUsbDevice, WDUUsbInterface, WDUUsbDeviceDescriptor, WDUUsbConfiguration, WDUUsbDescriptor, WDUUsbConfigurationDescriptor, WDUUsbInterfaceDescriptor, WDUUsbBulkInEndpointDescriptor, WDUUsbInterruptInEndpointDescriptor, WDUUsbBulkOutEndpointDescriptor, WDUUsbInterruptOutEndpointDescriptor, WDUUsbEndpointDescriptor, WDUUsbInterruptInEventArgs, WDUUsbInterruptInPipe, WDUUsbBulkInPipe, WDUUsbBulkOutPipe, WDUUsbInterruptOutPipe, WDUUsbInterfaceSetting;
+@protocol WDUIUsbControlRequestType, WDUIUsbSetupPacketFactory, WDUIUsbSetupPacket, WDUIUsbDeviceClass, WDUIUsbDeviceClassesStatics, WDUIUsbDeviceClasses, WDUIUsbDeviceStatics, WDUIUsbDeviceDescriptor, WDUIUsbConfigurationDescriptor, WDUIUsbConfigurationDescriptorStatics, WDUIUsbInterfaceDescriptor, WDUIUsbInterfaceDescriptorStatics, WDUIUsbEndpointDescriptor, WDUIUsbEndpointDescriptorStatics, WDUIUsbDescriptor, WDUIUsbInterruptInEventArgs, WDUIUsbBulkInPipe, WDUIUsbInterruptInPipe, WDUIUsbBulkOutPipe, WDUIUsbInterruptOutPipe, WDUIUsbConfiguration, WDUIUsbInterface, WDUIUsbInterfaceSetting, WDUIUsbBulkInEndpointDescriptor, WDUIUsbInterruptInEndpointDescriptor, WDUIUsbBulkOutEndpointDescriptor, WDUIUsbInterruptOutEndpointDescriptor, WDUIUsbDevice;
 
 // Windows.Devices.Usb.UsbTransferDirection
 enum _WDUUsbTransferDirection {
@@ -194,31 +184,21 @@ OBJCUWP_WINDOWS_DEVICES_USB_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_USB_EXPORT
 @interface WDUUsbDevice : RTObject <WFIClosable>
-+ (NSString*)getDeviceSelector:(unsigned int)vendorId productId:(unsigned int)productId winUsbInterfaceClass:(WFGUID*)winUsbInterfaceClass;
-+ (NSString*)getDeviceSelectorGuidOnly:(WFGUID*)winUsbInterfaceClass;
-+ (NSString*)getDeviceSelectorVidPidOnly:(unsigned int)vendorId productId:(unsigned int)productId;
-+ (NSString*)getDeviceClassSelector:(WDUUsbDeviceClass*)usbClass;
-+ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDUUsbDevice*))success failure:(void (^)(NSError*))failure;
++ (NSString *)getDeviceSelector:(unsigned int)vendorId productId:(unsigned int)productId winUsbInterfaceClass:(WFGUID*)winUsbInterfaceClass;
++ (NSString *)getDeviceSelectorGuidOnly:(WFGUID*)winUsbInterfaceClass;
++ (NSString *)getDeviceSelectorVidPidOnly:(unsigned int)vendorId productId:(unsigned int)productId;
++ (NSString *)getDeviceClassSelector:(WDUUsbDeviceClass*)usbClass;
++ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDUUsbDevice*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDUUsbConfiguration* configuration;
 @property (readonly) WDUUsbInterface* defaultInterface;
 @property (readonly) WDUUsbDeviceDescriptor* deviceDescriptor;
-- (void)sendControlOutTransferAsync:(WDUUsbSetupPacket*)setupPacket
-                             buffer:(RTObject<WSSIBuffer>*)buffer
-                            success:(void (^)(unsigned int))success
-                            failure:(void (^)(NSError*))failure;
-- (void)sendControlOutTransferAsyncNoBuffer:(WDUUsbSetupPacket*)setupPacket
-                                    success:(void (^)(unsigned int))success
-                                    failure:(void (^)(NSError*))failure;
-- (void)sendControlInTransferAsync:(WDUUsbSetupPacket*)setupPacket
-                            buffer:(RTObject<WSSIBuffer>*)buffer
-                           success:(void (^)(RTObject<WSSIBuffer>*))success
-                           failure:(void (^)(NSError*))failure;
-- (void)sendControlInTransferAsyncNoBuffer:(WDUUsbSetupPacket*)setupPacket
-                                   success:(void (^)(RTObject<WSSIBuffer>*))success
-                                   failure:(void (^)(NSError*))failure;
+- (void)sendControlOutTransferAsync:(WDUUsbSetupPacket*)setupPacket buffer:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success failure:(void (^)(NSError*))failure;
+- (void)sendControlOutTransferAsyncNoBuffer:(WDUUsbSetupPacket*)setupPacket success:(void (^)(unsigned int))success failure:(void (^)(NSError*))failure;
+- (void)sendControlInTransferAsync:(WDUUsbSetupPacket*)setupPacket buffer:(RTObject<WSSIBuffer>*)buffer success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
+- (void)sendControlInTransferAsyncNoBuffer:(WDUUsbSetupPacket*)setupPacket success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
@@ -446,7 +426,7 @@ OBJCUWP_WINDOWS_DEVICES_USB_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDUUsbInterruptInEndpointDescriptor* endpointDescriptor;
-- (EventRegistrationToken)addDataReceivedEvent:(void (^)(WDUUsbInterruptInPipe*, WDUUsbInterruptInEventArgs*))del;
+- (EventRegistrationToken)addDataReceivedEvent:(void(^)(WDUUsbInterruptInPipe*, WDUUsbInterruptInEventArgs*))del;
 - (void)removeDataReceivedEvent:(EventRegistrationToken)tok;
 - (RTObject<WFIAsyncAction>*)clearStallAsync;
 @end
@@ -526,3 +506,4 @@ OBJCUWP_WINDOWS_DEVICES_USB_EXPORT
 @end
 
 #endif // __WDUUsbInterfaceSetting_DEFINED__
+

@@ -23,6 +23,8 @@
 #import "CTCParagraphStyleTestViewController.h"
 #import "CTCFramesetterTestViewController.h"
 #import "CTCAffineTransformationTestViewController.h"
+#import "CTCPathForGlyphTestViewController.h"
+
 
 @interface TestRow : NSObject
 
@@ -61,7 +63,8 @@
             [TestRow row:@"ParagraphStyle Tests" testClass:[CTCParagraphStyleTestViewController class]],
             [TestRow row:@"Line Functions" testClass:[CTCLineTestViewController class]],
             [TestRow row:@"Framesetter Functions" testClass:[CTCFramesetterTestViewController class]],
-            [TestRow row:@"Affine Transformation Tests" testClass:[CTCAffineTransformationTestViewController class]]
+            [TestRow row:@"Affine Transformation Tests" testClass:[CTCAffineTransformationTestViewController class]],
+            [TestRow row:@"PathForGlyph Test" testClass:[CTCPathForGlyphTestViewController class]]
         ];
     }
     return _tests;

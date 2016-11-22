@@ -29,9 +29,7 @@
 
 @class WUTTextConstants, WUTFontWeights;
 @class WUTFontWeight;
-@protocol WUTITextConstantsStatics
-, WUTITextDocument, WUTITextRange, WUTITextSelection, WUTITextCharacterFormat, WUTITextParagraphFormat, WUTIFontWeights,
-    WUTIFontWeightsStatics;
+@protocol WUTITextConstantsStatics, WUTITextDocument, WUTITextRange, WUTITextSelection, WUTITextCharacterFormat, WUTITextParagraphFormat, WUTIFontWeights, WUTIFontWeightsStatics;
 
 // Windows.UI.Text.CaretType
 enum _WUTCaretType {
@@ -437,7 +435,7 @@ typedef unsigned WUTFontStyle;
 // [struct] Windows.UI.Text.FontWeight
 OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 @interface WUTFontWeight : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property unsigned short weight;
 @end
 
@@ -462,13 +460,13 @@ OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 - (RTObject<WUTITextParagraphFormat>*)getDefaultParagraphFormat;
 - (RTObject<WUTITextRange>*)getRange:(int)startPosition endPosition:(int)endPosition;
 - (RTObject<WUTITextRange>*)getRangeFromPoint:(WFPoint*)point options:(WUTPointOptions)options;
-- (void)getText:(WUTTextGetOptions)options value:(NSString**)value;
+- (void)getText:(WUTTextGetOptions)options value:(NSString **)value;
 - (void)loadFromStream:(WUTTextSetOptions)options value:(RTObject<WSSIRandomAccessStream>*)value;
 - (void)redo;
 - (void)saveToStream:(WUTTextGetOptions)options value:(RTObject<WSSIRandomAccessStream>*)value;
 - (void)setDefaultCharacterFormat:(RTObject<WUTITextCharacterFormat>*)value;
 - (void)setDefaultParagraphFormat:(RTObject<WUTITextParagraphFormat>*)value;
-- (void)setText:(WUTTextSetOptions)options value:(NSString*)value;
+- (void)setText:(WUTTextSetOptions)options value:(NSString *)value;
 - (void)undo;
 @end
 
@@ -489,11 +487,11 @@ OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 @property (retain) RTObject<WUTITextRange>* formattedText;
 @property WUTRangeGravity gravity;
 @property (readonly) int length;
-@property (retain) NSString* link;
+@property (retain) NSString * link;
 @property (retain) RTObject<WUTITextParagraphFormat>* paragraphFormat;
 @property int startPosition;
 @property (readonly) int storyLength;
-@property (retain) NSString* text;
+@property (retain) NSString * text;
 - (BOOL)canPaste:(int)format;
 - (void)changeCase:(WUTLetterCase)value;
 - (void)collapse:(BOOL)value;
@@ -502,24 +500,16 @@ OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 - (int)Delete:(WUTTextRangeUnit)unit count:(int)count;
 - (int)endOf:(WUTTextRangeUnit)unit extend:(BOOL)extend;
 - (int)expand:(WUTTextRangeUnit)unit;
-- (int)findText:(NSString*)value scanLength:(int)scanLength options:(WUTFindOptions)options;
+- (int)findText:(NSString *)value scanLength:(int)scanLength options:(WUTFindOptions)options;
 - (void)getCharacterUtf32:(unsigned int*)value offset:(int)offset;
 - (RTObject<WUTITextRange>*)getClone;
 - (int)getIndex:(WUTTextRangeUnit)unit;
-- (void)getPoint:(WUTHorizontalCharacterAlignment)horizontalAlign
-    verticalAlign:(WUTVerticalCharacterAlignment)verticalAlign
-          options:(WUTPointOptions)options
-            point:(WFPoint**)point;
+- (void)getPoint:(WUTHorizontalCharacterAlignment)horizontalAlign verticalAlign:(WUTVerticalCharacterAlignment)verticalAlign options:(WUTPointOptions)options point:(WFPoint**)point;
 - (void)getRect:(WUTPointOptions)options rect:(WFRect**)rect hit:(int*)hit;
-- (void)getText:(WUTTextGetOptions)options value:(NSString**)value;
+- (void)getText:(WUTTextGetOptions)options value:(NSString **)value;
 - (void)getTextViaStream:(WUTTextGetOptions)options value:(RTObject<WSSIRandomAccessStream>*)value;
 - (BOOL)inRange:(RTObject<WUTITextRange>*)range;
-- (void)insertImage:(int)width
-             height:(int)height
-             ascent:(int)ascent
-      verticalAlign:(WUTVerticalCharacterAlignment)verticalAlign
-      alternateText:(NSString*)alternateText
-              value:(RTObject<WSSIRandomAccessStream>*)value;
+- (void)insertImage:(int)width height:(int)height ascent:(int)ascent verticalAlign:(WUTVerticalCharacterAlignment)verticalAlign alternateText:(NSString *)alternateText value:(RTObject<WSSIRandomAccessStream>*)value;
 - (BOOL)inStory:(RTObject<WUTITextRange>*)range;
 - (BOOL)IsEqual:(RTObject<WUTITextRange>*)range;
 - (int)move:(WUTTextRangeUnit)unit count:(int)count;
@@ -531,7 +521,7 @@ OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 - (void)setIndex:(WUTTextRangeUnit)unit index:(int)index extend:(BOOL)extend;
 - (void)setPoint:(WFPoint*)point options:(WUTPointOptions)options extend:(BOOL)extend;
 - (void)setRange:(int)startPosition endPosition:(int)endPosition;
-- (void)setText:(WUTTextSetOptions)options value:(NSString*)value;
+- (void)setText:(WUTTextSetOptions)options value:(NSString *)value;
 - (void)setTextViaStream:(WUTTextSetOptions)options value:(RTObject<WSSIRandomAccessStream>*)value;
 - (int)startOf:(WUTTextRangeUnit)unit extend:(BOOL)extend;
 @end
@@ -555,7 +545,7 @@ OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 - (int)moveLeft:(WUTTextRangeUnit)unit count:(int)count extend:(BOOL)extend;
 - (int)moveRight:(WUTTextRangeUnit)unit count:(int)count extend:(BOOL)extend;
 - (int)moveUp:(WUTTextRangeUnit)unit count:(int)count extend:(BOOL)extend;
-- (void)typeText:(NSString*)value;
+- (void)typeText:(NSString *)value;
 - (BOOL)canPaste:(int)format;
 - (void)changeCase:(WUTLetterCase)value;
 - (void)collapse:(BOOL)value;
@@ -564,24 +554,16 @@ OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 - (int)Delete:(WUTTextRangeUnit)unit count:(int)count;
 - (int)endOf:(WUTTextRangeUnit)unit extend:(BOOL)extend;
 - (int)expand:(WUTTextRangeUnit)unit;
-- (int)findText:(NSString*)value scanLength:(int)scanLength options:(WUTFindOptions)options;
+- (int)findText:(NSString *)value scanLength:(int)scanLength options:(WUTFindOptions)options;
 - (void)getCharacterUtf32:(unsigned int*)value offset:(int)offset;
 - (RTObject<WUTITextRange>*)getClone;
 - (int)getIndex:(WUTTextRangeUnit)unit;
-- (void)getPoint:(WUTHorizontalCharacterAlignment)horizontalAlign
-    verticalAlign:(WUTVerticalCharacterAlignment)verticalAlign
-          options:(WUTPointOptions)options
-            point:(WFPoint**)point;
+- (void)getPoint:(WUTHorizontalCharacterAlignment)horizontalAlign verticalAlign:(WUTVerticalCharacterAlignment)verticalAlign options:(WUTPointOptions)options point:(WFPoint**)point;
 - (void)getRect:(WUTPointOptions)options rect:(WFRect**)rect hit:(int*)hit;
-- (void)getText:(WUTTextGetOptions)options value:(NSString**)value;
+- (void)getText:(WUTTextGetOptions)options value:(NSString **)value;
 - (void)getTextViaStream:(WUTTextGetOptions)options value:(RTObject<WSSIRandomAccessStream>*)value;
 - (BOOL)inRange:(RTObject<WUTITextRange>*)range;
-- (void)insertImage:(int)width
-             height:(int)height
-             ascent:(int)ascent
-      verticalAlign:(WUTVerticalCharacterAlignment)verticalAlign
-      alternateText:(NSString*)alternateText
-              value:(RTObject<WSSIRandomAccessStream>*)value;
+- (void)insertImage:(int)width height:(int)height ascent:(int)ascent verticalAlign:(WUTVerticalCharacterAlignment)verticalAlign alternateText:(NSString *)alternateText value:(RTObject<WSSIRandomAccessStream>*)value;
 - (BOOL)inStory:(RTObject<WUTITextRange>*)range;
 - (BOOL)IsEqual:(RTObject<WUTITextRange>*)range;
 - (int)move:(WUTTextRangeUnit)unit count:(int)count;
@@ -593,7 +575,7 @@ OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 - (void)setIndex:(WUTTextRangeUnit)unit index:(int)index extend:(BOOL)extend;
 - (void)setPoint:(WFPoint*)point options:(WUTPointOptions)options extend:(BOOL)extend;
 - (void)setRange:(int)startPosition endPosition:(int)endPosition;
-- (void)setText:(WUTTextSetOptions)options value:(NSString*)value;
+- (void)setText:(WUTTextSetOptions)options value:(NSString *)value;
 - (void)setTextViaStream:(WUTTextSetOptions)options value:(RTObject<WSSIRandomAccessStream>*)value;
 - (int)startOf:(WUTTextRangeUnit)unit extend:(BOOL)extend;
 @end
@@ -618,9 +600,9 @@ OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 @property WUTFormatEffect hidden;
 @property WUTFormatEffect italic;
 @property float kerning;
-@property (retain) NSString* languageTag;
+@property (retain) NSString * languageTag;
 @property (readonly) WUTLinkType linkType;
-@property (retain) NSString* name;
+@property (retain) NSString * name;
 @property WUTFormatEffect outline;
 @property float position;
 @property WUTFormatEffect protectedText;
@@ -729,3 +711,4 @@ OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 @end
 
 #endif // __WUTFontWeights_DEFINED__
+

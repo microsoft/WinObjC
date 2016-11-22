@@ -28,9 +28,7 @@
 #include <UWP/interopBase.h>
 
 @class WALLockScreenInfo, WALLockScreenBadge, WALLockScreenUnlockingDeferral, WALLockApplicationHost, WALLockScreenUnlockingEventArgs;
-@protocol WALILockScreenBadge
-, WALILockScreenInfo, WALILockScreenUnlockingDeferral, WALILockScreenUnlockingEventArgs, WALILockApplicationHost,
-    WALILockApplicationHostStatics;
+@protocol WALILockScreenBadge, WALILockScreenInfo, WALILockScreenUnlockingDeferral, WALILockScreenUnlockingEventArgs, WALILockApplicationHost, WALILockApplicationHostStatics;
 
 #include "WindowsStorageStreams.h"
 #include "WindowsFoundation.h"
@@ -50,13 +48,13 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_LOCKSCREEN_EXPORT
 @property (readonly) NSArray* /* WALLockScreenBadge* */ badges;
 @property (readonly) NSArray* /* NSString * */ detailText;
 @property (readonly) RTObject<WSSIRandomAccessStream>* lockScreenImage;
-- (EventRegistrationToken)addAlarmIconChangedEvent:(void (^)(WALLockScreenInfo*, RTObject*))del;
+- (EventRegistrationToken)addAlarmIconChangedEvent:(void(^)(WALLockScreenInfo*, RTObject*))del;
 - (void)removeAlarmIconChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addBadgesChangedEvent:(void (^)(WALLockScreenInfo*, RTObject*))del;
+- (EventRegistrationToken)addBadgesChangedEvent:(void(^)(WALLockScreenInfo*, RTObject*))del;
 - (void)removeBadgesChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addDetailTextChangedEvent:(void (^)(WALLockScreenInfo*, RTObject*))del;
+- (EventRegistrationToken)addDetailTextChangedEvent:(void(^)(WALLockScreenInfo*, RTObject*))del;
 - (void)removeDetailTextChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addLockScreenImageChangedEvent:(void (^)(WALLockScreenInfo*, RTObject*))del;
+- (EventRegistrationToken)addLockScreenImageChangedEvent:(void(^)(WALLockScreenInfo*, RTObject*))del;
 - (void)removeLockScreenImageChangedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -71,7 +69,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_LOCKSCREEN_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* automationName;
+@property (readonly) NSString * automationName;
 @property (readonly) RTObject<WSSIRandomAccessStream>* glyph;
 @property (readonly) RTObject<WSSIRandomAccessStream>* logo;
 @property (readonly) id /* unsigned int */ number;
@@ -104,7 +102,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_LOCKSCREEN_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-- (EventRegistrationToken)addUnlockingEvent:(void (^)(WALLockApplicationHost*, WALLockScreenUnlockingEventArgs*))del;
+- (EventRegistrationToken)addUnlockingEvent:(void(^)(WALLockApplicationHost*, WALLockScreenUnlockingEventArgs*))del;
 - (void)removeUnlockingEvent:(EventRegistrationToken)tok;
 - (void)requestUnlock;
 @end
@@ -125,3 +123,4 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_LOCKSCREEN_EXPORT
 @end
 
 #endif // __WALLockScreenUnlockingEventArgs_DEFINED__
+
