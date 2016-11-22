@@ -95,6 +95,7 @@ $(_UT_OBJ_DIR)/%.cpp.o : %.cpp
 .PHONY: clean
 clean:
 	-$(RM) -r $(_UT_OUT_DIR)/*
+	-$(RM) -r $(_UT_OUT_DIR)/.*.stamp
 
 _UT_RESOURCES := $(strip $(subst $(_UT_PROJECT_DIR)/,,$(UT_RESOURCES)))
 _UT_RESOURCE_DIRS := $(strip $(subst $(_UT_PROJECT_DIR)/,,$(UT_RESOURCE_DIRS)))

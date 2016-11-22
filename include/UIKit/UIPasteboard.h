@@ -20,7 +20,8 @@
 #import <Foundation/NSObject.h>
 
 @class NSString;
-@class NSArray;
+@class NSArray<ObjectType>;
+@class NSDictionary<KeyType, ObjectType>;
 @class NSData;
 @class NSIndexSet;
 @class UIImage;

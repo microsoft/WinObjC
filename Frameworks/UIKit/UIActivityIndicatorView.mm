@@ -148,10 +148,10 @@ static const int c_largeSquareLength = 37;
     //       and we would no longer have a _subview.
     _subView = [[UIView alloc] initWithFrame:CGRectZero xamlElement:_progressRing];
     [self addSubview:_subView];
-
     _isAnimating = NO;
     [self setHidesWhenStopped:YES];
     [self setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhite];
+    [self setUserInteractionEnabled:NO];
 }
 
 /**
@@ -231,9 +231,9 @@ static const int c_largeSquareLength = 37;
         _isAnimating = NO;
     }
 
-    [_progressRing setIsActive:YES];
+    [_progressRing setIsActive:NO];
     if (_hidesWhenStopped) {
-        [self setHidden:NO];
+        [self setHidden:YES];
     }
 }
 
