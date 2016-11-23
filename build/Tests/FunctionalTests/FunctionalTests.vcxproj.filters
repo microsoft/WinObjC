@@ -100,6 +100,9 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIKitTests\UIActionSheetTests.mm">
       <Filter>Tests\UIKitTests</Filter>
     </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIKitTests\UIButtonTests.mm">
+      <Filter>Tests\UIKitTests</Filter>
+    </ClangCompile>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\NSURL.AppxManifest.xml">
