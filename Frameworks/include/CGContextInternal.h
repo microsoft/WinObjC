@@ -32,7 +32,7 @@
 COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithRenderTarget(ID2D1RenderTarget* renderTarget, CGImageRef img = nullptr);
 COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithFormat(int width, int height, __CGSurfaceFormat fmt);
 COREGRAPHICS_EXPORT CGImageRef CGBitmapContextGetImage(CGContextRef ctx);
-COREGRAPHICS_EXPORT void CGContextDrawImageRect(CGContextRef ctx, CGImageRef img, CGRect src, CGRect dst);
+COREGRAPHICS_EXPORT void _CGContextDrawImageRect(CGContextRef ctx, CGImageRef img, CGRect src, CGRect dst);
 COREGRAPHICS_EXPORT void CGContextClearToColor(CGContextRef ctx, float r, float g, float b, float a);
 COREGRAPHICS_EXPORT bool CGContextIsDirty(CGContextRef ctx);
 COREGRAPHICS_EXPORT void CGContextSetDirty(CGContextRef ctx, bool dirty);

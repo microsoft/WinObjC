@@ -163,7 +163,7 @@ class DisplayTextureContent : public DisplayTexture {
 
 public:
     DisplayTextureContent(CGImageRef img) : name("TextureBitmap") {
-        woc::unique_cf<CGImageRef> image(_CGImageCreateCopyWithPixelFormat(img, GUID_WICPixelFormat32bppPBGRA));
+        woc::unique_cf<CGImageRef> image(_CGImageCreateCopyWithPixelFormat(img, GUID_WICPixelFormat32bppPRGBA));
         _xamlImage = CreateBitmapFromBits(_CGImageGetRawBytes(image.get()),
                                           CGImageGetWidth(image.get()),
                                           CGImageGetHeight(image.get()),

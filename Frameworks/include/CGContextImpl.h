@@ -105,7 +105,7 @@ public:
     virtual CGAffineTransform CGContextGetCTM();
     virtual void CGContextSetCTM(CGAffineTransform transform);
     virtual void CGContextDrawImage(CGRect rct, CGImageRef img);
-    virtual void CGContextDrawImageRect(CGImageRef img, CGRect src, CGRect dst);
+    virtual void _CGContextDrawImageRect(CGImageRef img, CGRect src, CGRect dst);
     virtual void CGContextDrawTiledImage(CGRect rct, CGImageRef img);
     virtual void CGContextClipToMask(CGRect dest, CGImageRef img);
     virtual void CGContextSaveGState();

@@ -95,6 +95,8 @@ static const std::map<GUID, __CGImagePixelProperties, GuidPixelLess> s_PixelForm
 bool _CGIsValidRenderTargetPixelFormat(WICPixelFormatGUID pixelFormat);
 const __CGImagePixelProperties* _CGGetPixelFormatProperties(WICPixelFormatGUID pixelFormat);
 
+WICPixelFormatGUID _CGImageGetWICPixelFormat(CGImageRef image);
+
 COREGRAPHICS_EXPORT CGImageRef _CGImageLoadGIF(void* bytes, int length);
 
 COREGRAPHICS_EXPORT CGImageRef _CGImageLoadBMP(void* bytes, size_t length);
@@ -115,7 +117,7 @@ COREGRAPHICS_EXPORT NSData* _CGImageRepresentation(CGImageRef image, REFGUID gui
 
 COREGRAPHICS_EXPORT CGImageRef _CGImageCreateWithWICBitmap(IWICBitmap* bitmap);
 
-COREGRAPHICS_EXPORT IWICBitmap* _CGImageGetImageSource(CGImageRef image);
+COREGRAPHICS_EXPORT HRESULT _CGImageGetWICImageSource(CGImageRef image, IWICBitmap** source);
 
 // Obtain a direct pointer to the data.
 COREGRAPHICS_EXPORT void* _CGImageGetRawBytes(CGImageRef image);
