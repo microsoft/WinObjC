@@ -16,22 +16,20 @@
 
 #pragma once
 
+#import <CoreGraphics/CGContext.h>
+#import <CoreGraphics/CGImage.h>
+
 #include <COMIncludes.h>
 #import <DWrite.h>
 #import <D2d1.h>
 #include <COMIncludes_End.h>
 
-#import "CGImageInternal.h"
-#import <CoreGraphics/CGImage.h>
-#import "CoreGraphics/CGContext.h"
 #import "CoreGraphicsInternal.h"
-#import "Starboard.h"
 
-#import <objc/runtime.h>
+// Context Internal
+COREGRAPHICS_EXPORT CGContextRef _CGContextCreateWithD2DRenderTarget(ID2D1RenderTarget* renderTarget);
+COREGRAPHICS_EXPORT void _CGContextSetShadowProjectionTransform(CGContextRef context, CGAffineTransform transform);
 
-COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithRenderTarget(ID2D1RenderTarget* renderTarget, CGImageRef img = nullptr);
-COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithFormat(int width, int height, __CGSurfaceFormat fmt);
-COREGRAPHICS_EXPORT CGImageRef CGBitmapContextGetImage(CGContextRef ctx);
 COREGRAPHICS_EXPORT void _CGContextDrawImageRect(CGContextRef ctx, CGImageRef img, CGRect src, CGRect dst);
 COREGRAPHICS_EXPORT void CGContextClearToColor(CGContextRef ctx, float r, float g, float b, float a);
 COREGRAPHICS_EXPORT bool CGContextIsDirty(CGContextRef ctx);
@@ -42,10 +40,8 @@ COREGRAPHICS_EXPORT bool CGContextIsPointInPath(CGContextRef c, bool eoFill, flo
 
 COREGRAPHICS_EXPORT void CGContextDrawGlyphRun(CGContextRef ctx, const DWRITE_GLYPH_RUN* glyphRun);
 
-// TODO 1077:: Remove once D2D render target is implemented
-COREGRAPHICS_EXPORT void _CGContextSetScaleFactor(CGContextRef ctx, float scale);
+// Bitmap Context Internal
+COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithRenderTarget(ID2D1RenderTarget* renderTarget, CGImageRef img = nullptr);
+COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithFormat(int width, int height, __CGSurfaceFormat fmt);
+COREGRAPHICS_EXPORT CGImageRef CGBitmapContextGetImage(CGContextRef ctx);
 
-COREGRAPHICS_EXPORT CGContextRef _CGContextCreateWithD2DRenderTarget(ID2D1RenderTarget* renderTarget);
-COREGRAPHICS_EXPORT void _CGContextSetShadowProjectionTransform(CGContextRef context, CGAffineTransform transform);
-
-#include "CGContextImpl.h"

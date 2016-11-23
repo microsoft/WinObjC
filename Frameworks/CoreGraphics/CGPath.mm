@@ -270,8 +270,6 @@ void CGPathAddArcToPoint(
     }
 
     CGPoint curPathPosition = CGPathGetCurrentPoint(path);
-    // TODO: Deduplicate this code from CGContextImpl::CGContextAddArcToPoint and
-    // CGContextCairo::CGContextAddArcToPoint
     double x0, y0;
     double dx0, dy0, dx2, dy2, xl0, xl2;
     double san, n0x, n0y, n2x, n2y, t;
