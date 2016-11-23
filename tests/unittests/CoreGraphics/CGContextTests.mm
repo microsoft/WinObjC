@@ -30,6 +30,7 @@
 #include <COMIncludes_end.h>
 
 #import "CGContextInternal.h"
+#import "TestUtils.h"
 
 using namespace Microsoft::WRL;
 #endif
@@ -419,3 +420,76 @@ TEST_P(ContextCoordinateTest, ConvertToUserSpace) {
 
 INSTANTIATE_TEST_CASE_P(CGContextCoordinateSpace, ContextCoordinateTest, ::testing::ValuesIn(coordinateTestTuples));
 #endif
+
+TEST(CGContext, DrawAnImageIntoContext) {
+    woc::unique_cf<CGColorSpaceRef> rgbColorSpace(CGColorSpaceCreateDeviceRGB());
+
+    // Create a canvas context
+    woc::unique_cf<CGContextRef> context(CGBitmapContextCreate(
+        nullptr, 512, 256, 8, 4 * 512 /* bytesPerRow = bytesPerPixel*width*/, rgbColorSpace.get(), kCGImageAlphaPremultipliedFirst));
+
+    // Load an image from file
+    CFDataRef data = (CFDataRef)[NSData dataWithContentsOfFile:getPathToFile(@"jpg1.jpg")];
+    woc::unique_cf<CGDataProviderRef> dataProvider(CGDataProviderCreateWithCFData(data));
+
+    woc::unique_cf<CGImageRef> cgImage(CGImageCreateWithJPEGDataProvider(dataProvider.get(), NULL, NO, kCGRenderingIntentDefault));
+    ASSERT_NE(cgImage, nullptr);
+
+    CGRect bounds = { 0, 0, 512, 256 };
+    CGAffineTransform flip = CGAffineTransformMakeScale(1, -1);
+    CGAffineTransform shift = CGAffineTransformTranslate(flip, 0, bounds.size.height * -1);
+    CGContextConcatCTM(context.get(), shift);
+
+    // Check the canvas context pixel before drawing
+    BYTE* dataPtr = static_cast<BYTE*>(CGBitmapContextGetData(context.get()));
+    ASSERT_NE(dataPtr, nullptr);
+    EXPECT_EQ(dataPtr[0], 0xcd);
+
+    // Draw the image into the canvas context
+    CGContextDrawImage(context.get(), bounds, cgImage.get());
+
+    // Check the canvas context pixel after drawing
+    dataPtr = static_cast<BYTE*>(CGBitmapContextGetData(context.get()));
+    ASSERT_NE(dataPtr, nullptr);
+    EXPECT_EQ(dataPtr[0], 0x97);
+}
+
+TEST(CGContext, DrawAContextImageIntoAContext) {
+    woc::unique_cf<CGColorSpaceRef> rgbColorSpace(CGColorSpaceCreateDeviceRGB());
+
+    // Create a bitmap context to draw into
+    woc::unique_cf<CGContextRef> contextImage(CGBitmapContextCreate(
+        nullptr, 10, 10, 8, 4 * 10 /* bytesPerRow = bytesPerPixel*width*/, rgbColorSpace.get(), kCGImageAlphaPremultipliedFirst));
+    ASSERT_NE(contextImage, nullptr);
+
+    // flood the bitmap context with a pretty color.
+    CGContextSetRGBFillColor(contextImage.get(), 1.0, 0.0, 0.0, 1.0);
+    CGContextFillRect(contextImage.get(), { 0, 0, 10, 10 });
+
+    // Create a image out of the bitmap context
+    woc::unique_cf<CGImageRef> image(CGBitmapContextCreateImage(contextImage.get()));
+    ASSERT_NE(image, nullptr);
+
+    // This will be the pseudo canvas context which we will draw into
+    woc::unique_cf<CGContextRef> context(CGBitmapContextCreate(
+        nullptr, 512, 256, 8, 4 * 512 /* bytesPerRow = bytesPerPixel*width*/, rgbColorSpace.get(), kCGImageAlphaPremultipliedFirst));
+
+    CGRect bounds = { 0, 0, 512, 256 };
+
+    CGAffineTransform flip = CGAffineTransformMakeScale(1, -1);
+    CGAffineTransform shift = CGAffineTransformTranslate(flip, 0, bounds.size.height * -1);
+    CGContextConcatCTM(context.get(), shift);
+
+    // Check the canvas context pixel before drawing
+    BYTE* dataPtr = static_cast<BYTE*>(CGBitmapContextGetData(context.get()));
+    ASSERT_NE(dataPtr, nullptr);
+    EXPECT_EQ(dataPtr[0], 0xcd);
+
+    // Draw the image into the canvas context
+    CGContextDrawImage(context.get(), bounds, image.get());
+
+    // Check the canvas context pixel after drawing
+    dataPtr = static_cast<BYTE*>(CGBitmapContextGetData(context.get()));
+    ASSERT_NE(dataPtr, nullptr);
+    EXPECT_EQ(dataPtr[0], 0xff);
+}

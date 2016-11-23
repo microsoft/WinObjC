@@ -18,8 +18,6 @@
 #import <Starboard.h>
 #import <math.h>
 
-#import "CGSurfaceInfoInternal.h" // TODO(DH) Evaluate the need for this header.
-
 #import <CoreGraphics/CGContext.h>
 #import <CoreGraphics/CGPath.h>
 #import <CoreGraphics/CGLayer.h>
@@ -840,7 +838,7 @@ CGRect CGContextGetClipBoundingBox(CGContextRef context) {
     auto& state = context->CurrentGState();
     if (!state.clippingGeometry) {
         D2D1_SIZE_F targetSize = context->RenderTarget()->GetSize();
-        return CGContextConvertRectToUserSpace(context, CGRect{ CGPointZero, { targetSize.width, targetSize.height }});
+        return CGContextConvertRectToUserSpace(context, CGRect{ CGPointZero, { targetSize.width, targetSize.height } });
     }
 
     D2D1_RECT_F bounds;
@@ -1393,39 +1391,6 @@ void CGContextShowGlyphsWithAdvances(CGContextRef context, const CGGlyph* glyphs
 }
 #pragma endregion
 
-#pragma region Drawing Operations - CGImage
-/// TODO(DH): GH#1078 Image Drawing
-/**
- @Status Interoperable
-*/
-void CGContextDrawImage(CGContextRef context, CGRect rect, CGImageRef image) {
-    NOISY_RETURN_IF_NULL(context);
-    if (!image) {
-        TraceWarning(TAG, L"Img == nullptr!");
-        return;
-    }
-    if (!context) {
-        TraceWarning(TAG, L"CGContextDrawImage: context == nullptr!");
-        return;
-    }
-
-    UNIMPLEMENTED();
-}
-
-void CGContextDrawImageRect(CGContextRef context, CGImageRef image, CGRect src, CGRect dst) {
-    NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
-}
-
-/**
- @Status Interoperable
-*/
-void CGContextDrawTiledImage(CGContextRef context, CGRect rect, CGImageRef image) {
-    NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
-}
-#pragma endregion
-
 #pragma region Drawing Operations - Basic Shapes
 /**
  @Status Interoperable
@@ -1803,9 +1768,93 @@ void CGContextEOFillPath(CGContextRef context) {
 }
 #pragma endregion
 
-#pragma region Drawing Operations - Gradient + Shading
+#pragma region Drawing Operations - CGImage
+
 /**
  @Status Interoperable
+*/
+void CGContextDrawImage(CGContextRef context, CGRect rect, CGImageRef image) {
+    NOISY_RETURN_IF_NULL(context);
+    NOISY_RETURN_IF_NULL(image);
+
+    // Obtain the pixel format for the image
+    WICPixelFormatGUID imagePixelFormat = _CGImageGetWICPixelFormat(image);
+
+    CFRetain(image);
+    woc::unique_cf<CGImageRef> refImage;
+    refImage.reset(image);
+
+    if (!_CGIsValidRenderTargetPixelFormat(imagePixelFormat)) {
+        // convert it to a valid pixelformat
+        refImage.reset(_CGImageCreateCopyWithPixelFormat(image, GUID_WICPixelFormat32bppPRGBA));
+    }
+
+    ComPtr<IWICBitmap> bmap;
+    FAIL_FAST_IF_FAILED(_CGImageGetWICImageSource(refImage.get(), &bmap));
+
+    ComPtr<ID2D1Bitmap> d2dBitmap;
+    FAIL_FAST_IF_FAILED(context->RenderTarget()->CreateBitmapFromWicBitmap(bmap.Get(), nullptr, &d2dBitmap));
+
+    // Flip the image to account for change in coordinate system origin.
+    CGAffineTransform flipImage = CGAffineTransformMakeTranslation(rect.origin.x, rect.origin.y + (rect.size.height / 2.0));
+    flipImage = CGAffineTransformScale(flipImage, 1.0, -1.0);
+    flipImage = CGAffineTransformTranslate(flipImage, -rect.origin.x, -(rect.origin.y + (rect.size.height / 2.0)));
+
+    ComPtr<ID2D1CommandList> commandList;
+    HRESULT hr = __CGContextRenderToCommandList(context,
+                                                _kCGCoordinateModeUserSpace,
+                                                &flipImage,
+                                                &commandList,
+                                                [&](CGContextRef context, ID2D1DeviceContext* deviceContext) {
+                                                    deviceContext->DrawBitmap(d2dBitmap.Get(), __CGRectToD2D_F(rect));
+                                                    return S_OK;
+                                                });
+    FAIL_FAST_IF_FAILED(hr);
+    FAIL_FAST_IF_FAILED(__CGContextRenderImage(context, commandList.Get()));
+}
+
+void _CGContextDrawImageRect(CGContextRef context, CGImageRef image, CGRect src, CGRect dst) {
+    NOISY_RETURN_IF_NULL(context);
+    NOISY_RETURN_IF_NULL(image);
+
+    if (CGRectEqualToRect(src, dst)) {
+        CGContextDrawImage(context, dst, image);
+        return;
+    }
+
+    RETURN_IF(CGRectGetHeight(src) == 0);
+    RETURN_IF(CGRectGetWidth(src) == 0);
+
+    // we want the source region to be drawn into the dest region (scaled)
+    // The image needs to be scaled and translated for the destination.
+    CGRect drawRect = CGRectMake(0, 0, CGImageGetWidth(image), CGImageGetHeight(image));
+    // scale factor of the image
+    float scaleX = CGRectGetWidth(dst) / CGRectGetWidth(src);
+    float scaleY = CGRectGetHeight(dst) / CGRectGetHeight(src);
+    // calculate he translation offset
+    float deltaX = CGRectGetMinX(dst) - (CGRectGetMinX(src) * scaleX);
+    float deltaY = CGRectGetMinY(dst) - (CGRectGetMinY(src) * scaleY);
+    drawRect = CGRectMake(deltaX, deltaY, (float)CGImageGetWidth(image) * scaleX, (float)CGImageGetHeight(image) * scaleY);
+
+    CGContextSaveGState(context);
+    CGContextClipToRect(context, dst);
+    CGContextDrawImage(context, drawRect, image);
+    CGContextRestoreGState(context);
+}
+
+/**
+ @Status Stub
+*/
+void CGContextDrawTiledImage(CGContextRef context, CGRect rect, CGImageRef image) {
+    // TODO #1417: This can be combined with brushes (brush + tiled fill);
+    NOISY_RETURN_IF_NULL(context);
+    UNIMPLEMENTED();
+}
+#pragma endregion
+
+#pragma region Drawing Operations - Gradient + Shading
+/**
+ @Status Stub
 */
 void CGContextDrawLinearGradient(
     CGContextRef context, CGGradientRef gradient, CGPoint startPoint, CGPoint endPoint, CGGradientDrawingOptions options) {
@@ -1816,7 +1865,7 @@ void CGContextDrawLinearGradient(
 }
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 void CGContextDrawRadialGradient(CGContextRef context,
                                  CGGradientRef gradient,
@@ -1899,12 +1948,6 @@ void CGContextSetDirty(CGContextRef context, bool dirty) {
 void CGContextReleaseLock(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
-}
-
-CGContextImpl* CGContextGetBacking(CGContextRef context) {
-    NOISY_RETURN_IF_NULL(context, StubReturn());
-    UNIMPLEMENTED();
-    return nullptr;
 }
 
 bool CGContextIsPointInPath(CGContextRef context, bool eoFill, CGFloat x, CGFloat y) {

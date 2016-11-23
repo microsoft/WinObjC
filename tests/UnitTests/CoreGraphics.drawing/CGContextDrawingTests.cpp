@@ -14,7 +14,68 @@
 //
 //******************************************************************************
 
-#include "DrawingTest.h"
+#import "DrawingTest.h"
+#import <windows.h>
+#import "CGContextInternal.h"
+
+// TODO:#1448 Remove the use of OBJC code
+#ifdef WINOBJC
+
+static NSString* getModulePath() {
+    char fullPath[_MAX_PATH];
+    GetModuleFileNameA(NULL, fullPath, _MAX_PATH);
+    return [@(fullPath) stringByDeletingLastPathComponent];
+}
+
+static NSString* getPathToFile(NSString* fileName) {
+    static StrongId<NSString*> refPath = getModulePath();
+    return [refPath stringByAppendingPathComponent:fileName];
+}
+
+DISABLED_DRAW_TEST_F(CGContext, DrawIntoRect, UIKitMimicTest) {
+    // Draw a portion of an image into a different region.
+    CFDataRef data = (CFDataRef)[NSData dataWithContentsOfFile:getPathToFile(@"png3.9.png")];
+    woc::unique_cf<CGDataProviderRef> dataProvider(CGDataProviderCreateWithCFData(data));
+
+    woc::unique_cf<CGImageRef> image(CGImageCreateWithPNGDataProvider(dataProvider.get(), NULL, NO, kCGRenderingIntentDefault));
+    ASSERT_NE(image, nullptr);
+
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGAffineTransform flip = CGAffineTransformMakeScale(1, -1);
+    CGAffineTransform shift = CGAffineTransformTranslate(flip, 0, bounds.size.height * -1);
+    CGContextConcatCTM(context, shift);
+
+    _CGContextDrawImageRect(context,
+                            image.get(),
+                            { 0, 0, bounds.size.width / 4, bounds.size.height / 4 },
+                            { 0, 0, bounds.size.width, bounds.size.height });
+}
+
+DISABLED_DRAW_TEST_F(CGContext, DrawAnImage, UIKitMimicTest) {
+    // Load an Image and draw it into the canvas context
+    CFDataRef data = (CFDataRef)[NSData dataWithContentsOfFile:getPathToFile(@"jpg1.jpg")];
+    woc::unique_cf<CGDataProviderRef> dataProvider(CGDataProviderCreateWithCFData(data));
+
+    woc::unique_cf<CGImageRef> cgImage(CGImageCreateWithJPEGDataProvider(dataProvider.get(),
+
+                                                                         NULL,
+                                                                         NO,
+                                                                         kCGRenderingIntentDefault));
+    ASSERT_NE(cgImage, nullptr);
+
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGAffineTransform flip = CGAffineTransformMakeScale(1, -1);
+    CGAffineTransform shift = CGAffineTransformTranslate(flip, 0, bounds.size.height * -1);
+    CGContextConcatCTM(context, shift);
+
+    CGContextDrawImage(context, bounds, cgImage.get());
+}
+
+#endif
 
 DISABLED_DRAW_TEST_F(CGContext, RedBox, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
@@ -23,6 +84,35 @@ DISABLED_DRAW_TEST_F(CGContext, RedBox, UIKitMimicTest) {
     CGContextSetRGBFillColor(context, 1.0, 0.0, 0.0, 1.0);
     CGContextFillRect(context, CGRectInset(bounds, 10, 10));
 }
+
+DISABLED_DRAW_TEST_F(CGContext, DrawAContextIntoAnImage, UIKitMimicTest) {
+    // This test will create a bitmap context, draw some entity into the context, then create a image out of the bitmap context.
+    // Thereafter it will draw the image into the Canvas context
+
+    static woc::unique_cf<CGColorSpaceRef> rgbColorSpace(CGColorSpaceCreateDeviceRGB());
+    // Create a bitmap context to draw the Image into
+    woc::unique_cf<CGContextRef> contextImage(CGBitmapContextCreate(
+        nullptr, 10, 10, 8, 4 * 10 /* bytesPerRow = bytesPerPixel*width*/, rgbColorSpace.get(), kCGImageAlphaPremultipliedFirst));
+    ASSERT_NE(contextImage, nullptr);
+
+    CGContextSetRGBFillColor(contextImage.get(), 1.0, 0.0, 0.0, 1.0);
+    CGContextFillRect(contextImage.get(), { 0, 0, 10, 10 });
+
+    // Create the image out of the bitmap context
+    woc::unique_cf<CGImageRef> image(CGBitmapContextCreateImage(contextImage.get()));
+    ASSERT_NE(image, nullptr);
+
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGAffineTransform flip = CGAffineTransformMakeScale(1, -1);
+    CGAffineTransform shift = CGAffineTransformTranslate(flip, 0, bounds.size.height * -1);
+    CGContextConcatCTM(context, shift);
+
+    // draw the image
+    CGContextDrawImage(context, bounds, image.get());
+}
+
 
 DISABLED_DRAW_TEST_F(CGContext, FillThenStrokeIsSameAsDrawFillStroke, WhiteBackgroundTest) {
     CGContextRef context = GetDrawingContext();

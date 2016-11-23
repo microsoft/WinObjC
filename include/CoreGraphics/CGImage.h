@@ -18,9 +18,34 @@
 #pragma once
 
 #import <CoreGraphics/CoreGraphicsExport.h>
+
+typedef struct __CGImage* CGImageRef;
+
 #import <CoreGraphics/CGGeometry.h>
 #import <CoreGraphics/CGColorSpace.h>
 #import <CoreGraphics/CGDataProvider.h>
+
+typedef CF_OPTIONS(CFIndex, CGImageAlphaInfo) {
+    kCGImageAlphaNone,
+    kCGImageAlphaPremultipliedLast,
+    kCGImageAlphaPremultipliedFirst,
+    kCGImageAlphaLast,
+    kCGImageAlphaFirst,
+    kCGImageAlphaNoneSkipLast,
+    kCGImageAlphaNoneSkipFirst,
+    kCGImageAlphaOnly
+};
+
+typedef CF_OPTIONS(CFIndex, CGBitmapInfo) {
+    kCGBitmapAlphaInfoMask = 0x1F,
+    kCGBitmapFloatComponents = (1 << 8),
+    kCGBitmapByteOrderMask = 0x7000,
+    kCGBitmapByteOrderDefault = (0 << 12),
+    kCGBitmapByteOrder16Little = (1 << 12),
+    kCGBitmapByteOrder32Little = (2 << 12),
+    kCGBitmapByteOrder16Big = (3 << 12),
+    kCGBitmapByteOrder32Big = (4 << 12)
+};
 
 #ifdef __BIG_ENDIAN__
 #define kCGBitmapByteOrder16Host kCGBitmapByteOrder16Big

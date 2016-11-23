@@ -52,6 +52,9 @@ LIBRARY CoreGraphics
         _DWriteFontGetBoundingBoxesForGlyphs
 
         ; CGColor.mm
+        kCGColorBlack DATA
+        kCGColorWhite DATA
+        kCGColorClear DATA
         CGColorRelease
         CGColorRetain
         CGColorCreate
@@ -226,12 +229,11 @@ LIBRARY CoreGraphics
 
         ; private exports below
         CGContextClearToColor
-        CGContextDrawImageRect
+        _CGContextDrawImageRect
         CGContextGetBlendMode
         CGContextIsDirty
         CGContextReleaseLock
         CGContextSetDirty
-        CGContextGetBacking
         CGContextDrawGlyphRun
         _CGContextSetShadowProjectionTransform
         _CGContextCreateWithD2DRenderTarget
@@ -360,7 +362,7 @@ LIBRARY CoreGraphics
         _CGImageCreateCopyWithPixelFormat
         _CGImageGetRawBytes
         _CGImageGetDisplayTexture
-        _CGImageGetImageSource
+        _CGImageGetWICImageSource
 
         ; private exports below
         CGImageAddDestructionListener
