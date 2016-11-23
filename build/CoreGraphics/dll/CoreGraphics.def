@@ -362,7 +362,6 @@ LIBRARY CoreGraphics
         _CGImageCreateCopyWithPixelFormat
         _CGImageGetRawBytes
         _CGImageGetDisplayTexture
-        _CGImageGetWICImageSource
 
         ; private exports below
         CGImageAddDestructionListener
