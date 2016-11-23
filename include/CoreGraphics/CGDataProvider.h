@@ -19,6 +19,11 @@
 #import <CoreFoundation/CFData.h>
 #import <CoreFoundation/CFURL.h>
 
+// TODO: following opaque types can not use form of
+// typedef struct __Foo* FooRef;
+// indiciating backing code need some clean up
+typedef void* CGDataProviderRef;
+
 CF_IMPLICIT_BRIDGING_ENABLED
 
 typedef size_t (*CGDataProviderGetBytesCallback)(void* info, void* buffer, size_t count);
@@ -37,12 +42,14 @@ typedef struct {
     CGDataProviderRewindCallback rewind;
     CGDataProviderReleaseInfoCallback releaseProvider;
 } CGDataProviderCallbacks;
+
 typedef struct {
     CGDataProviderGetBytePointerCallback getBytePointer;
     CGDataProviderReleaseBytePointerCallback releaseBytePointer;
     CGDataProviderGetBytesAtOffsetCallback getBytes;
     CGDataProviderReleaseInfoCallback releaseProvider;
 } CGDataProviderDirectAccessCallbacks;
+
 typedef struct {
     unsigned int version;
     CGDataProviderGetBytePointerCallback getBytePointer;
@@ -50,6 +57,7 @@ typedef struct {
     CGDataProviderGetBytesAtPositionCallback getBytesAtPosition;
     CGDataProviderReleaseInfoCallback releaseInfo;
 } CGDataProviderDirectCallbacks;
+
 typedef struct {
     unsigned int version;
     CGDataProviderGetBytesCallback getBytes;
@@ -57,6 +65,7 @@ typedef struct {
     CGDataProviderRewindCallback rewind;
     CGDataProviderReleaseInfoCallback releaseInfo;
 } CGDataProviderSequentialCallbacks;
+
 typedef void (*CGDataProviderReleaseDataCallback)(void* info, const void* data, size_t size);
 
 COREGRAPHICS_EXPORT CGDataProviderRef CGDataProviderCreateWithData(void* info,

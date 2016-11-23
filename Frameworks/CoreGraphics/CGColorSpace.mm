@@ -189,25 +189,6 @@ CGColorSpaceRef CGColorSpaceRetain(CGColorSpaceRef colorSpace) {
 }
 
 /**
- @Status Caveat
- @Notes Limited constants supported
-*/
-CGColorRef CGColorGetConstantColor(CFStringRef name) {
-    UIColor* ret;
-
-    char* pName = (char*)[(NSString*)name UTF8String];
-    if (strcmp(pName, "BLACK") == 0) {
-        ret = [_LazyUIColor2 blackColor];
-    } else if (strcmp(pName, "WHITE") == 0) {
-        ret = [_LazyUIColor2 whiteColor];
-    } else {
-        assert(0);
-    }
-
-    return (CGColorRef)[ret retain];
-}
-
-/**
  @Status Stub
  @Notes
 */

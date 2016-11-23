@@ -52,6 +52,9 @@ LIBRARY CoreGraphics
         _DWriteFontGetBoundingBoxesForGlyphs
 
         ; CGColor.mm
+        kCGColorBlack DATA
+        kCGColorWhite DATA
+        kCGColorClear DATA
         CGColorRelease
         CGColorRetain
         CGColorCreate

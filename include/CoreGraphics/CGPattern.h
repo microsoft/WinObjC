@@ -16,6 +16,11 @@
 #pragma once
 
 #import <CoreGraphics/CoreGraphicsExport.h>
+
+// TODO: CGPattern is currently an Objective-C object;
+// it cannot be defined as struct __CGPattern*.
+typedef void* CGPatternRef;
+
 #import <CoreGraphics/CGContext.h>
 #import <CoreGraphics/CGAffineTransform.h>
 #import <CoreGraphics/CGGeometry.h>
@@ -29,11 +34,11 @@ typedef struct {
     CGPatternReleaseInfoCallback releaseInfo;
 } CGPatternCallbacks;
 
-typedef enum {
+typedef CF_ENUM(CFIndex, CGPatternTiling) {
     kCGPatternTilingNoDistortion,
     kCGPatternTilingConstantSpacingMinimalDistortion,
     kCGPatternTilingConstantSpacing,
-} CGPatternTiling;
+};
 
 // Starboard-only:
 COREGRAPHICS_EXPORT CGPatternRef CGPatternCreateFromImage(CGImageRef img); // TODO: need to move out this maybe to UIKit ???

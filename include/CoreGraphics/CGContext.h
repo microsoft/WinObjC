@@ -15,6 +15,10 @@
 //******************************************************************************
 #pragma once
 
+#import <CoreGraphics/CoreGraphicsExport.h>
+
+typedef struct __CGContext* CGContextRef;
+
 #import <CoreGraphics/CGAffineTransform.h>
 #import <CoreGraphics/CGColor.h>
 #import <CoreGraphics/CGColorSpace.h>
@@ -26,17 +30,34 @@
 #import <CoreGraphics/CGPath.h>
 #import <CoreGraphics/CGPattern.h>
 #import <CoreGraphics/CGShading.h>
-#import <CoreGraphics/CoreGraphicsExport.h>
 
-typedef enum { kCGEncodingFontSpecific, kCGEncodingMacRoman } CGTextEncoding;
-typedef enum {
+#import <CoreFoundation/CFBase.h>
+
+// clang-format off
+typedef CF_OPTIONS(CFIndex, CGPathDrawingMode) {
+//  CG Drawing Bitfield   |STROKE|   |FILL  |   |EO    |
+    kCGPathStroke =       (1 << 0),
+    kCGPathFill =                    (1 << 1),
+    kCGPathFillStroke =   (1 << 0) | (1 << 1),
+    kCGPathEOFill =                  (1 << 1) | (1 << 2),
+    kCGPathEOFillStroke = (1 << 0) | (1 << 1) | (1 << 2),
+};
+// clang-format on
+
+typedef CF_ENUM(CFIndex, CGTextEncoding) {
+    kCGEncodingFontSpecific,
+    kCGEncodingMacRoman
+};
+
+typedef CF_ENUM(CFIndex, CGInterpolationQuality) {
     kCGInterpolationDefault = 0,
     kCGInterpolationNone = 1,
     kCGInterpolationLow = 2,
     kCGInterpolationMedium = 4,
     kCGInterpolationHigh = 3
-} CGInterpolationQuality;
-typedef enum {
+};
+
+typedef CF_ENUM(CFIndex, CGBlendMode) {
     kCGBlendModeNormal,
     kCGBlendModeMultiply,
     kCGBlendModeScreen,
@@ -65,8 +86,9 @@ typedef enum {
     kCGBlendModeXOR,
     kCGBlendModePlusDarker,
     kCGBlendModePlusLighter
-} CGBlendMode;
-typedef enum {
+};
+
+typedef CF_ENUM(CFIndex, CGTextDrawingMode) {
     kCGTextFill,
     kCGTextStroke,
     kCGTextFillStroke,
@@ -75,7 +97,7 @@ typedef enum {
     kCGTextStrokeClip,
     kCGTextFillStrokeClip,
     kCGTextClip
-} CGTextDrawingMode;
+};
 
 COREGRAPHICS_EXPORT void CGContextFlush(CGContextRef c) STUB_METHOD;
 COREGRAPHICS_EXPORT CFTypeID CGContextGetTypeID();
