@@ -29,7 +29,6 @@
 #import <CoreGraphics/D2DWrapper.h>
 #import "CGColorSpaceInternal.h"
 #import "CGImageInternal.h"
-#import "CGSurfaceInfoInternal.h"
 #import "CGIWICBitmap.h"
 
 using namespace Microsoft::WRL;

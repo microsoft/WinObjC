@@ -25,6 +25,7 @@
 #import "UIResponderInternal.h"
 #import "UIApplicationInternal.h"
 #import <UIKit/UITextViewDelegate.h>
+#import <Starboard/SmartTypes.h>
 
 static const wchar_t* TAG = L"UITextView";
 

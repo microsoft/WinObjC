@@ -18,8 +18,6 @@
 #import <Starboard.h>
 #import <math.h>
 
-#import "CGSurfaceInfoInternal.h" // TODO(DH) Evaluate the need for this header.
-
 #import <CoreGraphics/CGContext.h>
 #import <CoreGraphics/CGPath.h>
 #import <CoreGraphics/CGLayer.h>
@@ -1899,12 +1897,6 @@ void CGContextSetDirty(CGContextRef context, bool dirty) {
 void CGContextReleaseLock(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
-}
-
-CGContextImpl* CGContextGetBacking(CGContextRef context) {
-    NOISY_RETURN_IF_NULL(context, StubReturn());
-    UNIMPLEMENTED();
-    return nullptr;
 }
 
 bool CGContextIsPointInPath(CGContextRef context, bool eoFill, CGFloat x, CGFloat y) {

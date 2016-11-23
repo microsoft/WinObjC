@@ -231,7 +231,6 @@ LIBRARY CoreGraphics
         CGContextIsDirty
         CGContextReleaseLock
         CGContextSetDirty
-        CGContextGetBacking
         CGContextDrawGlyphRun
         _CGContextSetShadowProjectionTransform
         _CGContextCreateWithD2DRenderTarget
