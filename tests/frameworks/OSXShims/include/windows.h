@@ -25,6 +25,10 @@
 #define _MAX_PATH PATH_MAX
 #endif
 
+#ifndef MAX_PATH
+#define MAX_PATH PATH_MAX
+#endif
+
 #ifndef _MAX_FNAME
 #define _MAX_FNAME NAME_MAX
 #endif
