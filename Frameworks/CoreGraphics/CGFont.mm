@@ -19,6 +19,7 @@
 
 #import <CFRuntime.h>
 #import <CoreGraphics/DWriteWrapper.h>
+#import <CoreGraphics/CGFontInternal.h>
 
 #include <COMIncludes.h>
 #import <DWrite_3.h>
@@ -39,6 +40,9 @@ static const wchar_t* g_logTag = L"CGFont";
 struct __CGFont {
     CFRuntimeBase _base;
     ComPtr<IDWriteFontFace> _dwriteFontFace;
+
+    // Contains a value when created via Data Provider, null o/w
+    woc::unique_cf<CFDataRef> _data;
 
     struct DWRITE_FONT_METRICS _metrics;
     bool _cachedMetrics; // Set to true when _metrics is init'd
@@ -110,7 +114,8 @@ CGFontRef CGFontCreateWithDataProvider(CGDataProviderRef cgDataProvider) {
     CFAutorelease(ret);
     struct __CGFont* mutableRet = const_cast<struct __CGFont*>(ret);
 
-    RETURN_NULL_IF_FAILED(_DWriteCreateFontFaceWithDataProvider(cgDataProvider, &mutableRet->_dwriteFontFace));
+    mutableRet->_data.reset(CGDataProviderCopyData(cgDataProvider));
+    RETURN_NULL_IF_FAILED(_DWriteCreateFontFaceWithData(mutableRet->_data.get(), &mutableRet->_dwriteFontFace));
 
     return static_cast<CGFontRef>(CFRetain(ret));
 }
@@ -367,4 +372,8 @@ int CGFontGetUnitsPerEm(CGFontRef font) {
 CFTypeID CGFontGetTypeID() {
     static CFTypeID __kCGFontTypeID = _CFRuntimeRegisterClass(&__CGFontClass);
     return __kCGFontTypeID;
+}
+
+CFDataRef _CGFontGetData(CGFontRef font) {
+    return font ? font->_data.get() : nullptr;
 }

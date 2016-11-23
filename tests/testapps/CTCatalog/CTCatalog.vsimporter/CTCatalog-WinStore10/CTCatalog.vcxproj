@@ -233,7 +233,11 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Font Include="..\..\CTCatalog\Fonts\WinObjC-Bold.ttf" />
+    <Font Include="..\..\CTCatalog\Fonts\WinObjC-Italic.ttf" />
+    <Font Include="..\..\CTCatalog\Fonts\WinObjC.ttf" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.targets" />

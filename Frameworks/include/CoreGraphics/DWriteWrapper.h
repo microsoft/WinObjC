@@ -59,7 +59,9 @@ COREGRAPHICS_EXPORT HRESULT _DWriteCreateTextFormat(const wchar_t* fontFamilyNam
                                                     IDWriteTextFormat** outTextFormat);
 COREGRAPHICS_EXPORT HRESULT _DWriteCreateFontFamilyWithName(CFStringRef familyName, IDWriteFontFamily** outFontFamily);
 COREGRAPHICS_EXPORT HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, IDWriteFontFace** outFontFace);
-COREGRAPHICS_EXPORT HRESULT _DWriteCreateFontFaceWithDataProvider(CGDataProviderRef dataProvider, IDWriteFontFace** outFontFace);
+COREGRAPHICS_EXPORT HRESULT _DWriteCreateFontFaceWithData(CFDataRef data, IDWriteFontFace** outFontFace);
+COREGRAPHICS_EXPORT HRESULT _DWriteRegisterFontsWithDatas(CFArrayRef fontDatas, CFArrayRef* errors);
+COREGRAPHICS_EXPORT HRESULT _DWriteUnregisterFontsWithDatas(CFArrayRef fontDatas, CFArrayRef* errors);
 
 // DWriteFont getters that convert to a CF/CG object or struct
 COREGRAPHICS_EXPORT CFStringRef _DWriteFontCopyInformationalString(const Microsoft::WRL::ComPtr<IDWriteFontFace>& fontFace,

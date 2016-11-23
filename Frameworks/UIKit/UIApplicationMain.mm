@@ -166,18 +166,15 @@ int UIApplicationMainInit(NSString* principalClassName,
     if (infoDict != nil) {
         NSArray* fonts = [infoDict objectForKey:@"UIAppFonts"];
         if (fonts != nil) {
+            NSMutableArray* fontURLs = [NSMutableArray array];
             for (NSString* curFontName in fonts) {
-                NSString* path = [[NSBundle mainBundle] pathForResource:curFontName ofType:nil];
-                if (path != nil) {
-                    NSData* data = [NSData dataWithContentsOfFile:path];
-                    if (data != nil) {
-                        UIFont* font = [UIFont fontWithData:data];
-                        if (font != nil) {
-                            CTFontManagerRegisterGraphicsFont((CGFontRef)font, NULL);
-                        }
-                    }
+                NSURL* url = [[NSBundle mainBundle] URLForResource:curFontName withExtension:nil];
+                if (url != nil) {
+                    [fontURLs addObject:url];
                 }
             }
+
+            CTFontManagerRegisterFontsForURLs((CFArrayRef)fontURLs, kCTFontManagerScopeNone, nil);
         }
 
         if (defaultOrientation != UIInterfaceOrientationUnknown) {

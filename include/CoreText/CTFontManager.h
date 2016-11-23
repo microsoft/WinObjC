@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -57,15 +57,9 @@ CORETEXT_EXPORT const CFStringRef kCTFontManagerErrorFontURLsKey;
 
 CORETEXT_EXPORT CFArrayRef CTFontManagerCreateFontDescriptorsFromURL(CFURLRef fileURL) STUB_METHOD;
 CORETEXT_EXPORT bool CTFontManagerRegisterFontsForURL(CFURLRef fontURL, CTFontManagerScope scope, CFErrorRef _Nullable* error);
-CORETEXT_EXPORT bool CTFontManagerUnregisterFontsForURL(CFURLRef fontURL,
-                                                        CTFontManagerScope scope,
-                                                        CFErrorRef _Nullable* error) STUB_METHOD;
-CORETEXT_EXPORT bool CTFontManagerRegisterFontsForURLs(CFArrayRef fontURLs,
-                                                       CTFontManagerScope scope,
-                                                       CFArrayRef _Nullable* errors) STUB_METHOD;
-CORETEXT_EXPORT bool CTFontManagerUnregisterFontsForURLs(CFArrayRef fontURLs,
-                                                         CTFontManagerScope scope,
-                                                         CFArrayRef _Nullable* errors) STUB_METHOD;
+CORETEXT_EXPORT bool CTFontManagerUnregisterFontsForURL(CFURLRef fontURL, CTFontManagerScope scope, CFErrorRef _Nullable* error);
+CORETEXT_EXPORT bool CTFontManagerRegisterFontsForURLs(CFArrayRef fontURLs, CTFontManagerScope scope, CFArrayRef _Nullable* errors);
+CORETEXT_EXPORT bool CTFontManagerUnregisterFontsForURLs(CFArrayRef fontURLs, CTFontManagerScope scope, CFArrayRef _Nullable* errors);
 CORETEXT_EXPORT bool CTFontManagerRegisterGraphicsFont(CGFontRef font, CFErrorRef _Nullable* error);
 CORETEXT_EXPORT bool CTFontManagerUnregisterGraphicsFont(CGFontRef font, CFErrorRef _Nullable* error) STUB_METHOD;
 CORETEXT_EXPORT bool CTFontManagerIsSupportedFont(CFURLRef fontURL) STUB_METHOD;

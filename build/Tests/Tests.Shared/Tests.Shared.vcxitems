@@ -80,7 +80,6 @@
     </SBResourceCopy>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\include\CppUtils.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\include\MockClass.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\unittests\Tests.Shared\ByteUtils.h" />
   </ItemGroup>

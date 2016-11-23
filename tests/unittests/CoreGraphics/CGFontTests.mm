@@ -18,6 +18,7 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import <CoreFoundation/CoreFoundation.h>
 #import <Foundation/Foundation.h>
+#import <CoreGraphics/DWriteWrapper.h>
 
 // CTFont functionality is generally a superset of CGFont functionality, and hits the same code path
 // Thus, CTFont unit tests can also be thought of as CGFont test coverage
@@ -111,8 +112,8 @@ TEST(CGFont, GetDescent) {
 TEST(CGFont, CreateWithDataProvider) {
     char fullPath[_MAX_PATH];
     GetModuleFileNameA(NULL, fullPath, _MAX_PATH);
-    NSURL* testFileURL = [NSURL
-        fileURLWithPath:[[@(fullPath) stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"/data/WinObjC-Regular.ttf"]];
+    NSURL* testFileURL =
+        [NSURL fileURLWithPath:[[@(fullPath) stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"/data/WinObjC.ttf"]];
 
     CGDataProviderRef dataProvider = CGDataProviderCreateWithURL((__bridge CFURLRef)testFileURL);
     CFAutorelease(dataProvider);
@@ -121,12 +122,12 @@ TEST(CGFont, CreateWithDataProvider) {
     CFAutorelease(font);
 
     // Check some very basic properties to make sure that the right font was loaded
-    EXPECT_OBJCEQ((id)CFSTR("The Windows Bridge for iOS"), (id)CFAutorelease(CGFontCopyFullName(font)));
+    EXPECT_OBJCEQ((id)CFSTR("WinObjC"), (id)CFAutorelease(CGFontCopyFullName(font)));
     EXPECT_EQ(1638, CGFontGetAscent(font));
     EXPECT_EQ(-410, CGFontGetDescent(font));
 
     // Validate that creating a second time will still work (IDWriteFactory has some finnickiness regarding this)
     CGFontRef font2 = CGFontCreateWithDataProvider(dataProvider);
     CFAutorelease(font2);
-    EXPECT_OBJCEQ((id)CFSTR("The Windows Bridge for iOS"), (id)CFAutorelease(CGFontCopyFullName(font2)));
+    EXPECT_OBJCEQ((id)CFSTR("WinObjC"), (id)CFAutorelease(CGFontCopyFullName(font2)));
 }
