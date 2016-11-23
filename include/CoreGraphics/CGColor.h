@@ -16,6 +16,9 @@
 #pragma once
 
 #import <CoreGraphics/CoreGraphicsExport.h>
+
+typedef struct __CGColor* CGColorRef;
+
 #import <CoreGraphics/CGColorSpace.h>
 #import <CoreGraphics/CGPattern.h>
 

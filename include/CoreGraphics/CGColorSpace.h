@@ -17,8 +17,32 @@
 #pragma once
 
 #import <CoreGraphics/CoreGraphicsExport.h>
+
+typedef struct __CGColorSpace* CGColorSpaceRef;
+
 #import <CoreGraphics/CGBase.h>
 #import <CoreGraphics/CGDataProvider.h>
+
+#import <CoreFoundation/CFBase.h>
+
+typedef CF_ENUM(CFIndex, CGColorSpaceModel) {
+    kCGColorSpaceModelUnknown = -1,
+    kCGColorSpaceModelMonochrome,
+    kCGColorSpaceModelRGB,
+    kCGColorSpaceModelCMYK,
+    kCGColorSpaceModelLab,
+    kCGColorSpaceModelDeviceN,
+    kCGColorSpaceModelIndexed,
+    kCGColorSpaceModelPattern,
+};
+
+typedef CF_ENUM(CFIndex, CGColorRenderingIntent) {
+    kCGRenderingIntentDefault,
+    kCGRenderingIntentAbsoluteColorimetric,
+    kCGRenderingIntentRelativeColorimetric,
+    kCGRenderingIntentSaturation,
+    kCGRenderingIntentPerceptual,
+};
 
 COREGRAPHICS_EXPORT void CGColorSpaceRelease(CGColorSpaceRef space);
 COREGRAPHICS_EXPORT CGColorSpaceRef CGColorSpaceRetain(CGColorSpaceRef space);

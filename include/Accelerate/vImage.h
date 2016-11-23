@@ -26,9 +26,11 @@
 #define __attribute__(x)
 #endif
 
-#include "CoreGraphics/CoreGraphicsExport.h"
-
-typedef __CGColorSpace* CGColorSpaceRef;
+// CoreGraphics forward declarations *only for CL*.
+typedef struct __CGColorSpace* CGColorSpaceRef;
+typedef struct __CGImage* CGImageRef;
+typedef unsigned int CGBitmapInfo;
+typedef unsigned int CGColorRenderingIntent;
 typedef float CGFloat;
 #else
 #import <CoreGraphics/CoreGraphics.h>
