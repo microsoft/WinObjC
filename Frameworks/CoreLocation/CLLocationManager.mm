@@ -103,7 +103,7 @@ static void _requestExtendedExecutionSession() {
  */
 static void _removeExtendedExecutionSession() {
     std::lock_guard<std::mutex> lock(s_extendedExecutionMutex);
-    
+
     if (s_extendedExecutionRequestCount == 0) {
         return;
     }
@@ -430,16 +430,15 @@ static const int64_t c_timeoutInSeconds = 15LL;
                                                      timestamp:[NSDate dateWithTimeIntervalSince1970:(double)posixEpoch]];
 
         // Deliver location to the appropriate location manager delegate
-        if (_periodicLocationUpdateRequested) {
-            if (![self.location isEqual:previousLocation]) {
-                [self performSelector:@selector(_didUpdateToLocationsDelegate:)
-                             onThread:_callerThread
-                           withObject:previousLocation
-                        waitUntilDone:NO];
-            }
-        } else {
-            [self performSelector:@selector(_callUpdateLocationsDelegate) onThread:_callerThread withObject:nil waitUntilDone:NO];
+        if (_periodicLocationUpdateRequested && ![self.location isEqual:previousLocation]) {
+            [self performSelector:@selector(_didUpdateToLocationsDelegate:)
+                         onThread:_callerThread
+                       withObject:previousLocation
+                    waitUntilDone:NO];
         }
+
+        // always callUpdateLocationsDelegate because didUpdateToLocationsDelegate is deprecated.
+        [self performSelector:@selector(_callUpdateLocationsDelegate) onThread:_callerThread withObject:nil waitUntilDone:NO];
     }
 }
 
@@ -691,7 +690,7 @@ static const int64_t c_timeoutInSeconds = 15LL;
         if (_periodicLocationUpdateRequested) {
             NSTraceInfo(TAG, @"Stopped periodic location update");
             [_uwpGeolocator removePositionChangedEvent:_uwpPeriodicPositionChangeToken];
-            
+
             _removeExtendedExecutionSession();
             _periodicLocationUpdateRequested = NO;
         }
@@ -780,7 +779,7 @@ static const int64_t c_timeoutInSeconds = 15LL;
         if (_periodicHeadingUpdateRequested) {
             NSTraceInfo(TAG, @"Stopped periodic heading update");
             [_uwpCompass removeReadingChangedEvent:_uwpPeriodicHeadingChangeToken];
-            
+
             _removeExtendedExecutionSession();
             _periodicHeadingUpdateRequested = NO;
         }
