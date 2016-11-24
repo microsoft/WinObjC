@@ -29,7 +29,11 @@
 #define __TGMATH_H
 
 /* C99 7.22 Type-generic math <tgmath.h>. */
+#if defined(__cplusplus)
 #include <cmath>
+#else
+#include <math.h>
+#endif
 
 /* Type genericity for C++ is handled with overloading in cmath. */
 #if !defined(__cplusplus) && !defined(RC_INVOKED)
