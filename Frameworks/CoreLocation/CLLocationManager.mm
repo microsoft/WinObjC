@@ -662,7 +662,11 @@ static const int64_t c_timeoutInSeconds = 15LL;
 - (void)startUpdatingLocation {
     @synchronized(self) {
         if (!_periodicLocationUpdateRequested) {
-            NSTraceInfo(TAG, @"Started periodic location update");
+            NSTraceInfo(TAG, @"Starting periodic location update");
+
+            // make a single request first.  On reference platform, startUpdatingLocation will always cause at least one delegate callback
+            // on windows, addPositionChangedEvent will only be called if the position indeed changed.
+            [self requestLocation];
 
             if (self.allowsBackgroundLocationUpdates) {
                 // Request for a extended execution session so location updates can continue in the background.
