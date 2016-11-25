@@ -452,7 +452,7 @@ TEST(GLKit, TemporaryShaderNodes) {
 }
 
 TEST(GLKit, BasicMath) {
-    bool invertible = false;
+    BOOL invertible = NO;
 
     Dw32 cos2f;
     Dw32 sin2f;
@@ -542,11 +542,11 @@ TEST(GLKit, BasicMath) {
     // Make mc a non-invertible matrix by clearing the m33 element of the rotation+translation matrix.
     mc.m33 = 0.0f;
     mcInverse = GLKMatrix4Invert(mc, &invertible);
-    EXPECT_TRUE_MSG((invertible == false), "GLKMatrix4Invert erroneously reported non-invertible matrix as invertible.");
+    EXPECT_TRUE_MSG((invertible == NO), "GLKMatrix4Invert erroneously reported non-invertible matrix as invertible.");
     checkMatrix("GLKMatrix4Invert should return the identity matrix when a non-invertible matrix is passed in.", 
                 &mcInverse.m[0], &mIdentity.m[0]);
 
-    invertible = false;
+    invertible = NO;
     GLKMatrix3 mRot = GLKMatrix3MakeRotation(M_PI / 2.f, 1.f, 3.f, 2.f);
     GLKMatrix3 m3Scale = GLKMatrix3MakeScale(0.3f, 0.5f, 0.9f);
 
@@ -619,6 +619,17 @@ TEST(GLKit, BasicMath) {
     
     EXPECT_TRUE_MSG(m2_2.m00 == m3.m00 && m2_2.m01 == m3.m01 && m2_2.m10 == m3.m10 && m2_2.m11 == m3.m11,
                     "GLKMatrix3GetMatrix2 yielded unexpected result.");
+
+	// translate with vector
+	m4 = GLKMatrix4MakeWithArray(m4Values);
+	GLKMatrix4 m4_translated = GLKMatrix4TranslateWithVector3(m4, GLKVector3Make(34.2f, 6.3f, 3.9f));
+	GLKMatrix4 m4_translated4 = GLKMatrix4TranslateWithVector4(m4, GLKVector4Make(34.2f, 6.3f, 3.9f, 1000.0f));
+
+	checkMatrix("GLKMatrix4TranslateWithVector3 should be equal GLKMatrix4TranslateWithVector4.", &m4_translated.m[0], &m4_translated4.m[0], 4);
+	float m4Values_translate[16]  = { 0.f, 1.f, 2.f, 3.f, 4.f, 5.f, 6.f, 7.f, 8.f, 9.f, 10.f, 11.f, 68.4f, 113.8f, 159.200012f, 204.6f };
+
+	checkMatrix("GLKMatrix4TranslateWithVector3 to test values", &m4_translated.m[0], &m4Values_translate[0], 4);
+
 }
 
 TEST(GLKit, Quaternions) {
@@ -677,6 +688,71 @@ TEST(GLKit, Quaternions) {
     angle = GLKQuaternionAngle(q);
     EXPECT_TRUE_MSG(fabsf(angle - (float)M_PI) <= COMPARISON_EPSILON, "Quaternion angle extracted incorrectly!");
     EXPECT_TRUE_MSG(GLKVector3AllEqualToVector3(axis, GLKVector3ZAxis()), "Incorrect rotation axis extracted!");
+
+    // Test GLKQuaternionSlerp lerp
+    q = GLKQuaternionMake(1.f, 2.f, 3.f, 1.f);
+    q2 = GLKQuaternionMake(3.f, 4.f, 5.f, 5.f);
+    q3 = GLKQuaternionSlerp(q, q2, 0.25f);
+    NSString* q3_string = NSStringFromGLKQuaternion(q3);
+    EXPECT_TRUE_MSG(GLKQuaternionAllEqualToQuaternion(q3, GLKQuaternionMake(1.5f, 2.5f, 3.5f, 2.f)),
+                    "Quaternion slerp 0.25 incorrect!, %s",
+                    [q3_string UTF8String]);
+    q3 = GLKQuaternionSlerp(q, q2, 0.5f);
+    q3_string = NSStringFromGLKQuaternion(q3);
+    EXPECT_TRUE_MSG(GLKQuaternionAllEqualToQuaternion(q3, GLKQuaternionMake(2.f, 3.f, 4.f, 3.f)),
+                    "Quaternion slerp 0.5 incorrect!, %s",
+                    [q3_string UTF8String]);
+    q3 = GLKQuaternionSlerp(q, q2, 0.75f);
+    q3_string = NSStringFromGLKQuaternion(q3);
+    EXPECT_TRUE_MSG(GLKQuaternionAllEqualToQuaternion(q3, GLKQuaternionMake(2.5f, 3.5f, 4.5f, 4.f)),
+                    "Quaternion slerp 0.75 incorrect!, %s",
+                    [q3_string UTF8String]);
+
+    // Test create matrix with GLKQuaternion
+    GLKMatrix4 m4_q3 = GLKMatrix4MakeWithQuaternion(q3);
+    GLKMatrix3 m3_q2 = GLKMatrix3MakeWithQuaternion(q2);
+    float m4Values[16] = { -0.187214434,
+                           0.977168858,
+                           -0.100456655,
+                           0,
+                           -0.337899506,
+                           0.0319636464,
+                           0.940639138,
+                           0,
+                           0.922374308,
+                           0.210045666,
+                           0.324200988,
+                           0,
+                           0,
+                           0,
+                           0,
+                           1 };
+    checkMatrix("GLKMatrix4MakeWithQuaternion.", &m4_q3.m[0], &m4Values[0], 4);
+
+    float m3Values[9] = { -0.0933331251, 0.98666644,  -0.133333325, -0.346666574, 0.0933335423,
+                          0.933333158,   0.933333158, 0.133333325,  0.333333462 };
+    checkMatrix("GLKMatrix3MakeWithQuaternion.", &m3_q2.m[0], &m3Values[0], 3);
+
+    // Test GLKQuaternionSlerp slerp
+    q = GLKQuaternionNormalize(GLKQuaternionMake(1.f, 0.2f, -0.7f, 1.f));
+    q2 = GLKQuaternionNormalize(GLKQuaternionMake(3.3f, -4.5f, 3.1f, 2.f));
+    q3 = GLKQuaternionSlerp(q, q2, 0.25);
+    q3_string = NSStringFromGLKQuaternion(q3);
+    EXPECT_TRUE_MSG(GLKQuaternionAllEqualToQuaternion(q3, GLKQuaternionMake(0.716001987, -0.119813651, -0.225444451, 0.649738788)),
+                    "Quaternion slerp 0.25 incorrect!, %s",
+                    [q3_string UTF8String]);
+
+    q3 = GLKQuaternionSlerp(q, q2, 0.5);
+    q3_string = NSStringFromGLKQuaternion(q3);
+    EXPECT_TRUE_MSG(GLKQuaternionAllEqualToQuaternion(q3, GLKQuaternionMake(0.721375524, -0.351655632, 0.0149955451, 0.596431732)),
+                    "Quaternion slerp 0.25 incorrect!, %s",
+                    [q3_string UTF8String]);
+
+    q3 = GLKQuaternionSlerp(q, q2, 0.75);
+    q3_string = NSStringFromGLKQuaternion(q3);
+    EXPECT_TRUE_MSG(GLKQuaternionAllEqualToQuaternion(q3, GLKQuaternionMake(0.644200087, -0.54325676, 0.253719538, 0.474873364)),
+                    "Quaternion slerp 0.25 incorrect!, %s",
+                    [q3_string UTF8String]);
 }
 
 TEST(GLKit, Rotations) {
@@ -735,4 +811,47 @@ TEST(GLKit, Interpolation) {
     GLKVector4 zAxis = GLKVector4MakeWithVector3(GLKVector3ZAxis(), 0.f);
     GLKVector4 proj4 = GLKVector4Project(v4, zAxis);
     EXPECT_TRUE_MSG(GLKVector4AllEqualToVector4(proj4, zAxis), "GLKVector4 projection failed!");
+}
+
+TEST(GLKit, Projection) {
+    GLKMatrix4 m4_tr = GLKMatrix4TranslateWithVector3(GLKMatrix4Make(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15),
+                                                      GLKVector3Make(34.2f, 6.3f, 3.9f));
+
+    GLKVector3 testVec = GLKMatrix4MultiplyAndProjectVector3(m4_tr, GLKVector3Make(0.5, 0.3, 0.1));
+
+    EXPECT_TRUE_MSG(GLKVector3AllEqualToVector3(testVec, GLKVector3Make(0.336359322, 0.557572901, 0.77878654)),
+                    "Incorrect computation in GLKMatrix4MultiplyAndProjectVector3!");
+
+    GLKMatrix4 projection = GLKMatrix4Make(3.38356233, 0, 0, 0, 0, 4.51070833, 0, 0, 0, 0, -1.01133287, -1, 0, 0, -4.02266598, 0);
+    GLKMatrix4 modelview = GLKMatrix4Make(0.989012539,
+                                          0.0290720258,
+                                          -0.144865006,
+                                          0,
+                                          0.000000000385218968,
+                                          0.980440258,
+                                          0.196758181,
+                                          0,
+                                          0.147753373,
+                                          -0.19459866,
+                                          0.969679176,
+                                          0,
+                                          -2.29900551,
+                                          9.5357027,
+                                          -61.1366386,
+                                          0.999990463);
+    int viewport[4] = { 0, 0, 2125, 1594 };
+
+    GLKVector3 vd = { 2.67963099f, -25.2658691f, 0.158109993f };
+    GLKVector3 vProj = GLKMathProject(vd, modelview, projection, viewport);
+    EXPECT_TRUE_MSG(GLKVector3AllEqualToVector3(vProj, GLKVector3Make(1082.79614, -26.0647049, 0.975349426)),
+                    "Incorrect computation in GLKMathProject!");
+
+    BOOL success = NO;
+    GLKVector3 ptVec = { 758.0, 1004.0, 0.966700792 };
+    GLKVector3 vUnProj = GLKMathUnproject(ptVec, modelview, projection, viewport, &success);
+    EXPECT_TRUE_MSG(GLKVector3AllEqualToVector3(vUnProj, GLKVector3Make(-3.620101, -4.562381, 10.201591)),
+                    "Incorrect computation in GLKMathUnproject! %s",
+                    [NSStringFromGLKVector3(vUnProj) UTF8String]);
+
+    EXPECT_TRUE_MSG(success, "expected YES from GLKMathUnproject.");
 }

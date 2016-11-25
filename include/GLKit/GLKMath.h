@@ -24,57 +24,53 @@
 #define _GLK_MIN(a, b) ((a) < (b) ? (a) : (b))
 #define _GLK_MAX(a, b) ((a) > (b) ? (a) : (b))
 
-typedef struct _GLKVector2 {
-    union {
-        struct {
-            float x, y;
-        };
-        struct {
-            float s, t;
-        };
-        float v[2];
+union _GLKVector2 {
+    struct {
+        float x, y;
     };
-} GLKVector2;
+    struct {
+        float s, t;
+    };
+    float v[2];
+};
+typedef union _GLKVector2 GLKVector2;
 
-typedef struct _GLKVector3 {
-    union {
-        struct {
-            float x, y, z;
-        };
-        struct {
-            float s, t, p;
-        };
-        struct {
-            float r, g, b;
-        };
-        float v[3];
+union _GLKVector3 {
+    struct {
+        float x, y, z;
     };
-} GLKVector3;
+    struct {
+        float s, t, p;
+    };
+    struct {
+        float r, g, b;
+    };
+    float v[3];
+};
+typedef union _GLKVector3 GLKVector3;
 
-typedef struct _GLKVector4 {
-    union {
-        struct {
-            float x, y, z, w;
-        };
-        struct {
-            float r, g, b, a;
-        };
-        struct {
-            float s, t, p, q;
-        };
-        float v[4];
+union _GLKVector4 {
+    struct {
+        float x, y, z, w;
     };
-} GLKVector4;
+    struct {
+        float r, g, b, a;
+    };
+    struct {
+        float s, t, p, q;
+    };
+    float v[4];
+};
+typedef union _GLKVector4 GLKVector4;
 
-typedef struct _GLKMatrix2 {
-    union {
-        struct {
-            float m00, m01;
-            float m10, m11;
-        };
-        float m[4];
+union _GLKMatrix2 {
+    struct {
+        float m00, m01;
+        float m10, m11;
     };
-} GLKMatrix2;
+    float m[4];
+};
+typedef union _GLKMatrix2 GLKMatrix2;
 
 union _GLKMatrix3 {
     struct {
@@ -97,25 +93,24 @@ union _GLKMatrix4 {
 };
 typedef union _GLKMatrix4 GLKMatrix4;
 
-typedef struct _GLKQuaternion {
-    union {
-        struct {
-            GLKVector3 v;
-            float s;
-        };
-        struct {
-            float x, y, z, w;
-        };
-        float q[4];
+union _GLKQuaternion {
+    struct {
+        GLKVector3 v;
+        float s;
     };
-} GLKQuaternion;
+    struct {
+        float x, y, z, w;
+    };
+    float q[4];
+};
+typedef union _GLKQuaternion GLKQuaternion;
 
 GLKIT_EXPORT const GLKMatrix3 GLKMatrix3Identity;
 GLKIT_EXPORT const GLKMatrix4 GLKMatrix4Identity;
 GLKIT_EXPORT const GLKQuaternion GLKQuaternionIdentity;
 
 GLKIT_EXPORT GLKVector3 GLKMathProject(GLKVector3 object, GLKMatrix4 model, GLKMatrix4 projection, int* viewport);
-GLKIT_EXPORT GLKVector3 GLKMathUnproject(GLKVector3 window, GLKMatrix4 model, GLKMatrix4 projection, int* viewport, bool* success);
+GLKIT_EXPORT GLKVector3 GLKMathUnproject(GLKVector3 window, GLKMatrix4 model, GLKMatrix4 projection, int* viewport, BOOL* success);
 
 // --------------------------------------------------------------------------------
 
@@ -172,7 +167,7 @@ GLKIT_EXPORT GLKMatrix3 GLKMatrix3Subtract(GLKMatrix3 matrixLeft, GLKMatrix3 mat
 GLKIT_EXPORT GLKVector3 GLKMatrix3MultiplyVector3(GLKMatrix3 matrixLeft, GLKVector3 vectorRight);
 GLKIT_EXPORT void GLKMatrix3MultiplyVector3Array(GLKMatrix3 matrix, GLKVector3* vectors, size_t vectorCount);
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4Transpose(GLKMatrix4 mat);
-GLKIT_EXPORT GLKMatrix4 GLKMatrix4InvertAndTranspose(GLKMatrix4 matrix, bool* isInvertible);
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4InvertAndTranspose(GLKMatrix4 matrix, BOOL* isInvertible);
 GLKIT_EXPORT GLKMatrix3
 GLKMatrix3MakeAndTranspose(float m00, float m01, float m02, float m10, float m11, float m12, float m20, float m21, float m22);
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeAndTranspose(float m00,
@@ -218,8 +213,8 @@ GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeYRotation(float rad);
 GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeZRotation(float rad);
 
 GLKIT_EXPORT GLKMatrix2 GLKMatrix4GetMatrix2(GLKMatrix4 m);
-GLKIT_EXPORT GLKMatrix3 GLKMatrix3Invert(GLKMatrix3 m, bool* isInvertible);
-GLKIT_EXPORT GLKMatrix3 GLKMatrix3InvertAndTranspose(GLKMatrix3 m, bool* isInvertible);
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3Invert(GLKMatrix3 m, BOOL* isInvertible);
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3InvertAndTranspose(GLKMatrix3 m, BOOL* isInvertible);
 GLKIT_EXPORT GLKMatrix3 GLKMatrix4GetMatrix3(GLKMatrix4 m);
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4SetColumn(GLKMatrix4 matrix, int column, GLKVector4 vector);
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4SetRow(GLKMatrix4 matrix, int row, GLKVector4 vector);
@@ -266,7 +261,7 @@ GLKIT_EXPORT void GLKMatrix4MultiplyVector3ArrayWithTranslation(GLKMatrix4 m, GL
 GLKIT_EXPORT GLKVector3 GLKMatrix4MultiplyAndProjectVector3(GLKMatrix4 matrixLeft, GLKVector3 vectorRight);
 GLKIT_EXPORT void GLKMatrix4MultiplyAndProjectVector3Array(GLKMatrix4 matrix, GLKVector3* vectors, size_t vectorCount);
 
-GLKIT_EXPORT GLKMatrix4 GLKMatrix4Invert(GLKMatrix4 m, bool* isInvertible);
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4Invert(GLKMatrix4 m, BOOL* isInvertible);
 
 GLKIT_EXPORT NSString* NSStringFromGLKMatrix2(GLKMatrix2 matrix);
 GLKIT_EXPORT NSString* NSStringFromGLKMatrix3(GLKMatrix3 matrix);
@@ -722,71 +717,71 @@ inline GLKVector2 GLKVector2Lerp(GLKVector2 v1, GLKVector2 v2, float t) {
 /**
  @Status Interoperable
 */
-inline bool GLKVector4AllEqualToScalar(GLKVector4 v, float scalar) {
+inline BOOL GLKVector4AllEqualToScalar(GLKVector4 v, float scalar) {
     GLKVector4 o = GLKVector4SubtractScalar(v, scalar);
     if ((fabsf(o.x) + fabsf(o.y) + fabsf(o.z) + fabsf(o.w)) < (4.f * COMPARISON_EPSILON))
-        return true;
-    return false;
+        return YES;
+    return NO;
 }
 
 /**
  @Status Interoperable
 */
-inline bool GLKVector3AllEqualToScalar(GLKVector3 v, float scalar) {
+inline BOOL GLKVector3AllEqualToScalar(GLKVector3 v, float scalar) {
     GLKVector3 o = GLKVector3SubtractScalar(v, scalar);
     if ((fabsf(o.x) + fabsf(o.y) + fabsf(o.z)) < (3.f * COMPARISON_EPSILON))
-        return true;
-    return false;
+        return YES;
+    return NO;
 }
 
 /**
  @Status Interoperable
 */
-inline bool GLKVector2AllEqualToScalar(GLKVector2 v, float scalar) {
+inline BOOL GLKVector2AllEqualToScalar(GLKVector2 v, float scalar) {
     GLKVector2 o = GLKVector2SubtractScalar(v, scalar);
     if ((fabsf(o.x) + fabsf(o.y)) < (2.f * COMPARISON_EPSILON))
-        return true;
-    return false;
+        return YES;
+    return NO;
 }
 
 /**
  @Status Interoperable
 */
-inline bool GLKVector4AllEqualToVector4(GLKVector4 v1, GLKVector4 v2) {
+inline BOOL GLKVector4AllEqualToVector4(GLKVector4 v1, GLKVector4 v2) {
     GLKVector4 o = GLKVector4Subtract(v1, v2);
     if ((fabsf(o.x) + fabsf(o.y) + fabsf(o.z) + fabsf(o.w)) < (4.f * COMPARISON_EPSILON))
-        return true;
-    return false;
+        return YES;
+    return NO;
 }
 
 /**
  @Status Interoperable
 */
-inline bool GLKVector3AllEqualToVector3(GLKVector3 v1, GLKVector3 v2) {
+inline BOOL GLKVector3AllEqualToVector3(GLKVector3 v1, GLKVector3 v2) {
     GLKVector3 o = GLKVector3Subtract(v1, v2);
     if ((fabsf(o.x) + fabsf(o.y) + fabsf(o.z)) < (3.f * COMPARISON_EPSILON))
-        return true;
-    return false;
+        return YES;
+    return NO;
 }
 
 /**
  @Status Interoperable
 */
-inline bool GLKVector2AllEqualToVector2(GLKVector2 v1, GLKVector2 v2) {
+inline BOOL GLKVector2AllEqualToVector2(GLKVector2 v1, GLKVector2 v2) {
     GLKVector2 o = GLKVector2Subtract(v1, v2);
     if ((fabsf(o.x) + fabsf(o.y)) < (2.f * COMPARISON_EPSILON))
-        return true;
-    return false;
+        return YES;
+    return NO;
 }
 
 /**
  @Status Interoperable
 */
-inline bool GLKVector4XYZEqualToScalar(GLKVector4 v, float scalar) {
+inline BOOL GLKVector4XYZEqualToScalar(GLKVector4 v, float scalar) {
     GLKVector4 o = GLKVector4SubtractScalar(v, scalar);
     if ((fabsf(o.x) + fabsf(o.y) + fabsf(o.z)) < (3.f * COMPARISON_EPSILON))
-        return true;
-    return false;
+        return YES;
+    return NO;
 }
 
 /**
@@ -891,84 +886,84 @@ inline GLKVector4 GLKVector4Project(GLKVector4 v, GLKVector4 proj) {
 /**
  @Status Interoperable
 */
-inline bool GLKVector2AllGreaterThanOrEqualToScalar(GLKVector2 v, float scalar) {
+inline BOOL GLKVector2AllGreaterThanOrEqualToScalar(GLKVector2 v, float scalar) {
     return ((v.x >= scalar) && (v.y >= scalar));
 }
 
 /**
  @Status Interoperable
 */
-inline bool GLKVector3AllGreaterThanOrEqualToScalar(GLKVector3 v, float scalar) {
+inline BOOL GLKVector3AllGreaterThanOrEqualToScalar(GLKVector3 v, float scalar) {
     return ((v.x >= scalar) && (v.y >= scalar) && (v.z >= scalar));
 }
 
 /**
  @Status Interoperable
 */
-inline bool GLKVector4AllGreaterThanOrEqualToScalar(GLKVector4 v, float scalar) {
+inline BOOL GLKVector4AllGreaterThanOrEqualToScalar(GLKVector4 v, float scalar) {
     return ((v.x >= scalar) && (v.y >= scalar) && (v.z >= scalar) && (v.w >= scalar));
 }
 
 /**
  @Status Interoperable
 */
-inline bool GLKVector2AllGreaterThanScalar(GLKVector2 v, float scalar) {
+inline BOOL GLKVector2AllGreaterThanScalar(GLKVector2 v, float scalar) {
     return ((v.x > scalar) && (v.y > scalar));
 }
 
 /**
  @Status Interoperable
 */
-inline bool GLKVector3AllGreaterThanScalar(GLKVector3 v, float scalar) {
+inline BOOL GLKVector3AllGreaterThanScalar(GLKVector3 v, float scalar) {
     return ((v.x > scalar) && (v.y > scalar) && (v.z > scalar));
 }
 
 /**
  @Status Interoperable
 */
-inline bool GLKVector4AllGreaterThanScalar(GLKVector4 v, float scalar) {
+inline BOOL GLKVector4AllGreaterThanScalar(GLKVector4 v, float scalar) {
     return ((v.x > scalar) && (v.y > scalar) && (v.z > scalar) && (v.w > scalar));
 }
 
 /**
  @Status Interoperable
 */
-inline bool GLKVector2AllGreaterThanOrEqualToVector2(GLKVector2 v, GLKVector2 v2) {
+inline BOOL GLKVector2AllGreaterThanOrEqualToVector2(GLKVector2 v, GLKVector2 v2) {
     return ((v.x >= v2.x) && (v.y >= v2.y));
 }
 
 /**
  @Status Interoperable
 */
-inline bool GLKVector3AllGreaterThanOrEqualToVector3(GLKVector3 v, GLKVector3 v2) {
+inline BOOL GLKVector3AllGreaterThanOrEqualToVector3(GLKVector3 v, GLKVector3 v2) {
     return ((v.x >= v2.x) && (v.y >= v2.y) && (v.z >= v2.z));
 }
 
 /**
  @Status Interoperable
 */
-inline bool GLKVector4AllGreaterThanOrEqualToVector4(GLKVector4 v, GLKVector4 v2) {
+inline BOOL GLKVector4AllGreaterThanOrEqualToVector4(GLKVector4 v, GLKVector4 v2) {
     return ((v.x >= v2.x) && (v.y >= v2.y) && (v.z >= v2.z) && (v.w >= v2.w));
 }
 
 /**
  @Status Interoperable
 */
-inline bool GLKVector2AllGreaterThanVector2(GLKVector2 v, GLKVector2 v2) {
+inline BOOL GLKVector2AllGreaterThanVector2(GLKVector2 v, GLKVector2 v2) {
     return ((v.x > v2.x) && (v.y > v2.y));
 }
 
 /**
  @Status Interoperable
 */
-inline bool GLKVector3AllGreaterThanVector3(GLKVector3 v, GLKVector3 v2) {
+inline BOOL GLKVector3AllGreaterThanVector3(GLKVector3 v, GLKVector3 v2) {
     return ((v.x > v2.x) && (v.y > v2.y) && (v.z > v2.z));
 }
 
 /**
  @Status Interoperable
 */
-inline bool GLKVector4AllGreaterThanVector4(GLKVector4 v, GLKVector4 v2) {
+inline BOOL GLKVector4AllGreaterThanVector4(GLKVector4 v, GLKVector4 v2) {
     return ((v.x > v2.x) && (v.y > v2.y) && (v.z > v2.z) && (v.w > v2.w));
 }
 
@@ -1191,45 +1186,12 @@ inline GLKQuaternion GLKQuaternionInvert(GLKQuaternion q) {
 /**
  @Status Interoperable
 */
-inline GLKQuaternion GLKQuaternionSlerp(GLKQuaternion quaternionStart, GLKQuaternion quaternionEnd, float t) {
-    GLKQuaternion q1 = GLKQuaternionNormalize(quaternionStart);
-    GLKQuaternion q2 = GLKQuaternionNormalize(quaternionEnd);
-
-    float dot = GLKQuaternionDot(q1, q2);
-
-    if (dot < 0) {
-        dot = -dot;
-        q2 = GLKQuaternionMultiplyByScalar(-1.0, q2);
-    }
-
-    if (dot > 0.9999f) {
-        dot = 0.9999f;
-    }
-
-    float omega = acosf(dot);
-
-    float inv_sin_omega = (1.0f / sinf(omega));
-
-    q1 = GLKQuaternionMultiplyByScalar(inv_sin_omega, q1);
-    q2 = GLKQuaternionMultiplyByScalar(inv_sin_omega, q2);
-
-    q1 = GLKQuaternionMultiplyByScalar(sinf((1.0f - t) * omega), q1);
-    q2 = GLKQuaternionMultiplyByScalar(sinf(t * omega), q2);
-
-    return GLKQuaternionAdd(q1, q2);
-}
-
-/**
- @Status Interoperable
-*/
 inline GLKVector3 GLKQuaternionRotateVector3(GLKQuaternion q, GLKVector3 v) {
     GLKVector3 axis = GLKQuaternionAxis(q);
     float angle = GLKQuaternionAngle(q);
     GLKMatrix4 m = GLKMatrix4MakeRotation(angle, axis.x, axis.y, axis.z);
     return GLKMatrix4MultiplyVector3(m, v);
 }
-
-GLKIT_EXPORT void GLKQuaternionRotateVector3Array(GLKQuaternion q, GLKVector3* vecs, size_t numVecs);
 
 /**
  @Status Interoperable
@@ -1241,10 +1203,21 @@ inline GLKVector4 GLKQuaternionRotateVector4(GLKQuaternion q, GLKVector4 v) {
     return GLKMatrix4MultiplyVector4(m, v);
 }
 
+GLKIT_EXPORT void GLKQuaternionRotateVector3Array(GLKQuaternion q, GLKVector3* vecs, size_t numVecs);
 GLKIT_EXPORT void GLKQuaternionRotateVector4Array(GLKQuaternion q, GLKVector4* vecs, size_t numVecs);
 GLKIT_EXPORT GLKQuaternion GLKQuaternionMakeWithMatrix3(GLKMatrix3 mat);
 GLKIT_EXPORT GLKQuaternion GLKQuaternionMakeWithMatrix4(GLKMatrix4 mat);
+GLKIT_EXPORT GLKQuaternion GLKQuaternionSlerp(GLKQuaternion quaternionStart, GLKQuaternion quaternionEnd, float t);
 
+/**
+@Status Interoperable
+*/
+inline BOOL GLKQuaternionAllEqualToQuaternion(GLKQuaternion v1, GLKQuaternion v2) {
+    GLKQuaternion o = GLKQuaternionSubtract(v1, v2);
+    if ((fabsf(o.x) + fabsf(o.y) + fabsf(o.z) + fabsf(o.w)) < (4.f * COMPARISON_EPSILON))
+        return YES;
+    return NO;
+}
 // --------------------------------------------------------------------------------
 // Utilities.
 

@@ -674,10 +674,13 @@ GLKIT_EXPORT GLKVector3 GLKMatrix4MultiplyVector3(GLKMatrix4 m, GLKVector3 vec) 
    @Status Interoperable
 */
 GLKIT_EXPORT GLKVector3 GLKMatrix3MultiplyVector3(GLKMatrix3 m, GLKVector3 vec) {
-    GLKVector3 v = { m.m[0] * vec.v[0] + m.m[3] * vec.v[1] + m.m[6] * vec.v[2],
-                     m.m[1] * vec.v[0] + m.m[4] * vec.v[1] + m.m[7] * vec.v[2],
-                     m.m[2] * vec.v[0] + m.m[5] * vec.v[1] + m.m[8] * vec.v[2] };
-    return v;
+    GLKVector3 res;
+
+    res.x = m.m00 * vec.x + m.m10 * vec.y + m.m20 * vec.z;
+    res.y = m.m01 * vec.x + m.m11 * vec.y + m.m21 * vec.z;
+    res.z = m.m02 * vec.x + m.m12 * vec.y + m.m22 * vec.z;
+
+    return res;
 }
 
 /**
@@ -734,7 +737,7 @@ GLKIT_EXPORT GLKMatrix3 GLKMatrix4GetMatrix3(GLKMatrix4 m) {
 /**
    @Status Interoperable
 */
-GLKIT_EXPORT GLKMatrix3 GLKMatrix3Invert(GLKMatrix3 matrix, bool* isInvertible) {
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3Invert(GLKMatrix3 matrix, BOOL* isInvertible) {
     double doubleMatrixArray[9];
 
     doubleMatrixArray[0] = (double)matrix.m[0];
@@ -753,7 +756,7 @@ GLKIT_EXPORT GLKMatrix3 GLKMatrix3Invert(GLKMatrix3 matrix, bool* isInvertible) 
 
     double determinant = firstMinor - secondMinor + thirdMinor;
 
-    bool canInvert = determinant != 0.0f;
+    BOOL canInvert = (determinant != 0.0);
     if (isInvertible) {
         *isInvertible = canInvert;
     }
@@ -781,7 +784,7 @@ GLKIT_EXPORT GLKMatrix3 GLKMatrix3Invert(GLKMatrix3 matrix, bool* isInvertible) 
 /**
    @Status Interoperable
 */
-GLKIT_EXPORT GLKMatrix3 GLKMatrix3InvertAndTranspose(GLKMatrix3 m, bool* isInvertible) {
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3InvertAndTranspose(GLKMatrix3 m, BOOL* isInvertible) {
     m = GLKMatrix3Invert(m, isInvertible);
     return GLKMatrix3Transpose(m);
 }
@@ -840,31 +843,32 @@ GLKIT_EXPORT void GLKMatrix4MultiplyVector4Array(GLKMatrix4 m, GLKVector4* vecs,
 /**
  @Status Interoperable
 */
-GLKIT_EXPORT GLKMatrix4 GLKMatrix4Invert(GLKMatrix4 matrix, bool* isInvertible) {
-    float b00 = matrix.m[0] * matrix.m[5] - matrix.m[1] * matrix.m[4];
-    float b01 = matrix.m[0] * matrix.m[6] - matrix.m[2] * matrix.m[4];
-    float b02 = matrix.m[0] * matrix.m[7] - matrix.m[3] * matrix.m[4];
-    float b03 = matrix.m[1] * matrix.m[6] - matrix.m[2] * matrix.m[5];
-    float b04 = matrix.m[1] * matrix.m[7] - matrix.m[3] * matrix.m[5];
-    float b05 = matrix.m[2] * matrix.m[7] - matrix.m[3] * matrix.m[6];
-    float b06 = matrix.m[8] * matrix.m[13] - matrix.m[9] * matrix.m[12];
-    float b07 = matrix.m[8] * matrix.m[14] - matrix.m[10] * matrix.m[12];
-    float b08 = matrix.m[8] * matrix.m[15] - matrix.m[11] * matrix.m[12];
-    float b09 = matrix.m[9] * matrix.m[14] - matrix.m[10] * matrix.m[13];
-    float b10 = matrix.m[9] * matrix.m[15] - matrix.m[11] * matrix.m[13];
-    float b11 = matrix.m[10] * matrix.m[15] - matrix.m[11] * matrix.m[14];
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4Invert(GLKMatrix4 matrix, BOOL* isInvertible) {
+    // double for better precision
+    double b00 = matrix.m[0] * matrix.m[5] - matrix.m[1] * matrix.m[4];
+    double b01 = matrix.m[0] * matrix.m[6] - matrix.m[2] * matrix.m[4];
+    double b02 = matrix.m[0] * matrix.m[7] - matrix.m[3] * matrix.m[4];
+    double b03 = matrix.m[1] * matrix.m[6] - matrix.m[2] * matrix.m[5];
+    double b04 = matrix.m[1] * matrix.m[7] - matrix.m[3] * matrix.m[5];
+    double b05 = matrix.m[2] * matrix.m[7] - matrix.m[3] * matrix.m[6];
+    double b06 = matrix.m[8] * matrix.m[13] - matrix.m[9] * matrix.m[12];
+    double b07 = matrix.m[8] * matrix.m[14] - matrix.m[10] * matrix.m[12];
+    double b08 = matrix.m[8] * matrix.m[15] - matrix.m[11] * matrix.m[12];
+    double b09 = matrix.m[9] * matrix.m[14] - matrix.m[10] * matrix.m[13];
+    double b10 = matrix.m[9] * matrix.m[15] - matrix.m[11] * matrix.m[13];
+    double b11 = matrix.m[10] * matrix.m[15] - matrix.m[11] * matrix.m[14];
 
     // Calculate the determinant (inlined to avoid double-caching)
-    float determinant = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
+    double determinant = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
     if (isInvertible != NULL) {
-        *isInvertible = determinant != 0;
+        *isInvertible = determinant != 0.0;
     }
 
     if (determinant == 0) {
         return GLKMatrix4Identity;
     }
 
-    float invDet = 1.0f / determinant;
+    double invDet = 1.0 / determinant;
     GLKMatrix4 m;
 
     m.m[0] = (matrix.m[5] * b11 - matrix.m[6] * b10 + matrix.m[7] * b09) * invDet;
@@ -1149,14 +1153,14 @@ GLKVector3 GLKMathProject(GLKVector3 object, GLKMatrix4 model, GLKMatrix4 projec
     GLKVector4 v = GLKMatrix4MultiplyVector4(model, v4);
     v = GLKMatrix4MultiplyVector4(projection, v);
 
-    v.v[3] = 1.0 / v.v[3];
-    v.v[0] *= v.v[3];
-    v.v[1] *= v.v[3];
-    v.v[2] *= v.v[3];
+    v.w = 1.0 / v.w;
+    v.x *= v.w;
+    v.y *= v.w;
+    v.z *= v.w;
 
-    float x = (v.v[0] * 0.5 + 0.5) * viewport[2] + viewport[0];
-    float y = (v.v[1] * 0.5 + 0.5) * viewport[3] + viewport[1];
-    float z = (1.0 + v.v[2]) * 0.5;
+    float x = (v.x * 0.5 + 0.5) * viewport[2] + viewport[0];
+    float y = (v.y * 0.5 + 0.5) * viewport[3] + viewport[1];
+    float z = (1.0 + v.z) * 0.5;
 
     return GLKVector3Make(x, y, z);
 }
@@ -1164,8 +1168,8 @@ GLKVector3 GLKMathProject(GLKVector3 object, GLKMatrix4 model, GLKMatrix4 projec
 /**
  @Status Interoperable
 */
-GLKVector3 GLKMathUnproject(GLKVector3 window, GLKMatrix4 model, GLKMatrix4 projection, int* viewport, bool* success) {
-    bool canInvert = false;
+GLKVector3 GLKMathUnproject(GLKVector3 window, GLKMatrix4 model, GLKMatrix4 projection, int* viewport, BOOL* success) {
+    BOOL canInvert = NO;
     GLKMatrix4 inverted = GLKMatrix4Invert(GLKMatrix4Multiply(projection, model), &canInvert);
     if (success) {
         *success = canInvert;
@@ -1175,13 +1179,15 @@ GLKVector3 GLKMathUnproject(GLKVector3 window, GLKMatrix4 model, GLKMatrix4 proj
         return GLKVector3Make(0.0f, 0.0f, 0.0f);
     }
 
-    GLKVector4 normalisedVector =
-        GLKVector4Make((2 * window.x / viewport[2] - 1), (2 * (window.y - viewport[1]) / viewport[3] - 1), 2 * window.z - 1, 1);
+    GLKVector4 nv = GLKVector4Make((2.0 * window.x / viewport[2] - 1.0),
+                                   (2.0 * (window.y - (double)viewport[1]) / (double)viewport[3] - 1),
+                                   2.0 * window.z - 1.0,
+                                   1.0);
 
-    GLKVector4 _point = GLKMatrix4MultiplyVector4(inverted, normalisedVector);
-    _point.v[3] = 1.0 / _point.v[3];
+    GLKVector4 point = GLKMatrix4MultiplyVector4(inverted, nv);
+    point.w = 1.0 / point.w;
 
-    GLKVector3 vec = GLKVector3Make(_point.v[0] * _point.v[3], _point.v[1] * _point.v[3], _point.v[2] * _point.v[3]);
+    GLKVector3 vec = GLKVector3Make(point.x * point.w, point.y * point.w, point.z * point.w);
 
     return vec;
 }
@@ -1267,38 +1273,24 @@ GLKMatrix3 GLKMatrix3MakeWithQuaternion(GLKQuaternion quaternion) {
     quaternion = GLKQuaternionNormalize(quaternion);
 
     float x = quaternion.q[0];
-
     float y = quaternion.q[1];
-
     float z = quaternion.q[2];
-
     float w = quaternion.q[3];
 
     float _2x = x + x;
-
     float _2y = y + y;
-
     float _2z = z + z;
-
     float _2w = w + w;
 
-    GLKMatrix3 m = { 1.0f - _2y * y - _2z * z,
-
-                     _2x * y + _2w * z,
-
-                     _2x * z - _2w * y,
-
-                     _2x * y - _2w * z,
-
-                     1.0f - _2x * x - _2z * z,
-
-                     _2y * z + _2w * x,
-
-                     _2x * z + _2w * y,
-
-                     _2y * z - _2w * x,
-
-                     1.0f - _2x * x - _2y * y };
+    GLKMatrix3 m = GLKMatrix3Make(1.0f - _2y * y - _2z * z,
+                                  _2x * y + _2w * z,
+                                  _2x * z - _2w * y,
+                                  _2x * y - _2w * z,
+                                  1.0f - _2x * x - _2z * z,
+                                  _2y * z + _2w * x,
+                                  _2x * z + _2w * y,
+                                  _2y * z - _2w * x,
+                                  1.0f - _2x * x - _2y * y);
 
     return m;
 }
@@ -1319,7 +1311,10 @@ GLKMatrix3 GLKMatrix3MakeScale(float sx, float sy, float sz) {
  @Notes
 */
 GLKVector3 GLKMatrix3GetColumn(GLKMatrix3 matrix, int column) {
-    GLKVector3 v = { matrix.m[column * 3 + 0], matrix.m[column * 3 + 1], matrix.m[column * 3 + 2] };
+    GLKVector3 v;
+    v.x = matrix.m[column * 3 + 0];
+    v.y = matrix.m[column * 3 + 1];
+    v.z = matrix.m[column * 3 + 2];
     return v;
 }
 
@@ -1328,7 +1323,10 @@ GLKVector3 GLKMatrix3GetColumn(GLKMatrix3 matrix, int column) {
  @Notes
 */
 GLKVector3 GLKMatrix3GetRow(GLKMatrix3 matrix, int row) {
-    GLKVector3 v = { matrix.m[row], matrix.m[3 + row], matrix.m[6 + row] };
+    GLKVector3 v;
+    v.x = matrix.m[row];
+    v.y = matrix.m[3 + row];
+    v.z = matrix.m[6 + row];
     return v;
 }
 
@@ -1337,9 +1335,9 @@ GLKVector3 GLKMatrix3GetRow(GLKMatrix3 matrix, int row) {
  @Notes
 */
 GLKMatrix3 GLKMatrix3SetColumn(GLKMatrix3 matrix, int column, GLKVector3 vector) {
-    matrix.m[column * 3 + 0] = vector.v[0];
-    matrix.m[column * 3 + 1] = vector.v[1];
-    matrix.m[column * 3 + 2] = vector.v[2];
+    matrix.m[column * 3 + 0] = vector.x;
+    matrix.m[column * 3 + 1] = vector.y;
+    matrix.m[column * 3 + 2] = vector.z;
     return matrix;
 }
 
@@ -1348,9 +1346,9 @@ GLKMatrix3 GLKMatrix3SetColumn(GLKMatrix3 matrix, int column, GLKVector3 vector)
  @Notes
 */
 GLKMatrix3 GLKMatrix3SetRow(GLKMatrix3 matrix, int row, GLKVector3 vector) {
-    matrix.m[row] = vector.v[0];
-    matrix.m[row + 3] = vector.v[1];
-    matrix.m[row + 6] = vector.v[2];
+    matrix.m[row] = vector.x;
+    matrix.m[row + 3] = vector.y;
+    matrix.m[row + 6] = vector.z;
     return matrix;
 }
 
@@ -1396,7 +1394,7 @@ GLKMatrix3 GLKMatrix3Rotate(GLKMatrix3 matrix, float radians, float x, float y, 
  @Notes
 */
 GLKMatrix3 GLKMatrix3RotateWithVector3(GLKMatrix3 matrix, float radians, GLKVector3 axisVector) {
-    GLKMatrix3 rm = GLKMatrix3MakeRotation(radians, axisVector.v[0], axisVector.v[1], axisVector.v[2]);
+    GLKMatrix3 rm = GLKMatrix3MakeRotation(radians, axisVector.x, axisVector.y, axisVector.z);
     return GLKMatrix3Multiply(matrix, rm);
 }
 
@@ -1405,7 +1403,7 @@ GLKMatrix3 GLKMatrix3RotateWithVector3(GLKMatrix3 matrix, float radians, GLKVect
  @Notes
 */
 GLKMatrix3 GLKMatrix3RotateWithVector4(GLKMatrix3 matrix, float radians, GLKVector4 axisVector) {
-    GLKMatrix3 rm = GLKMatrix3MakeRotation(radians, axisVector.v[0], axisVector.v[1], axisVector.v[2]);
+    GLKMatrix3 rm = GLKMatrix3MakeRotation(radians, axisVector.x, axisVector.y, axisVector.z);
     return GLKMatrix3Multiply(matrix, rm);
 }
 
@@ -1441,8 +1439,15 @@ GLKMatrix3 GLKMatrix3RotateZ(GLKMatrix3 matrix, float radians) {
  @Notes
 */
 GLKMatrix3 GLKMatrix3Scale(GLKMatrix3 matrix, float sx, float sy, float sz) {
-    GLKMatrix3 m = { matrix.m00 * sx, matrix.m01 * sx, matrix.m02 * sx, matrix.m10 * sy, matrix.m11 * sy,
-                     matrix.m12 * sy, matrix.m20 * sz, matrix.m21 * sz, matrix.m22 * sz };
+    GLKMatrix3 m = GLKMatrix3Make(matrix.m00 * sx,
+                                  matrix.m01 * sx,
+                                  matrix.m02 * sx,
+                                  matrix.m10 * sy,
+                                  matrix.m11 * sy,
+                                  matrix.m12 * sy,
+                                  matrix.m20 * sz,
+                                  matrix.m21 * sz,
+                                  matrix.m22 * sz);
     return m;
 }
 
@@ -1451,7 +1456,7 @@ GLKMatrix3 GLKMatrix3Scale(GLKMatrix3 matrix, float sx, float sy, float sz) {
  @Notes
 */
 GLKMatrix3 GLKMatrix3ScaleWithVector3(GLKMatrix3 matrix, GLKVector3 scaleVector) {
-    GLKMatrix3 m = GLKMatrix3Scale(matrix, scaleVector.v[0], scaleVector.v[1], scaleVector.v[2]);
+    GLKMatrix3 m = GLKMatrix3Scale(matrix, scaleVector.x, scaleVector.y, scaleVector.z);
     return m;
 }
 
@@ -1460,9 +1465,7 @@ GLKMatrix3 GLKMatrix3ScaleWithVector3(GLKMatrix3 matrix, GLKVector3 scaleVector)
  @Notes
 */
 GLKMatrix3 GLKMatrix3ScaleWithVector4(GLKMatrix3 matrix, GLKVector4 scaleVector) {
-    GLKMatrix3 m = { matrix.m[0] * scaleVector.v[0], matrix.m[1] * scaleVector.v[0], matrix.m[2] * scaleVector.v[0],
-                     matrix.m[3] * scaleVector.v[1], matrix.m[4] * scaleVector.v[1], matrix.m[5] * scaleVector.v[1],
-                     matrix.m[6] * scaleVector.v[2], matrix.m[7] * scaleVector.v[2], matrix.m[8] * scaleVector.v[2] };
+    GLKMatrix3 m = GLKMatrix3Scale(matrix, scaleVector.x, scaleVector.y, scaleVector.z);
     return m;
 }
 
@@ -1537,22 +1540,22 @@ GLKMatrix4 GLKMatrix4MakeWithQuaternion(GLKQuaternion quaternion) {
     float _2z = z + z;
     float _2w = w + w;
 
-    GLKMatrix4 m = { 1.0f - _2y * y - _2z * z,
-                     _2x * y + _2w * z,
-                     _2x * z - _2w * y,
-                     0.0f,
-                     _2x * y - _2w * z,
-                     1.0f - _2x * x - _2z * z,
-                     _2y * z + _2w * x,
-                     0.0f,
-                     _2x * z + _2w * y,
-                     _2y * z - _2w * x,
-                     1.0f - _2x * x - _2y * y,
-                     0.0f,
-                     0.0f,
-                     0.0f,
-                     0.0f,
-                     1.0f };
+    GLKMatrix4 m = GLKMatrix4Make(1.0f - _2y * y - _2z * z,
+                                  _2x * y + _2w * z,
+                                  _2x * z - _2w * y,
+                                  0.0f,
+                                  _2x * y - _2w * z,
+                                  1.0f - _2x * x - _2z * z,
+                                  _2y * z + _2w * x,
+                                  0.0f,
+                                  _2x * z + _2w * y,
+                                  _2y * z - _2w * x,
+                                  1.0f - _2x * x - _2y * y,
+                                  0.0f,
+                                  0.0f,
+                                  0.0f,
+                                  0.0f,
+                                  1.0f);
 
     return m;
 }
@@ -1561,8 +1564,40 @@ GLKMatrix4 GLKMatrix4MakeWithQuaternion(GLKQuaternion quaternion) {
  @Status Interoperable
  @Notes
 */
+GLKQuaternion GLKQuaternionSlerp(GLKQuaternion quaternionStart, GLKQuaternion quaternionEnd, float t) {
+    GLKQuaternion q1 = quaternionStart;
+    GLKQuaternion q2 = quaternionEnd;
+
+    double cosHalfTheta = GLKQuaternionDot(q1, q2);
+
+    if (fabs(cosHalfTheta) >= 1.0) {
+        // Lerp
+        return GLKQuaternionAdd(GLKQuaternionMultiplyByScalar(1.0 - t, q1), GLKQuaternionMultiplyByScalar(t, quaternionEnd));
+    }
+
+    // Calculate temporary values.
+    double halfTheta = acos(cosHalfTheta);
+    double sinHalfTheta = sqrt(1.0 - cosHalfTheta * cosHalfTheta);
+
+    // if theta = 180 degrees then result is not fully defined
+    // we could rotate around any axis normal to qa or qb
+    if (fabs(sinHalfTheta) < 0.001) { // fabs is floating point absolute
+        return GLKQuaternionAdd(GLKQuaternionMultiplyByScalar(0.5, quaternionStart), GLKQuaternionMultiplyByScalar(0.5, quaternionEnd));
+    }
+
+    double ratioA = sin((1.0 - t) * halfTheta) / sinHalfTheta;
+    double ratioB = sin(t * halfTheta) / sinHalfTheta;
+
+    // calculate Quaternion.
+    return GLKQuaternionAdd(GLKQuaternionMultiplyByScalar(ratioA, quaternionStart), GLKQuaternionMultiplyByScalar(ratioB, quaternionEnd));
+}
+
+/**
+ @Status Interoperable
+ @Notes
+*/
 GLKVector4 GLKMatrix4GetColumn(GLKMatrix4 matrix, int column) {
-    GLKVector4 v = { matrix.m[column * 4 + 0], matrix.m[column * 4 + 1], matrix.m[column * 4 + 2], matrix.m[column * 4 + 3] };
+    GLKVector4 v = GLKVector4Make(matrix.m[column * 4 + 0], matrix.m[column * 4 + 1], matrix.m[column * 4 + 2], matrix.m[column * 4 + 3]);
     return v;
 }
 
@@ -1571,7 +1606,7 @@ GLKVector4 GLKMatrix4GetColumn(GLKMatrix4 matrix, int column) {
  @Notes
 */
 GLKVector4 GLKMatrix4GetRow(GLKMatrix4 matrix, int row) {
-    GLKVector4 v = { matrix.m[row], matrix.m[4 + row], matrix.m[8 + row], matrix.m[12 + row] };
+    GLKVector4 v = GLKVector4Make(matrix.m[row], matrix.m[4 + row], matrix.m[8 + row], matrix.m[12 + row]);
     return v;
 }
 
@@ -1593,10 +1628,10 @@ GLKMatrix4 GLKMatrix4SetColumn(GLKMatrix4 matrix, int column, GLKVector4 vector)
  @Notes
 */
 GLKMatrix4 GLKMatrix4SetRow(GLKMatrix4 matrix, int row, GLKVector4 vector) {
-    matrix.m[row] = vector.v[0];
-    matrix.m[row + 4] = vector.v[1];
-    matrix.m[row + 8] = vector.v[2];
-    matrix.m[row + 12] = vector.v[3];
+    matrix.m[row] = vector.x;
+    matrix.m[row + 4] = vector.y;
+    matrix.m[row + 8] = vector.z;
+    matrix.m[row + 12] = vector.w;
     return matrix;
 }
 
@@ -1604,8 +1639,8 @@ GLKMatrix4 GLKMatrix4SetRow(GLKMatrix4 matrix, int row, GLKVector4 vector) {
  @Status Interoperable
  @Notes
 */
-GLKMatrix4 GLKMatrix4InvertAndTranspose(GLKMatrix4 matrix, bool* isInvertible) {
-    bool canInvert = false;
+GLKMatrix4 GLKMatrix4InvertAndTranspose(GLKMatrix4 matrix, BOOL* isInvertible) {
+    BOOL canInvert = NO;
     GLKMatrix4 inverted = GLKMatrix4Invert(matrix, &canInvert);
     if (!canInvert) {
         return GLKMatrix4Identity;
@@ -1636,22 +1671,22 @@ GLKMatrix4 GLKMatrix4RotateWithVector4(GLKMatrix4 matrix, float radians, GLKVect
  @Notes
 */
 GLKMatrix4 GLKMatrix4ScaleWithVector3(GLKMatrix4 matrix, GLKVector3 scaleVector) {
-    GLKMatrix4 m = { matrix.m[0] * scaleVector.v[0],
-                     matrix.m[1] * scaleVector.v[0],
-                     matrix.m[2] * scaleVector.v[0],
-                     matrix.m[3] * scaleVector.v[0],
-                     matrix.m[4] * scaleVector.v[1],
-                     matrix.m[5] * scaleVector.v[1],
-                     matrix.m[6] * scaleVector.v[1],
-                     matrix.m[7] * scaleVector.v[1],
-                     matrix.m[8] * scaleVector.v[2],
-                     matrix.m[9] * scaleVector.v[2],
-                     matrix.m[10] * scaleVector.v[2],
-                     matrix.m[11] * scaleVector.v[2],
-                     matrix.m[12],
-                     matrix.m[13],
-                     matrix.m[14],
-                     matrix.m[15] };
+    GLKMatrix4 m = GLKMatrix4Make(matrix.m[0] * scaleVector.x,
+                                  matrix.m[1] * scaleVector.x,
+                                  matrix.m[2] * scaleVector.x,
+                                  matrix.m[3] * scaleVector.x,
+                                  matrix.m[4] * scaleVector.y,
+                                  matrix.m[5] * scaleVector.y,
+                                  matrix.m[6] * scaleVector.y,
+                                  matrix.m[7] * scaleVector.y,
+                                  matrix.m[8] * scaleVector.z,
+                                  matrix.m[9] * scaleVector.z,
+                                  matrix.m[10] * scaleVector.z,
+                                  matrix.m[11] * scaleVector.z,
+                                  matrix.m[12],
+                                  matrix.m[13],
+                                  matrix.m[14],
+                                  matrix.m[15]);
     return m;
 }
 
@@ -1660,22 +1695,7 @@ GLKMatrix4 GLKMatrix4ScaleWithVector3(GLKMatrix4 matrix, GLKVector3 scaleVector)
  @Notes
 */
 GLKMatrix4 GLKMatrix4ScaleWithVector4(GLKMatrix4 matrix, GLKVector4 scaleVector) {
-    GLKMatrix4 m = { matrix.m[0] * scaleVector.v[0],
-                     matrix.m[1] * scaleVector.v[0],
-                     matrix.m[2] * scaleVector.v[0],
-                     matrix.m[3] * scaleVector.v[0],
-                     matrix.m[4] * scaleVector.v[1],
-                     matrix.m[5] * scaleVector.v[1],
-                     matrix.m[6] * scaleVector.v[1],
-                     matrix.m[7] * scaleVector.v[1],
-                     matrix.m[8] * scaleVector.v[2],
-                     matrix.m[9] * scaleVector.v[2],
-                     matrix.m[10] * scaleVector.v[2],
-                     matrix.m[11] * scaleVector.v[2],
-                     matrix.m[12],
-                     matrix.m[13],
-                     matrix.m[14],
-                     matrix.m[15] };
+    GLKMatrix4 m = GLKMatrix4ScaleWithVector3(matrix, GLKVector3Make(scaleVector.x, scaleVector.y, scaleVector.z));
     return m;
 }
 
@@ -1684,22 +1704,23 @@ GLKMatrix4 GLKMatrix4ScaleWithVector4(GLKMatrix4 matrix, GLKVector4 scaleVector)
  @Notes
 */
 GLKMatrix4 GLKMatrix4TranslateWithVector3(GLKMatrix4 matrix, GLKVector3 translationVector) {
-    GLKMatrix4 m = { matrix.m00,
-                     matrix.m01,
-                     matrix.m02,
-                     matrix.m03,
-                     matrix.m10,
-                     matrix.m11,
-                     matrix.m12,
-                     matrix.m13,
-                     matrix.m20,
-                     matrix.m21,
-                     matrix.m22,
-                     matrix.m23,
-                     matrix.m00 * translationVector.x + matrix.m10 * translationVector.y + matrix.m20 * translationVector.z + matrix.m30,
-                     matrix.m01 * translationVector.x + matrix.m11 * translationVector.y + matrix.m21 * translationVector.z + matrix.m31,
-                     matrix.m02 * translationVector.x + matrix.m12 * translationVector.y + matrix.m22 * translationVector.z + matrix.m32,
-                     matrix.m03 * translationVector.x + matrix.m13 * translationVector.y + matrix.m23 * translationVector.z + matrix.m33 };
+    GLKMatrix4 m =
+        GLKMatrix4Make(matrix.m00,
+                       matrix.m01,
+                       matrix.m02,
+                       matrix.m03,
+                       matrix.m10,
+                       matrix.m11,
+                       matrix.m12,
+                       matrix.m13,
+                       matrix.m20,
+                       matrix.m21,
+                       matrix.m22,
+                       matrix.m23,
+                       matrix.m00 * translationVector.x + matrix.m10 * translationVector.y + matrix.m20 * translationVector.z + matrix.m30,
+                       matrix.m01 * translationVector.x + matrix.m11 * translationVector.y + matrix.m21 * translationVector.z + matrix.m31,
+                       matrix.m02 * translationVector.x + matrix.m12 * translationVector.y + matrix.m22 * translationVector.z + matrix.m32,
+                       matrix.m03 * translationVector.x + matrix.m13 * translationVector.y + matrix.m23 * translationVector.z + matrix.m33);
     return m;
 }
 
@@ -1708,24 +1729,7 @@ GLKMatrix4 GLKMatrix4TranslateWithVector3(GLKMatrix4 matrix, GLKVector3 translat
  @Notes
 */
 GLKMatrix4 GLKMatrix4TranslateWithVector4(GLKMatrix4 matrix, GLKVector4 translationVector) {
-    GLKMatrix4 m = {
-        matrix.m[0],
-        matrix.m[1],
-        matrix.m[2],
-        matrix.m[3],
-        matrix.m[4],
-        matrix.m[5],
-        matrix.m[6],
-        matrix.m[7],
-        matrix.m[8],
-        matrix.m[9],
-        matrix.m[10],
-        matrix.m[11],
-        matrix.m[0] * translationVector.v[0] + matrix.m[4] * translationVector.v[1] + matrix.m[8] * translationVector.v[2] + matrix.m[12],
-        matrix.m[1] * translationVector.v[0] + matrix.m[5] * translationVector.v[1] + matrix.m[9] * translationVector.v[2] + matrix.m[13],
-        matrix.m[2] * translationVector.v[0] + matrix.m[6] * translationVector.v[1] + matrix.m[10] * translationVector.v[2] + matrix.m[14],
-        matrix.m[3] * translationVector.v[0] + matrix.m[7] * translationVector.v[1] + matrix.m[11] * translationVector.v[2] + matrix.m[15]
-    };
+    GLKMatrix4 m = GLKMatrix4TranslateWithVector3(matrix, GLKVector3Make(translationVector.x, translationVector.y, translationVector.z));
     return m;
 }
 
@@ -1794,8 +1798,8 @@ GLKMatrix4 GLKMatrix4Subtract(GLKMatrix4 matrixLeft, GLKMatrix4 matrixRight) {
  @Notes
 */
 GLKVector3 GLKMatrix4MultiplyAndProjectVector3(GLKMatrix4 matrixLeft, GLKVector3 vectorRight) {
-    GLKVector4 v4 = GLKMatrix4MultiplyVector4(matrixLeft, GLKVector4Make(vectorRight.v[0], vectorRight.v[1], vectorRight.v[2], 1.0f));
-    GLKVector3 v = GLKVector3MultiplyScalar(GLKVector3Make(v4.v[0], v4.v[1], v4.v[2]), 1.0f / v4.v[3]);
+    GLKVector4 v4 = GLKMatrix4MultiplyVector4(matrixLeft, GLKVector4Make(vectorRight.x, vectorRight.y, vectorRight.z, 1.0f));
+    GLKVector3 v = GLKVector3MultiplyScalar(GLKVector3Make(v4.x, v4.y, v4.z), 1.0f / v4.w);
     return v;
 }
 
