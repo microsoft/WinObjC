@@ -133,7 +133,7 @@ static bool __lineHasGlyphsAfterIndex(CTLineRef line, CFIndex index) {
             };
 
             // Create line to fit as much text as possible in given rect
-            CTLineRef fitLine = (CTLineRef)CFArrayGetValueAtIndex(CTFrameGetLines(frame.get()), 0);
+            CTLineRef fitLine = static_cast<CTLineRef>(CFArrayGetValueAtIndex(CTFrameGetLines(frame.get()), 0));
 
             CFIndex fitLength = CTLineGetStringRange(fitLine).length;
             if (fitLength == 0L) {
