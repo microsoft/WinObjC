@@ -141,7 +141,9 @@ public:
 }
 
 - (void)autoLayoutAlloc {
-    objc_setAssociatedObject(self, @selector(_constraintStorage), [_NSLayoutConstraintStorage new], OBJC_ASSOCIATION_RETAIN);
+    _NSLayoutConstraintStorage* storage = [_NSLayoutConstraintStorage new];
+    objc_setAssociatedObject(self, @selector(_constraintStorage), storage, OBJC_ASSOCIATION_RETAIN);
+    [storage release];
 }
 
 - (void)autoLayoutConstraintAddedToView:(UIView*)view {
@@ -312,7 +314,9 @@ public:
 @implementation UILayoutGuide (AutoLayout)
 
 - (void)autoLayoutAlloc {
-    objc_setAssociatedObject(self, @selector(_autoLayoutProperties), [_AutoLayoutStorage new], OBJC_ASSOCIATION_RETAIN);
+    _AutoLayoutStorage* storage = [_AutoLayoutStorage new];
+    objc_setAssociatedObject(self, @selector(_autoLayoutProperties), storage, OBJC_ASSOCIATION_RETAIN);
+    [storage release];
 }
 
 - (CGRect)autoLayoutGetRect {
@@ -355,7 +359,9 @@ public:
 }
 
 - (void)autoLayoutAlloc {
-    objc_setAssociatedObject(self, @selector(_autoLayoutProperties), [_AutoLayoutStorage new], OBJC_ASSOCIATION_RETAIN);
+    _AutoLayoutStorage* storage = [_AutoLayoutStorage new];
+    objc_setAssociatedObject(self, @selector(_autoLayoutProperties), storage, OBJC_ASSOCIATION_RETAIN);
+    [storage release];
 }
 
 - (void)autoLayoutSetFrameToView:(UIView*)toView fromView:(UIView*)fromView {
