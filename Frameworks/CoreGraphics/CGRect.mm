@@ -18,6 +18,8 @@
 #import <limits>
 #import "Etc.h"
 
+#import <CoreGraphics/CGAffineTransform.h>
+
 /**
  @Status Interoperable
 */

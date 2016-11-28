@@ -56,7 +56,7 @@
     <WindowsAppContainer>false</WindowsAppContainer>
     <TargetOsAndVersion>Universal Windows</TargetOsAndVersion>
     <StarboardBasePath>..\..\..\..</StarboardBasePath>
-    <UseStarboardSourceSdk>true</UseStarboardSourceSdk>
+    
     <IslandwoodDRT>false</IslandwoodDRT>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(RootNamespace)\</OutDir>
   </PropertyGroup>
@@ -358,4 +358,7 @@
     </ItemGroup>
     <Copy SourceFiles="@(ReferenceFoundationTestResourceFile)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="True" />
   </Target>
+  <ItemGroup>
+    <None Include="Project.json" />
+  </ItemGroup>
 </Project>

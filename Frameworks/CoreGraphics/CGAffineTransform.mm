@@ -18,6 +18,8 @@
 #import <Starboard.h>
 #import <math.h>
 
+#import <CoreGraphics/CGAffineTransform.h>
+
 const CGAffineTransform CGAffineTransformIdentity = { 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f };
 
 /**
