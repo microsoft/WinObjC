@@ -78,7 +78,7 @@
     StrongId<UIColor> _backgroundColor;
     StrongId<Class> _popoverBackgroundViewClass;
     StrongId<_WYPopoverDelegateInternal> _delegateInternal;
-    WYPopoverController* _popoverControllerInternal;
+    StrongId<WYPopoverController> _popoverControllerInternal;
 }
 
 /**
@@ -86,8 +86,8 @@
 */
 - (instancetype)initWithContentViewController:(UIViewController*)viewController {
     if (self = [super init]) {
-        _popoverControllerInternal = [[WYPopoverController alloc] initWithContentViewController:viewController];
-        _delegateInternal = [[_WYPopoverDelegateInternal alloc] initWithController:self delegate:nil];
+        _popoverControllerInternal.attach([[WYPopoverController alloc] initWithContentViewController:viewController]);
+        _delegateInternal.attach([[_WYPopoverDelegateInternal alloc] initWithController:self delegate:nil]);
         [_popoverControllerInternal setDelegate:_delegateInternal];
     }
     return self;
@@ -259,17 +259,16 @@
     _backgroundColor.attach([color copy]);
     if (_backgroundColor) {
         [_popoverControllerInternal beginThemeUpdates];
-        _popoverControllerInternal.theme.fillTopColor = _backgroundColor;
-        _popoverControllerInternal.theme.fillBottomColor = _backgroundColor;
-        _popoverControllerInternal.theme.outerStrokeColor = _backgroundColor;
-        _popoverControllerInternal.theme.innerStrokeColor = _backgroundColor;
+        [_popoverControllerInternal theme].fillTopColor = _backgroundColor;
+        [_popoverControllerInternal theme].fillBottomColor = _backgroundColor;
+        [_popoverControllerInternal theme].outerStrokeColor = _backgroundColor;
+        [_popoverControllerInternal theme].innerStrokeColor = _backgroundColor;
         [_popoverControllerInternal endThemeUpdates];
     }
 }
 
 - (void)dealloc {
     [_presentCompletion release];
-    [_popoverControllerInternal release];
     [super dealloc];
 }
 

@@ -1006,6 +1006,20 @@ NSMutableDictionary* _pageMappings;
 /**
  @Status Interoperable
 */
+- (UIPresentationController*)presentationController {
+    // The presentationController property is currently used only as an alias
+    // for the popoverPresentationController property.
+    if (priv->_popoverPresentationController) {
+        return priv->_popoverPresentationController;
+    }
+
+    // priv->_presentationController is always nil in current implementation.
+    return priv->_presentationController;
+}
+
+/**
+ @Status Interoperable
+*/
 - (void)setView:(UIView*)newView {
     // No work necessary if it's the same view we already have
     if (newView == priv->view) {
@@ -1158,9 +1172,7 @@ NSMutableDictionary* _pageMappings;
         controller->priv->_presentCompletionBlock = [[completion copy] autorelease];
 
         if ([controller modalPresentationStyle] == UIModalPresentationPopover) {
-            [controller->priv->_popoverPresentationController release];
-            controller->priv->_popoverPresentationController =
-                [[UIPopoverPresentationController alloc] initWithPresentedViewController:controller presentingViewController:self];
+            controller->priv->_popoverPresentationController.attach([[UIPopoverPresentationController alloc] initWithPresentedViewController:controller presentingViewController:self]);
         }
 
         [controller performSelectorOnMainThread:@selector(_addToTop:) withObject:[NSNumber numberWithInt:animated] waitUntilDone:NO];
@@ -1240,6 +1252,7 @@ NSMutableDictionary* _pageMappings;
 
     curController->priv->_parentViewController = nil;
     curController->priv->_presentingViewController = nil;
+    curController->priv->_popoverPresentationController = nil;
 
     UIView* curView = [curController view];
 
@@ -1336,28 +1349,23 @@ NSMutableDictionary* _pageMappings;
 
     if ([self parentViewController] != nil) {
         if ([self modalPresentationStyle] == UIModalPresentationPopover) {
-            if (priv->_presentationController != nil) {
-                [priv->_presentationController release];
-            }
-
-            priv->_presentationController = priv->_popoverPresentationController;
-
             [priv->_popoverPresentationController _prepareForPresentation];
 
             displayPopover = ![self _hidesParent];
 
             if (displayPopover) {
-                priv->_popoverPresentationController->_managesPresentation = TRUE;
+                priv->_popoverPresentationController->_managesPresentation = YES;
 
                 __unsafe_unretained __block UIViewController* me = self;
 
                 dispatch_block_t cleanup = ^{
                     me->priv->_parentViewController->priv->_presentedViewController = nil;
                     me->priv->_parentViewController->priv->_modalViewController = nil;
+                    me->priv->_popoverPresentationController = nil;
                 };
 
-                [priv->_popoverPresentationController->_willDismissCompletion release];
-                priv->_popoverPresentationController->_willDismissCompletion = [cleanup copy];
+                [priv->_popoverPresentationController->_onDismissCleanupHandler release];
+                priv->_popoverPresentationController->_onDismissCleanupHandler = [cleanup copy];
                 [priv->_popoverPresentationController _presentAnimated:animated completion:priv->_presentCompletionBlock];
                 priv->_presentCompletionBlock = nil;
             }
@@ -2245,7 +2253,6 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
 
     priv->_childViewControllers = nil;
     priv->_searchDisplayController = nil;
-    priv->_storyboard = nil;
     priv->_modalTemplates = nil;
     priv->_dismissController = nil;
     IwFree(priv);

@@ -23,6 +23,12 @@
 #import "UIPopoverPresentationControllerInternal.h"
 #import "UIPopoverControllerInternal.h"
 
+@interface UIPopoverPresentationController ()
+
+- (void)_handleDismissCleanup;
+
+@end
+
 @interface _UIPopoverControllerDelegateInternal : NSObject <UIPopoverControllerDelegate>
 
 @property (nonatomic, assign) UIPopoverPresentationController* controller;
@@ -49,27 +55,19 @@
 }
 
 - (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController*)popoverController {
-    BOOL shouldDismiss = YES;
-
     if ([_delegate respondsToSelector:@selector(popoverPresentationControllerShouldDismissPopover:)]) {
-        shouldDismiss = [_delegate popoverPresentationControllerShouldDismissPopover:_controller];
+        return [_delegate popoverPresentationControllerShouldDismissPopover:_controller];
     }
 
-    if (shouldDismiss) {
-        if (_controller->_willDismissCompletion) {
-            _controller->_willDismissCompletion();
-            [_controller->_willDismissCompletion release];
-            _controller->_willDismissCompletion = nil;
-        }
-    }
-
-    return shouldDismiss;
+    return YES;
 }
 
 - (void)popoverControllerDidDismissPopover:(UIPopoverController*)popoverController {
     if ([_delegate respondsToSelector:@selector(popoverPresentationControllerDidDismissPopover:)]) {
         [_delegate popoverPresentationControllerDidDismissPopover:_controller];
     }
+
+    [_controller _handleDismissCleanup];
 }
 
 @end
@@ -91,8 +89,8 @@
     self = [super initWithPresentedViewController:presentedViewController presentingViewController:presentingViewController];
     if (self) {
         _permittedArrowDirections = UIPopoverArrowDirectionAny;
-        _popoverControllerInternal = [[UIPopoverController alloc] initWithContentViewController:presentedViewController];
-        _delegateInternal = [[_UIPopoverControllerDelegateInternal alloc] initWithController:self delegate:nil];
+        _popoverControllerInternal.attach([[UIPopoverController alloc] initWithContentViewController:presentedViewController]);
+        _delegateInternal.attach([[_UIPopoverControllerDelegateInternal alloc] initWithController:self delegate:nil]);
         [_popoverControllerInternal setDelegate:_delegateInternal];
     }
     return self;
@@ -122,6 +120,17 @@
 
 - (void)_dismissAnimated:(BOOL)animated completion:(dispatch_block_t)dismissCompletion {
     [_popoverControllerInternal _dismissPopoverAnimated:animated completion:dismissCompletion];
+}
+
+- (void)_handleDismissCleanup {
+    // stay alive while UIViewController forgets about us
+    [self retain];
+
+    _onDismissCleanupHandler();
+    [_onDismissCleanupHandler release];
+    _onDismissCleanupHandler = nil;
+
+    [self release];
 }
 
 /**
@@ -316,7 +325,7 @@
 }
 
 - (void)dealloc {
-    [_willDismissCompletion release];
+    [_onDismissCleanupHandler release];
     [super dealloc];
 }
 
