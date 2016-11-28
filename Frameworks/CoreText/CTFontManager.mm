@@ -40,18 +40,14 @@ CFArrayRef CTFontManagerCreateFontDescriptorsFromURL(CFURLRef fileURL) {
 template <typename TLambda>
 static bool __CTFontManagerUpdateWithFont(CFURLRef fontURL, CTFontManagerScope scope, CFErrorRef _Nullable* error, TLambda&& func) {
     woc::unique_cf<CFArrayRef> fontURLs{ CFArrayCreate(nullptr, (const void**)&fontURL, 1, &kCFTypeArrayCallBacks) };
-    if (error) {
-        CFArrayRef errors = nil;
-        bool ret = func(fontURLs.get(), scope, &errors);
-        if (errors != nil) {
-            *error = (CFErrorRef)CFRetain(CFArrayGetValueAtIndex(errors, 0));
-        }
-
-        CFRelease(errors);
-        return ret;
+    CFArrayRef errors = nil;
+    bool ret = func(fontURLs.get(), scope, &errors);
+    if (error != nil && errors != nil && CFArrayGetCount(errors) > 0L) {
+        *error = (CFErrorRef)CFRetain(CFArrayGetValueAtIndex(errors, 0));
     }
 
-    return func(fontURLs.get(), scope, nullptr);
+    CFRelease(errors);
+    return ret;
 }
 
 // Converts CFURLs to CFDatas which are passed into DWriteWrapper methods
@@ -118,18 +114,14 @@ bool CTFontManagerRegisterGraphicsFont(CGFontRef font, CFErrorRef* error) {
     }
 
     woc::unique_cf<CFArrayRef> fontDatas{ CFArrayCreate(nullptr, (const void**)&data, 1, &kCFTypeArrayCallBacks) };
-    if (error) {
-        CFArrayRef errors = nil;
-        bool ret = SUCCEEDED(_DWriteRegisterFontsWithDatas(fontDatas.get(), &errors));
-        if (errors != nil) {
-            *error = (CFErrorRef)CFRetain(CFArrayGetValueAtIndex(errors, 0));
-        }
-
-        CFRelease(errors);
-        return ret;
+    CFArrayRef errors = nil;
+    bool ret = SUCCEEDED(_DWriteRegisterFontsWithDatas(fontDatas.get(), &errors));
+    if (error != nil && errors != nil && CFArrayGetCount(errors) > 0L) {
+        *error = (CFErrorRef)CFRetain(CFArrayGetValueAtIndex(errors, 0));
     }
 
-    return SUCCEEDED(_DWriteRegisterFontsWithDatas(fontDatas.get(), nullptr));
+    CFRelease(errors);
+    return ret;
 }
 
 /**

@@ -540,8 +540,6 @@ HRESULT _DWriteFontGetBoundingBoxesForGlyphs(
     return ret;
 }
 
-#pragma region CGFontCreateWithDataProvider helpers
-
 /**
  * Custom implementation of IDWriteFontFileStream that implements Read in terms of an underlying CFDataRef
  *
@@ -650,7 +648,6 @@ private:
     woc::unique_cf<CFDataRef> _data;
 };
 
-#pragma region Font File Registration
 // Implementation of IDwriteFontFileEnumerator, which enumerates over internal data and returns a font file
 class DWriteFontFileEnumerator : public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IDWriteFontFileEnumerator> {
 protected:
@@ -668,31 +665,34 @@ public:
     }
 
     HRESULT STDMETHODCALLTYPE GetCurrentFontFile(_Out_ IDWriteFontFile** fontFile) {
-        if (location < m_previouslyCreatedFiles->size()) {
-            *fontFile = m_previouslyCreatedFiles->at(location).Get();
+        RETURN_HR_IF(E_ILLEGAL_METHOD_CALL, m_location < 0 || m_location > CFArrayGetCount(m_fontDatas.get()));
+
+        if (0 <= m_location && m_location < m_previouslyCreatedFiles->size()) {
+            *fontFile = m_previouslyCreatedFiles->at(m_location).Get();
         } else {
             ComPtr<IDWriteFactory> dwriteFactory;
             RETURN_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
 
             ComPtr<DWriteFontBinaryDataLoader> loader;
             RETURN_IF_FAILED(
-                MakeAndInitialize<DWriteFontBinaryDataLoader>(&loader, (CFDataRef)CFArrayGetValueAtIndex(m_fontDatas.get(), location)));
+                MakeAndInitialize<DWriteFontBinaryDataLoader>(&loader, (CFDataRef)CFArrayGetValueAtIndex(m_fontDatas.get(), m_location)));
             RETURN_IF_FAILED(dwriteFactory->RegisterFontFileLoader(loader.Get()));
 
             int unused;
-            RETURN_IF_FAILED(dwriteFactory->CreateCustomFontFileReference(&unused, sizeof(int), loader.Get(), fontFile));
+            RETURN_IF_FAILED(dwriteFactory->CreateCustomFontFileReference(&unused, sizeof(unused), loader.Get(), fontFile));
             m_previouslyCreatedFiles->emplace_back(*fontFile);
         }
+
         return S_OK;
     }
 
     HRESULT STDMETHODCALLTYPE MoveNext(_Out_ BOOL* hasCurrentFile) {
-        *hasCurrentFile = ++location < CFArrayGetCount(m_fontDatas.get());
+        *hasCurrentFile = ++m_location < CFArrayGetCount(m_fontDatas.get());
         return S_OK;
     }
 
 private:
-    int location = -1;
+    int m_location = -1;
 
     woc::unique_cf<CFArrayRef> m_fontDatas;
     std::vector<ComPtr<IDWriteFontFile>>* m_previouslyCreatedFiles;
@@ -857,8 +857,6 @@ HRESULT _DWriteUnregisterFontsWithDatas(CFArrayRef datas, CFArrayRef* errors) {
     return __DWriteUpdateUserCreatedFontCollection(datas, errors, std::mem_fn(&DWriteFontCollectionLoader::RemoveDatas));
 }
 
-#pragma endregion
-
 /**
  * Creates an IDWriteFontFace by attempting to use a CGDataProviderRef as a font file
  */
@@ -912,5 +910,3 @@ HRESULT _DWriteCreateFontFaceWithData(CFDataRef data, IDWriteFontFace** outFontF
 
     return S_OK;
 }
-
-#pragma endregion
