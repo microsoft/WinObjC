@@ -36,8 +36,9 @@ CFArrayRef CTFontManagerCreateFontDescriptorsFromURL(CFURLRef fileURL) {
 
 // Helper functions to reduce code duplication, as (un)registering fonts have almost identical path
 // (Un)Registers font by creating temporary CFArray and calling into function for multiple fonts
+// TLambda :: (CFArrayRef -> CTFontManagerScope -> CFArrayRef*) -> bool
 template <typename TLambda>
-static bool __CTFontManagerUpdateWithFont(CFURLRef fontURL, CTFontManagerScope scope, CFErrorRef _Nullable* error, const TLambda&& func) {
+static bool __CTFontManagerUpdateWithFont(CFURLRef fontURL, CTFontManagerScope scope, CFErrorRef _Nullable* error, TLambda&& func) {
     woc::unique_cf<CFArrayRef> fontURLs{ CFArrayCreate(nullptr, (const void**)&fontURL, 1, &kCFTypeArrayCallBacks) };
     if (error) {
         CFArrayRef errors = nil;
@@ -54,13 +55,11 @@ static bool __CTFontManagerUpdateWithFont(CFURLRef fontURL, CTFontManagerScope s
 }
 
 // Converts CFURLs to CFDatas which are passed into DWriteWrapper methods
+// TLambda :: (CFArrayRef -> CFArrayRef*) -> bool
 template <typename TLambda>
-static bool __CTFontManagerUpdateWithFonts(CFArrayRef fontURLs,
-                                           CTFontManagerScope scope,
-                                           CFArrayRef _Nullable* errors,
-                                           const TLambda&& func) {
+static bool __CTFontManagerUpdateWithFonts(CFArrayRef fontURLs, CTFontManagerScope scope, CFArrayRef _Nullable* errors, TLambda&& func) {
     CFIndex count = CFArrayGetCount(fontURLs);
-    woc::unique_cf<CFMutableArrayRef> fontDatas{ CFArrayCreateMutable(nullptr, 0, &kCFTypeArrayCallBacks) };
+    woc::unique_cf<CFMutableArrayRef> fontDatas{ CFArrayCreateMutable(nullptr, count, &kCFTypeArrayCallBacks) };
     for (size_t i = 0; i < count; ++i) {
         NSData* data = [NSData dataWithContentsOfURL:static_cast<NSURL*>(CFArrayGetValueAtIndex(fontURLs, i))];
         if (data != nullptr) {

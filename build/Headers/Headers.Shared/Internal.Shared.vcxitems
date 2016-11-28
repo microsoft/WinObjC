@@ -11,6 +11,9 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\include\**\*.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
 </Project>
