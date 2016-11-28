@@ -115,6 +115,7 @@ static CGFloat __GetXPositionIntersectingZone(CGRect rect, const CGContextRef ex
 /**
  @Status Caveat
  @Notes writingDirection and atIndex parameters are ignored
+ * TODO 1465: handle writing directions
 */
 
 - (CGRect)lineFragmentRectForProposedRect:(CGRect)proposed
