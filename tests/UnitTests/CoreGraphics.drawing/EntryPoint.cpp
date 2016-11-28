@@ -19,6 +19,7 @@
 #include <memory>
 
 #include <CoreFoundation/CoreFoundation.h>
+#include <UIKit/UIKit.h>
 
 #include "DrawingTestConfig.h"
 
@@ -104,6 +105,7 @@ int main(int argc, char** argv) {
         return -1;
     }
 #endif
+    [UIView class];
     testing::InitGoogleTest(&argc, argv);
 
     _configImpl = std::move(std::make_shared<CommandLineDrawingTestConfigImpl>(argc, argv));

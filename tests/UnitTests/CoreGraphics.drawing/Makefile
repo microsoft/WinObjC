@@ -6,6 +6,6 @@
 UT_NAME = CoreGraphics.Drawing
 UT_FILES := $(wildcard *.cpp)
 UT_RESOURCES := data
-UT_FRAMEWORKS = CoreGraphics ImageIO
+UT_FRAMEWORKS = CoreGraphics ImageIO CoreText
 
 include ../UT.common.mk

@@ -1,0 +1,527 @@
+//******************************************************************************
+//
+// Copyright (c) Microsoft. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+
+#include "DrawingTest.h"
+#include <CoreText/CoreText.h>
+#include <Starboard/SmartTypes.h>
+
+DRAW_TEST_F(CTFrame, BasicDrawingTest, WhiteBackgroundTest) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    // Creates path with current rectangle
+    woc::unique_cf<CGMutablePathRef> path{ CGPathCreateMutable() };
+    CGPathAddRect(path.get(), nullptr, bounds);
+
+    // Create style setting to match given alignment
+    CTParagraphStyleSetting setting;
+    CTTextAlignment alignment = kCTCenterTextAlignment;
+    setting.spec = kCTParagraphStyleSpecifierAlignment;
+    setting.valueSize = sizeof(CTTextAlignment);
+    setting.value = &alignment;
+    woc::unique_cf<CTParagraphStyleRef> paragraphStyle{ CTParagraphStyleCreate(&setting, std::extent<decltype(setting)>::value) };
+
+    woc::unique_cf<CTFontRef> myCFFont{ CTFontCreateWithName(CFSTR("Arial"), 20, nullptr) };
+
+    CFStringRef keys[2] = { kCTFontAttributeName, kCTParagraphStyleAttributeName };
+    CFTypeRef values[2] = { myCFFont.get(), paragraphStyle.get() };
+
+    woc::unique_cf<CFDictionaryRef> dict{ CFDictionaryCreate(nullptr,
+                                                             (const void**)keys,
+                                                             (const void**)values,
+                                                             std::extent<decltype(keys)>::value,
+                                                             &kCFTypeDictionaryKeyCallBacks,
+                                                             &kCFTypeDictionaryValueCallBacks) };
+
+    woc::unique_cf<CFAttributedStringRef> attrString{ CFAttributedStringCreate(nullptr, CFSTR("TEST TEXT.\ntext to test."), dict.get()) };
+
+    woc::unique_cf<CTFramesetterRef> framesetter{ CTFramesetterCreateWithAttributedString(attrString.get()) };
+
+    // Creates frame for framesetter with current attributed string
+    woc::unique_cf<CTFrameRef> frame{ CTFramesetterCreateFrame(framesetter.get(), CFRangeMake(0, 0), path.get(), NULL) };
+
+    // Draws the text in the frame
+    CTFrameDraw(frame.get(), context);
+}
+
+DRAW_TEST_F(CTFrame, BasicUIKitMimicDrawingTest, UIKitMimicTest) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    // Creates path with current rectangle
+    woc::unique_cf<CGMutablePathRef> path{ CGPathCreateMutable() };
+    CGPathAddRect(path.get(), nullptr, bounds);
+
+    // Create style setting to match given alignment
+    CTParagraphStyleSetting setting;
+    CTTextAlignment alignment = kCTCenterTextAlignment;
+    setting.spec = kCTParagraphStyleSpecifierAlignment;
+    setting.valueSize = sizeof(CTTextAlignment);
+    setting.value = &alignment;
+    woc::unique_cf<CTParagraphStyleRef> paragraphStyle{ CTParagraphStyleCreate(&setting, std::extent<decltype(setting)>::value) };
+
+    woc::unique_cf<CTFontRef> myCFFont{ CTFontCreateWithName(CFSTR("Arial"), 20, nullptr) };
+
+    CFStringRef keys[2] = { kCTFontAttributeName, kCTParagraphStyleAttributeName };
+    CFTypeRef values[2] = { myCFFont.get(), paragraphStyle.get() };
+
+    woc::unique_cf<CFDictionaryRef> dict{ CFDictionaryCreate(nullptr,
+                                                             (const void**)keys,
+                                                             (const void**)values,
+                                                             std::extent<decltype(keys)>::value,
+                                                             &kCFTypeDictionaryKeyCallBacks,
+                                                             &kCFTypeDictionaryValueCallBacks) };
+
+    woc::unique_cf<CFAttributedStringRef> attrString{ CFAttributedStringCreate(nullptr, CFSTR("TEST TEXT.\ntext to test."), dict.get()) };
+
+    woc::unique_cf<CTFramesetterRef> framesetter{ CTFramesetterCreateWithAttributedString(attrString.get()) };
+
+    // Creates frame for framesetter with current attributed string
+    woc::unique_cf<CTFrameRef> frame{ CTFramesetterCreateFrame(framesetter.get(), CFRangeMake(0, 0), path.get(), NULL) };
+
+    // Draws the text in the frame
+    CTFrameDraw(frame.get(), context);
+}
+
+DRAW_TEST_F(CTFrame, BasicUnicodeTest, WhiteBackgroundTest) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    // Creates path with current rectangle
+    woc::unique_cf<CGMutablePathRef> path{ CGPathCreateMutable() };
+    CGPathAddRect(path.get(), nullptr, bounds);
+
+    // Create style setting to match given alignment
+    CTParagraphStyleSetting setting;
+    CTTextAlignment alignment = kCTCenterTextAlignment;
+    setting.spec = kCTParagraphStyleSpecifierAlignment;
+    setting.valueSize = sizeof(CTTextAlignment);
+    setting.value = &alignment;
+    woc::unique_cf<CTParagraphStyleRef> paragraphStyle{ CTParagraphStyleCreate(&setting, std::extent<decltype(setting)>::value) };
+
+    woc::unique_cf<CTFontRef> myCFFont{ CTFontCreateWithName(CFSTR("Arial"), 20, nullptr) };
+
+    CFStringRef keys[2] = { kCTFontAttributeName, kCTParagraphStyleAttributeName };
+    CFTypeRef values[2] = { myCFFont.get(), paragraphStyle.get() };
+
+    woc::unique_cf<CFDictionaryRef> dict{ CFDictionaryCreate(nullptr,
+                                                             (const void**)keys,
+                                                             (const void**)values,
+                                                             std::extent<decltype(keys)>::value,
+                                                             &kCFTypeDictionaryKeyCallBacks,
+                                                             &kCFTypeDictionaryValueCallBacks) };
+
+    woc::unique_cf<CFAttributedStringRef> attrString{
+        CFAttributedStringCreate(nullptr, CFSTR("он прошел այն անցավ ມັນຜ່ານໄປ ਇਸ ਨੂੰ ਪਾਸ ਕੀਤਾ 它通過了 그것이 통과했다 minęło"), dict.get())
+    };
+
+    woc::unique_cf<CTFramesetterRef> framesetter{ CTFramesetterCreateWithAttributedString(attrString.get()) };
+
+    // Creates frame for framesetter with current attributed string
+    woc::unique_cf<CTFrameRef> frame{ CTFramesetterCreateFrame(framesetter.get(), CFRangeMake(0, 0), path.get(), NULL) };
+
+    // Draws the text in the frame
+    CTFrameDraw(frame.get(), context);
+}
+
+class CTFrame : public WhiteBackgroundTest,
+                public ::testing::WithParamInterface<::testing::tuple<CTTextAlignment, CTLineBreakMode, CTWritingDirection, CGFloat>> {
+    CFStringRef CreateOutputFilename() {
+        CTTextAlignment alignment = ::testing::get<0>(GetParam());
+        CTLineBreakMode lineBreakMode = ::testing::get<1>(GetParam());
+        CTWritingDirection writingDirection = ::testing::get<2>(GetParam());
+        CGFloat fontSize = ::testing::get<3>(GetParam());
+        return CFStringCreateWithFormat(nullptr,
+                                        nullptr,
+                                        CFSTR("TestImage.CT.Alignment.%d.LineBreakMode.%d.WritingDirection.%d.FontSize.%.02f.png"),
+                                        alignment,
+                                        lineBreakMode,
+                                        writingDirection,
+                                        fontSize);
+    }
+};
+
+TEST_P(CTFrame, AlignLBMFontSize) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    // Creates path with current rectangle
+    woc::unique_cf<CGMutablePathRef> path{ CGPathCreateMutable() };
+    CGPathAddRect(path.get(), nullptr, bounds);
+
+    // Create style setting to match given alignment
+    CTParagraphStyleSetting setting[3];
+    CTTextAlignment alignment = ::testing::get<0>(GetParam());
+    setting[0].spec = kCTParagraphStyleSpecifierAlignment;
+    setting[0].valueSize = sizeof(CTTextAlignment);
+    setting[0].value = &alignment;
+
+    CTLineBreakMode lineBreakMode = ::testing::get<1>(GetParam());
+    setting[1].spec = kCTParagraphStyleSpecifierLineBreakMode;
+    setting[1].valueSize = sizeof(CTLineBreakMode);
+    setting[1].value = &lineBreakMode;
+
+    CTWritingDirection writingDirection = ::testing::get<2>(GetParam());
+    setting[2].spec = kCTParagraphStyleSpecifierBaseWritingDirection;
+    setting[2].valueSize = sizeof(CTWritingDirection);
+    setting[2].value = &writingDirection;
+
+    woc::unique_cf<CTParagraphStyleRef> paragraphStyle{ CTParagraphStyleCreate(setting, 3) };
+    woc::unique_cf<CTFontRef> myCFFont{ CTFontCreateWithName(CFSTR("Arial"), ::testing::get<3>(GetParam()), nullptr) };
+
+    CFStringRef keys[2] = { kCTFontAttributeName, kCTParagraphStyleAttributeName };
+    CFTypeRef values[2] = { myCFFont.get(), paragraphStyle.get() };
+
+    woc::unique_cf<CFDictionaryRef> dict{ CFDictionaryCreate(nullptr,
+                                                             (const void**)keys,
+                                                             (const void**)values,
+                                                             std::extent<decltype(keys)>::value,
+                                                             &kCFTypeDictionaryKeyCallBacks,
+                                                             &kCFTypeDictionaryValueCallBacks) };
+
+    woc::unique_cf<CFAttributedStringRef> attrString{
+        CFAttributedStringCreate(nullptr,
+                                 CFSTR("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut "
+                                       "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris "
+                                       "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit "
+                                       "esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt "
+                                       "in culpa qui officia deserunt mollit anim id est laborum."),
+                                 dict.get())
+    };
+
+    woc::unique_cf<CTFramesetterRef> framesetter{ CTFramesetterCreateWithAttributedString(attrString.get()) };
+
+    // Creates frame for framesetter with current attributed string
+    woc::unique_cf<CTFrameRef> frame{ CTFramesetterCreateFrame(framesetter.get(), CFRangeMake(0, 0), path.get(), NULL) };
+
+    // Draws the text in the frame
+    CTFrameDraw(frame.get(), context);
+}
+
+static constexpr CTTextAlignment alignments[] = { kCTLeftTextAlignment,
+                                                  kCTRightTextAlignment,
+                                                  kCTCenterTextAlignment,
+                                                  kCTJustifiedTextAlignment,
+                                                  kCTNaturalTextAlignment };
+static constexpr CTLineBreakMode lineBreakModes[] = { kCTLineBreakByWordWrapping, kCTLineBreakByCharWrapping, kCTLineBreakByClipping };
+static constexpr CTWritingDirection writingDirections[] = { kCTWritingDirectionNatural,
+                                                            kCTWritingDirectionLeftToRight,
+                                                            kCTWritingDirectionRightToLeft };
+static constexpr CGFloat fontSizes[]{ 8.0, 25.5, 91.25 };
+
+INSTANTIATE_TEST_CASE_P(TestAlignmentLineBreakMode,
+                        CTFrame,
+                        ::testing::Combine(::testing::ValuesIn(alignments),
+                                           ::testing::ValuesIn(lineBreakModes),
+                                           ::testing::ValuesIn(writingDirections),
+                                           ::testing::ValuesIn(fontSizes)));
+
+class RotateCTM : public WhiteBackgroundTest, public ::testing::WithParamInterface<CGFloat> {
+    CFStringRef CreateOutputFilename() {
+        CGFloat rotation = GetParam();
+        return CFStringCreateWithFormat(nullptr, nullptr, CFSTR("TestImage.RotateCTM.%.02f.png"), rotation);
+    }
+};
+
+TEST_P(RotateCTM, TestRotatingCTM) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGContextRotateCTM(context, GetParam());
+
+    // Creates path with current rectangle
+    woc::unique_cf<CGMutablePathRef> path{ CGPathCreateMutable() };
+    CGPathAddRect(path.get(), nullptr, bounds);
+
+    // Create style setting to match given alignment
+    CTParagraphStyleSetting setting[1];
+    CTTextAlignment alignment = kCTLeftTextAlignment;
+    setting[0].spec = kCTParagraphStyleSpecifierAlignment;
+    setting[0].valueSize = sizeof(CTTextAlignment);
+    setting[0].value = &alignment;
+
+    woc::unique_cf<CTParagraphStyleRef> paragraphStyle{ CTParagraphStyleCreate(setting, std::extent<decltype(setting)>::value) };
+    woc::unique_cf<CTFontRef> myCFFont{ CTFontCreateWithName(CFSTR("Arial"), 20, nullptr) };
+
+    CFStringRef keys[2] = { kCTFontAttributeName, kCTParagraphStyleAttributeName };
+    CFTypeRef values[2] = { myCFFont.get(), paragraphStyle.get() };
+
+    woc::unique_cf<CFDictionaryRef> dict{ CFDictionaryCreate(nullptr,
+                                                             (const void**)keys,
+                                                             (const void**)values,
+                                                             std::extent<decltype(keys)>::value,
+                                                             &kCFTypeDictionaryKeyCallBacks,
+                                                             &kCFTypeDictionaryValueCallBacks) };
+
+    woc::unique_cf<CFAttributedStringRef> attrString{
+        CFAttributedStringCreate(nullptr,
+                                 CFSTR("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut "
+                                       "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris "
+                                       "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit "
+                                       "esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt "
+                                       "in culpa qui officia deserunt mollit anim id est laborum."),
+                                 dict.get())
+    };
+
+    woc::unique_cf<CTFramesetterRef> framesetter{ CTFramesetterCreateWithAttributedString(attrString.get()) };
+
+    // Creates frame for framesetter with current attributed string
+    woc::unique_cf<CTFrameRef> frame{ CTFramesetterCreateFrame(framesetter.get(), CFRangeMake(0, 0), path.get(), NULL) };
+
+    // Draws the text in the frame
+    CTFrameDraw(frame.get(), context);
+}
+
+static constexpr CGFloat rotations[] = { 30.0 * M_PI / 180.0, 60.0 * M_PI / 180.0, -45.0 * M_PI / 180.0 };
+INSTANTIATE_TEST_CASE_P(TestDrawingTextInRotatedCTM, RotateCTM, ::testing::ValuesIn(rotations));
+
+class ExtraKerning : public WhiteBackgroundTest, public ::testing::WithParamInterface<CGFloat> {
+    CFStringRef CreateOutputFilename() {
+        CGFloat extraKerning = GetParam();
+        return CFStringCreateWithFormat(nullptr, nullptr, CFSTR("TestImage.ExtraKerning.%.02f.png"), extraKerning);
+    }
+};
+
+TEST_P(ExtraKerning, TestExtraKerning) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    // Creates path with current rectangle
+    woc::unique_cf<CGMutablePathRef> path{ CGPathCreateMutable() };
+    CGPathAddRect(path.get(), nullptr, bounds);
+
+    // Create style setting to match given alignment
+    CTParagraphStyleSetting setting[1];
+    CTTextAlignment alignment = kCTLeftTextAlignment;
+    setting[0].spec = kCTParagraphStyleSpecifierAlignment;
+    setting[0].valueSize = sizeof(CTTextAlignment);
+    setting[0].value = &alignment;
+
+    woc::unique_cf<CTParagraphStyleRef> paragraphStyle{ CTParagraphStyleCreate(setting, std::extent<decltype(setting)>::value) };
+    woc::unique_cf<CTFontRef> myCFFont{ CTFontCreateWithName(CFSTR("Arial"), 20, nullptr) };
+
+    CGFloat extraKerning = GetParam();
+    woc::unique_cf<CFNumberRef> kerning{ CFNumberCreate(nullptr, kCFNumberCGFloatType, &extraKerning) };
+
+    CFStringRef keys[3] = { kCTFontAttributeName, kCTParagraphStyleAttributeName, kCTKernAttributeName };
+    CFTypeRef values[3] = { myCFFont.get(), paragraphStyle.get(), kerning.get() };
+
+    woc::unique_cf<CFDictionaryRef> dict{ CFDictionaryCreate(nullptr,
+                                                             (const void**)keys,
+                                                             (const void**)values,
+                                                             std::extent<decltype(keys)>::value,
+                                                             &kCFTypeDictionaryKeyCallBacks,
+                                                             &kCFTypeDictionaryValueCallBacks) };
+
+    woc::unique_cf<CFAttributedStringRef> attrString{
+        CFAttributedStringCreate(nullptr,
+                                 CFSTR("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut "
+                                       "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris "
+                                       "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit "
+                                       "esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt "
+                                       "in culpa qui officia deserunt mollit anim id est laborum."),
+                                 dict.get())
+    };
+
+    woc::unique_cf<CTFramesetterRef> framesetter{ CTFramesetterCreateWithAttributedString(attrString.get()) };
+
+    // Creates frame for framesetter with current attributed string
+    woc::unique_cf<CTFrameRef> frame{ CTFramesetterCreateFrame(framesetter.get(), CFRangeMake(0, 0), path.get(), NULL) };
+
+    // Draws the text in the frame
+    CTFrameDraw(frame.get(), context);
+}
+
+static constexpr CGFloat extraKernings[] = { -1.0, 1.0, 5.25, 25.75 };
+INSTANTIATE_TEST_CASE_P(TestDrawingTextInExtraKerning, ExtraKerning, ::testing::ValuesIn(extraKernings));
+
+class LineHeightMultiple : public WhiteBackgroundTest, public ::testing::WithParamInterface<CGFloat> {
+    CFStringRef CreateOutputFilename() {
+        CGFloat lineHeightMultiple = GetParam();
+        return CFStringCreateWithFormat(nullptr, nullptr, CFSTR("TestImage.LineHeightMultiple.%.02f.png"), lineHeightMultiple);
+    }
+};
+
+TEST_P(LineHeightMultiple, TestLineHeightMultiple) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    // Creates path with current rectangle
+    woc::unique_cf<CGMutablePathRef> path{ CGPathCreateMutable() };
+    CGPathAddRect(path.get(), nullptr, bounds);
+
+    // Create style setting to match given alignment
+    CTParagraphStyleSetting setting[2];
+    CTTextAlignment alignment = kCTLeftTextAlignment;
+    setting[0].spec = kCTParagraphStyleSpecifierAlignment;
+    setting[0].valueSize = sizeof(CTTextAlignment);
+    setting[0].value = &alignment;
+    CGFloat lineHeightMultiple = GetParam();
+    setting[0].spec = kCTParagraphStyleSpecifierLineHeightMultiple;
+    setting[0].valueSize = sizeof(CGFloat);
+    setting[0].value = &lineHeightMultiple;
+
+    woc::unique_cf<CTParagraphStyleRef> paragraphStyle{ CTParagraphStyleCreate(setting, std::extent<decltype(setting)>::value) };
+    woc::unique_cf<CTFontRef> myCFFont{ CTFontCreateWithName(CFSTR("Arial"), 20, nullptr) };
+
+    CFStringRef keys[2] = { kCTFontAttributeName, kCTParagraphStyleAttributeName };
+    CFTypeRef values[2] = { myCFFont.get(), paragraphStyle.get() };
+
+    woc::unique_cf<CFDictionaryRef> dict{ CFDictionaryCreate(nullptr,
+                                                             (const void**)keys,
+                                                             (const void**)values,
+                                                             std::extent<decltype(keys)>::value,
+                                                             &kCFTypeDictionaryKeyCallBacks,
+                                                             &kCFTypeDictionaryValueCallBacks) };
+
+    woc::unique_cf<CFAttributedStringRef> attrString{
+        CFAttributedStringCreate(nullptr,
+                                 CFSTR("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut "
+                                       "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris "
+                                       "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit "
+                                       "esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt "
+                                       "in culpa qui officia deserunt mollit anim id est laborum."),
+                                 dict.get())
+    };
+
+    woc::unique_cf<CTFramesetterRef> framesetter{ CTFramesetterCreateWithAttributedString(attrString.get()) };
+
+    // Creates frame for framesetter with current attributed string
+    woc::unique_cf<CTFrameRef> frame{ CTFramesetterCreateFrame(framesetter.get(), CFRangeMake(0, 0), path.get(), NULL) };
+
+    // Draws the text in the frame
+    CTFrameDraw(frame.get(), context);
+}
+
+static constexpr CGFloat lineHeightMultiples[] = { -1.0, .75, 1.25 };
+INSTANTIATE_TEST_CASE_P(TestDrawingTextInLineHeightMultiple, LineHeightMultiple, ::testing::ValuesIn(lineHeightMultiples));
+
+DRAW_TEST_F(CTRun, BasicDrawingTest, WhiteBackgroundTest) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    // Creates path with current rectangle
+    woc::unique_cf<CGMutablePathRef> path{ CGPathCreateMutable() };
+    CGPathAddRect(path.get(), nullptr, bounds);
+
+    woc::unique_cf<CTFontRef> myCFFont{ CTFontCreateWithName(CFSTR("Arial"), 20, nullptr) };
+
+    CFStringRef keys[1] = { kCTFontAttributeName };
+    CFTypeRef values[1] = { myCFFont.get() };
+
+    woc::unique_cf<CFDictionaryRef> dict{ CFDictionaryCreate(nullptr,
+                                                             (const void**)keys,
+                                                             (const void**)values,
+                                                             std::extent<decltype(keys)>::value,
+                                                             &kCFTypeDictionaryKeyCallBacks,
+                                                             &kCFTypeDictionaryValueCallBacks) };
+
+    woc::unique_cf<CFAttributedStringRef> attrString{ CFAttributedStringCreate(nullptr, CFSTR("TEST TEXT. text to test."), dict.get()) };
+
+    woc::unique_cf<CTLineRef> line{ CTLineCreateWithAttributedString(attrString.get()) };
+
+    // Draws the text in the frame
+    CTLineDraw(line.get(), context);
+}
+
+DRAW_TEST_F(CTLine, BasicDrawingTest, WhiteBackgroundTest) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    // Creates path with current rectangle
+    woc::unique_cf<CGMutablePathRef> path{ CGPathCreateMutable() };
+    CGPathAddRect(path.get(), nullptr, bounds);
+
+    woc::unique_cf<CTFontRef> myCFFont{ CTFontCreateWithName(CFSTR("Arial"), 20, nullptr) };
+
+    CFStringRef keys[1] = { kCTFontAttributeName };
+    CFTypeRef values[1] = { myCFFont.get() };
+
+    woc::unique_cf<CFDictionaryRef> dict{ CFDictionaryCreate(nullptr,
+                                                             (const void**)keys,
+                                                             (const void**)values,
+                                                             std::extent<decltype(keys)>::value,
+                                                             &kCFTypeDictionaryKeyCallBacks,
+                                                             &kCFTypeDictionaryValueCallBacks) };
+
+    woc::unique_cf<CFAttributedStringRef> attrString{ CFAttributedStringCreate(nullptr, CFSTR("TEST TEXT. text to test."), dict.get()) };
+
+    woc::unique_cf<CTLineRef> line{ CTLineCreateWithAttributedString(attrString.get()) };
+    CFArrayRef runs = CTLineGetGlyphRuns(line.get());
+    CTRunRef run = static_cast<CTRunRef>(CFArrayGetValueAtIndex(runs, 0));
+
+    // Draws the text in the frame
+    CTRunDraw(run, context, {});
+}
+
+class Fonts : public WhiteBackgroundTest, public ::testing::WithParamInterface<CFStringRef> {
+    CFStringRef CreateOutputFilename() {
+        CFStringRef fontName = GetParam();
+        return CFStringCreateWithFormat(nullptr, nullptr, CFSTR("TestImage.Fonts.%@.png"), fontName);
+    }
+};
+
+TEST_P(Fonts, TestFonts) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    // Creates path with current rectangle
+    woc::unique_cf<CGMutablePathRef> path{ CGPathCreateMutable() };
+    CGPathAddRect(path.get(), nullptr, bounds);
+
+    // Create style setting to match given alignment
+    CTParagraphStyleSetting setting[1];
+    CTTextAlignment alignment = kCTLeftTextAlignment;
+    setting[0].spec = kCTParagraphStyleSpecifierAlignment;
+    setting[0].valueSize = sizeof(CTTextAlignment);
+    setting[0].value = &alignment;
+
+    woc::unique_cf<CTParagraphStyleRef> paragraphStyle{ CTParagraphStyleCreate(setting, std::extent<decltype(setting)>::value) };
+
+    CFStringRef fontName = GetParam();
+    woc::unique_cf<CTFontRef> myCFFont{ CTFontCreateWithName(fontName, 20, nullptr) };
+
+    CFStringRef keys[2] = { kCTFontAttributeName, kCTParagraphStyleAttributeName };
+    CFTypeRef values[2] = { myCFFont.get(), paragraphStyle.get() };
+
+    woc::unique_cf<CFDictionaryRef> dict{ CFDictionaryCreate(nullptr,
+                                                             (const void**)keys,
+                                                             (const void**)values,
+                                                             std::extent<decltype(keys)>::value,
+                                                             &kCFTypeDictionaryKeyCallBacks,
+                                                             &kCFTypeDictionaryValueCallBacks) };
+
+    woc::unique_cf<CFAttributedStringRef> attrString{
+        CFAttributedStringCreate(nullptr,
+                                 CFSTR("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut "
+                                       "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris "
+                                       "nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit "
+                                       "esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt "
+                                       "in culpa qui officia deserunt mollit anim id est laborum."),
+                                 dict.get())
+    };
+
+    woc::unique_cf<CTFramesetterRef> framesetter{ CTFramesetterCreateWithAttributedString(attrString.get()) };
+
+    // Creates frame for framesetter with current attributed string
+    woc::unique_cf<CTFrameRef> frame{ CTFramesetterCreateFrame(framesetter.get(), CFRangeMake(0, 0), path.get(), NULL) };
+
+    // Draws the text in the frame
+    CTFrameDraw(frame.get(), context);
+}
+
+static CFStringRef fontNames[] = { CFSTR("Arial"), CFSTR("Times New Roman"), CFSTR("Wingdings"), CFSTR("Segoe UI") };
+INSTANTIATE_TEST_CASE_P(TestDrawingTextInFonts, Fonts, ::testing::ValuesIn(fontNames));
