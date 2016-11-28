@@ -280,9 +280,15 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\ClangModules\ObjCPPModulesTest.mm">
       <ObjectiveCModules>true</ObjectiveCModules>
     </ClangCompile>
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\ClangModules\ObjCImportTest.m">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsObjC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsObjC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">CompileAsObjC</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">CompileAsObjC</CompileAs>
+    </ClangCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ClangModules.h" />
+    <ClInclude Include="$(StarboardBasePath)\tests\unittests\ClangModules\ClangModules.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
