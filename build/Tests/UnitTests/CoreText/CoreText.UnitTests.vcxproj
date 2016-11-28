@@ -246,7 +246,7 @@
   </ItemGroup>
   <Target Name="CopyTestResourcesToOutput" AfterTargets="AfterBuild">
     <ItemGroup>
-      <TestResourceFile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics\data\*" />
+      <TestResourceFile Include="$(StarboardBasePath)\tests\unittests\CoreText\data\*" />
     </ItemGroup>
     <Copy SourceFiles="@(TestResourceFile)" DestinationFolder="$(OutDir)\data" SkipUnchangedFiles="True" />
   </Target>
