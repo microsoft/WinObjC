@@ -499,6 +499,7 @@ extern void UIActivityIndicatorViewGetXamlElement();
 
 extern void UIButtonCreateXamlElement();
 extern void UIButtonGetXamlElement();
+extern void UIButtonXAMLCatalog();
 
 extern void UIScrollViewCreateXamlElement();
 extern void UIScrollViewGetXamlElement();
@@ -628,6 +629,10 @@ public:
 
     TEST_METHOD(UIButton_GetXamlElement) {
         FrameworkHelper::RunOnUIThread(&UIButtonGetXamlElement);
+    }
+
+    TEST_METHOD(UIButton_XAMLCatalog) {
+        UIButtonXAMLCatalog();
     }
 
     TEST_METHOD(UIScrollView_CreateXamlElement) {
@@ -788,10 +793,12 @@ public:
     }
 
     TEST_METHOD(CALayerAppearance_OpacityChanged) {
+        // NOTE: We are not using the FrameworkHelper::RunOnUIThread because we need to set a waitable condition outside of it
         CALayerAppearanceOpacityChanged();
     }
 
     TEST_METHOD(CALayerAppearance_BackgroundColorChanged) {
+        // NOTE: We are not using the FrameworkHelper::RunOnUIThread because we need to set a waitable condition outside of it
         CALayerAppearanceBackgroundColorChanged();
     }
 }; /* class CoreAnimationTests */

@@ -13,8 +13,8 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#include <TestFramework.h>
-#include <Foundation/Foundation.h>
+#import <TestFramework.h>
+#import <Foundation/Foundation.h>
 
 #include <COMIncludes.h>
 #import <WRLHelpers.h>
@@ -27,7 +27,7 @@
 #import <windows.foundation.h>
 #include <COMIncludes_end.h>
 
-#include "ObjCXamlControls.h"
+#import "ObjCXamlControls.h"
 
 #import "UWP/WindowsUIXamlControls.h"
 #import "CALayerInternal.h"
@@ -86,38 +86,36 @@ TEST(CALayerAppearance, OpacityChanged) {
     __block CALayerViewController* caLayerVC;
 
     dispatch_sync(dispatch_get_main_queue(), ^{
-        // Give the layer its initial values and add it as a sublayer to the current UIView.layer
-        LOG_INFO("Creating CALayerViewController");
+        LOG_INFO("Creating CALayerViewController on the UI thread explicitly");
         caLayerVC = [[CALayerViewController alloc] init];
         [caLayerVC view];
 
-        __block int64_t callbackToken;
         __block WXUIElement* backingElement = [caLayerVC.layer _xamlElement];
         ASSERT_TRUE(backingElement);
 
         // We have to artificially ref the element since the block needs to keep it around
         [backingElement retain];
 
-        callbackToken = [backingElement
+        __block int64_t callbackToken = [backingElement
             registerPropertyChangedCallback:[WXUIElement opacityProperty]
                                    callback:^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                                       // TODO: It seems like backElement can be destroyed even though it is artificially +1'ed for this
-                                       // callback
-                                       LOG_INFO("Backing XAML element opacity: %f", backingElement.opacity);
-                                       LOG_INFO("CALayer.opacity: %f", caLayerVC.layer.opacity);
-                                       ASSERT_TRUE(backingElement.opacity == caLayerVC.layer.opacity);
+                // TODO: It seems like backElement can be destroyed even though it is artificially +1'ed for this
+                // callback
+                LOG_INFO("Backing XAML element opacity: %f", backingElement.opacity);
+                LOG_INFO("CALayer.opacity: %f", caLayerVC.layer.opacity);
+                ASSERT_TRUE(backingElement.opacity == caLayerVC.layer.opacity);
 
-                                       // Unregister the callback
-                                       [backingElement unregisterPropertyChangedCallback:[WXUIElement opacityProperty] token:callbackToken];
+                // Unregister the callback
+                [backingElement unregisterPropertyChangedCallback:[WXUIElement opacityProperty] token:callbackToken];
+                [backingElement release];
 
-                                       [backingElement release];
-                                       [caLayerVC.condition signal];
-                                   }];
+                [caLayerVC.condition signal];
+            }];
     });
 
     // TODO: Investigate the improved conditioned wait for a response.
     if (![caLayerVC.condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]]) {
-        ASSERT_FALSE_MSG(true, "FAILED: Waiting for property changed event timed out!"); // Wait timed out
+        ASSERT_FALSE_MSG(true, "FAILED: Waiting for property changed event timed out!");
     }
 
     // Don't leak
@@ -128,53 +126,51 @@ TEST(CALayerAppearance, BackgroundColorChanged) {
     __block CALayerViewController* caLayerVC;
 
     dispatch_sync(dispatch_get_main_queue(), ^{
-        // Give the layer its initial values and add it as a sublayer to the current UIView.layer
-        LOG_INFO("Creating CALayerViewController");
+        LOG_INFO("Creating CALayerViewController on the UI thread explicitly");
         caLayerVC = [[CALayerViewController alloc] init];
         [caLayerVC view];
 
-        __block int64_t callbackToken;
         __block WXUIElement* backingElement = [caLayerVC.layer _xamlElement];
         ASSERT_TRUE(backingElement);
 
         // We have to artificially ref the element since the block needs to keep it around
         [backingElement retain];
 
-        callbackToken = [backingElement
+        __block int64_t callbackToken = [backingElement
             registerPropertyChangedCallback:[WXCPanel backgroundProperty]
                                    callback:^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                                       WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], [sender getValue:dp]);
-                                       if (solidBrush != nil) {
-                                           LOG_INFO("Backing XAML element backgroundColor (red component): %d,%d,%d,%d",
-                                                    [solidBrush.color r],
-                                                    [solidBrush.color g],
-                                                    [solidBrush.color b],
-                                                    [solidBrush.color a]);
+                WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], [sender getValue:dp]);
+                if (solidBrush) {
+                    LOG_INFO("Backing XAML element backgroundColor (rgba): %d,%d,%d,%d",
+                            [solidBrush.color r],
+                            [solidBrush.color g],
+                            [solidBrush.color b],
+                            [solidBrush.color a]);
 
-                                           CGFloat red, green, blue, alpha;
-                                           [caLayerVC.layer.backgroundColor getRed:&red green:&green blue:&blue alpha:&alpha];
-                                           LOG_INFO("CALayer.backgroundColor (rgba): %.2f,%.2f,%.2f,%.2f", red, green, blue, alpha);
+                    CGFloat red, green, blue, alpha;
+                    [caLayerVC.layer.backgroundColor getRed:&red green:&green blue:&blue alpha:&alpha];
+                    LOG_INFO("CALayer.backgroundColor (rgba): %.2f,%.2f,%.2f,%.2f", red, green, blue, alpha);
 
-                                           // Validate that the change is reflected on the backing XAML control
-                                           ASSERT_TRUE(solidBrush.color.r == (int)(red * 255));
-                                           ASSERT_TRUE(solidBrush.color.g == (int)(green * 255));
-                                           ASSERT_TRUE(solidBrush.color.b == (int)(blue * 255));
-                                           ASSERT_TRUE(solidBrush.color.a == (int)(alpha * 255));
-                                       } else {
-                                           ASSERT_FALSE_MSG(true, "Backing XAML element solid color brush not found");
-                                       }
+                    // Validate that the change is reflected on the backing XAML control
+                    ASSERT_TRUE(solidBrush.color.r == (int)(red * 255));
+                    ASSERT_TRUE(solidBrush.color.g == (int)(green * 255));
+                    ASSERT_TRUE(solidBrush.color.b == (int)(blue * 255));
+                    ASSERT_TRUE(solidBrush.color.a == (int)(alpha * 255));
+                } else {
+                    ASSERT_FALSE_MSG(true, "Backing XAML element solid color brush not found");
+                }
 
-                                       // Unregister the callback
-                                       [backingElement unregisterPropertyChangedCallback:[WXCPanel backgroundProperty] token:callbackToken];
+                // Unregister the callback
+                [backingElement unregisterPropertyChangedCallback:[WXCPanel backgroundProperty] token:callbackToken];
+                [backingElement release];
 
-                                       [backingElement release];
-                                       [caLayerVC.condition signal];
-                                   }];
-    });
+                [caLayerVC.condition signal];
+            }];
+        });
 
     // TODO: Investigate the improved conditioned wait for a response.
     if (![caLayerVC.condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]]) {
-        ASSERT_FALSE_MSG(true, "FAILED: Waiting for property changed event timed out!"); // Wait timed out
+        ASSERT_FALSE_MSG(true, "FAILED: Waiting for property changed event timed out!");
     }
 
     // Don't leak
