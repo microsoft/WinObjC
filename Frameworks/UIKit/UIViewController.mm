@@ -484,10 +484,6 @@ NSMutableDictionary* _pageMappings;
     return YES;
 }
 
-- (BOOL)_popoverManagesPresentation {
-    return priv->_popoverPresentationController && priv->_popoverPresentationController->_managesPresentation;
-}
-
 - (void)_setResizeToScreen:(BOOL)resize {
     priv->_resizeToScreen = TRUE;
 }
@@ -1169,7 +1165,7 @@ NSMutableDictionary* _pageMappings;
         [controller view];
         controller->priv->_parentViewController = self;
         controller->priv->_presentingViewController = self;
-        controller->priv->_presentCompletionBlock = [[completion copy] autorelease];
+        controller->priv->_presentCompletionBlock.attach([completion copy]);
 
         if ([controller modalPresentationStyle] == UIModalPresentationPopover) {
             controller->priv->_popoverPresentationController.attach([[UIPopoverPresentationController alloc] initWithPresentedViewController:controller presentingViewController:self]);
@@ -1234,9 +1230,9 @@ NSMutableDictionary* _pageMappings;
     [curController retain];
     [curController autorelease];
 
-    BOOL popoverPresented = [curController _popoverManagesPresentation];
+    BOOL realPopoverPresented = [[curController popoverPresentationController] _isManagingPresentation];
 
-    if (!popoverPresented && curController->priv->_modalViewController) {
+    if (!realPopoverPresented && curController->priv->_modalViewController) {
         [curController dismissViewControllerAnimated:animated completion:completion];
     }
 
@@ -1259,8 +1255,8 @@ NSMutableDictionary* _pageMappings;
     UIView* myView = [self view];
     [myView setHidden:FALSE];
 
-    if (popoverPresented) {
-        [curController->priv->_popoverPresentationController _dismissAnimated:animated completion:completion];
+    if (realPopoverPresented) {
+        [[curController popoverPresentationController] _dismissAnimated:animated completion:completion];
     } else if (animated) {
         CGPoint curPos;
         id layer = [curView layer];
@@ -1292,7 +1288,7 @@ NSMutableDictionary* _pageMappings;
         [animation setRemovedOnCompletion:FALSE];
         [layer addAnimation:animation forKey:@"ModalDismiss"];
 
-        priv->_dismissCompletionBlock = [[completion copy] autorelease];
+        priv->_dismissCompletionBlock.attach([completion copy]);
 
         priv->_dismissController = curController;
         [curController _notifyViewWillDisappear:TRUE];
@@ -1349,13 +1345,11 @@ NSMutableDictionary* _pageMappings;
 
     if ([self parentViewController] != nil) {
         if ([self modalPresentationStyle] == UIModalPresentationPopover) {
-            [priv->_popoverPresentationController _prepareForPresentation];
+            [[self popoverPresentationController] _prepareForPresentation];
 
             displayPopover = ![self _hidesParent];
 
             if (displayPopover) {
-                priv->_popoverPresentationController->_managesPresentation = YES;
-
                 __unsafe_unretained __block UIViewController* me = self;
 
                 dispatch_block_t cleanup = ^{
@@ -1364,9 +1358,7 @@ NSMutableDictionary* _pageMappings;
                     me->priv->_popoverPresentationController = nil;
                 };
 
-                [priv->_popoverPresentationController->_onDismissCleanupHandler release];
-                priv->_popoverPresentationController->_onDismissCleanupHandler = [cleanup copy];
-                [priv->_popoverPresentationController _presentAnimated:animated completion:priv->_presentCompletionBlock];
+                [[self popoverPresentationController] _presentAnimated:animated presentCompletion:priv->_presentCompletionBlock dismissCompletion:cleanup];
                 priv->_presentCompletionBlock = nil;
             }
         }
@@ -1524,7 +1516,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
                 priv->_visibility = controllerWillAppear;
             }
 
-            if (![self _popoverManagesPresentation]) {
+            if (![[self popoverPresentationController] _isManagingPresentation]) {
                 [self viewWillAppear:isAnimated];
             }
         } break;
@@ -1552,7 +1544,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
 
 - (void)_doNotifyViewDidAppear:(BOOL)isAnimated {
     priv->_visibility = controllerVisible;
-    if (![self _popoverManagesPresentation]) {
+    if (![[self popoverPresentationController] _isManagingPresentation]) {
         [self viewDidAppear:isAnimated];
         if (priv->_presentCompletionBlock) {
             priv->_presentCompletionBlock();
@@ -1608,7 +1600,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
             } else {
                 priv->_visibility = controllerWillDisappearAnimated;
             }
-            if (![self _popoverManagesPresentation]) {
+            if (![[self popoverPresentationController] _isManagingPresentation]) {
                 [self viewWillDisappear:isAnimated];
             }
             break;
@@ -1633,7 +1625,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
         case controllerWillDisappear:
             if (isAnimated == FALSE) {
                 priv->_visibility = controllerNotVisible;
-                if (![self _popoverManagesPresentation]) {
+                if (![[self popoverPresentationController] _isManagingPresentation]) {
                     [self viewDidDisappear:isAnimated];
                 }
             } else {
@@ -1644,7 +1636,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
         case controllerWillDisappearAnimated:
             if (isAnimated) {
                 priv->_visibility = controllerNotVisible;
-                if (![self _popoverManagesPresentation]) {
+                if (![[self popoverPresentationController] _isManagingPresentation]) {
                     [self viewDidDisappear:isAnimated];
                 }
             }
@@ -1653,7 +1645,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
         case controllerVisible:
             TraceWarning(TAG, L"Warning: Didn't notify view will disappear");
             priv->_visibility = controllerNotVisible;
-            if (![self _popoverManagesPresentation]) {
+            if (![[self popoverPresentationController] _isManagingPresentation]) {
                 [self viewDidDisappear:isAnimated];
             }
             break;

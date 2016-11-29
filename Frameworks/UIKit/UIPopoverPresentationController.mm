@@ -25,7 +25,7 @@
 
 @interface UIPopoverPresentationController ()
 
-- (void)_handleDismissCleanup;
+- (void)_handleDismiss;
 
 @end
 
@@ -67,7 +67,7 @@
         [_delegate popoverPresentationControllerDidDismissPopover:_controller];
     }
 
-    [_controller _handleDismissCleanup];
+    [_controller _handleDismiss];
 }
 
 @end
@@ -79,6 +79,8 @@
     StrongId<UIBarButtonItem*> _barButtonItem;
     StrongId<UIView*> _sourceView;
     CGRect _sourceRect;
+    StrongId<dispatch_block_t> _dismissCompletion;
+    BOOL _isManagingPresentation;
 }
 
 /**
@@ -96,15 +98,24 @@
     return self;
 }
 
+- (BOOL)_isManagingPresentation {
+    return _isManagingPresentation;
+}
+
 - (void)_prepareForPresentation {
     if ([[_delegateInternal delegate] respondsToSelector:@selector(prepareForPopoverPresentation:)]) {
         [[_delegateInternal delegate] prepareForPopoverPresentation:self];
     }
 }
 
-- (void)_presentAnimated:(BOOL)animated completion:(dispatch_block_t)presentCompletion {
-    [_popoverControllerInternal->_presentCompletion release];
-    _popoverControllerInternal->_presentCompletion = [presentCompletion copy];
+- (void)_presentAnimated:(BOOL)animated presentCompletion:(dispatch_block_t)presentCompletion dismissCompletion:(dispatch_block_t)dismissCompletion {
+    _popoverControllerInternal->_presentCompletion.attach([presentCompletion copy]);
+
+    _dismissCompletion.attach([dismissCompletion copy]);
+
+    // WYPopoverController internally manages the presentation of the content
+    // view controller (and the invoking of the viewWillAppear: et al. appearance events).
+    _isManagingPresentation = YES;
 
     if (_barButtonItem) {
         [_popoverControllerInternal presentPopoverFromBarButtonItem:_barButtonItem
@@ -122,15 +133,16 @@
     [_popoverControllerInternal _dismissPopoverAnimated:animated completion:dismissCompletion];
 }
 
-- (void)_handleDismissCleanup {
-    // stay alive while UIViewController forgets about us
-    [self retain];
+- (void)_handleDismiss {
+    // Stay alive while we invoke _dismissCompletion (UIViewController tears
+    // down its strong ref to us in this completion; we must avoid our
+    // deallocation while this block we own is executing).
+    StrongId<UIPopoverPresentationController> strongSelf = self;
 
-    _onDismissCleanupHandler();
-    [_onDismissCleanupHandler release];
-    _onDismissCleanupHandler = nil;
+    _dismissCompletion();
+    _dismissCompletion = nil;
 
-    [self release];
+    _isManagingPresentation = NO;
 }
 
 /**
@@ -322,11 +334,6 @@
 - (void)setPopoverBackgroundViewClass:(Class)popoverBackgroundViewClass {
     UNIMPLEMENTED();
     _popoverBackgroundViewClass = popoverBackgroundViewClass;
-}
-
-- (void)dealloc {
-    [_onDismissCleanupHandler release];
-    [super dealloc];
 }
 
 @end

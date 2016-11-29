@@ -67,7 +67,6 @@
 - (void)popoverControllerDidPresentPopover:(WYPopoverController*)popoverController {
     if (_controller->_presentCompletion) {
         _controller->_presentCompletion();
-        [_controller->_presentCompletion release];
         _controller->_presentCompletion = nil;
     }
 }
@@ -265,11 +264,6 @@
         [_popoverControllerInternal theme].innerStrokeColor = _backgroundColor;
         [_popoverControllerInternal endThemeUpdates];
     }
-}
-
-- (void)dealloc {
-    [_presentCompletion release];
-    [super dealloc];
 }
 
 @end
