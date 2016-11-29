@@ -20,7 +20,7 @@
 #import <CoreText/CoreText.h>
 #import <Starboard/SmartTypes.h>
 
-NSURL* __GetRelativeURL(NSString* relativePath) {
+static NSURL* __GetRelativeURL(NSString* relativePath) {
     static char fullPath[_MAX_PATH];
     static int unused = [](char* path) { return GetModuleFileNameA(NULL, path, _MAX_PATH); }(fullPath);
     return [NSURL fileURLWithPath:[[@(fullPath) stringByDeletingLastPathComponent] stringByAppendingPathComponent:relativePath]];

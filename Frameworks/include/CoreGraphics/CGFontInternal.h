@@ -15,4 +15,6 @@
 //******************************************************************************
 #pragma once
 
+#include <CoreGraphics/CGFont.h>
+
 COREGRAPHICS_EXPORT CFDataRef _CGFontGetData(CGFontRef font);
