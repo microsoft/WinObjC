@@ -14,30 +14,20 @@
 //
 //******************************************************************************
 
-#import "DrawingTest.h"
-#import <windows.h>
-#import "CGContextInternal.h"
+#include "DrawingTest.h"
+#include "DrawingTestConfig.h"
+#include "ImageHelpers.h"
+#include <windows.h>
 
-// TODO:#1448 Remove the use of OBJC code
 #ifdef WINOBJC
-
-static NSString* getModulePath() {
-    char fullPath[_MAX_PATH];
-    GetModuleFileNameA(NULL, fullPath, _MAX_PATH);
-    return [@(fullPath) stringByDeletingLastPathComponent];
-}
-
-static NSString* getPathToFile(NSString* fileName) {
-    static StrongId<NSString*> refPath = getModulePath();
-    return [refPath stringByAppendingPathComponent:fileName];
-}
+#include "CGContextInternal.h"
 
 DISABLED_DRAW_TEST_F(CGContext, DrawIntoRect, UIKitMimicTest) {
     // Draw a portion of an image into a different region.
-    CFDataRef data = (CFDataRef)[NSData dataWithContentsOfFile:getPathToFile(@"png3.9.png")];
-    woc::unique_cf<CGDataProviderRef> dataProvider(CGDataProviderCreateWithCFData(data));
+    auto drawingConfig = DrawingTestConfig::Get();
 
-    woc::unique_cf<CGImageRef> image(CGImageCreateWithPNGDataProvider(dataProvider.get(), NULL, NO, kCGRenderingIntentDefault));
+    woc::unique_cf<CFStringRef> testFilename{ _CFStringCreateWithStdString(drawingConfig->GetResourcePath("png3.9.png")) };
+    woc::unique_cf<CGImageRef> image{ _CGImageCreateFromPNGFile(testFilename.get()) };
     ASSERT_NE(image, nullptr);
 
     CGContextRef context = GetDrawingContext();
@@ -52,18 +42,15 @@ DISABLED_DRAW_TEST_F(CGContext, DrawIntoRect, UIKitMimicTest) {
                             { 0, 0, bounds.size.width / 4, bounds.size.height / 4 },
                             { 0, 0, bounds.size.width, bounds.size.height });
 }
+#endif
 
 DISABLED_DRAW_TEST_F(CGContext, DrawAnImage, UIKitMimicTest) {
     // Load an Image and draw it into the canvas context
-    CFDataRef data = (CFDataRef)[NSData dataWithContentsOfFile:getPathToFile(@"jpg1.jpg")];
-    woc::unique_cf<CGDataProviderRef> dataProvider(CGDataProviderCreateWithCFData(data));
+    auto drawingConfig = DrawingTestConfig::Get();
 
-    woc::unique_cf<CGImageRef> cgImage(CGImageCreateWithJPEGDataProvider(dataProvider.get(),
-
-                                                                         NULL,
-                                                                         NO,
-                                                                         kCGRenderingIntentDefault));
-    ASSERT_NE(cgImage, nullptr);
+    woc::unique_cf<CFStringRef> testFilename{ _CFStringCreateWithStdString(drawingConfig->GetResourcePath("jpg1.jpg")) };
+    woc::unique_cf<CGImageRef> image{ _CGImageCreateFromJPEGFile(testFilename.get()) };
+    ASSERT_NE(image, nullptr);
 
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
@@ -72,10 +59,8 @@ DISABLED_DRAW_TEST_F(CGContext, DrawAnImage, UIKitMimicTest) {
     CGAffineTransform shift = CGAffineTransformTranslate(flip, 0, bounds.size.height * -1);
     CGContextConcatCTM(context, shift);
 
-    CGContextDrawImage(context, bounds, cgImage.get());
+    CGContextDrawImage(context, bounds, image.get());
 }
-
-#endif
 
 DISABLED_DRAW_TEST_F(CGContext, RedBox, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
