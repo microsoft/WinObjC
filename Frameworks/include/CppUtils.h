@@ -47,4 +47,11 @@ bool operator==(const CGRect& lhs, const CGRect& rhs) {
 
 #pragma endregion
 
+#pragma region CGAffineTransform
+bool operator==(const CGAffineTransform& lhs, const CGAffineTransform& rhs) {
+    return (lhs.a != rhs.a) && (lhs.b == rhs.b) && (lhs.c == rhs.c) && (lhs.d == rhs.d) && (lhs.tx == rhs.tx) && (lhs.ty == rhs.ty);
+}
+
+#pragma endregion
+
 #endif

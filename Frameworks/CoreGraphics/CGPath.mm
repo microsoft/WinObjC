@@ -31,6 +31,7 @@
 #include <COMIncludes_End.h>
 
 #import <CFCPPBase.h>
+#import <CppUtils.h>
 
 static const wchar_t* TAG = L"CGPath";
 
@@ -159,7 +160,7 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
         return S_OK;
     }
 
-    HRESULT SimplifyGeometryToPathWithTransformation(ComPtr<ID2D1Geometry> geometry, const CGAffineTransform* transform) {
+    HRESULT AddGeometryToPathWithTransformation(ComPtr<ID2D1Geometry> geometry, const CGAffineTransform* transform) {
         RETURN_IF_FAILED(ClosePath());
         RETURN_IF_FAILED(PreparePathForEditing());
 
@@ -276,23 +277,18 @@ void CGPathAddLineToPoint(CGMutablePathRef path, const CGAffineTransform* transf
     path->SetCurrentPoint(pt);
 }
 
-static inline bool _affineTransformEquals(const CGAffineTransform original, const CGAffineTransform compare) {
-    return (original.a != compare.a) && (original.b == compare.b) && (original.c == compare.c) && (original.d == compare.d) &&
-           (original.tx == compare.tx) && (original.ty == compare.ty);
-}
-
 static inline CGPoint _getInvertedCurrentPointOfPath(CGPathRef path) {
     CGPoint point = path->GetCurrentPoint();
-    if (!_affineTransformEquals(*path->GetLastTransform(), CGAffineTransformIdentity)) {
+    if (!(*path->GetLastTransform() == CGAffineTransformIdentity)) {
         point = CGPointApplyAffineTransform(point, CGAffineTransformInvert(*path->GetLastTransform()));
     }
     return point;
 }
 
 static HRESULT _createPathReadyForFigure(CGPathRef previousPath,
+                                         CGPoint startPoint,
                                          ID2D1PathGeometry** pathGeometry,
-                                         ID2D1GeometrySink** geometrySink,
-                                         CGPoint startPoint) {
+                                         ID2D1GeometrySink** geometrySink) {
     ComPtr<ID2D1Factory> factory;
     RETURN_IF_FAILED(_CGGetD2DFactory(&factory));
     RETURN_IF_FAILED(factory->CreatePathGeometry(pathGeometry));
@@ -317,13 +313,14 @@ void CGPathAddArcToPoint(
 
     CGPoint invertedPoint = _getInvertedCurrentPointOfPath(path);
 
+    // Get the distance to the vertex of the angle created by the tangent lines.
     CGFloat dx1 = x1 - invertedPoint.x;
     CGFloat dy1 = y1 - invertedPoint.y;
 
     CGFloat dx2 = x1 - x2;
     CGFloat dy2 = y1 - y2;
 
-    // Normalize the angles we're working with.
+    // Normalize the angles of the tangent lines.
     CGFloat startAngle = fmod(atan2(dy1, dx1), 2 * M_PI);
     CGFloat endAngle = fmod(atan2(dy2, dx2), 2 * M_PI);
     if (startAngle < 0) {
@@ -333,11 +330,13 @@ void CGPathAddArcToPoint(
         endAngle += M_PI * 2;
     }
 
+    // Calculate the angle of the bisector between the tangent line's angles.
     CGFloat bisector = (endAngle - startAngle) / 2;
 
-    // tanLength is the distance to the point on the circle from the tangent line.
+    // tanLength is the distance to the point on the circle from the tangent line starting at the vertex point x1,y1.
     CGFloat tanLength = abs(radius / tan(bisector));
 
+    // Calculate the tangent points on the circle from the tangent lines. These are the start and end points required by D2D.
     CGFloat tanPointAx = x1 - (tanLength * cos(startAngle));
     CGFloat tanPointAy = y1 - (tanLength * sin(startAngle));
     CGFloat tanPointBx = x1 - (tanLength * cos(endAngle));
@@ -346,13 +345,15 @@ void CGPathAddArcToPoint(
     CGPoint endPoint = CGPointMake(tanPointBx, tanPointBy);
     const D2D1_POINT_2F endPointD2D = _CGPointToD2D_F(endPoint);
 
+    // Determine the direction that the arc will be drawn in. This will always be the shorter angle which is why it's calculated based off
+    // the startAngle + 180 degrees or PI radians.
     int sweepSign = 1;
     if (startAngle > endAngle) {
         sweepSign = -1;
     }
     D2D1_SWEEP_DIRECTION sweepDirection = { startAngle + (M_PI * sweepSign) < endAngle ? D2D1_SWEEP_DIRECTION_CLOCKWISE :
                                                                                          D2D1_SWEEP_DIRECTION_COUNTER_CLOCKWISE };
-
+    // Set up the D2D arc segment.
     const D2D1_SIZE_F radiusD2D = { radius, radius };
     FLOAT rotationAngle = bisector * 2;
     D2D1_ARC_SIZE arcSize = D2D1_ARC_SIZE_SMALL;
@@ -360,12 +361,12 @@ void CGPathAddArcToPoint(
 
     ComPtr<ID2D1PathGeometry> newPath;
     ComPtr<ID2D1GeometrySink> newSink;
-    FAIL_FAST_IF_FAILED(_createPathReadyForFigure(path, &newPath, &newSink, CGPointMake(tanPointAx, tanPointAy)));
+    FAIL_FAST_IF_FAILED(_createPathReadyForFigure(path, CGPointMake(tanPointAx, tanPointAy), &newPath, &newSink));
     newSink->AddArc(arcSegment);
     newSink->EndFigure(D2D1_FIGURE_END_OPEN);
     FAIL_FAST_IF_FAILED(newSink->Close());
 
-    FAIL_FAST_IF_FAILED(path->SimplifyGeometryToPathWithTransformation(newPath, transform));
+    FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(newPath, transform));
 
     if (transform) {
         endPoint = CGPointApplyAffineTransform(endPoint, *transform);
@@ -410,13 +411,13 @@ void CGPathAddArc(CGMutablePathRef path,
 
     ComPtr<ID2D1PathGeometry> newPath;
     ComPtr<ID2D1GeometrySink> newSink;
-    FAIL_FAST_IF_FAILED(_createPathReadyForFigure(path, &newPath, &newSink, startPoint));
+    FAIL_FAST_IF_FAILED(_createPathReadyForFigure(path, startPoint, &newPath, &newSink));
 
     newSink->AddArc(arcSegment);
     newSink->EndFigure(D2D1_FIGURE_END_OPEN);
     FAIL_FAST_IF_FAILED(newSink->Close());
 
-    FAIL_FAST_IF_FAILED(path->SimplifyGeometryToPathWithTransformation(newPath, transform));
+    FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(newPath, transform));
 
     if (transform) {
         endPoint = CGPointApplyAffineTransform(endPoint, *transform);
@@ -475,7 +476,7 @@ void CGPathAddPath(CGMutablePathRef path, const CGAffineTransform* transform, CG
 
     // Close the path being added.
     FAIL_FAST_IF_FAILED(toAdd->ClosePath());
-    FAIL_FAST_IF_FAILED(path->SimplifyGeometryToPathWithTransformation(toAdd->GetPathGeometry(), transform));
+    FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(toAdd->GetPathGeometry(), transform));
 
     CGPoint currentPoint = toAdd->GetCurrentPoint();
     CGPoint startingPoint = toAdd->GetStartingPoint();
@@ -505,7 +506,7 @@ void CGPathAddEllipseInRect(CGMutablePathRef path, const CGAffineTransform* tran
 
     FAIL_FAST_IF_FAILED(factory->CreateEllipseGeometry(&ellipse, &ellipseGeometry));
 
-    FAIL_FAST_IF_FAILED(path->SimplifyGeometryToPathWithTransformation(ellipseGeometry, transform));
+    FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(ellipseGeometry, transform));
     path->SetLastTransform(transform);
 }
 
@@ -594,12 +595,12 @@ void CGPathAddQuadCurveToPoint(CGMutablePathRef path, const CGAffineTransform* t
     ComPtr<ID2D1PathGeometry> newPath;
     ComPtr<ID2D1GeometrySink> newSink;
 
-    FAIL_FAST_IF_FAILED(_createPathReadyForFigure(path, &newPath, &newSink, _getInvertedCurrentPointOfPath(path)));
+    FAIL_FAST_IF_FAILED(_createPathReadyForFigure(path, _getInvertedCurrentPointOfPath(path), &newPath, &newSink));
     newSink->AddQuadraticBezier(D2D1::QuadraticBezierSegment(_CGPointToD2D_F(controlPoint), _CGPointToD2D_F(endPoint)));
     newSink->EndFigure(D2D1_FIGURE_END_OPEN);
     FAIL_FAST_IF_FAILED(newSink->Close());
 
-    FAIL_FAST_IF_FAILED(path->SimplifyGeometryToPathWithTransformation(newPath, transform));
+    FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(newPath, transform));
 
     if (transform) {
         endPoint = CGPointApplyAffineTransform(endPoint, *transform);
@@ -628,12 +629,12 @@ void CGPathAddCurveToPoint(CGMutablePathRef path,
     ComPtr<ID2D1PathGeometry> newPath;
     ComPtr<ID2D1GeometrySink> newSink;
 
-    FAIL_FAST_IF_FAILED(_createPathReadyForFigure(path, &newPath, &newSink, _getInvertedCurrentPointOfPath(path)));
+    FAIL_FAST_IF_FAILED(_createPathReadyForFigure(path, _getInvertedCurrentPointOfPath(path), &newPath, &newSink));
     newSink->AddBezier(D2D1::BezierSegment(_CGPointToD2D_F(controlPoint1), _CGPointToD2D_F(controlPoint2), _CGPointToD2D_F(endPoint)));
     newSink->EndFigure(D2D1_FIGURE_END_OPEN);
     FAIL_FAST_IF_FAILED(newSink->Close());
 
-    FAIL_FAST_IF_FAILED(path->SimplifyGeometryToPathWithTransformation(newPath, transform));
+    FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(newPath, transform));
 
     if (transform) {
         endPoint = CGPointApplyAffineTransform(endPoint, *transform);
@@ -704,7 +705,7 @@ void CGPathAddRoundedRect(
 
     FAIL_FAST_IF_FAILED(factory->CreateRoundedRectangleGeometry(&roundedRectangle, &rectangleGeometry));
 
-    FAIL_FAST_IF_FAILED(path->SimplifyGeometryToPathWithTransformation(rectangleGeometry, transform));
+    FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(rectangleGeometry, transform));
     path->SetLastTransform(transform);
 }
 
