@@ -36,10 +36,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\AssetsLibraryTests\AssetsLibraryTestHelpers.h">
       <Filter>Tests\AssetsLibraryTests</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\samples\XAMLCatalog\XAMLCatalog\UIButtonViewController.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\samples\XAMLCatalog\XAMLCatalog\UIButtonViewController.h">
       <Filter>Tests\UIKitTests</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\samples\XAMLCatalog\XAMLCatalog\MenuTableViewController.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\samples\XAMLCatalog\XAMLCatalog\MenuTableViewController.h">
       <Filter>Tests\UIKitTests</Filter>
     </ClInclude>
   </ItemGroup>
@@ -114,10 +114,10 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIKitTests\UIScrollViewTests.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIKitTests\UISliderTests.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIKitTests\UITextFieldTests.mm" />
-    <ClangCompile Include="..\..\..\samples\XAMLCatalog\XAMLCatalog\UIButtonViewController.m">
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\samples\XAMLCatalog\XAMLCatalog\UIButtonViewController.m">
       <Filter>Tests\UIKitTests</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\..\samples\XAMLCatalog\XAMLCatalog\MenuTableViewController.m">
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\samples\XAMLCatalog\XAMLCatalog\MenuTableViewController.m">
       <Filter>Tests\UIKitTests</Filter>
     </ClangCompile>
   </ItemGroup>

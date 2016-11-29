@@ -37,14 +37,12 @@ static const NSTimeInterval c_testTimeoutInSec = 5;
 @interface CALayerViewController : UIViewController
 @property CALayer* layer;
 @property UIView* viewForLayer;
-@property NSCondition* condition;
 @end
 
 @implementation CALayerViewController
 - (instancetype)init {
     if (self = [super init]) {
         self->_layer = [CALayer layer];
-        self->_condition = [[NSCondition alloc] init];
     }
 
     return self;
@@ -63,79 +61,71 @@ static const NSTimeInterval c_testTimeoutInSec = 5;
 
 - (void)setupLayer {
     self->_layer.frame = self->_viewForLayer.bounds;
-
-    self->_layer.contentsGravity = kCAGravityCenter;
-    self->_layer.cornerRadius = 100.0;
-    self->_layer.borderWidth = 12.0;
-    self->_layer.borderColor = [UIColor whiteColor].CGColor;
-
     self->_layer.backgroundColor = [UIColor orangeColor].CGColor;
-
     self->_layer.opacity = 0.45f;
-
-    self->_layer.shadowOpacity = 0.75;
-    self->_layer.shadowRadius = 3.0;
-    self->_layer.shadowOffset = CGSizeMake(0, 3);
-
-    self->_layer.magnificationFilter = kCAFilterLinear;
-    self->_layer.geometryFlipped = NO;
 }
 @end
 
+//
+// Validate that the CALayer opacity property change invokes a property change in the backing XAML element
+//
 TEST(CALayerAppearance, OpacityChanged) {
     __block CALayerViewController* caLayerVC;
+    __block NSCondition* condition = [[[NSCondition alloc] init] autorelease];
 
     dispatch_sync(dispatch_get_main_queue(), ^{
         LOG_INFO("Creating CALayerViewController on the UI thread explicitly");
         caLayerVC = [[CALayerViewController alloc] init];
         [caLayerVC view];
 
-        __block WXUIElement* backingElement = [caLayerVC.layer _xamlElement];
-        ASSERT_TRUE(backingElement);
-
         // We have to artificially ref the element since the block needs to keep it around
+        __block WXUIElement* backingElement = [caLayerVC.layer _xamlElement];
         [backingElement retain];
 
+        // Register callback and wait for the property changed event to trigger
         __block int64_t callbackToken = [backingElement
             registerPropertyChangedCallback:[WXUIElement opacityProperty]
                                    callback:^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                // TODO: It seems like backElement can be destroyed even though it is artificially +1'ed for this
-                // callback
                 LOG_INFO("Backing XAML element opacity: %f", backingElement.opacity);
                 LOG_INFO("CALayer.opacity: %f", caLayerVC.layer.opacity);
-                ASSERT_TRUE(backingElement.opacity == caLayerVC.layer.opacity);
+                EXPECT_EQ_MSG(backingElement.opacity, caLayerVC.layer.opacity, "Failed to match opacity");
 
                 // Unregister the callback
                 [backingElement unregisterPropertyChangedCallback:[WXUIElement opacityProperty] token:callbackToken];
                 [backingElement release];
 
-                [caLayerVC.condition signal];
+                [condition lock];
+                [condition signal];
+                [condition unlock];
             }];
     });
 
-    // TODO: Investigate the improved conditioned wait for a response.
-    if (![caLayerVC.condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]]) {
-        ASSERT_FALSE_MSG(true, "FAILED: Waiting for property changed event timed out!");
-    }
+    [condition lock];
+    ASSERT_TRUE_MSG([condition waitUntilDate : [NSDate dateWithTimeIntervalSinceNow : c_testTimeoutInSec]],
+        "FAILED: Waiting for property changed event timed out!");
+    [condition unlock];
 
     // Don't leak
     [caLayerVC release];
 }
 
+//
+// Validate that the CALayer background property change invokes a property change in the backing XAML element
+//
 TEST(CALayerAppearance, BackgroundColorChanged) {
     __block CALayerViewController* caLayerVC;
+    __block NSCondition* condition = [[[NSCondition alloc] init] autorelease];
 
     dispatch_sync(dispatch_get_main_queue(), ^{
         LOG_INFO("Creating CALayerViewController on the UI thread explicitly");
         caLayerVC = [[CALayerViewController alloc] init];
         [caLayerVC view];
 
-        __block WXUIElement* backingElement = [caLayerVC.layer _xamlElement];
-        ASSERT_TRUE(backingElement);
-
         // We have to artificially ref the element since the block needs to keep it around
+        __block WXUIElement* backingElement = [caLayerVC.layer _xamlElement];
         [backingElement retain];
 
+        // Register callback and wait for the property changed event to trigger
         __block int64_t callbackToken = [backingElement
             registerPropertyChangedCallback:[WXCPanel backgroundProperty]
                                    callback:^(WXDependencyObject* sender, WXDependencyProperty* dp) {
@@ -152,26 +142,29 @@ TEST(CALayerAppearance, BackgroundColorChanged) {
                     LOG_INFO("CALayer.backgroundColor (rgba): %.2f,%.2f,%.2f,%.2f", red, green, blue, alpha);
 
                     // Validate that the change is reflected on the backing XAML control
-                    ASSERT_TRUE(solidBrush.color.r == (int)(red * 255));
-                    ASSERT_TRUE(solidBrush.color.g == (int)(green * 255));
-                    ASSERT_TRUE(solidBrush.color.b == (int)(blue * 255));
-                    ASSERT_TRUE(solidBrush.color.a == (int)(alpha * 255));
+                    EXPECT_EQ_MSG(solidBrush.color.r, (int)(red * 255), @"Failed to match red component");
+                    EXPECT_EQ_MSG(solidBrush.color.g, (int)(green * 255), @"Failed to match green component");
+                    EXPECT_EQ_MSG(solidBrush.color.b, (int)(blue * 255), @"Failed to match blue component");
+                    EXPECT_EQ_MSG(solidBrush.color.a, (int)(alpha * 255), @"Failed to match alpha component");
                 } else {
-                    ASSERT_FALSE_MSG(true, "Backing XAML element solid color brush not found");
+                    EXPECT_FALSE_MSG(solidBrush == nil, "Backing XAML element solid color brush not found");
                 }
 
                 // Unregister the callback
                 [backingElement unregisterPropertyChangedCallback:[WXCPanel backgroundProperty] token:callbackToken];
                 [backingElement release];
 
-                [caLayerVC.condition signal];
-            }];
-        });
+                [condition lock];
+                [condition signal];
+                [condition unlock];
+        }];
 
-    // TODO: Investigate the improved conditioned wait for a response.
-    if (![caLayerVC.condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]]) {
-        ASSERT_FALSE_MSG(true, "FAILED: Waiting for property changed event timed out!");
-    }
+    });
+
+    [condition lock];
+    ASSERT_TRUE_MSG([condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]],
+        "FAILED: Waiting for property changed event timed out!");
+    [condition unlock];
 
     // Don't leak
     [caLayerVC release];

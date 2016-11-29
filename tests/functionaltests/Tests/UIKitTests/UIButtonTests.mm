@@ -16,8 +16,8 @@
 #import <TestFramework.h>
 #import <Foundation/Foundation.h>
 
-// YUCKY YUCKY YUCKY
-#import "../../../samples/XAMLCatalog/XAMLCatalog/UIButtonViewController.h"
+// Re-use existing sample code for validation
+#import "XAMLCatalog/UIButtonViewController.h"
 
 #include <COMIncludes.h>
 #import <WRLHelpers.h>
@@ -52,14 +52,14 @@ TEST(UIButton, GetXamlElement) {
 
 TEST(UIButton, XAMLCatalog) {
     __block UIButtonViewController* buttonVC;
-    __block NSCondition* condition = [[NSCondition alloc] init];
+    __block NSCondition* condition = [[[NSCondition alloc] init] autorelease];
 
     dispatch_sync(dispatch_get_main_queue(), ^{
         buttonVC = [[UIButtonViewController alloc] init];
         [buttonVC view];
 
         // Extract the UIButton example from an existing XAMLCatalog cell in a TableViewController
-        NSIndexPath* indexPath = [NSIndexPath indexPathForRow:6 inSection:0];
+        NSIndexPath* indexPath = [NSIndexPath indexPathForRow:1 inSection:0];
         UITableViewCell* cell = [buttonVC tableView : buttonVC.tableView cellForRowAtIndexPath:indexPath];
         ASSERT_TRUE(cell);
 
@@ -70,10 +70,11 @@ TEST(UIButton, XAMLCatalog) {
         NSString* normalStateTitle = [cellButton titleForState:UIControlStateNormal];
         LOG_INFO(@"Cell subview[2] name: %@", normalStateTitle);
 
-        // Extract the backing XAML element
+        // We have to artificially ref the element since the block needs to keep it around
         __block WXUIElement* backingElement = [cellButton xamlElement];
-        ASSERT_TRUE(backingElement);
+        [backingElement retain];
 
+        // Register callback and wait for the property changed event to trigger
         __block int64_t callbackToken = [backingElement
             registerPropertyChangedCallback:[WXCControl backgroundProperty]
                             callback:^(WXDependencyObject* sender, WXDependencyProperty* dp) {
@@ -90,27 +91,29 @@ TEST(UIButton, XAMLCatalog) {
                     LOG_INFO("UIButton.backgroundColor (rgba): %.2f,%.2f,%.2f,%.2f", red, green, blue, alpha);
 
                     // Validate that the change is reflected on the backing XAML control
-                    ASSERT_TRUE(solidBrush.color.r == (int)(red * 255));
-                    ASSERT_TRUE(solidBrush.color.g == (int)(green * 255));
-                    ASSERT_TRUE(solidBrush.color.b == (int)(blue * 255));
-                    ASSERT_TRUE(solidBrush.color.a == (int)(alpha * 255));
+                    EXPECT_EQ_MSG(solidBrush.color.r, (int)(red * 255), @"Failed to match red component");
+                    EXPECT_EQ_MSG(solidBrush.color.g, (int)(green * 255), @"Failed to match green component");
+                    EXPECT_EQ_MSG(solidBrush.color.b, (int)(blue * 255), @"Failed to match blue component");
+                    EXPECT_EQ_MSG(solidBrush.color.a, (int)(alpha * 255), @"Failed to match alpha component");
                 }
                 else {
-                    ASSERT_FALSE_MSG(true, "Backing XAML element solid color brush not found");
+                    EXPECT_FALSE_MSG(solidBrush == nil, "Backing XAML element solid color brush not found");
                 }
 
                 // Unregister the callback
                 [backingElement unregisterPropertyChangedCallback:[WXCControl backgroundProperty] token:callbackToken];
                 [backingElement release];
 
+                [condition lock];
                 [condition signal];
+                [condition unlock];
         }];
     });
 
-    // TODO: Investigate the improved conditioned wait for a response.
-    if (![condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]]) {
-        ASSERT_FALSE_MSG(true, "FAILED: Waiting for property changed event timed out!");
-    }
+    [condition lock];
+    ASSERT_TRUE_MSG([condition waitUntilDate : [NSDate dateWithTimeIntervalSinceNow : c_testTimeoutInSec]],
+        "FAILED: Waiting for property changed event timed out!");
+    [condition unlock];
 
     // Don't leak
     [buttonVC release];
