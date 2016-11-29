@@ -499,7 +499,7 @@ extern void UIActivityIndicatorViewGetXamlElement();
 
 extern void UIButtonCreateXamlElement();
 extern void UIButtonGetXamlElement();
-extern void UIButtonXAMLCatalog();
+extern void UIButtonBackgroundColorChanged();
 
 extern void UIScrollViewCreateXamlElement();
 extern void UIScrollViewGetXamlElement();
@@ -631,8 +631,8 @@ public:
         FrameworkHelper::RunOnUIThread(&UIButtonGetXamlElement);
     }
 
-    TEST_METHOD(UIButton_XAMLCatalog) {
-        UIButtonXAMLCatalog();
+    TEST_METHOD(UIButton_BackgroundColorChanged) {
+        UIButtonBackgroundColorChanged();
     }
 
     TEST_METHOD(UIScrollView_CreateXamlElement) {

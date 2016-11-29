@@ -109,15 +109,25 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIKitTests\UIButtonTests.mm">
       <Filter>Tests\UIKitTests</Filter>
     </ClangCompile>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIKitTests\UIViewTests.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIKitTests\UIActivityIndicatorTests.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIKitTests\UIScrollViewTests.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIKitTests\UISliderTests.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIKitTests\UITextFieldTests.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\samples\XAMLCatalog\XAMLCatalog\UIButtonViewController.m">
       <Filter>Tests\UIKitTests</Filter>
     </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\samples\XAMLCatalog\XAMLCatalog\MenuTableViewController.m">
+      <Filter>Tests\UIKitTests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIKitTests\UIActivityIndicatorTests.mm">
+      <Filter>Tests\UIKitTests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIKitTests\UIScrollViewTests.mm">
+      <Filter>Tests\UIKitTests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIKitTests\UISliderTests.mm">
+      <Filter>Tests\UIKitTests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIKitTests\UITextFieldTests.mm">
+      <Filter>Tests\UIKitTests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIKitTests\UIViewTests.mm">
       <Filter>Tests\UIKitTests</Filter>
     </ClangCompile>
   </ItemGroup>

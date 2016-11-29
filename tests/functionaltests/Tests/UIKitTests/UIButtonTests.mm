@@ -50,7 +50,7 @@ TEST(UIButton, GetXamlElement) {
     ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
 }
 
-TEST(UIButton, XAMLCatalog) {
+TEST(UIButton, BackgroundColorChanged) {
     __block UIButtonViewController* buttonVC;
     __block NSCondition* condition = [[[NSCondition alloc] init] autorelease];
 
