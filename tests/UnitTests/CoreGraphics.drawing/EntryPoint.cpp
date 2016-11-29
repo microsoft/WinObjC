@@ -82,6 +82,11 @@ public:
     virtual std::string GetComparisonPath() override {
         return _comparisonPath;
     }
+
+    virtual std::string GetResourcePath(const std::string& resource) override {
+        // Using / as a path separator is valid on both Windows and OS X.
+        return __ModuleDirectory() + "/data/" + resource;
+    }
 };
 
 std::shared_ptr<DrawingTestConfigImpl> _configImpl;
