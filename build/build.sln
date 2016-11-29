@@ -628,11 +628,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MobileCoreServices.UnitTest
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dll", "dll", "{0A2BBD61-8D77-44B8-A6A1-FFC7FEEBFB57}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ClangModulesTest", "ClangModulesTest", "{A711EB80-D29C-406B-8601-4D40A7824EC0}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ClangTest", "ClangTest", "{A711EB80-D29C-406B-8601-4D40A7824EC0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{BA87F11F-CE9E-45EE-8269-C9C2C0E39C45}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClangModules.UnitTests", "Tests\UnitTests\ClangModules\ClangModules.UnitTests.vcxproj", "{DC8F4C51-B642-4C0E-9848-D7BF9C765912}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Clang.UnitTests", "Tests\UnitTests\Clang\Clang.UnitTests.vcxproj", "{DC8F4C51-B642-4C0E-9848-D7BF9C765912}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CFNetworkLib", "CFNetwork\lib\CFNetworkLib.vcxproj", "{45C3CD35-65B9-43A7-8060-30B8EE1E4F4F}"
 EndProject
