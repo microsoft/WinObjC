@@ -1,10 +1,10 @@
 # Welcome to the Windows Bridge for iOS Project
-The Windows Bridge for iOS (also referred to as WinObjC) is a Microsoft open-source project that provides an Objective-C development environment for Visual Studio and support for iOS APIs. The bridge allows you to create Universal Windows Platform (UWP) apps that will run on many Windows devices by re-using your Objective-C code and iOS APIs alongside Windows 10 features like Cortana and Live Tiles.
+The Windows Bridge for iOS (also referred to as WinObjC) is a Microsoft open-source project that provides an Objective-C development environment for Visual Studio and support for iOS APIs. The bridge allows you to create Universal Windows Platform (UWP) apps that will run on many Windows devices by re-using your Objective-C code and iOS APIs alongside Windows 10 features like Cortana and Windows Notifications.
 
 ## Download and Installation
-To use the bridge, you'll need:
-- The latest pre-built Windows Bridge for iOS SDK, that you can download [here](https://aka.ms/winobjc_latest) (click on the **winobjc.zip** file under *Downloads* to start the download and extract it to the local directory of your choice when complete).
-- **Windows 10**, build 10586 or higher (validate your version number [here](http://windows.microsoft.com/en-US/windows/which-operating-system)).
+To use the bridge you'll need:
+- The latest pre-built Windows Bridge for iOS SDK, that you can download [here](https://aka.ms/winobjc_latest). Click on the **winobjc.zip** file under *Downloads* to start the download and extract it to the local directory of your choice when complete.
+- **Windows 10**, build 10586 or higher. Validate your version number [here](http://windows.microsoft.com/en-US/windows/which-operating-system).
 - **Visual Studio 2015 Update 3** with Windows developer tools. Visual Studio 2015 Community is available for free [here](https://dev.windows.com/downloads). Select (at least) the following components during installation:
    1. Programming Languages -> Visual C++
    2. Universal Windows App Development Tools (all)
@@ -17,20 +17,20 @@ If you're having trouble downloading & installing the bridge, see the [Known Iss
 ### Importing your Xcode Project
 When using the bridge, the first thing you'll want to do is generate a Visual Studio solution from your Xcode project:
 
-1. Open the Windows Command Prompt (type **cmd** in the Start Menu to find it) and navigate to your Xcode project directory using the **cd** command. Note that you should go to the directory containing your project *.xcworkspace* or *.xcodeproj* folder: you shouldn't be inside those folders, but one level above them.
+1. Open the Windows Command Prompt (type **cmd** in the Start Menu to find it) and navigate to your Xcode project directory using the **cd** command. Note: use the directory containing your .workspace or .xcodeproj folder.
 
   ```
-    cd C:\winobjc\samples\MyProject
+    [location of unzipped SDK]\MyProject> cd [location of unzipped SDK]\winobjc\samples\MyProject
   ```
-2. Still from the Command Prompt, run the vsimporter tool from the *bin* directory of the bridge SDK you downloaded, which will generate the Visual Studio Solution:
+2. Run the vsimporter tool from the *bin* directory of the bridge SDK you downloaded This will generate the Visual Studio Solution:
 
   ```
-    C:\winobjc\bin\vsimporter.exe
+    [location of unzipped SDK]\MyProject> [location of unzipped SDK]\bin\vsimporter.exe
   ```
 3. Open the generated Visual Studio solution with the command:
 
   ```
-    MyProject.sln
+    [location of unzipped SDK]\MyProject> MyProject.sln
   ```
 
 For more detailed step by step instructions on how to import a project, see the [Quick Start Tutorial](https://github.com/Microsoft/WinObjC/wiki/Quick-Start-Tutorial) page of the wiki. For vsimporter options and known issues, check the [Using vsimporter](https://github.com/Microsoft/WinObjC/wiki/Using-vsimporter) wiki page.
