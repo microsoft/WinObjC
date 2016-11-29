@@ -168,6 +168,7 @@ int UIApplicationMainInit(NSString* principalClassName,
         if (fonts != nil) {
             NSMutableArray* fontURLs = [NSMutableArray array];
             for (NSString* curFontName in fonts) {
+                // curFontName contains extension, so pass in nil
                 NSURL* url = [[NSBundle mainBundle] URLForResource:curFontName withExtension:nil];
                 if (url != nil) {
                     [fontURLs addObject:url];

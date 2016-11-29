@@ -18,7 +18,6 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import <CoreFoundation/CoreFoundation.h>
 #import <Foundation/Foundation.h>
-#import <CoreGraphics/DWriteWrapper.h>
 
 // CTFont functionality is generally a superset of CGFont functionality, and hits the same code path
 // Thus, CTFont unit tests can also be thought of as CGFont test coverage

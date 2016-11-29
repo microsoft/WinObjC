@@ -14,20 +14,20 @@
 //
 //******************************************************************************
 
-#include <TestFramework.h>
+#import <TestFramework.h>
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 #import <CoreText/CoreText.h>
 #import <Starboard/SmartTypes.h>
 
-static NSURL* __GetRelativeURL(NSString* relativePath) {
+static NSURL* __GetURLFromPathRelativeToCurrentDirectory(NSString* relativePath) {
     static char fullPath[_MAX_PATH];
     static int unused = [](char* path) { return GetModuleFileNameA(NULL, path, _MAX_PATH); }(fullPath);
     return [NSURL fileURLWithPath:[[@(fullPath) stringByDeletingLastPathComponent] stringByAppendingPathComponent:relativePath]];
 }
 
 TEST(CTFontManager, ShouldBeAbleToRegisterFontsForURL) {
-    NSURL* testFileURL = __GetRelativeURL(@"/data/WinObjC.ttf");
+    NSURL* testFileURL = __GetURLFromPathRelativeToCurrentDirectory(@"/data/WinObjC.ttf");
     CFErrorRef error = nullptr;
     EXPECT_TRUE(CTFontManagerRegisterFontsForURL((__bridge CFURLRef)testFileURL, kCTFontManagerScopeSession, &error));
     EXPECT_EQ(nullptr, error);
@@ -48,7 +48,7 @@ TEST(CTFontManager, ShouldBeAbleToRegisterFontsForURL) {
 }
 
 TEST(CTFontManager, ShouldBeAbleToRegisterFontsForGraphicsFont) {
-    NSURL* testFileURL = __GetRelativeURL(@"/data/WinObjC-Italic.ttf");
+    NSURL* testFileURL = __GetURLFromPathRelativeToCurrentDirectory(@"/data/WinObjC-Italic.ttf");
     woc::unique_cf<CGDataProviderRef> dataProvider{ CGDataProviderCreateWithURL((__bridge CFURLRef)testFileURL) };
     woc::unique_cf<CGFontRef> graphicsFont{ CGFontCreateWithDataProvider(dataProvider.get()) };
     EXPECT_NE(nullptr, graphicsFont);
@@ -74,7 +74,7 @@ TEST(CTFontManager, ShouldBeAbleToRegisterFontsForGraphicsFont) {
 }
 
 TEST(CTFontManager, ShouldFailToUnregisterNonregisteredFonts) {
-    NSURL* testFileURL = __GetRelativeURL(@"/data/WinObjC.ttf");
+    NSURL* testFileURL = __GetURLFromPathRelativeToCurrentDirectory(@"/data/WinObjC.ttf");
     CFErrorRef error = nullptr;
     EXPECT_TRUE(CTFontManagerUnregisterFontsForURL((__bridge CFURLRef)testFileURL, kCTFontManagerScopeSession, &error));
     EXPECT_NE(nullptr, error);
