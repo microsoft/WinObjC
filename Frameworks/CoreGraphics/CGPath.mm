@@ -279,7 +279,7 @@ void CGPathAddLineToPoint(CGMutablePathRef path, const CGAffineTransform* transf
 
 static inline CGPoint _getInvertedCurrentPointOfPath(CGPathRef path) {
     CGPoint point = path->GetCurrentPoint();
-    if (!(*path->GetLastTransform() == CGAffineTransformIdentity)) {
+    if (!CGAffineTransformEqualToTransform(*path->GetLastTransform(), CGAffineTransformIdentity)) {
         point = CGPointApplyAffineTransform(point, CGAffineTransformInvert(*path->GetLastTransform()));
     }
     return point;
