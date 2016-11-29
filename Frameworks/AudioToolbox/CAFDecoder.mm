@@ -200,7 +200,7 @@ void CAFDecoder::ProduceOutputPackets(NSInputStream* stream,
 
     if (isPcm) {
         NSInteger result =
-            [stream read:(uint8_t*)&outOutputData maxLength:(cafDesc.mBytesPerPacket * (ioOutputDataByteSize / cafDesc.mBytesPerPacket))];
+            [stream read:(uint8_t*)outOutputData maxLength:(cafDesc.mBytesPerPacket * (ioOutputDataByteSize / cafDesc.mBytesPerPacket))];
         ioNumberPackets = (result / cafDesc.mBytesPerPacket);
         ioOutputDataByteSize = result;
         return;

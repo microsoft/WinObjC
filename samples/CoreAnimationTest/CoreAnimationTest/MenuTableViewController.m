@@ -1,0 +1,90 @@
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+
+#import "MenuTableViewController.h"
+
+static NSString* segueKeyName = @"Seque";
+static NSString* viewKeyName = @"View";
+static NSString* controllerKeyName = @"ViewController";
+static NSString* viewTitleKeyName = @"ViewName";
+
+@implementation MenuTableViewController
+
+- (id)init {
+    if (self = [super init]) {
+        self.menuItems = [[NSMutableArray alloc] init];
+    }
+
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder*)aDecoder {
+    if (self = [super initWithCoder:aDecoder]) {
+        self.menuItems = [[NSMutableArray alloc] init];
+    }
+
+    return self;
+}
+
+- (void)addMenuItemSegue:(NSString*)segueIdentifier andTitle:(NSString*)title {
+    [self.menuItems addObject:[NSDictionary dictionaryWithObjectsAndKeys:title, viewTitleKeyName, segueIdentifier, segueKeyName, nil]];
+}
+
+- (void)addMenuItemView:(UIView*)view andTitle:(NSString*)title {
+    [self.menuItems addObject:[NSDictionary dictionaryWithObjectsAndKeys:title, viewTitleKeyName, view, viewKeyName, nil]];
+}
+
+- (void)addMenuItemViewController:(UIViewController*)controller andTitle:(NSString*)title {
+    [self.menuItems addObject:[NSDictionary dictionaryWithObjectsAndKeys:title, viewTitleKeyName, controller, controllerKeyName, nil]];
+}
+
+- (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
+    return [self.menuItems count];
+}
+
+- (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath {
+    UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"MenuCell"];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MenuCell"];
+    }
+
+    NSDictionary* currentObject = [self.menuItems objectAtIndex:indexPath.row];
+    if (currentObject != nil && [currentObject isKindOfClass:[UIViewController class]]) {
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    } else {
+        cell.accessoryView = [currentObject objectForKey:viewKeyName];
+    }
+
+    // Set the text and accessibility identifier so we can find these elements via automation
+    cell.textLabel.text = [currentObject objectForKey:viewTitleKeyName];
+    cell.accessibilityIdentifier = cell.textLabel.text;
+
+    return cell;
+}
+
+- (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath {
+    NSString* segueIdentifier = [[self.menuItems objectAtIndex:indexPath.row] objectForKey:segueKeyName];
+    if ([segueIdentifier length] > 0) {
+        [self performSegueWithIdentifier:segueIdentifier sender:nil];
+        return;
+    }
+
+    UIViewController* viewController = [[self.menuItems objectAtIndex:indexPath.row] objectForKey:controllerKeyName];
+    if ([viewController isKindOfClass:[UIViewController class]]) {
+        [[super navigationController] pushViewController:viewController animated:YES];
+    }
+}
+@end

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -251,9 +251,8 @@ TEST(NSOrderedSet, IsEqualToOrderedSet) {
 TEST(NSOrderedSet, initWithObjects) {
     NSOrderedSet* orderedSet = [[[NSOrderedSet alloc] initWithObjects:NULL count:0] autorelease];
     ASSERT_NE(nil, orderedSet);
-	ASSERT_ANY_THROW({orderedSet = [[NSOrderedSet alloc] initWithObjects:NULL count:1];});
+    ASSERT_ANY_THROW({ orderedSet = [[NSOrderedSet alloc] initWithObjects:NULL count:1]; });
 }
-
 
 @interface TestPersonOrderedSet : NSObject
 - (instancetype)initWithName:(NSString*)name age:(NSUInteger)age;

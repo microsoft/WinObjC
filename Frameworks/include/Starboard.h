@@ -110,19 +110,6 @@ inline IWLazyClassLookup::operator id() {
 class EbrFile;
 #endif
 
-#define kGravityResize 0
-#define kGravityCenter 1
-#define kGravityTop 2
-#define kGravityResizeAspect 3
-#define kGravityTopLeft 4
-#define kGravityBottomLeft 5
-#define kGravityLeft 6
-#define kGravityAspectFill 7
-#define kGravityBottom 8
-#define kGravityTopRight 9
-#define kGravityRight 10
-#define kGravityBottomRight 11
-
 SB_EXPORT int EbrIncrement(int volatile* var);
 SB_EXPORT int EbrDecrement(int volatile* var);
 SB_EXPORT int EbrCompareExchange(int volatile* Destination, int Exchange, int Comperand);

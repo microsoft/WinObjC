@@ -91,4 +91,28 @@ void XamlContentDialogSetDestructiveButtonIndex(WXCContentDialog* contentDialog,
     XamlContentDialogSetDestructiveButtonIndex(inspectable, destructiveButtonIndex);
 }
 
+////////////////////////////////////////////////////////////////////////////////////
+// Label
+////////////////////////////////////////////////////////////////////////////////////
+WXCGrid* CreateLabel() {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlCreateLabel());
+    return _createRtProxy([WXCGrid class], inspectable.Get());
+}
+
+WXCTextBlock* GetLabelTextBlock(WXCGrid* labelGrid) {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetLabelTextBox([labelGrid comObj]));
+    return _createRtProxy([WXCTextBlock class], inspectable.Get());
+}
+
+////////////////////////////////////////////////////////////////////////////////////
+// CoreAnimation Layer Support
+////////////////////////////////////////////////////////////////////////////////////
+void SetFrameworkElementLayerProperties(WXFrameworkElement* targetElement,
+                                        WXCImage* layerContentProperty,
+                                        WXCCanvas* sublayerCanvasProperty) {
+    XamlSetFrameworkElementLayerProperties([targetElement comObj],
+                                           layerContentProperty ? [layerContentProperty comObj] : nullptr,
+                                           sublayerCanvasProperty ? [sublayerCanvasProperty comObj] : nullptr);
+}
+
 } // namespace XamlControls

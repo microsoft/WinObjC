@@ -25,7 +25,7 @@
 #import <UIKit/UITapGestureRecognizer.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
 
-#import "CACompositor.h"
+#import "StarboardXaml/DisplayProperties.h"
 #import "UIGestureRecognizerInternal.h"
 #include "LoggingNative.h"
 
@@ -35,7 +35,7 @@ static id _pendingTaps;
 extern NSMutableDictionary* g_curGesturesDict;
 
 #define TAP_SLACK_AREA \
-    (((GetCACompositor()->screenWidth() / GetCACompositor()->deviceWidth()) * GetCACompositor()->screenXDpi()) / 3.0f) //  1/3 inch
+    (((DisplayProperties::ScreenWidth() / DisplayProperties::DeviceWidth()) * DisplayProperties::ScreenXDpi()) / 3.0f) //  1/3 inch
 
 @interface UITapRecognizer : NSObject {
 @public

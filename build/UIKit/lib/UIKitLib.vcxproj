@@ -123,6 +123,9 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIWindow.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\_TableCellAnimationHelper.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\_UIGroupEdgeView.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\_UIPopupViewController.mm">
+      <ObjectiveCARC>true</ObjectiveCARC>
+    </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIActivityIndicatorView.mm">
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
@@ -319,6 +322,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITabPane.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\_TableCellAnimationHelper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\_UIGroupEdgeView.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\_UIPopupViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewData.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewItemKey.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutInfo.h" />
@@ -339,13 +343,22 @@
   <!-- StarboardXaml files -->
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\XamlCompositor.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\DisplayTexture.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\LayerCoordinator.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\StoryboardManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\StarboardXaml.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\LayerRegistration.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\XamlTypeInfoRegistration.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\LayerAnimation.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\LayerProxy.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\ApplicationCompositor.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\CALayerXaml.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\CompositorInterface.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\XamlCompositor.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\DisplayProperties.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\DisplayTexture.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\LayerAnimation.mm"/>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\LayerProxy.mm"/>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\LayerTransaction.mm"/>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\Quaternion.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\StringConversion.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\ApplicationMain.mm" />
@@ -354,14 +367,24 @@
     </ClangCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\CompositorInterface.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\LayerRegistration.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\LayerCoordinator.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\StoryboardManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\DisplayProperties.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\DisplayTexture.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\XamlTypeInfoRegistration.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\LayerAnimation.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\LayerProxy.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\LayerTransaction.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\StringConversion.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\ApplicationMain.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\ApplicationCompositor.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\CALayerXaml.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\StarboardXaml.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\UWPBackgroundTask.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\UIKit.Xaml\dll\UIKit.Xaml.vcxproj">
+      <Project>{1884d8f8-2c05-4334-a778-7d3c5a6736e8}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C0A51F53-73EE-435D-81D9-FE8FE625C431}</ProjectGuid>

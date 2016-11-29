@@ -34,8 +34,6 @@ UIKIT_XAML_EXPORT IInspectable* XamlCreateButton();
 UIKIT_XAML_EXPORT void XamlButtonApplyVisuals(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton,
                                               const Microsoft::WRL::ComPtr<IInspectable>& inspectableText,
                                               const Microsoft::WRL::ComPtr<IInspectable>& inspectableImage,
-                                              const Microsoft::WRL::ComPtr<IInspectable>& inspectableBackgroundImage,
-                                              const RECT insets,
                                               const Microsoft::WRL::ComPtr<IInspectable>& inspectableTitleColor);
 
 // Hooks pointer events on a UIKit::Button passed in as IInspectable
@@ -53,6 +51,25 @@ UIKIT_XAML_EXPORT void XamlHookLayoutEvent(const Microsoft::WRL::ComPtr<IInspect
 UIKIT_XAML_EXPORT void XamlRemovePointerEvents(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton);
 
 UIKIT_XAML_EXPORT void XamlRemoveLayoutEvent(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton);
+
+////////////////////////////////////////////////////////////////////////////////////
+// Label.xaml.cpp
+////////////////////////////////////////////////////////////////////////////////////
+
+// Returns a UIKit::Label as an IInspectable
+UIKIT_XAML_EXPORT IInspectable* XamlCreateLabel();
+
+// Retrieves the UIKit::Label's backing TextBlock as an IInspectable
+UIKIT_XAML_EXPORT IInspectable* XamlGetLabelTextBox(const Microsoft::WRL::ComPtr<IInspectable>& label);
+
+////////////////////////////////////////////////////////////////////////////////////
+// Layer.xaml.cpp
+////////////////////////////////////////////////////////////////////////////////////
+
+// Set one or more layer properties for the specified target xaml element
+UIKIT_XAML_EXPORT void XamlSetFrameworkElementLayerProperties(const Microsoft::WRL::ComPtr<IInspectable>& targetElement,
+                                                              const Microsoft::WRL::ComPtr<IInspectable>& sublayerCanvasProperty,
+                                                              const Microsoft::WRL::ComPtr<IInspectable>& layerContentProperty);
 
 ////////////////////////////////////////////////////////////////////////////////////
 // ProgressRing.xaml.cpp

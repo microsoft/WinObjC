@@ -58,6 +58,7 @@
         UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(xMargin, 0, labelWidth, labelHeight)];
         label.text = @"UISlider (initial = 0, min = 0, max = 1)";
         UISlider* simpleSlider = [[UISlider alloc] initWithFrame:CGRectMake(xMargin, labelHeight, 300, elementHeight)];
+        simpleSlider.accessibilityIdentifier = @"slider_Simple";
         [cell addSubview:simpleSlider];
         [cell addSubview:label];
     } else if (indexPath.row == 1) {

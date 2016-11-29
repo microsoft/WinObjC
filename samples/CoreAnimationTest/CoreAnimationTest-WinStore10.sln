@@ -1,0 +1,38 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.22823.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CoreAnimationTest", "CoreAnimationTest", "{45F6ED04-F5A2-4DA2-85FE-7D18A0366C39}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreAnimationTest", "CoreAnimationTest.vsimporter\CoreAnimationTest-WinStore10\CoreAnimationTest.vcxproj", "{F2CBB61E-B078-4CA8-8AF4-FE582E5966E5}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Debug|Win32 = Debug|Win32
+		Release|ARM = Release|ARM
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F2CBB61E-B078-4CA8-8AF4-FE582E5966E5}.Debug|ARM.ActiveCfg = Debug|ARM
+		{F2CBB61E-B078-4CA8-8AF4-FE582E5966E5}.Debug|ARM.Build.0 = Debug|ARM
+		{F2CBB61E-B078-4CA8-8AF4-FE582E5966E5}.Debug|ARM.Deploy.0 = Debug|ARM
+		{F2CBB61E-B078-4CA8-8AF4-FE582E5966E5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F2CBB61E-B078-4CA8-8AF4-FE582E5966E5}.Debug|Win32.Build.0 = Debug|Win32
+		{F2CBB61E-B078-4CA8-8AF4-FE582E5966E5}.Debug|Win32.Deploy.0 = Debug|Win32
+		{F2CBB61E-B078-4CA8-8AF4-FE582E5966E5}.Release|ARM.ActiveCfg = Release|ARM
+		{F2CBB61E-B078-4CA8-8AF4-FE582E5966E5}.Release|ARM.Build.0 = Release|ARM
+		{F2CBB61E-B078-4CA8-8AF4-FE582E5966E5}.Release|ARM.Deploy.0 = Release|ARM
+		{F2CBB61E-B078-4CA8-8AF4-FE582E5966E5}.Release|Win32.ActiveCfg = Release|Win32
+		{F2CBB61E-B078-4CA8-8AF4-FE582E5966E5}.Release|Win32.Build.0 = Release|Win32
+		{F2CBB61E-B078-4CA8-8AF4-FE582E5966E5}.Release|Win32.Deploy.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F2CBB61E-B078-4CA8-8AF4-FE582E5966E5} = {45F6ED04-F5A2-4DA2-85FE-7D18A0366C39}
+	EndGlobalSection
+EndGlobal

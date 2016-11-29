@@ -24,7 +24,9 @@
 #import <wrl/client.h>
 #include <COMIncludes_End.h>
 
+#import <Starboard.h>
 #import <string>
+#import <memory>
 
 // General DWrite helpers
 COREGRAPHICS_EXPORT CFStringRef _CFStringFromLocalizedString(IDWriteLocalizedStrings* localizedString);
@@ -35,14 +37,19 @@ COREGRAPHICS_EXPORT CFArrayRef _DWriteCopyFontNamesForFamilyName(CFStringRef fam
 COREGRAPHICS_EXPORT CFStringRef _DWriteGetFamilyNameForFontName(CFStringRef fontName);
 
 struct _DWriteFontProperties {
-    DWRITE_FONT_WEIGHT weight;
-    DWRITE_FONT_STRETCH stretch;
-    DWRITE_FONT_STYLE style;
-    CFStringRef familyName;
+    DWRITE_FONT_WEIGHT weight = DWRITE_FONT_WEIGHT_NORMAL;
+    DWRITE_FONT_STRETCH stretch = DWRITE_FONT_STRETCH_NORMAL;
+    DWRITE_FONT_STYLE style = DWRITE_FONT_STYLE_NORMAL;
+
+    woc::unique_cf<CFStringRef> displayName;
+    woc::unique_cf<CFStringRef> postScriptName;
+    woc::unique_cf<CFStringRef> familyName;
 };
 
 // Create DWrite objects
-COREGRAPHICS_EXPORT _DWriteFontProperties _DWriteGetFontPropertiesFromName(CFStringRef fontName);
+#ifdef __cplusplus
+extern "C++" std::shared_ptr<_DWriteFontProperties> _DWriteGetFontPropertiesFromName(CFStringRef fontName);
+#endif
 
 COREGRAPHICS_EXPORT HRESULT _DWriteCreateTextFormat(const wchar_t* fontFamilyName,
                                                     DWRITE_FONT_WEIGHT weight,
@@ -52,6 +59,7 @@ COREGRAPHICS_EXPORT HRESULT _DWriteCreateTextFormat(const wchar_t* fontFamilyNam
                                                     IDWriteTextFormat** outTextFormat);
 COREGRAPHICS_EXPORT HRESULT _DWriteCreateFontFamilyWithName(CFStringRef familyName, IDWriteFontFamily** outFontFamily);
 COREGRAPHICS_EXPORT HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, IDWriteFontFace** outFontFace);
+COREGRAPHICS_EXPORT HRESULT _DWriteCreateFontFaceWithDataProvider(CGDataProviderRef dataProvider, IDWriteFontFace** outFontFace);
 
 // DWriteFont getters that convert to a CF/CG object or struct
 COREGRAPHICS_EXPORT CFStringRef _DWriteFontCopyInformationalString(const Microsoft::WRL::ComPtr<IDWriteFontFace>& fontFace,

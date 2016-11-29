@@ -66,7 +66,7 @@
       <SBLibsWin10Win32 Include="..\Win32\$(Configuration)\Universal Windows\*.lib" />
       <SBLibsWin10Win32 Include="..\Win32\$(Configuration)\Universal Windows\*.dll" />
       <SBLibsWin10Win32 Include="..\Win32\$(Configuration)\Universal Windows\*.winmd" />
-      <SBLibsWin10Win32 Include="..\Win32\$(Configuration)\Universal Windows\UIKit.pri" />
+      <SBLibsWin10Win32 Include="..\Win32\$(Configuration)\Universal Windows\UIKit.Xaml.pri" />
       <SBLibsWin10Win32 Include="..\Win32\$(Configuration)\Universal Windows\*.bitmap" />
       <SBLibsWin10Win32 Include="..\Win32\$(Configuration)\Universal Windows\*.data" />
       <SBLibsWin10Win32 Include="..\Win32\$(Configuration)\Universal Windows\**\*.xaml" />
@@ -107,7 +107,7 @@
       <SBLibsWin10ARM Include="..\ARM\$(Configuration)\Universal Windows\*.lib" />
       <SBLibsWin10ARM Include="..\ARM\$(Configuration)\Universal Windows\*.dll" />
       <SBLibsWin10ARM Include="..\ARM\$(Configuration)\Universal Windows\*.winmd" />
-      <SBLibsWin10ARM Include="..\ARM\$(Configuration)\Universal Windows\UIKit.pri" />
+      <SBLibsWin10ARM Include="..\ARM\$(Configuration)\Universal Windows\UIKit.Xaml.pri" />
       <SBLibsWin10ARM Include="..\ARM\$(Configuration)\Universal Windows\*.bitmap" />
       <SBLibsWin10ARM Include="..\ARM\$(Configuration)\Universal Windows\*.data" />
       <SBLibsWin10ARM Include="..\ARM\$(Configuration)\Universal Windows\**\*.xaml" />

@@ -61,7 +61,6 @@ public:
 }
 
 static void initInternal(UIImageView* self) {
-    [self setUserInteractionEnabled:FALSE];
     [self setOpaque:FALSE];
     updateContents(self);
 }

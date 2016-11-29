@@ -30,7 +30,7 @@
 #import "UIApplicationInternal.h"
 #import <objc/objc-arc.h>
 
-#import "CACompositor.h"
+#import "StarboardXaml/DisplayProperties.h"
 
 typedef struct {
     idretain _buttonText;
@@ -397,7 +397,7 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
     id messageFont = [UIFont messageFont];
     id blackColor = [UIColor blackColor];
 
-    if (GetCACompositor()->isTablet()) {
+    if (DisplayProperties::IsTablet()) {
         CGRect screenRect;
         screenRect = [[UIScreen mainScreen] bounds];
         boxWidth = screenRect.size.width * 0.9f;

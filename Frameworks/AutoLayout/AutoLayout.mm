@@ -104,7 +104,8 @@ public:
     NSMutableArray* _associatedConstraints;
 };
 
-// Since categories can't have ivars, we bundle up a couple C++ classes in NSObjects and associate them to the UIView/UILayoutGuide/NSLayoutConstraint
+// Since categories can't have ivars, we bundle up a couple C++ classes in NSObjects and associate them to the
+// UIView/UILayoutGuide/NSLayoutConstraint
 @protocol _AutoLayoutProperties
 @property (readonly) AutoLayoutProperties* _autoLayoutProperties;
 @end
@@ -116,7 +117,7 @@ public:
 @end
 
 @implementation _AutoLayoutStorage
-@end 
+@end
 
 @interface _NSLayoutConstraintStorage : NSObject {
 @public
@@ -125,7 +126,7 @@ public:
 @end
 
 @implementation _NSLayoutConstraintStorage
-@end 
+@end
 
 @interface UIView (AutoLayoutProperties) <_AutoLayoutProperties>
 @end
@@ -140,7 +141,9 @@ public:
 }
 
 - (void)autoLayoutAlloc {
-    objc_setAssociatedObject(self, @selector(_constraintStorage), [_NSLayoutConstraintStorage new], OBJC_ASSOCIATION_RETAIN);
+    _NSLayoutConstraintStorage* storage = [_NSLayoutConstraintStorage new];
+    objc_setAssociatedObject(self, @selector(_constraintStorage), storage, OBJC_ASSOCIATION_RETAIN);
+    [storage release];
 }
 
 - (void)autoLayoutConstraintAddedToView:(UIView*)view {
@@ -270,7 +273,6 @@ public:
         }
 
         c_solver.AddConstraint(constraintStorage->_constraint);
-
     }
 }
 
@@ -312,7 +314,9 @@ public:
 @implementation UILayoutGuide (AutoLayout)
 
 - (void)autoLayoutAlloc {
-    objc_setAssociatedObject(self, @selector(_autoLayoutProperties), [_AutoLayoutStorage new], OBJC_ASSOCIATION_RETAIN);
+    _AutoLayoutStorage* storage = [_AutoLayoutStorage new];
+    objc_setAssociatedObject(self, @selector(_autoLayoutProperties), storage, OBJC_ASSOCIATION_RETAIN);
+    [storage release];
 }
 
 - (CGRect)autoLayoutGetRect {
@@ -355,7 +359,9 @@ public:
 }
 
 - (void)autoLayoutAlloc {
-    objc_setAssociatedObject(self, @selector(_autoLayoutProperties), [_AutoLayoutStorage new], OBJC_ASSOCIATION_RETAIN);
+    _AutoLayoutStorage* storage = [_AutoLayoutStorage new];
+    objc_setAssociatedObject(self, @selector(_autoLayoutProperties), storage, OBJC_ASSOCIATION_RETAIN);
+    [storage release];
 }
 
 - (void)autoLayoutSetFrameToView:(UIView*)toView fromView:(UIView*)fromView {
@@ -433,13 +439,15 @@ public:
                 c_solver.AddConstraint(&layoutProperties->_contentHuggingConstraint[Horizontal]);
                 c_solver.AddConstraint(&layoutProperties->_contentCompressionResistanceConstraint[Horizontal]);
             }
-            if ([self contentHuggingPriorityForAxis:UILayoutConstraintAxisHorizontal] != layoutProperties->_contentHuggingConstraint[Horizontal].weight()) {
-                c_solver.ChangeWeight(&layoutProperties->_contentHuggingConstraint[Horizontal], [self contentHuggingPriorityForAxis:UILayoutConstraintAxisHorizontal]);
+            if ([self contentHuggingPriorityForAxis:UILayoutConstraintAxisHorizontal] !=
+                layoutProperties->_contentHuggingConstraint[Horizontal].weight()) {
+                c_solver.ChangeWeight(&layoutProperties->_contentHuggingConstraint[Horizontal],
+                                      [self contentHuggingPriorityForAxis:UILayoutConstraintAxisHorizontal]);
             }
             if ([self contentCompressionResistancePriorityForAxis:UILayoutConstraintAxisHorizontal] !=
                 layoutProperties->_contentCompressionResistanceConstraint[Horizontal].weight()) {
                 c_solver.ChangeWeight(&layoutProperties->_contentCompressionResistanceConstraint[Horizontal],
-                                     [self contentCompressionResistancePriorityForAxis:UILayoutConstraintAxisHorizontal]);
+                                      [self contentCompressionResistancePriorityForAxis:UILayoutConstraintAxisHorizontal]);
             }
         }
         if (!layoutProperties->_contentHuggingConstraint[Horizontal].FIsInSolver()) {
@@ -477,13 +485,15 @@ public:
                 c_solver.AddConstraint(&layoutProperties->_contentHuggingConstraint[Vertical]);
                 c_solver.AddConstraint(&layoutProperties->_contentCompressionResistanceConstraint[Vertical]);
             }
-            if ([self contentHuggingPriorityForAxis:UILayoutConstraintAxisVertical] != layoutProperties->_contentHuggingConstraint[Vertical].weight()) {
-                c_solver.ChangeWeight(&layoutProperties->_contentHuggingConstraint[Vertical], [self contentHuggingPriorityForAxis:UILayoutConstraintAxisVertical]);
+            if ([self contentHuggingPriorityForAxis:UILayoutConstraintAxisVertical] !=
+                layoutProperties->_contentHuggingConstraint[Vertical].weight()) {
+                c_solver.ChangeWeight(&layoutProperties->_contentHuggingConstraint[Vertical],
+                                      [self contentHuggingPriorityForAxis:UILayoutConstraintAxisVertical]);
             }
             if ([self contentCompressionResistancePriorityForAxis:UILayoutConstraintAxisVertical] !=
                 layoutProperties->_contentCompressionResistanceConstraint[Vertical].weight()) {
                 c_solver.ChangeWeight(&layoutProperties->_contentCompressionResistanceConstraint[Vertical],
-                                     [self contentCompressionResistancePriorityForAxis:UILayoutConstraintAxisVertical]);
+                                      [self contentCompressionResistancePriorityForAxis:UILayoutConstraintAxisVertical]);
             }
         }
         if (!layoutProperties->_contentHuggingConstraint[Vertical].FIsInSolver()) {
@@ -510,7 +520,7 @@ public:
 // Gets the top most view that autolayout is relative to.
 - (UIView*)autolayoutRoot {
     UIView* ret = self;
-    
+
     while (ret.translatesAutoresizingMaskIntoConstraints == NO || ([ret.superview viewForBaselineLayout] == ret)) {
         ret = ret.superview;
         if (ret == nil) {
@@ -538,12 +548,11 @@ public:
         CGRect convFrame;
 
         layoutProperties->AddStays();
-            
+
         convFrame = [self convertRect:curBounds toView:[self autolayoutRoot]];
 
         if ((layoutProperties->_vars[AutoLayoutProperties::Right].Value() != convFrame.origin.x + convFrame.size.width) ||
             (layoutProperties->_vars[AutoLayoutProperties::Left].Value() != convFrame.origin.x)) {
-
             c_solver.AddEditVar(layoutProperties->_vars[AutoLayoutProperties::Right], ClsStrong(), 2.0);
             c_solver.AddEditVar(layoutProperties->_vars[AutoLayoutProperties::Left], ClsStrong(), 2.0);
 
@@ -551,12 +560,11 @@ public:
             c_solver.SuggestValue(layoutProperties->_vars[AutoLayoutProperties::Right], convFrame.origin.x + convFrame.size.width);
             c_solver.SuggestValue(layoutProperties->_vars[AutoLayoutProperties::Left], convFrame.origin.x);
             c_solver.Resolve();
-            c_solver.EndEdit(); // Removes edit constraints.    
+            c_solver.EndEdit(); // Removes edit constraints.
         }
 
         if ((layoutProperties->_vars[AutoLayoutProperties::Bottom].Value() != convFrame.origin.y + convFrame.size.height) ||
             (layoutProperties->_vars[AutoLayoutProperties::Top].Value() != convFrame.origin.y)) {
-
             c_solver.AddEditVar(layoutProperties->_vars[AutoLayoutProperties::Bottom], ClsStrong(), 2.0);
             c_solver.AddEditVar(layoutProperties->_vars[AutoLayoutProperties::Top], ClsStrong(), 2.0);
 
@@ -564,7 +572,7 @@ public:
             c_solver.SuggestValue(layoutProperties->_vars[AutoLayoutProperties::Bottom], convFrame.origin.y + convFrame.size.height);
             c_solver.SuggestValue(layoutProperties->_vars[AutoLayoutProperties::Top], convFrame.origin.y);
             c_solver.Resolve();
-            c_solver.EndEdit(); // Removes edit constraints. 
+            c_solver.EndEdit(); // Removes edit constraints.
         }
     } else {
         [self autoLayoutInvalidateContentSize];

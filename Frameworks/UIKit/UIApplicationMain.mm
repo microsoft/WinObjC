@@ -43,7 +43,7 @@
 #import "LoggingNative.h"
 #import "UIDeviceInternal.h"
 #import <MainDispatcher.h>
-#import <CACompositor.h>
+#import "StarboardXaml/DisplayProperties.h"
 #import <UWP/WindowsApplicationModelActivation.h>
 
 static const wchar_t* TAG = L"UIApplicationMain";
@@ -196,7 +196,7 @@ int UIApplicationMainInit(NSString* principalClassName,
 
         NSString* mainNibFile;
 
-        if (GetCACompositor()->isTablet()) {
+        if (DisplayProperties::IsTablet()) {
             mainNibFile = [infoDict objectForKey:@"NSMainNibFile~ipad"];
             if (mainNibFile == nil) {
                 mainNibFile = [infoDict objectForKey:@"NSMainNibFile"];
@@ -223,7 +223,7 @@ int UIApplicationMainInit(NSString* principalClassName,
             }
         } else {
             NSString* storyBoardName = nil;
-            if (GetCACompositor()->isTablet()) {
+            if (DisplayProperties::IsTablet()) {
                 storyBoardName = [infoDict objectForKey:@"UIMainStoryboardFile~ipad"];
             }
 

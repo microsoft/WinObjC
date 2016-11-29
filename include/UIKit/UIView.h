@@ -262,7 +262,7 @@ UIKIT_EXPORT_CLASS
 - (UIView*)viewForBaselineLayout;
 - (UIView*)viewWithTag:(NSInteger)tag;
 - (UIViewPrintFormatter*)viewPrintFormatter STUB_METHOD;
-- (instancetype)initWithFrame:(CGRect)aRect;
+- (instancetype)initWithFrame:(CGRect)frame;
 - (void)addConstraint:(NSLayoutConstraint*)constraint;
 - (void)addConstraints:(NSArray*)constraints;
 - (void)addGestureRecognizer:(UIGestureRecognizer*)gestureRecognizer;
@@ -339,7 +339,7 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, readonly) NSArray* subviews;
 @property (nonatomic, readonly) UIView* superview;
 @property (nonatomic, readonly) UIWindow* window;
-@property (nonatomic, retain) UIColor* tintColor;
+@property (nonatomic, retain) UIColor* tintColor STUB_PROPERTY;
 @property (nonatomic, strong) UIView* maskView STUB_PROPERTY;
 @property (readonly, copy, nonatomic) NSArray* layoutGuides STUB_PROPERTY;
 @property (readonly, getter=isFocused, nonatomic) BOOL focused STUB_PROPERTY;
@@ -381,7 +381,9 @@ UIKIT_EXPORT_CLASS
 // WinObjC Xaml Extensions
 @class WXFrameworkElement;
 @interface UIView (UIKitXamlExtensions)
-@property (nonatomic, retain) WXFrameworkElement* xamlElement;
++ (WXFrameworkElement*)createXamlElement;
+@property (nonatomic, readonly, strong) WXFrameworkElement* xamlElement;
+- (instancetype)initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement;
 @end
 
 @interface UIView (StarboardActions)

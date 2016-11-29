@@ -20,7 +20,7 @@
 #include "UIKit/UIKit.h"
 #include "CGContextInternal.h"
 #include "LoggingNative.h"
-#include "CACompositor.h"
+#include "StarboardXaml/DisplayProperties.h"
 
 static const wchar_t* TAG = L"UIGraphicsFunctions";
 
@@ -78,7 +78,7 @@ void UIGraphicsBeginImageContextWithOptions(CGSize size, BOOL opaque, float scal
     // TODO(DH) GH#1124 Revisit when we have support for CGImage+IWICBitmap
 #if 0
     if (scale == 0.0f) {
-        scale = GetCACompositor()->screenScale();
+        scale = DisplayProperties::ScreenScale();
     }
     CGContextRef newCtx = _CGBitmapContextCreateWithFormat((int)(size.width * scale), (int)(size.height * scale), _ColorARGB);
     newCtx->scale = scale;

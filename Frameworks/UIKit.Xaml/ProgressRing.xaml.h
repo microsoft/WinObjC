@@ -21,6 +21,7 @@
 #include "ObjCXamlControls.h"
 
 namespace UIKit {
+namespace Xaml {
 
 [Windows::Foundation::Metadata::WebHostHidden]
 public ref class ProgressRing sealed {
@@ -31,5 +32,6 @@ private:
     // TODO: Add support for padding and other missing properties, and to expose them as needed to UIKit.
 };
 
-}
+} /* Xaml*/
+} /* UIKit*/
 // clang-format on
