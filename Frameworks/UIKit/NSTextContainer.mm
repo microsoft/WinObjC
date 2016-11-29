@@ -146,10 +146,7 @@ static CGFloat __GetXPositionIntersectingZone(CGRect rect, const CGContextRef ex
     for (size_t i = 0; i < _exclusionPathBoundingRects.size(); ++i) {
         CGRect boundingRect = _exclusionPathBoundingRects[i];
         // If our proposed area doesn't intersect the bounding box of the exclusion zone at all, no need to compare against it
-        if ((proposed.origin.y < boundingRect.origin.y + boundingRect.size.height) &&
-            (proposed.origin.y + proposed.size.height > boundingRect.origin.y) &&
-            (proposed.origin.x < boundingRect.origin.x + boundingRect.size.width) &&
-            (proposed.origin.x + proposed.size.width > boundingRect.origin.x)) {
+        if (CGRectIntersectsRect(proposed, boundingRect)) {
             // Get maximum outer points to minimize stepping
             CGRect lineIntersection = CGRectMake(boundingRect.origin.x, proposed.origin.y, boundingRect.size.width, proposed.size.height);
             // TODO 1394: Remove and replace with CGPath
