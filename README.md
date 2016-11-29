@@ -3,7 +3,7 @@ The Windows Bridge for iOS (also referred to as WinObjC) is a Microsoft open-sou
 
 ## Download and Installation
 To use the bridge you'll need:
-- The latest pre-built Windows Bridge for iOS SDK, that you can download [here](https://aka.ms/winobjc_latest). Click on the **winobjc.zip** file under *Downloads* to start the download and extract it to the local directory of your choice when complete.
+- The latest pre-built Windows Bridge for iOS SDK, that you can download [here](https://aka.ms/winobjc_latest). Click on the **winobjc.zip** file under *Downloads* to start the download and extract it to the local directory of your choice (example: C:\winobjc) when complete.
 - **Windows 10**, build 10586 or higher. Validate your version number [here](http://windows.microsoft.com/en-US/windows/which-operating-system).
 - **Visual Studio 2015 Update 3** with Windows developer tools. Visual Studio 2015 Community is available for free [here](https://dev.windows.com/downloads). Select (at least) the following components during installation:
    1. Programming Languages -> Visual C++
@@ -20,17 +20,17 @@ When using the bridge, the first thing you'll want to do is generate a Visual St
 1. Open the Windows Command Prompt (type **cmd** in the Start Menu to find it) and navigate to your Xcode project directory using the **cd** command. Note: use the directory containing your .workspace or .xcodeproj folder.
 
   ```
-    [location of unzipped SDK]\MyProject> cd [location of unzipped SDK]\winobjc\samples\MyProject
+    C:\> cd C:\MyProject
   ```
-2. Run the vsimporter tool from the *bin* directory of the bridge SDK you downloaded This will generate the Visual Studio Solution:
+2. Run the vsimporter tool from the *bin* directory of the bridge SDK you downloaded. This will generate the Visual Studio Solution:
 
   ```
-    [location of unzipped SDK]\MyProject> [location of unzipped SDK]\bin\vsimporter.exe
+    C:\MyProject> C:\winobjc\bin\vsimporter.exe
   ```
 3. Open the generated Visual Studio solution with the command:
 
   ```
-    [location of unzipped SDK]\MyProject> MyProject.sln
+    C:\MyProject> MyProject.sln
   ```
 
 For more detailed step by step instructions on how to import a project, see the [Quick Start Tutorial](https://github.com/Microsoft/WinObjC/wiki/Quick-Start-Tutorial) page of the wiki. For vsimporter options and known issues, check the [Using vsimporter](https://github.com/Microsoft/WinObjC/wiki/Using-vsimporter) wiki page.
