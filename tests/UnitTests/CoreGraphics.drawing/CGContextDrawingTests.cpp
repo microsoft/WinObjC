@@ -14,9 +14,8 @@
 //
 //******************************************************************************
 
-#import "DrawingTest.h"
-#import <windows.h>
-#import "CGContextInternal.h"
+#include "DrawingTest.h"
+#include <windows.h>
 
 // TODO:#1448 Remove the use of OBJC code
 #ifdef WINOBJC
