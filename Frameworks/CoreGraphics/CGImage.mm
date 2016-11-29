@@ -576,8 +576,7 @@ const __CGImagePixelProperties* _CGGetPixelFormatProperties(WICPixelFormatGUID p
 HRESULT _CGImageGetWICImageSource(CGImageRef image, IWICBitmap** source) {
     RETURN_HR_IF_NULL(E_INVALIDARG, image);
     RETURN_HR_IF_NULL(E_POINTER, source);
-    *source = image->ImageSource().Get();
-    return S_OK;
+    return image->ImageSource().CopyTo(source);
 }
 
 DisplayTexture* _CGImageGetDisplayTexture(CGImageRef image) {
