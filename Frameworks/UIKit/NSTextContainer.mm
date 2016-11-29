@@ -28,6 +28,7 @@ static constexpr CGFloat c_defaultPadding = 5.0f;
     NSLayoutManager* _layoutManager;
     StrongId<NSArray> _exclusionPaths;
     // TODO 1394: Remove for CGD2D
+    // All of the _exclusion* lists are expected to maintain the same lengths
     std::vector<woc::unique_cf<CGContextRef>> _exclusionContexts;
     std::vector<CGRect> _exclusionPathBoundingRects;
 }
@@ -37,8 +38,10 @@ static constexpr CGFloat c_defaultPadding = 5.0f;
 */
 
 - (instancetype)initWithSize:(CGSize)size {
-    _size = size;
-    _lineFragmentPadding = c_defaultPadding;
+    if (self = [super init]) {
+        _size = size;
+        _lineFragmentPadding = c_defaultPadding;
+    }
 
     return self;
 }
@@ -65,7 +68,8 @@ static constexpr CGFloat c_defaultPadding = 5.0f;
     _exclusionContexts.clear();
     _exclusionPathBoundingRects.clear();
     for (UIBezierPath* path in static_cast<NSArray*>(_exclusionPaths)) {
-        woc::unique_cf<CGContextRef> context{ CGBitmapContextCreate(0, 1, 1, 1, 1, 0, 0) };
+        // Create an empty bitmap context to be as small as possible
+        woc::unique_cf<CGContextRef> context{ CGBitmapContextCreate(nullptr, 1, 1, 1, 1, nullptr, 0) };
         CGContextAddPath(context.get(), path.CGPath);
         _exclusionContexts.emplace_back(std::move(context));
         _exclusionPathBoundingRects.emplace_back(CGPathGetBoundingBox(path.CGPath));
@@ -144,7 +148,8 @@ static CGFloat __GetXPositionIntersectingZone(CGRect rect, const CGContextRef ex
         // If our proposed area doesn't intersect the bounding box of the exclusion zone at all, no need to compare against it
         if ((proposed.origin.y < boundingRect.origin.y + boundingRect.size.height) &&
             (proposed.origin.y + proposed.size.height > boundingRect.origin.y) &&
-            (proposed.origin.x < boundingRect.origin.x + boundingRect.size.width)) {
+            (proposed.origin.x < boundingRect.origin.x + boundingRect.size.width) &&
+            (proposed.origin.x + proposed.size.width > boundingRect.origin.x)) {
             // Get maximum outer points to minimize stepping
             CGRect lineIntersection = CGRectMake(boundingRect.origin.x, proposed.origin.y, boundingRect.size.width, proposed.size.height);
             // TODO 1394: Remove and replace with CGPath
