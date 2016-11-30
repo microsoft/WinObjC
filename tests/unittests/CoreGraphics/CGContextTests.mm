@@ -443,7 +443,6 @@ TEST(CGContext, DrawAnImageIntoContext) {
     // Check the canvas context pixel before drawing
     BYTE* dataPtr = static_cast<BYTE*>(CGBitmapContextGetData(context.get()));
     ASSERT_NE(dataPtr, nullptr);
-    EXPECT_EQ(dataPtr[0], 0xcd);
 
     // Draw the image into the canvas context
     CGContextDrawImage(context.get(), bounds, cgImage.get());
@@ -483,7 +482,6 @@ TEST(CGContext, DrawAContextImageIntoAContext) {
     // Check the canvas context pixel before drawing
     BYTE* dataPtr = static_cast<BYTE*>(CGBitmapContextGetData(context.get()));
     ASSERT_NE(dataPtr, nullptr);
-    EXPECT_EQ(dataPtr[0], 0xcd);
 
     // Draw the image into the canvas context
     CGContextDrawImage(context.get(), bounds, image.get());
