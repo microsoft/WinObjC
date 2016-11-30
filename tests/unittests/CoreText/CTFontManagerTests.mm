@@ -27,12 +27,17 @@ static NSURL* __GetURLFromPathRelativeToCurrentDirectory(NSString* relativePath)
 }
 
 TEST(CTFontManager, ShouldBeAbleToRegisterFontsForURL) {
+    woc::unique_cf<CFStringRef> fontName{ CFSTR("WinObjC") };
     NSURL* testFileURL = __GetURLFromPathRelativeToCurrentDirectory(@"/data/WinObjC.ttf");
     CFErrorRef error = nullptr;
     EXPECT_TRUE(CTFontManagerRegisterFontsForURL((__bridge CFURLRef)testFileURL, kCTFontManagerScopeSession, &error));
     EXPECT_EQ(nullptr, error);
-    woc::unique_cf<CTFontRef> font{ CTFontCreateWithName(CFSTR("WinObjC"), 20, nullptr) };
+
+    woc::unique_cf<CTFontRef> font{ CTFontCreateWithName(fontName.get(), 20, nullptr) };
     EXPECT_NE(nullptr, font);
+
+    woc::unique_cf<CGFontRef> cgfont{ CGFontCreateWithFontName(fontName.get()) };
+    EXPECT_NE(nullptr, cgfont);
 
     StrongId<NSString> familyName = (NSString*)CTFontCopyFamilyName(font.get());
     EXPECT_OBJCEQ(@"WinObjC", familyName);
@@ -40,7 +45,7 @@ TEST(CTFontManager, ShouldBeAbleToRegisterFontsForURL) {
     EXPECT_TRUE(CTFontManagerUnregisterFontsForURL((__bridge CFURLRef)testFileURL, kCTFontManagerScopeSession, &error));
     EXPECT_EQ(nullptr, error);
 
-    woc::unique_cf<CTFontRef> failedFont{ CTFontCreateWithName(CFSTR("WinObjC"), 20, nullptr) };
+    woc::unique_cf<CTFontRef> failedFont{ CTFontCreateWithName(fontName.get(), 20, nullptr) };
     EXPECT_NE(nullptr, failedFont);
 
     familyName = (NSString*)CTFontCopyFullName(failedFont.get());
@@ -48,6 +53,7 @@ TEST(CTFontManager, ShouldBeAbleToRegisterFontsForURL) {
 }
 
 TEST(CTFontManager, ShouldBeAbleToRegisterFontsForGraphicsFont) {
+    woc::unique_cf<CFStringRef> fontName{ CFSTR("WinObjC-Italic") };
     NSURL* testFileURL = __GetURLFromPathRelativeToCurrentDirectory(@"/data/WinObjC-Italic.ttf");
     woc::unique_cf<CGDataProviderRef> dataProvider{ CGDataProviderCreateWithURL((__bridge CFURLRef)testFileURL) };
     woc::unique_cf<CGFontRef> graphicsFont{ CGFontCreateWithDataProvider(dataProvider.get()) };
@@ -57,16 +63,19 @@ TEST(CTFontManager, ShouldBeAbleToRegisterFontsForGraphicsFont) {
     EXPECT_TRUE(CTFontManagerRegisterGraphicsFont(graphicsFont.get(), &error));
     EXPECT_EQ(nullptr, error);
 
-    woc::unique_cf<CTFontRef> font{ CTFontCreateWithName(CFSTR("WinObjC-Italic"), 20, nullptr) };
+    woc::unique_cf<CTFontRef> font{ CTFontCreateWithName(fontName.get(), 20, nullptr) };
     EXPECT_NE(nullptr, font);
+
+    woc::unique_cf<CGFontRef> cgfont{ CGFontCreateWithFontName(fontName.get()) };
+    EXPECT_NE(nullptr, cgfont);
 
     StrongId<NSString> familyName = (NSString*)CTFontCopyFullName(font.get());
     EXPECT_OBJCEQ(@"WinObjC Italic", familyName);
 
-    EXPECT_TRUE(CTFontManagerUnregisterFontsForURL((__bridge CFURLRef)testFileURL, kCTFontManagerScopeSession, &error));
+    EXPECT_TRUE(CTFontManagerUnregisterGraphicsFont(graphicsFont.get(), &error));
     EXPECT_EQ(nullptr, error);
 
-    woc::unique_cf<CTFontRef> failedFont{ CTFontCreateWithName(CFSTR("WinObjC-Italic"), 20, nullptr) };
+    woc::unique_cf<CTFontRef> failedFont{ CTFontCreateWithName(fontName.get(), 20, nullptr) };
     EXPECT_NE(nullptr, failedFont);
 
     StrongId<NSString> failedFamilyName = (NSString*)CTFontCopyFullName(failedFont.get());
@@ -79,4 +88,23 @@ TEST(CTFontManager, ShouldFailToUnregisterNonregisteredFonts) {
     EXPECT_TRUE(CTFontManagerUnregisterFontsForURL((__bridge CFURLRef)testFileURL, kCTFontManagerScopeSession, &error));
     EXPECT_NE(nullptr, error);
     EXPECT_EQ(kCTFontManagerErrorNotRegistered, CFErrorGetCode(error));
+}
+
+TEST(CTFontManager, UIFontFamilyNamesShouldContainRegisteredFonts) {
+    NSArray* familyNames = [UIFont familyNames];
+    EXPECT_FALSE([familyNames containsObject:@"WinObjC"]);
+
+    woc::unique_cf<CFStringRef> fontName{ CFSTR("WinObjC") };
+    NSURL* testFileURL = __GetURLFromPathRelativeToCurrentDirectory(@"/data/WinObjC.ttf");
+    CFErrorRef error = nullptr;
+    EXPECT_TRUE(CTFontManagerRegisterFontsForURL((__bridge CFURLRef)testFileURL, kCTFontManagerScopeSession, &error));
+
+    familyNames = [UIFont familyNames];
+    EXPECT_TRUE([familyNames containsObject:@"WinObjC"]);
+
+    EXPECT_TRUE(CTFontManagerUnregisterFontsForURL((__bridge CFURLRef)testFileURL, kCTFontManagerScopeSession, &error));
+    EXPECT_EQ(nullptr, error);
+
+    familyNames = [UIFont familyNames];
+    EXPECT_FALSE([familyNames containsObject:@"WinObjC"]);
 }

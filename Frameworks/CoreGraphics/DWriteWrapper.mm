@@ -190,9 +190,8 @@ static __DWritePropertiesMap __CreatePropertiesMapForFontCollection(IDWriteFontC
 
 /**
  * Private static map, that maps display name and postscript name to a _DWriteFontProperties struct for the corresponding user defined font.
- * Kept separate from c_systemFontPropertiesMap because this needs to be edited whenever a font is (un)registered
  */
-static __DWritePropertiesMap _userFontPropertiesMap;
+static __DWritePropertiesMap s_userFontPropertiesMap;
 
 /**
  * Helper method to convert IDWriteLocalizedStrings object to CFString object.
@@ -335,8 +334,8 @@ std::shared_ptr<_DWriteFontProperties> _DWriteGetFontPropertiesFromName(CFString
     if (info != systemFontPropertiesMap.end()) {
         return info->second;
     }
-    const auto& userFontInfo = _userFontPropertiesMap.find(upperFontName);
-    if (userFontInfo != _userFontPropertiesMap.end()) {
+    const auto& userFontInfo = s_userFontPropertiesMap.find(upperFontName);
+    if (userFontInfo != s_userFontPropertiesMap.end()) {
         return userFontInfo->second;
     }
 
@@ -839,8 +838,8 @@ static HRESULT __DWriteUpdateUserCreatedFontCollection(CFArrayRef datas, CFArray
     RETURN_IF_FAILED(
         dwriteFactory->CreateCustomFontCollection(loader.Get(), &(collectionKey), sizeof(collectionKey), &_userCreatedFontCollection));
 
-    // Update _userFontPropertiesMap with new values
-    _userFontPropertiesMap = __CreatePropertiesMapForFontCollection(_userCreatedFontCollection.Get());
+    // Update s_userFontPropertiesMap with new values
+    s_userFontPropertiesMap = __CreatePropertiesMapForFontCollection(_userCreatedFontCollection.Get());
 
     return S_OK;
 }

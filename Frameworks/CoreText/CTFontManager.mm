@@ -34,7 +34,8 @@ CFArrayRef CTFontManagerCreateFontDescriptorsFromURL(CFURLRef fileURL) {
     return StubReturn();
 }
 
-// Helper functions to reduce code duplication, as (un)registering fonts have almost identical path
+#pragma region Helper Functions
+
 // (Un)Registers font by creating temporary CFArray and calling into function for multiple fonts
 // TLambda :: (CFArrayRef -> CTFontManagerScope -> CFArrayRef*) -> bool
 template <typename TLambda>
@@ -65,6 +66,34 @@ static bool __CTFontManagerUpdateWithFonts(CFArrayRef fontURLs, CTFontManagerSco
 
     return SUCCEEDED(func(fontDatas.get(), errors));
 }
+
+// Gets CFData from CGFontRef if available, which are passed into DWriteWrapper methods
+// When graphics font was not created from data, return false with error containing error code
+// TLambda :: (CFArrayRef -> CFArrayRef*) -> bool
+template <typename TLambda>
+static bool __CTFontManagerUpdateWithGraphicsFont(CGFontRef font, CFErrorRef _Nullable* error, CFIndex errorCode, TLambda&& func) {
+    CFDataRef data = _CGFontGetData(font);
+    if (data == nullptr) {
+        // Font was created from registered font, not a custom font that can be (un)registered
+        if (error) {
+            *error = CFErrorCreate(nullptr, kCFErrorDomainCocoa, errorCode, nullptr);
+        }
+
+        return false;
+    }
+
+    woc::unique_cf<CFArrayRef> fontDatas{ CFArrayCreate(nullptr, (const void**)&data, 1, &kCFTypeArrayCallBacks) };
+    CFArrayRef errors = nil;
+    bool ret = SUCCEEDED(func(fontDatas.get(), &errors));
+    if (error != nil && errors != nil && CFArrayGetCount(errors) > 0L) {
+        *error = (CFErrorRef)CFRetain(CFArrayGetValueAtIndex(errors, 0));
+    }
+
+    CFRelease(errors);
+    return ret;
+}
+
+#pragma endregion Helper Functions
 
 /**
  @Status Caveat
@@ -103,25 +132,7 @@ bool CTFontManagerUnregisterFontsForURLs(CFArrayRef fontURLs, CTFontManagerScope
  @Notes
 */
 bool CTFontManagerRegisterGraphicsFont(CGFontRef font, CFErrorRef* error) {
-    CFDataRef data = _CGFontGetData(font);
-    if (data == nullptr) {
-        // Font was created from registered font, so it must already be registered
-        if (error) {
-            *error = CFErrorCreate(nullptr, kCFErrorDomainCocoa, kCTFontManagerErrorAlreadyRegistered, nullptr);
-        }
-
-        return false;
-    }
-
-    woc::unique_cf<CFArrayRef> fontDatas{ CFArrayCreate(nullptr, (const void**)&data, 1, &kCFTypeArrayCallBacks) };
-    CFArrayRef errors = nil;
-    bool ret = SUCCEEDED(_DWriteRegisterFontsWithDatas(fontDatas.get(), &errors));
-    if (error != nil && errors != nil && CFArrayGetCount(errors) > 0L) {
-        *error = (CFErrorRef)CFRetain(CFArrayGetValueAtIndex(errors, 0));
-    }
-
-    CFRelease(errors);
-    return ret;
+    return __CTFontManagerUpdateWithGraphicsFont(font, error, kCTFontManagerErrorAlreadyRegistered, &_DWriteRegisterFontsWithDatas);
 }
 
 /**
@@ -129,8 +140,7 @@ bool CTFontManagerRegisterGraphicsFont(CGFontRef font, CFErrorRef* error) {
  @Notes
 */
 bool CTFontManagerUnregisterGraphicsFont(CGFontRef font, CFErrorRef _Nullable* error) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return __CTFontManagerUpdateWithGraphicsFont(font, error, kCTFontManagerErrorNotRegistered, &_DWriteUnregisterFontsWithDatas);
 }
 
 /**
