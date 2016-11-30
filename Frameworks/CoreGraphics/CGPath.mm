@@ -59,19 +59,19 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
     __CGPath() : figureClosed(true), lastTransform(CGAffineTransformIdentity) {
     }
 
-    ComPtr<ID2D1PathGeometry> GetPathGeometry() {
+    ComPtr<ID2D1PathGeometry> GetPathGeometry() const {
         return pathGeometry;
     }
 
-    ComPtr<ID2D1GeometrySink> GetGeometrySink() {
+    ComPtr<ID2D1GeometrySink> GetGeometrySink() const {
         return geometrySink;
     }
 
-    CGPoint GetCurrentPoint() {
+    CGPoint GetCurrentPoint() const {
         return currentPoint;
     }
 
-    CGPoint GetStartingPoint() {
+    CGPoint GetStartingPoint() const {
         return startingPoint;
     }
 
@@ -91,7 +91,7 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
         }
     }
 
-    const CGAffineTransform* GetLastTransform() {
+    const CGAffineTransform* GetLastTransform() const {
         return &lastTransform;
     }
 
@@ -160,7 +160,7 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
         return S_OK;
     }
 
-    HRESULT AddGeometryToPathWithTransformation(ComPtr<ID2D1Geometry> geometry, const CGAffineTransform* transform) {
+    HRESULT AddGeometryToPathWithTransformation(const ID2D1Geometry* geometry, const CGAffineTransform* transform) {
         RETURN_IF_FAILED(ClosePath());
         RETURN_IF_FAILED(PreparePathForEditing());
 
@@ -170,6 +170,8 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
         }
         RETURN_IF_FAILED(
             geometry->Simplify(D2D1_GEOMETRY_SIMPLIFICATION_OPTION_CUBICS_AND_LINES, &transformation, GetGeometrySink().Get()));
+
+        SetLastTransform(transform);
         return S_OK;
     }
 };
@@ -366,12 +368,11 @@ void CGPathAddArcToPoint(
     newSink->EndFigure(D2D1_FIGURE_END_OPEN);
     FAIL_FAST_IF_FAILED(newSink->Close());
 
-    FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(newPath, transform));
+    FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(newPath.Get(), transform));
 
     if (transform) {
         endPoint = CGPointApplyAffineTransform(endPoint, *transform);
     }
-    path->SetLastTransform(transform);
     path->SetCurrentPoint(endPoint);
 }
 
@@ -417,12 +418,11 @@ void CGPathAddArc(CGMutablePathRef path,
     newSink->EndFigure(D2D1_FIGURE_END_OPEN);
     FAIL_FAST_IF_FAILED(newSink->Close());
 
-    FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(newPath, transform));
+    FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(newPath.Get(), transform));
 
     if (transform) {
         endPoint = CGPointApplyAffineTransform(endPoint, *transform);
     }
-    path->SetLastTransform(transform);
     path->SetCurrentPoint(endPoint);
 }
 
@@ -476,7 +476,7 @@ void CGPathAddPath(CGMutablePathRef path, const CGAffineTransform* transform, CG
 
     // Close the path being added.
     FAIL_FAST_IF_FAILED(toAdd->ClosePath());
-    FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(toAdd->GetPathGeometry(), transform));
+    FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(toAdd->GetPathGeometry().Get(), transform));
 
     CGPoint currentPoint = toAdd->GetCurrentPoint();
     CGPoint startingPoint = toAdd->GetStartingPoint();
@@ -486,7 +486,6 @@ void CGPathAddPath(CGMutablePathRef path, const CGAffineTransform* transform, CG
     }
     path->SetStartingPoint(startingPoint);
     path->SetCurrentPoint(currentPoint);
-    path->SetLastTransform(transform);
 }
 
 /**
@@ -506,8 +505,7 @@ void CGPathAddEllipseInRect(CGMutablePathRef path, const CGAffineTransform* tran
 
     FAIL_FAST_IF_FAILED(factory->CreateEllipseGeometry(&ellipse, &ellipseGeometry));
 
-    FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(ellipseGeometry, transform));
-    path->SetLastTransform(transform);
+    FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(ellipseGeometry.Get(), transform));
 }
 
 /**
@@ -600,13 +598,12 @@ void CGPathAddQuadCurveToPoint(CGMutablePathRef path, const CGAffineTransform* t
     newSink->EndFigure(D2D1_FIGURE_END_OPEN);
     FAIL_FAST_IF_FAILED(newSink->Close());
 
-    FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(newPath, transform));
+    FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(newPath.Get(), transform));
 
     if (transform) {
         endPoint = CGPointApplyAffineTransform(endPoint, *transform);
     }
     path->SetCurrentPoint(endPoint);
-    path->SetLastTransform(transform);
 }
 
 /**
@@ -634,13 +631,12 @@ void CGPathAddCurveToPoint(CGMutablePathRef path,
     newSink->EndFigure(D2D1_FIGURE_END_OPEN);
     FAIL_FAST_IF_FAILED(newSink->Close());
 
-    FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(newPath, transform));
+    FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(newPath.Get(), transform));
 
     if (transform) {
         endPoint = CGPointApplyAffineTransform(endPoint, *transform);
     }
     path->SetCurrentPoint(endPoint);
-    path->SetLastTransform(transform);
 }
 
 /**
@@ -705,8 +701,7 @@ void CGPathAddRoundedRect(
 
     FAIL_FAST_IF_FAILED(factory->CreateRoundedRectangleGeometry(&roundedRectangle, &rectangleGeometry));
 
-    FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(rectangleGeometry, transform));
-    path->SetLastTransform(transform);
+    FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(rectangleGeometry.Get(), transform));
 }
 
 int _CGPathPointCountForElementType(CGPathElementType type) {
