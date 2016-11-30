@@ -806,7 +806,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     bool isVisible = false;
 
     CALayer* curLayer = self;
-    CALayer* pSuper = (CALayer*)priv->superlayer;
+    CALayer* superLayer = (CALayer*)priv->superlayer;
     CALayer* nextSuper = curLayer->priv->superlayer;
     priv->superlayer = 0;
 
@@ -830,9 +830,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 
     [CATransaction _removeLayer:self];
 
-    pSuper->priv->removeChild(self);
+    superLayer->priv->removeChild(self);
 
-    [pSuper setNeedsLayout];
+    [superLayer setNeedsLayout];
     [self release];
 }
 
