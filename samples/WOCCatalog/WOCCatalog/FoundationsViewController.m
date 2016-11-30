@@ -29,11 +29,11 @@
     [super viewDidLoad];
 
     // add foundation test controllers here
-    [self addMenuItemViewController:[[TaskInfoViewController alloc] init] andTitle:@"task_info"];
+    [self addMenuItemViewControllerClass:[TaskInfoViewController class] andTitle:@"task_info"];
 
-    [self addMenuItemViewController:[[URLSessionViewController alloc] init] andTitle:@"URL Session"];
+    [self addMenuItemViewControllerClass:[URLSessionViewController class] andTitle:@"URL Session"];
 
-    [self addMenuItemViewController:[[UserDefaultsViewController alloc] init] andTitle:@"UserDefaults"];
+    [self addMenuItemViewControllerClass:[UserDefaultsViewController class] andTitle:@"UserDefaults"];
 }
 
 - (void)didReceiveMemoryWarning {
