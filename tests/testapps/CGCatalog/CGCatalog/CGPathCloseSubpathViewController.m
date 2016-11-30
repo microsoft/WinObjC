@@ -35,20 +35,22 @@
         CGContextSetStrokeColorWithColor(currentContext, self.options.lineColor);
         CGContextSetLineDash(currentContext, self.options.linePhase, self.options.lineDashPattern, self.options.lineDashCount);
 
+        CGAffineTransform transformation = self.options.affineTransform;
+
         CGMutablePathRef thePath = CGPathCreateMutable();
-        CGPathMoveToPoint(thePath, NULL, 50, 50);
-        CGPathAddLineToPoint(thePath, NULL, 50, 100);
-        CGPathAddLineToPoint(thePath, NULL, 100, 100);
+        CGPathMoveToPoint(thePath, &transformation, 50, 50);
+        CGPathAddLineToPoint(thePath, &transformation, 50, 100);
+        CGPathAddLineToPoint(thePath, &transformation, 100, 100);
         CGPathCloseSubpath(thePath);
 
-        CGPathMoveToPoint(thePath, NULL, 200, 50);
-        CGPathAddLineToPoint(thePath, NULL, 200, 100);
-        CGPathAddLineToPoint(thePath, NULL, 150, 100);
+        CGPathMoveToPoint(thePath, &transformation, 200, 50);
+        CGPathAddLineToPoint(thePath, &transformation, 200, 100);
+        CGPathAddLineToPoint(thePath, &transformation, 150, 100);
         CGPathCloseSubpath(thePath);
 
-        CGPathMoveToPoint(thePath, NULL, 100, 200);
-        CGPathAddLineToPoint(thePath, NULL, 125, 150);
-        CGPathAddLineToPoint(thePath, NULL, 150, 200);
+        CGPathMoveToPoint(thePath, &transformation, 100, 200);
+        CGPathAddLineToPoint(thePath, &transformation, 125, 150);
+        CGPathAddLineToPoint(thePath, &transformation, 150, 200);
         CGPathCloseSubpath(thePath);
 
         CGPathCloseSubpath(thePath);

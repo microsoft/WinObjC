@@ -11,6 +11,11 @@
 		552816081D062F6B0082C178 /* CGCCGContextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 552816071D062F6B0082C178 /* CGCCGContextViewController.m */; };
 		5528160A1D0630300082C178 /* LogoAutodesk.png in Resources */ = {isa = PBXBuildFile; fileRef = 552816091D0630300082C178 /* LogoAutodesk.png */; };
 		5579D6771D1B73EC00B33059 /* CGCCGPathContainsPointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5579D6761D1B73EC00B33059 /* CGCCGPathContainsPointViewController.m */; };
+		8B2360531DC92A90008F4EBF /* CGPathAddArcViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B2360521DC92A90008F4EBF /* CGPathAddArcViewController.m */; };
+		8B2360561DD690CC008F4EBF /* CGPathAddArcToPointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B2360551DD690CC008F4EBF /* CGPathAddArcToPointViewController.m */; };
+		8B2360591DDAACAE008F4EBF /* AddArc.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B2360571DDAACAE008F4EBF /* AddArc.png */; };
+		8B23605A1DDAACAE008F4EBF /* AddArcToPoint.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B2360581DDAACAE008F4EBF /* AddArcToPoint.png */; };
+		8B23605D1DDBAC23008F4EBF /* CGPathAddRoundedRectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B23605C1DDBAC23008F4EBF /* CGPathAddRoundedRectViewController.m */; };
 		8B2D2E821D9DA57700B8E557 /* AddCurveToPoint.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B2D2E7D1D9DA57700B8E557 /* AddCurveToPoint.png */; };
 		8B2D2E831D9DA57700B8E557 /* AddElipseToRect.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B2D2E7E1D9DA57700B8E557 /* AddElipseToRect.png */; };
 		8B2D2E841D9DA57700B8E557 /* AddLineToPoint.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B2D2E7F1D9DA57700B8E557 /* AddLineToPoint.png */; };
@@ -59,6 +64,14 @@
 		552816091D0630300082C178 /* LogoAutodesk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LogoAutodesk.png; sourceTree = "<group>"; };
 		5579D6751D1B73EC00B33059 /* CGCCGPathContainsPointViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGCCGPathContainsPointViewController.h; sourceTree = "<group>"; };
 		5579D6761D1B73EC00B33059 /* CGCCGPathContainsPointViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGCCGPathContainsPointViewController.m; sourceTree = "<group>"; };
+		8B2360511DC92A90008F4EBF /* CGPathAddArcViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathAddArcViewController.h; sourceTree = "<group>"; };
+		8B2360521DC92A90008F4EBF /* CGPathAddArcViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathAddArcViewController.m; sourceTree = "<group>"; };
+		8B2360541DD690CC008F4EBF /* CGPathAddArcToPointViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathAddArcToPointViewController.h; sourceTree = "<group>"; };
+		8B2360551DD690CC008F4EBF /* CGPathAddArcToPointViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathAddArcToPointViewController.m; sourceTree = "<group>"; };
+		8B2360571DDAACAE008F4EBF /* AddArc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AddArc.png; sourceTree = "<group>"; };
+		8B2360581DDAACAE008F4EBF /* AddArcToPoint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AddArcToPoint.png; sourceTree = "<group>"; };
+		8B23605B1DDBAC23008F4EBF /* CGPathAddRoundedRectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathAddRoundedRectViewController.h; sourceTree = "<group>"; };
+		8B23605C1DDBAC23008F4EBF /* CGPathAddRoundedRectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathAddRoundedRectViewController.m; sourceTree = "<group>"; };
 		8B2D2E7D1D9DA57700B8E557 /* AddCurveToPoint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AddCurveToPoint.png; sourceTree = "<group>"; };
 		8B2D2E7E1D9DA57700B8E557 /* AddElipseToRect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AddElipseToRect.png; sourceTree = "<group>"; };
 		8B2D2E7F1D9DA57700B8E557 /* AddLineToPoint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AddLineToPoint.png; sourceTree = "<group>"; };
@@ -140,6 +153,12 @@
 		8BC8830E1D90A33F009115D0 /* NewSamples */ = {
 			isa = PBXGroup;
 			children = (
+				8B23605B1DDBAC23008F4EBF /* CGPathAddRoundedRectViewController.h */,
+				8B23605C1DDBAC23008F4EBF /* CGPathAddRoundedRectViewController.m */,
+				8B2360541DD690CC008F4EBF /* CGPathAddArcToPointViewController.h */,
+				8B2360551DD690CC008F4EBF /* CGPathAddArcToPointViewController.m */,
+				8B2360511DC92A90008F4EBF /* CGPathAddArcViewController.h */,
+				8B2360521DC92A90008F4EBF /* CGPathAddArcViewController.m */,
 				8BF7B3DC1D9C63FA00C25A86 /* CGPathAddCurveToPointViewController.h */,
 				8BF7B3DD1D9C63FA00C25A86 /* CGPathAddCurveToPointViewController.m */,
 				8BF7B3DE1D9C63FA00C25A86 /* CGPathAddElipseViewController.h */,
@@ -246,6 +265,8 @@
 		F0D21CB81D0605E1002C32EE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8B2360571DDAACAE008F4EBF /* AddArc.png */,
+				8B2360581DDAACAE008F4EBF /* AddArcToPoint.png */,
 				8B2D2E8F1D9DA5F100B8E557 /* CloseSubPath.png */,
 				8B2D2E901D9DA5F100B8E557 /* GetBoundingBox.png */,
 				8B2D2E8B1D9DA5C800B8E557 /* CloseSubPath.png */,
@@ -322,6 +343,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B23605A1DDAACAE008F4EBF /* AddArcToPoint.png in Resources */,
 				8B2D2E841D9DA57700B8E557 /* AddLineToPoint.png in Resources */,
 				8B2D2E8A1D9DA5A000B8E557 /* PathApply.png in Resources */,
 				8B2D2E831D9DA57700B8E557 /* AddElipseToRect.png in Resources */,
@@ -331,6 +353,7 @@
 				8B2D2E851D9DA57700B8E557 /* AddPath.png in Resources */,
 				5528160A1D0630300082C178 /* LogoAutodesk.png in Resources */,
 				F0D21CBC1D0605ED002C32EE /* Launch Screen.storyboard in Resources */,
+				8B2360591DDAACAE008F4EBF /* AddArc.png in Resources */,
 				8B2D2E8E1D9DA5C800B8E557 /* GetBoundingBox.png in Resources */,
 				8B2D2E891D9DA5A000B8E557 /* PathAddRect.png in Resources */,
 				F0D21CBA1D0605E1002C32EE /* Assets.xcassets in Resources */,
@@ -352,6 +375,7 @@
 				8B9D65101D89C42800153CCF /* CGContextNewTestsController.m in Sources */,
 				F0D21C891D05FEF9002C32EE /* CGCRootViewController.m in Sources */,
 				8BF7B3F01D9C63FA00C25A86 /* CGPathAddCurveToPointViewController.m in Sources */,
+				8B2360531DC92A90008F4EBF /* CGPathAddArcViewController.m in Sources */,
 				FBA3A50C1D132C9A00C3C011 /* CGCCGContextReplacePathWithStrokedPath.m in Sources */,
 				8BF7B3F21D9C63FA00C25A86 /* CGPathAddLineToPointViewController.m in Sources */,
 				8B6186D31D89CD1800DA47F4 /* CGContextSamplesRootViewController.m in Sources */,
@@ -363,7 +387,9 @@
 				552816081D062F6B0082C178 /* CGCCGContextViewController.m in Sources */,
 				8BF7B3F81D9C63FA00C25A86 /* CGPathContainsPointViewController.m in Sources */,
 				5579D6771D1B73EC00B33059 /* CGCCGPathContainsPointViewController.m in Sources */,
+				8B2360561DD690CC008F4EBF /* CGPathAddArcToPointViewController.m in Sources */,
 				F0D21C861D05FEF9002C32EE /* AppDelegate.m in Sources */,
+				8B23605D1DDBAC23008F4EBF /* CGPathAddRoundedRectViewController.m in Sources */,
 				8B9D65131D89C5EB00153CCF /* CGContextSampleRow.m in Sources */,
 				F0D21CBF1D06078D002C32EE /* CGCBaseViewController.m in Sources */,
 				FB18A4BA1D1AD10A00A9555A /* CGCCGContextBeginTransparencyLayerWithRect.m in Sources */,

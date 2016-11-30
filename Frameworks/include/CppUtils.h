@@ -19,29 +19,35 @@
 
 #ifdef __cplusplus
 
+#import <iostream>
+
 #pragma region CFRange
-bool operator==(const CFRange& lhs, const CFRange& rhs) {
+inline bool operator==(const CFRange& lhs, const CFRange& rhs) {
     return lhs.location == rhs.location && lhs.length == rhs.length;
 }
 
 #pragma endregion
 
 #pragma region CGPoint
-bool operator==(const CGPoint& lhs, const CGPoint& rhs) {
-    return lhs.x == rhs.x && lhs.y == rhs.y;
+template <typename T>
+std::basic_ostream<T>& operator<<(std::basic_ostream<T>& os, const CGPoint& pt) {
+    return os << "{" << pt.x << ", " << pt.y << "}";
 }
 
+inline bool operator==(const CGPoint& lhs, const CGPoint& rhs) {
+    return ((std::abs(lhs.x - rhs.x) < 0.00001) && (std::abs(lhs.y - rhs.y) < 0.00001));
+}
 #pragma endregion
 
 #pragma region CGSize
-bool operator==(const CGSize& lhs, const CGSize& rhs) {
+inline bool operator==(const CGSize& lhs, const CGSize& rhs) {
     return lhs.width == rhs.width && lhs.height == rhs.height;
 }
 
 #pragma endregion
 
 #pragma region CGRect
-bool operator==(const CGRect& lhs, const CGRect& rhs) {
+inline bool operator==(const CGRect& lhs, const CGRect& rhs) {
     return lhs.origin == rhs.origin && lhs.size == rhs.size;
 }
 
