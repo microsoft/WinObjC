@@ -352,45 +352,7 @@ public:
         return std::fpclassify(CurrentGState().alpha) != FP_ZERO;
     }
 
-    HRESULT Clip(CGPathDrawingMode pathMode) {
-        if (!HasPath()) {
-            // Clipping to nothing is okay.
-            return S_OK;
-        }
-
-        auto& state = CurrentGState();
-
-        ComPtr<ID2D1Geometry> additionalClippingGeometry;
-        RETURN_IF_FAILED(_CGPathGetGeometry(Path(), &additionalClippingGeometry));
-        ClearPath();
-
-        D2D1_FILL_MODE d2dFillMode = (pathMode & kCGPathEOFill) == kCGPathEOFill ? D2D1_FILL_MODE_ALTERNATE : D2D1_FILL_MODE_WINDING;
-
-        if (!state.clippingGeometry) {
-            // If we don't have a clipping geometry, we are free to take this one wholesale (after EO/Winding conversion.)
-            return _CGConvertD2DGeometryToFillMode(additionalClippingGeometry.Get(), d2dFillMode, &state.clippingGeometry);
-        }
-
-        // If we have a clipping geometry, we must intersect it with the new path.
-        // To do so, we need to stream the combined geometry into a totally new geometry.
-        ComPtr<ID2D1PathGeometry> newClippingPathGeometry;
-        RETURN_IF_FAILED(Factory()->CreatePathGeometry(&newClippingPathGeometry));
-
-        ComPtr<ID2D1GeometrySink> geometrySink;
-        RETURN_IF_FAILED(newClippingPathGeometry->Open(&geometrySink));
-
-        geometrySink->SetFillMode(d2dFillMode);
-
-        RETURN_IF_FAILED(state.clippingGeometry->CombineWithGeometry(additionalClippingGeometry.Get(),
-                                                                     D2D1_COMBINE_MODE_INTERSECT,
-                                                                     nullptr,
-                                                                     geometrySink.Get()));
-
-        RETURN_IF_FAILED(geometrySink->Close());
-
-        state.clippingGeometry.Attach(newClippingPathGeometry.Detach());
-        return S_OK;
-    }
+    HRESULT Clip(CGPathDrawingMode pathMode);
 
     template <typename Lambda> // Lambda takes the form void(*)(CGContextRef, ID2D1DeviceContext*)
     HRESULT DrawToCommandList(_CGCoordinateMode coordinateMode,
@@ -925,6 +887,46 @@ bool CGContextPathContainsPoint(CGContextRef context, CGPoint point, CGPathDrawi
 #pragma endregion
 
 #pragma region Global State - Clipping and Masking
+HRESULT __CGContext::Clip(CGPathDrawingMode pathMode) {
+    if (!HasPath()) {
+        // Clipping to nothing is okay.
+        return S_OK;
+    }
+
+    auto& state = CurrentGState();
+
+    ComPtr<ID2D1Geometry> additionalClippingGeometry;
+    RETURN_IF_FAILED(_CGPathGetGeometry(Path(), &additionalClippingGeometry));
+    ClearPath();
+
+    D2D1_FILL_MODE d2dFillMode = (pathMode & kCGPathEOFill) == kCGPathEOFill ? D2D1_FILL_MODE_ALTERNATE : D2D1_FILL_MODE_WINDING;
+
+    if (!state.clippingGeometry) {
+        // If we don't have a clipping geometry, we are free to take this one wholesale (after EO/Winding conversion.)
+        return _CGConvertD2DGeometryToFillMode(additionalClippingGeometry.Get(), d2dFillMode, &state.clippingGeometry);
+    }
+
+    // If we have a clipping geometry, we must intersect it with the new path.
+    // To do so, we need to stream the combined geometry into a totally new geometry.
+    ComPtr<ID2D1PathGeometry> newClippingPathGeometry;
+    RETURN_IF_FAILED(Factory()->CreatePathGeometry(&newClippingPathGeometry));
+
+    ComPtr<ID2D1GeometrySink> geometrySink;
+    RETURN_IF_FAILED(newClippingPathGeometry->Open(&geometrySink));
+
+    geometrySink->SetFillMode(d2dFillMode);
+
+    RETURN_IF_FAILED(state.clippingGeometry->CombineWithGeometry(additionalClippingGeometry.Get(),
+                                                                 D2D1_COMBINE_MODE_INTERSECT,
+                                                                 nullptr,
+                                                                 geometrySink.Get()));
+
+    RETURN_IF_FAILED(geometrySink->Close());
+
+    state.clippingGeometry.Attach(newClippingPathGeometry.Detach());
+    return S_OK;
+}
+
 /**
  @Status Interoperable
 */
