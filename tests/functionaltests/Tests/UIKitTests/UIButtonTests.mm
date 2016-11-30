@@ -33,6 +33,7 @@
 #import "ObjCXamlControls.h"
 #import "UWP/WindowsUIXamlControls.h"
 
+// TODO: Consolidate this into a common place so that all tests can use it
 static const NSTimeInterval c_testTimeoutInSec = 5;
 
 TEST(UIButton, CreateXamlElement) {
@@ -63,15 +64,13 @@ TEST(UIButton, BackgroundColorChanged) {
         UITableViewCell* cell = [buttonVC tableView : buttonVC.tableView cellForRowAtIndexPath:indexPath];
         ASSERT_TRUE(cell);
 
+        // TODO: Formalize a way to extract existing buttons and their states from our test or sample apps
         UILabel* cellLabel = [cell.subviews objectAtIndex:1];
+        UIButton* cellButton = [cell.subviews objectAtIndex:2];
         LOG_INFO(@"Cell subview[1] text: %@", cellLabel.text);
 
-        __block UIButton* cellButton = [cell.subviews objectAtIndex:2];
-        NSString* normalStateTitle = [cellButton titleForState:UIControlStateNormal];
-        LOG_INFO(@"Cell subview[2] name: %@", normalStateTitle);
-
         // We have to artificially ref the element since the block needs to keep it around
-        __block WXUIElement* backingElement = [cellButton xamlElement];
+        WXUIElement* backingElement = [cellButton xamlElement];
         [backingElement retain];
 
         // Register callback and wait for the property changed event to trigger
@@ -79,26 +78,29 @@ TEST(UIButton, BackgroundColorChanged) {
             registerPropertyChangedCallback:[WXCControl backgroundProperty]
                             callback:^(WXDependencyObject* sender, WXDependencyProperty* dp) {
                 WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], [sender getValue:dp]);
-                if (solidBrush) {
-                    LOG_INFO("Backing XAML element backgroundColor (rgba): %d,%d,%d,%d",
-                        [solidBrush.color r],
-                        [solidBrush.color g],
-                        [solidBrush.color b],
-                        [solidBrush.color a]);
+                ASSERT_TRUE(solidBrush);
 
-                    CGFloat red, green, blue, alpha;
-                    [cellButton.backgroundColor getRed:&red green:&green blue:&blue alpha:&alpha];
-                    LOG_INFO("UIButton.backgroundColor (rgba): %.2f,%.2f,%.2f,%.2f", red, green, blue, alpha);
+                LOG_INFO("Backing XAML element backgroundColor (rgba): %d,%d,%d,%d",
+                    [solidBrush.color r],
+                    [solidBrush.color g],
+                    [solidBrush.color b],
+                    [solidBrush.color a]);
 
-                    // Validate that the change is reflected on the backing XAML control
-                    EXPECT_EQ_MSG(solidBrush.color.r, (int)(red * 255), @"Failed to match red component");
-                    EXPECT_EQ_MSG(solidBrush.color.g, (int)(green * 255), @"Failed to match green component");
-                    EXPECT_EQ_MSG(solidBrush.color.b, (int)(blue * 255), @"Failed to match blue component");
-                    EXPECT_EQ_MSG(solidBrush.color.a, (int)(alpha * 255), @"Failed to match alpha component");
-                }
-                else {
-                    EXPECT_FALSE_MSG(solidBrush == nil, "Backing XAML element solid color brush not found");
-                }
+                CGFloat red, green, blue, alpha;
+                [cellButton.backgroundColor getRed:&red green:&green blue:&blue alpha:&alpha];
+                LOG_INFO("UIButton.backgroundColor (rgba): %.2f,%.2f,%.2f,%.2f", red, green, blue, alpha);
+
+                // Validate that the change is reflected on the backing XAML control
+                EXPECT_EQ_MSG(solidBrush.color.r, (int)(red * 255), @"Failed to match red component");
+                EXPECT_EQ_MSG(solidBrush.color.g, (int)(green * 255), @"Failed to match green component");
+                EXPECT_EQ_MSG(solidBrush.color.b, (int)(blue * 255), @"Failed to match blue component");
+                EXPECT_EQ_MSG(solidBrush.color.a, (int)(alpha * 255), @"Failed to match alpha component");
+
+                // UIButton's background should be grayColor to match the value set for this button cell in XAMLCatalog
+                EXPECT_EQ_MSG(solidBrush.color.r, 127, @"Failed to match expected value for red component");
+                EXPECT_EQ_MSG(solidBrush.color.g, 127, @"Failed to match expected value for green component");
+                EXPECT_EQ_MSG(solidBrush.color.b, 127, @"Failed to match expected value for blue component");
+                EXPECT_EQ_MSG(solidBrush.color.a, 255, @"Failed to match expected value for alpha component");
 
                 // Unregister the callback
                 [backingElement unregisterPropertyChangedCallback:[WXCControl backgroundProperty] token:callbackToken];
@@ -111,7 +113,7 @@ TEST(UIButton, BackgroundColorChanged) {
     });
 
     [condition lock];
-    ASSERT_TRUE_MSG([condition waitUntilDate : [NSDate dateWithTimeIntervalSinceNow : c_testTimeoutInSec]],
+    ASSERT_TRUE_MSG([condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]],
         "FAILED: Waiting for property changed event timed out!");
     [condition unlock];
 

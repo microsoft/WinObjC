@@ -32,6 +32,7 @@
 #import "UWP/WindowsUIXamlControls.h"
 #import "CALayerInternal.h"
 
+// TODO: Consolidate this into a common place so that all tests can use it
 static const NSTimeInterval c_testTimeoutInSec = 5;
 
 @interface CALayerViewController : UIViewController
@@ -55,14 +56,8 @@ static const NSTimeInterval c_testTimeoutInSec = 5;
     self->_viewForLayer.frame = CGRectMake(0, 100, 200, 200);
     self->_viewForLayer.backgroundColor = [UIColor whiteColor];
 
-    [self setupLayer];
-    [self->_viewForLayer.layer addSublayer:self->_layer];
-}
-
-- (void)setupLayer {
     self->_layer.frame = self->_viewForLayer.bounds;
-    self->_layer.backgroundColor = [UIColor orangeColor].CGColor;
-    self->_layer.opacity = 0.45f;
+    [self->_viewForLayer.layer addSublayer:self->_layer];
 }
 @end
 
@@ -79,7 +74,7 @@ TEST(CALayerAppearance, OpacityChanged) {
         [caLayerVC view];
 
         // We have to artificially ref the element since the block needs to keep it around
-        __block WXUIElement* backingElement = [caLayerVC.layer _xamlElement];
+        WXUIElement* backingElement = [caLayerVC.layer _xamlElement];
         [backingElement retain];
 
         // Register callback and wait for the property changed event to trigger
@@ -88,7 +83,10 @@ TEST(CALayerAppearance, OpacityChanged) {
                                    callback:^(WXDependencyObject* sender, WXDependencyProperty* dp) {
                 LOG_INFO("Backing XAML element opacity: %f", backingElement.opacity);
                 LOG_INFO("CALayer.opacity: %f", caLayerVC.layer.opacity);
+
+                // Verification
                 EXPECT_EQ_MSG(backingElement.opacity, caLayerVC.layer.opacity, "Failed to match opacity");
+                EXPECT_EQ_MSG(backingElement.opacity, 0.5f, "Failed to match opacity with expected value");
 
                 // Unregister the callback
                 [backingElement unregisterPropertyChangedCallback:[WXUIElement opacityProperty] token:callbackToken];
@@ -98,10 +96,13 @@ TEST(CALayerAppearance, OpacityChanged) {
                 [condition signal];
                 [condition unlock];
             }];
+
+        // Action
+        caLayerVC.layer.opacity = 0.5f;
     });
 
     [condition lock];
-    ASSERT_TRUE_MSG([condition waitUntilDate : [NSDate dateWithTimeIntervalSinceNow : c_testTimeoutInSec]],
+    ASSERT_TRUE_MSG([condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]],
         "FAILED: Waiting for property changed event timed out!");
     [condition unlock];
 
@@ -122,7 +123,7 @@ TEST(CALayerAppearance, BackgroundColorChanged) {
         [caLayerVC view];
 
         // We have to artificially ref the element since the block needs to keep it around
-        __block WXUIElement* backingElement = [caLayerVC.layer _xamlElement];
+        WXUIElement* backingElement = [caLayerVC.layer _xamlElement];
         [backingElement retain];
 
         // Register callback and wait for the property changed event to trigger
@@ -130,25 +131,23 @@ TEST(CALayerAppearance, BackgroundColorChanged) {
             registerPropertyChangedCallback:[WXCPanel backgroundProperty]
                                    callback:^(WXDependencyObject* sender, WXDependencyProperty* dp) {
                 WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], [sender getValue:dp]);
-                if (solidBrush) {
-                    LOG_INFO("Backing XAML element backgroundColor (rgba): %d,%d,%d,%d",
-                            [solidBrush.color r],
-                            [solidBrush.color g],
-                            [solidBrush.color b],
-                            [solidBrush.color a]);
+                ASSERT_TRUE(solidBrush);
 
-                    CGFloat red, green, blue, alpha;
-                    [caLayerVC.layer.backgroundColor getRed:&red green:&green blue:&blue alpha:&alpha];
-                    LOG_INFO("CALayer.backgroundColor (rgba): %.2f,%.2f,%.2f,%.2f", red, green, blue, alpha);
+                LOG_INFO("Backing XAML element backgroundColor (rgba): %d,%d,%d,%d",
+                        [solidBrush.color r],
+                        [solidBrush.color g],
+                        [solidBrush.color b],
+                        [solidBrush.color a]);
 
-                    // Validate that the change is reflected on the backing XAML control
-                    EXPECT_EQ_MSG(solidBrush.color.r, (int)(red * 255), @"Failed to match red component");
-                    EXPECT_EQ_MSG(solidBrush.color.g, (int)(green * 255), @"Failed to match green component");
-                    EXPECT_EQ_MSG(solidBrush.color.b, (int)(blue * 255), @"Failed to match blue component");
-                    EXPECT_EQ_MSG(solidBrush.color.a, (int)(alpha * 255), @"Failed to match alpha component");
-                } else {
-                    EXPECT_FALSE_MSG(solidBrush == nil, "Backing XAML element solid color brush not found");
-                }
+                CGFloat red, green, blue, alpha;
+                [caLayerVC.layer.backgroundColor getRed:&red green:&green blue:&blue alpha:&alpha];
+                LOG_INFO("CALayer.backgroundColor (rgba): %.2f,%.2f,%.2f,%.2f", red, green, blue, alpha);
+
+                // Validate that the change is reflected on the backing XAML control
+                EXPECT_EQ_MSG(solidBrush.color.r, (int)(red * 255), @"Failed to match red component");
+                EXPECT_EQ_MSG(solidBrush.color.g, (int)(green * 255), @"Failed to match green component");
+                EXPECT_EQ_MSG(solidBrush.color.b, (int)(blue * 255), @"Failed to match blue component");
+                EXPECT_EQ_MSG(solidBrush.color.a, (int)(alpha * 255), @"Failed to match alpha component");
 
                 // Unregister the callback
                 [backingElement unregisterPropertyChangedCallback:[WXCPanel backgroundProperty] token:callbackToken];
@@ -159,6 +158,8 @@ TEST(CALayerAppearance, BackgroundColorChanged) {
                 [condition unlock];
         }];
 
+        // Action
+        caLayerVC.layer.backgroundColor = [UIColor redColor].CGColor;
     });
 
     [condition lock];
