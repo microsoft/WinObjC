@@ -174,7 +174,7 @@ public:
 };
 
 struct __CGContext : CoreFoundation::CppBase<__CGContext> {
-    ComPtr<ID2D1RenderTarget> renderTarget{ nullptr };
+    ComPtr<ID2D1DeviceContext> deviceContext;
 
     // Calculated at creation time, this transform flips CG's drawing commands,
     // anchored in the bottom left, to D2D's top-left coordinate system.
@@ -195,31 +195,14 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext> {
 
     CGAffineTransform textMatrix{ CGAffineTransformIdentity };
 
-    __CGContext(ID2D1RenderTarget* renderTarget) : renderTarget(renderTarget) {
-        ComPtr<ID2D1DeviceContext> deviceContext;
-        FAIL_FAST_IF_FAILED(RenderTarget().As(&deviceContext));
-
-        ComPtr<ID2D1Image> baselineTarget;
-        deviceContext->GetTarget(&baselineTarget);
-        // Set up the default/baseline layer.
-        layerStack.emplace(baselineTarget.Get());
-    }
-
-    inline ComPtr<ID2D1RenderTarget>& RenderTarget() {
-        return renderTarget;
-    }
-
-    inline __CGContextDrawingState& CurrentGState() {
-        return layerStack.top().CurrentGState();
-    }
-
+protected:
     inline HRESULT _SaveD2DDrawingState(ID2D1DrawingStateBlock** pDrawingState) {
         RETURN_HR_IF(E_POINTER, !pDrawingState);
 
         ComPtr<ID2D1DrawingStateBlock> drawingState;
         RETURN_IF_FAILED(Factory()->CreateDrawingStateBlock(&drawingState));
 
-        RenderTarget()->SaveDrawingState(drawingState.Get());
+        deviceContext->SaveDrawingState(drawingState.Get());
         *pDrawingState = drawingState.Detach();
         return S_OK;
     }
@@ -227,8 +210,34 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext> {
     inline HRESULT _RestoreD2DDrawingState(ID2D1DrawingStateBlock* drawingState) {
         RETURN_HR_IF(E_INVALIDARG, !drawingState);
 
-        RenderTarget()->RestoreDrawingState(drawingState);
+        deviceContext->RestoreDrawingState(drawingState);
         return S_OK;
+    }
+
+    HRESULT _CreateShadowEffect(ID2D1Image* inputImage, ID2D1Effect** outShadowEffect);
+
+public:
+    __CGContext(ID2D1RenderTarget* renderTarget) {
+        FAIL_FAST_IF_FAILED(renderTarget->QueryInterface(IID_PPV_ARGS(&deviceContext)));
+
+        // CG is a lower-left origin system (LLO), but D2D is upper left (ULO).
+        // We have to translate the render area back onscreen and flip it up to ULO.
+        D2D1_SIZE_F targetSize = deviceContext->GetSize();
+        deviceTransform = CGAffineTransformMake(1.f, 0.f, 0.f, -1.f, 0.f, targetSize.height);
+
+        ComPtr<ID2D1Image> baselineTarget;
+        deviceContext->GetTarget(&baselineTarget);
+
+        // Set up the default/baseline layer.
+        layerStack.emplace(baselineTarget.Get());
+    }
+
+    inline ComPtr<ID2D1DeviceContext>& DeviceContext() {
+        return deviceContext;
+    }
+
+    inline __CGContextDrawingState& CurrentGState() {
+        return layerStack.top().CurrentGState();
     }
 
     inline HRESULT PushGState() {
@@ -253,9 +262,6 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext> {
         // Save our current D2D state block & drawing parameters.
         RETURN_IF_FAILED(PushGState());
 
-        ComPtr<ID2D1DeviceContext> deviceContext;
-        RETURN_IF_FAILED(RenderTarget().As(&deviceContext));
-
         ComPtr<ID2D1CommandList> commandList;
         RETURN_IF_FAILED(deviceContext->CreateCommandList(&commandList));
 
@@ -274,14 +280,14 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext> {
         auto& newDrawingState = CurrentGState();
         newDrawingState.alpha = 1.0;
         newDrawingState.shadowColor = { 0.f, 0.f, 0.f, 0.f };
-        //newDrawingState.blendMode = kCGBlendModeNormal; // TODO GH#1389
+        // newDrawingState.blendMode = kCGBlendModeNormal; // TODO GH#1389
         newDrawingState.clippingGeometry = nullptr;
 
         // TODO(DH) RECT CLIP :O :O :O
         return S_OK;
     }
 
-    inline HRESULT PopLayer(ID2D1Image** outImage) {
+    inline HRESULT PopLayer() {
         if (layerStack.size() <= 1) {
             TraceError(TAG, L"Invalid attempt to pop base layer.");
             return E_BOUNDS;
@@ -303,18 +309,17 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext> {
         // Destroy the top layer and all its state.
         layerStack.pop();
 
-        // Restore the previous D2D state block & drawing parameters from the incoming layer.
-        PopGState();
-
         auto& incomingLayer = layerStack.top();
         ComPtr<ID2D1Image> incomingImageTarget;
         RETURN_IF_FAILED(incomingLayer.GetTarget(&incomingImageTarget));
 
-        ComPtr<ID2D1DeviceContext> deviceContext;
-        RETURN_IF_FAILED(RenderTarget().As(&deviceContext));
         deviceContext->SetTarget(incomingImageTarget.Get());
 
-        *outImage = outgoingCommandList.Detach();
+        RETURN_IF_FAILED(DrawImage(outgoingCommandList.Get()));
+
+        // Restore the previous D2D state block & drawing parameters from the incoming layer.
+        RETURN_IF_FAILED(PopGState());
+
         return S_OK;
     }
 
@@ -339,7 +344,7 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext> {
 
     inline ComPtr<ID2D1Factory> Factory() {
         ComPtr<ID2D1Factory> factory;
-        renderTarget->GetFactory(&factory);
+        deviceContext->GetFactory(&factory);
         return factory;
     }
 
@@ -386,6 +391,14 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext> {
         state.clippingGeometry.Attach(newClippingPathGeometry.Detach());
         return S_OK;
     }
+
+    template <typename Lambda> // Lambda takes the form void(*)(CGContextRef, ID2D1DeviceContext*)
+    HRESULT DrawToCommandList(_CGCoordinateMode coordinateMode,
+                              CGAffineTransform* additionalTransform,
+                              ID2D1CommandList** outCommandList,
+                              Lambda&& drawLambda);
+    HRESULT DrawGeometry(_CGCoordinateMode coordinateMode, ID2D1Geometry* pGeometry, CGPathDrawingMode drawMode);
+    HRESULT DrawImage(ID2D1Image* image);
 };
 
 #define NOISY_RETURN_IF_NULL(param, ...)                                    \
@@ -413,11 +426,6 @@ static HRESULT __CGContextPrepareDefaults(CGContextRef context) {
     // If a context does not support alpha, the default fill looks like fully opaque black.
     CGContextSetRGBFillColor(context, 0, 0, 0, 0);
     CGContextSetRGBStrokeColor(context, 0, 0, 0, 1);
-
-    // CG is a lower-left origin system (LLO), but D2D is upper left (ULO).
-    // We have to translate the render area back onscreen and flip it up to ULO.
-    D2D1_SIZE_F targetSize = context->RenderTarget()->GetSize();
-    context->deviceTransform = CGAffineTransformMake(1.f, 0.f, 0.f, -1.f, 0.f, targetSize.height);
     return S_OK;
 }
 
@@ -509,13 +517,11 @@ void CGContextBeginTransparencyLayerWithRect(CGContextRef context, CGRect rect, 
 /**
  @Status Interoperable
 */
-static HRESULT __CGContextRenderImage(CGContextRef context, ID2D1Image* image);
 void CGContextEndTransparencyLayer(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context);
 
-    ComPtr<ID2D1Image> layerImage;
-    FAIL_FAST_IF_FAILED(context->PopLayer(&layerImage));
-    FAIL_FAST_IF_FAILED(__CGContextRenderImage(context, layerImage.Get()));
+    // PopLayer takes care of drawing.
+    FAIL_FAST_IF_FAILED(context->PopLayer());
 }
 #pragma endregion
 
@@ -976,7 +982,7 @@ CGRect CGContextGetClipBoundingBox(CGContextRef context) {
 
     auto& state = context->CurrentGState();
     if (!state.clippingGeometry) {
-        D2D1_SIZE_F targetSize = context->RenderTarget()->GetSize();
+        D2D1_SIZE_F targetSize = context->DeviceContext()->GetSize();
         return CGContextConvertRectToUserSpace(context, CGRect{ CGPointZero, { targetSize.width, targetSize.height } });
     }
 
@@ -1325,7 +1331,7 @@ void CGContextSetGrayStrokeColor(CGContextRef context, CGFloat gray, CGFloat alp
 void CGContextSetRGBStrokeColor(CGContextRef context, CGFloat r, CGFloat g, CGFloat b, CGFloat a) {
     NOISY_RETURN_IF_NULL(context);
     ComPtr<ID2D1SolidColorBrush> brush;
-    FAIL_FAST_IF_FAILED(context->RenderTarget()->CreateSolidColorBrush({ r, g, b, a }, &brush));
+    FAIL_FAST_IF_FAILED(context->DeviceContext()->CreateSolidColorBrush({ r, g, b, a }, &brush));
     FAIL_FAST_IF_FAILED(brush.As(&context->CurrentGState().strokeBrush));
 }
 
@@ -1435,7 +1441,7 @@ void CGContextSetGrayFillColor(CGContextRef context, CGFloat gray, CGFloat alpha
 void CGContextSetRGBFillColor(CGContextRef context, CGFloat r, CGFloat g, CGFloat b, CGFloat a) {
     NOISY_RETURN_IF_NULL(context);
     ComPtr<ID2D1SolidColorBrush> brush;
-    FAIL_FAST_IF_FAILED(context->RenderTarget()->CreateSolidColorBrush({ r, g, b, a }, &brush));
+    FAIL_FAST_IF_FAILED(context->DeviceContext()->CreateSolidColorBrush({ r, g, b, a }, &brush));
     FAIL_FAST_IF_FAILED(brush.As(&context->CurrentGState().fillBrush));
 }
 
@@ -1537,17 +1543,14 @@ void CGContextShowGlyphsWithAdvances(CGContextRef context, const CGGlyph* glyphs
 */
 void CGContextClearRect(CGContextRef context, CGRect rect) {
     NOISY_RETURN_IF_NULL(context);
-    ComPtr<ID2D1RenderTarget> renderTarget = context->RenderTarget();
-    renderTarget->PushAxisAlignedClip(__CGRectToD2D_F(rect), D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
-    renderTarget->Clear(nullptr); // transparent black clear
-    renderTarget->PopAxisAlignedClip();
+    ComPtr<ID2D1DeviceContext> deviceContext = context->DeviceContext();
+    deviceContext->PushAxisAlignedClip(__CGRectToD2D_F(rect), D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
+    deviceContext->Clear(nullptr); // transparent black clear
+    deviceContext->PopAxisAlignedClip();
 }
 
-static HRESULT __CGContextCreateShadowEffect(CGContextRef context,
-                                             ID2D1DeviceContext* deviceContext,
-                                             ID2D1Image* inputImage,
-                                             ID2D1Effect** outShadowEffect) {
-    auto& state = context->CurrentGState();
+HRESULT __CGContext::_CreateShadowEffect(ID2D1Image* inputImage, ID2D1Effect** outShadowEffect) {
+    auto& state = CurrentGState();
     if (std::fpclassify(state.shadowColor.w) != FP_ZERO) {
         // The Shadow Effect takes an input image (or command list) and projects a shadow from
         // it with the specified parameters.
@@ -1569,7 +1572,7 @@ static HRESULT __CGContextCreateShadowEffect(CGContextRef context,
         RETURN_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D12DAffineTransform, &affineTransformEffect));
         affineTransformEffect->SetInputEffect(0, shadowEffect.Get());
 
-        CGSize deviceTransformedShadowOffset = CGSizeApplyAffineTransform(state.shadowOffset, context->deviceTransform);
+        CGSize deviceTransformedShadowOffset = CGSizeApplyAffineTransform(state.shadowOffset, deviceTransform);
         RETURN_IF_FAILED(affineTransformEffect->SetValue(D2D1_2DAFFINETRANSFORM_PROP_TRANSFORM_MATRIX,
                                                          D2D1::Matrix3x2F::Translation(deviceTransformedShadowOffset.width,
                                                                                        deviceTransformedShadowOffset.height)));
@@ -1595,15 +1598,10 @@ static HRESULT __CGContextCreateShadowEffect(CGContextRef context,
 }
 
 template <typename Lambda> // Lambda takes the form void(*)(CGContextRef, ID2D1DeviceContext*)
-static HRESULT __CGContextRenderToCommandList(CGContextRef context,
-                                              _CGCoordinateMode coordinateMode,
-                                              CGAffineTransform* additionalTransform,
-                                              ID2D1CommandList** outCommandList,
-                                              Lambda&& drawLambda) {
-    ComPtr<ID2D1RenderTarget> renderTarget = context->RenderTarget();
-    ComPtr<ID2D1DeviceContext> deviceContext;
-    RETURN_IF_FAILED(renderTarget.As(&deviceContext));
-
+HRESULT __CGContext::DrawToCommandList(_CGCoordinateMode coordinateMode,
+                                       CGAffineTransform* additionalTransform,
+                                       ID2D1CommandList** outCommandList,
+                                       Lambda&& drawLambda) {
     // Cache the original target to restore it later.
     ComPtr<ID2D1Image> originalTarget;
     deviceContext->GetTarget(&originalTarget);
@@ -1617,7 +1615,7 @@ static HRESULT __CGContextRenderToCommandList(CGContextRef context,
     CGAffineTransform transform = CGAffineTransformIdentity;
     switch (coordinateMode) {
         case _kCGCoordinateModeUserSpace:
-            transform = CGContextGetUserSpaceToDeviceSpaceTransform(context);
+            transform = CGContextGetUserSpaceToDeviceSpaceTransform(this);
             break;
         case _kCGCoordinateModeDeviceSpace:
         default:
@@ -1631,7 +1629,7 @@ static HRESULT __CGContextRenderToCommandList(CGContextRef context,
 
     deviceContext->SetTransform(__CGAffineTransformToD2D_F(transform));
 
-    RETURN_IF_FAILED(std::forward<Lambda>(drawLambda)(context, deviceContext.Get()));
+    RETURN_IF_FAILED(std::forward<Lambda>(drawLambda)(this, deviceContext.Get()));
 
     deviceContext->SetTransform(D2D1::IdentityMatrix());
 
@@ -1644,36 +1642,31 @@ static HRESULT __CGContextRenderToCommandList(CGContextRef context,
     return S_OK;
 }
 
-static HRESULT __CGContextRenderImage(CGContextRef context, ID2D1Image* image) {
+HRESULT __CGContext::DrawImage(ID2D1Image* image) {
     if (!image) {
         // Being asked to draw nothing is valid!
         return S_OK;
     }
 
-    ComPtr<ID2D1RenderTarget> renderTarget = context->RenderTarget();
-
-    auto& state = context->CurrentGState();
-
-    ComPtr<ID2D1DeviceContext> deviceContext;
-    RETURN_IF_FAILED(renderTarget.As(&deviceContext));
+    auto& state = CurrentGState();
 
     deviceContext->BeginDraw();
 
     bool layer = false;
     if (state.clippingGeometry) {
         layer = true;
-        renderTarget->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(),
-                                                      state.clippingGeometry.Get(),
-                                                      D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
-                                                      D2D1::IdentityMatrix(),
-                                                      1.0f),
-                                nullptr);
+        deviceContext->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(),
+                                                       state.clippingGeometry.Get(),
+                                                       D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
+                                                       D2D1::IdentityMatrix(),
+                                                       1.0f),
+                                 nullptr);
     }
 
     ComPtr<ID2D1Image> currentImage{ image };
 
     ComPtr<ID2D1Effect> shadowEffect;
-    RETURN_IF_FAILED(__CGContextCreateShadowEffect(context, deviceContext.Get(), currentImage.Get(), &shadowEffect));
+    RETURN_IF_FAILED(_CreateShadowEffect(currentImage.Get(), &shadowEffect));
     if (shadowEffect) {
         RETURN_IF_FAILED(shadowEffect.As(&currentImage));
     }
@@ -1681,7 +1674,7 @@ static HRESULT __CGContextRenderImage(CGContextRef context, ID2D1Image* image) {
     deviceContext->DrawImage(currentImage.Get());
 
     if (layer) {
-        renderTarget->PopLayer();
+        deviceContext->PopLayer();
     }
 
     // TODO GH#1194: We will need to re-evaluate Direct2D's D2DERR_RECREATE when we move to HW acceleration.
@@ -1690,14 +1683,11 @@ static HRESULT __CGContextRenderImage(CGContextRef context, ID2D1Image* image) {
     return S_OK;
 }
 
-static HRESULT __CGContextDrawGeometry(CGContextRef context,
-                                       _CGCoordinateMode coordinateMode,
-                                       ID2D1Geometry* pGeometry,
-                                       CGPathDrawingMode drawMode) {
+HRESULT __CGContext::DrawGeometry(_CGCoordinateMode coordinateMode, ID2D1Geometry* pGeometry, CGPathDrawingMode drawMode) {
     ComPtr<ID2D1CommandList> commandList;
     ComPtr<ID2D1Geometry> geometry(pGeometry);
-    HRESULT hr = __CGContextRenderToCommandList(
-        context, coordinateMode, nullptr, &commandList, [geometry, drawMode](CGContextRef context, ID2D1DeviceContext* deviceContext) {
+    HRESULT hr = DrawToCommandList(
+        coordinateMode, nullptr, &commandList, [geometry, drawMode](CGContextRef context, ID2D1DeviceContext* deviceContext) {
             auto& state = context->CurrentGState();
             if (drawMode & kCGPathFill) {
                 state.fillBrush->SetOpacity(state.alpha);
@@ -1724,7 +1714,7 @@ static HRESULT __CGContextDrawGeometry(CGContextRef context,
 
     RETURN_IF_FAILED(hr);
 
-    return __CGContextRenderImage(context, commandList.Get());
+    return DrawImage(commandList.Get());
 }
 
 /**
@@ -1740,7 +1730,7 @@ void CGContextStrokeRect(CGContextRef context, CGRect rect) {
     ComPtr<ID2D1RectangleGeometry> rectGeometry;
     FAIL_FAST_IF_FAILED(factory->CreateRectangleGeometry(__CGRectToD2D_F(rect), &rectGeometry));
 
-    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, _kCGCoordinateModeUserSpace, rectGeometry.Get(), kCGPathStroke));
+    FAIL_FAST_IF_FAILED(context->DrawGeometry(_kCGCoordinateModeUserSpace, rectGeometry.Get(), kCGPathStroke));
 
     context->ClearPath();
 }
@@ -1772,7 +1762,7 @@ void CGContextFillRect(CGContextRef context, CGRect rect) {
     ComPtr<ID2D1RectangleGeometry> rectGeometry;
     FAIL_FAST_IF_FAILED(factory->CreateRectangleGeometry(__CGRectToD2D_F(rect), &rectGeometry));
 
-    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, _kCGCoordinateModeUserSpace, rectGeometry.Get(), kCGPathFill));
+    FAIL_FAST_IF_FAILED(context->DrawGeometry(_kCGCoordinateModeUserSpace, rectGeometry.Get(), kCGPathFill));
 
     context->ClearPath();
 }
@@ -1792,7 +1782,7 @@ void CGContextStrokeEllipseInRect(CGContextRef context, CGRect rect) {
         factory->CreateEllipseGeometry({ { CGRectGetMidX(rect), CGRectGetMidY(rect) }, rect.size.width / 2.f, rect.size.height / 2.f },
                                        &ellipseGeometry));
 
-    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, _kCGCoordinateModeUserSpace, ellipseGeometry.Get(), kCGPathStroke));
+    FAIL_FAST_IF_FAILED(context->DrawGeometry(_kCGCoordinateModeUserSpace, ellipseGeometry.Get(), kCGPathStroke));
 
     context->ClearPath();
 }
@@ -1812,7 +1802,7 @@ void CGContextFillEllipseInRect(CGContextRef context, CGRect rect) {
         factory->CreateEllipseGeometry({ { CGRectGetMidX(rect), CGRectGetMidY(rect) }, rect.size.width / 2.f, rect.size.height / 2.f },
                                        &ellipseGeometry));
 
-    FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, _kCGCoordinateModeUserSpace, ellipseGeometry.Get(), kCGPathFill));
+    FAIL_FAST_IF_FAILED(context->DrawGeometry(_kCGCoordinateModeUserSpace, ellipseGeometry.Get(), kCGPathFill));
 
     context->ClearPath();
 }
@@ -1869,7 +1859,7 @@ void CGContextDrawPath(CGContextRef context, CGPathDrawingMode mode) {
     if (context->HasPath()) {
         ComPtr<ID2D1Geometry> pGeometry;
         FAIL_FAST_IF_FAILED(_CGPathGetGeometry(context->Path(), &pGeometry));
-        FAIL_FAST_IF_FAILED(__CGContextDrawGeometry(context, _kCGCoordinateModeDeviceSpace, pGeometry.Get(), mode));
+        FAIL_FAST_IF_FAILED(context->DrawGeometry(_kCGCoordinateModeDeviceSpace, pGeometry.Get(), mode));
         context->ClearPath();
     }
 }
@@ -1933,7 +1923,7 @@ void CGContextDrawImage(CGContextRef context, CGRect rect, CGImageRef image) {
     FAIL_FAST_IF_FAILED(_CGImageGetWICImageSource(refImage.get(), &bmap));
 
     ComPtr<ID2D1Bitmap> d2dBitmap;
-    FAIL_FAST_IF_FAILED(context->RenderTarget()->CreateBitmapFromWicBitmap(bmap.Get(), nullptr, &d2dBitmap));
+    FAIL_FAST_IF_FAILED(context->DeviceContext()->CreateBitmapFromWicBitmap(bmap.Get(), nullptr, &d2dBitmap));
 
     // Flip the image to account for change in coordinate system origin.
     CGAffineTransform flipImage = CGAffineTransformMakeTranslation(rect.origin.x, rect.origin.y + (rect.size.height / 2.0));
@@ -1941,16 +1931,15 @@ void CGContextDrawImage(CGContextRef context, CGRect rect, CGImageRef image) {
     flipImage = CGAffineTransformTranslate(flipImage, -rect.origin.x, -(rect.origin.y + (rect.size.height / 2.0)));
 
     ComPtr<ID2D1CommandList> commandList;
-    HRESULT hr = __CGContextRenderToCommandList(context,
-                                                _kCGCoordinateModeUserSpace,
-                                                &flipImage,
-                                                &commandList,
-                                                [&](CGContextRef context, ID2D1DeviceContext* deviceContext) {
-                                                    deviceContext->DrawBitmap(d2dBitmap.Get(), __CGRectToD2D_F(rect));
-                                                    return S_OK;
-                                                });
+    HRESULT hr = context->DrawToCommandList(_kCGCoordinateModeUserSpace,
+                                            &flipImage,
+                                            &commandList,
+                                            [&](CGContextRef context, ID2D1DeviceContext* deviceContext) {
+                                                deviceContext->DrawBitmap(d2dBitmap.Get(), __CGRectToD2D_F(rect));
+                                                return S_OK;
+                                            });
     FAIL_FAST_IF_FAILED(hr);
-    FAIL_FAST_IF_FAILED(__CGContextRenderImage(context, commandList.Get()));
+    FAIL_FAST_IF_FAILED(context->DrawImage(commandList.Get()));
 }
 
 void _CGContextDrawImageRect(CGContextRef context, CGImageRef image, CGRect src, CGRect dst) {
