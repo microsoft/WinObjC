@@ -20,7 +20,7 @@
 #import <CoreText/CoreText.h>
 #import <Starboard/SmartTypes.h>
 
-static NSURL* __GetURLFromPathRelativeToCurrentDirectory(NSString* relativePath) {
+static NSURL* __GetURLFromPathRelativeToModuleDirectory(NSString* relativePath) {
     static char fullPath[_MAX_PATH];
     static int unused = [](char* path) { return GetModuleFileNameA(NULL, path, _MAX_PATH); }(fullPath);
     return [NSURL fileURLWithPath:[[@(fullPath) stringByDeletingLastPathComponent] stringByAppendingPathComponent:relativePath]];
@@ -28,7 +28,7 @@ static NSURL* __GetURLFromPathRelativeToCurrentDirectory(NSString* relativePath)
 
 TEST(CTFontManager, ShouldBeAbleToRegisterFontsForURL) {
     woc::unique_cf<CFStringRef> fontName{ CFSTR("WinObjC") };
-    NSURL* testFileURL = __GetURLFromPathRelativeToCurrentDirectory(@"/data/WinObjC.ttf");
+    NSURL* testFileURL = __GetURLFromPathRelativeToModuleDirectory(@"/data/WinObjC.ttf");
     CFErrorRef error = nullptr;
     EXPECT_TRUE(CTFontManagerRegisterFontsForURL((__bridge CFURLRef)testFileURL, kCTFontManagerScopeSession, &error));
     EXPECT_EQ(nullptr, error);
@@ -54,7 +54,7 @@ TEST(CTFontManager, ShouldBeAbleToRegisterFontsForURL) {
 
 TEST(CTFontManager, ShouldBeAbleToRegisterFontsForGraphicsFont) {
     woc::unique_cf<CFStringRef> fontName{ CFSTR("WinObjC-Italic") };
-    NSURL* testFileURL = __GetURLFromPathRelativeToCurrentDirectory(@"/data/WinObjC-Italic.ttf");
+    NSURL* testFileURL = __GetURLFromPathRelativeToModuleDirectory(@"/data/WinObjC-Italic.ttf");
     woc::unique_cf<CGDataProviderRef> dataProvider{ CGDataProviderCreateWithURL((__bridge CFURLRef)testFileURL) };
     woc::unique_cf<CGFontRef> graphicsFont{ CGFontCreateWithDataProvider(dataProvider.get()) };
     EXPECT_NE(nullptr, graphicsFont);
@@ -83,7 +83,7 @@ TEST(CTFontManager, ShouldBeAbleToRegisterFontsForGraphicsFont) {
 }
 
 TEST(CTFontManager, ShouldFailToUnregisterNonregisteredFonts) {
-    NSURL* testFileURL = __GetURLFromPathRelativeToCurrentDirectory(@"/data/WinObjC.ttf");
+    NSURL* testFileURL = __GetURLFromPathRelativeToModuleDirectory(@"/data/WinObjC.ttf");
     CFErrorRef error = nullptr;
     EXPECT_TRUE(CTFontManagerUnregisterFontsForURL((__bridge CFURLRef)testFileURL, kCTFontManagerScopeSession, &error));
     EXPECT_NE(nullptr, error);

@@ -19,7 +19,7 @@
 #import <CoreText/CoreText.h>
 #import <Starboard/SmartTypes.h>
 
-static NSURL* __GetURLFromPathRelativeToCurrentDirectory(NSString* relativePath) {
+static NSURL* __GetURLFromPathRelativeToModuleDirectory(NSString* relativePath) {
     static char fullPath[_MAX_PATH];
     static int unused = [](char* path) { return GetModuleFileNameA(NULL, path, _MAX_PATH); }(fullPath);
     return [NSURL fileURLWithPath:[[@(fullPath) stringByDeletingLastPathComponent] stringByAppendingPathComponent:relativePath]];
@@ -148,7 +148,7 @@ TEST(CTFontManager, UIFontFamilyNamesShouldContainRegisteredFonts) {
     EXPECT_FALSE([familyNames containsObject:@"WinObjC"]);
 
     woc::unique_cf<CFStringRef> fontName{ CFSTR("WinObjC") };
-    NSURL* testFileURL = __GetURLFromPathRelativeToCurrentDirectory(@"/data/WinObjC.ttf");
+    NSURL* testFileURL = __GetURLFromPathRelativeToModuleDirectory(@"/data/WinObjC.ttf");
     CFErrorRef error = nullptr;
     EXPECT_TRUE(CTFontManagerRegisterFontsForURL((__bridge CFURLRef)testFileURL, kCTFontManagerScopeSession, &error));
 
