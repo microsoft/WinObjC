@@ -139,7 +139,7 @@ public:
         if (data) {
             m_dataBuffer = static_cast<BYTE*>(data);
         } else {
-            m_dataBuffer = new BYTE[m_height * m_bytesPerRow];
+            m_dataBuffer = new BYTE[m_height * m_bytesPerRow]();
             m_freeData = true;
         }
     }
