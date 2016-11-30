@@ -21,6 +21,7 @@
 #import <CoreGraphics/CGContext.h>
 #import <CoreGraphics/CGBitmapContext.h>
 #import <CoreGraphics/CGPattern.h>
+#import <CppUtils.h>
 
 #if TARGET_OS_WIN32
 #include <COMIncludes.h>
@@ -76,10 +77,6 @@ void cgContextPathApplierFunction(void* info, const CGPathElement* element) {
     }
 
     [result addObject:@{ kTypeKey : @(element->type), kPointsKey : points }];
-}
-
-static inline bool operator==(const CGPoint& lhs, const CGPoint& rhs) {
-    return ((std::abs(lhs.x - rhs.x) < 0.00001) && (std::abs(lhs.y - rhs.y) < 0.00001));
 }
 
 // Helper function that compares results from cgPathApplierFunction to expected results
@@ -278,11 +275,6 @@ DISABLED_TEST(CGPath, CGContextCopyPathCGPathAddQuadCurveToPoint) {
 
     CGContextRelease(context);
     CGColorSpaceRelease(rgbColorSpace);
-}
-
-template <typename T>
-std::basic_ostream<T>& operator<<(std::basic_ostream<T>& os, const CGPoint& pt) {
-    return os << "{" << pt.x << ", " << pt.y << "}";
 }
 
 template <typename T>
