@@ -153,21 +153,21 @@ TEST(UIView, InsertSubviewBelowSubviewNonSibling) {
 
 TEST(UIView, InsertSubviewAboveSubviewNonSibling) {
     UIViewTestHelper testHelper;
-    
+
     // Non-sibling pops on top
     testHelper.testInsertSubviewAboveSubview(testHelper._viewNonSibling, 3);
 }
 
 TEST(UIView, InsertSubviewBelowSubviewNil) {
     UIViewTestHelper testHelper;
-    
+
     // Nil unaffects index
     testHelper.testInsertSubviewBelowSubview(nil, 1);
 }
 
 TEST(UIView, InsertSubviewAboveSubviewNil) {
     UIViewTestHelper testHelper;
-    
+
     // Nil unaffects index
     testHelper.testInsertSubviewAboveSubview(nil, 1);
 }
