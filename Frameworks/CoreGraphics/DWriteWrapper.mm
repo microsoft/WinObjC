@@ -673,8 +673,9 @@ public:
             RETURN_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
 
             ComPtr<DWriteFontBinaryDataLoader> loader;
-            RETURN_IF_FAILED(
-                MakeAndInitialize<DWriteFontBinaryDataLoader>(&loader, (CFDataRef)CFArrayGetValueAtIndex(m_fontDatas.get(), m_location)));
+            RETURN_IF_FAILED(MakeAndInitialize<DWriteFontBinaryDataLoader>(&loader,
+                                                                           static_cast<CFDataRef>(
+                                                                               CFArrayGetValueAtIndex(m_fontDatas.get(), m_location))));
             RETURN_IF_FAILED(dwriteFactory->RegisterFontFileLoader(loader.Get()));
 
             int unused;
@@ -727,26 +728,14 @@ public:
             CFDataRef data = (CFDataRef)CFArrayGetValueAtIndex(fontDatas, i);
             if (data) {
                 if (CFSetContainsValue(m_fontDatasSet.get(), data)) {
-                    if (errors) {
-                        woc::unique_cf<CFErrorRef> error{
-                            CFErrorCreate(nullptr, kCFErrorDomainCocoa, kCTFontManagerErrorAlreadyRegistered, nullptr)
-                        };
-                        CFArrayAppendValue(outErrors, error.get());
-                    }
+                    __AppendErrorIfExists(outErrors, kCTFontManagerErrorAlreadyRegistered);
                 } else {
                     CFArrayAppendValue(m_fontDatas.get(), data);
                     CFSetAddValue(m_fontDatasSet.get(), data);
-                    if (errors) {
-                        CFArrayAppendValue(outErrors, nullptr);
-                    }
+                    __AppendNullptrIfExists(outErrors);
                 }
             } else {
-                if (errors) {
-                    woc::unique_cf<CFErrorRef> error{
-                        CFErrorCreate(nullptr, kCFErrorDomainCocoa, kCTFontManagerErrorInvalidFontData, nullptr)
-                    };
-                    CFArrayAppendValue(outErrors, error.get());
-                }
+                __AppendErrorIfExists(outErrors, kCTFontManagerErrorInvalidFontData);
             }
         }
     }
@@ -767,24 +756,12 @@ public:
                     CFIndex index = CFArrayGetFirstIndexOfValue(m_fontDatas.get(), { 0, CFArrayGetCount(m_fontDatas.get()) }, data);
                     CFArrayRemoveValueAtIndex(m_fontDatas.get(), index);
                     m_previouslyCreatedFiles.erase(m_previouslyCreatedFiles.begin() + index);
-                    if (errors) {
-                        CFArrayAppendValue(outErrors, nullptr);
-                    }
+                    __AppendNullptrIfExists(outErrors);
                 } else {
-                    if (errors) {
-                        woc::unique_cf<CFErrorRef> error{
-                            CFErrorCreate(nullptr, kCFErrorDomainCocoa, kCTFontManagerErrorNotRegistered, nullptr)
-                        };
-                        CFArrayAppendValue(outErrors, error.get());
-                    }
+                    __AppendErrorIfExists(outErrors, kCTFontManagerErrorNotRegistered);
                 }
             } else {
-                if (errors) {
-                    woc::unique_cf<CFErrorRef> error{
-                        CFErrorCreate(nullptr, kCFErrorDomainCocoa, kCTFontManagerErrorInvalidFontData, nullptr)
-                    };
-                    CFArrayAppendValue(outErrors, error.get());
-                }
+                __AppendErrorIfExists(outErrors, kCTFontManagerErrorInvalidFontData);
             }
         }
     }
@@ -806,6 +783,22 @@ private:
 
     // Array of previously created font files, which saves us from having to read a file multiple times
     std::vector<ComPtr<IDWriteFontFile>> m_previouslyCreatedFiles;
+
+    /**
+     * Private helpers to append a CFErrorRef or nullptr to the end of a CFMutableArray if it exists
+     */
+    static void __AppendErrorIfExists(CFMutableArrayRef errors, CFIndex errorCode) {
+        if (errors) {
+            woc::unique_cf<CFErrorRef> error{ CFErrorCreate(nullptr, kCFErrorDomainCocoa, errorCode, nullptr) };
+            CFArrayAppendValue(errors, error.get());
+        }
+    }
+
+    static void __AppendNullptrIfExists(CFMutableArrayRef errors) {
+        if (errors) {
+            CFArrayAppendValue(errors, nullptr);
+        }
+    }
 };
 
 // TLambda is a member function of our FontCollectionLoader which updates the internal state of the loader

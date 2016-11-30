@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,6 +17,13 @@
 #import <TestFramework.h>
 #import <UIKit/UIFont.h>
 #import <CoreText/CoreText.h>
+#import <Starboard/SmartTypes.h>
+
+static NSURL* __GetURLFromPathRelativeToCurrentDirectory(NSString* relativePath) {
+    static char fullPath[_MAX_PATH];
+    static int unused = [](char* path) { return GetModuleFileNameA(NULL, path, _MAX_PATH); }(fullPath);
+    return [NSURL fileURLWithPath:[[@(fullPath) stringByDeletingLastPathComponent] stringByAppendingPathComponent:relativePath]];
+}
 
 TEST(UIFont, FamilyName) {
     UIFont* font = [UIFont fontWithName:@"Segoe UI" size:22];
@@ -134,4 +141,23 @@ TEST(UIFont, Bridging) {
 
     // Call UIKit function on CTFont
     ASSERT_EQ(size, [(__bridge UIFont*)ctFont pointSize]);
+}
+
+TEST(CTFontManager, UIFontFamilyNamesShouldContainRegisteredFonts) {
+    NSArray* familyNames = [UIFont familyNames];
+    EXPECT_FALSE([familyNames containsObject:@"WinObjC"]);
+
+    woc::unique_cf<CFStringRef> fontName{ CFSTR("WinObjC") };
+    NSURL* testFileURL = __GetURLFromPathRelativeToCurrentDirectory(@"/data/WinObjC.ttf");
+    CFErrorRef error = nullptr;
+    EXPECT_TRUE(CTFontManagerRegisterFontsForURL((__bridge CFURLRef)testFileURL, kCTFontManagerScopeSession, &error));
+
+    familyNames = [UIFont familyNames];
+    EXPECT_TRUE([familyNames containsObject:@"WinObjC"]);
+
+    EXPECT_TRUE(CTFontManagerUnregisterFontsForURL((__bridge CFURLRef)testFileURL, kCTFontManagerScopeSession, &error));
+    EXPECT_EQ(nullptr, error);
+
+    familyNames = [UIFont familyNames];
+    EXPECT_FALSE([familyNames containsObject:@"WinObjC"]);
 }

@@ -89,22 +89,3 @@ TEST(CTFontManager, ShouldFailToUnregisterNonregisteredFonts) {
     EXPECT_NE(nullptr, error);
     EXPECT_EQ(kCTFontManagerErrorNotRegistered, CFErrorGetCode(error));
 }
-
-TEST(CTFontManager, UIFontFamilyNamesShouldContainRegisteredFonts) {
-    NSArray* familyNames = [UIFont familyNames];
-    EXPECT_FALSE([familyNames containsObject:@"WinObjC"]);
-
-    woc::unique_cf<CFStringRef> fontName{ CFSTR("WinObjC") };
-    NSURL* testFileURL = __GetURLFromPathRelativeToCurrentDirectory(@"/data/WinObjC.ttf");
-    CFErrorRef error = nullptr;
-    EXPECT_TRUE(CTFontManagerRegisterFontsForURL((__bridge CFURLRef)testFileURL, kCTFontManagerScopeSession, &error));
-
-    familyNames = [UIFont familyNames];
-    EXPECT_TRUE([familyNames containsObject:@"WinObjC"]);
-
-    EXPECT_TRUE(CTFontManagerUnregisterFontsForURL((__bridge CFURLRef)testFileURL, kCTFontManagerScopeSession, &error));
-    EXPECT_EQ(nullptr, error);
-
-    familyNames = [UIFont familyNames];
-    EXPECT_FALSE([familyNames containsObject:@"WinObjC"]);
-}
