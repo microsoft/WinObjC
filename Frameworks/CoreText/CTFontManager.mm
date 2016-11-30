@@ -52,7 +52,7 @@ static bool __CTFontManagerUpdateWithFont(CFURLRef fontURL, CTFontManagerScope s
 }
 
 // Converts CFURLs to CFDatas which are passed into DWriteWrapper methods
-// TLambda :: (CFArrayRef -> CFArrayRef*) -> bool
+// TLambda :: (CFArrayRef -> CFArrayRef*) -> HRESULT
 template <typename TLambda>
 static bool __CTFontManagerUpdateWithFonts(CFArrayRef fontURLs, CTFontManagerScope scope, CFArrayRef _Nullable* errors, TLambda&& func) {
     CFIndex count = CFArrayGetCount(fontURLs);
@@ -69,7 +69,7 @@ static bool __CTFontManagerUpdateWithFonts(CFArrayRef fontURLs, CTFontManagerSco
 
 // Gets CFData from CGFontRef if available, which are passed into DWriteWrapper methods
 // When graphics font was not created from data, return false with error containing error code
-// TLambda :: (CFArrayRef -> CFArrayRef*) -> bool
+// TLambda :: (CFArrayRef -> CFArrayRef*) -> HRESULT
 template <typename TLambda>
 static bool __CTFontManagerUpdateWithGraphicsFont(CGFontRef font, CFErrorRef _Nullable* error, CFIndex errorCode, TLambda&& func) {
     CFDataRef data = _CGFontGetData(font);
@@ -131,12 +131,12 @@ bool CTFontManagerUnregisterFontsForURLs(CFArrayRef fontURLs, CTFontManagerScope
  @Status Interoperable
  @Notes
 */
-bool CTFontManagerRegisterGraphicsFont(CGFontRef font, CFErrorRef* error) {
+bool CTFontManagerRegisterGraphicsFont(CGFontRef font, CFErrorRef _Nullable* error) {
     return __CTFontManagerUpdateWithGraphicsFont(font, error, kCTFontManagerErrorAlreadyRegistered, &_DWriteRegisterFontsWithDatas);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 bool CTFontManagerUnregisterGraphicsFont(CGFontRef font, CFErrorRef _Nullable* error) {
