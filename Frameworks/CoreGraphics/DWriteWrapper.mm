@@ -725,7 +725,7 @@ public:
 
         CFIndex count = CFArrayGetCount(fontDatas);
         for (CFIndex i = 0; i < count; ++i) {
-            CFDataRef data = (CFDataRef)CFArrayGetValueAtIndex(fontDatas, i);
+            CFDataRef data = static_cast<CFDataRef>(CFArrayGetValueAtIndex(fontDatas, i));
             if (data) {
                 if (CFSetContainsValue(m_fontDatasSet.get(), data)) {
                     __AppendErrorIfExists(outErrors, kCTFontManagerErrorAlreadyRegistered);
@@ -749,7 +749,7 @@ public:
 
         CFIndex count = CFArrayGetCount(fontDatas);
         for (CFIndex i = 0; i < count; ++i) {
-            CFDataRef data = (CFDataRef)CFArrayGetValueAtIndex(fontDatas, i);
+            CFDataRef data = static_cast<CFDataRef>(CFArrayGetValueAtIndex(fontDatas, i));
             if (data) {
                 if (CFSetContainsValue(m_fontDatasSet.get(), data)) {
                     CFSetRemoveValue(m_fontDatasSet.get(), data);

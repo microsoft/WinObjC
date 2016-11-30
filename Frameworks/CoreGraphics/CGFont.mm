@@ -374,6 +374,9 @@ CFTypeID CGFontGetTypeID() {
     return __kCGFontTypeID;
 }
 
+// TODO 1450: Convert this and all references to CGDataProviderRef
+// Currently CGDataProviderRef is broken for the needs of CTFontManager
+// So to prevent potentially copying multiple times, save a reference to the data
 CFDataRef _CGFontGetData(CGFontRef font) {
     return font ? font->_data.get() : nullptr;
 }
