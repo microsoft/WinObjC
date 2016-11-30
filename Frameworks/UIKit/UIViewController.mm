@@ -1230,6 +1230,10 @@ NSMutableDictionary* _pageMappings;
     [curController retain];
     [curController autorelease];
 
+    // We maintain a popoverPresentationController instance whenever UIModalPresentationPopover is specified.
+    // However, in non-tablet operation mode, UIModalPresentationPopover should result in the presentation of
+    // a full screen modal instead. We check here if an actual popover has been presented to handle the
+    // dismiss (of a genuine popover or alternately a full screen modal) appropriately.
     BOOL realPopoverPresented = [[curController popoverPresentationController] _isManagingPresentation];
 
     if (!realPopoverPresented && curController->priv->_modalViewController) {

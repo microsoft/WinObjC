@@ -16,7 +16,7 @@
 
 #pragma once
 
-@interface UIPopoverPresentationController()
+@interface UIPopoverPresentationController ()
 
 - (BOOL)_isManagingPresentation;
 - (void)_prepareForPresentation;
