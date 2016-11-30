@@ -291,3 +291,19 @@ DRAW_TEST_F(CGContext, TransparencyLayerWithInnerShadowCanStack, WhiteBackground
 
     CGContextEndTransparencyLayer(context);
 }
+
+DRAW_TEST_F(CGContext, TransparencyLayerIsAlphaCompositedAllAtOnce, WhiteBackgroundTest) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGContextSetAlpha(context, 0.5);
+
+    CGContextBeginTransparencyLayer(context, nullptr);
+
+    CGContextSetRGBStrokeColor(context, 1.0, 0.0, 0.0, 1.0);
+    CGContextSetLineWidth(context, 5);
+
+    _strokeTwoCirclesInContext(context, bounds);
+
+    CGContextEndTransparencyLayer(context);
+}
