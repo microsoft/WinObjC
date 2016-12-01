@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 #include <TestFramework.h>
-#import <UIKit/UIButton.h>
+#import <UIKit/UIActionSheet.h>
 
 #include <COMIncludes.h>
 #import <WRLHelpers.h>
@@ -30,17 +30,37 @@
 #include "ObjCXamlControls.h"
 #import "UWP/WindowsUIXamlControls.h"
 
-TEST(UIButton, CreateXamlElement) {
+TEST(UIActionSheet, CreateXamlElement) {
     // TODO: Switch to UIKit.Xaml projections when they're available.
-    Microsoft::WRL::ComPtr<IInspectable> xamlElement(XamlCreateButton());
+    Microsoft::WRL::ComPtr<IInspectable> xamlElement(XamlCreateContentDialog());
     ASSERT_TRUE(xamlElement);
 }
 
-TEST(UIButton, GetXamlElement) {
-    UIView* view = [[[UIButton alloc] init] autorelease];
-    WXFrameworkElement* backingElement = [view xamlElement];
+TEST(UIActionSheet, GetXamlElement) {
+    UIActionSheet* actionSheet = [[[UIActionSheet alloc] init] autorelease];
+    WXFrameworkElement* backingElement = [actionSheet xamlElement];
     ASSERT_TRUE(backingElement);
 
-    // TODO: Fix up when UIButton moves fully to XAML
     ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
+}
+
+TEST(UIActionSheet, NilParameters) {
+    UIActionSheet* actionSheet =
+        [[[UIActionSheet alloc] initWithTitle:nil delegate:nil cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil]
+            autorelease];
+    WXFrameworkElement* backingElement = [actionSheet xamlElement];
+    ASSERT_TRUE(backingElement);
+
+    // Check that cancel button index, destructive button index, other button index are correct
+    NSInteger numButtons = [actionSheet numberOfButtons];
+    ASSERT_TRUE(numButtons == 0);
+
+    NSInteger cancelIndex = [actionSheet cancelButtonIndex];
+    ASSERT_TRUE(cancelIndex == -1);
+
+    NSInteger destructiveIndex = [actionSheet destructiveButtonIndex];
+    ASSERT_TRUE(cancelIndex == -1);
+
+    NSInteger otherIndex = [actionSheet firstOtherButtonIndex];
+    ASSERT_TRUE(otherIndex == -1);
 }
