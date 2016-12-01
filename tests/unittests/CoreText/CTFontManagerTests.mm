@@ -39,7 +39,8 @@ TEST(CTFontManager, ShouldBeAbleToRegisterFontsForURL) {
     woc::unique_cf<CGFontRef> cgfont{ CGFontCreateWithFontName(fontName.get()) };
     EXPECT_NE(nullptr, cgfont);
 
-    StrongId<NSString> familyName = (NSString*)CTFontCopyFamilyName(font.get());
+    StrongId<NSString> familyName;
+    familyName.attach((NSString*)CTFontCopyFamilyName(font.get()));
     EXPECT_OBJCEQ(@"WinObjC", familyName);
 
     EXPECT_TRUE(CTFontManagerUnregisterFontsForURL((__bridge CFURLRef)testFileURL, kCTFontManagerScopeSession, &error));
@@ -69,7 +70,8 @@ TEST(CTFontManager, ShouldBeAbleToRegisterFontsForGraphicsFont) {
     woc::unique_cf<CGFontRef> cgfont{ CGFontCreateWithFontName(fontName.get()) };
     EXPECT_NE(nullptr, cgfont);
 
-    StrongId<NSString> familyName = (NSString*)CTFontCopyFullName(font.get());
+    StrongId<NSString> familyName;
+    familyName.attach((NSString*)CTFontCopyFullName(font.get()));
     EXPECT_OBJCEQ(@"WinObjC Italic", familyName);
 
     EXPECT_TRUE(CTFontManagerUnregisterGraphicsFont(graphicsFont.get(), &error));
@@ -112,7 +114,8 @@ TEST(CTFontManager, ShouldFailToRegisterSameFontTwice) {
     woc::unique_cf<CTFontRef> font{ CTFontCreateWithName(fontName.get(), 20, nullptr) };
     EXPECT_NE(nullptr, font);
 
-    StrongId<NSString> familyName = (NSString*)CTFontCopyFamilyName(font.get());
+    StrongId<NSString> familyName;
+    familyName.attach((NSString*)CTFontCopyFamilyName(font.get()));
     EXPECT_OBJCEQ(@"WinObjC", familyName);
 
     EXPECT_FALSE(CTFontManagerRegisterFontsForURL((__bridge CFURLRef)testFileURL, kCTFontManagerScopeSession, &error));
@@ -145,12 +148,14 @@ TEST(CTFontManager, ShouldRegisterMultipleFonts) {
 
     woc::unique_cf<CTFontRef> firstFont{ CTFontCreateWithName(firstFontName.get(), 20, nullptr) };
     EXPECT_NE(nullptr, firstFont);
-    StrongId<NSString> firstName = (NSString*)CTFontCopyFullName(firstFont.get());
+    StrongId<NSString> firstName;
+    firstName.attach((NSString*)CTFontCopyFullName(firstFont.get()));
     EXPECT_OBJCEQ(@"WinObjC", firstName);
 
     woc::unique_cf<CTFontRef> secondFont{ CTFontCreateWithName(secondFontName.get(), 20, nullptr) };
     EXPECT_NE(nullptr, secondFont);
-    StrongId<NSString> secondName = (NSString*)CTFontCopyFullName(secondFont.get());
+    StrongId<NSString> secondName;
+    secondName.attach((NSString*)CTFontCopyFullName(secondFont.get()));
     EXPECT_OBJCEQ(@"WinObjC Italic", secondName);
 
     EXPECT_TRUE(CTFontManagerUnregisterFontsForURLs((__bridge CFArrayRef)urls, kCTFontManagerScopeSession, &errors));
