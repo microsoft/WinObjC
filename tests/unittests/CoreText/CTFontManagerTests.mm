@@ -48,7 +48,7 @@ TEST(CTFontManager, ShouldBeAbleToRegisterFontsForURL) {
     woc::unique_cf<CTFontRef> failedFont{ CTFontCreateWithName(fontName.get(), 20, nullptr) };
     EXPECT_NE(nullptr, failedFont);
 
-    familyName = (NSString*)CTFontCopyFullName(failedFont.get());
+    familyName.attach((NSString*)CTFontCopyFullName(failedFont.get()));
     EXPECT_OBJCEQ(@"Segoe UI", familyName);
 }
 
@@ -125,7 +125,7 @@ TEST(CTFontManager, ShouldFailToRegisterSameFontTwice) {
     woc::unique_cf<CTFontRef> failedFont{ CTFontCreateWithName(fontName.get(), 20, nullptr) };
     EXPECT_NE(nullptr, failedFont);
 
-    familyName = (NSString*)CTFontCopyFullName(failedFont.get());
+    familyName.attach((NSString*)CTFontCopyFullName(failedFont.get()));
     EXPECT_OBJCEQ(@"Segoe UI", familyName);
 }
 
@@ -162,6 +162,6 @@ TEST(CTFontManager, ShouldRegisterMultipleFonts) {
     woc::unique_cf<CTFontRef> failedFont{ CTFontCreateWithName(secondFontName.get(), 20, nullptr) };
     EXPECT_NE(nullptr, failedFont);
 
-    secondName = (NSString*)CTFontCopyFullName(failedFont.get());
+    secondName.attach((NSString*)CTFontCopyFullName(failedFont.get()));
     EXPECT_OBJCEQ(@"Segoe UI", secondName);
 }
