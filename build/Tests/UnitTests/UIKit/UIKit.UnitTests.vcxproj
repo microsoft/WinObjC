@@ -269,6 +269,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\UIFontDescriptorTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\NSParagraphStyleTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\NSString+UIKitAdditionsTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\NSTextContainerTests.mm" />
   </ItemGroup>
   <Target Name="CopyTestResourcesToOutput" AfterTargets="AfterBuild">
     <ItemGroup>
