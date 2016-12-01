@@ -408,9 +408,6 @@ HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, IDWriteFontFace** outFon
     // Eg: Bold, Condensed, Light, Italic
     std::shared_ptr<_DWriteFontProperties> properties = _DWriteGetFontPropertiesFromName(name);
 
-    // TODO: #1250: Need to be able to load fonts from the app's bundle
-    // For now return a default font to avoid crashes in case of missing fonts
-    // When #1250 is completed, remove this
     if (!properties->familyName.get()) {
         name = CFSTR("Segoe UI");
         properties = _DWriteGetFontPropertiesFromName(name);
@@ -667,7 +664,7 @@ public:
         RETURN_HR_IF(E_ILLEGAL_METHOD_CALL, m_location < 0 || m_location > CFArrayGetCount(m_fontDatas.get()));
 
         if (0 <= m_location && m_location < m_previouslyCreatedFiles->size()) {
-            *fontFile = m_previouslyCreatedFiles->at(m_location).Get();
+            m_previouslyCreatedFiles->at(m_location).CopyTo(fontFile);
         } else {
             ComPtr<IDWriteFactory> dwriteFactory;
             RETURN_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
