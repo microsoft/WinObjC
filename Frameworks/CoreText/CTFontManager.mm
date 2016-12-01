@@ -59,12 +59,11 @@ static bool __CTFontManagerUpdateWithFonts(CFArrayRef fontURLs, CTFontManagerSco
     woc::unique_cf<CFMutableArrayRef> fontDatas{ CFArrayCreateMutable(nullptr, count, &kCFTypeArrayCallBacks) };
     for (size_t i = 0; i < count; ++i) {
         NSData* data = [NSData dataWithContentsOfURL:static_cast<NSURL*>(CFArrayGetValueAtIndex(fontURLs, i))];
-        if (data != nullptr) {
-            CFArrayAppendValue(fontDatas.get(), (CFDataRef)data);
-        }
+        CFArrayAppendValue(fontDatas.get(), (CFDataRef)data);
     }
 
-    return SUCCEEDED(func(fontDatas.get(), errors));
+    // S_FALSE represents partial failure so cannot use SUCCEEDED macro
+    return func(fontDatas.get(), errors) == S_OK;
 }
 
 // Gets CFData from CGFontRef if available, which are passed into DWriteWrapper methods
@@ -84,7 +83,9 @@ static bool __CTFontManagerUpdateWithGraphicsFont(CGFontRef font, CFErrorRef _Nu
 
     woc::unique_cf<CFArrayRef> fontDatas{ CFArrayCreate(nullptr, (const void**)&data, 1, &kCFTypeArrayCallBacks) };
     CFArrayRef errors = nil;
-    bool ret = SUCCEEDED(func(fontDatas.get(), &errors));
+
+    // S_FALSE represents partial failure so cannot use SUCCEEDED macro
+    bool ret = func(fontDatas.get(), &errors) == S_OK;
     if (error != nil && errors != nil && CFArrayGetCount(errors) > 0L) {
         *error = (CFErrorRef)CFRetain(CFArrayGetValueAtIndex(errors, 0));
     }

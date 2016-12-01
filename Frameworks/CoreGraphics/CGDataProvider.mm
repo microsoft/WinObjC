@@ -66,7 +66,9 @@ static const wchar_t* TAG = L"CGDataProvider";
 CGDataProviderRef CGDataProviderCreateWithURL(CFURLRef url) {
     NSString* path = [static_cast<NSURL*>(url) path];
     CGDataProvider* ret = [[CGDataProvider alloc] initWithContentsOfFile:path];
-    ret->filename = path;
+    if (ret) {
+        ret->filename = path;
+    }
 
     return ret;
 }

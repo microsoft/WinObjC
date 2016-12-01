@@ -85,7 +85,19 @@ TEST(CTFontManager, ShouldBeAbleToRegisterFontsForGraphicsFont) {
 TEST(CTFontManager, ShouldFailToUnregisterNonregisteredFonts) {
     NSURL* testFileURL = __GetURLFromPathRelativeToModuleDirectory(@"/data/WinObjC.ttf");
     CFErrorRef error = nullptr;
-    EXPECT_TRUE(CTFontManagerUnregisterFontsForURL((__bridge CFURLRef)testFileURL, kCTFontManagerScopeSession, &error));
+    EXPECT_FALSE(CTFontManagerUnregisterFontsForURL((__bridge CFURLRef)testFileURL, kCTFontManagerScopeSession, &error));
     EXPECT_NE(nullptr, error);
     EXPECT_EQ(kCTFontManagerErrorNotRegistered, CFErrorGetCode(error));
+}
+
+TEST(CTFontManager, ShouldFailToRegisterNonexistentFont) {
+    NSURL* testFileURL = __GetURLFromPathRelativeToModuleDirectory(@"/data/BlatantlyNonexistentFont.ttf");
+    CFErrorRef error = nullptr;
+    EXPECT_FALSE(CTFontManagerRegisterFontsForURL((__bridge CFURLRef)testFileURL, kCTFontManagerScopeSession, &error));
+    EXPECT_NE(nullptr, error);
+    EXPECT_EQ(kCTFontManagerErrorInvalidFontData, CFErrorGetCode(error));
+
+    EXPECT_FALSE(CTFontManagerUnregisterFontsForURL((__bridge CFURLRef)testFileURL, kCTFontManagerScopeSession, &error));
+    EXPECT_NE(nullptr, error);
+    EXPECT_EQ(kCTFontManagerErrorInvalidFontData, CFErrorGetCode(error));
 }
