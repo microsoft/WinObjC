@@ -54,9 +54,12 @@ TEST(UIButton, GetXamlElement) {
 TEST(UIButton, BackgroundColorChanged) {
     __block UIButtonViewController* buttonVC;
     __block NSCondition* condition = [[[NSCondition alloc] init] autorelease];
+    __block WXUIElement* backingElement = nil;
 
     dispatch_sync(dispatch_get_main_queue(), ^{
         buttonVC = [[UIButtonViewController alloc] init];
+
+        // TODO: Remove this line once we hook up to the root view controller which will trigger the view method
         [buttonVC view];
 
         // Extract the UIButton example from an existing XAMLCatalog cell in a TableViewController
@@ -70,11 +73,11 @@ TEST(UIButton, BackgroundColorChanged) {
         LOG_INFO(@"Cell subview[1] text: %@", cellLabel.text);
 
         // We have to artificially ref the element since the block needs to keep it around
-        WXUIElement* backingElement = [cellButton xamlElement];
+        backingElement = [cellButton xamlElement];
         [backingElement retain];
 
         // Register callback and wait for the property changed event to trigger
-        __block int64_t callbackToken = [backingElement
+        int64_t callbackToken = [backingElement
             registerPropertyChangedCallback:[WXCControl backgroundProperty]
                             callback:^(WXDependencyObject* sender, WXDependencyProperty* dp) {
                 WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], [sender getValue:dp]);
@@ -104,7 +107,6 @@ TEST(UIButton, BackgroundColorChanged) {
 
                 // Unregister the callback
                 [backingElement unregisterPropertyChangedCallback:[WXCControl backgroundProperty] token:callbackToken];
-                [backingElement release];
 
                 [condition lock];
                 [condition signal];
@@ -118,5 +120,6 @@ TEST(UIButton, BackgroundColorChanged) {
     [condition unlock];
 
     // Don't leak
+    [backingElement release];
     [buttonVC release];
 }

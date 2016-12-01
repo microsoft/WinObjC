@@ -67,18 +67,21 @@ static const NSTimeInterval c_testTimeoutInSec = 5;
 TEST(CALayerAppearance, OpacityChanged) {
     __block CALayerViewController* caLayerVC;
     __block NSCondition* condition = [[[NSCondition alloc] init] autorelease];
+    __block WXUIElement* backingElement = nil;
 
     dispatch_sync(dispatch_get_main_queue(), ^{
         LOG_INFO("Creating CALayerViewController on the UI thread explicitly");
         caLayerVC = [[CALayerViewController alloc] init];
+
+        // TODO: Remove this line once we hook up to the root view controller which will trigger the view method
         [caLayerVC view];
 
         // We have to artificially ref the element since the block needs to keep it around
-        WXUIElement* backingElement = [caLayerVC.layer _xamlElement];
+        backingElement = [caLayerVC.layer _xamlElement];
         [backingElement retain];
 
         // Register callback and wait for the property changed event to trigger
-        __block int64_t callbackToken = [backingElement
+        int64_t callbackToken = [backingElement
             registerPropertyChangedCallback:[WXUIElement opacityProperty]
                                    callback:^(WXDependencyObject* sender, WXDependencyProperty* dp) {
                 LOG_INFO("Backing XAML element opacity: %f", backingElement.opacity);
@@ -90,7 +93,6 @@ TEST(CALayerAppearance, OpacityChanged) {
 
                 // Unregister the callback
                 [backingElement unregisterPropertyChangedCallback:[WXUIElement opacityProperty] token:callbackToken];
-                [backingElement release];
 
                 [condition lock];
                 [condition signal];
@@ -107,6 +109,7 @@ TEST(CALayerAppearance, OpacityChanged) {
     [condition unlock];
 
     // Don't leak
+    [backingElement release];
     [caLayerVC release];
 }
 
@@ -116,6 +119,7 @@ TEST(CALayerAppearance, OpacityChanged) {
 TEST(CALayerAppearance, BackgroundColorChanged) {
     __block CALayerViewController* caLayerVC;
     __block NSCondition* condition = [[[NSCondition alloc] init] autorelease];
+    __block WXUIElement* backingElement = nil;
 
     dispatch_sync(dispatch_get_main_queue(), ^{
         LOG_INFO("Creating CALayerViewController on the UI thread explicitly");
@@ -123,11 +127,11 @@ TEST(CALayerAppearance, BackgroundColorChanged) {
         [caLayerVC view];
 
         // We have to artificially ref the element since the block needs to keep it around
-        WXUIElement* backingElement = [caLayerVC.layer _xamlElement];
+        backingElement = [caLayerVC.layer _xamlElement];
         [backingElement retain];
 
         // Register callback and wait for the property changed event to trigger
-        __block int64_t callbackToken = [backingElement
+        int64_t callbackToken = [backingElement
             registerPropertyChangedCallback:[WXCPanel backgroundProperty]
                                    callback:^(WXDependencyObject* sender, WXDependencyProperty* dp) {
                 WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], [sender getValue:dp]);
@@ -151,7 +155,6 @@ TEST(CALayerAppearance, BackgroundColorChanged) {
 
                 // Unregister the callback
                 [backingElement unregisterPropertyChangedCallback:[WXCPanel backgroundProperty] token:callbackToken];
-                [backingElement release];
 
                 [condition lock];
                 [condition signal];
@@ -168,5 +171,6 @@ TEST(CALayerAppearance, BackgroundColorChanged) {
     [condition unlock];
 
     // Don't leak
+    [backingElement release];
     [caLayerVC release];
 }
