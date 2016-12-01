@@ -393,7 +393,7 @@ WADDataPackageView* _getClipboardContent() {
     CGImageRef img = [image CGImage];
 
     // TODO #1338 - Support via encoded data from IWIC
-    woc::unique_cf<CGImageRef> imgRef(_CGImageCreateCopyWithPixelFormat(img, GUID_WICPixelFormat32bppPRGBA));
+    woc::unique_cf<CGImageRef> imgRef(_CGImageCreateCopyWithPixelFormat(img, GUID_WICPixelFormat32bppPBGRA));
     // TODO #1450 - CGDataProvider should not be an NSData.
     NSData* data = static_cast<NSData*>(CGImageGetDataProvider(imgRef.get()));
 

@@ -20,7 +20,6 @@
 #import "CoreGraphics/CGContext.h"
 #import "CGContextInternal.h"
 #import "CGImageInternal.h"
-#import "DisplayTexture.h"
 #import "CGIWICBitmap.h"
 #import <CoreGraphics/D2DWrapper.h>
 
@@ -307,8 +306,8 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
         std::shared_ptr<IDisplayTexture> texture = GetCACompositor()->CreateDisplayTexture(width, height);
 
         Microsoft::WRL::ComPtr<IWICBitmap> customWICBtmap =
-            Microsoft::WRL::Make<CGIWICBitmap>(texture.get(), GUID_WICPixelFormat32bppPRGBA, height, width);
-        // We want to convert it to GUID_WICPixelFormat32bppPRGBA for D2D Render Target compatibility.
+            Microsoft::WRL::Make<CGIWICBitmap>(texture, GUID_WICPixelFormat32bppPBGRA, height, width);
+        // We want to convert it to GUID_WICPixelFormat32bppPBGRA for D2D Render Target compatibility.
         woc::unique_cf<CGImageRef> image(_CGImageCreateWithWICBitmap(customWICBtmap.Get()));
 
         Microsoft::WRL::ComPtr<ID2D1Factory> factory;
@@ -318,8 +317,6 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
         RETURN_NULL_IF_FAILED(factory->CreateWicBitmapRenderTarget(customWICBtmap.Get(), D2D1::RenderTargetProperties(), &renderTarget));
         renderTarget->SetDpi(c_windowsDPI * scale, c_windowsDPI * scale);
 
-        // If we get here, CGIWICBitmap now owns texture.
-        texture.release();
         return _CGBitmapContextCreateWithRenderTarget(renderTarget.Get(), image.get());
     }
 
@@ -518,7 +515,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
         }
 
         // Create the contents
-        CGContextRef drawContext = CreateLayerContentsBitmapContext32(width, height);
+        CGContextRef drawContext = CreateLayerContentsBitmapContext32(width, height, priv->contentsScale);
 
         priv->ownsContents = TRUE;
         CGImageRef target = CGBitmapContextGetImage(drawContext);
@@ -576,8 +573,8 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
             priv->contents = target;
         }
     } else if (priv->contents) {
-        priv->contentsSize.width = float(priv->contents->Backing()->Width());
-        priv->contentsSize.height = float(priv->contents->Backing()->Height());
+        priv->contentsSize.width = float(CGImageGetWidth(priv->contents));
+        priv->contentsSize.height = float(CGImageGetHeight(priv->contents));
     }
 }
 

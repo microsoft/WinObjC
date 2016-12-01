@@ -28,12 +28,12 @@
 #import <windows.h>
 #import <CGColorSpaceInternal.h>
 #import <utility>
-#import "DisplayTexture.h"
 
 #include <COMIncludes.h>
 #import <D2d1.h>
 #import "Wincodec.h"
 #import <wrl/client.h>
+#import <IDisplayTexture.h>
 #include <COMIncludes_End.h>
 
 typedef struct {
@@ -93,7 +93,7 @@ static const std::map<GUID, __CGImagePixelProperties, GuidPixelLess> s_PixelForm
 };
 
 bool _CGIsValidRenderTargetPixelFormat(WICPixelFormatGUID pixelFormat);
-const __CGImagePixelProperties* _CGGetPixelFormatProperties(WICPixelFormatGUID pixelFormat);
+COREGRAPHICS_EXPORT const __CGImagePixelProperties* _CGGetPixelFormatProperties(WICPixelFormatGUID pixelFormat);
 
 WICPixelFormatGUID _CGImageGetWICPixelFormat(CGImageRef image);
 
@@ -122,8 +122,8 @@ HRESULT _CGImageGetWICImageSource(CGImageRef image, IWICBitmap** source);
 // Obtain a direct pointer to the data.
 COREGRAPHICS_EXPORT void* _CGImageGetRawBytes(CGImageRef image);
 
-// Obtain the associated DisplayTexture, return null for images that lack them.
-COREGRAPHICS_EXPORT DisplayTexture* _CGImageGetDisplayTexture(CGImageRef image);
+// Obtain the associated DisplayTexture
+__declspec(dllexport) std::shared_ptr<IDisplayTexture> _CGImageGetDisplayTexture(CGImageRef image);
 
 REFGUID _CGImageGetWICPixelFormatFromImageProperties(unsigned int bitsPerComponent,
                                                      unsigned int bitsPerPixel,

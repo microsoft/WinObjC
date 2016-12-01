@@ -429,7 +429,7 @@ TEST(CGContext, DrawAnImageIntoContext) {
         nullptr, 512, 256, 8, 4 * 512 /* bytesPerRow = bytesPerPixel*width*/, rgbColorSpace.get(), kCGImageAlphaPremultipliedFirst));
 
     // Load an image from file
-    CFDataRef data = (CFDataRef)[NSData dataWithContentsOfFile:getPathToFile(@"jpg1.jpg")];
+    CFDataRef data = (CFDataRef)[NSData dataWithContentsOfFile:getPathToFile(@"data/jpg1.jpg")];
     woc::unique_cf<CGDataProviderRef> dataProvider(CGDataProviderCreateWithCFData(data));
 
     woc::unique_cf<CGImageRef> cgImage(CGImageCreateWithJPEGDataProvider(dataProvider.get(), NULL, NO, kCGRenderingIntentDefault));
