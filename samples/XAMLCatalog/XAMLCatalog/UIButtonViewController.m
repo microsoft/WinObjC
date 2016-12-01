@@ -73,7 +73,7 @@
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
-    return 15;
+    return 16;
 }
 
 - (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
@@ -293,6 +293,33 @@
         
         [button setTitle:@"Selected Button" forState:UIControlStateSelected];
         [button setTitle:@"Selected Button" forState:UIControlStateNormal];
+        
+        [cell addSubview:label];
+        [cell addSubview:button];
+    } else if (indexPath.row == 15) {
+        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop, _labelWidth, _labelHeight)];
+        label.text = @"UIButton, Highlighted state text/color/image is the same as normal state";
+        
+        UIButton* button =
+        [[UIButton alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop + _labelHeight, _defaultWidth, _defaultHeight)];
+
+        // intentionally set nil color for UIControlStateHighlighted
+        // make sure color used for UIControlStateNormal is also used
+        // in highlighted state
+        [button setTitleColor:nil forState:UIControlStateHighlighted];
+        [button setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+        
+        // intentionally set nil color for UIControlStateHighlighted
+        // make sure title used for UIControlStateNormal is also used
+        // in highlighted state
+        [button setTitle:nil forState:UIControlStateHighlighted];
+        [button setTitle:@"Selected Button" forState:UIControlStateNormal];
+
+        // intentionally set nil color for UIControlStateHighlighted
+        // make sure image used for UIControlStateNormal is also used
+        // in highlighted state
+        [button setImage:nil forState:UIControlStateHighlighted];
+        [button setImage:[UIButtonViewController scaledTestImage] forState:UIControlStateNormal];
         
         [cell addSubview:label];
         [cell addSubview:button];
