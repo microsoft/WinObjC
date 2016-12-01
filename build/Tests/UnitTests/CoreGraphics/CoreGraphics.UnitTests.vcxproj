@@ -248,8 +248,8 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics\CGBitmapContextTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics\CGColorTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics\DWriteWrapperTests.mm" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\CoreGraphics\CGImageTests.mm" />
-    <ClangCompile Include="..\..\..\..\tests\unittests\CoreGraphics\TestUtils.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics\CGImageTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics\TestUtils.mm" />
   </ItemGroup>
   <Target Name="CopyTestResourcesToOutput" AfterTargets="AfterBuild">
     <ItemGroup>

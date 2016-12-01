@@ -580,17 +580,14 @@ HRESULT _CGImageGetWICImageSource(CGImageRef image, IWICBitmap** source) {
     return S_OK;
 }
 
-DisplayTexture* _CGImageGetDisplayTexture(CGImageRef image) {
+__declspec(dllexport) std::shared_ptr<IDisplayTexture> _CGImageGetDisplayTexture(CGImageRef image) {
     RETURN_NULL_IF(!image);
 
     ComPtr<ICGDisplayTexture> displayTextureAccess;
     RETURN_NULL_IF_FAILED(image->ImageSource().Get()->QueryInterface(IID_PPV_ARGS(&displayTextureAccess)));
     RETURN_NULL_IF(!displayTextureAccess);
 
-    IDisplayTexture* displayTexture;
-    RETURN_NULL_IF_FAILED(displayTextureAccess->DisplayTexture(&displayTexture));
-
-    return displayTexture->GetTexture();
+    return displayTextureAccess->DisplayTexture();
 }
 
 // Return the data pointer to the Image data.

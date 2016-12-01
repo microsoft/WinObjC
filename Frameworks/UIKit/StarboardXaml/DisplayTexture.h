@@ -15,11 +15,13 @@
 //******************************************************************************
 #pragma once
 
-#include "CACompositor.h"
+#include <IDisplayTexture.h>
 
 #include <memory>
 
 #if defined(__cplusplus) && defined(__OBJC__)
+
+#import <CoreGraphics/CGImage.h>
 
 class DisplayTexture : public IDisplayTexture {
 public:
