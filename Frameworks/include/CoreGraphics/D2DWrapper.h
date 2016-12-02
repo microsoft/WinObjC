@@ -36,6 +36,10 @@ inline D2D_POINT_2F _CGPointToD2D_F(CGPoint point) {
     return { point.x, point.y };
 }
 
+inline CGPoint _D2DPointToCGPoint(D2D_POINT_2F point) {
+    return CGPointMake(point.x, point.y);
+}
+
 inline CGRect _D2DRectToCGRect(D2D1_RECT_F rect) {
     CGFloat x = rect.left;
     CGFloat y = rect.top;
