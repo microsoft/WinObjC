@@ -16,6 +16,7 @@
 		8B2360591DDAACAE008F4EBF /* AddArc.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B2360571DDAACAE008F4EBF /* AddArc.png */; };
 		8B23605A1DDAACAE008F4EBF /* AddArcToPoint.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B2360581DDAACAE008F4EBF /* AddArcToPoint.png */; };
 		8B23605D1DDBAC23008F4EBF /* CGPathAddRoundedRectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B23605C1DDBAC23008F4EBF /* CGPathAddRoundedRectViewController.m */; };
+		8B2360601DF23E53008F4EBF /* CGPathApplyCurveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B23605F1DF23E53008F4EBF /* CGPathApplyCurveViewController.m */; };
 		8B2D2E821D9DA57700B8E557 /* AddCurveToPoint.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B2D2E7D1D9DA57700B8E557 /* AddCurveToPoint.png */; };
 		8B2D2E831D9DA57700B8E557 /* AddElipseToRect.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B2D2E7E1D9DA57700B8E557 /* AddElipseToRect.png */; };
 		8B2D2E841D9DA57700B8E557 /* AddLineToPoint.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B2D2E7F1D9DA57700B8E557 /* AddLineToPoint.png */; };
@@ -72,6 +73,8 @@
 		8B2360581DDAACAE008F4EBF /* AddArcToPoint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AddArcToPoint.png; sourceTree = "<group>"; };
 		8B23605B1DDBAC23008F4EBF /* CGPathAddRoundedRectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathAddRoundedRectViewController.h; sourceTree = "<group>"; };
 		8B23605C1DDBAC23008F4EBF /* CGPathAddRoundedRectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathAddRoundedRectViewController.m; sourceTree = "<group>"; };
+		8B23605E1DF23E53008F4EBF /* CGPathApplyCurveViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathApplyCurveViewController.h; sourceTree = "<group>"; };
+		8B23605F1DF23E53008F4EBF /* CGPathApplyCurveViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathApplyCurveViewController.m; sourceTree = "<group>"; };
 		8B2D2E7D1D9DA57700B8E557 /* AddCurveToPoint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AddCurveToPoint.png; sourceTree = "<group>"; };
 		8B2D2E7E1D9DA57700B8E557 /* AddElipseToRect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AddElipseToRect.png; sourceTree = "<group>"; };
 		8B2D2E7F1D9DA57700B8E557 /* AddLineToPoint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AddLineToPoint.png; sourceTree = "<group>"; };
@@ -153,6 +156,8 @@
 		8BC8830E1D90A33F009115D0 /* NewSamples */ = {
 			isa = PBXGroup;
 			children = (
+				8B23605E1DF23E53008F4EBF /* CGPathApplyCurveViewController.h */,
+				8B23605F1DF23E53008F4EBF /* CGPathApplyCurveViewController.m */,
 				8B23605B1DDBAC23008F4EBF /* CGPathAddRoundedRectViewController.h */,
 				8B23605C1DDBAC23008F4EBF /* CGPathAddRoundedRectViewController.m */,
 				8B2360541DD690CC008F4EBF /* CGPathAddArcToPointViewController.h */,
@@ -393,6 +398,7 @@
 				8B9D65131D89C5EB00153CCF /* CGContextSampleRow.m in Sources */,
 				F0D21CBF1D06078D002C32EE /* CGCBaseViewController.m in Sources */,
 				FB18A4BA1D1AD10A00A9555A /* CGCCGContextBeginTransparencyLayerWithRect.m in Sources */,
+				8B2360601DF23E53008F4EBF /* CGPathApplyCurveViewController.m in Sources */,
 				552816051D062EC90082C178 /* CGCCGBitmapContentViewController.m in Sources */,
 				8BF7B3F61D9C63FA00C25A86 /* CGPathApplyViewController.m in Sources */,
 				8BF7B3F41D9C63FA00C25A86 /* CGPathAddQuadCurveToPointViewController.m in Sources */,
