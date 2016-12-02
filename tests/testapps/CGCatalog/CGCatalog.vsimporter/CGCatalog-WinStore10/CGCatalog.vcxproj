@@ -179,6 +179,8 @@
     </AppxManifest>
     <Xml Include="default.rd.xml" />
     <None Include="CGCatalog_TemporaryKey.pfx" />
+    <Image Include="..\..\CGCatalog\Resources\AddArc.png" />
+    <Image Include="..\..\CGCatalog\Resources\AddArcToPoint.png" />
     <Image Include="Assets\LockScreenLogo.scale-200.png" />
     <Image Include="Assets\SplashScreen.scale-200.png" />
     <Image Include="Assets\Square150x150Logo.scale-200.png" />
@@ -188,6 +190,9 @@
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
     <ClangCompile Include="..\..\CGCatalog\CGContextShadowViewController.mm" />
     <ClangCompile Include="..\..\CGCatalog\CGDrawOptions.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddArcToPointViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddArcViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddRoundedRectViewController.m" />
     <ClangCompile Include="..\..\CGCatalog\CGPathCloseSubpathViewController.m" />
     <ClangCompile Include="..\..\CGCatalog\Samples\CGContextNewTestsController.m" />
     <ClangCompile Include="..\..\CGCatalog\CGCRootViewController.m" />

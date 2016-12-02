@@ -21,6 +21,7 @@
 #import <CoreGraphics/CGContext.h>
 #import <CoreGraphics/CGBitmapContext.h>
 #import <CoreGraphics/CGPattern.h>
+#import <CppUtils.h>
 
 #if TARGET_OS_WIN32
 #include <COMIncludes.h>
@@ -276,15 +277,6 @@ DISABLED_TEST(CGPath, CGContextCopyPathCGPathAddQuadCurveToPoint) {
     CGColorSpaceRelease(rgbColorSpace);
 }
 
-bool operator==(const CGPoint& lhs, const CGPoint& rhs) {
-    return ((std::abs(lhs.x - rhs.x) < 0.00001) && (std::abs(lhs.y - rhs.y) < 0.00001));
-}
-
-template <typename T>
-std::basic_ostream<T>& operator<<(std::basic_ostream<T>& os, const CGPoint& pt) {
-    return os << "{" << pt.x << ", " << pt.y << "}";
-}
-
 template <typename T>
 std::basic_ostream<T>& operator<<(std::basic_ostream<T>& os, const CGAffineTransform& transform) {
     os << "[";
@@ -443,7 +435,6 @@ TEST(CGContext, DrawAnImageIntoContext) {
     // Check the canvas context pixel before drawing
     BYTE* dataPtr = static_cast<BYTE*>(CGBitmapContextGetData(context.get()));
     ASSERT_NE(dataPtr, nullptr);
-    EXPECT_EQ(dataPtr[0], 0xcd);
 
     // Draw the image into the canvas context
     CGContextDrawImage(context.get(), bounds, cgImage.get());
@@ -483,7 +474,6 @@ TEST(CGContext, DrawAContextImageIntoAContext) {
     // Check the canvas context pixel before drawing
     BYTE* dataPtr = static_cast<BYTE*>(CGBitmapContextGetData(context.get()));
     ASSERT_NE(dataPtr, nullptr);
-    EXPECT_EQ(dataPtr[0], 0xcd);
 
     // Draw the image into the canvas context
     CGContextDrawImage(context.get(), bounds, image.get());

@@ -33,6 +33,16 @@ CGImageRef _CGImageCreateFromPNGFile(CFStringRef filename) {
     return CGImageCreateWithPNGDataProvider(dataProvider.get(), nullptr, FALSE, kCGRenderingIntentDefault);
 }
 
+CGImageRef _CGImageCreateFromJPEGFile(CFStringRef filename) {
+    woc::unique_cf<CGDataProviderRef> dataProvider{ CGDataProviderCreateWithFilename(
+        CFStringGetCStringPtr(filename, kCFStringEncodingUTF8)) };
+    if (!dataProvider) {
+        return nullptr;
+    }
+
+    return CGImageCreateWithJPEGDataProvider(dataProvider.get(), nullptr, FALSE, kCGRenderingIntentDefault);
+}
+
 CFDataRef _CFDataCreatePNGFromCGImage(CGImageRef image) {
     // Estimate the image data size to be as large as its raw pixel buffer.
     // This will never be hit; but if it does, CFData will grow intelligently regardless.
@@ -106,4 +116,8 @@ CFStringRef _CFStringCreateAbsolutePath(CFStringRef relativePath) {
         return nullptr;
     }
     return CFStringCreateWithCString(nullptr, reinterpret_cast<char*>(buffer), kCFStringEncodingUTF8);
+}
+
+CFStringRef _CFStringCreateWithStdString(const std::string& string) {
+	return CFStringCreateWithBytes(nullptr, reinterpret_cast<const UInt8*>(&string[0]), string.size(), kCFStringEncodingUTF8, FALSE);
 }

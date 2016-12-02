@@ -48,16 +48,6 @@ using namespace Microsoft::WRL;
 
 static const wchar_t* TAG = L"CGContext";
 
-static inline D2D_RECT_F __CGRectToD2D_F(CGRect rect) {
-    return {
-        rect.origin.x, rect.origin.y, rect.origin.x + rect.size.width, rect.origin.y + rect.size.height,
-    };
-}
-
-static inline D2D1_MATRIX_3X2_F __CGAffineTransformToD2D_F(CGAffineTransform transform) {
-    return { transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty };
-}
-
 enum _CGCoordinateMode : unsigned int { _kCGCoordinateModeDeviceSpace = 0, _kCGCoordinateModeUserSpace };
 
 // A drawing context is represented by a number of layers, each with their own drawing state:

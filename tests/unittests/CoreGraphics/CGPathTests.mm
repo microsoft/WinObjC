@@ -18,6 +18,7 @@
 #import <Starboard/SmartTypes.h>
 #import <CoreGraphics\CGPath.h>
 #import <Foundation\Foundation.h>
+#import <cpputils.h>
 
 #import <CoreGraphics/CGColor.h>
 #import <CoreGraphics/CGColorSpace.h>
@@ -219,7 +220,7 @@ DISABLED_TEST(CGPath, CGPathAddQuadCurveToPoint) {
     CGPathRelease(path);
 }
 
-DISABLED_TEST(CGPath, CGPathCreateMutableCopy) {
+TEST(CGPath, CGPathCreateMutableCopy) {
     CGMutablePathRef path1 = CGPathCreateMutable();
 
     CGRect rect = CGRectMake(2, 4, 8, 16);
@@ -412,7 +413,7 @@ CGPathRef newPathForRoundRect(CGRect rect, CGFloat radius) {
     return path;
 }
 
-DISABLED_TEST(CGPath, CGPathContainsPointOutsideRect) {
+TEST(CGPath, CGPathContainsPointOutsideRect) {
     CGFloat originX = 10.0f;
     CGFloat originY = 20.0f;
     CGFloat pathWidth = 100.0f;
@@ -438,7 +439,7 @@ DISABLED_TEST(CGPath, CGPathContainsPointOutsideRect) {
     EXPECT_FALSE(test);
 }
 
-DISABLED_TEST(CGPath, CGPathContainsPointInsideRectOutsidePath) {
+TEST(CGPath, CGPathContainsPointInsideRectOutsidePath) {
     CGFloat originX = 10.0f;
     CGFloat originY = 20.0f;
     CGFloat pathWidth = 100.0f;
@@ -583,16 +584,6 @@ DISABLED_TEST(CGPath, CGPathContainsPointEOFillFalse) {
     EXPECT_TRUE(test);
 }
 
-void EXPECT_POINTEQ(CGPoint pathPoint, CGFloat x, CGFloat y) {
-    EXPECT_EQ(x, pathPoint.x);
-    EXPECT_EQ(y, pathPoint.y);
-}
-
-void EXPECT_SIZEEQ(CGSize pathSize, CGFloat width, CGFloat height) {
-    EXPECT_EQ(width, pathSize.width);
-    EXPECT_EQ(height, pathSize.height);
-}
-
 // Simple tests for the status of a CGPath during the CGPath rework into D2D.
 TEST(CGPath, CGPathSimpleCreation) {
     // Create a new path
@@ -600,26 +591,26 @@ TEST(CGPath, CGPathSimpleCreation) {
     EXPECT_TRUE(CGPathIsEmpty(path));
     EXPECT_NE(nullptr, path);
     // Its starting point should be at 0,0
-    EXPECT_POINTEQ(CGPathGetCurrentPoint(path), 0, 0);
+    EXPECT_EQ(CGPathGetCurrentPoint(path), CGPointMake(0, 0));
 
     // Move to a new point
     CGPathMoveToPoint(path, nullptr, 50, 50);
-    EXPECT_POINTEQ(CGPathGetCurrentPoint(path), 50, 50);
+    EXPECT_EQ(CGPathGetCurrentPoint(path), CGPointMake(50, 50));
 
     // Move to another new point
     CGPathMoveToPoint(path, nullptr, 100, 50);
-    EXPECT_POINTEQ(CGPathGetCurrentPoint(path), 100, 50);
+    EXPECT_EQ(CGPathGetCurrentPoint(path), CGPointMake(100, 50));
 
     // Create a copy of this path which should be at the same point
     CGMutablePathRef pathCopy = CGPathCreateMutableCopy(path);
-    EXPECT_POINTEQ(CGPathGetCurrentPoint(pathCopy), 100, 50);
+    EXPECT_EQ(CGPathGetCurrentPoint(pathCopy), CGPointMake(100, 50));
 
     // Move the new path to a new point
     CGPathMoveToPoint(pathCopy, nullptr, 200, 200);
 
     // The original should not have been changed but the new path should have moved
-    EXPECT_POINTEQ(CGPathGetCurrentPoint(path), 100, 50);
-    EXPECT_POINTEQ(CGPathGetCurrentPoint(pathCopy), 200, 200);
+    EXPECT_EQ(CGPathGetCurrentPoint(path), CGPointMake(100, 50));
+    EXPECT_EQ(CGPathGetCurrentPoint(pathCopy), CGPointMake(200, 200));
 
     CGPathRelease(path);
     CGPathRelease(pathCopy);
@@ -630,12 +621,12 @@ TEST(CGPath, CGPathSimpleLines) {
     CGMutablePathRef path = CGPathCreateMutable();
     CGPathMoveToPoint(path, nullptr, 50, 50);
     CGPathAddLineToPoint(path, nullptr, 25, 25);
-    EXPECT_POINTEQ(CGPathGetCurrentPoint(path), 25, 25);
+    EXPECT_EQ(CGPathGetCurrentPoint(path), CGPointMake(25, 25));
 
     // Get the size of its bounding box
     CGRect boundingBox = CGPathGetBoundingBox(path);
-    EXPECT_POINTEQ(boundingBox.origin, 25, 25);
-    EXPECT_SIZEEQ(boundingBox.size, 25, 25);
+    EXPECT_EQ(boundingBox.origin, CGPointMake(25, 25));
+    EXPECT_EQ(boundingBox.size, CGSizeMake(25, 25));
 
     // Add a line further down to increase the bounding box's size
     CGPathAddLineToPoint(path, nullptr, 100, 200);
@@ -643,8 +634,8 @@ TEST(CGPath, CGPathSimpleLines) {
     boundingBox = CGPathGetBoundingBox(path);
 
     // Verify that the size of this box has changed
-    EXPECT_POINTEQ(boundingBox.origin, 25, 25);
-    EXPECT_SIZEEQ(boundingBox.size, 75, 175);
+    EXPECT_EQ(boundingBox.origin, CGPointMake(25, 25));
+    EXPECT_EQ(boundingBox.size, CGSizeMake(75, 175));
     CGPathRelease(path);
 
     // Create a new path and move it to a new point
@@ -654,8 +645,8 @@ TEST(CGPath, CGPathSimpleLines) {
 
     // Get the bounding box size of that path
     boundingBox = CGPathGetBoundingBox(path);
-    EXPECT_POINTEQ(boundingBox.origin, 50, 50);
-    EXPECT_SIZEEQ(boundingBox.size, 31, 57);
+    EXPECT_EQ(boundingBox.origin, CGPointMake(50, 50));
+    EXPECT_EQ(boundingBox.size, CGSizeMake(31, 57));
 
     // Create a copy of this path
     CGMutablePathRef pathCopy = CGPathCreateMutableCopy(path);
@@ -663,17 +654,17 @@ TEST(CGPath, CGPathSimpleLines) {
 
     // Check that original bounding box has not changed.
     boundingBox = CGPathGetBoundingBox(path);
-    EXPECT_POINTEQ(boundingBox.origin, 50, 50);
-    EXPECT_SIZEEQ(boundingBox.size, 31, 57);
+    EXPECT_EQ(boundingBox.origin, CGPointMake(50, 50));
+    EXPECT_EQ(boundingBox.size, CGSizeMake(31, 57));
 
     boundingBox = CGPathGetBoundingBox(pathCopy);
-    EXPECT_POINTEQ(boundingBox.origin, 50, 50);
-    EXPECT_SIZEEQ(boundingBox.size, 150, 150);
+    EXPECT_EQ(boundingBox.origin, CGPointMake(50, 50));
+    EXPECT_EQ(boundingBox.size, CGSizeMake(150, 150));
 
     // Redundant check for confidence
     boundingBox = CGPathGetBoundingBox(path);
-    EXPECT_POINTEQ(boundingBox.origin, 50, 50);
-    EXPECT_SIZEEQ(boundingBox.size, 31, 57);
+    EXPECT_EQ(boundingBox.origin, CGPointMake(50, 50));
+    EXPECT_EQ(boundingBox.size, CGSizeMake(31, 57));
 
     CGPathRelease(path);
     CGPathRelease(pathCopy);
@@ -689,17 +680,17 @@ TEST(CGPath, CGPathAddPathTest) {
     CGPathAddLineToPoint(secondPath, nullptr, 100, 100);
 
     CGRect boundingBox = CGPathGetBoundingBox(path);
-    EXPECT_POINTEQ(boundingBox.origin, 50, 50);
-    EXPECT_SIZEEQ(boundingBox.size, 25, 25);
+    EXPECT_EQ(boundingBox.origin, CGPointMake(50, 50));
+    EXPECT_EQ(boundingBox.size, CGSizeMake(25, 25));
 
     boundingBox = CGPathGetBoundingBox(secondPath);
-    EXPECT_POINTEQ(boundingBox.origin, 75, 75);
-    EXPECT_SIZEEQ(boundingBox.size, 25, 25);
+    EXPECT_EQ(boundingBox.origin, CGPointMake(75, 75));
+    EXPECT_EQ(boundingBox.size, CGSizeMake(25, 25));
 
     CGPathAddPath(path, nullptr, secondPath);
     boundingBox = CGPathGetBoundingBox(path);
-    EXPECT_POINTEQ(boundingBox.origin, 50, 50);
-    EXPECT_SIZEEQ(boundingBox.size, 50, 50);
+    EXPECT_EQ(boundingBox.origin, CGPointMake(50, 50));
+    EXPECT_EQ(boundingBox.size, CGSizeMake(50, 50));
 
     CGPathRelease(path);
     CGPathRelease(secondPath);
@@ -710,8 +701,8 @@ TEST(CGPath, CGPathRectanglesTest) {
     CGMutablePathRef path = CGPathCreateWithRect(theRectangle, nullptr);
     CGRect boundingBox = CGPathGetBoundingBox(path);
 
-    EXPECT_POINTEQ(boundingBox.origin, theRectangle.origin.x, theRectangle.origin.y);
-    EXPECT_SIZEEQ(boundingBox.size, theRectangle.size.height, theRectangle.size.width);
+    EXPECT_EQ(boundingBox.origin, theRectangle.origin);
+    EXPECT_EQ(boundingBox.size, theRectangle.size);
 
     CGPathRelease(path);
     path = CGPathCreateMutable();
@@ -722,8 +713,8 @@ TEST(CGPath, CGPathRectanglesTest) {
 
     boundingBox = CGPathGetBoundingBox(path);
 
-    EXPECT_POINTEQ(boundingBox.origin, 50, 50);
-    EXPECT_SIZEEQ(boundingBox.size, 250, 150);
+    EXPECT_EQ(boundingBox.origin, CGPointMake(50, 50));
+    EXPECT_EQ(boundingBox.size, CGSizeMake(250, 150));
 
     CGPathRelease(path);
 }
@@ -739,8 +730,8 @@ TEST(CGPath, CGPathAddLinesTest) {
 
     CGRect boundingBox = CGPathGetBoundingBox(path);
 
-    EXPECT_POINTEQ(boundingBox.origin, 50, 50);
-    EXPECT_SIZEEQ(boundingBox.size, 50, 50);
+    EXPECT_EQ(boundingBox.origin, CGPointMake(50, 50));
+    EXPECT_EQ(boundingBox.size, CGSizeMake(50, 50));
 
     CGPoint newPoints[] = { { 100, 100 }, { 200, 25 }, { 100, 100 }, { 25, 200 } };
 
@@ -748,8 +739,8 @@ TEST(CGPath, CGPathAddLinesTest) {
 
     boundingBox = CGPathGetBoundingBox(path);
 
-    EXPECT_POINTEQ(boundingBox.origin, 25, 25);
-    EXPECT_SIZEEQ(boundingBox.size, 175, 175);
+    EXPECT_EQ(boundingBox.origin, CGPointMake(25, 25));
+    EXPECT_EQ(boundingBox.size, CGSizeMake(175, 175));
 
     CGPathRelease(path);
 }
@@ -919,4 +910,47 @@ TEST(CGPath, SubShapesEqualityTest) {
     CGPathRelease(path1);
     CGPathRelease(path2);
     CGPathRelease(path3);
+}
+
+TEST(CGPath, AddArcTest) {
+    CGMutablePathRef path = CGPathCreateMutable();
+
+    CGPathMoveToPoint(path, nullptr, 50, 50);
+    CGPathAddArc(path, nullptr, 100, 100, 75, 0, (-1 * M_PI / 2.0), true);
+    CGPathCloseSubpath(path);
+
+    CGRect boundingBox = CGPathGetBoundingBox(path);
+    EXPECT_EQ(boundingBox.origin, CGPointMake(50, 25));
+    EXPECT_EQ(boundingBox.size, CGSizeMake(125, 75));
+    CGPathRelease(path);
+}
+
+TEST(CGPath, PathEllipseInRect) {
+    CGMutablePathRef path = CGPathCreateMutable();
+
+    CGRect rectangle = CGRectMake(50, 50, 100, 100);
+
+    CGPathMoveToPoint(path, nullptr, 50, 50);
+    CGPathAddEllipseInRect(path, nullptr, rectangle);
+    CGPathCloseSubpath(path);
+
+    CGRect boundingBox = CGPathGetBoundingBox(path);
+    EXPECT_EQ(boundingBox.origin, CGPointMake(50, 50));
+    EXPECT_EQ(boundingBox.size, CGSizeMake(100, 100));
+    CGPathRelease(path);
+}
+
+TEST(CGPath, CGPathAddArcToPoint) {
+    CGMutablePathRef thepath = CGPathCreateMutable();
+    CGPathMoveToPoint(thepath, NULL, 50, 50);
+    CGPathAddArcToPoint(thepath, NULL, 50, 100, 100, 100, 10);
+    EXPECT_EQ(CGPathGetCurrentPoint(thepath), CGPointMake(60, 100));
+    CGPathAddArcToPoint(thepath, NULL, 100, 100, 100, 50, 10);
+    EXPECT_EQ(CGPathGetCurrentPoint(thepath), CGPointMake(100, 90));
+    CGPathCloseSubpath(thepath);
+
+    CGRect boundingBox = CGPathGetBoundingBox(thepath);
+    EXPECT_EQ(boundingBox.origin, CGPointMake(50, 50));
+    EXPECT_EQ(boundingBox.size, CGSizeMake(50, 50));
+    CGPathRelease(thepath);
 }
