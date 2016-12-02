@@ -57,6 +57,7 @@ public:
     }
 
     HRESULT STDMETHODCALLTYPE GetCurrentFontFile(_Out_ IDWriteFontFile** fontFile) {
+        RETURN_HR_IF_NULL(E_POINTER, fontFile);
         RETURN_HR_IF(E_ILLEGAL_METHOD_CALL, m_location < 0 || m_location > CFArrayGetCount(m_fontDatas.get()));
 
         if (0 <= m_location && m_location < m_previouslyCreatedFiles->size()) {
@@ -80,6 +81,7 @@ public:
     }
 
     HRESULT STDMETHODCALLTYPE MoveNext(_Out_ BOOL* hasCurrentFile) {
+        RETURN_HR_IF_NULL(E_POINTER, hasCurrentFile);
         *hasCurrentFile = ++m_location < CFArrayGetCount(m_fontDatas.get());
         return S_OK;
     }

@@ -50,17 +50,19 @@ public:
     }
 
     HRESULT STDMETHODCALLTYPE GetFileSize(_Out_ uint64_t* fileSize) {
-        RETURN_HR_IF_NULL(E_INVALIDARG, fileSize);
+        RETURN_HR_IF_NULL(E_POINTER, fileSize);
         *fileSize = CFDataGetLength(m_data.get());
         return S_OK;
     };
 
     HRESULT STDMETHODCALLTYPE GetLastWriteTime(_Out_ uint64_t* lastWriteTime) {
-        RETURN_HR_IF_NULL(E_INVALIDARG, lastWriteTime);
+        RETURN_HR_IF_NULL(E_POINTER, lastWriteTime);
         *lastWriteTime = m_lastWriteTime;
         return S_OK;
     };
 
+    // fragmentContext is deliberately unused: this is meant to be passed to ReleaseFileFragment() below to free part of the data,
+    // but this stream frees all the underlying CFData at once
     HRESULT STDMETHODCALLTYPE ReadFileFragment(_Out_ const void** fragmentStart,
                                                uint64_t fileOffset,
                                                uint64_t fragmentSize,
@@ -75,8 +77,6 @@ public:
         }
 
         if (fragmentContext) {
-            // Deliberately unused: this is meant to be passed to ReleaseFileFragment() below to free part of the data,
-            // but this stream frees all the underlying CFData at once
             *fragmentContext = nullptr;
         }
 
@@ -99,6 +99,8 @@ DWriteFontBinaryDataLoader::DWriteFontBinaryDataLoader() {
 }
 
 HRESULT DWriteFontBinaryDataLoader::RuntimeClassInitialize(CFDataRef data) {
+    RETURN_HR_IF_NULL(E_INVALIDARG, data);
+
     CFRetain(data);
     m_data.reset(data);
     return S_OK;
@@ -109,11 +111,10 @@ HRESULT DWriteFontBinaryDataLoader::RuntimeClassInitialize(CFDataRef data) {
 HRESULT STDMETHODCALLTYPE DWriteFontBinaryDataLoader::CreateStreamFromKey(_In_ const void* fontFileReferenceKey,
                                                                           uint32_t fontFileReferenceKeySize,
                                                                           _Out_ IDWriteFontFileStream** fontFileStream) {
-    RETURN_HR_IF_NULL(E_INVALIDARG, fontFileStream);
+    RETURN_HR_IF_NULL(E_POINTER, fontFileStream);
 
     ComPtr<DWriteFontBinaryDataStream> ret;
     RETURN_IF_FAILED(MakeAndInitialize<DWriteFontBinaryDataStream>(&ret, m_data.get()));
 
-    *fontFileStream = ret.Detach();
-    return S_OK;
+    return ret.CopyTo(fontFileStream);
 }

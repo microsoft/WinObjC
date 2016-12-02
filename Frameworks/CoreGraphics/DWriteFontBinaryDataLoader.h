@@ -14,6 +14,8 @@
 //
 //******************************************************************************
 
+#pragma once
+
 #include <COMIncludes.h>
 #import <wrl/implements.h>
 #include <COMIncludes_End.h>
