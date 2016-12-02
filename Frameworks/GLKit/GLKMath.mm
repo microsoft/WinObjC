@@ -737,7 +737,7 @@ GLKIT_EXPORT GLKMatrix3 GLKMatrix4GetMatrix3(GLKMatrix4 m) {
 /**
    @Status Interoperable
 */
-GLKIT_EXPORT GLKMatrix3 GLKMatrix3Invert(GLKMatrix3 matrix, BOOL* isInvertible) {
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3Invert(GLKMatrix3 matrix, bool* isInvertible) {
     double doubleMatrixArray[9];
 
     doubleMatrixArray[0] = (double)matrix.m[0];
@@ -756,7 +756,7 @@ GLKIT_EXPORT GLKMatrix3 GLKMatrix3Invert(GLKMatrix3 matrix, BOOL* isInvertible) 
 
     double determinant = firstMinor - secondMinor + thirdMinor;
 
-    BOOL canInvert = (determinant != 0.0);
+    bool canInvert = (determinant != 0.0);
     if (isInvertible) {
         *isInvertible = canInvert;
     }
@@ -784,7 +784,7 @@ GLKIT_EXPORT GLKMatrix3 GLKMatrix3Invert(GLKMatrix3 matrix, BOOL* isInvertible) 
 /**
    @Status Interoperable
 */
-GLKIT_EXPORT GLKMatrix3 GLKMatrix3InvertAndTranspose(GLKMatrix3 m, BOOL* isInvertible) {
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3InvertAndTranspose(GLKMatrix3 m, bool* isInvertible) {
     m = GLKMatrix3Invert(m, isInvertible);
     return GLKMatrix3Transpose(m);
 }
@@ -843,7 +843,7 @@ GLKIT_EXPORT void GLKMatrix4MultiplyVector4Array(GLKMatrix4 m, GLKVector4* vecs,
 /**
  @Status Interoperable
 */
-GLKIT_EXPORT GLKMatrix4 GLKMatrix4Invert(GLKMatrix4 matrix, BOOL* isInvertible) {
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4Invert(GLKMatrix4 matrix, bool* isInvertible) {
     // double for better precision
     double b00 = matrix.m[0] * matrix.m[5] - matrix.m[1] * matrix.m[4];
     double b01 = matrix.m[0] * matrix.m[6] - matrix.m[2] * matrix.m[4];
@@ -1168,8 +1168,8 @@ GLKVector3 GLKMathProject(GLKVector3 object, GLKMatrix4 model, GLKMatrix4 projec
 /**
  @Status Interoperable
 */
-GLKVector3 GLKMathUnproject(GLKVector3 window, GLKMatrix4 model, GLKMatrix4 projection, int* viewport, BOOL* success) {
-    BOOL canInvert = NO;
+GLKVector3 GLKMathUnproject(GLKVector3 window, GLKMatrix4 model, GLKMatrix4 projection, int* viewport, bool* success) {
+    bool canInvert = false;
     GLKMatrix4 inverted = GLKMatrix4Invert(GLKMatrix4Multiply(projection, model), &canInvert);
     if (success) {
         *success = canInvert;
@@ -1639,8 +1639,8 @@ GLKMatrix4 GLKMatrix4SetRow(GLKMatrix4 matrix, int row, GLKVector4 vector) {
  @Status Interoperable
  @Notes
 */
-GLKMatrix4 GLKMatrix4InvertAndTranspose(GLKMatrix4 matrix, BOOL* isInvertible) {
-    BOOL canInvert = NO;
+GLKMatrix4 GLKMatrix4InvertAndTranspose(GLKMatrix4 matrix, bool* isInvertible) {
+    bool canInvert = false;
     GLKMatrix4 inverted = GLKMatrix4Invert(matrix, &canInvert);
     if (!canInvert) {
         return GLKMatrix4Identity;

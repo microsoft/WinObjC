@@ -450,7 +450,7 @@ TEST(GLKit, TemporaryShaderNodes) {
 }
 
 TEST(GLKit, BasicMath) {
-    BOOL invertible = NO;
+    bool invertible = false;
 
     Dw32 cos2f;
     Dw32 sin2f;
@@ -529,7 +529,7 @@ TEST(GLKit, BasicMath) {
                 &mcInverse.m[0],
                 &mIdentity.m[0]);
 
-    invertible = NO;
+    invertible = false;
     GLKMatrix3 mRot = GLKMatrix3MakeRotation(M_PI / 2.f, 1.f, 3.f, 2.f);
     GLKMatrix3 m3Scale = GLKMatrix3MakeScale(0.3f, 0.5f, 0.9f);
 
@@ -826,7 +826,7 @@ TEST(GLKit, Projection) {
     EXPECT_TRUE_MSG(GLKVector3AllEqualToVector3(vProj, GLKVector3Make(1082.79614, -26.0647049, 0.975349426)),
                     "Incorrect computation in GLKMathProject!");
 
-    BOOL success = NO;
+    bool success = false;
     GLKVector3 ptVec = { 758.0, 1004.0, 0.966700792 };
     GLKVector3 vUnProj = GLKMathUnproject(ptVec, modelview, projection, viewport, &success);
     EXPECT_TRUE_MSG(GLKVector3AllEqualToVector3(vUnProj, GLKVector3Make(-3.620101, -4.562381, 10.201591)),
