@@ -19,6 +19,7 @@
 #include "Starboard.h"
 
 #ifdef __OBJC__
+#import <CoreFoundation/CFString.h>
 #import <Foundation/NSString.h>
 #import <NSStringInternal.h>
 #include <COMIncludes.h>
@@ -242,7 +243,7 @@ struct StringTraits<HSTRING> {
 template <unsigned int Count>
 struct StringTraits<const wchar_t[Count]> {
     // Returns a const pointer to the start of the buffer
-    static const wchar_t* Data(const wchar_t(&string)[Count]) {
+    static const wchar_t* Data(const wchar_t (&string)[Count]) {
         static_assert(Count > 0, "StringTraits<wchar_t[]> does not support empty arrays.");
         return &string[0];
     }
@@ -252,7 +253,7 @@ struct StringTraits<const wchar_t[Count]> {
 template <unsigned int Count>
 struct StringTraits<wchar_t[Count]> {
     // Returns a const pointer to the start of the buffer
-    static const wchar_t* Data(const wchar_t(&string)[Count]) {
+    static const wchar_t* Data(const wchar_t (&string)[Count]) {
         static_assert(Count > 0, "StringTraits<wchar_t[]> does not support empty arrays.");
         return &string[0];
     }
@@ -300,7 +301,7 @@ struct StringTraits<const char*> {
 template <unsigned int Count>
 struct StringTraits<char[Count]> {
     // Returns a const pointer to the start of the buffer
-    static const char* Data(const char(&string)[Count]) {
+    static const char* Data(const char (&string)[Count]) {
         static_assert(Count > 0, "StringTraits<char[]> does not support empty arrays.");
         return &string[0];
     }
@@ -465,9 +466,22 @@ inline TSource ContainerFromDelimitedString(_In_ const std::wstring& delimitedSt
     return result;
 }
 
-// Returns a a vector from a delmited string
+// Returns a vector from a delmited string
 inline std::vector<std::wstring> VectorFromDelimitedString(_In_ const std::wstring& delimitedString, wchar_t delimiter) {
     return ContainerFromDelimitedString<std::vector<std::wstring>>(delimitedString, delimiter);
 }
+
+#ifdef __OBJC__
+
+// Returns a vector from a CFString
+inline std::vector<UniChar> VectorFromCFString(CFStringRef string) {
+    CFIndex length = CFStringGetLength(string);
+    std::vector<UniChar> ret(length + 1);
+    CFStringGetCharacters(string, CFRangeMake(0, length), ret.data());
+
+    return ret;
+}
+
+#endif
 
 } // Strings
