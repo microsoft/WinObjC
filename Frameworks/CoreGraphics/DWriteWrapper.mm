@@ -408,9 +408,8 @@ HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, IDWriteFontFace** outFon
     // Eg: Bold, Condensed, Light, Italic
     std::shared_ptr<_DWriteFontProperties> properties = _DWriteGetFontPropertiesFromName(name);
 
-    // TODO: #1250: Need to be able to load fonts from the app's bundle
+    // Need to be able to load fonts from the app's bundle
     // For now return a default font to avoid crashes in case of missing fonts
-    // When #1250 is completed, remove this
     if (!properties->familyName.get()) {
         name = CFSTR("Segoe UI");
         properties = _DWriteGetFontPropertiesFromName(name);
@@ -667,7 +666,7 @@ public:
         RETURN_HR_IF(E_ILLEGAL_METHOD_CALL, m_location < 0 || m_location > CFArrayGetCount(m_fontDatas.get()));
 
         if (0 <= m_location && m_location < m_previouslyCreatedFiles->size()) {
-            *fontFile = m_previouslyCreatedFiles->at(m_location).Get();
+            m_previouslyCreatedFiles->at(m_location).CopyTo(fontFile);
         } else {
             ComPtr<IDWriteFactory> dwriteFactory;
             RETURN_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
@@ -716,8 +715,9 @@ public:
         return S_OK;
     }
 
-    void AddDatas(CFArrayRef fontDatas, CFArrayRef* errors) {
+    HRESULT AddDatas(CFArrayRef fontDatas, CFArrayRef* errors) {
         CFMutableArrayRef outErrors = nil;
+        HRESULT ret = S_OK;
         if (errors) {
             outErrors = CFArrayCreateMutable(nullptr, 0, &kCFTypeArrayCallBacks);
             *errors = outErrors;
@@ -729,6 +729,7 @@ public:
             if (data) {
                 if (CFSetContainsValue(m_fontDatasSet.get(), data)) {
                     __AppendErrorIfExists(outErrors, kCTFontManagerErrorAlreadyRegistered);
+                    ret = S_FALSE;
                 } else {
                     CFArrayAppendValue(m_fontDatas.get(), data);
                     CFSetAddValue(m_fontDatasSet.get(), data);
@@ -736,12 +737,16 @@ public:
                 }
             } else {
                 __AppendErrorIfExists(outErrors, kCTFontManagerErrorInvalidFontData);
+                ret = S_FALSE;
             }
         }
+
+        return ret;
     }
 
-    void RemoveDatas(CFArrayRef fontDatas, CFArrayRef* errors) {
+    HRESULT RemoveDatas(CFArrayRef fontDatas, CFArrayRef* errors) {
         CFMutableArrayRef outErrors = nil;
+        HRESULT ret = S_OK;
         if (errors) {
             outErrors = CFArrayCreateMutable(nullptr, 0, &kCFTypeArrayCallBacks);
             *errors = outErrors;
@@ -759,11 +764,15 @@ public:
                     __AppendNullptrIfExists(outErrors);
                 } else {
                     __AppendErrorIfExists(outErrors, kCTFontManagerErrorNotRegistered);
+                    ret = S_FALSE;
                 }
             } else {
                 __AppendErrorIfExists(outErrors, kCTFontManagerErrorInvalidFontData);
+                ret = S_FALSE;
             }
         }
+
+        return ret;
     }
 
     HRESULT STDMETHODCALLTYPE CreateEnumeratorFromKey(_In_ IDWriteFactory* factory,
@@ -802,7 +811,7 @@ private:
 };
 
 // TLambda is a member function of our FontCollectionLoader which updates the internal state of the loader
-// TLambda :: (DWriteFontCollectionLoader -> CFArrayRef -> CFArrayRef*) -> void
+// TLambda :: (DWriteFontCollectionLoader -> CFArrayRef -> CFArrayRef*) -> HRESULT
 template <typename TLambda>
 static HRESULT __DWriteUpdateUserCreatedFontCollection(CFArrayRef datas, CFArrayRef* errors, TLambda&& func) {
     ComPtr<IDWriteFactory> dwriteFactory;
@@ -820,21 +829,20 @@ static HRESULT __DWriteUpdateUserCreatedFontCollection(CFArrayRef datas, CFArray
     RETURN_IF_FAILED(createdLoader);
 
     // Call member function to update loader's font data
-    func(loader.Get(), datas, errors);
+    // Still want to update font collection with whatever fonts succeeded, so return ret at end
+    HRESULT ret = func(loader.Get(), datas, errors);
 
     // DWrite won't create a new font collection unless we provide a new key each time
     // So every time we modify the font collection increment the key
     static size_t collectionKey = 0;
-    ++collectionKey;
-
     std::lock_guard<std::mutex> guard(_userCreatedFontCollectionMutex);
     RETURN_IF_FAILED(
-        dwriteFactory->CreateCustomFontCollection(loader.Get(), &(collectionKey), sizeof(collectionKey), &_userCreatedFontCollection));
+        dwriteFactory->CreateCustomFontCollection(loader.Get(), &(++collectionKey), sizeof(collectionKey), &_userCreatedFontCollection));
 
     // Update s_userFontPropertiesMap with new values
     s_userFontPropertiesMap = __CreatePropertiesMapForFontCollection(_userCreatedFontCollection.Get());
 
-    return S_OK;
+    return ret;
 }
 
 // Registers user defined fonts to a collection so they can be created later
