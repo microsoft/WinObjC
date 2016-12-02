@@ -14,6 +14,8 @@
 //
 //******************************************************************************
 
+#pragma once
+
 #import <CoreGraphics/DWriteWrapper.h>
 
 #import <unordered_map>
@@ -49,11 +51,11 @@ public:
     CFMutableArrayRef CopyFontFamilyNames();
     CFMutableArrayRef CopyFontNamesForFamilyName(CFStringRef familyName);
     std::shared_ptr<_DWriteFontProperties> GetFontPropertiesFromUppercaseFontName(const woc::unique_cf<CFStringRef>& upperFontName);
-    HRESULT CreateFontFamilyWithName(_In_ const wchar_t* unicharFamilyName, _Out_ IDWriteFontFamily** outFontFamily);
+    HRESULT CreateFontFamilyWithName(_In_ const wchar_t* unicharFamilyName, _Outptr_ IDWriteFontFamily** outFontFamily);
 
 protected:
     virtual Microsoft::WRL::ComPtr<IDWriteFontCollection> _GetFontCollection() = 0;
-    HRESULT _GetFontListForFamilyName(CFStringRef familyName, _Out_ IDWriteFontList** outFontList);
+    HRESULT _GetFontListForFamilyName(CFStringRef familyName, _Outptr_ IDWriteFontList** outFontList);
 
     void _InitializePropertiesMap();
     std::shared_ptr<_DWriteFontPropertiesMap> m_propertiesMap;

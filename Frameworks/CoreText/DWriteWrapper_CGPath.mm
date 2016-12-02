@@ -14,7 +14,6 @@
 //
 //******************************************************************************
 
-// #1207: Do not move this block, it has to come first for some reason
 #include <COMIncludes.h>
 #import <wrl/implements.h>
 #import <D2d1.h>

@@ -105,12 +105,12 @@ std::shared_ptr<_DWriteFontProperties> DWriteFontCollectionHelper::GetFontProper
 }
 
 HRESULT DWriteFontCollectionHelper::CreateFontFamilyWithName(_In_ const wchar_t* unicharFamilyName,
-                                                             _Out_ IDWriteFontFamily** outFontFamily) {
+                                                             _Outptr_ IDWriteFontFamily** outFontFamily) {
     ComPtr<IDWriteFontCollection> fontCollection = _GetFontCollection();
 
     // If no/empty font collection, say that the font family couldn't be found
     // Use S_FALSE to represent 'not found'
-    RETURN_HR_IF(S_FALSE, !fontCollection);
+    RETURN_HR_IF_NULL(S_FALSE, fontCollection);
 
     size_t fontFamilyIndex;
     BOOL fontFamilyExists;
@@ -123,13 +123,13 @@ HRESULT DWriteFontCollectionHelper::CreateFontFamilyWithName(_In_ const wchar_t*
     return S_FALSE;
 }
 
-HRESULT DWriteFontCollectionHelper::_GetFontListForFamilyName(CFStringRef familyName, _Out_ IDWriteFontList** outFontList) {
+HRESULT DWriteFontCollectionHelper::_GetFontListForFamilyName(CFStringRef familyName, _Outptr_ IDWriteFontList** outFontList) {
     ComPtr<IDWriteFontCollection> fontCollection = _GetFontCollection();
 
     // If no/empty font collection, fail to return a font list
     // Use of E_FAIL rather than a more nuanced HRESULT is permissable due to this being a private function only used in
     // _InitializePropertiesMap()
-    RETURN_HR_IF(E_FAIL, !fontCollection);
+    RETURN_HR_IF_NULL(E_FAIL, fontCollection);
 
     ComPtr<IDWriteFactory> dwriteFactory;
     RETURN_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));

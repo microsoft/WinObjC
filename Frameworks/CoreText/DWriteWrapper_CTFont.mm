@@ -181,7 +181,7 @@ CTFontSymbolicTraits _CTFontSymbolicTraitsFromCFNumber(CFNumberRef num) {
  * Creates an IDWriteFontFace given the attributes of a CTFontDescriptor
  * Currently, font name, family name, kCTFontWeight/Slant/Width, and part of SymbolicTrait, are taken into account
  */
-HRESULT _DWriteCreateFontFaceWithFontDescriptor(CTFontDescriptorRef fontDescriptor, _Out_ IDWriteFontFace** fontFace) {
+HRESULT _DWriteCreateFontFaceWithFontDescriptor(CTFontDescriptorRef fontDescriptor, _Outptr_ IDWriteFontFace** fontFace) {
     woc::unique_cf<CFStringRef> fontName(static_cast<CFStringRef>(CTFontDescriptorCopyAttribute(fontDescriptor, kCTFontNameAttribute)));
     woc::unique_cf<CFStringRef> familyName(
         static_cast<CFStringRef>(CTFontDescriptorCopyAttribute(fontDescriptor, kCTFontFamilyNameAttribute)));

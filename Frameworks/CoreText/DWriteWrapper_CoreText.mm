@@ -14,7 +14,6 @@
 //
 //******************************************************************************
 
-// #1207: Do not move this block, it has to come first for some reason
 #include <COMIncludes.h>
 #import <wrl/implements.h>
 #include <COMIncludes_End.h>
@@ -83,7 +82,7 @@ static bool __CloneArray(_In_reads_opt_(count) TElement const* source,
     return ret;
 }
 
-bool _CloneDWriteGlyphRun(_In_ DWRITE_GLYPH_RUN const* src, _Out_ DWRITE_GLYPH_RUN* dest) {
+bool _CloneDWriteGlyphRun(_In_ DWRITE_GLYPH_RUN const* src, _Outptr_ DWRITE_GLYPH_RUN* dest) {
     bool ret = true;
 
     if (src) {
@@ -190,8 +189,8 @@ static inline HRESULT __DWriteTextLayoutApplyExtraKerning(const ComPtr<IDWriteTe
  *
  * @return whether the creation was successful
  */
-static HRESULT __DWriteTextFormatCreate(CFAttributedStringRef string, CFRange range, _Out_ IDWriteTextFormat** outTextFormat) {
-    RETURN_HR_IF(E_INVALIDARG, !outTextFormat);
+static HRESULT __DWriteTextFormatCreate(CFAttributedStringRef string, CFRange range, _Outptr_ IDWriteTextFormat** outTextFormat) {
+    RETURN_HR_IF_NULL(E_POINTER, outTextFormat);
 
     std::shared_ptr<_DWriteFontProperties> properties;
     CGFloat fontSize;
@@ -230,8 +229,7 @@ static HRESULT __DWriteTextFormatCreate(CFAttributedStringRef string, CFRange ra
         RETURN_IF_FAILED(__DWriteTextFormatApplyParagraphStyle(textFormat, settings));
     }
 
-    *outTextFormat = textFormat.Detach();
-    return S_OK;
+    return textFormat.CopyTo(outTextFormat);
 }
 
 /**
@@ -247,8 +245,8 @@ static HRESULT __DWriteTextFormatCreate(CFAttributedStringRef string, CFRange ra
 static HRESULT __DWriteTextLayoutCreate(CFAttributedStringRef string,
                                         CFRange range,
                                         CGRect frameSize,
-                                        _Out_ IDWriteTextLayout** outTextLayout) {
-    RETURN_HR_IF(E_INVALIDARG, !outTextLayout);
+                                        _Outptr_ IDWriteTextLayout** outTextLayout) {
+    RETURN_HR_IF_NULL(E_POINTER, outTextLayout);
 
     ComPtr<IDWriteTextFormat> textFormat;
     RETURN_IF_FAILED(__DWriteTextFormatCreate(string, range, &textFormat));
@@ -313,8 +311,7 @@ static HRESULT __DWriteTextLayoutCreate(CFAttributedStringRef string,
         RETURN_NULL_IF_FAILED(textLayout->SetTypography(typography.Get(), dwriteRange));
     }
 
-    *outTextLayout = textLayout.Detach();
-    return S_OK;
+    return textLayout.CopyTo(outTextLayout);
 }
 
 /**

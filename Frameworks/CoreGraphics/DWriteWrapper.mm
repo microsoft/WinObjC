@@ -14,7 +14,6 @@
 //
 //******************************************************************************
 
-// #1207: Do not move this block, it has to come first for some reason
 #include <COMIncludes.h>
 #import <wrl/implements.h>
 #include <COMIncludes_End.h>
@@ -421,7 +420,7 @@ HRESULT _DWriteUnregisterFontsWithDatas(CFArrayRef datas, CFArrayRef* errors) {
 /**
  * Creates an IDWriteFontFace by attempting to use a CFDataRef as a font file
  */
-HRESULT _DWriteCreateFontFaceWithData(CFDataRef data, IDWriteFontFace** outFontFace) {
+HRESULT _DWriteCreateFontFaceWithData(CFDataRef data, _Out_ IDWriteFontFace** outFontFace) {
     ComPtr<IDWriteFactory> dwriteFactory;
     RETURN_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
 
