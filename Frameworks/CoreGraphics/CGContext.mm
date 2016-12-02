@@ -60,6 +60,16 @@ static inline D2D1_MATRIX_3X2_F __CGAffineTransformToD2D_F(CGAffineTransform tra
 
 enum _CGCoordinateMode : unsigned int { _kCGCoordinateModeDeviceSpace = 0, _kCGCoordinateModeUserSpace };
 
+// A drawing context is represented by a number of layers, each with their own drawing state:
+// Context
+// +-- Layer (base layer)
+//     +-- Drawing State (base drawing state)
+//     +-- Drawing State
+//     +-- Drawing State (3)
+// +-- Layer (transparency layer)
+//     +-- Drawing State (copied from (3) above, but stripped of composition controls)
+//     +-- Drawing State
+
 struct __CGContextDrawingState {
     // This is populated when the state is saved, and contains the D2D parameters that CG does not know.
     ComPtr<ID2D1DrawingStateBlock> d2dState{ nullptr };
@@ -157,10 +167,7 @@ struct __CGContextDrawingState {
 
         geometrySink->SetFillMode(d2dFillMode);
 
-        RETURN_IF_FAILED(clippingGeometry->CombineWithGeometry(incomingGeometry,
-                                                               D2D1_COMBINE_MODE_INTERSECT,
-                                                               nullptr,
-                                                               geometrySink.Get()));
+        RETURN_IF_FAILED(clippingGeometry->CombineWithGeometry(incomingGeometry, D2D1_COMBINE_MODE_INTERSECT, nullptr, geometrySink.Get()));
 
         RETURN_IF_FAILED(geometrySink->Close());
 
@@ -174,12 +181,12 @@ class __CGContextLayer {
     ComPtr<ID2D1Image> _target;
 
 public:
-    __CGContextLayer(ID2D1Image* target) : _target(target) {
+    __CGContextLayer(ID2D1Image* target, CGRect* region) : _target(target) {
         // Each newly-pushed default-constructed layer has an empty base state.
         _stateStack.emplace();
     }
 
-    __CGContextLayer(ID2D1Image* target, __CGContextLayer& parentLayer) : _target(target) {
+    __CGContextLayer(ID2D1Image* target, CGRect* region, __CGContextLayer& parentLayer) : _target(target) {
         _stateStack.emplace(parentLayer.CurrentGState());
     }
 
@@ -226,10 +233,6 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext> {
     // See the comments above _CGContextSetShadowProjectionTransform.
     CGAffineTransform shadowProjectionTransform{ CGAffineTransformIdentity };
 
-    std::stack<__CGContextLayer> layerStack{};
-
-    woc::unique_cf<CGMutablePathRef> currentPath{ nullptr };
-
     // TODO(DH) GH#1070 evaluate these defaults; they should be set by context creators.
     bool allowsAntialiasing = false;
     bool allowsFontSmoothing = false;
@@ -238,7 +241,10 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext> {
 
     CGAffineTransform textMatrix{ CGAffineTransformIdentity };
 
-protected:
+private:
+    std::stack<__CGContextLayer> _layerStack{};
+    woc::unique_cf<CGMutablePathRef> _currentPath{ nullptr };
+
     inline HRESULT _SaveD2DDrawingState(ID2D1DrawingStateBlock** pDrawingState) {
         RETURN_HR_IF(E_POINTER, !pDrawingState);
 
@@ -272,7 +278,7 @@ public:
         deviceContext->GetTarget(&baselineTarget);
 
         // Set up the default/baseline layer.
-        layerStack.emplace(baselineTarget.Get());
+        _layerStack.emplace(baselineTarget.Get(), nullptr);
     }
 
     inline ComPtr<ID2D1DeviceContext>& DeviceContext() {
@@ -280,18 +286,18 @@ public:
     }
 
     inline __CGContextDrawingState& CurrentGState() {
-        return layerStack.top().CurrentGState();
+        return _layerStack.top().CurrentGState();
     }
 
     inline HRESULT PushGState() {
-        auto& currentLayer = layerStack.top();
+        auto& currentLayer = _layerStack.top();
         ComPtr<ID2D1DrawingStateBlock> d2dState;
         RETURN_IF_FAILED(_SaveD2DDrawingState(&d2dState));
         return currentLayer.PushGState(d2dState.Get());
     }
 
     inline HRESULT PopGState() {
-        auto& currentLayer = layerStack.top();
+        auto& currentLayer = _layerStack.top();
         ComPtr<ID2D1DrawingStateBlock> d2dState;
         if (FAILED(currentLayer.PopGState(&d2dState))) {
             TraceError(TAG, L"Invalid attempt to pop last graphics state.");
@@ -301,88 +307,23 @@ public:
         return _RestoreD2DDrawingState(d2dState.Get());
     }
 
-    inline HRESULT PushLayer(CGRect* rect = nullptr) {
-        // Save our current D2D state block & drawing parameters.
-        RETURN_IF_FAILED(PushGState());
-
-        ComPtr<ID2D1CommandList> commandList;
-        RETURN_IF_FAILED(deviceContext->CreateCommandList(&commandList));
-
-        deviceContext->SetTarget(commandList.Get());
-
-        // Copy the current layer's state to the new layer.
-        auto& oldLayer = layerStack.top();
-        layerStack.emplace(commandList.Get(), oldLayer);
-
-        // These properties are not to be preserved across transparency layers.
-        // Doing so would cause:
-        // * Double shadows
-        // * Double transparency
-        // * Double blending
-        // * Double clipping
-        auto& newDrawingState = CurrentGState();
-        newDrawingState.alpha = 1.0;
-        newDrawingState.shadowColor = { 0.f, 0.f, 0.f, 0.f };
-        // newDrawingState.blendMode = kCGBlendModeNormal; // TODO GH#1389
-        newDrawingState.clippingGeometry = nullptr;
-
-        // TODO(DH) RECT CLIP :O :O :O
-        return S_OK;
-    }
-
-    inline HRESULT PopLayer() {
-        if (layerStack.size() <= 1) {
-            TraceError(TAG, L"Invalid attempt to pop base layer.");
-            return E_BOUNDS;
-        }
-
-        auto& outgoingLayer = layerStack.top();
-
-        ComPtr<ID2D1Image> outgoingImageTarget;
-        RETURN_IF_FAILED(outgoingLayer.GetTarget(&outgoingImageTarget));
-
-        ComPtr<ID2D1CommandList> outgoingCommandList;
-        if (FAILED(outgoingImageTarget.As(&outgoingCommandList))) {
-            TraceError(TAG, L"Popped a layer that was NOT a command list. PANIC!");
-            return E_UNEXPECTED;
-        }
-
-        RETURN_IF_FAILED(outgoingCommandList->Close());
-
-        // Destroy the top layer and all its state.
-        layerStack.pop();
-
-        auto& incomingLayer = layerStack.top();
-        ComPtr<ID2D1Image> incomingImageTarget;
-        RETURN_IF_FAILED(incomingLayer.GetTarget(&incomingImageTarget));
-
-        deviceContext->SetTarget(incomingImageTarget.Get());
-
-        RETURN_IF_FAILED(DrawImage(outgoingCommandList.Get()));
-
-        // Restore the previous D2D state block & drawing parameters from the incoming layer.
-        RETURN_IF_FAILED(PopGState());
-
-        return S_OK;
-    }
-
     inline bool HasPath() {
-        return currentPath != nullptr;
+        return _currentPath != nullptr;
     }
 
     inline CGMutablePathRef Path() {
-        if (!currentPath) {
-            currentPath.reset(CGPathCreateMutable());
+        if (!_currentPath) {
+            _currentPath.reset(CGPathCreateMutable());
         }
-        return currentPath.get();
+        return _currentPath.get();
     }
 
     inline void SetPath(CGMutablePathRef path) {
-        currentPath.reset(CGPathRetain(path));
+        _currentPath.reset(CGPathRetain(path));
     }
 
     inline void ClearPath() {
-        currentPath.reset();
+        _currentPath.reset();
     }
 
     inline ComPtr<ID2D1Factory> Factory() {
@@ -396,6 +337,9 @@ public:
     }
 
     HRESULT Clip(CGPathDrawingMode pathMode);
+
+    HRESULT PushLayer(CGRect* rect = nullptr);
+    HRESULT PopLayer();
 
     template <typename Lambda> // Lambda takes the form void(*)(CGContextRef, ID2D1DeviceContext*)
     HRESULT DrawToCommandList(_CGCoordinateMode coordinateMode,
@@ -503,6 +447,98 @@ void CGContextSynchronize(CGContextRef context) {
 #pragma endregion
 
 #pragma region Global State - Transparency Layers
+HRESULT __CGContext::PushLayer(CGRect* rect) {
+    // Save our current D2D state block & drawing parameters.
+    // We will take a new GState for composing the layer later in PopLayer(): ...
+    RETURN_IF_FAILED(PushGState());
+
+    // ... this one.
+    auto& gStateForComposingLayer = CurrentGState();
+
+    ComPtr<ID2D1CommandList> commandList;
+    RETURN_IF_FAILED(deviceContext->CreateCommandList(&commandList));
+
+    deviceContext->SetTarget(commandList.Get());
+
+    // Copy the current layer's state to the new layer.
+    auto& oldLayer = _layerStack.top();
+
+    _layerStack.emplace(commandList.Get(), rect, oldLayer);
+    auto& newLayer = _layerStack.top(); // C++17 makes .emplace return a stack<T>::reference; alas, we are C++14.
+
+    // These properties are not to be preserved across transparency layers.
+    // https://developer.apple.com/library/content/documentation/GraphicsImaging/Conceptual/drawingwithquartz2d/dq_trans_layers/dq_trans_layers.html#//apple_ref/doc/uid/TP30001066-CH210-SW1
+    // Doing so would cause:
+    // * Double shadows
+    // * Double transparency
+    // * Double blending
+    // * Double clipping
+    auto& newDrawingState = newLayer.CurrentGState();
+    newDrawingState.alpha = 1.0;
+    newDrawingState.shadowColor = { 0.f, 0.f, 0.f, 0.f };
+    // newDrawingState.blendMode = kCGBlendModeNormal; // TODO GH#1389
+    newDrawingState.clippingGeometry = nullptr;
+    if (rect) {
+        CGRect transformedClippingRegion = CGContextConvertRectToDeviceSpace(this, *rect);
+
+        if (gStateForComposingLayer.HasShadow()) {
+            // The reference platform grows the layer's clipping region by the shadow's offset and its approximate width.
+            CGFloat xdelta = fabsf(gStateForComposingLayer.shadowOffset.width);
+            xdelta += gStateForComposingLayer.shadowBlur;
+
+            CGFloat ydelta = fabsf(gStateForComposingLayer.shadowOffset.height);
+            ydelta += gStateForComposingLayer.shadowBlur;
+
+            transformedClippingRegion = CGRectInset(transformedClippingRegion, -xdelta, -ydelta);
+        }
+
+        ComPtr<ID2D1RectangleGeometry> rectGeometry;
+        RETURN_IF_FAILED(Factory()->CreateRectangleGeometry(__CGRectToD2D_F(transformedClippingRegion), &rectGeometry));
+        RETURN_IF_FAILED(newDrawingState.IntersectClippingGeometry(rectGeometry.Get(), kCGPathEOFill));
+    }
+
+    // A GState's global alpha is used when per-primitive drawing is not an option (such as when
+    // composing down a full transparency layer.)
+    gStateForComposingLayer.globalAlpha = gStateForComposingLayer.alpha;
+    gStateForComposingLayer.alpha = 1.0;
+    return S_OK;
+}
+
+HRESULT __CGContext::PopLayer() {
+    if (_layerStack.size() <= 1) {
+        TraceError(TAG, L"Invalid attempt to pop base layer.");
+        return E_BOUNDS;
+    }
+
+    auto outgoingLayer = std::move(_layerStack.top());
+
+    ComPtr<ID2D1Image> outgoingImageTarget;
+    RETURN_IF_FAILED(outgoingLayer.GetTarget(&outgoingImageTarget));
+
+    ComPtr<ID2D1CommandList> outgoingCommandList;
+    if (FAILED(outgoingImageTarget.As(&outgoingCommandList))) {
+        TraceError(TAG, L"Popped a layer that was NOT a command list. PANIC!");
+        return E_UNEXPECTED;
+    }
+
+    RETURN_IF_FAILED(outgoingCommandList->Close());
+
+    // Destroy the top layer and all its state.
+    _layerStack.pop();
+
+    auto& incomingLayer = _layerStack.top();
+    ComPtr<ID2D1Image> incomingImageTarget;
+    RETURN_IF_FAILED(incomingLayer.GetTarget(&incomingImageTarget));
+
+    deviceContext->SetTarget(incomingImageTarget.Get());
+
+    RETURN_IF_FAILED(DrawImage(outgoingCommandList.Get()));
+
+    // Restore the previous D2D state block & drawing parameters from the incoming layer.
+    RETURN_IF_FAILED(PopGState());
+
+    return S_OK;
+}
 /**
  @Status Interoperable
 */
@@ -524,9 +560,7 @@ void CGContextBeginTransparencyLayerWithRect(CGContextRef context, CGRect rect, 
 */
 void CGContextEndTransparencyLayer(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context);
-
-    // PopLayer takes care of drawing.
-    FAIL_FAST_IF_FAILED(context->PopLayer());
+    FAIL_FAST_IF_FAILED(context->PopLayer()); // PopLayer takes care of drawing.
 }
 #pragma endregion
 
