@@ -129,7 +129,7 @@ struct __CGContextDrawingState {
     }
 
     inline bool HasShadow() {
-        return std::fpclassify(state.shadowColor.w) != FP_ZERO;
+        return std::fpclassify(shadowColor.w) != FP_ZERO;
     }
 
     inline bool ShouldDraw() {
@@ -474,10 +474,10 @@ HRESULT __CGContext::PushLayer(CGRect* rect) {
         if (gStateForComposingLayer.HasShadow()) {
             // The reference platform grows the layer's clipping region by the shadow's offset and its approximate width.
             CGFloat xdelta = fabsf(gStateForComposingLayer.shadowOffset.width);
-            xdelta += gStateForComposingLayer.shadowBlur;
+            xdelta += gStateForComposingLayer.shadowBlur + 1;
 
             CGFloat ydelta = fabsf(gStateForComposingLayer.shadowOffset.height);
-            ydelta += gStateForComposingLayer.shadowBlur;
+            ydelta += gStateForComposingLayer.shadowBlur + 1;
 
             transformedClippingRegion = CGRectInset(transformedClippingRegion, -xdelta, -ydelta);
         }
