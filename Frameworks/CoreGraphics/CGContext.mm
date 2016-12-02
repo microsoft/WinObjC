@@ -92,8 +92,11 @@ struct __CGContextDrawingState {
     // Userspace Coordinate Transformation
     CGAffineTransform transform{ CGAffineTransformIdentity };
 
-    // Alpha Blending
+    // Per-Primitive Alpha
     CGFloat alpha = 1.0f;
+
+    // Global Alpha (used when per-primitive cannot be used.)
+    CGFloat globalAlpha = 1.0f;
 
     // Shadowing
     D2D1_VECTOR_4F shadowColor{ 0, 0, 0, 0 };
@@ -127,6 +130,10 @@ struct __CGContextDrawingState {
 
     inline bool HasShadow() {
         return std::fpclassify(state.shadowColor.w) != FP_ZERO;
+    }
+
+    inline bool ShouldDraw() {
+        return std::fpclassify(alpha) != FP_ZERO && std::fpclassify(globalAlpha) != FP_ZERO;
     }
 
     inline HRESULT IntersectClippingGeometry(ID2D1Geometry* incomingGeometry, CGPathDrawingMode pathMode) {
@@ -385,7 +392,7 @@ public:
     }
 
     inline bool ShouldDraw() {
-        return std::fpclassify(CurrentGState().alpha) != FP_ZERO;
+        return CurrentGState().ShouldDraw();
     }
 
     HRESULT Clip(CGPathDrawingMode pathMode);
@@ -1655,23 +1662,23 @@ HRESULT __CGContext::DrawToCommandList(_CGCoordinateMode coordinateMode,
 }
 
 HRESULT __CGContext::DrawImage(ID2D1Image* image) {
-    if (!image) {
+    auto& state = CurrentGState();
+
+    if (!image || !state.ShouldDraw()) {
         // Being asked to draw nothing is valid!
         return S_OK;
     }
 
-    auto& state = CurrentGState();
-
     deviceContext->BeginDraw();
 
     bool layer = false;
-    if (state.clippingGeometry) {
+    if (state.clippingGeometry || !IS_NEAR(state.globalAlpha, 1.0, .0001f)) {
         layer = true;
         deviceContext->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(),
                                                        state.clippingGeometry.Get(),
                                                        D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
                                                        D2D1::IdentityMatrix(),
-                                                       1.0f),
+                                                       state.globalAlpha),
                                  nullptr);
     }
 
