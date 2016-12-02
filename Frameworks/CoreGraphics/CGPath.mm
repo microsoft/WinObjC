@@ -28,10 +28,6 @@
 
 #include <COMIncludes.h>
 #import <WRLHelpers.h>
-#import <ErrorHandling.h>
-#import <wrl/client.h>
-#import <wrl/implements.h>
-#import <Wincodec.h>
 #include <COMIncludes_End.h>
 
 #import <CFCPPBase.h>

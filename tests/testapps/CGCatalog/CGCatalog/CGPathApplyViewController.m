@@ -77,7 +77,7 @@
     [super addComparisonLabel];
 }
 
-void CGPathApplyCallback(void* context, const CGPathElement* element) {
+static void CGPathApplyCallback(void* context, const CGPathElement* element) {
     CGPoint* points = element->points;
     CGContextMoveToPoint(context, 200, 125);
     CGContextAddLineToPoint(context, points[0].x, points[0].y);
