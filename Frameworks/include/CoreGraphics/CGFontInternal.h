@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,14 +13,8 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
 
-@interface UIPopoverPresentationController ()
+#include <CoreGraphics/CGFont.h>
 
-- (BOOL)_isManagingPresentation;
-- (void)_prepareForPresentation;
-- (void)_presentAnimated:(BOOL)animated presentCompletion:(dispatch_block_t)presentCompletion dismissCompletion:(dispatch_block_t)dismissCompletion;
-- (void)_dismissAnimated:(BOOL)animated completion:(dispatch_block_t)dismissCompletion;
-
-@end
+COREGRAPHICS_EXPORT CFDataRef _CGFontGetData(CGFontRef font);

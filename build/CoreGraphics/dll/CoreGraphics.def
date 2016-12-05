@@ -45,12 +45,14 @@ LIBRARY CoreGraphics
         _DWriteCreateTextFormat
         _DWriteCreateFontFamilyWithName
         _DWriteCreateFontFaceWithName
-        _DWriteCreateFontFaceWithDataProvider
+        _DWriteCreateFontFaceWithData
         _DWriteFontCopyInformationalString
         _DWriteFontCopyTable
         _DWriteFontGetSlantDegrees
         _DWriteFontGetBoundingBox
         _DWriteFontGetBoundingBoxesForGlyphs
+        _DWriteRegisterFontsWithDatas
+        _DWriteUnregisterFontsWithDatas
 
         ; CGColor.mm
         CGColorRelease
@@ -234,6 +236,7 @@ LIBRARY CoreGraphics
         CGContextSetDirty
         CGContextGetBacking
         CGContextDrawGlyphRun
+        CGContextIsPointInPath
         EbrCenterTextInRectVertically
         _CGContextSetScaleFactor
 
@@ -291,6 +294,7 @@ LIBRARY CoreGraphics
         CGFontGetNumberOfGlyphs
         CGFontGetGlyphAdvances
         CGFontGetUnitsPerEm
+        _CGFontGetData
 
         ; CGFunction.mm
         CGFunctionCreate
@@ -407,7 +411,6 @@ LIBRARY CoreGraphics
         CGPathContainsPoint
 
         ; private exports below
-        _CGPathFitRect
         _CGPathApplyPath
         _CGPathGetBoundingBoxInternal
 

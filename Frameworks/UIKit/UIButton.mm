@@ -262,9 +262,19 @@ Microsoft Extension
 */
 - (void)setImage:(UIImage*)image forState:(UIControlState)state {
     _states[state].image = image;
-    WUXMImageBrush* imageBrush = ConvertUIImageToWUXMImageBrush(image);
-    if (imageBrush) {
-        _states[state].inspectableImage = [imageBrush comObj];
+
+    // NOTE: check if image is nil before creating inspetableImage
+    // ConvertUIImageToWUXMImageBrush:nil creates a valid imageBrush with null comObj
+    // which isn't what we want
+    if (image) {
+        WUXMImageBrush* imageBrush = ConvertUIImageToWUXMImageBrush(image);
+        if (imageBrush) {
+            _states[state].inspectableImage = [imageBrush comObj];
+        }
+    } else {
+        // this enforces the fallback of using Image of normalState
+        // when a image for other states does not exis
+        _states[state].inspectableImage = nullptr;
     }
 
     // Update the Xaml elements immediately, so the proxies reflect reality
@@ -481,9 +491,19 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 */
 - (void)setTitle:(NSString*)title forState:(UIControlState)state {
     _states[state].title.attach([title copy]);
-    RTObject* rtString = [WFPropertyValue createString:title];
-    if (rtString) {
-        _states[state].inspectableTitle = [rtString comObj];
+
+    // NOTE: check if title is nil before creating inspectableTitle
+    // createString:nil creates a valid rtString with null comObj
+    // which isn't what we want
+    if (title) {
+        RTObject* rtString = [WFPropertyValue createString:title];
+        if (rtString) {
+            _states[state].inspectableTitle = [rtString comObj];
+        }
+    } else {
+        // this enforces the fallback of using title of normalState
+        // when a title for other states does not exist
+        _states[state].inspectableTitle = nullptr;
     }
 
     // Update the Xaml elements immediately, so the proxies reflect reality
@@ -517,10 +537,20 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 */
 - (void)setTitleColor:(UIColor*)color forState:(UIControlState)state {
     _states[state].textColor = color;
-    WUColor* convertedColor = ConvertUIColorToWUColor(color);
-    WUXMSolidColorBrush* titleColorBrush = [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
-    if (titleColorBrush) {
-        _states[state].inspectableTitleColor = [titleColorBrush comObj];
+
+    // NOTE: check if image is nil before creating convertedColor
+    // ConvertUIColorToWUColor:nil creates a valid WUColor with null comObj
+    // which isn't what we want
+    if (color) {
+        WUColor* convertedColor = ConvertUIColorToWUColor(color);
+        WUXMSolidColorBrush* titleColorBrush = [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
+        if (titleColorBrush) {
+            _states[state].inspectableTitleColor = [titleColorBrush comObj];
+        }
+    } else {
+        // this enforces the fallback of using titleColor of normalState
+        // when a titleColor for other states does not exist
+        _states[state].inspectableTitleColor = nullptr;
     }
 
     // Update the Xaml elements immediately, so the proxies reflect reality
