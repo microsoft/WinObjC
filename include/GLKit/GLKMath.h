@@ -24,101 +24,93 @@
 #define _GLK_MIN(a, b) ((a) < (b) ? (a) : (b))
 #define _GLK_MAX(a, b) ((a) > (b) ? (a) : (b))
 
-typedef struct _GLKVector2 {
-    union {
-        struct {
-            float x, y;
-        };
-        struct {
-            float s, t;
-        };
-        float v[2];
+union _GLKVector2 {
+    struct {
+        float x, y;
     };
-} GLKVector2;
+    struct {
+        float s, t;
+    };
+    float v[2];
+};
+typedef union _GLKVector2 GLKVector2;
 
-typedef struct _GLKVector3 {
-    union {
-        struct {
-            float x, y, z;
-        };
-        struct {
-            float s, t, p;
-        };
-        struct {
-            float r, g, b;
-        };
-        float v[3];
+union _GLKVector3 {
+    struct {
+        float x, y, z;
     };
-} GLKVector3;
+    struct {
+        float s, t, p;
+    };
+    struct {
+        float r, g, b;
+    };
+    float v[3];
+};
+typedef union _GLKVector3 GLKVector3;
 
-typedef struct _GLKVector4 {
-    union {
-        struct {
-            float x, y, z, w;
-        };
-        struct {
-            float r, g, b, a;
-        };
-        struct {
-            float s, t, p, q;
-        };
-        float v[4];
+union _GLKVector4 {
+    struct {
+        float x, y, z, w;
     };
-} GLKVector4;
+    struct {
+        float r, g, b, a;
+    };
+    struct {
+        float s, t, p, q;
+    };
+    float v[4];
+};
+typedef union _GLKVector4 GLKVector4;
 
-typedef struct _GLKMatrix2 {
-    union {
-        struct {
-            float m00, m01;
-            float m10, m11;
-        };
-        float m[4];
+union _GLKMatrix2 {
+    struct {
+        float m00, m01;
+        float m10, m11;
     };
-} GLKMatrix2;
+    float m[4];
+};
+typedef union _GLKMatrix2 GLKMatrix2;
 
-typedef struct _GLKMatrix3 {
-    union {
-        struct {
-            float m00, m01, m02;
-            float m10, m11, m12;
-            float m20, m21, m22;
-        };
-        float m[9];
+union _GLKMatrix3 {
+    struct {
+        float m00, m01, m02;
+        float m10, m11, m12;
+        float m20, m21, m22;
     };
-} GLKMatrix3;
+    float m[9];
+};
+typedef union _GLKMatrix3 GLKMatrix3;
 
-typedef struct _GLKMatrix4 {
-    union {
-        struct {
-            float m00, m01, m02, m03;
-            float m10, m11, m12, m13;
-            float m20, m21, m22, m23;
-            float m30, m31, m32, m33;
-        };
-        float m[16];
+union _GLKMatrix4 {
+    struct {
+        float m00, m01, m02, m03;
+        float m10, m11, m12, m13;
+        float m20, m21, m22, m23;
+        float m30, m31, m32, m33;
     };
-} GLKMatrix4;
+    float m[16];
+};
+typedef union _GLKMatrix4 GLKMatrix4;
 
-typedef struct _GLKQuaternion {
-    union {
-        struct {
-            GLKVector3 v;
-            float s;
-        };
-        struct {
-            float x, y, z, w;
-        };
-        float q[4];
+union _GLKQuaternion {
+    struct {
+        GLKVector3 v;
+        float s;
     };
-} GLKQuaternion;
+    struct {
+        float x, y, z, w;
+    };
+    float q[4];
+};
+typedef union _GLKQuaternion GLKQuaternion;
 
 GLKIT_EXPORT const GLKMatrix3 GLKMatrix3Identity;
 GLKIT_EXPORT const GLKMatrix4 GLKMatrix4Identity;
 GLKIT_EXPORT const GLKQuaternion GLKQuaternionIdentity;
 
-GLKIT_EXPORT GLKVector3 GLKMathProject(GLKVector3 object, GLKMatrix4 model, GLKMatrix4 projection, int* viewport) STUB_METHOD;
-GLKIT_EXPORT GLKVector3 GLKMathUnproject(GLKVector3 window, GLKMatrix4 model, GLKMatrix4 projection, int* viewport, bool* success)
-    STUB_METHOD;
+GLKIT_EXPORT GLKVector3 GLKMathProject(GLKVector3 object, GLKMatrix4 model, GLKMatrix4 projection, int* viewport);
+GLKIT_EXPORT GLKVector3 GLKMathUnproject(GLKVector3 window, GLKMatrix4 model, GLKMatrix4 projection, int* viewport, bool* success);
 
 // --------------------------------------------------------------------------------
 
@@ -160,22 +152,22 @@ GLKIT_EXPORT GLKMatrix4 GLKMatrix4Make(float m00,
                                        float m33);
 GLKIT_EXPORT GLKMatrix3 GLKMatrix3Make(float m00, float m01, float m02, float m10, float m11, float m12, float m20, float m21, float m22);
 GLKIT_EXPORT GLKMatrix3 GLKMatrix3Transpose(GLKMatrix3 mat);
-GLKIT_EXPORT GLKMatrix3 GLKMatrix3Multiply(GLKMatrix3 matrixLeft, GLKMatrix3 matrixRight) STUB_METHOD;
-GLKIT_EXPORT GLKMatrix3 GLKMatrix3Rotate(GLKMatrix3 matrix, float radians, float x, float y, float z) STUB_METHOD;
-GLKIT_EXPORT GLKMatrix3 GLKMatrix3RotateWithVector3(GLKMatrix3 matrix, float radians, GLKVector3 axisVector) STUB_METHOD;
-GLKIT_EXPORT GLKMatrix3 GLKMatrix3RotateWithVector4(GLKMatrix3 matrix, float radians, GLKVector4 axisVector) STUB_METHOD;
-GLKIT_EXPORT GLKMatrix3 GLKMatrix3RotateX(GLKMatrix3 matrix, float radians) STUB_METHOD;
-GLKIT_EXPORT GLKMatrix3 GLKMatrix3RotateY(GLKMatrix3 matrix, float radians) STUB_METHOD;
-GLKIT_EXPORT GLKMatrix3 GLKMatrix3RotateZ(GLKMatrix3 matrix, float radians) STUB_METHOD;
-GLKIT_EXPORT GLKMatrix3 GLKMatrix3Scale(GLKMatrix3 matrix, float sx, float sy, float sz) STUB_METHOD;
-GLKIT_EXPORT GLKMatrix3 GLKMatrix3ScaleWithVector3(GLKMatrix3 matrix, GLKVector3 scaleVector) STUB_METHOD;
-GLKIT_EXPORT GLKMatrix3 GLKMatrix3ScaleWithVector4(GLKMatrix3 matrix, GLKVector4 scaleVector) STUB_METHOD;
-GLKIT_EXPORT GLKMatrix3 GLKMatrix3Add(GLKMatrix3 matrixLeft, GLKMatrix3 matrixRight) STUB_METHOD;
-GLKIT_EXPORT GLKMatrix3 GLKMatrix3Subtract(GLKMatrix3 matrixLeft, GLKMatrix3 matrixRight) STUB_METHOD;
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3Multiply(GLKMatrix3 matrixLeft, GLKMatrix3 matrixRight);
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3Rotate(GLKMatrix3 matrix, float radians, float x, float y, float z);
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3RotateWithVector3(GLKMatrix3 matrix, float radians, GLKVector3 axisVector);
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3RotateWithVector4(GLKMatrix3 matrix, float radians, GLKVector4 axisVector);
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3RotateX(GLKMatrix3 matrix, float radians);
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3RotateY(GLKMatrix3 matrix, float radians);
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3RotateZ(GLKMatrix3 matrix, float radians);
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3Scale(GLKMatrix3 matrix, float sx, float sy, float sz);
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3ScaleWithVector3(GLKMatrix3 matrix, GLKVector3 scaleVector);
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3ScaleWithVector4(GLKMatrix3 matrix, GLKVector4 scaleVector);
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3Add(GLKMatrix3 matrixLeft, GLKMatrix3 matrixRight);
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3Subtract(GLKMatrix3 matrixLeft, GLKMatrix3 matrixRight);
 GLKIT_EXPORT GLKVector3 GLKMatrix3MultiplyVector3(GLKMatrix3 matrixLeft, GLKVector3 vectorRight);
-GLKIT_EXPORT void GLKMatrix3MultiplyVector3Array(GLKMatrix3 matrix, GLKVector3* vectors, size_t vectorCount) STUB_METHOD;
+GLKIT_EXPORT void GLKMatrix3MultiplyVector3Array(GLKMatrix3 matrix, GLKVector3* vectors, size_t vectorCount);
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4Transpose(GLKMatrix4 mat);
-GLKIT_EXPORT GLKMatrix4 GLKMatrix4InvertAndTranspose(GLKMatrix4 matrix, bool* isInvertible) STUB_METHOD;
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4InvertAndTranspose(GLKMatrix4 matrix, bool* isInvertible);
 GLKIT_EXPORT GLKMatrix3
 GLKMatrix3MakeAndTranspose(float m00, float m01, float m02, float m10, float m11, float m12, float m20, float m21, float m22);
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeAndTranspose(float m00,
@@ -198,22 +190,22 @@ GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeWithArray(float* values);
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeWithArrayAndTranspose(float* values);
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeWithColumns(GLKVector4 r0, GLKVector4 r1, GLKVector4 r2, GLKVector4 r3);
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeWithRows(GLKVector4 r0, GLKVector4 r1, GLKVector4 r2, GLKVector4 r3);
-GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeWithQuaternion(GLKQuaternion quaternion) STUB_METHOD;
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeWithQuaternion(GLKQuaternion quaternion);
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeOrthonormalXform(GLKVector3 right, GLKVector3 up, GLKVector3 forward, GLKVector3 pos);
 
 GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeWithArray(float* values);
 GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeWithArrayAndTranspose(float* values);
 GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeWithColumns(GLKVector3 r0, GLKVector3 r1, GLKVector3 r2);
 GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeWithRows(GLKVector3 r0, GLKVector3 r1, GLKVector3 r2);
-GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeWithQuaternion(GLKQuaternion quaternion) STUB_METHOD;
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeWithQuaternion(GLKQuaternion quaternion);
 
-GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeScale(float sx, float sy, float sz) STUB_METHOD;
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeScale(float sx, float sy, float sz);
 
 GLKIT_EXPORT GLKMatrix2 GLKMatrix3GetMatrix2(GLKMatrix3 matrix);
-GLKIT_EXPORT GLKVector3 GLKMatrix3GetColumn(GLKMatrix3 matrix, int column) STUB_METHOD;
-GLKIT_EXPORT GLKVector3 GLKMatrix3GetRow(GLKMatrix3 matrix, int row) STUB_METHOD;
-GLKIT_EXPORT GLKMatrix3 GLKMatrix3SetColumn(GLKMatrix3 matrix, int column, GLKVector3 vector) STUB_METHOD;
-GLKIT_EXPORT GLKMatrix3 GLKMatrix3SetRow(GLKMatrix3 matrix, int row, GLKVector3 vector) STUB_METHOD;
+GLKIT_EXPORT GLKVector3 GLKMatrix3GetColumn(GLKMatrix3 matrix, int column);
+GLKIT_EXPORT GLKVector3 GLKMatrix3GetRow(GLKMatrix3 matrix, int row);
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3SetColumn(GLKMatrix3 matrix, int column, GLKVector3 vector);
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3SetRow(GLKMatrix3 matrix, int row, GLKVector3 vector);
 
 GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeRotation(float rad, float x, float y, float z);
 GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeXRotation(float rad);
@@ -221,13 +213,13 @@ GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeYRotation(float rad);
 GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeZRotation(float rad);
 
 GLKIT_EXPORT GLKMatrix2 GLKMatrix4GetMatrix2(GLKMatrix4 m);
-GLKIT_EXPORT GLKMatrix3 GLKMatrix3Invert(GLKMatrix3 m, BOOL* isInvertible);
-GLKIT_EXPORT GLKMatrix3 GLKMatrix3InvertAndTranspose(GLKMatrix3 m, BOOL* isInvertible);
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3Invert(GLKMatrix3 m, bool* isInvertible);
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3InvertAndTranspose(GLKMatrix3 m, bool* isInvertible);
 GLKIT_EXPORT GLKMatrix3 GLKMatrix4GetMatrix3(GLKMatrix4 m);
-GLKIT_EXPORT GLKMatrix4 GLKMatrix4SetColumn(GLKMatrix4 matrix, int column, GLKVector4 vector) STUB_METHOD;
-GLKIT_EXPORT GLKMatrix4 GLKMatrix4SetRow(GLKMatrix4 matrix, int row, GLKVector4 vector) STUB_METHOD;
-GLKIT_EXPORT GLKVector4 GLKMatrix4GetColumn(GLKMatrix4 matrix, int column) STUB_METHOD;
-GLKIT_EXPORT GLKVector4 GLKMatrix4GetRow(GLKMatrix4 matrix, int row) STUB_METHOD;
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4SetColumn(GLKMatrix4 matrix, int column, GLKVector4 vector);
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4SetRow(GLKMatrix4 matrix, int row, GLKVector4 vector);
+GLKIT_EXPORT GLKVector4 GLKMatrix4GetColumn(GLKMatrix4 matrix, int column);
+GLKIT_EXPORT GLKVector4 GLKMatrix4GetRow(GLKMatrix4 matrix, int row);
 
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeRotation(float rad, float x, float y, float z);
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeXRotation(float rad);
@@ -244,21 +236,21 @@ GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeFrustum(float left, float right, float bot
 
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4Multiply(GLKMatrix4 m1, GLKMatrix4 m2);
 
-GLKIT_EXPORT GLKMatrix4 GLKMatrix4RotateWithVector3(GLKMatrix4 matrix, float radians, GLKVector3 axisVector) STUB_METHOD;
-GLKIT_EXPORT GLKMatrix4 GLKMatrix4RotateWithVector4(GLKMatrix4 matrix, float radians, GLKVector4 axisVector) STUB_METHOD;
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4RotateWithVector3(GLKMatrix4 matrix, float radians, GLKVector3 axisVector);
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4RotateWithVector4(GLKMatrix4 matrix, float radians, GLKVector4 axisVector);
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4Rotate(GLKMatrix4 m, float rad, float x, float y, float z);
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4RotateX(GLKMatrix4 m, float rad);
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4RotateY(GLKMatrix4 m, float rad);
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4RotateZ(GLKMatrix4 m, float rad);
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4Translate(GLKMatrix4 m, float x, float y, float z);
-GLKIT_EXPORT GLKMatrix4 GLKMatrix4TranslateWithVector3(GLKMatrix4 matrix, GLKVector3 translationVector) STUB_METHOD;
-GLKIT_EXPORT GLKMatrix4 GLKMatrix4TranslateWithVector4(GLKMatrix4 matrix, GLKVector4 translationVector) STUB_METHOD;
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4TranslateWithVector3(GLKMatrix4 matrix, GLKVector3 translationVector);
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4TranslateWithVector4(GLKMatrix4 matrix, GLKVector4 translationVector);
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4Scale(GLKMatrix4 m, float x, float y, float z);
-GLKIT_EXPORT GLKMatrix4 GLKMatrix4ScaleWithVector3(GLKMatrix4 matrix, GLKVector3 scaleVector) STUB_METHOD;
-GLKIT_EXPORT GLKMatrix4 GLKMatrix4ScaleWithVector4(GLKMatrix4 matrix, GLKVector4 scaleVector) STUB_METHOD;
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4ScaleWithVector3(GLKMatrix4 matrix, GLKVector3 scaleVector);
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4ScaleWithVector4(GLKMatrix4 matrix, GLKVector4 scaleVector);
 
-GLKIT_EXPORT GLKMatrix4 GLKMatrix4Add(GLKMatrix4 matrixLeft, GLKMatrix4 matrixRight) STUB_METHOD;
-GLKIT_EXPORT GLKMatrix4 GLKMatrix4Subtract(GLKMatrix4 matrixLeft, GLKMatrix4 matrixRight) STUB_METHOD;
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4Add(GLKMatrix4 matrixLeft, GLKMatrix4 matrixRight);
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4Subtract(GLKMatrix4 matrixLeft, GLKMatrix4 matrixRight);
 
 GLKIT_EXPORT GLKVector3 GLKMatrix4MultiplyVector3(GLKMatrix4 m, GLKVector3 vec);
 GLKIT_EXPORT GLKVector4 GLKMatrix4MultiplyVector4(GLKMatrix4 m, GLKVector4 vec);
@@ -266,21 +258,21 @@ GLKIT_EXPORT void GLKMatrix4MultiplyVector3Array(GLKMatrix4 m, GLKVector3* vecs,
 GLKIT_EXPORT void GLKMatrix4MultiplyVector4Array(GLKMatrix4 m, GLKVector4* vecs, size_t numVecs);
 GLKIT_EXPORT GLKVector3 GLKMatrix4MultiplyVector3WithTranslation(GLKMatrix4 m, GLKVector3 vec);
 GLKIT_EXPORT void GLKMatrix4MultiplyVector3ArrayWithTranslation(GLKMatrix4 m, GLKVector3* vecs, size_t numVecs);
-GLKIT_EXPORT GLKVector3 GLKMatrix4MultiplyAndProjectVector3(GLKMatrix4 matrixLeft, GLKVector3 vectorRight) STUB_METHOD;
-GLKIT_EXPORT void GLKMatrix4MultiplyAndProjectVector3Array(GLKMatrix4 matrix, GLKVector3* vectors, size_t vectorCount) STUB_METHOD;
+GLKIT_EXPORT GLKVector3 GLKMatrix4MultiplyAndProjectVector3(GLKMatrix4 matrixLeft, GLKVector3 vectorRight);
+GLKIT_EXPORT void GLKMatrix4MultiplyAndProjectVector3Array(GLKMatrix4 matrix, GLKVector3* vectors, size_t vectorCount);
 
-GLKIT_EXPORT GLKMatrix4 GLKMatrix4Invert(GLKMatrix4 m, BOOL* isInvertible);
+GLKIT_EXPORT GLKMatrix4 GLKMatrix4Invert(GLKMatrix4 m, bool* isInvertible);
 
-GLKIT_EXPORT NSString* NSStringFromGLKMatrix2(GLKMatrix2 matrix) STUB_METHOD;
-GLKIT_EXPORT NSString* NSStringFromGLKMatrix3(GLKMatrix3 matrix) STUB_METHOD;
-GLKIT_EXPORT NSString* NSStringFromGLKMatrix4(GLKMatrix4 matrix) STUB_METHOD;
+GLKIT_EXPORT NSString* NSStringFromGLKMatrix2(GLKMatrix2 matrix);
+GLKIT_EXPORT NSString* NSStringFromGLKMatrix3(GLKMatrix3 matrix);
+GLKIT_EXPORT NSString* NSStringFromGLKMatrix4(GLKMatrix4 matrix);
 
 // --------------------------------------------------------------------------------
 // Vectors.
 
-GLKIT_EXPORT NSString* NSStringFromGLKVector2(GLKVector2 vector) STUB_METHOD;
-GLKIT_EXPORT NSString* NSStringFromGLKVector3(GLKVector3 vector) STUB_METHOD;
-GLKIT_EXPORT NSString* NSStringFromGLKVector4(GLKVector4 vector) STUB_METHOD;
+GLKIT_EXPORT NSString* NSStringFromGLKVector2(GLKVector2 vector);
+GLKIT_EXPORT NSString* NSStringFromGLKVector3(GLKVector3 vector);
+GLKIT_EXPORT NSString* NSStringFromGLKVector4(GLKVector4 vector);
 
 /**
  @Status Interoperable
@@ -554,7 +546,7 @@ inline GLKVector4 GLKVector4Multiply(GLKVector4 v1, GLKVector4 v2) {
  @Status Interoperable
 */
 inline GLKVector4 GLKVector4CrossProduct(GLKVector4 l, GLKVector4 r) {
-    return GLKVector4Make(l.y * r.z - l.z * r.y, l.z * r.x - l.x * r.z, l.x * r.y - l.y * r.x, 1.f);
+    return GLKVector4Make(l.y * r.z - l.z * r.y, l.z * r.x - l.x * r.z, l.x * r.y - l.y * r.x, 0.0f);
 }
 
 /**
@@ -728,8 +720,8 @@ inline GLKVector2 GLKVector2Lerp(GLKVector2 v1, GLKVector2 v2, float t) {
 inline BOOL GLKVector4AllEqualToScalar(GLKVector4 v, float scalar) {
     GLKVector4 o = GLKVector4SubtractScalar(v, scalar);
     if ((fabsf(o.x) + fabsf(o.y) + fabsf(o.z) + fabsf(o.w)) < (4.f * COMPARISON_EPSILON))
-        return TRUE;
-    return FALSE;
+        return YES;
+    return NO;
 }
 
 /**
@@ -738,8 +730,8 @@ inline BOOL GLKVector4AllEqualToScalar(GLKVector4 v, float scalar) {
 inline BOOL GLKVector3AllEqualToScalar(GLKVector3 v, float scalar) {
     GLKVector3 o = GLKVector3SubtractScalar(v, scalar);
     if ((fabsf(o.x) + fabsf(o.y) + fabsf(o.z)) < (3.f * COMPARISON_EPSILON))
-        return TRUE;
-    return FALSE;
+        return YES;
+    return NO;
 }
 
 /**
@@ -748,8 +740,8 @@ inline BOOL GLKVector3AllEqualToScalar(GLKVector3 v, float scalar) {
 inline BOOL GLKVector2AllEqualToScalar(GLKVector2 v, float scalar) {
     GLKVector2 o = GLKVector2SubtractScalar(v, scalar);
     if ((fabsf(o.x) + fabsf(o.y)) < (2.f * COMPARISON_EPSILON))
-        return TRUE;
-    return FALSE;
+        return YES;
+    return NO;
 }
 
 /**
@@ -758,8 +750,8 @@ inline BOOL GLKVector2AllEqualToScalar(GLKVector2 v, float scalar) {
 inline BOOL GLKVector4AllEqualToVector4(GLKVector4 v1, GLKVector4 v2) {
     GLKVector4 o = GLKVector4Subtract(v1, v2);
     if ((fabsf(o.x) + fabsf(o.y) + fabsf(o.z) + fabsf(o.w)) < (4.f * COMPARISON_EPSILON))
-        return TRUE;
-    return FALSE;
+        return YES;
+    return NO;
 }
 
 /**
@@ -768,8 +760,8 @@ inline BOOL GLKVector4AllEqualToVector4(GLKVector4 v1, GLKVector4 v2) {
 inline BOOL GLKVector3AllEqualToVector3(GLKVector3 v1, GLKVector3 v2) {
     GLKVector3 o = GLKVector3Subtract(v1, v2);
     if ((fabsf(o.x) + fabsf(o.y) + fabsf(o.z)) < (3.f * COMPARISON_EPSILON))
-        return TRUE;
-    return FALSE;
+        return YES;
+    return NO;
 }
 
 /**
@@ -778,8 +770,8 @@ inline BOOL GLKVector3AllEqualToVector3(GLKVector3 v1, GLKVector3 v2) {
 inline BOOL GLKVector2AllEqualToVector2(GLKVector2 v1, GLKVector2 v2) {
     GLKVector2 o = GLKVector2Subtract(v1, v2);
     if ((fabsf(o.x) + fabsf(o.y)) < (2.f * COMPARISON_EPSILON))
-        return TRUE;
-    return FALSE;
+        return YES;
+    return NO;
 }
 
 /**
@@ -788,8 +780,8 @@ inline BOOL GLKVector2AllEqualToVector2(GLKVector2 v1, GLKVector2 v2) {
 inline BOOL GLKVector4XYZEqualToScalar(GLKVector4 v, float scalar) {
     GLKVector4 o = GLKVector4SubtractScalar(v, scalar);
     if ((fabsf(o.x) + fabsf(o.y) + fabsf(o.z)) < (3.f * COMPARISON_EPSILON))
-        return TRUE;
-    return FALSE;
+        return YES;
+    return NO;
 }
 
 /**
@@ -979,7 +971,7 @@ inline BOOL GLKVector4AllGreaterThanVector4(GLKVector4 v, GLKVector4 v2) {
 // Quaternions
 
 GLKIT_EXPORT GLKQuaternion GLKQuaternionMakeIdentity();
-GLKIT_EXPORT NSString* NSStringFromGLKQuaternion(GLKQuaternion quaternion) STUB_METHOD;
+GLKIT_EXPORT NSString* NSStringFromGLKQuaternion(GLKQuaternion quaternion);
 
 /**
  @Status Interoperable
@@ -1194,30 +1186,12 @@ inline GLKQuaternion GLKQuaternionInvert(GLKQuaternion q) {
 /**
  @Status Interoperable
 */
-inline GLKQuaternion GLKQuaternionSlerp(GLKQuaternion q1, GLKQuaternion q2, float t) {
-    float mq1 = GLKQuaternionLength(q1);
-    float mq2 = GLKQuaternionLength(q2);
-    float dp = GLKQuaternionDot(q1, q2);
-
-    float cang = dp / (mq1 * mq2);
-    float ang = acosf(cang);
-    float invsang = 1.f / sinf(ang);
-
-    return GLKQuaternionAdd(GLKQuaternionMultiplyByScalar(sinf((1.f - t) * ang) * invsang, q1),
-                            GLKQuaternionMultiplyByScalar(sinf(t * ang) * invsang, q2));
-}
-
-/**
- @Status Interoperable
-*/
 inline GLKVector3 GLKQuaternionRotateVector3(GLKQuaternion q, GLKVector3 v) {
     GLKVector3 axis = GLKQuaternionAxis(q);
     float angle = GLKQuaternionAngle(q);
     GLKMatrix4 m = GLKMatrix4MakeRotation(angle, axis.x, axis.y, axis.z);
     return GLKMatrix4MultiplyVector3(m, v);
 }
-
-GLKIT_EXPORT void GLKQuaternionRotateVector3Array(GLKQuaternion q, GLKVector3* vecs, size_t numVecs);
 
 /**
  @Status Interoperable
@@ -1229,10 +1203,21 @@ inline GLKVector4 GLKQuaternionRotateVector4(GLKQuaternion q, GLKVector4 v) {
     return GLKMatrix4MultiplyVector4(m, v);
 }
 
+GLKIT_EXPORT void GLKQuaternionRotateVector3Array(GLKQuaternion q, GLKVector3* vecs, size_t numVecs);
 GLKIT_EXPORT void GLKQuaternionRotateVector4Array(GLKQuaternion q, GLKVector4* vecs, size_t numVecs);
 GLKIT_EXPORT GLKQuaternion GLKQuaternionMakeWithMatrix3(GLKMatrix3 mat);
 GLKIT_EXPORT GLKQuaternion GLKQuaternionMakeWithMatrix4(GLKMatrix4 mat);
+GLKIT_EXPORT GLKQuaternion GLKQuaternionSlerp(GLKQuaternion quaternionStart, GLKQuaternion quaternionEnd, float t);
 
+/**
+@Status Interoperable
+*/
+inline BOOL GLKQuaternionAllEqualToQuaternion(GLKQuaternion v1, GLKQuaternion v2) {
+    GLKQuaternion o = GLKQuaternionSubtract(v1, v2);
+    if ((fabsf(o.x) + fabsf(o.y) + fabsf(o.z) + fabsf(o.w)) < (4.f * COMPARISON_EPSILON))
+        return YES;
+    return NO;
+}
 // --------------------------------------------------------------------------------
 // Utilities.
 
