@@ -143,7 +143,7 @@ TEST(UIFont, Bridging) {
     ASSERT_EQ(size, [(__bridge UIFont*)ctFont pointSize]);
 }
 
-TEST(CTFontManager, UIFontFamilyNamesShouldContainRegisteredFonts) {
+TEST(UIFont, FamilyNamesShouldContainRegisteredFonts) {
     NSArray* familyNames = [UIFont familyNames];
     EXPECT_FALSE([familyNames containsObject:@"WinObjC"]);
 

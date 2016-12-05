@@ -276,11 +276,13 @@ static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(CFAttributedStringRef 
 
             // Setting kern disables default kerning
             RETURN_NULL_IF_FAILED(typography->AddFontFeature({ DWRITE_FONT_FEATURE_TAG_KERNING, 0 }));
+        } else {
+            // Otherwise set kerning to true, as it will default to no kerning and this can be used to signify noncompatible features
+            // Forces run breaks without interfering with any layout features
+            // Necessary for attributes which DWrite does not support during layout (e.g. Color)
+            RETURN_NULL_IF_FAILED(typography->AddFontFeature({ DWRITE_FONT_FEATURE_TAG_KERNING, ++incompatibleAttributeFlag }));
         }
 
-        // Forces run breaks without interfering with any layout features
-        // Necessary for attributes which DWrite does not support during layout (e.g. Color)
-        RETURN_NULL_IF_FAILED(typography->AddFontFeature({ DWRITE_FONT_FEATURE_TAG_DEFAULT, ++incompatibleAttributeFlag }));
         RETURN_NULL_IF_FAILED(textLayout->SetTypography(typography.Get(), dwriteRange));
     }
 
