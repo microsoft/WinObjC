@@ -3562,7 +3562,7 @@ static float doRound(float f) {
 */
 - (void)invalidateIntrinsicContentSize {
     // Call into our AutoLayout extension to invalidate; it will trigger a relayout if needed.
-    [self autoLayoutInvalidateContentSize]
+    [self autoLayoutInvalidateContentSize];
 }
 
 /**
