@@ -189,7 +189,7 @@ static inline HRESULT __DWriteTextLayoutApplyExtraKerning(const ComPtr<IDWriteTe
  *
  * @return whether the creation was successful
  */
-static HRESULT __DWriteTextFormatCreate(CFAttributedStringRef string, CFRange range, _Outptr_ IDWriteTextFormat** outTextFormat) {
+static HRESULT __DWriteTextFormatCreate(CFAttributedStringRef string, CFRange range, IDWriteTextFormat** outTextFormat) {
     RETURN_HR_IF_NULL(E_POINTER, outTextFormat);
 
     std::shared_ptr<_DWriteFontProperties> properties;
@@ -229,7 +229,8 @@ static HRESULT __DWriteTextFormatCreate(CFAttributedStringRef string, CFRange ra
         RETURN_IF_FAILED(__DWriteTextFormatApplyParagraphStyle(textFormat, settings));
     }
 
-    return textFormat.CopyTo(outTextFormat);
+    *outTextFormat = textFormat.Detach();
+    return S_OK;
 }
 
 /**
@@ -242,10 +243,7 @@ static HRESULT __DWriteTextFormatCreate(CFAttributedStringRef string, CFRange ra
  *
  * @return whether the creation was successful
  */
-static HRESULT __DWriteTextLayoutCreate(CFAttributedStringRef string,
-                                        CFRange range,
-                                        CGRect frameSize,
-                                        _Outptr_ IDWriteTextLayout** outTextLayout) {
+static HRESULT __DWriteTextLayoutCreate(CFAttributedStringRef string, CFRange range, CGRect frameSize, IDWriteTextLayout** outTextLayout) {
     RETURN_HR_IF_NULL(E_POINTER, outTextLayout);
 
     ComPtr<IDWriteTextFormat> textFormat;
@@ -311,7 +309,8 @@ static HRESULT __DWriteTextLayoutCreate(CFAttributedStringRef string,
         RETURN_NULL_IF_FAILED(textLayout->SetTypography(typography.Get(), dwriteRange));
     }
 
-    return textLayout.CopyTo(outTextLayout);
+    *outTextLayout = textLayout.Detach();
+    return S_OK;
 }
 
 /**
@@ -319,7 +318,7 @@ static HRESULT __DWriteTextLayoutCreate(CFAttributedStringRef string,
  */
 class CustomDWriteTextRenderer : public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IDWriteTextRenderer> {
 protected:
-    InspectableClass(L"Windows.Bridge.DirectWrite", TrustLevel::BaseTrust);
+    InspectableClass(L"Windows.Bridge.DirectWrite.CustomDWriteTextRenderer", TrustLevel::BaseTrust);
 
 public:
     CustomDWriteTextRenderer() {

@@ -18,6 +18,7 @@
 
 #import <CoreGraphics/DWriteWrapper.h>
 
+#import <mutex>
 #import <unordered_map>
 
 /**
@@ -42,6 +43,8 @@ using _DWriteFontPropertiesMap =
  * by means of an internal cache.
  *
  * Concrete implementations must implement _GetFontCollection(), which is expected to return an IDWriteFontCollection to work on.
+ *
+ * Thread-safe.
  */
 class DWriteFontCollectionHelper {
 public:
@@ -51,12 +54,13 @@ public:
     CFMutableArrayRef CopyFontFamilyNames();
     CFMutableArrayRef CopyFontNamesForFamilyName(CFStringRef familyName);
     std::shared_ptr<_DWriteFontProperties> GetFontPropertiesFromUppercaseFontName(const woc::unique_cf<CFStringRef>& upperFontName);
-    HRESULT CreateFontFamilyWithName(_In_ const wchar_t* unicharFamilyName, _Outptr_ IDWriteFontFamily** outFontFamily);
+    HRESULT CreateFontFamilyWithName(const wchar_t* unicharFamilyName, IDWriteFontFamily** outFontFamily);
 
 protected:
     virtual Microsoft::WRL::ComPtr<IDWriteFontCollection> _GetFontCollection() = 0;
-    HRESULT _GetFontListForFamilyName(CFStringRef familyName, _Outptr_ IDWriteFontList** outFontList);
+    HRESULT _GetFontListForFamilyName(CFStringRef familyName, IDWriteFontList** outFontList);
 
     void _InitializePropertiesMap();
     std::shared_ptr<_DWriteFontPropertiesMap> m_propertiesMap;
+    std::recursive_mutex m_lock;
 };

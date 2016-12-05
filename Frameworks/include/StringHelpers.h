@@ -18,8 +18,11 @@
 
 #include "Starboard.h"
 
-#ifdef __OBJC__
+#ifdef __clang__
 #import <CoreFoundation/CFString.h>
+#endif
+
+#ifdef __OBJC__
 #import <Foundation/NSString.h>
 #import <NSStringInternal.h>
 #include <COMIncludes.h>
@@ -471,7 +474,7 @@ inline std::vector<std::wstring> VectorFromDelimitedString(_In_ const std::wstri
     return ContainerFromDelimitedString<std::vector<std::wstring>>(delimitedString, delimiter);
 }
 
-#ifdef __OBJC__
+#ifdef __clang__
 
 // Returns a vector from a CFString
 inline std::vector<UniChar> VectorFromCFString(CFStringRef string) {

@@ -25,15 +25,17 @@ using namespace Microsoft::WRL;
 static const wchar_t* TAG = L"_DWriteFontCollectionHelper";
 
 CFMutableArrayRef DWriteFontCollectionHelper::CopyFontFamilyNames() {
+    std::lock_guard<std::recursive_mutex> lock(m_lock);
+
     ComPtr<IDWriteFontCollection> fontCollection = _GetFontCollection();
     if (!fontCollection) {
         // Return empty array for an empty font collection
-        return CFArrayCreateMutable(kCFAllocatorSystemDefault, 0, &kCFTypeArrayCallBacks);
+        return CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks);
     }
 
     // Get the number of font families in the collection.
     uint32_t count = fontCollection->GetFontFamilyCount();
-    CFMutableArrayRef ret = CFArrayCreateMutable(kCFAllocatorSystemDefault, count, &kCFTypeArrayCallBacks);
+    CFMutableArrayRef ret = CFArrayCreateMutable(kCFAllocatorDefault, count, &kCFTypeArrayCallBacks);
     for (uint32_t i = 0; i < count; ++i) {
         // Get the font family.
         ComPtr<IDWriteFontFamily> fontFamily;
@@ -56,7 +58,9 @@ CFMutableArrayRef DWriteFontCollectionHelper::CopyFontFamilyNames() {
 }
 
 CFMutableArrayRef DWriteFontCollectionHelper::CopyFontNamesForFamilyName(CFStringRef familyName) {
-    CFMutableArrayRef ret = CFArrayCreateMutable(kCFAllocatorSystemDefault, 0, &kCFTypeArrayCallBacks);
+    std::lock_guard<std::recursive_mutex> lock(m_lock);
+
+    CFMutableArrayRef ret = CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks);
 
     ComPtr<IDWriteFontList> fontList;
     if (FAILED(_GetFontListForFamilyName(familyName, &fontList))) {
@@ -71,12 +75,12 @@ CFMutableArrayRef DWriteFontCollectionHelper::CopyFontNamesForFamilyName(CFStrin
         }
 
         ComPtr<IDWriteLocalizedStrings> fullName;
-        BOOL exist = FALSE;
-        if (FAILED(font->GetInformationalStrings(DWRITE_INFORMATIONAL_STRING_FULL_NAME, &fullName, &exist))) {
+        BOOL exists;
+        if (FAILED(font->GetInformationalStrings(DWRITE_INFORMATIONAL_STRING_FULL_NAME, &fullName, &exists))) {
             continue;
         }
 
-        if (exist) {
+        if (exists) {
             CFStringRef name = _CFStringFromLocalizedString(fullName.Get());
             if (CFStringGetLength(name) == 0) {
                 TraceError(TAG, L"Failed to convert the localized string to wide string.");
@@ -92,6 +96,8 @@ CFMutableArrayRef DWriteFontCollectionHelper::CopyFontNamesForFamilyName(CFStrin
 
 std::shared_ptr<_DWriteFontProperties> DWriteFontCollectionHelper::GetFontPropertiesFromUppercaseFontName(
     const woc::unique_cf<CFStringRef>& upperFontName) {
+    std::lock_guard<std::recursive_mutex> lock(m_lock);
+
     if (!m_propertiesMap) {
         _InitializePropertiesMap();
     }
@@ -104,8 +110,9 @@ std::shared_ptr<_DWriteFontProperties> DWriteFontCollectionHelper::GetFontProper
     return nullptr;
 }
 
-HRESULT DWriteFontCollectionHelper::CreateFontFamilyWithName(_In_ const wchar_t* unicharFamilyName,
-                                                             _Outptr_ IDWriteFontFamily** outFontFamily) {
+HRESULT DWriteFontCollectionHelper::CreateFontFamilyWithName(const wchar_t* unicharFamilyName, IDWriteFontFamily** outFontFamily) {
+    std::lock_guard<std::recursive_mutex> lock(m_lock);
+
     ComPtr<IDWriteFontCollection> fontCollection = _GetFontCollection();
 
     // If no/empty font collection, say that the font family couldn't be found
@@ -123,7 +130,9 @@ HRESULT DWriteFontCollectionHelper::CreateFontFamilyWithName(_In_ const wchar_t*
     return S_FALSE;
 }
 
-HRESULT DWriteFontCollectionHelper::_GetFontListForFamilyName(CFStringRef familyName, _Outptr_ IDWriteFontList** outFontList) {
+HRESULT DWriteFontCollectionHelper::_GetFontListForFamilyName(CFStringRef familyName, IDWriteFontList** outFontList) {
+    std::lock_guard<std::recursive_mutex> lock(m_lock);
+
     ComPtr<IDWriteFontCollection> fontCollection = _GetFontCollection();
 
     // If no/empty font collection, fail to return a font list
@@ -135,7 +144,7 @@ HRESULT DWriteFontCollectionHelper::_GetFontListForFamilyName(CFStringRef family
     RETURN_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
 
     size_t index = 0;
-    BOOL exists = FALSE;
+    BOOL exists;
 
     const auto& unicharFamilyName = Strings::VectorFromCFString(familyName);
     const wchar_t* data = reinterpret_cast<const wchar_t*>(unicharFamilyName.data());
@@ -154,10 +163,10 @@ HRESULT DWriteFontCollectionHelper::_GetFontListForFamilyName(CFStringRef family
 }
 
 void DWriteFontCollectionHelper::_InitializePropertiesMap() {
+    std::lock_guard<std::recursive_mutex> lock(m_lock);
+
     // Initialize m_propertiesMap
-    if (!m_propertiesMap) {
-        m_propertiesMap = std::make_shared<_DWriteFontPropertiesMap>();
-    }
+    m_propertiesMap = std::make_shared<_DWriteFontPropertiesMap>();
 
     woc::unique_cf<CFArrayRef> familyNames{ CopyFontFamilyNames() };
 

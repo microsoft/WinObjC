@@ -30,10 +30,12 @@
 class DWriteFontBinaryDataLoader
     : public Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::WinRtClassicComMix>, IDWriteFontFileLoader> {
 protected:
-    InspectableClass(L"Windows.Bridge.DirectWrite", TrustLevel::BaseTrust);
+    InspectableClass(L"Windows.Bridge.DirectWrite.DWriteFontBinaryDataLoader", TrustLevel::BaseTrust);
 
 public:
-    DWriteFontBinaryDataLoader();
+    DWriteFontBinaryDataLoader() {
+    }
+
     HRESULT RuntimeClassInitialize(CFDataRef data);
 
     HRESULT STDMETHODCALLTYPE CreateStreamFromKey(_In_ const void* fontFileReferenceKey,
