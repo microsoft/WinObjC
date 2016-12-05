@@ -18,7 +18,7 @@
 #import <AutoLayout.h>
 
 @interface UIView (AutoLayout) <AutoLayoutable>
-- (void)autoLayoutInvalidateContentSize;
+- (BOOL)autoLayoutInvalidateContentSize;
 - (void)autoLayoutLayoutSubviews;
 - (void)autoLayoutUpdateConstraints;
 @end

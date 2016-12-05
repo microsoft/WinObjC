@@ -533,19 +533,18 @@ public:
     }
 }
 
-- (void)autoLayoutInvalidateContentSize {
+- (BOOL)autoLayoutInvalidateContentSize {
     AutoLayoutProperties* layoutProperties = self._autoLayoutProperties;
 
     // We're already invalid; no more work is necessary
     if (!layoutProperties->_isContentSizeValid) {
-        return;
+        return NO;
     }
 
-    // Set ourselves to invalid, and trigger a re-layout pass.
+    // Set ourselves to invalid, and return that our state has changed so re-layout can
+    // be performed as needed.
     layoutProperties->_isContentSizeValid = false;
-
-    // The parent is always responsible for autolaying out its children
-    [self.superview setNeedsLayout];
+    return YES;
 }
 
 // Gets the top most view that autolayout is relative to.

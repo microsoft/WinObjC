@@ -3561,8 +3561,11 @@ static float doRound(float f) {
  @Status Interoperable
 */
 - (void)invalidateIntrinsicContentSize {
-    // Call into our AutoLayout extension to invalidate; it will trigger a relayout if needed.
-    [self autoLayoutInvalidateContentSize];
+    // Only trigger a relayout if we're not already invalidated
+    if ([self autoLayoutInvalidateContentSize]) {
+        // The parent is always responsible for autolaying out its children
+        [self.superview setNeedsLayout];
+    }
 }
 
 /**
