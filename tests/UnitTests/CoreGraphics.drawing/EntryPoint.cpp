@@ -20,6 +20,12 @@
 
 #include <CoreFoundation/CoreFoundation.h>
 
+#ifdef WINOBJC
+// NOTE: Current implementation of CoreGraphics requires UIKit to be loaded
+//      Remove once CoreGraphics has been updated
+#include <UIKit/UIKit.h>
+#endif // WINOBJC
+
 #include "DrawingTestConfig.h"
 
 template <size_t N>
@@ -104,6 +110,11 @@ int main(int argc, char** argv) {
         return -1;
     }
 #endif
+#ifdef WINOBJC
+    // NOTE: Current implementation of CoreGraphics requires UIKit to be loaded
+    //      Remove once CoreGraphics has been updated
+    [UIView class];
+#endif // WINOBJC
     testing::InitGoogleTest(&argc, argv);
 
     _configImpl = std::move(std::make_shared<CommandLineDrawingTestConfigImpl>(argc, argv));

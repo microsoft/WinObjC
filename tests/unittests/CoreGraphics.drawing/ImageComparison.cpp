@@ -62,7 +62,7 @@ ImageDelta PixelByPixelImageComparator::CompareImages(CGImageRef left, CGImageRe
 
     woc::unique_iw<uint8_t> deltaBuffer{ static_cast<uint8_t*>(IwCalloc(leftLength, 1)) };
 
-    const bgraPixel* leftPixels{ reinterpret_cast<const bgraPixel*>(CFDataGetBytePtr(leftData.get())) };
+    const rgbaPixel* leftPixels{ reinterpret_cast<const rgbaPixel*>(CFDataGetBytePtr(leftData.get())) };
     const rgbaPixel* rightPixels{ reinterpret_cast<const rgbaPixel*>(CFDataGetBytePtr(rightData.get())) };
     rgbaPixel* deltaPixels{ reinterpret_cast<rgbaPixel*>(deltaBuffer.get()) };
 
