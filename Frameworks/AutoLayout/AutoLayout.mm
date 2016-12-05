@@ -102,6 +102,7 @@ public:
     ClLinearInequality _contentCompressionResistanceConstraint[NumDirections];
 
     NSMutableArray* _associatedConstraints;
+    bool _isContentSizeValid = false;
 };
 
 // Since categories can't have ivars, we bundle up a couple C++ classes in NSObjects and associate them to the
@@ -389,40 +390,18 @@ public:
     [self setFrame:newFrame];
 }
 
-- (void)autoLayoutLayoutSubviews {
-    UIView* topView = [self autolayoutRoot];
-
-    for (int i = 0; i < [self.subviews count]; i++) {
-        UIView* child = (UIView*)[self.subviews objectAtIndex:i];
-        AutoLayoutProperties* childProps = child._autoLayoutProperties;
-
-        if ([childProps->_associatedConstraints count] && !child.translatesAutoresizingMaskIntoConstraints) {
-            // Constraints that rely on autoresizing behaviour don't always follow a top-down layout order.
-            // Baseline views can be autoresized, and are not always siblings to other constrained views.
-            // We have to update them first, and this potentially can happen recursively. Ie, a view
-            // constrained to a button's baseline, constrained to a segment's baseline, etc.
-            // To facilitate this, we update frames for views we depend on (and thus their autosizing, and
-            // constraints) before setting our own.
-            // TODO: last baseline
-            for (NSLayoutConstraint* constraint in childProps->_associatedConstraints) {
-                UIView* item = (UIView*)constraint.firstItem;
-                if (item != nil && item != self && constraint.firstAttribute == NSLayoutAttributeBaseline) {
-                    [item autoLayoutSetFrameToView:self fromView:topView];
-                }
-                item = (UIView*)constraint.secondItem;
-                if (item != nil && item != self && constraint.secondAttribute == NSLayoutAttributeBaseline) {
-                    [item autoLayoutSetFrameToView:self fromView:topView];
-                }
-            }
-            [child autoLayoutSetFrameToView:self fromView:topView];
-        }
-    }
-}
-
-- (void)autoLayoutInvalidateContentSize {
+- (void)_validateContentSize {
     AutoLayoutProperties* layoutProperties = self._autoLayoutProperties;
-    CGSize contentSize = [self intrinsicContentSize];
 
+    // If we're already valid, there's no more work left for us
+    if (layoutProperties->_isContentSizeValid) {
+        return;
+    } else {
+        layoutProperties->_isContentSizeValid = true;
+    }
+
+    // Update our constraints based upon our intrinsicContentSize
+    CGSize contentSize = [self intrinsicContentSize];
     if (contentSize.width == -1.0f /*UIViewNoIntrinsicMetric*/ || contentSize.width == 0) {
         if (layoutProperties->_contentHuggingConstraint[Horizontal].FIsInSolver()) {
             c_solver.RemoveConstraint(&layoutProperties->_contentHuggingConstraint[Horizontal]);
@@ -515,6 +494,58 @@ public:
             c_solver.AddConstraint(&layoutProperties->_contentCompressionResistanceConstraint[Vertical]);
         }
     }
+}
+
+- (void)autoLayoutLayoutSubviews {
+    UIView* topView = [self autolayoutRoot];
+
+    // Make sure our constraints are up to date
+    [self _validateContentSize];
+    [topView _validateContentSize];
+
+    for (int i = 0; i < [self.subviews count]; i++) {
+        UIView* child = (UIView*)[self.subviews objectAtIndex:i];
+        AutoLayoutProperties* childProps = child._autoLayoutProperties;
+
+        // Update the View's constraints if necessary
+        [child _validateContentSize];
+
+        if ([childProps->_associatedConstraints count] && !child.translatesAutoresizingMaskIntoConstraints) {
+            // Constraints that rely on autoresizing behaviour don't always follow a top-down layout order.
+            // Baseline views can be autoresized, and are not always siblings to other constrained views.
+            // We have to update them first, and this potentially can happen recursively. Ie, a view
+            // constrained to a button's baseline, constrained to a segment's baseline, etc.
+            // To facilitate this, we update frames for views we depend on (and thus their autosizing, and
+            // constraints) before setting our own.
+            // TODO: last baseline
+            for (NSLayoutConstraint* constraint in childProps->_associatedConstraints) {
+                UIView* item = (UIView*)constraint.firstItem;
+                if (item != nil && item != self && constraint.firstAttribute == NSLayoutAttributeBaseline) {
+                    [item autoLayoutSetFrameToView:self fromView:topView];
+                }
+                item = (UIView*)constraint.secondItem;
+                if (item != nil && item != self && constraint.secondAttribute == NSLayoutAttributeBaseline) {
+                    [item autoLayoutSetFrameToView:self fromView:topView];
+                }
+            }
+            [child autoLayoutSetFrameToView:self fromView:topView];
+        }
+    }
+}
+
+- (void)autoLayoutInvalidateContentSize {
+    AutoLayoutProperties* layoutProperties = self._autoLayoutProperties;
+
+    // We're already invalid; no more work is necessary
+    if (!layoutProperties->_isContentSizeValid) {
+        return;
+    }
+
+    // Set ourselves to invalid, and trigger a re-layout pass.
+    layoutProperties->_isContentSizeValid = false;
+
+    // The parent is always responsible for autolaying out its children
+    [self.superview setNeedsLayout];
 }
 
 // Gets the top most view that autolayout is relative to.
