@@ -190,8 +190,11 @@ public:
         RETURN_HR_IF(E_INVALIDARG, !drawingState);
 
         auto& oldState = _stateStack.top();
+
+        // Put a copy of the current drawing state at the top of the state stack.
         _stateStack.emplace(oldState);
         oldState.d2dState = drawingState;
+
         return S_OK;
     }
 
@@ -289,10 +292,14 @@ public:
     inline HRESULT PopGState() {
         auto& currentLayer = _layerStack.top();
         ComPtr<ID2D1DrawingStateBlock> d2dState;
-        if (FAILED(currentLayer.PopGState(&d2dState))) {
+        HRESULT hr = currentLayer.PopGState(&d2dState);
+        if (hr == E_BOUNDS) {
+            // We want to handle E_BOUNDS separately from the general failure case.
             TraceError(TAG, L"Invalid attempt to pop last graphics state.");
             return E_BOUNDS;
         }
+
+        RETURN_IF_FAILED(hr);
 
         return _RestoreD2DDrawingState(d2dState.Get());
     }
@@ -500,7 +507,7 @@ HRESULT __CGContext::PopLayer() {
         return E_BOUNDS;
     }
 
-    auto outgoingLayer = std::move(_layerStack.top());
+    auto& outgoingLayer = _layerStack.top();
 
     ComPtr<ID2D1Image> outgoingImageTarget;
     RETURN_IF_FAILED(outgoingLayer.GetTarget(&outgoingImageTarget));

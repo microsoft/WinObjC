@@ -27,7 +27,7 @@ static void _strokeTwoCirclesInContext(CGContextRef context, CGRect bounds) {
     }
 }
 
-DRAW_TEST_F(CGContext, TransparencyLayerIsShadowedAllAtOnce, WhiteBackgroundTest) {
+DISABLED_DRAW_TEST_F(CGContextTransparencyLayer, IsShadowedAllAtOnce, WhiteBackgroundTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -52,7 +52,7 @@ DRAW_TEST_F(CGContext, TransparencyLayerIsShadowedAllAtOnce, WhiteBackgroundTest
     CGContextEndTransparencyLayer(context);
 }
 
-DRAW_TEST_F(CGContext, TransparencyLayerWithInnerShadowCanStack, WhiteBackgroundTest) {
+DISABLED_DRAW_TEST_F(CGContextTransparencyLayer, StacksInnerAndOuterShadow, WhiteBackgroundTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -70,7 +70,21 @@ DRAW_TEST_F(CGContext, TransparencyLayerWithInnerShadowCanStack, WhiteBackground
     CGContextEndTransparencyLayer(context);
 }
 
-DRAW_TEST_F(CGContext, TransparencyLayerIsAlphaCompositedAllAtOnce, WhiteBackgroundTest) {
+DRAW_TEST_F(CGContextTransparencyLayer, FloodFill_GlobalAlpha0_5f, WhiteBackgroundTest) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGContextSetAlpha(context, 0.5);
+
+    CGContextBeginTransparencyLayer(context, nullptr);
+
+    CGContextSetRGBFillColor(context, 1.0, 0.0, 0.0, 1.0);
+    CGContextFillRect(context, CGRectInset(bounds, 2.0, 2.0));
+
+    CGContextEndTransparencyLayer(context);
+}
+
+DISABLED_DRAW_TEST_F(CGContextTransparencyLayer, DrawCircles_GlobalAlpha0_5f, WhiteBackgroundTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -86,7 +100,7 @@ DRAW_TEST_F(CGContext, TransparencyLayerIsAlphaCompositedAllAtOnce, WhiteBackgro
     CGContextEndTransparencyLayer(context);
 }
 
-DRAW_TEST_F(CGContext, TransparencyLayerWithZeroGlobalAlpha, WhiteBackgroundTest) {
+DRAW_TEST_F(CGContextTransparencyLayer, ZeroGlobalAlpha, WhiteBackgroundTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -102,7 +116,7 @@ DRAW_TEST_F(CGContext, TransparencyLayerWithZeroGlobalAlpha, WhiteBackgroundTest
     CGContextEndTransparencyLayer(context);
 }
 
-DRAW_TEST_F(CGContext, TransparencyLayerWithRect, WhiteBackgroundTest) {
+DISABLED_DRAW_TEST_F(CGContextTransparencyLayer, BoundedLayerDrawingCircles, WhiteBackgroundTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -119,8 +133,23 @@ DRAW_TEST_F(CGContext, TransparencyLayerWithRect, WhiteBackgroundTest) {
     CGContextEndTransparencyLayer(context);
 }
 
+DRAW_TEST_F(CGContextTransparencyLayer, BoundedLayerFloodFill, WhiteBackgroundTest) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGPoint center = _CGRectGetCenter(bounds);
+    CGRect clippingRect = _CGRectCenteredOnPoint({ 150, 150 }, center);
+
+    CGContextBeginTransparencyLayerWithRect(context, clippingRect, nullptr);
+
+    CGContextSetRGBFillColor(context, 1.0, 0.0, 0.0, 1.0);
+    CGContextFillRect(context, bounds);
+
+    CGContextEndTransparencyLayer(context);
+}
+
 // The shadow should extend beyond the bounds of the layer content, even if it is clipped.
-DRAW_TEST_F(CGContext, TransparencyLayerWithRectAndShadow, WhiteBackgroundTest) {
+DISABLED_DRAW_TEST_F(CGContextTransparencyLayer, BoundedLayerFloodFillShadow, WhiteBackgroundTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -133,15 +162,11 @@ DRAW_TEST_F(CGContext, TransparencyLayerWithRectAndShadow, WhiteBackgroundTest) 
 
     CGContextSetRGBFillColor(context, 1.0, 0.0, 0.0, 1.0);
     CGContextFillRect(context, bounds);
-    //CGContextSetRGBStrokeColor(context, 1.0, 0.0, 0.0, 1.0);
-    //CGContextSetLineWidth(context, 5);
-
-    //_strokeTwoCirclesInContext(context, bounds);
 
     CGContextEndTransparencyLayer(context);
 }
 
-DRAW_TEST_F(CGContext, TransparencyLayerWithRectIntoShornContext, WhiteBackgroundTest) {
+DISABLED_DRAW_TEST_F(CGContextTransparencyLayer, BoundedLayerFloodFill_GlobalTransform, WhiteBackgroundTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -152,16 +177,14 @@ DRAW_TEST_F(CGContext, TransparencyLayerWithRectIntoShornContext, WhiteBackgroun
 
     CGContextBeginTransparencyLayerWithRect(context, clippingRect, nullptr);
 
-    CGContextSetRGBStrokeColor(context, 1.0, 0.0, 0.0, 1.0);
-    CGContextSetLineWidth(context, 5);
-
-    _strokeTwoCirclesInContext(context, bounds);
+    CGContextSetRGBFillColor(context, 1.0, 0.0, 0.0, 1.0);
+    CGContextFillRect(context, bounds);
 
     CGContextEndTransparencyLayer(context);
 }
 
 // The shadow should extend beyond the bounds of the layer content, even if it is clipped.
-DRAW_TEST_F(CGContext, TransparencyLayerWithRectIntoShornContextWithShadow, WhiteBackgroundTest) {
+DISABLED_DRAW_TEST_F(CGContextTransparencyLayer, BoundedLayerDrawingCircles_GlobalTransform, WhiteBackgroundTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -181,3 +204,27 @@ DRAW_TEST_F(CGContext, TransparencyLayerWithRectIntoShornContextWithShadow, Whit
 
     CGContextEndTransparencyLayer(context);
 }
+
+DRAW_TEST_F(CGContextTransparencyLayer, BoundedLayerFloodFill_GlobalClip, WhiteBackgroundTest) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGPoint center = _CGRectGetCenter(bounds);
+    CGRect layerRect = _CGRectCenteredOnPoint({ 100, 100 }, center);
+
+    CGContextBeginPath(context);
+    CGContextAddRect(context, _CGRectCenteredOnPoint({ 150, 150 }, center));
+    CGContextAddRect(context, _CGRectCenteredOnPoint({ 50, 50 }, center));
+    CGContextEOClip(context);
+
+    CGContextSetRGBFillColor(context, 1.0, 1.0, 0.0, 1.0);
+    CGContextFillRect(context, _CGRectCenteredOnPoint({ 200, 200 }, center));
+
+    CGContextBeginTransparencyLayerWithRect(context, layerRect, nullptr);
+
+    CGContextSetRGBFillColor(context, 1.0, 0.0, 0.0, 1.0);
+    CGContextFillRect(context, bounds);
+
+    CGContextEndTransparencyLayer(context);
+}
+
