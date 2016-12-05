@@ -380,8 +380,13 @@ Microsoft Extension
         return;
     }
 
-    _touchInside = TRUE;
-    [self sendActionsForControlEvents:UIControlEventTouchDown];
+    // Multitouch isn't supported by default, that's handled through tracking.
+    // The first touch is the one used for control events.
+    if (!_controlEventTouch) {
+        _controlEventTouch = [touchSet anyObject];
+        _touchInside = TRUE;
+        [self sendActionsForControlEvents:UIControlEventTouchDown];
+    }
 
     if ([self respondsToSelector:@selector(beginTrackingWithTouch:withEvent:)]) {
         NSEnumerator* objEnum = [touchSet objectEnumerator];
@@ -407,7 +412,26 @@ Microsoft Extension
         return;
     }
 
-    [self sendActionsForControlEvents:UIControlEventTouchDragInside];
+    if ([touchSet containsObject:_controlEventTouch]) {
+        CGPoint point = [_controlEventTouch locationInView:self];
+        BOOL currentTouchInside = [self pointInside:point withEvent:event];
+
+        if (currentTouchInside != _touchInside) {
+            _touchInside = currentTouchInside;
+            if (currentTouchInside) {
+                [self sendActionsForControlEvents:UIControlEventTouchDragEnter];
+            } else {
+                [self sendActionsForControlEvents:UIControlEventTouchDragExit];
+            }
+        }
+
+        // TODO: Investigate fat-fingers
+        if (currentTouchInside) {
+            [self sendActionsForControlEvents:UIControlEventTouchDragInside];
+        } else {
+            [self sendActionsForControlEvents:UIControlEventTouchDragOutside];
+        }
+    }
 
     if ([self respondsToSelector:@selector(continueTrackingWithTouch:withEvent:)]) {
         NSEnumerator* objEnum = [touchSet objectEnumerator];
@@ -438,7 +462,17 @@ Microsoft Extension
         return;
     }
 
-    [self sendActionsForControlEvents:UIControlEventTouchUpInside];
+    if ([touchSet containsObject:_controlEventTouch]) {
+        CGPoint point = [_controlEventTouch locationInView:self];
+        BOOL currentTouchInside = [self pointInside:point withEvent:event];
+
+        if (currentTouchInside) {
+            [self sendActionsForControlEvents:UIControlEventTouchUpInside];
+        } else {
+            [self sendActionsForControlEvents:UIControlEventTouchUpOutside];
+        }
+        _controlEventTouch = nil;
+    }
 
     NSEnumerator* objEnum = [touchSet objectEnumerator];
     UITouch* curTouch;
@@ -464,7 +498,10 @@ Microsoft Extension
         return;
     }
 
-    [self sendActionsForControlEvents:UIControlEventTouchCancel];
+    if ([touchSet containsObject:_controlEventTouch]) {
+        [self sendActionsForControlEvents:UIControlEventTouchCancel];
+        _controlEventTouch = nil;
+    }
 }
 
 /**
