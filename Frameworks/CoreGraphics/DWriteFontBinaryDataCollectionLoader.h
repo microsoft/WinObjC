@@ -35,12 +35,10 @@ class DWriteFontBinaryDataCollectionLoader
     : public Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::WinRtClassicComMix>,
                                           IDWriteFontCollectionLoader> {
 protected:
-    InspectableClass(L"Windows.Bridge.DirectWrite", TrustLevel::BaseTrust);
+    InspectableClass(L"Windows.Bridge.DirectWrite.DWriteFontBinaryDataCollectionLoader", TrustLevel::BaseTrust);
 
 public:
-    DWriteFontBinaryDataCollectionLoader() {
-    }
-
+    DWriteFontBinaryDataCollectionLoader();
     HRESULT RuntimeClassInitialize();
 
     HRESULT STDMETHODCALLTYPE CreateEnumeratorFromKey(_In_ IDWriteFactory* factory,
@@ -52,13 +50,17 @@ public:
     HRESULT AddDatas(CFArrayRef fontDatas, CFArrayRef* errors);
     HRESULT RemoveDatas(CFArrayRef fontDatas, CFArrayRef* errors);
 
-private:
-    // Array of CFDataRef containing data of fonts, in order of being added
-    woc::unique_cf<CFMutableArrayRef> m_fontDatas;
+    // Returns a DWriteFontFile corresponding to the index-th CFDataRef in internal storage
+    HRESULT GetFontFileAt(int index, IDWriteFontFile** outFontFile);
 
+    // Returns number of files currently in internal storage
+    size_t GetFontFileCount();
+
+private:
     // Set of CFDataRef containing data of fonts, used to simplify checking if font has been added
     woc::unique_cf<CFMutableSetRef> m_fontDatasSet;
 
-    // Array of previously created font files, which saves us from having to read a file multiple times
-    std::vector<Microsoft::WRL::ComPtr<IDWriteFontFile>> m_previouslyCreatedFiles;
+    // List of CFDataRefs registered to this font collection loader through AddDatas()
+    // As an optimization, a font data may cache an IDWriteFontFile that was created using it, for fast access if the font is needed again
+    std::vector<std::pair<woc::unique_cf<CFDataRef>, Microsoft::WRL::ComPtr<IDWriteFontFile>>> m_fontDatas;
 };

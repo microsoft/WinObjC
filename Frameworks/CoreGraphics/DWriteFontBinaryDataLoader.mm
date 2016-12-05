@@ -28,13 +28,10 @@ using namespace Microsoft::WRL;
  */
 class DWriteFontBinaryDataStream : public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IDWriteFontFileStream> {
 protected:
-    InspectableClass(L"Windows.Bridge.DirectWrite", TrustLevel::BaseTrust);
+    InspectableClass(L"Windows.Bridge.DirectWrite.DWriteFontBinaryDataStream", TrustLevel::BaseTrust);
 
 public:
-    DWriteFontBinaryDataStream() {
-    }
-
-    HRESULT RuntimeClassInitialize(CFDataRef data) {
+    DWriteFontBinaryDataStream(CFDataRef data) {
         CFRetain(data);
         m_data.reset(data);
 
@@ -46,6 +43,9 @@ public:
         m_lastWriteTime = 0;
         m_lastWriteTime |= static_cast<uint64_t>(fileTime.dwLowDateTime);
         m_lastWriteTime |= static_cast<uint64_t>(fileTime.dwHighDateTime) << 32;
+    }
+
+    HRESULT RuntimeClassInitialize() {
         return S_OK;
     }
 
@@ -94,10 +94,6 @@ private:
 
 // DWriteFontBinaryDataLoader member functions
 
-DWriteFontBinaryDataLoader::DWriteFontBinaryDataLoader() {
-    // Deliberate no-op
-}
-
 HRESULT DWriteFontBinaryDataLoader::RuntimeClassInitialize(CFDataRef data) {
     RETURN_HR_IF_NULL(E_INVALIDARG, data);
 
@@ -113,8 +109,8 @@ HRESULT STDMETHODCALLTYPE DWriteFontBinaryDataLoader::CreateStreamFromKey(_In_ c
                                                                           _Out_ IDWriteFontFileStream** fontFileStream) {
     RETURN_HR_IF_NULL(E_POINTER, fontFileStream);
 
-    ComPtr<DWriteFontBinaryDataStream> ret;
-    RETURN_IF_FAILED(MakeAndInitialize<DWriteFontBinaryDataStream>(&ret, m_data.get()));
+    ComPtr<DWriteFontBinaryDataStream> ret = Make<DWriteFontBinaryDataStream>(m_data.get());
 
-    return ret.CopyTo(fontFileStream);
+    *fontFileStream = ret.Detach();
+    return S_OK;
 }

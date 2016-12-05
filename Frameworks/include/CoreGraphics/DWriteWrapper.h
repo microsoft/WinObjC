@@ -61,8 +61,8 @@ COREGRAPHICS_EXPORT CFArrayRef _DWriteCopyFontNamesForFamilyName(CFStringRef fam
 COREGRAPHICS_EXPORT CFStringRef _DWriteGetFamilyNameForFontName(CFStringRef fontName);
 
 // Creation of DWrite font face/family objects
-COREGRAPHICS_EXPORT HRESULT _DWriteCreateFontFamilyWithName(CFStringRef familyName, _Out_ IDWriteFontFamily** outFontFamily);
-COREGRAPHICS_EXPORT HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, _Out_ IDWriteFontFace** outFontFace);
+COREGRAPHICS_EXPORT HRESULT _DWriteCreateFontFamilyWithName(CFStringRef familyName, IDWriteFontFamily** outFontFamily);
+COREGRAPHICS_EXPORT HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, IDWriteFontFace** outFontFace);
 
 // DWriteFont getters that convert to a CF/CG object or struct
 COREGRAPHICS_EXPORT CFStringRef _DWriteFontCopyInformationalString(const Microsoft::WRL::ComPtr<IDWriteFontFace>& fontFace,
@@ -76,4 +76,4 @@ COREGRAPHICS_EXPORT HRESULT _DWriteFontGetBoundingBoxesForGlyphs(
 // DWrite functions relating to font binary data
 COREGRAPHICS_EXPORT HRESULT _DWriteRegisterFontsWithDatas(CFArrayRef fontDatas, CFArrayRef* errors);
 COREGRAPHICS_EXPORT HRESULT _DWriteUnregisterFontsWithDatas(CFArrayRef fontDatas, CFArrayRef* errors);
-COREGRAPHICS_EXPORT HRESULT _DWriteCreateFontFaceWithData(CFDataRef data, _Out_ IDWriteFontFace** outFontFace);
+COREGRAPHICS_EXPORT HRESULT _DWriteCreateFontFaceWithData(CFDataRef data, IDWriteFontFace** outFontFace);

@@ -22,7 +22,6 @@
 #import <StringHelpers.h>
 
 #import <functional>
-#import <mutex>
 #import <vector>
 #import <type_traits>
 
@@ -62,12 +61,14 @@ protected:
 class UserFontCollectionHelper : public DWriteFontCollectionHelper {
 public:
     HRESULT UpdateCollection(const ComPtr<IDWriteFactory>& dwriteFactory, const ComPtr<DWriteFontBinaryDataCollectionLoader>& loader) {
+        std::lock_guard<std::recursive_mutex> lock(m_lock);
+
         // DWrite won't create a new font collection unless we provide a new key each time
         // So every time we modify the font collection increment the key
-        static size_t collectionKey = 0;
+        static size_t s_collectionKey = 0;
 
         RETURN_IF_FAILED(
-            dwriteFactory->CreateCustomFontCollection(loader.Get(), &(++collectionKey), sizeof(collectionKey), &m_fontCollection));
+            dwriteFactory->CreateCustomFontCollection(loader.Get(), &(++s_collectionKey), sizeof(s_collectionKey), &m_fontCollection));
         // TODO #1374: Can reduce this to only update new/remove old fonts,
         // rather than leaving the whole map to regenerate
         m_propertiesMap.reset();
@@ -85,19 +86,16 @@ protected:
 // Private helper which returns the singleton DWriteFontCollectionHelper for the system font collection.
 static std::shared_ptr<SystemFontCollectionHelper> __GetSystemFontCollectionHelper() {
     // Function-local static for lazy initialization
-    static auto systemFontCollection = std::make_shared<SystemFontCollectionHelper>();
-    return systemFontCollection;
+    static auto s_systemFontCollection = std::make_shared<SystemFontCollectionHelper>();
+    return s_systemFontCollection;
 }
 
 // Private helper which returns the singleton DWriteFontCollectionHelper for the user font collection.
 static std::shared_ptr<UserFontCollectionHelper> __GetUserFontCollectionHelper() {
     // Function-local static for lazy initialization
-    static auto userFontCollection = std::make_shared<UserFontCollectionHelper>();
-    return userFontCollection;
+    static auto s_userFontCollection = std::make_shared<UserFontCollectionHelper>();
+    return s_userFontCollection;
 }
-
-// Lock controlling access to the user font collection helper
-static std::recursive_mutex s_userFontCollectionLock;
 
 /**
  * Helper method to return the user set default locale string.
@@ -152,7 +150,7 @@ CFStringRef _CFStringFromLocalizedString(IDWriteLocalizedStrings* localizedStrin
 
     // Strip out unnecessary null terminator
     return (CFStringRef)CFAutorelease(
-        CFStringCreateWithCharacters(kCFAllocatorSystemDefault, reinterpret_cast<UniChar*>(wcharString.data()), length));
+        CFStringCreateWithCharacters(kCFAllocatorDefault, reinterpret_cast<UniChar*>(wcharString.data()), length));
 }
 
 /**
@@ -166,7 +164,6 @@ std::shared_ptr<_DWriteFontProperties> _DWriteGetFontPropertiesFromName(CFString
         return info;
     }
 
-    std::lock_guard<std::recursive_mutex> guard(s_userFontCollectionLock);
     const auto& userFontInfo = __GetUserFontCollectionHelper()->GetFontPropertiesFromUppercaseFontName(upperFontName);
     if (userFontInfo) {
         return userFontInfo;
@@ -183,7 +180,6 @@ std::shared_ptr<_DWriteFontProperties> _DWriteGetFontPropertiesFromName(CFString
 CFArrayRef _DWriteCopyFontFamilyNames() {
     CFMutableArrayRef ret = __GetSystemFontCollectionHelper()->CopyFontFamilyNames();
 
-    std::lock_guard<std::recursive_mutex> guard(s_userFontCollectionLock);
     woc::unique_cf<CFArrayRef> userFamilyNames{ __GetUserFontCollectionHelper()->CopyFontFamilyNames() };
     CFArrayAppendArray(ret, userFamilyNames.get(), { 0, CFArrayGetCount(userFamilyNames.get()) });
 
@@ -196,7 +192,6 @@ CFArrayRef _DWriteCopyFontFamilyNames() {
 CFArrayRef _DWriteCopyFontNamesForFamilyName(CFStringRef familyName) {
     CFMutableArrayRef ret = __GetSystemFontCollectionHelper()->CopyFontNamesForFamilyName(familyName);
 
-    std::lock_guard<std::recursive_mutex> guard(s_userFontCollectionLock);
     woc::unique_cf<CFArrayRef> userFontNames{ __GetUserFontCollectionHelper()->CopyFontNamesForFamilyName(familyName) };
     CFArrayAppendArray(ret, userFontNames.get(), { 0, CFArrayGetCount(userFontNames.get()) });
     return ret;
@@ -215,7 +210,7 @@ CFStringRef _DWriteGetFamilyNameForFontName(CFStringRef fontName) {
 /**
  * Helper that creates a IDWriteFontFamily object for a given family name
  */
-HRESULT _DWriteCreateFontFamilyWithName(CFStringRef familyName, _Out_ IDWriteFontFamily** outFontFamily) {
+HRESULT _DWriteCreateFontFamilyWithName(CFStringRef familyName, IDWriteFontFamily** outFontFamily) {
     const auto& familyNameUnichars = Strings::VectorFromCFString(familyName);
 
     HRESULT result =
@@ -241,7 +236,7 @@ HRESULT _DWriteCreateFontFamilyWithName(CFStringRef familyName, _Out_ IDWriteFon
 /**
  * Helper function that creates an IDWriteFontFace object for a given font name.
  */
-HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, _Out_ IDWriteFontFace** outFontFace) {
+HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, IDWriteFontFace** outFontFace) {
     // Parse the font name for font weight, stretch, and style
     // Eg: Bold, Condensed, Light, Italic
     std::shared_ptr<_DWriteFontProperties> properties = _DWriteGetFontPropertiesFromName(name);
@@ -384,23 +379,22 @@ static HRESULT __DWriteUpdateUserCreatedFontCollection(CFArrayRef datas, CFArray
     RETURN_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
 
     // Create singleton Font Collection loader, which will be shared for registering/unregistering fonts
-    static ComPtr<DWriteFontBinaryDataCollectionLoader> loader;
-    static HRESULT createdLoader = [](DWriteFontBinaryDataCollectionLoader** collectionLoader) {
+    static ComPtr<DWriteFontBinaryDataCollectionLoader> s_loader;
+    static HRESULT s_loaderCreationResult = [](DWriteFontBinaryDataCollectionLoader** collectionLoader) {
         ComPtr<IDWriteFactory> dwriteFactory;
         RETURN_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
         RETURN_IF_FAILED(MakeAndInitialize<DWriteFontBinaryDataCollectionLoader>(collectionLoader));
         RETURN_IF_FAILED(dwriteFactory->RegisterFontCollectionLoader(*collectionLoader));
         return S_OK;
-    }(&loader);
-    RETURN_IF_FAILED(createdLoader);
+    }(&s_loader);
+    RETURN_IF_FAILED(s_loaderCreationResult);
 
     // Call member function to update loader's font data
     // Still want to update font collection with whatever fonts succeeded, so return ret at end
-    HRESULT ret = func(loader.Get(), datas, errors);
+    HRESULT ret = func(s_loader.Get(), datas, errors);
 
     // Update the user font collection
-    std::lock_guard<std::recursive_mutex> guard(s_userFontCollectionLock);
-    RETURN_IF_FAILED(__GetUserFontCollectionHelper()->UpdateCollection(dwriteFactory, loader));
+    RETURN_IF_FAILED(__GetUserFontCollectionHelper()->UpdateCollection(dwriteFactory, s_loader));
 
     return ret;
 }
@@ -420,7 +414,7 @@ HRESULT _DWriteUnregisterFontsWithDatas(CFArrayRef datas, CFArrayRef* errors) {
 /**
  * Creates an IDWriteFontFace by attempting to use a CFDataRef as a font file
  */
-HRESULT _DWriteCreateFontFaceWithData(CFDataRef data, _Out_ IDWriteFontFace** outFontFace) {
+HRESULT _DWriteCreateFontFaceWithData(CFDataRef data, IDWriteFontFace** outFontFace) {
     ComPtr<IDWriteFactory> dwriteFactory;
     RETURN_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
 

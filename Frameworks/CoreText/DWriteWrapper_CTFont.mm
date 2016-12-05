@@ -23,35 +23,21 @@ using namespace Microsoft::WRL;
 static const wchar_t* TAG = L"_DWriteWrapper_CTFont";
 
 // Represents a mapping between multiple representations of the same font weight across DWrite and CoreText
-// DWRITE_FONT_WEIGHT_BOLD = kCTFontWeightBold
-struct __WeightMapping {
-    DWRITE_FONT_WEIGHT dwriteValue;
-    CGFloat ctValue;
-};
-
-// Mapping for weight
 // Some loss of precision here as CT presents fewer values than DWrite
 // Note also that Thin and Ultra/Extra-Light are in opposite order in DWrite and CoreText/UIKit constants
 // (However, "Thin" fonts on the reference platform have UIFontWeightUltraLight...)
-// clang-format off
-static const struct __WeightMapping c_weightMap[] = { { DWRITE_FONT_WEIGHT_THIN, kCTFontWeightUltraLight },
-                                                    { DWRITE_FONT_WEIGHT_EXTRA_LIGHT, kCTFontWeightThin },
-                                                    { DWRITE_FONT_WEIGHT_ULTRA_LIGHT, kCTFontWeightThin },
-                                                    { DWRITE_FONT_WEIGHT_LIGHT, kCTFontWeightLight },
-                                                    { DWRITE_FONT_WEIGHT_SEMI_LIGHT, kCTFontWeightLight },
-                                                    { DWRITE_FONT_WEIGHT_NORMAL, kCTFontWeightRegular },
-                                                    { DWRITE_FONT_WEIGHT_REGULAR, kCTFontWeightRegular },
-                                                    { DWRITE_FONT_WEIGHT_MEDIUM, kCTFontWeightMedium },
-                                                    { DWRITE_FONT_WEIGHT_DEMI_BOLD, kCTFontWeightSemibold },
-                                                    { DWRITE_FONT_WEIGHT_SEMI_BOLD, kCTFontWeightSemibold },
-                                                    { DWRITE_FONT_WEIGHT_BOLD, kCTFontWeightBold },
-                                                    { DWRITE_FONT_WEIGHT_EXTRA_BOLD, kCTFontWeightHeavy },
-                                                    { DWRITE_FONT_WEIGHT_ULTRA_BOLD, kCTFontWeightHeavy },
-                                                    { DWRITE_FONT_WEIGHT_BLACK, kCTFontWeightBlack },
-                                                    { DWRITE_FONT_WEIGHT_HEAVY, kCTFontWeightBlack },
-                                                    { DWRITE_FONT_WEIGHT_EXTRA_BLACK, kCTFontWeightBlack },
-                                                    { DWRITE_FONT_WEIGHT_ULTRA_BLACK, kCTFontWeightBlack } };
-// clang-format on
+static const struct {
+    DWRITE_FONT_WEIGHT dwriteValue;
+    CGFloat ctValue;
+} c_weightMap[] = { { DWRITE_FONT_WEIGHT_THIN, kCTFontWeightUltraLight },    { DWRITE_FONT_WEIGHT_EXTRA_LIGHT, kCTFontWeightThin },
+                    { DWRITE_FONT_WEIGHT_ULTRA_LIGHT, kCTFontWeightThin },   { DWRITE_FONT_WEIGHT_LIGHT, kCTFontWeightLight },
+                    { DWRITE_FONT_WEIGHT_SEMI_LIGHT, kCTFontWeightLight },   { DWRITE_FONT_WEIGHT_NORMAL, kCTFontWeightRegular },
+                    { DWRITE_FONT_WEIGHT_REGULAR, kCTFontWeightRegular },    { DWRITE_FONT_WEIGHT_MEDIUM, kCTFontWeightMedium },
+                    { DWRITE_FONT_WEIGHT_DEMI_BOLD, kCTFontWeightSemibold }, { DWRITE_FONT_WEIGHT_SEMI_BOLD, kCTFontWeightSemibold },
+                    { DWRITE_FONT_WEIGHT_BOLD, kCTFontWeightBold },          { DWRITE_FONT_WEIGHT_EXTRA_BOLD, kCTFontWeightHeavy },
+                    { DWRITE_FONT_WEIGHT_ULTRA_BOLD, kCTFontWeightHeavy },   { DWRITE_FONT_WEIGHT_BLACK, kCTFontWeightBlack },
+                    { DWRITE_FONT_WEIGHT_HEAVY, kCTFontWeightBlack },        { DWRITE_FONT_WEIGHT_EXTRA_BLACK, kCTFontWeightBlack },
+                    { DWRITE_FONT_WEIGHT_ULTRA_BLACK, kCTFontWeightBlack } };
 
 /**
  * Helper function that converts a DWRITE_FONT_WEIGHT into a float usable for kCTFontWeightTrait.
@@ -100,11 +86,11 @@ static CGFloat __DWriteFontStretchToCT(DWRITE_FONT_STRETCH stretch) {
  * Note that the name fields in the _DWriteFontProperties are left as blank
  */
 static _DWriteFontProperties __DWriteFontPropertiesFromTraits(CFDictionaryRef traits) {
-    if (!traits) {
-        return {};
-    }
-
     _DWriteFontProperties ret = {};
+
+    if (!traits) {
+        return ret;
+    }
 
     // kCTFontWeightTrait, kCTFontWidthTrait, kCTFontSlantTrait take precedence over symbolic traits
     CFNumberRef weightTrait = static_cast<CFNumberRef>(CFDictionaryGetValue(traits, kCTFontWeightTrait));
@@ -181,7 +167,7 @@ CTFontSymbolicTraits _CTFontSymbolicTraitsFromCFNumber(CFNumberRef num) {
  * Creates an IDWriteFontFace given the attributes of a CTFontDescriptor
  * Currently, font name, family name, kCTFontWeight/Slant/Width, and part of SymbolicTrait, are taken into account
  */
-HRESULT _DWriteCreateFontFaceWithFontDescriptor(CTFontDescriptorRef fontDescriptor, _Outptr_ IDWriteFontFace** fontFace) {
+HRESULT _DWriteCreateFontFaceWithFontDescriptor(CTFontDescriptorRef fontDescriptor, IDWriteFontFace** fontFace) {
     woc::unique_cf<CFStringRef> fontName(static_cast<CFStringRef>(CTFontDescriptorCopyAttribute(fontDescriptor, kCTFontNameAttribute)));
     woc::unique_cf<CFStringRef> familyName(
         static_cast<CFStringRef>(CTFontDescriptorCopyAttribute(fontDescriptor, kCTFontFamilyNameAttribute)));

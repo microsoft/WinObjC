@@ -41,7 +41,7 @@ static const wchar_t* TAG = L"_DWriteWrapper_CGPath";
  */
 class __CGPathGeometrySink : public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IDWriteGeometrySink> {
 protected:
-    InspectableClass(L"Windows.Bridge.DirectWrite", TrustLevel::BaseTrust);
+    InspectableClass(L"Windows.Bridge.DirectWrite.__CGPathGeometrySink", TrustLevel::BaseTrust);
 
 public:
     __CGPathGeometrySink(const CGAffineTransform* transform) {
