@@ -355,14 +355,25 @@ HRESULT _DWriteCreateTextFormat(const wchar_t* fontFamilyName,
     ComPtr<IDWriteFactory> dwriteFactory;
     RETURN_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
 
-    return dwriteFactory->CreateTextFormat(fontFamilyName,
-                                           nullptr,
-                                           weight,
-                                           style,
-                                           stretch,
-                                           fontSize,
-                                           __GetUserDefaultLocaleName().data(),
-                                           outTextFormat); //
+    std::lock_guard<std::mutex> guard(_userCreatedFontCollectionMutex);
+    if (_userCreatedFontCollection) {
+        BOOL userCreatedFont = FALSE;
+        uint32_t unusedIndex;
+        RETURN_IF_FAILED(_userCreatedFontCollection->FindFamilyName(fontFamilyName, &unusedIndex, &userCreatedFont));
+        if (userCreatedFont) {
+            return dwriteFactory->CreateTextFormat(fontFamilyName,
+                                                   _userCreatedFontCollection.Get(),
+                                                   weight,
+                                                   style,
+                                                   stretch,
+                                                   fontSize,
+                                                   __GetUserDefaultLocaleName().data(),
+                                                   outTextFormat);
+        }
+    }
+
+    return dwriteFactory
+        ->CreateTextFormat(fontFamilyName, nullptr, weight, style, stretch, fontSize, __GetUserDefaultLocaleName().data(), outTextFormat);
 }
 
 /**
