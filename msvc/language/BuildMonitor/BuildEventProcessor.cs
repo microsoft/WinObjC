@@ -70,47 +70,6 @@ namespace BuildMonitor
         /// </example>
         private const string IdentifierPattern = @"({([a-zA-Z0-9@.\-_])+})|(([a-zA-Z0-9.\-_])+\\([a-zA-Z0-9.\-_])+)|(([a-zA-Z0-9.\-_])+@([a-zA-Z0-9.\-_])+)|(user(\w){0,2}(\W){0,1}([a-zA-Z0-9.\-_])+)";
 
-        /// <summary>
-        /// Match for classes with the NS- prefix.
-        /// </summary>
-        /// <example>
-        /// matches:  "NSClass", "NSSomeOtherClass1", "NSYetAnother1OfThoseClasses"
-        /// </example>
-        private const string NextStepProtocolPattern = @"(^NS([a-zA-Z0-9])+)|(\WNS([a-zA-Z0-9])+)";
-
-        /// <summary>
-        /// Match for classes with the UI- prefix.
-        /// </summary>
-        /// <example>
-        /// matches:  "UIClass", "UISomeOtherClass1", "UIYetAnother1OfThoseClasses"
-        /// </example>
-        private const string UserInterfaceProtocolPattern = @"(^UI([a-zA-Z0-9])+)|(\WUI([a-zA-Z0-9])+)";
-
-        /// <summary>
-        /// Match for classes with the WU- prefix.
-        /// </summary>
-        /// <example>
-        /// matches:  "WUClass", "WUSomeOtherClass1", "WUYetAnother1OfThoseClasses"
-        /// </example>
-        private const string WindowsUniversalProtocolPattern = @"(^WU([a-zA-Z0-9])+)|(\WWU([a-zA-Z0-9])+)";
-
-        /// <summary>
-        /// Match for task list descriptions that contain specific keywords but that don't match any other criteria.
-        /// </summary>
-        /// <example>
-        /// matches:  "method", "class", "property", "interface", "namespace"
-        /// </example>
-        private const string CodeConstructsPattern = @"((method)|(class)|(property)|(interface)|(namespace))";
-
-        /// <summary>
-        /// Match for methods and properties not yet implemented in WinObjC and marked as "deprecated"
-        /// </summary>
-        /// <example>
-        /// method '{Random}' in 'WU{Random}' is deprecated: property not yet implemented [-Wdeprecated-declarations] keep this string
-        /// method '{Random}' is deprecated: property not yet implemented [-Wdeprecated-declarations] keep this string
-        /// method 'initWithProduct{Random}:' in protocol is deprecated: method not yet implemented[-Wdeprecated-declarations] keep this string
-        /// </example>
-        private const string DeprecationPattern = @"(((property)|(method))(\snot yet implemented))(.)*(\[-Wdeprecated-declarations\])";
         #endregion
 
         #endregion Private Constants
@@ -342,31 +301,18 @@ namespace BuildMonitor
         {
             if (string.IsNullOrEmpty(message) == false)
             { 
-                // does it contain NS*, UI* or WU* class, protocol or interface
-                if (Regex.IsMatch(message, BuildEventProcessor.NextStepProtocolPattern) ||
-                    Regex.IsMatch(message, BuildEventProcessor.UserInterfaceProtocolPattern) ||
-                    Regex.IsMatch(message, BuildEventProcessor.WindowsUniversalProtocolPattern) ||
-                    Regex.IsMatch(message, BuildEventProcessor.DeprecationPattern))
-                {
-                    StringBuilder scrubbedMessage = new StringBuilder(message);
-                    ScrubMessagePrivateInfo(scrubbedMessage, _localPathsMatcher);
-                    ScrubMessagePrivateInfo(scrubbedMessage, _networkPathsMatcher);
-                    ScrubMessagePrivateInfo(scrubbedMessage, _protocolsMatcher);
-                    ScrubMessagePrivateInfo(scrubbedMessage, _identifierMatcher);
+                StringBuilder scrubbedMessage = new StringBuilder(message);
+                ScrubMessagePrivateInfo(scrubbedMessage, _localPathsMatcher);
+                ScrubMessagePrivateInfo(scrubbedMessage, _networkPathsMatcher);
+                ScrubMessagePrivateInfo(scrubbedMessage, _protocolsMatcher);
+                ScrubMessagePrivateInfo(scrubbedMessage, _identifierMatcher);
 
-                    // return scrubbed message with all other information intact
-                    return scrubbedMessage.ToString();
-                }
-
-                // does it contain any other code constructs, e.g. method, class, protocol, et al.
-                if (Regex.IsMatch(message, BuildEventProcessor.CodeConstructsPattern))
-                {
-                    return "Error unrelated to WinObjC.";
-                }
+                // return scrubbed message with all other information intact
+                return scrubbedMessage.ToString();
             }
 
             // return generic error message
-            return "Error unrelated to Objective-C or WinObjC.";
+            return "Error message was empty or null.";
         }
 
         private StringBuilder ScrubMessagePrivateInfo(StringBuilder message, Regex matcher)

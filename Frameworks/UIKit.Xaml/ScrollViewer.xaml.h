@@ -21,6 +21,7 @@
 #include "ObjCXamlControls.h"
 
 namespace UIKit {
+namespace Xaml {
 
 [Windows::Foundation::Metadata::WebHostHidden]
 public ref class ScrollViewer sealed {
@@ -31,5 +32,6 @@ private:
     // TODO: Add support for customizable insets and other missing properties to the hosted ScrollViewer, and to expose them as needed to UIKit.
 };
 
-}
+} /* Xaml*/
+} /* UIKit*/
 // clang-format on

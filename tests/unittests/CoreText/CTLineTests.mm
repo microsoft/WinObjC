@@ -274,13 +274,13 @@ TEST(CTLine, CTLineGetTypographicBounds) {
     EXPECT_LT(0, baseWidth);
     EXPECT_EQ_MSG(CTFontGetLeading(font), baseLeading, "Leading should always be the same as the font");
     EXPECT_GE_MSG(CTFontGetAscent(font), baseAscent, "Ascent should never exceed the maximum font ascent");
-    EXPECT_LE_MSG(CTFontGetDescent(font), baseDescent, "Descent should never exceed the maximum font descent");
+    EXPECT_GE_MSG(CTFontGetDescent(font), baseDescent, "Descent should never exceed the maximum font descent");
 
     CGFloat variableWidth = CTLineGetTypographicBounds(variableLine, &variableAscent, &variableDescent, &variableLeading);
     EXPECT_EQ_MSG(CTFontGetLeading(font), variableLeading, "Leading should always be the same as the font");
     EXPECT_LT(0, variableWidth);
     EXPECT_GE_MSG(CTFontGetAscent(font), variableAscent, "Ascent should never exceed the maximum font ascent");
-    EXPECT_LE_MSG(CTFontGetDescent(font), variableDescent, "Descent should never exceed the maximum font descent");
+    EXPECT_GE_MSG(CTFontGetDescent(font), variableDescent, "Descent should never exceed the maximum font descent");
 
     EXPECT_LE_MSG(baseAscent, variableAscent, "The ascent with \'H\' should be no less than the ascent with \'x\'");
     EXPECT_GE_MSG(baseDescent, variableDescent, "The descent with \'g\' should be no greater than the descent with \'x\'");
@@ -288,9 +288,9 @@ TEST(CTLine, CTLineGetTypographicBounds) {
 
 TEST(CTLine, ShouldSeparateRunsBasedOnColor) {
     NSMutableAttributedString* string = getAttributedString(@"ABCDEF");
-    [string addAttribute:NSForegroundColorAttributeName value:[UIColor magentaColor] range:{0, 2}];
-    [string addAttribute:NSForegroundColorAttributeName value:[UIColor yellowColor] range:{2, 2}];
-    [string addAttribute:NSForegroundColorAttributeName value:[UIColor cyanColor] range:{4, 2}];
+    [string addAttribute:NSForegroundColorAttributeName value:[UIColor magentaColor] range:{ 0, 2 }];
+    [string addAttribute:NSForegroundColorAttributeName value:[UIColor yellowColor] range:{ 2, 2 }];
+    [string addAttribute:NSForegroundColorAttributeName value:[UIColor cyanColor] range:{ 4, 2 }];
     CTLineRef line = CTLineCreateWithAttributedString((__bridge CFAttributedStringRef)string);
     EXPECT_EQ(6L, CTLineGetGlyphCount(line));
     EXPECT_EQ(3L, CFArrayGetCount(CTLineGetGlyphRuns(line)));

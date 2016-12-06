@@ -1776,7 +1776,7 @@ void CGContextDrawImage(CGContextRef context, CGRect rect, CGImageRef image) {
 
     if (!_CGIsValidRenderTargetPixelFormat(imagePixelFormat)) {
         // convert it to a valid pixelformat
-        refImage.reset(_CGImageCreateCopyWithPixelFormat(image, GUID_WICPixelFormat32bppPRGBA));
+        refImage.reset(_CGImageCreateCopyWithPixelFormat(image, GUID_WICPixelFormat32bppPBGRA));
     }
 
     ComPtr<IWICBitmap> bmap;

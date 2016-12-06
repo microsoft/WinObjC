@@ -23,7 +23,7 @@
 #import "UIKit/UIView.h"
 #import "UWP/WindowsApplicationModel.h"
 #import "UIViewControllerInternal.h"
-#import "CACompositor.h"
+#import "StarboardXaml/DisplayProperties.h"
 
 NSString* const UIDeviceBatteryLevelDidChangeNotification = @"UIDeviceBatteryLevelDidChangeNotification";
 NSString* const UIDeviceBatteryStateDidChangeNotification = @"UIDeviceBatteryStateDidChangeNotification";
@@ -191,7 +191,7 @@ if ( [curView isKindOfClass:popoverClass] ) {
  @Status Interoperable
 */
 - (UIUserInterfaceIdiom)userInterfaceIdiom {
-    if (!GetCACompositor()->isTablet()) {
+    if (!DisplayProperties::IsTablet()) {
         return UIUserInterfaceIdiomPhone;
     } else {
         return UIUserInterfaceIdiomPad;
@@ -203,7 +203,7 @@ if ( [curView isKindOfClass:popoverClass] ) {
 */
 - (id)model {
     UNIMPLEMENTED();
-    if (!GetCACompositor()->isTablet()) {
+    if (!DisplayProperties::IsTablet()) {
         return @"iPhone";
     } else {
         return @"iPad";

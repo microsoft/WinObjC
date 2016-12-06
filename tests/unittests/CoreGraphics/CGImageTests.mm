@@ -32,17 +32,17 @@ typedef struct {
 
 static const _ImageInfo imagesJPEG[] = {
     /*{"filename",height,width,isMask,bit per pixel, bits per component} */
-    { @"jpg1.jpg", 639, 960, false, 24, 8 },
-    { @"jpg2.jpg", 995, 1039, false, 24, 8 },
-    { @"jpg3.jpg", 4000, 6000, false, 24, 8 },
-    { @"jpg4.jpg", 979, 1468, false, 24, 8 },
+    { @"data/jpg1.jpg", 639, 960, false, 24, 8 },
+    { @"data/jpg2.jpg", 995, 1039, false, 24, 8 },
+    { @"data/jpg3.jpg", 4000, 6000, false, 24, 8 },
+    { @"data/jpg4.jpg", 979, 1468, false, 24, 8 },
 };
 
 static const _ImageInfo imagesPNG[] = {
     /*{"filename",height,width,isMask,bit per pixel, bits per component} */
-    { @"png1.png", 700, 1044, false, 32, 8 },
-    { @"png2.png", 136, 370, false, 8, 1 },
-    { @"png3.png", 795, 1197, false, 32, 8 },
+    { @"data/png1.png", 700, 1044, false, 32, 8 },
+    { @"data/png2.png", 136, 370, false, 8, 1 },
+    { @"data/png3.png", 795, 1197, false, 32, 8 },
 };
 
 #define EXPECT_IMAGE_DATA(image, imageInfo)                                                  \

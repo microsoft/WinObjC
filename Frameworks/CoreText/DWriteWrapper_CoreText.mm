@@ -115,21 +115,23 @@ static ComPtr<IDWriteTextFormat> __CreateDWriteTextFormat(CFAttributedStringRef 
     CTFontRef font = static_cast<CTFontRef>([attribs objectForKey:static_cast<NSString*>(kCTFontAttributeName)]);
     std::vector<wchar_t> familyName;
 
-    _DWriteFontProperties properties = { DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STRETCH_NORMAL, DWRITE_FONT_STYLE_NORMAL, nullptr };
+    std::shared_ptr<_DWriteFontProperties> properties;
 
     if (font) {
         fontSize = CTFontGetSize(font);
         CFStringRef fontFullName = CTFontCopyName(font, kCTFontFullNameKey);
         CFAutorelease(fontFullName);
         properties = _DWriteGetFontPropertiesFromName(fontFullName);
+    } else {
+        properties = std::make_shared<_DWriteFontProperties>();
     }
 
-    familyName.resize(CFStringGetLength(properties.familyName) + 1, 0);
-    CFStringGetCharacters(properties.familyName, CFRangeMake(0, familyName.size()), reinterpret_cast<UniChar*>(familyName.data()));
+    familyName.resize(CFStringGetLength(properties->familyName.get()) + 1, 0);
+    CFStringGetCharacters(properties->familyName.get(), CFRangeMake(0, familyName.size()), reinterpret_cast<UniChar*>(familyName.data()));
 
     ComPtr<IDWriteTextFormat> textFormat;
     RETURN_NULL_IF_FAILED(
-        _DWriteCreateTextFormat(familyName.data(), properties.weight, properties.style, properties.stretch, fontSize, &textFormat));
+        _DWriteCreateTextFormat(familyName.data(), properties->weight, properties->style, properties->stretch, fontSize, &textFormat));
 
     CTParagraphStyleRef settings =
         static_cast<CTParagraphStyleRef>([attribs valueForKey:static_cast<NSString*>(kCTParagraphStyleAttributeName)]);
@@ -239,14 +241,16 @@ static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(CFAttributedStringRef 
         CGFloat fontSize = kCTFontSystemFontSize;
         if (font != nil) {
             fontSize = CTFontGetSize(font);
-            _DWriteFontProperties properties = _DWriteGetFontPropertiesFromName(CTFontCopyName(font, kCTFontFullNameKey));
-            std::vector<wchar_t> familyName(CFStringGetLength(properties.familyName) + 1);
-            CFStringGetCharacters(properties.familyName, CFRangeMake(0, familyName.size()), reinterpret_cast<UniChar*>(familyName.data()));
+            std::shared_ptr<_DWriteFontProperties> properties = _DWriteGetFontPropertiesFromName(CTFontCopyName(font, kCTFontFullNameKey));
+            std::vector<wchar_t> familyName(CFStringGetLength(properties->familyName.get()) + 1);
+            CFStringGetCharacters(properties->familyName.get(),
+                                  CFRangeMake(0, familyName.size()),
+                                  reinterpret_cast<UniChar*>(familyName.data()));
 
             RETURN_NULL_IF_FAILED(textLayout->SetFontSize(fontSize, dwriteRange));
-            RETURN_NULL_IF_FAILED(textLayout->SetFontWeight(properties.weight, dwriteRange));
-            RETURN_NULL_IF_FAILED(textLayout->SetFontStretch(properties.stretch, dwriteRange));
-            RETURN_NULL_IF_FAILED(textLayout->SetFontStyle(properties.style, dwriteRange));
+            RETURN_NULL_IF_FAILED(textLayout->SetFontWeight(properties->weight, dwriteRange));
+            RETURN_NULL_IF_FAILED(textLayout->SetFontStretch(properties->stretch, dwriteRange));
+            RETURN_NULL_IF_FAILED(textLayout->SetFontStyle(properties->style, dwriteRange));
             RETURN_NULL_IF_FAILED(textLayout->SetFontFamilyName(familyName.data(), dwriteRange));
         }
 
@@ -439,7 +443,7 @@ static _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CG
 
         // These are created lazily in the first call to CTLineGetTypographicBounds, so initialize with impossible values
         line->_ascent = -FLT_MAX;
-        line->_descent = FLT_MAX;
+        line->_descent = -FLT_MAX;
         line->_leading = -FLT_MAX;
 
         // Glyph runs that have the same _baselineOriginY value are part of the the same Line.

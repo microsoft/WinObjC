@@ -85,7 +85,7 @@ static bool __lineHasGlyphsAfterIndex(CTLineRef line, CFIndex index) {
         double width = CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
 
         // Maximum height of lines on current horizontal, needed to get next yPos
-        CGFloat lineHeight = leading + ascent - descent;
+        CGFloat lineHeight = leading + ascent + descent;
 
         CFRange lineRange = CTLineGetStringRange(line);
 
@@ -290,7 +290,7 @@ static NSRange NSRangeFromCFRange(CFRange range) {
     ret.size.width = _totalSize.width;
 
     CTLineGetTypographicBounds((CTLineRef)_ctLines[lineIdx], &ascent, &descent, &leading);
-    ret.size.height = ascent - descent + leading;
+    ret.size.height = ascent + descent + leading;
 
     return ret;
 }
