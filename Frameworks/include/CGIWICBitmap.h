@@ -18,7 +18,6 @@
 #import "Starboard.h"
 #import "CoreGraphicsInternal.h"
 #import "CGImageInternal.h"
-#import "DisplayTexture.h"
 
 // Ignore some warnings
 #if defined __clang__
@@ -38,6 +37,7 @@
 #import <wrl/implements.h>
 #import <Wincodec.h>
 #import <D2d1.h>
+#import <IDisplayTexture.h>
 #include <COMIncludes_End.h>
 
 #import <memory>
@@ -46,7 +46,7 @@
 //The following interface is used to obtain the set display texture from a CGIWICBitmap
 struct __declspec(uuid("BA77A716-5FAF-42B1-B5B3-9B6369A0625D")) __declspec(novtable) ICGDisplayTexture : public IUnknown
 {
-    STDMETHOD(DisplayTexture)(_Out_ IDisplayTexture** displayTexture) = 0;
+	virtual std::shared_ptr<IDisplayTexture> DisplayTexture() = 0;
 };
 // clang-format on
 
@@ -58,7 +58,7 @@ class CGIWICBitmapLock
                                           Microsoft::WRL::FtmBase,
                                           IWICBitmapLock> {
 public:
-    CGIWICBitmapLock(_In_ IDisplayTexture* texture, _In_ const WICRect* region, _In_ WICPixelFormatGUID pixelFormat)
+    CGIWICBitmapLock(_In_ std::shared_ptr<IDisplayTexture> texture, _In_ const WICRect* region, _In_ WICPixelFormatGUID pixelFormat)
         : m_texture(texture), m_pixelFormat(pixelFormat), m_locked_rect(region) {
         int bpr;
         m_dataBuffer = static_cast<BYTE*>(m_texture->Lock(&bpr));
@@ -73,7 +73,6 @@ public:
     ~CGIWICBitmapLock() {
         if (m_texture) {
             m_texture->Unlock();
-            m_texture = nullptr;
         }
     }
 
@@ -111,7 +110,7 @@ private:
     BYTE* m_dataBuffer;
     const WICRect* m_locked_rect;
     size_t m_bytesPerRow;
-    IDisplayTexture* m_texture;
+    std::shared_ptr<IDisplayTexture> m_texture;
 };
 
 class CGIWICBitmap : public Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::RuntimeClassType::ClassicCom>,
@@ -120,7 +119,7 @@ class CGIWICBitmap : public Microsoft::WRL::RuntimeClass<Microsoft::WRL::Runtime
                                                          IWICBitmap,
                                                          ICGDisplayTexture> {
 public:
-    CGIWICBitmap(_In_ IDisplayTexture* texture, _In_ WICPixelFormatGUID pixelFormat, _In_ UINT height, _In_ UINT width)
+    CGIWICBitmap(_In_ std::shared_ptr<IDisplayTexture> texture, _In_ WICPixelFormatGUID pixelFormat, _In_ UINT height, _In_ UINT width)
         : m_dataBuffer(nullptr), m_texture(texture) {
         Init(pixelFormat, height, width);
     }
@@ -150,8 +149,6 @@ public:
             m_dataBuffer = nullptr;
             m_freeData = false;
         }
-        delete m_texture;
-        m_texture = nullptr;
     }
 
     // IWICBitmap interface
@@ -244,10 +241,8 @@ public:
         return E_NOTIMPL;
     }
 
-    HRESULT STDMETHODCALLTYPE DisplayTexture(_Out_ IDisplayTexture** displayTexture) {
-        RETURN_HR_IF_NULL(E_POINTER, displayTexture);
-        *displayTexture = m_texture;
-        return S_OK;
+    std::shared_ptr<IDisplayTexture> DisplayTexture() {
+        return m_texture;
     }
 
 private:
@@ -261,7 +256,7 @@ private:
     }
 
     WICPixelFormatGUID m_pixelFormat;
-    IDisplayTexture* m_texture;
+    std::shared_ptr<IDisplayTexture> m_texture;
     UINT m_height;
     UINT m_width;
     BYTE* m_dataBuffer;

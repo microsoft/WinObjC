@@ -25,11 +25,7 @@
 static const wchar_t* TAG = L"NSArray";
 
 static CFArrayCallBacks _NSCFArrayCallBacks = {
-    0,
-    _NSCFCallbackRetain,
-    _NSCFCallbackRelease,
-    _NSCFCallbackCopyDescription,
-    _NSCFCallbackEquals,
+    0, _NSCFCallbackRetain, _NSCFCallbackRelease, _NSCFCallbackCopyDescription, _NSCFCallbackEquals,
 };
 
 @interface NSCFArray : NSMutableArray
@@ -86,7 +82,8 @@ BRIDGED_CLASS_REQUIRED_IMPLS(CFArrayRef, CFArrayGetTypeID, NSArray, NSCFArray)
 
 - (id)objectAtIndex:(NSUInteger)index {
     if (index >= CFArrayGetCount((CFArrayRef)self)) {
-        [NSException raise:@"Array out of bounds" format:@"objectAtIndex: index > count (%d > %d), throwing exception\n", index, CFArrayGetCount((CFArrayRef)self)];
+        [NSException raise:@"Array out of bounds"
+                    format:@"objectAtIndex: index > count (%d > %d), throwing exception\n", index, CFArrayGetCount((CFArrayRef)self)];
         return nil;
     }
     return (id)CFArrayGetValueAtIndex((CFArrayRef)self, index);
@@ -100,7 +97,10 @@ BRIDGED_CLASS_REQUIRED_IMPLS(CFArrayRef, CFArrayGetTypeID, NSArray, NSCFArray)
 - (void)removeLastObject {
     BRIDGED_THROW_IF_IMMUTABLE(_CFArrayIsMutable, CFArrayRef);
     NSUInteger count = [self count];
-    CFArrayRemoveValueAtIndex(static_cast<CFMutableArrayRef>(self), count - 1);
+
+    if (count > 0) {
+        CFArrayRemoveValueAtIndex(static_cast<CFMutableArrayRef>(self), count - 1);
+    }
 }
 
 - (void)replaceObjectAtIndex:(NSUInteger)index withObject:(NSObject*)obj {

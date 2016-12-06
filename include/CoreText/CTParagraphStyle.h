@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -74,4 +74,4 @@ CORETEXT_EXPORT bool CTParagraphStyleGetValueForSpecifier(CTParagraphStyleRef pa
                                                           CTParagraphStyleSpecifier spec,
                                                           size_t valueBufferSize,
                                                           void* valueBuffer);
-CORETEXT_EXPORT CFTypeID CTParagraphStyleGetTypeID() STUB_METHOD;
+CORETEXT_EXPORT CFTypeID CTParagraphStyleGetTypeID();

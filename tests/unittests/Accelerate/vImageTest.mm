@@ -26,7 +26,7 @@
 #import "../UIKit/NullCompositor.h"
 
 vImage_Buffer src, dest;
-vImage_Error Error;
+vImage_Error g_error;
 Pixel_8888 background = {10, 20, 30, 40};
 uint8_t output[10][10][4];
 uint8_t input[10][10][4] = {
@@ -67,7 +67,7 @@ static void vImageInit(void) {
 TEST(Accelerate, BoxConvolve) {
     vImageInit();
 
-    Error =  vImageBoxConvolve_ARGB8888(&src, &dest, NULL, 0, 0, 5, 5, NULL, kvImageCopyInPlace);
+    g_error =  vImageBoxConvolve_ARGB8888(&src, &dest, NULL, 0, 0, 5, 5, NULL, kvImageCopyInPlace);
     uint8_t kvICiP_Expected [10][10][4] = {
     { {232, 19, 158, 38} , {175, 197, 114, 68} , {188, 109, 120, 80} , {102, 47, 102, 143} , {142, 79, 160, 52} , 
       {3, 124, 114, 32} , {70, 18, 189, 123} , {116, 190, 247, 56} , {17, 157, 230, 3} , {139, 79, 204, 66} },
@@ -102,7 +102,7 @@ TEST(Accelerate, BoxConvolve) {
     }
 
 
-    Error = vImageBoxConvolve_ARGB8888(&src, &dest, NULL, 0, 0, 5, 5, NULL, kvImageEdgeExtend);
+    g_error = vImageBoxConvolve_ARGB8888(&src, &dest, NULL, 0, 0, 5, 5, NULL, kvImageEdgeExtend);
     uint8_t kvIEE_Expected [10][10][4] ={
     { {143, 94, 154, 75} , {135, 100, 144, 84} , {126, 111, 134, 90} , {106, 126, 115, 89} , {101, 107, 123, 99} , 
       {107, 109, 139, 105} , {97, 126, 142, 92} , {111, 129, 150, 88} , {137, 126, 167, 91} , {149, 133, 173, 84} },
@@ -137,7 +137,7 @@ TEST(Accelerate, BoxConvolve) {
     }
 
 
-    Error = vImageBoxConvolve_ARGB8888(&src, &dest, NULL, 0, 0, 5, 5, NULL, kvImageTruncateKernel);
+    g_error = vImageBoxConvolve_ARGB8888(&src, &dest, NULL, 0, 0, 5, 5, NULL, kvImageTruncateKernel);
     uint8_t kvITC_Expected [10][10][4] = {
     { {99, 134, 138, 87} , {103, 125, 141, 91} , {99, 124, 136, 99} , {96, 137, 110, 98} , {101, 128, 113, 108} , 
       {120, 121, 123, 121} , {115, 135, 112, 117} , {140, 139, 119, 109} , {154, 141, 131, 114} , {157, 146, 137, 115} },
@@ -172,7 +172,7 @@ TEST(Accelerate, BoxConvolve) {
     }
 
 
-    Error = vImageBoxConvolve_ARGB8888(&src, &dest, NULL, 0, 0, 5, 5, background, kvImageBackgroundColorFill);
+    g_error = vImageBoxConvolve_ARGB8888(&src, &dest, NULL, 0, 0, 5, 5, background, kvImageBackgroundColorFill);
     uint8_t kvICBCF_Expected [10][10][4] = {
     { {42, 61, 69, 57} , {55, 71, 83, 64} , {63, 82, 93, 76} , {62, 90, 78, 75} , {65, 85, 80, 81} , 
       {76, 80, 86, 89} , {73, 89, 79, 86} , {88, 91, 83, 81} , {79, 78, 79, 76} , {63, 65, 68, 67} },
@@ -211,7 +211,7 @@ TEST(Accelerate, BoxConvolve) {
     dest.height = 6;
     dest.rowBytes = dest.width*4;
 
-    Error = vImageBoxConvolve_ARGB8888(&src, &dest, NULL, 2, 2, 5, 5, NULL, kvImageCopyInPlace);
+    g_error = vImageBoxConvolve_ARGB8888(&src, &dest, NULL, 2, 2, 5, 5, NULL, kvImageCopyInPlace);
     uint8_t Copy[6][6][4] = {
     { {116, 125, 134, 113} , {108, 140, 124, 103} , {101, 130, 124, 107} , {118, 133, 123, 113} , {111, 140, 125, 103} , 
       {117, 143, 122, 109} },
@@ -237,7 +237,7 @@ TEST(Accelerate, BoxConvolve) {
     }
 
 
-    Error = vImageBoxConvolve_ARGB8888(&src, &dest, NULL, 2, 2, 5, 5, NULL, kvImageEdgeExtend);
+    g_error = vImageBoxConvolve_ARGB8888(&src, &dest, NULL, 2, 2, 5, 5, NULL, kvImageEdgeExtend);
     uint8_t EE[6][6][4] = {
     { {116, 125, 134, 113} , {108, 140, 124, 103} , {101, 130, 124, 107} , {118, 133, 123, 113} , {111, 140, 125, 103} ,
       {117, 143, 122, 109} },
@@ -263,7 +263,7 @@ TEST(Accelerate, BoxConvolve) {
     }
 
 
-    Error = vImageBoxConvolve_ARGB8888(&src, &dest, NULL, 2, 2, 5, 5, NULL, kvImageTruncateKernel);
+    g_error = vImageBoxConvolve_ARGB8888(&src, &dest, NULL, 2, 2, 5, 5, NULL, kvImageTruncateKernel);
     uint8_t TK[6][6][4] = {
     { {116, 125, 134, 113} , {108, 140, 124, 103} , {101, 130, 124, 107} , {118, 133, 123, 113} , {111, 140, 125, 103} ,
       {117, 143, 122, 109} },
@@ -289,7 +289,7 @@ TEST(Accelerate, BoxConvolve) {
     }
 
 
-    Error = vImageBoxConvolve_ARGB8888(&src, &dest, NULL, 2, 2, 5, 5, background, kvImageBackgroundColorFill);
+    g_error = vImageBoxConvolve_ARGB8888(&src, &dest, NULL, 2, 2, 5, 5, background, kvImageBackgroundColorFill);
     uint8_t BCF[6][6][4] = {
     { {116, 125, 134, 113} , {108, 140, 124, 103} , {101, 130, 124, 107} , {118, 133, 123, 113} , {111, 140, 125, 103} , 
       {117, 143, 122, 109} },
@@ -326,7 +326,7 @@ TEST(Accelerate, MatrixMultiply) {
     
     double meandivisor = 400;
 
-    Error = vImageMatrixMultiply_ARGB8888(&src, &dest, A, meandivisor, NULL, NULL, 0);
+    g_error = vImageMatrixMultiply_ARGB8888(&src, &dest, A, meandivisor, NULL, NULL, 0);
     
     uint8_t matMultExpected [10][10][4] = {
     { {127, 138, 110, 110}, {174, 196, 107, 188}, {142, 162, 113, 156}, {80, 112, 108, 130}, {120, 142, 93, 120},
@@ -367,7 +367,7 @@ TEST(Accelerate, MatrixMultiply) {
                     186, 162,  21,  69,
                      58,  77, 187, 119 };
     
-    Error = vImageMatrixMultiply_ARGB8888(&src, &dest, B, meandivisor/2, NULL, NULL, 0);
+    g_error = vImageMatrixMultiply_ARGB8888(&src, &dest, B, meandivisor/2, NULL, NULL, 0);
     
     uint8_t matMultExpected2 [10][10][4] = {
     { {255, 255, 85, 109}, {255, 255, 236, 168}, {255, 255, 184, 148}, {255, 238, 188, 148}, {255, 255, 136, 129}, 
@@ -404,7 +404,7 @@ TEST(Accelerate, MatrixMultiply) {
     
     // Checking for cut off at 0
         
-    Error = vImageMatrixMultiply_ARGB8888(&src, &dest, B, -1 * meandivisor, NULL, NULL, 0);
+    g_error = vImageMatrixMultiply_ARGB8888(&src, &dest, B, -1 * meandivisor, NULL, NULL, 0);
     
     res = reinterpret_cast<uint8_t*>(dest.data);
     for(int i = 0; i<10; ++i) {

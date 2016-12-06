@@ -19,6 +19,7 @@
 #include "Slider.xaml.h"
 
 namespace UIKit {
+namespace Xaml {
 
 Slider::Slider() {
     InitializeComponent();
@@ -29,12 +30,14 @@ void Slider::OnApplyTemplate() {
     // TODO: Add support for min / max images, and to expose it as needed to UIKit.
 }
 
+} /* Xaml*/
+} /* UIKit*/
+
 ////////////////////////////////////////////////////////////////////////////////////
 // ObjectiveC Interop
 ////////////////////////////////////////////////////////////////////////////////////
 UIKIT_XAML_EXPORT IInspectable* XamlCreateSlider() {
-    return InspectableFromObject(ref new UIKit::Slider()).Detach();
+    return InspectableFromObject(ref new UIKit::Xaml::Slider()).Detach();
 }
 
-}
 // clang-format on

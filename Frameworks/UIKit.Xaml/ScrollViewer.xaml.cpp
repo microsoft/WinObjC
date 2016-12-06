@@ -19,17 +19,20 @@
 #include "ScrollViewer.xaml.h"
 
 namespace UIKit {
+namespace Xaml {
 
 ScrollViewer::ScrollViewer() {
     InitializeComponent();
 }
 
+} /* Xaml*/
+} /* UIKit*/
+
 ////////////////////////////////////////////////////////////////////////////////////
 // ObjectiveC Interop
 ////////////////////////////////////////////////////////////////////////////////////
 UIKIT_XAML_EXPORT IInspectable* XamlCreateScrollViewer() {
-    return InspectableFromObject(ref new UIKit::ScrollViewer()).Detach();
+    return InspectableFromObject(ref new UIKit::Xaml::ScrollViewer()).Detach();
 }
 
-}
 // clang-format on

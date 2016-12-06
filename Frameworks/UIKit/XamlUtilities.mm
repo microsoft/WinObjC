@@ -13,10 +13,10 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #import "XamlUtilities.h"
-#import "UIViewInternal+Xaml.h"
-#import "CACompositor.h"
+#import "StarboardXaml/DisplayTexture.h"
+
+#include <Windows.UI.Xaml.Media.h>
 
 using namespace Microsoft::WRL;
 using namespace Windows::Foundation;
@@ -39,7 +39,7 @@ WUXMImageBrush* ConvertUIImageToWUXMImageBrush(UIImage* image) {
     }
 
     CGImageRef cgImg = [image CGImage];
-    Microsoft::WRL::ComPtr<IInspectable> inspectableNode(GetCACompositor()->GetBitmapForCGImage(cgImg));
+    Microsoft::WRL::ComPtr<IInspectable> inspectableNode(DisplayTexture::GetBitmapForCGImage(cgImg));
     WUXMIBitmapSource* bitmapImageSource = CreateRtProxy([WUXMIBitmapSource class], inspectableNode.Get());
     WUXMImageBrush* imageBrush = [WUXMImageBrush make];
     imageBrush.imageSource = bitmapImageSource;
@@ -53,7 +53,7 @@ WUXMIBitmapSource* ConvertUIImageToWUXMIBitmapSource(UIImage* image) {
     }
 
     CGImageRef cgImg = [image CGImage];
-    Microsoft::WRL::ComPtr<IInspectable> inspectableNode(GetCACompositor()->GetBitmapForCGImage(cgImg));
+    Microsoft::WRL::ComPtr<IInspectable> inspectableNode(DisplayTexture::GetBitmapForCGImage(cgImg));
     WUXMIBitmapSource* bitmapImageSource = CreateRtProxy([WUXMIBitmapSource class], inspectableNode.Get());
 
     return bitmapImageSource;
@@ -229,7 +229,7 @@ void SetControlBorderStyle(WXCControl* control, UITextBorderStyle style) {
             break;
 
         case UITextBorderStyleBezel:
-            UNIMPLEMENTED();
+            UNIMPLEMENTED_WITH_MSG("UITextBorderStyleBezel not yet supported; treated as no border.");
             // we don't support UITextBorderStyleBezel, treat it as no border
             control.borderThickness = [WXThicknessHelper fromUniformLength:0];
             break;
@@ -257,9 +257,11 @@ ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlType> ReturnXamlType(NSString* xamlC
 
     ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlType> xamlType;
     auto className = Strings::NarrowToWide<HSTRING>(xamlClassName);
-    HRESULT hr = xamlMetaProvider->GetXamlTypeByFullName(className.Get(), xamlType.GetAddressOf());
-    if (SUCCEEDED(hr) && xamlType.Get() != nullptr) {
-        return xamlType;
+    if (xamlMetaProvider) {
+        HRESULT hr = xamlMetaProvider->GetXamlTypeByFullName(className.Get(), xamlType.GetAddressOf());
+        if (SUCCEEDED(hr) && xamlType.Get() != nullptr) {
+            return xamlType;
+        }
     }
 
     return nullptr;
@@ -287,9 +289,7 @@ UIView* GenerateUIKitControlFromXamlType(RTObject* xamlObject) {
             WXFrameworkElement* xamlElement = rt_dynamic_cast(classType, xamlObject);
             if (xamlElement != nil) {
                 Class controlClass = xamlSupportedControls[classType];
-                if ([controlClass instancesRespondToSelector:@selector(_initWithFrame:xamlElement:)]) {
-                    control = [[controlClass alloc] _initWithFrame:CGRectZero xamlElement:xamlElement];
-                }
+                control = [[controlClass alloc] initWithFrame:CGRectZero xamlElement:xamlElement];
                 break;
             }
         } catch (...) {

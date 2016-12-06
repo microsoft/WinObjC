@@ -62,7 +62,8 @@ BRIDGED_CLASS_REQUIRED_IMPLS(CTFontRef, CTFontGetTypeID, UIFont, UICTFont)
 }
 
 - (CGFloat)descender {
-    return CTFontGetDescent((CTFontRef)self);
+    // CTFontGetDescent is expected to return a positive value, but descender is expected to return a negative value
+    return -CTFontGetDescent((CTFontRef)self);
 }
 
 - (CGFloat)ascender {

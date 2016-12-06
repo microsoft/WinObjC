@@ -29,16 +29,31 @@ static const wchar_t* TAG = L"UIControl";
 
 @implementation UIControl
 
+- (void)_initUIControl {
+    _registeredActions = [[NSMutableArray alloc] init];
+    _activeTouches = [[NSMutableArray alloc] init];
+    _contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
+    _contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+}
+
 /**
  @Status Interoperable
 */
-- (instancetype)initWithFrame:(CGRect)pos {
-    _registeredActions = [NSMutableArray new];
-    _activeTouches = [NSMutableArray new];
-    _contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
-    _contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        [self _initUIControl];
+    }
 
-    [super initWithFrame:pos];
+    return self;
+}
+
+/**
+Microsoft Extension
+*/
+- (instancetype)initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
+    if (self = [super initWithFrame:frame xamlElement:xamlElement]) {
+        [self _initUIControl];
+    }
 
     return self;
 }
@@ -48,25 +63,21 @@ static const wchar_t* TAG = L"UIControl";
  @Notes May not be fully implemented
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
-    _registeredActions = [[NSMutableArray alloc] init];
-    _activeTouches = [NSMutableArray new];
+    if (self = [super initWithCoder:coder]) {
+        [self _initUIControl];
 
-    BOOL selected = [coder decodeInt32ForKey:@"UISelected"];
-    if (selected) {
-        _curState |= UIControlStateSelected;
+        BOOL selected = [coder decodeInt32ForKey:@"UISelected"];
+        if (selected) {
+            _curState |= UIControlStateSelected;
+        }
+
+        if ([coder containsValueForKey:@"UIContentHorizontalAlignment"]) {
+            _contentHorizontalAlignment = [coder decodeInt32ForKey:@"UIContentHorizontalAlignment"];
+        }
+        if ([coder containsValueForKey:@"UIContentVerticalAlignment"]) {
+            _contentVerticalAlignment = [coder decodeInt32ForKey:@"UIContentVerticalAlignment"];
+        }
     }
-
-    _contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
-    _contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-
-    if ([coder containsValueForKey:@"UIContentHorizontalAlignment"]) {
-        _contentHorizontalAlignment = [coder decodeInt32ForKey:@"UIContentHorizontalAlignment"];
-    }
-    if ([coder containsValueForKey:@"UIContentVerticalAlignment"]) {
-        _contentVerticalAlignment = [coder decodeInt32ForKey:@"UIContentVerticalAlignment"];
-    }
-
-    [super initWithCoder:coder];
 
     return self;
 }

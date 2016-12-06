@@ -133,6 +133,9 @@ TEST(CTFont, CopyNameHelpers) {
     EXPECT_OBJCEQ(@"Courier New", (id)CFAutorelease(CTFontCopyFamilyName(font)));
     EXPECT_OBJCEQ(@"Courier New Bold Italic", (id)CFAutorelease(CTFontCopyFullName(font)));
     EXPECT_OBJCEQ(@"Courier New Bold Italic", (id)CFAutorelease(CTFontCopyDisplayName(font)));
+
+    EXPECT_OBJCEQ(@"CourierNewPS-BoldItalicMT", (id)CFAutorelease(CTFontCopyAttribute(font, kCTFontNameAttribute)));
+    EXPECT_OBJCEQ(@"Courier New Bold Italic", (id)CFAutorelease(CTFontCopyAttribute(font, kCTFontDisplayNameAttribute)));
 }
 
 TEST(CTFont, Metrics) {
@@ -187,16 +190,18 @@ TEST(CTFont, CaseInsensitive) {
     EXPECT_TRUE(CFEqual(font1, font4));
 }
 
-// Font names differ slightly between platforms
-#if TARGET_OS_WIN32
-static const CFStringRef c_arialBoldItalicName = CFSTR("Arial Bold Italic");
-static const CFStringRef c_arialItalicName = CFSTR("Arial Italic");
-static const CFStringRef c_courierNewItalicName = CFSTR("Courier New Italic");
-static const CFStringRef c_courierNewBoldName = CFSTR("Courier New Bold");
-static const CFStringRef c_courierNewBoldItalicName = CFSTR("Courier New Bold Italic");
-static const CFStringRef c_trebuchetMSItalicName = CFSTR("Trebuchet MS Italic");
-static const CFStringRef c_timesNewRomanName = CFSTR("Times New Roman");
-#else
+TEST(CTFont, CreateWithPostScriptName) {
+    CTFontRef font1 = CTFontCreateWithName(CFSTR("Times New Roman"), 12.0, NULL);
+    CTFontRef font2 = CTFontCreateWithName(CFSTR("TimesNewRomanPSMT"), 12.0, NULL);
+    CFAutorelease(font1);
+    CFAutorelease(font2);
+
+    EXPECT_OBJCNE(nil, (id)font1);
+    EXPECT_OBJCNE(nil, (id)font2);
+
+    EXPECT_OBJCEQ((id)font1, (id)font2);
+}
+
 static const CFStringRef c_arialBoldItalicName = CFSTR("Arial-BoldItalicMT");
 static const CFStringRef c_arialItalicName = CFSTR("Arial-ItalicMT");
 static const CFStringRef c_courierNewItalicName = CFSTR("CourierNewPS-ItalicMT");
@@ -204,7 +209,7 @@ static const CFStringRef c_courierNewBoldName = CFSTR("CourierNewPS-BoldMT");
 static const CFStringRef c_courierNewBoldItalicName = CFSTR("CourierNewPS-BoldItalicMT");
 static const CFStringRef c_trebuchetMSItalicName = CFSTR("TrebuchetMS-Italic");
 static const CFStringRef c_timesNewRomanName = CFSTR("TimesNewRomanPSMT");
-#endif
+
 static const float c_errorMargin = 0.001f;
 
 TEST(CTFont, Traits) {

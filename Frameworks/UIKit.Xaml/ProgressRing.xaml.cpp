@@ -19,17 +19,20 @@
 #include "ProgressRing.xaml.h"
 
 namespace UIKit {
+namespace Xaml {
 
 ProgressRing::ProgressRing() {
     InitializeComponent();
 }
 
+} /* Xaml*/
+} /* UIKit*/
+
 ////////////////////////////////////////////////////////////////////////////////////
 // ObjectiveC Interop
 ////////////////////////////////////////////////////////////////////////////////////
 UIKIT_XAML_EXPORT IInspectable* XamlCreateProgressRing() {
-    return InspectableFromObject(ref new UIKit::ProgressRing()).Detach();
+    return InspectableFromObject(ref new UIKit::Xaml::ProgressRing()).Detach();
 }
 
-}
 // clang-format on
