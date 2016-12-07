@@ -53,7 +53,7 @@ struct _DWriteFontProperties {
 
 // Font name <-> font family, font properties
 #ifdef __cplusplus
-extern "C++" std::shared_ptr<_DWriteFontProperties> _DWriteGetFontPropertiesFromName(CFStringRef fontName);
+extern "C++" std::shared_ptr<const _DWriteFontProperties> _DWriteGetFontPropertiesFromName(CFStringRef fontName);
 #endif
 
 COREGRAPHICS_EXPORT CFArrayRef _DWriteCopyFontFamilyNames();

@@ -94,7 +94,7 @@ CFMutableArrayRef DWriteFontCollectionHelper::CopyFontNamesForFamilyName(CFStrin
     return ret;
 }
 
-std::shared_ptr<_DWriteFontProperties> DWriteFontCollectionHelper::GetFontPropertiesFromUppercaseFontName(
+std::shared_ptr<const _DWriteFontProperties> DWriteFontCollectionHelper::GetFontPropertiesFromUppercaseFontName(
     const woc::unique_cf<CFStringRef>& upperFontName) {
     std::lock_guard<std::recursive_mutex> lock(m_lock);
 

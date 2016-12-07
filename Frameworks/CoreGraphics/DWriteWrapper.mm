@@ -155,7 +155,7 @@ CFStringRef _CFStringFromLocalizedString(IDWriteLocalizedStrings* localizedStrin
 /**
  * Helper that parses a font name, and returns appropriate weight, stretch, style, and family name values
  */
-std::shared_ptr<_DWriteFontProperties> _DWriteGetFontPropertiesFromName(CFStringRef fontName) {
+std::shared_ptr<const _DWriteFontProperties> _DWriteGetFontPropertiesFromName(CFStringRef fontName) {
     woc::unique_cf<CFStringRef> upperFontName(_CFStringCreateUppercaseCopy(fontName));
 
     const auto& info = __GetSystemFontCollectionHelper()->GetFontPropertiesFromUppercaseFontName(upperFontName);
@@ -168,7 +168,7 @@ std::shared_ptr<_DWriteFontProperties> _DWriteGetFontPropertiesFromName(CFString
         return userFontInfo;
     }
 
-    return std::make_shared<_DWriteFontProperties>();
+    return std::make_shared<const _DWriteFontProperties>();
 }
 
 /**
@@ -238,7 +238,7 @@ HRESULT _DWriteCreateFontFamilyWithName(CFStringRef familyName, IDWriteFontFamil
 HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, IDWriteFontFace** outFontFace) {
     // Parse the font name for font weight, stretch, and style
     // Eg: Bold, Condensed, Light, Italic
-    std::shared_ptr<_DWriteFontProperties> properties = _DWriteGetFontPropertiesFromName(name);
+    std::shared_ptr<const _DWriteFontProperties> properties = _DWriteGetFontPropertiesFromName(name);
 
     // Need to be able to load fonts from the app's bundle
     // For now return a default font to avoid crashes in case of missing fonts
@@ -269,11 +269,11 @@ HRESULT _DWriteCreateTextFormatWithFontNameAndSize(CFStringRef optionalFontName,
     RETURN_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
 
     ComPtr<IDWriteTextFormat> textFormat;
-    std::shared_ptr<_DWriteFontProperties> info;
-    std::shared_ptr<_DWriteFontProperties> userFontInfo;
+    std::shared_ptr<const _DWriteFontProperties> info;
+    std::shared_ptr<const _DWriteFontProperties> userFontInfo;
 
     if (!optionalFontName) {
-        info = std::make_shared<_DWriteFontProperties>();
+        info = std::make_shared<const _DWriteFontProperties>();
     } else {
         woc::unique_cf<CFStringRef> upperFontName(_CFStringCreateUppercaseCopy(optionalFontName));
         info = __GetSystemFontCollectionHelper()->GetFontPropertiesFromUppercaseFontName(upperFontName);

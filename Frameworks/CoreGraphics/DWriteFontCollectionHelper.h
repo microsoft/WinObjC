@@ -35,7 +35,7 @@ struct __CFStringHashEqual {
 };
 
 using _DWriteFontPropertiesMap =
-    std::unordered_map<woc::unique_cf<CFStringRef>, std::shared_ptr<_DWriteFontProperties>, __CFStringHashEqual, __CFStringHashEqual>;
+    std::unordered_map<woc::unique_cf<CFStringRef>, std::shared_ptr<const _DWriteFontProperties>, __CFStringHashEqual, __CFStringHashEqual>;
 
 /**
  * A wrapper around an IDWriteFontCollection that provides mappings not directly available from the IDWriteFontCollection interface,
@@ -53,7 +53,7 @@ public:
 
     CFMutableArrayRef CopyFontFamilyNames();
     CFMutableArrayRef CopyFontNamesForFamilyName(CFStringRef familyName);
-    std::shared_ptr<_DWriteFontProperties> GetFontPropertiesFromUppercaseFontName(const woc::unique_cf<CFStringRef>& upperFontName);
+    std::shared_ptr<const _DWriteFontProperties> GetFontPropertiesFromUppercaseFontName(const woc::unique_cf<CFStringRef>& upperFontName);
     HRESULT CreateFontFamilyWithName(const wchar_t* unicharFamilyName, IDWriteFontFamily** outFontFamily);
     virtual Microsoft::WRL::ComPtr<IDWriteFontCollection> GetFontCollection() = 0;
 
