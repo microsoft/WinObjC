@@ -14,30 +14,24 @@
 //
 //******************************************************************************
 
-// #1207: Do not move this block, it has to come first for some reason
 #include <COMIncludes.h>
 #import <wrl/implements.h>
-#import <D2d1.h>
 #include <COMIncludes_End.h>
 
 #import "DWriteWrapper_CoreText.h"
 #import "CoreTextInternal.h"
 
-#import <Starboard.h>
-
-#import <CoreFoundation/CFBase.h>
-
 #import <LoggingNative.h>
+#import <StringHelpers.h>
 #import <vector>
 #import <iterator>
-#import <numeric>
 
 using namespace std;
 using namespace Microsoft::WRL;
 
 static const wchar_t* TAG = L"_DWriteWrapper_CoreText";
 
-static DWRITE_TEXT_ALIGNMENT __CoreTextAlignmentToDwrite(CTTextAlignment alignment) {
+static inline DWRITE_TEXT_ALIGNMENT __CTAlignmentToDWrite(CTTextAlignment alignment) {
     switch (alignment) {
         case kCTRightTextAlignment:
             return DWRITE_TEXT_ALIGNMENT_TRAILING;
@@ -52,10 +46,26 @@ static DWRITE_TEXT_ALIGNMENT __CoreTextAlignmentToDwrite(CTTextAlignment alignme
     }
 }
 
+static inline DWRITE_WORD_WRAPPING __CTLineBreakModeToDWrite(CTLineBreakMode lineBreakMode) {
+    switch (lineBreakMode) {
+        // TODO 1121:: DWrite does not support line breaking by truncation, so just use clipping for now
+        case kCTLineBreakByTruncatingHead:
+        case kCTLineBreakByTruncatingTail:
+        case kCTLineBreakByTruncatingMiddle:
+        case kCTLineBreakByClipping:
+            return DWRITE_WORD_WRAPPING_NO_WRAP;
+        case kCTLineBreakByCharWrapping:
+            return DWRITE_WORD_WRAPPING_CHARACTER;
+        case kCTLineBreakByWordWrapping:
+        default:
+            return DWRITE_WORD_WRAPPING_WRAP;
+    }
+}
+
 template <typename TElement>
-bool __CloneArray(_In_reads_opt_(count) TElement const* source,
-                  _In_ size_t count,
-                  _Outptr_result_buffer_all_maybenull_(count) TElement const** result) {
+static bool __CloneArray(_In_reads_opt_(count) TElement const* source,
+                         _In_ size_t count,
+                         _Outptr_result_buffer_all_maybenull_(count) TElement const** result) {
     bool ret = true;
 
     *result = nullptr;
@@ -72,7 +82,7 @@ bool __CloneArray(_In_reads_opt_(count) TElement const* source,
     return ret;
 }
 
-bool _CloneDWriteGlyphRun(_In_ DWRITE_GLYPH_RUN const* src, _Out_ DWRITE_GLYPH_RUN* dest) {
+bool _CloneDWriteGlyphRun(_In_ DWRITE_GLYPH_RUN const* src, _Outptr_ DWRITE_GLYPH_RUN* dest) {
     bool ret = true;
 
     if (src) {
@@ -97,97 +107,116 @@ bool _CloneDWriteGlyphRun(_In_ DWRITE_GLYPH_RUN const* src, _Out_ DWRITE_GLYPH_R
 }
 
 /**
+ * Private helper that applies a CTParagraphStyleRef to an IDWriteTextFormat
+ */
+static inline HRESULT __DWriteTextFormatApplyParagraphStyle(const ComPtr<IDWriteTextFormat>& textFormat, CTParagraphStyleRef settings) {
+    CTTextAlignment alignment = kCTNaturalTextAlignment;
+    if (CTParagraphStyleGetValueForSpecifier(settings, kCTParagraphStyleSpecifierAlignment, sizeof(CTTextAlignment), &alignment)) {
+        RETURN_IF_FAILED(textFormat->SetTextAlignment(__CTAlignmentToDWrite(alignment)));
+    }
+
+    CTWritingDirection direction;
+    if (CTParagraphStyleGetValueForSpecifier(settings, kCTParagraphStyleSpecifierBaseWritingDirection, sizeof(direction), &direction)) {
+        DWRITE_READING_DIRECTION dwriteDirection = DWRITE_READING_DIRECTION_LEFT_TO_RIGHT;
+        if (direction == kCTWritingDirectionRightToLeft) {
+            dwriteDirection = DWRITE_READING_DIRECTION_RIGHT_TO_LEFT;
+
+            // DWrite alignment is based upon reading direction whereas CoreText alignment is constant
+            // so we have to flip the writing direction
+            if (alignment == kCTRightTextAlignment || alignment == kCTNaturalTextAlignment) {
+                RETURN_IF_FAILED(textFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING));
+            } else if (alignment == kCTLeftTextAlignment) {
+                RETURN_IF_FAILED(textFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_TRAILING));
+            }
+        }
+
+        RETURN_IF_FAILED(textFormat->SetReadingDirection(dwriteDirection));
+    }
+
+    CTLineBreakMode lineBreakMode;
+    if (CTParagraphStyleGetValueForSpecifier(settings, kCTParagraphStyleSpecifierLineBreakMode, sizeof(lineBreakMode), &lineBreakMode)) {
+        RETURN_IF_FAILED(textFormat->SetWordWrapping(__CTLineBreakModeToDWrite(lineBreakMode)));
+    }
+
+    return S_OK;
+}
+
+/**
+ * Private helper that applies a CTFontRef to an IDWriteTextLayout within the specified range.
+ */
+static inline HRESULT __DWriteTextLayoutApplyFont(const ComPtr<IDWriteTextLayout>& textLayout, CTFontRef font, DWRITE_TEXT_RANGE range) {
+    std::shared_ptr<const _DWriteFontProperties> properties = _DWriteGetFontPropertiesFromName(CTFontCopyName(font, kCTFontFullNameKey));
+    RETURN_IF_FAILED(textLayout->SetFontWeight(properties->weight, range));
+    RETURN_IF_FAILED(textLayout->SetFontStretch(properties->stretch, range));
+    RETURN_IF_FAILED(textLayout->SetFontStyle(properties->style, range));
+
+    RETURN_IF_FAILED(textLayout->SetFontSize(CTFontGetSize(font), range));
+    RETURN_IF_FAILED(
+        textLayout->SetFontFamilyName(reinterpret_cast<wchar_t*>(Strings::VectorFromCFString(properties->familyName.get()).data()), range));
+
+    return S_OK;
+}
+
+/**
+ * Private helper that applies extra kerning to an IDWriteTextLayout within the specified range.
+ */
+static inline HRESULT __DWriteTextLayoutApplyExtraKerning(const ComPtr<IDWriteTextLayout>& textLayout,
+                                                          const ComPtr<IDWriteTypography>& typography,
+                                                          CFNumberRef extraKerningRef,
+                                                          DWRITE_TEXT_RANGE range) {
+    ComPtr<IDWriteTextLayout1> textLayout1;
+    RETURN_IF_FAILED(textLayout.As(&textLayout1));
+
+    CGFloat extraKerning;
+    CFNumberGetValue(extraKerningRef, kCFNumberFloatType, &extraKerning);
+
+    CGFloat leadingSpacing, trailingSpacing, minimumAdvanceWidth;
+    RETURN_IF_FAILED(textLayout1->GetCharacterSpacing(range.startPosition, &leadingSpacing, &trailingSpacing, &minimumAdvanceWidth));
+    RETURN_IF_FAILED(textLayout1->SetCharacterSpacing(leadingSpacing, trailingSpacing + extraKerning, minimumAdvanceWidth, range));
+
+    // Setting kern disables default kerning
+    RETURN_IF_FAILED(typography->AddFontFeature({ DWRITE_FONT_FEATURE_TAG_KERNING, 0 }));
+
+    return S_OK;
+}
+
+/**
  * Helper method to create a IDWriteTextFormat object given _CTTypesetter object and string range.
  *
  * @parameter ts _CTTypesetter object.
  * @parameter range string range to consider for rendering.
+ * @parameter outTextFormat outpointer for creating the text format
  *
- * @return the created IDWriteTextFormat object.
+ * @return whether the creation was successful
  */
-static ComPtr<IDWriteTextFormat> __CreateDWriteTextFormat(CFAttributedStringRef string, CFRange range) {
+static HRESULT __DWriteTextFormatCreate(CFAttributedStringRef string, CFRange range, IDWriteTextFormat** outTextFormat) {
+    RETURN_HR_IF_NULL(E_POINTER, outTextFormat);
+
     // TODO::
-    // Note here we only look at attribute value at first index of the specified range as we can get a default faont size to use here.
+    // Note here we only look at attribute value at first index of the specified range as we can get a default font size to use here.
     // Per string range attribute handling will be done in _CreateDWriteTextLayout.
+    CTFontRef font = static_cast<CTFontRef>(CFAttributedStringGetAttribute(string, range.location, kCTFontAttributeName, nullptr));
 
-    NSDictionary* attribs = [static_cast<NSAttributedString*>(string) attributesAtIndex:range.location effectiveRange:NULL];
-
+    woc::unique_cf<CFStringRef> fontFullName;
     CGFloat fontSize = kCTFontSystemFontSize;
-    CTFontRef font = static_cast<CTFontRef>([attribs objectForKey:static_cast<NSString*>(kCTFontAttributeName)]);
-    std::vector<wchar_t> familyName;
-
-    std::shared_ptr<_DWriteFontProperties> properties;
 
     if (font) {
+        fontFullName.reset(CTFontCopyName(font, kCTFontFullNameKey));
         fontSize = CTFontGetSize(font);
-        CFStringRef fontFullName = CTFontCopyName(font, kCTFontFullNameKey);
-        CFAutorelease(fontFullName);
-        properties = _DWriteGetFontPropertiesFromName(fontFullName);
-    } else {
-        properties = std::make_shared<_DWriteFontProperties>();
     }
-
-    familyName.resize(CFStringGetLength(properties->familyName.get()) + 1, 0);
-    CFStringGetCharacters(properties->familyName.get(), CFRangeMake(0, familyName.size()), reinterpret_cast<UniChar*>(familyName.data()));
 
     ComPtr<IDWriteTextFormat> textFormat;
-    RETURN_NULL_IF_FAILED(
-        _DWriteCreateTextFormat(familyName.data(), properties->weight, properties->style, properties->stretch, fontSize, &textFormat));
+    RETURN_IF_FAILED(_DWriteCreateTextFormatWithFontNameAndSize(fontFullName.get(), fontSize, &textFormat));
 
+    // Apply paragraph style if one exists in the attributed string
     CTParagraphStyleRef settings =
-        static_cast<CTParagraphStyleRef>([attribs valueForKey:static_cast<NSString*>(kCTParagraphStyleAttributeName)]);
+        static_cast<CTParagraphStyleRef>(CFAttributedStringGetAttribute(string, range.location, kCTParagraphStyleAttributeName, nullptr));
     if (settings) {
-        CTTextAlignment alignment = kCTNaturalTextAlignment;
-        if (CTParagraphStyleGetValueForSpecifier(settings, kCTParagraphStyleSpecifierAlignment, sizeof(CTTextAlignment), &alignment)) {
-            DWRITE_TEXT_ALIGNMENT dwriteAlignment = __CoreTextAlignmentToDwrite(alignment);
-            RETURN_NULL_IF_FAILED(textFormat->SetTextAlignment(dwriteAlignment));
-        }
-
-        CTWritingDirection direction;
-        if (CTParagraphStyleGetValueForSpecifier(settings, kCTParagraphStyleSpecifierBaseWritingDirection, sizeof(direction), &direction)) {
-            DWRITE_READING_DIRECTION dwriteDirection = DWRITE_READING_DIRECTION_LEFT_TO_RIGHT;
-            if (direction == kCTWritingDirectionRightToLeft) {
-                dwriteDirection = DWRITE_READING_DIRECTION_RIGHT_TO_LEFT;
-
-                // DWrite alignment is based upon reading direction whereas CoreText alignment is constant
-                // so we have to flip the writing direction
-                if (alignment == kCTRightTextAlignment || alignment == kCTNaturalTextAlignment) {
-                    RETURN_NULL_IF_FAILED(textFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING));
-                } else if (alignment == kCTLeftTextAlignment) {
-                    RETURN_NULL_IF_FAILED(textFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_TRAILING));
-                }
-            }
-
-            RETURN_NULL_IF_FAILED(textFormat->SetReadingDirection(dwriteDirection));
-        }
-
-        CTLineBreakMode lineBreakMode;
-        if (CTParagraphStyleGetValueForSpecifier(settings,
-                                                 kCTParagraphStyleSpecifierLineBreakMode,
-                                                 sizeof(lineBreakMode),
-                                                 &lineBreakMode)) {
-            DWRITE_WORD_WRAPPING wrapping;
-            switch (lineBreakMode) {
-                // TODO 1121:: DWrite does not support line breaking by truncation, so just use clipping for now
-                case kCTLineBreakByTruncatingHead:
-                case kCTLineBreakByTruncatingTail:
-                case kCTLineBreakByTruncatingMiddle:
-                case kCTLineBreakByClipping:
-                    wrapping = DWRITE_WORD_WRAPPING_NO_WRAP;
-                    break;
-                case kCTLineBreakByCharWrapping:
-                    wrapping = DWRITE_WORD_WRAPPING_CHARACTER;
-                    break;
-                case kCTLineBreakByWordWrapping:
-                default:
-                    wrapping = DWRITE_WORD_WRAPPING_WRAP;
-                    break;
-            }
-
-            THROW_IF_FAILED(textFormat->SetWordWrapping(wrapping));
-        }
+        RETURN_IF_FAILED(__DWriteTextFormatApplyParagraphStyle(textFormat, settings));
     }
 
-    return textFormat;
+    *outTextFormat = textFormat.Detach();
+    return S_OK;
 }
 
 /**
@@ -196,15 +225,15 @@ static ComPtr<IDWriteTextFormat> __CreateDWriteTextFormat(CFAttributedStringRef 
  * @parameter CFAttributedStringRef string with text and attributes
  * @parameter range string range to consider for rendering.
  * @parameter frameSize frame constrains to render the text on.
+ * @parameter outTextLayout outpointer for creating the text layout
  *
- * @return the created IDWriteTextLayout object.
+ * @return whether the creation was successful
  */
-static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(CFAttributedStringRef string, CFRange range, CGRect frameSize) {
-    ComPtr<IDWriteTextFormat> textFormat = __CreateDWriteTextFormat(string, range);
+static HRESULT __DWriteTextLayoutCreate(CFAttributedStringRef string, CFRange range, CGRect frameSize, IDWriteTextLayout** outTextLayout) {
+    RETURN_HR_IF_NULL(E_POINTER, outTextLayout);
 
-    NSRange curRange = NSMakeRangeFromCF(range);
-    NSString* subString = [static_cast<NSString*>(CFAttributedStringGetString(string)) substringWithRange:curRange];
-    wchar_t* wcharString = reinterpret_cast<wchar_t*>(const_cast<char*>([subString cStringUsingEncoding:NSUTF16StringEncoding]));
+    ComPtr<IDWriteTextFormat> textFormat;
+    RETURN_IF_FAILED(__DWriteTextFormatCreate(string, range, &textFormat));
 
     // TODO::
     // We need too support widthFunc semantic to be able to support NSLayout*. We could either change the API signature of this API or
@@ -214,79 +243,60 @@ static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(CFAttributedStringRef 
 
     // Get the direct write factory instance
     ComPtr<IDWriteFactory> dwriteFactory;
-    RETURN_NULL_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
+    RETURN_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
 
+    woc::unique_cf<CFStringRef> substring(CFStringCreateWithSubstring(kCFAllocatorDefault, CFAttributedStringGetString(string), range));
     ComPtr<IDWriteTextLayout> textLayout;
-    RETURN_NULL_IF_FAILED(dwriteFactory->CreateTextLayout(
-        wcharString, [subString length], textFormat.Get(), frameSize.size.width, frameSize.size.height, &textLayout));
+    RETURN_IF_FAILED(dwriteFactory->CreateTextLayout(reinterpret_cast<wchar_t*>(Strings::VectorFromCFString(substring.get()).data()),
+                                                     CFStringGetLength(substring.get()),
+                                                     textFormat.Get(),
+                                                     frameSize.size.width,
+                                                     frameSize.size.height,
+                                                     &textLayout));
 
     // TODO::
     // Iterate through all attributed string ranges and identify attributes so they can be used to -
     //  - set indentation
     //  - etc.
     //  These can be done using the DWrite IDWriteTextFormat range property methods.
+    CFIndex rangeEnd = range.location + range.length;
 
     // Used to separate runs for attributes which DWrite does not handle until drawing (e.g. Foreground Color)
     uint32_t incompatibleAttributeFlag = 0;
+    CFRange attributeRange;
 
-    NSRange attributeRange;
-    for (size_t i = 0; i < [subString length]; i += attributeRange.length) {
-        NSDictionary* attribs = [static_cast<NSAttributedString*>(string) attributesAtIndex:i + range.location
-                                                                      longestEffectiveRange:&attributeRange
-                                                                                    inRange:{ i + range.location, [subString length] }];
+    for (CFIndex currentIndex = range.location; currentIndex < rangeEnd; currentIndex += attributeRange.length) {
+        CTFontRef font =
+            static_cast<CTFontRef>(CFAttributedStringGetAttribute(string, currentIndex, kCTFontAttributeName, &attributeRange));
 
+        // attributeRange is properly populated even if this attribute is not found
         const DWRITE_TEXT_RANGE dwriteRange = { attributeRange.location, attributeRange.length };
-
-        CTFontRef font = static_cast<CTFontRef>([attribs objectForKey:static_cast<NSString*>(kCTFontAttributeName)]);
-        CGFloat fontSize = kCTFontSystemFontSize;
-        if (font != nil) {
-            fontSize = CTFontGetSize(font);
-            std::shared_ptr<_DWriteFontProperties> properties = _DWriteGetFontPropertiesFromName(CTFontCopyName(font, kCTFontFullNameKey));
-            std::vector<wchar_t> familyName(CFStringGetLength(properties->familyName.get()) + 1);
-            CFStringGetCharacters(properties->familyName.get(),
-                                  CFRangeMake(0, familyName.size()),
-                                  reinterpret_cast<UniChar*>(familyName.data()));
-
-            RETURN_NULL_IF_FAILED(textLayout->SetFontSize(fontSize, dwriteRange));
-            RETURN_NULL_IF_FAILED(textLayout->SetFontWeight(properties->weight, dwriteRange));
-            RETURN_NULL_IF_FAILED(textLayout->SetFontStretch(properties->stretch, dwriteRange));
-            RETURN_NULL_IF_FAILED(textLayout->SetFontStyle(properties->style, dwriteRange));
-            RETURN_NULL_IF_FAILED(textLayout->SetFontFamilyName(familyName.data(), dwriteRange));
+        if (font) {
+            RETURN_IF_FAILED(__DWriteTextLayoutApplyFont(textLayout, font, dwriteRange));
         }
 
         ComPtr<IDWriteTypography> typography;
-        RETURN_NULL_IF_FAILED(textLayout->GetTypography(dwriteRange.startPosition, &typography));
+        RETURN_IF_FAILED(textLayout->GetTypography(dwriteRange.startPosition, &typography));
         if (!typography.Get()) {
-            RETURN_NULL_IF_FAILED(dwriteFactory->CreateTypography(&typography));
+            RETURN_IF_FAILED(dwriteFactory->CreateTypography(&typography));
         }
 
-        CFNumberRef extraKerningRef = static_cast<CFNumberRef>([attribs objectForKey:static_cast<NSString*>(kCTKernAttributeName)]);
+        CFNumberRef extraKerningRef =
+            static_cast<CFNumberRef>(CFAttributedStringGetAttribute(string, currentIndex, kCTKernAttributeName, nullptr));
         if (extraKerningRef) {
-            ComPtr<IDWriteTextLayout1> textLayout1;
-            RETURN_NULL_IF_FAILED(textLayout.As(&textLayout1));
-            CGFloat leadingSpacing, trailingSpacing, minimumAdvanceWidth;
-            RETURN_NULL_IF_FAILED(
-                textLayout1->GetCharacterSpacing(dwriteRange.startPosition, &leadingSpacing, &trailingSpacing, &minimumAdvanceWidth));
-
-            CGFloat extraKerning;
-            CFNumberGetValue(extraKerningRef, kCFNumberFloatType, &extraKerning);
-            trailingSpacing += extraKerning;
-
-            RETURN_NULL_IF_FAILED(textLayout1->SetCharacterSpacing(leadingSpacing, trailingSpacing, minimumAdvanceWidth, dwriteRange));
-
-            // Setting kern disables default kerning
-            RETURN_NULL_IF_FAILED(typography->AddFontFeature({ DWRITE_FONT_FEATURE_TAG_KERNING, 0 }));
+            RETURN_IF_FAILED(__DWriteTextLayoutApplyExtraKerning(textLayout, typography, extraKerningRef, dwriteRange));
         } else {
             // Otherwise set kerning to true, as it will default to no kerning and this can be used to signify noncompatible features
             // Forces run breaks without interfering with any layout features
             // Necessary for attributes which DWrite does not support during layout (e.g. Color)
-            RETURN_NULL_IF_FAILED(typography->AddFontFeature({ DWRITE_FONT_FEATURE_TAG_KERNING, ++incompatibleAttributeFlag }));
+            RETURN_IF_FAILED(typography->AddFontFeature({ DWRITE_FONT_FEATURE_TAG_KERNING, ++incompatibleAttributeFlag }));
         }
 
-        RETURN_NULL_IF_FAILED(textLayout->SetTypography(typography.Get(), dwriteRange));
+        RETURN_IF_FAILED(textLayout->SetTypography(typography.Get(), dwriteRange));
     }
 
-    return textLayout;
+    *outTextLayout = textLayout.Detach();
+    return S_OK;
 }
 
 /**
@@ -294,12 +304,11 @@ static ComPtr<IDWriteTextLayout> __CreateDWriteTextLayout(CFAttributedStringRef 
  */
 class CustomDWriteTextRenderer : public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IDWriteTextRenderer> {
 protected:
-    InspectableClass(L"Windows.Bridge.DirectWrite", TrustLevel::BaseTrust);
+    InspectableClass(L"Windows.Bridge.DirectWrite.CustomDWriteTextRenderer", TrustLevel::BaseTrust);
 
 public:
-    CustomDWriteTextRenderer();
-
-    HRESULT RuntimeClassInitialize();
+    CustomDWriteTextRenderer() {
+    }
 
     HRESULT STDMETHODCALLTYPE DrawGlyphRun(_In_ void* clientDrawingContext,
                                            _In_ float baselineOriginX,
@@ -370,13 +379,6 @@ public:
     };
 };
 
-CustomDWriteTextRenderer::CustomDWriteTextRenderer() {
-}
-
-HRESULT CustomDWriteTextRenderer::RuntimeClassInitialize() {
-    return S_OK;
-}
-
 /**
  * Helper method to create _CTLine object given a CFAttributedStringRef
  *
@@ -411,8 +413,10 @@ static _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CG
         return frame;
     }
 
+    ComPtr<IDWriteTextLayout> textLayout;
+    RETURN_NULL_IF_FAILED(__DWriteTextLayoutCreate(string, range, frameSize, &textLayout));
+
     // Call custom renderer to get all glyph run details
-    ComPtr<IDWriteTextLayout> textLayout = __CreateDWriteTextLayout(string, range, frameSize);
     ComPtr<CustomDWriteTextRenderer> textRenderer = Make<CustomDWriteTextRenderer>();
     _DWriteGlyphRunDetails glyphRunDetails = {};
     textLayout->Draw(&glyphRunDetails, textRenderer.Get(), 0, 0);
@@ -429,11 +433,11 @@ static _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CG
     int i = 0;
     int j = 0;
 
-    // Relative offsets for each run and line that will be used by CTLineDraw and CTRunDRaw methods to render.
+    // Relative offsets for each run and line that will be used by CTLineDraw and CTRunDraw methods to render.
     float prevXPosForDraw = 0;
     float prevYPosForDraw = 0;
 
-    while (j < numOfGlyphRuns) {
+    while (i < numOfGlyphRuns) {
         _CTLine* line = [[_CTLine new] autorelease];
         NSMutableArray<_CTRun*>* runs = [NSMutableArray array];
         uint32_t stringRange = 0;
@@ -449,23 +453,23 @@ static _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CG
         line->_leading = -FLT_MAX;
 
         // Glyph runs that have the same _baselineOriginY value are part of the the same Line.
-        while ((j < numOfGlyphRuns) && (glyphRunDetails._baselineOriginY[i] == glyphRunDetails._baselineOriginY[j])) {
-            j++;
-        }
-        while (i < j) {
+        float baselineOriginYForCurrentLine = glyphRunDetails._baselineOriginY[i];
+
+        // Iterate through runs on the current line
+        for (j = i; (j < numOfGlyphRuns) && (glyphRunDetails._baselineOriginY[j] == baselineOriginYForCurrentLine); ++j) {
             // Create _CTRun objects and make them part of _CTLine
             _CTRun* run = [[_CTRun new] autorelease];
-            run->_range.location = glyphRunDetails._glyphRunDescriptions[i]._textPosition;
-            run->_range.length = glyphRunDetails._glyphRunDescriptions[i]._stringLength;
+            run->_range.location = glyphRunDetails._glyphRunDescriptions[j]._textPosition;
+            run->_range.length = glyphRunDetails._glyphRunDescriptions[j]._stringLength;
             run->_stringFragment = [static_cast<NSString*>(CFAttributedStringGetString(string))
                 substringWithRange:NSMakeRange(range.location + run->_range.location, run->_range.length)];
-            run->_dwriteGlyphRun = move(glyphRunDetails._dwriteGlyphRun[i]);
-            run->_stringIndices = move(glyphRunDetails._glyphRunDescriptions[i]._clusterMap);
+            run->_dwriteGlyphRun = move(glyphRunDetails._dwriteGlyphRun[j]);
+            run->_stringIndices = move(glyphRunDetails._glyphRunDescriptions[j]._clusterMap);
             run->_attributes =
                 [static_cast<NSAttributedString*>(string) attributesAtIndex:(range.location + run->_range.location) effectiveRange:NULL];
 
-            xPos = glyphRunDetails._baselineOriginX[i];
-            yPos = glyphRunDetails._baselineOriginY[i];
+            xPos = glyphRunDetails._baselineOriginX[j];
+            yPos = glyphRunDetails._baselineOriginY[j];
 
             // Calculate the relative offset of each glyph run and store it. This will be useful while drawing individual glpyh runs or
             // lines.
@@ -475,18 +479,20 @@ static _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CG
 
             // TODO::
             // This is a temp workaround until we can have actual glyph origins
-            for (int index = 0; index < glyphRunDetails._dwriteGlyphRun[i].glyphCount; index++) {
+            for (int index = 0; index < glyphRunDetails._dwriteGlyphRun[j].glyphCount; index++) {
                 run->_glyphOrigins.emplace_back(CGPoint{ xPos, yPos });
-                run->_glyphAdvances.emplace_back(CGSize{ glyphRunDetails._dwriteGlyphRun[i].glyphAdvances[index], 0.0f });
-                xPos += glyphRunDetails._dwriteGlyphRun[i].glyphAdvances[index];
-                line->_width += glyphRunDetails._dwriteGlyphRun[i].glyphAdvances[index];
+                run->_glyphAdvances.emplace_back(CGSize{ glyphRunDetails._dwriteGlyphRun[j].glyphAdvances[index], 0.0f });
+                xPos += glyphRunDetails._dwriteGlyphRun[j].glyphAdvances[index];
+                line->_width += glyphRunDetails._dwriteGlyphRun[j].glyphAdvances[index];
             }
 
             [runs addObject:run];
             stringRange += run->_range.length;
-            glyphCount += glyphRunDetails._dwriteGlyphRun[i].glyphCount;
-            i++;
+            glyphCount += glyphRunDetails._dwriteGlyphRun[j].glyphCount;
         }
+
+        // Fast-forward i to start on the next line
+        i = j;
 
         if ([runs count] > 0) {
             prevYPosForDraw = yPos;
@@ -509,476 +515,4 @@ static _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CG
     }
 
     return frame;
-}
-
-// Represents a mapping between multiple representations of the same font weight across DWrite and CoreText
-// DWRITE_FONT_WEIGHT_BOLD = kCTFontWeightBold
-struct WeightMapping {
-    DWRITE_FONT_WEIGHT dwriteValue;
-    CGFloat ctValue;
-};
-
-// Mapping for weight
-// Some loss of precision here as CT presents fewer values than DWrite
-// Note also that Thin and Ultra/Extra-Light are in opposite order in DWrite and CoreText/UIKit constants
-// (However, "Thin" fonts on the reference platform have UIFontWeightUltraLight...)
-// clang-format off
-static const struct WeightMapping c_weightMap[] = { { DWRITE_FONT_WEIGHT_THIN, kCTFontWeightUltraLight },
-                                                    { DWRITE_FONT_WEIGHT_EXTRA_LIGHT, kCTFontWeightThin },
-                                                    { DWRITE_FONT_WEIGHT_ULTRA_LIGHT, kCTFontWeightThin },
-                                                    { DWRITE_FONT_WEIGHT_LIGHT, kCTFontWeightLight },
-                                                    { DWRITE_FONT_WEIGHT_SEMI_LIGHT, kCTFontWeightLight },
-                                                    { DWRITE_FONT_WEIGHT_NORMAL, kCTFontWeightRegular },
-                                                    { DWRITE_FONT_WEIGHT_REGULAR, kCTFontWeightRegular },
-                                                    { DWRITE_FONT_WEIGHT_MEDIUM, kCTFontWeightMedium },
-                                                    { DWRITE_FONT_WEIGHT_DEMI_BOLD, kCTFontWeightSemibold },
-                                                    { DWRITE_FONT_WEIGHT_SEMI_BOLD, kCTFontWeightSemibold },
-                                                    { DWRITE_FONT_WEIGHT_BOLD, kCTFontWeightBold },
-                                                    { DWRITE_FONT_WEIGHT_EXTRA_BOLD, kCTFontWeightHeavy },
-                                                    { DWRITE_FONT_WEIGHT_ULTRA_BOLD, kCTFontWeightHeavy },
-                                                    { DWRITE_FONT_WEIGHT_BLACK, kCTFontWeightBlack },
-                                                    { DWRITE_FONT_WEIGHT_HEAVY, kCTFontWeightBlack },
-                                                    { DWRITE_FONT_WEIGHT_EXTRA_BLACK, kCTFontWeightBlack },
-                                                    { DWRITE_FONT_WEIGHT_ULTRA_BLACK, kCTFontWeightBlack } };
-// clang-format on
-
-/**
- * Creates an IDWriteFontFace given the attributes of a CTFontDescriptor
- * Currently, font name, family name, kCTFontWeight/Slant/Width, and part of SymbolicTrait, are taken into account
- */
-HRESULT _DWriteCreateFontFaceWithFontDescriptor(CTFontDescriptorRef fontDescriptor, IDWriteFontFace** outFontFace) {
-    CFStringRef fontName = static_cast<CFStringRef>(CFAutorelease(CTFontDescriptorCopyAttribute(fontDescriptor, kCTFontNameAttribute)));
-    CFStringRef familyName =
-        static_cast<CFStringRef>(CFAutorelease(CTFontDescriptorCopyAttribute(fontDescriptor, kCTFontFamilyNameAttribute)));
-
-    // font name takes precedence
-    if (fontName) {
-        if (familyName && !CFEqual(familyName, _DWriteGetFamilyNameForFontName(fontName))) {
-            TraceError(TAG,
-                       L"Mismatched font name \"%hs\" and family name \"%hs\"",
-                       [static_cast<NSString*>(fontName) UTF8String],
-                       [static_cast<NSString*>(familyName) UTF8String]);
-            return E_INVALIDARG;
-        }
-
-        // familyName is either valid for fontName, or unspecified
-        // just use fontName, then
-        return _DWriteCreateFontFaceWithName(fontName, outFontFace);
-    }
-
-    // otherwise, look at family name and other attributes
-    if (familyName) {
-        DWRITE_FONT_WEIGHT weight = DWRITE_FONT_WEIGHT_NORMAL;
-        DWRITE_FONT_STRETCH stretch = DWRITE_FONT_STRETCH_NORMAL;
-        DWRITE_FONT_STYLE style = DWRITE_FONT_STYLE_NORMAL;
-
-        // Look for traits that may specify weight, stretch, style
-        CFDictionaryRef traits =
-            static_cast<CFDictionaryRef>(CFAutorelease(CTFontDescriptorCopyAttribute(fontDescriptor, kCTFontTraitsAttribute)));
-
-        if (traits) {
-            // kCTFontWeightTrait, kCTFontWidthTrait, kCTFontSlantTrait take precedence over symbolic traits
-            CFNumberRef weightTrait = static_cast<CFNumberRef>(CFDictionaryGetValue(traits, kCTFontWeightTrait));
-            CFNumberRef widthTrait = static_cast<CFNumberRef>(CFDictionaryGetValue(traits, kCTFontWidthTrait));
-            CFNumberRef slantTrait = static_cast<CFNumberRef>(CFDictionaryGetValue(traits, kCTFontSlantTrait));
-
-            CFNumberRef cfSymbolicTrait = static_cast<CFNumberRef>(CFDictionaryGetValue(traits, kCTFontSymbolicTrait));
-            uint32_t symbolicTrait = cfSymbolicTrait ? _CTFontSymbolicTraitsFromCFNumber(cfSymbolicTrait) : 0;
-
-            if (weightTrait) {
-                CGFloat weightFloat;
-                CFNumberGetValue(weightTrait, kCFNumberCGFloatType, &weightFloat);
-
-                // Consult c_weightMap
-                for (const auto& weightMapping : c_weightMap) {
-                    if (weightFloat == weightMapping.ctValue) {
-                        weight = weightMapping.dwriteValue;
-                        break;
-                    }
-                }
-            } else if (symbolicTrait & kCTFontBoldTrait) {
-                weight = DWRITE_FONT_WEIGHT_BOLD;
-            }
-
-            if (widthTrait) {
-                CGFloat widthFloat;
-                CFNumberGetValue(widthTrait, kCFNumberCGFloatType, &widthFloat);
-
-                // Treat above 0 as expanded, below 0 as condensed
-                if (widthFloat > 0) {
-                    stretch = DWRITE_FONT_STRETCH_EXPANDED;
-                } else if (widthFloat < 0) {
-                    stretch = DWRITE_FONT_STRETCH_CONDENSED;
-                }
-            } else if (symbolicTrait & kCTFontExpandedTrait) {
-                stretch = DWRITE_FONT_STRETCH_EXPANDED;
-            } else if (symbolicTrait & kCTFontCondensedTrait) {
-                stretch = DWRITE_FONT_STRETCH_CONDENSED;
-            }
-
-            if (slantTrait) {
-                CGFloat slantFloat;
-                CFNumberGetValue(slantTrait, kCFNumberCGFloatType, &slantFloat);
-
-                // Treat anything above 0 as italic
-                if (slantFloat > 0) {
-                    style = DWRITE_FONT_STYLE_ITALIC;
-                }
-            } else if (symbolicTrait & kCTFontItalicTrait) {
-                style = DWRITE_FONT_STYLE_ITALIC;
-            }
-        }
-
-        // Create a best matching font based on the family name and weight/stretch/style
-        ComPtr<IDWriteFontFamily> fontFamily;
-        RETURN_IF_FAILED(_DWriteCreateFontFamilyWithName(familyName, &fontFamily));
-        RETURN_HR_IF_NULL(E_INVALIDARG, fontFamily);
-
-        ComPtr<IDWriteFont> font;
-        RETURN_IF_FAILED(fontFamily->GetFirstMatchingFont(weight, stretch, style, &font));
-
-        return font->CreateFontFace(outFontFace);
-    }
-
-    TraceError(TAG, L"Must specify either kCTFontFamilyNameAttribute or kCTFontNameAttribute in font descriptor");
-    return E_INVALIDARG;
-}
-
-/**
- * Helper function to box a CTFontSymbolicTraits in a CFNumber
- */
-CFNumberRef _CFNumberCreateFromSymbolicTraits(CTFontSymbolicTraits symbolicTraits) {
-    // symbolic traits are an unsigned 32-bit int
-    // CFNumber doesn't support unsigned ints
-    // get around this by storing in a signed 64-bit int
-    int64_t signedTraits = static_cast<int64_t>(symbolicTraits);
-    return CFNumberCreate(kCFAllocatorDefault, kCFNumberSInt64Type, &signedTraits);
-}
-
-/**
- * Helper function to unbox a CTFontSymbolicTraits from a CFNumber
- */
-CTFontSymbolicTraits _CTFontSymbolicTraitsFromCFNumber(CFNumberRef num) {
-    // symbolic traits are an unsigned 32-bit int, but were stored in a signed 64-bit int
-    int64_t ret;
-    CFNumberGetValue(static_cast<CFNumberRef>(num), kCFNumberSInt64Type, &ret);
-    return static_cast<CTFontSymbolicTraits>(ret);
-}
-
-/**
- * Helper function that converts a DWRITE_FONT_WEIGHT into a float usable for kCTFontWeightTrait.
- */
-CGFloat __DWriteGetCTFontWeight(DWRITE_FONT_WEIGHT weight) {
-    for (const auto& weightMapping : c_weightMap) {
-        if (weight == weightMapping.dwriteValue) {
-            return weightMapping.ctValue;
-        }
-    }
-
-    return kCTFontWeightRegular;
-}
-
-/**
- * Helper function that converts a DWRITE_FONT_STRETCH into a float usable for kCTFontWidthTrait.
- */
-CGFloat __DWriteGetCTFontWidth(DWRITE_FONT_STRETCH stretch) {
-    // kCTFontWidthTrait is documented to range from -1.0 to 1.0, centered at 0,
-    // with 'Condensed' fonts returning -0.2 on the reference platform
-    // DWrite stretch ranges from 0-9, centered at 5
-
-    // Reference platform lacks fonts with stretch besides 'normal' or 'condensed',
-    // and it is not yet clear how these values are used
-    // Do an approximate conversion for now
-    return (static_cast<float>(stretch) / 10.0f) - 0.5f;
-}
-
-/**
- * Helper function that reads certain properties from a DWrite font face,
- * then parses them into a dictionary suitable for kCTFontTraitsAttribute
- */
-static CFDictionaryRef _DWriteFontCreateTraitsDict(const ComPtr<IDWriteFontFace>& fontFace) {
-    // Get pointers for the additional FontFace interfaces
-    ComPtr<IDWriteFontFace1> fontFace1;
-    RETURN_NULL_IF_FAILED(fontFace.As(&fontFace1));
-    ComPtr<IDWriteFontFace2> fontFace2;
-    RETURN_NULL_IF_FAILED(fontFace.As(&fontFace2));
-    ComPtr<IDWriteFontFace3> fontFace3;
-    RETURN_NULL_IF_FAILED(fontFace.As(&fontFace3));
-
-    DWRITE_FONT_WEIGHT weight = fontFace3->GetWeight();
-    DWRITE_FONT_STRETCH stretch = fontFace3->GetStretch();
-    DWRITE_FONT_STYLE style = fontFace3->GetStyle();
-
-    CGFloat weightTrait = __DWriteGetCTFontWeight(weight);
-    CGFloat widthTrait = __DWriteGetCTFontWidth(stretch);
-
-    // kCTFontSlantTrait appears scaled to be 1.0 = 180 degrees, rather than = 30 degrees as documentation claims
-    CGFloat slantTrait = _DWriteFontGetSlantDegrees(fontFace) / -180.0f; // kCTFontSlantTrait is positive for negative angles
-
-    // symbolic traits are a bit mask - evaluate the trueness of each flag
-    CTFontSymbolicTraits symbolicTraits = 0;
-
-    if (style != DWRITE_FONT_STYLE_NORMAL) {
-        symbolicTraits |= kCTFontItalicTrait;
-    }
-
-    if (weight > DWRITE_FONT_WEIGHT_MEDIUM) {
-        symbolicTraits |= kCTFontBoldTrait;
-    }
-
-    if (stretch > DWRITE_FONT_STRETCH_MEDIUM) {
-        symbolicTraits |= kCTFontExpandedTrait;
-    } else if (stretch < DWRITE_FONT_STRETCH_NORMAL) {
-        symbolicTraits |= kCTFontCondensedTrait;
-    }
-
-    if (fontFace1->IsMonospacedFont()) {
-        symbolicTraits |= kCTFontMonoSpaceTrait;
-    }
-
-    if (fontFace1->HasVerticalGlyphVariants()) {
-        symbolicTraits |= kCTFontVerticalTrait;
-    }
-
-    if (fontFace2->IsColorFont()) {
-        symbolicTraits |= kCTFontColorGlyphsTrait;
-    }
-
-    // TODO: The symbolic traits below are poorly documented/have no clear DWrite mapping
-    // if (fontFace->IsFoo()) {
-    //     symbolicTraits |= kCTFontUIOptimizedTrait;
-    // }
-    // if (fontFace->IsFoo()) {
-    //     symbolicTraits |= kCTFontCompositeTrait;
-    // }
-
-    // TODO: The upper 16 bits of symbolic traits describe stylistic aspects of a font, specifically its serifs,
-    // such as modern, ornamental, or sans (no serifs)
-    // DWrite has no such API for characterizing fonts
-    // if (fontFace->IsFoo()) {
-    //     symbolicTraits |= kCTFontOldStyleSerifsClass;
-    // }
-
-    // Keys and values for the final trait dictionary
-    CFTypeRef traitKeys[] = { kCTFontSymbolicTrait, kCTFontWeightTrait, kCTFontWidthTrait, kCTFontSlantTrait };
-    CFTypeRef traitValues[] = { CFAutorelease(_CFNumberCreateFromSymbolicTraits(symbolicTraits)),
-                                CFAutorelease(CFNumberCreate(kCFAllocatorDefault, kCFNumberCGFloatType, &weightTrait)),
-                                CFAutorelease(CFNumberCreate(kCFAllocatorDefault, kCFNumberCGFloatType, &widthTrait)),
-                                CFAutorelease(CFNumberCreate(kCFAllocatorDefault, kCFNumberCGFloatType, &slantTrait)) };
-
-    return CFDictionaryCreate(kCFAllocatorDefault,
-                              traitKeys,
-                              traitValues,
-                              4,
-                              &kCFTypeDictionaryKeyCallBacks,
-                              &kCFTypeDictionaryValueCallBacks);
-}
-
-/**
- * Gets a name/informational string from a DWrite font face corresponding to a CTFont constant
- */
-CFStringRef _DWriteFontCopyName(const ComPtr<IDWriteFontFace>& fontFace, CFStringRef nameKey) {
-    if (nameKey == nullptr || fontFace == nullptr) {
-        return nullptr;
-    }
-
-    DWRITE_INFORMATIONAL_STRING_ID informationalStringId;
-
-    if (CFEqual(nameKey, kCTFontCopyrightNameKey)) {
-        informationalStringId = DWRITE_INFORMATIONAL_STRING_COPYRIGHT_NOTICE;
-    } else if (CFEqual(nameKey, kCTFontFamilyNameKey)) {
-        informationalStringId = DWRITE_INFORMATIONAL_STRING_WIN32_FAMILY_NAMES;
-    } else if (CFEqual(nameKey, kCTFontSubFamilyNameKey)) {
-        informationalStringId = DWRITE_INFORMATIONAL_STRING_WIN32_SUBFAMILY_NAMES;
-    } else if (CFEqual(nameKey, kCTFontStyleNameKey)) {
-        ComPtr<IDWriteFontFace3> dwriteFontFace3;
-        RETURN_NULL_IF_FAILED(fontFace.As(&dwriteFontFace3));
-        ComPtr<IDWriteLocalizedStrings> name;
-        RETURN_NULL_IF_FAILED(dwriteFontFace3->GetFaceNames(&name));
-        return static_cast<CFStringRef>(CFRetain(_CFStringFromLocalizedString(name.Get())));
-
-    } else if (CFEqual(nameKey, kCTFontUniqueNameKey)) {
-        return CFStringCreateWithFormat(kCFAllocatorDefault,
-                                        nullptr,
-                                        CFSTR("%@ %@"),
-                                        CFAutorelease(_DWriteFontCopyName(fontFace, kCTFontFullNameKey)),
-                                        CFAutorelease(_DWriteFontCopyName(fontFace, kCTFontStyleNameKey)));
-
-    } else if (CFEqual(nameKey, kCTFontFullNameKey)) {
-        informationalStringId = DWRITE_INFORMATIONAL_STRING_FULL_NAME;
-    } else if (CFEqual(nameKey, kCTFontVersionNameKey)) {
-        informationalStringId = DWRITE_INFORMATIONAL_STRING_VERSION_STRINGS;
-    } else if (CFEqual(nameKey, kCTFontPostScriptNameKey)) {
-        informationalStringId = DWRITE_INFORMATIONAL_STRING_POSTSCRIPT_NAME;
-    } else if (CFEqual(nameKey, kCTFontTrademarkNameKey)) {
-        informationalStringId = DWRITE_INFORMATIONAL_STRING_TRADEMARK;
-    } else if (CFEqual(nameKey, kCTFontManufacturerNameKey)) {
-        informationalStringId = DWRITE_INFORMATIONAL_STRING_MANUFACTURER;
-    } else if (CFEqual(nameKey, kCTFontDesignerNameKey)) {
-        informationalStringId = DWRITE_INFORMATIONAL_STRING_DESIGNER;
-    } else if (CFEqual(nameKey, kCTFontDescriptionNameKey)) {
-        informationalStringId = DWRITE_INFORMATIONAL_STRING_DESCRIPTION;
-    } else if (CFEqual(nameKey, kCTFontVendorURLNameKey)) {
-        informationalStringId = DWRITE_INFORMATIONAL_STRING_FONT_VENDOR_URL;
-    } else if (CFEqual(nameKey, kCTFontDesignerURLNameKey)) {
-        informationalStringId = DWRITE_INFORMATIONAL_STRING_DESIGNER_URL;
-    } else if (CFEqual(nameKey, kCTFontLicenseNameKey)) {
-        informationalStringId = DWRITE_INFORMATIONAL_STRING_LICENSE_DESCRIPTION;
-    } else if (CFEqual(nameKey, kCTFontLicenseURLNameKey)) {
-        informationalStringId = DWRITE_INFORMATIONAL_STRING_LICENSE_INFO_URL;
-    } else if (CFEqual(nameKey, kCTFontSampleTextNameKey)) {
-        informationalStringId = DWRITE_INFORMATIONAL_STRING_SAMPLE_TEXT;
-    } else if (CFEqual(nameKey, kCTFontPostScriptCIDNameKey)) {
-        informationalStringId = DWRITE_INFORMATIONAL_STRING_POSTSCRIPT_CID_NAME;
-    } else {
-        informationalStringId = DWRITE_INFORMATIONAL_STRING_NONE;
-    }
-
-    return _DWriteFontCopyInformationalString(fontFace, informationalStringId);
-}
-
-/**
- * Custom IDWriteGeometrySink class, built on top of a CGMutablePath,
- * that translates callbacks from IDWriteFontFace::GetGlyphRunOutline to CGPath elements.
- *
- * Notes:
- *
- * DWrite provides negative values for y-coordinates, whereas CGPath expects positive ones
- * As such, functions in this class will invert y-coordinates when passing points from DWrite to CG
- *
- * IDWriteFontFace::GetGlyphRunOutline uses this class in a single-threaded manner (dumping the draw instructions from the font linearly)
- * As such, this class is deliberately left thread-unsafe.
- */
-class __CGPathGeometrySink : public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IDWriteGeometrySink> {
-protected:
-    InspectableClass(L"Windows.Bridge.DirectWrite", TrustLevel::BaseTrust);
-
-public:
-    __CGPathGeometrySink(const CGAffineTransform* transform) {
-        _cgPath.reset(CGPathCreateMutable());
-        if (transform) {
-            _transform = std::make_unique<CGAffineTransform>(*transform);
-        }
-    }
-
-    HRESULT RuntimeClassInitialize() {
-        return S_OK;
-    }
-
-    void STDMETHODCALLTYPE AddBeziers(_In_ const D2D1_BEZIER_SEGMENT* beziers, unsigned int beziersCount) {
-        // Some background on Bezier curves:
-        // A quadratic Bezier curve is specified by 3 points:     a start point, a control point, and an end point
-        // A cubic Bezier curve is instead specified by 4 points: a start point, TWO control points, and an end point
-        // As a generalization, most "older" fonts specify quadratic curves, and "newer" ones can use cubic curves
-        // Eg: Times New Roman's curves are all quadratic
-
-        // CGPath has support for both orders of Bezier curve, (AddCurveToPoint for cubic, AddQuadCurveToPointFor quadratic)
-        // but DWrite's GeometrySink only supports cubic Bezier curves (AddBeziers),
-        // and approximates any quadratic curves in terms of a cubic curve
-        // Eg: Reference platform quadratic curve:  (previous endpoint),              (512, 632),              (480, 632)
-        //     DWrite approximate cubic curve:      (previous endpoint), (529, 632.666626), (501.333313, 632), (480, 632)
-
-        // Attempting to do an approximation from cubic back to quadratic would be clumsy and introduce further approximation error,
-        // So just pass all cubic Beziers through directly, including approximated ones
-        for (unsigned int i = 0; i < beziersCount; ++i) {
-            CGPathAddCurveToPoint(_cgPath.get(),
-                                  _transform.get(),
-                                  beziers[i].point1.x,
-                                  -beziers[i].point1.y,
-                                  beziers[i].point2.x,
-                                  -beziers[i].point2.y,
-                                  beziers[i].point3.x,
-                                  -beziers[i].point3.y);
-        }
-    }
-
-    void STDMETHODCALLTYPE AddLines(_In_ const D2D1_POINT_2F* points, unsigned int pointsCount) {
-        // Use individual CGPathAddLineToPoint() calls here, rather than CGPathAddLines
-        // CGPathAddLines does a CGPathMoveToPoint to the first point,
-        // which doesn't match what DWrite expects (draw a line from the previous point)
-        for (unsigned int i = 0; i < pointsCount; ++i) {
-            CGPathAddLineToPoint(_cgPath.get(), _transform.get(), points[i].x, -points[i].y);
-        }
-    }
-
-    void STDMETHODCALLTYPE BeginFigure(D2D1_POINT_2F startPoint, D2D1_FIGURE_BEGIN figureBegin) {
-        if (_figureInProgress) {
-            TraceError(TAG,
-                       L"IDWriteGeometrySink::BeginFigure called while a figure was currently in progress. Placing object in error state - "
-                       L"future function calls will fail.");
-            _invalidState = true;
-        }
-
-        if (!_invalidState) {
-            // figureBegin is ignored for CGPath purposes -
-            // filled vs hollow maps to CGPathDrawingMode, and is specified to CGContextDrawPath directly
-            _figureInProgress = true;
-            CGPathMoveToPoint(_cgPath.get(), _transform.get(), startPoint.x, -startPoint.y);
-        }
-    }
-
-    HRESULT STDMETHODCALLTYPE Close() {
-        if (_figureInProgress) {
-            TraceError(TAG,
-                       L"IDWriteGeometrySink::Close called while a figure was currently in progress. Placing object in error state - "
-                       L"future function calls will fail.");
-            _invalidState = true;
-        }
-
-        return _invalidState ? E_UNEXPECTED : S_OK;
-    }
-
-    void STDMETHODCALLTYPE EndFigure(D2D1_FIGURE_END figureEnd) {
-        if (!_figureInProgress) {
-            TraceError(TAG,
-                       L"IDWriteGeometrySink::EndFigure called while no figure was currently in progress. Placing object in error state - "
-                       L"future function calls will fail.");
-            _invalidState = true;
-        }
-
-        if (!_invalidState) {
-            // figureBegin is ignored for CGPath purposes -
-            // filled vs hollow maps to CGPathDrawingMode, and is specified to CGContextDrawPath directly
-            _figureInProgress = false;
-
-            if (figureEnd) {
-                // D2D1_FIGURE_END_CLOSED  = 1, close the subpath
-                CGPathCloseSubpath(_cgPath.get());
-            }
-            // D2D1_FIGURE_END_OPEN = 0, subpath is left open (no-op in terms of CGPath)
-        }
-    }
-
-    void STDMETHODCALLTYPE SetFillMode(D2D1_FILL_MODE fillMode) {
-        // No-op for CGPath purposes - CGPathDrawingMode is specified to CGContextDrawPath directly
-    }
-
-    void STDMETHODCALLTYPE SetSegmentFlags(D2D1_PATH_SEGMENT vertexFlags) {
-        // No-op for CGPath purposes - CGLineJoin is specified to CGContextStrokePath directly
-    }
-
-    // Releases the class's ownership of its path when all operations are finished, returning a +1 reference (from the path's Create)
-    CGPathRef ReleasePath() {
-        return _cgPath.release();
-    }
-
-private:
-    woc::unique_cf<CGMutablePathRef> _cgPath;
-    std::unique_ptr<CGAffineTransform> _transform;
-    bool _figureInProgress = false; // Keeps track of whether this class is currently between a BeginFigure and EndFigure call
-    bool _invalidState = false; // If BeginFigure and EndFigure calls are imbalanced, invalidate all future operations
-};
-
-CGPathRef _DWriteFontCreatePathForGlyph(const ComPtr<IDWriteFontFace>& fontFace,
-                                        CGFloat pointSize,
-                                        CGGlyph glyph,
-                                        const CGAffineTransform* transform) {
-    // Create an instance of a custom IDWriteGeometrySink backed by a CGMutablePathRef
-    ComPtr<__CGPathGeometrySink> geometrySink = Make<__CGPathGeometrySink>(transform);
-
-    // Call GetGlyphRunOutline using glyph as a C-style array of size 1
-    RETURN_NULL_IF_FAILED(fontFace->GetGlyphRunOutline(pointSize, &glyph, nullptr, nullptr, 1, false, false, geometrySink.Get()));
-
-    // Get the underlying CGMutablePathRef from the sink
-    return geometrySink->ReleasePath();
 }
