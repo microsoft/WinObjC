@@ -25,7 +25,7 @@
 #import <CoreFoundation/CFArray.h>
 #import <CoreFoundation/CFData.h>
 
-#import <vector>
+#import <unordered_map>
 
 /**
  * Custom implementation of IDWriteFontCollectionLoader, which creates an IDWriteFontFileEnumerator to create font files
@@ -39,7 +39,6 @@ protected:
 
 public:
     DWriteFontBinaryDataCollectionLoader();
-    HRESULT RuntimeClassInitialize();
 
     HRESULT STDMETHODCALLTYPE CreateEnumeratorFromKey(_In_ IDWriteFactory* factory,
                                                       _In_ const void* collectionKey,
@@ -50,17 +49,25 @@ public:
     HRESULT AddDatas(CFArrayRef fontDatas, CFArrayRef* errors);
     HRESULT RemoveDatas(CFArrayRef fontDatas, CFArrayRef* errors);
 
-    // Returns a DWriteFontFile corresponding to the index-th CFDataRef in internal storage
-    HRESULT GetFontFileAt(int index, IDWriteFontFile** outFontFile);
-
-    // Returns number of files currently in internal storage
-    size_t GetFontFileCount();
-
 private:
-    // Set of CFDataRef containing data of fonts, used to simplify checking if font has been added
-    woc::unique_cf<CFMutableSetRef> m_fontDatasSet;
+    struct __CFDataHashEqual {
+        std::size_t operator()(const woc::unique_cf<CFDataRef>& data) const {
+            return CFHash(data.get());
+        }
 
-    // List of CFDataRefs registered to this font collection loader through AddDatas()
-    // As an optimization, a font data may cache an IDWriteFontFile that was created using it, for fast access if the font is needed again
-    std::vector<std::pair<woc::unique_cf<CFDataRef>, Microsoft::WRL::ComPtr<IDWriteFontFile>>> m_fontDatas;
+        bool operator()(const woc::unique_cf<CFDataRef>& data1, const woc::unique_cf<CFDataRef>& data2) const {
+            return CFEqual(data1.get(), data2.get());
+        }
+    };
+
+    // Hash set of CFDataRefs registered to this font collection loader through AddDatas(),
+    // mapped to a IDWriteFontFile that was created using it
+    // This latter element is lazily initialized when it is first requested, then cached in the map
+    std::unordered_map<woc::unique_cf<CFDataRef>, Microsoft::WRL::ComPtr<IDWriteFontFile>, __CFDataHashEqual, __CFDataHashEqual>
+        m_fontDatas;
+
+public:
+    decltype(m_fontDatas)::iterator GetDataBegin();
+    decltype(m_fontDatas)::iterator GetDataEnd();
+    HRESULT GetFontFileAt(decltype(m_fontDatas)::iterator it, IDWriteFontFile** outFontFile);
 };

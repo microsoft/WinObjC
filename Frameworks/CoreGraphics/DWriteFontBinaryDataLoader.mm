@@ -45,10 +45,6 @@ public:
         m_lastWriteTime |= static_cast<uint64_t>(fileTime.dwHighDateTime) << 32;
     }
 
-    HRESULT RuntimeClassInitialize() {
-        return S_OK;
-    }
-
     HRESULT STDMETHODCALLTYPE GetFileSize(_Out_ uint64_t* fileSize) {
         RETURN_HR_IF_NULL(E_POINTER, fileSize);
         *fileSize = CFDataGetLength(m_data.get());

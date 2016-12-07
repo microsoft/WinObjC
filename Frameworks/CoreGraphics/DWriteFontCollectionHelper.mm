@@ -27,7 +27,7 @@ static const wchar_t* TAG = L"_DWriteFontCollectionHelper";
 CFMutableArrayRef DWriteFontCollectionHelper::CopyFontFamilyNames() {
     std::lock_guard<std::recursive_mutex> lock(m_lock);
 
-    ComPtr<IDWriteFontCollection> fontCollection = _GetFontCollection();
+    ComPtr<IDWriteFontCollection> fontCollection = GetFontCollection();
     if (!fontCollection) {
         // Return empty array for an empty font collection
         return CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks);
@@ -113,7 +113,7 @@ std::shared_ptr<_DWriteFontProperties> DWriteFontCollectionHelper::GetFontProper
 HRESULT DWriteFontCollectionHelper::CreateFontFamilyWithName(const wchar_t* unicharFamilyName, IDWriteFontFamily** outFontFamily) {
     std::lock_guard<std::recursive_mutex> lock(m_lock);
 
-    ComPtr<IDWriteFontCollection> fontCollection = _GetFontCollection();
+    ComPtr<IDWriteFontCollection> fontCollection = GetFontCollection();
 
     // If no/empty font collection, say that the font family couldn't be found
     // Use S_FALSE to represent 'not found'
@@ -133,7 +133,7 @@ HRESULT DWriteFontCollectionHelper::CreateFontFamilyWithName(const wchar_t* unic
 HRESULT DWriteFontCollectionHelper::_GetFontListForFamilyName(CFStringRef familyName, IDWriteFontList** outFontList) {
     std::lock_guard<std::recursive_mutex> lock(m_lock);
 
-    ComPtr<IDWriteFontCollection> fontCollection = _GetFontCollection();
+    ComPtr<IDWriteFontCollection> fontCollection = GetFontCollection();
 
     // If no/empty font collection, fail to return a font list
     // Use of E_FAIL rather than a more nuanced HRESULT is permissable due to this being a private function only used in

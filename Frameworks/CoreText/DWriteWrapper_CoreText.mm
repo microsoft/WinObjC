@@ -31,7 +31,7 @@ using namespace Microsoft::WRL;
 
 static const wchar_t* TAG = L"_DWriteWrapper_CoreText";
 
-static DWRITE_TEXT_ALIGNMENT __CTAlignmentToDWrite(CTTextAlignment alignment) {
+static inline DWRITE_TEXT_ALIGNMENT __CTAlignmentToDWrite(CTTextAlignment alignment) {
     switch (alignment) {
         case kCTRightTextAlignment:
             return DWRITE_TEXT_ALIGNMENT_TRAILING;
@@ -46,7 +46,7 @@ static DWRITE_TEXT_ALIGNMENT __CTAlignmentToDWrite(CTTextAlignment alignment) {
     }
 }
 
-static DWRITE_WORD_WRAPPING __CTLineBreakModeToDWrite(CTLineBreakMode lineBreakMode) {
+static inline DWRITE_WORD_WRAPPING __CTLineBreakModeToDWrite(CTLineBreakMode lineBreakMode) {
     switch (lineBreakMode) {
         // TODO 1121:: DWrite does not support line breaking by truncation, so just use clipping for now
         case kCTLineBreakByTruncatingHead:
@@ -192,35 +192,21 @@ static inline HRESULT __DWriteTextLayoutApplyExtraKerning(const ComPtr<IDWriteTe
 static HRESULT __DWriteTextFormatCreate(CFAttributedStringRef string, CFRange range, IDWriteTextFormat** outTextFormat) {
     RETURN_HR_IF_NULL(E_POINTER, outTextFormat);
 
-    std::shared_ptr<_DWriteFontProperties> properties;
-    CGFloat fontSize;
-
     // TODO::
     // Note here we only look at attribute value at first index of the specified range as we can get a default font size to use here.
     // Per string range attribute handling will be done in _CreateDWriteTextLayout.
     CTFontRef font = static_cast<CTFontRef>(CFAttributedStringGetAttribute(string, range.location, kCTFontAttributeName, nullptr));
 
+    woc::unique_cf<CFStringRef> fontFullName;
+    CGFloat fontSize = kCTFontSystemFontSize;
+
     if (font) {
-        woc::unique_cf<CFStringRef> fontFullName(CTFontCopyName(font, kCTFontFullNameKey));
-        properties = _DWriteGetFontPropertiesFromName(fontFullName.get());
+        fontFullName.reset(CTFontCopyName(font, kCTFontFullNameKey));
         fontSize = CTFontGetSize(font);
-    } else {
-        properties = std::make_shared<_DWriteFontProperties>();
-        fontSize = kCTFontSystemFontSize;
     }
 
-    ComPtr<IDWriteFactory> dwriteFactory;
-    RETURN_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
     ComPtr<IDWriteTextFormat> textFormat;
-    RETURN_IF_FAILED(
-        dwriteFactory->CreateTextFormat(reinterpret_cast<wchar_t*>(Strings::VectorFromCFString(properties->familyName.get()).data()),
-                                        nullptr,
-                                        properties->weight,
-                                        properties->style,
-                                        properties->stretch,
-                                        fontSize,
-                                        _GetUserDefaultLocaleName().data(),
-                                        &textFormat));
+    RETURN_IF_FAILED(_DWriteCreateTextFormatWithFontNameAndSize(fontFullName.get(), fontSize, &textFormat));
 
     // Apply paragraph style if one exists in the attributed string
     CTParagraphStyleRef settings =
@@ -303,10 +289,10 @@ static HRESULT __DWriteTextLayoutCreate(CFAttributedStringRef string, CFRange ra
             // Otherwise set kerning to true, as it will default to no kerning and this can be used to signify noncompatible features
             // Forces run breaks without interfering with any layout features
             // Necessary for attributes which DWrite does not support during layout (e.g. Color)
-            RETURN_NULL_IF_FAILED(typography->AddFontFeature({ DWRITE_FONT_FEATURE_TAG_KERNING, ++incompatibleAttributeFlag }));
+            RETURN_IF_FAILED(typography->AddFontFeature({ DWRITE_FONT_FEATURE_TAG_KERNING, ++incompatibleAttributeFlag }));
         }
 
-        RETURN_NULL_IF_FAILED(textLayout->SetTypography(typography.Get(), dwriteRange));
+        RETURN_IF_FAILED(textLayout->SetTypography(typography.Get(), dwriteRange));
     }
 
     *outTextLayout = textLayout.Detach();
@@ -322,10 +308,6 @@ protected:
 
 public:
     CustomDWriteTextRenderer() {
-    }
-
-    HRESULT RuntimeClassInitialize() {
-        return S_OK;
     }
 
     HRESULT STDMETHODCALLTYPE DrawGlyphRun(_In_ void* clientDrawingContext,

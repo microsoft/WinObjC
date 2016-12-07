@@ -40,8 +40,8 @@ static const wchar_t* c_defaultUserLanguage = L"en-us";
  * Intended as a singleton.
  */
 class SystemFontCollectionHelper : public DWriteFontCollectionHelper {
-protected:
-    ComPtr<IDWriteFontCollection> _GetFontCollection() {
+public:
+    ComPtr<IDWriteFontCollection> GetFontCollection() {
         // Seems okay to fail-fast in this case - hard to continue without any system font collection
         ComPtr<IDWriteFactory> dwriteFactory;
         THROW_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
@@ -76,8 +76,7 @@ public:
         return S_OK;
     }
 
-protected:
-    ComPtr<IDWriteFontCollection> _GetFontCollection() {
+    ComPtr<IDWriteFontCollection> GetFontCollection() {
         return m_fontCollection;
     }
     ComPtr<IDWriteFontCollection> m_fontCollection;
@@ -258,6 +257,58 @@ HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, IDWriteFontFace** outFon
     RETURN_IF_FAILED(fontFamily->GetFirstMatchingFont(properties->weight, properties->stretch, properties->style, &font));
 
     return font->CreateFontFace(outFontFace);
+}
+
+/**
+ * Helper function that creates an IDWriteFontFormat object for a given font name.
+ */
+HRESULT _DWriteCreateTextFormatWithFontNameAndSize(CFStringRef optionalFontName, CGFloat fontSize, IDWriteTextFormat** outTextFormat) {
+    RETURN_HR_IF_NULL(E_POINTER, outTextFormat);
+
+    ComPtr<IDWriteFactory> dwriteFactory;
+    RETURN_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
+
+    ComPtr<IDWriteTextFormat> textFormat;
+    std::shared_ptr<_DWriteFontProperties> info;
+    std::shared_ptr<_DWriteFontProperties> userFontInfo;
+
+    if (!optionalFontName) {
+        info = std::make_shared<_DWriteFontProperties>();
+    } else {
+        woc::unique_cf<CFStringRef> upperFontName(_CFStringCreateUppercaseCopy(optionalFontName));
+        info = __GetSystemFontCollectionHelper()->GetFontPropertiesFromUppercaseFontName(upperFontName);
+        userFontInfo = __GetUserFontCollectionHelper()->GetFontPropertiesFromUppercaseFontName(upperFontName);
+    }
+
+    if (info) {
+        RETURN_IF_FAILED(
+            dwriteFactory->CreateTextFormat(reinterpret_cast<wchar_t*>(Strings::VectorFromCFString(info->familyName.get()).data()),
+                                            nullptr,
+                                            info->weight,
+                                            info->style,
+                                            info->stretch,
+                                            fontSize,
+                                            _GetUserDefaultLocaleName().data(),
+                                            &textFormat));
+    }
+
+    // Try creating with the user font collection if creating with the system collection wasn't possible
+    if (!textFormat && userFontInfo) {
+        RETURN_IF_FAILED(
+            dwriteFactory->CreateTextFormat(reinterpret_cast<wchar_t*>(Strings::VectorFromCFString(userFontInfo->familyName.get()).data()),
+                                            __GetUserFontCollectionHelper()->GetFontCollection().Get(),
+                                            userFontInfo->weight,
+                                            userFontInfo->style,
+                                            userFontInfo->stretch,
+                                            fontSize,
+                                            _GetUserDefaultLocaleName().data(),
+                                            &textFormat));
+    }
+
+    RETURN_HR_IF_NULL(E_INVALIDARG, textFormat);
+
+    *outTextFormat = textFormat.Detach();
+    return S_OK;
 }
 
 /**

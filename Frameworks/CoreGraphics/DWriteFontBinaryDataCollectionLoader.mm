@@ -50,34 +50,37 @@ public:
         m_parent = parent;
     }
 
-    HRESULT RuntimeClassInitialize() {
-        return S_OK;
-    }
-
     HRESULT STDMETHODCALLTYPE GetCurrentFontFile(_Out_ IDWriteFontFile** outFontFile) {
-        return m_parent->GetFontFileAt(m_location, outFontFile);
+        return m_parent->GetFontFileAt(m_iterator, outFontFile);
     }
 
     HRESULT STDMETHODCALLTYPE MoveNext(_Out_ BOOL* hasCurrentFile) {
         RETURN_HR_IF_NULL(E_POINTER, hasCurrentFile);
-        *hasCurrentFile = ++m_location < m_parent->GetFontFileCount();
+        if (m_beforeBegin) {
+            m_beforeBegin = false;
+            m_iterator = m_parent->GetDataBegin();
+            *hasCurrentFile = (m_iterator != m_parent->GetDataEnd());
+            return S_OK;
+        }
+
+        if (m_iterator == m_parent->GetDataEnd()) {
+            *hasCurrentFile = FALSE;
+        } else {
+            m_iterator = std::next(m_iterator);
+            *hasCurrentFile = (m_iterator != m_parent->GetDataEnd());
+        }
         return S_OK;
     }
 
 private:
-    int m_location = -1;
-
+    bool m_beforeBegin = true; // Marks the '-1' position of m_iterator. Set to false when m_iterator is set to GetDataBegin()
+    decltype(std::declval<DWriteFontBinaryDataCollectionLoader>().GetDataBegin()) m_iterator;
     ComPtr<DWriteFontBinaryDataCollectionLoader> m_parent;
 };
 
 // DWriteFontBinaryDataCollectionLoader member functions
 
 DWriteFontBinaryDataCollectionLoader::DWriteFontBinaryDataCollectionLoader() {
-    m_fontDatasSet.reset(CFSetCreateMutable(nullptr, 0, &kCFTypeSetCallBacks));
-}
-
-HRESULT DWriteFontBinaryDataCollectionLoader::DWriteFontBinaryDataCollectionLoader::RuntimeClassInitialize() {
-    return S_OK;
 }
 
 HRESULT STDMETHODCALLTYPE DWriteFontBinaryDataCollectionLoader::CreateEnumeratorFromKey(_In_ IDWriteFactory* factory,
@@ -95,18 +98,14 @@ HRESULT DWriteFontBinaryDataCollectionLoader::AddDatas(CFArrayRef fontDatas, CFA
 
     CFIndex count = CFArrayGetCount(fontDatas);
     for (CFIndex i = 0; i < count; ++i) {
-        CFDataRef data = static_cast<CFDataRef>(CFArrayGetValueAtIndex(fontDatas, i));
-        if (data) {
-            if (CFSetContainsValue(m_fontDatasSet.get(), data)) {
+        woc::unique_cf<CFDataRef> data(static_cast<CFDataRef>(CFRetain(CFArrayGetValueAtIndex(fontDatas, i))));
+        if (data.get()) {
+            if (m_fontDatas.find(data) != m_fontDatas.end()) {
                 __AppendErrorIfExists(outErrors, kCTFontManagerErrorAlreadyRegistered);
                 ret = S_FALSE;
             } else {
-                m_fontDatas.push_back({});
-
-                CFRetain(data);
-                m_fontDatas.back().first.reset(data);
-
-                CFSetAddValue(m_fontDatasSet.get(), data);
+                ComPtr<IDWriteFontFile> emptyFontFilePtr = nullptr;
+                m_fontDatas.emplace(std::move(data), emptyFontFilePtr);
                 __AppendNullptrIfExists(outErrors);
             }
         } else {
@@ -129,18 +128,11 @@ HRESULT DWriteFontBinaryDataCollectionLoader::RemoveDatas(CFArrayRef fontDatas, 
 
     CFIndex count = CFArrayGetCount(fontDatas);
     for (CFIndex i = 0; i < count; ++i) {
-        CFDataRef data = static_cast<CFDataRef>(CFArrayGetValueAtIndex(fontDatas, i));
-        if (data) {
-            if (CFSetContainsValue(m_fontDatasSet.get(), data)) {
-                CFSetRemoveValue(m_fontDatasSet.get(), data);
-
-                for (auto it = m_fontDatas.begin(); it != m_fontDatas.end(); ++it) {
-                    if (CFEqual(it->first.get(), data)) {
-                        m_fontDatas.erase(it);
-                        break;
-                    }
-                }
-
+        woc::unique_cf<CFDataRef> data(static_cast<CFDataRef>(CFRetain(CFArrayGetValueAtIndex(fontDatas, i))));
+        if (data.get()) {
+            const auto it = m_fontDatas.find(data);
+            if (it != m_fontDatas.end()) {
+                m_fontDatas.erase(it);
                 __AppendNullptrIfExists(outErrors);
             } else {
                 __AppendErrorIfExists(outErrors, kCTFontManagerErrorNotRegistered);
@@ -159,28 +151,30 @@ HRESULT DWriteFontBinaryDataCollectionLoader::RemoveDatas(CFArrayRef fontDatas, 
     return ret;
 }
 
-HRESULT DWriteFontBinaryDataCollectionLoader::GetFontFileAt(int index, IDWriteFontFile** outFontFile) {
+decltype(DWriteFontBinaryDataCollectionLoader::m_fontDatas)::iterator DWriteFontBinaryDataCollectionLoader::GetDataBegin() {
+    return m_fontDatas.begin();
+}
+
+decltype(DWriteFontBinaryDataCollectionLoader::m_fontDatas)::iterator DWriteFontBinaryDataCollectionLoader::GetDataEnd() {
+    return m_fontDatas.end();
+}
+
+HRESULT DWriteFontBinaryDataCollectionLoader::GetFontFileAt(decltype(m_fontDatas)::iterator it, IDWriteFontFile** outFontFile) {
     RETURN_HR_IF_NULL(E_POINTER, outFontFile);
-    RETURN_HR_IF(E_ILLEGAL_METHOD_CALL, index < 0 || index > m_fontDatas.size());
+    RETURN_HR_IF(E_BOUNDS, it == m_fontDatas.end());
 
-    auto& it = m_fontDatas.at(index);
-
-    // Create the IDWriteFontFile in the cache, if it's not already cached
-    if (!it.second) {
+    // // Create the IDWriteFontFile in the cache, if it's not already cached
+    if (!it->second) {
         ComPtr<IDWriteFactory> dwriteFactory;
         RETURN_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
 
         ComPtr<DWriteFontBinaryDataLoader> loader;
-        RETURN_IF_FAILED(MakeAndInitialize<DWriteFontBinaryDataLoader>(&loader, it.first.get()));
+        RETURN_IF_FAILED(MakeAndInitialize<DWriteFontBinaryDataLoader>(&loader, it->first.get()));
         RETURN_IF_FAILED(dwriteFactory->RegisterFontFileLoader(loader.Get()));
 
         int unused;
-        RETURN_IF_FAILED(dwriteFactory->CreateCustomFontFileReference(&unused, sizeof(unused), loader.Get(), &it.second));
+        RETURN_IF_FAILED(dwriteFactory->CreateCustomFontFileReference(&unused, sizeof(unused), loader.Get(), &it->second));
     }
 
-    return it.second.CopyTo(outFontFile);
-}
-
-size_t DWriteFontBinaryDataCollectionLoader::GetFontFileCount() {
-    return m_fontDatas.size();
+    return it->second.CopyTo(outFontFile);
 }

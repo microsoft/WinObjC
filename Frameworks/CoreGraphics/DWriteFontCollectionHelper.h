@@ -42,7 +42,7 @@ using _DWriteFontPropertiesMap =
  * such as font name -> family name, postscript name -> font name, font name -> font weight, style,
  * by means of an internal cache.
  *
- * Concrete implementations must implement _GetFontCollection(), which is expected to return an IDWriteFontCollection to work on.
+ * Concrete implementations must implement GetFontCollection(), which is expected to return an IDWriteFontCollection to work on.
  *
  * Thread-safe.
  */
@@ -55,9 +55,9 @@ public:
     CFMutableArrayRef CopyFontNamesForFamilyName(CFStringRef familyName);
     std::shared_ptr<_DWriteFontProperties> GetFontPropertiesFromUppercaseFontName(const woc::unique_cf<CFStringRef>& upperFontName);
     HRESULT CreateFontFamilyWithName(const wchar_t* unicharFamilyName, IDWriteFontFamily** outFontFamily);
+    virtual Microsoft::WRL::ComPtr<IDWriteFontCollection> GetFontCollection() = 0;
 
 protected:
-    virtual Microsoft::WRL::ComPtr<IDWriteFontCollection> _GetFontCollection() = 0;
     HRESULT _GetFontListForFamilyName(CFStringRef familyName, IDWriteFontList** outFontList);
 
     void _InitializePropertiesMap();

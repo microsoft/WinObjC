@@ -216,8 +216,6 @@ static CFDictionaryRef _DWriteFontCreateTraitsDict(const ComPtr<IDWriteFontFace>
     // Get pointers for the additional FontFace interfaces
     ComPtr<IDWriteFontFace1> fontFace1;
     RETURN_NULL_IF_FAILED(fontFace.As(&fontFace1));
-    ComPtr<IDWriteFontFace2> fontFace2;
-    RETURN_NULL_IF_FAILED(fontFace.As(&fontFace2));
     ComPtr<IDWriteFontFace3> fontFace3;
     RETURN_NULL_IF_FAILED(fontFace.As(&fontFace3));
 
@@ -256,24 +254,17 @@ static CFDictionaryRef _DWriteFontCreateTraitsDict(const ComPtr<IDWriteFontFace>
         symbolicTraits |= kCTFontVerticalTrait;
     }
 
-    if (fontFace2->IsColorFont()) {
+    if (fontFace3->IsColorFont()) {
         symbolicTraits |= kCTFontColorGlyphsTrait;
     }
 
     // TODO: The symbolic traits below are poorly documented/have no clear DWrite mapping
-    // if (fontFace->IsFoo()) {
-    //     symbolicTraits |= kCTFontUIOptimizedTrait;
-    // }
-    // if (fontFace->IsFoo()) {
-    //     symbolicTraits |= kCTFontCompositeTrait;
-    // }
+    // kCTFontUIOptimizedTrait
+    // kCTFontCompositeTrait
 
     // TODO: The upper 16 bits of symbolic traits describe stylistic aspects of a font, specifically its serifs,
     // such as modern, ornamental, or sans (no serifs)
     // DWrite has no such API for characterizing fonts
-    // if (fontFace->IsFoo()) {
-    //     symbolicTraits |= kCTFontOldStyleSerifsClass;
-    // }
 
     // Keys and values for the final trait dictionary
     CFTypeRef traitKeys[] = { kCTFontSymbolicTrait, kCTFontWeightTrait, kCTFontWidthTrait, kCTFontSlantTrait };

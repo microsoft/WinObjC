@@ -51,10 +51,6 @@ public:
         }
     }
 
-    HRESULT RuntimeClassInitialize() {
-        return S_OK;
-    }
-
     void STDMETHODCALLTYPE AddBeziers(_In_ const D2D1_BEZIER_SEGMENT* beziers, unsigned int beziersCount) {
         // Some background on Bezier curves:
         // A quadratic Bezier curve is specified by 3 points:     a start point, a control point, and an end point
