@@ -241,8 +241,8 @@ CORETEXT_EXPORT CFDictionaryRef CTFontCopyVariation(CTFontRef font) STUB_METHOD;
 CORETEXT_EXPORT CFArrayRef CTFontCopyFeatures(CTFontRef font) STUB_METHOD;
 CORETEXT_EXPORT CFArrayRef CTFontCopyFeatureSettings(CTFontRef font) STUB_METHOD;
 CORETEXT_EXPORT bool CTFontGetGlyphsForCharacters(CTFontRef font, const UniChar characters[], CGGlyph glyphs[], CFIndex count);
-CORETEXT_EXPORT void CTFontDrawGlyphs(CTFontRef font, const CGGlyph glyphs[], const CGPoint positions[], size_t count, CGContextRef context)
-    STUB_METHOD;
+CORETEXT_EXPORT void CTFontDrawGlyphs(
+    CTFontRef font, const CGGlyph glyphs[], const CGPoint positions[], size_t count, CGContextRef context);
 CORETEXT_EXPORT CFIndex CTFontGetLigatureCaretPositions(CTFontRef font, CGGlyph glyph, CGFloat* positions, CFIndex maxPositions)
     STUB_METHOD;
 CORETEXT_EXPORT CGFontRef CTFontCopyGraphicsFont(CTFontRef font, CTFontDescriptorRef _Nullable* attributes);

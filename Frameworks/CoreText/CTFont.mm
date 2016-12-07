@@ -23,6 +23,7 @@
 #import <CFRuntime.h>
 #import <CFBridgeUtilities.h>
 #import <UIKit/UIFont.h>
+#import <CGContextInternal.h>
 
 #import <CoreText/CTFontDescriptor.h>
 #include <COMIncludes.h>
@@ -35,6 +36,7 @@
 #import <map>
 #import <memory>
 #import <vector>
+#import <algorithm>
 
 static const wchar_t* g_logTag = L"CTFont";
 
@@ -852,11 +854,21 @@ bool CTFontGetGlyphsForCharacters(CTFontRef fontRef, const UniChar characters[],
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 void CTFontDrawGlyphs(CTFontRef font, const CGGlyph glyphs[], const CGPoint positions[], size_t count, CGContextRef context) {
-    UNIMPLEMENTED();
+    if (font && glyphs && positions && count != 0 && context) {
+        std::vector<DWRITE_GLYPH_OFFSET> offsets(count);
+        std::transform(positions, positions + count, offsets.begin(), [](CGPoint point) {
+            return DWRITE_GLYPH_OFFSET{ point.x, point.y };
+        });
+        std::vector<FLOAT> advances(count);
+
+        DWRITE_GLYPH_RUN run = { font->_dwriteFontFace.Get(), font->_pointSize, count, glyphs, advances.data(), offsets.data(), FALSE, 0 };
+        CGContextSetTextPosition(context, 0, 0);
+        CGContextDrawGlyphRun(context, &run);
+    }
 }
 
 /**

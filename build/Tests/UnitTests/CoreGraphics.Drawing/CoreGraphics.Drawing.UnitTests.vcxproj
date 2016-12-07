@@ -240,6 +240,7 @@
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClangCompile Include="..\..\..\..\tests\unittests\CoreGraphics.drawing\CGTextDrawing.cpp" />
     <ClangCompile Include="..\..\..\..\tests\unittests\CoreGraphics.drawing\CTDrawingTests.cpp" />
     <ClCompile Include="$(StarboardBasePath)\tests\unittests\Framework\Framework.cpp" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.Drawing\EntryPoint.cpp" />
