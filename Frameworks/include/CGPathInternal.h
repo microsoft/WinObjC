@@ -23,6 +23,7 @@
 
 #include <COMIncludes.h>
 #include <d2d1.h>
+#import <WRLHelpers.h>
 #include <COMIncludes_End.h>
 
 const int kCGPathMaxPointCount = 3;
@@ -56,5 +57,6 @@ struct CGPathElementInternal : CGPathElement {
 typedef struct CGPathElementInternal CGPathElementInternal;
 
 HRESULT _CGPathGetGeometry(CGPathRef path, ID2D1Geometry** pGeometry);
+HRESULT _CGPathApplyInternal(Microsoft::WRL::ComPtr<ID2D1PathGeometry> pathGeometry, void* info, CGPathApplierFunction function);
 
 #endif
