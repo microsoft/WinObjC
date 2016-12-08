@@ -37,7 +37,6 @@ typedef struct {
     CGImageRef _imgClip, _imgMask;
     CGRect _imgMaskRect;
     CGAffineTransform curTransform;
-    CGPoint curTextPosition;
     CGTextDrawingMode textDrawingMode;
     uint32_t lineCap;
     float lineWidth;

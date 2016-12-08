@@ -237,6 +237,58 @@ INSTANTIATE_TEST_CASE_P(TestAlignmentLineBreakMode,
                                            ::testing::ValuesIn(c_writingDirections),
                                            ::testing::ValuesIn(c_fontSizes)));
 
+class TransformTextMatrix : public WhiteBackgroundTest, public ::testing::WithParamInterface<CGAffineTransform> {
+    CFStringRef CreateOutputFilename() {
+        CGAffineTransform textTransform = GetParam();
+        return CFStringCreateWithFormat(nullptr,
+                                        nullptr,
+                                        CFSTR("TestImage.TransformCTM.%.02f.%.02f.%.02f.%.02f.%.02f.%.02f.png"),
+                                        textTransform.a,
+                                        textTransform.b,
+                                        textTransform.c,
+                                        textTransform.d,
+                                        textTransform.tx,
+                                        textTransform.ty);
+    }
+};
+
+DISABLED_DRAW_TEST_P(TransformTextMatrix, TextTextMatrix) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGContextSetTextMatrix(context, GetParam());
+
+    // Creates path with current rectangle
+    woc::unique_cf<CGMutablePathRef> path{ CGPathCreateMutable() };
+    CGPathAddRect(path.get(), nullptr, bounds);
+
+    // Create style setting to match given alignment
+    CTParagraphStyleSetting setting[1];
+    CTTextAlignment alignment = kCTCenterTextAlignment;
+    setting[0].spec = kCTParagraphStyleSpecifierAlignment;
+    setting[0].valueSize = sizeof(CTTextAlignment);
+    setting[0].value = &alignment;
+
+    woc::unique_cf<CTParagraphStyleRef> paragraphStyle{ CTParagraphStyleCreate(setting, std::extent<decltype(setting)>::value) };
+    woc::unique_cf<CTFontRef> myCFFont{ CTFontCreateWithName(CFSTR("Arial"), 20, nullptr) };
+
+    CFStringRef keys[2] = { kCTFontAttributeName, kCTParagraphStyleAttributeName };
+    CFTypeRef values[2] = { myCFFont.get(), paragraphStyle.get() };
+
+    __DrawLoremIpsum(context, path.get(), keys, values);
+}
+
+static const CGAffineTransform c_textTransforms[] = { CGAffineTransformMakeRotation(30.0 * M_PI / 180.0),
+                                                      CGAffineTransformMakeRotation(60.0 * M_PI / 180.0),
+                                                      CGAffineTransformMakeRotation(-45.0 * M_PI / 180.0),
+                                                      CGAffineTransformMakeScale(2.0, 1.0),
+                                                      CGAffineTransformMakeScale(1.0, 2.0),
+                                                      CGAffineTransformMakeScale(2.0, 1.0),
+                                                      { 2, 2, 0, 2, 0, 0 },
+                                                      { 2, 0, 2, 2, 0, 0 },
+                                                      { 2, 2, 1.75, 2, 0, 0 } };
+INSTANTIATE_TEST_CASE_P(TestDrawingTextWithTransformedTextMatrix, TransformTextMatrix, ::testing::ValuesIn(c_textTransforms));
+
 class RotateCTM : public WhiteBackgroundTest, public ::testing::WithParamInterface<CGFloat> {
     CFStringRef CreateOutputFilename() {
         CGFloat rotation = GetParam();

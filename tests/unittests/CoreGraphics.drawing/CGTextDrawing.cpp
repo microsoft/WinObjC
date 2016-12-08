@@ -47,6 +47,15 @@ DISABLED_DRAW_TEST_F(CGContext, ShowGlyphsAtPoint, WhiteBackgroundTest) {
     CGContextShowGlyphsAtPoint(context, 25, 50, glyphs.data(), glyphs.size());
 }
 
+DISABLED_DRAW_TEST_F(CGContext, DrawWithRotatedTextMatrix, WhiteBackgroundTest) {
+    CGContextRef context = GetDrawingContext();
+    std::vector<CGGlyph> glyphs{ __CreateGlyphs() };
+    __SetFontForContext(context);
+    CGAffineTransform textMatrix = CGContextGetTextMatrix(context);
+    CGContextSetTextMatrix(context, CGAffineTransformRotate(textMatrix, 45.0 * M_PI / 180.0));
+    CGContextShowGlyphsAtPoint(context, 25, 50, glyphs.data(), glyphs.size());
+}
+
 // On reference platform, CGContextShowText* can only be used with CGContextSelectFont
 // Which we do not currently support.
 #ifdef WINOBJC
