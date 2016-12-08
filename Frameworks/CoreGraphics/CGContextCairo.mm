@@ -499,24 +499,24 @@ void CGContextCairo::CGContextShowGlyphsAtPoint(float x, float y, const CGGlyph*
 
 void CGContextCairo::CGContextShowGlyphsWithAdvances(const CGGlyph* glyphs, const CGSize* advances, size_t count) {
     _isDirty = true;
-    CGPoint curPos = curState->curTextPosition;
     CGFontRef font = curState->getCurFont();
     ComPtr<IDWriteFontFace> fontFace;
-    if (SUCCEEDED(_CGFontGetDWriteFontFace(font, &fontFace))) {
-        std::vector<DWRITE_GLYPH_OFFSET> positions(count);
-        CGPoint delta = CGPointZero;
-        std::transform(advances, advances + count, positions.begin(), [&delta](CGSize size) {
-            DWRITE_GLYPH_OFFSET ret = { delta.x, delta.y };
-            delta.x += size.width;
-            delta.y += size.height;
-            return ret;
-        });
-        std::vector<FLOAT> dwriteAdvances(count);
+    FAIL_FAST_IF_FAILED(_CGFontGetDWriteFontFace(font, &fontFace));
+    std::vector<DWRITE_GLYPH_OFFSET> positions(count);
+    CGPoint delta = CGPointZero;
+    std::transform(advances, advances + count, positions.begin(), [&delta](CGSize size) {
+        DWRITE_GLYPH_OFFSET ret = { delta.x, delta.y };
+        delta.x += size.width;
+        delta.y += size.height;
+        return ret;
+    });
 
-        DWRITE_GLYPH_RUN run = { fontFace.Get(), curState->fontSize, count, glyphs, dwriteAdvances.data(), positions.data(), FALSE, 0 };
-        CGContextDrawGlyphRun(&run);
-        curState->curTextPosition = { curPos.x + delta.x, curPos.y + delta.y };
-    }
+    // Give array of advances of zero so it will use positions correctly
+    std::vector<FLOAT> dwriteAdvances(count);
+
+    DWRITE_GLYPH_RUN run = { fontFace.Get(), curState->fontSize, count, glyphs, dwriteAdvances.data(), positions.data(), FALSE, 0 };
+    CGContextDrawGlyphRun(&run);
+    curState->curTextPosition = { curState->curTextPosition.x + delta.x, curState->curTextPosition.y + delta.y };
 }
 
 void CGContextCairo::CGContextShowGlyphs(const CGGlyph* glyphs, size_t count) {

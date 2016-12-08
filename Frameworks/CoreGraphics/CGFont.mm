@@ -384,14 +384,12 @@ CFDataRef _CGFontGetData(CGFontRef font) {
 }
 
 bool _CGFontGetGlyphsForCharacters(CGFontRef font, const char* characters, size_t count, CGGlyph* glyphs) {
-    if (!font || !characters || !glyphs || count == 0) {
-        return false;
-    }
-
+    RETURN_FALSE_IF(!font || !characters || !glyphs || count == 0);
     std::vector<uint32_t> chars(characters, characters + count);
     return SUCCEEDED(font->_dwriteFontFace->GetGlyphIndices(chars.data(), count, glyphs));
 }
 
 HRESULT _CGFontGetDWriteFontFace(CGFontRef font, IDWriteFontFace** outFace) {
-    return font ? font->_dwriteFontFace.CopyTo(outFace) : E_POINTER;
+    RETURN_HR_IF(E_POINTER, font == nullptr || outFace == nullptr);
+    return font->_dwriteFontFace.CopyTo(outFace);
 }

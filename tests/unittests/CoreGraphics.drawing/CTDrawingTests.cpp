@@ -490,7 +490,7 @@ DISABLED_DRAW_TEST_F(CTFontManager, DrawWithCustomFont, WhiteBackgroundTest) {
 }
 #endif // WINOBJC
 
-DRAW_TEST_F(CTFont, DrawGlyphs, WhiteBackgroundTest) {
+DISABLED_DRAW_TEST_F(CTFont, DrawGlyphs, WhiteBackgroundTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -498,9 +498,7 @@ DRAW_TEST_F(CTFont, DrawGlyphs, WhiteBackgroundTest) {
     woc::unique_cf<CGMutablePathRef> path{ CGPathCreateMutable() };
     CGPathAddRect(path.get(), nullptr, bounds);
     woc::unique_cf<CTFontRef> font{ CTFontCreateWithName(CFSTR("Segoe UI"), 20, nullptr) };
-    woc::unique_cf<CFStringRef> text{ CFSTR("TEST") };
-    UniChar chars[4];
-    CFStringGetCharacters(text.get(), { 0, 4 }, chars);
+    UniChar chars[4] = { 'T', 'E', 'S', 'T' };
     CGGlyph glyphs[4];
     CTFontGetGlyphsForCharacters(font.get(), chars, glyphs, 4);
     CGPoint positions[4] = { { 0, 0 }, { 10, 10 }, { 25, 25 }, { 65, 15 } };
