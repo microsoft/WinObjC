@@ -181,6 +181,7 @@
     <None Include="CGCatalog_TemporaryKey.pfx" />
     <Image Include="..\..\CGCatalog\Resources\AddArc.png" />
     <Image Include="..\..\CGCatalog\Resources\AddArcToPoint.png" />
+    <Image Include="..\..\CGCatalog\Resources\RoundedRect.png" />
     <Image Include="Assets\LockScreenLogo.scale-200.png" />
     <Image Include="Assets\SplashScreen.scale-200.png" />
     <Image Include="Assets\Square150x150Logo.scale-200.png" />

@@ -229,5 +229,8 @@
     <Image Include="..\..\CGCatalog\Resources\AddArc.png">
       <Filter>CGCatalog\Resources</Filter>
     </Image>
+    <Image Include="..\..\CGCatalog\Resources\RoundedRect.png">
+      <Filter>CGCatalog\Resources</Filter>
+    </Image>
   </ItemGroup>
 </Project>

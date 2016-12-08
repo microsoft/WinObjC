@@ -37,7 +37,6 @@
         CGContextSetLineDash(currentContext, self.options.linePhase, self.options.lineDashPattern, self.options.lineDashCount);
 
         CGMutablePathRef thepath = CGPathCreateMutable();
-        void CGPathApplyCallback(void* context, const CGPathElement* element);
 
         CGPathMoveToPoint(thepath, NULL, 200, 35);
         CGPathAddLineToPoint(thepath, NULL, 165, 100);

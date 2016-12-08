@@ -39,7 +39,6 @@
         CGAffineTransform transformation = self.options.affineTransform;
 
         CGMutablePathRef thepath = CGPathCreateMutable();
-        void CGPathApplyCallback(void* context, const CGPathElement* element);
 
         CGPathMoveToPoint(thepath, &transformation, 100, 450);
         CGPathAddQuadCurveToPoint(thepath, &transformation, 125, 425, 150, 450);
