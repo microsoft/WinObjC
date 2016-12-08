@@ -18,13 +18,15 @@
 #include <CoreText/CoreText.h>
 #include <Starboard/SmartTypes.h>
 
-void __CreateGlyphs(CGGlyph glyphs[4]) {
+static std::vector<CGGlyph> __CreateGlyphs() {
     UniChar chars[4] = { 'T', 'E', 'S', 'T' };
+    std::vector<CGGlyph> glyphs(4);
     woc::unique_cf<CTFontRef> ctfont{ CTFontCreateWithName(CFSTR("Arial"), 144, nullptr) };
-    CTFontGetGlyphsForCharacters(ctfont.get(), chars, glyphs, 4);
+    CTFontGetGlyphsForCharacters(ctfont.get(), chars, glyphs.data(), 4);
+    return glyphs;
 }
 
-void __SetFontForContext(CGContextRef context) {
+static void __SetFontForContext(CGContextRef context) {
     woc::unique_cf<CGFontRef> font{ CGFontCreateWithFontName(CFSTR("Arial")) };
     CGContextSetFont(context, font.get());
     CGContextSetFontSize(context, 144);
@@ -32,19 +34,17 @@ void __SetFontForContext(CGContextRef context) {
 
 DISABLED_DRAW_TEST_F(CGContext, ShowGlyphs, WhiteBackgroundTest) {
     CGContextRef context = GetDrawingContext();
-    CGGlyph glyphs[4];
-    __CreateGlyphs(glyphs);
+    std::vector<CGGlyph> glyphs{ __CreateGlyphs() };
     __SetFontForContext(context);
     CGContextSetTextPosition(context, 25, 50);
-    CGContextShowGlyphs(context, glyphs, 4);
+    CGContextShowGlyphs(context, glyphs.data(), glyphs.size());
 }
 
 DISABLED_DRAW_TEST_F(CGContext, ShowGlyphsAtPoint, WhiteBackgroundTest) {
     CGContextRef context = GetDrawingContext();
-    CGGlyph glyphs[4];
-    __CreateGlyphs(glyphs);
+    std::vector<CGGlyph> glyphs{ __CreateGlyphs() };
     __SetFontForContext(context);
-    CGContextShowGlyphsAtPoint(context, 25, 50, glyphs, 4);
+    CGContextShowGlyphsAtPoint(context, 25, 50, glyphs.data(), glyphs.size());
 }
 
 // On reference platform, CGContextShowText* can only be used with CGContextSelectFont

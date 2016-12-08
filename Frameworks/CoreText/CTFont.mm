@@ -860,10 +860,10 @@ bool CTFontGetGlyphsForCharacters(CTFontRef fontRef, const UniChar characters[],
 void CTFontDrawGlyphs(CTFontRef font, const CGGlyph glyphs[], const CGPoint positions[], size_t count, CGContextRef context) {
     if (font && glyphs && positions && count != 0 && context) {
         std::vector<DWRITE_GLYPH_OFFSET> offsets(count);
-        std::transform(positions, positions + count, offsets.begin(), [](CGPoint point) {
+        std::transform(positions, positions + count, offsets.begin(), [](const CGPoint& point) {
             return DWRITE_GLYPH_OFFSET{ point.x, point.y };
         });
-        std::vector<FLOAT> advances(count);
+        std::vector<FLOAT> advances(count, 0);
 
         DWRITE_GLYPH_RUN run = { font->_dwriteFontFace.Get(), font->_pointSize, count, glyphs, advances.data(), offsets.data(), FALSE, 0 };
         CGContextSetTextPosition(context, 0, 0);

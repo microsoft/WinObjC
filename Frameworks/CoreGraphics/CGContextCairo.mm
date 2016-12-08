@@ -504,7 +504,7 @@ void CGContextCairo::CGContextShowGlyphsWithAdvances(const CGGlyph* glyphs, cons
     FAIL_FAST_IF_FAILED(_CGFontGetDWriteFontFace(font, &fontFace));
     std::vector<DWRITE_GLYPH_OFFSET> positions(count);
     CGPoint delta = CGPointZero;
-    std::transform(advances, advances + count, positions.begin(), [&delta](CGSize size) {
+    std::transform(advances, advances + count, positions.begin(), [&delta](const CGSize& size) {
         DWRITE_GLYPH_OFFSET ret = { delta.x, delta.y };
         delta.x += size.width;
         delta.y += size.height;
@@ -512,7 +512,7 @@ void CGContextCairo::CGContextShowGlyphsWithAdvances(const CGGlyph* glyphs, cons
     });
 
     // Give array of advances of zero so it will use positions correctly
-    std::vector<FLOAT> dwriteAdvances(count);
+    std::vector<FLOAT> dwriteAdvances(count, 0);
 
     DWRITE_GLYPH_RUN run = { fontFace.Get(), curState->fontSize, count, glyphs, dwriteAdvances.data(), positions.data(), FALSE, 0 };
     CGContextDrawGlyphRun(&run);
