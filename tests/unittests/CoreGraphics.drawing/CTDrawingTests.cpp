@@ -18,11 +18,13 @@
 #include <CoreText/CoreText.h>
 #include <Starboard/SmartTypes.h>
 
+#ifdef WINOBJC
 static NSURL* __GetURLFromPathRelativeToModuleDirectory(NSString* relativePath) {
     static char fullPath[_MAX_PATH];
     static int unused = [](char* path) { return GetModuleFileNameA(NULL, path, _MAX_PATH); }(fullPath);
     return [NSURL fileURLWithPath:[[@(fullPath) stringByDeletingLastPathComponent] stringByAppendingPathComponent:relativePath]];
 }
+#endif // WINOBJC
 
 DISABLED_DRAW_TEST_F(CTFrame, BasicDrawingTest, WhiteBackgroundTest) {
     CGContextRef context = GetDrawingContext();
@@ -440,6 +442,7 @@ DISABLED_DRAW_TEST_P(Fonts, TestFonts) {
 static CFStringRef c_fontNames[] = { CFSTR("Arial"), CFSTR("Times New Roman"), CFSTR("Wingdings"), CFSTR("Segoe UI") };
 INSTANTIATE_TEST_CASE_P(TestDrawingTextInFonts, Fonts, ::testing::ValuesIn(c_fontNames));
 
+#ifdef WINOBJC
 DISABLED_DRAW_TEST_F(CTFontManager, DrawWithCustomFont, WhiteBackgroundTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
@@ -463,5 +466,41 @@ DISABLED_DRAW_TEST_F(CTFontManager, DrawWithCustomFont, WhiteBackgroundTest) {
     CFStringRef keys[2] = { kCTFontAttributeName, kCTParagraphStyleAttributeName };
     CFTypeRef values[2] = { myCFFont.get(), paragraphStyle.get() };
 
-    __DrawLoremIpsum(context, path.get(), keys, values);
+    woc::unique_cf<CFDictionaryRef> dict{ CFDictionaryCreate(nullptr,
+                                                             (const void**)keys,
+                                                             (const void**)values,
+                                                             std::extent<decltype(keys)>::value,
+                                                             &kCFTypeDictionaryKeyCallBacks,
+                                                             &kCFTypeDictionaryValueCallBacks) };
+
+    woc::unique_cf<CFAttributedStringRef> attrString{
+        CFAttributedStringCreate(nullptr,
+                                 CFSTR("GUR DHVPX OEBJA SBK WHZCF BIRE GUR YNML QBT. gur dhvpx oebja qbt whzcf bire gur ynml sbk."),
+                                 dict.get())
+    };
+
+    woc::unique_cf<CTFramesetterRef> framesetter{ CTFramesetterCreateWithAttributedString(attrString.get()) };
+
+    // Creates frame for framesetter with current attributed string
+    woc::unique_cf<CTFrameRef> frame{ CTFramesetterCreateFrame(framesetter.get(), CFRangeMake(0, 0), path.get(), NULL) };
+
+    // Draws the text in the frame
+    CTFrameDraw(frame.get(), context);
+    CTFontManagerUnregisterFontsForURL((__bridge CFURLRef)testFileURL, kCTFontManagerScopeSession, nullptr);
+}
+#endif // WINOBJC
+
+DISABLED_DRAW_TEST_F(CTFont, DrawGlyphs, WhiteBackgroundTest) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    // Creates path with current rectangle
+    woc::unique_cf<CGMutablePathRef> path{ CGPathCreateMutable() };
+    CGPathAddRect(path.get(), nullptr, bounds);
+    woc::unique_cf<CTFontRef> font{ CTFontCreateWithName(CFSTR("Segoe UI"), 20, nullptr) };
+    UniChar chars[4] = { 'T', 'E', 'S', 'T' };
+    CGGlyph glyphs[4];
+    CTFontGetGlyphsForCharacters(font.get(), chars, glyphs, 4);
+    CGPoint positions[4] = { { 0, 0 }, { 10, 10 }, { 25, 25 }, { 65, 15 } };
+    CTFontDrawGlyphs(font.get(), glyphs, positions, 4, context);
 }

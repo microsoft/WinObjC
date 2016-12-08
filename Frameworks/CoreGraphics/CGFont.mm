@@ -28,6 +28,8 @@
 
 #import "LoggingNative.h"
 
+#import <vector>
+
 const CFStringRef kCGFontVariationAxisName = static_cast<CFStringRef>(@"kCGFontVariationAxisName");
 const CFStringRef kCGFontVariationAxisMinValue = static_cast<CFStringRef>(@"kCGFontVariationAxisMinValue");
 const CFStringRef kCGFontVariationAxisMaxValue = static_cast<CFStringRef>(@"kCGFontVariationAxisMaxValue");
@@ -379,4 +381,15 @@ CFTypeID CGFontGetTypeID() {
 // So to prevent potentially copying multiple times, save a reference to the data
 CFDataRef _CGFontGetData(CGFontRef font) {
     return font ? font->_data.get() : nullptr;
+}
+
+bool _CGFontGetGlyphsForCharacters(CGFontRef font, const char* characters, size_t count, CGGlyph* glyphs) {
+    RETURN_FALSE_IF(!font || !characters || !glyphs || count == 0);
+    std::vector<uint32_t> chars(characters, characters + count);
+    return SUCCEEDED(font->_dwriteFontFace->GetGlyphIndices(chars.data(), count, glyphs));
+}
+
+HRESULT _CGFontGetDWriteFontFace(CGFontRef font, IDWriteFontFace** outFace) {
+    RETURN_HR_IF(E_POINTER, font == nullptr || outFace == nullptr);
+    return font->_dwriteFontFace.CopyTo(outFace);
 }
