@@ -44,7 +44,7 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <ProjectGuid>{DC8F4C51-B642-4C0E-9848-D7BF9C765912}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>ClangModules.UnitTests</RootNamespace>
+    <RootNamespace>Clang.UnitTests</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <ApplicationType>Windows Store</ApplicationType>
@@ -275,18 +275,18 @@
     <ClCompile Include="$(StarboardBasePath)\tests\unittests\EntryPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\ClangModules\ObjCModulesTest.m">
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Clang\ObjCModulesTest.m">
       <ObjectiveCModules>true</ObjectiveCModules>
     </ClangCompile>
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\ClangModules\ObjCPPModulesTest.mm">
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Clang\ObjCPPModulesTest.mm">
       <ObjectiveCModules>true</ObjectiveCModules>
     </ClangCompile>
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\ClangModules\ObjCImportTest.m">
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Clang\ObjCImportTest.m">
       <CompileAs>CompileAsObjC</CompileAs>
     </ClangCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(StarboardBasePath)\tests\unittests\ClangModules\ClangModules.h" />
+    <ClInclude Include="$(StarboardBasePath)\tests\unittests\Clang\ClangModules.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
