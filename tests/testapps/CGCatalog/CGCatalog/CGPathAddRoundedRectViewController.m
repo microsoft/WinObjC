@@ -51,7 +51,7 @@
 
         CGPathRelease(thepath);
 
-        [super drawComparisonCGImageFromImageName:@"AddArcToPoint" intoContext:currentContext];
+        [super drawComparisonCGImageFromImageName:@"RoundedRect" intoContext:currentContext];
     }];
 
     [self.view addSubview:drawView];

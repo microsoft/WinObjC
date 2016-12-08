@@ -26,6 +26,8 @@
 #import <CoreGraphics/D2DWrapper.h>
 #import "CGPathInternal.h"
 
+#import "CoreGraphics/D2DWrapper_CustomGeometrySink.h"
+
 #include <COMIncludes.h>
 #import <WRLHelpers.h>
 #include <COMIncludes_End.h>
@@ -704,99 +706,15 @@ void CGPathAddRoundedRect(
     FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(rectangleGeometry.Get(), transform));
 }
 
-int _CGPathPointCountForElementType(CGPathElementType type) {
-    int pointCount = 0;
-
-    switch (type) {
-        case kCGPathElementMoveToPoint:
-        case kCGPathElementAddLineToPoint:
-            pointCount = 1;
-            break;
-        case kCGPathElementAddQuadCurveToPoint:
-            pointCount = 2;
-            break;
-        case kCGPathElementAddCurveToPoint:
-            pointCount = 3;
-            break;
-        case kCGPathElementCloseSubpath:
-            pointCount = 0;
-            break;
-    }
-    return pointCount;
-}
-
-class _CGPathApplySink
-    : public Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::RuntimeClassType::ClassicCom>,
-                                          IAgileObject,
-                                          Microsoft::WRL::FtmBase,
-                                          ID2D1SimplifiedGeometrySink> {
-public:
-    _CGPathApplySink(_In_ void* info, _In_ CGPathApplierFunction function) : m_info(info), m_pathApplierFunction(function) {
-    }
-
-    STDMETHOD_(void, AddBeziers)(const D2D1_BEZIER_SEGMENT* beziers, UINT bezierCount) {
-        for (UINT i = 0; i < bezierCount; ++i) {
-            CGPoint cgPoints[3];
-            cgPoints[0] = _D2DPointToCGPoint(beziers[i].point1);
-            cgPoints[1] = _D2DPointToCGPoint(beziers[i].point2);
-            cgPoints[2] = _D2DPointToCGPoint(beziers[i].point3);
-            CGPathElement ele = { kCGPathElementAddCurveToPoint, cgPoints };
-            const CGPathElement* element = &ele;
-
-            m_pathApplierFunction(m_info, element);
-        }
-    }
-
-    STDMETHOD_(void, AddLines)(const D2D1_POINT_2F* points, UINT pointsCount) {
-        for (UINT i = 0; i < pointsCount; ++i) {
-            CGPoint cgPoints[1];
-            cgPoints[0] = _D2DPointToCGPoint(points[i]);
-
-            CGPathElement ele = { kCGPathElementAddLineToPoint, cgPoints };
-            const CGPathElement* element = &ele;
-
-            m_pathApplierFunction(m_info, element);
-        }
-    }
-
-    STDMETHOD_(void, BeginFigure)(D2D1_POINT_2F startPoint, D2D1_FIGURE_BEGIN figureBegin) {
-        CGPoint cgPoints[1];
-        cgPoints[0] = _D2DPointToCGPoint(startPoint);
-
-        CGPathElement ele = { kCGPathElementMoveToPoint, cgPoints };
-        const CGPathElement* element = &ele;
-
-        m_pathApplierFunction(m_info, element);
-    }
-
-    STDMETHOD_(void, EndFigure)(D2D1_FIGURE_END figureEnd) {
-    }
-
-    STDMETHOD_(void, SetFillMode)(D2D1_FILL_MODE fillMode) {
-    }
-
-    STDMETHOD_(void, SetSegmentFlags)(D2D1_PATH_SEGMENT vertexFlags) {
-    }
-
-    STDMETHOD(Close)() {
-        return S_OK;
-    }
-
-private:
-    void* m_info;
-    CGPathApplierFunction m_pathApplierFunction;
-};
-
 /**
 @Status Caveat
 @Notes Quadratic Bezier Curves are simplified into Cubic Bezier curves. Control point approximation for arcs differs from reference
 platform. TODO 1419 : Fix figure logic in D2D to eliminate extra start point callbacks.
 */
 void CGPathApply(CGPathRef path, void* info, CGPathApplierFunction function) {
-    ComPtr<_CGPathApplySink> sink = Microsoft::WRL::Make<_CGPathApplySink>(info, function);
+    FAIL_FAST_IF_NULL(path);
     FAIL_FAST_IF_FAILED(path->ClosePath());
-    FAIL_FAST_IF_FAILED(
-        path->GetPathGeometry()->Simplify(D2D1_GEOMETRY_SIMPLIFICATION_OPTION_CUBICS_AND_LINES, D2D1::IdentityMatrix(), sink.Get()));
+    FAIL_FAST_IF_FAILED(_CGPathApplyInternal(path->GetPathGeometry(), info, function));
 }
 
 /**

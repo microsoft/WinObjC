@@ -17,6 +17,7 @@
 		8B23605A1DDAACAE008F4EBF /* AddArcToPoint.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B2360581DDAACAE008F4EBF /* AddArcToPoint.png */; };
 		8B23605D1DDBAC23008F4EBF /* CGPathAddRoundedRectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B23605C1DDBAC23008F4EBF /* CGPathAddRoundedRectViewController.m */; };
 		8B2360601DF23E53008F4EBF /* CGPathApplyCurveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B23605F1DF23E53008F4EBF /* CGPathApplyCurveViewController.m */; };
+		8B2360621DF8BC4E008F4EBF /* RoundedRect.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B2360611DF8BC4E008F4EBF /* RoundedRect.png */; };
 		8B2D2E821D9DA57700B8E557 /* AddCurveToPoint.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B2D2E7D1D9DA57700B8E557 /* AddCurveToPoint.png */; };
 		8B2D2E831D9DA57700B8E557 /* AddElipseToRect.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B2D2E7E1D9DA57700B8E557 /* AddElipseToRect.png */; };
 		8B2D2E841D9DA57700B8E557 /* AddLineToPoint.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B2D2E7F1D9DA57700B8E557 /* AddLineToPoint.png */; };
@@ -75,6 +76,7 @@
 		8B23605C1DDBAC23008F4EBF /* CGPathAddRoundedRectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathAddRoundedRectViewController.m; sourceTree = "<group>"; };
 		8B23605E1DF23E53008F4EBF /* CGPathApplyCurveViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathApplyCurveViewController.h; sourceTree = "<group>"; };
 		8B23605F1DF23E53008F4EBF /* CGPathApplyCurveViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathApplyCurveViewController.m; sourceTree = "<group>"; };
+		8B2360611DF8BC4E008F4EBF /* RoundedRect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RoundedRect.png; sourceTree = "<group>"; };
 		8B2D2E7D1D9DA57700B8E557 /* AddCurveToPoint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AddCurveToPoint.png; sourceTree = "<group>"; };
 		8B2D2E7E1D9DA57700B8E557 /* AddElipseToRect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AddElipseToRect.png; sourceTree = "<group>"; };
 		8B2D2E7F1D9DA57700B8E557 /* AddLineToPoint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AddLineToPoint.png; sourceTree = "<group>"; };
@@ -270,6 +272,7 @@
 		F0D21CB81D0605E1002C32EE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8B2360611DF8BC4E008F4EBF /* RoundedRect.png */,
 				8B2360571DDAACAE008F4EBF /* AddArc.png */,
 				8B2360581DDAACAE008F4EBF /* AddArcToPoint.png */,
 				8B2D2E8F1D9DA5F100B8E557 /* CloseSubPath.png */,
@@ -357,6 +360,7 @@
 				8B2D2E821D9DA57700B8E557 /* AddCurveToPoint.png in Resources */,
 				8B2D2E851D9DA57700B8E557 /* AddPath.png in Resources */,
 				5528160A1D0630300082C178 /* LogoAutodesk.png in Resources */,
+				8B2360621DF8BC4E008F4EBF /* RoundedRect.png in Resources */,
 				F0D21CBC1D0605ED002C32EE /* Launch Screen.storyboard in Resources */,
 				8B2360591DDAACAE008F4EBF /* AddArc.png in Resources */,
 				8B2D2E8E1D9DA5C800B8E557 /* GetBoundingBox.png in Resources */,
