@@ -709,7 +709,7 @@ void CGPathAddRoundedRect(
  platform. TODO 1419 : Fix figure logic in D2D to eliminate extra start point callbacks.
 */
 void CGPathApply(CGPathRef path, void* info, CGPathApplierFunction function) {
-    FAIL_FAST_IF_NULL(path);
+    RETURN_IF(!path);
     FAIL_FAST_IF_FAILED(path->ClosePath());
     FAIL_FAST_IF_FAILED(_CGPathApplyInternal(path->GetPathGeometry(), info, function));
 }
