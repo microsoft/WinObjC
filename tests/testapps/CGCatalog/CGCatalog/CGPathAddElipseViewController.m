@@ -19,11 +19,6 @@
 
 @implementation CGPathAddElipseViewController
 
-- (id)initWithDrawingOptions:(CGDrawOptions*)options {
-    self = [super initWithDrawingOptions:options];
-    return self;
-}
-
 - (void)loadView {
     [super loadView];
 

@@ -19,11 +19,6 @@
 
 @implementation CGPathAddCurveToPointViewController
 
-- (id)initWithDrawingOptions:(CGDrawOptions*)options {
-    self = [super initWithDrawingOptions:options];
-    return self;
-}
-
 - (void)loadView {
     [super loadView];
     [self.view setBackgroundColor:[UIColor clearColor]];

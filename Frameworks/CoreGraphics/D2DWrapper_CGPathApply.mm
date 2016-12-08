@@ -15,20 +15,19 @@
 //******************************************************************************
 
 #import <CoreGraphics/D2DWrapper.h>
-#import <Starboard.h>
 
-#import "CoreGraphics/D2DWrapper_CustomGeometrySink.h"
+#import "CGPathInternal.h"
 
 #include <COMIncludes.h>
 #import <WRLHelpers.h>
 #include <COMIncludes_End.h>
 
+using namespace Microsoft::WRL;
+
 // The CGPathApplySink is an implementation of the Id2D1SimplifiedGeometrySink. We use this sink to create a custom callback for each
 // figure type of the path. This will let us call the CGPathApplierFunction provided to us automatically through the use of D2D APIs.
 // This should only be used with CGPathApply as it is very specialized for this case only.
-class _CGPathApplySink
-    : public Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::RuntimeClassType::WinRtClassicComMix>,
-                                          ID2D1SimplifiedGeometrySink> {
+class _CGPathApplySink : public RuntimeClass<RuntimeClassFlags<RuntimeClassType::WinRtClassicComMix>, ID2D1SimplifiedGeometrySink> {
 protected:
     InspectableClass(L"Windows.Bridge.Direct2D._CGPathApplySink", TrustLevel::BaseTrust);
 
@@ -85,10 +84,8 @@ private:
     CGPathApplierFunction m_pathApplierFunction;
 };
 
-using namespace Microsoft::WRL;
-
 HRESULT _CGPathApplyInternal(ComPtr<ID2D1PathGeometry> pathGeometry, void* info, CGPathApplierFunction function) {
-    ComPtr<_CGPathApplySink> sink = Microsoft::WRL::Make<_CGPathApplySink>(info, function);
+    ComPtr<_CGPathApplySink> sink = Make<_CGPathApplySink>(info, function);
     RETURN_IF_FAILED(pathGeometry->Simplify(D2D1_GEOMETRY_SIMPLIFICATION_OPTION_CUBICS_AND_LINES, D2D1::IdentityMatrix(), sink.Get()));
     return S_OK;
 }
