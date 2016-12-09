@@ -70,33 +70,33 @@ static CFURLRef getURLRefForOutFile(const wchar_t* filename) {
 TEST(ImageIO, ImageAtIndexWithData) {
     const wchar_t* imageFile = L"photo6_1024x670.jpg";
     NSData* imageData = getDataFromImageFile(imageFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
     NSDictionary* options = @{
         @"kCGImageSourceTypeIdentifierHint" : @"kUTTypeJPEG",
         @"kCGImageSourceShouldAllowFloat" : @"kCFBooleanTrue",
         @"kCGImageSourceShouldCache" : @"kCFBooleanTrue"
     };
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     CGImageRef imageRef = CGImageSourceCreateImageAtIndex(imageSource, 0, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageRef != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    ASSERT_NE_MSG(nil, imageRef, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
 
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRef), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRef), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRef), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRef), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRef)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRef), 670, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRef), 1024, "FAILED: ImageIOTest::Width");
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetAlphaInfo(imageRef));
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetBitmapInfo(imageRef));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRef));
+    EXPECT_EQ(24, CGImageGetBitsPerPixel(imageRef));
+    EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRef)));
+    EXPECT_EQ(670, CGImageGetHeight(imageRef));
+    EXPECT_EQ(1024, CGImageGetWidth(imageRef));
     size_t frameCount = CGImageSourceGetCount(imageSource);
-    ASSERT_EQ_MSG(frameCount, 1, "FAILED: ImageIOTest::FrameCount");
+    EXPECT_EQ(1, frameCount);
     CFRelease(imageSource);
 }
 
 TEST(ImageIO, ImageAtIndexWithDataProvider) {
     const wchar_t* imageFile = L"photo6_1024x670.jpg";
     NSData* imageData = getDataFromImageFile(imageFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
     NSDictionary* options = @{
         @"kCGImageSourceTypeIdentifierHint" : @"kUTTypeJPEG",
         @"kCGImageSourceShouldAllowFloat" : @"kCFBooleanTrue",
@@ -104,18 +104,18 @@ TEST(ImageIO, ImageAtIndexWithDataProvider) {
     };
     CGDataProviderRef imgDataProvider = CGDataProviderCreateWithCFData((CFDataRef)imageData);
     CGImageSourceRef imageSource = CGImageSourceCreateWithDataProvider(imgDataProvider, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithDataProvider returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithDataProvider returned nullptr");
     CGImageRef imageRef = CGImageSourceCreateImageAtIndex(imageSource, 0, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageRef != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRef), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRef), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRef), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRef), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRef)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRef), 670, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRef), 1024, "FAILED: ImageIOTest::Width");
+    ASSERT_NE_MSG(nil, imageRef, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetAlphaInfo(imageRef));
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetBitmapInfo(imageRef));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRef));
+    EXPECT_EQ(24, CGImageGetBitsPerPixel(imageRef));
+    EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRef)));
+    EXPECT_EQ(670, CGImageGetHeight(imageRef));
+    EXPECT_EQ(1024, CGImageGetWidth(imageRef));
     size_t frameCount = CGImageSourceGetCount(imageSource);
-    ASSERT_EQ_MSG(frameCount, 1, "FAILED: ImageIOTest::FrameCount");
+    EXPECT_EQ(1, frameCount);
     CFRelease(imageSource);
 }
 
@@ -129,29 +129,29 @@ TEST(ImageIO, ImageAtIndexWithUrl) {
         @"kCGImageSourceShouldCache" : @"kCFBooleanTrue"
     };
     CGImageSourceRef imageSource = CGImageSourceCreateWithURL(imgUrl, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithURL returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithURL returned nullptr");
     CGImageRef imageRef = CGImageSourceCreateImageAtIndex(imageSource, 0, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageRef != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRef), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRef), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRef), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRef), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRef)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRef), 670, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRef), 1024, "FAILED: ImageIOTest::Width");
+    ASSERT_NE_MSG(nil, imageRef, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetAlphaInfo(imageRef));
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetBitmapInfo(imageRef));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRef));
+    EXPECT_EQ(24, CGImageGetBitsPerPixel(imageRef));
+    EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRef)));
+    EXPECT_EQ(670, CGImageGetHeight(imageRef));
+    EXPECT_EQ(1024, CGImageGetWidth(imageRef));
     size_t frameCount = CGImageSourceGetCount(imageSource);
-    ASSERT_EQ_MSG(frameCount, 1, "FAILED: ImageIOTest::FrameCount");
+    EXPECT_EQ(1, frameCount);
     CFRelease(imageSource);
 }
 
 TEST(ImageIO, ImageTypeTest) {
     const wchar_t* imageFile = L"photo6_1024x670.jpg";
     NSData* imageData = getDataFromImageFile(imageFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, nullptr);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     CFStringRef imageType = CGImageSourceGetType(imageSource);
-    ASSERT_TRUE_MSG(imageType != nil, "FAILED: ImageIOTest::CGImageSourceGetType returned nullptr");
+    ASSERT_NE_MSG(nil, imageType, "FAILED: ImageIOTest::CGImageSourceGetType returned nullptr");
     ASSERT_OBJCEQ_MSG(static_cast<NSString*>(imageType), @"public.jpeg", "FAILED: ImageIOTest::Incorrect Image Type");
     CFRelease(imageSource);
 }
@@ -159,7 +159,7 @@ TEST(ImageIO, ImageTypeTest) {
 TEST(ImageIO, ThumbnailAtIndexFromSrcWithoutThumbnail) {
     const wchar_t* imageFile = L"photo6_1024x670.jpg";
     NSData* imageData = getDataFromImageFile(imageFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
     NSDictionary* options = @{
         @"kCGImageSourceTypeIdentifierHint" : @"kUTTypeJPEG",
         @"kCGImageSourceShouldAllowFloat" : @"kCFBooleanTrue",
@@ -170,23 +170,23 @@ TEST(ImageIO, ThumbnailAtIndexFromSrcWithoutThumbnail) {
         @"kCGImageSourceCreateThumbnailWithTransform" : @"kCFBooleanTrue"
     };
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     CGImageRef imageRef = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageRef != nil, "FAILED: ImageIOTest::CGImageSourceCreateThumbnailAtIndex returned nullptr");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRef), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRef), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRef), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRef), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRef)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRef), 670, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRef), 1024, "FAILED: ImageIOTest::Width");
+    ASSERT_NE_MSG(nil, imageRef, "FAILED: ImageIOTest::CGImageSourceCreateThumbnailAtIndex returned nullptr");
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetAlphaInfo(imageRef));
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetBitmapInfo(imageRef));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRef));
+    EXPECT_EQ(24, CGImageGetBitsPerPixel(imageRef));
+    EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRef)));
+    EXPECT_EQ(670, CGImageGetHeight(imageRef));
+    EXPECT_EQ(1024, CGImageGetWidth(imageRef));
     CFRelease(imageSource);
 }
 
 TEST(ImageIO, ThumbnailAtIndexFromAsymmetricSrcWithThumbnail) {
     const wchar_t* imageFile = L"photo6_1024x670_thumbnail_227x149.jpg";
     NSData* imageData = getDataFromImageFile(imageFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
     NSDictionary* options = @{
         @"kCGImageSourceTypeIdentifierHint" : @"kUTTypeJPEG",
         @"kCGImageSourceShouldAllowFloat" : @"kCFBooleanTrue",
@@ -197,23 +197,23 @@ TEST(ImageIO, ThumbnailAtIndexFromAsymmetricSrcWithThumbnail) {
         @"kCGImageSourceCreateThumbnailWithTransform" : @"kCFBooleanTrue"
     };
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     CGImageRef imageRef = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageRef != nil, "FAILED: ImageIOTest::CGImageSourceCreateThumbnailAtIndex returned nullptr");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRef), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRef), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRef), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRef), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRef)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRef), 149, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRef), 227, "FAILED: ImageIOTest::Width");
+    ASSERT_NE_MSG(nil, imageRef, "FAILED: ImageIOTest::CGImageSourceCreateThumbnailAtIndex returned nullptr");
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetAlphaInfo(imageRef));
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetBitmapInfo(imageRef));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRef));
+    EXPECT_EQ(24, CGImageGetBitsPerPixel(imageRef));
+    EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRef)));
+    EXPECT_EQ(149, CGImageGetHeight(imageRef));
+    EXPECT_EQ(227, CGImageGetWidth(imageRef));
     CFRelease(imageSource);
 }
 
 TEST(ImageIO, ThumbnailSizesRelativeToImage) {
     const wchar_t* imageFile = L"photo6_1024x670_thumbnail_227x149.jpg";
     NSData* imageData = getDataFromImageFile(imageFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
     NSDictionary* options = @{
         @"kCGImageSourceTypeIdentifierHint" : @"kUTTypeJPEG",
         @"kCGImageSourceShouldAllowFloat" : @"kCFBooleanTrue",
@@ -224,16 +224,16 @@ TEST(ImageIO, ThumbnailSizesRelativeToImage) {
         @"kCGImageSourceCreateThumbnailWithTransform" : @"kCFBooleanTrue"
     };
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     CGImageRef imageRef = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageRef != nil, "FAILED: ImageIOTest::CGImageSourceCreateThumbnailAtIndex returned nullptr");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRef), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRef), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRef), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRef), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRef)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRef), 10, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRef), 10, "FAILED: ImageIOTest::Width");
+    ASSERT_NE_MSG(nil, imageRef, "FAILED: ImageIOTest::CGImageSourceCreateThumbnailAtIndex returned nullptr");
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetAlphaInfo(imageRef));
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetBitmapInfo(imageRef));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRef));
+    EXPECT_EQ(24, CGImageGetBitsPerPixel(imageRef));
+    EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRef)));
+    EXPECT_EQ(10, CGImageGetHeight(imageRef));
+    EXPECT_EQ(10, CGImageGetWidth(imageRef));
     CFRelease(imageSource);
 
     options = @{
@@ -246,177 +246,179 @@ TEST(ImageIO, ThumbnailSizesRelativeToImage) {
         @"kCGImageSourceCreateThumbnailWithTransform" : @"kCFBooleanTrue"
     };
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     imageRef = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageRef != nil, "FAILED: ImageIOTest::CGImageSourceCreateThumbnailAtIndex returned nullptr");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRef), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRef), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRef), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRef), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRef)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRef), 149, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRef), 227, "FAILED: ImageIOTest::Width");
+    ASSERT_NE_MSG(nil, imageRef, "FAILED: ImageIOTest::CGImageSourceCreateThumbnailAtIndex returned nullptr");
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetAlphaInfo(imageRef));
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetBitmapInfo(imageRef));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRef));
+    EXPECT_EQ(24, CGImageGetBitsPerPixel(imageRef));
+    EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRef)));
+    EXPECT_EQ(149, CGImageGetHeight(imageRef));
+    EXPECT_EQ(227, CGImageGetWidth(imageRef));
     CFRelease(imageSource);
 }
 
 TEST(ImageIO, GIF_TIFF_MultiFrameSourceTest) {
     const wchar_t* imageFile = L"photo7_4layers_683x1024.gif";
     NSData* imageData = getDataFromImageFile(imageFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
     NSDictionary* options = @{
         @"kCGImageSourceTypeIdentifierHint" : @"kUTTypeGIF",
         @"kCGImageSourceShouldAllowFloat" : @"kCFBooleanTrue",
         @"kCGImageSourceShouldCache" : @"kCFBooleanTrue"
     };
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     CGImageRef imageRef = CGImageSourceCreateImageAtIndex(imageSource, 2, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageRef != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    ASSERT_NE_MSG(nil, imageRef, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
     CFStringRef imageType = CGImageSourceGetType(imageSource);
-    ASSERT_TRUE_MSG(imageType != nil, "FAILED: ImageIOTest::CGImageSourceGetType returned nullptr");
+    ASSERT_NE_MSG(nil, imageType, "FAILED: ImageIOTest::CGImageSourceGetType returned nullptr");
     ASSERT_OBJCEQ_MSG(static_cast<NSString*>(imageType), @"com.compuserve.gif", "FAILED: ImageIOTest::Incorrect Image Type");
     size_t frameCount = CGImageSourceGetCount(imageSource);
-    ASSERT_EQ_MSG(frameCount, 4, "FAILED: ImageIOTest::FrameCount");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRef), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRef), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRef), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRef), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRef)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRef), 1024, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRef), 683, "FAILED: ImageIOTest::Width");
+    EXPECT_EQ(4, frameCount);
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetAlphaInfo(imageRef));
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetBitmapInfo(imageRef));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRef));
+    EXPECT_EQ(8, CGImageGetBitsPerPixel(imageRef));
+    // TODO: Check Paletted/Indexed color space.
+    EXPECT_EQ(1024, CGImageGetHeight(imageRef));
+    EXPECT_EQ(683, CGImageGetWidth(imageRef));
 
     imageFile = L"photo8_4layers_1024x683.tif";
     imageData = getDataFromImageFile(imageFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
     options = @{
         @"kCGImageSourceTypeIdentifierHint" : @"kUTTypeTIFF",
         @"kCGImageSourceShouldAllowFloat" : @"kCFBooleanTrue",
         @"kCGImageSourceShouldCache" : @"kCFBooleanTrue"
     };
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     imageRef = CGImageSourceCreateImageAtIndex(imageSource, 3, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageRef != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    ASSERT_NE_MSG(nil, imageRef, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
     imageType = CGImageSourceGetType(imageSource);
-    ASSERT_TRUE_MSG(imageType != nil, "FAILED: ImageIOTest::CGImageSourceGetType returned nullptr");
+    ASSERT_NE_MSG(nil, imageType, "FAILED: ImageIOTest::CGImageSourceGetType returned nullptr");
     ASSERT_OBJCEQ_MSG(static_cast<NSString*>(imageType), @"public.tiff", "FAILED: ImageIOTest::Incorrect Image Type");
     frameCount = CGImageSourceGetCount(imageSource);
     ASSERT_EQ_MSG(frameCount, 4, "FAILED: ImageIOTest::FrameCount");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRef), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRef), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRef), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRef), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRef)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRef), 1024, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRef), 683, "FAILED: ImageIOTest::Width");
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetAlphaInfo(imageRef));
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetBitmapInfo(imageRef));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRef));
+    EXPECT_EQ(24, CGImageGetBitsPerPixel(imageRef));
+    EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRef)));
+    EXPECT_EQ(1024, CGImageGetHeight(imageRef));
+    EXPECT_EQ(683, CGImageGetWidth(imageRef));
     CFRelease(imageSource);
 }
 
 TEST(ImageIO, BMP_ICO_PNG_SingleFrameSourceTest) {
     const wchar_t* imageFile = L"testimg_227x149.bmp";
     NSData* imageData = getDataFromImageFile(imageFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
     NSDictionary* options = @{
         @"kCGImageSourceTypeIdentifierHint" : @"kUTTypeBMP",
         @"kCGImageSourceShouldAllowFloat" : @"kCFBooleanTrue",
         @"kCGImageSourceShouldCache" : @"kCFBooleanTrue"
     };
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     CGImageRef imageRef = CGImageSourceCreateImageAtIndex(imageSource, 0, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageRef != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    ASSERT_NE_MSG(nil, imageRef, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
     CFStringRef imageType = CGImageSourceGetType(imageSource);
-    ASSERT_TRUE_MSG(imageType != nil, "FAILED: ImageIOTest::CGImageSourceGetType returned nullptr");
+    ASSERT_NE_MSG(nil, imageType, "FAILED: ImageIOTest::CGImageSourceGetType returned nullptr");
     ASSERT_OBJCEQ_MSG(static_cast<NSString*>(imageType), @"com.microsoft.bmp", "FAILED: ImageIOTest::Incorrect Image Type");
     size_t frameCount = CGImageSourceGetCount(imageSource);
-    ASSERT_EQ_MSG(frameCount, 1, "FAILED: ImageIOTest::FrameCount");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRef), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRef), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRef), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRef), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRef)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRef), 149, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRef), 227, "FAILED: ImageIOTest::Width");
+    EXPECT_EQ(1, frameCount);
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetAlphaInfo(imageRef));
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetBitmapInfo(imageRef));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRef));
+    EXPECT_EQ(8, CGImageGetBitsPerPixel(imageRef));
+    // TODO: Check Paletted/Indexed color space.
+    EXPECT_EQ(149, CGImageGetHeight(imageRef));
+    EXPECT_EQ(227, CGImageGetWidth(imageRef));
 
+    // RGBA 8-bit ICO frame
     imageFile = L"photo2_683x1024.ico";
     imageData = getDataFromImageFile(imageFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
     options = @{
         @"kCGImageSourceTypeIdentifierHint" : @"kUTTypeICO",
         @"kCGImageSourceShouldAllowFloat" : @"kCFBooleanTrue",
         @"kCGImageSourceShouldCache" : @"kCFBooleanTrue"
     };
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     imageRef = CGImageSourceCreateImageAtIndex(imageSource, 0, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageRef != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    ASSERT_NE_MSG(nil, imageRef, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
     imageType = CGImageSourceGetType(imageSource);
-    ASSERT_TRUE_MSG(imageType != nil, "FAILED: ImageIOTest::CGImageSourceGetType returned nullptr");
+    ASSERT_NE_MSG(nil, imageType, "FAILED: ImageIOTest::CGImageSourceGetType returned nullptr");
     ASSERT_OBJCEQ_MSG(static_cast<NSString*>(imageType), @"com.microsoft.ico", "FAILED: ImageIOTest::Incorrect Image Type");
     frameCount = CGImageSourceGetCount(imageSource);
-    ASSERT_EQ_MSG(frameCount, 1, "FAILED: ImageIOTest::FrameCount");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRef), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRef), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRef), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRef), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRef)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRef), 1024, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRef), 683, "FAILED: ImageIOTest::Width");
+    EXPECT_EQ(1, frameCount);
+    EXPECT_EQ(kCGImageAlphaFirst, CGImageGetAlphaInfo(imageRef));
+    EXPECT_EQ(kCGImageAlphaFirst | kCGBitmapByteOrder32Big, CGImageGetBitmapInfo(imageRef));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRef));
+    EXPECT_EQ(32, CGImageGetBitsPerPixel(imageRef));
+    EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRef)));
+    EXPECT_EQ(1024, CGImageGetHeight(imageRef));
+    EXPECT_EQ(683, CGImageGetWidth(imageRef));
 
+    // Paletted/Indexed PNG
     imageFile = L"seafloor_256x256.png";
     imageData = getDataFromImageFile(imageFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
     options = @{
         @"kCGImageSourceTypeIdentifierHint" : @"kUTTypePNG",
         @"kCGImageSourceShouldAllowFloat" : @"kCFBooleanTrue",
         @"kCGImageSourceShouldCache" : @"kCFBooleanTrue"
     };
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     imageRef = CGImageSourceCreateImageAtIndex(imageSource, 0, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageRef != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    ASSERT_NE_MSG(nil, imageRef, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
     imageType = CGImageSourceGetType(imageSource);
-    ASSERT_TRUE_MSG(imageType != nil, "FAILED: ImageIOTest::CGImageSourceGetType returned nullptr");
+    ASSERT_NE_MSG(nil, imageType, "FAILED: ImageIOTest::CGImageSourceGetType returned nullptr");
     ASSERT_OBJCEQ_MSG(static_cast<NSString*>(imageType), @"public.png", "FAILED: ImageIOTest::Incorrect Image Type");
     frameCount = CGImageSourceGetCount(imageSource);
-    ASSERT_EQ_MSG(frameCount, 1, "FAILED: ImageIOTest::FrameCount");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRef), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRef), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRef), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRef), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRef)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRef), 256, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRef), 256, "FAILED: ImageIOTest::Width");
+    EXPECT_EQ(1, frameCount);
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetAlphaInfo(imageRef));
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetBitmapInfo(imageRef));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRef));
+    EXPECT_EQ(8, CGImageGetBitsPerPixel(imageRef));
+    // TODO: Check Paletted/Indexed color space.
+    EXPECT_EQ(256, CGImageGetHeight(imageRef));
+    EXPECT_EQ(256, CGImageGetWidth(imageRef));
     CFRelease(imageSource);
 }
 
 TEST(ImageIO, NegativeScenarioTest) {
     const wchar_t* imageFile = L"photo6_1024x670.jpg";
     NSData* imageData = getDataFromImageFile(imageFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
     NSDictionary* options = @{
         @"kCGImageSourceTypeIdentifierHint" : @"kUTTypeJPEG",
         @"kCGImageSourceShouldAllowFloat" : @"kCFBooleanTrue",
         @"kCGImageSourceShouldCache" : @"kCFBooleanTrue"
     };
     CGImageSourceRef imageSource = CGImageSourceCreateWithData(nullptr, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageSource == nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData should return nullptr");
+    ASSERT_EQ_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData should return nullptr");
 
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, nullptr);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
 
     imageSource = CGImageSourceCreateWithData(nullptr, nullptr);
-    ASSERT_TRUE_MSG(imageSource == nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData should return nullptr");
+    ASSERT_EQ_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData should return nullptr");
 
     CGDataProviderRef imgDataProvider = CGDataProviderCreateWithCFData((CFDataRef)imageData);
     imageSource = CGImageSourceCreateWithDataProvider(nullptr, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageSource == nil, "FAILED: ImageIOTest::CGImageSourceCreateWithDataProvider should return nullptr");
+    ASSERT_EQ_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithDataProvider should return nullptr");
 
     imageSource = CGImageSourceCreateWithDataProvider(imgDataProvider, nullptr);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithDataProvider returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithDataProvider returned nullptr");
 
     imageSource = CGImageSourceCreateWithDataProvider(nullptr, nullptr);
-    ASSERT_TRUE_MSG(imageSource == nil, "FAILED: ImageIOTest::CGImageSourceCreateWithDataProvider should return nullptr");
+    ASSERT_EQ_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithDataProvider should return nullptr");
 
     // get test startup full path
     wchar_t fullPath[_MAX_PATH];
@@ -436,25 +438,25 @@ TEST(ImageIO, NegativeScenarioTest) {
 
     CFURLRef imgUrl = (CFURLRef)[NSURL fileURLWithPath:directoryWithFile];
     imageSource = CGImageSourceCreateWithURL(nullptr, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageSource == nil, "FAILED: ImageIOTest::CGImageSourceCreateWithURL should return nullptr");
+    ASSERT_EQ_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithURL should return nullptr");
 
     imageSource = CGImageSourceCreateWithURL(nullptr, nullptr);
-    ASSERT_TRUE_MSG(imageSource == nil, "FAILED: ImageIOTest::CGImageSourceCreateWithURL should return nullptr");
+    ASSERT_EQ_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithURL should return nullptr");
 
     imageSource = CGImageSourceCreateWithURL(imgUrl, nullptr);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithURL returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithURL returned nullptr");
 
     CGImageRef imageRef = CGImageSourceCreateImageAtIndex(imageSource, 5, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageRef == nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex should return nullptr");
+    ASSERT_EQ_MSG(nil, imageRef, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex should return nullptr");
 
     imageRef = CGImageSourceCreateImageAtIndex(imageSource, -1, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageRef == nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex should return nullptr");
+    ASSERT_EQ_MSG(nil, imageRef, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex should return nullptr");
 
     imageRef = CGImageSourceCreateImageAtIndex(imageSource, 0, nullptr);
-    ASSERT_TRUE_MSG(imageRef != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    ASSERT_NE_MSG(nil, imageRef, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
 
     imageRef = CGImageSourceCreateImageAtIndex(nullptr, 0, nullptr);
-    ASSERT_TRUE_MSG(imageRef == nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex should return nullptr");
+    ASSERT_EQ_MSG(nil, imageRef, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex should return nullptr");
 
     size_t frameCount = CGImageSourceGetCount(nullptr);
     ASSERT_EQ_MSG(frameCount, 0, "FAILED: ImageIOTest::FrameCount");
@@ -469,13 +471,13 @@ TEST(ImageIO, NegativeScenarioTest) {
     };
 
     imageRef = CGImageSourceCreateThumbnailAtIndex(imageSource, 5, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageRef == nil, "FAILED: ImageIOTest::CGImageSourceCreateThumbnailAtIndex should return nullptr");
+    ASSERT_EQ_MSG(nil, imageRef, "FAILED: ImageIOTest::CGImageSourceCreateThumbnailAtIndex should return nullptr");
 
     imageRef = CGImageSourceCreateThumbnailAtIndex(nullptr, 0, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageRef == nil, "FAILED: ImageIOTest::CGImageSourceCreateThumbnailAtIndex should return nullptr");
+    ASSERT_EQ_MSG(nil, imageRef, "FAILED: ImageIOTest::CGImageSourceCreateThumbnailAtIndex should return nullptr");
 
     imageRef = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, nullptr);
-    ASSERT_TRUE_MSG(imageRef == nil, "FAILED: ImageIOTest::CGImageSourceCreateThumbnailAtIndex should return nullptr");
+    ASSERT_EQ_MSG(nil, imageRef, "FAILED: ImageIOTest::CGImageSourceCreateThumbnailAtIndex should return nullptr");
     CFRelease(imageSource);
 }
 
@@ -495,14 +497,14 @@ TEST(ImageIO, TypeIdentifierTest) {
 TEST(ImageIO, CopyJPEGPropertiesTest) {
     const wchar_t* imageFile = L"photo6_1024x670.jpg";
     NSData* imageData = getDataFromImageFile(imageFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, nil);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     CFDictionaryRef imageProperties = CGImageSourceCopyProperties(imageSource, nil);
-    ASSERT_TRUE_MSG(imageProperties != nil, "FAILED: ImageIOTest::CGImageSourceCopyProperties returned nullptr");
+    ASSERT_NE_MSG(nil, imageProperties, "FAILED: ImageIOTest::CGImageSourceCopyProperties returned nullptr");
     if (imageProperties && CFDictionaryContainsKey(imageProperties, kCGImagePropertyFileSize)) {
         int fileSize = [(id)CFDictionaryGetValue(imageProperties, kCGImagePropertyFileSize) intValue];
-        ASSERT_EQ_MSG(fileSize, 218940, "FAILED: ImageIOTest::FileSize");
+        EXPECT_EQ(218940, fileSize);
     }
 
     CFRelease(imageSource);
@@ -511,14 +513,14 @@ TEST(ImageIO, CopyJPEGPropertiesTest) {
 TEST(ImageIO, CopyGIFPropertiesTest) {
     const wchar_t* imageFile = L"photo7_4layers_683x1024.gif";
     NSData* imageData = getDataFromImageFile(imageFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, nil);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     CFDictionaryRef imageProperties = CGImageSourceCopyProperties(imageSource, nil);
-    ASSERT_TRUE_MSG(imageProperties != nil, "FAILED: ImageIOTest::CGImageSourceCopyProperties returned nullptr");
+    ASSERT_NE_MSG(nil, imageProperties, "FAILED: ImageIOTest::CGImageSourceCopyProperties returned nullptr");
     if (imageProperties && CFDictionaryContainsKey(imageProperties, kCGImagePropertyFileSize)) {
         int fileSize = [(id)CFDictionaryGetValue(imageProperties, kCGImagePropertyFileSize) intValue];
-        ASSERT_EQ_MSG(fileSize, 669893, "FAILED: ImageIOTest::FileSize");
+        EXPECT_EQ(669893, fileSize);
     }
 
     CFRelease(imageSource);
@@ -527,14 +529,14 @@ TEST(ImageIO, CopyGIFPropertiesTest) {
 TEST(ImageIO, CopyTIFFPropertiesTest) {
     const wchar_t* imageFile = L"photo8_4layers_1024x683.tif";
     NSData* imageData = getDataFromImageFile(imageFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, nil);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     CFDictionaryRef imageProperties = CGImageSourceCopyProperties(imageSource, nil);
-    ASSERT_TRUE_MSG(imageProperties != nil, "FAILED: ImageIOTest::CGImageSourceCopyProperties returned nullptr");
+    ASSERT_NE_MSG(nil, imageProperties, "FAILED: ImageIOTest::CGImageSourceCopyProperties returned nullptr");
     if (imageProperties && CFDictionaryContainsKey(imageProperties, kCGImagePropertyFileSize)) {
         int fileSize = [(id)CFDictionaryGetValue(imageProperties, kCGImagePropertyFileSize) intValue];
-        ASSERT_EQ_MSG(fileSize, 4187742, "FAILED: ImageIOTest::FileSize");
+        EXPECT_EQ(4187742, fileSize);
     }
 
     CFRelease(imageSource);
@@ -543,14 +545,14 @@ TEST(ImageIO, CopyTIFFPropertiesTest) {
 TEST(ImageIO, CopyPNGPropertiesTest) {
     const wchar_t* imageFile = L"seafloor_256x256.png";
     NSData* imageData = getDataFromImageFile(imageFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, nil);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     CFDictionaryRef imageProperties = CGImageSourceCopyProperties(imageSource, nil);
-    ASSERT_TRUE_MSG(imageProperties != nil, "FAILED: ImageIOTest::CGImageSourceCopyProperties returned nullptr");
+    ASSERT_NE_MSG(nil, imageProperties, "FAILED: ImageIOTest::CGImageSourceCopyProperties returned nullptr");
     if (imageProperties && CFDictionaryContainsKey(imageProperties, kCGImagePropertyFileSize)) {
         int fileSize = [(id)CFDictionaryGetValue(imageProperties, kCGImagePropertyFileSize) intValue];
-        ASSERT_EQ_MSG(fileSize, 59506, "FAILED: ImageIOTest::FileSize");
+        EXPECT_EQ(59506, fileSize);
     }
 
     CFRelease(imageSource);
@@ -559,14 +561,14 @@ TEST(ImageIO, CopyPNGPropertiesTest) {
 TEST(ImageIO, CopyBMPPropertiesTest) {
     const wchar_t* imageFile = L"testimg_227x149.bmp";
     NSData* imageData = getDataFromImageFile(imageFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, nil);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     CFDictionaryRef imageProperties = CGImageSourceCopyProperties(imageSource, nil);
-    ASSERT_TRUE_MSG(imageProperties != nil, "FAILED: ImageIOTest::CGImageSourceCopyProperties returned nullptr");
+    ASSERT_NE_MSG(nil, imageProperties, "FAILED: ImageIOTest::CGImageSourceCopyProperties returned nullptr");
     if (imageProperties && CFDictionaryContainsKey(imageProperties, kCGImagePropertyFileSize)) {
         int fileSize = [(id)CFDictionaryGetValue(imageProperties, kCGImagePropertyFileSize) intValue];
-        ASSERT_EQ_MSG(fileSize, 35050, "FAILED: ImageIOTest::FileSize");
+        EXPECT_EQ(35050, fileSize);
     }
 
     CFRelease(imageSource);
@@ -575,14 +577,14 @@ TEST(ImageIO, CopyBMPPropertiesTest) {
 TEST(ImageIO, CopyICOPropertiesTest) {
     const wchar_t* imageFile = L"photo2_683x1024.ico";
     NSData* imageData = getDataFromImageFile(imageFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, nil);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     CFDictionaryRef imageProperties = CGImageSourceCopyProperties(imageSource, nil);
-    ASSERT_TRUE_MSG(imageProperties != nil, "FAILED: ImageIOTest::CGImageSourceCopyProperties returned nullptr");
+    ASSERT_NE_MSG(nil, imageProperties, "FAILED: ImageIOTest::CGImageSourceCopyProperties returned nullptr");
     if (imageProperties && CFDictionaryContainsKey(imageProperties, kCGImagePropertyFileSize)) {
         int fileSize = [(id)CFDictionaryGetValue(imageProperties, kCGImagePropertyFileSize) intValue];
-        ASSERT_EQ_MSG(fileSize, 1041876, "FAILED: ImageIOTest::FileSize");
+        EXPECT_EQ(1041876, fileSize);
     }
 
     CFRelease(imageSource);
@@ -591,16 +593,16 @@ TEST(ImageIO, CopyICOPropertiesTest) {
 TEST(ImageIO, CopyJPEGPropertiesAtIndexTest) {
     const wchar_t* imageFile = L"photo6_1024x670.jpg";
     NSData* imageData = getDataFromImageFile(imageFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
     NSDictionary* options = @{
         @"kCGImageSourceTypeIdentifierHint" : @"kUTTypeJPEG",
         @"kCGImageSourceShouldAllowFloat" : @"kCFBooleanTrue",
         @"kCGImageSourceShouldCache" : @"kCFBooleanTrue"
     };
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     CFDictionaryRef imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageProperties != nil, "FAILED: ImageIOTest::CGImageSourceCopyPropertiesAtIndex returned nullptr");
+    ASSERT_NE_MSG(nil, imageProperties, "FAILED: ImageIOTest::CGImageSourceCopyPropertiesAtIndex returned nullptr");
 
     ASSERT_TRUE_MSG(CFDictionaryContainsKey(imageProperties, kCGImagePropertyJFIFDictionary),
                     "FAILED: ImageIOTest::JFIF dictionary not found");
@@ -616,28 +618,28 @@ TEST(ImageIO, CopyJPEGPropertiesAtIndexTest) {
 TEST(ImageIO, CopyGIFPropertiesAtIndexTest) {
     const wchar_t* imageFile = L"photo7_4layers_683x1024.gif";
     NSData* imageData = getDataFromImageFile(imageFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
     NSDictionary* options = @{
         @"kCGImageSourceTypeIdentifierHint" : @"kUTTypeGIF",
         @"kCGImageSourceShouldAllowFloat" : @"kCFBooleanTrue",
         @"kCGImageSourceShouldCache" : @"kCFBooleanTrue"
     };
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     CFDictionaryRef imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageProperties != nil, "FAILED: ImageIOTest::CGImageSourceCopyPropertiesAtIndex returned nullptr");
+    ASSERT_NE_MSG(nil, imageProperties, "FAILED: ImageIOTest::CGImageSourceCopyPropertiesAtIndex returned nullptr");
 
     ASSERT_TRUE_MSG(CFDictionaryContainsKey(imageProperties, kCGImagePropertyPixelHeight),
                     "FAILED: ImageIOTest::GIF PixelHeight Property not found");
     int actualHeight = [(id)CFDictionaryGetValue(imageProperties, kCGImagePropertyPixelHeight) intValue];
-    ASSERT_EQ_MSG(actualHeight, 1024, "FAILED: ImageIOTest::ActualHeight");
+    EXPECT_EQ(1024, actualHeight);
     ASSERT_TRUE_MSG(CFDictionaryContainsKey(imageProperties, kCGImagePropertyGIFDictionary),
                     "FAILED: ImageIOTest::GIF Dictionary not found");
     CFDictionaryRef gifDictionary = (CFDictionaryRef)CFDictionaryGetValue(imageProperties, kCGImagePropertyGIFDictionary);
     ASSERT_TRUE_MSG(CFDictionaryContainsKey(gifDictionary, kCGImagePropertyGIFDelayTime),
                     "FAILED: ImageIOTest::GIF dictionary does not contain Delay Time");
     double actualDelayTime = [(id)CFDictionaryGetValue(gifDictionary, kCGImagePropertyGIFDelayTime) doubleValue];
-    ASSERT_NEAR_MSG(actualDelayTime, 0.1, 0.01, "FAILED: ImageIOTest::Delay Time mismatch");
+    EXPECT_NEAR_MSG(actualDelayTime, 0.1, 0.01, "FAILED: ImageIOTest::Delay Time mismatch");
 
     CFRelease(imageSource);
 }
@@ -645,16 +647,16 @@ TEST(ImageIO, CopyGIFPropertiesAtIndexTest) {
 TEST(ImageIO, CopyTIFFPropertiesAtIndexTest) {
     const wchar_t* imageFile = L"photo8_4layers_1024x683.tif";
     NSData* imageData = getDataFromImageFile(imageFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
     NSDictionary* options = @{
         @"kCGImageSourceTypeIdentifierHint" : @"kUTTypeTIFF",
         @"kCGImageSourceShouldAllowFloat" : @"kCFBooleanTrue",
         @"kCGImageSourceShouldCache" : @"kCFBooleanTrue"
     };
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     CFDictionaryRef imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageProperties != nil, "FAILED: ImageIOTest::CGImageSourceCopyPropertiesAtIndex returned nullptr");
+    ASSERT_NE_MSG(nil, imageProperties, "FAILED: ImageIOTest::CGImageSourceCopyPropertiesAtIndex returned nullptr");
 
     ASSERT_TRUE_MSG(CFDictionaryContainsKey(imageProperties, kCGImagePropertyTIFFDictionary),
                     "FAILED: ImageIOTest::TIFF dictionary not found");
@@ -662,7 +664,7 @@ TEST(ImageIO, CopyTIFFPropertiesAtIndexTest) {
     ASSERT_TRUE_MSG(CFDictionaryContainsKey(tiffDictionary, kCGImagePropertyTIFFResolutionUnit),
                     "FAILED: ImageIOTest::TIFF dictionary does not contain Resolution Unit");
     int actualResolutionUnit = [(id)CFDictionaryGetValue(tiffDictionary, kCGImagePropertyTIFFResolutionUnit) intValue];
-    ASSERT_EQ_MSG(actualResolutionUnit, 2, "FAILED: ImageIOTest::ResolutionUnit");
+    EXPECT_EQ(2, actualResolutionUnit);
 
     CFRelease(imageSource);
 }
@@ -670,16 +672,16 @@ TEST(ImageIO, CopyTIFFPropertiesAtIndexTest) {
 TEST(ImageIO, CopyPNGPropertiesAtIndexTest) {
     const wchar_t* imageFile = L"seafloor_256x256.png";
     NSData* imageData = getDataFromImageFile(imageFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
     NSDictionary* options = @{
         @"kCGImageSourceTypeIdentifierHint" : @"kUTTypePNG",
         @"kCGImageSourceShouldAllowFloat" : @"kCFBooleanTrue",
         @"kCGImageSourceShouldCache" : @"kCFBooleanTrue"
     };
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     CFDictionaryRef imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, (CFDictionaryRef)options);
-    ASSERT_TRUE_MSG(imageProperties != nil, "FAILED: ImageIOTest::CGImageSourceCopyPropertiesAtIndex returned nullptr");
+    ASSERT_NE_MSG(nil, imageProperties, "FAILED: ImageIOTest::CGImageSourceCopyPropertiesAtIndex returned nullptr");
 
     ASSERT_TRUE_MSG(CFDictionaryContainsKey(imageProperties, kCGImagePropertyPNGDictionary),
                     "FAILED: ImageIOTest::PNG dictionary not found");
@@ -687,18 +689,19 @@ TEST(ImageIO, CopyPNGPropertiesAtIndexTest) {
     ASSERT_TRUE_MSG(CFDictionaryContainsKey(pngDictionary, kCGImagePropertyPNGGamma),
                     "FAILED: ImageIOTest::PNG dictionary does not contain Gamma");
     int actualGamma = [(id)CFDictionaryGetValue(pngDictionary, kCGImagePropertyPNGGamma) intValue];
-    ASSERT_EQ_MSG(actualGamma, 45455, "FAILED: ImageIOTest::PngGamma");
+    EXPECT_EQ(45455, actualGamma);
 
     CFRelease(imageSource);
 }
 
-DISABLED_TEST(ImageIO, DestinationTest) {
+TEST(ImageIO, DestinationTest) {
     const wchar_t* imageFile = L"photo6_1024x670.jpg";
     NSData* imageData = getDataFromImageFile(imageFile);
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
     CGImageRef imageRef = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
     CFRelease(imageSource);
 
+    // Written as BGRA
     const wchar_t* outFile = L"outphoto.tif";
     CFURLRef imgUrl = getURLRefForOutFile(outFile);
 
@@ -709,22 +712,23 @@ DISABLED_TEST(ImageIO, DestinationTest) {
 
     // Read back in the newly written image to check properties
     imageData = getDataFromImageFile(outFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", outFile);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     CGImageRef imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
-    ASSERT_TRUE_MSG(imageRefOut != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRefOut), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRefOut), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRefOut), 670, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRefOut), 1024, "FAILED: ImageIOTest::Width");
+    ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    EXPECT_EQ(kCGImageAlphaFirst, CGImageGetAlphaInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaFirst | kCGBitmapByteOrder32Big, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
+    EXPECT_EQ(32, CGImageGetBitsPerPixel(imageRefOut));
+    EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)));
+    EXPECT_EQ(670, CGImageGetHeight(imageRefOut));
+    EXPECT_EQ(1024, CGImageGetWidth(imageRefOut));
     size_t frameCount = CGImageSourceGetCount(imageSource);
-    ASSERT_EQ_MSG(frameCount, 1, "FAILED: ImageIOTest::FrameCount");
+    EXPECT_EQ(1, frameCount);
     CFRelease(imageSource);
 
+    // Written as RGB
     const wchar_t* outFile2 = L"outphoto.jpg";
     imgUrl = getURLRefForOutFile(outFile2);
 
@@ -735,22 +739,23 @@ DISABLED_TEST(ImageIO, DestinationTest) {
 
     // Read back in the newly written image to check properties
     imageData = getDataFromImageFile(outFile2);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile2);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", outFile2);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
-    ASSERT_TRUE_MSG(imageRefOut != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRefOut), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRefOut), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRefOut), 670, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRefOut), 1024, "FAILED: ImageIOTest::Width");
+    ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetAlphaInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
+    EXPECT_EQ(24, CGImageGetBitsPerPixel(imageRefOut));
+    EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)));
+    EXPECT_EQ(670, CGImageGetHeight(imageRefOut));
+    EXPECT_EQ(1024, CGImageGetWidth(imageRefOut));
     frameCount = CGImageSourceGetCount(imageSource);
-    ASSERT_EQ_MSG(frameCount, 1, "FAILED: ImageIOTest::FrameCount");
+    EXPECT_EQ(1, frameCount);
     CFRelease(imageSource);
 
+    // Written as RGB
     const wchar_t* outFile3 = L"outphoto.png";
     imgUrl = getURLRefForOutFile(outFile3);
 
@@ -761,22 +766,23 @@ DISABLED_TEST(ImageIO, DestinationTest) {
 
     // Read back in the newly written image to check properties
     imageData = getDataFromImageFile(outFile3);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile3);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", outFile3);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
-    ASSERT_TRUE_MSG(imageRefOut != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRefOut), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRefOut), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRefOut), 670, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRefOut), 1024, "FAILED: ImageIOTest::Width");
+    ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetAlphaInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
+    EXPECT_EQ(24, CGImageGetBitsPerPixel(imageRefOut));
+    EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)));
+    EXPECT_EQ(670, CGImageGetHeight(imageRefOut));
+    EXPECT_EQ(1024, CGImageGetWidth(imageRefOut));
     frameCount = CGImageSourceGetCount(imageSource);
-    ASSERT_EQ_MSG(frameCount, 1, "FAILED: ImageIOTest::FrameCount");
+    EXPECT_EQ(1, frameCount);
     CFRelease(imageSource);
 
+    // Written as BGRX
     const wchar_t* outFile4 = L"outphoto.bmp";
     imgUrl = getURLRefForOutFile(outFile4);
 
@@ -787,22 +793,23 @@ DISABLED_TEST(ImageIO, DestinationTest) {
 
     // Read back in the newly written image to check properties
     imageData = getDataFromImageFile(outFile4);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile4);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", outFile4);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
-    ASSERT_TRUE_MSG(imageRefOut != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRefOut), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRefOut), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRefOut), 670, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRefOut), 1024, "FAILED: ImageIOTest::Width");
+    ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    EXPECT_EQ(kCGImageAlphaNoneSkipFirst, CGImageGetAlphaInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaNoneSkipFirst | kCGBitmapByteOrder32Big, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
+    EXPECT_EQ(32, CGImageGetBitsPerPixel(imageRefOut));
+    EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)));
+    EXPECT_EQ(670, CGImageGetHeight(imageRefOut));
+    EXPECT_EQ(1024, CGImageGetWidth(imageRefOut));
     frameCount = CGImageSourceGetCount(imageSource);
-    ASSERT_EQ_MSG(frameCount, 1, "FAILED: ImageIOTest::FrameCount");
+    EXPECT_EQ(1, frameCount);
     CFRelease(imageSource);
 
+    // Written as Paletted/Indexed
     const wchar_t* outFile5 = L"outphoto.gif";
     imgUrl = getURLRefForOutFile(outFile5);
 
@@ -813,29 +820,30 @@ DISABLED_TEST(ImageIO, DestinationTest) {
 
     // Read back in the newly written image to check properties
     imageData = getDataFromImageFile(outFile5);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile5);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", outFile5);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
-    ASSERT_TRUE_MSG(imageRefOut != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRefOut), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRefOut), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRefOut), 670, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRefOut), 1024, "FAILED: ImageIOTest::Width");
+    ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetAlphaInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
+    EXPECT_EQ(8, CGImageGetBitsPerPixel(imageRefOut));
+    // TODO: Check Paletted/Indexed color space.
+    EXPECT_EQ(670, CGImageGetHeight(imageRefOut));
+    EXPECT_EQ(1024, CGImageGetWidth(imageRefOut));
     frameCount = CGImageSourceGetCount(imageSource);
-    ASSERT_EQ_MSG(frameCount, 1, "FAILED: ImageIOTest::FrameCount");
+    EXPECT_EQ(1, frameCount);
     CFRelease(imageSource);
     CFRelease(myImageDest);
 }
 
-DISABLED_TEST(ImageIO, DestinationFromSourceTest) {
+TEST(ImageIO, DestinationFromSourceTest) {
     const wchar_t* imageFile = L"testimg_227x149.bmp";
     NSData* imageData = getDataFromImageFile(imageFile);
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
 
+    // Written as BGRA
     const wchar_t* outFile = L"outphoto2.tif";
     CFURLRef imgUrl = getURLRefForOutFile(outFile);
 
@@ -847,21 +855,22 @@ DISABLED_TEST(ImageIO, DestinationFromSourceTest) {
     // Read back in the newly written image to check properties
     CFRelease(imageSource);
     imageData = getDataFromImageFile(outFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", outFile);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     CGImageRef imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
-    ASSERT_TRUE_MSG(imageRefOut != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRefOut), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRefOut), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRefOut), 149, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRefOut), 227, "FAILED: ImageIOTest::Width");
+    ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    EXPECT_EQ(kCGImageAlphaFirst, CGImageGetAlphaInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaFirst | kCGBitmapByteOrder32Big, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
+    EXPECT_EQ(32, CGImageGetBitsPerPixel(imageRefOut));
+    EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)));
+    EXPECT_EQ(149, CGImageGetHeight(imageRefOut));
+    EXPECT_EQ(227, CGImageGetWidth(imageRefOut));
     size_t frameCount = CGImageSourceGetCount(imageSource);
-    ASSERT_EQ_MSG(frameCount, 1, "FAILED: ImageIOTest::FrameCount");
+    EXPECT_EQ(1, frameCount);
 
+    // Written as RGB
     const wchar_t* outFile2 = L"outphoto2.jpg";
     imgUrl = getURLRefForOutFile(outFile2);
 
@@ -873,21 +882,22 @@ DISABLED_TEST(ImageIO, DestinationFromSourceTest) {
 
     // Read back in the newly written image to check properties
     imageData = getDataFromImageFile(outFile2);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile2);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", outFile2);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
-    ASSERT_TRUE_MSG(imageRefOut != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRefOut), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRefOut), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRefOut), 149, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRefOut), 227, "FAILED: ImageIOTest::Width");
+    ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetAlphaInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
+    EXPECT_EQ(24, CGImageGetBitsPerPixel(imageRefOut));
+    EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)));
+    EXPECT_EQ(149, CGImageGetHeight(imageRefOut));
+    EXPECT_EQ(227, CGImageGetWidth(imageRefOut));
     frameCount = CGImageSourceGetCount(imageSource);
-    ASSERT_EQ_MSG(frameCount, 1, "FAILED: ImageIOTest::FrameCount");
+    EXPECT_EQ(1, frameCount);
 
+    // Written as RGB
     const wchar_t* outFile3 = L"outphoto2.png";
     imgUrl = getURLRefForOutFile(outFile3);
 
@@ -899,21 +909,22 @@ DISABLED_TEST(ImageIO, DestinationFromSourceTest) {
 
     // Read back in the newly written image to check properties
     imageData = getDataFromImageFile(outFile3);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile3);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", outFile3);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
-    ASSERT_TRUE_MSG(imageRefOut != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRefOut), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRefOut), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRefOut), 149, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRefOut), 227, "FAILED: ImageIOTest::Width");
+    ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetAlphaInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
+    EXPECT_EQ(24, CGImageGetBitsPerPixel(imageRefOut));
+    EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)));
+    EXPECT_EQ(149, CGImageGetHeight(imageRefOut));
+    EXPECT_EQ(227, CGImageGetWidth(imageRefOut));
     frameCount = CGImageSourceGetCount(imageSource);
-    ASSERT_EQ_MSG(frameCount, 1, "FAILED: ImageIOTest::FrameCount");
+    EXPECT_EQ(1, frameCount);
 
+    // Written as BGRX
     const wchar_t* outFile4 = L"outphoto2.bmp";
     imgUrl = getURLRefForOutFile(outFile4);
 
@@ -925,24 +936,24 @@ DISABLED_TEST(ImageIO, DestinationFromSourceTest) {
 
     // Read back in the newly written image to check properties
     imageData = getDataFromImageFile(outFile4);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile4);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", outFile4);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
-    ASSERT_TRUE_MSG(imageRefOut != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRefOut), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRefOut), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRefOut), 149, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRefOut), 227, "FAILED: ImageIOTest::Width");
+    ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    EXPECT_EQ(kCGImageAlphaNoneSkipFirst, CGImageGetAlphaInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaNoneSkipFirst | kCGBitmapByteOrder32Big, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
+    EXPECT_EQ(32, CGImageGetBitsPerPixel(imageRefOut));
+    EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)));
+    EXPECT_EQ(149, CGImageGetHeight(imageRefOut));
+    EXPECT_EQ(227, CGImageGetWidth(imageRefOut));
     frameCount = CGImageSourceGetCount(imageSource);
-    ASSERT_EQ_MSG(frameCount, 1, "FAILED: ImageIOTest::FrameCount");
+    EXPECT_EQ(1, frameCount);
     CFRelease(imageSource);
 }
 
-DISABLED_TEST(ImageIO, DestinationMultiFrameTest) {
+TEST(ImageIO, DestinationMultiFrameTest) {
     const wchar_t* imageFile = L"photo2_683x1024.ico";
     NSData* imageData = getDataFromImageFile(imageFile);
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
@@ -953,6 +964,7 @@ DISABLED_TEST(ImageIO, DestinationMultiFrameTest) {
     CGImageSourceRef imageSource2 = CGImageSourceCreateWithData((CFDataRef)imageData2, NULL);
     CGImageRef imageRef2 = CGImageSourceCreateImageAtIndex(imageSource2, 0, NULL);
 
+    // Written as BGRA
     const wchar_t* outFile = L"outphoto_multiframe.tif";
     CFURLRef imgUrl = getURLRefForOutFile(outFile);
 
@@ -967,46 +979,46 @@ DISABLED_TEST(ImageIO, DestinationMultiFrameTest) {
 
     // Read back in the newly written image to check properties
     imageData = getDataFromImageFile(outFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", outFile);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     size_t frameCount = CGImageSourceGetCount(imageSource);
     ASSERT_EQ_MSG(frameCount, 3, "FAILED: ImageIOTest::FrameCount");
 
     CGImageRef imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
-    ASSERT_TRUE_MSG(imageRefOut != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRefOut), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRefOut), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRefOut), 1024, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRefOut), 683, "FAILED: ImageIOTest::Width");
+    ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    EXPECT_EQ(kCGImageAlphaFirst, CGImageGetAlphaInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaFirst | kCGBitmapByteOrder32Big, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
+    EXPECT_EQ(32, CGImageGetBitsPerPixel(imageRefOut));
+    EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)));
+    EXPECT_EQ(1024, CGImageGetHeight(imageRefOut));
+    EXPECT_EQ(683, CGImageGetWidth(imageRefOut));
 
     imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 1, NULL);
-    ASSERT_TRUE_MSG(imageRefOut != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRefOut), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRefOut), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRefOut), 683, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRefOut), 1024, "FAILED: ImageIOTest::Width");
+    ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    EXPECT_EQ(kCGImageAlphaFirst, CGImageGetAlphaInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaFirst | kCGBitmapByteOrder32Big, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
+    EXPECT_EQ(32, CGImageGetBitsPerPixel(imageRefOut));
+    EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)));
+    EXPECT_EQ(683, CGImageGetHeight(imageRefOut));
+    EXPECT_EQ(1024, CGImageGetWidth(imageRefOut));
 
     imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 2, NULL);
-    ASSERT_TRUE_MSG(imageRefOut != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRefOut), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRefOut), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRefOut), 683, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRefOut), 1024, "FAILED: ImageIOTest::Width");
+    ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    EXPECT_EQ(kCGImageAlphaFirst, CGImageGetAlphaInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaFirst | kCGBitmapByteOrder32Big, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
+    EXPECT_EQ(32, CGImageGetBitsPerPixel(imageRefOut));
+    EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)));
+    EXPECT_EQ(683, CGImageGetHeight(imageRefOut));
+    EXPECT_EQ(1024, CGImageGetWidth(imageRefOut));
 
     CFRelease(imageSource);
 }
 
-DISABLED_TEST(ImageIO, DestinationMultiFrameGifTest) {
+TEST(ImageIO, DestinationMultiFrameGifTest) {
     const wchar_t* imageFile = L"photo2_683x1024.ico";
     NSData* imageData = getDataFromImageFile(imageFile);
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
@@ -1017,6 +1029,7 @@ DISABLED_TEST(ImageIO, DestinationMultiFrameGifTest) {
     CGImageSourceRef imageSource2 = CGImageSourceCreateWithData((CFDataRef)imageData2, NULL);
     CGImageRef imageRef2 = CGImageSourceCreateImageAtIndex(imageSource2, 0, NULL);
 
+    // Written as Paletted/Indexed
     const wchar_t* outFile = L"outphoto_multiframe.gif";
     CFURLRef imgUrl = getURLRefForOutFile(outFile);
 
@@ -1031,46 +1044,46 @@ DISABLED_TEST(ImageIO, DestinationMultiFrameGifTest) {
 
     // Read back in the newly written image to check properties
     imageData = getDataFromImageFile(outFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", outFile);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     size_t frameCount = CGImageSourceGetCount(imageSource);
     ASSERT_EQ_MSG(frameCount, 3, "FAILED: ImageIOTest::FrameCount");
 
     CGImageRef imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
-    ASSERT_TRUE_MSG(imageRefOut != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRefOut), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRefOut), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRefOut), 1024, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRefOut), 683, "FAILED: ImageIOTest::Width");
+    ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetAlphaInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
+    EXPECT_EQ(8, CGImageGetBitsPerPixel(imageRefOut));
+    // TODO: Check Paletted/Indexed color space.
+    EXPECT_EQ(1024, CGImageGetHeight(imageRefOut));
+    EXPECT_EQ(683, CGImageGetWidth(imageRefOut));
 
     imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 1, NULL);
-    ASSERT_TRUE_MSG(imageRefOut != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRefOut), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRefOut), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRefOut), 683, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRefOut), 1024, "FAILED: ImageIOTest::Width");
+    ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetAlphaInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
+    EXPECT_EQ(8, CGImageGetBitsPerPixel(imageRefOut));
+    // TODO: Check Paletted/Indexed color space.
+    EXPECT_EQ(683, CGImageGetHeight(imageRefOut));
+    EXPECT_EQ(1024, CGImageGetWidth(imageRefOut));
 
     imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 2, NULL);
-    ASSERT_TRUE_MSG(imageRefOut != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRefOut), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRefOut), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRefOut), 683, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRefOut), 1024, "FAILED: ImageIOTest::Width");
+    ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetAlphaInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
+    EXPECT_EQ(8, CGImageGetBitsPerPixel(imageRefOut));
+    // TODO: Check Paletted/Indexed color space.
+    EXPECT_EQ(683, CGImageGetHeight(imageRefOut));
+    EXPECT_EQ(1024, CGImageGetWidth(imageRefOut));
 
     CFRelease(imageSource);
 }
 
-DISABLED_TEST(ImageIO, DestinationDataTest) {
+TEST(ImageIO, DestinationDataTest) {
     const wchar_t* imageFile = L"photo2_683x1024.ico";
     NSData* imageData = getDataFromImageFile(imageFile);
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
@@ -1086,22 +1099,22 @@ DISABLED_TEST(ImageIO, DestinationDataTest) {
     CFRelease(myImageDest);
 
     imageSource = CGImageSourceCreateWithData((CFDataRef)dataBuffer, NULL);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     size_t frameCount = CGImageSourceGetCount(imageSource);
     ASSERT_EQ_MSG(frameCount, 1, "FAILED: ImageIOTest::FrameCount");
     CGImageRef imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
-    ASSERT_TRUE_MSG(imageRefOut != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRefOut), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRefOut), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRef)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRefOut), 1024, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRefOut), 683, "FAILED: ImageIOTest::Width");
+    ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    EXPECT_EQ(kCGImageAlphaFirst, CGImageGetAlphaInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaFirst | kCGBitmapByteOrder32Big, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
+    EXPECT_EQ(32, CGImageGetBitsPerPixel(imageRefOut));
+    EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRef)));
+    EXPECT_EQ(1024, CGImageGetHeight(imageRefOut));
+    EXPECT_EQ(683, CGImageGetWidth(imageRefOut));
     CFRelease(imageSource);
 }
 
-DISABLED_TEST(ImageIO, DestinationMultiFrameDataTest) {
+TEST(ImageIO, DestinationMultiFrameDataTest) {
     const wchar_t* imageFile = L"photo2_683x1024.ico";
     NSData* imageData = getDataFromImageFile(imageFile);
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
@@ -1125,44 +1138,44 @@ DISABLED_TEST(ImageIO, DestinationMultiFrameDataTest) {
 
     // Read back in the newly written image to check properties
     imageSource = CGImageSourceCreateWithData((CFDataRef)dataBuffer, NULL);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     size_t frameCount = CGImageSourceGetCount(imageSource);
     ASSERT_EQ_MSG(frameCount, 3, "FAILED: ImageIOTest::FrameCount");
 
     CGImageRef imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
-    ASSERT_TRUE_MSG(imageRefOut != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRefOut), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRefOut), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRefOut), 1024, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRefOut), 683, "FAILED: ImageIOTest::Width");
+    ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    EXPECT_EQ(kCGImageAlphaFirst, CGImageGetAlphaInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaFirst | kCGBitmapByteOrder32Big, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
+    EXPECT_EQ(32, CGImageGetBitsPerPixel(imageRefOut));
+    EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)));
+    EXPECT_EQ(1024, CGImageGetHeight(imageRefOut));
+    EXPECT_EQ(683, CGImageGetWidth(imageRefOut));
 
     imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 1, NULL);
-    ASSERT_TRUE_MSG(imageRefOut != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRefOut), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRefOut), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRefOut), 683, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRefOut), 1024, "FAILED: ImageIOTest::Width");
+    ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    EXPECT_EQ(kCGImageAlphaFirst, CGImageGetAlphaInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaFirst | kCGBitmapByteOrder32Big, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
+    EXPECT_EQ(32, CGImageGetBitsPerPixel(imageRefOut));
+    EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)));
+    EXPECT_EQ(683, CGImageGetHeight(imageRefOut));
+    EXPECT_EQ(1024, CGImageGetWidth(imageRefOut));
 
     imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 2, NULL);
-    ASSERT_TRUE_MSG(imageRefOut != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRefOut), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRefOut), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRefOut), 683, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRefOut), 1024, "FAILED: ImageIOTest::Width");
+    ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    EXPECT_EQ(kCGImageAlphaFirst, CGImageGetAlphaInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaFirst | kCGBitmapByteOrder32Big, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
+    EXPECT_EQ(32, CGImageGetBitsPerPixel(imageRefOut));
+    EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)));
+    EXPECT_EQ(683, CGImageGetHeight(imageRefOut));
+    EXPECT_EQ(1024, CGImageGetWidth(imageRefOut));
 
     CFRelease(imageSource);
 }
 
-DISABLED_TEST(ImageIO, DestinationOptionsTest) {
+TEST(ImageIO, DestinationOptionsTest) {
     const wchar_t* imageFile = L"photo6_1024x670.jpg";
     NSData* imageData = getDataFromImageFile(imageFile);
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
@@ -1185,20 +1198,20 @@ DISABLED_TEST(ImageIO, DestinationOptionsTest) {
 
     // Read back in the newly written image to check properties
     imageData = getDataFromImageFile(outFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", outFile);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     CGImageRef imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
-    ASSERT_TRUE_MSG(imageRefOut != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRefOut), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRefOut), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRefOut), 670, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRefOut), 1024, "FAILED: ImageIOTest::Width");
+    ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetAlphaInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
+    EXPECT_EQ(24, CGImageGetBitsPerPixel(imageRefOut));
+    EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)));
+    EXPECT_EQ(670, CGImageGetHeight(imageRefOut));
+    EXPECT_EQ(1024, CGImageGetWidth(imageRefOut));
     size_t frameCount = CGImageSourceGetCount(imageSource);
-    ASSERT_EQ_MSG(frameCount, 1, "FAILED: ImageIOTest::FrameCount");
+    EXPECT_EQ(1, frameCount);
     CFRelease(imageSource);
 
     imageFile = L"photo2_683x1024.ico";
@@ -1237,14 +1250,14 @@ DISABLED_TEST(ImageIO, DestinationOptionsTest) {
 
     // Read back in the newly written image to check properties
     imageData = getDataFromImageFile(outFile2);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile2);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", outFile2);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     frameCount = CGImageSourceGetCount(imageSource);
     ASSERT_EQ_MSG(frameCount, 3, "FAILED: ImageIOTest::FrameCount");
 
     CFDictionaryRef imageProperties = CGImageSourceCopyProperties(imageSource, NULL);
-    ASSERT_TRUE_MSG(imageProperties != nil, "FAILED: ImageIOTest::CGImageSourceCopyProperties returned nullptr");
+    ASSERT_NE_MSG(nil, imageProperties, "FAILED: ImageIOTest::CGImageSourceCopyProperties returned nullptr");
 
     ASSERT_TRUE_MSG(CFDictionaryContainsKey(imageProperties, kCGImagePropertyGIFDictionary),
                     "FAILED: ImageIOTest::GIF dictionary not found");
@@ -1252,42 +1265,42 @@ DISABLED_TEST(ImageIO, DestinationOptionsTest) {
     ASSERT_TRUE_MSG(CFDictionaryContainsKey(gifDictionary, kCGImagePropertyGIFLoopCount),
                     "FAILED: ImageIOTest::GIF dictionary does not contain Loop Count");
     int actualLoopCount = [(id)CFDictionaryGetValue(gifDictionary, kCGImagePropertyGIFLoopCount) intValue];
-    ASSERT_EQ_MSG(actualLoopCount, loopCount, "FAILED: ImageIOTest::LoopCount");
+    EXPECT_EQ(loopCount, actualLoopCount);
 
     imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
-    ASSERT_TRUE_MSG(imageRefOut != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRefOut), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRefOut), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRefOut), 1024, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRefOut), 683, "FAILED: ImageIOTest::Width");
+    ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetAlphaInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
+    EXPECT_EQ(8, CGImageGetBitsPerPixel(imageRefOut));
+    // TODO: Check Paletted/Indexed color space.
+    EXPECT_EQ(1024, CGImageGetHeight(imageRefOut));
+    EXPECT_EQ(683, CGImageGetWidth(imageRefOut));
 
     imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 1, NULL);
-    ASSERT_TRUE_MSG(imageRefOut != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRefOut), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRefOut), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRefOut), 683, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRefOut), 1024, "FAILED: ImageIOTest::Width");
+    ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetAlphaInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
+    EXPECT_EQ(8, CGImageGetBitsPerPixel(imageRefOut));
+    // TODO: Check Paletted/Indexed color space.
+    EXPECT_EQ(683, CGImageGetHeight(imageRefOut));
+    EXPECT_EQ(1024, CGImageGetWidth(imageRefOut));
 
     imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 2, NULL);
-    ASSERT_TRUE_MSG(imageRefOut != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
-    ASSERT_EQ_MSG(CGImageGetAlphaInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::AlphaInfo");
-    ASSERT_EQ_MSG(CGImageGetBitmapInfo(imageRefOut), kCGImageAlphaLast, "FAILED: ImageIOTest::BitmapInfo");
-    ASSERT_EQ_MSG(CGImageGetBitsPerComponent(imageRefOut), 8, "FAILED: ImageIOTest::BitsPerComponent");
-    ASSERT_EQ_MSG(CGImageGetBitsPerPixel(imageRefOut), 32, "FAILED: ImageIOTest::BitsPerPixel");
-    ASSERT_EQ_MSG(CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)), 3, "FAILED: ImageIOTest::ColorSpaceComponentCount");
-    ASSERT_EQ_MSG(CGImageGetHeight(imageRefOut), 683, "FAILED: ImageIOTest::Height");
-    ASSERT_EQ_MSG(CGImageGetWidth(imageRefOut), 1024, "FAILED: ImageIOTest::Width");
+    ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetAlphaInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaNone, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
+    EXPECT_EQ(8, CGImageGetBitsPerPixel(imageRefOut));
+    // TODO: Check Paletted/Indexed color space.
+    EXPECT_EQ(683, CGImageGetHeight(imageRefOut));
+    EXPECT_EQ(1024, CGImageGetWidth(imageRefOut));
 
     CFRelease(imageSource);
 }
 
-DISABLED_TEST(ImageIO, DestinationImageOptionsTIFFTest) {
+TEST(ImageIO, DestinationImageOptionsTIFFTest) {
     const wchar_t* imageFile = L"photo2_683x1024.ico";
     NSData* imageData = getDataFromImageFile(imageFile);
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
@@ -1339,11 +1352,11 @@ DISABLED_TEST(ImageIO, DestinationImageOptionsTIFFTest) {
     CFRelease(myImageDest);
 
     imageData = getDataFromImageFile(outFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", outFile);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     CFDictionaryRef imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, NULL);
-    ASSERT_TRUE_MSG(imageProperties != nil, "FAILED: ImageIOTest::CGImageSourceCopyPropertiesAtIndex returned nullptr");
+    ASSERT_NE_MSG(nil, imageProperties, "FAILED: ImageIOTest::CGImageSourceCopyPropertiesAtIndex returned nullptr");
 
     // Note that this XResolution was actually passed in as 100. This field aliases with DPIWidth.
     // As observed on iOS, for TIFF, DPIWidth takes precedence, while for JPEG, XResolution takes precedence.
@@ -1365,16 +1378,16 @@ DISABLED_TEST(ImageIO, DestinationImageOptionsTIFFTest) {
 
     ASSERT_TRUE_MSG(CFDictionaryContainsKey(imageProperties, kCGImagePropertyPixelHeight), "FAILED: ImageIOTest::Pixel Height not found");
     int actualPixelHeight = [(id)CFDictionaryGetValue(imageProperties, kCGImagePropertyPixelHeight) intValue];
-    ASSERT_EQ_MSG(actualPixelHeight, 1024, "FAILED: ImageIOTest::Height");
+    EXPECT_EQ(1024, actualPixelHeight);
 
     ASSERT_TRUE_MSG(CFDictionaryContainsKey(imageProperties, kCGImagePropertyOrientation), "FAILED: ImageIOTest::Orientation not found");
     int actualOrientation = [(id)CFDictionaryGetValue(imageProperties, kCGImagePropertyOrientation) intValue];
-    ASSERT_EQ_MSG(actualOrientation, 3, "FAILED: ImageIOTest::Orientation");
+    EXPECT_EQ(3, actualOrientation);
 
     CFRelease(imageSource);
 }
 
-DISABLED_TEST(ImageIO, DestinationImageOptionsJPEGTest) {
+TEST(ImageIO, DestinationImageOptionsJPEGTest) {
     const wchar_t* imageFile = L"photo2_683x1024.ico";
     NSData* imageData = getDataFromImageFile(imageFile);
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
@@ -1426,11 +1439,11 @@ DISABLED_TEST(ImageIO, DestinationImageOptionsJPEGTest) {
     CFRelease(myImageDest);
 
     imageData = getDataFromImageFile(outFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", outFile);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     CFDictionaryRef imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, NULL);
-    ASSERT_TRUE_MSG(imageProperties != nil, "FAILED: ImageIOTest::CGImageSourceCopyPropertiesAtIndex returned nullptr");
+    ASSERT_NE_MSG(nil, imageProperties, "FAILED: ImageIOTest::CGImageSourceCopyPropertiesAtIndex returned nullptr");
 
     ASSERT_TRUE_MSG(CFDictionaryContainsKey(imageProperties, kCGImagePropertyJFIFDictionary),
                     "FAILED: ImageIOTest::JFIF dictionary not found");
@@ -1438,7 +1451,7 @@ DISABLED_TEST(ImageIO, DestinationImageOptionsJPEGTest) {
     ASSERT_TRUE_MSG(CFDictionaryContainsKey(jfifDictionary, kCGImagePropertyJFIFXDensity),
                     "FAILED: ImageIOTest::JFIF dictionary does not contain XDensity");
     double actualXDensity = [(id)CFDictionaryGetValue(jfifDictionary, kCGImagePropertyJFIFXDensity) doubleValue];
-    ASSERT_NEAR_MSG(actualXDensity, 0.0, 0.01, "FAILED: ImageIOTest::XDensity mismatch"); // Not set, should be 0
+    ASSERT_NEAR_MSG(actualXDensity, 96.0, 0.01, "FAILED: ImageIOTest::XDensity mismatch"); // By default, set to 96.0 (Windows Direct2D/WIC DPI)
 
     ASSERT_TRUE_MSG(CFDictionaryContainsKey(imageProperties, kCGImagePropertyGPSDictionary),
                     "FAILED: ImageIOTest::GPS dictionary not found");
@@ -1450,16 +1463,16 @@ DISABLED_TEST(ImageIO, DestinationImageOptionsJPEGTest) {
 
     ASSERT_TRUE_MSG(CFDictionaryContainsKey(imageProperties, kCGImagePropertyPixelHeight), "FAILED: ImageIOTest::Pixel Height not found");
     int actualPixelHeight = [(id)CFDictionaryGetValue(imageProperties, kCGImagePropertyPixelHeight) intValue];
-    ASSERT_EQ_MSG(actualPixelHeight, 1024, "FAILED: ImageIOTest::Height");
+    EXPECT_EQ(1024, actualPixelHeight);
 
     ASSERT_TRUE_MSG(CFDictionaryContainsKey(imageProperties, kCGImagePropertyOrientation), "FAILED: ImageIOTest::Orientation not found");
     int actualOrientation = [(id)CFDictionaryGetValue(imageProperties, kCGImagePropertyOrientation) intValue];
-    ASSERT_EQ_MSG(actualOrientation, 2, "FAILED: ImageIOTest::Orientation");
+    EXPECT_EQ(2, actualOrientation);
 
     CFRelease(imageSource);
 }
 
-DISABLED_TEST(ImageIO, DestinationImageOptionsGIFTest) {
+TEST(ImageIO, DestinationImageOptionsGIFTest) {
     const wchar_t* imageFile = L"photo2_683x1024.ico";
     NSData* imageData = getDataFromImageFile(imageFile);
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
@@ -1490,11 +1503,11 @@ DISABLED_TEST(ImageIO, DestinationImageOptionsGIFTest) {
     CFRelease(myImageDest);
 
     imageData = getDataFromImageFile(outFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", outFile);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     CFDictionaryRef imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, NULL);
-    ASSERT_TRUE_MSG(imageProperties != nil, "FAILED: ImageIOTest::CGImageSourceCopyPropertiesAtIndex returned nullptr");
+    ASSERT_NE_MSG(nil, imageProperties, "FAILED: ImageIOTest::CGImageSourceCopyPropertiesAtIndex returned nullptr");
 
     ASSERT_TRUE_MSG(CFDictionaryContainsKey(imageProperties, kCGImagePropertyGIFDictionary),
                     "FAILED: ImageIOTest::GIF dictionary not found");
@@ -1510,12 +1523,12 @@ DISABLED_TEST(ImageIO, DestinationImageOptionsGIFTest) {
 
     ASSERT_TRUE_MSG(CFDictionaryContainsKey(imageProperties, kCGImagePropertyPixelHeight), "FAILED: ImageIOTest::Pixel Height not found");
     int actualPixelHeight = [(id)CFDictionaryGetValue(imageProperties, kCGImagePropertyPixelHeight) intValue];
-    ASSERT_EQ_MSG(actualPixelHeight, 1024, "FAILED: ImageIOTest::Height");
+    EXPECT_EQ(1024, actualPixelHeight);
 
     CFRelease(imageSource);
 }
 
-DISABLED_TEST(ImageIO, DestinationImageOptionsPNGTest) {
+TEST(ImageIO, DestinationImageOptionsPNGTest) {
     const wchar_t* imageFile = L"photo2_683x1024.ico";
     NSData* imageData = getDataFromImageFile(imageFile);
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
@@ -1546,11 +1559,11 @@ DISABLED_TEST(ImageIO, DestinationImageOptionsPNGTest) {
     CFRelease(myImageDest);
 
     imageData = getDataFromImageFile(outFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", outFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", outFile);
     imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     CFDictionaryRef imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, NULL);
-    ASSERT_TRUE_MSG(imageProperties != nil, "FAILED: ImageIOTest::CGImageSourceCopyPropertiesAtIndex returned nullptr");
+    ASSERT_NE_MSG(nil, imageProperties, "FAILED: ImageIOTest::CGImageSourceCopyPropertiesAtIndex returned nullptr");
 
     ASSERT_TRUE_MSG(CFDictionaryContainsKey(imageProperties, kCGImagePropertyPNGDictionary),
                     "FAILED: ImageIOTest::PNG dictionary not found");
@@ -1558,7 +1571,7 @@ DISABLED_TEST(ImageIO, DestinationImageOptionsPNGTest) {
     ASSERT_TRUE_MSG(CFDictionaryContainsKey(pngDictionary, kCGImagePropertyPNGGamma),
                     "FAILED: ImageIOTest::PNG dictionary does not contain Gamma");
     int actualGamma = [(id)CFDictionaryGetValue(pngDictionary, kCGImagePropertyPNGGamma) intValue];
-    ASSERT_EQ_MSG(actualGamma, 45045, "FAILED: ImageIOTest::PngGamma");
+    EXPECT_EQ(45045, actualGamma);
 
     CFRelease(imageSource);
 }
@@ -1571,7 +1584,7 @@ TEST(ImageIO, TypeIDTest) {
 TEST(ImageIO, IncrementalJPEGImageWithFrameCheck) {
     const wchar_t* imageFile = L"photo6_1024x670.jpg";
     NSData* imageData = getDataFromImageFile(imageFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
     NSUInteger imageLength = [imageData length];
 
     // Minimum Stream Length at which CGImageSourceCreateImageAtIndex returns valid image references
@@ -1592,7 +1605,7 @@ TEST(ImageIO, IncrementalJPEGImageWithFrameCheck) {
     static const std::vector<int> c_streamLengthForFrame = { 1, 95, 96, 3850, 3851, 218939, 218940 };
 
     CGImageSourceRef imageRef = CGImageSourceCreateIncremental(nil);
-    ASSERT_TRUE_MSG(imageRef != nil, "FAILED: CGImageSourceCreateIncremental returned nullptr");
+    ASSERT_NE_MSG(nil, imageRef, "FAILED: CGImageSourceCreateIncremental returned nullptr");
 
     // Check container status change sequence at corresponding stream lengths
     for (int index = 0; index < c_streamLengthForContainer.size(); index++) {
@@ -1628,7 +1641,7 @@ TEST(ImageIO, IncrementalJPEGImageWithFrameCheck) {
 TEST(ImageIO, IncrementalBMPImageWithFrameCheck) {
     const wchar_t* imageFile = L"testimg_227x149.bmp";
     NSData* imageData = getDataFromImageFile(imageFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
     NSUInteger imageLength = [imageData length];
 
     // Minimum Stream Length at which CGImageSourceCreateImageAtIndex returns valid image references
@@ -1651,7 +1664,7 @@ TEST(ImageIO, IncrementalBMPImageWithFrameCheck) {
     static const std::vector<int> c_streamLengthForFrame = { 1, 95, 96, 35049, 35050 };
 
     CGImageSourceRef imageRef = CGImageSourceCreateIncremental(nil);
-    ASSERT_TRUE_MSG(imageRef != nil, "FAILED: CGImageSourceCreateIncremental returned nullptr");
+    ASSERT_NE_MSG(nil, imageRef, "FAILED: CGImageSourceCreateIncremental returned nullptr");
 
     // Check container status change sequence at corresponding stream lengths
     for (int index = 0; index < c_streamLengthForContainer.size(); index++) {
@@ -1687,7 +1700,7 @@ TEST(ImageIO, IncrementalBMPImageWithFrameCheck) {
 TEST(ImageIO, IncrementalPNGImageWithFrameCheck) {
     const wchar_t* imageFile = L"seafloor_256x256.png";
     NSData* imageData = getDataFromImageFile(imageFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
     NSUInteger imageLength = [imageData length];
 
     // Minimum Stream Length at which CGImageSourceCreateImageAtIndex returns valid image references - 907 for Apple's implementation
@@ -1709,7 +1722,7 @@ TEST(ImageIO, IncrementalPNGImageWithFrameCheck) {
     static const std::vector<int> c_streamLengthForFrame = { 1, 95, 96, 906, 907, 59505, 59506 };
 
     CGImageSourceRef imageRef = CGImageSourceCreateIncremental(nil);
-    ASSERT_TRUE_MSG(imageRef != nil, "FAILED: CGImageSourceCreateIncremental returned nullptr");
+    ASSERT_NE_MSG(nil, imageRef, "FAILED: CGImageSourceCreateIncremental returned nullptr");
 
     // Check container status change sequence at corresponding stream lengths
     for (int index = 0; index < c_streamLengthForContainer.size(); index++) {
@@ -1745,7 +1758,7 @@ TEST(ImageIO, IncrementalPNGImageWithFrameCheck) {
 TEST(ImageIO, IncrementalTIFFImageWithFrameCheck) {
     const wchar_t* imageFile = L"photo8_4layers_1024x683.tif";
     NSData* imageData = getDataFromImageFile(imageFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
     NSUInteger imageLength = [imageData length];
 
     // Minimum Stream Length at which CGImageSourceCreateImageAtIndex returns valid image references
@@ -1787,7 +1800,7 @@ TEST(ImageIO, IncrementalTIFFImageWithFrameCheck) {
     static const std::vector<int> c_streamLengthForFrame4 = { 1, 95, 96, 4184267, 4184268, 4187741, 4187742 };
 
     CGImageSourceRef imageRef = CGImageSourceCreateIncremental(nil);
-    ASSERT_TRUE_MSG(imageRef != nil, "FAILED: CGImageSourceCreateIncremental returned nullptr");
+    ASSERT_NE_MSG(nil, imageRef, "FAILED: CGImageSourceCreateIncremental returned nullptr");
 
     // Check container status change sequence at corresponding stream lengths
     for (int index = 0; index < c_streamLengthForContainer.size(); index++) {
@@ -1876,7 +1889,7 @@ TEST(ImageIO, IncrementalTIFFImageWithFrameCheck) {
 TEST(ImageIO, IncrementalGIFImageWithFrameCheck) {
     const wchar_t* imageFile = L"photo7_4layers_683x1024.gif";
     NSData* imageData = getDataFromImageFile(imageFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
     NSUInteger imageLength = [imageData length];
 
     // Minimum Stream Length at which CGImageSourceCreateImageAtIndex returns valid image references
@@ -1922,7 +1935,7 @@ TEST(ImageIO, IncrementalGIFImageWithFrameCheck) {
     static const std::vector<int> c_streamLengthForFrame4 = { 1, 95, 96, 613937, 613938, 613946, 613947, 614712, 614713, 669892, 669893 };
 
     CGImageSourceRef imageRef = CGImageSourceCreateIncremental(nil);
-    ASSERT_TRUE_MSG(imageRef != nil, "FAILED: CGImageSourceCreateIncremental returned nullptr");
+    ASSERT_NE_MSG(nil, imageRef, "FAILED: CGImageSourceCreateIncremental returned nullptr");
 
     // Check container status change sequence at corresponding stream lengths
     for (int index = 0; index < c_streamLengthForContainer.size(); index++) {
@@ -2011,7 +2024,7 @@ TEST(ImageIO, IncrementalGIFImageWithFrameCheck) {
 TEST(ImageIO, IncrementalICOImageWithFrameCheck) {
     const wchar_t* imageFile = L"photo2_683x1024.ico";
     NSData* imageData = getDataFromImageFile(imageFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
     NSUInteger imageLength = [imageData length];
 
     // Minimum Stream Length at which CGImageSourceCreateImageAtIndex returns valid image references
@@ -2034,7 +2047,7 @@ TEST(ImageIO, IncrementalICOImageWithFrameCheck) {
     static const std::vector<int> c_streamLengthForFrame = { 1, 95, 96, 1041875, 1041876 };
 
     CGImageSourceRef imageRef = CGImageSourceCreateIncremental(nil);
-    ASSERT_TRUE_MSG(imageRef != nil, "FAILED: CGImageSourceCreateIncremental returned nullptr");
+    ASSERT_NE_MSG(nil, imageRef, "FAILED: CGImageSourceCreateIncremental returned nullptr");
 
     // Check container status change sequence at corresponding stream lengths
     for (int index = 0; index < c_streamLengthForContainer.size(); index++) {
@@ -2070,7 +2083,7 @@ TEST(ImageIO, IncrementalICOImageWithFrameCheck) {
 TEST(ImageIO, IncrementalTIFFNegativeScenario) {
     const wchar_t* imageFile = L"photo8_4layers_1024x683.tif";
     NSData* imageData = getDataFromImageFile(imageFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
     NSUInteger imageLength = [imageData length];
 
     // Minimum Stream Length at which CGImageSourceCreateImageAtIndex returns valid image references
@@ -2096,7 +2109,7 @@ TEST(ImageIO, IncrementalTIFFNegativeScenario) {
     static const std::vector<int> c_streamLengthForFrame3 = { 1, 95, 96, 3129165, 3129166, 4184257, 4184258 };
 
     CGImageSourceRef imageRef = CGImageSourceCreateIncremental(nil);
-    ASSERT_TRUE_MSG(imageRef != nil, "FAILED: CGImageSourceCreateIncremental returned nullptr");
+    ASSERT_NE_MSG(nil, imageRef, "FAILED: CGImageSourceCreateIncremental returned nullptr");
 
     // Different indices fed to CGImageSourceCreateImageAtIndex and CGImageSourceGetStatusAtIndex
     bool imageStart = false;
@@ -2151,21 +2164,21 @@ TEST(ImageIO, IncrementalTIFFNegativeScenario) {
 TEST(ImageIO, NonIncrementalJPEGSource) {
     const wchar_t* imageFile = L"photo6_1024x670.jpg";
     NSData* imageData = getDataFromImageFile(imageFile);
-    ASSERT_TRUE_MSG(imageData != nil, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
+    ASSERT_NE_MSG(nil, imageData, "FAILED: ImageIOTest::Could not find file: [%s]", imageFile);
 
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, nullptr);
-    ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
+    ASSERT_NE_MSG(nil, imageSource, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
 
-    ASSERT_EQ_MSG(CGImageSourceGetStatus(imageSource), kCGImageStatusComplete, "FAILED: ImageIOTest::ContainerStatus");
-    ASSERT_EQ_MSG(CGImageSourceGetStatusAtIndex(imageSource, 0), kCGImageStatusUnknownType, "FAILED: ImageIOTest::ImageStatusAtIndex");
+    EXPECT_EQ(kCGImageStatusComplete, CGImageSourceGetStatus(imageSource));
+    ASSERT_EQ(kCGImageStatusUnknownType, CGImageSourceGetStatusAtIndex(imageSource, 0));
 
     CGImageRef imageRef = CGImageSourceCreateImageAtIndex(imageSource, 0, nullptr);
-    ASSERT_TRUE_MSG(imageRef != nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
-    ASSERT_EQ_MSG(CGImageSourceGetStatusAtIndex(imageSource, 0), kCGImageStatusComplete, "FAILED: ImageIOTest::ImageStatusAtIndex");
+    ASSERT_NE_MSG(nil, imageRef, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
+    EXPECT_EQ(kCGImageStatusComplete, CGImageSourceGetStatusAtIndex(imageSource, 0));
 
     imageRef = CGImageSourceCreateImageAtIndex(imageSource, 1, nullptr);
-    ASSERT_TRUE_MSG(imageRef == nil, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex should return nullptr");
-    ASSERT_EQ_MSG(CGImageSourceGetStatusAtIndex(imageSource, 1), kCGImageStatusUnknownType, "FAILED: ImageIOTest::ImageStatusAtIndex");
+    ASSERT_EQ_MSG(nil, imageRef, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex should return nullptr");
+    EXPECT_EQ(kCGImageStatusUnknownType, CGImageSourceGetStatusAtIndex(imageSource, 1));
 
     CFRelease(imageSource);
 }

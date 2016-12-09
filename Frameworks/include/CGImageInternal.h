@@ -117,7 +117,7 @@ COREGRAPHICS_EXPORT NSData* _CGImageRepresentation(CGImageRef image, REFGUID gui
 
 COREGRAPHICS_EXPORT CGImageRef _CGImageCreateWithWICBitmap(IWICBitmap* bitmap);
 
-HRESULT _CGImageGetWICImageSource(CGImageRef image, IWICBitmap** source);
+COREGRAPHICS_EXPORT HRESULT _CGImageGetWICImageSource(CGImageRef image, IWICBitmap** source);
 
 // Obtain a direct pointer to the data.
 COREGRAPHICS_EXPORT void* _CGImageGetRawBytes(CGImageRef image);
