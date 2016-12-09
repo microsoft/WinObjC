@@ -22,6 +22,7 @@
 #include <COMIncludes.h>
 #import <DWrite.h>
 #import <D2d1.h>
+#import <wincodec.h>
 #include <COMIncludes_End.h>
 
 #import "CoreGraphicsInternal.h"
@@ -40,6 +41,6 @@ COREGRAPHICS_EXPORT bool CGContextIsPointInPath(CGContextRef c, bool eoFill, flo
 COREGRAPHICS_EXPORT void CGContextDrawGlyphRun(CGContextRef ctx, const DWRITE_GLYPH_RUN* glyphRun);
 
 // Bitmap Context Internal
-COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithRenderTarget(ID2D1RenderTarget* renderTarget, CGImageRef img = nullptr);
+COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithRenderTarget(ID2D1RenderTarget* renderTarget, CGImageRef img, WICPixelFormatGUID outputPixelFormat);
 COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithFormat(int width, int height, __CGSurfaceFormat fmt);
 COREGRAPHICS_EXPORT CGImageRef CGBitmapContextGetImage(CGContextRef ctx);
