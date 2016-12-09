@@ -213,19 +213,22 @@ Microsoft Extension
  @Status Interoperable
 */
 - (void)setEnabled:(BOOL)enabled {
-    if (!enabled) {
-        _curState |= UIControlStateDisabled;
-    } else {
-        _curState &= ~UIControlStateDisabled;
-    }
+    // only update the value and then relayout if value actually changed
+    if ((_curState & UIControlStateDisabled) != enabled) {
+        if (!enabled) {
+            _curState |= UIControlStateDisabled;
+        } else {
+            _curState &= ~UIControlStateDisabled;
+        }
 
-    [self setNeedsDisplay];
-    [self setNeedsLayout];
+        [self setNeedsDisplay];
+        [self setNeedsLayout];
 
-    if (enabled) {
-        self.accessibilityTraits &= ~UIAccessibilityTraitNotEnabled;
-    } else {
-        self.accessibilityTraits |= UIAccessibilityTraitNotEnabled;
+        if (enabled) {
+            self.accessibilityTraits &= ~UIAccessibilityTraitNotEnabled;
+        } else {
+            self.accessibilityTraits |= UIAccessibilityTraitNotEnabled;
+        }
     }
 }
 
@@ -261,14 +264,17 @@ Microsoft Extension
  @Status Interoperable
 */
 - (void)setSelected:(BOOL)selected {
-    if (selected) {
-        _curState |= UIControlStateSelected;
-    } else {
-        _curState &= ~UIControlStateSelected;
-    }
+    // only update the value and then relayout if value actually changed
+    if ((_curState & UIControlStateSelected) != selected) {
+        if (selected) {
+            _curState |= UIControlStateSelected;
+        } else {
+            _curState &= ~UIControlStateSelected;
+        }
 
-    [self setNeedsDisplay];
-    [self setNeedsLayout];
+        [self setNeedsDisplay];
+        [self setNeedsLayout];
+    }
 }
 
 /**
@@ -282,14 +288,17 @@ Microsoft Extension
  @Status Interoperable
 */
 - (void)setHighlighted:(BOOL)highlighted {
-    if (highlighted) {
-        _curState |= UIControlStateHighlighted;
-    } else {
-        _curState &= ~UIControlStateHighlighted;
-    }
+    // only update the value and then relayout if value actually changed
+    if ((_curState & UIControlStateHighlighted) != highlighted) {
+        if (highlighted) {
+            _curState |= UIControlStateHighlighted;
+        } else {
+            _curState &= ~UIControlStateHighlighted;
+        }
 
-    [self setNeedsDisplay];
-    [self setNeedsLayout];
+        [self setNeedsDisplay];
+        [self setNeedsLayout];
+    }
 }
 
 /**
