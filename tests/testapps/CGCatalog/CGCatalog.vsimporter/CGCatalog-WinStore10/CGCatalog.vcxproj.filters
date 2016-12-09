@@ -132,39 +132,9 @@
     <ClangCompile Include="..\..\CGCatalog\CGPathAddElipseViewController.m">
       <Filter>CGCatalog\NewSamples</Filter>
     </ClangCompile>
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddLineToPoint.png">
-      <Filter>CGCatalog\Resources</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\PathApply.png">
-      <Filter>CGCatalog\Resources</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddElipseToRect.png">
-      <Filter>CGCatalog\Resources</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddQuadCurveToPoint.png">
-      <Filter>CGCatalog\Resources</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\CloseSubPath.png">
-      <Filter>CGCatalog\Resources</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddCurveToPoint.png">
-      <Filter>CGCatalog\Resources</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddPath.png">
-      <Filter>CGCatalog\Resources</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\LogoAutodesk.png">
-      <Filter>CGCatalog\Resources</Filter>
-    </SBResourceCopy>
     <StoryboardCompile Include="..\..\CGCatalog\Resources\Launch Screen.storyboard">
       <Filter>CGCatalog\Resources</Filter>
     </StoryboardCompile>
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\GetBoundingBox.png">
-      <Filter>CGCatalog\Resources</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\PathAddRect.png">
-      <Filter>CGCatalog\Resources</Filter>
-    </SBResourceCopy>
     <AssetCatalogCompile Include="..\..\CGCatalog\Resources\Assets.xcassets">
       <Filter>CGCatalog\Resources</Filter>
     </AssetCatalogCompile>
@@ -204,6 +174,45 @@
     <SBResourceCopy Include="..\..\CGCatalog\Resources\CloseSubPath.png" />
     <SBResourceCopy Include="..\..\CGCatalog\Resources\GetBoundingBox.png" />
     <SBResourceCopy Include="..\..\CGCatalog\Resources\CloseSubPath.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddArc.png">
+      <Filter>CGCatalog\Resources</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddArcToPoint.png">
+      <Filter>CGCatalog\Resources</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddCurveToPoint.png">
+      <Filter>CGCatalog\Resources</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddElipseToRect.png">
+      <Filter>CGCatalog\Resources</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddLineToPoint.png">
+      <Filter>CGCatalog\Resources</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddPath.png">
+      <Filter>CGCatalog\Resources</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddQuadCurveToPoint.png">
+      <Filter>CGCatalog\Resources</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\CloseSubPath.png">
+      <Filter>CGCatalog\Resources</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\GetBoundingBox.png">
+      <Filter>CGCatalog\Resources</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\LogoAutodesk.png">
+      <Filter>CGCatalog\Resources</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\PathAddRect.png">
+      <Filter>CGCatalog\Resources</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\PathApply.png">
+      <Filter>CGCatalog\Resources</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\RoundedRect.png">
+      <Filter>CGCatalog\Resources</Filter>
+    </SBResourceCopy>
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="..\..\CGCatalog\CGContextShadowViewController.mm">
@@ -221,16 +230,5 @@
     <ClangCompile Include="..\..\CGCatalog\CGPathApplyCurveViewController.m">
       <Filter>CGCatalog\NewSamples</Filter>
     </ClangCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\..\CGCatalog\Resources\AddArcToPoint.png">
-      <Filter>CGCatalog\Resources</Filter>
-    </Image>
-    <Image Include="..\..\CGCatalog\Resources\AddArc.png">
-      <Filter>CGCatalog\Resources</Filter>
-    </Image>
-    <Image Include="..\..\CGCatalog\Resources\RoundedRect.png">
-      <Filter>CGCatalog\Resources</Filter>
-    </Image>
   </ItemGroup>
 </Project>

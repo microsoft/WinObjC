@@ -711,7 +711,7 @@ void CGPathAddRoundedRect(
 void CGPathApply(CGPathRef path, void* info, CGPathApplierFunction function) {
     RETURN_IF(!path);
     FAIL_FAST_IF_FAILED(path->ClosePath());
-    FAIL_FAST_IF_FAILED(_CGPathApplyInternal(path->GetPathGeometry(), info, function));
+    FAIL_FAST_IF_FAILED(_CGPathApplyInternal(path->GetPathGeometry().Get(), info, function));
 }
 
 /**

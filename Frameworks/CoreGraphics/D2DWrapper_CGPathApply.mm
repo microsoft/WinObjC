@@ -24,7 +24,7 @@
 
 using namespace Microsoft::WRL;
 
-// The CGPathApplySink is an implementation of the Id2D1SimplifiedGeometrySink. We use this sink to create a custom callback for each
+// The CGPathApplySink is an implementation of the ID2D1SimplifiedGeometrySink. We use this sink to create a custom callback for each
 // figure type of the path. This will let us call the CGPathApplierFunction provided to us automatically through the use of D2D APIs.
 // This should only be used with CGPathApply as it is very specialized for this case only.
 class _CGPathApplySink : public RuntimeClass<RuntimeClassFlags<RuntimeClassType::WinRtClassicComMix>, ID2D1SimplifiedGeometrySink> {
@@ -84,7 +84,7 @@ private:
     CGPathApplierFunction m_pathApplierFunction;
 };
 
-HRESULT _CGPathApplyInternal(ComPtr<ID2D1PathGeometry> pathGeometry, void* info, CGPathApplierFunction function) {
+HRESULT _CGPathApplyInternal(ID2D1PathGeometry* pathGeometry, void* info, CGPathApplierFunction function) {
     ComPtr<_CGPathApplySink> sink = Make<_CGPathApplySink>(info, function);
     RETURN_IF_FAILED(pathGeometry->Simplify(D2D1_GEOMETRY_SIMPLIFICATION_OPTION_CUBICS_AND_LINES, D2D1::IdentityMatrix(), sink.Get()));
     return S_OK;

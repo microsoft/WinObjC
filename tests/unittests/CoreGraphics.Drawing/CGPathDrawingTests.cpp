@@ -291,60 +291,28 @@ DISABLED_DRAW_TEST_F(CGPath, PathApplyDraw, UIKitMimicTest) {
     CGPathRelease(thepath);
 }
 
-static void CGPathControlPointCallback(void* context, const CGPathElement* element) {
-    CGFloat colorComponents[] = { 0, 0, 0, 1 };
+static void _CGContextOutlinePoint(CGContextRef context, CGPoint point, CGFloat r, CGFloat g, CGFloat b) {
+    CGContextSetRGBStrokeColor(context, r, g, b, 1);
 
+    CGContextStrokeRect(context, CGRectMake(point.x - 2, point.y - 2, 5, 5));
+}
+
+static void CGPathControlPointCallback(void* context, const CGPathElement* element) {
     switch (element->type) {
         case kCGPathElementMoveToPoint:
-            colorComponents[0] = 1;
-            colorComponents[1] = 0;
-            colorComponents[2] = 0;
-            CGContextSetRGBStrokeColor((CGContextRef)context,
-                                       colorComponents[0],
-                                       colorComponents[1],
-                                       colorComponents[2],
-                                       colorComponents[3]);
-
-            CGContextStrokeRect((CGContextRef)context, CGRectMake(element->points[0].x - 2.5, element->points[0].y - 2.5, 4, 4));
+            _CGContextOutlinePoint((CGContextRef)context, element->points[0], 1, 0, 0);
             break;
         case kCGPathElementAddLineToPoint:
-            colorComponents[0] = 0;
-            colorComponents[1] = 1;
-            colorComponents[2] = 0;
-            CGContextSetRGBStrokeColor((CGContextRef)context,
-                                       colorComponents[0],
-                                       colorComponents[1],
-                                       colorComponents[2],
-                                       colorComponents[3]);
-
-            CGContextStrokeRect((CGContextRef)context, CGRectMake(element->points[0].x - 2.5, element->points[0].y - 2.5, 4, 4));
+            _CGContextOutlinePoint((CGContextRef)context, element->points[0], 0, 1, 0);
             break;
         case kCGPathElementAddQuadCurveToPoint:
-            colorComponents[0] = 0;
-            colorComponents[1] = 1;
-            colorComponents[2] = 1;
-            CGContextSetRGBStrokeColor((CGContextRef)context,
-                                       colorComponents[0],
-                                       colorComponents[1],
-                                       colorComponents[2],
-                                       colorComponents[3]);
-
-            CGContextStrokeRect((CGContextRef)context, CGRectMake(element->points[0].x - 2.5, element->points[0].y - 2.5, 4, 4));
-            CGContextStrokeRect((CGContextRef)context, CGRectMake(element->points[1].x - 2.5, element->points[1].y - 2.5, 4, 4));
+            _CGContextOutlinePoint((CGContextRef)context, element->points[0], 0, 1, 1);
+            _CGContextOutlinePoint((CGContextRef)context, element->points[1], 0, 1, 1);
             break;
         case kCGPathElementAddCurveToPoint:
-            colorComponents[0] = 1;
-            colorComponents[1] = 0;
-            colorComponents[2] = 1;
-            CGContextSetRGBStrokeColor((CGContextRef)context,
-                                       colorComponents[0],
-                                       colorComponents[1],
-                                       colorComponents[2],
-                                       colorComponents[3]);
-
-            CGContextStrokeRect((CGContextRef)context, CGRectMake(element->points[0].x - 2.5, element->points[0].y - 2.5, 4, 4));
-            CGContextStrokeRect((CGContextRef)context, CGRectMake(element->points[1].x - 2.5, element->points[1].y - 2.5, 4, 4));
-            CGContextStrokeRect((CGContextRef)context, CGRectMake(element->points[2].x - 2.5, element->points[2].y - 2.5, 4, 4));
+            _CGContextOutlinePoint((CGContextRef)context, element->points[0], 1, 0, 1);
+            _CGContextOutlinePoint((CGContextRef)context, element->points[1], 1, 0, 1);
+            _CGContextOutlinePoint((CGContextRef)context, element->points[2], 1, 0, 1);
             break;
         case kCGPathElementCloseSubpath:
             break;
