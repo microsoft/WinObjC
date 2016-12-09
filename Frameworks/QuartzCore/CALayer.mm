@@ -317,7 +317,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
         RETURN_NULL_IF_FAILED(factory->CreateWicBitmapRenderTarget(customWICBtmap.Get(), D2D1::RenderTargetProperties(), &renderTarget));
         renderTarget->SetDpi(c_windowsDPI * scale, c_windowsDPI * scale);
 
-        return _CGBitmapContextCreateWithRenderTarget(renderTarget.Get(), image.get());
+        return _CGBitmapContextCreateWithRenderTarget(renderTarget.Get(), image.get(), GUID_WICPixelFormat32bppPBGRA);
     }
 
     return nullptr;

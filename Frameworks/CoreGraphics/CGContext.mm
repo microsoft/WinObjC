@@ -2145,12 +2145,19 @@ void CGContextDrawGlyphRun(CGContextRef context, const DWRITE_GLYPH_RUN* glyphRu
 struct __CGBitmapContext : CoreFoundation::CppBase<__CGBitmapContext, __CGContext> {
     woc::unique_cf<CGImageRef> _image;
 
-    __CGBitmapContext(ID2D1RenderTarget* renderTarget) : Parent(renderTarget) {
+    __CGBitmapContext(ID2D1RenderTarget* renderTarget, REFWICPixelFormatGUID outputPixelFormat) : Parent(renderTarget), _outputPixelFormat(outputPixelFormat) {
     }
 
     inline void SetImage(CGImageRef image) {
         _image.reset(CGImageRetain(image));
     }
+
+    inline REFWICPixelFormatGUID GetOutputPixelFormat() const {
+        return _outputPixelFormat;
+    }
+
+private:
+    WICPixelFormatGUID _outputPixelFormat;
 };
 
 /**
@@ -2187,11 +2194,15 @@ CGContextRef CGBitmapContextCreateWithData(void* data,
 
     // bitsperpixel = ((bytesPerRow/width) * 8bits/byte)
     size_t bitsPerPixel = ((bytesPerRow / width) << 3);
-    REFGUID pixelFormat = _CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, space, bitmapInfo);
+    REFWICPixelFormatGUID outputPixelFormat = _CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, space, bitmapInfo);
+    WICPixelFormatGUID pixelFormat = outputPixelFormat;
 
     if (!_CGIsValidRenderTargetPixelFormat(pixelFormat)) {
-        UNIMPLEMENTED_WITH_MSG("CGBitmapContext does not currently support conversion and can only render into 32bpp PRGBA buffers.");
-        return nullptr;
+        if (data) {
+            UNIMPLEMENTED_WITH_MSG("CGBitmapContext does not currently support input conversion and can only render into 32bpp PRGBA buffers.");
+            return nullptr;
+        }
+        pixelFormat = GUID_WICPixelFormat32bppPRGBA;
     }
 
     // if data is null, enough memory is allocated via CGIWICBitmap
@@ -2206,7 +2217,8 @@ CGContextRef CGBitmapContextCreateWithData(void* data,
 
     ComPtr<ID2D1RenderTarget> renderTarget;
     RETURN_NULL_IF_FAILED(factory->CreateWicBitmapRenderTarget(customBitmap.Get(), D2D1::RenderTargetProperties(), &renderTarget));
-    return _CGBitmapContextCreateWithRenderTarget(renderTarget.Get(), image.get());
+    CGContextRef context = _CGBitmapContextCreateWithRenderTarget(renderTarget.Get(), image.get(), outputPixelFormat);
+    return context;
 }
 
 /**
@@ -2288,7 +2300,14 @@ void* CGBitmapContextGetData(CGContextRef context) {
 */
 CGImageRef CGBitmapContextCreateImage(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context, nullptr);
-    return CGImageCreateCopy(CGBitmapContextGetImage(context));
+    if (CFGetTypeID(context) != __CGBitmapContext::GetTypeID()) {
+        TraceError(TAG, L"Image requested from non-bitmap CGContext.");
+        return nullptr;
+    }
+
+    // This copy is a no-op if the output format requested matches the backing image format.
+    __CGBitmapContext* bitmapContext = (__CGBitmapContext*)context;
+    return _CGImageCreateCopyWithPixelFormat(bitmapContext->_image.get(), bitmapContext->GetOutputPixelFormat());
 }
 
 CGImageRef CGBitmapContextGetImage(CGContextRef context) {
@@ -2300,9 +2319,9 @@ CGImageRef CGBitmapContextGetImage(CGContextRef context) {
     return ((__CGBitmapContext*)context)->_image.get();
 }
 
-CGContextRef _CGBitmapContextCreateWithRenderTarget(ID2D1RenderTarget* renderTarget, CGImageRef img) {
+CGContextRef _CGBitmapContextCreateWithRenderTarget(ID2D1RenderTarget* renderTarget, CGImageRef img, WICPixelFormatGUID outputPixelFormat) {
     RETURN_NULL_IF(!renderTarget);
-    __CGBitmapContext* context = __CGBitmapContext::CreateInstance(kCFAllocatorDefault, renderTarget);
+    __CGBitmapContext* context = __CGBitmapContext::CreateInstance(kCFAllocatorDefault, renderTarget, outputPixelFormat);
     __CGContextPrepareDefaults(context);
     context->SetImage(img);
     return context;
