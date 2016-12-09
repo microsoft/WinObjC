@@ -31,6 +31,8 @@
 #import "CGImageInternal.h"
 #import "CGIWICBitmap.h"
 
+#import <algorithm>
+
 using namespace Microsoft::WRL;
 
 static const wchar_t* TAG = L"CGImage";
@@ -784,6 +786,85 @@ REFGUID _CGImageGetWICPixelFormatFromImageProperties(unsigned int bitsPerCompone
     }
 
     return GUID_WICPixelFormat32bppRGBA;
+}
+
+// __CGImageMaskConvertToWICAlphaBitmap converts a 1, 2, 4, or 8-bpp grayscale "mask" into an alpha-only image for a D2D opacity brush.
+// On the reference platform, mask images are grayscale images whose pixel values signify the pixel's alpha transmissivity.
+// A fully black region (S = 0.0) is translated to a fully opaque region (A = 1.0).
+// A fully white region (S = 1.0), on the other hand, becomes a fully transparent region (A = 0.0).
+// Values that fall within the range (0.0, 1.0) are converted into complementary alpha values (A = 1.0 - S).
+//
+// Conversion of 8bpp grayscale images is simple: Subtract the pixel's value from 255 and use the result as the alpha value.
+// Images of other bit depths have their pixels scaled to values between 0 and 255.
+static HRESULT __CGImageMaskConvertToWICAlphaBitmap(CGImageRef image, IWICBitmap** pAlphaBitmap) {
+    RETURN_HR_IF_NULL(E_INVALIDARG, image);
+    RETURN_HR_IF_NULL(E_POINTER, pAlphaBitmap);
+
+    RETURN_HR_IF(E_INVALIDARG, !CGImageIsMask(image));
+
+    ComPtr<IWICImagingFactory> imagingFactory;
+    RETURN_IF_FAILED(_CGGetWICFactory(&imagingFactory));
+
+    woc::unique_cf<CGImageRef> gray8Bitmap{ _CGImageCreateCopyWithPixelFormat(image, GUID_WICPixelFormat8bppGray) };
+    RETURN_HR_IF_NULL(E_INVALIDARG, gray8Bitmap);
+
+    ComPtr<IWICBitmap> gray8Source;
+    RETURN_IF_FAILED(_CGImageGetWICImageSource(gray8Bitmap.get(), &gray8Source));
+
+    unsigned int w = 0, h = 0;
+    RETURN_IF_FAILED(gray8Source->GetSize(&w, &h));
+
+    ComPtr<IWICBitmapLock> gray8Lock;
+    RETURN_IF_FAILED(gray8Source->Lock(nullptr, WICBitmapLockRead, &gray8Lock));
+
+    unsigned char* gray8Data;
+    size_t gray8Len, gray8Stride;
+    RETURN_IF_FAILED(gray8Lock->GetStride(&gray8Stride));
+    RETURN_IF_FAILED(gray8Lock->GetDataPointer(&gray8Len, &gray8Data));
+
+    ComPtr<IWICBitmap> alphaBitmap;
+    RETURN_IF_FAILED(imagingFactory->CreateBitmap(w, h, GUID_WICPixelFormat8bppAlpha, WICBitmapCacheOnDemand, &alphaBitmap));
+
+    ComPtr<IWICBitmapLock> alpha8Lock;
+    RETURN_IF_FAILED(alphaBitmap->Lock(nullptr, WICBitmapLockWrite, &alpha8Lock));
+
+    unsigned char* alpha8Data;
+    size_t alpha8Len, alpha8Stride;
+    RETURN_IF_FAILED(alpha8Lock->GetStride(&alpha8Stride));
+    RETURN_IF_FAILED(alpha8Lock->GetDataPointer(&alpha8Len, &alpha8Data));
+
+    RETURN_HR_IF(E_UNEXPECTED, alpha8Len != gray8Len || alpha8Stride != gray8Stride);
+
+    std::transform(gray8Data, gray8Data + gray8Len, alpha8Data, [](const unsigned char& px) { return ~px; });
+
+    *pAlphaBitmap = alphaBitmap.Detach();
+    return S_OK;
+}
+
+HRESULT _CGImageConvertToMaskCompatibleWICBitmap(CGImageRef image, IWICBitmap** pBitmap) {
+    RETURN_HR_IF_NULL(E_INVALIDARG, image);
+    RETURN_HR_IF_NULL(E_POINTER, pBitmap);
+
+    ComPtr<IWICBitmap> wicBitmap;
+    if (CGImageIsMask(image)) {
+        // Hard way: Convert the image's gray values to alpha values A where G = <pixel gray value>; A = (1 - G)
+        // We can perhaps take the easy way out and create an A8 only image, since D2D supports them.
+
+        // We can safely assume the image is already in Gray, so its pixels will be 1, 2, 4, or 8bpp grayscale.
+        // Upconvert to 8bpp grayscale to simplify the code here. If it's bad perf-wise we can break it down.
+        return __CGImageMaskConvertToWICAlphaBitmap(image, pBitmap);
+    }
+
+    // "Easy" way: Convert the image to an acceptable D2D pixel format (if necessary) and turn it into a D2D bitmap.
+    WICPixelFormatGUID imagePixelFormat = _CGImageGetWICPixelFormat(image);
+
+    woc::unique_cf<CGImageRef> convertedImage{ CGImageRetain(image) };
+    if (!_CGIsValidRenderTargetPixelFormat(imagePixelFormat)) {
+        // convert it to a valid pixelformat
+        convertedImage.reset(_CGImageCreateCopyWithPixelFormat(image, GUID_WICPixelFormat32bppPRGBA));
+    }
+
+    return _CGImageGetWICImageSource(convertedImage.get(), pBitmap);
 }
 
 #pragma endregion WIC_HELPERS

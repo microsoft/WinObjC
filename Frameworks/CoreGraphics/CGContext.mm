@@ -103,8 +103,9 @@ struct __CGContextDrawingState {
     CGSize shadowOffset{ 0, 0 };
     CGFloat shadowBlur{ 0 };
 
-    // Clipping
+    // Clipping + Masking
     ComPtr<ID2D1Geometry> clippingGeometry;
+    ComPtr<ID2D1BitmapBrush> opacityBrush;
 
     inline void ComputeStrokeStyle(ID2D1DeviceContext* deviceContext) {
         if (strokeStyle) {
@@ -345,6 +346,8 @@ public:
                               Lambda&& drawLambda);
     HRESULT DrawGeometry(_CGCoordinateMode coordinateMode, ID2D1Geometry* pGeometry, CGPathDrawingMode drawMode);
     HRESULT DrawImage(ID2D1Image* image);
+    HRESULT ClipToD2DMaskBitmap(ID2D1Bitmap* bitmap, bool shouldInterpolate, CGRect rect);
+    HRESULT ClipToCGImageMask(CGImageRef image, CGRect rect);
 };
 
 #define NOISY_RETURN_IF_NULL(param, ...)                                    \
@@ -1015,13 +1018,127 @@ void CGContextClipToRects(CGContextRef context, const CGRect* rects, unsigned co
     CGContextClip(context);
 }
 
+HRESULT __CGContext::ClipToD2DMaskBitmap(ID2D1Bitmap* bitmap, bool shouldInterpolate, CGRect rect) {
+    auto& state = CurrentGState();
+
+    D2D1_SIZE_U bitmapSize = bitmap->GetPixelSize();
+    CGFloat sx = rect.size.width / bitmapSize.width;
+    CGFloat sy = rect.size.height / bitmapSize.height;
+    CGFloat m = rect.origin.y + (rect.size.height / 2.f);
+
+    // |1  0 0| is the transformation matrix for flipping a rect about its Y midpoint m. (m = (y + h/2))
+    // |0 -1 0|
+    // |0 2m 1|
+    //
+    // Combined with [scale sx * sy] * [translate X, Y], that becomes:
+    // |sx     0 0|
+    // | 0   -sy 0|
+    // | x -y+2m 0|
+    // Or, the transformation matrix for drawing a flipped rect at a scale and offset.
+    CGAffineTransform transform{ sx, 0, 0, -sy, rect.origin.x, (2 * m) - rect.origin.y };
+
+    // Transform that by applying the device global transform (LLO<->ULO flip, plus user transform.)
+    CGAffineTransform userToDeviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(this);
+    transform = CGAffineTransformConcat(transform, userToDeviceTransform);
+
+    D2D1_INTERPOLATION_MODE interpolationMode = shouldInterpolate ? state.bitmapInterpolationMode : D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR;
+    ComPtr<ID2D1BitmapBrush1> newOpacityBrush;
+    RETURN_IF_FAILED(
+        deviceContext->CreateBitmapBrush(bitmap, D2D1::BitmapBrushProperties1(D2D1_EXTEND_MODE_CLAMP, D2D1_EXTEND_MODE_CLAMP, interpolationMode), D2D1::BrushProperties(), &newOpacityBrush));
+
+    newOpacityBrush->SetTransform(__CGAffineTransformToD2D_F(transform));
+
+    // Compliance with reference platform: D2D extends the last pixel of the opacity brush out to the
+    // ends of the earth. The reference platform truncates the clipping region at the edge of the mask.
+    ComPtr<ID2D1RectangleGeometry> rectGeometry;
+    ComPtr<ID2D1TransformedGeometry> transformedRectClippingGeometry;
+    RETURN_IF_FAILED(Factory()->CreateRectangleGeometry(__CGRectToD2D_F(rect), &rectGeometry));
+    RETURN_IF_FAILED(Factory()->CreateTransformedGeometry(rectGeometry.Get(),
+                                                          __CGAffineTransformToD2D_F(userToDeviceTransform),
+                                                          &transformedRectClippingGeometry));
+
+    if (state.opacityBrush) {
+        // If we already have an opacity brush, we have to go to great lengths to compose the two clipping images.
+        // - Create a compatible render target with a backing bitmap
+        // - Using two layers (reasons detailed below), fill a geometry with the intersection of the two 
+        //   masks.
+        // - Use that bitmap (untransformed, as the render has resolved the global coordinate system conflict)
+        //   as the opacity brush for future drawing.
+        ComPtr<ID2D1BitmapRenderTarget> compatibleTarget;
+        RETURN_IF_FAILED(deviceContext->CreateCompatibleRenderTarget(&compatibleTarget));
+        ComPtr<ID2D1DeviceContext> compatibleContext;
+        RETURN_IF_FAILED(compatibleTarget.As(&compatibleContext));
+
+        compatibleContext->BeginDraw();
+        compatibleContext->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(),
+                                                       nullptr,
+                                                       D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
+                                                       D2D1::IdentityMatrix(),
+                                                       1.0, // 1.0 global alpha for brush composition
+                                                       state.opacityBrush.Get()),
+                                 nullptr);
+        compatibleContext->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(),
+                                                       transformedRectClippingGeometry.Get(),
+                                                       D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
+                                                       D2D1::IdentityMatrix(),
+                                                       1.0, // 1.0 global alpha for brush composition
+                                                       newOpacityBrush.Get()),
+                                 nullptr);
+
+        ComPtr<ID2D1SolidColorBrush> brush;
+        RETURN_IF_FAILED(compatibleContext->CreateSolidColorBrush({ 0, 0, 0, 1 }, &brush));
+        // FillGeometry takes three parameters:
+        // * geometry
+        // * fill brush
+        // * opacity brush
+        //
+        // It looks like the perfect candidate for creating a new final opacity brush --
+        // one layer, one opacity-bound geometry fill! Except that for some reason,
+        // Direct2D returns D2DERR_INCOMPATIBLE_BRUSH_TYPES if you try to opacify a
+        // solid color brush with an opacity brush directly.
+        // Drawing through two stacked layers (original opacity brush, new opacity brush)
+        // however does work.
+        compatibleContext->FillGeometry(transformedRectClippingGeometry.Get(), brush.Get());
+        compatibleContext->PopLayer();
+        compatibleContext->PopLayer();
+        RETURN_IF_FAILED(compatibleContext->EndDraw());
+
+        ComPtr<ID2D1Bitmap> mergedAlphaMask;
+        RETURN_IF_FAILED(compatibleTarget->GetBitmap(&mergedAlphaMask));
+        newOpacityBrush->SetBitmap(mergedAlphaMask.Get());
+
+        // This brush is backed by a bitmap that is 1:1 scale/transform with the existing device context.
+        // Since its boundaries match the context boundaries, we don't need to intersect another global clip.
+        newOpacityBrush->SetTransform(D2D1::IdentityMatrix());
+    } else {
+        // Since we are not composing the opacity brushes, we have to clip the global region to the bounds of the opacity brush.
+        RETURN_IF_FAILED(state.IntersectClippingGeometry(transformedRectClippingGeometry.Get(), kCGPathFill));
+    }
+
+    state.opacityBrush = std::move(newOpacityBrush);
+
+    return S_OK;
+}
+
+HRESULT __CGContext::ClipToCGImageMask(CGImageRef image, CGRect rect) {
+    ComPtr<IWICBitmap> maskWicBitmap;
+    RETURN_IF_FAILED(_CGImageConvertToMaskCompatibleWICBitmap(image, &maskWicBitmap));
+
+    ComPtr<ID2D1Bitmap> maskD2DBitmap;
+    RETURN_IF_FAILED(deviceContext->CreateBitmapFromWicBitmap(maskWicBitmap.Get(), nullptr, &maskD2DBitmap));
+
+    return ClipToD2DMaskBitmap(maskD2DBitmap.Get(), CGImageGetShouldInterpolate(image), rect);
+}
+
 /**
  @Status Caveat
  @Notes Limited bitmap format support
 */
-void CGContextClipToMask(CGContextRef context, CGRect dest, CGImageRef image) {
+void CGContextClipToMask(CGContextRef context, CGRect rect, CGImageRef image) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    NOISY_RETURN_IF_NULL(image);
+
+    FAIL_FAST_IF_FAILED(context->ClipToCGImageMask(image, rect));
 }
 
 /**
@@ -1703,13 +1820,14 @@ HRESULT __CGContext::DrawImage(ID2D1Image* image) {
     deviceContext->BeginDraw();
 
     bool layer = false;
-    if (state.clippingGeometry || !IS_NEAR(state.globalAlpha, 1.0, .0001f)) {
+    if (state.clippingGeometry || !IS_NEAR(state.globalAlpha, 1.0, .0001f) || state.opacityBrush) {
         layer = true;
         deviceContext->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(),
                                                        state.clippingGeometry.Get(),
                                                        D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
                                                        D2D1::IdentityMatrix(),
-                                                       state.globalAlpha),
+                                                       state.globalAlpha,
+                                                       state.opacityBrush.Get()),
                                  nullptr);
     }
 
