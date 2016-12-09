@@ -64,6 +64,10 @@ static IWLazyIvarLookup<float> _LazyUIFontHorizontalScale(_LazyUIFont, "_horizon
 static IWLazyIvarLookup<void*> _LazyUIFontHandle(_LazyUIFont, "_font");
 static IWLazyIvarLookup<void*> _LazyUISizingFontHandle(_LazyUIFont, "_sizingFont");
 
+// DWrite will crash if we try to give it glyphs that are below this threshold
+// Though this value is approximate, it is small enough to not be noticeable while still safe
+static constexpr float c_glyphThreshold = 0.5f;
+
 CGContextCairo::CGContextCairo(CGContextRef base, CGImageRef destinationImage)
     : CGContextImpl(base, destinationImage), _drawContext(0), _filter(CAIRO_FILTER_BILINEAR) {
 }
@@ -518,15 +522,16 @@ void CGContextCairo::CGContextShowGlyphsWithAdvances(const CGGlyph* glyphs, cons
     // CGContextShow* functions transform the glyphs about the origin of the first glyph, rather than about each glyph's origin
     CGAffineTransform textMatrix{ curState->curTextMatrix };
     CGAffineTransform ctm{ curState->curTransform };
+    auto exit = wil::ScopeExit([&]() {
+        // Return transforms to previous values, move text position to end of last glyph drawn
+        curState->curTransform = ctm;
+        curState->curTextMatrix = textMatrix;
+        CGContextSetTextPosition(curState->curTextMatrix.tx + delta.x, curState->curTextMatrix.ty + delta.y);
+    });
+
     curState->curTransform = CGAffineTransformConcat(textMatrix, ctm);
     curState->curTextMatrix = CGAffineTransformIdentity;
-
     CGContextDrawGlyphRun(&run);
-
-    // Return transforms to previous values, move text position to end of last glyph drawn
-    curState->curTransform = ctm;
-    curState->curTextMatrix = textMatrix;
-    CGContextSetTextPosition(curState->curTextMatrix.tx + delta.x, curState->curTextMatrix.ty + delta.y);
 }
 
 void CGContextCairo::CGContextShowGlyphs(const CGGlyph* glyphs, size_t count) {
@@ -542,10 +547,7 @@ void CGContextCairo::CGContextSetFontSize(float ptSize) {
 }
 
 void CGContextCairo::CGContextSetTextMatrix(CGAffineTransform matrix) {
-    curState->curTextMatrix.a = matrix.a;
-    curState->curTextMatrix.b = matrix.b;
-    curState->curTextMatrix.c = matrix.c;
-    curState->curTextMatrix.d = matrix.d;
+    curState->curTextMatrix = matrix;
 }
 
 void CGContextCairo::CGContextGetTextMatrix(CGAffineTransform* ret) {
@@ -1898,11 +1900,10 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
 
     CGAffineTransform finalTransform = CGAffineTransformConcat(textTransform, userTransform);
 
-    // DWrite will crash if we try to give it glyphs that are below this threshold
-    // Though this value is approximate, it is small enough to not be noticeable while still safe
-    const float threshold = 0.5f;
-    if ((fabs(finalTransform.a * glyphRun->fontEmSize) <= threshold && fabs(finalTransform.b * glyphRun->fontEmSize) <= threshold) ||
-        (fabs(finalTransform.c * glyphRun->fontEmSize) <= threshold && fabs(finalTransform.d * glyphRun->fontEmSize) <= threshold)) {
+    if ((fabs(finalTransform.a * glyphRun->fontEmSize) <= c_glyphThreshold &&
+         fabs(finalTransform.b * glyphRun->fontEmSize) <= c_glyphThreshold) ||
+        (fabs(finalTransform.c * glyphRun->fontEmSize) <= c_glyphThreshold &&
+         fabs(finalTransform.d * glyphRun->fontEmSize) <= c_glyphThreshold)) {
         TraceWarning(TAG, L"Glyphs too small to be rendered");
         return;
     }

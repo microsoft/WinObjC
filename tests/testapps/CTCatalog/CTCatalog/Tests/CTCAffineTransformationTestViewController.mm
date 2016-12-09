@@ -16,6 +16,15 @@
 
 #import "CTCAffineTransformationTestViewController.h"
 
+#define MAKE_SLIDER(slider, rect, valueLimit, defaultVal)                                            \
+    slider = [[UISlider alloc] initWithFrame:rect];                                                  \
+    slider.minimumValue = -valueLimit;                                                               \
+    slider.maximumValue = valueLimit;                                                                \
+    slider.value = defaultVal;                                                                       \
+    slider.continuous = YES;                                                                         \
+    [slider addTarget:self action:@selector(drawTests) forControlEvents:UIControlEventValueChanged]; \
+    [self.view addSubview:slider];
+
 static const NSString* text = @"This frame is manipulated by the above sliders.  The leftmost slider changes rotation, which should be "
                               @"about the origin in the bottom-left of this frame with left being clockwise rotation and right being "
                               @"counterclockwise.  The middle sliders change the X and Y scale respectively.  The rightmost sliders "
@@ -128,85 +137,16 @@ static const NSString* text = @"This frame is manipulated by the above sliders. 
     self.view.backgroundColor = [UIColor whiteColor];
     CGFloat width = CGRectGetWidth(self.view.bounds);
 
-    _rotationSlider = [[UISlider alloc] initWithFrame:CGRectMake(0, 10, width / 4, 50)];
-    _rotationSlider.minimumValue = -2.0f * M_PI;
-    _rotationSlider.maximumValue = 2.0f * M_PI;
-    _rotationSlider.value = 0.0f;
-    _rotationSlider.continuous = YES;
-    [_rotationSlider addTarget:self action:@selector(drawTests) forControlEvents:UIControlEventValueChanged];
-    [self.view addSubview:_rotationSlider];
-
-    _scaleXSlider = [[UISlider alloc] initWithFrame:CGRectMake(width / 3, 10, width / 4, 50)];
-    _scaleXSlider.minimumValue = -2.0f;
-    _scaleXSlider.maximumValue = 2.0f;
-    _scaleXSlider.value = 1.0f;
-    _scaleXSlider.continuous = YES;
-    [_scaleXSlider addTarget:self action:@selector(drawTests) forControlEvents:UIControlEventValueChanged];
-    [self.view addSubview:_scaleXSlider];
-
-    _scaleYSlider = [[UISlider alloc] initWithFrame:CGRectMake(width / 3, 70, width / 4, 50)];
-    _scaleYSlider.minimumValue = -2.0f;
-    _scaleYSlider.maximumValue = 2.0f;
-    _scaleYSlider.value = 1.0f;
-    _scaleYSlider.continuous = YES;
-    [_scaleYSlider addTarget:self action:@selector(drawTests) forControlEvents:UIControlEventValueChanged];
-    [self.view addSubview:_scaleYSlider];
-
-    _translateXSlider = [[UISlider alloc] initWithFrame:CGRectMake(2.0f * width / 3, 10, width / 4, 50)];
-    _translateXSlider.minimumValue = -200;
-    _translateXSlider.maximumValue = 200;
-    _translateXSlider.value = 0.0f;
-    _translateXSlider.continuous = YES;
-    [_translateXSlider addTarget:self action:@selector(drawTests) forControlEvents:UIControlEventValueChanged];
-    [self.view addSubview:_translateXSlider];
-
-    _translateYSlider = [[UISlider alloc] initWithFrame:CGRectMake(2.0f * width / 3, 70, width / 4, 50)];
-    _translateYSlider.minimumValue = -200;
-    _translateYSlider.maximumValue = 200;
-    _translateYSlider.value = 0.0f;
-    _translateYSlider.continuous = YES;
-    [_translateYSlider addTarget:self action:@selector(drawTests) forControlEvents:UIControlEventValueChanged];
-    [self.view addSubview:_translateYSlider];
-
-    _textRotationSlider = [[UISlider alloc] initWithFrame:CGRectMake(0, 130, width / 4, 50)];
-    _textRotationSlider.minimumValue = -2.0f * M_PI;
-    _textRotationSlider.maximumValue = 2.0f * M_PI;
-    _textRotationSlider.value = 0.0f;
-    _textRotationSlider.continuous = YES;
-    [_textRotationSlider addTarget:self action:@selector(drawTests) forControlEvents:UIControlEventValueChanged];
-    [self.view addSubview:_textRotationSlider];
-
-    _textScaleXSlider = [[UISlider alloc] initWithFrame:CGRectMake(width / 3, 130, width / 4, 50)];
-    _textScaleXSlider.minimumValue = -2.0f;
-    _textScaleXSlider.maximumValue = 2.0f;
-    _textScaleXSlider.value = 1.0f;
-    _textScaleXSlider.continuous = YES;
-    [_textScaleXSlider addTarget:self action:@selector(drawTests) forControlEvents:UIControlEventValueChanged];
-    [self.view addSubview:_textScaleXSlider];
-
-    _textScaleYSlider = [[UISlider alloc] initWithFrame:CGRectMake(width / 3, 200, width / 4, 50)];
-    _textScaleYSlider.minimumValue = -2.0f;
-    _textScaleYSlider.maximumValue = 2.0f;
-    _textScaleYSlider.value = 1.0f;
-    _textScaleYSlider.continuous = YES;
-    [_textScaleYSlider addTarget:self action:@selector(drawTests) forControlEvents:UIControlEventValueChanged];
-    [self.view addSubview:_textScaleYSlider];
-
-    _textTranslateXSlider = [[UISlider alloc] initWithFrame:CGRectMake(2.0f * width / 3, 130, width / 4, 50)];
-    _textTranslateXSlider.minimumValue = -200;
-    _textTranslateXSlider.maximumValue = 200;
-    _textTranslateXSlider.value = 0.0f;
-    _textTranslateXSlider.continuous = YES;
-    [_textTranslateXSlider addTarget:self action:@selector(drawTests) forControlEvents:UIControlEventValueChanged];
-    [self.view addSubview:_textTranslateXSlider];
-
-    _textTranslateYSlider = [[UISlider alloc] initWithFrame:CGRectMake(2.0f * width / 3, 200, width / 4, 50)];
-    _textTranslateYSlider.minimumValue = -200;
-    _textTranslateYSlider.maximumValue = 200;
-    _textTranslateYSlider.value = 0.0f;
-    _textTranslateYSlider.continuous = YES;
-    [_textTranslateYSlider addTarget:self action:@selector(drawTests) forControlEvents:UIControlEventValueChanged];
-    [self.view addSubview:_textTranslateYSlider];
+    MAKE_SLIDER(_rotationSlider, CGRectMake(0, 10, width / 4, 50), 2.0f * M_PI, 0.0f)
+    MAKE_SLIDER(_scaleXSlider, CGRectMake(width / 3, 10, width / 4, 50), 2.0f, 1.0f)
+    MAKE_SLIDER(_scaleYSlider, CGRectMake(width / 3, 70, width / 4, 50), 2.0f, 1.0f)
+    MAKE_SLIDER(_translateXSlider, CGRectMake(2.0f * width / 3, 10, width / 4, 50), 200.0f, 0.0f)
+    MAKE_SLIDER(_translateYSlider, CGRectMake(2.0f * width / 3, 70, width / 4, 50), 200, 0.0f)
+    MAKE_SLIDER(_textRotationSlider, CGRectMake(0, 130, width / 4, 50), 2.0f * M_PI, 0.0f)
+    MAKE_SLIDER(_textScaleXSlider, CGRectMake(width / 3, 130, width / 4, 50), 2.0f, 1.0f)
+    MAKE_SLIDER(_textScaleYSlider, CGRectMake(width / 3, 200, width / 4, 50), 2.0f, 1.0f)
+    MAKE_SLIDER(_textTranslateXSlider, CGRectMake(2.0f * width / 3, 130, width / 4, 50), 200.0f, 0.0f)
+    MAKE_SLIDER(_textTranslateYSlider, CGRectMake(2.0f * width / 3, 200, width / 4, 50), 200.0f, 0.0f)
 
     // Create frame of text
     _textView = [[CTAffineTransformationTestView alloc] initWithFrame:CGRectMake(width / 4, 250, width / 2, 200)];
