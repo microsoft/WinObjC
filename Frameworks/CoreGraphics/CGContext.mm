@@ -1861,7 +1861,7 @@ void CGContextFillEllipseInRect(CGContextRef context, CGRect rect) {
  @Status Interoperable
  @Notes The current path is cleared as a side effect of this function.
 */
-void CGContextStrokeLineSegments(CGContextRef context, const CGPoint* points, unsigned count) {
+void CGContextStrokeLineSegments(CGContextRef context, const CGPoint* points, size_t count) {
     NOISY_RETURN_IF_NULL(context);
     RETURN_IF(!context->ShouldDraw());
 
