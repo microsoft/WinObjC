@@ -18,6 +18,7 @@
 #import <ImageIO/CGImageDestination.h>
 #import "CGImageDestinationInternal.h"
 #import <StubReturn.h>
+#import <CGImageInternal.h>
 #include <windows.h>
 #include <string>
 
@@ -979,6 +980,14 @@ void CGImageDestinationAddImage(CGImageDestinationRef idst, CGImageRef image, CF
         }
     }
 
+    // Turn image into a WIC Bitmap
+    ComPtr<IWICBitmap> inputImage;
+    status = _CGImageGetWICImageSource(image, &inputImage);
+    if (!SUCCEEDED(status)) {
+        NSTraceInfo(TAG, @"_CGImageGetWICImageSource failed with status=%x\n", status);
+        return;
+    }
+
     IWICMetadataQueryWriter* propertyWriter = imageFrameMetadataWriter.Get();
 
     // Set the pixel format based on file format and write necessary metadata
@@ -998,7 +1007,11 @@ void CGImageDestinationAddImage(CGImageDestinationRef idst, CGImageRef image, CF
             writeGIFProperties(propertyWriter, properties, imageWidth, imageHeight);
             break;
         case typePNG:
-            formatGUID = GUID_WICPixelFormat32bppRGBA;
+            status = inputImage->GetPixelFormat(&formatGUID);
+            if (!SUCCEEDED(status)) {
+                NSTraceInfo(TAG, @"Get Image Source Pixel Format failed with status=%x\n", status);
+                return;
+            }
             writePNGProperties(propertyWriter, properties, imageWidth, imageHeight);
             break;
         case typeBMP:
@@ -1012,27 +1025,6 @@ void CGImageDestinationAddImage(CGImageDestinationRef idst, CGImageRef image, CF
     status = imageBitmapFrame->SetPixelFormat(&formatGUID);
     if (!SUCCEEDED(status)) {
         NSTraceInfo(TAG, @"Set Pixel Format failed with status=%x\n", status);
-        return;
-    }
-
-    CGDataProviderRef provider = CGImageGetDataProvider(image);
-    NSData* imageByteData = (id)CGDataProviderCopyData(provider);
-
-    // Turn image into a WIC Bitmap
-    ComPtr<IWICBitmap> inputImage;
-
-    // All our input coming in from CGImagesource is in 32bppRGBA
-    ComPtr<IWICImagingFactory> imageFactory = imageDestination.idFactory;
-    status = imageFactory->CreateBitmapFromMemory(imageWidth,
-                                                  imageHeight,
-                                                  GUID_WICPixelFormat32bppRGBA,
-                                                  imageWidth * 4,
-                                                  imageHeight * imageWidth * 4,
-                                                  (unsigned char*)[imageByteData bytes],
-                                                  &inputImage);
-    [imageByteData release];
-    if (!SUCCEEDED(status)) {
-        NSTraceInfo(TAG, @"CreateBitmapFromMemory failed with status=%x\n", status);
         return;
     }
 
