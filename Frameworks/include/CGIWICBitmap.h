@@ -152,7 +152,7 @@ public:
     }
 
     // IWICBitmap interface
-    // TODO #1124: Today we do not support locking a region of the WIC bitmap for rendering. We only support locking the complete bitmap.
+    // TODO #1379: Today we do not support locking of a region smaller than the entire bitmap.
     // This will suffice CoreText requirement but needs to be revisted for CoreGraphics usage in future.
 
     HRESULT STDMETHODCALLTYPE Lock(_In_ const WICRect* region, _In_ DWORD flags, _COM_Outptr_ IWICBitmapLock** outLock) {
@@ -187,17 +187,36 @@ public:
                                          _Out_writes_all_(cbBufferSize) BYTE* buffer) {
         RETURN_HR_IF_NULL(E_POINTER, buffer);
 
+        const WICRect fullRect = { 0, 0, m_width, m_height };
         Microsoft::WRL::ComPtr<IWICBitmapLock> lock;
-        RETURN_IF_FAILED(Lock(copyRect, 0, &lock));
+        // TODO #1379: Support sub-regional locking.
+        RETURN_IF_FAILED(Lock(&fullRect, 0, &lock));
 
+        if (!copyRect) {
+            copyRect = &fullRect;
+        }
+
+        UINT sourceDataStride;
         UINT sourceDataSize;
         BYTE* sourceData;
+        RETURN_IF_FAILED(lock->GetStride(&sourceDataStride));
         RETURN_IF_FAILED(lock->GetDataPointer(&sourceDataSize, &sourceData));
 
-        RETURN_HR_IF(E_INVALIDARG, sourceDataSize > bufferSize);
-
-        // TODO #1379 - should support regional copying.
-        RETURN_HR_IF(E_UNEXPECTED, memcpy_s(buffer, bufferSize, sourceData, sourceDataSize) != 0);
+        if (copyRect->X == 0 && copyRect->Y == 0 && copyRect->Width == m_width && copyRect->Height == m_height) {
+            RETURN_HR_IF(E_INVALIDARG, sourceDataSize > bufferSize);
+            RETURN_HR_IF(E_UNEXPECTED, memcpy_s(buffer, bufferSize, sourceData, sourceDataSize) != 0);
+        } else {
+            // Once we support sub-regional locking we can fix this stride copier.
+            size_t bytesPerPixel = sourceDataStride / fullRect.Width;
+            ptrdiff_t xOffBytes = copyRect->X * bytesPerPixel;
+            for (off_t i = 0, j = copyRect->Y; i < copyRect->Height; ++i, ++j) {
+                RETURN_HR_IF(E_UNEXPECTED,
+                             memcpy_s(buffer + (stride * i),
+                                      bufferSize - (stride * i),
+                                      sourceData + xOffBytes + (sourceDataStride * j),
+                                      stride));
+            }
+        }
         return S_OK;
     }
 
