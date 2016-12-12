@@ -152,7 +152,7 @@ public:
     }
 
     // IWICBitmap interface
-    // TODO #1124: Today we do not support locking a region of the WIC bitmap for rendering. We only support locking the complete bitmap.
+    // TODO #1379: Today we do not support locking of a region smaller than the entire bitmap.
     // This will suffice CoreText requirement but needs to be revisted for CoreGraphics usage in future.
 
     HRESULT STDMETHODCALLTYPE Lock(_In_ const WICRect* region, _In_ DWORD flags, _COM_Outptr_ IWICBitmapLock** outLock) {
@@ -187,17 +187,48 @@ public:
                                          _Out_writes_all_(cbBufferSize) BYTE* buffer) {
         RETURN_HR_IF_NULL(E_POINTER, buffer);
 
+        const WICRect fullRect = { 0, 0, m_width, m_height };
+
         Microsoft::WRL::ComPtr<IWICBitmapLock> lock;
-        RETURN_IF_FAILED(Lock(copyRect, 0, &lock));
+        // TODO #1379: Support sub-regional locking.
+        RETURN_IF_FAILED(Lock(&fullRect, 0, &lock));
 
-        UINT sourceDataSize;
-        BYTE* sourceData;
-        RETURN_IF_FAILED(lock->GetDataPointer(&sourceDataSize, &sourceData));
+        if (!copyRect) {
+            copyRect = &fullRect;
+        }
 
-        RETURN_HR_IF(E_INVALIDARG, sourceDataSize > bufferSize);
+        RETURN_HR_IF(E_INVALIDARG, copyRect->Width == 0 || copyRect->Height == 0 || copyRect->X < 0 || copyRect->Y < 0);
 
-        // TODO #1379 - should support regional copying.
-        RETURN_HR_IF(E_UNEXPECTED, memcpy_s(buffer, bufferSize, sourceData, sourceDataSize) != 0);
+        unsigned int srcStride;
+        unsigned int srcSize;
+        uint8_t* srcData;
+        RETURN_IF_FAILED(lock->GetStride(&srcStride));
+        RETURN_IF_FAILED(lock->GetDataPointer(&srcSize, &srcData));
+
+        if (copyRect->X == 0 && copyRect->Y == 0 && copyRect->Width == m_width && copyRect->Height == m_height) {
+            RETURN_HR_IF(E_INVALIDARG, srcSize > bufferSize);
+            RETURN_HR_IF(E_UNEXPECTED, memcpy_s(buffer, bufferSize, srcData, srcSize) != 0);
+        } else {
+            // Once we support sub-regional locking we can fix this stride copier.
+
+            // Invalid state: Source stride is less than the width of the image.
+            // We can't copy regions from sub-8bpp images.
+            RETURN_HR_IF(E_NOTIMPL, srcStride < fullRect.Width);
+
+            size_t bytesPerPixel = srcStride / fullRect.Width;
+            ptrdiff_t srcOffset = (copyRect->X * bytesPerPixel) + (copyRect->Y * srcStride);
+            const uint8_t* end = buffer + (stride * copyRect->Height);
+            for (uint8_t *src = srcData + srcOffset, *dest = buffer;
+                 dest < end;
+                 src += srcStride, dest += stride) {
+                RETURN_HR_IF(E_UNEXPECTED,
+                             memcpy_s(dest,
+                                      end - dest, // Total remaining bytes available in the destination buffer.
+                                      src,
+                                      stride)
+                );
+            }
+        }
         return S_OK;
     }
 
