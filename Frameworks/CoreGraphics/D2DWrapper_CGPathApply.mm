@@ -38,10 +38,10 @@ public:
     STDMETHOD_(void, AddBeziers)(const D2D1_BEZIER_SEGMENT* beziers, UINT bezierCount) {
         FAIL_FAST_IF_NULL(beziers);
         for (UINT i = 0; i < bezierCount; ++i) {
-            CGPoint cgPoints[3] = { _D2DPointToCGPoint(beziers[i].point1),
-                                    _D2DPointToCGPoint(beziers[i].point2),
-                                    _D2DPointToCGPoint(beziers[i].point3) };
-            CGPathElement element = { kCGPathElementAddCurveToPoint, cgPoints };
+            CGPoint pathPoints[3] = { _D2DPointToCGPoint(beziers[i].point1),
+                                      _D2DPointToCGPoint(beziers[i].point2),
+                                      _D2DPointToCGPoint(beziers[i].point3) };
+            CGPathElement element = { kCGPathElementAddCurveToPoint, pathPoints };
             m_pathApplierFunction(m_info, &element);
         }
     }
@@ -49,17 +49,17 @@ public:
     STDMETHOD_(void, AddLines)(const D2D1_POINT_2F* points, UINT pointsCount) {
         FAIL_FAST_IF_NULL(points);
         for (UINT i = 0; i < pointsCount; ++i) {
-            CGPoint cgPoints[1] = { _D2DPointToCGPoint(points[i]) };
+            CGPoint pathPoint = _D2DPointToCGPoint(points[i]);
 
-            CGPathElement element = { kCGPathElementAddLineToPoint, cgPoints };
+            CGPathElement element = { kCGPathElementAddLineToPoint, &pathPoint };
             m_pathApplierFunction(m_info, &element);
         }
     }
 
     STDMETHOD_(void, BeginFigure)(D2D1_POINT_2F startPoint, D2D1_FIGURE_BEGIN figureBegin) {
-        CGPoint cgPoints[1] = { _D2DPointToCGPoint(startPoint) };
+        CGPoint pathPoint = _D2DPointToCGPoint(startPoint);
 
-        CGPathElement element = { kCGPathElementMoveToPoint, cgPoints };
+        CGPathElement element = { kCGPathElementMoveToPoint, &pathPoint };
         m_pathApplierFunction(m_info, &element);
     }
 
