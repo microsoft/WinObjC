@@ -56,10 +56,9 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
 }
 
 - (void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response {
-    dispatch_sync(self.queue,
-                  ^{
-                      [self.delegateCallOrder addObject:[NSNumber numberWithInteger:NSURLConnectionDelegateDidReceiveResponse]];
-                  });
+    dispatch_sync(self.queue, ^{
+        [self.delegateCallOrder addObject:[NSNumber numberWithInteger:NSURLConnectionDelegateDidReceiveResponse]];
+    });
     [self.condition lock];
     self.response = response;
     [self.condition signal];
@@ -67,10 +66,9 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
 }
 
 - (void)connection:(NSURLConnection*)connection didReceiveData:(nonnull NSData*)data {
-    dispatch_sync(self.queue,
-                  ^{
-                      [self.delegateCallOrder addObject:[NSNumber numberWithInteger:NSURLConnectionDelegateDidReceiveData]];
-                  });
+    dispatch_sync(self.queue, ^{
+        [self.delegateCallOrder addObject:[NSNumber numberWithInteger:NSURLConnectionDelegateDidReceiveData]];
+    });
 
     [self.condition lock];
     self.data = data;
@@ -79,10 +77,9 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
 }
 
 - (void)connection:(NSURLConnection*)connection didFailWithError:(NSError*)e {
-    dispatch_sync(self.queue,
-                  ^{
-                      [self.delegateCallOrder addObject:[NSNumber numberWithInteger:NSURLConnectionDelegateDidFailWithError]];
-                  });
+    dispatch_sync(self.queue, ^{
+        [self.delegateCallOrder addObject:[NSNumber numberWithInteger:NSURLConnectionDelegateDidFailWithError]];
+    });
 
     [self.condition lock];
     self.error = e;
@@ -92,84 +89,100 @@ typedef NS_ENUM(NSInteger, NSURLConnectionDelegateType) {
 
 @end
 
-/**
- * Test to verify a request can be successfully made and a valid response and data is received.
- */
-TEST(NSURLConnection, RequestWithURL) {
-    NSURLConnectionTestHelper* connectionTestHelper = [[NSURLConnectionTestHelper alloc] init];
-    NSString* urlString = @"https://httpbin.org/cookies/set?winobjc=awesome";
-    LOG_INFO("Establishing download task with url %@", urlString);
-    NSURLConnection* connection = [connectionTestHelper createConnectionWithRequest:urlString];
-    [connection start];
+class NSURLConnectionTests {
+public:
+    BEGIN_TEST_CLASS(NSURLConnectionTests)
+    TEST_CLASS_PROPERTY(L"UAP:AppXManifest", L"NSURL.AppxManifest.xml")
+    END_TEST_CLASS()
 
-    // Wait for data.
-    [connectionTestHelper.condition lock];
-    for (int i = 0; (i < 5) && ([connectionTestHelper.delegateCallOrder count] != 2); i++) {
-        [connectionTestHelper.condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]];
+    TEST_CLASS_SETUP(NSURLClassSetup) {
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
     }
-    ASSERT_EQ_MSG(2, [connectionTestHelper.delegateCallOrder count], "FAILED: We should have received two delegates call by now!");
-    [connectionTestHelper.condition unlock];
 
-    // Make sure we received a response.
-    ASSERT_EQ_MSG(NSURLConnectionDelegateDidReceiveResponse,
-                  [(NSNumber*)[connectionTestHelper.delegateCallOrder objectAtIndex:0] integerValue],
-                  "FAILED: didReceiveResponse should be the first delegate to be called!");
-    ASSERT_TRUE_MSG((connectionTestHelper.response != nil), "FAILED: Response cannot be empty!");
-    NSURLResponse* response = connectionTestHelper.response;
-    if (![response isKindOfClass:[NSHTTPURLResponse class]]) {
-        ASSERT_FALSE_MSG(true, "FAILED: Response should be of kind NSHTTPURLResponse class!");
+    TEST_METHOD_CLEANUP(NSURLCleanup) {
+        FunctionalTestCleanupUIApplication();
+        return true;
     }
-    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-    LOG_INFO("Received HTTP response status: %ld", [httpResponse statusCode]);
-    ASSERT_EQ_MSG(200, [httpResponse statusCode], "FAILED: HTTP status 200 expected!");
-    LOG_INFO("Received HTTP response headers: %d", [httpResponse allHeaderFields]);
 
-    // Make sure we received data.
-    ASSERT_EQ_MSG(NSURLConnectionDelegateDidReceiveData,
-                  [(NSNumber*)[connectionTestHelper.delegateCallOrder objectAtIndex:1] integerValue],
-                  "FAILED: didReceiveData should be the first delegate to be called!");
-    ASSERT_TRUE_MSG((connectionTestHelper.data != nil), "FAILED: We should have received some data!");
-    LOG_INFO("Received data: %@", [[NSString alloc] initWithData:connectionTestHelper.data encoding:NSUTF8StringEncoding]);
+    /**
+     * Test to verify a request can be successfully made and a valid response and data is received.
+     */
+    TEST(NSURLConnection, RequestWithURL) {
+        NSURLConnectionTestHelper* connectionTestHelper = [[NSURLConnectionTestHelper alloc] init];
+        NSString* urlString = @"https://httpbin.org/cookies/set?winobjc=awesome";
+        LOG_INFO("Establishing download task with url %@", urlString);
+        NSURLConnection* connection = [connectionTestHelper createConnectionWithRequest:urlString];
+        [connection start];
 
-    // Make sure there was no error.
-    ASSERT_TRUE_MSG((connectionTestHelper.error == nil), "FAILED: Connection returned error %@!", connectionTestHelper.error);
-}
+        // Wait for data.
+        [connectionTestHelper.condition lock];
+        for (int i = 0; (i < 5) && ([connectionTestHelper.delegateCallOrder count] != 2); i++) {
+            [connectionTestHelper.condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]];
+        }
+        ASSERT_EQ_MSG(2, [connectionTestHelper.delegateCallOrder count], "FAILED: We should have received two delegates call by now!");
+        [connectionTestHelper.condition unlock];
 
-/**
- * Test to verify a request can be successfully made but no data was received and a valid response error code was received.
- */
-TEST(NSURLConnection, RequestWithURL_Failure) {
-    NSURLConnectionTestHelper* connectionTestHelper = [[NSURLConnectionTestHelper alloc] init];
-    NSString* urlString = @"https://httpbin.org/status/404";
-    LOG_INFO("Establishing download task with url %@", urlString);
-    NSURLConnection* connection = [connectionTestHelper createConnectionWithRequest:urlString];
-    [connection start];
+        // Make sure we received a response.
+        ASSERT_EQ_MSG(NSURLConnectionDelegateDidReceiveResponse,
+                      [(NSNumber*)[connectionTestHelper.delegateCallOrder objectAtIndex:0] integerValue],
+                      "FAILED: didReceiveResponse should be the first delegate to be called!");
+        ASSERT_TRUE_MSG((connectionTestHelper.response != nil), "FAILED: Response cannot be empty!");
+        NSURLResponse* response = connectionTestHelper.response;
+        if (![response isKindOfClass:[NSHTTPURLResponse class]]) {
+            ASSERT_FALSE_MSG(true, "FAILED: Response should be of kind NSHTTPURLResponse class!");
+        }
+        NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+        LOG_INFO("Received HTTP response status: %ld", [httpResponse statusCode]);
+        ASSERT_EQ_MSG(200, [httpResponse statusCode], "FAILED: HTTP status 200 expected!");
+        LOG_INFO("Received HTTP response headers: %d", [httpResponse allHeaderFields]);
 
-    // Wait for a response.
-    [connectionTestHelper.condition lock];
+        // Make sure we received data.
+        ASSERT_EQ_MSG(NSURLConnectionDelegateDidReceiveData,
+                      [(NSNumber*)[connectionTestHelper.delegateCallOrder objectAtIndex:1] integerValue],
+                      "FAILED: didReceiveData should be the first delegate to be called!");
+        ASSERT_TRUE_MSG((connectionTestHelper.data != nil), "FAILED: We should have received some data!");
+        LOG_INFO("Received data: %@", [[NSString alloc] initWithData:connectionTestHelper.data encoding:NSUTF8StringEncoding]);
 
-    for (int i = 0; (i < 5) && ([connectionTestHelper.delegateCallOrder count] != 1); i++) {
-        [connectionTestHelper.condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]];
+        // Make sure there was no error.
+        ASSERT_TRUE_MSG((connectionTestHelper.error == nil), "FAILED: Connection returned error %@!", connectionTestHelper.error);
     }
-    ASSERT_EQ_MSG(1, [connectionTestHelper.delegateCallOrder count], "FAILED: We should have received one delegate call by now!");
-    [connectionTestHelper.condition unlock];
 
-    // Make sure we received a response.
-    ASSERT_EQ_MSG(NSURLConnectionDelegateDidReceiveResponse,
-                  [(NSNumber*)[connectionTestHelper.delegateCallOrder objectAtIndex:0] integerValue],
-                  "FAILED: didReceiveResponse should be the first delegate to be called!");
-    ASSERT_TRUE_MSG((connectionTestHelper.response != nil), "FAILED: Response cannot be empty!");
-    NSURLResponse* response = connectionTestHelper.response;
-    if (![response isKindOfClass:[NSHTTPURLResponse class]]) {
-        ASSERT_FALSE_MSG(true, "FAILED: Response should be of kind NSHTTPURLResponse class!");
+    /**
+     * Test to verify a request can be successfully made but no data was received and a valid response error code was received.
+     */
+    TEST(NSURLConnection, RequestWithURL_Failure) {
+        NSURLConnectionTestHelper* connectionTestHelper = [[NSURLConnectionTestHelper alloc] init];
+        NSString* urlString = @"https://httpbin.org/status/404";
+        LOG_INFO("Establishing download task with url %@", urlString);
+        NSURLConnection* connection = [connectionTestHelper createConnectionWithRequest:urlString];
+        [connection start];
+
+        // Wait for a response.
+        [connectionTestHelper.condition lock];
+
+        for (int i = 0; (i < 5) && ([connectionTestHelper.delegateCallOrder count] != 1); i++) {
+            [connectionTestHelper.condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]];
+        }
+        ASSERT_EQ_MSG(1, [connectionTestHelper.delegateCallOrder count], "FAILED: We should have received one delegate call by now!");
+        [connectionTestHelper.condition unlock];
+
+        // Make sure we received a response.
+        ASSERT_EQ_MSG(NSURLConnectionDelegateDidReceiveResponse,
+                      [(NSNumber*)[connectionTestHelper.delegateCallOrder objectAtIndex:0] integerValue],
+                      "FAILED: didReceiveResponse should be the first delegate to be called!");
+        ASSERT_TRUE_MSG((connectionTestHelper.response != nil), "FAILED: Response cannot be empty!");
+        NSURLResponse* response = connectionTestHelper.response;
+        if (![response isKindOfClass:[NSHTTPURLResponse class]]) {
+            ASSERT_FALSE_MSG(true, "FAILED: Response should be of kind NSHTTPURLResponse class!");
+        }
+        NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+        LOG_INFO("Received HTTP response status: %ld", [httpResponse statusCode]);
+        ASSERT_EQ_MSG(404, [httpResponse statusCode], "FAILED: HTTP status 404 was expected!");
+
+        // Make sure we did not receive any data.
+        ASSERT_TRUE_MSG((connectionTestHelper.data == nil), "FAILED: We should not have received any data!");
+
+        // Make sure there was no error.
+        ASSERT_TRUE_MSG((connectionTestHelper.error == nil), "FAILED: Connection returned error %@!", connectionTestHelper.error);
     }
-    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-    LOG_INFO("Received HTTP response status: %ld", [httpResponse statusCode]);
-    ASSERT_EQ_MSG(404, [httpResponse statusCode], "FAILED: HTTP status 404 was expected!");
-
-    // Make sure we did not receive any data.
-    ASSERT_TRUE_MSG((connectionTestHelper.data == nil), "FAILED: We should not have received any data!");
-
-    // Make sure there was no error.
-    ASSERT_TRUE_MSG((connectionTestHelper.error == nil), "FAILED: Connection returned error %@!", connectionTestHelper.error);
-}
+};

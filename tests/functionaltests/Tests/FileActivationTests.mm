@@ -59,32 +59,30 @@ MOCK_CLASS(MockFileActivatedEventArgs,
                MOCK_STDCALL_METHOD_1(get_Verb);
            });
 
-MOCK_CLASS(MockFileVectorView,
-           public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IVectorView<IStorageItem*>> {
+MOCK_CLASS(MockFileVectorView, public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IVectorView<IStorageItem*>> {
 
-               InspectableClass(L"MockVectorView", BaseTrust);
+    InspectableClass(L"MockVectorView", BaseTrust);
 
-               MOCK_STDCALL_METHOD_2(GetAt);
-               MOCK_STDCALL_METHOD_1(get_Size);
-               MOCK_STDCALL_METHOD_3(IndexOf);
-           });
+    MOCK_STDCALL_METHOD_2(GetAt);
+    MOCK_STDCALL_METHOD_1(get_Size);
+    MOCK_STDCALL_METHOD_3(IndexOf);
+});
 
-MOCK_CLASS(MockStorageItem,
-           public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IStorageItem> {
+MOCK_CLASS(MockStorageItem, public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IStorageItem> {
 
-               InspectableClass(RuntimeClass_Windows_Storage_StorageFile, BaseTrust);
+    InspectableClass(RuntimeClass_Windows_Storage_StorageFile, BaseTrust);
 
-               MOCK_STDCALL_METHOD_2(RenameAsyncOverloadDefaultOptions);
-               MOCK_STDCALL_METHOD_3(RenameAsync);
-               MOCK_STDCALL_METHOD_1(DeleteAsyncOverloadDefaultOptions);
-               MOCK_STDCALL_METHOD_2(DeleteAsync);
-               MOCK_STDCALL_METHOD_1(GetBasicPropertiesAsync);
-               MOCK_STDCALL_METHOD_1(get_Name);
-               MOCK_STDCALL_METHOD_1(get_Path);
-               MOCK_STDCALL_METHOD_1(get_Attributes);
-               MOCK_STDCALL_METHOD_1(get_DateCreated);
-               MOCK_STDCALL_METHOD_2(IsOfType);
-           });
+    MOCK_STDCALL_METHOD_2(RenameAsyncOverloadDefaultOptions);
+    MOCK_STDCALL_METHOD_3(RenameAsync);
+    MOCK_STDCALL_METHOD_1(DeleteAsyncOverloadDefaultOptions);
+    MOCK_STDCALL_METHOD_2(DeleteAsync);
+    MOCK_STDCALL_METHOD_1(GetBasicPropertiesAsync);
+    MOCK_STDCALL_METHOD_1(get_Name);
+    MOCK_STDCALL_METHOD_1(get_Path);
+    MOCK_STDCALL_METHOD_1(get_Attributes);
+    MOCK_STDCALL_METHOD_1(get_DateCreated);
+    MOCK_STDCALL_METHOD_2(IsOfType);
+});
 
 // Delegate for testing File foreground activation
 @interface FileActivationForegroundTestDelegate : NSObject <UIApplicationDelegate>
@@ -183,11 +181,27 @@ void FileActivatedTestForegroundActivation() {
                                 NSStringFromClass([FileActivationForegroundTestDelegate class]));
 }
 
-void FileActivatedTestForegroundActivationDelegateMethodsCalled() {
-    FileActivationForegroundTestDelegate* testDelegate = [[UIApplication sharedApplication] delegate];
-    NSDictionary* methodsCalled = [testDelegate methodsCalled];
-    EXPECT_TRUE(methodsCalled);
-    EXPECT_TRUE([methodsCalled objectForKey:@"application:willFinishLaunchingWithOptions:"]);
-    EXPECT_TRUE([methodsCalled objectForKey:@"application:didFinishLaunchingWithOptions:"]);
-    EXPECT_TRUE([methodsCalled objectForKey:@"application:didReceiveFile:"]);
-}
+class FileActivationForegroundActivation {
+public:
+    BEGIN_TEST_CLASS(FileActivationForegroundActivation)
+    END_TEST_CLASS()
+
+    TEST_CLASS_SETUP(FileActivationForegroundActivationClassSetup) {
+        // The class setup allows us to activate the app in our test method, but can only be done once per class
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FileActivatedTestForegroundActivation));
+    }
+
+    TEST_METHOD_CLEANUP(FileActivationForegroundActivationCleanup) {
+        FunctionalTestCleanupUIApplication();
+        return true;
+    }
+
+    TEST_METHOD(ForegroundActivationDelegateMethodsCalled) {
+        FileActivationForegroundTestDelegate* testDelegate = [[UIApplication sharedApplication] delegate];
+        NSDictionary* methodsCalled = [testDelegate methodsCalled];
+        EXPECT_TRUE(methodsCalled);
+        EXPECT_TRUE([methodsCalled objectForKey:@"application:willFinishLaunchingWithOptions:"]);
+        EXPECT_TRUE([methodsCalled objectForKey:@"application:didFinishLaunchingWithOptions:"]);
+        EXPECT_TRUE([methodsCalled objectForKey:@"application:didReceiveFile:"]);
+    }
+};

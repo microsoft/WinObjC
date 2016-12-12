@@ -17,20 +17,29 @@
 #include <TestFramework.h>
 #import <UIKit/UIKit.h>
 
-TEST(UIApplicationTests, OpenURL) {
-    // This test is to verify openURL does not block when an invalid URL is used.
-    __block NSCondition* condition = [[NSCondition new] autorelease];
-    __block BOOL success = YES;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),
-                   ^{
-                       NSString* urlString = @"itms-apps://itunes.com/apps/iplayfulinc";
-                       [condition lock];
-                       success = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
-                       [condition signal];
-                       [condition unlock];
-                   });
+class UIApplicationTests {
+public:
+    BEGIN_TEST_CLASS(UIApplicationTests)
+    END_TEST_CLASS()
 
-    [condition lock];
-    ASSERT_TRUE (!success || [condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]]);
-    [condition unlock];
-}
+    TEST_CLASS_SETUP(UIApplicationTestsSetup) {
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+    }
+
+    TEST(UIApplicationTests, OpenURL) {
+        // This test is to verify openURL does not block when an invalid URL is used.
+        __block NSCondition* condition = [[NSCondition new] autorelease];
+        __block BOOL success = YES;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            NSString* urlString = @"itms-apps://itunes.com/apps/iplayfulinc";
+            [condition lock];
+            success = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
+            [condition signal];
+            [condition unlock];
+        });
+
+        [condition lock];
+        ASSERT_TRUE(!success || [condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]]);
+        [condition unlock];
+    }
+};

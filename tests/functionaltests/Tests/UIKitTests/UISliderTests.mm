@@ -30,17 +30,36 @@
 #include "ObjCXamlControls.h"
 #import "UWP/WindowsUIXamlControls.h"
 
-TEST(UISlider, CreateXamlElement) {
-    // TODO: Switch to UIKit.Xaml projections when they're available.
-    Microsoft::WRL::ComPtr<IInspectable> xamlElement(XamlCreateSlider());
-    ASSERT_TRUE(xamlElement);
-}
+class UIKitSliderTests {
+public:
+    BEGIN_TEST_CLASS(UIKitSliderTests)
+    END_TEST_CLASS()
 
-TEST(UISlider, GetXamlElement) {
-    UIView* view = [[[UISlider alloc] init] autorelease];
-    WXFrameworkElement* backingElement = [view xamlElement];
-    ASSERT_TRUE(backingElement);
+    TEST_CLASS_SETUP(UIKitTestsSetup) {
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+    }
 
-    // TODO: Fix up when UISlider moves fully to XAML
-    ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
-}
+    TEST_METHOD_CLEANUP(UIKitTestsCleanup) {
+        FunctionalTestCleanupUIApplication();
+        return true;
+    }
+
+    TEST(UISlider, CreateXamlElement) {
+        FrameworkHelper::RunOnUIThread([]() {
+            // TODO: Switch to UIKit.Xaml projections when they're available.
+            Microsoft::WRL::ComPtr<IInspectable> xamlElement(XamlCreateSlider());
+            ASSERT_TRUE(xamlElement);
+        });
+    }
+
+    TEST(UISlider, GetXamlElement) {
+        FrameworkHelper::RunOnUIThread([]() {
+            UIView* view = [[[UISlider alloc] init] autorelease];
+            WXFrameworkElement* backingElement = [view xamlElement];
+            ASSERT_TRUE(backingElement);
+
+            // TODO: Fix up when UISlider moves fully to XAML
+            ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
+        });
+    }
+};

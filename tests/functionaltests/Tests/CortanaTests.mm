@@ -198,93 +198,124 @@ MOCK_CLASS(MockProtocolActivatedEventArgs,
     return;
 }
 @end
-// Creates test method which we call in TEST_CLASS_SETUP to activate app
-TEST(CortanaTest, VoiceCommandForegroundActivation) {
-    LOG_INFO("CortanaTest Voice Command Foreground Activation Test: ");
 
-    // Create mocked data to pass into application
-    auto fakeSpeechRecognitionResult = Make<MockSpeechRecognitionResult>();
-    fakeSpeechRecognitionResult->Setget_Text([](HSTRING* text) {
-        Wrappers::HString value;
-        value.Set(L"CORTANA_TEST");
-        *text = value.Detach();
-        return S_OK;
-    });
+//
+// Cortana Activation Tests
+//
+class CortanaVoiceCommandForegroundActivation {
+public:
+    BEGIN_TEST_CLASS(CortanaVoiceCommandForegroundActivation)
+    END_TEST_CLASS()
 
-    auto fakeVoiceCommandActivatedEventArgs = Make<MockVoiceCommandActivatedEventArgs>();
-    fakeVoiceCommandActivatedEventArgs->Setget_Result([&fakeSpeechRecognitionResult](ISpeechRecognitionResult** result) {
-        fakeSpeechRecognitionResult.CopyTo(result);
-        return S_OK;
-    });
+    TEST_CLASS_SETUP(CortanaVoiceCommandForegroundTestClassSetup) {
+        // The class setup allows us to activate the app in our test method, but can only be done once per class
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread([]() {
+            LOG_INFO("CortanaTest Voice Command Foreground Activation Test: ");
 
-    fakeVoiceCommandActivatedEventArgs->Setget_Kind([](ActivationKind* kind) {
-        *kind = ActivationKind_VoiceCommand;
-        return S_OK;
-    });
+            // Create mocked data to pass into application
+            auto fakeSpeechRecognitionResult = Make<MockSpeechRecognitionResult>();
+            fakeSpeechRecognitionResult->Setget_Text([](HSTRING* text) {
+                Wrappers::HString value;
+                value.Set(L"CORTANA_TEST");
+                *text = value.Detach();
+                return S_OK;
+            });
 
-    fakeVoiceCommandActivatedEventArgs->Setget_PreviousExecutionState([](ApplicationExecutionState* state) {
-        *state = ApplicationExecutionState_NotRunning;
-        return S_OK;
-    });
+            auto fakeVoiceCommandActivatedEventArgs = Make<MockVoiceCommandActivatedEventArgs>();
+            fakeVoiceCommandActivatedEventArgs->Setget_Result([&fakeSpeechRecognitionResult](ISpeechRecognitionResult** result) {
+                fakeSpeechRecognitionResult.CopyTo(result);
+                return S_OK;
+            });
 
-    // Pass activation argument to method which activates the app
-    UIApplicationActivationTest(reinterpret_cast<IInspectable*>(fakeVoiceCommandActivatedEventArgs.Get()),
-                                NSStringFromClass([CortanaVoiceCommandForegroundTestDelegate class]));
-}
+            fakeVoiceCommandActivatedEventArgs->Setget_Kind([](ActivationKind* kind) {
+                *kind = ActivationKind_VoiceCommand;
+                return S_OK;
+            });
 
-TEST(CortanaTest, VoiceCommandForegroundActivationDelegateMethodsCalled) {
-    CortanaVoiceCommandForegroundTestDelegate* testDelegate = [[UIApplication sharedApplication] delegate];
-    NSDictionary* methodsCalled = [testDelegate methodsCalled];
-    EXPECT_TRUE(methodsCalled);
-    EXPECT_TRUE([methodsCalled objectForKey:@"application:willFinishLaunchingWithOptions:"]);
-    EXPECT_TRUE([methodsCalled objectForKey:@"application:didFinishLaunchingWithOptions:"]);
-    EXPECT_TRUE([methodsCalled objectForKey:@"application:didReceiveVoiceCommand:"]);
-}
+            fakeVoiceCommandActivatedEventArgs->Setget_PreviousExecutionState([](ApplicationExecutionState* state) {
+                *state = ApplicationExecutionState_NotRunning;
+                return S_OK;
+            });
 
-// Creates test method which we call in TEST_CLASS_SETUP to activate app
-TEST(CortanaTest, ProtocolForegroundActivation) {
-    LOG_INFO("CortanaTest Protocol Foreground Activation Test: ");
+            // Pass activation argument to method which activates the app
+            UIApplicationActivationTest(reinterpret_cast<IInspectable*>(fakeVoiceCommandActivatedEventArgs.Get()),
+                                        NSStringFromClass([CortanaVoiceCommandForegroundTestDelegate class]));
+        }));
+    }
 
-    // Create mocked data to pass into application
-    auto fakeUri = Make<MockUri>();
-    fakeUri->SetToString([](HSTRING* text) {
-        Wrappers::HString value;
-        value.Set(L"CORTANA_TEST");
-        *text = value.Detach();
-        return S_OK;
-    });
+    TEST_METHOD_CLEANUP(CortanaVoiceCommandForegroundCleanup) {
+        FunctionalTestCleanupUIApplication();
+        return true;
+    }
 
-    auto fakeProtocolActivatedEventArgs = Make<MockProtocolActivatedEventArgs>();
-    fakeProtocolActivatedEventArgs->Setget_Uri([&fakeUri](IUriRuntimeClass** uri) {
-        fakeUri.CopyTo(uri);
-        return S_OK;
-    });
+    TEST(CortanaTest, VoiceCommandForegroundActivationDelegateMethodsCalled) {
+        CortanaVoiceCommandForegroundTestDelegate* testDelegate = [[UIApplication sharedApplication] delegate];
+        NSDictionary* methodsCalled = [testDelegate methodsCalled];
+        EXPECT_TRUE(methodsCalled);
+        EXPECT_TRUE([methodsCalled objectForKey:@"application:willFinishLaunchingWithOptions:"]);
+        EXPECT_TRUE([methodsCalled objectForKey:@"application:didFinishLaunchingWithOptions:"]);
+        EXPECT_TRUE([methodsCalled objectForKey:@"application:didReceiveVoiceCommand:"]);
+    }
 
-    fakeProtocolActivatedEventArgs->Setget_Kind([](ActivationKind* kind) {
-        *kind = ActivationKind_Protocol;
-        return S_OK;
-    });
+}; /* class CortanaVoiceCommandForegroundActivation */
 
-    fakeProtocolActivatedEventArgs->Setget_PreviousExecutionState([](ApplicationExecutionState* state) {
-        *state = ApplicationExecutionState_NotRunning;
-        return S_OK;
-    });
+class CortanaProtocolForegroundActivation {
+public:
+    BEGIN_TEST_CLASS(CortanaProtocolForegroundActivation)
+    END_TEST_CLASS()
 
-    fakeProtocolActivatedEventArgs->Setget_CallerPackageFamilyName([](HSTRING* name) {
-        Wrappers::HStringReference testName(L"TestPackageFamilyName");
-        return testName.CopyTo(name);
-    });
+    TEST_CLASS_SETUP(CortanaProtocolForegroundTestClassSetup) {
+        // The class setup allows us to activate the app in our test method, but can only be done once per class
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread([]() {
+            LOG_INFO("CortanaTest Protocol Foreground Activation Test: ");
 
-    // Pass activation argument to method which activates the app
-    UIApplicationActivationTest(reinterpret_cast<IInspectable*>(fakeProtocolActivatedEventArgs.Get()),
-                                NSStringFromClass([CortanaProtocolForegroundTestDelegate class]));
-}
+            // Create mocked data to pass into application
+            auto fakeUri = Make<MockUri>();
+            fakeUri->SetToString([](HSTRING* text) {
+                Wrappers::HString value;
+                value.Set(L"CORTANA_TEST");
+                *text = value.Detach();
+                return S_OK;
+            });
 
-TEST(CortanaTest, ProtocolForegroundActivationDelegateMethodsCalled) {
-    CortanaProtocolForegroundTestDelegate* testDelegate = [[UIApplication sharedApplication] delegate];
-    NSDictionary* methodsCalled = [testDelegate methodsCalled];
-    EXPECT_TRUE(methodsCalled);
-    EXPECT_TRUE([methodsCalled objectForKey:@"application:willFinishLaunchingWithOptions:"]);
-    EXPECT_TRUE([methodsCalled objectForKey:@"application:didFinishLaunchingWithOptions:"]);
-    EXPECT_TRUE([methodsCalled objectForKey:@"application:didReceiveProtocol:"]);
-}
+            auto fakeProtocolActivatedEventArgs = Make<MockProtocolActivatedEventArgs>();
+            fakeProtocolActivatedEventArgs->Setget_Uri([&fakeUri](IUriRuntimeClass** uri) {
+                fakeUri.CopyTo(uri);
+                return S_OK;
+            });
+
+            fakeProtocolActivatedEventArgs->Setget_Kind([](ActivationKind* kind) {
+                *kind = ActivationKind_Protocol;
+                return S_OK;
+            });
+
+            fakeProtocolActivatedEventArgs->Setget_PreviousExecutionState([](ApplicationExecutionState* state) {
+                *state = ApplicationExecutionState_NotRunning;
+                return S_OK;
+            });
+
+            fakeProtocolActivatedEventArgs->Setget_CallerPackageFamilyName([](HSTRING* name) {
+                Wrappers::HStringReference testName(L"TestPackageFamilyName");
+                return testName.CopyTo(name);
+            });
+
+            // Pass activation argument to method which activates the app
+            UIApplicationActivationTest(reinterpret_cast<IInspectable*>(fakeProtocolActivatedEventArgs.Get()),
+                                        NSStringFromClass([CortanaProtocolForegroundTestDelegate class]));
+        }));
+    }
+
+    TEST_METHOD_CLEANUP(CortanaProtocolForegroundCleanup) {
+        FunctionalTestCleanupUIApplication();
+        return true;
+    }
+
+    TEST(CortanaTest, ProtocolForegroundActivationDelegateMethodsCalled) {
+        CortanaProtocolForegroundTestDelegate* testDelegate = [[UIApplication sharedApplication] delegate];
+        NSDictionary* methodsCalled = [testDelegate methodsCalled];
+        EXPECT_TRUE(methodsCalled);
+        EXPECT_TRUE([methodsCalled objectForKey:@"application:willFinishLaunchingWithOptions:"]);
+        EXPECT_TRUE([methodsCalled objectForKey:@"application:didFinishLaunchingWithOptions:"]);
+        EXPECT_TRUE([methodsCalled objectForKey:@"application:didReceiveProtocol:"]);
+    }
+};

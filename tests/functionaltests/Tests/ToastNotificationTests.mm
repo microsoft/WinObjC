@@ -125,92 +125,119 @@ MOCK_CLASS(MockToastNotificationActivatedEventArgs,
 
 @end
 
-// Creates test method which we call in TEST_CLASS_SETUP to activate app
-TEST(ToastNotificationTest, ForegroundActivation) {
-    LOG_INFO("Toast Notification Foreground Activation Test: ");
+class ToastNotificationForegroundActivation {
+    BEGIN_TEST_CLASS(ToastNotificationForegroundActivation)
+    END_TEST_CLASS()
 
-    // Create mocked data to pass into application
-    RTObject* value = [WFPropertyValue createString:@"TOAST_NOTIFICATION_TEST_VALUE"];
-    WFCValueSet* wfcUserInput = [WFCValueSet make];
-    [wfcUserInput setObject:value forKey:@"TOAST_NOTIFICATION_TEST_KEY"];
+    TEST_CLASS_SETUP(ToastNotificationForegroundTestClassSetup) {
+        // The class setup allows us to activate the app in our test method, but can only be done once per class
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread([]() {
+            LOG_INFO("Toast Notification Foreground Activation Test: ");
 
-    auto fakeToastNotificationActivatedEventArgs = Make<MockToastNotificationActivatedEventArgs>();
-    fakeToastNotificationActivatedEventArgs->Setget_Argument([](HSTRING* argument) {
-        Wrappers::HString value;
-        value.Set(L"TOAST_NOTIFICATION_TEST");
-        *argument = value.Detach();
-        return S_OK;
-    });
+            // Create mocked data to pass into application
+            RTObject* value = [WFPropertyValue createString:@"TOAST_NOTIFICATION_TEST_VALUE"];
+            WFCValueSet* wfcUserInput = [WFCValueSet make];
+            [wfcUserInput setObject:value forKey:@"TOAST_NOTIFICATION_TEST_KEY"];
 
-    fakeToastNotificationActivatedEventArgs->Setget_UserInput([&wfcUserInput](IPropertySet** userInput) {
-        wfcUserInput.comObj.CopyTo(userInput);
-        return S_OK;
-    });
+            auto fakeToastNotificationActivatedEventArgs = Make<MockToastNotificationActivatedEventArgs>();
+            fakeToastNotificationActivatedEventArgs->Setget_Argument([](HSTRING* argument) {
+                Wrappers::HString value;
+                value.Set(L"TOAST_NOTIFICATION_TEST");
+                *argument = value.Detach();
+                return S_OK;
+            });
 
-    fakeToastNotificationActivatedEventArgs->Setget_Kind([](ActivationKind* kind) {
-        *kind = ActivationKind_ToastNotification;
-        return S_OK;
-    });
+            fakeToastNotificationActivatedEventArgs->Setget_UserInput([&wfcUserInput](IPropertySet** userInput) {
+                wfcUserInput.comObj.CopyTo(userInput);
+                return S_OK;
+            });
 
-    fakeToastNotificationActivatedEventArgs->Setget_PreviousExecutionState([](ApplicationExecutionState* state) {
-        *state = ApplicationExecutionState_NotRunning;
-        return S_OK;
-    });
+            fakeToastNotificationActivatedEventArgs->Setget_Kind([](ActivationKind* kind) {
+                *kind = ActivationKind_ToastNotification;
+                return S_OK;
+            });
 
-    // Pass activation argument to method which activates the app
-    UIApplicationActivationTest(reinterpret_cast<IInspectable*>(fakeToastNotificationActivatedEventArgs.Get()),
-                                NSStringFromClass([ToastNotificationForegroundActivationTestDelegate class]));
-}
+            fakeToastNotificationActivatedEventArgs->Setget_PreviousExecutionState([](ApplicationExecutionState* state) {
+                *state = ApplicationExecutionState_NotRunning;
+                return S_OK;
+            });
 
-TEST(ToastNotificationTest, ForegroundActivationDelegateMethodsCalled) {
-    ToastNotificationForegroundActivationTestDelegate* testDelegate = [[UIApplication sharedApplication] delegate];
-    NSDictionary* methodsCalled = [testDelegate methodsCalled];
-    EXPECT_TRUE(methodsCalled);
-    EXPECT_TRUE([methodsCalled objectForKey:@"application:willFinishLaunchingWithOptions:"]);
-    EXPECT_TRUE([methodsCalled objectForKey:@"application:didFinishLaunchingWithOptions:"]);
-    EXPECT_TRUE([methodsCalled objectForKey:@"application:didReceiveToastAction:"]);
-}
+            // Pass activation argument to method which activates the app
+            UIApplicationActivationTest(reinterpret_cast<IInspectable*>(fakeToastNotificationActivatedEventArgs.Get()),
+                                        NSStringFromClass([ToastNotificationForegroundActivationTestDelegate class]));
+        }));
+    }
 
-TEST(ToastNotificationTest, ActivatedAppReceivesToastNotification) {
-    LOG_INFO("Activated App Receives Toast Notification Test: ");
+    TEST_METHOD_CLEANUP(ToastNotificationForegroundCleanup) {
+        FunctionalTestCleanupUIApplication();
+        return true;
+    }
 
-    ActivatedAppReceivesToastNotificationDelegate* testDelegate = [ActivatedAppReceivesToastNotificationDelegate new];
-    [[UIApplication sharedApplication] setDelegate:testDelegate];
+    TEST(ToastNotificationTest, ForegroundActivationDelegateMethodsCalled) {
+        ToastNotificationForegroundActivationTestDelegate* testDelegate = [[UIApplication sharedApplication] delegate];
+        NSDictionary* methodsCalled = [testDelegate methodsCalled];
+        EXPECT_TRUE(methodsCalled);
+        EXPECT_TRUE([methodsCalled objectForKey:@"application:willFinishLaunchingWithOptions:"]);
+        EXPECT_TRUE([methodsCalled objectForKey:@"application:didFinishLaunchingWithOptions:"]);
+        EXPECT_TRUE([methodsCalled objectForKey:@"application:didReceiveToastAction:"]);
+    }
+};
 
-    // Create mocked data to pass into application
-    RTObject* value = [WFPropertyValue createString:@"TOAST_NOTIFICATION_TEST_VALUE"];
-    WFCValueSet* wfcUserInput = [WFCValueSet make];
-    [wfcUserInput setObject:value forKey:@"TOAST_NOTIFICATION_TEST_KEY"];
+class ActivatedAppReceivesToastNotification {
+    BEGIN_TEST_CLASS(ActivatedAppReceivesToastNotification)
+    END_TEST_CLASS()
 
-    auto fakeToastNotificationActivatedEventArgs = Make<MockToastNotificationActivatedEventArgs>();
-    fakeToastNotificationActivatedEventArgs->Setget_Argument([](HSTRING* argument) {
-        Wrappers::HString value;
-        value.Set(L"TOAST_NOTIFICATION_TEST");
-        *argument = value.Detach();
-        return S_OK;
-    });
+    TEST_CLASS_SETUP(ActivatedAppReceivesToastNotificationTestClassSetup) {
+        // The class setup allows us to activate the app in our test method, but can only be done once per class
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+    }
 
-    fakeToastNotificationActivatedEventArgs->Setget_UserInput([&wfcUserInput](IPropertySet** userInput) {
-        wfcUserInput.comObj.CopyTo(userInput);
-        return S_OK;
-    });
+    TEST_METHOD_CLEANUP(ActivatedAppReceivesToastNotificationCleanup) {
+        FunctionalTestCleanupUIApplication();
+        return true;
+    }
 
-    fakeToastNotificationActivatedEventArgs->Setget_Kind([](ActivationKind* kind) {
-        *kind = ActivationKind_ToastNotification;
-        return S_OK;
-    });
+    TEST(ToastNotificationTest, ActivatedAppReceivesToastNotification) {
+        LOG_INFO("Activated App Receives Toast Notification Test: ");
 
-    fakeToastNotificationActivatedEventArgs->Setget_PreviousExecutionState([](ApplicationExecutionState* state) {
-        *state = ApplicationExecutionState_Running;
-        return S_OK;
-    });
+        ActivatedAppReceivesToastNotificationDelegate* testDelegate = [ActivatedAppReceivesToastNotificationDelegate new];
+        [[UIApplication sharedApplication] setDelegate:testDelegate];
 
-    // Calls OnActivated, which should not go through activation because we are activated
-    // But should still call our new delegate method
-    UIApplicationActivationTest(reinterpret_cast<IInspectable*>(fakeToastNotificationActivatedEventArgs.Get()),
-                                NSStringFromClass([ToastNotificationForegroundActivationTestDelegate class]));
+        // Create mocked data to pass into application
+        RTObject* value = [WFPropertyValue createString:@"TOAST_NOTIFICATION_TEST_VALUE"];
+        WFCValueSet* wfcUserInput = [WFCValueSet make];
+        [wfcUserInput setObject:value forKey:@"TOAST_NOTIFICATION_TEST_KEY"];
 
-    NSDictionary* methodsCalled = [testDelegate methodsCalled];
-    EXPECT_TRUE(methodsCalled);
-    EXPECT_TRUE([methodsCalled objectForKey:@"application:didReceiveToastAction:"]);
-}
+        auto fakeToastNotificationActivatedEventArgs = Make<MockToastNotificationActivatedEventArgs>();
+        fakeToastNotificationActivatedEventArgs->Setget_Argument([](HSTRING* argument) {
+            Wrappers::HString value;
+            value.Set(L"TOAST_NOTIFICATION_TEST");
+            *argument = value.Detach();
+            return S_OK;
+        });
+
+        fakeToastNotificationActivatedEventArgs->Setget_UserInput([&wfcUserInput](IPropertySet** userInput) {
+            wfcUserInput.comObj.CopyTo(userInput);
+            return S_OK;
+        });
+
+        fakeToastNotificationActivatedEventArgs->Setget_Kind([](ActivationKind* kind) {
+            *kind = ActivationKind_ToastNotification;
+            return S_OK;
+        });
+
+        fakeToastNotificationActivatedEventArgs->Setget_PreviousExecutionState([](ApplicationExecutionState* state) {
+            *state = ApplicationExecutionState_Running;
+            return S_OK;
+        });
+
+        // Calls OnActivated, which should not go through activation because we are activated
+        // But should still call our new delegate method
+        UIApplicationActivationTest(reinterpret_cast<IInspectable*>(fakeToastNotificationActivatedEventArgs.Get()),
+                                    NSStringFromClass([ToastNotificationForegroundActivationTestDelegate class]));
+
+        NSDictionary* methodsCalled = [testDelegate methodsCalled];
+        EXPECT_TRUE(methodsCalled);
+        EXPECT_TRUE([methodsCalled objectForKey:@"application:didReceiveToastAction:"]);
+    }
+};

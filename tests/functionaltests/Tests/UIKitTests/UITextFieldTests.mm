@@ -30,17 +30,36 @@
 #include "ObjCXamlControls.h"
 #import "UWP/WindowsUIXamlControls.h"
 
-TEST(UITextField, CreateXamlElement) {
-    // TODO: Switch to UIKit.Xaml projections when they're available.
-    Microsoft::WRL::ComPtr<IInspectable> xamlElement(XamlCreateTextBox());
-    ASSERT_TRUE(xamlElement);
-}
+class UIKitTextFieldTests {
+public:
+    BEGIN_TEST_CLASS(UIKitTextFieldTests)
+    END_TEST_CLASS()
 
-TEST(UITextField, GetXamlElement) {
-    UIView* view = [[[UITextField alloc] init] autorelease];
-    WXFrameworkElement* backingElement = [view xamlElement];
-    ASSERT_TRUE(backingElement);
+    TEST_CLASS_SETUP(UIKitTestsSetup) {
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+    }
 
-    // TODO: Fix up when UITextField moves fully to XAML
-    ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
-}
+    TEST_METHOD_CLEANUP(UIKitTestsCleanup) {
+        FunctionalTestCleanupUIApplication();
+        return true;
+    }
+
+    TEST(UITextField, CreateXamlElement) {
+        FrameworkHelper::RunOnUIThread([]() {
+            // TODO: Switch to UIKit.Xaml projections when they're available.
+            Microsoft::WRL::ComPtr<IInspectable> xamlElement(XamlCreateTextBox());
+            ASSERT_TRUE(xamlElement);
+        });
+    }
+
+    TEST(UITextField, GetXamlElement) {
+        FrameworkHelper::RunOnUIThread([]() {
+            UIView* view = [[[UITextField alloc] init] autorelease];
+            WXFrameworkElement* backingElement = [view xamlElement];
+            ASSERT_TRUE(backingElement);
+
+            // TODO: Fix up when UITextField moves fully to XAML
+            ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
+        });
+    }
+};

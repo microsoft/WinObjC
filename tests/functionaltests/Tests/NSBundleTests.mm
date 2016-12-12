@@ -19,39 +19,54 @@
 #import <UWP/WindowsFoundation.h>
 #import <UWP/WindowsStorage.h>
 
-TEST(NSBundle, MSAppxURL) {
-    LOG_INFO("MSAppxURL test: ");
+class NSBundleTests {
+public:
+    BEGIN_TEST_CLASS(NSBundleTests)
+    END_TEST_CLASS()
 
-    NSURL* resourceURL = [[NSBundle mainBundle] URLForResource:@"FunctionalTests" withExtension:@"dll"];
-    NSURL* msAppxURL = [[NSBundle mainBundle] _msAppxURLForResourceWithURL:resourceURL];
-    ASSERT_OBJCEQ([NSURL URLWithString:[@"ms-appx:///" stringByAppendingString:[resourceURL lastPathComponent]]], msAppxURL);
+    TEST_CLASS_SETUP(NSURLClassSetup) {
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+    }
 
-    WFUri* msAppxURI = [WFUri makeUri:msAppxURL.absoluteString];
+    TEST_METHOD_CLEANUP(NSBundleCleanup) {
+        FunctionalTestCleanupUIApplication();
+        return true;
+    }
 
-    // Verify that the file can be accessed
-    __block BOOL success = NO;
-    __block BOOL signaled = NO;
-    __block NSCondition* condition = [[NSCondition new] autorelease];
+    TEST(NSBundle, MSAppxURL) {
+        LOG_INFO("MSAppxURL test: ");
 
-    [WSStorageFile getFileFromApplicationUriAsync:msAppxURI
-        success:^void(WSStorageFile* file) {
-            [condition lock];
-            success = YES;
-            signaled = YES;
-            [condition signal];
-            [condition unlock];
-        }
-        failure:^void(NSError* error) {
-            LOG_ERROR([[error description] UTF8String]);
-            [condition lock];
-            signaled = YES;
-            [condition signal];
-            [condition unlock];
-        }];
+        NSURL* resourceURL = [[NSBundle mainBundle] URLForResource:@"FunctionalTests" withExtension:@"dll"];
+        NSURL* msAppxURL = [[NSBundle mainBundle] _msAppxURLForResourceWithURL:resourceURL];
+        ASSERT_OBJCEQ([NSURL URLWithString:[@"ms-appx:///" stringByAppendingString:[resourceURL lastPathComponent]]], msAppxURL);
 
-    [condition lock];
-    ASSERT_TRUE (signaled || [condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]]);
-    [condition unlock];
+        WFUri* msAppxURI = [WFUri makeUri:msAppxURL.absoluteString];
 
-    ASSERT_EQ(YES, success);
-}
+        // Verify that the file can be accessed
+        __block BOOL success = NO;
+        __block BOOL signaled = NO;
+        __block NSCondition* condition = [[NSCondition new] autorelease];
+
+        [WSStorageFile getFileFromApplicationUriAsync:msAppxURI
+            success:^void(WSStorageFile* file) {
+                [condition lock];
+                success = YES;
+                signaled = YES;
+                [condition signal];
+                [condition unlock];
+            }
+            failure:^void(NSError* error) {
+                LOG_ERROR([[error description] UTF8String]);
+                [condition lock];
+                signaled = YES;
+                [condition signal];
+                [condition unlock];
+            }];
+
+        [condition lock];
+        ASSERT_TRUE(signaled || [condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]]);
+        [condition unlock];
+
+        ASSERT_EQ(YES, success);
+    }
+};

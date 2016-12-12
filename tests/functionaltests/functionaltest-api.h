@@ -17,6 +17,33 @@
 
 #include "Logger.h"
 
+#ifdef __OBJC__
+#pragma push_macro("interface")
+#ifndef interface
+#define interface struct
+#endif
+#pragma push_macro("Nil")
+#undef Nil
+#pragma push_macro("__alignof")
+#define __alignof alignof
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmicrosoft"
+#endif
+
+#include <UWP/RTHelpers.h>
+#include <WexTestClass.h>
+
+#ifdef __OBJC__
+#pragma pop_macro("Nil")
+#pragma pop_macro("interface")
+#pragma pop_macro("__alignof")
+#pragma clang diagnostic pop
+#endif
+
+#include "Framework/Framework.h"
+#include "FunctionalTestHelpers.h"
+extern void UIApplicationDefaultInitialize();
+
 /////////////////////////////////////////////////////////
 // TEST macro override
 /////////////////////////////////////////////////////////
@@ -25,7 +52,7 @@
 #ifdef TEST
 #undef TEST
 #endif
-#define TEST(__Name1, __Name2) void __Name1##__Name2()
+#define TEST(__Name1, __Name2) TEST_METHOD(__Name1##__Name2)
 
 /////////////////////////////////////////////////////////
 // Logging macros
