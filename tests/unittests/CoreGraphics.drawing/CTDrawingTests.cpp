@@ -237,26 +237,34 @@ INSTANTIATE_TEST_CASE_P(TestAlignmentLineBreakMode,
                                            ::testing::ValuesIn(c_writingDirections),
                                            ::testing::ValuesIn(c_fontSizes)));
 
-class TransformTextMatrix : public WhiteBackgroundTest, public ::testing::WithParamInterface<CGAffineTransform> {
+class Transform : public WhiteBackgroundTest, public ::testing::WithParamInterface<::testing::tuple<CGAffineTransform, CGAffineTransform>> {
     CFStringRef CreateOutputFilename() {
-        CGAffineTransform textTransform = GetParam();
+        CGAffineTransform textTransform = ::testing::get<0>(GetParam());
+        CGAffineTransform CTMTransform  = ::testing::get<1>(GetParam());
         return CFStringCreateWithFormat(nullptr,
                                         nullptr,
-                                        CFSTR("TestImage.TransformCTM.%.02f.%.02f.%.02f.%.02f.%.02f.%.02f.png"),
+                                        CFSTR("TestImage.Transform.TextMatrix.%.02f.%.02f.%.02f.%.02f.%.02f.%.02f.CTM.%.02f.%.02f.%.02f.%.02f.%.02f.%.02f.png"),
                                         textTransform.a,
                                         textTransform.b,
                                         textTransform.c,
                                         textTransform.d,
                                         textTransform.tx,
-                                        textTransform.ty);
+                                        textTransform.ty,
+                                        CTMTransform.a,
+                                        CTMTransform.b,
+                                        CTMTransform.c,
+                                        CTMTransform.d,
+                                        CTMTransform.tx,
+                                        CTMTransform.ty);
     }
 };
 
-DISABLED_DRAW_TEST_P(TransformTextMatrix, TextTextMatrix) {
+DRAW_TEST_P(Transform, TestMatrices) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
-    CGContextSetTextMatrix(context, GetParam());
+    CGContextSetTextMatrix(context, ::testing::get<0>(GetParam()));
+    CGContextConcatCTM(context, ::testing::get<1>(GetParam()));
 
     // Creates path with current rectangle
     woc::unique_cf<CGMutablePathRef> path{ CGPathCreateMutable() };
@@ -275,10 +283,21 @@ DISABLED_DRAW_TEST_P(TransformTextMatrix, TextTextMatrix) {
     CFStringRef keys[2] = { kCTFontAttributeName, kCTParagraphStyleAttributeName };
     CFTypeRef values[2] = { myCFFont.get(), paragraphStyle.get() };
 
+    woc::unique_cf<CFDictionaryRef> dict{ CFDictionaryCreate(
+        nullptr, (const void**)keys, (const void**)values, 1, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks) };
+
+    woc::unique_cf<CFAttributedStringRef> attrString{
+        CFAttributedStringCreate(nullptr,
+                                 CFSTR("The quick brown fox jumps over the lazy dog"),
+                                 dict.get())
+    };
+
+    woc::unique_cf<CTLineRef> line{CTLineCreateWithAttributedString(attrString.get())};
+    CTLineDraw(line.get(), context);
     __DrawLoremIpsum(context, path.get(), keys, values);
 }
 
-static const CGAffineTransform c_textTransforms[] = { CGAffineTransformMakeRotation(30.0 * M_PI / 180.0),
+static const CGAffineTransform c_transforms[] = { CGAffineTransformMakeRotation(30.0 * M_PI / 180.0),
                                                       CGAffineTransformMakeRotation(60.0 * M_PI / 180.0),
                                                       CGAffineTransformMakeRotation(-45.0 * M_PI / 180.0),
                                                       CGAffineTransformMakeScale(2.0, 1.0),
@@ -287,43 +306,8 @@ static const CGAffineTransform c_textTransforms[] = { CGAffineTransformMakeRotat
                                                       { 2, 2, 0, 2, 0, 0 },
                                                       { 2, 0, 2, 2, 0, 0 },
                                                       { 2, 2, 1.75, 2, 0, 0 } };
-INSTANTIATE_TEST_CASE_P(TestDrawingTextWithTransformedTextMatrix, TransformTextMatrix, ::testing::ValuesIn(c_textTransforms));
 
-class RotateCTM : public WhiteBackgroundTest, public ::testing::WithParamInterface<CGFloat> {
-    CFStringRef CreateOutputFilename() {
-        CGFloat rotation = GetParam();
-        return CFStringCreateWithFormat(nullptr, nullptr, CFSTR("TestImage.RotateCTM.%.02f.png"), rotation);
-    }
-};
-
-DISABLED_DRAW_TEST_P(RotateCTM, TestRotatingCTM) {
-    CGContextRef context = GetDrawingContext();
-    CGRect bounds = GetDrawingBounds();
-
-    CGContextRotateCTM(context, GetParam());
-
-    // Creates path with current rectangle
-    woc::unique_cf<CGMutablePathRef> path{ CGPathCreateMutable() };
-    CGPathAddRect(path.get(), nullptr, bounds);
-
-    // Create style setting to match given alignment
-    CTParagraphStyleSetting setting[1];
-    CTTextAlignment alignment = kCTLeftTextAlignment;
-    setting[0].spec = kCTParagraphStyleSpecifierAlignment;
-    setting[0].valueSize = sizeof(CTTextAlignment);
-    setting[0].value = &alignment;
-
-    woc::unique_cf<CTParagraphStyleRef> paragraphStyle{ CTParagraphStyleCreate(setting, std::extent<decltype(setting)>::value) };
-    woc::unique_cf<CTFontRef> myCFFont{ CTFontCreateWithName(CFSTR("Arial"), 20, nullptr) };
-
-    CFStringRef keys[2] = { kCTFontAttributeName, kCTParagraphStyleAttributeName };
-    CFTypeRef values[2] = { myCFFont.get(), paragraphStyle.get() };
-
-    __DrawLoremIpsum(context, path.get(), keys, values);
-}
-
-static constexpr CGFloat c_rotations[] = { 30.0 * M_PI / 180.0, 60.0 * M_PI / 180.0, -45.0 * M_PI / 180.0 };
-INSTANTIATE_TEST_CASE_P(TestDrawingTextInRotatedCTM, RotateCTM, ::testing::ValuesIn(c_rotations));
+INSTANTIATE_TEST_CASE_P(TestDrawingTextWithTransformedMatrices, Transform, ::testing::Combine(::testing::ValuesIn(c_transforms), ::testing::ValuesIn(c_transforms)));
 
 class ExtraKerning : public WhiteBackgroundTest, public ::testing::WithParamInterface<CGFloat> {
     CFStringRef CreateOutputFilename() {
