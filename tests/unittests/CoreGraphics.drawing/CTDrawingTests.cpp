@@ -305,7 +305,8 @@ static const CGAffineTransform c_transforms[] = { CGAffineTransformMakeRotation(
                                                       CGAffineTransformMakeScale(2.0, 1.0),
                                                       { 2, 2, 0, 2, 0, 0 },
                                                       { 2, 0, 2, 2, 0, 0 },
-                                                      { 2, 2, 1.75, 2, 0, 0 } };
+                                                      { 2, 2, 1.75, 2, 0, 0 },
+                                                      CGAffineTransformIdentity };
 
 INSTANTIATE_TEST_CASE_P(TestDrawingTextWithTransformedMatrices, Transform, ::testing::Combine(::testing::ValuesIn(c_transforms), ::testing::ValuesIn(c_transforms)));
 
