@@ -55,7 +55,6 @@ public:
     UIViewAutoresizing autoresizingMask;
     CGSize _contentHuggingPriority;
     CGSize _contentCompressionResistancePriority;
-    CGSize _previousIntrinsicContentSize;
     BOOL autoresizesSubviews;
     BOOL translatesAutoresizingMaskIntoConstraints;
     CGRect _resizeRoundingError;
