@@ -41,7 +41,7 @@ static const _ImageInfo imagesJPEG[] = {
 static const _ImageInfo imagesPNG[] = {
     /*{"filename",height,width,isMask,bit per pixel, bits per component} */
     { @"data/png1.png", 700, 1044, false, 32, 8 },
-    { @"data/png2.png", 136, 370, false, 8, 1 },
+    { @"data/png2.png", 136, 370, false, 8, 8 },
     { @"data/png3.png", 795, 1197, false, 32, 8 },
 };
 
