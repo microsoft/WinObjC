@@ -504,7 +504,14 @@ static std::string _printViewhierarchy(UIView* leafView) {
         touchEventName = @selector(touchesCancelled:withEvent:);
     }
 
-    if (touchPhase != UITouchPhaseBegan && ![touchPoint.touch->_view->priv->currentTouches containsObject:touchPoint.touch]) {
+    if (!touchPoint.touch->_view) {
+        // Ignore if the pointer isn't captured
+        if (DEBUG_TOUCHES_LIGHT) {
+            TraceVerbose(TAG,
+                L"View for touch is nil!, ignoring touch for touchPhase %d.",
+                touchPhase);
+        }
+    } else if (touchPhase != UITouchPhaseBegan && ![touchPoint.touch->_view->priv->currentTouches containsObject:touchPoint.touch]) {
         // Ignore if the pointer isn't captured
         if (DEBUG_TOUCHES_LIGHT) {
             TraceVerbose(TAG,

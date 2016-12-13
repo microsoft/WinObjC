@@ -2289,6 +2289,86 @@ static CALayer* _findSuperLayerForLayer(CALayer* layer) {
     return priv->_sublayerXamlElement;
 }
 
+// CAUTION: This is debug-only/temporary code; don't use it anywhere else!
+void GetLayerTransform(CALayer* layer, CGAffineTransform* outTransform) {
+    static const int c_maxDepth = 32;
+
+    //  Work backwards to its root layer
+    CALayer* layerList[c_maxDepth];
+    int layerListLen = 0;
+
+    CALayer* curLayer = (CALayer*)layer;
+
+    while (curLayer != nil) {
+        assert(layerListLen < c_maxDepth);
+        layerList[layerListLen++] = curLayer;
+
+        curLayer = (CALayer*)curLayer->priv->superlayer;
+    }
+
+    //  Build transform
+    CGPoint origin;
+
+    *outTransform = CGAffineTransformMakeTranslation(0.0f, 0.0f);
+
+    origin.x = 0;
+    origin.y = 0;
+
+    for (int i = layerListLen - 1; i >= 0; i--) {
+        curLayer = layerList[i];
+
+        *outTransform =
+            CGAffineTransformTranslate(*outTransform, curLayer->priv->position.x - origin.x, curLayer->priv->position.y - origin.y);
+
+        CGAffineTransform transform;
+
+        transform.a = curLayer->priv->transform.m[0][0];
+        transform.b = curLayer->priv->transform.m[0][1];
+        transform.c = curLayer->priv->transform.m[1][0];
+        transform.d = curLayer->priv->transform.m[1][1];
+        transform.tx = curLayer->priv->transform.m[3][0];
+        transform.ty = curLayer->priv->transform.m[3][1];
+
+        *outTransform = CGAffineTransformConcat(transform, *outTransform);
+        *outTransform = CGAffineTransformTranslate(*outTransform, -curLayer->priv->bounds.origin.x, -curLayer->priv->bounds.origin.y);
+
+        //  Calculate new center point
+        origin.x = curLayer->priv->bounds.size.width * curLayer->priv->anchorPoint.x;
+        origin.y = curLayer->priv->bounds.size.height * curLayer->priv->anchorPoint.y;
+    }
+}
+
+// CAUTION: This is debug-only/temporary code; don't use it anywhere else!
+CGPoint _legacyConvertPoint(CGPoint point, CALayer* fromLayer, CALayer* toLayer) {
+    //  Convert the point to center-based position
+    point.x -= fromLayer->priv->bounds.size.width * fromLayer->priv->anchorPoint.x;
+    point.y -= fromLayer->priv->bounds.size.height * fromLayer->priv->anchorPoint.y;
+ 
+    //  Convert to world-view
+    CGAffineTransform fromTransform;
+    GetLayerTransform(fromLayer, &fromTransform);
+    point = CGPointApplyAffineTransform(point, fromTransform);
+
+    CGAffineTransform toTransform;
+    GetLayerTransform(toLayer, &toTransform);
+    toTransform = CGAffineTransformInvert(toTransform);
+    point = CGPointApplyAffineTransform(point, toTransform);
+ 
+    //  Convert the point from center-based position
+    point.x += toLayer->priv->bounds.size.width * toLayer->priv->anchorPoint.x;
+    point.y += toLayer->priv->bounds.size.height * toLayer->priv->anchorPoint.y;
+ 
+    return point;
+}
+
+// CAUTION: This is debug-only/temporary code and won't work in most scenarios; don't use it anywhere else!
+bool _floatAlmostEqual(float a, float b) {
+    // Just look at two trailing decimals for our touch point
+    a = std::floor(a * 100) / 100;
+    b = std::floor(b * 100) / 100;
+    return (fabs(a - b) <= FLT_EPSILON);
+}
+
 /**
  @Status Interoperable
 */
@@ -2328,7 +2408,13 @@ static CALayer* _findSuperLayerForLayer(CALayer* layer) {
     CGPoint ret = { pointInToLayer.x, pointInToLayer.y };
 
     if (DEBUG_VERBOSE) {
-        TraceVerbose(TAG, L"convertPoint: {%f, %f} to {%f, %f}", point.x, point.y, ret.x, ret.y);
+        // How does our new convertPoint logic compare to the legacy logic?
+        CGPoint legacyPoint = _legacyConvertPoint(point, fromLayer, toLayer);
+        if (!_floatAlmostEqual(ret.x, legacyPoint.x) || !_floatAlmostEqual(ret.y, legacyPoint.y)) {
+            TraceWarning(TAG, L"convertPoint: The legacy point {%f, %f} did not match the new point {%f, %f}!", legacyPoint.x, legacyPoint.y, ret.x, ret.y);
+        }
+
+        TraceVerbose(TAG, L"convertPoint:{%f, %f} to:{%f, %f}, legacyPoint={%f, %f}", point.x, point.y, ret.x, ret.y, legacyPoint.x, legacyPoint.y);
     }
 
     return ret;
