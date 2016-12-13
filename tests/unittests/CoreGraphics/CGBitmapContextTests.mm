@@ -159,7 +159,7 @@ TEST(CGBitmapContext, BitmapInfoAPIs_Gray) {
     EXPECT_EQ(context, nullptr);
 
     context = CGBitmapContextCreate(nullptr, 120, 20, 8, 480, grayColorSpace, 0);
-    EXPECT_EQ(context, nullptr);
+    EXPECT_NE(context, nullptr);
 }
 
 TEST(CGBitmapContext, BitmapInfoAPIs_RGB) {
