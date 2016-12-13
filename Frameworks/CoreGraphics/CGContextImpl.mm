@@ -41,15 +41,15 @@ static const wchar_t* TAG = L"CGContextImpl";
 
 static IWLazyClassLookup _LazyUIFont("UIFont");
 
-id CGContextState::getCurFont() {
-    if (curFont == nil) {
-        curFont = [_LazyUIFont defaultFont];
+CGFontRef CGContextState::getCurFont() {
+    if (curFont == nullptr) {
+        curFont = CGFontCreateWithFontName(CFSTR("Segoe UI"));
     }
 
     return curFont;
 }
 
-void CGContextState::setCurFont(id font) {
+void CGContextState::setCurFont(CGFontRef font) {
     curFont = font;
 }
 
@@ -140,54 +140,23 @@ CGBlendMode CGContextImpl::CGContextGetBlendMode() {
     return curState->curBlendMode;
 }
 
-void CGContextImpl::CGContextShowTextAtPoint(float x, float y, const char* str, DWORD length) {
-    // TODO #924: Implement this with DWrite
+void CGContextImpl::CGContextShowTextAtPoint(float x, float y, const char* str, size_t length) {
     UNIMPLEMENTED();
 }
 
-void CGContextImpl::CGContextShowGlyphsAtPoint(float x, float y, WORD* glyphs, int count) {
-    CGSize size;
-
-    _isDirty = true;
-
-    switch (curState->textDrawingMode) {
-        case kCGTextFill:
-        case kCGTextStroke:
-        case kCGTextFillStroke:
-        case kCGTextFillClip:
-        case kCGTextStrokeClip:
-        case kCGTextFillStrokeClip:
-            size = CGFontDrawGlyphsToContext(glyphs, count, x, y);
-            break;
-
-        case kCGTextClip:
-        case kCGTextInvisible:
-            // TODO #924: Update the text position in this case
-            UNIMPLEMENTED();
-            break;
-    }
-
-    curState->curTextPosition.x = x + size.width;
-    curState->curTextPosition.y = y;
+void CGContextImpl::CGContextShowGlyphsAtPoint(float x, float y, const CGGlyph* glyphs, size_t count) {
+    UNIMPLEMENTED();
 }
 
-void CGContextImpl::CGContextShowGlyphsWithAdvances(WORD* glyphs, CGSize* advances, int count) {
-    CGPoint curPos = { curState->curTextPosition.x, curState->curTextPosition.y };
-    _isDirty = true;
-
-    for (int i = 0; i < count; i++) {
-        CGFontDrawGlyphsToContext(&glyphs[i], 1, curPos.x, curPos.y);
-        curPos.x += advances[i].width;
-        curPos.y += advances[i].height;
-    }
-    curState->curTextPosition = curPos;
+void CGContextImpl::CGContextShowGlyphsWithAdvances(const CGGlyph* glyphs, const CGSize* advances, size_t count) {
+    UNIMPLEMENTED();
 }
 
-void CGContextImpl::CGContextShowGlyphs(WORD* glyphs, int count) {
+void CGContextImpl::CGContextShowGlyphs(const CGGlyph* glyphs, size_t count) {
     CGContextShowGlyphsAtPoint(curState->curTextPosition.x, curState->curTextPosition.y, glyphs, count);
 }
 
-void CGContextImpl::CGContextSetFont(id font) {
+void CGContextImpl::CGContextSetFont(CGFontRef font) {
     curState->setCurFont(font);
 }
 
@@ -731,12 +700,6 @@ void CGContextImpl::CGContextSetRGBStrokeColor(float r, float g, float b, float 
     curState->curStrokeColor.g = g;
     curState->curStrokeColor.b = b;
     curState->curStrokeColor.a = a;
-}
-
-CGSize CGContextImpl::CGFontDrawGlyphsToContext(WORD* glyphs, DWORD length, float x, float y) {
-    CGSize ret = { 0, 0 };
-
-    return ret;
 }
 
 void CGContextImpl::CGContextSetShadowWithColor(CGSize offset, float blur, CGColorRef color) {

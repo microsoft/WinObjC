@@ -73,14 +73,16 @@
 		2324634F1CE69E2C00B7AAE4 /* UIKitControls */ = {
 			isa = PBXGroup;
 			children = (
-				231FBF881DA5E191004116E9 /* UITextFieldViewController.h */,
-				231FBF891DA5E191004116E9 /* UITextFieldViewController.m */,
 				23E594D11D6FC38D000BB01E /* UIActionSheetViewController.h */,
 				23E594D21D6FC38D000BB01E /* UIActionSheetViewController.m */,
-				82E63A5C1D07905D005C0993 /* UISliderViewController.h */,
-				82E63A5D1D07905D005C0993 /* UISliderViewController.m */,
 				6EEB8A5A1CE54B4E0021021E /* UIActivityIndicatorViewController.h */,
 				6EEB8A5B1CE54B4E0021021E /* UIActivityIndicatorViewController.m */,
+				96857DBE1D598FB300EB1FD0 /* UIButtonViewController.h */,
+				96857DBF1D598FB300EB1FD0 /* UIButtonViewController.m */,
+				82E63A5C1D07905D005C0993 /* UISliderViewController.h */,
+				82E63A5D1D07905D005C0993 /* UISliderViewController.m */,
+				231FBF881DA5E191004116E9 /* UITextFieldViewController.h */,
+				231FBF891DA5E191004116E9 /* UITextFieldViewController.m */,
 			);
 			name = UIKitControls;
 			sourceTree = "<group>";
@@ -106,16 +108,14 @@
 		6EEB8A351CE4F4050021021E /* XAMLCatalog */ = {
 			isa = PBXGroup;
 			children = (
-				96857DBC1D598FB300EB1FD0 /* MiscellaneousViewController.h */,
-				96857DBD1D598FB300EB1FD0 /* MiscellaneousViewController.m */,
-				96857DBE1D598FB300EB1FD0 /* UIButtonViewController.h */,
-				96857DBF1D598FB300EB1FD0 /* UIButtonViewController.m */,
-				6EEB8A451CE4F4050021021E /* Assets.xcassets */,
 				6EEB8A391CE4F4050021021E /* AppDelegate.h */,
 				6EEB8A3A1CE4F4050021021E /* AppDelegate.m */,
+				6EEB8A451CE4F4050021021E /* Assets.xcassets */,
 				6EEB8A4A1CE4F4050021021E /* Info.plist */,
 				6EEB8A541CE546A80021021E /* MenuTableViewController.h */,
 				6EEB8A551CE546A80021021E /* MenuTableViewController.m */,
+				96857DBC1D598FB300EB1FD0 /* MiscellaneousViewController.h */,
+				96857DBD1D598FB300EB1FD0 /* MiscellaneousViewController.m */,
 				6EEB8A3C1CE4F4050021021E /* ProgrammaticViewController.h */,
 				6EEB8A3D1CE4F4050021021E /* ProgrammaticViewController.m */,
 				6EEB8A3F1CE4F4050021021E /* StoryBoardViewController.h */,
@@ -138,8 +138,8 @@
 		7B67A2091DC366E1004BEF5D /* XamlControls */ = {
 			isa = PBXGroup;
 			children = (
-				7B67A2071DC366C1004BEF5D /* CustomTextControlViewController.m */,
 				7B67A20A1DC36756004BEF5D /* CustomTextControlViewController.h */,
+				7B67A2071DC366C1004BEF5D /* CustomTextControlViewController.m */,
 			);
 			name = XamlControls;
 			sourceTree = "<group>";

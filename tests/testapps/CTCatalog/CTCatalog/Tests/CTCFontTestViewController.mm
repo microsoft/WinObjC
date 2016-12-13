@@ -91,6 +91,12 @@ static UITableViewCell* createButtonCell(NSString* title, id target, SEL action)
     // Draws the text in the frame
     CTFrameDraw(frame, context);
 
+    UniChar characters[6]{ 'G', 'l', 'y', 'p', 'h', 's' };
+    CGGlyph glyphs[6];
+    CTFontGetGlyphsForCharacters(_font, characters, glyphs, 6);
+    CGPoint positions[6] = { { 0, 0 }, { 10, 10 }, { 20, 20 }, { 30, 20 }, { 40, 10 }, { 50, 0 } };
+    CTFontDrawGlyphs(_font, glyphs, positions, 6, context);
+
     // Creates outline
     CGContextSetLineWidth(context, 2.0);
     CGContextSetStrokeColorWithColor(context, color.CGColor);
@@ -247,8 +253,7 @@ static UITableViewCell* createButtonCell(NSString* title, id target, SEL action)
     [_rows addObject:createTextCell(@"CTFontGetDescent", [NSString stringWithFormat:@"%f", CTFontGetDescent(_font)], width / 2)];
     [_rows addObject:createTextCell(@"CTFontGetSize", [NSString stringWithFormat:@"%f", CTFontGetSize(_font)], width / 2)];
 
-    UniChar characters[6];
-    [@"Glyphs" getCharacters:characters range:NSMakeRange(0, 6)];
+    UniChar characters[6]{ 'G', 'l', 'y', 'p', 'h', 's' };
     CGGlyph glyphs[6];
     CTFontGetGlyphsForCharacters(_font, characters, glyphs, 6);
     [_rows addObject:createTextCell(
@@ -292,7 +297,6 @@ static UITableViewCell* createButtonCell(NSString* title, id target, SEL action)
     ADD_UNIMPLEMENTED(_rows, @"CTFontCreatePathForGlyph", width / 2);
     ADD_UNIMPLEMENTED(_rows, @"CTFontCreateUIFontForLanguage", width / 2);
     ADD_UNIMPLEMENTED(_rows, @"CTFontCreateWithNameAndOptions", width / 2);
-    ADD_UNIMPLEMENTED(_rows, @"CTFontDrawGlyphs", width / 2);
     ADD_UNIMPLEMENTED(_rows, @"CTFontGetBoundingBox", width / 2);
     ADD_UNIMPLEMENTED(_rows, @"CTFontGetBoundingRectsForGlyphs", width / 2);
     ADD_UNIMPLEMENTED(_rows, @"CTFontGetCapHeight", width / 2);

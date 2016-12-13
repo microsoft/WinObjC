@@ -73,7 +73,7 @@
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
-    return 15;
+    return 16;
 }
 
 - (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
@@ -271,7 +271,8 @@
 
         CGSize imageSize = [button.imageView sizeThatFits:CGSizeZero];
 
-        [button setTitle:[NSString stringWithFormat:@"W (%d) H (%d)", (int)imageSize.width, (int)imageSize.height] forState:UIControlStateNormal];
+        [button setTitle:[NSString stringWithFormat:@"W (%d) H (%d)", (int)imageSize.width, (int)imageSize.height]
+                forState:UIControlStateNormal];
 
         // Call to an unsupported API, should show up in Output window
         [button.imageView sizeToFit];
@@ -281,23 +282,50 @@
     } else if (indexPath.row == 14) {
         UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop, _labelWidth, _labelHeight)];
         label.text = @"UIButton, Selected=true, Title=Blue";
-        
+
         UIButton* button =
-        [[UIButton alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop + _labelHeight, _defaultWidth, _defaultHeight)];
+            [[UIButton alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop + _labelHeight, _defaultWidth, _defaultHeight)];
         button.selected = true;
         [button setTitleColor:[UIColor blueColor] forState:UIControlStateSelected];
         [button setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-        
+
         [button setBackgroundImage:[UIImage imageNamed:@"blue_background.jpg"] forState:UIControlStateSelected];
         [button setBackgroundImage:[UIImage imageNamed:@"yellow_background.jpg"] forState:UIControlStateNormal];
-        
+
         [button setTitle:@"Selected Button" forState:UIControlStateSelected];
         [button setTitle:@"Selected Button" forState:UIControlStateNormal];
-        
+
+        [cell addSubview:label];
+        [cell addSubview:button];
+    } else if (indexPath.row == 15) {
+        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop, _labelWidth, _labelHeight)];
+        label.text = @"UIButton, when in Highlighted (pressed) state, text/color/image is the same as normal state";
+
+        UIButton* button =
+            [[UIButton alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop + _labelHeight, _defaultWidth, _defaultHeight)];
+
+        // intentionally set nil titleColor for UIControlStateHighlighted
+        // make sure color used for UIControlStateNormal is also used
+        // in highlighted state
+        [button setTitleColor:nil forState:UIControlStateHighlighted];
+        [button setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+
+        // intentionally set nil on title for UIControlStateHighlighted
+        // make sure title used for UIControlStateNormal is also used
+        // in highlighted state
+        [button setTitle:nil forState:UIControlStateHighlighted];
+        [button setTitle:@"Hightlighted Button" forState:UIControlStateNormal];
+
+        // intentionally set nil on Image for UIControlStateHighlighted
+        // make sure image used for UIControlStateNormal is also used
+        // in highlighted state
+        [button setImage:nil forState:UIControlStateHighlighted];
+        [button setImage:[UIButtonViewController scaledTestImage] forState:UIControlStateNormal];
+
         [cell addSubview:label];
         [cell addSubview:button];
     }
-    
+
     return cell;
 }
 

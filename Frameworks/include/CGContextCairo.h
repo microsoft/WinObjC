@@ -56,11 +56,11 @@ public:
 
     virtual void CGContextSetBlendMode(CGBlendMode mode);
     virtual CGBlendMode CGContextGetBlendMode();
-    virtual void CGContextShowTextAtPoint(float x, float y, const char* str, DWORD length);
-    virtual void CGContextShowGlyphsAtPoint(float x, float y, WORD* glyphs, int count);
-    virtual void CGContextShowGlyphsWithAdvances(WORD* glyphs, CGSize* advances, int count);
-    virtual void CGContextShowGlyphs(WORD* glyphs, int count);
-    virtual void CGContextSetFont(id font);
+    virtual void CGContextShowTextAtPoint(float x, float y, const char* str, size_t length);
+    virtual void CGContextShowGlyphsAtPoint(float x, float y, const CGGlyph* glyphs, size_t count);
+    virtual void CGContextShowGlyphsWithAdvances(const CGGlyph* glyphs, const CGSize* advances, size_t count);
+    virtual void CGContextShowGlyphs(const CGGlyph* glyphs, size_t count);
+    virtual void CGContextSetFont(CGFontRef font);
     virtual void CGContextSetFontSize(float ptSize);
     virtual void CGContextSetTextMatrix(CGAffineTransform matrix);
     virtual void CGContextGetTextMatrix(CGAffineTransform* ret);
@@ -134,7 +134,6 @@ public:
     virtual void CGContextSetRGBFillColor(float r, float g, float b, float a);
     virtual void CGContextSetRGBStrokeColor(float r, float g, float b, float a);
 
-    virtual CGSize CGFontDrawGlyphsToContext(WORD* glyphs, DWORD length, float x, float y);
     virtual bool CGContextIsPointInPath(bool eoFill, float x, float y);
     virtual CGPathRef CGContextCopyPath(void);
 
