@@ -69,25 +69,6 @@ static const CGAffineTransform c_transforms[] = { CGAffineTransformMakeRotation(
                                                       CGAffineTransformIdentity };
 
 class CGTransform : public WhiteBackgroundTest, public ::testing::WithParamInterface<::testing::tuple<CGAffineTransform, CGAffineTransform>> {
-    CFStringRef CreateOutputFilename() {
-        CGAffineTransform textTransform = ::testing::get<0>(GetParam());
-        CGAffineTransform CTMTransform  = ::testing::get<1>(GetParam());
-        return CFStringCreateWithFormat(nullptr,
-                                        nullptr,
-                                        CFSTR("TestImage.CGTransform.TextMatrix.%.02f.%.02f.%.02f.%.02f.%.02f.%.02f.CTM.%.02f.%.02f.%.02f.%.02f.%.02f.%.02f.png"),
-                                        textTransform.a,
-                                        textTransform.b,
-                                        textTransform.c,
-                                        textTransform.d,
-                                        textTransform.tx,
-                                        textTransform.ty,
-                                        CTMTransform.a,
-                                        CTMTransform.b,
-                                        CTMTransform.c,
-                                        CTMTransform.d,
-                                        CTMTransform.tx,
-                                        CTMTransform.ty);
-    }
 };
 
 DRAW_TEST_P(CGTransform, TestMatrices) {
@@ -105,25 +86,6 @@ DRAW_TEST_P(CGTransform, TestMatrices) {
 INSTANTIATE_TEST_CASE_P(TestDrawingTextWithTransformedMatrices, CGTransform, ::testing::Combine(::testing::ValuesIn(c_transforms), ::testing::ValuesIn(c_transforms)));
 
 class CGUIKitTransform : public UIKitMimicTest, public ::testing::WithParamInterface<::testing::tuple<CGAffineTransform, CGAffineTransform>> {
-    CFStringRef CreateOutputFilename() {
-        CGAffineTransform textTransform = ::testing::get<0>(GetParam());
-        CGAffineTransform CTMTransform  = ::testing::get<1>(GetParam());
-        return CFStringCreateWithFormat(nullptr,
-                                        nullptr,
-                                        CFSTR("TestImage.CGUIKitTransform.TextMatrix.%.02f.%.02f.%.02f.%.02f.%.02f.%.02f.CTM.%.02f.%.02f.%.02f.%.02f.%.02f.%.02f.png"),
-                                        textTransform.a,
-                                        textTransform.b,
-                                        textTransform.c,
-                                        textTransform.d,
-                                        textTransform.tx,
-                                        textTransform.ty,
-                                        CTMTransform.a,
-                                        CTMTransform.b,
-                                        CTMTransform.c,
-                                        CTMTransform.d,
-                                        CTMTransform.tx,
-                                        CTMTransform.ty);
-    }
 };
 
 DRAW_TEST_P(CGUIKitTransform, TestMatrices) {
