@@ -397,6 +397,7 @@ void CGContextImpl::CGContextSaveGState() {
     states[curStateNum].setCurFont(curState->getCurFont());
     states[curStateNum].fontSize = curState->fontSize;
     states[curStateNum].textDrawingMode = curState->textDrawingMode;
+    states[curStateNum].curTextMatrix = curState->curTextMatrix;
     states[curStateNum].curBlendMode = curState->curBlendMode;
     states[curStateNum]._imgClip = NULL;
     states[curStateNum]._imgMask = NULL;
@@ -737,7 +738,7 @@ CGPathRef CGContextImpl::CGContextCopyPath(void) {
     return NULL;
 }
 
-void CGContextImpl::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
+void CGContextImpl::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, bool transformByGlyph) {
 }
 
 // TODO 1077:: Remove once D2D render target is implemented

@@ -237,10 +237,10 @@ INSTANTIATE_TEST_CASE_P(TestAlignmentLineBreakMode,
                                            ::testing::ValuesIn(c_writingDirections),
                                            ::testing::ValuesIn(c_fontSizes)));
 
-class Transform : public WhiteBackgroundTest, public ::testing::WithParamInterface<::testing::tuple<CGAffineTransform, CGAffineTransform>> {
-};
+class Transform : public WhiteBackgroundTest,
+                  public ::testing::WithParamInterface<::testing::tuple<CGAffineTransform, CGAffineTransform>> {};
 
-DRAW_TEST_P(Transform, TestMatrices) {
+DISABLED_DRAW_TEST_P(Transform, TestMatrices) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -268,34 +268,34 @@ DRAW_TEST_P(Transform, TestMatrices) {
         nullptr, (const void**)keys, (const void**)values, 1, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks) };
 
     woc::unique_cf<CFAttributedStringRef> attrString{
-        CFAttributedStringCreate(nullptr,
-                                 CFSTR("The quick brown fox jumps over the lazy dog"),
-                                 dict.get())
+        CFAttributedStringCreate(nullptr, CFSTR("The quick brown fox jumps over the lazy dog"), dict.get())
     };
 
-    woc::unique_cf<CTLineRef> line{CTLineCreateWithAttributedString(attrString.get())};
+    woc::unique_cf<CTLineRef> line{ CTLineCreateWithAttributedString(attrString.get()) };
     CTLineDraw(line.get(), context);
     __DrawLoremIpsum(context, path.get(), keys, values);
 }
 
 static const CGAffineTransform c_transforms[] = { CGAffineTransformMakeRotation(30.0 * M_PI / 180.0),
-                                                      CGAffineTransformMakeRotation(60.0 * M_PI / 180.0),
-                                                      CGAffineTransformMakeRotation(-45.0 * M_PI / 180.0),
-                                                      CGAffineTransformMakeScale(2.0, 1.0),
-                                                      CGAffineTransformMakeScale(1.0, 2.0),
-                                                      CGAffineTransformMakeScale(1.0, -1.0),
-                                                      CGAffineTransformMakeScale(-1.0, 1.0),
-                                                      { 2, 2, 0, 2, 0, 0 },
-                                                      { 2, 0, 2, 2, 0, 0 },
-                                                      { 2, 2, 1.75, 2, 0, 0 },
-                                                      CGAffineTransformIdentity };
+                                                  CGAffineTransformMakeRotation(60.0 * M_PI / 180.0),
+                                                  CGAffineTransformMakeRotation(-45.0 * M_PI / 180.0),
+                                                  CGAffineTransformMakeScale(2.0, 1.0),
+                                                  CGAffineTransformMakeScale(1.0, 2.0),
+                                                  CGAffineTransformMakeScale(1.0, -1.0),
+                                                  CGAffineTransformMakeScale(-1.0, 1.0),
+                                                  { 2, 2, 0, 2, 0, 0 },
+                                                  { 2, 0, 2, 2, 0, 0 },
+                                                  { 2, 2, 1.75, 2, 0, 0 },
+                                                  CGAffineTransformIdentity };
 
-INSTANTIATE_TEST_CASE_P(TestDrawingTextWithTransformedMatrices, Transform, ::testing::Combine(::testing::ValuesIn(c_transforms), ::testing::ValuesIn(c_transforms)));
+INSTANTIATE_TEST_CASE_P(TestDrawingTextWithTransformedMatrices,
+                        Transform,
+                        ::testing::Combine(::testing::ValuesIn(c_transforms), ::testing::ValuesIn(c_transforms)));
 
-class UIKitTransform : public UIKitMimicTest, public ::testing::WithParamInterface<::testing::tuple<CGAffineTransform, CGAffineTransform>> {
-};
+class UIKitTransform : public UIKitMimicTest,
+                       public ::testing::WithParamInterface<::testing::tuple<CGAffineTransform, CGAffineTransform>> {};
 
-DRAW_TEST_P(UIKitTransform, TestMatrices) {
+DISABLED_DRAW_TEST_P(UIKitTransform, TestMatrices) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -323,17 +323,17 @@ DRAW_TEST_P(UIKitTransform, TestMatrices) {
         nullptr, (const void**)keys, (const void**)values, 1, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks) };
 
     woc::unique_cf<CFAttributedStringRef> attrString{
-        CFAttributedStringCreate(nullptr,
-                                 CFSTR("The quick brown fox jumps over the lazy dog"),
-                                 dict.get())
+        CFAttributedStringCreate(nullptr, CFSTR("The quick brown fox jumps over the lazy dog"), dict.get())
     };
 
-    woc::unique_cf<CTLineRef> line{CTLineCreateWithAttributedString(attrString.get())};
+    woc::unique_cf<CTLineRef> line{ CTLineCreateWithAttributedString(attrString.get()) };
     CTLineDraw(line.get(), context);
     __DrawLoremIpsum(context, path.get(), keys, values);
 }
 
-INSTANTIATE_TEST_CASE_P(TestDrawingUITransforms, UIKitTransform, ::testing::Combine(::testing::ValuesIn(c_transforms), ::testing::ValuesIn(c_transforms)));
+INSTANTIATE_TEST_CASE_P(TestDrawingUITransforms,
+                        UIKitTransform,
+                        ::testing::Combine(::testing::ValuesIn(c_transforms), ::testing::ValuesIn(c_transforms)));
 
 class ExtraKerning : public WhiteBackgroundTest, public ::testing::WithParamInterface<CGFloat> {
     CFStringRef CreateOutputFilename() {
