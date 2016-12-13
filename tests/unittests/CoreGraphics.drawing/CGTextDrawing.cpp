@@ -53,8 +53,92 @@ DISABLED_DRAW_TEST_F(CGContext, DrawWithRotatedTextMatrix, WhiteBackgroundTest) 
     __SetFontForContext(context);
     CGAffineTransform textMatrix = CGContextGetTextMatrix(context);
     CGContextSetTextMatrix(context, CGAffineTransformRotate(textMatrix, 45.0 * M_PI / 180.0));
+    CGContextShowGlyphsAtPoint(context, 5, 10, glyphs.data(), glyphs.size());
+}
+
+static const CGAffineTransform c_transforms[] = { CGAffineTransformMakeRotation(30.0 * M_PI / 180.0),
+                                                      CGAffineTransformMakeRotation(60.0 * M_PI / 180.0),
+                                                      CGAffineTransformMakeRotation(-45.0 * M_PI / 180.0),
+                                                      CGAffineTransformMakeScale(2.0, 1.0),
+                                                      CGAffineTransformMakeScale(1.0, 2.0),
+                                                      CGAffineTransformMakeScale(1.0, -1.0),
+                                                      CGAffineTransformMakeScale(-1.0, 1.0),
+                                                      { 2, 2, 0, 2, 0, 0 },
+                                                      { 2, 0, 2, 2, 0, 0 },
+                                                      { 2, 2, 1.75, 2, 0, 0 },
+                                                      CGAffineTransformIdentity };
+
+class CGTransform : public WhiteBackgroundTest, public ::testing::WithParamInterface<::testing::tuple<CGAffineTransform, CGAffineTransform>> {
+    CFStringRef CreateOutputFilename() {
+        CGAffineTransform textTransform = ::testing::get<0>(GetParam());
+        CGAffineTransform CTMTransform  = ::testing::get<1>(GetParam());
+        return CFStringCreateWithFormat(nullptr,
+                                        nullptr,
+                                        CFSTR("TestImage.CGTransform.TextMatrix.%.02f.%.02f.%.02f.%.02f.%.02f.%.02f.CTM.%.02f.%.02f.%.02f.%.02f.%.02f.%.02f.png"),
+                                        textTransform.a,
+                                        textTransform.b,
+                                        textTransform.c,
+                                        textTransform.d,
+                                        textTransform.tx,
+                                        textTransform.ty,
+                                        CTMTransform.a,
+                                        CTMTransform.b,
+                                        CTMTransform.c,
+                                        CTMTransform.d,
+                                        CTMTransform.tx,
+                                        CTMTransform.ty);
+    }
+};
+
+DRAW_TEST_P(CGTransform, TestMatrices) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGContextSetTextMatrix(context, ::testing::get<0>(GetParam()));
+    CGContextConcatCTM(context, ::testing::get<1>(GetParam()));
+
+    std::vector<CGGlyph> glyphs{ __CreateGlyphs() };
+    __SetFontForContext(context);
     CGContextShowGlyphsAtPoint(context, 25, 50, glyphs.data(), glyphs.size());
 }
+
+INSTANTIATE_TEST_CASE_P(TestDrawingTextWithTransformedMatrices, CGTransform, ::testing::Combine(::testing::ValuesIn(c_transforms), ::testing::ValuesIn(c_transforms)));
+
+class CGUIKitTransform : public UIKitMimicTest, public ::testing::WithParamInterface<::testing::tuple<CGAffineTransform, CGAffineTransform>> {
+    CFStringRef CreateOutputFilename() {
+        CGAffineTransform textTransform = ::testing::get<0>(GetParam());
+        CGAffineTransform CTMTransform  = ::testing::get<1>(GetParam());
+        return CFStringCreateWithFormat(nullptr,
+                                        nullptr,
+                                        CFSTR("TestImage.CGUIKitTransform.TextMatrix.%.02f.%.02f.%.02f.%.02f.%.02f.%.02f.CTM.%.02f.%.02f.%.02f.%.02f.%.02f.%.02f.png"),
+                                        textTransform.a,
+                                        textTransform.b,
+                                        textTransform.c,
+                                        textTransform.d,
+                                        textTransform.tx,
+                                        textTransform.ty,
+                                        CTMTransform.a,
+                                        CTMTransform.b,
+                                        CTMTransform.c,
+                                        CTMTransform.d,
+                                        CTMTransform.tx,
+                                        CTMTransform.ty);
+    }
+};
+
+DRAW_TEST_P(CGUIKitTransform, TestMatrices) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGContextSetTextMatrix(context, CGAffineTransformScale(::testing::get<0>(GetParam()), 1.0f, -1.0f));
+    CGContextConcatCTM(context, ::testing::get<1>(GetParam()));
+
+    std::vector<CGGlyph> glyphs{ __CreateGlyphs() };
+    __SetFontForContext(context);
+    CGContextShowGlyphsAtPoint(context, 25, 50, glyphs.data(), glyphs.size());
+}
+
+INSTANTIATE_TEST_CASE_P(TestDrawingTextWithTransformedMatrices, CGUIKitTransform, ::testing::Combine(::testing::ValuesIn(c_transforms), ::testing::ValuesIn(c_transforms)));
 
 // On reference platform, CGContextShowText* can only be used with CGContextSelectFont
 // Which we do not currently support.
