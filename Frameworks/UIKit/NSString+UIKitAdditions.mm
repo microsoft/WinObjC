@@ -104,8 +104,7 @@ static void drawString(UIFont* font,
     CTFrameGetLineOrigins(frame, {}, origins.data());
     for (size_t i = 0; i < origins.size(); ++i) {
         // Need to set text position so each line will be drawn in the correct position relative to each other
-        // Y positions will be negative because we are drawing with the coordinate system flipped to what CoreText is expecting
-        CGContextSetTextPosition(context, rect.origin.x + origins[i].x, -(rect.origin.y + origins[i].y));
+        CGContextSetTextPosition(context, rect.origin.x + origins[i].x, rect.origin.y + origins[i].y);
         CTLineDraw(static_cast<CTLineRef>(lines[i]), context);
     }
 

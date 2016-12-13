@@ -18,7 +18,7 @@
 
 @interface UIPopoverController () {
 @public
-   dispatch_block_t _presentCompletion;
+   StrongId<dispatch_block_t> _presentCompletion;
 }
 
 - (void)_dismissPopoverAnimated:(BOOL)animated completion:(dispatch_block_t)completion;

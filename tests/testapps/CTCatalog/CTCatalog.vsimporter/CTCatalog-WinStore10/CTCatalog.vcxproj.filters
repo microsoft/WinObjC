@@ -117,4 +117,9 @@
       <Filter>CTCatalog\Test</Filter>
     </ClangCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Font Include="..\..\CTCatalog\Fonts\WinObjC.ttf" />
+    <Font Include="..\..\CTCatalog\Fonts\WinObjC-Bold.ttf" />
+    <Font Include="..\..\CTCatalog\Fonts\WinObjC-Italic.ttf" />
+  </ItemGroup>
 </Project>

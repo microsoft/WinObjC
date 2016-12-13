@@ -66,7 +66,9 @@ static const wchar_t* TAG = L"CGDataProvider";
 CGDataProviderRef CGDataProviderCreateWithURL(CFURLRef url) {
     NSString* path = [static_cast<NSURL*>(url) path];
     CGDataProvider* ret = [[CGDataProvider alloc] initWithContentsOfFile:path];
-    ret->filename = path;
+    if (ret) {
+        ret->filename = path;
+    }
 
     return ret;
 }
@@ -75,11 +77,9 @@ CGDataProviderRef CGDataProviderCreateWithURL(CFURLRef url) {
  @Status Interoperable
 */
 CFDataRef CGDataProviderCopyData(CGDataProviderRef provider) {
-    void* data = (void*)[(NSData*)provider bytes];
-    DWORD size = [(NSData*)provider length];
-    id ret = [[CGDataProvider alloc] initWithBytes:data length:size];
-
-    return (CFDataRef)ret;
+    uint8_t* bytes = (uint8_t*)[(NSData*)provider bytes];
+    size_t length = [(NSData*)provider length];
+    return CFDataCreate(nullptr, bytes, length);
 }
 
 /**

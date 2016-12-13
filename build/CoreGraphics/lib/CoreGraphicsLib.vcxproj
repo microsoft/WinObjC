@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -55,9 +55,15 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreGraphics\CGPDFStream.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreGraphics\CGPDFString.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreGraphics\CGShading.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreGraphics\DWriteFontBinaryDataLoader.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreGraphics\DWriteFontBinaryDataCollectionLoader.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreGraphics\DWriteFontCollectionHelper.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreGraphics\DWriteWrapper.mm" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\include\CoreGraphics\DWriteFontBinaryDataLoader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\include\CoreGraphics\DWriteFontBinaryDataCollectionLoader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\include\CoreGraphics\DWriteFontCollectionHelper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\include\CoreGraphics\DWriteWrapper.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
