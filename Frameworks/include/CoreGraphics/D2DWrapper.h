@@ -36,13 +36,17 @@ inline D2D_POINT_2F _CGPointToD2D_F(CGPoint point) {
     return { point.x, point.y };
 }
 
+inline CGPoint _D2DPointToCGPoint(D2D_POINT_2F point) {
+    return { point.x, point.y };
+}
+
 inline CGRect _D2DRectToCGRect(D2D1_RECT_F rect) {
     CGFloat x = rect.left;
     CGFloat y = rect.top;
     CGFloat width = rect.right - x;
     CGFloat height = rect.bottom - y;
 
-    return CGRectMake(x, y, width, height);
+    return { { x, y }, { width, height } };
 }
 
 inline D2D1_MATRIX_3X2_F __CGAffineTransformToD2D_F(CGAffineTransform transform) {

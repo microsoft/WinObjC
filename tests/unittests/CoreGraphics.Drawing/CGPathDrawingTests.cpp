@@ -249,3 +249,160 @@ DISABLED_DRAW_TEST_F(CGPath, GetBoundingBox, UIKitMimicTest) {
 
     CGPathRelease(thepath);
 }
+
+static CGRect applyBounds;
+
+static void CGPathApplyCallback(void* context, const CGPathElement* element) {
+    CGPoint* points = element->points;
+    CGContextMoveToPoint((CGContextRef)context,
+                         applyBounds.origin.x + applyBounds.size.width / 2,
+                         applyBounds.origin.y + applyBounds.size.height / 2);
+    CGContextAddLineToPoint((CGContextRef)context, points[0].x, points[0].y);
+    CGContextStrokePath((CGContextRef)context);
+}
+
+DISABLED_DRAW_TEST_F(CGPath, PathApplyDraw, UIKitMimicTest) {
+    CGContextRef context = GetDrawingContext();
+    applyBounds = GetDrawingBounds();
+    CGFloat width = applyBounds.size.width;
+    CGFloat height = applyBounds.size.height;
+    CGFloat xstart = applyBounds.origin.x;
+    CGFloat ystart = applyBounds.origin.y;
+
+    CGMutablePathRef thepath = CGPathCreateMutable();
+    CGPathMoveToPoint(thepath, NULL, xstart + .5 * width, ystart + .1 * height);
+    CGPathAddLineToPoint(thepath, NULL, xstart + .35 * width, ystart + .3 * height);
+    CGPathAddLineToPoint(thepath, NULL, xstart + .1 * width, ystart + .3 * height);
+    CGPathAddLineToPoint(thepath, NULL, xstart + .3 * width, ystart + .5 * height);
+    CGPathAddLineToPoint(thepath, NULL, xstart + .25 * width, ystart + .9 * height);
+    CGPathAddLineToPoint(thepath, NULL, xstart + .5 * width, ystart + .7 * height);
+    CGPathAddLineToPoint(thepath, NULL, xstart + .75 * width, ystart + .9 * height);
+    CGPathAddLineToPoint(thepath, NULL, xstart + .7 * width, ystart + .5 * height);
+    CGPathAddLineToPoint(thepath, NULL, xstart + .9 * width, ystart + .3 * height);
+    CGPathAddLineToPoint(thepath, NULL, xstart + .65 * width, ystart + .3 * height);
+    CGPathAddLineToPoint(thepath, NULL, xstart + .5 * width, ystart + .1 * height);
+    CGPathCloseSubpath(thepath);
+
+    CGPathApply(thepath, context, CGPathApplyCallback);
+
+    CGContextAddPath(context, thepath);
+    CGContextStrokePath(context);
+
+    CGPathRelease(thepath);
+}
+
+static void _CGContextOutlinePoint(CGContextRef context, CGPoint point, CGFloat r, CGFloat g, CGFloat b) {
+    CGContextSetRGBStrokeColor(context, r, g, b, 1);
+
+    CGContextStrokeRect(context, CGRectMake(point.x - 2, point.y - 2, 5, 5));
+}
+
+static void CGPathControlPointCallback(void* context, const CGPathElement* element) {
+    switch (element->type) {
+        case kCGPathElementMoveToPoint:
+            _CGContextOutlinePoint((CGContextRef)context, element->points[0], 1, 0, 0);
+            break;
+        case kCGPathElementAddLineToPoint:
+            _CGContextOutlinePoint((CGContextRef)context, element->points[0], 0, 1, 0);
+            break;
+        case kCGPathElementAddQuadCurveToPoint:
+            _CGContextOutlinePoint((CGContextRef)context, element->points[0], 0, 1, 1);
+            _CGContextOutlinePoint((CGContextRef)context, element->points[1], 0, 1, 1);
+            break;
+        case kCGPathElementAddCurveToPoint:
+            _CGContextOutlinePoint((CGContextRef)context, element->points[0], 1, 0, 1);
+            _CGContextOutlinePoint((CGContextRef)context, element->points[1], 1, 0, 1);
+            _CGContextOutlinePoint((CGContextRef)context, element->points[2], 1, 0, 1);
+            break;
+        case kCGPathElementCloseSubpath:
+            break;
+    }
+}
+
+DISABLED_DRAW_TEST_F(CGPath, PathApplyControlPointsQuadCurve, UIKitMimicTest) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+    CGFloat width = bounds.size.width;
+    CGFloat height = bounds.size.height;
+    CGFloat xstart = bounds.origin.x;
+    CGFloat ystart = bounds.origin.y;
+
+    CGMutablePathRef thepath = CGPathCreateMutable();
+    CGPathMoveToPoint(thepath, NULL, xstart + .25 * width, ystart + .25 * height);
+    CGPathAddQuadCurveToPoint(thepath, NULL, xstart + .31 * width, ystart + .12 * height, xstart + .37 * width, ystart + .25 * height);
+    CGPathMoveToPoint(thepath, NULL, xstart + .5 * width, ystart + .25 * height);
+    CGPathAddQuadCurveToPoint(thepath, NULL, xstart + .56 * width, ystart + .12 * height, xstart + .62 * width, ystart + .25 * height);
+    CGPathMoveToPoint(thepath, NULL, xstart + .25 * width, ystart + .5 * height);
+    CGPathAddQuadCurveToPoint(thepath, NULL, xstart + .5 * width, ystart + .78 * height, xstart + .75 * width, ystart + .25 * height);
+    CGPathMoveToPoint(thepath, NULL, xstart + .71 * width, ystart + .26 * height);
+    CGPathAddQuadCurveToPoint(thepath, NULL, xstart + .75 * width, ystart + .22 * height, xstart + .79 * width, ystart + .27 * height);
+
+    CGContextAddPath(context, thepath);
+    CGContextStrokePath(context);
+
+    CGPathApply(thepath, context, CGPathControlPointCallback);
+
+    CGPathRelease(thepath);
+}
+
+DISABLED_DRAW_TEST_F(CGPath, PathApplyControlPointsArcs, UIKitMimicTest) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+    CGFloat width = bounds.size.width;
+    CGFloat height = bounds.size.height;
+    CGFloat xstart = bounds.origin.x;
+    CGFloat ystart = bounds.origin.y;
+
+    CGMutablePathRef thepath = CGPathCreateMutable();
+
+    CGAffineTransform transformation = CGAffineTransformIdentity;
+    transformation = CGAffineTransformScale(transformation, .8, .8);
+    transformation = CGAffineTransformTranslate(transformation, .1 * width, .1 * height);
+
+    CGPathMoveToPoint(thepath, &transformation, xstart + .75 * width, ystart + .5 * height);
+    CGPathAddArc(thepath, &transformation, xstart + .5 * width, ystart + .5 * height, .5 * height, 0, M_PI / 2, true);
+    CGPathAddArc(thepath, &transformation, xstart + .5 * width, ystart + .5 * height, .5 * height, M_PI / 2, 0, true);
+    CGPathMoveToPoint(thepath, &transformation, xstart + .25 * width, ystart + .5 * height);
+    CGPathAddArc(thepath, &transformation, xstart + .375 * width, ystart + .5 * height, .25 * height, M_PI, 0, false);
+    CGPathMoveToPoint(thepath, &transformation, xstart + .5 * width, ystart + .5 * height);
+    CGPathAddArc(thepath, &transformation, xstart + .625 * width, ystart + .5 * height, .25 * height, M_PI, 0, true);
+    CGPathMoveToPoint(thepath, &transformation, xstart + .4375 * width, ystart + .5 * height);
+    CGPathAddArc(thepath, &transformation, xstart + .375 * width, ystart + .5 * height, .125 * height, 0, M_PI / 2, true);
+    CGPathAddArc(thepath, &transformation, xstart + .375 * width, ystart + .5 * height, .125 * height, M_PI / 2, 0, true);
+    CGPathMoveToPoint(thepath, &transformation, xstart + .6875 * width, ystart + .5 * height);
+    CGPathAddArc(thepath, &transformation, xstart + .625 * width, ystart + .5 * height, .125 * height, 0, M_PI / 2, true);
+    CGPathAddArc(thepath, &transformation, xstart + .625 * width, ystart + .5 * height, .125 * height, M_PI / 2, 0, true);
+
+    CGContextAddPath(context, thepath);
+    CGContextStrokePath(context);
+
+    CGPathApply(thepath, context, CGPathControlPointCallback);
+
+    CGPathRelease(thepath);
+}
+
+DISABLED_DRAW_TEST_F(CGPath, PathApplyControlPointsArcsSimple, UIKitMimicTest) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+    CGFloat width = bounds.size.width;
+    CGFloat height = bounds.size.height;
+    CGFloat xstart = bounds.origin.x;
+    CGFloat ystart = bounds.origin.y;
+
+    CGMutablePathRef thepath = CGPathCreateMutable();
+
+    CGPathMoveToPoint(thepath, NULL, xstart + .5 * width, ystart + .5 * height);
+    CGPathAddArc(thepath, NULL, xstart + .5 * width, ystart + .5 * height, .4 * height, 0, M_PI / 2, true);
+    CGPathCloseSubpath(thepath);
+
+    CGPathMoveToPoint(thepath, NULL, xstart + .55 * width, ystart + .45 * height);
+    CGPathAddArc(thepath, NULL, xstart + .55 * width, ystart + .45 * height, .4 * height, M_PI / 2, 0, true);
+    CGPathCloseSubpath(thepath);
+
+    CGContextAddPath(context, thepath);
+    CGContextStrokePath(context);
+
+    CGPathApply(thepath, context, CGPathControlPointCallback);
+
+    CGPathRelease(thepath);
+}

@@ -14,6 +14,8 @@
 //
 //******************************************************************************
 
+#pragma once
+
 #ifndef __CGPATHINTERNAL_H
 #define __CGPATHINTERNAL_H
 
@@ -21,8 +23,19 @@
 #include "CoreGraphics/CGContext.h"
 #include "CoreGraphics/CGPath.h"
 
+#if defined __clang__
+
+#pragma clang diagnostic push
+#ifdef _M_ARM
+// Disable 'invalid calling convention' warnings for __stdcall usage in ARM builds
+#pragma clang diagnostic ignored "-Wignored-attributes"
+#endif // _M_ARM
+
+#endif // __clang__
+
 #include <COMIncludes.h>
 #include <d2d1.h>
+#import <WRLHelpers.h>
 #include <COMIncludes_End.h>
 
 const int kCGPathMaxPointCount = 3;
@@ -56,5 +69,10 @@ struct CGPathElementInternal : CGPathElement {
 typedef struct CGPathElementInternal CGPathElementInternal;
 
 HRESULT _CGPathGetGeometry(CGPathRef path, ID2D1Geometry** pGeometry);
+HRESULT _CGPathApplyInternal(ID2D1PathGeometry* pathGeometry, void* info, CGPathApplierFunction function);
+
+#if defined __clang__
+#pragma clang diagnostic pop
+#endif
 
 #endif

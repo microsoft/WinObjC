@@ -26,6 +26,7 @@
 #import "CGPathAddQuadCurveToPointViewController.h"
 #import "CGPathAddRectViewController.h"
 #import "CGPathApplyViewController.h"
+#import "CGPathApplyCurveViewController.h"
 #import "CGPathCloseSubpathViewController.h"
 #import "CGPathContainsPointViewController.h"
 #import "CGPathGetBoundingBoxViewController.h"
@@ -65,6 +66,7 @@
             [CGContextSampleRow row:@"CGPathAddQuadCurveToPoint" class:[CGPathAddQuadCurveToPointViewController class]],
             [CGContextSampleRow row:@"CGPathAddRect" class:[CGPathAddRectViewController class]],
             [CGContextSampleRow row:@"CGPathApply" class:[CGPathApplyViewController class]],
+            [CGContextSampleRow row:@"CGPathApply Curves" class:[CGPathApplyCurveViewController class]],
             [CGContextSampleRow row:@"CGPathCloseSubpath" class:[CGPathCloseSubpathViewController class]],
             [CGContextSampleRow row:@"CGPathContainsPoint" class:[CGPathContainsPointViewController class]],
             [CGContextSampleRow row:@"CGPathGetBoundingBox" class:[CGPathGetBoundingBoxViewController class]],

@@ -19,11 +19,6 @@
 
 @implementation CGPathAddRoundedRectViewController
 
-- (id)initWithDrawingOptions:(CGDrawOptions*)options {
-    self = [super initWithDrawingOptions:options];
-    return self;
-}
-
 - (void)loadView {
     [super loadView];
     [self.view setBackgroundColor:[UIColor clearColor]];
@@ -51,7 +46,7 @@
 
         CGPathRelease(thepath);
 
-        [super drawComparisonCGImageFromImageName:@"AddArcToPoint" intoContext:currentContext];
+        [super drawComparisonCGImageFromImageName:@"RoundedRect" intoContext:currentContext];
     }];
 
     [self.view addSubview:drawView];

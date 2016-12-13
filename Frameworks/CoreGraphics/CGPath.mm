@@ -27,7 +27,7 @@
 #import "CGPathInternal.h"
 
 #include <COMIncludes.h>
-#import <wrl/client.h>
+#import <WRLHelpers.h>
 #include <COMIncludes_End.h>
 
 #import <CFCPPBase.h>
@@ -241,7 +241,7 @@ CGPathRef CGPathCreateCopy(CGPathRef path) {
 }
 
 /**
-@Status Interoperable
+ @Status Interoperable
 */
 CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path) {
     RETURN_NULL_IF(!path);
@@ -525,7 +525,7 @@ void CGPathCloseSubpath(CGMutablePathRef path) {
 }
 
 /**
-@Status Interoperable
+ @Status Interoperable
 */
 CGRect CGPathGetBoundingBox(CGPathRef path) {
     if (path == NULL) {
@@ -546,8 +546,7 @@ CGRect CGPathGetBoundingBox(CGPathRef path) {
 }
 
 /**
-@Status Interoperable
-
+ @Status Interoperable
 */
 bool CGPathIsEmpty(CGPathRef path) {
     if (path == NULL) {
@@ -582,7 +581,7 @@ CGPathRef CGPathRetain(CGPathRef path) {
 }
 
 /**
-@Status Interoperable
+ @Status Interoperable
 */
 void CGPathAddQuadCurveToPoint(CGMutablePathRef path, const CGAffineTransform* transform, CGFloat cpx, CGFloat cpy, CGFloat x, CGFloat y) {
     RETURN_IF(!path);
@@ -607,7 +606,7 @@ void CGPathAddQuadCurveToPoint(CGMutablePathRef path, const CGAffineTransform* t
 }
 
 /**
-@Status Interoperable
+ @Status Interoperable
 */
 void CGPathAddCurveToPoint(CGMutablePathRef path,
                            const CGAffineTransform* transform,
@@ -704,32 +703,15 @@ void CGPathAddRoundedRect(
     FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(rectangleGeometry.Get(), transform));
 }
 
-int _CGPathPointCountForElementType(CGPathElementType type) {
-    int pointCount = 0;
-
-    switch (type) {
-        case kCGPathElementMoveToPoint:
-        case kCGPathElementAddLineToPoint:
-            pointCount = 1;
-            break;
-        case kCGPathElementAddQuadCurveToPoint:
-            pointCount = 2;
-            break;
-        case kCGPathElementAddCurveToPoint:
-            pointCount = 3;
-            break;
-        case kCGPathElementCloseSubpath:
-            pointCount = 0;
-            break;
-    }
-    return pointCount;
-}
-
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Quadratic Bezier Curves are simplified into Cubic Bezier curves. Control point approximation for arcs differs from reference
+ platform. TODO 1419 : Fix figure logic in D2D to eliminate extra start point callbacks.
 */
 void CGPathApply(CGPathRef path, void* info, CGPathApplierFunction function) {
-    UNIMPLEMENTED();
+    RETURN_IF(!path);
+    FAIL_FAST_IF_FAILED(path->ClosePath());
+    FAIL_FAST_IF_FAILED(_CGPathApplyInternal(path->GetPathGeometry().Get(), info, function));
 }
 
 /**
