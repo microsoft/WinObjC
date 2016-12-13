@@ -347,6 +347,9 @@ typedef uint32_t WOCDeviceType;
 
 // Note: Will be deprecated in future releases
 @property (nonatomic) BOOL useLegacyHitTesting;
+
+// Note: Will be deprecated in future releases
+@property (nonatomic) BOOL useLegacyBatchedCATransactions;
 @end
 
 @interface UIApplication (UIApplicationDisplayMode)

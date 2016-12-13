@@ -36,6 +36,10 @@
     UIApplication.displayMode.useLegacyHitTesting = sender.on;
 }
 
+- (void)useLegacyBatchedCATransactions :(UISwitch*)sender {
+    UIApplication.displayMode.useLegacyBatchedCATransactions = sender.on;
+}
+
 - (void)toggleAdjustWindowSize:(UISwitch*)sender {
     UIApplication.displayMode.sizeUIWindowToFit = sender.on;
     [UIApplication.displayMode updateDisplaySettings];
@@ -258,6 +262,15 @@
     cell.accessoryView = useLegacyHitTesting;
     cell.textLabel.text = @"Use Legacy Hit Testing";
     [self.rows addObject:cell];
+    
+    UISwitch* useLegacyBatchedCATransactions = [UISwitch new];
+    useLegacyBatchedCATransactions.on = UIApplication.displayMode.useLegacyBatchedCATransactions;
+    [useLegacyBatchedCATransactions addTarget:self action:@selector(useLegacyBatchedCATransactions:) forControlEvents:UIControlEventValueChanged];
+
+    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MenuCell"];
+    cell.accessoryView = useLegacyBatchedCATransactions;
+    cell.textLabel.text = @"Use Legacy Batched CATransactions";
+    [self.rows addObject:cell];
 
     UISwitch* adjustWindowSize = [UISwitch new];
     adjustWindowSize.on = UIApplication.displayMode.sizeUIWindowToFit;
@@ -297,7 +310,7 @@
     cell.detailTextLabel.text = @"0.0 = fit to window";
     [self.rows addObject:cell];
 
-    fixedHeight = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 25)];
+    fixedHeight = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 30)];
     fixedHeight.text = [NSString stringWithFormat:@"%.1f", UIApplication.displayMode.fixedHeight];
     fixedHeight.borderStyle = UITextBorderStyleBezel;
     [fixedHeight addTarget:self action:@selector(setHeight:) forControlEvents:UIControlEventEditingDidEnd];
@@ -307,7 +320,7 @@
     cell.detailTextLabel.text = @"0.0 = fit to window";
     [self.rows addObject:cell];
 
-    fixedAspect = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 25)];
+    fixedAspect = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 30)];
     fixedAspect.text = [NSString stringWithFormat:@"%.1f", UIApplication.displayMode.fixedAspectRatio];
     fixedAspect.borderStyle = UITextBorderStyleBezel;
     [fixedAspect addTarget:self action:@selector(setAspect:) forControlEvents:UIControlEventEditingDidEnd];
@@ -317,7 +330,7 @@
     cell.detailTextLabel.text = @"0.0 = none";
     [self.rows addObject:cell];
 
-    magnification = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 25)];
+    magnification = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 30)];
     magnification.text = [NSString stringWithFormat:@"%.2f", UIApplication.displayMode.magnification];
     magnification.borderStyle = UITextBorderStyleBezel;
     [magnification addTarget:self action:@selector(setMagnification:) forControlEvents:UIControlEventEditingDidEnd];
@@ -326,7 +339,7 @@
     cell.textLabel.text = @"Magnification";
     [self.rows addObject:cell];
 
-    scale = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 25)];
+    scale = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 30)];
     scale.text = [NSString stringWithFormat:@"%.2f", [uiScreen scale]];
     scale.borderStyle = UITextBorderStyleBezel;
     cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MenuCell"];
@@ -334,7 +347,7 @@
     cell.textLabel.text = @"Scale";
     [self.rows addObject:cell];
 
-    nativeScale = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 25)];
+    nativeScale = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 30)];
     nativeScale.text = [NSString stringWithFormat:@"%.2f", [uiScreen nativeScale]];
     nativeScale.borderStyle = UITextBorderStyleBezel;
     cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MenuCell"];
@@ -342,7 +355,7 @@
     cell.textLabel.text = @"Native Scale";
     [self.rows addObject:cell];
 
-    nativeBounds = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 150, 25)];
+    nativeBounds = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 150, 30)];
     CGRect nativeBoundRect = [uiScreen nativeBounds];
     nativeBounds.text = [NSString stringWithFormat:@"%.2f, %.2f", nativeBoundRect.size.width, nativeBoundRect.size.height];
     nativeBounds.borderStyle = UITextBorderStyleBezel;
@@ -352,7 +365,7 @@
     cell.textLabel.text = @"Native Bounds";
     [self.rows addObject:cell];
 
-    uiScreenBrightness = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 25)];
+    uiScreenBrightness = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 30)];
     uiScreenBrightness.text = [NSString stringWithFormat:@"%.2f", [uiScreen brightness]];
     uiScreenBrightness.borderStyle = UITextBorderStyleBezel;
     cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MenuCell"];
@@ -384,7 +397,7 @@
     ];
 
     for (NSMutableDictionary* curItem in _informationLabels) {
-        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 25)];
+        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 30)];
         label.adjustsFontSizeToFitWidth = TRUE;
         label.text = [self getLabelTextFromValue:[UIApplication.displayMode valueForKey:curItem[@"ValueName"]]];
 
