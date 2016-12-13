@@ -222,3 +222,11 @@ DISABLED_DRAW_TEST_F(CGContext, ChangeCTMAfterCreatingPath, WhiteBackgroundTest)
     CGContextStrokePath(context);
     CGContextRestoreGState(context);
 }
+
+DRAW_TEST(CGContext, PremultipliedAlphaImage) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGContextSetRGBFillColor(context, 1.0, 0.0, 0.0, 0.5);
+    CGContextFillRect(context, { 0, 0, 100, 100 });
+}
