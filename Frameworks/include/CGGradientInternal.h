@@ -1,7 +1,7 @@
 //******************************************************************************
 //
 // Copyright (c) 2016 Intel Corporation. All rights reserved.
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,8 +17,8 @@
 
 #pragma once
 
-#include "CoreGraphics/CGGradient.h"
-#include "CoreGraphicsInternal.h"
+#import <CoreGraphics/CGGradient.h>
+#import "CoreGraphicsInternal.h"
 #include <objc/runtime.h>
 
 class __CGGradient : private objc_object {
@@ -34,3 +34,11 @@ public:
     void initWithColorComponents(const float* components, const float* locations, size_t count, CGColorSpaceRef colorspace);
     void initWithColors(CFArrayRef components, const float* locations, CGColorSpaceRef colorspace);
 };
+
+COREGRAPHICS_EXPORT unsigned long _CGGradientGetCount(CGGradientRef gradient);
+
+COREGRAPHICS_EXPORT float* _CGGradientGetStopLocation(CGGradientRef gradient);
+
+COREGRAPHICS_EXPORT float* _CGGradientGetColorComponents(CGGradientRef gradient);
+
+COREGRAPHICS_EXPORT CGColorSpaceModel _CGGradientGetColorSpaceModel(CGGradientRef gradient);

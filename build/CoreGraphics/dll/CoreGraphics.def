@@ -365,6 +365,12 @@ LIBRARY CoreGraphics
         _CGImageGetRawBytes
         _CGImageGetDisplayTexture
 
+        ; CGGradient private exports
+        _CGGradientGetCount
+        _CGGradientGetStopLocation
+        _CGGradientGetColorComponents
+        _CGGradientGetColorSpaceModel
+
         ; private exports below
         CGImageAddDestructionListener
 
