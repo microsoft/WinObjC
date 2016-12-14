@@ -196,6 +196,8 @@ public:
             copyRect = &fullRect;
         }
 
+        RETURN_HR_IF(E_INVALIDARG, copyRect->Width == 0 || copyRect->Height == 0 || copyRect->X < 0 || copyRect->Y < 0);
+
         UINT sourceDataStride;
         UINT sourceDataSize;
         BYTE* sourceData;
@@ -207,9 +209,10 @@ public:
             RETURN_HR_IF(E_UNEXPECTED, memcpy_s(buffer, bufferSize, sourceData, sourceDataSize) != 0);
         } else {
             // Once we support sub-regional locking we can fix this stride copier.
+            RETURN_HR_IF(E_NOTIMPL, sourceDataStride < fullRect.Width);
             size_t bytesPerPixel = sourceDataStride / fullRect.Width;
             ptrdiff_t xOffBytes = copyRect->X * bytesPerPixel;
-            for (off_t i = 0, j = copyRect->Y; i < copyRect->Height; ++i, ++j) {
+            for (size_t i = 0, j = copyRect->Y; i < copyRect->Height; ++i, ++j) {
                 RETURN_HR_IF(E_UNEXPECTED,
                              memcpy_s(buffer + (stride * i),
                                       bufferSize - (stride * i),
