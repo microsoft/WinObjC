@@ -26,6 +26,9 @@ struct Pixel {
     bool operator==(const Pixel& o) const {
         return r == o.r && g == o.g && g == o.g && a == o.a;
     }
+    bool operator!=(const Pixel& o) const {
+        return !(*this == o);
+    }
 };
 
 struct ImagePixelAccess {
@@ -55,8 +58,8 @@ private:
     }
 
 public:
-    size_t width;
-    size_t height;
+    const size_t width;
+    const size_t height;
 
     ImagePixelAccess(CGImageRef image)
         : _image(CGImageRetain(image)),
@@ -141,8 +144,8 @@ private:
     RGBAImageBuffer(const RGBAImageBuffer& other) = delete;
 
 public:
-    size_t width;
-    size_t height;
+    const size_t width;
+    const size_t height;
 
     RGBAImageBuffer(size_t width, size_t height) : _pixels(width * height, { 0, 0, 0, 0 }), width(width), height(height) {
     }
@@ -191,7 +194,7 @@ ImageDelta PixelByPixelImageComparator::CompareImages(CGImageRef left, CGImageRe
             auto bp = leftAccess.at(x, y);
             auto cp = rightAccess.at(x, y);
             auto& gp = deltaBuffer.at(x, y);
-            if (!(bp == cp)) {
+            if (bp != cp) {
                 ++npxchg;
                 if (cp == background) {
                     // Pixel is in EXPECTED but not ACTUAL
