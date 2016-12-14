@@ -44,6 +44,129 @@ DISABLED_DRAW_TEST_F(CGContext, DrawIntoRect, UIKitMimicTest) {
 }
 #endif
 
+DRAW_TEST_F(CGContext, LinearGradient, UIKitMimicTest) {
+    CGContextRef context = GetDrawingContext();
+    woc::unique_cf<CGColorSpaceRef> rgbColorSpace(CGColorSpaceCreateDeviceRGB());
+
+    CGFloat locations[2] = { 1.0, 0.0 };
+    CGFloat components[8] = { 0.0, 0.5, 0.0, 1.0, 1.0, 1.0, 0.8, 1.0 };
+    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
+    CGGradientRef gradient = CGGradientCreateWithColorComponents(colorspace, components, locations, 2);
+
+    CGPoint startPoint = CGPointMake(0, 0);
+    CGPoint endPoint = CGPointMake(512, 1024);
+
+    CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, kCGGradientDrawsBeforeStartLocation);
+}
+
+DRAW_TEST_F(CGContext, LinearGradientInvalidCount, UIKitMimicTest) {
+    CGContextRef context = GetDrawingContext();
+    woc::unique_cf<CGColorSpaceRef> rgbColorSpace(CGColorSpaceCreateDeviceRGB());
+
+    CGFloat locations[] = { 0.0 };
+
+    CGFloat components[] = {
+        0.85, 0, 0, 1.0,
+    };
+
+    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
+    CGGradientRef gradient = CGGradientCreateWithColorComponents(colorspace, components, locations, 0);
+    CGPoint startPoint = CGPointMake(0, 0);
+    CGPoint endPoint = CGPointMake(512, 1024);
+
+    CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, kCGGradientDrawsBeforeStartLocation);
+}
+
+DRAW_TEST_F(CGContext, LinearGradient2, UIKitMimicTest) {
+    CGContextRef context = GetDrawingContext();
+    woc::unique_cf<CGColorSpaceRef> rgbColorSpace(CGColorSpaceCreateDeviceRGB());
+
+    CGFloat locations[] = { 0.0, 0.33, 0.66, 1.0 };
+
+    CGFloat components[] = {
+        0.85, 0, 0, 1.0, 1, 0, 0, 1.0, 0.85, 0.3, 0, 1.0, 0.1, 0, 0.9, 1.0,
+    };
+
+    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
+    CGGradientRef gradient = CGGradientCreateWithColorComponents(colorspace, components, locations, 4);
+    CGPoint startPoint = CGPointMake(0, 0);
+    CGPoint endPoint = CGPointMake(512, 1024);
+
+    CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, kCGGradientDrawsBeforeStartLocation);
+}
+
+DRAW_TEST_F(CGContext, LinearGradient3, UIKitMimicTest) {
+    CGContextRef context = GetDrawingContext();
+    woc::unique_cf<CGColorSpaceRef> rgbColorSpace(CGColorSpaceCreateDeviceRGB());
+
+    CGFloat locations[] = { 0.0, 0.5, 1 };
+
+    CGFloat components[] = {
+        1, 0, 0, 1.0, 0, 1, 0, 1.0, 0, 0, 1, 1.0,
+    };
+
+    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
+    CGGradientRef gradient = CGGradientCreateWithColorComponents(colorspace, components, locations, 3);
+    CGPoint startPoint = CGPointMake(0, 0);
+    CGPoint endPoint = CGPointMake(512, 1024);
+
+    CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, kCGGradientDrawsBeforeStartLocation);
+}
+
+DRAW_TEST_F(CGContext, LinearGradientWithLowOpacity, UIKitMimicTest) {
+    CGContextRef context = GetDrawingContext();
+    woc::unique_cf<CGColorSpaceRef> rgbColorSpace(CGColorSpaceCreateDeviceRGB());
+
+    CGFloat locations[] = { 0.0, 0.5, 1 };
+
+    CGFloat components[] = {
+        1, 0, 0, 0.1, 0, 1, 0, 0.9, 0, 0, 1, 0.8,
+    };
+
+    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
+    CGGradientRef gradient = CGGradientCreateWithColorComponents(colorspace, components, locations, 3);
+    CGPoint startPoint = CGPointMake(300, 750);
+    CGPoint endPoint = CGPointMake(0, 0);
+
+    CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, kCGGradientDrawsBeforeStartLocation);
+}
+
+DRAW_TEST_F(CGContext, LinearGradientWithAlpha, UIKitMimicTest) {
+    CGContextRef context = GetDrawingContext();
+    woc::unique_cf<CGColorSpaceRef> rgbColorSpace(CGColorSpaceCreateDeviceRGB());
+
+    CGFloat locations[] = { 0.0, 0.25, 0.5, 0.6, 0.8, 0.9, 1 };
+
+    CGFloat components[] = {
+        1, 0, 0, 1, 0.4, 0.1, 0.5, 1, 0.50, 0.2, 0.99, 1, 0.41, 0.56, 0, 1, 0.12, 0.12, .3, 1, 0.9, 0.4, 1, 1, 0.2, 0.3, 0.8, 1,
+    };
+
+    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
+    CGGradientRef gradient = CGGradientCreateWithColorComponents(colorspace, components, locations, 7);
+    CGPoint startPoint = CGPointMake(512, 1024);
+    CGPoint endPoint = CGPointMake(0, 0);
+
+    CGContextSetAlpha(context, 0.75);
+    CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, kCGGradientDrawsBeforeStartLocation);
+}
+
+DRAW_TEST_F(CGContext, LinearGradientWithLowOpacityShort, UIKitMimicTest) {
+    CGContextRef context = GetDrawingContext();
+    woc::unique_cf<CGColorSpaceRef> rgbColorSpace(CGColorSpaceCreateDeviceRGB());
+
+    CGFloat locations[] = { 0.0, 0.5, 1 };
+
+    CGFloat components[] = {
+        1, 0, 0, 0.8, 0, 1, 0, 0.9, 0, 0, 1, 0.1,
+    };
+
+    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
+    CGGradientRef gradient = CGGradientCreateWithColorComponents(colorspace, components, locations, 3);
+    CGPoint startPoint = CGPointMake(250, 300);
+    CGPoint endPoint = CGPointMake(0, 0);
+    CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, kCGGradientDrawsAfterEndLocation);
+}
+
 DISABLED_DRAW_TEST_F(CGContext, DrawAnImage, UIKitMimicTest) {
     // Load an Image and draw it into the canvas context
     auto drawingConfig = DrawingTestConfig::Get();
@@ -97,7 +220,6 @@ DISABLED_DRAW_TEST_F(CGContext, DrawAContextIntoAnImage, UIKitMimicTest) {
     // draw the image
     CGContextDrawImage(context, bounds, image.get());
 }
-
 
 DISABLED_DRAW_TEST_F(CGContext, FillThenStrokeIsSameAsDrawFillStroke, WhiteBackgroundTest) {
     CGContextRef context = GetDrawingContext();
