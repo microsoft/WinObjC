@@ -346,7 +346,7 @@ public:
                               Lambda&& drawLambda);
     HRESULT DrawGeometry(_CGCoordinateMode coordinateMode, ID2D1Geometry* pGeometry, CGPathDrawingMode drawMode);
     HRESULT DrawImage(ID2D1Image* image);
-    HRESULT ClipToD2DMaskBitmap(ID2D1Bitmap* bitmap, bool shouldInterpolate, CGRect rect);
+    HRESULT ClipToD2DMaskBitmap(ID2D1Bitmap* bitmap, CGRect rect, bool shouldInterpolate);
     HRESULT ClipToCGImageMask(CGImageRef image, CGRect rect);
 };
 
@@ -1019,10 +1019,15 @@ void CGContextClipToRects(CGContextRef context, const CGRect* rects, unsigned co
     CGContextClip(context);
 }
 
-HRESULT __CGContext::ClipToD2DMaskBitmap(ID2D1Bitmap* bitmap, bool shouldInterpolate, CGRect rect) {
-    auto& state = CurrentGState();
+HRESULT __CGContext::ClipToD2DMaskBitmap(ID2D1Bitmap* bitmap, CGRect rect, bool shouldInterpolate) {
+    RETURN_HR_IF_NULL(E_INVALIDARG, bitmap);
 
     D2D1_SIZE_U bitmapSize = bitmap->GetPixelSize();
+
+    RETURN_HR_IF(E_INVALIDARG, bitmapSize.width == 0 || bitmapSize.height == 0);
+
+    auto& state = CurrentGState();
+
     CGFloat sx = rect.size.width / bitmapSize.width;
     CGFloat sy = rect.size.height / bitmapSize.height;
     CGFloat m = rect.origin.y + (rect.size.height / 2.f);
@@ -1128,7 +1133,7 @@ HRESULT __CGContext::ClipToCGImageMask(CGImageRef image, CGRect rect) {
     ComPtr<ID2D1Bitmap> maskD2DBitmap;
     RETURN_IF_FAILED(deviceContext->CreateBitmapFromWicBitmap(maskWicBitmap.Get(), nullptr, &maskD2DBitmap));
 
-    return ClipToD2DMaskBitmap(maskD2DBitmap.Get(), CGImageGetShouldInterpolate(image), rect);
+    return ClipToD2DMaskBitmap(maskD2DBitmap.Get(), rect, CGImageGetShouldInterpolate(image));
 }
 
 /**

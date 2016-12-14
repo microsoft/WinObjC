@@ -845,7 +845,6 @@ HRESULT _CGImageConvertToMaskCompatibleWICBitmap(CGImageRef image, IWICBitmap** 
     RETURN_HR_IF_NULL(E_INVALIDARG, image);
     RETURN_HR_IF_NULL(E_POINTER, pBitmap);
 
-    ComPtr<IWICBitmap> wicBitmap;
     if (CGImageIsMask(image)) {
         // Hard way: Convert the image's gray values to alpha values A where G = <pixel gray value>; A = (1 - G)
         // We can perhaps take the easy way out and create an A8 only image, since D2D supports them.
