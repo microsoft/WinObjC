@@ -366,3 +366,74 @@ DRAW_TEST(CGContextClipping, ClipATransparencyLayer) {
     // If the clip mask applies twice (wrong) it will be 25%.
     CGContextEndTransparencyLayer(context);
 }
+
+DRAW_TEST(CGImage, CreateWithSameSizeMask) {
+    auto drawingConfig = DrawingTestConfig::Get();
+
+    woc::unique_cf<CFStringRef> testFilename{ _CFStringCreateWithStdString(drawingConfig->GetResourcePath("jpg1.jpg")) };
+    woc::unique_cf<CGImageRef> image{ _CGImageCreateFromJPEGFile(testFilename.get()) };
+    ASSERT_NE(nullptr, image);
+
+    CGSize imageSize{ static_cast<CGFloat>(CGImageGetWidth(image.get())), static_cast<CGFloat>(CGImageGetHeight(image.get())) };
+
+    woc::unique_cf<CGImageRef> alphaMask{
+        __CreateClipImage(imageSize,
+            ClippingTypeMask,
+            [](CGContextRef context, CGSize size, ClippingType clipType) {
+                CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 1.0);
+                CGContextFillRect(context, { CGPointZero, size });
+
+                CGContextSetRGBStrokeColor(context, 0.0, 0.0, 0.0, 1.0);
+                CGContextSetLineWidth(context, 10.0);
+                CGContextStrokeRect(context, CGRectInset({ CGPointZero, size }, 20, 20));
+            })
+    };
+
+    ASSERT_NE(nullptr, alphaMask);
+
+    woc::unique_cf<CGImageRef> preMaskedImage{ CGImageCreateWithMask(image.get(), alphaMask.get()) };
+
+    ASSERT_NE(nullptr, preMaskedImage);
+
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGContextDrawImage(context, bounds, preMaskedImage.get());
+}
+
+DRAW_TEST(CGImage, CreateWithScaledMask) {
+    auto drawingConfig = DrawingTestConfig::Get();
+
+    woc::unique_cf<CFStringRef> testFilename{ _CFStringCreateWithStdString(drawingConfig->GetResourcePath("jpg1.jpg")) };
+    woc::unique_cf<CGImageRef> image{ _CGImageCreateFromJPEGFile(testFilename.get()) };
+    ASSERT_NE(nullptr, image);
+
+    CGSize imageSize{ static_cast<CGFloat>(CGImageGetWidth(image.get())), static_cast<CGFloat>(CGImageGetHeight(image.get())) };
+
+    woc::unique_cf<CGImageRef> alphaMask{
+        __CreateClipImage({ 64, 64 },
+            ClippingTypeMask,
+            [](CGContextRef context, CGSize size, ClippingType clipType) {
+                CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 1.0);
+                CGContextFillRect(context, { CGPointZero, size });
+
+                CGContextSetRGBStrokeColor(context, 0.0, 0.0, 0.0, 1.0);
+                CGContextSetLineWidth(context, 4.0);
+                CGPoint points[]{
+                    { 0, 0 }, { 64, 64 }, { 0, 64 }, { 64, 0 },
+                };
+                CGContextStrokeLineSegments(context, points, 4);
+            })
+    };
+
+    ASSERT_NE(nullptr, alphaMask);
+
+    woc::unique_cf<CGImageRef> preMaskedImage{ CGImageCreateWithMask(image.get(), alphaMask.get()) };
+
+    ASSERT_NE(nullptr, preMaskedImage);
+
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGContextDrawImage(context, bounds, preMaskedImage.get());
+}
