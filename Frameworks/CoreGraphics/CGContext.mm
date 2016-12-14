@@ -478,6 +478,7 @@ HRESULT __CGContext::PushLayer(CGRect* rect) {
     newDrawingState.shadowColor = { 0.f, 0.f, 0.f, 0.f };
     // newDrawingState.blendMode = kCGBlendModeNormal; // TODO GH#1389
     newDrawingState.clippingGeometry = nullptr;
+    newDrawingState.opacityBrush = nullptr;
     if (rect) {
         CGRect transformedClippingRegion = CGContextConvertRectToDeviceSpace(this, *rect);
 

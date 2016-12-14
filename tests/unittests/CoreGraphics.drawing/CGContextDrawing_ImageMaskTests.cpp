@@ -312,3 +312,64 @@ DRAW_TEST(CGContextClipping, CrossTransformedImageMasks) {
     CGContextSetRGBFillColor(context, 0.0, 0.0, 1.0, 1.0);
     CGContextFillRect(context, bounds);
 }
+
+DRAW_TEST(CGContextClipping, PushClipPopClip) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    woc::unique_cf<CGImageRef> clipImage1{
+        __CreateClipImage({64, 64}, ClippingTypeAlpha, [](CGContextRef context, CGSize size, ClippingType clipType) {
+            CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 0.5);
+            CGContextFillRect(context, { CGPointZero, size });
+        })
+    };
+
+    woc::unique_cf<CGImageRef> clipImage2{
+        __CreateClipImage({64, 64}, ClippingTypeAlpha, [](CGContextRef context, CGSize size, ClippingType clipType) {
+            CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 0.5);
+            CGContextFillEllipseInRect(context, { CGPointZero, size });
+        })
+    };
+
+    CGRect clippingRect{ CGPointZero, { 64, 64 } };
+    CGContextClipToMask(context, clippingRect, clipImage1.get());
+
+    CGContextSaveGState(context);
+
+    CGContextClipToMask(context, clippingRect, clipImage2.get());
+
+    // This should draw a 25% alpha circle.
+    CGContextSetRGBFillColor(context, 0.0, 0.0, 1.0, 1.0);
+    CGContextFillRect(context, bounds);
+
+    CGContextRestoreGState(context);
+
+    // This should draw a 50% alpha square over the circle.
+    CGContextSetRGBFillColor(context, 1.0, 0.0, 1.0, 1.0);
+    CGContextFillRect(context, bounds);
+}
+
+DRAW_TEST(CGContextClipping, ClipATransparencyLayer) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    woc::unique_cf<CGImageRef> clipImage{
+        __CreateClipImage({64, 64}, ClippingTypeAlpha, [](CGContextRef context, CGSize size, ClippingType clipType) {
+            CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 0.5);
+            CGContextFillRect(context, { CGPointZero, size });
+        })
+    };
+
+    CGRect clippingRect{ CGPointZero, { 64, 64 } };
+    CGContextClipToMask(context, clippingRect, clipImage.get());
+
+    CGContextBeginTransparencyLayer(context, nullptr);
+
+    // This will draw a 100% alpha blue box.
+    CGContextSetRGBFillColor(context, 0.0, 0.0, 1.0, 1.0);
+    CGContextFillRect(context, bounds);
+
+    // This should compose down a single 100% alpha blue box at 50% alpha (because of the clip mask).
+    // If the clip mask applies twice (wrong) it will be 25%.
+    CGContextEndTransparencyLayer(context);
+}
