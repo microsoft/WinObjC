@@ -22,13 +22,13 @@
 #import <CoreGraphics/CGPath.h>
 #import <CoreGraphics/CGLayer.h>
 #import <CoreGraphics/CGAffineTransform.h>
-#import <CoreGraphics/CGGradient.h>
 #import <LoggingNative.h>
 #import <CoreGraphics/D2DWrapper.h>
 #import "CGColorSpaceInternal.h"
 #import "CGContextInternal.h"
 #import "CGPathInternal.h"
 #import "CGIWICBitmap.h"
+#import "CGGradientInternal.h"
 
 #import <CFCppBase.h>
 
@@ -2032,15 +2032,76 @@ void CGContextDrawTiledImage(CGContextRef context, CGRect rect, CGImageRef image
 #pragma endregion
 
 #pragma region Drawing Operations - Gradient + Shading
+/*
+* Convert CGGradient to D2D1_GRADIENT_STOP
+*/
+static inline std::vector<D2D1_GRADIENT_STOP> __CGGradientToD2D1GradientStop(CGGradientRef gradient, CGGradientDrawingOptions options) {
+    unsigned long gradientCount = _CGGradientGetCount(gradient);
+
+    std::vector<D2D1_GRADIENT_STOP> gradientStops((options == kCGGradientDrawsAfterEndLocation) ? gradientCount + 1 : gradientCount);
+
+    float* colorComponenets = _CGGradientGetColorComponents(gradient);
+    float* locations = _CGGradientGetStopLocation(gradient);
+    for (unsigned long i = 0; i < gradientCount; ++i) {
+        unsigned int colorIndex = (i * 4);
+        gradientStops[i].color = D2D1::ColorF(colorComponenets[colorIndex],
+                                              colorComponenets[colorIndex + 1],
+                                              colorComponenets[colorIndex + 2],
+                                              colorComponenets[colorIndex + 3]);
+        gradientStops[i].position = locations[i];
+    }
+
+    if (options == kCGGradientDrawsAfterEndLocation) {
+        // Set the edge to be just a bit lower on the location
+        gradientStops[0].position = 1E-45;
+
+        // set the edge location to be transparent
+        gradientStops[gradientCount].color = D2D1::ColorF(0, 0, 0, 0);
+        gradientStops[gradientCount].position = 0;
+    }
+
+    return gradientStops;
+}
+
 /**
- @Status Stub
+ @Status Interoperable
 */
 void CGContextDrawLinearGradient(
     CGContextRef context, CGGradientRef gradient, CGPoint startPoint, CGPoint endPoint, CGGradientDrawingOptions options) {
     NOISY_RETURN_IF_NULL(context);
+    NOISY_RETURN_IF_NULL(gradient);
     RETURN_IF(!context->ShouldDraw());
 
-    UNIMPLEMENTED();
+    RETURN_IF(_CGGradientGetCount(gradient) == 0);
+
+    std::vector<D2D1_GRADIENT_STOP> gradientStops = __CGGradientToD2D1GradientStop(gradient, options);
+
+    ComPtr<ID2D1GradientStopCollection> gradientStopCollection;
+
+    ComPtr<ID2D1DeviceContext> deviceContext = context->DeviceContext();
+    FAIL_FAST_IF_FAILED(deviceContext->CreateGradientStopCollection(gradientStops.data(),
+                                                                    gradientStops.size(),
+                                                                    D2D1_GAMMA_2_2,
+                                                                    D2D1_EXTEND_MODE_CLAMP,
+                                                                    &gradientStopCollection));
+
+    ComPtr<ID2D1LinearGradientBrush> linearGradientBrush;
+    FAIL_FAST_IF_FAILED(deviceContext->CreateLinearGradientBrush(D2D1::LinearGradientBrushProperties(_CGPointToD2D_F(startPoint),
+                                                                                                     _CGPointToD2D_F(endPoint)),
+                                                                 gradientStopCollection.Get(),
+                                                                 &linearGradientBrush));
+
+    // set the transform for the brush and alpha
+    linearGradientBrush->SetTransform(__CGAffineTransformToD2D_F(CGContextGetUserSpaceToDeviceSpaceTransform(context)));
+    linearGradientBrush->SetOpacity(context->CurrentGState().alpha);
+
+    // Area to fill
+    D2D1_SIZE_F targetSize = deviceContext->GetSize();
+    D2D1_RECT_F region = D2D1::RectF(0, 0, targetSize.width, targetSize.height);
+
+    deviceContext->BeginDraw();
+    deviceContext->FillRectangle(&region, linearGradientBrush.Get());
+    FAIL_FAST_IF_FAILED(deviceContext->EndDraw());
 }
 
 /**
