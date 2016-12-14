@@ -241,6 +241,8 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.Drawing\EntryPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.drawing\CGTextDrawing.cpp" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.drawing\CTDrawingTests.cpp" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.Drawing\CGContextBlendModeTests.cpp" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.Drawing\CGContextTransparencyLayerTests.cpp" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.Drawing\CGContextDrawingTests.cpp" />

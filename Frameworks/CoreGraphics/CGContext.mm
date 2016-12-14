@@ -1558,6 +1558,7 @@ void CGContextShowTextAtPoint(CGContextRef context, CGFloat x, CGFloat y, const 
 */
 void CGContextShowGlyphsAtPoint(CGContextRef context, CGFloat x, CGFloat y, const CGGlyph* glyphs, unsigned count) {
     NOISY_RETURN_IF_NULL(context);
+    // TODO(DH) GH#1070 Merge in CGContextCairo.mm's Glyph Run code.
     UNIMPLEMENTED();
 }
 
@@ -1566,6 +1567,7 @@ void CGContextShowGlyphsAtPoint(CGContextRef context, CGFloat x, CGFloat y, cons
 */
 void CGContextShowGlyphs(CGContextRef context, const CGGlyph* glyphs, unsigned count) {
     NOISY_RETURN_IF_NULL(context);
+    // TODO(DH) GH#1070 Merge in CGContextCairo.mm's Glyph Run code.
     UNIMPLEMENTED();
 }
 
@@ -1575,6 +1577,7 @@ void CGContextShowGlyphs(CGContextRef context, const CGGlyph* glyphs, unsigned c
 */
 void CGContextShowGlyphsAtPositions(CGContextRef context, const CGGlyph* glyphs, const CGPoint* Lpositions, size_t count) {
     NOISY_RETURN_IF_NULL(context);
+    // TODO(DH) GH#1070 Merge in CGContextCairo.mm's Glyph Run code.
     UNIMPLEMENTED();
 }
 
@@ -1583,6 +1586,7 @@ void CGContextShowGlyphsAtPositions(CGContextRef context, const CGGlyph* glyphs,
 */
 void CGContextShowGlyphsWithAdvances(CGContextRef context, const CGGlyph* glyphs, const CGSize* advances, size_t count) {
     NOISY_RETURN_IF_NULL(context);
+    // TODO(DH) GH#1070 Merge in CGContextCairo.mm's Glyph Run code.
     UNIMPLEMENTED();
 }
 #pragma endregion

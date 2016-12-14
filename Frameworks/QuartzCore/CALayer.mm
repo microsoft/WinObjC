@@ -825,13 +825,11 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
         return;
     }
 
-    CALayer* oursuper = priv->superlayer;
-
     //  If our layer is visible, order all subviews out
     bool isVisible = false;
 
     CALayer* curLayer = self;
-    CALayer* pSuper = (CALayer*)priv->superlayer;
+    CALayer* superLayer = (CALayer*)priv->superlayer;
     CALayer* nextSuper = curLayer->priv->superlayer;
     priv->superlayer = 0;
 
@@ -855,7 +853,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 
     [CATransaction _removeLayer:self];
 
-    pSuper->priv->removeChild(self);
+    superLayer->priv->removeChild(self);
+
+    [superLayer setNeedsLayout];
     [self release];
 }
 

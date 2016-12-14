@@ -81,3 +81,6 @@ protected:
 
 #define DISABLED_DRAW_TEST(test_case_name, test_name) DRAW_TEST(test_case_name, DISABLED_##test_name)
 #define DISABLED_DRAW_TEST_F(test_case_name, test_name, test_fixture) DRAW_TEST_F(test_case_name, DISABLED_##test_name, test_fixture)
+
+#define DRAW_TEST_P(test_case_name, test_name) TEST_P(test_case_name, test_name)
+#define DISABLED_DRAW_TEST_P(test_case_name, test_name) DRAW_TEST_P(test_case_name, DISABLED_##test_name)

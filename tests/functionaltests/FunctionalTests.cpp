@@ -353,7 +353,6 @@ public:
 //
 // Cortana Activation Tests
 //
-
 extern void CortanaTestVoiceCommandForegroundActivation();
 extern void CortanaTestVoiceCommandForegroundActivationDelegateMethodsCalled();
 
@@ -500,6 +499,7 @@ extern void UIActivityIndicatorViewGetXamlElement();
 
 extern void UIButtonCreateXamlElement();
 extern void UIButtonGetXamlElement();
+extern void UIButtonBackgroundColorChanged();
 
 extern void UIScrollViewCreateXamlElement();
 extern void UIScrollViewGetXamlElement();
@@ -627,6 +627,10 @@ public:
 
     TEST_METHOD(UIButton_GetXamlElement) {
         FrameworkHelper::RunOnUIThread(&UIButtonGetXamlElement);
+    }
+
+    TEST_METHOD(UIButton_BackgroundColorChanged) {
+        UIButtonBackgroundColorChanged();
     }
 
     TEST_METHOD(UIScrollView_CreateXamlElement) {
@@ -763,3 +767,34 @@ public:
         NSURLStorageFileURL();
     }
 }; /* class NSURLStorageFileTests */
+
+//
+// CoreAnimationTests
+//
+extern void CALayerAppearanceOpacityChanged();
+extern void CALayerAppearanceBackgroundColorChanged();
+
+class CoreAnimationTests {
+public:
+    BEGIN_TEST_CLASS(CoreAnimationTests)
+    END_TEST_CLASS()
+
+    TEST_CLASS_SETUP(CoreAnimationTestsSetup) {
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+    }
+
+    TEST_METHOD_CLEANUP(CoreAnimationTestsCleanup) {
+        FunctionalTestCleanupUIApplication();
+        return true;
+    }
+
+    TEST_METHOD(CALayerAppearance_OpacityChanged) {
+        // NOTE: We are not using the FrameworkHelper::RunOnUIThread because we need to set a waitable condition outside of it
+        CALayerAppearanceOpacityChanged();
+    }
+
+    TEST_METHOD(CALayerAppearance_BackgroundColorChanged) {
+        // NOTE: We are not using the FrameworkHelper::RunOnUIThread because we need to set a waitable condition outside of it
+        CALayerAppearanceBackgroundColorChanged();
+    }
+}; /* class CoreAnimationTests */

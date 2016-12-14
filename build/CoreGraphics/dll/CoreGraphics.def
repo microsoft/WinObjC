@@ -37,20 +37,23 @@ LIBRARY CoreGraphics
         CGBitmapContextGetImage
 
         ; DWriteWrapper Additions
+        _GetUserDefaultLocaleName
         _CFStringFromLocalizedString
         _DWriteCopyFontFamilyNames
         _DWriteCopyFontNamesForFamilyName
         _DWriteGetFamilyNameForFontName
         _DWriteGetFontPropertiesFromName
-        _DWriteCreateTextFormat
         _DWriteCreateFontFamilyWithName
         _DWriteCreateFontFaceWithName
-        _DWriteCreateFontFaceWithDataProvider
+        _DWriteCreateTextFormatWithFontNameAndSize
+        _DWriteCreateFontFaceWithData
         _DWriteFontCopyInformationalString
         _DWriteFontCopyTable
         _DWriteFontGetSlantDegrees
         _DWriteFontGetBoundingBox
         _DWriteFontGetBoundingBoxesForGlyphs
+        _DWriteRegisterFontsWithDatas
+        _DWriteUnregisterFontsWithDatas
 
         ; CGColor.mm
         kCGColorBlack DATA
@@ -295,6 +298,7 @@ LIBRARY CoreGraphics
         CGFontGetNumberOfGlyphs
         CGFontGetGlyphAdvances
         CGFontGetUnitsPerEm
+        _CGFontGetData
 
         ; CGFunction.mm
         CGFunctionCreate

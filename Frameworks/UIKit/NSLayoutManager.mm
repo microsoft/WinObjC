@@ -31,7 +31,7 @@
     std::vector<CGPoint> _lineOrigins;
     CGSize _totalSize;
     BOOL _needsLayout;
-    CTFrameRef _frame;
+    woc::unique_cf<CTFrameRef> _frame;
 }
 
 // Returns true if any of the characters in line after index have visible glyphs, false otherwise
@@ -58,6 +58,8 @@ static bool __lineHasGlyphsAfterIndex(CTLineRef line, CFIndex index) {
     _totalSize.width = 0;
     _totalSize.height = 0;
 
+    woc::unique_cf<CTFramesetterRef> framesetter{ CTFramesetterCreateWithAttributedString(
+        static_cast<CFAttributedStringRef>(_textStorage.get())) };
     NSTextContainer* container = (NSTextContainer*)_textContainers[0];
     CGSize containerSize = container.size;
     CGPoint origin = { 0, 0 };
@@ -66,14 +68,11 @@ static bool __lineHasGlyphsAfterIndex(CTLineRef line, CFIndex index) {
     // into CTLineRefs for hard line breaks (e.g. '\n') which allows the assumption that once we run out of glyphs in a line to draw we must
     // perform a line break
     if (!_frame) {
-        CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(static_cast<CFAttributedStringRef>(_textStorage.get()));
-        CGPathRef path = CGPathCreateWithRect(CGRectMake(0, 0, FLT_MAX, FLT_MAX), nullptr);
-        _frame = CTFramesetterCreateFrame(framesetter, {}, path, nullptr);
-        CFRelease(framesetter);
-        CGPathRelease(path);
+        woc::unique_cf<CGPathRef> path{ CGPathCreateWithRect(CGRectMake(0, 0, FLT_MAX, FLT_MAX), nullptr) };
+        _frame.reset(CTFramesetterCreateFrame(framesetter.get(), {}, path.get(), nullptr));
     }
 
-    for (id lineRef in static_cast<NSArray*>(CTFrameGetLines(_frame))) {
+    for (id lineRef in static_cast<NSArray*>(CTFrameGetLines(_frame.get()))) {
         CTLineRef line = static_cast<CTLineRef>(lineRef);
 
         // Width of line already drawn, saves us from having to redraw line twice
@@ -128,15 +127,13 @@ static bool __lineHasGlyphsAfterIndex(CTLineRef line, CFIndex index) {
                 continue;
             }
 
-            CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(static_cast<CFAttributedStringRef>(_textStorage.get()));
-            CGPathRef path = CGPathCreateWithRect(CGRectMake(0, 0, rect.size.width, lineHeight), nullptr);
-            CTFrameRef frame = CTFramesetterCreateFrame(framesetter, { stringIndex, lastIndex - stringIndex }, path, nullptr);
-            CFRelease(framesetter);
-            CGPathRelease(path);
+            woc::unique_cf<CGPathRef> path{ CGPathCreateWithRect(CGRectMake(0, 0, rect.size.width, lineHeight), nullptr) };
+            woc::unique_cf<CTFrameRef> frame{
+                CTFramesetterCreateFrame(framesetter.get(), { stringIndex, lastIndex - stringIndex }, path.get(), nullptr)
+            };
 
             // Create line to fit as much text as possible in given rect
-            CTLineRef fitLine = static_cast<CTLineRef>([[[static_cast<NSArray*>(CTFrameGetLines(frame)) firstObject] retain] autorelease]);
-            CFRelease(frame);
+            CTLineRef fitLine = static_cast<CTLineRef>(CFArrayGetValueAtIndex(CTFrameGetLines(frame.get()), 0));
 
             CFIndex fitLength = CTLineGetStringRange(fitLine).length;
             if (fitLength == 0L) {
@@ -246,7 +243,7 @@ static bool __lineHasGlyphsAfterIndex(CTLineRef line, CFIndex index) {
     for (int curLine = 0; curLine < count; curLine++) {
         CTLineRef line = (CTLineRef)_ctLines[curLine];
         CGContextSaveGState(curCtx);
-        CGContextSetTextPosition(curCtx, _lineOrigins[curLine].x, -_lineOrigins[curLine].y);
+        CGContextSetTextPosition(curCtx, _lineOrigins[curLine].x, _lineOrigins[curLine].y);
         CTLineDraw(line, curCtx);
         CGContextRestoreGState(curCtx);
     }
@@ -623,8 +620,7 @@ static NSRange NSRangeFromCFRange(CFRange range) {
                                range:(NSRange)editRange
                       changeInLength:(NSInteger)deltaLen
                     invalidatedRange:(NSRange)invalidRange {
-    CFRelease(_frame);
-    _frame = nil;
+    _frame.reset(nil);
     [self invalidateDisplayForCharacterRange:invalidRange];
 }
 
@@ -634,7 +630,6 @@ static NSRange NSRangeFromCFRange(CFRange range) {
 - (void)dealloc {
     [_textContainers release];
     [_ctLines release];
-    CFRelease(_frame);
     [super dealloc];
 }
 

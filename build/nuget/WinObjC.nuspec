@@ -9,6 +9,7 @@
     <description>Islandwood WinObjC Package</description>
     <releaseNotes>None</releaseNotes>
     <copyright>Copyright 2016</copyright>
+    <projectUrl>https://github.com/Microsoft/WinObjC</projectUrl>
     <tags></tags>
     <dependencies></dependencies>
     <contentFiles>
@@ -33,6 +34,7 @@
     <file src="$root$\build\win32\$configuration$\universal windows\cfunicodedata-b.mapping"                                     target="runtimes\win10-x86\native" />
     <file src="$root$\build\win32\$configuration$\universal windows\cfunicodedata-l.mapping"                                     target="runtimes\win10-x86\native" />
 
+    <file src="$root$\build\win32\$configuration$\universal windows\UIKit.Xaml.pri"                                              target="lib\uap10.0" />
     <file src="$root$\build\Win32\$configuration$\Universal Windows\*.winmd"                                                     target="lib\uap10.0" />
     <file src="$root$\build\win32\$configuration$\universal windows\UIKit.Xaml\**\*.xaml"                                        target="contentFiles\any\uap\UIKit.Xaml" />
 

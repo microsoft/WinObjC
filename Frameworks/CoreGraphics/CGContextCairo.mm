@@ -30,6 +30,7 @@
 #import "CGGradientInternal.h"
 #import "CGImageInternal.h"
 #import "CGPathInternal.h"
+#import "CoreGraphics/CGFontInternal.h"
 #import "CGPatternInternal.h"
 #import "UIColorInternal.h"
 #import "CGSurfaceInfoInternal.h"
@@ -50,6 +51,9 @@ extern "C" {
 
 #include "LoggingNative.h"
 #import <StubReturn.h>
+
+#import <vector>
+#import <algorithm>
 
 using namespace Microsoft::WRL;
 
@@ -448,16 +452,31 @@ CGBlendMode CGContextCairo::CGContextGetBlendMode() {
     return curState->curBlendMode;
 }
 
-void CGContextCairo::CGContextShowTextAtPoint(float x, float y, const char* str, DWORD length) {
-    // TODO #924: Implement this with DWrite
-    UNIMPLEMENTED();
+void CGContextCairo::CGContextShowTextAtPoint(float x, float y, const char* str, size_t length) {
+    CGFontRef font = curState->getCurFont();
+    std::vector<CGGlyph> glyphs(length);
+    if (_CGFontGetGlyphsForCharacters(font, str, length, glyphs.data())) {
+        CGContextShowGlyphsAtPoint(x, y, glyphs.data(), length);
+    }
 }
 
-void CGContextCairo::CGContextShowGlyphsAtPoint(float x, float y, WORD* glyphs, int count) {
-    CGSize size;
+void CGContextCairo::CGContextShowGlyphsAtPoint(float x, float y, const CGGlyph* glyphs, size_t count) {
+    CGSize size = CGSizeZero;
 
     _isDirty = true;
 
+    std::vector<int> designUnitAdvances(count);
+    CGFontRef font = curState->getCurFont();
+    CGFontGetGlyphAdvances(font, glyphs, count, designUnitAdvances.data());
+    std::vector<CGSize> advances(count);
+    std::transform(designUnitAdvances.cbegin(),
+                   designUnitAdvances.cend(),
+                   advances.begin(),
+                   [ scale = curState->fontSize / CGFontGetUnitsPerEm(font), &size ](int unscaledAdvance) {
+                       CGFloat advanceWidth = scale * unscaledAdvance;
+                       size.width += advanceWidth;
+                       return CGSize{ advanceWidth, 0 };
+                   });
     switch (curState->textDrawingMode) {
         case kCGTextFill:
         case kCGTextStroke:
@@ -465,37 +484,46 @@ void CGContextCairo::CGContextShowGlyphsAtPoint(float x, float y, WORD* glyphs, 
         case kCGTextFillClip:
         case kCGTextStrokeClip:
         case kCGTextFillStrokeClip:
-            size = CGFontDrawGlyphsToContext(glyphs, count, x, y);
+            curState->curTextPosition = { x, y };
+            CGContextShowGlyphsWithAdvances(glyphs, advances.data(), count);
             break;
 
         case kCGTextClip:
         case kCGTextInvisible:
-            // TODO #924: Update the text position in this case
-            UNIMPLEMENTED();
+            // Do nothing, set text position at end
             break;
     }
 
-    curState->curTextPosition.x = x + size.width;
-    curState->curTextPosition.y = y;
+    curState->curTextPosition = { x + size.width, y };
 }
 
-void CGContextCairo::CGContextShowGlyphsWithAdvances(WORD* glyphs, CGSize* advances, int count) {
-    CGPoint curPos = { curState->curTextPosition.x, curState->curTextPosition.y };
+void CGContextCairo::CGContextShowGlyphsWithAdvances(const CGGlyph* glyphs, const CGSize* advances, size_t count) {
     _isDirty = true;
+    CGFontRef font = curState->getCurFont();
+    ComPtr<IDWriteFontFace> fontFace;
+    FAIL_FAST_IF_FAILED(_CGFontGetDWriteFontFace(font, &fontFace));
+    std::vector<DWRITE_GLYPH_OFFSET> positions(count);
+    CGPoint delta = CGPointZero;
+    std::transform(advances, advances + count, positions.begin(), [&delta](const CGSize& size) {
+        DWRITE_GLYPH_OFFSET ret = { delta.x, delta.y };
+        delta.x += size.width;
+        delta.y += size.height;
+        return ret;
+    });
 
-    for (int i = 0; i < count; i++) {
-        CGFontDrawGlyphsToContext(&glyphs[i], 1, curPos.x, curPos.y);
-        curPos.x += advances[i].width;
-        curPos.y += advances[i].height;
-    }
-    curState->curTextPosition = curPos;
+    // Give array of advances of zero so it will use positions correctly
+    std::vector<FLOAT> dwriteAdvances(count, 0);
+
+    DWRITE_GLYPH_RUN run = { fontFace.Get(), curState->fontSize, count, glyphs, dwriteAdvances.data(), positions.data(), FALSE, 0 };
+    CGContextDrawGlyphRun(&run);
+    curState->curTextPosition = { curState->curTextPosition.x + delta.x, curState->curTextPosition.y + delta.y };
 }
 
-void CGContextCairo::CGContextShowGlyphs(WORD* glyphs, int count) {
+void CGContextCairo::CGContextShowGlyphs(const CGGlyph* glyphs, size_t count) {
     CGContextShowGlyphsAtPoint(curState->curTextPosition.x, curState->curTextPosition.y, glyphs, count);
 }
 
-void CGContextCairo::CGContextSetFont(id font) {
+void CGContextCairo::CGContextSetFont(CGFontRef font) {
     curState->setCurFont(font);
 }
 
@@ -1772,12 +1800,6 @@ void CGContextCairo::CGContextSetRGBStrokeColor(float r, float g, float b, float
     curState->curStrokeColor.a = a;
 }
 
-CGSize CGContextCairo::CGFontDrawGlyphsToContext(WORD* glyphs, DWORD length, float x, float y) {
-    // TODO #924: Implement this with DWrite
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
 bool CGContextCairo::CGContextIsPointInPath(bool eoFill, float x, float y) {
     ObtainLock();
     LOCK_CAIRO();
@@ -1848,14 +1870,10 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
     //     1. Scaling - to handle scaling once text has been scaled, apply translation to the scaled height
     //     2. Rotation - CoreText rotates text anti-clockwise but DWrite performs clockwise rotation
 
-    // Apply the text transformation (text position, text matrix) in text space rather than user space
     // This means flipping the coordinate system,
     // Apply text position, where it will be translated to correct position given text matrix value
-    CGAffineTransform textTransform =
-        CGAffineTransformTranslate(curState->curTextMatrix, curState->curTextPosition.x, curState->curTextPosition.y);
-
     // Undo assumed inversion about Y axis
-    textTransform = CGAffineTransformConcat(CGAffineTransformMake(1, 0, 0, -1, 0, 0), textTransform);
+    CGAffineTransform textTransform = CGAffineTransformConcat(curState->curTextMatrix, CGAffineTransformMake(1, 0, 0, -1, 0, 0));
 
     // Find transform that user created by multiplying given transform by necessary transforms to draw with CoreText
     // First multiply by inverse scale to get properly scaled values
@@ -1865,6 +1883,9 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
     float height = _imgDest->Backing()->Height();
     CGAffineTransform userTransform =
         CGAffineTransformConcat(curState->curTransform, CGAffineTransformMake(1.0f / _scale, 0, 0, -1.0f / _scale, 0, height / _scale));
+
+    // Apply the text position in user space, not in text space
+    userTransform = CGAffineTransformTranslate(userTransform, curState->curTextPosition.x, curState->curTextPosition.y);
 
     // Apply the two transforms giving us the final result
     CGAffineTransform transform = CGAffineTransformConcat(textTransform, userTransform);

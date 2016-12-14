@@ -26,17 +26,25 @@ inline bool operator==(const CFRange& lhs, const CFRange& rhs) {
     return lhs.location == rhs.location && lhs.length == rhs.length;
 }
 
+template <typename T>
+std::basic_ostream<T>& operator<<(std::basic_ostream<T>& os, const CFRange& range) {
+    os << "{ location: " << range.location << ", length: " << range.length << " }";
+    return os;
+}
+
 #pragma endregion
 
 #pragma region CGPoint
-template <typename T>
-std::basic_ostream<T>& operator<<(std::basic_ostream<T>& os, const CGPoint& pt) {
-    return os << "{" << pt.x << ", " << pt.y << "}";
-}
-
 inline bool operator==(const CGPoint& lhs, const CGPoint& rhs) {
     return ((std::abs(lhs.x - rhs.x) < 0.00001) && (std::abs(lhs.y - rhs.y) < 0.00001));
 }
+
+template <typename T>
+std::basic_ostream<T>& operator<<(std::basic_ostream<T>& os, const CGPoint& point) {
+    os << "{ x: " << point.x << ", y: " << point.y << " }";
+    return os;
+}
+
 #pragma endregion
 
 #pragma region CGSize
@@ -44,11 +52,23 @@ inline bool operator==(const CGSize& lhs, const CGSize& rhs) {
     return lhs.width == rhs.width && lhs.height == rhs.height;
 }
 
+template <typename T>
+std::basic_ostream<T>& operator<<(std::basic_ostream<T>& os, const CGSize& size) {
+    os << "{ width: " << size.width << ", height: " << size.height << " }";
+    return os;
+}
+
 #pragma endregion
 
 #pragma region CGRect
 inline bool operator==(const CGRect& lhs, const CGRect& rhs) {
     return lhs.origin == rhs.origin && lhs.size == rhs.size;
+}
+
+template <typename T>
+std::basic_ostream<T>& operator<<(std::basic_ostream<T>& os, const CGRect& rect) {
+    os << "{ origin: " << rect.origin << ", size: " << rect.size << " }";
+    return os;
 }
 
 #pragma endregion

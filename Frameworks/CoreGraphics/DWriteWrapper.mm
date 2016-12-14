@@ -14,143 +14,100 @@
 //
 //******************************************************************************
 
-// #1207: Do not move this block, it has to come first for some reason
 #include <COMIncludes.h>
 #import <wrl/implements.h>
 #include <COMIncludes_End.h>
 
 #import <CoreGraphics/DWriteWrapper.h>
+#import <StringHelpers.h>
 
-#import <unordered_map>
+#import <functional>
 #import <vector>
+#import <type_traits>
 
-using namespace std;
+#import "DWriteFontBinaryDataLoader.h"
+#import "DWriteFontCollectionHelper.h"
+#import "DWriteFontBinaryDataCollectionLoader.h"
+
 using namespace Microsoft::WRL;
 
 static const wchar_t* TAG = L"_DWriteWrapper";
 static const wchar_t* c_defaultUserLanguage = L"en-us";
 
 /**
- * Private helper method to return the user set default locale string.
- *
- * @return use set locale string as wstring.
+ * Private concrete implementation of DWriteFontCollectionHelper.
+ * Wraps around the system font collection.
+ * Intended as a singleton.
  */
-static wstring __GetUserDefaultLocaleName() {
-    wchar_t localeName[LOCALE_NAME_MAX_LENGTH];
-    int defaultLocaleSuccess = GetUserDefaultLocaleName(localeName, LOCALE_NAME_MAX_LENGTH);
+class SystemFontCollectionHelper : public DWriteFontCollectionHelper {
+public:
+    ComPtr<IDWriteFontCollection> GetFontCollection() {
+        // Seems okay to fail-fast in this case - hard to continue without any system font collection
+        ComPtr<IDWriteFactory> dwriteFactory;
+        THROW_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
 
-    // If the default locale is returned, find that locale name, otherwise use "en-us".
-    return wstring(defaultLocaleSuccess ? localeName : c_defaultUserLanguage);
-}
+        ComPtr<IDWriteFontCollection> fontCollection;
+        THROW_IF_FAILED(dwriteFactory->GetSystemFontCollection(&fontCollection));
 
-/**
- * Private helper that creates an uppercase copy of a CFString
- */
-static CFStringRef __CFStringCreateUppercaseCopy(CFStringRef string, CFLocaleRef locale) {
-    CFMutableStringRef ret = CFStringCreateMutableCopy(nullptr, CFStringGetLength(string), string);
-    CFStringUppercase(ret, locale);
-    return ret;
-}
-
-/**
- * Private helper that creates the IDWriteFontList for a given font family name
- */
-HRESULT __DWriteGetFontListForFamilyName(CFStringRef familyName, IDWriteFontList** outFontList) {
-    ComPtr<IDWriteFactory> dwriteFactory;
-    RETURN_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
-
-    // Get the system font collection.
-    ComPtr<IDWriteFontCollection> fontCollection;
-    RETURN_IF_FAILED(dwriteFactory->GetSystemFontCollection(&fontCollection));
-
-    // Get the font family.
-    CFIndex familyNameLength = CFStringGetLength(familyName);
-    std::vector<UniChar> unicharFamilyName(familyNameLength + 1);
-    CFStringGetCharacters(familyName, CFRangeMake(0, familyNameLength), unicharFamilyName.data());
-
-    size_t index = 0;
-    BOOL exists = FALSE;
-
-    RETURN_IF_FAILED(fontCollection->FindFamilyName(reinterpret_cast<wchar_t*>(unicharFamilyName.data()), &index, &exists));
-    RETURN_HR_IF(E_INVALIDARG, !exists);
-
-    ComPtr<IDWriteFontFamily> fontFamily;
-    RETURN_IF_FAILED(fontCollection->GetFontFamily(index, &fontFamily));
-
-    RETURN_IF_FAILED(
-        fontFamily->GetMatchingFonts(DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STRETCH_NORMAL, DWRITE_FONT_STYLE_NORMAL, outFontList));
-
-    return S_OK;
-}
-
-/**
- * Private struct that exposes CFHash and CFEqual to an STL container
- */
-struct __CFStringHashEqual {
-    std::size_t operator()(const woc::unique_cf<CFStringRef>& item) const {
-        return CFHash(item.get());
-    }
-
-    bool operator()(const woc::unique_cf<CFStringRef>& item1, const woc::unique_cf<CFStringRef>& item2) const {
-        return CFEqual(item1.get(), item2.get());
+        return fontCollection;
     }
 };
 
 /**
- * Private static map, that maps uppercase display name and postscript name, to a _DWriteFontProperties struct for the corresponding font.
+ * Private concrete implementation of DWriteFontCollectionHelper.
+ * Wraps around an in-memory font collection of fonts provided by the user.
+ * Intended as a singleton.
  */
-static std::unordered_map<woc::unique_cf<CFStringRef>, std::shared_ptr<_DWriteFontProperties>, __CFStringHashEqual, __CFStringHashEqual>
-    c_fontPropertiesMap = []() {
-        decltype(c_fontPropertiesMap) ret;
+class UserFontCollectionHelper : public DWriteFontCollectionHelper {
+public:
+    HRESULT UpdateCollection(const ComPtr<IDWriteFactory>& dwriteFactory, const ComPtr<DWriteFontBinaryDataCollectionLoader>& loader) {
+        std::lock_guard<std::recursive_mutex> lock(m_lock);
 
-        woc::unique_cf<CFArrayRef> familyNames(_DWriteCopyFontFamilyNames());
-        woc::unique_cf<CFLocaleRef> locale(CFLocaleCopyCurrent());
+        // DWrite won't create a new font collection unless we provide a new key each time
+        // So every time we modify the font collection increment the key
+        static size_t s_collectionKey = 0;
 
-        for (size_t i = 0; i < CFArrayGetCount(familyNames.get()); ++i) {
-            woc::unique_cf<CFStringRef> familyName(static_cast<CFStringRef>(CFRetain(CFArrayGetValueAtIndex(familyNames.get(), i))));
-            ComPtr<IDWriteFontList> fontList;
+        RETURN_IF_FAILED(
+            dwriteFactory->CreateCustomFontCollection(loader.Get(), &(++s_collectionKey), sizeof(s_collectionKey), &m_fontCollection));
+        // TODO #1374: Can reduce this to only update new/remove old fonts,
+        // rather than leaving the whole map to regenerate
+        m_propertiesMap.reset();
 
-            if (FAILED(__DWriteGetFontListForFamilyName(familyName.get(), &fontList))) {
-                continue;
-            }
+        return S_OK;
+    }
 
-            size_t count = fontList->GetFontCount();
+    ComPtr<IDWriteFontCollection> GetFontCollection() {
+        return m_fontCollection;
+    }
+    ComPtr<IDWriteFontCollection> m_fontCollection;
+};
 
-            for (size_t j = 0; j < count; j++) {
-                ComPtr<IDWriteFont> font;
-                if (FAILED(fontList->GetFont(j, &font))) {
-                    continue;
-                }
+// Private helper which returns the singleton DWriteFontCollectionHelper for the system font collection.
+static std::shared_ptr<SystemFontCollectionHelper> __GetSystemFontCollectionHelper() {
+    // Function-local static for lazy initialization
+    static auto s_systemFontCollection = std::make_shared<SystemFontCollectionHelper>();
+    return s_systemFontCollection;
+}
 
-                // For each font in that family, fill out a _DWriteFontProperties
-                auto info = std::make_shared<_DWriteFontProperties>();
-                ComPtr<IDWriteLocalizedStrings> displayName;
-                ComPtr<IDWriteLocalizedStrings> postScriptName;
-                BOOL exist;
+// Private helper which returns the singleton DWriteFontCollectionHelper for the user font collection.
+static std::shared_ptr<UserFontCollectionHelper> __GetUserFontCollectionHelper() {
+    // Function-local static for lazy initialization
+    static auto s_userFontCollection = std::make_shared<UserFontCollectionHelper>();
+    return s_userFontCollection;
+}
 
-                if (SUCCEEDED(font->GetInformationalStrings(DWRITE_INFORMATIONAL_STRING_FULL_NAME, &displayName, &exist)) && exist) {
-                    info->displayName.reset(__CFStringCreateUppercaseCopy(_CFStringFromLocalizedString(displayName.Get()), locale.get()));
-                    woc::unique_cf<CFStringRef> uppercaseNameKey(__CFStringCreateUppercaseCopy(info->displayName.get(), locale.get()));
-                    ret.emplace(std::move(uppercaseNameKey), info);
-                }
+/**
+ * Helper method to return the user set default locale string.
+ *
+ * @return use set locale string as wstring.
+ */
+std::wstring _GetUserDefaultLocaleName() {
+    wchar_t localeName[LOCALE_NAME_MAX_LENGTH];
+    int defaultLocaleSuccess = GetUserDefaultLocaleName(localeName, LOCALE_NAME_MAX_LENGTH);
 
-                if (SUCCEEDED(font->GetInformationalStrings(DWRITE_INFORMATIONAL_STRING_POSTSCRIPT_NAME, &postScriptName, &exist)) &&
-                    exist) {
-                    info->postScriptName.reset(static_cast<CFStringRef>(CFRetain(_CFStringFromLocalizedString(postScriptName.Get()))));
-                    woc::unique_cf<CFStringRef> uppercaseNameKey(__CFStringCreateUppercaseCopy(info->postScriptName.get(), locale.get()));
-                    ret.emplace(std::move(uppercaseNameKey), info);
-                }
-
-                info->familyName.reset(CFStringCreateCopy(nullptr, familyName.get()));
-
-                info->weight = font->GetWeight();
-                info->stretch = font->GetStretch();
-                info->style = font->GetStyle();
-            }
-        }
-
-        return ret;
-    }();
+    // If the default locale is returned, find that locale name, otherwise use "en-us".
+    return std::wstring(defaultLocaleSuccess ? localeName : c_defaultUserLanguage);
+}
 
 /**
  * Helper method to convert IDWriteLocalizedStrings object to CFString object.
@@ -166,7 +123,7 @@ CFStringRef _CFStringFromLocalizedString(IDWriteLocalizedStrings* localizedStrin
     }
 
     // Get the default locale for this user.
-    wstring localeName = __GetUserDefaultLocaleName();
+    std::wstring localeName = _GetUserDefaultLocaleName();
 
     uint32_t index = 0;
     BOOL exists = FALSE;
@@ -187,159 +144,92 @@ CFStringRef _CFStringFromLocalizedString(IDWriteLocalizedStrings* localizedStrin
     RETURN_NULL_IF_FAILED(localizedString->GetStringLength(index, &length));
 
     // Get the string.
-    vector<wchar_t> wcharString = std::vector<wchar_t>(length + 1, 0);
+    std::vector<wchar_t> wcharString = std::vector<wchar_t>(length + 1, 0);
     RETURN_NULL_IF_FAILED(localizedString->GetString(index, wcharString.data(), length + 1));
 
     // Strip out unnecessary null terminator
     return (CFStringRef)CFAutorelease(
-        CFStringCreateWithCharacters(kCFAllocatorSystemDefault, reinterpret_cast<UniChar*>(wcharString.data()), length));
+        CFStringCreateWithCharacters(kCFAllocatorDefault, reinterpret_cast<UniChar*>(wcharString.data()), length));
+}
+
+/**
+ * Helper that parses a font name, and returns appropriate weight, stretch, style, and family name values
+ */
+std::shared_ptr<const _DWriteFontProperties> _DWriteGetFontPropertiesFromName(CFStringRef fontName) {
+    woc::unique_cf<CFStringRef> upperFontName(_CFStringCreateUppercaseCopy(fontName));
+
+    const auto& info = __GetSystemFontCollectionHelper()->GetFontPropertiesFromUppercaseFontName(upperFontName);
+    if (info) {
+        return info;
+    }
+
+    const auto& userFontInfo = __GetUserFontCollectionHelper()->GetFontPropertiesFromUppercaseFontName(upperFontName);
+    if (userFontInfo) {
+        return userFontInfo;
+    }
+
+    return std::make_shared<const _DWriteFontProperties>();
 }
 
 /**
  * Helper method to retrieve font family names installed in the system.
  *
- * @return Immutable array of font family name strings that are installed in the system.
+ * @return Array of font family name strings that are installed in the system.
  */
 CFArrayRef _DWriteCopyFontFamilyNames() {
-    woc::unique_cf<CFMutableArrayRef> fontFamilyNames(CFArrayCreateMutable(kCFAllocatorSystemDefault, 0, &kCFTypeArrayCallBacks));
+    CFMutableArrayRef ret = __GetSystemFontCollectionHelper()->CopyFontFamilyNames();
 
-    // Get the direct write factory instance
-    ComPtr<IDWriteFactory> dwriteFactory;
-    RETURN_NULL_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
+    woc::unique_cf<CFArrayRef> userFamilyNames{ __GetUserFontCollectionHelper()->CopyFontFamilyNames() };
+    CFArrayAppendArray(ret, userFamilyNames.get(), { 0, CFArrayGetCount(userFamilyNames.get()) });
 
-    // Get the system font collection.
-    ComPtr<IDWriteFontCollection> fontCollection;
-    RETURN_NULL_IF_FAILED(dwriteFactory->GetSystemFontCollection(&fontCollection));
-
-    // Get the number of font families in the collection.
-    uint32_t count = 0;
-    count = fontCollection->GetFontFamilyCount();
-
-    for (uint32_t i = 0; i < count; ++i) {
-        // Get the font family.
-        ComPtr<IDWriteFontFamily> fontFamily;
-        RETURN_NULL_IF_FAILED(fontCollection->GetFontFamily(i, &fontFamily));
-
-        // Get a list of localized strings for the family name.
-        ComPtr<IDWriteLocalizedStrings> familyNames;
-        RETURN_NULL_IF_FAILED(fontFamily->GetFamilyNames(&familyNames));
-
-        CFStringRef name = _CFStringFromLocalizedString(familyNames.Get());
-        if (CFStringGetLength(name) == 0) {
-            TraceError(TAG, L"Failed to convert the localized string to wide string.");
-            continue;
-        }
-
-        CFArrayAppendValue(fontFamilyNames.get(), name);
-    }
-
-    return fontFamilyNames.release();
+    return ret;
 }
 
 /**
  * Helper method to retrieve names of individual fonts under a font family.
  */
 CFArrayRef _DWriteCopyFontNamesForFamilyName(CFStringRef familyName) {
-    woc::unique_cf<CFMutableArrayRef> fontNames(CFArrayCreateMutable(kCFAllocatorSystemDefault, 0, &kCFTypeArrayCallBacks));
+    CFMutableArrayRef ret = __GetSystemFontCollectionHelper()->CopyFontNamesForFamilyName(familyName);
 
-    ComPtr<IDWriteFontList> fontList;
-    RETURN_NULL_IF_FAILED(__DWriteGetFontListForFamilyName(familyName, &fontList));
-
-    size_t count = fontList->GetFontCount();
-
-    for (size_t i = 0; i < count; i++) {
-        ComPtr<IDWriteFont> font;
-        RETURN_NULL_IF_FAILED(fontList->GetFont(i, &font));
-
-        ComPtr<IDWriteLocalizedStrings> fullName;
-        BOOL exist = FALSE;
-        RETURN_NULL_IF_FAILED(font->GetInformationalStrings(DWRITE_INFORMATIONAL_STRING_FULL_NAME, &fullName, &exist));
-
-        if (exist) {
-            CFStringRef name = _CFStringFromLocalizedString(fullName.Get());
-            if (CFStringGetLength(name) == 0) {
-                TraceError(TAG, L"Failed to convert the localized string to wide string.");
-                continue;
-            }
-
-            CFArrayAppendValue(fontNames.get(), name);
-        }
-    }
-
-    return fontNames.release();
+    woc::unique_cf<CFArrayRef> userFontNames{ __GetUserFontCollectionHelper()->CopyFontNamesForFamilyName(familyName) };
+    CFArrayAppendArray(ret, userFontNames.get(), { 0, CFArrayGetCount(userFontNames.get()) });
+    return ret;
 }
 
 /**
  * Helper method that maps a font name to the name of its family.
  *
- * Note: This function currently uses a cache, meaning that fonts installed during runtime will not be reflected
+ * Note: This function currently uses a cache, meaning that fonts installed during runtime will not be reflected,
+ * unless registered to the user font collection
  */
 CFStringRef _DWriteGetFamilyNameForFontName(CFStringRef fontName) {
     return _DWriteGetFontPropertiesFromName(fontName)->familyName.get();
 }
 
 /**
- * Helper that parses a font name, and returns appropriate weight, stretch, style, and family name values
- */
-std::shared_ptr<_DWriteFontProperties> _DWriteGetFontPropertiesFromName(CFStringRef fontName) {
-    woc::unique_cf<CFLocaleRef> locale(CFLocaleCopyCurrent());
-    woc::unique_cf<CFStringRef> upperFontName(__CFStringCreateUppercaseCopy(fontName, locale.get()));
-
-    const auto& info = c_fontPropertiesMap.find(upperFontName);
-    if (info != c_fontPropertiesMap.end()) {
-        return info->second;
-    }
-
-    return std::make_shared<_DWriteFontProperties>();
-}
-
-/**
- * Creates a DWrite text format object using the system font collection
- */
-HRESULT _DWriteCreateTextFormat(const wchar_t* fontFamilyName,
-                                DWRITE_FONT_WEIGHT weight,
-                                DWRITE_FONT_STYLE style,
-                                DWRITE_FONT_STRETCH stretch,
-                                float fontSize,
-                                IDWriteTextFormat** outTextFormat) {
-    // Get the direct write factory instance
-    ComPtr<IDWriteFactory> dwriteFactory;
-    RETURN_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
-
-    return dwriteFactory->CreateTextFormat(fontFamilyName,
-                                           nullptr,
-                                           weight,
-                                           style,
-                                           stretch,
-                                           fontSize,
-                                           __GetUserDefaultLocaleName().data(),
-                                           outTextFormat); //
-}
-
-/**
  * Helper that creates a IDWriteFontFamily object for a given family name
  */
 HRESULT _DWriteCreateFontFamilyWithName(CFStringRef familyName, IDWriteFontFamily** outFontFamily) {
-    ComPtr<IDWriteFactory> dwriteFactory;
-    RETURN_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
+    const auto& familyNameUnichars = Strings::VectorFromCFString(familyName);
 
-    ComPtr<IDWriteFontCollection> systemFontCollection;
-    RETURN_IF_FAILED(dwriteFactory->GetSystemFontCollection(&systemFontCollection));
+    HRESULT result =
+        __GetSystemFontCollectionHelper()->CreateFontFamilyWithName(reinterpret_cast<const wchar_t*>(familyNameUnichars.data()),
+                                                                    outFontFamily);
+    if (result != S_FALSE) {
+        return result;
+    }
 
-    CFIndex familyNameLength = CFStringGetLength(familyName);
-    std::vector<UniChar> unicharFamilyName(familyNameLength + 1);
-    CFStringGetCharacters(familyName, CFRangeMake(0, familyNameLength), unicharFamilyName.data());
+    // S_FALSE represents 'not found'
+    // No unexpected failure occurred, just couldn't find in the system font collection
+    // Try the user font collection
+    result = __GetUserFontCollectionHelper()->CreateFontFamilyWithName(reinterpret_cast<const wchar_t*>(familyNameUnichars.data()),
+                                                                       outFontFamily);
+    if (result != S_FALSE) {
+        return result;
+    }
 
-    size_t fontFamilyIndex;
-    BOOL fontFamilyExists;
-
-    RETURN_IF_FAILED(systemFontCollection->FindFamilyName(reinterpret_cast<const wchar_t*>(unicharFamilyName.data()),
-                                                          &fontFamilyIndex,
-                                                          &fontFamilyExists));
-
-    RETURN_HR_IF(E_INVALIDARG, !fontFamilyExists);
-
-    return systemFontCollection->GetFontFamily(fontFamilyIndex, outFontFamily);
+    // Family name could not be found
+    return E_INVALIDARG;
 }
 
 /**
@@ -348,11 +238,10 @@ HRESULT _DWriteCreateFontFamilyWithName(CFStringRef familyName, IDWriteFontFamil
 HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, IDWriteFontFace** outFontFace) {
     // Parse the font name for font weight, stretch, and style
     // Eg: Bold, Condensed, Light, Italic
-    std::shared_ptr<_DWriteFontProperties> properties = _DWriteGetFontPropertiesFromName(name);
+    std::shared_ptr<const _DWriteFontProperties> properties = _DWriteGetFontPropertiesFromName(name);
 
-    // TODO: #1250: Need to be able to load fonts from the app's bundle
+    // Need to be able to load fonts from the app's bundle
     // For now return a default font to avoid crashes in case of missing fonts
-    // When #1250 is completed, remove this
     if (!properties->familyName.get()) {
         name = CFSTR("Segoe UI");
         properties = _DWriteGetFontPropertiesFromName(name);
@@ -368,6 +257,58 @@ HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, IDWriteFontFace** outFon
     RETURN_IF_FAILED(fontFamily->GetFirstMatchingFont(properties->weight, properties->stretch, properties->style, &font));
 
     return font->CreateFontFace(outFontFace);
+}
+
+/**
+ * Helper function that creates an IDWriteFontFormat object for a given font name.
+ */
+HRESULT _DWriteCreateTextFormatWithFontNameAndSize(CFStringRef optionalFontName, CGFloat fontSize, IDWriteTextFormat** outTextFormat) {
+    RETURN_HR_IF_NULL(E_POINTER, outTextFormat);
+
+    ComPtr<IDWriteFactory> dwriteFactory;
+    RETURN_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
+
+    ComPtr<IDWriteTextFormat> textFormat;
+    std::shared_ptr<const _DWriteFontProperties> info;
+    std::shared_ptr<const _DWriteFontProperties> userFontInfo;
+
+    if (!optionalFontName) {
+        info = std::make_shared<const _DWriteFontProperties>();
+    } else {
+        woc::unique_cf<CFStringRef> upperFontName(_CFStringCreateUppercaseCopy(optionalFontName));
+        info = __GetSystemFontCollectionHelper()->GetFontPropertiesFromUppercaseFontName(upperFontName);
+        userFontInfo = __GetUserFontCollectionHelper()->GetFontPropertiesFromUppercaseFontName(upperFontName);
+    }
+
+    if (info) {
+        RETURN_IF_FAILED(
+            dwriteFactory->CreateTextFormat(reinterpret_cast<wchar_t*>(Strings::VectorFromCFString(info->familyName.get()).data()),
+                                            nullptr,
+                                            info->weight,
+                                            info->style,
+                                            info->stretch,
+                                            fontSize,
+                                            _GetUserDefaultLocaleName().data(),
+                                            &textFormat));
+    }
+
+    // Try creating with the user font collection if creating with the system collection wasn't possible
+    if (!textFormat && userFontInfo) {
+        RETURN_IF_FAILED(
+            dwriteFactory->CreateTextFormat(reinterpret_cast<wchar_t*>(Strings::VectorFromCFString(userFontInfo->familyName.get()).data()),
+                                            __GetUserFontCollectionHelper()->GetFontCollection().Get(),
+                                            userFontInfo->weight,
+                                            userFontInfo->style,
+                                            userFontInfo->stretch,
+                                            fontSize,
+                                            _GetUserDefaultLocaleName().data(),
+                                            &textFormat));
+    }
+
+    RETURN_HR_IF_NULL(E_INVALIDARG, textFormat);
+
+    *outTextFormat = textFormat.Detach();
+    return S_OK;
 }
 
 /**
@@ -481,128 +422,59 @@ HRESULT _DWriteFontGetBoundingBoxesForGlyphs(
     return ret;
 }
 
-#pragma region CGFontCreateWithDataProvider helpers
+// TLambda is a member function of our FontCollectionLoader which updates the internal state of the loader
+// TLambda :: (DWriteFontCollectionLoader -> CFArrayRef -> CFArrayRef*) -> HRESULT
+template <typename TLambda>
+static HRESULT __DWriteUpdateUserCreatedFontCollection(CFArrayRef datas, CFArrayRef* errors, TLambda&& func) {
+    ComPtr<IDWriteFactory> dwriteFactory;
+    RETURN_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
+
+    // Create singleton Font Collection loader, which will be shared for registering/unregistering fonts
+    static ComPtr<DWriteFontBinaryDataCollectionLoader> s_loader;
+    static HRESULT s_loaderCreationResult = [](DWriteFontBinaryDataCollectionLoader** collectionLoader) {
+        ComPtr<IDWriteFactory> dwriteFactory;
+        RETURN_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
+        RETURN_IF_FAILED(MakeAndInitialize<DWriteFontBinaryDataCollectionLoader>(collectionLoader));
+        RETURN_IF_FAILED(dwriteFactory->RegisterFontCollectionLoader(*collectionLoader));
+        return S_OK;
+    }(&s_loader);
+    RETURN_IF_FAILED(s_loaderCreationResult);
+
+    // Call member function to update loader's font data
+    // Still want to update font collection with whatever fonts succeeded, so return ret at end
+    HRESULT ret = func(s_loader.Get(), datas, errors);
+
+    // Update the user font collection
+    RETURN_IF_FAILED(__GetUserFontCollectionHelper()->UpdateCollection(dwriteFactory, s_loader));
+
+    return ret;
+}
+
+// Registers user defined fonts to a collection so they can be created later
+// Expects datas to be array of CFDataRefs, errors to be out pointer to array of CFErrorRef
+HRESULT _DWriteRegisterFontsWithDatas(CFArrayRef datas, CFArrayRef* errors) {
+    return __DWriteUpdateUserCreatedFontCollection(datas, errors, std::mem_fn(&DWriteFontBinaryDataCollectionLoader::AddDatas));
+}
+
+// Unregisters user defined fonts to a collection so they can be created later
+// Expects datas to be array of CFDataRefs, errors to be out pointer to array of CFErrorRef
+HRESULT _DWriteUnregisterFontsWithDatas(CFArrayRef datas, CFArrayRef* errors) {
+    return __DWriteUpdateUserCreatedFontCollection(datas, errors, std::mem_fn(&DWriteFontBinaryDataCollectionLoader::RemoveDatas));
+}
 
 /**
- * Custom implementation of IDWriteFontFileStream that implements Read in terms of an underlying CFDataRef
- *
- * While IDWriteFontFileStream normally frees its underlying data bit by bit through ReleaseFileFragment(),
- * for WinObjC purposes, it is easier to rely on existing mechanisms for CFData's destruction.
- * Thus, this class releases its CFData all at once, at the time of its destruction.
+ * Creates an IDWriteFontFace by attempting to use a CFDataRef as a font file
  */
-class DWriteFontBinaryDataStream : public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IDWriteFontFileStream> {
-protected:
-    InspectableClass(L"Windows.Bridge.DirectWrite", TrustLevel::BaseTrust);
-
-public:
-    DWriteFontBinaryDataStream() {
-    }
-
-    HRESULT RuntimeClassInitialize(CGDataProviderRef dataProvider) {
-        _data.reset(CGDataProviderCopyData(dataProvider));
-
-        // Just use current time for _lastWriteTime
-        FILETIME fileTime;
-        GetSystemTimeAsFileTime(&fileTime);
-
-        // Concat filetime into a single uint64_t
-        _lastWriteTime = 0;
-        _lastWriteTime |= static_cast<uint64_t>(fileTime.dwLowDateTime);
-        _lastWriteTime |= static_cast<uint64_t>(fileTime.dwHighDateTime) << 32;
-        return S_OK;
-    }
-
-    HRESULT STDMETHODCALLTYPE GetFileSize(_Out_ uint64_t* fileSize) {
-        RETURN_HR_IF_NULL(E_INVALIDARG, fileSize);
-        *fileSize = CFDataGetLength(_data.get());
-        return S_OK;
-    };
-
-    HRESULT STDMETHODCALLTYPE GetLastWriteTime(_Out_ uint64_t* lastWriteTime) {
-        RETURN_HR_IF_NULL(E_INVALIDARG, lastWriteTime);
-        *lastWriteTime = _lastWriteTime;
-        return S_OK;
-    };
-
-    HRESULT STDMETHODCALLTYPE ReadFileFragment(_Out_ const void** fragmentStart,
-                                               uint64_t fileOffset,
-                                               uint64_t fragmentSize,
-                                               _Out_ void** fragmentContext) {
-        if (fileOffset + fragmentSize > CFDataGetLength(_data.get())) {
-            return E_INVALIDARG;
-        }
-
-        if (fragmentStart) {
-            const uint8_t* underlyingBuffer = CFDataGetBytePtr(_data.get());
-            *fragmentStart = reinterpret_cast<const void*>(&(underlyingBuffer[fileOffset]));
-        }
-
-        if (fragmentContext) {
-            // Deliberately unused: this is meant to be passed to ReleaseFileFragment() below to free part of the data,
-            // but this stream frees all the underlying CFData at once
-            *fragmentContext = nullptr;
-        }
-
-        return S_OK;
-    };
-
-    void STDMETHODCALLTYPE ReleaseFileFragment(void* fragmentContext){
-        // Deliberate no-op: data is released alongside the _data member with the destruction of this object
-    };
-
-private:
-    woc::unique_cf<CFDataRef> _data;
-    uint64_t _lastWriteTime;
-};
-
-/**
- * Custom implementation of IDWriteFontFileLoader that loads a CGDataProviderRef as its font file
- */
-class DWriteFontBinaryDataLoader : public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IDWriteFontFileLoader> {
-protected:
-    InspectableClass(L"Windows.Bridge.DirectWrite", TrustLevel::BaseTrust);
-
-public:
-    DWriteFontBinaryDataLoader() {
-    }
-
-    HRESULT RuntimeClassInitialize(CGDataProviderRef dataProvider) {
-        CFRetain(dataProvider);
-        _dataProvider.reset(dataProvider);
-        return S_OK;
-    }
-
-    // Ignores first two params, just return the same kind of stream always
-    // Stream returned is dictated by dataProvider passed in at initialization time
-    HRESULT STDMETHODCALLTYPE CreateStreamFromKey(_In_ const void* fontFileReferenceKey,
-                                                  uint32_t fontFileReferenceKeySize,
-                                                  _Out_ IDWriteFontFileStream** fontFileStream) {
-        RETURN_HR_IF_NULL(E_INVALIDARG, fontFileStream);
-
-        ComPtr<DWriteFontBinaryDataStream> ret;
-        RETURN_IF_FAILED(MakeAndInitialize<DWriteFontBinaryDataStream>(&ret, _dataProvider.get()));
-
-        *fontFileStream = ret.Detach();
-        return S_OK;
-    }
-
-private:
-    woc::unique_cf<CGDataProviderRef> _dataProvider;
-};
-
-/**
- * Creates an IDWriteFontFace by attempting to use a CGDataProviderRef as a font file
- */
-HRESULT _DWriteCreateFontFaceWithDataProvider(CGDataProviderRef dataProvider, IDWriteFontFace** outFontFace) {
+HRESULT _DWriteCreateFontFaceWithData(CFDataRef data, IDWriteFontFace** outFontFace) {
     ComPtr<IDWriteFactory> dwriteFactory;
     RETURN_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
 
     ComPtr<IDWriteFontFileLoader> dwriteDataLoader;
-    RETURN_IF_FAILED(MakeAndInitialize<DWriteFontBinaryDataLoader>(&dwriteDataLoader, dataProvider));
+    RETURN_IF_FAILED(MakeAndInitialize<DWriteFontBinaryDataLoader>(&dwriteDataLoader, data));
 
     RETURN_IF_FAILED(dwriteFactory->RegisterFontFileLoader(dwriteDataLoader.Get()));
 
-    HRESULT createdFont = [&dwriteFactory, &dwriteDataLoader, &dataProvider, outFontFace]() {
+    HRESULT createdFont = [&dwriteFactory, &dwriteDataLoader, outFontFace]() {
         ComPtr<IDWriteFontFile> fontFile;
 
         // First two params are not used (see DWriteFontBinaryDataLoader::CreateStreamFromKey())
@@ -643,5 +515,3 @@ HRESULT _DWriteCreateFontFaceWithDataProvider(CGDataProviderRef dataProvider, ID
 
     return S_OK;
 }
-
-#pragma endregion

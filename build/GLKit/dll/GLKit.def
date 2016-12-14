@@ -124,6 +124,7 @@ LIBRARY GLKit
         GLKQuaternionMakeWithMatrix4
         GLKQuaternionRotateVector3Array
         GLKQuaternionRotateVector4Array
+        GLKQuaternionSlerp
         GLKTextureLoaderApplyPremultiplication DATA
         GLKTextureLoaderErrorDomain DATA
         GLKTextureLoaderErrorKey DATA

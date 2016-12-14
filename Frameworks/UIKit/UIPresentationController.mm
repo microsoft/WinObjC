@@ -19,19 +19,46 @@
 
 #include "UIKit/UIPresentationController.h"
 
-@implementation UIPresentationController
+@implementation UIPresentationController {
+    StrongId<UIViewController> _presentingViewController;
+    StrongId<UIViewController> _presentedViewController;
+    StrongId<UIView> _containerView;
+}
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithPresentedViewController:(UIViewController*)presentedViewController
              presentingViewController:(UIViewController*)presentingViewController {
-    _presentingViewController = presentingViewController;
-    _presentedViewController = presentedViewController;
-    _presentationStyle = _presentedViewController.modalPresentationStyle;
-    _containerView = _presentingViewController.view;
+    if (self = [super init]) {
+        _presentingViewController = presentingViewController;
+        _presentedViewController = presentedViewController;
+        _presentationStyle = [_presentedViewController modalPresentationStyle];
+        _containerView = [_presentingViewController view];
+    }
 
     return self;
+}
+
+/**
+ @Status Interoperable
+*/
+- (UIViewController*)presentingViewController {
+    return _presentingViewController;
+}
+
+/**
+ @Status Interoperable
+*/
+- (UIViewController*)presentedViewController {
+    return _presentedViewController;
+}
+
+/**
+ @Status Interoperable
+*/
+- (UIView*)containerView {
+    return _containerView;
 }
 
 /**
@@ -45,7 +72,7 @@
  @Status Interoperable
 */
 - (CGRect)frameOfPresentedViewInContainerView {
-    return _containerView.frame;
+    return [_containerView frame];
 }
 
 /**
