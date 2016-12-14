@@ -306,6 +306,10 @@ Microsoft Extension
     // Use the layer contents to draw the background image, similar to UIImageView.
     UIImageSetLayerContents([self layer], self.currentBackgroundImage);
 
+    // UIButton should always stretch its background.  Since we're leveraging our backing CALayer's background for 
+    // the UIButton background, we stretch it via the CALayer's contentsGravity.
+    self.layer.contentsGravity = kCAGravityResize;
+
     // Probably important to keep around for after the refactor.
     [super layoutSubviews];
 }
