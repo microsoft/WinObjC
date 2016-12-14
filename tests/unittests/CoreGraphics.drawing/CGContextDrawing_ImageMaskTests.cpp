@@ -172,19 +172,12 @@ protected:
         return s_clippingImages.at(shape | type).get();
     }
 
-    void _FillContextWithColorAndLines() {
+    void _FillContext() {
         CGContextRef context = GetDrawingContext();
         CGRect bounds = GetDrawingBounds();
-        CGContextSetRGBStrokeColor(context, 1.0, 0.0, 0.0, 1.0);
-        CGContextSetRGBFillColor(context, 0.0, 0.0, 0.0, 1.0);
+        CGContextSetRGBFillColor(context, 0.0, 0.0, 1.0, 1.0);
 
         CGContextFillRect(context, bounds);
-
-        for (CGFloat i = 0.5f; i < bounds.size.width; i += 10.0f) {
-            CGContextMoveToPoint(context, i, 0);
-            CGContextAddLineToPoint(context, i, bounds.size.height);
-            CGContextStrokePath(context);
-        }
     }
 };
 
@@ -203,7 +196,7 @@ TEST_P(CGContextClipping, StraightMask) {
 
     CGContextClipToMask(context, _CGRectCenteredOnPoint(clipSize, _CGRectGetCenter(bounds)), GetClippingImage(shape, type));
 
-    _FillContextWithColorAndLines();
+    _FillContext();
 }
 
 TEST_P(CGContextClipping, TransformedMask) {
@@ -217,7 +210,7 @@ TEST_P(CGContextClipping, TransformedMask) {
 
     CGContextClipToMask(context, _CGRectCenteredOnPoint(clipSize, _CGRectGetCenter(bounds)), GetClippingImage(shape, type));
 
-    _FillContextWithColorAndLines();
+    _FillContext();
 }
 
 TEST_P(CGContextClipping, StackedMaskSameType) {
@@ -232,7 +225,7 @@ TEST_P(CGContextClipping, StackedMaskSameType) {
     CGContextClipToMask(context, _CGRectCenteredOnPoint(clipSize, _CGRectGetCenter(bounds)), GetClippingImage(shape, type));
     CGContextClipToMask(context, _CGRectCenteredOnPoint(clipSize, _CGRectGetCenter(bounds)), GetClippingImage(otherShape, type));
 
-    _FillContextWithColorAndLines();
+    _FillContext();
 }
 
 TEST_P(CGContextClipping, StackedMaskOtherType) {
@@ -248,7 +241,7 @@ TEST_P(CGContextClipping, StackedMaskOtherType) {
     CGContextClipToMask(context, _CGRectCenteredOnPoint(clipSize, _CGRectGetCenter(bounds)), GetClippingImage(shape, type));
     CGContextClipToMask(context, _CGRectCenteredOnPoint(clipSize, _CGRectGetCenter(bounds)), GetClippingImage(otherShape, otherType));
 
-    _FillContextWithColorAndLines();
+    _FillContext();
 }
 
 TEST_P(CGContextClipping, MaskedAndClipped) {
@@ -264,7 +257,7 @@ TEST_P(CGContextClipping, MaskedAndClipped) {
 
     CGContextClipToMask(context, _CGRectCenteredOnPoint(clipSize, _CGRectGetCenter(bounds)), GetClippingImage(shape, type));
 
-    _FillContextWithColorAndLines();
+    _FillContext();
 }
 
 INSTANTIATE_TEST_CASE_P(Clipping,
