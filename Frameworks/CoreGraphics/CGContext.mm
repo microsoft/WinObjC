@@ -2035,9 +2035,10 @@ void CGContextDrawTiledImage(CGContextRef context, CGRect rect, CGImageRef image
 /*
 * Convert CGGradient to D2D1_GRADIENT_STOP
 */
-static inline std::vector<D2D1_GRADIENT_STOP> __CGGradientToD2D1GradientStop(CGGradientRef gradient) {
+static inline std::vector<D2D1_GRADIENT_STOP> __CGGradientToD2D1GradientStop(CGGradientRef gradient, CGGradientDrawingOptions options) {
     unsigned long gradientCount = _CGGradientGetCount(gradient);
-    std::vector<D2D1_GRADIENT_STOP> gradientStops(gradientCount);
+
+    std::vector<D2D1_GRADIENT_STOP> gradientStops((options == kCGGradientDrawsAfterEndLocation) ? gradientCount + 1 : gradientCount);
 
     float* colorComponenets = _CGGradientGetColorComponents(gradient);
     float* locations = _CGGradientGetStopLocation(gradient);
@@ -2050,12 +2051,20 @@ static inline std::vector<D2D1_GRADIENT_STOP> __CGGradientToD2D1GradientStop(CGG
         gradientStops[i].position = locations[i];
     }
 
+    if (options == kCGGradientDrawsAfterEndLocation) {
+        // Set the edge to be just a bit lower on the location
+        gradientStops[0].position = 1E-45;
+
+        // set the edge location to be transparent
+        gradientStops[gradientCount].color = D2D1::ColorF(0, 0, 0, 0);
+        gradientStops[gradientCount].position = 0;
+    }
+
     return gradientStops;
 }
 
 /**
- @Status Caveat
- @Notes kCGGradientDrawsBeforeStartLocation option is applied by default.
+ @Status Interoperable
 */
 void CGContextDrawLinearGradient(
     CGContextRef context, CGGradientRef gradient, CGPoint startPoint, CGPoint endPoint, CGGradientDrawingOptions options) {
@@ -2065,7 +2074,7 @@ void CGContextDrawLinearGradient(
 
     RETURN_IF(_CGGradientGetCount(gradient) == 0);
 
-    std::vector<D2D1_GRADIENT_STOP> gradientStops = __CGGradientToD2D1GradientStop(gradient);
+    std::vector<D2D1_GRADIENT_STOP> gradientStops = __CGGradientToD2D1GradientStop(gradient, options);
 
     ComPtr<ID2D1GradientStopCollection> gradientStopCollection;
 
