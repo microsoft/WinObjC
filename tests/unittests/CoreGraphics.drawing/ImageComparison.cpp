@@ -43,8 +43,15 @@ private:
         if (alpha == 0) {
             return 0;
         }
-        float fval = (float)val / (float(alpha) / 255.f);
-        return std::min((unsigned int)roundf(fval), 255U);
+
+        if (alpha == 255) {
+            return val;
+        }
+
+        uint32_t multiplier16bpp = (uint32_t)floor((255. / double(alpha)) * 65536.);
+        // Use the above multiplier to calculate the pixel's 16bpp unpremultiplied value.
+        uint32_t pixelValue = val * multiplier16bpp;
+        return std::min(255U, (pixelValue >> 16));
     }
 
 public:
