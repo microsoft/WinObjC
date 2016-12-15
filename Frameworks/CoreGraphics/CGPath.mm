@@ -754,21 +754,34 @@ CGPathRef CGPathCreateCopyByStrokingPath(
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes Creates a mutable copy
 */
 CGPathRef CGPathCreateCopyByTransformingPath(CGPathRef path, const CGAffineTransform* transform) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return CGPathCreateMutableCopyByTransformingPath(path, transform);
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 CGMutablePathRef CGPathCreateMutableCopyByTransformingPath(CGPathRef path, const CGAffineTransform* transform) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    RETURN_NULL_IF(!path);
+
+    if (transform) {
+        if (CGAffineTransformEqualToTransform(*transform, CGAffineTransformIdentity)) {
+            return CGPathCreateMutableCopy(path);
+        }
+
+        CGMutablePathRef transformedPath = CGPathCreateMutable();
+        path->ClosePath();
+
+        FAIL_FAST_IF_FAILED(transformedPath->AddGeometryToPathWithTransformation(path->GetPathGeometry().Get(), transform));
+        transformedPath->SetCurrentPoint(CGPointApplyAffineTransform(path->GetCurrentPoint(), *transform));
+        transformedPath->SetStartingPoint(CGPointApplyAffineTransform(path->GetStartingPoint(), *transform));
+        transformedPath->SetLastTransform(transform);
+        return transformedPath;
+    }
+    return CGPathCreateMutableCopy(path);
 }
 
 /**
@@ -782,7 +795,7 @@ CGPathRef CGPathCreateWithRoundedRect(CGRect rect, CGFloat cornerWidth, CGFloat 
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 bool CGPathEqualToPath(CGPathRef path1, CGPathRef path2) {
     return __CGPathEqual(path1, path2);
