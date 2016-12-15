@@ -1981,14 +1981,12 @@ void CGContextDrawImage(CGContextRef context, CGRect rect, CGImageRef image) {
     flipImage = CGAffineTransformTranslate(flipImage, -rect.origin.x, -(rect.origin.y + (rect.size.height / 2.0)));
 
     ComPtr<ID2D1CommandList> commandList;
-    HRESULT hr = context->DrawToCommandList(_kCGCoordinateModeUserSpace,
-                                            &flipImage,
-                                            &commandList,
-                                            [&](CGContextRef context, ID2D1DeviceContext* deviceContext) {
-                                                deviceContext->DrawBitmap(d2dBitmap.Get(), __CGRectToD2D_F(rect));
-                                                return S_OK;
-                                            });
-    FAIL_FAST_IF_FAILED(hr);
+    FAIL_FAST_IF_FAILED(context->DrawToCommandList(
+        _kCGCoordinateModeUserSpace, &flipImage, &commandList, [&](CGContextRef context, ID2D1DeviceContext* deviceContext) {
+            auto& state = context->CurrentGState();
+            deviceContext->DrawBitmap(d2dBitmap.Get(), __CGRectToD2D_F(rect), state.alpha, state.bitmapInterpolationMode);
+            return S_OK;
+        }));
     FAIL_FAST_IF_FAILED(context->DrawImage(commandList.Get()));
 }
 
