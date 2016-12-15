@@ -295,11 +295,14 @@ static const wchar_t* TAG = L"CAAnimation";
         [layer _displayChanged];
     }
 
-    [_attachedLayer _removeAnimation:self];
-    _attachedLayer = nil;
+    // Grab a strong reference to ourselves before removal from the layer, 
+    // in case the layer was holding the *only* remaining strong reference.
+    StrongId<CAAnimation> strongSelf(self); 
+    [_attachedLayer _removeAnimation: strongSelf];
+    strongSelf->_attachedLayer = nil;
 
     //  Make sure we don't create an animation in case we're transacted
-    _wasRemoved = TRUE;
+    strongSelf->_wasRemoved = TRUE;
 }
 
 /**
