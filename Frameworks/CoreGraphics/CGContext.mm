@@ -2472,6 +2472,10 @@ HRESULT __CGContext::Draw(__CGCoordinateMode coordinateMode, CGAffineTransform* 
 
     PushBeginDraw();
 
+    if (compositeEffect) {
+        deviceContext->Clear({0,0,0,0});
+    }
+
     bool layer = false;
     if (state.clippingGeometry || !IS_NEAR(state.globalAlpha, 1.0, .0001f) || state.opacityBrush) {
         layer = true;
@@ -2532,12 +2536,29 @@ HRESULT __CGContext::Draw(__CGCoordinateMode coordinateMode, CGAffineTransform* 
         }
 
         D2D1_COMPOSITE_MODE compositeMode = D2D1_COMPOSITE_MODE_SOURCE_OVER;
+        ComPtr<ID2D1Bitmap> renderTargetImage;
+        ComPtr<ID2D1Effect> compositeEffect;
         if ((state.blendMode & _kCGContextBlendD2DCompose) == _kCGContextBlendD2DCompose) {
             // If the user has requested a different composition mode, we'll honor it.
             // If they have requested a porter-duff blend mode, however, we'll use SOURCE_OVER regardless:
             // It doesn't truly matter, as our porter-duff blends are implemented in terms of a full
             // target readback, clear and blend effect. There /is/ no destination to compose once we're done.
             compositeMode = static_cast<D2D1_COMPOSITE_MODE>(state.blendMode & 0xFF);
+            if (compositeMode != D2D1_COMPOSITE_MODE_SOURCE_OVER) {
+                ComPtr<ID2D1Effect> compositeEffect;
+
+                deviceContext->CreateEffect(CLSID_D2D1Composite, &compositeEffect);
+
+                D2D1_SIZE_U dcPSize = deviceContext->GetPixelSize();
+                RETURN_IF_FAILED(deviceContext->CreateBitmap(dcPSize, nullptr, 0, D2D1::BitmapProperties(D2D1::PixelFormat(DXGI_FORMAT_R8G8B8A8_UNORM, D2D1_ALPHA_MODE_PREMULTIPLIED)), &renderTargetImage));
+                RETURN_IF_FAILED(renderTargetImage->CopyFromRenderTarget(nullptr, deviceContext.Get(), nullptr));
+
+                compositeEffect->SetInput(0, renderTargetImage.Get());
+                compositeEffect->SetValue(D2D1_COMPOSITE_PROP_MODE, state.blendMode & 0xFF);
+                compositeEffect->SetInput(1, currentImage.Get());
+                compositeEffect.As(&currentImage);
+                //*outBlendEffect = blendEffect.Detach();
+            }
         }
 
         // We use NEAREST_NEIGHBOR here since every CommandList or Image we are rendering will already be context-scaled,

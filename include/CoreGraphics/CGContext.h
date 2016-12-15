@@ -100,7 +100,7 @@ typedef CF_ENUM(CFIndex, CGBlendMode) {
     kCGBlendModeXOR,
     kCGBlendModePlusLighter,
 
-    kCGBlendModeCopy,
+    kCGBlendModeCopy = 0x020B, // D2D Composite mode 11 = *bounded* source copy.
 
     kCGBlendModePlusDarker = kCGBlendModePlusLighter, // [Unsupported right now, maps to kCGBlendModePlusLighter with a warning.]
 

@@ -58,7 +58,7 @@ class CGContextBlendMode : public WhiteBackgroundTest<>, public ::testing::WithP
     }
 };
 
-DRAW_TEST_P(CGContextBlendMode, OverlappedEllipses) {
+DRAW_TEST_P(CGContextBlendMode, OverlappedRects) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
     CGBlendMode blendMode = ::testing::get<1>(GetParam()).blendMode;
@@ -70,12 +70,12 @@ DRAW_TEST_P(CGContextBlendMode, OverlappedEllipses) {
     CGPoint secondEllipseCenter{ firstEllipseCenter.x + (bounds.size.width / 3.f), firstEllipseCenter.y };
 
     CGContextSetRGBFillColor(context, .25, .71, .95, alpha);
-    CGContextFillEllipseInRect(context, _CGRectCenteredOnPoint({ bounds.size.height, bounds.size.height }, firstEllipseCenter));
+    CGContextFillRect(context, _CGRectCenteredOnPoint({ bounds.size.height, bounds.size.height }, firstEllipseCenter));
 
     CGContextSetBlendMode(context, blendMode);
 
     CGContextSetRGBFillColor(context, .95, .25, .66, alpha);
-    CGContextFillEllipseInRect(context, _CGRectCenteredOnPoint({ bounds.size.height, bounds.size.height }, secondEllipseCenter));
+    CGContextFillRect(context, _CGRectCenteredOnPoint({ bounds.size.height, bounds.size.height }, secondEllipseCenter));
 }
 
 INSTANTIATE_TEST_CASE_P(DISABLED_CompositionModes,
