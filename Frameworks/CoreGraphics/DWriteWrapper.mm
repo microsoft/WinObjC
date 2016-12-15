@@ -96,17 +96,10 @@ static std::shared_ptr<UserFontCollectionHelper> __GetUserFontCollectionHelper()
     return s_userFontCollection;
 }
 
-/**
- * Helper method to return the user set default locale string.
- *
- * @return use set locale string as wstring.
- */
-std::wstring _GetUserDefaultLocaleName() {
-    wchar_t localeName[LOCALE_NAME_MAX_LENGTH];
-    int defaultLocaleSuccess = GetUserDefaultLocaleName(localeName, LOCALE_NAME_MAX_LENGTH);
-
-    // If the default locale is returned, find that locale name, otherwise use "en-us".
-    return std::wstring(defaultLocaleSuccess ? localeName : c_defaultUserLanguage);
+// Private helper, wraps around GetUserDefaultLocaleName() and returns a default of "en-us" if it fails
+static inline const wchar_t* __GetUserDefaultLocaleName(wchar_t* buf, size_t bufferSize) {
+    int defaultLocaleSuccess = GetUserDefaultLocaleName(buf, bufferSize);
+    return defaultLocaleSuccess ? buf : c_defaultUserLanguage;
 }
 
 /**
@@ -122,14 +115,13 @@ CFStringRef _CFStringFromLocalizedString(IDWriteLocalizedStrings* localizedStrin
         return nil;
     }
 
-    // Get the default locale for this user.
-    std::wstring localeName = _GetUserDefaultLocaleName();
+    wchar_t localeNameBuf[LOCALE_NAME_MAX_LENGTH];
+    const wchar_t* localeName = __GetUserDefaultLocaleName(localeNameBuf, LOCALE_NAME_MAX_LENGTH);
 
     uint32_t index = 0;
     BOOL exists = FALSE;
 
-    // If the default locale is returned, find that locale name, otherwise use "en-us".
-    RETURN_NULL_IF_FAILED(localizedString->FindLocaleName(localeName.c_str(), &index, &exists));
+    RETURN_NULL_IF_FAILED(localizedString->FindLocaleName(localeName, &index, &exists));
     if (!exists) {
         RETURN_NULL_IF_FAILED(localizedString->FindLocaleName(c_defaultUserLanguage, &index, &exists));
     }
@@ -143,13 +135,15 @@ CFStringRef _CFStringFromLocalizedString(IDWriteLocalizedStrings* localizedStrin
     uint32_t length = 0;
     RETURN_NULL_IF_FAILED(localizedString->GetStringLength(index, &length));
 
-    // Get the string.
-    std::vector<wchar_t> wcharString = std::vector<wchar_t>(length + 1, 0);
-    RETURN_NULL_IF_FAILED(localizedString->GetString(index, wcharString.data(), length + 1));
+    // Get the string. Use length + 1 here as GetString requires room for the null terminator.
+    woc::unique_iw<wchar_t> wcharString(static_cast<wchar_t*>(IwMalloc(sizeof(wchar_t) * (length + 1))));
+    RETURN_NULL_IF_FAILED(localizedString->GetString(index, wcharString.get(), length + 1));
 
     // Strip out unnecessary null terminator
-    return (CFStringRef)CFAutorelease(
-        CFStringCreateWithCharacters(kCFAllocatorDefault, reinterpret_cast<UniChar*>(wcharString.data()), length));
+    return (CFStringRef)CFAutorelease(CFStringCreateWithCharactersNoCopy(kCFAllocatorDefault,
+                                                                         reinterpret_cast<UniChar*>(wcharString.release()),
+                                                                         length,
+                                                                         kCFAllocatorDefault));
 }
 
 /**
@@ -280,6 +274,9 @@ HRESULT _DWriteCreateTextFormatWithFontNameAndSize(CFStringRef optionalFontName,
         userFontInfo = __GetUserFontCollectionHelper()->GetFontPropertiesFromUppercaseFontName(upperFontName);
     }
 
+    wchar_t localeNameBuf[LOCALE_NAME_MAX_LENGTH];
+    const wchar_t* localeName = __GetUserDefaultLocaleName(localeNameBuf, LOCALE_NAME_MAX_LENGTH);
+
     if (info) {
         RETURN_IF_FAILED(
             dwriteFactory->CreateTextFormat(reinterpret_cast<wchar_t*>(Strings::VectorFromCFString(info->familyName.get()).data()),
@@ -288,7 +285,7 @@ HRESULT _DWriteCreateTextFormatWithFontNameAndSize(CFStringRef optionalFontName,
                                             info->style,
                                             info->stretch,
                                             fontSize,
-                                            _GetUserDefaultLocaleName().data(),
+                                            localeName,
                                             &textFormat));
     }
 
@@ -301,7 +298,7 @@ HRESULT _DWriteCreateTextFormatWithFontNameAndSize(CFStringRef optionalFontName,
                                             userFontInfo->style,
                                             userFontInfo->stretch,
                                             fontSize,
-                                            _GetUserDefaultLocaleName().data(),
+                                            localeName,
                                             &textFormat));
     }
 
