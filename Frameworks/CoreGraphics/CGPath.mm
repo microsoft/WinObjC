@@ -59,12 +59,12 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
     __CGPath() : figureClosed(true), lastTransform(CGAffineTransformIdentity) {
     }
 
-    ComPtr<ID2D1PathGeometry> GetPathGeometry() const {
-        return pathGeometry;
+    ID2D1PathGeometry* GetPathGeometry() const {
+        return pathGeometry.Get();
     }
 
-    ComPtr<ID2D1GeometrySink> GetGeometrySink() const {
-        return geometrySink;
+    ID2D1GeometrySink* GetGeometrySink() const {
+        return geometrySink.Get();
     }
 
     CGPoint GetCurrentPoint() const {
@@ -168,8 +168,7 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
         if (transform) {
             transformation = __CGAffineTransformToD2D_F(*transform);
         }
-        RETURN_IF_FAILED(
-            geometry->Simplify(D2D1_GEOMETRY_SIMPLIFICATION_OPTION_CUBICS_AND_LINES, &transformation, GetGeometrySink().Get()));
+        RETURN_IF_FAILED(geometry->Simplify(D2D1_GEOMETRY_SIMPLIFICATION_OPTION_CUBICS_AND_LINES, &transformation, GetGeometrySink()));
 
         SetLastTransform(transform);
         return S_OK;
@@ -180,7 +179,7 @@ HRESULT _CGPathGetGeometry(CGPathRef path, ID2D1Geometry** pGeometry) {
     RETURN_HR_IF_NULL(E_POINTER, pGeometry);
     RETURN_HR_IF_NULL(E_POINTER, path);
     RETURN_IF_FAILED(path->ClosePath());
-    path->GetPathGeometry().CopyTo(pGeometry);
+    path->pathGeometry.CopyTo(pGeometry);
     return S_OK;
 }
 
@@ -204,13 +203,11 @@ static Boolean __CGPathEqual(CFTypeRef cf1, CFTypeRef cf2) {
     // ID2D1 Geometries have no isEquals method. However, for two geometries to be equal they are both reported to contain the other.
     // Thus we must do two comparisons.
     D2D1_GEOMETRY_RELATION relation = D2D1_GEOMETRY_RELATION_UNKNOWN;
-    RETURN_FALSE_IF_FAILED(
-        path1->GetPathGeometry()->CompareWithGeometry(path2->GetPathGeometry().Get(), D2D1::IdentityMatrix(), &relation));
+    RETURN_FALSE_IF_FAILED(path1->GetPathGeometry()->CompareWithGeometry(path2->GetPathGeometry(), D2D1::IdentityMatrix(), &relation));
 
     // Does path 1 contain path 2?
     if (relation == D2D1_GEOMETRY_RELATION_IS_CONTAINED) {
-        RETURN_FALSE_IF_FAILED(
-            path2->GetPathGeometry()->CompareWithGeometry(path1->GetPathGeometry().Get(), D2D1::IdentityMatrix(), &relation));
+        RETURN_FALSE_IF_FAILED(path2->GetPathGeometry()->CompareWithGeometry(path1->GetPathGeometry(), D2D1::IdentityMatrix(), &relation));
 
         // Return true if path 2 also contains path 1
         return (relation == D2D1_GEOMETRY_RELATION_IS_CONTAINED ? true : false);
@@ -253,7 +250,7 @@ CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path) {
     // Otherwise the D2D calls will return that a bad state has been entered.
     FAIL_FAST_IF_FAILED(path->ClosePath());
 
-    FAIL_FAST_IF_FAILED(path->GetPathGeometry()->Stream(mutableRet->GetGeometrySink().Get()));
+    FAIL_FAST_IF_FAILED(path->GetPathGeometry()->Stream(mutableRet->GetGeometrySink()));
 
     mutableRet->SetCurrentPoint(path->GetCurrentPoint());
     mutableRet->SetStartingPoint(path->GetStartingPoint());
@@ -476,7 +473,7 @@ void CGPathAddPath(CGMutablePathRef path, const CGAffineTransform* transform, CG
 
     // Close the path being added.
     FAIL_FAST_IF_FAILED(toAdd->ClosePath());
-    FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(toAdd->GetPathGeometry().Get(), transform));
+    FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(toAdd->GetPathGeometry(), transform));
 
     CGPoint currentPoint = toAdd->GetCurrentPoint();
     CGPoint startingPoint = toAdd->GetStartingPoint();
@@ -711,7 +708,7 @@ void CGPathAddRoundedRect(
 void CGPathApply(CGPathRef path, void* info, CGPathApplierFunction function) {
     RETURN_IF(!path);
     FAIL_FAST_IF_FAILED(path->ClosePath());
-    FAIL_FAST_IF_FAILED(_CGPathApplyInternal(path->GetPathGeometry().Get(), info, function));
+    FAIL_FAST_IF_FAILED(_CGPathApplyInternal(path->GetPathGeometry(), info, function));
 }
 
 /**
@@ -767,15 +764,11 @@ CGPathRef CGPathCreateCopyByTransformingPath(CGPathRef path, const CGAffineTrans
 CGMutablePathRef CGPathCreateMutableCopyByTransformingPath(CGPathRef path, const CGAffineTransform* transform) {
     RETURN_NULL_IF(!path);
 
-    if (transform) {
-        if (CGAffineTransformEqualToTransform(*transform, CGAffineTransformIdentity)) {
-            return CGPathCreateMutableCopy(path);
-        }
-
+    if (transform && !CGAffineTransformEqualToTransform(*transform, CGAffineTransformIdentity)) {
         CGMutablePathRef transformedPath = CGPathCreateMutable();
         path->ClosePath();
 
-        FAIL_FAST_IF_FAILED(transformedPath->AddGeometryToPathWithTransformation(path->GetPathGeometry().Get(), transform));
+        FAIL_FAST_IF_FAILED(transformedPath->AddGeometryToPathWithTransformation(path->GetPathGeometry(), transform));
         transformedPath->SetCurrentPoint(CGPointApplyAffineTransform(path->GetCurrentPoint(), *transform));
         transformedPath->SetStartingPoint(CGPointApplyAffineTransform(path->GetStartingPoint(), *transform));
         transformedPath->SetLastTransform(transform);
