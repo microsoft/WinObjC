@@ -177,24 +177,46 @@ static bool appCanOpenURL(NSURL* url) {
     [_webView loadRequest:request];
     [topView addSubview:_webView];
 
-    // <-
-    UIBarButtonItem* backButton =
-        [[UIBarButtonItem alloc] initWithImage:backArrow style:UIBarButtonItemStylePlain target:_webView action:@selector(goBack)];
+    StrongId<NSMutableArray<UIBarButtonItem*>> toolbarItemsArray = [[NSMutableArray alloc] init];
 
-    // ->
-    UIBarButtonItem* forwardButton =
-        [[UIBarButtonItem alloc] initWithImage:backArrow style:UIBarButtonItemStylePlain target:_webView action:@selector(goForward)];
+    UIBarButtonItem* space =
+        [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nullptr];
 
-    [[forwardButton _view] setTransform:CGAffineTransformMakeRotation(M_PI)];
+    if ([_webView canGoBack] == YES) {
+        // <-
+        UIBarButtonItem* backButton =
+            [[UIBarButtonItem alloc] initWithImage:backArrow style:UIBarButtonItemStylePlain target:_webView action:@selector(goBack)];
+        [toolbarItemsArray addObject:backButton];
+    } else {
+        // This is to ensure that the other buttons are rendered at the correct position.
+        [toolbarItemsArray addObject:space];
+    }
+
+    // This is to ensure that the other buttons are rendered at the correct position.
+    [toolbarItemsArray addObject:space];
+
+    if ([_webView canGoForward] == YES) {
+        // ->
+        UIBarButtonItem* forwardButton =
+            [[UIBarButtonItem alloc] initWithImage:backArrow style:UIBarButtonItemStylePlain target:_webView action:@selector(goForward)];
+
+        [[forwardButton _view] setTransform:CGAffineTransformMakeRotation(M_PI)];
+        [toolbarItemsArray addObject:forwardButton];
+    } else {
+        // This is to ensure that the other buttons are rendered at the correct position.
+        [toolbarItemsArray addObject:space];
+    }
+
+    // This is to ensure that the other buttons are rendered at the correct position.
+    [toolbarItemsArray addObject:space];
 
     // Done
     UIBarButtonItem* doneButton =
         [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(_cancel)];
 
-    UIBarButtonItem* space =
-        [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nullptr];
+    [toolbarItemsArray addObject:doneButton];
 
-    NSArray<UIBarButtonItem*>* toolbarItems = @[ backButton, space, forwardButton, space, doneButton ];
+    StrongId<NSArray<UIBarButtonItem*>> toolbarItems = [toolbarItemsArray copy];
 
     [toolbar setItems:toolbarItems animated:NO];
     [toolbar setTintColor:[UIColor lightGrayColor]];
