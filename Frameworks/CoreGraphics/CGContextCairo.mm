@@ -518,9 +518,10 @@ void CGContextCairo::CGContextShowGlyphsWithAdvances(const CGGlyph* glyphs, cons
     // Give array of advances of zero so it will use positions correctly
     std::vector<FLOAT> dwriteAdvances(count, 0);
     DWRITE_GLYPH_RUN run = { fontFace.Get(), curState->fontSize, count, glyphs, dwriteAdvances.data(), positions.data(), FALSE, 0 };
-    auto exit =
-        wil::ScopeExit([&]() { CGContextSetTextPosition(curState->curTextMatrix.tx + delta.x, curState->curTextMatrix.ty + delta.y); });
     CGContextDrawGlyphRun(&run, false);
+
+    // Set text position to after the end of the last glyph drawn
+    CGContextSetTextPosition(curState->curTextMatrix.tx + delta.x, curState->curTextMatrix.ty + delta.y);
 }
 
 void CGContextCairo::CGContextShowGlyphs(const CGGlyph* glyphs, size_t count) {
@@ -1901,6 +1902,8 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, boo
     // Draw the glyph using ID2D1RenderTarget
     ComPtr<ID2D1SolidColorBrush> brush;
     THROW_IF_FAILED(imgRenderTarget->CreateSolidColorBrush(brushColor, &brush));
+
+    // If text is only flipped vertically, we can draw it all at once rather than glyph by glyph
     if ((textTransform.a == 1.0f && fabs(textTransform.d) == 1.0f && textTransform.b == 0.0f && textTransform.c == 0.0f) ||
         !transformByGlyph) {
         // Apply the two transforms giving us the final result
