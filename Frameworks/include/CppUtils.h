@@ -71,4 +71,17 @@ std::basic_ostream<T>& operator<<(std::basic_ostream<T>& os, const CGRect& rect)
 
 #pragma endregion
 
+#pragma region CGAffineTransform
+inline bool operator==(const CGAffineTransform lhs, const CGAffineTransform& rhs) {
+    return lhs.a == rhs.a && lhs.b == rhs.b && lhs.c == rhs.c && lhs.d == rhs.d && lhs.tx == rhs.tx && lhs.ty == rhs.ty;
+}
+
+template <typename T>
+std::basic_ostream<T>& operator<<(std::basic_ostream<T>& os, const CGAffineTransform& t) {
+    os << "a: " << t.a << " b: " << t.b << " c: " << t.c << " d: " << t.d << " tx: " << t.tx << " ty: " << t.ty;
+    return os;
+}
+
+#pragma endregion
+
 #endif

@@ -37,7 +37,6 @@ typedef struct {
     CGImageRef _imgClip, _imgMask;
     CGRect _imgMaskRect;
     CGAffineTransform curTransform;
-    CGPoint curTextPosition;
     CGTextDrawingMode textDrawingMode;
     uint32_t lineCap;
     float lineWidth;
@@ -177,7 +176,7 @@ public:
     virtual bool CGContextIsPointInPath(bool eoFill, float x, float y);
     virtual CGPathRef CGContextCopyPath(void);
 
-    virtual void CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun);
+    virtual void CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, bool transformByGlyph = true);
 
     // TODO 1077:: Remove once D2D render target is implemented
     virtual void _CGContextSetScaleFactor(float scale);

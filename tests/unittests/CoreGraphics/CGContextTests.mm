@@ -30,6 +30,7 @@
 #import <Foundation\Foundation.h>
 #import <CoreGraphics\CGBitmapContext.h>
 #import <CoreGraphics\CGPattern.h>
+#import "CppUtils.h"
 
 void _DrawCustomPattern(void* info, CGContextRef context) {
     // Draw a circle inset from the pattern size
@@ -360,4 +361,19 @@ TEST(CGPath, CGContextCopyPathCGPathAddQuadCurveToPoint) {
 
     CGContextRelease(context);
     CGColorSpaceRelease(rgbColorSpace);
+}
+
+TEST(CGContext, TextPositionShouldBeInMatrix) {
+    woc::unique_cf<CGColorSpaceRef> rgbColorSpace{ CGColorSpaceCreateDeviceRGB() };
+    woc::unique_cf<CGContextRef> context{ CGBitmapContextCreate(0, 0, 0, 8, 0, rgbColorSpace.get(), 0) };
+    EXPECT_EQ(CGAffineTransformIdentity, CGContextGetTextMatrix(context.get()));
+    EXPECT_EQ(CGPointMake(0, 0), CGContextGetTextPosition(context.get()));
+    CGContextSetTextPosition(context.get(), 25, 50);
+    EXPECT_EQ(CGAffineTransformMake(1, 0, 0, 1, 25, 50), CGContextGetTextMatrix(context.get()));
+    EXPECT_EQ(CGPointMake(25, 50), CGContextGetTextPosition(context.get()));
+
+    CGAffineTransform transform{ 2, 1, 0, 1, 15, -25 };
+    CGContextSetTextMatrix(context.get(), transform);
+    EXPECT_EQ(transform, CGContextGetTextMatrix(context.get()));
+    EXPECT_EQ(CGPointMake(15, -25), CGContextGetTextPosition(context.get()));
 }
