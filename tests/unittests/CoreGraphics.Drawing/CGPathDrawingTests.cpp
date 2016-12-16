@@ -36,7 +36,7 @@ DRAW_TEST_F(CGPath, AddCurveToPoint, UIKitMimicTest) {
     CGPathRelease(thepath);
 }
 
-DRAW_TEST_F(CGPath, AddEllipse, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGPath, AddEllipse, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
