@@ -24,7 +24,7 @@ void soundCompletion(SystemSoundID ssID, void* self);
 - (void)viewDidLoad {
     [super viewDidLoad];
     CGRect bounds = [[UIScreen mainScreen] bounds];
-    
+
     scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, bounds.size.width, bounds.size.height)];
     scrollView.backgroundColor = [UIColor whiteColor];
     scrollView.contentSize = CGSizeMake(bounds.size.width, 900);
@@ -64,31 +64,65 @@ void soundCompletion(SystemSoundID ssID, void* self);
     [callbackFunction setBackgroundColor:[UIColor whiteColor]];
     [callbackFunction addTarget:self action:@selector(callbackFunctionChanged:) forControlEvents:UIControlEventValueChanged];
     [scrollView addSubview:callbackFunction];
-    
+
+    // Test Run Code For Audio Converter
+    NSURL* audioUrl = [[NSBundle mainBundle] URLForResource:@"test" withExtension:@"wav"];
+    // AVAudioPlayer *_audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error : nil];
+    NSData* data = [NSData dataWithContentsOfURL:audioUrl];
+    NSUInteger len = [data length];
+    UInt32 outLen = len * 2;
+    Byte* inByteData = (Byte*)malloc(len);
+    Byte* outByteData = (Byte*)malloc(len * 2);
+    memcpy(inByteData, [data bytes], len);
+
+    AudioStreamBasicDescription inFormat;
+    inFormat.mSampleRate = 44100;
+    inFormat.mFormatID = kAudioFormatLinearPCM;
+    inFormat.mFormatFlags = (kAudioFormatFlagIsPacked | kAudioFormatFlagIsSignedInteger);
+    inFormat.mBytesPerPacket = 4;
+    inFormat.mFramesPerPacket = 1;
+    inFormat.mBytesPerFrame = 4;
+    inFormat.mChannelsPerFrame = 2;
+    inFormat.mBitsPerChannel = 16;
+    inFormat.mReserved = 0;
+
+    AudioStreamBasicDescription outFormat;
+    outFormat.mSampleRate = 44100;
+    outFormat.mFormatID = kAudioFormatLinearPCM;
+    outFormat.mFormatFlags = (kAudioFormatFlagIsPacked | kAudioFormatFlagIsFloat);
+    outFormat.mBytesPerPacket = 8;
+    outFormat.mFramesPerPacket = 1;
+    outFormat.mBytesPerFrame = 8;
+    outFormat.mChannelsPerFrame = 2;
+    outFormat.mBitsPerChannel = 32;
+    outFormat.mReserved = 0;
+
+    AudioConverterRef converter;
+    OSStatus err = noErr;
+    err = AudioConverterNew(&inFormat, &outFormat, &converter);
+    err = AudioConverterConvertBuffer(converter, len, (void*)inByteData, &outLen, (void*)outByteData);
+    // End Of Test Run Code
+
     [self.view setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:scrollView];
 }
 
-
 - (void)callbackFunctionChanged:(UISwitch*)callbackSwitch {
-    
     if ([callbackSwitch isOn]) {
-        AudioServicesAddSystemSoundCompletion(sid, nil, nil, soundCompletion, (__bridge void*)self); 
+        AudioServicesAddSystemSoundCompletion(sid, nil, nil, soundCompletion, (__bridge void*)self);
     } else {
         AudioServicesRemoveSystemSoundCompletion(sid);
     }
 }
 
-
 - (void)playAlertSoundPressed:(UIButton*)button {
     [self completionLabel:false];
-    AudioServicesPlayAlertSound(sid);  
+    AudioServicesPlayAlertSound(sid);
 }
-
 
 - (void)playSystemSoundPressed:(UIButton*)button {
     [self completionLabel:false];
-    AudioServicesPlaySystemSound(sid);  
+    AudioServicesPlaySystemSound(sid);
 }
 
 - (void)completionLabel:(BOOL)show {
@@ -102,6 +136,5 @@ void soundCompletion(SystemSoundID ssID, void* self);
 @end
 
 void soundCompletion(SystemSoundID ssID, void* self) {
-
     [(__bridge AudioToolboxViewController*)self completionLabel:true];
 }
