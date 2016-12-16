@@ -188,6 +188,7 @@ public:
         RETURN_HR_IF_NULL(E_POINTER, buffer);
 
         const WICRect fullRect = { 0, 0, m_width, m_height };
+
         Microsoft::WRL::ComPtr<IWICBitmapLock> lock;
         // TODO #1379: Support sub-regional locking.
         RETURN_IF_FAILED(Lock(&fullRect, 0, &lock));
@@ -198,26 +199,34 @@ public:
 
         RETURN_HR_IF(E_INVALIDARG, copyRect->Width == 0 || copyRect->Height == 0 || copyRect->X < 0 || copyRect->Y < 0);
 
-        UINT sourceDataStride;
-        UINT sourceDataSize;
-        BYTE* sourceData;
-        RETURN_IF_FAILED(lock->GetStride(&sourceDataStride));
-        RETURN_IF_FAILED(lock->GetDataPointer(&sourceDataSize, &sourceData));
+        unsigned int srcStride;
+        unsigned int srcSize;
+        uint8_t* srcData;
+        RETURN_IF_FAILED(lock->GetStride(&srcStride));
+        RETURN_IF_FAILED(lock->GetDataPointer(&srcSize, &srcData));
 
         if (copyRect->X == 0 && copyRect->Y == 0 && copyRect->Width == m_width && copyRect->Height == m_height) {
-            RETURN_HR_IF(E_INVALIDARG, sourceDataSize > bufferSize);
-            RETURN_HR_IF(E_UNEXPECTED, memcpy_s(buffer, bufferSize, sourceData, sourceDataSize) != 0);
+            RETURN_HR_IF(E_INVALIDARG, srcSize > bufferSize);
+            RETURN_HR_IF(E_UNEXPECTED, memcpy_s(buffer, bufferSize, srcData, srcSize) != 0);
         } else {
             // Once we support sub-regional locking we can fix this stride copier.
-            RETURN_HR_IF(E_NOTIMPL, sourceDataStride < fullRect.Width);
-            size_t bytesPerPixel = sourceDataStride / fullRect.Width;
-            ptrdiff_t xOffBytes = copyRect->X * bytesPerPixel;
-            for (size_t i = 0, j = copyRect->Y; i < copyRect->Height; ++i, ++j) {
+
+            // Invalid state: Source stride is less than the width of the image.
+            // We can't copy regions from sub-8bpp images.
+            RETURN_HR_IF(E_NOTIMPL, srcStride < fullRect.Width);
+
+            size_t bytesPerPixel = srcStride / fullRect.Width;
+            ptrdiff_t srcOffset = (copyRect->X * bytesPerPixel) + (copyRect->Y * srcStride);
+            const uint8_t* end = buffer + (stride * copyRect->Height);
+            for (uint8_t *src = srcData + srcOffset, *dest = buffer;
+                 dest < end;
+                 src += srcStride, dest += stride) {
                 RETURN_HR_IF(E_UNEXPECTED,
-                             memcpy_s(buffer + (stride * i),
-                                      bufferSize - (stride * i),
-                                      sourceData + xOffBytes + (sourceDataStride * j),
-                                      stride));
+                             memcpy_s(dest,
+                                      end - dest, // Total remaining bytes available in the destination buffer.
+                                      src,
+                                      stride)
+                );
             }
         }
         return S_OK;
