@@ -176,7 +176,7 @@ static inline CGSize __CTLineGetBounds(CTLineRef line) {
                 origin = { remainingRect.origin.x, origin.y };
             } else {
                 origin = { 0.0f, origin.y + lineHeight };
-                _totalSize.width = std::max(_totalSize.width, rect.origin.x + fitWidth);
+                _totalSize.width = std::max(_totalSize.width, static_cast<CGFloat>(rect.origin.x + fitWidth));
                 if (stringIndex > indexOfLastVisibleChar) {
                     // Ended up with whitespace at end of the line, break to next line
                     break;
