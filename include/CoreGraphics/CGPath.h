@@ -57,11 +57,11 @@ COREGRAPHICS_EXPORT CGPathRef CGPathCreateWithRect(CGRect rect, const CGAffineTr
 COREGRAPHICS_EXPORT CGPathRef CGPathCreateWithRoundedRect(CGRect rect,
                                                           CGFloat cornerWidth,
                                                           CGFloat cornerHeight,
-                                                          const CGAffineTransform* transform) STUB_METHOD;
+                                                          const CGAffineTransform* transform);
 
 COREGRAPHICS_EXPORT CGPathRef CGPathCreateCopy(CGPathRef path);
 
-COREGRAPHICS_EXPORT CGPathRef CGPathCreateCopyByTransformingPath(CGPathRef path, const CGAffineTransform* transform) STUB_METHOD;
+COREGRAPHICS_EXPORT CGPathRef CGPathCreateCopyByTransformingPath(CGPathRef path, const CGAffineTransform* transform);
 
 COREGRAPHICS_EXPORT CGPathRef CGPathCreateCopyByDashingPath(
     CGPathRef path, const CGAffineTransform* transform, CGFloat phase, const CGFloat* lengths, size_t count) STUB_METHOD;
@@ -74,8 +74,7 @@ COREGRAPHICS_EXPORT CGPathRef CGPathCreateCopyByStrokingPath(CGPathRef path,
 
 COREGRAPHICS_EXPORT CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path);
 
-COREGRAPHICS_EXPORT CGMutablePathRef CGPathCreateMutableCopyByTransformingPath(CGPathRef path,
-                                                                               const CGAffineTransform* transform) STUB_METHOD;
+COREGRAPHICS_EXPORT CGMutablePathRef CGPathCreateMutableCopyByTransformingPath(CGPathRef path, const CGAffineTransform* transform);
 
 COREGRAPHICS_EXPORT void CGPathRelease(CGPathRef path);
 COREGRAPHICS_EXPORT CGPathRef CGPathRetain(CGPathRef path);
@@ -110,7 +109,7 @@ COREGRAPHICS_EXPORT void CGPathAddRect(CGMutablePathRef path, const CGAffineTran
 
 COREGRAPHICS_EXPORT void CGPathAddRects(CGMutablePathRef path, const CGAffineTransform* m, const CGRect* rects, size_t count) STUB_METHOD;
 COREGRAPHICS_EXPORT void CGPathAddRoundedRect(
-    CGMutablePathRef path, const CGAffineTransform* transform, CGRect rect, CGFloat cornerWidth, CGFloat cornerHeight) STUB_METHOD;
+    CGMutablePathRef path, const CGAffineTransform* transform, CGRect rect, CGFloat cornerWidth, CGFloat cornerHeight);
 COREGRAPHICS_EXPORT void CGPathApply(CGPathRef path, void* info, CGPathApplierFunction function);
 
 COREGRAPHICS_EXPORT void CGPathMoveToPoint(CGMutablePathRef path, const CGAffineTransform* m, CGFloat x, CGFloat y);
