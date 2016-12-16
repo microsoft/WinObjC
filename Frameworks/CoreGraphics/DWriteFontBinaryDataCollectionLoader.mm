@@ -16,6 +16,7 @@
 
 #import "DWriteFontBinaryDataCollectionLoader.h"
 #import "DWriteFontBinaryDataLoader.h"
+#import "CGDataProviderInternal.h"
 
 #import <CoreFoundation/CFError.h>
 
@@ -98,8 +99,8 @@ HRESULT DWriteFontBinaryDataCollectionLoader::AddDatas(CFArrayRef fontDatas, CFA
 
     CFIndex count = CFArrayGetCount(fontDatas);
     for (CFIndex i = 0; i < count; ++i) {
-        woc::unique_cf<CFDataRef> data(static_cast<CFDataRef>(CFRetain(CFArrayGetValueAtIndex(fontDatas, i))));
-        if (data.get()) {
+        woc::unique_cf<CGDataProviderRef> data((CGDataProviderRef)CFRetain(CFArrayGetValueAtIndex(fontDatas, i)));
+        if (data.get() && _CGDataProviderGetSize(data.get()) != 0) {
             if (m_fontDatas.find(data) != m_fontDatas.end()) {
                 __AppendErrorIfExists(outErrors, kCTFontManagerErrorAlreadyRegistered);
                 ret = S_FALSE;
@@ -128,8 +129,8 @@ HRESULT DWriteFontBinaryDataCollectionLoader::RemoveDatas(CFArrayRef fontDatas, 
 
     CFIndex count = CFArrayGetCount(fontDatas);
     for (CFIndex i = 0; i < count; ++i) {
-        woc::unique_cf<CFDataRef> data(static_cast<CFDataRef>(CFRetain(CFArrayGetValueAtIndex(fontDatas, i))));
-        if (data.get()) {
+        woc::unique_cf<CGDataProviderRef> data((CGDataProviderRef)CFRetain(CFArrayGetValueAtIndex(fontDatas, i)));
+        if (data.get() && _CGDataProviderGetSize(data.get()) != 0) {
             const auto it = m_fontDatas.find(data);
             if (it != m_fontDatas.end()) {
                 m_fontDatas.erase(it);

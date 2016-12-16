@@ -465,7 +465,7 @@ HRESULT _DWriteUnregisterFontsWithDatas(CFArrayRef datas, CFArrayRef* errors) {
 /**
  * Creates an IDWriteFontFace by attempting to use a CFDataRef as a font file
  */
-HRESULT _DWriteCreateFontFaceWithData(CFDataRef data, IDWriteFontFace** outFontFace) {
+HRESULT _DWriteCreateFontFaceWithData(CGDataProviderRef data, IDWriteFontFace** outFontFace) {
     ComPtr<IDWriteFactory> dwriteFactory;
     RETURN_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
 

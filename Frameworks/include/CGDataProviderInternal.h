@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,22 +13,8 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-// TODO: Task 7188763-Reimplement CGDataProvider which does not inherit from NSData but rather uses it within itself.
-@interface CGDataProvider : NSData {
-@public
-    CGDataProviderReleaseDataCallback releaseFunc;
-    void* info;
-    size_t size;
-    const void* data;
-    StrongId<NSString> filename;
-    StrongId<NSData> _data;
-}
-- (NSString*)_fileName;
-
-- (instancetype)init;
-- (instancetype)initWithBytesNoCopy:(void*)bytes length:(NSUInteger)length freeWhenDone:(BOOL)freeWhenDone;
-- (const void*)bytes;
-- (NSUInteger)length;
-
-@end
+#import <CoreGraphics/CGDataProvider.h>
+const void* _CGDataProviderGetData(CGDataProviderRef provider);
+size_t _CGDataProviderGetSize(CGDataProviderRef provider);
