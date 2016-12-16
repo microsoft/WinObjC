@@ -1112,7 +1112,8 @@ CGAffineTransform CGContextGetTextMatrix(CGContextRef context) {
 */
 void CGContextSetTextPosition(CGContextRef context, CGFloat x, CGFloat y) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    context->textMatrix.tx = x;
+    context->textMatrix.ty = y;
 }
 
 /**
@@ -1120,8 +1121,10 @@ void CGContextSetTextPosition(CGContextRef context, CGFloat x, CGFloat y) {
 */
 CGPoint CGContextGetTextPosition(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context, StubReturn());
-    UNIMPLEMENTED();
-    return StubReturn();
+    return {
+        context->textMatrix.tx,
+        context->textMatrix.ty,
+    };
 }
 
 /**
