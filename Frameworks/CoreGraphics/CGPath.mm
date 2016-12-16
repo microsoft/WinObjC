@@ -228,7 +228,7 @@ CGMutablePathRef CGPathCreateMutable() {
 }
 
 /**
- @Status Caveat
+ @Status Interoperable
  @Notes Creates a mutable copy
 */
 CGPathRef CGPathCreateCopy(CGPathRef path) {
@@ -751,7 +751,7 @@ CGPathRef CGPathCreateCopyByStrokingPath(
 }
 
 /**
- @Status Caveat
+ @Status Interoperable
  @Notes Creates a mutable copy
 */
 CGPathRef CGPathCreateCopyByTransformingPath(CGPathRef path, const CGAffineTransform* transform) {
