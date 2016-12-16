@@ -16,7 +16,7 @@
 
 #include "DrawingTest.h"
 
-DISABLED_DRAW_TEST_F(CGPath, AddCurveToPoint, UIKitMimicTest) {
+DRAW_TEST_F(CGPath, AddCurveToPoint, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -36,7 +36,7 @@ DISABLED_DRAW_TEST_F(CGPath, AddCurveToPoint, UIKitMimicTest) {
     CGPathRelease(thepath);
 }
 
-DISABLED_DRAW_TEST_F(CGPath, AddEllipse, UIKitMimicTest) {
+DRAW_TEST_F(CGPath, AddEllipse, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -58,7 +58,7 @@ DISABLED_DRAW_TEST_F(CGPath, AddEllipse, UIKitMimicTest) {
     CGPathRelease(thepath);
 }
 
-DISABLED_DRAW_TEST_F(CGPath, AddLineToPoint, UIKitMimicTest) {
+DRAW_TEST_F(CGPath, AddLineToPoint, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -84,7 +84,7 @@ DISABLED_DRAW_TEST_F(CGPath, AddLineToPoint, UIKitMimicTest) {
     CGPathRelease(thepath);
 }
 
-DISABLED_DRAW_TEST_F(CGPath, AddPath, UIKitMimicTest) {
+DRAW_TEST_F(CGPath, AddPath, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -116,7 +116,7 @@ DISABLED_DRAW_TEST_F(CGPath, AddPath, UIKitMimicTest) {
     CGPathRelease(theSecondPath);
 }
 
-DISABLED_DRAW_TEST_F(CGPath, AddQuadCurveToPoint, UIKitMimicTest) {
+DRAW_TEST_F(CGPath, AddQuadCurveToPoint, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -141,7 +141,7 @@ DISABLED_DRAW_TEST_F(CGPath, AddQuadCurveToPoint, UIKitMimicTest) {
     CGPathRelease(thePath);
 }
 
-DISABLED_DRAW_TEST_F(CGPath, AddRect, UIKitMimicTest) {
+DRAW_TEST_F(CGPath, AddRect, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -159,7 +159,7 @@ DISABLED_DRAW_TEST_F(CGPath, AddRect, UIKitMimicTest) {
     CGPathRelease(thePath);
 }
 
-DISABLED_DRAW_TEST_F(CGPath, Apply, UIKitMimicTest) {
+DRAW_TEST_F(CGPath, Apply, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -196,7 +196,7 @@ DISABLED_DRAW_TEST_F(CGPath, Apply, UIKitMimicTest) {
     CGPathRelease(thepath);
 }
 
-DISABLED_DRAW_TEST_F(CGPath, CloseSubpath, UIKitMimicTest) {
+DRAW_TEST_F(CGPath, CloseSubpath, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -223,7 +223,7 @@ DISABLED_DRAW_TEST_F(CGPath, CloseSubpath, UIKitMimicTest) {
     CGPathRelease(thePath);
 }
 
-DISABLED_DRAW_TEST_F(CGPath, GetBoundingBox, UIKitMimicTest) {
+DRAW_TEST_F(CGPath, GetBoundingBox, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -261,7 +261,7 @@ static void CGPathApplyCallback(void* context, const CGPathElement* element) {
     CGContextStrokePath((CGContextRef)context);
 }
 
-DISABLED_DRAW_TEST_F(CGPath, PathApplyDraw, UIKitMimicTest) {
+DRAW_TEST_F(CGPath, PathApplyDraw, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
     applyBounds = GetDrawingBounds();
     CGFloat width = applyBounds.size.width;
@@ -319,7 +319,7 @@ static void CGPathControlPointCallback(void* context, const CGPathElement* eleme
     }
 }
 
-DISABLED_DRAW_TEST_F(CGPath, PathApplyControlPointsQuadCurve, UIKitMimicTest) {
+DRAW_TEST_F(CGPath, PathApplyControlPointsQuadCurve, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
     CGFloat width = bounds.size.width;
@@ -345,7 +345,7 @@ DISABLED_DRAW_TEST_F(CGPath, PathApplyControlPointsQuadCurve, UIKitMimicTest) {
     CGPathRelease(thepath);
 }
 
-DISABLED_DRAW_TEST_F(CGPath, PathApplyControlPointsArcs, UIKitMimicTest) {
+DRAW_TEST_F(CGPath, PathApplyControlPointsArcs, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
     CGFloat width = bounds.size.width;
@@ -381,7 +381,7 @@ DISABLED_DRAW_TEST_F(CGPath, PathApplyControlPointsArcs, UIKitMimicTest) {
     CGPathRelease(thepath);
 }
 
-DISABLED_DRAW_TEST_F(CGPath, PathApplyControlPointsArcsSimple, UIKitMimicTest) {
+DRAW_TEST_F(CGPath, PathApplyControlPointsArcsSimple, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
     CGFloat width = bounds.size.width;
