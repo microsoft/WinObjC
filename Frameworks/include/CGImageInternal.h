@@ -49,10 +49,11 @@ struct GuidPixelLess : public std::binary_function<GUID, GUID, bool> {
     }
 };
 
-static const std::map<GUID, int, GuidPixelLess> s_ValidRenderTargetPixelFormat = { { GUID_WICPixelFormat8bppAlpha, 1 },
-                                                                                   { GUID_WICPixelFormat32bppPRGBA, 1 },
-                                                                                   { GUID_WICPixelFormat32bppBGR, 1 },
-                                                                                   { GUID_WICPixelFormat32bppPBGRA, 1 } };
+static const std::map<GUID, int, GuidPixelLess> s_ValidRenderTargetPixelFormat = { { GUID_WICPixelFormat8bppAlpha, 1 },    // A8 Straight
+                                                                                   { GUID_WICPixelFormat32bppRGB, 1 },     // RGBX
+                                                                                   { GUID_WICPixelFormat32bppPRGBA, 1 },   // RGBA Premultiplied
+                                                                                   { GUID_WICPixelFormat32bppBGR, 1 },     // BGRX
+                                                                                   { GUID_WICPixelFormat32bppPBGRA, 1 } }; // BGRX Premultiplied
 
 static const std::map<GUID, __CGImagePixelProperties, GuidPixelLess> s_PixelFormats = {
     // Last = RGBA, 32Little = forward: RGBA
