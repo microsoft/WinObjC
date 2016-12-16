@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -100,10 +101,10 @@ typedef OSStatus (*AudioConverterComplexInputDataProc)(AudioConverterRef inAudio
 typedef OSStatus (*AudioConverterInputDataProc)(AudioConverterRef inAudioConverter, UInt32* ioDataSize, void** outData, void* inUserData);
 typedef struct AudioConverterPrimeInfo AudioConverterPrimeInfo;
 
-AUDIOTOOLBOX_EXPORT OSStatus AudioConverterDispose(AudioConverterRef inAudioConverter) STUB_METHOD;
+AUDIOTOOLBOX_EXPORT OSStatus AudioConverterDispose(AudioConverterRef inAudioConverter);
 AUDIOTOOLBOX_EXPORT OSStatus AudioConverterNew(const AudioStreamBasicDescription* inSourceFormat,
                                                const AudioStreamBasicDescription* inDestinationFormat,
-                                               AudioConverterRef _Nullable* outAudioConverter) STUB_METHOD;
+                                               AudioConverterRef _Nullable* outAudioConverter);
 AUDIOTOOLBOX_EXPORT OSStatus AudioConverterNewSpecific(const AudioStreamBasicDescription* inSourceFormat,
                                                        const AudioStreamBasicDescription* inDestinationFormat,
                                                        UInt32 inNumberClassDescriptions,
@@ -126,7 +127,7 @@ AUDIOTOOLBOX_EXPORT OSStatus AudioConverterConvertBuffer(AudioConverterRef inAud
                                                          UInt32 inInputDataSize,
                                                          const void* inInputData,
                                                          UInt32* ioOutputDataSize,
-                                                         void* outOutputData) STUB_METHOD;
+                                                         void* outOutputData);
 AUDIOTOOLBOX_EXPORT OSStatus AudioConverterFillComplexBuffer(AudioConverterRef inAudioConverter,
                                                              AudioConverterComplexInputDataProc inInputDataProc,
                                                              void* inInputDataProcUserData,
