@@ -49,6 +49,10 @@ static bool appCanOpenURL(NSURL* url) {
     return false;
 }
 
+@interface SFSafariWebViewController ()
+- (void)_updateUIToolbarButtons;
+@end
+
 // Delegate for the UIWebView that underlies a SFSafariWebViewController
 @interface _SFWebViewDelegate : NSObject <UIWebViewDelegate>
 @property (weak, nonatomic) SFSafariWebViewController* viewController;
@@ -101,12 +105,22 @@ static bool appCanOpenURL(NSURL* url) {
 
     return !openWithAppDelegate;
 }
+
+- (void)webViewDidFinishLoad:(UIWebView*)webView {
+    // WebView has just finished loading, so the back and/or forward buttons can now be enabled/disabled.
+    [self.viewController _updateUIToolbarButtons];
+}
 @end
 
 @implementation SFSafariWebViewController {
     NSString* _redirectUrl;
     UIWebView* _webView;
     _SFWebViewDelegate* _webViewDelegate;
+    UIToolbar* _toolbar;
+    UIBarButtonItem* _backButton;
+    UIBarButtonItem* _forwardButton;
+    UIBarButtonItem* _doneButton;
+    UIBarButtonItem* _spaceButton;
 }
 
 /**
@@ -155,13 +169,13 @@ static bool appCanOpenURL(NSURL* url) {
 
     // Create a toolbar at the top of the view
     CGRect toolbarFrame = CGRectMake(0, 0, frame.size.width, toolbarHeight);
-    UIToolbar* toolbar = [[UIToolbar alloc] initWithFrame:toolbarFrame];
-    toolbar.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
+    _toolbar = [[UIToolbar alloc] initWithFrame:toolbarFrame];
+    _toolbar.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
 
     // Create a web view that fills most of the view
     CGRect webFrame = topView.bounds;
-    webFrame.origin.y += toolbar.frame.size.height;
-    webFrame.size.height -= toolbar.frame.size.height;
+    webFrame.origin.y += _toolbar.frame.size.height;
+    webFrame.size.height -= _toolbar.frame.size.height;
 
     _webView = [[UIWebView alloc] initWithFrame:webFrame];
     _webView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
@@ -178,28 +192,27 @@ static bool appCanOpenURL(NSURL* url) {
     [topView addSubview:_webView];
 
     // <-
-    UIBarButtonItem* backButton =
+    _backButton =
         [[UIBarButtonItem alloc] initWithImage:backArrow style:UIBarButtonItemStylePlain target:_webView action:@selector(goBack)];
 
     // ->
-    UIBarButtonItem* forwardButton =
+    _forwardButton =
         [[UIBarButtonItem alloc] initWithImage:backArrow style:UIBarButtonItemStylePlain target:_webView action:@selector(goForward)];
 
-    [[forwardButton _view] setTransform:CGAffineTransformMakeRotation(M_PI)];
+    [[_forwardButton _view] setTransform:CGAffineTransformMakeRotation(M_PI)];
 
     // Done
-    UIBarButtonItem* doneButton =
+    _doneButton =
         [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(_cancel)];
 
-    UIBarButtonItem* space =
+    _spaceButton =
         [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nullptr];
 
-    NSArray<UIBarButtonItem*>* toolbarItems = @[ backButton, space, forwardButton, space, doneButton ];
+    [self _updateUIToolbarButtons];
 
-    [toolbar setItems:toolbarItems animated:NO];
-    [toolbar setTintColor:[UIColor lightGrayColor]];
+    [_toolbar setTintColor:[UIColor lightGrayColor]];
 
-    [topView addSubview:toolbar];
+    [topView addSubview:_toolbar];
 
     self.view = topView;
 }
@@ -211,6 +224,36 @@ static bool appCanOpenURL(NSURL* url) {
 
 - (void)dealloc {
     _webView.delegate = nil;
+}
+
+- (void)_updateUIToolbarButtons {
+    StrongId<NSMutableArray<UIBarButtonItem*>> toolbarItemsArray = [[NSMutableArray alloc] init];
+
+    if ([_webView canGoBack] == YES) {
+        [toolbarItemsArray addObject:_backButton];
+    } else {
+        // This is to ensure that the other buttons are rendered at the correct position.
+        [toolbarItemsArray addObject:_spaceButton];
+    }
+
+    // This is to ensure that the other buttons are rendered at the correct position.
+    [toolbarItemsArray addObject:_spaceButton];
+
+    if ([_webView canGoForward] == YES) {
+        [toolbarItemsArray addObject:_forwardButton];
+    } else {
+        // This is to ensure that the other buttons are rendered at the correct position.
+        [toolbarItemsArray addObject:_spaceButton];
+    }
+
+    // This is to ensure that the other buttons are rendered at the correct position.
+    [toolbarItemsArray addObject:_spaceButton];
+
+    [toolbarItemsArray addObject:_doneButton];
+
+    StrongId<NSArray<UIBarButtonItem*>> toolbarItems = [toolbarItemsArray copy];
+
+    [_toolbar setItems:toolbarItems animated:NO];
 }
 
 @end
