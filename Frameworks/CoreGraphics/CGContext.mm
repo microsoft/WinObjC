@@ -164,6 +164,11 @@ struct __CGContextDrawingState {
         clippingGeometry.Attach(newClippingPathGeometry.Detach());
         return S_OK;
     }
+
+    inline D2D1_INTERPOLATION_MODE GetInterpolationModeForCGImage(CGImageRef image) {
+        RETURN_RESULT_IF_NULL(image, D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR);
+        return CGImageGetShouldInterpolate(image) ? bitmapInterpolationMode : D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR;
+    }
 };
 
 class __CGContextLayer {
@@ -1981,12 +1986,17 @@ void CGContextDrawImage(CGContextRef context, CGRect rect, CGImageRef image) {
     flipImage = CGAffineTransformTranslate(flipImage, -rect.origin.x, -(rect.origin.y + (rect.size.height / 2.0)));
 
     ComPtr<ID2D1CommandList> commandList;
-    FAIL_FAST_IF_FAILED(context->DrawToCommandList(
-        _kCGCoordinateModeUserSpace, &flipImage, &commandList, [&](CGContextRef context, ID2D1DeviceContext* deviceContext) {
-            auto& state = context->CurrentGState();
-            deviceContext->DrawBitmap(d2dBitmap.Get(), __CGRectToD2D_F(rect), state.alpha, state.bitmapInterpolationMode);
-            return S_OK;
-        }));
+    FAIL_FAST_IF_FAILED(context->DrawToCommandList(_kCGCoordinateModeUserSpace,
+                                                   &flipImage,
+                                                   &commandList,
+                                                   [&](CGContextRef context, ID2D1DeviceContext* deviceContext) {
+                                                       auto& state = context->CurrentGState();
+                                                       deviceContext->DrawBitmap(d2dBitmap.Get(),
+                                                                                 __CGRectToD2D_F(rect),
+                                                                                 state.alpha,
+                                                                                 state.GetInterpolationModeForCGImage(refImage.get()));
+                                                       return S_OK;
+                                                   }));
     FAIL_FAST_IF_FAILED(context->DrawImage(commandList.Get()));
 }
 
