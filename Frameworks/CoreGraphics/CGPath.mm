@@ -35,6 +35,78 @@
 
 static const wchar_t* TAG = L"CGPath";
 
+using namespace Microsoft::WRL;
+
+class _CGPathCustomSink : public RuntimeClass<RuntimeClassFlags<RuntimeClassType::WinRtClassicComMix>, ID2D1SimplifiedGeometrySink> {
+protected:
+    InspectableClass(L"Windows.Bridge.Direct2D._CGPathCustomSink", TrustLevel::BaseTrust);
+
+public:
+    ID2D1GeometrySink* getBackingSink() {
+        return geometrySink.Get();
+    }
+
+    _CGPathCustomSink(_In_ ID2D1GeometrySink* sink) : geometrySink(sink), isFigureOpen(false) {
+    }
+
+    STDMETHOD_(void, _EndFigure)(D2D1_FIGURE_END figureEnd) {
+        if (isFigureOpen) {
+            geometrySink->EndFigure(figureEnd);
+            isFigureOpen = false;
+        }
+    }
+
+    STDMETHOD_(void, SetFillMode)(D2D1_FILL_MODE fillMode) {
+        geometrySink->SetFillMode(fillMode);
+    }
+
+    STDMETHOD_(void, SetSegmentFlags)(D2D1_PATH_SEGMENT vertexFlags) {
+        geometrySink->SetSegmentFlags(vertexFlags);
+    }
+
+    STDMETHOD_(void, AddLines)(_In_reads_(pointsCount) CONST D2D1_POINT_2F* points, UINT32 pointsCount) {
+        geometrySink->AddLines(points, pointsCount);
+        lastPoint = points[pointsCount - 1];
+    }
+
+    STDMETHOD_(void, AddBeziers)(_In_reads_(beziersCount) CONST D2D1_BEZIER_SEGMENT* beziers, UINT32 beziersCount) {
+        geometrySink->AddBeziers(beziers, beziersCount);
+        lastPoint = beziers[beziersCount - 1].point3;
+    }
+
+    STDMETHOD_(void, BeginFigure)(D2D1_POINT_2F startPoint, D2D1_FIGURE_BEGIN figureBegin) {
+        if (isFigureOpen) {
+            if (startPoint.x != lastPoint.x || startPoint.y != lastPoint.y) {
+                _EndFigure(D2D1_FIGURE_END_OPEN);
+                geometrySink->BeginFigure(startPoint, figureBegin);
+            }
+        } else {
+            geometrySink->BeginFigure(startPoint, figureBegin);
+        }
+        isFigureOpen = true;
+    }
+
+    STDMETHOD_(void, EndFigure)(D2D1_FIGURE_END figureEnd) {
+    }
+
+    STDMETHOD(Close)() {
+        return S_OK;
+    };
+
+    STDMETHOD(_Close)() {
+        return geometrySink->Close();
+    }
+
+    STDMETHOD_(bool, IsFigureOpen)() {
+        return isFigureOpen;
+    }
+
+private:
+    ComPtr<ID2D1GeometrySink> geometrySink;
+    D2D1_POINT_2F lastPoint;
+    bool isFigureOpen;
+};
+
 static inline CGPoint __CreateCGPointWithTransform(CGFloat x, CGFloat y, const CGAffineTransform* transform) {
     CGPoint pt{ x, y };
     if (transform) {
@@ -49,14 +121,13 @@ using namespace Microsoft::WRL;
 
 struct __CGPath : CoreFoundation::CppBase<__CGPath> {
     ComPtr<ID2D1PathGeometry> pathGeometry;
-    ComPtr<ID2D1GeometrySink> geometrySink;
+    ComPtr<_CGPathCustomSink> geometrySink;
 
-    bool figureClosed;
     CGPoint currentPoint{ 0, 0 };
     CGPoint startingPoint{ 0, 0 };
     CGAffineTransform lastTransform;
 
-    __CGPath() : figureClosed(true), lastTransform(CGAffineTransformIdentity) {
+    __CGPath() : lastTransform(CGAffineTransformIdentity) {
     }
 
     ID2D1PathGeometry* GetPathGeometry() const {
@@ -64,7 +135,7 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
     }
 
     ID2D1GeometrySink* GetGeometrySink() const {
-        return geometrySink.Get();
+        return geometrySink->getBackingSink();
     }
 
     CGPoint GetCurrentPoint() const {
@@ -109,20 +180,18 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
 
             // Create temp vars for new path/sink
             ComPtr<ID2D1PathGeometry> newPath;
-            ComPtr<ID2D1GeometrySink> newSink;
+            ComPtr<ID2D1GeometrySink> newBackingSink;
 
             // Open a new path that the contents of the old path will be streamed into. We cannot re-use the same path as it is now closed
             // and cannot be opened again. We use the newPath variable because the factory was returning the same pointer for some strange
             // reason so this will force it to do otherwise.
             RETURN_IF_FAILED(factory->CreatePathGeometry(&newPath));
-            RETURN_IF_FAILED(newPath->Open(&newSink));
-            RETURN_IF_FAILED(pathGeometry->Stream(newSink.Get()));
+            RETURN_IF_FAILED(newPath->Open(&newBackingSink));
+            RETURN_IF_FAILED(pathGeometry->Stream(newBackingSink.Get()));
+            newBackingSink->SetFillMode(D2D1_FILL_MODE_WINDING);
 
             pathGeometry = newPath;
-            geometrySink = newSink;
-
-            // Without a new figure being created, it's by default closed
-            figureClosed = true;
+            geometrySink = Make<_CGPathCustomSink>(newBackingSink.Get());
         }
         return S_OK;
     }
@@ -130,23 +199,43 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
     HRESULT ClosePath() {
         if (geometrySink) {
             EndFigure(D2D1_FIGURE_END_OPEN);
-            RETURN_IF_FAILED(geometrySink->Close());
+            RETURN_IF_FAILED(geometrySink->_Close());
+
+            // Walk the path to ensure proper figure tracking.
+            ComPtr<ID2D1PathGeometry> newPath;
+            ComPtr<ID2D1GeometrySink> newBackingSink;
+
+            ComPtr<ID2D1Factory> factory;
+            RETURN_IF_FAILED(_CGGetD2DFactory(&factory));
+
+            RETURN_IF_FAILED(factory->CreatePathGeometry(&newPath));
+            RETURN_IF_FAILED(newPath->Open(&newBackingSink));
+            newBackingSink->SetFillMode(D2D1_FILL_MODE_WINDING);
+
+            ComPtr<_CGPathCustomSink> customGeometrySink = Make<_CGPathCustomSink>(newBackingSink.Get());
+
+            D2D1_MATRIX_3X2_F transformation = D2D1::IdentityMatrix();
+            RETURN_IF_FAILED(
+                pathGeometry->Simplify(D2D1_GEOMETRY_SIMPLIFICATION_OPTION_CUBICS_AND_LINES, &transformation, customGeometrySink.Get()));
+
+            customGeometrySink->_EndFigure(D2D1_FIGURE_END_OPEN);
+            RETURN_IF_FAILED(customGeometrySink->_Close());
+
+            pathGeometry = newPath;
             geometrySink = nullptr;
         }
         return S_OK;
     }
 
     void BeginFigure() {
-        if (figureClosed) {
+        if (!geometrySink->IsFigureOpen()) {
             geometrySink->BeginFigure(_CGPointToD2D_F(currentPoint), D2D1_FIGURE_BEGIN_FILLED);
-            figureClosed = false;
         }
     }
 
     void EndFigure(D2D1_FIGURE_END figureStatus) {
-        if (!figureClosed) {
-            geometrySink->EndFigure(figureStatus);
-            figureClosed = true;
+        if (geometrySink->IsFigureOpen()) {
+            geometrySink->_EndFigure(figureStatus);
         }
     }
 
@@ -155,20 +244,23 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
         RETURN_IF_FAILED(_CGGetD2DFactory(&factory));
 
         RETURN_IF_FAILED(factory->CreatePathGeometry(&pathGeometry));
-        RETURN_IF_FAILED(pathGeometry->Open(&geometrySink));
+        ComPtr<ID2D1GeometrySink> newBackingSink;
+        RETURN_IF_FAILED(pathGeometry->Open(&newBackingSink));
+        newBackingSink->SetFillMode(D2D1_FILL_MODE_WINDING);
+
+        geometrySink = Make<_CGPathCustomSink>(newBackingSink.Get());
 
         return S_OK;
     }
 
     HRESULT AddGeometryToPathWithTransformation(const ID2D1Geometry* geometry, const CGAffineTransform* transform) {
-        RETURN_IF_FAILED(ClosePath());
         RETURN_IF_FAILED(PreparePathForEditing());
 
         D2D1_MATRIX_3X2_F transformation = D2D1::IdentityMatrix();
         if (transform) {
             transformation = __CGAffineTransformToD2D_F(*transform);
         }
-        RETURN_IF_FAILED(geometry->Simplify(D2D1_GEOMETRY_SIMPLIFICATION_OPTION_CUBICS_AND_LINES, &transformation, GetGeometrySink()));
+        RETURN_IF_FAILED(geometry->Simplify(D2D1_GEOMETRY_SIMPLIFICATION_OPTION_CUBICS_AND_LINES, &transformation, geometrySink.Get()));
 
         SetLastTransform(transform);
         return S_OK;
@@ -291,7 +383,8 @@ static HRESULT _createPathReadyForFigure(CGPathRef previousPath,
     ComPtr<ID2D1Factory> factory;
     RETURN_IF_FAILED(_CGGetD2DFactory(&factory));
     RETURN_IF_FAILED(factory->CreatePathGeometry(pathGeometry));
-    RETURN_IF_FAILED((*pathGeometry)->Open(geometrySink));
+    RETURN_IF_FAILED((*pathGeometry)->Open((ID2D1GeometrySink**)geometrySink));
+    (*geometrySink)->SetFillMode(D2D1_FILL_MODE_WINDING);
 
     CGPoint invertedPoint = _getInvertedCurrentPointOfPath(previousPath);
     if (!CGPointEqualToPoint(invertedPoint, startPoint)) {
@@ -627,6 +720,7 @@ void CGPathAddCurveToPoint(CGMutablePathRef path,
     newSink->EndFigure(D2D1_FIGURE_END_OPEN);
     FAIL_FAST_IF_FAILED(newSink->Close());
 
+    path->BeginFigure();
     FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(newPath.Get(), transform));
 
     if (transform) {
@@ -703,7 +797,7 @@ void CGPathAddRoundedRect(
 /**
  @Status Caveat
  @Notes Quadratic Bezier Curves are simplified into Cubic Bezier curves. Control point approximation for arcs differs from reference
- platform. TODO 1419 : Fix figure logic in D2D to eliminate extra start point callbacks.
+ platform.
 */
 void CGPathApply(CGPathRef path, void* info, CGPathApplierFunction function) {
     RETURN_IF(!path);
@@ -766,11 +860,14 @@ CGMutablePathRef CGPathCreateMutableCopyByTransformingPath(CGPathRef path, const
 
     if (transform && !CGAffineTransformEqualToTransform(*transform, CGAffineTransformIdentity)) {
         CGMutablePathRef transformedPath = CGPathCreateMutable();
-        path->ClosePath();
+        FAIL_FAST_IF_FAILED(path->ClosePath());
 
-        FAIL_FAST_IF_FAILED(transformedPath->AddGeometryToPathWithTransformation(path->GetPathGeometry(), transform));
-        transformedPath->SetCurrentPoint(CGPointApplyAffineTransform(path->GetCurrentPoint(), *transform));
         transformedPath->SetStartingPoint(CGPointApplyAffineTransform(path->GetStartingPoint(), *transform));
+
+        transformedPath->BeginFigure();
+        FAIL_FAST_IF_FAILED(transformedPath->AddGeometryToPathWithTransformation(path->GetPathGeometry(), transform));
+
+        transformedPath->SetCurrentPoint(CGPointApplyAffineTransform(path->GetCurrentPoint(), *transform));
         transformedPath->SetLastTransform(transform);
         return transformedPath;
     }
