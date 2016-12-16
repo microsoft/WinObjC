@@ -215,3 +215,69 @@ TEST(CGBitmapContext, Rendering) {
     const BYTE* rData = static_cast<const BYTE*>(CFDataGetBytePtr(rawData.get()));
     _expectArrayValues(result, rData, 4);
 }
+
+struct BitmapFormatTestCase {
+    CGBitmapInfo bitmapInfo;
+    uint32_t nComponents;
+    uint32_t bitsPerPixel;
+    std::vector<uint8_t> mask;
+    std::vector<uint8_t> expectedPixelValues;
+};
+
+class BitmapFormats : public ::testing::TestWithParam<BitmapFormatTestCase> {};
+
+TEST_P(BitmapFormats, BufferCompare) {
+    const BitmapFormatTestCase& testInfo = GetParam();
+    const size_t width = 4;
+    const size_t height = 1;
+    size_t bytesPerPixel = std::pow(2, testInfo.bitsPerPixel >> 3);
+    size_t stride = width * bytesPerPixel;
+    std::vector<uint8_t> data(stride * height, 0xAB);
+    woc::unique_cf<CGColorSpaceRef> rgbColorSpace{ CGColorSpaceCreateDeviceRGB() };
+    woc::unique_cf<CGContextRef> context{ CGBitmapContextCreateWithData(data.data(),
+                                                                        width,
+                                                                        height,
+                                                                        testInfo.bitsPerPixel / testInfo.nComponents,
+                                                                        stride,
+                                                                        rgbColorSpace.get(),
+                                                                        testInfo.bitmapInfo,
+                                                                        nullptr,
+                                                                        nullptr) };
+    ASSERT_NE(nullptr, context);
+
+    // Pixel values: 0x20 0x40 0x00 0x80
+    // Premultiplied: 0x10 0x20 0x00 0x80
+    CGContextSetRGBFillColor(context.get(), 32. / 255., 64. / 255., 0.0, 128. / 255.);
+    CGContextFillRect(context.get(), { CGPointZero, { width, height } });
+
+    std::vector<uint8_t> transformedData(stride * height, 0xAB);
+
+    size_t maskLength = testInfo.mask.size();
+    size_t compareBufferLength = testInfo.expectedPixelValues.size();
+    for (size_t i; i < data.size(); ++i) {
+        uint8_t maskedValue = data[i] & testInfo.mask[i % maskLength];
+        EXPECT_EQ(maskedValue, testInfo.expectedPixelValues[i % compareBufferLength]);
+    }
+}
+
+// clang-format off
+static BitmapFormatTestCase bitmapFormatTestCases[]{
+    // CGBitmapInfo (pixel format, order)                         | #channels| bpp| pixel mask                | expected pixel values      |
+    // Alpha only (8bpp format)
+    { kCGImageAlphaOnly,                                            1,           8, { 0xFF }                  , { 0x80 }                   },
+
+    // RGBX (32bpp)
+    { kCGImageAlphaNoneSkipLast       | kCGBitmapByteOrder32Little, 4,          32, { 0xFF, 0xFF, 0xFF, 0x00 }, { 0x20, 0x40, 0x00, 0x00 } },
+
+    // RGBA (32bpp premultiplied)
+    { kCGImageAlphaPremultipliedLast  | kCGBitmapByteOrder32Little, 4,          32, { 0xFF, 0xFF, 0xFF, 0xFF }, { 0x10, 0x20, 0x00, 0x80 } },
+
+    // BGRX (32bpp)
+    { kCGImageAlphaNoneSkipFirst      | kCGBitmapByteOrder32Big,    4,          32, { 0xFF, 0xFF, 0xFF, 0x00 }, { 0x00, 0x40, 0x20, 0x00 } },
+
+    // BGRX (32bpp premultiplied)
+    { kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Big,    4,          32, { 0xFF, 0xFF, 0xFF, 0xFF }, { 0x00, 0x20, 0x10, 0x80 } },
+};
+// clang-format on
+
+INSTANTIATE_TEST_CASE_P(CGBitmapContextFormat, BitmapFormats, ::testing::ValuesIn(bitmapFormatTestCases));
