@@ -21,6 +21,7 @@
 
 @interface NSException (errorHandlingInternal)
 + (NSString*)_exceptionNameForHRESULT:(int)errorCode;
++ (int)_HRESULTForExceptionName:(NSString *)exceptionName;
 + (instancetype)_exceptionWithHRESULT:(int)errorCode reason:(NSString*)reason userInfo:(NSDictionary*)userInfo;
 
 - (HRESULT)_hresult;
