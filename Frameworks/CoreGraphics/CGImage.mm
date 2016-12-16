@@ -788,6 +788,22 @@ REFGUID _CGImageGetWICPixelFormatFromImageProperties(unsigned int bitsPerCompone
     return GUID_WICPixelFormat32bppRGBA;
 }
 
+static void __InvertMemcpy(void* dest, const void* src, size_t len) {
+    uint32_t* d32 = (uint32_t*)dest;
+    const uint32_t* s32 = (const uint32_t*)src;
+
+    for(; len >= 4; len -= 4) {
+        *d32++ = ~*s32++;
+    }
+
+    uint8_t* d8 = (uint8_t*)d32;
+    const uint8_t* s8 = (const uint8_t*)s32;
+
+    for(; len > 0; --len) {
+        *d8++ = ~*s8++;
+    }
+}
+
 // __CGImageMaskConvertToWICAlphaBitmap converts a 1, 2, 4, or 8-bpp grayscale "mask" into an alpha-only image for a D2D opacity brush.
 // On the reference platform, mask images are grayscale images whose pixel values signify the pixel's alpha transmissivity.
 // A fully black region (S = 0.0) is translated to a fully opaque region (A = 1.0).
@@ -833,9 +849,19 @@ static HRESULT __CGImageMaskConvertToWICAlphaBitmap(CGImageRef image, IWICBitmap
     RETURN_IF_FAILED(alpha8Lock->GetStride(&alpha8Stride));
     RETURN_IF_FAILED(alpha8Lock->GetDataPointer(&alpha8Len, &alpha8Data));
 
-    RETURN_HR_IF(E_UNEXPECTED, alpha8Len != gray8Len || alpha8Stride != gray8Stride);
+    RETURN_HR_IF(E_UNEXPECTED, alpha8Len < gray8Len || alpha8Stride < gray8Stride);
 
-    std::transform(gray8Data, gray8Data + gray8Len, alpha8Data, [](const unsigned char& px) { return ~px; });
+    if (alpha8Len == gray8Len && alpha8Stride == gray8Stride) {
+        __InvertMemcpy(alpha8Data, gray8Data, gray8Len);
+    } else {
+        // stride or length (likely both) differ
+        uint8_t* destEnd = alpha8Data + alpha8Len;
+        for(uint8_t *src = gray8Data, *dest = alpha8Data;
+            dest < destEnd;
+            src += gray8Stride, dest += alpha8Stride) {
+            __InvertMemcpy(dest, src, gray8Stride);
+        }
+    }
 
     *pAlphaBitmap = alphaBitmap.Detach();
     return S_OK;
