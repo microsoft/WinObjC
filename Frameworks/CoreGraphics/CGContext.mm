@@ -2046,14 +2046,6 @@ void CGContextDrawTiledImage(CGContextRef context, CGRect rect, CGImageRef image
     ComPtr<ID2D1Bitmap> d2dBitmap;
     FAIL_FAST_IF_FAILED(__CreateD2DBitmapFromCGImage(context, refImage.get(), &d2dBitmap));
 
-    ComPtr<ID2D1BitmapBrush> bitmapBrush;
-    ComPtr<ID2D1DeviceContext> deviceContext = context->DeviceContext();
-    FAIL_FAST_IF_FAILED(deviceContext->CreateBitmapBrush(d2dBitmap.Get(), &bitmapBrush));
-
-    // set the bitmap properties for the brush to be repeated
-    bitmapBrush->SetExtendModeX(D2D1_EXTEND_MODE_WRAP);
-    bitmapBrush->SetExtendModeY(D2D1_EXTEND_MODE_WRAP);
-
     // |1  0 0| is the transformation matrix for flipping a rect about its Y midpoint m. (m = (y + h/2))
     // |0 -1 0|
     // |0 2m 1|
@@ -2064,6 +2056,9 @@ void CGContextDrawTiledImage(CGContextRef context, CGRect rect, CGImageRef image
     // | x -y+2m 0|
     // Or, the transformation matrix for drawing a flipped rect at a scale and offset.
     D2D1_SIZE_U bitmapSize = d2dBitmap->GetPixelSize();
+    FAIL_FAST_IF(bitmapSize.width == 0);
+    FAIL_FAST_IF(bitmapSize.height == 0);
+
     CGFloat sx = rect.size.width / bitmapSize.width;
     CGFloat sy = rect.size.height / bitmapSize.height;
     CGFloat m = rect.origin.y + (rect.size.height / 2.f);
@@ -2071,20 +2066,32 @@ void CGContextDrawTiledImage(CGContextRef context, CGRect rect, CGImageRef image
     CGAffineTransform transform{ sx, 0, 0, -sy, rect.origin.x, (2 * m) - rect.origin.y };
     transform = CGAffineTransformConcat(transform, CGContextGetUserSpaceToDeviceSpaceTransform(context));
 
-    // set the transform for the brush and alpha
-    bitmapBrush->SetTransform(__CGAffineTransformToD2D_F(transform));
-    bitmapBrush->SetOpacity(context->CurrentGState().alpha);
-
-    // set the interpolationMode
-    bitmapBrush->SetInterpolationMode(D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR);
+    ComPtr<ID2D1BitmapBrush1> bitmapBrush;
+    ComPtr<ID2D1DeviceContext> deviceContext = context->DeviceContext();
+    FAIL_FAST_IF_FAILED(
+        deviceContext->CreateBitmapBrush(d2dBitmap.Get(),
+                                         D2D1::BitmapBrushProperties1(D2D1_EXTEND_MODE_WRAP,
+                                                                      D2D1_EXTEND_MODE_WRAP,
+                                                                      (CGImageGetShouldInterpolate(refImage.get()) ?
+                                                                           context->CurrentGState().bitmapInterpolationMode :
+                                                                           D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR)),
+                                         D2D1::BrushProperties(context->CurrentGState().alpha, __CGAffineTransformToD2D_F(transform)),
+                                         &bitmapBrush));
 
     // Area to fill
     D2D1_SIZE_F targetSize = deviceContext->GetSize();
     D2D1_RECT_F region = D2D1::RectF(0, 0, targetSize.width, targetSize.height);
 
-    deviceContext->BeginDraw();
-    deviceContext->FillRectangle(&region, bitmapBrush.Get());
-    FAIL_FAST_IF_FAILED(deviceContext->EndDraw());
+    ComPtr<ID2D1CommandList> commandList;
+    HRESULT hr = context->DrawToCommandList(_kCGCoordinateModeDeviceSpace,
+                                            nullptr,
+                                            &commandList,
+                                            [&](CGContextRef context, ID2D1DeviceContext* deviceContext) {
+                                                deviceContext->FillRectangle(&region, bitmapBrush.Get());
+                                                return S_OK;
+                                            });
+    FAIL_FAST_IF_FAILED(hr);
+    FAIL_FAST_IF_FAILED(context->DrawImage(commandList.Get()));
 }
 
 #pragma endregion
