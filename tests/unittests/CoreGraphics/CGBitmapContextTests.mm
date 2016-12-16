@@ -230,7 +230,7 @@ TEST_P(BitmapFormats, BufferCompare) {
     const BitmapFormatTestCase& testInfo = GetParam();
     const size_t width = 4;
     const size_t height = 1;
-    size_t bytesPerPixel = std::pow(2, testInfo.bitsPerPixel >> 3);
+    size_t bytesPerPixel = 2 << (testInfo.bitsPerPixel >> 3);
     size_t stride = width * bytesPerPixel;
     std::vector<uint8_t> data(stride * height, 0xAB);
     woc::unique_cf<CGColorSpaceRef> rgbColorSpace{ CGColorSpaceCreateDeviceRGB() };
@@ -249,8 +249,6 @@ TEST_P(BitmapFormats, BufferCompare) {
     // Premultiplied: 0x10 0x20 0x00 0x80
     CGContextSetRGBFillColor(context.get(), 32. / 255., 64. / 255., 0.0, 128. / 255.);
     CGContextFillRect(context.get(), { CGPointZero, { width, height } });
-
-    std::vector<uint8_t> transformedData(stride * height, 0xAB);
 
     size_t maskLength = testInfo.mask.size();
     size_t compareBufferLength = testInfo.expectedPixelValues.size();
