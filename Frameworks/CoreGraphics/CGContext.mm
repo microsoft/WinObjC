@@ -48,6 +48,8 @@ using namespace Microsoft::WRL;
 
 static const wchar_t* TAG = L"CGContext";
 
+static float s_CGGradientStartPoint = 1E-45;
+
 enum _CGCoordinateMode : unsigned int { _kCGCoordinateModeDeviceSpace = 0, _kCGCoordinateModeUserSpace };
 
 // A drawing context is represented by a number of layers, each with their own drawing state:
@@ -2038,6 +2040,8 @@ void CGContextDrawTiledImage(CGContextRef context, CGRect rect, CGImageRef image
 static inline std::vector<D2D1_GRADIENT_STOP> __CGGradientToD2D1GradientStop(CGGradientRef gradient, CGGradientDrawingOptions options) {
     unsigned long gradientCount = _CGGradientGetCount(gradient);
 
+    // We hold an extra place if kCGGradientDrawsAfterEndLocation is passed.
+    // This will be used to insert the transparent color.
     std::vector<D2D1_GRADIENT_STOP> gradientStops((options == kCGGradientDrawsAfterEndLocation) ? gradientCount + 1 : gradientCount);
 
     float* colorComponenets = _CGGradientGetColorComponents(gradient);
@@ -2052,8 +2056,10 @@ static inline std::vector<D2D1_GRADIENT_STOP> __CGGradientToD2D1GradientStop(CGG
     }
 
     if (options == kCGGradientDrawsAfterEndLocation) {
-        // Set the edge to be just a bit lower on the location
-        gradientStops[0].position = 1E-45;
+        // we want to support kCGGradientDrawsAfterEndLocation, but by default d2d will extend the region via repeating the brush (or other
+        // effect based on the extend mode).   We support that by inserting a point (with transparent color) close to the origin, such that
+        // d2d will automatically extend the transparent color, thus we obtain the desired effect for kCGGradientDrawsAfterEndLocation.
+        gradientStops[0].position = s_CGGradientStartPoint;
 
         // set the edge location to be transparent
         gradientStops[gradientCount].color = D2D1::ColorF(0, 0, 0, 0);
@@ -2086,22 +2092,27 @@ void CGContextDrawLinearGradient(
                                                                     &gradientStopCollection));
 
     ComPtr<ID2D1LinearGradientBrush> linearGradientBrush;
-    FAIL_FAST_IF_FAILED(deviceContext->CreateLinearGradientBrush(D2D1::LinearGradientBrushProperties(_CGPointToD2D_F(startPoint),
-                                                                                                     _CGPointToD2D_F(endPoint)),
-                                                                 gradientStopCollection.Get(),
-                                                                 &linearGradientBrush));
-
-    // set the transform for the brush and alpha
-    linearGradientBrush->SetTransform(__CGAffineTransformToD2D_F(CGContextGetUserSpaceToDeviceSpaceTransform(context)));
-    linearGradientBrush->SetOpacity(context->CurrentGState().alpha);
+    FAIL_FAST_IF_FAILED(deviceContext->CreateLinearGradientBrush(
+        D2D1::LinearGradientBrushProperties(_CGPointToD2D_F(startPoint), _CGPointToD2D_F(endPoint)),
+        D2D1::BrushProperties(context->CurrentGState().alpha,
+                              __CGAffineTransformToD2D_F(CGContextGetUserSpaceToDeviceSpaceTransform(context))),
+        gradientStopCollection.Get(),
+        &linearGradientBrush));
 
     // Area to fill
     D2D1_SIZE_F targetSize = deviceContext->GetSize();
     D2D1_RECT_F region = D2D1::RectF(0, 0, targetSize.width, targetSize.height);
 
-    deviceContext->BeginDraw();
-    deviceContext->FillRectangle(&region, linearGradientBrush.Get());
-    FAIL_FAST_IF_FAILED(deviceContext->EndDraw());
+    ComPtr<ID2D1CommandList> commandList;
+    HRESULT hr = context->DrawToCommandList(_kCGCoordinateModeDeviceSpace,
+                                            nullptr,
+                                            &commandList,
+                                            [&](CGContextRef context, ID2D1DeviceContext* deviceContext) {
+                                                deviceContext->FillRectangle(&region, linearGradientBrush.Get());
+                                                return S_OK;
+                                            });
+    FAIL_FAST_IF_FAILED(hr);
+    FAIL_FAST_IF_FAILED(context->DrawImage(commandList.Get()));
 }
 
 /**

@@ -46,12 +46,11 @@ DISABLED_DRAW_TEST_F(CGContext, DrawIntoRect, UIKitMimicTest) {
 
 DRAW_TEST_F(CGContext, LinearGradient, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
-    woc::unique_cf<CGColorSpaceRef> rgbColorSpace(CGColorSpaceCreateDeviceRGB());
 
     CGFloat locations[2] = { 1.0, 0.0 };
     CGFloat components[8] = { 0.0, 0.5, 0.0, 1.0, 1.0, 1.0, 0.8, 1.0 };
-    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
-    CGGradientRef gradient = CGGradientCreateWithColorComponents(colorspace, components, locations, 2);
+    woc::unique_cf<CGColorSpaceRef> rgbColorSpace(CGColorSpaceCreateDeviceRGB());
+    CGGradientRef gradient = CGGradientCreateWithColorComponents(rgbColorSpace.get(), components, locations, 2);
 
     CGPoint startPoint = CGPointMake(0, 0);
     CGPoint endPoint = CGPointMake(512, 1024);
