@@ -27,6 +27,7 @@
 #import "CGImageInternal.h"
 #import "_CGLifetimeBridgingType.h"
 #import "CGSurfaceInfoInternal.h"
+#import <CoreFoundation/CFData.h>
 
 extern "C" {
 #import <png.h>
@@ -125,11 +126,8 @@ CGImageRef CGImageCreateWithJPEGDataProvider(CGDataProviderRef source,
                                              bool shouldInterpolate,
                                              CGColorRenderingIntent intent) {
     FAIL_FAST_IF_FALSE(decode == nullptr);
-    FAIL_FAST_HR_IF_FALSE_MSG(E_INVALIDARG,
-                              ((source == nullptr) || [(NSObject*)source isKindOfClass:[NSData class]]),
-                              "CGDataProviderRef does not derive from NSData!");
 
-    id img = [[_LazyUIImage alloc] initWithData:(NSData*)source];
+    id img = [[_LazyUIImage alloc] initWithData:(NSData*)CGDataProviderCopyData(source)];
     return (CGImageRef)[img CGImage];
 }
 
@@ -142,11 +140,8 @@ CGImageRef CGImageCreateWithPNGDataProvider(CGDataProviderRef source,
                                             bool shouldInterpolate,
                                             CGColorRenderingIntent intent) {
     FAIL_FAST_IF_FALSE(decode == nullptr);
-    FAIL_FAST_HR_IF_FALSE_MSG(E_INVALIDARG,
-                              ((source == nullptr) || [(NSObject*)source isKindOfClass:[NSData class]]),
-                              "CGDataProviderRef does not derive from NSData!");
 
-    id img = [[_LazyUIImage alloc] initWithData:(NSData*)source];
+    id img = [[_LazyUIImage alloc] initWithData:(NSData*)CGDataProviderCopyData(source)];
 
     return (CGImageRef)[img CGImage];
 }
@@ -496,13 +491,11 @@ CGImageAlphaInfo CGImageGetAlphaInfo(CGImageRef img) {
  @Status Interoperable
 */
 CGDataProviderRef CGImageGetDataProvider(CGImageRef img) {
-    char* pPtr = (char*)img->Backing()->LockImageData();
-    CGImageDataProvider* ret = [[CGImageDataProvider alloc] initWithBytesNoCopy:pPtr
-                                                                         length:img->Backing()->Height() * img->Backing()->BytesPerRow()
-                                                                   freeWhenDone:FALSE];
-    ret->_img = img;
-
-    return ret;
+    const UInt8* pPtr = (const UInt8*)img->Backing()->LockImageData();
+    CFIndex length = img->Backing()->Height() * img->Backing()->BytesPerRow();
+    woc::unique_cf<CFDataRef> data{ CFDataCreateWithBytesNoCopy(nullptr, pPtr, length, kCFAllocatorNull) };
+    CGDataProviderRef dataProvider = CGDataProviderCreateWithCFData(data.get());
+    return dataProvider;
 }
 
 void* _CGImageGetData(CGImageRef img) {
@@ -634,10 +627,7 @@ CGImageRef CGImageCreate(size_t width,
                          bool shouldInterpolate,
                          CGColorRenderingIntent intent) {
     CGBitmapImage* newImage;
-    FAIL_FAST_HR_IF_FALSE_MSG(E_INVALIDARG,
-                              ((provider == nullptr) || [(NSObject*)provider isKindOfClass:[NSData class]]),
-                              "CGDataProviderRef does not derive from NSData!");
-    NSData* dataProvider = (__bridge NSData*)provider;
+    NSData* dataProvider = (__bridge NSData*)CGDataProviderCopyData(provider);
 
     char* data = (char*)[dataProvider bytes];
 

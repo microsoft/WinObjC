@@ -75,4 +75,4 @@ COREGRAPHICS_EXPORT HRESULT _DWriteFontGetBoundingBoxesForGlyphs(
 // DWrite functions relating to font binary data
 COREGRAPHICS_EXPORT HRESULT _DWriteRegisterFontsWithDatas(CFArrayRef fontDatas, CFArrayRef* errors);
 COREGRAPHICS_EXPORT HRESULT _DWriteUnregisterFontsWithDatas(CFArrayRef fontDatas, CFArrayRef* errors);
-COREGRAPHICS_EXPORT HRESULT _DWriteCreateFontFaceWithData(CFDataRef data, IDWriteFontFace** outFontFace);
+COREGRAPHICS_EXPORT HRESULT _DWriteCreateFontFaceWithData(CGDataProviderRef data, IDWriteFontFace** outFontFace);

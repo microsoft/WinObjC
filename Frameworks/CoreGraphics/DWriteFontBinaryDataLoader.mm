@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import "DWriteFontBinaryDataLoader.h"
+#import "CGDataProviderInternal.h"
 
 using namespace Microsoft::WRL;
 
@@ -31,9 +32,8 @@ protected:
     InspectableClass(L"Windows.Bridge.DirectWrite.DWriteFontBinaryDataStream", TrustLevel::BaseTrust);
 
 public:
-    DWriteFontBinaryDataStream(CFDataRef data) {
-        CFRetain(data);
-        m_data.reset(data);
+    DWriteFontBinaryDataStream(CGDataProviderRef data) {
+        m_data.reset(CGDataProviderRetain(data));
 
         // Just use current time for m_lastWriteTime
         FILETIME fileTime;
@@ -47,7 +47,7 @@ public:
 
     HRESULT STDMETHODCALLTYPE GetFileSize(_Out_ uint64_t* fileSize) {
         RETURN_HR_IF_NULL(E_POINTER, fileSize);
-        *fileSize = CFDataGetLength(m_data.get());
+        *fileSize = _CGDataProviderGetSize(m_data.get());
         return S_OK;
     };
 
@@ -63,12 +63,12 @@ public:
                                                uint64_t fileOffset,
                                                uint64_t fragmentSize,
                                                _Out_ void** fragmentContext) {
-        if (fileOffset + fragmentSize > CFDataGetLength(m_data.get())) {
+        if (fileOffset + fragmentSize > _CGDataProviderGetSize(m_data.get())) {
             return E_INVALIDARG;
         }
 
         if (fragmentStart) {
-            const uint8_t* underlyingBuffer = CFDataGetBytePtr(m_data.get());
+            const unsigned char* underlyingBuffer = (const unsigned char*)_CGDataProviderGetData(m_data.get());
             *fragmentStart = reinterpret_cast<const void*>(&(underlyingBuffer[fileOffset]));
         }
 
@@ -84,17 +84,16 @@ public:
     };
 
 private:
-    woc::unique_cf<CFDataRef> m_data;
+    woc::unique_cf<CGDataProviderRef> m_data;
     uint64_t m_lastWriteTime;
 };
 
 // DWriteFontBinaryDataLoader member functions
 
-HRESULT DWriteFontBinaryDataLoader::RuntimeClassInitialize(CFDataRef data) {
+HRESULT DWriteFontBinaryDataLoader::RuntimeClassInitialize(CGDataProviderRef data) {
     RETURN_HR_IF_NULL(E_INVALIDARG, data);
 
-    CFRetain(data);
-    m_data.reset(data);
+    m_data.reset(CGDataProviderRetain(data));
     return S_OK;
 }
 
