@@ -98,7 +98,6 @@ DISABLED_DRAW_TEST_F(CGContext, DrawAContextIntoAnImage, UIKitMimicTest) {
     CGContextDrawImage(context, bounds, image.get());
 }
 
-
 DISABLED_DRAW_TEST_F(CGContext, FillThenStrokeIsSameAsDrawFillStroke, WhiteBackgroundTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
