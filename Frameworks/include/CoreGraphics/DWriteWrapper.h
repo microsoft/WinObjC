@@ -29,10 +29,6 @@
 #import <memory>
 
 // General DWrite helpers
-#ifdef __cplusplus
-extern "C++" std::wstring _GetUserDefaultLocaleName();
-#endif
-
 static inline CFStringRef _CFStringCreateUppercaseCopy(CFStringRef string) {
     CFMutableStringRef ret = CFStringCreateMutableCopy(nullptr, CFStringGetLength(string), string);
     CFStringUppercase(ret, nullptr);

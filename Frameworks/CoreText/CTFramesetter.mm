@@ -32,7 +32,7 @@ static _CTFrame* __CreateFrame(_CTFramesetter* framesetter, CGRect frameRect, CF
     // Call _DWriteWrapper to get _CTLine object list that makes up this frame
     _CTTypesetter* typesetter = static_cast<_CTTypesetter*>(framesetter->_typesetter);
     if (range.length == 0L) {
-        range.length = typesetter->_characters.size() - range.location;
+        range.length = [typesetter->_string length] - range.location;
     }
 
     StrongId<_CTFrame> ret = _DWriteGetFrame(static_cast<CFAttributedStringRef>(typesetter->_attributedString.get()), range, frameRect);

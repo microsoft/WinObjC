@@ -37,7 +37,6 @@ LIBRARY CoreGraphics
         CGBitmapContextGetImage
 
         ; DWriteWrapper Additions
-        _GetUserDefaultLocaleName
         _CFStringFromLocalizedString
         _DWriteCopyFontFamilyNames
         _DWriteCopyFontNamesForFamilyName
