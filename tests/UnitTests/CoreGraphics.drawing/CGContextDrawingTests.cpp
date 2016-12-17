@@ -52,133 +52,133 @@ static void _drawTiledImage(CGContextRef context, CGRect rect, const std::string
     CGContextDrawTiledImage(context, rect, image.get());
 }
 
-DRAW_TEST_F(CGContext, TiledImageHeart, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, TiledImageHeart, UIKitMimicTest) {
     CGRect rect = { { 0, 0 }, { 128, 128 } };
     _drawTiledImage(GetDrawingContext(), rect, "tiledImageHeart.png");
 }
 
-DRAW_TEST_F(CGContext, TiledImageHeartScaledUp, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, TiledImageHeartScaledUp, UIKitMimicTest) {
     CGRect rect = { { 0, 0 }, { 250, 250 } };
     _drawTiledImage(GetDrawingContext(), rect, "tiledImageHeart.png");
 }
 
-DRAW_TEST_F(CGContext, TiledImageHeartScaledTiny, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, TiledImageHeartScaledTiny, UIKitMimicTest) {
     CGRect rect = { { 0, 0 }, { 1, 1 } };
     _drawTiledImage(GetDrawingContext(), rect, "tiledImageHeart.png");
 }
 
-DRAW_TEST_F(CGContext, TiledImageHeartScaledAlpha1, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, TiledImageHeartScaledAlpha1, UIKitMimicTest) {
     CGRect rect = { { 0, 0 }, { 100, 100 } };
     CGContextSetAlpha(GetDrawingContext(), 0.8);
     _drawTiledImage(GetDrawingContext(), rect, "tiledImageHeart.png");
 }
 
-DRAW_TEST_F(CGContext, TiledImageHeartScaledAlpha2, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, TiledImageHeartScaledAlpha2, UIKitMimicTest) {
     CGRect rect = { { 0, 0 }, { 256, 256 } };
     CGContextSetAlpha(GetDrawingContext(), 0.24);
     _drawTiledImage(GetDrawingContext(), rect, "tiledImageHeart.png");
 }
 
-DRAW_TEST_F(CGContext, TiledImageHeartScaledAlpha3, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, TiledImageHeartScaledAlpha3, UIKitMimicTest) {
     CGRect rect = { { 0, 0 }, { 300, 513 } };
     CGContextSetAlpha(GetDrawingContext(), 0.66);
     _drawTiledImage(GetDrawingContext(), rect, "tiledImageHeart.png");
 }
 
-DRAW_TEST_F(CGContext, TiledImageHeartScaledDown, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, TiledImageHeartScaledDown, UIKitMimicTest) {
     CGRect rect = { { 0, 0 }, { 50, 50 } };
     _drawTiledImage(GetDrawingContext(), rect, "tiledImageHeart.png");
 }
 
-DRAW_TEST_F(CGContext, TiledImageHeartScaled, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, TiledImageHeartScaled, UIKitMimicTest) {
     CGRect rect = { { 0, 0 }, { 250, 128 } };
     _drawTiledImage(GetDrawingContext(), rect, "tiledImageHeart.png");
 }
 
-DRAW_TEST_F(CGContext, TiledImageDog, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, TiledImageDog, UIKitMimicTest) {
     CGRect rect = { { 0, 0 }, { 256, 256 } };
     _drawTiledImage(GetDrawingContext(), rect, "tiledImageDog.png");
 }
 
-DRAW_TEST_F(CGContext, TiledImageDogScaledDown, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, TiledImageDogScaledDown, UIKitMimicTest) {
     CGRect rect = { { 0, 0 }, { 50, 50 } };
     _drawTiledImage(GetDrawingContext(), rect, "tiledImageDog.png");
 }
 
-DRAW_TEST_F(CGContext, TiledImageDogScaledUp, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, TiledImageDogScaledUp, UIKitMimicTest) {
     CGRect rect = { { 0, 0 }, { 512, 512 } };
     _drawTiledImage(GetDrawingContext(), rect, "tiledImageDog.png");
 }
 
-DRAW_TEST_F(CGContext, TiledImageDogScaled, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, TiledImageDogScaled, UIKitMimicTest) {
     CGRect rect = { { 0, 0 }, { 350, 500 } };
     _drawTiledImage(GetDrawingContext(), rect, "tiledImageDog.png");
 }
 
-DRAW_TEST_F(CGContext, TiledImageDogScaled2, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, TiledImageDogScaled2, UIKitMimicTest) {
     CGRect rect = { { 0, 0 }, { 128, 240 } };
     _drawTiledImage(GetDrawingContext(), rect, "tiledImageDog.png");
 }
 
-DRAW_TEST_F(CGContext, TiledImageDogScaledAspectRatioWrong, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, TiledImageDogScaledAspectRatioWrong, UIKitMimicTest) {
     CGRect rect = { { 0, 0 }, { 1024, 25 } };
     _drawTiledImage(GetDrawingContext(), rect, "tiledImageDog.png");
 }
 
-DRAW_TEST_F(CGContext, TiledImageDogScaledAspectRatio, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, TiledImageDogScaledAspectRatio, UIKitMimicTest) {
     CGRect rect = { { 0, 0 }, { 1024, 1024 } };
     _drawTiledImage(GetDrawingContext(), rect, "tiledImageDog.png");
 }
 
-DRAW_TEST_F(CGContext, TiledImageDogScaledAlpha, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, TiledImageDogScaledAlpha, UIKitMimicTest) {
     CGRect rect = { { 0, 0 }, { 100, 100 } };
     CGContextSetAlpha(GetDrawingContext(), 0.8);
     _drawTiledImage(GetDrawingContext(), rect, "tiledImageDog.png");
 }
 
-DRAW_TEST_F(CGContext, TiledImageDogScaledAlpha2, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, TiledImageDogScaledAlpha2, UIKitMimicTest) {
     CGRect rect = { { 0, 0 }, { 256, 256 } };
     CGContextSetAlpha(GetDrawingContext(), 0.24);
     _drawTiledImage(GetDrawingContext(), rect, "tiledImageDog.png");
 }
 
-DRAW_TEST_F(CGContext, TiledImageDogScaledAlpha3, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, TiledImageDogScaledAlpha3, UIKitMimicTest) {
     CGRect rect = { { 0, 0 }, { 300, 513 } };
     CGContextSetAlpha(GetDrawingContext(), 0.66);
     _drawTiledImage(GetDrawingContext(), rect, "tiledImageDog.png");
 }
 
-DRAW_TEST_F(CGContext, TiledImageCustom, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, TiledImageCustom, UIKitMimicTest) {
     CGRect rect = { { 0, 0 }, { 562, 469 } };
     _drawTiledImage(GetDrawingContext(), rect, "tiledImageCircleMe.png");
 }
 
-DRAW_TEST_F(CGContext, TiledImageCustomScaledUp, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, TiledImageCustomScaledUp, UIKitMimicTest) {
     CGRect rect = { { 0, 0 }, { 2050, 2050 } };
     _drawTiledImage(GetDrawingContext(), rect, "tiledImageCircleMe.png");
 }
 
-DRAW_TEST_F(CGContext, TiledImageCustomScaledDown, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, TiledImageCustomScaledDown, UIKitMimicTest) {
     CGRect rect = { { 0, 0 }, { 20, 20 } };
     _drawTiledImage(GetDrawingContext(), rect, "tiledImageCircleMe.png");
 }
 
-DRAW_TEST_F(CGContext, TiledImageCustomScaledDownReallyLow, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, TiledImageCustomScaledDownReallyLow, UIKitMimicTest) {
     CGRect rect = { { 0, 0 }, { 1, 1 } };
     _drawTiledImage(GetDrawingContext(), rect, "tiledImageCircleMe.png");
 }
 
-DRAW_TEST_F(CGContext, TiledImageCustomScaled, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, TiledImageCustomScaled, UIKitMimicTest) {
     CGRect rect = { { 0, 0 }, { 10, 250 } };
     _drawTiledImage(GetDrawingContext(), rect, "tiledImageCircleMe.png");
 }
 
-DRAW_TEST_F(CGContext, TiledImageCustomScaledObscure, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, TiledImageCustomScaledObscure, UIKitMimicTest) {
     CGRect rect = { { 0, 0 }, { 253, 13 } };
     _drawTiledImage(GetDrawingContext(), rect, "tiledImageCircleMe.png");
 }
 
-DRAW_TEST_F(CGContext, TiledImageCustomScaledAlpha, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, TiledImageCustomScaledAlpha, UIKitMimicTest) {
     CGRect rect = { { 0, 0 }, { 128, 128 } };
     CGContextSetAlpha(GetDrawingContext(), 0.88);
     _drawTiledImage(GetDrawingContext(), rect, "tiledImageCircleMe.png");
