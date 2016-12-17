@@ -130,7 +130,7 @@
       <IncludePaths>..\..\..\Frameworks\include;..\..\..\Frameworks\UIKit.Xaml;..\..\..\include\xplat;..\..\..\tests\frameworks\include;..\..\..\tests\functionaltests;..\..\..\tests\frameworks\gtest;..\..\..\tests\frameworks\gtest\include;..\..\..\deps\prebuilt\TAEF\build\Include;..\..\..\samples\XAMLCatalog;%(AdditionalIncludeDirectories)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
       <OtherCPlusPlusFlags>-fmsvc-real-char -Wdeprecated-declarations</OtherCPlusPlusFlags>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG=1;FUNCTIONAL_TEST_FRAMEWORK</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG=1;FUNCTIONAL_TEST_FRAMEWORK;INLINE_TEST_METHOD_MARKUP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClangCompile>
     <PostBuildEvent>
@@ -162,7 +162,7 @@
       <IncludePaths>..\..\..\Frameworks\include;..\..\..\Frameworks\UIKit.Xaml;..\..\..\include\xplat;..\..\..\tests\frameworks\include;..\..\..\tests\functionaltests;..\..\..\tests\frameworks\gtest;..\..\..\tests\frameworks\gtest\include;..\..\..\deps\prebuilt\TAEF\build\Include;..\..\..\samples\XAMLCatalog;%(AdditionalIncludeDirectories)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
       <OtherCPlusPlusFlags>-fmsvc-real-char -Wdeprecated-declarations</OtherCPlusPlusFlags>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG=1;FUNCTIONAL_TEST_FRAMEWORK</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG=1;FUNCTIONAL_TEST_FRAMEWORK;INLINE_TEST_METHOD_MARKUP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClangCompile>
     <PostBuildEvent>
@@ -190,7 +190,7 @@
       <IncludePaths>..\..\..\Frameworks\include;..\..\..\Frameworks\UIKit.Xaml;..\..\..\include\xplat;..\..\..\tests\frameworks\include;..\..\..\tests\functionaltests;..\..\..\tests\frameworks\gtest;..\..\..\tests\frameworks\gtest\include;..\..\..\deps\prebuilt\TAEF\build\Include;..\..\..\samples\XAMLCatalog;%(AdditionalIncludeDirectories)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
       <OtherCPlusPlusFlags>-fmsvc-real-char -Wdeprecated-declarations</OtherCPlusPlusFlags>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG=1;FUNCTIONAL_TEST_FRAMEWORK</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG=1;FUNCTIONAL_TEST_FRAMEWORK;INLINE_TEST_METHOD_MARKUP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClangCompile>
     <PostBuildEvent>
@@ -222,7 +222,7 @@
       <IncludePaths>..\..\..\Frameworks\include;..\..\..\Frameworks\UIKit.Xaml;..\..\..\include\xplat;..\..\..\tests\frameworks\include;..\..\..\tests\functionaltests;..\..\..\tests\frameworks\gtest;..\..\..\tests\frameworks\gtest\include;..\..\..\deps\prebuilt\TAEF\build\Include;..\..\..\samples\XAMLCatalog;%(AdditionalIncludeDirectories)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
       <OtherCPlusPlusFlags>-fmsvc-real-char -Wdeprecated-declarations</OtherCPlusPlusFlags>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG=1;FUNCTIONAL_TEST_FRAMEWORK</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG=1;FUNCTIONAL_TEST_FRAMEWORK;INLINE_TEST_METHOD_MARKUP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClangCompile>
     <PostBuildEvent>
