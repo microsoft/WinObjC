@@ -30,174 +30,212 @@
     return os;
 }
 
-TEST(NSLayoutConstraint, VisualFormatLanguage) {
-    UIView* topLevelView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
-    UIView* leftView = [UIView new];
-    UIView* rightView = [UIView new];
+class NSLayoutConstraintTests {
+public:
+    BEGIN_TEST_CLASS(NSLayoutConstraintTests)
+    END_TEST_CLASS()
 
-    [topLevelView addSubview:leftView];
-    [topLevelView addSubview:rightView];
+    TEST_CLASS_SETUP(NSLayoutConstraintTestsSetup) {
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+    }
 
-    NSDictionary* metrics = @{ @"metric1" : @750, @"metric2" : @20 };
+    TEST_METHOD_CLEANUP(NSLayoutConstraintTestsCleanup) {
+        FunctionalTestCleanupUIApplication();
+        return true;
+    }
 
-    NSArray* layoutConstraints =
-        [NSLayoutConstraint constraintsWithVisualFormat:@"|-(>=10@metric1)-[leftView(rightView@1000)][rightView(metric2)]|"
-                                                options:0
-                                                metrics:metrics
-                                                  views:NSDictionaryOfVariableBindings(leftView, rightView)];
+    TEST_METHOD(VisualFormatLanguage) {
+        FrameworkHelper::RunOnUIThread([]() {
+            UIView* topLevelView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+            UIView* leftView = [UIView new];
+            UIView* rightView = [UIView new];
 
-    // Parse should be successful, and return a correct number of constraints.
-    ASSERT_TRUE_MSG(layoutConstraints, "constraintsWithVisualFormat returned nil!");
-    ASSERT_EQ_MSG(5, [layoutConstraints count], "constraintsWithVisualFormat returned incorrect number of constraints; returned constraints");
+            [topLevelView addSubview:leftView];
+            [topLevelView addSubview:rightView];
 
-    // Constraints should be returned in the order that they appear.
-    NSLayoutConstraint* constraint = (NSLayoutConstraint*)[layoutConstraints objectAtIndex:0];
-    ASSERT_EQ_MSG(750, constraint.priority, "Constraints out of order.");
-    constraint = (NSLayoutConstraint*)[layoutConstraints objectAtIndex:1];
-    ASSERT_EQ_MSG(NSLayoutAttributeWidth, constraint.firstAttribute, "Constraints out of order.");
-    constraint = (NSLayoutConstraint*)[layoutConstraints objectAtIndex:2];
-    ASSERT_EQ_MSG(constraint.firstItem, leftView, "Constraints out of order.");
-    ASSERT_EQ_MSG(constraint.secondItem, rightView, "Constraints out of order.");
-    constraint = (NSLayoutConstraint*)[layoutConstraints objectAtIndex:3];
-    ASSERT_EQ_MSG(20, constraint.constant, "Constraints out of order.");
-    constraint = (NSLayoutConstraint*)[layoutConstraints objectAtIndex:4];
-    ASSERT_EQ_MSG(0, constraint.constant, "Constraints out of order.");
+            NSDictionary* metrics = @{ @"metric1" : @750, @"metric2" : @20 };
 
-    // There are a few more modes of operation that aren't tested, since their operation is quite simple:
-    //   * Vertical layout
-    //   * NSLayoutFormat options
-    //   * Metrics (though used in the test already)
-}
+            NSArray* layoutConstraints =
+                [NSLayoutConstraint constraintsWithVisualFormat:@"|-(>=10@metric1)-[leftView(rightView@1000)][rightView(metric2)]|"
+                                                        options:0
+                                                        metrics:metrics
+                                                          views:NSDictionaryOfVariableBindings(leftView, rightView)];
 
-TEST(NSLayoutConstraint, VisualFormatLanguageSyntax) {
-    UIView* topLevelView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
-    UIView* leftView = [UIView new];
-    UIView* rightView = [UIView new];
-    UIView* danglingView = [UIView new];
+            // Parse should be successful, and return a correct number of constraints.
+            ASSERT_TRUE_MSG(layoutConstraints, "constraintsWithVisualFormat returned nil!");
+            ASSERT_EQ_MSG(5,
+                          [layoutConstraints count],
+                          "constraintsWithVisualFormat returned incorrect number of constraints; returned constraints");
 
-    [topLevelView addSubview:leftView];
-    [topLevelView addSubview:rightView];
+            // Constraints should be returned in the order that they appear.
+            NSLayoutConstraint* constraint = (NSLayoutConstraint*)[layoutConstraints objectAtIndex:0];
+            ASSERT_EQ_MSG(750, constraint.priority, "Constraints out of order.");
+            constraint = (NSLayoutConstraint*)[layoutConstraints objectAtIndex:1];
+            ASSERT_EQ_MSG(NSLayoutAttributeWidth, constraint.firstAttribute, "Constraints out of order.");
+            constraint = (NSLayoutConstraint*)[layoutConstraints objectAtIndex:2];
+            ASSERT_EQ_MSG(constraint.firstItem, leftView, "Constraints out of order.");
+            ASSERT_EQ_MSG(constraint.secondItem, rightView, "Constraints out of order.");
+            constraint = (NSLayoutConstraint*)[layoutConstraints objectAtIndex:3];
+            ASSERT_EQ_MSG(20, constraint.constant, "Constraints out of order.");
+            constraint = (NSLayoutConstraint*)[layoutConstraints objectAtIndex:4];
+            ASSERT_EQ_MSG(0, constraint.constant, "Constraints out of order.");
 
-    NSDictionary* metrics = @{ @"metric" : @1 };
+            // There are a few more modes of operation that aren't tested, since their operation is quite simple:
+            //   * Vertical layout
+            //   * NSLayoutFormat options
+            //   * Metrics (though used in the test already)
+        });
+    }
 
-    // Dangling view to (nonexistant) superview
-    NSArray* layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[danglingView]-|"
-                                                                         options:0
-                                                                         metrics:nil
-                                                                           views:NSDictionaryOfVariableBindings(danglingView)];
+    TEST_METHOD(VisualFormatLanguageSyntax) {
+        FrameworkHelper::RunOnUIThread([]() {
+            UIView* topLevelView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+            UIView* leftView = [UIView new];
+            UIView* rightView = [UIView new];
+            UIView* danglingView = [UIView new];
 
-    EXPECT_FALSE_MSG(layoutConstraints, "View with no superview; constraintWithVisualFormat shouldn't return constraints! Returned");
+            [topLevelView addSubview:leftView];
+            [topLevelView addSubview:rightView];
 
-    // Missing item in views
-    layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[noView(20)]"
-                                                                options:0
-                                                                metrics:nil
-                                                                  views:NSDictionaryOfVariableBindings(leftView, rightView)];
+            NSDictionary* metrics = @{ @"metric" : @1 };
 
-    EXPECT_FALSE_MSG(layoutConstraints, "View missing from views; constraintWithVisualFormat shouldn't return constraints! Returned");
+            // Dangling view to (nonexistant) superview
+            NSArray* layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[danglingView]-|"
+                                                                                 options:0
+                                                                                 metrics:nil
+                                                                                   views:NSDictionaryOfVariableBindings(danglingView)];
 
-    // Missing item in views, but in metrics
-    layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[metric(20)]"
-                                                                options:0
-                                                                metrics:metrics
-                                                                  views:NSDictionaryOfVariableBindings(leftView, rightView)];
+            EXPECT_FALSE_MSG(layoutConstraints,
+                             "View with no superview; constraintWithVisualFormat shouldn't return constraints! Returned");
 
-    EXPECT_FALSE_MSG(layoutConstraints, "View missing from views, but in metrics; constraintWithVisualFormat shouldn't return constraints! Returned");
+            // Missing item in views
+            layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[noView(20)]"
+                                                                        options:0
+                                                                        metrics:nil
+                                                                          views:NSDictionaryOfVariableBindings(leftView, rightView)];
 
-    // Missing item in metrics, but in views
-    layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[leftView(20@rightView)]"
-                                                                options:0
-                                                                metrics:metrics
-                                                                  views:NSDictionaryOfVariableBindings(leftView, rightView)];
+            EXPECT_FALSE_MSG(layoutConstraints,
+                             "View missing from views; constraintWithVisualFormat shouldn't return constraints! Returned");
 
-    EXPECT_FALSE_MSG(layoutConstraints, "View missing from metrics, but in views; constraintWithVisualFormat shouldn't return constraints! Returned");
+            // Missing item in views, but in metrics
+            layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[metric(20)]"
+                                                                        options:0
+                                                                        metrics:metrics
+                                                                          views:NSDictionaryOfVariableBindings(leftView, rightView)];
 
-    // Dangling constraint
-    layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[leftView(20)]-"
-                                                                options:0
-                                                                metrics:metrics
-                                                                  views:NSDictionaryOfVariableBindings(leftView, rightView)];
+            EXPECT_FALSE_MSG(layoutConstraints,
+                             "View missing from views, but in metrics; constraintWithVisualFormat shouldn't return constraints! Returned");
 
-    EXPECT_FALSE_MSG(layoutConstraints, "Constraint left dangling; constraintWithVisualFormat shouldn't return constraints! Returned");
+            // Missing item in metrics, but in views
+            layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[leftView(20@rightView)]"
+                                                                        options:0
+                                                                        metrics:metrics
+                                                                          views:NSDictionaryOfVariableBindings(leftView, rightView)];
 
-    // Extra parens
-    layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[leftView((20))]"
-                                                                options:0
-                                                                metrics:metrics
-                                                                  views:NSDictionaryOfVariableBindings(leftView, rightView)];
+            EXPECT_FALSE_MSG(layoutConstraints,
+                             "View missing from metrics, but in views; constraintWithVisualFormat shouldn't return constraints! Returned");
 
-    EXPECT_FALSE_MSG(layoutConstraints, "Extra parens in format; constraintWithVisualFormat shouldn't return constraints! Returned");
+            // Dangling constraint
+            layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[leftView(20)]-"
+                                                                        options:0
+                                                                        metrics:metrics
+                                                                          views:NSDictionaryOfVariableBindings(leftView, rightView)];
 
-    layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[leftView()(20)]"
-                                                                options:0
-                                                                metrics:metrics
-                                                                  views:NSDictionaryOfVariableBindings(leftView, rightView)];
+            EXPECT_FALSE_MSG(layoutConstraints,
+                             "Constraint left dangling; constraintWithVisualFormat shouldn't return constraints! Returned");
 
-    EXPECT_FALSE_MSG(layoutConstraints, "Extra parens in format; constraintWithVisualFormat shouldn't return constraints! Returned");
+            // Extra parens
+            layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[leftView((20))]"
+                                                                        options:0
+                                                                        metrics:metrics
+                                                                          views:NSDictionaryOfVariableBindings(leftView, rightView)];
 
-    layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[leftView(20)]()"
-                                                                options:0
-                                                                metrics:metrics
-                                                                  views:NSDictionaryOfVariableBindings(leftView, rightView)];
+            EXPECT_FALSE_MSG(layoutConstraints,
+                             "Extra parens in format; constraintWithVisualFormat shouldn't return constraints! Returned");
 
-    EXPECT_FALSE_MSG(layoutConstraints, "Extra parens in format; constraintWithVisualFormat shouldn't return constraints! Returned");
+            layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[leftView()(20)]"
+                                                                        options:0
+                                                                        metrics:metrics
+                                                                          views:NSDictionaryOfVariableBindings(leftView, rightView)];
 
-    // Missing parens
-    layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[leftView(20]"
-                                                                options:0
-                                                                metrics:metrics
-                                                                  views:NSDictionaryOfVariableBindings(leftView, rightView)];
+            EXPECT_FALSE_MSG(layoutConstraints,
+                             "Extra parens in format; constraintWithVisualFormat shouldn't return constraints! Returned");
 
-    EXPECT_FALSE_MSG(layoutConstraints, "Missing parens in format; constraintWithVisualFormat shouldn't return constraints! Returned");
+            layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[leftView(20)]()"
+                                                                        options:0
+                                                                        metrics:metrics
+                                                                          views:NSDictionaryOfVariableBindings(leftView, rightView)];
 
-    // Priority out of bounds
-    layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[leftView(20@1001)]"
-                                                                options:0
-                                                                metrics:metrics
-                                                                  views:NSDictionaryOfVariableBindings(leftView, rightView)];
+            EXPECT_FALSE_MSG(layoutConstraints,
+                             "Extra parens in format; constraintWithVisualFormat shouldn't return constraints! Returned");
 
-    EXPECT_FALSE_MSG(layoutConstraints, "Priority out of bounds; constraintWithVisualFormat shouldn't return constraints! Returned");
+            // Missing parens
+            layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[leftView(20]"
+                                                                        options:0
+                                                                        metrics:metrics
+                                                                          views:NSDictionaryOfVariableBindings(leftView, rightView)];
 
-    layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[leftView(20@-1)]"
-                                                                options:0
-                                                                metrics:metrics
-                                                                  views:NSDictionaryOfVariableBindings(leftView, rightView)];
+            EXPECT_FALSE_MSG(layoutConstraints,
+                             "Missing parens in format; constraintWithVisualFormat shouldn't return constraints! Returned");
 
-    EXPECT_FALSE_MSG(layoutConstraints, "Priority out of bounds; constraintWithVisualFormat shouldn't return constraints! Returned");
-}
+            // Priority out of bounds
+            layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[leftView(20@1001)]"
+                                                                        options:0
+                                                                        metrics:metrics
+                                                                          views:NSDictionaryOfVariableBindings(leftView, rightView)];
 
-TEST(NSLayoutConstraint, AddConstraints) {
-    UIView* topLevelView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
-    UIView* leftView = [UIView new];
-    UIView* rightView = [UIView new];
-    UIView* danglingView = [UIView new];
+            EXPECT_FALSE_MSG(layoutConstraints,
+                             "Priority out of bounds; constraintWithVisualFormat shouldn't return constraints! Returned");
 
-    [topLevelView addSubview:leftView];
-    [topLevelView addSubview:rightView];
+            layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[leftView(20@-1)]"
+                                                                        options:0
+                                                                        metrics:metrics
+                                                                          views:NSDictionaryOfVariableBindings(leftView, rightView)];
 
-    NSArray* layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"|[leftView(rightView@1000)]-[rightView(10)]|"
-                                                                         options:0
-                                                                         metrics:nil
-                                                                           views:NSDictionaryOfVariableBindings(leftView, rightView)];
+            EXPECT_FALSE_MSG(layoutConstraints,
+                             "Priority out of bounds; constraintWithVisualFormat shouldn't return constraints! Returned");
+        });
+    }
 
-    ASSERT_TRUE_MSG(layoutConstraints, "constraintsWithVisualFormat returned nil!");
+    TEST_METHOD(AddConstraints) {
+        FrameworkHelper::RunOnUIThread([]() {
+            UIView* topLevelView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+            UIView* leftView = [UIView new];
+            UIView* rightView = [UIView new];
+            UIView* danglingView = [UIView new];
 
-    int numConstraints = [topLevelView.constraints count];
+            [topLevelView addSubview:leftView];
+            [topLevelView addSubview:rightView];
 
-    [topLevelView addConstraints:layoutConstraints];
+            NSArray* layoutConstraints =
+                [NSLayoutConstraint constraintsWithVisualFormat:@"|[leftView(rightView@1000)]-[rightView(10)]|"
+                                                        options:0
+                                                        metrics:nil
+                                                          views:NSDictionaryOfVariableBindings(leftView, rightView)];
 
-    EXPECT_EQ_MSG(numConstraints + [layoutConstraints count], [topLevelView.constraints count], "Not all constraints added to view");
+            ASSERT_TRUE_MSG(layoutConstraints, "constraintsWithVisualFormat returned nil!");
 
-    layoutConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[rightView][danglingView]"
-                                                                options:0
-                                                                metrics:nil
-                                                                  views:NSDictionaryOfVariableBindings(leftView, rightView, danglingView)];
+            int numConstraints = [topLevelView.constraints count];
 
-    ASSERT_TRUE_MSG(layoutConstraints, "constraintsWithVisualFormat returned nil!");
+            [topLevelView addConstraints:layoutConstraints];
 
-    numConstraints = [topLevelView.constraints count];
+            EXPECT_EQ_MSG(numConstraints + [layoutConstraints count],
+                          [topLevelView.constraints count],
+                          "Not all constraints added to view");
 
-    [topLevelView addConstraints:layoutConstraints];
+            layoutConstraints =
+                [NSLayoutConstraint constraintsWithVisualFormat:@"[rightView][danglingView]"
+                                                        options:0
+                                                        metrics:nil
+                                                          views:NSDictionaryOfVariableBindings(leftView, rightView, danglingView)];
 
-    EXPECT_EQ_MSG(numConstraints, [topLevelView.constraints count], "Unrelated constraints added to view");
-}
+            ASSERT_TRUE_MSG(layoutConstraints, "constraintsWithVisualFormat returned nil!");
+
+            numConstraints = [topLevelView.constraints count];
+
+            [topLevelView addConstraints:layoutConstraints];
+
+            EXPECT_EQ_MSG(numConstraints, [topLevelView.constraints count], "Unrelated constraints added to view");
+        });
+    }
+};

@@ -17,15 +17,32 @@
 
 #include "Logger.h"
 
-/////////////////////////////////////////////////////////
-// TEST macro override
-/////////////////////////////////////////////////////////
-
-// 'TEST(SampleTest, Sanity)' becomes 'void SampleTestSanity()'
-#ifdef TEST
-#undef TEST
+#ifdef __OBJC__
+#pragma push_macro("interface")
+#ifndef interface
+#define interface struct
 #endif
-#define TEST(__Name1, __Name2) void __Name1##__Name2()
+#pragma push_macro("Nil")
+#undef Nil
+#pragma push_macro("__alignof")
+#define __alignof alignof
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmicrosoft"
+#endif
+
+#include <UWP/RTHelpers.h>
+#include <WexTestClass.h>
+
+#ifdef __OBJC__
+#pragma pop_macro("Nil")
+#pragma pop_macro("interface")
+#pragma pop_macro("__alignof")
+#pragma clang diagnostic pop
+#endif
+
+#include "Framework/Framework.h"
+#include "FunctionalTestHelpers.h"
+extern void UIApplicationDefaultInitialize();
 
 /////////////////////////////////////////////////////////
 // Logging macros
@@ -350,7 +367,7 @@
 #endif
 #define EXPECT_NEAR_MSG(val1, val2, abs_error, format, ...)                          \
     FunctionalTestLog::SetUserComment(GTestLogPrivate::Format(format, __VA_ARGS__)); \
-    EXPECT_DOUBLEXPECT_NEAR(val1, val2, abs_error);
+    EXPECT_NEAR(val1, val2, abs_error);
 
 #ifdef EXPECT_THROW_MSG
 #undef EXPECT_THROW_MSG
@@ -386,3 +403,87 @@
 #define EXPECT_OBJCNE_MSG(val1, val2, format, ...)                                   \
     FunctionalTestLog::SetUserComment(GTestLogPrivate::Format(format, __VA_ARGS__)); \
     EXPECT_OBJCNE(val1, val2);
+
+// clang-format off
+#pragma push_macro("TEST")
+#define TEST(className, methodName)  \
+    \
+    class className##_##methodName { \
+        TEST_CLASS(className##_##methodName) \
+    \
+        TEST_METHOD(Test); \
+    };  \
+    \
+    void className##_##methodName::Test()
+
+#pragma push_macro("TEST_F")
+#define TEST_F(className, methodName)                  \
+/* This assumes that there already exists a className type with SetUp and TearDown methods to call */ \
+    \
+    class className##_##methodName : className { \
+        TEST_CLASS(className##_##methodName) \
+    \
+        TEST_METHOD(Test); \
+        TEST_METHOD_SETUP(_Setup); \
+        TEST_METHOD_CLEANUP(_Teardown); \
+        \
+        /* TODO: fix up inheritance to not use GTestClasses if not needed. */ \
+        virtual void TestBody() { \
+            Test(); \
+        } \
+    }; \
+    \
+    bool className##_##methodName::_Setup() { \
+        SetUp(); \
+        return true; \
+    } \
+    bool className##_##methodName::_Teardown() { \
+        TearDown(); \
+        return true; \
+    } \
+    void className##_##methodName::Test()
+
+// Don't override TEST_P. Its fine as is because of the needed INSTANTIATE_TEST_CASE_P.
+// TEST_P just sets up a base class with SetUp, TearDown, and TestBody that will be
+// called with the values.
+#pragma push_macro("INSTANTIATE_TEST_CASE_P")
+#define  INSTANTIATE_TEST_CASE_P(prefix, className, generator, ...)                  \
+/* This assumes that there already exists a className type with SetUp and TearDown methods to call */ \
+    \
+    class className##_##prefix { \
+        TEST_CLASS(className##_##prefix) \
+    \
+        TEST_METHOD(Test) { \
+            WEX::Logging::Log::Comment(L"\nStarting parameterized subtests for " L#className L"_" L#prefix L":"); \
+            ::testing::internal::ParamGenerator<className::ParamType> paramGenerator(generator); \
+            for (const auto& metaFactory : ::testing::UnitTest::GetInstance()->parameterized_test_registry(). \
+              GetTestCasePatternHolder<className>( \
+                  #className, \
+                  ::testing::internal::CodeLocation( \
+                      __FILE__, __LINE__))->GetTestMetaFactories()) { \
+                 size_t i = 0; \
+                 static const std::wstring c_stringPrefix = L #className L"_" L #prefix L"/"; \
+                 for (typename ::testing::internal::ParamGenerator<className::ParamType>::iterator param = paramGenerator.begin(); param != paramGenerator.end(); ++param, ++i) { \
+                    std::wstring currentTest = c_stringPrefix + std::to_wstring(i); \
+                    /* TODO: don't leak. Use better storage. */ \
+                    auto factory = metaFactory->CreateTestFactory(*param); \
+                    auto test = factory->CreateTest(); \
+                    \
+                    WEX::Logging::Log::StartGroup(currentTest.c_str()); \
+                    ::testing::TestRunner::SetUp(test); \
+                    \
+                    /* TODO: wrap this in an exception handler to ensure that clean up happens per run.*/ \
+                    ::testing::TestRunner::TestBody(test); \
+                    \
+                    ::testing::TestRunner::TearDown(test); \
+                    WEX::Logging::Log::EndGroup(currentTest.c_str()); \
+                    \
+                    delete factory; \
+                    delete test; \
+                } \
+            } \
+            WEX::Logging::Log::Comment(L"\nEnd of parameterized subtests for " L#className L"_" L#prefix L".\n"); \
+        } \
+    };
+
+// clang-format on

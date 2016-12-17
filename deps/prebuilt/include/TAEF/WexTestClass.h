@@ -3,6 +3,7 @@
 /// <summary>Test Authoring and Execution Framework native macro definitions</summary>
 // Copyright (c) Microsoft Corporation.  All Rights Reserved.
 //----------------------------------------------------------------------------------------------------------------------
+// clang-format off
 #pragma once
 
 // We currently require the C++ compiler from VS 2012 or later.
@@ -13,9 +14,11 @@
 #pragma warning(push)
 #pragma warning(disable:4481)
 
+#if !defined(__clang__)
 #pragma comment(lib, "TE.Common.lib")
 #pragma comment(lib, "Wex.Common.lib")
 #pragma comment(lib, "Wex.Logger.lib")
+#endif
 
 // Allow anyone who has defined an Assert macro to compile with this header file included
 #pragma push_macro("Assert")
@@ -35,6 +38,11 @@
 #include "WexException.h"
 
 #include <new>
+#endif
+
+#if defined(__clang__)
+#include <array>
+#include <utility>
 #endif
 
 #pragma push_macro("_Outptr_")
@@ -122,6 +130,29 @@ namespace WEX
 {
     namespace Private
     {
+#if defined(__clang__)
+        // Helper function to index into arrays to build up big std::array with concatenated characters of two. 
+        // Uses template function arg deduction to pull out NumChars from constant c strings and parameter pack expansion with
+        // std::index_sequence to rewrite into a new constant "string like object" that resembles a C++ qualified member name.
+        //
+        // TL;DR:
+        //    "ClassName", "MethodName" -> "ClassName::MethodName"
+        //    all at compile time because of constexpr and template magic.
+        template<unsigned NumChar1, unsigned NumChar2, std::size_t... Indices1, std::size_t... Indices2>
+        constexpr std::array<wchar_t const, NumChar1 + NumChar2 + 1> BuildQualifiedName(
+            wchar_t const (&str1)[NumChar1], wchar_t const (&str2)[NumChar2], std::index_sequence<Indices1...>, std::index_sequence<Indices2...>) {
+            static_assert(sizeof...(Indices1) < NumChar1, "Range of characters to use from first string must not include null terminator.");
+            return {{ str1[Indices1]..., L':', L':', str2[Indices2]...}};
+        }
+
+        // Helper to make calling the other one a little nicer using template argument type deduction.
+        template<unsigned NumChar1, unsigned NumChar2>
+        constexpr std::array<wchar_t const, NumChar1 + NumChar2 + 1> BuildQualifiedName(
+            wchar_t const (&str1)[NumChar1], wchar_t const (&str2)[NumChar2]) {
+            return BuildQualifiedName(str1, str2, std::make_index_sequence<NumChar1-1>(), std::make_index_sequence<NumChar2>());
+        }
+#endif
+
         /// \internal
         /// <summary>
         /// A SEH filter.
@@ -587,13 +618,40 @@ namespace WEX
 #pragma section("testdata$g_TCM", read)
 #pragma section("testdata$h_TMM", read)
 
+#define TAEF_ATTRIBUTE_SECTION(sectionName)                 __declspec(allocate(sectionName))
+
 // The IntelliSense compiler reports errors when trying to parse 'TAEF_PIN_FUNCTION_SYMBOL', so it should be skipped.
 #if defined(__INTELLISENSE__)
 # define TAEF_PIN_FUNCTION_SYMBOL
 #else
+
 /// \internal
 /// <summary> Instruct the compiler not to remove the function from the obj file during the optimization phase </summary>
+#if defined(__clang__)
+# define TAEF_PIN_FUNCTION_SYMBOL                 __attribute__((used)) 
+#else
 # define TAEF_PIN_FUNCTION_SYMBOL                 __pragma (comment(linker, "/include:" __FUNCDNAME__))
+#endif
+    
+#endif
+
+#if defined (__clang__)
+
+#define TAEF_CLASS_NAME_SYMBOL c_taefClassNameArray
+#define TAEF_CLASS_NAME &TAEF_CLASS_NAME_SYMBOL[0]
+#define TAEF_DEFINE_CLASS_NAME(className) \
+    static constexpr const wchar_t TAEF_CLASS_NAME_SYMBOL[] = L# className
+
+#define TAEF_QUALIFIED_METHOD_NAME_SYMBOL s_qualifiedMethodName
+#define TAEF_QUALIFIED_METHOD_NAME &TAEF_QUALIFIED_METHOD_NAME_SYMBOL[0]
+#define TAEF_DEFINE_QUALIFIED_METHOD_NAME(methodName) \
+    static constexpr auto TAEF_QUALIFIED_METHOD_NAME_SYMBOL = WEX::Private::BuildQualifiedName(TAEF_CLASS_NAME_SYMBOL, methodName)
+
+#else
+
+#define TAEF_DEFINE_QUALIFIED_METHOD_NAME(methodName)
+#define TAEF_DEFINE_CLASS_NAME(className)
+
 #endif
 
 /// \internal
@@ -610,6 +668,16 @@ namespace WEX
 #define TAEF_REGISTER_FIXTURE_METHOD(methodName, methodType)
 #define TAEF_REGISTER_TEST_METHOD(methodName)
 #else
+
+#if defined (__clang__)
+#define TAEF_FIXTURE_METHOD_INFO(methodType, methodName) \
+    {methodType, L#methodName, TAEF_QUALIFIED_METHOD_NAME, &TAEF_FixtureInvoker::TAEF_Invoke}
+#else
+#define TAEF_FIXTURE_METHOD_INFO(methodType, methodName) \
+    {methodType, L#methodName, TAEF__WFUNCTION__, &TAEF_FixtureInvoker::TAEF_Invoke}
+#endif
+
+
 #define TAEF_REGISTER_FIXTURE_METHOD(methodName, methodType) \
     struct TAEF_FixtureInvoker \
     { \
@@ -617,13 +685,22 @@ namespace WEX
         { \
             /* TAEF_TestClassType was typedef'd in the TEST_CLASS macro so we can safely cast from \
                void* to TAEF_TestClassType* and invoke the correct derived type's member functions */ \
-            return WEX::SafeInvoke(WEX::FixtureInvokeFunctor<TAEF_TestClassType>(*reinterpret_cast<TAEF_TestClassType*>(pTestClass), &methodName)); \
+            return WEX::SafeInvoke(WEX::FixtureInvokeFunctor<TAEF_TestClassType>(*reinterpret_cast<TAEF_TestClassType*>(pTestClass), &TAEF_TestClassType::methodName)); \
         } \
     }; \
+    TAEF_DEFINE_QUALIFIED_METHOD_NAME(TAEF__WFUNCTION__); \
     TAEF_PUSH_IGNORE_WARNINGS \
-    TAEF_PIN_FUNCTION_SYMBOL __declspec(allocate("testdata$e_FMI")) \
-    static const WEX::FixtureMethodInfo s_testInfo = {methodType, L#methodName, TAEF__WFUNCTION__, &TAEF_FixtureInvoker::TAEF_Invoke}; \
+    TAEF_PIN_FUNCTION_SYMBOL TAEF_ATTRIBUTE_SECTION("testdata$e_FMI") \
+    static const WEX::FixtureMethodInfo s_testInfo = TAEF_FIXTURE_METHOD_INFO(methodType, methodName); \
     return &s_testInfo; /* Return a pointer to s_testInfo in order to pin the struct into the dll so it does not get stripped out by the linker. */
+
+#if defined (__clang__)
+#define TAEF_TEST_METHOD_INFO(methodName) \
+    {WEX::TAEF_Identifier::TestMethodInfo, L#methodName, TAEF_QUALIFIED_METHOD_NAME, __COUNTER__ - TAEF_TestMethodIndexOffset, &TAEF_TestInvoker::TAEF_Invoke}
+#else
+#define TAEF_TEST_METHOD_INFO(methodName) \
+    {WEX::TAEF_Identifier::TestMethodInfo, L#methodName, TAEF__WFUNCTION__, __COUNTER__ - TAEF_TestMethodIndexOffset, &TAEF_TestInvoker::TAEF_Invoke}
+#endif
 
 #define TAEF_REGISTER_TEST_METHOD(methodName) \
     struct TAEF_TestInvoker \
@@ -632,13 +709,13 @@ namespace WEX
         { \
             /* TAEF_TestClassType was typedef'd in the TEST_CLASS macro so we can safely cast from \
                void* to TAEF_TestClassType* and invoke the correct type's member functions */ \
-            return WEX::SafeInvoke(WEX::TestInvokeFunctor<TAEF_TestClassType>(*reinterpret_cast<TAEF_TestClassType*>(pTestClass), &methodName)); \
+            return WEX::SafeInvoke(WEX::TestInvokeFunctor<TAEF_TestClassType>(*reinterpret_cast<TAEF_TestClassType*>(pTestClass), &TAEF_TestClassType::methodName)); \
         } \
     }; \
+    TAEF_DEFINE_QUALIFIED_METHOD_NAME(TAEF__WFUNCTION__); \
     TAEF_PUSH_IGNORE_WARNINGS \
-    TAEF_PIN_FUNCTION_SYMBOL __declspec(allocate("testdata$c_TMI")) \
-    static const WEX::TestMethodInfo s_testInfo = {WEX::TAEF_Identifier::TestMethodInfo, L#methodName, TAEF__WFUNCTION__, \
-                                                   __COUNTER__ - TAEF_TestMethodIndexOffset, &TAEF_TestInvoker::TAEF_Invoke}; \
+    TAEF_PIN_FUNCTION_SYMBOL TAEF_ATTRIBUTE_SECTION("testdata$c_TMI") \
+    static const WEX::TestMethodInfo s_testInfo = TAEF_TEST_METHOD_INFO(methodName); \
     return &s_testInfo; /* Return a pointer to s_testInfo in order to pin the struct into the dll so it does not get stripped out by the linker. */
 #endif
 
@@ -663,9 +740,18 @@ namespace WEX
 #define TEST_METHOD(methodName) \
     TAEF_TEST_METHOD(methodName) TAEF_TERMINATOR
 
+#if defined (__clang__)
+#define TAEF_TEST_METHOD_BASE_METADATA() \
+    { WEX::TAEF_Identifier::TestMethodMetadata, L"Name", TAEF_QUALIFIED_METHOD_NAME}
+#else
+#define TAEF_TEST_METHOD_BASE_METADATA() \
+    { WEX::TAEF_Identifier::TestMethodMetadata, L"Name", TAEF__WFUNCTION__}
+#endif
+
 #define TAEF_TEST_METHOD_METADATA_START \
-    TAEF_PIN_FUNCTION_SYMBOL __declspec(allocate("testdata$h_TMM")) \
-    static WEX::TestPropertyMetadata s_Metadata[] = { {WEX::TAEF_Identifier::TestMethodMetadata, L"Name", TAEF__WFUNCTION__}, \
+    TAEF_PIN_FUNCTION_SYMBOL TAEF_ATTRIBUTE_SECTION("testdata$h_TMM") \
+    static WEX::TestPropertyMetadata s_Metadata[] = { \
+        TAEF_TEST_METHOD_BASE_METADATA(), \
 
 #define TAEF_TEST_METHOD_METADATA_END \
                                                       {WEX::TAEF_Identifier::TestMethodMetadata, nullptr, nullptr}}; \
@@ -689,6 +775,7 @@ namespace WEX
  \
     static const __declspec(dllexport) WEX::TestPropertyMetadata* methodName ## _GetTestMethodMetadata() \
     { \
+        TAEF_DEFINE_QUALIFIED_METHOD_NAME(TAEF__WFUNCTION__); \
         TAEF_TEST_METHOD_METADATA_START \
 
 /// <summary>
@@ -717,11 +804,15 @@ namespace WEX
 ///      }
 /// \endcode
 #define BEGIN_TEST_METHOD_PROPERTIES() \
+    __if_not_exists(TAEF_QUALIFIED_METHOD_NAME_SYMBOL) \
+    { \
+        TAEF_DEFINE_QUALIFIED_METHOD_NAME(TAEF__WFUNCTION__ L"::TAEF_TestMethodProperties::TAEF_GetTestMethodMetadata"); \
+    } \
     struct TAEF_TestMethodProperties \
     { \
         static const __declspec(dllexport) WEX::TestPropertyMetadata* TAEF_GetTestMethodMetadata() \
         { \
-            TAEF_TEST_METHOD_METADATA_START \
+            TAEF_TEST_METHOD_METADATA_START
 
 /// <summary>
 ///  Macro that ends inline test method property declaration.
@@ -753,7 +844,7 @@ namespace WEX
 #define BEGIN_MODULE() \
     const __declspec(dllexport) WEX::TestPropertyMetadata* TAEF_GetModuleMetadata() \
     { \
-        TAEF_PIN_FUNCTION_SYMBOL __declspec(allocate("testdata$f_MM")) \
+        TAEF_PIN_FUNCTION_SYMBOL TAEF_ATTRIBUTE_SECTION("testdata$f_MM") \
         static const WEX::TestPropertyMetadata s_Metadata[] = { \
             {WEX::TAEF_Identifier::ModuleMetadata,  L"Name", L"___##TestFile##___"},
 
@@ -774,6 +865,17 @@ namespace WEX
         return s_Metadata; \
     }
 
+
+#if defined (__clang__)
+#define TAEF_TEST_CLASS_INFO(className) \
+    {WEX::TAEF_Identifier::TestClassInfo, TAEF_QUALIFIED_METHOD_NAME, &WEX::TestClassFactory<className>::CreateInstance, &WEX::TestClassFactory<className>::DestroyInstance }
+
+#else
+#define TAEF_TEST_CLASS_INFO(className) \
+    {WEX::TAEF_Identifier::TestClassInfo, TAEF__WFUNCTION__, &WEX::TestClassFactory<className>::CreateInstance, &WEX::TestClassFactory<className>::DestroyInstance }
+
+#endif
+
 /// <summary>
 ///  Macro for declaring a test class without associating it with any metadata
 /// </summary>
@@ -785,13 +887,14 @@ namespace WEX
 ///      }
 /// \endcode
 #define TEST_CLASS(className) \
+    TAEF_DEFINE_CLASS_NAME(className); \
     typedef className TAEF_TestClassType; \
     static const uintptr_t TAEF_TestMethodIndexOffset = __COUNTER__; \
     friend struct WEX::TestClassFactory<className>; \
     typedef bool (className::*TAEF_MemberMaintFunc)(); \
     __pragma(warning(suppress:25007)) /* Disable warning that member method may be static */ \
     bool TAEF_DummyMaintFunc() { return true; } \
-    static const __declspec(dllexport) WEX::TestClassInfo* TAEF_GetTestClassInfo() \
+    static const  __declspec(dllexport) WEX::TestClassInfo* TAEF_GetTestClassInfo() \
     { \
         /* this works similarly to WEX::Common::Conversion<T, U> checking if an expression (&_DummyMaintFunc) \
          * is convertible to the MemberMaintFunc type \
@@ -808,17 +911,25 @@ namespace WEX
             } \
             char member[2]; /* a two element array to ensure a different size from char returned by TestType(MemberMaintFunc) */ \
         }; \
-        COMPILE_TIME_CHECK_V2(sizeof(TaefClassNameTester::TestType(&TAEF_DummyMaintFunc)) == 1, \
-                TAEF_STRINGIZE(className) ## " is not the name of the current class", \
+        COMPILE_TIME_CHECK_V2(sizeof(TaefClassNameTester::TestType(&TAEF_TestClassType::TAEF_DummyMaintFunc)) == 1, \
+                TAEF_STRINGIZE(className) " is not the name of the current class", \
                 Not_current_test_class_name); \
  \
+        TAEF_DEFINE_QUALIFIED_METHOD_NAME(TAEF__WFUNCTION__); \
         TAEF_PUSH_IGNORE_WARNINGS \
-        TAEF_PIN_FUNCTION_SYMBOL __declspec(allocate("testdata$b_TCI")) \
-        static WEX::TestClassInfo const s_ClassInfo = \
-            {WEX::TAEF_Identifier::TestClassInfo, TAEF__WFUNCTION__, &WEX::TestClassFactory<className>::CreateInstance, \
-             &WEX::TestClassFactory<className>::DestroyInstance }; \
+        TAEF_PIN_FUNCTION_SYMBOL TAEF_ATTRIBUTE_SECTION("testdata$b_TCI") \
+        static WEX::TestClassInfo const s_ClassInfo = TAEF_TEST_CLASS_INFO(className); \
         return &s_ClassInfo; \
     }
+
+
+#if defined (__clang__)
+#define TAEF_TEST_CLASS_BASE_METADATA(className) \
+    { WEX::TAEF_Identifier::TestClassMetadata, L"Name", TAEF_QUALIFIED_METHOD_NAME}
+#else
+#define TAEF_TEST_CLASS_BASE_METADATA(className) \
+    { WEX::TAEF_Identifier::TestClassMetadata, L"Name", TAEF__WFUNCTION__ }
+#endif
 
 /// <summary>
 ///  Macro for declaring a test class and associating it with metadata
@@ -838,9 +949,10 @@ namespace WEX
  \
     static const __declspec(dllexport) WEX::TestPropertyMetadata* TAEF_GetClassMetadata() \
     { \
-        TAEF_PIN_FUNCTION_SYMBOL __declspec(allocate("testdata$g_TCM")) \
-        static const WEX::TestPropertyMetadata s_Metadata[] = { \
-            {WEX::TAEF_Identifier::TestClassMetadata, L"Name", TAEF__WFUNCTION__ },
+        TAEF_DEFINE_QUALIFIED_METHOD_NAME(TAEF__WFUNCTION__); \
+        TAEF_PIN_FUNCTION_SYMBOL TAEF_ATTRIBUTE_SECTION("testdata$g_TCM") \
+        static const WEX::TestPropertyMetadata s_Metadata[] =  { \
+            TAEF_TEST_CLASS_BASE_METADATA(className), \
 
 /// <summary>
 ///  Macro for adding a piece of metadata to a test class declaration.
@@ -869,7 +981,7 @@ namespace WEX
     }; \
  \
     TAEF_PUSH_IGNORE_WARNINGS \
-    TAEF_PIN_FUNCTION_SYMBOL __declspec(allocate("testdata$d_TGFI")) \
+    TAEF_PIN_FUNCTION_SYMBOL TAEF_ATTRIBUTE_SECTION("testdata$d_TGFI") \
     static const WEX::TestGlobalFunctionInfo s_moduleFixtureInfo = \
         {moduleFixtureType, L#methodName, &TAEF_ModuleFixtureInvoker::TAEF_Invoke }; \
     return &s_moduleFixtureInfo;
@@ -1015,7 +1127,7 @@ namespace WEX
 /// <summary>
 ///  Current framework version information
 /// </summary>
-extern "C" __declspec(allocate("testdata$a_TDH")) __declspec(selectany) WEX::TestVersionInfo s_versionInfo =
+extern "C" TAEF_ATTRIBUTE_SECTION("testdata$a_TDH") __declspec(selectany) WEX::TestVersionInfo s_versionInfo =
     {L"TestVersionInfo", "Copyright (c) Microsoft Corporation. All rights reserved.",
     "Wex Test Framework. Version: 0.42.600" TAEF_STRINGIZE(TAEF_ABI_VERSION) ".58", WEX::Private::StringManager::Deallocate};
 
@@ -1033,3 +1145,5 @@ extern "C" __declspec(allocate("testdata$a_TDH")) __declspec(selectany) WEX::Tes
 #pragma pop_macro("_In_")
 #pragma pop_macro("_Post_invalid_")
 #pragma warning(pop)
+
+// clang-format on
