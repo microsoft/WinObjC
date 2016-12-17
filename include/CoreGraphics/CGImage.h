@@ -82,7 +82,7 @@ COREGRAPHICS_EXPORT CGImageRef CGImageCreateWithPNGDataProvider(CGDataProviderRe
 
 COREGRAPHICS_EXPORT CGImageRef CGImageCreateWithImageInRect(CGImageRef image, CGRect rect);
 
-COREGRAPHICS_EXPORT CGImageRef CGImageCreateWithMask(CGImageRef image, CGImageRef mask) STUB_METHOD;
+COREGRAPHICS_EXPORT CGImageRef CGImageCreateWithMask(CGImageRef image, CGImageRef mask);
 
 COREGRAPHICS_EXPORT CGImageRef CGImageCreateWithMaskingColors(CGImageRef image, const CGFloat* components) STUB_METHOD;
 

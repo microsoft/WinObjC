@@ -525,13 +525,34 @@ CGImageRef CGImageCreateCopyWithColorSpace(CGImageRef ref, CGColorSpaceRef color
 }
 
 /**
- @Status Stub
+ @Status Interoperable
+ @Notes This function does not defer the composition of its mask.
+        This function supports non-grayscale alpha masks, unlike the reference platform.
  */
 CGImageRef CGImageCreateWithMask(CGImageRef image, CGImageRef mask) {
-    // TODO  #1425 - masks are applied during rendering via D2D.
     RETURN_NULL_IF(!image);
-    UNIMPLEMENTED();
-    return StubReturn();
+    RETURN_NULL_IF(!mask);
+    RETURN_NULL_IF(CGImageIsMask(image));
+
+    size_t width = CGImageGetWidth(image);
+    size_t height = CGImageGetHeight(image);
+
+    woc::unique_cf<CGContextRef> context{ CGBitmapContextCreate(nullptr,
+                                                                width,
+                                                                height,
+                                                                8,
+                                                                width * 4,
+                                                                CGImageGetColorSpace(image),
+                                                                kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Big) };
+    RETURN_NULL_IF(!context);
+
+    CGRect rect{
+        CGPointZero, { width, height },
+    };
+    CGContextClipToMask(context.get(), rect, mask);
+    CGContextDrawImage(context.get(), rect, image);
+
+    return CGBitmapContextCreateImage(context.get());
 }
 
 /**
