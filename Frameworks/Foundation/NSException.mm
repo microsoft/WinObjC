@@ -18,6 +18,11 @@
 #include "StubReturn.h"
 #import "Foundation/NSException.h"
 #import "NSLogging.h"
+#include <winstring.h>
+
+#include <COMIncludes.h>
+#include <roerrorapi.h>
+#include <COMIncludes_End.h>
 
 static const wchar_t* TAG = L"NSException";
 NSString* const NSRangeException = @"NSRangeExcepton";
@@ -206,7 +211,7 @@ NSUncaughtExceptionHandler* NSGetUncaughtExceptionHandler() {
 // Note: The table is not the exact inverse of _exceptionNameForHRESULT. 
 // E.g. E_ACCESSDENIED and RPC_E_WRONG_THREAD both map to NSObjectInaccessibleException.
 // However, NSObjectInaccessibleException only maps to E_ACCESSDENIED
-+ (int)_HRESULTForExceptionName:(NSString *)exceptionName {
++ (HRESULT)_HRESULTForExceptionName:(NSString *)exceptionName {
     if([exceptionName isEqualToString:NSInvalidArgumentException]) {
         return E_INVALIDARG;
     } else if ([exceptionName isEqualToString:NSGenericException]) {
@@ -240,5 +245,17 @@ NSUncaughtExceptionHandler* NSGetUncaughtExceptionHandler() {
     }
 
     return [[self class] _HRESULTForExceptionName:self.name];
+}
+
+- (void)_processException {
+    HRESULT hr = [self _hresult];
+    HSTRING_HEADER header;
+    HSTRING hsReason = nullptr;
+    
+    if(self.reason != nil) {
+        LPCWSTR reason = (LPCWSTR)([[self reason] cStringUsingEncoding:NSUnicodeStringEncoding]);
+        WindowsCreateStringReference(reason, wcslen(reason), &header, &hsReason);
+    }
+    RoOriginateError(hr, hsReason);
 }
 @end
