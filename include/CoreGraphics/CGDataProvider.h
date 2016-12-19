@@ -19,6 +19,8 @@
 #import <CoreFoundation/CFData.h>
 #import <CoreFoundation/CFURL.h>
 
+typedef const struct __CGDataProvider* CGDataProviderRef;
+
 typedef size_t (*CGDataProviderGetBytesCallback)(void* info, void* buffer, size_t count);
 typedef void (*CGDataProviderReleaseInfoCallback)(void* info);
 typedef void (*CGDataProviderRewindCallback)(void* info);

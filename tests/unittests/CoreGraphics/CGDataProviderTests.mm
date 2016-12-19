@@ -169,3 +169,44 @@ TEST(CGDataProvider, CreateWithFilename) {
     EXPECT_EQ(1452, CFDataGetLength(data.get()));
     EXPECT_NE(nullptr, CFDataGetBytePtr(data.get()));
 }
+
+TEST(CGDataProvider, CreateWithoutCallbacks) {
+    unsigned char rawData[1000];
+    std::iota(rawData, rawData + 1000, 1);
+    woc::unique_cf<CGDataProviderRef> provider{ CGDataProviderCreate(rawData, nullptr) };
+    EXPECT_NE(nullptr, provider);
+    woc::unique_cf<CFDataRef> data{ CGDataProviderCopyData(provider.get()) };
+    EXPECT_EQ(nullptr, data);
+    provider.reset(CGDataProviderCreateDirect(rawData, std::extent<decltype(rawData)>::value, nullptr));
+    EXPECT_NE(nullptr, provider);
+    data.reset(CGDataProviderCopyData(provider.get()));
+    EXPECT_EQ(nullptr, data);
+    provider.reset(CGDataProviderCreateDirectAccess(rawData, std::extent<decltype(rawData)>::value, nullptr));
+    EXPECT_NE(nullptr, provider);
+    data.reset(CGDataProviderCopyData(provider.get()));
+    EXPECT_EQ(nullptr, data);
+    provider.reset(CGDataProviderCreateSequential(rawData, nullptr));
+    EXPECT_NE(nullptr, provider);
+    data.reset(CGDataProviderCopyData(provider.get()));
+    EXPECT_EQ(nullptr, data);
+}
+
+TEST(CGDataProvider, ShouldCopyCallbacks) {
+    unsigned char rawData[1000];
+    std::iota(rawData, rawData + 1000, 1);
+    CGDataProviderCallbacks callbacks{ [](void* info, void* buffer, size_t count) {
+                                          size_t size = std::min(count, (size_t)1000);
+                                          std::memcpy(buffer, info, size);
+                                          return size;
+                                      },
+                                       [](void* info, size_t count) {},
+                                       nullptr,
+                                       [](void* info) {} };
+    woc::unique_cf<CGDataProviderRef> provider{ CGDataProviderCreate(rawData, &callbacks) };
+    callbacks = { nullptr, nullptr, nullptr, nullptr };
+
+    woc::unique_cf<CFDataRef> data{ CGDataProviderCopyData(provider.get()) };
+    EXPECT_EQ(1000, CFDataGetLength(data.get()));
+    EXPECT_NE(rawData, CFDataGetBytePtr(data.get()));
+    EXPECT_EQ(0, std::memcmp(rawData, CFDataGetBytePtr(data.get()), 1000));
+}

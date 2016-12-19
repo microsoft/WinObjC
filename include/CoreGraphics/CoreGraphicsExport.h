@@ -63,7 +63,6 @@ typedef struct __CGImage* CGImageRef;
 typedef struct __CGShading* CGShadingRef;
 typedef struct __CGPath* CGPathRef;
 typedef struct __CGPath* CGMutablePathRef;
-typedef struct __CGDataProvider* CGDataProviderRef;
 
 #if defined(__clang__)
 typedef id CGPatternRef;
