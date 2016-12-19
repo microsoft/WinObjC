@@ -44,10 +44,7 @@ typedef CF_OPTIONS(CFIndex, CGPathDrawingMode) {
 };
 // clang-format on
 
-typedef CF_ENUM(CFIndex, CGTextEncoding) {
-    kCGEncodingFontSpecific,
-    kCGEncodingMacRoman
-};
+typedef CF_ENUM(CFIndex, CGTextEncoding) { kCGEncodingFontSpecific, kCGEncodingMacRoman };
 
 typedef CF_ENUM(CFIndex, CGInterpolationQuality) {
     kCGInterpolationDefault = 0,
@@ -188,7 +185,7 @@ COREGRAPHICS_EXPORT void CGContextSetCMYKFillColor(
 COREGRAPHICS_EXPORT void CGContextSetFillColor(CGContextRef c, const CGFloat* components);
 COREGRAPHICS_EXPORT void CGContextSetCMYKStrokeColor(
     CGContextRef c, CGFloat cyan, CGFloat magenta, CGFloat yellow, CGFloat black, CGFloat alpha) STUB_METHOD;
-COREGRAPHICS_EXPORT void CGContextSetFillColorSpace(CGContextRef c, CGColorSpaceRef space) STUB_METHOD;
+COREGRAPHICS_EXPORT void CGContextSetFillColorSpace(CGContextRef c, CGColorSpaceRef space);
 
 COREGRAPHICS_EXPORT void CGContextSetFillColorWithColor(CGContextRef c, CGColorRef color);
 COREGRAPHICS_EXPORT void CGContextSetGrayFillColor(CGContextRef c, CGFloat gray, CGFloat alpha);

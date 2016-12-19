@@ -51,6 +51,7 @@ COREGRAPHICS_EXPORT CGPatternRef CGPatternCreate(void* info,
                                                  CGPatternTiling tiling,
                                                  bool isColored,
                                                  const CGPatternCallbacks* callbacks);
+
 COREGRAPHICS_EXPORT CGPatternRef CGPatternRetain(CGPatternRef pattern);
 COREGRAPHICS_EXPORT void CGPatternRelease(CGPatternRef pattern);
 

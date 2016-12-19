@@ -29,6 +29,7 @@
 #import "CGContextInternal.h"
 #import "CGPathInternal.h"
 #import "CGIWICBitmap.h"
+#import "CGPatternInternal.h"
 
 #import <CFCppBase.h>
 
@@ -165,6 +166,11 @@ struct __CGContextDrawingState {
         clippingGeometry.Attach(newClippingPathGeometry.Detach());
         return S_OK;
     }
+
+    inline D2D1_INTERPOLATION_MODE GetInterpolationModeForCGImage(CGImageRef image) {
+        RETURN_RESULT_IF_NULL(image, D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR);
+        return CGImageGetShouldInterpolate(image) ? bitmapInterpolationMode : D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR;
+    }
 };
 
 class __CGContextLayer {
@@ -238,6 +244,8 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext> {
 private:
     std::stack<__CGContextLayer> _layerStack{};
     woc::unique_cf<CGMutablePathRef> _currentPath{ nullptr };
+    woc::unique_cf<CGColorSpaceRef> _fillColorSpace;
+    woc::unique_cf<CGColorSpaceRef> _strokeColorSpace;
 
     inline HRESULT _SaveD2DDrawingState(ID2D1DrawingStateBlock** pDrawingState) {
         RETURN_HR_IF(E_POINTER, !pDrawingState);
@@ -273,6 +281,22 @@ public:
 
         // Set up the default/baseline layer.
         _layerStack.emplace(baselineTarget.Get(), nullptr);
+    }
+
+    inline void setFillColorSpace(CGColorSpaceRef colorspace) {
+        _fillColorSpace.reset(CGColorSpaceRetain(colorspace));
+    }
+
+    inline CGColorSpaceRef fillColorSpace() {
+        return _fillColorSpace.get();
+    }
+
+    inline void setStrokeColorSpace(CGColorSpaceRef colorspace) {
+        _strokeColorSpace.reset(CGColorSpaceRetain(colorspace));
+    }
+
+    inline CGColorSpaceRef strokeColorSpace() {
+        return _strokeColorSpace.get();
     }
 
     inline ComPtr<ID2D1DeviceContext>& DeviceContext() {
@@ -1467,12 +1491,14 @@ void CGContextSetLineWidth(CGContextRef context, CGFloat width) {
 
 #pragma region Drawing Parameters - Stroke Color
 /**
- @Status Stub
- @Notes Since we are currently missing Color Space support, this will need to be implemented.
+ @Status Caveat
+ @Notes Interoperable only for RGB.
 */
 void CGContextSetStrokeColor(CGContextRef context, const CGFloat* components) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    // TODO: based on the color space, we should be setting the fill color componenets.
+    // as color is not fully supported, assume RGBA for now.
+    CGContextSetRGBFillColor(context, components[0], components[1], components[2], components[3]);
 }
 
 /**
@@ -1486,12 +1512,12 @@ void CGContextSetStrokeColorWithColor(CGContextRef context, CGColorRef color) {
 }
 
 /**
- @Status Stub
- @Notes Since we are currently missing Color Space support, this will need to be implemented.
+ @Status Interoperable
 */
 void CGContextSetStrokeColorSpace(CGContextRef context, CGColorSpaceRef colorSpace) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    NOISY_RETURN_IF_NULL(colorSpace);
+    context->setStrokeColorSpace(colorSpace);
 }
 
 /**
@@ -1577,12 +1603,15 @@ void CGContextSetShadowWithColor(CGContextRef context, CGSize offset, CGFloat bl
 
 #pragma region Drawing Parameters - Fill Color
 /**
- @Status Stub
- @Notes Since we are currently missing Color Space support, this will need to be implemented.
+ @Status Caveat
+ @Notes Interoperable only for RGB.
 */
 void CGContextSetFillColor(CGContextRef context, const CGFloat* components) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    NOISY_RETURN_IF_NULL(components);
+    // TODO: based on the color space, we should be setting the fill color componenets.
+    // as color is not fully supported, assume RGBA for now.
+    CGContextSetRGBFillColor(context, components[0], components[1], components[2], components[3]);
 }
 
 /**
@@ -1596,12 +1625,12 @@ void CGContextSetFillColorWithColor(CGContextRef context, CGColorRef color) {
 }
 
 /**
- @Status Stub
- @Notes Since we are currently missing Color Space support, this will need to be implemented.
+ @Status Interoperable
 */
 void CGContextSetFillColorSpace(CGContextRef context, CGColorSpaceRef colorSpace) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    NOISY_RETURN_IF_NULL(colorSpace);
+    context->setFillColorSpace(colorSpace);
 }
 
 /**
@@ -1636,14 +1665,103 @@ void CGContextSetCMYKFillColor(CGContextRef context, CGFloat cyan, CGFloat magen
 }
 #pragma endregion
 
+#pragma region Image Helpers - CGImage / Brush
+
+static HRESULT __CreateD2DBitmapFromCGImage(CGContextRef context, CGImageRef image, ID2D1Bitmap** bitmap) {
+    RETURN_HR_IF_NULL(E_INVALIDARG, context);
+    RETURN_HR_IF_NULL(E_INVALIDARG, image);
+    RETURN_HR_IF_NULL(E_POINTER, bitmap);
+
+    ComPtr<IWICBitmap> bmap;
+    RETURN_IF_FAILED(_CGImageGetWICImageSource(image, &bmap));
+
+    ComPtr<ID2D1Bitmap> d2dBitmap;
+    RETURN_IF_FAILED(context->DeviceContext()->CreateBitmapFromWicBitmap(bmap.Get(), nullptr, &d2dBitmap));
+    *bitmap = d2dBitmap.Detach();
+    return S_OK;
+}
+
+static CGImageRef __CGContextCreateRenderableImage(CGImageRef image) {
+    RETURN_NULL_IF(!image);
+    WICPixelFormatGUID imagePixelFormat = _CGImageGetWICPixelFormat(image);
+    if (!_CGIsValidRenderTargetPixelFormat(imagePixelFormat)) {
+        // convert it to a valid pixelformat
+        return _CGImageCreateCopyWithPixelFormat(image, GUID_WICPixelFormat32bppPBGRA);
+    }
+
+    return CGImageRetain(image);
+}
+
+#pragma endregion
+
 #pragma region Drawing Parameters - Stroke / Fill Patterns
-/**
- @Status Stub
- @Notes
-*/
-void CGContextSetStrokePattern(CGContextRef context, CGPatternRef pattern, const CGFloat* components) {
-    NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+
+CGAffineTransform __BitmapBrushTransformation(CGContextRef context,
+                                              CGRect rectToDrawInto,
+                                              D2D1_SIZE_U bitmapSize,
+                                              CGAffineTransform matrix) {
+    // NULL CHECK
+    FAIL_FAST_IF(bitmapSize.width == 0);
+    FAIL_FAST_IF(bitmapSize.height == 0);
+
+    CGFloat sx = rectToDrawInto.size.width / bitmapSize.width;
+    CGFloat sy = rectToDrawInto.size.height / bitmapSize.height;
+    CGFloat m = rectToDrawInto.origin.y + (rectToDrawInto.size.height / 2.f);
+
+    CGAffineTransform transform{ sx, 0, 0, -sy, rectToDrawInto.origin.x, (2 * m) - rectToDrawInto.origin.y };
+    return CGAffineTransformConcat(transform, matrix);
+}
+
+HRESULT _CreatePatternBrush(CGContextRef context, CGPatternRef pattern, const CGFloat* components, ID2D1BitmapBrush1** brush) {
+    // TODO: change to support grayscale (masks) after dustins change.
+    woc::unique_cf<CGColorSpaceRef> colorspace{ CGColorSpaceCreateDeviceRGB() };
+
+    // We need to generate the pattern as an image (then tile it)
+    CGRect tileSize = _CGPatternGetFinalPatternSize(pattern);
+    size_t bitsPerComponent = 8;
+    size_t bytesPerRow = 4 * tileSize.size.width;
+    CGBitmapInfo bitmapInfo = kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Big;
+
+    woc::unique_cf<CGContextRef> patternContext{ CGBitmapContextCreate(
+        nullptr, tileSize.size.width, tileSize.size.height, bitsPerComponent, bytesPerRow, colorspace.get(), bitmapInfo) };
+    RETURN_HR_IF_NULL(E_UNEXPECTED, patternContext);
+
+    CGContextSetFillColorSpace(patternContext.get(), context->fillColorSpace());
+    // set the fill color
+    CGContextSetFillColor(patternContext.get(), components);
+
+    // Now we ask the user to draw
+    _CGPaternIssueCallBack(patternContext.get(), pattern);
+
+    // Get the image out of it
+    woc::unique_cf<CGImageRef> tileImage{ __CGContextCreateRenderableImage(CGBitmapContextCreateImage(patternContext.get())) };
+    RETURN_HR_IF_NULL(E_UNEXPECTED, tileImage);
+
+    ComPtr<ID2D1Bitmap> d2dBitmap;
+    RETURN_IF_FAILED(__CreateD2DBitmapFromCGImage(context, tileImage.get(), &d2dBitmap));
+
+    // Scale it by the inverted transform
+    // TODO: We have an issue with rotation, the CTM rotation should not affect the brush
+    CGSize size = CGSizeApplyAffineTransform(tileSize.size, CGAffineTransformInvert(context->CurrentGState().transform));
+
+    CGAffineTransform transform = __BitmapBrushTransformation(context,
+                                                              { { 0, 0 }, size.width, size.height },
+                                                              d2dBitmap->GetPixelSize(),
+                                                              _CGPatternGetTransformation(pattern));
+
+    ComPtr<ID2D1BitmapBrush1> bitmapBrush;
+    ComPtr<ID2D1DeviceContext> deviceContext = context->DeviceContext();
+    RETURN_IF_FAILED(deviceContext->CreateBitmapBrush(d2dBitmap.Get(),
+                                                      D2D1::BitmapBrushProperties1(D2D1_EXTEND_MODE_WRAP,
+                                                                                   D2D1_EXTEND_MODE_WRAP,
+                                                                                   context->CurrentGState().GetInterpolationModeForCGImage(
+                                                                                       tileImage.get())),
+                                                      D2D1::BrushProperties(1 /* the global alpha will be set during the draw sequence*/,
+                                                                            __CGAffineTransformToD2D_F(transform)),
+                                                      &bitmapBrush));
+
+    *brush = bitmapBrush.Detach();
+    return S_OK;
 }
 
 /**
@@ -1651,7 +1769,27 @@ void CGContextSetStrokePattern(CGContextRef context, CGPatternRef pattern, const
 */
 void CGContextSetFillPattern(CGContextRef context, CGPatternRef pattern, const CGFloat* components) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    NOISY_RETURN_IF_NULL(pattern);
+    NOISY_RETURN_IF_NULL(components);
+
+    ComPtr<ID2D1BitmapBrush1> bitmapBrush;
+    FAIL_FAST_IF_FAILED(_CreatePatternBrush(context, pattern, components, &bitmapBrush));
+    // set the fill brush
+    FAIL_FAST_IF_FAILED(bitmapBrush.As(&context->CurrentGState().fillBrush));
+}
+
+/**
+ @Status Interoperable
+*/
+void CGContextSetStrokePattern(CGContextRef context, CGPatternRef pattern, const CGFloat* components) {
+    NOISY_RETURN_IF_NULL(context);
+    NOISY_RETURN_IF_NULL(pattern);
+    NOISY_RETURN_IF_NULL(components);
+
+    ComPtr<ID2D1BitmapBrush1> bitmapBrush;
+    FAIL_FAST_IF_FAILED(_CreatePatternBrush(context, pattern, components, &bitmapBrush));
+    // set the stroke brush
+    FAIL_FAST_IF_FAILED(bitmapBrush.As(&context->CurrentGState().strokeBrush));
 }
 
 /**
@@ -2081,32 +2219,6 @@ void CGContextEOFillPath(CGContextRef context) {
 #pragma endregion
 
 #pragma region Drawing Operations - CGImage
-
-static HRESULT __CreateD2DBitmapFromCGImage(CGContextRef context, CGImageRef image, ID2D1Bitmap** bitmap) {
-    RETURN_HR_IF_NULL(E_INVALIDARG, context);
-    RETURN_HR_IF_NULL(E_INVALIDARG, image);
-    RETURN_HR_IF_NULL(E_POINTER, bitmap);
-
-    ComPtr<IWICBitmap> bmap;
-    RETURN_IF_FAILED(_CGImageGetWICImageSource(image, &bmap));
-
-    ComPtr<ID2D1Bitmap> d2dBitmap;
-    RETURN_IF_FAILED(context->DeviceContext()->CreateBitmapFromWicBitmap(bmap.Get(), nullptr, &d2dBitmap));
-    *bitmap = d2dBitmap.Detach();
-    return S_OK;
-}
-
-static CGImageRef __CGContextCreateRenderableImage(CGImageRef image) {
-    RETURN_NULL_IF(!image);
-    WICPixelFormatGUID imagePixelFormat = _CGImageGetWICPixelFormat(image);
-    if (!_CGIsValidRenderTargetPixelFormat(imagePixelFormat)) {
-        // convert it to a valid pixelformat
-        return _CGImageCreateCopyWithPixelFormat(image, GUID_WICPixelFormat32bppPBGRA);
-    }
-
-    CGImageRetain(image);
-    return image;
-}
 
 /**
  @Status Interoperable

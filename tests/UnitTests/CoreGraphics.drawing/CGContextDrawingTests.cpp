@@ -19,6 +19,126 @@
 #include "ImageHelpers.h"
 #include <windows.h>
 
+void drawPatternWindowsLogo(void* info, CGContextRef context) {
+    CGContextFillRect(context, CGRectMake(0, 0, 50, 50));
+
+    CGContextSetRGBFillColor(context, 0, 0.63, 0.94, 1);
+    CGContextFillRect(context, CGRectMake(0, 50, 50, 50));
+
+    CGContextSetRGBFillColor(context, 0.48, 0.73, 0, 1);
+    CGContextFillRect(context, CGRectMake(50, 50, 50, 50));
+
+    CGContextSetRGBFillColor(context, 1, 0.73, 0, 1);
+    CGContextFillRect(context, CGRectMake(50, 0, 50, 50));
+}
+
+void _SetPatternForStroke(CGContextRef context, float xStep, float yStep) {
+    CGPatternCallbacks coloredPatternCallbacks = { 0, drawPatternWindowsLogo, NULL };
+
+    CGPatternRef pattern = CGPatternCreate(NULL,
+                                           CGRectMake(0, 0, 100, 100),
+                                           CGAffineTransformIdentity,
+                                           xStep,
+                                           yStep,
+                                           kCGPatternTilingNoDistortion,
+                                           false,
+                                           &coloredPatternCallbacks);
+
+    woc::unique_cf<CGColorSpaceRef> rgbColorSpace(CGColorSpaceCreateDeviceRGB());
+    CGColorSpaceRef patternColorSpace = CGColorSpaceCreatePattern(rgbColorSpace.get());
+
+    CGContextSetStrokeColorSpace(context, patternColorSpace);
+
+    CGFloat color[] = { 0.96, 0.32, 0.07, 1 };
+    CGContextSetStrokePattern(context, pattern, color);
+}
+
+DRAW_TEST_F(CGContext, PatternStroke, UIKitMimicTest) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    _SetPatternForStroke(context, 100, 100);
+    CGRect borderRect = CGRectInset(bounds, 30, 50);
+    CGContextSetLineWidth(context, 45);
+    CGContextStrokeRect(context, borderRect);
+}
+
+void _SetPatternForFill(CGContextRef context, float xStep, float yStep) {
+    CGPatternCallbacks coloredPatternCallbacks = { 0, drawPatternWindowsLogo, NULL };
+
+    CGPatternRef pattern = CGPatternCreate(NULL,
+                                           CGRectMake(0, 0, 100, 100),
+                                           CGAffineTransformIdentity,
+                                           xStep,
+                                           yStep,
+                                           kCGPatternTilingNoDistortion,
+                                           false,
+                                           &coloredPatternCallbacks);
+
+    woc::unique_cf<CGColorSpaceRef> rgbColorSpace(CGColorSpaceCreateDeviceRGB());
+    CGColorSpaceRef patternColorSpace = CGColorSpaceCreatePattern(rgbColorSpace.get());
+
+    CGFloat color[] = { 0.96, 0.32, 0.07, 1 };
+
+    CGContextSetFillColorSpace(context, patternColorSpace);
+
+    CGContextSetFillPattern(context, pattern, color);
+}
+
+DRAW_TEST_F(CGContext, PatternFill, UIKitMimicTest) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    _SetPatternForFill(context, 100, 100);
+    CGContextFillRect(context, bounds);
+}
+
+DRAW_TEST_F(CGContext, PatternFillWindowsLogoWithAlpha, UIKitMimicTest) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGContextSetAlpha(context, 0.8);
+    _SetPatternForFill(context, 150, 150);
+    CGContextFillRect(context, bounds);
+}
+
+DRAW_TEST_F(CGContext, PatternFillWindowsLogoRotate, UIKitMimicTest) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    _SetPatternForFill(context, 100, 100);
+    CGContextRotateCTM(context, 0.4);
+    CGContextFillRect(context, bounds);
+}
+
+DRAW_TEST_F(CGContext, PatternFillWindowsLogoRegion, UIKitMimicTest) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    _SetPatternForFill(context, 100, 100);
+    CGRect borderRect = CGRectInset(bounds, 30, 50);
+    CGContextFillRect(context, borderRect);
+}
+
+DRAW_TEST_F(CGContext, PatternFillWindowsLogoPath, UIKitMimicTest) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    _SetPatternForFill(context, 100, 100);
+
+    CGMutablePathRef thepath = CGPathCreateMutable();
+    CGPathMoveToPoint(thepath, NULL, 30, 100);
+    CGPathAddCurveToPoint(thepath, NULL, 47.0f, 67.0f, 50.0f, 55.0f, 45.0f, 50.0f);
+    CGPathAddCurveToPoint(thepath, NULL, 42.0f, 47.0f, 37.0f, 46.0f, 30.0f, 55.0f);
+
+    CGPathAddCurveToPoint(thepath, NULL, 23.0f, 46.0f, 18.0f, 47.0f, 15.0f, 50.0f);
+    CGPathAddCurveToPoint(thepath, NULL, 10.0f, 55.0f, 13.0f, 67.0f, 30.0f, 100.0f);
+
+    CGPathCloseSubpath(thepath);
+    CGContextAddPath(context, thepath);
+    CGContextFillPath(context);
+}
+
 #ifdef WINOBJC
 #include "CGContextInternal.h"
 

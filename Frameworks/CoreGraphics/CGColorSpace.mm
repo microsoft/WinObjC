@@ -104,7 +104,7 @@ CGColorSpaceRef CGColorSpaceCreateDeviceRGB() {
 */
 CGColorSpaceRef CGColorSpaceCreatePattern(CGColorSpaceRef source) {
     UNIMPLEMENTED();
-    return (CGColorSpaceRef) new __CGColorSpace(kCGColorSpaceModelRGB);
+    return (CGColorSpaceRef) new __CGColorSpace(kCGColorSpaceModelPattern);
 }
 
 /**
@@ -113,7 +113,6 @@ CGColorSpaceRef CGColorSpaceCreatePattern(CGColorSpaceRef source) {
 CGColorSpaceRef CGColorSpaceCreateDeviceGray() {
     return (CGColorSpaceRef) new __CGColorSpace(kCGColorSpaceModelMonochrome);
 }
-
 
 CGColorSpaceRef _CGColorSpaceCreate(CGColorSpaceModel model) {
     return static_cast<CGColorSpaceRef>(new __CGColorSpace(model));

@@ -17,8 +17,9 @@
 
 #pragma once
 
-#include "CoreGraphics/CGPattern.h"
-#include "CoreGraphicsInternal.h"
+#import <CoreGraphics/CGPattern.h>
+#import <CoreGraphics/CGContext.h>
+#import "CoreGraphicsInternal.h"
 
 @interface CGPattern : NSObject {
 @public
@@ -33,5 +34,20 @@
 }
 - (CGImageRef)getPatternImage;
 - (CGAffineTransform)getPatternTransform;
+- (void)drawViaCallback:(CGContextRef)context;
 + (instancetype)patternWithImage:(CGImageRef)img;
 @end
+
+CGRect _CGPaternGetBounds(CGPatternRef pattern);
+
+/*
+* The CGPattern will call it's associated callback via supplying in the context.
+*/
+void _CGPaternIssueCallBack(CGContextRef context, CGPatternRef pattern);
+
+CGAffineTransform _CGPatternGetTransformation(CGPatternRef pattern);
+
+/*
+* This will tell us how much cropping or extension is needed based on xStep and yStep values.
+*/
+CGRect _CGPatternGetFinalPatternSize(CGPatternRef pattern);
