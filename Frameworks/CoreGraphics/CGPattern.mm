@@ -125,11 +125,6 @@
     return matrix;
 }
 
-- (void)drawViaCallback:(CGContextRef)context {
-    // issue the callback
-    callbacks.drawPattern(info, context);
-}
-
 - (void)dealloc {
     if (generatedImage) {
         CGImageRelease(generatedImage);
@@ -223,8 +218,7 @@ CGRect _CGPaternGetBounds(CGPatternRef pattern) {
 void _CGPaternIssueCallBack(CGContextRef context, CGPatternRef pattern) {
     FAIL_FAST_IF_NULL(context);
     FAIL_FAST_IF_NULL(pattern);
-
-    [((CGPattern*)pattern) drawViaCallback:context];
+    ((CGPattern*)pattern)->callbacks.drawPattern(((CGPattern*)pattern)->info, context);
 }
 
 CGAffineTransform _CGPatternGetTransformation(CGPatternRef pattern) {

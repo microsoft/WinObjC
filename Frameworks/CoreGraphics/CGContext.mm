@@ -283,19 +283,19 @@ public:
         _layerStack.emplace(baselineTarget.Get(), nullptr);
     }
 
-    inline void setFillColorSpace(CGColorSpaceRef colorspace) {
+    inline void SetFillColorSpace(CGColorSpaceRef colorspace) {
         _fillColorSpace.reset(CGColorSpaceRetain(colorspace));
     }
 
-    inline CGColorSpaceRef fillColorSpace() {
+    inline CGColorSpaceRef FillColorSpace() {
         return _fillColorSpace.get();
     }
 
-    inline void setStrokeColorSpace(CGColorSpaceRef colorspace) {
+    inline void SetStrokeColorSpace(CGColorSpaceRef colorspace) {
         _strokeColorSpace.reset(CGColorSpaceRetain(colorspace));
     }
 
-    inline CGColorSpaceRef strokeColorSpace() {
+    inline CGColorSpaceRef StrokeColorSpace() {
         return _strokeColorSpace.get();
     }
 
@@ -370,7 +370,7 @@ public:
                               Lambda&& drawLambda);
     HRESULT DrawGeometry(_CGCoordinateMode coordinateMode, ID2D1Geometry* pGeometry, CGPathDrawingMode drawMode);
     HRESULT DrawImage(ID2D1Image* image);
-    HRESULT ClipToD2DMaskBitmap(ID2D1Bitmap* bitmap, CGRect rect, bool shouldInterpolate);
+    HRESULT ClipToD2DMaskBitmap(ID2D1Bitmap* bitmap, CGRect rect, D2D1_INTERPOLATION_MODE interpolationMode);
     HRESULT ClipToCGImageMask(CGImageRef image, CGRect rect);
 };
 
@@ -1044,18 +1044,12 @@ void CGContextClipToRects(CGContextRef context, const CGRect* rects, unsigned co
     CGContextClip(context);
 }
 
-HRESULT __CGContext::ClipToD2DMaskBitmap(ID2D1Bitmap* bitmap, CGRect rect, bool shouldInterpolate) {
-    RETURN_HR_IF_NULL(E_INVALIDARG, bitmap);
-
-    D2D1_SIZE_U bitmapSize = bitmap->GetPixelSize();
-
-    RETURN_HR_IF(E_INVALIDARG, bitmapSize.width == 0 || bitmapSize.height == 0);
-
-    auto& state = CurrentGState();
-
-    CGFloat sx = rect.size.width / bitmapSize.width;
-    CGFloat sy = rect.size.height / bitmapSize.height;
-    CGFloat m = rect.origin.y + (rect.size.height / 2.f);
+static CGAffineTransform __BitmapBrushTransformation(CGContextRef context,
+                                                     CGRect rectToDrawInto,
+                                                     D2D1_SIZE_U bitmapSize,
+                                                     CGAffineTransform matrix) {
+    FAIL_FAST_IF(bitmapSize.width == 0);
+    FAIL_FAST_IF(bitmapSize.height == 0);
 
     // |1  0 0| is the transformation matrix for flipping a rect about its Y midpoint m. (m = (y + h/2))
     // |0 -1 0|
@@ -1066,22 +1060,34 @@ HRESULT __CGContext::ClipToD2DMaskBitmap(ID2D1Bitmap* bitmap, CGRect rect, bool 
     // | 0   -sy 0|
     // | x -y+2m 0|
     // Or, the transformation matrix for drawing a flipped rect at a scale and offset.
-    CGAffineTransform transform{ sx, 0, 0, -sy, rect.origin.x, (2 * m) - rect.origin.y };
 
-    // Transform that by applying the device global transform (LLO<->ULO flip, plus user transform.)
+    CGFloat sx = rectToDrawInto.size.width / bitmapSize.width;
+    CGFloat sy = rectToDrawInto.size.height / bitmapSize.height;
+    CGFloat m = rectToDrawInto.origin.y + (rectToDrawInto.size.height / 2.f);
+
+    CGAffineTransform transform{ sx, 0, 0, -sy, rectToDrawInto.origin.x, (2 * m) - rectToDrawInto.origin.y };
+    return CGAffineTransformConcat(transform, matrix);
+}
+
+HRESULT __CGContext::ClipToD2DMaskBitmap(ID2D1Bitmap* bitmap, CGRect rect, D2D1_INTERPOLATION_MODE interpolationMode) {
+    RETURN_HR_IF_NULL(E_INVALIDARG, bitmap);
+
+    D2D1_SIZE_U bitmapSize = bitmap->GetPixelSize();
+
+    RETURN_HR_IF(E_INVALIDARG, bitmapSize.width == 0 || bitmapSize.height == 0);
+
     CGAffineTransform userToDeviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(this);
-    transform = CGAffineTransformConcat(transform, userToDeviceTransform);
+    CGAffineTransform transform = __BitmapBrushTransformation(this, rect, bitmapSize, userToDeviceTransform);
 
-    D2D1_INTERPOLATION_MODE interpolationMode =
-        shouldInterpolate ? state.bitmapInterpolationMode : D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR;
+    auto& state = CurrentGState();
+
     ComPtr<ID2D1BitmapBrush1> newOpacityBrush;
     RETURN_IF_FAILED(
         deviceContext->CreateBitmapBrush(bitmap,
                                          D2D1::BitmapBrushProperties1(D2D1_EXTEND_MODE_CLAMP, D2D1_EXTEND_MODE_CLAMP, interpolationMode),
-                                         D2D1::BrushProperties(),
+                                         D2D1::BrushProperties(1 /* the global alpha will be set during the draw sequence*/,
+                                                               __CGAffineTransformToD2D_F(transform)),
                                          &newOpacityBrush));
-
-    newOpacityBrush->SetTransform(__CGAffineTransformToD2D_F(transform));
 
     // Compliance with reference platform: D2D extends the last pixel of the opacity brush out to the
     // ends of the earth. The reference platform truncates the clipping region at the edge of the mask.
@@ -1162,7 +1168,7 @@ HRESULT __CGContext::ClipToCGImageMask(CGImageRef image, CGRect rect) {
     ComPtr<ID2D1Bitmap> maskD2DBitmap;
     RETURN_IF_FAILED(deviceContext->CreateBitmapFromWicBitmap(maskWicBitmap.Get(), nullptr, &maskD2DBitmap));
 
-    return ClipToD2DMaskBitmap(maskD2DBitmap.Get(), rect, CGImageGetShouldInterpolate(image));
+    return ClipToD2DMaskBitmap(maskD2DBitmap.Get(), rect, this->CurrentGState().GetInterpolationModeForCGImage(image));
 }
 
 /**
@@ -1520,7 +1526,7 @@ void CGContextSetStrokeColorWithColor(CGContextRef context, CGColorRef color) {
 void CGContextSetStrokeColorSpace(CGContextRef context, CGColorSpaceRef colorSpace) {
     NOISY_RETURN_IF_NULL(context);
     NOISY_RETURN_IF_NULL(colorSpace);
-    context->setStrokeColorSpace(colorSpace);
+    context->SetStrokeColorSpace(colorSpace);
 }
 
 /**
@@ -1633,7 +1639,7 @@ void CGContextSetFillColorWithColor(CGContextRef context, CGColorRef color) {
 void CGContextSetFillColorSpace(CGContextRef context, CGColorSpaceRef colorSpace) {
     NOISY_RETURN_IF_NULL(context);
     NOISY_RETURN_IF_NULL(colorSpace);
-    context->setFillColorSpace(colorSpace);
+    context->SetFillColorSpace(colorSpace);
 }
 
 /**
@@ -1699,33 +1705,7 @@ static CGImageRef __CGContextCreateRenderableImage(CGImageRef image) {
 
 #pragma region Drawing Parameters - Stroke / Fill Patterns
 
-CGAffineTransform __BitmapBrushTransformation(CGContextRef context,
-                                              CGRect rectToDrawInto,
-                                              D2D1_SIZE_U bitmapSize,
-                                              CGAffineTransform matrix) {
-    // NULL CHECK
-    FAIL_FAST_IF(bitmapSize.width == 0);
-    FAIL_FAST_IF(bitmapSize.height == 0);
-
-    // |1  0 0| is the transformation matrix for flipping a rect about its Y midpoint m. (m = (y + h/2))
-    // |0 -1 0|
-    // |0 2m 1|
-    //
-    // Combined with [scale sx * sy] * [translate X, Y], that becomes:
-    // |sx     0 0|
-    // | 0   -sy 0|
-    // | x -y+2m 0|
-    // Or, the transformation matrix for drawing a flipped rect at a scale and offset.
-
-    CGFloat sx = rectToDrawInto.size.width / bitmapSize.width;
-    CGFloat sy = rectToDrawInto.size.height / bitmapSize.height;
-    CGFloat m = rectToDrawInto.origin.y + (rectToDrawInto.size.height / 2.f);
-
-    CGAffineTransform transform{ sx, 0, 0, -sy, rectToDrawInto.origin.x, (2 * m) - rectToDrawInto.origin.y };
-    return CGAffineTransformConcat(transform, matrix);
-}
-
-HRESULT _CreatePatternBrush(CGContextRef context, CGPatternRef pattern, const CGFloat* components, ID2D1BitmapBrush1** brush) {
+static HRESULT _CreatePatternBrush(CGContextRef context, CGPatternRef pattern, const CGFloat* components, ID2D1BitmapBrush1** brush) {
     // TODO: change to support grayscale (masks) after dustins change.
     woc::unique_cf<CGColorSpaceRef> colorspace{ CGColorSpaceCreateDeviceRGB() };
 
@@ -1739,7 +1719,7 @@ HRESULT _CreatePatternBrush(CGContextRef context, CGPatternRef pattern, const CG
         nullptr, tileSize.size.width, tileSize.size.height, bitsPerComponent, bytesPerRow, colorspace.get(), bitmapInfo) };
     RETURN_HR_IF_NULL(E_UNEXPECTED, patternContext);
 
-    CGContextSetFillColorSpace(patternContext.get(), context->fillColorSpace());
+    CGContextSetFillColorSpace(patternContext.get(), context->FillColorSpace());
     // set the fill color
     CGContextSetFillColor(patternContext.get(), components);
 
@@ -1778,7 +1758,8 @@ HRESULT _CreatePatternBrush(CGContextRef context, CGPatternRef pattern, const CG
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes only supports RGBA components (due to CGContextSetFillColor only supporting RGBA)
 */
 void CGContextSetFillPattern(CGContextRef context, CGPatternRef pattern, const CGFloat* components) {
     NOISY_RETURN_IF_NULL(context);
@@ -1792,7 +1773,8 @@ void CGContextSetFillPattern(CGContextRef context, CGPatternRef pattern, const C
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes only supports RGBA components (due to CGContextSetFillColor only supporting RGBA)
 */
 void CGContextSetStrokePattern(CGContextRef context, CGPatternRef pattern, const CGFloat* components) {
     NOISY_RETURN_IF_NULL(context);

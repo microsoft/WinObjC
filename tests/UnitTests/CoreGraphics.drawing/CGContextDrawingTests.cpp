@@ -19,7 +19,7 @@
 #include "ImageHelpers.h"
 #include <windows.h>
 
-void drawPatternWindowsLogo(void* info, CGContextRef context) {
+static void drawPatternWindowsLogo(void* info, CGContextRef context) {
     CGContextFillRect(context, CGRectMake(0, 0, 50, 50));
 
     CGContextSetRGBFillColor(context, 0, 0.63, 0.94, 1);
@@ -32,7 +32,7 @@ void drawPatternWindowsLogo(void* info, CGContextRef context) {
     CGContextFillRect(context, CGRectMake(50, 0, 50, 50));
 }
 
-void _SetPatternForStroke(CGContextRef context, float xStep, float yStep) {
+static void _SetPatternForStroke(CGContextRef context, float xStep, float yStep) {
     CGPatternCallbacks coloredPatternCallbacks = { 0, drawPatternWindowsLogo, NULL };
 
     CGPatternRef pattern = CGPatternCreate(NULL,
