@@ -299,7 +299,7 @@
     cell.textLabel.text = @"Tablet Mode";
     [self.rows addObject:cell];
 
-    fixedWidth = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 25)];
+    fixedWidth = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 30)];
     fixedWidth.text = [NSString stringWithFormat:@"%.1f", UIApplication.displayMode.fixedWidth];
     fixedWidth.borderStyle = UITextBorderStyleBezel;
     [fixedWidth addTarget:self action:@selector(setWidth:) forControlEvents:UIControlEventEditingDidEnd];
