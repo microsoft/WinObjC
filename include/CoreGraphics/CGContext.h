@@ -119,7 +119,7 @@ COREGRAPHICS_EXPORT void CGContextSetFillPattern(CGContextRef c, CGPatternRef pa
 COREGRAPHICS_EXPORT void CGContextSetRenderingIntent(CGContextRef c, CGColorRenderingIntent intent) STUB_METHOD;
 
 COREGRAPHICS_EXPORT void CGContextSetShouldAntialias(CGContextRef c, bool shouldAntialias) STUB_METHOD;
-COREGRAPHICS_EXPORT void CGContextSetStrokePattern(CGContextRef c, CGPatternRef pattern, const CGFloat* components) STUB_METHOD;
+COREGRAPHICS_EXPORT void CGContextSetStrokePattern(CGContextRef c, CGPatternRef pattern, const CGFloat* components);
 
 COREGRAPHICS_EXPORT void CGContextSetBlendMode(CGContextRef c, CGBlendMode mode);
 COREGRAPHICS_EXPORT void CGContextSetAllowsAntialiasing(CGContextRef c, bool allowsAntialiasing) STUB_METHOD;
@@ -198,7 +198,7 @@ COREGRAPHICS_EXPORT void CGContextSetShadowWithColor(CGContextRef c, CGSize offs
 
 COREGRAPHICS_EXPORT void CGContextSetStrokeColor(CGContextRef c, const CGFloat* components);
 
-COREGRAPHICS_EXPORT void CGContextSetStrokeColorSpace(CGContextRef c, CGColorSpaceRef space) STUB_METHOD;
+COREGRAPHICS_EXPORT void CGContextSetStrokeColorSpace(CGContextRef c, CGColorSpaceRef space);
 
 COREGRAPHICS_EXPORT void CGContextSetStrokeColorWithColor(CGContextRef c, CGColorRef color);
 COREGRAPHICS_EXPORT void CGContextConcatCTM(CGContextRef c, CGAffineTransform transform);

@@ -1079,8 +1079,6 @@ HRESULT __CGContext::ClipToD2DMaskBitmap(ID2D1Bitmap* bitmap, CGRect rect, D2D1_
     CGAffineTransform userToDeviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(this);
     CGAffineTransform transform = __BitmapBrushTransformation(this, rect, bitmapSize, userToDeviceTransform);
 
-    auto& state = CurrentGState();
-
     ComPtr<ID2D1BitmapBrush1> newOpacityBrush;
     RETURN_IF_FAILED(
         deviceContext->CreateBitmapBrush(bitmap,
@@ -1098,6 +1096,7 @@ HRESULT __CGContext::ClipToD2DMaskBitmap(ID2D1Bitmap* bitmap, CGRect rect, D2D1_
                                                           __CGAffineTransformToD2D_F(userToDeviceTransform),
                                                           &transformedRectClippingGeometry));
 
+    auto& state = CurrentGState();
     if (state.opacityBrush) {
         // If we already have an opacity brush, we have to go to great lengths to compose the two clipping images.
         // - Create a compatible render target with a backing bitmap
@@ -1705,7 +1704,9 @@ static CGImageRef __CGContextCreateRenderableImage(CGImageRef image) {
 
 #pragma region Drawing Parameters - Stroke / Fill Patterns
 
-static HRESULT _CreatePatternBrush(CGContextRef context, CGPatternRef pattern, const CGFloat* components, ID2D1BitmapBrush1** brush) {
+template <typename ContextStageLambda> // Takes the form void(*)(CGContextRef)
+static HRESULT _CreatePatternBrush(
+    CGContextRef context, CGPatternRef pattern, const CGFloat* components, ID2D1BitmapBrush1** brush, ContextStageLambda&& contextStage) {
     // TODO: change to support grayscale (masks) after dustins change.
     woc::unique_cf<CGColorSpaceRef> colorspace{ CGColorSpaceCreateDeviceRGB() };
 
@@ -1719,9 +1720,8 @@ static HRESULT _CreatePatternBrush(CGContextRef context, CGPatternRef pattern, c
         nullptr, tileSize.size.width, tileSize.size.height, bitsPerComponent, bytesPerRow, colorspace.get(), bitmapInfo) };
     RETURN_HR_IF_NULL(E_UNEXPECTED, patternContext);
 
-    CGContextSetFillColorSpace(patternContext.get(), context->FillColorSpace());
-    // set the fill color
-    CGContextSetFillColor(patternContext.get(), components);
+    // Stage the drawing context
+    RETURN_IF_FAILED(std::forward<ContextStageLambda>(contextStage)(patternContext.get()));
 
     // Now we ask the user to draw
     _CGPaternIssueCallBack(patternContext.get(), pattern);
@@ -1767,7 +1767,11 @@ void CGContextSetFillPattern(CGContextRef context, CGPatternRef pattern, const C
     NOISY_RETURN_IF_NULL(components);
 
     ComPtr<ID2D1BitmapBrush1> bitmapBrush;
-    FAIL_FAST_IF_FAILED(_CreatePatternBrush(context, pattern, components, &bitmapBrush));
+    FAIL_FAST_IF_FAILED(_CreatePatternBrush(context, pattern, components, &bitmapBrush, [&](CGContextRef drawingContext) {
+        CGContextSetFillColorSpace(drawingContext, context->FillColorSpace());
+        CGContextSetFillColor(drawingContext, components);
+        return S_OK;
+    }));
     // set the fill brush
     FAIL_FAST_IF_FAILED(bitmapBrush.As(&context->CurrentGState().fillBrush));
 }
@@ -1782,7 +1786,11 @@ void CGContextSetStrokePattern(CGContextRef context, CGPatternRef pattern, const
     NOISY_RETURN_IF_NULL(components);
 
     ComPtr<ID2D1BitmapBrush1> bitmapBrush;
-    FAIL_FAST_IF_FAILED(_CreatePatternBrush(context, pattern, components, &bitmapBrush));
+    FAIL_FAST_IF_FAILED(_CreatePatternBrush(context, pattern, components, &bitmapBrush, [&](CGContextRef drawingContext) {
+        CGContextSetStrokeColorSpace(drawingContext, context->StrokeColorSpace());
+        CGContextSetStrokeColor(drawingContext, components);
+        return S_OK;
+    }));
     // set the stroke brush
     FAIL_FAST_IF_FAILED(bitmapBrush.As(&context->CurrentGState().strokeBrush));
 }
