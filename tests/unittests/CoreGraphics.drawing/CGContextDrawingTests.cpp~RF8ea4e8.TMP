@@ -45,15 +45,21 @@ static void drawPatternSliced(void* info, CGContextRef context) {
     CGContextFillRect(context, middleSpot);
 }
 
-static void _SetPatternForStroke(CGContextRef context, CGRect rect, float xStep, float yStep, CGPatternDrawPatternCallback drawpattern) {
+static void _SetPatternForStroke(CGContextRef context,CGRect rect, float xStep, float yStep, CGPatternDrawPatternCallback drawpattern) {
     CGPatternCallbacks coloredPatternCallbacks = { 0, drawpattern, NULL };
 
-    CGPatternRef pattern =
-        CGPatternCreate(NULL, rect, CGAffineTransformIdentity, xStep, yStep, kCGPatternTilingNoDistortion, false, &coloredPatternCallbacks);
+    CGPatternRef pattern = CGPatternCreate(NULL,
+                                           rect,
+                                           CGAffineTransformIdentity,
+                                           xStep,
+                                           yStep,
+                                           kCGPatternTilingNoDistortion,
+                                           false,
+                                           &coloredPatternCallbacks);
 
     CFAutorelease(pattern);
     woc::unique_cf<CGColorSpaceRef> rgbColorSpace(CGColorSpaceCreateDeviceRGB());
-    woc::unique_cf<CGColorSpaceRef> patternColorSpace{ CGColorSpaceCreatePattern(rgbColorSpace.get()) };
+     woc::unique_cf<CGColorSpaceRef> patternColorSpace {CGColorSpaceCreatePattern(rgbColorSpace.get())};
 
     CGContextSetStrokeColorSpace(context, patternColorSpace.get());
 
@@ -64,12 +70,18 @@ static void _SetPatternForStroke(CGContextRef context, CGRect rect, float xStep,
 static void _SetPatternForFill(CGContextRef context, CGRect rect, float xStep, float yStep, CGPatternDrawPatternCallback drawpattern) {
     CGPatternCallbacks coloredPatternCallbacks = { 0, drawpattern, NULL };
 
-    CGPatternRef pattern =
-        CGPatternCreate(NULL, rect, CGAffineTransformIdentity, xStep, yStep, kCGPatternTilingNoDistortion, false, &coloredPatternCallbacks);
+    CGPatternRef pattern = CGPatternCreate(NULL,
+                                           rect,
+                                           CGAffineTransformIdentity,
+                                           xStep,
+                                           yStep,
+                                           kCGPatternTilingNoDistortion,
+                                           false,
+                                           &coloredPatternCallbacks);
 
     CFAutorelease(pattern);
     woc::unique_cf<CGColorSpaceRef> rgbColorSpace(CGColorSpaceCreateDeviceRGB());
-    woc::unique_cf<CGColorSpaceRef> patternColorSpace{ CGColorSpaceCreatePattern(rgbColorSpace.get()) };
+     woc::unique_cf<CGColorSpaceRef> patternColorSpace {CGColorSpaceCreatePattern(rgbColorSpace.get())};
 
     CGFloat color[] = { 0.96, 0.32, 0.07, 1 };
 
@@ -82,7 +94,7 @@ DISABLED_DRAW_TEST_F(CGContext, PatternStroke, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
-    _SetPatternForStroke(context, CGRectMake(0, 0, 100, 100), 100, 100, drawPatternWindowsLogo);
+    _SetPatternForStroke(context,  CGRectMake(0, 0, 100, 100),100, 100, drawPatternWindowsLogo);
     CGRect borderRect = CGRectInset(bounds, 30, 50);
     CGContextSetLineWidth(context, 45);
     CGContextStrokeRect(context, borderRect);
@@ -92,7 +104,7 @@ DISABLED_DRAW_TEST_F(CGContext, PatternStrokeSliced, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
-    _SetPatternForStroke(context, CGRectMake(0, 0, 100, 100), 100, 100, drawPatternSliced);
+    _SetPatternForStroke(context,  CGRectMake(0, 0, 100, 100),100, 100, drawPatternSliced);
     CGRect borderRect = CGRectInset(bounds, 30, 50);
     CGContextSetLineWidth(context, 45);
     CGContextStrokeRect(context, borderRect);
@@ -125,43 +137,44 @@ DISABLED_DRAW_TEST_F(CGContext, PatternDrawPath, UIKitMimicTest) {
     CGContextClosePath(context);
 
     CGContextSetLineWidth(context, 15);
-    _SetPatternForFill(context, CGRectMake(0, 0, 100, 100), 100, 100, drawPatternWindowsLogo);
-    _SetPatternForStroke(context, CGRectMake(0, 0, 100, 100), 100, 100, drawPatternSliced);
+    _SetPatternForFill(context,  CGRectMake(0, 0, 100, 100),100, 100, drawPatternWindowsLogo);
+    _SetPatternForStroke(context,  CGRectMake(0, 0, 100, 100),100, 100, drawPatternSliced);
 
     CGContextDrawPath(context, kCGPathEOFillStroke);
 }
 
-DISABLED_DRAW_TEST_F(CGContext, PatternFill, UIKitMimicTest) {
-    CGContextRef context = GetDrawingContext();
-    CGRect bounds = GetDrawingBounds();
 
-    _SetPatternForFill(context, CGRectMake(0, 0, 100, 100), 100, 100, drawPatternWindowsLogo);
-    CGContextFillRect(context, bounds);
+DISABLED_DRAW_TEST_F(CGContext, PatternFill, UIKitMimicTest) {
+	CGContextRef context = GetDrawingContext();
+	CGRect bounds = GetDrawingBounds();
+
+	_SetPatternForFill(context,  CGRectMake(0, 0, 100, 100),100, 100, drawPatternWindowsLogo);
+	CGContextFillRect(context, bounds);
 }
 
 DISABLED_DRAW_TEST_F(CGContext, PatternFillNULLRect, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
-    _SetPatternForFill(context, CGRectNull, 100, 100, drawPatternWindowsLogo);
+    _SetPatternForFill(context, CGRectNull,100, 100, drawPatternWindowsLogo);
     CGContextFillRect(context, bounds);
 }
 
 DISABLED_DRAW_TEST_F(CGContext, PatternStrokeNULLRect, UIKitMimicTest) {
-    CGContextRef context = GetDrawingContext();
-    CGRect bounds = GetDrawingBounds();
+	CGContextRef context = GetDrawingContext();
+	CGRect bounds = GetDrawingBounds();
 
-    _SetPatternForStroke(context, CGRectNull, 100, 100, drawPatternWindowsLogo);
-    CGRect borderRect = CGRectInset(bounds, 30, 50);
-    CGContextSetLineWidth(context, 45);
-    CGContextStrokeRect(context, borderRect);
+	_SetPatternForStroke(context, CGRectNull, 100, 100, drawPatternWindowsLogo);
+	CGRect borderRect = CGRectInset(bounds, 30, 50);
+	CGContextSetLineWidth(context, 45);
+	CGContextStrokeRect(context, borderRect);
 }
 
 DISABLED_DRAW_TEST_F(CGContext, PatternFillSliced, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
-    _SetPatternForFill(context, CGRectMake(0, 0, 100, 100), 100, 100, drawPatternSliced);
+    _SetPatternForFill(context,  CGRectMake(0, 0, 100, 100),100, 100, drawPatternSliced);
     CGContextFillRect(context, bounds);
 }
 
@@ -170,7 +183,7 @@ DISABLED_DRAW_TEST_F(CGContext, PatternFillWindowsLogoWithAlpha, UIKitMimicTest)
     CGRect bounds = GetDrawingBounds();
 
     CGContextSetAlpha(context, 0.8);
-    _SetPatternForFill(context, CGRectMake(0, 0, 100, 100), 150, 150, drawPatternWindowsLogo);
+    _SetPatternForFill(context,  CGRectMake(0, 0, 100, 100),150, 150, drawPatternWindowsLogo);
     CGContextFillRect(context, bounds);
 }
 
@@ -178,7 +191,7 @@ DISABLED_DRAW_TEST_F(CGContext, PatternFillWindowsLogoRotate, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
-    _SetPatternForFill(context, CGRectMake(0, 0, 100, 100), 100, 100, drawPatternWindowsLogo);
+    _SetPatternForFill(context,  CGRectMake(0, 0, 100, 100),100, 100, drawPatternWindowsLogo);
     CGContextRotateCTM(context, 0.4);
     CGContextFillRect(context, bounds);
 }
@@ -187,7 +200,7 @@ DISABLED_DRAW_TEST_F(CGContext, PatternFillWindowsLogoRegion, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
-    _SetPatternForFill(context, CGRectMake(0, 0, 100, 100), 100, 100, drawPatternWindowsLogo);
+    _SetPatternForFill(context,  CGRectMake(0, 0, 100, 100),100, 100, drawPatternWindowsLogo);
     CGRect borderRect = CGRectInset(bounds, 30, 50);
     CGContextFillRect(context, borderRect);
 }
@@ -196,7 +209,7 @@ DISABLED_DRAW_TEST_F(CGContext, PatternFillWindowsLogoPath, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
-    _SetPatternForFill(context, CGRectMake(0, 0, 100, 100), 100, 100, drawPatternWindowsLogo);
+    _SetPatternForFill(context,  CGRectMake(0, 0, 100, 100),100, 100, drawPatternWindowsLogo);
 
     CGMutablePathRef thepath = CGPathCreateMutable();
     CGPathMoveToPoint(thepath, NULL, 30, 100);

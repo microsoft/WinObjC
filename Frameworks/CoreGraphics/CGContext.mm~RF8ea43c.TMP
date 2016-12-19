@@ -1707,15 +1707,16 @@ static CGImageRef __CGContextCreateRenderableImage(CGImageRef image) {
 template <typename ContextStageLambda> // Takes the form HRESULT(*)(CGContextRef)
 static HRESULT _CreatePatternBrush(
     CGContextRef context, CGPatternRef pattern, const CGFloat* components, ID2D1BitmapBrush1** brush, ContextStageLambda&& contextStage) {
-    // if the origial size is null, just return without drawing anything
-    RETURN_HR_IF(S_OK, CGRectIsNull(_CGPatternGetBounds(pattern)));
-
-    // TODO #1592: change to support grayscale (masks) after dustins change.
+    
+	//if the origial size is null, just return without drawing anything
+	RETURN_HR_IF(S_OK,CGRectIsNull(_CGPatternGetBounds(pattern)));
+	
+	// TODO #1592: change to support grayscale (masks) after dustins change.
     woc::unique_cf<CGColorSpaceRef> colorspace{ CGColorSpaceCreateDeviceRGB() };
 
     // We need to generate the pattern as an image (then tile it)
     CGRect tileSize = _CGPatternGetFinalPatternSize(pattern);
-    RETURN_HR_IF(E_UNEXPECTED, CGRectIsNull(tileSize));
+	RETURN_HR_IF(E_UNEXPECTED, CGRectIsNull(tileSize));
 
     size_t bitsPerComponent = 8;
     size_t bytesPerRow = 4 * tileSize.size.width;
@@ -1733,7 +1734,7 @@ static HRESULT _CreatePatternBrush(
 
     // Get the image out of it
 
-    woc::unique_cf<CGImageRef> bitmapTiledimage{ CGBitmapContextCreateImage(patternContext.get()) };
+    woc::unique_cf<CGImageRef> bitmapTiledimage {CGBitmapContextCreateImage(patternContext.get())};
     woc::unique_cf<CGImageRef> tileImage{ __CGContextCreateRenderableImage(bitmapTiledimage.get()) };
     RETURN_HR_IF_NULL(E_UNEXPECTED, tileImage);
 

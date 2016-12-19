@@ -37,12 +37,12 @@
 + (instancetype)patternWithImage:(CGImageRef)img;
 @end
 
-CGRect _CGPaternGetBounds(CGPatternRef pattern);
+CGRect _CGPatternGetBounds(CGPatternRef pattern);
 
 /*
 * Call the CGPatternCallbacks associated with the pattern.
 */
-void _CGPaternIssueCallBack(CGContextRef context, CGPatternRef pattern);
+void _CGPatternIssueCallBack(CGContextRef context, CGPatternRef pattern);
 
 CGAffineTransform _CGPatternGetTransformation(CGPatternRef pattern);
 
