@@ -92,13 +92,14 @@ struct __CGDataProviderSequentialCallbacksInternal {
 
 template <typename TSkipBytes>
 class __SequentialDataProvider : public __CGDataProviderInternal {
-    mutable void* m_info;
-    mutable __CGDataProviderSequentialCallbacksInternal<TSkipBytes> m_callbacks;
+    void* m_info;
+    const __CGDataProviderSequentialCallbacksInternal<TSkipBytes> m_callbacks;
     mutable std::vector<unsigned char> m_data;
     mutable std::once_flag m_dataFlag;
     void GenerateData() const {
         if (m_callbacks.getBytes) {
-            size_t count = 0, delta = 0;
+            size_t count = 0;
+            size_t delta = 0;
             do {
                 m_data.resize(m_data.size() + c_streamSize);
                 delta = m_callbacks.getBytes(m_info, m_data.data() + count, c_streamSize);
@@ -123,10 +124,7 @@ public:
     }
 
     size_t GetSize() const override {
-        if (m_data.empty()) {
-            GetData();
-        }
-
+        std::call_once(m_dataFlag, &__SequentialDataProvider::GenerateData, this);
         return m_data.size();
     }
 
@@ -140,8 +138,8 @@ public:
 class __RawDataProvider : public __CGDataProviderInternal {
     void* m_info;
     const void* m_data;
-    size_t m_size;
-    CGDataProviderReleaseDataCallback m_releaseData;
+    const size_t m_size;
+    const CGDataProviderReleaseDataCallback m_releaseData;
 
 public:
     __RawDataProvider(void* info, const void* data, size_t size, CGDataProviderReleaseDataCallback releaseData)
@@ -186,8 +184,8 @@ struct __CGDataProviderDirectCallbacksInternal {
 
 class __DirectDataProvider : public __CGDataProviderInternal {
     void* m_info;
-    off_t m_size;
-    __CGDataProviderDirectCallbacksInternal m_callbacks;
+    const off_t m_size;
+    const __CGDataProviderDirectCallbacksInternal m_callbacks;
     mutable const void* m_data = nullptr;
     mutable std::once_flag m_dataFlag;
     void GenerateData() const {
@@ -241,28 +239,26 @@ public:
 };
 
 class __CFURLDataProvider : public __CGDataProviderInternal {
-    woc::unique_cf<CFURLRef> m_url;
+    const woc::unique_cf<CFURLRef> m_url;
     mutable woc::unique_cf<CFDataRef> m_data;
+    mutable std::once_flag m_dataFlag;
+    void GenerateData() const {
+        CFDataRef data;
+        if (CFURLCreateDataAndPropertiesFromResource(nullptr, m_url.get(), &data, nullptr, nullptr, nullptr)) {
+            m_data.reset(data);
+        }
+    }
 
 public:
     __CFURLDataProvider(CFURLRef url) : m_url((CFURLRef)CFRetain(url)) {
     }
     const void* GetData() const override {
-        if (!m_data) {
-            CFDataRef data;
-            if (CFURLCreateDataAndPropertiesFromResource(nullptr, m_url.get(), &data, nullptr, nullptr, nullptr)) {
-                m_data.reset(data);
-            }
-        }
-
+        std::call_once(m_dataFlag, &__CFURLDataProvider::GenerateData, this);
         return CFDataGetBytePtr(m_data.get());
     }
 
     size_t GetSize() const override {
-        if (!m_data) {
-            GetData();
-        }
-
+        std::call_once(m_dataFlag, &__CFURLDataProvider::GenerateData, this);
         return CFDataGetLength(m_data.get());
     }
 };
