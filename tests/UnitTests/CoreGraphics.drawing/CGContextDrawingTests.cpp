@@ -53,7 +53,7 @@ static void _SetPatternForStroke(CGContextRef context, float xStep, float yStep)
     CGContextSetStrokePattern(context, pattern, color);
 }
 
-DRAW_TEST_F(CGContext, PatternStroke, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, PatternStroke, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -85,7 +85,7 @@ void _SetPatternForFill(CGContextRef context, float xStep, float yStep) {
     CGContextSetFillPattern(context, pattern, color);
 }
 
-DRAW_TEST_F(CGContext, PatternFill, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, PatternFill, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -93,7 +93,7 @@ DRAW_TEST_F(CGContext, PatternFill, UIKitMimicTest) {
     CGContextFillRect(context, bounds);
 }
 
-DRAW_TEST_F(CGContext, PatternFillWindowsLogoWithAlpha, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, PatternFillWindowsLogoWithAlpha, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -102,7 +102,7 @@ DRAW_TEST_F(CGContext, PatternFillWindowsLogoWithAlpha, UIKitMimicTest) {
     CGContextFillRect(context, bounds);
 }
 
-DRAW_TEST_F(CGContext, PatternFillWindowsLogoRotate, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, PatternFillWindowsLogoRotate, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -111,7 +111,7 @@ DRAW_TEST_F(CGContext, PatternFillWindowsLogoRotate, UIKitMimicTest) {
     CGContextFillRect(context, bounds);
 }
 
-DRAW_TEST_F(CGContext, PatternFillWindowsLogoRegion, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, PatternFillWindowsLogoRegion, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -120,7 +120,7 @@ DRAW_TEST_F(CGContext, PatternFillWindowsLogoRegion, UIKitMimicTest) {
     CGContextFillRect(context, borderRect);
 }
 
-DRAW_TEST_F(CGContext, PatternFillWindowsLogoPath, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, PatternFillWindowsLogoPath, UIKitMimicTest) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
