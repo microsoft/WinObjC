@@ -1072,10 +1072,14 @@ HRESULT __CGContext::ClipToD2DMaskBitmap(ID2D1Bitmap* bitmap, CGRect rect, bool 
     CGAffineTransform userToDeviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(this);
     transform = CGAffineTransformConcat(transform, userToDeviceTransform);
 
-    D2D1_INTERPOLATION_MODE interpolationMode = shouldInterpolate ? state.bitmapInterpolationMode : D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR;
+    D2D1_INTERPOLATION_MODE interpolationMode =
+        shouldInterpolate ? state.bitmapInterpolationMode : D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR;
     ComPtr<ID2D1BitmapBrush1> newOpacityBrush;
     RETURN_IF_FAILED(
-        deviceContext->CreateBitmapBrush(bitmap, D2D1::BitmapBrushProperties1(D2D1_EXTEND_MODE_CLAMP, D2D1_EXTEND_MODE_CLAMP, interpolationMode), D2D1::BrushProperties(), &newOpacityBrush));
+        deviceContext->CreateBitmapBrush(bitmap,
+                                         D2D1::BitmapBrushProperties1(D2D1_EXTEND_MODE_CLAMP, D2D1_EXTEND_MODE_CLAMP, interpolationMode),
+                                         D2D1::BrushProperties(),
+                                         &newOpacityBrush));
 
     newOpacityBrush->SetTransform(__CGAffineTransformToD2D_F(transform));
 
@@ -1091,7 +1095,7 @@ HRESULT __CGContext::ClipToD2DMaskBitmap(ID2D1Bitmap* bitmap, CGRect rect, bool 
     if (state.opacityBrush) {
         // If we already have an opacity brush, we have to go to great lengths to compose the two clipping images.
         // - Create a compatible render target with a backing bitmap
-        // - Using two layers (reasons detailed below), fill a geometry with the intersection of the two 
+        // - Using two layers (reasons detailed below), fill a geometry with the intersection of the two
         //   masks.
         // - Use that bitmap (untransformed, as the render has resolved the global coordinate system conflict)
         //   as the opacity brush for future drawing.
@@ -1102,19 +1106,19 @@ HRESULT __CGContext::ClipToD2DMaskBitmap(ID2D1Bitmap* bitmap, CGRect rect, bool 
 
         compatibleContext->BeginDraw();
         compatibleContext->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(),
-                                                       nullptr,
-                                                       D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
-                                                       D2D1::IdentityMatrix(),
-                                                       1.0, // 1.0 global alpha for brush composition
-                                                       state.opacityBrush.Get()),
-                                 nullptr);
+                                                           nullptr,
+                                                           D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
+                                                           D2D1::IdentityMatrix(),
+                                                           1.0, // 1.0 global alpha for brush composition
+                                                           state.opacityBrush.Get()),
+                                     nullptr);
         compatibleContext->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(),
-                                                       transformedRectClippingGeometry.Get(),
-                                                       D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
-                                                       D2D1::IdentityMatrix(),
-                                                       1.0, // 1.0 global alpha for brush composition
-                                                       newOpacityBrush.Get()),
-                                 nullptr);
+                                                           transformedRectClippingGeometry.Get(),
+                                                           D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
+                                                           D2D1::IdentityMatrix(),
+                                                           1.0, // 1.0 global alpha for brush composition
+                                                           newOpacityBrush.Get()),
+                                     nullptr);
 
         ComPtr<ID2D1SolidColorBrush> brush;
         RETURN_IF_FAILED(compatibleContext->CreateSolidColorBrush({ 0, 0, 0, 1 }, &brush));
@@ -1269,8 +1273,7 @@ void CGContextSetTextPosition(CGContextRef context, CGFloat x, CGFloat y) {
 CGPoint CGContextGetTextPosition(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context, StubReturn());
     return {
-        context->textMatrix.tx,
-        context->textMatrix.ty,
+        context->textMatrix.tx, context->textMatrix.ty,
     };
 }
 
@@ -1703,6 +1706,16 @@ CGAffineTransform __BitmapBrushTransformation(CGContextRef context,
     // NULL CHECK
     FAIL_FAST_IF(bitmapSize.width == 0);
     FAIL_FAST_IF(bitmapSize.height == 0);
+
+    // |1  0 0| is the transformation matrix for flipping a rect about its Y midpoint m. (m = (y + h/2))
+    // |0 -1 0|
+    // |0 2m 1|
+    //
+    // Combined with [scale sx * sy] * [translate X, Y], that becomes:
+    // |sx     0 0|
+    // | 0   -sy 0|
+    // | x -y+2m 0|
+    // Or, the transformation matrix for drawing a flipped rect at a scale and offset.
 
     CGFloat sx = rectToDrawInto.size.width / bitmapSize.width;
     CGFloat sy = rectToDrawInto.size.height / bitmapSize.height;
@@ -2290,25 +2303,8 @@ void CGContextDrawTiledImage(CGContextRef context, CGRect rect, CGImageRef image
     ComPtr<ID2D1Bitmap> d2dBitmap;
     FAIL_FAST_IF_FAILED(__CreateD2DBitmapFromCGImage(context, refImage.get(), &d2dBitmap));
 
-    // |1  0 0| is the transformation matrix for flipping a rect about its Y midpoint m. (m = (y + h/2))
-    // |0 -1 0|
-    // |0 2m 1|
-    //
-    // Combined with [scale sx * sy] * [translate X, Y], that becomes:
-    // |sx     0 0|
-    // | 0   -sy 0|
-    // | x -y+2m 0|
-    // Or, the transformation matrix for drawing a flipped rect at a scale and offset.
-    D2D1_SIZE_U bitmapSize = d2dBitmap->GetPixelSize();
-    FAIL_FAST_IF(bitmapSize.width == 0);
-    FAIL_FAST_IF(bitmapSize.height == 0);
-
-    CGFloat sx = rect.size.width / bitmapSize.width;
-    CGFloat sy = rect.size.height / bitmapSize.height;
-    CGFloat m = rect.origin.y + (rect.size.height / 2.f);
-
-    CGAffineTransform transform{ sx, 0, 0, -sy, rect.origin.x, (2 * m) - rect.origin.y };
-    transform = CGAffineTransformConcat(transform, CGContextGetUserSpaceToDeviceSpaceTransform(context));
+    CGAffineTransform transform =
+        __BitmapBrushTransformation(context, rect, d2dBitmap->GetPixelSize(), CGContextGetUserSpaceToDeviceSpaceTransform(context));
 
     ComPtr<ID2D1BitmapBrush1> bitmapBrush;
     ComPtr<ID2D1DeviceContext> deviceContext = context->DeviceContext();
@@ -2454,7 +2450,8 @@ void CGContextDrawGlyphRun(CGContextRef context, const DWRITE_GLYPH_RUN* glyphRu
 struct __CGBitmapContext : CoreFoundation::CppBase<__CGBitmapContext, __CGContext> {
     woc::unique_cf<CGImageRef> _image;
 
-    __CGBitmapContext(ID2D1RenderTarget* renderTarget, REFWICPixelFormatGUID outputPixelFormat) : Parent(renderTarget), _outputPixelFormat(outputPixelFormat) {
+    __CGBitmapContext(ID2D1RenderTarget* renderTarget, REFWICPixelFormatGUID outputPixelFormat)
+        : Parent(renderTarget), _outputPixelFormat(outputPixelFormat) {
     }
 
     inline void SetImage(CGImageRef image) {
@@ -2503,12 +2500,14 @@ CGContextRef CGBitmapContextCreateWithData(void* data,
 
     // bitsperpixel = ((bytesPerRow/width) * 8bits/byte)
     size_t bitsPerPixel = ((bytesPerRow / width) << 3);
-    REFWICPixelFormatGUID outputPixelFormat = _CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, space, bitmapInfo);
+    REFWICPixelFormatGUID outputPixelFormat =
+        _CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, space, bitmapInfo);
     WICPixelFormatGUID pixelFormat = outputPixelFormat;
 
     if (!_CGIsValidRenderTargetPixelFormat(pixelFormat)) {
         if (data) {
-            UNIMPLEMENTED_WITH_MSG("CGBitmapContext does not currently support input conversion and can only render into 32bpp PRGBA buffers.");
+            UNIMPLEMENTED_WITH_MSG(
+                "CGBitmapContext does not currently support input conversion and can only render into 32bpp PRGBA buffers.");
             return nullptr;
         }
         pixelFormat = GUID_WICPixelFormat32bppPRGBA;
