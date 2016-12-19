@@ -34,20 +34,19 @@
 }
 - (CGImageRef)getPatternImage;
 - (CGAffineTransform)getPatternTransform;
-- (void)drawViaCallback:(CGContextRef)context;
 + (instancetype)patternWithImage:(CGImageRef)img;
 @end
 
-CGRect _CGPaternGetBounds(CGPatternRef pattern);
+CGRect _CGPatternGetBounds(CGPatternRef pattern);
 
 /*
-* The CGPattern will call it's associated callback via supplying in the context.
+* Call the CGPatternCallbacks associated with the pattern.
 */
-void _CGPaternIssueCallBack(CGContextRef context, CGPatternRef pattern);
+void _CGPatternIssueCallBack(CGContextRef context, CGPatternRef pattern);
 
 CGAffineTransform _CGPatternGetTransformation(CGPatternRef pattern);
 
 /*
-* This will tell us how much cropping or extension is needed based on xStep and yStep values.
+* Get the final size of the pattern tile (after xStep and xStep has been applied).
 */
 CGRect _CGPatternGetFinalPatternSize(CGPatternRef pattern);

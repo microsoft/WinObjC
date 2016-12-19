@@ -125,11 +125,6 @@
     return matrix;
 }
 
-- (void)drawViaCallback:(CGContextRef)context {
-    // issue the callback
-    callbacks.drawPattern(info, context);
-}
-
 - (void)dealloc {
     if (generatedImage) {
         CGImageRelease(generatedImage);
@@ -215,16 +210,15 @@ CGPatternRef CGPatternRetain(CGPatternRef pattern) {
     return pattern;
 }
 
-CGRect _CGPaternGetBounds(CGPatternRef pattern) {
+CGRect _CGPatternGetBounds(CGPatternRef pattern) {
     RETURN_RESULT_IF_NULL(pattern, CGRectNull);
     return ((CGPattern*)pattern)->bounds;
 }
 
-void _CGPaternIssueCallBack(CGContextRef context, CGPatternRef pattern) {
+void _CGPatternIssueCallBack(CGContextRef context, CGPatternRef pattern) {
     FAIL_FAST_IF_NULL(context);
     FAIL_FAST_IF_NULL(pattern);
-
-    [((CGPattern*)pattern) drawViaCallback:context];
+    ((CGPattern*)pattern)->callbacks.drawPattern(((CGPattern*)pattern)->info, context);
 }
 
 CGAffineTransform _CGPatternGetTransformation(CGPatternRef pattern) {
@@ -234,5 +228,5 @@ CGAffineTransform _CGPatternGetTransformation(CGPatternRef pattern) {
 
 CGRect _CGPatternGetFinalPatternSize(CGPatternRef pattern) {
     RETURN_RESULT_IF_NULL(pattern, CGRectNull);
-    return { { 0, 0 }, { ((CGPattern*)pattern)->xStep, ((CGPattern*)pattern)->yStep } };
+    return { CGPointZero, { ((CGPattern*)pattern)->xStep, ((CGPattern*)pattern)->yStep } };
 }
