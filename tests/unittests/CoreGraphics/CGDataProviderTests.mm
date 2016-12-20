@@ -170,25 +170,23 @@ TEST(CGDataProvider, CreateWithFilename) {
     EXPECT_NE(nullptr, CFDataGetBytePtr(data.get()));
 }
 
-TEST(CGDataProvider, CreateWithoutCallbacks) {
-    unsigned char rawData[1000];
-    std::iota(rawData, rawData + 1000, 1);
-    woc::unique_cf<CGDataProviderRef> provider{ CGDataProviderCreate(rawData, nullptr) };
-    EXPECT_NE(nullptr, provider);
-    woc::unique_cf<CFDataRef> data{ CGDataProviderCopyData(provider.get()) };
-    EXPECT_EQ(nullptr, data);
-    provider.reset(CGDataProviderCreateDirect(rawData, std::extent<decltype(rawData)>::value, nullptr));
-    EXPECT_NE(nullptr, provider);
-    data.reset(CGDataProviderCopyData(provider.get()));
-    EXPECT_EQ(nullptr, data);
-    provider.reset(CGDataProviderCreateDirectAccess(rawData, std::extent<decltype(rawData)>::value, nullptr));
-    EXPECT_NE(nullptr, provider);
-    data.reset(CGDataProviderCopyData(provider.get()));
-    EXPECT_EQ(nullptr, data);
-    provider.reset(CGDataProviderCreateSequential(rawData, nullptr));
-    EXPECT_NE(nullptr, provider);
-    data.reset(CGDataProviderCopyData(provider.get()));
-    EXPECT_EQ(nullptr, data);
+TEST(CGDataProvider, CreateEmpty) {
+    woc::unique_cf<CGDataProviderRef> provider{ CGDataProviderCreate(nullptr, nullptr) };
+    EXPECT_EQ(nullptr, provider);
+    provider.reset(CGDataProviderCreateDirect(nullptr, 0, nullptr));
+    EXPECT_EQ(nullptr, provider);
+    provider.reset(CGDataProviderCreateDirectAccess(nullptr, 0, nullptr));
+    EXPECT_EQ(nullptr, provider);
+    provider.reset(CGDataProviderCreateSequential(nullptr, nullptr));
+    EXPECT_EQ(nullptr, provider);
+    provider.reset(CGDataProviderCreateWithURL(nullptr));
+    EXPECT_EQ(nullptr, provider);
+    provider.reset(CGDataProviderCreateWithCFData(nullptr));
+    EXPECT_EQ(nullptr, provider);
+    provider.reset(CGDataProviderCreateWithFilename(nullptr));
+    EXPECT_EQ(nullptr, provider);
+    provider.reset(CGDataProviderCreateWithData(nullptr, nullptr, 0, nullptr));
+    EXPECT_EQ(nullptr, provider);
 }
 
 TEST(CGDataProvider, ShouldCopyCallbacks) {

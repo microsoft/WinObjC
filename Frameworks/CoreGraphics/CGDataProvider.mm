@@ -67,26 +67,19 @@ public:
 
 template <typename TSkipBytes>
 struct __CGDataProviderSequentialCallbacksInternal {
-    CGDataProviderGetBytesCallback getBytes = nullptr;
-    TSkipBytes skipBytes = nullptr;
-    CGDataProviderRewindCallback rewind = nullptr;
-    CGDataProviderReleaseInfoCallback releaseInfo = nullptr;
-    __CGDataProviderSequentialCallbacksInternal(const CGDataProviderCallbacks* callbacks) {
-        if (callbacks != nullptr) {
-            getBytes = callbacks->getBytes;
-            skipBytes = callbacks->skipBytes;
-            rewind = callbacks->rewind;
-            releaseInfo = callbacks->releaseProvider;
-        }
+    const CGDataProviderGetBytesCallback getBytes;
+    const TSkipBytes skipBytes;
+    const CGDataProviderRewindCallback rewind;
+    const CGDataProviderReleaseInfoCallback releaseInfo;
+    __CGDataProviderSequentialCallbacksInternal(const CGDataProviderCallbacks* callbacks)
+        : getBytes(callbacks->getBytes),
+          skipBytes(callbacks->skipBytes),
+          rewind(callbacks->rewind),
+          releaseInfo(callbacks->releaseProvider) {
     }
 
-    __CGDataProviderSequentialCallbacksInternal(const CGDataProviderSequentialCallbacks* callbacks) {
-        if (callbacks != nullptr) {
-            getBytes = callbacks->getBytes;
-            skipBytes = callbacks->skipForward;
-            rewind = callbacks->rewind;
-            releaseInfo = callbacks->releaseInfo;
-        }
+    __CGDataProviderSequentialCallbacksInternal(const CGDataProviderSequentialCallbacks* callbacks)
+        : getBytes(callbacks->getBytes), skipBytes(callbacks->skipForward), rewind(callbacks->rewind), releaseInfo(callbacks->releaseInfo) {
     }
 };
 
@@ -162,23 +155,19 @@ public:
 };
 
 struct __CGDataProviderDirectCallbacksInternal {
-    CGDataProviderGetBytePointerCallback getBytePointer = nullptr;
-    CGDataProviderReleaseBytePointerCallback releaseBytePointer = nullptr;
-    CGDataProviderReleaseInfoCallback releaseInfo = nullptr;
-    __CGDataProviderDirectCallbacksInternal(const CGDataProviderDirectCallbacks* callbacks) {
-        if (callbacks != nullptr) {
-            getBytePointer = callbacks->getBytePointer;
-            releaseBytePointer = callbacks->releaseBytePointer;
-            releaseInfo = callbacks->releaseInfo;
-        }
+    const CGDataProviderGetBytePointerCallback getBytePointer;
+    const CGDataProviderReleaseBytePointerCallback releaseBytePointer;
+    const CGDataProviderReleaseInfoCallback releaseInfo;
+    __CGDataProviderDirectCallbacksInternal(const CGDataProviderDirectCallbacks* callbacks)
+        : getBytePointer(callbacks->getBytePointer),
+          releaseBytePointer(callbacks->releaseBytePointer),
+          releaseInfo(callbacks->releaseInfo) {
     }
 
-    __CGDataProviderDirectCallbacksInternal(const CGDataProviderDirectAccessCallbacks* callbacks) {
-        if (callbacks != nullptr) {
-            getBytePointer = callbacks->getBytePointer;
-            releaseBytePointer = callbacks->releaseBytePointer;
-            releaseInfo = callbacks->releaseProvider;
-        }
+    __CGDataProviderDirectCallbacksInternal(const CGDataProviderDirectAccessCallbacks* callbacks)
+        : getBytePointer(callbacks->getBytePointer),
+          releaseBytePointer(callbacks->releaseBytePointer),
+          releaseInfo(callbacks->releaseProvider) {
     }
 };
 
@@ -347,7 +336,7 @@ private:
  @Notes
 */
 CGDataProviderRef CGDataProviderCreate(void* info, const CGDataProviderCallbacks* callbacks) {
-    return __CGDataProvider::CreateInstance(nullptr, info, callbacks);
+    return callbacks ? __CGDataProvider::CreateInstance(nullptr, info, callbacks) : nullptr;
 }
 
 /**
@@ -355,14 +344,14 @@ CGDataProviderRef CGDataProviderCreate(void* info, const CGDataProviderCallbacks
  @Notes
 */
 CGDataProviderRef CGDataProviderCreateDirectAccess(void* info, size_t size, const CGDataProviderDirectAccessCallbacks* callbacks) {
-    return __CGDataProvider::CreateInstance(nullptr, info, size, callbacks);
+    return callbacks ? __CGDataProvider::CreateInstance(nullptr, info, size, callbacks) : nullptr;
 }
 /**
  @Status Interoperable
  @Notes
 */
 CGDataProviderRef CGDataProviderCreateDirect(void* info, off_t size, const CGDataProviderDirectCallbacks* callbacks) {
-    return __CGDataProvider::CreateInstance(nullptr, info, size, callbacks);
+    return callbacks ? __CGDataProvider::CreateInstance(nullptr, info, size, callbacks) : nullptr;
 }
 
 /**
@@ -370,14 +359,14 @@ CGDataProviderRef CGDataProviderCreateDirect(void* info, off_t size, const CGDat
  @Notes
 */
 CGDataProviderRef CGDataProviderCreateSequential(void* info, const CGDataProviderSequentialCallbacks* callbacks) {
-    return __CGDataProvider::CreateInstance(nullptr, info, callbacks);
+    return callbacks ? __CGDataProvider::CreateInstance(nullptr, info, callbacks) : nullptr;
 }
 
 /**
 # @Status Interoperable
 */
 CGDataProviderRef CGDataProviderCreateWithData(void* info, const void* data, size_t size, CGDataProviderReleaseDataCallback releaseData) {
-    return __CGDataProvider::CreateInstance(nullptr, info, data, size, releaseData);
+    return data ? __CGDataProvider::CreateInstance(nullptr, info, data, size, releaseData) : nullptr;
 }
 
 /**
@@ -385,21 +374,21 @@ CGDataProviderRef CGDataProviderCreateWithData(void* info, const void* data, siz
  @Notes Only supports file:/// URLs
 */
 CGDataProviderRef CGDataProviderCreateWithURL(CFURLRef url) {
-    return __CGDataProvider::CreateInstance(nullptr, url);
+    return url ? __CGDataProvider::CreateInstance(nullptr, url) : nullptr;
 }
 
 /**
  @Status Interoperable
 */
 CGDataProviderRef CGDataProviderCreateWithCFData(CFDataRef data) {
-    return __CGDataProvider::CreateInstance(nullptr, data);
+    return data ? __CGDataProvider::CreateInstance(nullptr, data) : nullptr;
 }
 
 /**
  @Status Interoperable
 */
 CGDataProviderRef CGDataProviderCreateWithFilename(const char* filename) {
-    return __CGDataProvider::CreateInstance(nullptr, filename);
+    return filename ? __CGDataProvider::CreateInstance(nullptr, filename) : nullptr;
 }
 
 /**
