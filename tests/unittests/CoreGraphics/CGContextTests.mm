@@ -442,7 +442,7 @@ TEST(CGContext, DrawAnImageIntoContext) {
     // Check the canvas context pixel after drawing
     dataPtr = static_cast<BYTE*>(CGBitmapContextGetData(context.get()));
     ASSERT_NE(dataPtr, nullptr);
-    EXPECT_EQ(dataPtr[0], 0x97);
+    EXPECT_EQ(dataPtr[0], 0x98);
 }
 
 TEST(CGContext, DrawAContextImageIntoAContext) {
