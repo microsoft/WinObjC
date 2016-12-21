@@ -1211,6 +1211,12 @@ NSMutableDictionary* _pageMappings;
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
 }
 
+- (void)_onDismissCleanup {
+    priv->_parentViewController = nil;
+    priv->_presentingViewController = nil;
+    priv->_popoverPresentationController = nil;
+}
+
 /**
  @Status Interoperable
 */
@@ -1250,18 +1256,29 @@ NSMutableDictionary* _pageMappings;
         curController->priv->_parentViewController->priv->_modalViewController = nil;
     }
 
-    curController->priv->_parentViewController = nil;
-    curController->priv->_presentingViewController = nil;
-    curController->priv->_popoverPresentationController = nil;
-
     UIView* curView = [curController view];
 
     UIView* myView = [self view];
     [myView setHidden:FALSE];
 
     if (realPopoverPresented) {
-        [[curController popoverPresentationController] _dismissAnimated:animated completion:completion];
-    } else if (animated) {
+        __block __unsafe_unretained UIViewController* weakCurController = curController;
+
+        [[curController popoverPresentationController] _dismissAnimated:animated completion:^{
+            StrongId<UIViewController> strongCurController = weakCurController;
+            [strongCurController _onDismissCleanup];
+
+            if (completion) {
+                completion();
+            }
+        }];
+
+        return;
+    }
+
+    [curController _onDismissCleanup];
+
+    if (animated) {
         CGPoint curPos;
         id layer = [curView layer];
 
