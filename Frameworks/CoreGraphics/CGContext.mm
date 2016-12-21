@@ -30,6 +30,7 @@
 #import "CGPathInternal.h"
 #import "CGIWICBitmap.h"
 #import "CGPatternInternal.h"
+#import "CGGradientInternal.h"
 
 #import <CFCppBase.h>
 
@@ -48,6 +49,9 @@
 using namespace Microsoft::WRL;
 
 static const wchar_t* TAG = L"CGContext";
+
+// Coordinate offset to support CGGradientDrawingOptions
+static const float s_kCGGradientOffsetPoint = 1E-45;
 
 enum _CGCoordinateMode : unsigned int { _kCGCoordinateModeDeviceSpace = 0, _kCGCoordinateModeUserSpace };
 
@@ -2356,14 +2360,94 @@ void CGContextDrawTiledImage(CGContextRef context, CGRect rect, CGImageRef image
 
 #pragma region Drawing Operations - Gradient + Shading
 /**
- @Status Stub
+* Insert a transparent color at the specified 'location'.
+* This will also move the color at the specified 'location' to the supplied 'position'
+*/
+static inline void __CGGradientInsertTransparentColor(std::vector<D2D1_GRADIENT_STOP>& gradientStops, int location, float position) {
+    gradientStops[location].position = position;
+    // set the edge location to be transparent
+    D2D1_GRADIENT_STOP transparent = { location, D2D1::ColorF(0, 0, 0, 0) };
+    gradientStops.push_back(transparent);
+}
+
+/*
+* Convert CGGradient to D2D1_GRADIENT_STOP
+*/
+static std::vector<D2D1_GRADIENT_STOP> __CGGradientToD2D1GradientStop(CGContextRef context,
+                                                                      CGGradientRef gradient,
+                                                                      CGGradientDrawingOptions options) {
+    unsigned long gradientCount = _CGGradientGetCount(gradient);
+    std::vector<D2D1_GRADIENT_STOP> gradientStops(gradientCount);
+
+    CGFloat* colorComponents = _CGGradientGetColorComponents(gradient);
+    CGFloat* locations = _CGGradientGetStopLocation(gradient);
+    for (unsigned long i = 0; i < gradientCount; ++i) {
+        // TODO #1541: The indexing needs to get updated based on colorspace (for non RGBA)
+        unsigned int colorIndex = (i * 4);
+        gradientStops[i].color = D2D1::ColorF(colorComponents[colorIndex],
+                                              colorComponents[colorIndex + 1],
+                                              colorComponents[colorIndex + 2],
+                                              colorComponents[colorIndex + 3]);
+        gradientStops[i].position = locations[i];
+    }
+
+    // we want to support CGGradientDrawingOptions, but by default d2d will extend the region via repeating the brush (or other
+    // effect based on the extend mode).   We support that by inserting a point (with transparent color) close to the start/end points, such
+    // that d2d will automatically extend the transparent color, thus we obtain the desired effect for CGGradientDrawingOptions.
+
+    if (!(options & kCGGradientDrawsBeforeStartLocation)) {
+        __CGGradientInsertTransparentColor(gradientStops, 0, s_kCGGradientOffsetPoint);
+    }
+
+    if (!(options & kCGGradientDrawsAfterEndLocation)) {
+        __CGGradientInsertTransparentColor(gradientStops, 1, 1.f - s_kCGGradientOffsetPoint);
+    }
+
+    return gradientStops;
+}
+/**
+ @Status Interoperable
 */
 void CGContextDrawLinearGradient(
     CGContextRef context, CGGradientRef gradient, CGPoint startPoint, CGPoint endPoint, CGGradientDrawingOptions options) {
     NOISY_RETURN_IF_NULL(context);
+    NOISY_RETURN_IF_NULL(gradient);
     RETURN_IF(!context->ShouldDraw());
 
-    UNIMPLEMENTED();
+    RETURN_IF(_CGGradientGetCount(gradient) == 0);
+
+    std::vector<D2D1_GRADIENT_STOP> gradientStops = __CGGradientToD2D1GradientStop(context, gradient, options);
+
+    ComPtr<ID2D1GradientStopCollection> gradientStopCollection;
+
+    ComPtr<ID2D1DeviceContext> deviceContext = context->DeviceContext();
+    FAIL_FAST_IF_FAILED(deviceContext->CreateGradientStopCollection(gradientStops.data(),
+                                                                    gradientStops.size(),
+                                                                    D2D1_GAMMA_2_2,
+                                                                    D2D1_EXTEND_MODE_CLAMP,
+                                                                    &gradientStopCollection));
+
+    ComPtr<ID2D1LinearGradientBrush> linearGradientBrush;
+    FAIL_FAST_IF_FAILED(deviceContext->CreateLinearGradientBrush(
+        D2D1::LinearGradientBrushProperties(_CGPointToD2D_F(startPoint), _CGPointToD2D_F(endPoint)),
+        D2D1::BrushProperties(context->CurrentGState().alpha,
+                              __CGAffineTransformToD2D_F(CGContextGetUserSpaceToDeviceSpaceTransform(context))),
+        gradientStopCollection.Get(),
+        &linearGradientBrush));
+
+    // Area to fill
+    D2D1_SIZE_F targetSize = deviceContext->GetSize();
+    D2D1_RECT_F region = D2D1::RectF(0, 0, targetSize.width, targetSize.height);
+
+    ComPtr<ID2D1CommandList> commandList;
+    FAIL_FAST_IF_FAILED(context->DrawToCommandList(_kCGCoordinateModeDeviceSpace,
+                                                   nullptr,
+                                                   &commandList,
+                                                   [&](CGContextRef context, ID2D1DeviceContext* deviceContext) {
+                                                       deviceContext->FillRectangle(&region, linearGradientBrush.Get());
+                                                       return S_OK;
+                                                   }));
+    FAIL_FAST_IF_FAILED(context->DrawImage(commandList.Get()));
 }
 
 /**
