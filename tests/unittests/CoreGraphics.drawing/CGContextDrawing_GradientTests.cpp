@@ -17,18 +17,18 @@
 #include "DrawingTest.h"
 
 #pragma region LinearGradient
-DRAW_TEST_F(CGGradient, LinearGradient, UIKitMimicTest) {
-    CGContextRef context = GetDrawingContext();
 
-    CGFloat locations[2] = { 0, 1 };
-    CGFloat components[8] = { 0.0, 0.0, 1, 1.0, 1.0, 0, 0, 1.0 };
+static void _drawLinearGradient(CGContextRef context,
+                                CGPoint startPoint,
+                                CGPoint endPoint,
+                                CGFloat* components,
+                                CGFloat* locations,
+                                size_t count,
+                                CGGradientDrawingOptions options) {
     CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
-    CGGradientRef gradient = CGGradientCreateWithColorComponents(colorspace, components, locations, 2);
+    CGGradientRef gradient = CGGradientCreateWithColorComponents(colorspace, components, locations, count);
 
-    CGPoint startPoint = CGPointMake(0, 0);
-    CGPoint endPoint = CGPointMake(512, 1024);
-
-    CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, kCGGradientDrawsBeforeStartLocation);
+    CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, options);
     CFRelease(colorspace);
     CFRelease(gradient);
 }
@@ -37,15 +37,27 @@ static void _drawShortLinearGradientWithOptions(CGContextRef context, CGRect bou
     CGFloat locations[2] = { 0, 1 };
     CGFloat components[8] = { 0.0, 1, 0.0, 1.0, 1.0, 0, 0, 1.0 };
 
-    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
-    CGGradientRef gradient = CGGradientCreateWithColorComponents(colorspace, components, locations, 2);
-
     CGRect borderRect = CGRectInset(bounds, 30, 50);
 
-    CGContextDrawLinearGradient(context, gradient, borderRect.origin, CGPointMake(borderRect.size.width, borderRect.size.height), option);
+    _drawLinearGradient(context,
+                        borderRect.origin,
+                        CGPointMake(borderRect.size.width, borderRect.size.height),
+                        components,
+                        locations,
+                        _countof(locations),
+                        option);
+}
 
-    CFRelease(colorspace);
-    CFRelease(gradient);
+DRAW_TEST_F(CGGradient, LinearGradient, UIKitMimicTest) {
+    CGFloat locations[2] = { 0, 1 };
+    CGFloat components[8] = { 0.0, 0.0, 1, 1.0, 1.0, 0, 0, 1.0 };
+    _drawLinearGradient(GetDrawingContext(),
+                        CGPointMake(0, 0),
+                        CGPointMake(512, 1024),
+                        components,
+                        locations,
+                        _countof(locations),
+                        kCGGradientDrawsBeforeStartLocation);
 }
 
 DRAW_TEST_F(CGGradient, LinearGradientShortBothSides_Options_0, UIKitMimicTest) {
@@ -61,135 +73,106 @@ DRAW_TEST_F(CGGradient, LinearGradientShortBothSides_Options_kCGGradientDrawsAft
 }
 
 DRAW_TEST_F(CGGradient, LinearGradientInvalidCount, UIKitMimicTest) {
-    CGContextRef context = GetDrawingContext();
-
     CGFloat locations[] = { 0.0 };
 
     CGFloat components[] = {
         0.85, 0, 0, 1.0,
     };
-
-    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
-    CGGradientRef gradient = CGGradientCreateWithColorComponents(colorspace, components, locations, 0);
-    CGPoint startPoint = CGPointMake(0, 0);
-    CGPoint endPoint = CGPointMake(512, 1024);
-
-    CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, kCGGradientDrawsBeforeStartLocation);
-    CFRelease(colorspace);
-    CFRelease(gradient);
+    _drawLinearGradient(
+        GetDrawingContext(), CGPointMake(0, 0), CGPointMake(512, 1024), components, locations, 0, kCGGradientDrawsBeforeStartLocation);
 }
 
 DRAW_TEST_F(CGGradient, LinearGradient2, UIKitMimicTest) {
-    CGContextRef context = GetDrawingContext();
-
     CGFloat locations[] = { 0.0, 0.33, 0.66, 1.0 };
 
     CGFloat components[] = {
         0.85, 0, 0, 1.0, 1, 0, 0, 1.0, 0.85, 0.3, 0, 1.0, 0.1, 0, 0.9, 1.0,
     };
 
-    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
-    CGGradientRef gradient = CGGradientCreateWithColorComponents(colorspace, components, locations, 4);
-    CGPoint startPoint = CGPointMake(0, 0);
-    CGPoint endPoint = CGPointMake(512, 1024);
-
-    CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, kCGGradientDrawsBeforeStartLocation);
-    CFRelease(colorspace);
-    CFRelease(gradient);
+    _drawLinearGradient(GetDrawingContext(),
+                        CGPointMake(0, 0),
+                        CGPointMake(512, 1024),
+                        components,
+                        locations,
+                        _countof(locations),
+                        kCGGradientDrawsBeforeStartLocation);
 }
 
 DRAW_TEST_F(CGGradient, LinearGradient2Short, UIKitMimicTest) {
-    CGContextRef context = GetDrawingContext();
-
     CGFloat locations[] = { 0.0, 0.33, 1.0 };
 
     CGFloat components[] = { 0.85, 0, 0, 1.0, 1, 0, 0, 1.0, 0.85, 0.3, 0, 1.0 };
-
-    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
-    CGGradientRef gradient = CGGradientCreateWithColorComponents(colorspace, components, locations, 3);
-    CGPoint startPoint = CGPointMake(120, 200);
-    CGPoint endPoint = CGPointMake(350, 800);
-
-    CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, kCGGradientDrawsBeforeStartLocation);
-    CFRelease(colorspace);
-    CFRelease(gradient);
+    _drawLinearGradient(GetDrawingContext(),
+                        CGPointMake(120, 200),
+                        CGPointMake(350, 800),
+                        components,
+                        locations,
+                        _countof(locations),
+                        kCGGradientDrawsBeforeStartLocation);
 }
 
 DRAW_TEST_F(CGGradient, LinearGradient3, UIKitMimicTest) {
-    CGContextRef context = GetDrawingContext();
-
     CGFloat locations[] = { 0.0, 0.5, 1 };
 
     CGFloat components[] = {
         1, 0, 0, 1.0, 0, 1, 0, 1.0, 0, 0, 1, 1.0,
     };
-
-    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
-    CGGradientRef gradient = CGGradientCreateWithColorComponents(colorspace, components, locations, 3);
-    CGPoint startPoint = CGPointMake(0, 0);
-    CGPoint endPoint = CGPointMake(512, 1024);
-
-    CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, kCGGradientDrawsBeforeStartLocation);
-    CFRelease(colorspace);
-    CFRelease(gradient);
+    _drawLinearGradient(GetDrawingContext(),
+                        CGPointMake(0, 0),
+                        CGPointMake(512, 1024),
+                        components,
+                        locations,
+                        _countof(locations),
+                        kCGGradientDrawsBeforeStartLocation);
 }
 
 DRAW_TEST_F(CGGradient, LinearGradientWithLowOpacity, UIKitMimicTest) {
-    CGContextRef context = GetDrawingContext();
-
     CGFloat locations[] = { 0.0, 0.5, 1 };
 
     CGFloat components[] = {
         1, 0, 0, 0.1, 0, 1, 0, 0.9, 0, 0, 1, 0.8,
     };
 
-    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
-    CGGradientRef gradient = CGGradientCreateWithColorComponents(colorspace, components, locations, 3);
-    CGPoint startPoint = CGPointMake(300, 750);
-    CGPoint endPoint = CGPointMake(0, 0);
-
-    CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, kCGGradientDrawsBeforeStartLocation);
-    CFRelease(colorspace);
-    CFRelease(gradient);
+    _drawLinearGradient(GetDrawingContext(),
+                        CGPointMake(300, 750),
+                        CGPointMake(0, 0),
+                        components,
+                        locations,
+                        _countof(locations),
+                        kCGGradientDrawsBeforeStartLocation);
 }
 
 DRAW_TEST_F(CGGradient, LinearGradientWithAlpha, UIKitMimicTest) {
-    CGContextRef context = GetDrawingContext();
-
     CGFloat locations[] = { 0.0, 0.25, 0.5, 0.6, 0.8, 0.9, 1 };
 
     CGFloat components[] = {
         1, 0, 0, 1, 0.4, 0.1, 0.5, 1, 0.50, 0.2, 0.99, 1, 0.41, 0.56, 0, 1, 0.12, 0.12, .3, 1, 0.9, 0.4, 1, 1, 0.2, 0.3, 0.8, 1,
     };
 
-    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
-    CGGradientRef gradient = CGGradientCreateWithColorComponents(colorspace, components, locations, 7);
-    CGPoint startPoint = CGPointMake(512, 1024);
-    CGPoint endPoint = CGPointMake(0, 0);
-
-    CGContextSetAlpha(context, 0.75);
-    CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, kCGGradientDrawsBeforeStartLocation);
-    CFRelease(colorspace);
-    CFRelease(gradient);
+    CGContextSetAlpha(GetDrawingContext(), 0.75);
+    _drawLinearGradient(GetDrawingContext(),
+                        CGPointMake(0, 0),
+                        CGPointMake(512, 1024),
+                        components,
+                        locations,
+                        _countof(locations),
+                        kCGGradientDrawsBeforeStartLocation);
 }
 
 DRAW_TEST_F(CGGradient, LinearGradientWithLowOpacityShort, UIKitMimicTest) {
-    CGContextRef context = GetDrawingContext();
-
     CGFloat locations[] = { 0.0, 0.5, 1 };
 
     CGFloat components[] = {
         1, 0, 0, 0.8, 0, 1, 0, 0.9, 0, 0, 1, 0.1,
     };
 
-    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
-    CGGradientRef gradient = CGGradientCreateWithColorComponents(colorspace, components, locations, 3);
-    CGPoint startPoint = CGPointMake(250, 300);
-    CGPoint endPoint = CGPointMake(0, 0);
-    CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, kCGGradientDrawsAfterEndLocation);
-
-    CFRelease(colorspace);
-    CFRelease(gradient);
+    _drawLinearGradient(GetDrawingContext(),
+                        CGPointMake(250, 300),
+                        CGPointMake(0, 0),
+                        components,
+                        locations,
+                        _countof(locations),
+                        kCGGradientDrawsAfterEndLocation);
 }
 
 #pragma endregion LinearGradient

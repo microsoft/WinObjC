@@ -51,7 +51,7 @@ using namespace Microsoft::WRL;
 static const wchar_t* TAG = L"CGContext";
 
 // Coordinate offset to support CGGradientDrawingOptions
-static const float s_CGGradientOffsetPoint = 1E-45;
+static const float s_kCGGradientOffsetPoint = 1E-45;
 
 enum _CGCoordinateMode : unsigned int { _kCGCoordinateModeDeviceSpace = 0, _kCGCoordinateModeUserSpace };
 
@@ -2366,9 +2366,7 @@ void CGContextDrawTiledImage(CGContextRef context, CGRect rect, CGImageRef image
 static inline void __CGGradientInsertTransparentColor(std::vector<D2D1_GRADIENT_STOP>& gradientStops, int location, float position) {
     gradientStops[location].position = position;
     // set the edge location to be transparent
-    D2D1_GRADIENT_STOP transparent;
-    transparent.color = D2D1::ColorF(0, 0, 0, 0);
-    transparent.position = location;
+    D2D1_GRADIENT_STOP transparent = { location, D2D1::ColorF(0, 0, 0, 0) };
     gradientStops.push_back(transparent);
 }
 
@@ -2398,11 +2396,11 @@ static std::vector<D2D1_GRADIENT_STOP> __CGGradientToD2D1GradientStop(CGContextR
     // that d2d will automatically extend the transparent color, thus we obtain the desired effect for CGGradientDrawingOptions.
 
     if (!(options & kCGGradientDrawsBeforeStartLocation)) {
-        __CGGradientInsertTransparentColor(gradientStops, 0, s_CGGradientOffsetPoint);
+        __CGGradientInsertTransparentColor(gradientStops, 0, s_kCGGradientOffsetPoint);
     }
 
     if (!(options & kCGGradientDrawsAfterEndLocation)) {
-        __CGGradientInsertTransparentColor(gradientStops, 1, 1 - s_CGGradientOffsetPoint);
+        __CGGradientInsertTransparentColor(gradientStops, 1, 1.f - s_kCGGradientOffsetPoint);
     }
 
     return gradientStops;
