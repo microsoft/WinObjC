@@ -129,12 +129,14 @@ CTTypesetterRef CTFramesetterGetTypesetter(CTFramesetterRef framesetter) {
 */
 CGSize CTFramesetterSuggestFrameSizeWithConstraints(
     CTFramesetterRef framesetter, CFRange stringRange, CFDictionaryRef frameAttributes, CGSize constraints, CFRange* fitRange) {
-    return framesetter ?
-               _DWriteGetSize((CFAttributedStringRef) static_cast<_CTFramesetter*>(framesetter)->_typesetter->_attributedString.get(),
-                              stringRange,
-                              constraints,
-                              fitRange) :
-               CGSizeZero;
+    if (framesetter == nil) {
+        return CGSizeZero;
+    }
+
+    CFAttributedStringRef string =
+        static_cast<CFAttributedStringRef>(static_cast<_CTFramesetter*>(framesetter)->_typesetter->_attributedString.get());
+
+    _DWriteGetSize(string, stringRange, constraints, fitRange);
 }
 
 /**
