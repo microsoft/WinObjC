@@ -25,6 +25,7 @@
 #import <StringHelpers.h>
 #import <vector>
 #import <iterator>
+#import <numeric>
 
 using namespace std;
 using namespace Microsoft::WRL;
@@ -522,4 +523,56 @@ static _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CG
     }
 
     return frame;
+}
+
+static CGSize _DWriteGetSize(CFAttributedStringRef string, CFRange range, CGSize maxSize, CFRange* fitRange) {
+    CGSize ret = CGSizeZero;
+    if (range.length == 0L) {
+        range.length = CFAttributedStringGetLength(string);
+    }
+
+    if (!string || range.length <= 0L) {
+        return ret;
+    }
+
+    ComPtr<IDWriteTextLayout> textLayout;
+    if (FAILED(__DWriteTextLayoutCreate(string, range, { CGPointZero, maxSize }, &textLayout))) {
+        return ret;
+    }
+
+    DWRITE_TEXT_METRICS textMetrics;
+    if (FAILED(textLayout->GetMetrics(&textMetrics))) {
+        return ret;
+    }
+
+    // TODO:: find more precise value than 1.0 to increase width by to fully enclose frame
+    ret.width = std::min(maxSize.width, textMetrics.widthIncludingTrailingWhitespace + 1.0f);
+    ret.height = std::min(maxSize.height, textMetrics.height);
+
+    if (fitRange) {
+        *fitRange = {};
+        uint32_t lineCount = 0;
+
+        // Ignore return value, we only want the lineCount for now
+        textLayout->GetLineMetrics(nullptr, 0, &lineCount);
+
+        std::vector<DWRITE_LINE_METRICS> metrics(lineCount);
+        if (FAILED(textLayout->GetLineMetrics(metrics.data(), lineCount, &lineCount))) {
+            return ret;
+        }
+
+        float totalHeight = 0;
+        CFIndex endPos = range.location;
+        for (size_t i = 0; i < lineCount; ++i) {
+            totalHeight += metrics[i].baseline;
+            if (totalHeight > ret.height) {
+                break;
+            }
+            endPos += metrics[i].length;
+        }
+
+        *fitRange = { range.location, endPos };
+    }
+
+    return ret;
 }

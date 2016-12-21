@@ -123,23 +123,18 @@ CTTypesetterRef CTFramesetterGetTypesetter(CTFramesetterRef framesetter) {
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes frameAttributes parameter ignored
  @Notes
 */
 CGSize CTFramesetterSuggestFrameSizeWithConstraints(
     CTFramesetterRef framesetter, CFRange stringRange, CFDictionaryRef frameAttributes, CGSize constraints, CFRange* fitRange) {
-    CGRect frameSize = CGRectZero;
-    frameSize.size = constraints;
-
-    _CTFrame* frame = __CreateFrame(static_cast<_CTFramesetter*>(framesetter), frameSize, stringRange);
-    CGSize ret = frame ? frame->_frameRect.size : CGSizeZero;
-
-    if (fitRange) {
-        *fitRange = CTFrameGetVisibleStringRange(static_cast<CTFrameRef>(frame));
-    }
-
-    [frame release];
-    return ret;
+    return framesetter ?
+               _DWriteGetSize((CFAttributedStringRef) static_cast<_CTFramesetter*>(framesetter)->_typesetter->_attributedString.get(),
+                              stringRange,
+                              constraints,
+                              fitRange) :
+               CGSizeZero;
 }
 
 /**
