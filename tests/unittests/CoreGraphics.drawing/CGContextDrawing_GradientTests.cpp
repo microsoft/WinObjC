@@ -47,7 +47,7 @@ static void _drawShortLinearGradientWithOptions(CGContextRef context, CGRect bou
                         option);
 }
 
-DRAW_TEST_F(CGGradient, LinearGradient, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGGradient, LinearGradient, UIKitMimicTest) {
     CGFloat locations[2] = { 0, 1 };
     CGFloat components[8] = { 0.0, 0.0, 1, 1.0, 1.0, 0, 0, 1.0 };
     _drawLinearGradient(GetDrawingContext(),
@@ -58,15 +58,15 @@ DRAW_TEST_F(CGGradient, LinearGradient, UIKitMimicTest) {
                         kCGGradientDrawsBeforeStartLocation);
 }
 
-DRAW_TEST_F(CGGradient, LinearGradientShortBothSides_Options_0, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGGradient, LinearGradientShortBothSides_Options_0, UIKitMimicTest) {
     _drawShortLinearGradientWithOptions(GetDrawingContext(), GetDrawingBounds(), 0);
 }
 
-DRAW_TEST_F(CGGradient, LinearGradientShortBothSides_Options_kCGGradientDrawsBeforeStartLocation, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGGradient, LinearGradientShortBothSides_Options_kCGGradientDrawsBeforeStartLocation, UIKitMimicTest) {
     _drawShortLinearGradientWithOptions(GetDrawingContext(), GetDrawingBounds(), kCGGradientDrawsBeforeStartLocation);
 }
 
-DRAW_TEST_F(CGGradient, LinearGradientShortBothSides_Options_kCGGradientDrawsAfterEndLocation, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGGradient, LinearGradientShortBothSides_Options_kCGGradientDrawsAfterEndLocation, UIKitMimicTest) {
     _drawShortLinearGradientWithOptions(GetDrawingContext(), GetDrawingBounds(), kCGGradientDrawsAfterEndLocation);
 }
 
@@ -89,7 +89,7 @@ DRAW_TEST_F(CGGradient, LinearGradientInvalidCount, UIKitMimicTest) {
     CFRelease(gradient);
 }
 
-DRAW_TEST_F(CGGradient, LinearGradient2, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGGradient, LinearGradient2, UIKitMimicTest) {
     CGFloat locations[] = { 0.0, 0.33, 0.66, 1.0 };
 
     CGFloat components[] = {
@@ -104,7 +104,7 @@ DRAW_TEST_F(CGGradient, LinearGradient2, UIKitMimicTest) {
                         kCGGradientDrawsBeforeStartLocation);
 }
 
-DRAW_TEST_F(CGGradient, LinearGradient2Short, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGGradient, LinearGradient2Short, UIKitMimicTest) {
     CGFloat locations[] = { 0.0, 0.33, 1.0 };
 
     CGFloat components[] = { 0.85, 0, 0, 1.0, 1, 0, 0, 1.0, 0.85, 0.3, 0, 1.0 };
@@ -116,7 +116,7 @@ DRAW_TEST_F(CGGradient, LinearGradient2Short, UIKitMimicTest) {
                         kCGGradientDrawsBeforeStartLocation);
 }
 
-DRAW_TEST_F(CGGradient, LinearGradient3, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGGradient, LinearGradient3, UIKitMimicTest) {
     CGFloat locations[] = { 0.0, 0.5, 1 };
 
     CGFloat components[] = {
@@ -130,7 +130,7 @@ DRAW_TEST_F(CGGradient, LinearGradient3, UIKitMimicTest) {
                         kCGGradientDrawsBeforeStartLocation);
 }
 
-DRAW_TEST_F(CGGradient, LinearGradientWithLowOpacity, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGGradient, LinearGradientWithLowOpacity, UIKitMimicTest) {
     CGFloat locations[] = { 0.0, 0.5, 1 };
 
     CGFloat components[] = {
@@ -145,7 +145,7 @@ DRAW_TEST_F(CGGradient, LinearGradientWithLowOpacity, UIKitMimicTest) {
                         kCGGradientDrawsBeforeStartLocation);
 }
 
-DRAW_TEST_F(CGGradient, LinearGradientWithAlpha, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGGradient, LinearGradientWithAlpha, UIKitMimicTest) {
     CGFloat locations[] = { 0.0, 0.25, 0.5, 0.6, 0.8, 0.9, 1 };
 
     CGFloat components[] = {
@@ -161,7 +161,7 @@ DRAW_TEST_F(CGGradient, LinearGradientWithAlpha, UIKitMimicTest) {
                         kCGGradientDrawsBeforeStartLocation);
 }
 
-DRAW_TEST_F(CGGradient, LinearGradientWithLowOpacityShort, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGGradient, LinearGradientWithLowOpacityShort, UIKitMimicTest) {
     CGFloat locations[] = { 0.0, 0.5, 1 };
 
     CGFloat components[] = {
