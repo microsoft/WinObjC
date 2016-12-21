@@ -21,12 +21,12 @@
 static void _drawLinearGradient(CGContextRef context,
                                 CGPoint startPoint,
                                 CGPoint endPoint,
-                                CGFloat* components,
-                                CGFloat* locations,
-                                size_t count,
+                                CGFloat components[],
+                                CGFloat locations[],
                                 CGGradientDrawingOptions options) {
     CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
-    CGGradientRef gradient = CGGradientCreateWithColorComponents(colorspace, components, locations, count);
+    CGGradientRef gradient =
+        CGGradientCreateWithColorComponents(colorspace, components, locations, std::extent<decltype(locations)>::value);
 
     CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, options);
     CFRelease(colorspace);
@@ -44,7 +44,6 @@ static void _drawShortLinearGradientWithOptions(CGContextRef context, CGRect bou
                         CGPointMake(borderRect.size.width, borderRect.size.height),
                         components,
                         locations,
-                        _countof(locations),
                         option);
 }
 
@@ -56,7 +55,6 @@ DRAW_TEST_F(CGGradient, LinearGradient, UIKitMimicTest) {
                         CGPointMake(512, 1024),
                         components,
                         locations,
-                        _countof(locations),
                         kCGGradientDrawsBeforeStartLocation);
 }
 
@@ -78,8 +76,17 @@ DRAW_TEST_F(CGGradient, LinearGradientInvalidCount, UIKitMimicTest) {
     CGFloat components[] = {
         0.85, 0, 0, 1.0,
     };
-    _drawLinearGradient(
-        GetDrawingContext(), CGPointMake(0, 0), CGPointMake(512, 1024), components, locations, 0, kCGGradientDrawsBeforeStartLocation);
+
+    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
+    CGGradientRef gradient = CGGradientCreateWithColorComponents(colorspace, components, locations, 0);
+
+    CGContextDrawLinearGradient(GetDrawingContext(),
+                                gradient,
+                                CGPointMake(0, 0),
+                                CGPointMake(512, 1024),
+                                kCGGradientDrawsBeforeStartLocation);
+    CFRelease(colorspace);
+    CFRelease(gradient);
 }
 
 DRAW_TEST_F(CGGradient, LinearGradient2, UIKitMimicTest) {
@@ -94,7 +101,6 @@ DRAW_TEST_F(CGGradient, LinearGradient2, UIKitMimicTest) {
                         CGPointMake(512, 1024),
                         components,
                         locations,
-                        _countof(locations),
                         kCGGradientDrawsBeforeStartLocation);
 }
 
@@ -107,7 +113,6 @@ DRAW_TEST_F(CGGradient, LinearGradient2Short, UIKitMimicTest) {
                         CGPointMake(350, 800),
                         components,
                         locations,
-                        _countof(locations),
                         kCGGradientDrawsBeforeStartLocation);
 }
 
@@ -122,7 +127,6 @@ DRAW_TEST_F(CGGradient, LinearGradient3, UIKitMimicTest) {
                         CGPointMake(512, 1024),
                         components,
                         locations,
-                        _countof(locations),
                         kCGGradientDrawsBeforeStartLocation);
 }
 
@@ -138,7 +142,6 @@ DRAW_TEST_F(CGGradient, LinearGradientWithLowOpacity, UIKitMimicTest) {
                         CGPointMake(0, 0),
                         components,
                         locations,
-                        _countof(locations),
                         kCGGradientDrawsBeforeStartLocation);
 }
 
@@ -155,7 +158,6 @@ DRAW_TEST_F(CGGradient, LinearGradientWithAlpha, UIKitMimicTest) {
                         CGPointMake(512, 1024),
                         components,
                         locations,
-                        _countof(locations),
                         kCGGradientDrawsBeforeStartLocation);
 }
 
@@ -171,7 +173,6 @@ DRAW_TEST_F(CGGradient, LinearGradientWithLowOpacityShort, UIKitMimicTest) {
                         CGPointMake(0, 0),
                         components,
                         locations,
-                        _countof(locations),
                         kCGGradientDrawsAfterEndLocation);
 }
 
