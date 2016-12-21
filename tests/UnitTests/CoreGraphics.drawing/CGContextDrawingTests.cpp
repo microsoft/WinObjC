@@ -246,7 +246,7 @@ DISABLED_DRAW_TEST_F(CGContext, DrawIntoRect, UIKitMimicTest) {
     // Draw a portion of an image into a different region.
     auto drawingConfig = DrawingTestConfig::Get();
 
-    woc::unique_cf<CFStringRef> testFilename{ _CFStringCreateWithStdString(drawingConfig->GetResourcePath("png3.9.png")) };
+    woc::unique_cf<CFStringRef> testFilename{ _CFStringCreateWithStdString(drawingConfig->GetResourcePath("png1.9.png")) };
     woc::unique_cf<CGImageRef> image{ _CGImageCreateFromPNGFile(testFilename.get()) };
     ASSERT_NE(image, nullptr);
 
@@ -426,7 +426,7 @@ DRAW_TEST_F(CGContext, DrawAnImageWithOpacity, UIKitMimicTest) {
     // Load an Image and draw it into the canvas context
     auto drawingConfig = DrawingTestConfig::Get();
 
-    woc::unique_cf<CFStringRef> testFilename{ _CFStringCreateWithStdString(drawingConfig->GetResourcePath("png3.9.png")) };
+    woc::unique_cf<CFStringRef> testFilename{ _CFStringCreateWithStdString(drawingConfig->GetResourcePath("png1.9.png")) };
     woc::unique_cf<CGImageRef> image{ _CGImageCreateFromPNGFile(testFilename.get()) };
     ASSERT_NE(image, nullptr);
 
@@ -444,7 +444,7 @@ DRAW_TEST_F(CGContext, DrawAnImageWithOpacity, UIKitMimicTest) {
 DRAW_TEST_F(CGContext, DrawAnImageWithInterpolationQuality, UIKitMimicTest) {
     auto drawingConfig = DrawingTestConfig::Get();
 
-    woc::unique_cf<CFStringRef> testFilename{ _CFStringCreateWithStdString(drawingConfig->GetResourcePath("png3.9.png")) };
+    woc::unique_cf<CFStringRef> testFilename{ _CFStringCreateWithStdString(drawingConfig->GetResourcePath("png1.9.png")) };
     woc::unique_cf<CGImageRef> image{ _CGImageCreateFromPNGFile(testFilename.get()) };
     ASSERT_NE(image, nullptr);
 
@@ -457,7 +457,7 @@ DRAW_TEST_F(CGContext, DrawAnImageWithInterpolationQuality, UIKitMimicTest) {
 
 DRAW_TEST_F(CGContext, DrawAnImageWithInterpolationQualityAndAlpha, UIKitMimicTest) {
     auto drawingConfig = DrawingTestConfig::Get();
-    woc::unique_cf<CFStringRef> testFilename{ _CFStringCreateWithStdString(drawingConfig->GetResourcePath("png3.9.png")) };
+    woc::unique_cf<CFStringRef> testFilename{ _CFStringCreateWithStdString(drawingConfig->GetResourcePath("png1.9.png")) };
     woc::unique_cf<CGImageRef> image{ _CGImageCreateFromPNGFile(testFilename.get()) };
     ASSERT_NE(image, nullptr);
 
