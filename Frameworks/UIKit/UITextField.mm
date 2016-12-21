@@ -129,13 +129,17 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 
         [_secureModeLock lock];
         if (_secureTextMode) {
-            _passwordBox.password = _text;
+            if (![_passwordBox.password isEqualToString:_text]) {
+                _passwordBox.password = _text;
+            }
         } else {
-            _textBox.text = _text;
-            // Ensure caret at end of field in case we programmatically
-            // gain focus (becomeFirstResponder) after the text is set:
-            _textBox.selectionStart = [_text length];
-            _textBox.selectionLength = 0;
+            if (![_textBox.text isEqualToString:_text]) {
+                _textBox.text = _text;
+                // Ensure caret at end of field in case we programmatically
+                // gain focus (becomeFirstResponder) after the text is set:
+                _textBox.selectionStart = [_text length];
+                _textBox.selectionLength = 0;
+            }
         }
         [_secureModeLock unlock];
 
@@ -240,8 +244,8 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
     _passwordBox.fontFamily = _textBox.fontFamily = [WUXMFontFamily makeInstanceWithName:[font _compatibleFamilyName]];
 
     // The following enums map from DWrite directly to Xaml
-    _passwordBox.fontStretch = _textBox.fontStretch = (WUTFontStretch)[font _fontStretch]; 
-    _passwordBox.fontStyle = _textBox.fontStyle = (WUTFontStyle)[font _fontStyle]; 
+    _passwordBox.fontStretch = _textBox.fontStretch = (WUTFontStretch)[font _fontStretch];
+    _passwordBox.fontStyle = _textBox.fontStyle = (WUTFontStyle)[font _fontStyle];
     _passwordBox.fontSize = _textBox.fontSize = font.pointSize;
 
     WUTFontWeight* weight = nil;
@@ -250,7 +254,7 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
         case DWRITE_FONT_WEIGHT_THIN:
             weight = [WUTFontWeights thin];
             break;
-        //case DWRITE_FONT_WEIGHT_EXTRA_LIGHT:
+        // case DWRITE_FONT_WEIGHT_EXTRA_LIGHT:
         case DWRITE_FONT_WEIGHT_ULTRA_LIGHT:
             weight = [WUTFontWeights extraLight];
             break;
@@ -259,25 +263,25 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
             break;
         case DWRITE_FONT_WEIGHT_SEMI_LIGHT:
             weight = [WUTFontWeights semiLight];
-        //case DWRITE_FONT_WEIGHT_NORMAL:
+        // case DWRITE_FONT_WEIGHT_NORMAL:
         case DWRITE_FONT_WEIGHT_REGULAR:
             weight = [WUTFontWeights normal];
             break;
         case DWRITE_FONT_WEIGHT_MEDIUM:
             weight = [WUTFontWeights medium];
             break;
-        //case DWRITE_FONT_WEIGHT_DEMI_BOLD:
+        // case DWRITE_FONT_WEIGHT_DEMI_BOLD:
         case DWRITE_FONT_WEIGHT_SEMI_BOLD:
             weight = [WUTFontWeights semiBold];
             break;
         case DWRITE_FONT_WEIGHT_BOLD:
             weight = [WUTFontWeights bold];
             break;
-        //case DWRITE_FONT_WEIGHT_EXTRA_BOLD:
+        // case DWRITE_FONT_WEIGHT_EXTRA_BOLD:
         case DWRITE_FONT_WEIGHT_ULTRA_BOLD:
             weight = [WUTFontWeights extraBold];
             break;
-        //case DWRITE_FONT_WEIGHT_BLACK:
+        // case DWRITE_FONT_WEIGHT_BLACK:
         case DWRITE_FONT_WEIGHT_HEAVY:
             weight = [WUTFontWeights black];
             break;
@@ -291,7 +295,7 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
             break;
     }
 
-    _passwordBox.fontWeight = _textBox.fontWeight = weight; 
+    _passwordBox.fontWeight = _textBox.fontWeight = weight;
 }
 
 /**
@@ -418,7 +422,8 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 
     // If the min size is greater than our font size, the font wins out.
     // If the font's pointsize is smaller than the global min font size, the font wins out.
-    if (self.adjustsFontSizeToFitWidth && (self.minimumFontSize < _adjustedFont.pointSize) && (_adjustedFont.pointSize > g_minimumFontSize) && self.text && self.text.length) {
+    if (self.adjustsFontSizeToFitWidth && (self.minimumFontSize < _adjustedFont.pointSize) &&
+        (_adjustedFont.pointSize > g_minimumFontSize) && self.text && self.text.length) {
         NSString* passwordString = nil;
         CGFloat elementWidth = 0.0f;
 
@@ -430,7 +435,8 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
                 return;
             }
             passwordString = [@"" stringByPaddingToLength:self.text.length withString:_passwordBox.passwordChar startingAtIndex:0];
-            elementWidth = _passwordContentElement.actualWidth - _passwordContentElement.padding.left - _passwordContentElement.padding.right;
+            elementWidth =
+                _passwordContentElement.actualWidth - _passwordContentElement.padding.left - _passwordContentElement.padding.right;
         } else {
             if (_textContentElement == nil) {
                 // Not an error, we just might not be loaded yet.
@@ -1424,7 +1430,8 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
             strongSelf->_passwordBox.placeholderText = strongSelf.placeholder;
 
             // retrieve the ContentElement from the template
-            strongSelf->_passwordContentElement = rt_dynamic_cast<WXCControl>(FindTemplateChild(strongSelf->_passwordBox, @"ContentElement"));
+            strongSelf->_passwordContentElement =
+                rt_dynamic_cast<WXCControl>(FindTemplateChild(strongSelf->_passwordBox, @"ContentElement"));
 
             if (strongSelf->_passwordContentElement == nullptr) {
                 TraceWarning(TAG, L"Could not find ContentElement in control template: adjustsFontSizeToFitWidth will not function");
