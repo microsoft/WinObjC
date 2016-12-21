@@ -51,11 +51,11 @@ public:
 
 private:
     struct __CFDataHashEqual {
-        std::size_t operator()(const woc::unique_cf<CFDataRef>& data) const {
+        std::size_t operator()(const woc::unique_cf<CGDataProviderRef>& data) const {
             return CFHash(data.get());
         }
 
-        bool operator()(const woc::unique_cf<CFDataRef>& data1, const woc::unique_cf<CFDataRef>& data2) const {
+        bool operator()(const woc::unique_cf<CGDataProviderRef>& data1, const woc::unique_cf<CGDataProviderRef>& data2) const {
             return CFEqual(data1.get(), data2.get());
         }
     };
@@ -63,7 +63,7 @@ private:
     // Hash set of CFDataRefs registered to this font collection loader through AddDatas(),
     // mapped to a IDWriteFontFile that was created using it
     // This latter element is lazily initialized when it is first requested, then cached in the map
-    std::unordered_map<woc::unique_cf<CFDataRef>, Microsoft::WRL::ComPtr<IDWriteFontFile>, __CFDataHashEqual, __CFDataHashEqual>
+    std::unordered_map<woc::unique_cf<CGDataProviderRef>, Microsoft::WRL::ComPtr<IDWriteFontFile>, __CFDataHashEqual, __CFDataHashEqual>
         m_fontDatas;
 
 public:
