@@ -205,14 +205,6 @@ DRAW_TEST_F(CGImageDrawing, DrawAnImage, UIKitMimicTest) {
     CGContextDrawImage(context, bounds, image.get());
 }
 
-DRAW_TEST_F(CGImageDrawing, RedBox, UIKitMimicTest) {
-    CGContextRef context = GetDrawingContext();
-    CGRect bounds = GetDrawingBounds();
-
-    CGContextSetRGBFillColor(context, 1.0, 0.0, 0.0, 1.0);
-    CGContextFillRect(context, CGRectInset(bounds, 10, 10));
-}
-
 DRAW_TEST_F(CGImageDrawing, DrawAContextIntoAnImage, UIKitMimicTest) {
     // This test will create a bitmap context, draw some entity into the context, then create a image out of the bitmap context.
     // Thereafter it will draw the image into the Canvas context
