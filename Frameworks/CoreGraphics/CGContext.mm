@@ -51,7 +51,7 @@ using namespace Microsoft::WRL;
 static const wchar_t* TAG = L"CGContext";
 
 // Coordinate offset to support CGGradientDrawingOptions
-static const float s_CGGradientStartPoint = 1E-45;
+static const float s_CGGradientOffsetPoint = 1E-45;
 
 enum _CGCoordinateMode : unsigned int { _kCGCoordinateModeDeviceSpace = 0, _kCGCoordinateModeUserSpace };
 
@@ -2384,6 +2384,7 @@ static std::vector<D2D1_GRADIENT_STOP> __CGGradientToD2D1GradientStop(CGContextR
     CGFloat* colorComponents = _CGGradientGetColorComponents(gradient);
     CGFloat* locations = _CGGradientGetStopLocation(gradient);
     for (unsigned long i = 0; i < gradientCount; ++i) {
+        // TODO #1541: The indexing needs to get updated based on colorspace (for non RGBA)
         unsigned int colorIndex = (i * 4);
         gradientStops[i].color = D2D1::ColorF(colorComponents[colorIndex],
                                               colorComponents[colorIndex + 1],
@@ -2396,26 +2397,16 @@ static std::vector<D2D1_GRADIENT_STOP> __CGGradientToD2D1GradientStop(CGContextR
     // effect based on the extend mode).   We support that by inserting a point (with transparent color) close to the start/end points, such
     // that d2d will automatically extend the transparent color, thus we obtain the desired effect for CGGradientDrawingOptions.
 
-    switch (options) {
-        case 0:
-            __CGGradientInsertTransparentColor(gradientStops, 0, s_CGGradientStartPoint);
-            __CGGradientInsertTransparentColor(gradientStops, 1, 1 - s_CGGradientStartPoint);
-            break;
+    if (!(options & kCGGradientDrawsBeforeStartLocation)) {
+        __CGGradientInsertTransparentColor(gradientStops, 0, s_CGGradientOffsetPoint);
+    }
 
-        case kCGGradientDrawsAfterEndLocation:
-            __CGGradientInsertTransparentColor(gradientStops, 0, s_CGGradientStartPoint);
-            break;
-
-        case kCGGradientDrawsBeforeStartLocation:
-            __CGGradientInsertTransparentColor(gradientStops, 1, 1 - s_CGGradientStartPoint);
-            break;
-        default:
-            break;
+    if (!(options & kCGGradientDrawsAfterEndLocation)) {
+        __CGGradientInsertTransparentColor(gradientStops, 1, 1 - s_CGGradientOffsetPoint);
     }
 
     return gradientStops;
 }
-
 /**
  @Status Interoperable
 */
