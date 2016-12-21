@@ -386,11 +386,8 @@ CGImageRef CGImageMaskCreate(size_t width,
                              const CGFloat* decode,
                              bool shouldInterpolate) {
     FAIL_FAST_HR_IF_FALSE(E_UNEXPECTED, ((bitsPerComponent == 8) && (bitsPerPixel == 32)));
-    FAIL_FAST_HR_IF_FALSE_MSG(E_INVALIDARG,
-                              ((provider == nullptr) || [(NSObject*)provider isKindOfClass:[NSData class]]),
-                              "CGDataProviderRef does not derive from NSData!");
 
-    NSData* dataProvider = (__bridge NSData*)provider;
+    NSData* dataProvider = (__bridge NSData*)CGDataProviderCopyData(provider);
     char* pData = (char*)[dataProvider bytes];
     size_t dataLen = (size_t)[dataProvider length];
 
