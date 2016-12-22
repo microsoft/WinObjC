@@ -989,7 +989,7 @@ NSMutableDictionary* _pageMappings;
  @Status Interoperable
 */
 - (UIViewController*)modalViewController {
-    return priv->_modalViewController;
+    return priv->_presentedViewController;
 }
 
 /**
@@ -1126,6 +1126,11 @@ NSMutableDictionary* _pageMappings;
  @Status Interoperable
 */
 - (void)presentViewController:(UIViewController*)controller animated:(BOOL)animated completion:(void (^)(void))completion {
+    if (!controller) {
+        TraceWarning(TAG, L"Trying to present nil controller");
+        return;
+    }
+
     bool shouldShow = false;
     UIViewController* curController = self;
     while (curController != nil) {
@@ -1139,9 +1144,7 @@ NSMutableDictionary* _pageMappings;
         return;
     }
 
-    UIViewController* oldViewController = self;
-    if (priv->_modalViewController != nil) {
-        oldViewController = priv->_modalViewController;
+    if ([self presentedViewController]) {
         TraceWarning(TAG,
                      L"Can't present view controller %08x (%hs) - view controller %08x (%hs) already has a presented controller!",
                      controller,
@@ -1151,28 +1154,25 @@ NSMutableDictionary* _pageMappings;
         return;
     }
 
-    if (controller != nil) {
-        [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
-    }
+    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
 
     if ([controller _hidesParent]) {
         [self _notifyViewWillDisappear:animated];
     }
 
-    priv->_modalViewController = controller;
     priv->_presentedViewController = controller;
-    if (controller != nil) {
-        [controller view];
-        controller->priv->_parentViewController = self;
-        controller->priv->_presentingViewController = self;
-        controller->priv->_presentCompletionBlock.attach([completion copy]);
 
-        if ([controller modalPresentationStyle] == UIModalPresentationPopover) {
-            controller->priv->_popoverPresentationController.attach([[UIPopoverPresentationController alloc] initWithPresentedViewController:controller presentingViewController:self]);
-        }
+    [controller view];
 
-        [controller performSelectorOnMainThread:@selector(_addToTop:) withObject:[NSNumber numberWithInt:animated] waitUntilDone:NO];
+    controller->priv->_parentViewController = self;
+    controller->priv->_presentingViewController = self;
+    controller->priv->_presentCompletionBlock.attach([completion copy]);
+
+    if ([controller modalPresentationStyle] == UIModalPresentationPopover) {
+        controller->priv->_popoverPresentationController.attach([[UIPopoverPresentationController alloc] initWithPresentedViewController:controller presentingViewController:self]);
     }
+
+    [controller performSelectorOnMainThread:@selector(_addToTop:) withObject:[NSNumber numberWithInt:animated] waitUntilDone:NO];
 }
 
 /**
@@ -1211,72 +1211,69 @@ NSMutableDictionary* _pageMappings;
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
 }
 
-- (void)_onDismissCleanup {
-    priv->_parentViewController = nil;
-    priv->_presentingViewController = nil;
-    priv->_popoverPresentationController = nil;
+- (void)_childDismissCleanup {
+    priv->_presentedViewController->priv->_parentViewController = nil;
+    priv->_presentedViewController->priv->_presentingViewController = nil;
+    priv->_presentedViewController->priv->_popoverPresentationController = nil;
+    priv->_presentedViewController = nil;
 }
 
 /**
  @Status Interoperable
 */
 - (void)dismissViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion {
-    if (priv->_modalViewController == nil) {
-        if ([self parentViewController] != nil) {
+    if (![self presentedViewController]) {
+        // Calling dismiss on a view controller that hasn't presented additional view controllers itself should result in the parent handling the dismissal.
+
+        if ([self parentViewController]) {
             [[self parentViewController] dismissViewControllerAnimated:animated completion:completion];
-            return;
+        } else {
+            TraceWarning(TAG, L"dismissViewController invalid - nothing to dismiss");
         }
 
-        TraceWarning(TAG, L"dismissModalViewController invalid!");
         return;
     }
 
-    UIViewController* curController = priv->_modalViewController;
+    UIViewController* presented = [self presentedViewController];
 
-    [curController retain];
-    [curController autorelease];
+    if ([presented presentedViewController]) {
+        // Recursively handle multiple child dismissal.
+        // TODO: This is unsafe because we end up dispatching the dimiss animation of a
+        // parent before the child dispatch animation completes.
+        [presented dismissViewControllerAnimated:animated completion:completion];
+    }
+
+    __block __unsafe_unretained UIViewController *weakSelf = self;
+    dispatch_block_t cleanupCompletion = ^{
+        StrongId<UIViewController> strongSelf = weakSelf;
+        [strongSelf _childDismissCleanup];
+
+        // Completion must happen after full tear-down, otherwise attempts to present a new
+        // view controller from the parent of the just dismissed controller, in this completion,
+        // will fail on the stale presentingViewController/presentedViewController relationship.
+        if (completion) {
+            completion();
+        }
+    };
 
     // We maintain a popoverPresentationController instance whenever UIModalPresentationPopover is specified.
     // However, in non-tablet operation mode, UIModalPresentationPopover should result in the presentation of
     // a full screen modal instead. We check here if an actual popover has been presented to handle the
     // dismiss (of a genuine popover or alternately a full screen modal) appropriately.
-    BOOL realPopoverPresented = [[curController popoverPresentationController] _isManagingPresentation];
+    UIPopoverPresentationController* popover = [presented popoverPresentationController];
+    BOOL realPopoverPresented = [popover _isManagingPresentation];
 
-    if (!realPopoverPresented && curController->priv->_modalViewController) {
-        [curController dismissViewControllerAnimated:animated completion:completion];
+    if (realPopoverPresented) {
+        [popover _dismissAnimated:animated completion:cleanupCompletion];
+        return;
     }
 
     [self _notifyViewWillAppear:animated];
 
-    priv->_modalViewController = nil;
-    priv->_presentedViewController = nil;
-
-    if (curController->priv->_parentViewController) {
-        curController->priv->_parentViewController->priv->_presentedViewController = nil;
-        curController->priv->_parentViewController->priv->_modalViewController = nil;
-    }
-
-    UIView* curView = [curController view];
+    UIView* curView = [presented view];
 
     UIView* myView = [self view];
-    [myView setHidden:FALSE];
-
-    if (realPopoverPresented) {
-        __block __unsafe_unretained UIViewController* weakCurController = curController;
-
-        [[curController popoverPresentationController] _dismissAnimated:animated completion:^{
-            StrongId<UIViewController> strongCurController = weakCurController;
-            [strongCurController _onDismissCleanup];
-
-            if (completion) {
-                completion();
-            }
-        }];
-
-        return;
-    }
-
-    [curController _onDismissCleanup];
+    [myView setHidden:NO];
 
     if (animated) {
         CGPoint curPos;
@@ -1309,12 +1306,12 @@ NSMutableDictionary* _pageMappings;
         [animation setRemovedOnCompletion:FALSE];
         [layer addAnimation:animation forKey:@"ModalDismiss"];
 
-        priv->_dismissCompletionBlock.attach([completion copy]);
+        priv->_dismissCompletionBlock.attach([cleanupCompletion copy]);
 
-        priv->_dismissController = curController;
-        [curController _notifyViewWillDisappear:TRUE];
+        priv->_dismissController = presented;
+        [presented _notifyViewWillDisappear:YES];
     } else {
-        [curController _notifyViewWillDisappear:animated];
+        [presented _notifyViewWillDisappear:animated];
         [curView removeFromSuperview];
 
         if ([[self view] superview] == nil) {
@@ -1322,16 +1319,10 @@ NSMutableDictionary* _pageMappings;
             [[[self view] superview] bringSubviewToFront:[self view]];
         }
 
-        [curController _notifyViewDidDisappear:FALSE];
+        [presented _notifyViewDidDisappear:NO];
         [self _notifyViewDidAppear:animated];
 
-        TraceVerbose(TAG, L"Preparing completion");
-
-        if (completion) {
-            completion();
-        }
-
-        TraceVerbose(TAG, L"Done completion");
+        cleanupCompletion();
     }
 }
 
@@ -1371,12 +1362,11 @@ NSMutableDictionary* _pageMappings;
             displayPopover = ![self _hidesParent];
 
             if (displayPopover) {
-                __unsafe_unretained __block UIViewController* me = self;
+                __unsafe_unretained __block UIViewController* weakSelf = self;
 
                 dispatch_block_t cleanup = ^{
-                    me->priv->_parentViewController->priv->_presentedViewController = nil;
-                    me->priv->_parentViewController->priv->_modalViewController = nil;
-                    me->priv->_popoverPresentationController = nil;
+                    StrongId<UIViewController> strongSelf = weakSelf;
+                    [strongSelf childDismissCleanup];
                 };
 
                 [[self popoverPresentationController] _presentAnimated:animated presentCompletion:priv->_presentCompletionBlock dismissCompletion:cleanup];
@@ -2219,13 +2209,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
  @Status Interoperable
 */
 - (UIViewController*)presentedViewController {
-    if (priv->_presentedViewController) {
-        return priv->_presentedViewController;
-    } else if ([priv->_parentViewController presentedViewController] != self) {
-        return [priv->_parentViewController presentedViewController];
-    }
-
-    return nil;
+    return priv->_presentedViewController;
 }
 
 /**
@@ -2248,10 +2232,9 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     priv->toolbarItems = nil;
     priv->editButtonItem = nil;
     priv->navigationController = nil;
-    if (priv->_modalViewController) {
-        ((UIViewController*)priv->_modalViewController)->priv->_parentViewController = nil;
+    if (priv->_presentedViewController) {
+        priv->_presentedViewController->priv->_parentViewController = nil;
     }
-    priv->_modalViewController = nil;
     priv->_parentViewController = nil;
     priv->nibName = nil;
     priv->nibBundle = nil;
