@@ -550,11 +550,13 @@ static CGSize _DWriteGetSize(CFAttributedStringRef string, CFRange range, CGSize
     ret.height = std::min(maxSize.height, textMetrics.height);
 
     if (fitRange) {
-        *fitRange = {};
+        *fitRange = { range.location, 0L };
         uint32_t lineCount = 0;
 
-        // Ignore return value, we only want the lineCount for now
-        textLayout->GetLineMetrics(nullptr, 0, &lineCount);
+        // Should return E_NOT_SUFFICIENT_BUFFER and popluate lineCount
+        if (textLayout->GetLineMetrics(nullptr, 0, &lineCount) != E_NOT_SUFFICIENT_BUFFER) {
+            return ret;
+        }
 
         std::vector<DWRITE_LINE_METRICS> metrics(lineCount);
         if (FAILED(textLayout->GetLineMetrics(metrics.data(), lineCount, &lineCount))) {
@@ -571,7 +573,7 @@ static CGSize _DWriteGetSize(CFAttributedStringRef string, CFRange range, CGSize
             endPos += metrics[i].length;
         }
 
-        *fitRange = { range.location, endPos };
+        fitRange->length = endPos;
     }
 
     return ret;

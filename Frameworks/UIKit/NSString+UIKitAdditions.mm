@@ -100,10 +100,13 @@ static NSDictionary* _getDefaultUITextAttributes() {
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes Clipping line break modes unsupported
 */
 - (CGSize)drawInRect:(CGRect)rect withFont:(UIFont*)font lineBreakMode:(UILineBreakMode)lineBreakMode alignment:(UITextAlignment)alignment {
     CGContextRef context = UIGraphicsGetCurrentContext();
+
+    // 0 Width or Height treated as unlimited bounds
     if (rect.size.width == 0) {
         rect.size.width = std::numeric_limits<CGFloat>::max();
     }
@@ -113,36 +116,41 @@ static NSDictionary* _getDefaultUITextAttributes() {
     }
 
     CTParagraphStyleSetting styles[2];
-    CTTextAlignment align = _NSTextAlignmentToCTTextAlignment(alignment);
+    CTTextAlignment align = NSTextAlignmentToCTTextAlignment(alignment);
     styles[0] = { kCTParagraphStyleSpecifierAlignment, sizeof(CTTextAlignment), &align };
 
     CTLineBreakMode breakMode = static_cast<CTLineBreakMode>(lineBreakMode);
     styles[1] = { kCTParagraphStyleSpecifierLineBreakMode, sizeof(CTLineBreakMode), &breakMode };
 
-    NSAttributedString* attr =
-        [[[NSAttributedString alloc] initWithString:self
-                                         attributes:@{
-                                             (NSString*)kCTForegroundColorFromContextAttributeName : (id)kCFBooleanTrue,
-                                             (NSString*)kCTParagraphStyleAttributeName : (id)CTParagraphStyleCreate(styles, 2),
-                                             (NSString*)kCTFontAttributeName : font
-                                         }] autorelease];
+    NSAttributedString* attr = [[[NSAttributedString alloc]
+        initWithString:self
+            attributes:@{
+                (NSString*)kCTForegroundColorFromContextAttributeName : (id)kCFBooleanTrue,
+                (NSString*)kCTParagraphStyleAttributeName : (id)CTParagraphStyleCreate(styles, std::extent<decltype(styles)>::value),
+                (NSString*)kCTFontAttributeName : font
+            }] autorelease];
 
     woc::unique_cf<CTFramesetterRef> framesetter{ CTFramesetterCreateWithAttributedString(static_cast<CFAttributedStringRef>(attr)) };
 
     woc::unique_cf<CGPathRef> path{ CGPathCreateWithRect(rect, nullptr) };
     woc::unique_cf<CTFrameRef> frame{ CTFramesetterCreateFrame(framesetter.get(), {}, path.get(), nullptr) };
+    if (frame == nil) {
+        return CGSizeZero;
+    }
 
     // Invert text matrix so glyphs are drawn with correct orientation
     CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0f, -1.0f));
 
     // Can't draw the entire frame because it assumes our space has been flipped and translated
     NSArray* lines = static_cast<NSArray*>(CTFrameGetLines(frame.get()));
-    std::vector<CGPoint> origins([lines count]);
-    CTFrameGetLineOrigins(frame.get(), {}, origins.data());
-    for (size_t i = 0; i < origins.size(); ++i) {
-        // Need to set text position so each line will be drawn in the correct position relative to each other
-        CGContextSetTextPosition(context, rect.origin.x + origins[i].x, rect.origin.y + origins[i].y);
-        CTLineDraw(static_cast<CTLineRef>(lines[i]), context);
+    if ([lines count] != 0) {
+        std::vector<CGPoint> origins([lines count]);
+        CTFrameGetLineOrigins(frame.get(), {}, origins.data());
+        for (size_t i = 0; i < origins.size(); ++i) {
+            // Need to set text position so each line will be drawn in the correct position relative to each other
+            CGContextSetTextPosition(context, rect.origin.x + origins[i].x, rect.origin.y + origins[i].y);
+            CTLineDraw(static_cast<CTLineRef>(lines[i]), context);
+        }
     }
 
     return _CTFrameGetSize(frame.get());

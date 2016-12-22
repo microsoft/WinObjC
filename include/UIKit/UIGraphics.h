@@ -61,3 +61,4 @@ UIKIT_EXPORT void UIRectFrameUsingBlendMode(CGRect rect, CGBlendMode blendMode);
 #ifdef __cplusplus
 }
 #endif
+UIKIT_EXPORT CTTextAlignment NSTextAlignmentToCTTextAlignment(NSTextAlignment nsTextAlignment);
