@@ -246,7 +246,7 @@ DISABLED_DRAW_TEST_F(CGContext, DrawIntoRect, UIKitMimicTest) {
     // Draw a portion of an image into a different region.
     auto drawingConfig = DrawingTestConfig::Get();
 
-    woc::unique_cf<CFStringRef> testFilename{ _CFStringCreateWithStdString(drawingConfig->GetResourcePath("png3.9.png")) };
+    woc::unique_cf<CFStringRef> testFilename{ _CFStringCreateWithStdString(drawingConfig->GetResourcePath("png1.9.png")) };
     woc::unique_cf<CGImageRef> image{ _CGImageCreateFromPNGFile(testFilename.get()) };
     ASSERT_NE(image, nullptr);
 
@@ -419,6 +419,53 @@ DISABLED_DRAW_TEST_F(CGContext, DrawAnImage, UIKitMimicTest) {
     CGAffineTransform shift = CGAffineTransformTranslate(flip, 0, bounds.size.height * -1);
     CGContextConcatCTM(context, shift);
 
+    CGContextDrawImage(context, bounds, image.get());
+}
+
+DRAW_TEST_F(CGContext, DrawAnImageWithOpacity, UIKitMimicTest) {
+    // Load an Image and draw it into the canvas context
+    auto drawingConfig = DrawingTestConfig::Get();
+
+    woc::unique_cf<CFStringRef> testFilename{ _CFStringCreateWithStdString(drawingConfig->GetResourcePath("png1.9.png")) };
+    woc::unique_cf<CGImageRef> image{ _CGImageCreateFromPNGFile(testFilename.get()) };
+    ASSERT_NE(image, nullptr);
+
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGAffineTransform flip = CGAffineTransformMakeScale(1, -1);
+    CGAffineTransform shift = CGAffineTransformTranslate(flip, 0, bounds.size.height * -1);
+    CGContextConcatCTM(context, shift);
+
+    CGContextSetAlpha(context, 0.7);
+    CGContextDrawImage(context, bounds, image.get());
+}
+
+DRAW_TEST_F(CGContext, DrawAnImageWithInterpolationQuality, UIKitMimicTest) {
+    auto drawingConfig = DrawingTestConfig::Get();
+
+    woc::unique_cf<CFStringRef> testFilename{ _CFStringCreateWithStdString(drawingConfig->GetResourcePath("png1.9.png")) };
+    woc::unique_cf<CGImageRef> image{ _CGImageCreateFromPNGFile(testFilename.get()) };
+    ASSERT_NE(image, nullptr);
+
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGContextSetInterpolationQuality(context, kCGInterpolationLow);
+    CGContextDrawImage(context, bounds, image.get());
+}
+
+DRAW_TEST_F(CGContext, DrawAnImageWithInterpolationQualityAndAlpha, UIKitMimicTest) {
+    auto drawingConfig = DrawingTestConfig::Get();
+    woc::unique_cf<CFStringRef> testFilename{ _CFStringCreateWithStdString(drawingConfig->GetResourcePath("png1.9.png")) };
+    woc::unique_cf<CGImageRef> image{ _CGImageCreateFromPNGFile(testFilename.get()) };
+    ASSERT_NE(image, nullptr);
+
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGContextSetAlpha(context, 0.25);
+    CGContextSetInterpolationQuality(context, kCGInterpolationHigh);
     CGContextDrawImage(context, bounds, image.get());
 }
 
