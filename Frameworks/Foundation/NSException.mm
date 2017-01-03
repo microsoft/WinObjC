@@ -22,6 +22,7 @@
 
 #include <COMIncludes.h>
 #include <roerrorapi.h>
+#include "wrl\wrappers\corewrappers.h"
 #include <COMIncludes_End.h>
 
 static const wchar_t* TAG = L"NSException";
@@ -249,13 +250,14 @@ NSUncaughtExceptionHandler* NSGetUncaughtExceptionHandler() {
 
 - (void)_processException {
     HRESULT hr = [self _hresult];
-    HSTRING_HEADER header;
-    HSTRING hsReason = nullptr;
-    
+    assert(hr != S_OK);
+
     if(self.reason != nil) {
         LPCWSTR reason = (LPCWSTR)([[self reason] cStringUsingEncoding:NSUnicodeStringEncoding]);
-        WindowsCreateStringReference(reason, wcslen(reason), &header, &hsReason);
+        Microsoft::WRL::Wrappers::HStringReference hstrRef(reason);
+        RoOriginateError(hr, hstrRef.Get());
+    } else {
+        RoOriginateError(hr, nullptr);
     }
-    RoOriginateError(hr, hsReason);
 }
 @end
