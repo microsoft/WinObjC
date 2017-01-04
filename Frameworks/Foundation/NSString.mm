@@ -2139,12 +2139,13 @@ static std::vector<NSStringEncoding> _getNSStringEncodings() {
 - (CFStringEncoding)_fastestEncodingInCFStringEncoding {
     // Return Unicode encoding as soon as a single non-ASCII character is found. Otherwise, return ASCII encoding.
     // Check characters in chunks for perf reasons
-    NSUInteger length = self.length;
     const size_t bufferSize = 128;
+    UniChar buf[bufferSize];
+
+    const NSUInteger length = self.length;
     NSRange range;
 
     for (range.location = 0; range.location < length; range.location += range.length) {
-        UniChar buf[bufferSize];
         range.length = std::min(length - range.location, bufferSize);
 
         [self getCharacters:buf range:range];
