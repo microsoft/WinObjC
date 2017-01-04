@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -18,33 +18,61 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreImage/CoreImage.h>
-#import "Starboard/SmartTypes.h"
+#import <Starboard/SmartTypes.h>
 #import "CALayerInternal.h"
 #import "../UIKit/NullCompositor.h"
+#import <CoreGraphics/CGImage.h>
+#import <ImageIO/ImageIO.h>
 
 #include <windows.h>
 
-DISABLED_TEST(CoreImage, CGImageFromRect) {
+static NSString* getPathToFile(NSString* fileName) {
+    static StrongId<NSString*> refPath = []() {
+        char fullPath[_MAX_PATH];
+        GetModuleFileNameA(NULL, fullPath, _MAX_PATH);
+        return [@(fullPath) stringByDeletingLastPathComponent];
+    }();
+    return [refPath stringByAppendingPathComponent:fileName];
+}
+
+static CFMutableDataRef ObtainJPEGRepresentationFromCGImage(CGImageRef image) {
+    CFMutableDataRef cfData = CFDataCreateMutable(NULL, 0);
+    CFAutorelease(cfData);
+    CGImageDestinationRef destination = CGImageDestinationCreateWithData(cfData, CFSTR("public.jpeg"), 1, NULL);
+    CFAutorelease(destination);
+    CGImageDestinationAddImage(destination, image, nil);
+    if (!CGImageDestinationFinalize(destination)) {
+        return nil;
+    }
+    return cfData;
+}
+
+TEST(CoreImage, CGImageFromRect) {
     SetCACompositor(new NullCompositor);
     CIContext* context = [CIContext contextWithOptions:nil];
     ASSERT_TRUE_MSG(context != nil, "Failed: CIContext is nil.");
 
-    char fullPath[_MAX_PATH];
-    GetModuleFileNameA(NULL, fullPath, _MAX_PATH);
-    char* executablePath = strrchr(fullPath, '\\');
-    const char* relativePathToPhoto = "\\Photo2.jpg";
-    strncpy(executablePath, relativePathToPhoto, strlen(relativePathToPhoto) + 1);
-    UIImage* photo = [UIImage imageNamed:[NSString stringWithCString:fullPath]];
+    UIImage* photo = [UIImage imageNamed:getPathToFile(@"Photo2.jpg")];
+    ASSERT_TRUE(photo != nil);
+
     CIImage* ciImage = [CIImage imageWithCGImage:photo.CGImage];
+    ASSERT_TRUE(ciImage != nil);
     CGImageRef cgImage = [context createCGImage:ciImage fromRect:CGRectMake(300, 600, 200, 200)];
-    photo = [UIImage imageWithCGImage:cgImage];
+    ASSERT_TRUE(cgImage != nullptr);
 
-    const char* relativePathToCroppedPhoto = "\\CroppedPhoto2.jpg";
-    strncpy(executablePath, relativePathToCroppedPhoto, strlen(relativePathToCroppedPhoto) + 1);
-    UIImage* croppedPhoto = [UIImage imageNamed:[NSString stringWithCString:fullPath]];
+    NSData* data = [NSData dataWithContentsOfFile:getPathToFile(@"CroppedPhoto2.jpg")];
+    ASSERT_TRUE(data != nil);
+    CIImage* croppedPhotoCIImage = [CIImage imageWithData:data];
+    ASSERT_TRUE(croppedPhotoCIImage != nil);
 
-    NSData* photoData = UIImagePNGRepresentation(photo);
-    NSData* croppedPhotoData = UIImagePNGRepresentation(croppedPhoto);
+    CGImageRef croppedPhoto = [context createCGImage:croppedPhotoCIImage fromRect:[croppedPhotoCIImage extent]];
+    ASSERT_TRUE(croppedPhoto != nullptr);
 
-    ASSERT_TRUE_MSG([photoData isEqualToData:croppedPhotoData], "Failed: Cropped image does not match reference image");
+    CFMutableDataRef originalImageCropped = ObtainJPEGRepresentationFromCGImage(cgImage);
+    ASSERT_TRUE(originalImageCropped != nil);
+
+    CFMutableDataRef croppedImage = ObtainJPEGRepresentationFromCGImage(croppedPhoto);
+    ASSERT_TRUE(croppedImage != nil);
+
+    ASSERT_TRUE(CFEqual(originalImageCropped, croppedImage));
 }

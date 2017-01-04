@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,7 +17,7 @@
 #import <StubReturn.h>
 #import <CoreImage/CIContext.h>
 
-#include "Starboard.h"
+#import <Starboard.h>
 #import "CIImageInternal.h"
 
 NSString* const kCIContextOutputColorSpace = @"kCIContextOutputColorSpace";
@@ -74,8 +74,7 @@ NSString* const kCIContextWorkingFormat = @"kCIContextWorkingFormat";
  @Notes parameter dict is ignored.
 */
 + (CIContext*)contextWithOptions:(NSDictionary*)dict {
-    CIContext* context = [[CIContext alloc] init];
-    return context;
+    return [[CIContext alloc] init];
 }
 
 /**
@@ -158,10 +157,10 @@ NSString* const kCIContextWorkingFormat = @"kCIContextWorkingFormat";
  @Notes
 */
 - (void)render:(CIImage*)image
-  toMTLTexture:(id<MTLTexture>)texture
- commandBuffer:(id<MTLCommandBuffer>)commandBuffer
-        bounds:(CGRect)bounds
-    colorSpace:(CGColorSpaceRef)colorSpace {
+     toMTLTexture:(id<MTLTexture>)texture
+    commandBuffer:(id<MTLCommandBuffer>)commandBuffer
+           bounds:(CGRect)bounds
+       colorSpace:(CGColorSpaceRef)colorSpace {
     UNIMPLEMENTED();
 }
 

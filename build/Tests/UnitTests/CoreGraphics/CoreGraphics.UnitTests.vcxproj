@@ -35,7 +35,7 @@
       <Project>{26da08da-d0b9-4579-b168-e7f0a5f20e57}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\..\CoreText\dll\CoreText.vcxproj">
-        <Project>{36deec5d-f77b-4c94-a63c-86fb716833de}</Project>
+      <Project>{36deec5d-f77b-4c94-a63c-86fb716833de}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\..\AutoLayout\dll\AutoLayout.vcxproj">
       <Project>{D036FDB1-F82C-40C7-B1B4-65F499EAE116}</Project>
@@ -43,8 +43,8 @@
     <ProjectReference Include="..\..\..\WinObjCRT\dll\WinObjCRT.vcxproj">
       <Project>{585b4870-0d6b-43a6-8e7e-ad08f7f507b6}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\CoreImage\lib\CoreImageLib.vcxproj">
-      <Project>{90A8C3CC-1430-41C8-B9B8-3994C5C118ED}</Project>
+    <ProjectReference Include="..\..\..\CoreImage\dll\CoreImage.vcxproj">
+      <Project>{3EFCDFF3-6013-448F-8611-534D0F819D6B}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
