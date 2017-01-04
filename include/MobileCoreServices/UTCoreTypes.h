@@ -16,7 +16,4 @@
 
 #pragma once
 
-#import <StubIncludes.h>
-#import <MobileCoreServices/MobileCoreServicesExport.h>
 #import <MobileCoreServices/UTType.h>
-#import <MobileCoreServices/UTCoreTypes.h>
