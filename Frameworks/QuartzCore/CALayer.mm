@@ -1528,10 +1528,11 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
         _ClearColorQuad(priv->backgroundColor);
     }
 
-    [CATransaction _setPropertyForLayer:self name:@"backgroundColor" value:(NSObject*)color];
     CGColorRef old = priv->_backgroundColor;
     priv->_backgroundColor = CGColorRetain(color);
     CGColorRelease(old);
+
+    [CATransaction _setPropertyForLayer:self name:@"backgroundColor" value:(NSObject*)color];
 
     [self setNeedsDisplay];
 }

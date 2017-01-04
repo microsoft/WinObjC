@@ -777,8 +777,6 @@ extern void CALayerAppearanceBackgroundColorChanged();
 class CoreAnimationTests {
 public:
     BEGIN_TEST_CLASS(CoreAnimationTests)
-        // TODO: Temporarily disabled due to failing tests; re-enable when 1526 is fixed.
-        TEST_CLASS_PROPERTY(L"ignore", L"true") 
     END_TEST_CLASS()
 
     TEST_CLASS_SETUP(CoreAnimationTestsSetup) {
