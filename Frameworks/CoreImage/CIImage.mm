@@ -129,7 +129,7 @@ NSString* const kCIImageAutoAdjustLevel = @"kCIImageAutoAdjustLevel";
     }
 
     if (self = [self init]) {
-        _cgImage.reset(CGImageCreateCopy(cgImage));
+        _cgImage.reset(CGImageRetain(cgImage));
         _extent = CGRectMake(0, 0, CGImageGetWidth(cgImage), CGImageGetHeight(cgImage));
     }
 
