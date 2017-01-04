@@ -49,6 +49,11 @@ COREGRAPHICS_EXPORT bool CGContextIsPointInPath(CGContextRef c, bool eoFill, flo
 
 COREGRAPHICS_EXPORT void CGContextDrawGlyphRun(CGContextRef ctx, const DWRITE_GLYPH_RUN* glyphRun);
 
+COREGRAPHICS_EXPORT void _CGContextPushBeginDraw(CGContextRef ctx);
+COREGRAPHICS_EXPORT void _CGContextPopEndDraw(CGContextRef ctx);
+COREGRAPHICS_EXPORT void _CGContextSafeInnerBeginDraw(CGContextRef ctx);
+COREGRAPHICS_EXPORT void _CGContextSafeInnerEndDraw(CGContextRef ctx);
+
 // TODO 1077:: Remove once D2D render target is implemented
 COREGRAPHICS_EXPORT void _CGContextSetScaleFactor(CGContextRef ctx, float scale);
 
@@ -56,6 +61,9 @@ class __CGContext : private objc_object {
 public:
     float scale;
     CGContextImpl* _backing;
+
+    // Reduces the number of BeginDraw() and EndDraw() calls needed, by counting in a stack-like manner
+    uint32_t _beginEndDrawDepth = 0;
 
     __CGContext(CGImageRef pDest);
     ~__CGContext();

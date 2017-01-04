@@ -1863,7 +1863,7 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, boo
     CGContextStrokePath();
 
     ID2D1RenderTarget* imgRenderTarget = _imgDest->Backing()->GetRenderTarget();
-    THROW_NS_IF_NULL(E_UNEXPECTED, imgRenderTarget);
+    THROW_HR_IF_NULL(E_UNEXPECTED, imgRenderTarget);
 
     // Apply the required transformations as set in the context.
     // We need some special handling in transform as CoreText in iOS renders from bottom left but DWrite on Windows does top left.
@@ -1898,7 +1898,7 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, boo
     D2D1::ColorF brushColor =
         D2D1::ColorF(curState->curFillColor.r, curState->curFillColor.g, curState->curFillColor.b, curState->curFillColor.a);
 
-    imgRenderTarget->BeginDraw();
+    _CGContextPushBeginDraw(_rootContext);
     // Draw the glyph using ID2D1RenderTarget
     ComPtr<ID2D1SolidColorBrush> brush;
     THROW_IF_FAILED(imgRenderTarget->CreateSolidColorBrush(brushColor, &brush));
@@ -1932,7 +1932,7 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, boo
         }
     }
 
-    THROW_IF_FAILED(imgRenderTarget->EndDraw());
+    _CGContextPopEndDraw(_rootContext);
 }
 
 // TODO 1077:: Remove once D2D render target is implemented

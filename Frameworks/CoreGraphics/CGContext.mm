@@ -1238,3 +1238,45 @@ void CGContextDrawGlyphRun(CGContextRef ctx, const DWRITE_GLYPH_RUN* glyphRun) {
 void _CGContextSetScaleFactor(CGContextRef ctx, float scale) {
     ctx->Backing()->_CGContextSetScaleFactor(scale);
 }
+
+#pragma region CGContextBeginDrawEndDraw
+
+void _CGContextPushBeginDraw(CGContextRef ctx) {
+    if ((ctx->_beginEndDrawDepth)++ == 0) {
+        ID2D1RenderTarget* imgRenderTarget = ctx->Backing()->DestImage()->Backing()->GetRenderTarget();
+        THROW_HR_IF_NULL(E_UNEXPECTED, imgRenderTarget);
+        imgRenderTarget->BeginDraw();
+    }
+}
+
+void _CGContextPopEndDraw(CGContextRef ctx) {
+    if (--(ctx->_beginEndDrawDepth) == 0) {
+        ID2D1RenderTarget* imgRenderTarget = ctx->Backing()->DestImage()->Backing()->GetRenderTarget();
+        THROW_HR_IF_NULL(E_UNEXPECTED, imgRenderTarget);
+        THROW_IF_FAILED(imgRenderTarget->EndDraw());
+    }
+}
+
+void _CGContextSafeInnerBeginDraw(CGContextRef ctx) {
+    ID2D1RenderTarget* imgRenderTarget = ctx->Backing()->DestImage()->Backing()->GetRenderTarget();
+    THROW_HR_IF_NULL(E_UNEXPECTED, imgRenderTarget);
+
+    if ((ctx->_beginEndDrawDepth) > 0) {
+        imgRenderTarget->EndDraw();
+    }
+
+    imgRenderTarget->BeginDraw();
+}
+
+void _CGContextSafeInnerEndDraw(CGContextRef ctx) {
+    ID2D1RenderTarget* imgRenderTarget = ctx->Backing()->DestImage()->Backing()->GetRenderTarget();
+    THROW_HR_IF_NULL(E_UNEXPECTED, imgRenderTarget);
+
+    THROW_IF_FAILED(imgRenderTarget->EndDraw());
+
+    if ((ctx->_beginEndDrawDepth) > 0) {
+        imgRenderTarget->BeginDraw();
+    }
+}
+
+#pragma endregion
