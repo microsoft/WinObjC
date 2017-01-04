@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -21,7 +21,8 @@
 #import <math.h>
 
 #import "CIImageInternal.h"
-#include "Starboard.h"
+#import "CGImageInternal.h"
+#import <Starboard.h>
 
 /** @Status Stub */
 const CIFormat kCIFormatARGB8 = StubConstant();
@@ -73,13 +74,65 @@ NSString* const kCIImageAutoAdjustLevel = @"kCIImageAutoAdjustLevel";
 /**
  @Status Interoperable
 */
-- (CIImage*)init {
++ (CIImage*)emptyImage {
+    return [[[CIImage alloc] init] autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (CGRect)extent {
+    return self->_extent;
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)init {
     if (self = [super init]) {
-        _cgImage = nil;
-        _color = nil;
-        _filter = nil;
         _extent = CGRectInfinite;
     }
+    return self;
+}
+
+- (instancetype)_initWithCGImage:(CGImageRef)image color:(CIColor*)color {
+    if (self = [self initWithCGImage:image]) {
+        _color.attach([static_cast<id>(color) copy]);
+    }
+
+    return self;
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithColor:(CIColor*)color {
+    if (!color) {
+        [self release];
+        return nil;
+    }
+
+    if (self = [self init]) {
+        _color.attach([static_cast<id>(color) copy]);
+    }
+
+    return self;
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithCGImage:(CGImageRef)cgImage {
+    if (!cgImage) {
+        [self release];
+        return nil;
+    }
+
+    if (self = [self init]) {
+        _cgImage.reset(CGImageCreateCopy(cgImage));
+        _extent = CGRectMake(0, 0, CGImageGetWidth(cgImage), CGImageGetHeight(cgImage));
+    }
+
     return self;
 }
 
@@ -87,7 +140,47 @@ NSString* const kCIImageAutoAdjustLevel = @"kCIImageAutoAdjustLevel";
  @Status Stub
  @Notes
 */
-+ (CIImage*)emptyImage {
+- (instancetype)initWithCGImage:(CGImageRef)image options:(NSDictionary*)d {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithImage:(UIImage*)image {
+    if (!image) {
+        [self release];
+        return nil;
+    }
+    return [self initWithCGImage:[image CGImage]];
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithImage:(UIImage*)image options:(NSDictionary*)options {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithData:(NSData*)data {
+    if (!data) {
+        [self release];
+        return nil;
+    }
+    return [self initWithCGImage:_CGImageGetImageFromData((void*)[data bytes], [data length])];
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithData:(NSData*)data options:(NSDictionary*)d {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -96,12 +189,8 @@ NSString* const kCIImageAutoAdjustLevel = @"kCIImageAutoAdjustLevel";
  @Status Interoperable
 */
 + (CIImage*)imageWithColor:(CIColor*)color {
-    CIImage* ret = [[CIImage alloc] init];
-    if (ret != nil) {
-        ret->_color.attach([static_cast<id>(color) copy]);
-        ret->_extent = CGRectMake(INFINITY, INFINITY, CGFLOAT_MAX, CGFLOAT_MAX);
-    }
-    return [ret autorelease];
+    RETURN_NULL_IF(!color);
+    return [[[CIImage alloc] initWithColor:color] autorelease];
 }
 
 /**
@@ -116,13 +205,26 @@ NSString* const kCIImageAutoAdjustLevel = @"kCIImageAutoAdjustLevel";
 /**
  @Status Interoperable
 */
++ (CIImage*)imageWithData:(NSData*)data {
+    RETURN_NULL_IF(!data);
+    return [[[CIImage alloc] initWithData:data] autorelease];
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (CIImage*)imageWithData:(NSData*)data options:(NSDictionary*)d {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Interoperable
+*/
 + (CIImage*)imageWithCGImage:(CGImageRef)image {
-    CIImage* ret = [[CIImage alloc] init];
-    if (ret != nil) {
-        ret->_cgImage.attach([static_cast<id>(image) copy]);
-        ret->_extent = CGRectMake(0, 0, CGImageGetWidth(image), CGImageGetHeight(image));
-    }
-    return [ret autorelease];
+    RETURN_NULL_IF(!image);
+    return [[[CIImage alloc] initWithCGImage:image] autorelease];
 }
 
 /**
@@ -188,24 +290,6 @@ NSString* const kCIImageAutoAdjustLevel = @"kCIImageAutoAdjustLevel";
     return StubReturn();
 }
 
-/**
- @Status Stub
- @Notes
-*/
-+ (CIImage*)imageWithData:(NSData*)data {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-+ (CIImage*)imageWithData:(NSData*)data options:(NSDictionary*)d {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
 // clang-format off
 // clang format doesn't approve of unlabeled parameters
 /**
@@ -263,28 +347,21 @@ NSString* const kCIImageAutoAdjustLevel = @"kCIImageAutoAdjustLevel";
  @Status Interoperable
 */
 - (CIImage*)imageByCroppingToRect:(CGRect)rect {
-    CIImage* ret = [[CIImage alloc] init];
-    if (ret == nil) {
-        return nil;
-    }
-
-    ret->_extent = rect;
     if (self->_cgImage != nil) {
-        CGImageRef croppedImage = CGImageCreateWithImageInRect(static_cast<CGImageRef>((id)self->_cgImage), rect);
-        ret->_cgImage.attach([static_cast<id>(croppedImage) copy]);
+        woc::unique_cf<CGImageRef> croppedImage{ CGImageCreateWithImageInRect(self->_cgImage.get(), rect) };
+        return [CIImage imageWithCGImage:croppedImage.get()];
     } else if (self->_color != nil) {
-        ret->_color.attach([self->_color copy]);
         UIGraphicsBeginImageContext(rect.size);
         CGContextRef context = UIGraphicsGetCurrentContext();
         CIColor* color = static_cast<CIColor*>(self->_color);
         CGContextSetRGBFillColor(context, color.red, color.green, color.blue, color.alpha);
         CGContextFillRect(context, rect);
-        CGImageRef imageRef = CGBitmapContextCreateImage(context);
-        ret->_cgImage.attach([static_cast<id>(imageRef) copy]);
+        woc::unique_cf<CGImageRef> imageRef{ CGBitmapContextCreateImage(context) };
         UIGraphicsEndImageContext();
+        return [[[CIImage alloc] _initWithCGImage:imageRef.get() color:self->_color] autorelease];
     }
 
-    return [ret autorelease];
+    return [CIImage emptyImage];
 }
 
 /**
@@ -318,52 +395,7 @@ NSString* const kCIImageAutoAdjustLevel = @"kCIImageAutoAdjustLevel";
  @Status Stub
  @Notes
 */
-- (instancetype)initWithColor:(CIColor*)color {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
 - (instancetype)initWithBitmapData:(NSData*)d bytesPerRow:(size_t)bpr size:(CGSize)size format:(CIFormat)f colorSpace:(CGColorSpaceRef)c {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Interoperable
-*/
-- (instancetype)initWithCGImage:(CGImageRef)cgImage {
-    self->_cgImage.attach([static_cast<id>(cgImage) copy]);
-    self->_extent = CGRectMake(0, 0, CGImageGetWidth(cgImage), CGImageGetHeight(cgImage));
-    return self;
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (instancetype)initWithCGImage:(CGImageRef)image options:(NSDictionary*)d {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (instancetype)initWithImage:(UIImage*)image {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (instancetype)initWithImage:(UIImage*)image options:(NSDictionary*)options {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -418,24 +450,6 @@ NSString* const kCIImageAutoAdjustLevel = @"kCIImageAutoAdjustLevel";
  @Notes
 */
 - (instancetype)initWithCVPixelBuffer:(CVPixelBufferRef)buffer options:(NSDictionary*)dict {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (instancetype)initWithData:(NSData*)data {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (instancetype)initWithData:(NSData*)data options:(NSDictionary*)d {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -548,16 +562,6 @@ NSString* const kCIImageAutoAdjustLevel = @"kCIImageAutoAdjustLevel";
 
 - (CGImageRef)_CGImageFromRect:(CGRect)rect {
     CIImage* croppedImage = [self imageByCroppingToRect:rect];
-    return static_cast<CGImageRef>((id)croppedImage->_cgImage);
+    return static_cast<CGImageRef>(croppedImage->_cgImage.get());
 }
-
-/**
- @Status Interoperable
-*/
-- (void)dealloc {
-    _color = nil;
-    _cgImage = nil;
-    [super dealloc];
-}
-
 @end
