@@ -274,8 +274,7 @@ public:
     }
 
     TEST_METHOD_CLEANUP(NSUserDefaultsCleanup) {
-        (void)FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication);
-        return true;
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
     }
 
     TEST_METHOD(NSUserDefaults_Basic) {
@@ -311,8 +310,7 @@ public:
     }
 
     TEST_METHOD_CLEANUP(NSBundleCleanup) {
-        (void)FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication);
-        return true;
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
     }
 
     TEST_METHOD(NSBundle_MSAppxURL) {
@@ -341,8 +339,7 @@ public:
     }
 
     TEST_METHOD_CLEANUP(AssetsLibraryCleanup) {
-        (void)FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication);
-        return true;
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
     }
 
     TEST_METHOD(AssetsLibrary_GetVideoAsset) {
@@ -367,8 +364,7 @@ public:
     }
 
     TEST_METHOD_CLEANUP(CortanaVoiceCommandForegroundCleanup) {
-        (void)FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication);
-        return true;
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
     }
 
     TEST_METHOD(Cortana_VoiceCommandForegroundActivationDelegateMethodsCalled) {
@@ -390,8 +386,7 @@ public:
     }
 
     TEST_METHOD_CLEANUP(CortanaProtocolForegroundCleanup) {
-        (void)FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication);
-        return true;
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
     }
 
     TEST_METHOD(Cortana_ProtocolForegroundActivationDelegateMethodsCalled) {
@@ -412,8 +407,7 @@ class ToastNotificationForegroundActivation {
     }
 
     TEST_METHOD_CLEANUP(ToastNotificationForegroundCleanup) {
-        (void)FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication);
-        return true;
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
     }
 
     TEST_METHOD(ToastNotification_ForegroundActivationDelegateMethodsCalled) {
@@ -460,8 +454,7 @@ public:
     }
 
     TEST_METHOD_CLEANUP(FileActivationForegroundActivationCleanup) {
-        (void)FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication);
-        return true;
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
     }
 
     TEST_METHOD(FileActivation_TestForegroundActivationDelegateMethodsCalled) {
@@ -524,8 +517,7 @@ public:
     }
 
     TEST_METHOD_CLEANUP(UIKitTestsCleanup) {
-        (void)FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication);
-        return true;
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
     }
 
     TEST_METHOD(UIView_Create) {
@@ -697,8 +689,7 @@ public:
     }
 
     TEST_METHOD_CLEANUP(ProjectionTestCleanup) {
-        (void)FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication);
-        return true;
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
     }
 
     TEST_METHOD(ProjectionTest_WUCCoreDispatcherSanity) {
@@ -765,8 +756,7 @@ public:
     }
 
     TEST_METHOD_CLEANUP(NSURLStorageFileTestsCleanup) {
-        (void)FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication);
-        return true;
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
     }
 
     TEST_METHOD(NSURLTests_StorageFileURL) {
@@ -790,8 +780,7 @@ public:
     }
 
     TEST_METHOD_CLEANUP(CoreAnimationTestsCleanup) {
-        (void)FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication);
-        return true;
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
     }
 
     TEST_METHOD(CALayerAppearance_OpacityChanged) {

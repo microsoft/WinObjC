@@ -1532,6 +1532,10 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     priv->_backgroundColor = CGColorRetain(color);
     CGColorRelease(old);
 
+    // The CATransaction is now synchronous and in this scenario, the backgroundColor
+    // is updated almost immediately.By setting the priv->background first,
+    // we can ensure both states are kept in sync which is useful when performing
+    // automated testing.
     [CATransaction _setPropertyForLayer:self name:@"backgroundColor" value:(NSObject*)color];
 
     [self setNeedsDisplay];
