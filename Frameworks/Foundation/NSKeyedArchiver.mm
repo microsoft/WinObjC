@@ -25,6 +25,7 @@
 #import "Foundation/NSPropertyListSerialization.h"
 #import "Foundation/NSKeyedArchiver.h"
 #import "Foundation/NSAutoreleasePool.h"
+#import "ForFoundationOnly.h"
 #import "Etc.h"
 #import "NSLogging.h"
 #import "Hash.h"
@@ -65,12 +66,7 @@ static inline void _checkKey(NSString* aKey, NSMutableDictionary* _enc) {
 * Make a dictionary referring to the object at ref in the array of all objects.
 */
 static id makeReference(unsigned ref) {
-    id n;
-    id d;
-
-    n = [NSNumber numberWithUnsignedInt:ref];
-    d = [NSDictionary dictionaryWithObject:n forKey:@"CF$UID"];
-    return d;
+    return [static_cast<id>(_CFKeyedArchiverUIDCreate(kCFAllocatorDefault, ref)) autorelease];
 }
 
 @implementation NSKeyedArchiver {
