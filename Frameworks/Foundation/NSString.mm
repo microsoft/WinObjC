@@ -493,12 +493,12 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
  @Notes
 */
 - (BOOL)getBytes:(void*)buffer
-       maxLength:(NSUInteger)maxBuf
-      usedLength:(NSUInteger*)usedLength
-        encoding:(NSStringEncoding)encoding
-         options:(NSStringEncodingConversionOptions)options
-           range:(NSRange)range
-  remainingRange:(NSRangePointer)left {
+         maxLength:(NSUInteger)maxBuf
+        usedLength:(NSUInteger*)usedLength
+          encoding:(NSStringEncoding)encoding
+           options:(NSStringEncodingConversionOptions)options
+             range:(NSRange)range
+    remainingRange:(NSRangePointer)left {
     CFIndex totalBytesWritten = 0;
     unsigned int numCharsProcessed = 0;
     CFStringEncoding cfStringEncoding = CFStringConvertNSStringEncodingToEncoding(encoding);
@@ -1328,10 +1328,10 @@ BOOL _isALineSeparatorTypeCharacter(unichar ch) {
 }
 
 - (void)_getBlockStart:(NSUInteger*)startPtr
-                   end:(NSUInteger*)endPtr
-           contentsEnd:(NSUInteger*)contentsEndPtr
-              forRange:(NSRange)range
-  stopAtLineSeparators:(BOOL)line {
+                     end:(NSUInteger*)endPtr
+             contentsEnd:(NSUInteger*)contentsEndPtr
+                forRange:(NSRange)range
+    stopAtLineSeparators:(BOOL)line {
     NSUInteger len = [self length];
     unichar ch;
 
@@ -2138,8 +2138,18 @@ static std::vector<NSStringEncoding> _getNSStringEncodings() {
 
 - (CFStringEncoding)_fastestEncodingInCFStringEncoding {
     // Return Unicode encoding as soon as a single non-ASCII character is found. Otherwise, return ASCII encoding.
-    for (int32_t i = 0; i < [self length]; i++) {
-        if ([self characterAtIndex:i] > 0x7F) {
+    // Check characters in chunks for perf reasons
+    NSUInteger length = self.length;
+    const size_t bufferSize = 128;
+    NSRange range;
+
+    for (range.location = 0; range.location < length; range.location += range.length) {
+        UniChar buf[bufferSize];
+        range.length = std::min(length - range.location, bufferSize);
+
+        [self getCharacters:buf range:range];
+
+        if (std::any_of(buf, buf + range.length, [](UniChar c) { return c > 0x7F; })) {
             return kCFStringEncodingUnicode;
         }
     }
