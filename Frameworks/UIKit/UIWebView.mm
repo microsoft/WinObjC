@@ -251,6 +251,23 @@ static void _initUIWebView(UIWebView* self) {
 }
 
 /**
+ @Status Interoperable
+*/
+- (void)evaluateJavaScript:(NSString*)javaScriptString completionHandler:(void (^)(id, NSError*))completionHandler {
+  
+    [_xamlWebControl invokeScriptAsync:@"eval" arguments:[NSArray arrayWithObject:javaScriptString] success:^void(NSString* success) {
+        if(completionHandler != nil) {
+            completionHandler(success, nil);
+        }
+    } 
+        failure:^void(NSError* failure) {
+                if(completionHandler != nil) {
+                    completionHandler(nil, failure);
+                }
+        }];
+}
+
+/**
  @Status Stub
 */
 - (void)setDataDetectorTypes:(UIDataDetectorTypes)types {
