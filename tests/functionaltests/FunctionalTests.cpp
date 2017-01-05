@@ -185,8 +185,7 @@ public:
     }
 
     TEST_METHOD_CLEANUP(NSURLCleanup) {
-        (void)FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication);
-        return true;
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
     }
 
     //
@@ -427,8 +426,7 @@ class ActivatedAppReceivesToastNotification {
     }
 
     TEST_METHOD_CLEANUP(ActivatedAppReceivesToastNotificationCleanup) {
-        (void)FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication);
-        return true;
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
     }
 
     TEST_METHOD(ToastNotification_ActivatedAppReceivesToastNotification) {
