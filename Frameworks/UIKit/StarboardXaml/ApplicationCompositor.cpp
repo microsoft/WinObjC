@@ -59,24 +59,19 @@ extern "C" void RunApplicationMain(Platform::String^ principalClassName,
                                    float windowHeight,
                                    ActivationType activationType,
                                    Platform::Object^ activationArg) {
-    // Return from activation immediatly; push all subsequent app launch work to 
-    // be performed *after* initial app activation.
-    CoreWindow::GetForCurrentThread()->Dispatcher->RunAsync(
-        CoreDispatcherPriority::Normal, 
-        ref new DispatchedHandler([=]() {
-            // Perform initialization
-            InitializeApp();
 
-            // Kick off iOS application main startup
-            // Convert Object^ to IInspectable* so it can be passed into Objective C and there converted to its projection
-            ApplicationMainStart(
-                Strings::WideToNarrow(principalClassName->Data()).c_str(),
-                Strings::WideToNarrow(delegateClassName->Data()).c_str(),
-                windowWidth,
-                windowHeight,
-                activationType,
-                reinterpret_cast<IInspectable*>(activationArg));
-    }));
+    // Perform initialization
+    InitializeApp();
+
+    // Kick off iOS application main startup
+    // Convert Object^ to IInspectable* so it can be passed into Objective C and there converted to its projection
+    ApplicationMainStart(
+            Strings::WideToNarrow(principalClassName->Data()).c_str(),
+            Strings::WideToNarrow(delegateClassName->Data()).c_str(),
+            windowWidth,
+            windowHeight,
+            activationType,
+            reinterpret_cast<IInspectable*>(activationArg));
 }
 
 // clang-format off
