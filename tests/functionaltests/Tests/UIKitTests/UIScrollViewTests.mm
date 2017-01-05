@@ -30,17 +30,36 @@
 #include "ObjCXamlControls.h"
 #import "UWP/WindowsUIXamlControls.h"
 
-TEST(UIScrollView, CreateXamlElement) {
-    // TODO: Switch to UIKit.Xaml projections when they're available.
-    Microsoft::WRL::ComPtr<IInspectable> xamlElement(XamlCreateScrollViewer());
-    ASSERT_TRUE(xamlElement);
-}
+class UIKitScrollViewTests {
+public:
+    BEGIN_TEST_CLASS(UIKitScrollViewTests)
+    END_TEST_CLASS()
 
-TEST(UIScrollView, GetXamlElement) {
-    UIView* view = [[[UIScrollView alloc] init] autorelease];
-    WXFrameworkElement* backingElement = [view xamlElement];
-    ASSERT_TRUE(backingElement);
+    TEST_CLASS_SETUP(UIKitTestsSetup) {
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+    }
 
-    // TODO: Fix up when UIScrollView moves fully to XAML
-    ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
-}
+    TEST_METHOD_CLEANUP(UIKitTestsCleanup) {
+        FunctionalTestCleanupUIApplication();
+        return true;
+    }
+
+    TEST_METHOD(CreateXamlElement) {
+        FrameworkHelper::RunOnUIThread([]() {
+            // TODO: Switch to UIKit.Xaml projections when they're available.
+            Microsoft::WRL::ComPtr<IInspectable> xamlElement(XamlCreateScrollViewer());
+            ASSERT_TRUE(xamlElement);
+        });
+    }
+
+    TEST_METHOD(GetXamlElement) {
+        FrameworkHelper::RunOnUIThread([]() {
+            UIView* view = [[[UIScrollView alloc] init] autorelease];
+            WXFrameworkElement* backingElement = [view xamlElement];
+            ASSERT_TRUE(backingElement);
+
+            // TODO: Fix up when UIScrollView moves fully to XAML
+            ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
+        });
+    }
+};
