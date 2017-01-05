@@ -17,6 +17,9 @@
 
 #if defined(__OBJC__)
 
+#import <QuartzCore/CAAnimation.h>
+#import <QuartzCore/CALayer.h>
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wignored-attributes"
 

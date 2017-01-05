@@ -13,13 +13,15 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
+
+#import <UIKit/UINavigationController.h>
+#import <UIKit/UINavigationBarDelegate.h>
 
 @class UINavigationItem;
 @class UINavigationBar;
 
-@interface UINavigationController ()
+@interface UINavigationController () <UINavigationBarDelegate>
 - (void)_navigationBar:(UINavigationBar*)bar didPopItem:(UINavigationItem*)item;
 - (void)_layoutContainer;
 @end

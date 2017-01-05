@@ -16,9 +16,13 @@
 
 #import "Starboard.h"
 #import "_UIGroupEdgeView.h"
-#import "CoreGraphics/CGContext.h"
-#import "UIKit/UIColor.h"
 #import "UIViewInternal.h"
+
+#import <UIKit/UIColor.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UIGraphics.h>
+
+#import <CoreGraphics/CGContext.h>
 
 struct GroupBackgroundTexture {
     idretain _image;

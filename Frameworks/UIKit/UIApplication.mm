@@ -19,17 +19,32 @@
 
 #include "Platform/EbrPlatform.h"
 
-#include "CoreFoundation/CFArray.h"
-#include "CoreGraphics/CGContext.h"
+#import <UIKit/NSValue+UIKitAdditions.h>
+#include <UIKit/UIColor.h>
+#include <UIKit/UIAlertView.h>
+#include <UIKit/UIApplication.h>
+#include <UIKit/UIApplicationDelegate.h>
+#include <UIKit/UIImage.h>
+#include <UIKit/UIImageView.h>
+#include <UIKit/UITextInputTraits.h>
+#include <UIKit/UIView.h>
+#include <UIKit/UIViewController.h>
+#include <UIKit/UIWindow.h>
 
-#include "Foundation/NSMutableDictionary.h"
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSString.h"
+#include <CoreFoundation/CFArray.h>
+
+#include <CoreGraphics/CGContext.h>
+
+#include <Foundation/NSMutableDictionary.h>
+#include <Foundation/NSMutableArray.h>
+#include <Foundation/NSString.h>
+
+#include <QuartzCore/CALayer.h>
+#include <QuartzCore/CATransaction.h>
+
 #include "NSRunLoopSource.h"
 #include "NSRunLoop+Internal.h"
-#include "UIKit/UIView.h"
-#include "UIKit/UIImage.h"
-#include "UIKit/UIColor.h"
+
 #include "UIViewInternal.h"
 #include "UIApplicationInternal.h"
 #include "UIKit/UIGestureRecognizerSubclass.h"
@@ -301,7 +316,7 @@ static id findTopActionButtons(NSMutableArray* arr, NSArray* windows, UIView* ro
             int windowCount = [windows count];
 
             for (int j = windowCount - 1; j >= 0; j--) {
-                id curWindow = [windows objectAtIndex:j];
+                UIWindow* curWindow = [windows objectAtIndex:j];
 
                 middle.x = bounds.origin.x + bounds.size.width / 2.0f;
                 middle.y = bounds.origin.y + bounds.size.height / 2.0f;

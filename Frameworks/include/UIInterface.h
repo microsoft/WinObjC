@@ -14,7 +14,8 @@
 //
 //******************************************************************************
 
-#include <UIKit/UIKitExport.h>
+#import <UIKit/UIApplication.h>
+#import <UIKit/UIKitExport.h>
 
 UIKIT_EXPORT void UIRequestTransactionProcessing();
 UIKIT_EXPORT void UIShutdown();

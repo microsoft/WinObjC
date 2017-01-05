@@ -14,6 +14,9 @@
 //
 //******************************************************************************
 
+#import "UIKit/NSLayoutAnchor.h"
+#import "UIKit/NSLayoutConstraint.h"
+
 @interface NSLayoutAnchor () {
 @public
     NSLayoutAttribute _attr;

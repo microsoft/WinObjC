@@ -15,17 +15,25 @@
 //******************************************************************************
 
 #import "Starboard.h"
-#import "UIKit/UIView.h"
-#import "UIKit/UIControl.h"
-#import "UIKit/UIAlertView.h"
-#import "UIKit/UIAlertViewDelegate.h"
-#import "UIKit/UIApplication.h"
-#import "UIKit/UIColor.h"
-#import "Foundation/NSString.h"
-#import "Foundation/NSMutableArray.h"
-#import "CoreGraphics/CGAffineTransform.h"
 
-#import "UIKit/UIImage.h"
+#import <UIKit/NSString+UIKitAdditions.h>
+#import <UIKit/UIAlertView.h>
+#import <UIKit/UIAlertViewDelegate.h>
+#import <UIKit/UIApplication.h>
+#import <UIKit/UIButton.h>
+#import <UIKit/UIColor.h>
+#import <UIKit/UIControl.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UIKitTypes.h>
+#import <UIKit/UILabel.h>
+#import <UIKit/UIScreen.h>
+#import <UIKit/UIView.h>
+
+#import <Foundation/NSString.h>
+#import <Foundation/NSMutableArray.h>
+
+#import <CoreGraphics/CGAffineTransform.h>
+
 #import "UIFontInternal.h"
 #import "UIApplicationInternal.h"
 #import <objc/objc-arc.h>

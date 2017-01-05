@@ -14,6 +14,8 @@
 //
 //******************************************************************************
 
+#import <UIKit/UIDatePicker.h>
+
 @class UIDatePicker;
 @class UIColor;
 

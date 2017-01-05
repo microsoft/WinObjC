@@ -17,6 +17,8 @@
 #pragma once
 #import "UiKit/UIBarButtonItem.h"
 
+@class UIRuntimeEventConnection;
+
 @interface UIBarButtonItem (Internals)
 
 @property (nonatomic, readonly) float margin;

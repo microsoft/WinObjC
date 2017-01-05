@@ -16,16 +16,22 @@
 
 #import <StubReturn.h>
 #import <Starboard.h>
-#import <Foundation/NSString.h>
+
 #import <UIKit/UIColor.h>
 #import <UIKit/UIFont.h>
 #import <UIKit/UIImageView.h>
 #import <UIKit/UIImage.h>
+#import <UIKit/UIInterface.h>
 #import <UIKit/UILabel.h>
 #import <UIKit/UIPickerView.h>
+#import <UIKit/UIPickerViewDataSource.h>
+#import <UIKit/UIPickerViewDelegate.h>
 #import <UIKit/UIScrollView.h>
 #import <UIKit/UITableViewCell.h>
 #import <UIKit/UIView.h>
+
+#import <Foundation/NSString.h>
+
 #import <UIViewInternal.h>
 #import "UIDatePicker+Internal.h"
 

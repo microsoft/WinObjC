@@ -15,13 +15,18 @@
 //******************************************************************************
 
 #import "Starboard.h"
-#import "Foundation/NSString.h"
-#import "CoreGraphics/CGContext.h"
-#import "UIKit/UIView.h"
-#import "UIKit/UIFont.h"
-#import "UIKit/UIColor.h"
-#import "UIKit/UILabel.h"
-#import "UIKit/UIAccessibility.h"
+
+#import <UIKit/NSString+UIKitAdditions.h>
+#import <UIKit/UIAccessibility.h>
+#import <UIKit/UIColor.h>
+#import <UIKit/UIFont.h>
+#import <UIKit/UILabel.h>
+#import <UIKit/UIView.h>
+
+#import <CoreGraphics/CGContext.h>
+
+#import <Foundation/NSString.h>
+
 #import "UIFontInternal.h"
 #import "CGContextInternal.h"
 #import "StarboardXaml/DisplayProperties.h"

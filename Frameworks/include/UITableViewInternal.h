@@ -15,6 +15,12 @@
 //******************************************************************************
 #pragma once
 
+#include <UIKit/UICollectionViewDelegate.h>
+#include <UIKit/UIStoryboardSegueTemplate.h>
+#include <UIKit/UITableView.h>
+#include <UIKit/UITableViewDataSource.h>
+#include <UIKit/UITableViewDelegate.h>
+
 #include <unordered_map>
 #include <vector>
 
@@ -24,6 +30,7 @@ class TableViewRow;
 class ReusableCell;
 class VisibleComponents;
 
+@class UIButton;
 @class UICollectionViewData;
 
 struct UITableViewPriv {

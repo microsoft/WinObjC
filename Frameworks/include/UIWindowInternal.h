@@ -16,6 +16,8 @@
 
 #pragma once
 
+@class UIViewController;
+
 @interface UIWindow ()
 - (UIWindow*)_initWithContentRect:(CGRect)pos;
 - (void)_setRootViewController:(UIViewController*)controller;

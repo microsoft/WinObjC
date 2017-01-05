@@ -18,9 +18,10 @@
 @public
     id _delegate;
     idretain _title;
-    idretain _image;
-    idretain _selectedBackground, _highlightedBackground;
-    idretain _dividerImage;
+    UIImage* _image;
+    UIImage* _selectedBackground;
+    UIImage* _highlightedBackground;
+    UIImage* _dividerImage;
     idretain _segmentFont;
     idretain _textColor[2];
     StrongId<UIColor> _tintColor;

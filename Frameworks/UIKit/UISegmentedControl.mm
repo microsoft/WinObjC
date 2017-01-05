@@ -15,16 +15,21 @@
 //******************************************************************************
 
 #import "Starboard.h"
-#import "UIKit/UIView.h"
-#import "UIKit/UIControl.h"
-#import "Foundation/NSString.h"
-#import "Foundation/NSBundle.h"
-#import "Foundation/NSMutableDictionary.h"
-#import "UIKit/UISegmentedControl.h"
-#import "UIKit/UIColor.h"
+#import "StubReturn.h"
+
+#import <UIKit/NSString+UIKitAdditions.h>
+#import <UIKit/UIControl.h>
+#import <UIKit/UIColor.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UISegmentedControl.h>
+#import <UIKit/UIView.h>
+
+#import <Foundation/NSString.h>
+#import <Foundation/NSBundle.h>
+#import <Foundation/NSMutableDictionary.h>
+
 #import "UISegment.h"
 #import <math.h>
-#import "StubReturn.h"
 #import "UIViewInternal.h"
 #import "UISegmentedControlInternal.h"
 
@@ -117,7 +122,7 @@ static float widthForItems(id items) {
         if ([curItem isKindOfClass:[NSString class]]) {
             CGSize size = { 0, 0 };
 
-            size = [curItem sizeWithFont:font];
+            size = [(NSString*)curItem sizeWithFont:font];
             float width = 10.0f + size.width;
             if (width > maxItemWidth) {
                 maxItemWidth = width;
@@ -126,7 +131,7 @@ static float widthForItems(id items) {
         if ([curItem isKindOfClass:[UIImage class]]) {
             CGSize size = { 0, 0 };
 
-            size = [curItem size];
+            size = [(UIImage*)curItem size];
             float width = 10.0f + size.width;
             if (width > maxItemWidth) {
                 maxItemWidth = width;

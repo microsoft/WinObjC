@@ -18,6 +18,17 @@
 #import <Starboard.h>
 #import <StubReturn.h>
 
+#import <UIKit/NSString+UIKitAdditions.h>
+#import <UIKit/UIColor.h>
+#import <UIKit/UIControl.h>
+#import <UIKit/UIFont.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UIImageView.h>
+#import <UIKit/UITableViewCell.h>
+#import <UIKit/UITextField.h>
+#import <UIKit/UIView.h>
+#import <UIKit/UIViewController.h>
+
 #import "XamlControls.h"
 #import "XamlUtilities.h"
 
@@ -30,16 +41,6 @@
 #import "UIResponderInternal.h"
 #import <Foundation/NSNotificationCenter.h>
 #import <Foundation/NSTimer.h>
-
-#import <UIKit/UIColor.h>
-#import <UIKit/UIControl.h>
-#import <UIKit/UIFont.h>
-#import <UIKit/UIImage.h>
-#import <UIKit/UIImageView.h>
-#import <UIKit/UITableViewCell.h>
-#import <UIKit/UITextField.h>
-#import <UIKit/UIView.h>
-#import <UIKit/UIViewController.h>
 
 #import <UWP/WindowsUIXamlControls.h>
 

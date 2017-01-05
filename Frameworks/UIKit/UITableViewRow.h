@@ -14,6 +14,8 @@
 //
 //******************************************************************************
 
+#import <UIKit/UITableViewCell.h>
+
 @interface UITableViewRow : NSObject {
 @public
     float _height;

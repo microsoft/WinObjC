@@ -17,9 +17,23 @@
 #import <StubReturn.h>
 #import "Starboard.h"
 
+#import <UIKit/UIGraphics.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UIImageView.h>
+#import <UIKit/UILayoutGuide.h>
+#import <UIKit/UINavigationController.h>
+#import <UIKit/UITextField.h>
+#import <UIKit/UIView.h>
+#import <UIKit/UIWindow.h>
+
+#import <UIKit/UIGestureRecognizerDelegate.h>
+#import <UIKit/UIGestureRecognizerSubclass.h>
+#import <UIKit/UILongPressGestureRecognizer.h>
+#import <UIKit/UIPinchGestureRecognizer.h>
+#import <UIKit/UISwipeGestureRecognizer.h>
+#import <UIKit/UITapGestureRecognizer.h>
+
 #import "UIAnimationNotification.h"
-#import "QuartzCore/CABasicAnimation.h"
-#import "QuartzCore/CALayer.h"
 #import "UIAppearanceSetter.h"
 #import "UIViewInternal.h"
 #import "UIWindowInternal.h"
@@ -29,16 +43,22 @@
 #import "CAAnimationInternal.h"
 #import <AutoLayout.h>
 #import <NSLayoutConstraint+AutoLayout.h>
-#import <UIView+AutoLayout.h>
 #import "NSLayoutAnchorInternal.h"
+#import <UILayoutGuide+AutoLayout.h>
+#import <UIView+AutoLayout.h>
 #import <windows.h>
 #import <LoggingNative.h>
 #import <NSLogging.h>
 #import <objc/blocks_runtime.h>
-#import "UWP/WindowsUIXamlControls.h"
 #import "UIEventInternal.h"
 #import "UITouchInternal.h"
 #import "_UIDirectManipulationRecognizer.h"
+
+#import <QuartzCore/CABasicAnimation.h>
+#import <QuartzCore/CALayer.h>
+#import <QuartzCore/CAMediaTimingFunction.h>
+#import <QuartzCore/CATransition.h>
+#import <QuartzCore/CoreAnimationFunctions.h>
 
 #import <math.h>
 #import <string>

@@ -13,9 +13,11 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _UIVIEWCONTROLLERPRIVATE_H_
-#define _UIVIEWCONTROLLERPRIVATE_H_
+#import <UIKit/UIViewController.h>
+#import <UIKit/UIViewControllerAnimatedTransitioning.h>
+#import <UIKit/UIViewControllerContextTransitioning.h>
 
 enum ControllerVisibiltyState {
     controllerNotVisible,
@@ -26,6 +28,14 @@ enum ControllerVisibiltyState {
     controllerWillDisappearAnimated
 };
 
+@class UIBarButtonItem;
+@class UINavigationItem;
+@class UINavigationController;
+@class UIPopoverPresentationController;
+@class UIPresentationController;
+@class UISearchDisplayController;
+@class UIStoryboard;
+@class UITabBarItem;
 @class WXCPage;
 
 struct UIViewControllerPriv {
@@ -99,5 +109,3 @@ struct UIViewControllerPriv {
 - (void)_setRotation:(UIInterfaceOrientation)orientation animated:(BOOL)animated;
 - (BOOL)_rotationLocked:(UIInterfaceOrientation)curOrientation;
 @end
-
-#endif

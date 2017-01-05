@@ -15,6 +15,7 @@
 //******************************************************************************
 #pragma once
 
+#import <QuartzCore/CATransaction.h>
 #import "CACompositor.h"
 
 @interface CATransaction (Internal)

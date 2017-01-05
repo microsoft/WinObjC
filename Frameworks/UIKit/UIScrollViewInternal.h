@@ -13,8 +13,9 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
+
+#import <UIKit/UIScrollView.h>
 
 @interface UIScrollView ()
 - (void)_clampOffset;

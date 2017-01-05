@@ -18,10 +18,13 @@
 #import "Starboard.h"
 #import "LayerAnimation.h"
 
+#import <UIKit/NSValue+UIKitAdditions.h>
+#import <UIKit/UIApplication.h>
+
+#import <QuartzCore/CoreAnimationFunctions.h>
+
 #import "CAAnimationInternal.h"
 #import "Quaternion.h"
-
-#import <UIKit/UIApplication.h>
 
 static const wchar_t* TAG = L"LayerAnimation";
 

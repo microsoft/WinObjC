@@ -14,6 +14,8 @@
 //
 //******************************************************************************
 
+#import <UIKit/UIWindow.h>
+
 #include <COMIncludes.h>
 #import "ApplicationMain.h"
 #import <windows.foundation.h>

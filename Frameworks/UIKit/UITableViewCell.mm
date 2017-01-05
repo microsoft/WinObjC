@@ -17,8 +17,18 @@
 #define NOMINMAX
 
 #import "Starboard.h"
+
+#import <UIKit/UIButton.h>
+#import <UIKit/UIControl.h>
+#import <UIKit/UIFont.h>
+#import <UIKit/UILabel.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UIImageView.h>
+#import <UIKit/UISwipeGestureRecognizer.h>
+#import <UIKit/UITextField.h>
+#import <UIKit/UIView.h>
+
 #import "UITableViewContentView.h"
-#import "UIKit/UILabel.h"
 #import "UIViewInternal.h"
 #import "_UIGroupEdgeView.h"
 #import "UITableViewInternal.h"
@@ -873,7 +883,7 @@ static id buildInternalAccessory(UITableViewCell* self, int type) {
     }
 
     if (self->_internalAccessoryView == nil || self->_internalAccessoryType != type) {
-        id image = nil;
+        UIImage* image = nil;
 
         switch (type) {
             case UITableViewCellAccessoryCheckmark:
@@ -1320,7 +1330,7 @@ static void setupGroupView(UITableViewCell* self) {
             frame.size.width = 32;
             frame.size.height = 32;
 
-            id imageInView = [_imageView image];
+            UIImage* imageInView = [_imageView image];
 
             if (imageInView != nil) {
                 frame.size = [imageInView size];

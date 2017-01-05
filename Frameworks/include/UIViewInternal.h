@@ -17,7 +17,16 @@
 #pragma once
 
 #import "LinkedList.h"
-#include "UWP/InteropBase.h"
+#import <UIKit/NSLayoutAnchor.h>
+#import <UIKit/NSLayoutXAxisAnchor.h>
+#import <UIKit/NSLayoutYAxisAnchor.h>
+#import <UIKit/NSLayoutDimension.h>
+#import <UIKit/NSStringDrawingContext.h>
+#import <UIKit/UILayoutSupport.h>
+#import <UIKit/UITouch.h>
+#import <UIKit/UIView.h>
+#import "UWP/InteropBase.h"
+#import "UWP/WindowsUIXamlControls.h"
 
 @class UIWindow;
 @class WXFrameworkElement;

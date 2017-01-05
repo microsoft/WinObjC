@@ -17,7 +17,10 @@
 #include <StubReturn.h>
 #include "Starboard.h"
 
-#include "UIKit/NSLayoutManager.h"
+#include <UIKit/NSLayoutManager.h>
+#include <UIKit/NSLayoutManagerDelegate.h>
+#include <UIKit/NSTextContainer.h>
+#include <UIKit/UIGraphics.h>
 
 #include "CoreTextInternal.h"
 

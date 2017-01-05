@@ -13,16 +13,22 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #import "Starboard.h"
-#import "UIViewControllerInternal.h"
-#import "UITabBarControllerInternal.h"
+
+#import <UIKit/UINavigationBar.h>
+#import <UIKit/UINavigationBarDelegate.h>
+#import <UIKit/UINavigationController.h>
+#import <UIKit/UINavigationControllerDelegate.h>
+#import <UIKit/UIToolbar.h>
 #import <UIKit/UIViewController.h>
 #import <UIKit/UIView.h>
+
 #import "LoggingNative.h"
-#import "UITabBarControllerInternal.h"
 #import "UINavigationBarInternal.h"
+#import "UINavigationControllerInternal.h"
 #import "UIViewInternal.h"
+#import "UIViewControllerInternal.h"
+#import "UITabBarControllerInternal.h"
 #import "StarboardXaml/DisplayProperties.h"
 
 static const wchar_t* TAG = L"UINavigationController";
@@ -50,7 +56,8 @@ public:
 
 @implementation UINavigationController {
     UINavigationPane* _mainView;
-    idretain _navigationBar, _toolBar;
+    StrongId<UINavigationBar> _navigationBar;
+    idretain _toolBar;
     idretain _viewControllers;
     id _delegate;
 
@@ -213,7 +220,9 @@ static void createMainView(UINavigationController* self, CGRect frame) {
             [[UINavigationBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, DisplayProperties::ScreenWidth(), UINavigationBarHeight)]);
         [_navigationBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin];
     }
+
     [_navigationBar setDelegate:self];
+
     _viewControllers.attach([NSMutableArray new]);
     priv->_wantsFullScreenLayout = TRUE;
 
@@ -637,7 +646,8 @@ static void rotateViewController(UINavigationController* self) {
         nextParent = [parent parentViewController];
     }
 
-    if ([parent->priv->view superview] != nil && [parent->priv->view window] == [parent->priv->view superview]) {
+    if ([parent->priv->view superview] != nil && (UIView*)[parent->priv->view window] == [parent->priv->view superview]) {
+
         UIInterfaceOrientation curOrientation = (UIInterfaceOrientation)[self interfaceOrientation];
         if (!isSupportedControllerOrientation(self, curOrientation)) {
             //  Try to find any valid orientation
@@ -848,12 +858,6 @@ static void rotateViewController(UINavigationController* self) {
 
     bounds = [_containerView bounds];
 
-    /*
-    memcpy(&_containerRect, &bounds, sizeof(CGRect));
-    [_containerView setFrame:bounds];
-    bounds.origin.x = 0;
-    bounds.origin.y = 0;
-    */
     _curControllerView = [_curController view];
     [_curControllerView setFrame:bounds];
 

@@ -15,8 +15,11 @@
 //******************************************************************************
 
 #import "Starboard.h"
-#import "UIKit/UITableViewController.h"
-#import "UIKit/UITableView.h"
+
+#import <UIKit/UIScreen.h>
+#import <UIKit/UITableViewController.h>
+#import <UIKit/UITableView.h>
+
 #import "UITableViewDataSource.h"
 #import "UIViewControllerInternal.h"
 

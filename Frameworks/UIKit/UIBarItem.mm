@@ -15,10 +15,15 @@
 //******************************************************************************
 
 #import "Starboard.h"
-#import "UIKit/UIBarItem.h"
-#import "UIKit/UIView.h"
-#import "UIBarItemInternal.h"
 #import <StubReturn.h>
+
+#import <UIKit/UIBarItem.h>
+#import <UIKit/UIButton.h>
+#import <UIKit/UIBarButtonItem.h>
+#import <UIKit/UIFont.h>
+#import <UIKit/UIView.h>
+
+#import "UIBarItemInternal.h"
 
 @implementation UIBarItem {
     idretaintype(NSString) __title;
