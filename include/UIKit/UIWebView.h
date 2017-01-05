@@ -58,7 +58,7 @@ UIKIT_EXPORT_CLASS
 - (void)goForward;
 
 - (NSString*)stringByEvaluatingJavaScriptFromString:(NSString*)script;
-- (void)evaluateJavaScript:(NSString*)javaScriptString completionHandler:(void(^)(id, NSError* error))completionHandler;
+- (void)evaluateJavaScript:(NSString*)javaScriptString completionHandler:(void (^)(id, NSError* error))completionHandler;
 - (void)loadData:(NSData*)data MIMEType:(NSString*)MIMEType textEncodingName:(NSString*)encodingName baseURL:(NSURL*)baseURL;
 
 @property (nonatomic, assign) id<UIWebViewDelegate> delegate;

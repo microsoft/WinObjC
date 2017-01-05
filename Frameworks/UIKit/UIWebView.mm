@@ -255,16 +255,17 @@ static void _initUIWebView(UIWebView* self) {
   @Notes This is a workaround. Original UIWebView does not have this method
 */
 - (void)evaluateJavaScript:(NSString*)javaScriptString completionHandler:(void (^)(id, NSError*))completionHandler {
-  
-    [_xamlWebControl invokeScriptAsync:@"eval" arguments:[NSArray arrayWithObject:javaScriptString] success:^void(NSString* success) {
-        if(completionHandler != nil) {
-            completionHandler(success, nil);
+    [_xamlWebControl invokeScriptAsync:@"eval"
+        arguments:[NSArray arrayWithObject:javaScriptString]
+        success:^void(NSString* success) {
+            if (completionHandler != nil) {
+                completionHandler(success, nil);
+            }
         }
-    } 
         failure:^void(NSError* failure) {
-                if(completionHandler != nil) {
-                    completionHandler(nil, failure);
-                }
+            if (completionHandler != nil) {
+                completionHandler(nil, failure);
+            }
         }];
 }
 
