@@ -14,11 +14,20 @@
 //
 //******************************************************************************
 
-#import "QuartzCore/CAEmitterCell.h"
-#import "CAEmitterCellInternal.h"
-#import "QuartzCore/CATransform3D.h"
 #import "Starboard.h"
 #import <StubReturn.h>
+
+// TODO: File bug
+#import <UIKit/NSValue+UIKitAdditions.h>
+
+#import <QuartzCore/CAAnimation.h>
+#import <QuartzCore/CABasicAnimation.h>
+#import <QuartzCore/CAEmitterCell.h>
+#import <QuartzCore/CATransform3D.h>
+#import <QuartzCore/CoreAnimationFunctions.h>
+
+#import "CAEmitterCellInternal.h"
+
 #import <stdlib.h>
 
 @interface CAEmitterCALayer : CALayer <CAMediaTiming, NSCoding, NSObject>

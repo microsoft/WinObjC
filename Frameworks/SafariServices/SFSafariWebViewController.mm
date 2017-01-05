@@ -20,7 +20,12 @@
 #import <SafariServices/SFSafariViewController.h>
 #import "SFSafariWebViewController.h"
 #import "SFSafariViewControllerInternal.h"
+#import <UIKit/UIApplicationDelegate.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UIScreen.h>
+#import <UIKit/UIToolbar.h>
 #import <UIKit/UIWebView.h>
+#import <UIKit/UIWebViewDelegate.h>
 #import "UIBarButtonItem+Internals.h"
 
 static const wchar_t* TAG = L"SFSafariWebViewController";

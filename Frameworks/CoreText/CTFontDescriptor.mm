@@ -14,6 +14,9 @@
 //
 //******************************************************************************
 
+// TODO: File bug
+#import <UIKit/UIFontDescriptor.h>
+
 #import <CoreText/CTFontDescriptor.h>
 
 #import <CFBridgeUtilities.h>

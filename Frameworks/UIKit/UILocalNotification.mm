@@ -16,6 +16,9 @@
 
 #import <StubReturn.h>
 #import "Starboard.h"
+
+#import <UIKit/UILocalNotification.h>
+
 #import "Foundation/NSCalendar.h"
 #import "Foundation/NSCoder.h"
 #import "Foundation/NSDate.h"

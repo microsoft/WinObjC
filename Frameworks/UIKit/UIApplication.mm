@@ -20,16 +20,16 @@
 #include "Platform/EbrPlatform.h"
 
 #import <UIKit/NSValue+UIKitAdditions.h>
-#include <UIKit/UIColor.h>
-#include <UIKit/UIAlertView.h>
-#include <UIKit/UIApplication.h>
-#include <UIKit/UIApplicationDelegate.h>
-#include <UIKit/UIImage.h>
-#include <UIKit/UIImageView.h>
-#include <UIKit/UITextInputTraits.h>
-#include <UIKit/UIView.h>
-#include <UIKit/UIViewController.h>
-#include <UIKit/UIWindow.h>
+#import <UIKit/UIColor.h>
+#import <UIKit/UIAlertView.h>
+#import <UIKit/UIApplication.h>
+#import <UIKit/UIApplicationDelegate.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UIImageView.h>
+#import <UIKit/UITextInputTraits.h>
+#import <UIKit/UIView.h>
+#import <UIKit/UIViewController.h>
+#import <UIKit/UIWindow.h>
 
 #include <CoreFoundation/CFArray.h>
 
@@ -298,7 +298,7 @@ static idretaintype(WSDDisplayRequest) _screenActive;
 }
 
 static id findTopActionButtons(NSMutableArray* arr, NSArray* windows, UIView* root) {
-    id subviews = [root subviews];
+    NSArray* subviews = [root subviews];
     int count = [subviews count];
 
     for (int i = count - 1; i >= 0; i--) {
@@ -716,50 +716,6 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 
     // TODO #1201: 0x803e0208 : The notification platform does not have the proper privileges to complete the request.
     // [updater update:notification];
-}
-
-static void printViews(id curView, int level) {
-    char szOut[2048];
-    strcpy_s(szOut, sizeof(szOut), "");
-
-    for (int i = 0; i < level * 2; i++) {
-        sprintf_s(&szOut[strlen(szOut)], sizeof(szOut) - strlen(szOut), " ");
-    }
-    sprintf_s(&szOut[strlen(szOut)], sizeof(szOut) - strlen(szOut), "%s @ 0x%08x ", object_getClassName(curView), (unsigned int)curView);
-
-    if ([curView isHidden] || [curView alpha] <= 0.01f) {
-        sprintf_s(&szOut[strlen(szOut)], sizeof(szOut) - strlen(szOut), " (hidden) ");
-    }
-    if (![curView isUserInteractionEnabled]) {
-        sprintf_s(&szOut[strlen(szOut)], sizeof(szOut) - strlen(szOut), " (interaction disabled) ");
-    }
-    if ([curView isOpaque]) {
-        sprintf_s(&szOut[strlen(szOut)], sizeof(szOut) - strlen(szOut), " (opaque) ");
-    }
-    if ([curView respondsToSelector:@selector(text)]) {
-        id text = [curView text];
-        sprintf_s(&szOut[strlen(szOut)], sizeof(szOut) - strlen(szOut), " (text=\"%s\") ", [text UTF8String]);
-    }
-
-    CGRect rect;
-    rect = [curView frame];
-    id fmt = [NSString stringWithFormat:@"{%f, %f}{%f, %f}\n", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height];
-
-    /*
-    sprintf_s(&szOut[szOutLength],
-              sizeof(szOut) - strlen(szOut),
-              "{%f, %f}{%f, %f}\n",
-              rect.origin.x,
-              rect.origin.y,
-              rect.size.width,
-              rect.size.height);
-    */
-
-    TraceVerbose(TAG, L"%hs%hs", szOut, [fmt UTF8String]);
-
-    for (unsigned i = 0; i < [[curView subviews] count]; i++) {
-        printViews([[curView subviews] objectAtIndex:i], level + 1);
-    }
 }
 
 + (void)_shutdownEvent {

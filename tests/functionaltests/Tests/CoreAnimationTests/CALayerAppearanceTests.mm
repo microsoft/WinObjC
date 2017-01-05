@@ -16,6 +16,9 @@
 #import <TestFramework.h>
 #import <Foundation/Foundation.h>
 
+#import <UIKit/UIView.h>
+#import <UIKit/UIViewController.h>
+
 #include <COMIncludes.h>
 #import <WRLHelpers.h>
 #import <ErrorHandling.h>

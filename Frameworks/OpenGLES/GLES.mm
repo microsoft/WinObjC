@@ -14,6 +14,8 @@
 //
 //******************************************************************************
 
+#import <OpenGLES/EAGLExport.h>
+
 #include <pthread.h>
 #include <math.h>
 #include <vector>

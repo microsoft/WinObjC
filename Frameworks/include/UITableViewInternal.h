@@ -39,7 +39,7 @@ struct UITableViewPriv {
     idretain _footerView;
     idretain _externalObjects;
     float _footerYPos;
-    idretain _headerView;
+    StrongId<UIView> _headerView;
     StrongId<UIView> _backgroundView;
     std::unordered_map<std::string, std::vector<ReusableCell*>> _reusableCells;
     StrongId<NSMutableDictionary> _reusableCellNibs;
@@ -158,7 +158,8 @@ struct UITableViewPriv {
     StrongId<UIView> _backgroundView, _selectedbackgroundView;
     StrongId<NSIndexPath> _deferredIndexPath, _indexPath;
     UIView *_accessoryView, *_editingAccessoryView;
-    idretain _internalAccessoryView, _internalAccessoryButton;
+    StrongId<UIImageView> _internalAccessoryView;
+    StrongId<UIButton> _internalAccessoryButton;
     int _internalAccessoryType;
     idretain _reuseIdentifier;
     idretain _borderView;

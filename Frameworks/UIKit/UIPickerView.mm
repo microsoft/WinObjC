@@ -48,7 +48,7 @@ struct RowData {
 };
 
 @interface UIPickerView ()
-- (id)_subCellSelected:(int)row fromPicker:(id)fromPicker;
+- (id)_subCellSelected:(int)row fromPicker:(UIPickerSubView*)fromPicker;
 @end
 
 @interface UIPickerSubView : UIScrollView {
@@ -324,7 +324,7 @@ static void notifySetSelected(UIPickerSubView* self, int idx) {
     }
 
     if (selIdx >= 0 && selIdx < _numRows) {
-        id selected = _rowData[selIdx]._rowCell;
+        UITableViewCell* selected = _rowData[selIdx]._rowCell;
 
         int row = [selected tag];
         notifySetSelected(self, row);
@@ -363,7 +363,7 @@ static void notifySetSelected(UIPickerSubView* self, int idx) {
 }
 
 - (id)_cellSelectedUp:(id)cell {
-    int selIdx = [cell tag];
+    int selIdx = [(UITableViewCell*)cell tag];
     CGPoint dest = { 0, getRowContentPos(self, selIdx) };
 
     if (dest != [self contentOffset]) {
@@ -626,7 +626,7 @@ static void layoutSubSections(UIPickerView* self) {
     [self reloadAllComponents];
 }
 
-- (id)_subCellSelected:(int)row fromPicker:(id)fromPicker {
+- (id)_subCellSelected:(int)row fromPicker:(UIPickerSubView*)fromPicker {
     int component = [fromPicker tag];
 
     if ([_delegate respondsToSelector:@selector(pickerView:didSelectRow:inComponent:)]) {

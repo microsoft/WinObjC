@@ -13,6 +13,7 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
 #import <UIKit/UIApplication.h>
 #import <UIKit/UIKitExport.h>

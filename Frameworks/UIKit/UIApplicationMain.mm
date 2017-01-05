@@ -14,11 +14,15 @@
 //
 //******************************************************************************
 
-#include <COMIncludes.h>
-#import <windows.foundation.h>
-#include <COMIncludes_End.h>
-
 #import "Starboard.h"
+
+#import <UIKit/UIApplicationDelegate.h>
+#import <UIKit/UIDevice.h>
+#import <UIKit/UIFont.h>
+#import <UIKit/UINib.h>
+#import <UIKit/UIStoryboard.h>
+#import <UIKit/UIViewController.h>
+
 #import <Foundation/NSMutableArray.h>
 #import <Foundation/NSData.h>
 #import <Foundation/NSBundle.h>
@@ -26,22 +30,23 @@
 #import <Foundation/NSNotificationCenter.h>
 #import <Foundation/NSRunLoop.h>
 #import <Foundation/NSAutoReleasePool.h>
-#import <UIKit/UIViewController.h>
-#import <UIKit/UIDevice.h>
-#import <UIKit/UIFont.h>
-#import <UIKit/UINib.h>
-#import <UIKit/UIApplicationDelegate.h>
+
+#include <COMIncludes.h>
+#import <windows.foundation.h>
+#include <COMIncludes_End.h>
+
 #import <StringHelpers.h>
 #import <CollectionHelpers.h>
 #import "NSThread-Internal.h"
 #import "NSUserDefaultsInternal.h"
 #import "StarboardXaml/StarboardXaml.h"
 #import "UIApplicationInternal.h"
+#import "UIDeviceInternal.h"
 #import "UIFontInternal.h"
 #import "UIViewControllerInternal.h"
+#import "UIWindowInternal.h"
 #import "UIInterface.h"
 #import "LoggingNative.h"
-#import "UIDeviceInternal.h"
 #import <MainDispatcher.h>
 #import "StarboardXaml/DisplayProperties.h"
 #import <UWP/WindowsApplicationModelActivation.h>

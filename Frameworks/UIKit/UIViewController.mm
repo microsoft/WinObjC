@@ -1281,8 +1281,6 @@ NSMutableDictionary* _pageMappings;
     } else if (animated) {
         CGPoint curPos;
         CALayer* layer = [curView layer];
-
-        // TODO: Eradicate warning about multiple methods named 'position' found
         curPos = [layer position];
 
         CABasicAnimation* animation = [CABasicAnimation animationWithKeyPath:@"position"];

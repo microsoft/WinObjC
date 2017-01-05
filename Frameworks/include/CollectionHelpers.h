@@ -30,6 +30,10 @@
 
 #include <COMIncludes_End.h>
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-value"
+// TODO: File bug
+
 namespace Collections {
 namespace Private {
 template <typename T>
@@ -117,6 +121,8 @@ HRESULT WRLToNSCollection(const Microsoft::WRL::ComPtr<T>& collection,
                           typename Private::CollectionType<T>::NSEquivalentType* __autoreleasing* pNSCollection) {
     return WRLToNSCollection(collection.Get(), pNSCollection);
 }
+
+#pragma clang diagnostic pop
 
 #endif
 }

@@ -17,8 +17,12 @@
 #import "CGContextInternal.h"
 #import <CoreGraphics/CGContext.h>
 #import <CoreGraphics/CGImage.h>
-#import <CoreGraphics\CGBitmapContext.h>
-#import <Foundation\Foundation.h>
+#import <CoreGraphics/CGBitmapContext.h>
+#import <CoreText/CTFont.h>
+#import <CoreText/CTFrame.h>
+#import <CoreText/CTFrameSetter.h>
+#import <CoreText/CTStringAttributes.h>
+#import <Foundation/Foundation.h>
 #import <Starboard.h>
 #import <TestFramework.h>
 

@@ -31,6 +31,10 @@
 
 #import "WYPopoverPrivate.h"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnullability-completeness"
+// TODO: File bug
+
 @protocol WYPopoverControllerDelegate;
 @class WYPopoverTheme;
 
@@ -259,3 +263,5 @@ typedef NS_OPTIONS(NSUInteger, WYPopoverAnimationOptions) {
 + (instancetype)themeForIOS7;
 
 @end
+
+#pragma clang diagnostic pop

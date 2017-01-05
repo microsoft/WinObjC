@@ -57,8 +57,8 @@ public:
 @implementation UINavigationController {
     UINavigationPane* _mainView;
     StrongId<UINavigationBar> _navigationBar;
-    idretain _toolBar;
-    idretain _viewControllers;
+    StrongId<UIToolbar> _toolBar;
+    StrongId<NSMutableArray> _viewControllers;
     id _delegate;
 
     idretain _curController;
@@ -424,7 +424,7 @@ static void createMainView(UINavigationController* self, CGRect frame) {
 - (void)setViewControllers:(NSArray*)controllers animated:(BOOL)animated {
     //  Go through all controllers
     int count = [controllers count];
-    _viewControllers = [NSMutableArray array];
+    _viewControllers.attach([NSMutableArray new]);
     NSMutableArray* navigationItems = [NSMutableArray array];
 
     for (int i = 0; i < count; i++) {

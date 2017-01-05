@@ -166,7 +166,7 @@ BOOL g_resetAllTrackingGestures = TRUE;
         for (int i = viewDepth - 1; i >= 0; i--) {
             curView = views[i];
 
-            for (UIGestureRecognizer* curgesture in curView->priv->gestures) {
+            for (UIGestureRecognizer* curgesture in curView->priv->gestures.get()) {
                 if ([curgesture isEnabled]) {
                     [g_currentlyTrackingGesturesList addObject:curgesture];
                 }
@@ -1002,8 +1002,10 @@ static std::string _printViewhierarchy(UIView* leafView) {
                 for (int i = 0; i < [removeConstraints count]; i++) {
                     NSLayoutConstraint* wayward = [removeConstraints objectAtIndex:i];
                     if (wayward == constraint) {
-                        NSTraceVerbose(TAG, @"Removing constraint (%@)", [wayward description]);
-                        [wayward _printConstraint];
+                        if (DEBUG_LAYOUT) {
+                            NSTraceVerbose(TAG, @"Removing constraint (%@)", [wayward description]);
+                            [wayward _printConstraint];
+                        }
                         remove = true;
                         break;
                     }
@@ -1019,7 +1021,9 @@ static std::string _printViewhierarchy(UIView* leafView) {
         }
     }
 
-    [NSLayoutConstraint _printConstraints:self.constraints];
+    if (DEBUG_LAYOUT) {
+        [NSLayoutConstraint _printConstraints:self.constraints];
+    }
 
     [self setHidden:[coder decodeInt32ForKey:@"UIHidden"]];
 
@@ -1532,7 +1536,7 @@ static float doRound(float f) {
     }
 
     if (window == nil) {
-        for (UIGestureRecognizer* curgesture in priv->gestures) {
+        for (UIGestureRecognizer* curgesture in priv->gestures.get()) {
             if ([curgesture respondsToSelector:@selector(_cancelIfActive)]) {
                 [curgesture _cancelIfActive];
             }
@@ -3422,13 +3426,11 @@ static float doRound(float f) {
         [subviewsCopy[i] release];
     }
 
-    for (UIGestureRecognizer* curgesture in priv->gestures) {
+    for (UIGestureRecognizer* curgesture in priv->gestures.get()) {
         if ([curgesture respondsToSelector:@selector(_setView:)]) {
             [curgesture _setView:nil];
         }
     }
-    [priv->gestures release];
-    [priv->currentTouches release];
 
     [self->layer setDelegate:nil];
 
@@ -3485,7 +3487,7 @@ static float doRound(float f) {
  @Status Interoperable
 */
 - (void)setGestureRecognizers:(NSArray*)gestures {
-    for (UIGestureRecognizer* curgesture in priv->gestures) {
+    for (UIGestureRecognizer* curgesture in priv->gestures.get()) {
         if ([curgesture isKindOfClass:[UIGestureRecognizer class]]) {
             [curgesture _setView:nil];
         }
@@ -3501,7 +3503,7 @@ static float doRound(float f) {
     [priv->gestures release];
     priv->gestures = gestures;
 
-    for (UIGestureRecognizer* curgesture in priv->gestures) {
+    for (UIGestureRecognizer* curgesture in priv->gestures.get()) {
         if ([curgesture isKindOfClass:[UIGestureRecognizer class]]) {
             [curgesture _setView:self];
         } else {

@@ -916,7 +916,7 @@ static id buildInternalAccessory(UITableViewCell* self, int type) {
     return self->_internalAccessoryView;
 }
 
-static id getCurrentAccessoryView(UITableViewCell* self) {
+static UIView* getCurrentAccessoryView(UITableViewCell* self) {
     UIView* ret = nil;
 
     if (self->_accessoryView) {
@@ -937,13 +937,6 @@ static id getCurrentAccessoryView(UITableViewCell* self) {
                 TraceWarning(TAG, L"Invalid accessory style: %u", self->_selectionStyle);
         }
     }
-
-    /*
-    assert(!_accessoryType || !_removeButton);
-    if ( _removeButton ) {
-    ret = _removeButton;
-    }
-    */
 
     if (ret != self->_curAccessoryView) {
         [self->_curAccessoryView removeFromSuperview];
@@ -1194,7 +1187,7 @@ static void setupGroupView(UITableViewCell* self) {
         [_borderView setFrame:borderRect];
     }
 
-    id accessoryView = getCurrentAccessoryView(self);
+    UIView* accessoryView = getCurrentAccessoryView(self);
     if (accessoryView) {
         CGRect accessoryRect = { 0 };
 

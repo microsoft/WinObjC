@@ -14,12 +14,16 @@
 //
 //******************************************************************************
 
-#include <math.h>
 #include "Starboard.h"
-#include "QuartzCore/CATransition.h"
+
+#include <QuartzCore/CAMediaTimingFunction.h>
+#include <QuartzCore/CATransition.h>
+
 #include "CALayerInternal.h"
 #include "CACompositor.h"
 #include "CAAnimationInternal.h"
+
+#include <math.h>
 
 NSString* const kCATransitionFade = @"kCATransitionFade";
 NSString* const kCATransitionMoveIn = @"kCATransitionMoveIn";

@@ -109,7 +109,7 @@
     return self;
 }
 
-static float widthForItems(id items) {
+static float widthForItems(NSArray* items) {
     float maxItemWidth = 0.0f;
 
     id font = [UIFont boldSystemFontOfSize:12.0f];
@@ -149,7 +149,7 @@ static float widthForItems(id items) {
 /**
  @Status Interoperable
 */
-- (instancetype)initWithItems:(id)items {
+- (instancetype)initWithItems:(NSArray*)items {
     _shouldResizeToSuper = TRUE;
     _curSelected = 0xFFFFFFFF;
     _segments.attach([NSMutableArray new]);
@@ -241,7 +241,7 @@ static void positionSegments(UISegmentedControl* self) {
     }
 
     for (int i = 0; i < count; i++) {
-        id curSegment = [self->_segments objectAtIndex:i];
+        UISegment* curSegment = [self->_segments objectAtIndex:i];
 
         CGRect curFrame = { 0 };
         curFrame = [curSegment frame];
