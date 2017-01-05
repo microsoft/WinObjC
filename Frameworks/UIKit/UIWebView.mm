@@ -251,7 +251,8 @@ static void _initUIWebView(UIWebView* self) {
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+  @Notes This is a workaround. Original UIWebView does not have this method
 */
 - (void)evaluateJavaScript:(NSString*)javaScriptString completionHandler:(void (^)(id, NSError*))completionHandler {
   
