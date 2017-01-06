@@ -156,6 +156,20 @@ ID2D1RenderTarget* CGGraphicBufferImageBacking::GetRenderTarget() {
         THROW_IF_FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory), &d2dFactory));
         ComPtr<ID2D1RenderTarget> renderTarget;
         THROW_IF_FAILED(d2dFactory->CreateWicBitmapRenderTarget(wicBitmap.Get(), D2D1::RenderTargetProperties(), &renderTarget));
+
+        ComPtr<IDWriteFactory> dwriteFactory;
+        THROW_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
+        ComPtr<IDWriteRenderingParams> defaultTextRenderParams;
+        THROW_IF_FAILED(dwriteFactory->CreateRenderingParams(&defaultTextRenderParams));
+        ComPtr<IDWriteRenderingParams> textRenderParams;
+        THROW_IF_FAILED(dwriteFactory->CreateCustomRenderingParams(defaultTextRenderParams->GetClearTypeLevel(),
+                                                                   defaultTextRenderParams->GetEnhancedContrast(),
+                                                                   defaultTextRenderParams->GetGamma(),
+                                                                   defaultTextRenderParams->GetPixelGeometry(),
+                                                                   DWRITE_RENDERING_MODE_GDI_NATURAL,
+                                                                   &textRenderParams));
+        renderTarget->SetTextRenderingParams(textRenderParams.Get());
+
         _renderTarget = renderTarget.Detach();
         ReleaseImageData();
     }

@@ -1909,7 +1909,7 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, boo
         // Apply the two transforms giving us the final result
         imgRenderTarget->SetTransform(
             D2D1::Matrix3x2F(finalTransform.a, finalTransform.b, finalTransform.c, finalTransform.d, finalTransform.tx, finalTransform.ty));
-        imgRenderTarget->DrawGlyphRun(D2D1::Point2F(0, 0), glyphRun, brush.Get(), DWRITE_MEASURING_MODE_NATURAL);
+        imgRenderTarget->DrawGlyphRun(D2D1::Point2F(0, 0), glyphRun, brush.Get(), DWRITE_MEASURING_MODE_GDI_NATURAL);
     } else {
         // Text scaling and rotation apply to each glyph relative to its origin, so we must draw each glyph transformed independently
         DWRITE_GLYPH_RUN individualGlyphRun{ glyphRun->fontFace,
@@ -1925,7 +1925,7 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, boo
         for (uint32_t i = 0; i < glyphRun->glyphCount; ++i, ++(individualGlyphRun.glyphIndices)) {
             CGAffineTransform transform = CGAffineTransformConcat(textTransform, userTransform);
             imgRenderTarget->SetTransform(D2D1::Matrix3x2F(transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty));
-            imgRenderTarget->DrawGlyphRun(origin, &individualGlyphRun, brush.Get(), DWRITE_MEASURING_MODE_NATURAL);
+            imgRenderTarget->DrawGlyphRun(origin, &individualGlyphRun, brush.Get(), DWRITE_MEASURING_MODE_GDI_NATURAL);
 
             // Uses glyphAdvances to move each glyph
             userTransform = CGAffineTransformTranslate(userTransform, glyphRun->glyphAdvances[i], 0);
