@@ -25,8 +25,8 @@
 
 #import <Starboard.h>
 
-#import <UIKit\UIApplication.h>
-#import <UIKit\UIKitExport.h>
+#import <UIKit/UIApplication.h>
+#import <UIKit/UIKitExport.h>
 
 #import <Foundation/Foundation.h>
 
