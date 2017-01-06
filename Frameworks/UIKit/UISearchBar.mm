@@ -72,15 +72,13 @@ static void initInternal(UISearchBar* self) {
  @Status Interoperable
 */
 - (void)setPrompt:(NSString*)prompt {
-    if (_prompt == prompt || (([_prompt length] == 0) && ([prompt length] == 0))) {
-        // if old prompt text is the same as the new prompt text, quick return
-        // also, treat empty string @"" prompt as nil because setting empty string to prompt does not
-        // show prompt label on reference platform.
+    if ((([_prompt length] == 0) && ([prompt length] == 0)) || [_prompt isEqualToString:prompt]) {
+        // if old prompt text is "equlal" to the new prompt text (nil and emptyString are considered equal), quick return
         return;
     }
 
     // otherwise, old prompt text is different from new prompt text, need either add or remove prompt label
-    _prompt = prompt;
+    _prompt = [prompt copy];
 
     if ([_prompt length] == 0) {
         // remove prompt label since prompt text is either nil or empty
@@ -91,15 +89,15 @@ static void initInternal(UISearchBar* self) {
         if (_promptLabel == nil) {
             CGRect promptFrame = CGRectMake(0, c_marginTopForPrompt, self.frame.size.width, c_defaultTextFieldHeight);
 
-            self->_promptLabel.attach([[UILabel alloc] initWithFrame:promptFrame]);
-            [self->_promptLabel setTextAlignment:UITextAlignmentCenter];
-            [self->_promptLabel setBackgroundColor:nil];
-            [self->_promptLabel setTextColor:[UIColor blackColor]];
+            _promptLabel.attach([[UILabel alloc] initWithFrame:promptFrame]);
+            [_promptLabel setTextAlignment:UITextAlignmentCenter];
+            [_promptLabel setBackgroundColor:nil];
+            [_promptLabel setTextColor:[UIColor blackColor]];
             [self addSubview:self->_promptLabel];
         }
     }
 
-    [self setNeedsDisplay];
+    [self setNeedsLayout];
 }
 
 /**
