@@ -362,8 +362,8 @@ static void notifySetSelected(UIPickerSubView* self, int idx) {
     return _selectedRow;
 }
 
-- (id)_cellSelectedUp:(id)cell {
-    int selIdx = [(UITableViewCell*)cell tag];
+- (id)_cellSelectedUp:(UITableViewCell*)cell {
+    int selIdx = [cell tag];
     CGPoint dest = { 0, getRowContentPos(self, selIdx) };
 
     if (dest != [self contentOffset]) {
