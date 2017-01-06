@@ -59,8 +59,6 @@ vImage_Error vImageBuffer_InitWithCGImage(
         const CGColorSpaceModel srcCsModel = CGColorSpaceGetModel(srcColorSpace);
         const CGBitmapInfo srcBitmapInfo = CGImageGetBitmapInfo(image);
 
-        CGColorSpaceRelease(srcColorSpace);
-
         if (srcCsModel != dstCsModel) {
             TraceWarning(TAG, L"Colorspace conversions are not yet supported.");
         }
