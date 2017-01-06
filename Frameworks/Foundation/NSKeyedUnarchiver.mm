@@ -107,9 +107,25 @@ static NSString* _NSUnarchiverEncounteredInvalidClassExceptionExpectedClasses =
     return self;
 }
 
+// clang-format off
+static uint32_t _valueFromUID(CFKeyedArchiverUIDRef uid) {
+    NSDictionary* uidAsDictionary = static_cast<NSDictionary*>(uid);
+    NSNumber* legacyCFUID = nil;
+    if (
+        CFGetTypeID(uid) != _CFKeyedArchiverUIDGetTypeID()
+        && [uidAsDictionary isKindOfClass:[NSDictionary class]]
+        && [uidAsDictionary count] == 1
+        && (legacyCFUID = [uidAsDictionary objectForKey:@"CF$UID"]) != nil
+    ) {
+        return [legacyCFUID intValue];
+    }
+    return _CFKeyedArchiverUIDGetValue(uid);
+}
+// clang-format on
+
 static id decodeClassFromDictionary(NSKeyedUnarchiver* self, id classReference) {
     CFKeyedArchiverUIDRef uid = static_cast<CFKeyedArchiverUIDRef>([classReference objectForKey:@"$class"]);
-    id profile = [self->_objects objectAtIndex:_CFKeyedArchiverUIDGetValue(uid)];
+    id profile = [self->_objects objectAtIndex:_valueFromUID(uid)];
     id classes = [profile objectForKey:@"$classes"];
     id className = [profile objectForKey:@"$classname"];
 
@@ -152,7 +168,7 @@ static inline void checkClassAgainstExpectedClasses(NSKeyedUnarchiver* self, Cla
 }
 
 static id decodeObjectForUID(NSKeyedUnarchiver* self, CFKeyedArchiverUIDRef uid) {
-    uint32_t uidIntValue = _CFKeyedArchiverUIDGetValue(uid);
+    uint32_t uidIntValue = _valueFromUID(uid);
     id result = [self->_uidToObject objectForKey:static_cast<id>(uid)];
 
     if (result == NULL) {
@@ -297,6 +313,14 @@ static id _decodeObjectWithPropertyList(NSKeyedUnarchiver* self, id plist) {
         return result;
     } else if (CFGetTypeID(plist) == _CFKeyedArchiverUIDGetTypeID()) {
         return decodeObjectForUID(self, static_cast<CFKeyedArchiverUIDRef>(plist));
+    } else if ([plist isKindOfClass:[NSDictionary class]]) {
+        // Old versions of NSKeyedArchiver would emit invalid archives with
+        // the XML encoding for CF$UID. Parse that here.
+        NSDictionary* dictionary = (NSDictionary*)plist;
+        NSNumber* legacyCFUID = [dictionary objectForKey:@"CF$UID"];
+        if (dictionary.count == 1 && legacyCFUID) {
+            return decodeObjectForUID(self, static_cast<CFKeyedArchiverUIDRef>(plist));
+        }
     }
 
     [NSException raise:NSInvalidUnarchiveOperationException
