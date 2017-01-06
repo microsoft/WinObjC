@@ -17,7 +17,6 @@
 #import "Starboard.h"
 #import <StubReturn.h>
 
-// TODO: File bug
 #import <UIKit/NSValue+UIKitAdditions.h>
 
 #import <QuartzCore/CAAnimation.h>

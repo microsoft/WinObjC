@@ -3499,9 +3499,7 @@ static float doRound(float f) {
         }
     }
 
-    gestures = [gestures copy];
-    [priv->gestures release];
-    priv->gestures = gestures;
+    priv->gestures.attach([gestures copy]);
 
     for (UIGestureRecognizer* curgesture in priv->gestures.get()) {
         if ([curgesture isKindOfClass:[UIGestureRecognizer class]]) {

@@ -30,9 +30,9 @@
 
 #include <COMIncludes_End.h>
 
+// Tracked as issue #1644
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-value"
-// TODO: File bug
 
 namespace Collections {
 namespace Private {

@@ -349,11 +349,9 @@ void printConstraint(NSLayoutConstraint* constraint) {
 
 void printConstraints(NSArray* constraints) {
     int count = [constraints count];
-    if (count) {
-        for (int i = 0; i < count; i++) {
-            NSLayoutConstraint* constraint = [(id)constraints objectAtIndex:i];
-            printConstraint(constraint);
-        }
+    for (int i = 0; i < count; i++) {
+        NSLayoutConstraint* constraint = [constraints objectAtIndex:i];
+        printConstraint(constraint);
     }
 }
 

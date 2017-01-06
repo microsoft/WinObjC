@@ -31,9 +31,9 @@
 
 #import "WYPopoverPrivate.h"
 
+// Tracked as #1645
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wnullability-completeness"
-// TODO: File bug
 
 @protocol WYPopoverControllerDelegate;
 @class WYPopoverTheme;
