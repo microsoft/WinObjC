@@ -191,9 +191,9 @@ static void initInternal(UISearchBar* self) {
     } else {
         if (_cancelButton == nil) {
             self->_cancelButton.attach([[UIButton alloc] init]);
-            [self->_cancelButton setBackgroundColor:nil];
             [self->_cancelButton setTitle:cancelButtonText forState:UIControlStateNormal];
             [self->_cancelButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [self->_cancelButton addTarget:self action:@selector(_cancelButtonTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
             [self addSubview:self->_cancelButton];
         }
     }
@@ -367,6 +367,12 @@ static void initInternal(UISearchBar* self) {
         if ([_delegate respondsToSelector:@selector(searchBarTextDidEndEditing:)]) {
             [_delegate searchBarTextDidEndEditing:self];
         }
+    }
+}
+
+- (void)_cancelButtonTouchUpInside:(UIButton*)button {
+    if ([_delegate respondsToSelector:@selector(searchBarCancelButtonClicked:)]) {
+        [_delegate searchBarCancelButtonClicked:self];
     }
 }
 
