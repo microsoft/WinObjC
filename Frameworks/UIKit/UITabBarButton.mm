@@ -16,9 +16,16 @@
 //******************************************************************************
 
 #import "Starboard.h"
+
+#import <UIKit/NSString+UIKitAdditions.h>
+#import <UIKit/UIColor.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UIGraphics.h>
+#import <UIKit/UITabBar.h>
+#import <UIKit/UITabBarItem.h>
+
 #import "UIFontInternal.h"
 #import "UITabBarButton.h"
-#import "UIKit/UIColor.h"
 #import "CGContextInternal.h"
 #import "UITabBarControllerInternal.h"
 
@@ -108,7 +115,7 @@
         CGContextRelease(context);
     }
 
-    id title = [_item title];
+    NSString* title = [_item title];
     if (title != nil) {
         CGSize size;
         id font = [UIFont defaultFont];

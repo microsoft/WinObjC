@@ -17,8 +17,18 @@
 #define NOMINMAX
 
 #import "Starboard.h"
+
+#import <UIKit/UIButton.h>
+#import <UIKit/UIControl.h>
+#import <UIKit/UIFont.h>
+#import <UIKit/UILabel.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UIImageView.h>
+#import <UIKit/UISwipeGestureRecognizer.h>
+#import <UIKit/UITextField.h>
+#import <UIKit/UIView.h>
+
 #import "UITableViewContentView.h"
-#import "UIKit/UILabel.h"
 #import "UIViewInternal.h"
 #import "_UIGroupEdgeView.h"
 #import "UITableViewInternal.h"
@@ -873,7 +883,7 @@ static id buildInternalAccessory(UITableViewCell* self, int type) {
     }
 
     if (self->_internalAccessoryView == nil || self->_internalAccessoryType != type) {
-        id image = nil;
+        UIImage* image = nil;
 
         switch (type) {
             case UITableViewCellAccessoryCheckmark:
@@ -906,7 +916,7 @@ static id buildInternalAccessory(UITableViewCell* self, int type) {
     return self->_internalAccessoryView;
 }
 
-static id getCurrentAccessoryView(UITableViewCell* self) {
+static UIView* getCurrentAccessoryView(UITableViewCell* self) {
     UIView* ret = nil;
 
     if (self->_accessoryView) {
@@ -927,13 +937,6 @@ static id getCurrentAccessoryView(UITableViewCell* self) {
                 TraceWarning(TAG, L"Invalid accessory style: %u", self->_selectionStyle);
         }
     }
-
-    /*
-    assert(!_accessoryType || !_removeButton);
-    if ( _removeButton ) {
-    ret = _removeButton;
-    }
-    */
 
     if (ret != self->_curAccessoryView) {
         [self->_curAccessoryView removeFromSuperview];
@@ -1184,7 +1187,7 @@ static void setupGroupView(UITableViewCell* self) {
         [_borderView setFrame:borderRect];
     }
 
-    id accessoryView = getCurrentAccessoryView(self);
+    UIView* accessoryView = getCurrentAccessoryView(self);
     if (accessoryView) {
         CGRect accessoryRect = { 0 };
 
@@ -1320,7 +1323,7 @@ static void setupGroupView(UITableViewCell* self) {
             frame.size.width = 32;
             frame.size.height = 32;
 
-            id imageInView = [_imageView image];
+            UIImage* imageInView = [_imageView image];
 
             if (imageInView != nil) {
                 frame.size = [imageInView size];

@@ -13,8 +13,9 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
+
+#import <UIKit/UIControl.h>
 
 @class UIRuntimeEventConnection;
 

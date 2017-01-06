@@ -13,6 +13,10 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
+
+#import <UIKit/NSLayoutAnchor.h>
+#import <UIKit/NSLayoutConstraint.h>
 
 @interface NSLayoutAnchor () {
 @public

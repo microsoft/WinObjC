@@ -13,13 +13,11 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
 
-#import <UIKit/UIKitExport.h>
-#import <UIKit/UIKit.h>
 #import <CoreGraphics/CGGeometry.h>
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKitExport.h>
 
 @class UICollectionView;
 @class UICollectionViewLayout;

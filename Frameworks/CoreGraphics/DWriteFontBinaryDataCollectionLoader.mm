@@ -19,6 +19,7 @@
 #import "CGDataProviderInternal.h"
 
 #import <CoreFoundation/CFError.h>
+#import <CoreText/CTFontManager.h>
 
 using namespace Microsoft::WRL;
 

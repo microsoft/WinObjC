@@ -16,12 +16,14 @@
 
 #import <Starboard.h>
 #import <StubReturn.h>
-#import <math.h>
 
 #import <UIKit/UISwipeGestureRecognizer.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
+#import <UIKit/UITouch.h>
+#import <UIKit/UIView.h>
 
 #import "UIGestureRecognizerInternal.h"
+#import <math.h>
 
 @implementation UISwipeGestureRecognizer {
 @public

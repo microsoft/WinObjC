@@ -14,8 +14,11 @@
 //
 //******************************************************************************
 
-#import <StubReturn.h>
 #import <Starboard.h>
+#import <StubReturn.h>
+
+#import <CoreGraphics/CGAffineTransform.h>
+
 #import <math.h>
 
 const CGAffineTransform CGAffineTransformIdentity = { 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f };
