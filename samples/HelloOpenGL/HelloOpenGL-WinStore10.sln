@@ -1,17 +1,13 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.22823.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HelloOpenGL", "HelloOpenGL", "{81F1F78D-4F53-4896-B8FF-ADA8E5344AA0}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HelloOpenGL", "HelloOpenGL", "{6761F46B-2E44-4B62-AE46-70D81CE27171}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelloOpenGL-Headers", "HelloOpenGL.vsimporter\HelloOpenGL-Headers-WinStore10\HelloOpenGL-Headers.vcxitems", "{EAE2BFFB-46EF-4AC3-94DD-D5155779B441}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelloOpenGL", "HelloOpenGL.vsimporter\HelloOpenGL-WinStore10\HelloOpenGL.vcxproj", "{94BA35CD-F4E9-4B5B-BEE7-A452AB514360}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelloOpenGL", "HelloOpenGL.vsimporter\HelloOpenGL-WinStore10\HelloOpenGL.vcxproj", "{5F8B73C6-1253-4481-9567-A81321309725}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		HelloOpenGL.vsimporter\HelloOpenGL-Headers-WinStore10\HelloOpenGL-Headers.vcxitems*{94ba35cd-f4e9-4b5b-bee7-a452ab514360}*SharedItemsImports = 4
-		HelloOpenGL.vsimporter\HelloOpenGL-Headers-WinStore10\HelloOpenGL-Headers.vcxitems*{eae2bffb-46ef-4ac3-94dd-d5155779b441}*SharedItemsImports = 9
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -20,24 +16,23 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{94BA35CD-F4E9-4B5B-BEE7-A452AB514360}.Debug|ARM.ActiveCfg = Debug|ARM
-		{94BA35CD-F4E9-4B5B-BEE7-A452AB514360}.Debug|ARM.Build.0 = Debug|ARM
-		{94BA35CD-F4E9-4B5B-BEE7-A452AB514360}.Debug|ARM.Deploy.0 = Debug|ARM
-		{94BA35CD-F4E9-4B5B-BEE7-A452AB514360}.Debug|Win32.ActiveCfg = Debug|Win32
-		{94BA35CD-F4E9-4B5B-BEE7-A452AB514360}.Debug|Win32.Build.0 = Debug|Win32
-		{94BA35CD-F4E9-4B5B-BEE7-A452AB514360}.Debug|Win32.Deploy.0 = Debug|Win32
-		{94BA35CD-F4E9-4B5B-BEE7-A452AB514360}.Release|ARM.ActiveCfg = Release|ARM
-		{94BA35CD-F4E9-4B5B-BEE7-A452AB514360}.Release|ARM.Build.0 = Release|ARM
-		{94BA35CD-F4E9-4B5B-BEE7-A452AB514360}.Release|ARM.Deploy.0 = Release|ARM
-		{94BA35CD-F4E9-4B5B-BEE7-A452AB514360}.Release|Win32.ActiveCfg = Release|Win32
-		{94BA35CD-F4E9-4B5B-BEE7-A452AB514360}.Release|Win32.Build.0 = Release|Win32
-		{94BA35CD-F4E9-4B5B-BEE7-A452AB514360}.Release|Win32.Deploy.0 = Release|Win32
+		{5F8B73C6-1253-4481-9567-A81321309725}.Debug|ARM.ActiveCfg = Debug|ARM
+		{5F8B73C6-1253-4481-9567-A81321309725}.Debug|ARM.Build.0 = Debug|ARM
+		{5F8B73C6-1253-4481-9567-A81321309725}.Debug|ARM.Deploy.0 = Debug|ARM
+		{5F8B73C6-1253-4481-9567-A81321309725}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5F8B73C6-1253-4481-9567-A81321309725}.Debug|Win32.Build.0 = Debug|Win32
+		{5F8B73C6-1253-4481-9567-A81321309725}.Debug|Win32.Deploy.0 = Debug|Win32
+		{5F8B73C6-1253-4481-9567-A81321309725}.Release|ARM.ActiveCfg = Release|ARM
+		{5F8B73C6-1253-4481-9567-A81321309725}.Release|ARM.Build.0 = Release|ARM
+		{5F8B73C6-1253-4481-9567-A81321309725}.Release|ARM.Deploy.0 = Release|ARM
+		{5F8B73C6-1253-4481-9567-A81321309725}.Release|Win32.ActiveCfg = Release|Win32
+		{5F8B73C6-1253-4481-9567-A81321309725}.Release|Win32.Build.0 = Release|Win32
+		{5F8B73C6-1253-4481-9567-A81321309725}.Release|Win32.Deploy.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{EAE2BFFB-46EF-4AC3-94DD-D5155779B441} = {81F1F78D-4F53-4896-B8FF-ADA8E5344AA0}
-		{94BA35CD-F4E9-4B5B-BEE7-A452AB514360} = {81F1F78D-4F53-4896-B8FF-ADA8E5344AA0}
+		{5F8B73C6-1253-4481-9567-A81321309725} = {6761F46B-2E44-4B62-AE46-70D81CE27171}
 	EndGlobalSection
 EndGlobal
