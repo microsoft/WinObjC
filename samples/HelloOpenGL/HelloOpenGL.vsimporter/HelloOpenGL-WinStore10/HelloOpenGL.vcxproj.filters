@@ -1,23 +1,26 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{dc18f23a-ecc1-422e-9809-084b712c77ab}</UniqueIdentifier>
+      <UniqueIdentifier>{63547038-e170-4c8f-a5c9-bb43504ca018}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{1a648546-198b-4914-92d5-15dfff250034}</UniqueIdentifier>
+      <UniqueIdentifier>{d15faabc-8076-41c6-8482-7320935f0f7a}</UniqueIdentifier>
     </Filter>
     <Filter Include="HelloOpenGL">
-      <UniqueIdentifier>{6A4A98C5-A3A2-4167-A205-B9A62A2BA166}</UniqueIdentifier>
+      <UniqueIdentifier>{2C160A26-1608-48C0-AD47-15F38B2F9775}</UniqueIdentifier>
     </Filter>
-    <Filter Include="HelloOpenGL\Supporting Files">
-      <UniqueIdentifier>{BC0192E6-9063-4F9A-B4EB-BF92BC9E8AE4}</UniqueIdentifier>
+    <Filter Include="HelloOpenGL\Base">
+      <UniqueIdentifier>{60AE8B8B-8B6F-43B5-BFC1-4D4B6E629566}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{D4043FF0-41D8-4DAB-8C7B-28FDB36781DE}</UniqueIdentifier>
+      <UniqueIdentifier>{D80695ED-2AB6-4407-B297-562EF4924994}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <Xml Include="default.rd.xml" />
+    <AppxManifest Include="Package.appxmanifest" />
+    <None Include="HelloOpenGL_TemporaryKey.pfx" />
     <Image Include="Assets\LockScreenLogo.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
@@ -39,33 +42,33 @@
     <Image Include="Assets\Wide310x150Logo.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
+    <AssetCatalogCompile Include="..\..\HelloOpenGL\Assets.xcassets">
+      <Filter>HelloOpenGL</Filter>
+    </AssetCatalogCompile>
+    <ClInclude Include="..\..\HelloOpenGL\OpenGLES20Controller.h">
+      <Filter>HelloOpenGL</Filter>
+    </ClInclude>
+    <ClangCompile Include="..\..\HelloOpenGL\HelloOpenGL.m">
+      <Filter>HelloOpenGL</Filter>
+    </ClangCompile>
     <ClangCompile Include="..\..\HelloOpenGL\OpenGLES20Controller.m">
       <Filter>HelloOpenGL</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\HelloOpenGL\main.m">
-      <Filter>HelloOpenGL\Supporting Files</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\HelloOpenGL\HelloOpenGL.m">
       <Filter>HelloOpenGL</Filter>
     </ClangCompile>
-    <AssetCatalogCompile Include="..\..\HelloOpenGL\Assets.xcassets">
-      <Filter>HelloOpenGL</Filter>
-    </AssetCatalogCompile>
     <SBInfoPlistCopy Include="..\..\HelloOpenGL\Info.plist" />
+    <StoryboardCompile Include="..\..\HelloOpenGL\Base.lproj\LaunchScreen.storyboard">
+      <Filter>HelloOpenGL\Base</Filter>
+    </StoryboardCompile>
+    <StoryboardCompile Include="..\..\HelloOpenGL\Base.lproj\Main.storyboard">
+      <Filter>HelloOpenGL\Base</Filter>
+    </StoryboardCompile>
     <Text Include="HelloOpenGL-Debug-xcvars.txt">
       <Filter>Xcode Variable Files</Filter>
     </Text>
     <Text Include="HelloOpenGL-Release-xcvars.txt">
       <Filter>Xcode Variable Files</Filter>
     </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <AppxManifest Include="Package.appxmanifest" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="HelloOpenGL_TemporaryKey.pfx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Xml Include="default.rd.xml" />
   </ItemGroup>
 </Project>

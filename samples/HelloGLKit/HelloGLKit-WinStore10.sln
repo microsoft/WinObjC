@@ -1,17 +1,13 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.22823.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HelloGLKit", "HelloGLKit", "{D0ECD716-6AB8-4ED4-BE7A-C2B13E415822}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HelloGLKit", "HelloGLKit", "{A767F7AA-295B-4223-831B-C1968F43F783}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelloGLKit-Headers", "HelloGLKit.vsimporter\HelloGLKit-Headers-WinStore10\HelloGLKit-Headers.vcxitems", "{35FCD860-3A61-4B01-A826-CD28A67E49B3}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelloGLKit", "HelloGLKit.vsimporter\HelloGLKit-WinStore10\HelloGLKit.vcxproj", "{B82D23D5-5A6B-4C97-B2EA-ED33A185E6F3}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelloGLKit", "HelloGLKit.vsimporter\HelloGLKit-WinStore10\HelloGLKit.vcxproj", "{3B3E53EF-8A11-41CF-A5CA-F0B9414BAF2E}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		HelloGLKit.vsimporter\HelloGLKit-Headers-WinStore10\HelloGLKit-Headers.vcxitems*{35fcd860-3a61-4b01-a826-cd28a67e49b3}*SharedItemsImports = 9
-		HelloGLKit.vsimporter\HelloGLKit-Headers-WinStore10\HelloGLKit-Headers.vcxitems*{b82d23d5-5a6b-4c97-b2ea-ed33a185e6f3}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -20,24 +16,23 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B82D23D5-5A6B-4C97-B2EA-ED33A185E6F3}.Debug|ARM.ActiveCfg = Debug|ARM
-		{B82D23D5-5A6B-4C97-B2EA-ED33A185E6F3}.Debug|ARM.Build.0 = Debug|ARM
-		{B82D23D5-5A6B-4C97-B2EA-ED33A185E6F3}.Debug|ARM.Deploy.0 = Debug|ARM
-		{B82D23D5-5A6B-4C97-B2EA-ED33A185E6F3}.Debug|Win32.ActiveCfg = Debug|Win32
-		{B82D23D5-5A6B-4C97-B2EA-ED33A185E6F3}.Debug|Win32.Build.0 = Debug|Win32
-		{B82D23D5-5A6B-4C97-B2EA-ED33A185E6F3}.Debug|Win32.Deploy.0 = Debug|Win32
-		{B82D23D5-5A6B-4C97-B2EA-ED33A185E6F3}.Release|ARM.ActiveCfg = Release|ARM
-		{B82D23D5-5A6B-4C97-B2EA-ED33A185E6F3}.Release|ARM.Build.0 = Release|ARM
-		{B82D23D5-5A6B-4C97-B2EA-ED33A185E6F3}.Release|ARM.Deploy.0 = Release|ARM
-		{B82D23D5-5A6B-4C97-B2EA-ED33A185E6F3}.Release|Win32.ActiveCfg = Release|Win32
-		{B82D23D5-5A6B-4C97-B2EA-ED33A185E6F3}.Release|Win32.Build.0 = Release|Win32
-		{B82D23D5-5A6B-4C97-B2EA-ED33A185E6F3}.Release|Win32.Deploy.0 = Release|Win32
+		{3B3E53EF-8A11-41CF-A5CA-F0B9414BAF2E}.Debug|ARM.ActiveCfg = Debug|ARM
+		{3B3E53EF-8A11-41CF-A5CA-F0B9414BAF2E}.Debug|ARM.Build.0 = Debug|ARM
+		{3B3E53EF-8A11-41CF-A5CA-F0B9414BAF2E}.Debug|ARM.Deploy.0 = Debug|ARM
+		{3B3E53EF-8A11-41CF-A5CA-F0B9414BAF2E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3B3E53EF-8A11-41CF-A5CA-F0B9414BAF2E}.Debug|Win32.Build.0 = Debug|Win32
+		{3B3E53EF-8A11-41CF-A5CA-F0B9414BAF2E}.Debug|Win32.Deploy.0 = Debug|Win32
+		{3B3E53EF-8A11-41CF-A5CA-F0B9414BAF2E}.Release|ARM.ActiveCfg = Release|ARM
+		{3B3E53EF-8A11-41CF-A5CA-F0B9414BAF2E}.Release|ARM.Build.0 = Release|ARM
+		{3B3E53EF-8A11-41CF-A5CA-F0B9414BAF2E}.Release|ARM.Deploy.0 = Release|ARM
+		{3B3E53EF-8A11-41CF-A5CA-F0B9414BAF2E}.Release|Win32.ActiveCfg = Release|Win32
+		{3B3E53EF-8A11-41CF-A5CA-F0B9414BAF2E}.Release|Win32.Build.0 = Release|Win32
+		{3B3E53EF-8A11-41CF-A5CA-F0B9414BAF2E}.Release|Win32.Deploy.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{35FCD860-3A61-4B01-A826-CD28A67E49B3} = {D0ECD716-6AB8-4ED4-BE7A-C2B13E415822}
-		{B82D23D5-5A6B-4C97-B2EA-ED33A185E6F3} = {D0ECD716-6AB8-4ED4-BE7A-C2B13E415822}
+		{3B3E53EF-8A11-41CF-A5CA-F0B9414BAF2E} = {A767F7AA-295B-4223-831B-C1968F43F783}
 	EndGlobalSection
 EndGlobal
