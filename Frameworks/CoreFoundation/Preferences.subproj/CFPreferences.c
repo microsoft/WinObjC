@@ -188,7 +188,40 @@ if (completePath) {
     // append "Preferences\" and make the CFURL
     CFStringAppend(completePath, CFSTR("Preferences\\"));
     url = CFURLCreateWithFileSystemPath(alloc, completePath, kCFURLWindowsPathStyle, true);
-    _CFCreateDirectory(CFStringGetCStringPtr(completePath, kCFStringEncodingUTF8)); // WINOBJC: ensure directory exists
+	
+	// Converting mutable string to characters array
+	// When CFStringGetCStringPtr() fails,
+	// it tries CFStringGetCString().
+	char *fullPath;
+	char outPath[512];
+
+	Boolean conversionResult;
+	CFStringEncoding encodingMethod = CFStringGetSystemEncoding();
+
+	// 1st try for system encoding
+	fullPath = (char*)CFStringGetCStringPtr(completePath, encodingMethod);
+	if (fullPath == NULL) {
+		// 2nd try for Japanese system
+		encodingMethod = kCFStringEncodingUTF8;
+		fullPath = (char*)CFStringGetCStringPtr(completePath, encodingMethod);
+	}
+
+	// for safer operation.
+	if (fullPath == NULL) {
+		CFIndex length = CFStringGetLength(completePath);
+		fullPath = (char *)malloc(length + 1);
+		conversionResult = CFStringGetCString(completePath, fullPath, length, kCFStringEncodingUTF8);
+
+		strcpy(outPath, fullPath);
+
+		free(fullPath);
+	}
+	else {
+		strcpy(outPath, fullPath);
+	}
+
+	_CFCreateDirectory(outPath);
+
     CFRelease(completePath);
 }
 
