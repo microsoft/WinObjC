@@ -15,14 +15,14 @@
 //******************************************************************************
 
 #include "Starboard.h"
-#include "UIKit/UIKit.h"
-#include "UIKit/UIView.h"
-#include "UIKit/UITextField.h"
-#include "UIKit/UIColor.h"
-#include "UIKit/UILabel.h"
-#include "UIKit/UIFont.h"
-#include "UIKit/UIImage.h"
-#include "UIKit/UISegmentedControl.h"
+#include <UIKit/UIKit.h>
+#include <UIKit/UIView.h>
+#include <UIKit/UITextField.h>
+#include <UIKit/UIColor.h>
+#include <UIKit/UILabel.h>
+#include <UIKit/UIFont.h>
+#include <UIKit/UIImage.h>
+#include <UIKit/UISegmentedControl.h>
 #import "NSLogging.h"
 #include "StubReturn.h"
 
@@ -36,11 +36,12 @@ static const CGFloat c_scopeButtonMarginTop = 20;
 static NSString* cancelButtonText = @"Cancel";
 
 @implementation UISearchBar {
-    idretaintype(UITextField) _textField;
-    idretaintype(UILabel) _promptLabel;
-    idretaintype(UIButton) _cancelButton;
-    idretaintype(UISegmentedControl) _scopeButtons;
-    idretaintype(NSString) _placeholder;
+    StrongId<UITextField> _textField;
+    StrongId<UILabel> _promptLabel;
+    StrongId<UIButton> _cancelButton;
+    StrongId<UISegmentedControl> _scopeButtons;
+    StrongId<NSString> _placeholder;
+    StrongId<NSString> _prompt;
     BOOL _scopeButtonsHidden;
     id _delegate;
 }
@@ -73,7 +74,7 @@ static void initInternal(UISearchBar* self) {
 */
 - (void)setPrompt:(NSString*)prompt {
     if ((([_prompt length] == 0) && ([prompt length] == 0)) || [_prompt isEqualToString:prompt]) {
-        // if old prompt text is "equlal" to the new prompt text (nil and emptyString are considered equal), quick return
+        // if old prompt text is "equal" to the new prompt text (nil and emptyString are considered equal), quick return
         return;
     }
 
@@ -98,6 +99,13 @@ static void initInternal(UISearchBar* self) {
     }
 
     [self setNeedsLayout];
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)prompt {
+    return _prompt;
 }
 
 /**
@@ -239,7 +247,7 @@ static void initInternal(UISearchBar* self) {
 /**
  @Status Interoperable
 */
-- (void)setPlaceholder:(id)placeholder {
+- (void)setPlaceholder:(NSString*)placeholder {
     [_textField setPlaceholder:placeholder];
 }
 
@@ -253,7 +261,7 @@ static void initInternal(UISearchBar* self) {
 /**
  @Status Stub
 */
-- (void)setTintColor:(id)color {
+- (void)setTintColor:(UIColor*)color {
     UNIMPLEMENTED();
 }
 
@@ -272,14 +280,14 @@ static void initInternal(UISearchBar* self) {
 /**
  @Status Stub
 */
-- (void)setScopeButtonTitles:(id)titles {
+- (void)setScopeButtonTitles:(NSArray*)titles {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
-- (void)setScopeBarButtonTitleTextAttributes:(id)attributes forState:(UIControlState)forState {
+- (void)setScopeBarButtonTitleTextAttributes:(NSDictionary*)attributes forState:(UIControlState)forState {
     UNIMPLEMENTED();
 }
 
