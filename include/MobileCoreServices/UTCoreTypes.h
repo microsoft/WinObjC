@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,8 +14,6 @@
 //
 //******************************************************************************
 
-#import <UIKit/UIKit.h>
+#pragma once
 
-@interface SearchBarViewController : UITableViewController <UISearchBarDelegate>
-
-@end
+#import <MobileCoreServices/UTType.h>

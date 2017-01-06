@@ -18,6 +18,12 @@
 #include "StubReturn.h"
 #import "Foundation/NSException.h"
 #import "NSLogging.h"
+#include <winstring.h>
+
+#include <COMIncludes.h>
+#include <roerrorapi.h>
+#include "wrl\wrappers\corewrappers.h"
+#include <COMIncludes_End.h>
 
 static const wchar_t* TAG = L"NSException";
 NSString* const NSRangeException = @"NSRangeExcepton";
@@ -202,6 +208,29 @@ NSUncaughtExceptionHandler* NSGetUncaughtExceptionHandler() {
     return WinObjCException;
 }
 
+// Returns a HRESULT for an exception name
+// Note: The table is not the exact inverse of _exceptionNameForHRESULT. 
+// E.g. E_ACCESSDENIED and RPC_E_WRONG_THREAD both map to NSObjectInaccessibleException.
+// However, NSObjectInaccessibleException only maps to E_ACCESSDENIED
++ (HRESULT)_HRESULTForExceptionName:(NSString *)exceptionName {
+    if([exceptionName isEqualToString:NSInvalidArgumentException]) {
+        return E_INVALIDARG;
+    } else if ([exceptionName isEqualToString:NSGenericException]) {
+        return E_FAIL;
+    } else if ([exceptionName isEqualToString:NSRangeException]) {
+        return E_BOUNDS;
+    } else if ([exceptionName isEqualToString:NSObjectInaccessibleException]) {
+        return E_ACCESSDENIED;
+    } else if ([exceptionName isEqualToString:NSInternalInconsistencyException]) {
+        return E_UNEXPECTED;
+    } else if ([exceptionName isEqualToString:NSMallocException]) {
+        return E_OUTOFMEMORY;
+    } else if ([exceptionName isEqualToString:NSObjectNotAvailableException]) {
+        return __HRESULT_FROM_WIN32(ERROR_NOT_READY);
+    }
+    return E_UNEXPECTED;
+}
+
 // Returns exception with given HRESULT
 + (instancetype)_exceptionWithHRESULT:(int)errorCode reason:(NSString*)reason userInfo:(NSDictionary*)userInfo {
     NSException* ret = [[self alloc] initWithName:[self _exceptionNameForHRESULT:errorCode] reason:reason userInfo:userInfo];
@@ -216,7 +245,19 @@ NSUncaughtExceptionHandler* NSGetUncaughtExceptionHandler() {
         return [hresultValue unsignedIntValue];
     }
 
-    TraceWarning(L"NSException", L"Called -hresult on an NSException without an HRESULT!");
-    return E_UNEXPECTED;
+    return [[self class] _HRESULTForExceptionName:self.name];
+}
+
+- (void)_processException {
+    HRESULT hr = [self _hresult];
+    assert(hr != S_OK);
+
+    if(self.reason != nil) {
+        LPCWSTR reason = (LPCWSTR)([[self reason] cStringUsingEncoding:NSUnicodeStringEncoding]);
+        Microsoft::WRL::Wrappers::HStringReference hstrRef(reason);
+        RoOriginateError(hr, hstrRef.Get());
+    } else {
+        RoOriginateError(hr, nullptr);
+    }
 }
 @end

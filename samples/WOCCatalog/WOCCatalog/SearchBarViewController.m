@@ -71,9 +71,14 @@
         searchBar.showsCancelButton = true;
         [searchBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
         [cell addSubview:searchBar];
+        searchBar.delegate = self;
     }
 
     return cell;
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar*)searchBar {
+    searchBar.text = @"";
 }
 
 @end
