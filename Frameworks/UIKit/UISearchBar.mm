@@ -79,7 +79,7 @@ static void initInternal(UISearchBar* self) {
     }
 
     // otherwise, old prompt text is different from new prompt text, need either add or remove prompt label
-    _prompt = [prompt copy];
+    _prompt.attach([prompt copy]);
 
     if ([_prompt length] == 0) {
         // remove prompt label since prompt text is either nil or empty
