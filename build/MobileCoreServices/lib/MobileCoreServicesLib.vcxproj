@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="..\..\..\Frameworks\MobileCoreServices\UTType.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\MobileCoreServices\UTTypeInternalMap.mm" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3FB3DD16-59E3-4CB6-B91D-5095A933B645}</ProjectGuid>
