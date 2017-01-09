@@ -1,6 +1,6 @@
 ﻿//******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -21,6 +21,12 @@
 #include "Tests/AssetsLibraryTests/AssetsLibraryTestHelpers.h"
 #include <WexTestClass.h>
 #include <ErrorHandling.h>
+
+BEGIN_MODULE()
+MODULE_PROPERTY(L"RunAs", L"UAP")
+MODULE_PROPERTY(L"UAP:Host", L"Xaml")
+MODULE_PROPERTY(L"UAP:AppXManifest", L"Default.AppxManifest.xml")
+END_MODULE()
 
 // This is a method that UIKit exposes for the test frameworks to use.
 extern "C" void UIApplicationInitialize(const wchar_t*, const wchar_t*);
@@ -82,10 +88,8 @@ extern void SampleTestFailure();
 class SampleTest {
 public:
     BEGIN_TEST_CLASS(SampleTest)
-    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
-    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
-    // Note: TAEF automatically generates a default manifest with no capabilities at runtime. If your test
-    // requires special capabilities, add your own custom manifest with the required capabilities.
+    // Note: We automatically set a default AppXManifest at the top of this file, but it provides no UWP capabilities. If your test
+    // requires special capabilities, add your own custom manifest with the required capabilities, and specify it as such:
     // TEST_CLASS_PROPERTY(L"UAP:AppXManifest", L"xyz.AppxManifest.xml")
     TEST_CLASS_PROPERTY(L"Ignore", L"true")
     END_TEST_CLASS()
@@ -173,8 +177,6 @@ extern void NSURLSessionDownloadTaskWithURL_WithCancelResume();
 class NSURL {
 public:
     BEGIN_TEST_CLASS(NSURL)
-    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
-    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
     TEST_CLASS_PROPERTY(L"UAP:AppXManifest", L"NSURL.AppxManifest.xml")
     END_TEST_CLASS()
 
@@ -183,8 +185,7 @@ public:
     }
 
     TEST_METHOD_CLEANUP(NSURLCleanup) {
-        FunctionalTestCleanupUIApplication();
-        return true;
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
     }
 
     //
@@ -224,6 +225,13 @@ public:
     }
 
     TEST_METHOD(NSURLSession_DownloadTaskWithURL) {
+// Disable Test on ARM as it tries to hit a real endpoint and download significant data
+// and arm machines may not have a stable ethernet connection like a build server does.
+#ifdef _M_ARM
+        BEGIN_TEST_METHOD_PROPERTIES()
+        TEST_METHOD_PROPERTY(L"ignore", L"true")
+        END_TEST_METHOD_PROPERTIES()
+#endif
         NSURLSessionDownloadTaskWithURL();
     }
 
@@ -232,6 +240,13 @@ public:
     }
 
     TEST_METHOD(NSURLSession_DownloadTaskWithURL_WithCompletionHandler) {
+// Disable Test on ARM as it tries to hit a real endpoint and download significant data
+// and arm machines may not have a stable ethernet connection like a build server does.
+#ifdef _M_ARM
+        BEGIN_TEST_METHOD_PROPERTIES()
+        TEST_METHOD_PROPERTY(L"ignore", L"true")
+        END_TEST_METHOD_PROPERTIES()
+#endif
         NSURLSessionDownloadTaskWithURL_WithCompletionHandler();
     }
 
@@ -251,8 +266,6 @@ extern void NSUserDefaultsPerf();
 class NSUserDefaults {
 public:
     BEGIN_TEST_CLASS(NSUserDefaults)
-    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
-    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
     END_TEST_CLASS()
 
     TEST_CLASS_SETUP(NSURLClassSetup) {
@@ -260,8 +273,7 @@ public:
     }
 
     TEST_METHOD_CLEANUP(NSUserDefaultsCleanup) {
-        FunctionalTestCleanupUIApplication();
-        return true;
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
     }
 
     TEST_METHOD(NSUserDefaults_Basic) {
@@ -290,8 +302,6 @@ extern void NSBundleMSAppxURL();
 class NSBundle {
 public:
     BEGIN_TEST_CLASS(NSBundle)
-    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
-    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
     END_TEST_CLASS()
 
     TEST_CLASS_SETUP(NSURLClassSetup) {
@@ -299,8 +309,7 @@ public:
     }
 
     TEST_METHOD_CLEANUP(NSBundleCleanup) {
-        FunctionalTestCleanupUIApplication();
-        return true;
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
     }
 
     TEST_METHOD(NSBundle_MSAppxURL) {
@@ -316,8 +325,6 @@ extern void AssetsLibraryGetVideoAsset();
 class AssetsLibrary {
 public:
     BEGIN_TEST_CLASS(AssetsLibrary)
-    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
-    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
     TEST_CLASS_PROPERTY(L"UAP:AppXManifest", L"AssetsLibrary.AppxManifest.xml")
     END_TEST_CLASS()
 
@@ -331,8 +338,7 @@ public:
     }
 
     TEST_METHOD_CLEANUP(AssetsLibraryCleanup) {
-        FunctionalTestCleanupUIApplication();
-        return true;
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
     }
 
     TEST_METHOD(AssetsLibrary_GetVideoAsset) {
@@ -343,15 +349,12 @@ public:
 //
 // Cortana Activation Tests
 //
-
 extern void CortanaTestVoiceCommandForegroundActivation();
 extern void CortanaTestVoiceCommandForegroundActivationDelegateMethodsCalled();
 
 class CortanaVoiceCommandForegroundActivation {
 public:
     BEGIN_TEST_CLASS(CortanaVoiceCommandForegroundActivation)
-    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
-    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
     END_TEST_CLASS()
 
     TEST_CLASS_SETUP(CortanaVoiceCommandForegroundTestClassSetup) {
@@ -360,8 +363,7 @@ public:
     }
 
     TEST_METHOD_CLEANUP(CortanaVoiceCommandForegroundCleanup) {
-        FunctionalTestCleanupUIApplication();
-        return true;
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
     }
 
     TEST_METHOD(Cortana_VoiceCommandForegroundActivationDelegateMethodsCalled) {
@@ -375,8 +377,6 @@ extern void CortanaTestProtocolForegroundActivationDelegateMethodsCalled();
 class CortanaProtocolForegroundActivation {
 public:
     BEGIN_TEST_CLASS(CortanaProtocolForegroundActivation)
-    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
-    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
     END_TEST_CLASS()
 
     TEST_CLASS_SETUP(CortanaProtocolForegroundTestClassSetup) {
@@ -385,8 +385,7 @@ public:
     }
 
     TEST_METHOD_CLEANUP(CortanaProtocolForegroundCleanup) {
-        FunctionalTestCleanupUIApplication();
-        return true;
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
     }
 
     TEST_METHOD(Cortana_ProtocolForegroundActivationDelegateMethodsCalled) {
@@ -399,8 +398,6 @@ extern void ToastNotificationTestForegroundActivationDelegateMethodsCalled();
 
 class ToastNotificationForegroundActivation {
     BEGIN_TEST_CLASS(ToastNotificationForegroundActivation)
-    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
-    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
     END_TEST_CLASS()
 
     TEST_CLASS_SETUP(ToastNotificationForegroundTestClassSetup) {
@@ -409,8 +406,7 @@ class ToastNotificationForegroundActivation {
     }
 
     TEST_METHOD_CLEANUP(ToastNotificationForegroundCleanup) {
-        FunctionalTestCleanupUIApplication();
-        return true;
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
     }
 
     TEST_METHOD(ToastNotification_ForegroundActivationDelegateMethodsCalled) {
@@ -422,8 +418,6 @@ extern void ToastNotificationTestActivatedAppReceivesToastNotification();
 
 class ActivatedAppReceivesToastNotification {
     BEGIN_TEST_CLASS(ActivatedAppReceivesToastNotification)
-    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
-    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
     END_TEST_CLASS()
 
     TEST_CLASS_SETUP(ActivatedAppReceivesToastNotificationTestClassSetup) {
@@ -432,8 +426,7 @@ class ActivatedAppReceivesToastNotification {
     }
 
     TEST_METHOD_CLEANUP(ActivatedAppReceivesToastNotificationCleanup) {
-        FunctionalTestCleanupUIApplication();
-        return true;
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
     }
 
     TEST_METHOD(ToastNotification_ActivatedAppReceivesToastNotification) {
@@ -441,26 +434,80 @@ class ActivatedAppReceivesToastNotification {
     }
 }; /* class ActivatedAppReceivesToastNotification */
 
+//
+// File Activation Tests
+//
+
+extern void FileActivatedTestForegroundActivation();
+extern void FileActivatedTestForegroundActivationDelegateMethodsCalled();
+
+class FileActivationForegroundActivation {
+public:
+    BEGIN_TEST_CLASS(FileActivationForegroundActivation)
+    END_TEST_CLASS()
+
+    TEST_CLASS_SETUP(FileActivationForegroundActivationClassSetup) {
+        // The class setup allows us to activate the app in our test method, but can only be done once per class
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FileActivatedTestForegroundActivation));
+    }
+
+    TEST_METHOD_CLEANUP(FileActivationForegroundActivationCleanup) {
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
+    }
+
+    TEST_METHOD(FileActivation_TestForegroundActivationDelegateMethodsCalled) {
+        FileActivatedTestForegroundActivationDelegateMethodsCalled();
+    }
+}; /* class FileActivatedTestForegroundActivation */
+
 // UIKitTests
 //
 extern void UIViewCreate();
 extern void UIViewGetXamlElement();
+extern void UIViewInsertSubviewAtIndex0();
+extern void UIViewInsertSubviewAtIndex1();
+extern void UIViewInsertSubviewAtIndex2();
+extern void UIViewInsertSubviewAtIndex3();
+extern void UIViewInsertSubviewBelowSubview0();
+extern void UIViewInsertSubviewBelowSubview1();
+extern void UIViewInsertSubviewBelowSubview2();
+extern void UIViewInsertSubviewBelowSubview3();
+extern void UIViewInsertSubviewAboveSubview0();
+extern void UIViewInsertSubviewAboveSubview1();
+extern void UIViewInsertSubviewAboveSubview2();
+extern void UIViewInsertSubviewAboveSubview3();
+extern void UIViewInsertSubviewBelowSubviewNonSibling();
+extern void UIViewInsertSubviewAboveSubviewNonSibling();
+extern void UIViewInsertSubviewBelowSubviewNil();
+extern void UIViewInsertSubviewAboveSubviewNil();
+
+extern void UIActionSheetCreateXamlElement();
+extern void UIActionSheetGetXamlElement();
+extern void UIActionSheetNilParameters();
+
 extern void UIActivityIndicatorViewCreateXamlElement();
 extern void UIActivityIndicatorViewGetXamlElement();
+
 extern void UIButtonCreateXamlElement();
 extern void UIButtonGetXamlElement();
+extern void UIButtonBackgroundColorChanged();
+
 extern void UIScrollViewCreateXamlElement();
 extern void UIScrollViewGetXamlElement();
+
 extern void UISliderCreateXamlElement();
 extern void UISliderGetXamlElement();
+
 extern void UITextFieldCreateXamlElement();
 extern void UITextFieldGetXamlElement();
+
+extern void NSLayoutConstraintVisualFormatLanguage();
+extern void NSLayoutConstraintVisualFormatLanguageSyntax();
+extern void NSLayoutConstraintAddConstraints();
 
 class UIKitTests {
 public:
     BEGIN_TEST_CLASS(UIKitTests)
-    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
-    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
     END_TEST_CLASS()
 
     TEST_CLASS_SETUP(UIKitTestsSetup) {
@@ -468,56 +515,154 @@ public:
     }
 
     TEST_METHOD_CLEANUP(UIKitTestsCleanup) {
-        FunctionalTestCleanupUIApplication();
-        return true;
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
     }
 
     TEST_METHOD(UIView_Create) {
+        // Note: Intentionally not dispatched to the UI thread for testing purposes
         UIViewCreate();
     }
 
     TEST_METHOD(UIView_GetXamlElement) {
-        UIViewGetXamlElement();
+        FrameworkHelper::RunOnUIThread(&UIViewGetXamlElement);
+    }
+
+    TEST_METHOD(UIView_InsertSubviewAtIndex0) {
+        FrameworkHelper::RunOnUIThread(&UIViewInsertSubviewAtIndex0);
+    }
+
+    TEST_METHOD(UIView_InsertSubviewAtIndex1) {
+        FrameworkHelper::RunOnUIThread(&UIViewInsertSubviewAtIndex1);
+    }
+
+    TEST_METHOD(UIView_InsertSubviewAtIndex2) {
+        FrameworkHelper::RunOnUIThread(&UIViewInsertSubviewAtIndex2);
+    }
+
+    TEST_METHOD(UIView_InsertSubviewAtIndex3) {
+        FrameworkHelper::RunOnUIThread(&UIViewInsertSubviewAtIndex3);
+    }
+
+    TEST_METHOD(UIView_InsertSubviewBelowSubview0) {
+        FrameworkHelper::RunOnUIThread(&UIViewInsertSubviewBelowSubview0);
+    }
+
+    TEST_METHOD(UIView_InsertSubviewBelowSubview1) {
+        FrameworkHelper::RunOnUIThread(&UIViewInsertSubviewBelowSubview1);
+    }
+
+    TEST_METHOD(UIView_InsertSubviewBelowSubview2) {
+        FrameworkHelper::RunOnUIThread(&UIViewInsertSubviewBelowSubview2);
+    }
+
+    TEST_METHOD(UIView_InsertSubviewBelowSubview3) {
+        FrameworkHelper::RunOnUIThread(&UIViewInsertSubviewBelowSubview3);
+    }
+
+    TEST_METHOD(UIView_InsertSubviewAboveSubview0) {
+        FrameworkHelper::RunOnUIThread(&UIViewInsertSubviewAboveSubview0);
+    }
+
+    TEST_METHOD(UIView_InsertSubviewAboveSubview1) {
+        FrameworkHelper::RunOnUIThread(&UIViewInsertSubviewAboveSubview1);
+    }
+
+    TEST_METHOD(UIView_InsertSubviewAboveSubview2) {
+        FrameworkHelper::RunOnUIThread(&UIViewInsertSubviewAboveSubview2);
+    }
+
+    TEST_METHOD(UIView_InsertSubviewAboveSubview3) {
+        FrameworkHelper::RunOnUIThread(&UIViewInsertSubviewAboveSubview3);
+    }
+
+    TEST_METHOD(UIView_InsertSubviewBelowSubviewNonSibling) {
+        FrameworkHelper::RunOnUIThread(&UIViewInsertSubviewBelowSubviewNonSibling);
+    }
+
+    TEST_METHOD(UIView_InsertSubviewAboveSubviewNonSibling) {
+        FrameworkHelper::RunOnUIThread(&UIViewInsertSubviewAboveSubviewNonSibling);
+    }
+
+    TEST_METHOD(UIView_InsertSubviewBelowSubviewNil) {
+        FrameworkHelper::RunOnUIThread(&UIViewInsertSubviewBelowSubviewNil);
+    }
+
+    TEST_METHOD(UIView_InsertSubviewAboveSubviewNil) {
+        FrameworkHelper::RunOnUIThread(&UIViewInsertSubviewAboveSubviewNil);
+    }
+
+    TEST_METHOD(UIActionSheet_CreateXamlElement) {
+        FrameworkHelper::RunOnUIThread(&UIActionSheetCreateXamlElement);
+    }
+
+    TEST_METHOD(UIActionSheet_GetXamlElement) {
+        FrameworkHelper::RunOnUIThread(&UIActionSheetGetXamlElement);
+    }
+
+    TEST_METHOD(UIActionSheet_NilParameters) {
+        FrameworkHelper::RunOnUIThread(&UIActionSheetNilParameters);
     }
 
     TEST_METHOD(UIActivityIndicatorView_CreateXamlElement) {
-        UIActivityIndicatorViewCreateXamlElement();
+        FrameworkHelper::RunOnUIThread(&UIActivityIndicatorViewCreateXamlElement);
     }
 
     TEST_METHOD(UIActivityIndicatorView_GetXamlElement) {
-        UIActivityIndicatorViewGetXamlElement();
+        FrameworkHelper::RunOnUIThread(&UIActivityIndicatorViewGetXamlElement);
     }
 
     TEST_METHOD(UIButton_CreateXamlElement) {
-        UIButtonCreateXamlElement();
+        FrameworkHelper::RunOnUIThread(&UIButtonCreateXamlElement);
     }
 
     TEST_METHOD(UIButton_GetXamlElement) {
-        UIButtonGetXamlElement();
+        FrameworkHelper::RunOnUIThread(&UIButtonGetXamlElement);
+    }
+
+    TEST_METHOD(UIButton_BackgroundColorChanged) {
+        // Disable this test for now since it previously relied on the async delay between setting a UI property
+        // and seeing the change applied to the backing XAML element during the next tick on the runloop
+        BEGIN_TEST_METHOD_PROPERTIES()
+        TEST_METHOD_PROPERTY(L"ignore", L"true")
+        END_TEST_METHOD_PROPERTIES()
+
+        UIButtonBackgroundColorChanged();
     }
 
     TEST_METHOD(UIScrollView_CreateXamlElement) {
-        UIScrollViewCreateXamlElement();
+        FrameworkHelper::RunOnUIThread(&UIScrollViewCreateXamlElement);
     }
 
     TEST_METHOD(UIScrollView_GetXamlElement) {
-        UIScrollViewGetXamlElement();
+        FrameworkHelper::RunOnUIThread(&UIScrollViewGetXamlElement);
     }
 
     TEST_METHOD(UISlider_CreateXamlElement) {
-        UISliderCreateXamlElement();
+        FrameworkHelper::RunOnUIThread(&UISliderCreateXamlElement);
     }
 
     TEST_METHOD(UISlider_GetXamlElement) {
-        UISliderGetXamlElement();
+        FrameworkHelper::RunOnUIThread(&UISliderGetXamlElement);
     }
 
     TEST_METHOD(UITextField_CreateXamlElement) {
-        UITextFieldCreateXamlElement();
+        FrameworkHelper::RunOnUIThread(&UITextFieldCreateXamlElement);
     }
 
     TEST_METHOD(UITextField_GetXamlElement) {
-        UITextFieldGetXamlElement();
+        FrameworkHelper::RunOnUIThread(&UITextFieldGetXamlElement);
+    }
+
+    TEST_METHOD(NSLayoutConstraint_VisualFormatLanguage) {
+        FrameworkHelper::RunOnUIThread(&NSLayoutConstraintVisualFormatLanguage);
+    }
+
+    TEST_METHOD(NSLayoutConstraint_VisualFormatLanguageSyntax) {
+        FrameworkHelper::RunOnUIThread(&NSLayoutConstraintVisualFormatLanguageSyntax);
+    }
+
+    TEST_METHOD(NSLayoutConstraint_AddConstraints) {
+        FrameworkHelper::RunOnUIThread(&NSLayoutConstraintAddConstraints);
     }
 }; /* class UIKitTests */
 
@@ -529,12 +674,12 @@ extern void ProjectionCreateWithTest();
 extern void ProjectionAsyncOnUIThread();
 extern void ProjectionAsyncOnBackgroundThread();
 extern void ProjectionCreateWithARCEnabled();
+extern void ProjectionComposableAttrClass();
+extern void ProjectionContainerOfContainers();
 
 class ProjectionTest {
 public:
     BEGIN_TEST_CLASS(ProjectionTest)
-    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
-    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
     END_TEST_CLASS()
 
     TEST_CLASS_SETUP(ProjectionTestClassSetup) {
@@ -542,8 +687,7 @@ public:
     }
 
     TEST_METHOD_CLEANUP(ProjectionTestCleanup) {
-        FunctionalTestCleanupUIApplication();
-        return true;
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
     }
 
     TEST_METHOD(ProjectionTest_WUCCoreDispatcherSanity) {
@@ -566,6 +710,14 @@ public:
         ProjectionCreateWithARCEnabled();
     }
 
+    TEST_METHOD(ProjectionTest_ComposableAttrClass) {
+        ProjectionComposableAttrClass();
+    }
+
+    TEST_METHOD(ProjectionTest_ContainerOfContainers) {
+        ProjectionContainerOfContainers();
+    }
+
 }; /* class ProjectionTest */
 
 //
@@ -576,8 +728,6 @@ extern void UIApplicationTestsOpenURL();
 class UIApplicationTests {
 public:
     BEGIN_TEST_CLASS(UIApplicationTests)
-    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
-    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
     END_TEST_CLASS()
 
     TEST_CLASS_SETUP(UIApplicationTestsSetup) {
@@ -588,3 +738,56 @@ public:
         UIApplicationTestsOpenURL();
     }
 }; /* class UIApplicationTests */
+
+//
+// NSURLStorageFileTests
+//
+extern void NSURLStorageFileURL();
+
+class NSURLStorageFileTests {
+public:
+    BEGIN_TEST_CLASS(NSURLStorageFileTests)
+    END_TEST_CLASS()
+
+    TEST_CLASS_SETUP(NSURLStorageFileTestsSetup) {
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+    }
+
+    TEST_METHOD_CLEANUP(NSURLStorageFileTestsCleanup) {
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
+    }
+
+    TEST_METHOD(NSURLTests_StorageFileURL) {
+        NSURLStorageFileURL();
+    }
+}; /* class NSURLStorageFileTests */
+
+//
+// CoreAnimationTests
+//
+extern void CALayerAppearanceOpacityChanged();
+extern void CALayerAppearanceBackgroundColorChanged();
+
+class CoreAnimationTests {
+public:
+    BEGIN_TEST_CLASS(CoreAnimationTests)
+    END_TEST_CLASS()
+
+    TEST_CLASS_SETUP(CoreAnimationTestsSetup) {
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+    }
+
+    TEST_METHOD_CLEANUP(CoreAnimationTestsCleanup) {
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
+    }
+
+    TEST_METHOD(CALayerAppearance_OpacityChanged) {
+        // NOTE: We are not using the FrameworkHelper::RunOnUIThread because we need to set a waitable condition outside of it
+        CALayerAppearanceOpacityChanged();
+    }
+
+    TEST_METHOD(CALayerAppearance_BackgroundColorChanged) {
+        // NOTE: We are not using the FrameworkHelper::RunOnUIThread because we need to set a waitable condition outside of it
+        CALayerAppearanceBackgroundColorChanged();
+    }
+}; /* class CoreAnimationTests */

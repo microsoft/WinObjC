@@ -17,7 +17,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <vector>
-#include "Platform/EbrPlatform.h"
+#include <Foundation/NSInputStream.h>
 
 uint32_t int32Swap(uint32_t val);
 uint64_t int64Swap(uint64_t val);
@@ -114,9 +114,6 @@ private:
         int64_t mNumberValidFrames;
         int32_t mPrimingFrames;
         int32_t mRemainderFrames;
-
-        uint8_t mPacketDescriptions[1]; // this is a variable length array of
-        // mNumberPackets elements
     } CAFPacketTableHeader;
 
     typedef struct CAFDataChunk { uint32_t mEditCount; } CAFDataChunk;
@@ -129,28 +126,24 @@ private:
         kAudioCodecProduceOutputPacketSuccessHasMore
     } Result;
 
-    int GetUsedInputBufferByteSize(EbrFile* fpIn);
-    Byte* GetBytes(EbrFile* fpIn, int len);
+    Byte* GetBytes(NSInputStream* stream, int len);
 
     typedef std::vector<ChannelState> ChannelStateList;
 
-    UInt32 ProduceOutputPackets(EbrFile* fpIn,
-                                ChannelStateList& mChannelStateList,
-                                void* outOutputData,
-                                UInt32& ioOutputDataByteSize,
-                                UInt32& ioNumberPackets,
-                                OutputDescription& mOutputFormat,
-                                CAFAudioDescription& mInputFormat);
-    EbrFile* fpIn;
+    void ProduceOutputPackets(NSInputStream* stream,
+                              ChannelStateList& mChannelStateList,
+                              void* outOutputData,
+                              UInt32& ioOutputDataByteSize,
+                              OutputDescription& mOutputFormat,
+                              CAFAudioDescription& mInputFormat);
     CAFAudioDescription cafDesc;
     CAFPacketTableHeader cafPacketTbl;
 
+    ChannelStateList channelStates;
+
 public:
     OutputDescription OutputFormat;
-    ChannelStateList channelStates;
-    int dataStart;
 
-    bool InitForRead(EbrFile* in);
-    int ReadBuf(int16_t* samplesOut, uint32_t& ioOutputDataByteSize);
-    void Reset();
+    bool InitForRead(NSInputStream* stream);
+    int ReadBuf(NSInputStream* stream, int16_t* samplesOut, uint32_t& ioOutputDataByteSize);
 };

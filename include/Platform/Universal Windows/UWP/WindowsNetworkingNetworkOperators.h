@@ -19,43 +19,17 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
+#define OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Networking_NetworkOperators.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WNNMobileBroadbandAccount, WNNMobileBroadbandNetwork, WNNMobileBroadbandDeviceInformation, WNNMobileBroadbandPinManager,
-    WNNMobileBroadbandUiccApp, WNNNetworkOperatorTetheringAccessPointConfiguration, WNNNetworkOperatorTetheringOperationResult,
-    WNNNetworkOperatorTetheringManager, WNNNetworkOperatorTetheringClient, WNNMobileBroadbandAccountEventArgs,
-    WNNMobileBroadbandAccountUpdatedEventArgs, WNNMobileBroadbandAccountWatcher, WNNMobileBroadbandModem, WNNMobileBroadbandUicc,
-    WNNMobileBroadbandModemConfiguration, WNNMobileBroadbandDeviceServiceInformation, WNNMobileBroadbandDeviceService,
-    WNNMobileBroadbandPin, WNNMobileBroadbandPinOperationResult, WNNMobileBroadbandDeviceServiceDataSession,
-    WNNMobileBroadbandDeviceServiceCommandSession, WNNMobileBroadbandDeviceServiceDataReceivedEventArgs,
-    WNNMobileBroadbandDeviceServiceCommandResult, WNNMobileBroadbandUiccAppsResult, WNNMobileBroadbandUiccAppRecordDetailsResult,
-    WNNMobileBroadbandUiccAppReadRecordResult, WNNMobileBroadbandNetworkRegistrationStateChange,
-    WNNMobileBroadbandNetworkRegistrationStateChangeTriggerDetails, WNNMobileBroadbandRadioStateChange,
-    WNNMobileBroadbandRadioStateChangeTriggerDetails, WNNMobileBroadbandPinLockStateChange,
-    WNNMobileBroadbandPinLockStateChangeTriggerDetails, WNNMobileBroadbandDeviceServiceTriggerDetails, WNNKnownCSimFilePaths,
-    WNNKnownRuimFilePaths, WNNKnownSimFilePaths, WNNKnownUSimFilePaths, WNNHotspotAuthenticationEventDetails,
-    WNNHotspotAuthenticationContext, WNNHotspotCredentialsAuthenticationResult, WNNProvisionFromXmlDocumentResults, WNNProvisionedProfile,
-    WNNProvisioningAgent, WNNUssdMessage, WNNUssdReply, WNNUssdSession;
+@class WNNMobileBroadbandAccount, WNNMobileBroadbandNetwork, WNNMobileBroadbandDeviceInformation, WNNMobileBroadbandPinManager, WNNMobileBroadbandUiccApp, WNNNetworkOperatorTetheringAccessPointConfiguration, WNNNetworkOperatorTetheringOperationResult, WNNNetworkOperatorTetheringManager, WNNNetworkOperatorTetheringClient, WNNMobileBroadbandAccountEventArgs, WNNMobileBroadbandAccountUpdatedEventArgs, WNNMobileBroadbandAccountWatcher, WNNMobileBroadbandModem, WNNMobileBroadbandUicc, WNNMobileBroadbandModemConfiguration, WNNMobileBroadbandDeviceServiceInformation, WNNMobileBroadbandDeviceService, WNNMobileBroadbandPin, WNNMobileBroadbandPinOperationResult, WNNMobileBroadbandDeviceServiceDataSession, WNNMobileBroadbandDeviceServiceCommandSession, WNNMobileBroadbandDeviceServiceDataReceivedEventArgs, WNNMobileBroadbandDeviceServiceCommandResult, WNNMobileBroadbandUiccAppsResult, WNNMobileBroadbandUiccAppRecordDetailsResult, WNNMobileBroadbandUiccAppReadRecordResult, WNNMobileBroadbandNetworkRegistrationStateChange, WNNMobileBroadbandNetworkRegistrationStateChangeTriggerDetails, WNNMobileBroadbandRadioStateChange, WNNMobileBroadbandRadioStateChangeTriggerDetails, WNNMobileBroadbandPinLockStateChange, WNNMobileBroadbandPinLockStateChangeTriggerDetails, WNNMobileBroadbandDeviceServiceTriggerDetails, WNNKnownCSimFilePaths, WNNKnownRuimFilePaths, WNNKnownSimFilePaths, WNNKnownUSimFilePaths, WNNHotspotAuthenticationEventDetails, WNNHotspotAuthenticationContext, WNNHotspotCredentialsAuthenticationResult, WNNProvisionFromXmlDocumentResults, WNNProvisionedProfile, WNNProvisioningAgent, WNNUssdMessage, WNNUssdReply, WNNUssdSession, WNNNetworkOperatorNotificationEventDetails, WNNFdnAccessManager;
 @class WNNProfileUsage;
-@protocol WNNIMobileBroadbandAccountStatics
-, WNNIMobileBroadbandAccount, WNNIMobileBroadbandAccount2, WNNIMobileBroadbandDeviceInformation, WNNIMobileBroadbandDeviceInformation2,
-    WNNIMobileBroadbandNetwork, WNNIMobileBroadbandNetwork2, WNNINetworkOperatorTetheringAccessPointConfiguration,
-    WNNINetworkOperatorTetheringOperationResult, WNNINetworkOperatorTetheringManagerStatics, WNNINetworkOperatorTetheringManagerStatics2,
-    WNNINetworkOperatorTetheringManager, WNNINetworkOperatorTetheringClient, WNNINetworkOperatorTetheringClientManager,
-    WNNIMobileBroadbandAccountEventArgs, WNNIMobileBroadbandAccountUpdatedEventArgs, WNNIMobileBroadbandAccountWatcher,
-    WNNIMobileBroadbandModemStatics, WNNIMobileBroadbandModemConfiguration, WNNIMobileBroadbandModem, WNNIMobileBroadbandPinManager,
-    WNNIMobileBroadbandPinOperationResult, WNNIMobileBroadbandPin, WNNIMobileBroadbandDeviceServiceInformation,
-    WNNIMobileBroadbandDeviceService, WNNIMobileBroadbandDeviceServiceDataReceivedEventArgs, WNNIMobileBroadbandDeviceServiceDataSession,
-    WNNIMobileBroadbandDeviceServiceCommandResult, WNNIMobileBroadbandDeviceServiceCommandSession, WNNIMobileBroadbandUiccAppsResult,
-    WNNIMobileBroadbandUicc, WNNIMobileBroadbandUiccAppRecordDetailsResult, WNNIMobileBroadbandUiccAppReadRecordResult,
-    WNNIMobileBroadbandUiccApp, WNNIMobileBroadbandNetworkRegistrationStateChange,
-    WNNIMobileBroadbandNetworkRegistrationStateChangeTriggerDetails, WNNIMobileBroadbandRadioStateChange,
-    WNNIMobileBroadbandRadioStateChangeTriggerDetails, WNNIMobileBroadbandPinLockStateChange,
-    WNNIMobileBroadbandPinLockStateChangeTriggerDetails, WNNIMobileBroadbandDeviceServiceTriggerDetails, WNNIKnownCSimFilePathsStatics,
-    WNNIKnownRuimFilePathsStatics, WNNIKnownSimFilePathsStatics, WNNIKnownUSimFilePathsStatics, WNNIHotspotAuthenticationEventDetails,
-    WNNIHotspotAuthenticationContextStatics, WNNIHotspotAuthenticationContext, WNNIHotspotCredentialsAuthenticationResult,
-    WNNIHotspotAuthenticationContext2, WNNIProvisionFromXmlDocumentResults, WNNIProvisionedProfile, WNNIProvisioningAgent,
-    WNNIProvisioningAgentStaticMethods, WNNIUssdMessage, WNNIUssdMessageFactory, WNNIUssdReply, WNNIUssdSession, WNNIUssdSessionStatics;
+@protocol WNNIMobileBroadbandAccountStatics, WNNIMobileBroadbandAccount, WNNIMobileBroadbandAccount2, WNNIMobileBroadbandDeviceInformation, WNNIMobileBroadbandDeviceInformation2, WNNIMobileBroadbandNetwork, WNNIMobileBroadbandNetwork2, WNNINetworkOperatorTetheringAccessPointConfiguration, WNNINetworkOperatorTetheringOperationResult, WNNINetworkOperatorTetheringManagerStatics, WNNINetworkOperatorTetheringManagerStatics2, WNNINetworkOperatorTetheringManagerStatics3, WNNINetworkOperatorTetheringManager, WNNINetworkOperatorTetheringClient, WNNINetworkOperatorTetheringClientManager, WNNIMobileBroadbandAccountEventArgs, WNNIMobileBroadbandAccountUpdatedEventArgs, WNNIMobileBroadbandAccountWatcher, WNNIMobileBroadbandModemStatics, WNNIMobileBroadbandModemConfiguration, WNNIMobileBroadbandModem, WNNIMobileBroadbandPinManager, WNNIMobileBroadbandPinOperationResult, WNNIMobileBroadbandPin, WNNIMobileBroadbandDeviceServiceInformation, WNNIMobileBroadbandDeviceService, WNNIMobileBroadbandDeviceServiceDataReceivedEventArgs, WNNIMobileBroadbandDeviceServiceDataSession, WNNIMobileBroadbandDeviceServiceCommandResult, WNNIMobileBroadbandDeviceServiceCommandSession, WNNIMobileBroadbandUiccAppsResult, WNNIMobileBroadbandUicc, WNNIMobileBroadbandUiccAppRecordDetailsResult, WNNIMobileBroadbandUiccAppReadRecordResult, WNNIMobileBroadbandUiccApp, WNNIMobileBroadbandNetworkRegistrationStateChange, WNNIMobileBroadbandNetworkRegistrationStateChangeTriggerDetails, WNNIMobileBroadbandRadioStateChange, WNNIMobileBroadbandRadioStateChangeTriggerDetails, WNNIMobileBroadbandPinLockStateChange, WNNIMobileBroadbandPinLockStateChangeTriggerDetails, WNNIMobileBroadbandDeviceServiceTriggerDetails, WNNIKnownCSimFilePathsStatics, WNNIKnownRuimFilePathsStatics, WNNIKnownSimFilePathsStatics, WNNIKnownUSimFilePathsStatics, WNNIHotspotAuthenticationEventDetails, WNNIHotspotAuthenticationContextStatics, WNNIHotspotAuthenticationContext, WNNIHotspotCredentialsAuthenticationResult, WNNIHotspotAuthenticationContext2, WNNIProvisionFromXmlDocumentResults, WNNIProvisionedProfile, WNNIProvisioningAgent, WNNIProvisioningAgentStaticMethods, WNNIUssdMessage, WNNIUssdMessageFactory, WNNIUssdReply, WNNIUssdSession, WNNIUssdSessionStatics, WNNINetworkOperatorNotificationEventDetails, WNNINetworkOperatorTetheringEntitlementCheck, WNNIFdnAccessManagerStatics;
 
 // Windows.Networking.NetworkOperators.DataClasses
 enum _WNNDataClasses {
@@ -177,6 +151,8 @@ enum _WNNTetheringOperationStatus {
     WNNTetheringOperationStatusEntitlementCheckTimeout = 4,
     WNNTetheringOperationStatusEntitlementCheckFailure = 5,
     WNNTetheringOperationStatusOperationInProgress = 6,
+    WNNTetheringOperationStatusBluetoothDeviceOff = 7,
+    WNNTetheringOperationStatusNetworkLimitedConnectivity = 8,
 };
 typedef unsigned WNNTetheringOperationStatus;
 
@@ -295,9 +271,9 @@ typedef unsigned WNNUssdResultCode;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Networking.NetworkOperators.ProfileUsage
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNProfileUsage : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property unsigned int usageInMegabytes;
 @property (retain) WFDateTime* lastSyncTime;
 @end
@@ -306,17 +282,17 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandAccount_DEFINED__
 #define __WNNMobileBroadbandAccount_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandAccount : RTObject
-+ (WNNMobileBroadbandAccount*)createFromNetworkAccountId:(NSString*)networkAccountId;
++ (WNNMobileBroadbandAccount*)createFromNetworkAccountId:(NSString *)networkAccountId;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WNNMobileBroadbandDeviceInformation* currentDeviceInformation;
 @property (readonly) WNNMobileBroadbandNetwork* currentNetwork;
-@property (readonly) NSString* networkAccountId;
+@property (readonly) NSString * networkAccountId;
 @property (readonly) WFGUID* serviceProviderGuid;
-@property (readonly) NSString* serviceProviderName;
+@property (readonly) NSString * serviceProviderName;
 + (NSArray* /* NSString * */)availableNetworkAccountIds;
 - (NSArray* /* WNCConnectionProfile* */)getConnectionProfiles;
 @end
@@ -327,19 +303,19 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandNetwork_DEFINED__
 #define __WNNMobileBroadbandNetwork_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandNetwork : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* accessPointName;
+@property (readonly) NSString * accessPointName;
 @property (readonly) unsigned int activationNetworkError;
 @property (readonly) WNCNetworkAdapter* networkAdapter;
 @property (readonly) WNNNetworkRegistrationState networkRegistrationState;
 @property (readonly) unsigned int packetAttachNetworkError;
 @property (readonly) WNNDataClasses registeredDataClass;
-@property (readonly) NSString* registeredProviderId;
-@property (readonly) NSString* registeredProviderName;
+@property (readonly) NSString * registeredProviderId;
+@property (readonly) NSString * registeredProviderName;
 @property (readonly) unsigned int registrationNetworkError;
 @property (readonly) NSArray* /* WNNMobileBroadbandUiccApp* */ registrationUiccApps;
 - (void)showConnectionUI;
@@ -352,28 +328,28 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandDeviceInformation_DEFINED__
 #define __WNNMobileBroadbandDeviceInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandDeviceInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDSCellularClass cellularClass;
 @property (readonly) WNNMobileBroadbandRadioState currentRadioState;
-@property (readonly) NSString* customDataClass;
+@property (readonly) NSString * customDataClass;
 @property (readonly) WNNDataClasses dataClasses;
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * deviceId;
 @property (readonly) WNNMobileBroadbandDeviceType deviceType;
-@property (readonly) NSString* firmwareInformation;
-@property (readonly) NSString* manufacturer;
-@property (readonly) NSString* mobileEquipmentId;
-@property (readonly) NSString* model;
+@property (readonly) NSString * firmwareInformation;
+@property (readonly) NSString * manufacturer;
+@property (readonly) NSString * mobileEquipmentId;
+@property (readonly) NSString * model;
 @property (readonly) WNNNetworkDeviceStatus networkDeviceStatus;
-@property (readonly) NSString* simIccId;
-@property (readonly) NSString* subscriberId;
+@property (readonly) NSString * simIccId;
+@property (readonly) NSString * subscriberId;
 @property (readonly) NSArray* /* NSString * */ telephoneNumbers;
 @property (readonly) WNNMobileBroadbandPinManager* pinManager;
-@property (readonly) NSString* revision;
-@property (readonly) NSString* serialNumber;
+@property (readonly) NSString * revision;
+@property (readonly) NSString * serialNumber;
 @end
 
 #endif // __WNNMobileBroadbandDeviceInformation_DEFINED__
@@ -382,7 +358,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandPinManager_DEFINED__
 #define __WNNMobileBroadbandPinManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandPinManager : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -397,20 +373,15 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandUiccApp_DEFINED__
 #define __WNNMobileBroadbandUiccApp_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandUiccApp : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) RTObject<WSSIBuffer>* id;
 @property (readonly) WNNUiccAppKind kind;
-- (void)getRecordDetailsAsync:(id<NSFastEnumeration> /* unsigned int */)uiccFilePath
-                      success:(void (^)(WNNMobileBroadbandUiccAppRecordDetailsResult*))success
-                      failure:(void (^)(NSError*))failure;
-- (void)readRecordAsync:(id<NSFastEnumeration> /* unsigned int */)uiccFilePath
-            recordIndex:(int)recordIndex
-                success:(void (^)(WNNMobileBroadbandUiccAppReadRecordResult*))success
-                failure:(void (^)(NSError*))failure;
+- (void)getRecordDetailsAsync:(id<NSFastEnumeration> /* unsigned int */)uiccFilePath success:(void (^)(WNNMobileBroadbandUiccAppRecordDetailsResult*))success failure:(void (^)(NSError*))failure;
+- (void)readRecordAsync:(id<NSFastEnumeration> /* unsigned int */)uiccFilePath recordIndex:(int)recordIndex success:(void (^)(WNNMobileBroadbandUiccAppReadRecordResult*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WNNMobileBroadbandUiccApp_DEFINED__
@@ -419,14 +390,14 @@ WINRT_EXPORT
 #ifndef __WNNNetworkOperatorTetheringAccessPointConfiguration_DEFINED__
 #define __WNNNetworkOperatorTetheringAccessPointConfiguration_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNNetworkOperatorTetheringAccessPointConfiguration : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* ssid;
-@property (retain) NSString* passphrase;
+@property (retain) NSString * ssid;
+@property (retain) NSString * passphrase;
 @end
 
 #endif // __WNNNetworkOperatorTetheringAccessPointConfiguration_DEFINED__
@@ -435,12 +406,12 @@ WINRT_EXPORT
 #ifndef __WNNNetworkOperatorTetheringOperationResult_DEFINED__
 #define __WNNNetworkOperatorTetheringOperationResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNNetworkOperatorTetheringOperationResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* additionalErrorMessage;
+@property (readonly) NSString * additionalErrorMessage;
 @property (readonly) WNNTetheringOperationStatus status;
 @end
 
@@ -450,12 +421,13 @@ WINRT_EXPORT
 #ifndef __WNNNetworkOperatorTetheringManager_DEFINED__
 #define __WNNNetworkOperatorTetheringManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNNetworkOperatorTetheringManager : RTObject
-+ (WNNTetheringCapability)getTetheringCapability:(NSString*)networkAccountId;
-+ (WNNNetworkOperatorTetheringManager*)createFromNetworkAccountId:(NSString*)networkAccountId;
++ (WNNNetworkOperatorTetheringManager*)createFromConnectionProfileWithTargetAdapter:(WNCConnectionProfile*)profile adapter:(WNCNetworkAdapter*)adapter;
 + (WNNTetheringCapability)getTetheringCapabilityFromConnectionProfile:(WNCConnectionProfile*)profile;
 + (WNNNetworkOperatorTetheringManager*)createFromConnectionProfile:(WNCConnectionProfile*)profile;
++ (WNNTetheringCapability)getTetheringCapability:(NSString *)networkAccountId;
++ (WNNNetworkOperatorTetheringManager*)createFromNetworkAccountId:(NSString *)networkAccountId;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -475,13 +447,13 @@ WINRT_EXPORT
 #ifndef __WNNNetworkOperatorTetheringClient_DEFINED__
 #define __WNNNetworkOperatorTetheringClient_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNNetworkOperatorTetheringClient : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* WNHostName* */ hostNames;
-@property (readonly) NSString* macAddress;
+@property (readonly) NSString * macAddress;
 @end
 
 #endif // __WNNNetworkOperatorTetheringClient_DEFINED__
@@ -490,12 +462,12 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandAccountEventArgs_DEFINED__
 #define __WNNMobileBroadbandAccountEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandAccountEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* networkAccountId;
+@property (readonly) NSString * networkAccountId;
 @end
 
 #endif // __WNNMobileBroadbandAccountEventArgs_DEFINED__
@@ -504,14 +476,14 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandAccountUpdatedEventArgs_DEFINED__
 #define __WNNMobileBroadbandAccountUpdatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandAccountUpdatedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL hasDeviceInformationChanged;
 @property (readonly) BOOL hasNetworkChanged;
-@property (readonly) NSString* networkAccountId;
+@property (readonly) NSString * networkAccountId;
 @end
 
 #endif // __WNNMobileBroadbandAccountUpdatedEventArgs_DEFINED__
@@ -520,23 +492,22 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandAccountWatcher_DEFINED__
 #define __WNNMobileBroadbandAccountWatcher_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandAccountWatcher : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WNNMobileBroadbandAccountWatcherStatus status;
-- (EventRegistrationToken)addAccountAddedEvent:(void (^)(WNNMobileBroadbandAccountWatcher*, WNNMobileBroadbandAccountEventArgs*))del;
+- (EventRegistrationToken)addAccountAddedEvent:(void(^)(WNNMobileBroadbandAccountWatcher*, WNNMobileBroadbandAccountEventArgs*))del;
 - (void)removeAccountAddedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addAccountRemovedEvent:(void (^)(WNNMobileBroadbandAccountWatcher*, WNNMobileBroadbandAccountEventArgs*))del;
+- (EventRegistrationToken)addAccountRemovedEvent:(void(^)(WNNMobileBroadbandAccountWatcher*, WNNMobileBroadbandAccountEventArgs*))del;
 - (void)removeAccountRemovedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addAccountUpdatedEvent:(void (^)(WNNMobileBroadbandAccountWatcher*,
-                                                           WNNMobileBroadbandAccountUpdatedEventArgs*))del;
+- (EventRegistrationToken)addAccountUpdatedEvent:(void(^)(WNNMobileBroadbandAccountWatcher*, WNNMobileBroadbandAccountUpdatedEventArgs*))del;
 - (void)removeAccountUpdatedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addEnumerationCompletedEvent:(void (^)(WNNMobileBroadbandAccountWatcher*, RTObject*))del;
+- (EventRegistrationToken)addEnumerationCompletedEvent:(void(^)(WNNMobileBroadbandAccountWatcher*, RTObject*))del;
 - (void)removeEnumerationCompletedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStoppedEvent:(void (^)(WNNMobileBroadbandAccountWatcher*, RTObject*))del;
+- (EventRegistrationToken)addStoppedEvent:(void(^)(WNNMobileBroadbandAccountWatcher*, RTObject*))del;
 - (void)removeStoppedEvent:(EventRegistrationToken)tok;
 - (void)start;
 - (void)stop;
@@ -548,10 +519,10 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandModem_DEFINED__
 #define __WNNMobileBroadbandModem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandModem : RTObject
-+ (NSString*)getDeviceSelector;
-+ (WNNMobileBroadbandModem*)fromId:(NSString*)deviceId;
++ (NSString *)getDeviceSelector;
++ (WNNMobileBroadbandModem*)fromId:(NSString *)deviceId;
 + (WNNMobileBroadbandModem*)getDefault;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -565,8 +536,7 @@ WINRT_EXPORT
 @property (readonly) unsigned int maxDeviceServiceDataSizeInBytes;
 - (WNNMobileBroadbandDeviceService*)getDeviceService:(WFGUID*)deviceServiceId;
 - (RTObject<WFIAsyncAction>*)resetAsync;
-- (void)getCurrentConfigurationAsyncWithSuccess:(void (^)(WNNMobileBroadbandModemConfiguration*))success
-                                        failure:(void (^)(NSError*))failure;
+- (void)getCurrentConfigurationAsyncWithSuccess:(void (^)(WNNMobileBroadbandModemConfiguration*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WNNMobileBroadbandModem_DEFINED__
@@ -575,12 +545,12 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandUicc_DEFINED__
 #define __WNNMobileBroadbandUicc_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandUicc : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* simIccId;
+@property (readonly) NSString * simIccId;
 - (void)getUiccAppsAsyncWithSuccess:(void (^)(WNNMobileBroadbandUiccAppsResult*))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -590,13 +560,13 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandModemConfiguration_DEFINED__
 #define __WNNMobileBroadbandModemConfiguration_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandModemConfiguration : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* homeProviderId;
-@property (readonly) NSString* homeProviderName;
+@property (readonly) NSString * homeProviderId;
+@property (readonly) NSString * homeProviderName;
 @property (readonly) WNNMobileBroadbandUicc* uicc;
 @end
 
@@ -606,7 +576,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandDeviceServiceInformation_DEFINED__
 #define __WNNMobileBroadbandDeviceServiceInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandDeviceServiceInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -622,7 +592,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandDeviceService_DEFINED__
 #define __WNNMobileBroadbandDeviceService_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandDeviceService : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -639,7 +609,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandPin_DEFINED__
 #define __WNNMobileBroadbandPin_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandPin : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -651,23 +621,11 @@ WINRT_EXPORT
 @property (readonly) unsigned int maxLength;
 @property (readonly) unsigned int minLength;
 @property (readonly) WNNMobileBroadbandPinType type;
-- (void)enableAsync:(NSString*)currentPin
-            success:(void (^)(WNNMobileBroadbandPinOperationResult*))success
-            failure:(void (^)(NSError*))failure;
-- (void)disableAsync:(NSString*)currentPin
-             success:(void (^)(WNNMobileBroadbandPinOperationResult*))success
-             failure:(void (^)(NSError*))failure;
-- (void)enterAsync:(NSString*)currentPin
-           success:(void (^)(WNNMobileBroadbandPinOperationResult*))success
-           failure:(void (^)(NSError*))failure;
-- (void)changeAsync:(NSString*)currentPin
-             newPin:(NSString*)newPin
-            success:(void (^)(WNNMobileBroadbandPinOperationResult*))success
-            failure:(void (^)(NSError*))failure;
-- (void)unblockAsync:(NSString*)pinUnblockKey
-              newPin:(NSString*)newPin
-             success:(void (^)(WNNMobileBroadbandPinOperationResult*))success
-             failure:(void (^)(NSError*))failure;
+- (void)enableAsync:(NSString *)currentPin success:(void (^)(WNNMobileBroadbandPinOperationResult*))success failure:(void (^)(NSError*))failure;
+- (void)disableAsync:(NSString *)currentPin success:(void (^)(WNNMobileBroadbandPinOperationResult*))success failure:(void (^)(NSError*))failure;
+- (void)enterAsync:(NSString *)currentPin success:(void (^)(WNNMobileBroadbandPinOperationResult*))success failure:(void (^)(NSError*))failure;
+- (void)changeAsync:(NSString *)currentPin newPin:(NSString *)newPin success:(void (^)(WNNMobileBroadbandPinOperationResult*))success failure:(void (^)(NSError*))failure;
+- (void)unblockAsync:(NSString *)pinUnblockKey newPin:(NSString *)newPin success:(void (^)(WNNMobileBroadbandPinOperationResult*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WNNMobileBroadbandPin_DEFINED__
@@ -676,7 +634,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandPinOperationResult_DEFINED__
 #define __WNNMobileBroadbandPinOperationResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandPinOperationResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -691,13 +649,12 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandDeviceServiceDataSession_DEFINED__
 #define __WNNMobileBroadbandDeviceServiceDataSession_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandDeviceServiceDataSession : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-- (EventRegistrationToken)addDataReceivedEvent:(void (^)(WNNMobileBroadbandDeviceServiceDataSession*,
-                                                         WNNMobileBroadbandDeviceServiceDataReceivedEventArgs*))del;
+- (EventRegistrationToken)addDataReceivedEvent:(void(^)(WNNMobileBroadbandDeviceServiceDataSession*, WNNMobileBroadbandDeviceServiceDataReceivedEventArgs*))del;
 - (void)removeDataReceivedEvent:(EventRegistrationToken)tok;
 - (RTObject<WFIAsyncAction>*)writeDataAsync:(RTObject<WSSIBuffer>*)value;
 - (void)closeSession;
@@ -709,19 +666,13 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandDeviceServiceCommandSession_DEFINED__
 #define __WNNMobileBroadbandDeviceServiceCommandSession_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandDeviceServiceCommandSession : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-- (void)sendQueryCommandAsync:(unsigned int)commandId
-                         data:(RTObject<WSSIBuffer>*)data
-                      success:(void (^)(WNNMobileBroadbandDeviceServiceCommandResult*))success
-                      failure:(void (^)(NSError*))failure;
-- (void)sendSetCommandAsync:(unsigned int)commandId
-                       data:(RTObject<WSSIBuffer>*)data
-                    success:(void (^)(WNNMobileBroadbandDeviceServiceCommandResult*))success
-                    failure:(void (^)(NSError*))failure;
+- (void)sendQueryCommandAsync:(unsigned int)commandId data:(RTObject<WSSIBuffer>*)data success:(void (^)(WNNMobileBroadbandDeviceServiceCommandResult*))success failure:(void (^)(NSError*))failure;
+- (void)sendSetCommandAsync:(unsigned int)commandId data:(RTObject<WSSIBuffer>*)data success:(void (^)(WNNMobileBroadbandDeviceServiceCommandResult*))success failure:(void (^)(NSError*))failure;
 - (void)closeSession;
 @end
 
@@ -731,7 +682,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandDeviceServiceDataReceivedEventArgs_DEFINED__
 #define __WNNMobileBroadbandDeviceServiceDataReceivedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandDeviceServiceDataReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -745,7 +696,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandDeviceServiceCommandResult_DEFINED__
 #define __WNNMobileBroadbandDeviceServiceCommandResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandDeviceServiceCommandResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -760,7 +711,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandUiccAppsResult_DEFINED__
 #define __WNNMobileBroadbandUiccAppsResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandUiccAppsResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -775,7 +726,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandUiccAppRecordDetailsResult_DEFINED__
 #define __WNNMobileBroadbandUiccAppRecordDetailsResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandUiccAppRecordDetailsResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -794,7 +745,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandUiccAppReadRecordResult_DEFINED__
 #define __WNNMobileBroadbandUiccAppReadRecordResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandUiccAppReadRecordResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -809,12 +760,12 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandNetworkRegistrationStateChange_DEFINED__
 #define __WNNMobileBroadbandNetworkRegistrationStateChange_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandNetworkRegistrationStateChange : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * deviceId;
 @property (readonly) WNNMobileBroadbandNetwork* network;
 @end
 
@@ -824,7 +775,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandNetworkRegistrationStateChangeTriggerDetails_DEFINED__
 #define __WNNMobileBroadbandNetworkRegistrationStateChangeTriggerDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandNetworkRegistrationStateChangeTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -838,12 +789,12 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandRadioStateChange_DEFINED__
 #define __WNNMobileBroadbandRadioStateChange_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandRadioStateChange : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * deviceId;
 @property (readonly) WNNMobileBroadbandRadioState radioState;
 @end
 
@@ -853,7 +804,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandRadioStateChangeTriggerDetails_DEFINED__
 #define __WNNMobileBroadbandRadioStateChangeTriggerDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandRadioStateChangeTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -867,12 +818,12 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandPinLockStateChange_DEFINED__
 #define __WNNMobileBroadbandPinLockStateChange_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandPinLockStateChange : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * deviceId;
 @property (readonly) WNNMobileBroadbandPinLockState pinLockState;
 @property (readonly) WNNMobileBroadbandPinType pinType;
 @end
@@ -883,7 +834,7 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandPinLockStateChangeTriggerDetails_DEFINED__
 #define __WNNMobileBroadbandPinLockStateChangeTriggerDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandPinLockStateChangeTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -897,12 +848,12 @@ WINRT_EXPORT
 #ifndef __WNNMobileBroadbandDeviceServiceTriggerDetails_DEFINED__
 #define __WNNMobileBroadbandDeviceServiceTriggerDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandDeviceServiceTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * deviceId;
 @property (readonly) WFGUID* deviceServiceId;
 @property (readonly) RTObject<WSSIBuffer>* receivedData;
 @end
@@ -913,7 +864,7 @@ WINRT_EXPORT
 #ifndef __WNNKnownCSimFilePaths_DEFINED__
 #define __WNNKnownCSimFilePaths_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNKnownCSimFilePaths : RTObject
 + (NSArray* /* unsigned int */)eFSpn;
 + (NSArray* /* unsigned int */)gid1;
@@ -926,7 +877,7 @@ WINRT_EXPORT
 #ifndef __WNNKnownRuimFilePaths_DEFINED__
 #define __WNNKnownRuimFilePaths_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNKnownRuimFilePaths : RTObject
 + (NSArray* /* unsigned int */)eFSpn;
 + (NSArray* /* unsigned int */)gid1;
@@ -939,7 +890,7 @@ WINRT_EXPORT
 #ifndef __WNNKnownSimFilePaths_DEFINED__
 #define __WNNKnownSimFilePaths_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNKnownSimFilePaths : RTObject
 + (NSArray* /* unsigned int */)eFOns;
 + (NSArray* /* unsigned int */)eFSpn;
@@ -953,7 +904,7 @@ WINRT_EXPORT
 #ifndef __WNNKnownUSimFilePaths_DEFINED__
 #define __WNNKnownUSimFilePaths_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNKnownUSimFilePaths : RTObject
 + (NSArray* /* unsigned int */)eFOpl;
 + (NSArray* /* unsigned int */)eFPnn;
@@ -968,12 +919,12 @@ WINRT_EXPORT
 #ifndef __WNNHotspotAuthenticationEventDetails_DEFINED__
 #define __WNNHotspotAuthenticationEventDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNHotspotAuthenticationEventDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* eventToken;
+@property (readonly) NSString * eventToken;
 @end
 
 #endif // __WNNHotspotAuthenticationEventDetails_DEFINED__
@@ -982,9 +933,9 @@ WINRT_EXPORT
 #ifndef __WNNHotspotAuthenticationContext_DEFINED__
 #define __WNNHotspotAuthenticationContext_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNHotspotAuthenticationContext : RTObject
-+ (BOOL)tryGetAuthenticationContext:(NSString*)evenToken context:(WNNHotspotAuthenticationContext**)context;
++ (BOOL)tryGetAuthenticationContext:(NSString *)evenToken context:(WNNHotspotAuthenticationContext**)context;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -993,19 +944,11 @@ WINRT_EXPORT
 @property (readonly) WFUri* redirectMessageUrl;
 @property (readonly) WDXDXmlDocument* redirectMessageXml;
 @property (readonly) NSArray* /* uint8_t */ wirelessNetworkId;
-- (void)issueCredentials:(NSString*)userName
-                        password:(NSString*)password
-                 extraParameters:(NSString*)extraParameters
-    markAsManualConnectOnFailure:(BOOL)markAsManualConnectOnFailure;
+- (void)issueCredentials:(NSString *)userName password:(NSString *)password extraParameters:(NSString *)extraParameters markAsManualConnectOnFailure:(BOOL)markAsManualConnectOnFailure;
 - (void)abortAuthentication:(BOOL)markAsManual;
 - (void)skipAuthentication;
-- (void)triggerAttentionRequired:(NSString*)packageRelativeApplicationId applicationParameters:(NSString*)applicationParameters;
-- (void)issueCredentialsAsync:(NSString*)userName
-                     password:(NSString*)password
-              extraParameters:(NSString*)extraParameters
- markAsManualConnectOnFailure:(BOOL)markAsManualConnectOnFailure
-                      success:(void (^)(WNNHotspotCredentialsAuthenticationResult*))success
-                      failure:(void (^)(NSError*))failure;
+- (void)triggerAttentionRequired:(NSString *)packageRelativeApplicationId applicationParameters:(NSString *)applicationParameters;
+- (void)issueCredentialsAsync:(NSString *)userName password:(NSString *)password extraParameters:(NSString *)extraParameters markAsManualConnectOnFailure:(BOOL)markAsManualConnectOnFailure success:(void (^)(WNNHotspotCredentialsAuthenticationResult*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WNNHotspotAuthenticationContext_DEFINED__
@@ -1014,7 +957,7 @@ WINRT_EXPORT
 #ifndef __WNNHotspotCredentialsAuthenticationResult_DEFINED__
 #define __WNNHotspotCredentialsAuthenticationResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNHotspotCredentialsAuthenticationResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1031,13 +974,13 @@ WINRT_EXPORT
 #ifndef __WNNProvisionFromXmlDocumentResults_DEFINED__
 #define __WNNProvisionFromXmlDocumentResults_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNProvisionFromXmlDocumentResults : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL allElementsProvisioned;
-@property (readonly) NSString* provisionResultsXml;
+@property (readonly) NSString * provisionResultsXml;
 @end
 
 #endif // __WNNProvisionFromXmlDocumentResults_DEFINED__
@@ -1046,7 +989,7 @@ WINRT_EXPORT
 #ifndef __WNNProvisionedProfile_DEFINED__
 #define __WNNProvisionedProfile_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNProvisionedProfile : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1061,17 +1004,15 @@ WINRT_EXPORT
 #ifndef __WNNProvisioningAgent_DEFINED__
 #define __WNNProvisioningAgent_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNProvisioningAgent : RTObject
-+ (WNNProvisioningAgent*)createFromNetworkAccountId:(NSString*)networkAccountId;
++ (WNNProvisioningAgent*)createFromNetworkAccountId:(NSString *)networkAccountId;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-- (void)provisionFromXmlDocumentAsync:(NSString*)provisioningXmlDocument
-                              success:(void (^)(WNNProvisionFromXmlDocumentResults*))success
-                              failure:(void (^)(NSError*))failure;
-- (WNNProvisionedProfile*)getProvisionedProfile:(WNNProfileMediaType)mediaType profileName:(NSString*)profileName;
+- (void)provisionFromXmlDocumentAsync:(NSString *)provisioningXmlDocument success:(void (^)(WNNProvisionFromXmlDocumentResults*))success failure:(void (^)(NSError*))failure;
+- (WNNProvisionedProfile*)getProvisionedProfile:(WNNProfileMediaType)mediaType profileName:(NSString *)profileName;
 @end
 
 #endif // __WNNProvisioningAgent_DEFINED__
@@ -1080,13 +1021,13 @@ WINRT_EXPORT
 #ifndef __WNNUssdMessage_DEFINED__
 #define __WNNUssdMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNUssdMessage : RTObject
-+ (WNNUssdMessage*)makeMessage:(NSString*)messageText ACTIVATOR;
++ (WNNUssdMessage*)makeMessage:(NSString *)messageText ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* payloadAsText;
+@property (retain) NSString * payloadAsText;
 @property uint8_t dataCodingScheme;
 - (NSArray* /* uint8_t */)getPayload;
 - (void)setPayload:(NSArray* /* uint8_t */)value;
@@ -1098,7 +1039,7 @@ WINRT_EXPORT
 #ifndef __WNNUssdReply_DEFINED__
 #define __WNNUssdReply_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNUssdReply : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1113,10 +1054,10 @@ WINRT_EXPORT
 #ifndef __WNNUssdSession_DEFINED__
 #define __WNNUssdSession_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNUssdSession : RTObject
-+ (WNNUssdSession*)createFromNetworkAccountId:(NSString*)networkAccountId;
-+ (WNNUssdSession*)createFromNetworkInterfaceId:(NSString*)networkInterfaceId;
++ (WNNUssdSession*)createFromNetworkAccountId:(NSString *)networkAccountId;
++ (WNNUssdSession*)createFromNetworkInterfaceId:(NSString *)networkInterfaceId;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -1125,3 +1066,35 @@ WINRT_EXPORT
 @end
 
 #endif // __WNNUssdSession_DEFINED__
+
+// Windows.Networking.NetworkOperators.NetworkOperatorNotificationEventDetails
+#ifndef __WNNNetworkOperatorNotificationEventDetails_DEFINED__
+#define __WNNNetworkOperatorNotificationEventDetails_DEFINED__
+
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
+@interface WNNNetworkOperatorNotificationEventDetails : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) uint8_t encodingType;
+@property (readonly) NSString * message;
+@property (readonly) NSString * networkAccountId;
+@property (readonly) WNNNetworkOperatorEventMessageType notificationType;
+@property (readonly) NSString * ruleId;
+@property (readonly) RTObject<WDSISmsMessage>* smsMessage;
+- (void)authorizeTethering:(BOOL)allow entitlementFailureReason:(NSString *)entitlementFailureReason;
+@end
+
+#endif // __WNNNetworkOperatorNotificationEventDetails_DEFINED__
+
+// Windows.Networking.NetworkOperators.FdnAccessManager
+#ifndef __WNNFdnAccessManager_DEFINED__
+#define __WNNFdnAccessManager_DEFINED__
+
+OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
+@interface WNNFdnAccessManager : RTObject
++ (void)requestUnlockAsync:(NSString *)contactListId success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+@end
+
+#endif // __WNNFdnAccessManager_DEFINED__
+

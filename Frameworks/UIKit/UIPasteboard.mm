@@ -14,19 +14,22 @@
 //
 //******************************************************************************
 
-#import <COMIncludes.h>
-#import <windows.storage.streams.h>
-#import "RawBuffer.h"
-#import <COMIncludes_End.h>
-
 #import "Starboard.h"
-#import "UIKit/UIPasteboard.h"
-#import "NSLogging.h"
 #import <StubReturn.h>
+
+#import <UIKit/UIImage.h>
+#import <UIKit/UIPasteboard.h>
+
+#import "NSLogging.h"
 
 #import "UWP/WindowsApplicationModelDataTransfer.h"
 #import "CGImageInternal.h"
 #import "MobileCoreServices/UTType.h"
+
+#include <COMIncludes.h>
+#import <windows.storage.streams.h>
+#import "RawBuffer.h"
+#include <COMIncludes_End.h>
 
 static const wchar_t* TAG = L"UIPasteboard";
 NSString* const UIPasteboardNameGeneral = @"UIPasteboardNameGeneral";
@@ -34,12 +37,11 @@ NSString* const UIPasteboardNameFind = @"UIPasteboardNameFind";
 NSString* const UIPasteboardChangedTypesAddedKey = @"UIPasteboardChangedTypesAddedKey";
 NSString* const UIPasteboardChangedTypesRemovedKey = @"UIPasteboardChangedTypesRemovedKey";
 
-/** @Status Stub */
-NSArray* const UIPasteboardTypeListString = StubConstant();
-/** @Status Stub */
-NSArray* const UIPasteboardTypeListURL = StubConstant();
-/** @Status Stub */
-NSArray* const UIPasteboardTypeListImage = StubConstant();
+// retain here is to make sure the objects do not get destroyed when they are autoreleased
+NSArray<NSString*>* const UIPasteboardTypeListString = [@[ (NSString*)kUTTypeUTF8PlainText, (NSString*)kUTTypeText ] retain];
+NSArray<NSString*>* const UIPasteboardTypeListURL = [@[ (NSString*)kUTTypeURL ] retain];
+NSArray<NSString*>* const UIPasteboardTypeListImage = [@[ (NSString*)kUTTypePNG, (NSString*)kUTTypeJPEG ] retain];
+
 /** @Status Stub */
 NSArray* const UIPasteboardTypeListColor = StubConstant();
 
@@ -155,7 +157,8 @@ WADDataPackageView* _getClipboardContent() {
 */
 - (NSArray<NSString*>*)pasteboardTypes {
     WADDataPackageView* wasDataPackageView = _getClipboardContent();
-    NSMutableArray<NSString*>* types = [[[NSMutableArray<NSString*> alloc] init] autorelease];
+
+    NSMutableArray<NSString*>* types = [NSMutableArray arrayWithCapacity:3];
 
     if ([wasDataPackageView contains:[WADStandardDataFormats text]]) {
         [types addObject:(NSString*)kUTTypeText];
@@ -194,10 +197,117 @@ WADDataPackageView* _getClipboardContent() {
                 result = YES;
                 break;
             }
+        } else {
+            UNIMPLEMENTED_WITH_MSG("Unsupported pasteType (%hs) in containsPasteboardTypes", [type UTF8String]);
         }
     }
 
     return result;
+}
+
+/**
+ @Status Caveat
+ @Notes only support one item due to platform limit.
+ */
+- (NSArray<NSDictionary<NSString*, id>*>*)items {
+    WADDataPackageView* dataPackageView = _getClipboardContent();
+
+    int supportedTypes = 0;
+    for (NSString* format in dataPackageView.availableFormats) {
+        if ([format isEqualToString:[WADStandardDataFormats text]]) {
+            supportedTypes++;
+        } else if ([format isEqualToString:[WADStandardDataFormats bitmap]]) {
+            supportedTypes++;
+        } else if ([format isEqualToString:[WADStandardDataFormats uri]]) {
+            supportedTypes++;
+        }
+    }
+
+    // at most items can contain one item, or zero item if no supported type found
+    NSMutableArray<NSDictionary<NSString*, id>*>* items = [NSMutableArray arrayWithCapacity:1];
+    if (supportedTypes == 0) {
+        // early return empty array if no supported type found
+        return items;
+    }
+
+    NSMutableDictionary* ret = [NSMutableDictionary dictionaryWithCapacity:supportedTypes];
+    if ([dataPackageView contains:[WADStandardDataFormats text]]) {
+        [ret setValue:[UIPasteboard _getStringFromDataPackageView:dataPackageView] forKey:(NSString*)kUTTypeText];
+    }
+
+    if ([dataPackageView contains:[WADStandardDataFormats bitmap]]) {
+        [ret setValue:[UIPasteboard _getImageFromDataPackageView:dataPackageView] forKey:(NSString*)kUTTypeImage];
+    }
+
+    if ([dataPackageView contains:[WADStandardDataFormats uri]]) {
+        [ret setValue:[UIPasteboard _getURLFromDataPackageView:dataPackageView] forKey:(NSString*)kUTTypeURL];
+    }
+
+    [items addObject:ret];
+    return items;
+}
+
+/**
+ @Status Caveat
+ @Notes only support one item
+ */
+- (void)setItems:(NSArray<NSDictionary<NSString*, id>*>*)items {
+    if (![_name isEqualToString:UIPasteboardNameGeneral]) {
+        UNIMPLEMENTED_WITH_MSG("Only general pasteboard supported");
+        return;
+    }
+
+    NSInteger count = [items count];
+    if (count > 0) {
+        if (count > 1) {
+            UNIMPLEMENTED_WITH_MSG("Only support first item in items, the rest is ignored");
+        }
+
+        StrongId<WADDataPackage> dataPackage;
+        dataPackage.attach([WADDataPackage make]);
+        [dataPackage setRequestedOperation:WADDataPackageOperationCopy];
+        __block BOOL dataSet = NO;
+
+        // enumerate each format and copy the supported one to clipboard
+        NSDictionary<NSString*, id>* item = items[0];
+        [item enumerateKeysAndObjectsUsingBlock:^(NSString* pasteboardType, id data, BOOL*) {
+            if ([data isKindOfClass:[NSData class]]) {
+                // data is represented with binary form, let _setData to handle NSData
+                dataSet = [UIPasteboard _setData:pasteboardType withData:data on:dataPackage];
+            } else {
+                // otherwise, Data is Object, we can copy them directly
+                dataSet = YES;
+                if ([data isKindOfClass:[UIImage class]]) {
+                    [UIPasteboard _setImage:data onDataPackage:dataPackage];
+                } else if ([data isKindOfClass:[NSURL class]]) {
+                    [UIPasteboard _setURL:data onDataPackage:dataPackage];
+                } else if ([data isKindOfClass:[NSString class]]) {
+                    [UIPasteboard _setString:data onDataPackage:dataPackage];
+                } else {
+                    dataSet = NO;
+                    UNIMPLEMENTED_WITH_MSG("setting object_type=%hs for PasteboardType=%hs isn't supported yet",
+                                           object_getClassName(data),
+                                           [pasteboardType UTF8String]);
+                }
+            }
+        }];
+
+        if (dataSet) {
+            [WADClipboard setContent:dataPackage];
+            [WADClipboard flush];
+        }
+    } else {
+        // assigning items to nil or an empty array clears the pasteboard
+        [WADClipboard clear];
+    }
+}
+
+/**
+ @Status Caveat
+ @Notes only support one item at most
+ */
+- (NSInteger)numberOfItems {
+    return [self.items count];
 }
 
 /**
@@ -238,21 +348,25 @@ WADDataPackageView* _getClipboardContent() {
  @Notes only NSString and UIImage are supported.
 */
 - (void)setData:(NSData*)data forPasteboardType:(NSString*)pasteboardType {
-    if (data == nil || pasteboardType == nil) {
+    if (![_name isEqualToString:UIPasteboardNameGeneral]) {
+        UNIMPLEMENTED_WITH_MSG("Only general pasteboard supported");
         return;
     }
 
-    // Copy and Paste
-    if ([_name isEqualToString:UIPasteboardNameGeneral]) {
-        WADDataPackage* dataPackage = [[WADDataPackage make] autorelease];
-        dataPackage.requestedOperation = WADDataPackageOperationCopy;
+    if (data && pasteboardType) {
+        // only set data when both data and pasteType are avaiable
+        StrongId<WADDataPackage> dataPackage;
+        dataPackage.attach([WADDataPackage make]);
+        [dataPackage setRequestedOperation:WADDataPackageOperationCopy];
         [UIPasteboard _setData:pasteboardType withData:data on:dataPackage];
         [WADClipboard setContent:dataPackage];
+        [WADClipboard flush];
     }
 }
 
 + (WSSInMemoryRandomAccessStream*)_populateStream:(WSSInMemoryRandomAccessStream*)stream withData:(const void*)data withLength:(int)length {
-    WSSDataWriter* dataWriter = [[WSSDataWriter makeDataWriter:[stream getOutputStreamAt:0]] autorelease];
+    StrongId<WSSDataWriter> dataWriter;
+    dataWriter.attach([WSSDataWriter makeDataWriter:[stream getOutputStreamAt:0]]);
     ComPtr<IBuffer> buffer;
     IBuffer* rawBuffer = nullptr;
     HRESULT result;
@@ -283,28 +397,17 @@ WADDataPackageView* _getClipboardContent() {
 
     if (img->_imgType == CGImageTypePNG || img->_imgType == CGImageTypeJPEG) {
         const void* data = NULL;
-        bool freeData = false;
         int len = 0;
+        StrongId<NSData> fileData;
 
         switch (img->_imgType) {
             case CGImageTypePNG: {
                 CGPNGImageBacking* pngImg = (CGPNGImageBacking*)img->Backing();
 
                 if (pngImg->_fileName) {
-                    EbrFile* fpIn;
-                    fpIn = EbrFopen(pngImg->_fileName, "rb");
-                    if (!fpIn) {
-                        FAIL_FAST();
-                    }
-                    EbrFseek(fpIn, 0, SEEK_END);
-                    int fileLen = EbrFtell(fpIn);
-                    EbrFseek(fpIn, 0, SEEK_SET);
-                    void* pngData = (void*)IwMalloc(fileLen);
-                    len = EbrFread(pngData, 1, fileLen, fpIn);
-                    EbrFclose(fpIn);
-
-                    data = pngData;
-                    freeData = true;
+                    fileData.attach([[NSData alloc] initWithContentsOfFile:[NSString stringWithUTF8String:pngImg->_fileName]]);
+                    data = [fileData bytes];
+                    len = [fileData length];
                 } else {
                     data = [(NSData*)pngImg->_data bytes];
                     len = [(NSData*)pngImg->_data length];
@@ -315,20 +418,9 @@ WADDataPackageView* _getClipboardContent() {
                 CGJPEGImageBacking* jpgImg = (CGJPEGImageBacking*)img->Backing();
 
                 if (jpgImg->_fileName) {
-                    EbrFile* fpIn;
-                    fpIn = EbrFopen(jpgImg->_fileName, "rb");
-                    if (!fpIn) {
-                        FAIL_FAST();
-                    }
-                    EbrFseek(fpIn, 0, SEEK_END);
-                    int fileLen = EbrFtell(fpIn);
-                    EbrFseek(fpIn, 0, SEEK_SET);
-                    void* imgData = (void*)IwMalloc(fileLen);
-                    len = EbrFread(imgData, 1, fileLen, fpIn);
-                    EbrFclose(fpIn);
-
-                    data = imgData;
-                    freeData = true;
+                    fileData.attach([[NSData alloc] initWithContentsOfFile:[NSString stringWithUTF8String:jpgImg->_fileName]]);
+                    data = [fileData bytes];
+                    len = [fileData length];
                 } else {
                     data = [(NSData*)jpgImg->_data bytes];
                     len = [(NSData*)jpgImg->_data length];
@@ -339,40 +431,49 @@ WADDataPackageView* _getClipboardContent() {
                 break;
         }
 
-        WSSInMemoryRandomAccessStream* stream = [[WSSInMemoryRandomAccessStream make] autorelease];
+        StrongId<WSSInMemoryRandomAccessStream> stream;
+        stream.attach([WSSInMemoryRandomAccessStream make]);
         [UIPasteboard _populateStream:stream withData:data withLength:len];
-        if (freeData) {
-            IwFree((void*)data);
-        }
         return stream;
     }
     return nil;
 }
 
-+ (void)_setData:(NSString*)type withData:(NSData*)data on:(WADDataPackage*)package {
+// try to set data for a given type on datapackage
+// return YES when data has been set on datapackage successfully, NO otherwise.
+//
++ (BOOL)_setData:(NSString*)type withData:(NSData*)data on:(WADDataPackage*)package {
     if ([type isEqualToString:(NSString*)kUTTypeText]) {
         [package setText:[[[NSString alloc] initWithData:data encoding:NSUnicodeStringEncoding] autorelease]];
-    } else if ([type isEqualToString:(NSString*)kUTTypeImage]) {
+        return YES;
+    } else if ([type isEqualToString:(NSString*)kUTTypeImage] || [type isEqualToString:(NSString*)kUTTypePNG] ||
+               [type isEqualToString:(NSString*)kUTTypeJPEG]) {
+        // TODO: we should use UITypeConformsTo to check if type conforms to kUTTypeImage,
+        // but UITypeConformsTo has not been implemented yet and currently PNG is the only image format
+        // being used in copying
+
         // grab the image and unpack it and repack it.
         UIImage* uiImage = [UIImage imageWithData:data];
         WSSRandomAccessStreamReference* randomAccessStreamReference =
             [WSSRandomAccessStreamReference createFromStream:[UIPasteboard _grabStreamFromUIImage:uiImage]];
         [package setBitmap:randomAccessStreamReference];
+        return YES;
     } else if ([type isEqualToString:(NSString*)kUTTypeURL]) {
         // make sure it is a valid NSURL
         NSURL* url = [NSURL URLWithString:[[[NSString alloc] initWithData:data encoding:NSUnicodeStringEncoding] autorelease]];
         if (url == nil) {
-            TraceWarning(TAG, L"Null NSURL not supported");
-            return;
+            TraceWarning(TAG, L"Invalid URL.");
+            return NO;
         }
 
         // convert to WFURI
-        WFUri* uri = [[WFUri makeUri:url.absoluteString] autorelease];
+        StrongId<WFUri> uri;
+        uri.attach([WFUri makeUri:url.absoluteString]);
         [package setUri:uri];
-    } else if ([type isEqualToString:@"NSColor"]) {
-        TraceWarning(TAG, L"Error NSColor Not Supported");
+        return YES;
     } else {
-        NSTraceError(TAG, @"Unsupported Type so data is not packaged %@", type);
+        UNIMPLEMENTED_WITH_MSG("Type %@ is not supported yet", [type UTF8String]);
+        return NO;
     }
 }
 
@@ -442,11 +543,12 @@ WADDataPackageView* _getClipboardContent() {
  @Notes Only general pasteboard, for other type, it just will return nil.
 */
 - (NSString*)string {
-    if ([_name isEqualToString:UIPasteboardNameGeneral]) {
-        return [UIPasteboard _getStringFromClipboard];
+    if (![_name isEqualToString:UIPasteboardNameGeneral]) {
+        UNIMPLEMENTED_WITH_MSG("Only general pasteboard supported");
+        return nil;
     }
 
-    return nil;
+    return [UIPasteboard _getStringFromClipboard];
 }
 
 /**
@@ -454,24 +556,23 @@ WADDataPackageView* _getClipboardContent() {
  @Notes Only general pasteboard.
 */
 - (void)setString:(NSString*)aString {
-    if (aString == nil) {
+    if (![_name isEqualToString:UIPasteboardNameGeneral]) {
+        UNIMPLEMENTED_WITH_MSG("Only general pasteboard supported");
         return;
     }
 
-    if ([_name isEqualToString:UIPasteboardNameGeneral]) {
+    if (aString != nil) {
         [UIPasteboard _setStringToClipboard:aString];
     }
 }
 
-+ (NSString*)_getStringFromClipboard {
++ (NSString*)_getStringFromDataPackageView:(WADDataPackageView*)dataPackageView {
     __block NSString* stringData = nil;
-    WADDataPackageView* wasDataPackageView = _getClipboardContent();
-
-    if ([wasDataPackageView contains:[WADStandardDataFormats text]]) {
+    if ([dataPackageView contains:[WADStandardDataFormats text]]) {
         dispatch_group_t group = dispatch_group_create();
         dispatch_group_enter(group);
 
-        [wasDataPackageView getTextAsyncWithSuccess:^void(NSString* success) {
+        [dataPackageView getTextAsyncWithSuccess:^void(NSString* success) {
             stringData = [success retain];
 
             dispatch_group_leave(group);
@@ -489,13 +590,23 @@ WADDataPackageView* _getClipboardContent() {
     return [stringData autorelease];
 }
 
-+ (void)_setStringToClipboard:(NSString*)stringData {
-    NSData* data = [stringData dataUsingEncoding:NSUnicodeStringEncoding];
-    WADDataPackage* dataPackage = [[WADDataPackage make] autorelease];
++ (NSString*)_getStringFromClipboard {
+    WADDataPackageView* wasDataPackageView = _getClipboardContent();
+    return [UIPasteboard _getStringFromDataPackageView:wasDataPackageView];
+}
 
-    dataPackage.requestedOperation = WADDataPackageOperationCopy;
++ (void)_setString:(NSString*)stringData onDataPackage:(WADDataPackage*)dataPackage {
+    NSData* data = [stringData dataUsingEncoding:NSUnicodeStringEncoding];
     [UIPasteboard _setData:(NSString*)kUTTypeText withData:data on:dataPackage];
+}
+
++ (void)_setStringToClipboard:(NSString*)stringData {
+    StrongId<WADDataPackage> dataPackage;
+    dataPackage.attach([WADDataPackage make]);
+    [dataPackage setRequestedOperation:WADDataPackageOperationCopy];
+    [UIPasteboard _setString:stringData onDataPackage:dataPackage];
     [WADClipboard setContent:dataPackage];
+    [WADClipboard flush];
 }
 
 /**
@@ -503,11 +614,12 @@ WADDataPackageView* _getClipboardContent() {
  @Notes Only general pasteboard, for other type, it just will return nil.
 */
 - (UIImage*)image {
-    if ([_name isEqualToString:UIPasteboardNameGeneral]) {
-        return [UIPasteboard _getImageFromClipboard];
+    if (![_name isEqualToString:UIPasteboardNameGeneral]) {
+        UNIMPLEMENTED_WITH_MSG("Only general pasteboard supported");
+        return nil;
     }
 
-    return nil;
+    return [UIPasteboard _getImageFromClipboard];
 }
 
 /**
@@ -515,28 +627,29 @@ WADDataPackageView* _getClipboardContent() {
  @Notes Only general pasteboard.
 */
 - (void)setImage:(UIImage*)aImage {
-    if (aImage == nil) {
+    if (![_name isEqualToString:UIPasteboardNameGeneral]) {
+        UNIMPLEMENTED_WITH_MSG("Only general pasteboard supported");
         return;
     }
 
-    if ([_name isEqualToString:UIPasteboardNameGeneral]) {
+    if (aImage != nil) {
         [UIPasteboard _setImageToClipboard:aImage];
     }
 }
 
-+ (UIImage*)_getImageFromClipboard {
++ (UIImage*)_getImageFromDataPackageView:(WADDataPackageView*)dataPackageView {
     __block UIImage* imageData = nil;
-    WADDataPackageView* wasDataPackageView = _getClipboardContent();
 
-    if ([wasDataPackageView contains:[WADStandardDataFormats bitmap]]) {
+    if ([dataPackageView contains:[WADStandardDataFormats bitmap]]) {
         dispatch_group_t group = dispatch_group_create();
         dispatch_group_enter(group);
 
-        [wasDataPackageView getBitmapAsyncWithSuccess:^void(WSSRandomAccessStreamReference* randomAccessStreamReference) {
+        [dataPackageView getBitmapAsyncWithSuccess:^void(WSSRandomAccessStreamReference* randomAccessStreamReference) {
 
             [randomAccessStreamReference openReadAsyncWithSuccess:^void(RTObject<WSSIRandomAccessStreamWithContentType>* content) {
 
-                WSSBuffer* buffer = [[WSSBuffer make:content.size] autorelease];
+                StrongId<WSSBuffer> buffer;
+                buffer.attach([WSSBuffer make:content.size]);
 
                 [content readAsync:buffer
                     count:content.size
@@ -594,15 +707,24 @@ WADDataPackageView* _getClipboardContent() {
     return [imageData autorelease];
 }
 
-+ (void)_setImageToClipboard:(UIImage*)imageData {
-    WADDataPackage* dataPackage = [[WADDataPackage make] autorelease];
-    dataPackage.requestedOperation = WADDataPackageOperationCopy;
++ (UIImage*)_getImageFromClipboard {
+    WADDataPackageView* wasDataPackageView = _getClipboardContent();
+    return [UIPasteboard _getImageFromDataPackageView:wasDataPackageView];
+}
 
++ (void)_setImage:(UIImage*)imageData onDataPackage:(WADDataPackage*)dataPackage {
     WSSRandomAccessStreamReference* randomAccessStreamReference =
         [WSSRandomAccessStreamReference createFromStream:[UIPasteboard _grabStreamFromUIImage:imageData]];
     [dataPackage setBitmap:randomAccessStreamReference];
+}
 
++ (void)_setImageToClipboard:(UIImage*)imageData {
+    StrongId<WADDataPackage> dataPackage;
+    dataPackage.attach([WADDataPackage make]);
+    [dataPackage setRequestedOperation:WADDataPackageOperationCopy];
+    [UIPasteboard _setImage:imageData onDataPackage:dataPackage];
     [WADClipboard setContent:dataPackage];
+    [WADClipboard flush];
 }
 
 /**
@@ -610,11 +732,12 @@ WADDataPackageView* _getClipboardContent() {
  @Notes Only general pasteboard, for other type, it just will return nil.
 */
 - (NSURL*)URL {
-    if ([_name isEqualToString:UIPasteboardNameGeneral]) {
-        return [UIPasteboard _getURLFromClipboard];
+    if (![_name isEqualToString:UIPasteboardNameGeneral]) {
+        UNIMPLEMENTED_WITH_MSG("Only general pasteboard supported");
+        return nil;
     }
 
-    return nil;
+    return [UIPasteboard _getURLFromClipboard];
 }
 
 /**
@@ -622,24 +745,23 @@ WADDataPackageView* _getClipboardContent() {
  @Notes Only general pasteboard and local app communication is supported.
 */
 - (void)setURL:(NSURL*)aURL {
-    if (aURL == nil) {
+    if (![_name isEqualToString:UIPasteboardNameGeneral]) {
+        UNIMPLEMENTED_WITH_MSG("Only general pasteboard supported");
         return;
     }
 
-    if ([_name isEqualToString:UIPasteboardNameGeneral]) {
+    if (aURL != nil) {
         [UIPasteboard _setURLToClipboard:aURL];
     }
 }
 
-+ (NSURL*)_getURLFromClipboard {
++ (NSURL*)_getURLFromDataPackageView:(WADDataPackageView*)dataPackageView {
     __block NSURL* URLData = nil;
-    WADDataPackageView* wasDataPackageView = _getClipboardContent();
-
-    if ([wasDataPackageView contains:[WADStandardDataFormats uri]]) {
+    if ([dataPackageView contains:[WADStandardDataFormats uri]]) {
         dispatch_group_t group = dispatch_group_create();
         dispatch_group_enter(group);
 
-        [wasDataPackageView getUriAsyncWithSuccess:^void(WFUri* data) {
+        [dataPackageView getUriAsyncWithSuccess:^void(WFUri* data) {
             NSString* temp = data.absoluteUri;
             if (temp == nil || temp.length == 0) {
                 temp = data.displayUri;
@@ -672,14 +794,24 @@ WADDataPackageView* _getClipboardContent() {
     return [URLData autorelease];
 }
 
-+ (void)_setURLToClipboard:(NSURL*)URLData {
-    WADDataPackage* dataPackage = [[WADDataPackage make] autorelease];
-    dataPackage.requestedOperation = WADDataPackageOperationCopy;
++ (NSURL*)_getURLFromClipboard {
+    WADDataPackageView* wasDataPackageView = _getClipboardContent();
+    return [UIPasteboard _getURLFromDataPackageView:wasDataPackageView];
+}
 
-    WFUri* uri = [[WFUri makeUri:URLData.absoluteString] autorelease];
++ (void)_setURL:(NSURL*)URLData onDataPackage:(WADDataPackage*)dataPackage {
+    StrongId<WFUri> uri;
+    uri.attach([WFUri makeUri:URLData.absoluteString]);
     [dataPackage setUri:uri];
+}
 
++ (void)_setURLToClipboard:(NSURL*)URLData {
+    StrongId<WADDataPackage> dataPackage;
+    dataPackage.attach([WADDataPackage make]);
+    [dataPackage setRequestedOperation:WADDataPackageOperationCopy];
+    [UIPasteboard _setURL:URLData onDataPackage:dataPackage];
     [WADClipboard setContent:dataPackage];
+    [WADClipboard flush];
 }
 
 @end

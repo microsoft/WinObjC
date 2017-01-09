@@ -19,11 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_SECURITY_CREDENTIALS_UI_EXPORT
+#define OBJCUWP_WINDOWS_SECURITY_CREDENTIALS_UI_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Security_Credentials_UI.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WSCUCredentialPickerOptions, WSCUCredentialPickerResults, WSCUCredentialPicker, WSCUUserConsentVerifier;
-@protocol WSCUICredentialPickerOptions
-, WSCUICredentialPickerStatics, WSCUICredentialPickerResults, WSCUIUserConsentVerifierStatics;
+@protocol WSCUICredentialPickerOptions, WSCUICredentialPickerStatics, WSCUICredentialPickerResults, WSCUIUserConsentVerifierStatics;
 
 // Windows.Security.Credentials.UI.AuthenticationProtocol
 enum _WSCUAuthenticationProtocol {
@@ -75,19 +80,19 @@ typedef unsigned WSCUUserConsentVerificationResult;
 #ifndef __WSCUCredentialPickerOptions_DEFINED__
 #define __WSCUCredentialPickerOptions_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_CREDENTIALS_UI_EXPORT
 @interface WSCUCredentialPickerOptions : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* targetName;
+@property (retain) NSString * targetName;
 @property (retain) RTObject<WSSIBuffer>* previousCredential;
-@property (retain) NSString* message;
+@property (retain) NSString * message;
 @property unsigned int errorCode;
-@property (retain) NSString* customAuthenticationProtocol;
+@property (retain) NSString * customAuthenticationProtocol;
 @property WSCUCredentialSaveOption credentialSaveOption;
-@property (retain) NSString* caption;
+@property (retain) NSString * caption;
 @property BOOL callerSavesCredential;
 @property WSCUAuthenticationProtocol authenticationProtocol;
 @property BOOL alwaysDisplayDialog;
@@ -99,17 +104,17 @@ WINRT_EXPORT
 #ifndef __WSCUCredentialPickerResults_DEFINED__
 #define __WSCUCredentialPickerResults_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_CREDENTIALS_UI_EXPORT
 @interface WSCUCredentialPickerResults : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) RTObject<WSSIBuffer>* credential;
-@property (readonly) NSString* credentialDomainName;
-@property (readonly) NSString* credentialPassword;
+@property (readonly) NSString * credentialDomainName;
+@property (readonly) NSString * credentialPassword;
 @property (readonly) WSCUCredentialSaveOption credentialSaveOption;
 @property (readonly) BOOL credentialSaved;
-@property (readonly) NSString* credentialUserName;
+@property (readonly) NSString * credentialUserName;
 @property (readonly) unsigned int errorCode;
 @end
 
@@ -119,20 +124,11 @@ WINRT_EXPORT
 #ifndef __WSCUCredentialPicker_DEFINED__
 #define __WSCUCredentialPicker_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_CREDENTIALS_UI_EXPORT
 @interface WSCUCredentialPicker : RTObject
-+ (void)pickWithOptionsAsync:(WSCUCredentialPickerOptions*)options
-                     success:(void (^)(WSCUCredentialPickerResults*))success
-                     failure:(void (^)(NSError*))failure;
-+ (void)pickWithMessageAsync:(NSString*)targetName
-                     message:(NSString*)message
-                     success:(void (^)(WSCUCredentialPickerResults*))success
-                     failure:(void (^)(NSError*))failure;
-+ (void)pickWithCaptionAsync:(NSString*)targetName
-                     message:(NSString*)message
-                     caption:(NSString*)caption
-                     success:(void (^)(WSCUCredentialPickerResults*))success
-                     failure:(void (^)(NSError*))failure;
++ (void)pickWithOptionsAsync:(WSCUCredentialPickerOptions*)options success:(void (^)(WSCUCredentialPickerResults*))success failure:(void (^)(NSError*))failure;
++ (void)pickWithMessageAsync:(NSString *)targetName message:(NSString *)message success:(void (^)(WSCUCredentialPickerResults*))success failure:(void (^)(NSError*))failure;
++ (void)pickWithCaptionAsync:(NSString *)targetName message:(NSString *)message caption:(NSString *)caption success:(void (^)(WSCUCredentialPickerResults*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSCUCredentialPicker_DEFINED__
@@ -141,12 +137,11 @@ WINRT_EXPORT
 #ifndef __WSCUUserConsentVerifier_DEFINED__
 #define __WSCUUserConsentVerifier_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_CREDENTIALS_UI_EXPORT
 @interface WSCUUserConsentVerifier : RTObject
 + (void)checkAvailabilityAsyncWithSuccess:(void (^)(WSCUUserConsentVerifierAvailability))success failure:(void (^)(NSError*))failure;
-+ (void)requestVerificationAsync:(NSString*)message
-                         success:(void (^)(WSCUUserConsentVerificationResult))success
-                         failure:(void (^)(NSError*))failure;
++ (void)requestVerificationAsync:(NSString *)message success:(void (^)(WSCUUserConsentVerificationResult))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSCUUserConsentVerifier_DEFINED__
+

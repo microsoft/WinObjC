@@ -19,11 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
+#define OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Store_Preview_InstallControl.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WASPIAppInstallStatus, WASPIAppInstallItem, WASPIAppInstallManagerItemEventArgs, WASPIAppInstallManager;
-@protocol WASPIIAppInstallStatus
-, WASPIIAppInstallItem, WASPIIAppInstallManagerItemEventArgs, WASPIIAppInstallManager;
+@protocol WASPIIAppInstallStatus, WASPIIAppInstallStatus2, WASPIIAppInstallItem, WASPIIAppInstallItem2, WASPIIAppInstallManagerItemEventArgs, WASPIIAppInstallManager, WASPIIAppInstallManager2, WASPIIAppInstallManager3;
 
 // Windows.ApplicationModel.Store.Preview.InstallControl.AppInstallState
 enum _WASPIAppInstallState {
@@ -62,6 +67,8 @@ enum _WASPIAutoUpdateSetting {
 typedef unsigned WASPIAutoUpdateSetting;
 
 #include "WindowsFoundation.h"
+#include "WindowsSystem.h"
+#include "WindowsManagementDeployment.h"
 
 #import <Foundation/Foundation.h>
 
@@ -69,7 +76,7 @@ typedef unsigned WASPIAutoUpdateSetting;
 #ifndef __WASPIAppInstallStatus_DEFINED__
 #define __WASPIAppInstallStatus_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
 @interface WASPIAppInstallStatus : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -79,6 +86,8 @@ WINRT_EXPORT
 @property (readonly) HRESULT errorCode;
 @property (readonly) WASPIAppInstallState installState;
 @property (readonly) double percentComplete;
+@property (readonly) BOOL readyForLaunch;
+@property (readonly) WSUser* user;
 @end
 
 #endif // __WASPIAppInstallStatus_DEFINED__
@@ -87,23 +96,26 @@ WINRT_EXPORT
 #ifndef __WASPIAppInstallItem_DEFINED__
 #define __WASPIAppInstallItem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
 @interface WASPIAppInstallItem : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WASPIAppInstallType installType;
 @property (readonly) BOOL isUserInitiated;
-@property (readonly) NSString* packageFamilyName;
-@property (readonly) NSString* productId;
-- (EventRegistrationToken)addCompletedEvent:(void (^)(WASPIAppInstallItem*, RTObject*))del;
+@property (readonly) NSString * packageFamilyName;
+@property (readonly) NSString * productId;
+- (EventRegistrationToken)addCompletedEvent:(void(^)(WASPIAppInstallItem*, RTObject*))del;
 - (void)removeCompletedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStatusChangedEvent:(void (^)(WASPIAppInstallItem*, RTObject*))del;
+- (EventRegistrationToken)addStatusChangedEvent:(void(^)(WASPIAppInstallItem*, RTObject*))del;
 - (void)removeStatusChangedEvent:(EventRegistrationToken)tok;
 - (WASPIAppInstallStatus*)getCurrentStatus;
 - (void)cancel;
 - (void)pause;
 - (void)restart;
+- (void)cancelWithTelemetry:(NSString *)correlationVector;
+- (void)pauseWithTelemetry:(NSString *)correlationVector;
+- (void)restartWithTelemetry:(NSString *)correlationVector;
 @end
 
 #endif // __WASPIAppInstallItem_DEFINED__
@@ -112,7 +124,7 @@ WINRT_EXPORT
 #ifndef __WASPIAppInstallManagerItemEventArgs_DEFINED__
 #define __WASPIAppInstallManagerItemEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
 @interface WASPIAppInstallManagerItemEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -126,45 +138,46 @@ WINRT_EXPORT
 #ifndef __WASPIAppInstallManager_DEFINED__
 #define __WASPIAppInstallManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
 @interface WASPIAppInstallManager : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WASPIAutoUpdateSetting autoUpdateSetting;
-@property (retain) NSString* acquisitionIdentity;
+@property (retain) NSString * acquisitionIdentity;
 @property (readonly) NSArray* /* WASPIAppInstallItem* */ appInstallItems;
-- (EventRegistrationToken)addItemCompletedEvent:(void (^)(WASPIAppInstallManager*, WASPIAppInstallManagerItemEventArgs*))del;
+- (EventRegistrationToken)addItemCompletedEvent:(void(^)(WASPIAppInstallManager*, WASPIAppInstallManagerItemEventArgs*))del;
 - (void)removeItemCompletedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addItemStatusChangedEvent:(void (^)(WASPIAppInstallManager*, WASPIAppInstallManagerItemEventArgs*))del;
+- (EventRegistrationToken)addItemStatusChangedEvent:(void(^)(WASPIAppInstallManager*, WASPIAppInstallManagerItemEventArgs*))del;
 - (void)removeItemStatusChangedEvent:(EventRegistrationToken)tok;
-- (void)cancel:(NSString*)productId;
-- (void)pause:(NSString*)productId;
-- (void)restart:(NSString*)productId;
-- (void)getIsApplicableAsync:(NSString*)productId
-                       skuId:(NSString*)skuId
-                     success:(void (^)(BOOL))success
-                     failure:(void (^)(NSError*))failure;
-- (void)startAppInstallAsync:(NSString*)productId
-                            skuId:(NSString*)skuId
-                           repair:(BOOL)repair
-    forceUseOfNonRemovableStorage:(BOOL)forceUseOfNonRemovableStorage
-                          success:(void (^)(WASPIAppInstallItem*))success
-                          failure:(void (^)(NSError*))failure;
-- (void)updateAppByPackageFamilyNameAsync:(NSString*)packageFamilyName
-                                  success:(void (^)(WASPIAppInstallItem*))success
-                                  failure:(void (^)(NSError*))failure;
-- (void)searchForUpdatesAsync:(NSString*)productId
-                        skuId:(NSString*)skuId
-                      success:(void (^)(WASPIAppInstallItem*))success
-                      failure:(void (^)(NSError*))failure;
+- (void)cancel:(NSString *)productId;
+- (void)pause:(NSString *)productId;
+- (void)restart:(NSString *)productId;
+- (void)getIsApplicableAsync:(NSString *)productId skuId:(NSString *)skuId success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)startAppInstallAsync:(NSString *)productId skuId:(NSString *)skuId repair:(BOOL)repair forceUseOfNonRemovableStorage:(BOOL)forceUseOfNonRemovableStorage success:(void (^)(WASPIAppInstallItem*))success failure:(void (^)(NSError*))failure;
+- (void)updateAppByPackageFamilyNameAsync:(NSString *)packageFamilyName success:(void (^)(WASPIAppInstallItem*))success failure:(void (^)(NSError*))failure;
+- (void)searchForUpdatesAsync:(NSString *)productId skuId:(NSString *)skuId success:(void (^)(WASPIAppInstallItem*))success failure:(void (^)(NSError*))failure;
 - (void)searchForAllUpdatesAsyncWithSuccess:(void (^)(NSArray* /* WASPIAppInstallItem* */))success failure:(void (^)(NSError*))failure;
-- (void)isStoreBlockedByPolicyAsync:(NSString*)storeClientName
-               storeClientPublisher:(NSString*)storeClientPublisher
-                            success:(void (^)(BOOL))success
-                            failure:(void (^)(NSError*))failure;
-- (void)getIsAppAllowedToInstallAsync:(NSString*)productId success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)isStoreBlockedByPolicyAsync:(NSString *)storeClientName storeClientPublisher:(NSString *)storeClientPublisher success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)getIsAppAllowedToInstallAsync:(NSString *)productId success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)startAppInstallWithTelemetryAsync:(NSString *)productId skuId:(NSString *)skuId repair:(BOOL)repair forceUseOfNonRemovableStorage:(BOOL)forceUseOfNonRemovableStorage catalogId:(NSString *)catalogId bundleId:(NSString *)bundleId correlationVector:(NSString *)correlationVector success:(void (^)(WASPIAppInstallItem*))success failure:(void (^)(NSError*))failure;
+- (void)updateAppByPackageFamilyNameWithTelemetryAsync:(NSString *)packageFamilyName correlationVector:(NSString *)correlationVector success:(void (^)(WASPIAppInstallItem*))success failure:(void (^)(NSError*))failure;
+- (void)searchForUpdatesWithTelemetryAsync:(NSString *)productId skuId:(NSString *)skuId catalogId:(NSString *)catalogId correlationVector:(NSString *)correlationVector success:(void (^)(WASPIAppInstallItem*))success failure:(void (^)(NSError*))failure;
+- (void)searchForAllUpdatesWithTelemetryAsync:(NSString *)correlationVector success:(void (^)(NSArray* /* WASPIAppInstallItem* */))success failure:(void (^)(NSError*))failure;
+- (void)getIsAppAllowedToInstallWithTelemetryAsync:(NSString *)productId skuId:(NSString *)skuId catalogId:(NSString *)catalogId correlationVector:(NSString *)correlationVector success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)cancelWithTelemetry:(NSString *)productId correlationVector:(NSString *)correlationVector;
+- (void)pauseWithTelemetry:(NSString *)productId correlationVector:(NSString *)correlationVector;
+- (void)restartWithTelemetry:(NSString *)productId correlationVector:(NSString *)correlationVector;
+- (void)startProductInstallAsync:(NSString *)productId catalogId:(NSString *)catalogId flightId:(NSString *)flightId clientId:(NSString *)clientId repair:(BOOL)repair forceUseOfNonRemovableStorage:(BOOL)forceUseOfNonRemovableStorage correlationVector:(NSString *)correlationVector targetVolume:(WMDPackageVolume*)targetVolume success:(void (^)(NSArray* /* WASPIAppInstallItem* */))success failure:(void (^)(NSError*))failure;
+- (void)startProductInstallForUserAsync:(WSUser*)user productId:(NSString *)productId catalogId:(NSString *)catalogId flightId:(NSString *)flightId clientId:(NSString *)clientId repair:(BOOL)repair forceUseOfNonRemovableStorage:(BOOL)forceUseOfNonRemovableStorage correlationVector:(NSString *)correlationVector targetVolume:(WMDPackageVolume*)targetVolume success:(void (^)(NSArray* /* WASPIAppInstallItem* */))success failure:(void (^)(NSError*))failure;
+- (void)updateAppByPackageFamilyNameForUserAsync:(WSUser*)user packageFamilyName:(NSString *)packageFamilyName correlationVector:(NSString *)correlationVector success:(void (^)(WASPIAppInstallItem*))success failure:(void (^)(NSError*))failure;
+- (void)searchForUpdatesForUserAsync:(WSUser*)user productId:(NSString *)productId skuId:(NSString *)skuId catalogId:(NSString *)catalogId correlationVector:(NSString *)correlationVector success:(void (^)(WASPIAppInstallItem*))success failure:(void (^)(NSError*))failure;
+- (void)searchForAllUpdatesForUserAsync:(WSUser*)user correlationVector:(NSString *)correlationVector success:(void (^)(NSArray* /* WASPIAppInstallItem* */))success failure:(void (^)(NSError*))failure;
+- (void)getIsAppAllowedToInstallForUserAsync:(WSUser*)user productId:(NSString *)productId skuId:(NSString *)skuId catalogId:(NSString *)catalogId correlationVector:(NSString *)correlationVector success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)getIsApplicableForUserAsync:(WSUser*)user productId:(NSString *)productId skuId:(NSString *)skuId success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)moveToFrontOfDownloadQueue:(NSString *)productId correlationVector:(NSString *)correlationVector;
 @end
 
 #endif // __WASPIAppInstallManager_DEFINED__
+

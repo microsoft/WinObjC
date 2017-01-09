@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_EXPORT
+#define OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Security_Cryptography.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WSCCryptographicBuffer;
@@ -40,19 +46,20 @@ typedef unsigned WSCBinaryStringEncoding;
 #ifndef __WSCCryptographicBuffer_DEFINED__
 #define __WSCCryptographicBuffer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_EXPORT
 @interface WSCCryptographicBuffer : RTObject
 + (BOOL)compare:(RTObject<WSSIBuffer>*)object1 object2:(RTObject<WSSIBuffer>*)object2;
 + (RTObject<WSSIBuffer>*)generateRandom:(unsigned int)length;
 + (unsigned int)generateRandomNumber;
 + (RTObject<WSSIBuffer>*)createFromByteArray:(NSArray* /* uint8_t */)value;
 + (void)copyToByteArray:(RTObject<WSSIBuffer>*)buffer value:(NSArray* /* uint8_t */*)value;
-+ (RTObject<WSSIBuffer>*)decodeFromHexString:(NSString*)value;
-+ (NSString*)encodeToHexString:(RTObject<WSSIBuffer>*)buffer;
-+ (RTObject<WSSIBuffer>*)decodeFromBase64String:(NSString*)value;
-+ (NSString*)encodeToBase64String:(RTObject<WSSIBuffer>*)buffer;
-+ (RTObject<WSSIBuffer>*)convertStringToBinary:(NSString*)value encoding:(WSCBinaryStringEncoding)encoding;
-+ (NSString*)convertBinaryToString:(WSCBinaryStringEncoding)encoding buffer:(RTObject<WSSIBuffer>*)buffer;
++ (RTObject<WSSIBuffer>*)decodeFromHexString:(NSString *)value;
++ (NSString *)encodeToHexString:(RTObject<WSSIBuffer>*)buffer;
++ (RTObject<WSSIBuffer>*)decodeFromBase64String:(NSString *)value;
++ (NSString *)encodeToBase64String:(RTObject<WSSIBuffer>*)buffer;
++ (RTObject<WSSIBuffer>*)convertStringToBinary:(NSString *)value encoding:(WSCBinaryStringEncoding)encoding;
++ (NSString *)convertBinaryToString:(WSCBinaryStringEncoding)encoding buffer:(RTObject<WSSIBuffer>*)buffer;
 @end
 
 #endif // __WSCCryptographicBuffer_DEFINED__
+

@@ -2,22 +2,28 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{f939d6a1-4f91-4201-b38a-24edd790e1ce}</UniqueIdentifier>
+      <UniqueIdentifier>{86d91b62-1154-4dab-8c81-5de9374c3c82}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{90a6809e-64b6-4d8a-9aa5-14b6d6977de5}</UniqueIdentifier>
+      <UniqueIdentifier>{d53d2d97-6325-4b9f-88c4-e2044419e1d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Images">
+      <UniqueIdentifier>{2F2592B7-1AAC-4C42-A938-5A64495DDC53}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog">
-      <UniqueIdentifier>{3DB0B2CA-72CF-4FDE-8B63-35D5400227DC}</UniqueIdentifier>
+      <UniqueIdentifier>{53E070C2-E27D-4768-831C-48881671FC45}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog\Supporting Files">
-      <UniqueIdentifier>{7061AEB8-2AC7-437E-A515-A323D14C5819}</UniqueIdentifier>
+      <UniqueIdentifier>{368E02DA-E628-4BF5-8CD5-589A9389A03E}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog\UIKitControls">
-      <UniqueIdentifier>{1DCAF78B-738F-4176-AC7A-A50DDE931B85}</UniqueIdentifier>
+      <UniqueIdentifier>{083BC455-EBCF-4EE3-81F5-F897E1DB56DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="XAMLCatalog\XamlControls">
+      <UniqueIdentifier>{DDB161F8-C65B-49EB-A065-B4A2D0410EDB}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{806C73D9-F6F7-4933-B57A-521789FA9A53}</UniqueIdentifier>
+      <UniqueIdentifier>{678F0B8C-4157-4F10-AF98-409C45CB4EED}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -45,34 +51,89 @@
     <Image Include="Assets\Wide310x150Logo.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
-    <ClangCompile Include="..\..\XAMLCatalog\StoryBoardViewController.m">
+    <AssetCatalogCompile Include="..\..\XAMLCatalog\Assets.xcassets">
+      <Filter>XAMLCatalog</Filter>
+    </AssetCatalogCompile>
+    <ClInclude Include="..\..\XAMLCatalog\AppDelegate.h">
+      <Filter>XAMLCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XAMLCatalog\CustomTextControlViewController.h">
+      <Filter>XAMLCatalog\XamlControls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XAMLCatalog\MenuTableViewController.h">
+      <Filter>XAMLCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XAMLCatalog\MiscellaneousViewController.h">
+      <Filter>XAMLCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XAMLCatalog\ProgrammaticViewController.h">
+      <Filter>XAMLCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XAMLCatalog\StoryBoardViewController.h">
+      <Filter>XAMLCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XAMLCatalog\UIActionSheetViewController.h">
+      <Filter>XAMLCatalog\UIKitControls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XAMLCatalog\UIActivityIndicatorViewController.h">
+      <Filter>XAMLCatalog\UIKitControls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XAMLCatalog\UIButtonViewController.h">
+      <Filter>XAMLCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XAMLCatalog\UISliderViewController.h">
+      <Filter>XAMLCatalog\UIKitControls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XAMLCatalog\UITextFieldViewController.h">
+      <Filter>XAMLCatalog\UIKitControls</Filter>
+    </ClInclude>
+    <ClangCompile Include="..\..\XAMLCatalog\AppDelegate.m">
       <Filter>XAMLCatalog</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\XAMLCatalog\AppDelegate.m">
+    <ClangCompile Include="..\..\XAMLCatalog\CustomTextControlViewController.m">
+      <Filter>XAMLCatalog\XamlControls</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\XAMLCatalog\MenuTableViewController.m">
+      <Filter>XAMLCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\XAMLCatalog\MiscellaneousViewController.m">
       <Filter>XAMLCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\XAMLCatalog\ProgrammaticViewController.m">
       <Filter>XAMLCatalog</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\XAMLCatalog\StoryBoardViewController.m">
+      <Filter>XAMLCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\XAMLCatalog\UIActionSheetViewController.m">
+      <Filter>XAMLCatalog\UIKitControls</Filter>
+    </ClangCompile>
     <ClangCompile Include="..\..\XAMLCatalog\UIActivityIndicatorViewController.m">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\XAMLCatalog\UIButtonViewController.m">
+      <Filter>XAMLCatalog</Filter>
+    </ClangCompile>
     <ClangCompile Include="..\..\XAMLCatalog\UISliderViewController.m">
+      <Filter>XAMLCatalog\UIKitControls</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\XAMLCatalog\UITextFieldViewController.m">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\XAMLCatalog\main.m">
       <Filter>XAMLCatalog\Supporting Files</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\XAMLCatalog\MenuTableViewController.m">
-      <Filter>XAMLCatalog</Filter>
-    </ClangCompile>
-    <AssetCatalogCompile Include="..\..\XAMLCatalog\Assets.xcassets">
-      <Filter>XAMLCatalog</Filter>
-    </AssetCatalogCompile>
-    <StoryboardCompile Include="..\..\XAMLCatalog\XAMLCatalog.storyboard">
-      <Filter>XAMLCatalog</Filter>
-    </StoryboardCompile>
     <SBInfoPlistCopy Include="..\..\XAMLCatalog\Info.plist" />
+    <SBResourceCopy Include="..\..\XAMLCatalog\Images\blue_background.jpg">
+      <Filter>Images</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\XAMLCatalog\Images\button_image.png">
+      <Filter>Images</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\XAMLCatalog\Images\yellow_background.jpg">
+      <Filter>Images</Filter>
+    </SBResourceCopy>
+    <StoryboardCompile Include="..\..\XAMLCatalog\XAMLCatalog.storyboard" />
     <Text Include="XAMLCatalog-Debug-xcvars.txt">
       <Filter>Xcode Variable Files</Filter>
     </Text>

@@ -33,8 +33,8 @@ typedef std::set<std::string> StringSet;
 VCProject::VCProject(VSTemplateProject* projTemplate, const std::string& id)
 : m_template(projTemplate)
 {
-  sbAssert(projTemplate);
-  sbAssert(isAbsolutePath(projTemplate->getPath()));
+  sbAssertWithTelemetry(projTemplate, "Unable to create VCProject from NULL VSTemplateProject");
+  sbAssertWithTelemetry(isAbsolutePath(projTemplate->getPath()), "Path to project template is not absolute");
 
   // Determine subtype (shared or not)
    m_subType = projTemplate->isShared() ? VCShared : VCNone;
@@ -171,13 +171,22 @@ VCProjectConfiguration* VCProject::addConfiguration(const std::string& name)
 
 VCProjectItem* VCProject::addItem(const std::string& itemName, const std::string& includePath, const std::string& filterPath)
 {
-  VCProjectItem* ret = NULL;
+  VCProjectItem* projItem = NULL;
   if (!itemName.empty() && !includePath.empty()) {
-    ret = new VCProjectItem(itemName, includePath, filterPath);
-    m_items.push_back(ret);
+    projItem = new VCProjectItem(itemName, includePath, filterPath);
+
+    // Use a combination of item type and path to distinguish items
+    std::string itemKey = itemName + "::" + includePath;
+    auto insertResult = m_items.insert(make_pair(itemKey, projItem));
+
+    // If an item with the same key was already in the map, clean up
+    if (!insertResult.second) {
+      delete projItem;
+      projItem = insertResult.first->second;
+    }
   }
 
-  return ret;
+  return projItem;
 }
 
 void VCProject::addBuildExtension(const std::string& extension)
@@ -296,8 +305,8 @@ void VCProject::writeConfigurationItemDefinitions(pugi::xml_node& node) const
 void VCProject::writeProjectItems(pugi::xml_node& node) const
 {
   pugi::xml_node tempNode = node.parent().append_child("Temp");
-  for (auto item : m_items) {
-    item->writeDescription(tempNode);
+  for (auto itemPair : m_items) {
+    itemPair.second->writeDescription(tempNode);
   }
   mergeNodes(node, tempNode);
 }
@@ -322,7 +331,7 @@ bool VCProject::writeTemplate(const std::string& filePath, const LabelHandlerFnM
   // Open the template
   pugi::xml_document projDoc;
   pugi::xml_parse_result result = projDoc.load_file(filePath.c_str());
-  sbValidate(result, "Failed to open template file: " + filePath);
+  sbValidateWithTelemetry(result, "Failed to open template file: " + filePath);
   pugi::xml_node projRoot = projDoc.first_child();
 
   for (pugi::xml_node child = projRoot.first_child(); child; child = child.next_sibling()) {
@@ -377,10 +386,10 @@ static void recordFilterPath(const std::string& filterPath, StringSet& filterSet
 void VCProject::writeFilterItemDescriptions(pugi::xml_node& node) const
 {
   pugi::xml_node tempNode = node.parent().append_child("Temp");
-  for (auto item : m_items) {
-    std::string itemName = item->getItemName();
-    std::string includePath = item->getIncludePath();
-    std::string filterPath = item->getFilterPath();
+  for (auto itemPair : m_items) {
+    std::string itemName = itemPair.second->getItemName();
+    std::string includePath = itemPair.second->getIncludePath();
+    std::string filterPath = itemPair.second->getFilterPath();
 
     pugi::xml_node fItem = tempNode.append_child(itemName.c_str());
     fItem.append_attribute("Include") = includePath.c_str();
@@ -394,8 +403,8 @@ void VCProject::writeFilterItemDescriptions(pugi::xml_node& node) const
 void VCProject::writeFilterDescriptions(pugi::xml_node& node) const
 {
   StringSet filters;
-  for (auto item : m_items) {
-    recordFilterPath(item->getFilterPath(), filters);
+  for (auto itemPair : m_items) {
+    recordFilterPath(itemPair.second->getFilterPath(), filters);
   }
 
   pugi::xml_node tempNode = node.parent().append_child("Temp");
@@ -421,5 +430,10 @@ bool VCProject::writeFilters() const
   nodeHandlers["FilterItemDescriptions"] = &VCProject::writeFilterItemDescriptions;
   nodeHandlers["FilterDescriptions"] = &VCProject::writeFilterDescriptions;
 
-  return writeTemplate(filtersFilePath, nodeHandlers);
+  // In cases where the VS template doesn't contain a filters file, write nothing
+  if (fileExists(filtersFilePath)) {
+    return writeTemplate(filtersFilePath, nodeHandlers);
+  } else {
+    return true;
+  }
 }

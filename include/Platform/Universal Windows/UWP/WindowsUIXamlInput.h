@@ -19,21 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_XAML_EXPORT
+#define OBJCUWP_WINDOWS_UI_XAML_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WUXIPointer, WUXIFocusManager, WUXIInertiaExpansionBehavior, WUXIInertiaRotationBehavior, WUXIInertiaTranslationBehavior,
-    WUXIManipulationPivot, WUXIDoubleTappedRoutedEventArgs, WUXIHoldingRoutedEventArgs, WUXIInputScope, WUXIInputScopeName,
-    WUXIKeyRoutedEventArgs, WUXIManipulationCompletedRoutedEventArgs, WUXIManipulationDeltaRoutedEventArgs,
-    WUXIManipulationInertiaStartingRoutedEventArgs, WUXIManipulationStartedRoutedEventArgs, WUXIManipulationStartingRoutedEventArgs,
-    WUXIPointerRoutedEventArgs, WUXIRightTappedRoutedEventArgs, WUXITappedRoutedEventArgs;
-@protocol WUXIICommand
-, WUXIIFocusManager, WUXIIFocusManagerStatics, WUXIIFocusManagerStatics2, WUXIIFocusManagerStatics3, WUXIIInertiaExpansionBehavior,
-    WUXIIInertiaRotationBehavior, WUXIIInertiaTranslationBehavior, WUXIIManipulationPivot, WUXIIManipulationPivotFactory, WUXIIPointer,
-    WUXIIDoubleTappedRoutedEventArgs, WUXIIHoldingRoutedEventArgs, WUXIIInputScope, WUXIIInputScopeName, WUXIIInputScopeNameFactory,
-    WUXIIKeyRoutedEventArgs, WUXIIKeyRoutedEventArgs2, WUXIIManipulationCompletedRoutedEventArgs, WUXIIManipulationDeltaRoutedEventArgs,
-    WUXIIManipulationInertiaStartingRoutedEventArgs, WUXIIManipulationStartedRoutedEventArgs,
-    WUXIIManipulationStartedRoutedEventArgsFactory, WUXIIManipulationStartingRoutedEventArgs, WUXIIPointerRoutedEventArgs,
-    WUXIIRightTappedRoutedEventArgs, WUXIITappedRoutedEventArgs;
+@class WUXIPointer, WUXIAccessKeyDisplayRequestedEventArgs, WUXIAccessKeyDisplayDismissedEventArgs, WUXIAccessKeyInvokedEventArgs, WUXIAccessKeyManager, WUXIFocusManager, WUXIInertiaExpansionBehavior, WUXIInertiaRotationBehavior, WUXIInertiaTranslationBehavior, WUXIManipulationPivot, WUXIContextRequestedEventArgs, WUXIDoubleTappedRoutedEventArgs, WUXIHoldingRoutedEventArgs, WUXIInputScope, WUXIInputScopeName, WUXIKeyRoutedEventArgs, WUXIManipulationCompletedRoutedEventArgs, WUXIManipulationDeltaRoutedEventArgs, WUXIManipulationInertiaStartingRoutedEventArgs, WUXIManipulationStartedRoutedEventArgs, WUXIManipulationStartingRoutedEventArgs, WUXIPointerRoutedEventArgs, WUXIRightTappedRoutedEventArgs, WUXITappedRoutedEventArgs;
+@protocol WUXIICommand, WUXIIAccessKeyDisplayDismissedEventArgs, WUXIIAccessKeyDisplayRequestedEventArgs, WUXIIAccessKeyInvokedEventArgs, WUXIIAccessKeyManager, WUXIIAccessKeyManagerStatics, WUXIIFocusManager, WUXIIFocusManagerStatics, WUXIIFocusManagerStatics2, WUXIIFocusManagerStatics3, WUXIIInertiaExpansionBehavior, WUXIIInertiaRotationBehavior, WUXIIInertiaTranslationBehavior, WUXIIManipulationPivot, WUXIIManipulationPivotFactory, WUXIIPointer, WUXIIContextRequestedEventArgs, WUXIIDoubleTappedRoutedEventArgs, WUXIIHoldingRoutedEventArgs, WUXIIInputScope, WUXIIInputScopeName, WUXIIInputScopeNameFactory, WUXIIKeyRoutedEventArgs, WUXIIKeyRoutedEventArgs2, WUXIIKeyRoutedEventArgs3, WUXIIManipulationCompletedRoutedEventArgs, WUXIIManipulationDeltaRoutedEventArgs, WUXIIManipulationInertiaStartingRoutedEventArgs, WUXIIManipulationStartedRoutedEventArgs, WUXIIManipulationStartedRoutedEventArgsFactory, WUXIIManipulationStartingRoutedEventArgs, WUXIIPointerRoutedEventArgs, WUXIIRightTappedRoutedEventArgs, WUXIITappedRoutedEventArgs;
 
 // Windows.UI.Xaml.Input.FocusNavigationDirection
 enum _WUXIFocusNavigationDirection {
@@ -91,6 +86,7 @@ enum _WUXIInputScopeNameValue {
     WUXIInputScopeNameValueNumericPin = 64,
     WUXIInputScopeNameValueAlphanumericPin = 65,
     WUXIInputScopeNameValueFormulaNumber = 67,
+    WUXIInputScopeNameValueChatWithoutEmoji = 68,
 };
 typedef unsigned WUXIInputScopeNameValue;
 
@@ -128,75 +124,76 @@ typedef unsigned WUXIManipulationModes;
 // Windows.UI.Xaml.DependencyPropertyChangedCallback
 #ifndef __WXDependencyPropertyChangedCallback__DEFINED
 #define __WXDependencyPropertyChangedCallback__DEFINED
-typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, WXDependencyProperty* dp);
+typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, WXDependencyProperty* dp);
 #endif // __WXDependencyPropertyChangedCallback__DEFINED
+
 
 #import <Foundation/Foundation.h>
 
 // Windows.UI.Xaml.Input.DoubleTappedEventHandler
 #ifndef __WUXIDoubleTappedEventHandler__DEFINED
 #define __WUXIDoubleTappedEventHandler__DEFINED
-typedef void (^WUXIDoubleTappedEventHandler)(RTObject* sender, WUXIDoubleTappedRoutedEventArgs* e);
+typedef void(^WUXIDoubleTappedEventHandler)(RTObject* sender, WUXIDoubleTappedRoutedEventArgs* e);
 #endif // __WUXIDoubleTappedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.HoldingEventHandler
 #ifndef __WUXIHoldingEventHandler__DEFINED
 #define __WUXIHoldingEventHandler__DEFINED
-typedef void (^WUXIHoldingEventHandler)(RTObject* sender, WUXIHoldingRoutedEventArgs* e);
+typedef void(^WUXIHoldingEventHandler)(RTObject* sender, WUXIHoldingRoutedEventArgs* e);
 #endif // __WUXIHoldingEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.KeyEventHandler
 #ifndef __WUXIKeyEventHandler__DEFINED
 #define __WUXIKeyEventHandler__DEFINED
-typedef void (^WUXIKeyEventHandler)(RTObject* sender, WUXIKeyRoutedEventArgs* e);
+typedef void(^WUXIKeyEventHandler)(RTObject* sender, WUXIKeyRoutedEventArgs* e);
 #endif // __WUXIKeyEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.ManipulationCompletedEventHandler
 #ifndef __WUXIManipulationCompletedEventHandler__DEFINED
 #define __WUXIManipulationCompletedEventHandler__DEFINED
-typedef void (^WUXIManipulationCompletedEventHandler)(RTObject* sender, WUXIManipulationCompletedRoutedEventArgs* e);
+typedef void(^WUXIManipulationCompletedEventHandler)(RTObject* sender, WUXIManipulationCompletedRoutedEventArgs* e);
 #endif // __WUXIManipulationCompletedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.ManipulationDeltaEventHandler
 #ifndef __WUXIManipulationDeltaEventHandler__DEFINED
 #define __WUXIManipulationDeltaEventHandler__DEFINED
-typedef void (^WUXIManipulationDeltaEventHandler)(RTObject* sender, WUXIManipulationDeltaRoutedEventArgs* e);
+typedef void(^WUXIManipulationDeltaEventHandler)(RTObject* sender, WUXIManipulationDeltaRoutedEventArgs* e);
 #endif // __WUXIManipulationDeltaEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.ManipulationInertiaStartingEventHandler
 #ifndef __WUXIManipulationInertiaStartingEventHandler__DEFINED
 #define __WUXIManipulationInertiaStartingEventHandler__DEFINED
-typedef void (^WUXIManipulationInertiaStartingEventHandler)(RTObject* sender, WUXIManipulationInertiaStartingRoutedEventArgs* e);
+typedef void(^WUXIManipulationInertiaStartingEventHandler)(RTObject* sender, WUXIManipulationInertiaStartingRoutedEventArgs* e);
 #endif // __WUXIManipulationInertiaStartingEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.ManipulationStartedEventHandler
 #ifndef __WUXIManipulationStartedEventHandler__DEFINED
 #define __WUXIManipulationStartedEventHandler__DEFINED
-typedef void (^WUXIManipulationStartedEventHandler)(RTObject* sender, WUXIManipulationStartedRoutedEventArgs* e);
+typedef void(^WUXIManipulationStartedEventHandler)(RTObject* sender, WUXIManipulationStartedRoutedEventArgs* e);
 #endif // __WUXIManipulationStartedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.ManipulationStartingEventHandler
 #ifndef __WUXIManipulationStartingEventHandler__DEFINED
 #define __WUXIManipulationStartingEventHandler__DEFINED
-typedef void (^WUXIManipulationStartingEventHandler)(RTObject* sender, WUXIManipulationStartingRoutedEventArgs* e);
+typedef void(^WUXIManipulationStartingEventHandler)(RTObject* sender, WUXIManipulationStartingRoutedEventArgs* e);
 #endif // __WUXIManipulationStartingEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.PointerEventHandler
 #ifndef __WUXIPointerEventHandler__DEFINED
 #define __WUXIPointerEventHandler__DEFINED
-typedef void (^WUXIPointerEventHandler)(RTObject* sender, WUXIPointerRoutedEventArgs* e);
+typedef void(^WUXIPointerEventHandler)(RTObject* sender, WUXIPointerRoutedEventArgs* e);
 #endif // __WUXIPointerEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.RightTappedEventHandler
 #ifndef __WUXIRightTappedEventHandler__DEFINED
 #define __WUXIRightTappedEventHandler__DEFINED
-typedef void (^WUXIRightTappedEventHandler)(RTObject* sender, WUXIRightTappedRoutedEventArgs* e);
+typedef void(^WUXIRightTappedEventHandler)(RTObject* sender, WUXIRightTappedRoutedEventArgs* e);
 #endif // __WUXIRightTappedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.TappedEventHandler
 #ifndef __WUXITappedEventHandler__DEFINED
 #define __WUXITappedEventHandler__DEFINED
-typedef void (^WUXITappedEventHandler)(RTObject* sender, WUXITappedRoutedEventArgs* e);
+typedef void(^WUXITappedEventHandler)(RTObject* sender, WUXITappedRoutedEventArgs* e);
 #endif // __WUXITappedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.ICommand
@@ -204,10 +201,14 @@ typedef void (^WUXITappedEventHandler)(RTObject* sender, WUXITappedRoutedEventAr
 #define __WUXIICommand_DEFINED__
 
 @protocol WUXIICommand
-- (EventRegistrationToken)addCanExecuteChangedEvent:(void (^)(RTObject*, RTObject*))del;
+- (EventRegistrationToken)addCanExecuteChangedEvent:(void(^)(RTObject*, RTObject*))del;
 - (void)removeCanExecuteChangedEvent:(EventRegistrationToken)tok;
 - (BOOL)canExecute:(RTObject*)parameter;
 - (void)execute:(RTObject*)parameter;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXIICommand : RTObject <WUXIICommand>
 @end
 
 #endif // __WUXIICommand_DEFINED__
@@ -216,7 +217,7 @@ typedef void (^WUXITappedEventHandler)(RTObject* sender, WUXITappedRoutedEventAr
 #ifndef __WUXIPointer_DEFINED__
 #define __WUXIPointer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIPointer : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -229,14 +230,75 @@ WINRT_EXPORT
 
 #endif // __WUXIPointer_DEFINED__
 
+// Windows.UI.Xaml.Input.AccessKeyDisplayRequestedEventArgs
+#ifndef __WUXIAccessKeyDisplayRequestedEventArgs_DEFINED__
+#define __WUXIAccessKeyDisplayRequestedEventArgs_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXIAccessKeyDisplayRequestedEventArgs : RTObject
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) NSString * pressedKeys;
+@end
+
+#endif // __WUXIAccessKeyDisplayRequestedEventArgs_DEFINED__
+
+// Windows.UI.Xaml.Input.AccessKeyDisplayDismissedEventArgs
+#ifndef __WUXIAccessKeyDisplayDismissedEventArgs_DEFINED__
+#define __WUXIAccessKeyDisplayDismissedEventArgs_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXIAccessKeyDisplayDismissedEventArgs : RTObject
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@end
+
+#endif // __WUXIAccessKeyDisplayDismissedEventArgs_DEFINED__
+
+// Windows.UI.Xaml.Input.AccessKeyInvokedEventArgs
+#ifndef __WUXIAccessKeyInvokedEventArgs_DEFINED__
+#define __WUXIAccessKeyInvokedEventArgs_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXIAccessKeyInvokedEventArgs : RTObject
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property BOOL handled;
+@end
+
+#endif // __WUXIAccessKeyInvokedEventArgs_DEFINED__
+
+// Windows.UI.Xaml.Input.AccessKeyManager
+#ifndef __WUXIAccessKeyManager_DEFINED__
+#define __WUXIAccessKeyManager_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXIAccessKeyManager : RTObject
++ (void)exitDisplayMode;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
++ (BOOL)isDisplayModeEnabled;
++ (EventRegistrationToken)addIsDisplayModeEnabledChangedEvent:(void(^)(RTObject*, RTObject*))del;
++ (void)removeIsDisplayModeEnabledChangedEvent:(EventRegistrationToken)tok;
+@end
+
+#endif // __WUXIAccessKeyManager_DEFINED__
+
 // Windows.UI.Xaml.Input.FocusManager
 #ifndef __WUXIFocusManager_DEFINED__
 #define __WUXIFocusManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIFocusManager : RTObject
-+ (BOOL)tryMoveFocus:(WUXIFocusNavigationDirection)focusNavigationDirection;
 + (RTObject*)getFocusedElement;
++ (BOOL)tryMoveFocus:(WUXIFocusNavigationDirection)focusNavigationDirection;
 + (WXUIElement*)findNextFocusableElement:(WUXIFocusNavigationDirection)focusNavigationDirection;
 + (WXUIElement*)findNextFocusableElementWithHint:(WUXIFocusNavigationDirection)focusNavigationDirection hintRect:(WFRect*)hintRect;
 #if defined(__cplusplus)
@@ -250,7 +312,7 @@ WINRT_EXPORT
 #ifndef __WUXIInertiaExpansionBehavior_DEFINED__
 #define __WUXIInertiaExpansionBehavior_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIInertiaExpansionBehavior : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -265,7 +327,7 @@ WINRT_EXPORT
 #ifndef __WUXIInertiaRotationBehavior_DEFINED__
 #define __WUXIInertiaRotationBehavior_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIInertiaRotationBehavior : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -280,7 +342,7 @@ WINRT_EXPORT
 #ifndef __WUXIInertiaTranslationBehavior_DEFINED__
 #define __WUXIInertiaTranslationBehavior_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIInertiaTranslationBehavior : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -295,10 +357,10 @@ WINRT_EXPORT
 #ifndef __WUXIManipulationPivot_DEFINED__
 #define __WUXIManipulationPivot_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIManipulationPivot : RTObject
-+ (WUXIManipulationPivot*)makeInstanceWithCenterAndRadius:(WFPoint*)center radius:(double)radius ACTIVATOR;
 + (instancetype)make ACTIVATOR;
++ (WUXIManipulationPivot*)makeInstanceWithCenterAndRadius:(WFPoint*)center radius:(double)radius ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -312,7 +374,7 @@ WINRT_EXPORT
 #ifndef __WXRoutedEventArgs_DEFINED__
 #define __WXRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXRoutedEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -323,11 +385,27 @@ WINRT_EXPORT
 
 #endif // __WXRoutedEventArgs_DEFINED__
 
+// Windows.UI.Xaml.Input.ContextRequestedEventArgs
+#ifndef __WUXIContextRequestedEventArgs_DEFINED__
+#define __WUXIContextRequestedEventArgs_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXIContextRequestedEventArgs : WXRoutedEventArgs
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property BOOL handled;
+- (BOOL)tryGetPosition:(WXUIElement*)relativeTo point:(WFPoint**)point;
+@end
+
+#endif // __WUXIContextRequestedEventArgs_DEFINED__
+
 // Windows.UI.Xaml.Input.DoubleTappedRoutedEventArgs
 #ifndef __WUXIDoubleTappedRoutedEventArgs_DEFINED__
 #define __WUXIDoubleTappedRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIDoubleTappedRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -344,7 +422,7 @@ WINRT_EXPORT
 #ifndef __WUXIHoldingRoutedEventArgs_DEFINED__
 #define __WUXIHoldingRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIHoldingRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -362,7 +440,7 @@ WINRT_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -383,7 +461,7 @@ WINRT_EXPORT
 #ifndef __WUXIInputScope_DEFINED__
 #define __WUXIInputScope_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIInputScope : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -398,7 +476,7 @@ WINRT_EXPORT
 #ifndef __WUXIInputScopeName_DEFINED__
 #define __WUXIInputScopeName_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIInputScopeName : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 + (WUXIInputScopeName*)makeInstance:(WUXIInputScopeNameValue)nameValue ACTIVATOR;
@@ -414,7 +492,7 @@ WINRT_EXPORT
 #ifndef __WUXIKeyRoutedEventArgs_DEFINED__
 #define __WUXIKeyRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIKeyRoutedEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -423,6 +501,7 @@ WINRT_EXPORT
 @property (readonly) WSVirtualKey key;
 @property (readonly) WUCCorePhysicalKeyStatus* keyStatus;
 @property (readonly) WSVirtualKey originalKey;
+@property (readonly) NSString * deviceId;
 @end
 
 #endif // __WUXIKeyRoutedEventArgs_DEFINED__
@@ -431,7 +510,7 @@ WINRT_EXPORT
 #ifndef __WUXIManipulationCompletedRoutedEventArgs_DEFINED__
 #define __WUXIManipulationCompletedRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIManipulationCompletedRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -452,7 +531,7 @@ WINRT_EXPORT
 #ifndef __WUXIManipulationDeltaRoutedEventArgs_DEFINED__
 #define __WUXIManipulationDeltaRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIManipulationDeltaRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -475,7 +554,7 @@ WINRT_EXPORT
 #ifndef __WUXIManipulationInertiaStartingRoutedEventArgs_DEFINED__
 #define __WUXIManipulationInertiaStartingRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIManipulationInertiaStartingRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -498,7 +577,7 @@ WINRT_EXPORT
 #ifndef __WUXIManipulationStartedRoutedEventArgs_DEFINED__
 #define __WUXIManipulationStartedRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIManipulationStartedRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -518,7 +597,7 @@ WINRT_EXPORT
 #ifndef __WUXIManipulationStartingRoutedEventArgs_DEFINED__
 #define __WUXIManipulationStartingRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIManipulationStartingRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -536,7 +615,7 @@ WINRT_EXPORT
 #ifndef __WUXIPointerRoutedEventArgs_DEFINED__
 #define __WUXIPointerRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIPointerRoutedEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -554,7 +633,7 @@ WINRT_EXPORT
 #ifndef __WUXIRightTappedRoutedEventArgs_DEFINED__
 #define __WUXIRightTappedRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIRightTappedRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -571,7 +650,7 @@ WINRT_EXPORT
 #ifndef __WUXITappedRoutedEventArgs_DEFINED__
 #define __WUXITappedRoutedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXITappedRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -583,3 +662,4 @@ WINRT_EXPORT
 @end
 
 #endif // __WUXITappedRoutedEventArgs_DEFINED__
+

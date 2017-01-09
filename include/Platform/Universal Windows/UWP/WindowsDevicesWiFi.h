@@ -19,11 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_WIFI_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_WIFI_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Devices_WiFi.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WDWWiFiAdapter, WDWWiFiNetworkReport, WDWWiFiAvailableNetwork, WDWWiFiConnectionResult;
-@protocol WDWIWiFiAdapterStatics
-, WDWIWiFiAdapter, WDWIWiFiNetworkReport, WDWIWiFiAvailableNetwork, WDWIWiFiConnectionResult;
+@protocol WDWIWiFiAdapterStatics, WDWIWiFiAdapter, WDWIWiFiNetworkReport, WDWIWiFiAvailableNetwork, WDWIWiFiConnectionResult;
 
 // Windows.Devices.WiFi.WiFiNetworkKind
 enum _WDWWiFiNetworkKind {
@@ -44,6 +49,7 @@ enum _WDWWiFiPhyKind {
     WDWWiFiPhyKindErp = 6,
     WDWWiFiPhyKindHT = 7,
     WDWWiFiPhyKindVht = 8,
+    WDWWiFiPhyKindDmg = 9,
 };
 typedef unsigned WDWWiFiPhyKind;
 
@@ -85,35 +91,23 @@ typedef unsigned WDWWiFiConnectionStatus;
 #ifndef __WDWWiFiAdapter_DEFINED__
 #define __WDWWiFiAdapter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFI_EXPORT
 @interface WDWWiFiAdapter : RTObject
 + (void)findAllAdaptersAsyncWithSuccess:(void (^)(NSArray* /* WDWWiFiAdapter* */))success failure:(void (^)(NSError*))failure;
-+ (NSString*)getDeviceSelector;
-+ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDWWiFiAdapter*))success failure:(void (^)(NSError*))failure;
++ (NSString *)getDeviceSelector;
++ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDWWiFiAdapter*))success failure:(void (^)(NSError*))failure;
 + (void)requestAccessAsyncWithSuccess:(void (^)(WDWWiFiAccessStatus))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WNCNetworkAdapter* networkAdapter;
 @property (readonly) WDWWiFiNetworkReport* networkReport;
-- (EventRegistrationToken)addAvailableNetworksChangedEvent:(void (^)(WDWWiFiAdapter*, RTObject*))del;
+- (EventRegistrationToken)addAvailableNetworksChangedEvent:(void(^)(WDWWiFiAdapter*, RTObject*))del;
 - (void)removeAvailableNetworksChangedEvent:(EventRegistrationToken)tok;
 - (RTObject<WFIAsyncAction>*)scanAsync;
-- (void)connectAsync:(WDWWiFiAvailableNetwork*)availableNetwork
-    reconnectionKind:(WDWWiFiReconnectionKind)reconnectionKind
-             success:(void (^)(WDWWiFiConnectionResult*))success
-             failure:(void (^)(NSError*))failure;
-- (void)connectWithPasswordCredentialAsync:(WDWWiFiAvailableNetwork*)availableNetwork
-                          reconnectionKind:(WDWWiFiReconnectionKind)reconnectionKind
-                        passwordCredential:(WSCPasswordCredential*)passwordCredential
-                                   success:(void (^)(WDWWiFiConnectionResult*))success
-                                   failure:(void (^)(NSError*))failure;
-- (void)connectWithPasswordCredentialAndSsidAsync:(WDWWiFiAvailableNetwork*)availableNetwork
-                                 reconnectionKind:(WDWWiFiReconnectionKind)reconnectionKind
-                               passwordCredential:(WSCPasswordCredential*)passwordCredential
-                                             ssid:(NSString*)ssid
-                                          success:(void (^)(WDWWiFiConnectionResult*))success
-                                          failure:(void (^)(NSError*))failure;
+- (void)connectAsync:(WDWWiFiAvailableNetwork*)availableNetwork reconnectionKind:(WDWWiFiReconnectionKind)reconnectionKind success:(void (^)(WDWWiFiConnectionResult*))success failure:(void (^)(NSError*))failure;
+- (void)connectWithPasswordCredentialAsync:(WDWWiFiAvailableNetwork*)availableNetwork reconnectionKind:(WDWWiFiReconnectionKind)reconnectionKind passwordCredential:(WSCPasswordCredential*)passwordCredential success:(void (^)(WDWWiFiConnectionResult*))success failure:(void (^)(NSError*))failure;
+- (void)connectWithPasswordCredentialAndSsidAsync:(WDWWiFiAvailableNetwork*)availableNetwork reconnectionKind:(WDWWiFiReconnectionKind)reconnectionKind passwordCredential:(WSCPasswordCredential*)passwordCredential ssid:(NSString *)ssid success:(void (^)(WDWWiFiConnectionResult*))success failure:(void (^)(NSError*))failure;
 - (void)disconnect;
 @end
 
@@ -123,7 +117,7 @@ WINRT_EXPORT
 #ifndef __WDWWiFiNetworkReport_DEFINED__
 #define __WDWWiFiNetworkReport_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFI_EXPORT
 @interface WDWWiFiNetworkReport : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -138,13 +132,13 @@ WINRT_EXPORT
 #ifndef __WDWWiFiAvailableNetwork_DEFINED__
 #define __WDWWiFiAvailableNetwork_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFI_EXPORT
 @interface WDWWiFiAvailableNetwork : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFTimeSpan* beaconInterval;
-@property (readonly) NSString* bssid;
+@property (readonly) NSString * bssid;
 @property (readonly) int channelCenterFrequencyInKilohertz;
 @property (readonly) BOOL isWiFiDirect;
 @property (readonly) WDWWiFiNetworkKind networkKind;
@@ -152,7 +146,7 @@ WINRT_EXPORT
 @property (readonly) WDWWiFiPhyKind phyKind;
 @property (readonly) WNCNetworkSecuritySettings* securitySettings;
 @property (readonly) uint8_t signalBars;
-@property (readonly) NSString* ssid;
+@property (readonly) NSString * ssid;
 @property (readonly) WFTimeSpan* uptime;
 @end
 
@@ -162,7 +156,7 @@ WINRT_EXPORT
 #ifndef __WDWWiFiConnectionResult_DEFINED__
 #define __WDWWiFiConnectionResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_WIFI_EXPORT
 @interface WDWWiFiConnectionResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -171,3 +165,4 @@ WINRT_EXPORT
 @end
 
 #endif // __WDWWiFiConnectionResult_DEFINED__
+

@@ -45,7 +45,7 @@ static const int c_numControllers = 3;
 
 - (void)viewDidLoad {
     UILabel* label = [UILabel new];
-    
+
     self.view = [UIView new];
     self.view.backgroundColor = [UIColor whiteColor];
     self.view.autoresizesSubviews = YES;
@@ -55,25 +55,28 @@ static const int c_numControllers = 3;
     label.textAlignment = NSTextAlignmentCenter;
     label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 
-// TODO: Bar button items.   
+// TODO: Bar button items.
 #ifdef WINOBJC
     UIButton* forwardButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     UIButton* reverseButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    
+
     forwardButton.frame = CGRectMake(self.view.frame.size.width - 100, 100, 50, 50);
     reverseButton.frame = CGRectMake(50, 100, 50, 50);
     forwardButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-    
+
     [forwardButton setTitle:@">>" forState:UIControlStateNormal];
     [reverseButton setTitle:@"<<" forState:UIControlStateNormal];
-    
+
+    [forwardButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [reverseButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+
     [forwardButton addTarget:_controller action:@selector(_forward) forControlEvents:UIControlEventTouchUpInside];
     [reverseButton addTarget:_controller action:@selector(_reverse) forControlEvents:UIControlEventTouchUpInside];
-    
+
     [self.view addSubview:forwardButton];
     [self.view addSubview:reverseButton];
 #endif
-    
+
     [self.view addSubview:label];
 }
 
@@ -88,28 +91,32 @@ static const int c_numControllers = 3;
 }
 
 - (instancetype)init {
-    return [self initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
+    return [self initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll
+                   navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal
+                                 options:nil];
 }
 
-- (UIViewController*)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController {
+- (UIViewController*)pageViewController:(UIPageViewController*)pageViewController
+     viewControllerBeforeViewController:(UIViewController*)viewController {
     NSUInteger idx = [(PageViewPage*)viewController index];
-    
+
     idx = ((idx + c_numControllers - 1) % c_numControllers);
-    
+
     return [_controllers objectAtIndex:idx];
 }
 
-- (UIViewController*)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController {
+- (UIViewController*)pageViewController:(UIPageViewController*)pageViewController
+      viewControllerAfterViewController:(UIViewController*)viewController {
     NSUInteger idx = [(PageViewPage*)viewController index];
-    
+
     idx = ((idx + 1) % c_numControllers);
-    
+
     return [_controllers objectAtIndex:idx];
 }
 
 - (void)viewDidLoad {
     _controllers = [NSMutableArray new];
-    
+
     for (int i = 0; i < c_numControllers; i++) {
         UIViewController* pageController = [[PageViewPage alloc] initwithIndex:i controller:self];
         [_controllers addObject:pageController];
@@ -122,71 +129,82 @@ static const int c_numControllers = 3;
 
     [self setDelegate:self];
     [self setDataSource:self];
-    
+
 // TODO: Bar button items.
 #ifndef WINOBJC
-    UIBarButtonItem* forward = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFastForward target:self action:@selector(_forward)];
-    UIBarButtonItem* reverse = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRewind target:self action:@selector(_reverse)];
-    
+    UIBarButtonItem* forward =
+        [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFastForward target:self action:@selector(_forward)];
+    UIBarButtonItem* reverse =
+        [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRewind target:self action:@selector(_reverse)];
+
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:forward, reverse, nil];
 #endif
-    
+
     self.view.backgroundColor = [UIColor grayColor];
 }
 
 - (void)_forward {
     NSUInteger idx = [(PageViewPage*)[self.viewControllers objectAtIndex:0] index];
-    
+
     idx = ((idx + 1) % c_numControllers);
-    
-    [self setViewControllers:[NSArray arrayWithObjects:[_controllers objectAtIndex:idx], nil] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
+
+    [self setViewControllers:[NSArray arrayWithObjects:[_controllers objectAtIndex:idx], nil]
+                   direction:UIPageViewControllerNavigationDirectionForward
+                    animated:YES
+                  completion:nil];
 }
 
 - (void)_reverse {
     NSUInteger idx = [(PageViewPage*)[self.viewControllers objectAtIndex:0] index];
-    
+
     idx = ((idx + c_numControllers - 1) % c_numControllers);
-    
-    [self setViewControllers:[NSArray arrayWithObjects:[_controllers objectAtIndex:idx], nil] direction:UIPageViewControllerNavigationDirectionReverse animated:YES completion:nil];
+
+    [self setViewControllers:[NSArray arrayWithObjects:[_controllers objectAtIndex:idx], nil]
+                   direction:UIPageViewControllerNavigationDirectionReverse
+                    animated:YES
+                  completion:nil];
 }
 
-- (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray *)pendingViewControllers {
+- (void)pageViewController:(UIPageViewController*)pageViewController willTransitionToViewControllers:(NSArray*)pendingViewControllers {
     PageViewPage* pageFrom = (PageViewPage*)[pageViewController.viewControllers objectAtIndex:0];
     PageViewPage* pageTo = (PageViewPage*)[pendingViewControllers objectAtIndex:0];
     NSLog(@"Will transition from page %lu to page %lu.", (unsigned long)pageFrom.index, (unsigned long)pageTo.index);
 }
 
-- (NSInteger)presentationCountForPageViewController:(UIPageViewController *)pageViewController {
+- (NSInteger)presentationCountForPageViewController:(UIPageViewController*)pageViewController {
     return _controllers.count;
 }
 
-- (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController {
-    return [(PageViewPage *)[self.viewControllers objectAtIndex:0] index];
+- (NSInteger)presentationIndexForPageViewController:(UIPageViewController*)pageViewController {
+    return [(PageViewPage*)[self.viewControllers objectAtIndex:0] index];
 }
 
-- (void)pageViewController:(UIPageViewController *)pageViewController
+- (void)pageViewController:(UIPageViewController*)pageViewController
         didFinishAnimating:(BOOL)finished
-   previousViewControllers:(NSArray *)previousViewControllers
+   previousViewControllers:(NSArray*)previousViewControllers
        transitionCompleted:(BOOL)completed {
     PageViewPage* pageFrom = (PageViewPage*)[previousViewControllers objectAtIndex:0];
     PageViewPage* pageTo = (PageViewPage*)[pageViewController.viewControllers objectAtIndex:0];
     NSString* finishedString;
     NSString* completedString;
-    
+
     if (finished) {
         finishedString = @"finished";
     } else {
         finishedString = @"didn't finish";
     }
-    
+
     if (completed) {
         completedString = @"completed";
     } else {
         completedString = @"didn't complete";
     }
-    
+
     NSLog(@"Transition from page %lu to page %lu %@, and the animation %@.",
-          (unsigned long)pageFrom.index, (unsigned long)pageTo.index, completedString, finishedString);
+          (unsigned long)pageFrom.index,
+          (unsigned long)pageTo.index,
+          completedString,
+          finishedString);
 }
 
 @end

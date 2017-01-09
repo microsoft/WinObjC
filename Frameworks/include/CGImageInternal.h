@@ -22,19 +22,15 @@
 #include "CoreGraphics/CGImage.h"
 #include <objc/runtime.h>
 
+#include <COMIncludes.h>
+#import <D2d1.h>
+#include <COMIncludes_End.h>
+
 struct _cairo_surface;
 typedef struct _cairo_surface cairo_surface_t;
 
 class CGContextImpl;
-class DisplayTexture;
-
-class DisplayTextureLocking {
-public:
-    virtual void* LockWritableBitmapTexture(DisplayTexture* tex, int* stride) = 0;
-    virtual void UnlockWritableBitmapTexture(DisplayTexture* tex) = 0;
-    virtual void RetainDisplayTexture(DisplayTexture* tex) = 0;
-    virtual void ReleaseDisplayTexture(DisplayTexture* tex) = 0;
-};
+struct IDisplayTexture;
 
 class CGImageBacking {
 protected:
@@ -58,6 +54,7 @@ public:
     virtual int BytesPerRow() = 0;
     virtual int BytesPerPixel() = 0;
     virtual int BitsPerComponent() = 0;
+    virtual ID2D1RenderTarget* GetRenderTarget() = 0;
     virtual void GetSurfaceInfoWithoutPixelPtr(__CGSurfaceInfo* surfaceInfo) = 0;
     virtual __CGSurfaceFormat SurfaceFormat() = 0;
     virtual CGColorSpaceModel ColorSpaceModel() = 0;
@@ -68,8 +65,8 @@ public:
     virtual cairo_surface_t* LockCairoSurface() = 0;
     virtual void ReleaseCairoSurface() = 0;
     virtual void SetFreeWhenDone(bool freeWhenDone) = 0;
-    virtual DisplayTexture* GetDisplayTexture() {
-        return NULL;
+    virtual std::shared_ptr<IDisplayTexture> GetDisplayTexture() {
+        return nullptr;
     }
 
     virtual void DiscardIfPossible() {
@@ -92,7 +89,7 @@ typedef enum {
     CGImageTypeJPEG
 } CGImageType;
 
-class __CGImage : private objc_object {
+struct __CGImage : private objc_object {
 protected:
     CGImageBacking* _img;
 

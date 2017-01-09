@@ -19,11 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_XAML_RESOURCES_EXPORT
+#define OBJCUWP_WINDOWS_UI_XAML_RESOURCES_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml_Resources.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WUXRCustomXamlResourceLoader;
-@protocol WUXRICustomXamlResourceLoader
-, WUXRICustomXamlResourceLoaderOverrides, WUXRICustomXamlResourceLoaderStatics, WUXRICustomXamlResourceLoaderFactory;
+@protocol WUXRICustomXamlResourceLoader, WUXRICustomXamlResourceLoaderOverrides, WUXRICustomXamlResourceLoaderStatics, WUXRICustomXamlResourceLoaderFactory;
 
 #import <Foundation/Foundation.h>
 
@@ -32,10 +37,11 @@
 #define __WUXRICustomXamlResourceLoaderOverrides_DEFINED__
 
 @protocol WUXRICustomXamlResourceLoaderOverrides
-- (RTObject*)getResource:(NSString*)resourceId
-              objectType:(NSString*)objectType
-            propertyName:(NSString*)propertyName
-            propertyType:(NSString*)propertyType;
+- (RTObject*)getResource:(NSString *)resourceId objectType:(NSString *)objectType propertyName:(NSString *)propertyName propertyType:(NSString *)propertyType;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_RESOURCES_EXPORT
+@interface WUXRICustomXamlResourceLoaderOverrides : RTObject <WUXRICustomXamlResourceLoaderOverrides>
 @end
 
 #endif // __WUXRICustomXamlResourceLoaderOverrides_DEFINED__
@@ -44,7 +50,7 @@
 #ifndef __WUXRCustomXamlResourceLoader_DEFINED__
 #define __WUXRCustomXamlResourceLoader_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_RESOURCES_EXPORT
 @interface WUXRCustomXamlResourceLoader : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -52,10 +58,8 @@ WINRT_EXPORT
 #endif
 + (WUXRCustomXamlResourceLoader*)current;
 + (void)setCurrent:(WUXRCustomXamlResourceLoader*)value;
-- (RTObject*)getResource:(NSString*)resourceId
-              objectType:(NSString*)objectType
-            propertyName:(NSString*)propertyName
-            propertyType:(NSString*)propertyType;
+- (RTObject*)getResource:(NSString *)resourceId objectType:(NSString *)objectType propertyName:(NSString *)propertyName propertyType:(NSString *)propertyType;
 @end
 
 #endif // __WUXRCustomXamlResourceLoader_DEFINED__
+

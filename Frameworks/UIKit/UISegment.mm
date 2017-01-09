@@ -15,80 +15,80 @@
 //******************************************************************************
 
 #import "Starboard.h"
-#import "UIKit/UIView.h"
-#import "UIKit/UIControl.h"
-#import "UIKit/UIColor.h"
-#import "UIKit/UIFont.h"
-#import "Foundation/NSString.h"
-#import "CoreGraphics/CGContext.h"
+#import <UIKit/NSString+UIKitAdditions.h>
+#import <UIKit/UIColor.h>
+#import <UIKit/UIControl.h>
+#import <UIKit/UIFont.h>
+#import <UIKit/UIGraphics.h>
+#import <UIKit/UIKitTypes.h>
+#import <UIKit/UILayoutSupport.h>
+#import <UIKit/UISegmentedControl.h>
+#import <UIKit/UIView.h>
+#import <Foundation/NSString.h>
+#import <CoreGraphics/CGContext.h>
 #import "UISegment.h"
 #import "UIViewInternal.h"
 #import "UISegmentedControlInternal.h"
 
-static idretain _buttonLeft[2];
-static idretain _buttonRight[2];
-static idretain _buttonFill[2];
+static idretain _defaultTextColor[2];
 
 @implementation UISegment
 + (instancetype)initialize {
-    _buttonLeft[0] = [[UIImage imageNamed:@"/img/ButtonBarLeftNoSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)];
-    _buttonLeft[1] = [[UIImage imageNamed:@"/img/ButtonBarLeftSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)];
-    _buttonRight[0] = [[UIImage imageNamed:@"/img/ButtonBarRightNoSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)];
-    _buttonRight[1] = [[UIImage imageNamed:@"/img/ButtonBarRightSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)];
-    _buttonFill[0] = [[UIImage imageNamed:@"/img/ButtonBarFillNoSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)];
-    _buttonFill[1] = [[UIImage imageNamed:@"/img/ButtonBarFillSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)];
+    _defaultTextColor[0] = [UIColor blueColor];
+    _defaultTextColor[1] = [UIColor whiteColor];
 
     return self;
 }
 
 - (instancetype)initWithCoder:(NSCoder*)coder {
-    id result = [super initWithCoder:coder];
-    id info = [[coder decodeObjectForKey:@"UISegmentInfo"] retain];
-    _position = [coder decodeInt32ForKey:@"UISegmentPosition"];
+    if (self = [super initWithCoder:coder]) {
+        id info = [[coder decodeObjectForKey:@"UISegmentInfo"] retain];
+        _position = [coder decodeInt32ForKey:@"UISegmentPosition"];
 
-    CGRect frame;
-    frame = [self bounds];
+        if ([info isKindOfClass:[NSString class]]) {
+            _title = info;
+        } else if ([info isKindOfClass:[UIImage class]]) {
+            _image = info;
+        } else {
+            assert(0);
+        }
 
-    if ([info isKindOfClass:[NSString class]]) {
-        _title = info;
-    } else if ([info isKindOfClass:[UIImage class]]) {
-        _image = info;
-    } else {
-        assert(0);
+        [self setOpaque:NO];
+        _textColor[0] = nil;
+        _textColor[1] = nil;
+        _segmentFont = [UIFont boldSystemFontOfSize:15.0f];
     }
-    [self setOpaque:FALSE];
-    _textColor[0] = [UIColor darkGrayColor];
-    _textColor[1] = [UIColor whiteColor];
-    _segmentFont = [UIFont boldSystemFontOfSize:15.0f];
 
     return self;
 }
 
 - (instancetype)initWithTitle:(id)title {
-    _title.attach([title copy]);
-    _position = 0;
-
     CGRect frame = { 0 };
-    [self initWithFrame:frame];
-    [self setOpaque:FALSE];
-    _textColor[0] = [UIColor darkGrayColor];
-    _textColor[1] = [UIColor whiteColor];
-    _segmentFont = [UIFont boldSystemFontOfSize:15.0f];
 
+    if (self = [super initWithFrame:frame]) {
+        _title.attach([title copy]);
+        _position = 0;
+
+        [self setOpaque:NO];
+        _textColor[0] = nil;
+        _textColor[1] = nil;
+        _segmentFont = [UIFont boldSystemFontOfSize:15.0f];
+    }
     return self;
 }
 
 - (instancetype)initWithImage:(id)image {
-    _image = image;
-    _position = 0;
-
     CGRect frame = { 0.0f, 0.0f, 0.0f, 0.0f };
 
-    [self initWithFrame:frame];
-    [self setOpaque:FALSE];
-    _textColor[0] = [UIColor darkGrayColor];
-    _textColor[1] = [UIColor whiteColor];
-    _segmentFont = [UIFont boldSystemFontOfSize:15.0f];
+    if (self = [super initWithFrame:frame]) {
+        _image = image;
+        _position = 0;
+
+        [self setOpaque:NO];
+        _textColor[0] = nil;
+        _textColor[1] = nil;
+        _segmentFont = [UIFont boldSystemFontOfSize:15.0f];
+    }
 
     return self;
 }
@@ -163,10 +163,10 @@ static idretain _buttonFill[2];
 
 - (BOOL)isEnabled {
     if (_disabled) {
-        return FALSE;
+        return NO;
     }
 
-    return TRUE;
+    return YES;
 }
 
 - (id)drawRect:(CGRect)inRect {
@@ -191,10 +191,43 @@ static idretain _buttonFill[2];
 
     bounds = [self bounds];
 
+    UIColor* bgColor;
+    UIColor* textColor;
+
+    if (isOSTarget(@"7.0") && _selected == 0 && _tintColor != nil) {
+        textColor = _tintColor;
+        bgColor = [UIColor whiteColor];
+    } else {
+        bool tintColorUsed = false;
+        int bgSelectState = (_selected + 1) % 2;
+
+        // Get text/background colors. Fall back to tintColor and default colors if necessary
+        if (_textColor[_selected] == nil) {
+            if (_tintColor != nil) {
+                tintColorUsed = (_selected == 0);
+                textColor = (tintColorUsed) ? (id)(_tintColor) : (id)(_defaultTextColor[1]);
+            } else {
+                textColor = _defaultTextColor[_selected];
+            }
+        } else {
+            textColor = _textColor[_selected];
+        }
+
+        if (_textColor[bgSelectState] == nil) {
+            if (_tintColor != nil && tintColorUsed == false) {
+                bgColor = _tintColor;
+            } else {
+                bgColor = _defaultTextColor[bgSelectState];
+            }
+        } else {
+            bgColor = _textColor[bgSelectState];
+        }
+    }
+
     if (isOSTarget(@"7.0")) {
         if (_tintColor != nil) {
             if (_selected == 1) {
-                CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), (CGColorRef)_tintColor);
+                CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), [_tintColor CGColor]);
                 CGContextFillRect(UIGraphicsGetCurrentContext(), bounds);
             }
             if ((_type & 2) == 0) {
@@ -203,30 +236,30 @@ static idretain _buttonFill[2];
 
                 rect.origin.x = rect.size.width - lineWidth;
                 rect.size.width = lineWidth;
-                CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), (CGColorRef)_tintColor);
+                CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), [_tintColor CGColor]);
                 CGContextFillRect(UIGraphicsGetCurrentContext(), rect);
             }
         }
     } else {
         if (!_noDefaultImages) {
-            switch (_type) {
-                case 0:
-                case 3:
-                    [_buttonFill[_selected] drawInRect:bounds];
-                    break;
+            CGContextRef ctx = UIGraphicsGetCurrentContext();
 
-                case 1:
-                    [_buttonLeft[_selected] drawInRect:bounds];
-                    break;
-
-                case 2:
-                    [_buttonRight[_selected] drawInRect:bounds];
-                    break;
-
-                default:
-                    break;
+            if (_selected) {
+                // No border, just fill with background color
+                CGContextSetFillColorWithColor(ctx, [bgColor CGColor]);
+                CGContextFillRect(ctx, bounds);
+            } else {
+                // Fill with background color and draw border with text color
+                const CGRect borderRect = bounds;
+                const CGRect fillRect = CGRectInset(bounds, 1.0, 1.0);
+                CGContextSetFillColorWithColor(ctx, [bgColor CGColor]);
+                CGContextFillRect(ctx, fillRect);
+                CGContextSetStrokeColorWithColor(ctx, [textColor CGColor]);
+                CGContextSetLineWidth(ctx, 1.0);
+                CGContextStrokeRect(ctx, borderRect);
             }
         }
+
         if (_selected == 1 && _selectedBackground != nil) {
             CGRect superviewRect = { 0 };
             superviewRect = [[self superview] bounds];
@@ -260,12 +293,7 @@ static idretain _buttonFill[2];
     }
 
     if (_title != nil) {
-        id color = _textColor[_selected];
-        if (isOSTarget(@"7.0") && _selected == 0 && _tintColor != nil) {
-            color = _tintColor;
-        }
-        // if ( _selectedBackground != nil ) color = _textColor[1];
-        CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), (CGColorRef)color);
+        CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), [textColor CGColor]);
 
         CGSize size;
         CGRect rect;
@@ -362,7 +390,7 @@ static idretain _buttonFill[2];
     return self;
 }
 
-- (id)_setTintColor:(id)color {
+- (id)_setTintColor:(UIColor*)color {
     _tintColor = color;
     return self;
 }

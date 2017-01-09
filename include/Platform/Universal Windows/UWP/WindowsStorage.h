@@ -19,22 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_STORAGE_EXPORT
+#define OBJCUWP_WINDOWS_STORAGE_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Storage.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WSStorageLibrary, WSStorageFolder, WSKnownFolders, WSStorageFile, WSDownloadsFolder, WSStreamedFileDataRequest,
-    WSStorageStreamTransaction, WSStorageProvider, WSFileIO, WSPathIO, WSCachedFileManager, WSSystemAudioProperties, WSSystemGPSProperties,
-    WSSystemImageProperties, WSSystemMediaProperties, WSSystemMusicProperties, WSSystemPhotoProperties, WSSystemVideoProperties,
-    WSSystemProperties, WSApplicationData, WSSetVersionRequest, WSApplicationDataContainer, WSSetVersionDeferral,
-    WSApplicationDataContainerSettings, WSApplicationDataCompositeValue;
-@protocol WSIStorageLibraryStatics
-, WSIStorageLibrary, WSIKnownFoldersStatics, WSIKnownFoldersStatics2, WSIKnownFoldersPlaylistsStatics, WSIKnownFoldersCameraRollStatics,
-    WSIKnownFoldersSavedPicturesStatics, WSIDownloadsFolderStatics, WSIStreamedFileDataRequest, WSIStorageFileStatics, WSIStorageItem,
-    WSIStorageFolder, WSIStorageFile, WSIStorageFolderStatics, WSIStorageItem2, WSIStorageItemProperties, WSIStorageItemProperties2,
-    WSIStorageItemPropertiesWithProvider, WSIStorageFilePropertiesWithAvailability, WSIStorageProvider, WSIStorageFolder2, WSIStorageFile2,
-    WSIFileIOStatics, WSIPathIOStatics, WSICachedFileManagerStatics, WSISystemAudioProperties, WSISystemGPSProperties,
-    WSISystemImageProperties, WSISystemMediaProperties, WSISystemMusicProperties, WSISystemPhotoProperties, WSISystemVideoProperties,
-    WSISystemProperties, WSIStorageStreamTransaction, WSIApplicationDataStatics, WSIApplicationDataStatics2, WSIApplicationData,
-    WSIApplicationData2, WSIApplicationData3, WSISetVersionRequest, WSISetVersionDeferral, WSIApplicationDataContainer;
+@class WSStorageLibrary, WSStorageFolder, WSStorageLibraryChangeTracker, WSKnownFolders, WSStorageFile, WSDownloadsFolder, WSStorageLibraryChange, WSStorageLibraryChangeReader, WSStreamedFileDataRequest, WSStorageStreamTransaction, WSStorageProvider, WSFileIO, WSPathIO, WSCachedFileManager, WSSystemAudioProperties, WSSystemGPSProperties, WSSystemImageProperties, WSSystemMediaProperties, WSSystemMusicProperties, WSSystemPhotoProperties, WSSystemVideoProperties, WSSystemProperties, WSApplicationData, WSSetVersionRequest, WSApplicationDataContainer, WSSetVersionDeferral, WSApplicationDataContainerSettings, WSApplicationDataCompositeValue;
+@protocol WSIStorageLibraryStatics, WSIStorageLibraryStatics2, WSIStorageLibrary, WSIStorageLibrary2, WSIKnownFoldersStatics, WSIKnownFoldersStatics2, WSIKnownFoldersStatics3, WSIKnownFoldersPlaylistsStatics, WSIKnownFoldersCameraRollStatics, WSIKnownFoldersSavedPicturesStatics, WSIDownloadsFolderStatics, WSIDownloadsFolderStatics2, WSIStorageLibraryChange, WSIStorageItem, WSIStorageLibraryChangeReader, WSIStorageLibraryChangeTracker, WSIStreamedFileDataRequest, WSIStorageFileStatics, WSIStorageFolder, WSIStorageFile, WSIStorageFolderStatics, WSIStorageItem2, WSIStorageItemProperties, WSIStorageItemProperties2, WSIStorageItemPropertiesWithProvider, WSIStorageFilePropertiesWithAvailability, WSIStorageProvider, WSIStorageFolder2, WSIStorageFile2, WSIFileIOStatics, WSIPathIOStatics, WSICachedFileManagerStatics, WSISystemAudioProperties, WSISystemGPSProperties, WSISystemImageProperties, WSISystemMediaProperties, WSISystemMusicProperties, WSISystemPhotoProperties, WSISystemVideoProperties, WSISystemProperties, WSIStorageStreamTransaction, WSIApplicationDataStatics, WSIApplicationDataStatics2, WSIApplicationData, WSIApplicationData2, WSIApplicationData3, WSISetVersionRequest, WSISetVersionDeferral, WSIApplicationDataContainer;
 
 // Windows.Storage.KnownLibraryId
 enum _WSKnownLibraryId {
@@ -44,6 +38,25 @@ enum _WSKnownLibraryId {
     WSKnownLibraryIdDocuments = 3,
 };
 typedef unsigned WSKnownLibraryId;
+
+// Windows.Storage.KnownFolderId
+enum _WSKnownFolderId {
+    WSKnownFolderIdAppCaptures = 0,
+    WSKnownFolderIdCameraRoll = 1,
+    WSKnownFolderIdDocumentsLibrary = 2,
+    WSKnownFolderIdHomeGroup = 3,
+    WSKnownFolderIdMediaServerDevices = 4,
+    WSKnownFolderIdMusicLibrary = 5,
+    WSKnownFolderIdObjects3D = 6,
+    WSKnownFolderIdPicturesLibrary = 7,
+    WSKnownFolderIdPlaylists = 8,
+    WSKnownFolderIdRecordedCalls = 9,
+    WSKnownFolderIdRemovableDevices = 10,
+    WSKnownFolderIdSavedPictures = 11,
+    WSKnownFolderIdScreenshots = 12,
+    WSKnownFolderIdVideosLibrary = 13,
+};
+typedef unsigned WSKnownFolderId;
 
 // Windows.Storage.CreationCollisionOption
 enum _WSCreationCollisionOption {
@@ -95,6 +108,21 @@ enum _WSFileAccessMode {
 };
 typedef unsigned WSFileAccessMode;
 
+// Windows.Storage.StorageLibraryChangeType
+enum _WSStorageLibraryChangeType {
+    WSStorageLibraryChangeTypeCreated = 0,
+    WSStorageLibraryChangeTypeDeleted = 1,
+    WSStorageLibraryChangeTypeMovedOrRenamed = 2,
+    WSStorageLibraryChangeTypeContentsChanged = 3,
+    WSStorageLibraryChangeTypeMovedOutOfLibrary = 4,
+    WSStorageLibraryChangeTypeMovedIntoLibrary = 5,
+    WSStorageLibraryChangeTypeContentsReplaced = 6,
+    WSStorageLibraryChangeTypeIndexingStatusChanged = 7,
+    WSStorageLibraryChangeTypeEncryptionChanged = 8,
+    WSStorageLibraryChangeTypeChangeTrackingLost = 9,
+};
+typedef unsigned WSStorageLibraryChangeType;
+
 // Windows.Storage.StreamedFileFailureMode
 enum _WSStreamedFileFailureMode {
     WSStreamedFileFailureModeFailed = 0,
@@ -127,37 +155,61 @@ enum _WSApplicationDataCreateDisposition {
 typedef unsigned WSApplicationDataCreateDisposition;
 
 #include "WindowsStorageSearch.h"
+#include "WindowsSystem.h"
 #include "WindowsFoundation.h"
 #include "WindowsFoundationCollections.h"
-#include "WindowsStorageFileProperties.h"
 #include "WindowsStorageStreams.h"
+#include "WindowsStorageFileProperties.h"
 #include "WindowsStorageProvider.h"
-#include "WindowsSystem.h"
 // Windows.Storage.ApplicationDataSetVersionHandler
 #ifndef __WSApplicationDataSetVersionHandler__DEFINED
 #define __WSApplicationDataSetVersionHandler__DEFINED
-typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersionRequest);
+typedef void(^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersionRequest);
 #endif // __WSApplicationDataSetVersionHandler__DEFINED
 
 // Windows.Storage.StreamedFileDataRequestedHandler
 #ifndef __WSStreamedFileDataRequestedHandler__DEFINED
 #define __WSStreamedFileDataRequestedHandler__DEFINED
-typedef void (^WSStreamedFileDataRequestedHandler)(WSStreamedFileDataRequest* stream);
+typedef void(^WSStreamedFileDataRequestedHandler)(WSStreamedFileDataRequest* stream);
 #endif // __WSStreamedFileDataRequestedHandler__DEFINED
+
 
 #import <Foundation/Foundation.h>
 
 // Windows.Storage.StreamedFileDataRequestedHandler
 #ifndef __WSStreamedFileDataRequestedHandler__DEFINED
 #define __WSStreamedFileDataRequestedHandler__DEFINED
-typedef void (^WSStreamedFileDataRequestedHandler)(WSStreamedFileDataRequest* stream);
+typedef void(^WSStreamedFileDataRequestedHandler)(WSStreamedFileDataRequest* stream);
 #endif // __WSStreamedFileDataRequestedHandler__DEFINED
 
 // Windows.Storage.ApplicationDataSetVersionHandler
 #ifndef __WSApplicationDataSetVersionHandler__DEFINED
 #define __WSApplicationDataSetVersionHandler__DEFINED
-typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersionRequest);
+typedef void(^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersionRequest);
 #endif // __WSApplicationDataSetVersionHandler__DEFINED
+
+// Windows.Storage.IStorageItem
+#ifndef __WSIStorageItem_DEFINED__
+#define __WSIStorageItem_DEFINED__
+
+@protocol WSIStorageItem
+@property (readonly) WSFileAttributes attributes;
+@property (readonly) WFDateTime* dateCreated;
+@property (readonly) NSString * name;
+@property (readonly) NSString * path;
+- (RTObject<WFIAsyncAction>*)renameAsyncOverloadDefaultOptions:(NSString *)desiredName;
+- (RTObject<WFIAsyncAction>*)renameAsync:(NSString *)desiredName option:(WSNameCollisionOption)option;
+- (RTObject<WFIAsyncAction>*)deleteAsyncOverloadDefaultOptions;
+- (RTObject<WFIAsyncAction>*)deleteAsync:(WSStorageDeleteOption)option;
+- (void)getBasicPropertiesAsyncWithSuccess:(void (^)(WSFBasicProperties*))success failure:(void (^)(NSError*))failure;
+- (BOOL)isOfType:(WSStorageItemTypes)type;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageItem : RTObject <WSIStorageItem>
+@end
+
+#endif // __WSIStorageItem_DEFINED__
 
 // Windows.Storage.IStreamedFileDataRequest
 #ifndef __WSIStreamedFileDataRequest_DEFINED__
@@ -167,61 +219,37 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 - (void)failAndClose:(WSStreamedFileFailureMode)failureMode;
 @end
 
-#endif // __WSIStreamedFileDataRequest_DEFINED__
-
-// Windows.Storage.IStorageItem
-#ifndef __WSIStorageItem_DEFINED__
-#define __WSIStorageItem_DEFINED__
-
-@protocol WSIStorageItem
-@property (readonly) WSFileAttributes attributes;
-@property (readonly) WFDateTime* dateCreated;
-@property (readonly) NSString* name;
-@property (readonly) NSString* path;
-- (RTObject<WFIAsyncAction>*)renameAsyncOverloadDefaultOptions:(NSString*)desiredName;
-- (RTObject<WFIAsyncAction>*)renameAsync:(NSString*)desiredName option:(WSNameCollisionOption)option;
-- (RTObject<WFIAsyncAction>*)deleteAsyncOverloadDefaultOptions;
-- (RTObject<WFIAsyncAction>*)deleteAsync:(WSStorageDeleteOption)option;
-- (void)getBasicPropertiesAsyncWithSuccess:(void (^)(WSFBasicProperties*))success failure:(void (^)(NSError*))failure;
-- (BOOL)isOfType:(WSStorageItemTypes)type;
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStreamedFileDataRequest : RTObject <WSIStreamedFileDataRequest>
 @end
 
-#endif // __WSIStorageItem_DEFINED__
+#endif // __WSIStreamedFileDataRequest_DEFINED__
 
 // Windows.Storage.IStorageFolder
 #ifndef __WSIStorageFolder_DEFINED__
 #define __WSIStorageFolder_DEFINED__
 
 @protocol WSIStorageFolder <WSIStorageItem>
-- (void)createFileAsyncOverloadDefaultOptions:(NSString*)desiredName
-                                      success:(void (^)(WSStorageFile*))success
-                                      failure:(void (^)(NSError*))failure;
-- (void)createFileAsync:(NSString*)desiredName
-                options:(WSCreationCollisionOption)options
-                success:(void (^)(WSStorageFile*))success
-                failure:(void (^)(NSError*))failure;
-- (void)createFolderAsyncOverloadDefaultOptions:(NSString*)desiredName
-                                        success:(void (^)(WSStorageFolder*))success
-                                        failure:(void (^)(NSError*))failure;
-- (void)createFolderAsync:(NSString*)desiredName
-                  options:(WSCreationCollisionOption)options
-                  success:(void (^)(WSStorageFolder*))success
-                  failure:(void (^)(NSError*))failure;
-- (void)getFileAsync:(NSString*)name success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
-- (void)getFolderAsync:(NSString*)name success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
-- (void)getItemAsync:(NSString*)name success:(void (^)(RTObject<WSIStorageItem>*))success failure:(void (^)(NSError*))failure;
-- (void)getFilesAsyncOverloadDefaultOptionsStartAndCountWithSuccess:(void (^)(NSArray* /* WSStorageFile* */))success
-                                                            failure:(void (^)(NSError*))failure;
-- (void)getFoldersAsyncOverloadDefaultOptionsStartAndCountWithSuccess:(void (^)(NSArray* /* WSStorageFolder* */))success
-                                                              failure:(void (^)(NSError*))failure;
-- (void)getItemsAsyncOverloadDefaultStartAndCountWithSuccess:(void (^)(NSArray* /* RTObject<WSIStorageItem>* */))success
-                                                     failure:(void (^)(NSError*))failure;
-- (RTObject<WFIAsyncAction>*)renameAsyncOverloadDefaultOptions:(NSString*)desiredName;
-- (RTObject<WFIAsyncAction>*)renameAsync:(NSString*)desiredName option:(WSNameCollisionOption)option;
+- (void)createFileAsyncOverloadDefaultOptions:(NSString *)desiredName success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
+- (void)createFileAsync:(NSString *)desiredName options:(WSCreationCollisionOption)options success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
+- (void)createFolderAsyncOverloadDefaultOptions:(NSString *)desiredName success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
+- (void)createFolderAsync:(NSString *)desiredName options:(WSCreationCollisionOption)options success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
+- (void)getFileAsync:(NSString *)name success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
+- (void)getFolderAsync:(NSString *)name success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
+- (void)getItemAsync:(NSString *)name success:(void (^)(RTObject<WSIStorageItem>*))success failure:(void (^)(NSError*))failure;
+- (void)getFilesAsyncOverloadDefaultOptionsStartAndCountWithSuccess:(void (^)(NSArray* /* WSStorageFile* */))success failure:(void (^)(NSError*))failure;
+- (void)getFoldersAsyncOverloadDefaultOptionsStartAndCountWithSuccess:(void (^)(NSArray* /* WSStorageFolder* */))success failure:(void (^)(NSError*))failure;
+- (void)getItemsAsyncOverloadDefaultStartAndCountWithSuccess:(void (^)(NSArray* /* RTObject<WSIStorageItem>* */))success failure:(void (^)(NSError*))failure;
+- (RTObject<WFIAsyncAction>*)renameAsyncOverloadDefaultOptions:(NSString *)desiredName;
+- (RTObject<WFIAsyncAction>*)renameAsync:(NSString *)desiredName option:(WSNameCollisionOption)option;
 - (RTObject<WFIAsyncAction>*)deleteAsyncOverloadDefaultOptions;
 - (RTObject<WFIAsyncAction>*)deleteAsync:(WSStorageDeleteOption)option;
 - (void)getBasicPropertiesAsyncWithSuccess:(void (^)(WSFBasicProperties*))success failure:(void (^)(NSError*))failure;
 - (BOOL)isOfType:(WSStorageItemTypes)type;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageFolder : RTObject <WSIStorageFolder>
 @end
 
 #endif // __WSIStorageFolder_DEFINED__
@@ -234,6 +262,10 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 - (void)openReadAsyncWithSuccess:(void (^)(RTObject<WSSIRandomAccessStreamWithContentType>*))success failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSSIRandomAccessStreamReference : RTObject <WSSIRandomAccessStreamReference>
+@end
+
 #endif // __WSSIRandomAccessStreamReference_DEFINED__
 
 // Windows.Storage.Streams.IInputStreamReference
@@ -244,6 +276,10 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 - (void)openSequentialReadAsyncWithSuccess:(void (^)(RTObject<WSSIInputStream>*))success failure:(void (^)(NSError*))failure;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSSIInputStreamReference : RTObject <WSSIInputStreamReference>
+@end
+
 #endif // __WSSIInputStreamReference_DEFINED__
 
 // Windows.Storage.IStorageFile
@@ -251,40 +287,30 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 #define __WSIStorageFile_DEFINED__
 
 @protocol WSIStorageFile <WSIStorageItem, WSSIRandomAccessStreamReference, WSSIInputStreamReference>
-@property (readonly) NSString* contentType;
-@property (readonly) NSString* fileType;
-- (void)openAsync:(WSFileAccessMode)accessMode
-          success:(void (^)(RTObject<WSSIRandomAccessStream>*))success
-          failure:(void (^)(NSError*))failure;
+@property (readonly) NSString * contentType;
+@property (readonly) NSString * fileType;
+- (void)openAsync:(WSFileAccessMode)accessMode success:(void (^)(RTObject<WSSIRandomAccessStream>*))success failure:(void (^)(NSError*))failure;
 - (void)openTransactedWriteAsyncWithSuccess:(void (^)(WSStorageStreamTransaction*))success failure:(void (^)(NSError*))failure;
-- (void)copyOverloadDefaultNameAndOptions:(RTObject<WSIStorageFolder>*)destinationFolder
-                                  success:(void (^)(WSStorageFile*))success
-                                  failure:(void (^)(NSError*))failure;
-- (void)copyOverloadDefaultOptions:(RTObject<WSIStorageFolder>*)destinationFolder
-                    desiredNewName:(NSString*)desiredNewName
-                           success:(void (^)(WSStorageFile*))success
-                           failure:(void (^)(NSError*))failure;
-- (void)copyOverload:(RTObject<WSIStorageFolder>*)destinationFolder
-      desiredNewName:(NSString*)desiredNewName
-              option:(WSNameCollisionOption)option
-             success:(void (^)(WSStorageFile*))success
-             failure:(void (^)(NSError*))failure;
+- (void)copyOverloadDefaultNameAndOptions:(RTObject<WSIStorageFolder>*)destinationFolder success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
+- (void)copyOverloadDefaultOptions:(RTObject<WSIStorageFolder>*)destinationFolder desiredNewName:(NSString *)desiredNewName success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
+- (void)copyOverload:(RTObject<WSIStorageFolder>*)destinationFolder desiredNewName:(NSString *)desiredNewName option:(WSNameCollisionOption)option success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)copyAndReplaceAsync:(RTObject<WSIStorageFile>*)fileToReplace;
 - (RTObject<WFIAsyncAction>*)moveOverloadDefaultNameAndOptions:(RTObject<WSIStorageFolder>*)destinationFolder;
-- (RTObject<WFIAsyncAction>*)moveOverloadDefaultOptions:(RTObject<WSIStorageFolder>*)destinationFolder
-                                         desiredNewName:(NSString*)desiredNewName;
-- (RTObject<WFIAsyncAction>*)moveOverload:(RTObject<WSIStorageFolder>*)destinationFolder
-                           desiredNewName:(NSString*)desiredNewName
-                                   option:(WSNameCollisionOption)option;
+- (RTObject<WFIAsyncAction>*)moveOverloadDefaultOptions:(RTObject<WSIStorageFolder>*)destinationFolder desiredNewName:(NSString *)desiredNewName;
+- (RTObject<WFIAsyncAction>*)moveOverload:(RTObject<WSIStorageFolder>*)destinationFolder desiredNewName:(NSString *)desiredNewName option:(WSNameCollisionOption)option;
 - (RTObject<WFIAsyncAction>*)moveAndReplaceAsync:(RTObject<WSIStorageFile>*)fileToReplace;
-- (RTObject<WFIAsyncAction>*)renameAsyncOverloadDefaultOptions:(NSString*)desiredName;
-- (RTObject<WFIAsyncAction>*)renameAsync:(NSString*)desiredName option:(WSNameCollisionOption)option;
+- (RTObject<WFIAsyncAction>*)renameAsyncOverloadDefaultOptions:(NSString *)desiredName;
+- (RTObject<WFIAsyncAction>*)renameAsync:(NSString *)desiredName option:(WSNameCollisionOption)option;
 - (RTObject<WFIAsyncAction>*)deleteAsyncOverloadDefaultOptions;
 - (RTObject<WFIAsyncAction>*)deleteAsync:(WSStorageDeleteOption)option;
 - (void)getBasicPropertiesAsyncWithSuccess:(void (^)(WSFBasicProperties*))success failure:(void (^)(NSError*))failure;
 - (BOOL)isOfType:(WSStorageItemTypes)type;
 - (void)openReadAsyncWithSuccess:(void (^)(RTObject<WSSIRandomAccessStreamWithContentType>*))success failure:(void (^)(NSError*))failure;
 - (void)openSequentialReadAsyncWithSuccess:(void (^)(RTObject<WSSIInputStream>*))success failure:(void (^)(NSError*))failure;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageFile : RTObject <WSIStorageFile>
 @end
 
 #endif // __WSIStorageFile_DEFINED__
@@ -296,12 +322,16 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 @protocol WSIStorageItem2 <WSIStorageItem>
 - (void)getParentAsyncWithSuccess:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
 - (BOOL)IsEqual:(RTObject<WSIStorageItem>*)item;
-- (RTObject<WFIAsyncAction>*)renameAsyncOverloadDefaultOptions:(NSString*)desiredName;
-- (RTObject<WFIAsyncAction>*)renameAsync:(NSString*)desiredName option:(WSNameCollisionOption)option;
+- (RTObject<WFIAsyncAction>*)renameAsyncOverloadDefaultOptions:(NSString *)desiredName;
+- (RTObject<WFIAsyncAction>*)renameAsync:(NSString *)desiredName option:(WSNameCollisionOption)option;
 - (RTObject<WFIAsyncAction>*)deleteAsyncOverloadDefaultOptions;
 - (RTObject<WFIAsyncAction>*)deleteAsync:(WSStorageDeleteOption)option;
 - (void)getBasicPropertiesAsyncWithSuccess:(void (^)(WSFBasicProperties*))success failure:(void (^)(NSError*))failure;
 - (BOOL)isOfType:(WSStorageItemTypes)type;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageItem2 : RTObject <WSIStorageItem2>
 @end
 
 #endif // __WSIStorageItem2_DEFINED__
@@ -311,22 +341,17 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 #define __WSIStorageItemProperties_DEFINED__
 
 @protocol WSIStorageItemProperties
-@property (readonly) NSString* displayName;
-@property (readonly) NSString* displayType;
-@property (readonly) NSString* folderRelativeId;
+@property (readonly) NSString * displayName;
+@property (readonly) NSString * displayType;
+@property (readonly) NSString * folderRelativeId;
 @property (readonly) WSFStorageItemContentProperties* properties;
-- (void)getThumbnailAsyncOverloadDefaultSizeDefaultOptions:(WSFThumbnailMode)mode
-                                                   success:(void (^)(WSFStorageItemThumbnail*))success
-                                                   failure:(void (^)(NSError*))failure;
-- (void)getThumbnailAsyncOverloadDefaultOptions:(WSFThumbnailMode)mode
-                                  requestedSize:(unsigned int)requestedSize
-                                        success:(void (^)(WSFStorageItemThumbnail*))success
-                                        failure:(void (^)(NSError*))failure;
-- (void)getThumbnailAsync:(WSFThumbnailMode)mode
-            requestedSize:(unsigned int)requestedSize
-                  options:(WSFThumbnailOptions)options
-                  success:(void (^)(WSFStorageItemThumbnail*))success
-                  failure:(void (^)(NSError*))failure;
+- (void)getThumbnailAsyncOverloadDefaultSizeDefaultOptions:(WSFThumbnailMode)mode success:(void (^)(WSFStorageItemThumbnail*))success failure:(void (^)(NSError*))failure;
+- (void)getThumbnailAsyncOverloadDefaultOptions:(WSFThumbnailMode)mode requestedSize:(unsigned int)requestedSize success:(void (^)(WSFStorageItemThumbnail*))success failure:(void (^)(NSError*))failure;
+- (void)getThumbnailAsync:(WSFThumbnailMode)mode requestedSize:(unsigned int)requestedSize options:(WSFThumbnailOptions)options success:(void (^)(WSFStorageItemThumbnail*))success failure:(void (^)(NSError*))failure;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageItemProperties : RTObject <WSIStorageItemProperties>
 @end
 
 #endif // __WSIStorageItemProperties_DEFINED__
@@ -336,30 +361,16 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 #define __WSIStorageItemProperties2_DEFINED__
 
 @protocol WSIStorageItemProperties2 <WSIStorageItemProperties>
-- (void)getScaledImageAsThumbnailAsyncOverloadDefaultSizeDefaultOptions:(WSFThumbnailMode)mode
-                                                                success:(void (^)(WSFStorageItemThumbnail*))success
-                                                                failure:(void (^)(NSError*))failure;
-- (void)getScaledImageAsThumbnailAsyncOverloadDefaultOptions:(WSFThumbnailMode)mode
-                                               requestedSize:(unsigned int)requestedSize
-                                                     success:(void (^)(WSFStorageItemThumbnail*))success
-                                                     failure:(void (^)(NSError*))failure;
-- (void)getScaledImageAsThumbnailAsync:(WSFThumbnailMode)mode
-                         requestedSize:(unsigned int)requestedSize
-                               options:(WSFThumbnailOptions)options
-                               success:(void (^)(WSFStorageItemThumbnail*))success
-                               failure:(void (^)(NSError*))failure;
-- (void)getThumbnailAsyncOverloadDefaultSizeDefaultOptions:(WSFThumbnailMode)mode
-                                                   success:(void (^)(WSFStorageItemThumbnail*))success
-                                                   failure:(void (^)(NSError*))failure;
-- (void)getThumbnailAsyncOverloadDefaultOptions:(WSFThumbnailMode)mode
-                                  requestedSize:(unsigned int)requestedSize
-                                        success:(void (^)(WSFStorageItemThumbnail*))success
-                                        failure:(void (^)(NSError*))failure;
-- (void)getThumbnailAsync:(WSFThumbnailMode)mode
-            requestedSize:(unsigned int)requestedSize
-                  options:(WSFThumbnailOptions)options
-                  success:(void (^)(WSFStorageItemThumbnail*))success
-                  failure:(void (^)(NSError*))failure;
+- (void)getScaledImageAsThumbnailAsyncOverloadDefaultSizeDefaultOptions:(WSFThumbnailMode)mode success:(void (^)(WSFStorageItemThumbnail*))success failure:(void (^)(NSError*))failure;
+- (void)getScaledImageAsThumbnailAsyncOverloadDefaultOptions:(WSFThumbnailMode)mode requestedSize:(unsigned int)requestedSize success:(void (^)(WSFStorageItemThumbnail*))success failure:(void (^)(NSError*))failure;
+- (void)getScaledImageAsThumbnailAsync:(WSFThumbnailMode)mode requestedSize:(unsigned int)requestedSize options:(WSFThumbnailOptions)options success:(void (^)(WSFStorageItemThumbnail*))success failure:(void (^)(NSError*))failure;
+- (void)getThumbnailAsyncOverloadDefaultSizeDefaultOptions:(WSFThumbnailMode)mode success:(void (^)(WSFStorageItemThumbnail*))success failure:(void (^)(NSError*))failure;
+- (void)getThumbnailAsyncOverloadDefaultOptions:(WSFThumbnailMode)mode requestedSize:(unsigned int)requestedSize success:(void (^)(WSFStorageItemThumbnail*))success failure:(void (^)(NSError*))failure;
+- (void)getThumbnailAsync:(WSFThumbnailMode)mode requestedSize:(unsigned int)requestedSize options:(WSFThumbnailOptions)options success:(void (^)(WSFStorageItemThumbnail*))success failure:(void (^)(NSError*))failure;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageItemProperties2 : RTObject <WSIStorageItemProperties2>
 @end
 
 #endif // __WSIStorageItemProperties2_DEFINED__
@@ -370,18 +381,13 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 
 @protocol WSIStorageItemPropertiesWithProvider <WSIStorageItemProperties>
 @property (readonly) WSStorageProvider* provider;
-- (void)getThumbnailAsyncOverloadDefaultSizeDefaultOptions:(WSFThumbnailMode)mode
-                                                   success:(void (^)(WSFStorageItemThumbnail*))success
-                                                   failure:(void (^)(NSError*))failure;
-- (void)getThumbnailAsyncOverloadDefaultOptions:(WSFThumbnailMode)mode
-                                  requestedSize:(unsigned int)requestedSize
-                                        success:(void (^)(WSFStorageItemThumbnail*))success
-                                        failure:(void (^)(NSError*))failure;
-- (void)getThumbnailAsync:(WSFThumbnailMode)mode
-            requestedSize:(unsigned int)requestedSize
-                  options:(WSFThumbnailOptions)options
-                  success:(void (^)(WSFStorageItemThumbnail*))success
-                  failure:(void (^)(NSError*))failure;
+- (void)getThumbnailAsyncOverloadDefaultSizeDefaultOptions:(WSFThumbnailMode)mode success:(void (^)(WSFStorageItemThumbnail*))success failure:(void (^)(NSError*))failure;
+- (void)getThumbnailAsyncOverloadDefaultOptions:(WSFThumbnailMode)mode requestedSize:(unsigned int)requestedSize success:(void (^)(WSFStorageItemThumbnail*))success failure:(void (^)(NSError*))failure;
+- (void)getThumbnailAsync:(WSFThumbnailMode)mode requestedSize:(unsigned int)requestedSize options:(WSFThumbnailOptions)options success:(void (^)(WSFStorageItemThumbnail*))success failure:(void (^)(NSError*))failure;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageItemPropertiesWithProvider : RTObject <WSIStorageItemPropertiesWithProvider>
 @end
 
 #endif // __WSIStorageItemPropertiesWithProvider_DEFINED__
@@ -394,6 +400,10 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 @property (readonly) BOOL isAvailable;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageFilePropertiesWithAvailability : RTObject <WSIStorageFilePropertiesWithAvailability>
+@end
+
 #endif // __WSIStorageFilePropertiesWithAvailability_DEFINED__
 
 // Windows.Storage.IStorageFolder2
@@ -401,7 +411,11 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 #define __WSIStorageFolder2_DEFINED__
 
 @protocol WSIStorageFolder2
-- (void)tryGetItemAsync:(NSString*)name success:(void (^)(RTObject<WSIStorageItem>*))success failure:(void (^)(NSError*))failure;
+- (void)tryGetItemAsync:(NSString *)name success:(void (^)(RTObject<WSIStorageItem>*))success failure:(void (^)(NSError*))failure;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageFolder2 : RTObject <WSIStorageFolder2>
 @end
 
 #endif // __WSIStorageFolder2_DEFINED__
@@ -411,13 +425,12 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 #define __WSIStorageFile2_DEFINED__
 
 @protocol WSIStorageFile2
-- (void)openWithOptionsAsync:(WSFileAccessMode)accessMode
-                     options:(WSStorageOpenOptions)options
-                     success:(void (^)(RTObject<WSSIRandomAccessStream>*))success
-                     failure:(void (^)(NSError*))failure;
-- (void)openTransactedWriteWithOptionsAsync:(WSStorageOpenOptions)options
-                                    success:(void (^)(WSStorageStreamTransaction*))success
-                                    failure:(void (^)(NSError*))failure;
+- (void)openWithOptionsAsync:(WSFileAccessMode)accessMode options:(WSStorageOpenOptions)options success:(void (^)(RTObject<WSSIRandomAccessStream>*))success failure:(void (^)(NSError*))failure;
+- (void)openTransactedWriteWithOptionsAsync:(WSStorageOpenOptions)options success:(void (^)(WSStorageStreamTransaction*))success failure:(void (^)(NSError*))failure;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSIStorageFile2 : RTObject <WSIStorageFile2>
 @end
 
 #endif // __WSIStorageFile2_DEFINED__
@@ -426,15 +439,17 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 #ifndef __WSStorageLibrary_DEFINED__
 #define __WSStorageLibrary_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSStorageLibrary : RTObject
 + (void)getLibraryAsync:(WSKnownLibraryId)libraryId success:(void (^)(WSStorageLibrary*))success failure:(void (^)(NSError*))failure;
++ (void)getLibraryForUserAsync:(WSUser*)user libraryId:(WSKnownLibraryId)libraryId success:(void (^)(WSStorageLibrary*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSMutableArray<RTObservableCollection>* /* WSStorageFolder* */ folders;
 @property (readonly) WSStorageFolder* saveFolder;
-- (EventRegistrationToken)addDefinitionChangedEvent:(void (^)(WSStorageLibrary*, RTObject*))del;
+@property (readonly) WSStorageLibraryChangeTracker* changeTracker;
+- (EventRegistrationToken)addDefinitionChangedEvent:(void(^)(WSStorageLibrary*, RTObject*))del;
 - (void)removeDefinitionChangedEvent:(EventRegistrationToken)tok;
 - (void)requestAddFolderAsyncWithSuccess:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
 - (void)requestRemoveFolderAsync:(WSStorageFolder*)folder success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
@@ -456,29 +471,18 @@ WINRT_EXPORT
 - (WSSStorageFolderQueryResult*)createFolderQueryWithOptions:(WSSQueryOptions*)queryOptions;
 - (WSSStorageItemQueryResult*)createItemQuery;
 - (WSSStorageItemQueryResult*)createItemQueryWithOptions:(WSSQueryOptions*)queryOptions;
-- (void)getFilesAsync:(WSSCommonFileQuery)query
-           startIndex:(unsigned int)startIndex
-   maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve
-              success:(void (^)(NSArray* /* WSStorageFile* */))success
-              failure:(void (^)(NSError*))failure;
-- (void)getFilesAsyncOverloadDefaultStartAndCount:(WSSCommonFileQuery)query
-                                          success:(void (^)(NSArray* /* WSStorageFile* */))success
-                                          failure:(void (^)(NSError*))failure;
-- (void)getFoldersAsync:(WSSCommonFolderQuery)query
-             startIndex:(unsigned int)startIndex
-     maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve
-                success:(void (^)(NSArray* /* WSStorageFolder* */))success
-                failure:(void (^)(NSError*))failure;
-- (void)getFoldersAsyncOverloadDefaultStartAndCount:(WSSCommonFolderQuery)query
-                                            success:(void (^)(NSArray* /* WSStorageFolder* */))success
-                                            failure:(void (^)(NSError*))failure;
-- (void)getItemsAsync:(unsigned int)startIndex
-   maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve
-              success:(void (^)(NSArray* /* RTObject<WSIStorageItem>* */))success
-              failure:(void (^)(NSError*))failure;
+- (void)getFilesAsync:(WSSCommonFileQuery)query startIndex:(unsigned int)startIndex maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve success:(void (^)(NSArray* /* WSStorageFile* */))success failure:(void (^)(NSError*))failure;
+- (void)getFilesAsyncOverloadDefaultStartAndCount:(WSSCommonFileQuery)query success:(void (^)(NSArray* /* WSStorageFile* */))success failure:(void (^)(NSError*))failure;
+- (void)getFoldersAsync:(WSSCommonFolderQuery)query startIndex:(unsigned int)startIndex maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve success:(void (^)(NSArray* /* WSStorageFolder* */))success failure:(void (^)(NSError*))failure;
+- (void)getFoldersAsyncOverloadDefaultStartAndCount:(WSSCommonFolderQuery)query success:(void (^)(NSArray* /* WSStorageFolder* */))success failure:(void (^)(NSError*))failure;
+- (void)getItemsAsync:(unsigned int)startIndex maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve success:(void (^)(NSArray* /* RTObject<WSIStorageItem>* */))success failure:(void (^)(NSError*))failure;
 - (BOOL)areQueryOptionsSupported:(WSSQueryOptions*)queryOptions;
 - (BOOL)isCommonFolderQuerySupported:(WSSCommonFolderQuery)query;
 - (BOOL)isCommonFileQuerySupported:(WSSCommonFileQuery)query;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSSIStorageFolderQueryOperations : RTObject <WSSIStorageFolderQueryOperations>
 @end
 
 #endif // __WSSIStorageFolderQueryOperations_DEFINED__
@@ -487,53 +491,33 @@ WINRT_EXPORT
 #ifndef __WSStorageFolder_DEFINED__
 #define __WSStorageFolder_DEFINED__
 
-WINRT_EXPORT
-@interface WSStorageFolder : RTObject <WSIStorageFolder,
-                                       WSIStorageItem,
-                                       WSSIStorageFolderQueryOperations,
-                                       WSIStorageItemProperties,
-                                       WSIStorageItemProperties2,
-                                       WSIStorageItem2,
-                                       WSIStorageFolder2,
-                                       WSIStorageItemPropertiesWithProvider>
-+ (void)getFolderFromPathAsync:(NSString*)path success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSStorageFolder : RTObject <WSIStorageFolder, WSIStorageItem, WSSIStorageFolderQueryOperations, WSIStorageItemProperties, WSIStorageItemProperties2, WSIStorageItem2, WSIStorageFolder2, WSIStorageItemPropertiesWithProvider>
++ (void)getFolderFromPathAsync:(NSString *)path success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WSFileAttributes attributes;
 @property (readonly) WFDateTime* dateCreated;
-@property (readonly) NSString* name;
-@property (readonly) NSString* path;
-@property (readonly) NSString* displayName;
-@property (readonly) NSString* displayType;
-@property (readonly) NSString* folderRelativeId;
+@property (readonly) NSString * name;
+@property (readonly) NSString * path;
+@property (readonly) NSString * displayName;
+@property (readonly) NSString * displayType;
+@property (readonly) NSString * folderRelativeId;
 @property (readonly) WSFStorageItemContentProperties* properties;
 @property (readonly) WSStorageProvider* provider;
-- (void)createFileAsyncOverloadDefaultOptions:(NSString*)desiredName
-                                      success:(void (^)(WSStorageFile*))success
-                                      failure:(void (^)(NSError*))failure;
-- (void)createFileAsync:(NSString*)desiredName
-                options:(WSCreationCollisionOption)options
-                success:(void (^)(WSStorageFile*))success
-                failure:(void (^)(NSError*))failure;
-- (void)createFolderAsyncOverloadDefaultOptions:(NSString*)desiredName
-                                        success:(void (^)(WSStorageFolder*))success
-                                        failure:(void (^)(NSError*))failure;
-- (void)createFolderAsync:(NSString*)desiredName
-                  options:(WSCreationCollisionOption)options
-                  success:(void (^)(WSStorageFolder*))success
-                  failure:(void (^)(NSError*))failure;
-- (void)getFileAsync:(NSString*)name success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
-- (void)getFolderAsync:(NSString*)name success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
-- (void)getItemAsync:(NSString*)name success:(void (^)(RTObject<WSIStorageItem>*))success failure:(void (^)(NSError*))failure;
-- (void)getFilesAsyncOverloadDefaultOptionsStartAndCountWithSuccess:(void (^)(NSArray* /* WSStorageFile* */))success
-                                                            failure:(void (^)(NSError*))failure;
-- (void)getFoldersAsyncOverloadDefaultOptionsStartAndCountWithSuccess:(void (^)(NSArray* /* WSStorageFolder* */))success
-                                                              failure:(void (^)(NSError*))failure;
-- (void)getItemsAsyncOverloadDefaultStartAndCountWithSuccess:(void (^)(NSArray* /* RTObject<WSIStorageItem>* */))success
-                                                     failure:(void (^)(NSError*))failure;
-- (RTObject<WFIAsyncAction>*)renameAsyncOverloadDefaultOptions:(NSString*)desiredName;
-- (RTObject<WFIAsyncAction>*)renameAsync:(NSString*)desiredName option:(WSNameCollisionOption)option;
+- (void)createFileAsyncOverloadDefaultOptions:(NSString *)desiredName success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
+- (void)createFileAsync:(NSString *)desiredName options:(WSCreationCollisionOption)options success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
+- (void)createFolderAsyncOverloadDefaultOptions:(NSString *)desiredName success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
+- (void)createFolderAsync:(NSString *)desiredName options:(WSCreationCollisionOption)options success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
+- (void)getFileAsync:(NSString *)name success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
+- (void)getFolderAsync:(NSString *)name success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
+- (void)getItemAsync:(NSString *)name success:(void (^)(RTObject<WSIStorageItem>*))success failure:(void (^)(NSError*))failure;
+- (void)getFilesAsyncOverloadDefaultOptionsStartAndCountWithSuccess:(void (^)(NSArray* /* WSStorageFile* */))success failure:(void (^)(NSError*))failure;
+- (void)getFoldersAsyncOverloadDefaultOptionsStartAndCountWithSuccess:(void (^)(NSArray* /* WSStorageFolder* */))success failure:(void (^)(NSError*))failure;
+- (void)getItemsAsyncOverloadDefaultStartAndCountWithSuccess:(void (^)(NSArray* /* RTObject<WSIStorageItem>* */))success failure:(void (^)(NSError*))failure;
+- (RTObject<WFIAsyncAction>*)renameAsyncOverloadDefaultOptions:(NSString *)desiredName;
+- (RTObject<WFIAsyncAction>*)renameAsync:(NSString *)desiredName option:(WSNameCollisionOption)option;
 - (RTObject<WFIAsyncAction>*)deleteAsyncOverloadDefaultOptions;
 - (RTObject<WFIAsyncAction>*)deleteAsync:(WSStorageDeleteOption)option;
 - (void)getBasicPropertiesAsyncWithSuccess:(void (^)(WSFBasicProperties*))success failure:(void (^)(NSError*))failure;
@@ -547,66 +531,50 @@ WINRT_EXPORT
 - (WSSStorageFolderQueryResult*)createFolderQueryWithOptions:(WSSQueryOptions*)queryOptions;
 - (WSSStorageItemQueryResult*)createItemQuery;
 - (WSSStorageItemQueryResult*)createItemQueryWithOptions:(WSSQueryOptions*)queryOptions;
-- (void)getFilesAsync:(WSSCommonFileQuery)query
-           startIndex:(unsigned int)startIndex
-   maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve
-              success:(void (^)(NSArray* /* WSStorageFile* */))success
-              failure:(void (^)(NSError*))failure;
-- (void)getFilesAsyncOverloadDefaultStartAndCount:(WSSCommonFileQuery)query
-                                          success:(void (^)(NSArray* /* WSStorageFile* */))success
-                                          failure:(void (^)(NSError*))failure;
-- (void)getFoldersAsync:(WSSCommonFolderQuery)query
-             startIndex:(unsigned int)startIndex
-     maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve
-                success:(void (^)(NSArray* /* WSStorageFolder* */))success
-                failure:(void (^)(NSError*))failure;
-- (void)getFoldersAsyncOverloadDefaultStartAndCount:(WSSCommonFolderQuery)query
-                                            success:(void (^)(NSArray* /* WSStorageFolder* */))success
-                                            failure:(void (^)(NSError*))failure;
-- (void)getItemsAsync:(unsigned int)startIndex
-   maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve
-              success:(void (^)(NSArray* /* RTObject<WSIStorageItem>* */))success
-              failure:(void (^)(NSError*))failure;
+- (void)getFilesAsync:(WSSCommonFileQuery)query startIndex:(unsigned int)startIndex maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve success:(void (^)(NSArray* /* WSStorageFile* */))success failure:(void (^)(NSError*))failure;
+- (void)getFilesAsyncOverloadDefaultStartAndCount:(WSSCommonFileQuery)query success:(void (^)(NSArray* /* WSStorageFile* */))success failure:(void (^)(NSError*))failure;
+- (void)getFoldersAsync:(WSSCommonFolderQuery)query startIndex:(unsigned int)startIndex maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve success:(void (^)(NSArray* /* WSStorageFolder* */))success failure:(void (^)(NSError*))failure;
+- (void)getFoldersAsyncOverloadDefaultStartAndCount:(WSSCommonFolderQuery)query success:(void (^)(NSArray* /* WSStorageFolder* */))success failure:(void (^)(NSError*))failure;
+- (void)getItemsAsync:(unsigned int)startIndex maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve success:(void (^)(NSArray* /* RTObject<WSIStorageItem>* */))success failure:(void (^)(NSError*))failure;
 - (BOOL)areQueryOptionsSupported:(WSSQueryOptions*)queryOptions;
 - (BOOL)isCommonFolderQuerySupported:(WSSCommonFolderQuery)query;
 - (BOOL)isCommonFileQuerySupported:(WSSCommonFileQuery)query;
-- (void)getThumbnailAsyncOverloadDefaultSizeDefaultOptions:(WSFThumbnailMode)mode
-                                                   success:(void (^)(WSFStorageItemThumbnail*))success
-                                                   failure:(void (^)(NSError*))failure;
-- (void)getThumbnailAsyncOverloadDefaultOptions:(WSFThumbnailMode)mode
-                                  requestedSize:(unsigned int)requestedSize
-                                        success:(void (^)(WSFStorageItemThumbnail*))success
-                                        failure:(void (^)(NSError*))failure;
-- (void)getThumbnailAsync:(WSFThumbnailMode)mode
-            requestedSize:(unsigned int)requestedSize
-                  options:(WSFThumbnailOptions)options
-                  success:(void (^)(WSFStorageItemThumbnail*))success
-                  failure:(void (^)(NSError*))failure;
-- (void)getScaledImageAsThumbnailAsyncOverloadDefaultSizeDefaultOptions:(WSFThumbnailMode)mode
-                                                                success:(void (^)(WSFStorageItemThumbnail*))success
-                                                                failure:(void (^)(NSError*))failure;
-- (void)getScaledImageAsThumbnailAsyncOverloadDefaultOptions:(WSFThumbnailMode)mode
-                                               requestedSize:(unsigned int)requestedSize
-                                                     success:(void (^)(WSFStorageItemThumbnail*))success
-                                                     failure:(void (^)(NSError*))failure;
-- (void)getScaledImageAsThumbnailAsync:(WSFThumbnailMode)mode
-                         requestedSize:(unsigned int)requestedSize
-                               options:(WSFThumbnailOptions)options
-                               success:(void (^)(WSFStorageItemThumbnail*))success
-                               failure:(void (^)(NSError*))failure;
+- (void)getThumbnailAsyncOverloadDefaultSizeDefaultOptions:(WSFThumbnailMode)mode success:(void (^)(WSFStorageItemThumbnail*))success failure:(void (^)(NSError*))failure;
+- (void)getThumbnailAsyncOverloadDefaultOptions:(WSFThumbnailMode)mode requestedSize:(unsigned int)requestedSize success:(void (^)(WSFStorageItemThumbnail*))success failure:(void (^)(NSError*))failure;
+- (void)getThumbnailAsync:(WSFThumbnailMode)mode requestedSize:(unsigned int)requestedSize options:(WSFThumbnailOptions)options success:(void (^)(WSFStorageItemThumbnail*))success failure:(void (^)(NSError*))failure;
+- (void)getScaledImageAsThumbnailAsyncOverloadDefaultSizeDefaultOptions:(WSFThumbnailMode)mode success:(void (^)(WSFStorageItemThumbnail*))success failure:(void (^)(NSError*))failure;
+- (void)getScaledImageAsThumbnailAsyncOverloadDefaultOptions:(WSFThumbnailMode)mode requestedSize:(unsigned int)requestedSize success:(void (^)(WSFStorageItemThumbnail*))success failure:(void (^)(NSError*))failure;
+- (void)getScaledImageAsThumbnailAsync:(WSFThumbnailMode)mode requestedSize:(unsigned int)requestedSize options:(WSFThumbnailOptions)options success:(void (^)(WSFStorageItemThumbnail*))success failure:(void (^)(NSError*))failure;
 - (void)getParentAsyncWithSuccess:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
 - (BOOL)IsEqual:(RTObject<WSIStorageItem>*)item;
-- (void)tryGetItemAsync:(NSString*)name success:(void (^)(RTObject<WSIStorageItem>*))success failure:(void (^)(NSError*))failure;
+- (void)tryGetItemAsync:(NSString *)name success:(void (^)(RTObject<WSIStorageItem>*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSStorageFolder_DEFINED__
+
+// Windows.Storage.StorageLibraryChangeTracker
+#ifndef __WSStorageLibraryChangeTracker_DEFINED__
+#define __WSStorageLibraryChangeTracker_DEFINED__
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSStorageLibraryChangeTracker : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+- (WSStorageLibraryChangeReader*)getChangeReader;
+- (void)enable;
+- (void)reset;
+@end
+
+#endif // __WSStorageLibraryChangeTracker_DEFINED__
 
 // Windows.Storage.KnownFolders
 #ifndef __WSKnownFolders_DEFINED__
 #define __WSKnownFolders_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSKnownFolders : RTObject
++ (void)getFolderForUserAsync:(WSUser*)user folderId:(WSKnownFolderId)folderId success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
 + (WSStorageFolder*)cameraRoll;
 + (WSStorageFolder*)playlists;
 + (WSStorageFolder*)savedPictures;
@@ -628,119 +596,57 @@ WINRT_EXPORT
 #ifndef __WSStorageFile_DEFINED__
 #define __WSStorageFile_DEFINED__
 
-WINRT_EXPORT
-@interface WSStorageFile : RTObject <WSIStorageFile,
-                                     WSSIInputStreamReference,
-                                     WSSIRandomAccessStreamReference,
-                                     WSIStorageItem,
-                                     WSIStorageItemProperties,
-                                     WSIStorageItemProperties2,
-                                     WSIStorageItem2,
-                                     WSIStorageItemPropertiesWithProvider,
-                                     WSIStorageFilePropertiesWithAvailability,
-                                     WSIStorageFile2>
-+ (void)getFileFromPathAsync:(NSString*)path success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSStorageFile : RTObject <WSIStorageFile, WSSIInputStreamReference, WSSIRandomAccessStreamReference, WSIStorageItem, WSIStorageItemProperties, WSIStorageItemProperties2, WSIStorageItem2, WSIStorageItemPropertiesWithProvider, WSIStorageFilePropertiesWithAvailability, WSIStorageFile2>
++ (void)getFileFromPathAsync:(NSString *)path success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 + (void)getFileFromApplicationUriAsync:(WFUri*)uri success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
-+ (void)createStreamedFileAsync:(NSString*)displayNameWithExtension
-                  dataRequested:(WSStreamedFileDataRequestedHandler)dataRequested
-                      thumbnail:(RTObject<WSSIRandomAccessStreamReference>*)thumbnail
-                        success:(void (^)(WSStorageFile*))success
-                        failure:(void (^)(NSError*))failure;
-+ (void)replaceWithStreamedFileAsync:(RTObject<WSIStorageFile>*)fileToReplace
-                       dataRequested:(WSStreamedFileDataRequestedHandler)dataRequested
-                           thumbnail:(RTObject<WSSIRandomAccessStreamReference>*)thumbnail
-                             success:(void (^)(WSStorageFile*))success
-                             failure:(void (^)(NSError*))failure;
-+ (void)createStreamedFileFromUriAsync:(NSString*)displayNameWithExtension
-                                   uri:(WFUri*)uri
-                             thumbnail:(RTObject<WSSIRandomAccessStreamReference>*)thumbnail
-                               success:(void (^)(WSStorageFile*))success
-                               failure:(void (^)(NSError*))failure;
-+ (void)replaceWithStreamedFileFromUriAsync:(RTObject<WSIStorageFile>*)fileToReplace
-                                        uri:(WFUri*)uri
-                                  thumbnail:(RTObject<WSSIRandomAccessStreamReference>*)thumbnail
-                                    success:(void (^)(WSStorageFile*))success
-                                    failure:(void (^)(NSError*))failure;
++ (void)createStreamedFileAsync:(NSString *)displayNameWithExtension dataRequested:(WSStreamedFileDataRequestedHandler)dataRequested thumbnail:(RTObject<WSSIRandomAccessStreamReference>*)thumbnail success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
++ (void)replaceWithStreamedFileAsync:(RTObject<WSIStorageFile>*)fileToReplace dataRequested:(WSStreamedFileDataRequestedHandler)dataRequested thumbnail:(RTObject<WSSIRandomAccessStreamReference>*)thumbnail success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
++ (void)createStreamedFileFromUriAsync:(NSString *)displayNameWithExtension uri:(WFUri*)uri thumbnail:(RTObject<WSSIRandomAccessStreamReference>*)thumbnail success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
++ (void)replaceWithStreamedFileFromUriAsync:(RTObject<WSIStorageFile>*)fileToReplace uri:(WFUri*)uri thumbnail:(RTObject<WSSIRandomAccessStreamReference>*)thumbnail success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* contentType;
-@property (readonly) NSString* fileType;
+@property (readonly) NSString * contentType;
+@property (readonly) NSString * fileType;
 @property (readonly) BOOL isAvailable;
 @property (readonly) WSFileAttributes attributes;
 @property (readonly) WFDateTime* dateCreated;
-@property (readonly) NSString* name;
-@property (readonly) NSString* path;
-@property (readonly) NSString* displayType;
-@property (readonly) NSString* folderRelativeId;
+@property (readonly) NSString * name;
+@property (readonly) NSString * path;
+@property (readonly) NSString * displayType;
+@property (readonly) NSString * folderRelativeId;
 @property (readonly) WSFStorageItemContentProperties* properties;
-@property (readonly) NSString* displayName;
+@property (readonly) NSString * displayName;
 @property (readonly) WSStorageProvider* provider;
-- (void)openAsync:(WSFileAccessMode)accessMode
-          success:(void (^)(RTObject<WSSIRandomAccessStream>*))success
-          failure:(void (^)(NSError*))failure;
+- (void)openAsync:(WSFileAccessMode)accessMode success:(void (^)(RTObject<WSSIRandomAccessStream>*))success failure:(void (^)(NSError*))failure;
 - (void)openTransactedWriteAsyncWithSuccess:(void (^)(WSStorageStreamTransaction*))success failure:(void (^)(NSError*))failure;
-- (void)copyOverloadDefaultNameAndOptions:(RTObject<WSIStorageFolder>*)destinationFolder
-                                  success:(void (^)(WSStorageFile*))success
-                                  failure:(void (^)(NSError*))failure;
-- (void)copyOverloadDefaultOptions:(RTObject<WSIStorageFolder>*)destinationFolder
-                    desiredNewName:(NSString*)desiredNewName
-                           success:(void (^)(WSStorageFile*))success
-                           failure:(void (^)(NSError*))failure;
-- (void)copyOverload:(RTObject<WSIStorageFolder>*)destinationFolder
-      desiredNewName:(NSString*)desiredNewName
-              option:(WSNameCollisionOption)option
-             success:(void (^)(WSStorageFile*))success
-             failure:(void (^)(NSError*))failure;
+- (void)copyOverloadDefaultNameAndOptions:(RTObject<WSIStorageFolder>*)destinationFolder success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
+- (void)copyOverloadDefaultOptions:(RTObject<WSIStorageFolder>*)destinationFolder desiredNewName:(NSString *)desiredNewName success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
+- (void)copyOverload:(RTObject<WSIStorageFolder>*)destinationFolder desiredNewName:(NSString *)desiredNewName option:(WSNameCollisionOption)option success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)copyAndReplaceAsync:(RTObject<WSIStorageFile>*)fileToReplace;
 - (RTObject<WFIAsyncAction>*)moveOverloadDefaultNameAndOptions:(RTObject<WSIStorageFolder>*)destinationFolder;
-- (RTObject<WFIAsyncAction>*)moveOverloadDefaultOptions:(RTObject<WSIStorageFolder>*)destinationFolder
-                                         desiredNewName:(NSString*)desiredNewName;
-- (RTObject<WFIAsyncAction>*)moveOverload:(RTObject<WSIStorageFolder>*)destinationFolder
-                           desiredNewName:(NSString*)desiredNewName
-                                   option:(WSNameCollisionOption)option;
+- (RTObject<WFIAsyncAction>*)moveOverloadDefaultOptions:(RTObject<WSIStorageFolder>*)destinationFolder desiredNewName:(NSString *)desiredNewName;
+- (RTObject<WFIAsyncAction>*)moveOverload:(RTObject<WSIStorageFolder>*)destinationFolder desiredNewName:(NSString *)desiredNewName option:(WSNameCollisionOption)option;
 - (RTObject<WFIAsyncAction>*)moveAndReplaceAsync:(RTObject<WSIStorageFile>*)fileToReplace;
-- (RTObject<WFIAsyncAction>*)renameAsyncOverloadDefaultOptions:(NSString*)desiredName;
-- (RTObject<WFIAsyncAction>*)renameAsync:(NSString*)desiredName option:(WSNameCollisionOption)option;
+- (RTObject<WFIAsyncAction>*)renameAsyncOverloadDefaultOptions:(NSString *)desiredName;
+- (RTObject<WFIAsyncAction>*)renameAsync:(NSString *)desiredName option:(WSNameCollisionOption)option;
 - (RTObject<WFIAsyncAction>*)deleteAsyncOverloadDefaultOptions;
 - (RTObject<WFIAsyncAction>*)deleteAsync:(WSStorageDeleteOption)option;
 - (void)getBasicPropertiesAsyncWithSuccess:(void (^)(WSFBasicProperties*))success failure:(void (^)(NSError*))failure;
 - (BOOL)isOfType:(WSStorageItemTypes)type;
 - (void)openReadAsyncWithSuccess:(void (^)(RTObject<WSSIRandomAccessStreamWithContentType>*))success failure:(void (^)(NSError*))failure;
 - (void)openSequentialReadAsyncWithSuccess:(void (^)(RTObject<WSSIInputStream>*))success failure:(void (^)(NSError*))failure;
-- (void)getThumbnailAsyncOverloadDefaultSizeDefaultOptions:(WSFThumbnailMode)mode
-                                                   success:(void (^)(WSFStorageItemThumbnail*))success
-                                                   failure:(void (^)(NSError*))failure;
-- (void)getThumbnailAsyncOverloadDefaultOptions:(WSFThumbnailMode)mode
-                                  requestedSize:(unsigned int)requestedSize
-                                        success:(void (^)(WSFStorageItemThumbnail*))success
-                                        failure:(void (^)(NSError*))failure;
-- (void)getThumbnailAsync:(WSFThumbnailMode)mode
-            requestedSize:(unsigned int)requestedSize
-                  options:(WSFThumbnailOptions)options
-                  success:(void (^)(WSFStorageItemThumbnail*))success
-                  failure:(void (^)(NSError*))failure;
-- (void)getScaledImageAsThumbnailAsyncOverloadDefaultSizeDefaultOptions:(WSFThumbnailMode)mode
-                                                                success:(void (^)(WSFStorageItemThumbnail*))success
-                                                                failure:(void (^)(NSError*))failure;
-- (void)getScaledImageAsThumbnailAsyncOverloadDefaultOptions:(WSFThumbnailMode)mode
-                                               requestedSize:(unsigned int)requestedSize
-                                                     success:(void (^)(WSFStorageItemThumbnail*))success
-                                                     failure:(void (^)(NSError*))failure;
-- (void)getScaledImageAsThumbnailAsync:(WSFThumbnailMode)mode
-                         requestedSize:(unsigned int)requestedSize
-                               options:(WSFThumbnailOptions)options
-                               success:(void (^)(WSFStorageItemThumbnail*))success
-                               failure:(void (^)(NSError*))failure;
+- (void)getThumbnailAsyncOverloadDefaultSizeDefaultOptions:(WSFThumbnailMode)mode success:(void (^)(WSFStorageItemThumbnail*))success failure:(void (^)(NSError*))failure;
+- (void)getThumbnailAsyncOverloadDefaultOptions:(WSFThumbnailMode)mode requestedSize:(unsigned int)requestedSize success:(void (^)(WSFStorageItemThumbnail*))success failure:(void (^)(NSError*))failure;
+- (void)getThumbnailAsync:(WSFThumbnailMode)mode requestedSize:(unsigned int)requestedSize options:(WSFThumbnailOptions)options success:(void (^)(WSFStorageItemThumbnail*))success failure:(void (^)(NSError*))failure;
+- (void)getScaledImageAsThumbnailAsyncOverloadDefaultSizeDefaultOptions:(WSFThumbnailMode)mode success:(void (^)(WSFStorageItemThumbnail*))success failure:(void (^)(NSError*))failure;
+- (void)getScaledImageAsThumbnailAsyncOverloadDefaultOptions:(WSFThumbnailMode)mode requestedSize:(unsigned int)requestedSize success:(void (^)(WSFStorageItemThumbnail*))success failure:(void (^)(NSError*))failure;
+- (void)getScaledImageAsThumbnailAsync:(WSFThumbnailMode)mode requestedSize:(unsigned int)requestedSize options:(WSFThumbnailOptions)options success:(void (^)(WSFStorageItemThumbnail*))success failure:(void (^)(NSError*))failure;
 - (void)getParentAsyncWithSuccess:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
 - (BOOL)IsEqual:(RTObject<WSIStorageItem>*)item;
-- (void)openWithOptionsAsync:(WSFileAccessMode)accessMode
-                     options:(WSStorageOpenOptions)options
-                     success:(void (^)(RTObject<WSSIRandomAccessStream>*))success
-                     failure:(void (^)(NSError*))failure;
-- (void)openTransactedWriteWithOptionsAsync:(WSStorageOpenOptions)options
-                                    success:(void (^)(WSStorageStreamTransaction*))success
-                                    failure:(void (^)(NSError*))failure;
+- (void)openWithOptionsAsync:(WSFileAccessMode)accessMode options:(WSStorageOpenOptions)options success:(void (^)(RTObject<WSSIRandomAccessStream>*))success failure:(void (^)(NSError*))failure;
+- (void)openTransactedWriteWithOptionsAsync:(WSStorageOpenOptions)options success:(void (^)(WSStorageStreamTransaction*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSStorageFile_DEFINED__
@@ -749,21 +655,52 @@ WINRT_EXPORT
 #ifndef __WSDownloadsFolder_DEFINED__
 #define __WSDownloadsFolder_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSDownloadsFolder : RTObject
-+ (void)createFileAsync:(NSString*)desiredName success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
-+ (void)createFolderAsync:(NSString*)desiredName success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
-+ (void)createFileWithCollisionOptionAsync:(NSString*)desiredName
-                                    option:(WSCreationCollisionOption)option
-                                   success:(void (^)(WSStorageFile*))success
-                                   failure:(void (^)(NSError*))failure;
-+ (void)createFolderWithCollisionOptionAsync:(NSString*)desiredName
-                                      option:(WSCreationCollisionOption)option
-                                     success:(void (^)(WSStorageFolder*))success
-                                     failure:(void (^)(NSError*))failure;
++ (void)createFileForUserAsync:(WSUser*)user desiredName:(NSString *)desiredName success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
++ (void)createFolderForUserAsync:(WSUser*)user desiredName:(NSString *)desiredName success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
++ (void)createFileForUserWithCollisionOptionAsync:(WSUser*)user desiredName:(NSString *)desiredName option:(WSCreationCollisionOption)option success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
++ (void)createFolderForUserWithCollisionOptionAsync:(WSUser*)user desiredName:(NSString *)desiredName option:(WSCreationCollisionOption)option success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
++ (void)createFileAsync:(NSString *)desiredName success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
++ (void)createFolderAsync:(NSString *)desiredName success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
++ (void)createFileWithCollisionOptionAsync:(NSString *)desiredName option:(WSCreationCollisionOption)option success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
++ (void)createFolderWithCollisionOptionAsync:(NSString *)desiredName option:(WSCreationCollisionOption)option success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSDownloadsFolder_DEFINED__
+
+// Windows.Storage.StorageLibraryChange
+#ifndef __WSStorageLibraryChange_DEFINED__
+#define __WSStorageLibraryChange_DEFINED__
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSStorageLibraryChange : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) WSStorageLibraryChangeType changeType;
+@property (readonly) NSString * path;
+@property (readonly) NSString * previousPath;
+- (BOOL)isOfType:(WSStorageItemTypes)type;
+- (void)getStorageItemAsyncWithSuccess:(void (^)(RTObject<WSIStorageItem>*))success failure:(void (^)(NSError*))failure;
+@end
+
+#endif // __WSStorageLibraryChange_DEFINED__
+
+// Windows.Storage.StorageLibraryChangeReader
+#ifndef __WSStorageLibraryChangeReader_DEFINED__
+#define __WSStorageLibraryChangeReader_DEFINED__
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSStorageLibraryChangeReader : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+- (void)readBatchAsyncWithSuccess:(void (^)(NSArray* /* WSStorageLibraryChange* */))success failure:(void (^)(NSError*))failure;
+- (RTObject<WFIAsyncAction>*)acceptChangesAsync;
+@end
+
+#endif // __WSStorageLibraryChangeReader_DEFINED__
 
 // Windows.Foundation.IClosable
 #ifndef __WFIClosable_DEFINED__
@@ -773,6 +710,10 @@ WINRT_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Storage.Streams.IOutputStream
@@ -780,12 +721,13 @@ WINRT_EXPORT
 #define __WSSIOutputStream_DEFINED__
 
 @protocol WSSIOutputStream <WFIClosable>
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
-           success:(void (^)(unsigned int))success
-          progress:(void (^)(unsigned int))progress
-           failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WSSIOutputStream : RTObject <WSSIOutputStream>
 @end
 
 #endif // __WSSIOutputStream_DEFINED__
@@ -794,15 +736,12 @@ WINRT_EXPORT
 #ifndef __WSStreamedFileDataRequest_DEFINED__
 #define __WSStreamedFileDataRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSStreamedFileDataRequest : RTObject <WSSIOutputStream, WFIClosable, WSIStreamedFileDataRequest>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
-           success:(void (^)(unsigned int))success
-          progress:(void (^)(unsigned int))progress
-           failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)close;
 - (void)failAndClose:(WSStreamedFileFailureMode)failureMode;
@@ -814,7 +753,7 @@ WINRT_EXPORT
 #ifndef __WSStorageStreamTransaction_DEFINED__
 #define __WSStorageStreamTransaction_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSStorageStreamTransaction : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -830,13 +769,13 @@ WINRT_EXPORT
 #ifndef __WSStorageProvider_DEFINED__
 #define __WSStorageProvider_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSStorageProvider : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* displayName;
-@property (readonly) NSString* id;
+@property (readonly) NSString * displayName;
+@property (readonly) NSString * id;
 @end
 
 #endif // __WSStorageProvider_DEFINED__
@@ -845,39 +784,21 @@ WINRT_EXPORT
 #ifndef __WSFileIO_DEFINED__
 #define __WSFileIO_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSFileIO : RTObject
-+ (void)readTextAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
-+ (void)readTextWithEncodingAsync:(RTObject<WSIStorageFile>*)file
-                         encoding:(WSSUnicodeEncoding)encoding
-                          success:(void (^)(NSString*))success
-                          failure:(void (^)(NSError*))failure;
-+ (RTObject<WFIAsyncAction>*)writeTextAsync:(RTObject<WSIStorageFile>*)file contents:(NSString*)contents;
-+ (RTObject<WFIAsyncAction>*)writeTextWithEncodingAsync:(RTObject<WSIStorageFile>*)file
-                                               contents:(NSString*)contents
-                                               encoding:(WSSUnicodeEncoding)encoding;
-+ (RTObject<WFIAsyncAction>*)appendTextAsync:(RTObject<WSIStorageFile>*)file contents:(NSString*)contents;
-+ (RTObject<WFIAsyncAction>*)appendTextWithEncodingAsync:(RTObject<WSIStorageFile>*)file
-                                                contents:(NSString*)contents
-                                                encoding:(WSSUnicodeEncoding)encoding;
-+ (void)readLinesAsync:(RTObject<WSIStorageFile>*)file
-               success:(void (^)(NSMutableArray* /* NSString * */))success
-               failure:(void (^)(NSError*))failure;
-+ (void)readLinesWithEncodingAsync:(RTObject<WSIStorageFile>*)file
-                          encoding:(WSSUnicodeEncoding)encoding
-                           success:(void (^)(NSMutableArray* /* NSString * */))success
-                           failure:(void (^)(NSError*))failure;
++ (void)readTextAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
++ (void)readTextWithEncodingAsync:(RTObject<WSIStorageFile>*)file encoding:(WSSUnicodeEncoding)encoding success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
++ (RTObject<WFIAsyncAction>*)writeTextAsync:(RTObject<WSIStorageFile>*)file contents:(NSString *)contents;
++ (RTObject<WFIAsyncAction>*)writeTextWithEncodingAsync:(RTObject<WSIStorageFile>*)file contents:(NSString *)contents encoding:(WSSUnicodeEncoding)encoding;
++ (RTObject<WFIAsyncAction>*)appendTextAsync:(RTObject<WSIStorageFile>*)file contents:(NSString *)contents;
++ (RTObject<WFIAsyncAction>*)appendTextWithEncodingAsync:(RTObject<WSIStorageFile>*)file contents:(NSString *)contents encoding:(WSSUnicodeEncoding)encoding;
++ (void)readLinesAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(NSMutableArray* /* NSString * */))success failure:(void (^)(NSError*))failure;
++ (void)readLinesWithEncodingAsync:(RTObject<WSIStorageFile>*)file encoding:(WSSUnicodeEncoding)encoding success:(void (^)(NSMutableArray* /* NSString * */))success failure:(void (^)(NSError*))failure;
 + (RTObject<WFIAsyncAction>*)writeLinesAsync:(RTObject<WSIStorageFile>*)file lines:(id<NSFastEnumeration> /* NSString * */)lines;
-+ (RTObject<WFIAsyncAction>*)writeLinesWithEncodingAsync:(RTObject<WSIStorageFile>*)file
-                                                   lines:(id<NSFastEnumeration> /* NSString * */)lines
-                                                encoding:(WSSUnicodeEncoding)encoding;
++ (RTObject<WFIAsyncAction>*)writeLinesWithEncodingAsync:(RTObject<WSIStorageFile>*)file lines:(id<NSFastEnumeration> /* NSString * */)lines encoding:(WSSUnicodeEncoding)encoding;
 + (RTObject<WFIAsyncAction>*)appendLinesAsync:(RTObject<WSIStorageFile>*)file lines:(id<NSFastEnumeration> /* NSString * */)lines;
-+ (RTObject<WFIAsyncAction>*)appendLinesWithEncodingAsync:(RTObject<WSIStorageFile>*)file
-                                                    lines:(id<NSFastEnumeration> /* NSString * */)lines
-                                                 encoding:(WSSUnicodeEncoding)encoding;
-+ (void)readBufferAsync:(RTObject<WSIStorageFile>*)file
-                success:(void (^)(RTObject<WSSIBuffer>*))success
-                failure:(void (^)(NSError*))failure;
++ (RTObject<WFIAsyncAction>*)appendLinesWithEncodingAsync:(RTObject<WSIStorageFile>*)file lines:(id<NSFastEnumeration> /* NSString * */)lines encoding:(WSSUnicodeEncoding)encoding;
++ (void)readBufferAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
 + (RTObject<WFIAsyncAction>*)writeBufferAsync:(RTObject<WSIStorageFile>*)file buffer:(RTObject<WSSIBuffer>*)buffer;
 + (RTObject<WFIAsyncAction>*)writeBytesAsync:(RTObject<WSIStorageFile>*)file buffer:(NSArray* /* uint8_t */)buffer;
 @end
@@ -888,39 +809,23 @@ WINRT_EXPORT
 #ifndef __WSPathIO_DEFINED__
 #define __WSPathIO_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSPathIO : RTObject
-+ (void)readTextAsync:(NSString*)absolutePath success:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
-+ (void)readTextWithEncodingAsync:(NSString*)absolutePath
-                         encoding:(WSSUnicodeEncoding)encoding
-                          success:(void (^)(NSString*))success
-                          failure:(void (^)(NSError*))failure;
-+ (RTObject<WFIAsyncAction>*)writeTextAsync:(NSString*)absolutePath contents:(NSString*)contents;
-+ (RTObject<WFIAsyncAction>*)writeTextWithEncodingAsync:(NSString*)absolutePath
-                                               contents:(NSString*)contents
-                                               encoding:(WSSUnicodeEncoding)encoding;
-+ (RTObject<WFIAsyncAction>*)appendTextAsync:(NSString*)absolutePath contents:(NSString*)contents;
-+ (RTObject<WFIAsyncAction>*)appendTextWithEncodingAsync:(NSString*)absolutePath
-                                                contents:(NSString*)contents
-                                                encoding:(WSSUnicodeEncoding)encoding;
-+ (void)readLinesAsync:(NSString*)absolutePath
-               success:(void (^)(NSMutableArray* /* NSString * */))success
-               failure:(void (^)(NSError*))failure;
-+ (void)readLinesWithEncodingAsync:(NSString*)absolutePath
-                          encoding:(WSSUnicodeEncoding)encoding
-                           success:(void (^)(NSMutableArray* /* NSString * */))success
-                           failure:(void (^)(NSError*))failure;
-+ (RTObject<WFIAsyncAction>*)writeLinesAsync:(NSString*)absolutePath lines:(id<NSFastEnumeration> /* NSString * */)lines;
-+ (RTObject<WFIAsyncAction>*)writeLinesWithEncodingAsync:(NSString*)absolutePath
-                                                   lines:(id<NSFastEnumeration> /* NSString * */)lines
-                                                encoding:(WSSUnicodeEncoding)encoding;
-+ (RTObject<WFIAsyncAction>*)appendLinesAsync:(NSString*)absolutePath lines:(id<NSFastEnumeration> /* NSString * */)lines;
-+ (RTObject<WFIAsyncAction>*)appendLinesWithEncodingAsync:(NSString*)absolutePath
-                                                    lines:(id<NSFastEnumeration> /* NSString * */)lines
-                                                 encoding:(WSSUnicodeEncoding)encoding;
-+ (void)readBufferAsync:(NSString*)absolutePath success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
-+ (RTObject<WFIAsyncAction>*)writeBufferAsync:(NSString*)absolutePath buffer:(RTObject<WSSIBuffer>*)buffer;
-+ (RTObject<WFIAsyncAction>*)writeBytesAsync:(NSString*)absolutePath buffer:(NSArray* /* uint8_t */)buffer;
++ (void)readTextAsync:(NSString *)absolutePath success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
++ (void)readTextWithEncodingAsync:(NSString *)absolutePath encoding:(WSSUnicodeEncoding)encoding success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
++ (RTObject<WFIAsyncAction>*)writeTextAsync:(NSString *)absolutePath contents:(NSString *)contents;
++ (RTObject<WFIAsyncAction>*)writeTextWithEncodingAsync:(NSString *)absolutePath contents:(NSString *)contents encoding:(WSSUnicodeEncoding)encoding;
++ (RTObject<WFIAsyncAction>*)appendTextAsync:(NSString *)absolutePath contents:(NSString *)contents;
++ (RTObject<WFIAsyncAction>*)appendTextWithEncodingAsync:(NSString *)absolutePath contents:(NSString *)contents encoding:(WSSUnicodeEncoding)encoding;
++ (void)readLinesAsync:(NSString *)absolutePath success:(void (^)(NSMutableArray* /* NSString * */))success failure:(void (^)(NSError*))failure;
++ (void)readLinesWithEncodingAsync:(NSString *)absolutePath encoding:(WSSUnicodeEncoding)encoding success:(void (^)(NSMutableArray* /* NSString * */))success failure:(void (^)(NSError*))failure;
++ (RTObject<WFIAsyncAction>*)writeLinesAsync:(NSString *)absolutePath lines:(id<NSFastEnumeration> /* NSString * */)lines;
++ (RTObject<WFIAsyncAction>*)writeLinesWithEncodingAsync:(NSString *)absolutePath lines:(id<NSFastEnumeration> /* NSString * */)lines encoding:(WSSUnicodeEncoding)encoding;
++ (RTObject<WFIAsyncAction>*)appendLinesAsync:(NSString *)absolutePath lines:(id<NSFastEnumeration> /* NSString * */)lines;
++ (RTObject<WFIAsyncAction>*)appendLinesWithEncodingAsync:(NSString *)absolutePath lines:(id<NSFastEnumeration> /* NSString * */)lines encoding:(WSSUnicodeEncoding)encoding;
++ (void)readBufferAsync:(NSString *)absolutePath success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
++ (RTObject<WFIAsyncAction>*)writeBufferAsync:(NSString *)absolutePath buffer:(RTObject<WSSIBuffer>*)buffer;
++ (RTObject<WFIAsyncAction>*)writeBytesAsync:(NSString *)absolutePath buffer:(NSArray* /* uint8_t */)buffer;
 @end
 
 #endif // __WSPathIO_DEFINED__
@@ -929,12 +834,10 @@ WINRT_EXPORT
 #ifndef __WSCachedFileManager_DEFINED__
 #define __WSCachedFileManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSCachedFileManager : RTObject
 + (void)deferUpdates:(RTObject<WSIStorageFile>*)file;
-+ (void)completeUpdatesAsync:(RTObject<WSIStorageFile>*)file
-                     success:(void (^)(WSPFileUpdateStatus))success
-                     failure:(void (^)(NSError*))failure;
++ (void)completeUpdatesAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(WSPFileUpdateStatus))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSCachedFileManager_DEFINED__
@@ -943,12 +846,12 @@ WINRT_EXPORT
 #ifndef __WSSystemAudioProperties_DEFINED__
 #define __WSSystemAudioProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSystemAudioProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* encodingBitrate;
+@property (readonly) NSString * encodingBitrate;
 @end
 
 #endif // __WSSystemAudioProperties_DEFINED__
@@ -957,13 +860,13 @@ WINRT_EXPORT
 #ifndef __WSSystemGPSProperties_DEFINED__
 #define __WSSystemGPSProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSystemGPSProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* latitudeDecimal;
-@property (readonly) NSString* longitudeDecimal;
+@property (readonly) NSString * latitudeDecimal;
+@property (readonly) NSString * longitudeDecimal;
 @end
 
 #endif // __WSSystemGPSProperties_DEFINED__
@@ -972,13 +875,13 @@ WINRT_EXPORT
 #ifndef __WSSystemImageProperties_DEFINED__
 #define __WSSystemImageProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSystemImageProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* horizontalSize;
-@property (readonly) NSString* verticalSize;
+@property (readonly) NSString * horizontalSize;
+@property (readonly) NSString * verticalSize;
 @end
 
 #endif // __WSSystemImageProperties_DEFINED__
@@ -987,17 +890,17 @@ WINRT_EXPORT
 #ifndef __WSSystemMediaProperties_DEFINED__
 #define __WSSystemMediaProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSystemMediaProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* duration;
-@property (readonly) NSString* producer;
-@property (readonly) NSString* publisher;
-@property (readonly) NSString* subTitle;
-@property (readonly) NSString* writer;
-@property (readonly) NSString* year;
+@property (readonly) NSString * duration;
+@property (readonly) NSString * producer;
+@property (readonly) NSString * publisher;
+@property (readonly) NSString * subTitle;
+@property (readonly) NSString * writer;
+@property (readonly) NSString * year;
 @end
 
 #endif // __WSSystemMediaProperties_DEFINED__
@@ -1006,19 +909,19 @@ WINRT_EXPORT
 #ifndef __WSSystemMusicProperties_DEFINED__
 #define __WSSystemMusicProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSystemMusicProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* albumArtist;
-@property (readonly) NSString* albumTitle;
-@property (readonly) NSString* artist;
-@property (readonly) NSString* composer;
-@property (readonly) NSString* conductor;
-@property (readonly) NSString* displayArtist;
-@property (readonly) NSString* genre;
-@property (readonly) NSString* trackNumber;
+@property (readonly) NSString * albumArtist;
+@property (readonly) NSString * albumTitle;
+@property (readonly) NSString * artist;
+@property (readonly) NSString * composer;
+@property (readonly) NSString * conductor;
+@property (readonly) NSString * displayArtist;
+@property (readonly) NSString * genre;
+@property (readonly) NSString * trackNumber;
 @end
 
 #endif // __WSSystemMusicProperties_DEFINED__
@@ -1027,16 +930,16 @@ WINRT_EXPORT
 #ifndef __WSSystemPhotoProperties_DEFINED__
 #define __WSSystemPhotoProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSystemPhotoProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* cameraManufacturer;
-@property (readonly) NSString* cameraModel;
-@property (readonly) NSString* dateTaken;
-@property (readonly) NSString* orientation;
-@property (readonly) NSString* peopleNames;
+@property (readonly) NSString * cameraManufacturer;
+@property (readonly) NSString * cameraModel;
+@property (readonly) NSString * dateTaken;
+@property (readonly) NSString * orientation;
+@property (readonly) NSString * peopleNames;
 @end
 
 #endif // __WSSystemPhotoProperties_DEFINED__
@@ -1045,16 +948,16 @@ WINRT_EXPORT
 #ifndef __WSSystemVideoProperties_DEFINED__
 #define __WSSystemVideoProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSystemVideoProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* director;
-@property (readonly) NSString* frameHeight;
-@property (readonly) NSString* frameWidth;
-@property (readonly) NSString* orientation;
-@property (readonly) NSString* totalBitrate;
+@property (readonly) NSString * director;
+@property (readonly) NSString * frameHeight;
+@property (readonly) NSString * frameWidth;
+@property (readonly) NSString * orientation;
+@property (readonly) NSString * totalBitrate;
 @end
 
 #endif // __WSSystemVideoProperties_DEFINED__
@@ -1063,20 +966,20 @@ WINRT_EXPORT
 #ifndef __WSSystemProperties_DEFINED__
 #define __WSSystemProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSystemProperties : RTObject
 + (WSSystemAudioProperties*)audio;
-+ (NSString*)author;
-+ (NSString*)comment;
++ (NSString *)author;
++ (NSString *)comment;
 + (WSSystemGPSProperties*)gPS;
 + (WSSystemImageProperties*)image;
-+ (NSString*)itemNameDisplay;
-+ (NSString*)keywords;
++ (NSString *)itemNameDisplay;
++ (NSString *)keywords;
 + (WSSystemMediaProperties*)media;
 + (WSSystemMusicProperties*)music;
 + (WSSystemPhotoProperties*)photo;
-+ (NSString*)rating;
-+ (NSString*)title;
++ (NSString *)rating;
++ (NSString *)title;
 + (WSSystemVideoProperties*)video;
 @end
 
@@ -1086,7 +989,7 @@ WINRT_EXPORT
 #ifndef __WSApplicationData_DEFINED__
 #define __WSApplicationData_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSApplicationData : RTObject
 + (void)getForUserAsync:(WSUser*)user success:(void (^)(WSApplicationData*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
@@ -1102,14 +1005,14 @@ WINRT_EXPORT
 @property (readonly) WSStorageFolder* localCacheFolder;
 @property (readonly) WSStorageFolder* sharedLocalFolder;
 + (WSApplicationData*)current;
-- (EventRegistrationToken)addDataChangedEvent:(void (^)(WSApplicationData*, RTObject*))del;
+- (EventRegistrationToken)addDataChangedEvent:(void(^)(WSApplicationData*, RTObject*))del;
 - (void)removeDataChangedEvent:(EventRegistrationToken)tok;
 - (RTObject<WFIAsyncAction>*)setVersionAsync:(unsigned int)desiredVersion handler:(WSApplicationDataSetVersionHandler)handler;
 - (RTObject<WFIAsyncAction>*)clearAllAsync;
 - (RTObject<WFIAsyncAction>*)clearAsync:(WSApplicationDataLocality)locality;
 - (void)signalDataChanged;
-- (WSStorageFolder*)getPublisherCacheFolder:(NSString*)folderName;
-- (RTObject<WFIAsyncAction>*)clearPublisherCacheFolderAsync:(NSString*)folderName;
+- (WSStorageFolder*)getPublisherCacheFolder:(NSString *)folderName;
+- (RTObject<WFIAsyncAction>*)clearPublisherCacheFolderAsync:(NSString *)folderName;
 @end
 
 #endif // __WSApplicationData_DEFINED__
@@ -1118,7 +1021,7 @@ WINRT_EXPORT
 #ifndef __WSSetVersionRequest_DEFINED__
 #define __WSSetVersionRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSetVersionRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1134,17 +1037,17 @@ WINRT_EXPORT
 #ifndef __WSApplicationDataContainer_DEFINED__
 #define __WSApplicationDataContainer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSApplicationDataContainer : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSDictionary* /* NSString *, WSApplicationDataContainer* */ containers;
 @property (readonly) WSApplicationDataLocality locality;
-@property (readonly) NSString* name;
+@property (readonly) NSString * name;
 @property (readonly) RTObject<WFCIPropertySet>* values;
-- (WSApplicationDataContainer*)createContainer:(NSString*)name disposition:(WSApplicationDataCreateDisposition)disposition;
-- (void)deleteContainer:(NSString*)name;
+- (WSApplicationDataContainer*)createContainer:(NSString *)name disposition:(WSApplicationDataCreateDisposition)disposition;
+- (void)deleteContainer:(NSString *)name;
 @end
 
 #endif // __WSApplicationDataContainer_DEFINED__
@@ -1153,7 +1056,7 @@ WINRT_EXPORT
 #ifndef __WSSetVersionDeferral_DEFINED__
 #define __WSSetVersionDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSetVersionDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1168,23 +1071,27 @@ WINRT_EXPORT
 #define __WFCIPropertySet_DEFINED__
 
 @protocol WFCIPropertySet
-- (id)objectForKey:(id)key;
+- (id)objectForKey: (id)key;
 - (NSArray*)allKeys;
-- (NSArray*)allKeysForObject:(id)obj;
+- (NSArray*)allKeysForObject: (id)obj;
 - (NSArray*)allValues;
 - (id)keyEnumerator;
 - (unsigned int)count;
 
-- (void)setObject:(id)obj forKey:(id)key;
-- (void)setObject:(id)object forKeyedSubscript:(id)key;
-- (void)removeObjectForKey:(id)key;
-- (void)removeAllObjects;
-- (void)removeObjectsForKeys:(NSArray*)keys;
-- (void)addEntriesFromDictionary:(NSDictionary*)otherDict;
-- (void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
-- (void)setDictionary:(NSDictionary*)dict;
-- (EventRegistrationToken)addObserver:(RTCollectionListener)receiver;
-- (void)removeObserver:(EventRegistrationToken)receiverToken;
+-(void)setObject: (id)obj forKey: (id)key;
+-(void)setObject:(id)object forKeyedSubscript:(id)key;
+-(void)removeObjectForKey: (id)key;
+-(void)removeAllObjects;
+-(void)removeObjectsForKeys:(NSArray*)keys;
+-(void)addEntriesFromDictionary:(NSDictionary*)otherDict;
+-(void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
+-(void)setDictionary: (NSDictionary*)dict;
+-(EventRegistrationToken)addObserver: (RTCollectionListener)receiver;
+-(void)removeObserver: (EventRegistrationToken)receiverToken;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_EXPORT
+@interface WFCIPropertySet : RTObject <WFCIPropertySet>
 @end
 
 #endif // __WFCIPropertySet_DEFINED__
@@ -1193,7 +1100,7 @@ WINRT_EXPORT
 #ifndef __WSApplicationDataContainerSettings_DEFINED__
 #define __WSApplicationDataContainerSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSApplicationDataContainerSettings : RTObject <WFCIPropertySet>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1201,23 +1108,23 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 // Could not generate add_MapChanged (Can't marshal Windows.Foundation.Collections.MapChangedEventHandler`2<String,System.Object>)
 - (void)removeMapChangedEvent:(EventRegistrationToken)tok;
-- (id)objectForKey:(id)key;
+- (id)objectForKey: (id)key;
 - (NSArray*)allKeys;
-- (NSArray*)allKeysForObject:(id)obj;
+- (NSArray*)allKeysForObject: (id)obj;
 - (NSArray*)allValues;
 - (id)keyEnumerator;
 - (unsigned int)count;
 
-- (void)setObject:(id)obj forKey:(id)key;
-- (void)setObject:(id)object forKeyedSubscript:(id)key;
-- (void)removeObjectForKey:(id)key;
-- (void)removeAllObjects;
-- (void)removeObjectsForKeys:(NSArray*)keys;
-- (void)addEntriesFromDictionary:(NSDictionary*)otherDict;
-- (void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
-- (void)setDictionary:(NSDictionary*)dict;
-- (EventRegistrationToken)addObserver:(RTCollectionListener)receiver;
-- (void)removeObserver:(EventRegistrationToken)receiverToken;
+-(void)setObject: (id)obj forKey: (id)key;
+-(void)setObject:(id)object forKeyedSubscript:(id)key;
+-(void)removeObjectForKey: (id)key;
+-(void)removeAllObjects;
+-(void)removeObjectsForKeys:(NSArray*)keys;
+-(void)addEntriesFromDictionary:(NSDictionary*)otherDict;
+-(void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
+-(void)setDictionary: (NSDictionary*)dict;
+-(EventRegistrationToken)addObserver: (RTCollectionListener)receiver;
+-(void)removeObserver: (EventRegistrationToken)receiverToken;
 @end
 
 #endif // __WSApplicationDataContainerSettings_DEFINED__
@@ -1226,7 +1133,7 @@ WINRT_EXPORT
 #ifndef __WSApplicationDataCompositeValue_DEFINED__
 #define __WSApplicationDataCompositeValue_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSApplicationDataCompositeValue : RTObject <WFCIPropertySet>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1235,23 +1142,24 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 // Could not generate add_MapChanged (Can't marshal Windows.Foundation.Collections.MapChangedEventHandler`2<String,System.Object>)
 - (void)removeMapChangedEvent:(EventRegistrationToken)tok;
-- (id)objectForKey:(id)key;
+- (id)objectForKey: (id)key;
 - (NSArray*)allKeys;
-- (NSArray*)allKeysForObject:(id)obj;
+- (NSArray*)allKeysForObject: (id)obj;
 - (NSArray*)allValues;
 - (id)keyEnumerator;
 - (unsigned int)count;
 
-- (void)setObject:(id)obj forKey:(id)key;
-- (void)setObject:(id)object forKeyedSubscript:(id)key;
-- (void)removeObjectForKey:(id)key;
-- (void)removeAllObjects;
-- (void)removeObjectsForKeys:(NSArray*)keys;
-- (void)addEntriesFromDictionary:(NSDictionary*)otherDict;
-- (void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
-- (void)setDictionary:(NSDictionary*)dict;
-- (EventRegistrationToken)addObserver:(RTCollectionListener)receiver;
-- (void)removeObserver:(EventRegistrationToken)receiverToken;
+-(void)setObject: (id)obj forKey: (id)key;
+-(void)setObject:(id)object forKeyedSubscript:(id)key;
+-(void)removeObjectForKey: (id)key;
+-(void)removeAllObjects;
+-(void)removeObjectsForKeys:(NSArray*)keys;
+-(void)addEntriesFromDictionary:(NSDictionary*)otherDict;
+-(void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
+-(void)setDictionary: (NSDictionary*)dict;
+-(EventRegistrationToken)addObserver: (RTCollectionListener)receiver;
+-(void)removeObserver: (EventRegistrationToken)receiverToken;
 @end
 
 #endif // __WSApplicationDataCompositeValue_DEFINED__
+

@@ -19,25 +19,75 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT
+#define OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_System_UserProfile.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WSUAdvertisingManager, WSUUserProfilePersonalizationSettings, WSUGlobalizationPreferences, WSUFirstSignInSettings;
-@protocol WSUIAdvertisingManagerStatics
-, WSUIUserProfilePersonalizationSettings, WSUIUserProfilePersonalizationSettingsStatics, WSUIGlobalizationPreferencesStatics,
-    WSUIFirstSignInSettings, WSUIFirstSignInSettingsStatics;
+@class WSUAdvertisingManagerForUser, WSUAdvertisingManager, WSUUserProfilePersonalizationSettings, WSUGlobalizationPreferences, WSUFirstSignInSettings, WSUUserInformation, WSULockScreen;
+@protocol WSUIAdvertisingManagerStatics, WSUIAdvertisingManagerForUser, WSUIAdvertisingManagerStatics2, WSUIUserProfilePersonalizationSettings, WSUIUserProfilePersonalizationSettingsStatics, WSUIGlobalizationPreferencesStatics, WSUIFirstSignInSettings, WSUIFirstSignInSettingsStatics, WSUIUserInformationStatics, WSUILockScreenStatics, WSUILockScreenImageFeedStatics;
+
+// Windows.System.UserProfile.AccountPictureKind
+enum _WSUAccountPictureKind {
+    WSUAccountPictureKindSmallImage = 0,
+    WSUAccountPictureKindLargeImage = 1,
+    WSUAccountPictureKindVideo = 2,
+};
+typedef unsigned WSUAccountPictureKind;
+
+// Windows.System.UserProfile.SetAccountPictureResult
+enum _WSUSetAccountPictureResult {
+    WSUSetAccountPictureResultSuccess = 0,
+    WSUSetAccountPictureResultChangeDisabled = 1,
+    WSUSetAccountPictureResultLargeOrDynamicError = 2,
+    WSUSetAccountPictureResultVideoFrameSizeError = 3,
+    WSUSetAccountPictureResultFileSizeError = 4,
+    WSUSetAccountPictureResultFailure = 5,
+};
+typedef unsigned WSUSetAccountPictureResult;
+
+// Windows.System.UserProfile.SetImageFeedResult
+enum _WSUSetImageFeedResult {
+    WSUSetImageFeedResultSuccess = 0,
+    WSUSetImageFeedResultChangeDisabled = 1,
+    WSUSetImageFeedResultUserCanceled = 2,
+};
+typedef unsigned WSUSetImageFeedResult;
 
 #include "WindowsStorage.h"
 #include "WindowsGlobalization.h"
+#include "WindowsSystem.h"
+#include "WindowsStorageStreams.h"
+#include "WindowsFoundation.h"
 
 #import <Foundation/Foundation.h>
+
+// Windows.System.UserProfile.AdvertisingManagerForUser
+#ifndef __WSUAdvertisingManagerForUser_DEFINED__
+#define __WSUAdvertisingManagerForUser_DEFINED__
+
+OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT
+@interface WSUAdvertisingManagerForUser : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) NSString * advertisingId;
+@property (readonly) WSUser* user;
+@end
+
+#endif // __WSUAdvertisingManagerForUser_DEFINED__
 
 // Windows.System.UserProfile.AdvertisingManager
 #ifndef __WSUAdvertisingManager_DEFINED__
 #define __WSUAdvertisingManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT
 @interface WSUAdvertisingManager : RTObject
-+ (NSString*)advertisingId;
++ (WSUAdvertisingManagerForUser*)getForUser:(WSUser*)user;
++ (NSString *)advertisingId;
 @end
 
 #endif // __WSUAdvertisingManager_DEFINED__
@@ -46,7 +96,7 @@ WINRT_EXPORT
 #ifndef __WSUUserProfilePersonalizationSettings_DEFINED__
 #define __WSUUserProfilePersonalizationSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT
 @interface WSUUserProfilePersonalizationSettings : RTObject
 + (BOOL)isSupported;
 #if defined(__cplusplus)
@@ -63,12 +113,12 @@ WINRT_EXPORT
 #ifndef __WSUGlobalizationPreferences_DEFINED__
 #define __WSUGlobalizationPreferences_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT
 @interface WSUGlobalizationPreferences : RTObject
 + (NSArray* /* NSString * */)calendars;
 + (NSArray* /* NSString * */)clocks;
 + (NSArray* /* NSString * */)currencies;
-+ (NSString*)homeGeographicRegion;
++ (NSString *)homeGeographicRegion;
 + (NSArray* /* NSString * */)languages;
 + (WGDayOfWeek)weekStartsOn;
 @end
@@ -79,16 +129,16 @@ WINRT_EXPORT
 #ifndef __WSUFirstSignInSettings_DEFINED__
 #define __WSUFirstSignInSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT
 @interface WSUFirstSignInSettings : RTObject
 + (WSUFirstSignInSettings*)getDefault;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
-- (id)objectForKey:(id)key;
+- (id)objectForKey: (id)key;
 - (NSArray*)allKeys;
-- (NSArray*)allKeysForObject:(id)obj;
+- (NSArray*)allKeysForObject: (id)obj;
 - (NSArray*)allValues;
 - (id)keyEnumerator;
 - (unsigned int)count;
@@ -96,3 +146,45 @@ WINRT_EXPORT
 @end
 
 #endif // __WSUFirstSignInSettings_DEFINED__
+
+// Windows.System.UserProfile.UserInformation
+#ifndef __WSUUserInformation_DEFINED__
+#define __WSUUserInformation_DEFINED__
+
+OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT
+@interface WSUUserInformation : RTObject
++ (RTObject<WSIStorageFile>*)getAccountPicture:(WSUAccountPictureKind)kind;
++ (void)setAccountPictureAsync:(RTObject<WSIStorageFile>*)image success:(void (^)(WSUSetAccountPictureResult))success failure:(void (^)(NSError*))failure;
++ (void)setAccountPicturesAsync:(RTObject<WSIStorageFile>*)smallImage largeImage:(RTObject<WSIStorageFile>*)largeImage video:(RTObject<WSIStorageFile>*)video success:(void (^)(WSUSetAccountPictureResult))success failure:(void (^)(NSError*))failure;
++ (void)setAccountPictureFromStreamAsync:(RTObject<WSSIRandomAccessStream>*)image success:(void (^)(WSUSetAccountPictureResult))success failure:(void (^)(NSError*))failure;
++ (void)setAccountPicturesFromStreamsAsync:(RTObject<WSSIRandomAccessStream>*)smallImage largeImage:(RTObject<WSSIRandomAccessStream>*)largeImage video:(RTObject<WSSIRandomAccessStream>*)video success:(void (^)(WSUSetAccountPictureResult))success failure:(void (^)(NSError*))failure;
++ (void)getDisplayNameAsyncWithSuccess:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
++ (void)getFirstNameAsyncWithSuccess:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
++ (void)getLastNameAsyncWithSuccess:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
++ (void)getPrincipalNameAsyncWithSuccess:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
++ (void)getSessionInitiationProtocolUriAsyncWithSuccess:(void (^)(WFUri*))success failure:(void (^)(NSError*))failure;
++ (void)getDomainNameAsyncWithSuccess:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
++ (BOOL)accountPictureChangeEnabled;
++ (BOOL)nameAccessAllowed;
++ (EventRegistrationToken)addAccountPictureChangedEvent:(void(^)(RTObject*, RTObject*))del;
++ (void)removeAccountPictureChangedEvent:(EventRegistrationToken)tok;
+@end
+
+#endif // __WSUUserInformation_DEFINED__
+
+// Windows.System.UserProfile.LockScreen
+#ifndef __WSULockScreen_DEFINED__
+#define __WSULockScreen_DEFINED__
+
+OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT
+@interface WSULockScreen : RTObject
++ (RTObject<WSSIRandomAccessStream>*)getImageStream;
++ (RTObject<WFIAsyncAction>*)setImageFileAsync:(RTObject<WSIStorageFile>*)value;
++ (RTObject<WFIAsyncAction>*)setImageStreamAsync:(RTObject<WSSIRandomAccessStream>*)value;
++ (void)requestSetImageFeedAsync:(WFUri*)syndicationFeedUri success:(void (^)(WSUSetImageFeedResult))success failure:(void (^)(NSError*))failure;
++ (BOOL)tryRemoveImageFeed;
++ (WFUri*)originalImageFile;
+@end
+
+#endif // __WSULockScreen_DEFINED__
+

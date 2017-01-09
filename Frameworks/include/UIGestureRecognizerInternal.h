@@ -41,6 +41,8 @@ typedef NS_ENUM(NSUInteger, _UIPanGestureStage) {
 
 #define _UIPanGestureStageNumStages 3
 
+@class UIRuntimeEventConnection;
+
 @interface UIGestureRecognizer () <NSCoding> {
 @protected
     __unsafe_unretained id _delegate;
@@ -67,7 +69,7 @@ typedef NS_ENUM(NSUInteger, _UIPanGestureStage) {
 - (void)_setView:(UIView*)view;
 - (void)_cancelIfActive;
 - (void)_fire;
-+ (BOOL)_fireGestures:(id)gestures;
++ (BOOL)_fireGestures:(id)gestures shouldCancelTouches:(BOOL&)shouldCancelTouches;
 + (void)_failActiveExcept:(UIGestureRecognizer*)gesture;
 - (void)_addEventConnection:(UIRuntimeEventConnection*)connection;
 @end
@@ -76,6 +78,7 @@ typedef NS_ENUM(NSUInteger, _UIPanGestureStage) {
 @interface UIPanGestureRecognizer ()
 - (UIView*)_touchedView;
 - (void)_setDragSlack:(float)slack;
+- (float)_getDragSlack;
 - (void)_lockDirection:(int)dir;
 - (_UIPanGestureStage)_stage;
 @end

@@ -19,23 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Devices_AllJoyn.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WDAAllJoynStatus, WDAAllJoynAboutData, WDAAllJoynBusAttachment, WDAAllJoynBusAttachmentStateChangedEventArgs,
-    WDAAllJoynCredentialsRequestedEventArgs, WDAAllJoynCredentialsVerificationRequestedEventArgs, WDAAllJoynAuthenticationCompleteEventArgs,
-    WDAAllJoynCredentials, WDAAllJoynServiceInfo, WDAAllJoynAboutDataView, WDAAllJoynAcceptSessionJoinerEventArgs,
-    WDAAllJoynSessionMemberAddedEventArgs, WDAAllJoynSessionMemberRemovedEventArgs, WDAAllJoynSessionLostEventArgs,
-    WDAAllJoynProducerStoppedEventArgs, WDAAllJoynWatcherStoppedEventArgs, WDAAllJoynServiceInfoRemovedEventArgs, WDAAllJoynMessageInfo;
-@protocol WDAIAllJoynStatusStatics
-, WDAIAllJoynBusAttachment, WDAIAllJoynBusAttachmentStateChangedEventArgs, WDAIAllJoynCredentials, WDAIAllJoynCredentialsRequestedEventArgs,
-    WDAIAllJoynCredentialsVerificationRequestedEventArgs, WDAIAllJoynAuthenticationCompleteEventArgs, WDAIAllJoynBusAttachmentFactory,
-    WDAIAllJoynServiceInfo, WDAIAllJoynServiceInfoFactory, WDAIAllJoynAboutDataViewStatics, WDAIAllJoynAboutDataView, WDAIAllJoynAboutData,
-    WDAIAllJoynAcceptSessionJoinerEventArgs, WDAIAllJoynAcceptSessionJoiner, WDAIAllJoynAcceptSessionJoinerEventArgsFactory,
-    WDAIAllJoynSessionMemberAddedEventArgs, WDAIAllJoynSessionMemberAddedEventArgsFactory, WDAIAllJoynSessionMemberRemovedEventArgs,
-    WDAIAllJoynSessionMemberRemovedEventArgsFactory, WDAIAllJoynSessionLostEventArgs, WDAIAllJoynSessionLostEventArgsFactory,
-    WDAIAllJoynProducerStoppedEventArgs, WDAIAllJoynProducerStoppedEventArgsFactory, WDAIAllJoynWatcherStoppedEventArgs,
-    WDAIAllJoynWatcherStoppedEventArgsFactory, WDAIAllJoynServiceInfoRemovedEventArgs, WDAIAllJoynServiceInfoRemovedEventArgsFactory,
-    WDAIAllJoynMessageInfo, WDAIAllJoynMessageInfoFactory;
+@class WDAAllJoynStatus, WDAAllJoynAboutData, WDAAllJoynBusAttachment, WDAAllJoynBusAttachmentStateChangedEventArgs, WDAAllJoynCredentialsRequestedEventArgs, WDAAllJoynCredentialsVerificationRequestedEventArgs, WDAAllJoynAuthenticationCompleteEventArgs, WDAAllJoynServiceInfo, WDAAllJoynAboutDataView, WDAAllJoynAcceptSessionJoinerEventArgs, WDAAllJoynSessionJoinedEventArgs, WDAAllJoynCredentials, WDAAllJoynSession, WDAAllJoynSessionMemberAddedEventArgs, WDAAllJoynSessionMemberRemovedEventArgs, WDAAllJoynSessionLostEventArgs, WDAAllJoynBusObject, WDAAllJoynBusObjectStoppedEventArgs, WDAAllJoynProducerStoppedEventArgs, WDAAllJoynWatcherStoppedEventArgs, WDAAllJoynServiceInfoRemovedEventArgs, WDAAllJoynMessageInfo;
+@protocol WDAIAllJoynStatusStatics, WDAIAllJoynBusAttachment, WDAIAllJoynBusAttachment2, WDAIAllJoynBusAttachmentStatics, WDAIAllJoynBusAttachmentStateChangedEventArgs, WDAIAllJoynCredentials, WDAIAllJoynCredentialsRequestedEventArgs, WDAIAllJoynCredentialsVerificationRequestedEventArgs, WDAIAllJoynAuthenticationCompleteEventArgs, WDAIAllJoynBusAttachmentFactory, WDAIAllJoynSession, WDAIAllJoynSessionStatics, WDAIAllJoynProducer, WDAIAllJoynBusObject, WDAIAllJoynBusObjectFactory, WDAIAllJoynServiceInfo, WDAIAllJoynServiceInfoStatics, WDAIAllJoynServiceInfoFactory, WDAIAllJoynAboutDataViewStatics, WDAIAllJoynAboutDataView, WDAIAllJoynAboutData, WDAIAllJoynAcceptSessionJoinerEventArgs, WDAIAllJoynAcceptSessionJoiner, WDAIAllJoynAcceptSessionJoinerEventArgsFactory, WDAIAllJoynSessionMemberAddedEventArgs, WDAIAllJoynSessionMemberAddedEventArgsFactory, WDAIAllJoynSessionMemberRemovedEventArgs, WDAIAllJoynSessionMemberRemovedEventArgsFactory, WDAIAllJoynSessionJoinedEventArgs, WDAIAllJoynSessionJoinedEventArgsFactory, WDAIAllJoynSessionLostEventArgs, WDAIAllJoynSessionLostEventArgsFactory, WDAIAllJoynProducerStoppedEventArgs, WDAIAllJoynProducerStoppedEventArgsFactory, WDAIAllJoynBusObjectStoppedEventArgs, WDAIAllJoynBusObjectStoppedEventArgsFactory, WDAIAllJoynWatcherStoppedEventArgs, WDAIAllJoynWatcherStoppedEventArgsFactory, WDAIAllJoynServiceInfoRemovedEventArgs, WDAIAllJoynServiceInfoRemovedEventArgsFactory, WDAIAllJoynMessageInfo, WDAIAllJoynMessageInfoFactory;
 
 // Windows.Devices.AllJoyn.AllJoynAuthenticationMechanism
 enum _WDAAllJoynAuthenticationMechanism {
@@ -45,6 +38,7 @@ enum _WDAAllJoynAuthenticationMechanism {
     WDAAllJoynAuthenticationMechanismEcdheNull = 3,
     WDAAllJoynAuthenticationMechanismEcdhePsk = 4,
     WDAAllJoynAuthenticationMechanismEcdheEcdsa = 5,
+    WDAAllJoynAuthenticationMechanismEcdheSpeke = 6,
 };
 typedef unsigned WDAAllJoynAuthenticationMechanism;
 
@@ -80,10 +74,25 @@ typedef unsigned WDAAllJoynSessionLostReason;
 #include "WindowsNetworkingSockets.h"
 #include "WindowsSecurityCryptographyCertificates.h"
 #include "WindowsFoundation.h"
-#include "WindowsSecurityCredentials.h"
 #include "WindowsGlobalization.h"
+#include "WindowsDevicesEnumeration.h"
+#include "WindowsSecurityCredentials.h"
 
 #import <Foundation/Foundation.h>
+
+// Windows.Devices.AllJoyn.IAllJoynProducer
+#ifndef __WDAIAllJoynProducer_DEFINED__
+#define __WDAIAllJoynProducer_DEFINED__
+
+@protocol WDAIAllJoynProducer
+- (void)setBusObject:(WDAAllJoynBusObject*)busObject;
+@end
+
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
+@interface WDAIAllJoynProducer : RTObject <WDAIAllJoynProducer>
+@end
+
+#endif // __WDAIAllJoynProducer_DEFINED__
 
 // Windows.Devices.AllJoyn.IAllJoynAcceptSessionJoiner
 #ifndef __WDAIAllJoynAcceptSessionJoiner_DEFINED__
@@ -93,13 +102,17 @@ typedef unsigned WDAAllJoynSessionLostReason;
 - (void)accept;
 @end
 
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
+@interface WDAIAllJoynAcceptSessionJoiner : RTObject <WDAIAllJoynAcceptSessionJoiner>
+@end
+
 #endif // __WDAIAllJoynAcceptSessionJoiner_DEFINED__
 
 // Windows.Devices.AllJoyn.AllJoynStatus
 #ifndef __WDAAllJoynStatus_DEFINED__
 #define __WDAAllJoynStatus_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynStatus : RTObject
 + (int)authenticationFailed;
 + (int)authenticationRejectedByUser;
@@ -127,19 +140,19 @@ WINRT_EXPORT
 #ifndef __WDAAllJoynAboutData_DEFINED__
 #define __WDAAllJoynAboutData_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynAboutData : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* defaultDescription;
-@property (retain) NSString* defaultAppName;
+@property (retain) NSString * defaultDescription;
+@property (retain) NSString * defaultAppName;
 @property (retain) id /* WFDateTime* */ dateOfManufacture;
-@property (retain) NSString* defaultManufacturer;
+@property (retain) NSString * defaultManufacturer;
 @property WFGUID* appId;
 @property (retain) WFUri* supportUrl;
-@property (retain) NSString* softwareVersion;
-@property (retain) NSString* modelNumber;
+@property (retain) NSString * softwareVersion;
+@property (retain) NSString * modelNumber;
 @property BOOL isEnabled;
 @property (readonly) NSMutableDictionary* /* NSString *, NSString * */ appNames;
 @property (readonly) NSMutableDictionary* /* NSString *, NSString * */ manufacturers;
@@ -152,31 +165,37 @@ WINRT_EXPORT
 #ifndef __WDAAllJoynBusAttachment_DEFINED__
 #define __WDAAllJoynBusAttachment_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynBusAttachment : RTObject
-+ (WDAAllJoynBusAttachment*)make:(NSString*)connectionSpecification ACTIVATOR;
++ (WDAAllJoynBusAttachment*)getDefault;
++ (WDEDeviceWatcher*)getWatcher:(id<NSFastEnumeration> /* NSString * */)requiredInterfaces;
++ (WDAAllJoynBusAttachment*)make:(NSString *)connectionSpecification ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDAAllJoynAboutData* aboutData;
 @property (readonly) NSMutableArray* /* WDAAllJoynAuthenticationMechanism */ authenticationMechanisms;
-@property (readonly) NSString* connectionSpecification;
+@property (readonly) NSString * connectionSpecification;
 @property (readonly) WDAAllJoynBusAttachmentState state;
-@property (readonly) NSString* uniqueName;
-- (EventRegistrationToken)addAuthenticationCompleteEvent:(void (^)(WDAAllJoynBusAttachment*,
-                                                                   WDAAllJoynAuthenticationCompleteEventArgs*))del;
+@property (readonly) NSString * uniqueName;
+- (EventRegistrationToken)addAuthenticationCompleteEvent:(void(^)(WDAAllJoynBusAttachment*, WDAAllJoynAuthenticationCompleteEventArgs*))del;
 - (void)removeAuthenticationCompleteEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addCredentialsRequestedEvent:(void (^)(WDAAllJoynBusAttachment*, WDAAllJoynCredentialsRequestedEventArgs*))del;
+- (EventRegistrationToken)addCredentialsRequestedEvent:(void(^)(WDAAllJoynBusAttachment*, WDAAllJoynCredentialsRequestedEventArgs*))del;
 - (void)removeCredentialsRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addCredentialsVerificationRequestedEvent:(void (^)(WDAAllJoynBusAttachment*,
-                                                                             WDAAllJoynCredentialsVerificationRequestedEventArgs*))del;
+- (EventRegistrationToken)addCredentialsVerificationRequestedEvent:(void(^)(WDAAllJoynBusAttachment*, WDAAllJoynCredentialsVerificationRequestedEventArgs*))del;
 - (void)removeCredentialsVerificationRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStateChangedEvent:(void (^)(WDAAllJoynBusAttachment*, WDAAllJoynBusAttachmentStateChangedEventArgs*))del;
+- (EventRegistrationToken)addStateChangedEvent:(void(^)(WDAAllJoynBusAttachment*, WDAAllJoynBusAttachmentStateChangedEventArgs*))del;
 - (void)removeStateChangedEvent:(EventRegistrationToken)tok;
-- (void)pingAsync:(NSString*)uniqueName success:(void (^)(int))success failure:(void (^)(NSError*))failure;
+- (EventRegistrationToken)addAcceptSessionJoinerRequestedEvent:(void(^)(WDAAllJoynBusAttachment*, WDAAllJoynAcceptSessionJoinerEventArgs*))del;
+- (void)removeAcceptSessionJoinerRequestedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addSessionJoinedEvent:(void(^)(WDAAllJoynBusAttachment*, WDAAllJoynSessionJoinedEventArgs*))del;
+- (void)removeSessionJoinedEvent:(EventRegistrationToken)tok;
+- (void)pingAsync:(NSString *)uniqueName success:(void (^)(int))success failure:(void (^)(NSError*))failure;
 - (void)connect;
 - (void)disconnect;
+- (void)getAboutDataAsync:(WDAAllJoynServiceInfo*)serviceInfo success:(void (^)(WDAAllJoynAboutDataView*))success failure:(void (^)(NSError*))failure;
+- (void)getAboutDataWithLanguageAsync:(WDAAllJoynServiceInfo*)serviceInfo language:(WGLanguage*)language success:(void (^)(WDAAllJoynAboutDataView*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WDAAllJoynBusAttachment_DEFINED__
@@ -185,7 +204,7 @@ WINRT_EXPORT
 #ifndef __WDAAllJoynBusAttachmentStateChangedEventArgs_DEFINED__
 #define __WDAAllJoynBusAttachmentStateChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynBusAttachmentStateChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -200,15 +219,15 @@ WINRT_EXPORT
 #ifndef __WDAAllJoynCredentialsRequestedEventArgs_DEFINED__
 #define __WDAAllJoynCredentialsRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynCredentialsRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned short attemptCount;
 @property (readonly) WDAAllJoynCredentials* credentials;
-@property (readonly) NSString* peerUniqueName;
-@property (readonly) NSString* requestedUserName;
+@property (readonly) NSString * peerUniqueName;
+@property (readonly) NSString * requestedUserName;
 - (WFDeferral*)getDeferral;
 @end
 
@@ -218,7 +237,7 @@ WINRT_EXPORT
 #ifndef __WDAAllJoynCredentialsVerificationRequestedEventArgs_DEFINED__
 #define __WDAAllJoynCredentialsVerificationRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynCredentialsVerificationRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -228,7 +247,7 @@ WINRT_EXPORT
 @property (readonly) WNSSocketSslErrorSeverity peerCertificateErrorSeverity;
 @property (readonly) NSArray* /* WSCCChainValidationResult */ peerCertificateErrors;
 @property (readonly) NSArray* /* WSCCCertificate* */ peerIntermediateCertificates;
-@property (readonly) NSString* peerUniqueName;
+@property (readonly) NSString * peerUniqueName;
 - (void)accept;
 - (WFDeferral*)getDeferral;
 @end
@@ -239,23 +258,107 @@ WINRT_EXPORT
 #ifndef __WDAAllJoynAuthenticationCompleteEventArgs_DEFINED__
 #define __WDAAllJoynAuthenticationCompleteEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynAuthenticationCompleteEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDAAllJoynAuthenticationMechanism authenticationMechanism;
-@property (readonly) NSString* peerUniqueName;
+@property (readonly) NSString * peerUniqueName;
 @property (readonly) BOOL succeeded;
 @end
 
 #endif // __WDAAllJoynAuthenticationCompleteEventArgs_DEFINED__
 
+// Windows.Devices.AllJoyn.AllJoynServiceInfo
+#ifndef __WDAAllJoynServiceInfo_DEFINED__
+#define __WDAAllJoynServiceInfo_DEFINED__
+
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
+@interface WDAAllJoynServiceInfo : RTObject
++ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDAAllJoynServiceInfo*))success failure:(void (^)(NSError*))failure;
++ (WDAAllJoynServiceInfo*)make:(NSString *)uniqueName objectPath:(NSString *)objectPath sessionPort:(unsigned short)sessionPort ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) NSString * objectPath;
+@property (readonly) unsigned short sessionPort;
+@property (readonly) NSString * uniqueName;
+@end
+
+#endif // __WDAAllJoynServiceInfo_DEFINED__
+
+// Windows.Devices.AllJoyn.AllJoynAboutDataView
+#ifndef __WDAAllJoynAboutDataView_DEFINED__
+#define __WDAAllJoynAboutDataView_DEFINED__
+
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
+@interface WDAAllJoynAboutDataView : RTObject
++ (void)getDataBySessionPortAsync:(NSString *)uniqueName busAttachment:(WDAAllJoynBusAttachment*)busAttachment sessionPort:(unsigned short)sessionPort success:(void (^)(WDAAllJoynAboutDataView*))success failure:(void (^)(NSError*))failure;
++ (void)getDataBySessionPortWithLanguageAsync:(NSString *)uniqueName busAttachment:(WDAAllJoynBusAttachment*)busAttachment sessionPort:(unsigned short)sessionPort language:(WGLanguage*)language success:(void (^)(WDAAllJoynAboutDataView*))success failure:(void (^)(NSError*))failure;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) NSString * aJSoftwareVersion;
+@property (readonly) WFGUID* appId;
+@property (readonly) NSString * appName;
+@property (readonly) id /* WFDateTime* */ dateOfManufacture;
+@property (readonly) WGLanguage* defaultLanguage;
+@property (readonly) NSString * Description;
+@property (readonly) NSString * deviceId;
+@property (readonly) NSString * deviceName;
+@property (readonly) NSString * hardwareVersion;
+@property (readonly) NSString * manufacturer;
+@property (readonly) NSString * modelNumber;
+@property (readonly) NSDictionary* /* NSString *, RTObject* */ properties;
+@property (readonly) NSString * softwareVersion;
+@property (readonly) int status;
+@property (readonly) WFUri* supportUrl;
+@property (readonly) NSArray* /* WGLanguage* */ supportedLanguages;
+@end
+
+#endif // __WDAAllJoynAboutDataView_DEFINED__
+
+// Windows.Devices.AllJoyn.AllJoynAcceptSessionJoinerEventArgs
+#ifndef __WDAAllJoynAcceptSessionJoinerEventArgs_DEFINED__
+#define __WDAAllJoynAcceptSessionJoinerEventArgs_DEFINED__
+
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
+@interface WDAAllJoynAcceptSessionJoinerEventArgs : RTObject
++ (WDAAllJoynAcceptSessionJoinerEventArgs*)make:(NSString *)uniqueName sessionPort:(unsigned short)sessionPort trafficType:(WDAAllJoynTrafficType)trafficType proximity:(uint8_t)proximity acceptSessionJoiner:(RTObject<WDAIAllJoynAcceptSessionJoiner>*)acceptSessionJoiner ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) BOOL sameNetwork;
+@property (readonly) BOOL samePhysicalNode;
+@property (readonly) unsigned short sessionPort;
+@property (readonly) WDAAllJoynTrafficType trafficType;
+@property (readonly) NSString * uniqueName;
+- (void)accept;
+@end
+
+#endif // __WDAAllJoynAcceptSessionJoinerEventArgs_DEFINED__
+
+// Windows.Devices.AllJoyn.AllJoynSessionJoinedEventArgs
+#ifndef __WDAAllJoynSessionJoinedEventArgs_DEFINED__
+#define __WDAAllJoynSessionJoinedEventArgs_DEFINED__
+
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
+@interface WDAAllJoynSessionJoinedEventArgs : RTObject
++ (WDAAllJoynSessionJoinedEventArgs*)make:(WDAAllJoynSession*)session ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) WDAAllJoynSession* session;
+@end
+
+#endif // __WDAAllJoynSessionJoinedEventArgs_DEFINED__
+
 // Windows.Devices.AllJoyn.AllJoynCredentials
 #ifndef __WDAAllJoynCredentials_DEFINED__
 #define __WDAAllJoynCredentials_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynCredentials : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -268,98 +371,41 @@ WINRT_EXPORT
 
 #endif // __WDAAllJoynCredentials_DEFINED__
 
-// Windows.Devices.AllJoyn.AllJoynServiceInfo
-#ifndef __WDAAllJoynServiceInfo_DEFINED__
-#define __WDAAllJoynServiceInfo_DEFINED__
+// Windows.Devices.AllJoyn.AllJoynSession
+#ifndef __WDAAllJoynSession_DEFINED__
+#define __WDAAllJoynSession_DEFINED__
 
-WINRT_EXPORT
-@interface WDAAllJoynServiceInfo : RTObject
-+ (WDAAllJoynServiceInfo*)make:(NSString*)uniqueName objectPath:(NSString*)objectPath sessionPort:(unsigned short)sessionPort ACTIVATOR;
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
+@interface WDAAllJoynSession : RTObject
++ (void)getFromServiceInfoAsync:(WDAAllJoynServiceInfo*)serviceInfo success:(void (^)(WDAAllJoynSession*))success failure:(void (^)(NSError*))failure;
++ (void)getFromServiceInfoAndBusAttachmentAsync:(WDAAllJoynServiceInfo*)serviceInfo busAttachment:(WDAAllJoynBusAttachment*)busAttachment success:(void (^)(WDAAllJoynSession*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* objectPath;
-@property (readonly) unsigned short sessionPort;
-@property (readonly) NSString* uniqueName;
-@end
-
-#endif // __WDAAllJoynServiceInfo_DEFINED__
-
-// Windows.Devices.AllJoyn.AllJoynAboutDataView
-#ifndef __WDAAllJoynAboutDataView_DEFINED__
-#define __WDAAllJoynAboutDataView_DEFINED__
-
-WINRT_EXPORT
-@interface WDAAllJoynAboutDataView : RTObject
-+ (void)getDataBySessionPortAsync:(NSString*)uniqueName
-                    busAttachment:(WDAAllJoynBusAttachment*)busAttachment
-                      sessionPort:(unsigned short)sessionPort
-                          success:(void (^)(WDAAllJoynAboutDataView*))success
-                          failure:(void (^)(NSError*))failure;
-+ (void)getDataBySessionPortWithLanguageAsync:(NSString*)uniqueName
-                                busAttachment:(WDAAllJoynBusAttachment*)busAttachment
-                                  sessionPort:(unsigned short)sessionPort
-                                     language:(WGLanguage*)language
-                                      success:(void (^)(WDAAllJoynAboutDataView*))success
-                                      failure:(void (^)(NSError*))failure;
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
-#endif
-@property (readonly) NSString* aJSoftwareVersion;
-@property (readonly) WFGUID* appId;
-@property (readonly) NSString* appName;
-@property (readonly) id /* WFDateTime* */ dateOfManufacture;
-@property (readonly) WGLanguage* defaultLanguage;
-@property (readonly) NSString* Description;
-@property (readonly) NSString* deviceId;
-@property (readonly) NSString* deviceName;
-@property (readonly) NSString* hardwareVersion;
-@property (readonly) NSString* manufacturer;
-@property (readonly) NSString* modelNumber;
-@property (readonly) NSDictionary* /* NSString *, RTObject* */ properties;
-@property (readonly) NSString* softwareVersion;
+@property (readonly) int id;
 @property (readonly) int status;
-@property (readonly) WFUri* supportUrl;
-@property (readonly) NSArray* /* WGLanguage* */ supportedLanguages;
+- (EventRegistrationToken)addLostEvent:(void(^)(WDAAllJoynSession*, WDAAllJoynSessionLostEventArgs*))del;
+- (void)removeLostEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addMemberAddedEvent:(void(^)(WDAAllJoynSession*, WDAAllJoynSessionMemberAddedEventArgs*))del;
+- (void)removeMemberAddedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addMemberRemovedEvent:(void(^)(WDAAllJoynSession*, WDAAllJoynSessionMemberRemovedEventArgs*))del;
+- (void)removeMemberRemovedEvent:(EventRegistrationToken)tok;
+- (void)removeMemberAsync:(NSString *)uniqueName success:(void (^)(int))success failure:(void (^)(NSError*))failure;
 @end
 
-#endif // __WDAAllJoynAboutDataView_DEFINED__
-
-// Windows.Devices.AllJoyn.AllJoynAcceptSessionJoinerEventArgs
-#ifndef __WDAAllJoynAcceptSessionJoinerEventArgs_DEFINED__
-#define __WDAAllJoynAcceptSessionJoinerEventArgs_DEFINED__
-
-WINRT_EXPORT
-@interface WDAAllJoynAcceptSessionJoinerEventArgs : RTObject
-+ (WDAAllJoynAcceptSessionJoinerEventArgs*)make:(NSString*)uniqueName
-                                    sessionPort:(unsigned short)sessionPort
-                                    trafficType:(WDAAllJoynTrafficType)trafficType
-                                      proximity:(uint8_t)proximity
-                            acceptSessionJoiner:(RTObject<WDAIAllJoynAcceptSessionJoiner>*)acceptSessionJoiner ACTIVATOR;
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
-#endif
-@property (readonly) BOOL sameNetwork;
-@property (readonly) BOOL samePhysicalNode;
-@property (readonly) unsigned short sessionPort;
-@property (readonly) WDAAllJoynTrafficType trafficType;
-@property (readonly) NSString* uniqueName;
-- (void)accept;
-@end
-
-#endif // __WDAAllJoynAcceptSessionJoinerEventArgs_DEFINED__
+#endif // __WDAAllJoynSession_DEFINED__
 
 // Windows.Devices.AllJoyn.AllJoynSessionMemberAddedEventArgs
 #ifndef __WDAAllJoynSessionMemberAddedEventArgs_DEFINED__
 #define __WDAAllJoynSessionMemberAddedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynSessionMemberAddedEventArgs : RTObject
-+ (WDAAllJoynSessionMemberAddedEventArgs*)make:(NSString*)uniqueName ACTIVATOR;
++ (WDAAllJoynSessionMemberAddedEventArgs*)make:(NSString *)uniqueName ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* uniqueName;
+@property (readonly) NSString * uniqueName;
 @end
 
 #endif // __WDAAllJoynSessionMemberAddedEventArgs_DEFINED__
@@ -368,13 +414,13 @@ WINRT_EXPORT
 #ifndef __WDAAllJoynSessionMemberRemovedEventArgs_DEFINED__
 #define __WDAAllJoynSessionMemberRemovedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynSessionMemberRemovedEventArgs : RTObject
-+ (WDAAllJoynSessionMemberRemovedEventArgs*)make:(NSString*)uniqueName ACTIVATOR;
++ (WDAAllJoynSessionMemberRemovedEventArgs*)make:(NSString *)uniqueName ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* uniqueName;
+@property (readonly) NSString * uniqueName;
 @end
 
 #endif // __WDAAllJoynSessionMemberRemovedEventArgs_DEFINED__
@@ -383,7 +429,7 @@ WINRT_EXPORT
 #ifndef __WDAAllJoynSessionLostEventArgs_DEFINED__
 #define __WDAAllJoynSessionLostEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynSessionLostEventArgs : RTObject
 + (WDAAllJoynSessionLostEventArgs*)make:(WDAAllJoynSessionLostReason)reason ACTIVATOR;
 #if defined(__cplusplus)
@@ -394,11 +440,49 @@ WINRT_EXPORT
 
 #endif // __WDAAllJoynSessionLostEventArgs_DEFINED__
 
+// Windows.Devices.AllJoyn.AllJoynBusObject
+#ifndef __WDAAllJoynBusObject_DEFINED__
+#define __WDAAllJoynBusObject_DEFINED__
+
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
+@interface WDAAllJoynBusObject : RTObject
++ (WDAAllJoynBusObject*)make:(NSString *)objectPath ACTIVATOR;
++ (WDAAllJoynBusObject*)makeWithBusAttachment:(NSString *)objectPath busAttachment:(WDAAllJoynBusAttachment*)busAttachment ACTIVATOR;
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) WDAAllJoynBusAttachment* busAttachment;
+@property (readonly) WDAAllJoynSession* session;
+- (EventRegistrationToken)addStoppedEvent:(void(^)(WDAAllJoynBusObject*, WDAAllJoynBusObjectStoppedEventArgs*))del;
+- (void)removeStoppedEvent:(EventRegistrationToken)tok;
+- (void)start;
+- (void)stop;
+- (void)addProducer:(RTObject<WDAIAllJoynProducer>*)producer;
+@end
+
+#endif // __WDAAllJoynBusObject_DEFINED__
+
+// Windows.Devices.AllJoyn.AllJoynBusObjectStoppedEventArgs
+#ifndef __WDAAllJoynBusObjectStoppedEventArgs_DEFINED__
+#define __WDAAllJoynBusObjectStoppedEventArgs_DEFINED__
+
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
+@interface WDAAllJoynBusObjectStoppedEventArgs : RTObject
++ (WDAAllJoynBusObjectStoppedEventArgs*)make:(int)status ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) int status;
+@end
+
+#endif // __WDAAllJoynBusObjectStoppedEventArgs_DEFINED__
+
 // Windows.Devices.AllJoyn.AllJoynProducerStoppedEventArgs
 #ifndef __WDAAllJoynProducerStoppedEventArgs_DEFINED__
 #define __WDAAllJoynProducerStoppedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynProducerStoppedEventArgs : RTObject
 + (WDAAllJoynProducerStoppedEventArgs*)make:(int)status ACTIVATOR;
 #if defined(__cplusplus)
@@ -413,7 +497,7 @@ WINRT_EXPORT
 #ifndef __WDAAllJoynWatcherStoppedEventArgs_DEFINED__
 #define __WDAAllJoynWatcherStoppedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynWatcherStoppedEventArgs : RTObject
 + (WDAAllJoynWatcherStoppedEventArgs*)make:(int)status ACTIVATOR;
 #if defined(__cplusplus)
@@ -428,13 +512,13 @@ WINRT_EXPORT
 #ifndef __WDAAllJoynServiceInfoRemovedEventArgs_DEFINED__
 #define __WDAAllJoynServiceInfoRemovedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynServiceInfoRemovedEventArgs : RTObject
-+ (WDAAllJoynServiceInfoRemovedEventArgs*)make:(NSString*)uniqueName ACTIVATOR;
++ (WDAAllJoynServiceInfoRemovedEventArgs*)make:(NSString *)uniqueName ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* uniqueName;
+@property (readonly) NSString * uniqueName;
 @end
 
 #endif // __WDAAllJoynServiceInfoRemovedEventArgs_DEFINED__
@@ -443,13 +527,14 @@ WINRT_EXPORT
 #ifndef __WDAAllJoynMessageInfo_DEFINED__
 #define __WDAAllJoynMessageInfo_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynMessageInfo : RTObject
-+ (WDAAllJoynMessageInfo*)make:(NSString*)senderUniqueName ACTIVATOR;
++ (WDAAllJoynMessageInfo*)make:(NSString *)senderUniqueName ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* senderUniqueName;
+@property (readonly) NSString * senderUniqueName;
 @end
 
 #endif // __WDAAllJoynMessageInfo_DEFINED__
+

@@ -19,16 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
+#define OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml_Media_Imaging.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WUXMIDownloadProgressEventArgs, WUXMIXamlRenderingBackgroundTask, WUXMIBitmapSource, WUXMIRenderTargetBitmap,
-    WUXMISurfaceImageSource, WUXMIBitmapImage, WUXMIVirtualSurfaceImageSource, WUXMIWriteableBitmap, WUXMISoftwareBitmapSource;
-@protocol WUXMIIDownloadProgressEventArgs
-, WUXMIIXamlRenderingBackgroundTask, WUXMIIXamlRenderingBackgroundTaskOverrides, WUXMIIXamlRenderingBackgroundTaskFactory,
-    WUXMIIBitmapSource, WUXMIIBitmapSourceStatics, WUXMIIBitmapSourceFactory, WUXMIIRenderTargetBitmap, WUXMIIRenderTargetBitmapStatics,
-    WUXMIISurfaceImageSource, WUXMIISurfaceImageSourceFactory, WUXMIIBitmapImage, WUXMIIBitmapImageStatics, WUXMIIBitmapImageFactory,
-    WUXMIIBitmapImage2, WUXMIIBitmapImageStatics2, WUXMIIVirtualSurfaceImageSource, WUXMIIVirtualSurfaceImageSourceFactory,
-    WUXMIIWriteableBitmap, WUXMIIWriteableBitmapFactory, WUXMIISoftwareBitmapSource;
+@class WUXMIDownloadProgressEventArgs, WUXMIBitmapSource, WUXMIRenderTargetBitmap, WUXMISurfaceImageSource, WUXMIBitmapImage, WUXMIVirtualSurfaceImageSource, WUXMIWriteableBitmap, WUXMIXamlRenderingBackgroundTask, WUXMISoftwareBitmapSource;
+@protocol WUXMIIDownloadProgressEventArgs, WUXMIIBitmapSource, WUXMIIBitmapSourceStatics, WUXMIIBitmapSourceFactory, WUXMIIRenderTargetBitmap, WUXMIIRenderTargetBitmapStatics, WUXMIISurfaceImageSource, WUXMIISurfaceImageSourceFactory, WUXMIIBitmapImage, WUXMIIBitmapImageStatics, WUXMIIBitmapImageFactory, WUXMIIBitmapImage2, WUXMIIBitmapImageStatics2, WUXMIIBitmapImage3, WUXMIIBitmapImageStatics3, WUXMIIVirtualSurfaceImageSource, WUXMIIVirtualSurfaceImageSourceFactory, WUXMIIWriteableBitmap, WUXMIIWriteableBitmapFactory, WUXMIIXamlRenderingBackgroundTask, WUXMIIXamlRenderingBackgroundTaskOverrides, WUXMIIXamlRenderingBackgroundTaskFactory, WUXMIISoftwareBitmapSource;
 
 // Windows.UI.Xaml.Media.Imaging.BitmapCreateOptions
 enum _WUXMIBitmapCreateOptions {
@@ -44,43 +44,44 @@ enum _WUXMIDecodePixelType {
 };
 typedef unsigned WUXMIDecodePixelType;
 
-#include "WindowsApplicationModelBackground.h"
 #include "WindowsUIXamlMedia.h"
 #include "WindowsStorageStreams.h"
 #include "WindowsFoundation.h"
 #include "WindowsUIXaml.h"
+#include "WindowsApplicationModelBackground.h"
 #include "WindowsUICore.h"
 #include "WindowsGraphicsImaging.h"
 // Windows.UI.Xaml.DependencyPropertyChangedCallback
 #ifndef __WXDependencyPropertyChangedCallback__DEFINED
 #define __WXDependencyPropertyChangedCallback__DEFINED
-typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, WXDependencyProperty* dp);
+typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, WXDependencyProperty* dp);
 #endif // __WXDependencyPropertyChangedCallback__DEFINED
 
 // Windows.UI.Xaml.ExceptionRoutedEventHandler
 #ifndef __WXExceptionRoutedEventHandler__DEFINED
 #define __WXExceptionRoutedEventHandler__DEFINED
-typedef void (^WXExceptionRoutedEventHandler)(RTObject* sender, WXExceptionRoutedEventArgs* e);
+typedef void(^WXExceptionRoutedEventHandler)(RTObject* sender, WXExceptionRoutedEventArgs* e);
 #endif // __WXExceptionRoutedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Media.Imaging.DownloadProgressEventHandler
 #ifndef __WUXMIDownloadProgressEventHandler__DEFINED
 #define __WUXMIDownloadProgressEventHandler__DEFINED
-typedef void (^WUXMIDownloadProgressEventHandler)(RTObject* sender, WUXMIDownloadProgressEventArgs* e);
+typedef void(^WUXMIDownloadProgressEventHandler)(RTObject* sender, WUXMIDownloadProgressEventArgs* e);
 #endif // __WUXMIDownloadProgressEventHandler__DEFINED
 
 // Windows.UI.Xaml.RoutedEventHandler
 #ifndef __WXRoutedEventHandler__DEFINED
 #define __WXRoutedEventHandler__DEFINED
-typedef void (^WXRoutedEventHandler)(RTObject* sender, WXRoutedEventArgs* e);
+typedef void(^WXRoutedEventHandler)(RTObject* sender, WXRoutedEventArgs* e);
 #endif // __WXRoutedEventHandler__DEFINED
+
 
 #import <Foundation/Foundation.h>
 
 // Windows.UI.Xaml.Media.Imaging.DownloadProgressEventHandler
 #ifndef __WUXMIDownloadProgressEventHandler__DEFINED
 #define __WUXMIDownloadProgressEventHandler__DEFINED
-typedef void (^WUXMIDownloadProgressEventHandler)(RTObject* sender, WUXMIDownloadProgressEventArgs* e);
+typedef void(^WUXMIDownloadProgressEventHandler)(RTObject* sender, WUXMIDownloadProgressEventArgs* e);
 #endif // __WUXMIDownloadProgressEventHandler__DEFINED
 
 // Windows.UI.Xaml.Media.Imaging.IXamlRenderingBackgroundTaskOverrides
@@ -91,13 +92,17 @@ typedef void (^WUXMIDownloadProgressEventHandler)(RTObject* sender, WUXMIDownloa
 - (void)onRun:(RTObject<WABIBackgroundTaskInstance>*)taskInstance;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
+@interface WUXMIIXamlRenderingBackgroundTaskOverrides : RTObject <WUXMIIXamlRenderingBackgroundTaskOverrides>
+@end
+
 #endif // __WUXMIIXamlRenderingBackgroundTaskOverrides_DEFINED__
 
 // Windows.UI.Xaml.Media.Imaging.DownloadProgressEventArgs
 #ifndef __WUXMIDownloadProgressEventArgs_DEFINED__
 #define __WUXMIDownloadProgressEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
 @interface WUXMIDownloadProgressEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -107,25 +112,11 @@ WINRT_EXPORT
 
 #endif // __WUXMIDownloadProgressEventArgs_DEFINED__
 
-// Windows.UI.Xaml.Media.Imaging.XamlRenderingBackgroundTask
-#ifndef __WUXMIXamlRenderingBackgroundTask_DEFINED__
-#define __WUXMIXamlRenderingBackgroundTask_DEFINED__
-
-WINRT_EXPORT
-@interface WUXMIXamlRenderingBackgroundTask : RTObject
-#if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
-#endif
-- (void)onRun:(RTObject<WABIBackgroundTaskInstance>*)taskInstance;
-@end
-
-#endif // __WUXMIXamlRenderingBackgroundTask_DEFINED__
-
 // Windows.UI.Xaml.DependencyObject
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -146,7 +137,7 @@ WINRT_EXPORT
 #ifndef __WUXMImageSource_DEFINED__
 #define __WUXMImageSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
 @interface WUXMImageSource : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -159,7 +150,7 @@ WINRT_EXPORT
 #ifndef __WUXMIBitmapSource_DEFINED__
 #define __WUXMIBitmapSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
 @interface WUXMIBitmapSource : WUXMImageSource
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -178,7 +169,7 @@ WINRT_EXPORT
 #ifndef __WUXMIRenderTargetBitmap_DEFINED__
 #define __WUXMIRenderTargetBitmap_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
 @interface WUXMIRenderTargetBitmap : WUXMImageSource
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -199,8 +190,10 @@ WINRT_EXPORT
 #ifndef __WUXMISurfaceImageSource_DEFINED__
 #define __WUXMISurfaceImageSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
 @interface WUXMISurfaceImageSource : WUXMImageSource
++ (WUXMISurfaceImageSource*)makeInstanceWithDimensions:(int)pixelWidth pixelHeight:(int)pixelHeight ACTIVATOR;
++ (WUXMISurfaceImageSource*)makeInstanceWithDimensionsAndOpacity:(int)pixelWidth pixelHeight:(int)pixelHeight isOpaque:(BOOL)isOpaque ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -212,10 +205,10 @@ WINRT_EXPORT
 #ifndef __WUXMIBitmapImage_DEFINED__
 #define __WUXMIBitmapImage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
 @interface WUXMIBitmapImage : WUXMIBitmapSource
-+ (instancetype)make ACTIVATOR;
 + (WUXMIBitmapImage*)makeInstanceWithUriSource:(WFUri*)uriSource ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -224,17 +217,25 @@ WINRT_EXPORT
 @property int decodePixelHeight;
 @property WUXMIBitmapCreateOptions createOptions;
 @property WUXMIDecodePixelType decodePixelType;
+@property BOOL autoPlay;
+@property (readonly) BOOL isAnimatedBitmap;
+@property (readonly) BOOL isPlaying;
 + (WXDependencyProperty*)createOptionsProperty;
 + (WXDependencyProperty*)decodePixelHeightProperty;
 + (WXDependencyProperty*)decodePixelWidthProperty;
 + (WXDependencyProperty*)uriSourceProperty;
 + (WXDependencyProperty*)decodePixelTypeProperty;
++ (WXDependencyProperty*)autoPlayProperty;
++ (WXDependencyProperty*)isAnimatedBitmapProperty;
++ (WXDependencyProperty*)isPlayingProperty;
 - (EventRegistrationToken)addDownloadProgressEvent:(WUXMIDownloadProgressEventHandler)del;
 - (void)removeDownloadProgressEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addImageFailedEvent:(WXExceptionRoutedEventHandler)del;
 - (void)removeImageFailedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addImageOpenedEvent:(WXRoutedEventHandler)del;
 - (void)removeImageOpenedEvent:(EventRegistrationToken)tok;
+- (void)play;
+- (void)stop;
 @end
 
 #endif // __WUXMIBitmapImage_DEFINED__
@@ -243,12 +244,10 @@ WINRT_EXPORT
 #ifndef __WUXMIVirtualSurfaceImageSource_DEFINED__
 #define __WUXMIVirtualSurfaceImageSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
 @interface WUXMIVirtualSurfaceImageSource : WUXMISurfaceImageSource
 + (WUXMIVirtualSurfaceImageSource*)makeInstanceWithDimensions:(int)pixelWidth pixelHeight:(int)pixelHeight ACTIVATOR;
-+ (WUXMIVirtualSurfaceImageSource*)makeInstanceWithDimensionsAndOpacity:(int)pixelWidth
-                                                            pixelHeight:(int)pixelHeight
-                                                               isOpaque:(BOOL)isOpaque ACTIVATOR;
++ (WUXMIVirtualSurfaceImageSource*)makeInstanceWithDimensionsAndOpacity:(int)pixelWidth pixelHeight:(int)pixelHeight isOpaque:(BOOL)isOpaque ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -260,7 +259,7 @@ WINRT_EXPORT
 #ifndef __WUXMIWriteableBitmap_DEFINED__
 #define __WUXMIWriteableBitmap_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
 @interface WUXMIWriteableBitmap : WUXMIBitmapSource
 + (WUXMIWriteableBitmap*)makeInstanceWithDimensions:(int)pixelWidth pixelHeight:(int)pixelHeight ACTIVATOR;
 #if defined(__cplusplus)
@@ -272,6 +271,20 @@ WINRT_EXPORT
 
 #endif // __WUXMIWriteableBitmap_DEFINED__
 
+// Windows.UI.Xaml.Media.Imaging.XamlRenderingBackgroundTask
+#ifndef __WUXMIXamlRenderingBackgroundTask_DEFINED__
+#define __WUXMIXamlRenderingBackgroundTask_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
+@interface WUXMIXamlRenderingBackgroundTask : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+- (void)onRun:(RTObject<WABIBackgroundTaskInstance>*)taskInstance;
+@end
+
+#endif // __WUXMIXamlRenderingBackgroundTask_DEFINED__
+
 // Windows.Foundation.IClosable
 #ifndef __WFIClosable_DEFINED__
 #define __WFIClosable_DEFINED__
@@ -280,13 +293,17 @@ WINRT_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.UI.Xaml.Media.Imaging.SoftwareBitmapSource
 #ifndef __WUXMISoftwareBitmapSource_DEFINED__
 #define __WUXMISoftwareBitmapSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
 @interface WUXMISoftwareBitmapSource : WUXMImageSource <WFIClosable>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -297,3 +314,4 @@ WINRT_EXPORT
 @end
 
 #endif // __WUXMISoftwareBitmapSource_DEFINED__
+

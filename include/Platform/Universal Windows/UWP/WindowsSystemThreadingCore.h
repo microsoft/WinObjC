@@ -19,44 +19,50 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_SYSTEM_THREADING_CORE_EXPORT
+#define OBJCUWP_WINDOWS_SYSTEM_THREADING_CORE_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_System_Threading_Core.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WSTCSignalNotifier, WSTCPreallocatedWorkItem;
-@protocol WSTCISignalNotifierStatics
-, WSTCIPreallocatedWorkItemFactory, WSTCIPreallocatedWorkItem, WSTCISignalNotifier;
+@protocol WSTCISignalNotifierStatics, WSTCIPreallocatedWorkItemFactory, WSTCIPreallocatedWorkItem, WSTCISignalNotifier;
 
 #include "WindowsFoundation.h"
 #include "WindowsSystemThreading.h"
 // Windows.System.Threading.Core.SignalHandler
 #ifndef __WSTCSignalHandler__DEFINED
 #define __WSTCSignalHandler__DEFINED
-typedef void (^WSTCSignalHandler)(WSTCSignalNotifier* signalNotifier, BOOL timedOut);
+typedef void(^WSTCSignalHandler)(WSTCSignalNotifier* signalNotifier, BOOL timedOut);
 #endif // __WSTCSignalHandler__DEFINED
 
 // Windows.System.Threading.WorkItemHandler
 #ifndef __WSTWorkItemHandler__DEFINED
 #define __WSTWorkItemHandler__DEFINED
-typedef void (^WSTWorkItemHandler)(RTObject<WFIAsyncAction>* operation);
+typedef void(^WSTWorkItemHandler)(RTObject<WFIAsyncAction>* operation);
 #endif // __WSTWorkItemHandler__DEFINED
+
 
 #import <Foundation/Foundation.h>
 
 // Windows.System.Threading.Core.SignalHandler
 #ifndef __WSTCSignalHandler__DEFINED
 #define __WSTCSignalHandler__DEFINED
-typedef void (^WSTCSignalHandler)(WSTCSignalNotifier* signalNotifier, BOOL timedOut);
+typedef void(^WSTCSignalHandler)(WSTCSignalNotifier* signalNotifier, BOOL timedOut);
 #endif // __WSTCSignalHandler__DEFINED
 
 // Windows.System.Threading.Core.SignalNotifier
 #ifndef __WSTCSignalNotifier_DEFINED__
 #define __WSTCSignalNotifier_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SYSTEM_THREADING_CORE_EXPORT
 @interface WSTCSignalNotifier : RTObject
-+ (WSTCSignalNotifier*)attachToEvent:(NSString*)name handler:(WSTCSignalHandler)handler;
-+ (WSTCSignalNotifier*)attachToEventWithTimeout:(NSString*)name handler:(WSTCSignalHandler)handler timeout:(WFTimeSpan*)timeout;
-+ (WSTCSignalNotifier*)attachToSemaphore:(NSString*)name handler:(WSTCSignalHandler)handler;
-+ (WSTCSignalNotifier*)attachToSemaphoreWithTimeout:(NSString*)name handler:(WSTCSignalHandler)handler timeout:(WFTimeSpan*)timeout;
++ (WSTCSignalNotifier*)attachToEvent:(NSString *)name handler:(WSTCSignalHandler)handler;
++ (WSTCSignalNotifier*)attachToEventWithTimeout:(NSString *)name handler:(WSTCSignalHandler)handler timeout:(WFTimeSpan*)timeout;
++ (WSTCSignalNotifier*)attachToSemaphore:(NSString *)name handler:(WSTCSignalHandler)handler;
++ (WSTCSignalNotifier*)attachToSemaphoreWithTimeout:(NSString *)name handler:(WSTCSignalHandler)handler timeout:(WFTimeSpan*)timeout;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -70,13 +76,11 @@ WINRT_EXPORT
 #ifndef __WSTCPreallocatedWorkItem_DEFINED__
 #define __WSTCPreallocatedWorkItem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SYSTEM_THREADING_CORE_EXPORT
 @interface WSTCPreallocatedWorkItem : RTObject
 + (WSTCPreallocatedWorkItem*)makeWorkItem:(WSTWorkItemHandler)handler ACTIVATOR;
 + (WSTCPreallocatedWorkItem*)makeWorkItemWithPriority:(WSTWorkItemHandler)handler priority:(WSTWorkItemPriority)priority ACTIVATOR;
-+ (WSTCPreallocatedWorkItem*)makeWorkItemWithPriorityAndOptions:(WSTWorkItemHandler)handler
-                                                       priority:(WSTWorkItemPriority)priority
-                                                        options:(WSTWorkItemOptions)options ACTIVATOR;
++ (WSTCPreallocatedWorkItem*)makeWorkItemWithPriorityAndOptions:(WSTWorkItemHandler)handler priority:(WSTWorkItemPriority)priority options:(WSTWorkItemOptions)options ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -84,3 +88,4 @@ WINRT_EXPORT
 @end
 
 #endif // __WSTCPreallocatedWorkItem_DEFINED__
+

@@ -60,11 +60,11 @@ const XCBuildConfiguration* XCConfigurationList::getConfiguration(const String& 
   return NULL;
 }
 
-void XCConfigurationList::getConfigurations(const StringSet& configNames, BuildConfigurationList& ret) const
+void XCConfigurationList::getValidConfigurations(const StringSet& configNames, StringSet& ret) const
 {
   for (auto configName : configNames) {
     const XCBuildConfiguration* config = getConfiguration(configName);
     if (config)
-      ret.push_back(config);
+      ret.insert(configName);
   }
 }

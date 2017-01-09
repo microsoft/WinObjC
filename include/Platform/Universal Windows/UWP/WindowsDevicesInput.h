@@ -19,13 +19,17 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Devices_Input.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WDIPointerDevice, WDIMouseDevice, WDIMouseEventArgs, WDIMouseCapabilities, WDIKeyboardCapabilities, WDITouchCapabilities;
 @class WDIPointerDeviceUsage, WDIMouseDelta;
-@protocol WDIIMouseCapabilities
-, WDIIKeyboardCapabilities, WDIITouchCapabilities, WDIIPointerDeviceStatics, WDIIPointerDevice, WDIIPointerDevice2, WDIIMouseEventArgs,
-    WDIIMouseDevice, WDIIMouseDeviceStatics;
+@protocol WDIIMouseCapabilities, WDIIKeyboardCapabilities, WDIITouchCapabilities, WDIIPointerDeviceStatics, WDIIPointerDevice, WDIIPointerDevice2, WDIIMouseEventArgs, WDIIMouseDevice, WDIIMouseDeviceStatics;
 
 // Windows.Devices.Input.PointerDeviceType
 enum _WDIPointerDeviceType {
@@ -40,9 +44,9 @@ typedef unsigned WDIPointerDeviceType;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Devices.Input.PointerDeviceUsage
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
 @interface WDIPointerDeviceUsage : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property unsigned int usagePage;
 @property unsigned int usage;
 @property int minLogical;
@@ -54,9 +58,9 @@ WINRT_EXPORT
 @end
 
 // [struct] Windows.Devices.Input.MouseDelta
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
 @interface WDIMouseDelta : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property int x;
 @property int y;
 @end
@@ -65,7 +69,7 @@ WINRT_EXPORT
 #ifndef __WDIPointerDevice_DEFINED__
 #define __WDIPointerDevice_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
 @interface WDIPointerDevice : RTObject
 + (WDIPointerDevice*)getPointerDevice:(unsigned int)pointerId;
 + (NSArray* /* WDIPointerDevice* */)getPointerDevices;
@@ -87,13 +91,13 @@ WINRT_EXPORT
 #ifndef __WDIMouseDevice_DEFINED__
 #define __WDIMouseDevice_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
 @interface WDIMouseDevice : RTObject
 + (WDIMouseDevice*)getForCurrentView;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-- (EventRegistrationToken)addMouseMovedEvent:(void (^)(WDIMouseDevice*, WDIMouseEventArgs*))del;
+- (EventRegistrationToken)addMouseMovedEvent:(void(^)(WDIMouseDevice*, WDIMouseEventArgs*))del;
 - (void)removeMouseMovedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -103,7 +107,7 @@ WINRT_EXPORT
 #ifndef __WDIMouseEventArgs_DEFINED__
 #define __WDIMouseEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
 @interface WDIMouseEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -117,7 +121,7 @@ WINRT_EXPORT
 #ifndef __WDIMouseCapabilities_DEFINED__
 #define __WDIMouseCapabilities_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
 @interface WDIMouseCapabilities : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -136,7 +140,7 @@ WINRT_EXPORT
 #ifndef __WDIKeyboardCapabilities_DEFINED__
 #define __WDIKeyboardCapabilities_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
 @interface WDIKeyboardCapabilities : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -151,7 +155,7 @@ WINRT_EXPORT
 #ifndef __WDITouchCapabilities_DEFINED__
 #define __WDITouchCapabilities_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
 @interface WDITouchCapabilities : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -162,3 +166,4 @@ WINRT_EXPORT
 @end
 
 #endif // __WDITouchCapabilities_DEFINED__
+

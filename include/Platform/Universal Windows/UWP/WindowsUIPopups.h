@@ -19,11 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_POPUPS_EXPORT
+#define OBJCUWP_WINDOWS_UI_POPUPS_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_UI_Popups.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WUPMessageDialog, WUPUICommand, WUPUICommandSeparator, WUPPopupMenu;
-@protocol WUPIMessageDialog
-, WUPIMessageDialogFactory, WUPIUICommand, WUPIUICommandFactory, WUPIPopupMenu;
+@protocol WUPIMessageDialog, WUPIMessageDialogFactory, WUPIUICommand, WUPIUICommandFactory, WUPIPopupMenu;
 
 // Windows.UI.Popups.MessageDialogOptions
 enum _WUPMessageDialogOptions {
@@ -46,15 +51,16 @@ typedef unsigned WUPPlacement;
 // Windows.UI.Popups.UICommandInvokedHandler
 #ifndef __WUPUICommandInvokedHandler__DEFINED
 #define __WUPUICommandInvokedHandler__DEFINED
-typedef void (^WUPUICommandInvokedHandler)(RTObject<WUPIUICommand>* command);
+typedef void(^WUPUICommandInvokedHandler)(RTObject<WUPIUICommand>* command);
 #endif // __WUPUICommandInvokedHandler__DEFINED
+
 
 #import <Foundation/Foundation.h>
 
 // Windows.UI.Popups.UICommandInvokedHandler
 #ifndef __WUPUICommandInvokedHandler__DEFINED
 #define __WUPUICommandInvokedHandler__DEFINED
-typedef void (^WUPUICommandInvokedHandler)(RTObject<WUPIUICommand>* command);
+typedef void(^WUPUICommandInvokedHandler)(RTObject<WUPIUICommand>* command);
 #endif // __WUPUICommandInvokedHandler__DEFINED
 
 // Windows.UI.Popups.IUICommand
@@ -64,7 +70,11 @@ typedef void (^WUPUICommandInvokedHandler)(RTObject<WUPIUICommand>* command);
 @protocol WUPIUICommand
 @property (retain) RTObject* id;
 @property (copy) WUPUICommandInvokedHandler invoked;
-@property (retain) NSString* label;
+@property (retain) NSString * label;
+@end
+
+OBJCUWP_WINDOWS_UI_POPUPS_EXPORT
+@interface WUPIUICommand : RTObject <WUPIUICommand>
 @end
 
 #endif // __WUPIUICommand_DEFINED__
@@ -73,17 +83,17 @@ typedef void (^WUPUICommandInvokedHandler)(RTObject<WUPIUICommand>* command);
 #ifndef __WUPMessageDialog_DEFINED__
 #define __WUPMessageDialog_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_POPUPS_EXPORT
 @interface WUPMessageDialog : RTObject
-+ (WUPMessageDialog*)make:(NSString*)content ACTIVATOR;
-+ (WUPMessageDialog*)makeWithTitle:(NSString*)content title:(NSString*)title ACTIVATOR;
++ (WUPMessageDialog*)make:(NSString *)content ACTIVATOR;
++ (WUPMessageDialog*)makeWithTitle:(NSString *)content title:(NSString *)title ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* title;
+@property (retain) NSString * title;
 @property WUPMessageDialogOptions options;
 @property unsigned int defaultCommandIndex;
-@property (retain) NSString* content;
+@property (retain) NSString * content;
 @property unsigned int cancelCommandIndex;
 @property (readonly) NSMutableArray* /* RTObject<WUPIUICommand>* */ commands;
 - (void)showAsyncWithSuccess:(void (^)(RTObject<WUPIUICommand>*))success failure:(void (^)(NSError*))failure;
@@ -95,16 +105,16 @@ WINRT_EXPORT
 #ifndef __WUPUICommand_DEFINED__
 #define __WUPUICommand_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_POPUPS_EXPORT
 @interface WUPUICommand : RTObject <WUPIUICommand>
-+ (WUPUICommand*)make:(NSString*)label ACTIVATOR;
-+ (WUPUICommand*)makeWithHandler:(NSString*)label action:(WUPUICommandInvokedHandler)action ACTIVATOR;
-+ (WUPUICommand*)makeWithHandlerAndId:(NSString*)label action:(WUPUICommandInvokedHandler)action commandId:(RTObject*)commandId ACTIVATOR;
 + (instancetype)make ACTIVATOR;
++ (WUPUICommand*)make:(NSString *)label ACTIVATOR;
++ (WUPUICommand*)makeWithHandler:(NSString *)label action:(WUPUICommandInvokedHandler)action ACTIVATOR;
++ (WUPUICommand*)makeWithHandlerAndId:(NSString *)label action:(WUPUICommandInvokedHandler)action commandId:(RTObject*)commandId ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* label;
+@property (retain) NSString * label;
 @property (copy) WUPUICommandInvokedHandler invoked;
 @property (retain) RTObject* id;
 @end
@@ -115,13 +125,13 @@ WINRT_EXPORT
 #ifndef __WUPUICommandSeparator_DEFINED__
 #define __WUPUICommandSeparator_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_POPUPS_EXPORT
 @interface WUPUICommandSeparator : RTObject <WUPIUICommand>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* label;
+@property (retain) NSString * label;
 @property (copy) WUPUICommandInvokedHandler invoked;
 @property (retain) RTObject* id;
 @end
@@ -132,7 +142,7 @@ WINRT_EXPORT
 #ifndef __WUPPopupMenu_DEFINED__
 #define __WUPPopupMenu_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_POPUPS_EXPORT
 @interface WUPPopupMenu : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -141,10 +151,8 @@ WINRT_EXPORT
 @property (readonly) NSMutableArray* /* RTObject<WUPIUICommand>* */ commands;
 - (void)showAsync:(WFPoint*)invocationPoint success:(void (^)(RTObject<WUPIUICommand>*))success failure:(void (^)(NSError*))failure;
 - (void)showAsyncWithRect:(WFRect*)selection success:(void (^)(RTObject<WUPIUICommand>*))success failure:(void (^)(NSError*))failure;
-- (void)showAsyncWithRectAndPlacement:(WFRect*)selection
-                   preferredPlacement:(WUPPlacement)preferredPlacement
-                              success:(void (^)(RTObject<WUPIUICommand>*))success
-                              failure:(void (^)(NSError*))failure;
+- (void)showAsyncWithRectAndPlacement:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement success:(void (^)(RTObject<WUPIUICommand>*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WUPPopupMenu_DEFINED__
+

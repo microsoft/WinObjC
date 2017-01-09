@@ -23,7 +23,6 @@
 #include "Foundation/NSKeyedArchiver.h"
 #include "Foundation/NSArray.h"
 #include "NSEnumeratorInternal.h"
-#include "NSPropertyListWriter_binary.h"
 #include "CoreFoundation/CFArray.h"
 #include "Foundation/NSMutableString.h"
 #include "NSKeyedArchiverInternal.h"
@@ -719,10 +718,12 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
  @Notes atomically parameter not supported
 */
 - (BOOL)writeToFile:(NSString*)file atomically:(BOOL)atomically {
-    TraceVerbose(TAG, L"Writing array to file %hs", [file UTF8String]);
+    NSError* error = nil;
+    NSData* data = [NSPropertyListSerialization dataWithPropertyList:self format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
+    if (error != nil) {
+        return NO;
+    }
 
-    id data = [NSMutableData data];
-    [NSPropertyListWriter_Binary serializePropertyList:self intoData:data];
     return [data writeToFile:file atomically:atomically];
 }
 

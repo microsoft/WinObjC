@@ -19,11 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MANAGEMENT_CORE_EXPORT
+#define OBJCUWP_WINDOWS_MANAGEMENT_CORE_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Management_Core.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WMCApplicationDataManager;
-@protocol WMCIApplicationDataManagerStatics
-, WMCIApplicationDataManager;
+@protocol WMCIApplicationDataManagerStatics, WMCIApplicationDataManager;
 
 #include "WindowsStorage.h"
 
@@ -33,12 +38,13 @@
 #ifndef __WMCApplicationDataManager_DEFINED__
 #define __WMCApplicationDataManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MANAGEMENT_CORE_EXPORT
 @interface WMCApplicationDataManager : RTObject
-+ (WSApplicationData*)createForPackageFamily:(NSString*)packageFamilyName;
++ (WSApplicationData*)createForPackageFamily:(NSString *)packageFamilyName;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @end
 
 #endif // __WMCApplicationDataManager_DEFINED__
+

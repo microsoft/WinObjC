@@ -39,19 +39,20 @@
 UIKIT_EXPORT_CLASS
 @interface UIFont : NSObject
 
-+ (UIFont*)fontWithName:(NSString*)fontName size:(CGFloat)fontSize;
-+ (UIFont*)fontWithDescriptor:(UIFontDescriptor*)descriptor size:(CGFloat)fontSize;
-+ (NSArray<NSString*>*)familyNames;
-+ (NSArray<NSString*>*)fontNamesForFamilyName:(NSString*)familyName;
 + (UIFont*)preferredFontForTextStyle:(NSString*)style STUB_METHOD;
++ (UIFont*)fontWithName:(NSString*)fontName size:(CGFloat)fontSize;
+- (UIFont*)fontWithSize:(CGFloat)fontSize;
 
 + (UIFont*)systemFontOfSize:(CGFloat)fontSize;
++ (UIFont*)systemFontOfSize:(CGFloat)fontSize weight:(CGFloat)weight STUB_METHOD;
 + (UIFont*)boldSystemFontOfSize:(CGFloat)fontSize;
 + (UIFont*)italicSystemFontOfSize:(CGFloat)fontSize;
++ (UIFont*)monospacedDigitSystemFontOfSize:(CGFloat)fontSize weight:(CGFloat)weight;
 
-- (UIFont*)fontWithSize:(CGFloat)fontSize;
-- (UIFontDescriptor*)fontDescriptor;
++ (NSArray<NSString*>*)familyNames;
++ (NSArray<NSString*>*)fontNamesForFamilyName:(NSString*)familyName;
 
+@property (nonatomic, readonly, retain) NSString* familyName;
 @property (nonatomic, readonly, retain) NSString* fontName;
 
 @property (nonatomic, readonly) CGFloat ascender;
@@ -60,7 +61,14 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, readonly) CGFloat pointSize;
 @property (nonatomic, readonly) CGFloat xHeight;
 @property (nonatomic, readonly) CGFloat capHeight;
-@property (nonatomic, readonly, retain) NSString* familyName;
 @property (nonatomic, readonly) CGFloat leading;
+
++ (CGFloat)labelFontSize;
++ (CGFloat)buttonFontSize;
++ (CGFloat)smallSystemFontSize;
++ (CGFloat)systemFontSize;
+
+- (UIFontDescriptor*)fontDescriptor;
++ (UIFont*)fontWithDescriptor:(UIFontDescriptor*)descriptor size:(CGFloat)fontSize;
 
 @end

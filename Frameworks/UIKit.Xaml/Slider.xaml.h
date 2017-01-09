@@ -21,6 +21,7 @@
 #include "ObjCXamlControls.h"
 
 namespace UIKit {
+namespace Xaml {
 
 [Windows::Foundation::Metadata::WebHostHidden]
 public ref class Slider sealed
@@ -33,5 +34,6 @@ private:
     // TODO: Add support for min / max images, and to expose it as needed to UIKit.
 };
 
-}
+} /* Xaml*/
+} /* UIKit*/
 // clang-format on

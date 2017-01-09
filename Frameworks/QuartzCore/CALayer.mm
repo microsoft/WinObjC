@@ -52,6 +52,7 @@ static const wchar_t* TAG = L"CALayer";
 
 static const bool DEBUG_ALL = false;
 static const bool DEBUG_VERBOSE = DEBUG_ALL || false;
+static const bool DEBUG_DRAWING = DEBUG_VERBOSE || false;
 
 NSString* const kCAOnOrderIn = @"kCAOnOrderIn";
 NSString* const kCAOnOrderOut = @"kCAOnOrderOut";
@@ -73,13 +74,9 @@ NSString* const kCAFilterNearest = @"kCAFilterNearest";
 NSString* const kCAFilterTrilinear = @"kCAFilterTrilinear";
 
 @interface CALayer () {
-    WXFrameworkElement* _contentsElement;
 @public
     CAPrivateInfo* priv;
 }
-
-- (DisplayTexture*)_getDisplayTexture;
-
 @end
 
 // FIXME(DH): Compatibility shim to avoid rewriting parts of CA for libobjc2.
@@ -97,11 +94,24 @@ static BOOL object_isMethodFromClass(id object, SEL selector, const char* classN
 NSString* _opacityAction = @"opacity";
 NSString* _positionAction = @"position";
 NSString* _boundsAction = @"bounds";
-NSString* _boundsOriginAction = @"bounds.origin";
-NSString* _boundsSizeAction = @"bounds.size";
 NSString* _transformAction = @"transform";
 NSString* _orderInAction = @"onOrderIn";
 NSString* _orderOutAction = @"orderOut";
+
+enum Gravity {
+    kGravityResize = 0,
+    kGravityCenter = 1,
+    kGravityTop = 2,
+    kGravityResizeAspect = 3,
+    kGravityTopLeft = 4,
+    kGravityBottomLeft = 5,
+    kGravityLeft = 6,
+    kGravityAspectFill = 7,
+    kGravityBottom = 8,
+    kGravityTopRight = 9,
+    kGravityRight = 10,
+    kGravityBottomRight = 11
+};
 
 CACompositorInterface* _globalCompositor;
 
@@ -135,23 +145,23 @@ public:
     }
 };
 
-static void GetNeededLayouts(CAPrivateInfo* state, NodeList<CAPrivateInfo>* list, bool doAlwaysLayers) {
+static void GetNeededLayouts(CAPrivateInfo* state, NodeList<CAPrivateInfo>* list) {
     CAPrivateInfo* cur = state;
-    if (cur->needsLayout || (doAlwaysLayers && cur->alwaysLayout && !cur->didLayout)) {
+    if (cur->needsLayout) {
         list->AddNode(cur);
     }
 
     cur = cur->lastChild;
     while (cur) {
-        GetNeededLayouts(cur, list, doAlwaysLayers);
+        GetNeededLayouts(cur, list);
         cur = cur->prevSibling;
     }
 }
 
-void DoLayerLayouts(CALayer* window, bool doAlwaysLayers) {
+void DoLayerLayouts(CALayer* window) {
     NodeList<CAPrivateInfo> list;
     for (;;) {
-        GetNeededLayouts(window->priv, &list, doAlwaysLayers);
+        GetNeededLayouts(window->priv, &list);
 
         if (list.curPos == list.count) {
             break;
@@ -171,7 +181,7 @@ void DoLayerLayouts(CALayer* window, bool doAlwaysLayers) {
 
 static void GetNeededDisplays(CAPrivateInfo* state, NodeList<CAPrivateInfo>* list) {
     CAPrivateInfo* cur = state;
-    if (cur->needsDisplay || cur->hasNewContents) {
+    if (cur->needsDisplay) {
         list->AddNode(cur);
     }
 
@@ -189,48 +199,17 @@ static void DoDisplayList(CALayer* layer) {
     while (list.curPos < list.count) {
         CAPrivateInfo* cur = list.items[list.curPos];
 
-        if (!cur->_textureOverride) {
-            if (cur->delegate) {
-                if (DEBUG_VERBOSE) {
-                    TraceVerbose(TAG, L"Getting new texture for %hs", object_getClassName(cur->delegate));
-                }
+        if (cur->delegate) {
+            if (DEBUG_VERBOSE) {
+                TraceVerbose(TAG, L"Getting new texture for %hs", object_getClassName(cur->delegate));
             }
-            DisplayTexture* newTexture = (DisplayTexture*)[cur->self _getDisplayTexture];
-            cur->needsDisplay = FALSE;
-            cur->hasNewContents = FALSE;
-
-            if (cur->maskLayer) {
-                CALayer* maskLayer = (CALayer*)cur->maskLayer;
-                DisplayTexture* maskTexture = (DisplayTexture*)[cur->maskLayer _getDisplayTexture];
-                GetCACompositor()->setNodeTexture([CATransaction _currentDisplayTransaction],
-                                                  maskLayer->priv->_presentationNode,
-                                                  maskTexture,
-                                                  maskLayer->priv->contentsSize,
-                                                  maskLayer->priv->contentsScale);
-                GetCACompositor()->setNodeMaskNode(cur->_presentationNode, maskLayer->priv->_presentationNode);
-                if (maskTexture) {
-                    GetCACompositor()->ReleaseDisplayTexture(maskTexture);
-                }
-            }
-
-            GetCACompositor()->setNodeTexture([CATransaction _currentDisplayTransaction],
-                                              cur->_presentationNode,
-                                              newTexture,
-                                              cur->contentsSize,
-                                              cur->contentsScale);
-            if (newTexture) {
-                GetCACompositor()->ReleaseDisplayTexture(newTexture);
-            }
-        } else {
-            cur->needsDisplay = FALSE;
-            cur->hasNewContents = FALSE;
-
-            GetCACompositor()->setNodeTexture([CATransaction _currentDisplayTransaction],
-                                              cur->_presentationNode,
-                                              cur->_textureOverride,
-                                              cur->contentsSize,
-                                              cur->contentsScale);
         }
+
+        std::shared_ptr<IDisplayTexture> newTexture = [cur->self _getDisplayTexture];
+        cur->needsDisplay = FALSE;
+
+        // Set the new (or null) display texture on the layer proxy backing this layer
+        [CATransaction _currentLayerTransaction]->SetLayerTexture(cur->_layerProxy, newTexture, cur->contentsSize, cur->contentsScale);
 
         [cur->self _displayChanged];
 
@@ -238,25 +217,13 @@ static void DoDisplayList(CALayer* layer) {
     }
 }
 
-static void DiscardLayerContents(CALayer* layer) {
-    LLTREE_FOREACH(curLayer, layer->priv) {
-        DiscardLayerContents(curLayer->self);
-
-        if ([curLayer->self isKindOfClass:[CAEAGLLayer class]]) {
-            [curLayer->self _unlockTexture];
-        } else {
-            [curLayer->self _releaseContents:TRUE];
-        }
-    }
-}
-
-CAPrivateInfo::CAPrivateInfo(CALayer* self) {
+CAPrivateInfo::CAPrivateInfo(CALayer* self, WXFrameworkElement* xamlElement) {
     memset(this, 0, sizeof(CAPrivateInfo));
     setSelf(self);
 
     memset(&bounds, 0, sizeof(bounds));
     memset(&position, 0, sizeof(position));
-    zPosition = 0.0f;
+
     anchorPoint.x = 0.5f;
     anchorPoint.y = 0.5f;
 
@@ -274,40 +241,35 @@ CAPrivateInfo::CAPrivateInfo(CALayer* self) {
 
     contentsScale = 1.0f;
 
-    superlayer = 0;
+    superlayer = nil;
     opacity = 1.0f;
     hidden = FALSE;
-    gravity = 0;
-    contents = NULL;
+    gravity = kGravityResize;
+    contents = nullptr;
     ownsContents = FALSE;
     savedContext = NULL;
     isOpaque = FALSE;
-    delegate = 0;
+    delegate = nil;
     needsDisplay = TRUE;
     needsUpdate = FALSE;
-    hasNewContents = FALSE;
     backgroundColor.r = 0.0f;
     backgroundColor.g = 0.0f;
     backgroundColor.b = 0.0f;
     backgroundColor.a = 0.0f;
     _backgroundColor = nullptr;
-    contentColor.r = 1.0f;
-    contentColor.g = 1.0f;
-    contentColor.b = 1.0f;
-    contentColor.a = 1.0f;
     transform = CATransform3DMakeTranslation(0, 0, 0);
-    sublayerTransform = CATransform3DMakeTranslation(0, 0, 0);
     masksToBounds = FALSE;
     isRootLayer = FALSE;
     needsDisplayOnBoundsChange = FALSE;
-    drewOpaque = FALSE;
     _name = nil;
-    positionSet = FALSE;
-    sizeSet = FALSE;
-    originSet = FALSE;
-    _displayPending = false;
 
-    _presentationNode = GetCACompositor()->CreateDisplayNode();
+    // Create our backing layer proxy
+    _layerProxy = GetCACompositor()->CreateLayerProxy(xamlElement ? [xamlElement comObj] : nullptr);
+
+    // Query for our backing XAML node.
+    // ILayerProxy will have created one if the xamlElement passed into the previous CreateLayerProxy call was nullptr.
+    Microsoft::WRL::ComPtr<IInspectable> inspectable(_layerProxy->GetXamlElement());
+    _xamlElement = [WXFrameworkElement createWith:inspectable.Get()];
 }
 
 CAPrivateInfo::~CAPrivateInfo() {
@@ -325,58 +287,43 @@ CAPrivateInfo::~CAPrivateInfo() {
     if (savedContext) {
         CGContextRelease(savedContext);
     }
-    [maskLayer release];
-    maskLayer = nil;
-
-    GetCACompositor()->ReleaseNode(_presentationNode);
-    _presentationNode = NULL;
 }
 
-class LockingBufferInterface : public DisplayTextureLocking {
-public:
-    void* LockWritableBitmapTexture(DisplayTexture* tex, int* stride) {
-        return GetCACompositor()->LockWritableBitmapTexture(tex, stride);
-    }
-    void UnlockWritableBitmapTexture(DisplayTexture* tex) {
-        GetCACompositor()->UnlockWritableBitmapTexture(tex);
-    }
-
-    void RetainDisplayTexture(DisplayTexture* tex) {
-        GetCACompositor()->RetainDisplayTexture(tex);
-    }
-
-    void ReleaseDisplayTexture(DisplayTexture* tex) {
-        GetCACompositor()->ReleaseDisplayTexture(tex);
-    }
-};
-
-static LockingBufferInterface _globallockingBufferInterface;
-
 CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
-    DisplayTexture* tex = NULL;
-
     if ([NSThread isMainThread]) {
-        tex = GetCACompositor()->CreateWritableBitmapTexture32(width, height);
+        std::shared_ptr<IDisplayTexture> texture = GetCACompositor()->CreateDisplayTexture(width, height);
+        return _CGBitmapContextCreateWithTexture(width, height, texture);
     }
 
-    CGContextRef ret = _CGBitmapContextCreateWithTexture(width, height, tex, &_globallockingBufferInterface);
-
-    if (tex) {
-        _globallockingBufferInterface.ReleaseDisplayTexture(tex);
-    }
-
-    return ret;
+    return nil;
 }
 
 @implementation CALayer
+
 /**
  @Status Interoperable
 */
 - (instancetype)init {
-    assert(priv == NULL);
-    priv = new CAPrivateInfo(self);
+    return [self _initWithXamlElement:nil];
+}
 
+/**
+ Microsoft Extension
+ All CALayers are ultimately backed by a Xaml FrameworkElement.  Passing nil here will
+ result in the default Xaml FrameworkElement type being used.
+*/
+- (instancetype)_initWithXamlElement:(WXFrameworkElement*)xamlElement {
+    assert(!priv);
+    priv = new CAPrivateInfo(self, xamlElement);
     return self;
+}
+
+/**
+ Microsoft Extension
+ Retrieves the XAML FrameworkElement backing this CALayer.
+*/
+- (WXFrameworkElement*)_xamlElement {
+    return priv->_xamlElement;
 }
 
 - (CAPrivateInfo*)_priv {
@@ -473,23 +420,6 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
 - (void)drawInContext:(CGContextRef)ctx {
 }
 
-- (WXFrameworkElement*)contentsElement {
-    return _contentsElement;
-}
-
-- (void)setContentsElement:(WXFrameworkElement*)element {
-    [element retain];
-    [_contentsElement release];
-    _contentsElement = element;
-
-    if (priv->_textureOverride) {
-        GetCACompositor()->ReleaseDisplayTexture(priv->_textureOverride);
-    }
-    priv->_textureOverride = GetCACompositor()->CreateDisplayTextureForElement(element);
-    [self setContentsGravity:kCAGravityResize];
-    [self setNeedsDisplay];
-}
-
 /**
  @Status Interoperable
 */
@@ -505,11 +435,6 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
     if (priv->savedContext != NULL) {
         CGContextRelease(priv->savedContext);
         priv->savedContext = NULL;
-    }
-
-    if (priv->contentsInset.origin.x != 0.0f || priv->contentsInset.origin.y != 0.0f || priv->contentsInset.size.width != 0.0f ||
-        priv->contentsInset.size.height != 0.0f) {
-        memset(&priv->contentsInset, 0, sizeof(CGRect));
     }
 
     if (priv->contents == NULL || priv->ownsContents || [self isKindOfClass:[CAShapeLayer class]]) {
@@ -528,9 +453,11 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
         int height = (int)(ceilf(priv->bounds.size.height) * priv->contentsScale);
 
         if (width <= 0 || height <= 0) {
+            TraceVerbose(TAG, L"Not drawing due to invalid layer dimensions; width=%d, height=%d", width, height);
             return;
         }
 
+        // TODO: Why cap to 2048x2048?
         if (width > 2048) {
             width = 2048;
         }
@@ -548,81 +475,51 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
                                       [priv->delegate respondsToSelector:@selector(displayLayer:)])) {
             hasDrawingMethod = true;
         }
+
         if (!object_isMethodFromClass(self, @selector(drawInContext:), "CALayer")) {
             hasDrawingMethod = true;
         }
+
         if (!hasDrawingMethod) {
+            if (DEBUG_DRAWING) {
+                TraceVerbose(TAG, L"Not drawing because no drawing callback was found for this layer.");
+            }
             return;
         }
 
-        bool useVector = false;
+        // Create the contents
+        CGContextRef drawContext = CreateLayerContentsBitmapContext32(width, height);
 
-        //  Create the contents
-        CGImageRef target = NULL;
-        CGContextRef drawContext = NULL;
-        CGImageRef vectorTarget = NULL;
-
-        if ((priv->isOpaque && priv->_backgroundColor == nil) || priv->backgroundColor.a == 1.0) {
-            priv->drewOpaque = TRUE;
-        } else {
-            priv->drewOpaque = FALSE;
-        }
-
-        if (!target) {
-            if ((priv->isOpaque && priv->_backgroundColor == nil) || (priv->backgroundColor.a == 1.0 && 0)) {
-                /* CGVectorImage is currently in development - not ready for general use */
-                if (useVector) {
-                    // target = new CGVectorImage(width, height, _ColorBGR);
-                } else {
-                    drawContext = _CGBitmapContextCreateWithFormat(width, height, _ColorBGR);
-                }
-                priv->drewOpaque = TRUE;
-            } else {
-                /* CGVectorImage is currently in development - not ready for general use */
-                if (useVector) {
-                    // target = new CGVectorImage(width, height, _ColorARGB);
-                } else {
-                    drawContext = CreateLayerContentsBitmapContext32(width, height);
-                }
-                priv->drewOpaque = FALSE;
-            }
-            priv->ownsContents = TRUE;
-        }
-        target = CGBitmapContextGetImage(drawContext);
+        priv->ownsContents = TRUE;
+        CGImageRef target = CGBitmapContextGetImage(drawContext);
 
         CGContextRetain(drawContext);
         CGImageRetain(target);
         priv->savedContext = drawContext;
 
-        if (!vectorTarget) {
-            if (priv->_backgroundColor == nil || (int)[static_cast<UIColor*>(priv->_backgroundColor) _type] == solidBrush) {
-                CGContextClearToColor(drawContext,
-                                      priv->backgroundColor.r,
-                                      priv->backgroundColor.g,
-                                      priv->backgroundColor.b,
-                                      priv->backgroundColor.a);
-            } else {
-                CGContextClearToColor(drawContext, 0, 0, 0, 0);
+        if (priv->_backgroundColor == nil || (int)[static_cast<UIColor*>(priv->_backgroundColor) _type] == solidBrush) {
+            CGContextClearToColor(drawContext,
+                                  priv->backgroundColor.r,
+                                  priv->backgroundColor.g,
+                                  priv->backgroundColor.b,
+                                  priv->backgroundColor.a);
+        } else {
+            CGContextClearToColor(drawContext, 0, 0, 0, 0);
 
-                CGContextSaveGState(drawContext);
-                CGContextSetFillColorWithColor(drawContext, [static_cast<UIColor*>(priv->_backgroundColor) CGColor]);
+            CGContextSaveGState(drawContext);
+            CGContextSetFillColorWithColor(drawContext, [static_cast<UIColor*>(priv->_backgroundColor) CGColor]);
 
-                CGRect wholeRect;
-
-                wholeRect.origin.x = 0;
-                wholeRect.origin.y = 0;
-                wholeRect.size.width = float(width);
-                wholeRect.size.height = float(height);
-
-                CGContextFillRect(drawContext, wholeRect);
-                CGContextRestoreGState(drawContext);
-            }
+            CGRect wholeRect = CGRectMake(0, 0, width, height);
+            CGContextFillRect(drawContext, wholeRect);
+            CGContextRestoreGState(drawContext);
         }
 
         if (target->Backing()->Height() != 0) {
             CGContextTranslateCTM(drawContext, 0, float(target->Backing()->Height()));
         }
         if (priv->contentsScale != 1.0f) {
+            // TODO 1077:: Remove once D2D render target is implemented
+            _CGContextSetScaleFactor(drawContext, priv->contentsScale);
             CGContextScaleCTM(drawContext, priv->contentsScale, priv->contentsScale);
         }
 
@@ -633,7 +530,6 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
         [self drawInContext:drawContext];
 
         if (priv->delegate != 0) {
-            // const char *name = ((id) priv->delegate).object_getClassName();
             if ([priv->delegate respondsToSelector:@selector(displayLayer:)]) {
                 [priv->delegate displayLayer:self];
             } else {
@@ -644,45 +540,19 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
         CGContextReleaseLock(drawContext);
         CGContextRelease(drawContext);
 
+        // If we've drawn anything, set it as our contents
         if (!CGContextIsDirty(drawContext)) {
             CGImageRelease(target);
             CGContextRelease(drawContext);
             priv->savedContext = NULL;
             priv->contents = NULL;
         } else {
-            if (vectorTarget) {
-                /*
-                CGVectorImage *vecImg = (CGVectorImage *) target;
-
-                priv->contents = vecImg->Rasterize(&priv->contentsInset);
-
-                priv->contentsInset.origin.x /= priv->contentsScale;
-                priv->contentsInset.origin.y /= priv->contentsScale;
-                priv->contentsInset.size.width /= priv->contentsScale;
-                priv->contentsInset.size.height /= priv->contentsScale;
-
-                CGImageRelease(vecImg);
-                */
-            } else {
-                priv->contents = target;
-            }
+            priv->contents = target;
         }
-    } else {
-        if (priv->contents) {
-            priv->contentsSize.width = float(priv->contents->Backing()->Width());
-            priv->contentsSize.height = float(priv->contents->Backing()->Height());
-
-            /*
-            if ( priv->contents->_cachedTexture ) {
-            priv->contents->_cachedTexture->Release();
-            priv->contents->_cachedTexture = NULL;
-            }
-            */
-        }
+    } else if (priv->contents) {
+        priv->contentsSize.width = float(priv->contents->Backing()->Width());
+        priv->contentsSize.height = float(priv->contents->Backing()->Height());
     }
-
-    //  To signal that we need our context converted into a texture and sent to NativeUI (checked in UIApplication.cpp)
-    priv->hasNewContents = TRUE;
 }
 
 static void doRecursiveAction(CALayer* layer, NSString* actionName) {
@@ -708,26 +578,12 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     }
 }
 
-- (BOOL)_isPartOfViewHeiarchy {
-    CALayer* curLayer = self;
-
-    while (curLayer != nil) {
-        if (curLayer->priv->isRootLayer) {
-            return TRUE;
-        }
-
-        curLayer = curLayer->priv->superlayer;
-    }
-
-    return FALSE;
-}
-
 /**
  @Status Interoperable
 */
 - (void)addSublayer:(CALayer*)subLayerAddr {
     if (subLayerAddr == self) {
-        assert(0);
+        FAIL_FAST_MSG("Cannot addSublayer:self!");
     }
 
     [self _setShouldLayout];
@@ -741,7 +597,6 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     bool isVisible = false;
 
     CALayer* curLayer = self;
-
     while (curLayer != nil) {
         if (curLayer->priv->isRootLayer) {
             isVisible = true;
@@ -947,13 +802,11 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
         return;
     }
 
-    CALayer* oursuper = priv->superlayer;
-
     //  If our layer is visible, order all subviews out
     bool isVisible = false;
 
     CALayer* curLayer = self;
-    CALayer* pSuper = (CALayer*)priv->superlayer;
+    CALayer* superLayer = (CALayer*)priv->superlayer;
     CALayer* nextSuper = curLayer->priv->superlayer;
     priv->superlayer = 0;
 
@@ -977,7 +830,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 
     [CATransaction _removeLayer:self];
 
-    pSuper->priv->removeChild(self);
+    superLayer->priv->removeChild(self);
+
+    [superLayer setNeedsLayout];
     [self release];
 }
 
@@ -1111,22 +966,6 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 /**
  @Status Interoperable
 */
-- (CGAffineTransform)affineTransform {
-    CGAffineTransform ret;
-
-    ret.a = priv->transform.m[0][0];
-    ret.b = priv->transform.m[0][1];
-    ret.c = priv->transform.m[1][0];
-    ret.d = priv->transform.m[1][1];
-    ret.tx = priv->transform.m[3][0];
-    ret.ty = priv->transform.m[3][1];
-
-    return ret;
-}
-
-/**
- @Status Interoperable
-*/
 - (CGPoint)position {
     return priv->position;
 }
@@ -1155,7 +994,6 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     NSValue* newPosValue = [[NSValue alloc] initWithCGPoint:priv->position];
     [CATransaction _setPropertyForLayer:self name:@"position" value:newPosValue];
     [newPosValue release];
-    priv->positionSet = TRUE;
 
     if (action != nil) {
         [action runActionForKey:(id)_positionAction object:self arguments:nil];
@@ -1179,24 +1017,10 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
                      bounds.origin.y,
                      bounds.size.width,
                      bounds.size.height);
-        memset(&bounds, 0, sizeof(CGRect));
-#if defined(_DEBUG) || !defined(WINPHONE)
-        assert(0);
-#endif
+        return;
     }
-    /*
-    if ( bounds.size.height > 16384 || bounds.size.width > 16384 ) {
-    TraceWarning(TAG, L"**** Warning: Bad bounds on CALayer - %d, %d, %d, %d *****", (int) bounds.origin.x, (int)
-    bounds.origin.y,
-    (int) bounds.size.width, (int) bounds.size.height);
-    bounds.size.height = 32;
-    bounds.size.width = 32;
-    //((char *) 0) = 0;
-    //assert(0);
-    }
-    */
-    id<CAAction> action = nil;
 
+    id<CAAction> action = nil;
     if (priv->bounds.size.width != bounds.size.width || priv->bounds.size.height != bounds.size.height ||
         priv->bounds.origin.x != bounds.origin.x || priv->bounds.origin.y != bounds.origin.y) {
         action = [self actionForKey:_boundsAction];
@@ -1226,41 +1050,16 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     }
 
     [action runActionForKey:(id)_boundsAction object:self arguments:nil];
-
-    priv->sizeSet = TRUE;
-    priv->originSet = TRUE;
 }
 
-- (void)setOrigin:(CGPoint)origin {
-    [self _setOrigin:origin updateContent:YES];
-}
-
-- (void)_setOrigin:(CGPoint)origin updateContent:(BOOL)updateCALayerOrigin {
+- (void)_setOrigin:(CGPoint)origin {
     if (origin.x != origin.x || origin.y != origin.y) {
         TraceWarning(TAG, L"**** Warning: Bad origin on CALayer - %f, %f *****", origin.x, origin.y);
-        memset(&origin, 0, sizeof(CGPoint));
-        assert(0);
+        FAIL_FAST();
     }
 
-    if (priv->bounds.origin.x != origin.x || priv->bounds.origin.y != origin.y) {
-        id<CAAction> action = nil;
-        action = [self actionForKey:_boundsOriginAction];
-        priv->bounds.origin = origin;
-        [action runActionForKey:(id)_boundsOriginAction object:self arguments:nil];
-
-        // In the case of scrollviewer, we should not to update backing CALayer origin, This is related to our new design.
-        // previously updating the CALayer origin would resulting in content scrolling. but now scrollviewer
-        // is the one doing scrolling. so UIScrollview's origin really does not change any more.
-        // otherwise, it will result in double scrolling - meaning, scrollviewer does the scroll once. CALayer will scroll the
-        // scrollviewer itself.
-        if (updateCALayerOrigin) {
-            NSValue* newOriginValue = [[NSValue alloc] initWithCGPoint:priv->bounds.origin];
-            [CATransaction _setPropertyForLayer:self name:@"bounds.origin" value:newOriginValue];
-            [newOriginValue release];
-        }
-
-        priv->originSet = TRUE;
-    }
+    priv->bounds.origin = origin;
+    [self setNeedsLayout];
 }
 
 /**
@@ -1290,7 +1089,6 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 /**
  @Status Interoperable
 */
-
 - (CGRect)contentsCenter {
     return priv->contentsCenter;
 }
@@ -1408,7 +1206,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     if ([delegateAddr respondsToSelector:@selector(drawRect:)]) {
         if (!object_isMethodFromClass(priv->delegate, @selector(drawRect:), "UIView") &&
             ![priv->delegate isKindOfClass:[CAEAGLLayer class]]) {
-            priv->contentsScale = GetCACompositor()->screenScale();
+            priv->contentsScale = GetCACompositor()->GetScreenScale();
         }
     }
 }
@@ -1483,7 +1281,8 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
         }
     }
 
-    GetCACompositor()->setNodeTexture([CATransaction _currentDisplayTransaction], priv->_presentationNode, NULL, CGSizeMake(0, 0), 0.0f);
+    // Clear out the display texture for this layer
+    [CATransaction _currentLayerTransaction]->SetLayerTexture(priv->_layerProxy, nullptr, CGSizeMake(0, 0), 0.0f);
     [self setNeedsDisplay];
 }
 
@@ -1506,21 +1305,33 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 }
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 - (void)setZPosition:(float)pos {
-    priv->zPosition = pos;
-
-    NSNumber* newZPos = [[NSNumber alloc] initWithFloat:priv->zPosition];
-    [CATransaction _setPropertyForLayer:self name:@"zPosition" value:newZPos];
-    [newZPos release];
+    UNIMPLEMENTED();
 }
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 - (float)zPosition {
-    return priv->zPosition;
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setAnchorPointZ:(float)pos {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (float)anchorPointZ {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
@@ -1565,7 +1376,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     }
 
     if (curAnim != nil) {
-        [curAnim _abortAnimation];
+        [curAnim _removeAnimationsFromLayer];
     }
 
     CAAnimation* animCopy = [anim copy];
@@ -1650,20 +1461,19 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     newTransform.m[3][0] = transform.tx;
     newTransform.m[3][1] = transform.ty;
 
-    if (memcmp(priv->transform.m, newTransform.m, sizeof(newTransform.m)) == 0) {
-        return;
-    }
+    [self setTransform:newTransform];
+}
 
-    id<CAAction> action = [self actionForKey:_transformAction];
-
-    memcpy(&priv->transform, &newTransform, sizeof(CATransform3D));
-    priv->_frameIsCached = FALSE;
-
-    [action runActionForKey:(id)_transformAction object:self arguments:nil];
-
-    NSValue* transformValue = [[NSValue alloc] initWithCATransform3D:priv->transform];
-    [CATransaction _setPropertyForLayer:self name:@"transform" value:transformValue];
-    [transformValue release];
+/**
+ @Status Interoperable
+*/
+- (CGAffineTransform)affineTransform {
+    return CGAffineTransformMake(priv->transform.m[0][0],
+                                 priv->transform.m[0][1],
+                                 priv->transform.m[1][0],
+                                 priv->transform.m[1][1],
+                                 priv->transform.m[3][0],
+                                 priv->transform.m[3][1]);
 }
 
 /**
@@ -1689,26 +1499,23 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 /**
  @Status Interoperable
 */
-- (void)setSublayerTransform:(CATransform3D)transform {
-    memcpy(priv->sublayerTransform.m, transform.m, sizeof(transform.m));
-
-    NSValue* newTransform = [[NSValue alloc] initWithCATransform3D:priv->sublayerTransform];
-    [CATransaction _setPropertyForLayer:self name:@"sublayerTransform" value:newTransform];
-    [newTransform release];
-}
-
-/**
- @Status Interoperable
-*/
-- (CATransform3D)sublayerTransform {
-    return priv->sublayerTransform;
-}
-
-/**
- @Status Interoperable
-*/
 - (CATransform3D)transform {
     return priv->transform;
+}
+
+/**
+ @Status Stub
+*/
+- (void)setSublayerTransform:(CATransform3D)transform {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (CATransform3D)sublayerTransform {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
@@ -1721,10 +1528,15 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
         _ClearColorQuad(priv->backgroundColor);
     }
 
-    [CATransaction _setPropertyForLayer:self name:@"backgroundColor" value:(NSObject*)color];
     CGColorRef old = priv->_backgroundColor;
     priv->_backgroundColor = CGColorRetain(color);
     CGColorRelease(old);
+
+    // The CATransaction is now synchronous and in this scenario, the backgroundColor
+    // is updated almost immediately.By setting the priv->background first,
+    // we can ensure both states are kept in sync which is useful when performing
+    // automated testing.
+    [CATransaction _setPropertyForLayer:self name:@"backgroundColor" value:(NSObject*)color];
 
     [self setNeedsDisplay];
 }
@@ -1737,12 +1549,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 }
 
 - (void)_setContentColor:(CGColorRef)newColor {
-    if (newColor != nil) {
-        priv->contentColor = *[static_cast<UIColor*>(newColor) _getColors];
-    } else {
-        _ClearColorQuad(priv->contentColor);
-    }
-    [CATransaction _setPropertyForLayer:self name:@"contentColor" value:static_cast<UIColor*>(newColor)];
+    UNIMPLEMENTED();
 }
 
 /**
@@ -1887,7 +1694,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 */
 - (void)setShouldRasterize:(BOOL)shouldRasterize {
     priv->_shouldRasterize = shouldRasterize;
-    GetCACompositor()->SetShouldRasterize(priv->_presentationNode, shouldRasterize);
+    priv->_layerProxy->SetShouldRasterize(shouldRasterize);
 }
 
 /**
@@ -1976,21 +1783,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
         bool shouldAnimate = false;
 
         if (key == _positionAction) {
-            if (priv->positionSet) {
-                shouldAnimate = true;
-            }
-        } else if (key == _boundsOriginAction) {
-            if (priv->originSet) {
-                shouldAnimate = true;
-            }
-        } else if (key == _boundsSizeAction) {
-            if (priv->sizeSet) {
-                shouldAnimate = true;
-            }
+            shouldAnimate = true;
         } else if (key == _boundsAction) {
-            if (priv->sizeSet) {
-                shouldAnimate = true;
-            }
+            shouldAnimate = true;
         } else if (key == _transformAction) {
             shouldAnimate = true;
         } else if (key == _opacityAction) {
@@ -2004,12 +1799,13 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
         if (shouldAnimate) {
             ret = [CATransaction _implicitAnimationForKey:key];
             if (ret != nil) {
-                NSObject* value = GetCACompositor()->getDisplayProperty(priv->_presentationNode, [key UTF8String]);
+                NSObject* value = reinterpret_cast<NSObject*>(priv->_layerProxy->GetPropertyValue([key UTF8String]));
                 [static_cast<CABasicAnimation*>(ret) setFromValue:value];
             }
         }
     }
 
+    // The documentation says that we must convert from NSNull to nil here
     if ([static_cast<NSObject*>(ret) isKindOfClass:[NSNull class]]) {
         return nil;
     }
@@ -2025,18 +1821,16 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     return nil;
 }
 
-- (DisplayTexture*)_getDisplayTexture {
+- (std::shared_ptr<IDisplayTexture>)_getDisplayTexture {
     //  Update if needed
     [self displayIfNeeded];
 
-    DisplayTexture* ourTexture = NULL;
-
-    //  Create a texture
+    //  Create and return a texture if we have contents
     if (priv->contents) {
-        ourTexture = GetCACompositor()->GetDisplayTextureForCGImage(priv->contents, true);
+        return GetCACompositor()->GetDisplayTextureForCGImage(priv->contents);
     }
 
-    return ourTexture;
+    return nullptr;
 }
 
 /**
@@ -2091,8 +1885,6 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
                                           -(priv->position.y - priv->bounds.size.height * priv->anchorPoint.y),
                                           0.0f);
     curTransform = CATransform3DConcat(curTransform, priv->transform);
-    // curTransform.Translate(-priv->bounds.origin.x, -priv->bounds.origin.y, 0.0f);
-
     CATransform3DTransformPoints(curTransform, &pt, 1);
 
     point.x = pt.x;
@@ -2130,11 +1922,11 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 - (void)dealloc {
     if (DEBUG_VERBOSE) {
         TraceVerbose(TAG,
-            L"CALayer dealloc: (%hs - 0x%p, %hs - 0x%p).",
-            object_getClassName(self),
-            self,
-            priv->delegate ? object_getClassName(priv->delegate) : "nil",
-            priv->delegate);
+                     L"CALayer dealloc: (%hs - 0x%p, %hs - 0x%p).",
+                     object_getClassName(self),
+                     self,
+                     priv->delegate ? object_getClassName(priv->delegate) : "nil",
+                     priv->delegate);
     }
 
     [self removeAllAnimations];
@@ -2142,8 +1934,6 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     while (priv->firstChild) {
         [priv->firstChild->self removeFromSuperlayer];
     }
-
-    [_contentsElement release];
 
     delete priv;
     priv = NULL;
@@ -2279,11 +2069,6 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 */
 - (void)setMask:(CALayer*)mask {
     UNIMPLEMENTED();
-    id oldLayer = priv->maskLayer;
-    priv->maskLayer = [mask retain];
-    [oldLayer release];
-    [mask removeFromSuperlayer];
-    priv->hasNewContents = TRUE;
 }
 
 /**
@@ -2361,7 +2146,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 
     while (curLayer != nil) {
         if (curLayer->priv->superlayer == nil || ((CALayer*)curLayer->priv->superlayer)->priv->needsLayout == FALSE) {
-            DoLayerLayouts(curLayer, false);
+            DoLayerLayouts(curLayer);
             return;
         }
 
@@ -2369,13 +2154,20 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     }
 }
 
-// Kicks off an update to the layer's layout and display hierarchy if needed
-- (void)_displayChanged {
-    // Find the topmost superlayer
-    CALayer* superLayer = self;
+// Finds the topmost superlayer for the specified layer
+static CALayer* _findSuperLayerForLayer(CALayer* layer) {
+    CALayer* superLayer = layer;
     while (superLayer->priv->superlayer) {
         superLayer = superLayer->priv->superlayer;
     }
+
+    return superLayer;
+}
+
+// Kicks off an update to the layer's layout and display hierarchy if needed
+- (void)_displayChanged {
+    // Find the topmost superlayer
+    CALayer* superLayer = _findSuperLayerForLayer(self);
 
     // Kick off a display update if necessary
     if (!superLayer->priv->_displayPending) {
@@ -2397,21 +2189,19 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
         //////////////////////////////////////////////////////////////////////////////////////////////
         // TODO: Switch to ARC
         // We don't want to do display updates on an object that's currently deallocating.
-        // In order to ensure that we're not mid-deallocation during the display update, 
+        // In order to ensure that we're not mid-deallocation during the display update,
         // we create a weak reference here, and then *immediately* acquire a strong reference to it.
         // If that succeeds, we're guaranteed to not dealloc until after the block executes.
-        
+
         // Store a weak reference - this will fail if we're already deallocating
         id weakSuperLayer = nil;
         objc_storeWeak(&weakSuperLayer, superLayer);
-        
+
         // Grab a strong reference that we can pass into the block - this will fail if we're already deallocating
         auto strongSuperLayer = reinterpret_cast<CALayer*>(objc_loadWeakRetained(&weakSuperLayer));
-        
+
         // We need to make sure the retain we just performed above is released *after* we construct the block
-        auto releaseSuperLayer = wil::ScopeExit([&strongSuperLayer]() { 
-            objc_release(strongSuperLayer); 
-        });
+        auto releaseSuperLayer = wil::ScopeExit([&strongSuperLayer]() { objc_release(strongSuperLayer); });
 
         // The weak reference is no longer needed, so clean up after ourselves
         objc_destroyWeak(&weakSuperLayer);
@@ -2419,41 +2209,37 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
         // Grab a raw pointer (so it's not block-retained) - for logging purposes (if needed)
         void* rawSuperLayerForLog = reinterpret_cast<void*>(superLayer);
 
-        dispatch_async(
-            dispatch_get_main_queue(),
-            ^{
-                // If we have a valid non-dealloc'd object, run its display update pass
-                if (strongSuperLayer) {
-                    // Only run the update pass for this superLayer if it's a 'root layer' - aka a UIWindow layer,
-                    // or if we're running as a framework - aka for middleware scenarios - where the layer won't have
-                    // a 'root' superlayer.
-                    if (strongSuperLayer->priv->isRootLayer || GetCACompositor()->IsRunningAsFramework()) {
-                        strongSuperLayer->priv->_displayPending = false;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // If we have a valid non-dealloc'd object, run its display update pass
+            if (strongSuperLayer) {
+                // Only run the update pass for this superLayer if it's a 'root layer' - aka a UIWindow layer,
+                // or if we're running as a framework - aka for middleware scenarios - where the layer won't have
+                // a 'root' superlayer.
+                if (strongSuperLayer->priv->isRootLayer || GetCACompositor()->IsRunningAsFramework()) {
+                    strongSuperLayer->priv->_displayPending = false;
 
-                        if (DEBUG_VERBOSE) {
-                            TraceVerbose(
-                                TAG,
-                                L"Performing _displayChanged work for superlayer (%hs - 0x%p, %hs - 0x%p).",
-                                object_getClassName(strongSuperLayer),
-                                strongSuperLayer,
-                                strongSuperLayer->priv->delegate ? object_getClassName(strongSuperLayer->priv->delegate) : "nil",
-                                strongSuperLayer->priv->delegate);
-                        }
-
-                        // Recalculate layouts
-                        DoLayerLayouts(strongSuperLayer, true);
-
-                        // Redisplay anything necessary
-                        DoDisplayList(strongSuperLayer);
+                    if (DEBUG_VERBOSE) {
+                        TraceVerbose(TAG,
+                                     L"Performing _displayChanged work for superlayer (%hs - 0x%p, %hs - 0x%p).",
+                                     object_getClassName(strongSuperLayer),
+                                     strongSuperLayer,
+                                     strongSuperLayer->priv->delegate ? object_getClassName(strongSuperLayer->priv->delegate) : "nil",
+                                     strongSuperLayer->priv->delegate);
                     }
-                } else if (DEBUG_VERBOSE) {
-                    TraceVerbose(TAG, L"Skipping _displayChanged work for currently-dealloc'd object (0x%p).", rawSuperLayerForLog);
-                }
 
-                // Always commit and process all queued CATransactions
-                [CATransaction _commitRootQueue];
-                GetCACompositor()->ProcessTransactions();
-            });
+                    // Recalculate layouts
+                    DoLayerLayouts(strongSuperLayer);
+
+                    // Redisplay anything necessary
+                    DoDisplayList(strongSuperLayer);
+                }
+            } else if (DEBUG_VERBOSE) {
+                TraceVerbose(TAG, L"Skipping _displayChanged work for currently-dealloc'd object (0x%p).", rawSuperLayerForLog);
+            }
+
+            // Always commit and process all queued CATransactions
+            [CATransaction _commitAndProcessRootQueue];
+        });
     }
 }
 
@@ -2482,8 +2268,8 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     }
 }
 
-- (DisplayNode*)_presentationNode {
-    return priv->_presentationNode;
+- (std::shared_ptr<ILayerProxy>)_layerProxy {
+    return priv->_layerProxy;
 }
 
 - (int)_pixelWidth {
@@ -2498,17 +2284,28 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     priv->isRootLayer = isRootLayer;
 }
 
-#define MAX_DEPTH 32
+// Queries for, caches, and returns our backing XAML node's sublayer element.
+- (WXFrameworkElement*)_getSublayerXamlElement {
+    if (!priv->_sublayerXamlElement) {
+        Microsoft::WRL::ComPtr<IInspectable> inspectable(priv->_layerProxy->GetSublayerXamlElement());
+        priv->_sublayerXamlElement = [WXFrameworkElement createWith:inspectable.Get()];
+    }
 
+    return priv->_sublayerXamlElement;
+}
+
+// CAUTION: This is debug-only/temporary code; don't use it anywhere else!
 void GetLayerTransform(CALayer* layer, CGAffineTransform* outTransform) {
+    static const int c_maxDepth = 32;
+
     //  Work backwards to its root layer
-    CALayer* layerList[MAX_DEPTH];
+    CALayer* layerList[c_maxDepth];
     int layerListLen = 0;
 
     CALayer* curLayer = (CALayer*)layer;
 
     while (curLayer != nil) {
-        assert(layerListLen < MAX_DEPTH);
+        assert(layerListLen < c_maxDepth);
         layerList[layerListLen++] = curLayer;
 
         curLayer = (CALayer*)curLayer->priv->superlayer;
@@ -2546,57 +2343,114 @@ void GetLayerTransform(CALayer* layer, CGAffineTransform* outTransform) {
     }
 }
 
-// TODO: GitHub issue 508 and 509
-// We need a type-safe way to do this with projections.  This is copied verbatim from the projections
-// code and works perfectly for this limited usage, but we don't do any type validation below.
-// all _createRtProxy instance needs to go in a shared DLL in the future
-inline id _createRtProxy(Class cls, IInspectable* iface) {
-    // Oddly, WinRT can hand us back NULL objects from successful function calls. Plumb these through as nil.
-    if (!iface) {
-        return nil;
-    }
+// CAUTION: This is debug-only/temporary code; don't use it anywhere else!
+CGPoint _legacyConvertPoint(CGPoint point, CALayer* fromLayer, CALayer* toLayer) {
+    //  Convert the point to center-based position
+    point.x -= fromLayer->priv->bounds.size.width * fromLayer->priv->anchorPoint.x;
+    point.y -= fromLayer->priv->bounds.size.height * fromLayer->priv->anchorPoint.y;
+ 
+    //  Convert to world-view
+    CGAffineTransform fromTransform;
+    GetLayerTransform(fromLayer, &fromTransform);
+    point = CGPointApplyAffineTransform(point, fromTransform);
 
-    RTObject* ret = [NSAllocateObject(cls, 0, 0) init];
-    [ret setComObj:iface];
-    return [ret autorelease];
+    CGAffineTransform toTransform;
+    GetLayerTransform(toLayer, &toTransform);
+    toTransform = CGAffineTransformInvert(toTransform);
+    point = CGPointApplyAffineTransform(point, toTransform);
+ 
+    //  Convert the point from center-based position
+    point.x += toLayer->priv->bounds.size.width * toLayer->priv->anchorPoint.x;
+    point.y += toLayer->priv->bounds.size.height * toLayer->priv->anchorPoint.y;
+ 
+    return point;
 }
 
-inline WXUIElement* _getBackingXamlElementForCALayer(CALayer* layer) {
-    Microsoft::WRL::ComPtr<IInspectable> fromNode(GetCACompositor()->GetXamlLayoutElement([layer _presentationNode]));
-    return _createRtProxy([WXUIElement class], fromNode.Get());
+// CAUTION: This is debug-only/temporary code and won't work in most scenarios; don't use it anywhere else!
+bool _floatAlmostEqual(float a, float b) {
+    // Just look at two trailing decimals for our touch point
+    a = std::floor(a * 100) / 100;
+    b = std::floor(b * 100) / 100;
+    return (fabs(a - b) <= FLT_EPSILON);
 }
 
 /**
  @Status Interoperable
 */
 + (CGPoint)convertPoint:(CGPoint)point fromLayer:(CALayer*)fromLayer toLayer:(CALayer*)toLayer {
-    CGPoint ret = { point.x, point.y };
+    if (!fromLayer && !toLayer) {
+        if (DEBUG_VERBOSE) {
+            TraceVerbose(TAG, L"convertPoint cannot convert points for two nil layers.");
+        }
 
-    if (fromLayer && toLayer) {
-        // get the backing xaml UIElement for fromLayer
-        WXUIElement* fromLayerElement = _getBackingXamlElementForCALayer(fromLayer);
+        return point;
+    }
 
-        // get the backing xaml UIElement for toLayer
-        WXUIElement* toLayerElement = _getBackingXamlElementForCALayer(toLayer);
+    if (!fromLayer) {
+        // get the top most layer for the current layer hierarchy
+        fromLayer = _findSuperLayerForLayer(toLayer);
+    }
 
-        // set up transform from xaml elment in fromLayer to xaml element in toLayer
-        WUXMGeneralTransform* transform = [fromLayerElement transformToVisual:toLayerElement];
+    if (!toLayer) {
+        // get the top most layer for the current layer hierarchy
+        toLayer = _findSuperLayerForLayer(fromLayer);
+    }
 
-        // transform the points in fromLayer to point in toLayer
-        WFPoint* pointInFromLayer = [WXPointHelper fromCoordinates:point.x y:point.y];
-        WFPoint* pointInToLayer = [transform transformPoint:pointInFromLayer];
-        ret = { pointInToLayer.x, pointInToLayer.y };
+    // Get the backing sublayer xaml UIElement for fromLayer
+    // We use the sublayer element to support proper point conversion within a scrolled view.
+    WXUIElement* fromLayerElement = [fromLayer _getSublayerXamlElement];
+
+    // Get the backing sublayer xaml UIElement for toLayer
+    // We use the sublayer element to support proper point conversion within a scrolled view.
+    WXUIElement* toLayerElement = [toLayer _getSublayerXamlElement];
+
+    // set up transform from xaml elment in fromLayer to xaml element in toLayer
+    WUXMGeneralTransform* transform = [fromLayerElement transformToVisual:toLayerElement];
+
+    // transform the points in fromLayer to point in toLayer
+    WFPoint* pointInFromLayer = [WXPointHelper fromCoordinates:point.x y:point.y];
+    WFPoint* pointInToLayer = [transform transformPoint:pointInFromLayer];
+    CGPoint ret = { pointInToLayer.x, pointInToLayer.y };
+
+    if (DEBUG_VERBOSE) {
+        // How does our new convertPoint logic compare to the legacy logic?
+        CGPoint legacyPoint = _legacyConvertPoint(point, fromLayer, toLayer);
+        if (!_floatAlmostEqual(ret.x, legacyPoint.x) || !_floatAlmostEqual(ret.y, legacyPoint.y)) {
+            TraceWarning(TAG, L"convertPoint: The legacy point {%f, %f} did not match the new point {%f, %f}!", legacyPoint.x, legacyPoint.y, ret.x, ret.y);
+        }
+
+        TraceVerbose(TAG, L"convertPoint:{%f, %f} to:{%f, %f}, legacyPoint={%f, %f}", point.x, point.y, ret.x, ret.y, legacyPoint.x, legacyPoint.y);
     }
 
     return ret;
 }
 
 + (CGRect)convertRect:(CGRect)pos fromLayer:(CALayer*)fromLayer toLayer:(CALayer*)toLayer {
-    // get the backing xaml UIElement for fromLayer
-    WXUIElement* fromLayerElement = _getBackingXamlElementForCALayer(fromLayer);
+    if (!fromLayer && !toLayer) {
+        if (DEBUG_VERBOSE) {
+            TraceVerbose(TAG, L"convertRect cannot convert rects for two nil layers.");
+        }
 
-    // get the backing xaml UIElement for toLayer
-    WXUIElement* toLayerElement = _getBackingXamlElementForCALayer(toLayer);
+        return pos;
+    }
+
+    if (!fromLayer) {
+        // get the top most layer for the current layer hierarchy
+        fromLayer = _findSuperLayerForLayer(toLayer);
+    }
+
+    if (!toLayer) {
+        // get the top most layer for the current layer hierarchy
+        toLayer = _findSuperLayerForLayer(fromLayer);
+    }
+
+    // Get the backing sublayer xaml UIElement for fromLayer
+    // We use the sublayer element to support proper point conversion within a scrolled view.
+    WXUIElement* fromLayerElement = [fromLayer _getSublayerXamlElement];
+
+    // Get the backing sublayer xaml UIElement for toLayer
+    // We use the sublayer element to support proper point conversion within a scrolled view.
+    WXUIElement* toLayerElement = [toLayer _getSublayerXamlElement];
 
     // set up transform from xaml elment in fromLayer to xaml element in toLayer
     WUXMGeneralTransform* transform = [fromLayerElement transformToVisual:toLayerElement];
@@ -2607,13 +2461,30 @@ inline WXUIElement* _getBackingXamlElementForCALayer(CALayer* layer) {
     WFRect* rectInToLayer = [transform transformBounds:rectInFromLayer];
 
     CGRect ret = { rectInToLayer.x, rectInToLayer.y, rectInToLayer.width, rectInToLayer.height };
+
+    if (DEBUG_VERBOSE) {
+        TraceVerbose(TAG,
+                     L"convertRect: {origin:{%f, %f} size:{%f, %f}} to {origin:{%f, %f} size:{%f, %f}}",
+                     pos.origin.x,
+                     pos.origin.y,
+                     pos.size.width,
+                     pos.size.height,
+                     ret.origin.x,
+                     ret.origin.y,
+                     ret.size.width,
+                     ret.size.height);
+    }
+
     return ret;
 }
 
 - (NSObject*)presentationValueForKey:(NSString*)key {
-    return GetCACompositor()->getDisplayProperty(priv->_presentationNode, [key UTF8String]);
+    return reinterpret_cast<NSObject*>(priv->_layerProxy->GetPropertyValue([key UTF8String]));
 }
 
+////////////////////////////////////////////////////////////////////
+// TODO: This is a hack only here for UIWindow
+// We should find it a better home (just setting its backing Canvas.Z-Index property directly should be sufficient)
 - (void)_setZIndex:(int)zIndex {
     NSNumber* newZIndex = [[NSNumber alloc] initWithInt:zIndex];
     [CATransaction _setPropertyForLayer:self name:@"zIndex" value:newZIndex];
@@ -2656,12 +2527,10 @@ inline WXUIElement* _getBackingXamlElementForCALayer(CALayer* layer) {
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (BOOL)needsLayout {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return priv->needsLayout;
 }
 
 /**

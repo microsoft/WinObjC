@@ -18,6 +18,7 @@
 
 #include <limits>
 #include <iostream>
+#include <iterator>
 
 #include "utils.h"
 #include "sbassert.h"
@@ -47,40 +48,59 @@ bool queryBoolSelection(const String& queryMessage)
   }
 }
 
-template <class T>
-void queryListSelection(const std::vector<T*>& vec, const String& queryMessage, const String& itemName, std::vector<T*>& ret)
+static bool parseListSelection(const String& selection, size_t upperBound, std::set<size_t>& ret)
 {
-  sbAssert(!vec.empty());
+  // Tokenize the comma-separated list
+  StringVec tokens;
+  tokenize(selection, tokens, ",", "", "", "", "", false, false);
 
-  size_t selection = 0;
-  if (vec.size() > 1) {
-    std::cout << queryMessage << std::endl;
-    
-    std::cout << "  0) " << strToUpper("all " + itemName + "s") << std::endl;
-    for (int i = 0; i < vec.size(); i++)
-      std::cout << "  " << i+1 << ") " << vec[i]->getName() << std::endl;
-    
-    do {
-      std::cout << "Choose the " << itemName << "(s) to export: ";
-      std::cin >> selection;
-      if (std::cin.fail()) {
-        std::cin.clear();
-        std::cin.sync();
-      }
-    } while(selection > vec.size());
-    std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
+  ret.clear();
+  for (const String& token : tokens) {
+    String trimmedToken = trim(token);
+    int num = -1;
+    size_t sz;
+    try {
+      num = std::stoi(trimmedToken, &sz);
+    } catch (...) {}
+
+    // Make sure the whole token was parsed and the value is valid
+    if (sz == trimmedToken.length() && num >= 0 && num <= upperBound) {
+      ret.insert(num);
+    } else {
+      return false;
+    }
   }
 
-  std::cout << std::endl;
-
-  if (selection == 0) {
-    ret.insert(ret.end(), vec.begin(), vec.end());
-  } else {
-    ret.push_back(vec[selection - 1]);
-  }
+  return ret.size() > 0;
 }
 
-// Explicit instantiation
-template void queryListSelection<const XCScheme>(const std::vector<const XCScheme*>& vec, const String& queryMessage, const String& itemName, std::vector<const XCScheme*>& ret);
-template void queryListSelection<const PBXTarget>(const std::vector<const PBXTarget*>& vec, const String& queryMessage, const String& itemName, std::vector<const PBXTarget*>& ret);
-template void queryListSelection<const XCBuildConfiguration>(const std::vector<const XCBuildConfiguration*>& vec, const String& queryMessage, const String& itemName, std::vector<const XCBuildConfiguration*>& ret);
+void queryListSelection(const StringVec& values, const String& queryMessage, const String& itemName, std::vector<size_t>& ret)
+{
+  std::set<size_t> selection;
+  if (values.size() == 1) {
+    selection.insert(1);
+  } else if (values.size() > 1) {
+    std::cout << queryMessage << std::endl;
+    std::cout << "  0) " << strToUpper("all " + itemName + "s") << std::endl;
+    for (int i = 0; i < values.size(); i++) {
+      std::cout << "  " << i + 1 << ") " << values[i] << std::endl;
+    }
+    
+    String input;
+    do {
+      std::cout << "Enter comma-separated list of " << itemName << "(s) to import: ";
+      getline(cin, input);
+    } while(!parseListSelection(input, values.size(), selection));
+    std::cout << std::endl;
+  }
+
+  ret.clear();
+  if (selection.find(0) != selection.end()) {
+    for (size_t i = 0; i < values.size(); ++i) { ret.push_back(i); }
+  } else {
+    std::transform(selection.begin(),
+                   selection.end(),
+                   back_inserter(ret),
+                   [](size_t n) { return n - 1; });
+  }
+}

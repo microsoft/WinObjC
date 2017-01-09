@@ -19,17 +19,17 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
+#define OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Graphics_Printing.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WGPPrintTaskOptions, WGPStandardPrintTaskOptions, WGPPrintTaskProgressingEventArgs, WGPPrintTaskCompletedEventArgs, WGPPrintTask,
-    WGPPrintTaskSourceRequestedDeferral, WGPPrintTaskSourceRequestedArgs, WGPPrintTaskRequestedDeferral, WGPPrintTaskRequest,
-    WGPPrintTaskRequestedEventArgs, WGPPrintManager;
+@class WGPPrintPageInfo, WGPPrintTaskOptions, WGPStandardPrintTaskOptions, WGPPrintTaskProgressingEventArgs, WGPPrintTaskCompletedEventArgs, WGPPrintTask, WGPPrintTaskSourceRequestedDeferral, WGPPrintTaskSourceRequestedArgs, WGPPrintTaskRequestedDeferral, WGPPrintTaskRequest, WGPPrintTaskRequestedEventArgs, WGPPrintManager;
 @class WGPPrintPageDescription;
-@protocol WGPIPrintTaskOptionsCoreProperties
-, WGPIPrintTaskOptionsCoreUIConfiguration, WGPIPrintTaskOptionsCore, WGPIStandardPrintTaskOptionsStatic, WGPIPrintDocumentSource,
-    WGPIPrintTaskProgressingEventArgs, WGPIPrintTaskCompletedEventArgs, WGPIPrintTask, WGPIPrintTaskTargetDeviceSupport,
-    WGPIPrintTaskSourceRequestedDeferral, WGPIPrintTaskSourceRequestedArgs, WGPIPrintTaskRequestedDeferral, WGPIPrintTaskRequest,
-    WGPIPrintTaskRequestedEventArgs, WGPIPrintManagerStatic, WGPIPrintManager;
+@protocol WGPIPrintTaskOptionsCoreProperties, WGPIPrintPageInfo, WGPIPrintTaskOptions, WGPIPrintTaskOptionsCoreUIConfiguration, WGPIPrintTaskOptionsCore, WGPIStandardPrintTaskOptionsStatic, WGPIStandardPrintTaskOptionsStatic2, WGPIPrintDocumentSource, WGPIPrintTaskProgressingEventArgs, WGPIPrintTaskCompletedEventArgs, WGPIPrintTask, WGPIPrintTaskTargetDeviceSupport, WGPIPrintTask2, WGPIPrintTaskSourceRequestedDeferral, WGPIPrintTaskSourceRequestedArgs, WGPIPrintTaskRequestedDeferral, WGPIPrintTaskRequest, WGPIPrintTaskRequestedEventArgs, WGPIPrintManagerStatic, WGPIPrintManagerStatic2, WGPIPrintManager;
 
 // Windows.Graphics.Printing.PrintMediaSize
 enum _WGPPrintMediaSize {
@@ -358,6 +358,16 @@ enum _WGPPrintBinding {
 };
 typedef unsigned WGPPrintBinding;
 
+// Windows.Graphics.Printing.PrintBordering
+enum _WGPPrintBordering {
+    WGPPrintBorderingDefault = 0,
+    WGPPrintBorderingNotAvailable = 1,
+    WGPPrintBorderingPrinterCustom = 2,
+    WGPPrintBorderingBordered = 3,
+    WGPPrintBorderingBorderless = 4,
+};
+typedef unsigned WGPPrintBordering;
+
 // Windows.Graphics.Printing.PrintTaskCompletion
 enum _WGPPrintTaskCompletion {
     WGPPrintTaskCompletionAbandoned = 0,
@@ -367,20 +377,22 @@ enum _WGPPrintTaskCompletion {
 };
 typedef unsigned WGPPrintTaskCompletion;
 
-#include "WindowsApplicationModelDataTransfer.h"
 #include "WindowsFoundation.h"
+#include "WindowsApplicationModelDataTransfer.h"
+#include "WindowsStorageStreams.h"
 // Windows.Graphics.Printing.PrintTaskSourceRequestedHandler
 #ifndef __WGPPrintTaskSourceRequestedHandler__DEFINED
 #define __WGPPrintTaskSourceRequestedHandler__DEFINED
-typedef void (^WGPPrintTaskSourceRequestedHandler)(WGPPrintTaskSourceRequestedArgs* args);
+typedef void(^WGPPrintTaskSourceRequestedHandler)(WGPPrintTaskSourceRequestedArgs* args);
 #endif // __WGPPrintTaskSourceRequestedHandler__DEFINED
+
 
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Graphics.Printing.PrintPageDescription
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 @interface WGPPrintPageDescription : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property (retain) WFSize* pageSize;
 @property (retain) WFRect* imageableRect;
 @property unsigned int dpiX;
@@ -390,7 +402,7 @@ WINRT_EXPORT
 // Windows.Graphics.Printing.PrintTaskSourceRequestedHandler
 #ifndef __WGPPrintTaskSourceRequestedHandler__DEFINED
 #define __WGPPrintTaskSourceRequestedHandler__DEFINED
-typedef void (^WGPPrintTaskSourceRequestedHandler)(WGPPrintTaskSourceRequestedArgs* args);
+typedef void(^WGPPrintTaskSourceRequestedHandler)(WGPPrintTaskSourceRequestedArgs* args);
 #endif // __WGPPrintTaskSourceRequestedHandler__DEFINED
 
 // Windows.Graphics.Printing.IPrintTaskOptionsCoreProperties
@@ -413,6 +425,10 @@ typedef void (^WGPPrintTaskSourceRequestedHandler)(WGPPrintTaskSourceRequestedAr
 @property WGPPrintStaple staple;
 @end
 
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
+@interface WGPIPrintTaskOptionsCoreProperties : RTObject <WGPIPrintTaskOptionsCoreProperties>
+@end
+
 #endif // __WGPIPrintTaskOptionsCoreProperties_DEFINED__
 
 // Windows.Graphics.Printing.IPrintTaskOptionsCoreUIConfiguration
@@ -421,6 +437,10 @@ typedef void (^WGPPrintTaskSourceRequestedHandler)(WGPPrintTaskSourceRequestedAr
 
 @protocol WGPIPrintTaskOptionsCoreUIConfiguration
 @property (readonly) NSMutableArray* /* NSString * */ displayedOptions;
+@end
+
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
+@interface WGPIPrintTaskOptionsCoreUIConfiguration : RTObject <WGPIPrintTaskOptionsCoreUIConfiguration>
 @end
 
 #endif // __WGPIPrintTaskOptionsCoreUIConfiguration_DEFINED__
@@ -433,6 +453,10 @@ typedef void (^WGPPrintTaskSourceRequestedHandler)(WGPPrintTaskSourceRequestedAr
 - (WGPPrintPageDescription*)getPageDescription:(unsigned int)jobPageNumber;
 @end
 
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
+@interface WGPIPrintTaskOptionsCore : RTObject <WGPIPrintTaskOptionsCore>
+@end
+
 #endif // __WGPIPrintTaskOptionsCore_DEFINED__
 
 // Windows.Graphics.Printing.IPrintDocumentSource
@@ -442,33 +466,57 @@ typedef void (^WGPPrintTaskSourceRequestedHandler)(WGPPrintTaskSourceRequestedAr
 @protocol WGPIPrintDocumentSource
 @end
 
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
+@interface WGPIPrintDocumentSource : RTObject <WGPIPrintDocumentSource>
+@end
+
 #endif // __WGPIPrintDocumentSource_DEFINED__
+
+// Windows.Graphics.Printing.PrintPageInfo
+#ifndef __WGPPrintPageInfo_DEFINED__
+#define __WGPPrintPageInfo_DEFINED__
+
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
+@interface WGPPrintPageInfo : RTObject
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (retain) WFSize* pageSize;
+@property WGPPrintOrientation orientation;
+@property WGPPrintMediaSize mediaSize;
+@property unsigned int dpiY;
+@property unsigned int dpiX;
+@end
+
+#endif // __WGPPrintPageInfo_DEFINED__
 
 // Windows.Graphics.Printing.PrintTaskOptions
 #ifndef __WGPPrintTaskOptions_DEFINED__
 #define __WGPPrintTaskOptions_DEFINED__
 
-WINRT_EXPORT
-@interface WGPPrintTaskOptions
-    : RTObject <WGPIPrintTaskOptionsCore, WGPIPrintTaskOptionsCoreProperties, WGPIPrintTaskOptionsCoreUIConfiguration>
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
+@interface WGPPrintTaskOptions : RTObject <WGPIPrintTaskOptionsCore, WGPIPrintTaskOptionsCoreProperties, WGPIPrintTaskOptionsCoreUIConfiguration>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property WGPPrintMediaSize mediaSize;
+@property WGPPrintBordering bordering;
 @property WGPPrintMediaType mediaType;
+@property WGPPrintMediaSize mediaSize;
+@property unsigned int numberOfCopies;
 @property WGPPrintHolePunch holePunch;
 @property WGPPrintBinding binding;
 @property WGPPrintDuplex duplex;
 @property WGPPrintColorMode colorMode;
-@property WGPPrintStaple staple;
 @property WGPPrintCollation collation;
 @property WGPPrintQuality printQuality;
+@property WGPPrintStaple staple;
 @property WGPPrintOrientation orientation;
-@property unsigned int numberOfCopies;
-@property (readonly) unsigned int maxCopies;
 @property (readonly) unsigned int minCopies;
+@property (readonly) unsigned int maxCopies;
 @property (readonly) NSMutableArray* /* NSString * */ displayedOptions;
 - (WGPPrintPageDescription*)getPageDescription:(unsigned int)jobPageNumber;
+- (RTObject<WSSIRandomAccessStream>*)getPagePrintTicket:(WGPPrintPageInfo*)printPageInfo;
 @end
 
 #endif // __WGPPrintTaskOptions_DEFINED__
@@ -477,21 +525,22 @@ WINRT_EXPORT
 #ifndef __WGPStandardPrintTaskOptions_DEFINED__
 #define __WGPStandardPrintTaskOptions_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 @interface WGPStandardPrintTaskOptions : RTObject
-+ (NSString*)binding;
-+ (NSString*)collation;
-+ (NSString*)colorMode;
-+ (NSString*)copies;
-+ (NSString*)duplex;
-+ (NSString*)holePunch;
-+ (NSString*)inputBin;
-+ (NSString*)mediaSize;
-+ (NSString*)mediaType;
-+ (NSString*)nUp;
-+ (NSString*)orientation;
-+ (NSString*)printQuality;
-+ (NSString*)staple;
++ (NSString *)duplex;
++ (NSString *)binding;
++ (NSString *)collation;
++ (NSString *)colorMode;
++ (NSString *)copies;
++ (NSString *)nUp;
++ (NSString *)holePunch;
++ (NSString *)inputBin;
++ (NSString *)mediaSize;
++ (NSString *)mediaType;
++ (NSString *)orientation;
++ (NSString *)printQuality;
++ (NSString *)staple;
++ (NSString *)bordering;
 @end
 
 #endif // __WGPStandardPrintTaskOptions_DEFINED__
@@ -500,7 +549,7 @@ WINRT_EXPORT
 #ifndef __WGPPrintTaskProgressingEventArgs_DEFINED__
 #define __WGPPrintTaskProgressingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 @interface WGPPrintTaskProgressingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -514,7 +563,7 @@ WINRT_EXPORT
 #ifndef __WGPPrintTaskCompletedEventArgs_DEFINED__
 #define __WGPPrintTaskCompletedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 @interface WGPPrintTaskCompletedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -528,7 +577,7 @@ WINRT_EXPORT
 #ifndef __WGPPrintTask_DEFINED__
 #define __WGPPrintTask_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 @interface WGPPrintTask : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -536,15 +585,16 @@ WINRT_EXPORT
 @property (readonly) WGPPrintTaskOptions* options;
 @property (readonly) WADDataPackagePropertySet* properties;
 @property (readonly) RTObject<WGPIPrintDocumentSource>* source;
+@property BOOL isPreviewEnabled;
 @property BOOL isPrinterTargetEnabled;
 @property BOOL is3DManufacturingTargetEnabled;
-- (EventRegistrationToken)addCompletedEvent:(void (^)(WGPPrintTask*, WGPPrintTaskCompletedEventArgs*))del;
+- (EventRegistrationToken)addCompletedEvent:(void(^)(WGPPrintTask*, WGPPrintTaskCompletedEventArgs*))del;
 - (void)removeCompletedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPreviewingEvent:(void (^)(WGPPrintTask*, RTObject*))del;
+- (EventRegistrationToken)addPreviewingEvent:(void(^)(WGPPrintTask*, RTObject*))del;
 - (void)removePreviewingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addProgressingEvent:(void (^)(WGPPrintTask*, WGPPrintTaskProgressingEventArgs*))del;
+- (EventRegistrationToken)addProgressingEvent:(void(^)(WGPPrintTask*, WGPPrintTaskProgressingEventArgs*))del;
 - (void)removeProgressingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addSubmittingEvent:(void (^)(WGPPrintTask*, RTObject*))del;
+- (EventRegistrationToken)addSubmittingEvent:(void(^)(WGPPrintTask*, RTObject*))del;
 - (void)removeSubmittingEvent:(EventRegistrationToken)tok;
 @end
 
@@ -554,7 +604,7 @@ WINRT_EXPORT
 #ifndef __WGPPrintTaskSourceRequestedDeferral_DEFINED__
 #define __WGPPrintTaskSourceRequestedDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 @interface WGPPrintTaskSourceRequestedDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -568,7 +618,7 @@ WINRT_EXPORT
 #ifndef __WGPPrintTaskSourceRequestedArgs_DEFINED__
 #define __WGPPrintTaskSourceRequestedArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 @interface WGPPrintTaskSourceRequestedArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -584,7 +634,7 @@ WINRT_EXPORT
 #ifndef __WGPPrintTaskRequestedDeferral_DEFINED__
 #define __WGPPrintTaskRequestedDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 @interface WGPPrintTaskRequestedDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -598,13 +648,13 @@ WINRT_EXPORT
 #ifndef __WGPPrintTaskRequest_DEFINED__
 #define __WGPPrintTaskRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 @interface WGPPrintTaskRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFDateTime* deadline;
-- (WGPPrintTask*)createPrintTask:(NSString*)title handler:(WGPPrintTaskSourceRequestedHandler)handler;
+- (WGPPrintTask*)createPrintTask:(NSString *)title handler:(WGPPrintTaskSourceRequestedHandler)handler;
 - (WGPPrintTaskRequestedDeferral*)getDeferral;
 @end
 
@@ -614,7 +664,7 @@ WINRT_EXPORT
 #ifndef __WGPPrintTaskRequestedEventArgs_DEFINED__
 #define __WGPPrintTaskRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 @interface WGPPrintTaskRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -628,15 +678,17 @@ WINRT_EXPORT
 #ifndef __WGPPrintManager_DEFINED__
 #define __WGPPrintManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 @interface WGPPrintManager : RTObject
++ (BOOL)isSupported;
 + (WGPPrintManager*)getForCurrentView;
 + (void)showPrintUIAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-- (EventRegistrationToken)addPrintTaskRequestedEvent:(void (^)(WGPPrintManager*, WGPPrintTaskRequestedEventArgs*))del;
+- (EventRegistrationToken)addPrintTaskRequestedEvent:(void(^)(WGPPrintManager*, WGPPrintTaskRequestedEventArgs*))del;
 - (void)removePrintTaskRequestedEvent:(EventRegistrationToken)tok;
 @end
 
 #endif // __WGPPrintManager_DEFINED__
+

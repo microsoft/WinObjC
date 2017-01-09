@@ -19,11 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_FACEANALYSIS_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_FACEANALYSIS_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Media_FaceAnalysis.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WMFDetectedFace, WMFFaceTracker, WMFFaceDetector;
-@protocol WMFIDetectedFace
-, WMFIFaceDetector, WMFIFaceDetectorStatics, WMFIFaceTracker, WMFIFaceTrackerStatics;
+@protocol WMFIDetectedFace, WMFIFaceDetector, WMFIFaceDetectorStatics, WMFIFaceTracker, WMFIFaceTrackerStatics;
 
 #include "WindowsGraphicsImaging.h"
 #include "WindowsMedia.h"
@@ -34,7 +39,7 @@
 #ifndef __WMFDetectedFace_DEFINED__
 #define __WMFDetectedFace_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_FACEANALYSIS_EXPORT
 @interface WMFDetectedFace : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -48,7 +53,7 @@ WINRT_EXPORT
 #ifndef __WMFFaceTracker_DEFINED__
 #define __WMFFaceTracker_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_FACEANALYSIS_EXPORT
 @interface WMFFaceTracker : RTObject
 + (void)createAsyncWithSuccess:(void (^)(WMFFaceTracker*))success failure:(void (^)(NSError*))failure;
 + (NSArray* /* WGIBitmapPixelFormat */)getSupportedBitmapPixelFormats;
@@ -59,9 +64,7 @@ WINRT_EXPORT
 @property (retain) WGIBitmapSize* minDetectableFaceSize;
 @property (retain) WGIBitmapSize* maxDetectableFaceSize;
 + (BOOL)isSupported;
-- (void)processNextFrameAsync:(WMVideoFrame*)videoFrame
-                      success:(void (^)(NSMutableArray* /* WMFDetectedFace* */))success
-                      failure:(void (^)(NSError*))failure;
+- (void)processNextFrameAsync:(WMVideoFrame*)videoFrame success:(void (^)(NSMutableArray* /* WMFDetectedFace* */))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WMFFaceTracker_DEFINED__
@@ -70,7 +73,7 @@ WINRT_EXPORT
 #ifndef __WMFFaceDetector_DEFINED__
 #define __WMFFaceDetector_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_FACEANALYSIS_EXPORT
 @interface WMFFaceDetector : RTObject
 + (void)createAsyncWithSuccess:(void (^)(WMFFaceDetector*))success failure:(void (^)(NSError*))failure;
 + (NSArray* /* WGIBitmapPixelFormat */)getSupportedBitmapPixelFormats;
@@ -81,13 +84,9 @@ WINRT_EXPORT
 @property (retain) WGIBitmapSize* minDetectableFaceSize;
 @property (retain) WGIBitmapSize* maxDetectableFaceSize;
 + (BOOL)isSupported;
-- (void)detectFacesAsync:(WGISoftwareBitmap*)image
-                 success:(void (^)(NSMutableArray* /* WMFDetectedFace* */))success
-                 failure:(void (^)(NSError*))failure;
-- (void)detectFacesWithSearchAreaAsync:(WGISoftwareBitmap*)image
-                            searchArea:(WGIBitmapBounds*)searchArea
-                               success:(void (^)(NSMutableArray* /* WMFDetectedFace* */))success
-                               failure:(void (^)(NSError*))failure;
+- (void)detectFacesAsync:(WGISoftwareBitmap*)image success:(void (^)(NSMutableArray* /* WMFDetectedFace* */))success failure:(void (^)(NSError*))failure;
+- (void)detectFacesWithSearchAreaAsync:(WGISoftwareBitmap*)image searchArea:(WGIBitmapBounds*)searchArea success:(void (^)(NSMutableArray* /* WMFDetectedFace* */))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WMFFaceDetector_DEFINED__
+

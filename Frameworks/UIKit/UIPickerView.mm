@@ -16,16 +16,22 @@
 
 #import <StubReturn.h>
 #import <Starboard.h>
-#import <Foundation/NSString.h>
+
 #import <UIKit/UIColor.h>
 #import <UIKit/UIFont.h>
 #import <UIKit/UIImageView.h>
 #import <UIKit/UIImage.h>
+#import <UIKit/UIInterface.h>
 #import <UIKit/UILabel.h>
 #import <UIKit/UIPickerView.h>
+#import <UIKit/UIPickerViewDataSource.h>
+#import <UIKit/UIPickerViewDelegate.h>
 #import <UIKit/UIScrollView.h>
 #import <UIKit/UITableViewCell.h>
 #import <UIKit/UIView.h>
+
+#import <Foundation/NSString.h>
+
 #import <UIViewInternal.h>
 #import "UIDatePicker+Internal.h"
 
@@ -42,7 +48,7 @@ struct RowData {
 };
 
 @interface UIPickerView ()
-- (id)_subCellSelected:(int)row fromPicker:(id)fromPicker;
+- (id)_subCellSelected:(int)row fromPicker:(UIPickerSubView*)fromPicker;
 @end
 
 @interface UIPickerSubView : UIScrollView {
@@ -103,8 +109,7 @@ struct RowData {
 }
 
 - (void)layoutSubviews {
-    CGRect bounds;
-    bounds = [self bounds];
+    CGRect bounds = [self bounds];
 
     if (memcmp(&bounds.size, &_curSize.size, sizeof(CGSize)) != 0) {
         UIEdgeInsets inset = { 0 };
@@ -319,7 +324,7 @@ static void notifySetSelected(UIPickerSubView* self, int idx) {
     }
 
     if (selIdx >= 0 && selIdx < _numRows) {
-        id selected = _rowData[selIdx]._rowCell;
+        UITableViewCell* selected = _rowData[selIdx]._rowCell;
 
         int row = [selected tag];
         notifySetSelected(self, row);
@@ -357,7 +362,7 @@ static void notifySetSelected(UIPickerSubView* self, int idx) {
     return _selectedRow;
 }
 
-- (id)_cellSelectedUp:(id)cell {
+- (id)_cellSelectedUp:(UITableViewCell*)cell {
     int selIdx = [cell tag];
     CGPoint dest = { 0, getRowContentPos(self, selIdx) };
 
@@ -621,7 +626,7 @@ static void layoutSubSections(UIPickerView* self) {
     [self reloadAllComponents];
 }
 
-- (id)_subCellSelected:(int)row fromPicker:(id)fromPicker {
+- (id)_subCellSelected:(int)row fromPicker:(UIPickerSubView*)fromPicker {
     int component = [fromPicker tag];
 
     if ([_delegate respondsToSelector:@selector(pickerView:didSelectRow:inComponent:)]) {

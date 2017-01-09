@@ -36,6 +36,24 @@ LIBRARY CoreGraphics
         _CGBitmapContextCreateWithFormat
         CGBitmapContextGetImage
 
+        ; DWriteWrapper Additions
+        _CFStringFromLocalizedString
+        _DWriteCopyFontFamilyNames
+        _DWriteCopyFontNamesForFamilyName
+        _DWriteGetFamilyNameForFontName
+        _DWriteGetFontPropertiesFromName
+        _DWriteCreateFontFamilyWithName
+        _DWriteCreateFontFaceWithName
+        _DWriteCreateTextFormatWithFontNameAndSize
+        _DWriteCreateFontFaceWithData
+        _DWriteFontCopyInformationalString
+        _DWriteFontCopyTable
+        _DWriteFontGetSlantDegrees
+        _DWriteFontGetBoundingBox
+        _DWriteFontGetBoundingBoxesForGlyphs
+        _DWriteRegisterFontsWithDatas
+        _DWriteUnregisterFontsWithDatas
+
         ; CGColor.mm
         CGColorRelease
         CGColorRetain
@@ -217,7 +235,10 @@ LIBRARY CoreGraphics
         CGContextReleaseLock
         CGContextSetDirty
         CGContextGetBacking
+        CGContextDrawGlyphRun
+        CGContextIsPointInPath
         EbrCenterTextInRectVertically
+        _CGContextSetScaleFactor
 
         ; CGDataConsumer.mm
         CGDataConsumerCreate
@@ -228,6 +249,7 @@ LIBRARY CoreGraphics
         CGDataConsumerRetain
 
         ; CGDataProvider.mm
+        CGDataProviderCreate
         CGDataProviderCreateWithData
         CGDataProviderCreateWithURL
         CGDataProviderCreateWithFilename
@@ -238,6 +260,7 @@ LIBRARY CoreGraphics
         CGDataProviderRetain
         CGDataProviderCreateSequential
         CGDataProviderCreateDirect
+        CGDataProviderCreateDirectAccess
 
         ; CGFont.mm
         kCGFontVariationAxisName DATA
@@ -273,15 +296,7 @@ LIBRARY CoreGraphics
         CGFontGetNumberOfGlyphs
         CGFontGetGlyphAdvances
         CGFontGetUnitsPerEm
-
-        ; private exports below
-        CGFontFitChars
-        CGFontGetGlyphs
-        CGFontGetGlyphsForUnichars
-        CGFontSetFTFontSize
-        CGFontWrap
-        _CGFontLock
-        _CGFontUnlock
+        _CGFontGetData
 
         ; CGFunction.mm
         CGFunctionCreate
@@ -398,7 +413,6 @@ LIBRARY CoreGraphics
         CGPathContainsPoint
 
         ; private exports below
-        _CGPathFitRect
         _CGPathApplyPath
         _CGPathGetBoundingBoxInternal
 

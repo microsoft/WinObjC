@@ -15,6 +15,12 @@
 //******************************************************************************
 
 #import "Starboard.h"
+#import <UIKit/UIBarItem.h>
+#import <UIKit/UIButton.h>
+#import <UIKit/UIColor.h>
+#import <UIKit/UIRuntimeEventConnection.h>
+#import <UIKit/UISegmentedControl.h>
+#import <UIKit/NSString+UIKitAdditions.h>
 #import "UIBarItemInternal.h"
 #import "UIBarButtonItem+Internals.h"
 #import "UIAppearanceSetter.h"
@@ -49,9 +55,10 @@ static void initControls(UIBarButtonItem* self) {
         CGRect frame = { 0, 0, 0, 0 };
 
         self->_buttonView.attach([[UIButton alloc] initWithFrame:frame]);
+        [self->_buttonView setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
 
-        [self->_buttonView setTitle:(id)self->_title forState:0];
-        [self->_buttonView setImage:(id)self->_image forState:0];
+        [self->_buttonView setTitle:(id)self->_title forState:UIControlStateNormal];
+        [self->_buttonView setImage:(id)self->_image forState:UIControlStateNormal];
         [self->_buttonView setFont:(id)self->_font];
         [self->_buttonView addTarget:self action:@selector(_sendAction:) forControlEvents:UIControlEventTouchUpInside];
         [[self->_buttonView titleLabel] setLineBreakMode:UILineBreakModeMiddleTruncation];
@@ -386,7 +393,7 @@ static void initControls(UIBarButtonItem* self) {
 */
 - (void)setTitle:(NSString*)title {
     _title.attach([title copy]);
-    [_buttonView setTitle:(id)_title forState:0];
+    [_buttonView setTitle:(id)_title forState:UIControlStateNormal];
 }
 
 /**
@@ -443,7 +450,7 @@ static void initControls(UIBarButtonItem* self) {
 */
 - (void)setImage:(UIImage*)image {
     _image = image;
-    [_buttonView setImage:(id)_image forState:0];
+    [_buttonView setImage:(id)_image forState:UIControlStateNormal];
 }
 
 /**

@@ -139,7 +139,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libdispatch.lib;mincore.lib;ObjCUWP.lib;RTObjcInterop.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libdispatch.lib;mincore.lib;RTObjcInterop.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>
@@ -163,7 +163,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libdispatch.lib;mincore.lib;ObjCUWP.lib;RTObjcInterop.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libdispatch.lib;mincore.lib;RTObjcInterop.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>
@@ -191,7 +191,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libdispatch.lib;mincore.lib;ObjCUWP.lib;RTObjcInterop.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libdispatch.lib;mincore.lib;RTObjcInterop.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>
@@ -219,7 +219,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libdispatch.lib;mincore.lib;ObjCUWP.lib;RTObjcInterop.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libdispatch.lib;mincore.lib;RTObjcInterop.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>

@@ -19,17 +19,23 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_WEB_HTTP_FILTERS_EXPORT
+#define OBJCUWP_WINDOWS_WEB_HTTP_FILTERS_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Web_Http_Filters.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WWHFHttpCacheControl, WWHFHttpBaseProtocolFilter;
-@protocol WWHFIHttpFilter
-, WWHFIHttpCacheControl, WWHFIHttpBaseProtocolFilter, WWHFIHttpBaseProtocolFilter2;
+@class WWHFHttpCacheControl, WWHFHttpBaseProtocolFilter, WWHFHttpServerCustomValidationRequestedEventArgs;
+@protocol WWHFIHttpFilter, WWHFIHttpCacheControl, WWHFIHttpServerCustomValidationRequestedEventArgs, WWHFIHttpBaseProtocolFilter, WWHFIHttpBaseProtocolFilter2, WWHFIHttpBaseProtocolFilter3, WWHFIHttpBaseProtocolFilter4;
 
 // Windows.Web.Http.Filters.HttpCacheReadBehavior
 enum _WWHFHttpCacheReadBehavior {
     WWHFHttpCacheReadBehaviorDefault = 0,
     WWHFHttpCacheReadBehaviorMostRecent = 1,
     WWHFHttpCacheReadBehaviorOnlyFromCache = 2,
+    WWHFHttpCacheReadBehaviorNoCache = 3,
 };
 typedef unsigned WWHFHttpCacheReadBehavior;
 
@@ -40,7 +46,15 @@ enum _WWHFHttpCacheWriteBehavior {
 };
 typedef unsigned WWHFHttpCacheWriteBehavior;
 
+// Windows.Web.Http.Filters.HttpCookieUsageBehavior
+enum _WWHFHttpCookieUsageBehavior {
+    WWHFHttpCookieUsageBehaviorDefault = 0,
+    WWHFHttpCookieUsageBehaviorNoCookies = 1,
+};
+typedef unsigned WWHFHttpCookieUsageBehavior;
+
 #include "WindowsFoundation.h"
+#include "WindowsNetworkingSockets.h"
 #include "WindowsSecurityCryptographyCertificates.h"
 #include "WindowsWebHttp.h"
 #include "WindowsSecurityCredentials.h"
@@ -55,6 +69,10 @@ typedef unsigned WWHFHttpCacheWriteBehavior;
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_WEB_HTTP_FILTERS_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Web.Http.Filters.IHttpFilter
@@ -62,11 +80,12 @@ typedef unsigned WWHFHttpCacheWriteBehavior;
 #define __WWHFIHttpFilter_DEFINED__
 
 @protocol WWHFIHttpFilter <WFIClosable>
-- (void)sendRequestAsync:(WWHHttpRequestMessage*)request
-                 success:(void (^)(WWHHttpResponseMessage*))success
-                progress:(void (^)(WWHHttpProgress*))progress
-                 failure:(void (^)(NSError*))failure;
+- (void)sendRequestAsync:(WWHHttpRequestMessage*)request success:(void (^)(WWHHttpResponseMessage*))success progress:(void (^)(WWHHttpProgress*))progress failure:(void (^)(NSError*))failure;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_WEB_HTTP_FILTERS_EXPORT
+@interface WWHFIHttpFilter : RTObject <WWHFIHttpFilter>
 @end
 
 #endif // __WWHFIHttpFilter_DEFINED__
@@ -75,7 +94,7 @@ typedef unsigned WWHFHttpCacheWriteBehavior;
 #ifndef __WWHFHttpCacheControl_DEFINED__
 #define __WWHFHttpCacheControl_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_WEB_HTTP_FILTERS_EXPORT
 @interface WWHFHttpCacheControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -90,7 +109,7 @@ WINRT_EXPORT
 #ifndef __WWHFHttpBaseProtocolFilter_DEFINED__
 #define __WWHFHttpBaseProtocolFilter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_WEB_HTTP_FILTERS_EXPORT
 @interface WWHFHttpBaseProtocolFilter : RTObject <WWHFIHttpFilter, WFIClosable>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -108,11 +127,33 @@ WINRT_EXPORT
 @property (readonly) NSMutableArray* /* WSCCChainValidationResult */ ignorableServerCertificateErrors;
 @property (readonly) WWHFHttpCacheControl* cacheControl;
 @property WWHHttpVersion maxVersion;
-- (void)sendRequestAsync:(WWHHttpRequestMessage*)request
-                 success:(void (^)(WWHHttpResponseMessage*))success
-                progress:(void (^)(WWHHttpProgress*))progress
-                 failure:(void (^)(NSError*))failure;
+@property WWHFHttpCookieUsageBehavior cookieUsageBehavior;
+- (EventRegistrationToken)addServerCustomValidationRequestedEvent:(void(^)(WWHFHttpBaseProtocolFilter*, WWHFHttpServerCustomValidationRequestedEventArgs*))del;
+- (void)removeServerCustomValidationRequestedEvent:(EventRegistrationToken)tok;
+- (void)sendRequestAsync:(WWHHttpRequestMessage*)request success:(void (^)(WWHHttpResponseMessage*))success progress:(void (^)(WWHHttpProgress*))progress failure:(void (^)(NSError*))failure;
 - (void)close;
+- (void)clearAuthenticationCache;
 @end
 
 #endif // __WWHFHttpBaseProtocolFilter_DEFINED__
+
+// Windows.Web.Http.Filters.HttpServerCustomValidationRequestedEventArgs
+#ifndef __WWHFHttpServerCustomValidationRequestedEventArgs_DEFINED__
+#define __WWHFHttpServerCustomValidationRequestedEventArgs_DEFINED__
+
+OBJCUWP_WINDOWS_WEB_HTTP_FILTERS_EXPORT
+@interface WWHFHttpServerCustomValidationRequestedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) WWHHttpRequestMessage* requestMessage;
+@property (readonly) WSCCCertificate* serverCertificate;
+@property (readonly) WNSSocketSslErrorSeverity serverCertificateErrorSeverity;
+@property (readonly) NSArray* /* WSCCChainValidationResult */ serverCertificateErrors;
+@property (readonly) NSArray* /* WSCCCertificate* */ serverIntermediateCertificates;
+- (void)reject;
+- (WFDeferral*)getDeferral;
+@end
+
+#endif // __WWHFHttpServerCustomValidationRequestedEventArgs_DEFINED__
+

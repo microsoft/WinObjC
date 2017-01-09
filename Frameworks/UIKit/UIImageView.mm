@@ -16,6 +16,10 @@
 
 #include "Starboard.h"
 
+#import <UIKit/UIImage.h>
+#import <UIKit/UIImageView.h>
+#import <UIKit/UIView.h>
+
 class UIImageViewPrivData {
 public:
     UIImageViewPrivData() {
@@ -61,7 +65,6 @@ public:
 }
 
 static void initInternal(UIImageView* self) {
-    [self setUserInteractionEnabled:FALSE];
     [self setOpaque:FALSE];
     updateContents(self);
 }

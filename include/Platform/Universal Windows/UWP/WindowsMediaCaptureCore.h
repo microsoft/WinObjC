@@ -19,11 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_CORE_PROTECTION_PLAYBACK_CAPTURE_DEVICES_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_CORE_PROTECTION_PLAYBACK_CAPTURE_DEVICES_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Media_Core_Protection_Playback_Capture_Devices.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WMCCVariablePhotoSequenceCapture, WMCCVariablePhotoCapturedEventArgs;
-@protocol WMCCIVariablePhotoCapturedEventArgs
-, WMCCIVariablePhotoSequenceCapture, WMCCIVariablePhotoSequenceCapture2;
+@protocol WMCCIVariablePhotoCapturedEventArgs, WMCCIVariablePhotoSequenceCapture, WMCCIVariablePhotoSequenceCapture2;
 
 #include "WindowsFoundation.h"
 #include "WindowsMediaCapture.h"
@@ -34,14 +39,14 @@
 #ifndef __WMCCVariablePhotoSequenceCapture_DEFINED__
 #define __WMCCVariablePhotoSequenceCapture_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_PROTECTION_PLAYBACK_CAPTURE_DEVICES_EXPORT
 @interface WMCCVariablePhotoSequenceCapture : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-- (EventRegistrationToken)addPhotoCapturedEvent:(void (^)(WMCCVariablePhotoSequenceCapture*, WMCCVariablePhotoCapturedEventArgs*))del;
+- (EventRegistrationToken)addPhotoCapturedEvent:(void(^)(WMCCVariablePhotoSequenceCapture*, WMCCVariablePhotoCapturedEventArgs*))del;
 - (void)removePhotoCapturedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStoppedEvent:(void (^)(WMCCVariablePhotoSequenceCapture*, RTObject*))del;
+- (EventRegistrationToken)addStoppedEvent:(void(^)(WMCCVariablePhotoSequenceCapture*, RTObject*))del;
 - (void)removeStoppedEvent:(EventRegistrationToken)tok;
 - (RTObject<WFIAsyncAction>*)startAsync;
 - (RTObject<WFIAsyncAction>*)stopAsync;
@@ -55,7 +60,7 @@ WINRT_EXPORT
 #ifndef __WMCCVariablePhotoCapturedEventArgs_DEFINED__
 #define __WMCCVariablePhotoCapturedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_PROTECTION_PLAYBACK_CAPTURE_DEVICES_EXPORT
 @interface WMCCVariablePhotoCapturedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -67,3 +72,4 @@ WINRT_EXPORT
 @end
 
 #endif // __WMCCVariablePhotoCapturedEventArgs_DEFINED__
+

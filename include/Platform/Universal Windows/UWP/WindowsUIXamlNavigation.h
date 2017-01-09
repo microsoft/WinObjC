@@ -19,12 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_XAML_EXPORT
+#define OBJCUWP_WINDOWS_UI_XAML_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WUXNNavigationEventArgs, WUXNNavigatingCancelEventArgs, WUXNNavigationFailedEventArgs, WUXNPageStackEntry;
-@protocol WUXNINavigatingCancelEventArgs
-, WUXNINavigatingCancelEventArgs2, WUXNINavigationEventArgs, WUXNINavigationEventArgs2, WUXNINavigationFailedEventArgs, WUXNIPageStackEntry,
-    WUXNIPageStackEntryStatics, WUXNIPageStackEntryFactory;
+@protocol WUXNINavigatingCancelEventArgs, WUXNINavigatingCancelEventArgs2, WUXNINavigationEventArgs, WUXNINavigationEventArgs2, WUXNINavigationFailedEventArgs, WUXNIPageStackEntry, WUXNIPageStackEntryStatics, WUXNIPageStackEntryFactory;
 
 // Windows.UI.Xaml.Navigation.NavigationCacheMode
 enum _WUXNNavigationCacheMode {
@@ -51,46 +55,47 @@ typedef unsigned WUXNNavigationMode;
 // Windows.UI.Xaml.DependencyPropertyChangedCallback
 #ifndef __WXDependencyPropertyChangedCallback__DEFINED
 #define __WXDependencyPropertyChangedCallback__DEFINED
-typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, WXDependencyProperty* dp);
+typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, WXDependencyProperty* dp);
 #endif // __WXDependencyPropertyChangedCallback__DEFINED
+
 
 #import <Foundation/Foundation.h>
 
 // Windows.UI.Xaml.Navigation.LoadCompletedEventHandler
 #ifndef __WUXNLoadCompletedEventHandler__DEFINED
 #define __WUXNLoadCompletedEventHandler__DEFINED
-typedef void (^WUXNLoadCompletedEventHandler)(RTObject* sender, WUXNNavigationEventArgs* e);
+typedef void(^WUXNLoadCompletedEventHandler)(RTObject* sender, WUXNNavigationEventArgs* e);
 #endif // __WUXNLoadCompletedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Navigation.NavigatedEventHandler
 #ifndef __WUXNNavigatedEventHandler__DEFINED
 #define __WUXNNavigatedEventHandler__DEFINED
-typedef void (^WUXNNavigatedEventHandler)(RTObject* sender, WUXNNavigationEventArgs* e);
+typedef void(^WUXNNavigatedEventHandler)(RTObject* sender, WUXNNavigationEventArgs* e);
 #endif // __WUXNNavigatedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Navigation.NavigatingCancelEventHandler
 #ifndef __WUXNNavigatingCancelEventHandler__DEFINED
 #define __WUXNNavigatingCancelEventHandler__DEFINED
-typedef void (^WUXNNavigatingCancelEventHandler)(RTObject* sender, WUXNNavigatingCancelEventArgs* e);
+typedef void(^WUXNNavigatingCancelEventHandler)(RTObject* sender, WUXNNavigatingCancelEventArgs* e);
 #endif // __WUXNNavigatingCancelEventHandler__DEFINED
 
 // Windows.UI.Xaml.Navigation.NavigationFailedEventHandler
 #ifndef __WUXNNavigationFailedEventHandler__DEFINED
 #define __WUXNNavigationFailedEventHandler__DEFINED
-typedef void (^WUXNNavigationFailedEventHandler)(RTObject* sender, WUXNNavigationFailedEventArgs* e);
+typedef void(^WUXNNavigationFailedEventHandler)(RTObject* sender, WUXNNavigationFailedEventArgs* e);
 #endif // __WUXNNavigationFailedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Navigation.NavigationStoppedEventHandler
 #ifndef __WUXNNavigationStoppedEventHandler__DEFINED
 #define __WUXNNavigationStoppedEventHandler__DEFINED
-typedef void (^WUXNNavigationStoppedEventHandler)(RTObject* sender, WUXNNavigationEventArgs* e);
+typedef void(^WUXNNavigationStoppedEventHandler)(RTObject* sender, WUXNNavigationEventArgs* e);
 #endif // __WUXNNavigationStoppedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Navigation.NavigationEventArgs
 #ifndef __WUXNNavigationEventArgs_DEFINED__
 #define __WUXNNavigationEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXNNavigationEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -109,7 +114,7 @@ WINRT_EXPORT
 #ifndef __WUXNNavigatingCancelEventArgs_DEFINED__
 #define __WUXNNavigatingCancelEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXNNavigatingCancelEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -127,7 +132,7 @@ WINRT_EXPORT
 #ifndef __WUXNNavigationFailedEventArgs_DEFINED__
 #define __WUXNNavigationFailedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXNNavigationFailedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -143,7 +148,7 @@ WINRT_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -164,11 +169,9 @@ WINRT_EXPORT
 #ifndef __WUXNPageStackEntry_DEFINED__
 #define __WUXNPageStackEntry_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXNPageStackEntry : WXDependencyObject
-+ (WUXNPageStackEntry*)makeInstance:(WUXITypeName*)sourcePageType
-                          parameter:(RTObject*)parameter
-           navigationTransitionInfo:(WUXMANavigationTransitionInfo*)navigationTransitionInfo ACTIVATOR;
++ (WUXNPageStackEntry*)makeInstance:(WUXITypeName*)sourcePageType parameter:(RTObject*)parameter navigationTransitionInfo:(WUXMANavigationTransitionInfo*)navigationTransitionInfo ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -179,3 +182,4 @@ WINRT_EXPORT
 @end
 
 #endif // __WUXNPageStackEntry_DEFINED__
+

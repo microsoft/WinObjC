@@ -17,6 +17,7 @@
 #include <string.h>
 #include <iostream>
 #include <limits>
+#include <iterator>
 
 #include "sbassert.h"
 #include "utils.h"
@@ -31,6 +32,11 @@
 #include "SBProject.h"
 #include "SBTarget.h"
 #include "VSSolution.h"
+#include "VSTemplate.h"
+#include "VSTemplateProject.h"
+#include "VSTemplateParameters.h"
+#include "VCProject.h"
+#include "VCProjectConfiguration.h"
 
 SBWorkspace* SBWorkspace::s_workspace = NULL;
 
@@ -43,7 +49,7 @@ SBWorkspace* SBWorkspace::get()
 
 SBWorkspace* SBWorkspace::createFromProject(const String &projectDir)
 {
-  sbAssert(!s_workspace);
+  sbAssertWithTelemetry(!s_workspace, "Workspace already exists");
   
   // Create the workspace
   s_workspace = new SBWorkspace();
@@ -52,7 +58,7 @@ SBWorkspace* SBWorkspace::createFromProject(const String &projectDir)
   SBProject* proj = s_workspace->openProject(projectDir);
 
   // Failing to open a project here is fatal
-  sbValidate(proj);
+  sbValidateWithTelemetry(proj, "Failed to open main project");
 
   // Save a ptr to the project, so later we can access the "main" project
   s_workspace->m_mainProject = proj;
@@ -62,12 +68,12 @@ SBWorkspace* SBWorkspace::createFromProject(const String &projectDir)
 
 SBWorkspace* SBWorkspace::createFromWorkspace(const String &workspaceDir)
 {
-  sbAssert(!s_workspace);
+  sbAssertWithTelemetry(!s_workspace, "Workspace already exists");
   
   // Create the workspace
   s_workspace = new SBWorkspace();
   s_workspace->m_workspace = XCWorkspace::createFromFile(workspaceDir);
-  sbValidate(s_workspace->m_workspace);
+  sbValidateWithTelemetry(s_workspace->m_workspace, "Failed to open main workspace");
 
   // Record location of the workspace
   VariableCollectionManager& settingsManager = VariableCollectionManager::get();
@@ -82,10 +88,10 @@ SBWorkspace* SBWorkspace::createFromWorkspace(const String &workspaceDir)
   s_workspace->findSchemes(workspaceDir);
 
   // A workspace MUST contain at least one scheme
-  sbValidate(!s_workspace->m_schemes.empty(), "The \"" + s_workspace->getName() + "\" workspace does not contain any schemes.");
+  sbValidateWithTelemetry(!s_workspace->m_schemes.empty(), "The workspace does not contain any schemes.");
   
   // A workspace MUST also contain at least one open project
-  sbValidate(!s_workspace->m_openProjects.empty(), "The \"" + s_workspace->getName() + "\" workspace does not contain any valid projects.");
+  sbValidateWithTelemetry(!s_workspace->m_openProjects.empty(), "The workspace does not contain any valid projects.");
   
   return s_workspace;
 }
@@ -172,32 +178,62 @@ void SBWorkspace::findSchemes(const String& containerAbsPath)
   }
 }
 
-void SBWorkspace::printSummary() const
-{ 
-  if (!m_mainProject)
-    std::cout << "Information about workspace \"" << getName() << "\":" << std::endl;
-  else
-    m_mainProject->printSummary();
-  
-  if (!m_schemes.empty()) {
-    std::cout << "    Schemes:" << std::endl;
-    for (int i = 0; i < m_schemes.size(); i++)
-      std::cout << "\t" << m_schemes[i]->getName() << std::endl;
-  } else if (m_mainProject) {
-    std::cout << "    The project does not contain any schemes." << std::endl;
+void SBWorkspace::printSchemes() const
+{
+  std::cout << "    Schemes:" << std::endl;
+  for (int i = 0; i < m_schemes.size(); i++) {
+    std::cout << "\t" << m_schemes[i]->getName() << std::endl;
   }
   std::cout << std::endl;
 }
 
-void SBWorkspace::querySchemes(SchemeVec& ret) const
+void SBWorkspace::printSummary() const
+{ 
+  if (!m_mainProject) {
+    std::cout << "Information about workspace \"" << getName() << "\":" << std::endl;
+    printSchemes();
+  }
+
+  for (auto project : m_openProjects) {
+    project.second->printSummary();
+  }
+
+  if (m_mainProject) {
+    printSchemes();
+  }
+}
+
+void SBWorkspace::selectTargets(PotentialTargetsVec& ret)
 {
   String queryMessage;
-  if (m_workspace)
-    queryMessage = "The \"" + getName() + "\" workspace contains multiple schemes.";
-  else
-    queryMessage = "The project contains multiple schemes.";
-  
-  queryListSelection(m_schemes, queryMessage, "scheme", ret);
+  if (m_workspace) {
+    queryMessage = "The \"" + getName() + "\" workspace contains multiple targets.";
+  } else {
+    queryMessage = "The project contains multiple targets.";
+  }
+
+  // Get all possible targets in the solution
+  PotentialTargetsVec allTargets;
+  getAllTargets(allTargets);
+
+  // Construct vector of target names for the query, maintaining order
+  StringVec targetNames;
+  std::transform(allTargets.begin(),
+                 allTargets.end(),
+                 back_inserter(targetNames),
+                 [](auto kv) { return kv.first->getNameWithType(); });
+  sbAssertWithTelemetry(!targetNames.empty(), "The workspace contains no targets");
+
+  // Query the user for which targets should be queued
+  std::vector<size_t> selection;
+  queryListSelection(targetNames, queryMessage, "target", selection);
+
+  // Return selection of targets
+  ret.clear();
+  std::transform(selection.begin(),
+                 selection.end(),
+                 back_inserter(ret),
+                 [&allTargets](size_t i) { return allTargets[i]; });
 }
 
 const XCScheme* SBWorkspace::getScheme(const String& schemeName) const
@@ -227,10 +263,7 @@ void SBWorkspace::queueSchemes(const StringSet& schemeNames, const StringSet& co
   
   // Get the specified schemes
   SchemeVec schemePtrs;
-  if (isInteractive) {
-    // Query the user to select schemes
-    querySchemes(schemePtrs);
-  } else if (schemeNames.empty()) {
+  if (schemeNames.empty()) {
     // Queue up all schemes
     schemePtrs.insert(schemePtrs.end(), m_schemes.begin(), m_schemes.end());
   } else {
@@ -248,12 +281,65 @@ void SBWorkspace::queueSchemes(const StringSet& schemeNames, const StringSet& co
       SBProject* targetProj = openProject(projectPath);
 
       // Create the target
+      SBTarget* target = NULL;
       if (targetProj) {
-        targetProj->queueProjectTargetWithId(buildRef.id, configNames);
+        target = targetProj->queueTargetWithId(buildRef.id, &configNames);
       } else {
         SBLog::warning() << "Failed to open \"" << buildRef.container << "\" project referenced by \"" << scheme->getName() << "\" scheme. "
                          << "Ignoring \"" << buildRef.targetName << "\" target." << std::endl;
       }
+
+      // Mark target as having been explicitly queued up
+      if (target) {
+        target->markExplicit();
+      }
+    }
+  }
+}
+
+void SBWorkspace::getAllTargets(PotentialTargetsVec& targets) const
+{
+  for (auto projectKV : m_openProjects) {
+    SBProject* sbProject = projectKV.second;
+    const PBXProject* pbxProject = sbProject->getPBXProject();
+    const PBXTargetList& projectTargets = pbxProject->getTargets();
+    std::transform(projectTargets.begin(),
+                   projectTargets.end(),
+                   back_inserter(targets),
+                   [sbProject](const PBXTarget* target) { return std::make_pair(target, sbProject); });
+  }
+}
+
+void SBWorkspace::queueTargets(const StringSet& targetNames, const StringSet& configNames)
+{
+  BuildSettings bs(NULL);
+  bool isInteractive = bs.getValue("VSIMPORTER_INTERACTIVE") == "YES";
+
+  // Get the specified targets
+  PotentialTargetsVec selectedTargets;
+  if (isInteractive) {
+    // Query the user to select targets to be queued
+    selectTargets(selectedTargets);
+  } else if (targetNames.empty()) {
+    // Queue up all targets
+    getAllTargets(selectedTargets);
+  } else {
+    // Try to find matching targets by name
+    for (auto targetName : targetNames) {
+      TargetProjectPair targetKV = findTargetWithName(targetName);
+      if (targetKV.first) {
+        selectedTargets.push_back(targetKV);
+      }
+    }
+  }
+
+  // Queue targets
+  for (auto targetKV : selectedTargets) {
+    SBTarget* target = targetKV.second->queueTarget(targetKV.first, &configNames);
+
+    // Mark target as having been explicitly queued up
+    if (target) {
+      target->markExplicit();
     }
   }
 }
@@ -286,20 +372,6 @@ SBProject* SBWorkspace::openProject(const String& projectPath)
   return ret;
 }
 
-void SBWorkspace::queueTargets(const StringSet& targetNames, const StringSet& configNames)
-{
-  sbAssert(m_mainProject);
-  m_mainProject->queueProjectTargets(targetNames, configNames);
-}
-
-void SBWorkspace::queueAllTargets(const StringSet& configNames)
-{
-  const StringSet emptySet;
-  for (auto project : m_openProjects) {
-    project.second->queueProjectTargets(emptySet, configNames);
-  }
-}
-
 SBTarget* SBWorkspace::queueTargetWithProductName(const String& productName)
 {
   // Ask every open project to try building the target with specified product name
@@ -311,6 +383,37 @@ SBTarget* SBWorkspace::queueTargetWithProductName(const String& productName)
       break;
   }
   return target;
+}
+
+SBTarget* SBWorkspace::queueTargetWithName(const String& targetName, const StringSet& configNames)
+{
+  // Ask every open project to try building the target with specified name
+  SBTarget* target = NULL;
+  for (auto project : m_openProjects) {
+    target = project.second->queueTargetWithName(targetName, &configNames);
+    if (target)
+      break;
+  }
+
+  if (!target) {
+    SBLog::warning() << "Unable to convert \"" << targetName << "\" target." << std::endl;
+  }
+
+  return target;
+}
+
+SBWorkspace::TargetProjectPair SBWorkspace::findTargetWithName(const String& targetName) const
+{
+  for (auto project : m_openProjects) {
+    SBProject* sbProject = project.second;
+    const PBXTarget* target = sbProject->getPBXProject()->getTargetWithName(targetName);
+    if (target) {
+      return make_pair(target, sbProject);
+    }
+  }
+
+  SBLog::warning() << "Failed to find \"" << targetName << "\" target in workspace." << std::endl;
+  return { NULL, NULL };
 }
 
 void SBWorkspace::detectProjectCollisions() const
@@ -325,7 +428,7 @@ void SBWorkspace::detectProjectCollisions() const
     }
 
     // Get all project targets
-    project.second->getTargets(targets);
+    project.second->getQueuedTargets(targets);
   }
 
   // Check for any target name collisions
@@ -341,7 +444,57 @@ void SBWorkspace::detectProjectCollisions() const
   }
 }
 
-void SBWorkspace::generateFiles()
+VCProject* SBWorkspace::generateGlueProject() const
+{
+  // Get a set of all configurations appearing in all projects
+  StringSet slnConfigs;
+  for (auto project : m_openProjects) {
+    const StringSet& configs = project.second->getSelectedConfigurations();
+    slnConfigs.insert(configs.begin(), configs.end());
+  }
+
+  // Get the template
+  VSTemplate* vstemplate = VSTemplate::getTemplate("WinRT");
+  sbAssertWithTelemetry(vstemplate, "Failed to get WinRT VS template");
+
+  // Set up basis template parameters
+  string projectName = getName() + "WinRT";
+  VSTemplateParameters templateParams;
+  templateParams.setProjectName(projectName);
+
+  // Expand the template and get the template project
+  vstemplate->expand(sb_dirname(getPath()), templateParams);
+  const VSTemplateProjectVec& projTemplates = vstemplate->getProjects();
+  sbAssertWithTelemetry(projTemplates.size() == 1, "Unexpected WinRT template size");
+
+  // Create the glue project and add it to the solution
+  VCProject* glueProject = new VCProject(projTemplates.front());
+
+  // Get path to WinObjC SDK
+  BuildSettings globalBS(NULL);
+  String useRelativeSdkPath = globalBS.getValue("VSIMPORTER_RELATIVE_SDK_PATH");
+  String sdkDir = globalBS.getValue("WINOBJC_SDK_ROOT");
+
+  // Try to create a relative path to the SDK, if requested
+  if (strToUpper(useRelativeSdkPath) == "YES") {
+    String projectDir = sb_dirname(projTemplates.front()->getPath());
+    sdkDir = getRelativePath(projectDir, sdkDir);
+  }
+  glueProject->addGlobalProperty("WINOBJC_SDK_ROOT", platformPath(sdkDir), "'$(WINOBJC_SDK_ROOT)' == ''");
+
+  // Set configuration properties
+  for (auto configName : slnConfigs) {
+    VCProjectConfiguration *projConfig = glueProject->addConfiguration(configName);
+    projConfig->setProperty("TargetName", getName());
+  }
+
+  // Set RootNamespace
+  glueProject->addGlobalProperty("RootNamespace", getName());
+
+  return glueProject;
+}
+
+void SBWorkspace::generateFiles(bool genProjectionsProj)
 {
   // Detect and warn about about any collisions
   detectProjectCollisions();
@@ -370,12 +523,24 @@ void SBWorkspace::generateFiles()
     project.second->constructVCProjects(*sln, slnConfigs, vcProjects);
   }
 
+  // Construct a projections project, if required
+  VCProject* glueProject = nullptr;
+  if (genProjectionsProj) {
+    glueProject = generateGlueProject();
+    sln->addProject(glueProject);
+  }
+
   // Resolve dependencies
   for (auto proj : vcProjects) {
     proj.first->resolveVCProjectDependecies(proj.second, vcProjects);
+
+    // Add a dependency on all static/framework target projects
+    if (glueProject && proj.first->getProductType() == TargetStaticLib) {
+      glueProject->addProjectReference(proj.second);
+    }
   }
 
   // Write solution/projects to disk
-  sbValidate(!vcProjects.empty(), "No valid targets to import.");
+  sbValidateWithTelemetry(!vcProjects.empty(), "No valid targets to import.");
   sln->write();
 }

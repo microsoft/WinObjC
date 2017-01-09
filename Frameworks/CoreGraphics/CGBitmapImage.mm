@@ -22,8 +22,9 @@
 #import "CGContextImpl.h"
 #import "CGContextCairo.h"
 #import "CGSurfaceInfoInternal.h"
+#import "CGIWICBitmap.h"
 
-#include "LoggingNative.h"
+#import "LoggingNative.h"
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-register"
@@ -354,6 +355,7 @@ CGContextImpl* CGBitmapImageBacking::CreateDrawingContext(CGContextRef base) {
 CGBitmapImageBacking::CGBitmapImageBacking(const __CGSurfaceInfo& surfaceInfo) {
     _imageLocks = 0;
     _cairoLocks = 0;
+    _renderTarget = nullptr;
 
     _data = new CGImageData(surfaceInfo);
 }
@@ -361,6 +363,7 @@ CGBitmapImageBacking::CGBitmapImageBacking(const __CGSurfaceInfo& surfaceInfo) {
 CGBitmapImageBacking::CGBitmapImageBacking(CGImageRef img) {
     _imageLocks = 0;
     _cairoLocks = 0;
+    _renderTarget = nullptr;
 
     if (img->_imgType == CGImageTypeBitmap) {
         _data = ((CGBitmapImageBacking*)img->Backing())->_data->Duplicate();
@@ -386,6 +389,11 @@ CGBitmapImageBacking::CGBitmapImageBacking(CGImageRef img) {
 }
 
 CGBitmapImageBacking::~CGBitmapImageBacking() {
+    // release the render target first as it may hold locks on the image
+    if (_renderTarget != nullptr) {
+        _renderTarget->Release();
+    }
+
     if (_cairoLocks != 0 || _imageLocks != 0) {
         TraceWarning(TAG, L"Warning: Image data not unlocked (refcnt=%d, %d)", _cairoLocks, _imageLocks);
 
@@ -442,6 +450,21 @@ int CGBitmapImageBacking::BytesPerPixel() {
 
 int CGBitmapImageBacking::BitsPerComponent() {
     return _data->_bitsPerComponent;
+}
+
+ID2D1RenderTarget* CGBitmapImageBacking::GetRenderTarget() {
+    if (_renderTarget == nullptr) {
+        BYTE* imageData = static_cast<BYTE*>(LockImageData());
+        ComPtr<IWICBitmap> wicBitmap = Make<CGIWICBitmap>(this, SurfaceFormat());
+        ComPtr<ID2D1Factory> d2dFactory;
+        THROW_IF_FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory), &d2dFactory));
+        ComPtr<ID2D1RenderTarget> renderTarget;
+        THROW_IF_FAILED(d2dFactory->CreateWicBitmapRenderTarget(wicBitmap.Get(), D2D1::RenderTargetProperties(), &renderTarget));
+        _renderTarget = renderTarget.Detach();
+        ReleaseImageData();
+    }
+
+    return _renderTarget;
 }
 
 void CGBitmapImageBacking::GetSurfaceInfoWithoutPixelPtr(__CGSurfaceInfo* surfaceInfo) {

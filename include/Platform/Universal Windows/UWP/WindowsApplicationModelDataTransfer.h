@@ -19,17 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
+#define OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_DataTransfer.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WADStandardDataFormats, WADDataPackagePropertySetView, WADDataPackagePropertySet, WADDataProviderDeferral, WADDataProviderRequest,
-    WADOperationCompletedEventArgs, WADDataPackageView, WADDataPackage, WADHtmlFormatHelper, WADClipboard, WADDataRequestDeferral,
-    WADDataRequest, WADDataRequestedEventArgs, WADTargetApplicationChosenEventArgs, WADDataTransferManager, WADSharedStorageAccessManager;
-@protocol WADIStandardDataFormatsStatics
-, WADIStandardDataFormatsStatics2, WADIDataPackagePropertySetView, WADIDataPackagePropertySetView2, WADIDataPackagePropertySetView3,
-    WADIDataPackagePropertySet, WADIDataPackagePropertySet2, WADIDataPackagePropertySet3, WADIDataProviderDeferral, WADIDataProviderRequest,
-    WADIOperationCompletedEventArgs, WADIDataPackageView, WADIDataPackageView2, WADIDataPackageView3, WADIDataPackage, WADIDataPackage2,
-    WADIHtmlFormatHelperStatics, WADIClipboardStatics, WADIDataRequestDeferral, WADIDataRequest, WADIDataRequestedEventArgs,
-    WADITargetApplicationChosenEventArgs, WADIDataTransferManager, WADIDataTransferManagerStatics, WADISharedStorageAccessManagerStatics;
+@class WADStandardDataFormats, WADDataPackagePropertySetView, WADDataPackagePropertySet, WADDataProviderDeferral, WADDataProviderRequest, WADOperationCompletedEventArgs, WADDataPackageView, WADDataPackage, WADHtmlFormatHelper, WADClipboard, WADDataRequestDeferral, WADDataRequest, WADDataRequestedEventArgs, WADTargetApplicationChosenEventArgs, WADDataTransferManager, WADSharedStorageAccessManager;
+@protocol WADIStandardDataFormatsStatics, WADIStandardDataFormatsStatics2, WADIDataPackagePropertySetView, WADIDataPackagePropertySetView2, WADIDataPackagePropertySetView3, WADIDataPackagePropertySet, WADIDataPackagePropertySet2, WADIDataPackagePropertySet3, WADIDataProviderDeferral, WADIDataProviderRequest, WADIOperationCompletedEventArgs, WADIOperationCompletedEventArgs2, WADIDataPackageView, WADIDataPackageView2, WADIDataPackageView3, WADIDataPackageView4, WADIDataPackage, WADIDataPackage2, WADIHtmlFormatHelperStatics, WADIClipboardStatics, WADIDataRequestDeferral, WADIDataRequest, WADIDataRequestedEventArgs, WADITargetApplicationChosenEventArgs, WADIDataTransferManager, WADIDataTransferManagerStatics, WADIDataTransferManagerStatics2, WADISharedStorageAccessManagerStatics;
 
 // Windows.ApplicationModel.DataTransfer.DataPackageOperation
 enum _WADDataPackageOperation {
@@ -48,31 +47,32 @@ typedef unsigned WADDataPackageOperation;
 // Windows.ApplicationModel.DataTransfer.DataProviderHandler
 #ifndef __WADDataProviderHandler__DEFINED
 #define __WADDataProviderHandler__DEFINED
-typedef void (^WADDataProviderHandler)(WADDataProviderRequest* request);
+typedef void(^WADDataProviderHandler)(WADDataProviderRequest* request);
 #endif // __WADDataProviderHandler__DEFINED
+
 
 #import <Foundation/Foundation.h>
 
 // Windows.ApplicationModel.DataTransfer.DataProviderHandler
 #ifndef __WADDataProviderHandler__DEFINED
 #define __WADDataProviderHandler__DEFINED
-typedef void (^WADDataProviderHandler)(WADDataProviderRequest* request);
+typedef void(^WADDataProviderHandler)(WADDataProviderRequest* request);
 #endif // __WADDataProviderHandler__DEFINED
 
 // Windows.ApplicationModel.DataTransfer.StandardDataFormats
 #ifndef __WADStandardDataFormats_DEFINED__
 #define __WADStandardDataFormats_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADStandardDataFormats : RTObject
-+ (NSString*)bitmap;
-+ (NSString*)html;
-+ (NSString*)rtf;
-+ (NSString*)storageItems;
-+ (NSString*)text;
-+ (NSString*)uri;
-+ (NSString*)applicationLink;
-+ (NSString*)webLink;
++ (NSString *)bitmap;
++ (NSString *)html;
++ (NSString *)rtf;
++ (NSString *)storageItems;
++ (NSString *)text;
++ (NSString *)uri;
++ (NSString *)applicationLink;
++ (NSString *)webLink;
 @end
 
 #endif // __WADStandardDataFormats_DEFINED__
@@ -81,27 +81,27 @@ WINRT_EXPORT
 #ifndef __WADDataPackagePropertySetView_DEFINED__
 #define __WADDataPackagePropertySetView_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADDataPackagePropertySetView : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFUri* applicationListingUri;
-@property (readonly) NSString* applicationName;
-@property (readonly) NSString* Description;
+@property (readonly) NSString * applicationName;
+@property (readonly) NSString * Description;
 @property (readonly) NSArray* /* NSString * */ fileTypes;
 @property (readonly) WSSRandomAccessStreamReference* thumbnail;
-@property (readonly) NSString* title;
+@property (readonly) NSString * title;
 @property (readonly) WFUri* contentSourceApplicationLink;
 @property (readonly) WFUri* contentSourceWebLink;
 @property (readonly) WUColor* logoBackgroundColor;
-@property (readonly) NSString* packageFamilyName;
+@property (readonly) NSString * packageFamilyName;
 @property (readonly) RTObject<WSSIRandomAccessStreamReference>* square30x30Logo;
-@property (readonly) NSString* enterpriseId;
+@property (readonly) NSString * enterpriseId;
 @property (readonly) unsigned int size;
-- (id)objectForKey:(id)key;
+- (id)objectForKey: (id)key;
 - (NSArray*)allKeys;
-- (NSArray*)allKeysForObject:(id)obj;
+- (NSArray*)allKeysForObject: (id)obj;
 - (NSArray*)allValues;
 - (id)keyEnumerator;
 - (unsigned int)count;
@@ -114,39 +114,39 @@ WINRT_EXPORT
 #ifndef __WADDataPackagePropertySet_DEFINED__
 #define __WADDataPackagePropertySet_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADDataPackagePropertySet : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) RTObject<WSSIRandomAccessStreamReference>* thumbnail;
-@property (retain) NSString* title;
-@property (retain) NSString* Description;
-@property (retain) NSString* applicationName;
+@property (retain) NSString * title;
+@property (retain) NSString * Description;
+@property (retain) NSString * applicationName;
 @property (retain) WFUri* applicationListingUri;
 @property (readonly) NSMutableArray* /* NSString * */ fileTypes;
 @property (retain) RTObject<WSSIRandomAccessStreamReference>* square30x30Logo;
-@property (retain) NSString* packageFamilyName;
+@property (retain) NSString * packageFamilyName;
 @property (retain) WUColor* logoBackgroundColor;
 @property (retain) WFUri* contentSourceWebLink;
 @property (retain) WFUri* contentSourceApplicationLink;
-@property (retain) NSString* enterpriseId;
+@property (retain) NSString * enterpriseId;
 @property (readonly) unsigned int size;
-- (id)objectForKey:(id)key;
+- (id)objectForKey: (id)key;
 - (NSArray*)allKeys;
-- (NSArray*)allKeysForObject:(id)obj;
+- (NSArray*)allKeysForObject: (id)obj;
 - (NSArray*)allValues;
 - (id)keyEnumerator;
 - (unsigned int)count;
 
-- (void)setObject:(id)obj forKey:(id)key;
-- (void)setObject:(id)object forKeyedSubscript:(id)key;
-- (void)removeObjectForKey:(id)key;
-- (void)removeAllObjects;
-- (void)removeObjectsForKeys:(NSArray*)keys;
-- (void)addEntriesFromDictionary:(NSDictionary*)otherDict;
-- (void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
-- (void)setDictionary:(NSDictionary*)dict;
+-(void)setObject: (id)obj forKey: (id)key;
+-(void)setObject:(id)object forKeyedSubscript:(id)key;
+-(void)removeObjectForKey: (id)key;
+-(void)removeAllObjects;
+-(void)removeObjectsForKeys:(NSArray*)keys;
+-(void)addEntriesFromDictionary:(NSDictionary*)otherDict;
+-(void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
+-(void)setDictionary: (NSDictionary*)dict;
 @end
 
 #endif // __WADDataPackagePropertySet_DEFINED__
@@ -155,7 +155,7 @@ WINRT_EXPORT
 #ifndef __WADDataProviderDeferral_DEFINED__
 #define __WADDataProviderDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADDataProviderDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -169,13 +169,13 @@ WINRT_EXPORT
 #ifndef __WADDataProviderRequest_DEFINED__
 #define __WADDataProviderRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADDataProviderRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFDateTime* deadline;
-@property (readonly) NSString* formatId;
+@property (readonly) NSString * formatId;
 - (WADDataProviderDeferral*)getDeferral;
 - (void)setData:(RTObject*)value;
 @end
@@ -186,12 +186,13 @@ WINRT_EXPORT
 #ifndef __WADOperationCompletedEventArgs_DEFINED__
 #define __WADOperationCompletedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADOperationCompletedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WADDataPackageOperation operation;
+@property (readonly) NSString * acceptedFormatId;
 @end
 
 #endif // __WADOperationCompletedEventArgs_DEFINED__
@@ -200,7 +201,7 @@ WINRT_EXPORT
 #ifndef __WADDataPackageView_DEFINED__
 #define __WADDataPackageView_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADDataPackageView : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -209,24 +210,22 @@ WINRT_EXPORT
 @property (readonly) WADDataPackagePropertySetView* properties;
 @property (readonly) WADDataPackageOperation requestedOperation;
 - (void)reportOperationCompleted:(WADDataPackageOperation)value;
-- (BOOL)contains:(NSString*)formatId;
-- (void)getDataAsync:(NSString*)formatId success:(void (^)(RTObject*))success failure:(void (^)(NSError*))failure;
-- (void)getTextAsyncWithSuccess:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
-- (void)getCustomTextAsync:(NSString*)formatId success:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
+- (BOOL)contains:(NSString *)formatId;
+- (void)getDataAsync:(NSString *)formatId success:(void (^)(RTObject*))success failure:(void (^)(NSError*))failure;
+- (void)getTextAsyncWithSuccess:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
+- (void)getCustomTextAsync:(NSString *)formatId success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
 - (void)getUriAsyncWithSuccess:(void (^)(WFUri*))success failure:(void (^)(NSError*))failure;
-- (void)getHtmlFormatAsyncWithSuccess:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
-- (void)getResourceMapAsyncWithSuccess:(void (^)(NSDictionary* /* NSString *, WSSRandomAccessStreamReference* */))success
-                               failure:(void (^)(NSError*))failure;
-- (void)getRtfAsyncWithSuccess:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
+- (void)getHtmlFormatAsyncWithSuccess:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
+- (void)getResourceMapAsyncWithSuccess:(void (^)(NSDictionary* /* NSString *, WSSRandomAccessStreamReference* */))success failure:(void (^)(NSError*))failure;
+- (void)getRtfAsyncWithSuccess:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
 - (void)getBitmapAsyncWithSuccess:(void (^)(WSSRandomAccessStreamReference*))success failure:(void (^)(NSError*))failure;
 - (void)getStorageItemsAsyncWithSuccess:(void (^)(NSArray* /* RTObject<WSIStorageItem>* */))success failure:(void (^)(NSError*))failure;
 - (void)getApplicationLinkAsyncWithSuccess:(void (^)(WFUri*))success failure:(void (^)(NSError*))failure;
 - (void)getWebLinkAsyncWithSuccess:(void (^)(WFUri*))success failure:(void (^)(NSError*))failure;
 - (void)requestAccessAsyncWithSuccess:(void (^)(WSEProtectionPolicyEvaluationResult))success failure:(void (^)(NSError*))failure;
-- (void)requestAccessWithEnterpriseIdAsync:(NSString*)enterpriseId
-                                   success:(void (^)(WSEProtectionPolicyEvaluationResult))success
-                                   failure:(void (^)(NSError*))failure;
+- (void)requestAccessWithEnterpriseIdAsync:(NSString *)enterpriseId success:(void (^)(WSEProtectionPolicyEvaluationResult))success failure:(void (^)(NSError*))failure;
 - (WSEProtectionPolicyEvaluationResult)unlockAndAssumeEnterpriseIdentity;
+- (void)setAcceptedFormatId:(NSString *)formatId;
 @end
 
 #endif // __WADDataPackageView_DEFINED__
@@ -235,7 +234,7 @@ WINRT_EXPORT
 #ifndef __WADDataPackage_DEFINED__
 #define __WADDataPackage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADDataPackage : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -244,17 +243,17 @@ WINRT_EXPORT
 @property WADDataPackageOperation requestedOperation;
 @property (readonly) WADDataPackagePropertySet* properties;
 @property (readonly) NSMutableDictionary* /* NSString *, WSSRandomAccessStreamReference* */ resourceMap;
-- (EventRegistrationToken)addDestroyedEvent:(void (^)(WADDataPackage*, RTObject*))del;
+- (EventRegistrationToken)addDestroyedEvent:(void(^)(WADDataPackage*, RTObject*))del;
 - (void)removeDestroyedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addOperationCompletedEvent:(void (^)(WADDataPackage*, WADOperationCompletedEventArgs*))del;
+- (EventRegistrationToken)addOperationCompletedEvent:(void(^)(WADDataPackage*, WADOperationCompletedEventArgs*))del;
 - (void)removeOperationCompletedEvent:(EventRegistrationToken)tok;
 - (WADDataPackageView*)getView;
-- (void)setData:(NSString*)formatId value:(RTObject*)value;
-- (void)setDataProvider:(NSString*)formatId delayRenderer:(WADDataProviderHandler)delayRenderer;
-- (void)setText:(NSString*)value;
+- (void)setData:(NSString *)formatId value:(RTObject*)value;
+- (void)setDataProvider:(NSString *)formatId delayRenderer:(WADDataProviderHandler)delayRenderer;
+- (void)setText:(NSString *)value;
 - (void)setUri:(WFUri*)value;
-- (void)setHtmlFormat:(NSString*)value;
-- (void)setRtf:(NSString*)value;
+- (void)setHtmlFormat:(NSString *)value;
+- (void)setRtf:(NSString *)value;
 - (void)setBitmap:(WSSRandomAccessStreamReference*)value;
 - (void)setStorageItemsReadOnly:(id<NSFastEnumeration> /* RTObject<WSIStorageItem>* */)value;
 - (void)setStorageItems:(id<NSFastEnumeration> /* RTObject<WSIStorageItem>* */)value readOnly:(BOOL)readOnly;
@@ -268,10 +267,10 @@ WINRT_EXPORT
 #ifndef __WADHtmlFormatHelper_DEFINED__
 #define __WADHtmlFormatHelper_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADHtmlFormatHelper : RTObject
-+ (NSString*)getStaticFragment:(NSString*)htmlFormat;
-+ (NSString*)createHtmlFormat:(NSString*)htmlFragment;
++ (NSString *)getStaticFragment:(NSString *)htmlFormat;
++ (NSString *)createHtmlFormat:(NSString *)htmlFragment;
 @end
 
 #endif // __WADHtmlFormatHelper_DEFINED__
@@ -280,13 +279,13 @@ WINRT_EXPORT
 #ifndef __WADClipboard_DEFINED__
 #define __WADClipboard_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADClipboard : RTObject
 + (WADDataPackageView*)getContent;
 + (void)setContent:(WADDataPackage*)content;
 + (void)flush;
 + (void)clear;
-+ (EventRegistrationToken)addContentChangedEvent:(void (^)(RTObject*, RTObject*))del;
++ (EventRegistrationToken)addContentChangedEvent:(void(^)(RTObject*, RTObject*))del;
 + (void)removeContentChangedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -296,7 +295,7 @@ WINRT_EXPORT
 #ifndef __WADDataRequestDeferral_DEFINED__
 #define __WADDataRequestDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADDataRequestDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -310,14 +309,14 @@ WINRT_EXPORT
 #ifndef __WADDataRequest_DEFINED__
 #define __WADDataRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADDataRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (retain) WADDataPackage* data;
 @property (readonly) WFDateTime* deadline;
-- (void)failWithDisplayText:(NSString*)value;
+- (void)failWithDisplayText:(NSString *)value;
 - (WADDataRequestDeferral*)getDeferral;
 @end
 
@@ -327,7 +326,7 @@ WINRT_EXPORT
 #ifndef __WADDataRequestedEventArgs_DEFINED__
 #define __WADDataRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADDataRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -341,12 +340,12 @@ WINRT_EXPORT
 #ifndef __WADTargetApplicationChosenEventArgs_DEFINED__
 #define __WADTargetApplicationChosenEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADTargetApplicationChosenEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* applicationName;
+@property (readonly) NSString * applicationName;
 @end
 
 #endif // __WADTargetApplicationChosenEventArgs_DEFINED__
@@ -355,16 +354,17 @@ WINRT_EXPORT
 #ifndef __WADDataTransferManager_DEFINED__
 #define __WADDataTransferManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADDataTransferManager : RTObject
 + (void)showShareUI;
 + (WADDataTransferManager*)getForCurrentView;
++ (BOOL)isSupported;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-- (EventRegistrationToken)addDataRequestedEvent:(void (^)(WADDataTransferManager*, WADDataRequestedEventArgs*))del;
+- (EventRegistrationToken)addDataRequestedEvent:(void(^)(WADDataTransferManager*, WADDataRequestedEventArgs*))del;
 - (void)removeDataRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addTargetApplicationChosenEvent:(void (^)(WADDataTransferManager*, WADTargetApplicationChosenEventArgs*))del;
+- (EventRegistrationToken)addTargetApplicationChosenEvent:(void(^)(WADDataTransferManager*, WADTargetApplicationChosenEventArgs*))del;
 - (void)removeTargetApplicationChosenEvent:(EventRegistrationToken)tok;
 @end
 
@@ -374,11 +374,12 @@ WINRT_EXPORT
 #ifndef __WADSharedStorageAccessManager_DEFINED__
 #define __WADSharedStorageAccessManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADSharedStorageAccessManager : RTObject
-+ (NSString*)addFile:(RTObject<WSIStorageFile>*)file;
-+ (void)redeemTokenForFileAsync:(NSString*)token success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
-+ (void)removeFile:(NSString*)token;
++ (NSString *)addFile:(RTObject<WSIStorageFile>*)file;
++ (void)redeemTokenForFileAsync:(NSString *)token success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
++ (void)removeFile:(NSString *)token;
 @end
 
 #endif // __WADSharedStorageAccessManager_DEFINED__
+

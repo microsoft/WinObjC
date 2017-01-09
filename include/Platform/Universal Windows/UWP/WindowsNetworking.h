@@ -19,11 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_NETWORKING_EXPORT
+#define OBJCUWP_WINDOWS_NETWORKING_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Networking.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WNHostName, WNEndpointPair;
-@protocol WNIHostNameStatics
-, WNIHostName, WNIHostNameFactory, WNIEndpointPair, WNIEndpointPairFactory;
+@protocol WNIHostNameStatics, WNIHostName, WNIHostNameFactory, WNIEndpointPair, WNIEndpointPairFactory;
 
 // Windows.Networking.HostNameSortOptions
 enum _WNHostNameSortOptions {
@@ -58,7 +63,11 @@ typedef unsigned WNDomainNameType;
 #define __WFIStringable_DEFINED__
 
 @protocol WFIStringable
-- (NSString*)toString;
+- (NSString *)toString;
+@end
+
+OBJCUWP_WINDOWS_NETWORKING_EXPORT
+@interface WFIStringable : RTObject <WFIStringable>
 @end
 
 #endif // __WFIStringable_DEFINED__
@@ -67,20 +76,20 @@ typedef unsigned WNDomainNameType;
 #ifndef __WNHostName_DEFINED__
 #define __WNHostName_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_EXPORT
 @interface WNHostName : RTObject <WFIStringable>
-+ (int)compare:(NSString*)value1 value2:(NSString*)value2;
-+ (WNHostName*)makeHostName:(NSString*)hostName ACTIVATOR;
++ (int)compare:(NSString *)value1 value2:(NSString *)value2;
++ (WNHostName*)makeHostName:(NSString *)hostName ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* canonicalName;
-@property (readonly) NSString* displayName;
+@property (readonly) NSString * canonicalName;
+@property (readonly) NSString * displayName;
 @property (readonly) WNCIPInformation* iPInformation;
-@property (readonly) NSString* rawName;
+@property (readonly) NSString * rawName;
 @property (readonly) WNHostNameType type;
 - (BOOL)IsEqual:(WNHostName*)hostName;
-- (NSString*)toString;
+- (NSString *)toString;
 @end
 
 #endif // __WNHostName_DEFINED__
@@ -89,19 +98,17 @@ WINRT_EXPORT
 #ifndef __WNEndpointPair_DEFINED__
 #define __WNEndpointPair_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_NETWORKING_EXPORT
 @interface WNEndpointPair : RTObject
-+ (WNEndpointPair*)makeEndpointPair:(WNHostName*)localHostName
-                   localServiceName:(NSString*)localServiceName
-                     remoteHostName:(WNHostName*)remoteHostName
-                  remoteServiceName:(NSString*)remoteServiceName ACTIVATOR;
++ (WNEndpointPair*)makeEndpointPair:(WNHostName*)localHostName localServiceName:(NSString *)localServiceName remoteHostName:(WNHostName*)remoteHostName remoteServiceName:(NSString *)remoteServiceName ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* remoteServiceName;
+@property (retain) NSString * remoteServiceName;
 @property (retain) WNHostName* remoteHostName;
-@property (retain) NSString* localServiceName;
+@property (retain) NSString * localServiceName;
 @property (retain) WNHostName* localHostName;
 @end
 
 #endif // __WNEndpointPair_DEFINED__
+

@@ -19,20 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WSAWPWebProviderTokenRequest, WSAWPWebProviderTokenResponse, WSAWPWebAccountClientView, WSAWPWebAccountManager,
-    WSAWPWebAccountProviderRequestTokenOperation, WSAWPWebAccountProviderGetTokenSilentOperation,
-    WSAWPWebAccountProviderAddAccountOperation, WSAWPWebAccountProviderManageAccountOperation,
-    WSAWPWebAccountProviderDeleteAccountOperation, WSAWPWebAccountProviderSignOutAccountOperation,
-    WSAWPWebAccountProviderRetrieveCookiesOperation, WSAWPWebAccountProviderTriggerDetails;
-@protocol WSAWPIWebAccountProviderOperation
-, WSAWPIWebProviderTokenRequest, WSAWPIWebProviderTokenResponse, WSAWPIWebProviderTokenResponseFactory, WSAWPIWebAccountClientView,
-    WSAWPIWebAccountClientViewFactory, WSAWPIWebAccountManagerStatics, WSAWPIWebAccountScopeManagerStatics,
-    WSAWPIWebAccountProviderBaseReportOperation, WSAWPIWebAccountProviderUIReportOperation, WSAWPIWebAccountProviderSilentReportOperation,
-    WSAWPIWebAccountProviderTokenOperation, WSAWPIWebAccountProviderAddAccountOperation, WSAWPIWebAccountProviderManageAccountOperation,
-    WSAWPIWebAccountProviderDeleteAccountOperation, WSAWPIWebAccountProviderSignOutAccountOperation,
-    WSAWPIWebAccountProviderRetrieveCookiesOperation, WSAWPIWebAccountProviderTokenObjects;
+@class WSAWPWebProviderTokenRequest, WSAWPWebProviderTokenResponse, WSAWPWebAccountClientView, WSAWPWebAccountManager, WSAWPWebAccountProviderRequestTokenOperation, WSAWPWebAccountProviderGetTokenSilentOperation, WSAWPWebAccountProviderAddAccountOperation, WSAWPWebAccountProviderManageAccountOperation, WSAWPWebAccountProviderDeleteAccountOperation, WSAWPWebAccountProviderSignOutAccountOperation, WSAWPWebAccountProviderRetrieveCookiesOperation, WSAWPWebAccountProviderTriggerDetails;
+@protocol WSAWPIWebAccountProviderOperation, WSAWPIWebProviderTokenRequest, WSAWPIWebProviderTokenRequest2, WSAWPIWebProviderTokenResponse, WSAWPIWebProviderTokenResponseFactory, WSAWPIWebAccountClientView, WSAWPIWebAccountClientViewFactory, WSAWPIWebAccountManagerStatics, WSAWPIWebAccountManagerStatics2, WSAWPIWebAccountScopeManagerStatics, WSAWPIWebAccountMapManagerStatics, WSAWPIWebAccountProviderBaseReportOperation, WSAWPIWebAccountProviderUIReportOperation, WSAWPIWebAccountProviderSilentReportOperation, WSAWPIWebAccountProviderTokenOperation, WSAWPIWebAccountProviderAddAccountOperation, WSAWPIWebAccountProviderManageAccountOperation, WSAWPIWebAccountProviderDeleteAccountOperation, WSAWPIWebAccountProviderSignOutAccountOperation, WSAWPIWebAccountProviderRetrieveCookiesOperation, WSAWPIWebAccountProviderTokenObjects;
 
 // Windows.Security.Authentication.Web.Provider.WebAccountProviderOperationKind
 enum _WSAWPWebAccountProviderOperationKind {
@@ -85,6 +81,10 @@ typedef unsigned WSAWPWebAccountScope;
 @property (readonly) WSAWPWebAccountProviderOperationKind kind;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSAWPIWebAccountProviderOperation : RTObject <WSAWPIWebAccountProviderOperation>
+@end
+
 #endif // __WSAWPIWebAccountProviderOperation_DEFINED__
 
 // Windows.Security.Authentication.Web.Provider.IWebAccountProviderBaseReportOperation
@@ -94,6 +94,10 @@ typedef unsigned WSAWPWebAccountScope;
 @protocol WSAWPIWebAccountProviderBaseReportOperation
 - (void)reportCompleted;
 - (void)reportError:(WSAWCWebProviderError*)value;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSAWPIWebAccountProviderBaseReportOperation : RTObject <WSAWPIWebAccountProviderBaseReportOperation>
 @end
 
 #endif // __WSAWPIWebAccountProviderBaseReportOperation_DEFINED__
@@ -106,6 +110,10 @@ typedef unsigned WSAWPWebAccountScope;
 - (void)reportUserCanceled;
 - (void)reportCompleted;
 - (void)reportError:(WSAWCWebProviderError*)value;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSAWPIWebAccountProviderUIReportOperation : RTObject <WSAWPIWebAccountProviderUIReportOperation>
 @end
 
 #endif // __WSAWPIWebAccountProviderUIReportOperation_DEFINED__
@@ -121,6 +129,10 @@ typedef unsigned WSAWPWebAccountScope;
 - (void)reportError:(WSAWCWebProviderError*)value;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSAWPIWebAccountProviderSilentReportOperation : RTObject <WSAWPIWebAccountProviderSilentReportOperation>
+@end
+
 #endif // __WSAWPIWebAccountProviderSilentReportOperation_DEFINED__
 
 // Windows.Security.Authentication.Web.Provider.IWebAccountProviderTokenOperation
@@ -133,6 +145,10 @@ typedef unsigned WSAWPWebAccountScope;
 @property (readonly) NSMutableArray* /* WSAWPWebProviderTokenResponse* */ providerResponses;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSAWPIWebAccountProviderTokenOperation : RTObject <WSAWPIWebAccountProviderTokenOperation>
+@end
+
 #endif // __WSAWPIWebAccountProviderTokenOperation_DEFINED__
 
 // Windows.Security.Authentication.Web.Provider.IWebAccountProviderTokenObjects
@@ -143,13 +159,17 @@ typedef unsigned WSAWPWebAccountScope;
 @property (readonly) RTObject<WSAWPIWebAccountProviderOperation>* operation;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSAWPIWebAccountProviderTokenObjects : RTObject <WSAWPIWebAccountProviderTokenObjects>
+@end
+
 #endif // __WSAWPIWebAccountProviderTokenObjects_DEFINED__
 
 // Windows.Security.Authentication.Web.Provider.WebProviderTokenRequest
 #ifndef __WSAWPWebProviderTokenRequest_DEFINED__
 #define __WSAWPWebProviderTokenRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSAWPWebProviderTokenRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -158,10 +178,8 @@ WINRT_EXPORT
 @property (readonly) WSAWCWebTokenRequest* clientRequest;
 @property (readonly) WSAWPWebAccountSelectionOptions webAccountSelectionOptions;
 @property (readonly) NSArray* /* WSCWebAccount* */ webAccounts;
-- (void)getApplicationTokenBindingKeyAsync:(WSAWTokenBindingKeyType)keyType
-                                    target:(WFUri*)target
-                                   success:(void (^)(WSCCCryptographicKey*))success
-                                   failure:(void (^)(NSError*))failure;
+- (void)getApplicationTokenBindingKeyAsync:(WSAWTokenBindingKeyType)keyType target:(WFUri*)target success:(void (^)(WSCCCryptographicKey*))success failure:(void (^)(NSError*))failure;
+- (void)getApplicationTokenBindingKeyIdAsync:(WSAWTokenBindingKeyType)keyType target:(WFUri*)target success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSAWPWebProviderTokenRequest_DEFINED__
@@ -170,7 +188,7 @@ WINRT_EXPORT
 #ifndef __WSAWPWebProviderTokenResponse_DEFINED__
 #define __WSAWPWebProviderTokenResponse_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSAWPWebProviderTokenResponse : RTObject
 + (WSAWPWebProviderTokenResponse*)make:(WSAWCWebTokenResponse*)webTokenResponse ACTIVATOR;
 #if defined(__cplusplus)
@@ -185,16 +203,14 @@ WINRT_EXPORT
 #ifndef __WSAWPWebAccountClientView_DEFINED__
 #define __WSAWPWebAccountClientView_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSAWPWebAccountClientView : RTObject
 + (WSAWPWebAccountClientView*)make:(WSAWPWebAccountClientViewType)viewType applicationCallbackUri:(WFUri*)applicationCallbackUri ACTIVATOR;
-+ (WSAWPWebAccountClientView*)makeWithPairwiseId:(WSAWPWebAccountClientViewType)viewType
-                          applicationCallbackUri:(WFUri*)applicationCallbackUri
-                               accountPairwiseId:(NSString*)accountPairwiseId ACTIVATOR;
++ (WSAWPWebAccountClientView*)makeWithPairwiseId:(WSAWPWebAccountClientViewType)viewType applicationCallbackUri:(WFUri*)applicationCallbackUri accountPairwiseId:(NSString *)accountPairwiseId ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* accountPairwiseId;
+@property (readonly) NSString * accountPairwiseId;
 @property (readonly) WFUri* applicationCallbackUri;
 @property (readonly) WSAWPWebAccountClientViewType type;
 @end
@@ -205,35 +221,26 @@ WINRT_EXPORT
 #ifndef __WSAWPWebAccountManager_DEFINED__
 #define __WSAWPWebAccountManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSAWPWebAccountManager : RTObject
-+ (RTObject<WFIAsyncAction>*)updateWebAccountPropertiesAsync:(WSCWebAccount*)webAccount
-                                          webAccountUserName:(NSString*)webAccountUserName
-                                        additionalProperties:(NSDictionary* /* NSString *, NSString * */)additionalProperties;
-+ (void)addWebAccountAsync:(NSString*)webAccountId
-        webAccountUserName:(NSString*)webAccountUserName
-                     props:(NSDictionary* /* NSString *, NSString * */)props
-                   success:(void (^)(WSCWebAccount*))success
-                   failure:(void (^)(NSError*))failure;
++ (RTObject<WFIAsyncAction>*)pullCookiesAsync:(NSString *)uriString callerPFN:(NSString *)callerPFN;
++ (void)addWebAccountWithScopeAsync:(NSString *)webAccountId webAccountUserName:(NSString *)webAccountUserName props:(NSDictionary* /* NSString *, NSString * */)props scope:(WSAWPWebAccountScope)scope success:(void (^)(WSCWebAccount*))success failure:(void (^)(NSError*))failure;
++ (RTObject<WFIAsyncAction>*)setScopeAsync:(WSCWebAccount*)webAccount scope:(WSAWPWebAccountScope)scope;
++ (WSAWPWebAccountScope)getScope:(WSCWebAccount*)webAccount;
++ (void)addWebAccountWithScopeAndMapAsync:(NSString *)webAccountId webAccountUserName:(NSString *)webAccountUserName props:(NSDictionary* /* NSString *, NSString * */)props scope:(WSAWPWebAccountScope)scope perUserWebAccountId:(NSString *)perUserWebAccountId success:(void (^)(WSCWebAccount*))success failure:(void (^)(NSError*))failure;
++ (RTObject<WFIAsyncAction>*)setPerAppToPerUserAccountAsync:(WSCWebAccount*)perAppAccount perUserWebAccountId:(NSString *)perUserWebAccountId;
++ (void)getPerUserFromPerAppAccountAsync:(WSCWebAccount*)perAppAccount success:(void (^)(WSCWebAccount*))success failure:(void (^)(NSError*))failure;
++ (RTObject<WFIAsyncAction>*)clearPerUserFromPerAppAccountAsync:(WSCWebAccount*)perAppAccount;
++ (RTObject<WFIAsyncAction>*)updateWebAccountPropertiesAsync:(WSCWebAccount*)webAccount webAccountUserName:(NSString *)webAccountUserName additionalProperties:(NSDictionary* /* NSString *, NSString * */)additionalProperties;
++ (void)addWebAccountAsync:(NSString *)webAccountId webAccountUserName:(NSString *)webAccountUserName props:(NSDictionary* /* NSString *, NSString * */)props success:(void (^)(WSCWebAccount*))success failure:(void (^)(NSError*))failure;
 + (RTObject<WFIAsyncAction>*)deleteWebAccountAsync:(WSCWebAccount*)webAccount;
 + (void)findAllProviderWebAccountsAsyncWithSuccess:(void (^)(NSArray* /* WSCWebAccount* */))success failure:(void (^)(NSError*))failure;
 + (RTObject<WFIAsyncAction>*)pushCookiesAsync:(WFUri*)uri cookies:(NSArray* /* WWHHttpCookie* */)cookies;
 + (RTObject<WFIAsyncAction>*)setViewAsync:(WSCWebAccount*)webAccount view:(WSAWPWebAccountClientView*)view;
 + (RTObject<WFIAsyncAction>*)clearViewAsync:(WSCWebAccount*)webAccount applicationCallbackUri:(WFUri*)applicationCallbackUri;
-+ (void)getViewsAsync:(WSCWebAccount*)webAccount
-              success:(void (^)(NSArray* /* WSAWPWebAccountClientView* */))success
-              failure:(void (^)(NSError*))failure;
-+ (RTObject<WFIAsyncAction>*)setWebAccountPictureAsync:(WSCWebAccount*)webAccount
-                                     webAccountPicture:(RTObject<WSSIRandomAccessStream>*)webAccountPicture;
++ (void)getViewsAsync:(WSCWebAccount*)webAccount success:(void (^)(NSArray* /* WSAWPWebAccountClientView* */))success failure:(void (^)(NSError*))failure;
++ (RTObject<WFIAsyncAction>*)setWebAccountPictureAsync:(WSCWebAccount*)webAccount webAccountPicture:(RTObject<WSSIRandomAccessStream>*)webAccountPicture;
 + (RTObject<WFIAsyncAction>*)clearWebAccountPictureAsync:(WSCWebAccount*)webAccount;
-+ (void)addWebAccountWithScopeAsync:(NSString*)webAccountId
-                 webAccountUserName:(NSString*)webAccountUserName
-                              props:(NSDictionary* /* NSString *, NSString * */)props
-                              scope:(WSAWPWebAccountScope)scope
-                            success:(void (^)(WSCWebAccount*))success
-                            failure:(void (^)(NSError*))failure;
-+ (RTObject<WFIAsyncAction>*)setScopeAsync:(WSCWebAccount*)webAccount scope:(WSAWPWebAccountScope)scope;
-+ (WSAWPWebAccountScope)getScope:(WSCWebAccount*)webAccount;
 @end
 
 #endif // __WSAWPWebAccountManager_DEFINED__
@@ -242,11 +249,8 @@ WINRT_EXPORT
 #ifndef __WSAWPWebAccountProviderRequestTokenOperation_DEFINED__
 #define __WSAWPWebAccountProviderRequestTokenOperation_DEFINED__
 
-WINRT_EXPORT
-@interface WSAWPWebAccountProviderRequestTokenOperation : RTObject <WSAWPIWebAccountProviderTokenOperation,
-                                                                    WSAWPIWebAccountProviderOperation,
-                                                                    WSAWPIWebAccountProviderUIReportOperation,
-                                                                    WSAWPIWebAccountProviderBaseReportOperation>
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSAWPWebAccountProviderRequestTokenOperation : RTObject <WSAWPIWebAccountProviderTokenOperation, WSAWPIWebAccountProviderOperation, WSAWPIWebAccountProviderUIReportOperation, WSAWPIWebAccountProviderBaseReportOperation>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -265,11 +269,8 @@ WINRT_EXPORT
 #ifndef __WSAWPWebAccountProviderGetTokenSilentOperation_DEFINED__
 #define __WSAWPWebAccountProviderGetTokenSilentOperation_DEFINED__
 
-WINRT_EXPORT
-@interface WSAWPWebAccountProviderGetTokenSilentOperation : RTObject <WSAWPIWebAccountProviderTokenOperation,
-                                                                      WSAWPIWebAccountProviderOperation,
-                                                                      WSAWPIWebAccountProviderSilentReportOperation,
-                                                                      WSAWPIWebAccountProviderBaseReportOperation>
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSAWPWebAccountProviderGetTokenSilentOperation : RTObject <WSAWPIWebAccountProviderTokenOperation, WSAWPIWebAccountProviderOperation, WSAWPIWebAccountProviderSilentReportOperation, WSAWPIWebAccountProviderBaseReportOperation>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -289,7 +290,7 @@ WINRT_EXPORT
 #ifndef __WSAWPWebAccountProviderAddAccountOperation_DEFINED__
 #define __WSAWPWebAccountProviderAddAccountOperation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSAWPWebAccountProviderAddAccountOperation : RTObject <WSAWPIWebAccountProviderOperation>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -304,7 +305,7 @@ WINRT_EXPORT
 #ifndef __WSAWPWebAccountProviderManageAccountOperation_DEFINED__
 #define __WSAWPWebAccountProviderManageAccountOperation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSAWPWebAccountProviderManageAccountOperation : RTObject <WSAWPIWebAccountProviderOperation>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -320,9 +321,8 @@ WINRT_EXPORT
 #ifndef __WSAWPWebAccountProviderDeleteAccountOperation_DEFINED__
 #define __WSAWPWebAccountProviderDeleteAccountOperation_DEFINED__
 
-WINRT_EXPORT
-@interface WSAWPWebAccountProviderDeleteAccountOperation
-    : RTObject <WSAWPIWebAccountProviderOperation, WSAWPIWebAccountProviderBaseReportOperation>
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSAWPWebAccountProviderDeleteAccountOperation : RTObject <WSAWPIWebAccountProviderOperation, WSAWPIWebAccountProviderBaseReportOperation>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -338,15 +338,14 @@ WINRT_EXPORT
 #ifndef __WSAWPWebAccountProviderSignOutAccountOperation_DEFINED__
 #define __WSAWPWebAccountProviderSignOutAccountOperation_DEFINED__
 
-WINRT_EXPORT
-@interface WSAWPWebAccountProviderSignOutAccountOperation
-    : RTObject <WSAWPIWebAccountProviderOperation, WSAWPIWebAccountProviderBaseReportOperation>
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSAWPWebAccountProviderSignOutAccountOperation : RTObject <WSAWPIWebAccountProviderOperation, WSAWPIWebAccountProviderBaseReportOperation>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WSAWPWebAccountProviderOperationKind kind;
 @property (readonly) WFUri* applicationCallbackUri;
-@property (readonly) NSString* clientId;
+@property (readonly) NSString * clientId;
 @property (readonly) WSCWebAccount* webAccount;
 - (void)reportCompleted;
 - (void)reportError:(WSAWCWebProviderError*)value;
@@ -358,9 +357,8 @@ WINRT_EXPORT
 #ifndef __WSAWPWebAccountProviderRetrieveCookiesOperation_DEFINED__
 #define __WSAWPWebAccountProviderRetrieveCookiesOperation_DEFINED__
 
-WINRT_EXPORT
-@interface WSAWPWebAccountProviderRetrieveCookiesOperation
-    : RTObject <WSAWPIWebAccountProviderOperation, WSAWPIWebAccountProviderBaseReportOperation>
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSAWPWebAccountProviderRetrieveCookiesOperation : RTObject <WSAWPIWebAccountProviderOperation, WSAWPIWebAccountProviderBaseReportOperation>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -379,7 +377,7 @@ WINRT_EXPORT
 #ifndef __WSAWPWebAccountProviderTriggerDetails_DEFINED__
 #define __WSAWPWebAccountProviderTriggerDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSAWPWebAccountProviderTriggerDetails : RTObject <WSAWPIWebAccountProviderTokenObjects>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -388,3 +386,4 @@ WINRT_EXPORT
 @end
 
 #endif // __WSAWPWebAccountProviderTriggerDetails_DEFINED__
+

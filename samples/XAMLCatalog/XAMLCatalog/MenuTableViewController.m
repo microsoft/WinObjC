@@ -46,14 +46,6 @@ static NSString* viewTitleKeyName = @"ViewName";
     [self.menuItems addObject:[NSDictionary dictionaryWithObjectsAndKeys:title, viewTitleKeyName, controller, controllerKeyName, nil]];
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-}
-
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
     return [self.menuItems count];
 }
@@ -66,12 +58,14 @@ static NSString* viewTitleKeyName = @"ViewName";
 
     NSDictionary* currentObject = [self.menuItems objectAtIndex:indexPath.row];
     if (currentObject != nil && [currentObject isKindOfClass:[UIViewController class]]) {
-        cell.textLabel.text = [currentObject objectForKey:viewTitleKeyName];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     } else {
-        cell.textLabel.text = [currentObject objectForKey:viewTitleKeyName];
         cell.accessoryView = [currentObject objectForKey:viewKeyName];
     }
+
+    // Set the text and accessibility identifier so we can find these elements via automation
+    cell.textLabel.text = [currentObject objectForKey : viewTitleKeyName];
+    cell.accessibilityIdentifier = cell.textLabel.text;
 
     return cell;
 }

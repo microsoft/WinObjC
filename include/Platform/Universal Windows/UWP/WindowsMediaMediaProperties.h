@@ -19,16 +19,24 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Media_MediaProperties.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WMMMediaRatio, WMMMediaPropertySet, WMMAudioEncodingProperties, WMMMediaEncodingSubtypes, WMMH264ProfileIds, WMMMpeg2ProfileIds,
-    WMMVideoEncodingProperties, WMMImageEncodingProperties, WMMContainerEncodingProperties, WMMMediaEncodingProfile;
-@protocol WMMIMediaRatio
-, WMMIMediaEncodingProperties, WMMIAudioEncodingProperties, WMMIAudioEncodingPropertiesWithFormatUserData,
-    WMMIAudioEncodingPropertiesStatics, WMMIVideoEncodingProperties, WMMIMediaEncodingSubtypesStatics, WMMIH264ProfileIdsStatics,
-    WMMIMpeg2ProfileIdsStatics, WMMIVideoEncodingProperties2, WMMIVideoEncodingPropertiesStatics, WMMIImageEncodingProperties,
-    WMMIImageEncodingPropertiesStatics, WMMIImageEncodingPropertiesStatics2, WMMIContainerEncodingProperties,
-    WMMIMediaEncodingProfileStatics, WMMIMediaEncodingProfileStatics2, WMMIMediaEncodingProfile;
+@class WMMMediaRatio, WMMMediaPropertySet, WMMAudioEncodingProperties, WMMMediaEncodingSubtypes, WMMH264ProfileIds, WMMMpeg2ProfileIds, WMMVideoEncodingProperties, WMMImageEncodingProperties, WMMContainerEncodingProperties, WMMMediaEncodingProfile;
+@protocol WMMIMediaRatio, WMMIMediaEncodingProperties, WMMIAudioEncodingProperties, WMMIAudioEncodingPropertiesWithFormatUserData, WMMIAudioEncodingPropertiesStatics, WMMIVideoEncodingProperties, WMMIMediaEncodingSubtypesStatics, WMMIH264ProfileIdsStatics, WMMIMpeg2ProfileIdsStatics, WMMIVideoEncodingProperties2, WMMIVideoEncodingProperties3, WMMIVideoEncodingPropertiesStatics, WMMIImageEncodingProperties, WMMIImageEncodingPropertiesStatics, WMMIImageEncodingPropertiesStatics2, WMMIContainerEncodingProperties, WMMIMediaEncodingProfileStatics, WMMIMediaEncodingProfileStatics2, WMMIMediaEncodingProfile;
+
+// Windows.Media.MediaProperties.StereoscopicVideoPackingMode
+enum _WMMStereoscopicVideoPackingMode {
+    WMMStereoscopicVideoPackingModeNone = 0,
+    WMMStereoscopicVideoPackingModeSideBySide = 1,
+    WMMStereoscopicVideoPackingModeTopBottom = 2,
+};
+typedef unsigned WMMStereoscopicVideoPackingMode;
 
 // Windows.Media.MediaProperties.MediaPixelFormat
 enum _WMMMediaPixelFormat {
@@ -94,8 +102,12 @@ typedef unsigned WMMMediaMirroringOptions;
 
 @protocol WMMIMediaEncodingProperties
 @property (readonly) WMMMediaPropertySet* properties;
-@property (retain) NSString* subtype;
-@property (readonly) NSString* type;
+@property (retain) NSString * subtype;
+@property (readonly) NSString * type;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
+@interface WMMIMediaEncodingProperties : RTObject <WMMIMediaEncodingProperties>
 @end
 
 #endif // __WMMIMediaEncodingProperties_DEFINED__
@@ -104,7 +116,7 @@ typedef unsigned WMMMediaMirroringOptions;
 #ifndef __WMMMediaRatio_DEFINED__
 #define __WMMMediaRatio_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
 @interface WMMMediaRatio : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -119,28 +131,28 @@ WINRT_EXPORT
 #ifndef __WMMMediaPropertySet_DEFINED__
 #define __WMMMediaPropertySet_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
 @interface WMMMediaPropertySet : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
-- (id)objectForKey:(id)key;
+- (id)objectForKey: (id)key;
 - (NSArray*)allKeys;
-- (NSArray*)allKeysForObject:(id)obj;
+- (NSArray*)allKeysForObject: (id)obj;
 - (NSArray*)allValues;
 - (id)keyEnumerator;
 - (unsigned int)count;
 
-- (void)setObject:(id)obj forKey:(id)key;
-- (void)setObject:(id)object forKeyedSubscript:(id)key;
-- (void)removeObjectForKey:(id)key;
-- (void)removeAllObjects;
-- (void)removeObjectsForKeys:(NSArray*)keys;
-- (void)addEntriesFromDictionary:(NSDictionary*)otherDict;
-- (void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
-- (void)setDictionary:(NSDictionary*)dict;
+-(void)setObject: (id)obj forKey: (id)key;
+-(void)setObject:(id)object forKeyedSubscript:(id)key;
+-(void)removeObjectForKey: (id)key;
+-(void)removeAllObjects;
+-(void)removeObjectsForKeys:(NSArray*)keys;
+-(void)addEntriesFromDictionary:(NSDictionary*)otherDict;
+-(void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
+-(void)setDictionary: (NSDictionary*)dict;
 @end
 
 #endif // __WMMMediaPropertySet_DEFINED__
@@ -149,14 +161,12 @@ WINRT_EXPORT
 #ifndef __WMMAudioEncodingProperties_DEFINED__
 #define __WMMAudioEncodingProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
 @interface WMMAudioEncodingProperties : RTObject <WMMIMediaEncodingProperties>
 + (WMMAudioEncodingProperties*)createAac:(unsigned int)sampleRate channelCount:(unsigned int)channelCount bitrate:(unsigned int)bitrate;
 + (WMMAudioEncodingProperties*)createAacAdts:(unsigned int)sampleRate channelCount:(unsigned int)channelCount bitrate:(unsigned int)bitrate;
 + (WMMAudioEncodingProperties*)createMp3:(unsigned int)sampleRate channelCount:(unsigned int)channelCount bitrate:(unsigned int)bitrate;
-+ (WMMAudioEncodingProperties*)createPcm:(unsigned int)sampleRate
-                            channelCount:(unsigned int)channelCount
-                           bitsPerSample:(unsigned int)bitsPerSample;
++ (WMMAudioEncodingProperties*)createPcm:(unsigned int)sampleRate channelCount:(unsigned int)channelCount bitsPerSample:(unsigned int)bitsPerSample;
 + (WMMAudioEncodingProperties*)createWma:(unsigned int)sampleRate channelCount:(unsigned int)channelCount bitrate:(unsigned int)bitrate;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -166,9 +176,9 @@ WINRT_EXPORT
 @property unsigned int channelCount;
 @property unsigned int bitsPerSample;
 @property unsigned int bitrate;
-@property (retain) NSString* subtype;
+@property (retain) NSString * subtype;
 @property (readonly) WMMMediaPropertySet* properties;
-@property (readonly) NSString* type;
+@property (readonly) NSString * type;
 - (void)setFormatUserData:(NSArray* /* uint8_t */)value;
 - (void)getFormatUserData:(NSArray* /* uint8_t */*)value;
 @end
@@ -179,48 +189,48 @@ WINRT_EXPORT
 #ifndef __WMMMediaEncodingSubtypes_DEFINED__
 #define __WMMMediaEncodingSubtypes_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
 @interface WMMMediaEncodingSubtypes : RTObject
-+ (NSString*)aac;
-+ (NSString*)aacAdts;
-+ (NSString*)ac3;
-+ (NSString*)amrNb;
-+ (NSString*)amrWb;
-+ (NSString*)argb32;
-+ (NSString*)asf;
-+ (NSString*)avi;
-+ (NSString*)bgra8;
-+ (NSString*)bmp;
-+ (NSString*)eac3;
-+ (NSString*)Float;
-+ (NSString*)gif;
-+ (NSString*)h263;
-+ (NSString*)h264;
-+ (NSString*)h264Es;
-+ (NSString*)hevc;
-+ (NSString*)hevcEs;
-+ (NSString*)iyuv;
-+ (NSString*)jpeg;
-+ (NSString*)jpegXr;
-+ (NSString*)mjpg;
-+ (NSString*)mp3;
-+ (NSString*)mpeg;
-+ (NSString*)mpeg1;
-+ (NSString*)mpeg2;
-+ (NSString*)mpeg4;
-+ (NSString*)nv12;
-+ (NSString*)pcm;
-+ (NSString*)png;
-+ (NSString*)rgb24;
-+ (NSString*)rgb32;
-+ (NSString*)tiff;
-+ (NSString*)wave;
-+ (NSString*)wma8;
-+ (NSString*)wma9;
-+ (NSString*)wmv3;
-+ (NSString*)wvc1;
-+ (NSString*)yuy2;
-+ (NSString*)yv12;
++ (NSString *)aac;
++ (NSString *)aacAdts;
++ (NSString *)ac3;
++ (NSString *)amrNb;
++ (NSString *)amrWb;
++ (NSString *)argb32;
++ (NSString *)asf;
++ (NSString *)avi;
++ (NSString *)bgra8;
++ (NSString *)bmp;
++ (NSString *)eac3;
++ (NSString *)Float;
++ (NSString *)gif;
++ (NSString *)h263;
++ (NSString *)h264;
++ (NSString *)h264Es;
++ (NSString *)hevc;
++ (NSString *)hevcEs;
++ (NSString *)iyuv;
++ (NSString *)jpeg;
++ (NSString *)jpegXr;
++ (NSString *)mjpg;
++ (NSString *)mp3;
++ (NSString *)mpeg;
++ (NSString *)mpeg1;
++ (NSString *)mpeg2;
++ (NSString *)mpeg4;
++ (NSString *)nv12;
++ (NSString *)pcm;
++ (NSString *)png;
++ (NSString *)rgb24;
++ (NSString *)rgb32;
++ (NSString *)tiff;
++ (NSString *)wave;
++ (NSString *)wma8;
++ (NSString *)wma9;
++ (NSString *)wmv3;
++ (NSString *)wvc1;
++ (NSString *)yuy2;
++ (NSString *)yv12;
 @end
 
 #endif // __WMMMediaEncodingSubtypes_DEFINED__
@@ -229,7 +239,7 @@ WINRT_EXPORT
 #ifndef __WMMH264ProfileIds_DEFINED__
 #define __WMMH264ProfileIds_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
 @interface WMMH264ProfileIds : RTObject
 + (int)baseline;
 + (int)constrainedBaseline;
@@ -249,7 +259,7 @@ WINRT_EXPORT
 #ifndef __WMMMpeg2ProfileIds_DEFINED__
 #define __WMMMpeg2ProfileIds_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
 @interface WMMMpeg2ProfileIds : RTObject
 + (int)high;
 + (int)main;
@@ -264,24 +274,25 @@ WINRT_EXPORT
 #ifndef __WMMVideoEncodingProperties_DEFINED__
 #define __WMMVideoEncodingProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
 @interface WMMVideoEncodingProperties : RTObject <WMMIMediaEncodingProperties>
 + (WMMVideoEncodingProperties*)createH264;
 + (WMMVideoEncodingProperties*)createMpeg2;
-+ (WMMVideoEncodingProperties*)createUncompressed:(NSString*)subtype width:(unsigned int)width height:(unsigned int)height;
++ (WMMVideoEncodingProperties*)createUncompressed:(NSString *)subtype width:(unsigned int)width height:(unsigned int)height;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* subtype;
+@property (retain) NSString * subtype;
 @property (readonly) WMMMediaPropertySet* properties;
-@property (readonly) NSString* type;
+@property (readonly) NSString * type;
 @property unsigned int width;
 @property unsigned int height;
 @property unsigned int bitrate;
 @property (readonly) WMMMediaRatio* frameRate;
 @property (readonly) WMMMediaRatio* pixelAspectRatio;
 @property int profileId;
+@property (readonly) WMMStereoscopicVideoPackingMode stereoscopicVideoPackingMode;
 - (void)setFormatUserData:(NSArray* /* uint8_t */)value;
 - (void)getFormatUserData:(NSArray* /* uint8_t */*)value;
 @end
@@ -292,7 +303,7 @@ WINRT_EXPORT
 #ifndef __WMMImageEncodingProperties_DEFINED__
 #define __WMMImageEncodingProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
 @interface WMMImageEncodingProperties : RTObject <WMMIMediaEncodingProperties>
 + (WMMImageEncodingProperties*)createUncompressed:(WMMMediaPixelFormat)format;
 + (WMMImageEncodingProperties*)createBmp;
@@ -305,9 +316,9 @@ WINRT_EXPORT
 #endif
 @property unsigned int width;
 @property unsigned int height;
-@property (retain) NSString* subtype;
+@property (retain) NSString * subtype;
 @property (readonly) WMMMediaPropertySet* properties;
-@property (readonly) NSString* type;
+@property (readonly) NSString * type;
 @end
 
 #endif // __WMMImageEncodingProperties_DEFINED__
@@ -316,15 +327,15 @@ WINRT_EXPORT
 #ifndef __WMMContainerEncodingProperties_DEFINED__
 #define __WMMContainerEncodingProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
 @interface WMMContainerEncodingProperties : RTObject <WMMIMediaEncodingProperties>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* subtype;
+@property (retain) NSString * subtype;
 @property (readonly) WMMMediaPropertySet* properties;
-@property (readonly) NSString* type;
+@property (readonly) NSString * type;
 @end
 
 #endif // __WMMContainerEncodingProperties_DEFINED__
@@ -333,19 +344,15 @@ WINRT_EXPORT
 #ifndef __WMMMediaEncodingProfile_DEFINED__
 #define __WMMMediaEncodingProfile_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
 @interface WMMMediaEncodingProfile : RTObject
 + (WMMMediaEncodingProfile*)createM4a:(WMMAudioEncodingQuality)quality;
 + (WMMMediaEncodingProfile*)createMp3:(WMMAudioEncodingQuality)quality;
 + (WMMMediaEncodingProfile*)createWma:(WMMAudioEncodingQuality)quality;
 + (WMMMediaEncodingProfile*)createMp4:(WMMVideoEncodingQuality)quality;
 + (WMMMediaEncodingProfile*)createWmv:(WMMVideoEncodingQuality)quality;
-+ (void)createFromFileAsync:(RTObject<WSIStorageFile>*)file
-                    success:(void (^)(WMMMediaEncodingProfile*))success
-                    failure:(void (^)(NSError*))failure;
-+ (void)createFromStreamAsync:(RTObject<WSSIRandomAccessStream>*)stream
-                      success:(void (^)(WMMMediaEncodingProfile*))success
-                      failure:(void (^)(NSError*))failure;
++ (void)createFromFileAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(WMMMediaEncodingProfile*))success failure:(void (^)(NSError*))failure;
++ (void)createFromStreamAsync:(RTObject<WSSIRandomAccessStream>*)stream success:(void (^)(WMMMediaEncodingProfile*))success failure:(void (^)(NSError*))failure;
 + (WMMMediaEncodingProfile*)createWav:(WMMAudioEncodingQuality)quality;
 + (WMMMediaEncodingProfile*)createAvi:(WMMVideoEncodingQuality)quality;
 + (instancetype)make ACTIVATOR;
@@ -358,3 +365,4 @@ WINRT_EXPORT
 @end
 
 #endif // __WMMMediaEncodingProfile_DEFINED__
+

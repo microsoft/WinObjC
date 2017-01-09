@@ -19,14 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
+#define OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Services_Maps.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WSMMapAddress, WSMMapLocation, WSMMapRouteManeuver, WSMMapRouteLeg, WSMMapRoute, WSMMapLocationFinderResult, WSMMapRouteFinderResult,
-    WSMMapRouteDrivingOptions, WSMMapLocationFinder, WSMMapRouteFinder, WSMMapService, WSMMapManager;
-@protocol WSMIMapRouteDrivingOptions
-, WSMIMapAddress, WSMIMapAddress2, WSMIMapLocation, WSMIMapLocationFinderResult, WSMIMapRouteManeuver, WSMIMapRouteManeuver2,
-    WSMIMapRouteLeg, WSMIMapRoute, WSMIMapRoute2, WSMIMapRouteFinderResult, WSMIMapRouteFinderResult2, WSMIMapLocationFinderStatics,
-    WSMIMapRouteFinderStatics, WSMIMapRouteFinderStatics2, WSMIMapServiceStatics, WSMIMapManagerStatics, WSMIMapServiceStatics2;
+@class WSMMapAddress, WSMMapLocation, WSMMapRouteManeuver, WSMMapRouteLeg, WSMMapRoute, WSMMapLocationFinderResult, WSMMapRouteFinderResult, WSMMapRouteDrivingOptions, WSMMapLocationFinder, WSMMapRouteFinder, WSMMapService, WSMMapManager;
+@protocol WSMIMapRouteDrivingOptions, WSMIMapAddress, WSMIMapAddress2, WSMIMapLocation, WSMIMapLocationFinderResult, WSMIMapRouteManeuver, WSMIMapRouteManeuver2, WSMIMapRouteLeg, WSMIMapRoute, WSMIMapRoute2, WSMIMapRouteFinderResult, WSMIMapRouteFinderResult2, WSMIMapLocationFinderStatics, WSMIMapLocationFinderStatics2, WSMIMapRouteFinderStatics, WSMIMapRouteFinderStatics2, WSMIMapServiceStatics, WSMIMapManagerStatics, WSMIMapServiceStatics2, WSMIMapServiceStatics3;
 
 // Windows.Services.Maps.MapRouteOptimization
 enum _WSMMapRouteOptimization {
@@ -113,6 +115,13 @@ enum _WSMMapRouteFinderStatus {
 };
 typedef unsigned WSMMapRouteFinderStatus;
 
+// Windows.Services.Maps.MapLocationDesiredAccuracy
+enum _WSMMapLocationDesiredAccuracy {
+    WSMMapLocationDesiredAccuracyHigh = 0,
+    WSMMapLocationDesiredAccuracyLow = 1,
+};
+typedef unsigned WSMMapLocationDesiredAccuracy;
+
 #include "WindowsDevicesGeolocation.h"
 #include "WindowsFoundation.h"
 
@@ -122,27 +131,27 @@ typedef unsigned WSMMapRouteFinderStatus;
 #ifndef __WSMMapAddress_DEFINED__
 #define __WSMMapAddress_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapAddress : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* buildingFloor;
-@property (readonly) NSString* buildingName;
-@property (readonly) NSString* buildingRoom;
-@property (readonly) NSString* buildingWing;
-@property (readonly) NSString* continent;
-@property (readonly) NSString* country;
-@property (readonly) NSString* countryCode;
-@property (readonly) NSString* district;
-@property (readonly) NSString* neighborhood;
-@property (readonly) NSString* postCode;
-@property (readonly) NSString* region;
-@property (readonly) NSString* regionCode;
-@property (readonly) NSString* street;
-@property (readonly) NSString* streetNumber;
-@property (readonly) NSString* town;
-@property (readonly) NSString* formattedAddress;
+@property (readonly) NSString * buildingFloor;
+@property (readonly) NSString * buildingName;
+@property (readonly) NSString * buildingRoom;
+@property (readonly) NSString * buildingWing;
+@property (readonly) NSString * continent;
+@property (readonly) NSString * country;
+@property (readonly) NSString * countryCode;
+@property (readonly) NSString * district;
+@property (readonly) NSString * neighborhood;
+@property (readonly) NSString * postCode;
+@property (readonly) NSString * region;
+@property (readonly) NSString * regionCode;
+@property (readonly) NSString * street;
+@property (readonly) NSString * streetNumber;
+@property (readonly) NSString * town;
+@property (readonly) NSString * formattedAddress;
 @end
 
 #endif // __WSMMapAddress_DEFINED__
@@ -151,14 +160,14 @@ WINRT_EXPORT
 #ifndef __WSMMapLocation_DEFINED__
 #define __WSMMapLocation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapLocation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WSMMapAddress* address;
-@property (readonly) NSString* Description;
-@property (readonly) NSString* displayName;
+@property (readonly) NSString * Description;
+@property (readonly) NSString * displayName;
 @property (readonly) WDGGeopoint* point;
 @end
 
@@ -168,20 +177,20 @@ WINRT_EXPORT
 #ifndef __WSMMapRouteManeuver_DEFINED__
 #define __WSMMapRouteManeuver_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapRouteManeuver : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* exitNumber;
-@property (readonly) NSString* instructionText;
+@property (readonly) NSString * exitNumber;
+@property (readonly) NSString * instructionText;
 @property (readonly) WSMMapRouteManeuverKind kind;
 @property (readonly) double lengthInMeters;
 @property (readonly) WSMMapManeuverNotices maneuverNotices;
 @property (readonly) WDGGeopoint* startingPoint;
 @property (readonly) double endHeading;
 @property (readonly) double startHeading;
-@property (readonly) NSString* streetName;
+@property (readonly) NSString * streetName;
 @end
 
 #endif // __WSMMapRouteManeuver_DEFINED__
@@ -190,7 +199,7 @@ WINRT_EXPORT
 #ifndef __WSMMapRouteLeg_DEFINED__
 #define __WSMMapRouteLeg_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapRouteLeg : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -208,7 +217,7 @@ WINRT_EXPORT
 #ifndef __WSMMapRoute_DEFINED__
 #define __WSMMapRoute_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapRoute : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -229,7 +238,7 @@ WINRT_EXPORT
 #ifndef __WSMMapLocationFinderResult_DEFINED__
 #define __WSMMapLocationFinderResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapLocationFinderResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -244,7 +253,7 @@ WINRT_EXPORT
 #ifndef __WSMMapRouteFinderResult_DEFINED__
 #define __WSMMapRouteFinderResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapRouteFinderResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -260,7 +269,7 @@ WINRT_EXPORT
 #ifndef __WSMMapRouteDrivingOptions_DEFINED__
 #define __WSMMapRouteDrivingOptions_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapRouteDrivingOptions : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -278,20 +287,12 @@ WINRT_EXPORT
 #ifndef __WSMMapLocationFinder_DEFINED__
 #define __WSMMapLocationFinder_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapLocationFinder : RTObject
-+ (void)findLocationsAtAsync:(WDGGeopoint*)queryPoint
-                     success:(void (^)(WSMMapLocationFinderResult*))success
-                     failure:(void (^)(NSError*))failure;
-+ (void)findLocationsAsync:(NSString*)searchText
-            referencePoint:(WDGGeopoint*)referencePoint
-                   success:(void (^)(WSMMapLocationFinderResult*))success
-                   failure:(void (^)(NSError*))failure;
-+ (void)findLocationsWithMaxCountAsync:(NSString*)searchText
-                        referencePoint:(WDGGeopoint*)referencePoint
-                              maxCount:(unsigned int)maxCount
-                               success:(void (^)(WSMMapLocationFinderResult*))success
-                               failure:(void (^)(NSError*))failure;
++ (void)findLocationsAtWithAccuracyAsync:(WDGGeopoint*)queryPoint accuracy:(WSMMapLocationDesiredAccuracy)accuracy success:(void (^)(WSMMapLocationFinderResult*))success failure:(void (^)(NSError*))failure;
++ (void)findLocationsAtAsync:(WDGGeopoint*)queryPoint success:(void (^)(WSMMapLocationFinderResult*))success failure:(void (^)(NSError*))failure;
++ (void)findLocationsAsync:(NSString *)searchText referencePoint:(WDGGeopoint*)referencePoint success:(void (^)(WSMMapLocationFinderResult*))success failure:(void (^)(NSError*))failure;
++ (void)findLocationsWithMaxCountAsync:(NSString *)searchText referencePoint:(WDGGeopoint*)referencePoint maxCount:(unsigned int)maxCount success:(void (^)(WSMMapLocationFinderResult*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSMMapLocationFinder_DEFINED__
@@ -300,60 +301,19 @@ WINRT_EXPORT
 #ifndef __WSMMapRouteFinder_DEFINED__
 #define __WSMMapRouteFinder_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapRouteFinder : RTObject
-+ (void)getDrivingRouteAsync:(WDGGeopoint*)startPoint
-                    endPoint:(WDGGeopoint*)endPoint
-                     success:(void (^)(WSMMapRouteFinderResult*))success
-                     failure:(void (^)(NSError*))failure;
-+ (void)getDrivingRouteWithOptimizationAsync:(WDGGeopoint*)startPoint
-                                    endPoint:(WDGGeopoint*)endPoint
-                                optimization:(WSMMapRouteOptimization)optimization
-                                     success:(void (^)(WSMMapRouteFinderResult*))success
-                                     failure:(void (^)(NSError*))failure;
-+ (void)getDrivingRouteWithOptimizationAndRestrictionsAsync:(WDGGeopoint*)startPoint
-                                                   endPoint:(WDGGeopoint*)endPoint
-                                               optimization:(WSMMapRouteOptimization)optimization
-                                               restrictions:(WSMMapRouteRestrictions)restrictions
-                                                    success:(void (^)(WSMMapRouteFinderResult*))success
-                                                    failure:(void (^)(NSError*))failure;
-+ (void)getDrivingRouteWithOptimizationRestrictionsAndHeadingAsync:(WDGGeopoint*)startPoint
-                                                          endPoint:(WDGGeopoint*)endPoint
-                                                      optimization:(WSMMapRouteOptimization)optimization
-                                                      restrictions:(WSMMapRouteRestrictions)restrictions
-                                                  headingInDegrees:(double)headingInDegrees
-                                                           success:(void (^)(WSMMapRouteFinderResult*))success
-                                                           failure:(void (^)(NSError*))failure;
-+ (void)getDrivingRouteFromWaypointsAsync:(id<NSFastEnumeration> /* WDGGeopoint* */)wayPoints
-                                  success:(void (^)(WSMMapRouteFinderResult*))success
-                                  failure:(void (^)(NSError*))failure;
-+ (void)getDrivingRouteFromWaypointsAndOptimizationAsync:(id<NSFastEnumeration> /* WDGGeopoint* */)wayPoints
-                                            optimization:(WSMMapRouteOptimization)optimization
-                                                 success:(void (^)(WSMMapRouteFinderResult*))success
-                                                 failure:(void (^)(NSError*))failure;
-+ (void)getDrivingRouteFromWaypointsOptimizationAndRestrictionsAsync:(id<NSFastEnumeration> /* WDGGeopoint* */)wayPoints
-                                                        optimization:(WSMMapRouteOptimization)optimization
-                                                        restrictions:(WSMMapRouteRestrictions)restrictions
-                                                             success:(void (^)(WSMMapRouteFinderResult*))success
-                                                             failure:(void (^)(NSError*))failure;
-+ (void)getDrivingRouteFromWaypointsOptimizationRestrictionsAndHeadingAsync:(id<NSFastEnumeration> /* WDGGeopoint* */)wayPoints
-                                                               optimization:(WSMMapRouteOptimization)optimization
-                                                               restrictions:(WSMMapRouteRestrictions)restrictions
-                                                           headingInDegrees:(double)headingInDegrees
-                                                                    success:(void (^)(WSMMapRouteFinderResult*))success
-                                                                    failure:(void (^)(NSError*))failure;
-+ (void)getWalkingRouteAsync:(WDGGeopoint*)startPoint
-                    endPoint:(WDGGeopoint*)endPoint
-                     success:(void (^)(WSMMapRouteFinderResult*))success
-                     failure:(void (^)(NSError*))failure;
-+ (void)getWalkingRouteFromWaypointsAsync:(id<NSFastEnumeration> /* WDGGeopoint* */)wayPoints
-                                  success:(void (^)(WSMMapRouteFinderResult*))success
-                                  failure:(void (^)(NSError*))failure;
-+ (void)getDrivingRouteWithOptionsAsync:(WDGGeopoint*)startPoint
-                               endPoint:(WDGGeopoint*)endPoint
-                                options:(WSMMapRouteDrivingOptions*)options
-                                success:(void (^)(WSMMapRouteFinderResult*))success
-                                failure:(void (^)(NSError*))failure;
++ (void)getDrivingRouteWithOptionsAsync:(WDGGeopoint*)startPoint endPoint:(WDGGeopoint*)endPoint options:(WSMMapRouteDrivingOptions*)options success:(void (^)(WSMMapRouteFinderResult*))success failure:(void (^)(NSError*))failure;
++ (void)getDrivingRouteAsync:(WDGGeopoint*)startPoint endPoint:(WDGGeopoint*)endPoint success:(void (^)(WSMMapRouteFinderResult*))success failure:(void (^)(NSError*))failure;
++ (void)getDrivingRouteWithOptimizationAsync:(WDGGeopoint*)startPoint endPoint:(WDGGeopoint*)endPoint optimization:(WSMMapRouteOptimization)optimization success:(void (^)(WSMMapRouteFinderResult*))success failure:(void (^)(NSError*))failure;
++ (void)getDrivingRouteWithOptimizationAndRestrictionsAsync:(WDGGeopoint*)startPoint endPoint:(WDGGeopoint*)endPoint optimization:(WSMMapRouteOptimization)optimization restrictions:(WSMMapRouteRestrictions)restrictions success:(void (^)(WSMMapRouteFinderResult*))success failure:(void (^)(NSError*))failure;
++ (void)getDrivingRouteWithOptimizationRestrictionsAndHeadingAsync:(WDGGeopoint*)startPoint endPoint:(WDGGeopoint*)endPoint optimization:(WSMMapRouteOptimization)optimization restrictions:(WSMMapRouteRestrictions)restrictions headingInDegrees:(double)headingInDegrees success:(void (^)(WSMMapRouteFinderResult*))success failure:(void (^)(NSError*))failure;
++ (void)getDrivingRouteFromWaypointsAsync:(id<NSFastEnumeration> /* WDGGeopoint* */)wayPoints success:(void (^)(WSMMapRouteFinderResult*))success failure:(void (^)(NSError*))failure;
++ (void)getDrivingRouteFromWaypointsAndOptimizationAsync:(id<NSFastEnumeration> /* WDGGeopoint* */)wayPoints optimization:(WSMMapRouteOptimization)optimization success:(void (^)(WSMMapRouteFinderResult*))success failure:(void (^)(NSError*))failure;
++ (void)getDrivingRouteFromWaypointsOptimizationAndRestrictionsAsync:(id<NSFastEnumeration> /* WDGGeopoint* */)wayPoints optimization:(WSMMapRouteOptimization)optimization restrictions:(WSMMapRouteRestrictions)restrictions success:(void (^)(WSMMapRouteFinderResult*))success failure:(void (^)(NSError*))failure;
++ (void)getDrivingRouteFromWaypointsOptimizationRestrictionsAndHeadingAsync:(id<NSFastEnumeration> /* WDGGeopoint* */)wayPoints optimization:(WSMMapRouteOptimization)optimization restrictions:(WSMMapRouteRestrictions)restrictions headingInDegrees:(double)headingInDegrees success:(void (^)(WSMMapRouteFinderResult*))success failure:(void (^)(NSError*))failure;
++ (void)getWalkingRouteAsync:(WDGGeopoint*)startPoint endPoint:(WDGGeopoint*)endPoint success:(void (^)(WSMMapRouteFinderResult*))success failure:(void (^)(NSError*))failure;
++ (void)getWalkingRouteFromWaypointsAsync:(id<NSFastEnumeration> /* WDGGeopoint* */)wayPoints success:(void (^)(WSMMapRouteFinderResult*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSMMapRouteFinder_DEFINED__
@@ -362,11 +322,12 @@ WINRT_EXPORT
 #ifndef __WSMMapService_DEFINED__
 #define __WSMMapService_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapService : RTObject
-+ (NSString*)serviceToken;
-+ (void)setServiceToken:(NSString*)value;
-+ (NSString*)worldViewRegionCode;
++ (NSString *)serviceToken;
++ (void)setServiceToken:(NSString *)value;
++ (NSString *)worldViewRegionCode;
++ (NSString *)dataAttributions;
 @end
 
 #endif // __WSMMapService_DEFINED__
@@ -375,10 +336,11 @@ WINRT_EXPORT
 #ifndef __WSMMapManager_DEFINED__
 #define __WSMMapManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapManager : RTObject
 + (void)showDownloadedMapsUI;
 + (void)showMapsUpdateUI;
 @end
 
 #endif // __WSMMapManager_DEFINED__
+

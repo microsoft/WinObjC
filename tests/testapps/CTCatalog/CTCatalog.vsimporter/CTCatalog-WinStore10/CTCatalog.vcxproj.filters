@@ -104,11 +104,22 @@
     <ClangCompile Include="..\..\CTCatalog\Tests\CTCParagraphStyleTestViewController.mm">
       <Filter>CTCatalog\Test</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCPathForGlyphTestViewController.mm">
+      <Filter>CTCatalog\Test</Filter>
+    </ClangCompile>
     <ClangCompile Include="..\..\CTCatalog\Tests\CTCRunTestViewController.mm">
       <Filter>CTCatalog\Test</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\CTCatalog\CTCBaseViewController.mm">
       <Filter>CTCatalog</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCAffineTransformationTestViewController.mm">
+      <Filter>CTCatalog\Test</Filter>
+    </ClangCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="..\..\CTCatalog\Fonts\WinObjC.ttf" />
+    <Font Include="..\..\CTCatalog\Fonts\WinObjC-Bold.ttf" />
+    <Font Include="..\..\CTCatalog\Fonts\WinObjC-Italic.ttf" />
   </ItemGroup>
 </Project>

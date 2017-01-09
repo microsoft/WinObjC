@@ -15,22 +15,27 @@
 //******************************************************************************
 
 #import "Starboard.h"
-#import "UIKit/UIView.h"
-#import "UIKit/UIControl.h"
-#import "Foundation/NSString.h"
-#import "Foundation/NSBundle.h"
-#import "Foundation/NSMutableDictionary.h"
-#import "UIKit/UISegmentedControl.h"
-#import "UIKit/UIColor.h"
+#import "StubReturn.h"
+
+#import <UIKit/NSString+UIKitAdditions.h>
+#import <UIKit/UIControl.h>
+#import <UIKit/UIColor.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UISegmentedControl.h>
+#import <UIKit/UIView.h>
+
+#import <Foundation/NSString.h>
+#import <Foundation/NSBundle.h>
+#import <Foundation/NSMutableDictionary.h>
+
 #import "UISegment.h"
 #import <math.h>
-#import "StubReturn.h"
 #import "UIViewInternal.h"
 #import "UISegmentedControlInternal.h"
 
 @implementation UISegmentedControl {
     StrongId<NSMutableArray> _segments;
-    id _tintColor;
+    StrongId<UIColor> _tintColor;
     idretain _backgroundImages[16];
     idretain _segmentAttributes[16];
     idretain _dividerImage;
@@ -54,7 +59,7 @@
         [super setFrame:frame];
 
         [[self layer] setBorderWidth:1.0f];
-        [[self layer] setBorderColor:(CGColorRef)[UIColor blackColor]];
+        [[self layer] setBorderColor:[[UIColor blackColor] CGColor]];
         [self setClipsToBounds:TRUE];
     }
 
@@ -104,7 +109,7 @@
     return self;
 }
 
-static float widthForItems(id items) {
+static float widthForItems(NSArray* items) {
     float maxItemWidth = 0.0f;
 
     id font = [UIFont boldSystemFontOfSize:12.0f];
@@ -117,7 +122,7 @@ static float widthForItems(id items) {
         if ([curItem isKindOfClass:[NSString class]]) {
             CGSize size = { 0, 0 };
 
-            size = [curItem sizeWithFont:font];
+            size = [(NSString*)curItem sizeWithFont:font];
             float width = 10.0f + size.width;
             if (width > maxItemWidth) {
                 maxItemWidth = width;
@@ -126,7 +131,7 @@ static float widthForItems(id items) {
         if ([curItem isKindOfClass:[UIImage class]]) {
             CGSize size = { 0, 0 };
 
-            size = [curItem size];
+            size = [(UIImage*)curItem size];
             float width = 10.0f + size.width;
             if (width > maxItemWidth) {
                 maxItemWidth = width;
@@ -144,7 +149,7 @@ static float widthForItems(id items) {
 /**
  @Status Interoperable
 */
-- (instancetype)initWithItems:(id)items {
+- (instancetype)initWithItems:(NSArray*)items {
     _shouldResizeToSuper = TRUE;
     _curSelected = 0xFFFFFFFF;
     _segments.attach([NSMutableArray new]);
@@ -236,7 +241,7 @@ static void positionSegments(UISegmentedControl* self) {
     }
 
     for (int i = 0; i < count; i++) {
-        id curSegment = [self->_segments objectAtIndex:i];
+        UISegment* curSegment = [self->_segments objectAtIndex:i];
 
         CGRect curFrame = { 0 };
         curFrame = [curSegment frame];
@@ -520,7 +525,7 @@ static void positionSegments(UISegmentedControl* self) {
     _tintColor = uiColor;
 
     if (isOSTarget(@"7.0")) {
-        [[self layer] setBorderColor:(CGColorRef)_tintColor];
+        [[self layer] setBorderColor:[_tintColor CGColor]];
     }
 }
 
@@ -586,7 +591,6 @@ static void positionSegments(UISegmentedControl* self) {
 */
 - (void)dealloc {
     _segments = nil;
-    _tintColor = nil;
     _dividerImage = nil;
 
     for (int i = 0; i < 16; i++) {

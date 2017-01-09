@@ -19,7 +19,22 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_EXPORT
+#define OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Graphics_DirectX.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
+
+// Windows.Graphics.DirectX.DirectXAlphaMode
+enum _WGDDirectXAlphaMode {
+    WGDDirectXAlphaModeUnspecified = 0,
+    WGDDirectXAlphaModePremultiplied = 1,
+    WGDDirectXAlphaModeStraight = 2,
+    WGDDirectXAlphaModeIgnore = 3,
+};
+typedef unsigned WGDDirectXAlphaMode;
 
 // Windows.Graphics.DirectX.DirectXPixelFormat
 enum _WGDDirectXPixelFormat {
@@ -146,3 +161,4 @@ enum _WGDDirectXPixelFormat {
 typedef unsigned WGDDirectXPixelFormat;
 
 #import <Foundation/Foundation.h>
+

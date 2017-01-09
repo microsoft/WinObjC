@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1884d8f8-2c05-4334-a778-7d3c5a6736e8}</ProjectGuid>
     <Keyword>WindowsRuntimeComponent</Keyword>
-    <RootNamespace>UIKit</RootNamespace>
+    <RootNamespace>UIKit.Xaml</RootNamespace>
     <OutputName>UIKit.Xaml</OutputName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
@@ -91,6 +91,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>true</GenerateWindowsMetadata>
     </Link>
     <PostBuildEvent>
       <!-- Recursively copy all .xaml files to OutDir\UIKit.Xaml -->
@@ -111,6 +112,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>true</GenerateWindowsMetadata>
     </Link>
     <PostBuildEvent>
       <!-- Recursively copy all .xaml files to OutDir\UIKit.Xaml -->
@@ -131,6 +133,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>true</GenerateWindowsMetadata>
     </Link>
     <PostBuildEvent>
       <!-- Recursively copy all .xaml files to OutDir\UIKit.Xaml -->
@@ -151,6 +154,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>true</GenerateWindowsMetadata>
     </Link>
     <PostBuildEvent>
       <!-- Recursively copy all .xaml files to OutDir\UIKit.Xaml -->
@@ -160,6 +164,12 @@
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Button.xaml.h">
       <DependentUpon>Button.xaml</DependentUpon>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Label.xaml.h">
+      <DependentUpon>Label.xaml</DependentUpon>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Layer.xaml.h">
+      <DependentUpon>Layer.xaml</DependentUpon>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\pch.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ProgressRing.xaml.h">
@@ -174,17 +184,26 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\TextBox.xaml.h">
       <DependentUpon>TextBox.xaml</DependentUpon>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ContentDialog.xaml.h">
+      <DependentUpon>ContentDialog.xaml</DependentUpon>
+    </ClInclude>
     <ClInclude Include="..\..\..\Frameworks\UIKit.Xaml\ObjCXamlControls.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Button.xaml.cpp">
-      <DependentUpon>Button.xaml</DependentUpon>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Button.xaml.cpp">
+      <DependentUpon>Button.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Label.xaml.cpp">
+      <DependentUpon>Label.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Layer.xaml.cpp">
+      <DependentUpon>Layer.xaml</DependentUpon>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ProgressRing.xaml.cpp">
       <DependentUpon>ProgressRing.xaml</DependentUpon>
@@ -198,9 +217,18 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\TextBox.xaml.cpp">
       <DependentUpon>TextBox.xaml</DependentUpon>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ContentDialog.xaml.cpp">
+      <DependentUpon>ContentDialog.xaml</DependentUpon>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Button.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Label.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Layer.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ProgressRing.xaml">
@@ -213,6 +241,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\TextBox.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ContentDialog.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Themes\Generic.xaml" />

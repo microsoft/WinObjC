@@ -19,16 +19,17 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
+#define OBJCUWP_WINDOWS_DATA_TEXT_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Data_Text.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WDTSemanticTextQuery, WDTUnicodeCharacters, WDTAlternateWordForm, WDTWordSegment, WDTWordsSegmenter, WDTSelectableWordSegment,
-    WDTSelectableWordsSegmenter, WDTTextPredictionGenerator, WDTTextConversionGenerator, WDTTextReverseConversionGenerator;
+@class WDTSemanticTextQuery, WDTUnicodeCharacters, WDTAlternateWordForm, WDTWordSegment, WDTWordsSegmenter, WDTSelectableWordSegment, WDTSelectableWordsSegmenter, WDTTextPredictionGenerator, WDTTextConversionGenerator, WDTTextReverseConversionGenerator, WDTTextPhoneme;
 @class WDTTextSegment;
-@protocol WDTISemanticTextQueryFactory
-, WDTISemanticTextQuery, WDTIUnicodeCharactersStatics, WDTIAlternateWordForm, WDTISelectableWordSegment, WDTIWordSegment,
-    WDTIWordsSegmenter, WDTIWordsSegmenterFactory, WDTISelectableWordsSegmenter, WDTISelectableWordsSegmenterFactory,
-    WDTITextPredictionGenerator, WDTITextPredictionGeneratorFactory, WDTITextConversionGenerator, WDTITextConversionGeneratorFactory,
-    WDTITextReverseConversionGenerator, WDTITextReverseConversionGeneratorFactory;
+@protocol WDTISemanticTextQueryFactory, WDTISemanticTextQuery, WDTIUnicodeCharactersStatics, WDTIAlternateWordForm, WDTISelectableWordSegment, WDTIWordSegment, WDTIWordsSegmenter, WDTIWordsSegmenterFactory, WDTISelectableWordsSegmenter, WDTISelectableWordsSegmenterFactory, WDTITextPredictionGenerator, WDTITextPredictionGeneratorFactory, WDTITextConversionGenerator, WDTITextConversionGeneratorFactory, WDTITextReverseConversionGenerator, WDTITextReverseConversionGeneratorFactory, WDTITextPhoneme, WDTITextReverseConversionGenerator2;
 
 // Windows.Data.Text.UnicodeGeneralCategory
 enum _WDTUnicodeGeneralCategory {
@@ -87,23 +88,22 @@ typedef unsigned WDTAlternateNormalizationFormat;
 // Windows.Data.Text.SelectableWordSegmentsTokenizingHandler
 #ifndef __WDTSelectableWordSegmentsTokenizingHandler__DEFINED
 #define __WDTSelectableWordSegmentsTokenizingHandler__DEFINED
-typedef void (^WDTSelectableWordSegmentsTokenizingHandler)(id<NSFastEnumeration> /* WDTSelectableWordSegment* */ precedingWords,
-                                                           id<NSFastEnumeration> /* WDTSelectableWordSegment* */ words);
+typedef void(^WDTSelectableWordSegmentsTokenizingHandler)(id<NSFastEnumeration> /* WDTSelectableWordSegment* */ precedingWords, id<NSFastEnumeration> /* WDTSelectableWordSegment* */ words);
 #endif // __WDTSelectableWordSegmentsTokenizingHandler__DEFINED
 
 // Windows.Data.Text.WordSegmentsTokenizingHandler
 #ifndef __WDTWordSegmentsTokenizingHandler__DEFINED
 #define __WDTWordSegmentsTokenizingHandler__DEFINED
-typedef void (^WDTWordSegmentsTokenizingHandler)(id<NSFastEnumeration> /* WDTWordSegment* */ precedingWords,
-                                                 id<NSFastEnumeration> /* WDTWordSegment* */ words);
+typedef void(^WDTWordSegmentsTokenizingHandler)(id<NSFastEnumeration> /* WDTWordSegment* */ precedingWords, id<NSFastEnumeration> /* WDTWordSegment* */ words);
 #endif // __WDTWordSegmentsTokenizingHandler__DEFINED
+
 
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Data.Text.TextSegment
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 @interface WDTTextSegment : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property unsigned int startPosition;
 @property unsigned int length;
 @end
@@ -111,30 +111,28 @@ WINRT_EXPORT
 // Windows.Data.Text.WordSegmentsTokenizingHandler
 #ifndef __WDTWordSegmentsTokenizingHandler__DEFINED
 #define __WDTWordSegmentsTokenizingHandler__DEFINED
-typedef void (^WDTWordSegmentsTokenizingHandler)(id<NSFastEnumeration> /* WDTWordSegment* */ precedingWords,
-                                                 id<NSFastEnumeration> /* WDTWordSegment* */ words);
+typedef void(^WDTWordSegmentsTokenizingHandler)(id<NSFastEnumeration> /* WDTWordSegment* */ precedingWords, id<NSFastEnumeration> /* WDTWordSegment* */ words);
 #endif // __WDTWordSegmentsTokenizingHandler__DEFINED
 
 // Windows.Data.Text.SelectableWordSegmentsTokenizingHandler
 #ifndef __WDTSelectableWordSegmentsTokenizingHandler__DEFINED
 #define __WDTSelectableWordSegmentsTokenizingHandler__DEFINED
-typedef void (^WDTSelectableWordSegmentsTokenizingHandler)(id<NSFastEnumeration> /* WDTSelectableWordSegment* */ precedingWords,
-                                                           id<NSFastEnumeration> /* WDTSelectableWordSegment* */ words);
+typedef void(^WDTSelectableWordSegmentsTokenizingHandler)(id<NSFastEnumeration> /* WDTSelectableWordSegment* */ precedingWords, id<NSFastEnumeration> /* WDTSelectableWordSegment* */ words);
 #endif // __WDTSelectableWordSegmentsTokenizingHandler__DEFINED
 
 // Windows.Data.Text.SemanticTextQuery
 #ifndef __WDTSemanticTextQuery_DEFINED__
 #define __WDTSemanticTextQuery_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 @interface WDTSemanticTextQuery : RTObject
-+ (WDTSemanticTextQuery*)make:(NSString*)aqsFilter ACTIVATOR;
-+ (WDTSemanticTextQuery*)makeWithLanguage:(NSString*)aqsFilter filterLanguage:(NSString*)filterLanguage ACTIVATOR;
++ (WDTSemanticTextQuery*)make:(NSString *)aqsFilter ACTIVATOR;
++ (WDTSemanticTextQuery*)makeWithLanguage:(NSString *)aqsFilter filterLanguage:(NSString *)filterLanguage ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-- (NSArray* /* WDTTextSegment* */)find:(NSString*)content;
-- (NSArray* /* WDTTextSegment* */)findInProperty:(NSString*)propertyContent propertyName:(NSString*)propertyName;
+- (NSArray* /* WDTTextSegment* */)find:(NSString *)content;
+- (NSArray* /* WDTTextSegment* */)findInProperty:(NSString *)propertyContent propertyName:(NSString *)propertyName;
 @end
 
 #endif // __WDTSemanticTextQuery_DEFINED__
@@ -143,7 +141,7 @@ WINRT_EXPORT
 #ifndef __WDTUnicodeCharacters_DEFINED__
 #define __WDTUnicodeCharacters_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 @interface WDTUnicodeCharacters : RTObject
 + (unsigned int)getCodepointFromSurrogatePair:(unsigned int)highSurrogate lowSurrogate:(unsigned int)lowSurrogate;
 + (void)getSurrogatePairFromCodepoint:(unsigned int)codepoint highSurrogate:(wchar_t*)highSurrogate lowSurrogate:(wchar_t*)lowSurrogate;
@@ -170,12 +168,12 @@ WINRT_EXPORT
 #ifndef __WDTAlternateWordForm_DEFINED__
 #define __WDTAlternateWordForm_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 @interface WDTAlternateWordForm : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* alternateText;
+@property (readonly) NSString * alternateText;
 @property (readonly) WDTAlternateNormalizationFormat normalizationFormat;
 @property (readonly) WDTTextSegment* sourceTextSegment;
 @end
@@ -186,14 +184,14 @@ WINRT_EXPORT
 #ifndef __WDTWordSegment_DEFINED__
 #define __WDTWordSegment_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 @interface WDTWordSegment : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* WDTAlternateWordForm* */ alternateForms;
 @property (readonly) WDTTextSegment* sourceTextSegment;
-@property (readonly) NSString* text;
+@property (readonly) NSString * text;
 @end
 
 #endif // __WDTWordSegment_DEFINED__
@@ -202,16 +200,16 @@ WINRT_EXPORT
 #ifndef __WDTWordsSegmenter_DEFINED__
 #define __WDTWordsSegmenter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 @interface WDTWordsSegmenter : RTObject
-+ (WDTWordsSegmenter*)makeWithLanguage:(NSString*)language ACTIVATOR;
++ (WDTWordsSegmenter*)makeWithLanguage:(NSString *)language ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* resolvedLanguage;
-- (WDTWordSegment*)getTokenAt:(NSString*)text startIndex:(unsigned int)startIndex;
-- (NSArray* /* WDTWordSegment* */)getTokens:(NSString*)text;
-- (void)tokenize:(NSString*)text startIndex:(unsigned int)startIndex handler:(WDTWordSegmentsTokenizingHandler)handler;
+@property (readonly) NSString * resolvedLanguage;
+- (WDTWordSegment*)getTokenAt:(NSString *)text startIndex:(unsigned int)startIndex;
+- (NSArray* /* WDTWordSegment* */)getTokens:(NSString *)text;
+- (void)tokenize:(NSString *)text startIndex:(unsigned int)startIndex handler:(WDTWordSegmentsTokenizingHandler)handler;
 @end
 
 #endif // __WDTWordsSegmenter_DEFINED__
@@ -220,13 +218,13 @@ WINRT_EXPORT
 #ifndef __WDTSelectableWordSegment_DEFINED__
 #define __WDTSelectableWordSegment_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 @interface WDTSelectableWordSegment : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDTTextSegment* sourceTextSegment;
-@property (readonly) NSString* text;
+@property (readonly) NSString * text;
 @end
 
 #endif // __WDTSelectableWordSegment_DEFINED__
@@ -235,16 +233,16 @@ WINRT_EXPORT
 #ifndef __WDTSelectableWordsSegmenter_DEFINED__
 #define __WDTSelectableWordsSegmenter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 @interface WDTSelectableWordsSegmenter : RTObject
-+ (WDTSelectableWordsSegmenter*)makeWithLanguage:(NSString*)language ACTIVATOR;
++ (WDTSelectableWordsSegmenter*)makeWithLanguage:(NSString *)language ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* resolvedLanguage;
-- (WDTSelectableWordSegment*)getTokenAt:(NSString*)text startIndex:(unsigned int)startIndex;
-- (NSArray* /* WDTSelectableWordSegment* */)getTokens:(NSString*)text;
-- (void)tokenize:(NSString*)text startIndex:(unsigned int)startIndex handler:(WDTSelectableWordSegmentsTokenizingHandler)handler;
+@property (readonly) NSString * resolvedLanguage;
+- (WDTSelectableWordSegment*)getTokenAt:(NSString *)text startIndex:(unsigned int)startIndex;
+- (NSArray* /* WDTSelectableWordSegment* */)getTokens:(NSString *)text;
+- (void)tokenize:(NSString *)text startIndex:(unsigned int)startIndex handler:(WDTSelectableWordSegmentsTokenizingHandler)handler;
 @end
 
 #endif // __WDTSelectableWordsSegmenter_DEFINED__
@@ -253,19 +251,16 @@ WINRT_EXPORT
 #ifndef __WDTTextPredictionGenerator_DEFINED__
 #define __WDTTextPredictionGenerator_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 @interface WDTTextPredictionGenerator : RTObject
-+ (WDTTextPredictionGenerator*)make:(NSString*)languageTag ACTIVATOR;
++ (WDTTextPredictionGenerator*)make:(NSString *)languageTag ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL languageAvailableButNotInstalled;
-@property (readonly) NSString* resolvedLanguage;
-- (void)getCandidatesAsync:(NSString*)input success:(void (^)(NSArray* /* NSString * */))success failure:(void (^)(NSError*))failure;
-- (void)getCandidatesWithMaxCountAsync:(NSString*)input
-                         maxCandidates:(unsigned int)maxCandidates
-                               success:(void (^)(NSArray* /* NSString * */))success
-                               failure:(void (^)(NSError*))failure;
+@property (readonly) NSString * resolvedLanguage;
+- (void)getCandidatesAsync:(NSString *)input success:(void (^)(NSArray* /* NSString * */))success failure:(void (^)(NSError*))failure;
+- (void)getCandidatesWithMaxCountAsync:(NSString *)input maxCandidates:(unsigned int)maxCandidates success:(void (^)(NSArray* /* NSString * */))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WDTTextPredictionGenerator_DEFINED__
@@ -274,19 +269,16 @@ WINRT_EXPORT
 #ifndef __WDTTextConversionGenerator_DEFINED__
 #define __WDTTextConversionGenerator_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 @interface WDTTextConversionGenerator : RTObject
-+ (WDTTextConversionGenerator*)make:(NSString*)languageTag ACTIVATOR;
++ (WDTTextConversionGenerator*)make:(NSString *)languageTag ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL languageAvailableButNotInstalled;
-@property (readonly) NSString* resolvedLanguage;
-- (void)getCandidatesAsync:(NSString*)input success:(void (^)(NSArray* /* NSString * */))success failure:(void (^)(NSError*))failure;
-- (void)getCandidatesWithMaxCountAsync:(NSString*)input
-                         maxCandidates:(unsigned int)maxCandidates
-                               success:(void (^)(NSArray* /* NSString * */))success
-                               failure:(void (^)(NSError*))failure;
+@property (readonly) NSString * resolvedLanguage;
+- (void)getCandidatesAsync:(NSString *)input success:(void (^)(NSArray* /* NSString * */))success failure:(void (^)(NSError*))failure;
+- (void)getCandidatesWithMaxCountAsync:(NSString *)input maxCandidates:(unsigned int)maxCandidates success:(void (^)(NSArray* /* NSString * */))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WDTTextConversionGenerator_DEFINED__
@@ -295,15 +287,32 @@ WINRT_EXPORT
 #ifndef __WDTTextReverseConversionGenerator_DEFINED__
 #define __WDTTextReverseConversionGenerator_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
 @interface WDTTextReverseConversionGenerator : RTObject
-+ (WDTTextReverseConversionGenerator*)make:(NSString*)languageTag ACTIVATOR;
++ (WDTTextReverseConversionGenerator*)make:(NSString *)languageTag ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL languageAvailableButNotInstalled;
-@property (readonly) NSString* resolvedLanguage;
-- (void)convertBackAsync:(NSString*)input success:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
+@property (readonly) NSString * resolvedLanguage;
+- (void)convertBackAsync:(NSString *)input success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
+- (void)getPhonemesAsync:(NSString *)input success:(void (^)(NSArray* /* WDTTextPhoneme* */))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WDTTextReverseConversionGenerator_DEFINED__
+
+// Windows.Data.Text.TextPhoneme
+#ifndef __WDTTextPhoneme_DEFINED__
+#define __WDTTextPhoneme_DEFINED__
+
+OBJCUWP_WINDOWS_DATA_TEXT_EXPORT
+@interface WDTTextPhoneme : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) NSString * displayText;
+@property (readonly) NSString * readingText;
+@end
+
+#endif // __WDTTextPhoneme_DEFINED__
+

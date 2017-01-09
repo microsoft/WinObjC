@@ -60,7 +60,7 @@ __CGContext::__CGContext(CGImageRef pDest) {
 #ifdef DEBUG_CONTEXT_COUNT
     TraceVerbose(TAG, L"contextCount: %d", contextCount);
 #endif
-    object_setClass((id) this, [CGNSContext class]);
+    object_setClass((id)this, [CGNSContext class]);
     scale = 1.0f;
     _backing = pDest->Backing()->CreateDrawingContext(this);
 }
@@ -118,28 +118,28 @@ void CGContextShowTextAtPoint(CGContextRef pContext, CGFloat x, CGFloat y, const
  @Status Interoperable
 */
 void CGContextShowGlyphsAtPoint(CGContextRef ctx, CGFloat x, CGFloat y, const CGGlyph* glyphs, unsigned count) {
-    ctx->Backing()->CGContextShowGlyphsAtPoint(x, y, (WORD*)glyphs, count);
+    ctx->Backing()->CGContextShowGlyphsAtPoint(x, y, glyphs, count);
 }
 
 /**
  @Status Interoperable
 */
-void CGContextShowGlyphsWithAdvances(CGContextRef ctx, const CGGlyph* glyphs, CGSize* advances, unsigned count) {
-    ctx->Backing()->CGContextShowGlyphsWithAdvances((WORD*)glyphs, advances, count);
+void CGContextShowGlyphsWithAdvances(CGContextRef ctx, const CGGlyph* glyphs, const CGSize* advances, unsigned count) {
+    ctx->Backing()->CGContextShowGlyphsWithAdvances(glyphs, advances, count);
 }
 
 /**
  @Status Interoperable
 */
 void CGContextShowGlyphs(CGContextRef ctx, const CGGlyph* glyphs, unsigned count) {
-    ctx->Backing()->CGContextShowGlyphs((WORD*)glyphs, count);
+    ctx->Backing()->CGContextShowGlyphs(glyphs, count);
 }
 
 /**
  @Status Interoperable
 */
 void CGContextSetFont(CGContextRef ctx, CGFontRef font) {
-    ctx->Backing()->CGContextSetFont((id)font);
+    ctx->Backing()->CGContextSetFont(font);
 }
 
 /**
@@ -1032,12 +1032,12 @@ CGImageRef CGBitmapContextGetImage(CGContextRef ctx) {
     return ctx->Backing()->DestImage();
 }
 
-CGContextRef _CGBitmapContextCreateWithTexture(int width, int height, DisplayTexture* texture, DisplayTextureLocking* locking) {
+CGContextRef _CGBitmapContextCreateWithTexture(int width, int height, const std::shared_ptr<IDisplayTexture>& texture) {
     CGImageRef newImage = nullptr;
     __CGSurfaceInfo surfaceInfo = _CGSurfaceInfoInit(width, height, _ColorARGB);
 
     if (texture) {
-        newImage = new CGGraphicBufferImage(surfaceInfo, texture, locking);
+        newImage = new CGGraphicBufferImage(surfaceInfo, texture);
     } else {
         newImage = new CGBitmapImage(surfaceInfo);
     }
@@ -1185,14 +1185,6 @@ void CGContextShowGlyphsAtPositions(CGContextRef c, const CGGlyph* glyphs, const
  @Status Stub
  @Notes
 */
-void CGContextShowGlyphsWithAdvances(CGContextRef c, const CGGlyph* glyphs, const CGSize* advances, size_t count) {
-    UNIMPLEMENTED();
-}
-
-/**
- @Status Stub
- @Notes
-*/
 void CGContextSynchronize(CGContextRef c) {
     UNIMPLEMENTED();
 }
@@ -1237,4 +1229,12 @@ CGImageRef CGJPEGImageCreateFromData(NSData* data) {
 
 bool CGContextIsPointInPath(CGContextRef c, bool eoFill, CGFloat x, CGFloat y) {
     return c->Backing()->CGContextIsPointInPath(eoFill, x, y);
+}
+
+void CGContextDrawGlyphRun(CGContextRef ctx, const DWRITE_GLYPH_RUN* glyphRun) {
+    ctx->Backing()->CGContextDrawGlyphRun(glyphRun);
+}
+// TODO 1077:: Remove once D2D render target is implemented
+void _CGContextSetScaleFactor(CGContextRef ctx, float scale) {
+    ctx->Backing()->_CGContextSetScaleFactor(scale);
 }

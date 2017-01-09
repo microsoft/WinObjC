@@ -19,12 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_LOCKSCREEN_EXPORT
+#define OBJCUWP_WINDOWS_APPLICATIONMODEL_LOCKSCREEN_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_LockScreen.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WALLockScreenInfo, WALLockScreenBadge, WALLockScreenUnlockingDeferral, WALLockApplicationHost, WALLockScreenUnlockingEventArgs;
-@protocol WALILockScreenBadge
-, WALILockScreenInfo, WALILockScreenUnlockingDeferral, WALILockScreenUnlockingEventArgs, WALILockApplicationHost,
-    WALILockApplicationHostStatics;
+@protocol WALILockScreenBadge, WALILockScreenInfo, WALILockScreenUnlockingDeferral, WALILockScreenUnlockingEventArgs, WALILockApplicationHost, WALILockApplicationHostStatics;
 
 #include "WindowsStorageStreams.h"
 #include "WindowsFoundation.h"
@@ -35,7 +39,7 @@
 #ifndef __WALLockScreenInfo_DEFINED__
 #define __WALLockScreenInfo_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_LOCKSCREEN_EXPORT
 @interface WALLockScreenInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -44,13 +48,13 @@ WINRT_EXPORT
 @property (readonly) NSArray* /* WALLockScreenBadge* */ badges;
 @property (readonly) NSArray* /* NSString * */ detailText;
 @property (readonly) RTObject<WSSIRandomAccessStream>* lockScreenImage;
-- (EventRegistrationToken)addAlarmIconChangedEvent:(void (^)(WALLockScreenInfo*, RTObject*))del;
+- (EventRegistrationToken)addAlarmIconChangedEvent:(void(^)(WALLockScreenInfo*, RTObject*))del;
 - (void)removeAlarmIconChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addBadgesChangedEvent:(void (^)(WALLockScreenInfo*, RTObject*))del;
+- (EventRegistrationToken)addBadgesChangedEvent:(void(^)(WALLockScreenInfo*, RTObject*))del;
 - (void)removeBadgesChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addDetailTextChangedEvent:(void (^)(WALLockScreenInfo*, RTObject*))del;
+- (EventRegistrationToken)addDetailTextChangedEvent:(void(^)(WALLockScreenInfo*, RTObject*))del;
 - (void)removeDetailTextChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addLockScreenImageChangedEvent:(void (^)(WALLockScreenInfo*, RTObject*))del;
+- (EventRegistrationToken)addLockScreenImageChangedEvent:(void(^)(WALLockScreenInfo*, RTObject*))del;
 - (void)removeLockScreenImageChangedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -60,12 +64,12 @@ WINRT_EXPORT
 #ifndef __WALLockScreenBadge_DEFINED__
 #define __WALLockScreenBadge_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_LOCKSCREEN_EXPORT
 @interface WALLockScreenBadge : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* automationName;
+@property (readonly) NSString * automationName;
 @property (readonly) RTObject<WSSIRandomAccessStream>* glyph;
 @property (readonly) RTObject<WSSIRandomAccessStream>* logo;
 @property (readonly) id /* unsigned int */ number;
@@ -78,7 +82,7 @@ WINRT_EXPORT
 #ifndef __WALLockScreenUnlockingDeferral_DEFINED__
 #define __WALLockScreenUnlockingDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_LOCKSCREEN_EXPORT
 @interface WALLockScreenUnlockingDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -92,13 +96,13 @@ WINRT_EXPORT
 #ifndef __WALLockApplicationHost_DEFINED__
 #define __WALLockApplicationHost_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_LOCKSCREEN_EXPORT
 @interface WALLockApplicationHost : RTObject
 + (WALLockApplicationHost*)getForCurrentView;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-- (EventRegistrationToken)addUnlockingEvent:(void (^)(WALLockApplicationHost*, WALLockScreenUnlockingEventArgs*))del;
+- (EventRegistrationToken)addUnlockingEvent:(void(^)(WALLockApplicationHost*, WALLockScreenUnlockingEventArgs*))del;
 - (void)removeUnlockingEvent:(EventRegistrationToken)tok;
 - (void)requestUnlock;
 @end
@@ -109,7 +113,7 @@ WINRT_EXPORT
 #ifndef __WALLockScreenUnlockingEventArgs_DEFINED__
 #define __WALLockScreenUnlockingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_LOCKSCREEN_EXPORT
 @interface WALLockScreenUnlockingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -119,3 +123,4 @@ WINRT_EXPORT
 @end
 
 #endif // __WALLockScreenUnlockingEventArgs_DEFINED__
+

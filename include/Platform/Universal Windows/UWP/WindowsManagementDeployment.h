@@ -19,12 +19,17 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
+#define OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Management_Deployment.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WMDDeploymentResult, WMDPackageUserInformation, WMDPackageVolume, WMDPackageManager;
 @class WMDDeploymentProgress;
-@protocol WMDIDeploymentResult
-, WMDIPackageUserInformation, WMDIPackageManager, WMDIPackageManager2, WMDIPackageManager3, WMDIPackageVolume;
+@protocol WMDIDeploymentResult, WMDIPackageUserInformation, WMDIPackageManager, WMDIPackageManager2, WMDIPackageManager3, WMDIPackageManager4, WMDIPackageVolume, WMDIPackageVolume2;
 
 // Windows.Management.Deployment.DeploymentProgressState
 enum _WMDDeploymentProgressState {
@@ -58,6 +63,7 @@ enum _WMDPackageTypes {
     WMDPackageTypesResource = 4,
     WMDPackageTypesBundle = 8,
     WMDPackageTypesXap = 16,
+    WMDPackageTypesOptional = 32,
 };
 typedef unsigned WMDPackageTypes;
 
@@ -66,6 +72,7 @@ enum _WMDPackageInstallState {
     WMDPackageInstallStateNotInstalled = 0,
     WMDPackageInstallStateStaged = 1,
     WMDPackageInstallStateInstalled = 2,
+    WMDPackageInstallStatePaused = 6,
 };
 typedef unsigned WMDPackageInstallState;
 
@@ -94,9 +101,9 @@ typedef unsigned WMDPackageStatus;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Management.Deployment.DeploymentProgress
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 @interface WMDDeploymentProgress : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property WMDDeploymentProgressState state;
 @property unsigned int percentage;
 @end
@@ -105,13 +112,13 @@ WINRT_EXPORT
 #ifndef __WMDDeploymentResult_DEFINED__
 #define __WMDDeploymentResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 @interface WMDDeploymentResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFGUID* activityId;
-@property (readonly) NSString* errorText;
+@property (readonly) NSString * errorText;
 @property (readonly) HRESULT extendedErrorCode;
 @end
 
@@ -121,13 +128,13 @@ WINRT_EXPORT
 #ifndef __WMDPackageUserInformation_DEFINED__
 #define __WMDPackageUserInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 @interface WMDPackageUserInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMDPackageInstallState installState;
-@property (readonly) NSString* userSecurityId;
+@property (readonly) NSString * userSecurityId;
 @end
 
 #endif // __WMDPackageUserInformation_DEFINED__
@@ -136,44 +143,34 @@ WINRT_EXPORT
 #ifndef __WMDPackageVolume_DEFINED__
 #define __WMDPackageVolume_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 @interface WMDPackageVolume : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL isOffline;
 @property (readonly) BOOL isSystemVolume;
-@property (readonly) NSString* mountPoint;
-@property (readonly) NSString* name;
-@property (readonly) NSString* packageStorePath;
+@property (readonly) NSString * mountPoint;
+@property (readonly) NSString * name;
+@property (readonly) NSString * packageStorePath;
 @property (readonly) BOOL supportsHardLinks;
+@property (readonly) BOOL isAppxInstallSupported;
+@property (readonly) BOOL isFullTrustPackageSupported;
 - (NSMutableArray* /* WAPackage* */)findPackages;
-- (NSMutableArray* /* WAPackage* */)findPackagesByNamePublisher:(NSString*)packageName packagePublisher:(NSString*)packagePublisher;
-- (NSMutableArray* /* WAPackage* */)findPackagesByPackageFamilyName:(NSString*)packageFamilyName;
+- (NSMutableArray* /* WAPackage* */)findPackagesByNamePublisher:(NSString *)packageName packagePublisher:(NSString *)packagePublisher;
+- (NSMutableArray* /* WAPackage* */)findPackagesByPackageFamilyName:(NSString *)packageFamilyName;
 - (NSMutableArray* /* WAPackage* */)findPackagesWithPackageTypes:(WMDPackageTypes)packageTypes;
-- (NSMutableArray* /* WAPackage* */)findPackagesByNamePublisherWithPackagesTypes:(WMDPackageTypes)packageTypes
-                                                                     packageName:(NSString*)packageName
-                                                                packagePublisher:(NSString*)packagePublisher;
-- (NSMutableArray* /* WAPackage* */)findPackagesByPackageFamilyNameWithPackageTypes:(WMDPackageTypes)packageTypes
-                                                                  packageFamilyName:(NSString*)packageFamilyName;
-- (NSMutableArray* /* WAPackage* */)findPackageByPackageFullName:(NSString*)packageFullName;
-- (NSMutableArray* /* WAPackage* */)findPackagesByUserSecurityId:(NSString*)userSecurityId;
-- (NSMutableArray* /* WAPackage* */)findPackagesByUserSecurityIdNamePublisher:(NSString*)userSecurityId
-                                                                  packageName:(NSString*)packageName
-                                                             packagePublisher:(NSString*)packagePublisher;
-- (NSMutableArray* /* WAPackage* */)findPackagesByUserSecurityIdPackageFamilyName:(NSString*)userSecurityId
-                                                                packageFamilyName:(NSString*)packageFamilyName;
-- (NSMutableArray* /* WAPackage* */)findPackagesByUserSecurityIdWithPackageTypes:(NSString*)userSecurityId
-                                                                    packageTypes:(WMDPackageTypes)packageTypes;
-- (NSMutableArray* /* WAPackage* */)findPackagesByUserSecurityIdNamePublisherWithPackageTypes:(NSString*)userSecurityId
-                                                                                 packageTypes:(WMDPackageTypes)packageTypes
-                                                                                  packageName:(NSString*)packageName
-                                                                             packagePublisher:(NSString*)packagePublisher;
-- (NSMutableArray* /* WAPackage* */)findPackagesByUserSecurityIdPackageFamilyNameWithPackagesTypes:(NSString*)userSecurityId
-                                                                                      packageTypes:(WMDPackageTypes)packageTypes
-                                                                                 packageFamilyName:(NSString*)packageFamilyName;
-- (NSMutableArray* /* WAPackage* */)findPackageByUserSecurityIdPackageFullName:(NSString*)userSecurityId
-                                                               packageFullName:(NSString*)packageFullName;
+- (NSMutableArray* /* WAPackage* */)findPackagesByNamePublisherWithPackagesTypes:(WMDPackageTypes)packageTypes packageName:(NSString *)packageName packagePublisher:(NSString *)packagePublisher;
+- (NSMutableArray* /* WAPackage* */)findPackagesByPackageFamilyNameWithPackageTypes:(WMDPackageTypes)packageTypes packageFamilyName:(NSString *)packageFamilyName;
+- (NSMutableArray* /* WAPackage* */)findPackageByPackageFullName:(NSString *)packageFullName;
+- (NSMutableArray* /* WAPackage* */)findPackagesByUserSecurityId:(NSString *)userSecurityId;
+- (NSMutableArray* /* WAPackage* */)findPackagesByUserSecurityIdNamePublisher:(NSString *)userSecurityId packageName:(NSString *)packageName packagePublisher:(NSString *)packagePublisher;
+- (NSMutableArray* /* WAPackage* */)findPackagesByUserSecurityIdPackageFamilyName:(NSString *)userSecurityId packageFamilyName:(NSString *)packageFamilyName;
+- (NSMutableArray* /* WAPackage* */)findPackagesByUserSecurityIdWithPackageTypes:(NSString *)userSecurityId packageTypes:(WMDPackageTypes)packageTypes;
+- (NSMutableArray* /* WAPackage* */)findPackagesByUserSecurityIdNamePublisherWithPackageTypes:(NSString *)userSecurityId packageTypes:(WMDPackageTypes)packageTypes packageName:(NSString *)packageName packagePublisher:(NSString *)packagePublisher;
+- (NSMutableArray* /* WAPackage* */)findPackagesByUserSecurityIdPackageFamilyNameWithPackagesTypes:(NSString *)userSecurityId packageTypes:(WMDPackageTypes)packageTypes packageFamilyName:(NSString *)packageFamilyName;
+- (NSMutableArray* /* WAPackage* */)findPackageByUserSecurityIdPackageFullName:(NSString *)userSecurityId packageFullName:(NSString *)packageFullName;
+- (void)getAvailableSpaceAsyncWithSuccess:(void (^)(uint64_t))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WMDPackageVolume_DEFINED__
@@ -182,144 +179,55 @@ WINRT_EXPORT
 #ifndef __WMDPackageManager_DEFINED__
 #define __WMDPackageManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 @interface WMDPackageManager : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-- (void)addPackageAsync:(WFUri*)packageUri
-  dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris
-      deploymentOptions:(WMDDeploymentOptions)deploymentOptions
-                success:(void (^)(WMDDeploymentResult*))success
-               progress:(void (^)(WMDDeploymentProgress*))progress
-                failure:(void (^)(NSError*))failure;
-- (void)updatePackageAsync:(WFUri*)packageUri
-     dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris
-         deploymentOptions:(WMDDeploymentOptions)deploymentOptions
-                   success:(void (^)(WMDDeploymentResult*))success
-                  progress:(void (^)(WMDDeploymentProgress*))progress
-                   failure:(void (^)(NSError*))failure;
-- (void)removePackageAsync:(NSString*)packageFullName
-                   success:(void (^)(WMDDeploymentResult*))success
-                  progress:(void (^)(WMDDeploymentProgress*))progress
-                   failure:(void (^)(NSError*))failure;
-- (void)stagePackageAsync:(WFUri*)packageUri
-    dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris
-                  success:(void (^)(WMDDeploymentResult*))success
-                 progress:(void (^)(WMDDeploymentProgress*))progress
-                  failure:(void (^)(NSError*))failure;
-- (void)registerPackageAsync:(WFUri*)manifestUri
-       dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris
-           deploymentOptions:(WMDDeploymentOptions)deploymentOptions
-                     success:(void (^)(WMDDeploymentResult*))success
-                    progress:(void (^)(WMDDeploymentProgress*))progress
-                     failure:(void (^)(NSError*))failure;
+- (void)addPackageAsync:(WFUri*)packageUri dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris deploymentOptions:(WMDDeploymentOptions)deploymentOptions success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)updatePackageAsync:(WFUri*)packageUri dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris deploymentOptions:(WMDDeploymentOptions)deploymentOptions success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)removePackageAsync:(NSString *)packageFullName success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)stagePackageAsync:(WFUri*)packageUri dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)registerPackageAsync:(WFUri*)manifestUri dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris deploymentOptions:(WMDDeploymentOptions)deploymentOptions success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
 - (id<NSFastEnumeration> /* WAPackage* */)findPackages;
-- (id<NSFastEnumeration> /* WAPackage* */)findPackagesByUserSecurityId:(NSString*)userSecurityId;
-- (id<NSFastEnumeration> /* WAPackage* */)findPackagesByNamePublisher:(NSString*)packageName packagePublisher:(NSString*)packagePublisher;
-- (id<NSFastEnumeration> /* WAPackage* */)findPackagesByUserSecurityIdNamePublisher:(NSString*)userSecurityId
-                                                                        packageName:(NSString*)packageName
-                                                                   packagePublisher:(NSString*)packagePublisher;
-- (id<NSFastEnumeration> /* WMDPackageUserInformation* */)findUsers:(NSString*)packageFullName;
-- (void)setPackageState:(NSString*)packageFullName packageState:(WMDPackageState)packageState;
-- (WAPackage*)findPackageByPackageFullName:(NSString*)packageFullName;
-- (void)cleanupPackageForUserAsync:(NSString*)packageName
-                    userSecurityId:(NSString*)userSecurityId
-                           success:(void (^)(WMDDeploymentResult*))success
-                          progress:(void (^)(WMDDeploymentProgress*))progress
-                           failure:(void (^)(NSError*))failure;
-- (id<NSFastEnumeration> /* WAPackage* */)findPackagesByPackageFamilyName:(NSString*)packageFamilyName;
-- (id<NSFastEnumeration> /* WAPackage* */)findPackagesByUserSecurityIdPackageFamilyName:(NSString*)userSecurityId
-                                                                      packageFamilyName:(NSString*)packageFamilyName;
-- (WAPackage*)findPackageByUserSecurityIdPackageFullName:(NSString*)userSecurityId packageFullName:(NSString*)packageFullName;
-- (void)removePackageWithOptionsAsync:(NSString*)packageFullName
-                       removalOptions:(WMDRemovalOptions)removalOptions
-                              success:(void (^)(WMDDeploymentResult*))success
-                             progress:(void (^)(WMDDeploymentProgress*))progress
-                              failure:(void (^)(NSError*))failure;
-- (void)stagePackageWithOptionsAsync:(WFUri*)packageUri
-               dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris
-                   deploymentOptions:(WMDDeploymentOptions)deploymentOptions
-                             success:(void (^)(WMDDeploymentResult*))success
-                            progress:(void (^)(WMDDeploymentProgress*))progress
-                             failure:(void (^)(NSError*))failure;
-- (void)registerPackageByFullNameAsync:(NSString*)mainPackageFullName
-            dependencyPackageFullNames:(id<NSFastEnumeration> /* NSString * */)dependencyPackageFullNames
-                     deploymentOptions:(WMDDeploymentOptions)deploymentOptions
-                               success:(void (^)(WMDDeploymentResult*))success
-                              progress:(void (^)(WMDDeploymentProgress*))progress
-                               failure:(void (^)(NSError*))failure;
+- (id<NSFastEnumeration> /* WAPackage* */)findPackagesByUserSecurityId:(NSString *)userSecurityId;
+- (id<NSFastEnumeration> /* WAPackage* */)findPackagesByNamePublisher:(NSString *)packageName packagePublisher:(NSString *)packagePublisher;
+- (id<NSFastEnumeration> /* WAPackage* */)findPackagesByUserSecurityIdNamePublisher:(NSString *)userSecurityId packageName:(NSString *)packageName packagePublisher:(NSString *)packagePublisher;
+- (id<NSFastEnumeration> /* WMDPackageUserInformation* */)findUsers:(NSString *)packageFullName;
+- (void)setPackageState:(NSString *)packageFullName packageState:(WMDPackageState)packageState;
+- (WAPackage*)findPackageByPackageFullName:(NSString *)packageFullName;
+- (void)cleanupPackageForUserAsync:(NSString *)packageName userSecurityId:(NSString *)userSecurityId success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
+- (id<NSFastEnumeration> /* WAPackage* */)findPackagesByPackageFamilyName:(NSString *)packageFamilyName;
+- (id<NSFastEnumeration> /* WAPackage* */)findPackagesByUserSecurityIdPackageFamilyName:(NSString *)userSecurityId packageFamilyName:(NSString *)packageFamilyName;
+- (WAPackage*)findPackageByUserSecurityIdPackageFullName:(NSString *)userSecurityId packageFullName:(NSString *)packageFullName;
+- (void)removePackageWithOptionsAsync:(NSString *)packageFullName removalOptions:(WMDRemovalOptions)removalOptions success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)stagePackageWithOptionsAsync:(WFUri*)packageUri dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris deploymentOptions:(WMDDeploymentOptions)deploymentOptions success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)registerPackageByFullNameAsync:(NSString *)mainPackageFullName dependencyPackageFullNames:(id<NSFastEnumeration> /* NSString * */)dependencyPackageFullNames deploymentOptions:(WMDDeploymentOptions)deploymentOptions success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
 - (id<NSFastEnumeration> /* WAPackage* */)findPackagesWithPackageTypes:(WMDPackageTypes)packageTypes;
-- (id<NSFastEnumeration> /* WAPackage* */)findPackagesByUserSecurityIdWithPackageTypes:(NSString*)userSecurityId
-                                                                          packageTypes:(WMDPackageTypes)packageTypes;
-- (id<NSFastEnumeration> /* WAPackage* */)findPackagesByNamePublisherWithPackageTypes:(NSString*)packageName
-                                                                     packagePublisher:(NSString*)packagePublisher
-                                                                         packageTypes:(WMDPackageTypes)packageTypes;
-- (id<NSFastEnumeration> /* WAPackage* */)findPackagesByUserSecurityIdNamePublisherWithPackageTypes:(NSString*)userSecurityId
-                                                                                        packageName:(NSString*)packageName
-                                                                                   packagePublisher:(NSString*)packagePublisher
-                                                                                       packageTypes:(WMDPackageTypes)packageTypes;
-- (id<NSFastEnumeration> /* WAPackage* */)findPackagesByPackageFamilyNameWithPackageTypes:(NSString*)packageFamilyName
-                                                                             packageTypes:(WMDPackageTypes)packageTypes;
-- (id<NSFastEnumeration> /* WAPackage* */)findPackagesByUserSecurityIdPackageFamilyNameWithPackageTypes:(NSString*)userSecurityId
-                                                                                      packageFamilyName:(NSString*)packageFamilyName
-                                                                                           packageTypes:(WMDPackageTypes)packageTypes;
-- (void)stageUserDataAsync:(NSString*)packageFullName
-                   success:(void (^)(WMDDeploymentResult*))success
-                  progress:(void (^)(WMDDeploymentProgress*))progress
-                   failure:(void (^)(NSError*))failure;
-- (void)addPackageVolumeAsync:(NSString*)packageStorePath success:(void (^)(WMDPackageVolume*))success failure:(void (^)(NSError*))failure;
-- (void)addPackageToVolumeAsync:(WFUri*)packageUri
-          dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris
-              deploymentOptions:(WMDDeploymentOptions)deploymentOptions
-                   targetVolume:(WMDPackageVolume*)targetVolume
-                        success:(void (^)(WMDDeploymentResult*))success
-                       progress:(void (^)(WMDDeploymentProgress*))progress
-                        failure:(void (^)(NSError*))failure;
-- (void)clearPackageStatus:(NSString*)packageFullName status:(WMDPackageStatus)status;
-- (void)registerPackageWithAppDataVolumeAsync:(WFUri*)manifestUri
-                        dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris
-                            deploymentOptions:(WMDDeploymentOptions)deploymentOptions
-                                appDataVolume:(WMDPackageVolume*)appDataVolume
-                                      success:(void (^)(WMDDeploymentResult*))success
-                                     progress:(void (^)(WMDDeploymentProgress*))progress
-                                      failure:(void (^)(NSError*))failure;
-- (WMDPackageVolume*)findPackageVolumeByName:(NSString*)volumeName;
+- (id<NSFastEnumeration> /* WAPackage* */)findPackagesByUserSecurityIdWithPackageTypes:(NSString *)userSecurityId packageTypes:(WMDPackageTypes)packageTypes;
+- (id<NSFastEnumeration> /* WAPackage* */)findPackagesByNamePublisherWithPackageTypes:(NSString *)packageName packagePublisher:(NSString *)packagePublisher packageTypes:(WMDPackageTypes)packageTypes;
+- (id<NSFastEnumeration> /* WAPackage* */)findPackagesByUserSecurityIdNamePublisherWithPackageTypes:(NSString *)userSecurityId packageName:(NSString *)packageName packagePublisher:(NSString *)packagePublisher packageTypes:(WMDPackageTypes)packageTypes;
+- (id<NSFastEnumeration> /* WAPackage* */)findPackagesByPackageFamilyNameWithPackageTypes:(NSString *)packageFamilyName packageTypes:(WMDPackageTypes)packageTypes;
+- (id<NSFastEnumeration> /* WAPackage* */)findPackagesByUserSecurityIdPackageFamilyNameWithPackageTypes:(NSString *)userSecurityId packageFamilyName:(NSString *)packageFamilyName packageTypes:(WMDPackageTypes)packageTypes;
+- (void)stageUserDataAsync:(NSString *)packageFullName success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)addPackageVolumeAsync:(NSString *)packageStorePath success:(void (^)(WMDPackageVolume*))success failure:(void (^)(NSError*))failure;
+- (void)addPackageToVolumeAsync:(WFUri*)packageUri dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris deploymentOptions:(WMDDeploymentOptions)deploymentOptions targetVolume:(WMDPackageVolume*)targetVolume success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)clearPackageStatus:(NSString *)packageFullName status:(WMDPackageStatus)status;
+- (void)registerPackageWithAppDataVolumeAsync:(WFUri*)manifestUri dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris deploymentOptions:(WMDDeploymentOptions)deploymentOptions appDataVolume:(WMDPackageVolume*)appDataVolume success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
+- (WMDPackageVolume*)findPackageVolumeByName:(NSString *)volumeName;
 - (id<NSFastEnumeration> /* WMDPackageVolume* */)findPackageVolumes;
 - (WMDPackageVolume*)getDefaultPackageVolume;
-- (void)movePackageToVolumeAsync:(NSString*)packageFullName
-               deploymentOptions:(WMDDeploymentOptions)deploymentOptions
-                    targetVolume:(WMDPackageVolume*)targetVolume
-                         success:(void (^)(WMDDeploymentResult*))success
-                        progress:(void (^)(WMDDeploymentProgress*))progress
-                         failure:(void (^)(NSError*))failure;
-- (void)removePackageVolumeAsync:(WMDPackageVolume*)volume
-                         success:(void (^)(WMDDeploymentResult*))success
-                        progress:(void (^)(WMDDeploymentProgress*))progress
-                         failure:(void (^)(NSError*))failure;
+- (void)movePackageToVolumeAsync:(NSString *)packageFullName deploymentOptions:(WMDDeploymentOptions)deploymentOptions targetVolume:(WMDPackageVolume*)targetVolume success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)removePackageVolumeAsync:(WMDPackageVolume*)volume success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
 - (void)setDefaultPackageVolume:(WMDPackageVolume*)volume;
-- (void)setPackageStatus:(NSString*)packageFullName status:(WMDPackageStatus)status;
-- (void)setPackageVolumeOfflineAsync:(WMDPackageVolume*)packageVolume
-                             success:(void (^)(WMDDeploymentResult*))success
-                            progress:(void (^)(WMDDeploymentProgress*))progress
-                             failure:(void (^)(NSError*))failure;
-- (void)setPackageVolumeOnlineAsync:(WMDPackageVolume*)packageVolume
-                            success:(void (^)(WMDDeploymentResult*))success
-                           progress:(void (^)(WMDDeploymentProgress*))progress
-                            failure:(void (^)(NSError*))failure;
-- (void)stagePackageToVolumeAsync:(WFUri*)packageUri
-            dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris
-                deploymentOptions:(WMDDeploymentOptions)deploymentOptions
-                     targetVolume:(WMDPackageVolume*)targetVolume
-                          success:(void (^)(WMDDeploymentResult*))success
-                         progress:(void (^)(WMDDeploymentProgress*))progress
-                          failure:(void (^)(NSError*))failure;
-- (void)stageUserDataWithOptionsAsync:(NSString*)packageFullName
-                    deploymentOptions:(WMDDeploymentOptions)deploymentOptions
-                              success:(void (^)(WMDDeploymentResult*))success
-                             progress:(void (^)(WMDDeploymentProgress*))progress
-                              failure:(void (^)(NSError*))failure;
+- (void)setPackageStatus:(NSString *)packageFullName status:(WMDPackageStatus)status;
+- (void)setPackageVolumeOfflineAsync:(WMDPackageVolume*)packageVolume success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)setPackageVolumeOnlineAsync:(WMDPackageVolume*)packageVolume success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)stagePackageToVolumeAsync:(WFUri*)packageUri dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris deploymentOptions:(WMDDeploymentOptions)deploymentOptions targetVolume:(WMDPackageVolume*)targetVolume success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)stageUserDataWithOptionsAsync:(NSString *)packageFullName deploymentOptions:(WMDDeploymentOptions)deploymentOptions success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)getPackageVolumesAsyncWithSuccess:(void (^)(NSArray* /* WMDPackageVolume* */))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WMDPackageManager_DEFINED__
+

@@ -19,14 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_CORE_PROTECTION_PLAYBACK_CAPTURE_DEVICES_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_CORE_PROTECTION_PLAYBACK_CAPTURE_DEVICES_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Media_Core_Protection_Playback_Capture_Devices.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WMPMediaProtectionManager, WMPServiceRequestedEventArgs, WMPComponentLoadFailedEventArgs, WMPMediaProtectionServiceCompletion,
-    WMPRevocationAndRenewalInformation, WMPRevocationAndRenewalItem, WMPMediaProtectionPMPServer;
-@protocol WMPIMediaProtectionManager
-, WMPIMediaProtectionServiceCompletion, WMPIServiceRequestedEventArgs, WMPIMediaProtectionServiceRequest, WMPIServiceRequestedEventArgs2,
-    WMPIComponentLoadFailedEventArgs, WMPIRevocationAndRenewalInformation, WMPIRevocationAndRenewalItem,
-    WMPIMediaProtectionPMPServerFactory, WMPIMediaProtectionPMPServer;
+@class WMPMediaProtectionManager, WMPServiceRequestedEventArgs, WMPComponentLoadFailedEventArgs, WMPMediaProtectionServiceCompletion, WMPRevocationAndRenewalInformation, WMPRevocationAndRenewalItem, WMPMediaProtectionPMPServer, WMPProtectionCapabilities, WMPHdcpSession, WMPComponentRenewal;
+@protocol WMPIMediaProtectionManager, WMPIMediaProtectionServiceCompletion, WMPIServiceRequestedEventArgs, WMPIMediaProtectionServiceRequest, WMPIServiceRequestedEventArgs2, WMPIComponentLoadFailedEventArgs, WMPIRevocationAndRenewalInformation, WMPIRevocationAndRenewalItem, WMPIMediaProtectionPMPServerFactory, WMPIMediaProtectionPMPServer, WMPIProtectionCapabilities, WMPIHdcpSession, WMPIComponentRenewalStatics;
 
 // Windows.Media.Protection.RevocationAndRenewalReasons
 enum _WMPRevocationAndRenewalReasons {
@@ -59,45 +61,81 @@ enum _WMPGraphicsTrustStatus {
 };
 typedef unsigned WMPGraphicsTrustStatus;
 
+// Windows.Media.Protection.ProtectionCapabilityResult
+enum _WMPProtectionCapabilityResult {
+    WMPProtectionCapabilityResultNotSupported = 0,
+    WMPProtectionCapabilityResultMaybe = 1,
+    WMPProtectionCapabilityResultProbably = 2,
+};
+typedef unsigned WMPProtectionCapabilityResult;
+
+// Windows.Media.Protection.HdcpProtection
+enum _WMPHdcpProtection {
+    WMPHdcpProtectionOff = 0,
+    WMPHdcpProtectionOn = 1,
+    WMPHdcpProtectionOnWithTypeEnforcement = 2,
+};
+typedef unsigned WMPHdcpProtection;
+
+// Windows.Media.Protection.HdcpSetProtectionResult
+enum _WMPHdcpSetProtectionResult {
+    WMPHdcpSetProtectionResultSuccess = 0,
+    WMPHdcpSetProtectionResultTimedOut = 1,
+    WMPHdcpSetProtectionResultNotSupported = 2,
+    WMPHdcpSetProtectionResultUnknownFailure = 3,
+};
+typedef unsigned WMPHdcpSetProtectionResult;
+
+// Windows.Media.Protection.RenewalStatus
+enum _WMPRenewalStatus {
+    WMPRenewalStatusNotStarted = 0,
+    WMPRenewalStatusUpdatesInProgress = 1,
+    WMPRenewalStatusUserCancelled = 2,
+    WMPRenewalStatusAppComponentsMayNeedUpdating = 3,
+    WMPRenewalStatusNoComponentsFound = 4,
+};
+typedef unsigned WMPRenewalStatus;
+
 #include "WindowsFoundation.h"
 #include "WindowsFoundationCollections.h"
 #include "WindowsMediaPlayback.h"
 // Windows.Media.Protection.ComponentLoadFailedEventHandler
 #ifndef __WMPComponentLoadFailedEventHandler__DEFINED
 #define __WMPComponentLoadFailedEventHandler__DEFINED
-typedef void (^WMPComponentLoadFailedEventHandler)(WMPMediaProtectionManager* sender, WMPComponentLoadFailedEventArgs* e);
+typedef void(^WMPComponentLoadFailedEventHandler)(WMPMediaProtectionManager* sender, WMPComponentLoadFailedEventArgs* e);
 #endif // __WMPComponentLoadFailedEventHandler__DEFINED
 
 // Windows.Media.Protection.RebootNeededEventHandler
 #ifndef __WMPRebootNeededEventHandler__DEFINED
 #define __WMPRebootNeededEventHandler__DEFINED
-typedef void (^WMPRebootNeededEventHandler)(WMPMediaProtectionManager* sender);
+typedef void(^WMPRebootNeededEventHandler)(WMPMediaProtectionManager* sender);
 #endif // __WMPRebootNeededEventHandler__DEFINED
 
 // Windows.Media.Protection.ServiceRequestedEventHandler
 #ifndef __WMPServiceRequestedEventHandler__DEFINED
 #define __WMPServiceRequestedEventHandler__DEFINED
-typedef void (^WMPServiceRequestedEventHandler)(WMPMediaProtectionManager* sender, WMPServiceRequestedEventArgs* e);
+typedef void(^WMPServiceRequestedEventHandler)(WMPMediaProtectionManager* sender, WMPServiceRequestedEventArgs* e);
 #endif // __WMPServiceRequestedEventHandler__DEFINED
+
 
 #import <Foundation/Foundation.h>
 
 // Windows.Media.Protection.ServiceRequestedEventHandler
 #ifndef __WMPServiceRequestedEventHandler__DEFINED
 #define __WMPServiceRequestedEventHandler__DEFINED
-typedef void (^WMPServiceRequestedEventHandler)(WMPMediaProtectionManager* sender, WMPServiceRequestedEventArgs* e);
+typedef void(^WMPServiceRequestedEventHandler)(WMPMediaProtectionManager* sender, WMPServiceRequestedEventArgs* e);
 #endif // __WMPServiceRequestedEventHandler__DEFINED
 
 // Windows.Media.Protection.RebootNeededEventHandler
 #ifndef __WMPRebootNeededEventHandler__DEFINED
 #define __WMPRebootNeededEventHandler__DEFINED
-typedef void (^WMPRebootNeededEventHandler)(WMPMediaProtectionManager* sender);
+typedef void(^WMPRebootNeededEventHandler)(WMPMediaProtectionManager* sender);
 #endif // __WMPRebootNeededEventHandler__DEFINED
 
 // Windows.Media.Protection.ComponentLoadFailedEventHandler
 #ifndef __WMPComponentLoadFailedEventHandler__DEFINED
 #define __WMPComponentLoadFailedEventHandler__DEFINED
-typedef void (^WMPComponentLoadFailedEventHandler)(WMPMediaProtectionManager* sender, WMPComponentLoadFailedEventArgs* e);
+typedef void(^WMPComponentLoadFailedEventHandler)(WMPMediaProtectionManager* sender, WMPComponentLoadFailedEventArgs* e);
 #endif // __WMPComponentLoadFailedEventHandler__DEFINED
 
 // Windows.Media.Protection.IMediaProtectionServiceRequest
@@ -109,13 +147,17 @@ typedef void (^WMPComponentLoadFailedEventHandler)(WMPMediaProtectionManager* se
 @property (readonly) WFGUID* type;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_CORE_PROTECTION_PLAYBACK_CAPTURE_DEVICES_EXPORT
+@interface WMPIMediaProtectionServiceRequest : RTObject <WMPIMediaProtectionServiceRequest>
+@end
+
 #endif // __WMPIMediaProtectionServiceRequest_DEFINED__
 
 // Windows.Media.Protection.MediaProtectionManager
 #ifndef __WMPMediaProtectionManager_DEFINED__
 #define __WMPMediaProtectionManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_PROTECTION_PLAYBACK_CAPTURE_DEVICES_EXPORT
 @interface WMPMediaProtectionManager : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -136,7 +178,7 @@ WINRT_EXPORT
 #ifndef __WMPServiceRequestedEventArgs_DEFINED__
 #define __WMPServiceRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_PROTECTION_PLAYBACK_CAPTURE_DEVICES_EXPORT
 @interface WMPServiceRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -152,7 +194,7 @@ WINRT_EXPORT
 #ifndef __WMPComponentLoadFailedEventArgs_DEFINED__
 #define __WMPComponentLoadFailedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_PROTECTION_PLAYBACK_CAPTURE_DEVICES_EXPORT
 @interface WMPComponentLoadFailedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -167,7 +209,7 @@ WINRT_EXPORT
 #ifndef __WMPMediaProtectionServiceCompletion_DEFINED__
 #define __WMPMediaProtectionServiceCompletion_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_PROTECTION_PLAYBACK_CAPTURE_DEVICES_EXPORT
 @interface WMPMediaProtectionServiceCompletion : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -181,7 +223,7 @@ WINRT_EXPORT
 #ifndef __WMPRevocationAndRenewalInformation_DEFINED__
 #define __WMPRevocationAndRenewalInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_PROTECTION_PLAYBACK_CAPTURE_DEVICES_EXPORT
 @interface WMPRevocationAndRenewalInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -195,16 +237,16 @@ WINRT_EXPORT
 #ifndef __WMPRevocationAndRenewalItem_DEFINED__
 #define __WMPRevocationAndRenewalItem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_PROTECTION_PLAYBACK_CAPTURE_DEVICES_EXPORT
 @interface WMPRevocationAndRenewalItem : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* headerHash;
-@property (readonly) NSString* name;
-@property (readonly) NSString* publicKeyHash;
+@property (readonly) NSString * headerHash;
+@property (readonly) NSString * name;
+@property (readonly) NSString * publicKeyHash;
 @property (readonly) WMPRevocationAndRenewalReasons reasons;
-@property (readonly) NSString* renewalId;
+@property (readonly) NSString * renewalId;
 @end
 
 #endif // __WMPRevocationAndRenewalItem_DEFINED__
@@ -213,7 +255,7 @@ WINRT_EXPORT
 #ifndef __WMPMediaProtectionPMPServer_DEFINED__
 #define __WMPMediaProtectionPMPServer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CORE_PROTECTION_PLAYBACK_CAPTURE_DEVICES_EXPORT
 @interface WMPMediaProtectionPMPServer : RTObject
 + (WMPMediaProtectionPMPServer*)makePMPServer:(RTObject<WFCIPropertySet>*)pProperties ACTIVATOR;
 #if defined(__cplusplus)
@@ -223,3 +265,64 @@ WINRT_EXPORT
 @end
 
 #endif // __WMPMediaProtectionPMPServer_DEFINED__
+
+// Windows.Media.Protection.ProtectionCapabilities
+#ifndef __WMPProtectionCapabilities_DEFINED__
+#define __WMPProtectionCapabilities_DEFINED__
+
+OBJCUWP_WINDOWS_MEDIA_CORE_PROTECTION_PLAYBACK_CAPTURE_DEVICES_EXPORT
+@interface WMPProtectionCapabilities : RTObject
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+- (WMPProtectionCapabilityResult)isTypeSupported:(NSString *)type keySystem:(NSString *)keySystem;
+@end
+
+#endif // __WMPProtectionCapabilities_DEFINED__
+
+// Windows.Foundation.IClosable
+#ifndef __WFIClosable_DEFINED__
+#define __WFIClosable_DEFINED__
+
+@protocol WFIClosable
+- (void)close;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_CORE_PROTECTION_PLAYBACK_CAPTURE_DEVICES_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
+#endif // __WFIClosable_DEFINED__
+
+// Windows.Media.Protection.HdcpSession
+#ifndef __WMPHdcpSession_DEFINED__
+#define __WMPHdcpSession_DEFINED__
+
+OBJCUWP_WINDOWS_MEDIA_CORE_PROTECTION_PLAYBACK_CAPTURE_DEVICES_EXPORT
+@interface WMPHdcpSession : RTObject <WFIClosable>
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+- (EventRegistrationToken)addProtectionChangedEvent:(void(^)(WMPHdcpSession*, RTObject*))del;
+- (void)removeProtectionChangedEvent:(EventRegistrationToken)tok;
+- (BOOL)isEffectiveProtectionAtLeast:(WMPHdcpProtection)protection;
+- (id /* WMPHdcpProtection */)getEffectiveProtection;
+- (void)setDesiredMinProtectionAsync:(WMPHdcpProtection)protection success:(void (^)(WMPHdcpSetProtectionResult))success failure:(void (^)(NSError*))failure;
+- (void)close;
+@end
+
+#endif // __WMPHdcpSession_DEFINED__
+
+// Windows.Media.Protection.ComponentRenewal
+#ifndef __WMPComponentRenewal_DEFINED__
+#define __WMPComponentRenewal_DEFINED__
+
+OBJCUWP_WINDOWS_MEDIA_CORE_PROTECTION_PLAYBACK_CAPTURE_DEVICES_EXPORT
+@interface WMPComponentRenewal : RTObject
++ (void)renewSystemComponentsAsync:(WMPRevocationAndRenewalInformation*)information success:(void (^)(WMPRenewalStatus))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
+@end
+
+#endif // __WMPComponentRenewal_DEFINED__
+

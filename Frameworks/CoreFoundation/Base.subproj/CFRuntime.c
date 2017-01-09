@@ -275,6 +275,10 @@ void _CFRuntimeBridgeTypeToClass(CFTypeID cf_typeID, const void *cls_ref) {
     __CFUnlock(&__CFBigRuntimeFunnel);
 }
 
+uintptr_t __CFISAForTypeID(CFTypeID typeID) {
+    return (typeID < __CFRuntimeClassTableSize) ? __CFRuntimeObjCClassTable[typeID] : 0;
+}
+
 const CFRuntimeClass * _CFRuntimeGetClassWithTypeID(CFTypeID typeID) {
     return __CFRuntimeClassTable[typeID]; // hopelessly unthreadsafe
 }
@@ -291,9 +295,19 @@ void _CFRuntimeUnregisterClassWithTypeID(CFTypeID typeID) {
 CF_PRIVATE uint8_t __CFZombieEnabled = 0;
 CF_PRIVATE uint8_t __CFDeallocateZombies = 0;
 
-extern void __CFZombifyNSObject(void);  // from NSObject.m
+// WINOBJC: Since NSObject lives in Foundation, we have to invert the dependency here;
+// like in libobjc2, Foundation will set a callback to fire on object deallocation when
+// zombies are turned on.
+// extern void __CFZombifyNSObject(void);  // from NSObject.m
+void (*__CFZombifyNSObjectHook)(id);
 
 void _CFEnableZombies(void) {
+    __CFZombieEnabled = 1;
+}
+
+// WINOBJC: Zombies can be disabled.
+void _CFDisableZombies(void) {
+    __CFZombieEnabled = 0;
 }
 
 #endif /* DEBUG */
@@ -1118,6 +1132,12 @@ void __CFInitialize(void) {
         memset(__CFRuntimeClassTable, 0, sizeof(__CFRuntimeClassTable));
         memset(__CFRuntimeObjCClassTable, 0, sizeof(__CFRuntimeObjCClassTable));
 
+#if WINOBJC
+        // WINOBJC: Under the WinObjC runtime, all CFTypeRefs are _NSCFTypes or a toll-free bridged type
+        for (CFIndex idx = 1; idx < __CFRuntimeClassTableSize; ++idx) {
+            __CFRuntimeObjCClassTable[idx] = (uintptr_t)&_OBJC_CLASS__NSCFType;
+        }
+#endif
         
 #if DEPLOYMENT_RUNTIME_SWIFT
 
@@ -1846,6 +1866,12 @@ static void _CFRelease(CFTypeRef CF_RELEASES_ARGUMENT cf) {
             usesSystemDefaultAllocator = _CFAllocatorIsSystemDefault(allocator);
     }
 
+    // WinObjC: Resurrect zombie support; it looks like this was removed from the original codebase.
+#if defined(DEBUG) || defined(ENABLE_ZOMBIES)
+    if (__CFZombieEnabled && __CFZombifyNSObjectHook) {
+        __CFZombifyNSObjectHook((id)cf);
+    } else
+#endif
     {
         CFAllocatorDeallocate(allocator, (uint8_t *)cf - (usesSystemDefaultAllocator ? 0 : sizeof(CFAllocatorRef)));
     }

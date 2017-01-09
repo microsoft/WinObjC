@@ -19,13 +19,17 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
+#define OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml_Interop.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WUXINotifyCollectionChangedEventArgs;
 @class WUXITypeName;
-@protocol WUXIIBindableIterable
-, WUXIIBindableVector, WUXIIBindableObservableVector, WUXIIBindableVectorView, WUXIIBindableIterator, WUXIINotifyCollectionChanged,
-    WUXIINotifyCollectionChangedEventArgs, WUXIINotifyCollectionChangedEventArgsFactory;
+@protocol WUXIIBindableIterable, WUXIIBindableVector, WUXIIBindableObservableVector, WUXIIBindableVectorView, WUXIIBindableIterator, WUXIINotifyCollectionChanged, WUXIINotifyCollectionChangedEventArgs, WUXIINotifyCollectionChangedEventArgsFactory;
 
 // Windows.UI.Xaml.Interop.NotifyCollectionChangedAction
 enum _WUXINotifyCollectionChangedAction {
@@ -49,35 +53,36 @@ typedef unsigned WUXITypeKind;
 // Windows.UI.Xaml.Interop.BindableVectorChangedEventHandler
 #ifndef __WUXIBindableVectorChangedEventHandler__DEFINED
 #define __WUXIBindableVectorChangedEventHandler__DEFINED
-typedef void (^WUXIBindableVectorChangedEventHandler)(RTObject<WUXIIBindableObservableVector>* vector, RTObject* e);
+typedef void(^WUXIBindableVectorChangedEventHandler)(RTObject<WUXIIBindableObservableVector>* vector, RTObject* e);
 #endif // __WUXIBindableVectorChangedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Interop.NotifyCollectionChangedEventHandler
 #ifndef __WUXINotifyCollectionChangedEventHandler__DEFINED
 #define __WUXINotifyCollectionChangedEventHandler__DEFINED
-typedef void (^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINotifyCollectionChangedEventArgs* e);
+typedef void(^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINotifyCollectionChangedEventArgs* e);
 #endif // __WUXINotifyCollectionChangedEventHandler__DEFINED
+
 
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Xaml.Interop.TypeName
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
 @interface WUXITypeName : NSObject
-+ (instancetype) new;
-@property (retain) NSString* name;
++ (instancetype)new;
+@property (retain) NSString * name;
 @property WUXITypeKind kind;
 @end
 
 // Windows.UI.Xaml.Interop.BindableVectorChangedEventHandler
 #ifndef __WUXIBindableVectorChangedEventHandler__DEFINED
 #define __WUXIBindableVectorChangedEventHandler__DEFINED
-typedef void (^WUXIBindableVectorChangedEventHandler)(RTObject<WUXIIBindableObservableVector>* vector, RTObject* e);
+typedef void(^WUXIBindableVectorChangedEventHandler)(RTObject<WUXIIBindableObservableVector>* vector, RTObject* e);
 #endif // __WUXIBindableVectorChangedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Interop.NotifyCollectionChangedEventHandler
 #ifndef __WUXINotifyCollectionChangedEventHandler__DEFINED
 #define __WUXINotifyCollectionChangedEventHandler__DEFINED
-typedef void (^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINotifyCollectionChangedEventArgs* e);
+typedef void(^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINotifyCollectionChangedEventArgs* e);
 #endif // __WUXINotifyCollectionChangedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Interop.IBindableIterable
@@ -86,6 +91,10 @@ typedef void (^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINo
 
 @protocol WUXIIBindableIterable
 - (RTObject<WUXIIBindableIterator>*)first;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
+@interface WUXIIBindableIterable : RTObject <WUXIIBindableIterable>
 @end
 
 #endif // __WUXIIBindableIterable_DEFINED__
@@ -106,6 +115,10 @@ typedef void (^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINo
 - (void)removeAtEnd;
 - (void)clear;
 - (RTObject<WUXIIBindableIterator>*)first;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
+@interface WUXIIBindableVector : RTObject <WUXIIBindableVector>
 @end
 
 #endif // __WUXIIBindableVector_DEFINED__
@@ -129,6 +142,10 @@ typedef void (^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINo
 - (RTObject<WUXIIBindableIterator>*)first;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
+@interface WUXIIBindableObservableVector : RTObject <WUXIIBindableObservableVector>
+@end
+
 #endif // __WUXIIBindableObservableVector_DEFINED__
 
 // Windows.UI.Xaml.Interop.IBindableVectorView
@@ -140,6 +157,10 @@ typedef void (^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINo
 - (RTObject*)getAt:(unsigned int)index;
 - (BOOL)indexOf:(RTObject*)value index:(unsigned int*)index;
 - (RTObject<WUXIIBindableIterator>*)first;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
+@interface WUXIIBindableVectorView : RTObject <WUXIIBindableVectorView>
 @end
 
 #endif // __WUXIIBindableVectorView_DEFINED__
@@ -154,6 +175,10 @@ typedef void (^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINo
 - (BOOL)moveNext;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
+@interface WUXIIBindableIterator : RTObject <WUXIIBindableIterator>
+@end
+
 #endif // __WUXIIBindableIterator_DEFINED__
 
 // Windows.UI.Xaml.Interop.INotifyCollectionChanged
@@ -165,14 +190,19 @@ typedef void (^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINo
 - (void)removeCollectionChangedEvent:(EventRegistrationToken)tok;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
+@interface WUXIINotifyCollectionChanged : RTObject <WUXIINotifyCollectionChanged>
+@end
+
 #endif // __WUXIINotifyCollectionChanged_DEFINED__
 
 // Windows.UI.Xaml.Interop.NotifyCollectionChangedEventArgs
 #ifndef __WUXINotifyCollectionChangedEventArgs_DEFINED__
 #define __WUXINotifyCollectionChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
 @interface WUXINotifyCollectionChangedEventArgs : RTObject
++ (WUXINotifyCollectionChangedEventArgs*)makeInstanceWithAllParameters:(WUXINotifyCollectionChangedAction)action newItems:(RTObject<WUXIIBindableVector>*)newItems oldItems:(RTObject<WUXIIBindableVector>*)oldItems newIndex:(int)newIndex oldIndex:(int)oldIndex ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -184,3 +214,4 @@ WINRT_EXPORT
 @end
 
 #endif // __WUXINotifyCollectionChangedEventArgs_DEFINED__
+

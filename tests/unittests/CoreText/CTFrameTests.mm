@@ -1,4 +1,3 @@
-
 //******************************************************************************
 //
 // Copyright (c) Microsoft. All rights reserved.
@@ -16,14 +15,16 @@
 //******************************************************************************
 
 #include <TestFramework.h>
-#include "Starboard.h"
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 #import <CoreText/CoreText.h>
 #import <CoreFoundation/CFAttributedString.h>
 
+static constexpr double c_errorDelta = 0.0005;
+static constexpr float c_arbitraryFloat = 314159.2717;
+
 static NSAttributedString* getAttributedString(NSString* str) {
-    UIFontDescriptor* fontDescriptor = [UIFontDescriptor fontDescriptorWithName:@"Times New Roman" size:40];
+    UIFontDescriptor* fontDescriptor = [UIFontDescriptor fontDescriptorWithName:@"Segoe UI" size:40];
     UIFont* font = [UIFont fontWithDescriptor:fontDescriptor size:40];
 
     NSRange wholeRange = NSMakeRange(0, str.length);
@@ -43,36 +44,159 @@ TEST(CTFrame, GetStringRange) {
     CFAttributedStringRef string = (__bridge CFAttributedStringRef)getAttributedString(@"");
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(string);
     CGMutablePathRef path = CGPathCreateMutable();
-    CGPathAddRect(path, NULL, CGRectMake(0, 0, 100, 50));
+    CGPathAddRect(path, NULL, CGRectMake(0, 0, 60, 57));
     CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, NULL);
+    CFAutorelease(framesetter);
+    CFAutorelease(frame);
     EXPECT_EQ(0, CTFrameGetStringRange(frame).location);
     EXPECT_EQ(0, CTFrameGetStringRange(frame).length);
     EXPECT_EQ(0, CTFrameGetVisibleStringRange(frame).location);
     EXPECT_EQ(0, CTFrameGetVisibleStringRange(frame).length);
-    CFRelease(framesetter);
-    CFRelease(frame);
 
     // Can fit all of the text in frame, so visible range should be equal to string range
     string = (__bridge CFAttributedStringRef)getAttributedString(@"foo");
     framesetter = CTFramesetterCreateWithAttributedString(string);
     frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, NULL);
+    CFAutorelease(framesetter);
+    CFAutorelease(frame);
     EXPECT_EQ(0, CTFrameGetStringRange(frame).location);
     EXPECT_EQ(3, CTFrameGetStringRange(frame).length);
     EXPECT_EQ(0, CTFrameGetVisibleStringRange(frame).location);
     EXPECT_EQ(3, CTFrameGetVisibleStringRange(frame).length);
-    CFRelease(framesetter);
-    CFRelease(frame);
 
-    // Can only fit "foob" so visible range and string range should NOT be equal
+    // Can only fit "foo" so visible range and string range should NOT be equal
     string = (__bridge CFAttributedStringRef)getAttributedString(@"foobar");
     framesetter = CTFramesetterCreateWithAttributedString(string);
     frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, NULL);
+    CFAutorelease(framesetter);
+    CFAutorelease(frame);
     EXPECT_EQ(0, CTFrameGetStringRange(frame).location);
     EXPECT_EQ(6, CTFrameGetStringRange(frame).length);
     EXPECT_EQ(0, CTFrameGetVisibleStringRange(frame).location);
-    EXPECT_EQ(4, CTFrameGetVisibleStringRange(frame).length);
+    EXPECT_EQ(3, CTFrameGetVisibleStringRange(frame).length);
 
-    CFRelease(framesetter);
-    CFRelease(frame);
     CGPathRelease(path);
+}
+
+TEST(CTFrame, GetLines) {
+    EXPECT_EQ(nil, CTFrameGetLines(nil));
+    CFAttributedStringRef string = (__bridge CFAttributedStringRef)getAttributedString(@"");
+    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(string);
+    CFAutorelease(framesetter);
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGPathAddRect(path, NULL, CGRectMake(0, 0, 60, 57));
+    CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, NULL);
+    CFAutorelease(frame);
+    CFArrayRef lines = CTFrameGetLines(frame);
+    EXPECT_EQ(0, CFArrayGetCount(lines));
+
+    string = (__bridge CFAttributedStringRef)getAttributedString(@"foobar");
+    framesetter = CTFramesetterCreateWithAttributedString(string);
+    frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, NULL);
+    CFAutorelease(framesetter);
+    CFAutorelease(frame);
+    lines = CTFrameGetLines(frame);
+    EXPECT_EQ(2, CFArrayGetCount(lines));
+    CTLineRef line = (CTLineRef)CFArrayGetValueAtIndex(lines, 0);
+    EXPECT_EQ(0, CTLineGetStringRange(line).location);
+    EXPECT_EQ(3, CTLineGetStringRange(line).length);
+    line = (CTLineRef)CFArrayGetValueAtIndex(lines, 1);
+    EXPECT_EQ(3, CTLineGetStringRange(line).location);
+    EXPECT_EQ(3, CTLineGetStringRange(line).length);
+
+    CGPathRelease(path);
+}
+
+TEST(CTFrame, GetLineOrigins) {
+    std::vector<CGPoint> origins(5);
+
+    std::fill(origins.begin(), origins.end(), CGPoint{ c_arbitraryFloat, c_arbitraryFloat });
+    CTFrameGetLineOrigins(nullptr, CFRangeMake(0, 0), origins.data());
+    EXPECT_EQ(c_arbitraryFloat, origins[0].x);
+    EXPECT_EQ(c_arbitraryFloat, origins[0].y);
+
+    CFAttributedStringRef string = (__bridge CFAttributedStringRef)getAttributedString(@"");
+    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(string);
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGPathAddRect(path, NULL, CGRectMake(0, 0, 60, 300));
+    CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, NULL);
+    CFAutorelease(framesetter);
+    CFAutorelease(frame);
+
+    std::fill(origins.begin(), origins.end(), CGPoint{ c_arbitraryFloat, c_arbitraryFloat });
+    CTFrameGetLineOrigins(frame, CFRangeMake(0, 0), origins.data());
+    EXPECT_EQ(c_arbitraryFloat, origins[0].x);
+    EXPECT_EQ(c_arbitraryFloat, origins[0].y);
+
+    string = (__bridge CFAttributedStringRef)getAttributedString(@"foobarbazb");
+    framesetter = CTFramesetterCreateWithAttributedString(string);
+    frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, NULL);
+    CFAutorelease(framesetter);
+    CFAutorelease(frame);
+
+    // Location greater than available lines, does nothing
+    std::fill(origins.begin(), origins.end(), CGPoint{ c_arbitraryFloat, c_arbitraryFloat });
+    CTFrameGetLineOrigins(frame, CFRangeMake(110, 0), origins.data());
+    EXPECT_EQ(c_arbitraryFloat, origins[0].x);
+    EXPECT_EQ(c_arbitraryFloat, origins[0].y);
+
+    // Length negative, does nothing
+    std::fill(origins.begin(), origins.end(), CGPoint{ c_arbitraryFloat, c_arbitraryFloat });
+    CTFrameGetLineOrigins(frame, CFRangeMake(0, -110), origins.data());
+    EXPECT_EQ(c_arbitraryFloat, origins[0].x);
+    EXPECT_EQ(c_arbitraryFloat, origins[0].y);
+
+    // Location negative, does nothing
+    std::fill(origins.begin(), origins.end(), CGPoint{ c_arbitraryFloat, c_arbitraryFloat });
+    std::fill(origins.begin(), origins.end(), CGPoint{ c_arbitraryFloat, c_arbitraryFloat });
+    CTFrameGetLineOrigins(frame, CFRangeMake(-110, 0), origins.data());
+    EXPECT_EQ(c_arbitraryFloat, origins[0].x);
+    EXPECT_EQ(c_arbitraryFloat, origins[0].y);
+
+    std::fill(origins.begin(), origins.end(), CGPoint{ c_arbitraryFloat, c_arbitraryFloat });
+    CTFrameGetLineOrigins(frame, CFRangeMake(0, 0), origins.data());
+    EXPECT_NEAR(0.0f, origins[0].x, c_errorDelta);
+    EXPECT_NEAR(43.1641f, origins[0].y, c_errorDelta);
+    EXPECT_NEAR(0.0f, origins[1].x, c_errorDelta);
+    EXPECT_NEAR(96.3672f, origins[1].y, c_errorDelta);
+    EXPECT_NEAR(0.0f, origins[2].x, c_errorDelta);
+    EXPECT_NEAR(149.5703f, origins[2].y, c_errorDelta);
+    EXPECT_NEAR(0.0f, origins[3].x, c_errorDelta);
+    EXPECT_NEAR(202.7734f, origins[3].y, c_errorDelta);
+    EXPECT_EQ(c_arbitraryFloat, origins[4].x);
+    EXPECT_EQ(c_arbitraryFloat, origins[4].y);
+
+    // Length greater than available lines, does nothing
+    std::fill(origins.begin(), origins.end(), CGPoint{ c_arbitraryFloat, c_arbitraryFloat });
+    CTFrameGetLineOrigins(frame, CFRangeMake(0, 525600), origins.data());
+    EXPECT_EQ(c_arbitraryFloat, origins[0].x);
+    EXPECT_EQ(c_arbitraryFloat, origins[0].y);
+
+    std::fill(origins.begin(), origins.end(), CGPoint{ c_arbitraryFloat, c_arbitraryFloat });
+    CTFrameGetLineOrigins(frame, CFRangeMake(1, 2), origins.data());
+    EXPECT_NEAR(0.0f, origins[0].x, c_errorDelta);
+    EXPECT_NEAR(96.3672f, origins[0].y, c_errorDelta);
+    EXPECT_NEAR(0.0f, origins[1].x, c_errorDelta);
+    EXPECT_NEAR(149.5703f, origins[1].y, c_errorDelta);
+    EXPECT_EQ(c_arbitraryFloat, origins[2].x);
+    EXPECT_EQ(c_arbitraryFloat, origins[2].y);
+
+    CGPathRelease(path);
+}
+
+TEST(CTFrame, GetPath) {
+    EXPECT_EQ(nil, CTFrameGetPath(nil));
+
+    CFAttributedStringRef string = (__bridge CFAttributedStringRef)getAttributedString(@"TEST");
+    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(string);
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGPathAddRect(path, NULL, CGRectMake(0, 0, 60, 300));
+    CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, NULL);
+    CFAutorelease(framesetter);
+    CFAutorelease(frame);
+
+    EXPECT_EQ(path, CTFrameGetPath(frame));
+
+    CGPathRelease(path);
+    EXPECT_NE(nil, CTFrameGetPath(frame));
 }

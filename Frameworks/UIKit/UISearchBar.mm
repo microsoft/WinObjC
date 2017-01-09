@@ -15,14 +15,14 @@
 //******************************************************************************
 
 #include "Starboard.h"
-#include "UIKit/UIKit.h"
-#include "UIKit/UIView.h"
-#include "UIKit/UITextField.h"
-#include "UIKit/UIColor.h"
-#include "UIKit/UILabel.h"
-#include "UIKit/UIFont.h"
-#include "UIKit/UIImage.h"
-#include "UIKit/UISegmentedControl.h"
+#include <UIKit/UIKit.h>
+#include <UIKit/UIView.h>
+#include <UIKit/UITextField.h>
+#include <UIKit/UIColor.h>
+#include <UIKit/UILabel.h>
+#include <UIKit/UIFont.h>
+#include <UIKit/UIImage.h>
+#include <UIKit/UISegmentedControl.h>
 #import "NSLogging.h"
 #include "StubReturn.h"
 
@@ -36,11 +36,12 @@ static const CGFloat c_scopeButtonMarginTop = 20;
 static NSString* cancelButtonText = @"Cancel";
 
 @implementation UISearchBar {
-    idretaintype(UITextField) _textField;
-    idretaintype(UILabel) _promptLabel;
-    idretaintype(UIButton) _cancelButton;
-    idretaintype(UISegmentedControl) _scopeButtons;
-    idretaintype(NSString) _placeholder;
+    StrongId<UITextField> _textField;
+    StrongId<UILabel> _promptLabel;
+    StrongId<UIButton> _cancelButton;
+    StrongId<UISegmentedControl> _scopeButtons;
+    StrongId<NSString> _placeholder;
+    StrongId<NSString> _prompt;
     BOOL _scopeButtonsHidden;
     id _delegate;
 }
@@ -72,18 +73,39 @@ static void initInternal(UISearchBar* self) {
  @Status Interoperable
 */
 - (void)setPrompt:(NSString*)prompt {
-    if (_promptLabel == nil) {
-        CGRect promptFrame = CGRectMake(0, c_marginTopForPrompt, self.frame.size.width, c_defaultTextFieldHeight);
-
-        self->_promptLabel.attach([[UILabel alloc] initWithFrame:promptFrame]);
-        [self->_promptLabel setTextAlignment:UITextAlignmentCenter];
-        [self->_promptLabel setBackgroundColor:nil];
-        [self->_promptLabel setTextColor:[UIColor blackColor]];
-        [self addSubview:self->_promptLabel];
+    if ((([_prompt length] == 0) && ([prompt length] == 0)) || [_prompt isEqualToString:prompt]) {
+        // if old prompt text is "equal" to the new prompt text (nil and emptyString are considered equal), quick return
+        return;
     }
 
-    _prompt = prompt;
-    [self setNeedsDisplay];
+    // otherwise, old prompt text is different from new prompt text, need either add or remove prompt label
+    _prompt.attach([prompt copy]);
+
+    if ([_prompt length] == 0) {
+        // remove prompt label since prompt text is either nil or empty
+        [_promptLabel removeFromSuperview];
+        _promptLabel = nil;
+    } else {
+        // need to add prompt label if it does not exist since new prompt text is not empty
+        if (_promptLabel == nil) {
+            CGRect promptFrame = CGRectMake(0, c_marginTopForPrompt, self.frame.size.width, c_defaultTextFieldHeight);
+
+            _promptLabel.attach([[UILabel alloc] initWithFrame:promptFrame]);
+            [_promptLabel setTextAlignment:UITextAlignmentCenter];
+            [_promptLabel setBackgroundColor:nil];
+            [_promptLabel setTextColor:[UIColor blackColor]];
+            [self addSubview:self->_promptLabel];
+        }
+    }
+
+    [self setNeedsLayout];
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)prompt {
+    return _prompt;
 }
 
 /**
@@ -191,8 +213,9 @@ static void initInternal(UISearchBar* self) {
     } else {
         if (_cancelButton == nil) {
             self->_cancelButton.attach([[UIButton alloc] init]);
-            [self->_cancelButton setBackgroundColor:nil];
             [self->_cancelButton setTitle:cancelButtonText forState:UIControlStateNormal];
+            [self->_cancelButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [self->_cancelButton addTarget:self action:@selector(_cancelButtonTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
             [self addSubview:self->_cancelButton];
         }
     }
@@ -224,7 +247,7 @@ static void initInternal(UISearchBar* self) {
 /**
  @Status Interoperable
 */
-- (void)setPlaceholder:(id)placeholder {
+- (void)setPlaceholder:(NSString*)placeholder {
     [_textField setPlaceholder:placeholder];
 }
 
@@ -238,7 +261,7 @@ static void initInternal(UISearchBar* self) {
 /**
  @Status Stub
 */
-- (void)setTintColor:(id)color {
+- (void)setTintColor:(UIColor*)color {
     UNIMPLEMENTED();
 }
 
@@ -257,14 +280,14 @@ static void initInternal(UISearchBar* self) {
 /**
  @Status Stub
 */
-- (void)setScopeButtonTitles:(id)titles {
+- (void)setScopeButtonTitles:(NSArray*)titles {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
-- (void)setScopeBarButtonTitleTextAttributes:(id)attributes forState:(UIControlState)forState {
+- (void)setScopeBarButtonTitleTextAttributes:(NSDictionary*)attributes forState:(UIControlState)forState {
     UNIMPLEMENTED();
 }
 
@@ -366,6 +389,12 @@ static void initInternal(UISearchBar* self) {
         if ([_delegate respondsToSelector:@selector(searchBarTextDidEndEditing:)]) {
             [_delegate searchBarTextDidEndEditing:self];
         }
+    }
+}
+
+- (void)_cancelButtonTouchUpInside:(UIButton*)button {
+    if ([_delegate respondsToSelector:@selector(searchBarCancelButtonClicked:)]) {
+        [_delegate searchBarCancelButtonClicked:self];
     }
 }
 

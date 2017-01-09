@@ -14,12 +14,15 @@
 //
 //******************************************************************************
 
+#import <Starboard.h>
+#import <StubReturn.h>
+
 #import <UIKit/UILayoutGuide.h>
 #import <UIKit/NSLayoutAnchor.h>
 #import <UIKit/NSLayoutConstraint.h>
-#import <StubReturn.h>
-
-#import <Starboard.h>
+#import <UIKit/NSLayoutDimension.h>
+#import <UIKit/NSLayoutXAxisAnchor.h>
+#import <UIKit/NSLayoutYAxisAnchor.h>
 
 #import "UILayoutGuide+AutoLayout.h"
 #import "NSLayoutAnchorInternal.h"

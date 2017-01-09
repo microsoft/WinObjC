@@ -19,11 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_BACKGROUND_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_BACKGROUND_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Devices_Background.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WDBDeviceUseDetails, WDBDeviceServicingDetails;
-@protocol WDBIDeviceUseDetails
-, WDBIDeviceServicingDetails;
+@protocol WDBIDeviceUseDetails, WDBIDeviceServicingDetails;
 
 #include "WindowsFoundation.h"
 
@@ -33,13 +38,13 @@
 #ifndef __WDBDeviceUseDetails_DEFINED__
 #define __WDBDeviceUseDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BACKGROUND_EXPORT
 @interface WDBDeviceUseDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* arguments;
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * arguments;
+@property (readonly) NSString * deviceId;
 @end
 
 #endif // __WDBDeviceUseDetails_DEFINED__
@@ -48,14 +53,15 @@ WINRT_EXPORT
 #ifndef __WDBDeviceServicingDetails_DEFINED__
 #define __WDBDeviceServicingDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_BACKGROUND_EXPORT
 @interface WDBDeviceServicingDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* arguments;
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * arguments;
+@property (readonly) NSString * deviceId;
 @property (readonly) WFTimeSpan* expectedDuration;
 @end
 
 #endif // __WDBDeviceServicingDetails_DEFINED__
+

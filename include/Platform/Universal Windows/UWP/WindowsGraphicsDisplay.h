@@ -19,11 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_GRAPHICS_DISPLAY_EXPORT
+#define OBJCUWP_WINDOWS_GRAPHICS_DISPLAY_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Graphics_Display.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WGDDisplayInformation, WGDDisplayProperties;
-@protocol WGDIDisplayInformationStatics
-, WGDIDisplayInformation, WGDIDisplayInformation2, WGDIDisplayPropertiesStatics;
+@protocol WGDIDisplayInformationStatics, WGDIDisplayInformation, WGDIDisplayInformation2, WGDIDisplayInformation3, WGDIDisplayInformation4, WGDIDisplayPropertiesStatics;
 
 // Windows.Graphics.Display.DisplayOrientations
 enum _WGDDisplayOrientations {
@@ -62,22 +67,23 @@ typedef unsigned WGDResolutionScale;
 // Windows.Graphics.Display.DisplayPropertiesEventHandler
 #ifndef __WGDDisplayPropertiesEventHandler__DEFINED
 #define __WGDDisplayPropertiesEventHandler__DEFINED
-typedef void (^WGDDisplayPropertiesEventHandler)(RTObject* sender);
+typedef void(^WGDDisplayPropertiesEventHandler)(RTObject* sender);
 #endif // __WGDDisplayPropertiesEventHandler__DEFINED
+
 
 #import <Foundation/Foundation.h>
 
 // Windows.Graphics.Display.DisplayPropertiesEventHandler
 #ifndef __WGDDisplayPropertiesEventHandler__DEFINED
 #define __WGDDisplayPropertiesEventHandler__DEFINED
-typedef void (^WGDDisplayPropertiesEventHandler)(RTObject* sender);
+typedef void(^WGDDisplayPropertiesEventHandler)(RTObject* sender);
 #endif // __WGDDisplayPropertiesEventHandler__DEFINED
 
 // Windows.Graphics.Display.DisplayInformation
 #ifndef __WGDDisplayInformation_DEFINED__
 #define __WGDDisplayInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_DISPLAY_EXPORT
 @interface WGDDisplayInformation : RTObject
 + (WGDDisplayInformation*)getForCurrentView;
 #if defined(__cplusplus)
@@ -91,17 +97,20 @@ WINRT_EXPORT
 @property (readonly) WGDResolutionScale resolutionScale;
 @property (readonly) BOOL stereoEnabled;
 @property (readonly) double rawPixelsPerViewPixel;
+@property (readonly) id /* double */ diagonalSizeInInches;
+@property (readonly) unsigned int screenHeightInRawPixels;
+@property (readonly) unsigned int screenWidthInRawPixels;
 + (WGDDisplayOrientations)autoRotationPreferences;
 + (void)setAutoRotationPreferences:(WGDDisplayOrientations)value;
-- (EventRegistrationToken)addColorProfileChangedEvent:(void (^)(WGDDisplayInformation*, RTObject*))del;
+- (EventRegistrationToken)addColorProfileChangedEvent:(void(^)(WGDDisplayInformation*, RTObject*))del;
 - (void)removeColorProfileChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addDpiChangedEvent:(void (^)(WGDDisplayInformation*, RTObject*))del;
+- (EventRegistrationToken)addDpiChangedEvent:(void(^)(WGDDisplayInformation*, RTObject*))del;
 - (void)removeDpiChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addOrientationChangedEvent:(void (^)(WGDDisplayInformation*, RTObject*))del;
+- (EventRegistrationToken)addOrientationChangedEvent:(void(^)(WGDDisplayInformation*, RTObject*))del;
 - (void)removeOrientationChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStereoEnabledChangedEvent:(void (^)(WGDDisplayInformation*, RTObject*))del;
+- (EventRegistrationToken)addStereoEnabledChangedEvent:(void(^)(WGDDisplayInformation*, RTObject*))del;
 - (void)removeStereoEnabledChangedEvent:(EventRegistrationToken)tok;
-+ (EventRegistrationToken)addDisplayContentsInvalidatedEvent:(void (^)(WGDDisplayInformation*, RTObject*))del;
++ (EventRegistrationToken)addDisplayContentsInvalidatedEvent:(void(^)(WGDDisplayInformation*, RTObject*))del;
 + (void)removeDisplayContentsInvalidatedEvent:(EventRegistrationToken)tok;
 - (void)getColorProfileAsyncWithSuccess:(void (^)(RTObject<WSSIRandomAccessStream>*))success failure:(void (^)(NSError*))failure;
 @end
@@ -112,7 +121,7 @@ WINRT_EXPORT
 #ifndef __WGDDisplayProperties_DEFINED__
 #define __WGDDisplayProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_DISPLAY_EXPORT
 @interface WGDDisplayProperties : RTObject
 + (void)getColorProfileAsyncWithSuccess:(void (^)(RTObject<WSSIRandomAccessStream>*))success failure:(void (^)(NSError*))failure;
 + (WGDDisplayOrientations)autoRotationPreferences;
@@ -135,3 +144,4 @@ WINRT_EXPORT
 @end
 
 #endif // __WGDDisplayProperties_DEFINED__
+

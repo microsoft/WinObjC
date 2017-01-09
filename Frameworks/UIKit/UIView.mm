@@ -17,9 +17,23 @@
 #import <StubReturn.h>
 #import "Starboard.h"
 
+#import <UIKit/UIGraphics.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UIImageView.h>
+#import <UIKit/UILayoutGuide.h>
+#import <UIKit/UINavigationController.h>
+#import <UIKit/UITextField.h>
+#import <UIKit/UIView.h>
+#import <UIKit/UIWindow.h>
+
+#import <UIKit/UIGestureRecognizerDelegate.h>
+#import <UIKit/UIGestureRecognizerSubclass.h>
+#import <UIKit/UILongPressGestureRecognizer.h>
+#import <UIKit/UIPinchGestureRecognizer.h>
+#import <UIKit/UISwipeGestureRecognizer.h>
+#import <UIKit/UITapGestureRecognizer.h>
+
 #import "UIAnimationNotification.h"
-#import "QuartzCore/CABasicAnimation.h"
-#import "QuartzCore/CALayer.h"
 #import "UIAppearanceSetter.h"
 #import "UIViewInternal.h"
 #import "UIWindowInternal.h"
@@ -29,16 +43,22 @@
 #import "CAAnimationInternal.h"
 #import <AutoLayout.h>
 #import <NSLayoutConstraint+AutoLayout.h>
-#import <UIView+AutoLayout.h>
 #import "NSLayoutAnchorInternal.h"
-#import "CACompositor.h"
+#import <UILayoutGuide+AutoLayout.h>
+#import <UIView+AutoLayout.h>
 #import <windows.h>
 #import <LoggingNative.h>
 #import <NSLogging.h>
 #import <objc/blocks_runtime.h>
-#import "UWP/WindowsUIXamlControls.h"
 #import "UIEventInternal.h"
 #import "UITouchInternal.h"
+#import "_UIDirectManipulationRecognizer.h"
+
+#import <QuartzCore/CABasicAnimation.h>
+#import <QuartzCore/CALayer.h>
+#import <QuartzCore/CAMediaTimingFunction.h>
+#import <QuartzCore/CATransition.h>
+#import <QuartzCore/CoreAnimationFunctions.h>
 
 #import <math.h>
 #import <string>
@@ -46,12 +66,13 @@
 @class UIAppearanceSetter;
 
 static const wchar_t* TAG = L"UIView";
+
 static const bool DEBUG_ALL = false;
 static const bool DEBUG_TOUCHES_VERBOSE = DEBUG_ALL || false;
 static const bool DEBUG_TOUCHES = DEBUG_TOUCHES_VERBOSE || false;
-static const bool DEBUG_TOUCHES_LIGHT = DEBUG_TOUCHES || true;
+static const bool DEBUG_TOUCHES_LIGHT = DEBUG_TOUCHES || false;
 static const bool DEBUG_HIT_TESTING = DEBUG_ALL || false;
-static const bool DEBUG_HIT_TESTING_LIGHT = DEBUG_HIT_TESTING || true;
+static const bool DEBUG_HIT_TESTING_LIGHT = DEBUG_HIT_TESTING || false;
 static const bool DEBUG_GESTURES = DEBUG_ALL || false;
 static const bool DEBUG_LAYOUT = DEBUG_ALL || false;
 
@@ -59,6 +80,7 @@ const CGFloat UIViewNoIntrinsicMetric = -1.0f;
 
 /** @Status Stub */
 const CGSize UILayoutFittingCompressedSize = StubConstant();
+
 /** @Status Stub */
 const CGSize UILayoutFittingExpandedSize = StubConstant();
 
@@ -104,20 +126,6 @@ int viewCount = 0;
 @synthesize collisionBoundsType;
 @synthesize collisionBoundingPath;
 
-// TODO: GitHub issue 508 and 509
-// We need a type-safe way to do this with projections.  This is copied verbatim from the projections
-// code and works perfectly for this limited usage, but we don't do any type validation below.
-inline id _createRtProxy(Class cls, IInspectable* iface) {
-    // Oddly, WinRT can hand us back NULL objects from successful function calls. Plumb these through as nil.
-    if (!iface) {
-        return nil;
-    }
-
-    RTObject* ret = [NSAllocateObject(cls, 0, 0) init];
-    [ret setComObj:iface];
-    return [ret autorelease];
-}
-
 ///////////////////////////////////////////////////////////////////////////////////////////
 // TODO: This block of code will likely change when we incorporate WinRT GestureRecognizers
 NSMutableDictionary* g_curGesturesDict;
@@ -133,25 +141,32 @@ BOOL g_resetAllTrackingGestures = TRUE;
         g_currentlyTrackingGesturesList = [NSMutableArray new];
     }
 
-    bool handled = false;
+    BOOL shouldCancelTouches = false;
 
-    UIView* views[128];
+    const static int MAXIMUM_VIEW_ALLOWED = 128;
+    UIView* views[MAXIMUM_VIEW_ALLOWED];
     int viewDepth = 0;
+
     if (g_resetAllTrackingGestures) {
         g_resetAllTrackingGestures = FALSE;
-        //  Find gesture recognizers in the heirarchy, back-first
+        // Find gesture recognizers in the hierarchy, back-first
         UIView* curView = view;
 
         while (curView != nil) {
-            assert(viewDepth < 128);
-            views[viewDepth++] = curView;
-            curView = curView->priv->superview;
+            if (viewDepth < MAXIMUM_VIEW_ALLOWED) {
+                views[viewDepth++] = curView;
+                curView = curView->priv->superview;
+            } else {
+                TraceWarning(TAG, L"The nubmer of view in hierachy exceed maximum allowed, ignoring the rest");
+                break;
+            }
         }
 
+        // adding those enabled gestures into current tracking gestureList
         for (int i = viewDepth - 1; i >= 0; i--) {
             curView = views[i];
 
-            for (UIGestureRecognizer* curgesture in curView->priv->gestures) {
+            for (UIGestureRecognizer* curgesture in curView->priv->gestures.get()) {
                 if ([curgesture isEnabled]) {
                     [g_currentlyTrackingGesturesList addObject:curgesture];
                 }
@@ -159,14 +174,29 @@ BOOL g_resetAllTrackingGestures = TRUE;
         }
     }
 
-    viewDepth = 0;
-
     g_curGesturesDict = [NSMutableDictionary new];
 
-    UIGestureRecognizer* recognizers[128];
+    const static int MAXIMUM_GESTURE_ALLOWED = 128;
+    const static int MAXIMUM_DMANIPGESTURE_ALLOWED = 16;
 
+    UIGestureRecognizer* recognizers[MAXIMUM_GESTURE_ALLOWED];
+    UIGestureRecognizer* dManipRecognizers[MAXIMUM_DMANIPGESTURE_ALLOWED];
+
+    // separating all enabled gestures into its own list
+    // and adding each list into a tracking dictionary
+    int gestureCount = 0;
+    int dManipGestureCount = 0;
     for (UIGestureRecognizer* curgesture in g_currentlyTrackingGesturesList) {
-        recognizers[viewDepth++] = curgesture;
+        if (![curgesture isKindOfClass:[_UIDMPanGestureRecognizer class]]) {
+            recognizers[gestureCount++] = curgesture;
+        } else {
+            if (dManipGestureCount < MAXIMUM_DMANIPGESTURE_ALLOWED) {
+                dManipRecognizers[dManipGestureCount++] = curgesture;
+            } else {
+                TraceWarning(TAG, L"The number of DManip gestures exceed maximum allowed, ignoring the rest");
+                break;
+            }
+        }
 
         id gestureClass = [curgesture class];
         NSMutableArray* arr = [g_curGesturesDict objectForKey:gestureClass];
@@ -175,12 +205,14 @@ BOOL g_resetAllTrackingGestures = TRUE;
             [g_curGesturesDict setObject:arr forKey:gestureClass];
             [arr release];
         }
+
         [arr addObject:curgesture];
     }
 
-    for (int i = 0; i < viewDepth; i++) {
+    // sendTouch to gesture for state transiton
+    BOOL gestureOnGoing = NO;
+    for (int i = 0; i < gestureCount; i++) {
         UIGestureRecognizer* curgesture = recognizers[i];
-
         if ([curgesture state] != UIGestureRecognizerStateCancelled) {
             if (DEBUG_GESTURES) {
                 TraceVerbose(TAG, L"Checking gesture %hs.", object_getClassName(curgesture));
@@ -194,55 +226,96 @@ BOOL g_resetAllTrackingGestures = TRUE;
 
             if (send) {
                 [curgesture performSelector:eventName withObject:[NSMutableSet setWithObject:touch] withObject:event];
+                // verify if gesture state is Began or recognized after transition
+                if ((curgesture.state == UIGestureRecognizerStateBegan) || (curgesture.state == UIGestureRecognizerStateRecognized)) {
+                    gestureOnGoing = YES;
+                    if (DEBUG_GESTURES) {
+                        TraceVerbose(TAG,
+                                     L"gesture %hs is in state %d, cancel DManipGesture.",
+                                     object_getClassName(curgesture),
+                                     curgesture.state);
+                    }
+                }
+            }
+        }
+    }
+
+    // scanning DManip Gestures, if one gesture is ongoing, cancel all DManip Gestures
+    // otherwise, send Touch to DManip gestures
+    for (int i = 0; i < dManipGestureCount; i++) {
+         UIGestureRecognizer* dManipGesture = dManipRecognizers[i];
+        if (gestureOnGoing) {
+            [dManipGesture _cancelIfActive];
+            if (DEBUG_GESTURES) {
+                TraceVerbose(TAG, L"Cancelled DManip gesture %hs .", object_getClassName(dManipGesture));
+            }
+        } else {
+            if ([dManipGesture state] != UIGestureRecognizerStateCancelled) {
+                id delegate = [dManipGesture delegate];
+
+                BOOL send = TRUE;
+                if (touch.phase == UITouchPhaseBegan && [delegate respondsToSelector:@selector(gestureRecognizer:shouldReceiveTouch:)]) {
+                    send = [delegate gestureRecognizer:dManipGesture shouldReceiveTouch:touch];
+                }
+
+                if (send) {
+                    [dManipGesture performSelector:eventName withObject:[NSMutableSet setWithObject:touch] withObject:event];
+                    if (DEBUG_GESTURES) {
+                        TraceVerbose(TAG,
+                                     L"Send Touch with phase=%d to DManip gesture %hs.",
+                                     touch.phase,
+                                     object_getClassName(dManipGesture));
+                    }
+                }
             }
         }
     }
 
     // gesture priority list
-    const static id s_gesturesPriority[] = {[UIPinchGestureRecognizer class],
-                                            [UISwipeGestureRecognizer class],
-                                            [UIPanGestureRecognizer class],
-                                            [UILongPressGestureRecognizer class],
-                                            [UITapGestureRecognizer class] };
+    const static id s_gesturesPriority[] = {[UIPinchGestureRecognizer class], [UISwipeGestureRecognizer class],
+                                            [UIPanGestureRecognizer class],   [UILongPressGestureRecognizer class],
+                                            [UITapGestureRecognizer class],   [_UIDMPanGestureRecognizer class] };
 
     const static int s_numGestureTypes = sizeof(s_gesturesPriority) / sizeof(s_gesturesPriority[0]);
 
-    //  Process all gestures
-    for (int i = 0; i < s_numGestureTypes; i++) {
-        id curgestureClass = s_gesturesPriority[i];
+    //  Process all gestures, including DM gesture
+    for (auto const& curgestureClass : s_gesturesPriority) {
         id gestures = [g_curGesturesDict objectForKey:curgestureClass];
-        if ([curgestureClass _fireGestures:gestures]) {
-            handled = true;
-            if (handled && DEBUG_GESTURES) {
+        if ([curgestureClass _fireGestures:gestures shouldCancelTouches:shouldCancelTouches]) {
+            if (DEBUG_GESTURES) {
                 TraceVerbose(TAG, L"Gesture (%hs) handled.", object_getClassName(curgestureClass));
             }
         }
     }
 
-    //  Removed/reset failed/done gestures
-    for (int i = 0; i < viewDepth; i++) {
-        UIGestureRecognizer* curgesture = recognizers[i];
-        UIGestureRecognizerState state = (UIGestureRecognizerState)[curgesture state];
-
-        if (state == UIGestureRecognizerStateRecognized || state == UIGestureRecognizerStateEnded ||
-            state == UIGestureRecognizerStateFailed || state == UIGestureRecognizerStateCancelled) {
-            [curgesture reset];
-
-            if (DEBUG_GESTURES) {
-                TraceVerbose(TAG, L"Removing gesture %hs %x state=%d.", object_getClassName(curgesture), curgesture, state);
-            }
-
-            [g_currentlyTrackingGesturesList removeObject:curgesture];
-            id gesturesArr = [g_curGesturesDict objectForKey:[curgesture class]];
-            [gesturesArr removeObject:curgesture];
-        }
-    }
+    //  Removed/reset failed/done gestures, including gestures and dManipGestures
+    [self _clearFailedOrEndedGesture:recognizers length:gestureCount];
+    [self _clearFailedOrEndedGesture:dManipRecognizers length:dManipGestureCount];
 
     [g_curGesturesDict release];
     g_curGesturesDict = nil;
 
-    return handled;
+    return shouldCancelTouches;
 }
+
+- (void)_clearFailedOrEndedGesture:(UIGestureRecognizer**)recognizers length:(int)length {
+    for (int i = 0; i < length; i++) {
+        UIGestureRecognizerState state = (UIGestureRecognizerState)[recognizers[i] state];
+        if (state == UIGestureRecognizerStateRecognized || state == UIGestureRecognizerStateEnded ||
+            state == UIGestureRecognizerStateFailed || state == UIGestureRecognizerStateCancelled) {
+            [recognizers[i] reset];
+
+            if (DEBUG_GESTURES) {
+                TraceVerbose(TAG, L"Removing gesture %hs %x state=%d.", object_getClassName(recognizers[i]), recognizers[i], state);
+            }
+
+            [g_currentlyTrackingGesturesList removeObject:recognizers[i]];
+            id gesturesArr = [g_curGesturesDict objectForKey:[recognizers[i] class]];
+            [gesturesArr removeObject:recognizers[i]];
+        }
+    }
+}
+
 // TODO: This block of code will likely change when we incorporate WinRT GestureRecognizers
 ///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -295,7 +368,7 @@ static void _resetTouchPoint(TouchPoint& touchPoint) {
     touchPoint.pointerId = TouchPoint::s_invalidPointerId;
 }
 
-static std::string _printViewHeirarchy(UIView* leafView) {
+static std::string _printViewhierarchy(UIView* leafView) {
     std::string logString;
     char buffer[1024];
     for (UIView* current = leafView; current != nil; current = current->priv->superview) {
@@ -305,7 +378,7 @@ static std::string _printViewHeirarchy(UIView* leafView) {
                                           object_getClassName(current),
                                           current,
                                           [current _isHitTestable] ? "true" : "false",
-                                          [current->priv->_xamlInputElement isHitTestVisible] ? "true" : "false");
+                                          [current.layer._xamlElement isHitTestVisible] ? "true" : "false");
         buffer[charactersWritten] = '\0';
         logString += buffer;
     }
@@ -330,8 +403,8 @@ static std::string _printViewHeirarchy(UIView* leafView) {
 
     if (hitTestResult && (hitTestResult != self)) {
         if (DEBUG_HIT_TESTING_LIGHT) {
-            std::string selfTree = _printViewHeirarchy(self);
-            std::string hitTestTree = _printViewHeirarchy(hitTestResult);
+            std::string selfTree = _printViewhierarchy(self);
+            std::string hitTestTree = _printViewhierarchy(hitTestResult);
             TraceWarning(TAG,
                          L"XAML's chosen hit test view: \r\n\t %hs \r\n ...does not match the legacy hit test results: \r\n\t %hs.",
                          selfTree.c_str(),
@@ -375,7 +448,7 @@ static std::string _printViewHeirarchy(UIView* leafView) {
     }
 
     // Get the point value in this view's parent UIWindow's coordinates
-    WUIPointerPoint* pointerPoint = [pointerEventArgs getCurrentPoint:(owningWindow ? owningWindow->priv->_xamlInputElement : nil)];
+    WUIPointerPoint* pointerPoint = [pointerEventArgs getCurrentPoint:(owningWindow ? owningWindow.layer._xamlElement : nil)];
 
     // Locate the static TouchPoint object for this pointerId
     TouchPoint& touchPoint = _touchPointFromPointerId([pointerPoint pointerId]);
@@ -392,7 +465,9 @@ static std::string _printViewHeirarchy(UIView* leafView) {
     }
 
     // Update the touch info for this pointer event
-    [touchPoint.touch _updateWithPoint:pointerPoint forPhase:touchPhase];
+    // Also, adding pointerEventArgs to the specific Touch so that it can be used in UIButton's touchesBegan:withEvent method
+    // to mark the event as unhandled
+    [touchPoint.touch _updateWithPoint:pointerPoint routedEventArgs:pointerEventArgs forPhase:touchPhase];
 
     // Preprocess pointer event
     SEL touchEventName;
@@ -403,6 +478,13 @@ static std::string _printViewHeirarchy(UIView* leafView) {
 
             // Add this touch to the set of all current touches in the app
             [s_allTouches addObject:touchPoint.touch];
+
+            if (DEBUG_HIT_TESTING_LIGHT) {
+                TraceVerbose(TAG, L"Hit testing view %hs(0x%p).", object_getClassName(self), self);
+            }
+
+            // Update the hit-tested view. (Only one owner per UITouch lifetime)
+            touchPoint.touch->_view = [self _doHitTest:touchPoint.touch allTouches:s_allTouches];
 
             // Assign the correct selector
             touchEventName = @selector(touchesBegan:withEvent:);
@@ -432,12 +514,6 @@ static std::string _printViewHeirarchy(UIView* leafView) {
     // Keep the static touch event up to date
     [s_touchEvent _updateWithTouches:s_allTouches touchEvent:touchPoint.touch];
 
-    // Set the touch's view
-    if (DEBUG_HIT_TESTING_LIGHT) {
-        TraceVerbose(TAG, L"Hit testing view %hs(0x%p) for touchPhase %d.", object_getClassName(self), self, touchPhase);
-    }
-    touchPoint.touch->_view = [self _doHitTest:touchPoint.touch allTouches:s_allTouches];
-
     // Run through GestureRecognizers
     bool touchCanceled =
         [touchPoint.touch->_view _processGesturesForTouch:touchPoint.touch event:s_touchEvent touchEventName:touchEventName];
@@ -448,7 +524,14 @@ static std::string _printViewHeirarchy(UIView* leafView) {
         touchEventName = @selector(touchesCancelled:withEvent:);
     }
 
-    if (touchPhase != UITouchPhaseBegan && ![touchPoint.touch->_view->priv->currentTouches containsObject:touchPoint.touch]) {
+    if (!touchPoint.touch->_view) {
+        // Ignore if the pointer isn't captured
+        if (DEBUG_TOUCHES_LIGHT) {
+            TraceVerbose(TAG,
+                L"View for touch is nil!, ignoring touch for touchPhase %d.",
+                touchPhase);
+        }
+    } else if (touchPhase != UITouchPhaseBegan && ![touchPoint.touch->_view->priv->currentTouches containsObject:touchPoint.touch]) {
         // Ignore if the pointer isn't captured
         if (DEBUG_TOUCHES_LIGHT) {
             TraceVerbose(TAG,
@@ -482,7 +565,6 @@ static std::string _printViewHeirarchy(UIView* leafView) {
                 }
 
                 // Use this sole touch for the event we send to the view
-                // TODO: This is how it worked before; is that the expected behavior?
                 touchesForEvent = [NSMutableSet setWithObject:touchPoint.touch];
                 break;
 
@@ -494,9 +576,12 @@ static std::string _printViewHeirarchy(UIView* leafView) {
                                  static_cast<UIView*>(touchPoint.touch->_view));
                 }
 
-                // Use *all* of the view's current touches for the event we send to to it
-                // TODO: This is how it worked before; is that the expected behavior?
-                touchesForEvent = [NSMutableSet setWithArray:touchPoint.touch->_view->priv->currentTouches];
+                // There was a time we used *all* of the view's current tracked touches for the event, rather than one
+                // at a time. We likely chose this because the iOS input stack was grouping touches together, however
+                // that no longer appears to be the case. Grouping them causes a problem when a new touch begins,
+                // another moves, and both were sent as a move, causing previousLocationInView to return bogus results.
+                touchesForEvent = [NSMutableSet setWithObject:touchPoint.touch];
+
                 break;
 
             case UITouchPhaseEnded:
@@ -513,7 +598,6 @@ static std::string _printViewHeirarchy(UIView* leafView) {
                 [touchPoint.touch->_view->priv->currentTouches removeObject:touchPoint.touch];
 
                 // Use this sole touch for the event we send to the view
-                // TODO: This is how it worked before; is that the expected behavior?
                 touchesForEvent = [NSMutableSet setWithObject:touchPoint.touch];
                 break;
 
@@ -593,10 +677,7 @@ static std::string _printViewHeirarchy(UIView* leafView) {
 
     if ([self alpha] <= 0.01f) {
         if (DEBUG_HIT_TESTING) {
-            TraceVerbose(TAG,
-                         L"_isHitTestable returning NO for %hs(0x%p) because [self alpha] <= 0.01f.",
-                         object_getClassName(self),
-                         self);
+            TraceVerbose(TAG, L"_isHitTestable returning NO for %hs(0x%p) because [self alpha] <= 0.01f.", object_getClassName(self), self);
         }
         return NO;
     }
@@ -610,7 +691,7 @@ static std::string _printViewHeirarchy(UIView* leafView) {
     BOOL isHitTestable = [self _isHitTestable];
 
     if (DEBUG_HIT_TESTING) {
-        if ([self->priv->_xamlInputElement isHitTestVisible] != isHitTestable) {
+        if ([self.layer._xamlElement isHitTestVisible] != isHitTestable) {
             TraceVerbose(TAG,
                          L"Changing the XAML element for %hs(0x%p) to hit-testable=%hs.",
                          object_getClassName(self),
@@ -625,16 +706,42 @@ static std::string _printViewHeirarchy(UIView* leafView) {
         }
     }
 
-    // Update our _xamlInputElement as needed
-    [self->priv->_xamlInputElement setIsHitTestVisible:isHitTestable];
+    // Update our _xamlElement as needed
+    [self.layer._xamlElement setIsHitTestVisible:isHitTestable];
 }
 
-- (void)_initPriv {
+- (void)_initPrivWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
+    // Nothing to do if we're already initialized
     if (self->priv) {
         return;
     }
 
+    if (DEBUG_LAYOUT) {
+        TraceVerbose(TAG,
+                     L"[%f,%f] @ %fx%f",
+                     (float)frame.origin.x,
+                     (float)frame.origin.y,
+                     (float)frame.size.width,
+                     (float)frame.size.height);
+    }
+
     viewCount++;
+
+    // If we don't have a backing xamlElement, create one for this UIView type
+    if (!xamlElement) {
+        xamlElement = [[self class] createXamlElement];
+    }
+
+    // Create and initialize our backing presentation layer
+    if (!xamlElement) {
+        // No Xaml element was specified, so default layer init is fine
+        self->layer.attach([[[[self class] layerClass] alloc] init]);
+    } else {
+        // A Xaml element was specified, so we must initialize the layer with this backing xaml element
+        self->layer.attach([[[[self class] layerClass] alloc] _initWithXamlElement:xamlElement]);
+    }
+
+    [self->layer setDelegate:self];
 
     // Create the private backing object
     self->priv = new UIViewPrivateState(self);
@@ -643,23 +750,15 @@ static std::string _printViewHeirarchy(UIView* leafView) {
     static bool isAutoLayoutInitialized = InitializeAutoLayout();
     [self autoLayoutAlloc];
 
-    // Create and initialize our backing presentation layer
-    self->layer.attach([[[self class] layerClass] new]);
-    [self->layer setDelegate:self];
-
-    // Grab the layer's backing XAML node
-    Microsoft::WRL::ComPtr<IInspectable> inspectableNode(GetCACompositor()->GetXamlLayoutElement([self->layer _presentationNode]));
-    self->priv->_xamlInputElement = _createRtProxy([WXFrameworkElement class], inspectableNode.Get());
-
     // Set the XAML element's name so it's easily found in the VS live tree viewer
-    [self->priv->_xamlInputElement setName:[NSString stringWithUTF8String:object_getClassName(self)]];
+    [self.layer._xamlElement setName:[NSString stringWithUTF8String:object_getClassName(self)]];
 
     // Subscribe to the XAML node's input events
     __block UIView* weakSelf = self;
     self->priv->_pointerPressedEventRegistration =
-        [self->priv->_xamlInputElement addPointerPressedEvent:^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
+        [self.layer._xamlElement addPointerPressedEvent:^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
             // Capture the pointer within this xaml element
-            if (![weakSelf->priv->_xamlInputElement capturePointer:e.pointer]) {
+            if (![weakSelf.layer._xamlElement capturePointer:e.pointer]) {
                 TraceWarning(TAG, L"Failed to capture pointer...");
             }
 
@@ -669,24 +768,24 @@ static std::string _printViewHeirarchy(UIView* leafView) {
         }];
 
     self->priv->_pointerMovedEventRegistration =
-        [self->priv->_xamlInputElement addPointerMovedEvent:^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
+        [self.layer._xamlElement addPointerMovedEvent:^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
             // Set the event to handled, then process it as a UITouch
             e.handled = YES;
             [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseMoved];
         }];
 
     self->priv->_pointerReleasedEventRegistration =
-        [self->priv->_xamlInputElement addPointerReleasedEvent:^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
+        [self.layer._xamlElement addPointerReleasedEvent:^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
             // Set the event to handled, then process it as a UITouch
             e.handled = YES;
             [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseEnded];
 
             // release the pointer capture
-            [weakSelf->priv->_xamlInputElement releasePointerCapture:e.pointer];
+            [weakSelf.layer._xamlElement releasePointerCapture:e.pointer];
         }];
 
     self->priv->_pointerCanceledEventRegistration =
-        [self->priv->_xamlInputElement addPointerCanceledEvent:^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
+        [self.layer._xamlElement addPointerCanceledEvent:^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
             // Set the event to handled, then process it as a UITouch
             e.handled = YES;
             // Uncommon event; we'll use the same handling as pointer capture lost (below)
@@ -694,7 +793,7 @@ static std::string _printViewHeirarchy(UIView* leafView) {
         }];
 
     self->priv->_pointerCaptureLostEventRegistration =
-        [self->priv->_xamlInputElement addPointerCaptureLostEvent:^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
+        [self.layer._xamlElement addPointerCaptureLostEvent:^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
             // Set the event to handled, then process it as a UITouch
             e.handled = YES;
             // Treat capture lost just like a pointer canceled (which is actually quite uncommon)
@@ -706,7 +805,7 @@ static std::string _printViewHeirarchy(UIView* leafView) {
  @Public No
 */
 - (void)initAccessibility {
-    self.isAccessibilityElement = FALSE;
+    self.isAccessibilityElement = NO;
     self.accessibilityTraits = UIAccessibilityTraitNone;
     [self updateAccessibility];
 }
@@ -721,29 +820,15 @@ static std::string _printViewHeirarchy(UIView* leafView) {
 /**
  @Status Interoperable
 */
-+ (instancetype)allocWithZone:(NSZone*)zone {
-    UIView* ret = [super allocWithZone:zone];
-
+- (instancetype)initWithFrame:(CGRect)frame {
     // Run on the main thread because the underlying XAML objects can only be
     // called from the UI thread
     RunSynchronouslyOnMainThread(^{
-        [ret _initPriv];
-    });
+        [self _initPrivWithFrame:frame xamlElement:nil];
 
-    return ret;
-}
-
-static UIView* initInternal(UIView* self, CGRect pos) {
-    if (DEBUG_LAYOUT) {
-        TraceVerbose(TAG, L"[%f,%f] @ %fx%f", (float)pos.origin.x, (float)pos.origin.y, (float)pos.size.width, (float)pos.size.height);
-    }
-
-    // Run on the main thread because the underlying XAML objects can only be
-    // called from the UI thread
-    RunSynchronouslyOnMainThread(^{
-        [self _initPriv];
+        // Default state
         [self setOpaque:TRUE];
-        [self setFrame:pos];
+        [self setFrame:frame];
         [self setNeedsDisplay];
         [self initAccessibility];
     });
@@ -752,10 +837,22 @@ static UIView* initInternal(UIView* self, CGRect pos) {
 }
 
 /**
- @Status Interoperable
+ Microsoft extension
 */
-- (instancetype)initWithFrame:(CGRect)pos {
-    return initInternal(self, pos);
+- (instancetype)initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
+    // Run on the main thread because the underlying XAML objects can only be
+    // called from the UI thread
+    RunSynchronouslyOnMainThread(^{
+        [self _initPrivWithFrame:frame xamlElement:xamlElement];
+
+        // Default state
+        [self setOpaque:TRUE];
+        [self setFrame:frame];
+        [self setNeedsDisplay];
+        [self initAccessibility];
+    });
+
+    return self;
 }
 
 /**
@@ -783,8 +880,10 @@ static UIView* initInternal(UIView* self, CGRect pos) {
  @Notes May not be fully implemented
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
-    CGRect bounds;
+    // Init priv, get our backing Xaml element, etc.
+    [self _initPrivWithFrame:CGRectZero xamlElement:nil];
 
+    CGRect bounds;
     id boundsObj = [coder decodeObjectForKey:@"UIBounds"];
     if (boundsObj != nil) {
         if ([boundsObj isKindOfClass:[NSString class]]) {
@@ -800,7 +899,6 @@ static UIView* initInternal(UIView* self, CGRect pos) {
     }
 
     CGPoint center;
-
     id centerObj = [coder decodeObjectForKey:@"UICenter"];
     if (centerObj) {
         if ([centerObj isKindOfClass:[NSString class]]) {
@@ -904,8 +1002,10 @@ static UIView* initInternal(UIView* self, CGRect pos) {
                 for (int i = 0; i < [removeConstraints count]; i++) {
                     NSLayoutConstraint* wayward = [removeConstraints objectAtIndex:i];
                     if (wayward == constraint) {
-                        NSTraceVerbose(TAG, @"Removing constraint (%@)", [wayward description]);
-                        [wayward _printConstraint];
+                        if (DEBUG_LAYOUT) {
+                            NSTraceVerbose(TAG, @"Removing constraint (%@)", [wayward description]);
+                            [wayward _printConstraint];
+                        }
                         remove = true;
                         break;
                     }
@@ -921,7 +1021,9 @@ static UIView* initInternal(UIView* self, CGRect pos) {
         }
     }
 
-    [NSLayoutConstraint _printConstraints:self.constraints];
+    if (DEBUG_LAYOUT) {
+        [NSLayoutConstraint _printConstraints:self.constraints];
+    }
 
     [self setHidden:[coder decodeInt32ForKey:@"UIHidden"]];
 
@@ -1190,8 +1292,10 @@ static void doResize(unsigned mask, float& pos, float& size, float parentSize, f
 }
 
 static void adjustSubviews(UIView* self, CGSize parentSize, CGSize delta) {
-    if (!self->priv)
+    // Nothing to do if we're not even initialized yet
+    if (!self->priv) {
         return;
+    }
 
     if (self->priv->autoresizesSubviews) {
         //  Go through each subview and resize it
@@ -1432,7 +1536,7 @@ static float doRound(float f) {
     }
 
     if (window == nil) {
-        for (UIGestureRecognizer* curgesture in priv->gestures) {
+        for (UIGestureRecognizer* curgesture in priv->gestures.get()) {
             if ([curgesture respondsToSelector:@selector(_cancelIfActive)]) {
                 [curgesture _cancelIfActive];
             }
@@ -1485,7 +1589,7 @@ static float doRound(float f) {
     }
 
     if (window == nil) {
-        /* Optimization: release contents when not part of the view heirarchy */
+        /* Optimization: release contents when not part of the view hierarchy */
         [layer _releaseContents:FALSE];
     }
     [self didMoveToWindow];
@@ -1574,12 +1678,7 @@ static float doRound(float f) {
     }
 
     if (DEBUG_LAYOUT) {
-        TraceVerbose(TAG,
-                     L"Adding subview %hs(0x%p) to %hs(0x%p)",
-                     object_getClassName(subview),
-                     subview,
-                     object_getClassName(self),
-                     self);
+        TraceVerbose(TAG, L"Adding subview %hs(0x%p) to %hs(0x%p)", object_getClassName(subview), subview, object_getClassName(self), self);
     }
 
     UIWindow* subviewWindow = [subview _getWindowInternal];
@@ -2288,11 +2387,7 @@ static float doRound(float f) {
     priv->userInteractionEnabled = enabled;
 
     if (DEBUG_HIT_TESTING) {
-        TraceVerbose(TAG,
-                     L"Setting %hs(0x%p) to userInteractionEnabled=%hs.",
-                     object_getClassName(self),
-                     self,
-                     enabled ? "true" : "false");
+        TraceVerbose(TAG, L"Setting %hs(0x%p) to userInteractionEnabled=%hs.", object_getClassName(self), self, enabled ? "true" : "false");
     }
 
     // Keep our hit test state up to date
@@ -2444,6 +2539,13 @@ static float doRound(float f) {
 /**
  @Status Interoperable
 */
+- (BOOL)autoresizesSubviews {
+    return priv->autoresizesSubviews;
+}
+
+/**
+ @Status Interoperable
+*/
 - (void)setAutoresizesSubviews:(BOOL)autoresize {
     if (autoresize != priv->autoresizesSubviews) {
         priv->autoresizesSubviews = autoresize;
@@ -2565,7 +2667,6 @@ static float doRound(float f) {
 */
 - (void)updateConstraints {
     priv->_constraintsNeedUpdate = NO;
-
     [self autoLayoutUpdateConstraints];
 }
 
@@ -2929,7 +3030,8 @@ static float doRound(float f) {
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Spring parameters are ignored
 */
 + (void)animateWithDuration:(NSTimeInterval)duration
                       delay:(NSTimeInterval)delay
@@ -2938,8 +3040,7 @@ static float doRound(float f) {
                     options:(UIViewAnimationOptions)options
                  animations:(void (^)(void))animations
                  completion:(void (^)(BOOL finished))completion {
-    UNIMPLEMENTED();
-    completion(YES);
+    [self animateWithDuration:duration delay:delay options:options animations:animations completion:completion];
 }
 
 /**
@@ -3303,11 +3404,11 @@ static float doRound(float f) {
     TraceInfo(TAG, L"%d: dealloc %hs 0x%p: layer 0x%p", viewCount, object_getClassName(self), self, self->layer.get());
 
     // Unsubscribe from pointer events
-    [self->priv->_xamlInputElement removePointerPressedEvent:self->priv->_pointerPressedEventRegistration];
-    [self->priv->_xamlInputElement removePointerMovedEvent:self->priv->_pointerMovedEventRegistration];
-    [self->priv->_xamlInputElement removePointerReleasedEvent:self->priv->_pointerReleasedEventRegistration];
-    [self->priv->_xamlInputElement removePointerCanceledEvent:self->priv->_pointerCanceledEventRegistration];
-    [self->priv->_xamlInputElement removePointerCaptureLostEvent:self->priv->_pointerCaptureLostEventRegistration];
+    [self.layer._xamlElement removePointerPressedEvent:self->priv->_pointerPressedEventRegistration];
+    [self.layer._xamlElement removePointerMovedEvent:self->priv->_pointerMovedEventRegistration];
+    [self.layer._xamlElement removePointerReleasedEvent:self->priv->_pointerReleasedEventRegistration];
+    [self.layer._xamlElement removePointerCanceledEvent:self->priv->_pointerCanceledEventRegistration];
+    [self.layer._xamlElement removePointerCaptureLostEvent:self->priv->_pointerCaptureLostEventRegistration];
 
     [self removeFromSuperview];
     priv->backgroundColor = nil;
@@ -3325,13 +3426,11 @@ static float doRound(float f) {
         [subviewsCopy[i] release];
     }
 
-    for (UIGestureRecognizer* curgesture in priv->gestures) {
+    for (UIGestureRecognizer* curgesture in priv->gestures.get()) {
         if ([curgesture respondsToSelector:@selector(_setView:)]) {
             [curgesture _setView:nil];
         }
     }
-    [priv->gestures release];
-    [priv->currentTouches release];
 
     [self->layer setDelegate:nil];
 
@@ -3388,7 +3487,7 @@ static float doRound(float f) {
  @Status Interoperable
 */
 - (void)setGestureRecognizers:(NSArray*)gestures {
-    for (UIGestureRecognizer* curgesture in priv->gestures) {
+    for (UIGestureRecognizer* curgesture in priv->gestures.get()) {
         if ([curgesture isKindOfClass:[UIGestureRecognizer class]]) {
             [curgesture _setView:nil];
         }
@@ -3400,11 +3499,9 @@ static float doRound(float f) {
         }
     }
 
-    gestures = [gestures copy];
-    [priv->gestures release];
-    priv->gestures = gestures;
+    priv->gestures.attach([gestures copy]);
 
-    for (UIGestureRecognizer* curgesture in priv->gestures) {
+    for (UIGestureRecognizer* curgesture in priv->gestures.get()) {
         if ([curgesture isKindOfClass:[UIGestureRecognizer class]]) {
             [curgesture _setView:self];
         } else {
@@ -3491,7 +3588,11 @@ static float doRound(float f) {
  @Status Interoperable
 */
 - (void)invalidateIntrinsicContentSize {
-    [self autoLayoutInvalidateContentSize];
+    // The parent is always responsible for autolaying out its children, and just as on the reference platform,
+    // this triggers a layout pass on the superview only if our intrinsic content size has changed.
+    if ([self autoLayoutInvalidateContentSize]) {
+        [self.superview setNeedsLayout];
+    }
 }
 
 /**
@@ -3542,19 +3643,30 @@ static float doRound(float f) {
     return [viewScreenShot autorelease];
 }
 
-// Retrieves the XAML FrameworkElement backing this UIView.
+/**
+ Microsoft Extension
+ Retrieves the XAML FrameworkElement backing this UIView.
+*/
 - (WXFrameworkElement*)xamlElement {
-    // Derived UIViews currently assign their backing XAML FrameworkElement (if any) to their
-    // root CALayer's contentsElement property.  Setting a CALayer's contentsElement (which is null by default) results in
-    // the specified XAML FrameworkElement being added as a child of that CALayer.
-    WXFrameworkElement* layerContentElement = [self layer].contentsElement;
-    return layerContentElement ? layerContentElement : priv->_xamlInputElement.get();
+    return self.layer._xamlElement;
 }
 
-// Sets the backing CALayer's XAML contentsElement (which is null by default)
-// This results in the XAML FrameworkElement being added as a child of this UIView's root CALayer.
-- (void)setXamlElement:(WXFrameworkElement*)xamlElement {
-    [self layer].contentsElement = xamlElement;
+/**
+ Microsoft Extension
+*/
++ (WXFrameworkElement*)createXamlElement {
+    // Use CALayer's default backing Xaml element
+    return nil;
+}
+
+// Retrieve the backing XAML element's Automation Id
+- (NSString*)accessibilityIdentifier {
+    return [WUXAAutomationProperties getAutomationId:[self xamlElement]];
+}
+
+// Set the backing XAML element's Automation Id
+- (void)setAccessibilityIdentifier:(NSString*)accessibilityId {
+    [WUXAAutomationProperties setAutomationId:[self xamlElement] value:accessibilityId];
 }
 
 /**

@@ -19,13 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Media_Casting.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WMCCastingSource, WMCCastingConnectionErrorOccurredEventArgs, WMCCastingDevice, WMCCastingConnection,
-    WMCCastingDeviceSelectedEventArgs, WMCCastingDevicePickerFilter, WMCCastingDevicePicker;
-@protocol WMCICastingSource
-, WMCICastingConnectionErrorOccurredEventArgs, WMCICastingConnection, WMCICastingDevice, WMCICastingDeviceStatics,
-    WMCICastingDeviceSelectedEventArgs, WMCICastingDevicePickerFilter, WMCICastingDevicePicker;
+@class WMCCastingSource, WMCCastingConnectionErrorOccurredEventArgs, WMCCastingDevice, WMCCastingConnection, WMCCastingDeviceSelectedEventArgs, WMCCastingDevicePickerFilter, WMCCastingDevicePicker;
+@protocol WMCICastingSource, WMCICastingConnectionErrorOccurredEventArgs, WMCICastingConnection, WMCICastingDevice, WMCICastingDeviceStatics, WMCICastingDeviceSelectedEventArgs, WMCICastingDevicePickerFilter, WMCICastingDevicePicker;
 
 // Windows.Media.Casting.CastingPlaybackTypes
 enum _WMCCastingPlaybackTypes {
@@ -69,7 +72,7 @@ typedef unsigned WMCCastingConnectionState;
 #ifndef __WMCCastingSource_DEFINED__
 #define __WMCCastingSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 @interface WMCCastingSource : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -83,13 +86,13 @@ WINRT_EXPORT
 #ifndef __WMCCastingConnectionErrorOccurredEventArgs_DEFINED__
 #define __WMCCastingConnectionErrorOccurredEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 @interface WMCCastingConnectionErrorOccurredEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMCCastingConnectionErrorStatus errorStatus;
-@property (readonly) NSString* message;
+@property (readonly) NSString * message;
 @end
 
 #endif // __WMCCastingConnectionErrorOccurredEventArgs_DEFINED__
@@ -98,20 +101,18 @@ WINRT_EXPORT
 #ifndef __WMCCastingDevice_DEFINED__
 #define __WMCCastingDevice_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 @interface WMCCastingDevice : RTObject
-+ (NSString*)getDeviceSelector:(WMCCastingPlaybackTypes)type;
-+ (void)getDeviceSelectorFromCastingSourceAsync:(WMCCastingSource*)castingSource
-                                        success:(void (^)(NSString*))success
-                                        failure:(void (^)(NSError*))failure;
-+ (void)fromIdAsync:(NSString*)value success:(void (^)(WMCCastingDevice*))success failure:(void (^)(NSError*))failure;
++ (NSString *)getDeviceSelector:(WMCCastingPlaybackTypes)type;
++ (void)getDeviceSelectorFromCastingSourceAsync:(WMCCastingSource*)castingSource success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
++ (void)fromIdAsync:(NSString *)value success:(void (^)(WMCCastingDevice*))success failure:(void (^)(NSError*))failure;
 + (void)deviceInfoSupportsCastingAsync:(WDEDeviceInformation*)device success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* friendlyName;
+@property (readonly) NSString * friendlyName;
 @property (readonly) RTObject<WSSIRandomAccessStreamWithContentType>* icon;
-@property (readonly) NSString* id;
+@property (readonly) NSString * id;
 - (void)getSupportedCastingPlaybackTypesAsyncWithSuccess:(void (^)(WMCCastingPlaybackTypes))success failure:(void (^)(NSError*))failure;
 - (WMCCastingConnection*)createCastingConnection;
 @end
@@ -126,13 +127,17 @@ WINRT_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Media.Casting.CastingConnection
 #ifndef __WMCCastingConnection_DEFINED__
 #define __WMCCastingConnection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 @interface WMCCastingConnection : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -140,13 +145,11 @@ WINRT_EXPORT
 @property (retain) WMCCastingSource* source;
 @property (readonly) WMCCastingDevice* device;
 @property (readonly) WMCCastingConnectionState state;
-- (EventRegistrationToken)addErrorOccurredEvent:(void (^)(WMCCastingConnection*, WMCCastingConnectionErrorOccurredEventArgs*))del;
+- (EventRegistrationToken)addErrorOccurredEvent:(void(^)(WMCCastingConnection*, WMCCastingConnectionErrorOccurredEventArgs*))del;
 - (void)removeErrorOccurredEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStateChangedEvent:(void (^)(WMCCastingConnection*, RTObject*))del;
+- (EventRegistrationToken)addStateChangedEvent:(void(^)(WMCCastingConnection*, RTObject*))del;
 - (void)removeStateChangedEvent:(EventRegistrationToken)tok;
-- (void)requestStartCastingAsync:(WMCCastingSource*)value
-                         success:(void (^)(WMCCastingConnectionErrorStatus))success
-                         failure:(void (^)(NSError*))failure;
+- (void)requestStartCastingAsync:(WMCCastingSource*)value success:(void (^)(WMCCastingConnectionErrorStatus))success failure:(void (^)(NSError*))failure;
 - (void)disconnectAsyncWithSuccess:(void (^)(WMCCastingConnectionErrorStatus))success failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
@@ -157,7 +160,7 @@ WINRT_EXPORT
 #ifndef __WMCCastingDeviceSelectedEventArgs_DEFINED__
 #define __WMCCastingDeviceSelectedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 @interface WMCCastingDeviceSelectedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -171,7 +174,7 @@ WINRT_EXPORT
 #ifndef __WMCCastingDevicePickerFilter_DEFINED__
 #define __WMCCastingDevicePickerFilter_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 @interface WMCCastingDevicePickerFilter : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -188,7 +191,7 @@ WINRT_EXPORT
 #ifndef __WMCCastingDevicePicker_DEFINED__
 #define __WMCCastingDevicePicker_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 @interface WMCCastingDevicePicker : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -196,9 +199,9 @@ WINRT_EXPORT
 #endif
 @property (readonly) WDEDevicePickerAppearance* appearance;
 @property (readonly) WMCCastingDevicePickerFilter* filter;
-- (EventRegistrationToken)addCastingDevicePickerDismissedEvent:(void (^)(WMCCastingDevicePicker*, RTObject*))del;
+- (EventRegistrationToken)addCastingDevicePickerDismissedEvent:(void(^)(WMCCastingDevicePicker*, RTObject*))del;
 - (void)removeCastingDevicePickerDismissedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addCastingDeviceSelectedEvent:(void (^)(WMCCastingDevicePicker*, WMCCastingDeviceSelectedEventArgs*))del;
+- (EventRegistrationToken)addCastingDeviceSelectedEvent:(void(^)(WMCCastingDevicePicker*, WMCCastingDeviceSelectedEventArgs*))del;
 - (void)removeCastingDeviceSelectedEvent:(EventRegistrationToken)tok;
 - (void)show:(WFRect*)selection;
 - (void)showWithPlacement:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement;
@@ -206,3 +209,4 @@ WINRT_EXPORT
 @end
 
 #endif // __WMCCastingDevicePicker_DEFINED__
+

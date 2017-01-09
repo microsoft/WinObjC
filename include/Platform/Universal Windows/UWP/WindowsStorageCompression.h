@@ -19,11 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
+#define OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Storage_Compression.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WSCCompressor, WSCDecompressor;
-@protocol WSCICompressor
-, WSCIDecompressor, WSCICompressorFactory, WSCIDecompressorFactory;
+@protocol WSCICompressor, WSCIDecompressor, WSCICompressorFactory, WSCIDecompressorFactory;
 
 // Windows.Storage.Compression.CompressAlgorithm
 enum _WSCCompressAlgorithm {
@@ -49,6 +54,10 @@ typedef unsigned WSCCompressAlgorithm;
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Storage.Streams.IOutputStream
@@ -56,12 +65,13 @@ typedef unsigned WSCCompressAlgorithm;
 #define __WSSIOutputStream_DEFINED__
 
 @protocol WSSIOutputStream <WFIClosable>
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
-           success:(void (^)(unsigned int))success
-          progress:(void (^)(unsigned int))progress
-           failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
+@interface WSSIOutputStream : RTObject <WSSIOutputStream>
 @end
 
 #endif // __WSSIOutputStream_DEFINED__
@@ -70,21 +80,16 @@ typedef unsigned WSCCompressAlgorithm;
 #ifndef __WSCCompressor_DEFINED__
 #define __WSCCompressor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
 @interface WSCCompressor : RTObject <WSSIOutputStream, WFIClosable>
 + (WSCCompressor*)makeCompressor:(RTObject<WSSIOutputStream>*)underlyingStream ACTIVATOR;
-+ (WSCCompressor*)makeCompressorEx:(RTObject<WSSIOutputStream>*)underlyingStream
-                         algorithm:(WSCCompressAlgorithm)algorithm
-                         blockSize:(unsigned int)blockSize ACTIVATOR;
++ (WSCCompressor*)makeCompressorEx:(RTObject<WSSIOutputStream>*)underlyingStream algorithm:(WSCCompressAlgorithm)algorithm blockSize:(unsigned int)blockSize ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)finishAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (RTObject<WSSIOutputStream>*)detachStream;
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
-           success:(void (^)(unsigned int))success
-          progress:(void (^)(unsigned int))progress
-           failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
@@ -96,13 +101,12 @@ WINRT_EXPORT
 #define __WSSIInputStream_DEFINED__
 
 @protocol WSSIInputStream <WFIClosable>
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer
-            count:(unsigned int)count
-          options:(WSSInputStreamOptions)options
-          success:(void (^)(RTObject<WSSIBuffer>*))success
-         progress:(void (^)(unsigned int))progress
-          failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
+@interface WSSIInputStream : RTObject <WSSIInputStream>
 @end
 
 #endif // __WSSIInputStream_DEFINED__
@@ -111,20 +115,16 @@ WINRT_EXPORT
 #ifndef __WSCDecompressor_DEFINED__
 #define __WSCDecompressor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_COMPRESSION_EXPORT
 @interface WSCDecompressor : RTObject <WSSIInputStream, WFIClosable>
 + (WSCDecompressor*)makeDecompressor:(RTObject<WSSIInputStream>*)underlyingStream ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (RTObject<WSSIInputStream>*)detachStream;
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer
-            count:(unsigned int)count
-          options:(WSSInputStreamOptions)options
-          success:(void (^)(RTObject<WSSIBuffer>*))success
-         progress:(void (^)(unsigned int))progress
-          failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
 #endif // __WSCDecompressor_DEFINED__
+

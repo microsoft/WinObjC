@@ -19,11 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_SENSORS_CUSTOM_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_SENSORS_CUSTOM_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Devices_Sensors_Custom.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WDSCCustomSensor, WDSCCustomSensorReading, WDSCCustomSensorReadingChangedEventArgs;
-@protocol WDSCICustomSensorStatics
-, WDSCICustomSensor, WDSCICustomSensorReading, WDSCICustomSensorReadingChangedEventArgs;
+@protocol WDSCICustomSensorStatics, WDSCICustomSensor, WDSCICustomSensorReading, WDSCICustomSensorReadingChangedEventArgs;
 
 #include "WindowsFoundation.h"
 
@@ -33,17 +38,17 @@
 #ifndef __WDSCCustomSensor_DEFINED__
 #define __WDSCCustomSensor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_CUSTOM_EXPORT
 @interface WDSCCustomSensor : RTObject
-+ (NSString*)getDeviceSelector:(WFGUID*)interfaceId;
-+ (void)fromIdAsync:(NSString*)sensorId success:(void (^)(WDSCCustomSensor*))success failure:(void (^)(NSError*))failure;
++ (NSString *)getDeviceSelector:(WFGUID*)interfaceId;
++ (void)fromIdAsync:(NSString *)sensorId success:(void (^)(WDSCCustomSensor*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property unsigned int reportInterval;
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * deviceId;
 @property (readonly) unsigned int minimumReportInterval;
-- (EventRegistrationToken)addReadingChangedEvent:(void (^)(WDSCCustomSensor*, WDSCCustomSensorReadingChangedEventArgs*))del;
+- (EventRegistrationToken)addReadingChangedEvent:(void(^)(WDSCCustomSensor*, WDSCCustomSensorReadingChangedEventArgs*))del;
 - (void)removeReadingChangedEvent:(EventRegistrationToken)tok;
 - (WDSCCustomSensorReading*)getCurrentReading;
 @end
@@ -54,7 +59,7 @@ WINRT_EXPORT
 #ifndef __WDSCCustomSensorReading_DEFINED__
 #define __WDSCCustomSensorReading_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_CUSTOM_EXPORT
 @interface WDSCCustomSensorReading : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -69,7 +74,7 @@ WINRT_EXPORT
 #ifndef __WDSCCustomSensorReadingChangedEventArgs_DEFINED__
 #define __WDSCCustomSensorReadingChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SENSORS_CUSTOM_EXPORT
 @interface WDSCCustomSensorReadingChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -78,3 +83,4 @@ WINRT_EXPORT
 @end
 
 #endif // __WDSCCustomSensorReadingChangedEventArgs_DEFINED__
+

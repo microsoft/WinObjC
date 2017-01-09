@@ -19,7 +19,6 @@
 #import <Starboard.h>
 
 #import "CGContextInternal.h"
-#import "CGFontInternal.h"
 #import "CGPathInternal.h"
 #import "CGPatternInternal.h"
 #import "CoreGraphics/CGGeometry.h"
@@ -42,15 +41,15 @@ static const wchar_t* TAG = L"CGContextImpl";
 
 static IWLazyClassLookup _LazyUIFont("UIFont");
 
-id CGContextState::getCurFont() {
-    if (curFont == nil) {
-        curFont = [_LazyUIFont defaultFont];
+CGFontRef CGContextState::getCurFont() {
+    if (curFont == nullptr) {
+        curFont = CGFontCreateWithFontName(CFSTR("Segoe UI"));
     }
 
     return curFont;
 }
 
-void CGContextState::setCurFont(id font) {
+void CGContextState::setCurFont(CGFontRef font) {
     curFont = font;
 }
 
@@ -64,8 +63,6 @@ CGContextImpl::CGContextImpl(CGContextRef base, CGImageRef destinationImage) {
 
     curState->_imgClip = NULL;
     curState->_imgMask = NULL;
-    curState->curTextPosition.x = 0.0f;
-    curState->curTextPosition.y = 0.0f;
     curState->fontSize = 10.0f;
     curState->lineCap = 0;
     curState->lineWidth = 1.0f;
@@ -141,62 +138,23 @@ CGBlendMode CGContextImpl::CGContextGetBlendMode() {
     return curState->curBlendMode;
 }
 
-void CGContextImpl::CGContextShowTextAtPoint(float x, float y, const char* str, DWORD length) {
-    WORD* glyphs = (WORD*)IwMalloc(length * sizeof(WORD));
-    DWORD i;
-
-    for (i = 0; i < length; i++) {
-        glyphs[i] = str[i];
-    }
-
-    CGFontGetGlyphs(curState->getCurFont(), glyphs, length, glyphs);
-    CGContextShowGlyphsAtPoint(x, y, glyphs, length);
-
-    IwFree(glyphs);
+void CGContextImpl::CGContextShowTextAtPoint(float x, float y, const char* str, size_t length) {
+    UNIMPLEMENTED();
 }
 
-void CGContextImpl::CGContextShowGlyphsAtPoint(float x, float y, WORD* glyphs, int count) {
-    CGSize size;
-
-    _isDirty = true;
-
-    switch (curState->textDrawingMode) {
-        case kCGTextFill:
-        case kCGTextStroke:
-        case kCGTextFillStroke:
-        case kCGTextFillClip:
-        case kCGTextStrokeClip:
-        case kCGTextFillStrokeClip:
-            size = CGFontDrawGlyphsToContext(glyphs, count, x, y);
-            break;
-
-        case kCGTextClip:
-        case kCGTextInvisible:
-            CGFontMeasureGlyphs(curState->getCurFont(), curState->fontSize, glyphs, count, &size);
-            break;
-    }
-
-    curState->curTextPosition.x = x + size.width;
-    curState->curTextPosition.y = y;
+void CGContextImpl::CGContextShowGlyphsAtPoint(float x, float y, const CGGlyph* glyphs, size_t count) {
+    UNIMPLEMENTED();
 }
 
-void CGContextImpl::CGContextShowGlyphsWithAdvances(WORD* glyphs, CGSize* advances, int count) {
-    CGPoint curPos = { curState->curTextPosition.x, curState->curTextPosition.y };
-    _isDirty = true;
-
-    for (int i = 0; i < count; i++) {
-        CGFontDrawGlyphsToContext(&glyphs[i], 1, curPos.x, curPos.y);
-        curPos.x += advances[i].width;
-        curPos.y += advances[i].height;
-    }
-    curState->curTextPosition = curPos;
+void CGContextImpl::CGContextShowGlyphsWithAdvances(const CGGlyph* glyphs, const CGSize* advances, size_t count) {
+    UNIMPLEMENTED();
 }
 
-void CGContextImpl::CGContextShowGlyphs(WORD* glyphs, int count) {
-    CGContextShowGlyphsAtPoint(curState->curTextPosition.x, curState->curTextPosition.y, glyphs, count);
+void CGContextImpl::CGContextShowGlyphs(const CGGlyph* glyphs, size_t count) {
+    CGContextShowGlyphsAtPoint(curState->curTextMatrix.tx, curState->curTextMatrix.ty, glyphs, count);
 }
 
-void CGContextImpl::CGContextSetFont(id font) {
+void CGContextImpl::CGContextSetFont(CGFontRef font) {
     curState->setCurFont(font);
 }
 
@@ -213,8 +171,8 @@ void CGContextImpl::CGContextGetTextMatrix(CGAffineTransform* ret) {
 }
 
 void CGContextImpl::CGContextSetTextPosition(float x, float y) {
-    curState->curTextPosition.x = x;
-    curState->curTextPosition.y = y;
+    curState->curTextMatrix.tx = x;
+    curState->curTextMatrix.ty = y;
 }
 
 void CGContextImpl::CGContextSetTextDrawingMode(CGTextDrawingMode mode) {
@@ -423,8 +381,7 @@ void CGContextImpl::CGContextSelectFont(char* name, float size, DWORD encoding) 
 }
 
 void CGContextImpl::CGContextGetTextPosition(CGPoint* pos) {
-    pos->x = curState->curTextPosition.x;
-    pos->y = curState->curTextPosition.y;
+    *pos = { curState->curTextMatrix.tx, curState->curTextMatrix.ty };
 }
 
 void CGContextImpl::CGContextSaveGState() {
@@ -441,7 +398,6 @@ void CGContextImpl::CGContextSaveGState() {
     states[curStateNum].fontSize = curState->fontSize;
     states[curStateNum].textDrawingMode = curState->textDrawingMode;
     states[curStateNum].curTextMatrix = curState->curTextMatrix;
-    states[curStateNum].curTextPosition = curState->curTextPosition;
     states[curStateNum].curBlendMode = curState->curBlendMode;
     states[curStateNum]._imgClip = NULL;
     states[curStateNum]._imgMask = NULL;
@@ -742,12 +698,6 @@ void CGContextImpl::CGContextSetRGBStrokeColor(float r, float g, float b, float 
     curState->curStrokeColor.a = a;
 }
 
-CGSize CGContextImpl::CGFontDrawGlyphsToContext(WORD* glyphs, DWORD length, float x, float y) {
-    CGSize ret = { 0, 0 };
-
-    return ret;
-}
-
 void CGContextImpl::CGContextSetShadowWithColor(CGSize offset, float blur, CGColorRef color) {
     if (blur < 0) {
         blur = 0;
@@ -786,4 +736,11 @@ bool CGContextImpl::CGContextIsPointInPath(bool eoFill, float x, float y) {
 }
 CGPathRef CGContextImpl::CGContextCopyPath(void) {
     return NULL;
+}
+
+void CGContextImpl::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, bool transformByGlyph) {
+}
+
+// TODO 1077:: Remove once D2D render target is implemented
+void CGContextImpl::_CGContextSetScaleFactor(float scale) {
 }

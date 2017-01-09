@@ -19,9 +19,16 @@
 #include <UIKit/UILayoutGuide.h>
 #include <NSLayoutConstraint+AutoLayout.h>
 #include <UIView+AutoLayout.h>
+#include "LoggingNative.h"
 
 #define CL_NO_IO
 #define CL_NO_ID
+
+static const bool DEBUG_ALL = false;
+static const bool DEBUG_AUTO_LAYOUT_VERBOSE = DEBUG_ALL || false;
+static const bool DEBUG_AUTO_LAYOUT_LIGHT = DEBUG_ALL || false;
+
+static const wchar_t* TAG = L"AutoLayout";
 
 #include <cassowary-0.60/ClSimplexSolver.h>
 #include <cassowary-0.60/ClLinearEquation.h>
@@ -34,8 +41,9 @@ enum AutoLayoutDirection {
 };
 
 static ClSimplexSolver c_solver;
+static const float c_UIViewNoIntrinsicMetric = -1.0f;
 
-// Just to ensure linkage
+// Here to ensure linkage
 extern "C" bool InitializeAutoLayout() {
     return true;
 }
@@ -57,8 +65,13 @@ public:
         RemoveStays();
         for (int i = 0; i < NumDirections; i++) {
             if (_contentHuggingConstraint[i].FIsInSolver()) {
+                // We have to temporarily switch off auto-solve here to avoid exceptions
+                // TODO: Switch to manual solve mode at all times to avoid the special handling here, and to improve overall perf?
+                c_solver.SetAutosolve(false);
                 c_solver.RemoveConstraint(&_contentHuggingConstraint[i]);
                 c_solver.RemoveConstraint(&_contentCompressionResistanceConstraint[i]);
+                c_solver.SetAutosolve(true);
+                c_solver.Solve();
             }
         }
         [_associatedConstraints release];
@@ -102,9 +115,13 @@ public:
     ClLinearInequality _contentCompressionResistanceConstraint[NumDirections];
 
     NSMutableArray* _associatedConstraints;
+
+    // Cache intrinsic content sizes to avoid infinite layout cycles
+    CGSize _intrinsicContentSize = { c_UIViewNoIntrinsicMetric, c_UIViewNoIntrinsicMetric };
 };
 
-// Since categories can't have ivars, we bundle up a couple C++ classes in NSObjects and associate them to the UIView/UILayoutGuide/NSLayoutConstraint
+// Since categories can't have ivars, we bundle up a couple C++ classes in NSObjects and associate them to the
+// UIView/UILayoutGuide/NSLayoutConstraint
 @protocol _AutoLayoutProperties
 @property (readonly) AutoLayoutProperties* _autoLayoutProperties;
 @end
@@ -116,7 +133,7 @@ public:
 @end
 
 @implementation _AutoLayoutStorage
-@end 
+@end
 
 @interface _NSLayoutConstraintStorage : NSObject {
 @public
@@ -125,7 +142,7 @@ public:
 @end
 
 @implementation _NSLayoutConstraintStorage
-@end 
+@end
 
 @interface UIView (AutoLayoutProperties) <_AutoLayoutProperties>
 @end
@@ -140,7 +157,9 @@ public:
 }
 
 - (void)autoLayoutAlloc {
-    objc_setAssociatedObject(self, @selector(_constraintStorage), [_NSLayoutConstraintStorage new], OBJC_ASSOCIATION_RETAIN);
+    _NSLayoutConstraintStorage* storage = [_NSLayoutConstraintStorage new];
+    objc_setAssociatedObject(self, @selector(_constraintStorage), storage, OBJC_ASSOCIATION_RETAIN);
+    [storage release];
 }
 
 - (void)autoLayoutConstraintAddedToView:(UIView*)view {
@@ -270,7 +289,6 @@ public:
         }
 
         c_solver.AddConstraint(constraintStorage->_constraint);
-
     }
 }
 
@@ -312,7 +330,9 @@ public:
 @implementation UILayoutGuide (AutoLayout)
 
 - (void)autoLayoutAlloc {
-    objc_setAssociatedObject(self, @selector(_autoLayoutProperties), [_AutoLayoutStorage new], OBJC_ASSOCIATION_RETAIN);
+    _AutoLayoutStorage* storage = [_AutoLayoutStorage new];
+    objc_setAssociatedObject(self, @selector(_autoLayoutProperties), storage, OBJC_ASSOCIATION_RETAIN);
+    [storage release];
 }
 
 - (CGRect)autoLayoutGetRect {
@@ -355,7 +375,9 @@ public:
 }
 
 - (void)autoLayoutAlloc {
-    objc_setAssociatedObject(self, @selector(_autoLayoutProperties), [_AutoLayoutStorage new], OBJC_ASSOCIATION_RETAIN);
+    _AutoLayoutStorage* storage = [_AutoLayoutStorage new];
+    objc_setAssociatedObject(self, @selector(_autoLayoutProperties), storage, OBJC_ASSOCIATION_RETAIN);
+    [storage release];
 }
 
 - (void)autoLayoutSetFrameToView:(UIView*)toView fromView:(UIView*)fromView {
@@ -375,6 +397,25 @@ public:
     newPointTL = [toView convertPoint:oldPointTL fromView:fromView];
     newPointBR = [toView convertPoint:oldPointBR fromView:fromView];
 
+    if (DEBUG_AUTO_LAYOUT_VERBOSE) {
+        TraceVerbose(TAG,
+            L"autoLayoutSetFrameToView: self:%hs(0x%p) toView:%hs(0x%p) fromView:%hs(0x%p) - oldTopLeft:{%f, %f} - oldBottomRight:{%f, %f} - newTopLeft:{%f, %f} - newBottomRight:{%f, %f}",
+            object_getClassName(self),
+            self,
+            object_getClassName(toView),
+            toView,
+            object_getClassName(fromView),
+            fromView,
+            oldPointTL.x,
+            oldPointTL.y,
+            oldPointBR.x,
+            oldPointBR.y,
+            newPointTL.x,
+            newPointTL.y,
+            newPointBR.x,
+            newPointBR.y);
+    }
+
     newFrame.size.width = newPointBR.x - newPointTL.x;
     newFrame.size.height = newPointBR.y - newPointTL.y;
     newFrame.origin.x = newPointTL.x;
@@ -385,6 +426,12 @@ public:
 
 - (void)autoLayoutLayoutSubviews {
     UIView* topView = [self autolayoutRoot];
+
+    if (DEBUG_AUTO_LAYOUT_LIGHT) {
+        TraceVerbose(TAG, L"autoLayoutLayoutSubviews: %hs(0x%p).",
+            object_getClassName(self),
+            self);
+    }
 
     for (int i = 0; i < [self.subviews count]; i++) {
         UIView* child = (UIView*)[self.subviews objectAtIndex:i];
@@ -413,28 +460,61 @@ public:
     }
 }
 
-- (void)autoLayoutInvalidateContentSize {
+- (BOOL)autoLayoutInvalidateContentSize {
     AutoLayoutProperties* layoutProperties = self._autoLayoutProperties;
-    CGSize contentSize = [self intrinsicContentSize];
 
-    if (contentSize.width == -1.0f /*UIViewNoIntrinsicMetric*/ || contentSize.width == 0) {
+    CGSize newContentSize = [self intrinsicContentSize];
+    if (CGSizeEqualToSize(layoutProperties->_intrinsicContentSize, newContentSize)) {
+        if (DEBUG_AUTO_LAYOUT_LIGHT) {
+            TraceVerbose(TAG, L"autoLayoutInvalidateContentSize: Size {%f, %f} didn't change; no need to revalidate constraints; no need to re-layout %hs(0x%p).",
+                object_getClassName(self),
+                self,
+                newContentSize.width,
+                newContentSize.height);
+        }
+
+        // No more work left to be done; the size didn't actually change.
+        return NO;
+    } else {
+        if (DEBUG_AUTO_LAYOUT_LIGHT) {
+            TraceVerbose(TAG, L"autoLayoutInvalidateContentSize: intrinsicContentSize changed from {%f, %f} to {%f, %f}; need to revalidate constraints and re-layout %hs(0x%p).",
+                object_getClassName(self),
+                self,
+                newContentSize.width,
+                newContentSize.height,
+                layoutProperties->_intrinsicContentSize.width,
+                layoutProperties->_intrinsicContentSize.height);
+        }
+
+        // Store the new intrinsicContentSize
+        layoutProperties->_intrinsicContentSize = newContentSize;
+    }
+
+    if (newContentSize.width == c_UIViewNoIntrinsicMetric || newContentSize.width == 0) {
         if (layoutProperties->_contentHuggingConstraint[Horizontal].FIsInSolver()) {
             c_solver.RemoveConstraint(&layoutProperties->_contentHuggingConstraint[Horizontal]);
             c_solver.RemoveConstraint(&layoutProperties->_contentCompressionResistanceConstraint[Horizontal]);
         }
     } else {
         if (layoutProperties->_contentHuggingConstraint[Horizontal].FIsInSolver()) {
-            if (contentSize.width != layoutProperties->_contentHuggingConstraint[Horizontal].Expression().Constant()) {
-                layoutProperties->_contentHuggingConstraint[Horizontal].ChangeConstant(contentSize.width);
-                layoutProperties->_contentCompressionResistanceConstraint[Horizontal].ChangeConstant(contentSize.width);
+            if (newContentSize.width != layoutProperties->_contentHuggingConstraint[Horizontal].Expression().Constant()) {
+                // Changing constants on constraints while they're in a solver is ineffectual. Explicitly add/remove.
+                c_solver.RemoveConstraint(&layoutProperties->_contentHuggingConstraint[Horizontal]);
+                c_solver.RemoveConstraint(&layoutProperties->_contentCompressionResistanceConstraint[Horizontal]);
+                layoutProperties->_contentHuggingConstraint[Horizontal].ChangeConstant(newContentSize.width);
+                layoutProperties->_contentCompressionResistanceConstraint[Horizontal].ChangeConstant(newContentSize.width);
+                c_solver.AddConstraint(&layoutProperties->_contentHuggingConstraint[Horizontal]);
+                c_solver.AddConstraint(&layoutProperties->_contentCompressionResistanceConstraint[Horizontal]);
             }
-            if ([self contentHuggingPriorityForAxis:UILayoutConstraintAxisHorizontal] != layoutProperties->_contentHuggingConstraint[Horizontal].weight()) {
-                c_solver.ChangeWeight(&layoutProperties->_contentHuggingConstraint[Horizontal], [self contentHuggingPriorityForAxis:UILayoutConstraintAxisHorizontal]);
+            if ([self contentHuggingPriorityForAxis:UILayoutConstraintAxisHorizontal] !=
+                layoutProperties->_contentHuggingConstraint[Horizontal].weight()) {
+                c_solver.ChangeWeight(&layoutProperties->_contentHuggingConstraint[Horizontal],
+                                      [self contentHuggingPriorityForAxis:UILayoutConstraintAxisHorizontal]);
             }
             if ([self contentCompressionResistancePriorityForAxis:UILayoutConstraintAxisHorizontal] !=
                 layoutProperties->_contentCompressionResistanceConstraint[Horizontal].weight()) {
                 c_solver.ChangeWeight(&layoutProperties->_contentCompressionResistanceConstraint[Horizontal],
-                                     [self contentCompressionResistancePriorityForAxis:UILayoutConstraintAxisHorizontal]);
+                                      [self contentCompressionResistancePriorityForAxis:UILayoutConstraintAxisHorizontal]);
             }
         }
         if (!layoutProperties->_contentHuggingConstraint[Horizontal].FIsInSolver()) {
@@ -442,38 +522,45 @@ public:
                 ClLinearInequality(ClLinearExpression(layoutProperties->_vars[AutoLayoutProperties::Right]) -
                                        layoutProperties->_vars[AutoLayoutProperties::Left],
                                    cnLEQ,
-                                   contentSize.width,
+                                   newContentSize.width,
                                    ClsWeak(),
                                    [self contentHuggingPriorityForAxis:UILayoutConstraintAxisHorizontal]);
             layoutProperties->_contentCompressionResistanceConstraint[Horizontal] =
                 ClLinearInequality(ClLinearExpression(layoutProperties->_vars[AutoLayoutProperties::Right]) -
                                        layoutProperties->_vars[AutoLayoutProperties::Left],
                                    cnGEQ,
-                                   contentSize.width,
+                                   newContentSize.width,
                                    ClsWeak(),
                                    [self contentCompressionResistancePriorityForAxis:UILayoutConstraintAxisHorizontal]);
             c_solver.AddConstraint(&layoutProperties->_contentHuggingConstraint[Horizontal]);
             c_solver.AddConstraint(&layoutProperties->_contentCompressionResistanceConstraint[Horizontal]);
         }
     }
-    if (contentSize.height == -1.0f /*UIViewNoIntrinsicMetric*/ || contentSize.height == 0) {
+    if (newContentSize.height == c_UIViewNoIntrinsicMetric || newContentSize.height == 0) {
         if (layoutProperties->_contentHuggingConstraint[Vertical].FIsInSolver()) {
             c_solver.RemoveConstraint(&layoutProperties->_contentHuggingConstraint[Vertical]);
             c_solver.RemoveConstraint(&layoutProperties->_contentCompressionResistanceConstraint[Vertical]);
         }
     } else {
         if (layoutProperties->_contentHuggingConstraint[Vertical].FIsInSolver()) {
-            if (contentSize.height != layoutProperties->_contentHuggingConstraint[Vertical].Expression().Constant()) {
-                layoutProperties->_contentHuggingConstraint[Vertical].ChangeConstant(contentSize.height);
-                layoutProperties->_contentCompressionResistanceConstraint[Vertical].ChangeConstant(contentSize.height);
+            if (newContentSize.height != layoutProperties->_contentHuggingConstraint[Vertical].Expression().Constant()) {
+                // Changing constants on constraints while they're in a solver is ineffectual. Explicitly add/remove.
+                c_solver.RemoveConstraint(&layoutProperties->_contentHuggingConstraint[Vertical]);
+                c_solver.RemoveConstraint(&layoutProperties->_contentCompressionResistanceConstraint[Vertical]);
+                layoutProperties->_contentHuggingConstraint[Vertical].ChangeConstant(newContentSize.height);
+                layoutProperties->_contentCompressionResistanceConstraint[Vertical].ChangeConstant(newContentSize.height);
+                c_solver.AddConstraint(&layoutProperties->_contentHuggingConstraint[Vertical]);
+                c_solver.AddConstraint(&layoutProperties->_contentCompressionResistanceConstraint[Vertical]);
             }
-            if ([self contentHuggingPriorityForAxis:UILayoutConstraintAxisVertical] != layoutProperties->_contentHuggingConstraint[Vertical].weight()) {
-                c_solver.ChangeWeight(&layoutProperties->_contentHuggingConstraint[Vertical], [self contentHuggingPriorityForAxis:UILayoutConstraintAxisVertical]);
+            if ([self contentHuggingPriorityForAxis:UILayoutConstraintAxisVertical] !=
+                layoutProperties->_contentHuggingConstraint[Vertical].weight()) {
+                c_solver.ChangeWeight(&layoutProperties->_contentHuggingConstraint[Vertical],
+                                      [self contentHuggingPriorityForAxis:UILayoutConstraintAxisVertical]);
             }
             if ([self contentCompressionResistancePriorityForAxis:UILayoutConstraintAxisVertical] !=
                 layoutProperties->_contentCompressionResistanceConstraint[Vertical].weight()) {
                 c_solver.ChangeWeight(&layoutProperties->_contentCompressionResistanceConstraint[Vertical],
-                                     [self contentCompressionResistancePriorityForAxis:UILayoutConstraintAxisVertical]);
+                                      [self contentCompressionResistancePriorityForAxis:UILayoutConstraintAxisVertical]);
             }
         }
         if (!layoutProperties->_contentHuggingConstraint[Vertical].FIsInSolver()) {
@@ -481,26 +568,29 @@ public:
                 ClLinearInequality(ClLinearExpression(layoutProperties->_vars[AutoLayoutProperties::Bottom]) -
                                        layoutProperties->_vars[AutoLayoutProperties::Top],
                                    cnLEQ,
-                                   contentSize.height,
+                                   newContentSize.height,
                                    ClsWeak(),
                                    [self contentHuggingPriorityForAxis:UILayoutConstraintAxisVertical]);
             layoutProperties->_contentCompressionResistanceConstraint[Vertical] =
                 ClLinearInequality(ClLinearExpression(layoutProperties->_vars[AutoLayoutProperties::Bottom]) -
                                        layoutProperties->_vars[AutoLayoutProperties::Top],
                                    cnGEQ,
-                                   contentSize.height,
+                                   newContentSize.height,
                                    ClsWeak(),
                                    [self contentCompressionResistancePriorityForAxis:UILayoutConstraintAxisVertical]);
             c_solver.AddConstraint(&layoutProperties->_contentHuggingConstraint[Vertical]);
             c_solver.AddConstraint(&layoutProperties->_contentCompressionResistanceConstraint[Vertical]);
         }
     }
+
+    // Return YES, signifying that our state has changed.
+    return YES;
 }
 
 // Gets the top most view that autolayout is relative to.
 - (UIView*)autolayoutRoot {
     UIView* ret = self;
-    
+
     while (ret.translatesAutoresizingMaskIntoConstraints == NO || ([ret.superview viewForBaselineLayout] == ret)) {
         ret = ret.superview;
         if (ret == nil) {
@@ -528,33 +618,31 @@ public:
         CGRect convFrame;
 
         layoutProperties->AddStays();
-            
+
         convFrame = [self convertRect:curBounds toView:[self autolayoutRoot]];
 
         if ((layoutProperties->_vars[AutoLayoutProperties::Right].Value() != convFrame.origin.x + convFrame.size.width) ||
             (layoutProperties->_vars[AutoLayoutProperties::Left].Value() != convFrame.origin.x)) {
-
             c_solver.AddEditVar(layoutProperties->_vars[AutoLayoutProperties::Right], ClsStrong(), 2.0);
             c_solver.AddEditVar(layoutProperties->_vars[AutoLayoutProperties::Left], ClsStrong(), 2.0);
 
             c_solver.BeginEdit();
             c_solver.SuggestValue(layoutProperties->_vars[AutoLayoutProperties::Right], convFrame.origin.x + convFrame.size.width);
             c_solver.SuggestValue(layoutProperties->_vars[AutoLayoutProperties::Left], convFrame.origin.x);
-            c_solver.Resolve();
-            c_solver.EndEdit(); // Removes edit constraints.    
+            c_solver.Resolve(); // Must be nested between BeginEdit/EndEdit
+            c_solver.EndEdit(); // Removes edit constraints
         }
 
         if ((layoutProperties->_vars[AutoLayoutProperties::Bottom].Value() != convFrame.origin.y + convFrame.size.height) ||
             (layoutProperties->_vars[AutoLayoutProperties::Top].Value() != convFrame.origin.y)) {
-
             c_solver.AddEditVar(layoutProperties->_vars[AutoLayoutProperties::Bottom], ClsStrong(), 2.0);
             c_solver.AddEditVar(layoutProperties->_vars[AutoLayoutProperties::Top], ClsStrong(), 2.0);
 
             c_solver.BeginEdit();
             c_solver.SuggestValue(layoutProperties->_vars[AutoLayoutProperties::Bottom], convFrame.origin.y + convFrame.size.height);
             c_solver.SuggestValue(layoutProperties->_vars[AutoLayoutProperties::Top], convFrame.origin.y);
-            c_solver.Resolve();
-            c_solver.EndEdit(); // Removes edit constraints. 
+            c_solver.Resolve(); // Must be nested between BeginEdit/EndEdit
+            c_solver.EndEdit(); // Removes edit constraints
         }
     } else {
         [self autoLayoutInvalidateContentSize];
@@ -563,6 +651,7 @@ public:
 }
 
 - (void)autoLayoutDealloc {
+    objc_setAssociatedObject(self, @selector(_autoLayoutProperties), nil, OBJC_ASSOCIATION_RETAIN);
 }
 
 @end

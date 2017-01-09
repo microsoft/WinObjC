@@ -19,18 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Media_PlayTo.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WMPSourceChangeRequestedEventArgs, WMPPlaybackRateChangeRequestedEventArgs, WMPCurrentTimeChangeRequestedEventArgs,
-    WMPMuteChangeRequestedEventArgs, WMPVolumeChangeRequestedEventArgs, WMPPlayToReceiver, WMPPlayToConnection, WMPPlayToSource,
-    WMPPlayToConnectionStateChangedEventArgs, WMPPlayToConnectionTransferredEventArgs, WMPPlayToConnectionErrorEventArgs,
-    WMPPlayToSourceSelectedEventArgs, WMPPlayToSourceDeferral, WMPPlayToSourceRequest, WMPPlayToSourceRequestedEventArgs, WMPPlayToManager;
-@protocol WMPISourceChangeRequestedEventArgs
-, WMPIPlaybackRateChangeRequestedEventArgs, WMPICurrentTimeChangeRequestedEventArgs, WMPIMuteChangeRequestedEventArgs,
-    WMPIVolumeChangeRequestedEventArgs, WMPIPlayToReceiver, WMPIPlayToSource, WMPIPlayToSourceWithPreferredSourceUri,
-    WMPIPlayToConnectionStateChangedEventArgs, WMPIPlayToConnectionTransferredEventArgs, WMPIPlayToConnectionErrorEventArgs,
-    WMPIPlayToConnection, WMPIPlayToSourceSelectedEventArgs, WMPIPlayToSourceDeferral, WMPIPlayToSourceRequest,
-    WMPIPlayToSourceRequestedEventArgs, WMPIPlayToManager, WMPIPlayToManagerStatics;
+@class WMPSourceChangeRequestedEventArgs, WMPPlaybackRateChangeRequestedEventArgs, WMPCurrentTimeChangeRequestedEventArgs, WMPMuteChangeRequestedEventArgs, WMPVolumeChangeRequestedEventArgs, WMPPlayToReceiver, WMPPlayToConnection, WMPPlayToSource, WMPPlayToConnectionStateChangedEventArgs, WMPPlayToConnectionTransferredEventArgs, WMPPlayToConnectionErrorEventArgs, WMPPlayToSourceSelectedEventArgs, WMPPlayToSourceDeferral, WMPPlayToSourceRequest, WMPPlayToSourceRequestedEventArgs, WMPPlayToManager;
+@protocol WMPISourceChangeRequestedEventArgs, WMPIPlaybackRateChangeRequestedEventArgs, WMPICurrentTimeChangeRequestedEventArgs, WMPIMuteChangeRequestedEventArgs, WMPIVolumeChangeRequestedEventArgs, WMPIPlayToReceiver, WMPIPlayToSource, WMPIPlayToSourceWithPreferredSourceUri, WMPIPlayToConnectionStateChangedEventArgs, WMPIPlayToConnectionTransferredEventArgs, WMPIPlayToConnectionErrorEventArgs, WMPIPlayToConnection, WMPIPlayToSourceSelectedEventArgs, WMPIPlayToSourceDeferral, WMPIPlayToSourceRequest, WMPIPlayToSourceRequestedEventArgs, WMPIPlayToManager, WMPIPlayToManagerStatics;
 
 // Windows.Media.PlayTo.PlayToConnectionState
 enum _WMPPlayToConnectionState {
@@ -60,21 +58,21 @@ typedef unsigned WMPPlayToConnectionError;
 #ifndef __WMPSourceChangeRequestedEventArgs_DEFINED__
 #define __WMPSourceChangeRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPSourceChangeRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* album;
-@property (readonly) NSString* author;
+@property (readonly) NSString * album;
+@property (readonly) NSString * author;
 @property (readonly) id /* WFDateTime* */ date;
-@property (readonly) NSString* Description;
-@property (readonly) NSString* genre;
+@property (readonly) NSString * Description;
+@property (readonly) NSString * genre;
 @property (readonly) NSDictionary* /* NSString *, RTObject* */ properties;
 @property (readonly) id /* unsigned int */ rating;
 @property (readonly) RTObject<WSSIRandomAccessStreamWithContentType>* stream;
 @property (readonly) RTObject<WSSIRandomAccessStreamReference>* thumbnail;
-@property (readonly) NSString* title;
+@property (readonly) NSString * title;
 @end
 
 #endif // __WMPSourceChangeRequestedEventArgs_DEFINED__
@@ -83,7 +81,7 @@ WINRT_EXPORT
 #ifndef __WMPPlaybackRateChangeRequestedEventArgs_DEFINED__
 #define __WMPPlaybackRateChangeRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlaybackRateChangeRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -97,7 +95,7 @@ WINRT_EXPORT
 #ifndef __WMPCurrentTimeChangeRequestedEventArgs_DEFINED__
 #define __WMPCurrentTimeChangeRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPCurrentTimeChangeRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -111,7 +109,7 @@ WINRT_EXPORT
 #ifndef __WMPMuteChangeRequestedEventArgs_DEFINED__
 #define __WMPMuteChangeRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPMuteChangeRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -125,7 +123,7 @@ WINRT_EXPORT
 #ifndef __WMPVolumeChangeRequestedEventArgs_DEFINED__
 #define __WMPVolumeChangeRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPVolumeChangeRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -139,7 +137,7 @@ WINRT_EXPORT
 #ifndef __WMPPlayToReceiver_DEFINED__
 #define __WMPPlayToReceiver_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToReceiver : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -148,25 +146,25 @@ WINRT_EXPORT
 @property BOOL supportsVideo;
 @property BOOL supportsImage;
 @property BOOL supportsAudio;
-@property (retain) NSString* friendlyName;
+@property (retain) NSString * friendlyName;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
-- (EventRegistrationToken)addCurrentTimeChangeRequestedEvent:(void (^)(WMPPlayToReceiver*, WMPCurrentTimeChangeRequestedEventArgs*))del;
+- (EventRegistrationToken)addCurrentTimeChangeRequestedEvent:(void(^)(WMPPlayToReceiver*, WMPCurrentTimeChangeRequestedEventArgs*))del;
 - (void)removeCurrentTimeChangeRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addMuteChangeRequestedEvent:(void (^)(WMPPlayToReceiver*, WMPMuteChangeRequestedEventArgs*))del;
+- (EventRegistrationToken)addMuteChangeRequestedEvent:(void(^)(WMPPlayToReceiver*, WMPMuteChangeRequestedEventArgs*))del;
 - (void)removeMuteChangeRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPauseRequestedEvent:(void (^)(WMPPlayToReceiver*, RTObject*))del;
+- (EventRegistrationToken)addPauseRequestedEvent:(void(^)(WMPPlayToReceiver*, RTObject*))del;
 - (void)removePauseRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPlayRequestedEvent:(void (^)(WMPPlayToReceiver*, RTObject*))del;
+- (EventRegistrationToken)addPlayRequestedEvent:(void(^)(WMPPlayToReceiver*, RTObject*))del;
 - (void)removePlayRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPlaybackRateChangeRequestedEvent:(void (^)(WMPPlayToReceiver*, WMPPlaybackRateChangeRequestedEventArgs*))del;
+- (EventRegistrationToken)addPlaybackRateChangeRequestedEvent:(void(^)(WMPPlayToReceiver*, WMPPlaybackRateChangeRequestedEventArgs*))del;
 - (void)removePlaybackRateChangeRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addSourceChangeRequestedEvent:(void (^)(WMPPlayToReceiver*, WMPSourceChangeRequestedEventArgs*))del;
+- (EventRegistrationToken)addSourceChangeRequestedEvent:(void(^)(WMPPlayToReceiver*, WMPSourceChangeRequestedEventArgs*))del;
 - (void)removeSourceChangeRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStopRequestedEvent:(void (^)(WMPPlayToReceiver*, RTObject*))del;
+- (EventRegistrationToken)addStopRequestedEvent:(void(^)(WMPPlayToReceiver*, RTObject*))del;
 - (void)removeStopRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addTimeUpdateRequestedEvent:(void (^)(WMPPlayToReceiver*, RTObject*))del;
+- (EventRegistrationToken)addTimeUpdateRequestedEvent:(void(^)(WMPPlayToReceiver*, RTObject*))del;
 - (void)removeTimeUpdateRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addVolumeChangeRequestedEvent:(void (^)(WMPPlayToReceiver*, WMPVolumeChangeRequestedEventArgs*))del;
+- (EventRegistrationToken)addVolumeChangeRequestedEvent:(void(^)(WMPPlayToReceiver*, WMPVolumeChangeRequestedEventArgs*))del;
 - (void)removeVolumeChangeRequestedEvent:(EventRegistrationToken)tok;
 - (void)notifyVolumeChange:(double)volume mute:(BOOL)mute;
 - (void)notifyRateChange:(double)rate;
@@ -190,17 +188,17 @@ WINRT_EXPORT
 #ifndef __WMPPlayToConnection_DEFINED__
 #define __WMPPlayToConnection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToConnection : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMPPlayToConnectionState state;
-- (EventRegistrationToken)addErrorEvent:(void (^)(WMPPlayToConnection*, WMPPlayToConnectionErrorEventArgs*))del;
+- (EventRegistrationToken)addErrorEvent:(void(^)(WMPPlayToConnection*, WMPPlayToConnectionErrorEventArgs*))del;
 - (void)removeErrorEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStateChangedEvent:(void (^)(WMPPlayToConnection*, WMPPlayToConnectionStateChangedEventArgs*))del;
+- (EventRegistrationToken)addStateChangedEvent:(void(^)(WMPPlayToConnection*, WMPPlayToConnectionStateChangedEventArgs*))del;
 - (void)removeStateChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addTransferredEvent:(void (^)(WMPPlayToConnection*, WMPPlayToConnectionTransferredEventArgs*))del;
+- (EventRegistrationToken)addTransferredEvent:(void(^)(WMPPlayToConnection*, WMPPlayToConnectionTransferredEventArgs*))del;
 - (void)removeTransferredEvent:(EventRegistrationToken)tok;
 @end
 
@@ -210,7 +208,7 @@ WINRT_EXPORT
 #ifndef __WMPPlayToSource_DEFINED__
 #define __WMPPlayToSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToSource : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -227,7 +225,7 @@ WINRT_EXPORT
 #ifndef __WMPPlayToConnectionStateChangedEventArgs_DEFINED__
 #define __WMPPlayToConnectionStateChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToConnectionStateChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -242,7 +240,7 @@ WINRT_EXPORT
 #ifndef __WMPPlayToConnectionTransferredEventArgs_DEFINED__
 #define __WMPPlayToConnectionTransferredEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToConnectionTransferredEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -257,13 +255,13 @@ WINRT_EXPORT
 #ifndef __WMPPlayToConnectionErrorEventArgs_DEFINED__
 #define __WMPPlayToConnectionErrorEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToConnectionErrorEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WMPPlayToConnectionError code;
-@property (readonly) NSString* message;
+@property (readonly) NSString * message;
 @end
 
 #endif // __WMPPlayToConnectionErrorEventArgs_DEFINED__
@@ -272,12 +270,12 @@ WINRT_EXPORT
 #ifndef __WMPPlayToSourceSelectedEventArgs_DEFINED__
 #define __WMPPlayToSourceSelectedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToSourceSelectedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* friendlyName;
+@property (readonly) NSString * friendlyName;
 @property (readonly) RTObject<WSSIRandomAccessStreamWithContentType>* icon;
 @property (readonly) BOOL supportsAudio;
 @property (readonly) BOOL supportsImage;
@@ -290,7 +288,7 @@ WINRT_EXPORT
 #ifndef __WMPPlayToSourceDeferral_DEFINED__
 #define __WMPPlayToSourceDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToSourceDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -304,13 +302,13 @@ WINRT_EXPORT
 #ifndef __WMPPlayToSourceRequest_DEFINED__
 #define __WMPPlayToSourceRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToSourceRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFDateTime* deadline;
-- (void)displayErrorString:(NSString*)errorString;
+- (void)displayErrorString:(NSString *)errorString;
 - (WMPPlayToSourceDeferral*)getDeferral;
 - (void)setSource:(WMPPlayToSource*)value;
 @end
@@ -321,7 +319,7 @@ WINRT_EXPORT
 #ifndef __WMPPlayToSourceRequestedEventArgs_DEFINED__
 #define __WMPPlayToSourceRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToSourceRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -335,7 +333,7 @@ WINRT_EXPORT
 #ifndef __WMPPlayToManager_DEFINED__
 #define __WMPPlayToManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYTO_EXPORT
 @interface WMPPlayToManager : RTObject
 + (WMPPlayToManager*)getForCurrentView;
 + (void)showPlayToUI;
@@ -343,10 +341,11 @@ WINRT_EXPORT
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL defaultSourceSelection;
-- (EventRegistrationToken)addSourceRequestedEvent:(void (^)(WMPPlayToManager*, WMPPlayToSourceRequestedEventArgs*))del;
+- (EventRegistrationToken)addSourceRequestedEvent:(void(^)(WMPPlayToManager*, WMPPlayToSourceRequestedEventArgs*))del;
 - (void)removeSourceRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addSourceSelectedEvent:(void (^)(WMPPlayToManager*, WMPPlayToSourceSelectedEventArgs*))del;
+- (EventRegistrationToken)addSourceSelectedEvent:(void(^)(WMPPlayToManager*, WMPPlayToSourceSelectedEventArgs*))del;
 - (void)removeSourceSelectedEvent:(EventRegistrationToken)tok;
 @end
 
 #endif // __WMPPlayToManager_DEFINED__
+

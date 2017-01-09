@@ -52,9 +52,9 @@ void PBXBuildFile::initFromPlist(const String& id, const Plist::dictionary_type&
   // Parse attributes
   for (unsigned i = 0; i < attributes.size(); i++) {
     if (attributes[i] == "Public")
-      m_attributes &= ATTR_PUBLIC;
+      m_attributes |= ATTR_PUBLIC;
     else if (attributes[i] == "Private")
-      m_attributes &= ATTR_PRIVATE;
+      m_attributes |= ATTR_PRIVATE;
   }
   
   // Get fileRef

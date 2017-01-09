@@ -16,12 +16,7 @@
 
 #include "Foundation/NSURLProtocol.h"
 
-@interface NSURLProtocol_file : NSURLProtocol {
-@public
-    id _modes;
-    id _path;
-    EbrFile* fpIn;
-}
+@interface NSURLProtocol_file : NSURLProtocol
 - (id)initWithRequest:(id)request cachedResponse:(id)response client:(id)client;
 - (id)startLoading;
 - (id)stopLoading;

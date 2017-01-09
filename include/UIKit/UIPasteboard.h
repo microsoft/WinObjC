@@ -20,7 +20,8 @@
 #import <Foundation/NSObject.h>
 
 @class NSString;
-@class NSArray;
+@class NSArray<ObjectType>;
+@class NSDictionary<KeyType, ObjectType>;
 @class NSData;
 @class NSIndexSet;
 @class UIImage;
@@ -29,9 +30,9 @@
 
 UIKIT_EXPORT NSString* const UIPasteboardNameGeneral;
 UIKIT_EXPORT NSString* const UIPasteboardNameFind;
-UIKIT_EXPORT NSArray* const UIPasteboardTypeListString;
-UIKIT_EXPORT NSArray* const UIPasteboardTypeListURL;
-UIKIT_EXPORT NSArray* const UIPasteboardTypeListImage;
+UIKIT_EXPORT NSArray<NSString*>* const UIPasteboardTypeListString;
+UIKIT_EXPORT NSArray<NSString*>* const UIPasteboardTypeListURL;
+UIKIT_EXPORT NSArray<NSString*>* const UIPasteboardTypeListImage;
 UIKIT_EXPORT NSArray* const UIPasteboardTypeListColor;
 UIKIT_EXPORT NSString* const UIPasteboardChangedTypesAddedKey;
 UIKIT_EXPORT NSString* const UIPasteboardChangedTypesRemovedKey;
@@ -49,16 +50,16 @@ UIKIT_EXPORT_CLASS
 @property (getter=isPersistent, nonatomic) BOOL persistent STUB_PROPERTY;
 @property (readonly, nonatomic) NSInteger changeCount STUB_PROPERTY;
 - (NSArray*)pasteboardTypes STUB_METHOD;
-- (BOOL)containsPasteboardTypes:(NSArray*)pasteboardTypes STUB_METHOD;
+- (BOOL)containsPasteboardTypes:(NSArray*)pasteboardTypes;
 - (NSData*)dataForPasteboardType:(NSString*)pasteboardType;
 - (id)valueForPasteboardType:(NSString*)pasteboardType STUB_METHOD;
 - (void)setData:(NSData*)data forPasteboardType:(NSString*)pasteboardType;
 - (void)setValue:(id)value forPasteboardType:(NSString*)pasteboardType STUB_METHOD;
-@property (readonly, nonatomic) NSInteger numberOfItems STUB_PROPERTY;
+@property (readonly, nonatomic) NSInteger numberOfItems;
 - (NSArray*)pasteboardTypesForItemSet:(NSIndexSet*)itemSet STUB_METHOD;
 - (NSIndexSet*)itemSetWithPasteboardTypes:(NSArray*)pasteboardTypes STUB_METHOD;
 - (BOOL)containsPasteboardTypes:(NSArray*)pasteboardTypes inItemSet:(NSIndexSet*)itemSet STUB_METHOD;
-@property (copy, nonatomic) NSArray* items STUB_PROPERTY;
+@property (nonatomic, copy) NSArray<NSDictionary<NSString*, id>*>* items;
 - (NSArray*)dataForPasteboardType:(NSString*)pasteboardType inItemSet:(NSIndexSet*)itemSet STUB_METHOD;
 - (NSArray*)valuesForPasteboardType:(NSString*)pasteboardType inItemSet:(NSIndexSet*)itemSet STUB_METHOD;
 - (void)addItems:(NSArray*)items STUB_METHOD;

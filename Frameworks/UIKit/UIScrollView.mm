@@ -17,37 +17,45 @@
 #import <StubReturn.h>
 #import "AssertARCEnabled.h"
 #import "Starboard.h"
-#import <cmath>
-#import <Foundation/NSNumber.h>
-#import <Foundation/NSTimer.h>
-#import <Foundation/NSRunLoop.h>
-#import <Foundation/NSSet.h>
-#import <Foundation/NSString.h>
-#import <CoreGraphics/CGAffineTransform.h>
-#import <CoreGraphics/CGGeometry.h>
-#import <QuartzCore/CABasicAnimation.h>
-#import <QuartzCore/CADisplayLink.h>
-#import <QuartzCore/CALayer.h>
+
 #import <UIKit/UIApplication.h>
 #import <UIKit/UIColor.h>
 #import <UIKit/UIEvent.h>
 #import <UIKit/UITouch.h>
 #import <UIKit/UIGestureRecognizer.h>
-#import <UIKit/UIPanGestureRecognizer.h>
 #import <UIKit/UIScrollView.h>
+
+#import <Foundation/NSNumber.h>
+#import <Foundation/NSTimer.h>
+#import <Foundation/NSRunLoop.h>
+#import <Foundation/NSSet.h>
+#import <Foundation/NSString.h>
+
+#import <CoreGraphics/CGAffineTransform.h>
+#import <CoreGraphics/CGGeometry.h>
+
+#import <QuartzCore/CABasicAnimation.h>
+#import <QuartzCore/CADisplayLink.h>
+#import <QuartzCore/CALayer.h>
+#import <QuartzCore/CALayerDelegate.h>
+
 #import <UWP/WindowsUIXaml.h>
 #import <UWP/WindowsUIXamlControls.h>
 #import <UWP/WindowsUIXamlShapes.h>
 
+#import "_UIDirectManipulationRecognizer.h"
 #import "CAAnimationInternal.h"
 #import "CALayerInternal.h"
-#import "CACompositor.h"
+#import "StarboardXaml/DisplayProperties.h"
 #import "UIEventInternal.h"
+#import "UIScrollViewInternal.h"
 #import "UIGestureRecognizerInternal.h"
+#import "UIPanGestureRecognizerInternal.h"
 #import "UITouchInternal.h"
 #import "Etc.h"
+#import "XamlControls.h"
 #import "XamlUtilities.h"
-#import "StarboardXaml/CompositorInterface.h"
+#import <cmath>
 
 static const wchar_t* TAG = L"UIScrollView";
 
@@ -56,28 +64,12 @@ static const bool DEBUG_VERBOSE = DEBUG_ALL || false;
 static const bool DEBUG_DELEGATE = DEBUG_ALL || false;
 static const bool DEBUG_INSETS = DEBUG_ALL || false;
 static const bool DEBUG_ZOOM = DEBUG_ALL || false;
+static const bool DEBUG_DMANIP_GESTURE = DEBUG_ALL || false;
 
 /** @Status Stub */
 const float UIScrollViewDecelerationRateNormal = StubConstant();
 /** @Status Stub */
 const float UIScrollViewDecelerationRateFast = StubConstant();
-
-// Customer CALayer for UIScrollview
-@interface _UIScrollViewCALayer : CALayer
-@end
-
-@implementation _UIScrollViewCALayer
-- (instancetype)init {
-    self = [super init];
-    return self;
-}
-
-// override setOrigin not to adjust its content origin because scrolling is now done by scrollviewer
-// otherwise, it will cause double scrolling for the content
-- (void)setOrigin:(CGPoint)origin {
-    [self _setOrigin:origin updateContent:NO];
-}
-@end
 
 @implementation UIScrollView {
     CGPoint _contentOffset;
@@ -95,6 +87,9 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
     BOOL _isZooming;
     BOOL _isZoomingToRect;
 
+    // DManip gesture recognizer, used for detecting if DManip should start or not
+    StrongId<_UIDMPanGestureRecognizer> _dManipGesture;
+
     // xaml visuals to back UIScrollView - includes Scrollviewer, ContentGrid, Insets, and ContentCanvas
     StrongId<WXCScrollViewer> _scrollViewer;
     StrongId<WXCGrid> _contentGrid;
@@ -103,6 +98,7 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
     StrongId<WUXSRectangle> _bottomInset;
     StrongId<WUXSRectangle> _leftInset;
     StrongId<WXCCanvas> _contentCanvas;
+    StrongId<WXCImage> _contentImage;
 
     EventRegistrationToken _directManipulationStartedEventToken;
     EventRegistrationToken _directManipulationCompletedEventToken;
@@ -139,13 +135,47 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
     WXCScrollBarVisibility _previousVerticalScrollBarVisibility;
 }
 
-- (void)_initScrollViewer:(WXFrameworkElement*)xamlElement {
-    // creating backing scrollviewer
-    if (!xamlElement) {
-        _scrollViewer = [WXCScrollViewer make];
-    } else {
-        _scrollViewer = rt_dynamic_cast<WXCScrollViewer>(xamlElement);
+- (id)_dManipGestureCallback:(_UIDMPanGestureRecognizer*)gesture {
+    if (DEBUG_DMANIP_GESTURE) {
+        TraceVerbose(TAG, L"_dManipGestureCallback fired");
     }
+
+    // check the gesture state, if it is already being cancelled, don't start direct manipulation
+    if (gesture.state == UIGestureRecognizerStateCancelled) {
+        if (DEBUG_DMANIP_GESTURE) {
+            TraceVerbose(TAG, L"dManipGesture cancelled");
+        }
+
+        return self;
+    }
+
+    // setting manipulationMode of scrollview (on its canvas) chain to be System.
+    // so that direct manipulation will be effective on all scrollviews
+    [self _setManipulationMode:WUXIManipulationModesSystem recursive:YES];
+
+    for (auto const& pointer : [gesture _getTouches]) {
+        UITouch* touch = pointer.touch;
+        // start direct manipulation only if active touch presents
+        if (touch.phase != UITouchPhaseCancelled && touch.phase != UITouchPhaseEnded &&
+            touch->_routedEventArgs.pointer.pointerDeviceType == WDIPointerDeviceTypeTouch) {
+            if (![WXFrameworkElement tryStartDirectManipulation:touch->_routedEventArgs.pointer]) {
+                TraceWarning(TAG, L"DManip failed to start");
+            }
+        }
+    }
+
+    return self;
+}
+
+- (void)_initUIScrollView {
+    // Store a strongly-typed backing scrollviewer
+    _scrollViewer = rt_dynamic_cast<WXCScrollViewer>([self xamlElement]);
+    if (!_scrollViewer) {
+        FAIL_FAST();
+    }
+
+    self->_dManipGesture = [[_UIDMPanGestureRecognizer alloc] initWithTarget:self action:@selector(_dManipGestureCallback:)];
+    [self addGestureRecognizer:self->_dManipGesture];
 
     [self setMultipleTouchEnabled:TRUE];
 
@@ -159,9 +189,19 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
     _leftInset = [WUXSRectangle make];
     _leftInset.name = @"left";
 
-    // create content canvas
+    // Create a content canvas for our subviews
     _contentCanvas = [WXCCanvas make];
     _contentCanvas.name = @"Content Canvas";
+
+    // Create an image for our rendered content
+    _contentImage = [WXCImage make];
+    _contentImage.name = @"Content Element";
+
+    // Set up the CALayer properties for our backing Xaml element so
+    // our subviews are placed within our _contentCanvas
+    XamlControls::SetFrameworkElementLayerProperties(_scrollViewer,
+                                                     _contentImage, // content element
+                                                     _contentCanvas); // sublayer canvas
 
     // creating and build 3 X 3 content grid
     _contentGrid = [WXCGrid make];
@@ -221,10 +261,6 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
 
     _loaded = NO;
 
-    // setting the rootElement and the content element for scroll viewer
-    DisplayNode* displayNode = [[self layer] _presentationNode];
-    displayNode->SetScrollviewerControls(_scrollViewer.comObj.Get(), _contentCanvas.comObj.Get());
-
     // setting up manipulation, viewchanging and viewchanged event handlers
     [self _setupManipulationEventHandlers];
     [self _setupViewChangingHandler];
@@ -250,6 +286,12 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
     _scrollViewer.maxZoomFactor = 1.0f;
     _scrollViewer.minZoomFactor = 1.0f;
     _scrollViewer.zoomMode = WXCZoomModeDisabled;
+
+    // setting transparent background so we can receive touch input
+    _contentCanvas.background = [WUXMSolidColorBrush makeInstanceWithColor:[WUColors transparent]];
+
+    // by default, disable direct manipulation on backing scrollviewer
+    [self _setManipulationMode:WUXIManipulationModesAll recursive:NO];
 }
 
 - (BOOL)_isAnimating {
@@ -319,8 +361,6 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
                             strongSelf->_decelerating = YES;
 
                             if (strongSelf->_pagingEnabled) {
-                                strongSelf->_decelerating = NO;
-
                                 // cancel the direct manipulation before we do manual animating to page boundary
                                 [strongSelf->_scrollViewer cancelDirectManipulations];
 
@@ -508,7 +548,7 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
     _directManipulationStartedEventToken = [_scrollViewer addDirectManipulationStartedEvent:^void(RTObject*, RTObject*) {
         __strong UIScrollView* strongSelf = weakself;
         if (DEBUG_VERBOSE) {
-            TraceVerbose(TAG, L"Manipulation----Started");
+            TraceVerbose(TAG, L"DirectManipulation----Started");
         }
 
         if (strongSelf) {
@@ -519,10 +559,13 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
     _directManipulationCompletedEventToken = [_scrollViewer addDirectManipulationCompletedEvent:^void(RTObject*, RTObject*) {
         __strong UIScrollView* strongSelf = weakself;
         if (DEBUG_VERBOSE) {
-            TraceVerbose(TAG, L"Manipulation----Completed");
+            TraceVerbose(TAG, L"DirectManipulation----Completed");
         }
 
         if (strongSelf) {
+            // re-setting manipulationMode of scrollview (on its canvas) chain to be ALL.
+            // so that direct manipulation will be disabled on all scrollviews
+            [strongSelf _setManipulationMode:WUXIManipulationModesAll recursive:YES];
             strongSelf->_manipulationStarted = NO;
             strongSelf->_isTracking = NO;
             strongSelf->_isDragging = NO;
@@ -534,6 +577,23 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
     __weak UIScrollView* weakSelf = self;
     _loadEventToken = [self->_scrollViewer addLoadedEvent:^void(RTObject* sender, WXRoutedEventArgs* e) {
         __strong UIScrollView* strongSelf = weakSelf;
+
+        // Now that we're loaded, we need to put our content image within the control's root grid (rather than within its
+        // scrollcontentpresenter),
+        // so we don't double-scroll any rendered content.
+        // Note: This is a temporary solution for UIScrollView-derived rendered content until we can move UIScrollView to an all-xaml
+        // representation.
+        if (strongSelf) {
+            // Add the image to the parent of the scrollcontentpresenter
+            WXFrameworkElement* scrollContentPresenter = FindTemplateChild(strongSelf->_scrollViewer, @"ScrollContentPresenter");
+            if (scrollContentPresenter) {
+                WXCGrid* parent = rt_dynamic_cast<WXCGrid>(scrollContentPresenter.parent);
+                [parent.children insertObject:strongSelf->_contentImage atIndex:0];
+            } else {
+                TraceWarning(TAG, L"UIScrollView loaded event failed to find the ScrollContentPresenter child.");
+            }
+        }
+
         if (strongSelf && (strongSelf->_contentOffset != CGPointZero || strongSelf->_zoomScale != strongSelf->_scrollViewer.zoomFactor)) {
             strongSelf->_loaded = YES;
 
@@ -562,13 +622,9 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
  @Notes May not be fully implemented
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
-    return [self _initWithCoder:coder xamlElement:nil];
-}
-
-- (instancetype)_initWithCoder:(NSCoder*)coder xamlElement:(WXFrameworkElement*)xamlElement {
-    [self _initScrollViewer:xamlElement];
-
     if (self = [super initWithCoder:coder]) {
+        [self _initUIScrollView];
+
         if ([coder containsValueForKey:@"UIDelaysContentTouches"]) {
             _delaysContentTouches = [coder decodeBoolForKey:@"UIDelaysContentTouches"];
         } else {
@@ -615,18 +671,28 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
  @Status Interoperable
 */
 - (instancetype)initWithFrame:(CGRect)frame {
-    return [self _initWithFrame:frame xamlElement:nil];
+    return [self initWithFrame:frame xamlElement:nil];
 }
 
-- (instancetype)_initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
-    if (self = [super initWithFrame:frame]) {
+/**
+ Microsoft Extension
+*/
+- (instancetype)initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
+    if (self = [super initWithFrame:frame xamlElement:xamlElement]) {
+        [self _initUIScrollView];
         [self setClipsToBounds:1];
         _delaysContentTouches = TRUE;
-
-        [self _initScrollViewer:xamlElement];
     }
 
     return self;
+}
+
+/**
+ Microsoft Extension
+*/
++ (WXFrameworkElement*)createXamlElement {
+    // No autorelease needed because we compile with ARC
+    return [WXCScrollViewer make];
 }
 
 /**
@@ -813,7 +879,7 @@ static void clipPoint(UIScrollView* o, CGPoint& p, bool bounce = true) {
         TraceVerbose(TAG, L"refreshOrigin");
     }
 
-    [self.layer setOrigin:_contentOffset];
+    [self.layer _setOrigin:_contentOffset];
     [self setNeedsLayout];
 
     if ([self.delegate respondsToSelector:@selector(scrollViewDidScroll:)]) {
@@ -1258,7 +1324,8 @@ static void setContentOffsetKVOed(UIScrollView* self, CGPoint offs) {
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes UIScrollView does not support negative content insets. Clamped to 0 if insets values < 0.
 */
 - (void)setContentInset:(UIEdgeInsets)inset {
     if (DEBUG_VERBOSE) {
@@ -1272,6 +1339,27 @@ static void setContentOffsetKVOed(UIScrollView* self, CGPoint offs) {
 
     if (memcmp(&_contentInset, &inset, sizeof(UIEdgeInsets)) == 0) {
         return;
+    }
+
+    // Clamp inset values to 0 if they are negative
+    if (inset.top < 0.0f) {
+        TraceWarning(TAG, L"setContentInset: Clamping inset.top to 0");
+        inset.top = 0.0f;
+    }
+
+    if (inset.right < 0.0f) {
+        TraceWarning(TAG, L"setContentInset: Clamping inset.right to 0");
+        inset.right = 0.0f;
+    }
+
+    if (inset.bottom < 0.0f) {
+        TraceWarning(TAG, L"setContentInset: Clamping inset.bottom to 0");
+        inset.bottom = 0.0f;
+    }
+
+    if (inset.left < 0.0f) {
+        TraceWarning(TAG, L"setContentInset: Clamping inset.left to 0");
+        inset.left = 0.0f;
     }
 
     _contentInset = inset;
@@ -1461,8 +1549,30 @@ static float findMinY(UIScrollView* o) {
     return StubReturn();
 }
 
-+ (Class)layerClass {
-    return [_UIScrollViewCALayer class];
+- (void)_setManipulationMode:(WUXIManipulationModes)mode recursive:(BOOL)recursive {
+    if (DEBUG_VERBOSE) {
+        TraceVerbose(TAG,
+                     L"_setManipulationMode: currentMode=%d, targetmode=%d, recursive=%d",
+                     self->_contentCanvas.manipulationMode,
+                     mode,
+                     recursive);
+    }
+
+    if (_contentCanvas.manipulationMode != mode) {
+        _contentCanvas.manipulationMode = mode;
+
+        if (recursive) {
+            UIView* parent = [self superview];
+            while (parent) {
+                if ([parent isKindOfClass:[UIScrollView class]]) {
+                    UIScrollView* parentUIScrollview = (UIScrollView*)parent;
+                    [parentUIScrollview _setManipulationMode:mode recursive:NO];
+                }
+
+                parent = [parent superview];
+            }
+        }
+    }
 }
 
 @end

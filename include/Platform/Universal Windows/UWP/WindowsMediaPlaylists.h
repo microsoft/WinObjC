@@ -19,11 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_PLAYLISTS_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_PLAYLISTS_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Media_Playlists.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WMPPlaylist;
-@protocol WMPIPlaylist
-, WMPIPlaylistStatics;
+@protocol WMPIPlaylist, WMPIPlaylistStatics;
 
 // Windows.Media.Playlists.PlaylistFormat
 enum _WMPPlaylistFormat {
@@ -42,7 +47,7 @@ typedef unsigned WMPPlaylistFormat;
 #ifndef __WMPPlaylist_DEFINED__
 #define __WMPPlaylist_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYLISTS_EXPORT
 @interface WMPPlaylist : RTObject
 + (void)loadAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(WMPPlaylist*))success failure:(void (^)(NSError*))failure;
 + (instancetype)make ACTIVATOR;
@@ -51,17 +56,9 @@ WINRT_EXPORT
 #endif
 @property (readonly) NSMutableArray* /* WSStorageFile* */ files;
 - (RTObject<WFIAsyncAction>*)saveAsync;
-- (void)saveAsAsync:(RTObject<WSIStorageFolder>*)saveLocation
-        desiredName:(NSString*)desiredName
-             option:(WSNameCollisionOption)option
-            success:(void (^)(WSStorageFile*))success
-            failure:(void (^)(NSError*))failure;
-- (void)saveAsWithFormatAsync:(RTObject<WSIStorageFolder>*)saveLocation
-                  desiredName:(NSString*)desiredName
-                       option:(WSNameCollisionOption)option
-               playlistFormat:(WMPPlaylistFormat)playlistFormat
-                      success:(void (^)(WSStorageFile*))success
-                      failure:(void (^)(NSError*))failure;
+- (void)saveAsAsync:(RTObject<WSIStorageFolder>*)saveLocation desiredName:(NSString *)desiredName option:(WSNameCollisionOption)option success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
+- (void)saveAsWithFormatAsync:(RTObject<WSIStorageFolder>*)saveLocation desiredName:(NSString *)desiredName option:(WSNameCollisionOption)option playlistFormat:(WMPPlaylistFormat)playlistFormat success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WMPPlaylist_DEFINED__
+

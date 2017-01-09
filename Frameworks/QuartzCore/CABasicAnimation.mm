@@ -15,13 +15,16 @@
 //******************************************************************************
 
 #include "Starboard.h"
-#include <math.h>
 
-#include "QuartzCore/CALayer.h"
-#include "QuartzCore/CABasicAnimation.h"
+#include <QuartzCore/CABasicAnimation.h>
+#include <QuartzCore/CALayer.h>
+#include <QuartzCore/CoreAnimationFunctions.h>
+
 #include "CACompositor.h"
 #include "CAAnimationInternal.h"
 #include "LoggingNative.h"
+
+#include <math.h>
 
 static const wchar_t* TAG = L"CABasicAnimation";
 
@@ -98,7 +101,7 @@ static const wchar_t* TAG = L"CABasicAnimation";
     [object addAnimation:self forKey:key];
 }
 
-- (DisplayAnimation*)_createAnimation:(CALayer*)layer forKey:(id)forKey {
+- (std::shared_ptr<ILayerAnimation>)_createAnimation:(CALayer*)layer forKey:(id)forKey {
     _attachedLayer = layer;
 
     if (_keyPath == nil) {
@@ -120,7 +123,7 @@ static const wchar_t* TAG = L"CABasicAnimation";
         _from = [[layer valueForKeyPath:_keyPath] retain];
     }
 
-    _runningAnimation = _globalCompositor->GetBasicDisplayAnimation(self, _keyPath, _from, _to, _by, &_timingProperties);
+    _runningAnimation = _globalCompositor->CreateBasicAnimation(self, _keyPath, _from, _to, _by, &_timingProperties);
 
     return _runningAnimation;
 }

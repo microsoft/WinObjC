@@ -146,13 +146,13 @@
 
 #if !defined(CF_EXPORT)
 #if defined(CF_BUILDING_CF) && defined(__cplusplus)
-#define CF_EXPORT extern "C" __declspec(dllexport) 
+#define CF_EXPORT extern "C" __declspec(dllexport)
 #elif defined(CF_BUILDING_CF) && !defined(__cplusplus)
-#define CF_EXPORT extern __declspec(dllexport) 
+#define CF_EXPORT extern __declspec(dllexport)
 #elif defined(__cplusplus)
-#define CF_EXPORT extern "C" __declspec(dllimport) 
+#define CF_EXPORT extern "C" __declspec(dllimport)
 #else
-#define CF_EXPORT extern __declspec(dllimport) 
+#define CF_EXPORT extern __declspec(dllimport)
 #endif
 #endif
 
@@ -204,7 +204,7 @@ CF_EXTERN_C_BEGIN
 #endif
 #endif
 
-// Marks functions which return a CF type that may need to be retained by the caller but whose names are not consistent with CoreFoundation naming rules. The recommended fix to this is to rename the functions, but this macro can be used to let the clang static analyzer know of any exceptions that cannot be fixed. 
+// Marks functions which return a CF type that may need to be retained by the caller but whose names are not consistent with CoreFoundation naming rules. The recommended fix to this is to rename the functions, but this macro can be used to let the clang static analyzer know of any exceptions that cannot be fixed.
 // This macro is ONLY to be used in exceptional circumstances, not to annotate functions which conform to the CoreFoundation naming rules.
 #ifndef CF_RETURNS_NOT_RETAINED
 #if __has_feature(attribute_cf_returns_not_retained)
@@ -498,7 +498,6 @@ CF_INLINE CFRange CFRangeMake(CFIndex loc, CFIndex len) {
 CF_EXPORT
 CFRange __CFRangeMake(CFIndex loc, CFIndex len);
 
-
 /* Null representant */
 
 typedef const struct CF_BRIDGED_TYPE(NSNull) __CFNull * CFNullRef;
@@ -545,14 +544,14 @@ const CFAllocatorRef kCFAllocatorMallocZone;
 
 /* Null allocator which does nothing and allocates no memory. This allocator
    is useful as the "bytesDeallocator" in CFData or "contentsDeallocator"
-   in CFString where the memory should not be freed. 
+   in CFString where the memory should not be freed.
 */
 CF_EXPORT
 const CFAllocatorRef kCFAllocatorNull;
 
 /* Special allocator argument to CFAllocatorCreate() which means
    "use the functions given in the context to allocate the allocator
-   itself as well". 
+   itself as well".
 */
 CF_EXPORT
 const CFAllocatorRef kCFAllocatorUseContext;
@@ -568,7 +567,7 @@ typedef struct {
     CFIndex             version;
     void *              info;
     CFAllocatorRetainCallBack       retain;
-    CFAllocatorReleaseCallBack      release;        
+    CFAllocatorReleaseCallBack      release;
     CFAllocatorCopyDescriptionCallBack  copyDescription;
     CFAllocatorAllocateCallBack     allocate;
     CFAllocatorReallocateCallBack   reallocate;

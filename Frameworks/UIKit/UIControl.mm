@@ -15,12 +15,16 @@
 //******************************************************************************
 
 #import "Starboard.h"
-#import "UIKit/UIView.h"
-#import "UIKit/UIControl.h"
-#import "UIKit/UIRuntimeEventConnection.h"
-#import "Foundation/NSString.h"
-#import "Foundation/NSMutableArray.h"
-#import "Foundation/NSMutableSet.h"
+
+#import <UIKit/UIControl.h>
+#import <UIKit/UILabel.h>
+#import <UIKit/UIRuntimeEventConnection.h>
+#import <UIKit/UIView.h>
+
+#import <Foundation/NSString.h>
+#import <Foundation/NSMutableArray.h>
+#import <Foundation/NSMutableSet.h>
+
 #import "LoggingNative.h"
 #import "StubReturn.h"
 #import "UIControl+Internal.h"
@@ -29,16 +33,31 @@ static const wchar_t* TAG = L"UIControl";
 
 @implementation UIControl
 
+- (void)_initUIControl {
+    _registeredActions = [[NSMutableArray alloc] init];
+    _activeTouches = [[NSMutableArray alloc] init];
+    _contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
+    _contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+}
+
 /**
  @Status Interoperable
 */
-- (instancetype)initWithFrame:(CGRect)pos {
-    _registeredActions = [NSMutableArray new];
-    _activeTouches = [NSMutableArray new];
-    _contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
-    _contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        [self _initUIControl];
+    }
 
-    [super initWithFrame:pos];
+    return self;
+}
+
+/**
+Microsoft Extension
+*/
+- (instancetype)initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
+    if (self = [super initWithFrame:frame xamlElement:xamlElement]) {
+        [self _initUIControl];
+    }
 
     return self;
 }
@@ -48,25 +67,21 @@ static const wchar_t* TAG = L"UIControl";
  @Notes May not be fully implemented
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
-    _registeredActions = [[NSMutableArray alloc] init];
-    _activeTouches = [NSMutableArray new];
+    if (self = [super initWithCoder:coder]) {
+        [self _initUIControl];
 
-    BOOL selected = [coder decodeInt32ForKey:@"UISelected"];
-    if (selected) {
-        _curState |= UIControlStateSelected;
+        BOOL selected = [coder decodeInt32ForKey:@"UISelected"];
+        if (selected) {
+            _curState |= UIControlStateSelected;
+        }
+
+        if ([coder containsValueForKey:@"UIContentHorizontalAlignment"]) {
+            _contentHorizontalAlignment = [coder decodeInt32ForKey:@"UIContentHorizontalAlignment"];
+        }
+        if ([coder containsValueForKey:@"UIContentVerticalAlignment"]) {
+            _contentVerticalAlignment = [coder decodeInt32ForKey:@"UIContentVerticalAlignment"];
+        }
     }
-
-    _contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
-    _contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-
-    if ([coder containsValueForKey:@"UIContentHorizontalAlignment"]) {
-        _contentHorizontalAlignment = [coder decodeInt32ForKey:@"UIContentHorizontalAlignment"];
-    }
-    if ([coder containsValueForKey:@"UIContentVerticalAlignment"]) {
-        _contentVerticalAlignment = [coder decodeInt32ForKey:@"UIContentVerticalAlignment"];
-    }
-
-    [super initWithCoder:coder];
 
     return self;
 }
@@ -202,19 +217,22 @@ static const wchar_t* TAG = L"UIControl";
  @Status Interoperable
 */
 - (void)setEnabled:(BOOL)enabled {
-    if (!enabled) {
-        _curState |= UIControlStateDisabled;
-    } else {
-        _curState &= ~UIControlStateDisabled;
-    }
+    // only update the value and then relayout if value actually changed
+    if ((_curState & UIControlStateDisabled) != enabled) {
+        if (!enabled) {
+            _curState |= UIControlStateDisabled;
+        } else {
+            _curState &= ~UIControlStateDisabled;
+        }
 
-    [self setNeedsDisplay];
-    [self setNeedsLayout];
+        [self setNeedsDisplay];
+        [self setNeedsLayout];
 
-    if (enabled) {
-        self.accessibilityTraits &= ~UIAccessibilityTraitNotEnabled;
-    } else {
-        self.accessibilityTraits |= UIAccessibilityTraitNotEnabled;
+        if (enabled) {
+            self.accessibilityTraits &= ~UIAccessibilityTraitNotEnabled;
+        } else {
+            self.accessibilityTraits |= UIAccessibilityTraitNotEnabled;
+        }
     }
 }
 
@@ -250,14 +268,17 @@ static const wchar_t* TAG = L"UIControl";
  @Status Interoperable
 */
 - (void)setSelected:(BOOL)selected {
-    if (selected) {
-        _curState |= UIControlStateSelected;
-    } else {
-        _curState &= ~UIControlStateSelected;
-    }
+    // only update the value and then relayout if value actually changed
+    if ((_curState & UIControlStateSelected) != selected) {
+        if (selected) {
+            _curState |= UIControlStateSelected;
+        } else {
+            _curState &= ~UIControlStateSelected;
+        }
 
-    [self setNeedsDisplay];
-    [self setNeedsLayout];
+        [self setNeedsDisplay];
+        [self setNeedsLayout];
+    }
 }
 
 /**
@@ -271,14 +292,17 @@ static const wchar_t* TAG = L"UIControl";
  @Status Interoperable
 */
 - (void)setHighlighted:(BOOL)highlighted {
-    if (highlighted) {
-        _curState |= UIControlStateHighlighted;
-    } else {
-        _curState &= ~UIControlStateHighlighted;
-    }
+    // only update the value and then relayout if value actually changed
+    if ((_curState & UIControlStateHighlighted) != highlighted) {
+        if (highlighted) {
+            _curState |= UIControlStateHighlighted;
+        } else {
+            _curState &= ~UIControlStateHighlighted;
+        }
 
-    [self setNeedsDisplay];
-    [self setNeedsLayout];
+        [self setNeedsDisplay];
+        [self setNeedsLayout];
+    }
 }
 
 /**

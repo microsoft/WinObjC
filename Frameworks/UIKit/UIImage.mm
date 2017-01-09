@@ -15,23 +15,23 @@
 //
 //******************************************************************************
 
-#include <StubReturn.h>
-#include <math.h>
-#import <StubReturn.h>
 #include "Starboard.h"
+#include <StubReturn.h>
+
+#include <UIKit/UIGraphics.h>
+#include <UIKit/UIImage.h>
 
 #include "CGImageInternal.h"
 #include "CGContextInternal.h"
-#include "CoreGraphics/CGGeometry.h"
+#include <CoreGraphics/CGGeometry.h>
 
-#include "Foundation/NSString.h"
-#include "Foundation/NSMutableDictionary.h"
-#include "Foundation/NSBundle.h"
+#include <Foundation/NSString.h>
+#include <Foundation/NSMutableDictionary.h>
+#include <Foundation/NSBundle.h>
 
-#include "UIKit/UIImage.h"
 #include "UIImageCachedObject.h"
 #include "CALayerInternal.h"
-#include "CACompositor.h"
+#include "StarboardXaml/DisplayProperties.h"
 
 #include "windows.h"
 #include "COMIncludes.h"
@@ -39,6 +39,7 @@
 #include "COMIncludes_End.h"
 
 #include "LoggingNative.h"
+#include <math.h>
 
 @interface UIImage ()
 - (CGRect)_imageStretch;
@@ -369,7 +370,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
         return nil;
     }
 
-    if (strrchr(path, '.') != NULL && GetCACompositor()->screenScale() > 1.5f) {
+    if (strrchr(path, '.') != NULL && DisplayProperties::ScreenScale() > 1.5f) {
         size_t newStrSize = strlen(path) + 10;
         char* newStr = (char*)IwMalloc(newStrSize);
         const char* pathEnd = strrchr(path, '.');
@@ -413,7 +414,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
             }
         }
     }
-    if (!found && GetCACompositor()->screenScale() > 1.5f) {
+    if (!found && DisplayProperties::ScreenScale() > 1.5f) {
         NSString* _2x = [pathAddr stringByAppendingString:@"@2x"];
 
         NSString* pathFind = [bundle pathForResource:_2x ofType:@"png" inDirectory:nil forLocalization:@"English"];
@@ -460,19 +461,18 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
     }
     pthread_mutex_unlock(&imageCacheLock);
 
-    EbrFile* fpIn;
     BYTE in[8] = { 0 };
+    NSInputStream* inStream = [NSInputStream inputStreamWithFileAtPath:[NSString stringWithUTF8String:pathStr]];
+    [inStream open];
 
-    fpIn = EbrFopen(pathStr, "rb");
-    if (!fpIn) {
+    if (NSStreamStatusOpen != inStream.streamStatus) {
         TraceVerbose(TAG, L"Image %hs not found", pathStr);
         // m_pImage = new CGBitmapImage(64, 64, __CGSurfaceFormat::_ColorABGR, NULL);
         return nil;
     }
 
-    EbrFread(in, 1, 8, fpIn);
-
-    EbrFclose(fpIn);
+    [inStream read:in maxLength:_countof(in)];
+    [inStream close];
 
     if (in[0] == 0x89 && in[1] == 'P' && in[2] == 'N' && in[3] == 'G') {
         m_pImage = CGPNGImageCreateFromFile([NSString stringWithCString:pathStr]);
@@ -482,36 +482,19 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
             [self setOrientation:((CGJPEGImageBacking*)m_pImage->Backing())->_orientation];
         }
     } else {
-        EbrFile* fpIn;
-
-        fpIn = EbrFopen(pathStr, "rb");
-        if (!fpIn) {
-            TraceVerbose(TAG, L"Image %hs not found", pathStr);
-            // m_pImage = new CGBitmapImage(64, 64, __CGSurfaceFormat::_ColorABGR, NULL);
-            return nil;
-        }
-
-        EbrFseek(fpIn, 0, SEEK_END);
-        int len = EbrFtell(fpIn);
-        if (len <= 0) {
+        NSData* inData = [NSData dataWithContentsOfFile:[NSString stringWithUTF8String:pathStr]];
+        if (!inData) {
             TraceVerbose(TAG, L"Image %hs invalid", pathStr);
             // m_pImage = new CGBitmapImage(64, 64, __CGSurfaceFormat::_ColorABGR, NULL);
-            EbrFclose(fpIn);
             return nil;
         }
-        EbrFseek(fpIn, 0, SEEK_SET);
 
-        auto inBuffer = std::make_unique<char[]>(len);
-        len = EbrFread(inBuffer.get(), 1, len, fpIn);
-
-        EbrFclose(fpIn);
-
-        if (!loadTIFF(self, inBuffer.get(), len)) {
-            if (!loadGIF(self, inBuffer.get(), len)) {
-                if (!loadBMP(self, inBuffer.get(), len)) {
+        if (!loadTIFF(self, (void*)[inData bytes], [inData length])) {
+            if (!loadGIF(self, (void*)[inData bytes], [inData length])) {
+                if (!loadBMP(self, (void*)[inData bytes], [inData length])) {
                     TraceVerbose(TAG, L"Unrecognized image");
-                    for (int i = 0; i < MIN(len, 64); i++) {
-                        TraceVerbose(TAG, L"%02x ", inBuffer[i]);
+                    for (int i = 0; i < MIN([inData length], 64); i++) {
+                        TraceVerbose(TAG, L"%02x ", ((uint8_t*)[inData bytes])[i]);
                         if ((i + 1) % 16 == 0)
                             TraceVerbose(TAG, L"");
                     }
@@ -845,6 +828,13 @@ static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* dst) 
 /**
  @Status Interoperable
 */
+- (UIEdgeInsets)capInsets {
+    return _imageInsets;
+}
+
+/**
+ @Status Interoperable
+*/
 - (void)drawInRect:(CGRect)pos {
     [self drawInRect:pos blendMode:kCGBlendModeNormal alpha:1.0f];
 }
@@ -965,10 +955,17 @@ static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* dst) 
     if (leftCap != 0) {
         ret->_imageStretch.origin.x = leftCap / imgSize.width;
         ret->_imageStretch.size.width = 1.0f / imgSize.width;
+        if (leftCap < imgSize.width) {
+            // As per UIImage documentation, left/top caps create cap insets with a center section of 1x1 logical pixels
+            ret->_imageInsets.right = imgSize.width - (ret->_imageInsets.left + 1);
+        }
     }
     if (topCap != 0) {
         ret->_imageStretch.origin.y = topCap / imgSize.height;
         ret->_imageStretch.size.height = 1.0f / imgSize.height;
+        if (topCap < imgSize.height) {
+            ret->_imageInsets.bottom = imgSize.height - (ret->_imageInsets.top + 1);
+        }
     }
 
     return [ret autorelease];

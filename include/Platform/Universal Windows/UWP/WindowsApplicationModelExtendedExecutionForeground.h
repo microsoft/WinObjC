@@ -19,11 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_EXTENDEDEXECUTION_FOREGROUND_EXPORT
+#define OBJCUWP_WINDOWS_APPLICATIONMODEL_EXTENDEDEXECUTION_FOREGROUND_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_ExtendedExecution_Foreground.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WAEFExtendedExecutionForegroundRevokedEventArgs, WAEFExtendedExecutionForegroundSession;
-@protocol WAEFIExtendedExecutionForegroundRevokedEventArgs
-, WAEFIExtendedExecutionForegroundSession;
+@protocol WAEFIExtendedExecutionForegroundRevokedEventArgs, WAEFIExtendedExecutionForegroundSession;
 
 // Windows.ApplicationModel.ExtendedExecution.Foreground.ExtendedExecutionForegroundResult
 enum _WAEFExtendedExecutionForegroundResult {
@@ -56,7 +61,7 @@ typedef unsigned WAEFExtendedExecutionForegroundReason;
 #ifndef __WAEFExtendedExecutionForegroundRevokedEventArgs_DEFINED__
 #define __WAEFExtendedExecutionForegroundRevokedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_EXTENDEDEXECUTION_FOREGROUND_EXPORT
 @interface WAEFExtendedExecutionForegroundRevokedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -74,24 +79,29 @@ WINRT_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_APPLICATIONMODEL_EXTENDEDEXECUTION_FOREGROUND_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.ApplicationModel.ExtendedExecution.Foreground.ExtendedExecutionForegroundSession
 #ifndef __WAEFExtendedExecutionForegroundSession_DEFINED__
 #define __WAEFExtendedExecutionForegroundSession_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_EXTENDEDEXECUTION_FOREGROUND_EXPORT
 @interface WAEFExtendedExecutionForegroundSession : RTObject <WFIClosable>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WAEFExtendedExecutionForegroundReason reason;
-@property (retain) NSString* Description;
-- (EventRegistrationToken)addRevokedEvent:(void (^)(RTObject*, WAEFExtendedExecutionForegroundRevokedEventArgs*))del;
+@property (retain) NSString * Description;
+- (EventRegistrationToken)addRevokedEvent:(void(^)(RTObject*, WAEFExtendedExecutionForegroundRevokedEventArgs*))del;
 - (void)removeRevokedEvent:(EventRegistrationToken)tok;
 - (void)requestExtensionAsyncWithSuccess:(void (^)(WAEFExtendedExecutionForegroundResult))success failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
 #endif // __WAEFExtendedExecutionForegroundSession_DEFINED__
+

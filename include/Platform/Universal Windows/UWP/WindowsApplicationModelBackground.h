@@ -19,39 +19,25 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WABAppointmentStoreNotificationTrigger, WABApplicationTrigger, WABApplicationTriggerDetails, WABBackgroundExecutionManager,
-    WABMediaProcessingTrigger, WABBackgroundTaskRegistration, WABBackgroundTaskDeferral, WABBackgroundTaskProgressEventArgs,
-    WABBackgroundTaskCompletedEventArgs, WABBackgroundTaskBuilder, WABBackgroundWorkCost, WABChatMessageNotificationTrigger,
-    WABChatMessageReceivedNotificationTrigger, WABRcsEndUserMessageAvailableTrigger, WABContactStoreNotificationTrigger,
-    WABContentPrefetchTrigger, WABEmailStoreNotificationTrigger, WABMobileBroadbandRegistrationStateChangeTrigger,
-    WABMobileBroadbandRadioStateChangeTrigger, WABMobileBroadbandPinLockStateChangeTrigger,
-    WABMobileBroadbandDeviceServiceNotificationTrigger, WABSmsMessageReceivedTrigger, WABStorageLibraryContentChangedTrigger,
-    WABSystemTrigger, WABSystemCondition, WABNetworkOperatorNotificationTrigger, WABDeviceManufacturerNotificationTrigger,
-    WABCachedFileUpdaterTriggerDetails, WABCachedFileUpdaterTrigger, WABTimeTrigger, WABMaintenanceTrigger, WABDeviceUseTrigger,
-    WABDeviceServicingTrigger, WABRfcommConnectionTrigger, WABDeviceConnectionChangeTrigger, WABGattCharacteristicNotificationTrigger,
-    WABBluetoothLEAdvertisementWatcherTrigger, WABBluetoothLEAdvertisementPublisherTrigger, WABDeviceWatcherTrigger, WABLocationTrigger,
-    WABActivitySensorTrigger, WABNetworkOperatorHotspotAuthenticationTrigger, WABSocketActivityTrigger, WABPushNotificationTrigger,
-    WABToastNotificationHistoryChangedTrigger, WABToastNotificationActionTrigger;
-@protocol WABIApplicationTriggerDetails
-, WABIBackgroundExecutionManagerStatics, WABIBackgroundTaskInstance, WABIBackgroundWorkCostStatics, WABIBackgroundTaskDeferral,
-    WABIBackgroundTaskInstance2, WABIBackgroundTask, WABIBackgroundTaskRegistration, WABIBackgroundTaskRegistration2, WABIBackgroundTrigger,
-    WABIAppointmentStoreNotificationTrigger, WABIApplicationTrigger, WABIMediaProcessingTrigger, WABIBackgroundTaskRegistrationStatics,
-    WABIBackgroundTaskBuilder, WABIBackgroundCondition, WABIBackgroundTaskBuilder2, WABIBackgroundTaskBuilder3,
-    WABIBackgroundTaskCompletedEventArgs, WABIBackgroundTaskProgressEventArgs, WABIChatMessageNotificationTrigger,
-    WABIChatMessageReceivedNotificationTrigger, WABIRcsEndUserMessageAvailableTrigger, WABIContactStoreNotificationTrigger,
-    WABIContentPrefetchTrigger, WABIContentPrefetchTriggerFactory, WABIEmailStoreNotificationTrigger, WABISmsMessageReceivedTriggerFactory,
-    WABIStorageLibraryContentChangedTrigger, WABIStorageLibraryContentChangedTriggerStatics, WABISystemTrigger, WABISystemTriggerFactory,
-    WABISystemCondition, WABISystemConditionFactory, WABINetworkOperatorNotificationTrigger, WABINetworkOperatorNotificationTriggerFactory,
-    WABIDeviceManufacturerNotificationTrigger, WABIDeviceManufacturerNotificationTriggerFactory, WABICachedFileUpdaterTriggerDetails,
-    WABICachedFileUpdaterTrigger, WABITimeTrigger, WABITimeTriggerFactory, WABIMaintenanceTrigger, WABIMaintenanceTriggerFactory,
-    WABIDeviceUseTrigger, WABIDeviceServicingTrigger, WABIRfcommConnectionTrigger, WABIDeviceConnectionChangeTrigger,
-    WABIDeviceConnectionChangeTriggerStatics, WABIGattCharacteristicNotificationTrigger, WABIGattCharacteristicNotificationTriggerFactory,
-    WABIBluetoothLEAdvertisementWatcherTrigger, WABIBluetoothLEAdvertisementPublisherTrigger, WABIDeviceWatcherTrigger, WABILocationTrigger,
-    WABILocationTriggerFactory, WABIActivitySensorTrigger, WABIActivitySensorTriggerFactory,
-    WABINetworkOperatorHotspotAuthenticationTrigger, WABIPushNotificationTriggerFactory, WABIToastNotificationHistoryChangedTriggerFactory,
-    WABIToastNotificationActionTriggerFactory;
+@class WABAlarmApplicationManager, WABPhoneTrigger, WABCommunicationBlockingAppSetAsActiveTrigger, WABSmartCardTrigger, WABAppointmentStoreNotificationTrigger, WABApplicationTrigger, WABApplicationTriggerDetails, WABBackgroundExecutionManager, WABMediaProcessingTrigger, WABBackgroundTaskRegistration, WABBackgroundTaskDeferral, WABBackgroundTaskProgressEventArgs, WABBackgroundTaskCompletedEventArgs, WABBackgroundTaskBuilder, WABBackgroundWorkCost, WABChatMessageNotificationTrigger, WABChatMessageReceivedNotificationTrigger, WABRcsEndUserMessageAvailableTrigger, WABContactStoreNotificationTrigger, WABContentPrefetchTrigger, WABEmailStoreNotificationTrigger, WABMobileBroadbandRegistrationStateChangeTrigger, WABMobileBroadbandRadioStateChangeTrigger, WABMobileBroadbandPinLockStateChangeTrigger, WABMobileBroadbandDeviceServiceNotificationTrigger, WABSecondaryAuthenticationFactorAuthenticationTrigger, WABSmsMessageReceivedTrigger, WABStorageLibraryContentChangedTrigger, WABSystemTrigger, WABSystemCondition, WABNetworkOperatorNotificationTrigger, WABDeviceManufacturerNotificationTrigger, WABCachedFileUpdaterTriggerDetails, WABCachedFileUpdaterTrigger, WABTimeTrigger, WABMaintenanceTrigger, WABDeviceUseTrigger, WABDeviceServicingTrigger, WABRfcommConnectionTrigger, WABDeviceConnectionChangeTrigger, WABGattCharacteristicNotificationTrigger, WABBluetoothLEAdvertisementWatcherTrigger, WABBluetoothLEAdvertisementPublisherTrigger, WABDeviceWatcherTrigger, WABLocationTrigger, WABActivitySensorTrigger, WABSensorDataThresholdTrigger, WABNetworkOperatorHotspotAuthenticationTrigger, WABSocketActivityTrigger, WABPushNotificationTrigger, WABToastNotificationHistoryChangedTrigger, WABToastNotificationActionTrigger, WABUserNotificationChangedTrigger;
+@protocol WABIAlarmApplicationManagerStatics, WABIPhoneTriggerFactory, WABISmartCardTriggerFactory, WABIApplicationTriggerDetails, WABIBackgroundExecutionManagerStatics, WABIBackgroundTaskInstance, WABIBackgroundWorkCostStatics, WABIBackgroundTaskDeferral, WABIBackgroundTaskInstance2, WABIBackgroundTaskInstance4, WABIBackgroundTask, WABIBackgroundTaskRegistration, WABIBackgroundTaskRegistration2, WABIBackgroundTrigger, WABIPhoneTrigger, WABICommunicationBlockingAppSetAsActiveTrigger, WABISmartCardTrigger, WABIAppointmentStoreNotificationTrigger, WABIApplicationTrigger, WABIMediaProcessingTrigger, WABIBackgroundTaskRegistrationStatics, WABIBackgroundTaskBuilder, WABIBackgroundCondition, WABIBackgroundTaskBuilder2, WABIBackgroundTaskBuilder3, WABIBackgroundTaskCompletedEventArgs, WABIBackgroundTaskProgressEventArgs, WABIChatMessageNotificationTrigger, WABIChatMessageReceivedNotificationTrigger, WABIRcsEndUserMessageAvailableTrigger, WABIContactStoreNotificationTrigger, WABIContentPrefetchTrigger, WABIContentPrefetchTriggerFactory, WABIEmailStoreNotificationTrigger, WABISecondaryAuthenticationFactorAuthenticationTrigger, WABISmsMessageReceivedTriggerFactory, WABIStorageLibraryContentChangedTrigger, WABIStorageLibraryContentChangedTriggerStatics, WABISystemTrigger, WABISystemTriggerFactory, WABISystemCondition, WABISystemConditionFactory, WABINetworkOperatorNotificationTrigger, WABINetworkOperatorNotificationTriggerFactory, WABIDeviceManufacturerNotificationTrigger, WABIDeviceManufacturerNotificationTriggerFactory, WABICachedFileUpdaterTriggerDetails, WABICachedFileUpdaterTrigger, WABITimeTrigger, WABITimeTriggerFactory, WABIMaintenanceTrigger, WABIMaintenanceTriggerFactory, WABIDeviceUseTrigger, WABIDeviceServicingTrigger, WABIRfcommConnectionTrigger, WABIDeviceConnectionChangeTrigger, WABIDeviceConnectionChangeTriggerStatics, WABIGattCharacteristicNotificationTrigger, WABIGattCharacteristicNotificationTriggerFactory, WABIBluetoothLEAdvertisementWatcherTrigger, WABIBluetoothLEAdvertisementPublisherTrigger, WABIDeviceWatcherTrigger, WABILocationTrigger, WABILocationTriggerFactory, WABIActivitySensorTrigger, WABIActivitySensorTriggerFactory, WABISensorDataThresholdTrigger, WABISensorDataThresholdTriggerFactory, WABINetworkOperatorHotspotAuthenticationTrigger, WABISocketActivityTrigger, WABIPushNotificationTriggerFactory, WABIToastNotificationHistoryChangedTriggerFactory, WABIToastNotificationActionTriggerFactory, WABIUserNotificationChangedTriggerFactory;
+
+// Windows.ApplicationModel.Background.AlarmAccessStatus
+enum _WABAlarmAccessStatus {
+    WABAlarmAccessStatusUnspecified = 0,
+    WABAlarmAccessStatusAllowedWithWakeupCapability = 1,
+    WABAlarmAccessStatusAllowedWithoutWakeupCapability = 2,
+    WABAlarmAccessStatusDenied = 3,
+};
+typedef unsigned WABAlarmAccessStatus;
 
 // Windows.ApplicationModel.Background.ApplicationTriggerResult
 enum _WABApplicationTriggerResult {
@@ -68,6 +54,10 @@ enum _WABBackgroundAccessStatus {
     WABBackgroundAccessStatusAllowedWithAlwaysOnRealTimeConnectivity = 1,
     WABBackgroundAccessStatusAllowedMayUseActiveRealTimeConnectivity = 2,
     WABBackgroundAccessStatusDenied = 3,
+    WABBackgroundAccessStatusAlwaysAllowed = 4,
+    WABBackgroundAccessStatusAllowedSubjectToSystemPolicy = 5,
+    WABBackgroundAccessStatusDeniedBySystemPolicy = 6,
+    WABBackgroundAccessStatusDeniedByUser = 7,
 };
 typedef unsigned WABBackgroundAccessStatus;
 
@@ -130,6 +120,7 @@ enum _WABSystemTriggerType {
     WABSystemTriggerTypeOnlineIdConnectedStateChange = 12,
     WABSystemTriggerTypeBackgroundWorkCostChange = 13,
     WABSystemTriggerTypePowerStateChange = 14,
+    WABSystemTriggerTypeDefaultSignInAccountChange = 15,
 };
 typedef unsigned WABSystemTriggerType;
 
@@ -162,56 +153,59 @@ enum _WABLocationTriggerType {
 };
 typedef unsigned WABLocationTriggerType;
 
+#include "WindowsSystem.h"
+#include "WindowsApplicationModelCallsBackground.h"
+#include "WindowsFoundation.h"
+#include "WindowsDevicesSmartCards.h"
 #include "WindowsDevicesSms.h"
 #include "WindowsFoundationCollections.h"
+#include "WindowsStorage.h"
+#include "WindowsStorageProvider.h"
 #include "WindowsDevicesBluetooth.h"
 #include "WindowsDevicesBluetoothBackground.h"
-#include "WindowsFoundation.h"
-#include "WindowsStorage.h"
-#include "WindowsNetworking.h"
 #include "WindowsNetworkingSockets.h"
-#include "WindowsStorageProvider.h"
+#include "WindowsNetworking.h"
 #include "WindowsDevicesBluetoothGenericAttributeProfile.h"
 #include "WindowsDevicesBluetoothAdvertisement.h"
 #include "WindowsDevicesSensors.h"
+#include "WindowsUINotifications.h"
 // Windows.ApplicationModel.Background.BackgroundTaskCanceledEventHandler
 #ifndef __WABBackgroundTaskCanceledEventHandler__DEFINED
 #define __WABBackgroundTaskCanceledEventHandler__DEFINED
-typedef void (^WABBackgroundTaskCanceledEventHandler)(RTObject<WABIBackgroundTaskInstance>* sender,
-                                                      WABBackgroundTaskCancellationReason reason);
+typedef void(^WABBackgroundTaskCanceledEventHandler)(RTObject<WABIBackgroundTaskInstance>* sender, WABBackgroundTaskCancellationReason reason);
 #endif // __WABBackgroundTaskCanceledEventHandler__DEFINED
 
 // Windows.ApplicationModel.Background.BackgroundTaskCompletedEventHandler
 #ifndef __WABBackgroundTaskCompletedEventHandler__DEFINED
 #define __WABBackgroundTaskCompletedEventHandler__DEFINED
-typedef void (^WABBackgroundTaskCompletedEventHandler)(WABBackgroundTaskRegistration* sender, WABBackgroundTaskCompletedEventArgs* args);
+typedef void(^WABBackgroundTaskCompletedEventHandler)(WABBackgroundTaskRegistration* sender, WABBackgroundTaskCompletedEventArgs* args);
 #endif // __WABBackgroundTaskCompletedEventHandler__DEFINED
 
 // Windows.ApplicationModel.Background.BackgroundTaskProgressEventHandler
 #ifndef __WABBackgroundTaskProgressEventHandler__DEFINED
 #define __WABBackgroundTaskProgressEventHandler__DEFINED
-typedef void (^WABBackgroundTaskProgressEventHandler)(WABBackgroundTaskRegistration* sender, WABBackgroundTaskProgressEventArgs* args);
+typedef void(^WABBackgroundTaskProgressEventHandler)(WABBackgroundTaskRegistration* sender, WABBackgroundTaskProgressEventArgs* args);
 #endif // __WABBackgroundTaskProgressEventHandler__DEFINED
+
 
 #import <Foundation/Foundation.h>
 
 // Windows.ApplicationModel.Background.BackgroundTaskCanceledEventHandler
 #ifndef __WABBackgroundTaskCanceledEventHandler__DEFINED
 #define __WABBackgroundTaskCanceledEventHandler__DEFINED
-typedef void (^WABBackgroundTaskCanceledEventHandler)(RTObject<WABIBackgroundTaskInstance>* sender,
-                                                      WABBackgroundTaskCancellationReason reason);
+typedef void(^WABBackgroundTaskCanceledEventHandler)(RTObject<WABIBackgroundTaskInstance>* sender, WABBackgroundTaskCancellationReason reason);
 #endif // __WABBackgroundTaskCanceledEventHandler__DEFINED
 
 // Windows.ApplicationModel.Background.BackgroundTaskProgressEventHandler
 #ifndef __WABBackgroundTaskProgressEventHandler__DEFINED
 #define __WABBackgroundTaskProgressEventHandler__DEFINED
-typedef void (^WABBackgroundTaskProgressEventHandler)(WABBackgroundTaskRegistration* sender, WABBackgroundTaskProgressEventArgs* args);
+typedef void(^WABBackgroundTaskProgressEventHandler)(WABBackgroundTaskRegistration* sender, WABBackgroundTaskProgressEventArgs* args);
 #endif // __WABBackgroundTaskProgressEventHandler__DEFINED
 
 // Windows.ApplicationModel.Background.BackgroundTaskCompletedEventHandler
 #ifndef __WABBackgroundTaskCompletedEventHandler__DEFINED
 #define __WABBackgroundTaskCompletedEventHandler__DEFINED
-typedef void (^WABBackgroundTaskCompletedEventHandler)(WABBackgroundTaskRegistration* sender, WABBackgroundTaskCompletedEventArgs* args);
+typedef void(^WABBackgroundTaskCompletedEventHandler)(WABBackgroundTaskRegistration* sender, WABBackgroundTaskCompletedEventArgs* args);
 #endif // __WABBackgroundTaskCompletedEventHandler__DEFINED
 
 // Windows.ApplicationModel.Background.IBackgroundTaskInstance
@@ -229,6 +223,10 @@ typedef void (^WABBackgroundTaskCompletedEventHandler)(WABBackgroundTaskRegistra
 - (WABBackgroundTaskDeferral*)getDeferral;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WABIBackgroundTaskInstance : RTObject <WABIBackgroundTaskInstance>
+@end
+
 #endif // __WABIBackgroundTaskInstance_DEFINED__
 
 // Windows.ApplicationModel.Background.IBackgroundTaskInstance2
@@ -240,7 +238,26 @@ typedef void (^WABBackgroundTaskCompletedEventHandler)(WABBackgroundTaskRegistra
 - (WABBackgroundTaskDeferral*)getDeferral;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WABIBackgroundTaskInstance2 : RTObject <WABIBackgroundTaskInstance2>
+@end
+
 #endif // __WABIBackgroundTaskInstance2_DEFINED__
+
+// Windows.ApplicationModel.Background.IBackgroundTaskInstance4
+#ifndef __WABIBackgroundTaskInstance4_DEFINED__
+#define __WABIBackgroundTaskInstance4_DEFINED__
+
+@protocol WABIBackgroundTaskInstance4 <WABIBackgroundTaskInstance>
+@property (readonly) WSUser* user;
+- (WABBackgroundTaskDeferral*)getDeferral;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WABIBackgroundTaskInstance4 : RTObject <WABIBackgroundTaskInstance4>
+@end
+
+#endif // __WABIBackgroundTaskInstance4_DEFINED__
 
 // Windows.ApplicationModel.Background.IBackgroundTask
 #ifndef __WABIBackgroundTask_DEFINED__
@@ -250,6 +267,10 @@ typedef void (^WABBackgroundTaskCompletedEventHandler)(WABBackgroundTaskRegistra
 - (void)run:(RTObject<WABIBackgroundTaskInstance>*)taskInstance;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WABIBackgroundTask : RTObject <WABIBackgroundTask>
+@end
+
 #endif // __WABIBackgroundTask_DEFINED__
 
 // Windows.ApplicationModel.Background.IBackgroundTaskRegistration
@@ -257,13 +278,17 @@ typedef void (^WABBackgroundTaskCompletedEventHandler)(WABBackgroundTaskRegistra
 #define __WABIBackgroundTaskRegistration_DEFINED__
 
 @protocol WABIBackgroundTaskRegistration
-@property (readonly) NSString* name;
+@property (readonly) NSString * name;
 @property (readonly) WFGUID* taskId;
 - (EventRegistrationToken)addCompletedEvent:(WABBackgroundTaskCompletedEventHandler)del;
 - (void)removeCompletedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addProgressEvent:(WABBackgroundTaskProgressEventHandler)del;
 - (void)removeProgressEvent:(EventRegistrationToken)tok;
 - (void)unregister:(BOOL)cancelTask;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WABIBackgroundTaskRegistration : RTObject <WABIBackgroundTaskRegistration>
 @end
 
 #endif // __WABIBackgroundTaskRegistration_DEFINED__
@@ -277,6 +302,10 @@ typedef void (^WABBackgroundTaskCompletedEventHandler)(WABBackgroundTaskRegistra
 - (void)unregister:(BOOL)cancelTask;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WABIBackgroundTaskRegistration2 : RTObject <WABIBackgroundTaskRegistration2>
+@end
+
 #endif // __WABIBackgroundTaskRegistration2_DEFINED__
 
 // Windows.ApplicationModel.Background.IBackgroundTrigger
@@ -284,6 +313,10 @@ typedef void (^WABBackgroundTaskCompletedEventHandler)(WABBackgroundTaskRegistra
 #define __WABIBackgroundTrigger_DEFINED__
 
 @protocol WABIBackgroundTrigger
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WABIBackgroundTrigger : RTObject <WABIBackgroundTrigger>
 @end
 
 #endif // __WABIBackgroundTrigger_DEFINED__
@@ -295,13 +328,74 @@ typedef void (^WABBackgroundTaskCompletedEventHandler)(WABBackgroundTaskRegistra
 @protocol WABIBackgroundCondition
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WABIBackgroundCondition : RTObject <WABIBackgroundCondition>
+@end
+
 #endif // __WABIBackgroundCondition_DEFINED__
+
+// Windows.ApplicationModel.Background.AlarmApplicationManager
+#ifndef __WABAlarmApplicationManager_DEFINED__
+#define __WABAlarmApplicationManager_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WABAlarmApplicationManager : RTObject
++ (void)requestAccessAsyncWithSuccess:(void (^)(WABAlarmAccessStatus))success failure:(void (^)(NSError*))failure;
++ (WABAlarmAccessStatus)getAccessStatus;
+@end
+
+#endif // __WABAlarmApplicationManager_DEFINED__
+
+// Windows.ApplicationModel.Background.PhoneTrigger
+#ifndef __WABPhoneTrigger_DEFINED__
+#define __WABPhoneTrigger_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WABPhoneTrigger : RTObject <WABIBackgroundTrigger>
++ (WABPhoneTrigger*)make:(WACBPhoneTriggerType)type oneShot:(BOOL)oneShot ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) BOOL oneShot;
+@property (readonly) WACBPhoneTriggerType triggerType;
+@end
+
+#endif // __WABPhoneTrigger_DEFINED__
+
+// Windows.ApplicationModel.Background.CommunicationBlockingAppSetAsActiveTrigger
+#ifndef __WABCommunicationBlockingAppSetAsActiveTrigger_DEFINED__
+#define __WABCommunicationBlockingAppSetAsActiveTrigger_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WABCommunicationBlockingAppSetAsActiveTrigger : RTObject <WABIBackgroundTrigger>
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@end
+
+#endif // __WABCommunicationBlockingAppSetAsActiveTrigger_DEFINED__
+
+// Windows.ApplicationModel.Background.SmartCardTrigger
+#ifndef __WABSmartCardTrigger_DEFINED__
+#define __WABSmartCardTrigger_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WABSmartCardTrigger : RTObject <WABIBackgroundTrigger>
++ (WABSmartCardTrigger*)make:(WDSSmartCardTriggerType)triggerType ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) WDSSmartCardTriggerType triggerType;
+@end
+
+#endif // __WABSmartCardTrigger_DEFINED__
 
 // Windows.ApplicationModel.Background.AppointmentStoreNotificationTrigger
 #ifndef __WABAppointmentStoreNotificationTrigger_DEFINED__
 #define __WABAppointmentStoreNotificationTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABAppointmentStoreNotificationTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -315,16 +409,14 @@ WINRT_EXPORT
 #ifndef __WABApplicationTrigger_DEFINED__
 #define __WABApplicationTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABApplicationTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)requestAsyncWithSuccess:(void (^)(WABApplicationTriggerResult))success failure:(void (^)(NSError*))failure;
-- (void)requestAsyncWithArguments:(WFCValueSet*)arguments
-                          success:(void (^)(WABApplicationTriggerResult))success
-                          failure:(void (^)(NSError*))failure;
+- (void)requestAsyncWithArguments:(WFCValueSet*)arguments success:(void (^)(WABApplicationTriggerResult))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WABApplicationTrigger_DEFINED__
@@ -333,7 +425,7 @@ WINRT_EXPORT
 #ifndef __WABApplicationTriggerDetails_DEFINED__
 #define __WABApplicationTriggerDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABApplicationTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -347,16 +439,14 @@ WINRT_EXPORT
 #ifndef __WABBackgroundExecutionManager_DEFINED__
 #define __WABBackgroundExecutionManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABBackgroundExecutionManager : RTObject
 + (void)requestAccessAsyncWithSuccess:(void (^)(WABBackgroundAccessStatus))success failure:(void (^)(NSError*))failure;
-+ (void)requestAccessForApplicationAsync:(NSString*)applicationId
-                                 success:(void (^)(WABBackgroundAccessStatus))success
-                                 failure:(void (^)(NSError*))failure;
++ (void)requestAccessForApplicationAsync:(NSString *)applicationId success:(void (^)(WABBackgroundAccessStatus))success failure:(void (^)(NSError*))failure;
 + (void)removeAccess;
-+ (void)removeAccessForApplication:(NSString*)applicationId;
++ (void)removeAccessForApplication:(NSString *)applicationId;
 + (WABBackgroundAccessStatus)getAccessStatus;
-+ (WABBackgroundAccessStatus)getAccessStatusForApplication:(NSString*)applicationId;
++ (WABBackgroundAccessStatus)getAccessStatusForApplication:(NSString *)applicationId;
 @end
 
 #endif // __WABBackgroundExecutionManager_DEFINED__
@@ -365,16 +455,14 @@ WINRT_EXPORT
 #ifndef __WABMediaProcessingTrigger_DEFINED__
 #define __WABMediaProcessingTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABMediaProcessingTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 - (void)requestAsyncWithSuccess:(void (^)(WABMediaProcessingTriggerResult))success failure:(void (^)(NSError*))failure;
-- (void)requestAsyncWithArguments:(WFCValueSet*)arguments
-                          success:(void (^)(WABMediaProcessingTriggerResult))success
-                          failure:(void (^)(NSError*))failure;
+- (void)requestAsyncWithArguments:(WFCValueSet*)arguments success:(void (^)(WABMediaProcessingTriggerResult))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WABMediaProcessingTrigger_DEFINED__
@@ -383,12 +471,12 @@ WINRT_EXPORT
 #ifndef __WABBackgroundTaskRegistration_DEFINED__
 #define __WABBackgroundTaskRegistration_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABBackgroundTaskRegistration : RTObject <WABIBackgroundTaskRegistration, WABIBackgroundTaskRegistration2>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* name;
+@property (readonly) NSString * name;
 @property (readonly) WFGUID* taskId;
 @property (readonly) RTObject<WABIBackgroundTrigger>* trigger;
 + (NSDictionary* /* WFGUID*, RTObject<WABIBackgroundTaskRegistration>* */)allTasks;
@@ -405,7 +493,7 @@ WINRT_EXPORT
 #ifndef __WABBackgroundTaskDeferral_DEFINED__
 #define __WABBackgroundTaskDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABBackgroundTaskDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -419,7 +507,7 @@ WINRT_EXPORT
 #ifndef __WABBackgroundTaskProgressEventArgs_DEFINED__
 #define __WABBackgroundTaskProgressEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABBackgroundTaskProgressEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -434,7 +522,7 @@ WINRT_EXPORT
 #ifndef __WABBackgroundTaskCompletedEventArgs_DEFINED__
 #define __WABBackgroundTaskCompletedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABBackgroundTaskCompletedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -449,14 +537,14 @@ WINRT_EXPORT
 #ifndef __WABBackgroundTaskBuilder_DEFINED__
 #define __WABBackgroundTaskBuilder_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABBackgroundTaskBuilder : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* taskEntryPoint;
-@property (retain) NSString* name;
+@property (retain) NSString * taskEntryPoint;
+@property (retain) NSString * name;
 @property BOOL cancelOnConditionLoss;
 @property BOOL isNetworkRequested;
 - (void)setTrigger:(RTObject<WABIBackgroundTrigger>*)trigger;
@@ -470,7 +558,7 @@ WINRT_EXPORT
 #ifndef __WABBackgroundWorkCost_DEFINED__
 #define __WABBackgroundWorkCost_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABBackgroundWorkCost : RTObject
 + (WABBackgroundWorkCostValue)currentBackgroundWorkCost;
 @end
@@ -481,7 +569,7 @@ WINRT_EXPORT
 #ifndef __WABChatMessageNotificationTrigger_DEFINED__
 #define __WABChatMessageNotificationTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABChatMessageNotificationTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -495,7 +583,7 @@ WINRT_EXPORT
 #ifndef __WABChatMessageReceivedNotificationTrigger_DEFINED__
 #define __WABChatMessageReceivedNotificationTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABChatMessageReceivedNotificationTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -509,7 +597,7 @@ WINRT_EXPORT
 #ifndef __WABRcsEndUserMessageAvailableTrigger_DEFINED__
 #define __WABRcsEndUserMessageAvailableTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABRcsEndUserMessageAvailableTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -523,7 +611,7 @@ WINRT_EXPORT
 #ifndef __WABContactStoreNotificationTrigger_DEFINED__
 #define __WABContactStoreNotificationTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABContactStoreNotificationTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -537,7 +625,7 @@ WINRT_EXPORT
 #ifndef __WABContentPrefetchTrigger_DEFINED__
 #define __WABContentPrefetchTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABContentPrefetchTrigger : RTObject <WABIBackgroundTrigger>
 + (WABContentPrefetchTrigger*)make:(WFTimeSpan*)waitInterval ACTIVATOR;
 + (instancetype)make ACTIVATOR;
@@ -553,7 +641,7 @@ WINRT_EXPORT
 #ifndef __WABEmailStoreNotificationTrigger_DEFINED__
 #define __WABEmailStoreNotificationTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABEmailStoreNotificationTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -567,7 +655,7 @@ WINRT_EXPORT
 #ifndef __WABMobileBroadbandRegistrationStateChangeTrigger_DEFINED__
 #define __WABMobileBroadbandRegistrationStateChangeTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABMobileBroadbandRegistrationStateChangeTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -581,7 +669,7 @@ WINRT_EXPORT
 #ifndef __WABMobileBroadbandRadioStateChangeTrigger_DEFINED__
 #define __WABMobileBroadbandRadioStateChangeTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABMobileBroadbandRadioStateChangeTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -595,7 +683,7 @@ WINRT_EXPORT
 #ifndef __WABMobileBroadbandPinLockStateChangeTrigger_DEFINED__
 #define __WABMobileBroadbandPinLockStateChangeTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABMobileBroadbandPinLockStateChangeTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -609,7 +697,7 @@ WINRT_EXPORT
 #ifndef __WABMobileBroadbandDeviceServiceNotificationTrigger_DEFINED__
 #define __WABMobileBroadbandDeviceServiceNotificationTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABMobileBroadbandDeviceServiceNotificationTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -619,11 +707,25 @@ WINRT_EXPORT
 
 #endif // __WABMobileBroadbandDeviceServiceNotificationTrigger_DEFINED__
 
+// Windows.ApplicationModel.Background.SecondaryAuthenticationFactorAuthenticationTrigger
+#ifndef __WABSecondaryAuthenticationFactorAuthenticationTrigger_DEFINED__
+#define __WABSecondaryAuthenticationFactorAuthenticationTrigger_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WABSecondaryAuthenticationFactorAuthenticationTrigger : RTObject <WABIBackgroundTrigger>
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@end
+
+#endif // __WABSecondaryAuthenticationFactorAuthenticationTrigger_DEFINED__
+
 // Windows.ApplicationModel.Background.SmsMessageReceivedTrigger
 #ifndef __WABSmsMessageReceivedTrigger_DEFINED__
 #define __WABSmsMessageReceivedTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABSmsMessageReceivedTrigger : RTObject <WABIBackgroundTrigger>
 + (WABSmsMessageReceivedTrigger*)make:(WDSSmsFilterRules*)filterRules ACTIVATOR;
 #if defined(__cplusplus)
@@ -637,7 +739,7 @@ WINRT_EXPORT
 #ifndef __WABStorageLibraryContentChangedTrigger_DEFINED__
 #define __WABStorageLibraryContentChangedTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABStorageLibraryContentChangedTrigger : RTObject <WABIBackgroundTrigger>
 + (WABStorageLibraryContentChangedTrigger*)create:(WSStorageLibrary*)storageLibrary;
 + (WABStorageLibraryContentChangedTrigger*)createFromLibraries:(id<NSFastEnumeration> /* WSStorageLibrary* */)storageLibraries;
@@ -652,7 +754,7 @@ WINRT_EXPORT
 #ifndef __WABSystemTrigger_DEFINED__
 #define __WABSystemTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABSystemTrigger : RTObject <WABIBackgroundTrigger>
 + (WABSystemTrigger*)make:(WABSystemTriggerType)triggerType oneShot:(BOOL)oneShot ACTIVATOR;
 #if defined(__cplusplus)
@@ -668,7 +770,7 @@ WINRT_EXPORT
 #ifndef __WABSystemCondition_DEFINED__
 #define __WABSystemCondition_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABSystemCondition : RTObject <WABIBackgroundCondition>
 + (WABSystemCondition*)make:(WABSystemConditionType)conditionType ACTIVATOR;
 #if defined(__cplusplus)
@@ -683,13 +785,13 @@ WINRT_EXPORT
 #ifndef __WABNetworkOperatorNotificationTrigger_DEFINED__
 #define __WABNetworkOperatorNotificationTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABNetworkOperatorNotificationTrigger : RTObject <WABIBackgroundTrigger>
-+ (WABNetworkOperatorNotificationTrigger*)make:(NSString*)networkAccountId ACTIVATOR;
++ (WABNetworkOperatorNotificationTrigger*)make:(NSString *)networkAccountId ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* networkAccountId;
+@property (readonly) NSString * networkAccountId;
 @end
 
 #endif // __WABNetworkOperatorNotificationTrigger_DEFINED__
@@ -698,14 +800,14 @@ WINRT_EXPORT
 #ifndef __WABDeviceManufacturerNotificationTrigger_DEFINED__
 #define __WABDeviceManufacturerNotificationTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABDeviceManufacturerNotificationTrigger : RTObject <WABIBackgroundTrigger>
-+ (WABDeviceManufacturerNotificationTrigger*)make:(NSString*)triggerQualifier oneShot:(BOOL)oneShot ACTIVATOR;
++ (WABDeviceManufacturerNotificationTrigger*)make:(NSString *)triggerQualifier oneShot:(BOOL)oneShot ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL oneShot;
-@property (readonly) NSString* triggerQualifier;
+@property (readonly) NSString * triggerQualifier;
 @end
 
 #endif // __WABDeviceManufacturerNotificationTrigger_DEFINED__
@@ -714,7 +816,7 @@ WINRT_EXPORT
 #ifndef __WABCachedFileUpdaterTriggerDetails_DEFINED__
 #define __WABCachedFileUpdaterTriggerDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABCachedFileUpdaterTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -730,7 +832,7 @@ WINRT_EXPORT
 #ifndef __WABCachedFileUpdaterTrigger_DEFINED__
 #define __WABCachedFileUpdaterTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABCachedFileUpdaterTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -744,7 +846,7 @@ WINRT_EXPORT
 #ifndef __WABTimeTrigger_DEFINED__
 #define __WABTimeTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABTimeTrigger : RTObject <WABIBackgroundTrigger>
 + (WABTimeTrigger*)make:(unsigned int)freshnessTime oneShot:(BOOL)oneShot ACTIVATOR;
 #if defined(__cplusplus)
@@ -760,7 +862,7 @@ WINRT_EXPORT
 #ifndef __WABMaintenanceTrigger_DEFINED__
 #define __WABMaintenanceTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABMaintenanceTrigger : RTObject <WABIBackgroundTrigger>
 + (WABMaintenanceTrigger*)make:(unsigned int)freshnessTime oneShot:(BOOL)oneShot ACTIVATOR;
 #if defined(__cplusplus)
@@ -776,17 +878,14 @@ WINRT_EXPORT
 #ifndef __WABDeviceUseTrigger_DEFINED__
 #define __WABDeviceUseTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABDeviceUseTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-- (void)requestAsyncSimple:(NSString*)deviceId success:(void (^)(WABDeviceTriggerResult))success failure:(void (^)(NSError*))failure;
-- (void)requestAsyncWithArguments:(NSString*)deviceId
-                        arguments:(NSString*)arguments
-                          success:(void (^)(WABDeviceTriggerResult))success
-                          failure:(void (^)(NSError*))failure;
+- (void)requestAsyncSimple:(NSString *)deviceId success:(void (^)(WABDeviceTriggerResult))success failure:(void (^)(NSError*))failure;
+- (void)requestAsyncWithArguments:(NSString *)deviceId arguments:(NSString *)arguments success:(void (^)(WABDeviceTriggerResult))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WABDeviceUseTrigger_DEFINED__
@@ -795,21 +894,14 @@ WINRT_EXPORT
 #ifndef __WABDeviceServicingTrigger_DEFINED__
 #define __WABDeviceServicingTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABDeviceServicingTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-- (void)requestAsyncSimple:(NSString*)deviceId
-          expectedDuration:(WFTimeSpan*)expectedDuration
-                   success:(void (^)(WABDeviceTriggerResult))success
-                   failure:(void (^)(NSError*))failure;
-- (void)requestAsyncWithArguments:(NSString*)deviceId
-                 expectedDuration:(WFTimeSpan*)expectedDuration
-                        arguments:(NSString*)arguments
-                          success:(void (^)(WABDeviceTriggerResult))success
-                          failure:(void (^)(NSError*))failure;
+- (void)requestAsyncSimple:(NSString *)deviceId expectedDuration:(WFTimeSpan*)expectedDuration success:(void (^)(WABDeviceTriggerResult))success failure:(void (^)(NSError*))failure;
+- (void)requestAsyncWithArguments:(NSString *)deviceId expectedDuration:(WFTimeSpan*)expectedDuration arguments:(NSString *)arguments success:(void (^)(WABDeviceTriggerResult))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WABDeviceServicingTrigger_DEFINED__
@@ -818,7 +910,7 @@ WINRT_EXPORT
 #ifndef __WABRfcommConnectionTrigger_DEFINED__
 #define __WABRfcommConnectionTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABRfcommConnectionTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -837,15 +929,15 @@ WINRT_EXPORT
 #ifndef __WABDeviceConnectionChangeTrigger_DEFINED__
 #define __WABDeviceConnectionChangeTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABDeviceConnectionChangeTrigger : RTObject <WABIBackgroundTrigger>
-+ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WABDeviceConnectionChangeTrigger*))success failure:(void (^)(NSError*))failure;
++ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WABDeviceConnectionChangeTrigger*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL maintainConnection;
 @property (readonly) BOOL canMaintainConnection;
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * deviceId;
 @end
 
 #endif // __WABDeviceConnectionChangeTrigger_DEFINED__
@@ -854,7 +946,7 @@ WINRT_EXPORT
 #ifndef __WABGattCharacteristicNotificationTrigger_DEFINED__
 #define __WABGattCharacteristicNotificationTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABGattCharacteristicNotificationTrigger : RTObject <WABIBackgroundTrigger>
 + (WABGattCharacteristicNotificationTrigger*)make:(WDBGGattCharacteristic*)characteristic ACTIVATOR;
 #if defined(__cplusplus)
@@ -869,7 +961,7 @@ WINRT_EXPORT
 #ifndef __WABBluetoothLEAdvertisementWatcherTrigger_DEFINED__
 #define __WABBluetoothLEAdvertisementWatcherTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABBluetoothLEAdvertisementWatcherTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -889,7 +981,7 @@ WINRT_EXPORT
 #ifndef __WABBluetoothLEAdvertisementPublisherTrigger_DEFINED__
 #define __WABBluetoothLEAdvertisementPublisherTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABBluetoothLEAdvertisementPublisherTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -904,7 +996,7 @@ WINRT_EXPORT
 #ifndef __WABDeviceWatcherTrigger_DEFINED__
 #define __WABDeviceWatcherTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABDeviceWatcherTrigger : RTObject <WABIBackgroundTrigger>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -917,7 +1009,7 @@ WINRT_EXPORT
 #ifndef __WABLocationTrigger_DEFINED__
 #define __WABLocationTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABLocationTrigger : RTObject <WABIBackgroundTrigger>
 + (WABLocationTrigger*)make:(WABLocationTriggerType)triggerType ACTIVATOR;
 #if defined(__cplusplus)
@@ -932,7 +1024,7 @@ WINRT_EXPORT
 #ifndef __WABActivitySensorTrigger_DEFINED__
 #define __WABActivitySensorTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABActivitySensorTrigger : RTObject <WABIBackgroundTrigger>
 + (WABActivitySensorTrigger*)make:(unsigned int)reportIntervalInMilliseconds ACTIVATOR;
 #if defined(__cplusplus)
@@ -946,11 +1038,25 @@ WINRT_EXPORT
 
 #endif // __WABActivitySensorTrigger_DEFINED__
 
+// Windows.ApplicationModel.Background.SensorDataThresholdTrigger
+#ifndef __WABSensorDataThresholdTrigger_DEFINED__
+#define __WABSensorDataThresholdTrigger_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WABSensorDataThresholdTrigger : RTObject <WABIBackgroundTrigger>
++ (WABSensorDataThresholdTrigger*)make:(RTObject<WDSISensorDataThreshold>*)threshold ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@end
+
+#endif // __WABSensorDataThresholdTrigger_DEFINED__
+
 // Windows.ApplicationModel.Background.NetworkOperatorHotspotAuthenticationTrigger
 #ifndef __WABNetworkOperatorHotspotAuthenticationTrigger_DEFINED__
 #define __WABNetworkOperatorHotspotAuthenticationTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABNetworkOperatorHotspotAuthenticationTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -964,12 +1070,13 @@ WINRT_EXPORT
 #ifndef __WABSocketActivityTrigger_DEFINED__
 #define __WABSocketActivityTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABSocketActivityTrigger : RTObject <WABIBackgroundTrigger>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
+@property (readonly) BOOL isWakeFromLowPowerSupported;
 @end
 
 #endif // __WABSocketActivityTrigger_DEFINED__
@@ -978,9 +1085,9 @@ WINRT_EXPORT
 #ifndef __WABPushNotificationTrigger_DEFINED__
 #define __WABPushNotificationTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABPushNotificationTrigger : RTObject <WABIBackgroundTrigger>
-+ (WABPushNotificationTrigger*)make:(NSString*)applicationId ACTIVATOR;
++ (WABPushNotificationTrigger*)make:(NSString *)applicationId ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -993,10 +1100,10 @@ WINRT_EXPORT
 #ifndef __WABToastNotificationHistoryChangedTrigger_DEFINED__
 #define __WABToastNotificationHistoryChangedTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABToastNotificationHistoryChangedTrigger : RTObject <WABIBackgroundTrigger>
-+ (WABToastNotificationHistoryChangedTrigger*)make:(NSString*)applicationId ACTIVATOR;
 + (instancetype)make ACTIVATOR;
++ (WABToastNotificationHistoryChangedTrigger*)make:(NSString *)applicationId ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -1008,9 +1115,9 @@ WINRT_EXPORT
 #ifndef __WABToastNotificationActionTrigger_DEFINED__
 #define __WABToastNotificationActionTrigger_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WABToastNotificationActionTrigger : RTObject <WABIBackgroundTrigger>
-+ (WABToastNotificationActionTrigger*)make:(NSString*)applicationId ACTIVATOR;
++ (WABToastNotificationActionTrigger*)make:(NSString *)applicationId ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -1018,3 +1125,18 @@ WINRT_EXPORT
 @end
 
 #endif // __WABToastNotificationActionTrigger_DEFINED__
+
+// Windows.ApplicationModel.Background.UserNotificationChangedTrigger
+#ifndef __WABUserNotificationChangedTrigger_DEFINED__
+#define __WABUserNotificationChangedTrigger_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WABUserNotificationChangedTrigger : RTObject <WABIBackgroundTrigger>
++ (WABUserNotificationChangedTrigger*)make:(WUNNotificationKinds)notificationKinds ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@end
+
+#endif // __WABUserNotificationChangedTrigger_DEFINED__
+

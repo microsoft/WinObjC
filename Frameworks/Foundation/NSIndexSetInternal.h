@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -29,4 +29,5 @@
 - (void)_addItem:(NSRange)range;
 - (void)_removeItemAtIndex:(unsigned)position;
 - (void)_removeRanges:(NSRange)ranges;
+- (NSRangePointer)_allRanges;
 @end

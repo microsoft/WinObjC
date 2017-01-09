@@ -16,6 +16,7 @@
 #pragma once
 
 #import "NSInputSource.h"
+#import "NSRunLoopSource.h"
 
 #define MAX_WAITSIGNALS 128
 #define MAX_WAITSOCKETS 128

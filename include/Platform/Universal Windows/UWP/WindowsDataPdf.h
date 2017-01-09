@@ -19,11 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DATA_PDF_EXPORT
+#define OBJCUWP_WINDOWS_DATA_PDF_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Data_Pdf.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WDPPdfPageRenderOptions, WDPPdfPageDimensions, WDPPdfPage, WDPPdfDocument;
-@protocol WDPIPdfPageDimensions
-, WDPIPdfPageRenderOptions, WDPIPdfPage, WDPIPdfDocument, WDPIPdfDocumentStatics;
+@protocol WDPIPdfPageDimensions, WDPIPdfPageRenderOptions, WDPIPdfPage, WDPIPdfDocument, WDPIPdfDocumentStatics;
 
 // Windows.Data.Pdf.PdfPageRotation
 enum _WDPPdfPageRotation {
@@ -45,7 +50,7 @@ typedef unsigned WDPPdfPageRotation;
 #ifndef __WDPPdfPageRenderOptions_DEFINED__
 #define __WDPPdfPageRenderOptions_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_PDF_EXPORT
 @interface WDPPdfPageRenderOptions : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -65,7 +70,7 @@ WINRT_EXPORT
 #ifndef __WDPPdfPageDimensions_DEFINED__
 #define __WDPPdfPageDimensions_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_PDF_EXPORT
 @interface WDPPdfPageDimensions : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -87,13 +92,17 @@ WINRT_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_DATA_PDF_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Data.Pdf.PdfPage
 #ifndef __WDPPdfPage_DEFINED__
 #define __WDPPdfPage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_PDF_EXPORT
 @interface WDPPdfPage : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -104,8 +113,7 @@ WINRT_EXPORT
 @property (readonly) WDPPdfPageRotation rotation;
 @property (readonly) WFSize* size;
 - (RTObject<WFIAsyncAction>*)renderToStreamAsync:(RTObject<WSSIRandomAccessStream>*)outputStream;
-- (RTObject<WFIAsyncAction>*)renderWithOptionsToStreamAsync:(RTObject<WSSIRandomAccessStream>*)outputStream
-                                                    options:(WDPPdfPageRenderOptions*)options;
+- (RTObject<WFIAsyncAction>*)renderWithOptionsToStreamAsync:(RTObject<WSSIRandomAccessStream>*)outputStream options:(WDPPdfPageRenderOptions*)options;
 - (RTObject<WFIAsyncAction>*)preparePageAsync;
 - (void)close;
 @end
@@ -116,20 +124,12 @@ WINRT_EXPORT
 #ifndef __WDPPdfDocument_DEFINED__
 #define __WDPPdfDocument_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_PDF_EXPORT
 @interface WDPPdfDocument : RTObject
 + (void)loadFromFileAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(WDPPdfDocument*))success failure:(void (^)(NSError*))failure;
-+ (void)loadFromFileWithPasswordAsync:(RTObject<WSIStorageFile>*)file
-                             password:(NSString*)password
-                              success:(void (^)(WDPPdfDocument*))success
-                              failure:(void (^)(NSError*))failure;
-+ (void)loadFromStreamAsync:(RTObject<WSSIRandomAccessStream>*)inputStream
-                    success:(void (^)(WDPPdfDocument*))success
-                    failure:(void (^)(NSError*))failure;
-+ (void)loadFromStreamWithPasswordAsync:(RTObject<WSSIRandomAccessStream>*)inputStream
-                               password:(NSString*)password
-                                success:(void (^)(WDPPdfDocument*))success
-                                failure:(void (^)(NSError*))failure;
++ (void)loadFromFileWithPasswordAsync:(RTObject<WSIStorageFile>*)file password:(NSString *)password success:(void (^)(WDPPdfDocument*))success failure:(void (^)(NSError*))failure;
++ (void)loadFromStreamAsync:(RTObject<WSSIRandomAccessStream>*)inputStream success:(void (^)(WDPPdfDocument*))success failure:(void (^)(NSError*))failure;
++ (void)loadFromStreamWithPasswordAsync:(RTObject<WSSIRandomAccessStream>*)inputStream password:(NSString *)password success:(void (^)(WDPPdfDocument*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -139,3 +139,4 @@ WINRT_EXPORT
 @end
 
 #endif // __WDPPdfDocument_DEFINED__
+

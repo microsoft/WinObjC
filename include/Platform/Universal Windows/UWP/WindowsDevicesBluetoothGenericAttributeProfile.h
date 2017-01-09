@@ -19,17 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WDBGGattDeviceService, WDBGGattCharacteristic, WDBGGattDescriptor, WDBGGattPresentationFormat, WDBGGattReadResult,
-    WDBGGattReadClientCharacteristicConfigurationDescriptorResult, WDBGGattValueChangedEventArgs, WDBGGattServiceUuids,
-    WDBGGattCharacteristicUuids, WDBGGattDescriptorUuids, WDBGGattReliableWriteTransaction, WDBGGattPresentationFormatTypes;
-@protocol WDBGIGattDeviceServiceStatics
-, WDBGIGattCharacteristicStatics, WDBGIGattCharacteristic, WDBGIGattCharacteristic2, WDBGIGattDescriptorStatics, WDBGIGattDescriptor,
-    WDBGIGattPresentationFormatStatics, WDBGIGattPresentationFormatTypesStatics, WDBGIGattPresentationFormat,
-    WDBGIGattValueChangedEventArgs, WDBGIGattServiceUuidsStatics, WDBGIGattServiceUuidsStatics2, WDBGIGattCharacteristicUuidsStatics,
-    WDBGIGattCharacteristicUuidsStatics2, WDBGIGattDescriptorUuidsStatics, WDBGIGattReliableWriteTransaction, WDBGIGattReadResult,
-    WDBGIGattReadClientCharacteristicConfigurationDescriptorResult, WDBGIGattDeviceService, WDBGIGattDeviceService2;
+@class WDBGGattDeviceService, WDBGGattCharacteristic, WDBGGattDescriptor, WDBGGattPresentationFormat, WDBGGattReadResult, WDBGGattReadClientCharacteristicConfigurationDescriptorResult, WDBGGattValueChangedEventArgs, WDBGGattServiceUuids, WDBGGattCharacteristicUuids, WDBGGattDescriptorUuids, WDBGGattReliableWriteTransaction, WDBGGattPresentationFormatTypes;
+@protocol WDBGIGattDeviceServiceStatics, WDBGIGattCharacteristicStatics, WDBGIGattCharacteristic, WDBGIGattCharacteristic2, WDBGIGattDescriptorStatics, WDBGIGattDescriptor, WDBGIGattPresentationFormatStatics, WDBGIGattPresentationFormatTypesStatics, WDBGIGattPresentationFormat, WDBGIGattValueChangedEventArgs, WDBGIGattServiceUuidsStatics, WDBGIGattServiceUuidsStatics2, WDBGIGattCharacteristicUuidsStatics, WDBGIGattCharacteristicUuidsStatics2, WDBGIGattDescriptorUuidsStatics, WDBGIGattReliableWriteTransaction, WDBGIGattReadResult, WDBGIGattReadClientCharacteristicConfigurationDescriptorResult, WDBGIGattDeviceService, WDBGIGattDeviceService2;
 
 // Windows.Devices.Bluetooth.GenericAttributeProfile.GattCharacteristicProperties
 enum _WDBGGattCharacteristicProperties {
@@ -92,23 +91,27 @@ typedef unsigned WDBGGattCommunicationStatus;
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Devices.Bluetooth.GenericAttributeProfile.GattDeviceService
 #ifndef __WDBGGattDeviceService_DEFINED__
 #define __WDBGGattDeviceService_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBGGattDeviceService : RTObject <WFIClosable>
-+ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDBGGattDeviceService*))success failure:(void (^)(NSError*))failure;
-+ (NSString*)getDeviceSelectorFromUuid:(WFGUID*)serviceUuid;
-+ (NSString*)getDeviceSelectorFromShortId:(unsigned short)serviceShortId;
++ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDBGGattDeviceService*))success failure:(void (^)(NSError*))failure;
++ (NSString *)getDeviceSelectorFromUuid:(WFGUID*)serviceUuid;
++ (NSString *)getDeviceSelectorFromShortId:(unsigned short)serviceShortId;
 + (WFGUID*)convertShortIdToUuid:(unsigned short)shortId;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned short attributeHandle;
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * deviceId;
 @property (readonly) WFGUID* uuid;
 @property (readonly) WDBBluetoothLEDevice* device;
 @property (readonly) NSArray* /* WDBGGattDeviceService* */ parentServices;
@@ -125,7 +128,7 @@ WINRT_EXPORT
 #ifndef __WDBGGattCharacteristic_DEFINED__
 #define __WDBGGattCharacteristic_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBGGattCharacteristic : RTObject
 + (WFGUID*)convertShortIdToUuid:(unsigned short)shortId;
 #if defined(__cplusplus)
@@ -135,30 +138,18 @@ WINRT_EXPORT
 @property (readonly) unsigned short attributeHandle;
 @property (readonly) WDBGGattCharacteristicProperties characteristicProperties;
 @property (readonly) NSArray* /* WDBGGattPresentationFormat* */ presentationFormats;
-@property (readonly) NSString* userDescription;
+@property (readonly) NSString * userDescription;
 @property (readonly) WFGUID* uuid;
 @property (readonly) WDBGGattDeviceService* service;
-- (EventRegistrationToken)addValueChangedEvent:(void (^)(WDBGGattCharacteristic*, WDBGGattValueChangedEventArgs*))del;
+- (EventRegistrationToken)addValueChangedEvent:(void(^)(WDBGGattCharacteristic*, WDBGGattValueChangedEventArgs*))del;
 - (void)removeValueChangedEvent:(EventRegistrationToken)tok;
 - (NSArray* /* WDBGGattDescriptor* */)getDescriptors:(WFGUID*)descriptorUuid;
 - (void)readValueAsyncWithSuccess:(void (^)(WDBGGattReadResult*))success failure:(void (^)(NSError*))failure;
-- (void)readValueWithCacheModeAsync:(WDBBluetoothCacheMode)cacheMode
-                            success:(void (^)(WDBGGattReadResult*))success
-                            failure:(void (^)(NSError*))failure;
-- (void)writeValueAsync:(RTObject<WSSIBuffer>*)value
-                success:(void (^)(WDBGGattCommunicationStatus))success
-                failure:(void (^)(NSError*))failure;
-- (void)writeValueWithOptionAsync:(RTObject<WSSIBuffer>*)value
-                      writeOption:(WDBGGattWriteOption)writeOption
-                          success:(void (^)(WDBGGattCommunicationStatus))success
-                          failure:(void (^)(NSError*))failure;
-- (void)readClientCharacteristicConfigurationDescriptorAsyncWithSuccess:
-            (void (^)(WDBGGattReadClientCharacteristicConfigurationDescriptorResult*))success
-                                                                failure:(void (^)(NSError*))failure;
-- (void)writeClientCharacteristicConfigurationDescriptorAsync:
-            (WDBGGattClientCharacteristicConfigurationDescriptorValue)clientCharacteristicConfigurationDescriptorValue
-                                                      success:(void (^)(WDBGGattCommunicationStatus))success
-                                                      failure:(void (^)(NSError*))failure;
+- (void)readValueWithCacheModeAsync:(WDBBluetoothCacheMode)cacheMode success:(void (^)(WDBGGattReadResult*))success failure:(void (^)(NSError*))failure;
+- (void)writeValueAsync:(RTObject<WSSIBuffer>*)value success:(void (^)(WDBGGattCommunicationStatus))success failure:(void (^)(NSError*))failure;
+- (void)writeValueWithOptionAsync:(RTObject<WSSIBuffer>*)value writeOption:(WDBGGattWriteOption)writeOption success:(void (^)(WDBGGattCommunicationStatus))success failure:(void (^)(NSError*))failure;
+- (void)readClientCharacteristicConfigurationDescriptorAsyncWithSuccess:(void (^)(WDBGGattReadClientCharacteristicConfigurationDescriptorResult*))success failure:(void (^)(NSError*))failure;
+- (void)writeClientCharacteristicConfigurationDescriptorAsync:(WDBGGattClientCharacteristicConfigurationDescriptorValue)clientCharacteristicConfigurationDescriptorValue success:(void (^)(WDBGGattCommunicationStatus))success failure:(void (^)(NSError*))failure;
 - (NSArray* /* WDBGGattDescriptor* */)getAllDescriptors;
 @end
 
@@ -168,7 +159,7 @@ WINRT_EXPORT
 #ifndef __WDBGGattDescriptor_DEFINED__
 #define __WDBGGattDescriptor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBGGattDescriptor : RTObject
 + (WFGUID*)convertShortIdToUuid:(unsigned short)shortId;
 #if defined(__cplusplus)
@@ -178,12 +169,8 @@ WINRT_EXPORT
 @property (readonly) unsigned short attributeHandle;
 @property (readonly) WFGUID* uuid;
 - (void)readValueAsyncWithSuccess:(void (^)(WDBGGattReadResult*))success failure:(void (^)(NSError*))failure;
-- (void)readValueWithCacheModeAsync:(WDBBluetoothCacheMode)cacheMode
-                            success:(void (^)(WDBGGattReadResult*))success
-                            failure:(void (^)(NSError*))failure;
-- (void)writeValueAsync:(RTObject<WSSIBuffer>*)value
-                success:(void (^)(WDBGGattCommunicationStatus))success
-                failure:(void (^)(NSError*))failure;
+- (void)readValueWithCacheModeAsync:(WDBBluetoothCacheMode)cacheMode success:(void (^)(WDBGGattReadResult*))success failure:(void (^)(NSError*))failure;
+- (void)writeValueAsync:(RTObject<WSSIBuffer>*)value success:(void (^)(WDBGGattCommunicationStatus))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WDBGGattDescriptor_DEFINED__
@@ -192,7 +179,7 @@ WINRT_EXPORT
 #ifndef __WDBGGattPresentationFormat_DEFINED__
 #define __WDBGGattPresentationFormat_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBGGattPresentationFormat : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -211,7 +198,7 @@ WINRT_EXPORT
 #ifndef __WDBGGattReadResult_DEFINED__
 #define __WDBGGattReadResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBGGattReadResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -226,7 +213,7 @@ WINRT_EXPORT
 #ifndef __WDBGGattReadClientCharacteristicConfigurationDescriptorResult_DEFINED__
 #define __WDBGGattReadClientCharacteristicConfigurationDescriptorResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBGGattReadClientCharacteristicConfigurationDescriptorResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -241,7 +228,7 @@ WINRT_EXPORT
 #ifndef __WDBGGattValueChangedEventArgs_DEFINED__
 #define __WDBGGattValueChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBGGattValueChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -256,17 +243,18 @@ WINRT_EXPORT
 #ifndef __WDBGGattServiceUuids_DEFINED__
 #define __WDBGGattServiceUuids_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBGGattServiceUuids : RTObject
-+ (WFGUID*)genericAccess;
-+ (WFGUID*)heartRate;
-+ (WFGUID*)runningSpeedAndCadence;
++ (WFGUID*)cyclingSpeedAndCadence;
 + (WFGUID*)battery;
 + (WFGUID*)bloodPressure;
-+ (WFGUID*)cyclingSpeedAndCadence;
++ (WFGUID*)genericAccess;
 + (WFGUID*)genericAttribute;
 + (WFGUID*)glucose;
 + (WFGUID*)healthThermometer;
++ (WFGUID*)heartRate;
++ (WFGUID*)runningSpeedAndCadence;
++ (WFGUID*)nextDstChange;
 + (WFGUID*)alertNotification;
 + (WFGUID*)currentTime;
 + (WFGUID*)cyclingPower;
@@ -279,7 +267,6 @@ WINRT_EXPORT
 + (WFGUID*)referenceTimeUpdate;
 + (WFGUID*)scanParameters;
 + (WFGUID*)txPower;
-+ (WFGUID*)nextDstChange;
 @end
 
 #endif // __WDBGGattServiceUuids_DEFINED__
@@ -288,9 +275,12 @@ WINRT_EXPORT
 #ifndef __WDBGGattCharacteristicUuids_DEFINED__
 #define __WDBGGattCharacteristicUuids_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBGGattCharacteristicUuids : RTObject
 + (WFGUID*)batteryLevel;
++ (WFGUID*)bloodPressureFeature;
++ (WFGUID*)bloodPressureMeasurement;
++ (WFGUID*)bodySensorLocation;
 + (WFGUID*)cscFeature;
 + (WFGUID*)cscMeasurement;
 + (WFGUID*)glucoseFeature;
@@ -308,28 +298,8 @@ WINRT_EXPORT
 + (WFGUID*)sensorLocation;
 + (WFGUID*)temperatureMeasurement;
 + (WFGUID*)temperatureType;
-+ (WFGUID*)bloodPressureFeature;
-+ (WFGUID*)bloodPressureMeasurement;
-+ (WFGUID*)bodySensorLocation;
-+ (WFGUID*)reportMap;
-+ (WFGUID*)ringerControlPoint;
-+ (WFGUID*)ringerSetting;
-+ (WFGUID*)scanIntervalWindow;
-+ (WFGUID*)scanRefresh;
-+ (WFGUID*)serialNumberString;
-+ (WFGUID*)softwareRevisionString;
-+ (WFGUID*)supportUnreadAlertCategory;
-+ (WFGUID*)supportedNewAlertCategory;
-+ (WFGUID*)systemId;
-+ (WFGUID*)timeAccuracy;
-+ (WFGUID*)timeSource;
-+ (WFGUID*)timeUpdateControlPoint;
-+ (WFGUID*)timeUpdateState;
-+ (WFGUID*)timeWithDst;
-+ (WFGUID*)timeZone;
-+ (WFGUID*)txPowerLevel;
-+ (WFGUID*)unreadAlertStatus;
 + (WFGUID*)lnFeature;
++ (WFGUID*)alertCategoryId;
 + (WFGUID*)alertCategoryIdBitMask;
 + (WFGUID*)alertLevel;
 + (WFGUID*)alertNotificationControlPoint;
@@ -359,7 +329,6 @@ WINRT_EXPORT
 + (WFGUID*)hidInformation;
 + (WFGUID*)ieee1107320601RegulatoryCertificationDataList;
 + (WFGUID*)lnControlPoint;
-+ (WFGUID*)alertCategoryId;
 + (WFGUID*)localTimeInformation;
 + (WFGUID*)locationAndSpeed;
 + (WFGUID*)manufacturerNameString;
@@ -371,6 +340,24 @@ WINRT_EXPORT
 + (WFGUID*)protocolMode;
 + (WFGUID*)referenceTimeInformation;
 + (WFGUID*)report;
++ (WFGUID*)reportMap;
++ (WFGUID*)ringerControlPoint;
++ (WFGUID*)ringerSetting;
++ (WFGUID*)scanIntervalWindow;
++ (WFGUID*)scanRefresh;
++ (WFGUID*)serialNumberString;
++ (WFGUID*)softwareRevisionString;
++ (WFGUID*)supportUnreadAlertCategory;
++ (WFGUID*)supportedNewAlertCategory;
++ (WFGUID*)systemId;
++ (WFGUID*)timeAccuracy;
++ (WFGUID*)timeSource;
++ (WFGUID*)timeUpdateControlPoint;
++ (WFGUID*)timeUpdateState;
++ (WFGUID*)timeWithDst;
++ (WFGUID*)timeZone;
++ (WFGUID*)txPowerLevel;
++ (WFGUID*)unreadAlertStatus;
 @end
 
 #endif // __WDBGGattCharacteristicUuids_DEFINED__
@@ -379,7 +366,7 @@ WINRT_EXPORT
 #ifndef __WDBGGattDescriptorUuids_DEFINED__
 #define __WDBGGattDescriptorUuids_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBGGattDescriptorUuids : RTObject
 + (WFGUID*)characteristicAggregateFormat;
 + (WFGUID*)characteristicExtendedProperties;
@@ -395,7 +382,7 @@ WINRT_EXPORT
 #ifndef __WDBGGattReliableWriteTransaction_DEFINED__
 #define __WDBGGattReliableWriteTransaction_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBGGattReliableWriteTransaction : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -411,7 +398,7 @@ WINRT_EXPORT
 #ifndef __WDBGGattPresentationFormatTypes_DEFINED__
 #define __WDBGGattPresentationFormatTypes_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBGGattPresentationFormatTypes : RTObject
 + (uint8_t)bit2;
 + (uint8_t)boolean;
@@ -443,3 +430,4 @@ WINRT_EXPORT
 @end
 
 #endif // __WDBGGattPresentationFormatTypes_DEFINED__
+

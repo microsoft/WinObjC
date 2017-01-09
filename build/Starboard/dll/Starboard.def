@@ -136,52 +136,27 @@ LIBRARY Starboard
         EbrDecrement
         EbrCompareExchange
         EbrSleep
-        EbrAllocFile
-        EbrFreeFile
-        EbrFileFromFd
-        EbrFileGetType
-        EbrFmake
-        EbrFopen
-        EbrFdopen
-        EbrFclose
-        EbrFread
-        EbrFwrite
-        EbrFseek
-        EbrFseek64
-        EbrFtell
-        EbrFeof
         EbrStat
-        EbrFputc
+        EbrStat64i32
+        EbrTell
+        EbrGetOSFHandle
         EbrAccess
-        EbrRewind
-        EbrFerror
-        EbrFgetc
-        EbrUngetc
-        EbrFputs
-        EbrFputs
-        EbrFileno
-        EbrNativeFILE
-        EbrClearerr
-        EbrFreopen
         EbrFflush
-        EbrFsetpos
-        EbrFgetpos
         EbrOpen
         EbrOpenWithPermission
         EbrClose
-        EbrFd2Host
         EbrFstat
+        EbrFstat64i32
         EbrRead
         EbrWrite
         EbrLseek
-        EbrTruncate
         EbrTruncate64
-        EbrDup
         EbrRename
         EbrUnlink
         EbrMkdir
         EbrGetcwd
         EbrChdir
+        EbrChmod
         EbrRemove
         EbrRemoveEmptyDir
         EbrIsDir
@@ -202,9 +177,6 @@ LIBRARY Starboard
         EbrEventTimedWait
         EbrEventTimedMultipleWait
         EbrEventDestroy
-
-        ; Platform support
-        dbg_printf
 
         ; REMOVE / CLEANUP C++ EXPORTS
         ?format@string@woc@@YA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PBDZZ

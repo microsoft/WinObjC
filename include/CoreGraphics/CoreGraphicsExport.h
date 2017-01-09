@@ -64,13 +64,7 @@ typedef struct __CGShading* CGShadingRef;
 typedef struct __CGPath* CGPathRef;
 typedef struct __CGPath* CGMutablePathRef;
 
-// TODO: following opaque types can not use form of
-// typedef struct __Foo* FooRef;
-// indiciating backing code need some clean up
-typedef void* CGDataProviderRef;
-
 #if defined(__clang__)
-typedef id CGFontRef;
 typedef id CGPatternRef;
 #endif
 

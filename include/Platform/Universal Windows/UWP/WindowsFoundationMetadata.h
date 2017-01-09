@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_FOUNDATION_METADATA_EXPORT
+#define OBJCUWP_WINDOWS_FOUNDATION_METADATA_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Foundation_Metadata.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WFMApiInformation;
@@ -95,20 +101,19 @@ typedef unsigned WFMDeprecationType;
 #ifndef __WFMApiInformation_DEFINED__
 #define __WFMApiInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_METADATA_EXPORT
 @interface WFMApiInformation : RTObject
-+ (BOOL)isTypePresent:(NSString*)typeName;
-+ (BOOL)isMethodPresent:(NSString*)typeName methodName:(NSString*)methodName;
-+ (BOOL)isMethodPresentWithArity:(NSString*)typeName methodName:(NSString*)methodName inputParameterCount:(unsigned int)inputParameterCount;
-+ (BOOL)isEventPresent:(NSString*)typeName eventName:(NSString*)eventName;
-+ (BOOL)isPropertyPresent:(NSString*)typeName propertyName:(NSString*)propertyName;
-+ (BOOL)isReadOnlyPropertyPresent:(NSString*)typeName propertyName:(NSString*)propertyName;
-+ (BOOL)isWriteablePropertyPresent:(NSString*)typeName propertyName:(NSString*)propertyName;
-+ (BOOL)isEnumNamedValuePresent:(NSString*)enumTypeName valueName:(NSString*)valueName;
-+ (BOOL)isApiContractPresentByMajor:(NSString*)contractName majorVersion:(unsigned short)majorVersion;
-+ (BOOL)isApiContractPresentByMajorAndMinor:(NSString*)contractName
-                               majorVersion:(unsigned short)majorVersion
-                               minorVersion:(unsigned short)minorVersion;
++ (BOOL)isTypePresent:(NSString *)typeName;
++ (BOOL)isMethodPresent:(NSString *)typeName methodName:(NSString *)methodName;
++ (BOOL)isMethodPresentWithArity:(NSString *)typeName methodName:(NSString *)methodName inputParameterCount:(unsigned int)inputParameterCount;
++ (BOOL)isEventPresent:(NSString *)typeName eventName:(NSString *)eventName;
++ (BOOL)isPropertyPresent:(NSString *)typeName propertyName:(NSString *)propertyName;
++ (BOOL)isReadOnlyPropertyPresent:(NSString *)typeName propertyName:(NSString *)propertyName;
++ (BOOL)isWriteablePropertyPresent:(NSString *)typeName propertyName:(NSString *)propertyName;
++ (BOOL)isEnumNamedValuePresent:(NSString *)enumTypeName valueName:(NSString *)valueName;
++ (BOOL)isApiContractPresentByMajor:(NSString *)contractName majorVersion:(unsigned short)majorVersion;
++ (BOOL)isApiContractPresentByMajorAndMinor:(NSString *)contractName majorVersion:(unsigned short)majorVersion minorVersion:(unsigned short)minorVersion;
 @end
 
 #endif // __WFMApiInformation_DEFINED__
+

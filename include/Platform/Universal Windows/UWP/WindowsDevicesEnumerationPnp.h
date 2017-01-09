@@ -19,11 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_ENUMERATION_PNP_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_ENUMERATION_PNP_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Devices_Enumeration_Pnp.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WDEPPnpObjectUpdate, WDEPPnpObjectCollection, WDEPPnpObjectWatcher, WDEPPnpObject;
-@protocol WDEPIPnpObjectUpdate
-, WDEPIPnpObjectWatcher, WDEPIPnpObjectStatics, WDEPIPnpObject;
+@protocol WDEPIPnpObjectUpdate, WDEPIPnpObjectWatcher, WDEPIPnpObjectStatics, WDEPIPnpObject;
 
 // Windows.Devices.Enumeration.Pnp.PnpObjectType
 enum _WDEPPnpObjectType {
@@ -47,12 +52,12 @@ typedef unsigned WDEPPnpObjectType;
 #ifndef __WDEPPnpObjectUpdate_DEFINED__
 #define __WDEPPnpObjectUpdate_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_PNP_EXPORT
 @interface WDEPPnpObjectUpdate : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* id;
+@property (readonly) NSString * id;
 @property (readonly) NSDictionary* /* NSString *, RTObject* */ properties;
 @property (readonly) WDEPPnpObjectType type;
 @end
@@ -63,7 +68,7 @@ WINRT_EXPORT
 #ifndef __WDEPPnpObjectCollection_DEFINED__
 #define __WDEPPnpObjectCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_PNP_EXPORT
 @interface WDEPPnpObjectCollection : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -71,7 +76,9 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
 
 @end
 
@@ -81,21 +88,21 @@ WINRT_EXPORT
 #ifndef __WDEPPnpObjectWatcher_DEFINED__
 #define __WDEPPnpObjectWatcher_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_PNP_EXPORT
 @interface WDEPPnpObjectWatcher : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDEDeviceWatcherStatus status;
-- (EventRegistrationToken)addAddedEvent:(void (^)(WDEPPnpObjectWatcher*, WDEPPnpObject*))del;
+- (EventRegistrationToken)addAddedEvent:(void(^)(WDEPPnpObjectWatcher*, WDEPPnpObject*))del;
 - (void)removeAddedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addEnumerationCompletedEvent:(void (^)(WDEPPnpObjectWatcher*, RTObject*))del;
+- (EventRegistrationToken)addEnumerationCompletedEvent:(void(^)(WDEPPnpObjectWatcher*, RTObject*))del;
 - (void)removeEnumerationCompletedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addRemovedEvent:(void (^)(WDEPPnpObjectWatcher*, WDEPPnpObjectUpdate*))del;
+- (EventRegistrationToken)addRemovedEvent:(void(^)(WDEPPnpObjectWatcher*, WDEPPnpObjectUpdate*))del;
 - (void)removeRemovedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStoppedEvent:(void (^)(WDEPPnpObjectWatcher*, RTObject*))del;
+- (EventRegistrationToken)addStoppedEvent:(void(^)(WDEPPnpObjectWatcher*, RTObject*))del;
 - (void)removeStoppedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addUpdatedEvent:(void (^)(WDEPPnpObjectWatcher*, WDEPPnpObjectUpdate*))del;
+- (EventRegistrationToken)addUpdatedEvent:(void(^)(WDEPPnpObjectWatcher*, WDEPPnpObjectUpdate*))del;
 - (void)removeUpdatedEvent:(EventRegistrationToken)tok;
 - (void)start;
 - (void)stop;
@@ -107,34 +114,21 @@ WINRT_EXPORT
 #ifndef __WDEPPnpObject_DEFINED__
 #define __WDEPPnpObject_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_ENUMERATION_PNP_EXPORT
 @interface WDEPPnpObject : RTObject
-+ (void)createFromIdAsync:(WDEPPnpObjectType)type
-                       id:(NSString*)id
-      requestedProperties:(id<NSFastEnumeration> /* NSString * */)requestedProperties
-                  success:(void (^)(WDEPPnpObject*))success
-                  failure:(void (^)(NSError*))failure;
-+ (void)findAllAsync:(WDEPPnpObjectType)type
- requestedProperties:(id<NSFastEnumeration> /* NSString * */)requestedProperties
-             success:(void (^)(WDEPPnpObjectCollection*))success
-             failure:(void (^)(NSError*))failure;
-+ (void)findAllAsyncAqsFilter:(WDEPPnpObjectType)type
-          requestedProperties:(id<NSFastEnumeration> /* NSString * */)requestedProperties
-                    aqsFilter:(NSString*)aqsFilter
-                      success:(void (^)(WDEPPnpObjectCollection*))success
-                      failure:(void (^)(NSError*))failure;
-+ (WDEPPnpObjectWatcher*)createWatcher:(WDEPPnpObjectType)type
-                   requestedProperties:(id<NSFastEnumeration> /* NSString * */)requestedProperties;
-+ (WDEPPnpObjectWatcher*)createWatcherAqsFilter:(WDEPPnpObjectType)type
-                            requestedProperties:(id<NSFastEnumeration> /* NSString * */)requestedProperties
-                                      aqsFilter:(NSString*)aqsFilter;
++ (void)createFromIdAsync:(WDEPPnpObjectType)type id:(NSString *)id requestedProperties:(id<NSFastEnumeration> /* NSString * */)requestedProperties success:(void (^)(WDEPPnpObject*))success failure:(void (^)(NSError*))failure;
++ (void)findAllAsync:(WDEPPnpObjectType)type requestedProperties:(id<NSFastEnumeration> /* NSString * */)requestedProperties success:(void (^)(WDEPPnpObjectCollection*))success failure:(void (^)(NSError*))failure;
++ (void)findAllAsyncAqsFilter:(WDEPPnpObjectType)type requestedProperties:(id<NSFastEnumeration> /* NSString * */)requestedProperties aqsFilter:(NSString *)aqsFilter success:(void (^)(WDEPPnpObjectCollection*))success failure:(void (^)(NSError*))failure;
++ (WDEPPnpObjectWatcher*)createWatcher:(WDEPPnpObjectType)type requestedProperties:(id<NSFastEnumeration> /* NSString * */)requestedProperties;
++ (WDEPPnpObjectWatcher*)createWatcherAqsFilter:(WDEPPnpObjectType)type requestedProperties:(id<NSFastEnumeration> /* NSString * */)requestedProperties aqsFilter:(NSString *)aqsFilter;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* id;
+@property (readonly) NSString * id;
 @property (readonly) NSDictionary* /* NSString *, RTObject* */ properties;
 @property (readonly) WDEPPnpObjectType type;
 - (void)update:(WDEPPnpObjectUpdate*)updateInfo;
 @end
 
 #endif // __WDEPPnpObject_DEFINED__
+

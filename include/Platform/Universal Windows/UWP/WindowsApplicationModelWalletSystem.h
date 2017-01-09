@@ -19,11 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_SYSTEM_EXPORT
+#define OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_SYSTEM_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Wallet_System.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WAWSWalletItemSystemStore, WAWSWalletManagerSystem;
-@protocol WAWSIWalletItemSystemStore
-, WAWSIWalletItemSystemStore2, WAWSIWalletManagerSystemStatics;
+@protocol WAWSIWalletItemSystemStore, WAWSIWalletItemSystemStore2, WAWSIWalletManagerSystemStatics;
 
 // Windows.ApplicationModel.Wallet.System.WalletItemAppAssociation
 enum _WAWSWalletItemAppAssociation {
@@ -43,18 +48,16 @@ typedef unsigned WAWSWalletItemAppAssociation;
 #ifndef __WAWSWalletItemSystemStore_DEFINED__
 #define __WAWSWalletItemSystemStore_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_SYSTEM_EXPORT
 @interface WAWSWalletItemSystemStore : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-- (EventRegistrationToken)addItemsChangedEvent:(void (^)(WAWSWalletItemSystemStore*, RTObject*))del;
+- (EventRegistrationToken)addItemsChangedEvent:(void(^)(WAWSWalletItemSystemStore*, RTObject*))del;
 - (void)removeItemsChangedEvent:(EventRegistrationToken)tok;
 - (void)getItemsAsyncWithSuccess:(void (^)(NSArray* /* WAWWalletItem* */))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)deleteAsync:(WAWWalletItem*)item;
-- (void)importItemAsync:(RTObject<WSSIRandomAccessStreamReference>*)stream
-                success:(void (^)(WAWWalletItem*))success
-                failure:(void (^)(NSError*))failure;
+- (void)importItemAsync:(RTObject<WSSIRandomAccessStreamReference>*)stream success:(void (^)(WAWWalletItem*))success failure:(void (^)(NSError*))failure;
 - (WAWSWalletItemAppAssociation)getAppStatusForItem:(WAWWalletItem*)item;
 - (void)launchAppForItemAsync:(WAWWalletItem*)item success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
@@ -65,9 +68,10 @@ WINRT_EXPORT
 #ifndef __WAWSWalletManagerSystem_DEFINED__
 #define __WAWSWalletManagerSystem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_SYSTEM_EXPORT
 @interface WAWSWalletManagerSystem : RTObject
 + (void)requestStoreAsyncWithSuccess:(void (^)(WAWSWalletItemSystemStore*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WAWSWalletManagerSystem_DEFINED__
+

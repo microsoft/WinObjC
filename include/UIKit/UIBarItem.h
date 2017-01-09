@@ -60,6 +60,8 @@
 @property BOOL accessibilityElementsHidden STUB_PROPERTY;
 @property BOOL shouldGroupAccessibilityChildren STUB_PROPERTY;
 @property BOOL accessibilityViewIsModal STUB_PROPERTY;
+
+// Not really part of the UIAccessibility protocol (standalone UIAccessibilityIdentifier protocol)
 @property (copy) NSString* accessibilityIdentifier STUB_PROPERTY;
 
 - (void)setTitleTextAttributes:(NSDictionary*)attributes forState:(UIControlState)state STUB_METHOD;

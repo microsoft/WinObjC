@@ -36,7 +36,7 @@ namespace XamlControls {
 ////////////////////////////////////////////////////////////////////////////////////
 // Shared Helpers
 ////////////////////////////////////////////////////////////////////////////////////
-
+#if !__has_feature(objc_arc)
 // TODO: GitHub issue 508 and 509
 // We need a type-safe way to do this with projections.  This is copied verbatim from the projections
 // code and works perfectly for this limited usage, but we don't do any type validation below.
@@ -48,6 +48,7 @@ inline id _createRtProxy(Class cls, IInspectable* iface) {
 
     RTObject* ret = [NSAllocateObject(cls, 0, 0) init];
     [ret setComObj:iface];
+
     return [ret autorelease];
 }
 
@@ -79,10 +80,13 @@ public:
     virtual HRESULT STDMETHODCALLTYPE Invoke(IInspectable* arg0, ABI::Windows::UI::Xaml::Input::IPointerRoutedEventArgs* arg1) override {
         NSAutoreleasePool* p = [NSAutoreleasePool new];
         _delegate(_createBareRTObj(arg0), _createRtProxy<WUXIPointerRoutedEventArgs>(arg1));
+
         [p release];
+
         return 0;
     }
 };
+#endif // __has_feature(objc_arc)
 
 ////////////////////////////////////////////////////////////////////////////////////
 // Button
@@ -96,4 +100,32 @@ void HookButtonPointerEvents(WXCButton* button,
                              WUXIPointerEventHandler pointerCanceledHook,
                              WUXIPointerEventHandler pointerCaptureLostHook);
 
+void HookLayoutEvent(WXCButton* button, WUXIPointerEventHandler autoLayoutHook);
+
+////////////////////////////////////////////////////////////////////////////////////
+// ContentDialog
+////////////////////////////////////////////////////////////////////////////////////
+WXCContentDialog* CreateContentDialog();
+
+int XamlContentDialogPressedIndex(WXCContentDialog* contentDialog);
+unsigned int XamlContentDialogAddButtonWithTitle(WXCContentDialog* contentDialog, NSString* buttonTitle);
+NSString* XamlContentDialogButtonTitleAtIndex(WXCContentDialog* contentDialog, unsigned int buttonIndex);
+unsigned int XamlContentDialogNumberOfButtons(WXCContentDialog* contentDialog);
+void XamlContentDialogSetCancelButtonIndex(WXCContentDialog* contentDialog, unsigned int cancelButtonIndex);
+void XamlContentDialogSetDestructiveButtonIndex(WXCContentDialog* contentDialog, unsigned int destructiveButtonIndex);
+
+////////////////////////////////////////////////////////////////////////////////////
+// Label
+////////////////////////////////////////////////////////////////////////////////////
+WXCGrid* CreateLabel();
+WXCTextBlock* GetLabelTextBlock(WXCGrid* labelGrid);
+
+////////////////////////////////////////////////////////////////////////////////////
+// CoreAnimation Layer Support
+////////////////////////////////////////////////////////////////////////////////////
+
+// Set one or more layer properties for the specified target xaml element
+void SetFrameworkElementLayerProperties(WXFrameworkElement* targetElement,
+                                        WXCImage* layerContentProperty,
+                                        WXCCanvas* sublayerCanvasProperty);
 } // namespace XamlControls

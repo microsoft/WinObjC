@@ -19,12 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DATA_JSON_EXPORT
+#define OBJCUWP_WINDOWS_DATA_JSON_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Data_Json.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WDJJsonArray, WDJJsonObject, WDJJsonValue, WDJJsonError;
-@protocol WDJIJsonValue
-, WDJIJsonValueStatics, WDJIJsonValueStatics2, WDJIJsonObject, WDJIJsonObjectWithDefaultValues, WDJIJsonObjectStatics, WDJIJsonArray,
-    WDJIJsonArrayStatics, WDJIJsonErrorStatics, WDJIJsonErrorStatics2;
+@protocol WDJIJsonValue, WDJIJsonValueStatics, WDJIJsonValueStatics2, WDJIJsonObject, WDJIJsonObjectWithDefaultValues, WDJIJsonObjectStatics, WDJIJsonArray, WDJIJsonArrayStatics, WDJIJsonErrorStatics2;
 
 // Windows.Data.Json.JsonValueType
 enum _WDJJsonValueType {
@@ -57,12 +61,16 @@ typedef unsigned WDJJsonErrorStatus;
 
 @protocol WDJIJsonValue
 @property (readonly) WDJJsonValueType valueType;
-- (NSString*)stringify;
-- (NSString*)getString;
+- (NSString *)stringify;
+- (NSString *)getString;
 - (double)getNumber;
 - (BOOL)getBoolean;
 - (WDJJsonArray*)getArray;
 - (WDJJsonObject*)getObject;
+@end
+
+OBJCUWP_WINDOWS_DATA_JSON_EXPORT
+@interface WDJIJsonValue : RTObject <WDJIJsonValue>
 @end
 
 #endif // __WDJIJsonValue_DEFINED__
@@ -72,7 +80,11 @@ typedef unsigned WDJJsonErrorStatus;
 #define __WFIStringable_DEFINED__
 
 @protocol WFIStringable
-- (NSString*)toString;
+- (NSString *)toString;
+@end
+
+OBJCUWP_WINDOWS_DATA_JSON_EXPORT
+@interface WFIStringable : RTObject <WFIStringable>
 @end
 
 #endif // __WFIStringable_DEFINED__
@@ -81,10 +93,10 @@ typedef unsigned WDJJsonErrorStatus;
 #ifndef __WDJJsonArray_DEFINED__
 #define __WDJJsonArray_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_JSON_EXPORT
 @interface WDJJsonArray : RTObject <WDJIJsonValue, WFIStringable>
-+ (WDJJsonArray*)parse:(NSString*)input;
-+ (BOOL)tryParse:(NSString*)input result:(WDJJsonArray**)result;
++ (WDJJsonArray*)parse:(NSString *)input;
++ (BOOL)tryParse:(NSString *)input result:(WDJJsonArray**)result;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -93,26 +105,28 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
 
-- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
-- (void)removeObjectAtIndex:(NSUInteger)idx;
-- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
-- (void)addObject:(id)obj;
+- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
+- (void)removeObjectAtIndex: (NSUInteger)idx;
+- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
+- (void)addObject: (id)obj;
 - (void)removeLastObject;
 
 - (WDJJsonObject*)getObjectAt:(unsigned int)index;
 - (WDJJsonArray*)getArrayAt:(unsigned int)index;
-- (NSString*)getStringAt:(unsigned int)index;
+- (NSString *)getStringAt:(unsigned int)index;
 - (double)getNumberAt:(unsigned int)index;
 - (BOOL)getBooleanAt:(unsigned int)index;
-- (NSString*)stringify;
-- (NSString*)getString;
+- (NSString *)stringify;
+- (NSString *)getString;
 - (double)getNumber;
 - (BOOL)getBoolean;
 - (WDJJsonArray*)getArray;
 - (WDJJsonObject*)getObject;
-- (NSString*)toString;
+- (NSString *)toString;
 @end
 
 #endif // __WDJJsonArray_DEFINED__
@@ -121,51 +135,51 @@ WINRT_EXPORT
 #ifndef __WDJJsonObject_DEFINED__
 #define __WDJJsonObject_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_JSON_EXPORT
 @interface WDJJsonObject : RTObject <WDJIJsonValue, WFIStringable>
-+ (WDJJsonObject*)parse:(NSString*)input;
-+ (BOOL)tryParse:(NSString*)input result:(WDJJsonObject**)result;
++ (WDJJsonObject*)parse:(NSString *)input;
++ (BOOL)tryParse:(NSString *)input result:(WDJJsonObject**)result;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDJJsonValueType valueType;
 @property (readonly) unsigned int size;
-- (id)objectForKey:(id)key;
+- (id)objectForKey: (id)key;
 - (NSArray*)allKeys;
-- (NSArray*)allKeysForObject:(id)obj;
+- (NSArray*)allKeysForObject: (id)obj;
 - (NSArray*)allValues;
 - (id)keyEnumerator;
 - (unsigned int)count;
 
-- (void)setObject:(id)obj forKey:(id)key;
-- (void)setObject:(id)object forKeyedSubscript:(id)key;
-- (void)removeObjectForKey:(id)key;
-- (void)removeAllObjects;
-- (void)removeObjectsForKeys:(NSArray*)keys;
-- (void)addEntriesFromDictionary:(NSDictionary*)otherDict;
-- (void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
-- (void)setDictionary:(NSDictionary*)dict;
-- (WDJJsonValue*)getNamedValue:(NSString*)name;
-- (void)setNamedValue:(NSString*)name value:(RTObject<WDJIJsonValue>*)value;
-- (WDJJsonObject*)getNamedObject:(NSString*)name;
-- (WDJJsonArray*)getNamedArray:(NSString*)name;
-- (NSString*)getNamedString:(NSString*)name;
-- (double)getNamedNumber:(NSString*)name;
-- (BOOL)getNamedBoolean:(NSString*)name;
-- (NSString*)stringify;
-- (NSString*)getString;
+-(void)setObject: (id)obj forKey: (id)key;
+-(void)setObject:(id)object forKeyedSubscript:(id)key;
+-(void)removeObjectForKey: (id)key;
+-(void)removeAllObjects;
+-(void)removeObjectsForKeys:(NSArray*)keys;
+-(void)addEntriesFromDictionary:(NSDictionary*)otherDict;
+-(void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
+-(void)setDictionary: (NSDictionary*)dict;
+- (WDJJsonValue*)getNamedValue:(NSString *)name;
+- (void)setNamedValue:(NSString *)name value:(RTObject<WDJIJsonValue>*)value;
+- (WDJJsonObject*)getNamedObject:(NSString *)name;
+- (WDJJsonArray*)getNamedArray:(NSString *)name;
+- (NSString *)getNamedString:(NSString *)name;
+- (double)getNamedNumber:(NSString *)name;
+- (BOOL)getNamedBoolean:(NSString *)name;
+- (NSString *)stringify;
+- (NSString *)getString;
 - (double)getNumber;
 - (BOOL)getBoolean;
 - (WDJJsonArray*)getArray;
 - (WDJJsonObject*)getObject;
-- (WDJJsonValue*)getNamedValueOrDefault:(NSString*)name defaultValue:(WDJJsonValue*)defaultValue;
-- (WDJJsonObject*)getNamedObjectOrDefault:(NSString*)name defaultValue:(WDJJsonObject*)defaultValue;
-- (NSString*)getNamedStringOrDefault:(NSString*)name defaultValue:(NSString*)defaultValue;
-- (WDJJsonArray*)getNamedArrayOrDefault:(NSString*)name defaultValue:(WDJJsonArray*)defaultValue;
-- (double)getNamedNumberOrDefault:(NSString*)name defaultValue:(double)defaultValue;
-- (BOOL)getNamedBooleanOrDefault:(NSString*)name defaultValue:(BOOL)defaultValue;
-- (NSString*)toString;
+- (WDJJsonValue*)getNamedValueOrDefault:(NSString *)name defaultValue:(WDJJsonValue*)defaultValue;
+- (WDJJsonObject*)getNamedObjectOrDefault:(NSString *)name defaultValue:(WDJJsonObject*)defaultValue;
+- (NSString *)getNamedStringOrDefault:(NSString *)name defaultValue:(NSString *)defaultValue;
+- (WDJJsonArray*)getNamedArrayOrDefault:(NSString *)name defaultValue:(WDJJsonArray*)defaultValue;
+- (double)getNamedNumberOrDefault:(NSString *)name defaultValue:(double)defaultValue;
+- (BOOL)getNamedBooleanOrDefault:(NSString *)name defaultValue:(BOOL)defaultValue;
+- (NSString *)toString;
 @end
 
 #endif // __WDJJsonObject_DEFINED__
@@ -174,25 +188,25 @@ WINRT_EXPORT
 #ifndef __WDJJsonValue_DEFINED__
 #define __WDJJsonValue_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_JSON_EXPORT
 @interface WDJJsonValue : RTObject <WDJIJsonValue, WFIStringable>
-+ (WDJJsonValue*)parse:(NSString*)input;
-+ (BOOL)tryParse:(NSString*)input result:(WDJJsonValue**)result;
++ (WDJJsonValue*)createNullValue;
++ (WDJJsonValue*)parse:(NSString *)input;
++ (BOOL)tryParse:(NSString *)input result:(WDJJsonValue**)result;
 + (WDJJsonValue*)createBooleanValue:(BOOL)input;
 + (WDJJsonValue*)createNumberValue:(double)input;
-+ (WDJJsonValue*)createStringValue:(NSString*)input;
-+ (WDJJsonValue*)createNullValue;
++ (WDJJsonValue*)createStringValue:(NSString *)input;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDJJsonValueType valueType;
-- (NSString*)stringify;
-- (NSString*)getString;
+- (NSString *)stringify;
+- (NSString *)getString;
 - (double)getNumber;
 - (BOOL)getBoolean;
 - (WDJJsonArray*)getArray;
 - (WDJJsonObject*)getObject;
-- (NSString*)toString;
+- (NSString *)toString;
 @end
 
 #endif // __WDJJsonValue_DEFINED__
@@ -201,10 +215,10 @@ WINRT_EXPORT
 #ifndef __WDJJsonError_DEFINED__
 #define __WDJJsonError_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_JSON_EXPORT
 @interface WDJJsonError : RTObject
 + (WDJJsonErrorStatus)getJsonStatus:(int)hresult;
-+ (WDJJsonErrorStatus)getStatus:(int)hresult;
 @end
 
 #endif // __WDJJsonError_DEFINED__
+

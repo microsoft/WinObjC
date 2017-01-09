@@ -19,6 +19,12 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
+#define OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Foundation_Numerics.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WFNVector2, WFNVector3, WFNVector4, WFNMatrix3x2, WFNMatrix4x4, WFNPlane, WFNQuaternion;
@@ -26,26 +32,26 @@
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Foundation.Numerics.Vector2
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 @interface WFNVector2 : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property float x;
 @property float y;
 @end
 
 // [struct] Windows.Foundation.Numerics.Vector3
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 @interface WFNVector3 : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property float x;
 @property float y;
 @property float z;
 @end
 
 // [struct] Windows.Foundation.Numerics.Vector4
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 @interface WFNVector4 : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property float x;
 @property float y;
 @property float z;
@@ -53,9 +59,9 @@ WINRT_EXPORT
 @end
 
 // [struct] Windows.Foundation.Numerics.Matrix3x2
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 @interface WFNMatrix3x2 : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property float m11;
 @property float m12;
 @property float m21;
@@ -65,9 +71,9 @@ WINRT_EXPORT
 @end
 
 // [struct] Windows.Foundation.Numerics.Matrix4x4
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 @interface WFNMatrix4x4 : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property float m11;
 @property float m12;
 @property float m13;
@@ -87,19 +93,20 @@ WINRT_EXPORT
 @end
 
 // [struct] Windows.Foundation.Numerics.Plane
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 @interface WFNPlane : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property (retain) WFNVector3* normal;
 @property float d;
 @end
 
 // [struct] Windows.Foundation.Numerics.Quaternion
-WINRT_EXPORT
+OBJCUWP_WINDOWS_FOUNDATION_NUMERICS_EXPORT
 @interface WFNQuaternion : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property float x;
 @property float y;
 @property float z;
 @property float w;
 @end
+

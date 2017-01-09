@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -24,8 +24,12 @@
  */
 
 #import <Starboard.h>
+
+#import <UIKit/UIApplication.h>
+#import <UIKit/UIKitExport.h>
+
 #import <Foundation/Foundation.h>
-#import <UIKit\UIKitExport.h>
+
 #include <COMIncludes.h>
 #import <wrl/client.h>
 #import <WRLHelpers.h>
@@ -33,6 +37,7 @@
 #import <Windows.Foundation.Collections.h>
 #import <windows.applicationModel.background.h>
 #include <COMIncludes_end.h>
+
 #import <dispatch/dispatch.h>
 #import "StarboardXaml.h"
 #import "UWPBackgroundTask.h"

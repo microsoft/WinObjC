@@ -13,9 +13,21 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #import "XamlUtilities.h"
-#import "UIViewInternal+Xaml.h"
+
+#import <UIKit/UIActivityIndicatorView.h>
+#import <UIKit/UIButton.h>
+#import <UIKit/UIColor.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UILabel.h>
+#import <UIKit/UISlider.h>
+
+#import "StarboardXaml/DisplayTexture.h"
+
+#include <Windows.UI.Xaml.Media.h>
+
+using namespace Microsoft::WRL;
+using namespace Windows::Foundation;
 
 // cornerRadius when border style is set to round rectangle
 static const int c_borderCornerRadius = 8;
@@ -29,21 +41,66 @@ WUColor* ConvertUIColorToWUColor(UIColor* uiColor) {
         [WUColorHelper fromArgb:(unsigned char)(a * 255) r:(unsigned char)(r * 255) g:(unsigned char)(g * 255) b:(unsigned char)(b * 255)];
 }
 
+WUXMImageBrush* ConvertUIImageToWUXMImageBrush(UIImage* image) {
+    if (!image) {
+        return nil;
+    }
+
+    CGImageRef cgImg = [image CGImage];
+    Microsoft::WRL::ComPtr<IInspectable> inspectableNode(DisplayTexture::GetBitmapForCGImage(cgImg));
+    WUXMIBitmapSource* bitmapImageSource = CreateRtProxy([WUXMIBitmapSource class], inspectableNode.Get());
+    WUXMImageBrush* imageBrush = [WUXMImageBrush make];
+    imageBrush.imageSource = bitmapImageSource;
+
+    return imageBrush;
+}
+
+WUXMIBitmapSource* ConvertUIImageToWUXMIBitmapSource(UIImage* image) {
+    if (!image) {
+        return nil;
+    }
+
+    CGImageRef cgImg = [image CGImage];
+    Microsoft::WRL::ComPtr<IInspectable> inspectableNode(DisplayTexture::GetBitmapForCGImage(cgImg));
+    WUXMIBitmapSource* bitmapImageSource = CreateRtProxy([WUXMIBitmapSource class], inspectableNode.Get());
+
+    return bitmapImageSource;
+}
+
 WXTextAlignment ConvertUITextAlignmentToWXTextAlignment(UITextAlignment alignment) {
-    WXTextAlignment ret = UITextAlignmentLeft;
     switch (alignment) {
         case UITextAlignmentLeft:
-            ret = WXTextAlignmentLeft;
+            return WXTextAlignmentLeft;
             break;
+
         case UITextAlignmentCenter:
-            ret = WXTextAlignmentCenter;
+            return WXTextAlignmentCenter;
             break;
+
         case UITextAlignmentRight:
-            ret = WXTextAlignmentRight;
+            return WXTextAlignmentRight;
             break;
     }
 
-    return ret;
+    return UITextAlignmentLeft;
+}
+
+UITextAlignment ConvertWXTextAlignmentToUITextAlignment(WXTextAlignment alignment) {
+    switch (alignment) {
+        case WXTextAlignmentLeft:
+            return UITextAlignmentLeft;
+            break;
+
+        case WXTextAlignmentCenter:
+            return UITextAlignmentCenter;
+            break;
+
+        case WXTextAlignmentRight:
+            return UITextAlignmentRight;
+            break;
+    }
+
+    return UITextAlignmentLeft;
 }
 
 WUXIInputScope* ConvertKeyboardTypeToInputScope(UIKeyboardType keyboardType, BOOL secureTextMode) {
@@ -146,6 +203,28 @@ WXFrameworkElement* FindTemplateChild(WXCControl* control, NSString* name) {
     return target;
 }
 
+NSString* NSStringFromPropertyValue(RTObject* rtPropertyValue) {
+    // BUGBUG:8791977 - WFIPropertyValue is not publicly exposed via projections so we used a workaround
+    ComPtr<IInspectable> inspPropVal = [rtPropertyValue comObj];
+    return NSStringFromPropertyValue(inspPropVal);
+}
+
+NSString* NSStringFromPropertyValue(const ComPtr<IInspectable>& inspPropertyValue) {
+    ComPtr<ABI::Windows::Foundation::IPropertyValue> propVal;
+    HRESULT hr = inspPropertyValue.As(&propVal);
+    if (SUCCEEDED(hr)) {
+        HSTRING str;
+        auto freeHSTRING = wil::ScopeExit([&]() { WindowsDeleteString(str); });
+
+        hr = propVal->GetString(&str);
+        if (SUCCEEDED(hr)) {
+            return Strings::WideToNSString<HSTRING>(str);
+        }
+    }
+
+    return nil;
+}
+
 // Setup control border style
 void SetControlBorderStyle(WXCControl* control, UITextBorderStyle style) {
     switch (style) {
@@ -158,7 +237,7 @@ void SetControlBorderStyle(WXCControl* control, UITextBorderStyle style) {
             break;
 
         case UITextBorderStyleBezel:
-            UNIMPLEMENTED();
+            UNIMPLEMENTED_WITH_MSG("UITextBorderStyleBezel not yet supported; treated as no border.");
             // we don't support UITextBorderStyleBezel, treat it as no border
             control.borderThickness = [WXThicknessHelper fromUniformLength:0];
             break;
@@ -176,19 +255,21 @@ void SetControlBorderStyle(WXCControl* control, UITextBorderStyle style) {
     }
 }
 
-ComPtr<Markup::IXamlType> ReturnXamlType(NSString* xamlClassName) {
-    static ComPtr<Markup::IXamlMetadataProvider> xamlMetaProvider = nullptr;
+ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlType> ReturnXamlType(NSString* xamlClassName) {
+    static ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlMetadataProvider> xamlMetaProvider;
 
     if (!xamlMetaProvider) {
         auto inspApplicationCurrent = [WXApplication.current comObj];
         inspApplicationCurrent.As(&xamlMetaProvider);
     }
 
-    ComPtr<Markup::IXamlType> xamlType = nullptr;
+    ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlType> xamlType;
     auto className = Strings::NarrowToWide<HSTRING>(xamlClassName);
-    HRESULT hr = xamlMetaProvider->GetXamlTypeByFullName(className.Get(), xamlType.GetAddressOf());
-    if (SUCCEEDED(hr) && xamlType.Get() != nullptr) {
-        return xamlType;
+    if (xamlMetaProvider) {
+        HRESULT hr = xamlMetaProvider->GetXamlTypeByFullName(className.Get(), xamlType.GetAddressOf());
+        if (SUCCEEDED(hr) && xamlType.Get() != nullptr) {
+            return xamlType;
+        }
     }
 
     return nullptr;
@@ -216,9 +297,7 @@ UIView* GenerateUIKitControlFromXamlType(RTObject* xamlObject) {
             WXFrameworkElement* xamlElement = rt_dynamic_cast(classType, xamlObject);
             if (xamlElement != nil) {
                 Class controlClass = xamlSupportedControls[classType];
-                if ([controlClass instancesRespondToSelector:@selector(_initWithFrame:xamlElement:)]) {
-                    control = [[controlClass alloc] _initWithFrame:CGRectZero xamlElement:xamlElement];
-                }
+                control = [[controlClass alloc] initWithFrame:CGRectZero xamlElement:xamlElement];
                 break;
             }
         } catch (...) {

@@ -19,23 +19,23 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WSAppMemoryUsageLimitChangingEventArgs, WSAppMemoryReport, WSProcessMemoryReport, WSMemoryManager, WSProtocolForResultsOperation,
-    WSUserWatcher, WSUser, WSUserChangedEventArgs, WSUserAuthenticationStatusChangingEventArgs, WSUserAuthenticationStatusChangeDeferral,
-    WSKnownUserProperties, WSLaunchUriResult, WSLauncherUIOptions, WSLauncherOptions, WSFolderLauncherOptions, WSLauncher;
-@protocol WSIAppMemoryReport
-, WSIProcessMemoryReport, WSIAppMemoryUsageLimitChangingEventArgs, WSIMemoryManagerStatics, WSIMemoryManagerStatics2,
-    WSIProtocolForResultsOperation, WSIUser, WSIUserStatics, WSIUserWatcher, WSIUserChangedEventArgs,
-    WSIUserAuthenticationStatusChangeDeferral, WSIUserAuthenticationStatusChangingEventArgs, WSIKnownUserPropertiesStatics,
-    WSILaunchUriResult, WSILauncherUIOptions, WSILauncherOptions, WSILauncherOptions2, WSILauncherViewOptions, WSIFolderLauncherOptions,
-    WSILauncherStatics, WSILauncherStatics2, WSILauncherStatics3;
+@class WSAppMemoryUsageLimitChangingEventArgs, WSAppMemoryReport, WSProcessMemoryReport, WSMemoryManager, WSProtocolForResultsOperation, WSUserWatcher, WSUser, WSUserChangedEventArgs, WSUserAuthenticationStatusChangingEventArgs, WSUserAuthenticationStatusChangeDeferral, WSKnownUserProperties, WSUserPicker, WSUserDeviceAssociationChangedEventArgs, WSUserDeviceAssociation, WSLaunchUriResult, WSLauncherUIOptions, WSLauncherOptions, WSRemoteLauncherOptions, WSFolderLauncherOptions, WSLauncher, WSRemoteLauncher, WSProcessLauncherOptions, WSProcessLauncherResult, WSProcessLauncher, WSShutdownManager, WSTimeZoneSettings;
+@protocol WSIAppMemoryReport, WSIProcessMemoryReport, WSIAppMemoryUsageLimitChangingEventArgs, WSIMemoryManagerStatics, WSIMemoryManagerStatics2, WSIMemoryManagerStatics3, WSIProtocolForResultsOperation, WSIUser, WSIUserStatics, WSIUserWatcher, WSIUserChangedEventArgs, WSIUserAuthenticationStatusChangeDeferral, WSIUserAuthenticationStatusChangingEventArgs, WSIKnownUserPropertiesStatics, WSIUserPickerStatics, WSIUserPicker, WSIUserDeviceAssociationChangedEventArgs, WSIUserDeviceAssociationStatics, WSILaunchUriResult, WSILauncherUIOptions, WSILauncherOptions, WSILauncherOptions2, WSILauncherOptions3, WSILauncherViewOptions, WSIRemoteLauncherOptions, WSIFolderLauncherOptions, WSILauncherStatics, WSILauncherStatics2, WSILauncherStatics3, WSILauncherStatics4, WSIRemoteLauncherStatics, WSIProcessLauncherOptions, WSIProcessLauncherStatics, WSIProcessLauncherResult, WSIShutdownManagerStatics, WSITimeZoneSettingsStatics;
 
 // Windows.System.AppMemoryUsageLevel
 enum _WSAppMemoryUsageLevel {
     WSAppMemoryUsageLevelLow = 0,
     WSAppMemoryUsageLevelMedium = 1,
     WSAppMemoryUsageLevelHigh = 2,
+    WSAppMemoryUsageLevelOverLimit = 3,
 };
 typedef unsigned WSAppMemoryUsageLevel;
 
@@ -297,6 +297,36 @@ enum _WSLaunchUriStatus {
 };
 typedef unsigned WSLaunchUriStatus;
 
+// Windows.System.LaunchFileStatus
+enum _WSLaunchFileStatus {
+    WSLaunchFileStatusSuccess = 0,
+    WSLaunchFileStatusAppUnavailable = 1,
+    WSLaunchFileStatusDeniedByPolicy = 2,
+    WSLaunchFileStatusFileTypeNotSupported = 3,
+    WSLaunchFileStatusUnknown = 4,
+};
+typedef unsigned WSLaunchFileStatus;
+
+// Windows.System.RemoteLaunchUriStatus
+enum _WSRemoteLaunchUriStatus {
+    WSRemoteLaunchUriStatusUnknown = 0,
+    WSRemoteLaunchUriStatusSuccess = 1,
+    WSRemoteLaunchUriStatusAppUnavailable = 2,
+    WSRemoteLaunchUriStatusProtocolUnavailable = 3,
+    WSRemoteLaunchUriStatusRemoteSystemUnavailable = 4,
+    WSRemoteLaunchUriStatusValueSetTooLarge = 5,
+    WSRemoteLaunchUriStatusDeniedByLocalSystem = 6,
+    WSRemoteLaunchUriStatusDeniedByRemoteSystem = 7,
+};
+typedef unsigned WSRemoteLaunchUriStatus;
+
+// Windows.System.ShutdownKind
+enum _WSShutdownKind {
+    WSShutdownKindShutdown = 0,
+    WSShutdownKindRestart = 1,
+};
+typedef unsigned WSShutdownKind;
+
 #include "WindowsApplicationModel.h"
 #include "WindowsUIPopups.h"
 #include "WindowsFoundation.h"
@@ -305,6 +335,7 @@ typedef unsigned WSLaunchUriStatus;
 #include "WindowsStorage.h"
 #include "WindowsStorageSearch.h"
 #include "WindowsUIViewManagement.h"
+#include "WindowsSystemRemoteSystems.h"
 
 #import <Foundation/Foundation.h>
 
@@ -316,13 +347,17 @@ typedef unsigned WSLaunchUriStatus;
 @property WUVViewSizePreference desiredRemainingView;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSILauncherViewOptions : RTObject <WSILauncherViewOptions>
+@end
+
 #endif // __WSILauncherViewOptions_DEFINED__
 
 // Windows.System.AppMemoryUsageLimitChangingEventArgs
 #ifndef __WSAppMemoryUsageLimitChangingEventArgs_DEFINED__
 #define __WSAppMemoryUsageLimitChangingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSAppMemoryUsageLimitChangingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -337,7 +372,7 @@ WINRT_EXPORT
 #ifndef __WSAppMemoryReport_DEFINED__
 #define __WSAppMemoryReport_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSAppMemoryReport : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -354,7 +389,7 @@ WINRT_EXPORT
 #ifndef __WSProcessMemoryReport_DEFINED__
 #define __WSProcessMemoryReport_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSProcessMemoryReport : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -369,18 +404,19 @@ WINRT_EXPORT
 #ifndef __WSMemoryManager_DEFINED__
 #define __WSMemoryManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSMemoryManager : RTObject
 + (WSAppMemoryReport*)getAppMemoryReport;
 + (WSProcessMemoryReport*)getProcessMemoryReport;
++ (BOOL)trySetAppMemoryUsageLimit:(uint64_t)value;
 + (uint64_t)appMemoryUsage;
 + (WSAppMemoryUsageLevel)appMemoryUsageLevel;
 + (uint64_t)appMemoryUsageLimit;
-+ (EventRegistrationToken)addAppMemoryUsageDecreasedEvent:(void (^)(RTObject*, RTObject*))del;
++ (EventRegistrationToken)addAppMemoryUsageDecreasedEvent:(void(^)(RTObject*, RTObject*))del;
 + (void)removeAppMemoryUsageDecreasedEvent:(EventRegistrationToken)tok;
-+ (EventRegistrationToken)addAppMemoryUsageIncreasedEvent:(void (^)(RTObject*, RTObject*))del;
++ (EventRegistrationToken)addAppMemoryUsageIncreasedEvent:(void(^)(RTObject*, RTObject*))del;
 + (void)removeAppMemoryUsageIncreasedEvent:(EventRegistrationToken)tok;
-+ (EventRegistrationToken)addAppMemoryUsageLimitChangingEvent:(void (^)(RTObject*, WSAppMemoryUsageLimitChangingEventArgs*))del;
++ (EventRegistrationToken)addAppMemoryUsageLimitChangingEvent:(void(^)(RTObject*, WSAppMemoryUsageLimitChangingEventArgs*))del;
 + (void)removeAppMemoryUsageLimitChangingEvent:(EventRegistrationToken)tok;
 @end
 
@@ -390,7 +426,7 @@ WINRT_EXPORT
 #ifndef __WSProtocolForResultsOperation_DEFINED__
 #define __WSProtocolForResultsOperation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSProtocolForResultsOperation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -404,25 +440,25 @@ WINRT_EXPORT
 #ifndef __WSUserWatcher_DEFINED__
 #define __WSUserWatcher_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSUserWatcher : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WSUserWatcherStatus status;
-- (EventRegistrationToken)addAddedEvent:(void (^)(WSUserWatcher*, WSUserChangedEventArgs*))del;
+- (EventRegistrationToken)addAddedEvent:(void(^)(WSUserWatcher*, WSUserChangedEventArgs*))del;
 - (void)removeAddedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addAuthenticationStatusChangedEvent:(void (^)(WSUserWatcher*, WSUserChangedEventArgs*))del;
+- (EventRegistrationToken)addAuthenticationStatusChangedEvent:(void(^)(WSUserWatcher*, WSUserChangedEventArgs*))del;
 - (void)removeAuthenticationStatusChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addAuthenticationStatusChangingEvent:(void (^)(WSUserWatcher*, WSUserAuthenticationStatusChangingEventArgs*))del;
+- (EventRegistrationToken)addAuthenticationStatusChangingEvent:(void(^)(WSUserWatcher*, WSUserAuthenticationStatusChangingEventArgs*))del;
 - (void)removeAuthenticationStatusChangingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addEnumerationCompletedEvent:(void (^)(WSUserWatcher*, RTObject*))del;
+- (EventRegistrationToken)addEnumerationCompletedEvent:(void(^)(WSUserWatcher*, RTObject*))del;
 - (void)removeEnumerationCompletedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addRemovedEvent:(void (^)(WSUserWatcher*, WSUserChangedEventArgs*))del;
+- (EventRegistrationToken)addRemovedEvent:(void(^)(WSUserWatcher*, WSUserChangedEventArgs*))del;
 - (void)removeRemovedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addStoppedEvent:(void (^)(WSUserWatcher*, RTObject*))del;
+- (EventRegistrationToken)addStoppedEvent:(void(^)(WSUserWatcher*, RTObject*))del;
 - (void)removeStoppedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addUpdatedEvent:(void (^)(WSUserWatcher*, WSUserChangedEventArgs*))del;
+- (EventRegistrationToken)addUpdatedEvent:(void(^)(WSUserWatcher*, WSUserChangedEventArgs*))del;
 - (void)removeUpdatedEvent:(EventRegistrationToken)tok;
 - (void)start;
 - (void)stop;
@@ -434,29 +470,22 @@ WINRT_EXPORT
 #ifndef __WSUser_DEFINED__
 #define __WSUser_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSUser : RTObject
 + (WSUserWatcher*)createWatcher;
 + (void)findAllAsyncWithSuccess:(void (^)(NSArray* /* WSUser* */))success failure:(void (^)(NSError*))failure;
 + (void)findAllAsyncByType:(WSUserType)type success:(void (^)(NSArray* /* WSUser* */))success failure:(void (^)(NSError*))failure;
-+ (void)findAllAsyncByTypeAndStatus:(WSUserType)type
-                             status:(WSUserAuthenticationStatus)status
-                            success:(void (^)(NSArray* /* WSUser* */))success
-                            failure:(void (^)(NSError*))failure;
-+ (WSUser*)getFromId:(NSString*)nonRoamableId;
++ (void)findAllAsyncByTypeAndStatus:(WSUserType)type status:(WSUserAuthenticationStatus)status success:(void (^)(NSArray* /* WSUser* */))success failure:(void (^)(NSError*))failure;
++ (WSUser*)getFromId:(NSString *)nonRoamableId;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WSUserAuthenticationStatus authenticationStatus;
-@property (readonly) NSString* nonRoamableId;
+@property (readonly) NSString * nonRoamableId;
 @property (readonly) WSUserType type;
-- (void)getPropertyAsync:(NSString*)value success:(void (^)(RTObject*))success failure:(void (^)(NSError*))failure;
-- (void)getPropertiesAsync:(NSArray* /* NSString * */)values
-                   success:(void (^)(RTObject<WFCIPropertySet>*))success
-                   failure:(void (^)(NSError*))failure;
-- (void)getPictureAsync:(WSUserPictureSize)desiredSize
-                success:(void (^)(RTObject<WSSIRandomAccessStreamReference>*))success
-                failure:(void (^)(NSError*))failure;
+- (void)getPropertyAsync:(NSString *)value success:(void (^)(RTObject*))success failure:(void (^)(NSError*))failure;
+- (void)getPropertiesAsync:(NSArray* /* NSString * */)values success:(void (^)(RTObject<WFCIPropertySet>*))success failure:(void (^)(NSError*))failure;
+- (void)getPictureAsync:(WSUserPictureSize)desiredSize success:(void (^)(RTObject<WSSIRandomAccessStreamReference>*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSUser_DEFINED__
@@ -465,7 +494,7 @@ WINRT_EXPORT
 #ifndef __WSUserChangedEventArgs_DEFINED__
 #define __WSUserChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSUserChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -479,7 +508,7 @@ WINRT_EXPORT
 #ifndef __WSUserAuthenticationStatusChangingEventArgs_DEFINED__
 #define __WSUserAuthenticationStatusChangingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSUserAuthenticationStatusChangingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -496,7 +525,7 @@ WINRT_EXPORT
 #ifndef __WSUserAuthenticationStatusChangeDeferral_DEFINED__
 #define __WSUserAuthenticationStatusChangeDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSUserAuthenticationStatusChangeDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -510,26 +539,73 @@ WINRT_EXPORT
 #ifndef __WSKnownUserProperties_DEFINED__
 #define __WSKnownUserProperties_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSKnownUserProperties : RTObject
-+ (NSString*)accountName;
-+ (NSString*)displayName;
-+ (NSString*)domainName;
-+ (NSString*)firstName;
-+ (NSString*)guestHost;
-+ (NSString*)lastName;
-+ (NSString*)principalName;
-+ (NSString*)providerName;
-+ (NSString*)sessionInitiationProtocolUri;
++ (NSString *)accountName;
++ (NSString *)displayName;
++ (NSString *)domainName;
++ (NSString *)firstName;
++ (NSString *)guestHost;
++ (NSString *)lastName;
++ (NSString *)principalName;
++ (NSString *)providerName;
++ (NSString *)sessionInitiationProtocolUri;
 @end
 
 #endif // __WSKnownUserProperties_DEFINED__
+
+// Windows.System.UserPicker
+#ifndef __WSUserPicker_DEFINED__
+#define __WSUserPicker_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSUserPicker : RTObject
++ (BOOL)isSupported;
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (retain) WSUser* suggestedSelectedUser;
+@property BOOL allowGuestAccounts;
+- (void)pickSingleUserAsyncWithSuccess:(void (^)(WSUser*))success failure:(void (^)(NSError*))failure;
+@end
+
+#endif // __WSUserPicker_DEFINED__
+
+// Windows.System.UserDeviceAssociationChangedEventArgs
+#ifndef __WSUserDeviceAssociationChangedEventArgs_DEFINED__
+#define __WSUserDeviceAssociationChangedEventArgs_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSUserDeviceAssociationChangedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) NSString * deviceId;
+@property (readonly) WSUser* newUser;
+@property (readonly) WSUser* oldUser;
+@end
+
+#endif // __WSUserDeviceAssociationChangedEventArgs_DEFINED__
+
+// Windows.System.UserDeviceAssociation
+#ifndef __WSUserDeviceAssociation_DEFINED__
+#define __WSUserDeviceAssociation_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSUserDeviceAssociation : RTObject
++ (WSUser*)findUserFromDeviceId:(NSString *)deviceId;
++ (EventRegistrationToken)addUserDeviceAssociationChangedEvent:(void(^)(RTObject*, WSUserDeviceAssociationChangedEventArgs*))del;
++ (void)removeUserDeviceAssociationChangedEvent:(EventRegistrationToken)tok;
+@end
+
+#endif // __WSUserDeviceAssociation_DEFINED__
 
 // Windows.System.LaunchUriResult
 #ifndef __WSLaunchUriResult_DEFINED__
 #define __WSLaunchUriResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSLaunchUriResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -544,7 +620,7 @@ WINRT_EXPORT
 #ifndef __WSLauncherUIOptions_DEFINED__
 #define __WSLauncherUIOptions_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSLauncherUIOptions : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -560,31 +636,48 @@ WINRT_EXPORT
 #ifndef __WSLauncherOptions_DEFINED__
 #define __WSLauncherOptions_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSLauncherOptions : RTObject <WSILauncherViewOptions>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL treatAsUntrusted;
-@property (retain) NSString* preferredApplicationPackageFamilyName;
-@property (retain) NSString* preferredApplicationDisplayName;
+@property (retain) NSString * preferredApplicationPackageFamilyName;
+@property (retain) NSString * preferredApplicationDisplayName;
 @property (retain) WFUri* fallbackUri;
 @property BOOL displayApplicationPicker;
-@property (retain) NSString* contentType;
+@property (retain) NSString * contentType;
 @property (readonly) WSLauncherUIOptions* uI;
-@property (retain) NSString* targetApplicationPackageFamilyName;
+@property (retain) NSString * targetApplicationPackageFamilyName;
 @property (retain) WSSStorageFileQueryResult* neighboringFilesQuery;
+@property BOOL ignoreAppUriHandlers;
 @property WUVViewSizePreference desiredRemainingView;
 @end
 
 #endif // __WSLauncherOptions_DEFINED__
 
+// Windows.System.RemoteLauncherOptions
+#ifndef __WSRemoteLauncherOptions_DEFINED__
+#define __WSRemoteLauncherOptions_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSRemoteLauncherOptions : RTObject
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (retain) WFUri* fallbackUri;
+@property (readonly) NSMutableArray* /* NSString * */ preferredAppIds;
+@end
+
+#endif // __WSRemoteLauncherOptions_DEFINED__
+
 // Windows.System.FolderLauncherOptions
 #ifndef __WSFolderLauncherOptions_DEFINED__
 #define __WSFolderLauncherOptions_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSFolderLauncherOptions : RTObject <WSILauncherViewOptions>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -600,61 +693,116 @@ WINRT_EXPORT
 #ifndef __WSLauncher_DEFINED__
 #define __WSLauncher_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WSLauncher : RTObject
-+ (void)launchFolderAsync:(RTObject<WSIStorageFolder>*)folder success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-+ (void)launchFolderWithOptionsAsync:(RTObject<WSIStorageFolder>*)folder
-                             options:(WSFolderLauncherOptions*)options
-                             success:(void (^)(BOOL))success
-                             failure:(void (^)(NSError*))failure;
-+ (void)launchUriForResultsAsync:(WFUri*)uri
-                         options:(WSLauncherOptions*)options
-                         success:(void (^)(WSLaunchUriResult*))success
-                         failure:(void (^)(NSError*))failure;
-+ (void)launchUriForResultsWithDataAsync:(WFUri*)uri
-                                 options:(WSLauncherOptions*)options
-                               inputData:(WFCValueSet*)inputData
-                                 success:(void (^)(WSLaunchUriResult*))success
-                                 failure:(void (^)(NSError*))failure;
-+ (void)launchUriWithDataAsync:(WFUri*)uri
-                       options:(WSLauncherOptions*)options
-                     inputData:(WFCValueSet*)inputData
-                       success:(void (^)(BOOL))success
-                       failure:(void (^)(NSError*))failure;
-+ (void)queryUriSupportAsync:(WFUri*)uri
-      launchQuerySupportType:(WSLaunchQuerySupportType)launchQuerySupportType
-                     success:(void (^)(WSLaunchQuerySupportStatus))success
-                     failure:(void (^)(NSError*))failure;
-+ (void)queryUriSupportWithPackageFamilyNameAsync:(WFUri*)uri
-                           launchQuerySupportType:(WSLaunchQuerySupportType)launchQuerySupportType
-                                packageFamilyName:(NSString*)packageFamilyName
-                                          success:(void (^)(WSLaunchQuerySupportStatus))success
-                                          failure:(void (^)(NSError*))failure;
-+ (void)queryFileSupportAsync:(WSStorageFile*)file
-                      success:(void (^)(WSLaunchQuerySupportStatus))success
-                      failure:(void (^)(NSError*))failure;
-+ (void)queryFileSupportWithPackageFamilyNameAsync:(WSStorageFile*)file
-                                 packageFamilyName:(NSString*)packageFamilyName
-                                           success:(void (^)(WSLaunchQuerySupportStatus))success
-                                           failure:(void (^)(NSError*))failure;
-+ (void)findUriSchemeHandlersAsync:(NSString*)scheme
-                           success:(void (^)(NSArray* /* WAAppInfo* */))success
-                           failure:(void (^)(NSError*))failure;
-+ (void)findUriSchemeHandlersWithLaunchUriTypeAsync:(NSString*)scheme
-                             launchQuerySupportType:(WSLaunchQuerySupportType)launchQuerySupportType
-                                            success:(void (^)(NSArray* /* WAAppInfo* */))success
-                                            failure:(void (^)(NSError*))failure;
-+ (void)findFileHandlersAsync:(NSString*)extension success:(void (^)(NSArray* /* WAAppInfo* */))success failure:(void (^)(NSError*))failure;
 + (void)launchFileAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-+ (void)launchFileWithOptionsAsync:(RTObject<WSIStorageFile>*)file
-                           options:(WSLauncherOptions*)options
-                           success:(void (^)(BOOL))success
-                           failure:(void (^)(NSError*))failure;
++ (void)launchFileWithOptionsAsync:(RTObject<WSIStorageFile>*)file options:(WSLauncherOptions*)options success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 + (void)launchUriAsync:(WFUri*)uri success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-+ (void)launchUriWithOptionsAsync:(WFUri*)uri
-                          options:(WSLauncherOptions*)options
-                          success:(void (^)(BOOL))success
-                          failure:(void (^)(NSError*))failure;
++ (void)launchUriWithOptionsAsync:(WFUri*)uri options:(WSLauncherOptions*)options success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
++ (void)queryAppUriSupportAsync:(WFUri*)uri success:(void (^)(WSLaunchQuerySupportStatus))success failure:(void (^)(NSError*))failure;
++ (void)queryAppUriSupportWithPackageFamilyNameAsync:(WFUri*)uri packageFamilyName:(NSString *)packageFamilyName success:(void (^)(WSLaunchQuerySupportStatus))success failure:(void (^)(NSError*))failure;
++ (void)findAppUriHandlersAsync:(WFUri*)uri success:(void (^)(NSArray* /* WAAppInfo* */))success failure:(void (^)(NSError*))failure;
++ (void)launchUriForUserAsync:(WSUser*)user uri:(WFUri*)uri success:(void (^)(WSLaunchUriStatus))success failure:(void (^)(NSError*))failure;
++ (void)launchUriWithOptionsForUserAsync:(WSUser*)user uri:(WFUri*)uri options:(WSLauncherOptions*)options success:(void (^)(WSLaunchUriStatus))success failure:(void (^)(NSError*))failure;
++ (void)launchUriWithDataForUserAsync:(WSUser*)user uri:(WFUri*)uri options:(WSLauncherOptions*)options inputData:(WFCValueSet*)inputData success:(void (^)(WSLaunchUriStatus))success failure:(void (^)(NSError*))failure;
++ (void)launchUriForResultsForUserAsync:(WSUser*)user uri:(WFUri*)uri options:(WSLauncherOptions*)options success:(void (^)(WSLaunchUriResult*))success failure:(void (^)(NSError*))failure;
++ (void)launchUriForResultsWithDataForUserAsync:(WSUser*)user uri:(WFUri*)uri options:(WSLauncherOptions*)options inputData:(WFCValueSet*)inputData success:(void (^)(WSLaunchUriResult*))success failure:(void (^)(NSError*))failure;
++ (void)launchFolderAsync:(RTObject<WSIStorageFolder>*)folder success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
++ (void)launchFolderWithOptionsAsync:(RTObject<WSIStorageFolder>*)folder options:(WSFolderLauncherOptions*)options success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
++ (void)launchUriForResultsAsync:(WFUri*)uri options:(WSLauncherOptions*)options success:(void (^)(WSLaunchUriResult*))success failure:(void (^)(NSError*))failure;
++ (void)launchUriForResultsWithDataAsync:(WFUri*)uri options:(WSLauncherOptions*)options inputData:(WFCValueSet*)inputData success:(void (^)(WSLaunchUriResult*))success failure:(void (^)(NSError*))failure;
++ (void)launchUriWithDataAsync:(WFUri*)uri options:(WSLauncherOptions*)options inputData:(WFCValueSet*)inputData success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
++ (void)queryUriSupportAsync:(WFUri*)uri launchQuerySupportType:(WSLaunchQuerySupportType)launchQuerySupportType success:(void (^)(WSLaunchQuerySupportStatus))success failure:(void (^)(NSError*))failure;
++ (void)queryUriSupportWithPackageFamilyNameAsync:(WFUri*)uri launchQuerySupportType:(WSLaunchQuerySupportType)launchQuerySupportType packageFamilyName:(NSString *)packageFamilyName success:(void (^)(WSLaunchQuerySupportStatus))success failure:(void (^)(NSError*))failure;
++ (void)queryFileSupportAsync:(WSStorageFile*)file success:(void (^)(WSLaunchQuerySupportStatus))success failure:(void (^)(NSError*))failure;
++ (void)queryFileSupportWithPackageFamilyNameAsync:(WSStorageFile*)file packageFamilyName:(NSString *)packageFamilyName success:(void (^)(WSLaunchQuerySupportStatus))success failure:(void (^)(NSError*))failure;
++ (void)findUriSchemeHandlersAsync:(NSString *)scheme success:(void (^)(NSArray* /* WAAppInfo* */))success failure:(void (^)(NSError*))failure;
++ (void)findUriSchemeHandlersWithLaunchUriTypeAsync:(NSString *)scheme launchQuerySupportType:(WSLaunchQuerySupportType)launchQuerySupportType success:(void (^)(NSArray* /* WAAppInfo* */))success failure:(void (^)(NSError*))failure;
++ (void)findFileHandlersAsync:(NSString *)extension success:(void (^)(NSArray* /* WAAppInfo* */))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSLauncher_DEFINED__
+
+// Windows.System.RemoteLauncher
+#ifndef __WSRemoteLauncher_DEFINED__
+#define __WSRemoteLauncher_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSRemoteLauncher : RTObject
++ (void)launchUriAsync:(WSRRemoteSystemConnectionRequest*)remoteSystemConnectionRequest uri:(WFUri*)uri success:(void (^)(WSRemoteLaunchUriStatus))success failure:(void (^)(NSError*))failure;
++ (void)launchUriWithOptionsAsync:(WSRRemoteSystemConnectionRequest*)remoteSystemConnectionRequest uri:(WFUri*)uri options:(WSRemoteLauncherOptions*)options success:(void (^)(WSRemoteLaunchUriStatus))success failure:(void (^)(NSError*))failure;
++ (void)launchUriWithDataAsync:(WSRRemoteSystemConnectionRequest*)remoteSystemConnectionRequest uri:(WFUri*)uri options:(WSRemoteLauncherOptions*)options inputData:(WFCValueSet*)inputData success:(void (^)(WSRemoteLaunchUriStatus))success failure:(void (^)(NSError*))failure;
+@end
+
+#endif // __WSRemoteLauncher_DEFINED__
+
+// Windows.System.ProcessLauncherOptions
+#ifndef __WSProcessLauncherOptions_DEFINED__
+#define __WSProcessLauncherOptions_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSProcessLauncherOptions : RTObject
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (retain) NSString * workingDirectory;
+@property (retain) RTObject<WSSIOutputStream>* standardOutput;
+@property (retain) RTObject<WSSIInputStream>* standardInput;
+@property (retain) RTObject<WSSIOutputStream>* standardError;
+@end
+
+#endif // __WSProcessLauncherOptions_DEFINED__
+
+// Windows.System.ProcessLauncherResult
+#ifndef __WSProcessLauncherResult_DEFINED__
+#define __WSProcessLauncherResult_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSProcessLauncherResult : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) unsigned int exitCode;
+@end
+
+#endif // __WSProcessLauncherResult_DEFINED__
+
+// Windows.System.ProcessLauncher
+#ifndef __WSProcessLauncher_DEFINED__
+#define __WSProcessLauncher_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSProcessLauncher : RTObject
++ (void)runToCompletionAsync:(NSString *)fileName args:(NSString *)args success:(void (^)(WSProcessLauncherResult*))success failure:(void (^)(NSError*))failure;
++ (void)runToCompletionAsyncWithOptions:(NSString *)fileName args:(NSString *)args options:(WSProcessLauncherOptions*)options success:(void (^)(WSProcessLauncherResult*))success failure:(void (^)(NSError*))failure;
+@end
+
+#endif // __WSProcessLauncher_DEFINED__
+
+// Windows.System.ShutdownManager
+#ifndef __WSShutdownManager_DEFINED__
+#define __WSShutdownManager_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSShutdownManager : RTObject
++ (void)beginShutdown:(WSShutdownKind)shutdownKind timeout:(WFTimeSpan*)timeout;
++ (void)cancelShutdown;
+@end
+
+#endif // __WSShutdownManager_DEFINED__
+
+// Windows.System.TimeZoneSettings
+#ifndef __WSTimeZoneSettings_DEFINED__
+#define __WSTimeZoneSettings_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WSTimeZoneSettings : RTObject
++ (void)changeTimeZoneByDisplayName:(NSString *)timeZoneDisplayName;
++ (BOOL)canChangeTimeZone;
++ (NSString *)currentTimeZoneDisplayName;
++ (NSArray* /* NSString * */)supportedTimeZoneDisplayNames;
+@end
+
+#endif // __WSTimeZoneSettings_DEFINED__
+

@@ -19,16 +19,17 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
+#define OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Resources_Core.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WARCResourceMap, WARCResourceContext, WARCNamedResource, WARCResourceManager, WARCResourceQualifier, WARCResourceCandidate,
-    WARCResourceMapIterator, WARCResourceMapMapView, WARCResourceMapMapViewIterator, WARCResourceQualifierObservableMap,
-    WARCResourceQualifierMapView, WARCResourceQualifierVectorView, WARCResourceCandidateVectorView, WARCResourceContextLanguagesVectorView;
+@class WARCResourceMap, WARCResourceContext, WARCNamedResource, WARCResourceManager, WARCResourceQualifier, WARCResourceCandidate, WARCResourceMapIterator, WARCResourceMapMapView, WARCResourceMapMapViewIterator, WARCResourceQualifierObservableMap, WARCResourceQualifierMapView, WARCResourceQualifierVectorView, WARCResourceCandidateVectorView, WARCResourceContextLanguagesVectorView;
 @class WARCResourceLayoutInfo;
-@protocol WARCIResourceManager
-, WARCIResourceManager2, WARCIResourceManagerStatics, WARCIResourceQualifier, WARCIResourceContext, WARCIResourceContextStatics,
-    WARCIResourceContextStatics2, WARCIResourceContextStatics3, WARCIResourceCandidate, WARCIResourceCandidate2, WARCINamedResource,
-    WARCIResourceMap;
+@protocol WARCIResourceManager, WARCIResourceManager2, WARCIResourceManagerStatics, WARCIResourceQualifier, WARCIResourceContext, WARCIResourceContextStatics, WARCIResourceContextStatics2, WARCIResourceContextStatics3, WARCIResourceCandidate, WARCIResourceCandidate2, WARCINamedResource, WARCIResourceMap;
 
 // Windows.ApplicationModel.Resources.Core.ResourceQualifierPersistence
 enum _WARCResourceQualifierPersistence {
@@ -44,9 +45,9 @@ typedef unsigned WARCResourceQualifierPersistence;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.ApplicationModel.Resources.Core.ResourceLayoutInfo
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceLayoutInfo : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property unsigned int majorVersion;
 @property unsigned int minorVersion;
 @property unsigned int resourceSubtreeCount;
@@ -58,23 +59,23 @@ WINRT_EXPORT
 #ifndef __WARCResourceMap_DEFINED__
 #define __WARCResourceMap_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceMap : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFUri* uri;
 @property (readonly) unsigned int size;
-- (id)objectForKey:(id)key;
+- (id)objectForKey: (id)key;
 - (NSArray*)allKeys;
-- (NSArray*)allKeysForObject:(id)obj;
+- (NSArray*)allKeysForObject: (id)obj;
 - (NSArray*)allValues;
 - (id)keyEnumerator;
 - (unsigned int)count;
 
-- (WARCResourceCandidate*)getValue:(NSString*)resource;
-- (WARCResourceCandidate*)getValueForContext:(NSString*)resource context:(WARCResourceContext*)context;
-- (WARCResourceMap*)getSubtree:(NSString*)reference;
+- (WARCResourceCandidate*)getValue:(NSString *)resource;
+- (WARCResourceCandidate*)getValueForContext:(NSString *)resource context:(WARCResourceContext*)context;
+- (WARCResourceMap*)getSubtree:(NSString *)reference;
 @end
 
 #endif // __WARCResourceMap_DEFINED__
@@ -83,14 +84,12 @@ WINRT_EXPORT
 #ifndef __WARCResourceContext_DEFINED__
 #define __WARCResourceContext_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceContext : RTObject
-+ (void)setGlobalQualifierValueWithPersistence:(NSString*)key
-                                         value:(NSString*)value
-                                   persistence:(WARCResourceQualifierPersistence)persistence;
++ (void)setGlobalQualifierValueWithPersistence:(NSString *)key value:(NSString *)value persistence:(WARCResourceQualifierPersistence)persistence;
 + (WARCResourceContext*)createMatchingContext:(id<NSFastEnumeration> /* WARCResourceQualifier* */)result;
 + (WARCResourceContext*)getForCurrentView;
-+ (void)setGlobalQualifierValue:(NSString*)key value:(NSString*)value;
++ (void)setGlobalQualifierValue:(NSString *)key value:(NSString *)value;
 + (void)resetGlobalQualifierValues;
 + (void)resetGlobalQualifierValuesForSpecifiedQualifiers:(id<NSFastEnumeration> /* NSString * */)qualifierNames;
 + (WARCResourceContext*)getForViewIndependentUse;
@@ -112,7 +111,7 @@ WINRT_EXPORT
 #ifndef __WARCNamedResource_DEFINED__
 #define __WARCNamedResource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCNamedResource : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -131,9 +130,9 @@ WINRT_EXPORT
 #ifndef __WARCResourceManager_DEFINED__
 #define __WARCResourceManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceManager : RTObject
-+ (BOOL)isResourceReference:(NSString*)resourceReference;
++ (BOOL)isResourceReference:(NSString *)resourceReference;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -143,10 +142,8 @@ WINRT_EXPORT
 + (WARCResourceManager*)current;
 - (void)loadPriFiles:(id<NSFastEnumeration> /* RTObject<WSIStorageFile>* */)files;
 - (void)unloadPriFiles:(id<NSFastEnumeration> /* RTObject<WSIStorageFile>* */)files;
-- (NSArray* /* WARCNamedResource* */)getAllNamedResourcesForPackage:(NSString*)packageName
-                                                 resourceLayoutInfo:(WARCResourceLayoutInfo*)resourceLayoutInfo;
-- (NSArray* /* WARCResourceMap* */)getAllSubtreesForPackage:(NSString*)packageName
-                                         resourceLayoutInfo:(WARCResourceLayoutInfo*)resourceLayoutInfo;
+- (NSArray* /* WARCNamedResource* */)getAllNamedResourcesForPackage:(NSString *)packageName resourceLayoutInfo:(WARCResourceLayoutInfo*)resourceLayoutInfo;
+- (NSArray* /* WARCResourceMap* */)getAllSubtreesForPackage:(NSString *)packageName resourceLayoutInfo:(WARCResourceLayoutInfo*)resourceLayoutInfo;
 @end
 
 #endif // __WARCResourceManager_DEFINED__
@@ -155,15 +152,15 @@ WINRT_EXPORT
 #ifndef __WARCResourceQualifier_DEFINED__
 #define __WARCResourceQualifier_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceQualifier : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL isDefault;
 @property (readonly) BOOL isMatch;
-@property (readonly) NSString* qualifierName;
-@property (readonly) NSString* qualifierValue;
+@property (readonly) NSString * qualifierName;
+@property (readonly) NSString * qualifierValue;
 @property (readonly) double score;
 @end
 
@@ -173,7 +170,7 @@ WINRT_EXPORT
 #ifndef __WARCResourceCandidate_DEFINED__
 #define __WARCResourceCandidate_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceCandidate : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -182,9 +179,9 @@ WINRT_EXPORT
 @property (readonly) BOOL isMatch;
 @property (readonly) BOOL isMatchAsDefault;
 @property (readonly) NSArray* /* WARCResourceQualifier* */ qualifiers;
-@property (readonly) NSString* valueAsString;
+@property (readonly) NSString * valueAsString;
 - (void)getValueAsFileAsyncWithSuccess:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
-- (NSString*)getQualifierValue:(NSString*)qualifierName;
+- (NSString *)getQualifierValue:(NSString *)qualifierName;
 - (void)getValueAsStreamAsyncWithSuccess:(void (^)(RTObject<WSSIRandomAccessStream>*))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -194,15 +191,12 @@ WINRT_EXPORT
 #ifndef __WARCResourceMapIterator_DEFINED__
 #define __WARCResourceMapIterator_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceMapIterator : RTObject
-// Failed to get type for default interface: Can't marshal
-// Windows.Foundation.Collections.IIterator`1<Windows.Foundation.Collections.IKeyValuePair`2<String,Windows.ApplicationModel.Resources.Core.NamedResource>>
+ // Failed to get type for default interface: Can't marshal Windows.Foundation.Collections.IIterator`1<Windows.Foundation.Collections.IKeyValuePair`2<String,Windows.ApplicationModel.Resources.Core.NamedResource>>
 @property (readonly) RTKeyValuePair* /* NSString *, WARCNamedResource* */ current;
 @property (readonly) BOOL hasCurrent;
-// Could not find base class
-// Windows.Foundation.Collections.IIterator`1<Windows.Foundation.Collections.IKeyValuePair`2<String,Windows.ApplicationModel.Resources.Core.NamedResource>>
-// type information
+// Could not find base class Windows.Foundation.Collections.IIterator`1<Windows.Foundation.Collections.IKeyValuePair`2<String,Windows.ApplicationModel.Resources.Core.NamedResource>> type information
 @end
 
 #endif // __WARCResourceMapIterator_DEFINED__
@@ -211,15 +205,15 @@ WINRT_EXPORT
 #ifndef __WARCResourceMapMapView_DEFINED__
 #define __WARCResourceMapMapView_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceMapMapView : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
-- (id)objectForKey:(id)key;
+- (id)objectForKey: (id)key;
 - (NSArray*)allKeys;
-- (NSArray*)allKeysForObject:(id)obj;
+- (NSArray*)allKeysForObject: (id)obj;
 - (NSArray*)allValues;
 - (id)keyEnumerator;
 - (unsigned int)count;
@@ -232,15 +226,12 @@ WINRT_EXPORT
 #ifndef __WARCResourceMapMapViewIterator_DEFINED__
 #define __WARCResourceMapMapViewIterator_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceMapMapViewIterator : RTObject
-// Failed to get type for default interface: Can't marshal
-// Windows.Foundation.Collections.IIterator`1<Windows.Foundation.Collections.IKeyValuePair`2<String,Windows.ApplicationModel.Resources.Core.ResourceMap>>
+ // Failed to get type for default interface: Can't marshal Windows.Foundation.Collections.IIterator`1<Windows.Foundation.Collections.IKeyValuePair`2<String,Windows.ApplicationModel.Resources.Core.ResourceMap>>
 @property (readonly) RTKeyValuePair* /* NSString *, WARCResourceMap* */ current;
 @property (readonly) BOOL hasCurrent;
-// Could not find base class
-// Windows.Foundation.Collections.IIterator`1<Windows.Foundation.Collections.IKeyValuePair`2<String,Windows.ApplicationModel.Resources.Core.ResourceMap>>
-// type information
+// Could not find base class Windows.Foundation.Collections.IIterator`1<Windows.Foundation.Collections.IKeyValuePair`2<String,Windows.ApplicationModel.Resources.Core.ResourceMap>> type information
 @end
 
 #endif // __WARCResourceMapMapViewIterator_DEFINED__
@@ -249,7 +240,7 @@ WINRT_EXPORT
 #ifndef __WARCResourceQualifierObservableMap_DEFINED__
 #define __WARCResourceQualifierObservableMap_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceQualifierObservableMap : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -257,23 +248,23 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 // Could not generate add_MapChanged (Can't marshal Windows.Foundation.Collections.MapChangedEventHandler`2<String,String>)
 - (void)removeMapChangedEvent:(EventRegistrationToken)tok;
-- (id)objectForKey:(id)key;
+- (id)objectForKey: (id)key;
 - (NSArray*)allKeys;
-- (NSArray*)allKeysForObject:(id)obj;
+- (NSArray*)allKeysForObject: (id)obj;
 - (NSArray*)allValues;
 - (id)keyEnumerator;
 - (unsigned int)count;
 
-- (void)setObject:(id)obj forKey:(id)key;
-- (void)setObject:(id)object forKeyedSubscript:(id)key;
-- (void)removeObjectForKey:(id)key;
-- (void)removeAllObjects;
-- (void)removeObjectsForKeys:(NSArray*)keys;
-- (void)addEntriesFromDictionary:(NSDictionary*)otherDict;
-- (void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
-- (void)setDictionary:(NSDictionary*)dict;
-- (EventRegistrationToken)addObserver:(RTCollectionListener)receiver;
-- (void)removeObserver:(EventRegistrationToken)receiverToken;
+-(void)setObject: (id)obj forKey: (id)key;
+-(void)setObject:(id)object forKeyedSubscript:(id)key;
+-(void)removeObjectForKey: (id)key;
+-(void)removeAllObjects;
+-(void)removeObjectsForKeys:(NSArray*)keys;
+-(void)addEntriesFromDictionary:(NSDictionary*)otherDict;
+-(void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict;
+-(void)setDictionary: (NSDictionary*)dict;
+-(EventRegistrationToken)addObserver: (RTCollectionListener)receiver;
+-(void)removeObserver: (EventRegistrationToken)receiverToken;
 @end
 
 #endif // __WARCResourceQualifierObservableMap_DEFINED__
@@ -282,15 +273,15 @@ WINRT_EXPORT
 #ifndef __WARCResourceQualifierMapView_DEFINED__
 #define __WARCResourceQualifierMapView_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceQualifierMapView : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) unsigned int size;
-- (id)objectForKey:(id)key;
+- (id)objectForKey: (id)key;
 - (NSArray*)allKeys;
-- (NSArray*)allKeysForObject:(id)obj;
+- (NSArray*)allKeysForObject: (id)obj;
 - (NSArray*)allValues;
 - (id)keyEnumerator;
 - (unsigned int)count;
@@ -303,7 +294,7 @@ WINRT_EXPORT
 #ifndef __WARCResourceQualifierVectorView_DEFINED__
 #define __WARCResourceQualifierVectorView_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceQualifierVectorView : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -311,7 +302,9 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
 
 @end
 
@@ -321,7 +314,7 @@ WINRT_EXPORT
 #ifndef __WARCResourceCandidateVectorView_DEFINED__
 #define __WARCResourceCandidateVectorView_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceCandidateVectorView : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -329,7 +322,9 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
 
 @end
 
@@ -339,7 +334,7 @@ WINRT_EXPORT
 #ifndef __WARCResourceContextLanguagesVectorView_DEFINED__
 #define __WARCResourceContextLanguagesVectorView_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceContextLanguagesVectorView : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -347,8 +342,11 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
 
 @end
 
 #endif // __WARCResourceContextLanguagesVectorView_DEFINED__
+

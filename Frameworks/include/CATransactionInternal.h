@@ -15,11 +15,12 @@
 //******************************************************************************
 #pragma once
 
+#import <QuartzCore/CATransaction.h>
 #import "CACompositor.h"
 
 @interface CATransaction (Internal)
 
-+ (std::shared_ptr<DisplayTransaction>)_currentDisplayTransaction;
++ (std::shared_ptr<ILayerTransaction>)_currentLayerTransaction;
 
 + (void)_addSublayerToLayer:(CALayer*)layer sublayer:(CALayer*)sublayer;
 + (void)_addSublayerToLayer:(CALayer*)layer sublayer:(CALayer*)sublayer before:(CALayer*)before;
@@ -32,9 +33,9 @@
 
 + (void)_addAnimationToLayer:(CALayer*)layer animation:(CAAnimation*)anim forKey:(NSString*)key;
 + (CAAnimation*)_implicitAnimationForKey:(NSString*)forKey;
-+ (void)_commitRootQueue;
++ (void)_commitAndProcessRootQueue;
 
 + (void)_setPropertyForLayer:(CALayer*)layer name:(NSString*)propertyName value:(NSObject*)newValue;
 + (void)_addSublayerToTop:(CALayer*)layer;
-+ (void)_removeAnimationFromLayer:(CALayer*)layer animation:(DisplayAnimation*)anim;
++ (void)_removeAnimationFromLayer:(CALayer*)layer animation:(std::shared_ptr<ILayerAnimation>)anim;
 @end

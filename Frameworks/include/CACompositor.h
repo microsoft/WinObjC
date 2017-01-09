@@ -13,128 +13,139 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#if defined(__cplusplus) && defined(__OBJC__) && !defined(__CA_COMPOSITOR_H)
-#define __CA_COMPOSITOR_H
+#if defined(__OBJC__)
+
+#import <QuartzCore/CAAnimation.h>
+#import <QuartzCore/CALayer.h>
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wignored-attributes"
+
+#include <COMIncludes.h>
+#import <WRLHelpers.h>
+#import <ErrorHandling.h>
+#import <RawBuffer.h>
+#import <wrl/client.h>
+#import <wrl/implements.h>
+#import <wrl/async.h>
+#import <wrl/wrappers/corewrappers.h>
+#import <windows.foundation.h>
+#include <COMIncludes_end.h>
+
+#pragma clang diagnostic pop
+
+#else
 
 #include <memory>
-#include "winobjc\winobjc.h"
+#include <wrl/client.h>
 
-class DisplayNode;
-class DisplayAnimation;
-class DisplayTexture;
-class DisplayTransaction;
+#endif
+
+// Proxy between CALayer and its Xaml representation
+struct ILayerProxy {
+public:
+    virtual ~ILayerProxy() {};
+
+    // Returns the Xaml element backing this layer
+    virtual Microsoft::WRL::ComPtr<IInspectable> GetXamlElement() = 0;
+
+    // Returns the Xaml element used for hosting this layer's sublayer element
+    virtual Microsoft::WRL::ComPtr<IInspectable> GetSublayerXamlElement() = 0;
+
+    // Returns the property value as an NSObject*
+    virtual void* GetPropertyValue(const char* propertyName) = 0;
+    virtual void SetShouldRasterize(bool shouldRasterize) = 0;
+
+    // TODO: Can we remove this altogether at some point?
+    virtual void SetTopMost() = 0;
+};
+
+// Proxy between CAAnimation and its Xaml representation
+struct ILayerAnimation {
+public:
+    virtual ~ILayerAnimation() {};
+};
+
+// Proxy for CG-rendered content
+struct IDisplayTexture {
+public:
+    virtual ~IDisplayTexture() {};
+
+    virtual Microsoft::WRL::ComPtr<IInspectable> GetContent() = 0;
+    // Returns a pointer to the start of the backing buffer
+    virtual void* Lock(int* stride) = 0;
+    virtual void Unlock() = 0;
+};
+
+#if defined(__cplusplus) && defined(__OBJC__)
+
+// Proxy between CATransaction and its backing implementation
+struct ILayerTransaction {
+public:
+    virtual ~ILayerTransaction() {};
+
+    // Sublayer management
+    virtual void AddLayer(const std::shared_ptr<ILayerProxy>& layer,
+                          const std::shared_ptr<ILayerProxy>& superLayer,
+                          const std::shared_ptr<ILayerProxy>& beforeLayer,
+                          const std::shared_ptr<ILayerProxy>& afterLayer) = 0;
+    virtual void MoveLayer(const std::shared_ptr<ILayerProxy>& layer,
+                           const std::shared_ptr<ILayerProxy>& beforeLayer,
+                           const std::shared_ptr<ILayerProxy>& afterLayer) = 0;
+    virtual void RemoveLayer(const std::shared_ptr<ILayerProxy>& layer) = 0;
+
+    // Property management
+    virtual void SetLayerProperty(const std::shared_ptr<ILayerProxy>& layer, const char* propertyName, NSObject* newValue) = 0;
+
+    // Display management
+    virtual void SetLayerTexture(const std::shared_ptr<ILayerProxy>& layer,
+                                 const std::shared_ptr<IDisplayTexture>& newTexture,
+                                 CGSize contentsSize,
+                                 float contentsScale) = 0;
+
+    // Animation management
+    virtual void AddAnimation(CALayer* layer, CAAnimation* animation, NSString* forKey) = 0;
+    virtual void RemoveAnimation(const std::shared_ptr<ILayerAnimation>& animation) = 0;
+};
+
 struct CAMediaTimingProperties;
-
-#define CACompositorRotationNone 0.0f
-#define CACompositorRotation90Clockwise 90.0f
-#define CACompositorRotation180 180.0f
-#define CACompositorRotation90CounterClockwise 270.0f
 
 class CACompositorInterface {
 public:
-    virtual void ProcessTransactions() = 0;
-    virtual void RequestRedraw() = 0;
+    virtual ~CACompositorInterface() {};
 
-    virtual DisplayNode* CreateDisplayNode() = 0;
-    virtual Microsoft::WRL::ComPtr<IInspectable> GetXamlLayoutElement(DisplayNode*) = 0;
-    virtual std::shared_ptr<DisplayTransaction> CreateDisplayTransaction() = 0;
-    virtual void QueueDisplayTransaction(const std::shared_ptr<DisplayTransaction>& transaction,
-                                         const std::shared_ptr<DisplayTransaction>& onTransaction) = 0;
+    // Compositor APIs
+    virtual bool IsRunningAsFramework() = 0;
+    virtual float GetScreenScale() = 0;
 
-    virtual void addNode(const std::shared_ptr<DisplayTransaction>& transaction,
-                         DisplayNode* node,
-                         DisplayNode* superNode,
-                         DisplayNode* beforeNode,
-                         DisplayNode* afterNode) = 0;
+    // CATransaction support
+    virtual std::shared_ptr<ILayerTransaction> CreateLayerTransaction() = 0;
+    virtual void QueueLayerTransaction(const std::shared_ptr<ILayerTransaction>& transaction,
+                                       const std::shared_ptr<ILayerTransaction>& onTransaction) = 0;
+    virtual void ProcessLayerTransactions() = 0;
 
-    virtual void moveNode(const std::shared_ptr<DisplayTransaction>& transaction,
-                          DisplayNode* node,
-                          DisplayNode* beforeNode,
-                          DisplayNode* afterNode) = 0;
-    virtual void removeNode(const std::shared_ptr<DisplayTransaction>& transaction, DisplayNode* node) = 0;
+    // CALayer support
+    virtual std::shared_ptr<ILayerProxy> CreateLayerProxy(const Microsoft::WRL::ComPtr<IInspectable>& xamlElement) = 0;
 
-    virtual void addAnimation(const std::shared_ptr<DisplayTransaction>& transaction, id layer, id animation, id forKey) = 0;
+    // CAAnimation support
+    virtual std::shared_ptr<ILayerAnimation> CreateBasicAnimation(CAAnimation* animation,
+                                                                  NSString* propertyName,
+                                                                  NSObject* fromValue,
+                                                                  NSObject* toValue,
+                                                                  NSObject* byValue,
+                                                                  CAMediaTimingProperties* timingProperties) = 0;
+    virtual std::shared_ptr<ILayerAnimation> CreateTransitionAnimation(CAAnimation* animation, NSString* type, NSString* subtype) = 0;
 
-    virtual void setDisplayProperty(const std::shared_ptr<DisplayTransaction>& transaction,
-                                    DisplayNode* node,
-                                    const char* propertyName,
-                                    NSObject* newValue) = 0;
+    // DisplayTexture support
+    virtual std::shared_ptr<IDisplayTexture> CreateDisplayTexture(int width, int height) = 0;
+    virtual std::shared_ptr<IDisplayTexture> GetDisplayTextureForCGImage(CGImageRef img) = 0;
 
-    virtual void setNodeTexture(const std::shared_ptr<DisplayTransaction>& transaction,
-                                DisplayNode* node,
-                                DisplayTexture* newTexture,
-                                CGSize contentsSize,
-                                float contentsScale) = 0;
-
-    virtual void setNodeMaskNode(DisplayNode* node, DisplayNode* maskNode) = 0;
-    virtual NSObject* getDisplayProperty(DisplayNode* node, const char* propertyName = NULL) = 0;
-
-    virtual void setNodeTopMost(DisplayNode* node, bool topMost) = 0;
-    virtual void setNodeTopWindowLevel(DisplayNode* node, float level) = 0;
-
-    virtual DisplayTexture* GetDisplayTextureForCGImage(CGImageRef img, bool create) = 0;
-    virtual Microsoft::WRL::ComPtr<IInspectable> GetBitmapForCGImage(CGImageRef img) = 0;
-    virtual DisplayTexture* CreateDisplayTextureForText() = 0;
-    virtual void SetTextDisplayTextureParams(DisplayTexture* texture,
-                                             id font,
-                                             id text,
-                                             id color,
-                                             UITextAlignment alignment,
-                                             UILineBreakMode lineBreak,
-                                             id shadowColor,
-                                             const CGSize& shadowOffset,
-                                             int numLines,
-                                             UIEdgeInsets edgeInsets,
-                                             bool centerVertically) = 0;
-    virtual DisplayTexture* CreateDisplayTextureForElement(id xamlElement) = 0;
-
-    virtual DisplayAnimation* GetBasicDisplayAnimation(id caanim,
-                                                       NSString* propertyName,
-                                                       NSObject* fromValue,
-                                                       NSObject* toValue,
-                                                       NSObject* byValue,
-                                                       CAMediaTimingProperties* timingProperties) = 0;
-    virtual DisplayAnimation* GetMoveDisplayAnimation(DisplayAnimation** secondAnimRet,
-                                                      id caanim,
-                                                      DisplayNode* animNode,
-                                                      NSString* type,
-                                                      NSString* subtype,
-                                                      CAMediaTimingProperties* timingProperties) = 0;
-
-    virtual void RetainAnimation(DisplayAnimation* animation) = 0;
-    virtual void ReleaseAnimation(DisplayAnimation* animation) = 0;
-
-    virtual void RetainNode(DisplayNode* node) = 0;
-    virtual void ReleaseNode(DisplayNode* node) = 0;
-
-    virtual void RetainDisplayTexture(DisplayTexture* tex) = 0;
-    virtual void ReleaseDisplayTexture(DisplayTexture* tex) = 0;
-
-    virtual bool isTablet() = 0;
-    virtual float screenWidth() = 0;
-    virtual float screenHeight() = 0;
-    virtual float screenScale() = 0;
-    virtual int deviceWidth() = 0;
-    virtual int deviceHeight() = 0;
-    virtual float screenXDpi() = 0;
-    virtual float screenYDpi() = 0;
-
-    virtual void setScreenSize(float width, float height, float scale, float rotationClockwise) = 0;
-    virtual void setDeviceSize(int width, int height) = 0;
-    virtual void setScreenDpi(int xDpi, int yDpi) = 0;
-    virtual void setTablet(bool isTablet) = 0;
-
-    virtual DisplayTexture* CreateWritableBitmapTexture32(int width, int height) = 0;
-    virtual void* LockWritableBitmapTexture(DisplayTexture* tex, int* stride) = 0;
-    virtual void UnlockWritableBitmapTexture(DisplayTexture* tex) = 0;
-
+    // DisplayLink support
+    // TODO: Move to a displaylink helper API?
     virtual void EnableDisplaySyncNotification() = 0;
     virtual void DisableDisplaySyncNotification() = 0;
-
-    virtual void SetShouldRasterize(DisplayNode* node, bool rasterize) = 0;
-
-    virtual bool IsRunningAsFramework() = 0;
 };
 
 extern CACompositorInterface* _globalCompositor;
@@ -147,4 +158,5 @@ CA_EXPORT CACompositorInterface* GetCACompositor();
 CA_EXPORT void SetCACompositor(CACompositorInterface* compositorInterface);
 
 CA_EXPORT bool CASignalDisplayLink();
+
 #endif

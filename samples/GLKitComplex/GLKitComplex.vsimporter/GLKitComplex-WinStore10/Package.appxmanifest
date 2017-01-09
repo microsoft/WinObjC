@@ -8,7 +8,7 @@
 
   <Identity
     Name="db29d592-eb3b-4bfd-8443-04cba96442e4"
-    Publisher="CN=brianker"
+    Publisher="CN=islandwood"
     Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="db29d592-eb3b-4bfd-8443-04cba96442e4" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>

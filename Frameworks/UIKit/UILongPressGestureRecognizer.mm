@@ -21,7 +21,7 @@
 #import <Foundation/NSTimer.h>
 #import <UIKit/UILongPressGestureRecognizer.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
-
+#import <UIKit/UITouch.h>
 #import "UIGestureRecognizerInternal.h"
 
 #include "LoggingNative.h"
@@ -249,6 +249,25 @@ static TrackedTouch* findTouch(UITouch* touch, std::vector<TrackedTouch>& touche
     TraceVerbose(TAG, L"[UILongPressGestureRecognizer:touchesCancelled.");
     self.state = UIGestureRecognizerStateCancelled;
     [self reset];
+}
+
+/**
+ @Status Interoperable
+*/
+- (CGPoint)locationInView:(UIView*)view {
+    if (_trackedTouches.size() > 0) {
+        CGPoint averagePoint = { 0, 0 };
+        for (TrackedTouch& trackedTouch : _trackedTouches) {
+            CGPoint touchLocation = [trackedTouch.touch locationInView:view];
+            averagePoint.x += touchLocation.x;
+            averagePoint.y += touchLocation.y;
+        }
+        averagePoint.x /= _trackedTouches.size();
+        averagePoint.y /= _trackedTouches.size();
+        return averagePoint;
+    }
+
+    return { 0, 0 };
 }
 
 - (void)_commonInit {

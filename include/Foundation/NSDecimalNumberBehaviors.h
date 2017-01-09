@@ -16,12 +16,11 @@
 #pragma once
 
 #import <Foundation/FoundationExport.h>
+#import <Foundation/NSCoder.h>
 #import <Foundation/NSObject.h>
+#import <Foundation/NSDecimal.h>
 
 @class NSDecimalNumber;
-
-typedef NSUInteger NSRoundingMode;
-typedef NSUInteger NSCalculationError;
 
 @protocol NSDecimalNumberBehaviors <NSObject>
 

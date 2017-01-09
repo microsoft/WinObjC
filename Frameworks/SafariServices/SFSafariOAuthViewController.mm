@@ -24,6 +24,9 @@
 #import <Foundation/NSURLRequest.h>
 #import <UWP/WindowsSecurityAuthenticationWeb.h>
 
+#import <UIKit/UIApplication.h>
+#import <UIKit/UIApplicationDelegate.h>
+
 //
 // This implementation of SFSafariViewController is not Safari and is not a view controller.
 // It has only one function, and that is to handle OAuth requests. It is not suitable
@@ -124,8 +127,11 @@ static const wchar_t* TAG = L"SFSafariOAuthViewController";
                     break;
             }
 
-            // Seems odd to dismiss oneself, but this matches the reference platform
-            [self dismissViewControllerAnimated:NO completion:nil];
+            dispatch_sync(dispatch_get_main_queue(),
+                          ^{
+                              [self dismissViewControllerAnimated:NO completion:nil];
+                          });
+
             return;
         }
 
@@ -154,7 +160,11 @@ static const wchar_t* TAG = L"SFSafariOAuthViewController";
 
     void (^failure)(NSError*) = ^void(NSError* error) {
         NSTraceError(TAG, @"Web authentication failed: %@", error.localizedDescription);
-        [self dismissViewControllerAnimated:NO completion:nil];
+
+        dispatch_sync(dispatch_get_main_queue(),
+                      ^{
+                          [self dismissViewControllerAnimated:NO completion:nil];
+                      });
     };
 
     [WSAWWebAuthenticationBroker authenticateWithCallbackUriAsync:WSAWWebAuthenticationOptionsNone

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -20,7 +20,6 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>HelloUI</ProjectName>
-    <RootNamespace>HelloUI</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
@@ -29,8 +28,10 @@
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
     <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
-    <ProjectGuid>{4EB34FDE-1B6C-4B1D-BEEF-33D300ABD49C}</ProjectGuid>
-    <WINOBJC_SDK_ROOT>..\..\..\..</WINOBJC_SDK_ROOT>
+    <Keyword>IslandwoodProj</Keyword>
+    <ProjectGuid>{872D8571-5EBC-4539-993E-98F70B7D78B2}</ProjectGuid>
+    <RootNamespace>HelloUI</RootNamespace>
+    <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">..\..\..\..</WINOBJC_SDK_ROOT>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -38,7 +39,7 @@
     <PlatformToolset>v140</PlatformToolset>
     <TargetName>HelloUI</TargetName>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v140</PlatformToolset>
     <TargetName>HelloUI</TargetName>
@@ -46,16 +47,16 @@
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v140</PlatformToolset>
-    <TargetName>HelloUI</TargetName>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
     <Optimize>true</Optimize>
+    <TargetName>HelloUI</TargetName>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v140</PlatformToolset>
-    <TargetName>HelloUI</TargetName>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
     <Optimize>true</Optimize>
+    <TargetName>HelloUI</TargetName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -65,18 +66,19 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="PropertySheets">
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="PropertySheets">
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <PackageCertificateKeyFile>HelloUI_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>D095ED4071F7A0D93085697ECF15F78E76342CCF</PackageCertificateThumbprint>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -84,17 +86,20 @@
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
+    <ClangCompile>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
+      <HeaderMap>Project</HeaderMap>
+      <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
+      <ObjectiveCARC>true</ObjectiveCARC>
+      <ObjectiveCModules>true</ObjectiveCModules>
+      <OptimizationLevel>Disabled</OptimizationLevel>
+      <PreprocessorDefinitions>DEBUG=1</PreprocessorDefinitions>
+    </ClangCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <ClangCompile>
-      <HeaderMap>Project</HeaderMap>
-      <ObjectiveCARC>true</ObjectiveCARC>
-      <OptimizationLevel>Disabled</OptimizationLevel>
-      <PreprocessorDefinitions>DEBUG=1</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-    </ClangCompile>
     <SBInfoPlistCopy>
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </SBInfoPlistCopy>
@@ -105,17 +110,20 @@
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
+    <ClangCompile>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
+      <HeaderMap>Project</HeaderMap>
+      <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
+      <ObjectiveCARC>true</ObjectiveCARC>
+      <ObjectiveCModules>true</ObjectiveCModules>
+      <OptimizationLevel>Disabled</OptimizationLevel>
+      <PreprocessorDefinitions>DEBUG=1</PreprocessorDefinitions>
+    </ClangCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <ClangCompile>
-      <HeaderMap>Project</HeaderMap>
-      <ObjectiveCARC>true</ObjectiveCARC>
-      <OptimizationLevel>Disabled</OptimizationLevel>
-      <PreprocessorDefinitions>DEBUG=1</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-    </ClangCompile>
     <SBInfoPlistCopy>
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </SBInfoPlistCopy>
@@ -124,18 +132,19 @@
     <ClCompile>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
+    <ClangCompile>
+      <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
+      <HeaderMap>Project</HeaderMap>
+      <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
+      <ObjectiveCARC>true</ObjectiveCARC>
+      <ObjectiveCModules>true</ObjectiveCModules>
+      <OptimizationLevel>MinSpace</OptimizationLevel>
+    </ClangCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <ClangCompile>
-      <HeaderMap>Project</HeaderMap>
-      <ObjectiveCARC>true</ObjectiveCARC>
-      <OptimizationLevel>MinSpace</OptimizationLevel>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-    </ClangCompile>
     <SBInfoPlistCopy>
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </SBInfoPlistCopy>
@@ -144,26 +153,33 @@
     <ClCompile>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
+    <ClangCompile>
+      <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
+      <HeaderMap>Project</HeaderMap>
+      <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
+      <ObjectiveCARC>true</ObjectiveCARC>
+      <ObjectiveCModules>true</ObjectiveCModules>
+      <OptimizationLevel>MinSpace</OptimizationLevel>
+    </ClangCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <ClangCompile>
-      <HeaderMap>Project</HeaderMap>
-      <ObjectiveCARC>true</ObjectiveCARC>
-      <OptimizationLevel>MinSpace</OptimizationLevel>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-    </ClangCompile>
     <SBInfoPlistCopy>
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </SBInfoPlistCopy>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+  </ItemGroup>
+  <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Xml Include="default.rd.xml" />
     <None Include="HelloUI_TemporaryKey.pfx" />
     <Image Include="Assets\LockScreenLogo.scale-200.png" />
     <Image Include="Assets\SplashScreen.scale-200.png" />
@@ -172,9 +188,9 @@
     <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Image Include="Assets\StoreLogo.png" />
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
+    <AssetCatalogCompile Include="..\..\HelloUI\Images.xcassets" />
     <ClangCompile Include="..\..\HelloUI\HelloUI.m" />
     <ClangCompile Include="..\..\HelloUI\main.m" />
-    <AssetCatalogCompile Include="..\..\HelloUI\Images.xcassets" />
     <SBInfoPlistCopy Include="..\..\HelloUI\Info.plist">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Debug'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Release'">false</ExcludedFromBuild>
@@ -189,8 +205,20 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="default.rd.xml" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="App.xaml.h">
+      <DependentUpon>App.xaml</DependentUpon>
+    </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="App.xaml.cpp">
+      <DependentUpon>App.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.targets" />

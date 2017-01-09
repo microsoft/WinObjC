@@ -481,6 +481,19 @@ CF_EXPORT int _NS_chdir(const char *name);
 CF_EXPORT char *_NS_getenv(const char *name);
 CF_EXPORT int _NS_rename(const char *oldName, const char *newName);
 CF_EXPORT int _NS_open(const char *name, int oflag, int pmode);
+
+#if WINOBJC
+// WINOBJC: add handler for other file redirection
+CF_EXPORT int _NS_close(int fd);
+CF_EXPORT long _NS_lseek(int fd,long offset, int origin);
+CF_EXPORT int _NS_read(int fd, void *buffer, unsigned int count);
+CF_EXPORT int _NS_write(int fd, const void *buffer, unsigned int count);
+CF_EXPORT int _NS_stat64i32(const char *name, struct _stat64i32 *st);
+CF_EXPORT int _NS_fstat(int fd, struct _stat64i32* ret);
+CF_EXPORT size_t _NS_tell(int fd);
+CF_EXPORT intptr_t _NS_get_osfhandle(int fd);
+#endif
+
 CF_EXPORT int _NS_mkstemp(char *name, int bufSize);
 #endif
 

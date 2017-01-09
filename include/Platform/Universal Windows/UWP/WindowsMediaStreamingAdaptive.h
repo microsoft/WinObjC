@@ -19,17 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Media_Streaming_Adaptive.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WMSAAdaptiveMediaSource, WMSAAdaptiveMediaSourceCreationResult, WMSAAdaptiveMediaSourceDownloadBitrateChangedEventArgs,
-    WMSAAdaptiveMediaSourcePlaybackBitrateChangedEventArgs, WMSAAdaptiveMediaSourceDownloadRequestedEventArgs,
-    WMSAAdaptiveMediaSourceDownloadCompletedEventArgs, WMSAAdaptiveMediaSourceDownloadFailedEventArgs,
-    WMSAAdaptiveMediaSourceDownloadResult, WMSAAdaptiveMediaSourceDownloadRequestedDeferral;
-@protocol WMSAIAdaptiveMediaSourceCreationResult
-, WMSAIAdaptiveMediaSourceStatics, WMSAIAdaptiveMediaSource, WMSAIAdaptiveMediaSourceDownloadBitrateChangedEventArgs,
-    WMSAIAdaptiveMediaSourcePlaybackBitrateChangedEventArgs, WMSAIAdaptiveMediaSourceDownloadRequestedEventArgs,
-    WMSAIAdaptiveMediaSourceDownloadResult, WMSAIAdaptiveMediaSourceDownloadRequestedDeferral,
-    WMSAIAdaptiveMediaSourceDownloadCompletedEventArgs, WMSAIAdaptiveMediaSourceDownloadFailedEventArgs;
+@class WMSAAdaptiveMediaSource, WMSAAdaptiveMediaSourceCreationResult, WMSAAdaptiveMediaSourceDownloadBitrateChangedEventArgs, WMSAAdaptiveMediaSourcePlaybackBitrateChangedEventArgs, WMSAAdaptiveMediaSourceDownloadRequestedEventArgs, WMSAAdaptiveMediaSourceDownloadCompletedEventArgs, WMSAAdaptiveMediaSourceDownloadFailedEventArgs, WMSAAdaptiveMediaSourceAdvancedSettings, WMSAAdaptiveMediaSourceDownloadResult, WMSAAdaptiveMediaSourceDownloadRequestedDeferral;
+@protocol WMSAIAdaptiveMediaSourceCreationResult, WMSAIAdaptiveMediaSourceStatics, WMSAIAdaptiveMediaSource, WMSAIAdaptiveMediaSource2, WMSAIAdaptiveMediaSourceAdvancedSettings, WMSAIAdaptiveMediaSourceDownloadBitrateChangedEventArgs, WMSAIAdaptiveMediaSourcePlaybackBitrateChangedEventArgs, WMSAIAdaptiveMediaSourceDownloadRequestedEventArgs, WMSAIAdaptiveMediaSourceDownloadResult, WMSAIAdaptiveMediaSourceDownloadResult2, WMSAIAdaptiveMediaSourceDownloadRequestedDeferral, WMSAIAdaptiveMediaSourceDownloadCompletedEventArgs, WMSAIAdaptiveMediaSourceDownloadFailedEventArgs;
 
 // Windows.Media.Streaming.Adaptive.AdaptiveMediaSourceCreationStatus
 enum _WMSAAdaptiveMediaSourceCreationStatus {
@@ -67,60 +66,47 @@ typedef unsigned WMSAAdaptiveMediaSourceResourceType;
 @protocol WMCIMediaSource
 @end
 
+OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
+@interface WMCIMediaSource : RTObject <WMCIMediaSource>
+@end
+
 #endif // __WMCIMediaSource_DEFINED__
 
 // Windows.Media.Streaming.Adaptive.AdaptiveMediaSource
 #ifndef __WMSAAdaptiveMediaSource_DEFINED__
 #define __WMSAAdaptiveMediaSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 @interface WMSAAdaptiveMediaSource : RTObject <WMCIMediaSource>
-+ (BOOL)isContentTypeSupported:(NSString*)contentType;
-+ (void)createFromUriAsync:(WFUri*)uri
-                   success:(void (^)(WMSAAdaptiveMediaSourceCreationResult*))success
-                   failure:(void (^)(NSError*))failure;
-+ (void)createFromUriWithDownloaderAsync:(WFUri*)uri
-                              httpClient:(WWHHttpClient*)httpClient
-                                 success:(void (^)(WMSAAdaptiveMediaSourceCreationResult*))success
-                                 failure:(void (^)(NSError*))failure;
-+ (void)createFromStreamAsync:(RTObject<WSSIInputStream>*)stream
-                          uri:(WFUri*)uri
-                  contentType:(NSString*)contentType
-                      success:(void (^)(WMSAAdaptiveMediaSourceCreationResult*))success
-                      failure:(void (^)(NSError*))failure;
-+ (void)createFromStreamWithDownloaderAsync:(RTObject<WSSIInputStream>*)stream
-                                        uri:(WFUri*)uri
-                                contentType:(NSString*)contentType
-                                 httpClient:(WWHHttpClient*)httpClient
-                                    success:(void (^)(WMSAAdaptiveMediaSourceCreationResult*))success
-                                    failure:(void (^)(NSError*))failure;
++ (BOOL)isContentTypeSupported:(NSString *)contentType;
++ (void)createFromUriAsync:(WFUri*)uri success:(void (^)(WMSAAdaptiveMediaSourceCreationResult*))success failure:(void (^)(NSError*))failure;
++ (void)createFromUriWithDownloaderAsync:(WFUri*)uri httpClient:(WWHHttpClient*)httpClient success:(void (^)(WMSAAdaptiveMediaSourceCreationResult*))success failure:(void (^)(NSError*))failure;
++ (void)createFromStreamAsync:(RTObject<WSSIInputStream>*)stream uri:(WFUri*)uri contentType:(NSString *)contentType success:(void (^)(WMSAAdaptiveMediaSourceCreationResult*))success failure:(void (^)(NSError*))failure;
++ (void)createFromStreamWithDownloaderAsync:(RTObject<WSSIInputStream>*)stream uri:(WFUri*)uri contentType:(NSString *)contentType httpClient:(WWHHttpClient*)httpClient success:(void (^)(WMSAAdaptiveMediaSourceCreationResult*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property unsigned int initialBitrate;
 @property (retain) WFTimeSpan* inboundBitsPerSecondWindow;
-@property (retain) id /* unsigned int */ desiredMinBitrate;
 @property (retain) WFTimeSpan* desiredLiveOffset;
 @property (retain) id /* unsigned int */ desiredMaxBitrate;
-@property (readonly) BOOL audioOnlyPlayback;
-@property (readonly) NSArray* /* unsigned int */ availableBitrates;
-@property (readonly) uint64_t inboundBitsPerSecond;
-@property (readonly) unsigned int currentDownloadBitrate;
+@property (retain) id /* unsigned int */ desiredMinBitrate;
 @property (readonly) unsigned int currentPlaybackBitrate;
+@property (readonly) BOOL audioOnlyPlayback;
+@property (readonly) uint64_t inboundBitsPerSecond;
+@property (readonly) NSArray* /* unsigned int */ availableBitrates;
+@property (readonly) unsigned int currentDownloadBitrate;
 @property (readonly) BOOL isLive;
-- (EventRegistrationToken)addDownloadBitrateChangedEvent:(void (^)(WMSAAdaptiveMediaSource*,
-                                                                   WMSAAdaptiveMediaSourceDownloadBitrateChangedEventArgs*))del;
+@property (readonly) WMSAAdaptiveMediaSourceAdvancedSettings* advancedSettings;
+- (EventRegistrationToken)addDownloadBitrateChangedEvent:(void(^)(WMSAAdaptiveMediaSource*, WMSAAdaptiveMediaSourceDownloadBitrateChangedEventArgs*))del;
 - (void)removeDownloadBitrateChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addDownloadCompletedEvent:(void (^)(WMSAAdaptiveMediaSource*,
-                                                              WMSAAdaptiveMediaSourceDownloadCompletedEventArgs*))del;
+- (EventRegistrationToken)addDownloadCompletedEvent:(void(^)(WMSAAdaptiveMediaSource*, WMSAAdaptiveMediaSourceDownloadCompletedEventArgs*))del;
 - (void)removeDownloadCompletedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addDownloadFailedEvent:(void (^)(WMSAAdaptiveMediaSource*, WMSAAdaptiveMediaSourceDownloadFailedEventArgs*))del;
+- (EventRegistrationToken)addDownloadFailedEvent:(void(^)(WMSAAdaptiveMediaSource*, WMSAAdaptiveMediaSourceDownloadFailedEventArgs*))del;
 - (void)removeDownloadFailedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addDownloadRequestedEvent:(void (^)(WMSAAdaptiveMediaSource*,
-                                                              WMSAAdaptiveMediaSourceDownloadRequestedEventArgs*))del;
+- (EventRegistrationToken)addDownloadRequestedEvent:(void(^)(WMSAAdaptiveMediaSource*, WMSAAdaptiveMediaSourceDownloadRequestedEventArgs*))del;
 - (void)removeDownloadRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPlaybackBitrateChangedEvent:(void (^)(WMSAAdaptiveMediaSource*,
-                                                                   WMSAAdaptiveMediaSourcePlaybackBitrateChangedEventArgs*))del;
+- (EventRegistrationToken)addPlaybackBitrateChangedEvent:(void(^)(WMSAAdaptiveMediaSource*, WMSAAdaptiveMediaSourcePlaybackBitrateChangedEventArgs*))del;
 - (void)removePlaybackBitrateChangedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -130,7 +116,7 @@ WINRT_EXPORT
 #ifndef __WMSAAdaptiveMediaSourceCreationResult_DEFINED__
 #define __WMSAAdaptiveMediaSourceCreationResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 @interface WMSAAdaptiveMediaSourceCreationResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -146,7 +132,7 @@ WINRT_EXPORT
 #ifndef __WMSAAdaptiveMediaSourceDownloadBitrateChangedEventArgs_DEFINED__
 #define __WMSAAdaptiveMediaSourceDownloadBitrateChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 @interface WMSAAdaptiveMediaSourceDownloadBitrateChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -161,7 +147,7 @@ WINRT_EXPORT
 #ifndef __WMSAAdaptiveMediaSourcePlaybackBitrateChangedEventArgs_DEFINED__
 #define __WMSAAdaptiveMediaSourcePlaybackBitrateChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 @interface WMSAAdaptiveMediaSourcePlaybackBitrateChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -177,7 +163,7 @@ WINRT_EXPORT
 #ifndef __WMSAAdaptiveMediaSourceDownloadRequestedEventArgs_DEFINED__
 #define __WMSAAdaptiveMediaSourceDownloadRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 @interface WMSAAdaptiveMediaSourceDownloadRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -196,7 +182,7 @@ WINRT_EXPORT
 #ifndef __WMSAAdaptiveMediaSourceDownloadCompletedEventArgs_DEFINED__
 #define __WMSAAdaptiveMediaSourceDownloadCompletedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 @interface WMSAAdaptiveMediaSourceDownloadCompletedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -214,7 +200,7 @@ WINRT_EXPORT
 #ifndef __WMSAAdaptiveMediaSourceDownloadFailedEventArgs_DEFINED__
 #define __WMSAAdaptiveMediaSourceDownloadFailedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 @interface WMSAAdaptiveMediaSourceDownloadFailedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -228,11 +214,27 @@ WINRT_EXPORT
 
 #endif // __WMSAAdaptiveMediaSourceDownloadFailedEventArgs_DEFINED__
 
+// Windows.Media.Streaming.Adaptive.AdaptiveMediaSourceAdvancedSettings
+#ifndef __WMSAAdaptiveMediaSourceAdvancedSettings_DEFINED__
+#define __WMSAAdaptiveMediaSourceAdvancedSettings_DEFINED__
+
+OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
+@interface WMSAAdaptiveMediaSourceAdvancedSettings : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (retain) id /* double */ desiredBitrateHeadroomRatio;
+@property (retain) id /* double */ bitrateDowngradeTriggerRatio;
+@property BOOL allSegmentsIndependent;
+@end
+
+#endif // __WMSAAdaptiveMediaSourceAdvancedSettings_DEFINED__
+
 // Windows.Media.Streaming.Adaptive.AdaptiveMediaSourceDownloadResult
 #ifndef __WMSAAdaptiveMediaSourceDownloadResult_DEFINED__
 #define __WMSAAdaptiveMediaSourceDownloadResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 @interface WMSAAdaptiveMediaSourceDownloadResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -240,8 +242,10 @@ WINRT_EXPORT
 @property (retain) WFUri* resourceUri;
 @property (retain) RTObject<WSSIInputStream>* inputStream;
 @property unsigned int extendedStatus;
-@property (retain) NSString* contentType;
+@property (retain) NSString * contentType;
 @property (retain) RTObject<WSSIBuffer>* buffer;
+@property (retain) id /* uint64_t */ resourceByteRangeOffset;
+@property (retain) id /* uint64_t */ resourceByteRangeLength;
 @end
 
 #endif // __WMSAAdaptiveMediaSourceDownloadResult_DEFINED__
@@ -250,7 +254,7 @@ WINRT_EXPORT
 #ifndef __WMSAAdaptiveMediaSourceDownloadRequestedDeferral_DEFINED__
 #define __WMSAAdaptiveMediaSourceDownloadRequestedDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 @interface WMSAAdaptiveMediaSourceDownloadRequestedDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -259,3 +263,4 @@ WINRT_EXPORT
 @end
 
 #endif // __WMSAAdaptiveMediaSourceDownloadRequestedDeferral_DEFINED__
+

@@ -19,11 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_SHARETARGET_EXPORT
+#define OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_SHARETARGET_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_DataTransfer_ShareTarget.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WADSQuickLink, WADSShareOperation;
-@protocol WADSIQuickLink
-, WADSIShareOperation, WADSIShareOperation2;
+@protocol WADSIQuickLink, WADSIShareOperation, WADSIShareOperation2;
 
 #include "WindowsApplicationModelDataTransfer.h"
 #include "WindowsStorageStreams.h"
@@ -34,15 +39,15 @@
 #ifndef __WADSQuickLink_DEFINED__
 #define __WADSQuickLink_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_SHARETARGET_EXPORT
 @interface WADSQuickLink : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* title;
+@property (retain) NSString * title;
 @property (retain) WSSRandomAccessStreamReference* thumbnail;
-@property (retain) NSString* id;
+@property (retain) NSString * id;
 @property (readonly) NSMutableArray* /* NSString * */ supportedDataFormats;
 @property (readonly) NSMutableArray* /* NSString * */ supportedFileTypes;
 @end
@@ -53,21 +58,22 @@ WINRT_EXPORT
 #ifndef __WADSShareOperation_DEFINED__
 #define __WADSShareOperation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_SHARETARGET_EXPORT
 @interface WADSShareOperation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WADDataPackageView* data;
-@property (readonly) NSString* quickLinkId;
+@property (readonly) NSString * quickLinkId;
 - (void)removeThisQuickLink;
 - (void)reportStarted;
 - (void)reportDataRetrieved;
 - (void)reportSubmittedBackgroundTask;
 - (void)reportCompletedWithQuickLink:(WADSQuickLink*)quicklink;
 - (void)reportCompleted;
-- (void)reportError:(NSString*)value;
+- (void)reportError:(NSString *)value;
 - (void)dismissUI;
 @end
 
 #endif // __WADSShareOperation_DEFINED__
+

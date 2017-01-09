@@ -19,11 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Devices_SerialCommunication.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WDSSerialDevice, WDSErrorReceivedEventArgs, WDSPinChangedEventArgs;
-@protocol WDSISerialDeviceStatics
-, WDSIErrorReceivedEventArgs, WDSIPinChangedEventArgs, WDSISerialDevice;
+@protocol WDSISerialDeviceStatics, WDSIErrorReceivedEventArgs, WDSIPinChangedEventArgs, WDSISerialDevice;
 
 // Windows.Devices.SerialCommunication.SerialParity
 enum _WDSSerialParity {
@@ -85,18 +90,22 @@ typedef unsigned WDSSerialPinChange;
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Devices.SerialCommunication.SerialDevice
 #ifndef __WDSSerialDevice_DEFINED__
 #define __WDSSerialDevice_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
 @interface WDSSerialDevice : RTObject <WFIClosable>
-+ (NSString*)getDeviceSelector;
-+ (NSString*)getDeviceSelectorFromPortName:(NSString*)portName;
-+ (NSString*)getDeviceSelectorFromUsbVidPid:(unsigned short)vendorId productId:(unsigned short)productId;
-+ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDSSerialDevice*))success failure:(void (^)(NSError*))failure;
++ (NSString *)getDeviceSelector;
++ (NSString *)getDeviceSelectorFromPortName:(NSString *)portName;
++ (NSString *)getDeviceSelectorFromUsbVidPid:(unsigned short)vendorId productId:(unsigned short)productId;
++ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDSSerialDevice*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -116,12 +125,12 @@ WINRT_EXPORT
 @property (readonly) BOOL dataSetReadyState;
 @property (readonly) RTObject<WSSIInputStream>* inputStream;
 @property (readonly) RTObject<WSSIOutputStream>* outputStream;
-@property (readonly) NSString* portName;
+@property (readonly) NSString * portName;
 @property (readonly) unsigned short usbProductId;
 @property (readonly) unsigned short usbVendorId;
-- (EventRegistrationToken)addErrorReceivedEvent:(void (^)(WDSSerialDevice*, WDSErrorReceivedEventArgs*))del;
+- (EventRegistrationToken)addErrorReceivedEvent:(void(^)(WDSSerialDevice*, WDSErrorReceivedEventArgs*))del;
 - (void)removeErrorReceivedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addPinChangedEvent:(void (^)(WDSSerialDevice*, WDSPinChangedEventArgs*))del;
+- (EventRegistrationToken)addPinChangedEvent:(void(^)(WDSSerialDevice*, WDSPinChangedEventArgs*))del;
 - (void)removePinChangedEvent:(EventRegistrationToken)tok;
 - (void)close;
 @end
@@ -132,7 +141,7 @@ WINRT_EXPORT
 #ifndef __WDSErrorReceivedEventArgs_DEFINED__
 #define __WDSErrorReceivedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
 @interface WDSErrorReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -146,7 +155,7 @@ WINRT_EXPORT
 #ifndef __WDSPinChangedEventArgs_DEFINED__
 #define __WDSPinChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
 @interface WDSPinChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -155,3 +164,4 @@ WINRT_EXPORT
 @end
 
 #endif // __WDSPinChangedEventArgs_DEFINED__
+

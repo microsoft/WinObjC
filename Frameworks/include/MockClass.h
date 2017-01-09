@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -529,12 +529,12 @@ namespace Mock {
 template <typename TFunctor>
 void ValidateCallback(const TFunctor& functor, const wchar_t* name) {
     WEX::TestExecution::SetVerifyOutput verifySettings(WEX::TestExecution::VerifyOutputSettings::LogOnlyFailures);
-    VERIFY_IS_NOT_NULL(functor, WEX::Common::String().Format(L"The callback for %s has not been set!", name));
+    VERIFY_IS_NOT_NULL(functor, WEX::Common::String().Format(L"The callback for %ls has not been set!", name));
 }
-#elif defined(ASSERT_NE_MSG)
+#elif defined(ASSERT_TRUE_MSG)
 template <typename TFunctor>
 void ValidateCallback(const TFunctor& functor, const wchar_t* name) {
-    ASSERT_NE_MSG(functor, nullptr, "The callback for %s has not been set!", name);
+    ASSERT_TRUE_MSG(functor, "The callback for %S has not been set.", name);
 }
 #else
 #error "Unknown Test Framework!"

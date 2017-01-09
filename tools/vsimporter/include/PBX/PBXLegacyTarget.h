@@ -22,6 +22,7 @@
 class PBXLegacyTarget : public PBXTarget {
 public:
   virtual ~PBXLegacyTarget();
+  virtual String getTargetType() const { return "Legacy";  }
 
   const String& getBuildArguments() const { return m_buildArgumentsString; }
   const String& getBuildToolPath() const { return m_buildToolPath; }

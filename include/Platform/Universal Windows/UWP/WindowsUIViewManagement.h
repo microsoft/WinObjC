@@ -19,18 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
+#define OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_UI_ViewManagement.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WUVApplicationView, WUVApplicationViewConsolidatedEventArgs, WUVApplicationViewTitleBar, WUVApplicationViewSwitcher,
-    WUVActivationViewSwitcher, WUVInputPaneVisibilityEventArgs, WUVInputPane, WUVProjectionManager, WUVUIViewSettings,
-    WUVAccessibilitySettings, WUVUISettings;
-@protocol WUVIApplicationViewSwitcherStatics
-, WUVIApplicationViewSwitcherStatics2, WUVIApplicationViewInteropStatics, WUVIApplicationViewStatics, WUVIApplicationViewStatics2,
-    WUVIApplicationViewStatics3, WUVIApplicationView, WUVIApplicationView2, WUVIApplicationViewTitleBar, WUVIApplicationView3,
-    WUVIApplicationViewFullscreenStatics, WUVIApplicationViewConsolidatedEventArgs, WUVIActivationViewSwitcher,
-    WUVIInputPaneVisibilityEventArgs, WUVIInputPane, WUVIInputPane2, WUVIInputPaneControl, WUVIInputPaneStatics,
-    WUVIProjectionManagerStatics, WUVIProjectionManagerStatics2, WUVIUIViewSettings, WUVIUIViewSettingsStatics, WUVIAccessibilitySettings,
-    WUVIUISettings, WUVIUISettings2, WUVIUISettings3;
+@class WUVApplicationView, WUVApplicationViewConsolidatedEventArgs, WUVApplicationViewTitleBar, WUVApplicationViewSwitcher, WUVActivationViewSwitcher, WUVApplicationViewTransferContext, WUVInputPaneVisibilityEventArgs, WUVInputPane, WUVProjectionManager, WUVUIViewSettings, WUVAccessibilitySettings, WUVUISettings, WUVStatusBar, WUVStatusBarProgressIndicator, WUVApplicationViewScaling;
+@protocol WUVIApplicationViewSwitcherStatics, WUVIApplicationViewSwitcherStatics2, WUVIApplicationViewInteropStatics, WUVIApplicationViewStatics, WUVIApplicationViewStatics2, WUVIApplicationViewStatics3, WUVIApplicationView, WUVIApplicationView2, WUVIApplicationViewTitleBar, WUVIApplicationView3, WUVIApplicationViewFullscreenStatics, WUVIApplicationViewConsolidatedEventArgs, WUVIActivationViewSwitcher, WUVIApplicationViewTransferContext, WUVIApplicationViewTransferContextStatics, WUVIInputPaneVisibilityEventArgs, WUVIInputPane, WUVIInputPane2, WUVIInputPaneControl, WUVIInputPaneStatics, WUVIProjectionManagerStatics, WUVIProjectionManagerStatics2, WUVIUIViewSettings, WUVIUIViewSettingsStatics, WUVIAccessibilitySettings, WUVIUISettings, WUVIUISettings2, WUVIUISettings3, WUVIStatusBarStatics, WUVIStatusBar, WUVIStatusBarProgressIndicator, WUVIApplicationViewScaling, WUVIApplicationViewScalingStatics;
 
 // Windows.UI.ViewManagement.ApplicationViewState
 enum _WUVApplicationViewState {
@@ -148,17 +146,17 @@ typedef unsigned WUVUIElementType;
 #ifndef __WUVApplicationView_DEFINED__
 #define __WUVApplicationView_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVApplicationView : RTObject
 + (WUVApplicationView*)getForCurrentView;
-+ (BOOL)tryUnsnap;
 + (BOOL)tryUnsnapToFullscreen;
 + (int)getApplicationViewIdForWindow:(RTObject<WUCICoreWindow>*)window;
++ (BOOL)tryUnsnap;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
+@property (retain) NSString * title;
 @property BOOL isScreenCaptureEnabled;
-@property (retain) NSString* title;
 @property (readonly) BOOL adjacentToRightDisplayEdge;
 @property (readonly) int id;
 @property (readonly) BOOL isFullScreen;
@@ -178,9 +176,9 @@ WINRT_EXPORT
 + (void)setPreferredLaunchWindowingMode:(WUVApplicationViewWindowingMode)value;
 + (WFSize*)preferredLaunchViewSize;
 + (void)setPreferredLaunchViewSize:(WFSize*)value;
-- (EventRegistrationToken)addConsolidatedEvent:(void (^)(WUVApplicationView*, WUVApplicationViewConsolidatedEventArgs*))del;
+- (EventRegistrationToken)addConsolidatedEvent:(void(^)(WUVApplicationView*, WUVApplicationViewConsolidatedEventArgs*))del;
 - (void)removeConsolidatedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addVisibleBoundsChangedEvent:(void (^)(WUVApplicationView*, RTObject*))del;
+- (EventRegistrationToken)addVisibleBoundsChangedEvent:(void(^)(WUVApplicationView*, RTObject*))del;
 - (void)removeVisibleBoundsChangedEvent:(EventRegistrationToken)tok;
 - (BOOL)setDesiredBoundsMode:(WUVApplicationViewBoundsMode)boundsMode;
 - (BOOL)tryEnterFullScreenMode;
@@ -196,7 +194,7 @@ WINRT_EXPORT
 #ifndef __WUVApplicationViewConsolidatedEventArgs_DEFINED__
 #define __WUVApplicationViewConsolidatedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVApplicationViewConsolidatedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -210,7 +208,7 @@ WINRT_EXPORT
 #ifndef __WUVApplicationViewTitleBar_DEFINED__
 #define __WUVApplicationViewTitleBar_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVApplicationViewTitleBar : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -235,30 +233,16 @@ WINRT_EXPORT
 #ifndef __WUVApplicationViewSwitcher_DEFINED__
 #define __WUVApplicationViewSwitcher_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVApplicationViewSwitcher : RTObject
 + (void)disableShowingMainViewOnActivation;
 + (void)tryShowAsStandaloneAsync:(int)viewId success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-+ (void)tryShowAsStandaloneWithSizePreferenceAsync:(int)viewId
-                                    sizePreference:(WUVViewSizePreference)sizePreference
-                                           success:(void (^)(BOOL))success
-                                           failure:(void (^)(NSError*))failure;
-+ (void)tryShowAsStandaloneWithAnchorViewAndSizePreferenceAsync:(int)viewId
-                                                 sizePreference:(WUVViewSizePreference)sizePreference
-                                                   anchorViewId:(int)anchorViewId
-                                           anchorSizePreference:(WUVViewSizePreference)anchorSizePreference
-                                                        success:(void (^)(BOOL))success
-                                                        failure:(void (^)(NSError*))failure;
++ (void)tryShowAsStandaloneWithSizePreferenceAsync:(int)viewId sizePreference:(WUVViewSizePreference)sizePreference success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
++ (void)tryShowAsStandaloneWithAnchorViewAndSizePreferenceAsync:(int)viewId sizePreference:(WUVViewSizePreference)sizePreference anchorViewId:(int)anchorViewId anchorSizePreference:(WUVViewSizePreference)anchorSizePreference success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 + (RTObject<WFIAsyncAction>*)switchAsync:(int)viewId;
 + (RTObject<WFIAsyncAction>*)switchFromViewAsync:(int)toViewId fromViewId:(int)fromViewId;
-+ (RTObject<WFIAsyncAction>*)switchFromViewWithOptionsAsync:(int)toViewId
-                                                 fromViewId:(int)fromViewId
-                                                    options:(WUVApplicationViewSwitchingOptions)options;
-+ (void)prepareForCustomAnimatedSwitchAsync:(int)toViewId
-                                 fromViewId:(int)fromViewId
-                                    options:(WUVApplicationViewSwitchingOptions)options
-                                    success:(void (^)(BOOL))success
-                                    failure:(void (^)(NSError*))failure;
++ (RTObject<WFIAsyncAction>*)switchFromViewWithOptionsAsync:(int)toViewId fromViewId:(int)fromViewId options:(WUVApplicationViewSwitchingOptions)options;
++ (void)prepareForCustomAnimatedSwitchAsync:(int)toViewId fromViewId:(int)fromViewId options:(WUVApplicationViewSwitchingOptions)options success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 + (void)disableSystemViewActivationPolicy;
 @end
 
@@ -268,7 +252,7 @@ WINRT_EXPORT
 #ifndef __WUVActivationViewSwitcher_DEFINED__
 #define __WUVActivationViewSwitcher_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVActivationViewSwitcher : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -280,11 +264,27 @@ WINRT_EXPORT
 
 #endif // __WUVActivationViewSwitcher_DEFINED__
 
+// Windows.UI.ViewManagement.ApplicationViewTransferContext
+#ifndef __WUVApplicationViewTransferContext_DEFINED__
+#define __WUVApplicationViewTransferContext_DEFINED__
+
+OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
+@interface WUVApplicationViewTransferContext : RTObject
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property int viewId;
++ (NSString *)dataPackageFormatId;
+@end
+
+#endif // __WUVApplicationViewTransferContext_DEFINED__
+
 // Windows.UI.ViewManagement.InputPaneVisibilityEventArgs
 #ifndef __WUVInputPaneVisibilityEventArgs_DEFINED__
 #define __WUVInputPaneVisibilityEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVInputPaneVisibilityEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -299,7 +299,7 @@ WINRT_EXPORT
 #ifndef __WUVInputPane_DEFINED__
 #define __WUVInputPane_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVInputPane : RTObject
 + (WUVInputPane*)getForCurrentView;
 #if defined(__cplusplus)
@@ -307,9 +307,9 @@ WINRT_EXPORT
 #endif
 @property (readonly) WFRect* occludedRect;
 @property BOOL visible;
-- (EventRegistrationToken)addHidingEvent:(void (^)(WUVInputPane*, WUVInputPaneVisibilityEventArgs*))del;
+- (EventRegistrationToken)addHidingEvent:(void(^)(WUVInputPane*, WUVInputPaneVisibilityEventArgs*))del;
 - (void)removeHidingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addShowingEvent:(void (^)(WUVInputPane*, WUVInputPaneVisibilityEventArgs*))del;
+- (EventRegistrationToken)addShowingEvent:(void(^)(WUVInputPane*, WUVInputPaneVisibilityEventArgs*))del;
 - (void)removeShowingEvent:(EventRegistrationToken)tok;
 - (BOOL)tryShow;
 - (BOOL)tryHide;
@@ -321,28 +321,17 @@ WINRT_EXPORT
 #ifndef __WUVProjectionManager_DEFINED__
 #define __WUVProjectionManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVProjectionManager : RTObject
 + (RTObject<WFIAsyncAction>*)startProjectingAsync:(int)projectionViewId anchorViewId:(int)anchorViewId;
 + (RTObject<WFIAsyncAction>*)swapDisplaysForViewsAsync:(int)projectionViewId anchorViewId:(int)anchorViewId;
 + (RTObject<WFIAsyncAction>*)stopProjectingAsync:(int)projectionViewId anchorViewId:(int)anchorViewId;
-+ (RTObject<WFIAsyncAction>*)startProjectingWithDeviceInfoAsync:(int)projectionViewId
-                                                   anchorViewId:(int)anchorViewId
-                                              displayDeviceInfo:(WDEDeviceInformation*)displayDeviceInfo;
-+ (void)requestStartProjectingAsync:(int)projectionViewId
-                       anchorViewId:(int)anchorViewId
-                          selection:(WFRect*)selection
-                            success:(void (^)(BOOL))success
-                            failure:(void (^)(NSError*))failure;
-+ (void)requestStartProjectingWithPlacementAsync:(int)projectionViewId
-                                    anchorViewId:(int)anchorViewId
-                                       selection:(WFRect*)selection
-                              prefferedPlacement:(WUPPlacement)prefferedPlacement
-                                         success:(void (^)(BOOL))success
-                                         failure:(void (^)(NSError*))failure;
-+ (NSString*)getDeviceSelector;
++ (RTObject<WFIAsyncAction>*)startProjectingWithDeviceInfoAsync:(int)projectionViewId anchorViewId:(int)anchorViewId displayDeviceInfo:(WDEDeviceInformation*)displayDeviceInfo;
++ (void)requestStartProjectingAsync:(int)projectionViewId anchorViewId:(int)anchorViewId selection:(WFRect*)selection success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
++ (void)requestStartProjectingWithPlacementAsync:(int)projectionViewId anchorViewId:(int)anchorViewId selection:(WFRect*)selection prefferedPlacement:(WUPPlacement)prefferedPlacement success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
++ (NSString *)getDeviceSelector;
 + (BOOL)projectionDisplayAvailable;
-+ (EventRegistrationToken)addProjectionDisplayAvailableChangedEvent:(void (^)(RTObject*, RTObject*))del;
++ (EventRegistrationToken)addProjectionDisplayAvailableChangedEvent:(void(^)(RTObject*, RTObject*))del;
 + (void)removeProjectionDisplayAvailableChangedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -352,7 +341,7 @@ WINRT_EXPORT
 #ifndef __WUVUIViewSettings_DEFINED__
 #define __WUVUIViewSettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVUIViewSettings : RTObject
 + (WUVUIViewSettings*)getForCurrentView;
 #if defined(__cplusplus)
@@ -367,15 +356,15 @@ WINRT_EXPORT
 #ifndef __WUVAccessibilitySettings_DEFINED__
 #define __WUVAccessibilitySettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVAccessibilitySettings : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) BOOL highContrast;
-@property (readonly) NSString* highContrastScheme;
-- (EventRegistrationToken)addHighContrastChangedEvent:(void (^)(WUVAccessibilitySettings*, RTObject*))del;
+@property (readonly) NSString * highContrastScheme;
+- (EventRegistrationToken)addHighContrastChangedEvent:(void(^)(WUVAccessibilitySettings*, RTObject*))del;
 - (void)removeHighContrastChangedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -385,7 +374,7 @@ WINRT_EXPORT
 #ifndef __WUVUISettings_DEFINED__
 #define __WUVUISettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVUISettings : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -404,12 +393,70 @@ WINRT_EXPORT
 @property (readonly) WFSize* scrollBarSize;
 @property (readonly) WFSize* scrollBarThumbBoxSize;
 @property (readonly) double textScaleFactor;
-- (EventRegistrationToken)addTextScaleFactorChangedEvent:(void (^)(WUVUISettings*, RTObject*))del;
+- (EventRegistrationToken)addTextScaleFactorChangedEvent:(void(^)(WUVUISettings*, RTObject*))del;
 - (void)removeTextScaleFactorChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addColorValuesChangedEvent:(void (^)(WUVUISettings*, RTObject*))del;
+- (EventRegistrationToken)addColorValuesChangedEvent:(void(^)(WUVUISettings*, RTObject*))del;
 - (void)removeColorValuesChangedEvent:(EventRegistrationToken)tok;
 - (WUColor*)uIElementColor:(WUVUIElementType)desiredElement;
 - (WUColor*)getColorValue:(WUVUIColorType)desiredColor;
 @end
 
 #endif // __WUVUISettings_DEFINED__
+
+// Windows.UI.ViewManagement.StatusBar
+#ifndef __WUVStatusBar_DEFINED__
+#define __WUVStatusBar_DEFINED__
+
+OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
+@interface WUVStatusBar : RTObject
++ (WUVStatusBar*)getForCurrentView;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (retain) id /* WUColor* */ foregroundColor;
+@property double backgroundOpacity;
+@property (retain) id /* WUColor* */ backgroundColor;
+@property (readonly) WFRect* occludedRect;
+@property (readonly) WUVStatusBarProgressIndicator* progressIndicator;
+- (EventRegistrationToken)addHidingEvent:(void(^)(WUVStatusBar*, RTObject*))del;
+- (void)removeHidingEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addShowingEvent:(void(^)(WUVStatusBar*, RTObject*))del;
+- (void)removeShowingEvent:(EventRegistrationToken)tok;
+- (RTObject<WFIAsyncAction>*)showAsync;
+- (RTObject<WFIAsyncAction>*)hideAsync;
+@end
+
+#endif // __WUVStatusBar_DEFINED__
+
+// Windows.UI.ViewManagement.StatusBarProgressIndicator
+#ifndef __WUVStatusBarProgressIndicator_DEFINED__
+#define __WUVStatusBarProgressIndicator_DEFINED__
+
+OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
+@interface WUVStatusBarProgressIndicator : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (retain) NSString * text;
+@property (retain) id /* double */ progressValue;
+- (RTObject<WFIAsyncAction>*)showAsync;
+- (RTObject<WFIAsyncAction>*)hideAsync;
+@end
+
+#endif // __WUVStatusBarProgressIndicator_DEFINED__
+
+// Windows.UI.ViewManagement.ApplicationViewScaling
+#ifndef __WUVApplicationViewScaling_DEFINED__
+#define __WUVApplicationViewScaling_DEFINED__
+
+OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
+@interface WUVApplicationViewScaling : RTObject
++ (BOOL)trySetDisableLayoutScaling:(BOOL)disableLayoutScaling;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
++ (BOOL)disableLayoutScaling;
+@end
+
+#endif // __WUVApplicationViewScaling_DEFINED__
+

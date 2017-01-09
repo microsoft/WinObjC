@@ -23,6 +23,12 @@
 #import "UIPopoverPresentationControllerInternal.h"
 #import "UIPopoverControllerInternal.h"
 
+@interface UIPopoverPresentationController ()
+
+- (void)_handleDismiss;
+
+@end
+
 @interface _UIPopoverControllerDelegateInternal : NSObject <UIPopoverControllerDelegate>
 
 @property (nonatomic, assign) UIPopoverPresentationController* controller;
@@ -49,27 +55,19 @@
 }
 
 - (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController*)popoverController {
-    BOOL shouldDismiss = YES;
-
     if ([_delegate respondsToSelector:@selector(popoverPresentationControllerShouldDismissPopover:)]) {
-        shouldDismiss = [_delegate popoverPresentationControllerShouldDismissPopover:_controller];
+        return [_delegate popoverPresentationControllerShouldDismissPopover:_controller];
     }
 
-    if (shouldDismiss) {
-        if (_controller->_willDismissCompletion) {
-            _controller->_willDismissCompletion();
-            [_controller->_willDismissCompletion release];
-            _controller->_willDismissCompletion = nil;
-        }
-    }
-
-    return shouldDismiss;
+    return YES;
 }
 
 - (void)popoverControllerDidDismissPopover:(UIPopoverController*)popoverController {
     if ([_delegate respondsToSelector:@selector(popoverPresentationControllerDidDismissPopover:)]) {
         [_delegate popoverPresentationControllerDidDismissPopover:_controller];
     }
+
+    [_controller _handleDismiss];
 }
 
 @end
@@ -81,6 +79,8 @@
     StrongId<UIBarButtonItem*> _barButtonItem;
     StrongId<UIView*> _sourceView;
     CGRect _sourceRect;
+    StrongId<dispatch_block_t> _dismissCompletion;
+    BOOL _isManagingPresentation;
 }
 
 /**
@@ -91,11 +91,15 @@
     self = [super initWithPresentedViewController:presentedViewController presentingViewController:presentingViewController];
     if (self) {
         _permittedArrowDirections = UIPopoverArrowDirectionAny;
-        _popoverControllerInternal = [[UIPopoverController alloc] initWithContentViewController:presentedViewController];
-        _delegateInternal = [[_UIPopoverControllerDelegateInternal alloc] initWithController:self delegate:nil];
+        _popoverControllerInternal.attach([[UIPopoverController alloc] initWithContentViewController:presentedViewController]);
+        _delegateInternal.attach([[_UIPopoverControllerDelegateInternal alloc] initWithController:self delegate:nil]);
         [_popoverControllerInternal setDelegate:_delegateInternal];
     }
     return self;
+}
+
+- (BOOL)_isManagingPresentation {
+    return _isManagingPresentation;
 }
 
 - (void)_prepareForPresentation {
@@ -104,9 +108,14 @@
     }
 }
 
-- (void)_presentAnimated:(BOOL)animated completion:(dispatch_block_t)presentCompletion {
-    [_popoverControllerInternal->_presentCompletion release];
-    _popoverControllerInternal->_presentCompletion = [presentCompletion copy];
+- (void)_presentAnimated:(BOOL)animated presentCompletion:(dispatch_block_t)presentCompletion dismissCompletion:(dispatch_block_t)dismissCompletion {
+    _popoverControllerInternal->_presentCompletion.attach([presentCompletion copy]);
+
+    _dismissCompletion.attach([dismissCompletion copy]);
+
+    // WYPopoverController internally manages the presentation of the content
+    // view controller (and the invoking of the viewWillAppear: et al. appearance events).
+    _isManagingPresentation = YES;
 
     if (_barButtonItem) {
         [_popoverControllerInternal presentPopoverFromBarButtonItem:_barButtonItem
@@ -122,6 +131,18 @@
 
 - (void)_dismissAnimated:(BOOL)animated completion:(dispatch_block_t)dismissCompletion {
     [_popoverControllerInternal _dismissPopoverAnimated:animated completion:dismissCompletion];
+}
+
+- (void)_handleDismiss {
+    // Stay alive while we invoke _dismissCompletion (UIViewController tears
+    // down its strong ref to us in this completion; we must avoid our
+    // deallocation while this block we own is executing).
+    StrongId<UIPopoverPresentationController> strongSelf = self;
+
+    _dismissCompletion();
+    _dismissCompletion = nil;
+
+    _isManagingPresentation = NO;
 }
 
 /**
@@ -313,11 +334,6 @@
 - (void)setPopoverBackgroundViewClass:(Class)popoverBackgroundViewClass {
     UNIMPLEMENTED();
     _popoverBackgroundViewClass = popoverBackgroundViewClass;
-}
-
-- (void)dealloc {
-    [_willDismissCompletion release];
-    [super dealloc];
 }
 
 @end

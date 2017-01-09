@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "sbassert.h"
+#include "telemetryutils.h"
 #include "ErrorReporter.h"
 
 ErrorReporter::~ErrorReporter() {}
@@ -39,5 +40,5 @@ void ErrorReporter::reportError(const String& errorMessage, SBLogLevel severity)
   if (severity != SB_ERROR)
     SBLog::log(severity) << fullError << std::endl;
   else
-    sbValidate(0, fullError);
+    sbValidateWithTelemetry(0, fullError);
 }

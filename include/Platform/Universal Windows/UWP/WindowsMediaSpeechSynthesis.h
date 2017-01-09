@@ -19,11 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Media_SpeechSynthesis.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WMSVoiceInformation, WMSSpeechSynthesisStream, WMSSpeechSynthesizer;
-@protocol WMSIVoiceInformation
-, WMSIInstalledVoicesStatic, WMSISpeechSynthesisStream, WMSISpeechSynthesizer;
+@protocol WMSIVoiceInformation, WMSIInstalledVoicesStatic, WMSISpeechSynthesisStream, WMSISpeechSynthesizer;
 
 // Windows.Media.SpeechSynthesis.VoiceGender
 enum _WMSVoiceGender {
@@ -42,16 +47,16 @@ typedef unsigned WMSVoiceGender;
 #ifndef __WMSVoiceInformation_DEFINED__
 #define __WMSVoiceInformation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
 @interface WMSVoiceInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* Description;
-@property (readonly) NSString* displayName;
+@property (readonly) NSString * Description;
+@property (readonly) NSString * displayName;
 @property (readonly) WMSVoiceGender gender;
-@property (readonly) NSString* id;
-@property (readonly) NSString* language;
+@property (readonly) NSString * id;
+@property (readonly) NSString * language;
 @end
 
 #endif // __WMSVoiceInformation_DEFINED__
@@ -64,6 +69,10 @@ WINRT_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Storage.Streams.IInputStream
@@ -71,13 +80,12 @@ WINRT_EXPORT
 #define __WSSIInputStream_DEFINED__
 
 @protocol WSSIInputStream <WFIClosable>
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer
-            count:(unsigned int)count
-          options:(WSSInputStreamOptions)options
-          success:(void (^)(RTObject<WSSIBuffer>*))success
-         progress:(void (^)(unsigned int))progress
-          failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
+@interface WSSIInputStream : RTObject <WSSIInputStream>
 @end
 
 #endif // __WSSIInputStream_DEFINED__
@@ -87,12 +95,13 @@ WINRT_EXPORT
 #define __WSSIOutputStream_DEFINED__
 
 @protocol WSSIOutputStream <WFIClosable>
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
-           success:(void (^)(unsigned int))success
-          progress:(void (^)(unsigned int))progress
-           failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
+@interface WSSIOutputStream : RTObject <WSSIOutputStream>
 @end
 
 #endif // __WSSIOutputStream_DEFINED__
@@ -111,17 +120,13 @@ WINRT_EXPORT
 - (void)seek:(uint64_t)position;
 - (RTObject<WSSIRandomAccessStream>*)cloneStream;
 - (void)close;
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer
-            count:(unsigned int)count
-          options:(WSSInputStreamOptions)options
-          success:(void (^)(RTObject<WSSIBuffer>*))success
-         progress:(void (^)(unsigned int))progress
-          failure:(void (^)(NSError*))failure;
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
-           success:(void (^)(unsigned int))success
-          progress:(void (^)(unsigned int))progress
-           failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
+@interface WSSIRandomAccessStream : RTObject <WSSIRandomAccessStream>
 @end
 
 #endif // __WSSIRandomAccessStream_DEFINED__
@@ -131,7 +136,11 @@ WINRT_EXPORT
 #define __WSSIContentTypeProvider_DEFINED__
 
 @protocol WSSIContentTypeProvider
-@property (readonly) NSString* contentType;
+@property (readonly) NSString * contentType;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
+@interface WSSIContentTypeProvider : RTObject <WSSIContentTypeProvider>
 @end
 
 #endif // __WSSIContentTypeProvider_DEFINED__
@@ -140,24 +149,19 @@ WINRT_EXPORT
 #ifndef __WSSIRandomAccessStreamWithContentType_DEFINED__
 #define __WSSIRandomAccessStreamWithContentType_DEFINED__
 
-@protocol
-    WSSIRandomAccessStreamWithContentType <WSSIRandomAccessStream, WFIClosable, WSSIInputStream, WSSIOutputStream, WSSIContentTypeProvider>
+@protocol WSSIRandomAccessStreamWithContentType <WSSIRandomAccessStream, WFIClosable, WSSIInputStream, WSSIOutputStream, WSSIContentTypeProvider>
 - (RTObject<WSSIInputStream>*)getInputStreamAt:(uint64_t)position;
 - (RTObject<WSSIOutputStream>*)getOutputStreamAt:(uint64_t)position;
 - (void)seek:(uint64_t)position;
 - (RTObject<WSSIRandomAccessStream>*)cloneStream;
 - (void)close;
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer
-            count:(unsigned int)count
-          options:(WSSInputStreamOptions)options
-          success:(void (^)(RTObject<WSSIBuffer>*))success
-         progress:(void (^)(unsigned int))progress
-          failure:(void (^)(NSError*))failure;
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
-           success:(void (^)(unsigned int))success
-          progress:(void (^)(unsigned int))progress
-           failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+@end
+
+OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
+@interface WSSIRandomAccessStreamWithContentType : RTObject <WSSIRandomAccessStreamWithContentType>
 @end
 
 #endif // __WSSIRandomAccessStreamWithContentType_DEFINED__
@@ -166,18 +170,13 @@ WINRT_EXPORT
 #ifndef __WMSSpeechSynthesisStream_DEFINED__
 #define __WMSSpeechSynthesisStream_DEFINED__
 
-WINRT_EXPORT
-@interface WMSSpeechSynthesisStream : RTObject <WSSIRandomAccessStreamWithContentType,
-                                                WSSIContentTypeProvider,
-                                                WSSIRandomAccessStream,
-                                                WSSIOutputStream,
-                                                WFIClosable,
-                                                WSSIInputStream>
+OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
+@interface WMSSpeechSynthesisStream : RTObject <WSSIRandomAccessStreamWithContentType, WSSIContentTypeProvider, WSSIRandomAccessStream, WSSIOutputStream, WFIClosable, WSSIInputStream>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) NSArray* /* RTObject<WMIMediaMarker>* */ markers;
-@property (readonly) NSString* contentType;
+@property (readonly) NSString * contentType;
 @property uint64_t size;
 @property (readonly) BOOL canRead;
 @property (readonly) BOOL canWrite;
@@ -187,16 +186,8 @@ WINRT_EXPORT
 - (void)seek:(uint64_t)position;
 - (RTObject<WSSIRandomAccessStream>*)cloneStream;
 - (void)close;
-- (void)readAsync:(RTObject<WSSIBuffer>*)buffer
-            count:(unsigned int)count
-          options:(WSSInputStreamOptions)options
-          success:(void (^)(RTObject<WSSIBuffer>*))success
-         progress:(void (^)(unsigned int))progress
-          failure:(void (^)(NSError*))failure;
-- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
-           success:(void (^)(unsigned int))success
-          progress:(void (^)(unsigned int))progress
-           failure:(void (^)(NSError*))failure;
+- (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
+- (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -206,7 +197,7 @@ WINRT_EXPORT
 #ifndef __WMSSpeechSynthesizer_DEFINED__
 #define __WMSSpeechSynthesizer_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
 @interface WMSSpeechSynthesizer : RTObject <WFIClosable>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -215,13 +206,10 @@ WINRT_EXPORT
 @property (retain) WMSVoiceInformation* voice;
 + (NSArray* /* WMSVoiceInformation* */)allVoices;
 + (WMSVoiceInformation*)defaultVoice;
-- (void)synthesizeTextToStreamAsync:(NSString*)text
-                            success:(void (^)(WMSSpeechSynthesisStream*))success
-                            failure:(void (^)(NSError*))failure;
-- (void)synthesizeSsmlToStreamAsync:(NSString*)Ssml
-                            success:(void (^)(WMSSpeechSynthesisStream*))success
-                            failure:(void (^)(NSError*))failure;
+- (void)synthesizeTextToStreamAsync:(NSString *)text success:(void (^)(WMSSpeechSynthesisStream*))success failure:(void (^)(NSError*))failure;
+- (void)synthesizeSsmlToStreamAsync:(NSString *)Ssml success:(void (^)(WMSSpeechSynthesisStream*))success failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
 #endif // __WMSSpeechSynthesizer_DEFINED__
+

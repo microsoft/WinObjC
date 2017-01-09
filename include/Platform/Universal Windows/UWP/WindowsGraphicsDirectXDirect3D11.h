@@ -19,11 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT
+#define OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Graphics_DirectX_Direct3D11.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WGDDDirect3DMultisampleDescription, WGDDDirect3DSurfaceDescription;
-@protocol WGDDIDirect3DDevice
-, WGDDIDirect3DSurface;
+@protocol WGDDIDirect3DDevice, WGDDIDirect3DSurface;
 
 // Windows.Graphics.DirectX.Direct3D11.Direct3DUsage
 enum _WGDDDirect3DUsage {
@@ -55,17 +60,17 @@ typedef unsigned WGDDDirect3DBindings;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Graphics.DirectX.Direct3D11.Direct3DMultisampleDescription
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT
 @interface WGDDDirect3DMultisampleDescription : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property int count;
 @property int quality;
 @end
 
 // [struct] Windows.Graphics.DirectX.Direct3D11.Direct3DSurfaceDescription
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT
 @interface WGDDDirect3DSurfaceDescription : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property int width;
 @property int height;
 @property WGDDirectXPixelFormat format;
@@ -80,6 +85,10 @@ WINRT_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Graphics.DirectX.Direct3D11.IDirect3DDevice
@@ -89,6 +98,10 @@ WINRT_EXPORT
 @protocol WGDDIDirect3DDevice <WFIClosable>
 - (void)trim;
 - (void)close;
+@end
+
+OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT
+@interface WGDDIDirect3DDevice : RTObject <WGDDIDirect3DDevice>
 @end
 
 #endif // __WGDDIDirect3DDevice_DEFINED__
@@ -102,4 +115,9 @@ WINRT_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT
+@interface WGDDIDirect3DSurface : RTObject <WGDDIDirect3DSurface>
+@end
+
 #endif // __WGDDIDirect3DSurface_DEFINED__
+

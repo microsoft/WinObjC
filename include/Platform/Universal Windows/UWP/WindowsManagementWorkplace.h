@@ -19,10 +19,24 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MANAGEMENT_WORKPLACE_EXPORT
+#define OBJCUWP_WINDOWS_MANAGEMENT_WORKPLACE_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Management_Workplace.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WMWMdmPolicy;
-@protocol WMWIMdmAllowPolicyStatics;
+@class WMWMdmPolicy, WMWWorkplaceSettings;
+@protocol WMWIMdmAllowPolicyStatics, WMWIMdmPolicyStatics2, WMWIWorkplaceSettingsStatics;
+
+// Windows.Management.Workplace.MessagingSyncPolicy
+enum _WMWMessagingSyncPolicy {
+    WMWMessagingSyncPolicyDisallowed = 0,
+    WMWMessagingSyncPolicyAllowed = 1,
+    WMWMessagingSyncPolicyRequired = 2,
+};
+typedef unsigned WMWMessagingSyncPolicy;
 
 #import <Foundation/Foundation.h>
 
@@ -30,8 +44,9 @@
 #ifndef __WMWMdmPolicy_DEFINED__
 #define __WMWMdmPolicy_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MANAGEMENT_WORKPLACE_EXPORT
 @interface WMWMdmPolicy : RTObject
++ (WMWMessagingSyncPolicy)getMessagingSyncPolicy;
 + (BOOL)isBrowserAllowed;
 + (BOOL)isCameraAllowed;
 + (BOOL)isMicrosoftAccountAllowed;
@@ -39,3 +54,15 @@ WINRT_EXPORT
 @end
 
 #endif // __WMWMdmPolicy_DEFINED__
+
+// Windows.Management.Workplace.WorkplaceSettings
+#ifndef __WMWWorkplaceSettings_DEFINED__
+#define __WMWWorkplaceSettings_DEFINED__
+
+OBJCUWP_WINDOWS_MANAGEMENT_WORKPLACE_EXPORT
+@interface WMWWorkplaceSettings : RTObject
++ (BOOL)isMicrosoftAccountOptional;
+@end
+
+#endif // __WMWWorkplaceSettings_DEFINED__
+

@@ -19,17 +19,17 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Media_Import.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WMIPhotoImportSource, WMIPhotoImportOperation, WMIPhotoImportManager, WMIPhotoImportSession, WMIPhotoImportFindItemsResult,
-    WMIPhotoImportImportItemsResult, WMIPhotoImportDeleteImportedItemsFromSourceResult, WMIPhotoImportStorageMedium, WMIPhotoImportSidecar,
-    WMIPhotoImportVideoSegment, WMIPhotoImportItem, WMIPhotoImportSelectionChangedEventArgs, WMIPhotoImportItemImportedEventArgs;
+@class WMIPhotoImportSource, WMIPhotoImportOperation, WMIPhotoImportManager, WMIPhotoImportSession, WMIPhotoImportFindItemsResult, WMIPhotoImportImportItemsResult, WMIPhotoImportDeleteImportedItemsFromSourceResult, WMIPhotoImportStorageMedium, WMIPhotoImportSidecar, WMIPhotoImportVideoSegment, WMIPhotoImportItem, WMIPhotoImportSelectionChangedEventArgs, WMIPhotoImportItemImportedEventArgs;
 @class WMIPhotoImportProgress;
-@protocol WMIIPhotoImportManagerStatics
-, WMIIPhotoImportOperation, WMIIPhotoImportStorageMedium, WMIIPhotoImportSourceStatics, WMIIPhotoImportSource, WMIIPhotoImportSession,
-    WMIIPhotoImportItem, WMIIPhotoImportFindItemsResult, WMIIPhotoImportImportItemsResult,
-    WMIIPhotoImportDeleteImportedItemsFromSourceResult, WMIIPhotoImportSidecar, WMIIPhotoImportVideoSegment,
-    WMIIPhotoImportItemImportedEventArgs, WMIIPhotoImportSelectionChangedEventArgs;
+@protocol WMIIPhotoImportManagerStatics, WMIIPhotoImportOperation, WMIIPhotoImportStorageMedium, WMIIPhotoImportSourceStatics, WMIIPhotoImportSource, WMIIPhotoImportSession, WMIIPhotoImportSession2, WMIIPhotoImportItem, WMIIPhotoImportFindItemsResult, WMIIPhotoImportFindItemsResult2, WMIIPhotoImportImportItemsResult, WMIIPhotoImportDeleteImportedItemsFromSourceResult, WMIIPhotoImportSidecar, WMIIPhotoImportVideoSegment, WMIIPhotoImportItemImportedEventArgs, WMIIPhotoImportSelectionChangedEventArgs;
 
 // Windows.Media.Import.PhotoImportStage
 enum _WMIPhotoImportStage {
@@ -109,6 +109,14 @@ enum _WMIPhotoImportItemSelectionMode {
 };
 typedef unsigned WMIPhotoImportItemSelectionMode;
 
+// Windows.Media.Import.PhotoImportSubfolderDateFormat
+enum _WMIPhotoImportSubfolderDateFormat {
+    WMIPhotoImportSubfolderDateFormatYear = 0,
+    WMIPhotoImportSubfolderDateFormatYearMonth = 1,
+    WMIPhotoImportSubfolderDateFormatYearMonthDay = 2,
+};
+typedef unsigned WMIPhotoImportSubfolderDateFormat;
+
 // Windows.Media.Import.PhotoImportConnectionTransport
 enum _WMIPhotoImportConnectionTransport {
     WMIPhotoImportConnectionTransportUnknown = 0,
@@ -134,9 +142,9 @@ typedef unsigned WMIPhotoImportSubfolderCreationMode;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Media.Import.PhotoImportProgress
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 @interface WMIPhotoImportProgress : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property unsigned int itemsImported;
 @property unsigned int totalItemsToImport;
 @property uint64_t bytesImported;
@@ -148,28 +156,26 @@ WINRT_EXPORT
 #ifndef __WMIPhotoImportSource_DEFINED__
 #define __WMIPhotoImportSource_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 @interface WMIPhotoImportSource : RTObject
-+ (void)fromIdAsync:(NSString*)sourceId success:(void (^)(WMIPhotoImportSource*))success failure:(void (^)(NSError*))failure;
-+ (void)fromFolderAsync:(RTObject<WSIStorageFolder>*)sourceRootFolder
-                success:(void (^)(WMIPhotoImportSource*))success
-                failure:(void (^)(NSError*))failure;
++ (void)fromIdAsync:(NSString *)sourceId success:(void (^)(WMIPhotoImportSource*))success failure:(void (^)(NSError*))failure;
++ (void)fromFolderAsync:(RTObject<WSIStorageFolder>*)sourceRootFolder success:(void (^)(WMIPhotoImportSource*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) id /* unsigned int */ batteryLevelPercent;
-@property (readonly) NSString* connectionProtocol;
+@property (readonly) NSString * connectionProtocol;
 @property (readonly) WMIPhotoImportConnectionTransport connectionTransport;
 @property (readonly) id /* WFDateTime* */ dateTime;
-@property (readonly) NSString* Description;
-@property (readonly) NSString* displayName;
-@property (readonly) NSString* id;
+@property (readonly) NSString * Description;
+@property (readonly) NSString * displayName;
+@property (readonly) NSString * id;
 @property (readonly) id /* BOOL */ isLocked;
 @property (readonly) BOOL isMassStorage;
-@property (readonly) NSString* manufacturer;
-@property (readonly) NSString* model;
+@property (readonly) NSString * manufacturer;
+@property (readonly) NSString * model;
 @property (readonly) WMIPhotoImportPowerSource powerSource;
-@property (readonly) NSString* serialNumber;
+@property (readonly) NSString * serialNumber;
 @property (readonly) NSArray* /* WMIPhotoImportStorageMedium* */ storageMedia;
 @property (readonly) RTObject<WSSIRandomAccessStreamReference>* thumbnail;
 @property (readonly) WMIPhotoImportSourceType type;
@@ -182,17 +188,14 @@ WINRT_EXPORT
 #ifndef __WMIPhotoImportOperation_DEFINED__
 #define __WMIPhotoImportOperation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 @interface WMIPhotoImportOperation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-// Failed to generate property ContinueDeletingImportedItemsFromSourceAsync (Cannot marshal
-// Windows.Foundation.IAsyncOperationWithProgress`2<Windows.Media.Import.PhotoImportDeleteImportedItemsFromSourceResult,Double>)
-// Failed to generate property ContinueFindingItemsAsync (Cannot marshal
-// Windows.Foundation.IAsyncOperationWithProgress`2<Windows.Media.Import.PhotoImportFindItemsResult,UInt32>)
-// Failed to generate property ContinueImportingItemsAsync (Cannot marshal
-// Windows.Foundation.IAsyncOperationWithProgress`2<Windows.Media.Import.PhotoImportImportItemsResult,Windows.Media.Import.PhotoImportProgress>)
+// Failed to generate property ContinueDeletingImportedItemsFromSourceAsync (Cannot marshal Windows.Foundation.IAsyncOperationWithProgress`2<Windows.Media.Import.PhotoImportDeleteImportedItemsFromSourceResult,Double>)
+// Failed to generate property ContinueFindingItemsAsync (Cannot marshal Windows.Foundation.IAsyncOperationWithProgress`2<Windows.Media.Import.PhotoImportFindItemsResult,UInt32>)
+// Failed to generate property ContinueImportingItemsAsync (Cannot marshal Windows.Foundation.IAsyncOperationWithProgress`2<Windows.Media.Import.PhotoImportImportItemsResult,Windows.Media.Import.PhotoImportProgress>)
 @property (readonly) WMIPhotoImportSession* session;
 @property (readonly) WMIPhotoImportStage stage;
 @end
@@ -203,7 +206,7 @@ WINRT_EXPORT
 #ifndef __WMIPhotoImportManager_DEFINED__
 #define __WMIPhotoImportManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 @interface WMIPhotoImportManager : RTObject
 + (void)isSupportedAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 + (void)findAllSourcesAsyncWithSuccess:(void (^)(NSArray* /* WMIPhotoImportSource* */))success failure:(void (^)(NSError*))failure;
@@ -220,28 +223,30 @@ WINRT_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Media.Import.PhotoImportSession
 #ifndef __WMIPhotoImportSession_DEFINED__
 #define __WMIPhotoImportSession_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 @interface WMIPhotoImportSession : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WMIPhotoImportSubfolderCreationMode subfolderCreationMode;
 @property (retain) RTObject<WSIStorageFolder>* destinationFolder;
-@property (retain) NSString* destinationFileNamePrefix;
+@property (retain) NSString * destinationFileNamePrefix;
 @property BOOL appendSessionDateToDestinationFolder;
 @property (readonly) WFGUID* sessionId;
 @property (readonly) WMIPhotoImportSource* source;
-- (void)findItemsAsync:(WMIPhotoImportContentTypeFilter)contentTypeFilter
-     itemSelectionMode:(WMIPhotoImportItemSelectionMode)itemSelectionMode
-               success:(void (^)(WMIPhotoImportFindItemsResult*))success
-              progress:(void (^)(unsigned int))progress
-               failure:(void (^)(NSError*))failure;
+@property WMIPhotoImportSubfolderDateFormat subfolderDateFormat;
+@property BOOL rememberDeselectedItems;
+- (void)findItemsAsync:(WMIPhotoImportContentTypeFilter)contentTypeFilter itemSelectionMode:(WMIPhotoImportItemSelectionMode)itemSelectionMode success:(void (^)(WMIPhotoImportFindItemsResult*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
@@ -251,7 +256,7 @@ WINRT_EXPORT
 #ifndef __WMIPhotoImportFindItemsResult_DEFINED__
 #define __WMIPhotoImportFindItemsResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 @interface WMIPhotoImportFindItemsResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -280,17 +285,16 @@ WINRT_EXPORT
 @property (readonly) uint64_t totalSizeInBytes;
 @property (readonly) unsigned int videosCount;
 @property (readonly) uint64_t videosSizeInBytes;
-- (EventRegistrationToken)addItemImportedEvent:(void (^)(WMIPhotoImportFindItemsResult*, WMIPhotoImportItemImportedEventArgs*))del;
+- (EventRegistrationToken)addItemImportedEvent:(void(^)(WMIPhotoImportFindItemsResult*, WMIPhotoImportItemImportedEventArgs*))del;
 - (void)removeItemImportedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addSelectionChangedEvent:(void (^)(WMIPhotoImportFindItemsResult*, WMIPhotoImportSelectionChangedEventArgs*))del;
+- (EventRegistrationToken)addSelectionChangedEvent:(void(^)(WMIPhotoImportFindItemsResult*, WMIPhotoImportSelectionChangedEventArgs*))del;
 - (void)removeSelectionChangedEvent:(EventRegistrationToken)tok;
 - (void)selectAll;
 - (void)selectNone;
 - (RTObject<WFIAsyncAction>*)selectNewAsync;
 - (void)setImportMode:(WMIPhotoImportImportMode)value;
-- (void)importItemsAsyncWithSuccess:(void (^)(WMIPhotoImportImportItemsResult*))success
-                           progress:(void (^)(WMIPhotoImportProgress*))progress
-                            failure:(void (^)(NSError*))failure;
+- (void)importItemsAsyncWithSuccess:(void (^)(WMIPhotoImportImportItemsResult*))success progress:(void (^)(WMIPhotoImportProgress*))progress failure:(void (^)(NSError*))failure;
+- (void)addItemsInDateRangeToSelection:(WFDateTime*)rangeStart rangeLength:(WFTimeSpan*)rangeLength;
 @end
 
 #endif // __WMIPhotoImportFindItemsResult_DEFINED__
@@ -299,7 +303,7 @@ WINRT_EXPORT
 #ifndef __WMIPhotoImportImportItemsResult_DEFINED__
 #define __WMIPhotoImportImportItemsResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 @interface WMIPhotoImportImportItemsResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -317,9 +321,7 @@ WINRT_EXPORT
 @property (readonly) uint64_t totalSizeInBytes;
 @property (readonly) unsigned int videosCount;
 @property (readonly) uint64_t videosSizeInBytes;
-- (void)deleteImportedItemsFromSourceAsyncWithSuccess:(void (^)(WMIPhotoImportDeleteImportedItemsFromSourceResult*))success
-                                             progress:(void (^)(double))progress
-                                              failure:(void (^)(NSError*))failure;
+- (void)deleteImportedItemsFromSourceAsyncWithSuccess:(void (^)(WMIPhotoImportDeleteImportedItemsFromSourceResult*))success progress:(void (^)(double))progress failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WMIPhotoImportImportItemsResult_DEFINED__
@@ -328,7 +330,7 @@ WINRT_EXPORT
 #ifndef __WMIPhotoImportDeleteImportedItemsFromSourceResult_DEFINED__
 #define __WMIPhotoImportDeleteImportedItemsFromSourceResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 @interface WMIPhotoImportDeleteImportedItemsFromSourceResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -354,16 +356,16 @@ WINRT_EXPORT
 #ifndef __WMIPhotoImportStorageMedium_DEFINED__
 #define __WMIPhotoImportStorageMedium_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 @interface WMIPhotoImportStorageMedium : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) uint64_t availableSpaceInBytes;
 @property (readonly) uint64_t capacityInBytes;
-@property (readonly) NSString* Description;
-@property (readonly) NSString* name;
-@property (readonly) NSString* serialNumber;
+@property (readonly) NSString * Description;
+@property (readonly) NSString * name;
+@property (readonly) NSString * serialNumber;
 @property (readonly) WMIPhotoImportStorageMediumType storageMediumType;
 @property (readonly) WMIPhotoImportAccessMode supportedAccessMode;
 - (void)refresh;
@@ -375,13 +377,13 @@ WINRT_EXPORT
 #ifndef __WMIPhotoImportSidecar_DEFINED__
 #define __WMIPhotoImportSidecar_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 @interface WMIPhotoImportSidecar : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFDateTime* date;
-@property (readonly) NSString* name;
+@property (readonly) NSString * name;
 @property (readonly) uint64_t sizeInBytes;
 @end
 
@@ -391,13 +393,13 @@ WINRT_EXPORT
 #ifndef __WMIPhotoImportVideoSegment_DEFINED__
 #define __WMIPhotoImportVideoSegment_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 @interface WMIPhotoImportVideoSegment : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WFDateTime* date;
-@property (readonly) NSString* name;
+@property (readonly) NSString * name;
 @property (readonly) WMIPhotoImportSidecar* sibling;
 @property (readonly) NSArray* /* WMIPhotoImportSidecar* */ sidecars;
 @property (readonly) uint64_t sizeInBytes;
@@ -409,7 +411,7 @@ WINRT_EXPORT
 #ifndef __WMIPhotoImportItem_DEFINED__
 #define __WMIPhotoImportItem_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 @interface WMIPhotoImportItem : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -420,7 +422,7 @@ WINRT_EXPORT
 @property (readonly) NSArray* /* NSString * */ deletedFileNames;
 @property (readonly) NSArray* /* NSString * */ importedFileNames;
 @property (readonly) uint64_t itemKey;
-@property (readonly) NSString* name;
+@property (readonly) NSString * name;
 @property (readonly) WMIPhotoImportSidecar* sibling;
 @property (readonly) NSArray* /* WMIPhotoImportSidecar* */ sidecars;
 @property (readonly) uint64_t sizeInBytes;
@@ -434,7 +436,7 @@ WINRT_EXPORT
 #ifndef __WMIPhotoImportSelectionChangedEventArgs_DEFINED__
 #define __WMIPhotoImportSelectionChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 @interface WMIPhotoImportSelectionChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -448,7 +450,7 @@ WINRT_EXPORT
 #ifndef __WMIPhotoImportItemImportedEventArgs_DEFINED__
 #define __WMIPhotoImportItemImportedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 @interface WMIPhotoImportItemImportedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -457,3 +459,4 @@ WINRT_EXPORT
 @end
 
 #endif // __WMIPhotoImportItemImportedEventArgs_DEFINED__
+

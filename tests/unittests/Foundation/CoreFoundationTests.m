@@ -18,6 +18,7 @@
 #include <windows.h>
 
 #import <CoreFoundation/CoreFoundation.h>
+#import <CoreFoundation/CFTree.h>
 #import <mach/mach_time.h>
 
 static uint64_t walltime(const struct mach_timebase_info& timebase, uint64_t value) {
@@ -55,4 +56,20 @@ TEST(CoreFoundation, mach_absolute_time) {
     // does in fact move forward when expected.
     EXPECT_GT(measurement3, measurement2);
     EXPECT_GT(measurement2, measurement1);
+}
+
+TEST(CFType, UnknownTypeInObjCContainer) {
+    // This test requires a non-bridged public CF type. CFTreeRef will suffice.
+    CFTreeContext treeContext{};
+    CFTypeRef tree = static_cast<CFTypeRef>(CFTreeCreate(kCFAllocatorDefault, &treeContext));
+
+    NSArray* array = nil;
+
+    // The ',' in this method call upsets EXPECT_NO_THROW(...), so we need to hide it behind a lambda.
+    auto create = [&tree](){
+        return [[NSArray alloc] initWithObjects:static_cast<id>(tree), nil];
+    };
+    EXPECT_NO_THROW(array = create());
+    EXPECT_NO_THROW(CFRelease(tree));
+    EXPECT_NO_THROW([array release]);
 }

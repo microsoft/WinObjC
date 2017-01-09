@@ -18,27 +18,26 @@
 #import <CoreFoundation/CoreFoundation.h>
 #import <CFNetwork/CFFTPStream.h>
 
-const CFStringRef kCFStreamPropertyFTPUserName = static_cast<CFStringRef>(@"kCFStreamPropertyFTPUserName");
-const CFStringRef kCFStreamPropertyFTPPassword = static_cast<CFStringRef>(@"kCFStreamPropertyFTPPassword");
-const CFStringRef kCFStreamPropertyFTPUsePassiveMode = static_cast<CFStringRef>(@"kCFStreamPropertyFTPUsePassiveMode");
-const CFStringRef kCFStreamPropertyFTPResourceSize = static_cast<CFStringRef>(@"kCFStreamPropertyFTPResourceSize");
-const CFStringRef kCFStreamPropertyFTPFetchResourceInfo = static_cast<CFStringRef>(@"kCFStreamPropertyFTPFetchResourceInfo");
-const CFStringRef kCFStreamPropertyFTPFileTransferOffset = static_cast<CFStringRef>(@"kCFStreamPropertyFTPFileTransferOffset");
-const CFStringRef kCFStreamPropertyFTPAttemptPersistentConnection =
-    static_cast<CFStringRef>(@"kCFStreamPropertyFTPAttemptPersistentConnection");
-const CFStringRef kCFStreamPropertyFTPProxy = static_cast<CFStringRef>(@"kCFStreamPropertyFTPProxy");
-const CFStringRef kCFStreamPropertyFTPProxyHost = static_cast<CFStringRef>(@"kCFStreamPropertyFTPProxyHost");
-const CFStringRef kCFStreamPropertyFTPProxyPort = static_cast<CFStringRef>(@"kCFStreamPropertyFTPProxyPort");
-const CFStringRef kCFStreamPropertyFTPProxyUser = static_cast<CFStringRef>(@"kCFStreamPropertyFTPProxyUser");
-const CFStringRef kCFStreamPropertyFTPProxyPassword = static_cast<CFStringRef>(@"kCFStreamPropertyFTPProxyPassword");
-const CFStringRef kCFFTPResourceMode = static_cast<CFStringRef>(@"kCFFTPResourceMode");
-const CFStringRef kCFFTPResourceName = static_cast<CFStringRef>(@"kCFFTPResourceName");
-const CFStringRef kCFFTPResourceOwner = static_cast<CFStringRef>(@"kCFFTPResourceOwner");
-const CFStringRef kCFFTPResourceGroup = static_cast<CFStringRef>(@"kCFFTPResourceGroup");
-const CFStringRef kCFFTPResourceLink = static_cast<CFStringRef>(@"kCFFTPResourceLink");
-const CFStringRef kCFFTPResourceSize = static_cast<CFStringRef>(@"kCFFTPResourceSize");
-const CFStringRef kCFFTPResourceType = static_cast<CFStringRef>(@"kCFFTPResourceType");
-const CFStringRef kCFFTPResourceModDate = static_cast<CFStringRef>(@"kCFFTPResourceModDate");
+const CFStringRef kCFStreamPropertyFTPUserName = CFSTR("kCFStreamPropertyFTPUserName");
+const CFStringRef kCFStreamPropertyFTPPassword = CFSTR("kCFStreamPropertyFTPPassword");
+const CFStringRef kCFStreamPropertyFTPUsePassiveMode = CFSTR("kCFStreamPropertyFTPUsePassiveMode");
+const CFStringRef kCFStreamPropertyFTPResourceSize = CFSTR("kCFStreamPropertyFTPResourceSize");
+const CFStringRef kCFStreamPropertyFTPFetchResourceInfo = CFSTR("kCFStreamPropertyFTPFetchResourceInfo");
+const CFStringRef kCFStreamPropertyFTPFileTransferOffset = CFSTR("kCFStreamPropertyFTPFileTransferOffset");
+const CFStringRef kCFStreamPropertyFTPAttemptPersistentConnection = CFSTR("kCFStreamPropertyFTPAttemptPersistentConnection");
+const CFStringRef kCFStreamPropertyFTPProxy = CFSTR("kCFStreamPropertyFTPProxy");
+const CFStringRef kCFStreamPropertyFTPProxyHost = CFSTR("kCFStreamPropertyFTPProxyHost");
+const CFStringRef kCFStreamPropertyFTPProxyPort = CFSTR("kCFStreamPropertyFTPProxyPort");
+const CFStringRef kCFStreamPropertyFTPProxyUser = CFSTR("kCFStreamPropertyFTPProxyUser");
+const CFStringRef kCFStreamPropertyFTPProxyPassword = CFSTR("kCFStreamPropertyFTPProxyPassword");
+const CFStringRef kCFFTPResourceMode = CFSTR("kCFFTPResourceMode");
+const CFStringRef kCFFTPResourceName = CFSTR("kCFFTPResourceName");
+const CFStringRef kCFFTPResourceOwner = CFSTR("kCFFTPResourceOwner");
+const CFStringRef kCFFTPResourceGroup = CFSTR("kCFFTPResourceGroup");
+const CFStringRef kCFFTPResourceLink = CFSTR("kCFFTPResourceLink");
+const CFStringRef kCFFTPResourceSize = CFSTR("kCFFTPResourceSize");
+const CFStringRef kCFFTPResourceType = CFSTR("kCFFTPResourceType");
+const CFStringRef kCFFTPResourceModDate = CFSTR("kCFFTPResourceModDate");
 const SInt32 kCFStreamErrorDomainFTP = StubConstant();
 
 /**

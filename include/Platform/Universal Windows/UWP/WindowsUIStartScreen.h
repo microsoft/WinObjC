@@ -19,14 +19,31 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
+#define OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_UI_StartScreen.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WUSSecondaryTileVisualElements, WUSSecondaryTile, WUSVisualElementsRequestedEventArgs, WUSVisualElementsRequest,
-    WUSVisualElementsRequestDeferral;
-@protocol WUSISecondaryTile
-, WUSISecondaryTile2, WUSISecondaryTileVisualElements, WUSISecondaryTileVisualElements2, WUSISecondaryTileVisualElements3,
-    WUSISecondaryTileFactory, WUSISecondaryTileFactory2, WUSISecondaryTileStatics, WUSIVisualElementsRequestedEventArgs,
-    WUSIVisualElementsRequest, WUSIVisualElementsRequestDeferral;
+@class WUSJumpListItem, WUSJumpList, WUSSecondaryTileVisualElements, WUSSecondaryTile, WUSVisualElementsRequestedEventArgs, WUSVisualElementsRequest, WUSVisualElementsRequestDeferral;
+@protocol WUSIJumpListItem, WUSIJumpListItemStatics, WUSIJumpList, WUSIJumpListStatics, WUSISecondaryTile, WUSISecondaryTile2, WUSISecondaryTileVisualElements, WUSISecondaryTileVisualElements2, WUSISecondaryTileVisualElements3, WUSISecondaryTileFactory, WUSISecondaryTileFactory2, WUSISecondaryTileStatics, WUSIVisualElementsRequestedEventArgs, WUSIVisualElementsRequest, WUSIVisualElementsRequestDeferral;
+
+// Windows.UI.StartScreen.JumpListSystemGroupKind
+enum _WUSJumpListSystemGroupKind {
+    WUSJumpListSystemGroupKindNone = 0,
+    WUSJumpListSystemGroupKindFrequent = 1,
+    WUSJumpListSystemGroupKindRecent = 2,
+};
+typedef unsigned WUSJumpListSystemGroupKind;
+
+// Windows.UI.StartScreen.JumpListItemKind
+enum _WUSJumpListItemKind {
+    WUSJumpListItemKindArguments = 0,
+    WUSJumpListItemKindSeparator = 1,
+};
+typedef unsigned WUSJumpListItemKind;
 
 // Windows.UI.StartScreen.TileOptions
 enum _WUSTileOptions {
@@ -63,11 +80,51 @@ typedef unsigned WUSForegroundText;
 
 #import <Foundation/Foundation.h>
 
+// Windows.UI.StartScreen.JumpListItem
+#ifndef __WUSJumpListItem_DEFINED__
+#define __WUSJumpListItem_DEFINED__
+
+OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
+@interface WUSJumpListItem : RTObject
++ (WUSJumpListItem*)createWithArguments:(NSString *)arguments displayName:(NSString *)displayName;
++ (WUSJumpListItem*)createSeparator;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (retain) WFUri* logo;
+@property (retain) NSString * groupName;
+@property (retain) NSString * displayName;
+@property (retain) NSString * Description;
+@property (readonly) NSString * arguments;
+@property (readonly) WUSJumpListItemKind kind;
+@property (readonly) BOOL removedByUser;
+@end
+
+#endif // __WUSJumpListItem_DEFINED__
+
+// Windows.UI.StartScreen.JumpList
+#ifndef __WUSJumpList_DEFINED__
+#define __WUSJumpList_DEFINED__
+
+OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
+@interface WUSJumpList : RTObject
++ (void)loadCurrentAsyncWithSuccess:(void (^)(WUSJumpList*))success failure:(void (^)(NSError*))failure;
++ (BOOL)isSupported;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property WUSJumpListSystemGroupKind systemGroupKind;
+@property (readonly) NSMutableArray* /* WUSJumpListItem* */ items;
+- (RTObject<WFIAsyncAction>*)saveAsync;
+@end
+
+#endif // __WUSJumpList_DEFINED__
+
 // Windows.UI.StartScreen.SecondaryTileVisualElements
 #ifndef __WUSSecondaryTileVisualElements_DEFINED__
 #define __WUSSecondaryTileVisualElements_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
 @interface WUSSecondaryTileVisualElements : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -92,68 +149,45 @@ WINRT_EXPORT
 #ifndef __WUSSecondaryTile_DEFINED__
 #define __WUSSecondaryTile_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
 @interface WUSSecondaryTile : RTObject
-+ (BOOL)exists:(NSString*)tileId;
++ (BOOL)exists:(NSString *)tileId;
 + (void)findAllAsyncWithSuccess:(void (^)(NSArray* /* WUSSecondaryTile* */))success failure:(void (^)(NSError*))failure;
-+ (void)findAllForApplicationAsync:(NSString*)applicationId
-                           success:(void (^)(NSArray* /* WUSSecondaryTile* */))success
-                           failure:(void (^)(NSError*))failure;
++ (void)findAllForApplicationAsync:(NSString *)applicationId success:(void (^)(NSArray* /* WUSSecondaryTile* */))success failure:(void (^)(NSError*))failure;
 + (void)findAllForPackageAsyncWithSuccess:(void (^)(NSArray* /* WUSSecondaryTile* */))success failure:(void (^)(NSError*))failure;
-+ (WUSSecondaryTile*)makeMinimalTile:(NSString*)tileId
-                         displayName:(NSString*)displayName
-                           arguments:(NSString*)arguments
-                   square150x150Logo:(WFUri*)square150x150Logo
-                         desiredSize:(WUSTileSize)desiredSize ACTIVATOR;
 + (instancetype)make ACTIVATOR;
-+ (WUSSecondaryTile*)makeTile:(NSString*)tileId
-                    shortName:(NSString*)shortName
-                  displayName:(NSString*)displayName
-                    arguments:(NSString*)arguments
-                  tileOptions:(WUSTileOptions)tileOptions
-                logoReference:(WFUri*)logoReference ACTIVATOR;
-+ (WUSSecondaryTile*)makeWideTile:(NSString*)tileId
-                        shortName:(NSString*)shortName
-                      displayName:(NSString*)displayName
-                        arguments:(NSString*)arguments
-                      tileOptions:(WUSTileOptions)tileOptions
-                    logoReference:(WFUri*)logoReference
-                wideLogoReference:(WFUri*)wideLogoReference ACTIVATOR;
-+ (WUSSecondaryTile*)makeWithId:(NSString*)tileId ACTIVATOR;
++ (WUSSecondaryTile*)makeTile:(NSString *)tileId shortName:(NSString *)shortName displayName:(NSString *)displayName arguments:(NSString *)arguments tileOptions:(WUSTileOptions)tileOptions logoReference:(WFUri*)logoReference ACTIVATOR;
++ (WUSSecondaryTile*)makeWideTile:(NSString *)tileId shortName:(NSString *)shortName displayName:(NSString *)displayName arguments:(NSString *)arguments tileOptions:(WUSTileOptions)tileOptions logoReference:(WFUri*)logoReference wideLogoReference:(WFUri*)wideLogoReference ACTIVATOR;
++ (WUSSecondaryTile*)makeWithId:(NSString *)tileId ACTIVATOR;
++ (WUSSecondaryTile*)makeMinimalTile:(NSString *)tileId displayName:(NSString *)displayName arguments:(NSString *)arguments square150x150Logo:(WFUri*)square150x150Logo desiredSize:(WUSTileSize)desiredSize ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* shortName;
+@property (retain) NSString * shortName;
 @property (retain) WFUri* logo;
-@property (retain) NSString* tileId;
+@property (retain) NSString * tileId;
 @property BOOL lockScreenDisplayBadgeAndTileText;
 @property (retain) WFUri* lockScreenBadgeLogo;
-@property (retain) NSString* arguments;
+@property (retain) NSString * arguments;
 @property WUSForegroundText foregroundText;
-@property (retain) NSString* displayName;
+@property (retain) NSString * displayName;
 @property (retain) WUColor* backgroundColor;
 @property (retain) WFUri* wideLogo;
 @property WUSTileOptions tileOptions;
 @property (retain) WFUri* smallLogo;
 @property BOOL roamingEnabled;
-@property (retain) NSString* phoneticName;
+@property (retain) NSString * phoneticName;
 @property (readonly) WUSSecondaryTileVisualElements* visualElements;
-- (EventRegistrationToken)addVisualElementsRequestedEvent:(void (^)(WUSSecondaryTile*, WUSVisualElementsRequestedEventArgs*))del;
+- (EventRegistrationToken)addVisualElementsRequestedEvent:(void(^)(WUSSecondaryTile*, WUSVisualElementsRequestedEventArgs*))del;
 - (void)removeVisualElementsRequestedEvent:(EventRegistrationToken)tok;
 - (void)requestCreateAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)requestCreateAsyncWithPoint:(WFPoint*)invocationPoint success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)requestCreateAsyncWithRect:(WFRect*)selection success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-- (void)requestCreateAsyncWithRectAndPlacement:(WFRect*)selection
-                            preferredPlacement:(WUPPlacement)preferredPlacement
-                                       success:(void (^)(BOOL))success
-                                       failure:(void (^)(NSError*))failure;
+- (void)requestCreateAsyncWithRectAndPlacement:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)requestDeleteAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)requestDeleteAsyncWithPoint:(WFPoint*)invocationPoint success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)requestDeleteAsyncWithRect:(WFRect*)selection success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-- (void)requestDeleteAsyncWithRectAndPlacement:(WFRect*)selection
-                            preferredPlacement:(WUPPlacement)preferredPlacement
-                                       success:(void (^)(BOOL))success
-                                       failure:(void (^)(NSError*))failure;
+- (void)requestDeleteAsyncWithRectAndPlacement:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)updateAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -163,7 +197,7 @@ WINRT_EXPORT
 #ifndef __WUSVisualElementsRequestedEventArgs_DEFINED__
 #define __WUSVisualElementsRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
 @interface WUSVisualElementsRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -177,7 +211,7 @@ WINRT_EXPORT
 #ifndef __WUSVisualElementsRequest_DEFINED__
 #define __WUSVisualElementsRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
 @interface WUSVisualElementsRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -194,7 +228,7 @@ WINRT_EXPORT
 #ifndef __WUSVisualElementsRequestDeferral_DEFINED__
 #define __WUSVisualElementsRequestDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
 @interface WUSVisualElementsRequestDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -203,3 +237,4 @@ WINRT_EXPORT
 @end
 
 #endif // __WUSVisualElementsRequestDeferral_DEFINED__
+

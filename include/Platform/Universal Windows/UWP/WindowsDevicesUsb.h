@@ -19,20 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_USB_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_USB_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Devices_Usb.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WDUUsbControlRequestType, WDUUsbSetupPacket, WDUUsbDeviceClass, WDUUsbDeviceClasses, WDUUsbDevice, WDUUsbInterface,
-    WDUUsbDeviceDescriptor, WDUUsbConfiguration, WDUUsbDescriptor, WDUUsbConfigurationDescriptor, WDUUsbInterfaceDescriptor,
-    WDUUsbBulkInEndpointDescriptor, WDUUsbInterruptInEndpointDescriptor, WDUUsbBulkOutEndpointDescriptor,
-    WDUUsbInterruptOutEndpointDescriptor, WDUUsbEndpointDescriptor, WDUUsbInterruptInEventArgs, WDUUsbInterruptInPipe, WDUUsbBulkInPipe,
-    WDUUsbBulkOutPipe, WDUUsbInterruptOutPipe, WDUUsbInterfaceSetting;
-@protocol WDUIUsbControlRequestType
-, WDUIUsbSetupPacketFactory, WDUIUsbSetupPacket, WDUIUsbDeviceClass, WDUIUsbDeviceClassesStatics, WDUIUsbDeviceClasses,
-    WDUIUsbDeviceStatics, WDUIUsbDeviceDescriptor, WDUIUsbConfigurationDescriptor, WDUIUsbConfigurationDescriptorStatics,
-    WDUIUsbInterfaceDescriptor, WDUIUsbInterfaceDescriptorStatics, WDUIUsbEndpointDescriptor, WDUIUsbEndpointDescriptorStatics,
-    WDUIUsbDescriptor, WDUIUsbInterruptInEventArgs, WDUIUsbBulkInPipe, WDUIUsbInterruptInPipe, WDUIUsbBulkOutPipe, WDUIUsbInterruptOutPipe,
-    WDUIUsbConfiguration, WDUIUsbInterface, WDUIUsbInterfaceSetting, WDUIUsbBulkInEndpointDescriptor, WDUIUsbInterruptInEndpointDescriptor,
-    WDUIUsbBulkOutEndpointDescriptor, WDUIUsbInterruptOutEndpointDescriptor, WDUIUsbDevice;
+@class WDUUsbControlRequestType, WDUUsbSetupPacket, WDUUsbDeviceClass, WDUUsbDeviceClasses, WDUUsbDevice, WDUUsbInterface, WDUUsbDeviceDescriptor, WDUUsbConfiguration, WDUUsbDescriptor, WDUUsbConfigurationDescriptor, WDUUsbInterfaceDescriptor, WDUUsbBulkInEndpointDescriptor, WDUUsbInterruptInEndpointDescriptor, WDUUsbBulkOutEndpointDescriptor, WDUUsbInterruptOutEndpointDescriptor, WDUUsbEndpointDescriptor, WDUUsbInterruptInEventArgs, WDUUsbInterruptInPipe, WDUUsbBulkInPipe, WDUUsbBulkOutPipe, WDUUsbInterruptOutPipe, WDUUsbInterfaceSetting;
+@protocol WDUIUsbControlRequestType, WDUIUsbSetupPacketFactory, WDUIUsbSetupPacket, WDUIUsbDeviceClass, WDUIUsbDeviceClassesStatics, WDUIUsbDeviceClasses, WDUIUsbDeviceStatics, WDUIUsbDeviceDescriptor, WDUIUsbConfigurationDescriptor, WDUIUsbConfigurationDescriptorStatics, WDUIUsbInterfaceDescriptor, WDUIUsbInterfaceDescriptorStatics, WDUIUsbEndpointDescriptor, WDUIUsbEndpointDescriptorStatics, WDUIUsbDescriptor, WDUIUsbInterruptInEventArgs, WDUIUsbBulkInPipe, WDUIUsbInterruptInPipe, WDUIUsbBulkOutPipe, WDUIUsbInterruptOutPipe, WDUIUsbConfiguration, WDUIUsbInterface, WDUIUsbInterfaceSetting, WDUIUsbBulkInEndpointDescriptor, WDUIUsbInterruptInEndpointDescriptor, WDUIUsbBulkOutEndpointDescriptor, WDUIUsbInterruptOutEndpointDescriptor, WDUIUsbDevice;
 
 // Windows.Devices.Usb.UsbTransferDirection
 enum _WDUUsbTransferDirection {
@@ -95,7 +91,7 @@ typedef unsigned WDUUsbWriteOptions;
 #ifndef __WDUUsbControlRequestType_DEFINED__
 #define __WDUUsbControlRequestType_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_USB_EXPORT
 @interface WDUUsbControlRequestType : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -113,7 +109,7 @@ WINRT_EXPORT
 #ifndef __WDUUsbSetupPacket_DEFINED__
 #define __WDUUsbSetupPacket_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_USB_EXPORT
 @interface WDUUsbSetupPacket : RTObject
 + (WDUUsbSetupPacket*)makeWithEightByteBuffer:(RTObject<WSSIBuffer>*)eightByteBuffer ACTIVATOR;
 + (instancetype)make ACTIVATOR;
@@ -133,7 +129,7 @@ WINRT_EXPORT
 #ifndef __WDUUsbDeviceClass_DEFINED__
 #define __WDUUsbDeviceClass_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_USB_EXPORT
 @interface WDUUsbDeviceClass : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -150,7 +146,7 @@ WINRT_EXPORT
 #ifndef __WDUUsbDeviceClasses_DEFINED__
 #define __WDUUsbDeviceClasses_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_USB_EXPORT
 @interface WDUUsbDeviceClasses : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -176,39 +172,33 @@ WINRT_EXPORT
 - (void)close;
 @end
 
+OBJCUWP_WINDOWS_DEVICES_USB_EXPORT
+@interface WFIClosable : RTObject <WFIClosable>
+@end
+
 #endif // __WFIClosable_DEFINED__
 
 // Windows.Devices.Usb.UsbDevice
 #ifndef __WDUUsbDevice_DEFINED__
 #define __WDUUsbDevice_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_USB_EXPORT
 @interface WDUUsbDevice : RTObject <WFIClosable>
-+ (NSString*)getDeviceSelector:(unsigned int)vendorId productId:(unsigned int)productId winUsbInterfaceClass:(WFGUID*)winUsbInterfaceClass;
-+ (NSString*)getDeviceSelectorGuidOnly:(WFGUID*)winUsbInterfaceClass;
-+ (NSString*)getDeviceSelectorVidPidOnly:(unsigned int)vendorId productId:(unsigned int)productId;
-+ (NSString*)getDeviceClassSelector:(WDUUsbDeviceClass*)usbClass;
-+ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDUUsbDevice*))success failure:(void (^)(NSError*))failure;
++ (NSString *)getDeviceSelector:(unsigned int)vendorId productId:(unsigned int)productId winUsbInterfaceClass:(WFGUID*)winUsbInterfaceClass;
++ (NSString *)getDeviceSelectorGuidOnly:(WFGUID*)winUsbInterfaceClass;
++ (NSString *)getDeviceSelectorVidPidOnly:(unsigned int)vendorId productId:(unsigned int)productId;
++ (NSString *)getDeviceClassSelector:(WDUUsbDeviceClass*)usbClass;
++ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDUUsbDevice*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDUUsbConfiguration* configuration;
 @property (readonly) WDUUsbInterface* defaultInterface;
 @property (readonly) WDUUsbDeviceDescriptor* deviceDescriptor;
-- (void)sendControlOutTransferAsync:(WDUUsbSetupPacket*)setupPacket
-                             buffer:(RTObject<WSSIBuffer>*)buffer
-                            success:(void (^)(unsigned int))success
-                            failure:(void (^)(NSError*))failure;
-- (void)sendControlOutTransferAsyncNoBuffer:(WDUUsbSetupPacket*)setupPacket
-                                    success:(void (^)(unsigned int))success
-                                    failure:(void (^)(NSError*))failure;
-- (void)sendControlInTransferAsync:(WDUUsbSetupPacket*)setupPacket
-                            buffer:(RTObject<WSSIBuffer>*)buffer
-                           success:(void (^)(RTObject<WSSIBuffer>*))success
-                           failure:(void (^)(NSError*))failure;
-- (void)sendControlInTransferAsyncNoBuffer:(WDUUsbSetupPacket*)setupPacket
-                                   success:(void (^)(RTObject<WSSIBuffer>*))success
-                                   failure:(void (^)(NSError*))failure;
+- (void)sendControlOutTransferAsync:(WDUUsbSetupPacket*)setupPacket buffer:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success failure:(void (^)(NSError*))failure;
+- (void)sendControlOutTransferAsyncNoBuffer:(WDUUsbSetupPacket*)setupPacket success:(void (^)(unsigned int))success failure:(void (^)(NSError*))failure;
+- (void)sendControlInTransferAsync:(WDUUsbSetupPacket*)setupPacket buffer:(RTObject<WSSIBuffer>*)buffer success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
+- (void)sendControlInTransferAsyncNoBuffer:(WDUUsbSetupPacket*)setupPacket success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
 - (void)close;
 @end
 
@@ -218,7 +208,7 @@ WINRT_EXPORT
 #ifndef __WDUUsbInterface_DEFINED__
 #define __WDUUsbInterface_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_USB_EXPORT
 @interface WDUUsbInterface : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -238,7 +228,7 @@ WINRT_EXPORT
 #ifndef __WDUUsbDeviceDescriptor_DEFINED__
 #define __WDUUsbDeviceDescriptor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_USB_EXPORT
 @interface WDUUsbDeviceDescriptor : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -257,7 +247,7 @@ WINRT_EXPORT
 #ifndef __WDUUsbConfiguration_DEFINED__
 #define __WDUUsbConfiguration_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_USB_EXPORT
 @interface WDUUsbConfiguration : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -273,7 +263,7 @@ WINRT_EXPORT
 #ifndef __WDUUsbDescriptor_DEFINED__
 #define __WDUUsbDescriptor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_USB_EXPORT
 @interface WDUUsbDescriptor : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -289,7 +279,7 @@ WINRT_EXPORT
 #ifndef __WDUUsbConfigurationDescriptor_DEFINED__
 #define __WDUUsbConfigurationDescriptor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_USB_EXPORT
 @interface WDUUsbConfigurationDescriptor : RTObject
 + (BOOL)tryParse:(WDUUsbDescriptor*)descriptor parsed:(WDUUsbConfigurationDescriptor**)parsed;
 + (WDUUsbConfigurationDescriptor*)parse:(WDUUsbDescriptor*)descriptor;
@@ -308,7 +298,7 @@ WINRT_EXPORT
 #ifndef __WDUUsbInterfaceDescriptor_DEFINED__
 #define __WDUUsbInterfaceDescriptor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_USB_EXPORT
 @interface WDUUsbInterfaceDescriptor : RTObject
 + (BOOL)tryParse:(WDUUsbDescriptor*)descriptor parsed:(WDUUsbInterfaceDescriptor**)parsed;
 + (WDUUsbInterfaceDescriptor*)parse:(WDUUsbDescriptor*)descriptor;
@@ -328,7 +318,7 @@ WINRT_EXPORT
 #ifndef __WDUUsbBulkInEndpointDescriptor_DEFINED__
 #define __WDUUsbBulkInEndpointDescriptor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_USB_EXPORT
 @interface WDUUsbBulkInEndpointDescriptor : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -344,7 +334,7 @@ WINRT_EXPORT
 #ifndef __WDUUsbInterruptInEndpointDescriptor_DEFINED__
 #define __WDUUsbInterruptInEndpointDescriptor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_USB_EXPORT
 @interface WDUUsbInterruptInEndpointDescriptor : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -361,7 +351,7 @@ WINRT_EXPORT
 #ifndef __WDUUsbBulkOutEndpointDescriptor_DEFINED__
 #define __WDUUsbBulkOutEndpointDescriptor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_USB_EXPORT
 @interface WDUUsbBulkOutEndpointDescriptor : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -377,7 +367,7 @@ WINRT_EXPORT
 #ifndef __WDUUsbInterruptOutEndpointDescriptor_DEFINED__
 #define __WDUUsbInterruptOutEndpointDescriptor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_USB_EXPORT
 @interface WDUUsbInterruptOutEndpointDescriptor : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -394,7 +384,7 @@ WINRT_EXPORT
 #ifndef __WDUUsbEndpointDescriptor_DEFINED__
 #define __WDUUsbEndpointDescriptor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_USB_EXPORT
 @interface WDUUsbEndpointDescriptor : RTObject
 + (BOOL)tryParse:(WDUUsbDescriptor*)descriptor parsed:(WDUUsbEndpointDescriptor**)parsed;
 + (WDUUsbEndpointDescriptor*)parse:(WDUUsbDescriptor*)descriptor;
@@ -416,7 +406,7 @@ WINRT_EXPORT
 #ifndef __WDUUsbInterruptInEventArgs_DEFINED__
 #define __WDUUsbInterruptInEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_USB_EXPORT
 @interface WDUUsbInterruptInEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -430,13 +420,13 @@ WINRT_EXPORT
 #ifndef __WDUUsbInterruptInPipe_DEFINED__
 #define __WDUUsbInterruptInPipe_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_USB_EXPORT
 @interface WDUUsbInterruptInPipe : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDUUsbInterruptInEndpointDescriptor* endpointDescriptor;
-- (EventRegistrationToken)addDataReceivedEvent:(void (^)(WDUUsbInterruptInPipe*, WDUUsbInterruptInEventArgs*))del;
+- (EventRegistrationToken)addDataReceivedEvent:(void(^)(WDUUsbInterruptInPipe*, WDUUsbInterruptInEventArgs*))del;
 - (void)removeDataReceivedEvent:(EventRegistrationToken)tok;
 - (RTObject<WFIAsyncAction>*)clearStallAsync;
 @end
@@ -447,7 +437,7 @@ WINRT_EXPORT
 #ifndef __WDUUsbBulkInPipe_DEFINED__
 #define __WDUUsbBulkInPipe_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_USB_EXPORT
 @interface WDUUsbBulkInPipe : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -466,7 +456,7 @@ WINRT_EXPORT
 #ifndef __WDUUsbBulkOutPipe_DEFINED__
 #define __WDUUsbBulkOutPipe_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_USB_EXPORT
 @interface WDUUsbBulkOutPipe : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -483,7 +473,7 @@ WINRT_EXPORT
 #ifndef __WDUUsbInterruptOutPipe_DEFINED__
 #define __WDUUsbInterruptOutPipe_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_USB_EXPORT
 @interface WDUUsbInterruptOutPipe : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -500,7 +490,7 @@ WINRT_EXPORT
 #ifndef __WDUUsbInterfaceSetting_DEFINED__
 #define __WDUUsbInterfaceSetting_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_USB_EXPORT
 @interface WDUUsbInterfaceSetting : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -516,3 +506,4 @@ WINRT_EXPORT
 @end
 
 #endif // __WDUUsbInterfaceSetting_DEFINED__
+

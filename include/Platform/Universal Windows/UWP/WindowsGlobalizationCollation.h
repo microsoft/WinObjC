@@ -19,11 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_GLOBALIZATION_COLLATION_EXPORT
+#define OBJCUWP_WINDOWS_GLOBALIZATION_COLLATION_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Globalization_Collation.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WGCCharacterGrouping, WGCCharacterGroupings;
-@protocol WGCICharacterGrouping
-, WGCICharacterGroupings;
+@protocol WGCICharacterGrouping, WGCICharacterGroupings;
 
 #import <Foundation/Foundation.h>
 
@@ -31,13 +36,13 @@
 #ifndef __WGCCharacterGrouping_DEFINED__
 #define __WGCCharacterGrouping_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GLOBALIZATION_COLLATION_EXPORT
 @interface WGCCharacterGrouping : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* first;
-@property (readonly) NSString* label;
+@property (readonly) NSString * first;
+@property (readonly) NSString * label;
 @end
 
 #endif // __WGCCharacterGrouping_DEFINED__
@@ -46,7 +51,7 @@ WINRT_EXPORT
 #ifndef __WGCCharacterGroupings_DEFINED__
 #define __WGCCharacterGroupings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GLOBALIZATION_COLLATION_EXPORT
 @interface WGCCharacterGroupings : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -55,9 +60,12 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
 
-- (NSString*)lookup:(NSString*)text;
+- (NSString *)lookup:(NSString *)text;
 @end
 
 #endif // __WGCCharacterGroupings_DEFINED__
+

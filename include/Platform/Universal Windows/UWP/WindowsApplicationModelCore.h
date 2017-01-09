@@ -19,15 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WACAppListEntry, WACCoreApplication, WACCoreApplicationView, WACCoreApplicationViewTitleBar, WACUnhandledErrorDetectedEventArgs,
-    WACHostedViewClosingEventArgs, WACUnhandledError;
-@protocol WACIAppListEntry
-, WACIFrameworkView, WACIFrameworkViewSource, WACICoreApplication, WACICoreApplicationUseCount, WACICoreApplicationExit,
-    WACICoreImmersiveApplication, WACICoreImmersiveApplication2, WACICoreImmersiveApplication3, WACICoreApplicationUnhandledError,
-    WACICoreApplicationView, WACICoreApplicationView2, WACICoreApplicationView3, WACIHostedViewClosingEventArgs,
-    WACICoreApplicationViewTitleBar, WACIUnhandledErrorDetectedEventArgs, WACIUnhandledError;
+@class WACAppListEntry, WACCoreApplication, WACCoreApplicationView, WACCoreApplicationViewTitleBar, WACUnhandledErrorDetectedEventArgs, WACHostedViewClosingEventArgs, WACUnhandledError;
+@protocol WACIAppListEntry, WACIFrameworkView, WACIFrameworkViewSource, WACICoreApplication, WACICoreApplicationUseCount, WACICoreApplicationExit, WACICoreApplication2, WACICoreImmersiveApplication, WACICoreImmersiveApplication2, WACICoreImmersiveApplication3, WACICoreApplicationUnhandledError, WACICoreApplicationView, WACICoreApplicationView2, WACICoreApplicationView3, WACIHostedViewClosingEventArgs, WACICoreApplicationViewTitleBar, WACIUnhandledErrorDetectedEventArgs, WACIUnhandledError;
 
 #include "WindowsFoundationCollections.h"
 #include "WindowsApplicationModel.h"
@@ -44,9 +45,13 @@
 @protocol WACIFrameworkView
 - (void)Initialize:(WACCoreApplicationView*)applicationView;
 - (void)setWindow:(WUCCoreWindow*)window;
-- (void)Load:(NSString*)entryPoint;
+- (void)Load:(NSString *)entryPoint;
 - (void)run;
 - (void)uninitialize;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WACIFrameworkView : RTObject <WACIFrameworkView>
 @end
 
 #endif // __WACIFrameworkView_DEFINED__
@@ -59,6 +64,10 @@
 - (RTObject<WACIFrameworkView>*)createView;
 @end
 
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WACIFrameworkViewSource : RTObject <WACIFrameworkViewSource>
+@end
+
 #endif // __WACIFrameworkViewSource_DEFINED__
 
 // Windows.ApplicationModel.Core.ICoreApplicationUnhandledError
@@ -66,8 +75,12 @@
 #define __WACICoreApplicationUnhandledError_DEFINED__
 
 @protocol WACICoreApplicationUnhandledError
-- (EventRegistrationToken)addUnhandledErrorDetectedEvent:(void (^)(RTObject*, WACUnhandledErrorDetectedEventArgs*))del;
+- (EventRegistrationToken)addUnhandledErrorDetectedEvent:(void(^)(RTObject*, WACUnhandledErrorDetectedEventArgs*))del;
 - (void)removeUnhandledErrorDetectedEvent:(EventRegistrationToken)tok;
+@end
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WACICoreApplicationUnhandledError : RTObject <WACICoreApplicationUnhandledError>
 @end
 
 #endif // __WACICoreApplicationUnhandledError_DEFINED__
@@ -76,7 +89,7 @@
 #ifndef __WACAppListEntry_DEFINED__
 #define __WACAppListEntry_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WACAppListEntry : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -91,28 +104,35 @@ WINRT_EXPORT
 #ifndef __WACCoreApplication_DEFINED__
 #define __WACCoreApplication_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WACCoreApplication : RTObject
 + (void)exit;
++ (WACCoreApplicationView*)createNewView:(NSString *)runtimeType entryPoint:(NSString *)entryPoint;
 + (void)incrementApplicationUseCount;
 + (void)decrementApplicationUseCount;
++ (void)enablePrelaunch:(BOOL)value;
 + (WACCoreApplicationView*)createNewViewFromMainView;
-+ (WACCoreApplicationView*)createNewView:(NSString*)runtimeType entryPoint:(NSString*)entryPoint;
 + (WACCoreApplicationView*)createNewViewWithViewSource:(RTObject<WACIFrameworkViewSource>*)viewSource;
 + (WACCoreApplicationView*)getCurrentView;
 + (void)run:(RTObject<WACIFrameworkViewSource>*)viewSource;
 + (void)runWithActivationFactories:(RTObject<WFIGetActivationFactory>*)activationFactoryCallback;
-+ (NSString*)id;
++ (NSString *)id;
 + (RTObject<WFCIPropertySet>*)properties;
 + (WACCoreApplicationView*)mainView;
 + (NSArray* /* WACCoreApplicationView* */)views;
-+ (EventRegistrationToken)addUnhandledErrorDetectedEvent:(void (^)(RTObject*, WACUnhandledErrorDetectedEventArgs*))del;
++ (EventRegistrationToken)addUnhandledErrorDetectedEvent:(void(^)(RTObject*, WACUnhandledErrorDetectedEventArgs*))del;
 + (void)removeUnhandledErrorDetectedEvent:(EventRegistrationToken)tok;
-+ (EventRegistrationToken)addExitingEvent:(void (^)(RTObject*, RTObject*))del;
++ (EventRegistrationToken)addExitingEvent:(void(^)(RTObject*, RTObject*))del;
 + (void)removeExitingEvent:(EventRegistrationToken)tok;
-+ (EventRegistrationToken)addResumingEvent:(void (^)(RTObject*, RTObject*))del;
++ (EventRegistrationToken)addBackgroundActivatedEvent:(void(^)(RTObject*, WAABackgroundActivatedEventArgs*))del;
++ (void)removeBackgroundActivatedEvent:(EventRegistrationToken)tok;
++ (EventRegistrationToken)addEnteredBackgroundEvent:(void(^)(RTObject*, WAEnteredBackgroundEventArgs*))del;
++ (void)removeEnteredBackgroundEvent:(EventRegistrationToken)tok;
++ (EventRegistrationToken)addLeavingBackgroundEvent:(void(^)(RTObject*, WALeavingBackgroundEventArgs*))del;
++ (void)removeLeavingBackgroundEvent:(EventRegistrationToken)tok;
++ (EventRegistrationToken)addResumingEvent:(void(^)(RTObject*, RTObject*))del;
 + (void)removeResumingEvent:(EventRegistrationToken)tok;
-+ (EventRegistrationToken)addSuspendingEvent:(void (^)(RTObject*, WASuspendingEventArgs*))del;
++ (EventRegistrationToken)addSuspendingEvent:(void(^)(RTObject*, WASuspendingEventArgs*))del;
 + (void)removeSuspendingEvent:(EventRegistrationToken)tok;
 @end
 
@@ -122,7 +142,7 @@ WINRT_EXPORT
 #ifndef __WACCoreApplicationView_DEFINED__
 #define __WACCoreApplicationView_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WACCoreApplicationView : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -133,9 +153,9 @@ WINRT_EXPORT
 @property (readonly) WUCCoreDispatcher* dispatcher;
 @property (readonly) BOOL isComponent;
 @property (readonly) WACCoreApplicationViewTitleBar* titleBar;
-- (EventRegistrationToken)addActivatedEvent:(void (^)(WACCoreApplicationView*, RTObject<WAAIActivatedEventArgs>*))del;
+- (EventRegistrationToken)addActivatedEvent:(void(^)(WACCoreApplicationView*, RTObject<WAAIActivatedEventArgs>*))del;
 - (void)removeActivatedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addHostedViewClosingEvent:(void (^)(WACCoreApplicationView*, WACHostedViewClosingEventArgs*))del;
+- (EventRegistrationToken)addHostedViewClosingEvent:(void(^)(WACCoreApplicationView*, WACHostedViewClosingEventArgs*))del;
 - (void)removeHostedViewClosingEvent:(EventRegistrationToken)tok;
 @end
 
@@ -145,7 +165,7 @@ WINRT_EXPORT
 #ifndef __WACCoreApplicationViewTitleBar_DEFINED__
 #define __WACCoreApplicationViewTitleBar_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WACCoreApplicationViewTitleBar : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -155,9 +175,9 @@ WINRT_EXPORT
 @property (readonly) BOOL isVisible;
 @property (readonly) double systemOverlayLeftInset;
 @property (readonly) double systemOverlayRightInset;
-- (EventRegistrationToken)addIsVisibleChangedEvent:(void (^)(WACCoreApplicationViewTitleBar*, RTObject*))del;
+- (EventRegistrationToken)addIsVisibleChangedEvent:(void(^)(WACCoreApplicationViewTitleBar*, RTObject*))del;
 - (void)removeIsVisibleChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addLayoutMetricsChangedEvent:(void (^)(WACCoreApplicationViewTitleBar*, RTObject*))del;
+- (EventRegistrationToken)addLayoutMetricsChangedEvent:(void(^)(WACCoreApplicationViewTitleBar*, RTObject*))del;
 - (void)removeLayoutMetricsChangedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -167,7 +187,7 @@ WINRT_EXPORT
 #ifndef __WACUnhandledErrorDetectedEventArgs_DEFINED__
 #define __WACUnhandledErrorDetectedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WACUnhandledErrorDetectedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -181,7 +201,7 @@ WINRT_EXPORT
 #ifndef __WACHostedViewClosingEventArgs_DEFINED__
 #define __WACHostedViewClosingEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WACHostedViewClosingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -195,7 +215,7 @@ WINRT_EXPORT
 #ifndef __WACUnhandledError_DEFINED__
 #define __WACUnhandledError_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WACUnhandledError : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -205,3 +225,4 @@ WINRT_EXPORT
 @end
 
 #endif // __WACUnhandledError_DEFINED__
+

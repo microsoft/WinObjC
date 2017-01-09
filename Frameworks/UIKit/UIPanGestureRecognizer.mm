@@ -14,35 +14,28 @@
 //
 //******************************************************************************
 
-#import <vector>
 #import "Starboard.h"
+
+#import <UIKit/UIGestureRecognizerDelegate.h>
+#import <UIKit/UIGestureRecognizerSubclass.h>
+#import <UIKit/UIPanGestureRecognizer.h>
+#import <UIKit/UITouch.h>
+#import <UIKit/UIWindow.h>
+
 #import <Foundation/NSMutableDictionary.h>
 #import <Foundation/NSValue.h>
 #import <Foundation/NSString.h>
-#import <UIKit/UIPanGestureRecognizer.h>
-#import <UIKit/UIGestureRecognizerSubclass.h>
-#import <UIKit/UITouch.h>
+
 #import "UIGestureRecognizerInternal.h"
 #import "LoggingNative.h"
 #import "UIScrollViewInternal.h"
 #import "UWP/WindowsUIInput.h"
 #import "UITouchInternal.h"
+#import "UIPanGestureRecognizerInternal.h"
+
+#import <vector>
 
 static const wchar_t* TAG = L"UIPanGestureRecognizer";
-
-// So we can allocate explicitly because otherwise constructors aren't called:
-struct TouchInfo {
-    UITouch* touch;
-    CGPoint startPos, lastPos;
-    double startTime;
-};
-
-struct Private {
-    std::vector<TouchInfo> touches;
-    CGPoint currentVelocity;
-    CGPoint lastCenter;
-    CGPoint currentTranslation;
-};
 
 #define VELOCITY_THRESHOLD 50.0f
 NSArray* curPanList = nil;
@@ -276,10 +269,15 @@ static void deleteTouch(UITouch* touch, std::vector<TouchInfo>& touches) {
 
     if (_state == UIGestureRecognizerStatePossible && _priv->touches.size() >= _minimumNumberOfTouches &&
         _priv->touches.size() <= _maximumNumberOfTouches) {
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-method-access"
+// TODO: File bug
         if ([_delegate respondsToSelector:@selector(_gestureRecognizerTouchesReached:)]) {
             [_delegate _gestureRecognizerTouchesReached:self];
         }
     }
+#pragma clang diagnostic pop
 
     numTouchesChanged(self);
 }
@@ -424,11 +422,12 @@ static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
     return _touchedView;
 }
 
-/**
- @Status Interoperable
-*/
 - (void)_setDragSlack:(float)slack {
     _dragSlack = slack;
+}
+
+- (float) _getDragSlack {
+    return _dragSlack;
 }
 
 /**
@@ -504,7 +503,7 @@ static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
     }
 }
 
-+ (BOOL)_fireGestures:(id)gestures {
++ (BOOL)_fireGestures:(id)gestures shouldCancelTouches:(BOOL&)shouldCancelTouches {
     bool didRecognize = false;
     int count = [gestures count];
 
@@ -530,6 +529,7 @@ static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
                     curgesture->_state = UIGestureRecognizerStateChanged;
                 }
                 [curgesture _fire];
+                shouldCancelTouches |= curgesture.cancelsTouchesInView;
                 didRecognize = true;
             }
         }
@@ -538,6 +538,10 @@ static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
     curPanList = nil;
 
     return didRecognize;
+}
+
+- (const std::vector<TouchInfo>&)_getTouches {
+    return self->_priv->touches;
 }
 
 @end

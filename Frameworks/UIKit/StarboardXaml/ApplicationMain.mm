@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,6 +13,8 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+
+#import <UIKit/UIWindow.h>
 
 #include <COMIncludes.h>
 #import "ApplicationMain.h"
@@ -38,7 +40,9 @@
 #import <CACompositorClient.h>
 #import <UIApplicationInternal.h>
 #import <MainDispatcher.h>
+#import <_UIPopupViewController.h>
 #import <UWP/WindowsApplicationModelActivation.h>
+#import <UWP/WindowsUIXamlControlsPrimitives.h>
 
 using namespace Microsoft::WRL;
 
@@ -81,15 +85,23 @@ int ApplicationMainStart(const char* principalName,
         };
         activationArgument = toastAction;
     } else if (activationType == ActivationTypeVoiceCommand) {
-        WMSSpeechRecognitionResult* result = [WMSSpeechRecognitionResult createWith:activationArg];
+        WMSSpeechRecognitionResult* result = [WMSSpeechRecognitionResult createWith:(IInspectable*)activationArg];
         activationArgument = result;
     } else if (activationType == ActivationTypeProtocol) {
-        WFUri* uri = [WFUri createWith:activationArg];
+        WFUri* uri = [WFUri createWith:(IInspectable*)activationArg];
         activationArgument = uri;
+    } else if (activationType == ActivationTypeFile) {
+        WAAFileActivatedEventArgs* activatedEventArgs = [WAAFileActivatedEventArgs createWith:activationArg];
+        activationArgument = activatedEventArgs;
     }
 
     WOCDisplayMode* displayMode = [UIApplication displayMode];
     [displayMode _setWindowSize:CGSizeMake(windowWidth, windowHeight)];
+
+    if (activationType == ActivationTypeLibrary) {
+        // In library mode, honor app's native display size
+        [displayMode setDisplayPreset:WOCDisplayPresetNative];
+    }
 
     NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
 
@@ -144,7 +156,25 @@ int ApplicationMainStart(const char* principalName,
     [displayMode _updateDisplaySettings];
 
     UIApplicationMainInit(principalClassName, delegateClassName, defaultOrientation, (int)activationType, activationArgument);
-    ScheduleMainRunLoop();
+
+    if (activationType == ActivationTypeLibrary) {
+        // Create a top-level UIWindow with popup view controller, which will not normally be visible.
+        // If some other view controller tries to present to it, the popup view controller will make
+        // the desired UI visible inside a XAML Popup.
+        WFRect* appFrame = [[WXWindow current] bounds];
+        CGRect windowFrame = CGRectMake(0, 0, appFrame.width, appFrame.height);
+
+        UIWindow* keyWindow = [[UIWindow alloc] initWithFrame:windowFrame];
+        keyWindow.rootViewController = [[_UIPopupViewController alloc] init];
+        [keyWindow makeKeyWindow];
+    }
+
+    // The main runloop has to be started asynchronously, so we return as soon as possible from application activate.
+    // The apps can (and do) handle application launch delegate from the first tine NSRunloop run is called, and that can
+    // take a REALLY long time to complete, causing PLM to terminate us.  We were getting lucky in some cases and the app would launch.
+    // This will also fix the number of sporadic launch test failures that we have seen in the labs.
+
+    ScheduleMainRunLoopAsync();
 
     return 0;
 }

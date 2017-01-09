@@ -17,9 +17,8 @@
 #import <StubReturn.h>
 #import "Starboard.h"
 
-#import <unordered_map>
-
 #import "StringHelpers.h"
+#import "XamlControls.h"
 #import "XamlUtilities.h"
 
 #import "Foundation/NSBundle.h"
@@ -30,18 +29,32 @@
 #import "Foundation/NSString.h"
 #import "Foundation/NSValue.h"
 
-#import "UIKit/UIApplication.h"
-#import "UIKit/UIDevice.h"
-#import "UIKit/UINib.h"
-#import "UIKit/UIScreen.h"
-#import "UIKit/UIPopoverPresentationController.h"
-#import "UIKit/UIView.h"
-#import "UIKit/UIViewController.h"
+#import <UIKit/NSValue+UIKitAdditions.h>
+#import <UIKit/UIApplication.h>
+#import <UIKit/UIBarButtonItem.h>
+#import <UIKit/UIDevice.h>
+#import <UIKit/UINavigationController.h>
+#import <UIKit/UINavigationItem.h>
+#import <UIKit/UINib.h>
+#import <UIKit/UIScreen.h>
+#import <UIKit/UIPopoverPresentationController.h>
+#import <UIKit/UIStoryboardSegue.h>
+#import <UIKit/UIStoryboardSegueTemplate.h>
+#import <UIKit/UIStoryboardPushSegueTemplate.h>
+#import <UIKit/UITabBarController.h>
+#import <UIKit/UIView.h>
+#import <UIKit/UIViewController.h>
 
 #import "AutoLayout.h"
-#import "CACompositor.h"
-#import "CoreGraphics/CGContext.h"
-#import "CoreGraphics/CGAffineTransform.h"
+#import "StarboardXaml/DisplayProperties.h"
+
+#import <CoreGraphics/CGContext.h>
+#import <CoreGraphics/CGAffineTransform.h>
+
+#import <QuartzCore/CAAnimation.h>
+#import <QuartzCore/CABasicAnimation.h>
+#import <QuartzCore/CALayer.h>
+#import <QuartzCore/CoreAnimationFunctions.h>
 
 #import "UIApplicationInternal.h"
 #import "UIEmptyView.h"
@@ -54,6 +67,9 @@
 
 #import "UWP/WindowsUIXaml.h"
 #import "UWP/WindowsFoundation.h"
+
+#import <ErrorHandling.h>
+#import <unordered_map>
 
 extern BOOL g_presentingAnimated;
 
@@ -119,7 +135,7 @@ bool isSupportedControllerOrientation(UIViewController* controller, UIInterfaceO
     NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
     NSArray* orientations = 0;
 
-    if (GetCACompositor()->isTablet()) {
+    if (DisplayProperties::IsTablet()) {
         orientations = [infoDict objectForKey:@"UISupportedInterfaceOrientations~ipad"];
     }
     if (!orientations) {
@@ -159,7 +175,7 @@ bool isSupportedControllerOrientation(UIViewController* controller, UIInterfaceO
 UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* controller, UIInterfaceOrientation orientation) {
     NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
     NSArray* orientations = 0;
-    if (GetCACompositor()->isTablet()) {
+    if (DisplayProperties::IsTablet()) {
         orientations = [infoDict objectForKey:@"UISupportedInterfaceOrientations~ipad"];
     }
     if (!orientations) {
@@ -246,8 +262,11 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 }
 
 - (instancetype)initWithIdentifier:(NSString*)identifier {
-    _identifier = identifier;
-    self.translatesAutoresizingMaskIntoConstraints = NO;
+    if (self = [super init]) {
+        _identifier = identifier;
+        self.translatesAutoresizingMaskIntoConstraints = NO;
+    }
+
     return self;
 }
 
@@ -257,11 +276,13 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 }
 
 - (instancetype)initWithCoder:(NSCoder*)coder {
-    _UILayoutGuide* ret = [super initWithCoder:coder];
-    _identifier = [coder decodeObjectForKey:@"_UILayoutGuideIdentifier"];
-    self.translatesAutoresizingMaskIntoConstraints = NO;
-    assert(_identifier);
-    return ret;
+    if (self = [super initWithCoder:coder]) {
+        _identifier = [coder decodeObjectForKey:@"_UILayoutGuideIdentifier"];
+        self.translatesAutoresizingMaskIntoConstraints = NO;
+        assert(_identifier);
+    }
+
+    return self;
 }
 
 - (CGFloat)length {
@@ -339,7 +360,7 @@ class EventArgs : public ABI::Windows::UI::Xaml::Navigation::INavigationEventArg
     }
 };
 
-NSMutableDictionary *_pageMappings;
+NSMutableDictionary* _pageMappings;
 
 @implementation UIViewController : UIResponder
 
@@ -448,7 +469,7 @@ NSMutableDictionary *_pageMappings;
 }
 
 - (CGRect)_modalPresentationFormSheetFrame {
-    if (!GetCACompositor()->isTablet()) {
+    if (!DisplayProperties::IsTablet()) {
         // fullscreen on non-tablets
         return [[UIScreen mainScreen] applicationFrame];
     }
@@ -470,14 +491,10 @@ NSMutableDictionary *_pageMappings;
 
 - (BOOL)_hidesParent {
     UIModalPresentationStyle style = [self modalPresentationStyle];
-    if ((style == UIModalPresentationFormSheet || style == UIModalPresentationPopover) && GetCACompositor()->isTablet()) {
+    if ((style == UIModalPresentationFormSheet || style == UIModalPresentationPopover) && DisplayProperties::IsTablet()) {
         return NO;
     }
     return YES;
-}
-
-- (BOOL)_popoverManagesPresentation {
-    return priv->_popoverPresentationController && priv->_popoverPresentationController->_managesPresentation;
 }
 
 - (void)_setResizeToScreen:(BOOL)resize {
@@ -609,7 +626,7 @@ NSMutableDictionary *_pageMappings;
 }
 
 - (void)_setRotation:(UIInterfaceOrientation)orientation animated:(BOOL)animated {
-    if (([priv->view superview] == nil || [priv->view window] != [priv->view superview]) && !priv->_isRootView) {
+    if (([priv->view superview] == nil || (UIView*)[priv->view window] != [priv->view superview]) && !priv->_isRootView) {
         return;
     }
 
@@ -645,6 +662,9 @@ NSMutableDictionary *_pageMappings;
  @Status Caveat
  @Notes May not be fully implemented
 */
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-designated-initializers"
+// TODO: File bug
 - (instancetype)initWithCoder:(NSCoder*)coder {
     UIView* view = [coder decodeObjectForKey:@"UIView"];
     [self setView:view];
@@ -685,6 +705,7 @@ NSMutableDictionary *_pageMappings;
 
     return self;
 }
+#pragma clang diagnostic pop
 
 /**
  @Status Interoperable
@@ -884,7 +905,7 @@ NSMutableDictionary *_pageMappings;
     }
 
     if (priv->view == nil) {
-        CGRect frame = { 0.0f, 0.0f, GetCACompositor()->screenWidth(), GetCACompositor()->screenHeight() };
+        CGRect frame = { 0.0f, 0.0f, DisplayProperties::ScreenWidth(), DisplayProperties::ScreenHeight() };
 
         frame = [[UIScreen mainScreen] applicationFrame]; /** This is correct **/
         if ([self modalPresentationStyle] == UIModalPresentationFormSheet) {
@@ -902,7 +923,7 @@ NSMutableDictionary *_pageMappings;
 
 - (void)_doResizeToScreen {
     if ((priv->_resizeToScreen && priv->view && priv->_autoresize) || [self wantsFullScreenLayout]) {
-        CGRect frame = { 0.0f, 0.0f, GetCACompositor()->screenHeight(), GetCACompositor()->screenWidth() };
+        CGRect frame = { 0.0f, 0.0f, DisplayProperties::ScreenHeight(), DisplayProperties::ScreenWidth() };
 
         if ([self wantsFullScreenLayout]) {
             frame = [[UIScreen mainScreen] bounds];
@@ -929,7 +950,7 @@ NSMutableDictionary *_pageMappings;
 
         if (priv->view == nil) {
             TraceVerbose(TAG, L"Class name=%hs", object_getClassName(self));
-            CGRect frame = { 0.0f, 0.0f, GetCACompositor()->screenHeight(), GetCACompositor()->screenWidth() };
+            CGRect frame = { 0.0f, 0.0f, DisplayProperties::ScreenHeight(), DisplayProperties::ScreenWidth() };
 
             frame = [[UIScreen mainScreen] applicationFrame];
             if ([self modalPresentationStyle] == UIModalPresentationFormSheet) {
@@ -993,6 +1014,20 @@ NSMutableDictionary *_pageMappings;
 */
 - (UIPopoverPresentationController*)popoverPresentationController {
     return priv->_popoverPresentationController;
+}
+
+/**
+ @Status Interoperable
+*/
+- (UIPresentationController*)presentationController {
+    // The presentationController property is currently used only as an alias
+    // for the popoverPresentationController property.
+    if (priv->_popoverPresentationController) {
+        return priv->_popoverPresentationController;
+    }
+
+    // priv->_presentationController is always nil in current implementation.
+    return priv->_presentationController;
 }
 
 /**
@@ -1147,12 +1182,10 @@ NSMutableDictionary *_pageMappings;
         [controller view];
         controller->priv->_parentViewController = self;
         controller->priv->_presentingViewController = self;
-        controller->priv->_presentCompletionBlock = [[completion copy] autorelease];
+        controller->priv->_presentCompletionBlock.attach([completion copy]);
 
         if ([controller modalPresentationStyle] == UIModalPresentationPopover) {
-            [controller->priv->_popoverPresentationController release];
-            controller->priv->_popoverPresentationController =
-                [[UIPopoverPresentationController alloc] initWithPresentedViewController:controller presentingViewController:self];
+            controller->priv->_popoverPresentationController.attach([[UIPopoverPresentationController alloc] initWithPresentedViewController:controller presentingViewController:self]);
         }
 
         [controller performSelectorOnMainThread:@selector(_addToTop:) withObject:[NSNumber numberWithInt:animated] waitUntilDone:NO];
@@ -1214,9 +1247,13 @@ NSMutableDictionary *_pageMappings;
     [curController retain];
     [curController autorelease];
 
-    BOOL popoverPresented = [curController _popoverManagesPresentation];
+    // We maintain a popoverPresentationController instance whenever UIModalPresentationPopover is specified.
+    // However, in non-tablet operation mode, UIModalPresentationPopover should result in the presentation of
+    // a full screen modal instead. We check here if an actual popover has been presented to handle the
+    // dismiss (of a genuine popover or alternately a full screen modal) appropriately.
+    BOOL realPopoverPresented = [[curController popoverPresentationController] _isManagingPresentation];
 
-    if (!popoverPresented && curController->priv->_modalViewController) {
+    if (!realPopoverPresented && curController->priv->_modalViewController) {
         [curController dismissViewControllerAnimated:animated completion:completion];
     }
 
@@ -1232,19 +1269,18 @@ NSMutableDictionary *_pageMappings;
 
     curController->priv->_parentViewController = nil;
     curController->priv->_presentingViewController = nil;
+    curController->priv->_popoverPresentationController = nil;
 
     UIView* curView = [curController view];
 
     UIView* myView = [self view];
     [myView setHidden:FALSE];
 
-    if (popoverPresented) {
-        [curController->priv->_popoverPresentationController _dismissAnimated:animated completion:completion];
+    if (realPopoverPresented) {
+        [[curController popoverPresentationController] _dismissAnimated:animated completion:completion];
     } else if (animated) {
         CGPoint curPos;
-        id layer = [curView layer];
-
-        // TODO: Eradicate warning about multiple methods named 'position' found
+        CALayer* layer = [curView layer];
         curPos = [layer position];
 
         CABasicAnimation* animation = [CABasicAnimation animationWithKeyPath:@"position"];
@@ -1252,13 +1288,13 @@ NSMutableDictionary *_pageMappings;
 
         int orientation = findOrientation(self);
         if (orientation == UIInterfaceOrientationPortrait) {
-            curPos.y += GetCACompositor()->screenHeight();
+            curPos.y += DisplayProperties::ScreenHeight();
         } else if (orientation == UIInterfaceOrientationPortraitUpsideDown) {
-            curPos.y -= GetCACompositor()->screenHeight();
+            curPos.y -= DisplayProperties::ScreenHeight();
         } else if (orientation == UIInterfaceOrientationLandscapeLeft) {
-            curPos.x += GetCACompositor()->screenWidth();
+            curPos.x += DisplayProperties::ScreenWidth();
         } else {
-            curPos.x -= GetCACompositor()->screenWidth();
+            curPos.x -= DisplayProperties::ScreenWidth();
         }
 
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
@@ -1271,7 +1307,7 @@ NSMutableDictionary *_pageMappings;
         [animation setRemovedOnCompletion:FALSE];
         [layer addAnimation:animation forKey:@"ModalDismiss"];
 
-        priv->_dismissCompletionBlock = [[completion copy] autorelease];
+        priv->_dismissCompletionBlock.attach([completion copy]);
 
         priv->_dismissController = curController;
         [curController _notifyViewWillDisappear:TRUE];
@@ -1328,29 +1364,20 @@ NSMutableDictionary *_pageMappings;
 
     if ([self parentViewController] != nil) {
         if ([self modalPresentationStyle] == UIModalPresentationPopover) {
-            if (priv->_presentationController != nil) {
-                [priv->_presentationController release];
-            }
-
-            priv->_presentationController = priv->_popoverPresentationController;
-
-            [priv->_popoverPresentationController _prepareForPresentation];
+            [[self popoverPresentationController] _prepareForPresentation];
 
             displayPopover = ![self _hidesParent];
 
             if (displayPopover) {
-                priv->_popoverPresentationController->_managesPresentation = TRUE;
-
                 __unsafe_unretained __block UIViewController* me = self;
 
                 dispatch_block_t cleanup = ^{
                     me->priv->_parentViewController->priv->_presentedViewController = nil;
                     me->priv->_parentViewController->priv->_modalViewController = nil;
+                    me->priv->_popoverPresentationController = nil;
                 };
 
-                [priv->_popoverPresentationController->_willDismissCompletion release];
-                priv->_popoverPresentationController->_willDismissCompletion = [cleanup copy];
-                [priv->_popoverPresentationController _presentAnimated:animated completion:priv->_presentCompletionBlock];
+                [[self popoverPresentationController] _presentAnimated:animated presentCompletion:priv->_presentCompletionBlock dismissCompletion:cleanup];
                 priv->_presentCompletionBlock = nil;
             }
         }
@@ -1401,26 +1428,26 @@ NSMutableDictionary *_pageMappings;
 
                 int orientation = findOrientation(self);
                 if (orientation == UIInterfaceOrientationPortrait) {
-                    curPos.y += GetCACompositor()->screenHeight();
+                    curPos.y += DisplayProperties::ScreenHeight();
                 } else if (orientation == UIInterfaceOrientationPortraitUpsideDown) {
-                    curPos.y -= GetCACompositor()->screenHeight();
+                    curPos.y -= DisplayProperties::ScreenHeight();
                 } else if (orientation == UIInterfaceOrientationLandscapeLeft) {
-                    curPos.x += GetCACompositor()->screenWidth();
+                    curPos.x += DisplayProperties::ScreenWidth();
                 } else {
-                    curPos.x -= GetCACompositor()->screenWidth();
+                    curPos.x -= DisplayProperties::ScreenWidth();
                 }
 
                 CABasicAnimation* animation = [CABasicAnimation animationWithKeyPath:@"position"];
                 [animation setFromValue:[NSValue valueWithCGPoint:curPos]];
 
                 if (orientation == UIInterfaceOrientationPortrait) {
-                    curPos.y -= GetCACompositor()->screenHeight();
+                    curPos.y -= DisplayProperties::ScreenHeight();
                 } else if (orientation == UIInterfaceOrientationPortraitUpsideDown) {
-                    curPos.y += GetCACompositor()->screenHeight();
+                    curPos.y += DisplayProperties::ScreenHeight();
                 } else if (orientation == UIInterfaceOrientationLandscapeLeft) {
-                    curPos.x -= GetCACompositor()->screenWidth();
+                    curPos.x -= DisplayProperties::ScreenWidth();
                 } else {
-                    curPos.x += GetCACompositor()->screenWidth();
+                    curPos.x += DisplayProperties::ScreenWidth();
                 }
 
                 [animation setToValue:[NSValue valueWithCGPoint:curPos]];
@@ -1508,7 +1535,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
                 priv->_visibility = controllerWillAppear;
             }
 
-            if (![self _popoverManagesPresentation]) {
+            if (![[self popoverPresentationController] _isManagingPresentation]) {
                 [self viewWillAppear:isAnimated];
             }
         } break;
@@ -1536,7 +1563,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
 
 - (void)_doNotifyViewDidAppear:(BOOL)isAnimated {
     priv->_visibility = controllerVisible;
-    if (![self _popoverManagesPresentation]) {
+    if (![[self popoverPresentationController] _isManagingPresentation]) {
         [self viewDidAppear:isAnimated];
         if (priv->_presentCompletionBlock) {
             priv->_presentCompletionBlock();
@@ -1592,7 +1619,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
             } else {
                 priv->_visibility = controllerWillDisappearAnimated;
             }
-            if (![self _popoverManagesPresentation]) {
+            if (![[self popoverPresentationController] _isManagingPresentation]) {
                 [self viewWillDisappear:isAnimated];
             }
             break;
@@ -1617,7 +1644,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
         case controllerWillDisappear:
             if (isAnimated == FALSE) {
                 priv->_visibility = controllerNotVisible;
-                if (![self _popoverManagesPresentation]) {
+                if (![[self popoverPresentationController] _isManagingPresentation]) {
                     [self viewDidDisappear:isAnimated];
                 }
             } else {
@@ -1628,7 +1655,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
         case controllerWillDisappearAnimated:
             if (isAnimated) {
                 priv->_visibility = controllerNotVisible;
-                if (![self _popoverManagesPresentation]) {
+                if (![[self popoverPresentationController] _isManagingPresentation]) {
                     [self viewDidDisappear:isAnimated];
                 }
             }
@@ -1637,7 +1664,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
         case controllerVisible:
             TraceWarning(TAG, L"Warning: Didn't notify view will disappear");
             priv->_visibility = controllerNotVisible;
-            if (![self _popoverManagesPresentation]) {
+            if (![[self popoverPresentationController] _isManagingPresentation]) {
                 [self viewDidDisappear:isAnimated];
             }
             break;
@@ -1773,7 +1800,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     }
 
     if (_pageMappings == nil) {
-        _pageMappings = (NSMutableDictionary *)CFDictionaryCreateMutable(NULL, 10, NULL, NULL);
+        _pageMappings = (NSMutableDictionary*)CFDictionaryCreateMutable(NULL, 10, NULL, NULL);
     }
 
     CGRect frame = [[UIScreen mainScreen] applicationFrame];
@@ -1781,18 +1808,17 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
         frame = [self _modalPresentationFormSheetFrame];
     }
 
-    // Create a template UIView
-    UIView* view = [[[UIEmptyView alloc] initWithFrame:frame] autorelease];
-    [view setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
-    [self setView:view];
-
     // Activate an instance of the XAML class and its page
     Microsoft::WRL::ComPtr<IInspectable> pageObj = nullptr;
     auto xamlType = ReturnXamlType(priv->_xamlClassName);
     xamlType->ActivateInstance(pageObj.GetAddressOf());
+    [_pageMappings setObject:self forKey:(id)(void*)pageObj.Get()];
 
-    priv->_page = CreateRtProxy([WXCPage class], pageObj.Get());
-    [_pageMappings setObject: self forKey: (id) (void *) pageObj.Get()];
+    // Create a template UIView
+    priv->_page = [WXCPage createWith:pageObj.Get()];
+    UIView* view = [[[UIEmptyView alloc] initWithFrame:frame xamlElement:priv->_page] autorelease];
+    [view setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
+    [self setView:view];
 
     // Walk the list of outlets and assign them to the corresponding XAML UIElement
     unsigned int propListCount = 0;
@@ -1811,8 +1837,6 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
             }
         }
     }
-
-    [self.view setXamlElement:priv->_page];
 }
 
 /**
@@ -2193,11 +2217,13 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
  @Status Interoperable
 */
 - (UIViewController*)presentedViewController {
-    if (priv->_presentedViewController == nil) {
-        return [priv->_parentViewController presentingViewController];
+    if (priv->_presentedViewController) {
+        return priv->_presentedViewController;
+    } else if ([priv->_parentViewController presentedViewController] != self) {
+        return [priv->_parentViewController presentedViewController];
     }
 
-    return priv->_presentingViewController;
+    return nil;
 }
 
 /**
@@ -2238,7 +2264,6 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
 
     priv->_childViewControllers = nil;
     priv->_searchDisplayController = nil;
-    priv->_storyboard = nil;
     priv->_modalTemplates = nil;
     priv->_dismissController = nil;
     IwFree(priv);
@@ -2784,10 +2809,8 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
 
 @end
 
-extern "C" void UIViewControllerFirePageEvent(void *pageController, const char *selector)
-{
-    id obj = [_pageMappings objectForKey: (id)pageController];
+extern "C" void UIViewControllerFirePageEvent(void* pageController, const char* selector) {
+    id obj = [_pageMappings objectForKey:(id)pageController];
     SEL sel = sel_registerName(selector);
-    [obj performSelector: sel withObject: nil];
+    [obj performSelector:sel withObject:nil];
 }
-

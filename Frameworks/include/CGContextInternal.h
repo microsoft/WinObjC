@@ -16,19 +16,20 @@
 
 #pragma once
 
-#include "CGImageInternal.h"
-#include "CoreGraphics/CGContext.h"
-#include "CoreGraphicsInternal.h"
-#include "Starboard.h"
+#include <COMIncludes.h>
+#import <DWrite.h>
+#include <COMIncludes_End.h>
 
-#include <objc/runtime.h>
+#import "CGImageInternal.h"
+#import "CoreGraphics/CGContext.h"
+#import "CoreGraphicsInternal.h"
+#import "Starboard.h"
+
+#import <objc/runtime.h>
 
 class CGContextImpl;
 COREGRAPHICS_EXPORT void EbrCenterTextInRectVertically(CGRect* rect, CGSize* textSize, id font);
-COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithTexture(int width,
-                                                                   int height,
-                                                                   DisplayTexture* texture = NULL,
-                                                                   DisplayTextureLocking* locking = NULL);
+COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithTexture(int width, int height, const std::shared_ptr<IDisplayTexture>& texture);
 COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithFormat(int width, int height, __CGSurfaceFormat fmt);
 COREGRAPHICS_EXPORT CGImageRef CGBitmapContextGetImage(CGContextRef ctx);
 COREGRAPHICS_EXPORT void CGContextDrawImageRect(CGContextRef ctx, CGImageRef img, CGRect src, CGRect dst);
@@ -45,6 +46,11 @@ COREGRAPHICS_EXPORT CGImageRef CGPNGImageCreateFromData(NSData* data);
 COREGRAPHICS_EXPORT CGImageRef CGJPEGImageCreateFromFile(NSString* path);
 COREGRAPHICS_EXPORT CGImageRef CGJPEGImageCreateFromData(NSData* data);
 COREGRAPHICS_EXPORT bool CGContextIsPointInPath(CGContextRef c, bool eoFill, float x, float y);
+
+COREGRAPHICS_EXPORT void CGContextDrawGlyphRun(CGContextRef ctx, const DWRITE_GLYPH_RUN* glyphRun);
+
+// TODO 1077:: Remove once D2D render target is implemented
+COREGRAPHICS_EXPORT void _CGContextSetScaleFactor(CGContextRef ctx, float scale);
 
 class __CGContext : private objc_object {
 public:

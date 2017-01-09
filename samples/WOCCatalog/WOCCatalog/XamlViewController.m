@@ -90,14 +90,12 @@
 
     if (indexPath.row == 0) {
         WXCDatePicker* datePicker = [WXCDatePicker make];
-        UIView* datePickerView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 280.0f, cell.frame.size.height)];
-        [datePickerView setXamlElement:datePicker];
+        UIView* datePickerView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 280.0f, cell.frame.size.height) xamlElement:datePicker];
         cell.textLabel.text = @"DatePicker";
         cell.accessoryView = datePickerView;
 
     } else if (indexPath.row == 1) {
-        UIView* buttonView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 100.0f, cell.frame.size.height)];
-        [buttonView setXamlElement:self.playPauseButton];
+        UIView* buttonView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 100.0f, cell.frame.size.height) xamlElement:self.playPauseButton];
         cell.textLabel.text = @"Button";
         cell.accessoryView = buttonView;
     } else if (indexPath.row == 2) {
@@ -108,15 +106,13 @@
 #endif
         checkBox.requestedTheme = WXApplicationThemeDark;
         checkBox.content = [WFPropertyValue createString:@"Check"];
-        UIView* checkBoxView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 100.0f, cell.frame.size.height)];
-        [checkBoxView setXamlElement:checkBox];
+        UIView* checkBoxView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 100.0f, cell.frame.size.height) xamlElement:checkBox];
         cell.textLabel.text = @"Check Box";
         cell.accessoryView = checkBoxView;
     } else if (indexPath.row == 3) {
         self.mediaElement = [WXCMediaElement make];
-        UIView* meView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 300.0f, 300.f)];
+        UIView* meView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 300.0f, 300.f) xamlElement:self.mediaElement];
         self.mediaElement.autoPlay = YES;
-        [meView setXamlElement:self.mediaElement];
         self.mediaElement.source = [WFUri makeUri:@"http://video.ch9.ms/ch9/189c/72816d8e-6ccb-4b42-aebd-325363c8189c/win10.mp4"];
         cell.textLabel.text = @"MSDN tv";
         cell.accessoryView = meView;
@@ -128,15 +124,13 @@
         slider.value = 25.0;
         slider.smallChange = 5.0;
         slider.largeChange = 20.0;
-        UIView* sliderView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 300.0f, cell.frame.size.height)];
-        [sliderView setXamlElement:slider];
+        UIView* sliderView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 300.0f, cell.frame.size.height) xamlElement:slider];
         cell.textLabel.text = @"Slider";
         cell.accessoryView = sliderView;
     } else {
 #ifdef __MAPSUPPORT
         self.mapElement = [WUXCMMapControl create];
-        UIView* mapView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 400.0f, 300.f)];
-        [mapView setXamlElement:self.mapElement];
+        UIView* mapView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 400.0f, 300.f) xamlElement:self.mapElement];
         cell.textLabel.text = @"Map Control";
         cell.accessoryView = mapView;
 #endif

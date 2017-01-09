@@ -14,12 +14,16 @@
 //
 //******************************************************************************
 
-#include <math.h>
 #include "Starboard.h"
-#include "QuartzCore/CATransition.h"
+
+#include <QuartzCore/CAMediaTimingFunction.h>
+#include <QuartzCore/CATransition.h>
+
 #include "CALayerInternal.h"
 #include "CACompositor.h"
 #include "CAAnimationInternal.h"
+
+#include <math.h>
 
 NSString* const kCATransitionFade = @"kCATransitionFade";
 NSString* const kCATransitionMoveIn = @"kCATransitionMoveIn";
@@ -80,14 +84,9 @@ NSString* const kCATransitionFromBottom = @"kCATransitionFromBottom";
 - (void)runActionForKey:(NSString*)key object:(NSObject*)object arguments:(NSDictionary*)dict {
 }
 
-- (DisplayAnimation*)_createAnimation:(CALayer*)layer forKey:(NSString*)key {
+- (std::shared_ptr<ILayerAnimation>)_createAnimation:(CALayer*)layer forKey:(NSString*)key {
     _attachedLayer = layer;
-    _runningAnimation = _globalCompositor->GetMoveDisplayAnimation(&_runningAnimation2,
-                                                                   self,
-                                                                   [layer _priv]->_presentationNode,
-                                                                   _type,
-                                                                   _subtype,
-                                                                   &_timingProperties);
+    _runningAnimation = _globalCompositor->CreateTransitionAnimation(self, _type, _subtype);
 
     return _runningAnimation;
 }
@@ -100,7 +99,6 @@ NSString* const kCATransitionFromBottom = @"kCATransitionFromBottom";
     CATransition* ret = [super copyWithZone:zone];
 
     assert(_runningAnimation == NULL);
-    assert(_runningAnimation2 == NULL);
 
     ret->_type = [_type copy];
     ret->_subtype = [_subtype copy];

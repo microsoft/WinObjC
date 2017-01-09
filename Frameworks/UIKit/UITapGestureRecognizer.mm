@@ -15,19 +15,22 @@
 //******************************************************************************
 
 #import <Starboard.h>
-#import <math.h>
+
+#import <UIKit/UIEvent.h>
+#import <UIKit/UIGestureRecognizerSubclass.h>
+#import <UIKit/UITapGestureRecognizer.h>
+#import <UIKit/UITouch.h>
 
 #import <Foundation/NSMutableDictionary.h>
 #import <Foundation/NSMutableArray.h>
 #import <Foundation/NSValue.h>
 #import <Foundation/NSString.h>
 #import <Foundation/NSTimer.h>
-#import <UIKit/UITapGestureRecognizer.h>
-#import <UIKit/UIGestureRecognizerSubclass.h>
 
-#import "CACompositor.h"
+#import "StarboardXaml/DisplayProperties.h"
 #import "UIGestureRecognizerInternal.h"
 #include "LoggingNative.h"
+#import <math.h>
 
 static const wchar_t* TAG = L"UITapGestureRecognizer";
 
@@ -35,7 +38,7 @@ static id _pendingTaps;
 extern NSMutableDictionary* g_curGesturesDict;
 
 #define TAP_SLACK_AREA \
-    (((GetCACompositor()->screenWidth() / GetCACompositor()->deviceWidth()) * GetCACompositor()->screenXDpi()) / 3.0f) //  1/3 inch
+    (((DisplayProperties::ScreenWidth() / DisplayProperties::DeviceWidth()) * DisplayProperties::ScreenXDpi()) / 3.0f) //  1/3 inch
 
 @interface UITapRecognizer : NSObject {
 @public
@@ -256,12 +259,12 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
     }
 
     id allTouches = [event allTouches];
-    unsigned count = [touches count];
 
-    if (count > _numberOfTouchesRequired || EbrGetMediaTime() - _tapTime > 0.75f) {
-        TraceVerbose(TAG, L"too many touches, numberOfTouchesRequired=%d, count=%d", _numberOfTouchesRequired, count);
+    // We may have to revisit this logic, since the UITouch tap count should drive it.
+    if (_maxTouches > _numberOfTouchesRequired || EbrGetMediaTime() - _tapTime > 0.75f) {
+        TraceVerbose(TAG, L"too many touches, numberOfTouchesRequired=%d, _maxTouches=%d", _numberOfTouchesRequired, _maxTouches);
         _state = UIGestureRecognizerStateFailed;
-    } else if (count == _numberOfTouchesRequired) {
+    } else if (_maxTouches == _numberOfTouchesRequired) {
         bool success = true;
 
         // get max numberofTapsRequired in current Tap gesture list.

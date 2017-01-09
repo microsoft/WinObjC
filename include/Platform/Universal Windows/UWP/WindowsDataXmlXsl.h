@@ -19,11 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DATA_XML_XSL_EXPORT
+#define OBJCUWP_WINDOWS_DATA_XML_XSL_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Data_Xml_Xsl.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WDXXXsltProcessor;
-@protocol WDXXIXsltProcessor
-, WDXXIXsltProcessor2, WDXXIXsltProcessorFactory;
+@protocol WDXXIXsltProcessor, WDXXIXsltProcessor2, WDXXIXsltProcessorFactory;
 
 #include "WindowsDataXmlDom.h"
 
@@ -33,14 +38,15 @@
 #ifndef __WDXXXsltProcessor_DEFINED__
 #define __WDXXXsltProcessor_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DATA_XML_XSL_EXPORT
 @interface WDXXXsltProcessor : RTObject
 + (WDXXXsltProcessor*)makeInstance:(WDXDXmlDocument*)document ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-- (NSString*)transformToString:(RTObject<WDXDIXmlNode>*)inputNode;
+- (NSString *)transformToString:(RTObject<WDXDIXmlNode>*)inputNode;
 - (WDXDXmlDocument*)transformToDocument:(RTObject<WDXDIXmlNode>*)inputNode;
 @end
 
 #endif // __WDXXXsltProcessor_DEFINED__
+

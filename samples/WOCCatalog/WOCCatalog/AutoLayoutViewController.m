@@ -47,27 +47,28 @@
     id bottomGuide = self.bottomLayoutGuide;
     self.view.backgroundColor = [UIColor whiteColor];
     
-    CenteredAutoLayoutLabel* topLabel = [[CenteredAutoLayoutLabel alloc] initWithFrame:CGRectMake(0, 0, 50, 20)];
-    topLabel.text = @"AutoLayout Top Guide";
+    CenteredAutoLayoutLabel* topLabel = [[CenteredAutoLayoutLabel alloc] initWithFrame:CGRectMake(0, 0, 50, 30)];
+    topLabel.text = @"AutoLayout Top Guide - Test By Resizing and Rotating Window";
     topLabel.textColor = [UIColor lightGrayColor];
     
     [self.view addSubview:topLabel];
     [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"|-[topLabel]-|" options:NO metrics:nil views:NSDictionaryOfVariableBindings(topLabel)]];
-    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:[topGuide]-[topLabel(20)]" options:NO metrics:nil views:NSDictionaryOfVariableBindings(topLabel, topGuide)]];
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:[topGuide]-[topLabel(30)]" options:NO metrics:nil views:NSDictionaryOfVariableBindings(topLabel, topGuide)]];
 
-    CenteredAutoLayoutLabel* bottomLabel = [[CenteredAutoLayoutLabel alloc] initWithFrame:CGRectMake(0, 0, 50, 20)];
+    CenteredAutoLayoutLabel* bottomLabel = [[CenteredAutoLayoutLabel alloc] initWithFrame:CGRectMake(0, 0, 50, 30)];
     bottomLabel.text = @"AutoLayout Bottom Guide";
     bottomLabel.textColor = [UIColor lightGrayColor];
     
     [self.view addSubview:bottomLabel];
     [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"|-[bottomLabel]-|" options:NO metrics:nil views:NSDictionaryOfVariableBindings(bottomLabel)]];
-    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:[bottomLabel(20)]-[bottomGuide]" options:NO metrics:nil views:NSDictionaryOfVariableBindings(bottomLabel, bottomGuide)]];
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:[bottomLabel(30)]-[bottomGuide]" options:NO metrics:nil views:NSDictionaryOfVariableBindings(bottomLabel, bottomGuide)]];
     
     UIButton* button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     
     [button setTitle:@"Button For Baseline" forState:UIControlStateNormal];
-    [button invalidateIntrinsicContentSize];
+    [button setTitle:@"Highlighted State Changes Intrinsic Content Size" forState:UIControlStateHighlighted];
     [button setContentHuggingPriority:251 forAxis:UILayoutConstraintAxisVertical];
+    button.contentEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10);
     button.translatesAutoresizingMaskIntoConstraints = NO;
     button.layer.cornerRadius = 5.0f;
     button.backgroundColor = [UIColor lightGrayColor];
@@ -75,8 +76,6 @@
     
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:button attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:bottomLabel attribute:NSLayoutAttributeTop multiplier:1.0 constant:-8.0f]];
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:button attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:button.superview attribute:NSLayoutAttributeLeft multiplier:1.0 constant:20.0f]];
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:button attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:button.intrinsicContentSize.width + 20]];
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:button attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:button.intrinsicContentSize.height + 20]];
     
     CenteredAutoLayoutLabel* buttonLabel = [CenteredAutoLayoutLabel new];
     

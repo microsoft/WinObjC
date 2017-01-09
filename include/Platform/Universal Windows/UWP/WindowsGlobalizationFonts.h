@@ -19,11 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_GLOBALIZATION_FONTS_EXPORT
+#define OBJCUWP_WINDOWS_GLOBALIZATION_FONTS_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Globalization_Fonts.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WGFLanguageFont, WGFLanguageFontGroup;
-@protocol WGFILanguageFontGroup
-, WGFILanguageFontGroupFactory, WGFILanguageFont;
+@protocol WGFILanguageFontGroup, WGFILanguageFontGroupFactory, WGFILanguageFont;
 
 #include "WindowsUIText.h"
 
@@ -33,12 +38,12 @@
 #ifndef __WGFLanguageFont_DEFINED__
 #define __WGFLanguageFont_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GLOBALIZATION_FONTS_EXPORT
 @interface WGFLanguageFont : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* fontFamily;
+@property (readonly) NSString * fontFamily;
 @property (readonly) WUTFontStretch fontStretch;
 @property (readonly) WUTFontStyle fontStyle;
 @property (readonly) WUTFontWeight* fontWeight;
@@ -51,9 +56,9 @@ WINRT_EXPORT
 #ifndef __WGFLanguageFontGroup_DEFINED__
 #define __WGFLanguageFontGroup_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GLOBALIZATION_FONTS_EXPORT
 @interface WGFLanguageFontGroup : RTObject
-+ (WGFLanguageFontGroup*)makeLanguageFontGroup:(NSString*)languageTag ACTIVATOR;
++ (WGFLanguageFontGroup*)makeLanguageFontGroup:(NSString *)languageTag ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
@@ -71,3 +76,4 @@ WINRT_EXPORT
 @end
 
 #endif // __WGFLanguageFontGroup_DEFINED__
+

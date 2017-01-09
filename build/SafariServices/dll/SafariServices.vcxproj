@@ -57,7 +57,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>SafariServices.def</ModuleDefinitionFile>
-      <AdditionalDependencies>ObjCUWP.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
@@ -69,7 +69,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>SafariServices.def</ModuleDefinitionFile>
-      <AdditionalDependencies>ObjCUWP.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
@@ -81,7 +81,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>SafariServices.def</ModuleDefinitionFile>
-      <AdditionalDependencies>ObjCUWP.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
@@ -93,7 +93,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>SafariServices.def</ModuleDefinitionFile>
-      <AdditionalDependencies>ObjCUWP.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>

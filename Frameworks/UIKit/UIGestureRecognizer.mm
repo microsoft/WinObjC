@@ -231,7 +231,7 @@ static void commonInit(UIGestureRecognizer* self) {
     UNIMPLEMENTED();
 }
 
-+ (BOOL)_fireGestures:(id)gestures {
++ (BOOL)_fireGestures:(id)gestures shouldCancelTouches:(BOOL&)shouldCancelTouches {
     bool didRecognize = false;
 
     for (UIGestureRecognizer* curgesture in gestures) {
@@ -240,6 +240,7 @@ static void commonInit(UIGestureRecognizer* self) {
         if (state == UIGestureRecognizerStateRecognized || state == UIGestureRecognizerStateBegan ||
             state == UIGestureRecognizerStateChanged || state == UIGestureRecognizerStateEnded) {
             [curgesture _fire];
+            shouldCancelTouches |= curgesture.cancelsTouchesInView;
             didRecognize = true;
         }
     }

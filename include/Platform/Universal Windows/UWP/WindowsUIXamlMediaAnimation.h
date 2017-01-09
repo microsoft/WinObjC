@@ -19,62 +19,17 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_XAML_EXPORT
+#define OBJCUWP_WINDOWS_UI_XAML_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WUXMAKeyTimeHelper, WUXMARepeatBehaviorHelper, WUXMATransitionCollection, WUXMAColorKeyFrameCollection,
-    WUXMADoubleKeyFrameCollection, WUXMAObjectKeyFrameCollection, WUXMAPointKeyFrameCollection, WUXMATimelineCollection, WUXMAColorKeyFrame,
-    WUXMADoubleKeyFrame, WUXMAEasingFunctionBase, WUXMAKeySpline, WUXMANavigationTransitionInfo, WUXMAObjectKeyFrame, WUXMAPointKeyFrame,
-    WUXMATimeline, WUXMATransition, WUXMAAddDeleteThemeTransition, WUXMABackEase, WUXMABeginStoryboard, WUXMABounceEase, WUXMACircleEase,
-    WUXMAColorAnimation, WUXMAColorAnimationUsingKeyFrames, WUXMAContentThemeTransition, WUXMACubicEase, WUXMADiscreteColorKeyFrame,
-    WUXMADiscreteDoubleKeyFrame, WUXMADiscreteObjectKeyFrame, WUXMADiscretePointKeyFrame, WUXMADoubleAnimation,
-    WUXMADoubleAnimationUsingKeyFrames, WUXMADragItemThemeAnimation, WUXMADragOverThemeAnimation, WUXMADrillInThemeAnimation,
-    WUXMADrillOutThemeAnimation, WUXMADropTargetItemThemeAnimation, WUXMAEasingColorKeyFrame, WUXMAEasingDoubleKeyFrame,
-    WUXMAEasingPointKeyFrame, WUXMAEdgeUIThemeTransition, WUXMAElasticEase, WUXMAEntranceThemeTransition, WUXMAExponentialEase,
-    WUXMAFadeInThemeAnimation, WUXMAFadeOutThemeAnimation, WUXMALinearColorKeyFrame, WUXMALinearDoubleKeyFrame, WUXMALinearPointKeyFrame,
-    WUXMAObjectAnimationUsingKeyFrames, WUXMAPaneThemeTransition, WUXMAPointAnimation, WUXMAPointAnimationUsingKeyFrames,
-    WUXMAPointerDownThemeAnimation, WUXMAPointerUpThemeAnimation, WUXMAPopInThemeAnimation, WUXMAPopOutThemeAnimation,
-    WUXMAPopupThemeTransition, WUXMAPowerEase, WUXMAQuadraticEase, WUXMAQuarticEase, WUXMAQuinticEase, WUXMAReorderThemeTransition,
-    WUXMARepositionThemeAnimation, WUXMARepositionThemeTransition, WUXMASineEase, WUXMASplineColorKeyFrame, WUXMASplineDoubleKeyFrame,
-    WUXMASplinePointKeyFrame, WUXMASplitCloseThemeAnimation, WUXMASplitOpenThemeAnimation, WUXMAStoryboard, WUXMASwipeBackThemeAnimation,
-    WUXMASwipeHintThemeAnimation, WUXMACommonNavigationTransitionInfo, WUXMAContinuumNavigationTransitionInfo,
-    WUXMADrillInNavigationTransitionInfo, WUXMAEntranceNavigationTransitionInfo, WUXMANavigationThemeTransition,
-    WUXMASlideNavigationTransitionInfo, WUXMASuppressNavigationTransitionInfo;
+@class WUXMAKeyTimeHelper, WUXMARepeatBehaviorHelper, WUXMATransitionCollection, WUXMAColorKeyFrameCollection, WUXMADoubleKeyFrameCollection, WUXMAObjectKeyFrameCollection, WUXMAPointKeyFrameCollection, WUXMATimelineCollection, WUXMAColorKeyFrame, WUXMADoubleKeyFrame, WUXMAEasingFunctionBase, WUXMAKeySpline, WUXMANavigationTransitionInfo, WUXMAObjectKeyFrame, WUXMAPointKeyFrame, WUXMATimeline, WUXMATransition, WUXMAAddDeleteThemeTransition, WUXMABackEase, WUXMABeginStoryboard, WUXMABounceEase, WUXMACircleEase, WUXMAColorAnimation, WUXMAColorAnimationUsingKeyFrames, WUXMAContentThemeTransition, WUXMACubicEase, WUXMADiscreteColorKeyFrame, WUXMADiscreteDoubleKeyFrame, WUXMADiscreteObjectKeyFrame, WUXMADiscretePointKeyFrame, WUXMADoubleAnimation, WUXMADoubleAnimationUsingKeyFrames, WUXMADragItemThemeAnimation, WUXMADragOverThemeAnimation, WUXMADrillInThemeAnimation, WUXMADrillOutThemeAnimation, WUXMADropTargetItemThemeAnimation, WUXMAEasingColorKeyFrame, WUXMAEasingDoubleKeyFrame, WUXMAEasingPointKeyFrame, WUXMAEdgeUIThemeTransition, WUXMAElasticEase, WUXMAEntranceThemeTransition, WUXMAExponentialEase, WUXMAFadeInThemeAnimation, WUXMAFadeOutThemeAnimation, WUXMALinearColorKeyFrame, WUXMALinearDoubleKeyFrame, WUXMALinearPointKeyFrame, WUXMAObjectAnimationUsingKeyFrames, WUXMAPaneThemeTransition, WUXMAPointAnimation, WUXMAPointAnimationUsingKeyFrames, WUXMAPointerDownThemeAnimation, WUXMAPointerUpThemeAnimation, WUXMAPopInThemeAnimation, WUXMAPopOutThemeAnimation, WUXMAPopupThemeTransition, WUXMAPowerEase, WUXMAQuadraticEase, WUXMAQuarticEase, WUXMAQuinticEase, WUXMAReorderThemeTransition, WUXMARepositionThemeAnimation, WUXMARepositionThemeTransition, WUXMASineEase, WUXMASplineColorKeyFrame, WUXMASplineDoubleKeyFrame, WUXMASplinePointKeyFrame, WUXMASplitCloseThemeAnimation, WUXMASplitOpenThemeAnimation, WUXMAStoryboard, WUXMASwipeBackThemeAnimation, WUXMASwipeHintThemeAnimation, WUXMAConnectedAnimation, WUXMAConnectedAnimationService, WUXMACommonNavigationTransitionInfo, WUXMAContinuumNavigationTransitionInfo, WUXMADrillInNavigationTransitionInfo, WUXMAEntranceNavigationTransitionInfo, WUXMANavigationThemeTransition, WUXMASlideNavigationTransitionInfo, WUXMASuppressNavigationTransitionInfo;
 @class WUXMAKeyTime, WUXMARepeatBehavior;
-@protocol WUXMAIKeyTimeHelper
-, WUXMAIKeyTimeHelperStatics, WUXMAIRepeatBehaviorHelper, WUXMAIRepeatBehaviorHelperStatics, WUXMAIColorKeyFrame,
-    WUXMAIColorKeyFrameStatics, WUXMAIColorKeyFrameFactory, WUXMAIDoubleKeyFrame, WUXMAIDoubleKeyFrameStatics, WUXMAIDoubleKeyFrameFactory,
-    WUXMAIEasingFunctionBase, WUXMAIEasingFunctionBaseStatics, WUXMAIEasingFunctionBaseFactory, WUXMAIKeySpline,
-    WUXMAINavigationTransitionInfo, WUXMAINavigationTransitionInfoOverrides, WUXMAINavigationTransitionInfoFactory, WUXMAIObjectKeyFrame,
-    WUXMAIObjectKeyFrameStatics, WUXMAIObjectKeyFrameFactory, WUXMAIPointKeyFrame, WUXMAIPointKeyFrameStatics, WUXMAIPointKeyFrameFactory,
-    WUXMAITimeline, WUXMAITimelineStatics, WUXMAITimelineFactory, WUXMAITransition, WUXMAITransitionFactory, WUXMAIAddDeleteThemeTransition,
-    WUXMAIBackEase, WUXMAIBackEaseStatics, WUXMAIBeginStoryboard, WUXMAIBeginStoryboardStatics, WUXMAIBounceEase, WUXMAIBounceEaseStatics,
-    WUXMAICircleEase, WUXMAIColorAnimation, WUXMAIColorAnimationStatics, WUXMAIColorAnimationUsingKeyFrames,
-    WUXMAIColorAnimationUsingKeyFramesStatics, WUXMAIContentThemeTransition, WUXMAIContentThemeTransitionStatics, WUXMAICubicEase,
-    WUXMAIDiscreteColorKeyFrame, WUXMAIDiscreteDoubleKeyFrame, WUXMAIDiscreteObjectKeyFrame, WUXMAIDiscretePointKeyFrame,
-    WUXMAIDoubleAnimation, WUXMAIDoubleAnimationStatics, WUXMAIDoubleAnimationUsingKeyFrames, WUXMAIDoubleAnimationUsingKeyFramesStatics,
-    WUXMAIDragItemThemeAnimation, WUXMAIDragItemThemeAnimationStatics, WUXMAIDragOverThemeAnimation, WUXMAIDragOverThemeAnimationStatics,
-    WUXMAIDrillInThemeAnimation, WUXMAIDrillInThemeAnimationStatics, WUXMAIDrillOutThemeAnimation, WUXMAIDrillOutThemeAnimationStatics,
-    WUXMAIDropTargetItemThemeAnimation, WUXMAIDropTargetItemThemeAnimationStatics, WUXMAIEasingColorKeyFrame,
-    WUXMAIEasingColorKeyFrameStatics, WUXMAIEasingDoubleKeyFrame, WUXMAIEasingDoubleKeyFrameStatics, WUXMAIEasingPointKeyFrame,
-    WUXMAIEasingPointKeyFrameStatics, WUXMAIEdgeUIThemeTransition, WUXMAIEdgeUIThemeTransitionStatics, WUXMAIElasticEase,
-    WUXMAIElasticEaseStatics, WUXMAIEntranceThemeTransition, WUXMAIEntranceThemeTransitionStatics, WUXMAIExponentialEase,
-    WUXMAIExponentialEaseStatics, WUXMAIFadeInThemeAnimation, WUXMAIFadeInThemeAnimationStatics, WUXMAIFadeOutThemeAnimation,
-    WUXMAIFadeOutThemeAnimationStatics, WUXMAILinearColorKeyFrame, WUXMAILinearDoubleKeyFrame, WUXMAILinearPointKeyFrame,
-    WUXMAIObjectAnimationUsingKeyFrames, WUXMAIObjectAnimationUsingKeyFramesStatics, WUXMAIPaneThemeTransition,
-    WUXMAIPaneThemeTransitionStatics, WUXMAIPointAnimation, WUXMAIPointAnimationStatics, WUXMAIPointAnimationUsingKeyFrames,
-    WUXMAIPointAnimationUsingKeyFramesStatics, WUXMAIPointerDownThemeAnimation, WUXMAIPointerDownThemeAnimationStatics,
-    WUXMAIPointerUpThemeAnimation, WUXMAIPointerUpThemeAnimationStatics, WUXMAIPopInThemeAnimation, WUXMAIPopInThemeAnimationStatics,
-    WUXMAIPopOutThemeAnimation, WUXMAIPopOutThemeAnimationStatics, WUXMAIPopupThemeTransition, WUXMAIPopupThemeTransitionStatics,
-    WUXMAIPowerEase, WUXMAIPowerEaseStatics, WUXMAIQuadraticEase, WUXMAIQuarticEase, WUXMAIQuinticEase, WUXMAIReorderThemeTransition,
-    WUXMAIRepositionThemeAnimation, WUXMAIRepositionThemeAnimationStatics, WUXMAIRepositionThemeTransition, WUXMAISineEase,
-    WUXMAISplineColorKeyFrame, WUXMAISplineColorKeyFrameStatics, WUXMAISplineDoubleKeyFrame, WUXMAISplineDoubleKeyFrameStatics,
-    WUXMAISplinePointKeyFrame, WUXMAISplinePointKeyFrameStatics, WUXMAISplitCloseThemeAnimation, WUXMAISplitCloseThemeAnimationStatics,
-    WUXMAISplitOpenThemeAnimation, WUXMAISplitOpenThemeAnimationStatics, WUXMAIStoryboard, WUXMAIStoryboardStatics,
-    WUXMAISwipeBackThemeAnimation, WUXMAISwipeBackThemeAnimationStatics, WUXMAISwipeHintThemeAnimation,
-    WUXMAISwipeHintThemeAnimationStatics, WUXMAICommonNavigationTransitionInfo, WUXMAICommonNavigationTransitionInfoStatics,
-    WUXMAIContinuumNavigationTransitionInfo, WUXMAIContinuumNavigationTransitionInfoStatics, WUXMAIDrillInNavigationTransitionInfo,
-    WUXMAIEntranceNavigationTransitionInfo, WUXMAIEntranceNavigationTransitionInfoStatics, WUXMAINavigationThemeTransition,
-    WUXMAINavigationThemeTransitionStatics, WUXMAISlideNavigationTransitionInfo, WUXMAISuppressNavigationTransitionInfo;
+@protocol WUXMAIKeyTimeHelper, WUXMAIKeyTimeHelperStatics, WUXMAIRepeatBehaviorHelper, WUXMAIRepeatBehaviorHelperStatics, WUXMAIColorKeyFrame, WUXMAIColorKeyFrameStatics, WUXMAIColorKeyFrameFactory, WUXMAIDoubleKeyFrame, WUXMAIDoubleKeyFrameStatics, WUXMAIDoubleKeyFrameFactory, WUXMAIEasingFunctionBase, WUXMAIEasingFunctionBaseStatics, WUXMAIEasingFunctionBaseFactory, WUXMAIKeySpline, WUXMAINavigationTransitionInfo, WUXMAINavigationTransitionInfoOverrides, WUXMAINavigationTransitionInfoFactory, WUXMAIObjectKeyFrame, WUXMAIObjectKeyFrameStatics, WUXMAIObjectKeyFrameFactory, WUXMAIPointKeyFrame, WUXMAIPointKeyFrameStatics, WUXMAIPointKeyFrameFactory, WUXMAITimeline, WUXMAITimelineStatics, WUXMAITimelineFactory, WUXMAITransition, WUXMAITransitionFactory, WUXMAIAddDeleteThemeTransition, WUXMAIBackEase, WUXMAIBackEaseStatics, WUXMAIBeginStoryboard, WUXMAIBeginStoryboardStatics, WUXMAIBounceEase, WUXMAIBounceEaseStatics, WUXMAICircleEase, WUXMAIColorAnimation, WUXMAIColorAnimationStatics, WUXMAIColorAnimationUsingKeyFrames, WUXMAIColorAnimationUsingKeyFramesStatics, WUXMAIContentThemeTransition, WUXMAIContentThemeTransitionStatics, WUXMAICubicEase, WUXMAIDiscreteColorKeyFrame, WUXMAIDiscreteDoubleKeyFrame, WUXMAIDiscreteObjectKeyFrame, WUXMAIDiscretePointKeyFrame, WUXMAIDoubleAnimation, WUXMAIDoubleAnimationStatics, WUXMAIDoubleAnimationUsingKeyFrames, WUXMAIDoubleAnimationUsingKeyFramesStatics, WUXMAIDragItemThemeAnimation, WUXMAIDragItemThemeAnimationStatics, WUXMAIDragOverThemeAnimation, WUXMAIDragOverThemeAnimationStatics, WUXMAIDrillInThemeAnimation, WUXMAIDrillInThemeAnimationStatics, WUXMAIDrillOutThemeAnimation, WUXMAIDrillOutThemeAnimationStatics, WUXMAIDropTargetItemThemeAnimation, WUXMAIDropTargetItemThemeAnimationStatics, WUXMAIEasingColorKeyFrame, WUXMAIEasingColorKeyFrameStatics, WUXMAIEasingDoubleKeyFrame, WUXMAIEasingDoubleKeyFrameStatics, WUXMAIEasingPointKeyFrame, WUXMAIEasingPointKeyFrameStatics, WUXMAIEdgeUIThemeTransition, WUXMAIEdgeUIThemeTransitionStatics, WUXMAIElasticEase, WUXMAIElasticEaseStatics, WUXMAIEntranceThemeTransition, WUXMAIEntranceThemeTransitionStatics, WUXMAIExponentialEase, WUXMAIExponentialEaseStatics, WUXMAIFadeInThemeAnimation, WUXMAIFadeInThemeAnimationStatics, WUXMAIFadeOutThemeAnimation, WUXMAIFadeOutThemeAnimationStatics, WUXMAILinearColorKeyFrame, WUXMAILinearDoubleKeyFrame, WUXMAILinearPointKeyFrame, WUXMAIObjectAnimationUsingKeyFrames, WUXMAIObjectAnimationUsingKeyFramesStatics, WUXMAIPaneThemeTransition, WUXMAIPaneThemeTransitionStatics, WUXMAIPointAnimation, WUXMAIPointAnimationStatics, WUXMAIPointAnimationUsingKeyFrames, WUXMAIPointAnimationUsingKeyFramesStatics, WUXMAIPointerDownThemeAnimation, WUXMAIPointerDownThemeAnimationStatics, WUXMAIPointerUpThemeAnimation, WUXMAIPointerUpThemeAnimationStatics, WUXMAIPopInThemeAnimation, WUXMAIPopInThemeAnimationStatics, WUXMAIPopOutThemeAnimation, WUXMAIPopOutThemeAnimationStatics, WUXMAIPopupThemeTransition, WUXMAIPopupThemeTransitionStatics, WUXMAIPowerEase, WUXMAIPowerEaseStatics, WUXMAIQuadraticEase, WUXMAIQuarticEase, WUXMAIQuinticEase, WUXMAIReorderThemeTransition, WUXMAIRepositionThemeAnimation, WUXMAIRepositionThemeAnimationStatics, WUXMAIRepositionThemeTransition, WUXMAIRepositionThemeTransition2, WUXMAIRepositionThemeTransitionStatics2, WUXMAISineEase, WUXMAISplineColorKeyFrame, WUXMAISplineColorKeyFrameStatics, WUXMAISplineDoubleKeyFrame, WUXMAISplineDoubleKeyFrameStatics, WUXMAISplinePointKeyFrame, WUXMAISplinePointKeyFrameStatics, WUXMAISplitCloseThemeAnimation, WUXMAISplitCloseThemeAnimationStatics, WUXMAISplitOpenThemeAnimation, WUXMAISplitOpenThemeAnimationStatics, WUXMAIStoryboard, WUXMAIStoryboardStatics, WUXMAISwipeBackThemeAnimation, WUXMAISwipeBackThemeAnimationStatics, WUXMAISwipeHintThemeAnimation, WUXMAISwipeHintThemeAnimationStatics, WUXMAIConnectedAnimation, WUXMAIConnectedAnimationService, WUXMAIConnectedAnimationServiceStatics, WUXMAICommonNavigationTransitionInfo, WUXMAICommonNavigationTransitionInfoStatics, WUXMAIContinuumNavigationTransitionInfo, WUXMAIContinuumNavigationTransitionInfoStatics, WUXMAIDrillInNavigationTransitionInfo, WUXMAIEntranceNavigationTransitionInfo, WUXMAIEntranceNavigationTransitionInfoStatics, WUXMAINavigationThemeTransition, WUXMAINavigationThemeTransitionStatics, WUXMAISlideNavigationTransitionInfo, WUXMAISuppressNavigationTransitionInfo;
 
 // Windows.UI.Xaml.Media.Animation.ClockState
 enum _WUXMAClockState {
@@ -111,27 +66,29 @@ typedef unsigned WUXMARepeatBehaviorType;
 #include "WindowsFoundation.h"
 #include "WindowsUIXamlControlsPrimitives.h"
 #include "WindowsUI.h"
+#include "WindowsUIComposition.h"
 #include "WindowsUIXaml.h"
 #include "WindowsUICore.h"
 // Windows.UI.Xaml.DependencyPropertyChangedCallback
 #ifndef __WXDependencyPropertyChangedCallback__DEFINED
 #define __WXDependencyPropertyChangedCallback__DEFINED
-typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, WXDependencyProperty* dp);
+typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, WXDependencyProperty* dp);
 #endif // __WXDependencyPropertyChangedCallback__DEFINED
+
 
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Xaml.Media.Animation.KeyTime
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAKeyTime : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property (retain) WFTimeSpan* timeSpan;
 @end
 
 // [struct] Windows.UI.Xaml.Media.Animation.RepeatBehavior
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMARepeatBehavior : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property double count;
 @property (retain) WFTimeSpan* duration;
 @property WUXMARepeatBehaviorType type;
@@ -142,8 +99,12 @@ WINRT_EXPORT
 #define __WUXMAINavigationTransitionInfoOverrides_DEFINED__
 
 @protocol WUXMAINavigationTransitionInfoOverrides
-- (NSString*)getNavigationStateCore;
-- (void)setNavigationStateCore:(NSString*)navigationState;
+- (NSString *)getNavigationStateCore;
+- (void)setNavigationStateCore:(NSString *)navigationState;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXMAINavigationTransitionInfoOverrides : RTObject <WUXMAINavigationTransitionInfoOverrides>
 @end
 
 #endif // __WUXMAINavigationTransitionInfoOverrides_DEFINED__
@@ -152,7 +113,7 @@ WINRT_EXPORT
 #ifndef __WUXMAKeyTimeHelper_DEFINED__
 #define __WUXMAKeyTimeHelper_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAKeyTimeHelper : RTObject
 + (WUXMAKeyTime*)fromTimeSpan:(WFTimeSpan*)timeSpan;
 #if defined(__cplusplus)
@@ -166,7 +127,7 @@ WINRT_EXPORT
 #ifndef __WUXMARepeatBehaviorHelper_DEFINED__
 #define __WUXMARepeatBehaviorHelper_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMARepeatBehaviorHelper : RTObject
 + (WUXMARepeatBehavior*)fromCount:(double)count;
 + (WUXMARepeatBehavior*)fromDuration:(WFTimeSpan*)duration;
@@ -185,7 +146,7 @@ WINRT_EXPORT
 #ifndef __WUXMATransitionCollection_DEFINED__
 #define __WUXMATransitionCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMATransitionCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -194,12 +155,14 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
 
-- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
-- (void)removeObjectAtIndex:(NSUInteger)idx;
-- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
-- (void)addObject:(id)obj;
+- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
+- (void)removeObjectAtIndex: (NSUInteger)idx;
+- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
+- (void)addObject: (id)obj;
 - (void)removeLastObject;
 
 @end
@@ -210,7 +173,7 @@ WINRT_EXPORT
 #ifndef __WUXMAColorKeyFrameCollection_DEFINED__
 #define __WUXMAColorKeyFrameCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAColorKeyFrameCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -219,12 +182,14 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
 
-- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
-- (void)removeObjectAtIndex:(NSUInteger)idx;
-- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
-- (void)addObject:(id)obj;
+- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
+- (void)removeObjectAtIndex: (NSUInteger)idx;
+- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
+- (void)addObject: (id)obj;
 - (void)removeLastObject;
 
 @end
@@ -235,7 +200,7 @@ WINRT_EXPORT
 #ifndef __WUXMADoubleKeyFrameCollection_DEFINED__
 #define __WUXMADoubleKeyFrameCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMADoubleKeyFrameCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -244,12 +209,14 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
 
-- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
-- (void)removeObjectAtIndex:(NSUInteger)idx;
-- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
-- (void)addObject:(id)obj;
+- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
+- (void)removeObjectAtIndex: (NSUInteger)idx;
+- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
+- (void)addObject: (id)obj;
 - (void)removeLastObject;
 
 @end
@@ -260,7 +227,7 @@ WINRT_EXPORT
 #ifndef __WUXMAObjectKeyFrameCollection_DEFINED__
 #define __WUXMAObjectKeyFrameCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAObjectKeyFrameCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -269,12 +236,14 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
 
-- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
-- (void)removeObjectAtIndex:(NSUInteger)idx;
-- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
-- (void)addObject:(id)obj;
+- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
+- (void)removeObjectAtIndex: (NSUInteger)idx;
+- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
+- (void)addObject: (id)obj;
 - (void)removeLastObject;
 
 @end
@@ -285,7 +254,7 @@ WINRT_EXPORT
 #ifndef __WUXMAPointKeyFrameCollection_DEFINED__
 #define __WUXMAPointKeyFrameCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAPointKeyFrameCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -294,12 +263,14 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
 
-- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
-- (void)removeObjectAtIndex:(NSUInteger)idx;
-- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
-- (void)addObject:(id)obj;
+- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
+- (void)removeObjectAtIndex: (NSUInteger)idx;
+- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
+- (void)addObject: (id)obj;
 - (void)removeLastObject;
 
 @end
@@ -310,7 +281,7 @@ WINRT_EXPORT
 #ifndef __WUXMATimelineCollection_DEFINED__
 #define __WUXMATimelineCollection_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMATimelineCollection : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -319,12 +290,14 @@ WINRT_EXPORT
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
+                                  objects:(id __unsafe_unretained [])buffer
+                                    count:(NSUInteger)len;
 
-- (void)insertObject:(id)obj atIndex:(NSUInteger)idx;
-- (void)removeObjectAtIndex:(NSUInteger)idx;
-- (void)replaceObjectAtIndex:(NSUInteger)idx withObject:(id)obj;
-- (void)addObject:(id)obj;
+- (void)insertObject: (id)obj atIndex: (NSUInteger)idx;
+- (void)removeObjectAtIndex: (NSUInteger)idx;
+- (void)replaceObjectAtIndex: (NSUInteger)idx withObject: (id)obj;
+- (void)addObject: (id)obj;
 - (void)removeLastObject;
 
 @end
@@ -335,7 +308,7 @@ WINRT_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -356,7 +329,7 @@ WINRT_EXPORT
 #ifndef __WUXMAColorKeyFrame_DEFINED__
 #define __WUXMAColorKeyFrame_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAColorKeyFrame : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -373,7 +346,7 @@ WINRT_EXPORT
 #ifndef __WUXMADoubleKeyFrame_DEFINED__
 #define __WUXMADoubleKeyFrame_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMADoubleKeyFrame : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -390,7 +363,7 @@ WINRT_EXPORT
 #ifndef __WUXMAEasingFunctionBase_DEFINED__
 #define __WUXMAEasingFunctionBase_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAEasingFunctionBase : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -406,7 +379,7 @@ WINRT_EXPORT
 #ifndef __WUXMAKeySpline_DEFINED__
 #define __WUXMAKeySpline_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAKeySpline : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -422,13 +395,13 @@ WINRT_EXPORT
 #ifndef __WUXMANavigationTransitionInfo_DEFINED__
 #define __WUXMANavigationTransitionInfo_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMANavigationTransitionInfo : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-- (NSString*)getNavigationStateCore;
-- (void)setNavigationStateCore:(NSString*)navigationState;
+- (NSString *)getNavigationStateCore;
+- (void)setNavigationStateCore:(NSString *)navigationState;
 @end
 
 #endif // __WUXMANavigationTransitionInfo_DEFINED__
@@ -437,7 +410,7 @@ WINRT_EXPORT
 #ifndef __WUXMAObjectKeyFrame_DEFINED__
 #define __WUXMAObjectKeyFrame_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAObjectKeyFrame : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -454,7 +427,7 @@ WINRT_EXPORT
 #ifndef __WUXMAPointKeyFrame_DEFINED__
 #define __WUXMAPointKeyFrame_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAPointKeyFrame : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -471,7 +444,7 @@ WINRT_EXPORT
 #ifndef __WUXMATimeline_DEFINED__
 #define __WUXMATimeline_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMATimeline : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -490,7 +463,7 @@ WINRT_EXPORT
 + (WXDependencyProperty*)fillBehaviorProperty;
 + (WXDependencyProperty*)repeatBehaviorProperty;
 + (WXDependencyProperty*)speedRatioProperty;
-- (EventRegistrationToken)addCompletedEvent:(void (^)(RTObject*, RTObject*))del;
+- (EventRegistrationToken)addCompletedEvent:(void(^)(RTObject*, RTObject*))del;
 - (void)removeCompletedEvent:(EventRegistrationToken)tok;
 @end
 
@@ -500,7 +473,7 @@ WINRT_EXPORT
 #ifndef __WUXMATransition_DEFINED__
 #define __WUXMATransition_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMATransition : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -513,7 +486,7 @@ WINRT_EXPORT
 #ifndef __WUXMAAddDeleteThemeTransition_DEFINED__
 #define __WUXMAAddDeleteThemeTransition_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAAddDeleteThemeTransition : WUXMATransition
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -527,7 +500,7 @@ WINRT_EXPORT
 #ifndef __WUXMABackEase_DEFINED__
 #define __WUXMABackEase_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMABackEase : WUXMAEasingFunctionBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -543,7 +516,7 @@ WINRT_EXPORT
 #ifndef __WXTriggerAction_DEFINED__
 #define __WXTriggerAction_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXTriggerAction : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -556,7 +529,7 @@ WINRT_EXPORT
 #ifndef __WUXMABeginStoryboard_DEFINED__
 #define __WUXMABeginStoryboard_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMABeginStoryboard : WXTriggerAction
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -572,7 +545,7 @@ WINRT_EXPORT
 #ifndef __WUXMABounceEase_DEFINED__
 #define __WUXMABounceEase_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMABounceEase : WUXMAEasingFunctionBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -590,7 +563,7 @@ WINRT_EXPORT
 #ifndef __WUXMACircleEase_DEFINED__
 #define __WUXMACircleEase_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMACircleEase : WUXMAEasingFunctionBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -604,7 +577,7 @@ WINRT_EXPORT
 #ifndef __WUXMAColorAnimation_DEFINED__
 #define __WUXMAColorAnimation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAColorAnimation : WUXMATimeline
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -628,7 +601,7 @@ WINRT_EXPORT
 #ifndef __WUXMAColorAnimationUsingKeyFrames_DEFINED__
 #define __WUXMAColorAnimationUsingKeyFrames_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAColorAnimationUsingKeyFrames : WUXMATimeline
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -645,7 +618,7 @@ WINRT_EXPORT
 #ifndef __WUXMAContentThemeTransition_DEFINED__
 #define __WUXMAContentThemeTransition_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAContentThemeTransition : WUXMATransition
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -663,7 +636,7 @@ WINRT_EXPORT
 #ifndef __WUXMACubicEase_DEFINED__
 #define __WUXMACubicEase_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMACubicEase : WUXMAEasingFunctionBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -677,7 +650,7 @@ WINRT_EXPORT
 #ifndef __WUXMADiscreteColorKeyFrame_DEFINED__
 #define __WUXMADiscreteColorKeyFrame_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMADiscreteColorKeyFrame : WUXMAColorKeyFrame
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -691,7 +664,7 @@ WINRT_EXPORT
 #ifndef __WUXMADiscreteDoubleKeyFrame_DEFINED__
 #define __WUXMADiscreteDoubleKeyFrame_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMADiscreteDoubleKeyFrame : WUXMADoubleKeyFrame
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -705,7 +678,7 @@ WINRT_EXPORT
 #ifndef __WUXMADiscreteObjectKeyFrame_DEFINED__
 #define __WUXMADiscreteObjectKeyFrame_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMADiscreteObjectKeyFrame : WUXMAObjectKeyFrame
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -719,7 +692,7 @@ WINRT_EXPORT
 #ifndef __WUXMADiscretePointKeyFrame_DEFINED__
 #define __WUXMADiscretePointKeyFrame_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMADiscretePointKeyFrame : WUXMAPointKeyFrame
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -733,7 +706,7 @@ WINRT_EXPORT
 #ifndef __WUXMADoubleAnimation_DEFINED__
 #define __WUXMADoubleAnimation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMADoubleAnimation : WUXMATimeline
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -757,7 +730,7 @@ WINRT_EXPORT
 #ifndef __WUXMADoubleAnimationUsingKeyFrames_DEFINED__
 #define __WUXMADoubleAnimationUsingKeyFrames_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMADoubleAnimationUsingKeyFrames : WUXMATimeline
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -774,13 +747,13 @@ WINRT_EXPORT
 #ifndef __WUXMADragItemThemeAnimation_DEFINED__
 #define __WUXMADragItemThemeAnimation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMADragItemThemeAnimation : WUXMATimeline
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* targetName;
+@property (retain) NSString * targetName;
 + (WXDependencyProperty*)targetNameProperty;
 @end
 
@@ -790,14 +763,14 @@ WINRT_EXPORT
 #ifndef __WUXMADragOverThemeAnimation_DEFINED__
 #define __WUXMADragOverThemeAnimation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMADragOverThemeAnimation : WUXMATimeline
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property double toOffset;
-@property (retain) NSString* targetName;
+@property (retain) NSString * targetName;
 @property WUXCPAnimationDirection direction;
 + (WXDependencyProperty*)directionProperty;
 + (WXDependencyProperty*)targetNameProperty;
@@ -810,15 +783,15 @@ WINRT_EXPORT
 #ifndef __WUXMADrillInThemeAnimation_DEFINED__
 #define __WUXMADrillInThemeAnimation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMADrillInThemeAnimation : WUXMATimeline
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* exitTargetName;
+@property (retain) NSString * exitTargetName;
 @property (retain) WXDependencyObject* exitTarget;
-@property (retain) NSString* entranceTargetName;
+@property (retain) NSString * entranceTargetName;
 @property (retain) WXDependencyObject* entranceTarget;
 + (WXDependencyProperty*)entranceTargetNameProperty;
 + (WXDependencyProperty*)entranceTargetProperty;
@@ -832,15 +805,15 @@ WINRT_EXPORT
 #ifndef __WUXMADrillOutThemeAnimation_DEFINED__
 #define __WUXMADrillOutThemeAnimation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMADrillOutThemeAnimation : WUXMATimeline
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* exitTargetName;
+@property (retain) NSString * exitTargetName;
 @property (retain) WXDependencyObject* exitTarget;
-@property (retain) NSString* entranceTargetName;
+@property (retain) NSString * entranceTargetName;
 @property (retain) WXDependencyObject* entranceTarget;
 + (WXDependencyProperty*)entranceTargetNameProperty;
 + (WXDependencyProperty*)entranceTargetProperty;
@@ -854,13 +827,13 @@ WINRT_EXPORT
 #ifndef __WUXMADropTargetItemThemeAnimation_DEFINED__
 #define __WUXMADropTargetItemThemeAnimation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMADropTargetItemThemeAnimation : WUXMATimeline
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* targetName;
+@property (retain) NSString * targetName;
 + (WXDependencyProperty*)targetNameProperty;
 @end
 
@@ -870,7 +843,7 @@ WINRT_EXPORT
 #ifndef __WUXMAEasingColorKeyFrame_DEFINED__
 #define __WUXMAEasingColorKeyFrame_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAEasingColorKeyFrame : WUXMAColorKeyFrame
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -886,7 +859,7 @@ WINRT_EXPORT
 #ifndef __WUXMAEasingDoubleKeyFrame_DEFINED__
 #define __WUXMAEasingDoubleKeyFrame_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAEasingDoubleKeyFrame : WUXMADoubleKeyFrame
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -902,7 +875,7 @@ WINRT_EXPORT
 #ifndef __WUXMAEasingPointKeyFrame_DEFINED__
 #define __WUXMAEasingPointKeyFrame_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAEasingPointKeyFrame : WUXMAPointKeyFrame
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -918,7 +891,7 @@ WINRT_EXPORT
 #ifndef __WUXMAEdgeUIThemeTransition_DEFINED__
 #define __WUXMAEdgeUIThemeTransition_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAEdgeUIThemeTransition : WUXMATransition
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -934,7 +907,7 @@ WINRT_EXPORT
 #ifndef __WUXMAElasticEase_DEFINED__
 #define __WUXMAElasticEase_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAElasticEase : WUXMAEasingFunctionBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -952,7 +925,7 @@ WINRT_EXPORT
 #ifndef __WUXMAEntranceThemeTransition_DEFINED__
 #define __WUXMAEntranceThemeTransition_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAEntranceThemeTransition : WUXMATransition
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -972,7 +945,7 @@ WINRT_EXPORT
 #ifndef __WUXMAExponentialEase_DEFINED__
 #define __WUXMAExponentialEase_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAExponentialEase : WUXMAEasingFunctionBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -988,13 +961,13 @@ WINRT_EXPORT
 #ifndef __WUXMAFadeInThemeAnimation_DEFINED__
 #define __WUXMAFadeInThemeAnimation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAFadeInThemeAnimation : WUXMATimeline
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* targetName;
+@property (retain) NSString * targetName;
 + (WXDependencyProperty*)targetNameProperty;
 @end
 
@@ -1004,13 +977,13 @@ WINRT_EXPORT
 #ifndef __WUXMAFadeOutThemeAnimation_DEFINED__
 #define __WUXMAFadeOutThemeAnimation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAFadeOutThemeAnimation : WUXMATimeline
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* targetName;
+@property (retain) NSString * targetName;
 + (WXDependencyProperty*)targetNameProperty;
 @end
 
@@ -1020,7 +993,7 @@ WINRT_EXPORT
 #ifndef __WUXMALinearColorKeyFrame_DEFINED__
 #define __WUXMALinearColorKeyFrame_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMALinearColorKeyFrame : WUXMAColorKeyFrame
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1034,7 +1007,7 @@ WINRT_EXPORT
 #ifndef __WUXMALinearDoubleKeyFrame_DEFINED__
 #define __WUXMALinearDoubleKeyFrame_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMALinearDoubleKeyFrame : WUXMADoubleKeyFrame
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1048,7 +1021,7 @@ WINRT_EXPORT
 #ifndef __WUXMALinearPointKeyFrame_DEFINED__
 #define __WUXMALinearPointKeyFrame_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMALinearPointKeyFrame : WUXMAPointKeyFrame
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1062,7 +1035,7 @@ WINRT_EXPORT
 #ifndef __WUXMAObjectAnimationUsingKeyFrames_DEFINED__
 #define __WUXMAObjectAnimationUsingKeyFrames_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAObjectAnimationUsingKeyFrames : WUXMATimeline
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1079,7 +1052,7 @@ WINRT_EXPORT
 #ifndef __WUXMAPaneThemeTransition_DEFINED__
 #define __WUXMAPaneThemeTransition_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAPaneThemeTransition : WUXMATransition
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1095,7 +1068,7 @@ WINRT_EXPORT
 #ifndef __WUXMAPointAnimation_DEFINED__
 #define __WUXMAPointAnimation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAPointAnimation : WUXMATimeline
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1119,7 +1092,7 @@ WINRT_EXPORT
 #ifndef __WUXMAPointAnimationUsingKeyFrames_DEFINED__
 #define __WUXMAPointAnimationUsingKeyFrames_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAPointAnimationUsingKeyFrames : WUXMATimeline
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1136,13 +1109,13 @@ WINRT_EXPORT
 #ifndef __WUXMAPointerDownThemeAnimation_DEFINED__
 #define __WUXMAPointerDownThemeAnimation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAPointerDownThemeAnimation : WUXMATimeline
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* targetName;
+@property (retain) NSString * targetName;
 + (WXDependencyProperty*)targetNameProperty;
 @end
 
@@ -1152,13 +1125,13 @@ WINRT_EXPORT
 #ifndef __WUXMAPointerUpThemeAnimation_DEFINED__
 #define __WUXMAPointerUpThemeAnimation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAPointerUpThemeAnimation : WUXMATimeline
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* targetName;
+@property (retain) NSString * targetName;
 + (WXDependencyProperty*)targetNameProperty;
 @end
 
@@ -1168,13 +1141,13 @@ WINRT_EXPORT
 #ifndef __WUXMAPopInThemeAnimation_DEFINED__
 #define __WUXMAPopInThemeAnimation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAPopInThemeAnimation : WUXMATimeline
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* targetName;
+@property (retain) NSString * targetName;
 @property double fromVerticalOffset;
 @property double fromHorizontalOffset;
 + (WXDependencyProperty*)fromHorizontalOffsetProperty;
@@ -1188,13 +1161,13 @@ WINRT_EXPORT
 #ifndef __WUXMAPopOutThemeAnimation_DEFINED__
 #define __WUXMAPopOutThemeAnimation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAPopOutThemeAnimation : WUXMATimeline
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* targetName;
+@property (retain) NSString * targetName;
 + (WXDependencyProperty*)targetNameProperty;
 @end
 
@@ -1204,7 +1177,7 @@ WINRT_EXPORT
 #ifndef __WUXMAPopupThemeTransition_DEFINED__
 #define __WUXMAPopupThemeTransition_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAPopupThemeTransition : WUXMATransition
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1222,7 +1195,7 @@ WINRT_EXPORT
 #ifndef __WUXMAPowerEase_DEFINED__
 #define __WUXMAPowerEase_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAPowerEase : WUXMAEasingFunctionBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1238,7 +1211,7 @@ WINRT_EXPORT
 #ifndef __WUXMAQuadraticEase_DEFINED__
 #define __WUXMAQuadraticEase_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAQuadraticEase : WUXMAEasingFunctionBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1252,7 +1225,7 @@ WINRT_EXPORT
 #ifndef __WUXMAQuarticEase_DEFINED__
 #define __WUXMAQuarticEase_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAQuarticEase : WUXMAEasingFunctionBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1266,7 +1239,7 @@ WINRT_EXPORT
 #ifndef __WUXMAQuinticEase_DEFINED__
 #define __WUXMAQuinticEase_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAQuinticEase : WUXMAEasingFunctionBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1280,7 +1253,7 @@ WINRT_EXPORT
 #ifndef __WUXMAReorderThemeTransition_DEFINED__
 #define __WUXMAReorderThemeTransition_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAReorderThemeTransition : WUXMATransition
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1294,13 +1267,13 @@ WINRT_EXPORT
 #ifndef __WUXMARepositionThemeAnimation_DEFINED__
 #define __WUXMARepositionThemeAnimation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMARepositionThemeAnimation : WUXMATimeline
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* targetName;
+@property (retain) NSString * targetName;
 @property double fromVerticalOffset;
 @property double fromHorizontalOffset;
 + (WXDependencyProperty*)fromHorizontalOffsetProperty;
@@ -1314,12 +1287,14 @@ WINRT_EXPORT
 #ifndef __WUXMARepositionThemeTransition_DEFINED__
 #define __WUXMARepositionThemeTransition_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMARepositionThemeTransition : WUXMATransition
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
+@property BOOL isStaggeringEnabled;
++ (WXDependencyProperty*)isStaggeringEnabledProperty;
 @end
 
 #endif // __WUXMARepositionThemeTransition_DEFINED__
@@ -1328,7 +1303,7 @@ WINRT_EXPORT
 #ifndef __WUXMASineEase_DEFINED__
 #define __WUXMASineEase_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMASineEase : WUXMAEasingFunctionBase
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1342,7 +1317,7 @@ WINRT_EXPORT
 #ifndef __WUXMASplineColorKeyFrame_DEFINED__
 #define __WUXMASplineColorKeyFrame_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMASplineColorKeyFrame : WUXMAColorKeyFrame
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1358,7 +1333,7 @@ WINRT_EXPORT
 #ifndef __WUXMASplineDoubleKeyFrame_DEFINED__
 #define __WUXMASplineDoubleKeyFrame_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMASplineDoubleKeyFrame : WUXMADoubleKeyFrame
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1374,7 +1349,7 @@ WINRT_EXPORT
 #ifndef __WUXMASplinePointKeyFrame_DEFINED__
 #define __WUXMASplinePointKeyFrame_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMASplinePointKeyFrame : WUXMAPointKeyFrame
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1390,19 +1365,19 @@ WINRT_EXPORT
 #ifndef __WUXMASplitCloseThemeAnimation_DEFINED__
 #define __WUXMASplitCloseThemeAnimation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMASplitCloseThemeAnimation : WUXMATimeline
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WUXCPAnimationDirection contentTranslationDirection;
-@property (retain) NSString* contentTargetName;
+@property (retain) NSString * contentTargetName;
 @property (retain) WXDependencyObject* contentTarget;
-@property (retain) NSString* closedTargetName;
+@property (retain) NSString * closedTargetName;
 @property (retain) WXDependencyObject* closedTarget;
 @property double closedLength;
-@property (retain) NSString* openedTargetName;
+@property (retain) NSString * openedTargetName;
 @property (retain) WXDependencyObject* openedTarget;
 @property double openedLength;
 @property double offsetFromCenter;
@@ -1426,19 +1401,19 @@ WINRT_EXPORT
 #ifndef __WUXMASplitOpenThemeAnimation_DEFINED__
 #define __WUXMASplitOpenThemeAnimation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMASplitOpenThemeAnimation : WUXMATimeline
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WUXCPAnimationDirection contentTranslationDirection;
-@property (retain) NSString* contentTargetName;
+@property (retain) NSString * contentTargetName;
 @property (retain) WXDependencyObject* contentTarget;
-@property (retain) NSString* closedTargetName;
+@property (retain) NSString * closedTargetName;
 @property (retain) WXDependencyObject* closedTarget;
 @property double closedLength;
-@property (retain) NSString* openedTargetName;
+@property (retain) NSString * openedTargetName;
 @property (retain) WXDependencyObject* openedTarget;
 @property double openedLength;
 @property double offsetFromCenter;
@@ -1462,12 +1437,12 @@ WINRT_EXPORT
 #ifndef __WUXMAStoryboard_DEFINED__
 #define __WUXMAStoryboard_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAStoryboard : WUXMATimeline
-+ (NSString*)getTargetProperty:(WUXMATimeline*)element;
-+ (void)setTargetProperty:(WUXMATimeline*)element path:(NSString*)path;
-+ (NSString*)getTargetName:(WUXMATimeline*)element;
-+ (void)setTargetName:(WUXMATimeline*)element name:(NSString*)name;
++ (NSString *)getTargetProperty:(WUXMATimeline*)element;
++ (void)setTargetProperty:(WUXMATimeline*)element path:(NSString *)path;
++ (NSString *)getTargetName:(WUXMATimeline*)element;
++ (void)setTargetName:(WUXMATimeline*)element name:(NSString *)name;
 + (void)setTarget:(WUXMATimeline*)timeline target:(WXDependencyObject*)target;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1493,13 +1468,13 @@ WINRT_EXPORT
 #ifndef __WUXMASwipeBackThemeAnimation_DEFINED__
 #define __WUXMASwipeBackThemeAnimation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMASwipeBackThemeAnimation : WUXMATimeline
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* targetName;
+@property (retain) NSString * targetName;
 @property double fromVerticalOffset;
 @property double fromHorizontalOffset;
 + (WXDependencyProperty*)fromHorizontalOffsetProperty;
@@ -1513,7 +1488,7 @@ WINRT_EXPORT
 #ifndef __WUXMASwipeHintThemeAnimation_DEFINED__
 #define __WUXMASwipeHintThemeAnimation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMASwipeHintThemeAnimation : WUXMATimeline
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1521,7 +1496,7 @@ WINRT_EXPORT
 #endif
 @property double toVerticalOffset;
 @property double toHorizontalOffset;
-@property (retain) NSString* targetName;
+@property (retain) NSString * targetName;
 + (WXDependencyProperty*)targetNameProperty;
 + (WXDependencyProperty*)toHorizontalOffsetProperty;
 + (WXDependencyProperty*)toVerticalOffsetProperty;
@@ -1529,11 +1504,46 @@ WINRT_EXPORT
 
 #endif // __WUXMASwipeHintThemeAnimation_DEFINED__
 
+// Windows.UI.Xaml.Media.Animation.ConnectedAnimation
+#ifndef __WUXMAConnectedAnimation_DEFINED__
+#define __WUXMAConnectedAnimation_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXMAConnectedAnimation : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+- (EventRegistrationToken)addCompletedEvent:(void(^)(WUXMAConnectedAnimation*, RTObject*))del;
+- (void)removeCompletedEvent:(EventRegistrationToken)tok;
+- (BOOL)tryStart:(WXUIElement*)destination;
+- (void)cancel;
+@end
+
+#endif // __WUXMAConnectedAnimation_DEFINED__
+
+// Windows.UI.Xaml.Media.Animation.ConnectedAnimationService
+#ifndef __WUXMAConnectedAnimationService_DEFINED__
+#define __WUXMAConnectedAnimationService_DEFINED__
+
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
+@interface WUXMAConnectedAnimationService : RTObject
++ (WUXMAConnectedAnimationService*)getForCurrentView;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (retain) WUCCompositionEasingFunction* defaultEasingFunction;
+@property (retain) WFTimeSpan* defaultDuration;
+- (WUXMAConnectedAnimation*)prepareToAnimate:(NSString *)key source:(WXUIElement*)source;
+- (WUXMAConnectedAnimation*)getAnimation:(NSString *)key;
+@end
+
+#endif // __WUXMAConnectedAnimationService_DEFINED__
+
 // Windows.UI.Xaml.Media.Animation.CommonNavigationTransitionInfo
 #ifndef __WUXMACommonNavigationTransitionInfo_DEFINED__
 #define __WUXMACommonNavigationTransitionInfo_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMACommonNavigationTransitionInfo : WUXMANavigationTransitionInfo
 + (BOOL)getIsStaggerElement:(WXUIElement*)element;
 + (void)setIsStaggerElement:(WXUIElement*)element value:(BOOL)value;
@@ -1552,7 +1562,7 @@ WINRT_EXPORT
 #ifndef __WUXMAContinuumNavigationTransitionInfo_DEFINED__
 #define __WUXMAContinuumNavigationTransitionInfo_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAContinuumNavigationTransitionInfo : WUXMANavigationTransitionInfo
 + (BOOL)getIsEntranceElement:(WXUIElement*)element;
 + (void)setIsEntranceElement:(WXUIElement*)element value:(BOOL)value;
@@ -1577,7 +1587,7 @@ WINRT_EXPORT
 #ifndef __WUXMADrillInNavigationTransitionInfo_DEFINED__
 #define __WUXMADrillInNavigationTransitionInfo_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMADrillInNavigationTransitionInfo : WUXMANavigationTransitionInfo
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1591,7 +1601,7 @@ WINRT_EXPORT
 #ifndef __WUXMAEntranceNavigationTransitionInfo_DEFINED__
 #define __WUXMAEntranceNavigationTransitionInfo_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMAEntranceNavigationTransitionInfo : WUXMANavigationTransitionInfo
 + (BOOL)getIsTargetElement:(WXUIElement*)element;
 + (void)setIsTargetElement:(WXUIElement*)element value:(BOOL)value;
@@ -1608,7 +1618,7 @@ WINRT_EXPORT
 #ifndef __WUXMANavigationThemeTransition_DEFINED__
 #define __WUXMANavigationThemeTransition_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMANavigationThemeTransition : WUXMATransition
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1624,7 +1634,7 @@ WINRT_EXPORT
 #ifndef __WUXMASlideNavigationTransitionInfo_DEFINED__
 #define __WUXMASlideNavigationTransitionInfo_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMASlideNavigationTransitionInfo : WUXMANavigationTransitionInfo
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1638,7 +1648,7 @@ WINRT_EXPORT
 #ifndef __WUXMASuppressNavigationTransitionInfo_DEFINED__
 #define __WUXMASuppressNavigationTransitionInfo_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMASuppressNavigationTransitionInfo : WUXMANavigationTransitionInfo
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -1647,3 +1657,4 @@ WINRT_EXPORT
 @end
 
 #endif // __WUXMASuppressNavigationTransitionInfo_DEFINED__
+

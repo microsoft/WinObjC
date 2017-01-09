@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,11 +14,15 @@
 //
 //******************************************************************************
 
-#include <COMIncludes.h>
-#import <windows.foundation.h>
-#include <COMIncludes_End.h>
-
 #import "Starboard.h"
+
+#import <UIKit/UIApplicationDelegate.h>
+#import <UIKit/UIDevice.h>
+#import <UIKit/UIFont.h>
+#import <UIKit/UINib.h>
+#import <UIKit/UIStoryboard.h>
+#import <UIKit/UIViewController.h>
+
 #import <Foundation/NSMutableArray.h>
 #import <Foundation/NSData.h>
 #import <Foundation/NSBundle.h>
@@ -26,24 +30,25 @@
 #import <Foundation/NSNotificationCenter.h>
 #import <Foundation/NSRunLoop.h>
 #import <Foundation/NSAutoReleasePool.h>
-#import <UIKit/UIViewController.h>
-#import <UIKit/UIDevice.h>
-#import <UIKit/UIFont.h>
-#import <UIKit/UINib.h>
-#import <UIKit/UIApplicationDelegate.h>
+
+#include <COMIncludes.h>
+#import <windows.foundation.h>
+#include <COMIncludes_End.h>
+
 #import <StringHelpers.h>
 #import <CollectionHelpers.h>
 #import "NSThread-Internal.h"
 #import "NSUserDefaultsInternal.h"
 #import "StarboardXaml/StarboardXaml.h"
 #import "UIApplicationInternal.h"
+#import "UIDeviceInternal.h"
 #import "UIFontInternal.h"
 #import "UIViewControllerInternal.h"
+#import "UIWindowInternal.h"
 #import "UIInterface.h"
 #import "LoggingNative.h"
-#import "UIDeviceInternal.h"
 #import <MainDispatcher.h>
-#import <CACompositor.h>
+#import "StarboardXaml/DisplayProperties.h"
 #import <UWP/WindowsApplicationModelActivation.h>
 
 static const wchar_t* TAG = L"UIApplicationMain";
@@ -166,19 +171,16 @@ int UIApplicationMainInit(NSString* principalClassName,
     if (infoDict != nil) {
         NSArray* fonts = [infoDict objectForKey:@"UIAppFonts"];
         if (fonts != nil) {
+            NSMutableArray* fontURLs = [NSMutableArray array];
             for (NSString* curFontName in fonts) {
-                NSString* path = [[NSBundle mainBundle] pathForResource:curFontName ofType:nil];
-                if (path != nil) {
-                    NSData* data = [NSData dataWithContentsOfFile:path];
-                    if (data != nil) {
-                        UIFont* font = [UIFont fontWithData:data];
-                        if (font != nil) {
-                            [font _setName:[[path lastPathComponent] stringByDeletingPathExtension]];
-                            CTFontManagerRegisterGraphicsFont((CGFontRef)font, NULL);
-                        }
-                    }
+                // curFontName contains extension, so pass in nil
+                NSURL* url = [[NSBundle mainBundle] URLForResource:curFontName withExtension:nil];
+                if (url != nil) {
+                    [fontURLs addObject:url];
                 }
             }
+
+            CTFontManagerRegisterFontsForURLs((CFArrayRef)fontURLs, kCTFontManagerScopeNone, nil);
         }
 
         if (defaultOrientation != UIInterfaceOrientationUnknown) {
@@ -197,7 +199,7 @@ int UIApplicationMainInit(NSString* principalClassName,
 
         NSString* mainNibFile;
 
-        if (GetCACompositor()->isTablet()) {
+        if (DisplayProperties::IsTablet()) {
             mainNibFile = [infoDict objectForKey:@"NSMainNibFile~ipad"];
             if (mainNibFile == nil) {
                 mainNibFile = [infoDict objectForKey:@"NSMainNibFile"];
@@ -224,7 +226,7 @@ int UIApplicationMainInit(NSString* principalClassName,
             }
         } else {
             NSString* storyBoardName = nil;
-            if (GetCACompositor()->isTablet()) {
+            if (DisplayProperties::IsTablet()) {
                 storyBoardName = [infoDict objectForKey:@"UIMainStoryboardFile~ipad"];
             }
 
@@ -258,6 +260,9 @@ int UIApplicationMainInit(NSString* principalClassName,
             break;
         case ActivationTypeProtocol:
             [launchOption setValue:activationArg forKey:UIApplicationLaunchOptionsProtocolKey];
+            break;
+        case ActivationTypeFile:
+            [launchOption setValue:activationArg forKey:UIApplicationLaunchOptionsFileKey];
             break;
         default:
             break;
@@ -356,6 +361,10 @@ extern "C" void UIApplicationMainHandleWindowVisibilityChangeEvent(bool isVisibl
 extern "C" void UIApplicationMainHandleVoiceCommandEvent(IInspectable* voiceCommandResult) {
     WMSSpeechRecognitionResult* result = [WMSSpeechRecognitionResult createWith:voiceCommandResult];
     [[UIApplication sharedApplication] _sendVoiceCommandReceivedEvent:result];
+}
+
+extern "C" void UIApplicationMainHandleFileEvent(IInspectable* result) {
+    [[UIApplication sharedApplication] _sendFileReceivedEvent:[WAAFileActivatedEventArgs createWith:result]];
 }
 
 static NSString* _bundleIdFromPackageFamilyName(const wchar_t* packageFamily) {

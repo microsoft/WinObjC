@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -19,17 +19,32 @@
 
 #include "Platform/EbrPlatform.h"
 
-#include "CoreFoundation/CFArray.h"
-#include "CoreGraphics/CGContext.h"
+#import <UIKit/NSValue+UIKitAdditions.h>
+#import <UIKit/UIColor.h>
+#import <UIKit/UIAlertView.h>
+#import <UIKit/UIApplication.h>
+#import <UIKit/UIApplicationDelegate.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UIImageView.h>
+#import <UIKit/UITextInputTraits.h>
+#import <UIKit/UIView.h>
+#import <UIKit/UIViewController.h>
+#import <UIKit/UIWindow.h>
 
-#include "Foundation/NSMutableDictionary.h"
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSString.h"
+#include <CoreFoundation/CFArray.h>
+
+#include <CoreGraphics/CGContext.h>
+
+#include <Foundation/NSMutableDictionary.h>
+#include <Foundation/NSMutableArray.h>
+#include <Foundation/NSString.h>
+
+#include <QuartzCore/CALayer.h>
+#include <QuartzCore/CATransaction.h>
+
 #include "NSRunLoopSource.h"
 #include "NSRunLoop+Internal.h"
-#include "UIKit/UIView.h"
-#include "UIKit/UIImage.h"
-#include "UIKit/UIColor.h"
+
 #include "UIViewInternal.h"
 #include "UIApplicationInternal.h"
 #include "UIKit/UIGestureRecognizerSubclass.h"
@@ -47,7 +62,6 @@
 
 #include "UIEmptyView.h"
 
-#include "CACompositor.h"
 #include "UIInterface.h"
 
 #include "UWP/WindowsUICore.h"
@@ -55,6 +69,7 @@
 
 #include "LoggingNative.h"
 #include "UIApplicationMainInternal.h"
+#import "StarboardXaml/DisplayProperties.h"
 #import "StarboardXaml/UWPBackgroundTask.h"
 
 static const wchar_t* TAG = L"UIApplication";
@@ -100,6 +115,7 @@ NSString* const UIApplicationLaunchOptionsAnnotationKey = @"UIApplicationLaunchO
 NSString* const UIApplicationLaunchOptionsLocalNotificationKey = @"UIApplicationLaunchOptionsLocalNotificationKey";
 NSString* const UIApplicationLaunchOptionsToastActionKey = @"UIApplicationLaunchOptionsToastActionKey";
 NSString* const UIApplicationLaunchOptionsVoiceCommandKey = @"UIApplicationLaunchOptionsVoiceCommandKey";
+NSString* const UIApplicationLaunchOptionsFileKey = @"UIApplicationLaunchOptionsFileKey";
 NSString* const UIApplicationLaunchOptionsProtocolKey = @"UIApplicationLaunchOptionsProtocolKey";
 NSString* const UIApplicationLaunchOptionsLocationKey = @"UIApplicationLaunchOptionsLocationKey";
 
@@ -282,7 +298,7 @@ static idretaintype(WSDDisplayRequest) _screenActive;
 }
 
 static id findTopActionButtons(NSMutableArray* arr, NSArray* windows, UIView* root) {
-    id subviews = [root subviews];
+    NSArray* subviews = [root subviews];
     int count = [subviews count];
 
     for (int i = count - 1; i >= 0; i--) {
@@ -300,7 +316,7 @@ static id findTopActionButtons(NSMutableArray* arr, NSArray* windows, UIView* ro
             int windowCount = [windows count];
 
             for (int j = windowCount - 1; j >= 0; j--) {
-                id curWindow = [windows objectAtIndex:j];
+                UIWindow* curWindow = [windows objectAtIndex:j];
 
                 middle.x = bounds.origin.x + bounds.size.width / 2.0f;
                 middle.y = bounds.origin.y + bounds.size.height / 2.0f;
@@ -478,8 +494,8 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 
     appFrame.origin.x = 0;
     appFrame.origin.y = 0;
-    appFrame.size.width = GetCACompositor()->screenWidth();
-    appFrame.size.height = GetCACompositor()->screenHeight();
+    appFrame.size.width = DisplayProperties::ScreenWidth();
+    appFrame.size.height = DisplayProperties::ScreenHeight();
 
     _curOrientation = orientation;
     CGAffineTransform trans;
@@ -698,51 +714,8 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
     WUNBadgeNotification* notification = [WUNBadgeNotification makeBadgeNotification:doc];
     WUNBadgeUpdater* updater = [WUNBadgeUpdateManager createBadgeUpdaterForApplication];
 
-    [updater update:notification];
-}
-
-static void printViews(id curView, int level) {
-    char szOut[2048];
-    strcpy_s(szOut, sizeof(szOut), "");
-
-    for (int i = 0; i < level * 2; i++) {
-        sprintf_s(&szOut[strlen(szOut)], sizeof(szOut) - strlen(szOut), " ");
-    }
-    sprintf_s(&szOut[strlen(szOut)], sizeof(szOut) - strlen(szOut), "%s @ 0x%08x ", object_getClassName(curView), (unsigned int)curView);
-
-    if ([curView isHidden] || [curView alpha] <= 0.01f) {
-        sprintf_s(&szOut[strlen(szOut)], sizeof(szOut) - strlen(szOut), " (hidden) ");
-    }
-    if (![curView isUserInteractionEnabled]) {
-        sprintf_s(&szOut[strlen(szOut)], sizeof(szOut) - strlen(szOut), " (interaction disabled) ");
-    }
-    if ([curView isOpaque]) {
-        sprintf_s(&szOut[strlen(szOut)], sizeof(szOut) - strlen(szOut), " (opaque) ");
-    }
-    if ([curView respondsToSelector:@selector(text)]) {
-        id text = [curView text];
-        sprintf_s(&szOut[strlen(szOut)], sizeof(szOut) - strlen(szOut), " (text=\"%s\") ", [text UTF8String]);
-    }
-
-    CGRect rect;
-    rect = [curView frame];
-    id fmt = [NSString stringWithFormat:@"{%f, %f}{%f, %f}\n", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height];
-
-    /*
-    sprintf_s(&szOut[szOutLength],
-              sizeof(szOut) - strlen(szOut),
-              "{%f, %f}{%f, %f}\n",
-              rect.origin.x,
-              rect.origin.y,
-              rect.size.width,
-              rect.size.height);
-    */
-
-    TraceVerbose(TAG, L"%hs%hs", szOut, [fmt UTF8String]);
-
-    for (unsigned i = 0; i < [[curView subviews] count]; i++) {
-        printViews([[curView subviews] objectAtIndex:i], level + 1);
-    }
+    // TODO #1201: 0x803e0208 : The notification platform does not have the proper privileges to complete the request.
+    // [updater update:notification];
 }
 
 + (void)_shutdownEvent {
@@ -920,22 +893,22 @@ static void printViews(id curView, int level) {
         CGRect frame;
         frame.origin.x = 0.0f;
         frame.origin.y = 0.0f;
-        frame.size.width = GetCACompositor()->screenWidth();
+        frame.size.width = DisplayProperties::ScreenWidth();
         frame.size.height = statusBarHeight;
         statusBar = [[UIImageView alloc] initWithFrame:frame];
         [statusBar setImage:[UIImage imageNamed:@"/img/StatusBar.png"]];
         [statusBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin];
 
-        frame.size.height = GetCACompositor()->screenHeight();
+        frame.size.height = DisplayProperties::ScreenHeight();
         statusBarRotationLayer = [[UIView alloc] initWithFrame:frame];
         [statusBarRotationLayer addSubview:statusBar];
         popupRotationLayer = [[UIKeyboardRotationView alloc] initWithFrame:frame];
 
         CALayer* layer = [statusBarRotationLayer layer];
-        GetCACompositor()->setNodeTopMost((DisplayNode*)[layer _presentationNode], true);
+        [layer _layerProxy]->SetTopMost();
         [CATransaction _addSublayerToTop:layer];
-        GetCACompositor()->setNodeTopMost((DisplayNode*)[[popupRotationLayer layer] _presentationNode], true);
-        GetCACompositor()->setNodeTopMost((DisplayNode*)[[statusBarRotationLayer layer] _presentationNode], true);
+        [[popupRotationLayer layer] _layerProxy]->SetTopMost();
+        [[statusBarRotationLayer layer] _layerProxy]->SetTopMost();
     }
 
     _curNotifications = [NSMutableArray new];
@@ -1026,16 +999,16 @@ static void printViews(id curView, int level) {
 
     switch (_curOrientation) {
         case UIInterfaceOrientationLandscapeRight:
-            ret.origin.x = GetCACompositor()->screenWidth() - statusBarHeight;
+            ret.origin.x = DisplayProperties::ScreenWidth() - statusBarHeight;
             ret.origin.y = 0.0f;
             ret.size.width = statusBarHeight;
-            ret.size.height = GetCACompositor()->screenHeight();
+            ret.size.height = DisplayProperties::ScreenHeight();
             break;
 
         case UIInterfaceOrientationPortrait:
             ret.origin.x = 0.0f;
             ret.origin.y = 0.0f;
-            ret.size.width = GetCACompositor()->screenWidth();
+            ret.size.width = DisplayProperties::ScreenWidth();
             ret.size.height = statusBarHeight;
             break;
 
@@ -1043,13 +1016,13 @@ static void printViews(id curView, int level) {
             ret.origin.x = 0.0f;
             ret.origin.y = 0.0f;
             ret.size.width = statusBarHeight;
-            ret.size.height = GetCACompositor()->screenHeight();
+            ret.size.height = DisplayProperties::ScreenHeight();
             break;
 
         case UIInterfaceOrientationPortraitUpsideDown:
             ret.origin.x = 0.0f;
-            ret.origin.y = GetCACompositor()->screenHeight() - statusBarHeight;
-            ret.size.width = GetCACompositor()->screenWidth();
+            ret.origin.y = DisplayProperties::ScreenHeight() - statusBarHeight;
+            ret.size.width = DisplayProperties::ScreenWidth();
             ret.size.height = statusBarHeight;
             break;
     }
@@ -1069,8 +1042,8 @@ static void printViews(id curView, int level) {
 
         popupRect.origin.x = 0;
         popupRect.origin.y = 0;
-        popupRect.size.width = GetCACompositor()->screenWidth();
-        popupRect.size.height = GetCACompositor()->screenHeight();
+        popupRect.size.width = DisplayProperties::ScreenWidth();
+        popupRect.size.height = DisplayProperties::ScreenHeight();
 
         popupWindow = [[UIWindow alloc] _initWithContentRect:popupRect];
         [popupWindow setWindowLevel:100000.0f];
@@ -1249,6 +1222,12 @@ static void _sendMemoryWarningToViewControllers(UIView* subview) {
 - (void)_sendVoiceCommandReceivedEvent:(WMSSpeechRecognitionResult*)result {
     if ([self.delegate respondsToSelector:@selector(application:didReceiveVoiceCommand:)]) {
         [self.delegate application:sharedApplication didReceiveVoiceCommand:result];
+    }
+}
+
+- (void)_sendFileReceivedEvent:(WAAFileActivatedEventArgs*)result {
+    if ([self.delegate respondsToSelector:@selector(application:didReceiveFile:)]) {
+        [self.delegate application:sharedApplication didReceiveFile:result];
     }
 }
 
@@ -1900,25 +1879,25 @@ void UIShutdown() {
     float newWidth = [self currentWidth];
     float newHeight = [self currentHeight];
     float newMagnification = [self currentMagnification];
-    float newRotation = CACompositorRotationNone;
+    DisplayProperties::ScreenRotation newRotation = DisplayProperties::ScreenRotationNone;
 
     switch (_presentationTransform) {
         case UIInterfaceOrientationPortraitUpsideDown:
-            newRotation = CACompositorRotation180;
+            newRotation = DisplayProperties::ScreenRotation180;
             break;
 
         case UIInterfaceOrientationLandscapeLeft:
-            newRotation = CACompositorRotation90CounterClockwise;
+            newRotation = DisplayProperties::ScreenRotation90CounterClockwise;
             break;
 
         case UIInterfaceOrientationLandscapeRight:
-            newRotation = CACompositorRotation90Clockwise;
+            newRotation = DisplayProperties::ScreenRotation90Clockwise;
             break;
     }
 
-    GetCACompositor()->setTablet(_operationMode == WOCOperationModeTablet);
-    GetCACompositor()->setScreenSize(newWidth, newHeight, newMagnification, newRotation);
-    GetCACompositor()->setDeviceSize(newWidth, newHeight);
+    DisplayProperties::SetTablet(_operationMode == WOCOperationModeTablet);
+    DisplayProperties::SetScreenSize(newWidth, newHeight, newMagnification, newRotation);
+    DisplayProperties::SetDeviceSize(newWidth, newHeight);
 
     //  Adjust size of all UIWindows
     CGRect curBounds;

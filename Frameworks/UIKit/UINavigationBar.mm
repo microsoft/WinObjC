@@ -16,26 +16,34 @@
 
 #import "Starboard.h"
 #import "NSStringInternal.h"
-#import "Foundation/NSMutableArray.h"
-#import "Foundation/NSString.h"
-#import "CoreGraphics/CGContext.h"
-#import "CoreGraphics/CGGradient.h"
-#import "UIKit/UIView.h"
-#import "UIKit/UIFont.h"
-#import "UIKit/UIColor.h"
-#import "UIKit/UIDevice.h"
-#import "UIKit/UIImage.h"
-#import "UIKit/UIButton.h"
-#import "UIKit/UILabel.h"
-#import "UIKit/UINavigationBar.h"
-#import "UIKit/UIBarButtonItem.h"
+
+#import <UIKit/NSValue+UIKitAdditions.h>
+#import <UIKit/UIBarButtonItem.h>
+#import <UIKit/UIButton.h>
+#import <UIKit/UIColor.h>
+#import <UIKit/UIDevice.h>
+#import <UIKit/UIFont.h>
+#import <UIKit/UIGraphics.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UIImageView.h>
+#import <UIKit/UILabel.h>
+#import <UIKit/UINavigationBar.h>
+#import <UIKit/UINavigationController.h>
+#import <UIKit/UIView.h>
+
+#import <CoreGraphics/CGContext.h>
+#import <CoreGraphics/CGGradient.h>
+
+#import <Foundation/NSMutableArray.h>
+#import <Foundation/NSString.h>
+
 #import "UIBarButtonItem+Internals.h"
 #import "UINavigationItemInternal.h"
 #import "LoggingNative.h"
 #import "UINavigationControllerInternal.h"
 #import "UIBarButtonItem+Internals.h"
 #import "UINavigationBarInternal.h"
-#import "CACompositor.h"
+#import "StarboardXaml/DisplayProperties.h"
 
 static const wchar_t* TAG = L"UINavigationBar";
 
@@ -616,7 +624,7 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
     CGRect frame = self.frame;
 
     shadowImageView = [[UIImageView alloc]
-        initWithFrame:CGRectMake(0.0f, frame.origin.y + frame.size.height, GetCACompositor()->screenWidth(), size.height)];
+        initWithFrame:CGRectMake(0.0f, frame.origin.y + frame.size.height, DisplayProperties::ScreenWidth(), size.height)];
 
     shadowImageView.image = image;
 

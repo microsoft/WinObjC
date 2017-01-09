@@ -19,12 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_MEDIA_CONTENTRESTRICTIONS_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_CONTENTRESTRICTIONS_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Media_ContentRestrictions.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WMCRatedContentDescription, WMCContentRestrictionsBrowsePolicy, WMCRatedContentRestrictions;
-@protocol WMCIRatedContentDescription
-, WMCIRatedContentDescriptionFactory, WMCIContentRestrictionsBrowsePolicy, WMCIRatedContentRestrictions,
-    WMCIRatedContentRestrictionsFactory;
+@protocol WMCIRatedContentDescription, WMCIRatedContentDescriptionFactory, WMCIContentRestrictionsBrowsePolicy, WMCIRatedContentRestrictions, WMCIRatedContentRestrictionsFactory;
 
 // Windows.Media.ContentRestrictions.RatedContentCategory
 enum _WMCRatedContentCategory {
@@ -55,16 +59,16 @@ typedef unsigned WMCContentAccessRestrictionLevel;
 #ifndef __WMCRatedContentDescription_DEFINED__
 #define __WMCRatedContentDescription_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CONTENTRESTRICTIONS_EXPORT
 @interface WMCRatedContentDescription : RTObject
-+ (WMCRatedContentDescription*)make:(NSString*)id title:(NSString*)title category:(WMCRatedContentCategory)category ACTIVATOR;
++ (WMCRatedContentDescription*)make:(NSString *)id title:(NSString *)title category:(WMCRatedContentCategory)category ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* title;
+@property (retain) NSString * title;
 @property (retain) NSMutableArray* /* NSString * */ ratings;
 @property (retain) RTObject<WSSIRandomAccessStreamReference>* image;
-@property (retain) NSString* id;
+@property (retain) NSString * id;
 @property WMCRatedContentCategory category;
 @end
 
@@ -74,12 +78,12 @@ WINRT_EXPORT
 #ifndef __WMCContentRestrictionsBrowsePolicy_DEFINED__
 #define __WMCContentRestrictionsBrowsePolicy_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CONTENTRESTRICTIONS_EXPORT
 @interface WMCContentRestrictionsBrowsePolicy : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* geographicRegion;
+@property (readonly) NSString * geographicRegion;
 @property (readonly) id /* unsigned int */ maxBrowsableAgeRating;
 @property (readonly) id /* unsigned int */ preferredAgeRating;
 @end
@@ -90,22 +94,19 @@ WINRT_EXPORT
 #ifndef __WMCRatedContentRestrictions_DEFINED__
 #define __WMCRatedContentRestrictions_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_MEDIA_CONTENTRESTRICTIONS_EXPORT
 @interface WMCRatedContentRestrictions : RTObject
-+ (WMCRatedContentRestrictions*)makeWithMaxAgeRating:(unsigned int)maxAgeRating ACTIVATOR;
 + (instancetype)make ACTIVATOR;
++ (WMCRatedContentRestrictions*)makeWithMaxAgeRating:(unsigned int)maxAgeRating ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-- (EventRegistrationToken)addRestrictionsChangedEvent:(void (^)(RTObject*, RTObject*))del;
+- (EventRegistrationToken)addRestrictionsChangedEvent:(void(^)(RTObject*, RTObject*))del;
 - (void)removeRestrictionsChangedEvent:(EventRegistrationToken)tok;
 - (void)getBrowsePolicyAsyncWithSuccess:(void (^)(WMCContentRestrictionsBrowsePolicy*))success failure:(void (^)(NSError*))failure;
-- (void)getRestrictionLevelAsync:(WMCRatedContentDescription*)RatedContentDescription
-                         success:(void (^)(WMCContentAccessRestrictionLevel))success
-                         failure:(void (^)(NSError*))failure;
-- (void)requestContentAccessAsync:(WMCRatedContentDescription*)RatedContentDescription
-                          success:(void (^)(BOOL))success
-                          failure:(void (^)(NSError*))failure;
+- (void)getRestrictionLevelAsync:(WMCRatedContentDescription*)RatedContentDescription success:(void (^)(WMCContentAccessRestrictionLevel))success failure:(void (^)(NSError*))failure;
+- (void)requestContentAccessAsync:(WMCRatedContentDescription*)RatedContentDescription success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WMCRatedContentRestrictions_DEFINED__
+

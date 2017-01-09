@@ -13,14 +13,12 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
 
-#import <UIKit/UIKitExport.h>
-#import <Foundation/NSObject.h>
-#import <UIKit/UIKit.h>
 #import <CoreGraphics/CGGeometry.h>
+#import <Foundation/NSObject.h>
 #import <UIKit/UIDynamicBehavior.h>
+#import <UIKit/UIKitExport.h>
 
 @protocol UIDynamicItem;
 @class NSArray;

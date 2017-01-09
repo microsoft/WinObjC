@@ -17,10 +17,20 @@
 #pragma once
 
 #import "LinkedList.h"
-#include "UWP/InteropBase.h"
+#import <UIKit/NSLayoutAnchor.h>
+#import <UIKit/NSLayoutXAxisAnchor.h>
+#import <UIKit/NSLayoutYAxisAnchor.h>
+#import <UIKit/NSLayoutDimension.h>
+#import <UIKit/NSStringDrawingContext.h>
+#import <UIKit/UILayoutSupport.h>
+#import <UIKit/UITouch.h>
+#import <UIKit/UIView.h>
+#import "UWP/InteropBase.h"
+#import "UWP/WindowsUIXamlControls.h"
 
 @class UIWindow;
 @class WXFrameworkElement;
+@class WUXIPointerRoutedEventArgs;
 
 class UIViewPrivateState : public LLTreeNode<UIViewPrivateState, UIView> {
 public:
@@ -31,8 +41,8 @@ public:
     BOOL userInteractionEnabled;
     BOOL multipleTouchEnabled;
     UIViewContentMode contentMode;
-    id currentTouches;
-    id gestures;
+    StrongId<NSMutableArray> currentTouches;
+    StrongId<NSMutableArray> gestures;
     StrongId<NSMutableArray> constraints;
     bool _isChangingParent;
     bool _constraintsNeedUpdate;
@@ -58,7 +68,6 @@ public:
     BOOL translatesAutoresizingMaskIntoConstraints;
     CGRect _resizeRoundingError;
 
-    StrongId<WXFrameworkElement> _xamlInputElement; // The XAML element receiving touch input for this view
     EventRegistrationToken _pointerPressedEventRegistration = { 0 };
     EventRegistrationToken _pointerMovedEventRegistration = { 0 };
     EventRegistrationToken _pointerReleasedEventRegistration = { 0 };
@@ -76,8 +85,8 @@ public:
         userInteractionEnabled = YES;
         multipleTouchEnabled = NO;
         contentMode = UIViewContentModeScaleToFill;
-        currentTouches = [[NSMutableArray alloc] initWithCapacity:16];
-        gestures = [NSMutableArray new];
+        currentTouches.attach([[NSMutableArray alloc] initWithCapacity:16]);
+        gestures.attach([NSMutableArray new]);
         constraints.attach([NSMutableArray new]);
         translatesAutoresizingMaskIntoConstraints = YES;
         _isChangingParent = false;
@@ -106,7 +115,8 @@ public:
     UIViewPrivateState* priv;
 }
 
-- (void)_initPriv;
+- (UITouchPhase)_processPointerEvent:(WUXIPointerRoutedEventArgs*)pointerEventArgs forTouchPhase:(UITouchPhase)touchPhase;
+
 + (void)_setPageTransitionForView:(UIView*)view fromLeft:(BOOL)fromLeft;
 - (void)_applyConstraints;
 - (void)_setShouldLayout;

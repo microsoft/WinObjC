@@ -17,8 +17,18 @@
 #define NOMINMAX
 
 #import "Starboard.h"
+
+#import <UIKit/UIButton.h>
+#import <UIKit/UIControl.h>
+#import <UIKit/UIFont.h>
+#import <UIKit/UILabel.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UIImageView.h>
+#import <UIKit/UISwipeGestureRecognizer.h>
+#import <UIKit/UITextField.h>
+#import <UIKit/UIView.h>
+
 #import "UITableViewContentView.h"
-#import "UIKit/UILabel.h"
 #import "UIViewInternal.h"
 #import "_UIGroupEdgeView.h"
 #import "UITableViewInternal.h"
@@ -27,7 +37,7 @@
 #import "CALayerInternal.h"
 #import "UITableViewInternal.h"
 #import "UIColorInternal.h"
-#import "CACompositor.h"
+#import "StarboardXaml/DisplayProperties.h"
 
 #import <algorithm>
 
@@ -91,7 +101,7 @@ static UILabel* getTextLabel(UITableViewCell* self) {
                 [self->_textLabel setBackgroundColor:nil];
                 [self->_textLabel setNumberOfLines:0];
                 [self->_textLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
-                [self->_textLabel setFont:[UIFont fontWithName:@"Helvetica Bold" size:[UIFont labelFontSize]]];
+                [self->_textLabel setFont:[UIFont fontWithName:@"Segoe UI Bold" size:[UIFont labelFontSize]]];
 
                 [self->_contentView addSubview:self->_textLabel];
                 break;
@@ -113,7 +123,7 @@ static UILabel* getTextLabel(UITableViewCell* self) {
                 [self->_textLabel setBackgroundColor:nil];
                 [self->_textLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
                 [self->_textLabel setNumberOfLines:0];
-                [self->_textLabel setFont:[UIFont fontWithName:@"Helvetica Bold" size:[UIFont labelFontSize]]];
+                [self->_textLabel setFont:[UIFont fontWithName:@"Segoe UI Bold" size:[UIFont labelFontSize]]];
 
                 [self->_contentView addSubview:self->_textLabel];
                 break;
@@ -135,7 +145,7 @@ static UILabel* getTextLabel(UITableViewCell* self) {
                 [self->_textLabel setBackgroundColor:nil];
                 [self->_textLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
                 [self->_textLabel setNumberOfLines:1];
-                [self->_textLabel setFont:[UIFont fontWithName:@"Helvetica Bold" size:[UIFont labelFontSize]]];
+                [self->_textLabel setFont:[UIFont fontWithName:@"Segoe UI Bold" size:[UIFont labelFontSize]]];
 
                 [self->_contentView addSubview:self->_textLabel];
                 break;
@@ -148,15 +158,15 @@ static UILabel* getTextLabel(UITableViewCell* self) {
 
         switch (self->_style) {
             case UITableViewCellStyleSubtitle:
-                [self->_textLabel setFont:[UIFont fontWithName:@"Helvetica Bold" size:[UIFont labelFontSize] + 1.0f]];
+                [self->_textLabel setFont:[UIFont fontWithName:@"Segoe UI Bold" size:[UIFont labelFontSize] + 1.0f]];
                 break;
 
             case UITableViewCellStyleValue1:
-                [self->_textLabel setFont:[UIFont fontWithName:@"Helvetica Bold" size:[UIFont labelFontSize]]];
+                [self->_textLabel setFont:[UIFont fontWithName:@"Segoe UI Bold" size:[UIFont labelFontSize]]];
                 break;
 
             case UITableViewCellStyleValue2:
-                [self->_textLabel setFont:[UIFont fontWithName:@"Helvetica Bold" size:[UIFont smallSystemFontSize]]];
+                [self->_textLabel setFont:[UIFont fontWithName:@"Segoe UI Bold" size:[UIFont smallSystemFontSize]]];
                 break;
 
             case UITableViewCellStyleDefault:
@@ -196,7 +206,7 @@ static id getSecondaryLabel(UITableViewCell* self) {
                 [self->_secondaryLabel setHighlightedTextColor:[UIColor blackColor]];
                 [self->_secondaryLabel setBackgroundColor:nil];
                 [self->_secondaryLabel setTextAlignment:UITextAlignmentRight];
-                [self->_secondaryLabel setFont:[UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize]]];
+                [self->_secondaryLabel setFont:[UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]]];
                 [self->_secondaryLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
 
                 [self->_contentView addSubview:self->_secondaryLabel];
@@ -216,7 +226,7 @@ static id getSecondaryLabel(UITableViewCell* self) {
                 [self->_secondaryLabel setTextColor:[UIColor grayColor]];
                 [self->_secondaryLabel setHighlightedTextColor:[UIColor blackColor]];
                 [self->_secondaryLabel setBackgroundColor:nil];
-                [self->_secondaryLabel setFont:[UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize] / 2.0f]];
+                [self->_secondaryLabel setFont:[UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize] / 2.0f]];
                 [self->_secondaryLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
 
                 [self->_contentView addSubview:self->_secondaryLabel];
@@ -236,7 +246,7 @@ static id getSecondaryLabel(UITableViewCell* self) {
                 [self->_secondaryLabel setTextColor:[UIColor grayColor]];
                 [self->_secondaryLabel setHighlightedTextColor:[UIColor blackColor]];
                 [self->_secondaryLabel setBackgroundColor:nil];
-                [self->_secondaryLabel setFont:[UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize] / 2.0f]];
+                [self->_secondaryLabel setFont:[UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize] / 2.0f]];
                 [self->_secondaryLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
 
                 [self->_contentView addSubview:self->_secondaryLabel];
@@ -250,15 +260,15 @@ static id getSecondaryLabel(UITableViewCell* self) {
 
         switch (self->_style) {
             case UITableViewCellStyleSubtitle:
-                [self->_secondaryLabel setFont:[UIFont fontWithName:@"Helvetica" size:[UIFont systemFontSize]]];
+                [self->_secondaryLabel setFont:[UIFont fontWithName:@"Segoe UI" size:[UIFont systemFontSize]]];
                 break;
 
             case UITableViewCellStyleValue1:
-                [self->_secondaryLabel setFont:[UIFont fontWithName:@"Helvetica" size:[UIFont systemFontSize] + 1.0f]];
+                [self->_secondaryLabel setFont:[UIFont fontWithName:@"Segoe UI" size:[UIFont systemFontSize] + 1.0f]];
                 break;
 
             case UITableViewCellStyleValue2:
-                [self->_secondaryLabel setFont:[UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize]]];
+                [self->_secondaryLabel setFont:[UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]]];
                 break;
 
             case UITableViewCellStyleDefault:
@@ -678,7 +688,7 @@ static float getMarginWidth(UITableViewCell* self) {
 
     float marginWidth = 0.0f;
     if (tableViewWidth > 20) {
-        if (tableViewWidth < 400 || !GetCACompositor()->isTablet()) {
+        if (tableViewWidth < 400 || !DisplayProperties::IsTablet()) {
             marginWidth = 10.0f;
         } else {
             marginWidth = std::max(31.0f, std::min(45.0f, tableViewWidth * 0.06f));
@@ -873,7 +883,7 @@ static id buildInternalAccessory(UITableViewCell* self, int type) {
     }
 
     if (self->_internalAccessoryView == nil || self->_internalAccessoryType != type) {
-        id image = nil;
+        UIImage* image = nil;
 
         switch (type) {
             case UITableViewCellAccessoryCheckmark:
@@ -906,7 +916,7 @@ static id buildInternalAccessory(UITableViewCell* self, int type) {
     return self->_internalAccessoryView;
 }
 
-static id getCurrentAccessoryView(UITableViewCell* self) {
+static UIView* getCurrentAccessoryView(UITableViewCell* self) {
     UIView* ret = nil;
 
     if (self->_accessoryView) {
@@ -927,13 +937,6 @@ static id getCurrentAccessoryView(UITableViewCell* self) {
                 TraceWarning(TAG, L"Invalid accessory style: %u", self->_selectionStyle);
         }
     }
-
-    /*
-    assert(!_accessoryType || !_removeButton);
-    if ( _removeButton ) {
-    ret = _removeButton;
-    }
-    */
 
     if (ret != self->_curAccessoryView) {
         [self->_curAccessoryView removeFromSuperview];
@@ -1184,7 +1187,7 @@ static void setupGroupView(UITableViewCell* self) {
         [_borderView setFrame:borderRect];
     }
 
-    id accessoryView = getCurrentAccessoryView(self);
+    UIView* accessoryView = getCurrentAccessoryView(self);
     if (accessoryView) {
         CGRect accessoryRect = { 0 };
 
@@ -1320,7 +1323,7 @@ static void setupGroupView(UITableViewCell* self) {
             frame.size.width = 32;
             frame.size.height = 32;
 
-            id imageInView = [_imageView image];
+            UIImage* imageInView = [_imageView image];
 
             if (imageInView != nil) {
                 frame.size = [imageInView size];

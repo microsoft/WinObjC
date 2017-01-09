@@ -19,113 +19,120 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
+#define OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml_Shapes.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WUXSShape, WUXSEllipse, WUXSLine, WUXSPath, WUXSPolygon, WUXSPolyline, WUXSRectangle;
-@protocol WUXSIShape
-, WUXSIShapeStatics, WUXSIShapeFactory, WUXSIEllipse, WUXSILine, WUXSILineStatics, WUXSIPath, WUXSIPathStatics, WUXSIPathFactory,
-    WUXSIPolygon, WUXSIPolygonStatics, WUXSIPolyline, WUXSIPolylineStatics, WUXSIRectangle, WUXSIRectangleStatics;
+@protocol WUXSIShape, WUXSIShapeStatics, WUXSIShapeFactory, WUXSIShape2, WUXSIEllipse, WUXSILine, WUXSILineStatics, WUXSIPath, WUXSIPathStatics, WUXSIPathFactory, WUXSIPolygon, WUXSIPolygonStatics, WUXSIPolyline, WUXSIPolylineStatics, WUXSIRectangle, WUXSIRectangleStatics;
 
 #include "WindowsUIXamlMediaAnimation.h"
 #include "WindowsApplicationModelDataTransfer.h"
 #include "WindowsUIXamlMedia.h"
 #include "WindowsUIXamlInput.h"
+#include "WindowsUIComposition.h"
 #include "WindowsUIXaml.h"
 #include "WindowsFoundation.h"
 #include "WindowsUIInput.h"
 #include "WindowsUIXamlAutomationPeers.h"
+#include "WindowsUIXamlControlsPrimitives.h"
 #include "WindowsUIXamlData.h"
 #include "WindowsUIXamlMediaMedia3D.h"
 #include "WindowsUICore.h"
 // Windows.UI.Xaml.DependencyPropertyChangedCallback
 #ifndef __WXDependencyPropertyChangedCallback__DEFINED
 #define __WXDependencyPropertyChangedCallback__DEFINED
-typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, WXDependencyProperty* dp);
+typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, WXDependencyProperty* dp);
 #endif // __WXDependencyPropertyChangedCallback__DEFINED
 
 // Windows.UI.Xaml.DragEventHandler
 #ifndef __WXDragEventHandler__DEFINED
 #define __WXDragEventHandler__DEFINED
-typedef void (^WXDragEventHandler)(RTObject* sender, WXDragEventArgs* e);
+typedef void(^WXDragEventHandler)(RTObject* sender, WXDragEventArgs* e);
 #endif // __WXDragEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.DoubleTappedEventHandler
 #ifndef __WUXIDoubleTappedEventHandler__DEFINED
 #define __WUXIDoubleTappedEventHandler__DEFINED
-typedef void (^WUXIDoubleTappedEventHandler)(RTObject* sender, WUXIDoubleTappedRoutedEventArgs* e);
+typedef void(^WUXIDoubleTappedEventHandler)(RTObject* sender, WUXIDoubleTappedRoutedEventArgs* e);
 #endif // __WUXIDoubleTappedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.HoldingEventHandler
 #ifndef __WUXIHoldingEventHandler__DEFINED
 #define __WUXIHoldingEventHandler__DEFINED
-typedef void (^WUXIHoldingEventHandler)(RTObject* sender, WUXIHoldingRoutedEventArgs* e);
+typedef void(^WUXIHoldingEventHandler)(RTObject* sender, WUXIHoldingRoutedEventArgs* e);
 #endif // __WUXIHoldingEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.KeyEventHandler
 #ifndef __WUXIKeyEventHandler__DEFINED
 #define __WUXIKeyEventHandler__DEFINED
-typedef void (^WUXIKeyEventHandler)(RTObject* sender, WUXIKeyRoutedEventArgs* e);
+typedef void(^WUXIKeyEventHandler)(RTObject* sender, WUXIKeyRoutedEventArgs* e);
 #endif // __WUXIKeyEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.ManipulationCompletedEventHandler
 #ifndef __WUXIManipulationCompletedEventHandler__DEFINED
 #define __WUXIManipulationCompletedEventHandler__DEFINED
-typedef void (^WUXIManipulationCompletedEventHandler)(RTObject* sender, WUXIManipulationCompletedRoutedEventArgs* e);
+typedef void(^WUXIManipulationCompletedEventHandler)(RTObject* sender, WUXIManipulationCompletedRoutedEventArgs* e);
 #endif // __WUXIManipulationCompletedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.ManipulationDeltaEventHandler
 #ifndef __WUXIManipulationDeltaEventHandler__DEFINED
 #define __WUXIManipulationDeltaEventHandler__DEFINED
-typedef void (^WUXIManipulationDeltaEventHandler)(RTObject* sender, WUXIManipulationDeltaRoutedEventArgs* e);
+typedef void(^WUXIManipulationDeltaEventHandler)(RTObject* sender, WUXIManipulationDeltaRoutedEventArgs* e);
 #endif // __WUXIManipulationDeltaEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.ManipulationInertiaStartingEventHandler
 #ifndef __WUXIManipulationInertiaStartingEventHandler__DEFINED
 #define __WUXIManipulationInertiaStartingEventHandler__DEFINED
-typedef void (^WUXIManipulationInertiaStartingEventHandler)(RTObject* sender, WUXIManipulationInertiaStartingRoutedEventArgs* e);
+typedef void(^WUXIManipulationInertiaStartingEventHandler)(RTObject* sender, WUXIManipulationInertiaStartingRoutedEventArgs* e);
 #endif // __WUXIManipulationInertiaStartingEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.ManipulationStartedEventHandler
 #ifndef __WUXIManipulationStartedEventHandler__DEFINED
 #define __WUXIManipulationStartedEventHandler__DEFINED
-typedef void (^WUXIManipulationStartedEventHandler)(RTObject* sender, WUXIManipulationStartedRoutedEventArgs* e);
+typedef void(^WUXIManipulationStartedEventHandler)(RTObject* sender, WUXIManipulationStartedRoutedEventArgs* e);
 #endif // __WUXIManipulationStartedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.ManipulationStartingEventHandler
 #ifndef __WUXIManipulationStartingEventHandler__DEFINED
 #define __WUXIManipulationStartingEventHandler__DEFINED
-typedef void (^WUXIManipulationStartingEventHandler)(RTObject* sender, WUXIManipulationStartingRoutedEventArgs* e);
+typedef void(^WUXIManipulationStartingEventHandler)(RTObject* sender, WUXIManipulationStartingRoutedEventArgs* e);
 #endif // __WUXIManipulationStartingEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.PointerEventHandler
 #ifndef __WUXIPointerEventHandler__DEFINED
 #define __WUXIPointerEventHandler__DEFINED
-typedef void (^WUXIPointerEventHandler)(RTObject* sender, WUXIPointerRoutedEventArgs* e);
+typedef void(^WUXIPointerEventHandler)(RTObject* sender, WUXIPointerRoutedEventArgs* e);
 #endif // __WUXIPointerEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.RightTappedEventHandler
 #ifndef __WUXIRightTappedEventHandler__DEFINED
 #define __WUXIRightTappedEventHandler__DEFINED
-typedef void (^WUXIRightTappedEventHandler)(RTObject* sender, WUXIRightTappedRoutedEventArgs* e);
+typedef void(^WUXIRightTappedEventHandler)(RTObject* sender, WUXIRightTappedRoutedEventArgs* e);
 #endif // __WUXIRightTappedEventHandler__DEFINED
 
 // Windows.UI.Xaml.Input.TappedEventHandler
 #ifndef __WUXITappedEventHandler__DEFINED
 #define __WUXITappedEventHandler__DEFINED
-typedef void (^WUXITappedEventHandler)(RTObject* sender, WUXITappedRoutedEventArgs* e);
+typedef void(^WUXITappedEventHandler)(RTObject* sender, WUXITappedRoutedEventArgs* e);
 #endif // __WUXITappedEventHandler__DEFINED
 
 // Windows.UI.Xaml.RoutedEventHandler
 #ifndef __WXRoutedEventHandler__DEFINED
 #define __WXRoutedEventHandler__DEFINED
-typedef void (^WXRoutedEventHandler)(RTObject* sender, WXRoutedEventArgs* e);
+typedef void(^WXRoutedEventHandler)(RTObject* sender, WXRoutedEventArgs* e);
 #endif // __WXRoutedEventHandler__DEFINED
 
 // Windows.UI.Xaml.SizeChangedEventHandler
 #ifndef __WXSizeChangedEventHandler__DEFINED
 #define __WXSizeChangedEventHandler__DEFINED
-typedef void (^WXSizeChangedEventHandler)(RTObject* sender, WXSizeChangedEventArgs* e);
+typedef void(^WXSizeChangedEventHandler)(RTObject* sender, WXSizeChangedEventArgs* e);
 #endif // __WXSizeChangedEventHandler__DEFINED
+
 
 #import <Foundation/Foundation.h>
 
@@ -139,6 +146,10 @@ typedef void (^WXSizeChangedEventHandler)(RTObject* sender, WXSizeChangedEventAr
 - (void)onApplyTemplate;
 @end
 
+OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
+@interface WXIFrameworkElementOverrides : RTObject <WXIFrameworkElementOverrides>
+@end
+
 #endif // __WXIFrameworkElementOverrides_DEFINED__
 
 // Windows.UI.Xaml.IFrameworkElementOverrides2
@@ -146,7 +157,11 @@ typedef void (^WXSizeChangedEventHandler)(RTObject* sender, WXSizeChangedEventAr
 #define __WXIFrameworkElementOverrides2_DEFINED__
 
 @protocol WXIFrameworkElementOverrides2
-- (BOOL)goToElementStateCore:(NSString*)stateName useTransitions:(BOOL)useTransitions;
+- (BOOL)goToElementStateCore:(NSString *)stateName useTransitions:(BOOL)useTransitions;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
+@interface WXIFrameworkElementOverrides2 : RTObject <WXIFrameworkElementOverrides2>
 @end
 
 #endif // __WXIFrameworkElementOverrides2_DEFINED__
@@ -158,8 +173,11 @@ typedef void (^WXSizeChangedEventHandler)(RTObject* sender, WXSizeChangedEventAr
 @protocol WXIUIElementOverrides
 - (WUXAPAutomationPeer*)onCreateAutomationPeer;
 - (void)onDisconnectVisualChildren;
-- (id<NSFastEnumeration> /* id<NSFastEnumeration> < WFPoint* > */)findSubElementsForTouchTargeting:(WFPoint*)point
-                                                                                      boundingRect:(WFRect*)boundingRect;
+- (id<NSFastEnumeration> /* id<NSFastEnumeration> < WFPoint* > */)findSubElementsForTouchTargeting:(WFPoint*)point boundingRect:(WFRect*)boundingRect;
+@end
+
+OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
+@interface WXIUIElementOverrides : RTObject <WXIUIElementOverrides>
 @end
 
 #endif // __WXIUIElementOverrides_DEFINED__
@@ -168,7 +186,7 @@ typedef void (^WXSizeChangedEventHandler)(RTObject* sender, WXSizeChangedEventAr
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -189,35 +207,40 @@ WINRT_EXPORT
 #ifndef __WXUIElement_DEFINED__
 #define __WXUIElement_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 @interface WXUIElement : WXDependencyObject
 + (BOOL)tryStartDirectManipulation:(WUXIPointer*)value;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property BOOL isRightTapEnabled;
-@property (retain) WUXMProjection* projection;
-@property BOOL allowDrop;
 @property BOOL isHitTestVisible;
-@property double opacity;
-@property (retain) WUXMCacheMode* cacheMode;
 @property BOOL isDoubleTapEnabled;
+@property double opacity;
+@property (retain) WUXMProjection* projection;
+@property (retain) WUXMRectangleGeometry* clip;
+@property (retain) WUXMCacheMode* cacheMode;
+@property WUXIManipulationModes manipulationMode;
 @property BOOL isTapEnabled;
+@property BOOL isRightTapEnabled;
+@property BOOL isHoldingEnabled;
+@property BOOL allowDrop;
 @property WXVisibility visibility;
 @property BOOL useLayoutRounding;
-@property (retain) WUXMRectangleGeometry* clip;
 @property (retain) WUXMATransitionCollection* transitions;
 @property (retain) WFPoint* renderTransformOrigin;
 @property (retain) WUXMTransform* renderTransform;
-@property BOOL isHoldingEnabled;
-@property WUXIManipulationModes manipulationMode;
-@property (readonly) WFSize* renderSize;
 @property (readonly) NSArray* /* WUXIPointer* */ pointerCaptures;
 @property (readonly) WFSize* desiredSize;
+@property (readonly) WFSize* renderSize;
 @property WUXMElementCompositeMode compositeMode;
 @property (retain) WUXMMTransform3D* transform3D;
 @property BOOL canDrag;
-+ (WXRoutedEvent*)dropEvent;
+@property BOOL isAccessKeyScope;
+@property BOOL exitDisplayModeOnAccessKeyInvoked;
+@property (retain) WUXCPFlyoutBase* contextFlyout;
+@property (retain) WXDependencyObject* accessKeyScopeOwner;
+@property (retain) NSString * accessKey;
++ (WXDependencyProperty*)isRightTapEnabledProperty;
 + (WXDependencyProperty*)allowDropProperty;
 + (WXDependencyProperty*)cacheModeProperty;
 + (WXDependencyProperty*)clipProperty;
@@ -225,12 +248,11 @@ WINRT_EXPORT
 + (WXRoutedEvent*)dragEnterEvent;
 + (WXRoutedEvent*)dragLeaveEvent;
 + (WXRoutedEvent*)dragOverEvent;
-+ (WXRoutedEvent*)pointerCanceledEvent;
++ (WXRoutedEvent*)dropEvent;
 + (WXRoutedEvent*)holdingEvent;
 + (WXDependencyProperty*)isDoubleTapEnabledProperty;
 + (WXDependencyProperty*)isHitTestVisibleProperty;
 + (WXDependencyProperty*)isHoldingEnabledProperty;
-+ (WXDependencyProperty*)isRightTapEnabledProperty;
 + (WXDependencyProperty*)isTapEnabledProperty;
 + (WXRoutedEvent*)keyDownEvent;
 + (WXRoutedEvent*)keyUpEvent;
@@ -241,6 +263,7 @@ WINRT_EXPORT
 + (WXRoutedEvent*)manipulationStartedEvent;
 + (WXRoutedEvent*)manipulationStartingEvent;
 + (WXDependencyProperty*)opacityProperty;
++ (WXRoutedEvent*)pointerCanceledEvent;
 + (WXRoutedEvent*)pointerCaptureLostEvent;
 + (WXDependencyProperty*)pointerCapturesProperty;
 + (WXRoutedEvent*)pointerEnteredEvent;
@@ -258,8 +281,13 @@ WINRT_EXPORT
 + (WXDependencyProperty*)useLayoutRoundingProperty;
 + (WXDependencyProperty*)visibilityProperty;
 + (WXDependencyProperty*)compositeModeProperty;
-+ (WXDependencyProperty*)transform3DProperty;
 + (WXDependencyProperty*)canDragProperty;
++ (WXDependencyProperty*)transform3DProperty;
++ (WXDependencyProperty*)accessKeyScopeOwnerProperty;
++ (WXDependencyProperty*)contextFlyoutProperty;
++ (WXDependencyProperty*)exitDisplayModeOnAccessKeyInvokedProperty;
++ (WXDependencyProperty*)isAccessKeyScopeProperty;
++ (WXDependencyProperty*)accessKeyProperty;
 - (EventRegistrationToken)addDoubleTappedEvent:(WUXIDoubleTappedEventHandler)del;
 - (void)removeDoubleTappedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addDragEnterEvent:(WXDragEventHandler)del;
@@ -310,10 +338,20 @@ WINRT_EXPORT
 - (void)removeRightTappedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addTappedEvent:(WUXITappedEventHandler)del;
 - (void)removeTappedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addDragStartingEvent:(void (^)(WXUIElement*, WXDragStartingEventArgs*))del;
+- (EventRegistrationToken)addDragStartingEvent:(void(^)(WXUIElement*, WXDragStartingEventArgs*))del;
 - (void)removeDragStartingEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addDropCompletedEvent:(void (^)(WXUIElement*, WXDropCompletedEventArgs*))del;
+- (EventRegistrationToken)addDropCompletedEvent:(void(^)(WXUIElement*, WXDropCompletedEventArgs*))del;
 - (void)removeDropCompletedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addAccessKeyDisplayDismissedEvent:(void(^)(WXUIElement*, WUXIAccessKeyDisplayDismissedEventArgs*))del;
+- (void)removeAccessKeyDisplayDismissedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addAccessKeyDisplayRequestedEvent:(void(^)(WXUIElement*, WUXIAccessKeyDisplayRequestedEventArgs*))del;
+- (void)removeAccessKeyDisplayRequestedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addAccessKeyInvokedEvent:(void(^)(WXUIElement*, WUXIAccessKeyInvokedEventArgs*))del;
+- (void)removeAccessKeyInvokedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addContextCanceledEvent:(void(^)(WXUIElement*, WXRoutedEventArgs*))del;
+- (void)removeContextCanceledEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addContextRequestedEvent:(void(^)(WXUIElement*, WUXIContextRequestedEventArgs*))del;
+- (void)removeContextRequestedEvent:(EventRegistrationToken)tok;
 - (void)measure:(WFSize*)availableSize;
 - (void)arrange:(WFRect*)finalRect;
 - (BOOL)capturePointer:(WUXIPointer*)value;
@@ -327,12 +365,9 @@ WINRT_EXPORT
 - (void)updateLayout;
 - (WUXAPAutomationPeer*)onCreateAutomationPeer;
 - (void)onDisconnectVisualChildren;
-- (id<NSFastEnumeration> /* id<NSFastEnumeration> < WFPoint* > */)findSubElementsForTouchTargeting:(WFPoint*)point
-                                                                                      boundingRect:(WFRect*)boundingRect;
+- (id<NSFastEnumeration> /* id<NSFastEnumeration> < WFPoint* > */)findSubElementsForTouchTargeting:(WFPoint*)point boundingRect:(WFRect*)boundingRect;
 - (BOOL)cancelDirectManipulations;
-- (void)startDragAsync:(WUIPointerPoint*)pointerPoint
-               success:(void (^)(WADDataPackageOperation))success
-               failure:(void (^)(NSError*))failure;
+- (void)startDragAsync:(WUIPointerPoint*)pointerPoint success:(void (^)(WADDataPackageOperation))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WXUIElement_DEFINED__
@@ -341,52 +376,66 @@ WINRT_EXPORT
 #ifndef __WXFrameworkElement_DEFINED__
 #define __WXFrameworkElement_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 @interface WXFrameworkElement : WXUIElement
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) WXThickness* margin;
-@property (retain) NSString* language;
-@property WXHorizontalAlignment horizontalAlignment;
 @property double height;
 @property WXFlowDirection flowDirection;
+@property double minHeight;
 @property (retain) RTObject* dataContext;
-@property WXVerticalAlignment verticalAlignment;
+@property (retain) NSString * name;
+@property double minWidth;
 @property double maxWidth;
 @property double maxHeight;
-@property double minHeight;
+@property (retain) WXThickness* margin;
+@property (retain) NSString * language;
+@property WXHorizontalAlignment horizontalAlignment;
+@property (retain) WXResourceDictionary* resources;
 @property double width;
+@property WXVerticalAlignment verticalAlignment;
 @property (retain) RTObject* tag;
 @property (retain) WXStyle* style;
-@property (retain) WXResourceDictionary* resources;
-@property (retain) NSString* name;
-@property double minWidth;
-@property (readonly) double actualWidth;
 @property (readonly) WFUri* baseUri;
-@property (readonly) WXTriggerCollection* triggers;
 @property (readonly) double actualHeight;
 @property (readonly) WXDependencyObject* parent;
+@property (readonly) WXTriggerCollection* triggers;
+@property (readonly) double actualWidth;
 @property WXElementTheme requestedTheme;
-+ (WXDependencyProperty*)flowDirectionProperty;
+@property (retain) WXThickness* focusVisualMargin;
+@property (retain) WUXMBrush* focusVisualSecondaryBrush;
+@property (retain) WXThickness* focusVisualPrimaryThickness;
+@property (retain) WUXMBrush* focusVisualPrimaryBrush;
+@property BOOL allowFocusWhenDisabled;
+@property BOOL allowFocusOnInteraction;
+@property (retain) WXThickness* focusVisualSecondaryThickness;
++ (WXDependencyProperty*)styleProperty;
 + (WXDependencyProperty*)actualHeightProperty;
 + (WXDependencyProperty*)actualWidthProperty;
 + (WXDependencyProperty*)dataContextProperty;
-+ (WXDependencyProperty*)maxWidthProperty;
++ (WXDependencyProperty*)flowDirectionProperty;
 + (WXDependencyProperty*)heightProperty;
 + (WXDependencyProperty*)horizontalAlignmentProperty;
 + (WXDependencyProperty*)languageProperty;
 + (WXDependencyProperty*)marginProperty;
 + (WXDependencyProperty*)maxHeightProperty;
++ (WXDependencyProperty*)maxWidthProperty;
 + (WXDependencyProperty*)minHeightProperty;
 + (WXDependencyProperty*)minWidthProperty;
 + (WXDependencyProperty*)nameProperty;
-+ (WXDependencyProperty*)styleProperty;
 + (WXDependencyProperty*)tagProperty;
 + (WXDependencyProperty*)verticalAlignmentProperty;
 + (WXDependencyProperty*)widthProperty;
 + (WXDependencyProperty*)requestedThemeProperty;
-- (EventRegistrationToken)addLayoutUpdatedEvent:(void (^)(RTObject*, RTObject*))del;
++ (WXDependencyProperty*)allowFocusOnInteractionProperty;
++ (WXDependencyProperty*)allowFocusWhenDisabledProperty;
++ (WXDependencyProperty*)focusVisualMarginProperty;
++ (WXDependencyProperty*)focusVisualPrimaryBrushProperty;
++ (WXDependencyProperty*)focusVisualPrimaryThicknessProperty;
++ (WXDependencyProperty*)focusVisualSecondaryBrushProperty;
++ (WXDependencyProperty*)focusVisualSecondaryThicknessProperty;
+- (EventRegistrationToken)addLayoutUpdatedEvent:(void(^)(RTObject*, RTObject*))del;
 - (void)removeLayoutUpdatedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addLoadedEvent:(WXRoutedEventHandler)del;
 - (void)removeLoadedEvent:(EventRegistrationToken)tok;
@@ -394,17 +443,17 @@ WINRT_EXPORT
 - (void)removeSizeChangedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addUnloadedEvent:(WXRoutedEventHandler)del;
 - (void)removeUnloadedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addDataContextChangedEvent:(void (^)(WXFrameworkElement*, WXDataContextChangedEventArgs*))del;
+- (EventRegistrationToken)addDataContextChangedEvent:(void(^)(WXFrameworkElement*, WXDataContextChangedEventArgs*))del;
 - (void)removeDataContextChangedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addLoadingEvent:(void (^)(WXFrameworkElement*, RTObject*))del;
+- (EventRegistrationToken)addLoadingEvent:(void(^)(WXFrameworkElement*, RTObject*))del;
 - (void)removeLoadingEvent:(EventRegistrationToken)tok;
-- (RTObject*)findName:(NSString*)name;
+- (RTObject*)findName:(NSString *)name;
 - (void)setBinding:(WXDependencyProperty*)dp binding:(WUXDBindingBase*)binding;
 - (WFSize*)measureOverride:(WFSize*)availableSize;
 - (WFSize*)arrangeOverride:(WFSize*)finalSize;
 - (void)onApplyTemplate;
 - (WUXDBindingExpression*)getBindingExpression:(WXDependencyProperty*)dp;
-- (BOOL)goToElementStateCore:(NSString*)stateName useTransitions:(BOOL)useTransitions;
+- (BOOL)goToElementStateCore:(NSString *)stateName useTransitions:(BOOL)useTransitions;
 @end
 
 #endif // __WXFrameworkElement_DEFINED__
@@ -413,7 +462,7 @@ WINRT_EXPORT
 #ifndef __WUXSShape_DEFINED__
 #define __WUXSShape_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 @interface WUXSShape : WXFrameworkElement
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -441,6 +490,7 @@ WINRT_EXPORT
 + (WXDependencyProperty*)strokeProperty;
 + (WXDependencyProperty*)strokeStartLineCapProperty;
 + (WXDependencyProperty*)strokeThicknessProperty;
+- (WUCCompositionBrush*)getAlphaMask;
 @end
 
 #endif // __WUXSShape_DEFINED__
@@ -449,7 +499,7 @@ WINRT_EXPORT
 #ifndef __WUXSEllipse_DEFINED__
 #define __WUXSEllipse_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 @interface WUXSEllipse : WUXSShape
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -463,7 +513,7 @@ WINRT_EXPORT
 #ifndef __WUXSLine_DEFINED__
 #define __WUXSLine_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 @interface WUXSLine : WUXSShape
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -485,7 +535,7 @@ WINRT_EXPORT
 #ifndef __WUXSPath_DEFINED__
 #define __WUXSPath_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 @interface WUXSPath : WUXSShape
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -501,7 +551,7 @@ WINRT_EXPORT
 #ifndef __WUXSPolygon_DEFINED__
 #define __WUXSPolygon_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 @interface WUXSPolygon : WUXSShape
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -519,7 +569,7 @@ WINRT_EXPORT
 #ifndef __WUXSPolyline_DEFINED__
 #define __WUXSPolyline_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 @interface WUXSPolyline : WUXSShape
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -537,7 +587,7 @@ WINRT_EXPORT
 #ifndef __WUXSRectangle_DEFINED__
 #define __WUXSRectangle_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 @interface WUXSRectangle : WUXSShape
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -550,3 +600,4 @@ WINRT_EXPORT
 @end
 
 #endif // __WUXSRectangle_DEFINED__
+

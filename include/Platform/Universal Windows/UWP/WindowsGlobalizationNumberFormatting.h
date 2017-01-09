@@ -19,15 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+#define OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Globalization_NumberFormatting.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WGNSignificantDigitsNumberRounder, WGNIncrementNumberRounder, WGNDecimalFormatter, WGNPercentFormatter, WGNPermilleFormatter,
-    WGNCurrencyFormatter, WGNNumeralSystemTranslator;
-@protocol WGNINumberRounder
-, WGNISignificantDigitsNumberRounder, WGNIIncrementNumberRounder, WGNINumberFormatter, WGNINumberFormatter2, WGNINumberParser,
-    WGNINumberFormatterOptions, WGNISignificantDigitsOption, WGNINumberRounderOption, WGNISignedZeroOption, WGNIDecimalFormatterFactory,
-    WGNIPercentFormatterFactory, WGNIPermilleFormatterFactory, WGNICurrencyFormatterFactory, WGNICurrencyFormatter, WGNICurrencyFormatter2,
-    WGNINumeralSystemTranslatorFactory, WGNINumeralSystemTranslator;
+@class WGNSignificantDigitsNumberRounder, WGNIncrementNumberRounder, WGNDecimalFormatter, WGNPercentFormatter, WGNPermilleFormatter, WGNCurrencyFormatter, WGNNumeralSystemTranslator;
+@protocol WGNINumberRounder, WGNISignificantDigitsNumberRounder, WGNIIncrementNumberRounder, WGNINumberFormatter, WGNINumberFormatter2, WGNINumberParser, WGNINumberFormatterOptions, WGNISignificantDigitsOption, WGNINumberRounderOption, WGNISignedZeroOption, WGNIDecimalFormatterFactory, WGNIPercentFormatterFactory, WGNIPermilleFormatterFactory, WGNICurrencyFormatterFactory, WGNICurrencyFormatter, WGNICurrencyFormatter2, WGNINumeralSystemTranslatorFactory, WGNINumeralSystemTranslator;
 
 // Windows.Globalization.NumberFormatting.RoundingAlgorithm
 enum _WGNRoundingAlgorithm {
@@ -67,6 +68,10 @@ typedef unsigned WGNCurrencyFormatterMode;
 - (double)roundDouble:(double)value;
 @end
 
+OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+@interface WGNINumberRounder : RTObject <WGNINumberRounder>
+@end
+
 #endif // __WGNINumberRounder_DEFINED__
 
 // Windows.Globalization.NumberFormatting.INumberFormatter
@@ -74,9 +79,13 @@ typedef unsigned WGNCurrencyFormatterMode;
 #define __WGNINumberFormatter_DEFINED__
 
 @protocol WGNINumberFormatter
-- (NSString*)formatInt:(int64_t)value;
-- (NSString*)formatUInt:(uint64_t)value;
-- (NSString*)formatDouble:(double)value;
+- (NSString *)formatInt:(int64_t)value;
+- (NSString *)formatUInt:(uint64_t)value;
+- (NSString *)formatDouble:(double)value;
+@end
+
+OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+@interface WGNINumberFormatter : RTObject <WGNINumberFormatter>
 @end
 
 #endif // __WGNINumberFormatter_DEFINED__
@@ -86,9 +95,13 @@ typedef unsigned WGNCurrencyFormatterMode;
 #define __WGNINumberFormatter2_DEFINED__
 
 @protocol WGNINumberFormatter2
-- (NSString*)formatInt:(int64_t)value;
-- (NSString*)formatUInt:(uint64_t)value;
-- (NSString*)formatDouble:(double)value;
+- (NSString *)formatInt:(int64_t)value;
+- (NSString *)formatUInt:(uint64_t)value;
+- (NSString *)formatDouble:(double)value;
+@end
+
+OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+@interface WGNINumberFormatter2 : RTObject <WGNINumberFormatter2>
 @end
 
 #endif // __WGNINumberFormatter2_DEFINED__
@@ -98,9 +111,13 @@ typedef unsigned WGNCurrencyFormatterMode;
 #define __WGNINumberParser_DEFINED__
 
 @protocol WGNINumberParser
-- (id /* int64_t */)parseInt:(NSString*)text;
-- (id /* uint64_t */)parseUInt:(NSString*)text;
-- (id /* double */)parseDouble:(NSString*)text;
+- (id /* int64_t */)parseInt:(NSString *)text;
+- (id /* uint64_t */)parseUInt:(NSString *)text;
+- (id /* double */)parseDouble:(NSString *)text;
+@end
+
+OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+@interface WGNINumberParser : RTObject <WGNINumberParser>
 @end
 
 #endif // __WGNINumberParser_DEFINED__
@@ -111,14 +128,18 @@ typedef unsigned WGNCurrencyFormatterMode;
 
 @protocol WGNINumberFormatterOptions
 @property int fractionDigits;
-@property (readonly) NSString* geographicRegion;
+@property (readonly) NSString * geographicRegion;
 @property int integerDigits;
 @property BOOL isDecimalPointAlwaysDisplayed;
 @property BOOL isGrouped;
 @property (readonly) NSArray* /* NSString * */ languages;
-@property (retain) NSString* numeralSystem;
-@property (readonly) NSString* resolvedGeographicRegion;
-@property (readonly) NSString* resolvedLanguage;
+@property (retain) NSString * numeralSystem;
+@property (readonly) NSString * resolvedGeographicRegion;
+@property (readonly) NSString * resolvedLanguage;
+@end
+
+OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+@interface WGNINumberFormatterOptions : RTObject <WGNINumberFormatterOptions>
 @end
 
 #endif // __WGNINumberFormatterOptions_DEFINED__
@@ -131,6 +152,10 @@ typedef unsigned WGNCurrencyFormatterMode;
 @property int significantDigits;
 @end
 
+OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+@interface WGNISignificantDigitsOption : RTObject <WGNISignificantDigitsOption>
+@end
+
 #endif // __WGNISignificantDigitsOption_DEFINED__
 
 // Windows.Globalization.NumberFormatting.INumberRounderOption
@@ -139,6 +164,10 @@ typedef unsigned WGNCurrencyFormatterMode;
 
 @protocol WGNINumberRounderOption
 @property (retain) RTObject<WGNINumberRounder>* numberRounder;
+@end
+
+OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+@interface WGNINumberRounderOption : RTObject <WGNINumberRounderOption>
 @end
 
 #endif // __WGNINumberRounderOption_DEFINED__
@@ -151,13 +180,17 @@ typedef unsigned WGNCurrencyFormatterMode;
 @property BOOL isZeroSigned;
 @end
 
+OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+@interface WGNISignedZeroOption : RTObject <WGNISignedZeroOption>
+@end
+
 #endif // __WGNISignedZeroOption_DEFINED__
 
 // Windows.Globalization.NumberFormatting.SignificantDigitsNumberRounder
 #ifndef __WGNSignificantDigitsNumberRounder_DEFINED__
 #define __WGNSignificantDigitsNumberRounder_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 @interface WGNSignificantDigitsNumberRounder : RTObject <WGNINumberRounder>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -179,7 +212,7 @@ WINRT_EXPORT
 #ifndef __WGNIncrementNumberRounder_DEFINED__
 #define __WGNIncrementNumberRounder_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 @interface WGNIncrementNumberRounder : RTObject <WGNINumberRounder>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -201,38 +234,31 @@ WINRT_EXPORT
 #ifndef __WGNDecimalFormatter_DEFINED__
 #define __WGNDecimalFormatter_DEFINED__
 
-WINRT_EXPORT
-@interface WGNDecimalFormatter : RTObject <WGNINumberFormatterOptions,
-                                           WGNINumberFormatter,
-                                           WGNINumberFormatter2,
-                                           WGNINumberParser,
-                                           WGNISignificantDigitsOption,
-                                           WGNINumberRounderOption,
-                                           WGNISignedZeroOption>
+OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+@interface WGNDecimalFormatter : RTObject <WGNINumberFormatterOptions, WGNINumberFormatter, WGNINumberFormatter2, WGNINumberParser, WGNISignificantDigitsOption, WGNINumberRounderOption, WGNISignedZeroOption>
 + (instancetype)make ACTIVATOR;
-+ (WGNDecimalFormatter*)makeDecimalFormatter:(id<NSFastEnumeration> /* NSString * */)languages
-                            geographicRegion:(NSString*)geographicRegion ACTIVATOR;
++ (WGNDecimalFormatter*)makeDecimalFormatter:(id<NSFastEnumeration> /* NSString * */)languages geographicRegion:(NSString *)geographicRegion ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property BOOL isDecimalPointAlwaysDisplayed;
 @property int integerDigits;
 @property BOOL isGrouped;
+@property (retain) NSString * numeralSystem;
 @property int fractionDigits;
-@property (retain) NSString* numeralSystem;
-@property (readonly) NSString* geographicRegion;
+@property (readonly) NSString * geographicRegion;
 @property (readonly) NSArray* /* NSString * */ languages;
-@property (readonly) NSString* resolvedGeographicRegion;
-@property (readonly) NSString* resolvedLanguage;
+@property (readonly) NSString * resolvedGeographicRegion;
+@property (readonly) NSString * resolvedLanguage;
 @property (retain) RTObject<WGNINumberRounder>* numberRounder;
 @property BOOL isZeroSigned;
 @property int significantDigits;
-- (NSString*)formatInt:(int64_t)value;
-- (NSString*)formatUInt:(uint64_t)value;
-- (NSString*)formatDouble:(double)value;
-- (id /* int64_t */)parseInt:(NSString*)text;
-- (id /* uint64_t */)parseUInt:(NSString*)text;
-- (id /* double */)parseDouble:(NSString*)text;
+- (NSString *)formatInt:(int64_t)value;
+- (NSString *)formatUInt:(uint64_t)value;
+- (NSString *)formatDouble:(double)value;
+- (id /* int64_t */)parseInt:(NSString *)text;
+- (id /* uint64_t */)parseUInt:(NSString *)text;
+- (id /* double */)parseDouble:(NSString *)text;
 @end
 
 #endif // __WGNDecimalFormatter_DEFINED__
@@ -241,16 +267,9 @@ WINRT_EXPORT
 #ifndef __WGNPercentFormatter_DEFINED__
 #define __WGNPercentFormatter_DEFINED__
 
-WINRT_EXPORT
-@interface WGNPercentFormatter : RTObject <WGNINumberFormatterOptions,
-                                           WGNINumberFormatter,
-                                           WGNINumberFormatter2,
-                                           WGNINumberParser,
-                                           WGNISignificantDigitsOption,
-                                           WGNINumberRounderOption,
-                                           WGNISignedZeroOption>
-+ (WGNPercentFormatter*)makePercentFormatter:(id<NSFastEnumeration> /* NSString * */)languages
-                            geographicRegion:(NSString*)geographicRegion ACTIVATOR;
+OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+@interface WGNPercentFormatter : RTObject <WGNINumberFormatterOptions, WGNINumberFormatter, WGNINumberFormatter2, WGNINumberParser, WGNISignificantDigitsOption, WGNINumberRounderOption, WGNISignedZeroOption>
++ (WGNPercentFormatter*)makePercentFormatter:(id<NSFastEnumeration> /* NSString * */)languages geographicRegion:(NSString *)geographicRegion ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -258,21 +277,21 @@ WINRT_EXPORT
 @property BOOL isDecimalPointAlwaysDisplayed;
 @property int integerDigits;
 @property BOOL isGrouped;
+@property (retain) NSString * numeralSystem;
 @property int fractionDigits;
-@property (retain) NSString* numeralSystem;
-@property (readonly) NSString* geographicRegion;
+@property (readonly) NSString * geographicRegion;
 @property (readonly) NSArray* /* NSString * */ languages;
-@property (readonly) NSString* resolvedGeographicRegion;
-@property (readonly) NSString* resolvedLanguage;
+@property (readonly) NSString * resolvedGeographicRegion;
+@property (readonly) NSString * resolvedLanguage;
 @property (retain) RTObject<WGNINumberRounder>* numberRounder;
 @property BOOL isZeroSigned;
 @property int significantDigits;
-- (NSString*)formatInt:(int64_t)value;
-- (NSString*)formatUInt:(uint64_t)value;
-- (NSString*)formatDouble:(double)value;
-- (id /* int64_t */)parseInt:(NSString*)text;
-- (id /* uint64_t */)parseUInt:(NSString*)text;
-- (id /* double */)parseDouble:(NSString*)text;
+- (NSString *)formatInt:(int64_t)value;
+- (NSString *)formatUInt:(uint64_t)value;
+- (NSString *)formatDouble:(double)value;
+- (id /* int64_t */)parseInt:(NSString *)text;
+- (id /* uint64_t */)parseUInt:(NSString *)text;
+- (id /* double */)parseDouble:(NSString *)text;
 @end
 
 #endif // __WGNPercentFormatter_DEFINED__
@@ -281,16 +300,9 @@ WINRT_EXPORT
 #ifndef __WGNPermilleFormatter_DEFINED__
 #define __WGNPermilleFormatter_DEFINED__
 
-WINRT_EXPORT
-@interface WGNPermilleFormatter : RTObject <WGNINumberFormatterOptions,
-                                            WGNINumberFormatter,
-                                            WGNINumberFormatter2,
-                                            WGNINumberParser,
-                                            WGNISignificantDigitsOption,
-                                            WGNINumberRounderOption,
-                                            WGNISignedZeroOption>
-+ (WGNPermilleFormatter*)makePermilleFormatter:(id<NSFastEnumeration> /* NSString * */)languages
-                              geographicRegion:(NSString*)geographicRegion ACTIVATOR;
+OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+@interface WGNPermilleFormatter : RTObject <WGNINumberFormatterOptions, WGNINumberFormatter, WGNINumberFormatter2, WGNINumberParser, WGNISignificantDigitsOption, WGNINumberRounderOption, WGNISignedZeroOption>
++ (WGNPermilleFormatter*)makePermilleFormatter:(id<NSFastEnumeration> /* NSString * */)languages geographicRegion:(NSString *)geographicRegion ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -298,21 +310,21 @@ WINRT_EXPORT
 @property BOOL isDecimalPointAlwaysDisplayed;
 @property int integerDigits;
 @property BOOL isGrouped;
+@property (retain) NSString * numeralSystem;
 @property int fractionDigits;
-@property (retain) NSString* numeralSystem;
-@property (readonly) NSString* geographicRegion;
+@property (readonly) NSString * geographicRegion;
 @property (readonly) NSArray* /* NSString * */ languages;
-@property (readonly) NSString* resolvedGeographicRegion;
-@property (readonly) NSString* resolvedLanguage;
+@property (readonly) NSString * resolvedGeographicRegion;
+@property (readonly) NSString * resolvedLanguage;
 @property (retain) RTObject<WGNINumberRounder>* numberRounder;
 @property BOOL isZeroSigned;
 @property int significantDigits;
-- (NSString*)formatInt:(int64_t)value;
-- (NSString*)formatUInt:(uint64_t)value;
-- (NSString*)formatDouble:(double)value;
-- (id /* int64_t */)parseInt:(NSString*)text;
-- (id /* uint64_t */)parseUInt:(NSString*)text;
-- (id /* double */)parseDouble:(NSString*)text;
+- (NSString *)formatInt:(int64_t)value;
+- (NSString *)formatUInt:(uint64_t)value;
+- (NSString *)formatDouble:(double)value;
+- (id /* int64_t */)parseInt:(NSString *)text;
+- (id /* uint64_t */)parseUInt:(NSString *)text;
+- (id /* double */)parseDouble:(NSString *)text;
 @end
 
 #endif // __WGNPermilleFormatter_DEFINED__
@@ -321,41 +333,33 @@ WINRT_EXPORT
 #ifndef __WGNCurrencyFormatter_DEFINED__
 #define __WGNCurrencyFormatter_DEFINED__
 
-WINRT_EXPORT
-@interface WGNCurrencyFormatter : RTObject <WGNINumberParser,
-                                            WGNINumberFormatter2,
-                                            WGNINumberFormatter,
-                                            WGNINumberFormatterOptions,
-                                            WGNISignificantDigitsOption,
-                                            WGNINumberRounderOption,
-                                            WGNISignedZeroOption>
-+ (WGNCurrencyFormatter*)makeCurrencyFormatterCode:(NSString*)currencyCode ACTIVATOR;
-+ (WGNCurrencyFormatter*)makeCurrencyFormatterCodeContext:(NSString*)currencyCode
-                                                languages:(id<NSFastEnumeration> /* NSString * */)languages
-                                         geographicRegion:(NSString*)geographicRegion ACTIVATOR;
+OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
+@interface WGNCurrencyFormatter : RTObject <WGNINumberParser, WGNINumberFormatter2, WGNINumberFormatter, WGNINumberFormatterOptions, WGNISignificantDigitsOption, WGNINumberRounderOption, WGNISignedZeroOption>
++ (WGNCurrencyFormatter*)makeCurrencyFormatterCode:(NSString *)currencyCode ACTIVATOR;
++ (WGNCurrencyFormatter*)makeCurrencyFormatterCodeContext:(NSString *)currencyCode languages:(id<NSFastEnumeration> /* NSString * */)languages geographicRegion:(NSString *)geographicRegion ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* currency;
+@property (retain) NSString * currency;
 @property WGNCurrencyFormatterMode mode;
+@property (retain) NSString * numeralSystem;
 @property BOOL isGrouped;
 @property BOOL isDecimalPointAlwaysDisplayed;
 @property int integerDigits;
 @property int fractionDigits;
-@property (retain) NSString* numeralSystem;
-@property (readonly) NSString* geographicRegion;
-@property (readonly) NSString* resolvedGeographicRegion;
-@property (readonly) NSString* resolvedLanguage;
+@property (readonly) NSString * geographicRegion;
+@property (readonly) NSString * resolvedGeographicRegion;
+@property (readonly) NSString * resolvedLanguage;
 @property (readonly) NSArray* /* NSString * */ languages;
 @property (retain) RTObject<WGNINumberRounder>* numberRounder;
 @property BOOL isZeroSigned;
 @property int significantDigits;
-- (NSString*)formatInt:(int64_t)value;
-- (NSString*)formatUInt:(uint64_t)value;
-- (NSString*)formatDouble:(double)value;
-- (id /* int64_t */)parseInt:(NSString*)text;
-- (id /* uint64_t */)parseUInt:(NSString*)text;
-- (id /* double */)parseDouble:(NSString*)text;
+- (NSString *)formatInt:(int64_t)value;
+- (NSString *)formatUInt:(uint64_t)value;
+- (NSString *)formatDouble:(double)value;
+- (id /* int64_t */)parseInt:(NSString *)text;
+- (id /* uint64_t */)parseUInt:(NSString *)text;
+- (id /* double */)parseDouble:(NSString *)text;
 - (void)applyRoundingForCurrency:(WGNRoundingAlgorithm)roundingAlgorithm;
 @end
 
@@ -365,17 +369,18 @@ WINRT_EXPORT
 #ifndef __WGNNumeralSystemTranslator_DEFINED__
 #define __WGNNumeralSystemTranslator_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 @interface WGNNumeralSystemTranslator : RTObject
-+ (WGNNumeralSystemTranslator*)make:(id<NSFastEnumeration> /* NSString * */)languages ACTIVATOR;
 + (instancetype)make ACTIVATOR;
++ (WGNNumeralSystemTranslator*)make:(id<NSFastEnumeration> /* NSString * */)languages ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* numeralSystem;
+@property (retain) NSString * numeralSystem;
 @property (readonly) NSArray* /* NSString * */ languages;
-@property (readonly) NSString* resolvedLanguage;
-- (NSString*)translateNumerals:(NSString*)value;
+@property (readonly) NSString * resolvedLanguage;
+- (NSString *)translateNumerals:(NSString *)value;
 @end
 
 #endif // __WGNNumeralSystemTranslator_DEFINED__
+

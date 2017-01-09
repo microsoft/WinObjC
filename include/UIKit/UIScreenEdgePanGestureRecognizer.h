@@ -13,13 +13,13 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
 
-#import <UIKit/UIKitExport.h>
 #import <Foundation/NSObject.h>
+
+#import <UIKit/UIGeometry.h>
+#import <UIKit/UIKitExport.h>
 #import <UIKit/UIPanGestureRecognizer.h>
-#import <UIKit/UIKit.h>
 
 UIKIT_EXPORT_CLASS
 @interface UIScreenEdgePanGestureRecognizer : UIPanGestureRecognizer

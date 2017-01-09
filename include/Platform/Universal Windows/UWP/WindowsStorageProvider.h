@@ -19,12 +19,16 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_STORAGE_EXPORT
+#define OBJCUWP_WINDOWS_STORAGE_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Storage.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
 @class WSPCachedFileUpdaterUI, WSPFileUpdateRequestedEventArgs, WSPFileUpdateRequest, WSPFileUpdateRequestDeferral, WSPCachedFileUpdater;
-@protocol WSPICachedFileUpdaterUI
-, WSPIFileUpdateRequestedEventArgs, WSPIFileUpdateRequest, WSPIFileUpdateRequestDeferral, WSPICachedFileUpdaterUI2, WSPIFileUpdateRequest2,
-    WSPICachedFileUpdaterStatics;
+@protocol WSPICachedFileUpdaterUI, WSPIFileUpdateRequestedEventArgs, WSPIFileUpdateRequest, WSPIFileUpdateRequestDeferral, WSPICachedFileUpdaterUI2, WSPIFileUpdateRequest2, WSPICachedFileUpdaterStatics;
 
 // Windows.Storage.Provider.CachedFileTarget
 enum _WSPCachedFileTarget {
@@ -86,18 +90,18 @@ typedef unsigned WSPWriteActivationMode;
 #ifndef __WSPCachedFileUpdaterUI_DEFINED__
 #define __WSPCachedFileUpdaterUI_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSPCachedFileUpdaterUI : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* title;
+@property (retain) NSString * title;
 @property (readonly) WSPUIStatus uIStatus;
 @property (readonly) WSPCachedFileTarget updateTarget;
 @property (readonly) WSPFileUpdateRequest* updateRequest;
-- (EventRegistrationToken)addFileUpdateRequestedEvent:(void (^)(WSPCachedFileUpdaterUI*, WSPFileUpdateRequestedEventArgs*))del;
+- (EventRegistrationToken)addFileUpdateRequestedEvent:(void(^)(WSPCachedFileUpdaterUI*, WSPFileUpdateRequestedEventArgs*))del;
 - (void)removeFileUpdateRequestedEvent:(EventRegistrationToken)tok;
-- (EventRegistrationToken)addUIRequestedEvent:(void (^)(WSPCachedFileUpdaterUI*, RTObject*))del;
+- (EventRegistrationToken)addUIRequestedEvent:(void(^)(WSPCachedFileUpdaterUI*, RTObject*))del;
 - (void)removeUIRequestedEvent:(EventRegistrationToken)tok;
 - (WSPFileUpdateRequestDeferral*)getDeferral;
 @end
@@ -108,7 +112,7 @@ WINRT_EXPORT
 #ifndef __WSPFileUpdateRequestedEventArgs_DEFINED__
 #define __WSPFileUpdateRequestedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSPFileUpdateRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -122,15 +126,15 @@ WINRT_EXPORT
 #ifndef __WSPFileUpdateRequest_DEFINED__
 #define __WSPFileUpdateRequest_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSPFileUpdateRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WSPFileUpdateStatus status;
-@property (readonly) NSString* contentId;
+@property (readonly) NSString * contentId;
 @property (readonly) WSStorageFile* file;
-@property (retain) NSString* userInputNeededMessage;
+@property (retain) NSString * userInputNeededMessage;
 - (WSPFileUpdateRequestDeferral*)getDeferral;
 - (void)updateLocalFile:(RTObject<WSIStorageFile>*)value;
 @end
@@ -141,7 +145,7 @@ WINRT_EXPORT
 #ifndef __WSPFileUpdateRequestDeferral_DEFINED__
 #define __WSPFileUpdateRequestDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSPFileUpdateRequestDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -155,13 +159,10 @@ WINRT_EXPORT
 #ifndef __WSPCachedFileUpdater_DEFINED__
 #define __WSPCachedFileUpdater_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSPCachedFileUpdater : RTObject
-+ (void)setUpdateInformation:(RTObject<WSIStorageFile>*)file
-                   contentId:(NSString*)contentId
-                    readMode:(WSPReadActivationMode)readMode
-                   writeMode:(WSPWriteActivationMode)writeMode
-                     options:(WSPCachedFileOptions)options;
++ (void)setUpdateInformation:(RTObject<WSIStorageFile>*)file contentId:(NSString *)contentId readMode:(WSPReadActivationMode)readMode writeMode:(WSPWriteActivationMode)writeMode options:(WSPCachedFileOptions)options;
 @end
 
 #endif // __WSPCachedFileUpdater_DEFINED__
+

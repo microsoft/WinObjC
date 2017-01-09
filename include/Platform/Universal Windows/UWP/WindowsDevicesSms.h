@@ -19,16 +19,27 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
+#define OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Devices_Sms.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WDSSmsTextMessage2, WDSSmsWapMessage, WDSSmsAppMessage, WDSSmsBroadcastMessage, WDSSmsVoicemailMessage, WDSSmsStatusMessage,
-    WDSSmsSendMessageResult, WDSSmsDevice2, WDSSmsMessageReceivedTriggerDetails, WDSSmsFilterRule, WDSSmsFilterRules,
-    WDSSmsMessageRegistration;
+@class WDSSmsBinaryMessage, WDSSmsTextMessage, WDSDeleteSmsMessageOperation, WDSDeleteSmsMessagesOperation, WDSGetSmsMessageOperation, WDSGetSmsMessagesOperation, WDSSmsDeviceMessageStore, WDSSendSmsMessageOperation, WDSSmsMessageReceivedEventArgs, WDSSmsDevice, WDSGetSmsDeviceOperation, WDSSmsReceivedEventDetails, WDSSmsTextMessage2, WDSSmsWapMessage, WDSSmsAppMessage, WDSSmsBroadcastMessage, WDSSmsVoicemailMessage, WDSSmsStatusMessage, WDSSmsSendMessageResult, WDSSmsDevice2, WDSSmsMessageReceivedTriggerDetails, WDSSmsFilterRule, WDSSmsFilterRules, WDSSmsMessageRegistration;
 @class WDSSmsEncodedLength;
-@protocol WDSISmsMessageBase
-, WDSISmsTextMessage2, WDSISmsWapMessage, WDSISmsAppMessage, WDSISmsBroadcastMessage, WDSISmsVoicemailMessage, WDSISmsStatusMessage,
-    WDSISmsSendMessageResult, WDSISmsDevice2Statics, WDSISmsDevice2, WDSISmsMessageReceivedTriggerDetails, WDSISmsFilterRule,
-    WDSISmsFilterRuleFactory, WDSISmsFilterRules, WDSISmsFilterRulesFactory, WDSISmsMessageRegistrationStatics, WDSISmsMessageRegistration;
+@protocol WDSISmsMessage, WDSISmsBinaryMessage, WDSISmsTextMessage, WDSISmsTextMessageStatics, WDSISmsDeviceMessageStore, WDSISmsMessageReceivedEventArgs, WDSISmsDeviceStatics, WDSISmsDeviceStatics2, WDSISmsDevice, WDSISmsReceivedEventDetails, WDSISmsReceivedEventDetails2, WDSISmsMessageBase, WDSISmsTextMessage2, WDSISmsWapMessage, WDSISmsAppMessage, WDSISmsBroadcastMessage, WDSISmsVoicemailMessage, WDSISmsStatusMessage, WDSISmsSendMessageResult, WDSISmsDevice2Statics, WDSISmsDevice2, WDSISmsMessageReceivedTriggerDetails, WDSISmsFilterRule, WDSISmsFilterRuleFactory, WDSISmsFilterRules, WDSISmsFilterRulesFactory, WDSISmsMessageRegistrationStatics, WDSISmsMessageRegistration;
+
+// Windows.Devices.Sms.SmsMessageFilter
+enum _WDSSmsMessageFilter {
+    WDSSmsMessageFilterAll = 0,
+    WDSSmsMessageFilterUnread = 1,
+    WDSSmsMessageFilterRead = 2,
+    WDSSmsMessageFilterSent = 3,
+    WDSSmsMessageFilterDraft = 4,
+};
+typedef unsigned WDSSmsMessageFilter;
 
 // Windows.Devices.Sms.SmsMessageClass
 enum _WDSSmsMessageClass {
@@ -157,13 +168,31 @@ typedef unsigned WDSSmsFilterActionType;
 
 #include "WindowsStorageStreams.h"
 #include "WindowsFoundation.h"
+// Windows.Devices.Sms.SmsDeviceStatusChangedEventHandler
+#ifndef __WDSSmsDeviceStatusChangedEventHandler__DEFINED
+#define __WDSSmsDeviceStatusChangedEventHandler__DEFINED
+typedef void(^WDSSmsDeviceStatusChangedEventHandler)(WDSSmsDevice* sender);
+#endif // __WDSSmsDeviceStatusChangedEventHandler__DEFINED
+
+// Windows.Devices.Sms.SmsMessageReceivedEventHandler
+#ifndef __WDSSmsMessageReceivedEventHandler__DEFINED
+#define __WDSSmsMessageReceivedEventHandler__DEFINED
+typedef void(^WDSSmsMessageReceivedEventHandler)(WDSSmsDevice* sender, WDSSmsMessageReceivedEventArgs* e);
+#endif // __WDSSmsMessageReceivedEventHandler__DEFINED
+
+// Windows.Foundation.AsyncActionCompletedHandler
+#ifndef __WFAsyncActionCompletedHandler__DEFINED
+#define __WFAsyncActionCompletedHandler__DEFINED
+typedef void(^WFAsyncActionCompletedHandler)(RTObject<WFIAsyncAction>* asyncInfo, WFAsyncStatus asyncStatus);
+#endif // __WFAsyncActionCompletedHandler__DEFINED
+
 
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Devices.Sms.SmsEncodedLength
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsEncodedLength : NSObject
-+ (instancetype) new;
++ (instancetype)new;
 @property unsigned int segmentCount;
 @property unsigned int characterCountLastSegment;
 @property unsigned int charactersPerSegment;
@@ -171,43 +200,408 @@ WINRT_EXPORT
 @property unsigned int bytesPerSegment;
 @end
 
+// Windows.Devices.Sms.SmsMessageReceivedEventHandler
+#ifndef __WDSSmsMessageReceivedEventHandler__DEFINED
+#define __WDSSmsMessageReceivedEventHandler__DEFINED
+typedef void(^WDSSmsMessageReceivedEventHandler)(WDSSmsDevice* sender, WDSSmsMessageReceivedEventArgs* e);
+#endif // __WDSSmsMessageReceivedEventHandler__DEFINED
+
+// Windows.Devices.Sms.SmsDeviceStatusChangedEventHandler
+#ifndef __WDSSmsDeviceStatusChangedEventHandler__DEFINED
+#define __WDSSmsDeviceStatusChangedEventHandler__DEFINED
+typedef void(^WDSSmsDeviceStatusChangedEventHandler)(WDSSmsDevice* sender);
+#endif // __WDSSmsDeviceStatusChangedEventHandler__DEFINED
+
+// Windows.Devices.Sms.ISmsMessage
+#ifndef __WDSISmsMessage_DEFINED__
+#define __WDSISmsMessage_DEFINED__
+
+@protocol WDSISmsMessage
+@property (readonly) unsigned int id;
+@property (readonly) WDSSmsMessageClass messageClass;
+@end
+
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
+@interface WDSISmsMessage : RTObject <WDSISmsMessage>
+@end
+
+#endif // __WDSISmsMessage_DEFINED__
+
+// Windows.Devices.Sms.ISmsBinaryMessage
+#ifndef __WDSISmsBinaryMessage_DEFINED__
+#define __WDSISmsBinaryMessage_DEFINED__
+
+@protocol WDSISmsBinaryMessage <WDSISmsMessage>
+@property WDSSmsDataFormat format;
+- (NSArray* /* uint8_t */)getData;
+- (void)setData:(NSArray* /* uint8_t */)value;
+@end
+
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
+@interface WDSISmsBinaryMessage : RTObject <WDSISmsBinaryMessage>
+@end
+
+#endif // __WDSISmsBinaryMessage_DEFINED__
+
+// Windows.Devices.Sms.ISmsTextMessage
+#ifndef __WDSISmsTextMessage_DEFINED__
+#define __WDSISmsTextMessage_DEFINED__
+
+@protocol WDSISmsTextMessage <WDSISmsMessage>
+@property (retain) NSString * body;
+@property WDSSmsEncoding encoding;
+@property (retain) NSString * from;
+@property (readonly) unsigned int partCount;
+@property (readonly) unsigned int partNumber;
+@property (readonly) unsigned int partReferenceId;
+@property (readonly) WFDateTime* timestamp;
+@property (retain) NSString * to;
+- (NSArray* /* RTObject<WDSISmsBinaryMessage>* */)toBinaryMessages:(WDSSmsDataFormat)format;
+@end
+
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
+@interface WDSISmsTextMessage : RTObject <WDSISmsTextMessage>
+@end
+
+#endif // __WDSISmsTextMessage_DEFINED__
+
+// Windows.Devices.Sms.ISmsDevice
+#ifndef __WDSISmsDevice_DEFINED__
+#define __WDSISmsDevice_DEFINED__
+
+@protocol WDSISmsDevice
+@property (readonly) NSString * accountPhoneNumber;
+@property (readonly) WDSCellularClass cellularClass;
+@property (readonly) WDSSmsDeviceStatus deviceStatus;
+@property (readonly) WDSSmsDeviceMessageStore* messageStore;
+- (EventRegistrationToken)addSmsDeviceStatusChangedEvent:(WDSSmsDeviceStatusChangedEventHandler)del;
+- (void)removeSmsDeviceStatusChangedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addSmsMessageReceivedEvent:(WDSSmsMessageReceivedEventHandler)del;
+- (void)removeSmsMessageReceivedEvent:(EventRegistrationToken)tok;
+- (WDSSendSmsMessageOperation*)sendMessageAsync:(RTObject<WDSISmsMessage>*)message;
+- (WDSSmsEncodedLength*)calculateLength:(WDSSmsTextMessage*)message;
+@end
+
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
+@interface WDSISmsDevice : RTObject <WDSISmsDevice>
+@end
+
+#endif // __WDSISmsDevice_DEFINED__
+
 // Windows.Devices.Sms.ISmsMessageBase
 #ifndef __WDSISmsMessageBase_DEFINED__
 #define __WDSISmsMessageBase_DEFINED__
 
 @protocol WDSISmsMessageBase
 @property (readonly) WDSCellularClass cellularClass;
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * deviceId;
 @property (readonly) WDSSmsMessageClass messageClass;
 @property (readonly) WDSSmsMessageType messageType;
-@property (readonly) NSString* simIccId;
+@property (readonly) NSString * simIccId;
+@end
+
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
+@interface WDSISmsMessageBase : RTObject <WDSISmsMessageBase>
 @end
 
 #endif // __WDSISmsMessageBase_DEFINED__
+
+// Windows.Devices.Sms.SmsBinaryMessage
+#ifndef __WDSSmsBinaryMessage_DEFINED__
+#define __WDSSmsBinaryMessage_DEFINED__
+
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
+@interface WDSSmsBinaryMessage : RTObject <WDSISmsBinaryMessage, WDSISmsMessage>
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property WDSSmsDataFormat format;
+@property (readonly) unsigned int id;
+@property (readonly) WDSSmsMessageClass messageClass;
+- (NSArray* /* uint8_t */)getData;
+- (void)setData:(NSArray* /* uint8_t */)value;
+@end
+
+#endif // __WDSSmsBinaryMessage_DEFINED__
+
+// Windows.Devices.Sms.SmsTextMessage
+#ifndef __WDSSmsTextMessage_DEFINED__
+#define __WDSSmsTextMessage_DEFINED__
+
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
+@interface WDSSmsTextMessage : RTObject <WDSISmsTextMessage, WDSISmsMessage>
++ (WDSSmsTextMessage*)fromBinaryMessage:(WDSSmsBinaryMessage*)binaryMessage;
++ (WDSSmsTextMessage*)fromBinaryData:(WDSSmsDataFormat)format value:(NSArray* /* uint8_t */)value;
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) unsigned int id;
+@property (readonly) WDSSmsMessageClass messageClass;
+@property (retain) NSString * to;
+@property (retain) NSString * from;
+@property WDSSmsEncoding encoding;
+@property (retain) NSString * body;
+@property (readonly) unsigned int partCount;
+@property (readonly) unsigned int partNumber;
+@property (readonly) unsigned int partReferenceId;
+@property (readonly) WFDateTime* timestamp;
+- (NSArray* /* RTObject<WDSISmsBinaryMessage>* */)toBinaryMessages:(WDSSmsDataFormat)format;
+@end
+
+#endif // __WDSSmsTextMessage_DEFINED__
+
+// Windows.Foundation.IAsyncInfo
+#ifndef __WFIAsyncInfo_DEFINED__
+#define __WFIAsyncInfo_DEFINED__
+
+@protocol WFIAsyncInfo
+@property (readonly) HRESULT errorCode;
+@property (readonly) unsigned int id;
+@property (readonly) WFAsyncStatus status;
+- (void)cancel;
+- (void)close;
+@end
+
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
+@interface WFIAsyncInfo : RTObject <WFIAsyncInfo>
+@end
+
+#endif // __WFIAsyncInfo_DEFINED__
+
+// Windows.Foundation.IAsyncAction
+#ifndef __WFIAsyncAction_DEFINED__
+#define __WFIAsyncAction_DEFINED__
+
+@protocol WFIAsyncAction <WFIAsyncInfo>
+@property (copy) WFAsyncActionCompletedHandler completed;
+- (void)getResults;
+- (void)cancel;
+- (void)close;
+@end
+
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
+@interface WFIAsyncAction : RTObject <WFIAsyncAction>
+@end
+
+#endif // __WFIAsyncAction_DEFINED__
+
+// Windows.Devices.Sms.DeleteSmsMessageOperation
+#ifndef __WDSDeleteSmsMessageOperation_DEFINED__
+#define __WDSDeleteSmsMessageOperation_DEFINED__
+
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
+@interface WDSDeleteSmsMessageOperation : RTObject <WFIAsyncAction, WFIAsyncInfo>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) HRESULT errorCode;
+@property (readonly) unsigned int id;
+@property (readonly) WFAsyncStatus status;
+@property (copy) WFAsyncActionCompletedHandler completed;
+- (void)getResults;
+- (void)cancel;
+- (void)close;
+@end
+
+#endif // __WDSDeleteSmsMessageOperation_DEFINED__
+
+// Windows.Devices.Sms.DeleteSmsMessagesOperation
+#ifndef __WDSDeleteSmsMessagesOperation_DEFINED__
+#define __WDSDeleteSmsMessagesOperation_DEFINED__
+
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
+@interface WDSDeleteSmsMessagesOperation : RTObject <WFIAsyncAction, WFIAsyncInfo>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) HRESULT errorCode;
+@property (readonly) unsigned int id;
+@property (readonly) WFAsyncStatus status;
+@property (copy) WFAsyncActionCompletedHandler completed;
+- (void)getResults;
+- (void)cancel;
+- (void)close;
+@end
+
+#endif // __WDSDeleteSmsMessagesOperation_DEFINED__
+
+// Windows.Devices.Sms.GetSmsMessageOperation
+#ifndef __WDSGetSmsMessageOperation_DEFINED__
+#define __WDSGetSmsMessageOperation_DEFINED__
+
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
+@interface WDSGetSmsMessageOperation : RTObject <WFIAsyncInfo>
+ // Failed to get type for default interface: Can't marshal Windows.Foundation.IAsyncOperation`1<Windows.Devices.Sms.ISmsMessage>
+@property (readonly) HRESULT errorCode;
+@property (readonly) unsigned int id;
+@property (readonly) WFAsyncStatus status;
+// Failed to generate property Completed (Can't marshal Windows.Foundation.AsyncOperationCompletedHandler`1<Windows.Devices.Sms.ISmsMessage>)
+// Could not find base class Windows.Foundation.IAsyncOperation`1<Windows.Devices.Sms.ISmsMessage> type information
+- (void)cancel;
+- (void)close;
+@end
+
+#endif // __WDSGetSmsMessageOperation_DEFINED__
+
+// Windows.Devices.Sms.GetSmsMessagesOperation
+#ifndef __WDSGetSmsMessagesOperation_DEFINED__
+#define __WDSGetSmsMessagesOperation_DEFINED__
+
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
+@interface WDSGetSmsMessagesOperation : RTObject <WFIAsyncInfo>
+ // Failed to get type for default interface: Can't marshal Windows.Foundation.IAsyncOperationWithProgress`2<Windows.Foundation.Collections.IVectorView`1<Windows.Devices.Sms.ISmsMessage>,Int32>
+@property (readonly) HRESULT errorCode;
+@property (readonly) unsigned int id;
+@property (readonly) WFAsyncStatus status;
+// Failed to generate property Progress (Can't marshal Windows.Foundation.AsyncOperationProgressHandler`2<Windows.Foundation.Collections.IVectorView`1<Windows.Devices.Sms.ISmsMessage>,Int32>)
+// Failed to generate property Completed (Can't marshal Windows.Foundation.AsyncOperationWithProgressCompletedHandler`2<Windows.Foundation.Collections.IVectorView`1<Windows.Devices.Sms.ISmsMessage>,Int32>)
+// Could not find base class Windows.Foundation.IAsyncOperationWithProgress`2<Windows.Foundation.Collections.IVectorView`1<Windows.Devices.Sms.ISmsMessage>,Int32> type information
+- (void)cancel;
+- (void)close;
+@end
+
+#endif // __WDSGetSmsMessagesOperation_DEFINED__
+
+// Windows.Devices.Sms.SmsDeviceMessageStore
+#ifndef __WDSSmsDeviceMessageStore_DEFINED__
+#define __WDSSmsDeviceMessageStore_DEFINED__
+
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
+@interface WDSSmsDeviceMessageStore : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) unsigned int maxMessages;
+- (RTObject<WFIAsyncAction>*)deleteMessageAsync:(unsigned int)messageId;
+- (RTObject<WFIAsyncAction>*)deleteMessagesAsync:(WDSSmsMessageFilter)messageFilter;
+- (void)getMessageAsync:(unsigned int)messageId success:(void (^)(RTObject<WDSISmsMessage>*))success failure:(void (^)(NSError*))failure;
+- (void)getMessagesAsync:(WDSSmsMessageFilter)messageFilter success:(void (^)(NSArray* /* RTObject<WDSISmsMessage>* */))success progress:(void (^)(int))progress failure:(void (^)(NSError*))failure;
+@end
+
+#endif // __WDSSmsDeviceMessageStore_DEFINED__
+
+// Windows.Devices.Sms.SendSmsMessageOperation
+#ifndef __WDSSendSmsMessageOperation_DEFINED__
+#define __WDSSendSmsMessageOperation_DEFINED__
+
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
+@interface WDSSendSmsMessageOperation : RTObject <WFIAsyncAction, WFIAsyncInfo>
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) HRESULT errorCode;
+@property (readonly) unsigned int id;
+@property (readonly) WFAsyncStatus status;
+@property (copy) WFAsyncActionCompletedHandler completed;
+- (void)getResults;
+- (void)cancel;
+- (void)close;
+@end
+
+#endif // __WDSSendSmsMessageOperation_DEFINED__
+
+// Windows.Devices.Sms.SmsMessageReceivedEventArgs
+#ifndef __WDSSmsMessageReceivedEventArgs_DEFINED__
+#define __WDSSmsMessageReceivedEventArgs_DEFINED__
+
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
+@interface WDSSmsMessageReceivedEventArgs : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) WDSSmsBinaryMessage* binaryMessage;
+@property (readonly) WDSSmsTextMessage* textMessage;
+@end
+
+#endif // __WDSSmsMessageReceivedEventArgs_DEFINED__
+
+// Windows.Devices.Sms.SmsDevice
+#ifndef __WDSSmsDevice_DEFINED__
+#define __WDSSmsDevice_DEFINED__
+
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
+@interface WDSSmsDevice : RTObject <WDSISmsDevice>
++ (void)fromNetworkAccountIdAsync:(NSString *)networkAccountId success:(void (^)(WDSSmsDevice*))success failure:(void (^)(NSError*))failure;
++ (NSString *)getDeviceSelector;
++ (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDSSmsDevice*))success failure:(void (^)(NSError*))failure;
++ (void)getDefaultAsyncWithSuccess:(void (^)(WDSSmsDevice*))success failure:(void (^)(NSError*))failure;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) NSString * accountPhoneNumber;
+@property (readonly) WDSCellularClass cellularClass;
+@property (readonly) WDSSmsDeviceStatus deviceStatus;
+@property (readonly) WDSSmsDeviceMessageStore* messageStore;
+- (EventRegistrationToken)addSmsDeviceStatusChangedEvent:(WDSSmsDeviceStatusChangedEventHandler)del;
+- (void)removeSmsDeviceStatusChangedEvent:(EventRegistrationToken)tok;
+- (EventRegistrationToken)addSmsMessageReceivedEvent:(WDSSmsMessageReceivedEventHandler)del;
+- (void)removeSmsMessageReceivedEvent:(EventRegistrationToken)tok;
+- (WDSSendSmsMessageOperation*)sendMessageAsync:(RTObject<WDSISmsMessage>*)message;
+- (WDSSmsEncodedLength*)calculateLength:(WDSSmsTextMessage*)message;
+@end
+
+#endif // __WDSSmsDevice_DEFINED__
+
+// Windows.Devices.Sms.GetSmsDeviceOperation
+#ifndef __WDSGetSmsDeviceOperation_DEFINED__
+#define __WDSGetSmsDeviceOperation_DEFINED__
+
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
+@interface WDSGetSmsDeviceOperation : RTObject <WFIAsyncInfo>
+ // Failed to get type for default interface: Can't marshal Windows.Foundation.IAsyncOperation`1<Windows.Devices.Sms.SmsDevice>
+@property (readonly) HRESULT errorCode;
+@property (readonly) unsigned int id;
+@property (readonly) WFAsyncStatus status;
+// Failed to generate property Completed (Can't marshal Windows.Foundation.AsyncOperationCompletedHandler`1<Windows.Devices.Sms.SmsDevice>)
+// Could not find base class Windows.Foundation.IAsyncOperation`1<Windows.Devices.Sms.SmsDevice> type information
+- (void)cancel;
+- (void)close;
+@end
+
+#endif // __WDSGetSmsDeviceOperation_DEFINED__
+
+// Windows.Devices.Sms.SmsReceivedEventDetails
+#ifndef __WDSSmsReceivedEventDetails_DEFINED__
+#define __WDSSmsReceivedEventDetails_DEFINED__
+
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
+@interface WDSSmsReceivedEventDetails : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) NSString * deviceId;
+@property (readonly) unsigned int messageIndex;
+@property (readonly) WDSSmsBinaryMessage* binaryMessage;
+@property (readonly) WDSSmsMessageClass messageClass;
+@end
+
+#endif // __WDSSmsReceivedEventDetails_DEFINED__
 
 // Windows.Devices.Sms.SmsTextMessage2
 #ifndef __WDSSmsTextMessage2_DEFINED__
 #define __WDSSmsTextMessage2_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsTextMessage2 : RTObject <WDSISmsMessageBase>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDSSmsMessageType messageType;
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * deviceId;
 @property (readonly) WDSCellularClass cellularClass;
 @property (readonly) WDSSmsMessageClass messageClass;
-@property (readonly) NSString* simIccId;
+@property (readonly) NSString * simIccId;
 @property int retryAttemptCount;
-@property (retain) NSString* to;
+@property (retain) NSString * to;
 @property BOOL isDeliveryNotificationEnabled;
 @property WDSSmsEncoding encoding;
-@property (retain) NSString* callbackNumber;
-@property (retain) NSString* body;
+@property (retain) NSString * callbackNumber;
+@property (retain) NSString * body;
 @property (readonly) int protocolId;
-@property (readonly) NSString* from;
+@property (readonly) NSString * from;
 @property (readonly) WFDateTime* timestamp;
 @property (readonly) int teleserviceId;
 @end
@@ -218,23 +612,23 @@ WINRT_EXPORT
 #ifndef __WDSSmsWapMessage_DEFINED__
 #define __WDSSmsWapMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsWapMessage : RTObject <WDSISmsMessageBase>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDSCellularClass cellularClass;
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * deviceId;
 @property (readonly) WDSSmsMessageClass messageClass;
 @property (readonly) WDSSmsMessageType messageType;
-@property (readonly) NSString* simIccId;
+@property (readonly) NSString * simIccId;
 @property (readonly) WFDateTime* timestamp;
-@property (readonly) NSString* applicationId;
+@property (readonly) NSString * applicationId;
 @property (readonly) RTObject<WSSIBuffer>* binaryBody;
-@property (readonly) NSString* contentType;
-@property (readonly) NSString* from;
+@property (readonly) NSString * contentType;
+@property (readonly) NSString * from;
 @property (readonly) NSMutableDictionary* /* NSString *, NSString * */ headers;
-@property (readonly) NSString* to;
+@property (readonly) NSString * to;
 @end
 
 #endif // __WDSSmsWapMessage_DEFINED__
@@ -243,7 +637,7 @@ WINRT_EXPORT
 #ifndef __WDSSmsAppMessage_DEFINED__
 #define __WDSSmsAppMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsAppMessage : RTObject <WDSISmsMessageBase>
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -254,18 +648,18 @@ WINRT_EXPORT
 @property BOOL isDeliveryNotificationEnabled;
 @property int retryAttemptCount;
 @property WDSSmsEncoding encoding;
-@property (retain) NSString* callbackNumber;
-@property (retain) NSString* body;
+@property (retain) NSString * body;
+@property (retain) NSString * callbackNumber;
 @property (retain) RTObject<WSSIBuffer>* binaryBody;
-@property (retain) NSString* to;
+@property (retain) NSString * to;
 @property int teleserviceId;
-@property (readonly) NSString* from;
+@property (readonly) NSString * from;
 @property (readonly) WFDateTime* timestamp;
 @property (readonly) WDSCellularClass cellularClass;
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * deviceId;
 @property (readonly) WDSSmsMessageClass messageClass;
 @property (readonly) WDSSmsMessageType messageType;
-@property (readonly) NSString* simIccId;
+@property (readonly) NSString * simIccId;
 @end
 
 #endif // __WDSSmsAppMessage_DEFINED__
@@ -274,12 +668,12 @@ WINRT_EXPORT
 #ifndef __WDSSmsBroadcastMessage_DEFINED__
 #define __WDSSmsBroadcastMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsBroadcastMessage : RTObject <WDSISmsMessageBase>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* body;
+@property (readonly) NSString * body;
 @property (readonly) WDSSmsBroadcastType broadcastType;
 @property (readonly) int channel;
 @property (readonly) WDSSmsGeographicalScope geographicalScope;
@@ -287,13 +681,13 @@ WINRT_EXPORT
 @property (readonly) BOOL isUserPopupRequested;
 @property (readonly) int messageCode;
 @property (readonly) WFDateTime* timestamp;
-@property (readonly) NSString* to;
+@property (readonly) NSString * to;
 @property (readonly) int updateNumber;
 @property (readonly) WDSCellularClass cellularClass;
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * deviceId;
 @property (readonly) WDSSmsMessageClass messageClass;
 @property (readonly) WDSSmsMessageType messageType;
-@property (readonly) NSString* simIccId;
+@property (readonly) NSString * simIccId;
 @end
 
 #endif // __WDSSmsBroadcastMessage_DEFINED__
@@ -302,20 +696,20 @@ WINRT_EXPORT
 #ifndef __WDSSmsVoicemailMessage_DEFINED__
 #define __WDSSmsVoicemailMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsVoicemailMessage : RTObject <WDSISmsMessageBase>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDSCellularClass cellularClass;
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * deviceId;
 @property (readonly) WDSSmsMessageClass messageClass;
 @property (readonly) WDSSmsMessageType messageType;
-@property (readonly) NSString* simIccId;
-@property (readonly) NSString* body;
+@property (readonly) NSString * simIccId;
+@property (readonly) NSString * body;
 @property (readonly) id /* int */ messageCount;
 @property (readonly) WFDateTime* timestamp;
-@property (readonly) NSString* to;
+@property (readonly) NSString * to;
 @end
 
 #endif // __WDSSmsVoicemailMessage_DEFINED__
@@ -324,23 +718,23 @@ WINRT_EXPORT
 #ifndef __WDSSmsStatusMessage_DEFINED__
 #define __WDSSmsStatusMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsStatusMessage : RTObject <WDSISmsMessageBase>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WDSCellularClass cellularClass;
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * deviceId;
 @property (readonly) WDSSmsMessageClass messageClass;
 @property (readonly) WDSSmsMessageType messageType;
-@property (readonly) NSString* simIccId;
+@property (readonly) NSString * simIccId;
 @property (readonly) int status;
-@property (readonly) NSString* body;
+@property (readonly) NSString * body;
 @property (readonly) WFDateTime* dischargeTime;
-@property (readonly) NSString* from;
+@property (readonly) NSString * from;
 @property (readonly) int messageReferenceNumber;
 @property (readonly) WFDateTime* serviceCenterTimestamp;
-@property (readonly) NSString* to;
+@property (readonly) NSString * to;
 @end
 
 #endif // __WDSSmsStatusMessage_DEFINED__
@@ -349,7 +743,7 @@ WINRT_EXPORT
 #ifndef __WDSSmsSendMessageResult_DEFINED__
 #define __WDSSmsSendMessageResult_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsSendMessageResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -369,27 +763,25 @@ WINRT_EXPORT
 #ifndef __WDSSmsDevice2_DEFINED__
 #define __WDSSmsDevice2_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsDevice2 : RTObject
-+ (NSString*)getDeviceSelector;
-+ (WDSSmsDevice2*)fromId:(NSString*)deviceId;
++ (NSString *)getDeviceSelector;
++ (WDSSmsDevice2*)fromId:(NSString *)deviceId;
 + (WDSSmsDevice2*)getDefault;
-+ (WDSSmsDevice2*)fromParentId:(NSString*)parentDeviceId;
++ (WDSSmsDevice2*)fromParentId:(NSString *)parentDeviceId;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* smscAddress;
-@property (readonly) NSString* accountPhoneNumber;
+@property (retain) NSString * smscAddress;
+@property (readonly) NSString * accountPhoneNumber;
 @property (readonly) WDSCellularClass cellularClass;
-@property (readonly) NSString* deviceId;
+@property (readonly) NSString * deviceId;
 @property (readonly) WDSSmsDeviceStatus deviceStatus;
-@property (readonly) NSString* parentDeviceId;
-- (EventRegistrationToken)addDeviceStatusChangedEvent:(void (^)(WDSSmsDevice2*, RTObject*))del;
+@property (readonly) NSString * parentDeviceId;
+- (EventRegistrationToken)addDeviceStatusChangedEvent:(void(^)(WDSSmsDevice2*, RTObject*))del;
 - (void)removeDeviceStatusChangedEvent:(EventRegistrationToken)tok;
 - (WDSSmsEncodedLength*)calculateLength:(RTObject<WDSISmsMessageBase>*)message;
-- (void)sendMessageAndGetResultAsync:(RTObject<WDSISmsMessageBase>*)message
-                             success:(void (^)(WDSSmsSendMessageResult*))success
-                             failure:(void (^)(NSError*))failure;
+- (void)sendMessageAndGetResultAsync:(RTObject<WDSISmsMessageBase>*)message success:(void (^)(WDSSmsSendMessageResult*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WDSSmsDevice2_DEFINED__
@@ -398,7 +790,7 @@ WINRT_EXPORT
 #ifndef __WDSSmsMessageReceivedTriggerDetails_DEFINED__
 #define __WDSSmsMessageReceivedTriggerDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsMessageReceivedTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -420,7 +812,7 @@ WINRT_EXPORT
 #ifndef __WDSSmsFilterRule_DEFINED__
 #define __WDSSmsFilterRule_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsFilterRule : RTObject
 + (WDSSmsFilterRule*)makeFilterRule:(WDSSmsMessageType)messageType ACTIVATOR;
 #if defined(__cplusplus)
@@ -447,7 +839,7 @@ WINRT_EXPORT
 #ifndef __WDSSmsFilterRules_DEFINED__
 #define __WDSSmsFilterRules_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsFilterRules : RTObject
 + (WDSSmsFilterRules*)makeFilterRules:(WDSSmsFilterActionType)actionType ACTIVATOR;
 #if defined(__cplusplus)
@@ -463,17 +855,18 @@ WINRT_EXPORT
 #ifndef __WDSSmsMessageRegistration_DEFINED__
 #define __WDSSmsMessageRegistration_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsMessageRegistration : RTObject
-+ (WDSSmsMessageRegistration*)Register:(NSString*)id filterRules:(WDSSmsFilterRules*)filterRules;
++ (WDSSmsMessageRegistration*)Register:(NSString *)id filterRules:(WDSSmsFilterRules*)filterRules;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) NSString* id;
+@property (readonly) NSString * id;
 + (NSArray* /* WDSSmsMessageRegistration* */)allRegistrations;
-- (EventRegistrationToken)addMessageReceivedEvent:(void (^)(WDSSmsMessageRegistration*, WDSSmsMessageReceivedTriggerDetails*))del;
+- (EventRegistrationToken)addMessageReceivedEvent:(void(^)(WDSSmsMessageRegistration*, WDSSmsMessageReceivedTriggerDetails*))del;
 - (void)removeMessageReceivedEvent:(EventRegistrationToken)tok;
 - (void)unregister;
 @end
 
 #endif // __WDSSmsMessageRegistration_DEFINED__
+

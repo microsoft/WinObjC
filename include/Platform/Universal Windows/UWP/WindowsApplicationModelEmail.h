@@ -19,23 +19,32 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@class WAEEmailMessage, WAEEmailStore, WAEEmailMailbox, WAEEmailConversationReader, WAEEmailQueryOptions, WAEEmailMessageReader,
-    WAEEmailConversation, WAEEmailFolder, WAEEmailRecipient, WAEEmailIrmTemplate, WAEEmailIrmInfo, WAEEmailAttachment, WAEEmailMeetingInfo,
-    WAEEmailMailboxChangedDeferral, WAEEmailMailboxCapabilities, WAEEmailMailboxChangeTracker, WAEEmailMailboxPolicies,
-    WAEEmailMailboxSyncManager, WAEEmailMailboxChangedEventArgs, WAEEmailMailboxAutoReplySettings, WAEEmailMailboxAutoReply,
-    WAEEmailItemCounts, WAEEmailQueryTextSearch, WAEEmailConversationBatch, WAEEmailMessageBatch, WAEEmailMailboxAction,
-    WAEEmailMailboxChange, WAEEmailMailboxChangeReader, WAEEmailManager, WAEEmailStoreNotificationTriggerDetails;
-@protocol WAEIEmailManagerStatics
-, WAEIEmailManagerStatics2, WAEIEmailStore, WAEIEmailRecipient, WAEIEmailRecipientFactory, WAEIEmailIrmTemplate,
-    WAEIEmailIrmTemplateFactory, WAEIEmailIrmInfo, WAEIEmailIrmInfoFactory, WAEIEmailMessage, WAEIEmailMessage2, WAEIEmailAttachment,
-    WAEIEmailAttachment2, WAEIEmailAttachmentFactory, WAEIEmailAttachmentFactory2, WAEIEmailMailboxChangedEventArgs,
-    WAEIEmailMailboxChangedDeferral, WAEIEmailStoreNotificationTriggerDetails, WAEIEmailMailboxPolicies, WAEIEmailMailboxCapabilities,
-    WAEIEmailMailbox, WAEIEmailMailbox2, WAEIEmailMailboxAutoReplySettings, WAEIEmailMailboxAutoReply, WAEIEmailMailboxSyncManager,
-    WAEIEmailFolder, WAEIEmailConversation, WAEIEmailMailboxAction, WAEIEmailQueryTextSearch, WAEIEmailQueryOptionsFactory,
-    WAEIEmailQueryOptions, WAEIEmailConversationBatch, WAEIEmailConversationReader, WAEIEmailMessageBatch, WAEIEmailMessageReader,
-    WAEIEmailMailboxChange, WAEIEmailMailboxChangeReader, WAEIEmailMailboxChangeTracker, WAEIEmailMeetingInfo, WAEIEmailItemCounts;
+@class WAEEmailMessage, WAEEmailStore, WAEEmailManagerForUser, WAEEmailMailbox, WAEEmailConversationReader, WAEEmailQueryOptions, WAEEmailMessageReader, WAEEmailConversation, WAEEmailFolder, WAEEmailRecipient, WAEEmailIrmTemplate, WAEEmailIrmInfo, WAEEmailAttachment, WAEEmailMeetingInfo, WAEEmailMailboxChangedDeferral, WAEEmailMailboxCapabilities, WAEEmailMailboxChangeTracker, WAEEmailMailboxPolicies, WAEEmailMailboxSyncManager, WAEEmailMailboxChangedEventArgs, WAEEmailMailboxAutoReplySettings, WAEEmailRecipientResolutionResult, WAEEmailMailboxCreateFolderResult, WAEEmailMailboxAutoReply, WAEEmailItemCounts, WAEEmailQueryTextSearch, WAEEmailConversationBatch, WAEEmailMessageBatch, WAEEmailMailboxAction, WAEEmailMailboxChange, WAEEmailMailboxChangeReader, WAEEmailManager, WAEEmailStoreNotificationTriggerDetails;
+@protocol WAEIEmailManagerStatics, WAEIEmailManagerStatics2, WAEIEmailManagerStatics3, WAEIEmailManagerForUser, WAEIEmailStore, WAEIEmailRecipient, WAEIEmailRecipientFactory, WAEIEmailIrmTemplate, WAEIEmailIrmTemplateFactory, WAEIEmailIrmInfo, WAEIEmailIrmInfoFactory, WAEIEmailMessage, WAEIEmailMessage2, WAEIEmailMessage3, WAEIEmailAttachment, WAEIEmailAttachment2, WAEIEmailAttachmentFactory, WAEIEmailAttachmentFactory2, WAEIEmailMailboxChangedEventArgs, WAEIEmailMailboxChangedDeferral, WAEIEmailStoreNotificationTriggerDetails, WAEIEmailMailboxPolicies, WAEIEmailMailboxPolicies2, WAEIEmailMailboxPolicies3, WAEIEmailMailboxCapabilities, WAEIEmailMailboxCapabilities2, WAEIEmailMailboxCapabilities3, WAEIEmailMailbox, WAEIEmailMailbox2, WAEIEmailMailbox3, WAEIEmailMailbox4, WAEIEmailRecipientResolutionResult, WAEIEmailRecipientResolutionResult2, WAEIEmailMailboxCreateFolderResult, WAEIEmailMailboxAutoReplySettings, WAEIEmailMailboxAutoReply, WAEIEmailMailboxSyncManager, WAEIEmailMailboxSyncManager2, WAEIEmailFolder, WAEIEmailConversation, WAEIEmailMailboxAction, WAEIEmailQueryTextSearch, WAEIEmailQueryOptionsFactory, WAEIEmailQueryOptions, WAEIEmailConversationBatch, WAEIEmailConversationReader, WAEIEmailMessageBatch, WAEIEmailMessageReader, WAEIEmailMailboxChange, WAEIEmailMailboxChangeReader, WAEIEmailMailboxChangeTracker, WAEIEmailMeetingInfo, WAEIEmailMeetingInfo2, WAEIEmailItemCounts;
+
+// Windows.ApplicationModel.Email.EmailCertificateValidationStatus
+enum _WAEEmailCertificateValidationStatus {
+    WAEEmailCertificateValidationStatusSuccess = 0,
+    WAEEmailCertificateValidationStatusNoMatch = 1,
+    WAEEmailCertificateValidationStatusInvalidUsage = 2,
+    WAEEmailCertificateValidationStatusInvalidCertificate = 3,
+    WAEEmailCertificateValidationStatusRevoked = 4,
+    WAEEmailCertificateValidationStatusChainRevoked = 5,
+    WAEEmailCertificateValidationStatusRevocationServerFailure = 6,
+    WAEEmailCertificateValidationStatusExpired = 7,
+    WAEEmailCertificateValidationStatusUntrusted = 8,
+    WAEEmailCertificateValidationStatusServerError = 9,
+    WAEEmailCertificateValidationStatusUnknownFailure = 10,
+};
+typedef unsigned WAEEmailCertificateValidationStatus;
 
 // Windows.ApplicationModel.Email.EmailStoreAccessType
 enum _WAEEmailStoreAccessType {
@@ -194,6 +203,7 @@ enum _WAEEmailMailboxSyncStatus {
     WAEEmailMailboxSyncStatusAuthenticationError = 3,
     WAEEmailMailboxSyncStatusPolicyError = 4,
     WAEEmailMailboxSyncStatusUnknownError = 5,
+    WAEEmailMailboxSyncStatusManualAccountRemovalRequired = 6,
 };
 typedef unsigned WAEEmailMailboxSyncStatus;
 
@@ -201,6 +211,7 @@ typedef unsigned WAEEmailMailboxSyncStatus;
 enum _WAEEmailMailboxOtherAppReadAccess {
     WAEEmailMailboxOtherAppReadAccessSystemOnly = 0,
     WAEEmailMailboxOtherAppReadAccessFull = 1,
+    WAEEmailMailboxOtherAppReadAccessNone = 2,
 };
 typedef unsigned WAEEmailMailboxOtherAppReadAccess;
 
@@ -252,9 +263,67 @@ enum _WAEEmailQuerySearchScope {
 };
 typedef unsigned WAEEmailQuerySearchScope;
 
+// Windows.ApplicationModel.Email.EmailRecipientResolutionStatus
+enum _WAEEmailRecipientResolutionStatus {
+    WAEEmailRecipientResolutionStatusSuccess = 0,
+    WAEEmailRecipientResolutionStatusRecipientNotFound = 1,
+    WAEEmailRecipientResolutionStatusAmbiguousRecipient = 2,
+    WAEEmailRecipientResolutionStatusNoCertificate = 3,
+    WAEEmailRecipientResolutionStatusCertificateRequestLimitReached = 4,
+    WAEEmailRecipientResolutionStatusCannotResolveDistributionList = 5,
+    WAEEmailRecipientResolutionStatusServerError = 6,
+    WAEEmailRecipientResolutionStatusUnknownFailure = 7,
+};
+typedef unsigned WAEEmailRecipientResolutionStatus;
+
+// Windows.ApplicationModel.Email.EmailMessageSmimeKind
+enum _WAEEmailMessageSmimeKind {
+    WAEEmailMessageSmimeKindNone = 0,
+    WAEEmailMessageSmimeKindClearSigned = 1,
+    WAEEmailMessageSmimeKindOpaqueSigned = 2,
+    WAEEmailMessageSmimeKindEncrypted = 3,
+};
+typedef unsigned WAEEmailMessageSmimeKind;
+
+// Windows.ApplicationModel.Email.EmailMailboxEmptyFolderStatus
+enum _WAEEmailMailboxEmptyFolderStatus {
+    WAEEmailMailboxEmptyFolderStatusSuccess = 0,
+    WAEEmailMailboxEmptyFolderStatusNetworkError = 1,
+    WAEEmailMailboxEmptyFolderStatusPermissionsError = 2,
+    WAEEmailMailboxEmptyFolderStatusServerError = 3,
+    WAEEmailMailboxEmptyFolderStatusUnknownFailure = 4,
+    WAEEmailMailboxEmptyFolderStatusCouldNotDeleteEverything = 5,
+};
+typedef unsigned WAEEmailMailboxEmptyFolderStatus;
+
+// Windows.ApplicationModel.Email.EmailMailboxCreateFolderStatus
+enum _WAEEmailMailboxCreateFolderStatus {
+    WAEEmailMailboxCreateFolderStatusSuccess = 0,
+    WAEEmailMailboxCreateFolderStatusNetworkError = 1,
+    WAEEmailMailboxCreateFolderStatusPermissionsError = 2,
+    WAEEmailMailboxCreateFolderStatusServerError = 3,
+    WAEEmailMailboxCreateFolderStatusUnknownFailure = 4,
+    WAEEmailMailboxCreateFolderStatusNameCollision = 5,
+    WAEEmailMailboxCreateFolderStatusServerRejected = 6,
+};
+typedef unsigned WAEEmailMailboxCreateFolderStatus;
+
+// Windows.ApplicationModel.Email.EmailMailboxDeleteFolderStatus
+enum _WAEEmailMailboxDeleteFolderStatus {
+    WAEEmailMailboxDeleteFolderStatusSuccess = 0,
+    WAEEmailMailboxDeleteFolderStatusNetworkError = 1,
+    WAEEmailMailboxDeleteFolderStatusPermissionsError = 2,
+    WAEEmailMailboxDeleteFolderStatusServerError = 3,
+    WAEEmailMailboxDeleteFolderStatusUnknownFailure = 4,
+    WAEEmailMailboxDeleteFolderStatusCouldNotDeleteEverything = 5,
+};
+typedef unsigned WAEEmailMailboxDeleteFolderStatus;
+
 #include "WindowsApplicationModelAppointments.h"
 #include "WindowsFoundation.h"
+#include "WindowsSystem.h"
 #include "WindowsStorageStreams.h"
+#include "WindowsSecurityCryptographyCertificates.h"
 
 #import <Foundation/Foundation.h>
 
@@ -262,14 +331,14 @@ typedef unsigned WAEEmailQuerySearchScope;
 #ifndef __WAEEmailMessage_DEFINED__
 #define __WAEEmailMessage_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMessage : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* body;
-@property (retain) NSString* subject;
+@property (retain) NSString * subject;
+@property (retain) NSString * body;
 @property (readonly) NSMutableArray* /* WAEEmailRecipient* */ bcc;
 @property (readonly) NSMutableArray* /* WAEEmailRecipient* */ cC;
 @property (readonly) NSMutableArray* /* WAEEmailAttachment* */ attachments;
@@ -277,30 +346,32 @@ WINRT_EXPORT
 @property WAEEmailFlagState flagState;
 @property unsigned int estimatedDownloadSizeInBytes;
 @property WAEEmailMessageDownloadState downloadState;
+@property (retain) WAEEmailIrmInfo* irmInfo;
 @property WAEEmailImportance importance;
 @property BOOL allowInternetImages;
-@property (retain) id /* WFDateTime* */ sentTime;
-@property (retain) WAEEmailRecipient* sender;
-@property (retain) NSString* preview;
-@property int originalCodePage;
-@property (retain) NSString* remoteId;
-@property (retain) NSString* messageClass;
-@property WAEEmailMessageResponseKind lastResponseKind;
-@property BOOL isRead;
+@property (retain) NSString * messageClass;
 @property BOOL isSeen;
+@property BOOL isRead;
+@property WAEEmailMessageResponseKind lastResponseKind;
+@property (retain) WAEEmailRecipient* sender;
+@property (retain) id /* WFDateTime* */ sentTime;
+@property (retain) NSString * preview;
+@property int originalCodePage;
 @property (retain) WAEEmailMeetingInfo* meetingInfo;
-@property (retain) WAEEmailIrmInfo* irmInfo;
-@property (readonly) BOOL isSmartSendable;
-@property (readonly) uint64_t changeNumber;
-@property (readonly) NSString* conversationId;
-@property (readonly) NSString* mailboxId;
-@property (readonly) NSString* folderId;
-@property (readonly) NSString* normalizedSubject;
-@property (readonly) NSString* id;
-@property (readonly) NSString* inResponseToMessageId;
-@property (readonly) BOOL hasPartialBodies;
-@property (readonly) BOOL isDraftMessage;
+@property (retain) NSString * remoteId;
 @property (readonly) BOOL isServerSearchMessage;
+@property (readonly) NSString * mailboxId;
+@property (readonly) uint64_t changeNumber;
+@property (readonly) NSString * conversationId;
+@property (readonly) NSString * normalizedSubject;
+@property (readonly) NSString * folderId;
+@property (readonly) NSString * id;
+@property (readonly) BOOL hasPartialBodies;
+@property (readonly) NSString * inResponseToMessageId;
+@property (readonly) BOOL isDraftMessage;
+@property (readonly) BOOL isSmartSendable;
+@property WAEEmailMessageSmimeKind smimeKind;
+@property (retain) RTObject<WSSIRandomAccessStreamReference>* smimeData;
 - (RTObject<WSSIRandomAccessStreamReference>*)getBodyStream:(WAEEmailMessageBodyKind)type;
 - (void)setBodyStream:(WAEEmailMessageBodyKind)type stream:(RTObject<WSSIRandomAccessStreamReference>*)stream;
 @end
@@ -311,7 +382,7 @@ WINRT_EXPORT
 #ifndef __WAEEmailStore_DEFINED__
 #define __WAEEmailStore_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailStore : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -321,122 +392,96 @@ WINRT_EXPORT
 - (WAEEmailConversationReader*)getConversationReaderWithOptions:(WAEEmailQueryOptions*)options;
 - (WAEEmailMessageReader*)getMessageReader;
 - (WAEEmailMessageReader*)getMessageReaderWithOptions:(WAEEmailQueryOptions*)options;
-- (void)getMailboxAsync:(NSString*)id success:(void (^)(WAEEmailMailbox*))success failure:(void (^)(NSError*))failure;
-- (void)getConversationAsync:(NSString*)id success:(void (^)(WAEEmailConversation*))success failure:(void (^)(NSError*))failure;
-- (void)getFolderAsync:(NSString*)id success:(void (^)(WAEEmailFolder*))success failure:(void (^)(NSError*))failure;
-- (void)getMessageAsync:(NSString*)id success:(void (^)(WAEEmailMessage*))success failure:(void (^)(NSError*))failure;
-- (void)createMailboxAsync:(NSString*)accountName
-            accountAddress:(NSString*)accountAddress
-                   success:(void (^)(WAEEmailMailbox*))success
-                   failure:(void (^)(NSError*))failure;
-- (void)createMailboxInAccountAsync:(NSString*)accountName
-                     accountAddress:(NSString*)accountAddress
-                  userDataAccountId:(NSString*)userDataAccountId
-                            success:(void (^)(WAEEmailMailbox*))success
-                            failure:(void (^)(NSError*))failure;
+- (void)getMailboxAsync:(NSString *)id success:(void (^)(WAEEmailMailbox*))success failure:(void (^)(NSError*))failure;
+- (void)getConversationAsync:(NSString *)id success:(void (^)(WAEEmailConversation*))success failure:(void (^)(NSError*))failure;
+- (void)getFolderAsync:(NSString *)id success:(void (^)(WAEEmailFolder*))success failure:(void (^)(NSError*))failure;
+- (void)getMessageAsync:(NSString *)id success:(void (^)(WAEEmailMessage*))success failure:(void (^)(NSError*))failure;
+- (void)createMailboxAsync:(NSString *)accountName accountAddress:(NSString *)accountAddress success:(void (^)(WAEEmailMailbox*))success failure:(void (^)(NSError*))failure;
+- (void)createMailboxInAccountAsync:(NSString *)accountName accountAddress:(NSString *)accountAddress userDataAccountId:(NSString *)userDataAccountId success:(void (^)(WAEEmailMailbox*))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WAEEmailStore_DEFINED__
+
+// Windows.ApplicationModel.Email.EmailManagerForUser
+#ifndef __WAEEmailManagerForUser_DEFINED__
+#define __WAEEmailManagerForUser_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAEEmailManagerForUser : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) WSUser* user;
+- (RTObject<WFIAsyncAction>*)showComposeNewEmailAsync:(WAEEmailMessage*)message;
+- (void)requestStoreAsync:(WAEEmailStoreAccessType)accessType success:(void (^)(WAEEmailStore*))success failure:(void (^)(NSError*))failure;
+@end
+
+#endif // __WAEEmailManagerForUser_DEFINED__
 
 // Windows.ApplicationModel.Email.EmailMailbox
 #ifndef __WAEEmailMailbox_DEFINED__
 #define __WAEEmailMailbox_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMailbox : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property WAEEmailMailboxOtherAppWriteAccess otherAppWriteAccess;
-@property (retain) NSString* mailAddress;
+@property (retain) NSString * mailAddress;
 @property WAEEmailMailboxOtherAppReadAccess otherAppReadAccess;
-@property (retain) NSString* displayName;
-@property (readonly) NSString* id;
+@property (retain) NSString * displayName;
+@property (readonly) NSString * id;
 @property (readonly) BOOL isDataEncryptedUnderLock;
 @property (readonly) BOOL isOwnedByCurrentApp;
 @property (readonly) NSMutableArray* /* NSString * */ mailAddressAliases;
 @property (readonly) WAEEmailMailboxCapabilities* capabilities;
 @property (readonly) WAEEmailMailboxChangeTracker* changeTracker;
 @property (readonly) WAEEmailMailboxPolicies* policies;
-@property (readonly) NSString* sourceDisplayName;
+@property (readonly) NSString * sourceDisplayName;
 @property (readonly) WAEEmailMailboxSyncManager* syncManager;
-@property (readonly) NSString* userDataAccountId;
-@property (readonly) NSString* linkedMailboxId;
-@property (readonly) NSString* networkAccountId;
-@property (readonly) NSString* networkId;
-- (EventRegistrationToken)addMailboxChangedEvent:(void (^)(WAEEmailMailbox*, WAEEmailMailboxChangedEventArgs*))del;
+@property (readonly) NSString * userDataAccountId;
+@property (readonly) NSString * linkedMailboxId;
+@property (readonly) NSString * networkAccountId;
+@property (readonly) NSString * networkId;
+- (EventRegistrationToken)addMailboxChangedEvent:(void(^)(WAEEmailMailbox*, WAEEmailMailboxChangedEventArgs*))del;
 - (void)removeMailboxChangedEvent:(EventRegistrationToken)tok;
 - (WAEEmailConversationReader*)getConversationReader;
 - (WAEEmailConversationReader*)getConversationReaderWithOptions:(WAEEmailQueryOptions*)options;
 - (WAEEmailMessageReader*)getMessageReader;
 - (WAEEmailMessageReader*)getMessageReaderWithOptions:(WAEEmailQueryOptions*)options;
 - (RTObject<WFIAsyncAction>*)deleteAsync;
-- (void)getConversationAsync:(NSString*)id success:(void (^)(WAEEmailConversation*))success failure:(void (^)(NSError*))failure;
-- (void)getFolderAsync:(NSString*)id success:(void (^)(WAEEmailFolder*))success failure:(void (^)(NSError*))failure;
-- (void)getMessageAsync:(NSString*)id success:(void (^)(WAEEmailMessage*))success failure:(void (^)(NSError*))failure;
-- (void)getSpecialFolderAsync:(WAEEmailSpecialFolderKind)folderType
-                      success:(void (^)(WAEEmailFolder*))success
-                      failure:(void (^)(NSError*))failure;
+- (void)getConversationAsync:(NSString *)id success:(void (^)(WAEEmailConversation*))success failure:(void (^)(NSError*))failure;
+- (void)getFolderAsync:(NSString *)id success:(void (^)(WAEEmailFolder*))success failure:(void (^)(NSError*))failure;
+- (void)getMessageAsync:(NSString *)id success:(void (^)(WAEEmailMessage*))success failure:(void (^)(NSError*))failure;
+- (void)getSpecialFolderAsync:(WAEEmailSpecialFolderKind)folderType success:(void (^)(WAEEmailFolder*))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)saveAsync;
-- (RTObject<WFIAsyncAction>*)markMessageAsSeenAsync:(NSString*)messageId;
-- (RTObject<WFIAsyncAction>*)markFolderAsSeenAsync:(NSString*)folderId;
-- (RTObject<WFIAsyncAction>*)markMessageReadAsync:(NSString*)messageId isRead:(BOOL)isRead;
-- (RTObject<WFIAsyncAction>*)changeMessageFlagStateAsync:(NSString*)messageId flagState:(WAEEmailFlagState)flagState;
-- (void)tryMoveMessageAsync:(NSString*)messageId
-          newParentFolderId:(NSString*)newParentFolderId
-                    success:(void (^)(BOOL))success
-                    failure:(void (^)(NSError*))failure;
-- (void)tryMoveFolderAsync:(NSString*)folderId
-         newParentFolderId:(NSString*)newParentFolderId
-                   success:(void (^)(BOOL))success
-                   failure:(void (^)(NSError*))failure;
-- (void)tryMoveFolderWithNewNameAsync:(NSString*)folderId
-                    newParentFolderId:(NSString*)newParentFolderId
-                        newFolderName:(NSString*)newFolderName
-                              success:(void (^)(BOOL))success
-                              failure:(void (^)(NSError*))failure;
-- (RTObject<WFIAsyncAction>*)deleteMessageAsync:(NSString*)messageId;
-- (RTObject<WFIAsyncAction>*)markFolderSyncEnabledAsync:(NSString*)folderId isSyncEnabled:(BOOL)isSyncEnabled;
+- (RTObject<WFIAsyncAction>*)markMessageAsSeenAsync:(NSString *)messageId;
+- (RTObject<WFIAsyncAction>*)markFolderAsSeenAsync:(NSString *)folderId;
+- (RTObject<WFIAsyncAction>*)markMessageReadAsync:(NSString *)messageId isRead:(BOOL)isRead;
+- (RTObject<WFIAsyncAction>*)changeMessageFlagStateAsync:(NSString *)messageId flagState:(WAEEmailFlagState)flagState;
+- (void)tryMoveMessageAsync:(NSString *)messageId newParentFolderId:(NSString *)newParentFolderId success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)tryMoveFolderAsync:(NSString *)folderId newParentFolderId:(NSString *)newParentFolderId success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)tryMoveFolderWithNewNameAsync:(NSString *)folderId newParentFolderId:(NSString *)newParentFolderId newFolderName:(NSString *)newFolderName success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (RTObject<WFIAsyncAction>*)deleteMessageAsync:(NSString *)messageId;
+- (RTObject<WFIAsyncAction>*)markFolderSyncEnabledAsync:(NSString *)folderId isSyncEnabled:(BOOL)isSyncEnabled;
 - (RTObject<WFIAsyncAction>*)sendMessageAsync:(WAEEmailMessage*)message;
 - (RTObject<WFIAsyncAction>*)saveDraftAsync:(WAEEmailMessage*)message;
-- (RTObject<WFIAsyncAction>*)downloadMessageAsync:(NSString*)messageId;
-- (RTObject<WFIAsyncAction>*)downloadAttachmentAsync:(NSString*)attachmentId;
-- (void)createResponseMessageAsync:(NSString*)messageId
-                      responseType:(WAEEmailMessageResponseKind)responseType
-                           subject:(NSString*)subject
-                responseHeaderType:(WAEEmailMessageBodyKind)responseHeaderType
-                    responseHeader:(NSString*)responseHeader
-                           success:(void (^)(WAEEmailMessage*))success
-                           failure:(void (^)(NSError*))failure;
-- (void)tryUpdateMeetingResponseAsync:(WAEEmailMessage*)meeting
-                             response:(WAEEmailMeetingResponseType)response
-                              subject:(NSString*)subject
-                              comment:(NSString*)comment
-                           sendUpdate:(BOOL)sendUpdate
-                              success:(void (^)(BOOL))success
-                              failure:(void (^)(NSError*))failure;
-- (void)tryForwardMeetingAsync:(WAEEmailMessage*)meeting
-                    recipients:(id<NSFastEnumeration> /* WAEEmailRecipient* */)recipients
-                       subject:(NSString*)subject
-             forwardHeaderType:(WAEEmailMessageBodyKind)forwardHeaderType
-                 forwardHeader:(NSString*)forwardHeader
-                       comment:(NSString*)comment
-                       success:(void (^)(BOOL))success
-                       failure:(void (^)(NSError*))failure;
-- (void)tryProposeNewTimeForMeetingAsync:(WAEEmailMessage*)meeting
-                            newStartTime:(WFDateTime*)newStartTime
-                             newDuration:(WFTimeSpan*)newDuration
-                                 subject:(NSString*)subject
-                                 comment:(NSString*)comment
-                                 success:(void (^)(BOOL))success
-                                 failure:(void (^)(NSError*))failure;
+- (RTObject<WFIAsyncAction>*)downloadMessageAsync:(NSString *)messageId;
+- (RTObject<WFIAsyncAction>*)downloadAttachmentAsync:(NSString *)attachmentId;
+- (void)createResponseMessageAsync:(NSString *)messageId responseType:(WAEEmailMessageResponseKind)responseType subject:(NSString *)subject responseHeaderType:(WAEEmailMessageBodyKind)responseHeaderType responseHeader:(NSString *)responseHeader success:(void (^)(WAEEmailMessage*))success failure:(void (^)(NSError*))failure;
+- (void)tryUpdateMeetingResponseAsync:(WAEEmailMessage*)meeting response:(WAEEmailMeetingResponseType)response subject:(NSString *)subject comment:(NSString *)comment sendUpdate:(BOOL)sendUpdate success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)tryForwardMeetingAsync:(WAEEmailMessage*)meeting recipients:(id<NSFastEnumeration> /* WAEEmailRecipient* */)recipients subject:(NSString *)subject forwardHeaderType:(WAEEmailMessageBodyKind)forwardHeaderType forwardHeader:(NSString *)forwardHeader comment:(NSString *)comment success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)tryProposeNewTimeForMeetingAsync:(WAEEmailMessage*)meeting newStartTime:(WFDateTime*)newStartTime newDuration:(WFTimeSpan*)newDuration subject:(NSString *)subject comment:(NSString *)comment success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)smartSendMessageAsync:(WAEEmailMessage*)message smartSend:(BOOL)smartSend;
-- (void)trySetAutoReplySettingsAsync:(WAEEmailMailboxAutoReplySettings*)autoReplySettings
-                             success:(void (^)(BOOL))success
-                             failure:(void (^)(NSError*))failure;
-- (void)tryGetAutoReplySettingsAsync:(WAEEmailMailboxAutoReplyMessageResponseKind)requestedFormat
-                             success:(void (^)(WAEEmailMailboxAutoReplySettings*))success
-                             failure:(void (^)(NSError*))failure;
+- (void)trySetAutoReplySettingsAsync:(WAEEmailMailboxAutoReplySettings*)autoReplySettings success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)tryGetAutoReplySettingsAsync:(WAEEmailMailboxAutoReplyMessageResponseKind)requestedFormat success:(void (^)(WAEEmailMailboxAutoReplySettings*))success failure:(void (^)(NSError*))failure;
+- (void)resolveRecipientsAsync:(id<NSFastEnumeration> /* NSString * */)recipients success:(void (^)(NSArray* /* WAEEmailRecipientResolutionResult* */))success failure:(void (^)(NSError*))failure;
+- (void)validateCertificatesAsync:(id<NSFastEnumeration> /* WSCCCertificate* */)certificates success:(void (^)(NSArray* /* WAEEmailCertificateValidationStatus */))success failure:(void (^)(NSError*))failure;
+- (void)tryEmptyFolderAsync:(NSString *)folderId success:(void (^)(WAEEmailMailboxEmptyFolderStatus))success failure:(void (^)(NSError*))failure;
+- (void)tryCreateFolderAsync:(NSString *)parentFolderId name:(NSString *)name success:(void (^)(WAEEmailMailboxCreateFolderResult*))success failure:(void (^)(NSError*))failure;
+- (void)tryDeleteFolderAsync:(NSString *)folderId success:(void (^)(WAEEmailMailboxDeleteFolderStatus))success failure:(void (^)(NSError*))failure;
+- (RTObject<WFIAsyncAction>*)registerSyncManagerAsync;
 @end
 
 #endif // __WAEEmailMailbox_DEFINED__
@@ -445,7 +490,7 @@ WINRT_EXPORT
 #ifndef __WAEEmailConversationReader_DEFINED__
 #define __WAEEmailConversationReader_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailConversationReader : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -459,10 +504,10 @@ WINRT_EXPORT
 #ifndef __WAEEmailQueryOptions_DEFINED__
 #define __WAEEmailQueryOptions_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailQueryOptions : RTObject
-+ (WAEEmailQueryOptions*)makeWithText:(NSString*)text ACTIVATOR;
-+ (WAEEmailQueryOptions*)makeWithTextAndFields:(NSString*)text fields:(WAEEmailQuerySearchFields)fields ACTIVATOR;
++ (WAEEmailQueryOptions*)makeWithText:(NSString *)text ACTIVATOR;
++ (WAEEmailQueryOptions*)makeWithTextAndFields:(NSString *)text fields:(WAEEmailQuerySearchFields)fields ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -480,7 +525,7 @@ WINRT_EXPORT
 #ifndef __WAEEmailMessageReader_DEFINED__
 #define __WAEEmailMessageReader_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMessageReader : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -494,28 +539,26 @@ WINRT_EXPORT
 #ifndef __WAEEmailConversation_DEFINED__
 #define __WAEEmailConversation_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailConversation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
 @property (readonly) WAEEmailFlagState flagState;
 @property (readonly) BOOL hasAttachment;
-@property (readonly) NSString* id;
+@property (readonly) NSString * id;
 @property (readonly) WAEEmailImportance importance;
 @property (readonly) WAEEmailMessageResponseKind lastEmailResponseKind;
 @property (readonly) WAEEmailRecipient* latestSender;
-@property (readonly) NSString* mailboxId;
+@property (readonly) NSString * mailboxId;
 @property (readonly) unsigned int messageCount;
-@property (readonly) NSString* mostRecentMessageId;
+@property (readonly) NSString * mostRecentMessageId;
 @property (readonly) WFDateTime* mostRecentMessageTime;
-@property (readonly) NSString* preview;
-@property (readonly) NSString* subject;
+@property (readonly) NSString * preview;
+@property (readonly) NSString * subject;
 @property (readonly) unsigned int unreadMessageCount;
 - (void)findMessagesAsyncWithSuccess:(void (^)(NSArray* /* WAEEmailMessage* */))success failure:(void (^)(NSError*))failure;
-- (void)findMessagesWithCountAsync:(unsigned int)count
-                           success:(void (^)(NSArray* /* WAEEmailMessage* */))success
-                           failure:(void (^)(NSError*))failure;
+- (void)findMessagesWithCountAsync:(unsigned int)count success:(void (^)(NSArray* /* WAEEmailMessage* */))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WAEEmailConversation_DEFINED__
@@ -524,33 +567,30 @@ WINRT_EXPORT
 #ifndef __WAEEmailFolder_DEFINED__
 #define __WAEEmailFolder_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailFolder : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* remoteId;
+@property (retain) NSString * remoteId;
 @property (retain) WFDateTime* lastSuccessfulSyncTime;
 @property BOOL isSyncEnabled;
-@property (retain) NSString* displayName;
-@property (readonly) NSString* id;
+@property (retain) NSString * displayName;
+@property (readonly) NSString * id;
 @property (readonly) WAEEmailSpecialFolderKind kind;
-@property (readonly) NSString* mailboxId;
-@property (readonly) NSString* parentFolderId;
-- (void)createFolderAsync:(NSString*)name success:(void (^)(WAEEmailFolder*))success failure:(void (^)(NSError*))failure;
+@property (readonly) NSString * mailboxId;
+@property (readonly) NSString * parentFolderId;
+- (void)createFolderAsync:(NSString *)name success:(void (^)(WAEEmailFolder*))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)deleteAsync;
 - (void)findChildFoldersAsyncWithSuccess:(void (^)(NSArray* /* WAEEmailFolder* */))success failure:(void (^)(NSError*))failure;
 - (WAEEmailConversationReader*)getConversationReader;
 - (WAEEmailConversationReader*)getConversationReaderWithOptions:(WAEEmailQueryOptions*)options;
-- (void)getMessageAsync:(NSString*)id success:(void (^)(WAEEmailMessage*))success failure:(void (^)(NSError*))failure;
+- (void)getMessageAsync:(NSString *)id success:(void (^)(WAEEmailMessage*))success failure:(void (^)(NSError*))failure;
 - (WAEEmailMessageReader*)getMessageReader;
 - (WAEEmailMessageReader*)getMessageReaderWithOptions:(WAEEmailQueryOptions*)options;
 - (void)getMessageCountsAsyncWithSuccess:(void (^)(WAEEmailItemCounts*))success failure:(void (^)(NSError*))failure;
 - (void)tryMoveAsync:(WAEEmailFolder*)newParentFolder success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-- (void)tryMoveWithNewNameAsync:(WAEEmailFolder*)newParentFolder
-                  newFolderName:(NSString*)newFolderName
-                        success:(void (^)(BOOL))success
-                        failure:(void (^)(NSError*))failure;
+- (void)tryMoveWithNewNameAsync:(WAEEmailFolder*)newParentFolder newFolderName:(NSString *)newFolderName success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)trySaveAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)saveMessageAsync:(WAEEmailMessage*)message;
 @end
@@ -561,16 +601,16 @@ WINRT_EXPORT
 #ifndef __WAEEmailRecipient_DEFINED__
 #define __WAEEmailRecipient_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailRecipient : RTObject
-+ (WAEEmailRecipient*)make:(NSString*)address ACTIVATOR;
-+ (WAEEmailRecipient*)makeWithName:(NSString*)address name:(NSString*)name ACTIVATOR;
++ (WAEEmailRecipient*)make:(NSString *)address ACTIVATOR;
++ (WAEEmailRecipient*)makeWithName:(NSString *)address name:(NSString *)name ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* name;
-@property (retain) NSString* address;
+@property (retain) NSString * name;
+@property (retain) NSString * address;
 @end
 
 #endif // __WAEEmailRecipient_DEFINED__
@@ -579,16 +619,16 @@ WINRT_EXPORT
 #ifndef __WAEEmailIrmTemplate_DEFINED__
 #define __WAEEmailIrmTemplate_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailIrmTemplate : RTObject
-+ (WAEEmailIrmTemplate*)make:(NSString*)id name:(NSString*)name description:(NSString*)description ACTIVATOR;
++ (WAEEmailIrmTemplate*)make:(NSString *)id name:(NSString *)name description:(NSString *)description ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* name;
-@property (retain) NSString* id;
-@property (retain) NSString* Description;
+@property (retain) NSString * name;
+@property (retain) NSString * id;
+@property (retain) NSString * Description;
 @end
 
 #endif // __WAEEmailIrmTemplate_DEFINED__
@@ -597,7 +637,7 @@ WINRT_EXPORT
 #ifndef __WAEEmailIrmInfo_DEFINED__
 #define __WAEEmailIrmInfo_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailIrmInfo : RTObject
 + (instancetype)make ACTIVATOR;
 + (WAEEmailIrmInfo*)make:(WFDateTime*)expiration irmTemplate:(WAEEmailIrmTemplate*)irmTemplate ACTIVATOR;
@@ -624,25 +664,23 @@ WINRT_EXPORT
 #ifndef __WAEEmailAttachment_DEFINED__
 #define __WAEEmailAttachment_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailAttachment : RTObject
-+ (WAEEmailAttachment*)make:(NSString*)fileName data:(RTObject<WSSIRandomAccessStreamReference>*)data ACTIVATOR;
 + (instancetype)make ACTIVATOR;
-+ (WAEEmailAttachment*)make:(NSString*)fileName
-                       data:(RTObject<WSSIRandomAccessStreamReference>*)data
-                   mimeType:(NSString*)mimeType ACTIVATOR;
++ (WAEEmailAttachment*)make:(NSString *)fileName data:(RTObject<WSSIRandomAccessStreamReference>*)data mimeType:(NSString *)mimeType ACTIVATOR;
++ (WAEEmailAttachment*)make:(NSString *)fileName data:(RTObject<WSSIRandomAccessStreamReference>*)data ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* fileName;
+@property (retain) NSString * fileName;
 @property (retain) RTObject<WSSIRandomAccessStreamReference>* data;
-@property (retain) NSString* mimeType;
+@property (retain) NSString * mimeType;
 @property BOOL isInline;
 @property uint64_t estimatedDownloadSizeInBytes;
 @property WAEEmailAttachmentDownloadState downloadState;
-@property (retain) NSString* contentLocation;
-@property (retain) NSString* contentId;
-@property (readonly) NSString* id;
+@property (retain) NSString * contentLocation;
+@property (retain) NSString * contentId;
+@property (readonly) NSString * id;
 @property (readonly) BOOL isFromBaseMessage;
 @end
 
@@ -652,25 +690,26 @@ WINRT_EXPORT
 #ifndef __WAEEmailMeetingInfo_DEFINED__
 #define __WAEEmailMeetingInfo_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMeetingInfo : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* location;
+@property (retain) NSString * location;
 @property BOOL isResponseRequested;
 @property BOOL isAllDay;
-@property (retain) WFTimeSpan* duration;
-@property (retain) NSString* appointmentRoamingId;
-@property (retain) id /* WFDateTime* */ appointmentOriginalStartTime;
 @property BOOL allowNewTimeProposal;
-@property (retain) WFDateTime* startTime;
+@property (retain) WFTimeSpan* duration;
+@property (retain) NSString * appointmentRoamingId;
+@property (retain) id /* WFDateTime* */ appointmentOriginalStartTime;
+@property (retain) id /* WFTimeSpan* */ proposedDuration;
 @property uint64_t remoteChangeNumber;
+@property (retain) WFDateTime* startTime;
 @property (retain) id /* WFDateTime* */ recurrenceStartTime;
 @property (retain) WAAAppointmentRecurrence* recurrence;
 @property (retain) id /* WFDateTime* */ proposedStartTime;
-@property (retain) id /* WFTimeSpan* */ proposedDuration;
+@property (readonly) BOOL isReportedOutOfDateByServer;
 @end
 
 #endif // __WAEEmailMeetingInfo_DEFINED__
@@ -679,7 +718,7 @@ WINRT_EXPORT
 #ifndef __WAEEmailMailboxChangedDeferral_DEFINED__
 #define __WAEEmailMailboxChangedDeferral_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMailboxChangedDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -693,19 +732,25 @@ WINRT_EXPORT
 #ifndef __WAEEmailMailboxCapabilities_DEFINED__
 #define __WAEEmailMailboxCapabilities_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMailboxCapabilities : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) BOOL canForwardMeetings;
-@property (readonly) BOOL canGetAndSetExternalAutoReplies;
-@property (readonly) BOOL canGetAndSetInternalAutoReplies;
-@property (readonly) BOOL canProposeNewTimeForMeetings;
-@property (readonly) BOOL canServerSearchFolders;
-@property (readonly) BOOL canServerSearchMailbox;
-@property (readonly) BOOL canSmartSend;
-@property (readonly) BOOL canUpdateMeetingResponses;
+@property BOOL canSmartSend;
+@property BOOL canUpdateMeetingResponses;
+@property BOOL canServerSearchMailbox;
+@property BOOL canServerSearchFolders;
+@property BOOL canForwardMeetings;
+@property BOOL canProposeNewTimeForMeetings;
+@property BOOL canGetAndSetInternalAutoReplies;
+@property BOOL canGetAndSetExternalAutoReplies;
+@property BOOL canValidateCertificates;
+@property BOOL canResolveRecipients;
+@property BOOL canMoveFolder;
+@property BOOL canEmptyFolder;
+@property BOOL canDeleteFolder;
+@property BOOL canCreateFolder;
 @end
 
 #endif // __WAEEmailMailboxCapabilities_DEFINED__
@@ -714,7 +759,7 @@ WINRT_EXPORT
 #ifndef __WAEEmailMailboxChangeTracker_DEFINED__
 #define __WAEEmailMailboxChangeTracker_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMailboxChangeTracker : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -731,15 +776,17 @@ WINRT_EXPORT
 #ifndef __WAEEmailMailboxPolicies_DEFINED__
 #define __WAEEmailMailboxPolicies_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMailboxPolicies : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) BOOL allowSmimeSoftCertificates;
-@property (readonly) WAEEmailMailboxAllowedSmimeEncryptionAlgorithmNegotiation allowedSmimeEncryptionAlgorithmNegotiation;
-@property (readonly) id /* WAEEmailMailboxSmimeEncryptionAlgorithm */ requiredSmimeEncryptionAlgorithm;
-@property (readonly) id /* WAEEmailMailboxSmimeSigningAlgorithm */ requiredSmimeSigningAlgorithm;
+@property (retain) id /* WAEEmailMailboxSmimeSigningAlgorithm */ requiredSmimeSigningAlgorithm;
+@property (retain) id /* WAEEmailMailboxSmimeEncryptionAlgorithm */ requiredSmimeEncryptionAlgorithm;
+@property WAEEmailMailboxAllowedSmimeEncryptionAlgorithmNegotiation allowedSmimeEncryptionAlgorithmNegotiation;
+@property BOOL allowSmimeSoftCertificates;
+@property BOOL mustSignSmimeMessages;
+@property BOOL mustEncryptSmimeMessages;
 @end
 
 #endif // __WAEEmailMailboxPolicies_DEFINED__
@@ -748,15 +795,15 @@ WINRT_EXPORT
 #ifndef __WAEEmailMailboxSyncManager_DEFINED__
 #define __WAEEmailMailboxSyncManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMailboxSyncManager : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (readonly) WFDateTime* lastAttemptedSyncTime;
-@property (readonly) WFDateTime* lastSuccessfulSyncTime;
-@property (readonly) WAEEmailMailboxSyncStatus status;
-- (EventRegistrationToken)addSyncStatusChangedEvent:(void (^)(WAEEmailMailboxSyncManager*, RTObject*))del;
+@property WAEEmailMailboxSyncStatus status;
+@property (retain) WFDateTime* lastSuccessfulSyncTime;
+@property (retain) WFDateTime* lastAttemptedSyncTime;
+- (EventRegistrationToken)addSyncStatusChangedEvent:(void(^)(WAEEmailMailboxSyncManager*, RTObject*))del;
 - (void)removeSyncStatusChangedEvent:(EventRegistrationToken)tok;
 - (void)syncAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
@@ -767,7 +814,7 @@ WINRT_EXPORT
 #ifndef __WAEEmailMailboxChangedEventArgs_DEFINED__
 #define __WAEEmailMailboxChangedEventArgs_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMailboxChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -781,7 +828,7 @@ WINRT_EXPORT
 #ifndef __WAEEmailMailboxAutoReplySettings_DEFINED__
 #define __WAEEmailMailboxAutoReplySettings_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMailboxAutoReplySettings : RTObject
 + (instancetype)make ACTIVATOR;
 #if defined(__cplusplus)
@@ -798,16 +845,48 @@ WINRT_EXPORT
 
 #endif // __WAEEmailMailboxAutoReplySettings_DEFINED__
 
+// Windows.ApplicationModel.Email.EmailRecipientResolutionResult
+#ifndef __WAEEmailRecipientResolutionResult_DEFINED__
+#define __WAEEmailRecipientResolutionResult_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAEEmailRecipientResolutionResult : RTObject
++ (instancetype)make ACTIVATOR;
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property WAEEmailRecipientResolutionStatus status;
+@property (readonly) NSArray* /* WSCCCertificate* */ publicKeys;
+- (void)setPublicKeys:(id<NSFastEnumeration> /* WSCCCertificate* */)value;
+@end
+
+#endif // __WAEEmailRecipientResolutionResult_DEFINED__
+
+// Windows.ApplicationModel.Email.EmailMailboxCreateFolderResult
+#ifndef __WAEEmailMailboxCreateFolderResult_DEFINED__
+#define __WAEEmailMailboxCreateFolderResult_DEFINED__
+
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+@interface WAEEmailMailboxCreateFolderResult : RTObject
+#if defined(__cplusplus)
++ (instancetype)createWith:(IInspectable*)obj;
+#endif
+@property (readonly) WAEEmailFolder* folder;
+@property (readonly) WAEEmailMailboxCreateFolderStatus status;
+@end
+
+#endif // __WAEEmailMailboxCreateFolderResult_DEFINED__
+
 // Windows.ApplicationModel.Email.EmailMailboxAutoReply
 #ifndef __WAEEmailMailboxAutoReply_DEFINED__
 #define __WAEEmailMailboxAutoReply_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMailboxAutoReply : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* response;
+@property (retain) NSString * response;
 @property BOOL isEnabled;
 @end
 
@@ -817,7 +896,7 @@ WINRT_EXPORT
 #ifndef __WAEEmailItemCounts_DEFINED__
 #define __WAEEmailItemCounts_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailItemCounts : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -834,12 +913,12 @@ WINRT_EXPORT
 #ifndef __WAEEmailQueryTextSearch_DEFINED__
 #define __WAEEmailQueryTextSearch_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailQueryTextSearch : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
 #endif
-@property (retain) NSString* text;
+@property (retain) NSString * text;
 @property WAEEmailQuerySearchScope searchScope;
 @property WAEEmailQuerySearchFields fields;
 @end
@@ -850,7 +929,7 @@ WINRT_EXPORT
 #ifndef __WAEEmailConversationBatch_DEFINED__
 #define __WAEEmailConversationBatch_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailConversationBatch : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -865,7 +944,7 @@ WINRT_EXPORT
 #ifndef __WAEEmailMessageBatch_DEFINED__
 #define __WAEEmailMessageBatch_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMessageBatch : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -880,7 +959,7 @@ WINRT_EXPORT
 #ifndef __WAEEmailMailboxAction_DEFINED__
 #define __WAEEmailMailboxAction_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMailboxAction : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -895,7 +974,7 @@ WINRT_EXPORT
 #ifndef __WAEEmailMailboxChange_DEFINED__
 #define __WAEEmailMailboxChange_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMailboxChange : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -912,7 +991,7 @@ WINRT_EXPORT
 #ifndef __WAEEmailMailboxChangeReader_DEFINED__
 #define __WAEEmailMailboxChangeReader_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMailboxChangeReader : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -928,8 +1007,9 @@ WINRT_EXPORT
 #ifndef __WAEEmailManager_DEFINED__
 #define __WAEEmailManager_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailManager : RTObject
++ (WAEEmailManagerForUser*)getForUser:(WSUser*)user;
 + (RTObject<WFIAsyncAction>*)showComposeNewEmailAsync:(WAEEmailMessage*)message;
 + (void)requestStoreAsync:(WAEEmailStoreAccessType)accessType success:(void (^)(WAEEmailStore*))success failure:(void (^)(NSError*))failure;
 @end
@@ -940,7 +1020,7 @@ WINRT_EXPORT
 #ifndef __WAEEmailStoreNotificationTriggerDetails_DEFINED__
 #define __WAEEmailStoreNotificationTriggerDetails_DEFINED__
 
-WINRT_EXPORT
+OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailStoreNotificationTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj;
@@ -948,3 +1028,4 @@ WINRT_EXPORT
 @end
 
 #endif // __WAEEmailStoreNotificationTriggerDetails_DEFINED__
+

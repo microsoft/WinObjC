@@ -19,10 +19,15 @@
 
 #pragma once
 
+#ifndef OBJCUWP_WINDOWS_GRAPHICS_EFFECTS_EXPORT
+#define OBJCUWP_WINDOWS_GRAPHICS_EFFECTS_EXPORT __declspec(dllimport)
+#ifndef IN_OBJCUWP_BUILD
+#pragma comment(lib, "ObjCUWP_Windows_Graphics_Effects.lib")
+#endif
+#endif
 #include <UWP/interopBase.h>
 
-@protocol WGEIGraphicsEffectSource
-, WGEIGraphicsEffect;
+@protocol WGEIGraphicsEffectSource, WGEIGraphicsEffect;
 
 #import <Foundation/Foundation.h>
 
@@ -33,6 +38,10 @@
 @protocol WGEIGraphicsEffectSource
 @end
 
+OBJCUWP_WINDOWS_GRAPHICS_EFFECTS_EXPORT
+@interface WGEIGraphicsEffectSource : RTObject <WGEIGraphicsEffectSource>
+@end
+
 #endif // __WGEIGraphicsEffectSource_DEFINED__
 
 // Windows.Graphics.Effects.IGraphicsEffect
@@ -40,7 +49,12 @@
 #define __WGEIGraphicsEffect_DEFINED__
 
 @protocol WGEIGraphicsEffect <WGEIGraphicsEffectSource>
-@property (retain) NSString* name;
+@property (retain) NSString * name;
+@end
+
+OBJCUWP_WINDOWS_GRAPHICS_EFFECTS_EXPORT
+@interface WGEIGraphicsEffect : RTObject <WGEIGraphicsEffect>
 @end
 
 #endif // __WGEIGraphicsEffect_DEFINED__
+
