@@ -1137,6 +1137,9 @@ static void _sendMemoryWarningToViewControllers(UIView* subview) {
     if (isActive) {
         [self _sendEnteringForegroundEvents];
 
+        // Wake/unblock the main run loop so it starts processing messages again.
+        [[NSRunLoop mainRunLoop] _wakeUp];
+
         if ([self.delegate respondsToSelector:@selector(applicationDidBecomeActive:)]) {
             [self.delegate applicationDidBecomeActive:self];
         }
