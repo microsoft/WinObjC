@@ -129,7 +129,6 @@ static void _matchCallBack(void* context, CFRange* ranges, CFIndex count, _CFReg
  @Status Interoperable
 */
 - (NSTextCheckingResult*)firstMatchInString:(NSString*)string options:(NSMatchingOptions)options range:(NSRange)range {
-    NSRange tempRange = NSMakeRange(NSNotFound, 0);
     __block NSTextCheckingResult* result = nil;
 
     [self enumerateMatchesInString:string
