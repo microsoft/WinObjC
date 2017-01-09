@@ -476,3 +476,17 @@ TEST(NSProgress, LocalizedDescription) {
     ASSERT_OBJCEQ(@"user-set localizedDescription", outLocalizedDescription);
     ASSERT_OBJCEQ(@"user-set localizedAdditionalDescription", outLocalizedAdditionalDescription);
 }
+
+TEST(NSProgress, KVOLocalizedDescription) {
+    NSProgress* progress = [NSProgress progressWithTotalUnitCount:100];
+
+    _NSFoundationTestKVOFacade* kvoListener = [[_NSFoundationTestKVOFacade newWithObservee:progress] autorelease];
+    [kvoListener observeKeyPath:@"localizedDescription"
+                     withOptions:NSKeyValueObservingOptionNew
+                 performingBlock:^(id progress) {
+                     // Setting NSProgressFileTotalCountKey in User Info should trigger a localized decription change.
+                     [progress setUserInfoObject:@(102) forKey:NSProgressFileTotalCountKey];
+                 }
+        andExpectChangeCallbacks:nil];
+    EXPECT_EQ(1, kvoListener.hits);
+}

@@ -99,7 +99,7 @@
 }
 
 - (void)observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void*)context {
-    if ([_callbacks length] > 0) {
+    if ([_callbacks count] > 0) {
         auto x = [_callbacks objectAtIndex:_callbackIndex];
         if (_callbackIndex++ == [_callbacks count]) {
             _callbackIndex = 0;
