@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Intel Corporation. All rights reserved.
+// Copyright (c) 2017 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -22,28 +22,10 @@
 #import <NSBundleInternal.h>
 #import <NSLogging.h>
 
-// This is needed for getting mfapi.h to build
-#ifndef OUT
-#define OUT
-#endif
+static const wchar_t* TAG = L"AudioConverterTest";
 
-#include <COMIncludes.h>
-#import <wrl\client.h>
-#import <wrl\wrappers\corewrappers.h>
-#import <mfapi.h>
-#include <mfidl.h>
-#include <mferror.h>
-#include <wmcodecdsp.h>
-#include <COMIncludes_End.h>
+#import <AudioToolbox/AudioConverterInternal.h>
 
-using namespace Microsoft::WRL;
-using namespace Microsoft::WRL::Wrappers;
-
-@interface AudioConverter : NSObject
-@property (atomic) ComPtr<IMFTransform> transform;
-@property (atomic) float sizeChangeMultiplier;
-- (float)getSizeChangeMultiplier;
-@end
 
 @implementation AudioConverter
 - (ComPtr<IMFTransform>)getTransform {
@@ -55,13 +37,6 @@ using namespace Microsoft::WRL::Wrappers;
 }
 @end
 
-static const wchar_t* TAG = L"AudioConverterTest";
-
-#define RETURN_AUDIOERR_IF_FAILED_WITH_MSG(hr, msg) \
-    if (FAILED(hr)) {                               \
-        NSTraceInfo(TAG, @"%@", msg);               \
-        return kAudioConverterErr_UnspecifiedError; \
-    }
 
 OSStatus _setMFProperties(const AudioStreamBasicDescription* format, IMFMediaType** mediaType) {
     RETURN_AUDIOERR_IF_FAILED_WITH_MSG(MFCreateMediaType(mediaType), @"MFCreateMediaType failed");

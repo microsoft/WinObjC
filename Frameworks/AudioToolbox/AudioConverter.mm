@@ -21,34 +21,10 @@
 #import <NSLogging.h>
 #import "AssertARCEnabled.h"
 
-#include <COMIncludes.h>
-#import <wrl\client.h>
-#import <wrl\wrappers\corewrappers.h>
-#include <mfapi.h>
-#include <mfidl.h>
-#include <mferror.h>
-#include <wmcodecdsp.h>
-#include <COMIncludes_End.h>
-
-using namespace Microsoft::WRL;
-using namespace Microsoft::WRL::Wrappers;
-
-@interface AudioConverter : NSObject
-@property (atomic) ComPtr<IMFTransform> transform;
-@property (atomic) float sizeChangeMultiplier;
-- (instancetype)initWithSourceFormat:(const AudioStreamBasicDescription*)srcFormat
-                   destinationFormat:(const AudioStreamBasicDescription*)destFormat;
-- (ComPtr<IMFTransform>)getTransform;
-- (float)getSizeChangeMultiplier;
-@end
-
 static const wchar_t* TAG = L"AudioConverter";
 
-#define RETURN_AUDIOERR_IF_FAILED_WITH_MSG(hr, msg) \
-    if (FAILED(hr)) {                               \
-        NSTraceInfo(TAG, @"%@", msg);               \
-        return kAudioConverterErr_UnspecifiedError; \
-    }
+#import <AudioToolbox/AudioConverterInternal.h>
+
 
 @implementation AudioConverter
 - (instancetype)initWithSourceFormat:(const AudioStreamBasicDescription*)srcFormat
@@ -56,10 +32,10 @@ static const wchar_t* TAG = L"AudioConverter";
     if (self = [super init]) {
         ComPtr<IUnknown> spTransformUnk;
 
-        RETURN_NULL_IF_FAILED(
+        RETURN_NIL_IF_FAILED(
             CoCreateInstance(CLSID_AudioResamplerMediaObject, nullptr, CLSCTX_INPROC_SERVER, IID_IUnknown, (void**)&spTransformUnk));
 
-        RETURN_NULL_IF_FAILED(spTransformUnk.As(&_transform));
+        RETURN_NIL_IF_FAILED(spTransformUnk.As(&_transform));
 
         _sizeChangeMultiplier =
             (destFormat->mSampleRate * destFormat->mBytesPerFrame) / (srcFormat->mSampleRate * srcFormat->mBytesPerFrame);
@@ -129,6 +105,10 @@ OSStatus _setMFProperties(const AudioStreamBasicDescription* format, IMFMediaTyp
 OSStatus AudioConverterNew(const AudioStreamBasicDescription* inSourceFormat,
                            const AudioStreamBasicDescription* inDestinationFormat,
                            AudioConverterRef _Nullable* outAudioConverter) {
+    if (inSourceFormat == nullptr || inDestinationFormat == nullptr) {
+        return kAudioConverterErr_UnspecifiedError;
+    }
+
     if (inSourceFormat->mFormatID != kAudioFormatLinearPCM || inDestinationFormat->mFormatID != kAudioFormatLinearPCM) {
         UNIMPLEMENTED();
         return StubReturn();
@@ -150,12 +130,12 @@ OSStatus AudioConverterNew(const AudioStreamBasicDescription* inSourceFormat,
 
     ComPtr<IMFTransform> mediaTransform = [outConverter getTransform];
 
-    ComPtr<IMFMediaType> sourceMediaType = nullptr;
+    ComPtr<IMFMediaType> sourceMediaType;
     RETURN_AUDIOERR_IF_FAILED_WITH_MSG(_setMFProperties(inSourceFormat, &sourceMediaType), @"Creating source mediatype Failed");
 
     RETURN_AUDIOERR_IF_FAILED_WITH_MSG(mediaTransform->SetInputType(0, sourceMediaType.Get(), 0), @"MFTransform InputStream Failed");
 
-    ComPtr<IMFMediaType> destinationMediaType = nullptr;
+    ComPtr<IMFMediaType> destinationMediaType;
     RETURN_AUDIOERR_IF_FAILED_WITH_MSG(_setMFProperties(inDestinationFormat, &destinationMediaType),
                                        @"Creating destination mediatype Failed");
 
@@ -271,12 +251,12 @@ OSStatus AudioConverterConvertBuffer(
 
     RETURN_AUDIOERR_IF_FAILED_WITH_MSG(mediaTransform->ProcessInput(0, sampleIn.Get(), 0), @"Input processing failed");
 
-    ComPtr<IMFSample> sampleOut = NULL;
     // Create the output sample
+    ComPtr<IMFSample> sampleOut = NULL;
     RETURN_AUDIOERR_IF_FAILED_WITH_MSG(MFCreateSample(&sampleOut), @"Output sample creation failed");
 
+    // Create a buffer for the output sample
     ComPtr<IMFMediaBuffer> bufferOut = NULL;
-    // create a buffer for the output sample
     RETURN_AUDIOERR_IF_FAILED_WITH_MSG(MFCreateMemoryBuffer(*ioOutputDataSize, &bufferOut), @"Output buffer creation failed");
 
     // Add the output buffer
