@@ -182,52 +182,24 @@ static CFURLRef _preferencesDirectoryForUserHostSafetyLevel(CFStringRef userName
 #if DEPLOYMENT_TARGET_WINDOWS
 
 CFURLRef url = NULL;
+Boolean success = false;
 
 CFMutableStringRef completePath = _CFCreateApplicationRepositoryPath(alloc, CSIDL_APPDATA);
 if (completePath) {
     // append "Preferences\" and make the CFURL
     CFStringAppend(completePath, CFSTR("Preferences\\"));
     url = CFURLCreateWithFileSystemPath(alloc, completePath, kCFURLWindowsPathStyle, true);
-	
-	// Converting mutable string to characters array
-	// When CFStringGetCStringPtr() fails,
-	// it tries CFStringGetCString().
-	char *fullPath;
-	char outPath[512];
 
-	Boolean conversionResult;
-	CFStringEncoding encodingMethod = CFStringGetSystemEncoding();
-
-	// 1st try for system encoding
-	fullPath = (char*)CFStringGetCStringPtr(completePath, encodingMethod);
-	if (fullPath == NULL) {
-		// 2nd try for Japanese system
-		encodingMethod = kCFStringEncodingUTF8;
-		fullPath = (char*)CFStringGetCStringPtr(completePath, encodingMethod);
+	char cPath[CFMaxPathSize];
+	if (CFURLGetFileSystemRepresentation(url, true, (unsigned char *)cPath, CFMaxPathSize)) {
+		success = _CFCreateDirectory(cPath);
 	}
-
-	// for safer operation.
-	if (fullPath == NULL) {
-		CFIndex length = CFStringGetLength(completePath);
-		fullPath = (char *)malloc(length + 1);
-		conversionResult = CFStringGetCString(completePath, fullPath, length, kCFStringEncodingUTF8);
-
-		strcpy(outPath, fullPath);
-
-		free(fullPath);
-	}
-	else {
-		strcpy(outPath, fullPath);
-	}
-
-	_CFCreateDirectory(outPath);
 
     CFRelease(completePath);
 }
 
-
 // Can't find a better place?  Home directory then?
-if (url == NULL)
+if (!success)
     url = CFCopyHomeDirectoryURLForUser((userName == kCFPreferencesCurrentUser) ? NULL : userName);
 
 return url;
