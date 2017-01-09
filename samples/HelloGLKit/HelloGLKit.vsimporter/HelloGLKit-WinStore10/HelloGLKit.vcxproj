@@ -29,9 +29,9 @@
     <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <Keyword>IslandwoodProj</Keyword>
-    <ProjectGuid>{3B3E53EF-8A11-41CF-A5CA-F0B9414BAF2E}</ProjectGuid>
+    <ProjectGuid>{B7ED0716-0B1E-4FE0-BE3E-870D2DA6F38F}</ProjectGuid>
     <RootNamespace>HelloGLKit</RootNamespace>
-    <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">E:\island\github\henryfox\WinObjC</WINOBJC_SDK_ROOT>
+    <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">..\..\..\..</WINOBJC_SDK_ROOT>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

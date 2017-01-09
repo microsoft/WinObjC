@@ -2,19 +2,19 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{63547038-e170-4c8f-a5c9-bb43504ca018}</UniqueIdentifier>
+      <UniqueIdentifier>{60d15db9-65d6-4d10-a0d2-79a35a4ccbb4}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{d15faabc-8076-41c6-8482-7320935f0f7a}</UniqueIdentifier>
+      <UniqueIdentifier>{9452999f-8c71-472d-a8c7-f642727a6f01}</UniqueIdentifier>
     </Filter>
     <Filter Include="HelloOpenGL">
-      <UniqueIdentifier>{2C160A26-1608-48C0-AD47-15F38B2F9775}</UniqueIdentifier>
+      <UniqueIdentifier>{EF64643C-2004-4E62-9C12-0A66B0216509}</UniqueIdentifier>
     </Filter>
     <Filter Include="HelloOpenGL\Base">
-      <UniqueIdentifier>{60AE8B8B-8B6F-43B5-BFC1-4D4B6E629566}</UniqueIdentifier>
+      <UniqueIdentifier>{59C38EDD-8B7E-4215-A946-0214EA2871E6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{D80695ED-2AB6-4407-B297-562EF4924994}</UniqueIdentifier>
+      <UniqueIdentifier>{268C280C-3AA2-4B60-AA20-FFF5F1217653}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

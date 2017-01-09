@@ -29,9 +29,9 @@
     <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <Keyword>IslandwoodProj</Keyword>
-    <ProjectGuid>{5F8B73C6-1253-4481-9567-A81321309725}</ProjectGuid>
+    <ProjectGuid>{5667C667-0E57-4F19-9091-01FA8737E20F}</ProjectGuid>
     <RootNamespace>HelloOpenGL</RootNamespace>
-    <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">E:\island\github\henryfox\WinObjC</WINOBJC_SDK_ROOT>
+    <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">..\..\..\..</WINOBJC_SDK_ROOT>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

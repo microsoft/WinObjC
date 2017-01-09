@@ -7,11 +7,11 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="e39cf139-ba09-4d0e-b933-6a457eb8d053"
+    Name="fae08089-524b-48c3-aed4-86beeceefce4"
     Publisher="CN=islandwood"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="e39cf139-ba09-4d0e-b933-6a457eb8d053" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="fae08089-524b-48c3-aed4-86beeceefce4" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>GLKitComplex</DisplayName>

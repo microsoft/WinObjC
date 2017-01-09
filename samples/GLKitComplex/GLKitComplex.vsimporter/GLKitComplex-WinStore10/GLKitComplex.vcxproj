@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -29,9 +29,9 @@
     <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <Keyword>IslandwoodProj</Keyword>
-    <ProjectGuid>{410D5BA4-8604-4089-A80F-FDDA814BA272}</ProjectGuid>
+    <ProjectGuid>{E45BBE1B-1E64-4C3C-9D81-433F9AB81749}</ProjectGuid>
     <RootNamespace>GLKitComplex</RootNamespace>
-    <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">E:\island\github\henryfox\WinObjC</WINOBJC_SDK_ROOT>
+    <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">..\..\..\..</WINOBJC_SDK_ROOT>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -180,18 +180,7 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <Xml Include="default.rd.xml" />
-    <None Include="..\..\GLKitComplex\Data\teapot_specular.pdn" />
     <None Include="GLKitComplex_TemporaryKey.pfx" />
-    <Image Include="..\..\GLKitComplex\Data\lobbyxneg.jpg" />
-    <Image Include="..\..\GLKitComplex\Data\lobbyxpos.jpg" />
-    <Image Include="..\..\GLKitComplex\Data\lobbyyneg.JPG" />
-    <Image Include="..\..\GLKitComplex\Data\lobbyypos.jpg" />
-    <Image Include="..\..\GLKitComplex\Data\lobbyzneg.JPG" />
-    <Image Include="..\..\GLKitComplex\Data\lobbyzpos.JPG" />
-    <Image Include="..\..\GLKitComplex\Data\seafloor.png" />
-    <Image Include="..\..\GLKitComplex\Data\teapot_decal.png" />
-    <Image Include="..\..\GLKitComplex\Data\teapot_emissive.png" />
-    <Image Include="..\..\GLKitComplex\Data\teapot_specular.png" />
     <Image Include="Assets\LockScreenLogo.scale-200.png" />
     <Image Include="Assets\SplashScreen.scale-200.png" />
     <Image Include="Assets\Square150x150Logo.scale-200.png" />

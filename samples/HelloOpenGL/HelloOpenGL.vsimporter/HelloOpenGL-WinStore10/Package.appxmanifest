@@ -7,11 +7,11 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="529fbfee-aab7-499d-8e5d-a41c0923ec6a"
+    Name="472e6724-e708-405a-859b-cffa71e8fbab"
     Publisher="CN=islandwood"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="529fbfee-aab7-499d-8e5d-a41c0923ec6a" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="472e6724-e708-405a-859b-cffa71e8fbab" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>HelloOpenGL</DisplayName>
