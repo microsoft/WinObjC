@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,13 +14,15 @@
 //
 //******************************************************************************
 
-#import <MobileCoreServices/UTType.h>
-#import <UTTypeInternalMap.h>
-#import <dispatch/dispatch.h>
-#import <ErrorHandling.h>
-#import <array>
-#import <vector>
+#include <MobileCoreServices/UTType.h>
+#include <StubReturn.h>
+#include <ErrorHandling.h>
+#include <UTTypeInternal.h>
+#include <ErrorHandling.h>
+#include <array>
+#include <vector>
 
+#pragma region internalMapHelpers
 typedef struct {
     CFStringRef utiName;
     std::vector<CFStringRef> fileNameExtensions;
@@ -245,71 +247,67 @@ SystemUTIMapEntryArray& _UTGetSytemUTIMapping() {
     return map;
 }
 
-static dispatch_once_t onceToken;
+/**
+ * Initializes the system UTI map.
+ */
+static bool __UTInitializeSystemUTIMaps() {
+    s_systemUTIMap = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, &kCFTypeDictionaryKeyCallBacks, NULL);
+    s_fileExtensionToSystemUTIMap = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, &kCFTypeDictionaryKeyCallBacks, NULL);
+    s_mimeTypeToSystemUTIMap = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, &kCFTypeDictionaryKeyCallBacks, NULL);
+
+    auto& map = _UTGetSytemUTIMapping();
+    uint32_t count = 0;
+    for (const SystemUTIMapEntry& entry : map) {
+        // Add the UTI entry to s_systemUTIMap
+        //  Key: UTI (CFStringRef)
+        //  Value: SystemUTIMapEntry (struct)
+        if (!CFDictionaryContainsKey(s_systemUTIMap, (const void*)entry.utiName)) {
+            CFDictionaryAddValue(s_systemUTIMap, (const void*)entry.utiName, (const void*)&map[count++]);
+        } else {
+            FAIL_FAST_MSG("Key (%s) collition detected in s_systemUTIMap!", CFStringGetCStringPtr(entry.utiName, kCFStringEncodingUTF8));
+        }
+
+        // Add each file name extension to the s_fileExtensionToSystemUTIMap
+        //  Key: File Name Extension (CFStringRef)
+        //  Value: CFMutableArray of UTI strings (CFMutableArrayRef)
+        for (const auto& fileNameExtension : entry.fileNameExtensions) {
+            if (!CFDictionaryContainsKey(s_fileExtensionToSystemUTIMap, (const void*)fileNameExtension)) {
+                CFMutableArrayRef systemUTIArray = CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks);
+                CFArrayAppendValue(systemUTIArray, (const void*)entry.utiName);
+                CFDictionaryAddValue(s_fileExtensionToSystemUTIMap, (const void*)fileNameExtension, (const void*)systemUTIArray);
+            } else {
+                CFMutableArrayRef systemUTIArray = static_cast<CFMutableArrayRef>(
+                    const_cast<void*>(CFDictionaryGetValue(s_fileExtensionToSystemUTIMap, (const void*)fileNameExtension)));
+                CFArrayAppendValue(systemUTIArray, (const void*)entry.utiName);
+                CFDictionarySetValue(s_fileExtensionToSystemUTIMap, (const void*)fileNameExtension, (const void*)systemUTIArray);
+            }
+        }
+
+        // Add each mime type to the s_mimeTypeToSystemUTIMap
+        //  Key: Mime Type (CFStringRef)
+        //  Value: CFMutableArray of UTI strings (CFMutableArrayRef)
+        for (const auto& mimeType : entry.mimeTypes) {
+            if (!CFDictionaryContainsKey(s_mimeTypeToSystemUTIMap, (const void*)mimeType)) {
+                CFMutableArrayRef systemUTIArray = CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks);
+                CFArrayAppendValue(systemUTIArray, (const void*)entry.utiName);
+                CFDictionaryAddValue(s_mimeTypeToSystemUTIMap, (const void*)mimeType, (const void*)systemUTIArray);
+            } else {
+                CFMutableArrayRef systemUTIArray = static_cast<CFMutableArrayRef>(
+                    const_cast<void*>(CFDictionaryGetValue(s_mimeTypeToSystemUTIMap, (const void*)mimeType)));
+                CFArrayAppendValue(systemUTIArray, (const void*)entry.utiName);
+                CFDictionarySetValue(s_mimeTypeToSystemUTIMap, (const void*)mimeType, (const void*)systemUTIArray);
+            }
+        }
+    }
+
+    return true;
+}
 
 /**
  * Initializes the system UTI map.
  */
 void _UTInitializeSystemUTIMaps() {
-    dispatch_once(&onceToken,
-                  ^{
-                      s_systemUTIMap = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, &kCFTypeDictionaryKeyCallBacks, NULL);
-                      s_fileExtensionToSystemUTIMap =
-                          CFDictionaryCreateMutable(kCFAllocatorDefault, 0, &kCFTypeDictionaryKeyCallBacks, NULL);
-                      s_mimeTypeToSystemUTIMap = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, &kCFTypeDictionaryKeyCallBacks, NULL);
-
-                      auto& map = _UTGetSytemUTIMapping();
-                      uint32_t count = 0;
-                      for (const SystemUTIMapEntry& entry : map) {
-                          // Add the UTI entry to s_systemUTIMap
-                          //  Key: UTI (CFStringRef)
-                          //  Value: SystemUTIMapEntry (struct)
-                          if (!CFDictionaryContainsKey(s_systemUTIMap, (const void*)entry.utiName)) {
-                              CFDictionaryAddValue(s_systemUTIMap, (const void*)entry.utiName, (const void*)&map[count++]);
-                          } else {
-                              assert(0);
-                              LOG_HR_MSG(E_FAIL,
-                                         "Key (%s) collition detected in s_systemUTIMap!",
-                                         [static_cast<NSString*>(entry.utiName) UTF8String]);
-                          }
-
-                          // Add each file name extension to the s_fileExtensionToSystemUTIMap
-                          //  Key: File Name Extension (CFStringRef)
-                          //  Value: CFMutableArray of UTI strings (CFMutableArrayRef)
-                          for (const auto& fileNameExtension : entry.fileNameExtensions) {
-                              if (!CFDictionaryContainsKey(s_fileExtensionToSystemUTIMap, (const void*)fileNameExtension)) {
-                                  CFMutableArrayRef systemUTIArray = CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks);
-                                  CFArrayAppendValue(systemUTIArray, (const void*)entry.utiName);
-                                  CFDictionaryAddValue(s_fileExtensionToSystemUTIMap,
-                                                       (const void*)fileNameExtension,
-                                                       (const void*)systemUTIArray);
-                              } else {
-                                  CFMutableArrayRef systemUTIArray = static_cast<CFMutableArrayRef>(const_cast<void*>(
-                                      CFDictionaryGetValue(s_fileExtensionToSystemUTIMap, (const void*)fileNameExtension)));
-                                  CFArrayAppendValue(systemUTIArray, (const void*)entry.utiName);
-                                  CFDictionarySetValue(s_fileExtensionToSystemUTIMap,
-                                                       (const void*)fileNameExtension,
-                                                       (const void*)systemUTIArray);
-                              }
-                          }
-
-                          // Add each mime type to the s_mimeTypeToSystemUTIMap
-                          //  Key: Mime Type (CFStringRef)
-                          //  Value: CFMutableArray of UTI strings (CFMutableArrayRef)
-                          for (const auto& mimeType : entry.mimeTypes) {
-                              if (!CFDictionaryContainsKey(s_mimeTypeToSystemUTIMap, (const void*)mimeType)) {
-                                  CFMutableArrayRef systemUTIArray = CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks);
-                                  CFArrayAppendValue(systemUTIArray, (const void*)entry.utiName);
-                                  CFDictionaryAddValue(s_mimeTypeToSystemUTIMap, (const void*)mimeType, (const void*)systemUTIArray);
-                              } else {
-                                  CFMutableArrayRef systemUTIArray = static_cast<CFMutableArrayRef>(
-                                      const_cast<void*>(CFDictionaryGetValue(s_mimeTypeToSystemUTIMap, (const void*)mimeType)));
-                                  CFArrayAppendValue(systemUTIArray, (const void*)entry.utiName);
-                                  CFDictionarySetValue(s_mimeTypeToSystemUTIMap, (const void*)mimeType, (const void*)systemUTIArray);
-                              }
-                          }
-                      }
-                  });
+    static bool result = __UTInitializeSystemUTIMaps();
 }
 
 /**
@@ -317,11 +315,8 @@ void _UTInitializeSystemUTIMaps() {
  * @param fileNameExtension file name extension
  * @return UTI
  */
-CFArrayRef _UTGetUTIsForFileNameExtension(CFStringRef fileNameExtension) {
-    if (fileNameExtension == NULL) {
-        return NULL;
-    }
-
+CFArrayRef _UTCreateUTIsForFileNameExtension(CFStringRef fileNameExtension) {
+    RETURN_NULL_IF(!fileNameExtension);
     CFArrayRef UTIs =
         static_cast<CFArrayRef>(const_cast<void*>(CFDictionaryGetValue(s_fileExtensionToSystemUTIMap, (const void*)fileNameExtension)));
     return UTIs ? CFArrayCreateCopy(kCFAllocatorDefault, UTIs) : NULL;
@@ -332,7 +327,7 @@ CFArrayRef _UTGetUTIsForFileNameExtension(CFStringRef fileNameExtension) {
  * @param mimeType MIME type
  * @return UTI
  */
-CFArrayRef _UTGetUTIsForMIMEType(CFStringRef mimeType) {
+CFArrayRef _UTCreateUTIsForMIMEType(CFStringRef mimeType) {
     CFArrayRef UTIs = static_cast<CFArrayRef>(const_cast<void*>(CFDictionaryGetValue(s_mimeTypeToSystemUTIMap, (const void*)mimeType)));
     return CFArrayCreateCopy(kCFAllocatorDefault, UTIs);
 }
@@ -342,10 +337,12 @@ CFArrayRef _UTGetUTIsForMIMEType(CFStringRef mimeType) {
  * @param UTI UTI string
  * @return file name extension associated with the UTI
  */
-CFStringRef _UTGetFileNameExtensionForUTI(CFStringRef UTI) {
+CFStringRef _UTCopyFileNameExtensionForUTI(CFStringRef UTI) {
     SystemUTIMapEntry* entry = static_cast<SystemUTIMapEntry*>(const_cast<void*>(CFDictionaryGetValue(s_systemUTIMap, (const void*)UTI)));
     if (entry != nullptr) {
-        return entry->fileNameExtensions[0];
+        CFStringRef result = entry->fileNameExtensions[0];
+        CFRetain(result);
+        return result;
     }
 
     return NULL;
@@ -356,11 +353,14 @@ CFStringRef _UTGetFileNameExtensionForUTI(CFStringRef UTI) {
  * @param UTI UTI string
  * @return MIME type associated with the UTI
  */
-CFStringRef _UTGetMimeTypeForUTI(CFStringRef UTI) {
+CFStringRef _UTCopyMimeTypeForUTI(CFStringRef UTI) {
     SystemUTIMapEntry* entry = static_cast<SystemUTIMapEntry*>(const_cast<void*>(CFDictionaryGetValue(s_systemUTIMap, (const void*)UTI)));
     if (entry != nullptr) {
-        return entry->mimeTypes[0];
+        CFStringRef result = entry->mimeTypes[0];
+        CFRetain(result);
+        return result;
     }
 
     return NULL;
 }
+#pragma endregion internalMapHelpers

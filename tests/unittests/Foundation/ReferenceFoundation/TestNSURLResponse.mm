@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -34,6 +34,7 @@ TEST(NSURLResponse, URL) {
     NSURLResponse* res =
         [[[NSURLResponse alloc] initWithURL:url MIMEType:@"text/plain" expectedContentLength:0 textEncodingName:nil] autorelease];
     ASSERT_OBJCEQ_MSG(url, res.URL, @"should be the expected url");
+    ASSERT_OBJCEQ(@"path.txt", res.suggestedFilename);
 }
 
 TEST(NSURLResponse, MIMEType_1) {
@@ -42,6 +43,7 @@ TEST(NSURLResponse, MIMEType_1) {
         [[[NSURLResponse alloc] initWithURL:[NSURL URLWithString:@"test"] MIMEType:mimetype expectedContentLength:0 textEncodingName:nil]
             autorelease];
     ASSERT_OBJCEQ_MSG(mimetype, res.MIMEType, @"should be the passed in mimetype");
+    ASSERT_OBJCEQ(@"test.txt", res.suggestedFilename);
 }
 
 TEST(NSURLResponse, MIMEType_2) {
@@ -50,6 +52,7 @@ TEST(NSURLResponse, MIMEType_2) {
         [[[NSURLResponse alloc] initWithURL:[NSURL URLWithString:@"test"] MIMEType:mimetype expectedContentLength:0 textEncodingName:nil]
             autorelease];
     ASSERT_OBJCEQ_MSG(mimetype, res.MIMEType, @"should be the other mimetype");
+    ASSERT_OBJCEQ(@"test", res.suggestedFilename);
 }
 
 TEST(NSURLResponse, ExpectedContentLength) {
@@ -74,22 +77,22 @@ TEST(NSURLResponse, TextEncodingName) {
     ASSERT_OBJCEQ_MSG(encoding, res1.textEncodingName, @"should be the utf8 encoding");
     NSURLResponse* res2 = [[[NSURLResponse alloc] initWithURL:url MIMEType:nil expectedContentLength:0 textEncodingName:nil] autorelease];
     ASSERT_OBJCEQ(nil, res2.textEncodingName);
+    ASSERT_OBJCEQ(@"test", res1.suggestedFilename);
+    ASSERT_OBJCEQ(@"test", res2.suggestedFilename);
 }
 
-// Disabled pending GH#832; we do not respect the incoming MIME type when generating filenames. OS X does.
-OSX_DISABLED_TEST(NSURLResponse, SuggestedFilename) {
+TEST(NSURLResponse, SuggestedFilename) {
     NSURL* url = [NSURL URLWithString:@"a/test/name.extension"];
     NSURLResponse* res =
         [[[NSURLResponse alloc] initWithURL:url MIMEType:@"text/plain" expectedContentLength:0 textEncodingName:nil] autorelease];
-    ASSERT_OBJCEQ(@"name.extension", res.suggestedFilename);
+    ASSERT_OBJCEQ(@"name.extension.txt", res.suggestedFilename);
 }
 
-// Disabled pending GH#832; we do not respect the incoming MIME type when generating filenames. OS X does.
-OSX_DISABLED_TEST(NSURLResponse, SuggestedFilename_2) {
+TEST(NSURLResponse, SuggestedFilename_2) {
     NSURL* url = [NSURL URLWithString:@"a/test/name.extension?foo=bar"];
     NSURLResponse* res =
         [[[NSURLResponse alloc] initWithURL:url MIMEType:@"text/plain" expectedContentLength:0 textEncodingName:nil] autorelease];
-    ASSERT_OBJCEQ(@"name.extension", res.suggestedFilename);
+    ASSERT_OBJCEQ(@"name.extension.txt", res.suggestedFilename);
 }
 
 TEST(NSURLResponse, SuggestedFilename_3) {
@@ -107,6 +110,7 @@ TEST(NSHTTPURLResponse, URL_and_status_1) {
         }] autorelease];
     ASSERT_OBJCEQ(url, response.URL);
     ASSERT_EQ(200, response.statusCode);
+    ASSERT_OBJCEQ(@"Unknown", response.suggestedFilename);
 }
 
 TEST(NSHTTPURLResponse, URL_and_status_2) {
@@ -117,6 +121,7 @@ TEST(NSHTTPURLResponse, URL_and_status_2) {
         }] autorelease];
     ASSERT_OBJCEQ(url, response.URL);
     ASSERT_EQ(302, response.statusCode);
+    ASSERT_OBJCEQ(@"Unknown", response.suggestedFilename);
 }
 
 TEST(NSHTTPURLResponse, HeaderFields_1) {
@@ -124,12 +129,14 @@ TEST(NSHTTPURLResponse, HeaderFields_1) {
     NSHTTPURLResponse* response =
         [[[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:nil] autorelease];
     ASSERT_EQ(0, response.allHeaderFields.count);
+    ASSERT_OBJCEQ(@"Unknown", response.suggestedFilename);
 }
 TEST(NSHTTPURLResponse, HeaderFields_2) {
     NSURL* url = [NSURL URLWithString:@"https://www.swift.org"];
     NSHTTPURLResponse* response =
         [[[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:@"HTTP/1.1" headerFields:@{}] autorelease];
     ASSERT_EQ(0, response.allHeaderFields.count);
+    ASSERT_OBJCEQ(@"Unknown", response.suggestedFilename);
 }
 
 TEST(NSHTTPURLResponse, HeaderFields_3) {
@@ -140,6 +147,7 @@ TEST(NSHTTPURLResponse, HeaderFields_3) {
     ASSERT_EQ(2, response.allHeaderFields.count);
     ASSERT_OBJCEQ(@"1", response.allHeaderFields[@"A"]);
     ASSERT_OBJCEQ(@"2", response.allHeaderFields[@"B"]);
+    ASSERT_OBJCEQ(@"Unknown", response.suggestedFilename);
 }
 
 // Note that the message content length is different from the message
