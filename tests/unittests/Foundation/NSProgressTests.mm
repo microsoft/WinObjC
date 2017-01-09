@@ -20,6 +20,8 @@
 
 #import "TestUtils.h"
 
+static const double c_errorMargin = 0.000001;
+
 static const uint64_t work1pendingUnitCount = 2;
 static const uint64_t work2pendingUnitCount = 30;
 
@@ -164,12 +166,7 @@ TEST(NSProgress, IsIndeterminate) {
     EXPECT_TRUE([progress isIndeterminate]);
 }
 
-// The way fractionCompleted and completedUnitCount being updated is flawed.
-// It does not pertain to the behavior that is detailed here
-// https://developer.apple.com/library/ios/documentation/Foundation/Reference/NSProgress_Class/#//apple_ref/doc/uid/TP40013490-CH1-SW46
-// for creating a tree of progress objects.
-// The following bug is opened to address this: #834
-OSX_DISABLED_TEST(NSProgress, ChainImplicit) {
+TEST(NSProgress, ChainImplicit) {
     NSProgress* prog1 = [NSProgress progressWithTotalUnitCount:100];
     [prog1 becomeCurrentWithPendingUnitCount:100];
     NSProgress* prog2 = [NSProgress progressWithTotalUnitCount:50];
@@ -177,11 +174,9 @@ OSX_DISABLED_TEST(NSProgress, ChainImplicit) {
     NSProgress* prog3 = [NSProgress progressWithTotalUnitCount:10];
     [prog3 setCompletedUnitCount:6];
 
-    // We are getting 0, in osx
     ASSERT_EQ(0.6, [prog3 fractionCompleted]);
-    // We are getting 0.6, in osx
-    ASSERT_EQ(0, [prog2 fractionCompleted]);
-    ASSERT_EQ(0, [prog1 fractionCompleted]);
+    ASSERT_EQ(0.6, [prog2 fractionCompleted]);
+    ASSERT_EQ(0.6, [prog1 fractionCompleted]);
 
     ASSERT_EQ(6, [prog3 completedUnitCount]);
     ASSERT_EQ(0, [prog2 completedUnitCount]);
@@ -194,9 +189,94 @@ OSX_DISABLED_TEST(NSProgress, ChainImplicit) {
     ASSERT_EQ(1.0, [prog1 fractionCompleted]);
 
     ASSERT_EQ(10, [prog3 completedUnitCount]);
-    // the below should be 0
     ASSERT_EQ(50, [prog2 completedUnitCount]);
     ASSERT_EQ(100, [prog1 completedUnitCount]);
+
+    [prog2 resignCurrent];
+    [prog1 resignCurrent];
+}
+
+TEST(NSProgress, ChainImplicit_EdgeCases) {
+    NSProgress* prog1 = [NSProgress progressWithTotalUnitCount:100];
+    [prog1 becomeCurrentWithPendingUnitCount:100];
+    NSProgress* prog2 = [NSProgress progressWithTotalUnitCount:120];
+    [prog2 becomeCurrentWithPendingUnitCount:20];
+    NSProgress* prog3 = [NSProgress progressWithTotalUnitCount:3];
+
+    ASSERT_EQ(0, [prog3 completedUnitCount]);
+    ASSERT_EQ(0, [prog2 completedUnitCount]);
+    ASSERT_EQ(0, [prog1 completedUnitCount]);
+
+    ASSERT_EQ(0, [prog3 fractionCompleted]);
+    ASSERT_EQ(0, [prog2 fractionCompleted]);
+    ASSERT_EQ(0, [prog1 fractionCompleted]);
+
+    [prog3 setCompletedUnitCount:1];
+
+    ASSERT_EQ(1, [prog3 completedUnitCount]);
+    ASSERT_EQ(0, [prog2 completedUnitCount]);
+    ASSERT_EQ(0, [prog1 completedUnitCount]);
+
+    ASSERT_NEAR(1.0f / 3.0f, [prog3 fractionCompleted], c_errorMargin);
+    ASSERT_NEAR(1.0f / 18.0f, [prog2 fractionCompleted], c_errorMargin);
+    ASSERT_NEAR(1.0f / 18.0f, [prog1 fractionCompleted], c_errorMargin);
+
+    // Manually add 60 to prog2
+    [prog2 setCompletedUnitCount:60];
+
+    ASSERT_EQ(1, [prog3 completedUnitCount]);
+    ASSERT_EQ(60, [prog2 completedUnitCount]);
+    ASSERT_EQ(0, [prog1 completedUnitCount]);
+
+    ASSERT_NEAR(1.0f / 3.0f, [prog3 fractionCompleted], c_errorMargin);
+    ASSERT_NEAR(0.5f + (1.0f / 18.0f), [prog2 fractionCompleted], c_errorMargin);
+    ASSERT_NEAR(0.5f + (1.0f / 18.0f), [prog1 fractionCompleted], c_errorMargin);
+
+    // Go past-the-end on prog3, should add the 20 pending units to prog2
+    [prog3 setCompletedUnitCount:4];
+
+    ASSERT_EQ(4, [prog3 completedUnitCount]);
+    ASSERT_EQ(80, [prog2 completedUnitCount]);
+    ASSERT_EQ(0, [prog1 completedUnitCount]);
+
+    ASSERT_NEAR(4.0f / 3.0f, [prog3 fractionCompleted], c_errorMargin);
+    ASSERT_NEAR(80.0f / 120.0f, [prog2 fractionCompleted], c_errorMargin);
+    ASSERT_NEAR(80.0f / 120.0f, [prog1 fractionCompleted], c_errorMargin);
+
+    // Reset prog3 back to 0 (probably shouldn't ever be done in production)
+    [prog3 setCompletedUnitCount:0];
+
+    ASSERT_EQ(0, [prog3 completedUnitCount]);
+    ASSERT_EQ(80, [prog2 completedUnitCount]); // Stays the same
+    ASSERT_EQ(0, [prog1 completedUnitCount]);
+
+    ASSERT_EQ(0, [prog3 fractionCompleted]);
+    ASSERT_NEAR((60.0f / 120.0f) - (1.0f / 18.0f),
+                [prog2 fractionCompleted],
+                c_errorMargin); // Lowers by 4/3 * 20/120, despite completedUnitCount staying the same
+    ASSERT_NEAR((60.0f / 120.0f) - (1.0f / 18.0f), [prog1 fractionCompleted], c_errorMargin); // Lowers by 4/3 * 20/120
+
+    // Complete prog3 again (probably shouldn't ever be done in production)
+    [prog3 setCompletedUnitCount:3];
+
+    ASSERT_EQ(3, [prog3 completedUnitCount]);
+    ASSERT_EQ(100, [prog2 completedUnitCount]); // Increments again
+    ASSERT_EQ(0, [prog1 completedUnitCount]);
+
+    ASSERT_EQ(1, [prog3 fractionCompleted]);
+    ASSERT_NEAR((80.0f / 120.0f) - (1.0f / 18.0f), [prog2 fractionCompleted], c_errorMargin); // Increases by 20/120
+    ASSERT_NEAR((80.0f / 120.0f) - (1.0f / 18.0f), [prog1 fractionCompleted], c_errorMargin); // Increases by 20/120
+
+    // Reset prog2 to 0 (probably shouldn't ever be done in production)
+    [prog2 setCompletedUnitCount:0];
+
+    ASSERT_EQ(3, [prog3 completedUnitCount]);
+    ASSERT_EQ(0, [prog2 completedUnitCount]); // Hard resets without taking anything from prog3 into account
+    ASSERT_EQ(0, [prog1 completedUnitCount]);
+
+    ASSERT_EQ(1, [prog3 fractionCompleted]);
+    ASSERT_NEAR(0, [prog2 fractionCompleted], c_errorMargin); // fractionCompleted floors at 0
+    ASSERT_NEAR(0, [prog1 fractionCompleted], c_errorMargin);
 
     [prog2 resignCurrent];
     [prog1 resignCurrent];
