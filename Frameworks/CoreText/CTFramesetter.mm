@@ -128,7 +128,7 @@ CGSize CTFramesetterSuggestFrameSizeWithConstraints(
     CFAttributedStringRef string =
         static_cast<CFAttributedStringRef>(static_cast<_CTFramesetter*>(framesetter)->_typesetter->_attributedString.get());
 
-    return _DWriteGetSize(string, stringRange, constraints, fitRange);
+    return _DWriteGetFrameSize(string, stringRange, constraints, fitRange);
 }
 
 /**

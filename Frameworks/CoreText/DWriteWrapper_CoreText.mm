@@ -525,12 +525,15 @@ static _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CG
     return frame;
 }
 
-static CGSize _DWriteGetSize(CFAttributedStringRef string, CFRange range, CGSize maxSize, CFRange* fitRange) {
+static CGSize _DWriteGetFrameSize(CFAttributedStringRef string, CFRange range, CGSize maxSize, CFRange* fitRange) {
     CGSize ret = CGSizeZero;
+
+    // Treat range.length of 0 as unlimited length
     if (range.length == 0L) {
-        range.length = CFAttributedStringGetLength(string);
+        range.length = CFAttributedStringGetLength(string) - range.location;
     }
 
+    // No text to draw, just return CGSizeZero
     if (!string || range.length <= 0L) {
         return ret;
     }
@@ -565,12 +568,12 @@ static CGSize _DWriteGetSize(CFAttributedStringRef string, CFRange range, CGSize
 
         float totalHeight = 0;
         CFIndex endPos = range.location;
-        for (size_t i = 0; i < lineCount; ++i) {
-            totalHeight += metrics[i].baseline;
+        for (auto metric : metrics) {
+            totalHeight += metric.baseline;
             if (totalHeight > ret.height) {
                 break;
             }
-            endPos += metrics[i].length;
+            endPos += metric.length;
         }
 
         fitRange->length = endPos;

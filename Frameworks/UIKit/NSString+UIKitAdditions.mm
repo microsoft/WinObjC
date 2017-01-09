@@ -104,8 +104,6 @@ static NSDictionary* _getDefaultUITextAttributes() {
  @Notes Clipping line break modes unsupported
 */
 - (CGSize)drawInRect:(CGRect)rect withFont:(UIFont*)font lineBreakMode:(UILineBreakMode)lineBreakMode alignment:(UITextAlignment)alignment {
-    CGContextRef context = UIGraphicsGetCurrentContext();
-
     // 0 Width or Height treated as unlimited bounds
     if (rect.size.width == 0) {
         rect.size.width = std::numeric_limits<CGFloat>::max();
@@ -127,16 +125,25 @@ static NSDictionary* _getDefaultUITextAttributes() {
             attributes:@{
                 (NSString*)kCTForegroundColorFromContextAttributeName : (id)kCFBooleanTrue,
                 (NSString*)kCTParagraphStyleAttributeName : (id)CTParagraphStyleCreate(styles, std::extent<decltype(styles)>::value),
-                (NSString*)kCTFontAttributeName : font
+                (NSString*)kCTFontAttributeName : (font ? font : [UIFont defaultFont])
             }] autorelease];
 
     woc::unique_cf<CTFramesetterRef> framesetter{ CTFramesetterCreateWithAttributedString(static_cast<CFAttributedStringRef>(attr)) };
+    if (framesetter == nil) {
+        return CGSizeZero;
+    }
 
     woc::unique_cf<CGPathRef> path{ CGPathCreateWithRect(rect, nullptr) };
+    if (path == nil) {
+        return CGSizeZero;
+    }
+
     woc::unique_cf<CTFrameRef> frame{ CTFramesetterCreateFrame(framesetter.get(), {}, path.get(), nullptr) };
     if (frame == nil) {
         return CGSizeZero;
     }
+
+    CGContextRef context = UIGraphicsGetCurrentContext();
 
     // Invert text matrix so glyphs are drawn with correct orientation
     CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0f, -1.0f));
