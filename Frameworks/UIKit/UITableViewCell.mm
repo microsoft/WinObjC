@@ -1482,12 +1482,6 @@ static void removeAllAnimationsFromLayers(CALayer* layer) {
     }
 }
 
-// determine if a UIView is internal subview used for building default chrome for UITableViewCell
-- (BOOL)_isInternalSubview:(UIView*)view {
-    return (view == _contentView || view == _curAccessoryView || view == _groupEdgeView || view == _removeButton ||
-            view == _editSelectedView || view == _backgroundView || view == _selectedbackgroundView || view == _borderView);
-}
-
 /**
  @Status Interoperable
 */
@@ -1523,13 +1517,16 @@ static void removeAllAnimationsFromLayers(CALayer* layer) {
     }
     _editSelectedViewVisible = FALSE;
 
-    // for any subivew which isn't internal subview used for building default chrome, need to remove them before re-use
-    for (UIView* subview in [self subviews]) {
-        if (![self _isInternalSubview:subview]) {
-            [subview removeFromSuperview];
-        }
+    /*
+    if ( _backgroundView != nil ) {
+    [_backgroundView removeFromSuperview];
+    _backgroundView = nil;
     }
-
+    if ( _selectedbackgroundView != nil ) {
+    [_selectedbackgroundView removeFromSuperview];
+    _selectedbackgroundView = nil;
+    }
+    */
     [self setNeedsLayout];
 }
 
