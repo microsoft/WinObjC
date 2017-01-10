@@ -714,7 +714,6 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
     WUNBadgeNotification* notification = [WUNBadgeNotification makeBadgeNotification:doc];
     WUNBadgeUpdater* updater = [WUNBadgeUpdateManager createBadgeUpdaterForApplication];
 
-    // TODO #1201: 0x803e0208 : The notification platform does not have the proper privileges to complete the request.
     [updater update:notification];
 }
 
