@@ -14,9 +14,13 @@
 //
 //******************************************************************************
 
-#pragma once
+#include "gtest-api.h"
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
 
-#include <Winsock2.h>
-#include <ws2tcpip.h>
-
-#define _SOCKLEN_T_DECLARED
+TEST(WOCStdLib, WinSockBuildTests) {
+    char addrBuf[INET_ADDRSTRLEN];
+    char testData[100];
+    inet_ntop(AF_INET, NULL, addrBuf, (socklen_t)sizeof(addrBuf));
+}

@@ -224,6 +224,7 @@
   <ItemGroup>
     <ClangCompile Include="..\..\..\..\tests\unittests\WOCStdLib\mach\mach_task_info_test.mm" />
     <ClangCompile Include="..\..\..\..\tests\unittests\WOCStdLib\mach\mach_test.mm" />
+    <ClangCompile Include="..\..\..\..\tests\unittests\WOCStdLib\inettests.mm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
