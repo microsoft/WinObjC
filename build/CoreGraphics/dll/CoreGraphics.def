@@ -42,9 +42,9 @@ LIBRARY CoreGraphics
         _DWriteCopyFontNamesForFamilyName
         _DWriteGetFamilyNameForFontName
         _DWriteGetFontPropertiesFromName
-        _DWriteCreateTextFormat
         _DWriteCreateFontFamilyWithName
         _DWriteCreateFontFaceWithName
+        _DWriteCreateTextFormatWithFontNameAndSize
         _DWriteCreateFontFaceWithData
         _DWriteFontCopyInformationalString
         _DWriteFontCopyTable
@@ -249,6 +249,7 @@ LIBRARY CoreGraphics
         CGDataConsumerRetain
 
         ; CGDataProvider.mm
+        CGDataProviderCreate
         CGDataProviderCreateWithData
         CGDataProviderCreateWithURL
         CGDataProviderCreateWithFilename
@@ -259,6 +260,7 @@ LIBRARY CoreGraphics
         CGDataProviderRetain
         CGDataProviderCreateSequential
         CGDataProviderCreateDirect
+        CGDataProviderCreateDirectAccess
 
         ; CGFont.mm
         kCGFontVariationAxisName DATA

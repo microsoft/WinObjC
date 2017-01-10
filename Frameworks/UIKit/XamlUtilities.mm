@@ -14,6 +14,14 @@
 //
 //******************************************************************************
 #import "XamlUtilities.h"
+
+#import <UIKit/UIActivityIndicatorView.h>
+#import <UIKit/UIButton.h>
+#import <UIKit/UIColor.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UILabel.h>
+#import <UIKit/UISlider.h>
+
 #import "StarboardXaml/DisplayTexture.h"
 
 #include <Windows.UI.Xaml.Media.h>

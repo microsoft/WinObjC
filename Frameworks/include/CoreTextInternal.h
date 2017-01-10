@@ -50,7 +50,6 @@ inline void _SafeRelease(T** p) {
 @public
     StrongId<NSAttributedString> _attributedString;
     StrongId<NSString> _string;
-    std::vector<WORD> _characters;
 }
 @end
 

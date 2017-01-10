@@ -14,9 +14,13 @@
 //
 //******************************************************************************
 
+#import <UIKit/UIFont.h>
+
 #import "UICTFontDescriptor.h"
 
+#import <CoreText/CTFont.h>
 #import <CoreText/CTFontDescriptor.h>
+
 #import <CFFoundationInternal.h>
 #import <BridgeHelpers.h>
 

@@ -52,7 +52,7 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, getter=isMomentary) BOOL momentary;
 @property (nonatomic) BOOL apportionsSegmentWidthsByContent STUB_PROPERTY;
 
-- (id)initWithItems:(NSArray*)items;
+- (instancetype)initWithItems:(NSArray*)items;
 
 - (void)setTitle:(NSString*)title forSegmentAtIndex:(NSUInteger)segment;
 - (NSString*)titleForSegmentAtIndex:(NSUInteger)segment;

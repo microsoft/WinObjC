@@ -62,6 +62,7 @@ static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
 @private
     // explicitly declared here for custom set/get
     int64_t _completedUnitCount;
+    int64_t _totalUnitCount;
     StrongId<NSString> _localizedDescription;
     StrongId<NSString> _localizedAdditionalDescription;
 
@@ -229,7 +230,11 @@ static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
             [_parent _incrementCompletedUnitCount:_parentPendingUnitCount];
         }
 
+        [self willChangeValueForKey:@"fractionCompleted"];
+        [self willChangeValueForKey:@"indeterminate"];
         _completedUnitCount = inUnitCount;
+        [self didChangeValueForKey:@"indeterminate"];
+        [self didChangeValueForKey:@"fractionCompleted"];
     }
 }
 
@@ -252,6 +257,28 @@ static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
 /**
  @Status Interoperable
 */
+- (void)setTotalUnitCount:(int64_t)inUnitCount {
+    @synchronized(self) { // Property is atomic
+        [self willChangeValueForKey:@"fractionCompleted"];
+        [self willChangeValueForKey:@"indeterminate"];
+        _totalUnitCount = inUnitCount;
+        [self didChangeValueForKey:@"indeterminate"];
+        [self didChangeValueForKey:@"fractionCompleted"];
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+- (int64_t)totalUnitCount {
+    @synchronized(self) { // Property is atomic
+        return _totalUnitCount;
+    }
+}
+
+/**
+ @Status Interoperable
+*/
 - (double)fractionCompleted {
     // Override synthesized getter so that this can be calculated dynamically
     @synchronized(self) { // Property is atomic
@@ -266,7 +293,14 @@ static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
     decltype(_cancellationHandler) cancellationHandler;
 
     @synchronized(self) {
+        if (_cancelled) {
+            return;
+        }
+
+        [self willChangeValueForKey:@"cancelled"];
         _cancelled = YES;
+        [self didChangeValueForKey:@"cancelled"];
+
         cancellationHandler = _cancellationHandler;
     }
 
@@ -282,7 +316,14 @@ static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
     decltype(_pausingHandler) pausingHandler;
 
     @synchronized(self) {
+        if (_paused) {
+            return;
+        }
+
+        [self willChangeValueForKey:@"paused"];
         _paused = YES;
+        [self didChangeValueForKey:@"paused"];
+
         pausingHandler = _pausingHandler;
     }
 
@@ -298,7 +339,14 @@ static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
     decltype(_resumingHandler) resumingHandler;
 
     @synchronized(self) {
+        if (!_paused) {
+            return;
+        }
+
+        [self willChangeValueForKey:@"paused"];
         _paused = NO;
+        [self didChangeValueForKey:@"paused"];
+
         resumingHandler = _resumingHandler;
     }
 
@@ -318,7 +366,11 @@ static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
  @Status Interoperable
 */
 - (void)setUserInfoObject:(id)objectOrNil forKey:(NSString*)key {
-    [reinterpret_cast<NSMutableDictionary*>(_userInfo) setObject:objectOrNil forKey:key];
+    if (!objectOrNil) {
+        [reinterpret_cast<NSMutableDictionary*>(_userInfo) removeObjectForKey:key];
+    } else {
+        [reinterpret_cast<NSMutableDictionary*>(_userInfo) setObject:objectOrNil forKey:key];
+    }
 }
 
 /**
@@ -328,6 +380,16 @@ static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
     @synchronized(self) {
         _localizedDescription.attach([newDescription copy]);
     }
+}
+
++ (NSSet<NSString*>*)keyPathsForValuesAffectingLocalizedDescription {
+    return [NSSet setWithObjects:@"userInfo.NSProgressFileOperationKindKey",
+                                 @"userInfo.NSProgressFileTotalCountKey",
+                                 @"completedUnitCount",
+                                 @"totalUnitCount",
+                                 @"fractionCompleted",
+                                 @"kind",
+                                 nil];
 }
 
 /**
@@ -382,6 +444,19 @@ static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
     @synchronized(self) {
         _localizedAdditionalDescription.attach([newDescription copy]);
     }
+}
+
++ (NSSet<NSString*>*)keyPathsForValuesAffectingLocalizedAdditionalDescription {
+    return [NSSet setWithObjects:@"userInfo.NSProgressEstimatedTimeRemainingKey",
+                                 @"userInfo.NSProgressFileOperationKindKey",
+                                 @"userInfo.NSProgressFileCompletedCountKey",
+                                 @"userInfo.NSProgressFileTotalCountKey",
+                                 @"userInfo.NSProgressThroughputKey",
+                                 @"completedUnitCount",
+                                 @"totalUnitCount",
+                                 @"fractionCompleted",
+                                 @"kind",
+                                 nil];
 }
 
 /**

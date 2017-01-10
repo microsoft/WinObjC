@@ -16,7 +16,10 @@
 
 #include "Starboard.h"
 
-#include "UIKit/NSParagraphStyle.h"
+#import <UIKit/NSLayoutManager.h>
+#import <UIKit/NSTextContainer.h>
+#import <UIKit/NSParagraphStyle.h>
+#import <UIKit/UIBezierPath.h>
 #include <CGContextInternal.h>
 
 #include <vector>

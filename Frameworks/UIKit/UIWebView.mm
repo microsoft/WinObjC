@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "UIKit/UIKit.h"
 #include "UIKit/UIView.h"
 #include "CoreGraphics/CGContext.h"
@@ -243,11 +244,31 @@ static void _initUIWebView(UIWebView* self) {
 }
 
 /**
- @Status Interoperable
+ @Status Gap
 */
 - (NSString*)stringByEvaluatingJavaScriptFromString:(NSString*)string {
-    NSString* ret = [_xamlWebControl invokeScript:@"eval" arguments:[NSArray arrayWithObject:string]];
-    return ret;
+    UNIMPLEMENTED_WITH_MSG(
+        "stringByEvaluatingJavaScriptFromString is not supported on our platform. Call evaluateJavaScript:completionHandler: instead.");
+    return StubReturn();
+}
+
+/**
+ @Status Caveat
+  @Notes This is a workaround. Original UIWebView does not have this method
+*/
+- (void)evaluateJavaScript:(NSString*)javaScriptString completionHandler:(void (^)(id, NSError*))completionHandler {
+    [_xamlWebControl invokeScriptAsync:@"eval"
+        arguments:[NSArray arrayWithObject:javaScriptString]
+        success:^void(NSString* success) {
+            if (completionHandler != nil) {
+                completionHandler(success, nil);
+            }
+        }
+        failure:^void(NSError* failure) {
+            if (completionHandler != nil) {
+                completionHandler(nil, failure);
+            }
+        }];
 }
 
 /**

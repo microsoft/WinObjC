@@ -41,6 +41,8 @@ typedef NS_ENUM(NSUInteger, _UIPanGestureStage) {
 
 #define _UIPanGestureStageNumStages 3
 
+@class UIRuntimeEventConnection;
+
 @interface UIGestureRecognizer () <NSCoding> {
 @protected
     __unsafe_unretained id _delegate;

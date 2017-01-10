@@ -15,13 +15,16 @@
 //******************************************************************************
 
 #include "Starboard.h"
-#include <math.h>
 
-#include "QuartzCore/CALayer.h"
-#include "QuartzCore/CABasicAnimation.h"
+#include <QuartzCore/CABasicAnimation.h>
+#include <QuartzCore/CALayer.h>
+#include <QuartzCore/CoreAnimationFunctions.h>
+
 #include "CACompositor.h"
 #include "CAAnimationInternal.h"
 #include "LoggingNative.h"
+
+#include <math.h>
 
 static const wchar_t* TAG = L"CABasicAnimation";
 

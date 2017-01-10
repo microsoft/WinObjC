@@ -18,6 +18,11 @@
 #import "Starboard.h"
 #import "LayerAnimation.h"
 
+#import <UIKit/NSValue+UIKitAdditions.h>
+#import <UIKit/UIApplication.h>
+
+#import <QuartzCore/CoreAnimationFunctions.h>
+
 #import "CAAnimationInternal.h"
 #import "Quaternion.h"
 
@@ -51,6 +56,13 @@ public:
     }
 
     concurrency::task<void> AddToLayer(ILayerProxy& layer) {
+        // We don't currently support transition animations when in synchronous transaction mode,
+        // so call the completion handler and return immediately.
+        if (!UIApplication.displayMode.useLegacyBatchedCATransactions) {
+            _Completed();
+            return concurrency::task_from_result();
+        }
+
         _CreateXamlAnimation();
         return _AddTransitionAnimation(layer, [_type UTF8String], [_subType UTF8String]);
     }

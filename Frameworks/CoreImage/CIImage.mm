@@ -14,14 +14,16 @@
 //
 //******************************************************************************
 
+#include "Starboard.h"
 #import <StubReturn.h>
+
 #import <CoreImage/CIImage.h>
 #import <CoreImage/CIColor.h>
 #import <CoreGraphics/CoreGraphics.h>
-#import <math.h>
+#import <UIKit/UIGraphics.h>
 
 #import "CIImageInternal.h"
-#include "Starboard.h"
+#import <math.h>
 
 /** @Status Stub */
 const CIFormat kCIFormatARGB8 = StubConstant();

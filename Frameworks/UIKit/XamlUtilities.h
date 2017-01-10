@@ -13,12 +13,15 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
 #import <Starboard.h>
 
 #import "StringHelpers.h"
 
 #import <UIKit/UIControl.h>
+#import <UIKit/UITextField.h>
+#import <UIKit/UITextInputTraits.h>
 
 #import "UWP/WindowsUIXaml.h"
 #import "UWP/WindowsUIXamlControls.h"

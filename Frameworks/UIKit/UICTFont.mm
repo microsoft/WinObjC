@@ -18,6 +18,9 @@
 #import <CFFoundationInternal.h>
 #import <BridgeHelpers.h>
 
+#import <CoreText/CTFont.h>
+#import <CoreText/CTFontDescriptor.h>
+
 // Only exists to support the WinObjC-only [UIFont initWithCoder:]
 #pragma region UIFontPrototype
 @implementation UIFontPrototype

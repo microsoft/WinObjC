@@ -15,9 +15,12 @@
 //******************************************************************************
 
 #import "Starboard.h"
-#import "UIKit/UIPasteboard.h"
-#import "NSLogging.h"
 #import <StubReturn.h>
+
+#import <UIKit/UIImage.h>
+#import <UIKit/UIPasteboard.h>
+
+#import "NSLogging.h"
 
 #import "UWP/WindowsApplicationModelDataTransfer.h"
 #import "CGImageInternal.h"

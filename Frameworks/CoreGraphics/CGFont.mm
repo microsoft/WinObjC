@@ -28,6 +28,8 @@
 
 #import "LoggingNative.h"
 
+#import <vector>
+
 const CFStringRef kCGFontVariationAxisName = static_cast<CFStringRef>(@"kCGFontVariationAxisName");
 const CFStringRef kCGFontVariationAxisMinValue = static_cast<CFStringRef>(@"kCGFontVariationAxisMinValue");
 const CFStringRef kCGFontVariationAxisMaxValue = static_cast<CFStringRef>(@"kCGFontVariationAxisMaxValue");
@@ -42,7 +44,7 @@ struct __CGFont {
     ComPtr<IDWriteFontFace> _dwriteFontFace;
 
     // Contains a value when created via Data Provider, null o/w
-    woc::unique_cf<CFDataRef> _data;
+    woc::unique_cf<CGDataProviderRef> _data;
 
     struct DWRITE_FONT_METRICS _metrics;
     bool _cachedMetrics; // Set to true when _metrics is init'd
@@ -114,7 +116,7 @@ CGFontRef CGFontCreateWithDataProvider(CGDataProviderRef cgDataProvider) {
     CFAutorelease(ret);
     struct __CGFont* mutableRet = const_cast<struct __CGFont*>(ret);
 
-    mutableRet->_data.reset(CGDataProviderCopyData(cgDataProvider));
+    mutableRet->_data.reset(CGDataProviderRetain(cgDataProvider));
     RETURN_NULL_IF_FAILED(_DWriteCreateFontFaceWithData(mutableRet->_data.get(), &mutableRet->_dwriteFontFace));
 
     return static_cast<CGFontRef>(CFRetain(ret));
@@ -374,9 +376,17 @@ CFTypeID CGFontGetTypeID() {
     return __kCGFontTypeID;
 }
 
-// TODO 1450: Convert this and all references to CGDataProviderRef
-// Currently CGDataProviderRef is broken for the needs of CTFontManager
-// So to prevent potentially copying multiple times, save a reference to the data
-CFDataRef _CGFontGetData(CGFontRef font) {
+CGDataProviderRef _CGFontGetData(CGFontRef font) {
     return font ? font->_data.get() : nullptr;
+}
+
+bool _CGFontGetGlyphsForCharacters(CGFontRef font, const char* characters, size_t count, CGGlyph* glyphs) {
+    RETURN_FALSE_IF(!font || !characters || !glyphs || count == 0);
+    std::vector<uint32_t> chars(characters, characters + count);
+    return SUCCEEDED(font->_dwriteFontFace->GetGlyphIndices(chars.data(), count, glyphs));
+}
+
+HRESULT _CGFontGetDWriteFontFace(CGFontRef font, IDWriteFontFace** outFace) {
+    RETURN_HR_IF(E_POINTER, font == nullptr || outFace == nullptr);
+    return font->_dwriteFontFace.CopyTo(outFace);
 }

@@ -47,21 +47,21 @@
     id bottomGuide = self.bottomLayoutGuide;
     self.view.backgroundColor = [UIColor whiteColor];
     
-    CenteredAutoLayoutLabel* topLabel = [[CenteredAutoLayoutLabel alloc] initWithFrame:CGRectMake(0, 0, 50, 20)];
-    topLabel.text = @"AutoLayout Top Guide";
+    CenteredAutoLayoutLabel* topLabel = [[CenteredAutoLayoutLabel alloc] initWithFrame:CGRectMake(0, 0, 50, 30)];
+    topLabel.text = @"AutoLayout Top Guide - Test By Resizing and Rotating Window";
     topLabel.textColor = [UIColor lightGrayColor];
     
     [self.view addSubview:topLabel];
     [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"|-[topLabel]-|" options:NO metrics:nil views:NSDictionaryOfVariableBindings(topLabel)]];
-    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:[topGuide]-[topLabel(20)]" options:NO metrics:nil views:NSDictionaryOfVariableBindings(topLabel, topGuide)]];
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:[topGuide]-[topLabel(30)]" options:NO metrics:nil views:NSDictionaryOfVariableBindings(topLabel, topGuide)]];
 
-    CenteredAutoLayoutLabel* bottomLabel = [[CenteredAutoLayoutLabel alloc] initWithFrame:CGRectMake(0, 0, 50, 20)];
+    CenteredAutoLayoutLabel* bottomLabel = [[CenteredAutoLayoutLabel alloc] initWithFrame:CGRectMake(0, 0, 50, 30)];
     bottomLabel.text = @"AutoLayout Bottom Guide";
     bottomLabel.textColor = [UIColor lightGrayColor];
     
     [self.view addSubview:bottomLabel];
     [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"|-[bottomLabel]-|" options:NO metrics:nil views:NSDictionaryOfVariableBindings(bottomLabel)]];
-    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:[bottomLabel(20)]-[bottomGuide]" options:NO metrics:nil views:NSDictionaryOfVariableBindings(bottomLabel, bottomGuide)]];
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:[bottomLabel(30)]-[bottomGuide]" options:NO metrics:nil views:NSDictionaryOfVariableBindings(bottomLabel, bottomGuide)]];
     
     UIButton* button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     

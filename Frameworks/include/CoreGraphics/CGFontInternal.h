@@ -15,6 +15,12 @@
 //******************************************************************************
 #pragma once
 
-#include <CoreGraphics/CGFont.h>
+#import <CoreGraphics/CGFont.h>
+#include <COMIncludes.h>
+#import <DWrite_3.h>
+#import <wrl/client.h>
+#include <COMIncludes_End.h>
 
-COREGRAPHICS_EXPORT CFDataRef _CGFontGetData(CGFontRef font);
+COREGRAPHICS_EXPORT CGDataProviderRef _CGFontGetData(CGFontRef font);
+bool _CGFontGetGlyphsForCharacters(CGFontRef font, const char* chars, size_t count, CGGlyph* glyphs);
+HRESULT _CGFontGetDWriteFontFace(CGFontRef font, IDWriteFontFace** outFace);

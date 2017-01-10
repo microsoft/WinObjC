@@ -15,6 +15,8 @@
 //******************************************************************************
 #pragma once
 
+#import <QuartzCore/CAEmitterCell.h>
+
 @interface CAEmitterCell () {
 }
 @property BOOL birthed;

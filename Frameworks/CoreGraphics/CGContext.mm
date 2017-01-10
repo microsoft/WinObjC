@@ -118,28 +118,28 @@ void CGContextShowTextAtPoint(CGContextRef pContext, CGFloat x, CGFloat y, const
  @Status Interoperable
 */
 void CGContextShowGlyphsAtPoint(CGContextRef ctx, CGFloat x, CGFloat y, const CGGlyph* glyphs, unsigned count) {
-    ctx->Backing()->CGContextShowGlyphsAtPoint(x, y, (WORD*)glyphs, count);
+    ctx->Backing()->CGContextShowGlyphsAtPoint(x, y, glyphs, count);
 }
 
 /**
  @Status Interoperable
 */
-void CGContextShowGlyphsWithAdvances(CGContextRef ctx, const CGGlyph* glyphs, CGSize* advances, unsigned count) {
-    ctx->Backing()->CGContextShowGlyphsWithAdvances((WORD*)glyphs, advances, count);
+void CGContextShowGlyphsWithAdvances(CGContextRef ctx, const CGGlyph* glyphs, const CGSize* advances, unsigned count) {
+    ctx->Backing()->CGContextShowGlyphsWithAdvances(glyphs, advances, count);
 }
 
 /**
  @Status Interoperable
 */
 void CGContextShowGlyphs(CGContextRef ctx, const CGGlyph* glyphs, unsigned count) {
-    ctx->Backing()->CGContextShowGlyphs((WORD*)glyphs, count);
+    ctx->Backing()->CGContextShowGlyphs(glyphs, count);
 }
 
 /**
  @Status Interoperable
 */
 void CGContextSetFont(CGContextRef ctx, CGFontRef font) {
-    ctx->Backing()->CGContextSetFont((id)font);
+    ctx->Backing()->CGContextSetFont(font);
 }
 
 /**
@@ -1178,14 +1178,6 @@ void CGContextSetStrokePattern(CGContextRef c, CGPatternRef pattern, const CGFlo
  @Notes
 */
 void CGContextShowGlyphsAtPositions(CGContextRef c, const CGGlyph* glyphs, const CGPoint* Lpositions, size_t count) {
-    UNIMPLEMENTED();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-void CGContextShowGlyphsWithAdvances(CGContextRef c, const CGGlyph* glyphs, const CGSize* advances, size_t count) {
     UNIMPLEMENTED();
 }
 

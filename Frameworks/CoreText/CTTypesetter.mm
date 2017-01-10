@@ -33,10 +33,6 @@ const CFStringRef kCTTypesetterOptionForcedEmbeddingLevel = static_cast<CFString
     _attributedString = str;
     _string = [str string];
 
-    //  Measure the string
-    _characters.resize(str.length);
-    [_string getCharacters:_characters.data()];
-
     return self;
 }
 
@@ -82,7 +78,14 @@ CTLineRef CTTypesetterCreateLineWithOffset(CTTypesetterRef ts, CFRange range, do
                                       CGRectMake(offset, 0, FLT_MAX, FLT_MAX));
 
     RETURN_NULL_IF(!frame);
-    THROW_NS_IF_FALSE(E_UNEXPECTED, [frame->_lines count] == 1);
+    if ([frame->_lines count] != 1) {
+        TraceError(TAG,
+                   L"CTTypesetterCreateLineWithOffset - range {%f, %f} did not fit on a single line, instead used %u.",
+                   range.location,
+                   range.length,
+                   [frame->_lines count]);
+        return nullptr;
+    }
 
     return static_cast<CTLineRef>([[frame->_lines firstObject] retain]);
 }
@@ -102,7 +105,7 @@ CFIndex CTTypesetterSuggestLineBreak(CTTypesetterRef typesetter, CFIndex startIn
 CFIndex CTTypesetterSuggestLineBreakWithOffset(CTTypesetterRef ts, CFIndex index, double width, double offset) {
     _CTTypesetter* typesetter = static_cast<_CTTypesetter*>(ts);
     _CTFrame* frame = _DWriteGetFrame(static_cast<CFAttributedStringRef>(typesetter->_attributedString.get()),
-                                      CFRangeMake(index, typesetter->_characters.size() - index),
+                                      CFRangeMake(index, [typesetter->_string length] - index),
                                       CGRectMake(offset, 0, width, FLT_MAX));
     return ([frame->_lines count] > 0) ? static_cast<_CTLine*>([frame->_lines firstObject])->_strRange.length : 0;
 }

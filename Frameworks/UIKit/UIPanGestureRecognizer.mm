@@ -14,20 +14,26 @@
 //
 //******************************************************************************
 
-#import <vector>
 #import "Starboard.h"
+
+#import <UIKit/UIGestureRecognizerDelegate.h>
+#import <UIKit/UIGestureRecognizerSubclass.h>
+#import <UIKit/UIPanGestureRecognizer.h>
+#import <UIKit/UITouch.h>
+#import <UIKit/UIWindow.h>
+
 #import <Foundation/NSMutableDictionary.h>
 #import <Foundation/NSValue.h>
 #import <Foundation/NSString.h>
-#import <UIKit/UIPanGestureRecognizer.h>
-#import <UIKit/UIGestureRecognizerSubclass.h>
-#import <UIKit/UITouch.h>
+
 #import "UIGestureRecognizerInternal.h"
 #import "LoggingNative.h"
 #import "UIScrollViewInternal.h"
 #import "UWP/WindowsUIInput.h"
 #import "UITouchInternal.h"
 #import "UIPanGestureRecognizerInternal.h"
+
+#import <vector>
 
 static const wchar_t* TAG = L"UIPanGestureRecognizer";
 
@@ -263,10 +269,15 @@ static void deleteTouch(UITouch* touch, std::vector<TouchInfo>& touches) {
 
     if (_state == UIGestureRecognizerStatePossible && _priv->touches.size() >= _minimumNumberOfTouches &&
         _priv->touches.size() <= _maximumNumberOfTouches) {
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-method-access"
+// TODO: File bug
         if ([_delegate respondsToSelector:@selector(_gestureRecognizerTouchesReached:)]) {
             [_delegate _gestureRecognizerTouchesReached:self];
         }
     }
+#pragma clang diagnostic pop
 
     numTouchesChanged(self);
 }

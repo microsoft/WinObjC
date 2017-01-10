@@ -15,6 +15,7 @@
 //******************************************************************************
 #pragma once
 
+#import <QuartzCore/CAAnimation.h>
 #import "CACompositor.h"
 
 struct CAMediaTimingProperties {

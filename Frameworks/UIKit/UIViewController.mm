@@ -17,8 +17,6 @@
 #import <StubReturn.h>
 #import "Starboard.h"
 
-#import <unordered_map>
-
 #import "StringHelpers.h"
 #import "XamlControls.h"
 #import "XamlUtilities.h"
@@ -31,18 +29,32 @@
 #import "Foundation/NSString.h"
 #import "Foundation/NSValue.h"
 
-#import "UIKit/UIApplication.h"
-#import "UIKit/UIDevice.h"
-#import "UIKit/UINib.h"
-#import "UIKit/UIScreen.h"
-#import "UIKit/UIPopoverPresentationController.h"
-#import "UIKit/UIView.h"
-#import "UIKit/UIViewController.h"
+#import <UIKit/NSValue+UIKitAdditions.h>
+#import <UIKit/UIApplication.h>
+#import <UIKit/UIBarButtonItem.h>
+#import <UIKit/UIDevice.h>
+#import <UIKit/UINavigationController.h>
+#import <UIKit/UINavigationItem.h>
+#import <UIKit/UINib.h>
+#import <UIKit/UIScreen.h>
+#import <UIKit/UIPopoverPresentationController.h>
+#import <UIKit/UIStoryboardSegue.h>
+#import <UIKit/UIStoryboardSegueTemplate.h>
+#import <UIKit/UIStoryboardPushSegueTemplate.h>
+#import <UIKit/UITabBarController.h>
+#import <UIKit/UIView.h>
+#import <UIKit/UIViewController.h>
 
 #import "AutoLayout.h"
 #import "StarboardXaml/DisplayProperties.h"
-#import "CoreGraphics/CGContext.h"
-#import "CoreGraphics/CGAffineTransform.h"
+
+#import <CoreGraphics/CGContext.h>
+#import <CoreGraphics/CGAffineTransform.h>
+
+#import <QuartzCore/CAAnimation.h>
+#import <QuartzCore/CABasicAnimation.h>
+#import <QuartzCore/CALayer.h>
+#import <QuartzCore/CoreAnimationFunctions.h>
 
 #import "UIApplicationInternal.h"
 #import "UIEmptyView.h"
@@ -57,6 +69,7 @@
 #import "UWP/WindowsFoundation.h"
 
 #import <ErrorHandling.h>
+#import <unordered_map>
 
 extern BOOL g_presentingAnimated;
 
@@ -619,7 +632,7 @@ NSMutableDictionary* _pageMappings;
 }
 
 - (void)_setRotation:(UIInterfaceOrientation)orientation animated:(BOOL)animated {
-    if (([priv->view superview] == nil || [priv->view window] != [priv->view superview]) && !priv->_isRootView) {
+    if (([priv->view superview] == nil || (UIView*)[priv->view window] != [priv->view superview]) && !priv->_isRootView) {
         return;
     }
 
@@ -655,6 +668,9 @@ NSMutableDictionary* _pageMappings;
  @Status Caveat
  @Notes May not be fully implemented
 */
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-designated-initializers"
+// TODO: File bug
 - (instancetype)initWithCoder:(NSCoder*)coder {
     UIView* view = [coder decodeObjectForKey:@"UIView"];
     [self setView:view];
@@ -695,6 +711,7 @@ NSMutableDictionary* _pageMappings;
 
     return self;
 }
+#pragma clang diagnostic pop
 
 /**
  @Status Interoperable
