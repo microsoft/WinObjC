@@ -551,11 +551,13 @@ TEST(NSCalendar, ExactMatch) {
                                    usingBlock:^(NSDate* date, BOOL exactMatch, BOOL* stop) {
                                        NSInteger month = [calendar component:NSCalendarUnitMonth fromDate:date];
 
+                                       iterationsToTest++;
                                        if (month != 2) {
                                            ASSERT_TRUE(exactMatch);
-                                           iterationsToTest++;
+                                       } else {
+                                           ASSERT_TRUE(!exactMatch);
                                        }
-                                       if (iterationsToTest > 20) {
+                                       if (iterationsToTest > 24) {
                                            *stop = YES;
                                        }
                                    }];

@@ -559,9 +559,8 @@ static NSDate* _validDateNormalUnit(NSCalendar* cal,
     }
 
     NSDateComponents* directMatchingComps = [cal components:s_NSDateComponentsAllFlagOptions fromDate:workingDate];
-    for (int i = 0; i < _countof(s_NSDateComponentsIndividualFlags); i++) {
+    for (int i = 0; i < std::extent<decltype(s_NSDateComponentsIndividualFlags)>::value; i++) {
         NSInteger expectedValue = [matchComps valueForComponent:s_NSDateComponentsIndividualFlags[i]];
-        NSInteger workingValue = [workingComps valueForComponent:s_NSDateComponentsIndividualFlags[i]];
         if (expectedValue != NSUndefinedDateComponent) {
             [directMatchingComps setValue:expectedValue forComponent:s_NSDateComponentsIndividualFlags[i]];
         }
