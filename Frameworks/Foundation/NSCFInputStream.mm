@@ -51,6 +51,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFInputStream)
 @implementation NSCFInputStream
 
 BRIDGED_CLASS_REQUIRED_IMPLS(CFReadStreamRef, CFReadStreamGetTypeID, NSURL, NSCFInputStream)
+BRIDGED_CLASS_FOR_CODER(NSInputStream)
 
 /**
  @Status Interoperable

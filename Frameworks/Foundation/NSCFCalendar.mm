@@ -171,6 +171,7 @@ static NSDateComponents* _descriptionToComponents(NSCalendar* self, NSCalendarUn
 @implementation NSCFCalendar
 
 BRIDGED_CLASS_REQUIRED_IMPLS(CFCalendarRef, CFCalendarGetTypeID, NSCalendar, NSCFCalendar)
+BRIDGED_CLASS_FOR_CODER(NSCalendar)
 
 + (void)initialize {
     _initAllFlagsComponents();

@@ -329,3 +329,17 @@ TEST(NSIndexSet, NSCodingNonemptySet) {
     NSMutableIndexSet* decodedSet = [[NSMutableIndexSet alloc] initWithCoder:decoder];
     EXPECT_OBJCEQ(set, decodedSet);
 }
+
+TEST(NSIndexSet, MutableInstanceArchivesAsMutable) {
+    NSMutableIndexSet* input = [NSMutableIndexSet indexSetWithIndexesInRange:{1, 5}];
+
+    NSData* data = [NSKeyedArchiver archivedDataWithRootObject:input];
+    ASSERT_OBJCNE(nil, data);
+
+    NSMutableIndexSet* output = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    ASSERT_OBJCNE(nil, output);
+
+    EXPECT_NO_THROW([output addIndex:10]);
+
+    EXPECT_OBJCNE(input, output);
+}
