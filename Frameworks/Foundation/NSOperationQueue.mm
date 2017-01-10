@@ -38,6 +38,11 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 static const wchar_t* TAG = L"NSOperationQueue";
 
+// NOTE: NSOperationQueuePriv is totally not needed. This class is just acting as the logic encapsulation of state and data ownership for
+// the
+// operation queue class. The ObjectiveC class itself is perfectly capable of storing and using all this information. This is simply a
+// vestige
+// of the previous implementation.
 class NSOperationQueuePriv {
 public:
     NSOperationQueuePriv(NSOperationQueue* parent) : _thread(nullptr), _maxConcurrentOperationCount(1), _isSuspended(NO) {
@@ -74,7 +79,7 @@ public:
         }
 
         // Now that a candidate has been determined, drop the lock so that it can potientially run.
-        // NOTE: a [operation start] call will potienitally run the operation on that this thread.
+        // NOTE: a [operation start] call will potienitally run the operation on this thread.
 
         if (candidateOperation != nil) {
             // Valid candidate to start. Make sure its actually ready for liftoff.
@@ -142,6 +147,11 @@ public:
         if (!toReturn) {
             // No work left to do. Clear out the thread here. This signals that a new work thread is needed to be created and
             // current one can end its execution.
+            //
+            // NOTE: its awfully weird to have a "getter" have a side effect like nil'ing out _thread. This is needed because the
+            // decision to stop the work thread is made based on not having more work and this means that the thread needs restarted
+            // on the next go around. A real fix is to not manage the thread manually and use a threadpool or other mechanism to run the
+            // operations.
             _thread = nil;
         }
 
@@ -153,7 +163,7 @@ public:
             std::lock_guard<std::mutex> lock(_lock);
 
             StrongId<NSOperation> strongOperation = operation;
-            _operationsHoldingArea[priority].emplace_back(strongOperation);
+            _operationsHoldingArea[priority].emplace_back(std::move(strongOperation));
             if (_thread == nil || _thread.get().finished) {
                 _thread.attach([[NSThread alloc] initWithTarget:queue selector:selector object:nil]);
                 [_thread start];
@@ -285,7 +295,7 @@ private:
         // NOTE: This may be insufficient / racy. This only checks the holding area and not "on deck" items.
         // Its possible that the check is made right after a transfer to on deck which would incorrectly report
         // all done when some items may go back into holding and certainly all of them aren't completed. This particularly
-        // would affect WaitUntilAllOperationsAreFinished and
+        // would affect WaitUntilAllOperationsAreFinished.
         for (int i = 0; i < NSOperationQueuePriority_Count; i++) {
             if (_operationsHoldingArea[i].empty()) {
                 return TRUE;
@@ -315,10 +325,6 @@ private:
     // special care is needed to ensure that no re-entrant functions are used while under the lock.
     std::mutex _lock;
 };
-
-extern pthread_key_t g_currentDispatchQueue;
-
-static id _mainQueue;
 
 @interface NSOperationQueue () {
     std::unique_ptr<NSOperationQueuePriv> _priv;
