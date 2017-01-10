@@ -55,7 +55,7 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
 }
 - (instancetype)initWithTask:(NSURLSessionTask*)task taskCompletionHandler:(NSURLSessionTaskCompletionHandler)taskCompletionHandler;
 - (instancetype)initWithTask:(NSURLSessionTask*)task
-   downloadCompletionHandler:(NSURLSessionDownloadTaskCompletionHandler)downloadCompletionHandler;
+    downloadCompletionHandler:(NSURLSessionDownloadTaskCompletionHandler)downloadCompletionHandler;
 - (void)dispatchTaskCompletionHandler;
 - (void)dispatchDownloadCompletionHandlerForURL:(NSURL*)url;
 - (void)accumulateData:(NSData*)data;
@@ -71,7 +71,7 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
 }
 
 - (instancetype)initWithTask:(NSURLSessionTask*)task
-   downloadCompletionHandler:(NSURLSessionDownloadTaskCompletionHandler)downloadCompletionHandler {
+    downloadCompletionHandler:(NSURLSessionDownloadTaskCompletionHandler)downloadCompletionHandler {
     if (self = [self init]) {
         _task = [task retain];
         _downloadCompletionHandler = [downloadCompletionHandler copy];
@@ -443,11 +443,10 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
 */
 - (void)finishTasksAndInvalidate {
     [self _beginInvalidation];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
-                   ^{
-                       [self _waitForTasks];
-                       [self _completeInvalidation];
-                   });
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self _waitForTasks];
+        [self _completeInvalidation];
+    });
 }
 
 - (void)_waitForTasks {
@@ -500,17 +499,16 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
 @Notes Does not flush cache, cookies, or credentials yet. Does not switch to new socket.
 */
 - (void)flushWithCompletionHandler:(void (^)(void))completionHandler {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
-                   ^{
-                       std::lock_guard<std::mutex> lock(_mutex);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        std::lock_guard<std::mutex> lock(_mutex);
 
-                       // These three do not have corresponding APIs yet.
-                       //[_configuration.URLCache _flush];
-                       //[_configuration.HTTPCookieStorage _flush];
-                       //[_configuration.URLCredentialStorage _flush];
+        // These three do not have corresponding APIs yet.
+        //[_configuration.URLCache _flush];
+        //[_configuration.HTTPCookieStorage _flush];
+        //[_configuration.URLCredentialStorage _flush];
 
-                       [_delegateQueue addOperationWithBlock:completionHandler];
-                   });
+        [_delegateQueue addOperationWithBlock:completionHandler];
+    });
 }
 
 /**
@@ -518,45 +516,43 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
 @Notes Does not erase cookies or credentials yet. Does not switch to new socket.
 */
 - (void)resetWithCompletionHandler:(void (^)(void))completionHandler {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
-                   ^{
-                       std::lock_guard<std::mutex> lock(_mutex);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        std::lock_guard<std::mutex> lock(_mutex);
 
-                       [_configuration.URLCache removeAllCachedResponses];
-                       // These two do not have corresponding APIs yet.
-                       //[_configuration.HTTPCookieStorage _removeAllCookies];
-                       //[_configuration.URLCredentialStorage _removeAllCredentials];
+        [_configuration.URLCache removeAllCachedResponses];
+        // These two do not have corresponding APIs yet.
+        //[_configuration.HTTPCookieStorage _removeAllCookies];
+        //[_configuration.URLCredentialStorage _removeAllCredentials];
 
-                       [_delegateQueue addOperationWithBlock:completionHandler];
-                   });
+        [_delegateQueue addOperationWithBlock:completionHandler];
+    });
 }
 
 /**
 @Status Interoperable
 */
 - (void)getTasksWithCompletionHandler:(void (^)(NSArray* dataTasks, NSArray* uploadTasks, NSArray* downloadTasks))completionHandler {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
-                   ^{
-                       std::lock_guard<std::mutex> lock(_mutex);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        std::lock_guard<std::mutex> lock(_mutex);
 
-                       NSMutableArray* dataTasks = [NSMutableArray array];
-                       NSMutableArray* uploadTasks = [NSMutableArray array];
-                       NSMutableArray* downloadTasks = [NSMutableArray array];
+        NSMutableArray* dataTasks = [NSMutableArray array];
+        NSMutableArray* uploadTasks = [NSMutableArray array];
+        NSMutableArray* downloadTasks = [NSMutableArray array];
 
-                       for (NSURLSessionTask* task in _allTasks) {
-                           if ([task isKindOfClass:[NSURLSessionDataTask class]]) {
-                               [dataTasks addObject:task];
-                           } else if ([task isKindOfClass:[NSURLSessionDownloadTask class]]) {
-                               [downloadTasks addObject:task];
-                           } else if ([task isKindOfClass:[NSURLSessionUploadTask class]]) {
-                               [uploadTasks addObject:task];
-                           }
-                       }
+        for (NSURLSessionTask* task in _allTasks) {
+            if ([task isKindOfClass:[NSURLSessionDataTask class]]) {
+                [dataTasks addObject:task];
+            } else if ([task isKindOfClass:[NSURLSessionDownloadTask class]]) {
+                [downloadTasks addObject:task];
+            } else if ([task isKindOfClass:[NSURLSessionUploadTask class]]) {
+                [uploadTasks addObject:task];
+            }
+        }
 
-                       [_delegateQueue addOperationWithBlock:^{
-                           completionHandler(dataTasks, uploadTasks, downloadTasks);
-                       }];
-                   });
+        [_delegateQueue addOperationWithBlock:^{
+            completionHandler(dataTasks, uploadTasks, downloadTasks);
+        }];
+    });
 }
 
 // These delegate methods will be used by all tasks and internally to the session.
@@ -761,15 +757,21 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
                              totalBytesExpectedToWrite);
 }
 
+- (void)_destroyTemporaryFile:(NSURL*)url {
+    [[NSFileManager defaultManager] removeItemAtURL:url error:nullptr];
+}
+
 - (void)downloadTask:(NSURLSessionDownloadTask*)task didFinishDownloadingToURL:(NSURL*)url {
     _NSURLSessionInflightTaskInfo* inflightTaskData = [self _inflightDataForTask:task];
     if (inflightTaskData) {
         [inflightTaskData dispatchDownloadCompletionHandlerForURL:url];
+        [self _destroyTemporaryFile:url];
     } else {
         // NOT OPTIONAL (protocol specifies @required)
         auto properDelegate(reinterpret_cast<id<NSURLSessionDownloadDelegate>>(_delegate));
         [_delegateQueue addOperationWithBlock:^{
             [properDelegate URLSession:self downloadTask:task didFinishDownloadingToURL:url];
+            [self _destroyTemporaryFile:url];
         }];
     }
 }
