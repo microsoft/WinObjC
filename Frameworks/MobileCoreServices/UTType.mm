@@ -14,115 +14,141 @@
 //
 //******************************************************************************
 
-#import <MobileCoreServices/MobileCoreServices.h>
-#import <UTTypeInternal.h>
-#import <StubReturn.h>
+#include <MobileCoreServices/MobileCoreServices.h>
+#include <UTTypeInternal.h>
+#include <ErrorHandling.h>
+#include <StubReturn.h>
 
 // Type Declaration Dictionary Keys
-const CFStringRef kUTExportedTypeDeclarationsKey = static_cast<const CFStringRef>(@"UTExportedTypeDeclarations");
-const CFStringRef kUTImportedTypeDeclarationsKey = static_cast<const CFStringRef>(@"UTImportedTypeDeclarations");
-const CFStringRef kUTTypeIdentifierKey = static_cast<const CFStringRef>(@"UTTypeIdentifierKey");
-const CFStringRef kUTTypeTagSpecificationKey = static_cast<const CFStringRef>(@"UTTypeTagSpecificationKey");
-const CFStringRef kUTTypeConformsToKey = static_cast<const CFStringRef>(@"UTTypeConformsToKey");
-const CFStringRef kUTTypeDescriptionKey = static_cast<const CFStringRef>(@"UTTypeDescriptionKey");
-const CFStringRef kUTTypeIconFileKey = static_cast<const CFStringRef>(@"UTTypeIconFileKey");
-const CFStringRef kUTTypeReferenceURLKey = static_cast<const CFStringRef>(@"UTTypeReferenceURLKey");
-const CFStringRef kUTTypeVersionKey = static_cast<const CFStringRef>(@"UTTypeVersionKey");
+const CFStringRef kUTExportedTypeDeclarationsKey = CFSTR("UTExportedTypeDeclarations");
+const CFStringRef kUTImportedTypeDeclarationsKey = CFSTR("UTImportedTypeDeclarations");
+const CFStringRef kUTTypeIdentifierKey = CFSTR("UTTypeIdentifierKey");
+const CFStringRef kUTTypeTagSpecificationKey = CFSTR("UTTypeTagSpecificationKey");
+const CFStringRef kUTTypeConformsToKey = CFSTR("UTTypeConformsToKey");
+const CFStringRef kUTTypeDescriptionKey = CFSTR("UTTypeDescriptionKey");
+const CFStringRef kUTTypeIconFileKey = CFSTR("UTTypeIconFileKey");
+const CFStringRef kUTTypeReferenceURLKey = CFSTR("UTTypeReferenceURLKey");
+const CFStringRef kUTTypeVersionKey = CFSTR("UTTypeVersionKey");
 
 // Type Tag Classes
-const CFStringRef kUTTagClassFilenameExtension = static_cast<const CFStringRef>(@"public.filename-extension");
-const CFStringRef kUTTagClassMIMEType = static_cast<const CFStringRef>(@"public.mime-type");
+const CFStringRef kUTTagClassFilenameExtension = CFSTR("public.filename-extension");
+const CFStringRef kUTTagClassMIMEType = CFSTR("public.mime-type");
 
 // UTI Abstract Types
-const CFStringRef kUTTypeItem = static_cast<const CFStringRef>(@"public.item");
-const CFStringRef kUTTypeContent = static_cast<const CFStringRef>(@"public.content");
-const CFStringRef kUTTypeCompositeContent = static_cast<const CFStringRef>(@"public.composite-content");
-const CFStringRef kUTTypeApplication = static_cast<const CFStringRef>(@"com.apple.application");
-const CFStringRef kUTTypeMessage = static_cast<const CFStringRef>(@"public.message");
-const CFStringRef kUTTypeContact = static_cast<const CFStringRef>(@"public.contact");
-const CFStringRef kUTTypeArchive = static_cast<const CFStringRef>(@"public.archive");
-const CFStringRef kUTTypeDiskImage = static_cast<const CFStringRef>(@"public.disk-image");
+const CFStringRef kUTTypeItem = CFSTR("public.item");
+const CFStringRef kUTTypeContent = CFSTR("public.content");
+const CFStringRef kUTTypeCompositeContent = CFSTR("public.composite-content");
+const CFStringRef kUTTypeApplication = CFSTR("com.apple.application");
+const CFStringRef kUTTypeMessage = CFSTR("public.message");
+const CFStringRef kUTTypeContact = CFSTR("public.contact");
+const CFStringRef kUTTypeArchive = CFSTR("public.archive");
+const CFStringRef kUTTypeDiskImage = CFSTR("public.disk-image");
 
 // UTI Concrete Types
-const CFStringRef kUTTypeData = static_cast<const CFStringRef>(@"public.data");
-const CFStringRef kUTTypeDirectory = static_cast<const CFStringRef>(@"public.directory");
-const CFStringRef kUTTypeResolvable = static_cast<const CFStringRef>(@"com.apple.resolvable");
-const CFStringRef kUTTypeSymLink = static_cast<const CFStringRef>(@"public.symlink");
-const CFStringRef kUTTypeMountPoint = static_cast<const CFStringRef>(@"com.apple.mount-point");
-const CFStringRef kUTTypeAliasFile = static_cast<const CFStringRef>(@"com.apple.alias-file");
-const CFStringRef kUTTypeAliasRecord = static_cast<const CFStringRef>(@"com.apple.alias-record");
-const CFStringRef kUTTypeURL = static_cast<const CFStringRef>(@"public.url");
-const CFStringRef kUTTypeFileURL = static_cast<const CFStringRef>(@"public.file-url");
+const CFStringRef kUTTypeData = CFSTR("public.data");
+const CFStringRef kUTTypeDirectory = CFSTR("public.directory");
+const CFStringRef kUTTypeResolvable = CFSTR("com.apple.resolvable");
+const CFStringRef kUTTypeSymLink = CFSTR("public.symlink");
+const CFStringRef kUTTypeMountPoint = CFSTR("com.apple.mount-point");
+const CFStringRef kUTTypeAliasFile = CFSTR("com.apple.alias-file");
+const CFStringRef kUTTypeAliasRecord = CFSTR("com.apple.alias-record");
+const CFStringRef kUTTypeURL = CFSTR("public.url");
+const CFStringRef kUTTypeFileURL = CFSTR("public.file-url");
 
 // UTI Text Types
-const CFStringRef kUTTypeText = static_cast<const CFStringRef>(@"public.text");
-const CFStringRef kUTTypePlainText = static_cast<const CFStringRef>(@"public.plain-text");
-const CFStringRef kUTTypeUTF8PlainText = static_cast<const CFStringRef>(@"public.utf8-plain-text");
-const CFStringRef kUTTypeUTF16ExternalPlainText = static_cast<const CFStringRef>(@"public.utf16-external-plain-text");
-const CFStringRef kUTTypeUTF16PlainText = static_cast<const CFStringRef>(@"public.utf16-plain-text");
-const CFStringRef kUTTypeRTF = static_cast<const CFStringRef>(@"public.rtf");
-const CFStringRef kUTTypeHTML = static_cast<const CFStringRef>(@"public.html");
-const CFStringRef kUTTypeXML = static_cast<const CFStringRef>(@"public.xml");
-const CFStringRef kUTTypeSourceCode = static_cast<const CFStringRef>(@"public.source-code");
-const CFStringRef kUTTypeCSource = static_cast<const CFStringRef>(@"public.c-source");
-const CFStringRef kUTTypeObjectiveCSource = static_cast<const CFStringRef>(@"public.objective-c-source");
-const CFStringRef kUTTypeCPlusPlusSource = static_cast<const CFStringRef>(@"public.c-plus-plus-source");
-const CFStringRef kUTTypeObjectiveCPlusPlusSource = static_cast<const CFStringRef>(@"public.objective-c-plus-plus-source");
-const CFStringRef kUTTypeCHeader = static_cast<const CFStringRef>(@"public.c-header");
-const CFStringRef kUTTypeCPlusPlusHeader = static_cast<const CFStringRef>(@"public.c-plus-plus-header");
-const CFStringRef kUTTypeJavaSource = static_cast<const CFStringRef>(@"public.java-source");
+const CFStringRef kUTTypeText = CFSTR("public.text");
+const CFStringRef kUTTypePlainText = CFSTR("public.plain-text");
+const CFStringRef kUTTypeUTF8PlainText = CFSTR("public.utf8-plain-text");
+const CFStringRef kUTTypeUTF16ExternalPlainText = CFSTR("public.utf16-external-plain-text");
+const CFStringRef kUTTypeUTF16PlainText = CFSTR("public.utf16-plain-text");
+const CFStringRef kUTTypeRTF = CFSTR("public.rtf");
+const CFStringRef kUTTypeHTML = CFSTR("public.html");
+const CFStringRef kUTTypeXML = CFSTR("public.xml");
+const CFStringRef kUTTypeSourceCode = CFSTR("public.source-code");
+const CFStringRef kUTTypeCSource = CFSTR("public.c-source");
+const CFStringRef kUTTypeObjectiveCSource = CFSTR("public.objective-c-source");
+const CFStringRef kUTTypeCPlusPlusSource = CFSTR("public.c-plus-plus-source");
+const CFStringRef kUTTypeObjectiveCPlusPlusSource = CFSTR("public.objective-c-plus-plus-source");
+const CFStringRef kUTTypeCHeader = CFSTR("public.c-header");
+const CFStringRef kUTTypeCPlusPlusHeader = CFSTR("public.c-plus-plus-header");
+const CFStringRef kUTTypeJavaSource = CFSTR("public.java-source");
 
 // UTI Composite Content Types
-const CFStringRef kUTTypePDF = static_cast<const CFStringRef>(@"com.adobe.pdf");
-const CFStringRef kUTTypeRTFD = static_cast<const CFStringRef>(@"com.apple.rtfd");
-const CFStringRef kUTTypeFlatRTFD = static_cast<const CFStringRef>(@"com.apple.flat-rtfd");
-const CFStringRef kUTTypeTXNTextAndMultimediaData = static_cast<const CFStringRef>(@"com.apple.txn.text-multimedia-data");
-const CFStringRef kUTTypeWebArchive = static_cast<const CFStringRef>(@"com.apple.webarchive");
+const CFStringRef kUTTypePDF = CFSTR("com.adobe.pdf");
+const CFStringRef kUTTypeRTFD = CFSTR("com.apple.rtfd");
+const CFStringRef kUTTypeFlatRTFD = CFSTR("com.apple.flat-rtfd");
+const CFStringRef kUTTypeTXNTextAndMultimediaData = CFSTR("com.apple.txn.text-multimedia-data");
+const CFStringRef kUTTypeWebArchive = CFSTR("com.apple.webarchive");
 
 // UTI Image Content Types
-const CFStringRef kUTTypeImage = static_cast<const CFStringRef>(@"public.image");
-const CFStringRef kUTTypeJPEG = static_cast<const CFStringRef>(@"public.jpeg");
-const CFStringRef kUTTypeJPEG2000 = static_cast<const CFStringRef>(@"public.jpeg-2000");
-const CFStringRef kUTTypeTIFF = static_cast<const CFStringRef>(@"public.tiff");
-const CFStringRef kUTTypePICT = static_cast<const CFStringRef>(@"com.apple.pict");
-const CFStringRef kUTTypeGIF = static_cast<const CFStringRef>(@"com.compuserve.gif");
-const CFStringRef kUTTypePNG = static_cast<const CFStringRef>(@"public.png");
-const CFStringRef kUTTypeQuickTimeImage = static_cast<const CFStringRef>(@"com.apple.quicktime-image");
-const CFStringRef kUTTypeAppleICNS = static_cast<const CFStringRef>(@"com.apple.icns");
-const CFStringRef kUTTypeBMP = static_cast<const CFStringRef>(@"com.microsoft.bmp");
-const CFStringRef kUTTypeICO = static_cast<const CFStringRef>(@"com.microsoft.ico");
+const CFStringRef kUTTypeImage = CFSTR("public.image");
+const CFStringRef kUTTypeJPEG = CFSTR("public.jpeg");
+const CFStringRef kUTTypeJPEG2000 = CFSTR("public.jpeg-2000");
+const CFStringRef kUTTypeTIFF = CFSTR("public.tiff");
+const CFStringRef kUTTypePICT = CFSTR("com.apple.pict");
+const CFStringRef kUTTypeGIF = CFSTR("com.compuserve.gif");
+const CFStringRef kUTTypePNG = CFSTR("public.png");
+const CFStringRef kUTTypeQuickTimeImage = CFSTR("com.apple.quicktime-image");
+const CFStringRef kUTTypeAppleICNS = CFSTR("com.apple.icns");
+const CFStringRef kUTTypeBMP = CFSTR("com.microsoft.bmp");
+const CFStringRef kUTTypeICO = CFSTR("com.microsoft.ico");
 
 // UTI Audio Visual Content Types
-const CFStringRef kUTTypeAudiovisualContent = static_cast<const CFStringRef>(@"public.audiovisual-content");
-const CFStringRef kUTTypeMovie = static_cast<const CFStringRef>(@"public.movie");
-const CFStringRef kUTTypeVideo = static_cast<const CFStringRef>(@"public.video");
-const CFStringRef kUTTypeAudio = static_cast<const CFStringRef>(@"public.audio");
-const CFStringRef kUTTypeQuickTimeMovie = static_cast<const CFStringRef>(@"com.apple.quicktime-movie");
-const CFStringRef kUTTypeMPEG = static_cast<const CFStringRef>(@"public.mpeg");
-const CFStringRef kUTTypeMPEG4 = static_cast<const CFStringRef>(@"public.mpeg-4");
-const CFStringRef kUTTypeMP3 = static_cast<const CFStringRef>(@"public.mp");
-const CFStringRef kUTTypeMPEG4Audio = static_cast<const CFStringRef>(@"public.mpeg-4-audio");
-const CFStringRef kUTTypeAppleProtectedMPEG4Audio = static_cast<const CFStringRef>(@"com.apple.protected-mpeg-4-audio");
+const CFStringRef kUTTypeAudiovisualContent = CFSTR("public.audiovisual-content");
+const CFStringRef kUTTypeMovie = CFSTR("public.movie");
+const CFStringRef kUTTypeVideo = CFSTR("public.video");
+const CFStringRef kUTTypeAudio = CFSTR("public.audio");
+const CFStringRef kUTTypeQuickTimeMovie = CFSTR("com.apple.quicktime-movie");
+const CFStringRef kUTTypeMPEG = CFSTR("public.mpeg");
+const CFStringRef kUTTypeMPEG4 = CFSTR("public.mpeg-4");
+const CFStringRef kUTTypeMP3 = CFSTR("public.mp");
+const CFStringRef kUTTypeMPEG4Audio = CFSTR("public.mpeg-4-audio");
+const CFStringRef kUTTypeAppleProtectedMPEG4Audio = CFSTR("com.apple.protected-mpeg-4-audio");
 
 // UTI Directory Types
-const CFStringRef kUTTypeFolder = static_cast<const CFStringRef>(@"public.folder");
-const CFStringRef kUTTypeVolume = static_cast<const CFStringRef>(@"public.volume");
-const CFStringRef kUTTypePackage = static_cast<const CFStringRef>(@"com.apple.package");
-const CFStringRef kUTTypeBundle = static_cast<const CFStringRef>(@"com.apple.bundle");
-const CFStringRef kUTTypeFramework = static_cast<const CFStringRef>(@"com.apple.framework");
+const CFStringRef kUTTypeFolder = CFSTR("public.folder");
+const CFStringRef kUTTypeVolume = CFSTR("public.volume");
+const CFStringRef kUTTypePackage = CFSTR("com.apple.package");
+const CFStringRef kUTTypeBundle = CFSTR("com.apple.bundle");
+const CFStringRef kUTTypeFramework = CFSTR("com.apple.framework");
 
 // UTI Miscellaneous Types
-const CFStringRef kUTTypeApplicationBundle = static_cast<const CFStringRef>(@"com.apple.application-bundle");
-const CFStringRef kUTTypeApplicationFile = static_cast<const CFStringRef>(@"com.apple.application-file");
-const CFStringRef kUTTypeVCard = static_cast<const CFStringRef>(@"public.vcard");
-const CFStringRef kUTTypeInkText = static_cast<const CFStringRef>(@"com.apple.ink.inktext");
+const CFStringRef kUTTypeApplicationBundle = CFSTR("com.apple.application-bundle");
+const CFStringRef kUTTypeApplicationFile = CFSTR("com.apple.application-file");
+const CFStringRef kUTTypeVCard = CFSTR("public.vcard");
+const CFStringRef kUTTypeInkText = CFSTR("com.apple.ink.inktext");
 
 /**
  @Status Caveat
  @Notes Only a subset of System UTIs are supported and inConformingToUTI is option not supported.
 */
 CFStringRef UTTypeCreatePreferredIdentifierForTag(CFStringRef inTagClass, CFStringRef inTag, CFStringRef inConformingToUTI) {
-    return _UTTypeCreatePreferredIdentifierForTag(inTagClass, inTag, inConformingToUTI);
+    RETURN_NULL_IF(!inTagClass);
+    RETURN_NULL_IF(!inTag);
+
+    // Initialize System UTI.
+    _UTInitializeSystemUTIMaps();
+
+    if (inConformingToUTI != NULL) {
+        UNIMPLEMENTED_WITH_MSG("inConformingToUTI (%s) is not currently supported for UTTypeCreatePreferredIdentifierForTag",
+                               CFStringGetCStringPtr(inConformingToUTI, kCFStringEncodingUTF8));
+    }
+
+    CFComparisonResult result;
+
+    result = CFStringCompare(inTagClass, kUTTagClassFilenameExtension, 0);
+    if (result == kCFCompareEqualTo) {
+        CFArrayRef fileNameExtensions = _UTCreateUTIsForFileNameExtension(inTag);
+        return fileNameExtensions ? static_cast<CFStringRef>(CFArrayGetValueAtIndex(fileNameExtensions, 0)) : NULL;
+    }
+
+    result = CFStringCompare(inTagClass, kUTTagClassMIMEType, 0);
+    if (result == kCFCompareEqualTo) {
+        CFArrayRef mimeTypes = _UTCreateUTIsForMIMEType(inTag);
+        return static_cast<CFStringRef>(CFArrayGetValueAtIndex(mimeTypes, 0));
+    }
+
+    return NULL;
 }
 
 /**
@@ -130,7 +156,30 @@ CFStringRef UTTypeCreatePreferredIdentifierForTag(CFStringRef inTagClass, CFStri
  @Notes Only a subset of System UTIs are supported and inConformingToUTI is option not supported.
 */
 CFArrayRef UTTypeCreateAllIdentifiersForTag(CFStringRef inTagClass, CFStringRef inTag, CFStringRef inConformingToUTI) {
-    return _UTTypeCreateAllIdentifiersForTag(inTagClass, inTag, inConformingToUTI);
+    RETURN_NULL_IF(!inTagClass);
+    RETURN_NULL_IF(!inTag);
+
+    // Initialize MobileCoreServices System UTI.
+    _UTInitializeSystemUTIMaps();
+
+    if (inConformingToUTI != NULL) {
+        UNIMPLEMENTED_WITH_MSG("inConformingToUTI (%s) is not currently supported for UTTypeCreatePreferredIdentifierForTag",
+                               CFStringGetCStringPtr(inConformingToUTI, kCFStringEncodingUTF8));
+    }
+
+    CFComparisonResult result;
+
+    result = CFStringCompare(inTagClass, kUTTagClassFilenameExtension, 0);
+    if (result == kCFCompareEqualTo) {
+        return _UTCreateUTIsForFileNameExtension(inTag);
+    }
+
+    result = CFStringCompare(inTagClass, kUTTagClassMIMEType, 0);
+    if (result == kCFCompareEqualTo) {
+        return _UTCreateUTIsForMIMEType(inTag);
+    }
+
+    return NULL;
 }
 
 /**
@@ -138,7 +187,25 @@ CFArrayRef UTTypeCreateAllIdentifiersForTag(CFStringRef inTagClass, CFStringRef 
  @Notes Only a subset of System UTIs are supported.
 */
 CFStringRef UTTypeCopyPreferredTagWithClass(CFStringRef inUTI, CFStringRef inTagClass) {
-    return _UTTypeCopyPreferredTagWithClass(inUTI, inTagClass);
+    RETURN_NULL_IF(!inUTI);
+    RETURN_NULL_IF(!inTagClass);
+
+    // Initialize MobileCoreServices System UTI.
+    _UTInitializeSystemUTIMaps();
+
+    CFComparisonResult result;
+
+    result = CFStringCompare(inTagClass, kUTTagClassMIMEType, 0);
+    if (result == kCFCompareEqualTo) {
+        return _UTCopyMimeTypeForUTI(inUTI);
+    }
+
+    result = CFStringCompare(inTagClass, kUTTagClassFilenameExtension, 0);
+    if (result == kCFCompareEqualTo) {
+        return _UTCopyFileNameExtensionForUTI(inUTI);
+    }
+
+    return NULL;
 }
 
 /**
@@ -146,7 +213,11 @@ CFStringRef UTTypeCopyPreferredTagWithClass(CFStringRef inUTI, CFStringRef inTag
  @Notes UTI conformance logic is not supported.
 */
 Boolean UTTypeEqual(CFStringRef inUTI1, CFStringRef inUTI2) {
-    return _UTTypeEqual(inUTI1, inUTI2);
+    // Initialize MobileCoreServices System UTI.
+    _UTInitializeSystemUTIMaps();
+
+    CFComparisonResult result = CFStringCompare(inUTI1, inUTI2, 0);
+    return (result == kCFCompareEqualTo) ? true : false;
 }
 
 /**
@@ -154,7 +225,17 @@ Boolean UTTypeEqual(CFStringRef inUTI1, CFStringRef inUTI2) {
  @Notes UTI conformance logic is not supported.
 */
 Boolean UTTypeConformsTo(CFStringRef inUTI, CFStringRef inConformsToUTI) {
-    return _UTTypeConformsTo(inUTI, inConformsToUTI);
+    // Initialize MobileCoreServices System UTI.
+    _UTInitializeSystemUTIMaps();
+
+    if (UTTypeEqual(inUTI, inConformsToUTI)) {
+        return true;
+    } else {
+        UNIMPLEMENTED_WITH_MSG("UTI conformance check is not implemented! Checking %s conformance to %s.",
+                               CFStringGetCStringPtr(inUTI, kCFStringEncodingUTF8),
+                               CFStringGetCStringPtr(inConformsToUTI, kCFStringEncodingUTF8));
+        return false;
+    }
 }
 
 /**

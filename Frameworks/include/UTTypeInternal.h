@@ -15,14 +15,11 @@
 //******************************************************************************
 #pragma once
 
-#import <Foundation/FoundationExport.h>
-#import <CoreFoundation/CFString.h>
-#import <CoreFoundation/CFArray.h>
+#include <CoreFoundation/CFString.h>
+#include <CoreFoundation/CFArray.h>
 
-FOUNDATION_EXPORT CFStringRef _UTTypeCreatePreferredIdentifierForTag(CFStringRef inTagClass,
-                                                                     CFStringRef inTag,
-                                                                     CFStringRef inConformingToUTI);
-FOUNDATION_EXPORT CFArrayRef _UTTypeCreateAllIdentifiersForTag(CFStringRef inTagClass, CFStringRef inTag, CFStringRef inConformingToUTI);
-FOUNDATION_EXPORT CFStringRef _UTTypeCopyPreferredTagWithClass(CFStringRef inUTI, CFStringRef inTagClass);
-FOUNDATION_EXPORT Boolean _UTTypeEqual(CFStringRef inUTI1, CFStringRef inUTI2);
-FOUNDATION_EXPORT Boolean _UTTypeConformsTo(CFStringRef inUTI, CFStringRef inConformsToUTI);
+void _UTInitializeSystemUTIMaps();
+CFArrayRef _UTCreateUTIsForFileNameExtension(CFStringRef fileNameExtension);
+CFArrayRef _UTCreateUTIsForMIMEType(CFStringRef fileNameExtension);
+CFStringRef _UTCopyMimeTypeForUTI(CFStringRef UTI);
+CFStringRef _UTCopyFileNameExtensionForUTI(CFStringRef UTI);

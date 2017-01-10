@@ -17,12 +17,11 @@
 //
 //******************************************************************************
 
-#include <Starboard.h>
-#include <StubReturn.h>
-#include <Foundation/NSURLResponse.h>
+#import <Starboard.h>
+#import <StubReturn.h>
+#import <Starboard/SmartTypes.h>
 #import <MobileCoreServices/UTType.h>
 #import <NSURLResponseInternal.h>
-#import <UTTypeInternal.h>
 
 @interface NSURLResponse () {
     int _expectedContentLength;
@@ -97,18 +96,16 @@ NSString* _NSReplaceIllegalFileNameCharacters(NSString* fileName) {
 
         if (fileName && ![fileName isEqualToString:s_unknownFileName]) {
             woc::unique_cf<CFStringRef> identifier {
-                _UTTypeCreatePreferredIdentifierForTag(static_cast<CFStringRef>(@"public.mime-type"),
-                                                       static_cast<CFStringRef>(mimeType),
-                                                       nullptr)
+                UTTypeCreatePreferredIdentifierForTag(static_cast<CFStringRef>(@"public.mime-type"),
+                                                      static_cast<CFStringRef>(mimeType),
+                                                      nullptr)
             };
-            StrongId<NSString> extension {
-                static_cast<NSString*>(
-                    _UTTypeCopyPreferredTagWithClass(identifier.get(), static_cast<CFStringRef>(@"public.filename-extension")))
-            };
+            NSString* extension = [static_cast<NSString*>(
+                UTTypeCopyPreferredTagWithClass(identifier.get(), static_cast<CFStringRef>(@"public.filename-extension"))) autorelease];
 
             // If the filename already has the extension do not append
             _suggestedFilename.attach((extension && ![extension isEqualToString:[fileName pathExtension]]) ?
-                                          [[NSString alloc] initWithFormat:@"%@.%@", fileName, extension.get()] :
+                                          [[NSString alloc] initWithFormat:@"%@.%@", fileName, extension] :
                                           [fileName copy]);
         } else {
             _suggestedFilename.attach([s_unknownFileName copy]);

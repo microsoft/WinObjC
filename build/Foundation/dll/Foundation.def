@@ -875,10 +875,3 @@ LIBRARY Foundation
         ScheduleMainRunLoop
         ScheduleMainRunLoopAsync
         SetupMainRunLoopTimedMultipleWaiter
-
-        ;UTTypeHelpers (Internal)
-        _UTTypeCreatePreferredIdentifierForTag
-        _UTTypeCreateAllIdentifiersForTag
-        _UTTypeCopyPreferredTagWithClass
-        _UTTypeEqual
-        _UTTypeConformsTo
