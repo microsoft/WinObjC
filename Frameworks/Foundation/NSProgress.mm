@@ -211,7 +211,7 @@ static decltype(s_currentProgressStack) & _getProgressStackForCurrentThread() {
             // See NSProgress class reference:
             // If you don’t create any child progress objects between the calls to becomeCurrentWithPendingUnitCount: and resignCurrent,
             // the "parent" progress automatically updates its completedUnitCount by adding the pending units.
-            if (currentProgress.childCreated) {
+            if (!currentProgress.childCreated) {
                 @synchronized(self) {
                     [self setCompletedUnitCount:self.completedUnitCount + currentProgress.pendingUnitCountToAssign];
                 }
