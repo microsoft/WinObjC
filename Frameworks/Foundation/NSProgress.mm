@@ -288,7 +288,11 @@ static decltype(s_currentProgressStack) & _getProgressStackForCurrentThread() {
     @synchronized(self) { // Property is atomic
         [self willChangeValueForKey:@"fractionCompleted"];
         [self willChangeValueForKey:@"indeterminate"];
+                double ratio = (double)inUnitCount / _totalUnitCount;
         _totalUnitCount = inUnitCount;
+        [self _updateCompletedUnitsBy:0
+                  fractionCompletedBy:(_fractionCompleted / ratio) - _fractionCompleted
+                 unitCountForFraction:_totalUnitCount];
         [self didChangeValueForKey:@"indeterminate"];
         [self didChangeValueForKey:@"fractionCompleted"];
     }
