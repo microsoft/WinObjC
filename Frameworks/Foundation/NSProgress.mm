@@ -62,6 +62,7 @@ static decltype(s_currentProgressStack) & _getProgressStackForCurrentThread() {
 @private
     // explicitly declared here for custom set/get
     int64_t _completedUnitCount;
+    int64_t _totalUnitCount;
     StrongId<NSString> _localizedDescription;
     StrongId<NSString> _localizedAdditionalDescription;
 
@@ -271,6 +272,28 @@ static decltype(s_currentProgressStack) & _getProgressStackForCurrentThread() {
     // Pairing a synthesized getter with a user-defined setter would otherwise generate a warning
     @synchronized(self) { // Property is atomic
         return _completedUnitCount;
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setTotalUnitCount:(int64_t)inUnitCount {
+    @synchronized(self) { // Property is atomic
+        double ratio = (double)inUnitCount / _totalUnitCount;
+        _totalUnitCount = inUnitCount;
+        [self _updateCompletedUnitsBy:0
+                  fractionCompletedBy:(_fractionCompleted / ratio) - _fractionCompleted
+                 unitCountForFraction:_totalUnitCount];
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+- (int64_t)totalUnitCount {
+    @synchronized(self) { // Property is atomic
+        return _totalUnitCount;
     }
 }
 

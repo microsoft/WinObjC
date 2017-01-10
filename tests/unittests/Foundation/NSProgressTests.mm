@@ -258,6 +258,17 @@ TEST(NSProgress, ChainImplicit_EdgeCases) {
     ASSERT_NEAR((80.0f / 120.0f) - (1.0f / 18.0f), [prog2 fractionCompleted], c_errorMargin); // Increases by 20/120
     ASSERT_NEAR((80.0f / 120.0f) - (1.0f / 18.0f), [prog1 fractionCompleted], c_errorMargin); // Increases by 20/120
 
+    // Change prog3's total unit count to 9
+    [prog3 setTotalUnitCount:9];
+
+    ASSERT_EQ(3, [prog3 completedUnitCount]);
+    ASSERT_EQ(100, [prog2 completedUnitCount]);
+    ASSERT_EQ(0, [prog1 completedUnitCount]);
+
+    ASSERT_NEAR(1.0f / 3.0f, [prog3 fractionCompleted], c_errorMargin);
+    ASSERT_NEAR(0.5f, [prog2 fractionCompleted], c_errorMargin); // lower by 20/120, increase by 1/3 * 20/120
+    ASSERT_NEAR(0.5f, [prog1 fractionCompleted], c_errorMargin); // lower by 20/120, increase by 1/3 * 20/120
+
     // Reset prog2 to 0 (probably shouldn't ever be done in production)
     [prog2 setCompletedUnitCount:0];
 
@@ -265,7 +276,7 @@ TEST(NSProgress, ChainImplicit_EdgeCases) {
     ASSERT_EQ(0, [prog2 completedUnitCount]); // Hard resets without taking anything from prog3 into account
     ASSERT_EQ(0, [prog1 completedUnitCount]);
 
-    ASSERT_EQ(1, [prog3 fractionCompleted]);
+    ASSERT_NEAR(1.0f / 3.0f, [prog3 fractionCompleted], c_errorMargin);
     ASSERT_NEAR(0, [prog2 fractionCompleted], c_errorMargin); // fractionCompleted floors at 0
     ASSERT_NEAR(0, [prog1 fractionCompleted], c_errorMargin);
 
