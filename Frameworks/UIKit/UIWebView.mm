@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "UIKit/UIKit.h"
 #include "UIKit/UIView.h"
 #include "CoreGraphics/CGContext.h"
