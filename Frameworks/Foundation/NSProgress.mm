@@ -203,8 +203,7 @@ static decltype(s_currentProgressStack) & _getProgressStackForCurrentThread() {
     auto currentProgressStack = _getProgressStackForCurrentThread();
 
     // If self is the top element on the current progress stack, pop it
-    // Be sure to check if self == nil here, otherwise [nil resignCurrent] may cause a pop on an empty stack
-    if (self && !currentProgressStack->empty()) {
+    if (!currentProgressStack->empty()) {
         CurrentProgress currentProgress = currentProgressStack->top();
 
         if ([currentProgress.progress isEqual:self]) {
@@ -222,7 +221,7 @@ static decltype(s_currentProgressStack) & _getProgressStackForCurrentThread() {
         }
     }
 
-    // self was nil, or otherwise was not currentProgress
+    // self was not currentProgress
     [NSException raise:NSInvalidArgumentException
                 format:@"NSProgress was not the current progress on this thread %@", [NSThread currentThread]];
 }
@@ -245,6 +244,7 @@ static decltype(s_currentProgressStack) & _getProgressStackForCurrentThread() {
             fractionCompletedBy:(double)deltaFraction
            unitCountForFraction:(int64_t)unitCountForFraction {
     @synchronized(self) {
+        [self willChangeValueForKey:@"completedUnitCount"];
         [self willChangeValueForKey:@"fractionCompleted"];
         [self willChangeValueForKey:@"indeterminate"];
         double prevFraction = _fractionCompleted;
@@ -261,6 +261,7 @@ static decltype(s_currentProgressStack) & _getProgressStackForCurrentThread() {
         }
         [self didChangeValueForKey:@"indeterminate"];
         [self didChangeValueForKey:@"fractionCompleted"];
+        [self didChangeValueForKey:@"completedUnitCount"];
 
         if (_parent) {
             if (_fractionCompleted >= 1) {
