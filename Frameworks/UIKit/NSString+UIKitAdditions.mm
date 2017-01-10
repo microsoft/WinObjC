@@ -93,7 +93,8 @@ static NSDictionary* _getDefaultUITextAttributes() {
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes Clipping line break modes unsupported
 */
 - (CGSize)drawInRect:(CGRect)rect withFont:(UIFont*)font lineBreakMode:(UILineBreakMode)lineBreakMode {
     return [self drawInRect:rect withFont:font lineBreakMode:lineBreakMode alignment:UITextAlignmentLeft];
