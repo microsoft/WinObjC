@@ -135,7 +135,9 @@ TEST(NSProgress, FractionCompleted) {
                      [userInfo setCompletedUnitCount:1];
                  }
         andExpectChangeCallbacks:nil];
-    EXPECT_EQ(2, kvoListener.hits);
+
+    // Depending on OSX version, the implementation differs slightly, and changes the number of hits
+    EXPECT_TRUE((kvoListener.hits == 1) || (kvoListener.hits == 2));
 
     ASSERT_EQ(0.5, [userInfo fractionCompleted]);
 }

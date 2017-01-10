@@ -233,12 +233,6 @@ static decltype(s_currentProgressStack) & _getProgressStackForCurrentThread() {
             double deltaFraction = static_cast<double>(deltaCompletedUnit) / _totalUnitCount;
             [self _updateCompletedUnitsBy:deltaCompletedUnit fractionCompletedBy:deltaFraction unitCountForFraction:_totalUnitCount];
         }
-
-        [self willChangeValueForKey:@"fractionCompleted"];
-        [self willChangeValueForKey:@"indeterminate"];
-        _completedUnitCount = inUnitCount;
-        [self didChangeValueForKey:@"indeterminate"];
-        [self didChangeValueForKey:@"fractionCompleted"];
     }
 }
 
@@ -246,6 +240,8 @@ static decltype(s_currentProgressStack) & _getProgressStackForCurrentThread() {
             fractionCompletedBy:(double)deltaFraction
            unitCountForFraction:(int64_t)unitCountForFraction {
     @synchronized(self) {
+        [self willChangeValueForKey:@"fractionCompleted"];
+        [self willChangeValueForKey:@"indeterminate"];
         double prevFraction = _fractionCompleted;
 
         // If this function is called from a child, deltaFraction needs to be adjusted according to the pending unit count of the child
@@ -258,6 +254,8 @@ static decltype(s_currentProgressStack) & _getProgressStackForCurrentThread() {
         if (_fractionCompleted < 0) {
             _fractionCompleted = 0;
         }
+        [self didChangeValueForKey:@"indeterminate"];
+        [self didChangeValueForKey:@"fractionCompleted"];
 
         if (_parent) {
             if (_fractionCompleted >= 1) {
@@ -288,11 +286,13 @@ static decltype(s_currentProgressStack) & _getProgressStackForCurrentThread() {
     @synchronized(self) { // Property is atomic
         [self willChangeValueForKey:@"fractionCompleted"];
         [self willChangeValueForKey:@"indeterminate"];
-                double ratio = (double)inUnitCount / _totalUnitCount;
+
+        double ratio = (double)inUnitCount / _totalUnitCount;
         _totalUnitCount = inUnitCount;
         [self _updateCompletedUnitsBy:0
                   fractionCompletedBy:(_fractionCompleted / ratio) - _fractionCompleted
                  unitCountForFraction:_totalUnitCount];
+
         [self didChangeValueForKey:@"indeterminate"];
         [self didChangeValueForKey:@"fractionCompleted"];
     }
@@ -304,16 +304,6 @@ static decltype(s_currentProgressStack) & _getProgressStackForCurrentThread() {
 - (int64_t)totalUnitCount {
     @synchronized(self) { // Property is atomic
         return _totalUnitCount;
-    }
-}
-
-/**
- @Status Interoperable
-*/
-- (double)fractionCompleted {
-    // Override synthesized getter so that this can be calculated dynamically
-    @synchronized(self) { // Property is atomic
-        return (double)_completedUnitCount / _totalUnitCount;
     }
 }
 
