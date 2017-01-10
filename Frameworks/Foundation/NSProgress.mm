@@ -200,26 +200,31 @@ static decltype(s_currentProgressStack) & _getProgressStackForCurrentThread() {
  @Status Interoperable
 */
 - (void)resignCurrent {
+    auto currentProgressStack = _getProgressStackForCurrentThread();
+
     // If self is the top element on the current progress stack, pop it
     // Be sure to check if self == nil here, otherwise [nil resignCurrent] may cause a pop on an empty stack
-    if (self && [self isEqual:[NSProgress currentProgress]]) {
-        auto currentProgressStack = _getProgressStackForCurrentThread();
+    if (self && !currentProgressStack->empty()) {
+        CurrentProgress currentProgress = currentProgressStack->top();
 
-        // See NSProgress class reference:
-        // If you don’t create any child progress objects between the calls to becomeCurrentWithPendingUnitCount: and resignCurrent,
-        // the "parent" progress automatically updates its completedUnitCount by adding the pending units.
-        if (!currentProgressStack->top().childCreated) {
-            @synchronized(self) {
-                [self setCompletedUnitCount:self.completedUnitCount + currentProgressStack->top().pendingUnitCountToAssign];
+        if ([currentProgress.progress isEqual:self]) {
+            // See NSProgress class reference:
+            // If you don’t create any child progress objects between the calls to becomeCurrentWithPendingUnitCount: and resignCurrent,
+            // the "parent" progress automatically updates its completedUnitCount by adding the pending units.
+            if (currentProgress.childCreated) {
+                @synchronized(self) {
+                    [self setCompletedUnitCount:self.completedUnitCount + currentProgress.pendingUnitCountToAssign];
+                }
             }
+
+            currentProgressStack->pop();
+            return;
         }
-
-        currentProgressStack->pop();
-
-    } else {
-        [NSException raise:NSInvalidArgumentException
-                    format:@"NSProgress was not the current progress on this thread %@", [NSThread currentThread]];
     }
+
+    // self was nil, or otherwise was not currentProgress
+    [NSException raise:NSInvalidArgumentException
+                format:@"NSProgress was not the current progress on this thread %@", [NSThread currentThread]];
 }
 
 /**
