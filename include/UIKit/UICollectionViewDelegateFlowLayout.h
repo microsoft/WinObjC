@@ -18,6 +18,7 @@
 #import <CoreGraphics/CGGeometry.h>
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKitExport.h>
+#import <UIKit/UIGeometry.h>
 
 @class UICollectionView;
 @class UICollectionViewLayout;

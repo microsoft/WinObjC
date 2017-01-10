@@ -19,6 +19,7 @@
 #import <Foundation/NSObject.h>
 #import <UIKit/UIDynamicBehavior.h>
 #import <UIKit/UIKitExport.h>
+#import <UIKit/UIGeometry.h>
 
 @protocol UIDynamicItem;
 @class NSArray;
