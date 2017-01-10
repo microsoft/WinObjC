@@ -243,11 +243,12 @@ static void _initUIWebView(UIWebView* self) {
 }
 
 /**
- @Status Interoperable
+ @Status Gap
 */
 - (NSString*)stringByEvaluatingJavaScriptFromString:(NSString*)string {
-    NSString* ret = [_xamlWebControl invokeScript:@"eval" arguments:[NSArray arrayWithObject:string]];
-    return ret;
+    UNIMPLEMENTED_WITH_MSG(
+        "stringByEvaluatingJavaScriptFromString is not supported on our platform. Call evaluateJavaScript:completionHandler: instead.");
+    return StubReturn();
 }
 
 /**

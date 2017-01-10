@@ -57,7 +57,10 @@ UIKIT_EXPORT_CLASS
 - (void)goBack;
 - (void)goForward;
 
-- (NSString*)stringByEvaluatingJavaScriptFromString:(NSString*)script;
+// stringByEvaluatingJavaScriptFromString is not
+// supported on our platform. Call
+// evaluateJavaScript:completionHandler: instead.
+- (NSString*)stringByEvaluatingJavaScriptFromString:(NSString*)script STUB_METHOD;
 - (void)evaluateJavaScript:(NSString*)javaScriptString completionHandler:(void (^)(id, NSError* error))completionHandler;
 - (void)loadData:(NSData*)data MIMEType:(NSString*)MIMEType textEncodingName:(NSString*)encodingName baseURL:(NSURL*)baseURL;
 
