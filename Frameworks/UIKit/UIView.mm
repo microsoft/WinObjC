@@ -3395,6 +3395,11 @@ static float doRound(float f) {
 #pragma clang diagnostic pop
 
 - (void)_dealloc {
+    if (!self->priv) {
+        // If we were never initialized, there's nothing to do here.
+        return;
+    }
+
     if (_deallocating) {
         return;
     }
