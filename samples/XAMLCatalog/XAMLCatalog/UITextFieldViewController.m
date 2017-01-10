@@ -273,9 +273,17 @@ placeHolder : (NSString*)placeHolder
     UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier : @"MenuCell"];
     if (nil == cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier : @"MenuCell"];
+    } else {
+        // do custom contentview subview clean up if we add subview to contentview
+        UIView *subView = (UIView *)[cell.contentView viewWithTag:1];
+        if ([subView superview]) {
+            [subView removeFromSuperview];
+        }
     }
 
-    [cell addSubview : [_textFields objectAtIndex : indexPath.row]];
+    UIView* subView = [_textFields objectAtIndex : indexPath.row];
+    subView.tag = 1;
+    [cell.contentView addSubview : subView];
     return cell;
 }
 
