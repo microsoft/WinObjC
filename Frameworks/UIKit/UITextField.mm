@@ -308,20 +308,16 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 - (UIColor*)textColor {
     WUXMSolidColorBrush* colorBrush = nil;
     if (_secureTextMode) {
-        colorBrush = rt_dynamic_cast<WUXMSolidColorBrush>(_passwordBox.background);
-        if (colorBrush != nil) {
-            return ConvertWUColorToUIColor(colorBrush.color);
-        } else {
-            return nil;
-        }
+        colorBrush = rt_dynamic_cast<WUXMSolidColorBrush>(_passwordBox.foreground);
     } else {
-        colorBrush = rt_dynamic_cast<WUXMSolidColorBrush>(_textBox.background);
-        if (colorBrush != nil) {
-            return ConvertWUColorToUIColor(colorBrush.color);
-        } else {
-            return nil;
-        }
+        colorBrush = rt_dynamic_cast<WUXMSolidColorBrush>(_textBox.foreground);
     }
+
+    if (colorBrush != nil) {
+        return ConvertWUColorToUIColor(colorBrush.color);
+    }
+
+    return nil;
 }
 
 /**
@@ -351,19 +347,15 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
     WUXMSolidColorBrush* colorBrush = nil;
     if (_secureTextMode) {
         colorBrush = rt_dynamic_cast<WUXMSolidColorBrush>(_passwordBox.background);
-        if (colorBrush != nil) {
-            return ConvertWUColorToUIColor(colorBrush.color);
-        } else {
-            return nil;
-        }
     } else {
         colorBrush = rt_dynamic_cast<WUXMSolidColorBrush>(_textBox.background);
-        if (colorBrush != nil) {
-            return ConvertWUColorToUIColor(colorBrush.color);
-        } else {
-            return nil;
-        }
     }
+
+    if (colorBrush != nil) {
+        return ConvertWUColorToUIColor(colorBrush.color);
+    } 
+    
+    return nil;
 }
 
 /**
@@ -374,6 +366,8 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
     if (!_secureTextMode) {
         // passwordBox does not support text alignment
         _textBox.textAlignment = ConvertUITextAlignmentToWXTextAlignment(alignment);
+    } else {
+        UNIMPLEMENTED_WITH_MSG("SecureTextEntry mode does not support UITextAlignment");
     }
     [_secureModeLock unlock];
 }
