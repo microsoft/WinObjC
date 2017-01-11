@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -15,12 +15,11 @@
 //******************************************************************************
 #pragma once
 
-#import <MobileCoreServices/MobileCoreServicesExport.h>
-#import <CoreFoundation/CFString.h>
-#import <CoreFoundation/CFArray.h>
+#include <CoreFoundation/CFString.h>
+#include <CoreFoundation/CFArray.h>
 
-MOBILECORESERVICES_EXPORT void _UTInitializeSystemUTIMaps();
-MOBILECORESERVICES_EXPORT CFArrayRef _UTGetUTIsForFileNameExtension(CFStringRef fileNameExtension);
-MOBILECORESERVICES_EXPORT CFArrayRef _UTGetUTIsForMIMEType(CFStringRef fileNameExtension);
-MOBILECORESERVICES_EXPORT CFStringRef _UTGetMimeTypeForUTI(CFStringRef UTI);
-MOBILECORESERVICES_EXPORT CFStringRef _UTGetFileNameExtensionForUTI(CFStringRef UTI);
+void _UTInitializeSystemUTIMaps();
+CFArrayRef _UTCreateUTIsForFileNameExtension(CFStringRef fileNameExtension);
+CFArrayRef _UTCreateUTIsForMIMEType(CFStringRef fileNameExtension);
+CFStringRef _UTCopyMimeTypeForUTI(CFStringRef UTI);
+CFStringRef _UTCopyFileNameExtensionForUTI(CFStringRef UTI);
