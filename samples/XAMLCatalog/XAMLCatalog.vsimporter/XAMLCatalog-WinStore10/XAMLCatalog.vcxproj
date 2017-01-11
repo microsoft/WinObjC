@@ -200,6 +200,7 @@
     <ClInclude Include="..\..\XAMLCatalog\UIButtonViewController.h" />
     <ClInclude Include="..\..\XAMLCatalog\UISliderViewController.h" />
     <ClInclude Include="..\..\XAMLCatalog\UITextFieldViewController.h" />
+    <ClInclude Include="..\..\XAMLCatalog\UIViewViewController.h" />    
     <ClangCompile Include="..\..\XAMLCatalog\AppDelegate.m" />
     <ClangCompile Include="..\..\XAMLCatalog\CustomTextControlViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\MenuTableViewController.m" />
@@ -211,6 +212,7 @@
     <ClangCompile Include="..\..\XAMLCatalog\UIButtonViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UISliderViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UITextFieldViewController.m" />
+    <ClangCompile Include="..\..\XAMLCatalog\UIViewViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\main.m" />
     <SBInfoPlistCopy Include="..\..\XAMLCatalog\Info.plist">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Debug'">false</ExcludedFromBuild>
