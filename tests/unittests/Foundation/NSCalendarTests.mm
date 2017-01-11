@@ -535,3 +535,30 @@ WIN32_DISABLED_TEST(NSCalendar, RangeOfWeekOfMonthTest) {
     EXPECT_EQ(range.location, 27);
     EXPECT_EQ(range.length, 6);
 }
+
+TEST(NSCalendar, ExactMatch) {
+    NSCalendar* calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    NSDate* start = [calendar dateWithEra:1 year:2010 month:3 day:1 hour:1 minute:2 second:3 nanosecond:0];
+
+    NSDateComponents* components = [[NSDateComponents new] autorelease];
+    components.day = 30;
+
+    __block int iterationsToTest = 0;
+
+    [calendar enumerateDatesStartingAfterDate:start
+                           matchingComponents:components
+                                      options:NSCalendarMatchPreviousTimePreservingSmallerUnits | NSCalendarSearchBackwards
+                                   usingBlock:^(NSDate* date, BOOL exactMatch, BOOL* stop) {
+                                       NSInteger month = [calendar component:NSCalendarUnitMonth fromDate:date];
+
+                                       iterationsToTest++;
+                                       if (month != 2) {
+                                           ASSERT_TRUE(exactMatch);
+                                       } else {
+                                           ASSERT_TRUE(!exactMatch);
+                                       }
+                                       if (iterationsToTest > 24) {
+                                           *stop = YES;
+                                       }
+                                   }];
+}
