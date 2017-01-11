@@ -16,6 +16,8 @@
 
 #import "ButtonsViewController.h"
 
+static const int TAG_SUBVIEW_UIBUTTON = 1;
+
 @implementation ButtonsViewController
 
 - (id)init {
@@ -47,6 +49,10 @@
     UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"MenuCell"];
     if (nil == cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MenuCell"];
+    } else {
+        // before reuse, check if cell contains any tagged subview, if so, remove them first
+        UIView* subView = (UIView*)[cell viewWithTag:TAG_SUBVIEW_UIBUTTON];
+        [subView removeFromSuperview];
     }
 
     if (indexPath.row == 0) {
@@ -55,7 +61,7 @@
         button.layer.cornerRadius = 5.0f;
         [button setTitle:@"Simple Button" forState:UIControlStateNormal];
         [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-
+        button.tag = TAG_SUBVIEW_UIBUTTON;
         [cell addSubview:button];
     } else if (indexPath.row == 1) {
         UIImage* buttonBackground = [UIImage imageNamed:@"whiteButton.png"];
@@ -72,6 +78,7 @@
         [button setTitle:@"Image Button" forState:UIControlStateNormal];
         [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [button setTintColor:[UIColor whiteColor]];
+        button.tag = TAG_SUBVIEW_UIBUTTON;
         [cell addSubview:button];
     }
 

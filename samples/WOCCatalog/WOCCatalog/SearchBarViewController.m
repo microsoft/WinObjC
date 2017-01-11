@@ -18,6 +18,8 @@
 
 @implementation SearchBarViewController
 
+static const int TAG_SUBVIEW_UISEARCHBAR = 1;
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 
@@ -36,6 +38,10 @@
     UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"MenuCell"];
     if (nil == cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MenuCell"];
+    } else {
+        // before reuse, check if cell contains any tagged subview, if so, remove them first
+        UIView* subView = (UIView*)[cell viewWithTag:TAG_SUBVIEW_UISEARCHBAR];
+        [subView removeFromSuperview];
     }
 
     [super viewDidLoad];
@@ -46,23 +52,27 @@
     if (indexPath.row == 0) {
         UISearchBar* searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, cell.bounds.size.width, 100)];
         [searchBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
+        searchBar.tag = TAG_SUBVIEW_UISEARCHBAR;
         [cell addSubview:searchBar];
     } else if (indexPath.row == 1) {
         UISearchBar* searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, cell.bounds.size.width, 100)];
         [searchBar setPrompt:@"UISearchBar prompt"];
         [searchBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
+        searchBar.tag = TAG_SUBVIEW_UISEARCHBAR;
         [cell addSubview:searchBar];
     } else if (indexPath.row == 2) {
         UISearchBar* searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, cell.bounds.size.width, 100)];
         [searchBar setPrompt:@"UISearchBar with bg image"];
         [searchBar setSearchFieldBackgroundImage:[UIImage imageNamed:@"tf_bgimage.jpg"] forState:UIControlStateNormal];
         [searchBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
+        searchBar.tag = TAG_SUBVIEW_UISEARCHBAR;
         [cell addSubview:searchBar];
     } else if (indexPath.row == 3) {
         UISearchBar* searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, cell.bounds.size.width, 100)];
         [searchBar setPrompt:@"UISearchBar with cancel button"];
         searchBar.showsCancelButton = true;
         [searchBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
+        searchBar.tag = TAG_SUBVIEW_UISEARCHBAR;
         [cell addSubview:searchBar];
     }
 
