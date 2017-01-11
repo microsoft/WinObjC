@@ -14,8 +14,13 @@
 //
 //******************************************************************************
 
-#import <StubReturn.h>
 #import "Starboard.h"
+#import <StubReturn.h>
+
+#import <UIKit/NSString+UIKitAdditions.h>
+#import <UIKit/UIButton.h>
+#import <UIKit/UIImageView.h>
+#import <UIKit/UILabel.h>
 
 #import "LoggingNative.h"
 #import "CALayerInternal.h"

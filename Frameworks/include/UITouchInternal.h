@@ -15,6 +15,8 @@
 //******************************************************************************
 #pragma once
 
+#import <UIKit/UITouch.h>
+
 @class WUIPointerPoint;
 @class WUXIPointerRoutedEventArgs;
 

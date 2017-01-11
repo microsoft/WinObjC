@@ -15,15 +15,18 @@
 //******************************************************************************
 
 #include "Starboard.h"
+
+#import <UIKit/NSObject+UIKitAdditions.h>
 #import <UIKit/UINib.h>
+#import <UIKit/UIView.h>
+#import <UIKit/UIWindow.h>
+
 #import <Foundation/NSString.h>
 #import <Foundation/NSData.h>
 #import <Foundation/NSMutableArray.h>
 #import <Foundation/NSKeyedUnarchiver.h>
-#import <UIKit/UIView.h>
-#import <UIKit/UIWindow.h>
+
 #import "UIProxyObject.h"
-#import <UIKit/UIWindow.h>
 #import "UINibUnarchiver.h"
 #import "UIRuntimeOutletCollectionConnection.h"
 #import "UIRuntimeOutletConnection.h"

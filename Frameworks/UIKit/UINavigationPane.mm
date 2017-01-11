@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import "Starboard.h"
+#import <UIKit/UINavigationController.h>
 #import "UINavigationControllerInternal.h"
 #import "LoggingNative.h"
 

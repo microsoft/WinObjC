@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,10 +14,6 @@
 //
 //******************************************************************************
 
-#import "UIKit/NSLayoutAnchor.h"
-#import "UIKit/NSLayoutConstraint.h"
+#pragma once
 
-@interface NSLayoutAnchor () {}
-+ (instancetype)_anchorWithAttribute:(NSLayoutAttribute)attribute owner:(id)owner;
-- (void)_validateMayConstrainToAnchor:(NSLayoutAnchor*)anchor;
-@end
+#import <MobileCoreServices/UTType.h>

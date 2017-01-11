@@ -18,6 +18,8 @@
 #import <StubReturn.h>
 #include "Starboard.h"
 
+#include "QuartzCore/CATransform3D.h"
+
 #include <math.h>
 #include <algorithm>
 

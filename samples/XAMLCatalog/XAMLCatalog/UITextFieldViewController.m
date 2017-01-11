@@ -40,7 +40,6 @@ static const int TAG_SUBVIEW_UITEXTFIELD = 1;
     UITextField* textField = [[UITextField alloc] initWithFrame:frame];
     textField.textColor = color;
     textField.backgroundColor = background;
-    textField.secureTextEntry = secureTextEntry;
     textField.font = [UIFont systemFontOfSize:17.0];
     textField.placeholder = placeHolder;
     textField.keyboardType = keyboardType;
@@ -49,6 +48,9 @@ static const int TAG_SUBVIEW_UITEXTFIELD = 1;
     textField.spellCheckingType = spellCheckingType;
     textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     textField.delegate = self;
+
+    // intentially move down to make sure properties is transferred correctly
+    textField.secureTextEntry = secureTextEntry;
 
     // Set the accessibility identifier so we can access these controls via automation
     textField.accessibilityIdentifier = [NSString stringWithFormat:@"textField_%ld", [_textFields count]];
@@ -241,6 +243,18 @@ static const int TAG_SUBVIEW_UITEXTFIELD = 1;
                                                borderStyle:UITextBorderStyleLine
                                                   fontSize:22.0f
                                            minimumFontSize:17.0f]];
+
+    // creating a Secured text entry and change it to non-secure
+    UITextField* temp = [self _createTextFieldWithColor:[UIColor blackColor]
+                                             background:[UIColor lightGrayColor]
+                                        secureTextEntry:YES
+                                            placeHolder:@"From Securty to Non-Secure"
+                                           keyboardType:UIKeyboardTypeDefault
+                                            borderStyle:UITextBorderStyleRoundedRect
+                                          textAlignment:UITextAlignmentLeft
+                                      spellCheckingType:UITextSpellCheckingTypeNo];
+    temp.secureTextEntry = NO;
+    [_textFields addObject:temp];
 
     [self tableView].allowsSelection = NO;
 }

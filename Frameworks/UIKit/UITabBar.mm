@@ -16,14 +16,18 @@
 
 #import "Starboard.h"
 #import "StubReturn.h"
-#import "UIKit/UITabBar.h"
+
+#import <UIKit/UIColor.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UITabBar.h>
+#import <UIKit/UITabBarItem.h>
+
 #import "UITabBarButton.h"
-#import "UIKit/UIColor.h"
-#import "CoreGraphics/CGContext.h"
-#import "Foundation/NSMutableArray.h"
-#import "Foundation/NSString.h"
-#import "UIKit/UIColor.h"
-#import "UIKit/UITabBar.h"
+
+#import <CoreGraphics/CGContext.h>
+
+#import <Foundation/NSMutableArray.h>
+#import <Foundation/NSString.h>
 
 #import "LoggingNative.h"
 #import "UIAppearanceSetter.h"
@@ -34,7 +38,7 @@
 static const wchar_t* TAG = L"UITabBar";
 
 @implementation UITabBar {
-    idretain _items;
+    StrongId<NSMutableArray> _items;
     bool _layoutDirty;
     StrongId<NSMutableArray> _buttons;
     idretain _backgroundImage, _selectionIndicatorImage;

@@ -16,11 +16,15 @@
 
 #import "Starboard.h"
 
-#import <UIKit/UIView.h>
-#import <UIKit/UIDevice.h>
 #import <UIKit/UIApplication.h>
-#import <Foundation/NSArray.h>
+#import <UIKit/UIDevice.h>
 #import <UIKit/UIScreen.h>
+#import <UIKit/UIScreenMode.h>
+#import <UIKit/UIView.h>
+
+#import <Foundation/NSArray.h>
+
+#import <QuartzCore/CADisplayLink.h>
 
 #import "StubReturn.h"
 #import "StarboardXaml/DisplayProperties.h"

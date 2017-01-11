@@ -17,23 +17,28 @@
 #import <StubReturn.h>
 #import "AssertARCEnabled.h"
 #import "Starboard.h"
-#import <cmath>
-#import <Foundation/NSNumber.h>
-#import <Foundation/NSTimer.h>
-#import <Foundation/NSRunLoop.h>
-#import <Foundation/NSSet.h>
-#import <Foundation/NSString.h>
-#import <CoreGraphics/CGAffineTransform.h>
-#import <CoreGraphics/CGGeometry.h>
-#import <QuartzCore/CABasicAnimation.h>
-#import <QuartzCore/CADisplayLink.h>
-#import <QuartzCore/CALayer.h>
+
 #import <UIKit/UIApplication.h>
 #import <UIKit/UIColor.h>
 #import <UIKit/UIEvent.h>
 #import <UIKit/UITouch.h>
 #import <UIKit/UIGestureRecognizer.h>
 #import <UIKit/UIScrollView.h>
+
+#import <Foundation/NSNumber.h>
+#import <Foundation/NSTimer.h>
+#import <Foundation/NSRunLoop.h>
+#import <Foundation/NSSet.h>
+#import <Foundation/NSString.h>
+
+#import <CoreGraphics/CGAffineTransform.h>
+#import <CoreGraphics/CGGeometry.h>
+
+#import <QuartzCore/CABasicAnimation.h>
+#import <QuartzCore/CADisplayLink.h>
+#import <QuartzCore/CALayer.h>
+#import <QuartzCore/CALayerDelegate.h>
+
 #import <UWP/WindowsUIXaml.h>
 #import <UWP/WindowsUIXamlControls.h>
 #import <UWP/WindowsUIXamlShapes.h>
@@ -50,6 +55,7 @@
 #import "Etc.h"
 #import "XamlControls.h"
 #import "XamlUtilities.h"
+#import <cmath>
 
 static const wchar_t* TAG = L"UIScrollView";
 
@@ -582,7 +588,7 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
             WXFrameworkElement* scrollContentPresenter = FindTemplateChild(strongSelf->_scrollViewer, @"ScrollContentPresenter");
             if (scrollContentPresenter) {
                 WXCGrid* parent = rt_dynamic_cast<WXCGrid>(scrollContentPresenter.parent);
-                [parent.children insertObject:self->_contentImage atIndex:0];
+                [parent.children insertObject:strongSelf->_contentImage atIndex:0];
             } else {
                 TraceWarning(TAG, L"UIScrollView loaded event failed to find the ScrollContentPresenter child.");
             }

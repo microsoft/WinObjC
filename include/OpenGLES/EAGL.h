@@ -20,10 +20,7 @@
 #import <Foundation/Foundation.h>
 #import <OpenGLES/EAGLExport.h>
 
-enum {
-   kEAGLRenderingAPIOpenGLES1 = 1,
-   kEAGLRenderingAPIOpenGLES2 = 2
-};
+enum { kEAGLRenderingAPIOpenGLES1 = 1, kEAGLRenderingAPIOpenGLES2 = 2, kEAGLRenderingAPIOpenGLES3 = 3 };
 typedef uint32_t EAGLRenderingAPI;
 
 @interface EAGLSharegroup : NSObject
@@ -31,16 +28,17 @@ typedef uint32_t EAGLRenderingAPI;
 
 EAGL_EXPORT_CLASS
 @interface EAGLContext : NSObject
-@property (readonly) EAGLSharegroup *sharegroup;
+@property (readonly) EAGLSharegroup* sharegroup;
+@property (readonly) NSUInteger API;
 @property (getter=isMultiThreaded, nonatomic) BOOL multiThreaded;
 
 - (id)initWithAPI:(EAGLRenderingAPI)api;
-- (id)initWithAPI:(EAGLRenderingAPI)api sharegroup:(EAGLSharegroup *)sharegroup;
-- (BOOL) presentRenderbuffer: (int) obj;
-- (BOOL) renderbufferStorage: (int) dest fromDrawable: (id) layer;
+- (id)initWithAPI:(EAGLRenderingAPI)api sharegroup:(EAGLSharegroup*)sharegroup;
+- (BOOL)presentRenderbuffer:(int)obj;
+- (BOOL)renderbufferStorage:(int)dest fromDrawable:(id)layer;
 
-+ (BOOL) setCurrentContext: (id) newContext;
-+ (EAGLContext *) currentContext;
++ (BOOL)setCurrentContext:(id)newContext;
++ (EAGLContext*)currentContext;
 
 @end
 

@@ -13,16 +13,14 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
 
-#import <QuartzCore/CAEmitterCell.h>
+#include "gtest-api.h"
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
 
-@interface CAEmitterCell () {
+TEST(WOCStdLib, WinSockBuildTests) {
+    char addrBuf[INET_ADDRSTRLEN];
+    char testData[100];
+    inet_ntop(AF_INET, NULL, addrBuf, (socklen_t)sizeof(addrBuf));
 }
-@property BOOL birthed;
-- (CALayer*)generateCALayerFromEmitterCell:(CGPoint)startingPosition
-                      withParentOffsetLong:(CGFloat)offsetLong
-                       withParentOffsetLat:(CGFloat)offsetLat
-                         withParentCALayer:(CALayer*)parent
-                       withBabyEmitterCell:(CAEmitterCell*)babyCell;
-@end

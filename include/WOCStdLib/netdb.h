@@ -242,10 +242,18 @@ void        setnetent(int);
 void        setprotoent(int);
 int     getaddrinfo(const char *, const char *,
                 const struct addrinfo *, struct addrinfo **);
+
+#ifndef WINOBJC     // Defined by ws2tcpip.h
 int     getnameinfo(const struct sockaddr *, socklen_t, char *,
                 size_t, char *, size_t, int);
+#endif
+
 void        freeaddrinfo(struct addrinfo *);
+
+#ifndef WINOBJC     // Defined by ws2tcpip.h
 const char  *gai_strerror(int);
+#endif
+
 void        setservent(int);
 
 #if __BSD_VISIBLE

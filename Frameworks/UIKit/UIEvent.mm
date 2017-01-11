@@ -15,7 +15,8 @@
 //******************************************************************************
 #include "Starboard.h"
 
-#include "UIKit/UIEvent.h"
+#include <UIKit/UIEvent.h>
+#include <UIKit/UITouch.h>
 
 @implementation UIEvent {
     StrongId<NSMutableSet<UITouch*>> touches;

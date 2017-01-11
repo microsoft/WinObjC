@@ -27,7 +27,7 @@ static const int TAG_SUBVIEW_UISEARCHBAR = 1;
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
-    return 4;
+    return 5;
 }
 
 - (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
@@ -74,9 +74,21 @@ static const int TAG_SUBVIEW_UISEARCHBAR = 1;
         [searchBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
         searchBar.tag = TAG_SUBVIEW_UISEARCHBAR;
         [cell addSubview:searchBar];
+    } else if (indexPath.row == 4) {
+        // searchbar with empty prompt, we should not show prompt label
+        UISearchBar* searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, cell.bounds.size.width, 100)];
+        [searchBar setPrompt:@""];
+        searchBar.showsCancelButton = true;
+        [searchBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
+        [cell addSubview:searchBar];
+        searchBar.delegate = self;
     }
 
     return cell;
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar*)searchBar {
+    searchBar.text = @"";
 }
 
 @end

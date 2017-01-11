@@ -13,8 +13,9 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
+
+#import <UIKit/UITabBar.h>
 
 @interface UITabBar ()
 - (void)_setLayoutDirty;

@@ -17,15 +17,21 @@
 
 #include <StubReturn.h>
 #include "Starboard.h"
-#include "UIKit/UIView.h"
-#include "UIKit/UIColor.h"
-#include "CoreGraphics/CGContext.h"
-#include "CGContextInternal.h"
+
+#include <UIKit/UIColor.h>
+#include <UIKit/UIGraphics.h>
+#include <UIKit/UIImage.h>
+#include <UIKit/UIView.h>
+
+#include <CoreGraphics/CGContext.h>
+#include <CoreGraphics/CGAffineTransform.h>
+#include <CoreGraphics/CGPattern.h>
+
 #include "Foundation/NSString.h"
 #include "Foundation/NSMutableDictionary.h"
+
+#include "CGContextInternal.h"
 #include "CGPatternInternal.h"
-#include "CoreGraphics/CGAffineTransform.h"
-#include "CoreGraphics/CGPattern.h"
 
 #include <math.h>
 #include "LoggingNative.h"
@@ -80,6 +86,7 @@ static const wchar_t* TAG = L"UIColor";
 @Status Interoperable
 */
 - (void)dealloc {
+    [super dealloc];
 }
 
 @end

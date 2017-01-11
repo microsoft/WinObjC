@@ -18,10 +18,13 @@
 
 #include <algorithm>
 
-#import <Foundation/NSException.h>
 #import <UIKit/UIPanGestureRecognizer.h>
 #import <UIKit/UIScrollView.h>
 #import <UIKit/UIPageViewController.h>
+#import <UIKit/UIPageViewControllerDataSource.h>
+#import <UIKit/UIPageViewControllerDelegate.h>
+
+#import <Foundation/NSException.h>
 
 #import <objc/blocks_runtime.h>
 

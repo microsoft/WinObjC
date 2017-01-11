@@ -16,8 +16,11 @@
 
 #import <StubReturn.h>
 #import "Starboard.h"
-#import "UIKit/UITouch.h"
-#import "UIKit/UIView.h"
+
+#import <UIKit/UITouch.h>
+#import <UIKit/UIView.h>
+#import <UIKit/UIWindow.h>
+
 #import "UIViewInternal.h"
 #import "UITouchInternal.h"
 #import "UWP/WindowsUIInput.h"
