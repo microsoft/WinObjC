@@ -24,6 +24,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import "Foundation/NSData.h"
 #import "Foundation/NSValue.h"
 #import "NSCoderInternal.h"
+#import "ForFoundationOnly.h"
 #import <stack>
 #import <memory>
 #import <functional>
@@ -42,7 +43,7 @@ static NSString* _NSUnarchiverEncounteredInvalidClassExceptionExpectedClasses =
     idretaintype(NSMutableDictionary) _uidToObject;
     idretaintype(NSMutableDictionary) _objectToUid;
     idretaintype(NSMutableDictionary) _classVersions;
-    idretaintype(NSNumber) _activeUid;
+    woc::unique_cf<CFKeyedArchiverUIDRef> _activeUid;
     int _unnamedKeyIndex;
 
     idretaintype(NSMutableArray) _dataObjects;
@@ -106,10 +107,25 @@ static NSString* _NSUnarchiverEncounteredInvalidClassExceptionExpectedClasses =
     return self;
 }
 
+// clang-format off
+static uint32_t _valueFromUID(CFKeyedArchiverUIDRef uid) {
+    NSDictionary* uidAsDictionary = static_cast<NSDictionary*>(uid);
+    NSNumber* legacyCFUID = nil;
+    if (
+        CFGetTypeID(uid) != _CFKeyedArchiverUIDGetTypeID()
+        && [uidAsDictionary isKindOfClass:[NSDictionary class]]
+        && [uidAsDictionary count] == 1
+        && (legacyCFUID = [uidAsDictionary objectForKey:@"CF$UID"]) != nil
+    ) {
+        return [legacyCFUID intValue];
+    }
+    return _CFKeyedArchiverUIDGetValue(uid);
+}
+// clang-format on
+
 static id decodeClassFromDictionary(NSKeyedUnarchiver* self, id classReference) {
-    id plist = [classReference objectForKey:@"$class"];
-    id uid = [plist objectForKey:@"CF$UID"];
-    id profile = [self->_objects objectAtIndex:[uid intValue]];
+    CFKeyedArchiverUIDRef uid = static_cast<CFKeyedArchiverUIDRef>([classReference objectForKey:@"$class"]);
+    id profile = [self->_objects objectAtIndex:_valueFromUID(uid)];
     id classes = [profile objectForKey:@"$classes"];
     id className = [profile objectForKey:@"$classname"];
 
@@ -151,9 +167,9 @@ static inline void checkClassAgainstExpectedClasses(NSKeyedUnarchiver* self, Cla
                            }] raise];
 }
 
-static id decodeObjectForUID(NSKeyedUnarchiver* self, NSNumber* uid) {
-    DWORD uidIntValue = [uid intValue];
-    id result = [self->_uidToObject objectForKey:uid];
+static id decodeObjectForUID(NSKeyedUnarchiver* self, CFKeyedArchiverUIDRef uid) {
+    uint32_t uidIntValue = _valueFromUID(uid);
+    id result = [self->_uidToObject objectForKey:static_cast<id>(uid)];
 
     if (result == NULL) {
         id plist = [self->_objects objectAtIndex:uidIntValue];
@@ -187,11 +203,13 @@ static id decodeObjectForUID(NSKeyedUnarchiver* self, NSNumber* uid) {
             if (classType != nil) {
                 result = [classType alloc];
 
-                [self->_uidToObject setObject:result forKey:uid];
+                // This store is legal: _uidToObject is a CFDictionary created *without* copy semantics.
+                // We're just accessing it through the Objective-C facade.
+                [self->_uidToObject setObject:result forKey:static_cast<id<NSCopying>>(uid)];
 
                 int curPos = self->_curUid;
 
-                self->_activeUid = uid;
+                self->_activeUid.reset(static_cast<CFKeyedArchiverUIDRef>(CFRetain(uid)));
                 self->_curUid = 0;
 
                 if ([result respondsToSelector:@selector(initWithCoder:)]) {
@@ -206,10 +224,10 @@ static id decodeObjectForUID(NSKeyedUnarchiver* self, NSNumber* uid) {
                 }
 
                 self->_curUid = curPos;
-                self->_activeUid = nil;
+                self->_activeUid.reset(nullptr);
 
                 if (result != nil) {
-                    [self->_uidToObject setObject:result forKey:uid];
+                    [self->_uidToObject setObject:result forKey:static_cast<id<NSCopying>>(uid)];
                     if ([result respondsToSelector:@selector(awakeAfterUsingCoder:)]) {
                         result = [result awakeAfterUsingCoder:self];
                     }
@@ -240,7 +258,7 @@ static id decodeObjectForUID(NSKeyedUnarchiver* self, NSNumber* uid) {
         }
 
         if (result) {
-            [self->_uidToObject setObject:result forKey:uid];
+            [self->_uidToObject setObject:result forKey:static_cast<id<NSCopying>>(uid)];
         }
     }
 
@@ -258,9 +276,7 @@ static id decodeObjectForUID(NSKeyedUnarchiver* self, NSNumber* uid) {
         [NSException raise:NSInvalidUnarchiveOperationException format:@"attempted to unarchive data with multiple root objects"];
         return nil;
     } else {
-        id object = [values objectAtIndex:0];
-        id uid = [object objectForKey:@"CF$UID"];
-
+        CFKeyedArchiverUIDRef uid = static_cast<CFKeyedArchiverUIDRef>([values objectAtIndex:0]);
         return decodeObjectForUID(self, uid);
     }
 }
@@ -281,11 +297,7 @@ static id _decodeObjectWithPropertyList(NSKeyedUnarchiver* self, id plist) {
         return plist;
     }
 
-    if ([plist isKindOfClass:[NSDictionary class]]) {
-        id uid = [plist objectForKey:@"CF$UID"];
-
-        return decodeObjectForUID(self, uid);
-    } else if ([plist isKindOfClass:[NSArray class]]) {
+    if ([plist isKindOfClass:[NSArray class]]) {
         id result = [NSMutableArray array];
         DWORD i, count = [plist count];
 
@@ -299,6 +311,16 @@ static id _decodeObjectWithPropertyList(NSKeyedUnarchiver* self, id plist) {
         }
 
         return result;
+    } else if (CFGetTypeID(plist) == _CFKeyedArchiverUIDGetTypeID()) {
+        return decodeObjectForUID(self, static_cast<CFKeyedArchiverUIDRef>(plist));
+    } else if ([plist isKindOfClass:[NSDictionary class]]) {
+        // Old versions of NSKeyedArchiver would emit invalid archives with
+        // the XML encoding for CF$UID. Parse that here.
+        NSDictionary* dictionary = (NSDictionary*)plist;
+        NSNumber* legacyCFUID = [dictionary objectForKey:@"CF$UID"];
+        if (dictionary.count == 1 && legacyCFUID) {
+            return decodeObjectForUID(self, static_cast<CFKeyedArchiverUIDRef>(plist));
+        }
     }
 
     [NSException raise:NSInvalidUnarchiveOperationException
@@ -589,13 +611,14 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
 }
 
 - (void)_swapActiveObject:(id)object {
-    FAIL_FAST_HR_IF_NULL(E_UNEXPECTED, _activeUid);
+    id<NSCopying> key = static_cast<id<NSCopying>>(_activeUid.get());
+    FAIL_FAST_HR_IF_NULL(E_UNEXPECTED, key);
 
-    if (object != [self->_uidToObject objectForKey:_activeUid]) {
+    if (object != [self->_uidToObject objectForKey:key]) {
         if (object != nil) {
-            [self->_uidToObject setObject:object forKey:_activeUid];
+            [self->_uidToObject setObject:object forKey:key];
         } else {
-            [self->_uidToObject removeObjectForKey:_activeUid];
+            [self->_uidToObject removeObjectForKey:key];
         }
     }
 }

@@ -18,6 +18,10 @@
 #import <Starboard.h>
 #import <StubReturn.h>
 
+#import <UIKit/NSObject+UIKitAdditions.h>
+#import <UIKit/UIActivityIndicatorView.h>
+#import <UIKit/UIColor.h>
+
 #import "XamlUtilities.h"
 
 #import <UWP/WindowsUIXamlControls.h>

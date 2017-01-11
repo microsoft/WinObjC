@@ -24,6 +24,8 @@
 #import "CAAnimationInternal.h"
 #import "CALayerInternal.h"
 
+#import <UIKit/UIApplication.h>
+
 static const wchar_t* TAG = L"LayerTransaction";
 
 using namespace XamlCompositor::Internal;
@@ -217,15 +219,33 @@ void LayerTransaction::Process() {
 }
 
 void LayerTransaction::_QueueProperty(const std::shared_ptr<QueuedProperty> property) {
+    // If we're in synchronous mode, set the property immediately
+    if (!UIApplication.displayMode.useLegacyBatchedCATransactions) {
+        property->Process();
+        return;
+    }
+
     auto& currentUpdates = _queuedProperties[property->_layer];
     currentUpdates[property->_propertyName] = property;
 }
 
 void LayerTransaction::_QueueMovement(const std::shared_ptr<QueuedMovement>& layerMovement) {
+    // If we're in synchronous mode, move the node immediately
+    if (!UIApplication.displayMode.useLegacyBatchedCATransactions) {
+        layerMovement->Process();
+        return;
+    }
+
     _queuedMovements.push_back(layerMovement);
 }
 
 void LayerTransaction::_QueueAnimation(const std::shared_ptr<QueuedAnimation>& animation) {
+    // If we're in synchronous mode, kick off the animation immediately
+    if (!UIApplication.displayMode.useLegacyBatchedCATransactions) {
+        animation->Process();
+        return;
+    }
+
     _queuedAnimations.push_back(animation);
 }
 

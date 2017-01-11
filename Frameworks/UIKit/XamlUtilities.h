@@ -13,12 +13,15 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
 #import <Starboard.h>
 
 #import "StringHelpers.h"
 
 #import <UIKit/UIControl.h>
+#import <UIKit/UITextField.h>
+#import <UIKit/UITextInputTraits.h>
 
 #import "UWP/WindowsUIXaml.h"
 #import "UWP/WindowsUIXamlControls.h"
@@ -36,6 +39,9 @@ WUXMFontFamily* WUXFontFamilyFromUIFontName(NSString* uiFontName);
 
 // Convert UIColor to Color on windows
 WUColor* ConvertUIColorToWUColor(UIColor* uiColor);
+
+// Convert windows color to UIColor
+UIColor* ConvertWUColorToUIColor(WUColor* wuColor);
 
 // Convert UIImage to WUXMImageBrush on windows
 WUXMImageBrush* ConvertUIImageToWUXMImageBrush(UIImage* image);

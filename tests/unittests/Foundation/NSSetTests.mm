@@ -129,3 +129,17 @@ TEST(NSSet, setByAddingObjectsFromArrayDuplicate) {
     NSSet* setFromDupArray = [set setByAddingObjectsFromArray:dupArray];
     ASSERT_EQ([setFromDupArray count], 6);
 }
+
+TEST(NSSet, MutableInstanceArchivesAsMutable) {
+    NSMutableSet* input = [NSMutableSet setWithObject:@"hello"];
+
+    NSData* data = [NSKeyedArchiver archivedDataWithRootObject:input];
+    ASSERT_OBJCNE(nil, data);
+
+    NSMutableSet* output = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    ASSERT_OBJCNE(nil, output);
+
+    EXPECT_NO_THROW([output addObject:@"world"]);
+
+    EXPECT_OBJCNE(input, output);
+}

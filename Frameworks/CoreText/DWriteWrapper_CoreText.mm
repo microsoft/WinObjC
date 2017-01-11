@@ -265,11 +265,15 @@ static HRESULT __DWriteTextLayoutCreate(CFAttributedStringRef string, CFRange ra
     uint32_t incompatibleAttributeFlag = 0;
     CFRange attributeRange;
 
-    for (CFIndex currentIndex = range.location; currentIndex < rangeEnd; currentIndex += attributeRange.length) {
-        CTFontRef font =
-            static_cast<CTFontRef>(CFAttributedStringGetAttribute(string, currentIndex, kCTFontAttributeName, &attributeRange));
+    // Find the range of the first set of attributes and skip it, since the underlying DWriteTextFormat has already internalized it
+    // If this first set of attributes lasts the entire range, the below for loop is not executed at all
+    // attributeRange is populated even if this attribute is not found
+    CFAttributedStringGetAttribute(string, range.location, kCTFontAttributeName, &attributeRange);
 
-        // attributeRange is properly populated even if this attribute is not found
+    for (CFIndex index = attributeRange.location + attributeRange.length; index < rangeEnd; index += attributeRange.length) {
+        CTFontRef font = static_cast<CTFontRef>(CFAttributedStringGetAttribute(string, index, kCTFontAttributeName, &attributeRange));
+
+        // attributeRange is populated even if this attribute is not found
         const DWRITE_TEXT_RANGE dwriteRange = { attributeRange.location, attributeRange.length };
         if (font) {
             RETURN_IF_FAILED(__DWriteTextLayoutApplyFont(textLayout, font, dwriteRange));
@@ -282,7 +286,7 @@ static HRESULT __DWriteTextLayoutCreate(CFAttributedStringRef string, CFRange ra
         }
 
         CFNumberRef extraKerningRef =
-            static_cast<CFNumberRef>(CFAttributedStringGetAttribute(string, currentIndex, kCTKernAttributeName, nullptr));
+            static_cast<CFNumberRef>(CFAttributedStringGetAttribute(string, index, kCTKernAttributeName, nullptr));
         if (extraKerningRef) {
             RETURN_IF_FAILED(__DWriteTextLayoutApplyExtraKerning(textLayout, typography, extraKerningRef, dwriteRange));
         } else {
@@ -329,6 +333,7 @@ public:
         _DWriteGlyphRunDescription glyphRunDescriptionInfo;
         glyphRunDescriptionInfo._stringLength = glyphRunDescription->stringLength;
         glyphRunDescriptionInfo._textPosition = glyphRunDescription->textPosition;
+        glyphRunDescriptionInfo._clusterMap.reserve(glyphRun->glyphCount);
         std::transform(glyphRunDescription->clusterMap,
                        glyphRunDescription->clusterMap + glyphRun->glyphCount,
                        std::back_inserter(glyphRunDescriptionInfo._clusterMap),
@@ -479,6 +484,8 @@ static _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CG
 
             // TODO::
             // This is a temp workaround until we can have actual glyph origins
+            run->_glyphOrigins.reserve(glyphRunDetails._dwriteGlyphRun[j].glyphCount);
+            run->_glyphAdvances.reserve(glyphRunDetails._dwriteGlyphRun[j].glyphCount);
             for (int index = 0; index < glyphRunDetails._dwriteGlyphRun[j].glyphCount; index++) {
                 run->_glyphOrigins.emplace_back(CGPoint{ xPos, yPos });
                 run->_glyphAdvances.emplace_back(CGSize{ glyphRunDetails._dwriteGlyphRun[j].glyphAdvances[index], 0.0f });

@@ -58,8 +58,8 @@ static bool __CTFontManagerUpdateWithFonts(CFArrayRef fontURLs, CTFontManagerSco
     CFIndex count = CFArrayGetCount(fontURLs);
     woc::unique_cf<CFMutableArrayRef> fontDatas{ CFArrayCreateMutable(nullptr, count, &kCFTypeArrayCallBacks) };
     for (size_t i = 0; i < count; ++i) {
-        NSData* data = [NSData dataWithContentsOfURL:static_cast<NSURL*>(CFArrayGetValueAtIndex(fontURLs, i))];
-        CFArrayAppendValue(fontDatas.get(), (CFDataRef)data);
+        woc::unique_cf<CGDataProviderRef> data{ CGDataProviderCreateWithURL((CFURLRef)CFArrayGetValueAtIndex(fontURLs, i)) };
+        CFArrayAppendValue(fontDatas.get(), data.get());
     }
 
     // S_FALSE represents partial failure so cannot use SUCCEEDED macro
@@ -71,7 +71,7 @@ static bool __CTFontManagerUpdateWithFonts(CFArrayRef fontURLs, CTFontManagerSco
 // TLambda :: (CFArrayRef -> CFArrayRef*) -> HRESULT
 template <typename TLambda>
 static bool __CTFontManagerUpdateWithGraphicsFont(CGFontRef font, CFErrorRef _Nullable* error, CFIndex errorCode, TLambda&& func) {
-    CFDataRef data = _CGFontGetData(font);
+    CGDataProviderRef data = _CGFontGetData(font);
     if (data == nullptr) {
         // Font was created from registered font, not a custom font that can be (un)registered
         if (error) {

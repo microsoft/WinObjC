@@ -13,14 +13,16 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
 @interface UISegment : UIView {
 @public
     id _delegate;
     idretain _title;
-    idretain _image;
-    idretain _selectedBackground, _highlightedBackground;
-    idretain _dividerImage;
+    StrongId<UIImage> _image;
+    StrongId<UIImage> _selectedBackground;
+    StrongId<UIImage> _highlightedBackground;
+    StrongId<UIImage> _dividerImage;
     idretain _segmentFont;
     idretain _textColor[2];
     StrongId<UIColor> _tintColor;

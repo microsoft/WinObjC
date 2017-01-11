@@ -144,7 +144,9 @@ static const CGFloat c_height = 40;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     } else if (indexPath.row == 5) {
         // Add test for disabling input
-        UIButton* _disableInputButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [_disableInputButton removeFromSuperview];
+
+        _disableInputButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         NSString* buttonText = @"Ignore UIApplication interaction events for 5 seconds.";
         _disableInputButton.frame = CGRectMake(5.0f, 5.0f, 450, cell.frame.size.height - 5.0f);
         _disableInputButton.layer.cornerRadius = 5.0f;

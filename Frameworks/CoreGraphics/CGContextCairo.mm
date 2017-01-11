@@ -64,6 +64,10 @@ static IWLazyIvarLookup<float> _LazyUIFontHorizontalScale(_LazyUIFont, "_horizon
 static IWLazyIvarLookup<void*> _LazyUIFontHandle(_LazyUIFont, "_font");
 static IWLazyIvarLookup<void*> _LazyUISizingFontHandle(_LazyUIFont, "_sizingFont");
 
+// DWrite will crash if we try to give it glyphs that are below this threshold
+// Though this value is approximate, it is small enough to not be noticeable while still safe
+static constexpr float c_glyphThreshold = 0.5f;
+
 CGContextCairo::CGContextCairo(CGContextRef base, CGImageRef destinationImage)
     : CGContextImpl(base, destinationImage), _drawContext(0), _filter(CAIRO_FILTER_BILINEAR) {
 }
@@ -484,7 +488,7 @@ void CGContextCairo::CGContextShowGlyphsAtPoint(float x, float y, const CGGlyph*
         case kCGTextFillClip:
         case kCGTextStrokeClip:
         case kCGTextFillStrokeClip:
-            curState->curTextPosition = { x, y };
+            CGContextSetTextPosition(x, y);
             CGContextShowGlyphsWithAdvances(glyphs, advances.data(), count);
             break;
 
@@ -494,7 +498,7 @@ void CGContextCairo::CGContextShowGlyphsAtPoint(float x, float y, const CGGlyph*
             break;
     }
 
-    curState->curTextPosition = { x + size.width, y };
+    CGContextSetTextPosition(x + size.width, y);
 }
 
 void CGContextCairo::CGContextShowGlyphsWithAdvances(const CGGlyph* glyphs, const CGSize* advances, size_t count) {
@@ -513,14 +517,15 @@ void CGContextCairo::CGContextShowGlyphsWithAdvances(const CGGlyph* glyphs, cons
 
     // Give array of advances of zero so it will use positions correctly
     std::vector<FLOAT> dwriteAdvances(count, 0);
-
     DWRITE_GLYPH_RUN run = { fontFace.Get(), curState->fontSize, count, glyphs, dwriteAdvances.data(), positions.data(), FALSE, 0 };
-    CGContextDrawGlyphRun(&run);
-    curState->curTextPosition = { curState->curTextPosition.x + delta.x, curState->curTextPosition.y + delta.y };
+    CGContextDrawGlyphRun(&run, false);
+
+    // Set text position to after the end of the last glyph drawn
+    CGContextSetTextPosition(curState->curTextMatrix.tx + delta.x, curState->curTextMatrix.ty + delta.y);
 }
 
 void CGContextCairo::CGContextShowGlyphs(const CGGlyph* glyphs, size_t count) {
-    CGContextShowGlyphsAtPoint(curState->curTextPosition.x, curState->curTextPosition.y, glyphs, count);
+    CGContextShowGlyphsAtPoint(curState->curTextMatrix.tx, curState->curTextMatrix.ty, glyphs, count);
 }
 
 void CGContextCairo::CGContextSetFont(CGFontRef font) {
@@ -540,8 +545,8 @@ void CGContextCairo::CGContextGetTextMatrix(CGAffineTransform* ret) {
 }
 
 void CGContextCairo::CGContextSetTextPosition(float x, float y) {
-    curState->curTextPosition.x = x;
-    curState->curTextPosition.y = y;
+    curState->curTextMatrix.tx = x;
+    curState->curTextMatrix.ty = y;
 }
 
 void CGContextCairo::CGContextSetTextDrawingMode(CGTextDrawingMode mode) {
@@ -762,8 +767,7 @@ void CGContextCairo::CGContextSelectFont(char* name, float size, DWORD encoding)
 }
 
 void CGContextCairo::CGContextGetTextPosition(CGPoint* pos) {
-    pos->x = curState->curTextPosition.x;
-    pos->y = curState->curTextPosition.y;
+    *pos = { curState->curTextMatrix.tx, curState->curTextMatrix.ty };
 }
 
 void CGContextCairo::CGContextSaveGState() {
@@ -785,9 +789,8 @@ void CGContextCairo::CGContextSaveGState() {
     states[curStateNum].setCurFont(curState->getCurFont());
     states[curStateNum].fontSize = curState->fontSize;
     states[curStateNum].textDrawingMode = curState->textDrawingMode;
-    states[curStateNum].curTextMatrix = curState->curTextMatrix;
-    states[curStateNum].curTextPosition = curState->curTextPosition;
     states[curStateNum].curBlendMode = curState->curBlendMode;
+    states[curStateNum].curTextMatrix = curState->curTextMatrix;
     states[curStateNum]._imgClip = NULL;
     states[curStateNum]._imgMask = NULL;
     states[curStateNum].shadowColor = NULL;
@@ -1851,19 +1854,13 @@ CGPathRef CGContextCairo::CGContextCopyPath(void) {
  *
  * @parameter glyphRun DWRITE_GLYPH_RUN object to render
  */
-void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
+void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, bool transformByGlyph) {
     ObtainLock();
 
     CGContextStrokePath();
 
     ID2D1RenderTarget* imgRenderTarget = _imgDest->Backing()->GetRenderTarget();
     THROW_NS_IF_NULL(E_UNEXPECTED, imgRenderTarget);
-
-    // Set the brush color to the current values from the context.
-    D2D1::ColorF brushColor =
-        D2D1::ColorF(curState->curFillColor.r, curState->curFillColor.g, curState->curFillColor.b, curState->curFillColor.a);
-
-    imgRenderTarget->BeginDraw();
 
     // Apply the required transformations as set in the context.
     // We need some special handling in transform as CoreText in iOS renders from bottom left but DWrite on Windows does top left.
@@ -1873,7 +1870,7 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
     // This means flipping the coordinate system,
     // Apply text position, where it will be translated to correct position given text matrix value
     // Undo assumed inversion about Y axis
-    CGAffineTransform textTransform = CGAffineTransformConcat(curState->curTextMatrix, CGAffineTransformMake(1, 0, 0, -1, 0, 0));
+    CGAffineTransform textTransform = CGAffineTransformConcat(CGAffineTransformMake(1, 0, 0, -1, 0, 0), curState->curTextMatrix);
 
     // Find transform that user created by multiplying given transform by necessary transforms to draw with CoreText
     // First multiply by inverse scale to get properly scaled values
@@ -1884,17 +1881,53 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
     CGAffineTransform userTransform =
         CGAffineTransformConcat(curState->curTransform, CGAffineTransformMake(1.0f / _scale, 0, 0, -1.0f / _scale, 0, height / _scale));
 
-    // Apply the text position in user space, not in text space
-    userTransform = CGAffineTransformTranslate(userTransform, curState->curTextPosition.x, curState->curTextPosition.y);
+    CGAffineTransform finalTransform = CGAffineTransformConcat(textTransform, userTransform);
 
-    // Apply the two transforms giving us the final result
-    CGAffineTransform transform = CGAffineTransformConcat(textTransform, userTransform);
-    imgRenderTarget->SetTransform(D2D1::Matrix3x2F(transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty));
+    if ((fabs(finalTransform.a * glyphRun->fontEmSize) <= c_glyphThreshold &&
+         fabs(finalTransform.b * glyphRun->fontEmSize) <= c_glyphThreshold) ||
+        (fabs(finalTransform.d * glyphRun->fontEmSize) <= c_glyphThreshold &&
+         fabs(finalTransform.c * glyphRun->fontEmSize) <= c_glyphThreshold)) {
+        TraceWarning(TAG, L"Glyphs too small to be rendered");
+        return;
+    }
 
+    // Set the brush color to the current values from the context.
+    D2D1::ColorF brushColor =
+        D2D1::ColorF(curState->curFillColor.r, curState->curFillColor.g, curState->curFillColor.b, curState->curFillColor.a);
+
+    imgRenderTarget->BeginDraw();
     // Draw the glyph using ID2D1RenderTarget
     ComPtr<ID2D1SolidColorBrush> brush;
     THROW_IF_FAILED(imgRenderTarget->CreateSolidColorBrush(brushColor, &brush));
-    imgRenderTarget->DrawGlyphRun(D2D1::Point2F(0, 0), glyphRun, brush.Get(), DWRITE_MEASURING_MODE_NATURAL);
+
+    // If text is only flipped vertically, we can draw it all at once rather than glyph by glyph
+    if ((textTransform.a == 1.0f && fabs(textTransform.d) == 1.0f && textTransform.b == 0.0f && textTransform.c == 0.0f) ||
+        !transformByGlyph) {
+        // Apply the two transforms giving us the final result
+        imgRenderTarget->SetTransform(
+            D2D1::Matrix3x2F(finalTransform.a, finalTransform.b, finalTransform.c, finalTransform.d, finalTransform.tx, finalTransform.ty));
+        imgRenderTarget->DrawGlyphRun(D2D1::Point2F(0, 0), glyphRun, brush.Get(), DWRITE_MEASURING_MODE_NATURAL);
+    } else {
+        // Text scaling and rotation apply to each glyph relative to its origin, so we must draw each glyph transformed independently
+        DWRITE_GLYPH_RUN individualGlyphRun{ glyphRun->fontFace,
+                                             glyphRun->fontEmSize,
+                                             1, // Since this is glyph by glyph, glyphCount is one
+                                             glyphRun->glyphIndices,
+                                             nullptr,
+                                             nullptr,
+                                             glyphRun->isSideways,
+                                             glyphRun->bidiLevel };
+        D2D1_POINT_2F origin{ 0, 0 };
+        // Iterate through every glyph by incrementing pointer in glyphIndices array
+        for (uint32_t i = 0; i < glyphRun->glyphCount; ++i, ++(individualGlyphRun.glyphIndices)) {
+            CGAffineTransform transform = CGAffineTransformConcat(textTransform, userTransform);
+            imgRenderTarget->SetTransform(D2D1::Matrix3x2F(transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty));
+            imgRenderTarget->DrawGlyphRun(origin, &individualGlyphRun, brush.Get(), DWRITE_MEASURING_MODE_NATURAL);
+
+            // Uses glyphAdvances to move each glyph
+            userTransform = CGAffineTransformTranslate(userTransform, glyphRun->glyphAdvances[i], 0);
+        }
+    }
 
     THROW_IF_FAILED(imgRenderTarget->EndDraw());
 }

@@ -35,8 +35,6 @@
 
 #ifdef __OBJC__
 
-#include "UIKit/UIKit.h"
-
 static const float kPi = 3.14159265358979323846f;
 static const double kPi_d = 3.14159265358979323846;
 

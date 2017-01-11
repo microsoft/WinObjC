@@ -15,6 +15,10 @@
 //******************************************************************************
 #pragma once
 
+@class NSString;
+@class UIColor;
+@class UIImage;
+
 @interface UIButtonContent : NSObject
 
 @property (retain) UIImage* image;

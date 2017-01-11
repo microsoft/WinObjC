@@ -15,8 +15,9 @@
 //******************************************************************************
 #pragma once
 
-@interface UIResponder ()
+#import <UIKit/UIResponder.h>
 
+@interface UIResponder ()
 + (void)_keyPressed:(unsigned short)key;
 - (void)_keyPressed:(unsigned short)key;
 + (id)_deleteRange:(id)num;

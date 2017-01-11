@@ -31,7 +31,7 @@
 - (void)_sendResumeEvent;
 - (void)_sendToastActionReceivedEvent:(NSDictionary*)toastAction;
 - (void)_sendVoiceCommandReceivedEvent:(WMSSpeechRecognitionResult*)result;
-- (void)_sendProtocolReceivedEvent:(WFUri*)uri;
+- (void)_sendProtocolReceivedEvent:(WFUri*)protocolUri source:(NSString*)source;
 - (void)_sendFileReceivedEvent:(WAAFileActivatedEventArgs*)result;
 @end
 

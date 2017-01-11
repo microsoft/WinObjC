@@ -20,6 +20,7 @@
 #import <math.h>
 #import <vector>
 #import <CoreGraphics/CGContext.h>
+#import <CoreGraphics/CGBitmapContext.h>
 #import <CoreGraphics/CGGeometry.h>
 #import <CoreGraphics/CGDataProvider.h>
 #import <Foundation/NSData.h>
@@ -249,11 +250,10 @@ CGImageRef CGImageCreate(size_t width,
                          const float* decode,
                          bool shouldInterpolate,
                          CGColorRenderingIntent intent) {
-    RETURN_NULL_IF(((provider == nullptr) || ![(NSObject*)provider isKindOfClass:[NSData class]]) || (colorSpace == nullptr));
+    RETURN_NULL_IF(provider == nullptr || colorSpace == nullptr);
 
-    NSData* dataProvider = (__bridge NSData*)provider;
-
-    unsigned char* data = (unsigned char*)[dataProvider bytes];
+    woc::unique_cf<CFDataRef> providerData{ CGDataProviderCopyData(provider) };
+    unsigned char* data = const_cast<unsigned char*>(CFDataGetBytePtr(providerData.get()));
 
     ComPtr<IWICBitmap> image;
     ComPtr<IWICImagingFactory> imageFactory;
@@ -327,11 +327,10 @@ CGImageRef CGImageMaskCreate(size_t width,
                              CGDataProviderRef provider,
                              const CGFloat* decode,
                              bool shouldInterpolate) {
-    RETURN_NULL_IF(((provider == nullptr) || ![(NSObject*)provider isKindOfClass:[NSData class]]));
+    RETURN_NULL_IF(provider == nullptr);
 
-    NSData* dataProvider = (__bridge NSData*)provider;
-
-    unsigned char* data = (unsigned char*)[dataProvider bytes];
+    woc::unique_cf<CFDataRef> providerData{ CGDataProviderCopyData(provider) };
+    unsigned char* data = const_cast<unsigned char*>(CFDataGetBytePtr(providerData.get()));
 
     ComPtr<IWICBitmap> image;
     ComPtr<IWICImagingFactory> imageFactory;
@@ -358,12 +357,12 @@ CGDataProviderRef CGImageGetDataProvider(CGImageRef img) {
 
     const unsigned int stride = CGImageGetBytesPerRow(img);
     const unsigned int size = CGImageGetHeight(img) * stride;
-    woc::unique_iw<unsigned char> data(static_cast<unsigned char*>(IwMalloc(size)));
+    woc::unique_iw<unsigned char> buffer(static_cast<unsigned char*>(IwMalloc(size)));
 
-    RETURN_NULL_IF_FAILED(img->ImageSource()->CopyPixels(nullptr, stride, size, data.get()));
+    RETURN_NULL_IF_FAILED(img->ImageSource()->CopyPixels(nullptr, stride, size, buffer.get()));
 
-    NSData* byteData = [NSData dataWithBytesNoCopy:data.release() length:size freeWhenDone:YES];
-    CGDataProviderRef ret = CGDataProviderCreateWithCFData((CFDataRef)byteData);
+    woc::unique_cf<CFDataRef> data{ CFDataCreateWithBytesNoCopy(nullptr, buffer.release(), size, kCFAllocatorDefault) };
+    CGDataProviderRef ret = CGDataProviderCreateWithCFData(data.get());
     CFAutorelease(ret);
     return ret;
 }

@@ -149,9 +149,11 @@ uint16_t     ntohs(uint16_t);
 
 in_addr_t    inet_addr(const char *);
 /*const*/ char  *inet_ntoa(struct in_addr);
+#ifndef WINOBJC     // Defined by ws2tcpip.h
 const char  *inet_ntop(int, const void * __restrict, char * __restrict,
             socklen_t);
 int      inet_pton(int, const char * __restrict, void * __restrict);
+#endif
 
 #if __BSD_VISIBLE
 int      inet_aton(const char *, struct in_addr *);

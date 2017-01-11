@@ -19,8 +19,16 @@
 #include "NSCFString.h"
 #include "NSRaise.h"
 #include "BridgeHelpers.h"
+#include "CFFoundationInternal.h"
 
 @implementation NSMutableString
+
+static Class _NSCFString$classForCoder(id self, SEL _cmd) {
+    if (_CFStringIsMutable(static_cast<CFStringRef>(self))) {
+        return [NSMutableString class];
+    }
+    return [NSString class];
+}
 
 + (void)load {
     // Now that NSString is loaded, go ahead and reset _NSCFString's superclass
@@ -32,6 +40,12 @@
     class_setSuperclass(nscfClass, self);
     object_setClass(nscfMetaClass, object_getClass(object_getClass(self)));
     class_setSuperclass(nscfMetaClass, object_getClass(self));
+
+    // NSString is special and needs some help. We can't override classForCoder
+    // in _NSCFString because it lives in CoreFoundation (and can't reference us.)
+    // We have to stomp it here to make sure that mutable strings are coded properly,
+    // and immutable strings are not coded at all (short-circuited through NSKeyedArchiver.)
+    class_replaceMethod(nscfClass, @selector(classForCoder), reinterpret_cast<IMP>(&_NSCFString$classForCoder), "#@:");
 }
 
 /**

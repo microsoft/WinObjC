@@ -15,12 +15,17 @@
 //******************************************************************************
 
 #import "Starboard.h"
-#import "UIKit/UIView.h"
-#import "UIKit/UIControl.h"
-#import "UIKit/UIColor.h"
-#import "UIKit/UIFont.h"
-#import "Foundation/NSString.h"
-#import "CoreGraphics/CGContext.h"
+#import <UIKit/NSString+UIKitAdditions.h>
+#import <UIKit/UIColor.h>
+#import <UIKit/UIControl.h>
+#import <UIKit/UIFont.h>
+#import <UIKit/UIGraphics.h>
+#import <UIKit/UIKitTypes.h>
+#import <UIKit/UILayoutSupport.h>
+#import <UIKit/UISegmentedControl.h>
+#import <UIKit/UIView.h>
+#import <Foundation/NSString.h>
+#import <CoreGraphics/CGContext.h>
 #import "UISegment.h"
 #import "UIViewInternal.h"
 #import "UISegmentedControlInternal.h"

@@ -62,7 +62,8 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFOutputStream)
 #pragma region NSCFOutputStream
 @implementation NSCFOutputStream
 
-BRIDGED_CLASS_REQUIRED_IMPLS(CFWriteStreamRef, CFWriteStreamGetTypeID, NSURL, NSCFOutputStream)
+BRIDGED_CLASS_REQUIRED_IMPLS(CFWriteStreamRef, CFWriteStreamGetTypeID, NSOutputStream, NSCFOutputStream)
+BRIDGED_CLASS_FOR_CODER(NSOutputStream)
 
 /**
  @Status Interoperable

@@ -411,3 +411,17 @@ TEST(NSArray, SortedArrayWithOptions) {
 
     ASSERT_OBJCEQ(expectedStableSort, actualStableSort);
 }
+
+TEST(NSArray, MutableInstanceArchivesAsMutable) {
+    NSMutableArray* input = [NSMutableArray arrayWithObject:@"hello"];
+
+    NSData* data = [NSKeyedArchiver archivedDataWithRootObject:input];
+    ASSERT_OBJCNE(nil, data);
+
+    NSMutableArray* output = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    ASSERT_OBJCNE(nil, output);
+
+    EXPECT_NO_THROW([output addObject:@"world"]);
+
+    EXPECT_OBJCNE(input, output);
+}

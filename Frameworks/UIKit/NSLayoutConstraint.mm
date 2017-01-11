@@ -325,7 +325,7 @@ const char* constraintType(NSLayoutAttribute attribute) {
 // Todo: Be more descriptive.
 void printConstraint(NSLayoutConstraint* constraint) {
     if (constraint.firstItem != nil) {
-        CGRect itmBounds = [constraint.firstItem isKindOfClass:[UIView class]] ? [constraint.firstItem bounds] : [constraint.firstItem layoutFrame];
+        CGRect itmBounds = [constraint.firstItem isKindOfClass:[UIView class]] ? [(UIView*)constraint.firstItem bounds] : [constraint.firstItem layoutFrame];
         TraceVerbose(TAG, L"%hs from (%hs) Type: %hs",
                     [[[constraint class] description] UTF8String],
                     [[constraint.firstItem description] UTF8String],
@@ -335,7 +335,7 @@ void printConstraint(NSLayoutConstraint* constraint) {
         TraceVerbose(TAG, L"%hs from (NONE) Type: %hs", [[[constraint class] description] UTF8String], constraintType(constraint.firstAttribute));
     }
     if (constraint.secondItem != nil) {
-        CGRect itmBounds = [constraint.secondItem isKindOfClass:[UIView class]] ? [constraint.secondItem bounds] : [constraint.secondItem layoutFrame];
+        CGRect itmBounds = [constraint.secondItem isKindOfClass:[UIView class]] ? [(UIView*)constraint.secondItem bounds] : [constraint.secondItem layoutFrame];
         TraceVerbose(TAG, L"%hs to   (%hs) Type: %hs",
                     [[[constraint class] description] UTF8String],
                     [[constraint.secondItem description] UTF8String],
@@ -347,13 +347,11 @@ void printConstraint(NSLayoutConstraint* constraint) {
     TraceVerbose(TAG, L"Details: mult(%f) const(%f), priority(%f)", constraint.multiplier, constraint.constant, constraint.priority);
 }
 
-void printConstraints(id constraints) {
+void printConstraints(NSArray* constraints) {
     int count = [constraints count];
-    if (count) {
-        for (int i = 0; i < count; i++) {
-            NSLayoutConstraint* constraint = [(id)constraints objectAtIndex:i];
-            printConstraint(constraint);
-        }
+    for (int i = 0; i < count; i++) {
+        NSLayoutConstraint* constraint = [constraints objectAtIndex:i];
+        printConstraint(constraint);
     }
 }
 

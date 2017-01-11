@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -15,7 +15,8 @@
 //******************************************************************************
 
 #pragma once
+#include <StubIncludes.h>
+#include <MobileCoreServices/MobileCoreServicesExport.h>
+#include <MobileCoreServices/UTType.h>
+#include <MobileCoreServices/UTCoreTypes.h>
 
-#import <StubIncludes.h>
-#import <MobileCoreServices/MobileCoreServicesExport.h>
-#import <MobileCoreServices/UTType.h>

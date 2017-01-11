@@ -16,9 +16,13 @@
 
 #pragma once
 
+#import <OpenGLES/EAGL.h>
+
 #include <COMIncludes.h>
 #include <EGL/EGL.h>
 #include <COMIncludes_End.h>
+
+@class CALayer;
 
 namespace OpenGLES {
 class OpenGLESContext;

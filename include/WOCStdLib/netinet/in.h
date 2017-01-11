@@ -531,10 +531,12 @@ __END_DECLS
 /*
  * Argument structure for IP_ADD_MEMBERSHIP and IP_DROP_MEMBERSHIP.
  */
+#ifndef WINOBJC     // Defined by ws2tcpip.h
 struct ip_mreq {
     struct  in_addr imr_multiaddr;  /* IP multicast address of group */
     struct  in_addr imr_interface;  /* local IP address of interface */
 };
+#endif
 
 /*
  * Modified argument structure for IP_MULTICAST_IF, obtained from Linux.
@@ -550,12 +552,12 @@ struct ip_mreqn {
 /*
  * Argument structure for IPv4 Multicast Source Filter APIs. [RFC3678]
  */
+#ifndef WINOBJC     // Defined by ws2tcpip.h
 struct ip_mreq_source {
     struct  in_addr imr_multiaddr;  /* IP multicast address of group */
     struct  in_addr imr_sourceaddr; /* IP address of source */
     struct  in_addr imr_interface;  /* local IP address of interface */
 };
-
 /*
  * Argument structures for Protocol-Independent Multicast Source
  * Filter APIs. [RFC3678]
@@ -570,6 +572,7 @@ struct group_source_req {
     struct sockaddr_storage gsr_group;  /* group address */
     struct sockaddr_storage gsr_source; /* source address */
 };
+#endif
 
 #ifndef __MSFILTERREQ_DEFINED
 #define __MSFILTERREQ_DEFINED
@@ -597,6 +600,7 @@ struct sockaddr;
  * The RFC specifies uint_t for the 6th argument to [sg]etsourcefilter().
  * We use uint32_t here to be consistent.
  */
+#ifndef WINOBJC     // Defined by ws2tcpip.h
 int setipv4sourcefilter(int, struct in_addr, struct in_addr, uint32_t,
         uint32_t, struct in_addr *);
 int getipv4sourcefilter(int, struct in_addr, struct in_addr, uint32_t *,
@@ -605,6 +609,7 @@ int setsourcefilter(int, uint32_t, struct sockaddr *, socklen_t,
         uint32_t, uint32_t, struct sockaddr_storage *);
 int getsourcefilter(int, uint32_t, struct sockaddr *, socklen_t,
         uint32_t *, uint32_t *, struct sockaddr_storage *);
+#endif
 
 /*
  * Filter modes; also used to represent per-socket filter mode internally.

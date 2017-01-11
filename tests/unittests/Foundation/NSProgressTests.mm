@@ -18,6 +18,10 @@
 #import <TestFramework.h>
 #import <thread>
 
+#import "TestUtils.h"
+
+static const double c_errorMargin = 0.000001;
+
 static const uint64_t work1pendingUnitCount = 2;
 static const uint64_t work2pendingUnitCount = 30;
 
@@ -123,8 +127,17 @@ TEST(NSProgress, FractionCompleted) {
     ASSERT_EQ(0, [userInfo totalUnitCount]);
     ASSERT_EQ(0, [userInfo completedUnitCount]);
 
-    [userInfo setTotalUnitCount:2];
-    [userInfo setCompletedUnitCount:1];
+    _NSFoundationTestKVOFacade* kvoListener = [[_NSFoundationTestKVOFacade newWithObservee:userInfo] autorelease];
+    [kvoListener observeKeyPath:@"fractionCompleted"
+                     withOptions:NSKeyValueObservingOptionNew
+                 performingBlock:^(id userInfo) {
+                     [userInfo setTotalUnitCount:2];
+                     [userInfo setCompletedUnitCount:1];
+                 }
+        andExpectChangeCallbacks:nil];
+
+    // Depending on OSX version, the implementation differs slightly, and changes the number of hits
+    EXPECT_TRUE((kvoListener.hits == 1) || (kvoListener.hits == 2));
 
     ASSERT_EQ(0.5, [userInfo fractionCompleted]);
 }
@@ -155,12 +168,7 @@ TEST(NSProgress, IsIndeterminate) {
     EXPECT_TRUE([progress isIndeterminate]);
 }
 
-// The way fractionCompleted and completedUnitCount being updated is flawed.
-// It does not pertain to the behavior that is detailed here
-// https://developer.apple.com/library/ios/documentation/Foundation/Reference/NSProgress_Class/#//apple_ref/doc/uid/TP40013490-CH1-SW46
-// for creating a tree of progress objects.
-// The following bug is opened to address this: #834
-OSX_DISABLED_TEST(NSProgress, ChainImplicit) {
+TEST(NSProgress, ChainImplicit) {
     NSProgress* prog1 = [NSProgress progressWithTotalUnitCount:100];
     [prog1 becomeCurrentWithPendingUnitCount:100];
     NSProgress* prog2 = [NSProgress progressWithTotalUnitCount:50];
@@ -168,11 +176,9 @@ OSX_DISABLED_TEST(NSProgress, ChainImplicit) {
     NSProgress* prog3 = [NSProgress progressWithTotalUnitCount:10];
     [prog3 setCompletedUnitCount:6];
 
-    // We are getting 0, in osx
     ASSERT_EQ(0.6, [prog3 fractionCompleted]);
-    // We are getting 0.6, in osx
-    ASSERT_EQ(0, [prog2 fractionCompleted]);
-    ASSERT_EQ(0, [prog1 fractionCompleted]);
+    ASSERT_EQ(0.6, [prog2 fractionCompleted]);
+    ASSERT_EQ(0.6, [prog1 fractionCompleted]);
 
     ASSERT_EQ(6, [prog3 completedUnitCount]);
     ASSERT_EQ(0, [prog2 completedUnitCount]);
@@ -185,9 +191,105 @@ OSX_DISABLED_TEST(NSProgress, ChainImplicit) {
     ASSERT_EQ(1.0, [prog1 fractionCompleted]);
 
     ASSERT_EQ(10, [prog3 completedUnitCount]);
-    // the below should be 0
     ASSERT_EQ(50, [prog2 completedUnitCount]);
     ASSERT_EQ(100, [prog1 completedUnitCount]);
+
+    [prog2 resignCurrent];
+    [prog1 resignCurrent];
+}
+
+TEST(NSProgress, ChainImplicit_EdgeCases) {
+    NSProgress* prog1 = [NSProgress progressWithTotalUnitCount:100];
+    [prog1 becomeCurrentWithPendingUnitCount:100];
+    NSProgress* prog2 = [NSProgress progressWithTotalUnitCount:120];
+    [prog2 becomeCurrentWithPendingUnitCount:20];
+    NSProgress* prog3 = [NSProgress progressWithTotalUnitCount:3];
+
+    ASSERT_EQ(0, [prog3 completedUnitCount]);
+    ASSERT_EQ(0, [prog2 completedUnitCount]);
+    ASSERT_EQ(0, [prog1 completedUnitCount]);
+
+    ASSERT_EQ(0, [prog3 fractionCompleted]);
+    ASSERT_EQ(0, [prog2 fractionCompleted]);
+    ASSERT_EQ(0, [prog1 fractionCompleted]);
+
+    [prog3 setCompletedUnitCount:1];
+
+    ASSERT_EQ(1, [prog3 completedUnitCount]);
+    ASSERT_EQ(0, [prog2 completedUnitCount]);
+    ASSERT_EQ(0, [prog1 completedUnitCount]);
+
+    ASSERT_NEAR(1.0f / 3.0f, [prog3 fractionCompleted], c_errorMargin);
+    ASSERT_NEAR(1.0f / 18.0f, [prog2 fractionCompleted], c_errorMargin);
+    ASSERT_NEAR(1.0f / 18.0f, [prog1 fractionCompleted], c_errorMargin);
+
+    // Manually add 60 to prog2
+    [prog2 setCompletedUnitCount:60];
+
+    ASSERT_EQ(1, [prog3 completedUnitCount]);
+    ASSERT_EQ(60, [prog2 completedUnitCount]);
+    ASSERT_EQ(0, [prog1 completedUnitCount]);
+
+    ASSERT_NEAR(1.0f / 3.0f, [prog3 fractionCompleted], c_errorMargin);
+    ASSERT_NEAR(0.5f + (1.0f / 18.0f), [prog2 fractionCompleted], c_errorMargin);
+    ASSERT_NEAR(0.5f + (1.0f / 18.0f), [prog1 fractionCompleted], c_errorMargin);
+
+    // Go past-the-end on prog3, should add the 20 pending units to prog2
+    [prog3 setCompletedUnitCount:4];
+
+    ASSERT_EQ(4, [prog3 completedUnitCount]);
+    ASSERT_EQ(80, [prog2 completedUnitCount]);
+    ASSERT_EQ(0, [prog1 completedUnitCount]);
+
+    ASSERT_NEAR(4.0f / 3.0f, [prog3 fractionCompleted], c_errorMargin);
+    ASSERT_NEAR(80.0f / 120.0f, [prog2 fractionCompleted], c_errorMargin);
+    ASSERT_NEAR(80.0f / 120.0f, [prog1 fractionCompleted], c_errorMargin);
+
+    // Reset prog3 back to 0 (probably shouldn't ever be done in production)
+    [prog3 setCompletedUnitCount:0];
+
+    ASSERT_EQ(0, [prog3 completedUnitCount]);
+    ASSERT_EQ(80, [prog2 completedUnitCount]); // Stays the same
+    ASSERT_EQ(0, [prog1 completedUnitCount]);
+
+    ASSERT_EQ(0, [prog3 fractionCompleted]);
+    ASSERT_NEAR((60.0f / 120.0f) - (1.0f / 18.0f),
+                [prog2 fractionCompleted],
+                c_errorMargin); // Lowers by 4/3 * 20/120, despite completedUnitCount staying the same
+    ASSERT_NEAR((60.0f / 120.0f) - (1.0f / 18.0f), [prog1 fractionCompleted], c_errorMargin); // Lowers by 4/3 * 20/120
+
+    // Complete prog3 again (probably shouldn't ever be done in production)
+    [prog3 setCompletedUnitCount:3];
+
+    ASSERT_EQ(3, [prog3 completedUnitCount]);
+    ASSERT_EQ(100, [prog2 completedUnitCount]); // Increments again
+    ASSERT_EQ(0, [prog1 completedUnitCount]);
+
+    ASSERT_EQ(1, [prog3 fractionCompleted]);
+    ASSERT_NEAR((80.0f / 120.0f) - (1.0f / 18.0f), [prog2 fractionCompleted], c_errorMargin); // Increases by 20/120
+    ASSERT_NEAR((80.0f / 120.0f) - (1.0f / 18.0f), [prog1 fractionCompleted], c_errorMargin); // Increases by 20/120
+
+    // Change prog3's total unit count to 9
+    [prog3 setTotalUnitCount:9];
+
+    ASSERT_EQ(3, [prog3 completedUnitCount]);
+    ASSERT_EQ(100, [prog2 completedUnitCount]);
+    ASSERT_EQ(0, [prog1 completedUnitCount]);
+
+    ASSERT_NEAR(1.0f / 3.0f, [prog3 fractionCompleted], c_errorMargin);
+    ASSERT_NEAR(0.5f, [prog2 fractionCompleted], c_errorMargin); // lower by 20/120, increase by 1/3 * 20/120
+    ASSERT_NEAR(0.5f, [prog1 fractionCompleted], c_errorMargin); // lower by 20/120, increase by 1/3 * 20/120
+
+    // Reset prog2 to 0 (probably shouldn't ever be done in production)
+    [prog2 setCompletedUnitCount:0];
+
+    ASSERT_EQ(3, [prog3 completedUnitCount]);
+    ASSERT_EQ(0, [prog2 completedUnitCount]); // Hard resets without taking anything from prog3 into account
+    ASSERT_EQ(0, [prog1 completedUnitCount]);
+
+    ASSERT_NEAR(1.0f / 3.0f, [prog3 fractionCompleted], c_errorMargin);
+    ASSERT_NEAR(0, [prog2 fractionCompleted], c_errorMargin); // fractionCompleted floors at 0
+    ASSERT_NEAR(0, [prog1 fractionCompleted], c_errorMargin);
 
     [prog2 resignCurrent];
     [prog1 resignCurrent];
@@ -197,18 +299,27 @@ TEST(NSProgress, TreeImplicit) {
     NSProgress* root = [NSProgress progressWithTotalUnitCount:100];
     ProgressThreadHelper* progressThreadHelper = [[ProgressThreadHelper new] autorelease];
 
-    NSThread* thread1 = [[[NSThread alloc] initWithTarget:progressThreadHelper selector:@selector(work1:) object:root] autorelease];
-    NSThread* thread2 = [[[NSThread alloc] initWithTarget:progressThreadHelper selector:@selector(work2:) object:root] autorelease];
+    _NSFoundationTestKVOFacade* kvoListener = [[_NSFoundationTestKVOFacade newWithObservee:root] autorelease];
+    [kvoListener observeKeyPath:@"fractionCompleted"
+                     withOptions:NSKeyValueObservingOptionNew
+                 performingBlock:^(id root) {
+                     NSThread* thread1 =
+                         [[[NSThread alloc] initWithTarget:progressThreadHelper selector:@selector(work1:) object:root] autorelease];
+                     NSThread* thread2 =
+                         [[[NSThread alloc] initWithTarget:progressThreadHelper selector:@selector(work2:) object:root] autorelease];
 
-    [thread1 start];
-    [thread2 start];
+                     [thread1 start];
+                     [thread2 start];
 
-    size_t i = 0;
-    while ((![thread1 isFinished] || ![thread2 isFinished]) && (i++ < 50)) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-    }
+                     size_t i = 0;
+                     while ((![thread1 isFinished] || ![thread2 isFinished]) && (i++ < 50)) {
+                         std::this_thread::sleep_for(std::chrono::milliseconds(10));
+                     }
 
-    ASSERT_EQ(work1pendingUnitCount + work2pendingUnitCount, [root completedUnitCount]);
+                     ASSERT_EQ(work1pendingUnitCount + work2pendingUnitCount, [root completedUnitCount]);
+                 }
+        andExpectChangeCallbacks:nil];
+    EXPECT_NE(0, kvoListener.hits);
 }
 
 // The selector addChild:withPendingUnitCount is only supported in OSX Foundation 10.11,
@@ -358,17 +469,36 @@ OSX_DISABLED_TEST(NSProgress, CancelPauseResume) {
     }];
 
     // Verify that the handlers are called and the bools are set
-    [root cancel];
-    ASSERT_EQ(YES, [root isCancelled]);
-    ASSERT_EQ(YES, cancelCalled);
+    _NSFoundationTestKVOFacade* kvoListener = [[_NSFoundationTestKVOFacade newWithObservee:root] autorelease];
+    [kvoListener observeKeyPath:@"cancelled"
+                     withOptions:NSKeyValueObservingOptionNew
+                 performingBlock:^(id root) {
+                     [root cancel];
+                     ASSERT_EQ(YES, [root isCancelled]);
+                     ASSERT_EQ(YES, cancelCalled);
+                 }
+        andExpectChangeCallbacks:nil];
+    EXPECT_EQ(1, kvoListener.hits);
 
-    [root pause];
-    ASSERT_EQ(YES, [root isPaused]);
-    ASSERT_EQ(YES, pauseCalled);
+    [kvoListener observeKeyPath:@"paused"
+                     withOptions:NSKeyValueObservingOptionNew
+                 performingBlock:^(id root) {
+                     [root pause];
+                     ASSERT_EQ(YES, [root isPaused]);
+                     ASSERT_EQ(YES, pauseCalled);
+                 }
+        andExpectChangeCallbacks:nil];
+    EXPECT_EQ(1, kvoListener.hits);
 
-    [root resume];
-    ASSERT_EQ(NO, [root isPaused]);
-    ASSERT_EQ(YES, resumeCalled);
+    [kvoListener observeKeyPath:@"paused"
+                     withOptions:NSKeyValueObservingOptionNew
+                 performingBlock:^(id root) {
+                     [root resume];
+                     ASSERT_EQ(NO, [root isPaused]);
+                     ASSERT_EQ(YES, resumeCalled);
+                 }
+        andExpectChangeCallbacks:nil];
+    EXPECT_EQ(1, kvoListener.hits);
 }
 
 TEST(NSProgress, LocalizedDescription) {
@@ -438,4 +568,18 @@ TEST(NSProgress, LocalizedDescription) {
     [progress setLocalizedAdditionalDescription:userSetLocalizedAdditionalDescription];
     ASSERT_OBJCEQ(@"user-set localizedDescription", outLocalizedDescription);
     ASSERT_OBJCEQ(@"user-set localizedAdditionalDescription", outLocalizedAdditionalDescription);
+}
+
+TEST(NSProgress, KVOLocalizedDescription) {
+    NSProgress* progress = [NSProgress progressWithTotalUnitCount:100];
+
+    _NSFoundationTestKVOFacade* kvoListener = [[_NSFoundationTestKVOFacade newWithObservee:progress] autorelease];
+    [kvoListener observeKeyPath:@"localizedDescription"
+                     withOptions:NSKeyValueObservingOptionNew
+                 performingBlock:^(id progress) {
+                     // Setting NSProgressFileTotalCountKey in User Info should trigger a localized decription change.
+                     [progress setUserInfoObject:@(102) forKey:NSProgressFileTotalCountKey];
+                 }
+        andExpectChangeCallbacks:nil];
+    EXPECT_EQ(1, kvoListener.hits);
 }

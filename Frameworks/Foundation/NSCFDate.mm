@@ -53,6 +53,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFDate)
 @implementation NSCFDate
 
 BRIDGED_CLASS_REQUIRED_IMPLS(CFDateRef, CFDateGetTypeID, NSDate, NSCFDate)
+BRIDGED_CLASS_FOR_CODER(NSDate)
 
 - (double)timeIntervalSinceReferenceDate {
     return CFDateGetAbsoluteTime(static_cast<CFDateRef>(self));

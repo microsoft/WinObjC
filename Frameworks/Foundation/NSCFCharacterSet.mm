@@ -56,6 +56,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFCharacterSet)
 @implementation NSCFCharacterSet
 
 BRIDGED_CLASS_REQUIRED_IMPLS(CFCharacterSetRef, CFCharacterSetGetTypeID, NSCharacterSet, NSCFCharacterSet)
+BRIDGED_MUTABLE_CLASS_FOR_CODER(CFCharacterSetRef, __CFCharacterSetIsMutable, NSCharacterSet, NSMutableCharacterSet)
 
 - (BOOL)characterIsMember:(unichar)aCharacter {
     return CFCharacterSetIsCharacterMember(static_cast<CFCharacterSetRef>(self), aCharacter);
