@@ -44,6 +44,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(UICTFontDescriptor)
 @implementation UICTFontDescriptor
 
 BRIDGED_CLASS_REQUIRED_IMPLS(CTFontDescriptorRef, CTFontDescriptorGetTypeID, UIFontDescriptor, UICTFontDescriptor)
+BRIDGED_CLASS_FOR_CODER(UIFontDescriptor)
 
 - (NSDictionary<NSString*, id>*)fontAttributes {
     return [(__bridge NSDictionary<NSString*, id>*)CTFontDescriptorCopyAttributes(static_cast<CTFontDescriptorRef>(self)) autorelease];

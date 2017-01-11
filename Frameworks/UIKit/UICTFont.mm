@@ -47,6 +47,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(UICTFont)
 @implementation UICTFont
 
 BRIDGED_CLASS_REQUIRED_IMPLS(CTFontRef, CTFontGetTypeID, UIFont, UICTFont)
+BRIDGED_CLASS_FOR_CODER(UIFont)
 
 + (UIFont*)fontWithName:(NSString*)name size:(float)size {
     return [(__bridge UIFont*)CTFontCreateWithName((__bridge CFStringRef)name, size, nullptr) autorelease];

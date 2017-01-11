@@ -62,10 +62,19 @@ __pragma(clang diagnostic pop) \
 + (NSBridgedConcreteType*)allocWithZone:(NSZone*)zone { \
     FAIL_FAST(); \
     return nullptr; \
-} \
- \
+}
+
+#define BRIDGED_CLASS_FOR_CODER(NSBridgedType) \
 - (Class)classForCoder { \
-  return [NSBridgedType class];\
+    return [NSBridgedType class];\
+}
+
+#define BRIDGED_MUTABLE_CLASS_FOR_CODER(CFBridgedTypeRef, ISMutableFN, NSBridgedType, NSMutableBridgedType) \
+- (Class)classForCoder { \
+    if (ISMutableFN((CFBridgedTypeRef)self)) { \
+      return [NSMutableBridgedType class]; \
+    } \
+    return [NSBridgedType class]; \
 }
 // clang-format on
 

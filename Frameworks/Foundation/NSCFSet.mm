@@ -82,6 +82,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFSet)
 @implementation NSCFSet
 
 BRIDGED_CLASS_REQUIRED_IMPLS(CFSetRef, CFSetGetTypeID, NSSet, NSCFSet)
+BRIDGED_MUTABLE_CLASS_FOR_CODER(CFSetRef, _CFSetIsMutable, NSSet, NSMutableSet)
 
 - (unsigned)count {
     return CFSetGetCount(static_cast<CFSetRef>(self));

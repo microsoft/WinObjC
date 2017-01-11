@@ -773,3 +773,18 @@ TEST(NSAttributedString, Subclass) {
     ASSERT_EQ(2, CFAttributedStringGetLength((__bridge CFAttributedStringRef)didOverride));
     ASSERT_EQ(YES, [didOverride methodCalled]);
 }
+
+DISABLED_TEST(NSAttributedString, MutableInstanceArchivesAsMutable) {
+    NSMutableAttributedString* input = [[[NSMutableAttributedString alloc] initWithString:@"hello"] autorelease];
+
+    NSData* data = [NSKeyedArchiver archivedDataWithRootObject:input];
+    ASSERT_OBJCNE(nil, data);
+
+    NSMutableAttributedString* output = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    ASSERT_OBJCNE(nil, output);
+
+    EXPECT_NO_THROW([output appendAttributedString:[[[NSMutableAttributedString alloc] initWithString:@" world"] autorelease]]);
+    EXPECT_OBJCEQ(@"hello world", [output string]);
+
+    EXPECT_OBJCNE(input, output);
+}

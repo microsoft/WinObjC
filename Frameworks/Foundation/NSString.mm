@@ -2021,7 +2021,13 @@ static std::vector<NSStringEncoding> _getNSStringEncodings() {
  @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
-    [coder encodeObject:self forKey:@"NS.string"];
+    if ([coder isKindOfClass:[NSKeyedArchiver class]]) {
+        [coder _encodeRawObject:self forKey:@"NS.string"];
+    } else {
+        // This can cause custom string subclasses to act up.
+        // Ideally, a developer would override encodeWithCoder:.
+        [coder encodeObject:[NSString stringWithString:self] forKey:@"NS.string"];
+    }
 }
 
 /**

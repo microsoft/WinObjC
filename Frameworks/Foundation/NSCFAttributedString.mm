@@ -81,6 +81,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFAttributedString)
 @implementation NSCFAttributedString
 
 BRIDGED_CLASS_REQUIRED_IMPLS(CFAttributedStringRef, CFAttributedStringGetTypeID, NSAttributedString, NSCFAttributedString)
+BRIDGED_MUTABLE_CLASS_FOR_CODER(CFAttributedStringRef, _CFAttributedStringIsMutable, NSAttributedString, NSMutableAttributedString)
 
 - (NSString*)string {
     return (__bridge NSString*)CFAttributedStringGetString(reinterpret_cast<CFAttributedStringRef>(self));

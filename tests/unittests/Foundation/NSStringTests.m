@@ -710,3 +710,18 @@ TEST(NSString, LastPathComponent) {
     string = @"/tmp/foo///";
     EXPECT_OBJCEQ(@"foo", string.lastPathComponent);
 }
+
+TEST(NSString, MutableInstanceArchivesAsMutable) {
+    NSMutableString* input = [NSMutableString stringWithString:@"hello"];
+
+    NSData* data = [NSKeyedArchiver archivedDataWithRootObject:input];
+    ASSERT_OBJCNE(nil, data);
+
+    NSMutableString* output = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    ASSERT_OBJCNE(nil, output);
+
+    EXPECT_NO_THROW([output appendString:@" world"]);
+    EXPECT_OBJCEQ(@"hello world", output);
+
+    EXPECT_OBJCNE(input, output);
+}

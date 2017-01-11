@@ -99,6 +99,11 @@ static id makeReference(unsigned objectId) {
     [_enc setObject:o forKey:aKey];
 }
 
+- (void)_encodeRawObject:(NSObject*)object forKey:(NSString*)key {
+    _checkKey(key, _enc);
+    [_enc setObject:object forKey:key];
+}
+
 /**
  @Status Interoperable
 */
