@@ -2257,6 +2257,27 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
 
 /**
  @Status Interoperable
+ @Notes Contradictory documentation exists for this property:
+        On the one hand:
+        "When you present a view controller modally (either explicitly or
+         implicitly) using the presentViewController:animated:completion:
+         method, the view controller that called the method has this property
+         set to the view controller that it presented. If the current view
+         controller did not present another view controller modally, the value
+         in this property is nil."
+        This is contradicted by the statement that this property is:
+        "The view controller that is presented by this view controller, or one
+         of its ancestors in the view controller hierarchy."
+
+        WinObjC is implementing the latter statement (requiring traversal of the
+        parent hierarchy). For the former behaviour use the modalViewController
+        property.
+
+        Note that our underlying private ivar priv->_presentedViewController
+        simply holds an instance of the controller presented on self via
+        presentViewController:animated:completion: or nil if no view controller
+        has been presented (note that the modalViewController property
+        implementation simply returns this ivar).
 */
 - (UIViewController*)presentedViewController {
     if (priv->_presentedViewController) {
