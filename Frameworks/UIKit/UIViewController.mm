@@ -1154,7 +1154,7 @@ NSMutableDictionary* _pageMappings;
         return;
     }
 
-    if ([self presentedViewController]) {
+    if (priv->_presentedViewController) {
         TraceWarning(TAG,
                      L"Can't present view controller %08x (%hs) - view controller %08x (%hs) already has a presented controller!",
                      controller,
@@ -1280,7 +1280,7 @@ NSMutableDictionary* _pageMappings;
  @Status Interoperable
 */
 - (void)dismissViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion {
-    if (![self presentedViewController]) {
+    if (!priv->_presentedViewController) {
         // Calling dismiss on a view controller that hasn't presented additional view controllers itself should result in the parent handling the dismissal.
 
         if ([self parentViewController]) {
@@ -1292,15 +1292,16 @@ NSMutableDictionary* _pageMappings;
         return;
     }
 
-    UIViewController* presented = [self presentedViewController];
+    UIViewController* presented = priv->_presentedViewController;
 
     // Handle multiple child dismissal:
-    UIViewController* grandChild = [presented presentedViewController];
-    while (UIViewController* next = [grandChild presentedViewController]) {
-        grandChild = next;
-    }
+    UIViewController* grandChild = presented->priv->_presentedViewController;
 
     if (grandChild) {
+        while (UIViewController* next = grandChild->priv->_presentedViewController) {
+            grandChild = next;
+        }
+
         // Dismiss the youngest first with specified animation
         __unsafe_unretained __block UIViewController* parent = [grandChild parentViewController];
         [parent dismissViewControllerAnimated:animated completion:^{
@@ -2258,7 +2259,13 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
  @Status Interoperable
 */
 - (UIViewController*)presentedViewController {
-    return priv->_presentedViewController;
+    if (priv->_presentedViewController) {
+        return priv->_presentedViewController;
+    } else if ([priv->_parentViewController presentedViewController] != self) {
+        return [priv->_parentViewController presentedViewController];
+    }
+
+    return nil;
 }
 
 /**
