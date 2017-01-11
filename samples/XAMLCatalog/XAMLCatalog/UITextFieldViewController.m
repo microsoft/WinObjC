@@ -21,6 +21,7 @@ static const CGFloat c_originY = 8;
 static const CGFloat c_width = 260;
 static const CGFloat c_height = 40;
 static const CGFloat c_labelFontSize = 17.0f;
+static const int TAG_SUBVIEW_UITEXTFIELD = 1;
 
 @implementation UITextFieldViewController {
 @private
@@ -287,9 +288,17 @@ static const CGFloat c_labelFontSize = 17.0f;
     UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"MenuCell"];
     if (nil == cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MenuCell"];
+    } else {
+        // Before reuse, check if any subview in contentview is tagged with TAG_SUBVIEW_UITEXTFIELD
+        // if so, we know it is a custom view that we need to remove
+        UIView* subView = (UIView*)[cell.contentView viewWithTag:TAG_SUBVIEW_UITEXTFIELD];
+        [subView removeFromSuperview];
     }
 
-    [cell addSubview:[_textFields objectAtIndex:indexPath.row]];
+    // Tag UITextField subview with TAG_SUBVIEW_TEXTFIELD before adding this subview into contentview
+    UIView* subView = [_textFields objectAtIndex:indexPath.row];
+    subView.tag = TAG_SUBVIEW_UITEXTFIELD;
+    [cell.contentView addSubview:subView];
     return cell;
 }
 
