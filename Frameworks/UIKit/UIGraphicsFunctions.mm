@@ -1,7 +1,7 @@
 //******************************************************************************
 //
 // Copyright (c) 2016 Intel Corporation. All rights reserved.
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -15,79 +15,104 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include <StubReturn.h>
-#include "UIKit/UIKit.h"
-#include "CGContextInternal.h"
-#include "LoggingNative.h"
-#include "StarboardXaml/DisplayProperties.h"
+#import <StubReturn.h>
+#import <Starboard.h>
+#import <UIKit/UIKit.h>
+#import <LoggingNative.h>
+#import <CoreGraphics/CGContext.h>
+
+#import "StarboardXaml/DisplayProperties.h"
+#import "CGContextInternal.h" // for shadow projection
+
+#import <stack>
+#import <mutex>
 
 static const wchar_t* TAG = L"UIGraphicsFunctions";
 
-#define MAX_CONTEXT_DEPTH 128
-__declspec(thread) CGContextRef _currentCGContext[MAX_CONTEXT_DEPTH];
-__declspec(thread) int _currentCGContextDepth;
+namespace {
+typedef NS_ENUM(NSUInteger, _UIGraphicsContextType) {
+    _UIGraphicsContextTypeUnknown = 0,
+    _UIGraphicsContextTypeUser,
+    _UIGraphicsContextTypeImage,
+    _UIGraphicsContextTypePDF,
+};
 
-/**
- @Status Stub
- @Notes
-*/
-void UIRectFrameUsingBlendMode(CGRect rect, CGBlendMode blendMode) {
-    UNIMPLEMENTED();
+struct _UIGraphicsContextRecord {
+    woc::unique_cf<CGContextRef> context;
+    _UIGraphicsContextType type;
+    CGSize size;
+    CGFloat scale;
+
+    _UIGraphicsContextRecord(CGContextRef context, _UIGraphicsContextType type, CGSize size = CGSizeZero, CGFloat scale = 1.0f)
+        : context(CGContextRetain(context)), type(type), size(size), scale(scale) {
+    }
+};
 }
+
+static std::mutex s_contextStackMutex;
+static std::stack<_UIGraphicsContextRecord> s_contextStack;
 
 /**
  @Status Interoperable
 */
 void UIGraphicsPushContext(CGContextRef context) {
-    if (_currentCGContextDepth >= MAX_CONTEXT_DEPTH - 1) {
-        assert(0);
-        return;
-    }
+    std::lock_guard<std::mutex> lock(s_contextStackMutex);
 
-    CGContextRetain(context);
-    _currentCGContext[++(_currentCGContextDepth)] = context;
+    s_contextStack.emplace(context, _UIGraphicsContextTypeUser);
 }
 
 /**
  @Status Interoperable
 */
 void UIGraphicsPopContext() {
-    if (_currentCGContextDepth <= 0) {
-        assert(0);
+    std::lock_guard<std::mutex> lock(s_contextStackMutex);
+    if (s_contextStack.empty()) {
+        TraceError(TAG, L"UIGraphicsPopContext(): the context stack was empty.");
         return;
     }
-    CGContextRelease(_currentCGContext[_currentCGContextDepth]);
-    _currentCGContext[_currentCGContextDepth] = nullptr;
-    _currentCGContextDepth--;
+    s_contextStack.pop();
 }
 
 /**
  @Status Interoperable
 */
 CGContextRef UIGraphicsGetCurrentContext() {
-    return _currentCGContext[_currentCGContextDepth];
+    std::lock_guard<std::mutex> lock(s_contextStackMutex);
+    return s_contextStack.top().context.get();
 }
 
 /**
- @Status Caveat
- @Notes opaque parameter not supported
+ @Status Interoperable
 */
 void UIGraphicsBeginImageContextWithOptions(CGSize size, BOOL opaque, float scale) {
-    return;
-    // TODO(DH) GH#1124 Revisit when we have support for CGImage+IWICBitmap
-#if 0
+    // Locking occurs in UIGraphicsPushContext.
     if (scale == 0.0f) {
         scale = DisplayProperties::ScreenScale();
     }
-    CGContextRef newCtx = _CGBitmapContextCreateWithFormat((int)(size.width * scale), (int)(size.height * scale), _ColorARGB);
-    newCtx->scale = scale;
-    CGContextTranslateCTM(newCtx, 0.0f, size.height * scale);
-    CGContextScaleCTM(newCtx, scale, scale);
-    CGContextScaleCTM(newCtx, 1.0f, -1.0f);
 
-    UIGraphicsPushContext(newCtx);
-#endif
+    CGSize scaledSize{
+        size.width * scale, size.height * scale,
+    };
+    woc::unique_cf<CGColorSpaceRef> rgbColorSpace(CGColorSpaceCreateDeviceRGB());
+    woc::unique_cf<CGContextRef> context{ CGBitmapContextCreate(nullptr,
+                                                                scaledSize.width,
+                                                                scaledSize.height,
+                                                                8, // 32bpp (8 bits per component)
+                                                                scaledSize.width * 4, // Stride for RGBA/RGBX
+                                                                rgbColorSpace.get(),
+                                                                (opaque ? kCGImageAlphaNoneSkipLast : kCGImageAlphaPremultipliedLast) |
+                                                                    kCGBitmapByteOrder32Little) };
+
+    // Apply the UIKit ULO transform (and shadow projection transform)
+    CGContextTranslateCTM(context.get(), 0.0f, size.height * scale);
+    CGContextScaleCTM(context.get(), scale, -scale);
+    _CGContextSetShadowProjectionTransform(context.get(), CGAffineTransformMakeScale(1.0, -1.0));
+
+    {
+        std::lock_guard<std::mutex> lock(s_contextStackMutex);
+
+        s_contextStack.emplace(context.get(), _UIGraphicsContextTypeImage, size, scale);
+    }
 }
 
 /**
@@ -101,43 +126,76 @@ void UIGraphicsBeginImageContext(CGSize size) {
  @Status Interoperable
 */
 UIImage* UIGraphicsGetImageFromCurrentImageContext() {
-    return nil;
-    // TODO(DH) GH#1124 Revisit when we have support for CGImage+IWICBitmap
-#if 0
-    id ret = [UIImage imageWithCGImage:CGBitmapContextGetImage(UIGraphicsGetCurrentContext())
-                                 scale:UIGraphicsGetCurrentContext()->scale
-                           orientation:UIImageOrientationUp];
+    std::lock_guard<std::mutex> lock(s_contextStackMutex);
+    if (s_contextStack.empty()) {
+        TraceError(TAG, L"UIGraphicsGetImageFromCurrentImageContext(): the context stack was empty.");
+        return nil;
+    }
 
-    return ret;
-#endif
+    _UIGraphicsContextRecord& topRecord = s_contextStack.top();
+    if (topRecord.type != _UIGraphicsContextTypeImage) {
+        TraceError(TAG, L"UIGraphicsGetImageFromCurrentImageContext(): the top context is not an image context.");
+        return nil;
+    }
+
+    CGContextRef context = topRecord.context.get();
+    return [UIImage imageWithCGImage:CGBitmapContextGetImage(context) scale:topRecord.scale orientation:UIImageOrientationUp];
 }
 
 /**
  @Status Interoperable
 */
 void UIGraphicsEndImageContext() {
-    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    std::lock_guard<std::mutex> lock(s_contextStackMutex);
+    if (s_contextStack.empty()) {
+        TraceError(TAG, L"UIGraphicsEndImageContext(): the context stack was empty.");
+        return;
+    }
 
-    UIGraphicsPopContext();
-    CGContextRelease(ctx);
+    if (s_contextStack.top().type == _UIGraphicsContextTypeImage) {
+        s_contextStack.pop(); // Releases record's CGContext.
+    }
 }
 
 /**
  @Status Interoperable
 */
 void UIRectFill(CGRect rect) {
-    CGContextRef ctx = UIGraphicsGetCurrentContext();
-    CGContextFillRect(ctx, rect);
+    UIRectFillUsingBlendMode(rect, kCGBlendModeCopy);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
+*/
+void UIRectFillUsingBlendMode(CGRect rect, CGBlendMode blendMode) {
+    CGContextRef context = UIGraphicsGetCurrentContext();
+
+    CGContextSaveGState(context);
+    CGContextSetBlendMode(context, blendMode);
+    CGContextFillRect(context, rect);
+    CGContextRestoreGState(context);
+}
+
+/**
+ @Status Interoperable
 */
 void UIRectFrame(CGRect rect) {
-    UNIMPLEMENTED();
-    CGContextRef ctx = UIGraphicsGetCurrentContext();
-    // CGContextFillRect(ctx, rect);
-    TraceVerbose(TAG, L"UIRectFrame not supported");
+    UIRectFrameUsingBlendMode(rect, kCGBlendModeCopy);
+}
+
+/**
+ @Status Interoperable
+*/
+void UIRectFrameUsingBlendMode(CGRect rect, CGBlendMode blendMode) {
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSaveGState(context);
+    CGContextSetLineWidth(context, 1.0);
+    CGContextSetBlendMode(context, kCGBlendModeCopy);
+
+    // Rect is inset because the API is specified as stroking a 1.0pt wide line *inside* the provided rectangle.
+    CGContextStrokeRect(context, CGRectInset(rect, 0.5, 0.5));
+
+    CGContextRestoreGState(context);
 }
 
 /**
@@ -147,17 +205,6 @@ void UIRectClip(CGRect clip) {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
 
     CGContextClipToRect(ctx, clip);
-}
-
-/**
- @Status Interoperable
-*/
-void UIRectFillUsingBlendMode(CGRect rect, CGBlendMode mode) {
-    CGContextRef ctx = UIGraphicsGetCurrentContext();
-    CGBlendMode oldBlend = CGContextGetBlendMode(ctx);
-    CGContextSetBlendMode(ctx, mode);
-    CGContextFillRect(ctx, rect);
-    CGContextSetBlendMode(ctx, oldBlend);
 }
 
 /**
