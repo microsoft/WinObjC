@@ -29,6 +29,7 @@
 
 static const wchar_t* TAG = L"UIGraphicsFunctions";
 
+namespace {
 typedef NS_ENUM(NSUInteger, _UIGraphicsContextType) {
     _UIGraphicsContextTypeUnknown = 0,
     _UIGraphicsContextTypeUser,
@@ -46,6 +47,7 @@ struct _UIGraphicsContextRecord {
         : context(CGContextRetain(context)), type(type), size(size), scale(scale) {
     }
 };
+}
 
 static std::mutex s_contextStackMutex;
 static std::stack<_UIGraphicsContextRecord> s_contextStack;
