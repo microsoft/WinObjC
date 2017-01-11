@@ -140,8 +140,11 @@ void LayerProxy::SetTopMost() {
 void LayerProxy::_SetBackgroundColor(float r, float g, float b, float a) {
     FrameworkElement^ xamlLayer = _FrameworkElementFromInspectable(_xamlElement);
 
-    SolidColorBrush^ backgroundBrush = nullptr; // A null brush is transparent and not hit-testable
-    if (!_isRoot && !_topMost && (a != 0.0)) {
+    // A null brush is transparent and not hit-testable; we only want this for 'root' or 'topmost' layers/views.
+    // For everything else, we simply map through the background color that was set on the layer/view.
+    // Note that UIView hit-testability is handled in UIView via its 'userInteractionEnabled', 'isHidden', and 'alpha' property values.
+    SolidColorBrush^ backgroundBrush = nullptr; 
+    if (!_isRoot && !_topMost) {
         Windows::UI::Color backgroundColor;
         backgroundColor.R = static_cast<unsigned char>(r * 255.0);
         backgroundColor.G = static_cast<unsigned char>(g * 255.0);
