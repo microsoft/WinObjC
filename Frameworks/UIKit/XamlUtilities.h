@@ -40,6 +40,9 @@ WUXMFontFamily* WUXFontFamilyFromUIFontName(NSString* uiFontName);
 // Convert UIColor to Color on windows
 WUColor* ConvertUIColorToWUColor(UIColor* uiColor);
 
+// Convert windows color to UIColor
+UIColor* ConvertWUColorToUIColor(WUColor* wuColor);
+
 // Convert UIImage to WUXMImageBrush on windows
 WUXMImageBrush* ConvertUIImageToWUXMImageBrush(UIImage* image);
 

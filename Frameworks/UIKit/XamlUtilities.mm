@@ -41,6 +41,10 @@ WUColor* ConvertUIColorToWUColor(UIColor* uiColor) {
         [WUColorHelper fromArgb:(unsigned char)(a * 255) r:(unsigned char)(r * 255) g:(unsigned char)(g * 255) b:(unsigned char)(b * 255)];
 }
 
+UIColor* ConvertWUColorToUIColor(WUColor* wuColor) {
+    return [UIColor colorWithRed:wuColor.r / 255 green:wuColor.g / 255 blue:wuColor.b / 255 alpha:wuColor.a / 255];
+}
+
 WUXMImageBrush* ConvertUIImageToWUXMImageBrush(UIImage* image) {
     if (!image) {
         return nil;
@@ -243,7 +247,6 @@ void SetControlBorderStyle(WXCControl* control, UITextBorderStyle style) {
             break;
 
         case UITextBorderStyleRoundedRect:
-            [control applyTemplate];
             WXFrameworkElement* elem = FindTemplateChild(control, @"BorderElement");
 
             // if the control template has not been loaded yet, it can return nullptr for borderElement
