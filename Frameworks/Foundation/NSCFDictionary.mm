@@ -89,6 +89,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFDictionary)
 @implementation NSCFDictionary
 
 BRIDGED_CLASS_REQUIRED_IMPLS(CFDictionaryRef, CFDictionaryGetTypeID, NSDictionary, NSCFDictionary)
+BRIDGED_MUTABLE_CLASS_FOR_CODER(CFDictionaryRef, _CFDictionaryIsMutable, NSDictionary, NSMutableDictionary)
 
 - (id)objectForKey:(id)key {
     if (key == nil) {

@@ -171,6 +171,7 @@ static NSDateComponents* _descriptionToComponents(NSCalendar* self, NSCalendarUn
 @implementation NSCFCalendar
 
 BRIDGED_CLASS_REQUIRED_IMPLS(CFCalendarRef, CFCalendarGetTypeID, NSCalendar, NSCFCalendar)
+BRIDGED_CLASS_FOR_CODER(NSCalendar)
 
 + (void)initialize {
     _initAllFlagsComponents();
@@ -556,6 +557,21 @@ static NSDate* _validDateNormalUnit(NSCalendar* cal,
         [updateUnit setValue:sign forComponent:unitToUpdate];
 
         workingDate = [cal dateByAddingComponents:updateUnit toDate:workingDate options:opts];
+    }
+
+    NSDateComponents* directMatchingComps = [cal components:s_NSDateComponentsAllFlagOptions fromDate:workingDate];
+    for (int i = 0; i < std::extent<decltype(s_NSDateComponentsIndividualFlags)>::value; i++) {
+        NSInteger expectedValue = [matchComps valueForComponent:s_NSDateComponentsIndividualFlags[i]];
+        if (expectedValue != NSUndefinedDateComponent) {
+            [directMatchingComps setValue:expectedValue forComponent:s_NSDateComponentsIndividualFlags[i]];
+        }
+    }
+
+    // Attempt to directly create the matching date using the expected matching components now that the largest
+    // possible unit has been updated.
+    if (_isValidDate(cal, directMatchingComps)) {
+        NSDate* exactDate = [cal dateFromComponents:directMatchingComps];
+        return exactDate;
     }
 
     return workingDate;

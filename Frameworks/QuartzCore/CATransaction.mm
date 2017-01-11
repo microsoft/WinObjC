@@ -16,10 +16,14 @@
 
 #import <StubReturn.h>
 #import "Starboard.h"
-#import "Foundation/NSString.h"
-#import "Foundation/NSThread.h"
-#import "QuartzCore/CATransaction.h"
-#import "QuartzCore/CABasicAnimation.h"
+
+#import <QuartzCore/CABasicAnimation.h>
+#import <QuartzCore/CAMediaTimingFunction.h>
+#import <QuartzCore/CATransaction.h>
+
+#import <Foundation/NSString.h>
+#import <Foundation/NSThread.h>
+
 #import "CALayerInternal.h"
 #import "LoggingNative.h"
 

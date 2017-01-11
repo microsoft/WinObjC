@@ -37,7 +37,6 @@ LIBRARY CoreGraphics
         CGBitmapContextGetImage
 
         ; DWriteWrapper Additions
-        _GetUserDefaultLocaleName
         _CFStringFromLocalizedString
         _DWriteCopyFontFamilyNames
         _DWriteCopyFontNamesForFamilyName
@@ -253,6 +252,7 @@ LIBRARY CoreGraphics
         CGDataConsumerRetain
 
         ; CGDataProvider.mm
+        CGDataProviderCreate
         CGDataProviderCreateWithData
         CGDataProviderCreateWithURL
         CGDataProviderCreateWithFilename
@@ -263,6 +263,7 @@ LIBRARY CoreGraphics
         CGDataProviderRetain
         CGDataProviderCreateSequential
         CGDataProviderCreateDirect
+        CGDataProviderCreateDirectAccess
 
         ; CGFont.mm
         kCGFontVariationAxisName DATA

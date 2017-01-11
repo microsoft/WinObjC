@@ -277,17 +277,6 @@ DISABLED_TEST(CGPath, CGContextCopyPathCGPathAddQuadCurveToPoint) {
     CGColorSpaceRelease(rgbColorSpace);
 }
 
-template <typename T>
-std::basic_ostream<T>& operator<<(std::basic_ostream<T>& os, const CGAffineTransform& transform) {
-    os << "[";
-    if (CGAffineTransformIsIdentity(transform)) {
-        os << "identity transform";
-    } else {
-        os << transform.a << " " << transform.b << " " << transform.c << " " << transform.d << " " << transform.tx << " " << transform.ty;
-    }
-    return os << "]";
-}
-
 #if TARGET_OS_WIN32
 class ContextCoordinateTest
     : public ::testing::TestWithParam<::testing::tuple<CGAffineTransform, std::vector<CGPoint>, std::vector<CGPoint>>> {
@@ -483,4 +472,19 @@ TEST(CGContext, DrawAContextImageIntoAContext) {
     dataPtr = static_cast<BYTE*>(CGBitmapContextGetData(context.get()));
     ASSERT_NE(dataPtr, nullptr);
     EXPECT_EQ(dataPtr[0], 0xff);
+}
+
+TEST(CGContext, TextPositionShouldBeInMatrix) {
+    woc::unique_cf<CGColorSpaceRef> rgbColorSpace{ CGColorSpaceCreateDeviceRGB() };
+    woc::unique_cf<CGContextRef> context{ CGBitmapContextCreate(0, 1, 1, 8, 4, rgbColorSpace.get(), kCGImageAlphaOnly) };
+    EXPECT_EQ(CGAffineTransformIdentity, CGContextGetTextMatrix(context.get()));
+    EXPECT_EQ(CGPointMake(0, 0), CGContextGetTextPosition(context.get()));
+    CGContextSetTextPosition(context.get(), 25, 50);
+    EXPECT_EQ(CGAffineTransformMake(1, 0, 0, 1, 25, 50), CGContextGetTextMatrix(context.get()));
+    EXPECT_EQ(CGPointMake(25, 50), CGContextGetTextPosition(context.get()));
+
+    CGAffineTransform transform{ 2, 1, 0, 1, 15, -25 };
+    CGContextSetTextMatrix(context.get(), transform);
+    EXPECT_EQ(transform, CGContextGetTextMatrix(context.get()));
+    EXPECT_EQ(CGPointMake(15, -25), CGContextGetTextPosition(context.get()));
 }

@@ -36,12 +36,12 @@ public:
     DWriteFontBinaryDataLoader() {
     }
 
-    HRESULT RuntimeClassInitialize(CFDataRef data);
+    HRESULT RuntimeClassInitialize(CGDataProviderRef data);
 
     HRESULT STDMETHODCALLTYPE CreateStreamFromKey(_In_ const void* fontFileReferenceKey,
                                                   uint32_t fontFileReferenceKeySize,
                                                   _Out_ IDWriteFontFileStream** fontFileStream);
 
 private:
-    woc::unique_cf<CFDataRef> m_data;
+    woc::unique_cf<CGDataProviderRef> m_data;
 };

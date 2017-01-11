@@ -17,6 +17,9 @@
 
 #import <StubReturn.h>
 #import <Starboard.h>
+
+#import <CoreGraphics/CGBitmapContext.h>
+
 #import "CGPatternInternal.h"
 #import "CGContextInternal.h"
 

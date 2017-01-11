@@ -13,9 +13,11 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _UIVIEWCONTROLLERPRIVATE_H_
-#define _UIVIEWCONTROLLERPRIVATE_H_
+#import <UIKit/UIViewController.h>
+#import <UIKit/UIViewControllerAnimatedTransitioning.h>
+#import <UIKit/UIViewControllerContextTransitioning.h>
 
 enum ControllerVisibiltyState {
     controllerNotVisible,
@@ -26,6 +28,14 @@ enum ControllerVisibiltyState {
     controllerWillDisappearAnimated
 };
 
+@class UIBarButtonItem;
+@class UINavigationItem;
+@class UINavigationController;
+@class UIPopoverPresentationController;
+@class UIPresentationController;
+@class UISearchDisplayController;
+@class UIStoryboard;
+@class UITabBarItem;
 @class WXCPage;
 
 struct UIViewControllerPriv {
@@ -34,14 +44,13 @@ struct UIViewControllerPriv {
     idretaintype(NSArray) toolbarItems;
     idretaintype(UIBarButtonItem) editButtonItem;
     idretaintype(UINavigationController) navigationController;
-    idretaintype(UIViewController) _modalViewController;
     idretaintype(UISearchDisplayController) _searchDisplayController;
-    __unsafe_unretained UIViewController* _presentingViewController;
-    __unsafe_unretained UIViewController* _presentedViewController;
+    StrongId<UIViewController> _presentedViewController;
     StrongId<UIPopoverPresentationController> _popoverPresentationController;
     StrongId<UIPresentationController> _presentationController;
     idretaintype(NSDictionary) _externalObjects;
     __unsafe_unretained UIViewController* _parentViewController;
+    __unsafe_unretained UIViewController* _presentingViewController;
     idretaintype(NSString) nibName;
     idretaintype(NSBundle) nibBundle;
     idretaintype(NSString) _title;
@@ -99,5 +108,3 @@ struct UIViewControllerPriv {
 - (void)_setRotation:(UIInterfaceOrientation)orientation animated:(BOOL)animated;
 - (BOOL)_rotationLocked:(UIInterfaceOrientation)curOrientation;
 @end
-
-#endif

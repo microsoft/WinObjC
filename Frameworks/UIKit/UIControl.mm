@@ -15,12 +15,16 @@
 //******************************************************************************
 
 #import "Starboard.h"
-#import "UIKit/UIView.h"
-#import "UIKit/UIControl.h"
-#import "UIKit/UIRuntimeEventConnection.h"
-#import "Foundation/NSString.h"
-#import "Foundation/NSMutableArray.h"
-#import "Foundation/NSMutableSet.h"
+
+#import <UIKit/UIControl.h>
+#import <UIKit/UILabel.h>
+#import <UIKit/UIRuntimeEventConnection.h>
+#import <UIKit/UIView.h>
+
+#import <Foundation/NSString.h>
+#import <Foundation/NSMutableArray.h>
+#import <Foundation/NSMutableSet.h>
+
 #import "LoggingNative.h"
 #import "StubReturn.h"
 #import "UIControl+Internal.h"

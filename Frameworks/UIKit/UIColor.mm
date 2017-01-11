@@ -16,20 +16,26 @@
 //******************************************************************************
 
 #import <StubReturn.h>
+#import <Starboard.h>
+
 #import <UIKit/UIColor.h>
+#import <UIKit/UIGraphics.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UIView.h>
+
 #import <CoreGraphics/CGContext.h>
-#import <Foundation/NSString.h>
-#import <Foundation/NSMutableDictionary.h>
 #import <CoreGraphics/CGAffineTransform.h>
 #import <CoreGraphics/CGPattern.h>
 
-#import "Starboard.h"
-#import "UIColorInternal.h"
+#import <Foundation/NSString.h>
+#import <Foundation/NSMutableDictionary.h>
+
 #import "CGContextInternal.h"
 #import "CGPatternInternal.h"
+#import "UIColorInternal.h"
 
 #import <math.h>
-#import "LoggingNative.h"
+#import <LoggingNative.h>
 
 static const wchar_t* TAG = L"UIColor";
 
@@ -81,6 +87,7 @@ static const wchar_t* TAG = L"UIColor";
 @Status Interoperable
 */
 - (void)dealloc {
+    [super dealloc];
 }
 
 @end

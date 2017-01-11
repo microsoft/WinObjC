@@ -144,7 +144,7 @@ CGImageRef vImageCreateCGImageFromBuffer(vImage_Buffer* buffer,
 
     if (packedWidthInBytes < buffer->rowBytes) {
         // packing needed
-        packedBuffer = malloc(buffer->height * packedWidthInBytes);
+        packedBuffer = IwMalloc(buffer->height * packedWidthInBytes);
 
         if (packedBuffer != nil) {
             packedBufferAllocated = true;
@@ -213,7 +213,7 @@ CGImageRef vImageCreateCGImageFromBuffer(vImage_Buffer* buffer,
         CGContextRelease(ctx);
 
         if (packedBufferAllocated == true) {
-            free(packedBuffer);
+            IwFree(packedBuffer);
         }
     }
 

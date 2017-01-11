@@ -35,8 +35,8 @@ static NSString* viewTitleKeyName = @"ViewName";
     return self;
 }
 
-- (void)addMenuItemViewControllerClass:(Class)controllerClass andTitle:(NSString*)title {
-    [self.menuItems addObject:[NSDictionary dictionaryWithObjectsAndKeys:title, viewTitleKeyName, controllerClass, controllerKeyName, nil]];
+- (void)addMenuItemViewController:(UIViewController*)controller andTitle:(NSString*)title {
+    [self.menuItems addObject:[NSDictionary dictionaryWithObjectsAndKeys:title, viewTitleKeyName, controller, controllerKeyName, nil]];
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -63,8 +63,7 @@ static NSString* viewTitleKeyName = @"ViewName";
 }
 
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath {
-    Class viewControllerClass = [[self.menuItems objectAtIndex:indexPath.row] objectForKey:controllerKeyName];
-    UIViewController* viewController = [[viewControllerClass alloc] init];
+    UIViewController* viewController = [[self.menuItems objectAtIndex:indexPath.row] objectForKey:controllerKeyName];
     [[self navigationController] pushViewController:viewController animated:YES];
 }
 

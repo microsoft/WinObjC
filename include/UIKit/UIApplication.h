@@ -30,8 +30,8 @@
 
 #pragma once
 
-#import <UIKit/UIResponder.h>
 #import <UIKit/UIDevice.h>
+#import <UIKit/UIResponder.h>
 #import <StarboardExport.h>
 #import <stdint.h>
 
@@ -347,6 +347,9 @@ typedef uint32_t WOCDeviceType;
 
 // Note: Will be deprecated in future releases
 @property (nonatomic) BOOL useLegacyHitTesting;
+
+// Note: Will be deprecated in future releases
+@property (nonatomic) BOOL useLegacyBatchedCATransactions;
 @end
 
 @interface UIApplication (UIApplicationDisplayMode)
@@ -357,3 +360,7 @@ typedef uint32_t WOCDeviceType;
 @interface UIApplication (UIApplicationInitialStartupMode)
 + (void)setStartupDisplayMode:(WOCDisplayMode*)mode;
 @end
+
+// Necessary to prevent crash in apps that neglect to pull in the delegate header.
+// Tracked as #1647.
+#import <UIKit/UIApplicationDelegate.h>

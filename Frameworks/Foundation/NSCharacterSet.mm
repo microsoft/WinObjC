@@ -242,7 +242,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSCharacterSet, NSMutableCharacterSetPrototype, CFChar
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super init]) {
-        self = [[NSCharacterSet
+        self = [[[self class]
             characterSetWithBitmapRepresentation:[coder decodeObjectOfClass:[NSData class] forKey:@"bitmapRepresentation"]] retain];
     }
     return self;

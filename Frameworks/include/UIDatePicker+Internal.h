@@ -13,6 +13,9 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
+
+#import <UIKit/UIDatePicker.h>
 
 @class UIDatePicker;
 @class UIColor;

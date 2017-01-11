@@ -1,23 +1,26 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{e68a0447-25d3-48cb-bdf3-37f96be74872}</UniqueIdentifier>
+      <UniqueIdentifier>{6497114e-8c49-47cf-bd7e-2caaaef4b9b5}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{86f70517-f1c4-4b27-b78c-4fd5379e2e21}</UniqueIdentifier>
+      <UniqueIdentifier>{a8203dfd-e407-4106-a91f-45bb7976f98e}</UniqueIdentifier>
     </Filter>
     <Filter Include="GLKitComplex">
-      <UniqueIdentifier>{A1AA97D4-F97A-47C7-A4D9-B7450D1C5294}</UniqueIdentifier>
+      <UniqueIdentifier>{5BB4745A-5EB8-4F23-B063-F9C7E9E2B269}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GLKitComplex\Supporting Files">
-      <UniqueIdentifier>{49288208-9761-4541-8AFB-4EA1D0DA1932}</UniqueIdentifier>
+    <Filter Include="GLKitComplex\Base">
+      <UniqueIdentifier>{CB2B31F2-8729-4BD9-A7EC-DAAEC2F082AD}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{2617FDA0-8671-4055-88FE-40036A03C077}</UniqueIdentifier>
+      <UniqueIdentifier>{FE7114EF-5E09-4C55-8024-0F0F29E662B9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <Xml Include="default.rd.xml" />
+    <AppxManifest Include="Package.appxmanifest" />
+    <None Include="GLKitComplex_TemporaryKey.pfx" />
     <Image Include="Assets\LockScreenLogo.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
@@ -39,74 +42,45 @@
     <Image Include="Assets\Wide310x150Logo.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
-    <ClangCompile Include="..\..\GLKitComplex\Mesh.mm">
+    <AssetCatalogCompile Include="..\..\GLKitComplex\Assets.xcassets">
       <Filter>GLKitComplex</Filter>
-    </ClangCompile>
+    </AssetCatalogCompile>
+    <ClInclude Include="..\..\GLKitComplex\GLRenderer.h">
+      <Filter>GLKitComplex</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GLKitComplex\Mesh.h">
+      <Filter>GLKitComplex</Filter>
+    </ClInclude>
     <ClangCompile Include="..\..\GLKitComplex\GLKitComplex.mm">
       <Filter>GLKitComplex</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\GLKitComplex\main.m">
-      <Filter>GLKitComplex\Supporting Files</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\GLKitComplex\GLRenderer.mm">
       <Filter>GLKitComplex</Filter>
     </ClangCompile>
-    <AssetCatalogCompile Include="..\..\GLKitComplex\Assets.xcassets">
+    <ClangCompile Include="..\..\GLKitComplex\Mesh.mm">
       <Filter>GLKitComplex</Filter>
-    </AssetCatalogCompile>
+    </ClangCompile>
+    <ClangCompile Include="..\..\GLKitComplex\main.m">
+      <Filter>GLKitComplex</Filter>
+    </ClangCompile>
     <SBInfoPlistCopy Include="..\..\GLKitComplex\Info.plist" />
+    <SBResourceCopy Include="..\..\GLKitComplex\Data">
+      <Filter>GLKitComplex</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\utah-teapot.obj">
+      <Filter>GLKitComplex</Filter>
+    </SBResourceCopy>
+    <StoryboardCompile Include="..\..\GLKitComplex\Base.lproj\LaunchScreen.storyboard">
+      <Filter>GLKitComplex\Base</Filter>
+    </StoryboardCompile>
+    <StoryboardCompile Include="..\..\GLKitComplex\Base.lproj\Main.storyboard">
+      <Filter>GLKitComplex\Base</Filter>
+    </StoryboardCompile>
     <Text Include="GLKitComplex-Debug-xcvars.txt">
       <Filter>Xcode Variable Files</Filter>
     </Text>
     <Text Include="GLKitComplex-Release-xcvars.txt">
       <Filter>Xcode Variable Files</Filter>
     </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <AppxManifest Include="Package.appxmanifest" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="GLKitComplex_TemporaryKey.pfx" />
-  </ItemGroup>
-  <ItemGroup>
-    <SBResourceCopy Include="..\..\GLKitComplex\Data\lobbyxneg.JPG">
-      <Filter>Assets</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\GLKitComplex\Data\lobbyxpos.JPG">
-      <Filter>Assets</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\GLKitComplex\Data\lobbyyneg.JPG">
-      <Filter>Assets</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\GLKitComplex\Data\lobbyypos.JPG">
-      <Filter>Assets</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\GLKitComplex\Data\lobbyzneg.JPG">
-      <Filter>Assets</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\GLKitComplex\Data\lobbyzpos.JPG">
-      <Filter>Assets</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\GLKitComplex\Data\seafloor.png">
-      <Filter>Assets</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\GLKitComplex\Data\teapot_decal.png">
-      <Filter>Assets</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\GLKitComplex\Data\teapot_emissive.png">
-      <Filter>Assets</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\GLKitComplex\Data\teapot_specular.pdn">
-      <Filter>Assets</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\GLKitComplex\Data\teapot_specular.png">
-      <Filter>Assets</Filter>
-    </SBResourceCopy>
-    <SBResourceCopy Include="..\..\GLKitComplex\Data\utah-teapot.obj">
-      <Filter>Assets</Filter>
-    </SBResourceCopy>
-  </ItemGroup>
-  <ItemGroup>
-    <Xml Include="default.rd.xml" />
   </ItemGroup>
 </Project>

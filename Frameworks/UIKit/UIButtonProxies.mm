@@ -15,6 +15,9 @@
 //******************************************************************************
 
 #import "Starboard.h"
+#import <UIKit/UILabel.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UIImageView.h>
 #import <Foundation/NSString.h>
 
 // TOOD: Bug 8706843:Constructor or Helper to create FontFamily isn't projected - thus no way to create a FontFamily from Objective C side.

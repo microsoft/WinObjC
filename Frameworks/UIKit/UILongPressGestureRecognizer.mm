@@ -21,7 +21,7 @@
 #import <Foundation/NSTimer.h>
 #import <UIKit/UILongPressGestureRecognizer.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
-
+#import <UIKit/UITouch.h>
 #import "UIGestureRecognizerInternal.h"
 
 #include "LoggingNative.h"

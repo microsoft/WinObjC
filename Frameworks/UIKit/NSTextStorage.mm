@@ -15,10 +15,13 @@
 //******************************************************************************
 
 #import "Starboard.h"
-
 #import "StubReturn.h"
-#import "UIKit/NSParagraphStyle.h"
+
+#import <UIKit/NSLayoutManager.h>
+#import <UIKit/NSParagraphStyle.h>
+
 #import "UIFontInternal.h"
+
 NSString* const NSTextStorageDidProcessEditingNotification = @"NSTextStorageDidProcessEditingNotification";
 NSString* const NSTextStorageWillProcessEditingNotification = @"NSTextStorageWillProcessEditingNotification";
 

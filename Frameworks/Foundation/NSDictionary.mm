@@ -26,7 +26,6 @@
 #import "Foundation/NSMutableArray.h"
 #import "Foundation/NSKeyedArchiver.h"
 #import "LoggingNative.h"
-#import "NSPropertyListWriter_binary.h"
 #import "NSKeyedArchiverInternal.h"
 #import "VAListHelper.h"
 #import "NSCFDictionary.h"
@@ -524,10 +523,12 @@ BASE_CLASS_REQUIRED_IMPLS(NSDictionary, NSDictionaryPrototype, CFDictionaryGetTy
  @Notes atomically parameter not supported
 */
 - (BOOL)writeToFile:(NSString*)file atomically:(BOOL)atomically {
-    TraceVerbose(TAG, L"Writing dictionary to file %hs", [file UTF8String]);
+    NSError* error = nil;
+    NSData* data = [NSPropertyListSerialization dataWithPropertyList:self format:NSPropertyListXMLFormat_v1_0 options:0 error:&error];
+    if (error != nil) {
+        return NO;
+    }
 
-    NSMutableData* data = [NSMutableData data];
-    [NSPropertyListWriter_Binary serializePropertyList:self intoData:data];
     return [data writeToFile:file atomically:atomically];
 }
 

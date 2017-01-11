@@ -1725,7 +1725,7 @@ vImage_Error vImageBuffer_Init(
         const uint32_t allocSize = maxPitch * height;
 
         // Note: We can't use alignedMalloc here since the client is responsible for freeing the buffer and can use free or aligned_free
-        buffer->data = malloc(allocSize);
+        buffer->data = IwMalloc(allocSize);
 
         if (buffer->data != nullptr) {
             // SIMD load/store instructions operate best on 16byte aligned memory and in blocks of 16bytes
@@ -1738,7 +1738,7 @@ vImage_Error vImageBuffer_Init(
         } else {
             // Try again without additional padding
             buffer->rowBytes = alignedPitch;
-            buffer->data = malloc(buffer->rowBytes * height);
+            buffer->data = IwMalloc(buffer->rowBytes * height);
 
             if (buffer->data == nullptr) {
                 returnCode = kvImageMemoryAllocationError;
@@ -1746,7 +1746,7 @@ vImage_Error vImageBuffer_Init(
         }
     } else {
         buffer->rowBytes = alignedPitch;
-        buffer->data = malloc(buffer->rowBytes * height);
+        buffer->data = IwMalloc(buffer->rowBytes * height);
 
         if (buffer->data == nullptr) {
             returnCode = kvImageMemoryAllocationError;

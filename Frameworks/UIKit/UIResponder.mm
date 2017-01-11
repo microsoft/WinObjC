@@ -16,6 +16,9 @@
 
 #import "Starboard.h"
 #import "LoggingNative.h"
+
+#import <UIKit/UIView.h>
+
 #import "UIResponderInternal.h"
 #import "UIApplicationInternal.h"
 

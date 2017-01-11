@@ -150,7 +150,6 @@
 #import <UIKit/UIKey.h>
 #import <UIKit/UIKeyCommand.h>
 #import <UIKit/UIKeyInput.h>
-#import <UIKit/UIKit.h>
 #import <UIKit/UIKitExport.h>
 #import <UIKit/UIKitTypes.h>
 #import <UIKit/UILabel.h>

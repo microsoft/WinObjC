@@ -110,7 +110,7 @@ public:
         static_assert(std::is_base_of<__CFRuntimeBase, T>::value,
                       "CoreFoundation::CppBase cannot be used with types that do not derive from __CFRuntimeBase.");
         T* ret = reinterpret_cast<T*>(
-            const_cast<void*>(_CFRuntimeCreateInstance(allocator, GetTypeID(), sizeof(T) - sizeof(__CFRuntimeBase), nullptr)));
+            const_cast<void*>(_CFRuntimeCreateInstance(allocator, T::GetTypeID(), sizeof(T) - sizeof(__CFRuntimeBase), nullptr)));
 
         // Technically, accessing any members of __CFRuntimeBase (which are set up by _CFRuntimeCreateInstance) after
         // new (ret) T() is undefined behaviour, since the constructor chain does not change them from their otherwise
