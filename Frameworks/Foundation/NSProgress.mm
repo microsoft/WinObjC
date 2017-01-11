@@ -50,7 +50,7 @@ struct CurrentProgress {
 thread_local static std::shared_ptr<std::stack<CurrentProgress>> s_currentProgressStack;
 
 // Returns the stack of NSProgress objects that have becomeCurrent on the current thread, initializing it if necessary
-static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
+static decltype(s_currentProgressStack) & _getProgressStackForCurrentThread() {
     if (!s_currentProgressStack) {
         s_currentProgressStack = std::make_shared<std::stack<CurrentProgress>>();
     }
@@ -200,47 +200,78 @@ static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
  @Status Interoperable
 */
 - (void)resignCurrent {
+    auto currentProgressStack = _getProgressStackForCurrentThread();
+
     // If self is the top element on the current progress stack, pop it
-    // Be sure to check if self == nil here, otherwise [nil resignCurrent] may cause a pop on an empty stack
-    if (self && [self isEqual:[NSProgress currentProgress]]) {
-        auto currentProgressStack = _getProgressStackForCurrentThread();
+    if (!currentProgressStack->empty()) {
+        CurrentProgress currentProgress = currentProgressStack->top();
 
-        // See NSProgress class reference:
-        // If you don’t create any child progress objects between the calls to becomeCurrentWithPendingUnitCount: and resignCurrent,
-        // the "parent" progress automatically updates its completedUnitCount by adding the pending units.
-        if (!currentProgressStack->top().childCreated) {
-            [self _incrementCompletedUnitCount:currentProgressStack->top().pendingUnitCountToAssign];
+        if ([currentProgress.progress isEqual:self]) {
+            // See NSProgress class reference:
+            // If you don’t create any child progress objects between the calls to becomeCurrentWithPendingUnitCount: and resignCurrent,
+            // the "parent" progress automatically updates its completedUnitCount by adding the pending units.
+            if (!currentProgress.childCreated) {
+                @synchronized(self) {
+                    [self setCompletedUnitCount:self.completedUnitCount + currentProgress.pendingUnitCountToAssign];
+                }
+            }
+
+            currentProgressStack->pop();
+            return;
         }
-
-        currentProgressStack->pop();
-
-    } else {
-        [NSException raise:NSInvalidArgumentException
-                    format:@"NSProgress was not the current progress on this thread %@", [NSThread currentThread]];
     }
+
+    // self was not currentProgress
+    [NSException raise:NSInvalidArgumentException
+                format:@"NSProgress was not the current progress on this thread %@", [NSThread currentThread]];
 }
 
 /**
  @Status Interoperable
 */
 - (void)setCompletedUnitCount:(int64_t)inUnitCount {
-    // Override synthesized setter so that parent can be updated with pendingUnitCount if necessary
+    // Override synthesized setter so that parent is updated as well
     @synchronized(self) { // Property is atomic
-        if ((_parent) && (inUnitCount >= _totalUnitCount) && (inUnitCount != _completedUnitCount)) {
-            [_parent _incrementCompletedUnitCount:_parentPendingUnitCount];
+        if (inUnitCount != _completedUnitCount) { // Only do anything if the count actually changed
+            int64_t deltaCompletedUnit = inUnitCount - _completedUnitCount;
+            double deltaFraction = static_cast<double>(deltaCompletedUnit) / _totalUnitCount;
+            [self _updateCompletedUnitsBy:deltaCompletedUnit fractionCompletedBy:deltaFraction unitCountForFraction:_totalUnitCount];
         }
-
-        [self willChangeValueForKey:@"fractionCompleted"];
-        [self willChangeValueForKey:@"indeterminate"];
-        _completedUnitCount = inUnitCount;
-        [self didChangeValueForKey:@"indeterminate"];
-        [self didChangeValueForKey:@"fractionCompleted"];
     }
 }
 
-- (void)_incrementCompletedUnitCount:(int64_t)inUnitCount {
+- (void)_updateCompletedUnitsBy:(int64_t)deltaCompletedUnit
+            fractionCompletedBy:(double)deltaFraction
+           unitCountForFraction:(int64_t)unitCountForFraction {
     @synchronized(self) {
-        [self setCompletedUnitCount:(_completedUnitCount + inUnitCount)];
+        [self willChangeValueForKey:@"completedUnitCount"];
+        [self willChangeValueForKey:@"fractionCompleted"];
+        [self willChangeValueForKey:@"indeterminate"];
+        double prevFraction = _fractionCompleted;
+
+        // If this function is called from a child, deltaFraction needs to be adjusted according to the pending unit count of the child
+        // If this function is called from self, the latter half of the below expression evaluates to 1, and this is just deltaFraction
+        double deltaFractionForSelf = deltaFraction * unitCountForFraction / _totalUnitCount;
+
+        _completedUnitCount += deltaCompletedUnit;
+        _fractionCompleted += deltaFractionForSelf;
+
+        if (_fractionCompleted < 0) {
+            _fractionCompleted = 0;
+        }
+        [self didChangeValueForKey:@"indeterminate"];
+        [self didChangeValueForKey:@"fractionCompleted"];
+        [self didChangeValueForKey:@"completedUnitCount"];
+
+        if (_parent) {
+            if (_fractionCompleted >= 1) {
+                [_parent _updateCompletedUnitsBy:_parentPendingUnitCount
+                             fractionCompletedBy:(1.0f - prevFraction)
+                            unitCountForFraction:_parentPendingUnitCount];
+            } else {
+                [_parent _updateCompletedUnitsBy:0 fractionCompletedBy:deltaFractionForSelf unitCountForFraction:_parentPendingUnitCount];
+            }
+        }
     }
 }
 
@@ -261,7 +292,13 @@ static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
     @synchronized(self) { // Property is atomic
         [self willChangeValueForKey:@"fractionCompleted"];
         [self willChangeValueForKey:@"indeterminate"];
+
+        double ratio = (double)inUnitCount / _totalUnitCount;
         _totalUnitCount = inUnitCount;
+        [self _updateCompletedUnitsBy:0
+                  fractionCompletedBy:(_fractionCompleted / ratio) - _fractionCompleted
+                 unitCountForFraction:_totalUnitCount];
+
         [self didChangeValueForKey:@"indeterminate"];
         [self didChangeValueForKey:@"fractionCompleted"];
     }
@@ -273,16 +310,6 @@ static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
 - (int64_t)totalUnitCount {
     @synchronized(self) { // Property is atomic
         return _totalUnitCount;
-    }
-}
-
-/**
- @Status Interoperable
-*/
-- (double)fractionCompleted {
-    // Override synthesized getter so that this can be calculated dynamically
-    @synchronized(self) { // Property is atomic
-        return (double)_completedUnitCount / _totalUnitCount;
     }
 }
 
