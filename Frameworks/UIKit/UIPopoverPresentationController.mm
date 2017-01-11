@@ -80,7 +80,6 @@
     StrongId<UIView*> _sourceView;
     CGRect _sourceRect;
     StrongId<dispatch_block_t> _dismissCompletion;
-    BOOL _isManagingPresentation;
 }
 
 /**
@@ -98,24 +97,13 @@
     return self;
 }
 
-- (BOOL)_isManagingPresentation {
-    return _isManagingPresentation;
-}
+- (void)_presentAnimated:(BOOL)animated presentCompletion:(dispatch_block_t)presentCompletion dismissCompletion:(dispatch_block_t)dismissCompletion {
+    _popoverControllerInternal->_presentCompletion.attach([presentCompletion copy]);
+    _dismissCompletion.attach([dismissCompletion copy]);
 
-- (void)_prepareForPresentation {
     if ([[_delegateInternal delegate] respondsToSelector:@selector(prepareForPopoverPresentation:)]) {
         [[_delegateInternal delegate] prepareForPopoverPresentation:self];
     }
-}
-
-- (void)_presentAnimated:(BOOL)animated presentCompletion:(dispatch_block_t)presentCompletion dismissCompletion:(dispatch_block_t)dismissCompletion {
-    _popoverControllerInternal->_presentCompletion.attach([presentCompletion copy]);
-
-    _dismissCompletion.attach([dismissCompletion copy]);
-
-    // WYPopoverController internally manages the presentation of the content
-    // view controller (and the invoking of the viewWillAppear: et al. appearance events).
-    _isManagingPresentation = YES;
 
     if (_barButtonItem) {
         [_popoverControllerInternal presentPopoverFromBarButtonItem:_barButtonItem
@@ -141,8 +129,6 @@
 
     _dismissCompletion();
     _dismissCompletion = nil;
-
-    _isManagingPresentation = NO;
 }
 
 /**
