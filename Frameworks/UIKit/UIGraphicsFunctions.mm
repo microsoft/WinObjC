@@ -15,15 +15,17 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include <StubReturn.h>
-#include "UIKit/UIKit.h"
-#include "CGContextInternal.h"
-#include "LoggingNative.h"
-#include "StarboardXaml/DisplayProperties.h"
+#import <StubReturn.h>
+#import <Starboard.h>
+#import <UIKit/UIKit.h>
+#import <LoggingNative.h>
+#import <CoreGraphics/CGContext.h>
 
-#include <stack>
-#include <mutex>
+#import "StarboardXaml/DisplayProperties.h"
+#import "CGContextInternal.h" // for shadow projection
+
+#import <stack>
+#import <mutex>
 
 static const wchar_t* TAG = L"UIGraphicsFunctions";
 
@@ -62,7 +64,7 @@ void UIGraphicsPushContext(CGContextRef context) {
 */
 void UIGraphicsPopContext() {
     std::lock_guard<std::mutex> lock(s_contextStackMutex);
-    if (s_contextStack.size() == 0) {
+    if (s_contextStack.empty()) {
         TraceError(TAG, L"UIGraphicsPopContext(): the context stack was empty.");
         return;
     }
@@ -90,29 +92,25 @@ void UIGraphicsBeginImageContextWithOptions(CGSize size, BOOL opaque, float scal
         size.width * scale, size.height * scale,
     };
     woc::unique_cf<CGColorSpaceRef> rgbColorSpace(CGColorSpaceCreateDeviceRGB());
-    CGContextRef context =
-        CGBitmapContextCreate(nullptr,
-                              scaledSize.width,
-                              scaledSize.height,
-                              8, // 32bpp (8 bits per component)
-                              scaledSize.width * 4, // Stride for RGBA/RGBX
-                              rgbColorSpace.get(),
-                              (opaque ? kCGImageAlphaNoneSkipLast : kCGImageAlphaPremultipliedLast) | kCGBitmapByteOrder32Little);
+    woc::unique_cf<CGContextRef> context{ CGBitmapContextCreate(nullptr,
+                                                                scaledSize.width,
+                                                                scaledSize.height,
+                                                                8, // 32bpp (8 bits per component)
+                                                                scaledSize.width * 4, // Stride for RGBA/RGBX
+                                                                rgbColorSpace.get(),
+                                                                (opaque ? kCGImageAlphaNoneSkipLast : kCGImageAlphaPremultipliedLast) |
+                                                                    kCGBitmapByteOrder32Little) };
 
     // Apply the UIKit ULO transform (and shadow projection transform)
-    CGContextTranslateCTM(context, 0.0f, size.height * scale);
-    CGContextScaleCTM(context, scale, scale);
-    CGContextScaleCTM(context, 1.0f, -1.0f);
-    _CGContextSetShadowProjectionTransform(context, CGAffineTransformMakeScale(1.0, -1.0));
+    CGContextTranslateCTM(context.get(), 0.0f, size.height * scale);
+    CGContextScaleCTM(context.get(), scale, -scale);
+    _CGContextSetShadowProjectionTransform(context.get(), CGAffineTransformMakeScale(1.0, -1.0));
 
     {
         std::lock_guard<std::mutex> lock(s_contextStackMutex);
 
-        s_contextStack.emplace(context, _UIGraphicsContextTypeImage, size, scale);
+        s_contextStack.emplace(context.get(), _UIGraphicsContextTypeImage, size, scale);
     }
-
-    // This context is owned by the context stack.
-    CGContextRelease(context);
 }
 
 /**
@@ -127,7 +125,7 @@ void UIGraphicsBeginImageContext(CGSize size) {
 */
 UIImage* UIGraphicsGetImageFromCurrentImageContext() {
     std::lock_guard<std::mutex> lock(s_contextStackMutex);
-    if (s_contextStack.size() == 0) {
+    if (s_contextStack.empty()) {
         TraceError(TAG, L"UIGraphicsGetImageFromCurrentImageContext(): the context stack was empty.");
         return nil;
     }
@@ -139,8 +137,7 @@ UIImage* UIGraphicsGetImageFromCurrentImageContext() {
     }
 
     CGContextRef context = topRecord.context.get();
-    id ret = [UIImage imageWithCGImage:CGBitmapContextGetImage(context) scale:topRecord.scale orientation:UIImageOrientationUp];
-    return ret;
+    return [UIImage imageWithCGImage:CGBitmapContextGetImage(context) scale:topRecord.scale orientation:UIImageOrientationUp];
 }
 
 /**
@@ -148,17 +145,14 @@ UIImage* UIGraphicsGetImageFromCurrentImageContext() {
 */
 void UIGraphicsEndImageContext() {
     std::lock_guard<std::mutex> lock(s_contextStackMutex);
-    if (s_contextStack.size() == 0) {
+    if (s_contextStack.empty()) {
         TraceError(TAG, L"UIGraphicsEndImageContext(): the context stack was empty.");
         return;
     }
 
-    _UIGraphicsContextRecord& topRecord = s_contextStack.top();
-    if (topRecord.type != _UIGraphicsContextTypeImage) {
-        return;
+    if (s_contextStack.top().type == _UIGraphicsContextTypeImage) {
+        s_contextStack.pop(); // Releases record's CGContext.
     }
-
-    s_contextStack.pop(); // Releases record's CGContext.
 }
 
 /**
@@ -169,8 +163,7 @@ void UIRectFill(CGRect rect) {
 }
 
 /**
- @Status Caveat
- @Notes Blend modes are not implemented.
+ @Status Interoperable
 */
 void UIRectFillUsingBlendMode(CGRect rect, CGBlendMode blendMode) {
     CGContextRef context = UIGraphicsGetCurrentContext();
@@ -189,8 +182,7 @@ void UIRectFrame(CGRect rect) {
 }
 
 /**
- @Status Caveat
- @Notes Blend modes are not implemented.
+ @Status Interoperable
 */
 void UIRectFrameUsingBlendMode(CGRect rect, CGBlendMode blendMode) {
     CGContextRef context = UIGraphicsGetCurrentContext();
