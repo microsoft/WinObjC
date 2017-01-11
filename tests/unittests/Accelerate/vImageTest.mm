@@ -488,7 +488,7 @@ static void vImageTestGetFormatFromCgImage(CGImageRef imageRef, vImage_CGImageFo
     ASSERT_TRUE(imageRef != nullptr);
 
     format->bitmapInfo = CGImageGetBitmapInfo(imageRef);
-    format->colorSpace = CGImageGetColorSpace(imageRef);
+    format->colorSpace = CGColorSpaceRetain(CGImageGetColorSpace(imageRef));
     format->bitsPerComponent = (uint32_t)CGImageGetBitsPerComponent(imageRef);
 
     const uint32_t alphaInfo = format->bitmapInfo & kCGBitmapAlphaInfoMask;
@@ -821,7 +821,7 @@ TEST(Accelerate, Convert) {
     vImageTestBufferFree(&rgbDest);
 }
 
-DISABLED_TEST(Accelerate, AlphaUnpremultiply) {
+TEST(Accelerate, AlphaUnpremultiply) {
     SetCACompositor(new NullCompositor);
 
     char fullPath[_MAX_PATH];
@@ -831,14 +831,23 @@ DISABLED_TEST(Accelerate, AlphaUnpremultiply) {
     strncpy(executablePath, relativePathToPhoto, strlen(relativePathToPhoto) + 1);
     UIImage* photo = [UIImage imageNamed:[NSString stringWithCString:fullPath]];
 
+    woc::unique_cf<CGColorSpaceRef> rgbColorSpace(CGColorSpaceCreateDeviceRGB());
+    woc::unique_cf<CGContextRef> rgbaConversionContext{
+        CGBitmapContextCreate(nullptr, photo.size.width, photo.size.height, 8, photo.size.width * 4, rgbColorSpace.get(), kCGBitmapByteOrder32Big | kCGImageAlphaLast)
+    };
+    CGContextDrawImage(rgbaConversionContext.get(), {CGPointZero, photo.size}, photo.CGImage);
+    woc::unique_cf<CGImageRef> rgbaImage{
+        CGBitmapContextCreateImage(rgbaConversionContext.get())
+    };
+
     vImage_Buffer unpremultipliedBufferSimd, unpremultipliedBufferNormal;
     const uint8_t alphaVal = 0x80;
 
     _vImageSetSimdOptmizationsState(false);
-    vImageTestSetAlphaAndUnpremultiply(photo.CGImage, &unpremultipliedBufferNormal, alphaVal);
+    vImageTestSetAlphaAndUnpremultiply(rgbaImage.get(), &unpremultipliedBufferNormal, alphaVal);
 
     _vImageSetSimdOptmizationsState(true);
-    vImageTestSetAlphaAndUnpremultiply(photo.CGImage, &unpremultipliedBufferSimd, alphaVal);
+    vImageTestSetAlphaAndUnpremultiply(rgbaImage.get(), &unpremultipliedBufferSimd, alphaVal);
 
     ASSERT_TRUE_MSG(vImageTestCompare8888Buffers(&unpremultipliedBufferSimd, &unpremultipliedBufferNormal),
                     "SIMD and non-SIMD output of AlphaUnpremultiply do not match");
