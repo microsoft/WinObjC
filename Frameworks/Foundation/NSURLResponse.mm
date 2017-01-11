@@ -103,7 +103,7 @@ NSString* _NSReplaceIllegalFileNameCharacters(NSString* fileName) {
             NSString* extension = [static_cast<NSString*>(
                 UTTypeCopyPreferredTagWithClass(identifier.get(), static_cast<CFStringRef>(@"public.filename-extension"))) autorelease];
 
-            // If the filename already has the extension do not append
+            // If the filename already has the expected extension (based on MIME type), do not append
             _suggestedFilename.attach((extension && ![extension isEqualToString:[fileName pathExtension]]) ?
                                           [[NSString alloc] initWithFormat:@"%@.%@", fileName, extension] :
                                           [fileName copy]);
