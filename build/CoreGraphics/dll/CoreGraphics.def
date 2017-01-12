@@ -264,6 +264,8 @@ LIBRARY CoreGraphics
         CGDataProviderCreateSequential
         CGDataProviderCreateDirect
         CGDataProviderCreateDirectAccess
+        _CGDataProviderGetData
+        _CGDataProviderGetSize
 
         ; CGFont.mm
         kCGFontVariationAxisName DATA
