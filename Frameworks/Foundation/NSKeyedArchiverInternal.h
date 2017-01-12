@@ -21,4 +21,5 @@
 
 @interface NSKeyedArchiver ()
 - (void)_encodeArrayOfObjects:(NSArray*)anArray forKey:(NSString*)aKey;
+- (void)_encodeRawObject:(NSObject*)object forKey:(NSString*)key;
 @end

@@ -15,12 +15,16 @@
 //******************************************************************************
 
 #import "Starboard.h"
-#import "UIKit/UITabBarController.h"
-#import "UIKit/UIViewController.h"
-#import "UIKit/UIApplication.h"
-#import "Foundation/NSString.h"
-#import "Foundation/NSMutableArray.h"
-#import "UIKit/UINavigationController.h"
+
+#import <UIKit/UIApplication.h>
+#import <UIKit/UINavigationController.h>
+#import <UIKit/UITabBarController.h>
+#import <UIKit/UITabBarControllerDelegate.h>
+#import <UIKit/UIViewController.h>
+
+#import <Foundation/NSString.h>
+#import <Foundation/NSMutableArray.h>
+
 #import "UIViewControllerInternal.h"
 #import "UITabPane.h"
 #import "LoggingNative.h"

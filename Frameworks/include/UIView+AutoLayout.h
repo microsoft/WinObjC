@@ -18,7 +18,7 @@
 #import <AutoLayout.h>
 
 @interface UIView (AutoLayout) <AutoLayoutable>
-- (void)autoLayoutInvalidateContentSize;
+- (BOOL)autoLayoutInvalidateContentSize; // Returns a BOOL signifying whether or not our intrinsicContentSize actually changed
 - (void)autoLayoutLayoutSubviews;
 - (void)autoLayoutUpdateConstraints;
 @end

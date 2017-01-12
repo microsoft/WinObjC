@@ -20,6 +20,7 @@
 #import <math.h>
 #import <vector>
 #import <CoreGraphics/CGContext.h>
+#import <CoreGraphics/CGBitmapContext.h>
 #import <CoreGraphics/CGGeometry.h>
 #import <CoreGraphics/CGDataProvider.h>
 #import <Foundation/NSData.h>
@@ -30,6 +31,7 @@
 #import "CGColorSpaceInternal.h"
 #import "CGImageInternal.h"
 #import "CGIWICBitmap.h"
+#import "CGDataProviderInternal.h"
 
 #import <algorithm>
 
@@ -249,11 +251,7 @@ CGImageRef CGImageCreate(size_t width,
                          const float* decode,
                          bool shouldInterpolate,
                          CGColorRenderingIntent intent) {
-    RETURN_NULL_IF(((provider == nullptr) || ![(NSObject*)provider isKindOfClass:[NSData class]]) || (colorSpace == nullptr));
-
-    NSData* dataProvider = (__bridge NSData*)provider;
-
-    unsigned char* data = (unsigned char*)[dataProvider bytes];
+    RETURN_NULL_IF(provider == nullptr || colorSpace == nullptr);
 
     ComPtr<IWICBitmap> image;
     ComPtr<IWICImagingFactory> imageFactory;
@@ -261,8 +259,9 @@ CGImageRef CGImageCreate(size_t width,
 
     REFGUID pixelFormat = _CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, colorSpace, bitmapInfo);
 
+    unsigned char* bytes = static_cast<unsigned char*>(const_cast<void*>(_CGDataProviderGetData(provider)));
     RETURN_NULL_IF_FAILED(
-        imageFactory->CreateBitmapFromMemory(width, height, pixelFormat, bytesPerRow, height * bytesPerRow, data, &image));
+        imageFactory->CreateBitmapFromMemory(width, height, pixelFormat, bytesPerRow, height * bytesPerRow, bytes, &image));
 
     CGImageRef imageRef = __CGImage::CreateInstance();
     imageRef->SetImageSource(image).SetColorSpace(colorSpace).SetRenderingIntent(intent).SetInterpolate(shouldInterpolate);
@@ -327,11 +326,7 @@ CGImageRef CGImageMaskCreate(size_t width,
                              CGDataProviderRef provider,
                              const CGFloat* decode,
                              bool shouldInterpolate) {
-    RETURN_NULL_IF(((provider == nullptr) || ![(NSObject*)provider isKindOfClass:[NSData class]]));
-
-    NSData* dataProvider = (__bridge NSData*)provider;
-
-    unsigned char* data = (unsigned char*)[dataProvider bytes];
+    RETURN_NULL_IF(provider == nullptr);
 
     ComPtr<IWICBitmap> image;
     ComPtr<IWICImagingFactory> imageFactory;
@@ -341,8 +336,9 @@ CGImageRef CGImageMaskCreate(size_t width,
     REFGUID pixelFormat =
         _CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, colorSpace.get(), kCGBitmapByteOrderDefault);
 
+    unsigned char* bytes = static_cast<unsigned char*>(const_cast<void*>(_CGDataProviderGetData(provider)));
     RETURN_NULL_IF_FAILED(
-        imageFactory->CreateBitmapFromMemory(width, height, pixelFormat, bytesPerRow, height * bytesPerRow, data, &image));
+        imageFactory->CreateBitmapFromMemory(width, height, pixelFormat, bytesPerRow, height * bytesPerRow, bytes, &image));
 
     CGImageRef imageRef = __CGImage::CreateInstance();
     imageRef->SetImageSource(image).SetIsMask(true).SetInterpolate(shouldInterpolate);
@@ -358,12 +354,12 @@ CGDataProviderRef CGImageGetDataProvider(CGImageRef img) {
 
     const unsigned int stride = CGImageGetBytesPerRow(img);
     const unsigned int size = CGImageGetHeight(img) * stride;
-    woc::unique_iw<unsigned char> data(static_cast<unsigned char*>(IwMalloc(size)));
+    woc::unique_iw<unsigned char> buffer(static_cast<unsigned char*>(IwMalloc(size)));
 
-    RETURN_NULL_IF_FAILED(img->ImageSource()->CopyPixels(nullptr, stride, size, data.get()));
+    RETURN_NULL_IF_FAILED(img->ImageSource()->CopyPixels(nullptr, stride, size, buffer.get()));
 
-    NSData* byteData = [NSData dataWithBytesNoCopy:data.release() length:size freeWhenDone:YES];
-    CGDataProviderRef ret = CGDataProviderCreateWithCFData((CFDataRef)byteData);
+    woc::unique_cf<CFDataRef> data{ CFDataCreateWithBytesNoCopy(nullptr, buffer.release(), size, kCFAllocatorDefault) };
+    CGDataProviderRef ret = CGDataProviderCreateWithCFData(data.get());
     CFAutorelease(ret);
     return ret;
 }
@@ -452,10 +448,10 @@ CGImageRef CGImageCreateWithJPEGDataProvider(CGDataProviderRef source,
                                              const CGFloat decode[],
                                              bool shouldInterpolate,
                                              CGColorRenderingIntent intent) {
-    RETURN_NULL_IF((source == nullptr) || ![(NSObject*)source isKindOfClass:[NSData class]]);
+    RETURN_NULL_IF(source == nullptr);
 
-    NSData* sourceData = (__bridge NSData*)source;
-    CGImageRef imageRef = _CGImageLoadJPEG((void*)[sourceData bytes], [sourceData length]);
+    unsigned char* bytes = static_cast<unsigned char*>(const_cast<void*>(_CGDataProviderGetData(source)));
+    CGImageRef imageRef = _CGImageLoadJPEG(bytes, _CGDataProviderGetSize(source));
 
     RETURN_NULL_IF(!imageRef);
     imageRef->SetInterpolate(shouldInterpolate).SetRenderingIntent(intent);
@@ -471,10 +467,10 @@ CGImageRef CGImageCreateWithPNGDataProvider(CGDataProviderRef source,
                                             const CGFloat decode[],
                                             bool shouldInterpolate,
                                             CGColorRenderingIntent intent) {
-    RETURN_NULL_IF((source == nullptr) || ![(NSObject*)source isKindOfClass:[NSData class]]);
+    RETURN_NULL_IF(source == nullptr);
 
-    NSData* sourceData = (__bridge NSData*)source;
-    CGImageRef imageRef = _CGImageLoadPNG((void*)[sourceData bytes], [sourceData length]);
+    unsigned char* bytes = static_cast<unsigned char*>(const_cast<void*>(_CGDataProviderGetData(source)));
+    CGImageRef imageRef = _CGImageLoadPNG(bytes, _CGDataProviderGetSize(source));
 
     RETURN_NULL_IF(!imageRef);
     imageRef->SetInterpolate(shouldInterpolate).SetRenderingIntent(intent);

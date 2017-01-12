@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -19,12 +19,7 @@
 #import <CoreFoundation/CFData.h>
 #import <CoreFoundation/CFURL.h>
 
-// TODO: following opaque types can not use form of
-// typedef struct __Foo* FooRef;
-// indiciating backing code need some clean up
-typedef void* CGDataProviderRef;
-
-CF_IMPLICIT_BRIDGING_ENABLED
+typedef const struct __CGDataProvider* CGDataProviderRef;
 
 typedef size_t (*CGDataProviderGetBytesCallback)(void* info, void* buffer, size_t count);
 typedef void (*CGDataProviderReleaseInfoCallback)(void* info);
@@ -36,21 +31,21 @@ typedef size_t (*CGDataProviderGetBytesAtOffsetCallback)(void* info, void* buffe
 typedef void (*CGDataProviderReleaseBytePointerCallback)(void* info, const void* pointer);
 typedef size_t (*CGDataProviderGetBytesAtPositionCallback)(void* info, void* buffer, off_t position, size_t count);
 
-typedef struct {
+typedef struct CGDataProviderCallbacks {
     CGDataProviderGetBytesCallback getBytes;
     CGDataProviderSkipBytesCallback skipBytes;
     CGDataProviderRewindCallback rewind;
     CGDataProviderReleaseInfoCallback releaseProvider;
 } CGDataProviderCallbacks;
 
-typedef struct {
+typedef struct CGDataProviderDirectAccessCallbacks {
     CGDataProviderGetBytePointerCallback getBytePointer;
     CGDataProviderReleaseBytePointerCallback releaseBytePointer;
     CGDataProviderGetBytesAtOffsetCallback getBytes;
     CGDataProviderReleaseInfoCallback releaseProvider;
 } CGDataProviderDirectAccessCallbacks;
 
-typedef struct {
+typedef struct CGDataProviderDirectCallbacks {
     unsigned int version;
     CGDataProviderGetBytePointerCallback getBytePointer;
     CGDataProviderReleaseBytePointerCallback releaseBytePointer;
@@ -58,7 +53,7 @@ typedef struct {
     CGDataProviderReleaseInfoCallback releaseInfo;
 } CGDataProviderDirectCallbacks;
 
-typedef struct {
+typedef struct CGDataProviderSequentialCallbacks {
     unsigned int version;
     CGDataProviderGetBytesCallback getBytes;
     CGDataProviderSkipForwardCallback skipForward;
@@ -68,20 +63,21 @@ typedef struct {
 
 typedef void (*CGDataProviderReleaseDataCallback)(void* info, const void* data, size_t size);
 
+COREGRAPHICS_EXPORT CGDataProviderRef CGDataProviderCreate(void* info, const CGDataProviderCallbacks* callbacks);
 COREGRAPHICS_EXPORT CGDataProviderRef CGDataProviderCreateWithData(void* info,
                                                                    const void* data,
                                                                    size_t size,
                                                                    CGDataProviderReleaseDataCallback releaseData);
+COREGRAPHICS_EXPORT CGDataProviderRef CGDataProviderCreateDirect(void* info, off_t size, const CGDataProviderDirectCallbacks* callbacks);
+COREGRAPHICS_EXPORT CGDataProviderRef CGDataProviderCreateDirectAccess(void* info,
+                                                                       size_t size,
+                                                                       const CGDataProviderDirectAccessCallbacks* callbacks);
+COREGRAPHICS_EXPORT CGDataProviderRef CGDataProviderCreateSequential(void* info, const CGDataProviderSequentialCallbacks* callbacks);
+COREGRAPHICS_EXPORT CGDataProviderRef CGDataProviderCreateWithCFData(CFDataRef data);
 COREGRAPHICS_EXPORT CGDataProviderRef CGDataProviderCreateWithURL(CFURLRef url);
 COREGRAPHICS_EXPORT CGDataProviderRef CGDataProviderCreateWithFilename(const char* filename);
-COREGRAPHICS_EXPORT CGDataProviderRef CGDataProviderCreateWithCFData(CFDataRef data);
 COREGRAPHICS_EXPORT CFDataRef CGDataProviderCopyData(CGDataProviderRef provider);
+
+COREGRAPHICS_EXPORT CFTypeID CGDataProviderGetTypeID();
 COREGRAPHICS_EXPORT void CGDataProviderRelease(CGDataProviderRef provider);
 COREGRAPHICS_EXPORT CGDataProviderRef CGDataProviderRetain(CGDataProviderRef provider);
-COREGRAPHICS_EXPORT CGDataProviderRef CGDataProviderCreateDirect(void* info, off_t size, const CGDataProviderDirectCallbacks* callbacks);
-
-COREGRAPHICS_EXPORT CFTypeID CGDataProviderGetTypeID() STUB_METHOD;
-COREGRAPHICS_EXPORT CGDataProviderRef CGDataProviderCreateSequential(void* info,
-                                                                     const CGDataProviderSequentialCallbacks* callbacks);
-
-CF_IMPLICIT_BRIDGING_DISABLED

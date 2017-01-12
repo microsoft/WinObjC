@@ -116,3 +116,17 @@ TEST(NSDictionary, KeysSortedByValueWithOptions_Stable) {
 
     ASSERT_OBJCEQ(expected, actual);
 }
+
+TEST(NSDictionary, MutableInstanceArchivesAsMutable) {
+    NSMutableDictionary* input = [NSMutableDictionary dictionaryWithObject:@"world" forKey:@"hello"];
+
+    NSData* data = [NSKeyedArchiver archivedDataWithRootObject:input];
+    ASSERT_OBJCNE(nil, data);
+
+    NSMutableDictionary* output = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    ASSERT_OBJCNE(nil, output);
+
+    EXPECT_NO_THROW([output setObject:@"morld" forKey:@"yello"]);
+
+    EXPECT_OBJCNE(input, output);
+}

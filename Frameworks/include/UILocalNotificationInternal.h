@@ -13,8 +13,9 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
+
+#import <UIKit/UILocalNotification.h>
 
 @interface UILocalNotification ()
 - (void)_setReceiver:(id)receiver;

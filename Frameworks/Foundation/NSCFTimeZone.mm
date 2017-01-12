@@ -53,6 +53,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSTimeZonePrototype)
 @implementation NSCFTimeZone
 
 BRIDGED_CLASS_REQUIRED_IMPLS(CFTimeZoneRef, CFTimeZoneGetTypeID, NSTimeZone, NSCFTimeZone)
+BRIDGED_CLASS_FOR_CODER(NSTimeZone)
 
 - (NSString*)abbreviationForDate:(NSDate*)aDate {
     return [static_cast<NSString*>(CFTimeZoneCopyAbbreviation(static_cast<CFTimeZoneRef>(self), [aDate timeIntervalSinceReferenceDate]))

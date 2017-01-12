@@ -15,19 +15,22 @@
 //******************************************************************************
 
 #import <Starboard.h>
-#import <math.h>
+
+#import <UIKit/UIEvent.h>
+#import <UIKit/UIGestureRecognizerSubclass.h>
+#import <UIKit/UITapGestureRecognizer.h>
+#import <UIKit/UITouch.h>
 
 #import <Foundation/NSMutableDictionary.h>
 #import <Foundation/NSMutableArray.h>
 #import <Foundation/NSValue.h>
 #import <Foundation/NSString.h>
 #import <Foundation/NSTimer.h>
-#import <UIKit/UITapGestureRecognizer.h>
-#import <UIKit/UIGestureRecognizerSubclass.h>
 
 #import "StarboardXaml/DisplayProperties.h"
 #import "UIGestureRecognizerInternal.h"
 #include "LoggingNative.h"
+#import <math.h>
 
 static const wchar_t* TAG = L"UITapGestureRecognizer";
 

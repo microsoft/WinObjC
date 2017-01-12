@@ -104,9 +104,11 @@ void LayerAnimation::_Start() {
 
 void LayerAnimation::Stop() {
     CoreAnimation::StoryboardManager^ storyboardManager = _GetStoryboardManager(_storyboardManager);
-    storyboardManager->Stop();
-    storyboardManager->Completed = nullptr;
-    _storyboardManager = nullptr;
+    if (storyboardManager) {
+        storyboardManager->Stop();
+        storyboardManager->Completed = nullptr;
+        _storyboardManager = nullptr;
+    }
 }
 
 concurrency::task<void> LayerAnimation::_AddAnimation(ILayerProxy& layer, const char* propertyName, bool fromValid, float from, bool toValid, float to) {

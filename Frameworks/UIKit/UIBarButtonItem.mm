@@ -15,6 +15,12 @@
 //******************************************************************************
 
 #import "Starboard.h"
+#import <UIKit/UIBarItem.h>
+#import <UIKit/UIButton.h>
+#import <UIKit/UIColor.h>
+#import <UIKit/UIRuntimeEventConnection.h>
+#import <UIKit/UISegmentedControl.h>
+#import <UIKit/NSString+UIKitAdditions.h>
 #import "UIBarItemInternal.h"
 #import "UIBarButtonItem+Internals.h"
 #import "UIAppearanceSetter.h"

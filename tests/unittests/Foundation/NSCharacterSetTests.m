@@ -223,3 +223,20 @@ TEST(NSCharacterSet, Polymorphic_Creators) {
     set = [NSMutableCharacterSet characterSetWithBitmapRepresentation:nil];
     EXPECT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 }
+
+TEST(NSCharacterSet, MutableInstanceArchivesAsMutable) {
+    NSMutableCharacterSet* input = [NSMutableCharacterSet characterSetWithCharactersInString:@"a"];
+
+    NSData* data = [NSKeyedArchiver archivedDataWithRootObject:input];
+    ASSERT_OBJCNE(nil, data);
+
+    NSMutableCharacterSet* output = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    ASSERT_OBJCNE(nil, output);
+
+    EXPECT_NO_THROW([output addCharactersInString:@"b"]);
+
+    // We cannot compare these for equality. Despite having different ranges (!) they are considered equal
+    // on the reference platform.
+    EXPECT_FALSE([input characterIsMember:'b']);
+    EXPECT_TRUE([output characterIsMember:'b']);
+}

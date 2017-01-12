@@ -21,6 +21,7 @@
 #import <CoreGraphics/CGImage.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import "CoreGraphics/CGDataProvider.h"
+#import "CGDataProviderInternal.h"
 #import <Foundation/Foundation.h>
 
 static const wchar_t* TAG = L"vImage";
@@ -83,7 +84,7 @@ vImage_Error vImageBuffer_InitWithCGImage(
     if (result == kvImageNoError) {
         const uint32_t srcPitch = CGImageGetBytesPerRow(image);
         const uint32_t dstPitch = buffer->rowBytes;
-        const BYTE* srcData = static_cast<const BYTE *>([static_cast<NSData*>(CGImageGetDataProvider(image)) bytes]);
+        const BYTE* srcData = static_cast<const BYTE *>(_CGDataProviderGetData(CGImageGetDataProvider(image)));
         BYTE* dstData = reinterpret_cast<BYTE*>(buffer->data);
         const uint32_t bytesPerPixel = format->bitsPerPixel >> 3;
         const uint32_t bytesToCopy = width * bytesPerPixel;
@@ -144,7 +145,7 @@ CGImageRef vImageCreateCGImageFromBuffer(vImage_Buffer* buffer,
 
     if (packedWidthInBytes < buffer->rowBytes) {
         // packing needed
-        packedBuffer = malloc(buffer->height * packedWidthInBytes);
+        packedBuffer = IwMalloc(buffer->height * packedWidthInBytes);
 
         if (packedBuffer != nil) {
             packedBufferAllocated = true;
@@ -213,7 +214,7 @@ CGImageRef vImageCreateCGImageFromBuffer(vImage_Buffer* buffer,
         CGContextRelease(ctx);
 
         if (packedBufferAllocated == true) {
-            free(packedBuffer);
+            IwFree(packedBuffer);
         }
     }
 

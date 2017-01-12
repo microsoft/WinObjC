@@ -824,11 +824,12 @@ void LayerCoordinator::_RegisterDependencyProperties() {
             ref new PropertyMetadata(0.0,
             ref new PropertyChangedCallback(&LayerCoordinator::_VisualHeightChangedCallback)));
 
+        // Store as an int (rather than as a ContentGravity enum value) so we can read the values in the VS debugger at runtime
         s_contentGravityProperty = DependencyProperty::RegisterAttached(
             "ContentGravity",
-            ContentGravity::typeid,
+            int::typeid,
             FrameworkElement::typeid,
-            ref new PropertyMetadata(ContentGravity::Resize, nullptr));
+            ref new PropertyMetadata(static_cast<Object^>(static_cast<int>(ContentGravity::Resize)), nullptr));
 
         s_contentCenterProperty = DependencyProperty::RegisterAttached(
             "ContentCenter",
@@ -1060,11 +1061,13 @@ void LayerCoordinator::_VisualHeightChangedCallback(DependencyObject^ sender, De
 
 // ContentGravity
 ContentGravity LayerCoordinator::GetContentGravity(FrameworkElement^ element) {
-    return static_cast<ContentGravity>(element->GetValue(s_contentGravityProperty));
+    // We store as an int (rather than as a ContentGravity enum value) so we can read the values in the VS debugger at runtime
+    return static_cast<ContentGravity>(static_cast<int>(element->GetValue(s_contentGravityProperty)));
 }
 
 void LayerCoordinator::SetContentGravity(FrameworkElement^ element, ContentGravity value) {
-    element->SetValue(s_contentGravityProperty, value);
+    // We store as an int (rather than as a ContentGravity enum value) so we can read the values in the VS debugger at runtime
+    element->SetValue(s_contentGravityProperty, ref new Platform::Box<int>(static_cast<int>(value)));
     _ApplyContentGravity(element, value);
 }
 

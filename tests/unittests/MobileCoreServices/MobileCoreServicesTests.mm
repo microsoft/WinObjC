@@ -16,7 +16,7 @@
 
 #import <TestFramework.h>
 #import <MobileCoreServices/MobileCoreServices.h>
-#import <UTTypeInternalMap.h>
+#import <UTTypeInternal.h>
 
 TEST(MobileCoreServices, MobileCoreServices_UTTypeCreatePreferredIdentifierForTag) {
     LOG_INFO("MobileCoreServices UTTypeCreatePreferredIdentifierForTag test: ");

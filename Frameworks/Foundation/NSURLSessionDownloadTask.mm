@@ -121,10 +121,6 @@ dataTask:(NSURLSessionDataTask*)dataTask {
     [outputStream release];
 }
 
-- (void)_destroyTemporaryFile {
-    [[NSFileManager defaultManager] removeItemAtURL:_temporaryFileURL error:NULL];
-}
-
 /**
  @Status Interoperable
 */
@@ -160,8 +156,8 @@ dataTask:(NSURLSessionDataTask*)dataTask {
  @Status Interoperable
 */
 - (void)URLProtocol:(NSURLProtocol*)connection
- didReceiveResponse:(NSURLResponse*)response
- cacheStoragePolicy:(NSURLCacheStoragePolicy)policy {
+    didReceiveResponse:(NSURLResponse*)response
+    cacheStoragePolicy:(NSURLCacheStoragePolicy)policy {
     [super URLProtocol:connection didReceiveResponse:response cacheStoragePolicy:policy];
 
     if (_resumed) {
@@ -230,7 +226,5 @@ dataTask:(NSURLSessionDataTask*)dataTask {
     [self._taskDelegate downloadTask:self didFinishDownloadingToURL:[[_temporaryFileURL retain] autorelease]];
 
     [super URLProtocolDidFinishLoading:connection];
-
-    [self _destroyTemporaryFile];
 }
 @end

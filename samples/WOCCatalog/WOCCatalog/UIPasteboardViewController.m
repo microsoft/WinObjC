@@ -15,7 +15,7 @@
 //******************************************************************************
 
 #import "UIPasteboardViewController.h"
-#import "MobileCoreServices/UTType.h"
+#import <MobileCoreServices/MobileCoreServices.h>
 
 static const CGFloat c_originX = 5;
 static const CGFloat c_originY = 8;

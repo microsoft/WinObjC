@@ -17,3 +17,6 @@
 #pragma once
 
 #include <Winsock2.h>
+#include <ws2tcpip.h>
+
+#define _SOCKLEN_T_DECLARED

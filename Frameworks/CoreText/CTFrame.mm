@@ -118,7 +118,8 @@ void CTFrameDraw(CTFrameRef frameRef, CGContextRef ctx) {
 
         // Invert Text Matrix and CTM so glyphs are drawn in correct orientation and correct position
         CGAffineTransform textMatrix = CGContextGetTextMatrix(ctx);
-        CGContextSetTextMatrix(ctx, CGAffineTransformScale(textMatrix, 1.0f, -1.0f));
+        CGContextSetTextMatrix(
+            ctx, CGAffineTransformMake(textMatrix.a, -textMatrix.b, textMatrix.c, -textMatrix.d, textMatrix.tx, textMatrix.ty));
         CGContextScaleCTM(ctx, 1.0f, -1.0f);
 
         for (size_t i = 0; i < frame->_lineOrigins.size() && (frame->_lineOrigins[i].y < frame->_frameRect.size.height); ++i) {

@@ -15,6 +15,9 @@
 //******************************************************************************
 
 #import <Starboard.h>
+
+#import <CoreGraphics/CGAffineTransform.h>
+
 #import <limits>
 #import "Etc.h"
 

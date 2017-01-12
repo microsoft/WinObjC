@@ -16,6 +16,10 @@
 
 #include "Starboard.h"
 
+#import <UIKit/UIImage.h>
+#import <UIKit/UIImageView.h>
+#import <UIKit/UIView.h>
+
 class UIImageViewPrivData {
 public:
     UIImageViewPrivData() {

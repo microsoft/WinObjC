@@ -50,6 +50,7 @@ static const double meanDivisor = 100;
     UILabel* _gLabel;
     UILabel* _bLabel;
     UILabel* _boxLabel;
+    UIButton* _imageChange;
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -129,6 +130,7 @@ static const double meanDivisor = 100;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     } else if (indexPath.row == 1) {
         // Image display box
+        [_imv removeFromSuperview];
 
         UIImage* transformImg = [self transformImage:_img];
         _imv = [[UIImageView alloc] initWithFrame:CGRectMake(3, 2, cell.bounds.size.width - 6.0f, cell.bounds.size.height - 4.0f)];
@@ -192,17 +194,18 @@ static const double meanDivisor = 100;
 
     } else if (indexPath.row == 7) {
         // Select Image
+        [_imageChange removeFromSuperview];
 
-        UIButton* imageChange = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        imageChange.frame = CGRectMake(10.0f, 5.0f, 120.0f, cell.bounds.size.height - 15.0f);
-        imageChange.layer.cornerRadius = 5.0f;
-        imageChange.backgroundColor = [UIColor lightGrayColor];
-        [imageChange setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [imageChange setTitle:@"Select Image" forState:UIControlStateNormal];
+        _imageChange = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        _imageChange.frame = CGRectMake(10.0f, 5.0f, 120.0f, cell.bounds.size.height - 15.0f);
+        _imageChange.layer.cornerRadius = 5.0f;
+        _imageChange.backgroundColor = [UIColor lightGrayColor];
+        [_imageChange setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [_imageChange setTitle:@"Select Image" forState:UIControlStateNormal];
 
-        [cell addSubview:imageChange];
+        [cell addSubview:_imageChange];
 
-        [imageChange addTarget:self action:@selector(imageChangePress) forControlEvents:UIControlEventTouchUpInside];
+        [_imageChange addTarget:self action:@selector(imageChangePress) forControlEvents:UIControlEventTouchUpInside];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
 

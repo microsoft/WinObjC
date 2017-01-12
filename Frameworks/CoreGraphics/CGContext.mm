@@ -19,6 +19,7 @@
 #import <math.h>
 
 #import <CoreGraphics/CGContext.h>
+#import <CoreGraphics/CGBitmapContext.h>
 #import <CoreGraphics/CGPath.h>
 #import <CoreGraphics/CGLayer.h>
 #import <CoreGraphics/CGAffineTransform.h>

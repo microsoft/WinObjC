@@ -75,6 +75,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFArray)
 @implementation NSCFArray
 
 BRIDGED_CLASS_REQUIRED_IMPLS(CFArrayRef, CFArrayGetTypeID, NSArray, NSCFArray)
+BRIDGED_MUTABLE_CLASS_FOR_CODER(CFArrayRef, _CFArrayIsMutable, NSArray, NSMutableArray)
 
 - (NSUInteger)count {
     return CFArrayGetCount((CFArrayRef)self);
