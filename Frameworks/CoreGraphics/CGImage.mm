@@ -451,10 +451,12 @@ CGImageRef CGImageCreateWithJPEGDataProvider(CGDataProviderRef source,
                                              const CGFloat decode[],
                                              bool shouldInterpolate,
                                              CGColorRenderingIntent intent) {
-    RETURN_NULL_IF((source == nullptr) || ![(NSObject*)source isKindOfClass:[NSData class]]);
+    RETURN_NULL_IF(source == nullptr);
 
-    NSData* sourceData = (__bridge NSData*)source;
-    CGImageRef imageRef = _CGImageLoadJPEG((void*)[sourceData bytes], [sourceData length]);
+    woc::unique_cf<CFDataRef> providerData{ CGDataProviderCopyData(source) };
+    unsigned char* bytes = const_cast<unsigned char*>(CFDataGetBytePtr(providerData.get()));
+    size_t length = CFDataGetLength(providerData.get());
+    CGImageRef imageRef = _CGImageLoadJPEG(bytes, length);
 
     RETURN_NULL_IF(!imageRef);
     imageRef->SetInterpolate(shouldInterpolate).SetRenderingIntent(intent);
@@ -470,10 +472,12 @@ CGImageRef CGImageCreateWithPNGDataProvider(CGDataProviderRef source,
                                             const CGFloat decode[],
                                             bool shouldInterpolate,
                                             CGColorRenderingIntent intent) {
-    RETURN_NULL_IF((source == nullptr) || ![(NSObject*)source isKindOfClass:[NSData class]]);
+    RETURN_NULL_IF(source == nullptr);
 
-    NSData* sourceData = (__bridge NSData*)source;
-    CGImageRef imageRef = _CGImageLoadPNG((void*)[sourceData bytes], [sourceData length]);
+    woc::unique_cf<CFDataRef> providerData{ CGDataProviderCopyData(source) };
+    unsigned char* bytes = const_cast<unsigned char*>(CFDataGetBytePtr(providerData.get()));
+    size_t length = CFDataGetLength(providerData.get());
+    CGImageRef imageRef = _CGImageLoadPNG(bytes, length);
 
     RETURN_NULL_IF(!imageRef);
     imageRef->SetInterpolate(shouldInterpolate).SetRenderingIntent(intent);
