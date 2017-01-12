@@ -21,8 +21,8 @@
 #import "UIButtonViewController.h"
 #import "UISliderViewController.h"
 #import "UITextFieldViewController.h"
+#import "UIViewViewController.h"
 #import "CustomTextControlViewController.h"
-
 #import "MiscellaneousViewController.h"
 
 @implementation ProgrammaticViewController
@@ -44,6 +44,9 @@
 
     // UITextField
     [self addMenuItemViewController:[[UITextFieldViewController alloc] init] andTitle : @"UITextField"];
+
+    // UIViewViewController
+    [self addMenuItemViewController:[[UIViewViewController alloc] init] andTitle : @"UIView"];
 
     // CustomTextControlViewController
     [self addMenuItemViewController:[[CustomTextControlViewController alloc] init] andTitle : @"Custom Text View"];

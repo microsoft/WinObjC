@@ -17,6 +17,7 @@
 		6EEB8A461CE4F4050021021E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6EEB8A451CE4F4050021021E /* Assets.xcassets */; };
 		6EEB8A561CE546A80021021E /* MenuTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EEB8A551CE546A80021021E /* MenuTableViewController.m */; };
 		6EEB8A5C1CE54B4E0021021E /* UIActivityIndicatorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EEB8A5B1CE54B4E0021021E /* UIActivityIndicatorViewController.m */; };
+		71ADC9FA1E26F8F6008BBCAA /* UIViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 71ADC9F91E26F8F6008BBCAA /* UIViewViewController.m */; };
 		7B67A2081DC366C1004BEF5D /* CustomTextControlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B67A2071DC366C1004BEF5D /* CustomTextControlViewController.m */; };
 		822F85BE1D8F908C001DC8A5 /* blue_background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 822F85BB1D8F908C001DC8A5 /* blue_background.jpg */; };
 		822F85BF1D8F908C001DC8A5 /* button_image.png in Resources */ = {isa = PBXBuildFile; fileRef = 822F85BC1D8F908C001DC8A5 /* button_image.png */; };
@@ -46,6 +47,8 @@
 		6EEB8A551CE546A80021021E /* MenuTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuTableViewController.m; sourceTree = "<group>"; };
 		6EEB8A5A1CE54B4E0021021E /* UIActivityIndicatorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIActivityIndicatorViewController.h; sourceTree = "<group>"; };
 		6EEB8A5B1CE54B4E0021021E /* UIActivityIndicatorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIActivityIndicatorViewController.m; sourceTree = "<group>"; };
+		71ADC9F81E26F8F6008BBCAA /* UIViewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIViewViewController.h; sourceTree = "<group>"; };
+		71ADC9F91E26F8F6008BBCAA /* UIViewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIViewViewController.m; sourceTree = "<group>"; };
 		7B67A2071DC366C1004BEF5D /* CustomTextControlViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomTextControlViewController.m; sourceTree = "<group>"; };
 		7B67A20A1DC36756004BEF5D /* CustomTextControlViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomTextControlViewController.h; sourceTree = "<group>"; };
 		822F85BB1D8F908C001DC8A5 /* blue_background.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = blue_background.jpg; path = XAMLCatalog/Images/blue_background.jpg; sourceTree = "<group>"; };
@@ -73,6 +76,8 @@
 		2324634F1CE69E2C00B7AAE4 /* UIKitControls */ = {
 			isa = PBXGroup;
 			children = (
+				71ADC9F81E26F8F6008BBCAA /* UIViewViewController.h */,
+				71ADC9F91E26F8F6008BBCAA /* UIViewViewController.m */,
 				23E594D11D6FC38D000BB01E /* UIActionSheetViewController.h */,
 				23E594D21D6FC38D000BB01E /* UIActionSheetViewController.m */,
 				6EEB8A5A1CE54B4E0021021E /* UIActivityIndicatorViewController.h */,
@@ -232,6 +237,7 @@
 				6EEB8A3E1CE4F4050021021E /* ProgrammaticViewController.m in Sources */,
 				96857DC01D598FB300EB1FD0 /* MiscellaneousViewController.m in Sources */,
 				7B67A2081DC366C1004BEF5D /* CustomTextControlViewController.m in Sources */,
+				71ADC9FA1E26F8F6008BBCAA /* UIViewViewController.m in Sources */,
 				6EEB8A5C1CE54B4E0021021E /* UIActivityIndicatorViewController.m in Sources */,
 				96857DC11D598FB300EB1FD0 /* UIButtonViewController.m in Sources */,
 				82E63A5E1D07905D005C0993 /* UISliderViewController.m in Sources */,
