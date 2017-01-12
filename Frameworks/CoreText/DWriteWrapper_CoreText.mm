@@ -25,6 +25,7 @@
 #import <StringHelpers.h>
 #import <vector>
 #import <iterator>
+#import <numeric>
 
 using namespace std;
 using namespace Microsoft::WRL;
@@ -522,4 +523,61 @@ static _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CG
     }
 
     return frame;
+}
+
+static CGSize _DWriteGetFrameSize(CFAttributedStringRef string, CFRange range, CGSize maxSize, CFRange* fitRange) {
+    CGSize ret = CGSizeZero;
+
+    // Treat range.length of 0 as unlimited length
+    if (range.length == 0L) {
+        range.length = CFAttributedStringGetLength(string) - range.location;
+    }
+
+    // No text to draw, just return CGSizeZero
+    if (!string || range.length <= 0L) {
+        return ret;
+    }
+
+    ComPtr<IDWriteTextLayout> textLayout;
+    if (FAILED(__DWriteTextLayoutCreate(string, range, { CGPointZero, maxSize }, &textLayout))) {
+        return ret;
+    }
+
+    DWRITE_TEXT_METRICS textMetrics;
+    if (FAILED(textLayout->GetMetrics(&textMetrics))) {
+        return ret;
+    }
+
+    // TODO:: find more precise value than 1.0 to increase width by to fully enclose frame
+    ret.width = std::min(maxSize.width, textMetrics.widthIncludingTrailingWhitespace + 1.0f);
+    ret.height = std::min(maxSize.height, textMetrics.height);
+
+    if (fitRange) {
+        *fitRange = { range.location, 0L };
+        uint32_t lineCount = 0;
+
+        // Should return E_NOT_SUFFICIENT_BUFFER and popluate lineCount
+        if (textLayout->GetLineMetrics(nullptr, 0, &lineCount) != E_NOT_SUFFICIENT_BUFFER) {
+            return ret;
+        }
+
+        std::vector<DWRITE_LINE_METRICS> metrics(lineCount);
+        if (FAILED(textLayout->GetLineMetrics(metrics.data(), lineCount, &lineCount))) {
+            return ret;
+        }
+
+        float totalHeight = 0;
+        CFIndex endPos = range.location;
+        for (auto metric : metrics) {
+            totalHeight += metric.baseline;
+            if (totalHeight > ret.height) {
+                break;
+            }
+            endPos += metric.length;
+        }
+
+        fitRange->length = endPos;
+    }
+
+    return ret;
 }
