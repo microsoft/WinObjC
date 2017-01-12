@@ -95,7 +95,7 @@
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
-    return 5;
+    return 6;
 }
 
 - (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
@@ -150,6 +150,10 @@
         // Setup test
         label.text = @"Hidden=YES; yellow background SHOULD NOT be visible and view SHOULD NOT respond to touch.";
         testView.hidden = YES;
+    } else if (indexPath.row == 5) {
+        // Setup test
+        label.text = @"nil background SHOULD NOT be visible, but view SHOULD respond to touch.";
+        testView.backgroundColor = nil;
     }
 
     return cell;
