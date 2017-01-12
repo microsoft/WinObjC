@@ -126,17 +126,7 @@ NSString* const kCIImageAutoAdjustLevel = @"kCIImageAutoAdjustLevel";
  @Status Interoperable
 */
 - (instancetype)initWithCGImage:(CGImageRef)cgImage {
-    if (!cgImage) {
-        [self release];
-        return nil;
-    }
-
-    if (self = [self init]) {
-        _cgImage.reset(CGImageRetain(cgImage));
-        _extent = CGRectMake(0, 0, CGImageGetWidth(cgImage), CGImageGetHeight(cgImage));
-    }
-
-    return self;
+    return [self initWithCGImage:cgImage options:nil];
 }
 
 /**
@@ -144,18 +134,25 @@ NSString* const kCIImageAutoAdjustLevel = @"kCIImageAutoAdjustLevel";
  @Notes options not supported
 */
 - (instancetype)initWithCGImage:(CGImageRef)image options:(NSDictionary*)options {
-    return [self initWithCGImage:image];
+    if (!image) {
+        [self release];
+        return nil;
+    }
+
+    if (self = [self init]) {
+        _cgImage.reset(CGImageRetain(image));
+        _extent = CGRectMake(0, 0, CGImageGetWidth(image), CGImageGetHeight(image));
+        _options.attach([options copy]);
+    }
+
+    return self;
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithImage:(UIImage*)image {
-    if (!image) {
-        [self release];
-        return nil;
-    }
-    return [self initWithCGImage:[image CGImage]];
+    return [self initWithImage:image options:nil];
 }
 
 /**
@@ -163,18 +160,18 @@ NSString* const kCIImageAutoAdjustLevel = @"kCIImageAutoAdjustLevel";
  @Notes options not supported
 */
 - (instancetype)initWithImage:(UIImage*)image options:(NSDictionary*)options {
-    return [self initWithImage:image];
+    if (!image) {
+        [self release];
+        return nil;
+    }
+    return [self initWithCGImage:[image CGImage] options:options];
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithData:(NSData*)data {
-    if (!data) {
-        [self release];
-        return nil;
-    }
-    return [self initWithCGImage:_CGImageGetImageFromData((void*)[data bytes], [data length])];
+    return [self initWithData:data options:nil];
 }
 
 /**
@@ -182,7 +179,11 @@ NSString* const kCIImageAutoAdjustLevel = @"kCIImageAutoAdjustLevel";
  @Notes options not supported
 */
 - (instancetype)initWithData:(NSData*)data options:(NSDictionary*)options {
-    return [self initWithData:data];
+    if (!data) {
+        [self release];
+        return nil;
+    }
+    return [self initWithCGImage:_CGImageGetImageFromData((void*)[data bytes], [data length]) options:options];
 }
 
 /**
@@ -206,8 +207,7 @@ NSString* const kCIImageAutoAdjustLevel = @"kCIImageAutoAdjustLevel";
  @Status Interoperable
 */
 + (CIImage*)imageWithData:(NSData*)data {
-    RETURN_NULL_IF(!data);
-    return [[[CIImage alloc] initWithData:data] autorelease];
+    return [CIImage imageWithData:data options:nil];
 }
 
 /**
@@ -215,15 +215,15 @@ NSString* const kCIImageAutoAdjustLevel = @"kCIImageAutoAdjustLevel";
  @Notes options not supported
 */
 + (CIImage*)imageWithData:(NSData*)data options:(NSDictionary*)options {
-    return [CIImage imageWithData:data];
+    RETURN_NULL_IF(!data);
+    return [[[CIImage alloc] initWithData:data options:options] autorelease];
 }
 
 /**
  @Status Interoperable
 */
 + (CIImage*)imageWithCGImage:(CGImageRef)image {
-    RETURN_NULL_IF(!image);
-    return [[[CIImage alloc] initWithCGImage:image] autorelease];
+    return [self imageWithCGImage:image options:nil];
 }
 
 /**
@@ -231,7 +231,8 @@ NSString* const kCIImageAutoAdjustLevel = @"kCIImageAutoAdjustLevel";
  @Notes options not supported
 */
 + (CIImage*)imageWithCGImage:(CGImageRef)image options:(NSDictionary*)options {
-    return [self imageWithCGImage:image];
+    RETURN_NULL_IF(!image);
+    return [[[CIImage alloc] initWithCGImage:image options:options] autorelease];
 }
 
 /**

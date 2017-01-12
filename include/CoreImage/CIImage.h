@@ -68,15 +68,15 @@ COREIMAGE_EXPORT_CLASS
                          format:(CIFormat)f
                      colorSpace:(CGColorSpaceRef)cs STUB_METHOD;
 + (CIImage*)imageWithCGImage:(CGImageRef)image;
-+ (CIImage*)imageWithCGImage:(CGImageRef)image options:(NSDictionary*)d STUB_METHOD;
++ (CIImage*)imageWithCGImage:(CGImageRef)image options:(NSDictionary*)options;
 + (CIImage*)imageWithContentsOfURL:(NSURL*)url STUB_METHOD;
-+ (CIImage*)imageWithContentsOfURL:(NSURL*)url options:(NSDictionary*)d STUB_METHOD;
++ (CIImage*)imageWithContentsOfURL:(NSURL*)url options:(NSDictionary*)options STUB_METHOD;
 + (CIImage*)imageWithCVImageBuffer:(CVImageBufferRef)imageBuffer STUB_METHOD;
 + (CIImage*)imageWithCVImageBuffer:(CVImageBufferRef)imageBuffer options:(NSDictionary*)dict STUB_METHOD;
 + (CIImage*)imageWithCVPixelBuffer:(CVPixelBufferRef)buffer STUB_METHOD;
 + (CIImage*)imageWithCVPixelBuffer:(CVPixelBufferRef)buffer options:(NSDictionary*)dict STUB_METHOD;
 + (CIImage*)imageWithData:(NSData*)data;
-+ (CIImage*)imageWithData:(NSData*)data options:(NSDictionary*)d STUB_METHOD;
++ (CIImage*)imageWithData:(NSData*)data options:(NSDictionary*)options;
 + (CIImage*)imageWithImageProvider:(id)p
                               size:(size_t)
                              width:(size_t)height
@@ -98,9 +98,9 @@ COREIMAGE_EXPORT_CLASS
                             format:(CIFormat)f
                         colorSpace:(CGColorSpaceRef)c STUB_METHOD;
 - (instancetype)initWithCGImage:(CGImageRef)image;
-- (instancetype)initWithCGImage:(CGImageRef)image options:(NSDictionary*)d STUB_METHOD;
+- (instancetype)initWithCGImage:(CGImageRef)image options:(NSDictionary*)options;
 - (instancetype)initWithImage:(UIImage*)image;
-- (instancetype)initWithImage:(UIImage*)image options:(NSDictionary*)options STUB_METHOD;
+- (instancetype)initWithImage:(UIImage*)image options:(NSDictionary*)options;
 - (instancetype)initWithContentsOfURL:(NSURL*)url STUB_METHOD;
 - (instancetype)initWithContentsOfURL:(NSURL*)url options:(NSDictionary*)d STUB_METHOD;
 - (instancetype)initWithCVImageBuffer:(CVImageBufferRef)imageBuffer STUB_METHOD;
@@ -108,7 +108,7 @@ COREIMAGE_EXPORT_CLASS
 - (instancetype)initWithCVPixelBuffer:(CVPixelBufferRef)buffer STUB_METHOD;
 - (instancetype)initWithCVPixelBuffer:(CVPixelBufferRef)buffer options:(NSDictionary*)dict STUB_METHOD;
 - (instancetype)initWithData:(NSData*)data;
-- (instancetype)initWithData:(NSData*)data options:(NSDictionary*)d STUB_METHOD;
+- (instancetype)initWithData:(NSData*)data options:(NSDictionary*)options;
 - (instancetype)initWithImageProvider:(id)p
                                  size:(size_t)
                                 width:(size_t)height

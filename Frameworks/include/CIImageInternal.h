@@ -19,11 +19,13 @@
 #import <CoreImage/CIImage.h>
 #import <CoreGraphics/CGImage.h>
 #import <memory>
+#import <Foundation/NSDictionary.h>
 #import <Starboard.h>
 
 @interface CIImage () {
     woc::unique_cf<CGImageRef> _cgImage;
     StrongId<CIColor> _color;
+    StrongId<NSDictionary> _options;
     CIFilter* _filter;
     CGRect _extent;
 }
