@@ -16,7 +16,7 @@
 
 #include "DrawingTest.h"
 
-DISABLED_DRAW_TEST_F(CGContextFill, ConcentricCirclesWinding, WhiteBackgroundTest) {
+DISABLED_DRAW_TEST_F(CGContextFill, ConcentricCirclesWinding, WhiteBackgroundTest<PixelByPixelImageComparator<ComparisonMode::Exact>>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -38,7 +38,7 @@ DISABLED_DRAW_TEST_F(CGContextFill, ConcentricCirclesWinding, WhiteBackgroundTes
     CGPathRelease(concentricCirclesPath);
 }
 
-DISABLED_DRAW_TEST_F(CGContextFill, ConcentricCirclesEvenOdd, WhiteBackgroundTest) {
+DISABLED_DRAW_TEST_F(CGContextFill, ConcentricCirclesEvenOdd, WhiteBackgroundTest<PixelByPixelImageComparator<ComparisonMode::Exact>>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -60,7 +60,7 @@ DISABLED_DRAW_TEST_F(CGContextFill, ConcentricCirclesEvenOdd, WhiteBackgroundTes
     CGPathRelease(concentricCirclesPath);
 }
 
-DISABLED_DRAW_TEST_F(CGContextFill, ConcentricRectsWinding, WhiteBackgroundTest) {
+DISABLED_DRAW_TEST_F(CGContextFill, ConcentricRectsWinding, WhiteBackgroundTest<PixelByPixelImageComparator<ComparisonMode::Exact>>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -82,7 +82,7 @@ DISABLED_DRAW_TEST_F(CGContextFill, ConcentricRectsWinding, WhiteBackgroundTest)
     CGPathRelease(path);
 }
 
-DISABLED_DRAW_TEST_F(CGContextFill, ConcentricRectsEvenOdd, WhiteBackgroundTest) {
+DISABLED_DRAW_TEST_F(CGContextFill, ConcentricRectsEvenOdd, WhiteBackgroundTest<PixelByPixelImageComparator<ComparisonMode::Exact>>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
