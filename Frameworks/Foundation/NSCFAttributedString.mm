@@ -35,8 +35,10 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFAttributedString)
 }
 
 - (_Nullable instancetype)initWithAttributedString:(NSAttributedString*)string {
-    return reinterpret_cast<NSAttributedStringPrototype*>(static_cast<NSAttributedString*>(
-        CFAttributedStringCreateWithSubstring(kCFAllocatorDefault, static_cast<CFAttributedStringRef>(string), CFRange{ 0, [string length] })));
+    return reinterpret_cast<NSAttributedStringPrototype*>(
+        static_cast<NSAttributedString*>(CFAttributedStringCreateWithSubstring(kCFAllocatorDefault,
+                                                                               static_cast<CFAttributedStringRef>(string),
+                                                                               CFRange{ 0, [string length] })));
 }
 
 - (_Nullable instancetype)initWithString:(NSString*)string attributes:(NSDictionary*)attributes {
@@ -58,11 +60,13 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFAttributedString)
 }
 
 - (_Nullable instancetype)initWithAttributedString:(NSAttributedString*)string {
-    return reinterpret_cast<NSMutableAttributedStringPrototype*>(CFAttributedStringCreateMutableCopy(kCFAllocatorDefault, 0, static_cast<CFAttributedStringRef>(string)));
+    return reinterpret_cast<NSMutableAttributedStringPrototype*>(
+        CFAttributedStringCreateMutableCopy(kCFAllocatorDefault, 0, static_cast<CFAttributedStringRef>(string)));
 }
 
 - (_Nullable instancetype)initWithString:(NSString*)string attributes:(NSDictionary*)attributes {
-    NSMutableAttributedString* attributedString = static_cast<NSMutableAttributedString*>(CFAttributedStringCreateMutable(kCFAllocatorDefault, 0));
+    NSMutableAttributedString* attributedString =
+        static_cast<NSMutableAttributedString*>(CFAttributedStringCreateMutable(kCFAllocatorDefault, 0));
     CFAttributedStringReplaceString(static_cast<CFMutableAttributedStringRef>(attributedString),
                                     CFRange{ 0, 0 },
                                     static_cast<CFStringRef>(string));
@@ -108,6 +112,12 @@ BRIDGED_MUTABLE_CLASS_FOR_CODER(CFAttributedStringRef, _CFAttributedStringIsMuta
 - (void)addAttribute:(NSString*)name value:(id)value range:(NSRange)range {
     BRIDGED_THROW_IF_IMMUTABLE(_CFAttributedStringIsMutable, CFAttributedStringRef);
     THROW_NS_IF_FALSE(E_BOUNDS, ((range.location + range.length) <= [self length]));
+
+    if (value == nil) {
+        @throw [NSException exceptionWithName:NSInvalidArgumentException
+                                       reason:[NSString stringWithFormat:@"*** %@ nil value", NSStringFromSelector(_cmd)]
+                                     userInfo:nil];
+    }
 
     CFAttributedStringSetAttribute(reinterpret_cast<CFMutableAttributedStringRef>(self),
                                    *reinterpret_cast<CFRange*>(&range),

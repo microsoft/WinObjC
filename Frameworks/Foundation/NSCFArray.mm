@@ -106,6 +106,11 @@ BRIDGED_MUTABLE_CLASS_FOR_CODER(CFArrayRef, _CFArrayIsMutable, NSArray, NSMutabl
 
 - (void)replaceObjectAtIndex:(NSUInteger)index withObject:(NSObject*)obj {
     BRIDGED_THROW_IF_IMMUTABLE(_CFArrayIsMutable, CFArrayRef);
+    if (obj == nil) {
+        @throw [NSException exceptionWithName:NSInvalidArgumentException
+                                       reason:[NSString stringWithFormat:@"*** %@ object cannot be nil", NSStringFromSelector(_cmd)]
+                                     userInfo:nil];
+    }
     //  Fastpath
     CFRange range;
     range.location = index;
@@ -115,6 +120,12 @@ BRIDGED_MUTABLE_CLASS_FOR_CODER(CFArrayRef, _CFArrayIsMutable, NSArray, NSMutabl
 
 - (void)insertObject:(NSObject*)objAddr atIndex:(NSUInteger)index {
     BRIDGED_THROW_IF_IMMUTABLE(_CFArrayIsMutable, CFArrayRef);
+    if (objAddr == nil) {
+        @throw [NSException exceptionWithName:NSInvalidArgumentException
+                                       reason:[NSString stringWithFormat:@"*** %@ object cannot be nil", NSStringFromSelector(_cmd)]
+                                     userInfo:nil];
+    }
+
     CFArrayInsertValueAtIndex(static_cast<CFMutableArrayRef>(self), index, reinterpret_cast<const void*>(objAddr));
 }
 
@@ -125,6 +136,11 @@ BRIDGED_MUTABLE_CLASS_FOR_CODER(CFArrayRef, _CFArrayIsMutable, NSArray, NSMutabl
 
 - (void)addObject:(NSObject*)objAddr {
     BRIDGED_THROW_IF_IMMUTABLE(_CFArrayIsMutable, CFArrayRef);
+    if (objAddr == nil) {
+        @throw [NSException exceptionWithName:NSInvalidArgumentException
+                                       reason:[NSString stringWithFormat:@"*** %@ object cannot be nil", NSStringFromSelector(_cmd)]
+                                     userInfo:nil];
+    }
     CFArrayAppendValue((CFMutableArrayRef)self, (const void*)objAddr);
 }
 

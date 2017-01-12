@@ -788,3 +788,8 @@ DISABLED_TEST(NSAttributedString, MutableInstanceArchivesAsMutable) {
 
     EXPECT_OBJCNE(input, output);
 }
+
+TEST(NSMutableAttributedString, InsertingNilShouldThrow) {
+    NSMutableAttributedString* string = [[[NSMutableAttributedString alloc] initWithString:@"hello"] autorelease];
+    EXPECT_ANY_THROW([string addAttribute:@"attribute" value:nil range:NSMakeRange(0, 3)]);
+}

@@ -115,7 +115,11 @@
  @Status Interoperable
 */
 - (void)setObject:(id)object forKeyedSubscript:(id)key {
-    [self setObject:object forKey:key];
+    if (object == nil) {
+        [self removeObjectForKey:key];
+    } else {
+        [self setObject:object forKey:key];
+    }
 }
 
 /**
