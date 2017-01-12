@@ -140,6 +140,11 @@ int UIApplicationMainInit(NSString* principalClassName,
     [[NSThread currentThread] _associateWithMainThread];
     NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
 
+    outerPool = [NSAutoreleasePoolWarn new];
+    NSAutoreleasePool* pool = [NSAutoreleasePool new];
+    NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
+    UIApplication* uiApplication;
+
     // Register fonts listed in app's Info.plist, from the app's bundle
     // This needs to happen before [UIApplication new]/[objc_getClass(pClassName) new] below,
     // as they may attempt to use fonts from the app's bundle
@@ -158,11 +163,6 @@ int UIApplicationMainInit(NSString* principalClassName,
             CTFontManagerRegisterFontsForURLs((CFArrayRef)fontURLs, kCTFontManagerScopeNone, nil);
         }
     }
-
-    outerPool = [NSAutoreleasePoolWarn new];
-    NSAutoreleasePool* pool = [NSAutoreleasePool new];
-    NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
-    UIApplication* uiApplication;
 
     if (principalClassName == nil) {
         principalClassName = [infoDict objectForKey:@"NSPrincipalClass"];
