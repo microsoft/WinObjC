@@ -31,6 +31,7 @@
 #import "CGColorSpaceInternal.h"
 #import "CGImageInternal.h"
 #import "CGIWICBitmap.h"
+#import "CGDataProviderInternal.h"
 
 #import <algorithm>
 
@@ -252,17 +253,15 @@ CGImageRef CGImageCreate(size_t width,
                          CGColorRenderingIntent intent) {
     RETURN_NULL_IF(provider == nullptr || colorSpace == nullptr);
 
-    woc::unique_cf<CFDataRef> providerData{ CGDataProviderCopyData(provider) };
-    unsigned char* data = const_cast<unsigned char*>(CFDataGetBytePtr(providerData.get()));
-
     ComPtr<IWICBitmap> image;
     ComPtr<IWICImagingFactory> imageFactory;
     RETURN_NULL_IF_FAILED(_CGGetWICFactory(&imageFactory));
 
     REFGUID pixelFormat = _CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, colorSpace, bitmapInfo);
 
+    unsigned char* bytes = static_cast<unsigned char*>(const_cast<void*>(_CGDataProviderGetData(provider)));
     RETURN_NULL_IF_FAILED(
-        imageFactory->CreateBitmapFromMemory(width, height, pixelFormat, bytesPerRow, height * bytesPerRow, data, &image));
+        imageFactory->CreateBitmapFromMemory(width, height, pixelFormat, bytesPerRow, height * bytesPerRow, bytes, &image));
 
     CGImageRef imageRef = __CGImage::CreateInstance();
     imageRef->SetImageSource(image).SetColorSpace(colorSpace).SetRenderingIntent(intent).SetInterpolate(shouldInterpolate);
@@ -329,9 +328,6 @@ CGImageRef CGImageMaskCreate(size_t width,
                              bool shouldInterpolate) {
     RETURN_NULL_IF(provider == nullptr);
 
-    woc::unique_cf<CFDataRef> providerData{ CGDataProviderCopyData(provider) };
-    unsigned char* data = const_cast<unsigned char*>(CFDataGetBytePtr(providerData.get()));
-
     ComPtr<IWICBitmap> image;
     ComPtr<IWICImagingFactory> imageFactory;
     RETURN_NULL_IF_FAILED(_CGGetWICFactory(&imageFactory));
@@ -340,8 +336,9 @@ CGImageRef CGImageMaskCreate(size_t width,
     REFGUID pixelFormat =
         _CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, colorSpace.get(), kCGBitmapByteOrderDefault);
 
+    unsigned char* bytes = static_cast<unsigned char*>(const_cast<void*>(_CGDataProviderGetData(provider)));
     RETURN_NULL_IF_FAILED(
-        imageFactory->CreateBitmapFromMemory(width, height, pixelFormat, bytesPerRow, height * bytesPerRow, data, &image));
+        imageFactory->CreateBitmapFromMemory(width, height, pixelFormat, bytesPerRow, height * bytesPerRow, bytes, &image));
 
     CGImageRef imageRef = __CGImage::CreateInstance();
     imageRef->SetImageSource(image).SetIsMask(true).SetInterpolate(shouldInterpolate);
@@ -453,10 +450,8 @@ CGImageRef CGImageCreateWithJPEGDataProvider(CGDataProviderRef source,
                                              CGColorRenderingIntent intent) {
     RETURN_NULL_IF(source == nullptr);
 
-    woc::unique_cf<CFDataRef> providerData{ CGDataProviderCopyData(source) };
-    unsigned char* bytes = const_cast<unsigned char*>(CFDataGetBytePtr(providerData.get()));
-    size_t length = CFDataGetLength(providerData.get());
-    CGImageRef imageRef = _CGImageLoadJPEG(bytes, length);
+    unsigned char* bytes = static_cast<unsigned char*>(const_cast<void*>(_CGDataProviderGetData(source)));
+    CGImageRef imageRef = _CGImageLoadJPEG(bytes, _CGDataProviderGetSize(source));
 
     RETURN_NULL_IF(!imageRef);
     imageRef->SetInterpolate(shouldInterpolate).SetRenderingIntent(intent);
@@ -474,10 +469,8 @@ CGImageRef CGImageCreateWithPNGDataProvider(CGDataProviderRef source,
                                             CGColorRenderingIntent intent) {
     RETURN_NULL_IF(source == nullptr);
 
-    woc::unique_cf<CFDataRef> providerData{ CGDataProviderCopyData(source) };
-    unsigned char* bytes = const_cast<unsigned char*>(CFDataGetBytePtr(providerData.get()));
-    size_t length = CFDataGetLength(providerData.get());
-    CGImageRef imageRef = _CGImageLoadPNG(bytes, length);
+    unsigned char* bytes = static_cast<unsigned char*>(const_cast<void*>(_CGDataProviderGetData(source)));
+    CGImageRef imageRef = _CGImageLoadPNG(bytes, _CGDataProviderGetSize(source));
 
     RETURN_NULL_IF(!imageRef);
     imageRef->SetInterpolate(shouldInterpolate).SetRenderingIntent(intent);
