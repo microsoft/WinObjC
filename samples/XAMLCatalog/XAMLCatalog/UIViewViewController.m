@@ -87,7 +87,8 @@
 
     static const float margin = 5.0;
 
-    _labelFrame = CGRectMake(margin, margin, 600, 50);
+    CGRect screenBounds = [[UIScreen mainScreen] bounds];
+    _labelFrame = CGRectMake(margin, margin, screenBounds.size.width, 50);
     _containerViewFrame = CGRectMake(margin, margin + _labelFrame.size.height, 300, 100);
     _testViewFrame = CGRectMake(margin, margin, _containerViewFrame.size.width - (margin * 2.0), _containerViewFrame.size.height - (margin * 2.0));
     _statusLabelViewFrame = CGRectMake(margin * 2.0, margin, _testViewFrame.size.width - (margin * 2.0), 40);
@@ -108,6 +109,7 @@
 
     // Add the instruction label
     UILabel* label = [[UILabel alloc] initWithFrame:_labelFrame];
+    label.adjustsFontSizeToFitWidth = YES;
     [cell.contentView addSubview:label];
 
     // Add a container view to deliniate bounds of test view
