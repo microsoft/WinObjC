@@ -31,7 +31,7 @@
     <Keyword>IslandwoodProj</Keyword>
     <ProjectGuid>{A2D70D6C-657B-4071-83FC-5425BA8164B3}</ProjectGuid>
     <RootNamespace>XAMLCatalog</RootNamespace>
-    <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">I:\enl\vso_1_WinObjC</WINOBJC_SDK_ROOT>
+    <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">..\..\..\..</WINOBJC_SDK_ROOT>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
