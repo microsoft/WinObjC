@@ -109,6 +109,9 @@
 
     // Add the instruction label
     UILabel* label = [[UILabel alloc] initWithFrame:_labelFrame];
+    // Using adjustsFontSizeToFitWidth so the instruction labels show up on phone
+    // The need for adjustsFontSizeToFitWidth is tracked by #1690.
+    // The fact that adjustsFontSizeToFitWidth functions incorrectly on desktop tracked by #1689.
     label.adjustsFontSizeToFitWidth = YES;
     [cell.contentView addSubview:label];
 
