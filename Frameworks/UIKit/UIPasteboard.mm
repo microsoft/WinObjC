@@ -393,15 +393,9 @@ WADDataPackageView* _getClipboardContent() {
 }
 
 + (WSSInMemoryRandomAccessStream*)_grabStreamFromUIImage:(UIImage*)image {
-    CGImageRef img = [image CGImage];
-
-    // TODO #1338 - Support via encoded data from IWIC
-    woc::unique_cf<CGImageRef> imgRef(_CGImageCreateCopyWithPixelFormat(img, GUID_WICPixelFormat32bppPBGRA));
-    // TODO #1450 - CGDataProvider should not be an NSData.
-    NSData* data = static_cast<NSData*>(CGImageGetDataProvider(imgRef.get()));
-
     StrongId<WSSInMemoryRandomAccessStream> stream;
     stream.attach([WSSInMemoryRandomAccessStream make]);
+    NSData* data = UIImagePNGRepresentation(image);
     [UIPasteboard _populateStream:stream withData:[data bytes] withLength:[data length]];
     return stream;
 }

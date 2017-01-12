@@ -38,6 +38,9 @@
 #include "Wincodec.h"
 #include "COMIncludes_End.h"
 
+#import <MobileCoreServices/UTType.h>
+#import <ImageIO/CGImageDestination.h>
+
 #include "LoggingNative.h"
 #include <math.h>
 
@@ -889,22 +892,34 @@ static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* dst) 
     return StubReturn();
 }
 
-/**
- @Status Stub
-*/
-NSData* UIImagePNGRepresentation(UIImage* img) {
+static NSData* _ObtainImageRepresentation(UIImage* img, CFStringRef type, NSDictionary* properties) {
     RETURN_NULL_IF(!img);
-    UNIMPLEMENTED();
-    return StubReturn();
+    CFMutableDataRef cfData = CFDataCreateMutable(nullptr, 0);
+    CFAutorelease(cfData);
+    CGImageDestinationRef destination = CGImageDestinationCreateWithData(cfData, type, 1, nullptr);
+    CFAutorelease(destination);
+    CGImageDestinationAddImage(destination, getImage(img), static_cast<CFDictionaryRef>(properties));
+    if (!CGImageDestinationFinalize(destination)) {
+        return nil;
+    }
+    return static_cast<NSData*>(cfData);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
+*/
+NSData* UIImagePNGRepresentation(UIImage* img) {
+    RETURN_NULL_IF(!img);
+    return _ObtainImageRepresentation(img, kUTTypePNG, nil);
+}
+
+/**
+ @Status Interoperable
 */
 NSData* UIImageJPEGRepresentation(UIImage* img, CGFloat quality) {
     RETURN_NULL_IF(!img);
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSDictionary* properties = [NSDictionary dictionaryWithObjectsAndKeys:@(quality), kCGImageDestinationLossyCompressionQuality, nil];
+    return _ObtainImageRepresentation(img, kUTTypeJPEG, properties);
 }
 
 /**
