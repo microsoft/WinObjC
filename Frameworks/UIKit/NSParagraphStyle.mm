@@ -18,6 +18,7 @@
 #import <StubReturn.h>
 
 #import <UIKit/NSParagraphStyle.h>
+#import <UIKit/UIGraphics.h>
 #import "NSParagraphStyleInternal.h"
 
 @implementation NSParagraphStyle

@@ -31,6 +31,7 @@
 #pragma once
 
 #import "UIKitExport.h"
+#import "UIKitTypes.h"
 #import <ApplicationServices/ApplicationServices.h>
 
 @class UIImage;
