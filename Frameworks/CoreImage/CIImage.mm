@@ -77,14 +77,15 @@ NSString* const kCIImageAutoAdjustLevel = @"kCIImageAutoAdjustLevel";
  @Status Interoperable
 */
 + (CIImage*)emptyImage {
-    return [[[CIImage alloc] init] autorelease];
+    static CIImage* emptyImg = [CIImage new];
+    return emptyImg;
 }
 
 /**
  @Status Interoperable
 */
 - (CGRect)extent {
-    return self->_extent;
+    return _extent;
 }
 
 /**
@@ -139,12 +140,11 @@ NSString* const kCIImageAutoAdjustLevel = @"kCIImageAutoAdjustLevel";
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes options not supported
 */
-- (instancetype)initWithCGImage:(CGImageRef)image options:(NSDictionary*)d {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (instancetype)initWithCGImage:(CGImageRef)image options:(NSDictionary*)options {
+    return [self initWithCGImage:image];
 }
 
 /**
@@ -159,12 +159,11 @@ NSString* const kCIImageAutoAdjustLevel = @"kCIImageAutoAdjustLevel";
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes options not supported
 */
 - (instancetype)initWithImage:(UIImage*)image options:(NSDictionary*)options {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self initWithImage:image];
 }
 
 /**
@@ -179,12 +178,11 @@ NSString* const kCIImageAutoAdjustLevel = @"kCIImageAutoAdjustLevel";
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes options not supported
 */
-- (instancetype)initWithData:(NSData*)data options:(NSDictionary*)d {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (instancetype)initWithData:(NSData*)data options:(NSDictionary*)options {
+    return [self initWithData:data];
 }
 
 /**
@@ -213,12 +211,11 @@ NSString* const kCIImageAutoAdjustLevel = @"kCIImageAutoAdjustLevel";
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes options not supported
 */
-+ (CIImage*)imageWithData:(NSData*)data options:(NSDictionary*)d {
-    UNIMPLEMENTED();
-    return StubReturn();
++ (CIImage*)imageWithData:(NSData*)data options:(NSDictionary*)options {
+    return [CIImage imageWithData:data];
 }
 
 /**
@@ -230,12 +227,11 @@ NSString* const kCIImageAutoAdjustLevel = @"kCIImageAutoAdjustLevel";
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes options not supported
 */
-+ (CIImage*)imageWithCGImage:(CGImageRef)image options:(NSDictionary*)d {
-    UNIMPLEMENTED();
-    return StubReturn();
++ (CIImage*)imageWithCGImage:(CGImageRef)image options:(NSDictionary*)options {
+    return [self imageWithCGImage:image];
 }
 
 /**
@@ -349,18 +345,18 @@ NSString* const kCIImageAutoAdjustLevel = @"kCIImageAutoAdjustLevel";
  @Status Interoperable
 */
 - (CIImage*)imageByCroppingToRect:(CGRect)rect {
-    if (self->_cgImage != nil) {
-        woc::unique_cf<CGImageRef> croppedImage{ CGImageCreateWithImageInRect(self->_cgImage.get(), rect) };
+    if (_cgImage != nil) {
+        woc::unique_cf<CGImageRef> croppedImage{ CGImageCreateWithImageInRect(_cgImage.get(), rect) };
         return [CIImage imageWithCGImage:croppedImage.get()];
-    } else if (self->_color != nil) {
+    } else if (_color != nil) {
         UIGraphicsBeginImageContext(rect.size);
         CGContextRef context = UIGraphicsGetCurrentContext();
-        CIColor* color = static_cast<CIColor*>(self->_color);
+        CIColor* color = static_cast<CIColor*>(_color);
         CGContextSetRGBFillColor(context, color.red, color.green, color.blue, color.alpha);
         CGContextFillRect(context, rect);
         woc::unique_cf<CGImageRef> imageRef{ CGBitmapContextCreateImage(context) };
         UIGraphicsEndImageContext();
-        return [[[CIImage alloc] _initWithCGImage:imageRef.get() color:self->_color] autorelease];
+        return [[[CIImage alloc] _initWithCGImage:imageRef.get() color:_color] autorelease];
     }
 
     return [CIImage emptyImage];

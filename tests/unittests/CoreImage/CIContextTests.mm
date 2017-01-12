@@ -50,29 +50,29 @@ static CFMutableDataRef ObtainJPEGRepresentationFromCGImage(CGImageRef image) {
 TEST(CoreImage, CGImageFromRect) {
     SetCACompositor(new NullCompositor);
     CIContext* context = [CIContext contextWithOptions:nil];
-    ASSERT_TRUE_MSG(context != nil, "Failed: CIContext is nil.");
+    ASSERT_OBJCNE(nil, context);
 
     UIImage* photo = [UIImage imageNamed:getPathToFile(@"Photo2.jpg")];
-    ASSERT_TRUE(photo != nil);
+    ASSERT_OBJCNE(nil, photo);
 
     CIImage* ciImage = [CIImage imageWithCGImage:photo.CGImage];
-    ASSERT_TRUE(ciImage != nil);
+    ASSERT_OBJCNE(nil, ciImage);
     CGImageRef cgImage = [context createCGImage:ciImage fromRect:CGRectMake(300, 600, 200, 200)];
-    ASSERT_TRUE(cgImage != nullptr);
+    ASSERT_NE(nullptr, cgImage);
 
     NSData* data = [NSData dataWithContentsOfFile:getPathToFile(@"CroppedPhoto2.jpg")];
-    ASSERT_TRUE(data != nil);
+    ASSERT_OBJCNE(nil, data);
     CIImage* croppedPhotoCIImage = [CIImage imageWithData:data];
-    ASSERT_TRUE(croppedPhotoCIImage != nil);
+    ASSERT_OBJCNE(nil, croppedPhotoCIImage);
 
     CGImageRef croppedPhoto = [context createCGImage:croppedPhotoCIImage fromRect:[croppedPhotoCIImage extent]];
-    ASSERT_TRUE(croppedPhoto != nullptr);
+    ASSERT_NE(nullptr, croppedPhoto);
 
     CFMutableDataRef originalImageCropped = ObtainJPEGRepresentationFromCGImage(cgImage);
-    ASSERT_TRUE(originalImageCropped != nil);
+    ASSERT_NE(nil, originalImageCropped);
 
     CFMutableDataRef croppedImage = ObtainJPEGRepresentationFromCGImage(croppedPhoto);
-    ASSERT_TRUE(croppedImage != nil);
+    ASSERT_NE(nil, croppedImage);
 
     ASSERT_TRUE(CFEqual(originalImageCropped, croppedImage));
 }

@@ -23,7 +23,7 @@
 
 @interface CIImage () {
     woc::unique_cf<CGImageRef> _cgImage;
-    idretain _color;
+    StrongId<CIColor> _color;
     CIFilter* _filter;
     CGRect _extent;
 }
