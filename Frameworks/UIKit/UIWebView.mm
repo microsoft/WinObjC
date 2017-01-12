@@ -253,7 +253,7 @@ static void _initUIWebView(UIWebView* self) {
 }
 
 /**
- @Status Gap
+ @Status Stub
 */
 - (NSString*)stringByEvaluatingJavaScriptFromString:(NSString*)string {
     UNIMPLEMENTED_WITH_MSG(
