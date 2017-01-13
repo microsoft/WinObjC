@@ -21,10 +21,10 @@
 #import <CoreImage/CIColor.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import <UIKit/UIGraphics.h>
+#import <UIKit/UIImage.h>
 #import <math.h>
 #import "CIImageInternal.h"
 #import "CGImageInternal.h"
-
 
 /** @Status Stub */
 const CIFormat kCIFormatARGB8 = StubConstant();
