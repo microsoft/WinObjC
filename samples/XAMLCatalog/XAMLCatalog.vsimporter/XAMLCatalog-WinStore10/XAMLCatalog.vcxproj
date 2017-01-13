@@ -198,6 +198,7 @@
     <ClInclude Include="..\..\XAMLCatalog\UIActionSheetViewController.h" />
     <ClInclude Include="..\..\XAMLCatalog\UIActivityIndicatorViewController.h" />
     <ClInclude Include="..\..\XAMLCatalog\UIButtonViewController.h" />
+    <ClInclude Include="..\..\XAMLCatalog\UILabelViewController.h" />
     <ClInclude Include="..\..\XAMLCatalog\UISliderViewController.h" />
     <ClInclude Include="..\..\XAMLCatalog\UITextFieldViewController.h" />
     <ClangCompile Include="..\..\XAMLCatalog\AppDelegate.m" />
@@ -209,6 +210,7 @@
     <ClangCompile Include="..\..\XAMLCatalog\UIActionSheetViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UIActivityIndicatorViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UIButtonViewController.m" />
+    <ClangCompile Include="..\..\XAMLCatalog\UILabelViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UISliderViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UITextFieldViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\main.m" />

@@ -346,9 +346,9 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 */
 - (UIColor*)backgroundColor {
     WUXMSolidColorBrush* colorBrush = nil;
-    if (_secureTextMode) {
+    if (_secureTextMode && _passwordBox.background != nullptr) {
         colorBrush = rt_dynamic_cast<WUXMSolidColorBrush>(_passwordBox.background);
-    } else {
+    } else if (!_secureTextMode && _textBox.background != nullptr) {
         colorBrush = rt_dynamic_cast<WUXMSolidColorBrush>(_textBox.background);
     }
 

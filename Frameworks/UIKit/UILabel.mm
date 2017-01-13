@@ -115,9 +115,7 @@
 
     [_textBlock setLineHeight:[_font ascender] - [_font descender]];
 
-    // Note: These were set in the compositor before the refactor.
-    // TODO: Revisit to fix the remaining text issues with the  refactor.
-    [_textBlock setTextWrapping:WXTextWrappingWrap];
+    ApplyLineBreakModeOnTextBlock(_textBlock, _lineBreakMode, self.numberOfLines);
     [_textBlock setLineStackingStrategy:WXLineStackingStrategyBlockLineHeight];
 
     UIColor* color = _textColor;

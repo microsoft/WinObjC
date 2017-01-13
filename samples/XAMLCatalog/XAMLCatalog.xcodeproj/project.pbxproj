@@ -24,6 +24,7 @@
 		82E63A5E1D07905D005C0993 /* UISliderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 82E63A5D1D07905D005C0993 /* UISliderViewController.m */; };
 		96857DC01D598FB300EB1FD0 /* MiscellaneousViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96857DBD1D598FB300EB1FD0 /* MiscellaneousViewController.m */; };
 		96857DC11D598FB300EB1FD0 /* UIButtonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96857DBF1D598FB300EB1FD0 /* UIButtonViewController.m */; };
+		A5EFA1601E26FC0D00881967 /* UILabelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A5EFA15F1E26FC0D00881967 /* UILabelViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +58,8 @@
 		96857DBD1D598FB300EB1FD0 /* MiscellaneousViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MiscellaneousViewController.m; sourceTree = "<group>"; };
 		96857DBE1D598FB300EB1FD0 /* UIButtonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIButtonViewController.h; sourceTree = "<group>"; };
 		96857DBF1D598FB300EB1FD0 /* UIButtonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIButtonViewController.m; sourceTree = "<group>"; };
+		A5EFA15E1E26FC0D00881967 /* UILabelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UILabelViewController.h; sourceTree = "<group>"; };
+		A5EFA15F1E26FC0D00881967 /* UILabelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UILabelViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +111,8 @@
 		6EEB8A351CE4F4050021021E /* XAMLCatalog */ = {
 			isa = PBXGroup;
 			children = (
+				A5EFA15E1E26FC0D00881967 /* UILabelViewController.h */,
+				A5EFA15F1E26FC0D00881967 /* UILabelViewController.m */,
 				6EEB8A391CE4F4050021021E /* AppDelegate.h */,
 				6EEB8A3A1CE4F4050021021E /* AppDelegate.m */,
 				6EEB8A451CE4F4050021021E /* Assets.xcassets */,
@@ -227,6 +232,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A5EFA1601E26FC0D00881967 /* UILabelViewController.m in Sources */,
 				6EEB8A411CE4F4050021021E /* StoryBoardViewController.m in Sources */,
 				6EEB8A3B1CE4F4050021021E /* AppDelegate.m in Sources */,
 				6EEB8A3E1CE4F4050021021E /* ProgrammaticViewController.m in Sources */,

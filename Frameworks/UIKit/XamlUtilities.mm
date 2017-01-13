@@ -42,7 +42,11 @@ WUColor* ConvertUIColorToWUColor(UIColor* uiColor) {
 }
 
 UIColor* ConvertWUColorToUIColor(WUColor* wuColor) {
-    return [UIColor colorWithRed:wuColor.r / 255 green:wuColor.g / 255 blue:wuColor.b / 255 alpha:wuColor.a / 255];
+    CGFloat r = wuColor.r / 255.0;
+    CGFloat g = wuColor.g / 255.0;
+    CGFloat b = wuColor.b / 255.0;
+    CGFloat a = wuColor.a / 255.0;
+    return [UIColor colorWithRed:r green:g blue:b alpha:a];
 }
 
 WUXMImageBrush* ConvertUIImageToWUXMImageBrush(UIImage* image) {
@@ -322,4 +326,44 @@ id CreateRtProxy(Class cls, IInspectable* iface) {
     [ret setComObj:iface];
 
     return ret;
+}
+
+void ApplyLineBreakModeOnTextBlock(WXCTextBlock* textBlock, UILineBreakMode mode, int numberOfLines) {
+    if (numberOfLines == 1) {
+        textBlock.textWrapping = WXTextWrappingNoWrap;
+    } else {
+        textBlock.textWrapping = WXTextWrappingWrap;
+    }
+
+    switch (mode) {
+        case UILineBreakModeWordWrap:
+            textBlock.textTrimming = WXTextTrimmingNone;
+            break;
+
+        case UILineBreakModeCharacterWrap:
+            // GAP: currently textblock don't support UILineBreakModeCharacterWrap
+            UNIMPLEMENTED_WITH_MSG("UILineBreakModeCharacterWrap unsupported, using UILineBreakModeWordWrap instead");
+            textBlock.textTrimming = WXTextTrimmingNone;
+            break;
+
+        case UILineBreakModeClip:
+            textBlock.textTrimming = WXTextTrimmingClip;
+            break;
+
+        case UILineBreakModeHeadTruncation:
+            // GAP: currently textblock don't support UILineBreakModeHeadTruncation
+            UNIMPLEMENTED_WITH_MSG("UILineBreakModeHeadTruncation unsupported, using UILineBreakModeTailTruncation instead");
+            textBlock.textTrimming = WXTextTrimmingCharacterEllipsis;
+            break;
+
+        case UILineBreakModeMiddleTruncation:
+            // GAP currently textblock don't support UILineBreakModeMiddleTruncation
+            UNIMPLEMENTED_WITH_MSG("UILineBreakModeMiddleTruncation unsupported, using UILineBreakModeTailTruncation instead");
+            textBlock.textTrimming = WXTextTrimmingCharacterEllipsis;
+            break;
+
+        case UILineBreakModeTailTruncation:
+            textBlock.textTrimming = WXTextTrimmingCharacterEllipsis;
+            break;
+    }
 }
