@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -19,6 +19,7 @@
 #import <Foundation/NSMutableAttributedString.h>
 #import "NSCFAttributedString.h"
 #import "CFFoundationInternal.h"
+#import "NSCFCollectionSupport.h"
 
 #import <algorithm>
 
@@ -112,13 +113,7 @@ BRIDGED_MUTABLE_CLASS_FOR_CODER(CFAttributedStringRef, _CFAttributedStringIsMuta
 - (void)addAttribute:(NSString*)name value:(id)value range:(NSRange)range {
     BRIDGED_THROW_IF_IMMUTABLE(_CFAttributedStringIsMutable, CFAttributedStringRef);
     THROW_NS_IF_FALSE(E_BOUNDS, ((range.location + range.length) <= [self length]));
-
-    if (value == nil) {
-        @throw [NSException exceptionWithName:NSInvalidArgumentException
-                                       reason:[NSString stringWithFormat:@"*** %@ nil value", NSStringFromSelector(_cmd)]
-                                     userInfo:nil];
-    }
-
+    NS_COLLECTION_THROW_IF_NULL_REASON(value, [NSString stringWithFormat:@"*** %@ nil value", NSStringFromSelector(_cmd)]);
     CFAttributedStringSetAttribute(reinterpret_cast<CFMutableAttributedStringRef>(self),
                                    *reinterpret_cast<CFRange*>(&range),
                                    (__bridge CFStringRef)name,
