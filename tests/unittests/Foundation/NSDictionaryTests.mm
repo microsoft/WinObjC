@@ -147,7 +147,7 @@ TEST(NSMutableDictionary, InsertingNilForKeyedSubscriptShouldRemoveValue) {
     EXPECT_EQ(0, [dict count]);
 }
 
-TEST(NSMutableDictionary, InsertingNilWithLiteralSyntaxShouldRemoveValue) {
+TEST(NSMutableDictionary, InsertingNilWithSubscriptingShouldRemoveValue) {
     NSMutableDictionary* dict = [NSMutableDictionary dictionaryWithObject:@"world" forKey:@"hello"];
     dict[@"hello"] = nil;
     EXPECT_EQ(nil, dict[@"hello"]);
