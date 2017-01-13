@@ -33,9 +33,9 @@ typedef struct __CFStringTokenizer {
 
 static void __CFStringTokenizerInit(CFTypeRef cf) {
     __CFStringTokenizer* tokenizer = (__CFStringTokenizer*)cf;
-    new (&tokenizer->_str) woc::unique_iw<UChar>(nullptr);
-    new (&tokenizer->_locale) woc::unique_cf<CFLocaleRef>(nullptr);
-    new (&tokenizer->_iterator) std::unique_ptr<UBreakIterator, decltype(&ubrk_close)>(nullptr, ubrk_close);
+    new (std::addressof(tokenizer->_str)) woc::unique_iw<UChar>(nullptr);
+    new (std::addressof(tokenizer->_locale)) woc::unique_cf<CFLocaleRef>(nullptr);
+    new (std::addressof(tokenizer->_iterator)) std::unique_ptr<UBreakIterator, decltype(&ubrk_close)>(nullptr, ubrk_close);
 }
 
 static void __CFStringTokenizerDeallocate(CFTypeRef cf) {
