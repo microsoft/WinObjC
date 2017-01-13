@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -60,7 +60,7 @@ COREIMAGE_EXPORT NSString* const kCIImageAutoAdjustCrop;
 COREIMAGE_EXPORT NSString* const kCIImageAutoAdjustLevel;
 COREIMAGE_EXPORT_CLASS
 @interface CIImage : NSObject <NSCopying, NSSecureCoding>
-+ (CIImage*)emptyImage STUB_METHOD;
++ (CIImage*)emptyImage;
 + (CIImage*)imageWithColor:(CIColor*)color;
 + (CIImage*)imageWithBitmapData:(NSData*)d
                     bytesPerRow:(size_t)bpr
@@ -68,15 +68,15 @@ COREIMAGE_EXPORT_CLASS
                          format:(CIFormat)f
                      colorSpace:(CGColorSpaceRef)cs STUB_METHOD;
 + (CIImage*)imageWithCGImage:(CGImageRef)image;
-+ (CIImage*)imageWithCGImage:(CGImageRef)image options:(NSDictionary*)d STUB_METHOD;
++ (CIImage*)imageWithCGImage:(CGImageRef)image options:(NSDictionary*)options;
 + (CIImage*)imageWithContentsOfURL:(NSURL*)url STUB_METHOD;
-+ (CIImage*)imageWithContentsOfURL:(NSURL*)url options:(NSDictionary*)d STUB_METHOD;
++ (CIImage*)imageWithContentsOfURL:(NSURL*)url options:(NSDictionary*)options STUB_METHOD;
 + (CIImage*)imageWithCVImageBuffer:(CVImageBufferRef)imageBuffer STUB_METHOD;
 + (CIImage*)imageWithCVImageBuffer:(CVImageBufferRef)imageBuffer options:(NSDictionary*)dict STUB_METHOD;
 + (CIImage*)imageWithCVPixelBuffer:(CVPixelBufferRef)buffer STUB_METHOD;
 + (CIImage*)imageWithCVPixelBuffer:(CVPixelBufferRef)buffer options:(NSDictionary*)dict STUB_METHOD;
-+ (CIImage*)imageWithData:(NSData*)data STUB_METHOD;
-+ (CIImage*)imageWithData:(NSData*)data options:(NSDictionary*)d STUB_METHOD;
++ (CIImage*)imageWithData:(NSData*)data;
++ (CIImage*)imageWithData:(NSData*)data options:(NSDictionary*)options;
 + (CIImage*)imageWithImageProvider:(id)p
                               size:(size_t)
                              width:(size_t)height
@@ -91,24 +91,24 @@ COREIMAGE_EXPORT_CLASS
 - (CIImage*)imageByApplyingOrientation:(int)orientation STUB_METHOD;
 - (CIImage*)imageByClampingToExtent STUB_METHOD;
 - (CIImage*)imageByCompositingOverImage:(CIImage*)dest STUB_METHOD;
-- (instancetype)initWithColor:(CIColor*)color STUB_METHOD;
+- (instancetype)initWithColor:(CIColor*)color;
 - (instancetype)initWithBitmapData:(NSData*)d
                        bytesPerRow:(size_t)bpr
                               size:(CGSize)size
                             format:(CIFormat)f
                         colorSpace:(CGColorSpaceRef)c STUB_METHOD;
 - (instancetype)initWithCGImage:(CGImageRef)image;
-- (instancetype)initWithCGImage:(CGImageRef)image options:(NSDictionary*)d STUB_METHOD;
-- (instancetype)initWithImage:(UIImage*)image STUB_METHOD;
-- (instancetype)initWithImage:(UIImage*)image options:(NSDictionary*)options STUB_METHOD;
+- (instancetype)initWithCGImage:(CGImageRef)image options:(NSDictionary*)options;
+- (instancetype)initWithImage:(UIImage*)image;
+- (instancetype)initWithImage:(UIImage*)image options:(NSDictionary*)options;
 - (instancetype)initWithContentsOfURL:(NSURL*)url STUB_METHOD;
 - (instancetype)initWithContentsOfURL:(NSURL*)url options:(NSDictionary*)d STUB_METHOD;
 - (instancetype)initWithCVImageBuffer:(CVImageBufferRef)imageBuffer STUB_METHOD;
 - (instancetype)initWithCVImageBuffer:(CVImageBufferRef)imageBuffer options:(NSDictionary*)dict STUB_METHOD;
 - (instancetype)initWithCVPixelBuffer:(CVPixelBufferRef)buffer STUB_METHOD;
 - (instancetype)initWithCVPixelBuffer:(CVPixelBufferRef)buffer options:(NSDictionary*)dict STUB_METHOD;
-- (instancetype)initWithData:(NSData*)data STUB_METHOD;
-- (instancetype)initWithData:(NSData*)data options:(NSDictionary*)d STUB_METHOD;
+- (instancetype)initWithData:(NSData*)data;
+- (instancetype)initWithData:(NSData*)data options:(NSDictionary*)options;
 - (instancetype)initWithImageProvider:(id)p
                                  size:(size_t)
                                 width:(size_t)height
@@ -117,7 +117,7 @@ COREIMAGE_EXPORT_CLASS
                               options:(NSDictionary*)dict STUB_METHOD;
 - (instancetype)initWithTexture:(unsigned int)name size:(CGSize)size flipped:(BOOL)flag colorSpace:(CGColorSpaceRef)cs STUB_METHOD;
 - (instancetype)initWithMTLTexture:(id<MTLTexture>)texture options:(NSDictionary*)options STUB_METHOD;
-@property (readonly, nonatomic) CGRect extent STUB_PROPERTY;
+@property (readonly, nonatomic) CGRect extent;
 @property (readonly, atomic) NSDictionary* properties STUB_PROPERTY;
 @property (readonly, atomic) NSURL* url STUB_PROPERTY;
 @property (readonly, atomic) CGColorSpaceRef colorSpace STUB_PROPERTY;

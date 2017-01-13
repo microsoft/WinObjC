@@ -43,8 +43,8 @@
     <ProjectReference Include="..\..\..\WinObjCRT\dll\WinObjCRT.vcxproj">
       <Project>{585b4870-0d6b-43a6-8e7e-ad08f7f507b6}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\CoreImage\lib\CoreImageLib.vcxproj">
-      <Project>{90A8C3CC-1430-41C8-B9B8-3994C5C118ED}</Project>
+    <ProjectReference Include="..\..\..\CoreImage\dll\CoreImage.vcxproj">
+      <Project>{3EFCDFF3-6013-448F-8611-534D0F819D6B}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
