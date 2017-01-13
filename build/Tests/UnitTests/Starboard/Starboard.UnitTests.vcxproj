@@ -226,6 +226,7 @@
     <ClCompile Include="$(StarboardBasePath)\tests\unittests\EntryPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClangCompile Include="..\..\..\..\Tests\UnitTests\Starboard\AutoCFTests.cpp" />
     <ClangCompile Include="..\..\..\..\tests\unittests\Starboard\AutoIdTests_ARC.mm" />
     <ClangCompile Include="..\..\..\..\tests\unittests\Starboard\AutoIdTests_NoARC.mm" />
     <ClangCompile Include="..\..\..\..\tests\unittests\Starboard\CommonCryptoTests.mm" />
