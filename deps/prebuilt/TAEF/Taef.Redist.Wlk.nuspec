@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+  <metadata>
+    <id>Taef.Redist.Wlk</id>
+    <version>10.4.170111003-fixDebugBuildBreak</version>
+    <title>TAEF Redist</title>
+    <authors>Microsoft</authors>
+    <owners>Microsoft</owners>
+    <projectUrl>http://taef</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Package containing TE.exe and everything else needed to run TAEF tests from the command line. TAEF, the Test Authoring and Execution Framework, provides a consistent mechanism for Microsoft Developers and Testers to write and run automation. The consistent framework allows tests to be shared across disciplines and across teams, and provides a single infrastructure to invest in thereby allowing all disciplines and teams to benefit from the investment.</description>
+    <summary>Package for running TAEF tests from the command line.</summary>
+    <releaseNotes />
+    <copyright>Copyright 2015 Microsoft Corporation</copyright>
+    <tags>test test-framework TAEF framework inner-loop outer-loop testing nativepackage</tags>
+  </metadata>
+</package>

@@ -45,6 +45,7 @@ MOCK_CLASS(MockSpeechRecognitionResult,
                InspectableClass(RuntimeClass_Windows_Media_SpeechRecognition_SpeechRecognitionResult, BaseTrust);
 
            public:
+
                MOCK_STDCALL_METHOD_1(get_Status);
                MOCK_STDCALL_METHOD_1(get_Text);
                MOCK_STDCALL_METHOD_1(get_Confidence);
