@@ -14,14 +14,44 @@
 //
 //******************************************************************************
 
-#import "FunctionalTestHelpers.h"
+#import <Logger.h>
+#import <FunctionalTestHelpers.h>
+#import <AppDelegate.h>
+
 #include "UIKit/UIApplication.h"
+#include "UIViewInternal.h"
 #import <Starboard/SmartTypes.h>
+#import <StringHelpers.h>
 #import <UWP/WindowsApplicationModel.h>
 
-// Prevents UIApplication state from carrying over between functional tests
+// This is a method that UIKit exposes for the test frameworks to use.
+extern "C" void UIApplicationInitialize(const wchar_t*, const wchar_t*);
+
+static bool g_appRunning = false;
+
+// Launches the functional test app
+void FunctionalTestSetupUIApplication() {
+    if (g_appRunning) {
+        FunctionalTestLog::LogErrorAndAbort(
+            "Mismatched calls to FunctionalTestSetupUIApplication/FunctionalTestCleanupUIApplication!", 
+            __FILE__, 
+            __FUNCTION__, 
+            __LINE__);
+    }
+
+    RunSynchronouslyOnMainThread(^{
+        // The name of our default 'AppDelegate' class
+        UIApplicationInitialize(nullptr, Strings::NarrowToWide<std::wstring>(NSStringFromClass([AppDelegate class])).c_str());
+        g_appRunning = true;
+    });
+}
+
+// Terminates the functional test app
 void FunctionalTestCleanupUIApplication() {
-    [[UIApplication sharedApplication] _destroy];
+    RunSynchronouslyOnMainThread(^{
+        [[UIApplication sharedApplication] _destroy];
+        g_appRunning = false;
+    });
 }
 
 // Gets the path to the app installation location

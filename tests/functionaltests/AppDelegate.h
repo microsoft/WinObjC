@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,16 +14,11 @@
 //
 //******************************************************************************
 
-#pragma once
+#import <UIKit/UIKit.h>
 
-// Setup method to call before every test class to initialize the UIApplication
-void FunctionalTestSetupUIApplication();
+@interface AppDelegate : UIResponder <UIApplicationDelegate>
 
-// Cleanup method to call after every test class to free the UIApplication
-void FunctionalTestCleanupUIApplication();
+@property (strong, nonatomic) UIWindow* window;
+@property (strong, nonatomic) UIViewController* viewController;
 
-#ifdef __OBJC__
-#import <Foundation/NSString.h>
-NSString* appendPathRelativeToFTModule(NSString* pathAppendage);
-NSString* getModulePath();
-#endif
+@end

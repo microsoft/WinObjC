@@ -1,6 +1,7 @@
 //******************************************************************************
 //
-// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
+// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,16 +15,26 @@
 //
 //******************************************************************************
 
-#pragma once
+#import <MainViewController.h>
 
-// Setup method to call before every test class to initialize the UIApplication
-void FunctionalTestSetupUIApplication();
+#import "UIKit/UIColor.h"
+#import "UIKit/UIView.h"
 
-// Cleanup method to call after every test class to free the UIApplication
-void FunctionalTestCleanupUIApplication();
+@interface MainViewController ()
 
-#ifdef __OBJC__
-#import <Foundation/NSString.h>
-NSString* appendPathRelativeToFTModule(NSString* pathAppendage);
-NSString* getModulePath();
-#endif
+@end
+
+@implementation MainViewController
+
+- (void)viewDidLoad {
+    self.view.backgroundColor = [UIColor lightGrayColor];
+
+    [super viewDidLoad];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+@end
