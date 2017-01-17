@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -27,31 +27,23 @@
 // This is a method that UIKit exposes for the test frameworks to use.
 extern "C" void UIApplicationInitialize(const wchar_t*, const wchar_t*);
 
-static bool g_appRunning = false;
-
 // Launches the functional test app
-void FunctionalTestSetupUIApplication() {
-    if (g_appRunning) {
-        FunctionalTestLog::LogErrorAndAbort(
-            "Mismatched calls to FunctionalTestSetupUIApplication/FunctionalTestCleanupUIApplication!", 
-            __FILE__, 
-            __FUNCTION__, 
-            __LINE__);
-    }
-
+bool FunctionalTestSetupUIApplication() {
     RunSynchronouslyOnMainThread(^{
         // The name of our default 'AppDelegate' class
         UIApplicationInitialize(nullptr, Strings::NarrowToWide<std::wstring>(NSStringFromClass([AppDelegate class])).c_str());
-        g_appRunning = true;
     });
+
+    return true;
 }
 
 // Terminates the functional test app
-void FunctionalTestCleanupUIApplication() {
+bool FunctionalTestCleanupUIApplication() {
     RunSynchronouslyOnMainThread(^{
         [[UIApplication sharedApplication] _destroy];
-        g_appRunning = false;
     });
+
+    return true;
 }
 
 // Gets the path to the app installation location

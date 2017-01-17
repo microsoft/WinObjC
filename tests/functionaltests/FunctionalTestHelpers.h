@@ -17,10 +17,10 @@
 #pragma once
 
 // Setup method to call before every test class to initialize the UIApplication
-void FunctionalTestSetupUIApplication();
+bool FunctionalTestSetupUIApplication();
 
 // Cleanup method to call after every test class to free the UIApplication
-void FunctionalTestCleanupUIApplication();
+bool FunctionalTestCleanupUIApplication();
 
 #ifdef __OBJC__
 #import <Foundation/NSString.h>

@@ -92,8 +92,7 @@ public:
     //     2. Use the same mechanism as in TEST_METHOD below to export a method from the WinObjC test file and call it here.
     //     3. If you do not need this functionality feel free to remove this for your test class.
     TEST_CLASS_SETUP(SampleTestClassSetup) {
-        FunctionalTestSetupUIApplication();
-        return true;
+        return FunctionalTestSetupUIApplication();
     }
 
     // SampleTest test class cleanup.
@@ -102,8 +101,7 @@ public:
     //     2. Use the same mechanism as in TEST_METHOD below to export a method from the WinObjC test file and call it here.
     //     3. If you do not need this functionality feel free to remove this for your test class.
     TEST_CLASS_CLEANUP(SampleTestClassCleanup) {
-        FunctionalTestCleanupUIApplication();
-        return true;
+        return FunctionalTestCleanupUIApplication();
     }
 
     // SampleTest test method setup.
@@ -175,13 +173,11 @@ public:
     END_TEST_CLASS()
 
     TEST_CLASS_SETUP(NSURLClassSetup) {
-        FunctionalTestSetupUIApplication();
-        return true;
+        return FunctionalTestSetupUIApplication();
     }
 
     TEST_CLASS_CLEANUP(NSURLClassCleanup) {
-        FunctionalTestCleanupUIApplication();
-        return true;
+        return FunctionalTestCleanupUIApplication();
     }
 
     //
@@ -265,13 +261,11 @@ public:
     END_TEST_CLASS()
 
     TEST_CLASS_SETUP(NSUserDefaultsClassSetup) {
-        FunctionalTestSetupUIApplication();
-        return true;
+        return FunctionalTestSetupUIApplication();
     }
 
     TEST_CLASS_CLEANUP(NSUserDefaultsClassCleanup) {
-        FunctionalTestCleanupUIApplication();
-        return true;
+        return FunctionalTestCleanupUIApplication();
     }
 
     TEST_METHOD(NSUserDefaults_Basic) {
@@ -303,13 +297,11 @@ public:
     END_TEST_CLASS()
 
     TEST_CLASS_SETUP(NSBundleClassSetup) {
-        FunctionalTestSetupUIApplication();
-        return true;
+        return FunctionalTestSetupUIApplication();
     }
 
     TEST_CLASS_CLEANUP(NSBundleClassCleanup) {
-        FunctionalTestCleanupUIApplication();
-        return true;
+        return FunctionalTestCleanupUIApplication();
     }
 
     TEST_METHOD(NSBundle_MSAppxURL) {
@@ -330,13 +322,13 @@ public:
 
     TEST_CLASS_SETUP(AssetsLibraryClassSetup) {
         bool success = AssetsLibraryTestVideoSetup("AssetsLibraryTestVideo.mp4");
-        FunctionalTestSetupUIApplication();
+        success &= FunctionalTestSetupUIApplication();
         return success;
     }
 
     TEST_CLASS_CLEANUP(AssetsLibraryClassCleanup) {
         bool success = AssetsLibraryTestVideoCleanup("AssetsLibraryTestVideo.mp4");
-        FunctionalTestCleanupUIApplication();
+        success &= FunctionalTestCleanupUIApplication();
         return success;
     }
 
@@ -362,8 +354,7 @@ public:
     }
 
     TEST_CLASS_CLEANUP(CortanaVoiceCommandForegroundTestClassCleanup) {
-        FunctionalTestCleanupUIApplication();
-        return true;
+        return FunctionalTestCleanupUIApplication();
     }
 
     TEST_METHOD(Cortana_VoiceCommandForegroundActivationDelegateMethodsCalled) {
@@ -385,8 +376,7 @@ public:
     }
 
     TEST_CLASS_CLEANUP(CortanaProtocolForegroundTestClassCleanup) {
-        FunctionalTestCleanupUIApplication();
-        return true;
+        return FunctionalTestCleanupUIApplication();
     }
 
     TEST_METHOD(Cortana_ProtocolForegroundActivationDelegateMethodsCalled) {
@@ -407,8 +397,7 @@ class ToastNotificationForegroundActivation {
     }
 
     TEST_CLASS_CLEANUP(ToastNotificationForegroundTestClassCleanup) {
-        FunctionalTestCleanupUIApplication();
-        return true;
+        return FunctionalTestCleanupUIApplication();
     }
 
     TEST_METHOD(ToastNotification_ForegroundActivationDelegateMethodsCalled) {
@@ -424,13 +413,11 @@ class ActivatedAppReceivesToastNotification {
 
     TEST_CLASS_SETUP(ActivatedAppReceivesToastNotificationTestClassSetup) {
         // The class setup allows us to activate the app in our test method, but can only be done once per class
-        FunctionalTestSetupUIApplication();
-        return true;
+        return FunctionalTestSetupUIApplication();
     }
 
     TEST_CLASS_CLEANUP(ActivatedAppReceivesToastNotificationTestClassCleanup) {
-        FunctionalTestCleanupUIApplication();
-        return true;
+        return FunctionalTestCleanupUIApplication();
     }
 
     TEST_METHOD(ToastNotification_ActivatedAppReceivesToastNotification) {
@@ -456,8 +443,7 @@ public:
     }
 
     TEST_CLASS_CLEANUP(FileActivationForegroundActivationClassCleanup) {
-        FunctionalTestCleanupUIApplication();
-        return true;
+        return FunctionalTestCleanupUIApplication();
     }
 
     TEST_METHOD(FileActivation_TestForegroundActivationDelegateMethodsCalled) {
@@ -516,13 +502,11 @@ public:
     END_TEST_CLASS()
 
     TEST_CLASS_SETUP(UIKitTestsClassSetup) {
-        FunctionalTestSetupUIApplication();
-        return true;
+        return FunctionalTestSetupUIApplication();
     }
 
     TEST_CLASS_CLEANUP(UIKitTestsClassCleanup) {
-        FunctionalTestCleanupUIApplication();
-        return true;
+        return FunctionalTestCleanupUIApplication();
     }
 
     TEST_METHOD(UIView_Create) {
@@ -690,13 +674,11 @@ public:
     END_TEST_CLASS()
 
     TEST_CLASS_SETUP(ProjectionTestClassSetup) {
-        FunctionalTestSetupUIApplication();
-        return true;
+        return FunctionalTestSetupUIApplication();
     }
 
     TEST_CLASS_CLEANUP(ProjectionTestClassCleanup) {
-        FunctionalTestCleanupUIApplication();
-        return true;
+        return FunctionalTestCleanupUIApplication();
     }
 
     TEST_METHOD(ProjectionTest_WUCCoreDispatcherSanity) {
@@ -740,13 +722,11 @@ public:
     END_TEST_CLASS()
 
     TEST_CLASS_SETUP(UIApplicationTestsClassSetup) {
-        FunctionalTestSetupUIApplication();
-        return true;
+        return FunctionalTestSetupUIApplication();
     }
 
     TEST_CLASS_CLEANUP(UIApplicationTestsClassCleanup) {
-        FunctionalTestCleanupUIApplication();
-        return true;
+        return FunctionalTestCleanupUIApplication();
     }
 
     TEST_METHOD(UIApplicationTests_OpenURL) {
@@ -765,13 +745,11 @@ public:
     END_TEST_CLASS()
 
     TEST_CLASS_SETUP(NSURLStorageFileTestsClassSetup) {
-        FunctionalTestSetupUIApplication();
-        return true;
+        return FunctionalTestSetupUIApplication();
     }
 
     TEST_CLASS_CLEANUP(NSURLStorageFileTestsClassCleanup) {
-        FunctionalTestCleanupUIApplication();
-        return true;
+        return FunctionalTestCleanupUIApplication();
     }
 
     TEST_METHOD(NSURLTests_StorageFileURL) {
@@ -791,13 +769,11 @@ public:
     END_TEST_CLASS()
 
     TEST_CLASS_SETUP(CoreAnimationTestsClassSetup) {
-        FunctionalTestSetupUIApplication();
-        return true;
+        return FunctionalTestSetupUIApplication();
     }
 
     TEST_CLASS_CLEANUP(CoreAnimationTestsClassCleanup) {
-        FunctionalTestCleanupUIApplication();
-        return true;
+        return FunctionalTestCleanupUIApplication();
     }
 
     TEST_METHOD(CALayerAppearance_OpacityChanged) {
