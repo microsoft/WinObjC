@@ -189,19 +189,11 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
     _leftInset = [WUXSRectangle make];
     _leftInset.name = @"left";
 
-    // Create a content canvas for our subviews
-    _contentCanvas = [WXCCanvas make];
-    _contentCanvas.name = @"Content Canvas";
+    // Grab the content canvas for our subviews - we created it in createXamlElement
+    _contentCanvas = XamlControls::GetFrameworkElementSublayerCanvasProperty(_scrollViewer);
 
-    // Create an image for our rendered content
-    _contentImage = [WXCImage make];
-    _contentImage.name = @"Content Element";
-
-    // Set up the CALayer properties for our backing Xaml element so
-    // our subviews are placed within our _contentCanvas
-    XamlControls::SetFrameworkElementLayerProperties(_scrollViewer,
-                                                     _contentImage, // content element
-                                                     _contentCanvas); // sublayer canvas
+    // Grab the image for our rendered content - we created it in createXamlElement
+    _contentImage = XamlControls::GetFrameworkElementLayerContentProperty(_scrollViewer);
 
     // creating and build 3 X 3 content grid
     _contentGrid = [WXCGrid make];
@@ -691,8 +683,26 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
  Microsoft Extension
 */
 + (WXFrameworkElement*)createXamlElement {
+    WXCScrollViewer* scrollViewer = [WXCScrollViewer make];
+
+    // Create an image for our rendered content
+    WXCImage* contentImage = [WXCImage make];
+    contentImage.name = @"Content Element";
+
+    // Create a content canvas for our subviews
+    WXCCanvas* contentCanvas = [WXCCanvas make];
+    contentCanvas.name = @"Content Canvas";
+
+    // Set up the CALayer properties for our backing Xaml element so
+    // our subviews are placed within our contentCanvas
+    // Note: It's critical that we do this here in case subviews are added before _initUIScrollView has a chance
+    // to run (during initWithCoder, for example).
+    XamlControls::SetFrameworkElementLayerProperties(scrollViewer,
+        contentImage, // content element
+        contentCanvas); // sublayer canvas
+
     // No autorelease needed because we compile with ARC
-    return [WXCScrollViewer make];
+    return scrollViewer;
 }
 
 /**

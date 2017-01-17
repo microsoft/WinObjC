@@ -115,4 +115,14 @@ void SetFrameworkElementLayerProperties(WXFrameworkElement* targetElement,
                                            sublayerCanvasProperty ? [sublayerCanvasProperty comObj] : nullptr);
 }
 
+WXCImage* GetFrameworkElementLayerContentProperty(WXFrameworkElement* targetElement) {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetFrameworkElementLayerContentProperty([targetElement comObj]));
+    return _createRtProxy([WXCImage class], inspectable.Get());
+}
+
+WXCCanvas* GetFrameworkElementSublayerCanvasProperty(WXFrameworkElement* targetElement) {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetFrameworkElementSublayerCanvasProperty([targetElement comObj]));
+    return _createRtProxy([WXCCanvas class], inspectable.Get());
+}
+
 } // namespace XamlControls
