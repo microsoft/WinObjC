@@ -893,13 +893,14 @@ NSMutableDictionary* _pageMappings;
         TraceVerbose(TAG, L"Loading view %hs with owner=%hs", name ? name : "nil", object_getClassName(self));
 
         if (EbrAccess(openname, 0) != -1) {
-            UIStoryboard* proxyObjects[1];
-            NSString* proxyNames[1];
+            UIStoryboard* proxyObject = [self storyboard];
+            NSString* proxyName = @"UIStoryboardPlaceholder";
 
-            proxyObjects[0] = [self storyboard];
-            proxyNames[0] = @"UIStoryboardPlaceholder";
+            NSMutableDictionary* proxyObjectsDict = [NSMutableDictionary dictionary];
+            if (proxyObject != nil) {
+                [proxyObjectsDict setObject:proxyObject forKey:proxyName];
+            }
 
-            NSMutableDictionary* proxyObjectsDict = [NSMutableDictionary dictionaryWithObjects:proxyObjects forKeys:proxyNames count:1];
             [proxyObjectsDict addEntriesFromDictionary:priv->_externalObjects];
 
             UINib* nib = [UINib nibWithNibName:[NSString stringWithCString:openname] bundle:priv->nibBundle];
