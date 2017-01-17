@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -787,4 +787,9 @@ DISABLED_TEST(NSAttributedString, MutableInstanceArchivesAsMutable) {
     EXPECT_OBJCEQ(@"hello world", [output string]);
 
     EXPECT_OBJCNE(input, output);
+}
+
+TEST(NSMutableAttributedString, InsertingNilShouldThrow) {
+    NSMutableAttributedString* string = [[[NSMutableAttributedString alloc] initWithString:@"hello"] autorelease];
+    EXPECT_ANY_THROW([string addAttribute:@"attribute" value:nil range:NSMakeRange(0, 3)]);
 }

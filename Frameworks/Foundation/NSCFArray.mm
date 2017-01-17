@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -106,6 +106,7 @@ BRIDGED_MUTABLE_CLASS_FOR_CODER(CFArrayRef, _CFArrayIsMutable, NSArray, NSMutabl
 
 - (void)replaceObjectAtIndex:(NSUInteger)index withObject:(NSObject*)obj {
     BRIDGED_THROW_IF_IMMUTABLE(_CFArrayIsMutable, CFArrayRef);
+    NS_COLLECTION_THROW_IF_NULL_REASON(obj, [NSString stringWithFormat:@"*** %@ object cannot be nil", NSStringFromSelector(_cmd)]);
     //  Fastpath
     CFRange range;
     range.location = index;
@@ -115,6 +116,13 @@ BRIDGED_MUTABLE_CLASS_FOR_CODER(CFArrayRef, _CFArrayIsMutable, NSArray, NSMutabl
 
 - (void)insertObject:(NSObject*)objAddr atIndex:(NSUInteger)index {
     BRIDGED_THROW_IF_IMMUTABLE(_CFArrayIsMutable, CFArrayRef);
+    NS_COLLECTION_THROW_IF_NULL_REASON(objAddr, [NSString stringWithFormat:@"*** %@ object cannot be nil", NSStringFromSelector(_cmd)]);
+    if (objAddr == nil) {
+        @throw [NSException exceptionWithName:NSInvalidArgumentException
+                                       reason:[NSString stringWithFormat:@"*** %@ object cannot be nil", NSStringFromSelector(_cmd)]
+                                     userInfo:nil];
+    }
+
     CFArrayInsertValueAtIndex(static_cast<CFMutableArrayRef>(self), index, reinterpret_cast<const void*>(objAddr));
 }
 
@@ -125,6 +133,7 @@ BRIDGED_MUTABLE_CLASS_FOR_CODER(CFArrayRef, _CFArrayIsMutable, NSArray, NSMutabl
 
 - (void)addObject:(NSObject*)objAddr {
     BRIDGED_THROW_IF_IMMUTABLE(_CFArrayIsMutable, CFArrayRef);
+    NS_COLLECTION_THROW_IF_NULL_REASON(objAddr, [NSString stringWithFormat:@"*** %@ object cannot be nil", NSStringFromSelector(_cmd)]);
     CFArrayAppendValue((CFMutableArrayRef)self, (const void*)objAddr);
 }
 
