@@ -490,8 +490,7 @@ CGImageAlphaInfo CGImageGetAlphaInfo(CGImageRef img) {
 CGDataProviderRef CGImageGetDataProvider(CGImageRef img) {
     const UInt8* pPtr = (const UInt8*)img->Backing()->LockImageData();
     CFIndex length = img->Backing()->Height() * img->Backing()->BytesPerRow();
-    woc::unique_cf<CFDataRef> data{ CFDataCreateWithBytesNoCopy(nullptr, pPtr, length, kCFAllocatorNull) };
-    CGDataProviderRef dataProvider = CGDataProviderCreateWithCFData(data.get());
+    CGDataProviderRef dataProvider = CGDataProviderCreateWithData(nullptr, pPtr, length, nullptr);
     return dataProvider;
 }
 
