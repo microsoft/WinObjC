@@ -86,7 +86,7 @@ typedef CF_ENUM(CFIndex, CGBlendMode) {
 };
 
 typedef CF_ENUM(CFIndex, CGTextDrawingMode) {
-    kCGTextFill,
+    kCGTextFill = 0,
     kCGTextStroke,
     kCGTextFillStroke,
     kCGTextInvisible,
