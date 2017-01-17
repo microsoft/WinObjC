@@ -32,6 +32,7 @@
 #import "CGIWICBitmap.h"
 #import "CGPatternInternal.h"
 #import "CGGradientInternal.h"
+#import "CoreGraphics/CGFontInternal.h"
 
 #import <CFCppBase.h>
 
@@ -112,6 +113,11 @@ struct __CGContextDrawingState {
     // Clipping + Masking
     ComPtr<ID2D1Geometry> clippingGeometry;
     ComPtr<ID2D1BitmapBrush> opacityBrush;
+
+    // Text Drawing
+    CGTextDrawingMode textDrawingMode = kCGTextFill;
+    woc::StrongCF<CGFontRef> font;
+    CGFloat fontSize = 0.f;
 
     inline void ComputeStrokeStyle(ID2D1DeviceContext* deviceContext) {
         if (strokeStyle) {
@@ -375,6 +381,7 @@ public:
                               Lambda&& drawLambda);
     HRESULT DrawGeometry(_CGCoordinateMode coordinateMode, ID2D1Geometry* pGeometry, CGPathDrawingMode drawMode);
     HRESULT DrawImage(ID2D1Image* image);
+    HRESULT DrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, bool transformByGlyph = true);
     HRESULT ClipToD2DMaskBitmap(ID2D1Bitmap* bitmap, CGRect rect, D2D1_INTERPOLATION_MODE interpolationMode);
     HRESULT ClipToCGImageMask(CGImageRef image, CGRect rect);
 };
@@ -1219,11 +1226,13 @@ void CGContextSetCharacterSpacing(CGContextRef context, CGFloat spacing) {
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes Only kCGTextFill is supported.
 */
 void CGContextSetTextDrawingMode(CGContextRef context, CGTextDrawingMode mode) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    auto& state = context->CurrentGState();
+    state.textDrawingMode = mode;
 }
 
 /**
@@ -1231,15 +1240,29 @@ void CGContextSetTextDrawingMode(CGContextRef context, CGTextDrawingMode mode) {
 */
 void CGContextSetFont(CGContextRef context, CGFontRef font) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    NOISY_RETURN_IF_NULL(font);
+    auto& state = context->CurrentGState();
+    state.font = font;
 }
 
 /**
  @Status Interoperable
+ @Notes encoding is not used as Windows fonts do not support the MacRoman encoding.
 */
 void CGContextSelectFont(CGContextRef context, const char* name, CGFloat size, CGTextEncoding encoding) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+
+    auto fontName = woc::MakeStrongCF<CFStringRef>(CFStringCreateWithCString(nullptr, name, kCFStringEncodingUTF8));
+    auto font = woc::MakeStrongCF<CGFontRef>(CGFontCreateWithFontName(fontName));
+
+    if (!font) {
+        TraceError(TAG, L"Unable to locate font %hs.", name);
+        return;
+    }
+
+    auto& state = context->CurrentGState();
+    state.font = std::move(font);
+    state.fontSize = size;
 }
 
 /**
@@ -1247,7 +1270,8 @@ void CGContextSelectFont(CGContextRef context, const char* name, CGFloat size, C
 */
 void CGContextSetFontSize(CGContextRef context, CGFloat ptSize) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    auto& state = context->CurrentGState();
+    state.fontSize = ptSize;
 }
 
 /**
@@ -1839,11 +1863,101 @@ void CGContextSetPatternPhase(CGContextRef context, CGSize phase) {
 
 #pragma region Drawing Operations - Text
 /**
- @Status Stub
+ * Helper method to render text with the given DWRITE_GLYPH_RUN.
+ *
+ * @parameter glyphRun DWRITE_GLYPH_RUN object to render
+ */
+HRESULT __CGContext::DrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, bool transformByGlyph /* default true */) {
+    RETURN_HR_IF(E_INVALIDARG, !glyphRun);
+
+    // DWrite will crash if we try to give it glyphs that are below this threshold
+    // Though this value is approximate, it is small enough to not be noticeable while still safe
+    static constexpr float c_glyphThreshold = 0.5f;
+
+    // Undo assumed inversion about Y axis
+    CGAffineTransform textTransform = CGAffineTransformScale(textMatrix, 1.0, -1.0);
+    CGAffineTransform deviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(this);
+
+    CGAffineTransform finalTextTransform = CGAffineTransformConcat(textTransform, deviceTransform);
+    if ((fabs(finalTextTransform.a * glyphRun->fontEmSize) <= c_glyphThreshold &&
+         fabs(finalTextTransform.b * glyphRun->fontEmSize) <= c_glyphThreshold) ||
+        (fabs(finalTextTransform.d * glyphRun->fontEmSize) <= c_glyphThreshold &&
+         fabs(finalTextTransform.c * glyphRun->fontEmSize) <= c_glyphThreshold)) {
+        TraceWarning(TAG, L"Glyphs too small to be rendered");
+
+        // Not a failure state! Not drawing the glyphs is *okay*.
+        return S_FALSE;
+    }
+
+    auto& state = CurrentGState();
+
+    ComPtr<ID2D1CommandList> textCommandList;
+    // If text is only flipped vertically, we can draw it all at once rather than glyph by glyph
+    if ((textTransform.a == 1.0f && fabs(textTransform.d) == 1.0f && textTransform.b == 0.0f && textTransform.c == 0.0f) ||
+        !transformByGlyph) {
+        HRESULT hr = DrawToCommandList(_kCGCoordinateModeUserSpace,
+                                       &textTransform,
+                                       &textCommandList,
+                                       [&state, glyphRun](CGContextRef context, ID2D1DeviceContext* deviceContext) {
+                                           deviceContext->DrawGlyphRun(D2D1::Point2F(0, 0),
+                                                                       glyphRun,
+                                                                       state.fillBrush.Get(),
+                                                                       DWRITE_MEASURING_MODE_NATURAL);
+                                           return S_OK;
+                                       });
+        RETURN_IF_FAILED(hr);
+    } else {
+        // Using device space here gives us finer-grained control over the transform.
+        HRESULT hr = DrawToCommandList(
+            _kCGCoordinateModeDeviceSpace,
+            nullptr,
+            &textCommandList,
+            [&state, &glyphRun, &deviceTransform, &textTransform](CGContextRef context, ID2D1DeviceContext* deviceContext) {
+                CGAffineTransform runningGlobalTransform = deviceTransform;
+                // Text scaling and rotation apply to each glyph relative to its origin, so we must draw each glyph transformed
+                // independently
+                DWRITE_GLYPH_RUN individualGlyphRun{ glyphRun->fontFace,
+                                                     glyphRun->fontEmSize,
+                                                     1, // Since this is glyph by glyph, glyphCount is one
+                                                     glyphRun->glyphIndices,
+                                                     nullptr,
+                                                     nullptr,
+                                                     glyphRun->isSideways,
+                                                     glyphRun->bidiLevel };
+                D2D1_POINT_2F origin{ 0, 0 };
+                // Iterate through every glyph by incrementing pointer in glyphIndices array
+                for (uint32_t i = 0; i < glyphRun->glyphCount; ++i, ++(individualGlyphRun.glyphIndices)) {
+                    CGAffineTransform finalTextTransform = CGAffineTransformConcat(textTransform, runningGlobalTransform);
+                    deviceContext->SetTransform(__CGAffineTransformToD2D_F(finalTextTransform));
+                    deviceContext->DrawGlyphRun(origin, &individualGlyphRun, state.fillBrush.Get(), DWRITE_MEASURING_MODE_NATURAL);
+
+                    // Uses glyphAdvances to move each glyph
+                    runningGlobalTransform = CGAffineTransformTranslate(runningGlobalTransform, glyphRun->glyphAdvances[i], 0);
+                }
+                return S_OK;
+            });
+        RETURN_IF_FAILED(hr);
+    }
+
+    RETURN_IF_FAILED(DrawImage(textCommandList.Get()));
+
+    ClearPath();
+    return S_OK;
+}
+
+// Internal: used by CoreText.
+void CGContextDrawGlyphRun(CGContextRef context, const DWRITE_GLYPH_RUN* glyphRun) {
+    NOISY_RETURN_IF_NULL(context);
+    FAIL_FAST_IF_FAILED(context->DrawGlyphRun(glyphRun));
+}
+
+/**
+ @Status Interoperable
 */
 void CGContextShowText(CGContextRef context, const char* str, unsigned count) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    CGPoint textPosition = CGContextGetTextPosition(context);
+    CGContextShowTextAtPoint(context, textPosition.x, textPosition.y, str, count);
 }
 
 /**
@@ -1851,16 +1965,13 @@ void CGContextShowText(CGContextRef context, const char* str, unsigned count) {
 */
 void CGContextShowTextAtPoint(CGContextRef context, CGFloat x, CGFloat y, const char* str, size_t length) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
-}
+    auto& state = context->CurrentGState();
+    RETURN_IF(!state.font);
 
-/**
- @Status Interoperable
-*/
-void CGContextShowGlyphsAtPoint(CGContextRef context, CGFloat x, CGFloat y, const CGGlyph* glyphs, unsigned count) {
-    NOISY_RETURN_IF_NULL(context);
-    // TODO(DH) GH#1070 Merge in CGContextCairo.mm's Glyph Run code.
-    UNIMPLEMENTED();
+    std::vector<CGGlyph> glyphs(length);
+    if (_CGFontGetGlyphsForCharacters(state.font, str, length, glyphs.data())) {
+        CGContextShowGlyphsAtPoint(context, x, y, glyphs.data(), length);
+    }
 }
 
 /**
@@ -1868,8 +1979,51 @@ void CGContextShowGlyphsAtPoint(CGContextRef context, CGFloat x, CGFloat y, cons
 */
 void CGContextShowGlyphs(CGContextRef context, const CGGlyph* glyphs, unsigned count) {
     NOISY_RETURN_IF_NULL(context);
-    // TODO(DH) GH#1070 Merge in CGContextCairo.mm's Glyph Run code.
-    UNIMPLEMENTED();
+    CGPoint textPosition = CGContextGetTextPosition(context);
+    CGContextShowGlyphsAtPoint(context, textPosition.x, textPosition.y, glyphs, count);
+}
+
+/**
+ @Status Interoperable
+*/
+void CGContextShowGlyphsAtPoint(CGContextRef context, CGFloat x, CGFloat y, const CGGlyph* glyphs, unsigned count) {
+    NOISY_RETURN_IF_NULL(context);
+
+    auto& state = context->CurrentGState();
+    RETURN_IF(!state.font);
+
+    CGSize size = CGSizeZero;
+    std::vector<int> designUnitAdvances(count);
+    CGFontRef font = state.font;
+    CGFontGetGlyphAdvances(font, glyphs, count, designUnitAdvances.data());
+    std::vector<CGSize> advances(count);
+    std::transform(designUnitAdvances.cbegin(),
+                   designUnitAdvances.cend(),
+                   advances.begin(),
+                   [ scale = state.fontSize / CGFontGetUnitsPerEm(font), &size ](int unscaledAdvance) {
+                       CGFloat advanceWidth = scale * unscaledAdvance;
+                       size.width += advanceWidth;
+                       return CGSize{ advanceWidth, 0 };
+                   });
+
+    switch (state.textDrawingMode) {
+        case kCGTextFill:
+        case kCGTextStroke:
+        case kCGTextFillStroke:
+        case kCGTextFillClip:
+        case kCGTextStrokeClip:
+        case kCGTextFillStrokeClip:
+            CGContextSetTextPosition(context, x, y);
+            CGContextShowGlyphsWithAdvances(context, glyphs, advances.data(), count);
+            break;
+
+        case kCGTextClip:
+        case kCGTextInvisible:
+            // Do nothing, set text position at end
+            break;
+    }
+
+    CGContextSetTextPosition(context, x + size.width, y);
 }
 
 /**
@@ -1878,7 +2032,6 @@ void CGContextShowGlyphs(CGContextRef context, const CGGlyph* glyphs, unsigned c
 */
 void CGContextShowGlyphsAtPositions(CGContextRef context, const CGGlyph* glyphs, const CGPoint* Lpositions, size_t count) {
     NOISY_RETURN_IF_NULL(context);
-    // TODO(DH) GH#1070 Merge in CGContextCairo.mm's Glyph Run code.
     UNIMPLEMENTED();
 }
 
@@ -1887,8 +2040,31 @@ void CGContextShowGlyphsAtPositions(CGContextRef context, const CGGlyph* glyphs,
 */
 void CGContextShowGlyphsWithAdvances(CGContextRef context, const CGGlyph* glyphs, const CGSize* advances, size_t count) {
     NOISY_RETURN_IF_NULL(context);
-    // TODO(DH) GH#1070 Merge in CGContextCairo.mm's Glyph Run code.
-    UNIMPLEMENTED();
+
+    auto& state = context->CurrentGState();
+    RETURN_IF(!state.font);
+
+    CGFontRef font = state.font;
+
+    ComPtr<IDWriteFontFace> fontFace;
+    FAIL_FAST_IF_FAILED(_CGFontGetDWriteFontFace(font, &fontFace));
+    std::vector<DWRITE_GLYPH_OFFSET> positions(count);
+    CGPoint delta = CGPointZero;
+    std::transform(advances, advances + count, positions.begin(), [&delta](const CGSize& size) {
+        DWRITE_GLYPH_OFFSET ret = { delta.x, delta.y };
+        delta.x += size.width;
+        delta.y += size.height;
+        return ret;
+    });
+
+    // Give array of advances of zero so it will use positions correctly
+    std::vector<FLOAT> dwriteAdvances(count, 0);
+    DWRITE_GLYPH_RUN run = { fontFace.Get(), state.fontSize, count, glyphs, dwriteAdvances.data(), positions.data(), FALSE, 0 };
+    FAIL_FAST_IF_FAILED(context->DrawGlyphRun(&run, false));
+
+    // Set text position to after the end of the last glyph drawn
+    CGPoint textPosition = CGContextGetTextPosition(context);
+    CGContextSetTextPosition(context, textPosition.x + delta.x, textPosition.y + delta.y);
 }
 #pragma endregion
 
@@ -2544,11 +2720,6 @@ bool CGContextIsPointInPath(CGContextRef context, bool eoFill, CGFloat x, CGFloa
     NOISY_RETURN_IF_NULL(context, StubReturn());
     UNIMPLEMENTED();
     return StubReturn();
-}
-
-void CGContextDrawGlyphRun(CGContextRef context, const DWRITE_GLYPH_RUN* glyphRun) {
-    NOISY_RETURN_IF_NULL(context);
-    // TODO(DH) GH#1070 Merge in CGContextCairo.mm's Glyph Run code.
 }
 #pragma endregion
 
