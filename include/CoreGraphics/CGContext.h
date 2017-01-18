@@ -154,7 +154,7 @@ COREGRAPHICS_EXPORT void CGContextEOFillPath(CGContextRef c);
 COREGRAPHICS_EXPORT void CGContextFillPath(CGContextRef c);
 COREGRAPHICS_EXPORT void CGContextFillRect(CGContextRef c, CGRect rect);
 
-COREGRAPHICS_EXPORT void CGContextFillRects(CGContextRef c, const CGRect* rects, size_t count) STUB_METHOD;
+COREGRAPHICS_EXPORT void CGContextFillRects(CGContextRef c, const CGRect* rects, size_t count);
 
 COREGRAPHICS_EXPORT void CGContextFillEllipseInRect(CGContextRef c, CGRect rect);
 COREGRAPHICS_EXPORT void CGContextStrokePath(CGContextRef c);
@@ -180,11 +180,11 @@ COREGRAPHICS_EXPORT void CGContextClipToMask(CGContextRef c, CGRect rect, CGImag
 COREGRAPHICS_EXPORT void CGContextSetAlpha(CGContextRef c, CGFloat alpha);
 
 COREGRAPHICS_EXPORT void CGContextSetCMYKFillColor(
-    CGContextRef c, CGFloat cyan, CGFloat magenta, CGFloat yellow, CGFloat black, CGFloat alpha) STUB_METHOD;
+    CGContextRef c, CGFloat cyan, CGFloat magenta, CGFloat yellow, CGFloat black, CGFloat alpha);
 
 COREGRAPHICS_EXPORT void CGContextSetFillColor(CGContextRef c, const CGFloat* components);
 COREGRAPHICS_EXPORT void CGContextSetCMYKStrokeColor(
-    CGContextRef c, CGFloat cyan, CGFloat magenta, CGFloat yellow, CGFloat black, CGFloat alpha) STUB_METHOD;
+    CGContextRef c, CGFloat cyan, CGFloat magenta, CGFloat yellow, CGFloat black, CGFloat alpha);
 COREGRAPHICS_EXPORT void CGContextSetFillColorSpace(CGContextRef c, CGColorSpaceRef space);
 
 COREGRAPHICS_EXPORT void CGContextSetFillColorWithColor(CGContextRef c, CGColorRef color);
