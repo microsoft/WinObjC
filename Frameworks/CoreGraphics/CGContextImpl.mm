@@ -1,7 +1,7 @@
 //******************************************************************************
 //
 // Copyright (c) 2016 Intel Corporation. All rights reserved.
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -25,15 +25,6 @@
 #import "UIColorInternal.h"
 #import "UIFontInternal.h"
 #import "CGSurfaceInfoInternal.h"
-
-extern "C" {
-#import <ft2build.h>
-#import FT_FREETYPE_H
-#import <ftadvanc.h>
-#import <ftglyph.h>
-#import <ftsizes.h>
-#import <tttables.h>
-}
 
 #include "LoggingNative.h"
 
