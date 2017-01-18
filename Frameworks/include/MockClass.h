@@ -21,8 +21,15 @@
 #define __alignof alignof
 #endif
 
-#include "ParameterTypes.h"
+#define BUILD_VARIABLE_NAME_INT(x, y) x##y
+#define BUILD_VARIABLE_NAME(x, y) BUILD_VARIABLE_NAME_INT(x, y)
+
+#define MEMBER_PARAMETER_TYPES_CONST_false
+#define MEMBER_PARAMETER_TYPES_CONST_true const
+
 #include "Windows.h"
+
+#include <tuple>
 
 // Copying these macros from WexTestClass.h, but not including
 // it because it brings in dependencies on TAEF that we don't want
@@ -350,171 +357,6 @@ VERIFY_ARE_EQUAL(1, callCount);
 }
 */ /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////
-// Macros for mocking C++/CX interface methods
-// Be sure to call CX_MOCK_INTERFACE(YourInterface) first.
-//////////////////////////////////////////////////////////////////////////////////////////////
-
-// This macro must be called per-interface before any of the CX_MOCK_METHOD* calls will compile for it.
-// Be sure to fully qualify your interface name; for example: ABI::Windows::Media::SpeechRecognition::ISpeechRecognitionResult
-#define CX_MOCK_INTERFACE(FULLY_QUALIFIED_INTERFACE_NAME) CX_MOCK_INTERFACE_DISPATCHER_IMPL(FULLY_QUALIFIED_INTERFACE_NAME, __cdecl)
-
-////////////////////////////////////////////////////////////////
-// Macros for mocking C++/CX interface methods
-////////////////////////////////////////////////////////////////
-
-// Mock a zero-arg method in high level C++/CX
-#define CX_MOCK_METHOD_0(INTERFACE_NAME, METHOD_NAME) CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 0, INTERFACE_CLASS, public)
-
-// Mock a one-arg method in high level C++/CX
-#define CX_MOCK_METHOD_1(INTERFACE_NAME, METHOD_NAME) CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 1, INTERFACE_CLASS, public)
-
-// Mock a two-arg method in high level C++/CX
-#define CX_MOCK_METHOD_2(INTERFACE_NAME, METHOD_NAME) CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 2, INTERFACE_CLASS, public)
-
-// Mock a three-arg method in high level C++/CX
-#define CX_MOCK_METHOD_3(INTERFACE_NAME, METHOD_NAME) CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 3, INTERFACE_CLASS, public)
-
-// Mock a four-arg method in high level C++/CX
-#define CX_MOCK_METHOD_4(INTERFACE_NAME, METHOD_NAME) CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 4, INTERFACE_CLASS, public)
-
-// Mock a five-arg method in high level C++/CX
-#define CX_MOCK_METHOD_5(INTERFACE_NAME, METHOD_NAME) CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 5, INTERFACE_CLASS, public)
-
-// Mock a six-arg method in high level C++/CX
-#define CX_MOCK_METHOD_6(INTERFACE_NAME, METHOD_NAME) CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 6, INTERFACE_CLASS, public)
-
-// Mock a seven-arg method in high level C++/CX
-#define CX_MOCK_METHOD_7(INTERFACE_NAME, METHOD_NAME) CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 7, INTERFACE_CLASS, public)
-
-// Mock an eight-arg method in high level C++/CX
-#define CX_MOCK_METHOD_8(INTERFACE_NAME, METHOD_NAME) CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 8, INTERFACE_CLASS, public)
-
-// Mock a nine-arg method in high level C++/CX
-#define CX_MOCK_METHOD_9(INTERFACE_NAME, METHOD_NAME) CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 9, INTERFACE_CLASS, public)
-
-// Mock a ten-arg method in high level C++/CX
-#define CX_MOCK_METHOD_10(INTERFACE_NAME, METHOD_NAME) CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 10, INTERFACE_CLASS, public)
-
-// Mock a read/write property getter/setter
-#define CX_MOCK_PROPERTY(INTERFACE_NAME, PROPERTY_NAME) CX_BUILD_MOCK_PROPERTY_IMPL(INTERFACE_NAME, PROPERTY_NAME, INTERFACE_CLASS, public)
-
-// Mock a readonly property getter
-#define CX_MOCK_READONLY_PROPERTY(INTERFACE_NAME, PROPERTY_NAME) \
-    CX_BUILD_MOCK_READONLY_PROPERTY_IMPL(INTERFACE_NAME, PROPERTY_NAME, INTERFACE_CLASS, public)
-
-////////////////////////////////////////////////////////////////
-// Macros for mocking public C++/CX abstract class methods
-////////////////////////////////////////////////////////////////
-
-// Mock a zero-arg public abstract class method in high level C++/CX
-#define CX_MOCK_ABSTRACT_METHOD_0(INTERFACE_NAME, METHOD_NAME) \
-    CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 0, ABSTRACT_CLASS, public)
-
-// Mock a one-arg public abstract class method in high level C++/CX
-#define CX_MOCK_ABSTRACT_METHOD_1(INTERFACE_NAME, METHOD_NAME) \
-    CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 1, ABSTRACT_CLASS, public)
-
-// Mock a two-arg public abstract class method in high level C++/CX
-#define CX_MOCK_ABSTRACT_METHOD_2(INTERFACE_NAME, METHOD_NAME) \
-    CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 2, ABSTRACT_CLASS, public)
-
-// Mock a three-arg public abstract class method in high level C++/CX
-#define CX_MOCK_ABSTRACT_METHOD_3(INTERFACE_NAME, METHOD_NAME) \
-    CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 3, ABSTRACT_CLASS, public)
-
-// Mock a four-arg public abstract class method in high level C++/CX
-#define CX_MOCK_ABSTRACT_METHOD_4(INTERFACE_NAME, METHOD_NAME) \
-    CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 4, ABSTRACT_CLASS, public)
-
-// Mock a five-arg public abstract class method in high level C++/CX
-#define CX_MOCK_ABSTRACT_METHOD_5(INTERFACE_NAME, METHOD_NAME) \
-    CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 5, ABSTRACT_CLASS, public)
-
-// Mock a six-arg public abstract class method in high level C++/CX
-#define CX_MOCK_ABSTRACT_METHOD_6(INTERFACE_NAME, METHOD_NAME) \
-    CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 6, ABSTRACT_CLASS, public)
-
-// Mock a seven-arg public abstract class method in high level C++/CX
-#define CX_MOCK_ABSTRACT_METHOD_7(INTERFACE_NAME, METHOD_NAME) \
-    CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 7, ABSTRACT_CLASS, public)
-
-// Mock an eight-arg public abstract class method in high level C++/CX
-#define CX_MOCK_ABSTRACT_METHOD_8(INTERFACE_NAME, METHOD_NAME) \
-    CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 8, ABSTRACT_CLASS, public)
-
-// Mock a nine-arg public abstract class method in high level C++/CX
-#define CX_MOCK_ABSTRACT_METHOD_9(INTERFACE_NAME, METHOD_NAME) \
-    CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 9, ABSTRACT_CLASS, public)
-
-// Mock a ten-arg public abstract class method in high level C++/CX
-#define CX_MOCK_ABSTRACT_METHOD_10(INTERFACE_NAME, METHOD_NAME) \
-    CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 10, ABSTRACT_CLASS, public)
-
-// Mock a public abstract read/write property getter/setter
-#define CX_MOCK_ABSTRACT_PROPERTY(INTERFACE_NAME, PROPERTY_NAME) \
-    CX_BUILD_MOCK_PROPERTY_IMPL(INTERFACE_NAME, PROPERTY_NAME, ABSTRACT_CLASS, public)
-
-// Mock a public abstract readonly property getter
-#define CX_MOCK_ABSTRACT_READONLY_PROPERTY(INTERFACE_NAME, PROPERTY_NAME) \
-    CX_BUILD_MOCK_READONLY_PROPERTY_IMPL(INTERFACE_NAME, PROPERTY_NAME, ABSTRACT_CLASS, public)
-
-////////////////////////////////////////////////////////////////
-// Macros for mocking internal C++/CX abstract class methods
-////////////////////////////////////////////////////////////////
-
-// Mock a zero-arg internal abstract class method in high level C++/CX
-#define CX_MOCK_INTERNAL_ABSTRACT_METHOD_0(INTERFACE_NAME, METHOD_NAME) \
-    CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 0, ABSTRACT_CLASS, internal)
-
-// Mock a one-arg internal abstract class method in high level C++/CX
-#define CX_MOCK_INTERNAL_ABSTRACT_METHOD_1(INTERFACE_NAME, METHOD_NAME) \
-    CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 1, ABSTRACT_CLASS, internal)
-
-// Mock a two-arg internal abstract class method in high level C++/CX
-#define CX_MOCK_INTERNAL_ABSTRACT_METHOD_2(INTERFACE_NAME, METHOD_NAME) \
-    CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 2, ABSTRACT_CLASS, internal)
-
-// Mock a three-arg internal abstract class method in high level C++/CX
-#define CX_MOCK_INTERNAL_ABSTRACT_METHOD_3(INTERFACE_NAME, METHOD_NAME) \
-    CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 3, ABSTRACT_CLASS, internal)
-
-// Mock a four-arg internal abstract class method in high level C++/CX
-#define CX_MOCK_INTERNAL_ABSTRACT_METHOD_4(INTERFACE_NAME, METHOD_NAME) \
-    CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 4, ABSTRACT_CLASS, internal)
-
-// Mock a five-arg internal abstract class method in high level C++/CX
-#define CX_MOCK_INTERNAL_ABSTRACT_METHOD_5(INTERFACE_NAME, METHOD_NAME) \
-    CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 5, ABSTRACT_CLASS, internal)
-
-// Mock a six-arg internal abstract class method in high level C++/CX
-#define CX_MOCK_INTERNAL_ABSTRACT_METHOD_6(INTERFACE_NAME, METHOD_NAME) \
-    CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 6, ABSTRACT_CLASS, internal)
-
-// Mock a seven-arg internal abstract class method in high level C++/CX
-#define CX_MOCK_INTERNAL_ABSTRACT_METHOD_7(INTERFACE_NAME, METHOD_NAME) \
-    CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 7, ABSTRACT_CLASS, internal)
-
-// Mock an eight-arg internal abstract class method in high level C++/CX
-#define CX_MOCK_INTERNAL_ABSTRACT_METHOD_8(INTERFACE_NAME, METHOD_NAME) \
-    CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 8, ABSTRACT_CLASS, internal)
-
-// Mock a nine-arg internal abstract class method in high level C++/CX
-#define CX_MOCK_INTERNAL_ABSTRACT_METHOD_9(INTERFACE_NAME, METHOD_NAME) \
-    CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 9, ABSTRACT_CLASS, internal)
-
-// Mock a ten-arg internal abstract class method in high level C++/CX
-#define CX_MOCK_INTERNAL_ABSTRACT_METHOD_10(INTERFACE_NAME, METHOD_NAME) \
-    CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, 10, ABSTRACT_CLASS, internal)
-
-// Mock an internal abstract read/write property getter/setter
-#define CX_MOCK_INTERNAL_ABSTRACT_PROPERTY(INTERFACE_NAME, PROPERTY_NAME) \
-    CX_BUILD_MOCK_PROPERTY_IMPL(INTERFACE_NAME, PROPERTY_NAME, ABSTRACT_CLASS, internal)
-
-// Mock an internal abstract readonly property getter
-#define CX_MOCK_INTERNAL_ABSTRACT_READONLY_PROPERTY(INTERFACE_NAME, PROPERTY_NAME) \
-    CX_BUILD_MOCK_READONLY_PROPERTY_IMPL(INTERFACE_NAME, PROPERTY_NAME, ABSTRACT_CLASS, internal)
-
 //*********************************************************************************************************************
 // DO NOT directly call any of the private helper macros/functions below.
 //*********************************************************************************************************************
@@ -546,85 +388,110 @@ void ValidateCallback(const TFunctor& functor, const wchar_t* name) {
 //*********************************************************************************************************************
 // Internal/private low level C++ support
 //*********************************************************************************************************************
+template <typename T>
+struct ParameterTypes;
+
+template <typename TReturn, typename TClass, typename... TArgs>
+struct ParameterTypes<TReturn (TClass::*)(TArgs...)> {
+    using ReturnType = TReturn;
+    using ClassType = TClass;
+    static constexpr auto ParameterCount = sizeof...(TArgs);
+
+    template <size_t index>
+    using Type = typename std::tuple_element<index - 1, std::tuple<TArgs...>>::type;
+
+    using FunctorType = std::function<TReturn(TArgs...)>;
+};
+
+template <typename TReturn, typename TClass, typename... TArgs>
+struct ParameterTypes<TReturn __stdcall (TClass::*)(TArgs...)> : ParameterTypes<TReturn (TClass::*)(TArgs...)> {};
+
+template <typename TReturn, typename TClass, typename... TArgs>
+struct ParameterTypes<TReturn __fastcall (TClass::*)(TArgs...)> : ParameterTypes<TReturn (TClass::*)(TArgs...)> {};
+
+template <typename TReturn, typename TClass, typename... TArgs>
+struct ParameterTypes<TReturn __cdecl (TClass::*)(TArgs...)> : ParameterTypes<TReturn (TClass::*)(TArgs...)> {};
+
+template <typename TReturn, typename TClass, typename... TArgs>
+struct ParameterTypes<TReturn __vectorcall (TClass::*)(TArgs...)> : ParameterTypes<TReturn (TClass::*)(TArgs...)> {};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Macros used to build out the parameter types passed to the method and the contained std::function
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #define MOCK_NAMED_ARGS_0(METHOD_NAME)
 
-#define MOCK_NAMED_ARGS_1(METHOD_NAME) WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter1 p1
+#define MOCK_NAMED_ARGS_1(METHOD_NAME) ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<1> p1
 
-#define MOCK_NAMED_ARGS_2(METHOD_NAME)                                                   \
-    WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter1 p1, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter2 p2
+#define MOCK_NAMED_ARGS_2(METHOD_NAME) \
+    ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<1> p1, ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<2> p2
 
-#define MOCK_NAMED_ARGS_3(METHOD_NAME)                                                       \
-    WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter1 p1,     \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter2 p2, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter3 p3
+#define MOCK_NAMED_ARGS_3(METHOD_NAME)                                       \
+    ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<1> p1,     \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<2> p2, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<3> p3
 
-#define MOCK_NAMED_ARGS_4(METHOD_NAME)                                                       \
-    WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter1 p1,     \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter2 p2, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter3 p3, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter4 p4
+#define MOCK_NAMED_ARGS_4(METHOD_NAME)                                       \
+    ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<1> p1,     \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<2> p2, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<3> p3, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<4> p4
 
-#define MOCK_NAMED_ARGS_5(METHOD_NAME)                                                       \
-    WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter1 p1,     \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter2 p2, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter3 p3, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter4 p4, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter5 p5
+#define MOCK_NAMED_ARGS_5(METHOD_NAME)                                       \
+    ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<1> p1,     \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<2> p2, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<3> p3, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<4> p4, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<5> p5
 
-#define MOCK_NAMED_ARGS_6(METHOD_NAME)                                                       \
-    WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter1 p1,     \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter2 p2, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter3 p3, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter4 p4, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter5 p5, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter6 p6
+#define MOCK_NAMED_ARGS_6(METHOD_NAME)                                       \
+    ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<1> p1,     \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<2> p2, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<3> p3, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<4> p4, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<5> p5, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<6> p6
 
-#define MOCK_NAMED_ARGS_7(METHOD_NAME)                                                       \
-    WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter1 p1,     \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter2 p2, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter3 p3, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter4 p4, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter5 p5, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter6 p6, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter7 p7
+#define MOCK_NAMED_ARGS_7(METHOD_NAME)                                       \
+    ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<1> p1,     \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<2> p2, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<3> p3, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<4> p4, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<5> p5, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<6> p6, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<7> p7
 
-#define MOCK_NAMED_ARGS_8(METHOD_NAME)                                                       \
-    WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter1 p1,     \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter2 p2, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter3 p3, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter4 p4, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter5 p5, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter6 p6, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter7 p7, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter8 p8
+#define MOCK_NAMED_ARGS_8(METHOD_NAME)                                       \
+    ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<1> p1,     \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<2> p2, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<3> p3, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<4> p4, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<5> p5, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<6> p6, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<7> p7, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<8> p8
 
-#define MOCK_NAMED_ARGS_9(METHOD_NAME)                                                       \
-    WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter1 p1,     \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter2 p2, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter3 p3, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter4 p4, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter5 p5, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter6 p6, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter7 p7, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter8 p8, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter9 p9
+#define MOCK_NAMED_ARGS_9(METHOD_NAME)                                       \
+    ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<1> p1,     \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<2> p2, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<3> p3, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<4> p4, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<5> p5, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<6> p6, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<7> p7, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<8> p8, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<9> p9
 
-#define MOCK_NAMED_ARGS_10(METHOD_NAME)                                                      \
-    WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter1 p1,     \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter2 p2, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter3 p3, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter4 p4, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter5 p5, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter6 p6, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter7 p7, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter8 p8, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter9 p9, \
-        WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Parameter10 p10
+#define MOCK_NAMED_ARGS_10(METHOD_NAME)                                      \
+    ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<1> p1,     \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<2> p2, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<3> p3, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<4> p4, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<5> p5, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<6> p6, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<7> p7, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<8> p8, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<9> p9, \
+        ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::Type<10> p10
 
 ////////////////////////////////////////////////////
 // Macros to build out function call parameter list
@@ -645,13 +512,12 @@ void ValidateCallback(const TFunctor& functor, const wchar_t* name) {
 // Internally used by MOCK_* macros; do not call directly.
 /////////////////////////////////////////////////////////////
 #define BUILD_MOCK_METHOD_IMPL(METHOD_NAME, PARAMETER_COUNT, IS_CONST, ...)                                                               \
-    \
+                                                                                                                                          \
 private:                                                                                                                                  \
-    std::function<WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::ReturnType(                                       \
-        BUILD_VARIABLE_NAME(MOCK_NAMED_ARGS_, PARAMETER_COUNT)(METHOD_NAME))> BUILD_VARIABLE_NAME(m_, METHOD_NAME);                       \
-    \
+    ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::FunctorType BUILD_VARIABLE_NAME(m_, METHOD_NAME);                            \
+                                                                                                                                          \
 public:                                                                                                                                   \
-    virtual WEX::Common::ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::ReturnType __VA_ARGS__ METHOD_NAME(                     \
+    virtual ParameterTypes<decltype(&MOCK_CLASS_NAME::METHOD_NAME)>::ReturnType __VA_ARGS__ METHOD_NAME(                                  \
         BUILD_VARIABLE_NAME(MOCK_NAMED_ARGS_, PARAMETER_COUNT)(METHOD_NAME)) BUILD_VARIABLE_NAME(MEMBER_PARAMETER_TYPES_CONST_, IS_CONST) \
         override {                                                                                                                        \
         Test::Mock::ValidateCallback(BUILD_VARIABLE_NAME(m_, METHOD_NAME), TAEF_WIDEN(TAEF_STRINGIZE(METHOD_NAME)));                      \
@@ -659,208 +525,4 @@ public:                                                                         
     }                                                                                                                                     \
     void BUILD_VARIABLE_NAME(Set, METHOD_NAME)(const decltype(BUILD_VARIABLE_NAME(m_, METHOD_NAME))& callback) {                          \
         BUILD_VARIABLE_NAME(m_, METHOD_NAME) = callback;                                                                                  \
-    }
-
-//*********************************************************************************************************************
-// Internal/private high level C++/CX support
-//*********************************************************************************************************************
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// Macros used to build out the parameter types passed to the custom ParameterTypes instantiations
-// that are made in CX_MOCK_INTERFACE_IMPL for high-level C++/CX interface mocks.
-////////////////////////////////////////////////////////////////////////////////////////////////////
-#define CX_MEMBER_PARAMETER_TYPES_TEMPLATE_0 template <typename TR>
-#define CX_MEMBER_PARAMETER_TYPES_TEMPLATE_1 template <typename TR, typename T1>
-#define CX_MEMBER_PARAMETER_TYPES_TEMPLATE_2 template <typename TR, typename T1, typename T2>
-#define CX_MEMBER_PARAMETER_TYPES_TEMPLATE_3 template <typename TR, typename T1, typename T2, typename T3>
-#define CX_MEMBER_PARAMETER_TYPES_TEMPLATE_4 template <typename TR, typename T1, typename T2, typename T3, typename T4>
-#define CX_MEMBER_PARAMETER_TYPES_TEMPLATE_5 template <typename TR, typename T1, typename T2, typename T3, typename T4, typename T5>
-#define CX_MEMBER_PARAMETER_TYPES_TEMPLATE_6 \
-    template <typename TR, typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
-#define CX_MEMBER_PARAMETER_TYPES_TEMPLATE_7 \
-    template <typename TR, typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7>
-#define CX_MEMBER_PARAMETER_TYPES_TEMPLATE_8 \
-    template <typename TR, typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8>
-#define CX_MEMBER_PARAMETER_TYPES_TEMPLATE_9 \
-    template <typename TR,                   \
-              typename T1,                   \
-              typename T2,                   \
-              typename T3,                   \
-              typename T4,                   \
-              typename T5,                   \
-              typename T6,                   \
-              typename T7,                   \
-              typename T8,                   \
-              typename T9>
-#define CX_MEMBER_PARAMETER_TYPES_TEMPLATE_10 \
-    template <typename TR,                    \
-              typename T1,                    \
-              typename T2,                    \
-              typename T3,                    \
-              typename T4,                    \
-              typename T5,                    \
-              typename T6,                    \
-              typename T7,                    \
-              typename T8,                    \
-              typename T9,                    \
-              typename T10>
-
-////////////////////////////////////////////////////////////////////////
-// Internally used by CX_MOCK_INTERFACE_ macro; do not call directly.
-////////////////////////////////////////////////////////////////////////
-#define CX_MOCK_INTERFACE_IMPL(INTERFACE_NAME, PARAMETER_COUNT, CALLING_CONVENTION)                                                      \
-    BUILD_VARIABLE_NAME(CX_MEMBER_PARAMETER_TYPES_TEMPLATE_, PARAMETER_COUNT)                                                            \
-    struct MockInterfaceCalled<TR (CALLING_CONVENTION INTERFACE_NAME::*)(BUILD_VARIABLE_NAME(PARAMETER_TYPES_ARGS_, PARAMETER_COUNT))> { \
-        static const bool result = true;                                                                                                 \
-    };                                                                                                                                   \
-    BUILD_VARIABLE_NAME(CX_MEMBER_PARAMETER_TYPES_TEMPLATE_, PARAMETER_COUNT)                                                            \
-    struct WEX::Common::ParameterTypes<TR (CALLING_CONVENTION INTERFACE_NAME::*)(                                                        \
-        BUILD_VARIABLE_NAME(PARAMETER_TYPES_ARGS_, PARAMETER_COUNT))> {                                                                  \
-        typedef TR ReturnType;                                                                                                           \
-        typedef typename INTERFACE_NAME ClassType;                                                                                       \
-        static const unsigned short ParameterCount = PARAMETER_COUNT;                                                                    \
-        static const bool IsConstMethod = false;                                                                                         \
-        typedef BUILD_VARIABLE_NAME(PARAMETER_TYPES_TYPELIST_, PARAMETER_COUNT) Parameters;                                              \
-        typedef typename WEX::Common::TypeAt<Parameters, 0>::Result Parameter1;                                                          \
-        typedef typename WEX::Common::TypeAt<Parameters, 1>::Result Parameter2;                                                          \
-        typedef typename WEX::Common::TypeAt<Parameters, 2>::Result Parameter3;                                                          \
-        typedef typename WEX::Common::TypeAt<Parameters, 3>::Result Parameter4;                                                          \
-        typedef typename WEX::Common::TypeAt<Parameters, 4>::Result Parameter5;                                                          \
-        typedef typename WEX::Common::TypeAt<Parameters, 5>::Result Parameter6;                                                          \
-        typedef typename WEX::Common::TypeAt<Parameters, 6>::Result Parameter7;                                                          \
-        typedef typename WEX::Common::TypeAt<Parameters, 7>::Result Parameter8;                                                          \
-        typedef typename WEX::Common::TypeAt<Parameters, 8>::Result Parameter9;                                                          \
-        typedef typename WEX::Common::TypeAt<Parameters, 9>::Result Parameter10;                                                         \
-    };
-
-/////////////////////////////////////////////////////////////////////
-// Internally used by CX_MOCK_INTERFACE_ macro; do not call directly.
-/////////////////////////////////////////////////////////////////////
-#define CX_MOCK_INTERFACE_DISPATCHER_IMPL(INTERFACE_NAME, CALLING_CONVENTION) \
-    CX_MOCK_INTERFACE_IMPL(INTERFACE_NAME, 0, CALLING_CONVENTION)             \
-    CX_MOCK_INTERFACE_IMPL(INTERFACE_NAME, 1, CALLING_CONVENTION)             \
-    CX_MOCK_INTERFACE_IMPL(INTERFACE_NAME, 2, CALLING_CONVENTION)             \
-    CX_MOCK_INTERFACE_IMPL(INTERFACE_NAME, 3, CALLING_CONVENTION)             \
-    CX_MOCK_INTERFACE_IMPL(INTERFACE_NAME, 4, CALLING_CONVENTION)             \
-    CX_MOCK_INTERFACE_IMPL(INTERFACE_NAME, 5, CALLING_CONVENTION)             \
-    CX_MOCK_INTERFACE_IMPL(INTERFACE_NAME, 6, CALLING_CONVENTION)             \
-    CX_MOCK_INTERFACE_IMPL(INTERFACE_NAME, 7, CALLING_CONVENTION)             \
-    CX_MOCK_INTERFACE_IMPL(INTERFACE_NAME, 8, CALLING_CONVENTION)             \
-    CX_MOCK_INTERFACE_IMPL(INTERFACE_NAME, 9, CALLING_CONVENTION)             \
-    CX_MOCK_INTERFACE_IMPL(INTERFACE_NAME, 10, CALLING_CONVENTION)
-
-/////////////////////////////////////////////////////////////
-// Internally used by CX_MOCK_* macros; do not call directly.
-/////////////////////////////////////////////////////////////
-template <typename TPrototype>
-struct MockInterfaceCalled {
-    static const bool result = false;
-};
-
-/////////////////////////////////////////////////////////////
-// Builds out C++/CX interface method implementations
-/////////////////////////////////////////////////////////////
-#define MOCK_OVERRIDE_INTERFACE_CLASS
-#define MOCK_OVERRIDE_ABSTRACT_CLASS override
-
-#define CX_BUILD_MOCK_METHOD_IMPL(INTERFACE_NAME, METHOD_NAME, PARAMETER_COUNT, MOCK_TYPE, ACCESS)                                  \
-    static_assert(MockInterfaceCalled<decltype(&INTERFACE_NAME::METHOD_NAME)>::result,                                              \
-                  "You must add a single call to CX_MOCK_INTERFACE(" TAEF_STRINGIZE(                                                \
-                      INTERFACE_NAME) ") before this CX_MOCK_METHOD_" TAEF_STRINGIZE(PARAMETER_COUNT) " call will compile.");       \
-    typedef WEX::Common::ParameterTypes<decltype(&INTERFACE_NAME::METHOD_NAME)> BUILD_VARIABLE_NAME(METHOD_NAME, PARAMETER_TYPES);  \
-    static_assert(PARAMETER_COUNT == BUILD_VARIABLE_NAME(METHOD_NAME, PARAMETER_TYPES)::ParameterCount,                             \
-                  "Incorrect macro called for function; parameter count doesn't match!");                                           \
-    \
-private:                                                                                                                            \
-    std::function<BUILD_VARIABLE_NAME(METHOD_NAME, PARAMETER_TYPES)::ReturnType(                                                    \
-        BUILD_VARIABLE_NAME(MOCK_NAMED_ARGS_, PARAMETER_COUNT)(INTERFACE_NAME::METHOD_NAME))> BUILD_VARIABLE_NAME(m_, METHOD_NAME); \
-    ACCESS:                                                                                                                         \
-    virtual BUILD_VARIABLE_NAME(METHOD_NAME, PARAMETER_TYPES)::ReturnType METHOD_NAME(                                              \
-        BUILD_VARIABLE_NAME(MOCK_NAMED_ARGS_, PARAMETER_COUNT)(INTERFACE_NAME::METHOD_NAME))                                        \
-        BUILD_VARIABLE_NAME(MOCK_OVERRIDE_, MOCK_TYPE) {                                                                            \
-        Test::Mock::ValidateCallback(BUILD_VARIABLE_NAME(m_, METHOD_NAME), TAEF_WIDEN(TAEF_STRINGIZE(METHOD_NAME)));                \
-        return BUILD_VARIABLE_NAME(m_, METHOD_NAME)(BUILD_VARIABLE_NAME(MOCK_CALL_ARGS_, PARAMETER_COUNT));                         \
-    }                                                                                                                               \
-    internal:                                                                                                                       \
-    void BUILD_VARIABLE_NAME(Set, METHOD_NAME)(const decltype(BUILD_VARIABLE_NAME(m_, METHOD_NAME))& callback) {                    \
-        BUILD_VARIABLE_NAME(m_, METHOD_NAME) = callback;                                                                            \
-    }
-
-/////////////////////////////////////////////////////////////
-// Builds out C++/CX read/write property implementations
-/////////////////////////////////////////////////////////////
-#define CX_BUILD_MOCK_PROPERTY_IMPL(INTERFACE_NAME, PROPERTY_NAME, MOCK_TYPE, ACCESS)                                         \
-    static_assert(MockInterfaceCalled<decltype(&INTERFACE_NAME::PROPERTY_NAME::get)>::result,                                 \
-                  "You must add a single call to CX_MOCK_INTERFACE(" TAEF_STRINGIZE(                                          \
-                      INTERFACE_NAME) ") before this CX_MOCK_METHOD_" TAEF_STRINGIZE(PARAMETER_COUNT) " call will compile."); \
-    typedef WEX::Common::ParameterTypes<decltype(&INTERFACE_NAME::PROPERTY_NAME::get)>                                        \
-        BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, get), PARAMETER_TYPES);                                        \
-    static_assert(0 == BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, get), PARAMETER_TYPES)::ParameterCount,         \
-                  "Incorrect macro called for function; parameter count doesn't match!");                                     \
-    static_assert(MockInterfaceCalled<decltype(&INTERFACE_NAME::PROPERTY_NAME::set)>::result,                                 \
-                  "You must add a single call to CX_MOCK_INTERFACE(" TAEF_STRINGIZE(                                          \
-                      INTERFACE_NAME) ") before this CX_MOCK_METHOD_" TAEF_STRINGIZE(PARAMETER_COUNT) " call will compile."); \
-    typedef WEX::Common::ParameterTypes<decltype(&INTERFACE_NAME::PROPERTY_NAME::set)>                                        \
-        BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, set), PARAMETER_TYPES);                                        \
-    static_assert(1 == BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, set), PARAMETER_TYPES)::ParameterCount,         \
-                  "Incorrect macro called for function; parameter count doesn't match!");                                     \
-    \
-private:                                                                                                                      \
-    std::function<BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, get), PARAMETER_TYPES)::ReturnType()>                \
-        BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, get));                                                     \
-    std::function<void(BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, set), PARAMETER_TYPES)::Parameter1 p1)>         \
-        BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, set));                                                     \
-    ACCESS:                                                                                                                   \
-    property BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, get), PARAMETER_TYPES)::ReturnType PROPERTY_NAME {        \
-        virtual BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, get), PARAMETER_TYPES)::ReturnType get()               \
-            BUILD_VARIABLE_NAME(MOCK_OVERRIDE_, MOCK_TYPE) {                                                                  \
-            Test::Mock::ValidateCallback(BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, get)),                    \
-                                         TAEF_WIDEN(TAEF_STRINGIZE(PROPERTY_NAME))L"::get");                                  \
-            return BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, get))();                                        \
-        }                                                                                                                     \
-        virtual void set(BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, set), PARAMETER_TYPES)::Parameter1 p1)        \
-            BUILD_VARIABLE_NAME(MOCK_OVERRIDE_, MOCK_TYPE) {                                                                  \
-            Test::Mock::ValidateCallback(BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, set)),                    \
-                                         TAEF_WIDEN(TAEF_STRINGIZE(PROPERTY_NAME))L"::set");                                  \
-            return BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, set))(p1);                                      \
-        }                                                                                                                     \
-    }                                                                                                                         \
-    internal:                                                                                                                 \
-    void BUILD_VARIABLE_NAME(Set, BUILD_VARIABLE_NAME(PROPERTY_NAME, Getter))(                                                \
-        const decltype(BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, get)))& callback) {                         \
-        BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, get)) = callback;                                          \
-    }                                                                                                                         \
-    void BUILD_VARIABLE_NAME(Set, BUILD_VARIABLE_NAME(PROPERTY_NAME, Setter))(                                                \
-        const decltype(BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, set)))& callback) {                         \
-        BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, set)) = callback;                                          \
-    }
-
-/////////////////////////////////////////////////////////////
-// Builds out C++/CX readonly property implementations
-/////////////////////////////////////////////////////////////
-#define CX_BUILD_MOCK_READONLY_PROPERTY_IMPL(INTERFACE_NAME, PROPERTY_NAME, MOCK_TYPE, ACCESS)                                \
-    static_assert(MockInterfaceCalled<decltype(&INTERFACE_NAME::PROPERTY_NAME::get)>::result,                                 \
-                  "You must add a single call to CX_MOCK_INTERFACE(" TAEF_STRINGIZE(                                          \
-                      INTERFACE_NAME) ") before this CX_MOCK_METHOD_" TAEF_STRINGIZE(PARAMETER_COUNT) " call will compile."); \
-    typedef WEX::Common::ParameterTypes<decltype(&INTERFACE_NAME::PROPERTY_NAME::get)>                                        \
-        BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, get), PARAMETER_TYPES);                                        \
-    static_assert(0 == BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, get), PARAMETER_TYPES)::ParameterCount,         \
-                  "Incorrect macro called for function; parameter count doesn't match!");                                     \
-    \
-private:                                                                                                                      \
-    std::function<BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, get), PARAMETER_TYPES)::ReturnType()>                \
-        BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, get));                                                     \
-    ACCESS:                                                                                                                   \
-    property BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, get), PARAMETER_TYPES)::ReturnType PROPERTY_NAME {        \
-        virtual BUILD_VARIABLE_NAME(BUILD_VARIABLE_NAME(PROPERTY_NAME, get), PARAMETER_TYPES)::ReturnType get()               \
-            BUILD_VARIABLE_NAME(MOCK_OVERRIDE_, MOCK_TYPE) {                                                                  \
-            Test::Mock::ValidateCallback(BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, get)),                    \
-                                         TAEF_WIDEN(TAEF_STRINGIZE(PROPERTY_NAME))L"::get");                                  \
-            return BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, get))();                                        \
-        }                                                                                                                     \
-    }                                                                                                                         \
-    internal:                                                                                                                 \
-    void BUILD_VARIABLE_NAME(Set, BUILD_VARIABLE_NAME(PROPERTY_NAME, Getter))(                                                \
-        const decltype(BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, get)))& callback) {                         \
-        BUILD_VARIABLE_NAME(m_, BUILD_VARIABLE_NAME(PROPERTY_NAME, get)) = callback;                                          \
     }
