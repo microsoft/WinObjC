@@ -241,8 +241,8 @@ LIBRARY CoreGraphics
         _CGContextSetScaleFactor
         _CGContextPushBeginDraw
         _CGContextPopEndDraw
-        _CGContextSafeInnerBeginDraw
-        _CGContextSafeInnerEndDraw
+        _CGContextEscapeBeginEndDrawStack
+        _CGContextUnescapeBeginEndDrawStack
 
         ; CGDataConsumer.mm
         CGDataConsumerCreate

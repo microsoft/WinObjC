@@ -1257,24 +1257,18 @@ void _CGContextPopEndDraw(CGContextRef ctx) {
     }
 }
 
-void _CGContextSafeInnerBeginDraw(CGContextRef ctx) {
-    ID2D1RenderTarget* imgRenderTarget = ctx->Backing()->DestImage()->Backing()->GetRenderTarget();
-    THROW_HR_IF_NULL(E_UNEXPECTED, imgRenderTarget);
-
-    if ((ctx->_beginEndDrawDepth) > 0) {
-        imgRenderTarget->EndDraw();
+void _CGContextEscapeBeginEndDrawStack(CGContextRef ctx) {
+    if ((ctx->_beginEndDrawDepth > 0) && ((ctx->_escapeBeginEndDrawDepth)++ == 0)) {
+        ID2D1RenderTarget* imgRenderTarget = ctx->Backing()->DestImage()->Backing()->GetRenderTarget();
+        THROW_HR_IF_NULL(E_UNEXPECTED, imgRenderTarget);
+        THROW_IF_FAILED(imgRenderTarget->EndDraw());
     }
-
-    imgRenderTarget->BeginDraw();
 }
 
-void _CGContextSafeInnerEndDraw(CGContextRef ctx) {
-    ID2D1RenderTarget* imgRenderTarget = ctx->Backing()->DestImage()->Backing()->GetRenderTarget();
-    THROW_HR_IF_NULL(E_UNEXPECTED, imgRenderTarget);
-
-    THROW_IF_FAILED(imgRenderTarget->EndDraw());
-
-    if ((ctx->_beginEndDrawDepth) > 0) {
+void _CGContextUnescapeBeginEndDrawStack(CGContextRef ctx) {
+    if ((ctx->_beginEndDrawDepth > 0) && (--(ctx->_escapeBeginEndDrawDepth) == 0)) {
+        ID2D1RenderTarget* imgRenderTarget = ctx->Backing()->DestImage()->Backing()->GetRenderTarget();
+        THROW_HR_IF_NULL(E_UNEXPECTED, imgRenderTarget);
         imgRenderTarget->BeginDraw();
     }
 }
