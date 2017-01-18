@@ -69,7 +69,7 @@ UIKIT_EXPORT_CLASS
 
 // Managing Scrolling
 @property (nonatomic, getter=isScrollEnabled) BOOL scrollEnabled;
-@property (nonatomic, getter=isDirectionalLockEnabled) BOOL directionalLockEnabled STUB_PROPERTY;
+@property (nonatomic, getter=isDirectionalLockEnabled) BOOL directionalLockEnabled;
 @property (nonatomic) BOOL scrollsToTop STUB_PROPERTY;
 - (void)scrollRectToVisible:(CGRect)rect animated:(BOOL)animated;
 @property (nonatomic, assign) BOOL pagingEnabled;
