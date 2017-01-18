@@ -28,6 +28,7 @@
 #import "UIViewInternal.h"
 #import "UIButtonContent.h"
 #import "UIButtonProxies.h"
+#import "UIControlInternal.h"
 #import "UIEventInternal.h"
 #import "UITouchInternal.h"
 

@@ -16,7 +16,6 @@
 //******************************************************************************
 
 #import "MainViewController.h"
-#import "ButtonsViewController.h"
 #import "ControlsViewController.h"
 #import "TextDisplayViewController.h"
 #import "TransitionsViewController.h"
@@ -81,9 +80,6 @@
 
     // Gestures
     [self addMenuItemViewController:[[GesturesViewController alloc] init] andTitle:@"Gestures"];
-    
-    // Buttons
-    [self addMenuItemViewController:[[ButtonsViewController alloc] init] andTitle:@"ButtonsViewController"];
 
     // AutoLayout
     [self addMenuItemViewController:[[AutoLayoutViewController alloc] init] andTitle:@"Constraint Based Layout"];

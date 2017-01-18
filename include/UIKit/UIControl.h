@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
- * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+ * Copyright (c) Microsoft Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -94,17 +94,7 @@ UIKIT_EXPORT_CLASS
                                UICoordinateSpace,
                                UIDynamicItem,
                                UIFocusEnvironment,
-                               UITraitEnvironment> {
-@protected
-    NSMutableArray* _registeredActions;
-    UIControlContentHorizontalAlignment _contentHorizontalAlignment;
-    UIControlContentVerticalAlignment _contentVerticalAlignment;
-
-    BOOL _touchInside;
-    UIControlState _curState;
-    NSMutableArray* _activeTouches;
-    UIControlEvents _sendControlEventsOnBack;
-}
+                               UITraitEnvironment> 
 
 - (void)addTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents;
 - (void)removeTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents;

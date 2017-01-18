@@ -29,7 +29,6 @@
 @end
 
 @implementation UIButtonViewController {
-    UILabel* _labelTouchDown;
     UILabel* _labelTouchUpInside;
 
     float _labelHeight;
@@ -40,9 +39,6 @@
 
     float _marginLeft;
     float _marginTop;
-
-    int touchDownCount;
-    int touchUpInsideCount;
 }
 
 - (void)viewDidLoad {
@@ -58,10 +54,6 @@
     // label sizes
     _labelHeight = 40;
     _labelWidth = 600;
-
-    // setting touch count initial values
-    touchDownCount = 0;
-    touchUpInsideCount = 0;
 }
 
 + (UIImage*)scaledTestImage {
@@ -73,7 +65,7 @@
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
-    return 16;
+    return 15;
 }
 
 - (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
@@ -134,35 +126,28 @@
         [cell addSubview:button];
     } else if (indexPath.row == 4) {
         _labelTouchUpInside = [[UILabel alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop, _labelWidth, _labelHeight)];
-        _labelTouchUpInside.numberOfLines = 2;
         _labelTouchUpInside.text =
-            [NSString stringWithFormat:@"Button with event : UIControlEventTouchUpInside,\ntouchup count = %d", touchUpInsideCount];
+            [NSString stringWithFormat:@"Test UIControl events by touching, dragging, etc."];
 
-        UIButton* button =
-            [[UIButton alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop + _labelHeight, _defaultWidth, _defaultHeight)];
-        [button setTitle:@"Button" forState:UIControlStateNormal];
+        UIButton* button = [UIButton buttonWithType : UIButtonTypeRoundedRect];
+        button.frame = CGRectMake(_marginLeft, _marginTop + _labelHeight, _defaultWidth, _defaultHeight);
+
+        [button setTitle:@"UIControl Events" forState:UIControlStateNormal];
         [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [button addTarget:self action:@selector(_buttonTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
+
+        [button addTarget:self action:@selector(_touchDown:) forControlEvents:UIControlEventTouchDown];
+        [button addTarget:self action:@selector(_touchUpInside:) forControlEvents:UIControlEventTouchUpInside];
+        [button addTarget:self action:@selector(_touchUpOutside:) forControlEvents:UIControlEventTouchUpOutside];
+        [button addTarget:self action:@selector(_touchDragInside:) forControlEvents:UIControlEventTouchDragInside];
+        [button addTarget:self action:@selector(_touchDragOutside:) forControlEvents:UIControlEventTouchDragOutside];
+        [button addTarget:self action:@selector(_touchDragEnter:) forControlEvents:UIControlEventTouchDragEnter];
+        [button addTarget:self action:@selector(_touchDragExit:) forControlEvents:UIControlEventTouchDragExit];
+
         button.backgroundColor = [UIColor grayColor];
 
         [cell addSubview:button];
         [cell addSubview:_labelTouchUpInside];
     } else if (indexPath.row == 5) {
-        _labelTouchDown = [[UILabel alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop, _labelWidth, _labelHeight)];
-        _labelTouchDown.numberOfLines = 2;
-        _labelTouchDown.text =
-            [NSString stringWithFormat:@"Button with event : UIControlEventTouchDown,\ntouch count = %d", touchDownCount];
-
-        UIButton* button =
-            [[UIButton alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop + _labelHeight, _defaultWidth, _defaultHeight)];
-        [button setTitle:@"Button" forState:UIControlStateNormal];
-        [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        button.backgroundColor = [UIColor grayColor];
-        [button addTarget:self action:@selector(_buttonTouchDown:) forControlEvents:UIControlEventTouchDown];
-
-        [cell addSubview:button];
-        [cell addSubview:_labelTouchDown];
-    } else if (indexPath.row == 6) {
         UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop, _labelWidth, _labelHeight)];
         label.text = @"UIButton, Pressed Title in Blue color";
 
@@ -177,7 +162,7 @@
 
         [cell addSubview:label];
         [cell addSubview:button];
-    } else if (indexPath.row == 7) {
+    } else if (indexPath.row == 6) {
         UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop, _labelWidth, _labelHeight)];
         label.text = @"Derived UIButton, not supporting button press";
 
@@ -189,7 +174,7 @@
 
         [cell addSubview:label];
         [cell addSubview:button];
-    } else if (indexPath.row == 8) {
+    } else if (indexPath.row == 7) {
         UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop, _labelWidth, _labelHeight)];
         label.text = @"UIButton, with backgroundImage, state = Disabled";
 
@@ -202,7 +187,7 @@
 
         [cell addSubview:label];
         [cell addSubview:button];
-    } else if (indexPath.row == 9) {
+    } else if (indexPath.row == 8) {
         UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop, _labelWidth, _labelHeight)];
         label.text = @"UIButton, with backgroundImage";
 
@@ -216,7 +201,7 @@
         [button setImage:nil forState:UIControlStateNormal];
         [cell addSubview:label];
         [cell addSubview:button];
-    } else if (indexPath.row == 10) {
+    } else if (indexPath.row == 9) {
         UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop, _labelWidth, _labelHeight)];
         label.text = @"UIButton, with image";
 
@@ -228,7 +213,7 @@
 
         [cell addSubview:label];
         [cell addSubview:button];
-    } else if (indexPath.row == 11) {
+    } else if (indexPath.row == 10) {
         UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop, _labelWidth, _labelHeight)];
         label.text = @"UIButton, with image and background";
 
@@ -242,7 +227,7 @@
 
         [cell addSubview:label];
         [cell addSubview:button];
-    } else if (indexPath.row == 12) {
+    } else if (indexPath.row == 11) {
         UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop, _labelWidth, _labelHeight)];
         label.text = @"UIButton, font changed via titleLabel";
 
@@ -258,7 +243,7 @@
 
         [cell addSubview:label];
         [cell addSubview:button];
-    } else if (indexPath.row == 13) {
+    } else if (indexPath.row == 12) {
         UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop, _labelWidth, _labelHeight)];
         label.text = @"UIButton, title set to imageView width and height";
 
@@ -279,7 +264,7 @@
 
         [cell addSubview:label];
         [cell addSubview:button];
-    } else if (indexPath.row == 14) {
+    } else if (indexPath.row == 13) {
         UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop, _labelWidth, _labelHeight)];
         label.text = @"UIButton, Selected=true, Title=Blue";
 
@@ -297,7 +282,7 @@
 
         [cell addSubview:label];
         [cell addSubview:button];
-    } else if (indexPath.row == 15) {
+    } else if (indexPath.row == 14) {
         UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop, _labelWidth, _labelHeight)];
         label.text = @"UIButton, when in Highlighted (pressed) state, text/color/image is the same as normal state";
 
@@ -329,15 +314,43 @@
     return cell;
 }
 
-- (void)_buttonTouchDown:(UIButton*)button {
-    touchDownCount++;
-    _labelTouchDown.text = [NSString stringWithFormat:@"Button with event: UIControlEventTouchDown,\ntouch count = %d", touchDownCount];
+- (void)_touchDown:(id)sender {
+    UIButton* button = (UIButton*)sender;
+
+    [button setTitle:@"Touch Down" forState:UIControlStateNormal];
 }
 
-- (void)_buttonTouchUpInside:(UIButton*)button {
-    touchUpInsideCount++;
-    _labelTouchUpInside.text =
-        [NSString stringWithFormat:@"Button with event: UIControlEventTouchUpInside,\ntouchup count = %d", touchUpInsideCount];
+- (void)_touchUpInside:(id)sender {
+    UIButton* button = (UIButton*)sender;
+
+    [button setTitle:@"Touch Up Inside" forState:UIControlStateNormal];
+}
+
+- (void)_touchUpOutside:(id)sender {
+    UIButton* button = (UIButton*)sender;
+
+    [button setTitle:@"Touch Up Outside" forState:UIControlStateNormal];
+}
+
+- (void)_touchDragInside:(id)sender {
+    UIButton* button = (UIButton*)sender;
+
+    [button setTitle:@"Drag Inside" forState:UIControlStateNormal];
+}
+
+- (void)_touchDragOutside:(id)sender {
+    UIButton* button = (UIButton*)sender;
+
+    [button setTitle:@"Drag Outside" forState:UIControlStateNormal];
+}
+
+// Since the following will get clobbered by other drag events, just output to the debug window.
+- (void)_touchDragEnter:(id)sender {
+    NSLog(@"Drag Enter");
+}
+
+- (void)_touchDragExit:(id)sender {
+    NSLog(@"Drag Exit");
 }
 
 @end

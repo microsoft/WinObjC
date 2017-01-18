@@ -19,6 +19,7 @@
 #import <UIKit/UIControl.h>
 #import <UIKit/UILabel.h>
 #import <UIKit/UIRuntimeEventConnection.h>
+#import <UIKit/UITouch.h>
 #import <UIKit/UIView.h>
 
 #import <Foundation/NSString.h>
@@ -27,15 +28,15 @@
 
 #import "LoggingNative.h"
 #import "StubReturn.h"
-#import "UIControl+Internal.h"
+#import "UIControlInternal.h"
 
 static const wchar_t* TAG = L"UIControl";
 
 @implementation UIControl
 
 - (void)_initUIControl {
-    _registeredActions = [[NSMutableArray alloc] init];
-    _activeTouches = [[NSMutableArray alloc] init];
+    _registeredActions.attach([[NSMutableArray alloc] init]);
+    _activeTouches.attach([[NSMutableArray alloc] init]);
     _contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
     _contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
 }
@@ -107,8 +108,10 @@ Microsoft Extension
 
         //  Cascade the action down the responder chain
         while (target != nil) {
-            if ([target respondsToSelector:sel])
+            if ([target respondsToSelector:sel]) {
                 break;
+            }
+
             target = [target nextResponder];
         }
     }
@@ -353,9 +356,9 @@ Microsoft Extension
     }
 
     [self removeTarget:target action:actionSel forControlEvents:events];
-    UIRuntimeEventConnection* newEvent = [[UIRuntimeEventConnection alloc] initWithTarget:target selector:actionSel eventMask:events];
+    StrongId<UIRuntimeEventConnection> newEvent;
+    newEvent.attach([[UIRuntimeEventConnection alloc] initWithTarget:target selector:actionSel eventMask:events]);
     [_registeredActions addObject:newEvent];
-    [newEvent release];
 }
 
 /**
@@ -484,6 +487,7 @@ Microsoft Extension
         } else {
             [self sendActionsForControlEvents:UIControlEventTouchUpOutside];
         }
+
         _controlEventTouch = nil;
     }
 
@@ -571,11 +575,9 @@ Microsoft Extension
  @Status Interoperable
 */
 - (void)dealloc {
-    [_registeredActions release];
-    [_activeTouches release];
-
     [super dealloc];
 }
+
 
 /**
  @Status Stub
