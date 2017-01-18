@@ -32,7 +32,7 @@ static void __SetFontForContext(CGContextRef context) {
     CGContextSetFontSize(context, 144);
 }
 
-DISABLED_DRAW_TEST_F(CGContext, ShowGlyphs, WhiteBackgroundTest) {
+TEXT_DRAW_TEST_F(CGContext, ShowGlyphs, WhiteBackgroundTest<PixelByPixelImageComparator<ComparisonMode::Mask>>) {
     CGContextRef context = GetDrawingContext();
     std::vector<CGGlyph> glyphs{ __CreateGlyphs() };
     __SetFontForContext(context);
@@ -40,14 +40,14 @@ DISABLED_DRAW_TEST_F(CGContext, ShowGlyphs, WhiteBackgroundTest) {
     CGContextShowGlyphs(context, glyphs.data(), glyphs.size());
 }
 
-DISABLED_DRAW_TEST_F(CGContext, ShowGlyphsAtPoint, WhiteBackgroundTest) {
+TEXT_DRAW_TEST_F(CGContext, ShowGlyphsAtPoint, WhiteBackgroundTest<PixelByPixelImageComparator<ComparisonMode::Mask>>) {
     CGContextRef context = GetDrawingContext();
     std::vector<CGGlyph> glyphs{ __CreateGlyphs() };
     __SetFontForContext(context);
     CGContextShowGlyphsAtPoint(context, 25, 50, glyphs.data(), glyphs.size());
 }
 
-DISABLED_DRAW_TEST_F(CGContext, DrawWithRotatedTextMatrix, WhiteBackgroundTest) {
+TEXT_DRAW_TEST_F(CGContext, DrawWithRotatedTextMatrix, WhiteBackgroundTest<PixelByPixelImageComparator<ComparisonMode::Mask>>) {
     CGContextRef context = GetDrawingContext();
     std::vector<CGGlyph> glyphs{ __CreateGlyphs() };
     __SetFontForContext(context);
@@ -68,10 +68,10 @@ static const CGAffineTransform c_transforms[] = { CGAffineTransformMakeRotation(
                                                   { 2, 2, 1.75, 2, 0, 0 },
                                                   CGAffineTransformIdentity };
 
-class CGTransform : public WhiteBackgroundTest,
+class CGTransform : public WhiteBackgroundTest<PixelByPixelImageComparator<ComparisonMode::Mask>>,
                     public ::testing::WithParamInterface<::testing::tuple<CGAffineTransform, CGAffineTransform>> {};
 
-DISABLED_DRAW_TEST_P(CGTransform, TestMatrices) {
+TEXT_DRAW_TEST_P(CGTransform, TestMatrices) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -87,10 +87,10 @@ INSTANTIATE_TEST_CASE_P(TestDrawingTextWithTransformedMatrices,
                         CGTransform,
                         ::testing::Combine(::testing::ValuesIn(c_transforms), ::testing::ValuesIn(c_transforms)));
 
-class CGUIKitTransform : public UIKitMimicTest,
+class CGUIKitTransform : public UIKitMimicTest<PixelByPixelImageComparator<ComparisonMode::Mask>>,
                          public ::testing::WithParamInterface<::testing::tuple<CGAffineTransform, CGAffineTransform>> {};
 
-DISABLED_DRAW_TEST_P(CGUIKitTransform, TestMatrices) {
+TEXT_DRAW_TEST_P(CGUIKitTransform, TestMatrices) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -109,7 +109,7 @@ INSTANTIATE_TEST_CASE_P(TestDrawingTextWithTransformedMatrices,
 // On reference platform, CGContextShowText* can only be used with CGContextSelectFont
 // Which we do not currently support.
 #ifdef WINOBJC
-DISABLED_DRAW_TEST_F(CGContext, ShowTextAtPoint, WhiteBackgroundTest) {
+TEXT_DRAW_TEST_F(CGContext, ShowTextAtPoint, WhiteBackgroundTest<PixelByPixelImageComparator<ComparisonMode::Mask>>) {
     CGContextRef context = GetDrawingContext();
     __SetFontForContext(context);
     CGContextShowTextAtPoint(context, 25, 50, "TEST", 4);

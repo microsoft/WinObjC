@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #pragma once
+#include <string>
 
 enum class DrawingTestMode : int { Generate, Compare };
 

@@ -21,6 +21,8 @@
 
 enum class ImageComparisonResult : unsigned int { Unknown = 0, Incomparable, Different, Same };
 
+enum struct ComparisonMode { Exact, Mask };
+
 struct ImageDelta {
     ImageComparisonResult result;
     size_t differences;
@@ -39,6 +41,7 @@ public:
     virtual ImageDelta CompareImages(CGImageRef left, CGImageRef right) = 0;
 };
 
+template <ComparisonMode Mode = ComparisonMode::Exact, size_t FailureThreshold = 1>
 class PixelByPixelImageComparator : public ImageComparator {
 public:
     ImageDelta CompareImages(CGImageRef left, CGImageRef right) override;
