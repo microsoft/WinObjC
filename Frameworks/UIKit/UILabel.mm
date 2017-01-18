@@ -111,18 +111,18 @@
 
     [_textBlock setFontFamily:[WUXMFontFamily makeInstanceWithName:[_font _compatibleFamilyName]]];
 
-    [_textBlock setTextAlignment:ConvertUITextAlignmentToWXTextAlignment(_alignment)];
+    [_textBlock setTextAlignment:XamlUtilities::ConvertUITextAlignmentToWXTextAlignment(_alignment)];
 
     [_textBlock setLineHeight:[_font ascender] - [_font descender]];
 
-    ApplyLineBreakModeOnTextBlock(_textBlock, _lineBreakMode, self.numberOfLines);
+    XamlUtilities::ApplyLineBreakModeOnTextBlock(_textBlock, _lineBreakMode, self.numberOfLines);
     [_textBlock setLineStackingStrategy:WXLineStackingStrategyBlockLineHeight];
 
     UIColor* color = _textColor;
     if (_isHighlighted && _highlightedTextColor != nil) {
         color = _highlightedTextColor;
     }
-    [_textBlock setForeground:[WUXMSolidColorBrush makeInstanceWithColor:ConvertUIColorToWUColor(color)]];
+    [_textBlock setForeground:[WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor(color)]];
 
     [self invalidateIntrinsicContentSize];
     [self setNeedsDisplay];

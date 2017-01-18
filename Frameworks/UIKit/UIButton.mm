@@ -272,7 +272,7 @@ Microsoft Extension
     // ConvertUIImageToWUXMImageBrush:nil creates a valid imageBrush with null comObj
     // which isn't what we want
     if (image) {
-        WUXMImageBrush* imageBrush = ConvertUIImageToWUXMImageBrush(image);
+        WUXMImageBrush* imageBrush = XamlUtilities::ConvertUIImageToWUXMImageBrush(image);
         if (imageBrush) {
             _states[state].inspectableImage = [imageBrush comObj];
         }
@@ -311,7 +311,7 @@ Microsoft Extension
     // Use the layer contents to draw the background image, similar to UIImageView.
     UIImageSetLayerContents([self layer], self.currentBackgroundImage);
 
-    // UIButton should always stretch its background.  Since we're leveraging our backing CALayer's background for 
+    // UIButton should always stretch its background.  Since we're leveraging our backing CALayer's background for
     // the UIButton background, we stretch it via the CALayer's contentsGravity.
     self.layer.contentsGravity = kCAGravityResize;
 
@@ -551,7 +551,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     // ConvertUIColorToWUColor:nil creates a valid WUColor with null comObj
     // which isn't what we want
     if (color) {
-        WUColor* convertedColor = ConvertUIColorToWUColor(color);
+        WUColor* convertedColor = XamlUtilities::ConvertUIColorToWUColor(color);
         WUXMSolidColorBrush* titleColorBrush = [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
         if (titleColorBrush) {
             _states[state].inspectableTitleColor = [titleColorBrush comObj];

@@ -29,17 +29,17 @@ static const int TAG_SUBVIEW_UILABEL = 1;
 }
 
 - (UILabel*)_createUILabelWithColor:(UIColor*)color
-                            text:(NSString *)text
-                            textAlignment:(NSTextAlignment)alignment
-                        lineBreakMode:(UILineBreakMode)lineBreakMode
-                        numnberOfLines:(NSInteger )numnberOfLines {
+                               text:(NSString*)text
+                      textAlignment:(NSTextAlignment)alignment
+                      lineBreakMode:(UILineBreakMode)lineBreakMode
+                      numberOfLines:(NSInteger)numberOfLines {
     CGRect frame = CGRectMake(c_originX, c_originY, c_width, c_height);
     UILabel* label = [[UILabel alloc] initWithFrame:frame];
     label.textColor = color;
     label.text = text;
     label.textAlignment = alignment;
     label.lineBreakMode = lineBreakMode;
-    label.numberOfLines = numnberOfLines;
+    label.numberOfLines = numberOfLines;
     return label;
 }
 
@@ -51,47 +51,51 @@ static const int TAG_SUBVIEW_UILABEL = 1;
 
     // Row 0. password with number keyboard with Round border
     [_labels addObject:[self _createUILabelWithColor:[UIColor blackColor]
-                                                 text:@"wordWrap test, You should see this string is wrapped around word"
-                                             textAlignment:UITextAlignmentLeft
-                                         lineBreakMode:UILineBreakModeWordWrap
-                                         numnberOfLines:0]];
+                                                text:@"wordWrap test, You should see this string is wrapped around word"
+                                       textAlignment:UITextAlignmentLeft
+                                       lineBreakMode:UILineBreakModeWordWrap
+                                       numberOfLines:0]];
 
     [_labels addObject:[self _createUILabelWithColor:[UIColor redColor]
-                                                 text:@"chararacterWrap is not supported, treated as wordWrap"
-                                             textAlignment:UITextAlignmentLeft
-                                         lineBreakMode:UILineBreakModeCharacterWrap
-                                         numnberOfLines:0]];
+                                                text:@"chararacterWrap is not supported, treated as wordWrap"
+                                       textAlignment:UITextAlignmentLeft
+                                       lineBreakMode:UILineBreakModeCharacterWrap
+                                       numberOfLines:2]];
 
     [_labels addObject:[self _createUILabelWithColor:[UIColor blueColor]
-                                                 text:@"Clip and wrapping, the string is wrapped and clipped at the end of second line if the string is long enough"
-                                             textAlignment:UITextAlignmentLeft
-                                         lineBreakMode:UILineBreakModeClip
-                                         numnberOfLines:0]];
+                                                text:@"Clip and wrapping, the string is wrapped and clipped at the end of second line if "
+                                                     @"the string is long enough"
+                                       textAlignment:UITextAlignmentLeft
+                                       lineBreakMode:UILineBreakModeClip
+                                       numberOfLines:3]];
 
-    [_labels addObject:[self _createUILabelWithColor:[UIColor grayColor]
-                                                 text:@"Clip and nowrapping, cliped at the end of first line and the rest will not wrap and show"
-                                             textAlignment:UITextAlignmentLeft
-                                         lineBreakMode:UILineBreakModeClip
-                                         numnberOfLines:1]];
+    [_labels
+        addObject:[self _createUILabelWithColor:[UIColor grayColor]
+                                           text:@"Clip and nowrapping, cliped at the end of first line and the rest will not wrap and show"
+                                  textAlignment:UITextAlignmentLeft
+                                  lineBreakMode:UILineBreakModeClip
+                                  numberOfLines:1]];
 
-
-    [_labels addObject:[self _createUILabelWithColor:[UIColor purpleColor]
-                                                 text:@"TailTruncation, this is a very long string, that we are using for testing TailTruncation"
-                                             textAlignment:UITextAlignmentLeft
-                                         lineBreakMode:UILineBreakModeTailTruncation
-                                         numnberOfLines:0]];
-
-    [_labels addObject:[self _createUILabelWithColor:[UIColor blackColor]
-                                                 text:@"HeadTruncation but shown as TailTruncation, this is a very long string, that we are using for testing HeadTruncation"
-                                             textAlignment:UITextAlignmentLeft
-                                         lineBreakMode:UILineBreakModeHeadTruncation
-                                         numnberOfLines:0]];
+    [_labels
+        addObject:[self _createUILabelWithColor:[UIColor purpleColor]
+                                           text:@"TailTruncation, this is a very long string, that we are using for testing TailTruncation"
+                                  textAlignment:UITextAlignmentLeft
+                                  lineBreakMode:UILineBreakModeTailTruncation
+                                  numberOfLines:0]];
 
     [_labels addObject:[self _createUILabelWithColor:[UIColor blackColor]
-                                                 text:@"MiddleTruncation but shown as TailTruncation, this is a very long string, that we are using for testing MiddleTruncation"
-                                             textAlignment:UITextAlignmentLeft
-                                         lineBreakMode:UILineBreakModeMiddleTruncation
-                                         numnberOfLines:0]];
+                                                text:@"HeadTruncation but shown as TailTruncation, this is a very long string, that we are "
+                                                     @"using for testing HeadTruncation"
+                                       textAlignment:UITextAlignmentLeft
+                                       lineBreakMode:UILineBreakModeHeadTruncation
+                                       numberOfLines:2]];
+
+    [_labels addObject:[self _createUILabelWithColor:[UIColor blackColor]
+                                                text:@"MiddleTruncation but shown as TailTruncation, this is a very long string, that we "
+                                                     @"are using for testing MiddleTruncation"
+                                       textAlignment:UITextAlignmentLeft
+                                       lineBreakMode:UILineBreakModeMiddleTruncation
+                                       numberOfLines:3]];
 
     [self tableView].allowsSelection = NO;
 }

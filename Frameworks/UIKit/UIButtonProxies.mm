@@ -169,11 +169,11 @@ static const wchar_t* tag = L"UIButtonProxies";
 }
 
 - (void)setTextAlignment:(UITextAlignment)alignment {
-    _xamlTextBlock.textAlignment = ConvertUITextAlignmentToWXTextAlignment(alignment);
+    _xamlTextBlock.textAlignment = XamlUtilities::ConvertUITextAlignmentToWXTextAlignment(alignment);
 }
 
 - (UITextAlignment)textAlignment {
-    return ConvertWXTextAlignmentToUITextAlignment(_xamlTextBlock.textAlignment);
+    return XamlUtilities::ConvertWXTextAlignmentToUITextAlignment(_xamlTextBlock.textAlignment);
 }
 
 - (void)setText:(NSString*)text {
@@ -235,7 +235,7 @@ static const wchar_t* tag = L"UIButtonProxies";
 }
 
 - (void)setLineBreakMode:(UILineBreakMode)mode {
-    ApplyLineBreakModeOnTextBlock(_xamlTextBlock, mode, self.numberOfLines);
+    XamlUtilities::ApplyLineBreakModeOnTextBlock(_xamlTextBlock, mode, self.numberOfLines);
 }
 
 - (UILineBreakMode)lineBreakMode {

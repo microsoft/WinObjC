@@ -585,7 +585,8 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
         // representation.
         if (strongSelf) {
             // Add the image to the parent of the scrollcontentpresenter
-            WXFrameworkElement* scrollContentPresenter = FindTemplateChild(strongSelf->_scrollViewer, @"ScrollContentPresenter");
+            WXFrameworkElement* scrollContentPresenter =
+                XamlUtilities::FindTemplateChild(strongSelf->_scrollViewer, @"ScrollContentPresenter");
             if (scrollContentPresenter) {
                 WXCGrid* parent = rt_dynamic_cast<WXCGrid>(scrollContentPresenter.parent);
                 [parent.children insertObject:strongSelf->_contentImage atIndex:0];
@@ -1377,10 +1378,10 @@ static void setContentOffsetKVOed(UIScrollView* self, CGPoint offs) {
 
     if (DEBUG_INSETS) {
         // setting different color on insets for debugging
-        _topInset.fill = [WUXMSolidColorBrush makeInstanceWithColor:ConvertUIColorToWUColor([UIColor redColor])];
-        _bottomInset.fill = [WUXMSolidColorBrush makeInstanceWithColor:ConvertUIColorToWUColor([UIColor blueColor])];
-        _leftInset.fill = [WUXMSolidColorBrush makeInstanceWithColor:ConvertUIColorToWUColor([UIColor redColor])];
-        _rightInset.fill = [WUXMSolidColorBrush makeInstanceWithColor:ConvertUIColorToWUColor([UIColor blueColor])];
+        _topInset.fill = [WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor([UIColor redColor])];
+        _bottomInset.fill = [WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor([UIColor blueColor])];
+        _leftInset.fill = [WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor([UIColor redColor])];
+        _rightInset.fill = [WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor([UIColor blueColor])];
     }
 }
 
