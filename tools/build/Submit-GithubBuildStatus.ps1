@@ -2,6 +2,7 @@
 .SYNOPSIS
     Submits a CI build status to GitHub for the latest SHA1 in a pull request branch.
 #>
+[CmdletBinding(SupportsShouldProcess=$True)]
 Param (
 	[Parameter(Mandatory=$true, HelpMessage="GitHub Pull Request specifier (<origin> <branch>)")]
 	[string]$PullRequest,
@@ -28,8 +29,8 @@ Param (
 	[Parameter(HelpMessage="Optional description prepended to test results")]
 	[string]$Description,
 
-	[Parameter(HelpMessage="Do not push status to GitHub")]
-	[switch]$OnlyPrintStatus
+	[Parameter(HelpMessage="Optional status-related URL")]
+	[string]$DetailsURL
 )
 
 $ErrorActionPreference = "Stop";
@@ -82,6 +83,7 @@ $newStatus = [PSCustomObject]@{
 	state = $Status;
 	context = $BuildDefinition;
 	description = $(If ([string]::IsNullOrWhiteSpace($Description)) { "" } Else { $Description });
+	target_url = $(If ([string]::IsNullOrWhiteSpace($DetailsURL)) { "" } Else { $DetailsURL });
 }
 
 # Bug; GitHub sends a 404 for authentication failures. Unfortunately, Invoke-WebRequest waits for a 401 before retrying with
@@ -94,8 +96,9 @@ $statusHeaders = @{
 	Authorization = "Basic $($encodedAuthCredential)"
 }
 
-If ($OnlyPrintStatus) {
-	$newStatus | Format-List
-} Else {
+If ($PSCmdlet.ShouldProcess($latestSha1, "GitHub Build Status")) {
 	Invoke-WebRequest -Body (ConvertTo-JSON $newStatus) -ContentType "application/json" -Headers $statusHeaders -Method Post -Uri $statusURL | Out-Null
+} Else {
+	Write-Host "Would submit build status:"
+	Write-Host $newStatus
 }

@@ -254,7 +254,7 @@ static const int c_largeSquareLength = 37;
 - (void)setColor:(UIColor*)color {
     _color = color;
 
-    WUColor* convertedColor = ConvertUIColorToWUColor(color);
+    WUColor* convertedColor = XamlUtilities::ConvertUIColorToWUColor(color);
     WUXMSolidColorBrush* brush = [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
     [_progressRing setForeground:brush];
 }

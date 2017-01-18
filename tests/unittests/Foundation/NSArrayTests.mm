@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -424,4 +424,14 @@ TEST(NSArray, MutableInstanceArchivesAsMutable) {
     EXPECT_NO_THROW([output addObject:@"world"]);
 
     EXPECT_OBJCNE(input, output);
+}
+
+TEST(NSMutableArray, InsertingNilShouldThrow) {
+    NSMutableArray* arr = [NSMutableArray arrayWithObject:@"hello"];
+    EXPECT_ANY_THROW(arr[0] = nil);
+    EXPECT_ANY_THROW([arr insertObject:nil atIndex:1]);
+    EXPECT_ANY_THROW([arr addObject:nil]);
+    EXPECT_ANY_THROW([arr replaceObjectAtIndex:0 withObject:nil]);
+    EXPECT_OBJCEQ(@"hello", arr[0]);
+    EXPECT_EQ(1, [arr count]);
 }

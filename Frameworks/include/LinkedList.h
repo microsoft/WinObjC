@@ -18,6 +18,7 @@
 #define __UTILS_LINKEDLIST_H
 
 #include <malloc.h>
+#include <type_traits>
 #ifdef EBRIUS
 #include "Foundation/NSArray.h"
 #endif

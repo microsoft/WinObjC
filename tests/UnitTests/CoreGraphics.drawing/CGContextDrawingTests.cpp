@@ -469,7 +469,7 @@ DRAW_TEST_F(CGContext, DrawAnImageWithInterpolationQualityAndAlpha, UIKitMimicTe
     CGContextDrawImage(context, bounds, image.get());
 }
 
-DISABLED_DRAW_TEST_F(CGContext, RedBox, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, RedBox, UIKitMimicTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -477,7 +477,7 @@ DISABLED_DRAW_TEST_F(CGContext, RedBox, UIKitMimicTest) {
     CGContextFillRect(context, CGRectInset(bounds, 10, 10));
 }
 
-DISABLED_DRAW_TEST_F(CGContext, DrawAContextIntoAnImage, UIKitMimicTest) {
+DISABLED_DRAW_TEST_F(CGContext, DrawAContextIntoAnImage, UIKitMimicTest<>) {
     // This test will create a bitmap context, draw some entity into the context, then create a image out of the bitmap context.
     // Thereafter it will draw the image into the Canvas context
 
@@ -505,7 +505,7 @@ DISABLED_DRAW_TEST_F(CGContext, DrawAContextIntoAnImage, UIKitMimicTest) {
     CGContextDrawImage(context, bounds, image.get());
 }
 
-DISABLED_DRAW_TEST_F(CGContext, FillThenStrokeIsSameAsDrawFillStroke, WhiteBackgroundTest) {
+DISABLED_DRAW_TEST_F(CGContext, FillThenStrokeIsSameAsDrawFillStroke, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -543,7 +543,7 @@ static void _drawThreeCirclesInContext(CGContextRef context, CGRect bounds) {
     }
 }
 
-DISABLED_DRAW_TEST_F(CGContext, OverlappingCirclesColorAlpha, WhiteBackgroundTest) {
+DISABLED_DRAW_TEST_F(CGContext, OverlappingCirclesColorAlpha, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -554,7 +554,7 @@ DISABLED_DRAW_TEST_F(CGContext, OverlappingCirclesColorAlpha, WhiteBackgroundTes
     _drawThreeCirclesInContext(context, bounds);
 }
 
-DISABLED_DRAW_TEST_F(CGContext, OverlappingCirclesGlobalAlpha, WhiteBackgroundTest) {
+DISABLED_DRAW_TEST_F(CGContext, OverlappingCirclesGlobalAlpha, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -567,7 +567,7 @@ DISABLED_DRAW_TEST_F(CGContext, OverlappingCirclesGlobalAlpha, WhiteBackgroundTe
     _drawThreeCirclesInContext(context, bounds);
 }
 
-DISABLED_DRAW_TEST_F(CGContext, OverlappingCirclesGlobalAlphaStackedWithColorAlpha, WhiteBackgroundTest) {
+DISABLED_DRAW_TEST_F(CGContext, OverlappingCirclesGlobalAlphaStackedWithColorAlpha, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -580,7 +580,7 @@ DISABLED_DRAW_TEST_F(CGContext, OverlappingCirclesGlobalAlphaStackedWithColorAlp
     _drawThreeCirclesInContext(context, bounds);
 }
 
-DISABLED_DRAW_TEST_F(CGContext, OverlappingCirclesTransparencyLayerAlpha, WhiteBackgroundTest) {
+DISABLED_DRAW_TEST_F(CGContext, OverlappingCirclesTransparencyLayerAlpha, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -600,7 +600,7 @@ DISABLED_DRAW_TEST_F(CGContext, OverlappingCirclesTransparencyLayerAlpha, WhiteB
 // This test proves that the path is stored fully transformed;
 // changing the CTM before stroking it does not cause it to scale!
 // However, the stroke width _is_ scaled (!)
-DISABLED_DRAW_TEST_F(CGContext, ChangeCTMAfterCreatingPath, WhiteBackgroundTest) {
+DISABLED_DRAW_TEST_F(CGContext, ChangeCTMAfterCreatingPath, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 

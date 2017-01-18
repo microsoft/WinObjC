@@ -14,20 +14,11 @@
 //
 //******************************************************************************
 
-#pragma once
-#include <string>
+#import <UIKit/UIKit.h>
 
-enum class DrawingTestMode : int { Generate, Compare };
+@interface AppDelegate : UIResponder <UIApplicationDelegate>
 
-class DrawingTestConfigImpl {
-public:
-    virtual DrawingTestMode GetMode() = 0;
-    virtual std::string GetOutputPath() = 0;
-    virtual std::string GetComparisonPath() = 0;
-    virtual std::string GetResourcePath(const std::string& resource) = 0;
-};
+@property (strong, nonatomic) UIWindow* window;
+@property (strong, nonatomic) UIViewController* viewController;
 
-class DrawingTestConfig {
-public:
-    static DrawingTestConfigImpl* Get();
-};
+@end

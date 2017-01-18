@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -14,20 +15,26 @@
 //
 //******************************************************************************
 
-#pragma once
-#include <string>
+#import <MainViewController.h>
 
-enum class DrawingTestMode : int { Generate, Compare };
+#import "UIKit/UIColor.h"
+#import "UIKit/UIView.h"
 
-class DrawingTestConfigImpl {
-public:
-    virtual DrawingTestMode GetMode() = 0;
-    virtual std::string GetOutputPath() = 0;
-    virtual std::string GetComparisonPath() = 0;
-    virtual std::string GetResourcePath(const std::string& resource) = 0;
-};
+@interface MainViewController ()
 
-class DrawingTestConfig {
-public:
-    static DrawingTestConfigImpl* Get();
-};
+@end
+
+@implementation MainViewController
+
+- (void)viewDidLoad {
+    self.view.backgroundColor = [UIColor lightGrayColor];
+
+    [super viewDidLoad];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+@end

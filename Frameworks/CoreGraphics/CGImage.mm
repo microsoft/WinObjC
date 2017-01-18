@@ -358,10 +358,10 @@ CGDataProviderRef CGImageGetDataProvider(CGImageRef img) {
 
     RETURN_NULL_IF_FAILED(img->ImageSource()->CopyPixels(nullptr, stride, size, buffer.get()));
 
-    woc::unique_cf<CFDataRef> data{ CFDataCreateWithBytesNoCopy(nullptr, buffer.release(), size, kCFAllocatorDefault) };
-    CGDataProviderRef ret = CGDataProviderCreateWithCFData(data.get());
-    CFAutorelease(ret);
-    return ret;
+    CGDataProviderRef dataProvider =
+        CGDataProviderCreateWithData(nullptr, buffer.release(), size, [](void* info, const void* data, size_t size) { IwFree(const_cast<void*>(data)); });
+    CFAutorelease(dataProvider);
+    return dataProvider;
 }
 
 /**
@@ -533,13 +533,8 @@ CGImageRef CGImageCreateWithMask(CGImageRef image, CGImageRef mask) {
     size_t width = CGImageGetWidth(image);
     size_t height = CGImageGetHeight(image);
 
-    woc::unique_cf<CGContextRef> context{ CGBitmapContextCreate(nullptr,
-                                                                width,
-                                                                height,
-                                                                8,
-                                                                width * 4,
-                                                                CGImageGetColorSpace(image),
-                                                                kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Big) };
+    woc::unique_cf<CGContextRef> context{ CGBitmapContextCreate(
+        nullptr, width, height, 8, width * 4, CGImageGetColorSpace(image), kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Big) };
     RETURN_NULL_IF(!context);
 
     CGRect rect{
@@ -809,14 +804,14 @@ static void __InvertMemcpy(void* dest, const void* src, size_t len) {
     uint32_t* d32 = (uint32_t*)dest;
     const uint32_t* s32 = (const uint32_t*)src;
 
-    for(; len >= 4; len -= 4) {
+    for (; len >= 4; len -= 4) {
         *d32++ = ~*s32++;
     }
 
     uint8_t* d8 = (uint8_t*)d32;
     const uint8_t* s8 = (const uint8_t*)s32;
 
-    for(; len > 0; --len) {
+    for (; len > 0; --len) {
         *d8++ = ~*s8++;
     }
 }
@@ -873,9 +868,7 @@ static HRESULT __CGImageMaskConvertToWICAlphaBitmap(CGImageRef image, IWICBitmap
     } else {
         // stride or length (likely both) differ
         uint8_t* destEnd = alpha8Data + alpha8Len;
-        for(uint8_t *src = gray8Data, *dest = alpha8Data;
-            dest < destEnd;
-            src += gray8Stride, dest += alpha8Stride) {
+        for (uint8_t *src = gray8Data, *dest = alpha8Data; dest < destEnd; src += gray8Stride, dest += alpha8Stride) {
             __InvertMemcpy(dest, src, gray8Stride);
         }
     }

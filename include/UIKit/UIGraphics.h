@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
- * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+ * Copyright (c) Microsoft. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,13 +31,10 @@
 #pragma once
 
 #import "UIKitExport.h"
+#import "UIKitTypes.h"
 #import <ApplicationServices/ApplicationServices.h>
 
 @class UIImage;
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 UIKIT_EXPORT void UIGraphicsPushContext(CGContextRef ctx);
 UIKIT_EXPORT void UIGraphicsPopContext(void);
@@ -58,6 +55,4 @@ UIKIT_EXPORT void UIRectFillUsingBlendMode(CGRect rect, CGBlendMode blendMode);
 UIKIT_EXPORT void UIRectFrame(CGRect rect);
 UIKIT_EXPORT void UIRectFrameUsingBlendMode(CGRect rect, CGBlendMode blendMode);
 
-#ifdef __cplusplus
-}
-#endif
+UIKIT_EXPORT CTTextAlignment NSTextAlignmentToCTTextAlignment(NSTextAlignment nsTextAlignment);

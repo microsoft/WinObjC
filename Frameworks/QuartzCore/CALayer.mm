@@ -1412,7 +1412,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 
 - (void)_removeAnimation:(CAAnimation*)animation {
     CAAnimation* objForKey = [priv->_animations objectForKey:animation->_keyName];
-    [priv->_animations setObject:nil forKey:animation->_keyName];
+    [priv->_animations removeObjectForKey:animation->_keyName];
 }
 
 /**

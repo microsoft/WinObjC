@@ -33,6 +33,7 @@
 #include "Windows.UI.Xaml.Markup.h"
 #include "COMIncludes_End.h"
 
+namespace XamlUtilities {
 NSString* const XamlAutoGenNamespace = @"IslandwoodAutoGenNamespace";
 
 WUXMFontFamily* WUXFontFamilyFromUIFontName(NSString* uiFontName);
@@ -82,3 +83,7 @@ UIView* GenerateUIKitControlFromXamlType(RTObject* xamlObject);
 // We need a type-safe way to do this with projections.  This is copied verbatim from the projections
 // code and works perfectly for this limited usage, but we don't do any type validation below.
 id CreateRtProxy(Class cls, IInspectable* iface);
+
+// apply LineBreakMode on xaml TextBock
+void ApplyLineBreakModeOnTextBlock(WXCTextBlock* textBlock, UILineBreakMode mode, int numberOfLines);
+}

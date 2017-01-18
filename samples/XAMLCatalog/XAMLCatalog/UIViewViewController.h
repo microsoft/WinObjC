@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,20 +14,7 @@
 //
 //******************************************************************************
 
-#pragma once
-#include <string>
+#import "MenuTableViewController.h"
 
-enum class DrawingTestMode : int { Generate, Compare };
-
-class DrawingTestConfigImpl {
-public:
-    virtual DrawingTestMode GetMode() = 0;
-    virtual std::string GetOutputPath() = 0;
-    virtual std::string GetComparisonPath() = 0;
-    virtual std::string GetResourcePath(const std::string& resource) = 0;
-};
-
-class DrawingTestConfig {
-public:
-    static DrawingTestConfigImpl* Get();
-};
+@interface UIViewViewController : MenuTableViewController
+@end

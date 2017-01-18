@@ -42,68 +42,6 @@ NSString* const UITextAttributeTextShadowOffset = @"UITextAttributeTextShadowOff
 
 @implementation NSString (UIKitAdditions)
 
-static void drawString(UIFont* font,
-                       CGContextRef context,
-                       NSString* string,
-                       CGRect rect,
-                       UILineBreakMode lineBreakMode,
-                       UITextAlignment alignment,
-                       CGSize* sizeOut) {
-    if (font == nil) {
-        TraceVerbose(TAG, L"drawString: font = nil!");
-        return;
-    }
-
-    if (rect.size.width == 0) {
-        rect.size.width = FLT_MAX;
-    }
-
-    if (rect.size.height == 0) {
-        rect.size.height = FLT_MAX;
-    }
-
-    CTParagraphStyleSetting styles[2];
-    CTTextAlignment align = _NSTextAlignmentToCTTextAlignment(alignment);
-    styles[0] = { kCTParagraphStyleSpecifierAlignment, sizeof(CTTextAlignment), &align };
-
-    CTLineBreakMode breakMode = static_cast<CTLineBreakMode>(lineBreakMode);
-    styles[1] = { kCTParagraphStyleSpecifierLineBreakMode, sizeof(CTLineBreakMode), &breakMode };
-
-    NSAttributedString* attr =
-        [[[NSAttributedString alloc] initWithString:string
-                                         attributes:@{
-                                             (NSString*)kCTForegroundColorFromContextAttributeName : (id)kCFBooleanTrue,
-                                             (NSString*)kCTParagraphStyleAttributeName : (id)CTParagraphStyleCreate(styles, 2),
-                                             (NSString*)kCTFontAttributeName : font
-                                         }] autorelease];
-
-    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(static_cast<CFAttributedStringRef>(attr));
-
-    CGPathRef path = CGPathCreateWithRect(rect, nullptr);
-    CTFrameRef frame = CTFramesetterCreateFrame(framesetter, {}, path, nullptr);
-
-    // Invert text matrix so glyphs are drawn with correct orientation
-    CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0f, -1.0f));
-
-    // Can't draw the entire frame because it assumes our space has been flipped and translated
-    NSArray* lines = static_cast<NSArray*>(CTFrameGetLines(frame));
-    std::vector<CGPoint> origins([lines count]);
-    CTFrameGetLineOrigins(frame, {}, origins.data());
-    for (size_t i = 0; i < origins.size(); ++i) {
-        // Need to set text position so each line will be drawn in the correct position relative to each other
-        CGContextSetTextPosition(context, rect.origin.x + origins[i].x, rect.origin.y + origins[i].y);
-        CTLineDraw(static_cast<CTLineRef>(lines[i]), context);
-    }
-
-    if (sizeOut) {
-        *sizeOut = _CTFrameGetSize(frame);
-    }
-
-    CGPathRelease(path);
-    CFRelease(framesetter);
-    CFRelease(frame);
-}
-
 static NSDictionary* _getDefaultUITextAttributes() {
     static NSDictionary* _defaultUITextAttributes;
     if (_defaultUITextAttributes == nil) {
@@ -114,17 +52,6 @@ static NSDictionary* _getDefaultUITextAttributes() {
     }
 
     return _defaultUITextAttributes;
-}
-
-/**
- @Status Interoperable
-*/
-- (CGSize)drawInRect:(CGRect)rct withFont:(UIFont*)font {
-    CGSize fontExtent;
-
-    drawString(font, UIGraphicsGetCurrentContext(), self, rct, UILineBreakModeWordWrap, UITextAlignmentLeft, &fontExtent);
-
-    return fontExtent;
 }
 
 /**
@@ -161,48 +88,94 @@ static NSDictionary* _getDefaultUITextAttributes() {
 /**
  @Status Interoperable
 */
-- (CGSize)drawInRect:(CGRect)rct withFont:(UIFont*)font lineBreakMode:(UILineBreakMode)lineBreakMode alignment:(UITextAlignment)alignment {
-    CGSize fontExtent;
+- (CGSize)drawInRect:(CGRect)rect withFont:(UIFont*)font {
+    return [self drawInRect:rect withFont:font lineBreakMode:UILineBreakModeWordWrap];
+}
 
-    drawString(font, UIGraphicsGetCurrentContext(), self, rct, lineBreakMode, alignment, &fontExtent);
+/**
+ @Status Caveat
+ @Notes Clipping line break modes unsupported
+*/
+- (CGSize)drawInRect:(CGRect)rect withFont:(UIFont*)font lineBreakMode:(UILineBreakMode)lineBreakMode {
+    return [self drawInRect:rect withFont:font lineBreakMode:lineBreakMode alignment:UITextAlignmentLeft];
+}
 
-    return fontExtent;
+/**
+ @Status Caveat
+ @Notes Clipping line break modes unsupported
+*/
+- (CGSize)drawInRect:(CGRect)rect withFont:(UIFont*)font lineBreakMode:(UILineBreakMode)lineBreakMode alignment:(UITextAlignment)alignment {
+    // 0 Width or Height treated as unlimited bounds
+    if (rect.size.width == 0) {
+        rect.size.width = std::numeric_limits<CGFloat>::max();
+    }
+
+    if (rect.size.height == 0) {
+        rect.size.height = std::numeric_limits<CGFloat>::max();
+    }
+
+    CTParagraphStyleSetting styles[2];
+    CTTextAlignment align = NSTextAlignmentToCTTextAlignment(alignment);
+    styles[0] = { kCTParagraphStyleSpecifierAlignment, sizeof(CTTextAlignment), &align };
+
+    CTLineBreakMode breakMode = static_cast<CTLineBreakMode>(lineBreakMode);
+    styles[1] = { kCTParagraphStyleSpecifierLineBreakMode, sizeof(CTLineBreakMode), &breakMode };
+
+    NSAttributedString* attr = [[[NSAttributedString alloc]
+        initWithString:self
+            attributes:@{
+                (NSString*)kCTForegroundColorFromContextAttributeName : (id)kCFBooleanTrue,
+                (NSString*)kCTParagraphStyleAttributeName : (id)CTParagraphStyleCreate(styles, std::extent<decltype(styles)>::value),
+                (NSString*)kCTFontAttributeName : (font ? font : [UIFont defaultFont])
+            }] autorelease];
+
+    woc::unique_cf<CTFramesetterRef> framesetter{ CTFramesetterCreateWithAttributedString(static_cast<CFAttributedStringRef>(attr)) };
+    if (framesetter == nil) {
+        return CGSizeZero;
+    }
+
+    woc::unique_cf<CGPathRef> path{ CGPathCreateWithRect(rect, nullptr) };
+    if (path == nil) {
+        return CGSizeZero;
+    }
+
+    woc::unique_cf<CTFrameRef> frame{ CTFramesetterCreateFrame(framesetter.get(), {}, path.get(), nullptr) };
+    if (frame == nil) {
+        return CGSizeZero;
+    }
+
+    CGContextRef context = UIGraphicsGetCurrentContext();
+
+    // Invert text matrix so glyphs are drawn with correct orientation
+    CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0f, -1.0f));
+
+    // Can't draw the entire frame because it assumes our space has been flipped and translated
+    NSArray* lines = static_cast<NSArray*>(CTFrameGetLines(frame.get()));
+    if ([lines count] != 0) {
+        std::vector<CGPoint> origins([lines count]);
+        CTFrameGetLineOrigins(frame.get(), {}, origins.data());
+        for (size_t i = 0; i < origins.size(); ++i) {
+            // Need to set text position so each line will be drawn in the correct position relative to each other
+            CGContextSetTextPosition(context, rect.origin.x + origins[i].x, rect.origin.y + origins[i].y);
+            CTLineDraw(static_cast<CTLineRef>(lines[i]), context);
+        }
+    }
+
+    return _CTFrameGetSize(frame.get());
 }
 
 /**
  @Status Interoperable
 */
-- (CGSize)drawInRect:(CGRect)rct withFont:(UIFont*)font lineBreakMode:(UILineBreakMode)lineBreakMode {
-    CGSize fontExtent;
-
-    drawString(font, UIGraphicsGetCurrentContext(), self, rct, lineBreakMode, UITextAlignmentLeft, &fontExtent);
-
-    return fontExtent;
-}
-
-/**
- @Status Interoperable
-*/
-- (CGSize)drawAtPoint:(CGPoint)pt withFont:(UIFont*)font {
-    CGSize fontExtent;
-
-    CGRect rct;
-
-    rct.origin.x = pt.x;
-    rct.origin.y = pt.y;
-    rct.size.width = 0;
-    rct.size.height = 0;
-
-    drawString(font, UIGraphicsGetCurrentContext(), self, rct, UILineBreakModeClip, UITextAlignmentLeft, &fontExtent);
-
-    return fontExtent;
+- (CGSize)drawAtPoint:(CGPoint)point withFont:(UIFont*)font {
+    return [self drawAtPoint:point forWidth:0 withFont:font];
 }
 
 /**
  @Status Caveat
  @Notes Currently UITextAttributeTextShadowColor and UITextAttributeTextShadowOffset will be ignored.
 */
-- (void)drawAtPoint:(CGPoint)pt withAttributes:(NSDictionary*)attrs {
+- (void)drawAtPoint:(CGPoint)point withAttributes:(NSDictionary*)attrs {
     if (attrs == nil) {
         attrs = _getDefaultUITextAttributes();
     }
@@ -225,73 +198,43 @@ static NSDictionary* _getDefaultUITextAttributes() {
 
     UIFont* uiFont = [attrs valueForKey:UITextAttributeFont];
     if (uiFont != nil) {
-        [self drawAtPoint:pt withFont:uiFont];
+        [self drawAtPoint:point withFont:uiFont];
     }
 }
 
-- (CGSize)drawAtPoint:(CGPoint)pt forWidth:(float)forWidth withFont:(UIFont*)font {
-    CGSize fontExtent;
-
-    CGRect rct;
-
-    rct.origin.x = pt.x;
-    rct.origin.y = pt.y;
-    rct.size.width = forWidth;
-    rct.size.height = 0;
-
-    drawString(font, UIGraphicsGetCurrentContext(), self, rct, UILineBreakModeClip, UITextAlignmentLeft, &fontExtent);
-
-    return fontExtent;
+- (CGSize)drawAtPoint:(CGPoint)point forWidth:(float)width withFont:(UIFont*)font {
+    return [self drawInRect:{ point, CGSizeMake(width, 0) } withFont:font lineBreakMode:UILineBreakModeClip];
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes parameter baselineAdjustment and minFontSize are ignored as text is drawn at given text size
 */
-- (CGSize)drawAtPoint:(CGPoint)pt
-              forWidth:(float)forWidth
+- (CGSize)drawAtPoint:(CGPoint)point
+              forWidth:(float)width
               withFont:(UIFont*)font
            minFontSize:(float)minFontSize
         actualFontSize:(float*)actualFontSize
          lineBreakMode:(UILineBreakMode)lineBreak
     baselineAdjustment:(UIBaselineAdjustment)baseline {
-    CGSize fontExtent;
-    CGRect rct;
-
-    rct.origin.x = pt.x;
-    rct.origin.y = pt.y;
-    rct.size.width = forWidth;
-    rct.size.height = 0;
-
-    drawString(font, UIGraphicsGetCurrentContext(), self, rct, UILineBreakModeClip, UITextAlignmentLeft, &fontExtent);
     if (actualFontSize) {
         *actualFontSize = 10.0f;
     }
-
-    return fontExtent;
+    return [self drawInRect:{ point, CGSizeMake(width, 0) } withFont:font lineBreakMode:lineBreak];
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes parameter baselineAdjustment is ignored
 */
-- (CGSize)drawAtPoint:(CGPoint)pt
-              forWidth:(float)forWidth
+- (CGSize)drawAtPoint:(CGPoint)point
+              forWidth:(float)width
               withFont:(UIFont*)font
               fontSize:(float)fontSize
          lineBreakMode:(UILineBreakMode)lineBreak
     baselineAdjustment:(UIBaselineAdjustment)baseline {
-    CGSize fontExtent;
-    CGRect rct;
-
-    rct.origin.x = pt.x;
-    rct.origin.y = pt.y;
-    rct.size.width = forWidth;
-    rct.size.height = 0;
-
     font = [font fontWithSize:fontSize];
-
-    drawString(font, UIGraphicsGetCurrentContext(), self, rct, UILineBreakModeClip, UITextAlignmentLeft, &fontExtent);
-
-    return fontExtent;
+    return [self drawInRect:{ point, CGSizeMake(width, 0) } withFont:font lineBreakMode:lineBreak];
 }
 
 // Private helper for sizeWith... functions

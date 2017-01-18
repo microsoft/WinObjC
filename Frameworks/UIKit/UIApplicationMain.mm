@@ -145,6 +145,25 @@ int UIApplicationMainInit(NSString* principalClassName,
     NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
     UIApplication* uiApplication;
 
+    // Register fonts listed in app's Info.plist, from the app's bundle
+    // This needs to happen before [UIApplication new]/[objc_getClass(pClassName) new] below,
+    // as they may attempt to use fonts from the app's bundle
+    if (infoDict) {
+        NSArray* fonts = [infoDict objectForKey:@"UIAppFonts"];
+        if (fonts != nil) {
+            NSMutableArray* fontURLs = [NSMutableArray array];
+            for (NSString* curFontName in fonts) {
+                // curFontName contains extension, so pass in nil
+                NSURL* url = [[NSBundle mainBundle] URLForResource:curFontName withExtension:nil];
+                if (url != nil) {
+                    [fontURLs addObject:url];
+                }
+            }
+
+            CTFontManagerRegisterFontsForURLs((CFArrayRef)fontURLs, kCTFontManagerScopeNone, nil);
+        }
+    }
+
     if (principalClassName == nil) {
         principalClassName = [infoDict objectForKey:@"NSPrincipalClass"];
     }
@@ -168,21 +187,7 @@ int UIApplicationMainInit(NSString* principalClassName,
     [uiApplication setDelegate:delegateApp];
     idretain rootController(nil);
 
-    if (infoDict != nil) {
-        NSArray* fonts = [infoDict objectForKey:@"UIAppFonts"];
-        if (fonts != nil) {
-            NSMutableArray* fontURLs = [NSMutableArray array];
-            for (NSString* curFontName in fonts) {
-                // curFontName contains extension, so pass in nil
-                NSURL* url = [[NSBundle mainBundle] URLForResource:curFontName withExtension:nil];
-                if (url != nil) {
-                    [fontURLs addObject:url];
-                }
-            }
-
-            CTFontManagerRegisterFontsForURLs((CFArrayRef)fontURLs, kCTFontManagerScopeNone, nil);
-        }
-
+    if (infoDict) {
         if (defaultOrientation != UIInterfaceOrientationUnknown) {
             [uiApplication setStatusBarOrientation:defaultOrientation];
             [uiApplication _setInternalOrientation:defaultOrientation];

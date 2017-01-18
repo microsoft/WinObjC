@@ -155,6 +155,15 @@ static void _initUIWebView(UIWebView* self) {
             }
         }];
 
+    // Add handler which will be invoked when user calls window.external.notify(msg) function in javascript
+    [self->_xamlWebControl addScriptNotifyEvent:^void(RTObject* sender, WXCNotifyEventArgs* e) {
+        // Send event to webView delegate
+        NSURL* url = [NSURL URLWithString:e.callingUri.absoluteUri];
+        if ([weakSelf->_delegate respondsToSelector:@selector(webView:scriptNotify:value:)]) {
+            [weakSelf->_delegate webView:weakSelf scriptNotify:url value:e.value];
+        }
+    }];
+
     CGRect bounds;
     bounds = [self bounds];
 
@@ -244,7 +253,7 @@ static void _initUIWebView(UIWebView* self) {
 }
 
 /**
- @Status Gap
+ @Status Stub
 */
 - (NSString*)stringByEvaluatingJavaScriptFromString:(NSString*)string {
     UNIMPLEMENTED_WITH_MSG(

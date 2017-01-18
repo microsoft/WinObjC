@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -29,7 +29,7 @@
     <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <Keyword>IslandwoodProj</Keyword>
-    <ProjectGuid>{B1031B85-9024-407A-8D76-107825391494}</ProjectGuid>
+    <ProjectGuid>{A2D70D6C-657B-4071-83FC-5425BA8164B3}</ProjectGuid>
     <RootNamespace>XAMLCatalog</RootNamespace>
     <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">..\..\..\..</WINOBJC_SDK_ROOT>
   </PropertyGroup>
@@ -198,8 +198,10 @@
     <ClInclude Include="..\..\XAMLCatalog\UIActionSheetViewController.h" />
     <ClInclude Include="..\..\XAMLCatalog\UIActivityIndicatorViewController.h" />
     <ClInclude Include="..\..\XAMLCatalog\UIButtonViewController.h" />
+    <ClInclude Include="..\..\XAMLCatalog\UILabelViewController.h" />
     <ClInclude Include="..\..\XAMLCatalog\UISliderViewController.h" />
     <ClInclude Include="..\..\XAMLCatalog\UITextFieldViewController.h" />
+    <ClInclude Include="..\..\XAMLCatalog\UIViewViewController.h" />
     <ClangCompile Include="..\..\XAMLCatalog\AppDelegate.m" />
     <ClangCompile Include="..\..\XAMLCatalog\CustomTextControlViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\MenuTableViewController.m" />
@@ -209,8 +211,10 @@
     <ClangCompile Include="..\..\XAMLCatalog\UIActionSheetViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UIActivityIndicatorViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UIButtonViewController.m" />
+    <ClangCompile Include="..\..\XAMLCatalog\UILabelViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UISliderViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UITextFieldViewController.m" />
+    <ClangCompile Include="..\..\XAMLCatalog\UIViewViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\main.m" />
     <SBInfoPlistCopy Include="..\..\XAMLCatalog\Info.plist">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Debug'">false</ExcludedFromBuild>
