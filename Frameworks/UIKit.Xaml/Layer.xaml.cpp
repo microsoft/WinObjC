@@ -122,3 +122,15 @@ UIKIT_XAML_EXPORT void XamlSetFrameworkElementLayerProperties(
         frameworkElement->SetValue(UIKit::Xaml::Private::CoreAnimation::Layer::SublayerCanvasProperty, sublayerCanvas);
     }
 }
+
+// Get the layerContentProperty for the specified target xaml element
+UIKIT_XAML_EXPORT IInspectable* XamlGetFrameworkElementLayerContentProperty(const Microsoft::WRL::ComPtr<IInspectable>& targetElement) {
+    auto frameworkElement = safe_cast<FrameworkElement^>(reinterpret_cast<Object^>(targetElement.Get()));
+    return InspectableFromObject(frameworkElement->GetValue(UIKit::Xaml::Private::CoreAnimation::Layer::LayerContentProperty)).Detach();
+}
+
+// Get the sublayerCanvasProperty for the specified target xaml element
+UIKIT_XAML_EXPORT IInspectable* XamlGetFrameworkElementSublayerCanvasProperty(const Microsoft::WRL::ComPtr<IInspectable>& targetElement) {
+    auto frameworkElement = safe_cast<FrameworkElement^>(reinterpret_cast<Object^>(targetElement.Get()));
+    return InspectableFromObject(frameworkElement->GetValue(UIKit::Xaml::Private::CoreAnimation::Layer::SublayerCanvasProperty)).Detach();
+}
