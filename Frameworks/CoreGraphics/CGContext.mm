@@ -406,10 +406,8 @@ CFTypeID CGContextGetTypeID() {
 #pragma region Global State - Lifetime
 static HRESULT __CGContextPrepareDefaults(CGContextRef context) {
     // Reference platform defaults:
-    // * Fill  : fully transparent black
-    // * Stroke: fully opaque black
-    // If a context does not support alpha, the default fill looks like fully opaque black.
-    CGContextSetRGBFillColor(context, 0, 0, 0, 0);
+    // * All colors are fully opaque black.
+    CGContextSetRGBFillColor(context, 0, 0, 0, 1);
     CGContextSetRGBStrokeColor(context, 0, 0, 0, 1);
     return S_OK;
 }
