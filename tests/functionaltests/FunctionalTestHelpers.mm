@@ -25,13 +25,13 @@
 #import <UWP/WindowsApplicationModel.h>
 
 // This is a method that UIKit exposes for the test frameworks to use.
-extern "C" void UIApplicationInitialize(const wchar_t*, const wchar_t*);
+extern "C" void UIApplicationInitializeFunctionalTest(const wchar_t*, const wchar_t*);
 
 // Launches the functional test app
 bool FunctionalTestSetupUIApplication() {
     RunSynchronouslyOnMainThread(^{
         // The name of our default 'AppDelegate' class
-        UIApplicationInitialize(nullptr, Strings::NarrowToWide<std::wstring>(NSStringFromClass([AppDelegate class])).c_str());
+        UIApplicationInitializeFunctionalTest(nullptr, Strings::NarrowToWide<std::wstring>(NSStringFromClass([AppDelegate class])).c_str());
     });
 
     return true;
