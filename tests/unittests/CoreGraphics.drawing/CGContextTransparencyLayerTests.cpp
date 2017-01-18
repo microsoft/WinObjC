@@ -27,7 +27,7 @@ static void _strokeTwoCirclesInContext(CGContextRef context, CGRect bounds) {
     }
 }
 
-DISABLED_DRAW_TEST_F(CGContextTransparencyLayer, IsShadowedAllAtOnce, WhiteBackgroundTest) {
+DISABLED_DRAW_TEST_F(CGContextTransparencyLayer, IsShadowedAllAtOnce, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -52,7 +52,7 @@ DISABLED_DRAW_TEST_F(CGContextTransparencyLayer, IsShadowedAllAtOnce, WhiteBackg
     CGContextEndTransparencyLayer(context);
 }
 
-DISABLED_DRAW_TEST_F(CGContextTransparencyLayer, StacksInnerAndOuterShadow, WhiteBackgroundTest) {
+DISABLED_DRAW_TEST_F(CGContextTransparencyLayer, StacksInnerAndOuterShadow, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -70,7 +70,7 @@ DISABLED_DRAW_TEST_F(CGContextTransparencyLayer, StacksInnerAndOuterShadow, Whit
     CGContextEndTransparencyLayer(context);
 }
 
-DRAW_TEST_F(CGContextTransparencyLayer, FloodFill_GlobalAlpha0_5f, WhiteBackgroundTest) {
+DRAW_TEST_F(CGContextTransparencyLayer, FloodFill_GlobalAlpha0_5f, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -84,7 +84,7 @@ DRAW_TEST_F(CGContextTransparencyLayer, FloodFill_GlobalAlpha0_5f, WhiteBackgrou
     CGContextEndTransparencyLayer(context);
 }
 
-DISABLED_DRAW_TEST_F(CGContextTransparencyLayer, DrawCircles_GlobalAlpha0_5f, WhiteBackgroundTest) {
+DISABLED_DRAW_TEST_F(CGContextTransparencyLayer, DrawCircles_GlobalAlpha0_5f, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -100,7 +100,7 @@ DISABLED_DRAW_TEST_F(CGContextTransparencyLayer, DrawCircles_GlobalAlpha0_5f, Wh
     CGContextEndTransparencyLayer(context);
 }
 
-DRAW_TEST_F(CGContextTransparencyLayer, ZeroGlobalAlpha, WhiteBackgroundTest) {
+DRAW_TEST_F(CGContextTransparencyLayer, ZeroGlobalAlpha, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -116,7 +116,7 @@ DRAW_TEST_F(CGContextTransparencyLayer, ZeroGlobalAlpha, WhiteBackgroundTest) {
     CGContextEndTransparencyLayer(context);
 }
 
-DISABLED_DRAW_TEST_F(CGContextTransparencyLayer, BoundedLayerDrawingCircles, WhiteBackgroundTest) {
+DISABLED_DRAW_TEST_F(CGContextTransparencyLayer, BoundedLayerDrawingCircles, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -133,7 +133,7 @@ DISABLED_DRAW_TEST_F(CGContextTransparencyLayer, BoundedLayerDrawingCircles, Whi
     CGContextEndTransparencyLayer(context);
 }
 
-DRAW_TEST_F(CGContextTransparencyLayer, BoundedLayerFloodFill, WhiteBackgroundTest) {
+DRAW_TEST_F(CGContextTransparencyLayer, BoundedLayerFloodFill, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -149,7 +149,7 @@ DRAW_TEST_F(CGContextTransparencyLayer, BoundedLayerFloodFill, WhiteBackgroundTe
 }
 
 // The shadow should extend beyond the bounds of the layer content, even if it is clipped.
-DISABLED_DRAW_TEST_F(CGContextTransparencyLayer, BoundedLayerFloodFillShadow, WhiteBackgroundTest) {
+DISABLED_DRAW_TEST_F(CGContextTransparencyLayer, BoundedLayerFloodFillShadow, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -166,7 +166,7 @@ DISABLED_DRAW_TEST_F(CGContextTransparencyLayer, BoundedLayerFloodFillShadow, Wh
     CGContextEndTransparencyLayer(context);
 }
 
-DISABLED_DRAW_TEST_F(CGContextTransparencyLayer, BoundedLayerFloodFill_GlobalTransform, WhiteBackgroundTest) {
+DISABLED_DRAW_TEST_F(CGContextTransparencyLayer, BoundedLayerFloodFill_GlobalTransform, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -184,7 +184,7 @@ DISABLED_DRAW_TEST_F(CGContextTransparencyLayer, BoundedLayerFloodFill_GlobalTra
 }
 
 // The shadow should extend beyond the bounds of the layer content, even if it is clipped.
-DISABLED_DRAW_TEST_F(CGContextTransparencyLayer, BoundedLayerDrawingCircles_GlobalTransform, WhiteBackgroundTest) {
+DISABLED_DRAW_TEST_F(CGContextTransparencyLayer, BoundedLayerDrawingCircles_GlobalTransform, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -205,7 +205,7 @@ DISABLED_DRAW_TEST_F(CGContextTransparencyLayer, BoundedLayerDrawingCircles_Glob
     CGContextEndTransparencyLayer(context);
 }
 
-DRAW_TEST_F(CGContextTransparencyLayer, BoundedLayerFloodFill_GlobalClip, WhiteBackgroundTest) {
+DRAW_TEST_F(CGContextTransparencyLayer, BoundedLayerFloodFill_GlobalClip, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 

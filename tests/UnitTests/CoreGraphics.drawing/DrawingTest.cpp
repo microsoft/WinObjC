@@ -25,19 +25,6 @@
 static const CGSize g_defaultCanvasSize{ 512.f, 256.f };
 
 template <typename TComparator>
-woc::unique_cf<CGColorSpaceRef> testing::DrawTest<TComparator>::s_deviceColorSpace;
-
-template <typename TComparator>
-void testing::DrawTest<TComparator>::SetUpTestCase() {
-    s_deviceColorSpace.reset(CGColorSpaceCreateDeviceRGB());
-}
-
-template <typename TComparator>
-void testing::DrawTest<TComparator>::TearDownTestCase() {
-    s_deviceColorSpace.release();
-}
-
-template <typename TComparator>
 CGSize testing::DrawTest<TComparator>::CanvasSize() {
     return g_defaultCanvasSize;
 }
@@ -46,8 +33,9 @@ template <typename TComparator>
 void testing::DrawTest<TComparator>::SetUp() {
     CGSize size = CanvasSize();
 
+    auto deviceColorSpace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
     _context.reset(CGBitmapContextCreate(
-        nullptr, size.width, size.height, 8, size.width * 4, s_deviceColorSpace.get(), kCGImageAlphaPremultipliedFirst));
+        nullptr, size.width, size.height, 8, size.width * 4, deviceColorSpace, kCGImageAlphaPremultipliedFirst));
     ASSERT_NE(nullptr, _context);
 
     _bounds = { CGPointZero, size };

@@ -31,13 +31,7 @@ private:
     woc::unique_cf<CGContextRef> _context;
     CGRect _bounds;
 
-protected:
-    static woc::unique_cf<CGColorSpaceRef> s_deviceColorSpace;
-
 public:
-    static void SetUpTestCase();
-    static void TearDownTestCase();
-
     virtual CFStringRef CreateAdditionalTestDescription();
     virtual CFStringRef CreateOutputFilename();
     virtual CGSize CanvasSize();

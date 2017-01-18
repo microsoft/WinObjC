@@ -115,7 +115,7 @@ void __GradientMaskGenerator(CGContextRef context, CGSize size, ClippingType cli
     }
 }
 
-class CGContextClipping : public ::testing::DrawTest,
+class CGContextClipping : public ::testing::DrawTest<>,
                           public ::testing::WithParamInterface<::testing::tuple<ClippingShape, ClippingType, CGSize>> {
 private:
     static std::vector<std::tuple<ClippingShape, CGSize, std::function<void(CGContextRef, CGSize, ClippingType)>>> s_maskGenerators;
