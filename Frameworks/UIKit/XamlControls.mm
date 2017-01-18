@@ -73,7 +73,7 @@ NSString* XamlContentDialogButtonTitleAtIndex(WXCContentDialog* contentDialog, u
     ComPtr<IInspectable> inspectable([contentDialog comObj]);
 
     ComPtr<IInspectable> inspPropVal(XamlContentDialogButtonTitleAtIndex(inspectable, buttonIndex));
-    return NSStringFromPropertyValue(inspPropVal);
+    return XamlUtilities::NSStringFromPropertyValue(inspPropVal);
 }
 
 unsigned int XamlContentDialogNumberOfButtons(WXCContentDialog* contentDialog) {

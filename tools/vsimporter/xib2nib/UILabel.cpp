@@ -29,15 +29,8 @@ static void WriteLayoutWidth(struct _PropertyMapper* prop, NIBWriter* writer, XI
 }
 
 static PropertyMapper propertyMappings[] = {
-    "IBUIShadowColor",
-    "UIShadowColor",
-    NULL,
-    "IBUILineBreakMode",
-    "UILineBreakMode",
-    NULL,
-    "preferredMaxLayoutWidth",
-    "UIPreferredMaxLayoutWidth",
-    WriteLayoutWidth,
+    "IBUIShadowColor",           "UIShadowColor",  NULL, "IBUILineBreakMode", "UILineBreakMode", NULL, "preferredMaxLayoutWidth",
+    "UIPreferredMaxLayoutWidth", WriteLayoutWidth,
 };
 static const int numPropertyMappings = sizeof(propertyMappings) / sizeof(PropertyMapper);
 
@@ -51,6 +44,9 @@ UILabel::UILabel() {
     _adjustsFontSizeToFit = false;
     _minimumFontSize = -1.0f;
     _font = NULL;
+
+    // default line break mode is tailTrucation
+    _lineBreakMode = 4;
 }
 
 void UILabel::InitFromXIB(XIBObject* obj) {
@@ -69,6 +65,9 @@ void UILabel::InitFromXIB(XIBObject* obj) {
 
     _textAlignment = obj->GetInt("IBUITextAlignment", 0);
     _numberOfLines = obj->GetInt("IBUINumberOfLines", 1);
+
+    // default line break mode is tailTrucation
+    _lineBreakMode = obj->GetInt("IBUILineBreakMode", 4);
     _font = (UIFont*)obj->FindMember("IBUIFontDescription");
     if (!_font)
         _font = (UIFont*)obj->FindMember("IBUIFont");
@@ -94,20 +93,48 @@ void UILabel::InitFromStory(XIBObject* obj) {
         _numberOfLines = atoi(getAttrAndHandle("numberOfLines"));
     }
 
-    if (getAttrib("textAlignment")) {
-        const char* pAlign = getAttrib("textAlignment");
+    const char* lineBreakModeAttributeString = "lineBreakMode";
+    const char* lineBreakModeAttributeValue = getAttrib(lineBreakModeAttributeString);
+    if (lineBreakModeAttributeValue) {
+        if (strcmp(lineBreakModeAttributeValue, "wordWrap") == 0) {
+            _lineBreakMode = 0;
+            getAttrAndHandle(lineBreakModeAttributeString);
+        } else if (strcmp(lineBreakModeAttributeValue, "characterWrap") == 0) {
+            _lineBreakMode = 1;
+            getAttrAndHandle(lineBreakModeAttributeString);
+        } else if (strcmp(lineBreakModeAttributeValue, "clip") == 0) {
+            _lineBreakMode = 2;
+            getAttrAndHandle(lineBreakModeAttributeString);
+        } else if (strcmp(lineBreakModeAttributeValue, "headTruncation") == 0) {
+            _lineBreakMode = 3;
+            getAttrAndHandle(lineBreakModeAttributeString);
+        } else if (strcmp(lineBreakModeAttributeValue, "tailTruncation") == 0) {
+            _lineBreakMode = 4;
+            getAttrAndHandle(lineBreakModeAttributeString);
+        } else if (strcmp(lineBreakModeAttributeValue, "middleTruncation") == 0) {
+            _lineBreakMode = 5;
+            getAttrAndHandle(lineBreakModeAttributeString);
+        } else {
+            printf("invalid linebreak value %s, using default (tailTruncation) \n", lineBreakModeAttributeValue);
+        }
+    }
 
-        if (strcmp(pAlign, "left") == 0) {
+    const char* textAlignmentAttributeString = "textAlignment";
+    const char* textAlignmentAttributeValue = getAttrAndHandle(textAlignmentAttributeString);
+    if (textAlignmentAttributeValue) {
+        if (strcmp(textAlignmentAttributeValue, "left") == 0) {
             _textAlignment = 0;
-            getAttrAndHandle("textAlignment");
+            getAttrAndHandle(textAlignmentAttributeString);
 
-        } else if (strcmp(pAlign, "center") == 0) {
+        } else if (strcmp(textAlignmentAttributeValue, "center") == 0) {
             _textAlignment = 1;
-            getAttrAndHandle("textAlignment");
+            getAttrAndHandle(textAlignmentAttributeString);
 
-        } else if (strcmp(pAlign, "right") == 0) {
+        } else if (strcmp(textAlignmentAttributeValue, "right") == 0) {
             _textAlignment = 2;
-            getAttrAndHandle("textAlignment");
+            getAttrAndHandle(textAlignmentAttributeString);
+        } else {
+            printf("invalid textAligment value %s, using default (left)\n", textAlignmentAttributeValue);
         }
     }
 
@@ -151,6 +178,10 @@ void UILabel::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
 
     if (_numberOfLines != 1) {
         AddInt(writer, "UINumberOfLines", _numberOfLines);
+    }
+
+    if (_lineBreakMode != 4) {
+        AddInt(writer, "UILineBreakMode", _lineBreakMode);
     }
 
     if (_baselineAdjustment != 0) {

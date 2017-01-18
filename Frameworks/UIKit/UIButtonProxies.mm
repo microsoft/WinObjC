@@ -169,11 +169,11 @@ static const wchar_t* tag = L"UIButtonProxies";
 }
 
 - (void)setTextAlignment:(UITextAlignment)alignment {
-    _xamlTextBlock.textAlignment = ConvertUITextAlignmentToWXTextAlignment(alignment);
+    _xamlTextBlock.textAlignment = XamlUtilities::ConvertUITextAlignmentToWXTextAlignment(alignment);
 }
 
 - (UITextAlignment)textAlignment {
-    return ConvertWXTextAlignmentToUITextAlignment(_xamlTextBlock.textAlignment);
+    return XamlUtilities::ConvertWXTextAlignmentToUITextAlignment(_xamlTextBlock.textAlignment);
 }
 
 - (void)setText:(NSString*)text {
@@ -235,37 +235,7 @@ static const wchar_t* tag = L"UIButtonProxies";
 }
 
 - (void)setLineBreakMode:(UILineBreakMode)mode {
-    switch (mode) {
-        case UILineBreakModeWordWrap:
-            _xamlTextBlock.textTrimming = WXTextTrimmingNone;
-            _xamlTextBlock.textWrapping = WXTextWrappingWrapWholeWords;
-            break;
-
-        case UILineBreakModeCharacterWrap:
-            _xamlTextBlock.textTrimming = WXTextTrimmingNone;
-            _xamlTextBlock.textWrapping = WXTextWrappingWrap;
-            break;
-
-        case UILineBreakModeClip:
-            _xamlTextBlock.textWrapping = WXTextWrappingNoWrap;
-            _xamlTextBlock.textTrimming = WXTextTrimmingClip;
-            break;
-
-        case UILineBreakModeHeadTruncation:
-            // GAP: currently textblock don't support UILineBreakModeHeadTruncation
-            UNIMPLEMENTED_WITH_MSG("UILineBreakModeHeadTruncation unsupported");
-            break;
-
-        case UILineBreakModeMiddleTruncation:
-            // GAP currently textblock don't support UILineBreakModeMiddleTruncation
-            UNIMPLEMENTED_WITH_MSG("UILineBreakModeMiddleTruncation unsupported");
-            break;
-
-        case UILineBreakModeTailTruncation:
-            _xamlTextBlock.textWrapping = WXTextWrappingNoWrap;
-            _xamlTextBlock.textTrimming = WXTextTrimmingCharacterEllipsis;
-            break;
-    }
+    XamlUtilities::ApplyLineBreakModeOnTextBlock(_xamlTextBlock, mode, self.numberOfLines);
 }
 
 - (UILineBreakMode)lineBreakMode {

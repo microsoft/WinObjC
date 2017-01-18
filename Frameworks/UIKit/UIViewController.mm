@@ -795,8 +795,8 @@ NSMutableDictionary* _pageMappings;
         }
 
         // Load the XAML version if found. First prepend the auto-generated XAML namespace to the XAML class name
-        NSString* xamlClassName = [NSString stringWithFormat:@"%@.%@", XamlAutoGenNamespace, strNib];
-        auto xamlType = ReturnXamlType(xamlClassName);
+        NSString* xamlClassName = [NSString stringWithFormat:@"%@.%@", XamlUtilities::XamlAutoGenNamespace, strNib];
+        auto xamlType = XamlUtilities::ReturnXamlType(xamlClassName);
         if (xamlType.Get() != nullptr) {
             priv->_xamlClassName = xamlClassName;
         }
@@ -1178,12 +1178,13 @@ NSMutableDictionary* _pageMappings;
     }
 
     if (visibleParent->priv->_visibility != controllerVisible) {
-        TraceWarning(TAG,
-                     L"Presenting view controller %08x (%hs) on view controller %08x (%hs) which is not yet fully visible - continuing anyway.",
-                     controller,
-                     object_getClassName(controller),
-                     visibleParent,
-                     object_getClassName(visibleParent));
+        TraceWarning(
+            TAG,
+            L"Presenting view controller %08x (%hs) on view controller %08x (%hs) which is not yet fully visible - continuing anyway.",
+            controller,
+            object_getClassName(controller),
+            visibleParent,
+            object_getClassName(visibleParent));
     }
 
     if (visibleParent != self) {
@@ -1207,7 +1208,8 @@ NSMutableDictionary* _pageMappings;
     controller->priv->_presentingViewController = self;
 
     if ([controller modalPresentationStyle] == UIModalPresentationPopover) {
-        controller->priv->_popoverPresentationController.attach([[UIPopoverPresentationController alloc] initWithPresentedViewController:controller presentingViewController:self]);
+        controller->priv->_popoverPresentationController.attach(
+            [[UIPopoverPresentationController alloc] initWithPresentedViewController:controller presentingViewController:self]);
 
         dispatch_block_t popoverPresent = ^{
             [[UIApplication sharedApplication] endIgnoringInteractionEvents];
@@ -1226,7 +1228,9 @@ NSMutableDictionary* _pageMappings;
         dispatch_async(dispatch_get_main_queue(), ^{
             // Dispatch the presentation asynchronously so users have the opportunity to configure the
             // popoverPresentationController after presentViewController but before the actual popover is presented.
-            [controller->priv->_popoverPresentationController _presentAnimated:animated presentCompletion:popoverPresent dismissCompletion:popoverDismiss];
+            [controller->priv->_popoverPresentationController _presentAnimated:animated
+                                                             presentCompletion:popoverPresent
+                                                             dismissCompletion:popoverDismiss];
         });
     } else {
         controller->priv->_presentCompletionBlock.attach([completion copy]);
@@ -1282,7 +1286,8 @@ NSMutableDictionary* _pageMappings;
 */
 - (void)dismissViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion {
     if (!priv->_presentedViewController) {
-        // Calling dismiss on a view controller that hasn't presented additional view controllers itself should result in the parent handling the dismissal.
+        // Calling dismiss on a view controller that hasn't presented additional view controllers itself should result in the parent
+        // handling the dismissal.
 
         if ([self parentViewController]) {
             [[self parentViewController] dismissViewControllerAnimated:animated completion:completion];
@@ -1305,23 +1310,24 @@ NSMutableDictionary* _pageMappings;
 
         // Dismiss the youngest first with specified animation
         __unsafe_unretained __block UIViewController* parent = [grandChild parentViewController];
-        [parent dismissViewControllerAnimated:animated completion:^{
-            // Dismiss the remaining with no animation
-            do {
-                parent = [parent parentViewController];
-                // We rely on dismissViewControllerAnimated:NO blocking until child dismissal
-                [parent dismissViewControllerAnimated:NO completion:nil];
-            } while (parent != self);
+        [parent dismissViewControllerAnimated:animated
+                                   completion:^{
+                                       // Dismiss the remaining with no animation
+                                       do {
+                                           parent = [parent parentViewController];
+                                           // We rely on dismissViewControllerAnimated:NO blocking until child dismissal
+                                           [parent dismissViewControllerAnimated:NO completion:nil];
+                                       } while (parent != self);
 
-            if (completion) {
-                completion();
-            }
-        }];
+                                       if (completion) {
+                                           completion();
+                                       }
+                                   }];
 
         return;
     }
 
-    __block __unsafe_unretained UIViewController *weakSelf = self;
+    __block __unsafe_unretained UIViewController* weakSelf = self;
     dispatch_block_t cleanupCompletion = ^{
         StrongId<UIViewController> strongSelf = weakSelf;
         [strongSelf _childDismissCleanup];
@@ -1418,7 +1424,6 @@ NSMutableDictionary* _pageMappings;
 }
 
 - (void)_addToTop:(NSNumber*)animatedValue {
-
     if (![self parentViewController]) {
         TraceError(TAG, L"Modal controller doesn't have a parent!");
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
@@ -1853,7 +1858,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
 
     // Activate an instance of the XAML class and its page
     Microsoft::WRL::ComPtr<IInspectable> pageObj = nullptr;
-    auto xamlType = ReturnXamlType(priv->_xamlClassName);
+    auto xamlType = XamlUtilities::ReturnXamlType(priv->_xamlClassName);
     xamlType->ActivateInstance(pageObj.GetAddressOf());
     [_pageMappings setObject:self forKey:(id)(void*)pageObj.Get()];
 
@@ -1874,7 +1879,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
         if (propName) {
             NSString* propNameString = [NSString stringWithCString:propName];
             RTObject* obj = [priv->_page findName:propNameString];
-            UIView* control = GenerateUIKitControlFromXamlType(obj);
+            UIView* control = XamlUtilities::GenerateUIKitControlFromXamlType(obj);
             if (control != nil) {
                 [self setValue:control forKey:propNameString];
             }
@@ -2142,7 +2147,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     NSString* controllerName = nil;
     UIStoryboardSegueTemplate* segueTemplate = nil;
 
-    for (UIStoryboardSegueTemplate* cur in(NSArray*)priv->_modalTemplates) {
+    for (UIStoryboardSegueTemplate* cur in (NSArray*)priv->_modalTemplates) {
         if ([[cur identifier] isEqualToString:identifier]) {
             controllerName = [cur destination];
             segueTemplate = cur;
@@ -2173,7 +2178,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     NSString* controllerName = nil;
     UIStoryboardSegueTemplate* segueTemplate = nil;
 
-    for (UIStoryboardSegueTemplate* cur in(NSArray*)priv->_modalTemplates) {
+    for (UIStoryboardSegueTemplate* cur in (NSArray*)priv->_modalTemplates) {
         if ([[cur destination] isEqualToString:destination]) {
             controllerName = [cur destination];
             segueTemplate = cur;
@@ -2321,7 +2326,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
 
     //  Remove us from being the parent of our child view controller.
     //  Should we call controller->removeFromParentViewController instead?
-    for (UIViewController* curController in(NSArray*)priv->_childViewControllers) {
+    for (UIViewController* curController in (NSArray*)priv->_childViewControllers) {
         curController->priv->_parentViewController = nil;
     }
 

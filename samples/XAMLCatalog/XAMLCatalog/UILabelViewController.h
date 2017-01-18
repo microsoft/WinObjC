@@ -13,34 +13,9 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
-#include "UIView.h"
 
-class UIColor;
-class UIFont;
+#import "MenuTableViewController.h"
 
-class UILabel :
-    public UIView
-{
-private:
-    CGSize _shadowOffset;
-    const char *_text;
-    UIColor *_textColor, *_highlightedColor;
-    UIFont *_font;
-    int _textAlignment;
-    int _numberOfLines;
-    bool _adjustsFontSizeToFit;
-    float _minimumFontSize;
-    int _baselineAdjustment;
-    int _lineBreakMode;
-
-public:
-    UILabel();
-
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
-    ObjectConverter *Clone();
-};
-
+@interface UILabelViewController : MenuTableViewController
+@end
