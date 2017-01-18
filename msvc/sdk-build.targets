@@ -46,6 +46,9 @@
       <_ImportLibraryFileNames Include="@(Link -> '%(ImportLibrary)')">
       </_ImportLibraryFileNames>
 
+      <_WinMDFileNames Include="@(Link -> '%(WindowsMetadataFile)')">
+      </_WinMDFileNames>
+
       <PackageFile Include="@(_IncludeFiles)" Condition="Exists('%(FullPath)')">
         <PackagePath>build\include\$(MSBuildProjectName)\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
       </PackageFile>
@@ -58,7 +61,7 @@
         <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
       </PackageFile>
 
-      <PackageFile Include="@(WinMDFullPath)" Condition="'@(WinMDFullPath)' != ''">
+      <PackageFile Include="@(_WinMDFileNames->Distinct())" Condition="Exists('%(FullPath)')">
         <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
       </PackageFile>
     </ItemGroup>
