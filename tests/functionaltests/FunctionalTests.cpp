@@ -28,14 +28,6 @@ MODULE_PROPERTY(L"UAP:Host", L"Xaml")
 MODULE_PROPERTY(L"UAP:AppXManifest", L"Default.AppxManifest.xml")
 END_MODULE()
 
-// This is a method that UIKit exposes for the test frameworks to use.
-extern "C" void UIApplicationInitialize(const wchar_t*, const wchar_t*);
-
-static void UIApplicationDefaultInitialize() {
-    // Pass null to indicate default app and app delegate classes
-    UIApplicationInitialize(nullptr, nullptr);
-}
-
 //
 // How is functional test organized?
 //
@@ -100,7 +92,7 @@ public:
     //     2. Use the same mechanism as in TEST_METHOD below to export a method from the WinObjC test file and call it here.
     //     3. If you do not need this functionality feel free to remove this for your test class.
     TEST_CLASS_SETUP(SampleTestClassSetup) {
-        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+        return FunctionalTestSetupUIApplication();
     }
 
     // SampleTest test class cleanup.
@@ -109,7 +101,7 @@ public:
     //     2. Use the same mechanism as in TEST_METHOD below to export a method from the WinObjC test file and call it here.
     //     3. If you do not need this functionality feel free to remove this for your test class.
     TEST_CLASS_CLEANUP(SampleTestClassCleanup) {
-        return true;
+        return FunctionalTestCleanupUIApplication();
     }
 
     // SampleTest test method setup.
@@ -181,11 +173,11 @@ public:
     END_TEST_CLASS()
 
     TEST_CLASS_SETUP(NSURLClassSetup) {
-        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+        return FunctionalTestSetupUIApplication();
     }
 
-    TEST_METHOD_CLEANUP(NSURLCleanup) {
-        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
+    TEST_CLASS_CLEANUP(NSURLClassCleanup) {
+        return FunctionalTestCleanupUIApplication();
     }
 
     //
@@ -268,12 +260,12 @@ public:
     BEGIN_TEST_CLASS(NSUserDefaults)
     END_TEST_CLASS()
 
-    TEST_CLASS_SETUP(NSURLClassSetup) {
-        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+    TEST_CLASS_SETUP(NSUserDefaultsClassSetup) {
+        return FunctionalTestSetupUIApplication();
     }
 
-    TEST_METHOD_CLEANUP(NSUserDefaultsCleanup) {
-        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
+    TEST_CLASS_CLEANUP(NSUserDefaultsClassCleanup) {
+        return FunctionalTestCleanupUIApplication();
     }
 
     TEST_METHOD(NSUserDefaults_Basic) {
@@ -304,12 +296,12 @@ public:
     BEGIN_TEST_CLASS(NSBundle)
     END_TEST_CLASS()
 
-    TEST_CLASS_SETUP(NSURLClassSetup) {
-        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+    TEST_CLASS_SETUP(NSBundleClassSetup) {
+        return FunctionalTestSetupUIApplication();
     }
 
-    TEST_METHOD_CLEANUP(NSBundleCleanup) {
-        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
+    TEST_CLASS_CLEANUP(NSBundleClassCleanup) {
+        return FunctionalTestCleanupUIApplication();
     }
 
     TEST_METHOD(NSBundle_MSAppxURL) {
@@ -330,15 +322,14 @@ public:
 
     TEST_CLASS_SETUP(AssetsLibraryClassSetup) {
         bool success = AssetsLibraryTestVideoSetup("AssetsLibraryTestVideo.mp4");
-        return (success & SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize)));
+        success &= FunctionalTestSetupUIApplication();
+        return success;
     }
 
     TEST_CLASS_CLEANUP(AssetsLibraryClassCleanup) {
-        return AssetsLibraryTestVideoCleanup("AssetsLibraryTestVideo.mp4");
-    }
-
-    TEST_METHOD_CLEANUP(AssetsLibraryCleanup) {
-        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
+        bool success = AssetsLibraryTestVideoCleanup("AssetsLibraryTestVideo.mp4");
+        success &= FunctionalTestCleanupUIApplication();
+        return success;
     }
 
     TEST_METHOD(AssetsLibrary_GetVideoAsset) {
@@ -362,8 +353,8 @@ public:
         return SUCCEEDED(FrameworkHelper::RunOnUIThread(&CortanaTestVoiceCommandForegroundActivation));
     }
 
-    TEST_METHOD_CLEANUP(CortanaVoiceCommandForegroundCleanup) {
-        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
+    TEST_CLASS_CLEANUP(CortanaVoiceCommandForegroundTestClassCleanup) {
+        return FunctionalTestCleanupUIApplication();
     }
 
     TEST_METHOD(Cortana_VoiceCommandForegroundActivationDelegateMethodsCalled) {
@@ -384,8 +375,8 @@ public:
         return SUCCEEDED(FrameworkHelper::RunOnUIThread(&CortanaTestProtocolForegroundActivation));
     }
 
-    TEST_METHOD_CLEANUP(CortanaProtocolForegroundCleanup) {
-        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
+    TEST_CLASS_CLEANUP(CortanaProtocolForegroundTestClassCleanup) {
+        return FunctionalTestCleanupUIApplication();
     }
 
     TEST_METHOD(Cortana_ProtocolForegroundActivationDelegateMethodsCalled) {
@@ -405,8 +396,8 @@ class ToastNotificationForegroundActivation {
         return SUCCEEDED(FrameworkHelper::RunOnUIThread(&ToastNotificationTestForegroundActivation));
     }
 
-    TEST_METHOD_CLEANUP(ToastNotificationForegroundCleanup) {
-        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
+    TEST_CLASS_CLEANUP(ToastNotificationForegroundTestClassCleanup) {
+        return FunctionalTestCleanupUIApplication();
     }
 
     TEST_METHOD(ToastNotification_ForegroundActivationDelegateMethodsCalled) {
@@ -422,11 +413,11 @@ class ActivatedAppReceivesToastNotification {
 
     TEST_CLASS_SETUP(ActivatedAppReceivesToastNotificationTestClassSetup) {
         // The class setup allows us to activate the app in our test method, but can only be done once per class
-        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+        return FunctionalTestSetupUIApplication();
     }
 
-    TEST_METHOD_CLEANUP(ActivatedAppReceivesToastNotificationCleanup) {
-        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
+    TEST_CLASS_CLEANUP(ActivatedAppReceivesToastNotificationTestClassCleanup) {
+        return FunctionalTestCleanupUIApplication();
     }
 
     TEST_METHOD(ToastNotification_ActivatedAppReceivesToastNotification) {
@@ -451,8 +442,8 @@ public:
         return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FileActivatedTestForegroundActivation));
     }
 
-    TEST_METHOD_CLEANUP(FileActivationForegroundActivationCleanup) {
-        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
+    TEST_CLASS_CLEANUP(FileActivationForegroundActivationClassCleanup) {
+        return FunctionalTestCleanupUIApplication();
     }
 
     TEST_METHOD(FileActivation_TestForegroundActivationDelegateMethodsCalled) {
@@ -510,12 +501,12 @@ public:
     BEGIN_TEST_CLASS(UIKitTests)
     END_TEST_CLASS()
 
-    TEST_CLASS_SETUP(UIKitTestsSetup) {
-        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+    TEST_CLASS_SETUP(UIKitTestsClassSetup) {
+        return FunctionalTestSetupUIApplication();
     }
 
-    TEST_METHOD_CLEANUP(UIKitTestsCleanup) {
-        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
+    TEST_CLASS_CLEANUP(UIKitTestsClassCleanup) {
+        return FunctionalTestCleanupUIApplication();
     }
 
     TEST_METHOD(UIView_Create) {
@@ -683,11 +674,11 @@ public:
     END_TEST_CLASS()
 
     TEST_CLASS_SETUP(ProjectionTestClassSetup) {
-        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+        return FunctionalTestSetupUIApplication();
     }
 
-    TEST_METHOD_CLEANUP(ProjectionTestCleanup) {
-        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
+    TEST_CLASS_CLEANUP(ProjectionTestClassCleanup) {
+        return FunctionalTestCleanupUIApplication();
     }
 
     TEST_METHOD(ProjectionTest_WUCCoreDispatcherSanity) {
@@ -730,8 +721,12 @@ public:
     BEGIN_TEST_CLASS(UIApplicationTests)
     END_TEST_CLASS()
 
-    TEST_CLASS_SETUP(UIApplicationTestsSetup) {
-        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+    TEST_CLASS_SETUP(UIApplicationTestsClassSetup) {
+        return FunctionalTestSetupUIApplication();
+    }
+
+    TEST_CLASS_CLEANUP(UIApplicationTestsClassCleanup) {
+        return FunctionalTestCleanupUIApplication();
     }
 
     TEST_METHOD(UIApplicationTests_OpenURL) {
@@ -749,12 +744,12 @@ public:
     BEGIN_TEST_CLASS(NSURLStorageFileTests)
     END_TEST_CLASS()
 
-    TEST_CLASS_SETUP(NSURLStorageFileTestsSetup) {
-        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+    TEST_CLASS_SETUP(NSURLStorageFileTestsClassSetup) {
+        return FunctionalTestSetupUIApplication();
     }
 
-    TEST_METHOD_CLEANUP(NSURLStorageFileTestsCleanup) {
-        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
+    TEST_CLASS_CLEANUP(NSURLStorageFileTestsClassCleanup) {
+        return FunctionalTestCleanupUIApplication();
     }
 
     TEST_METHOD(NSURLTests_StorageFileURL) {
@@ -773,12 +768,12 @@ public:
     BEGIN_TEST_CLASS(CoreAnimationTests)
     END_TEST_CLASS()
 
-    TEST_CLASS_SETUP(CoreAnimationTestsSetup) {
-        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationDefaultInitialize));
+    TEST_CLASS_SETUP(CoreAnimationTestsClassSetup) {
+        return FunctionalTestSetupUIApplication();
     }
 
-    TEST_METHOD_CLEANUP(CoreAnimationTestsCleanup) {
-        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&FunctionalTestCleanupUIApplication));
+    TEST_CLASS_CLEANUP(CoreAnimationTestsClassCleanup) {
+        return FunctionalTestCleanupUIApplication();
     }
 
     TEST_METHOD(CALayerAppearance_OpacityChanged) {

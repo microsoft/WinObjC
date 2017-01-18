@@ -1,5 +1,6 @@
-﻿//******************************************************************************
+//******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -13,14 +14,27 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
 
-#include "targetver.h"
+#import <MainViewController.h>
 
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
+#import "UIKit/UIColor.h"
+#import "UIKit/UIView.h"
 
-#include <windows.h>
+@interface MainViewController ()
 
-#include <string>
+@end
+
+@implementation MainViewController
+
+- (void)viewDidLoad {
+    self.view.backgroundColor = [UIColor lightGrayColor];
+
+    [super viewDidLoad];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+@end

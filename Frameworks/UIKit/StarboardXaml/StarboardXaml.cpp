@@ -353,7 +353,7 @@ int UIApplicationMain(int argc, char* argv[], void* principalClassName, void* de
 }
 
 // This is the initialization function for non-Islandwood apps that intend to call into Islandwood:
-// test executables and general WinRT apps that want to call Islandwood libraries
+// general WinRT apps that want to call Islandwood libraries
 UIKIT_EXPORT
 void UIApplicationInitialize(const wchar_t* principalClassName, const wchar_t* delegateClassName) {
     // Register tracelogging
@@ -372,6 +372,28 @@ void UIApplicationInitialize(const wchar_t* principalClassName, const wchar_t* d
     }
 
     _ApplicationLaunch(ActivationTypeLibrary, nullptr);
+}
+
+// This is the initialization function for functional tests
+UIKIT_EXPORT
+void UIApplicationInitializeFunctionalTest(const wchar_t* principalClassName, const wchar_t* delegateClassName) {
+    // Register tracelogging
+    TraceRegister();
+
+    if (principalClassName != nullptr) {
+        g_principalClassName = ref new Platform::String(principalClassName);
+    } else {
+        g_principalClassName = ref new Platform::String();
+    }
+
+    if (delegateClassName != nullptr) {
+        g_delegateClassName = ref new Platform::String(delegateClassName);
+    } else {
+        g_delegateClassName = ref new Platform::String();
+    }
+
+    // Perform a default app launch
+    _ApplicationLaunch(ActivationTypeNone, nullptr);
 }
 
 // Note: Like UIApplicationMain, delegateClassName is actually an NSString*.

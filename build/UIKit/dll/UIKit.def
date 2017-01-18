@@ -3,6 +3,7 @@ LIBRARY UIKit
         ; Application entry points (StarboardXAML)
         UIApplicationMain
         UIApplicationInitialize
+        UIApplicationInitializeFunctionalTest
         UIApplicationActivationTest
         UIApplicationLaunched
         UIApplicationActivated

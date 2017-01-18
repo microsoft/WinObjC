@@ -17,6 +17,7 @@
 #pragma once
 
 #import "LinkedList.h"
+#import <Starboard/SmartTypes.h>
 #import <UIKit/NSLayoutAnchor.h>
 #import <UIKit/NSLayoutXAxisAnchor.h>
 #import <UIKit/NSLayoutYAxisAnchor.h>

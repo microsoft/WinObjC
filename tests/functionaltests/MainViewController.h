@@ -1,4 +1,4 @@
-﻿//******************************************************************************
+//******************************************************************************
 //
 // Copyright (c) Microsoft. All rights reserved.
 //
@@ -13,14 +13,9 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
 
-#include "targetver.h"
+#import "UIKit/UIViewController.h"
 
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
+@interface MainViewController : UIViewController
 
-#include <windows.h>
-
-#include <string>
+@end

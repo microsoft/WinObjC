@@ -1,4 +1,4 @@
-﻿//******************************************************************************
+//******************************************************************************
 //
 // Copyright (c) Microsoft. All rights reserved.
 //
@@ -13,14 +13,12 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
 
-#include "targetver.h"
+#import <UIKit/UIKit.h>
 
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
+@interface AppDelegate : UIResponder <UIApplicationDelegate>
 
-#include <windows.h>
+@property (strong, nonatomic) UIWindow* window;
+@property (strong, nonatomic) UIViewController* viewController;
 
-#include <string>
+@end
