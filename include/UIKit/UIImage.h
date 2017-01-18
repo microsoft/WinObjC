@@ -127,7 +127,7 @@ UIKIT_EXPORT BOOL UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(NSString* videoP
 
 // both of these use .CGImage to generate the image data - note what this means
 // for multi-scale images!
-UIKIT_EXPORT NSData* UIImageJPEGRepresentation(UIImage* image, CGFloat compressionQuality) STUB_METHOD;
-UIKIT_EXPORT NSData* UIImagePNGRepresentation(UIImage* image) STUB_METHOD;
+UIKIT_EXPORT NSData* UIImageJPEGRepresentation(UIImage* image, CGFloat compressionQuality);
+UIKIT_EXPORT NSData* UIImagePNGRepresentation(UIImage* image);
 
 void UIImageSetLayerContents(CALayer* layer, UIImage* image);
