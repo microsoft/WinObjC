@@ -446,7 +446,6 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
     GLKTextureInfoAlphaState as;
     if (!getBitmapFormat(fmt, type, as, bpp)) {
         CGImageRelease(img);
-        CGDataProviderRelease(provider);
         return nil;
     }
 
@@ -504,7 +503,6 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
         delete[] bytes;
     }
     CGImageRelease(img);
-    CGDataProviderRelease(provider);
     return [[GLKTextureInfo alloc] initWith:tex target:GL_TEXTURE_2D width:w height:sideh alphaState:as];
 }
 
