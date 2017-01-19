@@ -19,6 +19,8 @@
 #include <COMIncludes.h>
 #include <windows.foundation.h>
 #include <windows.foundation.collections.h>
+#include <wrl.h>
+#include <wrl/async.h>
 #include <wrl/client.h>
 #include <wrl/event.h>
 #include <wrl/implements.h>
