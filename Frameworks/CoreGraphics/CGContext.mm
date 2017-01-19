@@ -2070,6 +2070,8 @@ void CGContextShowGlyphsWithAdvances(CGContextRef context, const CGGlyph* glyphs
 /**
  @Status Caveat
  @Notes only supports the scenario where clipping is not set.
+ Also only works on untransformed coordinates.
+ The cleared region will be cleared in device space.
 */
 void CGContextClearRect(CGContextRef context, CGRect rect) {
     NOISY_RETURN_IF_NULL(context);
