@@ -28,7 +28,6 @@
 class LayerProxy : public ILayerProxy, public std::enable_shared_from_this<LayerProxy> {
 public:
     explicit LayerProxy(IInspectable* xamlElement);
-    ~LayerProxy();
 
     // ILayerProxy
     Microsoft::WRL::ComPtr<IInspectable> GetXamlElement() override;
@@ -68,8 +67,7 @@ private:
     float _GetPresentationPropertyValue(const char* name);
 
     bool _isRoot;
-    // TODO: weak_ptr or reference??
-    LayerProxy* _parent;
+    std::weak_ptr<LayerProxy> _parent;
     std::set<std::shared_ptr<LayerProxy>> _subLayers;
     std::shared_ptr<IDisplayTexture> _currentTexture;
     bool _topMost;

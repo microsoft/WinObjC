@@ -19,11 +19,13 @@
 #import "UIActionSheetViewController.h"
 #import "UIActivityIndicatorViewController.h"
 #import "UIButtonViewController.h"
+#import "UILabelViewController.h"
 #import "UISliderViewController.h"
 #import "UITextFieldViewController.h"
 #import "UIViewViewController.h"
 #import "CustomTextControlViewController.h"
 #import "MiscellaneousViewController.h"
+
 
 @implementation ProgrammaticViewController
 
@@ -38,6 +40,9 @@
 
     // UIButton
     [self addMenuItemViewController:[[UIButtonViewController alloc] init] andTitle:@"UIButton"];
+
+    // UILabel
+    [self addMenuItemViewController:[[UILabelViewController alloc] init] andTitle : @"UILabel"];
 
     // UISlider
     [self addMenuItemViewController:[[UISliderViewController alloc] init] andTitle:@"UISlider"];

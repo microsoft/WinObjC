@@ -294,7 +294,7 @@ static const int s_InvalidButtonIndex = -1;
  @Status Interoperable
 */
 - (NSString*)title {
-    return NSStringFromPropertyValue(_contentDialog.title);
+    return XamlUtilities::NSStringFromPropertyValue(_contentDialog.title);
 }
 
 /**

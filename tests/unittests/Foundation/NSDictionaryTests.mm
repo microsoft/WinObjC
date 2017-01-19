@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -50,11 +50,11 @@ TEST(NSDictionary, Enumerate) {
 
 TEST(NSDictionary, KeysSortedByValueUsingComparator) {
     NSDictionary* testDict = @{ @"A" : @2, @"B" : @4, @"C" : @3, @"D" : @1 };
-    NSArray* actualArray = [testDict keysSortedByValueUsingComparator: ^(id obj1, id obj2) {
+    NSArray* actualArray = [testDict keysSortedByValueUsingComparator:^(id obj1, id obj2) {
         return [obj1 compare:obj2];
     }];
 
-    NSArray* expectedArray = @[@"D", @"A", @"C", @"B" ];
+    NSArray* expectedArray = @[ @"D", @"A", @"C", @"B" ];
     ASSERT_OBJCEQ(expectedArray, actualArray);
 }
 
@@ -70,8 +70,8 @@ TEST(NSDictionary, ExpandBeyondCapacity) {
 }
 
 TEST(NSDictionary, KeysSortedByValue) {
-    NSDictionary* dictionary = @{@"f" : @6, @"b": @2, @"a" : @1, @"c" : @3, @"e" : @5, @"d" : @4};
-    NSArray* expected = @[@"a", @"b", @"c", @"d", @"e", @"f"];
+    NSDictionary* dictionary = @{ @"f" : @6, @"b" : @2, @"a" : @1, @"c" : @3, @"e" : @5, @"d" : @4 };
+    NSArray* expected = @[ @"a", @"b", @"c", @"d", @"e", @"f" ];
     NSArray* actual = [dictionary keysSortedByValueUsingComparator:^NSComparisonResult(id obj1, id obj2) {
         int a = [obj1 intValue];
         int b = [obj2 intValue];
@@ -86,33 +86,42 @@ TEST(NSDictionary, KeysSortedByValue) {
 }
 
 TEST(NSDictionary, KeysSortedByValueWithOptions) {
-    NSDictionary* dictionary = @{@"f" : @6, @"b": @2, @"a" : @1, @"c" : @3, @"e" : @5, @"d" : @4};
-    NSArray* expected = @[@"a", @"b", @"c", @"d", @"e", @"f"];
-    NSArray* actual = [dictionary keysSortedByValueWithOptions:0 usingComparator:^NSComparisonResult(id obj1, id obj2) {
-        int a = [obj1 intValue];
-        int b = [obj2 intValue];
-        if (a == b) {
-            return NSOrderedSame;
-        }
+    NSDictionary* dictionary = @{ @"f" : @6, @"b" : @2, @"a" : @1, @"c" : @3, @"e" : @5, @"d" : @4 };
+    NSArray* expected = @[ @"a", @"b", @"c", @"d", @"e", @"f" ];
+    NSArray* actual = [dictionary keysSortedByValueWithOptions:0
+                                               usingComparator:^NSComparisonResult(id obj1, id obj2) {
+                                                   int a = [obj1 intValue];
+                                                   int b = [obj2 intValue];
+                                                   if (a == b) {
+                                                       return NSOrderedSame;
+                                                   }
 
-        return (a > b) ? NSOrderedDescending : NSOrderedAscending;
-    }];
+                                                   return (a > b) ? NSOrderedDescending : NSOrderedAscending;
+                                               }];
 
     ASSERT_OBJCEQ(expected, actual);
 }
 
 TEST(NSDictionary, KeysSortedByValueWithOptions_Stable) {
-    NSDictionary* dictionary = @{@"a" : @1, @"b": @1, @"c" : @1, @"d" : @1, @"e" : @1, @"f" : @0};
-    NSArray* expected = @[@"f", @"d", @"b", @"e", @"c", @"a"]; // Note: ordering after "f" is dependent on CFDictionary (this ordering matches the reference platform)
-    NSArray* actual = [dictionary keysSortedByValueWithOptions:NSSortStable usingComparator:^NSComparisonResult(id obj1, id obj2) {
-        int a = [obj1 intValue];
-        int b = [obj2 intValue];
-        if (a == b) {
-            return NSOrderedSame;
-        }
+    NSDictionary* dictionary = @{ @"a" : @1, @"b" : @1, @"c" : @1, @"d" : @1, @"e" : @1, @"f" : @0 };
+    NSArray* expected = @[
+        @"f",
+        @"d",
+        @"b",
+        @"e",
+        @"c",
+        @"a"
+    ]; // Note: ordering after "f" is dependent on CFDictionary (this ordering matches the reference platform)
+    NSArray* actual = [dictionary keysSortedByValueWithOptions:NSSortStable
+                                               usingComparator:^NSComparisonResult(id obj1, id obj2) {
+                                                   int a = [obj1 intValue];
+                                                   int b = [obj2 intValue];
+                                                   if (a == b) {
+                                                       return NSOrderedSame;
+                                                   }
 
-        return (a > b) ? NSOrderedDescending : NSOrderedAscending;
-    }];
+                                                   return (a > b) ? NSOrderedDescending : NSOrderedAscending;
+                                               }];
 
     ASSERT_OBJCEQ(expected, actual);
 }
@@ -129,4 +138,24 @@ TEST(NSDictionary, MutableInstanceArchivesAsMutable) {
     EXPECT_NO_THROW([output setObject:@"morld" forKey:@"yello"]);
 
     EXPECT_OBJCNE(input, output);
+}
+
+TEST(NSMutableDictionary, InsertingNilForKeyedSubscriptShouldRemoveValue) {
+    NSMutableDictionary* dict = [NSMutableDictionary dictionaryWithObject:@"world" forKey:@"hello"];
+    [dict setObject:nil forKeyedSubscript:@"hello"];
+    EXPECT_EQ(nil, dict[@"hello"]);
+    EXPECT_EQ(0, [dict count]);
+}
+
+TEST(NSMutableDictionary, InsertingNilWithSubscriptingShouldRemoveValue) {
+    NSMutableDictionary* dict = [NSMutableDictionary dictionaryWithObject:@"world" forKey:@"hello"];
+    dict[@"hello"] = nil;
+    EXPECT_EQ(nil, dict[@"hello"]);
+    EXPECT_EQ(0, [dict count]);
+}
+
+TEST(NSMutableDictionary, SetObjectWithNilShouldThrow) {
+    NSMutableDictionary* dict = [NSMutableDictionary dictionaryWithObject:@"world" forKey:@"hello"];
+    EXPECT_ANY_THROW([dict setObject:nil forKey:@"fail"]);
+    EXPECT_OBJCEQ(@"world", dict[@"hello"]);
 }

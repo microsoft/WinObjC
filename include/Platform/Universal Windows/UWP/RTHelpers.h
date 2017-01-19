@@ -411,7 +411,6 @@ template <typename WRLContainerT, typename KeyEnumeratorAdapterTypeT, typename B
 struct DictionaryAdapterObj : DictionaryAdapter {
     BaseTypeT implObj;
     ComPtr<IInspectable> comObj;
-    RTProxiedNSDictionaryKeyEnumerator* indirectKeyEnumerator;
 
 #if defined(__cplusplus)
     ComPtr<IInspectable> getInternalComObj() {
@@ -421,9 +420,6 @@ struct DictionaryAdapterObj : DictionaryAdapter {
 
     DictionaryAdapterObj(IInspectable* container) {
         comObj = container;
-        indirectKeyEnumerator =
-            [[RTProxiedNSDictionaryKeyEnumerator alloc] initWithMap:comObj.Get()
-                                                            adapter:std::move(std::make_unique<KeyEnumeratorAdapterTypeT>())];
     }
 
     id objectForKey(id key) {
@@ -431,7 +427,8 @@ struct DictionaryAdapterObj : DictionaryAdapter {
     }
 
     id keyEnumerator() {
-        return AUTORELEASE(RETAIN(indirectKeyEnumerator));
+        return AUTORELEASE([[RTProxiedNSDictionaryKeyEnumerator alloc] initWithMap:comObj.Get()
+                                                                           adapter:std::move(std::make_unique<KeyEnumeratorAdapterTypeT>())]);
     }
 
     unsigned int count() {
@@ -449,17 +446,12 @@ struct DictionaryAdapterObj : DictionaryAdapter {
     NSArray* allValues() {
         return implObj.allValues(comObj);
     }
-
-    ~DictionaryAdapterObj() {
-        RELEASE(indirectKeyEnumerator);
-    }
 };
 
 template <typename WRLContainerT, typename KeyEnumeratorAdapterTypeT, typename BaseTypeT>
 struct MutableDictionaryAdapterObj : MutableDictionaryAdapter {
     BaseTypeT implObj;
     ComPtr<IInspectable> comObj;
-    RTProxiedNSDictionaryKeyEnumerator* indirectKeyEnumerator;
 
 #if defined(__cplusplus)
     ComPtr<IInspectable> getInternalComObj() {
@@ -469,9 +461,6 @@ struct MutableDictionaryAdapterObj : MutableDictionaryAdapter {
 
     MutableDictionaryAdapterObj(IInspectable* container) {
         comObj = container;
-        indirectKeyEnumerator =
-            [[RTProxiedNSDictionaryKeyEnumerator alloc] initWithMap:comObj.Get()
-                                                            adapter:std::move(std::make_unique<KeyEnumeratorAdapterTypeT>())];
     }
 
     id objectForKey(id key) {
@@ -479,7 +468,8 @@ struct MutableDictionaryAdapterObj : MutableDictionaryAdapter {
     }
 
     id keyEnumerator() {
-        return AUTORELEASE(RETAIN(indirectKeyEnumerator));
+        return AUTORELEASE([[RTProxiedNSDictionaryKeyEnumerator alloc] initWithMap:comObj.Get()
+                                                                           adapter:std::move(std::make_unique<KeyEnumeratorAdapterTypeT>())]);
     }
 
     unsigned int count() {
@@ -526,10 +516,6 @@ struct MutableDictionaryAdapterObj : MutableDictionaryAdapter {
         implObj.clear(comObj);
         implObj.addAll(comObj, otherDict);
     }
-
-    ~MutableDictionaryAdapterObj() {
-        RELEASE(indirectKeyEnumerator);
-    }
 };
 
 template <typename WRLContainerT, typename KeyEnumeratorAdapterTypeT, typename BaseTypeT>
@@ -546,9 +532,6 @@ struct ObservableDictionaryAdapterObj : ObservableDictionaryAdapter {
 
     ObservableDictionaryAdapterObj(IInspectable* container) {
         comObj = container;
-        indirectKeyEnumerator =
-            [[RTProxiedNSDictionaryKeyEnumerator alloc] initWithMap:comObj.Get()
-                                                            adapter:std::move(std::make_unique<KeyEnumeratorAdapterTypeT>())];
     }
 
     id objectForKey(id key) {
@@ -556,7 +539,8 @@ struct ObservableDictionaryAdapterObj : ObservableDictionaryAdapter {
     }
 
     id keyEnumerator() {
-        return AUTORELEASE(RETAIN(indirectKeyEnumerator));
+        return AUTORELEASE([[RTProxiedNSDictionaryKeyEnumerator alloc] initWithMap:comObj.Get()
+                                                                           adapter:std::move(std::make_unique<KeyEnumeratorAdapterTypeT>())]);
     }
 
     unsigned int count() {
@@ -610,10 +594,6 @@ struct ObservableDictionaryAdapterObj : ObservableDictionaryAdapter {
 
     void unregisterSelf() {
         implObj.unregisterSelf(comObj);
-    }
-
-    ~ObservableDictionaryAdapterObj() {
-        RELEASE(indirectKeyEnumerator);
     }
 };
 

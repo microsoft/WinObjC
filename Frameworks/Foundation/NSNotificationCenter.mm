@@ -223,7 +223,7 @@ static NSMutableArray* arrayForObservers(NSNotificationCenter* self, NSString* k
     }
 
     if (CFArrayGetCount((CFArrayRef)arr) == 0) {
-        [observers setObject:nil forKey:name];
+        [observers removeObjectForKey:name];
     }
 }
 

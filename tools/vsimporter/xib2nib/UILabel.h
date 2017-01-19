@@ -33,6 +33,7 @@ private:
     bool _adjustsFontSizeToFit;
     float _minimumFontSize;
     int _baselineAdjustment;
+    int _lineBreakMode;
 
 public:
     UILabel();

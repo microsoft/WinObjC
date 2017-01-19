@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -142,4 +142,10 @@ TEST(NSSet, MutableInstanceArchivesAsMutable) {
     EXPECT_NO_THROW([output addObject:@"world"]);
 
     EXPECT_OBJCNE(input, output);
+}
+
+TEST(NSMutableSet, ShouldThrowWhenTryingToInsertNil) {
+    NSMutableSet* set = [NSMutableSet set];
+    EXPECT_ANY_THROW([set addObject:nil]);
+    EXPECT_EQ(0, [set count]);
 }

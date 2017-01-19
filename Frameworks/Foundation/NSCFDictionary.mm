@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -112,6 +112,9 @@ BRIDGED_MUTABLE_CLASS_FOR_CODER(CFDictionaryRef, _CFDictionaryIsMutable, NSDicti
 
 - (void)setObject:(id)object forKey:(id)key {
     BRIDGED_THROW_IF_IMMUTABLE(_CFDictionaryIsMutable, CFDictionaryRef);
+    NS_COLLECTION_THROW_IF_NULL_REASON(object,
+                                       [NSString
+                                           stringWithFormat:@"*** %@ object cannot be nil (key: %@)", NSStringFromSelector(_cmd), key]);
     CFDictionarySetValue((CFMutableDictionaryRef)self, (const void*)key, (void*)object);
 }
 
