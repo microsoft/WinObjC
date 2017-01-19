@@ -2076,10 +2076,10 @@ void CGContextClearRect(CGContextRef context, CGRect rect) {
     ComPtr<ID2D1DeviceContext> deviceContext = context->DeviceContext();
     if (!context->CurrentGState().clippingGeometry) {
         deviceContext->BeginDraw();
-        deviceContext->PushAxisAlignedClip(__CGRectToD2D_F(rect), D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
+		deviceContext->PushAxisAlignedClip(__CGRectToD2D_F(rect), D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
         deviceContext->Clear(nullptr); // transparent black clear
         deviceContext->PopAxisAlignedClip();
-        deviceContext->EndDraw();
+		deviceContext->EndDraw();
     }
 }
 
