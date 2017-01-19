@@ -376,6 +376,7 @@ public:
     };
 
     HRESULT STDMETHODCALLTYPE GetCurrentTransform(_In_opt_ void* clientDrawingContext, _Out_ DWRITE_MATRIX* transform) throw() {
+        *transform = {1, 0, 0, 1, 0, 0};
         return S_OK;
     };
 
