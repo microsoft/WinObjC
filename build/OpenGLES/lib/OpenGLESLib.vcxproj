@@ -161,4 +161,7 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\ANGLE.WindowsStore.2.1.13\build\native\ANGLE.WindowsStore.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\ANGLE.WindowsStore.2.1.13\build\native\ANGLE.WindowsStore.targets'))" />
   </Target>
+  <ItemGroup>
+    <None Include="Project.json" />
+  </ItemGroup>
 </Project>
