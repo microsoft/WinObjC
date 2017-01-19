@@ -333,7 +333,6 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
     GLint fmt, type;
     GLKTextureInfoAlphaState as;
     if (!getBitmapFormat(fmt, type, as, bpp)) {
-        CGDataProviderRelease(provider);
         return nil;
     }
 
@@ -384,7 +383,6 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
     if (deleteBytes) {
         delete[] bytes;
     }
-    CGDataProviderRelease(provider);
 
     return [[GLKTextureInfo alloc] initWith:tex target:GL_TEXTURE_2D width:w height:h alphaState:as];
 }
@@ -567,7 +565,6 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
         if (w != h || rowSize != expectedRowSize) {
             NSTraceWarning(TAG, @"WARNING - Image %@ (%dx%d) - is in an invalid format.", fn, w, h);
             curSide++;
-            CGDataProviderRelease(provider);
             CGImageRelease(img);
             continue;
         }
@@ -586,7 +583,6 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
             if ((w != sideW) || (h != sideH) || (imgBpp != bpp)) {
                 NSTraceWarning(TAG, @"WARNING - Image %@ (%dx%d) - does not match existing format.", fn, w, h);
                 curSide++;
-                CGDataProviderRelease(provider);
                 CGImageRelease(img);
                 continue;
             }
@@ -594,7 +590,6 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
 
         GLint fmt, type;
         if (!getBitmapFormat(fmt, type, as, bpp)) {
-            CGDataProviderRelease(provider);
             CGImageRelease(img);
             return nil;
         }
@@ -644,7 +639,6 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
         if (deleteBytes) {
             delete[] bytes;
         }
-        CGDataProviderRelease(provider);
         CGImageRelease(img);
         curSide++;
     }
