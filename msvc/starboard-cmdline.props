@@ -3,7 +3,6 @@
   <!-- This file SHOULD NOT be included in the SDK! Add customizations not meant to be in the SDK here! -->
   <PropertyGroup Label="Starboard In-Situ Defaults">
     <TargetOsAndVersion Condition="'$(TargetOsAndVersion)'==''">Universal Windows</TargetOsAndVersion>
-    <UseStarboardSourceSdk>true</UseStarboardSourceSdk>
   </PropertyGroup>
 
   <ImportGroup>

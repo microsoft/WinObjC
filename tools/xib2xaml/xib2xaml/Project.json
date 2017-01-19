@@ -1,0 +1,11 @@
+﻿{
+  "dependencies": {
+    "NuGet.Build.Packaging": "0.1.163-pr61"
+  },
+  "frameworks": {
+    ".NETFramework,Version=v4.6.1": {}
+  },
+  "runtimes": {
+    "win-x86": {}
+  }
+}
