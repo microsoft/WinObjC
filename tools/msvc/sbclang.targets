@@ -832,7 +832,7 @@
 
 
   <!-- TODO: This should use XMLPoke or similar to dynamically figure out where the important bits are packaged to.-->
-  <ItemGroup Condition="'$(ConfigurationType)' == 'DynamicLibrary' or '$(ConfigurationType)' == 'Application'">
+  <ItemGroup Condition="'$(ConfigurationType)' != 'StaticLibrary'">
     <_ReferencesFromPackage Include="$(MSBuildThisFileDirectory)..\lib\$(TargetOsAndVersion)\$(PlatformTarget)\*.winmd"/>    
     <_ReferencesFromPackage Include="$(MSBuildThisFileDirectory)..\lib\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.winmd"/>
 
