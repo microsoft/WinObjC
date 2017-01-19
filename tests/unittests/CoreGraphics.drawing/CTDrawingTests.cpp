@@ -343,8 +343,7 @@ class ExtraKerning : public WhiteBackgroundTest<PixelByPixelImageComparator<Comp
     }
 };
 
-// TODO 1696: Re-enable
-DISABLED_TEXT_DRAW_TEST_P(ExtraKerning, TestExtraKerning) {
+TEXT_DRAW_TEST_P(ExtraKerning, TestExtraKerning) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 

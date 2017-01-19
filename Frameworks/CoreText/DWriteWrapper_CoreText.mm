@@ -265,13 +265,7 @@ static HRESULT __DWriteTextLayoutCreate(CFAttributedStringRef string, CFRange ra
     // Used to separate runs for attributes which DWrite does not handle until drawing (e.g. Foreground Color)
     uint32_t incompatibleAttributeFlag = 0;
     CFRange attributeRange;
-
-    // Find the range of the first set of attributes and skip it, since the underlying DWriteTextFormat has already internalized it
-    // If this first set of attributes lasts the entire range, the below for loop is not executed at all
-    // attributeRange is populated even if this attribute is not found
-    CFAttributedStringGetAttribute(string, range.location, kCTFontAttributeName, &attributeRange);
-
-    for (CFIndex index = attributeRange.location + attributeRange.length; index < rangeEnd; index += attributeRange.length) {
+    for (CFIndex index = range.location; index < rangeEnd; index += attributeRange.length) {
         CTFontRef font = static_cast<CTFontRef>(CFAttributedStringGetAttribute(string, index, kCTFontAttributeName, &attributeRange));
 
         // attributeRange is populated even if this attribute is not found
