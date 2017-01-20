@@ -134,6 +134,7 @@
 
         [button setTitle:@"UIControl Events" forState:UIControlStateNormal];
         [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [button setTitleColor:[UIColor blueColor] forState:UIControlStateHighlighted];
 
         [button addTarget:self action:@selector(_touchDown:) forControlEvents:UIControlEventTouchDown];
         [button addTarget:self action:@selector(_touchUpInside:) forControlEvents:UIControlEventTouchUpInside];

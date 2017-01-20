@@ -622,20 +622,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     CGPoint point = [[touchSet anyObject] locationInView:self];
     BOOL currentTouchInside = [self pointInside:point withEvent:event];
 
-    UIControlState newState;
-
-    if (currentTouchInside) {
-        newState = _curState | UIControlStateHighlighted;
-    } else {
-        newState = _curState & ~UIControlStateHighlighted;
-    }
-
-    // Relayout when new state is different than old state
-    if(_curState != newState) {
-        _curState = newState;
-        [self setNeedsDisplay];
-        [self setNeedsLayout];
-    }
+    // Update our highlighted state accordingly
+    [super setHighlighted:currentTouchInside];
 
     [super touchesMoved:touchSet withEvent:event];
 }
@@ -655,14 +643,9 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     }
 
     _isPressed = true;
-    UIControlState newState = _curState | UIControlStateHighlighted;
 
-    // Relayout when new state is different than old state
-    if (_curState != newState) {
-        _curState = newState;
-        [self invalidateIntrinsicContentSize];
-        [self setNeedsLayout];
-    }
+    // Update our highlighted state accordingly
+    [self setHighlighted:_isPressed];
 
     [super touchesBegan:touchSet withEvent:event];
 }
@@ -679,14 +662,9 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     }
 
     _isPressed = false;
-    UIControlState newState = _curState & ~UIControlStateHighlighted;
 
-    // Relayout when new state is different than old state
-    if (_curState != newState) {
-        _curState = newState;
-        [self invalidateIntrinsicContentSize];
-        [self setNeedsLayout];
-    }
+    // Update our highlighted state accordingly
+    [self setHighlighted:_isPressed];
 
     [super touchesEnded:touchSet withEvent:event];
 }
@@ -703,14 +681,9 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     }
 
     _isPressed = false;
-    UIControlState newState = _curState & ~UIControlStateHighlighted;
 
-    // Relayout when new state is different than old state
-    if (_curState != newState) {
-        _curState = newState;
-        [self invalidateIntrinsicContentSize];
-        [self setNeedsLayout];
-    }
+    // Update our highlighted state accordingly
+    [self setHighlighted:_isPressed];
 
     [super touchesCancelled:touchSet withEvent:event];
 

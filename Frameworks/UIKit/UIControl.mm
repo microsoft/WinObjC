@@ -229,6 +229,7 @@ Microsoft Extension
         }
 
         [self setNeedsDisplay];
+        [self invalidateIntrinsicContentSize];
         [self setNeedsLayout];
 
         if (enabled) {
@@ -280,6 +281,7 @@ Microsoft Extension
         }
 
         [self setNeedsDisplay];
+        [self invalidateIntrinsicContentSize];
         [self setNeedsLayout];
     }
 }
@@ -304,6 +306,7 @@ Microsoft Extension
         }
 
         [self setNeedsDisplay];
+        [self invalidateIntrinsicContentSize];
         [self setNeedsLayout];
     }
 }
@@ -570,14 +573,6 @@ Microsoft Extension
 - (void)_backPressed {
     [self sendActionsForControlEvents:_sendControlEventsOnBack];
 }
-
-/**
- @Status Interoperable
-*/
-- (void)dealloc {
-    [super dealloc];
-}
-
 
 /**
  @Status Stub
