@@ -474,6 +474,12 @@ static inline CGImageRef getImage(UIImage* uiImage) {
     RETURN_IF(!img);
 
     CGContextSaveGState(cur);
+    _CGContextPushBeginDraw(cur);
+
+    auto popEnd = wil::ScopeExit([cur]() {
+        _CGContextPopEndDraw(cur);
+        CGContextRestoreGState(cur);
+    });
 
     CGContextSetBlendMode(cur, mode);
     CGContextSetAlpha(cur, alpha);
@@ -493,8 +499,6 @@ static inline CGImageRef getImage(UIImage* uiImage) {
     srcRect.size.height = -img_height;
 
     _CGContextDrawImageRect(cur, img, srcRect, pos);
-
-    CGContextRestoreGState(cur);
 }
 
 /**
@@ -672,14 +676,18 @@ static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* dst) 
     }
 
     CGContextSaveGState(ctx);
+    _CGContextPushBeginDraw(ctx);
+
+    auto popEnd = wil::ScopeExit([ctx]() {
+        _CGContextPopEndDraw(ctx);
+        CGContextRestoreGState(ctx);
+    });
 
     CGContextSetBlendMode(ctx, mode);
     CGContextSetAlpha(ctx, alpha);
 
     // Draw image and divide into patches if necessary
     drawPatches(ctx, self, &pos);
-
-    CGContextRestoreGState(ctx);
 }
 
 - (void)setOrientation:(UIImageOrientation)orientation {
