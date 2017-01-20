@@ -357,7 +357,7 @@ TEST(ImageIO, BMP_ICO_PNG_SingleFrameSourceTest) {
     frameCount = CGImageSourceGetCount(imageSource);
     EXPECT_EQ(1, frameCount);
     EXPECT_EQ(kCGImageAlphaFirst, CGImageGetAlphaInfo(imageRef));
-    EXPECT_EQ(kCGImageAlphaFirst | kCGBitmapByteOrder32Big, CGImageGetBitmapInfo(imageRef));
+    EXPECT_EQ(kCGImageAlphaFirst | kCGBitmapByteOrder32Little, CGImageGetBitmapInfo(imageRef));
     EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRef));
     EXPECT_EQ(32, CGImageGetBitsPerPixel(imageRef));
     EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRef)));
@@ -718,7 +718,7 @@ TEST(ImageIO, DestinationTest) {
     CGImageRef imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
     ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
     EXPECT_EQ(kCGImageAlphaFirst, CGImageGetAlphaInfo(imageRefOut));
-    EXPECT_EQ(kCGImageAlphaFirst | kCGBitmapByteOrder32Big, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaFirst | kCGBitmapByteOrder32Little, CGImageGetBitmapInfo(imageRefOut));
     EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
     EXPECT_EQ(32, CGImageGetBitsPerPixel(imageRefOut));
     EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)));
@@ -799,7 +799,7 @@ TEST(ImageIO, DestinationTest) {
     imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
     ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
     EXPECT_EQ(kCGImageAlphaNoneSkipFirst, CGImageGetAlphaInfo(imageRefOut));
-    EXPECT_EQ(kCGImageAlphaNoneSkipFirst | kCGBitmapByteOrder32Big, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaNoneSkipFirst | kCGBitmapByteOrder32Little, CGImageGetBitmapInfo(imageRefOut));
     EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
     EXPECT_EQ(32, CGImageGetBitsPerPixel(imageRefOut));
     EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)));
@@ -861,7 +861,7 @@ TEST(ImageIO, DestinationFromSourceTest) {
     CGImageRef imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
     ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
     EXPECT_EQ(kCGImageAlphaFirst, CGImageGetAlphaInfo(imageRefOut));
-    EXPECT_EQ(kCGImageAlphaFirst | kCGBitmapByteOrder32Big, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaFirst | kCGBitmapByteOrder32Little, CGImageGetBitmapInfo(imageRefOut));
     EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
     EXPECT_EQ(32, CGImageGetBitsPerPixel(imageRefOut));
     EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)));
@@ -942,7 +942,7 @@ TEST(ImageIO, DestinationFromSourceTest) {
     imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
     ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
     EXPECT_EQ(kCGImageAlphaNoneSkipFirst, CGImageGetAlphaInfo(imageRefOut));
-    EXPECT_EQ(kCGImageAlphaNoneSkipFirst | kCGBitmapByteOrder32Big, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaNoneSkipFirst | kCGBitmapByteOrder32Little, CGImageGetBitmapInfo(imageRefOut));
     EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
     EXPECT_EQ(32, CGImageGetBitsPerPixel(imageRefOut));
     EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)));
@@ -988,7 +988,7 @@ TEST(ImageIO, DestinationMultiFrameTest) {
     CGImageRef imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
     ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
     EXPECT_EQ(kCGImageAlphaFirst, CGImageGetAlphaInfo(imageRefOut));
-    EXPECT_EQ(kCGImageAlphaFirst | kCGBitmapByteOrder32Big, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaFirst | kCGBitmapByteOrder32Little, CGImageGetBitmapInfo(imageRefOut));
     EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
     EXPECT_EQ(32, CGImageGetBitsPerPixel(imageRefOut));
     EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)));
@@ -998,7 +998,7 @@ TEST(ImageIO, DestinationMultiFrameTest) {
     imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 1, NULL);
     ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
     EXPECT_EQ(kCGImageAlphaFirst, CGImageGetAlphaInfo(imageRefOut));
-    EXPECT_EQ(kCGImageAlphaFirst | kCGBitmapByteOrder32Big, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaFirst | kCGBitmapByteOrder32Little, CGImageGetBitmapInfo(imageRefOut));
     EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
     EXPECT_EQ(32, CGImageGetBitsPerPixel(imageRefOut));
     EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)));
@@ -1008,7 +1008,7 @@ TEST(ImageIO, DestinationMultiFrameTest) {
     imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 2, NULL);
     ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
     EXPECT_EQ(kCGImageAlphaFirst, CGImageGetAlphaInfo(imageRefOut));
-    EXPECT_EQ(kCGImageAlphaFirst | kCGBitmapByteOrder32Big, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaFirst | kCGBitmapByteOrder32Little, CGImageGetBitmapInfo(imageRefOut));
     EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
     EXPECT_EQ(32, CGImageGetBitsPerPixel(imageRefOut));
     EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)));
@@ -1105,7 +1105,7 @@ TEST(ImageIO, DestinationDataTest) {
     CGImageRef imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
     ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
     EXPECT_EQ(kCGImageAlphaFirst, CGImageGetAlphaInfo(imageRefOut));
-    EXPECT_EQ(kCGImageAlphaFirst | kCGBitmapByteOrder32Big, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaFirst | kCGBitmapByteOrder32Little, CGImageGetBitmapInfo(imageRefOut));
     EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
     EXPECT_EQ(32, CGImageGetBitsPerPixel(imageRefOut));
     EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRef)));
@@ -1145,7 +1145,7 @@ TEST(ImageIO, DestinationMultiFrameDataTest) {
     CGImageRef imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
     ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
     EXPECT_EQ(kCGImageAlphaFirst, CGImageGetAlphaInfo(imageRefOut));
-    EXPECT_EQ(kCGImageAlphaFirst | kCGBitmapByteOrder32Big, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaFirst | kCGBitmapByteOrder32Little, CGImageGetBitmapInfo(imageRefOut));
     EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
     EXPECT_EQ(32, CGImageGetBitsPerPixel(imageRefOut));
     EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)));
@@ -1155,7 +1155,7 @@ TEST(ImageIO, DestinationMultiFrameDataTest) {
     imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 1, NULL);
     ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
     EXPECT_EQ(kCGImageAlphaFirst, CGImageGetAlphaInfo(imageRefOut));
-    EXPECT_EQ(kCGImageAlphaFirst | kCGBitmapByteOrder32Big, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaFirst | kCGBitmapByteOrder32Little, CGImageGetBitmapInfo(imageRefOut));
     EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
     EXPECT_EQ(32, CGImageGetBitsPerPixel(imageRefOut));
     EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)));
@@ -1165,7 +1165,7 @@ TEST(ImageIO, DestinationMultiFrameDataTest) {
     imageRefOut = CGImageSourceCreateImageAtIndex(imageSource, 2, NULL);
     ASSERT_NE_MSG(nil, imageRefOut, "FAILED: ImageIOTest::CGImageSourceCreateImageAtIndex returned nullptr");
     EXPECT_EQ(kCGImageAlphaFirst, CGImageGetAlphaInfo(imageRefOut));
-    EXPECT_EQ(kCGImageAlphaFirst | kCGBitmapByteOrder32Big, CGImageGetBitmapInfo(imageRefOut));
+    EXPECT_EQ(kCGImageAlphaFirst | kCGBitmapByteOrder32Little, CGImageGetBitmapInfo(imageRefOut));
     EXPECT_EQ(8, CGImageGetBitsPerComponent(imageRefOut));
     EXPECT_EQ(32, CGImageGetBitsPerPixel(imageRefOut));
     EXPECT_EQ(3, CGColorSpaceGetNumberOfComponents(CGImageGetColorSpace(imageRefOut)));

@@ -407,7 +407,7 @@ TEST(CGContext, DrawAnImageIntoContext) {
 
     // Create a canvas context
     woc::unique_cf<CGContextRef> context(CGBitmapContextCreate(
-        nullptr, 512, 256, 8, 4 * 512 /* bytesPerRow = bytesPerPixel*width*/, rgbColorSpace.get(), kCGImageAlphaPremultipliedFirst));
+        nullptr, 512, 256, 8, 4 * 512 /* bytesPerRow = bytesPerPixel*width*/, rgbColorSpace.get(), kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big));
 
     // Load an image from file
     CFDataRef data = (CFDataRef)[NSData dataWithContentsOfFile:getPathToFile(@"data/jpg1.jpg")];
@@ -453,7 +453,7 @@ TEST(CGContext, DrawAContextImageIntoAContext) {
 
     // This will be the pseudo canvas context which we will draw into
     woc::unique_cf<CGContextRef> context(CGBitmapContextCreate(
-        nullptr, 512, 256, 8, 4 * 512 /* bytesPerRow = bytesPerPixel*width*/, rgbColorSpace.get(), kCGImageAlphaPremultipliedFirst));
+        nullptr, 512, 256, 8, 4 * 512 /* bytesPerRow = bytesPerPixel*width*/, rgbColorSpace.get(), kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big));
 
     CGRect bounds = { 0, 0, 512, 256 };
 
@@ -475,8 +475,8 @@ TEST(CGContext, DrawAContextImageIntoAContext) {
 }
 
 TEST(CGContext, TextPositionShouldBeInMatrix) {
-    woc::unique_cf<CGColorSpaceRef> rgbColorSpace{ CGColorSpaceCreateDeviceRGB() };
-    woc::unique_cf<CGContextRef> context{ CGBitmapContextCreate(0, 1, 1, 8, 4, rgbColorSpace.get(), kCGImageAlphaOnly) };
+    woc::unique_cf<CGColorSpaceRef> grayColorSpace{ CGColorSpaceCreateDeviceGray() };
+    woc::unique_cf<CGContextRef> context{ CGBitmapContextCreate(0, 1, 1, 8, 1, grayColorSpace.get(), kCGImageAlphaOnly) };
     EXPECT_EQ(CGAffineTransformIdentity, CGContextGetTextMatrix(context.get()));
     EXPECT_EQ(CGPointMake(0, 0), CGContextGetTextPosition(context.get()));
     CGContextSetTextPosition(context.get(), 25, 50);
