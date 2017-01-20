@@ -44,7 +44,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BuildMonitor\BuildMonitor.csproj" />
+    <ProjectReference Include="..\ObjectiveC\ObjectiveC.csproj" />
     <ProjectReference Include="..\vsimporter\vsimporter.vcxproj" />
+    <ProjectReference Include="..\VSIX\ObjectiveCVSIX.csproj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets')" />

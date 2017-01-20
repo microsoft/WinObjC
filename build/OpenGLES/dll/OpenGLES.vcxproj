@@ -105,5 +105,5 @@
   </ItemGroup>
   <ItemGroup>
       <Link Include="$(angle-BinPath)\*lib" />
-   </ItemGroup>
+  </ItemGroup>
 </Project>
