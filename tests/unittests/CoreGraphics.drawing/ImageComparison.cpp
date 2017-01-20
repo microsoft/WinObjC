@@ -76,7 +76,18 @@ public:
         CGBitmapInfo bitmapInfo = CGImageGetBitmapInfo(image);
         _byteOrder = bitmapInfo & kCGBitmapByteOrderMask;
         if (_byteOrder == kCGBitmapByteOrderDefault) {
-            _byteOrder = kCGBitmapByteOrder32Host;
+#ifdef TARGET_OS_MAC
+            // 32bpp formats default to 32Big on the reference platform.
+            _byteOrder = kCGBitmapByteOrder32Big;
+#else // WINOBJC
+            // WinObjC should never return Default from CGImageGetBitmapInfo!
+            // However, this is mirrored here from CGImage for completeness' sake.
+            if (_alphaFirst) {
+                _byteOrder = kCGBitmapByteOrder32Little;
+            } else {
+                _byteOrder = kCGBitmapByteOrder32Big;
+            }
+#endif
         }
     }
 
@@ -84,10 +95,10 @@ public:
         if (_alphaInfo == kCGImageAlphaNone) {
             uint8_t(&rawData)[3] = *(((decltype(&rawData))_data) + (y * width) + x);
             switch (_byteOrder) {
-                case kCGBitmapByteOrder32Big:
+                case kCGBitmapByteOrder32Little:
                     // raw data is B G R
                     return { rawData[2], rawData[1], rawData[0], 255 };
-                case kCGBitmapByteOrder32Little:
+                case kCGBitmapByteOrder32Big:
                     // raw data is R G B
                     return { rawData[0], rawData[1], rawData[2], 255 };
                 default:
@@ -98,22 +109,22 @@ public:
             Pixel p;
             if (_alphaFirst) {
                 switch (_byteOrder) {
-                    case kCGBitmapByteOrder32Big:
+                    case kCGBitmapByteOrder32Little:
                         // raw data is B G R A
                         p = { rawData[2], rawData[1], rawData[0], rawData[3] };
                         break;
-                    case kCGBitmapByteOrder32Little:
+                    case kCGBitmapByteOrder32Big:
                         // raw data is A R G B
                         p = { rawData[1], rawData[2], rawData[3], rawData[0] };
                         break;
                 }
             } else {
                 switch (_byteOrder) {
-                    case kCGBitmapByteOrder32Big:
+                    case kCGBitmapByteOrder32Little:
                         // raw data is A B G R
                         p = { rawData[3], rawData[2], rawData[1], rawData[0] };
                         break;
-                    case kCGBitmapByteOrder32Little:
+                    case kCGBitmapByteOrder32Big:
                         // raw data is R G B A
                         p = { rawData[0], rawData[1], rawData[2], rawData[3] };
                         break;
@@ -272,7 +283,7 @@ ImageDelta PixelByPixelImageComparator<Mode, FailureThreshold>::CompareImages(CG
                                                          32,
                                                          deltaBuffer.stride(),
                                                          CGImageGetColorSpace(left),
-                                                         kCGBitmapByteOrder32Little | kCGImageAlphaLast,
+                                                         kCGBitmapByteOrder32Big | kCGImageAlphaLast, // RGBA
                                                          deltaProvider.get(),
                                                          nullptr,
                                                          FALSE,

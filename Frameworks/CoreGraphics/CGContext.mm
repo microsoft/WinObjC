@@ -2782,8 +2782,8 @@ CGContextRef CGBitmapContextCreateWithData(void* data,
 
     // bitsperpixel = ((bytesPerRow/width) * 8bits/byte)
     size_t bitsPerPixel = ((bytesPerRow / width) << 3);
-    REFWICPixelFormatGUID outputPixelFormat =
-        _CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, space, bitmapInfo);
+    WICPixelFormatGUID outputPixelFormat;
+    RETURN_NULL_IF_FAILED(_CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, space, bitmapInfo, &outputPixelFormat));
     WICPixelFormatGUID pixelFormat = outputPixelFormat;
 
     if (!_CGIsValidRenderTargetPixelFormat(pixelFormat)) {

@@ -257,7 +257,9 @@ CGImageRef CGImageCreate(size_t width,
     ComPtr<IWICImagingFactory> imageFactory;
     RETURN_NULL_IF_FAILED(_CGGetWICFactory(&imageFactory));
 
-    REFGUID pixelFormat = _CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, colorSpace, bitmapInfo);
+    GUID pixelFormat;
+    RETURN_NULL_IF_FAILED(
+        _CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, colorSpace, bitmapInfo, &pixelFormat));
 
     unsigned char* bytes = static_cast<unsigned char*>(const_cast<void*>(_CGDataProviderGetData(provider)));
     RETURN_NULL_IF_FAILED(
@@ -333,8 +335,9 @@ CGImageRef CGImageMaskCreate(size_t width,
     RETURN_NULL_IF_FAILED(_CGGetWICFactory(&imageFactory));
 
     woc::unique_cf<CGColorSpaceRef> colorSpace(CGColorSpaceCreateDeviceGray());
-    REFGUID pixelFormat =
-        _CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, colorSpace.get(), kCGBitmapByteOrderDefault);
+    GUID pixelFormat;
+    RETURN_NULL_IF_FAILED(
+        _CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, colorSpace, kCGBitmapByteOrderDefault, &pixelFormat));
 
     unsigned char* bytes = static_cast<unsigned char*>(const_cast<void*>(_CGDataProviderGetData(provider)));
     RETURN_NULL_IF_FAILED(
@@ -533,8 +536,9 @@ CGImageRef CGImageCreateWithMask(CGImageRef image, CGImageRef mask) {
     size_t width = CGImageGetWidth(image);
     size_t height = CGImageGetHeight(image);
 
-    woc::unique_cf<CGContextRef> context{ CGBitmapContextCreate(
-        nullptr, width, height, 8, width * 4, CGImageGetColorSpace(image), kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Big) };
+    woc::unique_cf<CGContextRef> context{
+        CGBitmapContextCreate(nullptr, width, height, 8, width * 4, CGImageGetColorSpace(image), kCGImageAlphaPremultipliedLast)
+    };
     RETURN_NULL_IF(!context);
 
     CGRect rect{
@@ -706,98 +710,95 @@ NSData* _CGImageRepresentation(CGImageRef image, REFGUID guid, float quality) {
     return nil;
 }
 
-REFGUID _CGImageGetWICPixelFormatFromImageProperties(unsigned int bitsPerComponent,
-                                                     unsigned int bitsPerPixel,
-                                                     CGColorSpaceRef colorSpace,
-                                                     CGBitmapInfo bitmapInfo) {
+// CG packed format key
+//  |Color  |bits/px|CGBitmapInfo   |
+//  |-------|-------|---------------|
+// 32      24      16               0
+#define CG_FORMAT_KEY(colorSpaceModel, bpp, byteOrder, alpha) \
+    (((colorSpaceModel & 0xFF) << 24) | ((bpp & 0xFF) << 16) | ((alpha | byteOrder) & 0xFFFF))
+
+HRESULT _CGImageGetWICPixelFormatFromImageProperties(
+    unsigned int bitsPerComponent, unsigned int bitsPerPixel, CGColorSpaceRef colorSpace, CGBitmapInfo bitmapInfo, GUID* pixelFormat) {
+
+    // clang-format off
+    static std::map<uint32_t, WICPixelFormatGUID> s_CGWICFormatMap{
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 24, kCGBitmapByteOrderDefault,  kCGImageAlphaNone),               GUID_WICPixelFormat24bppRGB       },
+
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 32, kCGBitmapByteOrderDefault,  kCGImageAlphaNoneSkipFirst     ), GUID_WICPixelFormat32bppBGR       },
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 32, kCGBitmapByteOrderDefault,  kCGImageAlphaNoneSkipLast      ), GUID_WICPixelFormat32bppRGB       },
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 32, kCGBitmapByteOrderDefault,  kCGImageAlphaPremultipliedFirst), GUID_WICPixelFormat32bppPBGRA     },
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 32, kCGBitmapByteOrderDefault,  kCGImageAlphaPremultipliedLast ), GUID_WICPixelFormat32bppPRGBA     },
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 32, kCGBitmapByteOrderDefault,  kCGImageAlphaFirst             ), GUID_WICPixelFormat32bppRGBA      },
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 32, kCGBitmapByteOrderDefault,  kCGImageAlphaLast              ), GUID_WICPixelFormat32bppRGBA      },
+
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 32, kCGBitmapByteOrder32Little, kCGImageAlphaNoneSkipFirst     ), GUID_WICPixelFormat32bppBGR       },
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 32, kCGBitmapByteOrder32Little, kCGImageAlphaPremultipliedFirst), GUID_WICPixelFormat32bppPBGRA     },
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 32, kCGBitmapByteOrder32Little, kCGImageAlphaFirst             ), GUID_WICPixelFormat32bppRGBA      },
+
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 32, kCGBitmapByteOrder32Big,    kCGImageAlphaNoneSkipLast      ), GUID_WICPixelFormat32bppRGB       },
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 32, kCGBitmapByteOrder32Big,    kCGImageAlphaPremultipliedLast ), GUID_WICPixelFormat32bppPRGBA     },
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 32, kCGBitmapByteOrder32Big,    kCGImageAlphaLast              ), GUID_WICPixelFormat32bppRGBA      },
+
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 64, kCGBitmapByteOrderDefault,  kCGImageAlphaPremultipliedLast ), GUID_WICPixelFormat64bppPRGBA     },
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 64, kCGBitmapByteOrderDefault,  kCGImageAlphaLast              ), GUID_WICPixelFormat64bppRGBA      },
+
+        { CG_FORMAT_KEY(kCGColorSpaceModelCMYK      , 32, kCGBitmapByteOrderDefault,  kCGImageAlphaNone              ), GUID_WICPixelFormat32bppCMYK      },
+        { CG_FORMAT_KEY(kCGColorSpaceModelCMYK      , 32, kCGBitmapByteOrder32Big  ,  kCGImageAlphaNone              ), GUID_WICPixelFormat32bppCMYK      },
+        { CG_FORMAT_KEY(kCGColorSpaceModelCMYK      , 40, kCGBitmapByteOrderDefault,  kCGImageAlphaLast              ), GUID_WICPixelFormat40bppCMYKAlpha },
+        { CG_FORMAT_KEY(kCGColorSpaceModelCMYK      , 64, kCGBitmapByteOrderDefault,  kCGImageAlphaNone              ), GUID_WICPixelFormat64bppCMYK      },
+        { CG_FORMAT_KEY(kCGColorSpaceModelCMYK      , 80, kCGBitmapByteOrderDefault,  kCGImageAlphaLast              ), GUID_WICPixelFormat80bppCMYKAlpha },
+
+        { CG_FORMAT_KEY(kCGColorSpaceModelMonochrome,  1, kCGBitmapByteOrderDefault,  kCGImageAlphaNone              ), GUID_WICPixelFormatBlackWhite     },
+        { CG_FORMAT_KEY(kCGColorSpaceModelMonochrome,  2, kCGBitmapByteOrderDefault,  kCGImageAlphaNone              ), GUID_WICPixelFormat2bppGray       },
+        { CG_FORMAT_KEY(kCGColorSpaceModelMonochrome,  4, kCGBitmapByteOrderDefault,  kCGImageAlphaNone              ), GUID_WICPixelFormat4bppGray       },
+        { CG_FORMAT_KEY(kCGColorSpaceModelMonochrome,  8, kCGBitmapByteOrderDefault,  kCGImageAlphaNone              ), GUID_WICPixelFormat8bppGray       },
+        { CG_FORMAT_KEY(kCGColorSpaceModelMonochrome, 16, kCGBitmapByteOrderDefault,  kCGImageAlphaNone              ), GUID_WICPixelFormat16bppGray      },
+        { CG_FORMAT_KEY(kCGColorSpaceModelMonochrome, 16, kCGBitmapByteOrder16Little, kCGImageAlphaNone              ), GUID_WICPixelFormat16bppGray      },
+
+        { CG_FORMAT_KEY(kCGColorSpaceModelMonochrome,  8, kCGBitmapByteOrderDefault,  kCGImageAlphaOnly              ), GUID_WICPixelFormat8bppAlpha      },
+
+        { CG_FORMAT_KEY(kCGColorSpaceModelIndexed   ,  1, kCGBitmapByteOrderDefault,  kCGImageAlphaNone              ), GUID_WICPixelFormat1bppIndexed    },
+        { CG_FORMAT_KEY(kCGColorSpaceModelIndexed   ,  2, kCGBitmapByteOrderDefault,  kCGImageAlphaNone              ), GUID_WICPixelFormat2bppIndexed    },
+        { CG_FORMAT_KEY(kCGColorSpaceModelIndexed   ,  4, kCGBitmapByteOrderDefault,  kCGImageAlphaNone              ), GUID_WICPixelFormat4bppIndexed    },
+        { CG_FORMAT_KEY(kCGColorSpaceModelIndexed   ,  8, kCGBitmapByteOrderDefault,  kCGImageAlphaNone              ), GUID_WICPixelFormat8bppIndexed    },
+    };
+    // clang-format on
+
+    RETURN_HR_IF(E_POINTER, !pixelFormat);
+
     CGColorSpaceModel colorSpaceModel = CGColorSpaceGetModel(colorSpace);
 
     unsigned int alphaInfo = bitmapInfo & kCGBitmapAlphaInfoMask;
-    // TODO #1124: support for kCGBitmapFloatComponents and account for ByteOrder
-    // TODO #1124: make this more verbose, map?
+    unsigned int byteOrder = bitmapInfo & kCGBitmapByteOrderMask;
+    unsigned int formatImputedBpp = 0;
+    switch (byteOrder) {
+        case kCGBitmapByteOrder32Little:
+        case kCGBitmapByteOrder32Big:
+            formatImputedBpp = 32;
+            break;
+        case kCGBitmapByteOrder16Little:
+        case kCGBitmapByteOrder16Big:
+            formatImputedBpp = 16;
+            break;
+    }
 
-    if (colorSpaceModel == kCGColorSpaceModelRGB) {
-        switch (alphaInfo) {
-            case kCGImageAlphaFirst:
-            case kCGImageAlphaLast:
-                if (bitsPerPixel == 32) {
-                    return GUID_WICPixelFormat32bppRGBA;
-                } else if (bitsPerPixel == 64) {
-                    return GUID_WICPixelFormat64bppRGBA;
-                } else {
-                    UNIMPLEMENTED_WITH_MSG("kCGImageAlphaLast: Unknown pixelformat: %d", bitsPerPixel);
-                    return GUID_WICPixelFormat32bppRGBA;
-                }
-                break;
-            case kCGImageAlphaPremultipliedLast:
-            case kCGImageAlphaPremultipliedFirst:
-                if (bitsPerPixel == 32) {
-                    return GUID_WICPixelFormat32bppPRGBA;
-                } else if (bitsPerPixel == 64) {
-                    return GUID_WICPixelFormat64bppPRGBA;
-                } else {
-                    UNIMPLEMENTED_WITH_MSG("kCGImageAlphaPremultipliedFirst: Unknown pixelformat: %d", bitsPerPixel);
-                    return GUID_WICPixelFormat32bppPRGBA;
-                }
-                break;
-            case kCGImageAlphaNoneSkipFirst:
-            case kCGImageAlphaNoneSkipLast:
-            case kCGImageAlphaNone:
-                if (bitsPerPixel == 32) {
-                    return GUID_WICPixelFormat32bppRGB;
-                } else if (bitsPerPixel == 48) {
-                    return GUID_WICPixelFormat48bppRGB;
-                } else if (bitsPerPixel == 64) {
-                    return GUID_WICPixelFormat64bppRGB;
-                } else {
-                    UNIMPLEMENTED_WITH_MSG("Alpha None: Unknown pixelformat: %d", bitsPerPixel);
-                    return GUID_WICPixelFormat32bppRGB;
-                }
-                break;
-            case kCGImageAlphaOnly:
-                return GUID_WICPixelFormat8bppAlpha;
-                break;
-            default:
-                UNIMPLEMENTED_WITH_MSG("Unknown pixel format, alphaInfo:%d, assuming RGBA", alphaInfo);
-                return GUID_WICPixelFormat32bppRGBA;
-                break;
-        }
-    } else if (colorSpaceModel == kCGColorSpaceModelCMYK) {
-        if (bitsPerPixel == 32) {
-            return GUID_WICPixelFormat32bppCMYK;
-        } else if (bitsPerPixel == 64) {
-            return GUID_WICPixelFormat64bppCMYK;
-        } else if (bitsPerPixel == 40) {
-            return GUID_WICPixelFormat40bppCMYKAlpha;
-        } else if (bitsPerPixel == 80) {
-            return GUID_WICPixelFormat80bppCMYKAlpha;
-        }
-    } else if (colorSpaceModel == kCGColorSpaceModelMonochrome) {
-        if (bitsPerPixel == 1) {
-            return GUID_WICPixelFormatBlackWhite;
-        } else if (bitsPerPixel == 4) {
-            return GUID_WICPixelFormat4bppGray;
-        } else if (bitsPerPixel == 8) {
-            return GUID_WICPixelFormat8bppGray;
-        } else if (bitsPerPixel == 16) {
-            return GUID_WICPixelFormat16bppGray;
-        } else if (bitsPerPixel == 32) {
-            return GUID_WICPixelFormat32bppGrayFloat;
-        }
-
-    } else if (colorSpaceModel == kCGColorSpaceModelIndexed) {
-        if (bitsPerPixel == 1) {
-            return GUID_WICPixelFormat1bppIndexed;
-        } else if (bitsPerPixel == 2) {
-            return GUID_WICPixelFormat2bppIndexed;
-        } else if (bitsPerPixel == 4) {
-            return GUID_WICPixelFormat4bppIndexed;
-        } else if (bitsPerPixel == 8) {
-            return GUID_WICPixelFormat8bppIndexed;
+    if (formatImputedBpp == 0 || formatImputedBpp == bitsPerPixel) {
+        auto found = s_CGWICFormatMap.find(CG_FORMAT_KEY(colorSpaceModel, bitsPerPixel, bitmapInfo, 0));
+        if (found != s_CGWICFormatMap.end()) {
+            *pixelFormat = found->second;
+            return S_OK;
         }
     }
 
-    return GUID_WICPixelFormat32bppRGBA;
+    size_t nComponents = CGColorSpaceGetNumberOfComponents(colorSpace);
+    TraceError(TAG,
+               L"Unfulfillable request for format with %dbpp%s (%d/component), %d-component color space, bitmap info %x",
+               bitsPerPixel,
+               (bitmapInfo & kCGBitmapFloatComponents) != 0 ? " (floating-point)" : "",
+               bitsPerComponent,
+               nComponents,
+               bitmapInfo);
+    return E_NOTIMPL;
 }
 
 static void __InvertMemcpy(void* dest, const void* src, size_t len) {
