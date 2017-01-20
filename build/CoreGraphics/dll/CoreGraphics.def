@@ -239,6 +239,10 @@ LIBRARY CoreGraphics
         CGContextIsPointInPath
         EbrCenterTextInRectVertically
         _CGContextSetScaleFactor
+        _CGContextPushBeginDraw
+        _CGContextPopEndDraw
+        _CGContextEscapeBeginEndDrawStack
+        _CGContextUnescapeBeginEndDrawStack
 
         ; CGDataConsumer.mm
         CGDataConsumerCreate

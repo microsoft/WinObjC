@@ -105,6 +105,11 @@ void CGContextCairo::_assignAndResetFilter(cairo_pattern_t* pattern) {
 // An OSS request has been submitted. The link for the request is:
 // https://osstool.microsoft.com/palamida/RequestDetails.htm?rid=40072&projectId=1
 void CGContextCairo::_cairoImageSurfaceBlur(cairo_surface_t* surface) {
+    // TODO #1635: It's unsafe to edit the bitmap not through D2D1RenderTarget, during a BeginDraw()
+    // Escape any Begin/EndDraw() pairs for the lifetime of this function (to be removed during the CGD2D merge)
+    _CGContextEscapeBeginEndDrawStack(_rootContext);
+    auto popEnd = wil::ScopeExit([this]() { _CGContextUnescapeBeginEndDrawStack(this->_rootContext); });
+
     double blur = curState->shadowBlur;
 
     if (surface == NULL || blur <= 0) {
@@ -171,6 +176,11 @@ void CGContextCairo::_cairoImageSurfaceBlur(cairo_surface_t* surface) {
 }
 
 void CGContextCairo::_cairoContextStrokePathShadow() {
+    // TODO #1635: It's unsafe to edit the bitmap not through D2D1RenderTarget, during a BeginDraw()
+    // Escape any Begin/EndDraw() pairs for the lifetime of this function (to be removed during the CGD2D merge)
+    _CGContextEscapeBeginEndDrawStack(_rootContext);
+    auto popEnd = wil::ScopeExit([this]() { _CGContextUnescapeBeginEndDrawStack(this->_rootContext); });
+
     int i;
     double width, height, deltaWidth, deltaHeight;
 
@@ -283,6 +293,11 @@ void CGContextCairo::_cairoContextStrokePathShadow() {
 }
 
 void CGContextCairo::Clear(float r, float g, float b, float a) {
+    // TODO #1635: It's unsafe to edit the bitmap not through D2D1RenderTarget, during a BeginDraw()
+    // Escape any Begin/EndDraw() pairs for the lifetime of this function (to be removed during the CGD2D merge)
+    _CGContextEscapeBeginEndDrawStack(_rootContext);
+    auto popEnd = wil::ScopeExit([this]() { _CGContextUnescapeBeginEndDrawStack(this->_rootContext); });
+
     ObtainLock();
 
     CGRect rct;
@@ -303,6 +318,11 @@ void CGContextCairo::Clear(float r, float g, float b, float a) {
 }
 
 void CGContextCairo::DrawImage(CGImageRef img, CGRect src, CGRect dest, bool tiled) {
+    // TODO #1635: It's unsafe to edit the bitmap not through D2D1RenderTarget, during a BeginDraw()
+    // Escape any Begin/EndDraw() pairs for the lifetime of this function (to be removed during the CGD2D merge)
+    _CGContextEscapeBeginEndDrawStack(_rootContext);
+    auto popEnd = wil::ScopeExit([this]() { _CGContextUnescapeBeginEndDrawStack(this->_rootContext); });
+
     ObtainLock();
 
     if (dest.size.width == 0.0f || dest.size.height == 0.0f)
@@ -854,6 +874,11 @@ void CGContextCairo::CGContextRestoreGState() {
 }
 
 void CGContextCairo::CGContextClearRect(CGRect rct) {
+    // TODO #1635: It's unsafe to edit the bitmap not through D2D1RenderTarget, during a BeginDraw()
+    // Escape any Begin/EndDraw() pairs for the lifetime of this function (to be removed during the CGD2D merge)
+    _CGContextEscapeBeginEndDrawStack(_rootContext);
+    auto popEnd = wil::ScopeExit([this]() { _CGContextUnescapeBeginEndDrawStack(this->_rootContext); });
+
     ObtainLock();
 
     _isDirty = true;
@@ -886,6 +911,11 @@ void CGContextCairo::CGContextClearRect(CGRect rct) {
 }
 
 void CGContextCairo::CGContextFillRect(CGRect rct) {
+    // TODO #1635: It's unsafe to edit the bitmap not through D2D1RenderTarget, during a BeginDraw()
+    // Escape any Begin/EndDraw() pairs for the lifetime of this function (to be removed during the CGD2D merge)
+    _CGContextEscapeBeginEndDrawStack(_rootContext);
+    auto popEnd = wil::ScopeExit([this]() { _CGContextUnescapeBeginEndDrawStack(this->_rootContext); });
+
     ObtainLock();
 
     _isDirty = true;
@@ -1102,6 +1132,11 @@ void CGContextCairo::setFillColorSource() {
 }
 
 void CGContextCairo::CGContextStrokeEllipseInRect(CGRect rct) {
+    // TODO #1635: It's unsafe to edit the bitmap not through D2D1RenderTarget, during a BeginDraw()
+    // Escape any Begin/EndDraw() pairs for the lifetime of this function (to be removed during the CGD2D merge)
+    _CGContextEscapeBeginEndDrawStack(_rootContext);
+    auto popEnd = wil::ScopeExit([this]() { _CGContextUnescapeBeginEndDrawStack(this->_rootContext); });
+
     ObtainLock();
 
     _isDirty = true;
@@ -1135,6 +1170,11 @@ void CGContextCairo::CGContextStrokeEllipseInRect(CGRect rct) {
 }
 
 void CGContextCairo::CGContextFillEllipseInRect(CGRect rct) {
+    // TODO #1635: It's unsafe to edit the bitmap not through D2D1RenderTarget, during a BeginDraw()
+    // Escape any Begin/EndDraw() pairs for the lifetime of this function (to be removed during the CGD2D merge)
+    _CGContextEscapeBeginEndDrawStack(_rootContext);
+    auto popEnd = wil::ScopeExit([this]() { _CGContextUnescapeBeginEndDrawStack(this->_rootContext); });
+
     ObtainLock();
 
     _isDirty = true;
@@ -1174,6 +1214,11 @@ void CGContextCairo::CGContextAddPath(CGPathRef path) {
 }
 
 void CGContextCairo::CGContextStrokePath() {
+    // TODO #1635: It's unsafe to edit the bitmap not through D2D1RenderTarget, during a BeginDraw()
+    // Escape any Begin/EndDraw() pairs for the lifetime of this function (to be removed during the CGD2D merge)
+    _CGContextEscapeBeginEndDrawStack(_rootContext);
+    auto popEnd = wil::ScopeExit([this]() { _CGContextUnescapeBeginEndDrawStack(this->_rootContext); });
+
     ObtainLock();
 
     _isDirty = true;
@@ -1197,6 +1242,11 @@ void CGContextCairo::CGContextStrokePath() {
 }
 
 void CGContextCairo::CGContextStrokeRect(CGRect rct) {
+    // TODO #1635: It's unsafe to edit the bitmap not through D2D1RenderTarget, during a BeginDraw()
+    // Escape any Begin/EndDraw() pairs for the lifetime of this function (to be removed during the CGD2D merge)
+    _CGContextEscapeBeginEndDrawStack(_rootContext);
+    auto popEnd = wil::ScopeExit([this]() { _CGContextUnescapeBeginEndDrawStack(this->_rootContext); });
+
     ObtainLock();
 
     _isDirty = true;
@@ -1230,6 +1280,11 @@ void CGContextCairo::CGContextStrokeRect(CGRect rct) {
 }
 
 void CGContextCairo::CGContextStrokeRectWithWidth(CGRect rct, float width) {
+    // TODO #1635: It's unsafe to edit the bitmap not through D2D1RenderTarget, during a BeginDraw()
+    // Escape any Begin/EndDraw() pairs for the lifetime of this function (to be removed during the CGD2D merge)
+    _CGContextEscapeBeginEndDrawStack(_rootContext);
+    auto popEnd = wil::ScopeExit([this]() { _CGContextUnescapeBeginEndDrawStack(this->_rootContext); });
+
     ObtainLock();
 
     _isDirty = true;
@@ -1260,6 +1315,11 @@ void CGContextCairo::CGContextStrokeRectWithWidth(CGRect rct, float width) {
 }
 
 void CGContextCairo::CGContextFillPath() {
+    // TODO #1635: It's unsafe to edit the bitmap not through D2D1RenderTarget, during a BeginDraw()
+    // Escape any Begin/EndDraw() pairs for the lifetime of this function (to be removed during the CGD2D merge)
+    _CGContextEscapeBeginEndDrawStack(_rootContext);
+    auto popEnd = wil::ScopeExit([this]() { _CGContextUnescapeBeginEndDrawStack(this->_rootContext); });
+
     ObtainLock();
 
     _isDirty = true;
@@ -1288,6 +1348,11 @@ void CGContextCairo::CGContextFillPath() {
 }
 
 void CGContextCairo::CGContextEOFillPath() {
+    // TODO #1635: It's unsafe to edit the bitmap not through D2D1RenderTarget, during a BeginDraw()
+    // Escape any Begin/EndDraw() pairs for the lifetime of this function (to be removed during the CGD2D merge)
+    _CGContextEscapeBeginEndDrawStack(_rootContext);
+    auto popEnd = wil::ScopeExit([this]() { _CGContextUnescapeBeginEndDrawStack(this->_rootContext); });
+
     ObtainLock();
 
     _isDirty = true;
@@ -1316,6 +1381,11 @@ void CGContextCairo::CGContextEOFillPath() {
 }
 
 void CGContextCairo::CGContextEOClip() {
+    // TODO #1635: It's unsafe to edit the bitmap not through D2D1RenderTarget, during a BeginDraw()
+    // Escape any Begin/EndDraw() pairs for the lifetime of this function (to be removed during the CGD2D merge)
+    _CGContextEscapeBeginEndDrawStack(_rootContext);
+    auto popEnd = wil::ScopeExit([this]() { _CGContextUnescapeBeginEndDrawStack(this->_rootContext); });
+
     ObtainLock();
 
     TraceWarning(TAG, L"CGContextEOClip not supported");
@@ -1326,6 +1396,11 @@ void CGContextCairo::CGContextEOClip() {
 }
 
 void CGContextCairo::CGContextDrawPath(CGPathDrawingMode mode) {
+    // TODO #1635: It's unsafe to edit the bitmap not through D2D1RenderTarget, during a BeginDraw()
+    // Escape any Begin/EndDraw() pairs for the lifetime of this function (to be removed during the CGD2D merge)
+    _CGContextEscapeBeginEndDrawStack(_rootContext);
+    auto popEnd = wil::ScopeExit([this]() { _CGContextUnescapeBeginEndDrawStack(this->_rootContext); });
+
     ObtainLock();
 
     _isDirty = true;
@@ -1426,6 +1501,11 @@ void CGContextCairo::CGContextBeginPath() {
 }
 
 void CGContextCairo::CGContextDrawLinearGradient(CGGradientRef gradient, CGPoint startPoint, CGPoint endPoint, DWORD options) {
+    // TODO #1635: It's unsafe to edit the bitmap not through D2D1RenderTarget, during a BeginDraw()
+    // Escape any Begin/EndDraw() pairs for the lifetime of this function (to be removed during the CGD2D merge)
+    _CGContextEscapeBeginEndDrawStack(_rootContext);
+    auto popEnd = wil::ScopeExit([this]() { _CGContextUnescapeBeginEndDrawStack(this->_rootContext); });
+
     ObtainLock();
 
     _isDirty = true;
@@ -1467,6 +1547,11 @@ void CGContextCairo::CGContextDrawLinearGradient(CGGradientRef gradient, CGPoint
 
 void CGContextCairo::CGContextDrawRadialGradient(
     CGGradientRef gradient, CGPoint startCenter, float startRadius, CGPoint endCenter, float endRadius, DWORD options) {
+    // TODO #1635: It's unsafe to edit the bitmap not through D2D1RenderTarget, during a BeginDraw()
+    // Escape any Begin/EndDraw() pairs for the lifetime of this function (to be removed during the CGD2D merge)
+    _CGContextEscapeBeginEndDrawStack(_rootContext);
+    auto popEnd = wil::ScopeExit([this]() { _CGContextUnescapeBeginEndDrawStack(this->_rootContext); });
+
     ObtainLock();
 
     _isDirty = true;
@@ -1673,6 +1758,11 @@ void CGContextCairo::CGContextSetShouldAntialias(DWORD shouldAntialias) {
 }
 
 void CGContextCairo::CGContextClip() {
+    // TODO #1635: It's unsafe to edit the bitmap not through D2D1RenderTarget, during a BeginDraw()
+    // Escape any Begin/EndDraw() pairs for the lifetime of this function (to be removed during the CGD2D merge)
+    _CGContextEscapeBeginEndDrawStack(_rootContext);
+    auto popEnd = wil::ScopeExit([this]() { _CGContextUnescapeBeginEndDrawStack(this->_rootContext); });
+
     ObtainLock();
 
     LOCK_CAIRO();
@@ -1710,6 +1800,11 @@ void CGContextCairo::CGContextGetPathBoundingBox(CGRect* ret) {
 }
 
 void CGContextCairo::CGContextClipToRect(CGRect rect) {
+    // TODO #1635: It's unsafe to edit the bitmap not through D2D1RenderTarget, during a BeginDraw()
+    // Escape any Begin/EndDraw() pairs for the lifetime of this function (to be removed during the CGD2D merge)
+    _CGContextEscapeBeginEndDrawStack(_rootContext);
+    auto popEnd = wil::ScopeExit([this]() { _CGContextUnescapeBeginEndDrawStack(this->_rootContext); });
+
     ObtainLock();
     LOCK_CAIRO();
     cairo_path_t* oldPath = cairo_copy_path(_drawContext);
@@ -1738,6 +1833,11 @@ void CGContextCairo::CGContextBeginTransparencyLayer(id auxInfo) {
 }
 
 void CGContextCairo::CGContextBeginTransparencyLayerWithRect(CGRect rect, id auxInfo) {
+    // TODO #1635: It's unsafe to edit the bitmap not through D2D1RenderTarget, during a BeginDraw()
+    // Escape any Begin/EndDraw() pairs for the lifetime of this function (to be removed during the CGD2D merge)
+    _CGContextEscapeBeginEndDrawStack(_rootContext);
+    auto popEnd = wil::ScopeExit([this]() { _CGContextUnescapeBeginEndDrawStack(this->_rootContext); });
+
     ObtainLock();
     LOCK_CAIRO();
     cairo_save(_drawContext);
@@ -1756,6 +1856,11 @@ void CGContextCairo::CGContextBeginTransparencyLayerWithRect(CGRect rect, id aux
 }
 
 void CGContextCairo::CGContextEndTransparencyLayer() {
+    // TODO #1635: It's unsafe to edit the bitmap not through D2D1RenderTarget, during a BeginDraw()
+    // Escape any Begin/EndDraw() pairs for the lifetime of this function (to be removed during the CGD2D merge)
+    _CGContextEscapeBeginEndDrawStack(_rootContext);
+    auto popEnd = wil::ScopeExit([this]() { _CGContextUnescapeBeginEndDrawStack(this->_rootContext); });
+
     ObtainLock();
     LOCK_CAIRO();
     // Retrieve the group as a pattern
@@ -1863,7 +1968,7 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, boo
     CGContextStrokePath();
 
     ID2D1RenderTarget* imgRenderTarget = _imgDest->Backing()->GetRenderTarget();
-    THROW_NS_IF_NULL(E_UNEXPECTED, imgRenderTarget);
+    THROW_HR_IF_NULL(E_UNEXPECTED, imgRenderTarget);
 
     // Apply the required transformations as set in the context.
     // We need some special handling in transform as CoreText in iOS renders from bottom left but DWrite on Windows does top left.
@@ -1898,7 +2003,9 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, boo
     D2D1::ColorF brushColor =
         D2D1::ColorF(curState->curFillColor.r, curState->curFillColor.g, curState->curFillColor.b, curState->curFillColor.a);
 
-    imgRenderTarget->BeginDraw();
+    _CGContextPushBeginDraw(_rootContext);
+    auto popEnd = wil::ScopeExit([this]() { _CGContextPopEndDraw(this->_rootContext); });
+
     // Draw the glyph using ID2D1RenderTarget
     ComPtr<ID2D1SolidColorBrush> brush;
     THROW_IF_FAILED(imgRenderTarget->CreateSolidColorBrush(brushColor, &brush));
@@ -1931,8 +2038,6 @@ void CGContextCairo::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, boo
             userTransform = CGAffineTransformTranslate(userTransform, glyphRun->glyphAdvances[i], 0);
         }
     }
-
-    THROW_IF_FAILED(imgRenderTarget->EndDraw());
 }
 
 // TODO 1077:: Remove once D2D render target is implemented
