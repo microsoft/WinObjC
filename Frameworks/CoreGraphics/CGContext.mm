@@ -43,6 +43,7 @@
 #import <wrl/client.h>
 #include <COMIncludes_end.h>
 
+#import <atomic>
 #import <list>
 #import <vector>
 #import <stack>
@@ -387,6 +388,32 @@ public:
         return CurrentGState().ShouldDraw();
     }
 
+    inline void PushBeginDraw() {
+        if ((_beginEndDrawDepth)++ == 0) {
+            deviceContext->BeginDraw();
+        }
+    }
+
+    inline HRESULT PopEndDraw() {
+        if (--(_beginEndDrawDepth) == 0) {
+            RETURN_IF_FAILED(deviceContext->EndDraw());
+        }
+        return S_OK;
+    }
+
+    inline HRESULT EscapeBeginEndDrawStack() {
+        if ((_beginEndDrawDepth > 0) && ((_escapeBeginEndDrawDepth)++ == 0)) {
+            RETURN_IF_FAILED(deviceContext->EndDraw());
+        }
+        return S_OK;
+    }
+
+    inline void UnescapeBeginEndDrawStack() {
+        if ((_beginEndDrawDepth > 0) && (--(_escapeBeginEndDrawDepth) == 0)) {
+            deviceContext->BeginDraw();
+        }
+    }
+
     HRESULT Clip(CGPathDrawingMode pathMode);
 
     HRESULT PushLayer(CGRect* rect = nullptr);
@@ -510,7 +537,9 @@ HRESULT __CGContext::PushLayer(CGRect* rect) {
     ComPtr<ID2D1CommandList> commandList;
     RETURN_IF_FAILED(deviceContext->CreateCommandList(&commandList));
 
+    EscapeBeginEndDrawStack();
     deviceContext->SetTarget(commandList.Get());
+    UnescapeBeginEndDrawStack();
 
     // Copy the current layer's state to the new layer.
     auto& oldLayer = _layerStack.top();
@@ -583,7 +612,9 @@ HRESULT __CGContext::PopLayer() {
     ComPtr<ID2D1Image> incomingImageTarget;
     RETURN_IF_FAILED(incomingLayer.GetTarget(&incomingImageTarget));
 
+    EscapeBeginEndDrawStack();
     deviceContext->SetTarget(incomingImageTarget.Get());
+    UnescapeBeginEndDrawStack();
 
     RETURN_IF_FAILED(DrawImage(outgoingCommandList.Get()));
 
@@ -2163,8 +2194,9 @@ HRESULT __CGContext::DrawToCommandList(_CGCoordinateMode coordinateMode,
     ComPtr<ID2D1CommandList> commandList;
     RETURN_IF_FAILED(deviceContext->CreateCommandList(&commandList));
 
-    deviceContext->BeginDraw();
+    EscapeBeginEndDrawStack();
     deviceContext->SetTarget(commandList.Get());
+    deviceContext->BeginDraw();
 
     CGAffineTransform transform = CGAffineTransformIdentity;
     switch (coordinateMode) {
@@ -2191,6 +2223,7 @@ HRESULT __CGContext::DrawToCommandList(_CGCoordinateMode coordinateMode,
     RETURN_IF_FAILED(commandList->Close());
 
     deviceContext->SetTarget(originalTarget.Get());
+    UnescapeBeginEndDrawStack();
 
     *outCommandList = commandList.Detach();
     return S_OK;
@@ -2204,7 +2237,9 @@ HRESULT __CGContext::DrawImage(ID2D1Image* image) {
         return S_OK;
     }
 
-    deviceContext->BeginDraw();
+    PushBeginDraw();
+    // TODO GH#1194: We will need to re-evaluate Direct2D's D2DERR_RECREATE when we move to HW acceleration.
+    auto popEnd = wil::ScopeExit([this]() { this->PopEndDraw(); });
 
     bool layer = false;
     if (state.clippingGeometry || !IS_NEAR(state.globalAlpha, 1.0, .0001f) || state.opacityBrush) {
@@ -2231,9 +2266,6 @@ HRESULT __CGContext::DrawImage(ID2D1Image* image) {
     if (layer) {
         deviceContext->PopLayer();
     }
-
-    // TODO GH#1194: We will need to re-evaluate Direct2D's D2DERR_RECREATE when we move to HW acceleration.
-    RETURN_IF_FAILED(deviceContext->EndDraw());
 
     return S_OK;
 }
@@ -2940,38 +2972,23 @@ CGContextRef _CGBitmapContextCreateWithFormat(int width, int height, __CGSurface
     return StubReturn();
 }
 #pragma endregion
+
 #pragma region CGContextBeginDrawEndDraw
 
-void _CGContextPushBeginDraw(CGContextRef ctx) {
-    if ((ctx->_beginEndDrawDepth)++ == 0) {
-        ID2D1RenderTarget* imgRenderTarget = ctx->Backing()->DestImage()->Backing()->GetRenderTarget();
-        THROW_HR_IF_NULL(E_UNEXPECTED, imgRenderTarget);
-        imgRenderTarget->BeginDraw();
-    }
+void _CGContextPushBeginDraw(CGContextRef context) {
+    context->PushBeginDraw();
 }
 
-void _CGContextPopEndDraw(CGContextRef ctx) {
-    if (--(ctx->_beginEndDrawDepth) == 0) {
-        ID2D1RenderTarget* imgRenderTarget = ctx->Backing()->DestImage()->Backing()->GetRenderTarget();
-        THROW_HR_IF_NULL(E_UNEXPECTED, imgRenderTarget);
-        THROW_IF_FAILED(imgRenderTarget->EndDraw());
-    }
+void _CGContextPopEndDraw(CGContextRef context) {
+    FAIL_FAST_IF_FAILED(context->PopEndDraw());
 }
 
-void _CGContextEscapeBeginEndDrawStack(CGContextRef ctx) {
-    if ((ctx->_beginEndDrawDepth > 0) && ((ctx->_escapeBeginEndDrawDepth)++ == 0)) {
-        ID2D1RenderTarget* imgRenderTarget = ctx->Backing()->DestImage()->Backing()->GetRenderTarget();
-        THROW_HR_IF_NULL(E_UNEXPECTED, imgRenderTarget);
-        THROW_IF_FAILED(imgRenderTarget->EndDraw());
-    }
+void _CGContextEscapeBeginEndDrawStack(CGContextRef context) {
+    FAIL_FAST_IF_FAILED(context->EscapeBeginEndDrawStack());
 }
 
-void _CGContextUnescapeBeginEndDrawStack(CGContextRef ctx) {
-    if ((ctx->_beginEndDrawDepth > 0) && (--(ctx->_escapeBeginEndDrawDepth) == 0)) {
-        ID2D1RenderTarget* imgRenderTarget = ctx->Backing()->DestImage()->Backing()->GetRenderTarget();
-        THROW_HR_IF_NULL(E_UNEXPECTED, imgRenderTarget);
-        imgRenderTarget->BeginDraw();
-    }
+void _CGContextUnescapeBeginEndDrawStack(CGContextRef context) {
+    context->UnescapeBeginEndDrawStack();
 }
 
 #pragma endregion
