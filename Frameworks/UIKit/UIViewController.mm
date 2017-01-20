@@ -2422,7 +2422,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
         }
     }
 
-    _UILayoutGuide* tlg = [[_UILayoutGuide alloc] initWithIdentifier:@"_UIViewControllerTop"];
+    _UILayoutGuide* tlg = [[[_UILayoutGuide alloc] initWithIdentifier:@"_UIViewControllerTop"] autorelease];
     [view addSubview:tlg];
     [view addConstraint:[NSLayoutConstraint constraintWithItem:view
                                                      attribute:NSLayoutAttributeTop
@@ -2462,7 +2462,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
         }
     }
 
-    _UILayoutGuide* blg = [[_UILayoutGuide alloc] initWithIdentifier:@"_UIViewControllerBottom"];
+    _UILayoutGuide* blg = [[[_UILayoutGuide alloc] initWithIdentifier:@"_UIViewControllerBottom"] autorelease];
     [view addSubview:blg];
     [view addConstraint:[NSLayoutConstraint constraintWithItem:view
                                                      attribute:NSLayoutAttributeBottom
