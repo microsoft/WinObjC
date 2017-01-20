@@ -2068,14 +2068,21 @@ void CGContextShowGlyphsWithAdvances(CGContextRef context, const CGGlyph* glyphs
 
 #pragma region Drawing Operations - Basic Shapes
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes only supports the scenario where clipping is not set.
+ Also only works on untransformed coordinates.
+ The cleared region will be cleared in device space.
 */
 void CGContextClearRect(CGContextRef context, CGRect rect) {
     NOISY_RETURN_IF_NULL(context);
     ComPtr<ID2D1DeviceContext> deviceContext = context->DeviceContext();
-    deviceContext->PushAxisAlignedClip(__CGRectToD2D_F(rect), D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
-    deviceContext->Clear(nullptr); // transparent black clear
-    deviceContext->PopAxisAlignedClip();
+    if (!context->CurrentGState().clippingGeometry) {
+        deviceContext->BeginDraw();
+        deviceContext->PushAxisAlignedClip(__CGRectToD2D_F(rect), D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
+        deviceContext->Clear(nullptr); // transparent black clear
+        deviceContext->PopAxisAlignedClip();
+        deviceContext->EndDraw();
+    }
 }
 
 HRESULT __CGContext::_CreateShadowEffect(ID2D1Image* inputImage, ID2D1Effect** outShadowEffect) {
