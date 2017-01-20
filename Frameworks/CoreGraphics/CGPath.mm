@@ -42,69 +42,73 @@ protected:
     InspectableClass(L"Windows.Bridge.Direct2D._CGPathCustomSink", TrustLevel::BaseTrust);
 
 public:
-    ID2D1GeometrySink* getBackingSink() {
+    ID2D1GeometrySink* GetBackingSink() {
         return geometrySink.Get();
     }
 
-    _CGPathCustomSink(_In_ ID2D1GeometrySink* sink) : geometrySink(sink), isFigureOpen(false) {
-    }
-
-    STDMETHOD_(void, _EndFigure)(D2D1_FIGURE_END figureEnd) {
-        if (isFigureOpen) {
-            geometrySink->EndFigure(figureEnd);
-            isFigureOpen = false;
-        }
+    _CGPathCustomSink(_In_ ID2D1GeometrySink* sink) : m_geometrySink(sink), m_isFigureOpen(false) {
     }
 
     STDMETHOD_(void, SetFillMode)(D2D1_FILL_MODE fillMode) {
-        geometrySink->SetFillMode(fillMode);
+        m_geometrySink->SetFillMode(fillMode);
     }
 
     STDMETHOD_(void, SetSegmentFlags)(D2D1_PATH_SEGMENT vertexFlags) {
-        geometrySink->SetSegmentFlags(vertexFlags);
+        m_geometrySink->SetSegmentFlags(vertexFlags);
     }
 
     STDMETHOD_(void, AddLines)(_In_reads_(pointsCount) CONST D2D1_POINT_2F* points, UINT32 pointsCount) {
-        geometrySink->AddLines(points, pointsCount);
-        lastPoint = points[pointsCount - 1];
+        m_geometrySink->AddLines(points, pointsCount);
+        m_lastPoint = points[pointsCount - 1];
     }
 
     STDMETHOD_(void, AddBeziers)(_In_reads_(beziersCount) CONST D2D1_BEZIER_SEGMENT* beziers, UINT32 beziersCount) {
-        geometrySink->AddBeziers(beziers, beziersCount);
-        lastPoint = beziers[beziersCount - 1].point3;
+        m_geometrySink->AddBeziers(beziers, beziersCount);
+        m_lastPoint = beziers[beziersCount - 1].point3;
     }
 
     STDMETHOD_(void, BeginFigure)(D2D1_POINT_2F startPoint, D2D1_FIGURE_BEGIN figureBegin) {
-        if (isFigureOpen) {
-            if (startPoint.x != lastPoint.x || startPoint.y != lastPoint.y) {
+        if (m_isFigureOpen) {
+            if (startPoint.x != m_lastPoint.x || startPoint.y != m_lastPoint.y) {
                 _EndFigure(D2D1_FIGURE_END_OPEN);
-                geometrySink->BeginFigure(startPoint, figureBegin);
+                m_geometrySink->BeginFigure(startPoint, figureBegin);
             }
         } else {
-            geometrySink->BeginFigure(startPoint, figureBegin);
+            m_geometrySink->BeginFigure(startPoint, figureBegin);
         }
-        isFigureOpen = true;
+        m_isFigureOpen = true;
     }
 
+    // We are using an internal end figure call to force any simplify call to leave the figure open. Otherwise
+    // Simplify will end and close the path causing an error state on further operations.
+    STDMETHOD_(void, _EndFigure)(D2D1_FIGURE_END figureEnd) {
+        if (m_isFigureOpen) {
+            m_geometrySink->EndFigure(figureEnd);
+            m_isFigureOpen = false;
+        }
+    }
+
+    // EndFigure is left blank to allow any Simplify call to leave the figure open. See _EndFigure
     STDMETHOD_(void, EndFigure)(D2D1_FIGURE_END figureEnd) {
     }
 
+    STDMETHOD(_Close)() {
+        return m_geometrySink->Close();
+    }
+
+    // Close is left blank to prevent any Simplify call from closing and forcing us to re-open the current path.
     STDMETHOD(Close)() {
         return S_OK;
     };
 
-    STDMETHOD(_Close)() {
-        return geometrySink->Close();
-    }
-
     STDMETHOD_(bool, IsFigureOpen)() {
-        return isFigureOpen;
+        return m_isFigureOpen;
     }
 
 private:
-    ComPtr<ID2D1GeometrySink> geometrySink;
-    D2D1_POINT_2F lastPoint;
-    bool isFigureOpen;
+    ComPtr<ID2D1GeometrySink> m_geometrySink;
+    D2D1_POINT_2F m_lastPoint;
+    bool m_isFigureOpen;
 };
 
 static inline CGPoint __CreateCGPointWithTransform(CGFloat x, CGFloat y, const CGAffineTransform* transform) {
@@ -135,7 +139,7 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
     }
 
     ID2D1GeometrySink* GetGeometrySink() const {
-        return geometrySink->getBackingSink();
+        return geometrySink->GetBackingSink();
     }
 
     CGPoint GetCurrentPoint() const {
