@@ -55,4 +55,9 @@
     <Link Include="@(_ImportLibsFromPackage)"/>
 
   </ItemGroup>
+
+  <!-- TODO: Remove when ANGLE package is correct -->
+    <ItemGroup>
+      <ReferenceCopyLocalPaths Include="$(angle-BinPath)\*.dll" />
+    </ItemGroup>
 </Project>
