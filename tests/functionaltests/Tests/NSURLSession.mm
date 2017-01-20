@@ -617,7 +617,7 @@ inline int _GetLastDelegateCall(NSURLSessionDownloadTaskTestHelper* downloadTask
 /**
  * Test to verify a download task call can be successfully made and can be cancelled/resumed at runtime.
  */
-TEST(NSURLSession, DownloadTaskWithURL_WithCancelResume) {
+DISABLED_TEST(NSURLSession, DownloadTaskWithURL_WithCancelResume) {
     NSURLSessionDownloadTaskTestHelper* downloadTaskTestHelper = [[NSURLSessionDownloadTaskTestHelper alloc] init];
     NSURLSession* session = [downloadTaskTestHelper createSession];
     NSURL* url = [NSURL URLWithString:@"http://speedtest.ams01.softlayer.com/downloads/test500.zip"];

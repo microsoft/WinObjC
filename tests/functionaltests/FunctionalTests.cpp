@@ -164,7 +164,6 @@ extern void NSURLSessionDataTaskWithURL_WithCompletionHandler_Failure();
 extern void NSURLSessionDownloadTaskWithURL();
 extern void NSURLSessionDownloadTaskWithURL_Failure();
 extern void NSURLSessionDownloadTaskWithURL_WithCompletionHandler();
-extern void NSURLSessionDownloadTaskWithURL_WithCancelResume();
 
 class NSURL {
 public:
@@ -240,10 +239,6 @@ public:
         END_TEST_METHOD_PROPERTIES()
 #endif
         NSURLSessionDownloadTaskWithURL_WithCompletionHandler();
-    }
-
-    TEST_METHOD(NSURLSession_DownloadTaskWithURL_WithCancelResume) {
-        NSURLSessionDownloadTaskWithURL_WithCancelResume();
     }
 }; /* class NSURL */
 
