@@ -22,6 +22,7 @@
 #import <Foundation/NSMutableDictionary.h>
 #import "CoreGraphics/CGContext.h"
 #import "CoreTextInternal.h"
+#import "CGContextInternal.h"
 #import "NSParagraphStyleInternal.h"
 #import <assert.h>
 #import "LoggingNative.h"
@@ -145,6 +146,8 @@ static NSDictionary* _getDefaultUITextAttributes() {
     }
 
     CGContextRef context = UIGraphicsGetCurrentContext();
+    _CGContextPushBeginDraw(context);
+    auto popEnd = wil::ScopeExit([context]() { _CGContextPopEndDraw(context); });
 
     // Invert text matrix so glyphs are drawn with correct orientation
     CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0f, -1.0f));

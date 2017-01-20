@@ -41,6 +41,7 @@
 #import "UIGestureRecognizerInternal.h"
 #import "CALayerInternal.h"
 #import "CAAnimationInternal.h"
+#import "CGContextInternal.h"
 #import <AutoLayout.h>
 #import <NSLayoutConstraint+AutoLayout.h>
 #import "NSLayoutAnchorInternal.h"
@@ -243,7 +244,7 @@ BOOL g_resetAllTrackingGestures = TRUE;
     // scanning DManip Gestures, if one gesture is ongoing, cancel all DManip Gestures
     // otherwise, send Touch to DManip gestures
     for (int i = 0; i < dManipGestureCount; i++) {
-         UIGestureRecognizer* dManipGesture = dManipRecognizers[i];
+        UIGestureRecognizer* dManipGesture = dManipRecognizers[i];
         if (gestureOnGoing) {
             [dManipGesture _cancelIfActive];
             if (DEBUG_GESTURES) {
@@ -527,9 +528,7 @@ static std::string _printViewhierarchy(UIView* leafView) {
     if (!touchPoint.touch->_view) {
         // Ignore if the pointer isn't captured
         if (DEBUG_TOUCHES_LIGHT) {
-            TraceVerbose(TAG,
-                L"View for touch is nil!, ignoring touch for touchPhase %d.",
-                touchPhase);
+            TraceVerbose(TAG, L"View for touch is nil!, ignoring touch for touchPhase %d.", touchPhase);
         }
     } else if (touchPhase != UITouchPhaseBegan && ![touchPoint.touch->_view->priv->currentTouches containsObject:touchPoint.touch]) {
         // Ignore if the pointer isn't captured
@@ -2252,14 +2251,18 @@ static float doRound(float f) {
 */
 - (void)drawLayer:(CALayer*)layer inContext:(CGContextRef)context {
     UIGraphicsPushContext(context);
+    _CGContextPushBeginDraw(context);
+
+    auto popEnd = wil::ScopeExit([context]() {
+        _CGContextPopEndDraw(context);
+        UIGraphicsPopContext();
+    });
 
     CGRect bounds;
     // TODO(DH)
     bounds = self.bounds;
-    //bounds = CGContextGetClipBoundingBox(context);
+    // bounds = CGContextGetClipBoundingBox(context);
     [self drawRect:bounds];
-
-    UIGraphicsPopContext();
 }
 
 /**
