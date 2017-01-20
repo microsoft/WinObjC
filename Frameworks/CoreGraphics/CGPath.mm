@@ -43,7 +43,7 @@ protected:
 
 public:
     ID2D1GeometrySink* GetBackingSink() {
-        return geometrySink.Get();
+        return m_geometrySink.Get();
     }
 
     _CGPathCustomSink(_In_ ID2D1GeometrySink* sink) : m_geometrySink(sink), m_isFigureOpen(false) {
@@ -387,7 +387,7 @@ static HRESULT _createPathReadyForFigure(CGPathRef previousPath,
     ComPtr<ID2D1Factory> factory;
     RETURN_IF_FAILED(_CGGetD2DFactory(&factory));
     RETURN_IF_FAILED(factory->CreatePathGeometry(pathGeometry));
-    RETURN_IF_FAILED((*pathGeometry)->Open((ID2D1GeometrySink**)geometrySink));
+    RETURN_IF_FAILED((*pathGeometry)->Open(geometrySink));
     (*geometrySink)->SetFillMode(D2D1_FILL_MODE_WINDING);
 
     CGPoint invertedPoint = _getInvertedCurrentPointOfPath(previousPath);
@@ -724,7 +724,6 @@ void CGPathAddCurveToPoint(CGMutablePathRef path,
     newSink->EndFigure(D2D1_FIGURE_END_OPEN);
     FAIL_FAST_IF_FAILED(newSink->Close());
 
-    path->BeginFigure();
     FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(newPath.Get(), transform));
 
     if (transform) {

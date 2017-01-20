@@ -408,7 +408,7 @@ DRAW_TEST_F(CGPath, PathApplyControlPointsArcsSimple, UIKitMimicTest<>) {
 }
 
 // Fill Tests
-DRAW_TEST_F(CGPath, FillArcsSimple, UIKitMimicTest) {
+DRAW_TEST_F(CGPath, FillArcsSimple, UIKitMimicTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
     CGFloat width = bounds.size.width;
@@ -434,7 +434,7 @@ DRAW_TEST_F(CGPath, FillArcsSimple, UIKitMimicTest) {
     CGPathRelease(thepath);
 }
 
-DRAW_TEST_F(CGPath, FillArcsComplex, UIKitMimicTest) {
+DRAW_TEST_F(CGPath, FillArcsComplex, UIKitMimicTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
     CGFloat width = bounds.size.width;
@@ -470,7 +470,7 @@ DRAW_TEST_F(CGPath, FillArcsComplex, UIKitMimicTest) {
     CGPathRelease(thepath);
 }
 
-DRAW_TEST_F(CGPath, FillStraightLines, UIKitMimicTest) {
+DRAW_TEST_F(CGPath, FillStraightLines, UIKitMimicTest<>) {
     CGContextRef context = GetDrawingContext();
     applyBounds = GetDrawingBounds();
     CGFloat width = applyBounds.size.width;
@@ -500,7 +500,7 @@ DRAW_TEST_F(CGPath, FillStraightLines, UIKitMimicTest) {
     CGPathRelease(thepath);
 }
 
-DRAW_TEST_F(CGPath, FillModeCircles, UIKitMimicTest) {
+DRAW_TEST_F(CGPath, FillModeCircles, UIKitMimicTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
     CGFloat width = bounds.size.width;
