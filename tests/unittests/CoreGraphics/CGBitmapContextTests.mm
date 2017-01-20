@@ -151,25 +151,24 @@ DISABLED_TEST(CGBitmapContext, VerifyPixelFormatBGRA) {
                      );
 }
 
-static void _expectArrayValues(const BYTE* res, const BYTE* source, int size) {
-    for (int i = 0; i < size; ++i) {
-        EXPECT_EQ(res[i], source[i]);
+#define EXPECT_ARRAY_EQ(expected, actual, size) \
+    for (int i = 0; i < (size); ++i) { \
+        EXPECT_EQ((expected)[i], (actual)[i]) << i << " of " << size; \
     }
-}
 
 TEST(CGBitmapContext, BitmapInfoAPIs_Gray) {
     CGColorSpaceRef grayColorSpace = CGColorSpaceCreateDeviceGray();
     CGContextRef context = CGBitmapContextCreate(0, 0, 0, 8, 0, grayColorSpace, 0);
     EXPECT_EQ(context, nullptr);
 
-    context = CGBitmapContextCreate(nullptr, 120, 20, 8, 480, grayColorSpace, 0);
+    context = CGBitmapContextCreate(nullptr, 120, 20, 8, 120, grayColorSpace, 0);
     EXPECT_NE(context, nullptr);
 }
 
 TEST(CGBitmapContext, BitmapInfoAPIs_RGB) {
     CGColorSpaceRef rgbColorSpace = CGColorSpaceCreateDeviceRGB();
 
-    CGContextRef context = CGBitmapContextCreate(nullptr, 120, 20, 8, 480, rgbColorSpace, kCGImageAlphaPremultipliedFirst);
+    CGContextRef context = CGBitmapContextCreate(nullptr, 120, 20, 8, 480, rgbColorSpace, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
 
     EXPECT_EQ(CGBitmapContextGetBitsPerComponent(context), 8);
     EXPECT_EQ(CGBitmapContextGetBitsPerPixel(context), 32);
@@ -186,8 +185,9 @@ TEST(CGBitmapContext, BitmapInfoAPIs_RGB) {
 TEST(CGBitmapContext, Rendering) {
     woc::unique_cf<CGColorSpaceRef> rgbColorSpace(CGColorSpaceCreateDeviceRGB());
 
+    //                 R     G  B  A
     BYTE result[4] = { 0xff, 0, 0, 0xff };
-    woc::unique_cf<CGContextRef> context(CGBitmapContextCreate(nullptr, 1, 1, 8, 4, rgbColorSpace.get(), kCGImageAlphaPremultipliedFirst));
+    woc::unique_cf<CGContextRef> context(CGBitmapContextCreate(nullptr, 1, 1, 8, 4, rgbColorSpace.get(), kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big));
 
     EXPECT_EQ(CGBitmapContextGetBitsPerComponent(context.get()), 8);
     EXPECT_EQ(CGBitmapContextGetBitsPerPixel(context.get()), 32);
@@ -207,7 +207,7 @@ TEST(CGBitmapContext, Rendering) {
     BYTE* data = static_cast<BYTE*>(CGBitmapContextGetData(context.get()));
     ASSERT_NE(data, nullptr);
 
-    _expectArrayValues(result, data, 4);
+    EXPECT_ARRAY_EQ(result, data, 4);
 
     // Create the image out of the bitmap context
     woc::unique_cf<CGImageRef> image(CGBitmapContextCreateImage(context.get()));
@@ -217,7 +217,7 @@ TEST(CGBitmapContext, Rendering) {
     ASSERT_NE(rawData, nullptr);
 
     const BYTE* rData = static_cast<const BYTE*>(CFDataGetBytePtr(rawData.get()));
-    _expectArrayValues(result, rData, 4);
+    EXPECT_ARRAY_EQ(result, rData, 4);
 }
 
 struct BitmapFormatTestCase {
@@ -234,16 +234,21 @@ TEST_P(BitmapFormats, BufferCompare) {
     const BitmapFormatTestCase& testInfo = GetParam();
     const size_t width = 4;
     const size_t height = 1;
-    size_t bytesPerPixel = 2 << (testInfo.bitsPerPixel >> 3);
+    size_t bytesPerPixel = testInfo.bitsPerPixel >> 3;
     size_t stride = width * bytesPerPixel;
     std::vector<uint8_t> data(stride * height, 0);
-    woc::unique_cf<CGColorSpaceRef> rgbColorSpace{ CGColorSpaceCreateDeviceRGB() };
+    woc::unique_cf<CGColorSpaceRef> colorSpace;
+    if (bytesPerPixel == 1) {
+        colorSpace.reset(CGColorSpaceCreateDeviceGray());
+    } else {
+        colorSpace.reset(CGColorSpaceCreateDeviceRGB());
+    }
     woc::unique_cf<CGContextRef> context{ CGBitmapContextCreateWithData(data.data(),
                                                                         width,
                                                                         height,
                                                                         testInfo.bitsPerPixel / testInfo.nComponents,
                                                                         stride,
-                                                                        rgbColorSpace.get(),
+                                                                        colorSpace.get(),
                                                                         testInfo.bitmapInfo,
                                                                         nullptr,
                                                                         nullptr) };
@@ -258,7 +263,7 @@ TEST_P(BitmapFormats, BufferCompare) {
     size_t compareBufferLength = testInfo.expectedPixelValues.size();
     for (size_t i = 0; i < data.size(); ++i) {
         uint8_t maskedValue = data[i] & testInfo.mask[i % maskLength];
-        EXPECT_EQ(maskedValue, testInfo.expectedPixelValues[i % compareBufferLength]);
+        EXPECT_EQ(testInfo.expectedPixelValues[i % compareBufferLength], maskedValue) << i;
     }
 }
 
@@ -269,18 +274,17 @@ static BitmapFormatTestCase bitmapFormatTestCases[]{
     { kCGImageAlphaOnly,                                            1,           8, { 0xFF }                  , { 0x80 }                   },
 
     // RGBX (32bpp)
-    { kCGImageAlphaNoneSkipLast       | kCGBitmapByteOrder32Little, 4,          32, { 0xFF, 0xFF, 0xFF, 0x00 }, { 0x20, 0x40, 0x00, 0x00 } },
+    { kCGImageAlphaNoneSkipLast       | kCGBitmapByteOrder32Big,    4,          32, { 0xFF, 0xFF, 0xFF, 0x00 }, { 0x10, 0x20, 0x00, 0x00 } },
 
     // RGBA (32bpp premultiplied)
-    { kCGImageAlphaPremultipliedLast  | kCGBitmapByteOrder32Little, 4,          32, { 0xFF, 0xFF, 0xFF, 0xFF }, { 0x10, 0x20, 0x00, 0x80 } },
+    { kCGImageAlphaPremultipliedLast  | kCGBitmapByteOrder32Big,    4,          32, { 0xFF, 0xFF, 0xFF, 0xFF }, { 0x10, 0x20, 0x00, 0x80 } },
 
-    // BGRX (32bpp)
-    { kCGImageAlphaNoneSkipFirst      | kCGBitmapByteOrder32Big,    4,          32, { 0xFF, 0xFF, 0xFF, 0x00 }, { 0x00, 0x40, 0x20, 0x00 } },
+    // BGRX (32bpp) (XRGB but in LE)
+    { kCGImageAlphaNoneSkipFirst      | kCGBitmapByteOrder32Little, 4,          32, { 0xFF, 0xFF, 0xFF, 0x00 }, { 0x00, 0x20, 0x10, 0x00 } },
 
-    // BGRX (32bpp premultiplied)
-    { kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Big,    4,          32, { 0xFF, 0xFF, 0xFF, 0xFF }, { 0x00, 0x20, 0x10, 0x80 } },
+    // BGRA (32bpp premultiplied) (ARGB but in LE)
+    { kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Little, 4,          32, { 0xFF, 0xFF, 0xFF, 0xFF }, { 0x00, 0x20, 0x10, 0x80 } },
 };
 // clang-format on
 
-// Github #1694 - enable this when tests are fixed.
-// INSTANTIATE_TEST_CASE_P(CGBitmapContextFormat, BitmapFormats, ::testing::ValuesIn(bitmapFormatTestCases));
+INSTANTIATE_TEST_CASE_P(CGBitmapContextFormat, BitmapFormats, ::testing::ValuesIn(bitmapFormatTestCases));
