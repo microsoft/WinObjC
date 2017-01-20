@@ -360,7 +360,7 @@
                                     <constraint firstAttribute="height" constant="100" id="jzf-wl-pPs"/>
                                     <constraint firstAttribute="width" constant="300" id="oPb-uK-RMZ"/>
                                 </constraints>
-                                <string key="text">Click the control to gain focus. Use the keyboard to type and caret nagivate. Hold shift to update the selection. Right click or Ctrl+C or V to copy and paste.</string>
+                                <string key="text">Click the control to gain focus. Use the keyboard to type and caret navigate. Hold shift to update the selection. Right click or Ctrl+C or V to copy and paste.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>

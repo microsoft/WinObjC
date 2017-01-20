@@ -258,6 +258,13 @@ private:
     woc::unique_cf<CGColorSpaceRef> _fillColorSpace;
     woc::unique_cf<CGColorSpaceRef> _strokeColorSpace;
 
+    // Keeps track of the depth of a 'stack' of PushBeginDraw/PopEndDraw calls
+    // Since nothing needs to actually be put on a stack, just increment a counter insteads
+    std::atomic_uint32_t _beginEndDrawDepth = { 0 };
+
+    // Keeps track of the depth of a 'stack' of (Un)EscapeBeginEndDrawStack calls
+    std::atomic_uint32_t _escapeBeginEndDrawDepth = { 0 };
+
     inline HRESULT _SaveD2DDrawingState(ID2D1DrawingStateBlock** pDrawingState) {
         RETURN_HR_IF(E_POINTER, !pDrawingState);
 
@@ -2921,4 +2928,39 @@ CGContextRef _CGBitmapContextCreateWithFormat(int width, int height, __CGSurface
     UNIMPLEMENTED();
     return StubReturn();
 }
+#pragma endregion
+#pragma region CGContextBeginDrawEndDraw
+
+void _CGContextPushBeginDraw(CGContextRef ctx) {
+    if ((ctx->_beginEndDrawDepth)++ == 0) {
+        ID2D1RenderTarget* imgRenderTarget = ctx->Backing()->DestImage()->Backing()->GetRenderTarget();
+        THROW_HR_IF_NULL(E_UNEXPECTED, imgRenderTarget);
+        imgRenderTarget->BeginDraw();
+    }
+}
+
+void _CGContextPopEndDraw(CGContextRef ctx) {
+    if (--(ctx->_beginEndDrawDepth) == 0) {
+        ID2D1RenderTarget* imgRenderTarget = ctx->Backing()->DestImage()->Backing()->GetRenderTarget();
+        THROW_HR_IF_NULL(E_UNEXPECTED, imgRenderTarget);
+        THROW_IF_FAILED(imgRenderTarget->EndDraw());
+    }
+}
+
+void _CGContextEscapeBeginEndDrawStack(CGContextRef ctx) {
+    if ((ctx->_beginEndDrawDepth > 0) && ((ctx->_escapeBeginEndDrawDepth)++ == 0)) {
+        ID2D1RenderTarget* imgRenderTarget = ctx->Backing()->DestImage()->Backing()->GetRenderTarget();
+        THROW_HR_IF_NULL(E_UNEXPECTED, imgRenderTarget);
+        THROW_IF_FAILED(imgRenderTarget->EndDraw());
+    }
+}
+
+void _CGContextUnescapeBeginEndDrawStack(CGContextRef ctx) {
+    if ((ctx->_beginEndDrawDepth > 0) && (--(ctx->_escapeBeginEndDrawDepth) == 0)) {
+        ID2D1RenderTarget* imgRenderTarget = ctx->Backing()->DestImage()->Backing()->GetRenderTarget();
+        THROW_HR_IF_NULL(E_UNEXPECTED, imgRenderTarget);
+        imgRenderTarget->BeginDraw();
+    }
+}
+
 #pragma endregion

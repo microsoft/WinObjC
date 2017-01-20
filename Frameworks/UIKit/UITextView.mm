@@ -398,7 +398,11 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
  @Status Interoperable
 */
 - (void)drawRect:(CGRect)rect {
-    CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), [_textColor CGColor]);
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    _CGContextPushBeginDraw(ctx);
+    auto popEnd = wil::ScopeExit([ctx]() { _CGContextPopEndDraw(ctx); });
+
+    CGContextSetFillColorWithColor(ctx, [_textColor CGColor]);
 
     NSRange range{ 0, INT_MAX };
     CGPoint origin = self.bounds.origin;
@@ -759,7 +763,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     centerRect.origin.y = 0;
     centerRect.size = fontExtent;
     // TODO(DH)
-    //EbrCenterTextInRectVertically(&centerRect, &fontExtent, _font);
+    // EbrCenterTextInRectVertically(&centerRect, &fontExtent, _font);
     rect.origin.y += centerRect.origin.y;
 
     ret.width = ourRect.size.width;

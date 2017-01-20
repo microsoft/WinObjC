@@ -874,7 +874,7 @@
         textEdit.autoresizingMask = infoLabel.autoresizingMask = focusButton.autoresizingMask =
             UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
 
-        infoLabel.text = @"Click the control to gain focus. Use the keyboard to type and caret nagivate. Hold shift to update the "
+        infoLabel.text = @"Click the control to gain focus. Use the keyboard to type and caret navigate. Hold shift to update the "
                          @"selection. Right click or Ctrl+C or V to copy and paste.";
         infoLabel.numberOfLines = 0;
         infoLabel.textAlignment = NSTextAlignmentCenter;

@@ -23,6 +23,7 @@
 #include <UIKit/UIGraphics.h>
 
 #include "CoreTextInternal.h"
+#include "CGContextInternal.h"
 
 #include <vector>
 #include <functional>
@@ -256,6 +257,9 @@ static inline CGSize __CTLineGetBounds(CTLineRef line) {
     CGContextRef curCtx = UIGraphicsGetCurrentContext();
     CGContextSaveGState(curCtx);
     CGContextSetTextMatrix(curCtx, CGAffineTransformMakeScale(1.0f, -1.0f));
+
+    _CGContextPushBeginDraw(curCtx);
+    auto popEnd = wil::ScopeExit([curCtx]() { _CGContextPopEndDraw(curCtx); });
 
     int count = [_ctLines count];
     for (int curLine = 0; curLine < count; curLine++) {

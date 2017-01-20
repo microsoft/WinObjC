@@ -41,6 +41,22 @@ COREGRAPHICS_EXPORT bool CGContextIsPointInPath(CGContextRef c, bool eoFill, flo
 COREGRAPHICS_EXPORT void CGContextDrawGlyphRun(CGContextRef ctx, const DWRITE_GLYPH_RUN* glyphRun);
 
 // Bitmap Context Internal
-COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithRenderTarget(ID2D1RenderTarget* renderTarget, CGImageRef img, WICPixelFormatGUID outputPixelFormat);
+COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithRenderTarget(ID2D1RenderTarget* renderTarget,
+                                                                        CGImageRef img,
+                                                                        WICPixelFormatGUID outputPixelFormat);
 COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithFormat(int width, int height, __CGSurfaceFormat fmt);
 COREGRAPHICS_EXPORT CGImageRef CGBitmapContextGetImage(CGContextRef ctx);
+// Reduces the number of BeginDraw() and EndDraw() calls needed, by counting in a stack-like manner,
+// and only calling BeginDraw()/EndDraw() when the stack is empty/emptied
+COREGRAPHICS_EXPORT void _CGContextPushBeginDraw(CGContextRef ctx);
+COREGRAPHICS_EXPORT void _CGContextPopEndDraw(CGContextRef ctx);
+
+// If currently in a Begin/EndDraw stack, Escape will EndDraw(), Unescape will BeginDraw()
+// For scenarios where a Begin/EndDraw pair needs to be temporarily escaped, to be returned to at a later time
+// Ie:
+//      - Switching render targets - Illegal to do so if currently in a Begin/EndDraw pair
+//      - Cairo - ID2D1RenderTarget is considered to 'own' the bitmap during Begin/EndDraw,
+//                unsafe to edit the same bitmap from cairo at this time
+// Also counts in a stack-like manner, so that the escape and unescape only happen once
+COREGRAPHICS_EXPORT void _CGContextEscapeBeginEndDrawStack(CGContextRef ctx);
+COREGRAPHICS_EXPORT void _CGContextUnescapeBeginEndDrawStack(CGContextRef ctx);

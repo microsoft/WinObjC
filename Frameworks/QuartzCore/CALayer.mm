@@ -393,6 +393,13 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
     [self layoutIfNeeded];
 
     CGContextSaveGState(ctx);
+    _CGContextPushBeginDraw(ctx);
+
+    auto popEnd = wil::ScopeExit([ctx]() {
+        _CGContextPopEndDraw(ctx);
+        CGContextRestoreGState(ctx);
+    });
+
     CGContextTranslateCTM(ctx, priv->position.x, priv->position.y);
     CGContextTranslateCTM(ctx, -priv->bounds.size.width * priv->anchorPoint.x, -priv->bounds.size.height * priv->anchorPoint.y);
     CGRect destRect;
@@ -435,8 +442,6 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
     LLTREE_FOREACH(curLayer, priv) {
         [curLayer->self renderInContext:ctx];
     }
-
-    CGContextRestoreGState(ctx);
 }
 
 /**
@@ -521,6 +526,13 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
         CGImageRef target = CGBitmapContextGetImage(drawContext);
 
         CGContextRetain(drawContext);
+        _CGContextPushBeginDraw(drawContext);
+
+        auto popEnd = wil::ScopeExit([drawContext]() {
+            _CGContextPopEndDraw(drawContext);
+            CGContextRelease(drawContext);
+        });
+
         CGImageRetain(target);
         priv->savedContext = drawContext;
 
@@ -561,7 +573,6 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
         }
 
         CGContextReleaseLock(drawContext);
-        CGContextRelease(drawContext);
 
         // If we've drawn anything, set it as our contents
         if (!CGContextIsDirty(drawContext)) {
@@ -2371,7 +2382,7 @@ CGPoint _legacyConvertPoint(CGPoint point, CALayer* fromLayer, CALayer* toLayer)
     //  Convert the point to center-based position
     point.x -= fromLayer->priv->bounds.size.width * fromLayer->priv->anchorPoint.x;
     point.y -= fromLayer->priv->bounds.size.height * fromLayer->priv->anchorPoint.y;
- 
+
     //  Convert to world-view
     CGAffineTransform fromTransform;
     GetLayerTransform(fromLayer, &fromTransform);
@@ -2381,11 +2392,11 @@ CGPoint _legacyConvertPoint(CGPoint point, CALayer* fromLayer, CALayer* toLayer)
     GetLayerTransform(toLayer, &toTransform);
     toTransform = CGAffineTransformInvert(toTransform);
     point = CGPointApplyAffineTransform(point, toTransform);
- 
+
     //  Convert the point from center-based position
     point.x += toLayer->priv->bounds.size.width * toLayer->priv->anchorPoint.x;
     point.y += toLayer->priv->bounds.size.height * toLayer->priv->anchorPoint.y;
- 
+
     return point;
 }
 
@@ -2439,10 +2450,16 @@ bool _floatAlmostEqual(float a, float b) {
         // How does our new convertPoint logic compare to the legacy logic?
         CGPoint legacyPoint = _legacyConvertPoint(point, fromLayer, toLayer);
         if (!_floatAlmostEqual(ret.x, legacyPoint.x) || !_floatAlmostEqual(ret.y, legacyPoint.y)) {
-            TraceWarning(TAG, L"convertPoint: The legacy point {%f, %f} did not match the new point {%f, %f}!", legacyPoint.x, legacyPoint.y, ret.x, ret.y);
+            TraceWarning(TAG,
+                         L"convertPoint: The legacy point {%f, %f} did not match the new point {%f, %f}!",
+                         legacyPoint.x,
+                         legacyPoint.y,
+                         ret.x,
+                         ret.y);
         }
 
-        TraceVerbose(TAG, L"convertPoint:{%f, %f} to:{%f, %f}, legacyPoint={%f, %f}", point.x, point.y, ret.x, ret.y, legacyPoint.x, legacyPoint.y);
+        TraceVerbose(
+            TAG, L"convertPoint:{%f, %f} to:{%f, %f}, legacyPoint={%f, %f}", point.x, point.y, ret.x, ret.y, legacyPoint.x, legacyPoint.y);
     }
 
     return ret;
