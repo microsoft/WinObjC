@@ -17,8 +17,22 @@
 
 #import <UIKit/UIControl.h>
 
+#import <Starboard/SmartTypes.h>
+
 @class UIRuntimeEventConnection;
 
-@interface UIControl (Internal)
+@interface UIControl () {
+@protected
+    StrongId<NSMutableArray> _registeredActions;
+    UIControlContentHorizontalAlignment _contentHorizontalAlignment;
+    UIControlContentVerticalAlignment _contentVerticalAlignment;
+
+    BOOL _touchInside;
+    UIControlState _curState;
+    StrongId<NSMutableArray> _activeTouches;
+    StrongId<UITouch> _controlEventTouch;
+    UIControlEvents _sendControlEventsOnBack;
+}
+
 - (void)_addEventConnection:(UIRuntimeEventConnection*)connection;
 @end
