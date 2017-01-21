@@ -284,8 +284,19 @@ public:
 
         // CG is a lower-left origin system (LLO), but D2D is upper left (ULO).
         // We have to translate the render area back onscreen and flip it up to ULO.
+        float height = 0.f;
+#ifdef _M_ARM
+        // TODO: GH#1769; GetSize() returns garbage on ARM.
+        // We would prefer to allow D2D to do the DPI calculation.
+        D2D1_SIZE_U targetPixelSize = deviceContext->GetPixelSize();
+        FLOAT dpiX, dpiY;
+        deviceContext->GetDpi(&dpiX, &dpiY);
+        height = (targetPixelSize.height * 96.0) / dpiY;
+#else
         D2D1_SIZE_F targetSize = deviceContext->GetSize();
-        deviceTransform = CGAffineTransformMake(1.f, 0.f, 0.f, -1.f, 0.f, targetSize.height);
+        height = targetSize.height;
+#endif
+        deviceTransform = CGAffineTransformMake(1.f, 0.f, 0.f, -1.f, 0.f, height);
 
         ComPtr<ID2D1Image> baselineTarget;
         deviceContext->GetTarget(&baselineTarget);
