@@ -27,50 +27,6 @@ static const wchar_t* TAG = L"AudioConverterTest";
 #import <AudioToolbox/AudioConverterInternal.h>
 
 
-@implementation AudioConverter
-- (ComPtr<IMFTransform>)getTransform {
-    return _transform;
-}
-
-- (float)getSizeChangeMultiplier {
-    return _sizeChangeMultiplier;
-}
-@end
-
-
-OSStatus _setMFProperties(const AudioStreamBasicDescription* format, IMFMediaType** mediaType) {
-    RETURN_AUDIOERR_IF_FAILED_WITH_MSG(MFCreateMediaType(mediaType), @"MFCreateMediaType failed");
-
-    RETURN_AUDIOERR_IF_FAILED_WITH_MSG((*mediaType)->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Audio), @"Setting the major type failed");
-
-    if (format->mFormatFlags & kAudioFormatFlagIsFloat) {
-        RETURN_AUDIOERR_IF_FAILED_WITH_MSG((*mediaType)->SetGUID(MF_MT_SUBTYPE, MFAudioFormat_Float), @"Setting the subtype failed");
-    } else {
-        RETURN_AUDIOERR_IF_FAILED_WITH_MSG((*mediaType)->SetGUID(MF_MT_SUBTYPE, MFAudioFormat_PCM), @"Setting the subtype failed");
-    }
-
-    RETURN_AUDIOERR_IF_FAILED_WITH_MSG((*mediaType)->SetUINT32(MF_MT_AUDIO_NUM_CHANNELS, format->mChannelsPerFrame),
-                                       @"Setting the number of audio channels failed");
-
-    RETURN_AUDIOERR_IF_FAILED_WITH_MSG((*mediaType)->SetUINT32(MF_MT_AUDIO_SAMPLES_PER_SECOND, format->mSampleRate),
-                                       @"Setting the number of audio samples per second failed");
-
-    RETURN_AUDIOERR_IF_FAILED_WITH_MSG((*mediaType)->SetUINT32(MF_MT_AUDIO_BLOCK_ALIGNMENT, format->mBytesPerFrame),
-                                       @"Setting the block alignment failed");
-
-    RETURN_AUDIOERR_IF_FAILED_WITH_MSG((*mediaType)
-                                           ->SetUINT32(MF_MT_AUDIO_AVG_BYTES_PER_SECOND, format->mSampleRate * format->mBytesPerFrame),
-                                       @"Setting the average number of bytes per second failed");
-
-    RETURN_AUDIOERR_IF_FAILED_WITH_MSG((*mediaType)->SetUINT32(MF_MT_AUDIO_BITS_PER_SAMPLE, format->mBitsPerChannel),
-                                       @"Setting the number of bits per audio sample failed");
-
-    RETURN_AUDIOERR_IF_FAILED_WITH_MSG((*mediaType)->SetUINT32(MF_MT_ALL_SAMPLES_INDEPENDENT, TRUE),
-                                       @"Setting the audio sample independent flag failed");
-
-    return noErr;
-}
-
 TEST(AudioToolbox, AudioConverterTest) {
     AudioStreamBasicDescription inFormat;
     inFormat.mSampleRate = 44100;

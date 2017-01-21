@@ -54,3 +54,5 @@ using namespace Microsoft::WRL::Wrappers;
 - (ComPtr<IMFTransform>)getTransform;
 - (float)getSizeChangeMultiplier;
 @end
+
+OSStatus _setMFProperties(const AudioStreamBasicDescription* format, IMFMediaType** mediaType);
