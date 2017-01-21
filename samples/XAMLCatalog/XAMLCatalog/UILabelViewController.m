@@ -46,10 +46,9 @@ static const int TAG_SUBVIEW_UILABEL = 1;
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    // creating the text Fields
+    // creating lables
     _labels = [[NSMutableArray alloc] init];
 
-    // Row 0. password with number keyboard with Round border
     [_labels addObject:[self _createUILabelWithColor:[UIColor blackColor]
                                                 text:@"wordWrap test, You should see this string is wrapped around word"
                                        textAlignment:UITextAlignmentLeft
@@ -101,7 +100,7 @@ static const int TAG_SUBVIEW_UILABEL = 1;
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
-    return [_labels count];
+    return 15;
 }
 
 - (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
@@ -113,16 +112,75 @@ static const int TAG_SUBVIEW_UILABEL = 1;
     if (nil == cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MenuCell"];
     } else {
-        // Before reuse, check if any subview in contentview is tagged with TAG_SUBVIEW_UITEXTFIELD
+        // Before reuse, check if any subview in contentview is tagged with TAG_SUBVIEW_UILABEL
         // if so, we know it is a custom view that we need to remove
         UIView* subView = (UIView*)[cell.contentView viewWithTag:TAG_SUBVIEW_UILABEL];
         [subView removeFromSuperview];
+
+        cell.textLabel.text = nil;
+        cell.textLabel.adjustsFontSizeToFitWidth = NO;
     }
 
-    // Tag UITextField subview with TAG_SUBVIEW_TEXTFIELD before adding this subview into contentview
-    UIView* subView = [_labels objectAtIndex:indexPath.row];
-    subView.tag = TAG_SUBVIEW_UILABEL;
-    [cell.contentView addSubview:subView];
+    // Tag UILabel subview with TAG_SUBVIEW_UILABEL before adding this subview into contentview
+    if (indexPath.row < 7) {
+        // first 7 rows are for linkbreak testing
+        UIView* subView = [_labels objectAtIndex:indexPath.row];
+        subView.tag = TAG_SUBVIEW_UILABEL;
+        [cell.contentView addSubview:subView];
+    } else if (indexPath.row == 7) {
+        cell.textLabel.text = @"SizeThatFits 1";
+        cell.textLabel.numberOfLines = 2;
+        UILabel* textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, c_width / 2, c_height)];
+        textLabel.text = @"short string";
+        cell.accessoryView = textLabel;
+    }
+    if (indexPath.row == 8) {
+        cell.textLabel.numberOfLines = 2;
+        cell.textLabel.text = @"SizeThatFits 2";
+        UILabel* textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, c_width / 2, c_height)];
+        textLabel.text = @"middle size string fits into label";
+        textLabel.font = [textLabel.font fontWithSize:20.0];
+        cell.accessoryView = textLabel;
+    }
+    if (indexPath.row == 9) {
+        cell.textLabel.numberOfLines = 2;
+        cell.textLabel.text = @"SizeThatFits 3";
+        UILabel* textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, c_width / 2, c_height)];
+        textLabel.text = @"this is really really long string that size should fits into the label";
+        cell.accessoryView = textLabel;
+    } else if (indexPath.row == 10) {
+        cell.textLabel.text = @"small string SizeThatFits";
+        UILabel* textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 60, c_height)];
+        textLabel.numberOfLines = 2;
+        textLabel.text = @"short string";
+        cell.accessoryView = textLabel;
+    }
+    if (indexPath.row == 11) {
+        cell.textLabel.text = @"longer string SizeThatFits";
+        UILabel* textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 60, c_height)];
+        textLabel.text = @"middle size string fits into label";
+        cell.accessoryView = textLabel;
+    }
+    if (indexPath.row == 12) {
+        cell.textLabel.text = @"really long string SizeThatFits";
+        UILabel* textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 60, c_height)];
+        textLabel.numberOfLines = 2;
+        textLabel.text = @"this is really really long string that size should fits into the label";
+        textLabel.lineBreakMode = UILineBreakModeWordWrap;
+        cell.accessoryView = textLabel;
+    }
+    if (indexPath.row == 13) {
+        UILabel* textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, c_width, c_height)];
+        textLabel.text = @"adjustFontSize = false, font is using default font";
+        cell.accessoryView = textLabel;
+    }
+    if (indexPath.row == 14) {
+        UILabel* textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, c_width, c_height)];
+        textLabel.text = @"adjustFontSize = YES, font is adjusted to fit the width of this UIlabel";
+        textLabel.adjustsFontSizeToFitWidth = YES;
+        cell.accessoryView = textLabel;
+    }
+
     return cell;
 }
 

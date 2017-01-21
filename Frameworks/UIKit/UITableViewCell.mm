@@ -1191,7 +1191,10 @@ static void setupGroupView(UITableViewCell* self) {
     if (accessoryView) {
         CGRect accessoryRect = { 0 };
 
-        if ([accessoryView isKindOfClass:[UITextField class]]) {
+        // TODO: on reference platform, when UILabel is the accessory view, it uses its own intrinContentsize (similar to UITextField)
+        // we should scrub the layout logic here to make sure do we need to special casing for both UITextField/UILabel
+        // and treat the rest differently
+        if ([accessoryView isKindOfClass:[UITextField class]] || [accessoryView isKindOfClass:[UILabel class]]) {
             CGRect bounds = { 0 };
             bounds = [accessoryView bounds];
             accessoryRect.size = bounds.size;

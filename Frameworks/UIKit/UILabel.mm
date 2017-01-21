@@ -44,7 +44,6 @@
     UILineBreakMode _lineBreakMode;
     BOOL _adjustFontSize;
     float _minimumFontSize;
-    float _originalFontSize;
     int _numberOfLines;
     BOOL _isDisabled;
     BOOL _isHighlighted;
@@ -52,53 +51,63 @@
     StrongId<WXCTextBlock> _textBlock;
 }
 
-- (void)adjustFontSizeToFit {
+- (void)_adjustFontSizeToFit {
     if (_numberOfLines == 0) {
-        [self adjustTextLayerSize];
+        [self _adjustTextLayerSize];
         return;
     }
 
-    float curFontSize = _originalFontSize;
-    _font = [_font fontWithSize:curFontSize];
-
-    CGRect rect;
-    rect = [self bounds];
-    if (rect.size.width == 0.0f || rect.size.height == 0.0f) {
+    CGRect rect = [self bounds];
+    if (rect.size.width == 0.0f || rect.size.height == 0.0f || _text == nil) {
         return;
     }
 
-    while (curFontSize > _minimumFontSize && curFontSize > 0.0f) {
+    // MaxFitFontSize records currently found maximum font size that fits the bounds,
+    // It starts with _minimumFontSize because it is smallest font size allowed by the UILabel
+    float maxFitFontSize = _minimumFontSize;
+
+    float curFontSize = [_font pointSize];
+    // Start our trial with fonts bigger than _minimumFontSize
+    if (curFontSize < maxFitFontSize) {
+        curFontSize = 2.0 * maxFitFontSize;
+        _font = [_font fontWithSize:curFontSize];
+    }
+
+    // Do binary search on maximum font size that fits the bound
+    do {
+        // Caculating rect size using font and line break settings
         CGSize size = CGSizeZero;
-
-        //  A single line of text should be clipped
         if (_numberOfLines == 1) {
-            size = [_text sizeWithFont:_font constrainedToSize:CGSizeMake(rect.size.width, 0.0f) lineBreakMode:UILineBreakModeClip];
+            size = [_text sizeWithFont:_font constrainedToSize:CGSizeMake(0.0f, 0.0f) lineBreakMode:UILineBreakModeClip];
         } else {
-            //  Multiple lines of text should be wrapped
             size = [_text sizeWithFont:_font constrainedToSize:CGSizeMake(rect.size.width, 0.0f) lineBreakMode:UILineBreakModeWordWrap];
         }
 
         if (size.width < rect.size.width && size.height <= rect.size.height) {
-            break;
+            // Update maxFitFontSize, and double current font size and retry
+            maxFitFontSize = curFontSize;
+            curFontSize *= 2.0f;
+        } else {
+            // Current font size does not fit
+            if (curFontSize - maxFitFontSize <= 1.0f) {
+                // Distance between current font size wwhich does nit fit
+                // and maximum font size which fits is less than 1.0, break out
+                break;
+            } else {
+                // Re-try with middle value between maxFitFontSize and current Font Size
+                curFontSize = (curFontSize + maxFitFontSize) / 2.0f;
+            }
         }
 
-        curFontSize -= 1.0f;
         _font = [_font fontWithSize:curFontSize];
-    }
+    } while (true);
 
-    if (curFontSize < _minimumFontSize) {
-        curFontSize = _minimumFontSize;
-    }
-    if (curFontSize < 0.0f) {
-        curFontSize = 1.0f;
-    }
+    _font = [_font fontWithSize:maxFitFontSize];
 
-    _font = [_font fontWithSize:curFontSize];
-
-    [self adjustTextLayerSize];
+    [self _adjustTextLayerSize];
 }
 
-- (void)adjustTextLayerSize {
+- (void)_adjustTextLayerSize {
     [_textBlock setText:_text];
     [_textBlock setFontSize:[_font pointSize]];
 
@@ -177,9 +186,9 @@
         }
 
         if (_adjustFontSize) {
-            [self adjustFontSizeToFit];
+            [self _adjustFontSizeToFit];
         } else {
-            [self adjustTextLayerSize];
+            [self _adjustTextLayerSize];
         }
     }
 
@@ -231,7 +240,7 @@
 
         _font = [UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]];
 
-        [self adjustTextLayerSize];
+        [self _adjustTextLayerSize];
     }
 
     return self;
@@ -250,7 +259,7 @@
 
         _font = [UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]];
 
-        [self adjustTextLayerSize];
+        [self _adjustTextLayerSize];
     }
 
     return self;
@@ -278,12 +287,10 @@
 - (void)setFont:(UIFont*)font {
     if (![_font isEqual:font]) {
         _font = font;
-        _originalFontSize = [_font pointSize];
-
         if (_adjustFontSize) {
-            [self adjustFontSizeToFit];
+            [self _adjustFontSizeToFit];
         } else {
-            [self adjustTextLayerSize];
+            [self _adjustTextLayerSize];
         }
     }
 }
@@ -309,9 +316,9 @@
         _text.attach([newStr copy]);
 
         if (_adjustFontSize) {
-            [self adjustFontSizeToFit];
+            [self _adjustFontSizeToFit];
         } else {
-            [self adjustTextLayerSize];
+            [self _adjustTextLayerSize];
         }
 
         self.accessibilityValue = newStr;
@@ -362,7 +369,7 @@
 - (void)setTextAlignment:(UITextAlignment)alignment {
     if (alignment != _alignment) {
         _alignment = alignment;
-        [self adjustTextLayerSize];
+        [self _adjustTextLayerSize];
     }
 }
 
@@ -383,7 +390,7 @@
     if (![_textColor isEqual:color]) {
         [[_textColor retain] autorelease];
         _textColor = color;
-        [self adjustTextLayerSize];
+        [self _adjustTextLayerSize];
     }
 }
 
@@ -481,7 +488,7 @@
 */
 - (void)setLineBreakMode:(UILineBreakMode)mode {
     _lineBreakMode = mode;
-    [self adjustTextLayerSize];
+    [self _adjustTextLayerSize];
 }
 
 /**
@@ -501,7 +508,7 @@
     } else {
         [self setBackgroundColor:_savedBackgroundColor];
     }
-    [self adjustTextLayerSize];
+    [self _adjustTextLayerSize];
 }
 
 /**
@@ -539,7 +546,7 @@
     _adjustFontSize = adjusts;
 
     if (_adjustFontSize) {
-        [self adjustFontSizeToFit];
+        [self _adjustFontSizeToFit];
     }
 }
 
@@ -563,34 +570,14 @@
     CGSize ret = { 0 };
 
     if (_text != nil) {
-        //  Grab the font at the original point size set in setFont:
-        UIFont* measurementFont = [_font fontWithSize:_originalFontSize];
-
-        //  Measure the height of a single line of text of this font
-        CGSize fontHeight = [@" " sizeWithFont:measurementFont];
-
-        //  If we have to fit everything on one line, or if the current width
-        //  is incalculable (we can't wrap to a width of 0), set the
-        //  fit width to inifinite
-        if (curSize.width == 0 || self.numberOfLines == 1) {
-            curSize.width = FLT_MAX;
-        }
-
-        if ((self.numberOfLines == 0) || (self.numberOfLines == 1)) {
-            curSize.height = FLT_MAX;
-        } else {
-            curSize.height = fontHeight.height * self.numberOfLines;
+        if (self.numberOfLines != 0) {
+            // for fixed number of lines, use hinted size as contraints for height
+            CGFloat lineHeight = [_font ascender] - [_font descender];
+            curSize.height = std::min(lineHeight * self.numberOfLines, curSize.height);
         }
 
         //  Calculate the size of the text set in our label
-        ret = [_text sizeWithFont:measurementFont
-                constrainedToSize:CGSizeMake(curSize.width, curSize.height)
-                    lineBreakMode:self.lineBreakMode];
-
-        //  The returned height to 1 line if the number of lines is 1
-        if (self.numberOfLines == 1) {
-            ret.height = fontHeight.height;
-        }
+        ret = [_text sizeWithFont:_font constrainedToSize:CGSizeMake(curSize.width, curSize.height) lineBreakMode:self.lineBreakMode];
     }
 
     return ret;
@@ -642,9 +629,9 @@
 */
 - (void)layoutSubviews {
     if (_adjustFontSize) {
-        [self adjustFontSizeToFit];
+        [self _adjustFontSizeToFit];
     } else {
-        [self adjustTextLayerSize];
+        [self _adjustTextLayerSize];
     }
     [self setNeedsDisplay];
 }
