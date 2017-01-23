@@ -14,9 +14,9 @@
 //
 //******************************************************************************
 
+#import <Foundation/Foundation.h>
 #import <Starboard/SmartTypes.h>
 #import <TestFramework.h>
-#import <Foundation/Foundation.h>
 #import <future>
 #import <windows.h>
 
@@ -94,7 +94,7 @@
 
 @end
 
-TEST(NSTimer, NegativeTimeInterval) {
+ARM_DISABLED_TEST(NSTimer, NegativeTimeInterval) {
     NSTimerTestObj* testObj = [[[NSTimerTestObj alloc] initWithValue:NO] autorelease];
     NSTimer* timer = [NSTimer scheduledTimerWithTimeInterval:-5.0 target:testObj selector:@selector(testFunction) userInfo:nil repeats:YES];
 
@@ -105,16 +105,15 @@ TEST(NSTimer, NegativeTimeInterval) {
     ASSERT_GE_MSG([timer timeInterval], 0., "FAILED:timeInterval should be non negative.");
 }
 
-TEST(NSTimer, ScheduledTimerWithTimeInterval) {
+ARM_DISABLED_TEST(NSTimer, ScheduledTimerWithTimeInterval) {
     NSTimerTestObj* testObj = [[[NSTimerTestObj alloc] initWithValue:NO] autorelease];
     volatile long waitCompletion = 0;
 
-    auto selectorCalledAsync = std::async(std::launch::async,
-                                          [&waitCompletion, testObj]() {
-                                              BOOL fooChanged = [testObj waitOnCalledConditionForInterval:15] && [testObj called];
-                                              _InterlockedExchange(&waitCompletion, 1L);
-                                              return fooChanged;
-                                          });
+    auto selectorCalledAsync = std::async(std::launch::async, [&waitCompletion, testObj]() {
+        BOOL fooChanged = [testObj waitOnCalledConditionForInterval:15] && [testObj called];
+        _InterlockedExchange(&waitCompletion, 1L);
+        return fooChanged;
+    });
 
     NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
 
@@ -136,16 +135,15 @@ TEST(NSTimer, ScheduledTimerWithTimeInterval) {
     ASSERT_EQ_MSG(YES, selectorCalledAsync.get(), "FAILED: the scheduled timer did not call the method.");
 }
 
-TEST(NSTimer, ScheduledTimerWithTimeIntervalRepeat) {
+ARM_DISABLED_TEST(NSTimer, ScheduledTimerWithTimeIntervalRepeat) {
     NSTimerTestObj* testObj = [[[NSTimerTestObj alloc] initWithValue:NO count:5] autorelease];
     volatile long waitCompletion = 0;
 
-    auto selectorCalledAsync = std::async(std::launch::async,
-                                          [&waitCompletion, testObj]() {
-                                              BOOL fooChanged = [testObj waitOnCalledConditionForInterval:15] && [testObj called];
-                                              _InterlockedExchange(&waitCompletion, 1L);
-                                              return fooChanged;
-                                          });
+    auto selectorCalledAsync = std::async(std::launch::async, [&waitCompletion, testObj]() {
+        BOOL fooChanged = [testObj waitOnCalledConditionForInterval:15] && [testObj called];
+        _InterlockedExchange(&waitCompletion, 1L);
+        return fooChanged;
+    });
 
     NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
 
@@ -168,7 +166,7 @@ TEST(NSTimer, ScheduledTimerWithTimeIntervalRepeat) {
     ASSERT_EQ_MSG(YES, selectorCalledAsync.get(), "FAILED: the scheduled timer did not call the method.");
 }
 
-TEST(NSTimer, ScheduledTimerWithTimeIntervalFireOnce) {
+ARM_DISABLED_TEST(NSTimer, ScheduledTimerWithTimeIntervalFireOnce) {
     NSTimerTestObj* testObj = [[[NSTimerTestObj alloc] initWithValue:NO] autorelease];
     NSTimer* timer = [NSTimer scheduledTimerWithTimeInterval:1 target:testObj selector:@selector(testFunction) userInfo:nil repeats:NO];
 
@@ -184,16 +182,15 @@ TEST(NSTimer, ScheduledTimerWithTimeIntervalFireOnce) {
     ASSERT_EQ_MSG(1, [testObj count], "FAILED: the object's method should be called once only.");
 }
 
-TEST(NSTimer, ScheduledTimerWithTimeIntervalFireRepeat) {
+ARM_DISABLED_TEST(NSTimer, ScheduledTimerWithTimeIntervalFireRepeat) {
     NSTimerTestObj* testObj = [[[NSTimerTestObj alloc] initWithValue:NO count:5] autorelease];
     volatile long waitCompletion = 0;
 
-    auto selectorCalledAsync = std::async(std::launch::async,
-                                          [&waitCompletion, testObj]() {
-                                              BOOL fooChanged = [testObj waitOnCalledConditionForInterval:15] && [testObj called];
-                                              _InterlockedExchange(&waitCompletion, 1L);
-                                              return fooChanged;
-                                          });
+    auto selectorCalledAsync = std::async(std::launch::async, [&waitCompletion, testObj]() {
+        BOOL fooChanged = [testObj waitOnCalledConditionForInterval:15] && [testObj called];
+        _InterlockedExchange(&waitCompletion, 1L);
+        return fooChanged;
+    });
 
     NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
 
@@ -225,16 +222,15 @@ TEST(NSTimer, ScheduledTimerWithTimeIntervalFireRepeat) {
     ASSERT_TRUE_MSG(![timer isValid], "FAILED: The timer should not be valid after invalidation.");
 }
 
-TEST(NSTimer, ScheduledTimerWithTimeIntervalWithInvocation) {
+ARM_DISABLED_TEST(NSTimer, ScheduledTimerWithTimeIntervalWithInvocation) {
     NSTimerTestObj* testObj = [[[NSTimerTestObj alloc] initWithValue:NO] autorelease];
     volatile long waitCompletion = 0;
 
-    auto selectorCalledAsync = std::async(std::launch::async,
-                                          [&waitCompletion, testObj]() {
-                                              BOOL fooChanged = [testObj waitOnCalledConditionForInterval:15] && [testObj called];
-                                              _InterlockedExchange(&waitCompletion, 1L);
-                                              return fooChanged;
-                                          });
+    auto selectorCalledAsync = std::async(std::launch::async, [&waitCompletion, testObj]() {
+        BOOL fooChanged = [testObj waitOnCalledConditionForInterval:15] && [testObj called];
+        _InterlockedExchange(&waitCompletion, 1L);
+        return fooChanged;
+    });
 
     NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
 
