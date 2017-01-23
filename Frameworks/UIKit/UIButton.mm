@@ -269,7 +269,7 @@ Microsoft Extension
 - (void)setImage:(UIImage*)image forState:(UIControlState)state {
     _states[state].image = image;
 
-    // NOTE: check if image is nil before creating inspetableImage
+    // NOTE: check if image is nil before creating inspectableImage
     // ConvertUIImageToWUXMImageBrush:nil creates a valid imageBrush with null comObj
     // which isn't what we want
     if (image) {
@@ -552,8 +552,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     // ConvertUIColorToWUColor:nil creates a valid WUColor with null comObj
     // which isn't what we want
     if (color) {
-        WUColor* convertedColor = XamlUtilities::ConvertUIColorToWUColor(color);
-        WUXMSolidColorBrush* titleColorBrush = [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
+        WUXMSolidColorBrush* titleColorBrush = [[WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor(color)] autorelease];
         if (titleColorBrush) {
             _states[state].inspectableTitleColor = [titleColorBrush comObj];
         }

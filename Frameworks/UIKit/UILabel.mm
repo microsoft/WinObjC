@@ -109,7 +109,7 @@
     [_textBlock setFontStyle:static_cast<WUTFontStyle>([_font _fontStyle])];
     [_textBlock setFontStretch:static_cast<WUTFontStretch>([_font _fontStretch])];
 
-    [_textBlock setFontFamily:[WUXMFontFamily makeInstanceWithName:[_font _compatibleFamilyName]]];
+    [_textBlock setFontFamily:[[WUXMFontFamily makeInstanceWithName:[_font _compatibleFamilyName]] autorelease]];
 
     [_textBlock setTextAlignment:XamlUtilities::ConvertUITextAlignmentToWXTextAlignment(_alignment)];
 
@@ -122,7 +122,7 @@
     if (_isHighlighted && _highlightedTextColor != nil) {
         color = _highlightedTextColor;
     }
-    [_textBlock setForeground:[WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor(color)]];
+    [_textBlock setForeground:[[WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor(color)] autorelease]];
 
     [self invalidateIntrinsicContentSize];
     [self setNeedsDisplay];
