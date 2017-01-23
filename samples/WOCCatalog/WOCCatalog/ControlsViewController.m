@@ -51,7 +51,7 @@ static const int MULTIPLEPRESENTDISMISS_ROW = 5;
 
     const CGFloat buttonHeight = 50;
     const CGFloat buttonWidth = 175;
-    const CGFloat originOffset = 25;
+    const CGFloat originOffset = 15;
 
     self.leftPopoverButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     self.leftPopoverButton.titleLabel.font = [UIFont systemFontOfSize:11];
@@ -63,7 +63,8 @@ static const int MULTIPLEPRESENTDISMISS_ROW = 5;
     self.rightPopoverButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     self.rightPopoverButton.titleLabel.font = [UIFont systemFontOfSize:11];
     [self.rightPopoverButton setTitle:@"Popover (up arrow direction)" forState:UIControlStateNormal];
-    [self.rightPopoverButton setFrame:CGRectMake(self.view.bounds.size.width - originOffset - buttonWidth, originOffset, buttonWidth, buttonHeight)];
+    [self.rightPopoverButton
+        setFrame:CGRectMake(self.view.bounds.size.width - originOffset - buttonWidth, originOffset, buttonWidth, buttonHeight)];
     [self.rightPopoverButton addTarget:self action:@selector(pressedPopoverButton:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.rightPopoverButton];
 }
@@ -185,19 +186,28 @@ static const int MULTIPLEPRESENTDISMISS_ROW = 5;
         UIViewController* viewController = [[PopoverViewController alloc] initWithImage:[UIImage imageNamed:@"photo1.jpg"]];
         viewController.modalPresentationStyle = UIModalPresentationFormSheet;
 
-        [self presentViewController:viewController animated:YES completion:^{
-            UIViewController* another = [[PopoverViewController alloc] initWithImage:[UIImage imageNamed:@"photo1.jpg"]];
-            another.modalPresentationStyle = UIModalPresentationFormSheet;
-            [viewController presentViewController:another animated:YES completion:^{
-                UIViewController* yetAnother = [[PopoverViewController alloc] initWithImage:[UIImage imageNamed:@"photo1.jpg"]];
-                yetAnother.modalPresentationStyle = UIModalPresentationFormSheet;
-                [another presentViewController:yetAnother animated:YES completion:^{
-                    // This should dismiss all children (only topmost should be dismissed with animation).
-                    [self dismissViewControllerAnimated:YES completion:^{
-                    }];
-                }];
-            }];
-        }];
+        [self presentViewController:viewController
+                           animated:YES
+                         completion:^{
+                             UIViewController* another = [[PopoverViewController alloc] initWithImage:[UIImage imageNamed:@"photo1.jpg"]];
+                             another.modalPresentationStyle = UIModalPresentationFormSheet;
+                             [viewController presentViewController:another
+                                                          animated:YES
+                                                        completion:^{
+                                                            UIViewController* yetAnother = [[PopoverViewController alloc]
+                                                                initWithImage:[UIImage imageNamed:@"photo1.jpg"]];
+                                                            yetAnother.modalPresentationStyle = UIModalPresentationFormSheet;
+                                                            [another presentViewController:yetAnother
+                                                                                  animated:YES
+                                                                                completion:^{
+                                                                                    // This should dismiss all children (only topmost should
+                                                                                    // be dismissed with animation).
+                                                                                    [self dismissViewControllerAnimated:YES
+                                                                                                             completion:^{
+                                                                                                             }];
+                                                                                }];
+                                                        }];
+                         }];
     }
 }
 
