@@ -1,6 +1,7 @@
 <#
 .SYNOPSIS
     Runs Tests for Islandwood project.
+    A test comment
 #>
 param(
     [Parameter(ParameterSetName="TestLocation", HelpMessage="Directory of Tests to run")]
