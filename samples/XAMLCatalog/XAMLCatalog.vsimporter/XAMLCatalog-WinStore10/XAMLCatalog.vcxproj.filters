@@ -1,29 +1,29 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{fdb75f11-e56a-4a96-8dee-751ee9922057}</UniqueIdentifier>
+      <UniqueIdentifier>{5b63b4d9-4cf3-4ee7-9c07-979a1b7a2b90}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{7376c44f-2a30-4db1-855d-efc3cf050b54}</UniqueIdentifier>
+      <UniqueIdentifier>{b90f1aee-77fa-432c-9e80-f335fb3ec883}</UniqueIdentifier>
     </Filter>
     <Filter Include="Images">
-      <UniqueIdentifier>{F5278BB7-C8E1-4BC2-B8CC-BF9C60C6AB39}</UniqueIdentifier>
+      <UniqueIdentifier>{F640AAC6-FC86-4B3E-B494-AEFDE936AA7B}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog">
-      <UniqueIdentifier>{A90D5805-D357-4138-823D-CF386832BB0B}</UniqueIdentifier>
+      <UniqueIdentifier>{F46AF905-132A-46B5-A5F7-198B6EF7BF89}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog\Supporting Files">
-      <UniqueIdentifier>{9A757F10-113C-4F96-81B2-3D31D149AB4D}</UniqueIdentifier>
+      <UniqueIdentifier>{9C38E223-8855-4368-A64F-F9248851EAB7}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog\UIKitControls">
-      <UniqueIdentifier>{B63877D8-B1FE-4570-9EDC-049549BC732F}</UniqueIdentifier>
+      <UniqueIdentifier>{DD2EAD14-F632-40F4-B349-3CCBE2AC94A6}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog\XamlControls">
-      <UniqueIdentifier>{8E17F989-D783-423A-BE3A-85D89F6EDF28}</UniqueIdentifier>
+      <UniqueIdentifier>{40CE0495-F3FF-4BE6-8050-A0AE1D45915D}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{279DA68E-B966-4EAE-87EF-00BD9928311A}</UniqueIdentifier>
+      <UniqueIdentifier>{B50ADFCA-EEB5-466C-8241-136AA5DEB14A}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -72,22 +72,28 @@
     <ClInclude Include="..\..\XAMLCatalog\StoryBoardViewController.h">
       <Filter>XAMLCatalog</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\XAMLCatalog\UIActionSheetViewController.h">
+    <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UIActionSheetViewController.h">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\XAMLCatalog\UIActivityIndicatorViewController.h">
+    <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UIActivityIndicatorViewController.h">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\XAMLCatalog\UIButtonViewController.h">
+    <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UIButtonViewController.h">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\XAMLCatalog\UISliderViewController.h">
+    <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UIButtonWithControlsViewController.h">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\XAMLCatalog\UITextFieldViewController.h">
+    <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UILabelViewController.h">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\XAMLCatalog\UIViewViewController.h">
+    <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UISliderViewController.h">
+      <Filter>XAMLCatalog\UIKitControls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UITextFieldViewController.h">
+      <Filter>XAMLCatalog\UIKitControls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UIViewViewController.h">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClInclude>
     <ClangCompile Include="..\..\XAMLCatalog\AppDelegate.m">
@@ -108,22 +114,28 @@
     <ClangCompile Include="..\..\XAMLCatalog\StoryBoardViewController.m">
       <Filter>XAMLCatalog</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\XAMLCatalog\UIActionSheetViewController.m">
+    <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UIActionSheetViewController.m">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\XAMLCatalog\UIActivityIndicatorViewController.m">
+    <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UIActivityIndicatorViewController.m">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\XAMLCatalog\UIButtonViewController.m">
+    <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UIButtonViewController.m">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\XAMLCatalog\UISliderViewController.m">
+    <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UIButtonWithControlsViewController.m">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\XAMLCatalog\UITextFieldViewController.m">
+    <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UILabelViewController.m">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\XAMLCatalog\UIViewViewController.m">
+    <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UISliderViewController.m">
+      <Filter>XAMLCatalog\UIKitControls</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UITextFieldViewController.m">
+      <Filter>XAMLCatalog\UIKitControls</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UIViewViewController.m">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\XAMLCatalog\main.m">
@@ -146,24 +158,5 @@
     <Text Include="XAMLCatalog-Release-xcvars.txt">
       <Filter>Xcode Variable Files</Filter>
     </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <ApplicationDefinition Include="App.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="App.xaml.cpp" />
-    <ClCompile Include="pch.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="pch.h" />
-    <ClInclude Include="App.xaml.h" />
-    <ClInclude Include="..\..\XAMLCatalog\UILabelViewController.h">
-      <Filter>XAMLCatalog</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClangCompile Include="..\..\XAMLCatalog\UILabelViewController.m">
-      <Filter>XAMLCatalog</Filter>
-    </ClangCompile>
   </ItemGroup>
 </Project>

@@ -19,6 +19,7 @@
 #import "UIActionSheetViewController.h"
 #import "UIActivityIndicatorViewController.h"
 #import "UIButtonViewController.h"
+#import "UIButtonWithControlsViewController.h"
 #import "UILabelViewController.h"
 #import "UISliderViewController.h"
 #import "UITextFieldViewController.h"
@@ -41,8 +42,11 @@
     // UIButton
     [self addMenuItemViewController:[[UIButtonViewController alloc] init] andTitle:@"UIButton"];
 
+    // UIButton
+    [self addMenuItemViewController:[[UIButtonWithControlsViewController alloc] init] andTitle:@"UIButton - controls"];
+
     // UILabel
-    [self addMenuItemViewController:[[UILabelViewController alloc] init] andTitle : @"UILabel"];
+    [self addMenuItemViewController:[[UILabelViewController alloc] init] andTitle:@"UILabel"];
 
     // UISlider
     [self addMenuItemViewController:[[UISliderViewController alloc] init] andTitle:@"UISlider"];

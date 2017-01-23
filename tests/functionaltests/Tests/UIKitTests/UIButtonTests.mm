@@ -14,27 +14,12 @@
 //
 //******************************************************************************
 #import <TestFramework.h>
-#import <Foundation/Foundation.h>
+#import "FunctionalTestHelpers.h"
+#import "UXTestHelpers.h"
 
 // Re-use existing sample code for validation
-#import "XAMLCatalog/UIButtonViewController.h"
-
-#include <COMIncludes.h>
-#import <WRLHelpers.h>
-#import <ErrorHandling.h>
-#import <RawBuffer.h>
-#import <wrl/client.h>
-#import <wrl/implements.h>
-#import <wrl/async.h>
-#import <wrl/wrappers/corewrappers.h>
-#import <windows.foundation.h>
-#include <COMIncludes_end.h>
-
-#import "ObjCXamlControls.h"
-#import "UWP/WindowsUIXamlControls.h"
-
-// TODO: Consolidate this into a common place so that all tests can use it
-static const NSTimeInterval c_testTimeoutInSec = 5;
+#import "UIKitControls/UIButtonViewController.h"
+#import "UIKitControls/UIButtonWithControlsViewController.h"
 
 TEST(UIButton, CreateXamlElement) {
     // TODO: Switch to UIKit.Xaml projections when they're available.
@@ -51,47 +36,35 @@ TEST(UIButton, GetXamlElement) {
     ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
 }
 
-TEST(UIButton, BackgroundColorChanged) {
-    __block UIButtonViewController* buttonVC;
+TEST(UIButton, TitleColorChanged) {
+    __block BOOL signaled = NO;
     __block NSCondition* condition = [[[NSCondition alloc] init] autorelease];
-    __block WXUIElement* backingElement = nil;
+
+    UIButtonWithControlsViewController* buttonVC = [[[UIButtonWithControlsViewController alloc] init] autorelease];
+    ViewControllerHelper testHelper(buttonVC);
 
     dispatch_sync(dispatch_get_main_queue(), ^{
-        buttonVC = [[UIButtonViewController alloc] init];
+        // Extract UIButton.titleLabel control to verify its visual state
+        WXFrameworkElement* titleElement = [buttonVC.button.titleLabel xamlElement];
+        ASSERT_TRUE(titleElement);
 
-        // TODO: Remove this line once we hook up to the root view controller which will trigger the view method
-        [buttonVC view];
-
-        // Extract the UIButton example from an existing XAMLCatalog cell in a TableViewController
-        NSIndexPath* indexPath = [NSIndexPath indexPathForRow:1 inSection:0];
-        UITableViewCell* cell = [buttonVC tableView : buttonVC.tableView cellForRowAtIndexPath:indexPath];
-        ASSERT_TRUE(cell);
-
-        // TODO: Formalize a way to extract existing buttons and their states from our test or sample apps
-        UILabel* cellLabel = [cell.subviews objectAtIndex:1];
-        UIButton* cellButton = [cell.subviews objectAtIndex:2];
-        LOG_INFO(@"Cell subview[1] text: %@", cellLabel.text);
-
-        // We have to artificially ref the element since the block needs to keep it around
-        backingElement = [cellButton xamlElement];
-        [backingElement retain];
-
-        // Register callback and wait for the property changed event to trigger
-        int64_t callbackToken = [backingElement
-            registerPropertyChangedCallback:[WXCControl backgroundProperty]
-                            callback:^(WXDependencyObject* sender, WXDependencyProperty* dp) {
+        // Register RAII event subscription handler
+        XamlEventSubscription
+            xamlSubscriber(titleElement, [WXCTextBlock foregroundProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
+                // Validate the state of the XAML object
                 WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], [sender getValue:dp]);
-                ASSERT_TRUE(solidBrush);
+                LOG_INFO("XAML element color (rgba): %d,%d,%d,%d",
+                         [solidBrush.color r],
+                         [solidBrush.color g],
+                         [solidBrush.color b],
+                         [solidBrush.color a]);
 
-                LOG_INFO("Backing XAML element backgroundColor (rgba): %d,%d,%d,%d",
-                    [solidBrush.color r],
-                    [solidBrush.color g],
-                    [solidBrush.color b],
-                    [solidBrush.color a]);
+                // Extract the title color for the normal state
+                UIColor* titleColorNormal = [buttonVC.button titleColorForState:UIControlStateNormal];
 
                 CGFloat red, green, blue, alpha;
-                [cellButton.backgroundColor getRed:&red green:&green blue:&blue alpha:&alpha];
-                LOG_INFO("UIButton.backgroundColor (rgba): %.2f,%.2f,%.2f,%.2f", red, green, blue, alpha);
+                [titleColorNormal getRed:&red green:&green blue:&blue alpha:&alpha];
+                LOG_INFO("UIButton.titleColorForState:normal (rgba): %.2f,%.2f,%.2f,%.2f", red, green, blue, alpha);
 
                 // Validate that the change is reflected on the backing XAML control
                 EXPECT_EQ_MSG(solidBrush.color.r, (int)(red * 255), @"Failed to match red component");
@@ -99,27 +72,62 @@ TEST(UIButton, BackgroundColorChanged) {
                 EXPECT_EQ_MSG(solidBrush.color.b, (int)(blue * 255), @"Failed to match blue component");
                 EXPECT_EQ_MSG(solidBrush.color.a, (int)(alpha * 255), @"Failed to match alpha component");
 
-                // UIButton's background should be grayColor to match the value set for this button cell in XAMLCatalog
-                EXPECT_EQ_MSG(solidBrush.color.r, 127, @"Failed to match expected value for red component");
-                EXPECT_EQ_MSG(solidBrush.color.g, 127, @"Failed to match expected value for green component");
-                EXPECT_EQ_MSG(solidBrush.color.b, 127, @"Failed to match expected value for blue component");
-                EXPECT_EQ_MSG(solidBrush.color.a, 255, @"Failed to match expected value for alpha component");
-
-                // Unregister the callback
-                [backingElement unregisterPropertyChangedCallback:[WXCControl backgroundProperty] token:callbackToken];
-
                 [condition lock];
+                signaled = YES;
                 [condition signal];
                 [condition unlock];
-        }];
+            });
+
+        // Action - validate this action takes effect on the control
+        [buttonVC sliderTitleColorNormal].value = 150.0f;
     });
 
     [condition lock];
-    ASSERT_TRUE_MSG([condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]],
-        "FAILED: Waiting for property changed event timed out!");
+    ASSERT_TRUE_MSG(signaled || [condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]],
+                    "FAILED: Waiting for property changed event timed out!");
     [condition unlock];
+}
 
-    // Don't leak
-    [backingElement release];
-    [buttonVC release];
+TEST(UIButton, TextChanged) {
+    __block BOOL signaled = NO;
+    __block NSCondition* condition = [[[NSCondition alloc] init] autorelease];
+
+    UIButtonWithControlsViewController* buttonVC = [[[UIButtonWithControlsViewController alloc] init] autorelease];
+    ViewControllerHelper testHelper(buttonVC);
+
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        // Extract UIButton.titleLabel control to verify its visual state
+        WXFrameworkElement* titleElement = [buttonVC.button.titleLabel xamlElement];
+        ASSERT_TRUE(titleElement);
+
+        // Register RAII event subscription handler
+        XamlEventSubscription xamlSubscriber(titleElement,
+                                             [WXCTextBlock textProperty],
+                                             ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
+                                                 // Validate the state of the XAML object
+                                                 NSString* text = NSStringFromPropertyValue([sender getValue:dp]);
+                                                 LOG_INFO("TextBlock text: %@", text);
+
+                                                 // Extract the text for the normal state
+                                                 NSString* textNormal = [buttonVC.button titleForState:UIControlStateNormal];
+                                                 LOG_INFO("UIButton title - normal: %@", textNormal);
+
+                                                 // Validate that the change is reflected on the backing XAML control
+                                                 EXPECT_OBJCEQ_MSG(text, textNormal, @"Failed to match strings in XAML and UIButton");
+
+                                                 [condition lock];
+                                                 signaled = YES;
+                                                 [condition signal];
+                                                 [condition unlock];
+                                             });
+
+        // TODO: Action - validate this action takes effect on the control
+        //[buttonVC textButtonLabel].text = @"Functional testing";
+        [[buttonVC button] setTitle:@"Functional testing" forState:UIControlStateNormal];
+    });
+
+    [condition lock];
+    ASSERT_TRUE_MSG(signaled || [condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]],
+                    "FAILED: Waiting for property changed event timed out!");
+    [condition unlock];
 }
