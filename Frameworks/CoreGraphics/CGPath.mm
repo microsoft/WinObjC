@@ -238,7 +238,7 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
     }
 
     void EndFigure(D2D1_FIGURE_END figureStatus) {
-        if (geometrySink->IsFigureOpen()) {
+        if (geometrySink != nullptr && geometrySink->IsFigureOpen()) {
             geometrySink->_EndFigure(figureStatus);
         }
     }

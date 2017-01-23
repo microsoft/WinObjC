@@ -759,7 +759,7 @@ static bool testSymmetricEquivalence(CGPathRef path1, CGPathRef path2) {
     return (CGPathEqualToPath(path1, path2) && CGPathEqualToPath(path2, path1));
 }
 
-TEST(CGPath, CGPathEqualsTest) {
+DISABLED_TEST(CGPath, CGPathEqualsTest) {
     CGMutablePathRef path1 = CGPathCreateMutable();
     CGMutablePathRef path2 = CGPathCreateMutable();
 
@@ -871,7 +871,7 @@ TEST(CGPath, CGPathEqualsTest) {
     CGPathRelease(containedRectangle);
 }
 
-TEST(CGPath, SubShapesEqualityTest) {
+DISABLED_TEST(CGPath, SubShapesEqualityTest) {
     CGMutablePathRef path1 = CGPathCreateMutable();
     CGMutablePathRef path2 = CGPathCreateMutable();
 
