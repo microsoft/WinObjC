@@ -1,5 +1,8 @@
 LIBRARY AudioToolbox
     EXPORTS
+          AudioConverterDispose
+          AudioConverterNew
+          AudioConverterConvertBuffer
           AudioServicesCreateSystemSoundID
           AudioServicesDisposeSystemSoundID
           AudioServicesPlayAlertSound
