@@ -267,10 +267,9 @@ static NSDictionary* _getDefaultUITextAttributes() {
 }
 
 // Private helper that converts a UILineBreakMode -> NSParagraphStyle
-static inline StrongId<NSParagraphStyle> _paragraphStyleWithLineBreakMode(UILineBreakMode lineBreakMode) {
-    StrongId<NSParagraphStyle> ret;
-    ret.attach([[NSMutableParagraphStyle alloc] init]);
-    [ret setLineBreakMode:lineBreakMode];
+static inline NSParagraphStyle* _paragraphStyleWithLineBreakMode(UILineBreakMode lineBreakMode) {
+    NSMutableParagraphStyle* ret = [[[NSMutableParagraphStyle alloc] init] autorelease];
+    ret.lineBreakMode = lineBreakMode;
     return ret;
 }
 
@@ -279,10 +278,9 @@ static inline StrongId<NSParagraphStyle> _paragraphStyleWithLineBreakMode(UILine
  @Notes lineBreakMode is currently not fully supported
 */
 - (CGSize)sizeWithFont:(UIFont*)font constrainedToSize:(CGSize)size lineBreakMode:(UILineBreakMode)lineBreakMode {
-    StrongId<NSParagraphStyle> style = _paragraphStyleWithLineBreakMode(lineBreakMode);
     return [self _sizeWithAttributes:@{
         NSFontAttributeName : font,
-        NSParagraphStyleAttributeName : style
+        NSParagraphStyleAttributeName : _paragraphStyleWithLineBreakMode(lineBreakMode)
     }
                    constrainedToSize:size];
 }
