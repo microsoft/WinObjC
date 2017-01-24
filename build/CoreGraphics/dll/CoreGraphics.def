@@ -37,7 +37,6 @@ LIBRARY CoreGraphics
         CGBitmapContextGetImage
 
         ; DWriteWrapper Additions
-        _GetUserDefaultLocaleName
         _CFStringFromLocalizedString
         _DWriteCopyFontFamilyNames
         _DWriteCopyFontNamesForFamilyName
@@ -240,6 +239,10 @@ LIBRARY CoreGraphics
         CGContextIsPointInPath
         EbrCenterTextInRectVertically
         _CGContextSetScaleFactor
+        _CGContextPushBeginDraw
+        _CGContextPopEndDraw
+        _CGContextEscapeBeginEndDrawStack
+        _CGContextUnescapeBeginEndDrawStack
 
         ; CGDataConsumer.mm
         CGDataConsumerCreate
@@ -250,6 +253,7 @@ LIBRARY CoreGraphics
         CGDataConsumerRetain
 
         ; CGDataProvider.mm
+        CGDataProviderCreate
         CGDataProviderCreateWithData
         CGDataProviderCreateWithURL
         CGDataProviderCreateWithFilename
@@ -260,6 +264,7 @@ LIBRARY CoreGraphics
         CGDataProviderRetain
         CGDataProviderCreateSequential
         CGDataProviderCreateDirect
+        CGDataProviderCreateDirectAccess
 
         ; CGFont.mm
         kCGFontVariationAxisName DATA

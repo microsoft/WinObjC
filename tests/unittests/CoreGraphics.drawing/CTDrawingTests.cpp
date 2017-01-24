@@ -26,7 +26,7 @@ static NSURL* __GetURLFromPathRelativeToModuleDirectory(NSString* relativePath) 
 }
 #endif // WINOBJC
 
-DISABLED_DRAW_TEST_F(CTFrame, BasicDrawingTest, WhiteBackgroundTest) {
+TEXT_DRAW_TEST_F(CTFrame, BasicDrawingTest, WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -65,7 +65,7 @@ DISABLED_DRAW_TEST_F(CTFrame, BasicDrawingTest, WhiteBackgroundTest) {
     CTFrameDraw(frame.get(), context);
 }
 
-DISABLED_DRAW_TEST_F(CTFrame, BasicUIKitMimicDrawingTest, UIKitMimicTest) {
+TEXT_DRAW_TEST_F(CTFrame, BasicUIKitMimicDrawingTest, UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -104,7 +104,7 @@ DISABLED_DRAW_TEST_F(CTFrame, BasicUIKitMimicDrawingTest, UIKitMimicTest) {
     CTFrameDraw(frame.get(), context);
 }
 
-DISABLED_DRAW_TEST_F(CTFrame, BasicUnicodeTest, WhiteBackgroundTest) {
+TEXT_DRAW_TEST_F(CTFrame, BasicUnicodeTest, WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -133,7 +133,7 @@ DISABLED_DRAW_TEST_F(CTFrame, BasicUnicodeTest, WhiteBackgroundTest) {
                                                              &kCFTypeDictionaryValueCallBacks) };
 
     woc::unique_cf<CFAttributedStringRef> attrString{
-        CFAttributedStringCreate(nullptr, CFSTR("он прошел այն անցավ ມັນຜ່ານໄປ ਇਸ ਨੂੰ ਪਾਸ ਕੀਤਾ 它通過了 그것이 통과했다 minęło"), dict.get())
+        CFAttributedStringCreate(nullptr, CFSTR("он прошел այն անցավ ມັນຜ່ານໄປ minęło"), dict.get())
     };
 
     woc::unique_cf<CTFramesetterRef> framesetter{ CTFramesetterCreateWithAttributedString(attrString.get()) };
@@ -145,7 +145,7 @@ DISABLED_DRAW_TEST_F(CTFrame, BasicUnicodeTest, WhiteBackgroundTest) {
     CTFrameDraw(frame.get(), context);
 }
 
-class CTFrame : public WhiteBackgroundTest,
+class CTFrame : public WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>,
                 public ::testing::WithParamInterface<::testing::tuple<CTTextAlignment, CTLineBreakMode, CTWritingDirection, CGFloat>> {
     CFStringRef CreateOutputFilename() {
         CTTextAlignment alignment = ::testing::get<0>(GetParam());
@@ -186,7 +186,7 @@ static void __DrawLoremIpsum(CGContextRef context, CGPathRef path, const CFStrin
     CTFrameDraw(frame.get(), context);
 }
 
-DISABLED_DRAW_TEST_P(CTFrame, AlignLBMFontSize) {
+TEXT_DRAW_TEST_P(CTFrame, AlignLBMFontSize) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -237,18 +237,15 @@ INSTANTIATE_TEST_CASE_P(TestAlignmentLineBreakMode,
                                            ::testing::ValuesIn(c_writingDirections),
                                            ::testing::ValuesIn(c_fontSizes)));
 
-class RotateCTM : public WhiteBackgroundTest, public ::testing::WithParamInterface<CGFloat> {
-    CFStringRef CreateOutputFilename() {
-        CGFloat rotation = GetParam();
-        return CFStringCreateWithFormat(nullptr, nullptr, CFSTR("TestImage.RotateCTM.%.02f.png"), rotation);
-    }
-};
+class Transform : public WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<1024>>>,
+                  public ::testing::WithParamInterface<::testing::tuple<CGAffineTransform, CGAffineTransform>> {};
 
-DISABLED_DRAW_TEST_P(RotateCTM, TestRotatingCTM) {
+TEXT_DRAW_TEST_P(Transform, TestMatrices) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
-    CGContextRotateCTM(context, GetParam());
+    CGContextSetTextMatrix(context, ::testing::get<0>(GetParam()));
+    CGContextConcatCTM(context, ::testing::get<1>(GetParam()));
 
     // Creates path with current rectangle
     woc::unique_cf<CGMutablePathRef> path{ CGPathCreateMutable() };
@@ -256,7 +253,7 @@ DISABLED_DRAW_TEST_P(RotateCTM, TestRotatingCTM) {
 
     // Create style setting to match given alignment
     CTParagraphStyleSetting setting[1];
-    CTTextAlignment alignment = kCTLeftTextAlignment;
+    CTTextAlignment alignment = kCTCenterTextAlignment;
     setting[0].spec = kCTParagraphStyleSpecifierAlignment;
     setting[0].valueSize = sizeof(CTTextAlignment);
     setting[0].value = &alignment;
@@ -267,20 +264,86 @@ DISABLED_DRAW_TEST_P(RotateCTM, TestRotatingCTM) {
     CFStringRef keys[2] = { kCTFontAttributeName, kCTParagraphStyleAttributeName };
     CFTypeRef values[2] = { myCFFont.get(), paragraphStyle.get() };
 
+    woc::unique_cf<CFDictionaryRef> dict{ CFDictionaryCreate(
+        nullptr, (const void**)keys, (const void**)values, 1, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks) };
+
+    woc::unique_cf<CFAttributedStringRef> attrString{
+        CFAttributedStringCreate(nullptr, CFSTR("The quick brown fox jumps over the lazy dog"), dict.get())
+    };
+
+    woc::unique_cf<CTLineRef> line{ CTLineCreateWithAttributedString(attrString.get()) };
+    CTLineDraw(line.get(), context);
     __DrawLoremIpsum(context, path.get(), keys, values);
 }
 
-static constexpr CGFloat c_rotations[] = { 30.0 * M_PI / 180.0, 60.0 * M_PI / 180.0, -45.0 * M_PI / 180.0 };
-INSTANTIATE_TEST_CASE_P(TestDrawingTextInRotatedCTM, RotateCTM, ::testing::ValuesIn(c_rotations));
+static const CGAffineTransform c_transforms[] = { CGAffineTransformMakeRotation(30.0 * M_PI / 180.0),
+                                                  CGAffineTransformMakeRotation(60.0 * M_PI / 180.0),
+                                                  CGAffineTransformMakeRotation(-45.0 * M_PI / 180.0),
+                                                  CGAffineTransformMakeScale(2.0, 1.0),
+                                                  CGAffineTransformMakeScale(1.0, 2.0),
+                                                  CGAffineTransformMakeScale(1.0, -1.0),
+                                                  CGAffineTransformMakeScale(-1.0, 1.0),
+                                                  { 2, 2, 0, 2, 0, 0 },
+                                                  { 2, 0, 2, 2, 0, 0 },
+                                                  { 2, 2, 1.75, 2, 0, 0 },
+                                                  CGAffineTransformIdentity };
 
-class ExtraKerning : public WhiteBackgroundTest, public ::testing::WithParamInterface<CGFloat> {
+INSTANTIATE_TEST_CASE_P(TestDrawingTextWithTransformedMatrices,
+                        Transform,
+                        ::testing::Combine(::testing::ValuesIn(c_transforms), ::testing::ValuesIn(c_transforms)));
+
+class UIKitTransform : public UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>,
+                       public ::testing::WithParamInterface<::testing::tuple<CGAffineTransform, CGAffineTransform>> {};
+
+TEXT_DRAW_TEST_P(UIKitTransform, TestMatrices) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGContextSetTextMatrix(context, CGAffineTransformConcat(CGAffineTransformMakeScale(1.0, -1.0), ::testing::get<0>(GetParam())));
+    CGContextConcatCTM(context, ::testing::get<1>(GetParam()));
+
+    // Creates path with current rectangle
+    woc::unique_cf<CGMutablePathRef> path{ CGPathCreateMutable() };
+    CGPathAddRect(path.get(), nullptr, bounds);
+
+    // Create style setting to match given alignment
+    CTParagraphStyleSetting setting[1];
+    CTTextAlignment alignment = kCTCenterTextAlignment;
+    setting[0].spec = kCTParagraphStyleSpecifierAlignment;
+    setting[0].valueSize = sizeof(CTTextAlignment);
+    setting[0].value = &alignment;
+
+    woc::unique_cf<CTParagraphStyleRef> paragraphStyle{ CTParagraphStyleCreate(setting, std::extent<decltype(setting)>::value) };
+    woc::unique_cf<CTFontRef> myCFFont{ CTFontCreateWithName(CFSTR("Arial"), 20, nullptr) };
+
+    CFStringRef keys[2] = { kCTFontAttributeName, kCTParagraphStyleAttributeName };
+    CFTypeRef values[2] = { myCFFont.get(), paragraphStyle.get() };
+
+    woc::unique_cf<CFDictionaryRef> dict{ CFDictionaryCreate(
+        nullptr, (const void**)keys, (const void**)values, 1, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks) };
+
+    woc::unique_cf<CFAttributedStringRef> attrString{
+        CFAttributedStringCreate(nullptr, CFSTR("The quick brown fox jumps over the lazy dog"), dict.get())
+    };
+
+    woc::unique_cf<CTLineRef> line{ CTLineCreateWithAttributedString(attrString.get()) };
+    CTLineDraw(line.get(), context);
+    __DrawLoremIpsum(context, path.get(), keys, values);
+}
+
+INSTANTIATE_TEST_CASE_P(TestDrawingUITransforms,
+                        UIKitTransform,
+                        ::testing::Combine(::testing::ValuesIn(c_transforms), ::testing::ValuesIn(c_transforms)));
+
+class ExtraKerning : public WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>,
+                     public ::testing::WithParamInterface<CGFloat> {
     CFStringRef CreateOutputFilename() {
         CGFloat extraKerning = GetParam();
         return CFStringCreateWithFormat(nullptr, nullptr, CFSTR("TestImage.ExtraKerning.%.02f.png"), extraKerning);
     }
 };
 
-DISABLED_DRAW_TEST_P(ExtraKerning, TestExtraKerning) {
+TEXT_DRAW_TEST_P(ExtraKerning, TestExtraKerning) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -310,14 +373,15 @@ DISABLED_DRAW_TEST_P(ExtraKerning, TestExtraKerning) {
 static constexpr CGFloat c_extraKernings[] = { -1.0, 1.0, 5.25, 25.75 };
 INSTANTIATE_TEST_CASE_P(TestDrawingTextInExtraKerning, ExtraKerning, ::testing::ValuesIn(c_extraKernings));
 
-class LineHeightMultiple : public WhiteBackgroundTest, public ::testing::WithParamInterface<CGFloat> {
+class LineHeightMultiple : public WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>,
+                           public ::testing::WithParamInterface<CGFloat> {
     CFStringRef CreateOutputFilename() {
         CGFloat lineHeightMultiple = GetParam();
         return CFStringCreateWithFormat(nullptr, nullptr, CFSTR("TestImage.LineHeightMultiple.%.02f.png"), lineHeightMultiple);
     }
 };
 
-DISABLED_DRAW_TEST_P(LineHeightMultiple, TestLineHeightMultiple) {
+TEXT_DRAW_TEST_P(LineHeightMultiple, TestLineHeightMultiple) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -348,7 +412,7 @@ DISABLED_DRAW_TEST_P(LineHeightMultiple, TestLineHeightMultiple) {
 static constexpr CGFloat c_lineHeightMultiples[] = { -1.0, .75, 1.25 };
 INSTANTIATE_TEST_CASE_P(TestDrawingTextInLineHeightMultiple, LineHeightMultiple, ::testing::ValuesIn(c_lineHeightMultiples));
 
-DISABLED_DRAW_TEST_F(CTRun, BasicDrawingTest, WhiteBackgroundTest) {
+TEXT_DRAW_TEST_F(CTRun, BasicDrawingTest, WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -376,7 +440,7 @@ DISABLED_DRAW_TEST_F(CTRun, BasicDrawingTest, WhiteBackgroundTest) {
     CTLineDraw(line.get(), context);
 }
 
-DISABLED_DRAW_TEST_F(CTLine, BasicDrawingTest, WhiteBackgroundTest) {
+TEXT_DRAW_TEST_F(CTLine, BasicDrawingTest, WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -406,14 +470,15 @@ DISABLED_DRAW_TEST_F(CTLine, BasicDrawingTest, WhiteBackgroundTest) {
     CTRunDraw(run, context, {});
 }
 
-class Fonts : public WhiteBackgroundTest, public ::testing::WithParamInterface<CFStringRef> {
+class Fonts : public WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<2300>>>,
+              public ::testing::WithParamInterface<CFStringRef> {
     CFStringRef CreateOutputFilename() {
         CFStringRef fontName = GetParam();
         return CFStringCreateWithFormat(nullptr, nullptr, CFSTR("TestImage.Fonts.%@.png"), fontName);
     }
 };
 
-DISABLED_DRAW_TEST_P(Fonts, TestFonts) {
+TEXT_DRAW_TEST_P(Fonts, TestFonts) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -443,7 +508,7 @@ static CFStringRef c_fontNames[] = { CFSTR("Arial"), CFSTR("Times New Roman"), C
 INSTANTIATE_TEST_CASE_P(TestDrawingTextInFonts, Fonts, ::testing::ValuesIn(c_fontNames));
 
 #ifdef WINOBJC
-DISABLED_DRAW_TEST_F(CTFontManager, DrawWithCustomFont, WhiteBackgroundTest) {
+TEXT_DRAW_TEST_F(CTFontManager, DrawWithCustomFont, WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<512>>>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -490,7 +555,7 @@ DISABLED_DRAW_TEST_F(CTFontManager, DrawWithCustomFont, WhiteBackgroundTest) {
 }
 #endif // WINOBJC
 
-DISABLED_DRAW_TEST_F(CTFont, DrawGlyphs, WhiteBackgroundTest) {
+TEXT_DRAW_TEST_F(CTFont, DrawGlyphs, WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<64>>>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 

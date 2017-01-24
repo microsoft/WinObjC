@@ -15,23 +15,28 @@
 //******************************************************************************
 
 #import "Starboard.h"
-#import "UIKit/UIView.h"
-#import "UIKit/UIControl.h"
-#import "UIKit/UIRuntimeEventConnection.h"
-#import "Foundation/NSString.h"
-#import "Foundation/NSMutableArray.h"
-#import "Foundation/NSMutableSet.h"
+
+#import <UIKit/UIControl.h>
+#import <UIKit/UILabel.h>
+#import <UIKit/UIRuntimeEventConnection.h>
+#import <UIKit/UITouch.h>
+#import <UIKit/UIView.h>
+
+#import <Foundation/NSString.h>
+#import <Foundation/NSMutableArray.h>
+#import <Foundation/NSMutableSet.h>
+
 #import "LoggingNative.h"
 #import "StubReturn.h"
-#import "UIControl+Internal.h"
+#import "UIControlInternal.h"
 
 static const wchar_t* TAG = L"UIControl";
 
 @implementation UIControl
 
 - (void)_initUIControl {
-    _registeredActions = [[NSMutableArray alloc] init];
-    _activeTouches = [[NSMutableArray alloc] init];
+    _registeredActions.attach([[NSMutableArray alloc] init]);
+    _activeTouches.attach([[NSMutableArray alloc] init]);
     _contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
     _contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
 }
@@ -103,8 +108,10 @@ Microsoft Extension
 
         //  Cascade the action down the responder chain
         while (target != nil) {
-            if ([target respondsToSelector:sel])
+            if ([target respondsToSelector:sel]) {
                 break;
+            }
+
             target = [target nextResponder];
         }
     }
@@ -222,6 +229,7 @@ Microsoft Extension
         }
 
         [self setNeedsDisplay];
+        [self invalidateIntrinsicContentSize];
         [self setNeedsLayout];
 
         if (enabled) {
@@ -273,6 +281,7 @@ Microsoft Extension
         }
 
         [self setNeedsDisplay];
+        [self invalidateIntrinsicContentSize];
         [self setNeedsLayout];
     }
 }
@@ -297,6 +306,7 @@ Microsoft Extension
         }
 
         [self setNeedsDisplay];
+        [self invalidateIntrinsicContentSize];
         [self setNeedsLayout];
     }
 }
@@ -349,9 +359,9 @@ Microsoft Extension
     }
 
     [self removeTarget:target action:actionSel forControlEvents:events];
-    UIRuntimeEventConnection* newEvent = [[UIRuntimeEventConnection alloc] initWithTarget:target selector:actionSel eventMask:events];
+    StrongId<UIRuntimeEventConnection> newEvent;
+    newEvent.attach([[UIRuntimeEventConnection alloc] initWithTarget:target selector:actionSel eventMask:events]);
     [_registeredActions addObject:newEvent];
-    [newEvent release];
 }
 
 /**
@@ -389,8 +399,13 @@ Microsoft Extension
         return;
     }
 
-    _touchInside = TRUE;
-    [self sendActionsForControlEvents:UIControlEventTouchDown];
+    // Multitouch isn't supported by default, that's handled through tracking.
+    // The first touch is the one used for control events.
+    if (!_controlEventTouch) {
+        _controlEventTouch = [touchSet anyObject];
+        _touchInside = TRUE;
+        [self sendActionsForControlEvents:UIControlEventTouchDown];
+    }
 
     if ([self respondsToSelector:@selector(beginTrackingWithTouch:withEvent:)]) {
         NSEnumerator* objEnum = [touchSet objectEnumerator];
@@ -416,7 +431,26 @@ Microsoft Extension
         return;
     }
 
-    [self sendActionsForControlEvents:UIControlEventTouchDragInside];
+    if ([touchSet containsObject:_controlEventTouch]) {
+        CGPoint point = [_controlEventTouch locationInView:self];
+        BOOL currentTouchInside = [self pointInside:point withEvent:event];
+
+        if (currentTouchInside != _touchInside) {
+            _touchInside = currentTouchInside;
+            if (currentTouchInside) {
+                [self sendActionsForControlEvents:UIControlEventTouchDragEnter];
+            } else {
+                [self sendActionsForControlEvents:UIControlEventTouchDragExit];
+            }
+        }
+
+        // TODO: Investigate fat-fingers
+        if (currentTouchInside) {
+            [self sendActionsForControlEvents:UIControlEventTouchDragInside];
+        } else {
+            [self sendActionsForControlEvents:UIControlEventTouchDragOutside];
+        }
+    }
 
     if ([self respondsToSelector:@selector(continueTrackingWithTouch:withEvent:)]) {
         NSEnumerator* objEnum = [touchSet objectEnumerator];
@@ -447,7 +481,18 @@ Microsoft Extension
         return;
     }
 
-    [self sendActionsForControlEvents:UIControlEventTouchUpInside];
+    if ([touchSet containsObject:_controlEventTouch]) {
+        CGPoint point = [_controlEventTouch locationInView:self];
+        BOOL currentTouchInside = [self pointInside:point withEvent:event];
+
+        if (currentTouchInside) {
+            [self sendActionsForControlEvents:UIControlEventTouchUpInside];
+        } else {
+            [self sendActionsForControlEvents:UIControlEventTouchUpOutside];
+        }
+
+        _controlEventTouch = nil;
+    }
 
     NSEnumerator* objEnum = [touchSet objectEnumerator];
     UITouch* curTouch;
@@ -473,7 +518,10 @@ Microsoft Extension
         return;
     }
 
-    [self sendActionsForControlEvents:UIControlEventTouchCancel];
+    if ([touchSet containsObject:_controlEventTouch]) {
+        [self sendActionsForControlEvents:UIControlEventTouchCancel];
+        _controlEventTouch = nil;
+    }
 }
 
 /**
@@ -524,16 +572,6 @@ Microsoft Extension
 
 - (void)_backPressed {
     [self sendActionsForControlEvents:_sendControlEventsOnBack];
-}
-
-/**
- @Status Interoperable
-*/
-- (void)dealloc {
-    [_registeredActions release];
-    [_activeTouches release];
-
-    [super dealloc];
 }
 
 /**

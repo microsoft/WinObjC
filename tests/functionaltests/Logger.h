@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,6 +16,7 @@
 #pragma once
 
 #include <mutex>
+#include <string>
 #include <vector>
 
 class FunctionalTestLog {
@@ -47,12 +48,10 @@ public:
     // @param continueTest continues test execution after logging the error.
     static void LogErrorAndAbort(const char* comment, const char* file, const char* function, const int line);
 
-    static void SetUserComment(const std::vector<char>& comment) {
-        _userComment = comment;
-    }
+    static void SetUserComment(const std::vector<char>& comment);
 
 private:
-    thread_local static std::vector<char> _userComment;
+    thread_local static std::wstring _userComment;
 
     FunctionalTestLog(){};
 }; /* class FunctionalTestLog */

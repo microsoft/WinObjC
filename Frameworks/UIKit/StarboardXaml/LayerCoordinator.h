@@ -142,6 +142,7 @@ private:
     static Windows::UI::Xaml::DependencyProperty^ s_contentGravityProperty;
     static Windows::UI::Xaml::DependencyProperty^ s_contentCenterProperty;
     static Windows::UI::Xaml::DependencyProperty^ s_contentSizeProperty;
+    static Windows::UI::Xaml::DependencyProperty^ s_contentScaleProperty;
 
     // Content helpers
     static Windows::UI::Xaml::Controls::Image^ _GetContentImage(Windows::UI::Xaml::FrameworkElement^ element, bool createIfPossible = false);
@@ -150,6 +151,8 @@ private:
     static void _ApplyContentGravity(Windows::UI::Xaml::FrameworkElement^ element, ContentGravity gravity);
     static Windows::Foundation::Size _GetContentSize(Windows::UI::Xaml::FrameworkElement^ element);
     static void _SetContentSize(Windows::UI::Xaml::FrameworkElement^ element, Windows::Foundation::Size value);
+    static void _SetContentScale(Windows::UI::Xaml::FrameworkElement^ element, double value);
+    static double _GetContentScale(Windows::UI::Xaml::FrameworkElement^ element);
     static void _VisualWidthChangedCallback(Windows::UI::Xaml::DependencyObject^ sender, Windows::UI::Xaml::DependencyPropertyChangedEventArgs^ args);
     static void _VisualHeightChangedCallback(Windows::UI::Xaml::DependencyObject^ sender, Windows::UI::Xaml::DependencyPropertyChangedEventArgs^ args);
 };

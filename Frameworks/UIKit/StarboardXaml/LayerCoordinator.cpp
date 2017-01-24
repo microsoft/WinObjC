@@ -604,6 +604,7 @@ DependencyProperty^ LayerCoordinator::s_visualHeightProperty = nullptr;
 DependencyProperty^ LayerCoordinator::s_contentGravityProperty = nullptr;
 DependencyProperty^ LayerCoordinator::s_contentCenterProperty = nullptr;
 DependencyProperty^ LayerCoordinator::s_contentSizeProperty = nullptr;
+DependencyProperty^ LayerCoordinator::s_contentScaleProperty = nullptr;
 
 void LayerCoordinator::InitializeFrameworkElement(FrameworkElement^ element) {
     // No-op if already registered
@@ -701,6 +702,9 @@ void LayerCoordinator::SetContent(FrameworkElement^ element, ImageSource^ source
     }
     _SetContentSize(element, Size(width / scale, height / scale));
 
+    // Store the content scale
+    _SetContentScale(element, scale);
+
     // Refresh any content center settings
     _ApplyContentCenter(element, _GetContentCenter(element));
 
@@ -752,10 +756,15 @@ void LayerCoordinator::_ApplyContentCenter(FrameworkElement^ element, Rect conte
     if (contentCenter.Equals(Rect(0, 0, 1.0, 1.0))) {
         image->NineGrid = Thickness(0, 0, 0, 0);
     } else {
-        int left = static_cast<int>(contentCenter.X * contentSize.Width);
-        int top = static_cast<int>(contentCenter.Y * contentSize.Height);
-        int right = (static_cast<int>(contentSize.Width) - (left + (static_cast<int>(contentCenter.Width * contentSize.Width))));
-        int bottom = (static_cast<int>(contentSize.Height) - (top + (static_cast<int>(contentCenter.Height * contentSize.Height))));
+        // When creating the NineGrid, we need to take the scaled image dimensions into account
+        const double contentScale = _GetContentScale(element);
+        const double imageWidth = contentSize.Width * contentScale;
+        const double imageHeight = contentSize.Height * contentScale;
+
+        int left = static_cast<int>(contentCenter.X * imageWidth);
+        int top = static_cast<int>(contentCenter.Y * imageHeight);
+        int right = (static_cast<int>(imageWidth) - (left + (static_cast<int>(contentCenter.Width * imageWidth))));
+        int bottom = (static_cast<int>(imageHeight) - (top + (static_cast<int>(contentCenter.Height * imageHeight))));
 
         // Remove edge cases that contentsCenter supports but NineGrid does not. 1/3 for top 1/3 for bottom 1/3 for
         // the center etc..
@@ -765,12 +774,12 @@ void LayerCoordinator::_ApplyContentCenter(FrameworkElement^ element, Rect conte
         bottom = std::max<int>(0, bottom);
 
         // Cap the left/right to the maximum width
-        int maxWidth = static_cast<int>(contentSize.Width / 3);
+        int maxWidth = static_cast<int>(imageWidth / 3);
         left = std::min<int>(left, maxWidth);
         right = std::min<int>(right, maxWidth);
 
         // Cap the top/bottom to the maximum height
-        int maxHeight = static_cast<int>(contentSize.Height / 3);
+        int maxHeight = static_cast<int>(imageHeight / 3);
         top = std::min<int>(top, maxHeight);
         bottom = std::min<int>(bottom, maxHeight);
 
@@ -815,11 +824,12 @@ void LayerCoordinator::_RegisterDependencyProperties() {
             ref new PropertyMetadata(0.0,
             ref new PropertyChangedCallback(&LayerCoordinator::_VisualHeightChangedCallback)));
 
+        // Store as an int (rather than as a ContentGravity enum value) so we can read the values in the VS debugger at runtime
         s_contentGravityProperty = DependencyProperty::RegisterAttached(
             "ContentGravity",
-            ContentGravity::typeid,
+            int::typeid,
             FrameworkElement::typeid,
-            ref new PropertyMetadata(ContentGravity::Resize, nullptr));
+            ref new PropertyMetadata(static_cast<Object^>(static_cast<int>(ContentGravity::Resize)), nullptr));
 
         s_contentCenterProperty = DependencyProperty::RegisterAttached(
             "ContentCenter",
@@ -827,11 +837,18 @@ void LayerCoordinator::_RegisterDependencyProperties() {
             FrameworkElement::typeid,
             ref new PropertyMetadata(Windows::Foundation::Rect(0, 0, 1.0, 1.0), nullptr));
 
+        // The size of the layer content, divided by the scale factor of the content
         s_contentSizeProperty = DependencyProperty::RegisterAttached(
             "ContentSize",
             Windows::Foundation::Size::typeid,
             FrameworkElement::typeid,
             ref new PropertyMetadata(Windows::Foundation::Size(0, 0), nullptr));
+
+        s_contentScaleProperty = DependencyProperty::RegisterAttached(
+            "ContentScale",
+            double::typeid,
+            FrameworkElement::typeid,
+            ref new PropertyMetadata(0.0, nullptr));
 
         s_dependencyPropertiesRegistered = true;
     }
@@ -1044,11 +1061,13 @@ void LayerCoordinator::_VisualHeightChangedCallback(DependencyObject^ sender, De
 
 // ContentGravity
 ContentGravity LayerCoordinator::GetContentGravity(FrameworkElement^ element) {
-    return static_cast<ContentGravity>(element->GetValue(s_contentGravityProperty));
+    // We store as an int (rather than as a ContentGravity enum value) so we can read the values in the VS debugger at runtime
+    return static_cast<ContentGravity>(static_cast<int>(element->GetValue(s_contentGravityProperty)));
 }
 
 void LayerCoordinator::SetContentGravity(FrameworkElement^ element, ContentGravity value) {
-    element->SetValue(s_contentGravityProperty, value);
+    // We store as an int (rather than as a ContentGravity enum value) so we can read the values in the VS debugger at runtime
+    element->SetValue(s_contentGravityProperty, ref new Platform::Box<int>(static_cast<int>(value)));
     _ApplyContentGravity(element, value);
 }
 
@@ -1311,6 +1330,15 @@ Size LayerCoordinator::_GetContentSize(FrameworkElement^ element) {
 
 void LayerCoordinator::_SetContentSize(Windows::UI::Xaml::FrameworkElement^ element, Size value) {
     element->SetValue(s_contentSizeProperty, value);
+}
+
+// ContentScale
+void LayerCoordinator::_SetContentScale(Windows::UI::Xaml::FrameworkElement^ element, double value) {
+    element->SetValue(s_contentScaleProperty, value);
+}
+
+double LayerCoordinator::_GetContentScale(FrameworkElement^ element) {
+    return static_cast<double>(element->GetValue(s_contentScaleProperty));
 }
 
 void LayerCoordinator::AddAnimation(Platform::String^ propertyName,

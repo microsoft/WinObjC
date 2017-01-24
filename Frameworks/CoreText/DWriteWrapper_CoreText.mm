@@ -25,6 +25,7 @@
 #import <StringHelpers.h>
 #import <vector>
 #import <iterator>
+#import <numeric>
 
 using namespace std;
 using namespace Microsoft::WRL;
@@ -264,12 +265,10 @@ static HRESULT __DWriteTextLayoutCreate(CFAttributedStringRef string, CFRange ra
     // Used to separate runs for attributes which DWrite does not handle until drawing (e.g. Foreground Color)
     uint32_t incompatibleAttributeFlag = 0;
     CFRange attributeRange;
+    for (CFIndex index = range.location; index < rangeEnd; index += attributeRange.length) {
+        CTFontRef font = static_cast<CTFontRef>(CFAttributedStringGetAttribute(string, index, kCTFontAttributeName, &attributeRange));
 
-    for (CFIndex currentIndex = range.location; currentIndex < rangeEnd; currentIndex += attributeRange.length) {
-        CTFontRef font =
-            static_cast<CTFontRef>(CFAttributedStringGetAttribute(string, currentIndex, kCTFontAttributeName, &attributeRange));
-
-        // attributeRange is properly populated even if this attribute is not found
+        // attributeRange is populated even if this attribute is not found
         const DWRITE_TEXT_RANGE dwriteRange = { attributeRange.location, attributeRange.length };
         if (font) {
             RETURN_IF_FAILED(__DWriteTextLayoutApplyFont(textLayout, font, dwriteRange));
@@ -282,7 +281,7 @@ static HRESULT __DWriteTextLayoutCreate(CFAttributedStringRef string, CFRange ra
         }
 
         CFNumberRef extraKerningRef =
-            static_cast<CFNumberRef>(CFAttributedStringGetAttribute(string, currentIndex, kCTKernAttributeName, nullptr));
+            static_cast<CFNumberRef>(CFAttributedStringGetAttribute(string, index, kCTKernAttributeName, nullptr));
         if (extraKerningRef) {
             RETURN_IF_FAILED(__DWriteTextLayoutApplyExtraKerning(textLayout, typography, extraKerningRef, dwriteRange));
         } else {
@@ -329,6 +328,7 @@ public:
         _DWriteGlyphRunDescription glyphRunDescriptionInfo;
         glyphRunDescriptionInfo._stringLength = glyphRunDescription->stringLength;
         glyphRunDescriptionInfo._textPosition = glyphRunDescription->textPosition;
+        glyphRunDescriptionInfo._clusterMap.reserve(glyphRun->glyphCount);
         std::transform(glyphRunDescription->clusterMap,
                        glyphRunDescription->clusterMap + glyphRun->glyphCount,
                        std::back_inserter(glyphRunDescriptionInfo._clusterMap),
@@ -370,6 +370,7 @@ public:
     };
 
     HRESULT STDMETHODCALLTYPE GetCurrentTransform(_In_opt_ void* clientDrawingContext, _Out_ DWRITE_MATRIX* transform) throw() {
+        *transform = {1, 0, 0, 1, 0, 0};
         return S_OK;
     };
 
@@ -479,6 +480,8 @@ static _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CG
 
             // TODO::
             // This is a temp workaround until we can have actual glyph origins
+            run->_glyphOrigins.reserve(glyphRunDetails._dwriteGlyphRun[j].glyphCount);
+            run->_glyphAdvances.reserve(glyphRunDetails._dwriteGlyphRun[j].glyphCount);
             for (int index = 0; index < glyphRunDetails._dwriteGlyphRun[j].glyphCount; index++) {
                 run->_glyphOrigins.emplace_back(CGPoint{ xPos, yPos });
                 run->_glyphAdvances.emplace_back(CGSize{ glyphRunDetails._dwriteGlyphRun[j].glyphAdvances[index], 0.0f });
@@ -515,4 +518,61 @@ static _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CG
     }
 
     return frame;
+}
+
+static CGSize _DWriteGetFrameSize(CFAttributedStringRef string, CFRange range, CGSize maxSize, CFRange* fitRange) {
+    CGSize ret = CGSizeZero;
+
+    // Treat range.length of 0 as unlimited length
+    if (range.length == 0L) {
+        range.length = CFAttributedStringGetLength(string) - range.location;
+    }
+
+    // No text to draw, just return CGSizeZero
+    if (!string || range.length <= 0L) {
+        return ret;
+    }
+
+    ComPtr<IDWriteTextLayout> textLayout;
+    if (FAILED(__DWriteTextLayoutCreate(string, range, { CGPointZero, maxSize }, &textLayout))) {
+        return ret;
+    }
+
+    DWRITE_TEXT_METRICS textMetrics;
+    if (FAILED(textLayout->GetMetrics(&textMetrics))) {
+        return ret;
+    }
+
+    // TODO:: find more precise value than 1.0 to increase width by to fully enclose frame
+    ret.width = std::min(maxSize.width, textMetrics.widthIncludingTrailingWhitespace + 1.0f);
+    ret.height = std::min(maxSize.height, textMetrics.height);
+
+    if (fitRange) {
+        *fitRange = { range.location, 0L };
+        uint32_t lineCount = 0;
+
+        // Should return E_NOT_SUFFICIENT_BUFFER and popluate lineCount
+        if (textLayout->GetLineMetrics(nullptr, 0, &lineCount) != E_NOT_SUFFICIENT_BUFFER) {
+            return ret;
+        }
+
+        std::vector<DWRITE_LINE_METRICS> metrics(lineCount);
+        if (FAILED(textLayout->GetLineMetrics(metrics.data(), lineCount, &lineCount))) {
+            return ret;
+        }
+
+        float totalHeight = 0;
+        CFIndex endPos = range.location;
+        for (auto metric : metrics) {
+            totalHeight += metric.baseline;
+            if (totalHeight > ret.height) {
+                break;
+            }
+            endPos += metric.length;
+        }
+
+        fitRange->length = endPos;
+    }
+
+    return ret;
 }

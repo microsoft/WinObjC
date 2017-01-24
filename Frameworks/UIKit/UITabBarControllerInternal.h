@@ -13,8 +13,9 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
+
+#import <UIKit/UITabBarController.h>
 
 @class UITabBar;
 @class UITabBarItem;

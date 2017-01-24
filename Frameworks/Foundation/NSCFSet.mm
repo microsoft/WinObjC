@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -24,12 +24,7 @@
 #include <vector>
 
 static CFSetCallBacks _NSCFSetCallBacks = {
-    0,
-    _NSCFCallbackRetain,
-    _NSCFCallbackRelease,
-    _NSCFCallbackCopyDescription,
-    _NSCFCallbackEquals,
-    _NSCFCallbackHash,
+    0, _NSCFCallbackRetain, _NSCFCallbackRelease, _NSCFCallbackCopyDescription, _NSCFCallbackEquals, _NSCFCallbackHash,
 };
 
 @interface NSCFSet : NSMutableSet
@@ -45,7 +40,8 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFSet)
 }
 
 - (_Nullable instancetype)initWithObjects:(id _Nonnull const*)objs count:(NSUInteger)count {
-    return reinterpret_cast<NSSetPrototype*>(static_cast<NSSet*>((CFSetCreate(kCFAllocatorDefault, (const void**)(objs), count, &_NSCFSetCallBacks))));
+    return reinterpret_cast<NSSetPrototype*>(
+        static_cast<NSSet*>((CFSetCreate(kCFAllocatorDefault, (const void**)(objs), count, &_NSCFSetCallBacks))));
 }
 
 @end
@@ -82,6 +78,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFSet)
 @implementation NSCFSet
 
 BRIDGED_CLASS_REQUIRED_IMPLS(CFSetRef, CFSetGetTypeID, NSSet, NSCFSet)
+BRIDGED_MUTABLE_CLASS_FOR_CODER(CFSetRef, _CFSetIsMutable, NSSet, NSMutableSet)
 
 - (unsigned)count {
     return CFSetGetCount(static_cast<CFSetRef>(self));
@@ -110,6 +107,7 @@ BRIDGED_CLASS_REQUIRED_IMPLS(CFSetRef, CFSetGetTypeID, NSSet, NSCFSet)
 
 - (void)addObject:(id)object {
     BRIDGED_THROW_IF_IMMUTABLE(_CFSetIsMutable, CFSetRef);
+    NS_COLLECTION_THROW_IF_NULL_REASON(object, [NSString stringWithFormat:@"*** %@ object cannot be nil", NSStringFromSelector(_cmd)]);
     CFSetAddValue(static_cast<CFMutableSetRef>(self), object);
 }
 

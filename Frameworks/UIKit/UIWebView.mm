@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "UIKit/UIKit.h"
 #include "UIKit/UIView.h"
 #include "CoreGraphics/CGContext.h"
@@ -36,7 +37,7 @@
     id _delegate;
     idretaintype(NSURLRequest) _request;
     bool _isLoading;
-    UIScrollView* _scrollView;
+    StrongId<UIScrollView> _scrollView;
     StrongId<WXCWebView> _xamlWebControl;
     EventRegistrationToken _xamlLoadCompletedEventCookie;
     EventRegistrationToken _xamlLoadStartedEventCookie;
@@ -154,11 +155,20 @@ static void _initUIWebView(UIWebView* self) {
             }
         }];
 
+    // Add handler which will be invoked when user calls window.external.notify(msg) function in javascript
+    [self->_xamlWebControl addScriptNotifyEvent:^void(RTObject* sender, WXCNotifyEventArgs* e) {
+        // Send event to webView delegate
+        NSURL* url = [NSURL URLWithString:e.callingUri.absoluteUri];
+        if ([weakSelf->_delegate respondsToSelector:@selector(webView:scriptNotify:value:)]) {
+            [weakSelf->_delegate webView:weakSelf scriptNotify:url value:e.value];
+        }
+    }];
+
     CGRect bounds;
     bounds = [self bounds];
 
     //  For compatibility only
-    self->_scrollView = [[UIScrollView alloc] initWithFrame:bounds];
+    self->_scrollView.attach([[UIScrollView alloc] initWithFrame:bounds]);
 
     [self setNeedsLayout];
 }
@@ -243,11 +253,31 @@ static void _initUIWebView(UIWebView* self) {
 }
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 - (NSString*)stringByEvaluatingJavaScriptFromString:(NSString*)string {
-    NSString* ret = [_xamlWebControl invokeScript:@"eval" arguments:[NSArray arrayWithObject:string]];
-    return ret;
+    UNIMPLEMENTED_WITH_MSG(
+        "stringByEvaluatingJavaScriptFromString is not supported on our platform. Call evaluateJavaScript:completionHandler: instead.");
+    return StubReturn();
+}
+
+/**
+ @Status Caveat
+  @Notes This is a workaround. Original UIWebView does not have this method
+*/
+- (void)evaluateJavaScript:(NSString*)javaScriptString completionHandler:(void (^)(id, NSError*))completionHandler {
+    [_xamlWebControl invokeScriptAsync:@"eval"
+        arguments:[NSArray arrayWithObject:javaScriptString]
+        success:^void(NSString* success) {
+            if (completionHandler != nil) {
+                completionHandler(success, nil);
+            }
+        }
+        failure:^void(NSError* failure) {
+            if (completionHandler != nil) {
+                completionHandler(nil, failure);
+            }
+        }];
 }
 
 /**

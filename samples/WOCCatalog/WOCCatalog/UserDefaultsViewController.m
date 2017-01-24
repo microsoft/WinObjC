@@ -20,6 +20,7 @@ static const CGFloat c_originX = 5;
 static const CGFloat c_originY = 8;
 static const CGFloat c_width = 460;
 static const CGFloat c_height = 40;
+static const int TAG_SUBVIEW_UITEXTFIELD = 1;
 
 @implementation UserDefaultsViewController {
 @private
@@ -30,7 +31,7 @@ static const CGFloat c_height = 40;
     [super viewDidLoad];
 
     NSUserDefaults* standardDefaults = [NSUserDefaults standardUserDefaults];
-    NSDictionary* dict = @{@"FavoriteWord" : @"ChangeAndRelaunchMe", @"FavoriteBool" : [NSNumber numberWithBool:YES]};
+    NSDictionary* dict = @{ @"FavoriteWord" : @"ChangeAndRelaunchMe", @"FavoriteBool" : [NSNumber numberWithBool:YES] };
     [standardDefaults registerDefaults:dict];
     NSString* placeHolder = [NSString stringWithFormat:@"%@", [standardDefaults stringForKey:@"FavoriteWord"]];
 
@@ -52,7 +53,7 @@ static const CGFloat c_height = 40;
     [_textFields addObject:switchFavoriteBool];
     [switchFavoriteBool addTarget:self action:@selector(changeFavoriteBool) forControlEvents:UIControlEventValueChanged];
 
-    [self tableView].allowsSelection = NO;    
+    [self tableView].allowsSelection = NO;
 }
 
 - (void)changeFavoriteBool {
@@ -82,7 +83,7 @@ static const CGFloat c_height = 40;
     return YES;
 }
 
-- (void)textFieldDidEndEditing:(UITextField *)textField {
+- (void)textFieldDidEndEditing:(UITextField*)textField {
     NSUserDefaults* standardDefaults = [NSUserDefaults standardUserDefaults];
     [standardDefaults setObject:textField.text forKey:@"FavoriteWord"];
 }
@@ -91,9 +92,16 @@ static const CGFloat c_height = 40;
     UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"MenuCell"];
     if (nil == cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MenuCell"];
+    } else {
+        // Before reuse, check if any subview in contentview is tagged with TAG_SUBVIEW_UITEXTFIELD
+        // if so, we know it is a custom view that we need to remove
+        UIView* subView = (UIView*)[cell viewWithTag:TAG_SUBVIEW_UITEXTFIELD];
+        [subView removeFromSuperview];
     }
 
-    [cell addSubview:[_textFields objectAtIndex:indexPath.row]];
+    UIView* subview = [_textFields objectAtIndex:indexPath.row];
+    subview.tag = TAG_SUBVIEW_UITEXTFIELD;
+    [cell addSubview:subview];
     return cell;
 }
 

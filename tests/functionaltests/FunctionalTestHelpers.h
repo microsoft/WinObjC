@@ -16,8 +16,11 @@
 
 #pragma once
 
-// Cleanup method to call after every test class to prevent leaking UIApplication
-void FunctionalTestCleanupUIApplication();
+// Setup method to call before every test class to initialize the UIApplication
+bool FunctionalTestSetupUIApplication();
+
+// Cleanup method to call after every test class to free the UIApplication
+bool FunctionalTestCleanupUIApplication();
 
 #ifdef __OBJC__
 #import <Foundation/NSString.h>

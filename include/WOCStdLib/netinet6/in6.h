@@ -136,6 +136,7 @@ typedef __uint8_t   sa_family_t;
 /*
  * IPv6 address
  */
+#ifndef WINOBJC     // Defined by ws2tcpip.h
 struct in6_addr {
   union {
     __uint8_t   __u6_addr8[16];
@@ -143,6 +144,7 @@ struct in6_addr {
     __uint32_t  __u6_addr32[4];
   } __u6_addr;      /* 128-bit IP6 address */
 };
+#endif
 
 #define s6_addr   __u6_addr.__u6_addr8
 
@@ -154,6 +156,7 @@ struct in6_addr {
 #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
 #define SIN6_LEN
 #endif /* !_POSIX_C_SOURCE || _DARWIN_C_SOURCE */
+#ifndef WINOBJC     // Defined by ws2tcpip.h
 struct sockaddr_in6 {
   __uint8_t sin6_len; /* length of this struct(sa_family_t)*/
   sa_family_t sin6_family;  /* AF_INET6 (sa_family_t) */
@@ -162,6 +165,7 @@ struct sockaddr_in6 {
   struct in6_addr sin6_addr;  /* IP6 address */
   __uint32_t  sin6_scope_id;  /* scope zone index */
 };
+#endif
 
 /*
  * Definition of some useful macros to handle IP6 addresses
@@ -364,6 +368,7 @@ struct route_in6 {
 /*
  * Argument structure for IPV6_JOIN_GROUP and IPV6_LEAVE_GROUP.
  */
+#ifndef WINOBJC     // Defined by ws2tcpip.h
 struct ipv6_mreq {
   struct in6_addr ipv6mr_multiaddr;
   unsigned int  ipv6mr_interface;
@@ -376,6 +381,7 @@ struct in6_pktinfo {
   struct in6_addr ipi6_addr;  /* src/dst IPv6 address */
   unsigned int  ipi6_ifindex; /* send/recv interface index */
 };
+#endif
 
 /*
  * Argument for IPV6_PORTRANGE:

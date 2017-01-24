@@ -18,14 +18,13 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
 
-#import <UIKit/UIKit.h>
 #import <UIKit/UIKitExport.h>
 #import <UIKit/UICollectionViewLayout.h>
 #import <UIKit/UICollectionViewUpdateItem.h>
 #import <UIKit/UICollectionViewLayoutAttributes.h>
+#import <UIKit/UIScrollView.h>
 
 @class UICollectionViewLayout, UICollectionViewLayoutAttributes, UICollectionViewController, UICollectionViewCell,
     UICollectionViewTransitionLayout;

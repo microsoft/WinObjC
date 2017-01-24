@@ -368,3 +368,18 @@ TEST(NSData, Copying_CustomBufferWithoutOwnership) {
     *(backingBuffer.get() + 5) = '!';
     ASSERT_OBJCNE(copiedData, originalNonOwningData);
 }
+
+TEST(NSData, MutableInstanceArchivesAsMutable) {
+    NSMutableData* input = [NSMutableData dataWithBytes:"hello" length:5];
+
+    NSData* data = [NSKeyedArchiver archivedDataWithRootObject:input];
+    ASSERT_OBJCNE(nil, data);
+
+    NSMutableData* output = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    ASSERT_OBJCNE(nil, output);
+
+    EXPECT_NO_THROW([output appendBytes:" world\0" length:7]);
+    EXPECT_STREQ("hello world", (const char*)output.bytes);
+
+    EXPECT_OBJCNE(input, output);
+}

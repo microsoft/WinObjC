@@ -14,8 +14,13 @@
 //
 //******************************************************************************
 
-#import <StubReturn.h>
 #import "Starboard.h"
+#import <StubReturn.h>
+
+#import <UIKit/NSString+UIKitAdditions.h>
+#import <UIKit/UIButton.h>
+#import <UIKit/UIImageView.h>
+#import <UIKit/UILabel.h>
 
 #import "LoggingNative.h"
 #import "CALayerInternal.h"
@@ -23,6 +28,7 @@
 #import "UIViewInternal.h"
 #import "UIButtonContent.h"
 #import "UIButtonProxies.h"
+#import "UIControlInternal.h"
 #import "UIEventInternal.h"
 #import "UITouchInternal.h"
 
@@ -167,11 +173,11 @@ struct ButtonState {
     WXCTextBlock* templateText = rt_dynamic_cast([WXCTextBlock class], [_xamlButton getTemplateChild:@"buttonText"]);
 
     if (templateText) {
-        _proxyLabel = [[_UILabel_Proxy alloc] initWithXamlElement:templateText font:[UIFont buttonFont]];
+        _proxyLabel.attach([[_UILabel_Proxy alloc] initWithXamlElement:templateText font:[UIFont buttonFont]]);
     }
 
     if (templateImage) {
-        _proxyImageView = [[_UIImageView_Proxy alloc] initWithXamlElement:templateImage];
+        _proxyImageView.attach([[_UIImageView_Proxy alloc] initWithXamlElement:templateImage]);
     }
 
     _contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
@@ -267,7 +273,7 @@ Microsoft Extension
     // ConvertUIImageToWUXMImageBrush:nil creates a valid imageBrush with null comObj
     // which isn't what we want
     if (image) {
-        WUXMImageBrush* imageBrush = ConvertUIImageToWUXMImageBrush(image);
+        WUXMImageBrush* imageBrush = XamlUtilities::ConvertUIImageToWUXMImageBrush(image);
         if (imageBrush) {
             _states[state].inspectableImage = [imageBrush comObj];
         }
@@ -305,6 +311,10 @@ Microsoft Extension
 
     // Use the layer contents to draw the background image, similar to UIImageView.
     UIImageSetLayerContents([self layer], self.currentBackgroundImage);
+
+    // UIButton should always stretch its background.  Since we're leveraging our backing CALayer's background for
+    // the UIButton background, we stretch it via the CALayer's contentsGravity.
+    self.layer.contentsGravity = kCAGravityResize;
 
     // Probably important to keep around for after the refactor.
     [super layoutSubviews];
@@ -542,7 +552,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     // ConvertUIColorToWUColor:nil creates a valid WUColor with null comObj
     // which isn't what we want
     if (color) {
-        WUColor* convertedColor = ConvertUIColorToWUColor(color);
+        WUColor* convertedColor = XamlUtilities::ConvertUIColorToWUColor(color);
         WUXMSolidColorBrush* titleColorBrush = [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
         if (titleColorBrush) {
             _states[state].inspectableTitleColor = [titleColorBrush comObj];
@@ -608,6 +618,13 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     WUXIPointerRoutedEventArgs* routedEvent = [event _touchEvent]->_routedEventArgs;
     [routedEvent setHandled:NO];
 
+    // We're assuming multitouchenabled = NO; it's a button after all.
+    CGPoint point = [[touchSet anyObject] locationInView:self];
+    BOOL currentTouchInside = [self pointInside:point withEvent:event];
+
+    // Update our highlighted state accordingly
+    [super setHighlighted:currentTouchInside];
+
     [super touchesMoved:touchSet withEvent:event];
 }
 
@@ -626,14 +643,9 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     }
 
     _isPressed = true;
-    UIControlState newState = _curState | UIControlStateHighlighted;
 
-    // Relayout when new state is different than old state
-    if (_curState != newState) {
-        _curState = newState;
-        [self invalidateIntrinsicContentSize];
-        [self setNeedsLayout];
-    }
+    // Update our highlighted state accordingly
+    [self setHighlighted:_isPressed];
 
     [super touchesBegan:touchSet withEvent:event];
 }
@@ -650,14 +662,9 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     }
 
     _isPressed = false;
-    UIControlState newState = _curState & ~UIControlStateHighlighted;
 
-    // Relayout when new state is different than old state
-    if (_curState != newState) {
-        _curState = newState;
-        [self invalidateIntrinsicContentSize];
-        [self setNeedsLayout];
-    }
+    // Update our highlighted state accordingly
+    [self setHighlighted:_isPressed];
 
     [super touchesEnded:touchSet withEvent:event];
 }
@@ -674,14 +681,9 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     }
 
     _isPressed = false;
-    UIControlState newState = _curState & ~UIControlStateHighlighted;
 
-    // Relayout when new state is different than old state
-    if (_curState != newState) {
-        _curState = newState;
-        [self invalidateIntrinsicContentSize];
-        [self setNeedsLayout];
-    }
+    // Update our highlighted state accordingly
+    [self setHighlighted:_isPressed];
 
     [super touchesCancelled:touchSet withEvent:event];
 

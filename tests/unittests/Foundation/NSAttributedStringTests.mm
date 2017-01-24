@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -772,4 +772,24 @@ TEST(NSAttributedString, Subclass) {
     [didOverride setMethodCalled:NO];
     ASSERT_EQ(2, CFAttributedStringGetLength((__bridge CFAttributedStringRef)didOverride));
     ASSERT_EQ(YES, [didOverride methodCalled]);
+}
+
+DISABLED_TEST(NSAttributedString, MutableInstanceArchivesAsMutable) {
+    NSMutableAttributedString* input = [[[NSMutableAttributedString alloc] initWithString:@"hello"] autorelease];
+
+    NSData* data = [NSKeyedArchiver archivedDataWithRootObject:input];
+    ASSERT_OBJCNE(nil, data);
+
+    NSMutableAttributedString* output = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    ASSERT_OBJCNE(nil, output);
+
+    EXPECT_NO_THROW([output appendAttributedString:[[[NSMutableAttributedString alloc] initWithString:@" world"] autorelease]]);
+    EXPECT_OBJCEQ(@"hello world", [output string]);
+
+    EXPECT_OBJCNE(input, output);
+}
+
+TEST(NSMutableAttributedString, InsertingNilShouldThrow) {
+    NSMutableAttributedString* string = [[[NSMutableAttributedString alloc] initWithString:@"hello"] autorelease];
+    EXPECT_ANY_THROW([string addAttribute:@"attribute" value:nil range:NSMakeRange(0, 3)]);
 }

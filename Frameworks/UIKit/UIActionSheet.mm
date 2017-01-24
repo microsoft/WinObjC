@@ -17,25 +17,26 @@
 #import "AssertARCEnabled.h"
 #import "Starboard.h"
 
-#import "LoggingNative.h"
+#import <UIKit/UIActionSheet.h>
+#import <UIKit/UIControl.h>
+#import <UIKit/UIColor.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UIView.h>
+#import <UIKit/UIWindow.h>
 
-#import "CoreGraphics/CGAffineTransform.h"
-#import "CoreGraphics/CGContext.h"
-
-#import "UIKit/UIView.h"
-#import "UIKit/UIControl.h"
-#import "UIKit/UIColor.h"
-#import "UIKit/UIImage.h"
-#import "UIKit/UIActionSheet.h"
+#import <CoreGraphics/CGAffineTransform.h>
+#import <CoreGraphics/CGContext.h>
 
 #import "UIApplicationInternal.h"
 #import "UIBarButtonItem+Internals.h"
 
-#import "UWP/WindowsFoundation.h"
-#import "UWP/WindowsUIXamlControls.h"
+#import <UWP/WindowsFoundation.h>
+#import <UWP/WindowsUIXamlControls.h>
 
 #import "XamlUtilities.h"
 #import "XamlControls.h"
+
+#import "LoggingNative.h"
 
 static const wchar_t* TAG = L"UIActionSheet";
 
@@ -293,7 +294,7 @@ static const int s_InvalidButtonIndex = -1;
  @Status Interoperable
 */
 - (NSString*)title {
-    return NSStringFromPropertyValue(_contentDialog.title);
+    return XamlUtilities::NSStringFromPropertyValue(_contentDialog.title);
 }
 
 /**

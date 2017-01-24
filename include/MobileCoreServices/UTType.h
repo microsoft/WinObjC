@@ -15,11 +15,11 @@
 //******************************************************************************
 #pragma once
 
-#import <MobileCoreServices/MobileCoreServicesExport.h>
-#import <CoreFoundation/CFString.h>
-#import <CoreFoundation/CFArray.h>
-#import <CoreFoundation/CFDictionary.h>
-#import <CoreFoundation/CFURL.h>
+#include <MobileCoreServices/MobileCoreServicesExport.h>
+#include <CoreFoundation/CFString.h>
+#include <CoreFoundation/CFArray.h>
+#include <CoreFoundation/CFDictionary.h>
+#include <CoreFoundation/CFURL.h>
 
 MOBILECORESERVICES_EXPORT CFStringRef UTTypeCreatePreferredIdentifierForTag(CFStringRef inTagClass,
                                                                             CFStringRef inTag,

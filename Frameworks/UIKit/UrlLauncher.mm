@@ -15,16 +15,17 @@
 //******************************************************************************
 
 #import "UrlLauncher.h"
+#import "Starboard.h"
 #import "NSLogging.h"
 
 static const wchar_t* TAG = L"UrlLauncher";
 
 @interface UrlLauncher () {
     Class _launcher;
-    NSCondition* _launchCondition;
+    StrongId<NSCondition> _launchCondition;
     BOOL _launchCompleted;
     BOOL _launchDidSucceed;
-    NSCondition* _canOpenCondition;
+    StrongId<NSCondition> _canOpenCondition;
     BOOL _canOpenCompleted;
     BOOL _canOpenDidSucceed;
 }
@@ -34,8 +35,8 @@ static const wchar_t* TAG = L"UrlLauncher";
 - (UrlLauncher*)initWithLauncher:(Class)launcher {
     if (self = [super init]) {
         _launcher = launcher;
-        _launchCondition = [NSCondition new];
-        _canOpenCondition = [NSCondition new];
+        _launchCondition.attach([NSCondition new]);
+        _canOpenCondition.attach([NSCondition new]);
     }
 
     return self;

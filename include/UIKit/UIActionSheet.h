@@ -75,6 +75,6 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, readonly) NSInteger numberOfButtons;
 
 @property (nonatomic, assign) UIActionSheetStyle actionSheetStyle STUB_PROPERTY;
-@property (nonatomic, readonly, getter=isVisible) BOOL visible STUB_PROPERTY;
+@property (nonatomic, readonly, getter=isVisible) BOOL visible;
 
 @end

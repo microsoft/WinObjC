@@ -19,8 +19,6 @@
 #import <UIKit/UIFont.h>
 #import <UIKit/UIFontDescriptor.h>
 
-#import <CGDataProviderInternal.h>
-
 #import <CoreGraphics/DWriteWrapper.h>
 #import <CoreText/CTFont.h>
 

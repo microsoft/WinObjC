@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,14 +14,36 @@
 //
 //******************************************************************************
 
-#import "FunctionalTestHelpers.h"
+#import <Logger.h>
+#import <FunctionalTestHelpers.h>
+#import <AppDelegate.h>
+
 #include "UIKit/UIApplication.h"
+#include "UIViewInternal.h"
 #import <Starboard/SmartTypes.h>
+#import <StringHelpers.h>
 #import <UWP/WindowsApplicationModel.h>
 
-// Prevents UIApplication state from carrying over between functional tests
-void FunctionalTestCleanupUIApplication() {
-    [[UIApplication sharedApplication] _destroy];
+// This is a method that UIKit exposes for the test frameworks to use.
+extern "C" void UIApplicationInitializeFunctionalTest(const wchar_t*, const wchar_t*);
+
+// Launches the functional test app
+bool FunctionalTestSetupUIApplication() {
+    RunSynchronouslyOnMainThread(^{
+        // The name of our default 'AppDelegate' class
+        UIApplicationInitializeFunctionalTest(nullptr, Strings::NarrowToWide<std::wstring>(NSStringFromClass([AppDelegate class])).c_str());
+    });
+
+    return true;
+}
+
+// Terminates the functional test app
+bool FunctionalTestCleanupUIApplication() {
+    RunSynchronouslyOnMainThread(^{
+        [[UIApplication sharedApplication] _destroy];
+    });
+
+    return true;
 }
 
 // Gets the path to the app installation location

@@ -63,8 +63,6 @@ CGContextImpl::CGContextImpl(CGContextRef base, CGImageRef destinationImage) {
 
     curState->_imgClip = NULL;
     curState->_imgMask = NULL;
-    curState->curTextPosition.x = 0.0f;
-    curState->curTextPosition.y = 0.0f;
     curState->fontSize = 10.0f;
     curState->lineCap = 0;
     curState->lineWidth = 1.0f;
@@ -153,7 +151,7 @@ void CGContextImpl::CGContextShowGlyphsWithAdvances(const CGGlyph* glyphs, const
 }
 
 void CGContextImpl::CGContextShowGlyphs(const CGGlyph* glyphs, size_t count) {
-    CGContextShowGlyphsAtPoint(curState->curTextPosition.x, curState->curTextPosition.y, glyphs, count);
+    CGContextShowGlyphsAtPoint(curState->curTextMatrix.tx, curState->curTextMatrix.ty, glyphs, count);
 }
 
 void CGContextImpl::CGContextSetFont(CGFontRef font) {
@@ -173,8 +171,8 @@ void CGContextImpl::CGContextGetTextMatrix(CGAffineTransform* ret) {
 }
 
 void CGContextImpl::CGContextSetTextPosition(float x, float y) {
-    curState->curTextPosition.x = x;
-    curState->curTextPosition.y = y;
+    curState->curTextMatrix.tx = x;
+    curState->curTextMatrix.ty = y;
 }
 
 void CGContextImpl::CGContextSetTextDrawingMode(CGTextDrawingMode mode) {
@@ -383,8 +381,7 @@ void CGContextImpl::CGContextSelectFont(char* name, float size, DWORD encoding) 
 }
 
 void CGContextImpl::CGContextGetTextPosition(CGPoint* pos) {
-    pos->x = curState->curTextPosition.x;
-    pos->y = curState->curTextPosition.y;
+    *pos = { curState->curTextMatrix.tx, curState->curTextMatrix.ty };
 }
 
 void CGContextImpl::CGContextSaveGState() {
@@ -401,7 +398,6 @@ void CGContextImpl::CGContextSaveGState() {
     states[curStateNum].fontSize = curState->fontSize;
     states[curStateNum].textDrawingMode = curState->textDrawingMode;
     states[curStateNum].curTextMatrix = curState->curTextMatrix;
-    states[curStateNum].curTextPosition = curState->curTextPosition;
     states[curStateNum].curBlendMode = curState->curBlendMode;
     states[curStateNum]._imgClip = NULL;
     states[curStateNum]._imgMask = NULL;
@@ -742,7 +738,7 @@ CGPathRef CGContextImpl::CGContextCopyPath(void) {
     return NULL;
 }
 
-void CGContextImpl::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun) {
+void CGContextImpl::CGContextDrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, bool transformByGlyph) {
 }
 
 // TODO 1077:: Remove once D2D render target is implemented

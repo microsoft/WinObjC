@@ -16,6 +16,9 @@
 #import <TestFramework.h>
 #import <Foundation/Foundation.h>
 
+#import <UIKit/UIView.h>
+#import <UIKit/UIViewController.h>
+
 #include <COMIncludes.h>
 #import <WRLHelpers.h>
 #import <ErrorHandling.h>
@@ -66,6 +69,7 @@ static const NSTimeInterval c_testTimeoutInSec = 5;
 //
 TEST(CALayerAppearance, OpacityChanged) {
     __block CALayerViewController* caLayerVC;
+    __block BOOL signaled = NO;
     __block NSCondition* condition = [[[NSCondition alloc] init] autorelease];
     __block WXUIElement* backingElement = nil;
 
@@ -95,6 +99,7 @@ TEST(CALayerAppearance, OpacityChanged) {
                 [backingElement unregisterPropertyChangedCallback:[WXUIElement opacityProperty] token:callbackToken];
 
                 [condition lock];
+                signaled = YES;
                 [condition signal];
                 [condition unlock];
             }];
@@ -104,7 +109,7 @@ TEST(CALayerAppearance, OpacityChanged) {
     });
 
     [condition lock];
-    ASSERT_TRUE_MSG([condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]],
+    ASSERT_TRUE_MSG(signaled || [condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]],
         "FAILED: Waiting for property changed event timed out!");
     [condition unlock];
 
@@ -118,6 +123,7 @@ TEST(CALayerAppearance, OpacityChanged) {
 //
 TEST(CALayerAppearance, BackgroundColorChanged) {
     __block CALayerViewController* caLayerVC;
+    __block BOOL signaled = NO;
     __block NSCondition* condition = [[[NSCondition alloc] init] autorelease];
     __block WXUIElement* backingElement = nil;
 
@@ -157,8 +163,10 @@ TEST(CALayerAppearance, BackgroundColorChanged) {
                 [backingElement unregisterPropertyChangedCallback:[WXCPanel backgroundProperty] token:callbackToken];
 
                 [condition lock];
+                signaled = YES;
                 [condition signal];
                 [condition unlock];
+                //
         }];
 
         // Action
@@ -166,7 +174,7 @@ TEST(CALayerAppearance, BackgroundColorChanged) {
     });
 
     [condition lock];
-    ASSERT_TRUE_MSG([condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]],
+    ASSERT_TRUE_MSG(signaled || [condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]],
         "FAILED: Waiting for property changed event timed out!");
     [condition unlock];
 

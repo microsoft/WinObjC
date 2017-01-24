@@ -50,6 +50,7 @@ CF_EXPORT Boolean _CFDataIsMutable(CFDataRef data);
 CF_EXPORT Boolean _CFDataOwnsBuffer(CFDataRef data);
 CF_EXPORT Boolean _CFAttributedStringIsMutable(CFAttributedStringRef attrStr);
 CF_EXPORT Boolean _CFSetIsMutable(CFSetRef hc);
+CF_EXPORT Boolean _CFStringIsMutable(CFStringRef string);
 CF_EXTERN_C_END
 
 // Copied from CFFileUtilities.c

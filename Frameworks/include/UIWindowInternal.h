@@ -13,8 +13,11 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
+
+#import <UIKit/UIWindow.h>
+
+@class UIViewController;
 
 @interface UIWindow ()
 - (UIWindow*)_initWithContentRect:(CGRect)pos;

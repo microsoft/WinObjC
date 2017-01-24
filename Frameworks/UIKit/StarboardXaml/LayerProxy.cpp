@@ -32,6 +32,9 @@ using namespace Windows::UI::Xaml::Media;
 
 static const wchar_t* TAG = L"LayerProxy";
 
+static const bool DEBUG_ALL = false;
+static const bool DEBUG_HIERARCHY = DEBUG_ALL | false;
+
 // TODO: We should formally expose this off of XamlCompositor for our use here.
 extern Canvas^ s_windowCollection;
 
@@ -45,17 +48,33 @@ __inline Panel^ _SubLayerPanelFromInspectable(const ComPtr<IInspectable>& elemen
     // First check if the element implements ILayer
     ILayer^ layerElement = dynamic_cast<ILayer^>(xamlElement);
     if (layerElement) {
+        if (DEBUG_HIERARCHY) {
+            TraceVerbose(
+                TAG,
+                L"_SubLayerPanelFromInspectable for [%ws] returning layerElement->SublayerCanvas [%ws].",
+                layerElement->GetType()->FullName->Data(),
+                layerElement->SublayerCanvas->GetType()->FullName->Data());
+        }
+
         return layerElement->SublayerCanvas;
     }
 
     // Not an ILayer, so default to grabbing the xamlElement's SublayerCanvasProperty (if it exists)
-    return dynamic_cast<Canvas^>(_FrameworkElementFromInspectable(element)->GetValue(Layer::SublayerCanvasProperty));
+    Platform::Object^ value = xamlElement->GetValue(Layer::SublayerCanvasProperty);
+    if (DEBUG_HIERARCHY) {
+        TraceVerbose(
+            TAG,
+            L"GetValue(Layer::SublayerCanvasProperty) for [%ws] returned layerElement->SublayerCanvas [%ws].",
+            xamlElement->GetType()->FullName->Data(),
+            (value ? value->GetType()->FullName->Data() : L"nullptr"));
+    }
+
+    return dynamic_cast<Canvas^>(value);
 };
 
 LayerProxy::LayerProxy(IInspectable* xamlElement) :
     _xamlElement(nullptr),
     _isRoot(false),
-    _parent(nullptr),
     _currentTexture(nullptr),
     _topMost(false) {
 
@@ -68,12 +87,6 @@ LayerProxy::LayerProxy(IInspectable* xamlElement) :
 
     // Initialize the UIElement with CoreAnimation
     CoreAnimation::LayerCoordinator::InitializeFrameworkElement(_FrameworkElementFromInspectable(_xamlElement));
-}
-
-LayerProxy::~LayerProxy() {
-    for (auto layer : _subLayers) {
-        layer->_parent = nullptr;
-    }
 }
 
 Microsoft::WRL::ComPtr<IInspectable> LayerProxy::GetXamlElement() {
@@ -140,8 +153,11 @@ void LayerProxy::SetTopMost() {
 void LayerProxy::_SetBackgroundColor(float r, float g, float b, float a) {
     FrameworkElement^ xamlLayer = _FrameworkElementFromInspectable(_xamlElement);
 
-    SolidColorBrush^ backgroundBrush = nullptr; // A null brush is transparent and not hit-testable
-    if (!_isRoot && !_topMost && (a != 0.0)) {
+    // A null brush is transparent and not hit-testable; we only want this for 'root' or 'topmost' layers/views.
+    // For everything else, we simply map through the background color that was set on the layer/view.
+    // Note that UIView hit-testability is handled in UIView via its 'userInteractionEnabled', 'isHidden', and 'alpha' property values.
+    SolidColorBrush^ backgroundBrush = nullptr; 
+    if (!_isRoot && !_topMost) {
         Windows::UI::Color backgroundColor;
         backgroundColor.R = static_cast<unsigned char>(r * 255.0);
         backgroundColor.G = static_cast<unsigned char>(g * 255.0);
@@ -189,8 +205,14 @@ void LayerProxy::AddToRoot() {
 }
 
 void LayerProxy::AddSubLayer(const std::shared_ptr<LayerProxy>& subLayer, const std::shared_ptr<LayerProxy>& before, const std::shared_ptr<LayerProxy>& after) {
-    assert(subLayer->_parent == NULL);
-    subLayer->_parent = this;
+    // Make sure the sublayer isn't already parented
+    {
+        auto strongParent = subLayer->_parent.lock();
+        assert(!strongParent);
+    }
+
+    // Set ourselves as the sublayer's parent
+    subLayer->_parent = shared_from_this();
     _subLayers.insert(subLayer);
 
     FrameworkElement^ xamlElementForSubLayer = _FrameworkElementFromInspectable(subLayer->_xamlElement);
@@ -226,12 +248,14 @@ void LayerProxy::AddSubLayer(const std::shared_ptr<LayerProxy>& subLayer, const 
 }
 
 void LayerProxy::MoveLayer(const std::shared_ptr<LayerProxy>& before, const std::shared_ptr<LayerProxy>& after) {
-    assert(_parent != NULL);
+    // Grab a strong reference to our parent
+    auto strongParent = _parent.lock();
+    assert(strongParent);
 
     FrameworkElement^ xamlElementForThisLayer = _FrameworkElementFromInspectable(_xamlElement);
-    Panel^ subLayerPanelForParentLayer = _SubLayerPanelFromInspectable(_parent->_xamlElement);
+    Panel^ subLayerPanelForParentLayer = _SubLayerPanelFromInspectable(strongParent->_xamlElement);
     if (!subLayerPanelForParentLayer) {
-        FrameworkElement^ xamlElementForParentLayer = _FrameworkElementFromInspectable(_parent->_xamlElement);
+        FrameworkElement^ xamlElementForParentLayer = _FrameworkElementFromInspectable(strongParent->_xamlElement);
         UNIMPLEMENTED_WITH_MSG(
             "MoveLayer for [%ws] not supported on parent [%ws].",
             xamlElementForThisLayer->GetType()->FullName->Data(),
@@ -239,7 +263,7 @@ void LayerProxy::MoveLayer(const std::shared_ptr<LayerProxy>& before, const std:
         return;
     }
 
-    if (before != NULL) {
+    if (before) {
         FrameworkElement^ xamlBeforeLayer = _FrameworkElementFromInspectable(before->_xamlElement);
 
         unsigned int srcIdx = 0;
@@ -261,7 +285,7 @@ void LayerProxy::MoveLayer(const std::shared_ptr<LayerProxy>& before, const std:
             FAIL_FAST();
         }
     } else {
-        assert(after != NULL);
+        assert(after);
 
         FrameworkElement^ xamlAfterLayer = _FrameworkElementFromInspectable(after->_xamlElement);
         unsigned int srcIdx = 0;
@@ -286,21 +310,39 @@ void LayerProxy::MoveLayer(const std::shared_ptr<LayerProxy>& before, const std:
 }
 
 void LayerProxy::RemoveFromSuperLayer() {
+    // Grab a strong reference to our parent (if one exists)
+    auto strongParent = _parent.lock();
+
     FrameworkElement^ xamlElementForThisLayer = _FrameworkElementFromInspectable(_xamlElement);
     Panel^ subLayerPanelForParentLayer;
     if (_isRoot) {
         subLayerPanelForParentLayer = s_windowCollection;
     } else {
-        if (!_parent) {
+        if (!strongParent) {
+            if (DEBUG_HIERARCHY) {
+                TraceVerbose(
+                    TAG, 
+                    L"RemoveFromSuperLayer for [%ws] doesn't have a parent; nothing left to do.", 
+                    xamlElementForThisLayer->GetType()->FullName->Data());
+            }
+
             return;
         }
 
-        subLayerPanelForParentLayer = _SubLayerPanelFromInspectable(_parent->_xamlElement);
-        _parent->_subLayers.erase(shared_from_this());
+        subLayerPanelForParentLayer = _SubLayerPanelFromInspectable(strongParent->_xamlElement);
+        strongParent->_subLayers.erase(shared_from_this());
+    }
+
+    if (DEBUG_HIERARCHY) {
+        TraceVerbose(
+            TAG,
+            L"RemoveFromSuperLayer xamlElementForThisLayer = [%ws]; subLayerPanelForParentLayer = [%ws].",
+            xamlElementForThisLayer->GetType()->FullName->Data(),
+            subLayerPanelForParentLayer->GetType()->FullName->Data());
     }
 
     if (!subLayerPanelForParentLayer) {
-        FrameworkElement^ xamlElementForParentLayer = _FrameworkElementFromInspectable(_parent->_xamlElement);
+        FrameworkElement^ xamlElementForParentLayer = _FrameworkElementFromInspectable(strongParent->_xamlElement);
         UNIMPLEMENTED_WITH_MSG(
             "RemoveFromSuperLayer for [%ws] not supported on parent [%ws].",
             xamlElementForThisLayer->GetType()->FullName->Data(),
@@ -309,12 +351,12 @@ void LayerProxy::RemoveFromSuperLayer() {
         return;
     }
 
-    _parent = nullptr;
-
     unsigned int idx = 0;
     if (subLayerPanelForParentLayer->Children->IndexOf(xamlElementForThisLayer, &idx) == true) {
         subLayerPanelForParentLayer->Children->RemoveAt(idx);
     } else {
         FAIL_FAST();
     }
+
+    _parent.reset();
 }

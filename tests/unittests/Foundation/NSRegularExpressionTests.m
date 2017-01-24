@@ -174,6 +174,11 @@ TEST(NSRegularExpression, RangeResultTests) {
 
     ASSERT_EQ(theRange.location, NSNotFound);
     ASSERT_EQ(theRange.length, 0);
+
+    StrongId<NSTextCheckingResult> result =
+        [regex firstMatchInString:testString options:NSRegularExpressionCaseInsensitive range:NSMakeRange(0, [testString length])];
+
+    ASSERT_EQ(nil, result);
 }
 
 TEST(NSRegularExpression, EscapeFormattingTests) {

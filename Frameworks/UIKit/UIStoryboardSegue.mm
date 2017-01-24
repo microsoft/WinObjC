@@ -17,6 +17,9 @@
 #import "Starboard.h"
 #import <StubReturn.h>
 
+#import <UIKit/UIStoryboardSegue.h>
+#import <UIKit/UIViewController.h>
+
 @implementation UIStoryboardSegue {
     idretain _identifier, _source, _destination;
 }

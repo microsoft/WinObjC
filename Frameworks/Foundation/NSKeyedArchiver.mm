@@ -25,6 +25,7 @@
 #import "Foundation/NSPropertyListSerialization.h"
 #import "Foundation/NSKeyedArchiver.h"
 #import "Foundation/NSAutoreleasePool.h"
+#import "ForFoundationOnly.h"
 #import "Etc.h"
 #import "NSLogging.h"
 #import "Hash.h"
@@ -62,15 +63,10 @@ static inline void _checkKey(NSString* aKey, NSMutableDictionary* _enc) {
 }
 
 /*
-* Make a dictionary referring to the object at ref in the array of all objects.
+* Make a dictionary referring to the object at objectId in the array of all objects.
 */
-static id makeReference(unsigned ref) {
-    id n;
-    id d;
-
-    n = [NSNumber numberWithUnsignedInt:ref];
-    d = [NSDictionary dictionaryWithObject:n forKey:@"CF$UID"];
-    return d;
+static id makeReference(unsigned objectId) {
+    return [static_cast<id>(_CFKeyedArchiverUIDCreate(kCFAllocatorDefault, objectId)) autorelease];
 }
 
 @implementation NSKeyedArchiver {
@@ -101,6 +97,11 @@ static id makeReference(unsigned ref) {
         o = m;
     }
     [_enc setObject:o forKey:aKey];
+}
+
+- (void)_encodeRawObject:(NSObject*)object forKey:(NSString*)key {
+    _checkKey(key, _enc);
+    [_enc setObject:object forKey:key];
 }
 
 /**
@@ -310,23 +311,23 @@ static id makeReference(unsigned ref) {
     }
 
     id objectInfo = nil; // Encoded object
-    unsigned ref = 0;
-    unsigned* refTmp;
+    unsigned objectId = 0;
+    unsigned* existingObjectId;
 
     if (anObject != nil) {
-        if (_priv->uIdMap.get(anObject, refTmp)) {
-            ref = *refTmp;
+        if (_priv->uIdMap.get(anObject, existingObjectId)) {
+            objectId = *existingObjectId;
         } else {
             if (conditional) {
-                if (_priv->cIdMap.get(anObject, refTmp)) {
-                    ref = [_obj count];
-                    _priv->cIdMap.insert(anObject, ref);
+                if (_priv->cIdMap.get(anObject, existingObjectId)) {
+                    objectId = [_obj count];
+                    _priv->cIdMap.insert(anObject, objectId);
 
                     // Use the null object as a placeholder for a conditionally encoded object.
                     [_obj addObject:[_obj objectAtIndex:0]];
                 } else {
                     // This object has already been conditionally encoded.
-                    ref = *refTmp;
+                    objectId = *existingObjectId;
                 }
             } else {
                 id c = [anObject classForKeyedArchiver];
@@ -340,16 +341,16 @@ static id makeReference(unsigned ref) {
                     objectInfo = m;
                 }
 
-                if (_priv->cIdMap.get(anObject, refTmp)) {
+                if (_priv->cIdMap.get(anObject, existingObjectId)) {
                     // Conditionally encoded ... replace with actual value.
-                    ref = *refTmp;
-                    _priv->uIdMap.insert(anObject, ref);
+                    objectId = *existingObjectId;
+                    _priv->uIdMap.insert(anObject, objectId);
                     _priv->cIdMap.remove(anObject);
-                    [_obj replaceObjectAtIndex:ref withObject:objectInfo];
+                    [_obj replaceObjectAtIndex:objectId withObject:objectInfo];
                 } else {
                     // Not encoded ... create dictionary for it.
-                    ref = [_obj count];
-                    _priv->uIdMap.insert(anObject, ref);
+                    objectId = [_obj count];
+                    _priv->uIdMap.insert(anObject, objectId);
                     [_obj addObject:objectInfo];
                 }
                 [m release];
@@ -358,7 +359,7 @@ static id makeReference(unsigned ref) {
     }
 
     // Build an object to reference the encoded value of anObject
-    id refObject = makeReference(ref);
+    id refObject = makeReference(objectId);
 
     // objectInfo is a dictionary describing the object.
     if (objectInfo != nil && m == objectInfo) {
@@ -409,14 +410,14 @@ static id makeReference(unsigned ref) {
         * simply because that seems to be the way MacOS-X does it and
         * we want to maximise compatibility (perhaps they had good reason?)
         */
-        if (_priv->uIdMap.get(c, refTmp)) {
-            ref = *refTmp;
+        if (_priv->uIdMap.get(c, existingObjectId)) {
+            objectId = *existingObjectId;
         } else {
             id cDict;
             id hierarchy;
 
-            ref = [_obj count];
-            _priv->uIdMap.insert(c, ref);
+            objectId = [_obj count];
+            _priv->uIdMap.insert(c, objectId);
             cDict = [[NSMutableDictionary alloc] initWithCapacity:2];
 
             // Record class name
@@ -443,7 +444,7 @@ static id makeReference(unsigned ref) {
         * Now create a reference to the class information and store it
         * in the object description dictionary for the object we just encoded.
         */
-        [m setObject:makeReference(ref) forKey:@"$class"];
+        [m setObject:makeReference(objectId) forKey:@"$class"];
     }
 
     // If we have encoded the object information, tell the delegate.

@@ -16,8 +16,10 @@
 
 #import "Starboard.h"
 #import "StubReturn.h"
-#import "UIKit/UIView.h"
-#import "UIKit/UITabBar.h"
+#import <UIKit/UIImage.h>
+#import <UIKit/UITabBar.h>
+#import <UIKit/UITabBarItem.h>
+#import <UIKit/UIView.h>
 #import "UIBarItemInternal.h"
 #import "LoggingNative.h"
 #import "UIAppearanceSetter.h"

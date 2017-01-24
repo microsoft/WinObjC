@@ -42,15 +42,3 @@
 @property (nonatomic, readwrite) float hyphenationFactor;
 
 @end
-
-// The values of right and center CTTextAlignment and NSTextAlignment do not correspond so they can't be simply cast
-inline CTTextAlignment _NSTextAlignmentToCTTextAlignment(NSTextAlignment alignment) {
-    switch (alignment) {
-        case NSTextAlignmentRight:
-            return kCTRightTextAlignment;
-        case NSTextAlignmentCenter:
-            return kCTCenterTextAlignment;
-        default:
-            return alignment;
-    }
-}

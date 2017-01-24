@@ -619,7 +619,7 @@ inline int _GetLastDelegateCall(NSURLSessionDownloadTaskTestHelper* downloadTask
 /**
  * Test to verify a download task call can be successfully made and can be cancelled/resumed at runtime.
  */
-TEST(NSURLSession, DownloadTaskWithURL_WithCancelResume) {
+DISABLED_TEST(NSURLSession, DownloadTaskWithURL_WithCancelResume) {
     NSURLSessionDownloadTaskTestHelper* downloadTaskTestHelper = [[NSURLSessionDownloadTaskTestHelper alloc] init];
     NSURLSession* session = [downloadTaskTestHelper createSession];
     NSURL* url = [NSURL URLWithString:@"http://speedtest.ams01.softlayer.com/downloads/test500.zip"];
@@ -647,14 +647,11 @@ TEST(NSURLSession, DownloadTaskWithURL_WithCancelResume) {
     double lastBytesDownloaded = (double)downloadTaskTestHelper.totalBytesWritten / 1024 / 1024;
     LOG_INFO("Download in progress - %fMB", lastBytesDownloaded);
     [NSThread sleepForTimeInterval:0.5];
+    ASSERT_EQ(NSURLSessionTaskStateRunning, downloadTask.state);
+    [NSThread sleepForTimeInterval:0.5];
     double currentBytesDownloaded = (double)downloadTaskTestHelper.totalBytesWritten / 1024 / 1024;
     LOG_INFO("Download in progress - %fMB", currentBytesDownloaded);
-    ASSERT_GT_MSG(currentBytesDownloaded, lastBytesDownloaded, "FAILED: File download should be in progress!");
-    [NSThread sleepForTimeInterval:0.5];
-    lastBytesDownloaded = currentBytesDownloaded;
-    currentBytesDownloaded = (double)downloadTaskTestHelper.totalBytesWritten / 1024 / 1024;
-    LOG_INFO("Download in progress - %fMB", currentBytesDownloaded);
-    ASSERT_GT_MSG(currentBytesDownloaded, lastBytesDownloaded, "FAILED: File download should be in progress!");
+    ASSERT_GT_MSG(currentBytesDownloaded, lastBytesDownloaded, "FAILED: File download should be in progress, but no more has been downloaded!");
 
     // Now cancel the download
     __block NSCondition* conditionCancelled = [[NSCondition alloc] init];
@@ -675,14 +672,12 @@ TEST(NSURLSession, DownloadTaskWithURL_WithCancelResume) {
     [conditionCancelled unlock];
 
     // Make sure download has stopped.
-    lastBytesDownloaded = (double)downloadTaskTestHelper.totalBytesWritten / 1024 / 1024;
     [NSThread sleepForTimeInterval:0.5];
-    currentBytesDownloaded = (double)downloadTaskTestHelper.totalBytesWritten / 1024 / 1024;
-    ASSERT_EQ_MSG(currentBytesDownloaded, lastBytesDownloaded, "FAILED: File download should have stopped!");
+    ASSERT_EQ(NSURLSessionTaskStateCanceling, downloadTask.state);
+    lastBytesDownloaded = (double)downloadTaskTestHelper.totalBytesWritten / 1024 / 1024;
     [NSThread sleepForTimeInterval:1];
-    lastBytesDownloaded = currentBytesDownloaded;
     currentBytesDownloaded = (double)downloadTaskTestHelper.totalBytesWritten / 1024 / 1024;
-    ASSERT_EQ_MSG(currentBytesDownloaded, lastBytesDownloaded, "FAILED: File download should have stopped!");
+    ASSERT_EQ_MSG(currentBytesDownloaded, lastBytesDownloaded, "FAILED: File download should have stopped, but downloaded an extra %.4f MB!", currentBytesDownloaded - lastBytesDownloaded);
     LOG_INFO("Download stuck at - %fMB", currentBytesDownloaded);
 
     LOG_INFO("Resuming download...");

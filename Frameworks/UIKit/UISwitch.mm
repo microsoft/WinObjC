@@ -13,15 +13,17 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #include "Starboard.h"
-#include "UIKit/UIView.h"
-#include "UIKit/UIControl.h"
+
+#include <UIKit/UIView.h>
+#include <UIKit/UIControl.h>
+#include <UIKit/UIImage.h>
+#include <UIKit/UIImageView.h>
+#include <UIKit/UIGestureRecognizer.h>
+#include <UIKit/UITapGestureRecognizer.h>
+#include <UIKit/UISwitch.h>
+
 #include "CoreGraphics/CGContext.h"
-#include "UIKit/UIImage.h"
-#include "UIKit/UIImageView.h"
-#include "UIKit/UIGestureRecognizer.h"
-#include "UIKit/UISwitch.h"
 
 #include "UIGestureRecognizerInternal.h"
 

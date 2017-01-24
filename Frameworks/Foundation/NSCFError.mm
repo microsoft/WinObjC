@@ -24,6 +24,7 @@
 @implementation NSCFError
 
 BRIDGED_CLASS_REQUIRED_IMPLS(CFErrorRef, CFErrorGetTypeID, NSError, NSCFError)
+BRIDGED_CLASS_FOR_CODER(NSError)
 
 - (NSString*)domain {
     return static_cast<NSString*>(CFErrorGetDomain(static_cast<CFErrorRef>(self)));

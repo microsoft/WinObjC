@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -128,4 +128,24 @@ TEST(NSSet, setByAddingObjectsFromArrayDuplicate) {
     NSSet* set = [NSSet set];
     NSSet* setFromDupArray = [set setByAddingObjectsFromArray:dupArray];
     ASSERT_EQ([setFromDupArray count], 6);
+}
+
+TEST(NSSet, MutableInstanceArchivesAsMutable) {
+    NSMutableSet* input = [NSMutableSet setWithObject:@"hello"];
+
+    NSData* data = [NSKeyedArchiver archivedDataWithRootObject:input];
+    ASSERT_OBJCNE(nil, data);
+
+    NSMutableSet* output = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    ASSERT_OBJCNE(nil, output);
+
+    EXPECT_NO_THROW([output addObject:@"world"]);
+
+    EXPECT_OBJCNE(input, output);
+}
+
+TEST(NSMutableSet, ShouldThrowWhenTryingToInsertNil) {
+    NSMutableSet* set = [NSMutableSet set];
+    EXPECT_ANY_THROW([set addObject:nil]);
+    EXPECT_EQ(0, [set count]);
 }

@@ -15,7 +15,12 @@
 //******************************************************************************
 
 #include "Starboard.h"
+
 #include <UIKit/UIStoryboard.h>
+#include <UIKit/UIStoryboardSegueTemplate.h>
+#include <UIKit/UIStoryboardPushSegueTemplate.h>
+#include <UIKit/UIViewController.h>
+
 #include "LoggingNative.h"
 
 static const wchar_t* TAG = L"UIStoryboardModalSegueTemplate";

@@ -86,15 +86,15 @@ void createResultsArray(WSMMapLocationFinderResult* results, NSMutableArray* geo
         }
 
         [addressDictionary setValue:placemarkName forKey:@"placemarkName"];
-        [addressDictionary setValue:[currentAddress countryCode] forKey:@"placemarkISOcountryCode"];
-        [addressDictionary setValue:[currentAddress country] forKey:@"placemarkCountry"];
-        [addressDictionary setValue:[currentAddress postCode] forKey:@"placemarkPostalCode"];
-        [addressDictionary setValue:[currentAddress region] forKey:@"placemarkAdministrativeArea"];
-        [addressDictionary setValue:[currentAddress district] forKey:@"placemarkSubAdministrativeArea"];
-        [addressDictionary setValue:[currentAddress town] forKey:@"placemarkLocality"];
-        [addressDictionary setValue:[currentAddress neighborhood] forKey:@"placemarkSubLocality"];
-        [addressDictionary setValue:[currentAddress street] forKey:@"placemarkThoroughfare"];
-        [addressDictionary setValue:[currentAddress streetNumber] forKey:@"placemarkSubThoroughfare"];
+        [addressDictionary setValue:[currentAddress countryCode] forKey:@"CountryCode"];
+        [addressDictionary setValue:[currentAddress country] forKey:@"Country"];
+        [addressDictionary setValue:[currentAddress postCode] forKey:@"PostalCode"];
+        [addressDictionary setValue:[currentAddress region] forKey:@"AdministrativeArea"];
+        [addressDictionary setValue:[currentAddress district] forKey:@"SubAdministrativeArea"];
+        [addressDictionary setValue:[currentAddress town] forKey:@"Locality"];
+        [addressDictionary setValue:[currentAddress neighborhood] forKey:@"SubLocality"];
+        [addressDictionary setValue:[currentAddress street] forKey:@"Thoroughfare"];
+        [addressDictionary setValue:[currentAddress streetNumber] forKey:@"SubThoroughfare"];
         CLLocation* resultLocation = [[CLLocation alloc] initWithLatitude:[[[currentResult point] position] latitude]
                                                                 longitude:[[[currentResult point] position] longitude]];
 
@@ -109,19 +109,13 @@ void createResultsArray(WSMMapLocationFinderResult* results, NSMutableArray* geo
 - (void)reverseGeocodeLocation:(CLLocation*)location completionHandler:(CLGeocodeCompletionHandler)completionHandler {
     @synchronized(self) {
         if (!CLLocationCoordinate2DIsValid(location.coordinate)) {
-            dispatch_async(dispatch_get_main_queue(),
-                           ^{
-                               completionHandler(nullptr,
-                                                 [NSError errorWithDomain:@"kCLErrorDomain"
-                                                                     code:kCLErrorGeocodeFoundNoResult
-                                                                 userInfo:nullptr]);
-                           });
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completionHandler(nullptr, [NSError errorWithDomain:@"kCLErrorDomain" code:kCLErrorGeocodeFoundNoResult userInfo:nullptr]);
+            });
         } else if (self.isGeocoding) {
-            dispatch_async(dispatch_get_main_queue(),
-                           ^{
-                               completionHandler(nullptr,
-                                                 [NSError errorWithDomain:@"kCLErrorDomain" code:kCLErrorGeocodeCanceled userInfo:nullptr]);
-                           });
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completionHandler(nullptr, [NSError errorWithDomain:@"kCLErrorDomain" code:kCLErrorGeocodeCanceled userInfo:nullptr]);
+            });
         } else {
             self.geocoding = true;
 
@@ -141,17 +135,15 @@ void createResultsArray(WSMMapLocationFinderResult* results, NSMutableArray* geo
                     NSMutableArray* geocodeResult = [[NSMutableArray alloc] init];
                     createResultsArray(results, geocodeResult);
 
-                    dispatch_async(dispatch_get_main_queue(),
-                                   ^{
-                                       completionHandler(geocodeResult, geocodeStatus);
-                                   });
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        completionHandler(geocodeResult, geocodeStatus);
+                    });
                 }
                 failure:^void(NSError* error) {
                     self.geocoding = false;
-                    dispatch_async(dispatch_get_main_queue(),
-                                   ^{
-                                       completionHandler(nullptr, error);
-                                   });
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        completionHandler(nullptr, error);
+                    });
                 }];
         }
     }
@@ -163,11 +155,9 @@ void createResultsArray(WSMMapLocationFinderResult* results, NSMutableArray* geo
 - (void)geocodeAddressDictionary:(NSDictionary*)addressDictionary completionHandler:(CLGeocodeCompletionHandler)completionHandler {
     @synchronized(self) {
         if (self.isGeocoding) {
-            dispatch_async(dispatch_get_main_queue(),
-                           ^{
-                               completionHandler(nullptr,
-                                                 [NSError errorWithDomain:@"kCLErrorDomain" code:kCLErrorGeocodeCanceled userInfo:nullptr]);
-                           });
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completionHandler(nullptr, [NSError errorWithDomain:@"kCLErrorDomain" code:kCLErrorGeocodeCanceled userInfo:nullptr]);
+            });
         } else {
             self.geocoding = true;
 
@@ -213,17 +203,15 @@ void createResultsArray(WSMMapLocationFinderResult* results, NSMutableArray* geo
                     NSMutableArray* geocodeResult = [[NSMutableArray alloc] init];
                     createResultsArray(results, geocodeResult);
 
-                    dispatch_async(dispatch_get_main_queue(),
-                                   ^{
-                                       completionHandler(geocodeResult, geocodeStatus);
-                                   });
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        completionHandler(geocodeResult, geocodeStatus);
+                    });
                 }
                 failure:^void(NSError* error) {
                     self.geocoding = false;
-                    dispatch_async(dispatch_get_main_queue(),
-                                   ^{
-                                       completionHandler(nullptr, error);
-                                   });
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        completionHandler(nullptr, error);
+                    });
                 }];
         }
     }
@@ -235,11 +223,9 @@ void createResultsArray(WSMMapLocationFinderResult* results, NSMutableArray* geo
 - (void)geocodeAddressString:(NSString*)addressString completionHandler:(CLGeocodeCompletionHandler)completionHandler {
     @synchronized(self) {
         if (self.isGeocoding) {
-            dispatch_async(dispatch_get_main_queue(),
-                           ^{
-                               completionHandler(nullptr,
-                                                 [NSError errorWithDomain:@"kCLErrorDomain" code:kCLErrorGeocodeCanceled userInfo:nullptr]);
-                           });
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completionHandler(nullptr, [NSError errorWithDomain:@"kCLErrorDomain" code:kCLErrorGeocodeCanceled userInfo:nullptr]);
+            });
         } else {
             self.geocoding = true;
             [WSMMapLocationFinder findLocationsAsync:addressString
@@ -253,17 +239,15 @@ void createResultsArray(WSMMapLocationFinderResult* results, NSMutableArray* geo
                     NSMutableArray* geocodeResult = [[NSMutableArray alloc] init];
                     createResultsArray(results, geocodeResult);
 
-                    dispatch_async(dispatch_get_main_queue(),
-                                   ^{
-                                       completionHandler(geocodeResult, geocodeStatus);
-                                   });
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        completionHandler(geocodeResult, geocodeStatus);
+                    });
                 }
                 failure:^void(NSError* error) {
                     self.geocoding = false;
-                    dispatch_async(dispatch_get_main_queue(),
-                                   ^{
-                                       completionHandler(nullptr, error);
-                                   });
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        completionHandler(nullptr, error);
+                    });
                 }];
         }
     }
@@ -279,11 +263,9 @@ void createResultsArray(WSMMapLocationFinderResult* results, NSMutableArray* geo
            completionHandler:(CLGeocodeCompletionHandler)completionHandler {
     @synchronized(self) {
         if (self.isGeocoding) {
-            dispatch_async(dispatch_get_main_queue(),
-                           ^{
-                               completionHandler(nullptr,
-                                                 [NSError errorWithDomain:@"kCLErrorDomain" code:kCLErrorGeocodeCanceled userInfo:nullptr]);
-                           });
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completionHandler(nullptr, [NSError errorWithDomain:@"kCLErrorDomain" code:kCLErrorGeocodeCanceled userInfo:nullptr]);
+            });
         } else {
             self.geocoding = true;
             WDGBasicGeoposition* geoposition = [[WDGBasicGeoposition alloc] init];
@@ -303,17 +285,15 @@ void createResultsArray(WSMMapLocationFinderResult* results, NSMutableArray* geo
                     NSMutableArray* geocodeResult = [[NSMutableArray alloc] init];
                     createResultsArray(results, geocodeResult);
 
-                    dispatch_async(dispatch_get_main_queue(),
-                                   ^{
-                                       completionHandler(geocodeResult, geocodeStatus);
-                                   });
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        completionHandler(geocodeResult, geocodeStatus);
+                    });
                 }
                 failure:^void(NSError* error) {
                     self.geocoding = false;
-                    dispatch_async(dispatch_get_main_queue(),
-                                   ^{
-                                       completionHandler(nullptr, error);
-                                   });
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        completionHandler(nullptr, error);
+                    });
                 }];
         }
     }

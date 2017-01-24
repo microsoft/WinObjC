@@ -305,16 +305,257 @@ bool operator!=(const Any& other, const AutoId<TObj, TLifetimeTraits>& val) {
 
 #ifdef CF_EXPORT // Quick way to detect CoreFoundation.
 namespace woc {
-template <typename T>
-class unique_cf : public std::unique_ptr<typename std::remove_pointer<T>::type, decltype(&CFRelease)> {
-public:
-    unique_cf() : std::unique_ptr<typename std::remove_pointer<T>::type, decltype(&CFRelease)>(nullptr, CFRelease) {
-    }
-
-    explicit unique_cf(T&& val)
-        : std::unique_ptr<typename std::remove_pointer<T>::type, decltype(&CFRelease)>(std::forward<T>(val), CFRelease) {
+// Unsafe - a direct non-refcounting store of a refcountable object.
+struct CFLifetimeUnsafe {
+    inline static CFTypeRef store(CFTypeRef* destination, CFTypeRef value) {
+        *destination = value;
+        return value;
     }
 };
+
+// Retain - a retaining/releasing store of a refcountable object.
+//  - Releases the refcounted value at the destination while never allowing
+//    *destination to hold a non-owning reference.
+struct CFLifetimeRetain {
+    inline static CFTypeRef store(CFTypeRef* destination, CFTypeRef value) {
+        if (*destination == value) {
+            return value;
+        }
+
+        if (*destination) {
+            CFRelease(static_cast<CFTypeRef>(*destination));
+        }
+
+        return *destination = ((value ? CFRetain(value) : nullptr));
+    }
+};
+
+namespace details {
+template <typename T, typename TWrapped>
+class AutoCFRef {
+private:
+    T* ptr;
+
+public:
+    AutoCFRef(T* ptr): ptr(ptr) { }
+
+    operator TWrapped*() const {
+        return ptr->releaseAndGetAddressOf();
+    }
+
+    operator void**() const {
+        return reinterpret_cast<void**>(ptr->releaseAndGetAddressOf());
+    }
+
+    operator TWrapped() const {
+        return ptr->get();
+    }
+
+    operator void*() const {
+        return ptr->get();
+    }
+};
+}
+
+template <typename T, typename TLifetimeTraits = CFLifetimeRetain>
+class AutoCF {
+private:
+    inline CFTypeRef* _addressof() {
+        using TMutable = std::add_pointer_t<std::remove_const_t<std::remove_pointer_t<T>>>;
+        return const_cast<CFTypeRef*>(reinterpret_cast<void**>(const_cast<TMutable*>(&_val)));
+    }
+
+    template <typename TOther>
+    using TCanConvertFrom = std::is_convertible<TOther, T>;
+
+    template <typename TOther>
+    using TCanConvertTo = std::is_convertible<T, TOther>;
+
+    T _val = reinterpret_cast<T>(0);
+
+public:
+    AutoCF() : _val(nullptr) {
+    }
+
+    explicit AutoCF(const T& val) : _val(nullptr) {
+        TLifetimeTraits::store(_addressof(), static_cast<CFTypeRef>(val));
+    }
+
+    explicit AutoCF(T&& val): _val(val) {
+        val = nullptr;
+    }
+
+    template <typename TOtherLifetime>
+    AutoCF(const AutoCF<T, TOtherLifetime>& other)
+        : _val(nullptr) {
+        TLifetimeTraits::store(_addressof(), static_cast<CFTypeRef>(other._val));
+    }
+
+    // Copy from same lifetime.
+    AutoCF(const AutoCF<T, TLifetimeTraits>& other) : _val(nullptr) {
+        TLifetimeTraits::store(_addressof(), static_cast<CFTypeRef>(other._val));
+    }
+
+    // We can only move from the same lifetime, and only with convertible objects.
+    template <typename TOtherLifetime>
+    AutoCF(AutoCF<T, TOtherLifetime>&& other) {
+        static_assert(std::is_same<TLifetimeTraits, TOtherLifetime>::value,
+                      "AutoCF can only move from another AutoCF&& with the same lifetime.");
+    }
+
+    // Move from same lifetime.
+    AutoCF(AutoCF<T, TLifetimeTraits>&& other) : _val(other._val) {
+        other._val = nil;
+    }
+
+    ~AutoCF() {
+        TLifetimeTraits::store(_addressof(), nullptr);
+    }
+
+    operator T() const {
+        return _val;
+    }
+
+    explicit operator bool() const {
+        return _val != nullptr;
+    }
+
+    // The attach function assumes ownership of an already-refcounted object.
+    void attach(T val) {
+        if (val == _val) {
+            return;
+        }
+
+        TLifetimeTraits::store(_addressof(), nullptr);
+        _val = val;
+    }
+
+    // The detach function disavows ownership of a refcounted object, returning to the caller both
+    // the value and the burden of its memory management.
+    T detach() {
+        T val = _val;
+        _val = nullptr;
+        return val;
+    }
+
+    // Each of the copy and move assignment operators and constructors requires two specializations:
+    // Any object type, any lifetime
+    // Same object, same lifetime.
+    // Without the second, MSVC and clang will generate a direct value copy for
+    // AutoCF<T> x, y; x = y;
+    // thus breaking the refcounting on the contents of x.
+    //
+    // The cross-lifetime copy assignment operator and constructor allow for a retaining AutoCF to take a +1
+    // refcount on another weakly-held AutoCF's value.
+    template <typename TOtherLifetime>
+    AutoCF<T, TLifetimeTraits>& operator=(const AutoCF<T, TOtherLifetime>& other) {
+        TLifetimeTraits::store(_addressof(), static_cast<CFTypeRef>(other._val));
+        return *this;
+    }
+
+    AutoCF<T, TLifetimeTraits>& operator=(const AutoCF<T, TLifetimeTraits>& other) {
+        TLifetimeTraits::store(_addressof(), static_cast<CFTypeRef>(other._val));
+        return *this;
+    }
+
+    // The move constructor and assignment operator disallow moving across lifetimes for reasons similar to the
+    // copy allowing them: It isn't reasonable to inherit a +0 refcount in a refcounting container, and neither is
+    // the converse.
+    template <typename TOtherLifetime>
+    AutoCF<T, TLifetimeTraits>& operator=(AutoCF<T, TOtherLifetime>&& other) {
+        static_assert(std::is_same<TLifetimeTraits, TOtherLifetime>::value,
+                      "AutoCF can only move from another AutoCF&& with the same lifetime.");
+        return *this;
+    }
+
+    AutoCF<T, TLifetimeTraits>& operator=(AutoCF<T, TLifetimeTraits>&& other) {
+        _val = other._val;
+        other._val = nullptr;
+        return *this;
+    }
+
+    template <typename Any, typename = typename std::enable_if<TCanConvertFrom<Any>::value>::type>
+    AutoCF<T>& operator=(const Any& val) {
+        TLifetimeTraits::store(_addressof(), static_cast<CFTypeRef>(val));
+        return *this;
+    }
+
+    template <typename Any>
+    bool operator!=(const Any& other) const {
+        // Use a C-style cast here because we want static_cast behaviour for convertible types and
+        // reinterpret_cast behaviour for pointer/value types that can't be converted.
+        return (T)other != _val;
+    }
+
+    template <typename Any>
+    bool operator==(const Any& other) const {
+        // As above.
+        return (T)other == _val;
+    }
+
+    T operator->() {
+        return _val;
+    }
+
+    T get() const {
+        return _val;
+    }
+
+    details::AutoCFRef<AutoCF<T, TLifetimeTraits>, T> operator&() {
+        return details::AutoCFRef<AutoCF<T, TLifetimeTraits>, T>(this);
+    }
+
+    T* releaseAndGetAddressOf() {
+        TLifetimeTraits::store(_addressof(), static_cast<CFTypeRef>(nullptr));
+        return &_val;
+    }
+
+    template <typename TOtherObj, typename TOtherLifetime>
+    friend class AutoCF;
+};
+
+// unique_cf was once defined to be a std::unique_ptr<T, decltype(CFRelease)>.
+// This compatibility definition mimics the common use cases for the unique_ptr version of unique_cf using AutoCF.
+template <typename T>
+class unique_cf: public AutoCF<T, CFLifetimeRetain> {
+public:
+    unique_cf(): AutoCF<T, CFLifetimeRetain>() {
+    }
+
+    // The default unary T constructor for unique_ptr/cf takes full ownership of the passed-in value,
+    // but the same constructor on AutoCF takes shared ownership. AutoCF's move constructor, however,
+    // takes full ownership.
+    unique_cf(T val): AutoCF<T, CFLifetimeRetain>(std::move(val)) {
+    }
+
+    void reset(T val = nullptr) {
+        AutoCF<T, CFLifetimeRetain>::attach(val);
+    }
+
+    T release() {
+        return AutoCF<T, CFLifetimeRetain>::detach();
+    }
+
+    unique_cf<T>& operator=(T val) = delete;
+    unique_cf<T>& operator=(const unique_cf<T>& other) = delete;
+    unique_cf<T>& operator=(unique_cf<T>&& other) = delete;
+};
+
+template <typename T = CFTypeRef>
+using StrongCF = AutoCF<T, CFLifetimeRetain>;
+
+template <typename T = CFTypeRef>
+using UnsafeCF = AutoCF<T, CFLifetimeUnsafe>;
+
+template <typename T, typename TLifetimeTraits = CFLifetimeRetain>
+AutoCF<T, TLifetimeTraits> MakeAutoCF(T val) {
+    return AutoCF<T, TLifetimeTraits>(std::move(val));
+}
+
+template <typename T>
+StrongCF<T> MakeStrongCF(T val) {
+    return StrongCF<T>(std::move(val));
+}
 }
 #endif
 

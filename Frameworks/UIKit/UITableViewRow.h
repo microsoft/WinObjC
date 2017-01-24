@@ -13,6 +13,9 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
+
+#import <UIKit/UITableViewCell.h>
 
 @interface UITableViewRow : NSObject {
 @public

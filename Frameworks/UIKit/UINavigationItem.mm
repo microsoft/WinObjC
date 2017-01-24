@@ -15,7 +15,8 @@
 //******************************************************************************
 
 #import "Starboard.h"
-#import "UIKit/UINavigationItem.h"
+#import <UIKit/UINavigationItem.h>
+#import <UIKit/UIToolbar.h>
 #import "UIAppearanceSetter.h"
 #import "UIBarButtonItem+Internals.h"
 #import "UINavigationItemInternal.h"

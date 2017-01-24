@@ -73,7 +73,7 @@ NSString* XamlContentDialogButtonTitleAtIndex(WXCContentDialog* contentDialog, u
     ComPtr<IInspectable> inspectable([contentDialog comObj]);
 
     ComPtr<IInspectable> inspPropVal(XamlContentDialogButtonTitleAtIndex(inspectable, buttonIndex));
-    return NSStringFromPropertyValue(inspPropVal);
+    return XamlUtilities::NSStringFromPropertyValue(inspPropVal);
 }
 
 unsigned int XamlContentDialogNumberOfButtons(WXCContentDialog* contentDialog) {
@@ -113,6 +113,16 @@ void SetFrameworkElementLayerProperties(WXFrameworkElement* targetElement,
     XamlSetFrameworkElementLayerProperties([targetElement comObj],
                                            layerContentProperty ? [layerContentProperty comObj] : nullptr,
                                            sublayerCanvasProperty ? [sublayerCanvasProperty comObj] : nullptr);
+}
+
+WXCImage* GetFrameworkElementLayerContentProperty(WXFrameworkElement* targetElement) {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetFrameworkElementLayerContentProperty([targetElement comObj]));
+    return _createRtProxy([WXCImage class], inspectable.Get());
+}
+
+WXCCanvas* GetFrameworkElementSublayerCanvasProperty(WXFrameworkElement* targetElement) {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetFrameworkElementSublayerCanvasProperty([targetElement comObj]));
+    return _createRtProxy([WXCCanvas class], inspectable.Get());
 }
 
 } // namespace XamlControls

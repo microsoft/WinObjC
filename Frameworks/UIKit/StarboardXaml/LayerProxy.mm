@@ -18,7 +18,11 @@
 #import "Starboard.h"
 #import "LayerProxy.h"
 
-#import "QuartzCore\CATransform3D.h"
+#import <UIKit/NSValue+UIKitAdditions.h>
+#import <UIKit/UIImage.h>
+
+#import <QuartzCore/CATransform3D.h>
+
 #import "Quaternion.h"
 #import "UIColorInternal.h"
 
