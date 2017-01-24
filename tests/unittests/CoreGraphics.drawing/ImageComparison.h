@@ -21,7 +21,23 @@
 
 enum class ImageComparisonResult : unsigned int { Unknown = 0, Incomparable, Different, Same };
 
-enum struct ComparisonMode { Exact, Mask };
+struct rgbaPixel {
+    uint8_t r, g, b, a;
+};
+
+template <size_t FailureThreshold = 1>
+struct PixelComparisonModeExact {
+    static constexpr size_t Threshold = FailureThreshold;
+    template <typename LP, typename RP>
+    rgbaPixel ComparePixels(const LP& background, const LP& bp, const RP& cp, size_t& npxchg);
+};
+
+template <size_t FailureThreshold = 1>
+struct PixelComparisonModeMask {
+    static constexpr size_t Threshold = FailureThreshold;
+    template <typename LP, typename RP>
+    rgbaPixel ComparePixels(const LP& background, const LP& bp, const RP& cp, size_t& npxchg);
+};
 
 struct ImageDelta {
     ImageComparisonResult result;
@@ -41,7 +57,7 @@ public:
     virtual ImageDelta CompareImages(CGImageRef left, CGImageRef right) = 0;
 };
 
-template <ComparisonMode Mode = ComparisonMode::Exact, size_t FailureThreshold = 1>
+template <typename PixelComparisonMode = PixelComparisonModeExact<1>>
 class PixelByPixelImageComparator : public ImageComparator {
 public:
     ImageDelta CompareImages(CGImageRef left, CGImageRef right) override;
