@@ -20,8 +20,12 @@
 #include <CoreGraphics/CoreGraphics.h>
 
 #include <Starboard/SmartTypes.h>
+#include "ImageComparison.h"
+
+// Due to how templates are compiled as needed, any new usage of templates needs to be "forced" in DrawingTest.cpp
 
 namespace testing {
+template <typename TComparator = PixelByPixelImageComparator<>>
 class DrawTest : public ::testing::Test {
 private:
     woc::unique_cf<CGContextRef> _context;
@@ -63,19 +67,21 @@ inline CGRect _CGRectCenteredOnPoint(CGSize size, CGPoint point) {
     };
 }
 
-class WhiteBackgroundTest : public ::testing::DrawTest {
+template <typename TComparator = PixelByPixelImageComparator<>>
+class WhiteBackgroundTest : public ::testing::DrawTest<TComparator> {
 protected:
     virtual void SetUpContext();
 };
 
-class UIKitMimicTest : public WhiteBackgroundTest {
+template <typename TComparator = PixelByPixelImageComparator<>>
+class UIKitMimicTest : public WhiteBackgroundTest<TComparator> {
 protected:
     virtual CGSize CanvasSize();
     virtual void SetUpContext();
 };
 
 #define DRAW_TEST(test_case_name, test_name) \
-    GTEST_TEST_(test_case_name, test_name, ::testing::DrawTest, ::testing::internal::GetTestTypeId())
+    GTEST_TEST_(test_case_name, test_name, ::testing::DrawTest<>, ::testing::internal::GetTestTypeId())
 #define DRAW_TEST_F(test_case_name, test_name, test_fixture) \
     GTEST_TEST_(test_case_name, test_name, test_fixture, ::testing::internal::GetTestTypeId())
 
@@ -84,3 +90,18 @@ protected:
 
 #define DRAW_TEST_P(test_case_name, test_name) TEST_P(test_case_name, test_name)
 #define DISABLED_DRAW_TEST_P(test_case_name, test_name) DRAW_TEST_P(test_case_name, DISABLED_##test_name)
+
+#define TEXT_DRAW_TEST(test_case_name, test_name)                                       \
+    GTEST_TEST_(test_case_name,                                                         \
+                test_name,                                                              \
+                ::testing::DrawTest<PixelByPixelImageComparator<ComparisonMode::Mask>>, \
+                ::testing::internal::GetTestTypeId())
+#define TEXT_DRAW_TEST_F(test_case_name, test_name, test_fixture) \
+    GTEST_TEST_(test_case_name, test_name, test_fixture, ::testing::internal::GetTestTypeId())
+
+#define DISABLED_TEXT_DRAW_TEST(test_case_name, test_name) TEXT_DRAW_TEST(test_case_name, DISABLED_##test_name)
+#define DISABLED_TEXT_DRAW_TEST_F(test_case_name, test_name, test_fixture) \
+    TEXT_DRAW_TEST_F(test_case_name, DISABLED_##test_name, test_fixture)
+
+#define TEXT_DRAW_TEST_P(test_case_name, test_name) TEST_P(test_case_name, test_name)
+#define DISABLED_TEXT_DRAW_TEST_P(test_case_name, test_name) TEXT_DRAW_TEST_P(test_case_name, DISABLED_##test_name)

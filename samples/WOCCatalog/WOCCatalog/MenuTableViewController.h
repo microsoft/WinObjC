@@ -20,6 +20,6 @@
 
 @property (nonatomic, retain) NSMutableArray* menuItems;
 
-- (void)addMenuItemViewControllerClass:(Class)controllerClass andTitle:(NSString*)title;
+- (void)addMenuItemViewController:(UIViewController*)controller andTitle:(NSString*)title;
 
 @end

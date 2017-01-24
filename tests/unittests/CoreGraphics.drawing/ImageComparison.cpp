@@ -23,16 +23,64 @@ struct bgraPixel {
     uint8_t b, g, r, a;
 };
 
-struct rgbaPixel {
-    uint8_t r, g, b, a;
-};
-
 template <typename T, typename U>
 bool operator==(const T& t, const U& u) {
     return t.r == u.r && t.g == u.g && t.b == u.b && t.a == u.a;
 }
 
-ImageDelta PixelByPixelImageComparator::CompareImages(CGImageRef left, CGImageRef right) {
+template <size_t FailureThreshold>
+template <typename LP, typename RP>
+rgbaPixel PixelComparisonModeExact<FailureThreshold>::ComparePixels(const LP& background, const LP& bp, const RP& cp, size_t& npxchg) {
+        rgbaPixel gp{};
+        if (!(bp == cp)) {
+            ++npxchg;
+            if (cp == background) {
+                // Pixel is in EXPECTED but not ACTUAL
+                gp.r = gp.a = 255;
+            } else if (bp == background) {
+                // Pixel is in ACTUAL but not EXPECTED
+                gp.g = gp.a = 255;
+            } else {
+                // Pixel is in BOTH but DIFFERENT
+                gp.r = gp.g = gp.a = 255;
+            }
+        } else {
+            gp.r = gp.g = gp.b = 0;
+            gp.a = 255;
+        }
+
+        return gp;
+}
+
+template <size_t FailureThreshold>
+template <typename LP, typename RP>
+rgbaPixel PixelComparisonModeMask<FailureThreshold>::ComparePixels(const LP& background, const LP& bp, const RP& cp, size_t& npxchg) {
+        rgbaPixel gp{};
+        if (!(bp == cp)) {
+            ++npxchg;
+            if (cp == background) {
+                // Pixel is in EXPECTED but not ACTUAL
+                gp.r = gp.a = 255;
+            } else if (bp == background) {
+                // Pixel is in ACTUAL but not EXPECTED
+                gp.g = gp.a = 255;
+            } else {
+                // Pixel is in BOTH but DIFFERENT
+                // Only comparing as mask so counts as match
+                gp.r = gp.g = gp.b = 0;
+                gp.a = 255;
+                --npxchg;
+            }
+        } else {
+            gp.r = gp.g = gp.b = 0;
+            gp.a = 255;
+        }
+
+        return gp;
+}
+
+template <typename PixelComparisonMode>
+ImageDelta PixelByPixelImageComparator<PixelComparisonMode>::CompareImages(CGImageRef left, CGImageRef right) {
     if (!left || !right) {
         return { ImageComparisonResult::Incomparable };
     }
@@ -71,26 +119,12 @@ ImageDelta PixelByPixelImageComparator::CompareImages(CGImageRef left, CGImageRe
     auto background = leftPixels[0];
 
     size_t npxchg = 0;
+    PixelComparisonMode mode;
     for (off_t i = 0; i < leftLength / sizeof(rgbaPixel); ++i) {
         auto& bp = leftPixels[i];
         auto& cp = rightPixels[i];
         auto& gp = deltaPixels[i];
-        if (!(bp == cp)) {
-            ++npxchg;
-            if (cp == background) {
-                // Pixel is in EXPECTED but not ACTUAL
-                gp.r = gp.a = 255;
-            } else if (bp == background) {
-                // Pixel is in ACTUAL but not EXPECTED
-                gp.g = gp.a = 255;
-            } else {
-                // Pixel is in BOTH but DIFFERENT
-                gp.r = gp.g = gp.a = 255;
-            }
-        } else {
-            gp.r = gp.g = gp.b = 0;
-            gp.a = 255;
-        }
+        gp = mode.ComparePixels(background, bp, cp, npxchg);
     }
 
     woc::unique_cf<CFDataRef> deltaData{ CFDataCreateWithBytesNoCopy(nullptr, deltaBuffer.release(), leftLength, kCFAllocatorDefault) };
@@ -109,6 +143,14 @@ ImageDelta PixelByPixelImageComparator::CompareImages(CGImageRef left, CGImageRe
                                                          kCGRenderingIntentDefault) };
 
     return {
-        (npxchg == 0 ? ImageComparisonResult::Same : ImageComparisonResult::Different), npxchg, deltaImage.get(),
+        (npxchg < PixelComparisonMode::Threshold ? ImageComparisonResult::Same : ImageComparisonResult::Different), npxchg, deltaImage.get(),
     };
 }
+
+// Force templates so they compile
+template class PixelByPixelImageComparator<>;
+template class PixelByPixelImageComparator<PixelComparisonModeMask<>>;
+template class PixelByPixelImageComparator<PixelComparisonModeMask<2300>>;
+template class PixelByPixelImageComparator<PixelComparisonModeMask<1024>>;
+template class PixelByPixelImageComparator<PixelComparisonModeMask<512>>;
+template class PixelByPixelImageComparator<PixelComparisonModeMask<64>>;

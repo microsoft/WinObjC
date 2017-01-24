@@ -51,6 +51,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFLocale)
 @implementation NSCFLocale
 
 BRIDGED_CLASS_REQUIRED_IMPLS(CFLocaleRef, CFLocaleGetTypeID, NSLocale, NSCFLocale)
+BRIDGED_CLASS_FOR_CODER(NSLocale)
 
 - (NSString*)displayNameForKey:(id)key value:(id)value {
     return [(static_cast<NSString*>(CFLocaleCopyDisplayNameForPropertyValue(static_cast<CFLocaleRef>(self),

@@ -1031,7 +1031,6 @@ void CGImageDestinationAddImage(CGImageDestinationRef idst, CGImageRef image, CF
                                                   (unsigned char*)[imageByteData bytes],
                                                   &inputImage);
     [imageByteData release];
-    CGDataProviderRelease(provider);
     if (!SUCCEEDED(status)) {
         NSTraceInfo(TAG, @"CreateBitmapFromMemory failed with status=%x\n", status);
         return;

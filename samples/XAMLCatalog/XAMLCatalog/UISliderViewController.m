@@ -18,6 +18,10 @@
 
 #import "UISliderViewController.h"
 
+static const int TAG_SUBVIEW_LABEL = 1;
+static const int TAG_SUBVIEW_SLIDER = 2;
+static const int TAG_SUBVIEW_BUTTON = 3;
+
 @implementation UISliderViewController {
     UISlider* _setValueSlider;
     UILabel* _valueChangeLabel;
@@ -52,6 +56,12 @@
     UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"MenuCell"];
     if (nil == cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MenuCell"];
+    } else {
+        // before reuse, check if cell contains any tagged subview, if so, remove them first
+        for (int tag = TAG_SUBVIEW_LABEL; tag <= TAG_SUBVIEW_BUTTON; tag++) {
+            UIView* subView = (UIView*)[cell viewWithTag:tag];
+            [subView removeFromSuperview];
+        }
     }
 
     if (indexPath.row == 0) {
@@ -59,6 +69,10 @@
         label.text = @"UISlider (initial = 0, min = 0, max = 1)";
         UISlider* simpleSlider = [[UISlider alloc] initWithFrame:CGRectMake(xMargin, labelHeight, 300, elementHeight)];
         simpleSlider.accessibilityIdentifier = @"slider_Simple";
+
+        label.tag = TAG_SUBVIEW_LABEL;
+        simpleSlider.tag = TAG_SUBVIEW_SLIDER;
+
         [cell addSubview:simpleSlider];
         [cell addSubview:label];
     } else if (indexPath.row == 1) {
@@ -69,6 +83,10 @@
         slider.maximumValue = 100;
         slider.minimumValue = 0;
         slider.value = 25;
+
+        label.tag = TAG_SUBVIEW_LABEL;
+        slider.tag = TAG_SUBVIEW_SLIDER;
+
         [cell addSubview:label];
         [cell addSubview:slider];
     } else if (indexPath.row == 2) {
@@ -79,6 +97,10 @@
         sliderWithMinMax.maximumValue = 87;
         sliderWithMinMax.minimumValue = 20;
         sliderWithMinMax.value = 25;
+
+        label.tag = TAG_SUBVIEW_LABEL;
+        sliderWithMinMax.tag = TAG_SUBVIEW_SLIDER;
+
         [cell addSubview:label];
         [cell addSubview:sliderWithMinMax];
     } else if (indexPath.row == 3) {
@@ -89,6 +111,10 @@
         _setValueSlider.maximumValue = 100;
         _setValueSlider.minimumValue = 0;
         _setValueSlider.value = 25;
+
+        label.tag = TAG_SUBVIEW_LABEL;
+        _setValueSlider.tag = TAG_SUBVIEW_SLIDER;
+
         [cell addSubview:label];
         [cell addSubview:_setValueSlider];
 
@@ -97,6 +123,8 @@
         [button setTitle:@"Set value to 25" forState:UIControlStateNormal];
         [button addTarget:self action:@selector(_buttonClick:) forControlEvents:UIControlEventTouchUpInside];
         [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+
+        button.tag = TAG_SUBVIEW_BUTTON;
         [cell addSubview:button];
     } else if (indexPath.row == 4) {
         UISlider* slider = [[UISlider alloc] initWithFrame:CGRectMake(xMargin, labelHeight, 300, elementHeight)];
@@ -110,6 +138,9 @@
         _valueChangeLabel = [[UILabel alloc] initWithFrame:CGRectMake(xMargin, 0, labelWidth, labelHeight)];
         NSString* labelText = [NSString stringWithFormat:@"UISlider,continuous=YES,value=%f", slider.value];
         _valueChangeLabel.text = labelText;
+
+        _valueChangeLabel.tag = TAG_SUBVIEW_LABEL;
+        slider.tag = TAG_SUBVIEW_SLIDER;
 
         [cell addSubview:_valueChangeLabel];
         [cell addSubview:slider];
@@ -126,6 +157,10 @@
         // add value changed event to slider
         [slider addTarget:self action:@selector(_sliderMoved:) forControlEvents:UIControlEventValueChanged];
         [slider setContinuous:false];
+
+        _discontinuousSliderLabel.tag = TAG_SUBVIEW_LABEL;
+        slider.tag = TAG_SUBVIEW_SLIDER;
+
         [cell addSubview:_discontinuousSliderLabel];
         [cell addSubview:slider];
     }

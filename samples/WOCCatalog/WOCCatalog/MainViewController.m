@@ -16,7 +16,6 @@
 //******************************************************************************
 
 #import "MainViewController.h"
-#import "ButtonsViewController.h"
 #import "ControlsViewController.h"
 #import "TextDisplayViewController.h"
 #import "TransitionsViewController.h"
@@ -62,96 +61,93 @@
     [super viewDidLoad];
 
     // Geocoding
-    [self addMenuItemViewControllerClass:[GeocodingViewController class] andTitle:@"Geocoding"];
+    [self addMenuItemViewController:[[GeocodingViewController alloc] init] andTitle:@"Geocoding"];
 
     // AudioToolbox
-    [self addMenuItemViewControllerClass:[AudioToolboxViewController class] andTitle:@"AudioToolbox"];
+    [self addMenuItemViewController:[[AudioToolboxViewController alloc] init] andTitle:@"AudioToolbox"];
 
     // CoreMotion
-    [self addMenuItemViewControllerClass:[CoreMotionViewController class] andTitle:@"CoreMotion"];
+    [self addMenuItemViewController:[[CoreMotionViewController alloc] init] andTitle:@"CoreMotion"];
 
     // CoreLocation
-    [self addMenuItemViewControllerClass:[CoreLocationViewController class] andTitle:@"CoreLocation"];
+    [self addMenuItemViewController:[[CoreLocationViewController alloc] init] andTitle:@"CoreLocation"];
 
     // Foundations tests
-    [self addMenuItemViewControllerClass:[FoundationsViewController class] andTitle:@"Foundation Tests"];
+    [self addMenuItemViewController:[[FoundationsViewController alloc] init] andTitle:@"Foundation Tests"];
 
     // Controls
-    [self addMenuItemViewControllerClass:[ControlsViewController class] andTitle:@"Controls"];
+    [self addMenuItemViewController:[[ControlsViewController alloc] init] andTitle:@"Controls"];
 
     // Gestures
-    [self addMenuItemViewControllerClass:[GesturesViewController class] andTitle:@"Gestures"];
-    
-    // Buttons
-    [self addMenuItemViewControllerClass:[ButtonsViewController class] andTitle:@"ButtonsViewController"];
+    [self addMenuItemViewController:[[GesturesViewController alloc] init] andTitle:@"Gestures"];
 
     // AutoLayout
-    [self addMenuItemViewControllerClass:[AutoLayoutViewController class] andTitle:@"Constraint Based Layout"];
+    [self addMenuItemViewController:[[AutoLayoutViewController alloc] init] andTitle:@"Constraint Based Layout"];
 
 #ifdef WINOBJC
     // Controls
-    [self addMenuItemViewControllerClass:[XamlViewController class] andTitle:@"XamlControls"];
+    [self addMenuItemViewController:[[XamlViewController alloc] init] andTitle:@"XamlControls"];
 
     // Display mode
-    [self addMenuItemViewControllerClass:[SBDisplayModeViewController class] andTitle:@"Display Mode"];
+    [self addMenuItemViewController:[[SBDisplayModeViewController alloc] init] andTitle:@"Display Mode"];
 #endif
 
     // SearchBar
-    [self addMenuItemViewControllerClass:[SearchBarViewController class] andTitle:@"SearchBar"];
+    [self addMenuItemViewController:[[SearchBarViewController alloc] init] andTitle:@"SearchBar"];
 
     // OpenGL
-    [self addMenuItemViewControllerClass:[OpenGLES11ViewController class] andTitle:@"Open GLES 1.1"];
+    [self addMenuItemViewController:[[OpenGLES11ViewController alloc] init] andTitle:@"Open GLES 1.1"];
 
     // OpenGL 2.0
-    [self addMenuItemViewControllerClass:[OpenGLES20ViewController class] andTitle:@"Open GLES 2.0"];
+    [self addMenuItemViewController:[[OpenGLES20ViewController alloc] init] andTitle:@"Open GLES 2.0"];
 
     // GLKit
-    [self addMenuItemViewControllerClass:[GLKitExampleController class] andTitle:@"GLKit"];
+    [self addMenuItemViewController:[[GLKitExampleController alloc] init] andTitle:@"GLKit"];
 
     // Text Display
-    [self addMenuItemViewControllerClass:[TextDrawerController class] andTitle:@"Text Display"];
+    [self addMenuItemViewController:[[TextDrawerController alloc] init] andTitle:@"Text Display"];
 
     // Pickers
-    [self addMenuItemViewControllerClass:[PickersViewController class] andTitle:@"Pickers"];
+    [self addMenuItemViewController:[[PickersViewController alloc] init] andTitle:@"Pickers"];
 
     // Images
-    [self addMenuItemViewControllerClass:[ImagesViewController class] andTitle:@"ImageView"];
+    [self addMenuItemViewController:[[ImagesViewController alloc] init] andTitle:@"ImageView"];
 
     // Web
-    [self addMenuItemViewControllerClass:[WebViewController class] andTitle:@"WebView"];
+    [self addMenuItemViewController:[[WebViewController alloc] init] andTitle:@"WebView"];
 
     // Segment
-    [self addMenuItemViewControllerClass:[SegmentsViewController class] andTitle:@"Segments"];
+    [self addMenuItemViewController:[[SegmentsViewController alloc] init] andTitle:@"Segments"];
 
     // Alerts
-    [self addMenuItemViewControllerClass:[AlertsViewController class] andTitle:@"Alerts"];
+    [self addMenuItemViewController:[[AlertsViewController alloc] init] andTitle:@"Alerts"];
 
     // CollectionView
-    [self addMenuItemViewControllerClass:[PhotogridViewController class] andTitle:@"CollectionView"];
+    [self addMenuItemViewController:[[PhotogridViewController alloc] init] andTitle:@"CollectionView"];
 
     // PageView
-    [self addMenuItemViewControllerClass:[PageViewController class] andTitle:@"Page View"];
+    [self addMenuItemViewController:[[PageViewController alloc] init] andTitle:@"Page View"];
 
     // Bezier
-    [self addMenuItemViewControllerClass:[BezierViewController class] andTitle:@"Bezier Paths"];
+    [self addMenuItemViewController:[[BezierViewController alloc] init] andTitle:@"Bezier Paths"];
 
     // Application
-    [self addMenuItemViewControllerClass:[ApplicationViewController class] andTitle:@"Application"];
+    [self addMenuItemViewController:[[ApplicationViewController alloc] init] andTitle:@"Application"];
 
     // Basic Animation
-    [self addMenuItemViewControllerClass:[BasicAnimationViewController class] andTitle:@"Animation"];
+    [self addMenuItemViewController:[[BasicAnimationViewController alloc] init] andTitle:@"Animation"];
 
     // Accelerate 1
-    [self addMenuItemViewControllerClass:[AccelerateViewController class] andTitle:@"Accelerate 1"];
+    [self addMenuItemViewController:[[AccelerateViewController alloc] init] andTitle:@"Accelerate 1"];
 
     // Accelerate 2
-    [self addMenuItemViewControllerClass:[AccelerateViewController2 class] andTitle:@"Accelerate 2"];
+    [self addMenuItemViewController:[[AccelerateViewController2 alloc] init] andTitle:@"Accelerate 2"];
     
     // Shadow
-    [self addMenuItemViewControllerClass:[ShadowViewController class] andTitle:@"Shadow"];
+    [self addMenuItemViewController:[[ShadowViewController alloc] init] andTitle:@"Shadow"];
 
     // UIPasteboard
-    [self addMenuItemViewControllerClass:[UIPasteboardViewController class] andTitle:@"Copy And Paste"];
+    [self addMenuItemViewController:[[UIPasteboardViewController alloc] init] andTitle:@"Copy And Paste"];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -17,9 +17,13 @@
 #include <StubReturn.h>
 #include "Starboard.h"
 
-#include "UIKit/NSLayoutManager.h"
+#include <UIKit/NSLayoutManager.h>
+#include <UIKit/NSLayoutManagerDelegate.h>
+#include <UIKit/NSTextContainer.h>
+#include <UIKit/UIGraphics.h>
 
 #include "CoreTextInternal.h"
+#include "CGContextInternal.h"
 
 #include <vector>
 #include <functional>
@@ -34,22 +38,38 @@
     woc::unique_cf<CTFrameRef> _frame;
 }
 
-// Returns true if any of the characters in line after index have visible glyphs, false otherwise
-// Used to determine if a given index is past the visible part of a line for linebreaking
-static bool __lineHasGlyphsAfterIndex(CTLineRef line, CFIndex index) {
-    for (id runRef in static_cast<NSArray*>(CTLineGetGlyphRuns(line))) {
-        CTRunRef run = static_cast<CTRunRef>(runRef);
-        CFRange runRange = CTRunGetStringRange(run);
-        if (runRange.location <= index && index <= runRange.location + runRange.length) {
-            const CFIndex* indices = CTRunGetStringIndicesPtr(run);
-            if (std::any_of(indices,
-                            indices + CTRunGetGlyphCount(run),
-                            std::bind(std::greater_equal<CFIndex>(), std::placeholders::_1, index))) {
-                return true;
+// Private helper:
+// Given a CTLineRef, returns the index of the character in the original string, that maps to the last visible glyph in the line
+static CFIndex __CTLineGetStringIndexOfLastVisibleGlyph(CTLineRef line) {
+    CFArrayRef runs = CTLineGetGlyphRuns(line);
+
+    CFIndex ret = -1;
+    for (CFIndex i = CFArrayGetCount(runs) - 1; i >= 0; --i) {
+        CTRunRef run = static_cast<CTRunRef>(CFArrayGetValueAtIndex(runs, i));
+        CFIndex glyphCount = CTRunGetGlyphCount(run);
+
+        // Open question: Can runs ever be non-monotonic with respect to the original string?
+        // If not, can do an early return here
+        if (glyphCount > 0) {
+            const CFIndex* stringIndices = CTRunGetStringIndicesPtr(run);
+
+            // Glyphs within a run can be non-monotonic with respect to the original string
+            // Find the greatest index within the run's string indices
+            const CFIndex* maxIndexInRun = std::max_element(stringIndices, stringIndices + glyphCount);
+
+            if (*maxIndexInRun > ret) {
+                ret = *maxIndexInRun;
             }
         }
     }
-    return false;
+
+    return ret;
+}
+
+// Private helper for getting the width and height of a line in DIPs
+static inline CGSize __CTLineGetBounds(CTLineRef line) {
+    CGFloat ascent, descent, leading;
+    return { CTLineGetTypographicBounds(line, &ascent, &descent, &leading), ascent + descent + leading };
 }
 
 - (void)__layoutAllText {
@@ -60,9 +80,6 @@ static bool __lineHasGlyphsAfterIndex(CTLineRef line, CFIndex index) {
 
     woc::unique_cf<CTFramesetterRef> framesetter{ CTFramesetterCreateWithAttributedString(
         static_cast<CFAttributedStringRef>(_textStorage.get())) };
-    NSTextContainer* container = (NSTextContainer*)_textContainers[0];
-    CGSize containerSize = container.size;
-    CGPoint origin = { 0, 0 };
 
     // Creates frame containing all of the text, which allows us to measure the line heights for measuring rectangles and breaks the text
     // into CTLineRefs for hard line breaks (e.g. '\n') which allows the assumption that once we run out of glyphs in a line to draw we must
@@ -72,48 +89,52 @@ static bool __lineHasGlyphsAfterIndex(CTLineRef line, CFIndex index) {
         _frame.reset(CTFramesetterCreateFrame(framesetter.get(), {}, path.get(), nullptr));
     }
 
+    NSTextContainer* container = (NSTextContainer*)_textContainers[0];
+    const CGSize containerSize = container.size;
+    CGPoint origin{ 0, 0 };
+
     for (id lineRef in static_cast<NSArray*>(CTFrameGetLines(_frame.get()))) {
         CTLineRef line = static_cast<CTLineRef>(lineRef);
 
-        // Width of line already drawn, saves us from having to redraw line twice
-        double drawnWidth = 0.0;
-
-        CGFloat ascent, descent, leading;
-
-        // Width of entire line
-        double width = CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
-
         // Maximum height of lines on current horizontal, needed to get next yPos
-        CGFloat lineHeight = leading + ascent + descent;
+        const CGFloat lineHeight = __CTLineGetBounds(line).height;
 
-        CFRange lineRange = CTLineGetStringRange(line);
+        const CFRange lineRange = CTLineGetStringRange(line);
+        const CFIndex lineEnd = lineRange.location + lineRange.length; // String index of last glyph in line
 
-        // Index of first glyph in line to be drawn
-        CFIndex stringIndex = lineRange.location;
-        CFIndex lineEnd = stringIndex + lineRange.length;
+        const CFIndex indexOfLastVisibleChar = __CTLineGetStringIndexOfLastVisibleGlyph(line); // Alternate termination point
 
+        CGRect proposedRect{}; // Proposes a drawing rectangle to [NSTextContainer lineFragmentRectForProposedRect]
+        proposedRect.size.width = containerSize.width;
+        proposedRect.size.height = lineHeight;
+
+        CGRect frameDrawRect{}; // Drawing rectangle actually used in CTFramesetterCreateFrame to layout the text
+        frameDrawRect.size.height = lineHeight;
+
+        double drawnWidth = 0.0; // Width of line already drawn, saves us from having to redraw line twice
+
+        CFIndex stringIndex = lineRange.location; // String index of first glyph in line to be drawn
         while (stringIndex < lineEnd) {
             if (origin.y > containerSize.height) {
                 // Added as much text as can fit in the frame, can end here
                 return;
             }
 
-            if (!__lineHasGlyphsAfterIndex(line, stringIndex)) {
-                // Ended up without any visible glyphs to draw
-                // Caused by a line of only whitespace
+            if (stringIndex > indexOfLastVisibleChar) {
+                // Ended up without any visible glyphs to draw, caused by a line of only whitespace
                 origin = { 0.0f, origin.y + lineHeight };
-                _totalSize.height += lineHeight;
                 break;
             }
 
-            CGRect remainingRect = {};
-            CGRect rect = [container lineFragmentRectForProposedRect:CGRectMake(origin.x, origin.y, containerSize.width, lineHeight)
-                                                             atIndex:stringIndex
-                                                    writingDirection:NSWritingDirectionLeftToRight
-                                                       remainingRect:&remainingRect];
+            CGRect remainingRect{};
+            proposedRect.origin = origin;
+            const CGRect rect = [container lineFragmentRectForProposedRect:proposedRect
+                                                                   atIndex:stringIndex
+                                                          writingDirection:NSWritingDirectionLeftToRight
+                                                             remainingRect:&remainingRect];
 
             // Approximate how many characters can fit to keep from re-rendering large amounts of text
-            CFIndex lastIndex = std::min(CTLineGetStringIndexForPosition(line, { drawnWidth + rect.size.width, 0.0f }) + 1, lineEnd);
+            const CFIndex lastIndex = std::min(CTLineGetStringIndexForPosition(line, { drawnWidth + rect.size.width, 0.0f }) + 1, lineEnd);
 
             if (lastIndex == stringIndex) {
                 // Unable to fit any text in the current rect, continue to next
@@ -121,13 +142,13 @@ static bool __lineHasGlyphsAfterIndex(CTLineRef line, CFIndex index) {
                     origin = { remainingRect.origin.x, origin.y };
                 } else {
                     origin = { 0.0f, origin.y + lineHeight };
-                    _totalSize.height += lineHeight;
                 }
 
                 continue;
             }
 
-            woc::unique_cf<CGPathRef> path{ CGPathCreateWithRect(CGRectMake(0, 0, rect.size.width, lineHeight), nullptr) };
+            frameDrawRect.size.width = rect.size.width;
+            woc::unique_cf<CGPathRef> path{ CGPathCreateWithRect(frameDrawRect, nullptr) };
             woc::unique_cf<CTFrameRef> frame{
                 CTFramesetterCreateFrame(framesetter.get(), { stringIndex, lastIndex - stringIndex }, path.get(), nullptr)
             };
@@ -135,42 +156,40 @@ static bool __lineHasGlyphsAfterIndex(CTLineRef line, CFIndex index) {
             // Create line to fit as much text as possible in given rect
             CTLineRef fitLine = static_cast<CTLineRef>(CFArrayGetValueAtIndex(CTFrameGetLines(frame.get()), 0));
 
-            CFIndex fitLength = CTLineGetStringRange(fitLine).length;
+            const CFIndex fitLength = CTLineGetStringRange(fitLine).length;
             if (fitLength == 0L) {
                 // Failed to fit any text in the current rect, continue to next
                 if (remainingRect.size.width > 0.0f && stringIndex < lineEnd) {
                     origin = { remainingRect.origin.x, origin.y };
                 } else {
                     origin = { 0.0f, origin.y + lineHeight };
-                    _totalSize.height += lineHeight;
                 }
 
                 continue;
             }
-
-            // Increase index of next character to layout
             stringIndex += fitLength;
 
             // Save line and origin for when it is drawn
             [_ctLines addObject:(id)fitLine];
             _lineOrigins.emplace_back(CGPoint{ rect.origin.x, rect.origin.y + lineHeight });
 
-            double fitWidth = CTLineGetTypographicBounds(fitLine, nullptr, nullptr, nullptr);
+            const double fitWidth = CTLineGetTypographicBounds(fitLine, nullptr, nullptr, nullptr);
             drawnWidth += fitWidth;
 
             if (remainingRect.size.width > 0 && stringIndex < lineEnd) {
                 origin = { remainingRect.origin.x, origin.y };
             } else {
                 origin = { 0.0f, origin.y + lineHeight };
-                _totalSize.height += lineHeight;
-                _totalSize.width = std::max(_totalSize.width, rect.origin.x + (CGFloat)fitWidth);
-                if (!__lineHasGlyphsAfterIndex(line, stringIndex)) {
+                _totalSize.width = std::max(_totalSize.width, static_cast<CGFloat>(rect.origin.x + fitWidth));
+                if (stringIndex > indexOfLastVisibleChar) {
                     // Ended up with whitespace at end of the line, break to next line
                     break;
                 }
             }
         }
     }
+
+    _totalSize.height = origin.y;
 }
 
 - (void)layoutIfNeeded {
@@ -238,6 +257,9 @@ static bool __lineHasGlyphsAfterIndex(CTLineRef line, CFIndex index) {
     CGContextRef curCtx = UIGraphicsGetCurrentContext();
     CGContextSaveGState(curCtx);
     CGContextSetTextMatrix(curCtx, CGAffineTransformMakeScale(1.0f, -1.0f));
+
+    _CGContextPushBeginDraw(curCtx);
+    auto popEnd = wil::ScopeExit([curCtx]() { _CGContextPopEndDraw(curCtx); });
 
     int count = [_ctLines count];
     for (int curLine = 0; curLine < count; curLine++) {

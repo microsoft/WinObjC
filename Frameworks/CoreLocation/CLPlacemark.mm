@@ -55,6 +55,7 @@
 
 - (instancetype)initWithLocation:(CLLocation*)location dictionary:(NSMutableDictionary*)dictionary {
     if (self = [super init]) {
+        _addressDictionary = dictionary;
         _location = location;
         _name = [dictionary objectForKey:@"placemarkName"];
         _ISOcountryCode = [dictionary objectForKey:@"placemarkISOcountryCode"];

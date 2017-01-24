@@ -13,8 +13,9 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
+
+#import <UIKit/UINavigationBar.h>
 
 @interface UINavigationBar (Internal)
 - (void)_pushNavigationItem:(UINavigationItem*)item;

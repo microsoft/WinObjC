@@ -31,4 +31,7 @@
 - (void)webViewDidStartLoad:(UIWebView*)webView;
 - (void)webViewDidFinishLoad:(UIWebView*)webView;
 - (void)webView:(UIWebView*)webView didFailLoadWithError:(NSError*)error;
+// Workaround to handle window.external.notify event in HTML part.
+// Original UIWebViewDelegate does not have this method
+- (void)webView:(UIWebView*)webView scriptNotify:(NSURL*)url value:(NSString*)value;
 @end

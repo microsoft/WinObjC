@@ -27,11 +27,10 @@
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 #pragma once
 
+#import <UIKit/UIControl.h>
 #import <UIKit/UIKitTypes.h>
-#import "UIControl.h"
 
 typedef enum {
     UIButtonTypeCustom = 0,

@@ -77,6 +77,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFURL)
 @implementation NSCFURL
 
 BRIDGED_CLASS_REQUIRED_IMPLS(CFURLRef, CFURLGetTypeID, NSURL, NSCFURL)
+BRIDGED_CLASS_FOR_CODER(NSURL)
 
 - (BOOL)getFileSystemRepresentation:(char*)buffer maxLength:(NSUInteger)maxBufferLength {
     return CFURLGetFileSystemRepresentation(static_cast<CFURLRef>(self), true, reinterpret_cast<uint8_t*>(buffer), maxBufferLength);

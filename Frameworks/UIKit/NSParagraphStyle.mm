@@ -18,6 +18,7 @@
 #import <StubReturn.h>
 
 #import <UIKit/NSParagraphStyle.h>
+#import <UIKit/UIGraphics.h>
 #import "NSParagraphStyleInternal.h"
 
 @implementation NSParagraphStyle
@@ -126,7 +127,7 @@
 - (CTParagraphStyleRef)_createCTParagraphStyle {
     CTLineBreakMode lineBreakMode = self.lineBreakMode;
     CTWritingDirection writingDirection = self.baseWritingDirection;
-    CTTextAlignment alignment = _NSTextAlignmentToCTTextAlignment(self.alignment);
+    CTTextAlignment alignment = NSTextAlignmentToCTTextAlignment(self.alignment);
     CTParagraphStyleSetting settings[14] =
         { { kCTParagraphStyleSpecifierAlignment, sizeof(CTTextAlignment), &alignment },
           { kCTParagraphStyleSpecifierFirstLineHeadIndent, sizeof(CGFloat), &_firstLineHeadIndent },

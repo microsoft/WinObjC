@@ -101,6 +101,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFData)
 @implementation NSCFData
 
 BRIDGED_CLASS_REQUIRED_IMPLS(CFDataRef, CFDataGetTypeID, NSData, NSCFData)
+BRIDGED_MUTABLE_CLASS_FOR_CODER(CFDataRef, _CFDataIsMutable, NSData, NSMutableData)
 
 - (const void*)bytes {
     return CFDataGetBytePtr(static_cast<CFDataRef>(self));

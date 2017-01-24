@@ -50,7 +50,7 @@ CGNamedBlendMode compositionModes[] = {
 
 CGFloat alphas[] = { 0.5f, 1.f };
 
-class CGContextBlendMode : public WhiteBackgroundTest, public ::testing::WithParamInterface<::testing::tuple<CGFloat, CGNamedBlendMode>> {
+class CGContextBlendMode : public WhiteBackgroundTest<>, public ::testing::WithParamInterface<::testing::tuple<CGFloat, CGNamedBlendMode>> {
     CFStringRef CreateOutputFilename() {
         const char* blendModeName = ::testing::get<1>(GetParam()).name;
         CGFloat alpha = ::testing::get<0>(GetParam());

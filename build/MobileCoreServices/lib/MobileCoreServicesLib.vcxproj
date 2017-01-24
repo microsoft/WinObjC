@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -19,8 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="..\..\..\Frameworks\MobileCoreServices\UTType.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\MobileCoreServices\UTTypeInternalMap.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\MobileCoreServices\UTType.cpp">
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\MobileCoreServices\UTTypeInternal.cpp">
+    </ClangCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3FB3DD16-59E3-4CB6-B91D-5095A933B645}</ProjectGuid>

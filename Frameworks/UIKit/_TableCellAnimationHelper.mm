@@ -17,11 +17,13 @@
 #include "Starboard.h"
 #include "_TableCellAnimationHelper.h"
 
+#include <UIKit/UIView.h>
+
 @implementation _TableCellAnimationHelper
 
 - (void)animationFinished {
     for (int i = 0; i < _numCellsToBeRemoved; i++) {
-        [_cellsToBeRemoved[i] removeFromSuperview];
+        [(UIView*)_cellsToBeRemoved[i] removeFromSuperview];
         [_cellsToBeRemoved[i] release];
     }
     IwFree(_cellsToBeRemoved);

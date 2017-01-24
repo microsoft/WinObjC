@@ -21,25 +21,41 @@
 #import "CGPathInternal.h"
 #import "DWriteWrapper_CoreText.h"
 
-using namespace std;
-
 @implementation _CTFramesetter : NSObject
 @end
 
-static _CTFrame* __CreateFrame(_CTFramesetter* framesetter, CGRect frameRect, CFRange range) {
-    RETURN_NULL_IF(framesetter == nil);
+/**
+ @Status Interoperable
+*/
+CTFramesetterRef CTFramesetterCreateWithAttributedString(CFAttributedStringRef string) {
+    _CTFramesetter* ret = [_CTFramesetter alloc];
+    ret->_typesetter.attach(static_cast<_CTTypesetter*>(CTTypesetterCreateWithAttributedString(string)));
+    return static_cast<CTFramesetterRef>(ret);
+}
+
+/**
+ @Status Caveat
+ @Notes frameAttributes parameter ignored
+*/
+CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetterRef, CFRange range, CGPathRef path, CFDictionaryRef frameAttributes) {
+    RETURN_NULL_IF(framesetterRef == nil || path == nullptr);
+    CGRect frameRect;
+    _CGPathGetBoundingBoxInternal(path, &frameRect);
+    _CTFramesetter* framesetter = static_cast<_CTFramesetter*>(framesetterRef);
 
     // Call _DWriteWrapper to get _CTLine object list that makes up this frame
     _CTTypesetter* typesetter = static_cast<_CTTypesetter*>(framesetter->_typesetter);
     if (range.length == 0L) {
-        range.length = typesetter->_characters.size() - range.location;
+        range.length = [typesetter->_string length] - range.location;
     }
 
     StrongId<_CTFrame> ret = _DWriteGetFrame(static_cast<CFAttributedStringRef>(typesetter->_attributedString.get()), range, frameRect);
+    ret->_path.reset(CGPathRetain(path));
+    ret->_frameRect.origin = frameRect.origin;
 
     // Trying to access attributes without any text will throw an error
     if (range.length <= 0L) {
-        return ret.detach();
+        return static_cast<CTFrameRef>(ret.detach());
     }
 
     CTParagraphStyleRef settings =
@@ -48,7 +64,7 @@ static _CTFrame* __CreateFrame(_CTFramesetter* framesetter, CGRect frameRect, CF
                                                                    effectiveRange:nullptr]);
 
     if (settings == nullptr) {
-        return ret.detach();
+        return static_cast<CTFrameRef>(ret.detach());
     }
 
     // DWrite only gives manual control of lineheight when it is constant through a frame
@@ -87,31 +103,7 @@ static _CTFrame* __CreateFrame(_CTFramesetter* framesetter, CGRect frameRect, CF
         }
     }
 
-    return ret.detach();
-}
-
-/**
- @Status Interoperable
-*/
-CTFramesetterRef CTFramesetterCreateWithAttributedString(CFAttributedStringRef string) {
-    _CTFramesetter* ret = [_CTFramesetter alloc];
-    ret->_typesetter = static_cast<_CTTypesetter*>(CTTypesetterCreateWithAttributedString(string));
-    return static_cast<CTFramesetterRef>(ret);
-}
-
-/**
- @Status Caveat
- @Notes frameAttributes parameter ignored
-*/
-CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetter, CFRange stringRange, CGPathRef path, CFDictionaryRef frameAttributes) {
-    CGRect frameSize;
-    _CGPathGetBoundingBoxInternal(path, &frameSize);
-
-    _CTFrame* ret = __CreateFrame(static_cast<_CTFramesetter*>(framesetter), frameSize, stringRange);
-    ret->_path.reset(CGPathRetain(path));
-    ret->_frameRect.origin = frameSize.origin;
-
-    return static_cast<CTFrameRef>(ret);
+    return static_cast<CTFrameRef>(ret.detach());
 }
 
 /**
@@ -123,23 +115,20 @@ CTTypesetterRef CTFramesetterGetTypesetter(CTFramesetterRef framesetter) {
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes frameAttributes parameter ignored
  @Notes
 */
 CGSize CTFramesetterSuggestFrameSizeWithConstraints(
     CTFramesetterRef framesetter, CFRange stringRange, CFDictionaryRef frameAttributes, CGSize constraints, CFRange* fitRange) {
-    CGRect frameSize = CGRectZero;
-    frameSize.size = constraints;
-
-    _CTFrame* frame = __CreateFrame(static_cast<_CTFramesetter*>(framesetter), frameSize, stringRange);
-    CGSize ret = frame ? frame->_frameRect.size : CGSizeZero;
-
-    if (fitRange) {
-        *fitRange = CTFrameGetVisibleStringRange(static_cast<CTFrameRef>(frame));
+    if (framesetter == nil) {
+        return CGSizeZero;
     }
 
-    [frame release];
-    return ret;
+    CFAttributedStringRef string =
+        static_cast<CFAttributedStringRef>(static_cast<_CTFramesetter*>(framesetter)->_typesetter->_attributedString.get());
+
+    return _DWriteGetFrameSize(string, stringRange, constraints, fitRange);
 }
 
 /**

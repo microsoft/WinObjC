@@ -128,4 +128,11 @@ WXCTextBlock* GetLabelTextBlock(WXCGrid* labelGrid);
 void SetFrameworkElementLayerProperties(WXFrameworkElement* targetElement,
                                         WXCImage* layerContentProperty,
                                         WXCCanvas* sublayerCanvasProperty);
+
+// Get the layerContentProperty for the specified target xaml element
+WXCImage* GetFrameworkElementLayerContentProperty(WXFrameworkElement* targetElement);
+
+// Get the sublayerCanvasProperty for the specified target xaml element
+WXCCanvas* GetFrameworkElementSublayerCanvasProperty(WXFrameworkElement* targetElement);
+
 } // namespace XamlControls

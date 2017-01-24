@@ -16,14 +16,23 @@
 
 #import "Starboard.h"
 #import <StubReturn.h>
-#import "CoreGraphics/CGGeometry.h"
-#import "CoreGraphics/CGAffineTransform.h"
-#import "Foundation/NSNotificationCenter.h"
-#import "QuartzCore/CALayer.h"
-#import "UIKit/UIView.h"
-#import "UIKit/UIWindow.h"
-#import "UIKit/UIApplication.h"
-#import "UIKit/UITouch.h"
+
+#import <UIKit/UIApplication.h>
+#import <UIKit/UIScreen.h>
+#import <UIKit/UITouch.h>
+#import <UIKit/UIView.h>
+#import <UIKit/UIViewController.h>
+#import <UIKit/UIWindow.h>
+
+
+#import <CoreGraphics/CGGeometry.h>
+#import <CoreGraphics/CGAffineTransform.h>
+
+#import <Foundation/NSNotificationCenter.h>
+
+#import <QuartzCore/CALayer.h>
+#import <QuartzCore/CATransaction.h>
+
 #import "LoggingNative.h"
 #import "UIApplicationInternal.h"
 #import "CALayerInternal.h"

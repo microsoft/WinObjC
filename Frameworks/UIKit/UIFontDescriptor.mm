@@ -16,6 +16,7 @@
 
 #import <StubReturn.h>
 #import <Starboard.h>
+
 #import <UIKit/UIFontDescriptor.h>
 
 #import <Foundation/NSNumber.h>
@@ -24,6 +25,9 @@
 #import <BridgeHelpers.h>
 
 #import "UICTFontDescriptor.h"
+
+#import <CoreText/CTFontDescriptor.h>
+#import <CoreText/CTFont.h>
 
 NSString* const UIFontTextStyleTitle1 = @"UICTFontTextStyleTitle1";
 NSString* const UIFontTextStyleTitle2 = @"UICTFontTextStyleTitle2";

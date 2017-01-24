@@ -15,20 +15,20 @@
 //
 //******************************************************************************
 
-#include <StubReturn.h>
-#include <math.h>
-#import <StubReturn.h>
 #include "Starboard.h"
+#include <StubReturn.h>
+
+#include <UIKit/UIGraphics.h>
+#include <UIKit/UIImage.h>
 
 #include "CGImageInternal.h"
 #include "CGContextInternal.h"
-#include "CoreGraphics/CGGeometry.h"
+#include <CoreGraphics/CGGeometry.h>
 
-#include "Foundation/NSString.h"
-#include "Foundation/NSMutableDictionary.h"
-#include "Foundation/NSBundle.h"
+#include <Foundation/NSString.h>
+#include <Foundation/NSMutableDictionary.h>
+#include <Foundation/NSBundle.h>
 
-#include "UIKit/UIImage.h"
 #include "UIImageCachedObject.h"
 #include "CALayerInternal.h"
 #include "StarboardXaml/DisplayProperties.h"
@@ -39,6 +39,7 @@
 #include "COMIncludes_End.h"
 
 #include "LoggingNative.h"
+#include <math.h>
 
 @interface UIImage ()
 - (CGRect)_imageStretch;

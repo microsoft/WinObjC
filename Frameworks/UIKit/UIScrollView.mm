@@ -17,23 +17,28 @@
 #import <StubReturn.h>
 #import "AssertARCEnabled.h"
 #import "Starboard.h"
-#import <cmath>
-#import <Foundation/NSNumber.h>
-#import <Foundation/NSTimer.h>
-#import <Foundation/NSRunLoop.h>
-#import <Foundation/NSSet.h>
-#import <Foundation/NSString.h>
-#import <CoreGraphics/CGAffineTransform.h>
-#import <CoreGraphics/CGGeometry.h>
-#import <QuartzCore/CABasicAnimation.h>
-#import <QuartzCore/CADisplayLink.h>
-#import <QuartzCore/CALayer.h>
+
 #import <UIKit/UIApplication.h>
 #import <UIKit/UIColor.h>
 #import <UIKit/UIEvent.h>
 #import <UIKit/UITouch.h>
 #import <UIKit/UIGestureRecognizer.h>
 #import <UIKit/UIScrollView.h>
+
+#import <Foundation/NSNumber.h>
+#import <Foundation/NSTimer.h>
+#import <Foundation/NSRunLoop.h>
+#import <Foundation/NSSet.h>
+#import <Foundation/NSString.h>
+
+#import <CoreGraphics/CGAffineTransform.h>
+#import <CoreGraphics/CGGeometry.h>
+
+#import <QuartzCore/CABasicAnimation.h>
+#import <QuartzCore/CADisplayLink.h>
+#import <QuartzCore/CALayer.h>
+#import <QuartzCore/CALayerDelegate.h>
+
 #import <UWP/WindowsUIXaml.h>
 #import <UWP/WindowsUIXamlControls.h>
 #import <UWP/WindowsUIXamlShapes.h>
@@ -50,6 +55,7 @@
 #import "Etc.h"
 #import "XamlControls.h"
 #import "XamlUtilities.h"
+#import <cmath>
 
 static const wchar_t* TAG = L"UIScrollView";
 
@@ -183,19 +189,11 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
     _leftInset = [WUXSRectangle make];
     _leftInset.name = @"left";
 
-    // Create a content canvas for our subviews
-    _contentCanvas = [WXCCanvas make];
-    _contentCanvas.name = @"Content Canvas";
+    // Grab the content canvas for our subviews - we created it in createXamlElement
+    _contentCanvas = XamlControls::GetFrameworkElementSublayerCanvasProperty(_scrollViewer);
 
-    // Create an image for our rendered content
-    _contentImage = [WXCImage make];
-    _contentImage.name = @"Content Element";
-
-    // Set up the CALayer properties for our backing Xaml element so
-    // our subviews are placed within our _contentCanvas
-    XamlControls::SetFrameworkElementLayerProperties(_scrollViewer,
-                                                     _contentImage, // content element
-                                                     _contentCanvas); // sublayer canvas
+    // Grab the image for our rendered content - we created it in createXamlElement
+    _contentImage = XamlControls::GetFrameworkElementLayerContentProperty(_scrollViewer);
 
     // creating and build 3 X 3 content grid
     _contentGrid = [WXCGrid make];
@@ -579,10 +577,11 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
         // representation.
         if (strongSelf) {
             // Add the image to the parent of the scrollcontentpresenter
-            WXFrameworkElement* scrollContentPresenter = FindTemplateChild(strongSelf->_scrollViewer, @"ScrollContentPresenter");
+            WXFrameworkElement* scrollContentPresenter =
+                XamlUtilities::FindTemplateChild(strongSelf->_scrollViewer, @"ScrollContentPresenter");
             if (scrollContentPresenter) {
                 WXCGrid* parent = rt_dynamic_cast<WXCGrid>(scrollContentPresenter.parent);
-                [parent.children insertObject:self->_contentImage atIndex:0];
+                [parent.children insertObject:strongSelf->_contentImage atIndex:0];
             } else {
                 TraceWarning(TAG, L"UIScrollView loaded event failed to find the ScrollContentPresenter child.");
             }
@@ -685,8 +684,26 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
  Microsoft Extension
 */
 + (WXFrameworkElement*)createXamlElement {
+    WXCScrollViewer* scrollViewer = [WXCScrollViewer make];
+
+    // Create an image for our rendered content
+    WXCImage* contentImage = [WXCImage make];
+    contentImage.name = @"Content Element";
+
+    // Create a content canvas for our subviews
+    WXCCanvas* contentCanvas = [WXCCanvas make];
+    contentCanvas.name = @"Content Canvas";
+
+    // Set up the CALayer properties for our backing Xaml element so
+    // our subviews are placed within our contentCanvas
+    // Note: It's critical that we do this here in case subviews are added before _initUIScrollView has a chance
+    // to run (during initWithCoder, for example).
+    XamlControls::SetFrameworkElementLayerProperties(scrollViewer,
+        contentImage, // content element
+        contentCanvas); // sublayer canvas
+
     // No autorelease needed because we compile with ARC
-    return [WXCScrollViewer make];
+    return scrollViewer;
 }
 
 /**
@@ -1371,10 +1388,10 @@ static void setContentOffsetKVOed(UIScrollView* self, CGPoint offs) {
 
     if (DEBUG_INSETS) {
         // setting different color on insets for debugging
-        _topInset.fill = [WUXMSolidColorBrush makeInstanceWithColor:ConvertUIColorToWUColor([UIColor redColor])];
-        _bottomInset.fill = [WUXMSolidColorBrush makeInstanceWithColor:ConvertUIColorToWUColor([UIColor blueColor])];
-        _leftInset.fill = [WUXMSolidColorBrush makeInstanceWithColor:ConvertUIColorToWUColor([UIColor redColor])];
-        _rightInset.fill = [WUXMSolidColorBrush makeInstanceWithColor:ConvertUIColorToWUColor([UIColor blueColor])];
+        _topInset.fill = [WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor([UIColor redColor])];
+        _bottomInset.fill = [WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor([UIColor blueColor])];
+        _leftInset.fill = [WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor([UIColor redColor])];
+        _rightInset.fill = [WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor([UIColor blueColor])];
     }
 }
 

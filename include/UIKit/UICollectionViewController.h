@@ -18,11 +18,10 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
 
-#import <UIKit/UIKit.h>
 #import <UIKit/UIKitExport.h>
+#import <UIKit/UIViewController.h>
 
 @class UICollectionView;
 @class UICollectionViewLayout;

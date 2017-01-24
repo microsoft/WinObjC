@@ -15,13 +15,18 @@
 //******************************************************************************
 
 #import "Starboard.h"
-#import "Foundation/NSString.h"
-#import "CoreGraphics/CGContext.h"
-#import "UIKit/UIView.h"
-#import "UIKit/UIFont.h"
-#import "UIKit/UIColor.h"
-#import "UIKit/UILabel.h"
-#import "UIKit/UIAccessibility.h"
+
+#import <UIKit/NSString+UIKitAdditions.h>
+#import <UIKit/UIAccessibility.h>
+#import <UIKit/UIColor.h>
+#import <UIKit/UIFont.h>
+#import <UIKit/UILabel.h>
+#import <UIKit/UIView.h>
+
+#import <CoreGraphics/CGContext.h>
+
+#import <Foundation/NSString.h>
+
 #import "UIFontInternal.h"
 #import "CGContextInternal.h"
 #import "StarboardXaml/DisplayProperties.h"
@@ -106,20 +111,18 @@
 
     [_textBlock setFontFamily:[WUXMFontFamily makeInstanceWithName:[_font _compatibleFamilyName]]];
 
-    [_textBlock setTextAlignment:ConvertUITextAlignmentToWXTextAlignment(_alignment)];
+    [_textBlock setTextAlignment:XamlUtilities::ConvertUITextAlignmentToWXTextAlignment(_alignment)];
 
     [_textBlock setLineHeight:[_font ascender] - [_font descender]];
 
-    // Note: These were set in the compositor before the refactor.
-    // TODO: Revisit to fix the remaining text issues with the  refactor.
-    [_textBlock setTextWrapping:WXTextWrappingWrap];
+    XamlUtilities::ApplyLineBreakModeOnTextBlock(_textBlock, _lineBreakMode, self.numberOfLines);
     [_textBlock setLineStackingStrategy:WXLineStackingStrategyBlockLineHeight];
 
     UIColor* color = _textColor;
     if (_isHighlighted && _highlightedTextColor != nil) {
         color = _highlightedTextColor;
     }
-    [_textBlock setForeground:[WUXMSolidColorBrush makeInstanceWithColor:ConvertUIColorToWUColor(color)]];
+    [_textBlock setForeground:[WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor(color)]];
 
     [self invalidateIntrinsicContentSize];
     [self setNeedsDisplay];
@@ -142,7 +145,7 @@
         if (font == nil) {
             font = [UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]];
         }
-        [self setFont:font];
+        _font = font;
 
         _alignment = (UITextAlignment)[coder decodeInt32ForKey:@"UITextAlignment"];
         _adjustFontSize = [coder decodeInt32ForKey:@"UIAdjustsFontSizeToFit"];
@@ -160,6 +163,7 @@
         } else {
             _lineBreakMode = UILineBreakModeTailTruncation;
         }
+
         if ([coder containsValueForKey:@"UIShadowOffset"]) {
             id obj = [coder decodeObjectForKey:@"UIShadowOffset"];
             CGSize size = { 0 };
@@ -207,13 +211,11 @@
 
     _alignment = UITextAlignmentLeft;
     _lineBreakMode = UILineBreakModeTailTruncation;
-    [self setFont:[UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]]];
     _textColor = [UIColor blackColor];
     _shadowColor = _textColor;
     _minimumFontSize = 8.0f;
     _numberOfLines = 1;
     [self setOpaque:FALSE];
-    [self adjustTextLayerSize];
 }
 
 /**
@@ -226,6 +228,10 @@
         // TODO: Reevaluate whether or not this is the correct default mode for UILabels that are initialized via initWithFrame.
         //       Some of our test apps expect the initWithCoder path to default to UIViewContentModeScaleToFill (aka kCAGravityResize).
         [self setContentMode:UIViewContentModeRedraw];
+
+        _font = [UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]];
+
+        [self adjustTextLayerSize];
     }
 
     return self;
@@ -241,6 +247,10 @@
         // TODO: Reevaluate whether or not this is the correct default mode for UILabels that are initialized via initWithFrame.
         //       Some of our test apps expect the initWithCoder path to default to UIViewContentModeScaleToFill (aka kCAGravityResize).
         [self setContentMode:UIViewContentModeRedraw];
+
+        _font = [UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]];
+
+        [self adjustTextLayerSize];
     }
 
     return self;
@@ -282,9 +292,6 @@
  @Status Interoperable
 */
 - (UIFont*)font {
-    if (_font == nil) {
-        _font = [UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]];
-    }
     return _font;
 }
 
@@ -556,13 +563,8 @@
     CGSize ret = { 0 };
 
     if (_text != nil) {
-        UIFont* measurementFont = nil;
-        if (_font == nil) {
-            [self setFont:[UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]]];
-        }
-
         //  Grab the font at the original point size set in setFont:
-        measurementFont = [_font fontWithSize:_originalFontSize];
+        UIFont* measurementFont = [_font fontWithSize:_originalFontSize];
 
         //  Measure the height of a single line of text of this font
         CGSize fontHeight = [@" " sizeWithFont:measurementFont];
@@ -654,10 +656,6 @@
     CGSize ret;
 
     if (_text != nil) {
-        if (_font == nil) {
-            [self setFont:[UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]]];
-        }
-
         ret = [_text sizeWithFont:_font];
 
         if (_numberOfLines == 1) {

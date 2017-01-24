@@ -35,7 +35,7 @@
       <Project>{26da08da-d0b9-4579-b168-e7f0a5f20e57}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\..\CoreText\dll\CoreText.vcxproj">
-        <Project>{36deec5d-f77b-4c94-a63c-86fb716833de}</Project>
+      <Project>{36deec5d-f77b-4c94-a63c-86fb716833de}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\..\AutoLayout\dll\AutoLayout.vcxproj">
       <Project>{D036FDB1-F82C-40C7-B1B4-65F499EAE116}</Project>
@@ -61,9 +61,9 @@
     <ApplicationType>Windows Store</ApplicationType>
     <AppContainerApplication>false</AppContainerApplication>
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
-    <TargetPlatformVersion>10.0.10586.0</TargetPlatformVersion>
+    <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
-    <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <WindowsAppContainer>false</WindowsAppContainer>
     <TargetOsAndVersion>Universal Windows</TargetOsAndVersion>
@@ -247,6 +247,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics\CGBitmapContextTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics\CGColorTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics\DWriteWrapperTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics\CGDataProviderTests.mm" />
   </ItemGroup>
   <Target Name="CopyTestResourcesToOutput" AfterTargets="AfterBuild">
     <ItemGroup>

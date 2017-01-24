@@ -90,12 +90,18 @@ BOOL UIFloatRangeIsEqualToRange(UIFloatRange range, UIFloatRange otherRange) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
-CTTextAlignment NSTextAlignmentToCTTextAlignment(NSTextAlignment nsTextAlignment) {
-    UNIMPLEMENTED();
-    return StubReturn();
+CTTextAlignment NSTextAlignmentToCTTextAlignment(NSTextAlignment alignment) {
+    switch (alignment) {
+        case NSTextAlignmentRight:
+            return kCTRightTextAlignment;
+        case NSTextAlignmentCenter:
+            return kCTCenterTextAlignment;
+        default:
+            return alignment;
+    }
 }
 
 /**

@@ -15,17 +15,25 @@
 //******************************************************************************
 
 #import "Starboard.h"
-#import "UIKit/UIView.h"
-#import "UIKit/UIControl.h"
-#import "UIKit/UIAlertView.h"
-#import "UIKit/UIAlertViewDelegate.h"
-#import "UIKit/UIApplication.h"
-#import "UIKit/UIColor.h"
-#import "Foundation/NSString.h"
-#import "Foundation/NSMutableArray.h"
-#import "CoreGraphics/CGAffineTransform.h"
 
-#import "UIKit/UIImage.h"
+#import <UIKit/NSString+UIKitAdditions.h>
+#import <UIKit/UIAlertView.h>
+#import <UIKit/UIAlertViewDelegate.h>
+#import <UIKit/UIApplication.h>
+#import <UIKit/UIButton.h>
+#import <UIKit/UIColor.h>
+#import <UIKit/UIControl.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UIKitTypes.h>
+#import <UIKit/UILabel.h>
+#import <UIKit/UIScreen.h>
+#import <UIKit/UIView.h>
+
+#import <Foundation/NSString.h>
+#import <Foundation/NSMutableArray.h>
+
+#import <CoreGraphics/CGAffineTransform.h>
+
 #import "UIFontInternal.h"
 #import "UIApplicationInternal.h"
 #import <objc/objc-arc.h>
@@ -298,7 +306,7 @@ static id createButton(UIAlertView* self, int index, id text, float x, float y, 
     id buttonBackground = [[UIImage imageNamed:@"/img/blackbutton-pressed@2x.png"] stretchableImageWithLeftCapWidth:9 topCapHeight:0];
     id buttonPressed = [[UIImage imageNamed:@"/img/blackbutton-normal@2x.png"] stretchableImageWithLeftCapWidth:9 topCapHeight:0];
 
-    id ret = [[UIButton alloc] initWithFrame:frame];
+    UIButton* ret = [[UIButton alloc] initWithFrame:frame];
     [ret setTitle:text forState:0];
     [ret setTitleColor:[UIColor blackColor] forState:0];
     [ret setBackgroundImage:buttonBackground forState:0];
@@ -363,7 +371,7 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
 }
 
 - (void)buttonClicked:(id)button {
-    int index = [button tag];
+    int index = [(UIButton*)button tag];
 
     [self retain];
     [self autorelease];
@@ -432,7 +440,7 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
         curHeight += 10.0f;
     }
 
-    id popupWindow = [[UIApplication sharedApplication] _popupLayer];
+    UIView* popupWindow = [[UIApplication sharedApplication] _popupLayer];
     [[popupWindow superview] bringSubviewToFront:popupWindow];
 
     CGRect fullScreen;

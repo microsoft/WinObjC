@@ -24,21 +24,26 @@
 
 static const CGSize g_defaultCanvasSize{ 512.f, 256.f };
 
-woc::unique_cf<CGColorSpaceRef> testing::DrawTest::s_deviceColorSpace;
+template <typename TComparator>
+woc::unique_cf<CGColorSpaceRef> testing::DrawTest<TComparator>::s_deviceColorSpace;
 
-void testing::DrawTest::SetUpTestCase() {
+template <typename TComparator>
+void testing::DrawTest<TComparator>::SetUpTestCase() {
     s_deviceColorSpace.reset(CGColorSpaceCreateDeviceRGB());
 }
 
-void testing::DrawTest::TearDownTestCase() {
+template <typename TComparator>
+void testing::DrawTest<TComparator>::TearDownTestCase() {
     s_deviceColorSpace.release();
 }
 
-CGSize testing::DrawTest::CanvasSize() {
+template <typename TComparator>
+CGSize testing::DrawTest<TComparator>::CanvasSize() {
     return g_defaultCanvasSize;
 }
 
-void testing::DrawTest::SetUp() {
+template <typename TComparator>
+void testing::DrawTest<TComparator>::SetUp() {
     CGSize size = CanvasSize();
 
     _context.reset(CGBitmapContextCreate(
@@ -50,11 +55,13 @@ void testing::DrawTest::SetUp() {
     SetUpContext();
 }
 
-CFStringRef testing::DrawTest::CreateAdditionalTestDescription() {
+template <typename TComparator>
+CFStringRef testing::DrawTest<TComparator>::CreateAdditionalTestDescription() {
     return nullptr;
 }
 
-CFStringRef testing::DrawTest::CreateOutputFilename() {
+template <typename TComparator>
+CFStringRef testing::DrawTest<TComparator>::CreateOutputFilename() {
     const ::testing::TestInfo* const test_info = ::testing::UnitTest::GetInstance()->current_test_info();
     woc::unique_cf<CFStringRef> additionalDesc{ CreateAdditionalTestDescription() };
     woc::unique_cf<CFStringRef> filename{ CFStringCreateWithFormat(nullptr,
@@ -67,7 +74,8 @@ CFStringRef testing::DrawTest::CreateOutputFilename() {
     return filename.release();
 }
 
-void testing::DrawTest::TearDown() {
+template <typename TComparator>
+void testing::DrawTest<TComparator>::TearDown() {
     CGContextRef context = GetDrawingContext();
 
     // Generate image from context.
@@ -108,14 +116,14 @@ void testing::DrawTest::TearDown() {
         ASSERT_NE(nullptr, referenceImage);
 
         // And fire off a comparator.
-        PixelByPixelImageComparator comparator;
+        TComparator comparator;
         auto delta = comparator.CompareImages(referenceImage.get(), image.get());
 
         if (delta.result != ImageComparisonResult::Same) {
             if (delta.result == ImageComparisonResult::Incomparable) {
                 ADD_FAILURE() << "images are incomparable due to a mismatch in dimensions, presence, or byte length";
             } else {
-                ADD_FAILURE() << "images differ nontrivially";
+                ADD_FAILURE() << "images differ nontrivially with " << delta.differences << " registered differences";
             }
 
             woc::unique_cf<CFStringRef> deltaFilename{
@@ -134,29 +142,35 @@ void testing::DrawTest::TearDown() {
     }
 }
 
-void testing::DrawTest::SetUpContext() {
+template <typename TComparator>
+void testing::DrawTest<TComparator>::SetUpContext() {
     // The default context is fine as-is.
 }
 
-void testing::DrawTest::TestBody() {
+template <typename TComparator>
+void testing::DrawTest<TComparator>::TestBody() {
     // Nothing.
 }
 
-CGContextRef testing::DrawTest::GetDrawingContext() {
+template <typename TComparator>
+CGContextRef testing::DrawTest<TComparator>::GetDrawingContext() {
     return _context.get();
 }
 
-void testing::DrawTest::SetDrawingBounds(CGRect bounds) {
+template <typename TComparator>
+void testing::DrawTest<TComparator>::SetDrawingBounds(CGRect bounds) {
     _bounds = bounds;
 }
 
-CGRect testing::DrawTest::GetDrawingBounds() {
+template <typename TComparator>
+CGRect testing::DrawTest<TComparator>::GetDrawingBounds() {
     return _bounds;
 }
 
-void WhiteBackgroundTest::SetUpContext() {
-    CGContextRef context = GetDrawingContext();
-    CGRect bounds = GetDrawingBounds();
+template <typename TComparator>
+void WhiteBackgroundTest<TComparator>::SetUpContext() {
+    CGContextRef context = this->GetDrawingContext();
+    CGRect bounds = this->GetDrawingBounds();
 
     CGContextSaveGState(context);
     CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 1.0);
@@ -166,21 +180,43 @@ void WhiteBackgroundTest::SetUpContext() {
     CGContextSetRGBStrokeColor(context, 0.0, 0.0, 0.0, 1.0);
 }
 
-CGSize UIKitMimicTest::CanvasSize() {
-    CGSize parent = WhiteBackgroundTest::CanvasSize();
+template <typename TComparator>
+CGSize UIKitMimicTest<TComparator>::CanvasSize() {
+    CGSize parent = WhiteBackgroundTest<TComparator>::CanvasSize();
     return { parent.width * 2., parent.height * 2. };
 }
 
-void UIKitMimicTest::SetUpContext() {
-    WhiteBackgroundTest::SetUpContext();
+template <typename TComparator>
+void UIKitMimicTest<TComparator>::SetUpContext() {
+    WhiteBackgroundTest<TComparator>::SetUpContext();
 
-    CGContextRef context = GetDrawingContext();
-    CGRect bounds = GetDrawingBounds();
+    CGContextRef context = this->GetDrawingContext();
+    CGRect bounds = this->GetDrawingBounds();
 
     CGContextScaleCTM(context, 1.0, -1.0);
     CGContextTranslateCTM(context, 0, -bounds.size.height);
     CGContextScaleCTM(context, 2.0, 2.0);
     bounds = CGRectApplyAffineTransform(bounds, CGAffineTransformMakeScale(.5, .5));
 
-    SetDrawingBounds(bounds);
+    this->SetDrawingBounds(bounds);
 }
+
+// Force templates so they compile
+template class ::testing::DrawTest<>;
+template class WhiteBackgroundTest<>;
+template class UIKitMimicTest<>;
+template class ::testing::DrawTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>;
+template class WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>;
+template class UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>;
+template class ::testing::DrawTest<PixelByPixelImageComparator<PixelComparisonModeMask<2300>>>;
+template class ::testing::DrawTest<PixelByPixelImageComparator<PixelComparisonModeMask<1024>>>;
+template class ::testing::DrawTest<PixelByPixelImageComparator<PixelComparisonModeMask<512>>>;
+template class ::testing::DrawTest<PixelByPixelImageComparator<PixelComparisonModeMask<64>>>;
+template class WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<2300>>>;
+template class WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<1024>>>;
+template class WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<512>>>;
+template class WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<64>>>;
+template class UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<2300>>>;
+template class UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<1024>>>;
+template class UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<512>>>;
+template class UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<64>>>;

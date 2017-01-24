@@ -18,13 +18,11 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
 
-#import <UIKit/UIKit.h>
-#import <UIKit/UIKitExport.h>
 #import <UIKit/UICollectionViewLayout.h>
 #import <UIKit/UICollectionViewDelegateFlowLayout.h>
+#import <UIKit/UIKitExport.h>
 
 UIKIT_EXPORT extern NSString* const UICollectionElementKindSectionHeader;
 UIKIT_EXPORT extern NSString* const UICollectionElementKindSectionFooter;

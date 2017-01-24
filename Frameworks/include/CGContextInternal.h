@@ -26,6 +26,7 @@
 #import "Starboard.h"
 
 #import <objc/runtime.h>
+#import <atomic>
 
 class CGContextImpl;
 COREGRAPHICS_EXPORT void EbrCenterTextInRectVertically(CGRect* rect, CGSize* textSize, id font);
@@ -49,6 +50,21 @@ COREGRAPHICS_EXPORT bool CGContextIsPointInPath(CGContextRef c, bool eoFill, flo
 
 COREGRAPHICS_EXPORT void CGContextDrawGlyphRun(CGContextRef ctx, const DWRITE_GLYPH_RUN* glyphRun);
 
+// Reduces the number of BeginDraw() and EndDraw() calls needed, by counting in a stack-like manner,
+// and only calling BeginDraw()/EndDraw() when the stack is empty/emptied
+COREGRAPHICS_EXPORT void _CGContextPushBeginDraw(CGContextRef ctx);
+COREGRAPHICS_EXPORT void _CGContextPopEndDraw(CGContextRef ctx);
+
+// If currently in a Begin/EndDraw stack, Escape will EndDraw(), Unescape will BeginDraw()
+// For scenarios where a Begin/EndDraw pair needs to be temporarily escaped, to be returned to at a later time
+// Ie:
+//      - Switching render targets - Illegal to do so if currently in a Begin/EndDraw pair
+//      - Cairo - ID2D1RenderTarget is considered to 'own' the bitmap during Begin/EndDraw,
+//                unsafe to edit the same bitmap from cairo at this time
+// Also counts in a stack-like manner, so that the escape and unescape only happen once
+COREGRAPHICS_EXPORT void _CGContextEscapeBeginEndDrawStack(CGContextRef ctx);
+COREGRAPHICS_EXPORT void _CGContextUnescapeBeginEndDrawStack(CGContextRef ctx);
+
 // TODO 1077:: Remove once D2D render target is implemented
 COREGRAPHICS_EXPORT void _CGContextSetScaleFactor(CGContextRef ctx, float scale);
 
@@ -56,6 +72,13 @@ class __CGContext : private objc_object {
 public:
     float scale;
     CGContextImpl* _backing;
+
+    // Keeps track of the depth of a 'stack' of PushBeginDraw/PopEndDraw calls
+    // Since nothing needs to actually be put on a stack, just increment a counter insteads
+    std::atomic_uint32_t _beginEndDrawDepth = { 0 };
+
+    // Keeps track of the depth of a 'stack' of (Un)EscapeBeginEndDrawStack calls
+    std::atomic_uint32_t _escapeBeginEndDrawDepth = { 0 };
 
     __CGContext(CGImageRef pDest);
     ~__CGContext();

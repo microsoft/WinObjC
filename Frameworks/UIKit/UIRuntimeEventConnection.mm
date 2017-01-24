@@ -15,10 +15,12 @@
 //******************************************************************************
 
 #import "Starboard.h"
-#import "UIKit/UIRuntimeEventConnection.h"
-#import "LoggingNative.h"
+#import <UIKit/UIRuntimeEventConnection.h>
+
+#import "UIControlInternal.h"
 #import "UIProxyObject.h"
-#import "UIControl+Internal.h"
+
+#import "LoggingNative.h"
 
 static const wchar_t* TAG = L"UIRuntimeEventConnection";
 

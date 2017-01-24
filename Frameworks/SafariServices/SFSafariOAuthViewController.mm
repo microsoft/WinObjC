@@ -24,6 +24,9 @@
 #import <Foundation/NSURLRequest.h>
 #import <UWP/WindowsSecurityAuthenticationWeb.h>
 
+#import <UIKit/UIApplication.h>
+#import <UIKit/UIApplicationDelegate.h>
+
 //
 // This implementation of SFSafariViewController is not Safari and is not a view controller.
 // It has only one function, and that is to handle OAuth requests. It is not suitable

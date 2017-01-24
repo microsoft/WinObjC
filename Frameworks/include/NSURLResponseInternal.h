@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,17 +13,15 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
 
-#import <Starboard/SmartTypes.h>
-
+#import <Foundation/NSURLResponse.h>
 @interface NSURLResponse ()
 - (id)_initWithURL:(NSURL*)url
-    MIMEType:(NSString*)mimeType
+                 MIMEType:(NSString*)mimeType
     expectedContentLength:(NSInteger)expectedContentLength
-    textEncodingName:(NSString*)textEncodingName
-    suggestedFilename:(NSString*)fileName;
+         textEncodingName:(NSString*)textEncodingName
+        suggestedFilename:(NSString*)fileName;
 @end
 
 NSString* _NSReplaceIllegalFileNameCharacters(NSString* filename);
