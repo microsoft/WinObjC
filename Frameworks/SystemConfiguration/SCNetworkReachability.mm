@@ -134,15 +134,19 @@ static NSLock* _allReachabilityOperationsLock;
 
 + (void)_checkGlobalReachability {
     WNCConnectionProfile* internetConnectionProfile = [WNCNetworkInformation getInternetConnectionProfile];
-    if (internetConnectionProfile &&
-        [internetConnectionProfile getNetworkConnectivityLevel] == WNCNetworkConnectivityLevelInternetAccess) {
-        SCNetworkReachabilityFlags newFlags = kSCNetworkReachabilityFlagsReachable;
+    @try {
+        if (internetConnectionProfile &&
+            [internetConnectionProfile getNetworkConnectivityLevel] == WNCNetworkConnectivityLevelInternetAccess) {
+            SCNetworkReachabilityFlags newFlags = kSCNetworkReachabilityFlagsReachable;
 
-        if (internetConnectionProfile.isWwanConnectionProfile) {
-            newFlags |= kSCNetworkReachabilityFlagsIsWWAN;
+            if (internetConnectionProfile.isWwanConnectionProfile) {
+                newFlags |= kSCNetworkReachabilityFlagsIsWWAN;
+            }
+            _globalReachableFlags = newFlags;
+        } else {
+            _globalReachableFlags = 0;
         }
-        _globalReachableFlags = newFlags;
-    } else {
+    } @catch (NSException* exception) {
         _globalReachableFlags = 0;
     }
 }
@@ -237,12 +241,11 @@ static NSLock* _allReachabilityOperationsLock;
     if (_callbackQueue != NULL && _isPerformingCallback == FALSE) {
         _isPerformingCallback = TRUE;
         [self retain];
-        dispatch_async(_callbackQueue,
-                       ^void() {
-                           [self _performCallback];
-                           [self release];
-                           _isPerformingCallback = FALSE;
-                       });
+        dispatch_async(_callbackQueue, ^void() {
+            [self _performCallback];
+            [self release];
+            _isPerformingCallback = FALSE;
+        });
     }
 
     [_reachabilityFlagsValid unlock];
