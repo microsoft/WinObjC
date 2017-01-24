@@ -31,7 +31,7 @@
 - (void)_removeInputSource:(NSInputSource*)source forMode:(NSString*)mode;
 - (void)_addObserver:(NSObject*)observer forMode:(NSString*)mode;
 - (void)_removeObserver:(NSObject*)observer forMode:(NSString*)mode;
-- (StrongId<NSArray*>)_statesForMode:(NSString*)mode;
+- (StrongId<NSArray>)_statesForMode:(NSString*)mode;
 - (void)_processMainRunLoop:(int)value;
 - (void)_shutdown;
 - (void)removeTimer:(NSTimer*)timer forMode:(NSString*)mode;
