@@ -252,11 +252,14 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext> {
 
     CGAffineTransform textMatrix{ CGAffineTransformIdentity };
 
+    using __CGContextFlushHook = void(*)(CGContextRef);
+
 private:
     std::stack<__CGContextLayer> _layerStack{};
     woc::unique_cf<CGMutablePathRef> _currentPath{ nullptr };
     woc::unique_cf<CGColorSpaceRef> _fillColorSpace;
     woc::unique_cf<CGColorSpaceRef> _strokeColorSpace;
+    __CGContextFlushHook _flushHook;
 
     inline HRESULT _SaveD2DDrawingState(ID2D1DrawingStateBlock** pDrawingState) {
         RETURN_HR_IF(E_POINTER, !pDrawingState);
@@ -378,6 +381,11 @@ public:
 
     inline bool ShouldDraw() {
         return CurrentGState().ShouldDraw();
+    }
+
+    // For bitmap, PDF, etc. consumers.
+    void SetFlushHook(__CGContextFlushHook flushHook) {
+        _flushHook = flushHook;
     }
 
     HRESULT Clip(CGPathDrawingMode pathMode);
@@ -2227,6 +2235,9 @@ HRESULT __CGContext::DrawImage(ID2D1Image* image) {
 
     // TODO GH#1194: We will need to re-evaluate Direct2D's D2DERR_RECREATE when we move to HW acceleration.
     RETURN_IF_FAILED(deviceContext->EndDraw());
+    if (_flushHook) {
+        _flushHook(this);
+    }
 
     return S_OK;
 }
@@ -2743,8 +2754,27 @@ bool CGContextIsPointInPath(CGContextRef context, bool eoFill, CGFloat x, CGFloa
 struct __CGBitmapContext : CoreFoundation::CppBase<__CGBitmapContext, __CGContext> {
     woc::unique_cf<CGImageRef> _image;
 
+    void* _data;
+
+    size_t _width;
+    size_t _height;
+    size_t _stride;
+
+    CGBitmapContextReleaseDataCallback _releaseDataCallback;
+    void* _releaseInfo;
+
     __CGBitmapContext(ID2D1RenderTarget* renderTarget, REFWICPixelFormatGUID outputPixelFormat)
         : Parent(renderTarget), _outputPixelFormat(outputPixelFormat) {
+    }
+
+    __CGBitmapContext(ID2D1RenderTarget* renderTarget, REFWICPixelFormatGUID outputPixelFormat, void* data, size_t width, size_t height, size_t stride, CGBitmapContextReleaseDataCallback releaseDataCallback, void* releaseInfo)
+        : Parent(renderTarget), _outputPixelFormat(outputPixelFormat), _data(data), _width(width), _height(height), _stride(stride), _releaseDataCallback(releaseDataCallback), _releaseInfo(releaseInfo) {
+    }
+
+    ~__CGBitmapContext() {
+        if (_data && _releaseDataCallback) {
+            _releaseDataCallback(_releaseInfo, _data);
+        }
     }
 
     inline void SetImage(CGImageRef image) {
@@ -2773,6 +2803,26 @@ CGContextRef CGBitmapContextCreate(void* data,
     return CGBitmapContextCreateWithData(data, width, height, bitsPerComponent, bytesPerRow, colorSpace, bitmapInfo, nullptr, nullptr);
 }
 
+void __CGBitmapContextCopyOutputFormatFlushHook(CGContextRef context) {
+    __CGBitmapContext* bitmapContext = (__CGBitmapContext*)context;
+
+    ComPtr<IWICImagingFactory> imageFactory;
+    FAIL_FAST_IF_FAILED(_CGGetWICFactory(&imageFactory));
+
+    ComPtr<IWICFormatConverter> converter;
+    FAIL_FAST_IF_FAILED(imageFactory->CreateFormatConverter(&converter));
+
+    // Unfortunately, we must create a format converter every time we do this:
+    // the converter could conceivably cache any regions it has touched, and
+    // we can't reinitialize an existing one to flush its caches.
+    ComPtr<IWICBitmap> imageSource;
+    FAIL_FAST_IF_FAILED(_CGImageGetWICImageSource(bitmapContext->_image, &imageSource));
+    FAIL_FAST_IF_FAILED(converter->Initialize(
+        imageSource.Get(), bitmapContext->GetOutputPixelFormat(), WICBitmapDitherTypeNone, nullptr, 0.f, WICBitmapPaletteTypeMedianCut));
+
+    FAIL_FAST_IF_FAILED(converter->CopyPixels(nullptr, bitmapContext->_stride, bitmapContext->_stride * bitmapContext->_width, static_cast<uint8_t*>(bitmapContext->_data)));
+}
+
 /**
  @Status Caveat
  @Notes releaseCallback and releaseInfo is ignored.
@@ -2783,31 +2833,41 @@ CGContextRef CGBitmapContextCreateWithData(void* data,
                                            size_t height,
                                            size_t bitsPerComponent,
                                            size_t bytesPerRow,
-                                           CGColorSpaceRef space,
+                                           CGColorSpaceRef colorSpace,
                                            uint32_t bitmapInfo,
                                            CGBitmapContextReleaseDataCallback releaseCallback,
                                            void* releaseInfo) {
     RETURN_NULL_IF(!width);
     RETURN_NULL_IF(!height);
-    RETURN_NULL_IF(!space);
+    RETURN_NULL_IF(!colorSpace);
 
     // bitsperpixel = ((bytesPerRow/width) * 8bits/byte)
     size_t bitsPerPixel = ((bytesPerRow / width) << 3);
     WICPixelFormatGUID outputPixelFormat;
-    RETURN_NULL_IF_FAILED(_CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, space, bitmapInfo, &outputPixelFormat));
+    RETURN_NULL_IF_FAILED(_CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, colorSpace, bitmapInfo, &outputPixelFormat));
     WICPixelFormatGUID pixelFormat = outputPixelFormat;
 
+    bool grayscaleHack = false;
+    void* realBuffer = data;
+
     if (!_CGIsValidRenderTargetPixelFormat(pixelFormat)) {
-        if (data) {
-            UNIMPLEMENTED_WITH_MSG(
-                "CGBitmapContext does not currently support input conversion and can only render into 32bpp PRGBA buffers.");
-            return nullptr;
-        }
         pixelFormat = GUID_WICPixelFormat32bppPRGBA;
+        if (data) {
+            if (CGColorSpaceGetModel(colorSpace) == kCGColorSpaceModelMonochrome) {
+                TraceWarning(TAG, L"Grayscale context requested at %dx%d. Since Direct2D does not support this, this context will use full immediate mode. There will be a significant performance penalty.", width, height);
+                //outputPixelFormat = pixelFormat = GUID_WICPixelFormat8bppAlpha;
+                grayscaleHack = true;
+                realBuffer = nullptr;
+            } else {
+                UNIMPLEMENTED_WITH_MSG(
+                    "CGBitmapContext does not currently support input conversion and can only render into 32bpp PRGBA buffers.");
+                return nullptr;
+            }
+        }
     }
 
     // if data is null, enough memory is allocated via CGIWICBitmap
-    ComPtr<IWICBitmap> customBitmap = Make<CGIWICBitmap>(data, pixelFormat, height, width);
+    ComPtr<IWICBitmap> customBitmap = Make<CGIWICBitmap>(realBuffer, pixelFormat, height, width);
     RETURN_NULL_IF(!customBitmap);
 
     woc::unique_cf<CGImageRef> image(_CGImageCreateWithWICBitmap(customBitmap.Get()));
@@ -2818,7 +2878,13 @@ CGContextRef CGBitmapContextCreateWithData(void* data,
 
     ComPtr<ID2D1RenderTarget> renderTarget;
     RETURN_NULL_IF_FAILED(factory->CreateWicBitmapRenderTarget(customBitmap.Get(), D2D1::RenderTargetProperties(), &renderTarget));
-    CGContextRef context = _CGBitmapContextCreateWithRenderTarget(renderTarget.Get(), image.get(), outputPixelFormat);
+
+    __CGBitmapContext* context = __CGBitmapContext::CreateInstance(kCFAllocatorDefault, renderTarget.Get(), outputPixelFormat, data, width, height, bytesPerRow, releaseCallback, releaseInfo);
+    __CGContextPrepareDefaults(context);
+    context->SetImage(image);
+    if (grayscaleHack) {
+        context->SetFlushHook(&__CGBitmapContextCopyOutputFormatFlushHook);
+    }
     return context;
 }
 
