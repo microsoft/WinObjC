@@ -17,7 +17,14 @@
 #import <TestFramework.h>
 #import <Foundation/Foundation.h>
 #import <CoreText/CoreText.h>
+#import <Starboard/SmartTypes.h>
 #import <vector>
+
+static NSURL* __GetURLFromPathRelativeToModuleDirectory(NSString* relativePath) {
+    static char fullPath[_MAX_PATH];
+    static int unused = [](char* path) { return GetModuleFileNameA(NULL, path, _MAX_PATH); }(fullPath);
+    return [NSURL fileURLWithPath:[[@(fullPath) stringByDeletingLastPathComponent] stringByAppendingPathComponent:relativePath]];
+}
 
 class FontCopyName : public ::testing::TestWithParam<::testing::tuple<CFStringRef, const NSString*>> {
 public:
@@ -46,19 +53,11 @@ TEST_P(FontCopyName, VerifyProperties) {
     CFRelease(propertyValue);
 }
 
-const NSString* c_copyrightName = @"© 2015 Microsoft Corporation. All Rights Reserved.";
 const NSString* c_familyName = @"Segoe UI";
 const NSString* c_subFamilyName = @"Regular";
 const NSString* c_styleName = @"Regular";
 const NSString* c_uniqueName = @"Segoe UI Regular";
 const NSString* c_fullName = @"Segoe UI";
-
-// version name for Segoe UI font is different on ARM than on x86 platform, so we are using different version names for both platforms.
-#ifdef _M_ARM
-const NSString* c_versionName = @"Version 5.53; sf";
-#else
-const NSString* c_versionName = @"Version 5.53";
-#endif
 
 const NSString* c_postscriptName = @"SegoeUI";
 const NSString* c_trademarkName = @"Segoe is a trademark of the Microsoft group of companies.";
@@ -73,8 +72,7 @@ const NSString* c_postscriptCIDName = nullptr;
 
 INSTANTIATE_TEST_CASE_P(CTFont,
                         FontCopyName,
-                        ::testing::Values(::testing::make_tuple(kCTFontCopyrightNameKey, c_copyrightName),
-                                          ::testing::make_tuple(kCTFontFamilyNameKey, c_familyName),
+                        ::testing::Values(::testing::make_tuple(kCTFontFamilyNameKey, c_familyName),
                                           ::testing::make_tuple(kCTFontSubFamilyNameKey, c_subFamilyName),
                                           ::testing::make_tuple(kCTFontStyleNameKey, c_styleName),
                                           ::testing::make_tuple(kCTFontUniqueNameKey, c_uniqueName),
@@ -88,8 +86,27 @@ INSTANTIATE_TEST_CASE_P(CTFont,
                                           ::testing::make_tuple(kCTFontDesignerURLNameKey, c_designerURLName),
                                           ::testing::make_tuple(kCTFontLicenseURLNameKey, c_licenseURLName),
                                           ::testing::make_tuple(kCTFontSampleTextNameKey, c_sampleTextName),
-                                          ::testing::make_tuple(kCTFontVersionNameKey, c_versionName),
                                           ::testing::make_tuple(kCTFontPostScriptCIDNameKey, c_postscriptCIDName)));
+
+TEST(CTFont, RegisteredFontCopyName) {
+    auto fontName = woc::MakeAutoCF<CFStringRef>(CFSTR("WinObjC"));
+    NSURL* testFileURL = __GetURLFromPathRelativeToModuleDirectory(@"/data/WinObjC.ttf");
+    CFErrorRef error = nullptr;
+    EXPECT_TRUE(CTFontManagerRegisterFontsForURL((__bridge CFURLRef)testFileURL, kCTFontManagerScopeSession, &error));
+    EXPECT_EQ(nullptr, error);
+
+    auto font = woc::MakeAutoCF<CTFontRef>(CTFontCreateWithName(fontName, 20, nullptr));
+    ASSERT_NE(nullptr, font);
+
+    auto copyright = woc::MakeAutoCF<CFStringRef>(CTFontCopyName(font, kCTFontCopyrightNameKey));
+    EXPECT_OBJCEQ(@"Copyright (c) Microsoft", static_cast<NSString*>(copyright.get()));
+
+    auto version = woc::MakeAutoCF<CFStringRef>(CTFontCopyName(font, kCTFontVersionNameKey));
+    EXPECT_OBJCEQ(@"Version 001.000 ", static_cast<NSString*>(version.get()));
+
+    EXPECT_TRUE(CTFontManagerUnregisterFontsForURL((__bridge CFURLRef)testFileURL, kCTFontManagerScopeSession, &error));
+    EXPECT_EQ(nullptr, error);
+}
 
 TEST(CTFont, EqualHash) {
     CTFontRef font1 = CTFontCreateWithName(CFSTR("Times New Roman"), 12.0, NULL);
