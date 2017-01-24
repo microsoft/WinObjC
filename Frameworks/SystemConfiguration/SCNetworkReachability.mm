@@ -146,7 +146,7 @@ static NSLock* _allReachabilityOperationsLock;
         } else {
             _globalReachableFlags = 0;
         }
-    } @catch (NSException* exception) {
+    } @catch (...) {
         _globalReachableFlags = 0;
     }
 }
