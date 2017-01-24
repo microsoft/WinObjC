@@ -99,7 +99,7 @@ static CGRect __FirstPossibleRectForProposed(CGRect proposed,
             }
         }
         if (path.origin.x + path.size.width > proposed.origin.x) {
-            proposed.origin.x = (path.origin.x + path.size.width) + padding;
+            proposed.origin.x = std::min((path.origin.x + path.size.width) + padding, maxWidth);
             proposed.size.width = maxWidth - proposed.origin.x;
         }
     }
