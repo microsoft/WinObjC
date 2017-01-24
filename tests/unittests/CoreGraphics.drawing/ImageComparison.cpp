@@ -23,25 +23,14 @@ struct bgraPixel {
     uint8_t b, g, r, a;
 };
 
-struct rgbaPixel {
-    uint8_t r, g, b, a;
-};
-
 template <typename T, typename U>
 bool operator==(const T& t, const U& u) {
     return t.r == u.r && t.g == u.g && t.b == u.b && t.a == u.a;
 }
 
-template <ComparisonMode Mode>
-struct __comparePixels {
-    template <typename LP, typename RP>
-    rgbaPixel operator()(const LP& background, const LP& bp, const RP& cp, size_t& npxchg);
-};
-
-template <>
-struct __comparePixels<ComparisonMode::Exact> {
-    template <typename LP, typename RP>
-    rgbaPixel operator()(const LP& background, const LP& bp, const RP& cp, size_t& npxchg) {
+template <size_t FailureThreshold>
+template <typename LP, typename RP>
+rgbaPixel PixelComparisonModeExact<FailureThreshold>::ComparePixels(const LP& background, const LP& bp, const RP& cp, size_t& npxchg) {
         rgbaPixel gp{};
         if (!(bp == cp)) {
             ++npxchg;
@@ -61,13 +50,11 @@ struct __comparePixels<ComparisonMode::Exact> {
         }
 
         return gp;
-    }
-};
+}
 
-template <>
-struct __comparePixels<ComparisonMode::Mask> {
-    template <typename LP, typename RP>
-    rgbaPixel operator()(const LP& background, const LP& bp, const RP& cp, size_t& npxchg) {
+template <size_t FailureThreshold>
+template <typename LP, typename RP>
+rgbaPixel PixelComparisonModeMask<FailureThreshold>::ComparePixels(const LP& background, const LP& bp, const RP& cp, size_t& npxchg) {
         rgbaPixel gp{};
         if (!(bp == cp)) {
             ++npxchg;
@@ -90,11 +77,10 @@ struct __comparePixels<ComparisonMode::Mask> {
         }
 
         return gp;
-    }
-};
+}
 
-template <ComparisonMode Mode, size_t FailureThreshold>
-ImageDelta PixelByPixelImageComparator<Mode, FailureThreshold>::CompareImages(CGImageRef left, CGImageRef right) {
+template <typename PixelComparisonMode>
+ImageDelta PixelByPixelImageComparator<PixelComparisonMode>::CompareImages(CGImageRef left, CGImageRef right) {
     if (!left || !right) {
         return { ImageComparisonResult::Incomparable };
     }
@@ -133,12 +119,12 @@ ImageDelta PixelByPixelImageComparator<Mode, FailureThreshold>::CompareImages(CG
     auto background = leftPixels[0];
 
     size_t npxchg = 0;
-    __comparePixels<Mode> pixelComparitor{};
+    PixelComparisonMode mode;
     for (off_t i = 0; i < leftLength / sizeof(rgbaPixel); ++i) {
         auto& bp = leftPixels[i];
         auto& cp = rightPixels[i];
         auto& gp = deltaPixels[i];
-        gp = pixelComparitor(background, bp, cp, npxchg);
+        gp = mode.ComparePixels(background, bp, cp, npxchg);
     }
 
     woc::unique_cf<CFDataRef> deltaData{ CFDataCreateWithBytesNoCopy(nullptr, deltaBuffer.release(), leftLength, kCFAllocatorDefault) };
@@ -157,11 +143,14 @@ ImageDelta PixelByPixelImageComparator<Mode, FailureThreshold>::CompareImages(CG
                                                          kCGRenderingIntentDefault) };
 
     return {
-        (npxchg < FailureThreshold ? ImageComparisonResult::Same : ImageComparisonResult::Different), npxchg, deltaImage.get(),
+        (npxchg < PixelComparisonMode::Threshold ? ImageComparisonResult::Same : ImageComparisonResult::Different), npxchg, deltaImage.get(),
     };
 }
 
 // Force templates so they compile
 template class PixelByPixelImageComparator<>;
-template class PixelByPixelImageComparator<ComparisonMode::Mask>;
-template class PixelByPixelImageComparator<ComparisonMode::Mask, 1024>;
+template class PixelByPixelImageComparator<PixelComparisonModeMask<>>;
+template class PixelByPixelImageComparator<PixelComparisonModeMask<2300>>;
+template class PixelByPixelImageComparator<PixelComparisonModeMask<1024>>;
+template class PixelByPixelImageComparator<PixelComparisonModeMask<512>>;
+template class PixelByPixelImageComparator<PixelComparisonModeMask<64>>;
