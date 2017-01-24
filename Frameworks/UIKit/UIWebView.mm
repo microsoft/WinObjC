@@ -37,7 +37,7 @@
     id _delegate;
     idretaintype(NSURLRequest) _request;
     bool _isLoading;
-    UIScrollView* _scrollView;
+    StrongId<UIScrollView> _scrollView;
     StrongId<WXCWebView> _xamlWebControl;
     EventRegistrationToken _xamlLoadCompletedEventCookie;
     EventRegistrationToken _xamlLoadStartedEventCookie;
@@ -168,7 +168,7 @@ static void _initUIWebView(UIWebView* self) {
     bounds = [self bounds];
 
     //  For compatibility only
-    self->_scrollView = [[UIScrollView alloc] initWithFrame:bounds];
+    self->_scrollView.attach([[UIScrollView alloc] initWithFrame:bounds]);
 
     [self setNeedsLayout];
 }

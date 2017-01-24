@@ -349,7 +349,7 @@ static void initInternal(UITableViewCell* self) {
         _cellBackgroundColor = [UIColor clearColor];
     }
 
-    _swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(_didSwipe:)];
+    _swipeGestureRecognizer.attach([[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(_didSwipe:)]);
     [_swipeGestureRecognizer setDelegate:self];
     [self addGestureRecognizer:_swipeGestureRecognizer];
     return ret;

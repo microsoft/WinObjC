@@ -173,11 +173,11 @@ struct ButtonState {
     WXCTextBlock* templateText = rt_dynamic_cast([WXCTextBlock class], [_xamlButton getTemplateChild:@"buttonText"]);
 
     if (templateText) {
-        _proxyLabel = [[_UILabel_Proxy alloc] initWithXamlElement:templateText font:[UIFont buttonFont]];
+        _proxyLabel.attach([[_UILabel_Proxy alloc] initWithXamlElement:templateText font:[UIFont buttonFont]]);
     }
 
     if (templateImage) {
-        _proxyImageView = [[_UIImageView_Proxy alloc] initWithXamlElement:templateImage];
+        _proxyImageView.attach([[_UIImageView_Proxy alloc] initWithXamlElement:templateImage]);
     }
 
     _contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
