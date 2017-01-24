@@ -358,6 +358,7 @@ static void didSelectDate(UIDatePicker* self, int row, int component) {
     //[components setHour:17];
 
     NSDate* newDate = [calendar dateFromComponents:components];
+    [components release];
     NSDate* clampedDate = clampDate(self, newDate);
 
     if (![clampedDate isEqual:newDate]) {
