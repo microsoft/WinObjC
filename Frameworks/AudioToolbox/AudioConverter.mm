@@ -54,9 +54,9 @@ static const wchar_t* TAG = L"AudioConverter";
 @end
 
 /**
- @Status Caveat: AudioConverter supported only for conversions through AudioConverterConvertBuffer.
-                 Returns kAudioConverterErr_UnspecifiedError on failure and noErr (0) on success. Other return types not supported.
- @Notes
+ @Status Caveat
+ @Notes AudioConverter supported only for conversions through AudioConverterConvertBuffer. 
+        Returns kAudioConverterErr_UnspecifiedError on failure and noErr (0) on success. Other return types not supported.
 */
 OSStatus AudioConverterDispose(AudioConverterRef inAudioConverter) {
     RETURN_AUDIOERR_IF_FAILED_WITH_MSG(MFShutdown(), @"MFShutdown Failed");
@@ -98,9 +98,10 @@ OSStatus _setMFProperties(const AudioStreamBasicDescription* format, IMFMediaTyp
 }
 
 /**
-@Status Caveat: AudioConverter supported only for conversions through AudioConverterConvertBuffer.
-                Only Linear PCM formats are supported with 1 Frame per Packet and equal source & destination Channels per Frame.
-                Returns kAudioConverterErr_UnspecifiedError on failure and noErr (0) on success. Other return types not supported.
+@Status Caveat
+@Notes AudioConverter supported only for conversions through AudioConverterConvertBuffer.
+       Only Linear PCM formats are supported with 1 Frame per Packet and equal source & destination Channels per Frame.
+       Returns kAudioConverterErr_UnspecifiedError on failure and noErr (0) on success. Other return types not supported.
 */
 OSStatus AudioConverterNew(const AudioStreamBasicDescription* inSourceFormat,
                            const AudioStreamBasicDescription* inDestinationFormat,
@@ -212,9 +213,9 @@ OSStatus AudioConverterSetProperty(AudioConverterRef inAudioConverter,
 }
 
 /**
- @Status Caveat: Returns kAudioConverterErr_UnspecifiedError, kAudioConverterErr_InvalidInputSize or
-                 kAudioConverterErr_InvalidOutputSize on failure and noErr (0) on success. Other return types not supported.
- @Notes
+ @Status Caveat
+ @Notes Returns kAudioConverterErr_UnspecifiedError, kAudioConverterErr_InvalidInputSize or
+        kAudioConverterErr_InvalidOutputSize on failure and noErr (0) on success. Other return types not supported.
 */
 OSStatus AudioConverterConvertBuffer(
     AudioConverterRef inAudioConverter, UInt32 inInputDataSize, const void* inInputData, UInt32* ioOutputDataSize, void* outOutputData) {
