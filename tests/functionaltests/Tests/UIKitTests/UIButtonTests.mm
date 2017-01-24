@@ -38,45 +38,53 @@ TEST(UIButton, GetXamlElement) {
 
 TEST(UIButton, TitleColorChanged) {
     __block BOOL signaled = NO;
-    __block NSCondition* condition = [[[NSCondition alloc] init] autorelease];
+    __block NSCondition* condition = [[NSCondition alloc] init];
+    __block UXTestAPI::XamlEventSubscription xamlSubscriber;
 
-    UIButtonWithControlsViewController* buttonVC = [[[UIButtonWithControlsViewController alloc] init] autorelease];
-    ViewControllerHelper testHelper(buttonVC);
+    UIButtonWithControlsViewController* buttonVC = [[UIButtonWithControlsViewController alloc] init];
+    UXTestAPI::ViewControllerPresenter testHelper(buttonVC);
 
-    dispatch_sync(dispatch_get_main_queue(), ^{
+    dispatch_async(dispatch_get_main_queue(), ^{
         // Extract UIButton.titleLabel control to verify its visual state
         WXFrameworkElement* titleElement = [buttonVC.button.titleLabel xamlElement];
         ASSERT_TRUE(titleElement);
 
         // Register RAII event subscription handler
-        XamlEventSubscription
-            xamlSubscriber(titleElement, [WXCTextBlock foregroundProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                // Validate the state of the XAML object
-                WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], [sender getValue:dp]);
-                LOG_INFO("XAML element color (rgba): %d,%d,%d,%d",
-                         [solidBrush.color r],
-                         [solidBrush.color g],
-                         [solidBrush.color b],
-                         [solidBrush.color a]);
+        xamlSubscriber.Set(titleElement, [WXCTextBlock foregroundProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
+            // Validate the state of the XAML object
+            WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], [sender getValue:dp]);
+            LOG_INFO("XAML element color (rgba): %d,%d,%d,%d",
+                     [solidBrush.color r],
+                     [solidBrush.color g],
+                     [solidBrush.color b],
+                     [solidBrush.color a]);
 
-                // Extract the title color for the normal state
-                UIColor* titleColorNormal = [buttonVC.button titleColorForState:UIControlStateNormal];
+            // Extract the title color for the normal state
+            UIColor* titleColorNormal = [buttonVC.button titleColorForState:UIControlStateNormal];
 
-                CGFloat red, green, blue, alpha;
-                [titleColorNormal getRed:&red green:&green blue:&blue alpha:&alpha];
-                LOG_INFO("UIButton.titleColorForState:normal (rgba): %.2f,%.2f,%.2f,%.2f", red, green, blue, alpha);
+            CGFloat red, green, blue, alpha;
+            [titleColorNormal getRed:&red green:&green blue:&blue alpha:&alpha];
+            LOG_INFO("UIButton.titleColorForState:normal (rgba): %.2f,%.2f,%.2f,%.2f", red, green, blue, alpha);
 
-                // Validate that the change is reflected on the backing XAML control
-                EXPECT_EQ_MSG(solidBrush.color.r, (int)(red * 255), @"Failed to match red component");
-                EXPECT_EQ_MSG(solidBrush.color.g, (int)(green * 255), @"Failed to match green component");
-                EXPECT_EQ_MSG(solidBrush.color.b, (int)(blue * 255), @"Failed to match blue component");
-                EXPECT_EQ_MSG(solidBrush.color.a, (int)(alpha * 255), @"Failed to match alpha component");
+            // Validate that the change is reflected on the backing XAML control
+            EXPECT_EQ_MSG(solidBrush.color.r, (int)(red * 255), @"Failed to match red component");
+            EXPECT_EQ_MSG(solidBrush.color.g, (int)(green * 255), @"Failed to match green component");
+            EXPECT_EQ_MSG(solidBrush.color.b, (int)(blue * 255), @"Failed to match blue component");
+            EXPECT_EQ_MSG(solidBrush.color.a, (int)(alpha * 255), @"Failed to match alpha component");
 
-                [condition lock];
-                signaled = YES;
-                [condition signal];
-                [condition unlock];
-            });
+            // Ensure that the XAML color values match the viewcontroller property
+            CGFloat VCred, VCgreen, VCblue, VCalpha;
+            [[buttonVC titleColorNormal] getRed:&VCred green:&VCgreen blue:&VCblue alpha:&VCalpha];
+            EXPECT_EQ_MSG(solidBrush.color.r, (int)(red * 255), @"Failed to match red component on the VC");
+            EXPECT_EQ_MSG(solidBrush.color.g, (int)(green * 255), @"Failed to match green component on the VC");
+            EXPECT_EQ_MSG(solidBrush.color.b, (int)(blue * 255), @"Failed to match blue component on the VC");
+            EXPECT_EQ_MSG(solidBrush.color.a, (int)(alpha * 255), @"Failed to match alpha component on the VC");
+
+            [condition lock];
+            signaled = YES;
+            [condition signal];
+            [condition unlock];
+        });
 
         // Action - validate this action takes effect on the control
         [buttonVC sliderTitleColorNormal].value = 150.0f;
@@ -90,40 +98,42 @@ TEST(UIButton, TitleColorChanged) {
 
 TEST(UIButton, TextChanged) {
     __block BOOL signaled = NO;
-    __block NSCondition* condition = [[[NSCondition alloc] init] autorelease];
+    __block NSCondition* condition = [[NSCondition alloc] init];
+    __block UXTestAPI::XamlEventSubscription xamlSubscriber;
 
-    UIButtonWithControlsViewController* buttonVC = [[[UIButtonWithControlsViewController alloc] init] autorelease];
-    ViewControllerHelper testHelper(buttonVC);
+    __block NSString* expectedString = @"Functional testing";
 
-    dispatch_sync(dispatch_get_main_queue(), ^{
+    UIButtonWithControlsViewController* buttonVC = [[UIButtonWithControlsViewController alloc] init];
+    UXTestAPI::ViewControllerPresenter testHelper(buttonVC, 3.0f);
+
+    dispatch_async(dispatch_get_main_queue(), ^{
         // Extract UIButton.titleLabel control to verify its visual state
         WXFrameworkElement* titleElement = [buttonVC.button.titleLabel xamlElement];
         ASSERT_TRUE(titleElement);
 
         // Register RAII event subscription handler
-        XamlEventSubscription xamlSubscriber(titleElement,
-                                             [WXCTextBlock textProperty],
-                                             ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                                                 // Validate the state of the XAML object
-                                                 NSString* text = NSStringFromPropertyValue([sender getValue:dp]);
-                                                 LOG_INFO("TextBlock text: %@", text);
+        xamlSubscriber.Set(titleElement, [WXCTextBlock textProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
+            // Validate the state of the XAML object
+            NSString* text = UXTestAPI::NSStringFromPropertyValue([sender getValue:dp]);
+            LOG_INFO("TextBlock text: %@", text);
 
-                                                 // Extract the text for the normal state
-                                                 NSString* textNormal = [buttonVC.button titleForState:UIControlStateNormal];
-                                                 LOG_INFO("UIButton title - normal: %@", textNormal);
+            // Extract the text for the normal state
+            NSString* textNormal = [buttonVC.button titleForState:UIControlStateNormal];
+            LOG_INFO("UIButton title - normal: %@", textNormal);
 
-                                                 // Validate that the change is reflected on the backing XAML control
-                                                 EXPECT_OBJCEQ_MSG(text, textNormal, @"Failed to match strings in XAML and UIButton");
+            // Validate that the change is reflected on the backing XAML control
+            EXPECT_OBJCEQ_MSG(text, textNormal, @"Failed to match strings in XAML and UIButton");
+            EXPECT_OBJCEQ_MSG(text, expectedString, @"Failed to match expected string");
 
-                                                 [condition lock];
-                                                 signaled = YES;
-                                                 [condition signal];
-                                                 [condition unlock];
-                                             });
+            [condition lock];
+            signaled = YES;
+            [condition signal];
+            [condition unlock];
+        });
 
         // TODO: Action - validate this action takes effect on the control
         //[buttonVC textButtonLabel].text = @"Functional testing";
-        [[buttonVC button] setTitle:@"Functional testing" forState:UIControlStateNormal];
+        [[buttonVC button] setTitle:expectedString forState:UIControlStateNormal];
     });
 
     [condition lock];

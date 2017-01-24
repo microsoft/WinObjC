@@ -27,7 +27,6 @@
 #import "CustomTextControlViewController.h"
 #import "MiscellaneousViewController.h"
 
-
 @implementation ProgrammaticViewController
 
 - (void)viewDidLoad {
@@ -43,7 +42,8 @@
     [self addMenuItemViewController:[[UIButtonViewController alloc] init] andTitle:@"UIButton"];
 
     // UIButton
-    [self addMenuItemViewController:[[UIButtonWithControlsViewController alloc] init] andTitle:@"UIButton - controls"];
+    [self addMenuItemViewController:[[UIButtonWithControlsViewController alloc] init]
+                           andTitle:@"UIButton with controls to change behavior and visual appearance"];
 
     // UILabel
     [self addMenuItemViewController:[[UILabelViewController alloc] init] andTitle:@"UILabel"];
@@ -52,13 +52,13 @@
     [self addMenuItemViewController:[[UISliderViewController alloc] init] andTitle:@"UISlider"];
 
     // UITextField
-    [self addMenuItemViewController:[[UITextFieldViewController alloc] init] andTitle : @"UITextField"];
+    [self addMenuItemViewController:[[UITextFieldViewController alloc] init] andTitle:@"UITextField"];
 
     // UIViewViewController
-    [self addMenuItemViewController:[[UIViewViewController alloc] init] andTitle : @"UIView"];
+    [self addMenuItemViewController:[[UIViewViewController alloc] init] andTitle:@"UIView"];
 
     // CustomTextControlViewController
-    [self addMenuItemViewController:[[CustomTextControlViewController alloc] init] andTitle : @"Custom Text View"];
+    [self addMenuItemViewController:[[CustomTextControlViewController alloc] init] andTitle:@"Custom Text View"];
 
     // MiscellaneousViewController
     [self addMenuItemViewController:[[MiscellaneousViewController alloc] init] andTitle:@"MiscellaneousViews"];

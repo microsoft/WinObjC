@@ -17,9 +17,8 @@
 #import "UXTestHelpers.h"
 #import "StringHelpers.h"
 
-////////////////////////////////////////////////////////////////
-// UX Helpers
-////////////////////////////////////////////////////////////////
+namespace UXTestAPI {
+
 UIWindow* GetCurrentWindow() {
     return [[UIApplication sharedApplication] keyWindow];
 }
@@ -45,3 +44,66 @@ NSString* NSStringFromPropertyValue(const Microsoft::WRL::ComPtr<IInspectable>& 
 
     return nil;
 }
+
+//
+// ViewControllerPresenter methods
+//
+ViewControllerPresenter::ViewControllerPresenter(UIViewController* viewController)
+    : _externalViewController(viewController), _timeOutInSeconds(0.0f) {
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        UIWindow* currentWindow = GetCurrentWindow();
+        [currentWindow.rootViewController presentViewController:_externalViewController animated:NO completion:nil];
+    });
+
+    // Visually confirm that the view appears on screen
+    [NSThread sleepForTimeInterval:_timeOutInSeconds];
+}
+
+ViewControllerPresenter::ViewControllerPresenter(UIViewController* viewController, double timeOutInSeconds)
+    : _externalViewController(viewController), _timeOutInSeconds(timeOutInSeconds) {
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        UIWindow* currentWindow = GetCurrentWindow();
+        [currentWindow.rootViewController presentViewController:_externalViewController animated:NO completion:nil];
+    });
+
+    // Visually confirm that the view appears on screen
+    [NSThread sleepForTimeInterval:_timeOutInSeconds];
+}
+
+ViewControllerPresenter::~ViewControllerPresenter() {
+    // Visually confirm the view before it is dismissed
+    [NSThread sleepForTimeInterval:_timeOutInSeconds];
+
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        [_externalViewController dismissViewControllerAnimated:NO completion:nil];
+    });
+
+    // Visually confirm that viewcontroller is dismissed
+    [NSThread sleepForTimeInterval:_timeOutInSeconds];
+}
+
+//
+// XamlEventSubscription methods
+//
+void XamlEventSubscription::Set(WXDependencyObject* xamlObject, WXDependencyProperty* propertyToObserve, XamlEventBlock callbackHandler) {
+    Reset();
+
+    _xamlObject = xamlObject;
+    _propertyToObserve = propertyToObserve;
+
+    // Register callback and wait for the property changed event to trigger
+    _callbackToken = [_xamlObject registerPropertyChangedCallback:_propertyToObserve
+                                                         callback:^(WXDependencyObject* sender, WXDependencyProperty* dp) {
+                                                             callbackHandler(sender, dp);
+                                                         }];
+}
+
+void XamlEventSubscription::Reset() {
+    if (_callbackToken != -1) {
+        // Unregister the callback
+        [_xamlObject unregisterPropertyChangedCallback:_propertyToObserve token:_callbackToken];
+        _callbackToken = -1;
+    }
+}
+
+} // namespace UXTestAPI

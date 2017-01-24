@@ -33,59 +33,52 @@
 #import "ObjCXamlControls.h"
 #import "UWP/WindowsUIXamlControls.h"
 
+namespace UXTestAPI {
+
+using XamlEventBlock = void (^)(WXDependencyObject*, WXDependencyProperty*);
+
+// Extract the current key window for the app
 UIWindow* GetCurrentWindow();
 
+// Utility string functions to convert PropertyValue strings to NSString
 NSString* NSStringFromPropertyValue(RTObject* rtPropertyValue);
 NSString* NSStringFromPropertyValue(const Microsoft::WRL::ComPtr<IInspectable>& inspPropertyValue);
 
-class ViewControllerHelper {
+// Class that is used to display and dismiss the viewController's view within the test
+class ViewControllerPresenter {
 public:
-    ViewControllerHelper(UIViewController* viewController) : _externalViewController(viewController) {
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            UIWindow* currentWindow = GetCurrentWindow();
-            [currentWindow.rootViewController presentViewController:_externalViewController animated:NO completion:nil];
-        });
+    ViewControllerPresenter(UIViewController* viewController);
+    ViewControllerPresenter(UIViewController* viewController, double timeOutInSeconds);
+    ~ViewControllerPresenter();
 
-        // Uncomment this sleep - only used to visually confirm that the view appears on screen
-        //[NSThread sleepForTimeInterval:3];
-    }
-
-    ~ViewControllerHelper() {
-        // Uncomment this sleep - only used to visually confirm the view before it is dismissed
-        //[NSThread sleepForTimeInterval:3];
-
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            [_externalViewController dismissViewControllerAnimated:NO completion:nil];
-        });
-
-        // Uncomment this sleep - only used to visually confirm that viewcontroller is dismissed
-        //[NSThread sleepForTimeInterval:3];
-    }
+    ViewControllerPresenter(const ViewControllerPresenter& other) = delete; // no copy
+    ViewControllerPresenter& operator=(const ViewControllerPresenter& other) = delete;
 
 private:
+    double _timeOutInSeconds;
     StrongId<UIViewController> _externalViewController;
-};
+}; // class ViewControllerPresenter
 
-typedef void (^XamlEventBlock)(WXDependencyObject*, WXDependencyProperty*);
-
+// Class to set user-supplied block to monitor XAML property changed events
 class XamlEventSubscription {
 public:
-    XamlEventSubscription(WXDependencyObject* xamlObject, WXDependencyProperty* propertyToObserve, XamlEventBlock callbackHandler)
-        : _xamlObject(xamlObject), _propertyToObserve(propertyToObserve) {
-        // Register callback and wait for the property changed event to trigger
-        _callbackToken = [_xamlObject registerPropertyChangedCallback:_propertyToObserve
-                                                             callback:^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                                                                 callbackHandler(sender, dp);
-                                                             }];
+    XamlEventSubscription() : _callbackToken(-1) {
     }
 
     ~XamlEventSubscription() {
-        // Unregister the callback
-        [_xamlObject unregisterPropertyChangedCallback:_propertyToObserve token:_callbackToken];
+        Reset();
     }
+
+    // XamlEventSubscription(const XamlEventSubscription& other) = delete; // no copy
+    XamlEventSubscription& operator=(const XamlEventSubscription& other) = delete;
+
+    void Set(WXDependencyObject* xamlObject, WXDependencyProperty* propertyToObserve, XamlEventBlock callbackHandler);
+    void Reset();
 
 private:
     int64_t _callbackToken;
     StrongId<WXDependencyObject> _xamlObject;
     StrongId<WXDependencyProperty> _propertyToObserve;
-};
+}; // class XamlEventSubscription
+
+} // namespace UXTestAPI

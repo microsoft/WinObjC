@@ -19,7 +19,9 @@
 @interface UIButtonWithControlsViewController : UIViewController <UITextFieldDelegate>
 
 @property (nonatomic, readonly) UIButton* button;
-@property (nonatomic, readonly) UITextField* textButtonLabel;
+@property (nonatomic, readonly) UITextField* textButtonNormal;
 @property (nonatomic, readonly) UISlider* sliderTitleColorNormal;
+
+@property (nonatomic, readonly) UIColor* titleColorNormal;
 
 @end
