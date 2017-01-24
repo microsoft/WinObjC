@@ -146,7 +146,8 @@ static inline HRESULT __DWriteTextFormatApplyParagraphStyle(const ComPtr<IDWrite
  * Private helper that applies a CTFontRef to an IDWriteTextLayout within the specified range.
  */
 static inline HRESULT __DWriteTextLayoutApplyFont(const ComPtr<IDWriteTextLayout>& textLayout, CTFontRef font, DWRITE_TEXT_RANGE range) {
-    std::shared_ptr<const _DWriteFontProperties> properties = _DWriteGetFontPropertiesFromName(CTFontCopyName(font, kCTFontFullNameKey));
+    auto fontName = woc::MakeAutoCF<CFStringRef>(CTFontCopyName(font, kCTFontFullNameKey));
+    std::shared_ptr<const _DWriteFontProperties> properties = _DWriteGetFontPropertiesFromName(fontName);
     RETURN_IF_FAILED(textLayout->SetFontWeight(properties->weight, range));
     RETURN_IF_FAILED(textLayout->SetFontStretch(properties->stretch, range));
     RETURN_IF_FAILED(textLayout->SetFontStyle(properties->style, range));
