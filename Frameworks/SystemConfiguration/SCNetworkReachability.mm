@@ -165,7 +165,7 @@ static NSLock* _allReachabilityOperationsLock;
         _runLoopsScheduled.attach([NSMutableDictionary new]);
         _reachabilityFlagsValid.attach([NSConditionLock new]);
         _weakRef.attach([[SCNetworkReachabilityWeakRef alloc] initWithObject:self]);
-        _callbackQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0);
+        _callbackQueue = dispatch_get_main_queue();
 
         // clang-format off
         CFRunLoopSourceContext ctxt{
