@@ -383,7 +383,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
 
         if (EbrAccess(pathStr, 0) == -1) {
             id pathFind =
-                [bundle pathForResource:[NSString stringWithCString:newStr] ofType:nil inDirectory:nil forLocalization:@"English"];
+                [bundle pathForResource:[NSString stringWithCString:newStr] ofType:@"png" inDirectory:nil forLocalization:@"English"];
 
             if (pathFind != nil) {
                 path = (char*)[pathFind UTF8String];
@@ -404,7 +404,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
         pathStr = IwStrDup(path);
 
         if (EbrAccess(pathStr, 0) == -1) {
-            NSString* pathFind = [bundle pathForResource:pathAddr ofType:nil inDirectory:nil forLocalization:@"English"];
+            NSString* pathFind = [bundle pathForResource:pathAddr ofType:@"png" inDirectory:nil forLocalization:@"English"];
 
             if (pathFind != nil) {
                 path = [pathFind UTF8String];
