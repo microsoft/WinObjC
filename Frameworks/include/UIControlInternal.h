@@ -13,20 +13,26 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#import <UIKit/UIKit.h>
+#import <UIKit/UIControl.h>
 
-@interface ButtonsViewController : UITableViewController
+#import <Starboard/SmartTypes.h>
 
-@property (nonatomic, retain, readonly) UIButton* grayButton;
-@property (nonatomic, retain, readonly) UIButton* imageButton;
+@class UIRuntimeEventConnection;
 
-@property (nonatomic, retain, readonly) UIButton* roundedButtonType;
-@property (nonatomic, retain, readonly) UIButton* detailDisclosureButtonType;
-@property (nonatomic, retain, readonly) UIButton* infoLightButtonType;
-@property (nonatomic, retain, readonly) UIButton* infoDarkButtonType;
-@property (nonatomic, retain, readonly) UIButton* contactAddButtonType;
+@interface UIControl () {
+@protected
+    StrongId<NSMutableArray> _registeredActions;
+    UIControlContentHorizontalAlignment _contentHorizontalAlignment;
+    UIControlContentVerticalAlignment _contentVerticalAlignment;
 
-@property (nonatomic, retain) NSArray* menuItems;
+    BOOL _touchInside;
+    UIControlState _curState;
+    StrongId<NSMutableArray> _activeTouches;
+    StrongId<UITouch> _controlEventTouch;
+    UIControlEvents _sendControlEventsOnBack;
+}
 
+- (void)_addEventConnection:(UIRuntimeEventConnection*)connection;
 @end

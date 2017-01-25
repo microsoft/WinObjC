@@ -182,19 +182,24 @@ static CFURLRef _preferencesDirectoryForUserHostSafetyLevel(CFStringRef userName
 #if DEPLOYMENT_TARGET_WINDOWS
 
 CFURLRef url = NULL;
+Boolean success = false;
 
 CFMutableStringRef completePath = _CFCreateApplicationRepositoryPath(alloc, CSIDL_APPDATA);
 if (completePath) {
     // append "Preferences\" and make the CFURL
     CFStringAppend(completePath, CFSTR("Preferences\\"));
     url = CFURLCreateWithFileSystemPath(alloc, completePath, kCFURLWindowsPathStyle, true);
-    _CFCreateDirectory(CFStringGetCStringPtr(completePath, kCFStringEncodingUTF8)); // WINOBJC: ensure directory exists
+
+	char cPath[CFMaxPathSize];
+	if (CFURLGetFileSystemRepresentation(url, true, (unsigned char *)cPath, CFMaxPathSize)) {
+		success = _CFCreateDirectory(cPath);
+	}
+
     CFRelease(completePath);
 }
 
-
 // Can't find a better place?  Home directory then?
-if (url == NULL)
+if (!success)
     url = CFCopyHomeDirectoryURLForUser((userName == kCFPreferencesCurrentUser) ? NULL : userName);
 
 return url;

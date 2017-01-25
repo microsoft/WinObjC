@@ -23,7 +23,9 @@ bool FunctionalTestSetupUIApplication();
 bool FunctionalTestCleanupUIApplication();
 
 #ifdef __OBJC__
-#import <Foundation/NSString.h>
+#import <Foundation/Foundation.h>
+static const NSTimeInterval c_testTimeoutInSec = 5;
+
 NSString* appendPathRelativeToFTModule(NSString* pathAppendage);
 NSString* getModulePath();
 #endif

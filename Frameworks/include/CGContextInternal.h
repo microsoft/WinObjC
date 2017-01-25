@@ -46,6 +46,7 @@ COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithRenderTarget(ID2D1Ren
                                                                         WICPixelFormatGUID outputPixelFormat);
 COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithFormat(int width, int height, __CGSurfaceFormat fmt);
 COREGRAPHICS_EXPORT CGImageRef CGBitmapContextGetImage(CGContextRef ctx);
+
 // Reduces the number of BeginDraw() and EndDraw() calls needed, by counting in a stack-like manner,
 // and only calling BeginDraw()/EndDraw() when the stack is empty/emptied
 COREGRAPHICS_EXPORT void _CGContextPushBeginDraw(CGContextRef ctx);

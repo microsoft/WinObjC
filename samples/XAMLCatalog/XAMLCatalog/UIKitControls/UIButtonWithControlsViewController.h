@@ -13,12 +13,19 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
 
-#import <UIKit/UIControl.h>
+#import "MenuTableViewController.h"
 
-@class UIRuntimeEventConnection;
+// Subclassed UITextField to support functional testing
+@interface TestEnabledUITextField : UITextField
+@end
 
-@interface UIControl (Internal)
-- (void)_addEventConnection:(UIRuntimeEventConnection*)connection;
+@interface UIButtonWithControlsViewController : UIViewController
+
+@property (nonatomic, readonly) UIButton* button;
+@property (nonatomic, readonly) TestEnabledUITextField* textTitleNormal;
+@property (nonatomic, readonly) UISlider* sliderTitleColorNormal;
+
+@property (nonatomic, readonly) UIColor* titleColorNormal;
+
 @end

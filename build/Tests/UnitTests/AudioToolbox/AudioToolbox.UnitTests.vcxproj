@@ -135,7 +135,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>;libdispatch.lib;mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mfuuid.lib;mfplat.lib;libdispatch.lib;mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>
@@ -144,6 +144,7 @@
       <OtherCPlusPlusFlags>-Wdeprecated-declarations</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalOptions>"-DAUDIOTOOLBOX_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
@@ -157,7 +158,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>;libdispatch.lib;mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mfuuid.lib;mfplat.lib;libdispatch.lib;mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>
@@ -166,6 +167,7 @@
       <OtherCPlusPlusFlags>-Wdeprecated-declarations</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalOptions>"-DAUDIOTOOLBOX_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -183,7 +185,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>;libdispatch.lib;mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mfuuid.lib;mfplat.lib;libdispatch.lib;mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>
@@ -192,6 +194,7 @@
       <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <OptimizationLevel>Full</OptimizationLevel>
+      <AdditionalOptions>"-DAUDIOTOOLBOX_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
@@ -209,7 +212,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>;libdispatch.lib;mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mfuuid.lib;mfplat.lib;libdispatch.lib;mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>
@@ -218,6 +221,7 @@
       <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <OptimizationLevel>Full</OptimizationLevel>
+      <AdditionalOptions>"-DAUDIOTOOLBOX_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -226,6 +230,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\AudioToolbox\ExampleTest.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\UnitTests\AudioToolbox\AudioConverterTest.mm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

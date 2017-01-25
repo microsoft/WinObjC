@@ -340,13 +340,11 @@ public:
     AutoCFRef(T* ptr): ptr(ptr) { }
 
     operator TWrapped*() const {
-        ptr->attach(nullptr);
-        return &ptr->get();
+        return ptr->releaseAndGetAddressOf();
     }
 
     operator void**() const {
-        ptr->attach(nullptr);
-        return &ptr->get();
+        return reinterpret_cast<void**>(ptr->releaseAndGetAddressOf());
     }
 
     operator TWrapped() const {
@@ -499,16 +497,17 @@ public:
         return _val;
     }
 
-    T& get() {
-        return _val;
-    }
-
     T get() const {
         return _val;
     }
 
     details::AutoCFRef<AutoCF<T, TLifetimeTraits>, T> operator&() {
         return details::AutoCFRef<AutoCF<T, TLifetimeTraits>, T>(this);
+    }
+
+    T* releaseAndGetAddressOf() {
+        TLifetimeTraits::store(_addressof(), static_cast<CFTypeRef>(nullptr));
+        return &_val;
     }
 
     template <typename TOtherObj, typename TOtherLifetime>
@@ -536,6 +535,10 @@ public:
     T release() {
         return AutoCF<T, CFLifetimeRetain>::detach();
     }
+
+    unique_cf<T>& operator=(T val) = delete;
+    unique_cf<T>& operator=(const unique_cf<T>& other) = delete;
+    unique_cf<T>& operator=(unique_cf<T>&& other) = delete;
 };
 
 template <typename T = CFTypeRef>

@@ -28,6 +28,7 @@
 #import "UIViewInternal.h"
 #import "UIButtonContent.h"
 #import "UIButtonProxies.h"
+#import "UIControlInternal.h"
 #import "UIEventInternal.h"
 #import "UITouchInternal.h"
 
@@ -172,11 +173,11 @@ struct ButtonState {
     WXCTextBlock* templateText = rt_dynamic_cast([WXCTextBlock class], [_xamlButton getTemplateChild:@"buttonText"]);
 
     if (templateText) {
-        _proxyLabel = [[_UILabel_Proxy alloc] initWithXamlElement:templateText font:[UIFont buttonFont]];
+        _proxyLabel.attach([[_UILabel_Proxy alloc] initWithXamlElement:templateText font:[UIFont buttonFont]]);
     }
 
     if (templateImage) {
-        _proxyImageView = [[_UIImageView_Proxy alloc] initWithXamlElement:templateImage];
+        _proxyImageView.attach([[_UIImageView_Proxy alloc] initWithXamlElement:templateImage]);
     }
 
     _contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
@@ -617,6 +618,13 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     WUXIPointerRoutedEventArgs* routedEvent = [event _touchEvent]->_routedEventArgs;
     [routedEvent setHandled:NO];
 
+    // We're assuming multitouchenabled = NO; it's a button after all.
+    CGPoint point = [[touchSet anyObject] locationInView:self];
+    BOOL currentTouchInside = [self pointInside:point withEvent:event];
+
+    // Update our highlighted state accordingly
+    [super setHighlighted:currentTouchInside];
+
     [super touchesMoved:touchSet withEvent:event];
 }
 
@@ -635,14 +643,9 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     }
 
     _isPressed = true;
-    UIControlState newState = _curState | UIControlStateHighlighted;
 
-    // Relayout when new state is different than old state
-    if (_curState != newState) {
-        _curState = newState;
-        [self invalidateIntrinsicContentSize];
-        [self setNeedsLayout];
-    }
+    // Update our highlighted state accordingly
+    [self setHighlighted:_isPressed];
 
     [super touchesBegan:touchSet withEvent:event];
 }
@@ -659,14 +662,9 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     }
 
     _isPressed = false;
-    UIControlState newState = _curState & ~UIControlStateHighlighted;
 
-    // Relayout when new state is different than old state
-    if (_curState != newState) {
-        _curState = newState;
-        [self invalidateIntrinsicContentSize];
-        [self setNeedsLayout];
-    }
+    // Update our highlighted state accordingly
+    [self setHighlighted:_isPressed];
 
     [super touchesEnded:touchSet withEvent:event];
 }
@@ -683,14 +681,9 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     }
 
     _isPressed = false;
-    UIControlState newState = _curState & ~UIControlStateHighlighted;
 
-    // Relayout when new state is different than old state
-    if (_curState != newState) {
-        _curState = newState;
-        [self invalidateIntrinsicContentSize];
-        [self setNeedsLayout];
-    }
+    // Update our highlighted state accordingly
+    [self setHighlighted:_isPressed];
 
     [super touchesCancelled:touchSet withEvent:event];
 

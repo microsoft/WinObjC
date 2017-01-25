@@ -29,7 +29,7 @@
 */
 CTFramesetterRef CTFramesetterCreateWithAttributedString(CFAttributedStringRef string) {
     _CTFramesetter* ret = [_CTFramesetter alloc];
-    ret->_typesetter = static_cast<_CTTypesetter*>(CTTypesetterCreateWithAttributedString(string));
+    ret->_typesetter.attach(static_cast<_CTTypesetter*>(CTTypesetterCreateWithAttributedString(string)));
     return static_cast<CTFramesetterRef>(ret);
 }
 

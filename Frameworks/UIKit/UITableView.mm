@@ -634,11 +634,11 @@ static void initInternal(UITableView* self) {
     priv->_defaultRowHeight = 50.0f;
     priv->_defaultSectionHeaderHeight = 22.0f;
     priv->_footerYPos = 0.f;
-    priv->_reusableCellNibs = [NSMutableDictionary new];
-    priv->_reusableHeaderClasses = [NSMutableDictionary new];
-    priv->_reusableCellClasses = [NSMutableDictionary new];
-    self->_indexPathsForSelectedItems = [NSMutableSet new];
-    self->_indexPathsForHighlightedItems = [NSMutableSet new];
+    priv->_reusableCellNibs.attach([NSMutableDictionary new]);
+    priv->_reusableHeaderClasses.attach([NSMutableDictionary new]);
+    priv->_reusableCellClasses.attach([NSMutableDictionary new]);
+    self->_indexPathsForSelectedItems.attach([NSMutableSet new]);
+    self->_indexPathsForHighlightedItems.attach([NSMutableSet new]);
     priv->_separatorStyle = 0;
     self.showsHorizontalScrollIndicator = FALSE;
 }
@@ -1464,7 +1464,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
         return [ret autorelease];
     }
 
-    return [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+    return [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier] autorelease];
 }
 
 /**

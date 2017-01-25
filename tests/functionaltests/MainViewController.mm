@@ -27,9 +27,9 @@
 @implementation MainViewController
 
 - (void)viewDidLoad {
-    self.view.backgroundColor = [UIColor lightGrayColor];
-
     [super viewDidLoad];
+
+    self.view.backgroundColor = [UIColor purpleColor];
 }
 
 - (void)didReceiveMemoryWarning {

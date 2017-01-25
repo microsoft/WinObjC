@@ -146,7 +146,8 @@ static inline HRESULT __DWriteTextFormatApplyParagraphStyle(const ComPtr<IDWrite
  * Private helper that applies a CTFontRef to an IDWriteTextLayout within the specified range.
  */
 static inline HRESULT __DWriteTextLayoutApplyFont(const ComPtr<IDWriteTextLayout>& textLayout, CTFontRef font, DWRITE_TEXT_RANGE range) {
-    std::shared_ptr<const _DWriteFontProperties> properties = _DWriteGetFontPropertiesFromName(CTFontCopyName(font, kCTFontFullNameKey));
+    auto fontName = woc::MakeAutoCF<CFStringRef>(CTFontCopyName(font, kCTFontFullNameKey));
+    std::shared_ptr<const _DWriteFontProperties> properties = _DWriteGetFontPropertiesFromName(fontName);
     RETURN_IF_FAILED(textLayout->SetFontWeight(properties->weight, range));
     RETURN_IF_FAILED(textLayout->SetFontStretch(properties->stretch, range));
     RETURN_IF_FAILED(textLayout->SetFontStyle(properties->style, range));
@@ -265,13 +266,7 @@ static HRESULT __DWriteTextLayoutCreate(CFAttributedStringRef string, CFRange ra
     // Used to separate runs for attributes which DWrite does not handle until drawing (e.g. Foreground Color)
     uint32_t incompatibleAttributeFlag = 0;
     CFRange attributeRange;
-
-    // Find the range of the first set of attributes and skip it, since the underlying DWriteTextFormat has already internalized it
-    // If this first set of attributes lasts the entire range, the below for loop is not executed at all
-    // attributeRange is populated even if this attribute is not found
-    CFAttributedStringGetAttribute(string, range.location, kCTFontAttributeName, &attributeRange);
-
-    for (CFIndex index = attributeRange.location + attributeRange.length; index < rangeEnd; index += attributeRange.length) {
+    for (CFIndex index = range.location; index < rangeEnd; index += attributeRange.length) {
         CTFontRef font = static_cast<CTFontRef>(CFAttributedStringGetAttribute(string, index, kCTFontAttributeName, &attributeRange));
 
         // attributeRange is populated even if this attribute is not found
@@ -376,6 +371,7 @@ public:
     };
 
     HRESULT STDMETHODCALLTYPE GetCurrentTransform(_In_opt_ void* clientDrawingContext, _Out_ DWRITE_MATRIX* transform) throw() {
+        *transform = {1, 0, 0, 1, 0, 0};
         return S_OK;
     };
 

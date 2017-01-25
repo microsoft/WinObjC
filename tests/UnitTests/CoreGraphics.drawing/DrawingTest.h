@@ -25,7 +25,7 @@
 // Due to how templates are compiled as needed, any new usage of templates needs to be "forced" in DrawingTest.cpp
 
 namespace testing {
-template <typename TComparator = PixelByPixelImageComparator<ComparisonMode::Exact>>
+template <typename TComparator = PixelByPixelImageComparator<>>
 class DrawTest : public ::testing::Test {
 private:
     woc::unique_cf<CGContextRef> _context;

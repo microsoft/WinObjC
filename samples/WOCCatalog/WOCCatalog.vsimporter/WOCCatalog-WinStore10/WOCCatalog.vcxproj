@@ -197,7 +197,6 @@
     <ClInclude Include="..\..\WOCCatalog\AutoLayoutViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\BasicAnimationViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\BezierViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\ButtonsViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\ControlsViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\CoreLocationViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\CoreMotionViewController.h" />
@@ -237,7 +236,6 @@
     <ClangCompile Include="..\..\WOCCatalog\AutoLayoutViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\BasicAnimationViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\BezierViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\ButtonsViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\ControlsViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\CoreLocationViewController.mm" />
     <ClangCompile Include="..\..\WOCCatalog\CoreMotionViewController.mm" />

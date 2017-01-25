@@ -294,9 +294,26 @@ CFStringRef _DWriteFontCopyName(const ComPtr<IDWriteFontFace>& fontFace, CFStrin
     if (CFEqual(nameKey, kCTFontCopyrightNameKey)) {
         informationalStringId = DWRITE_INFORMATIONAL_STRING_COPYRIGHT_NOTICE;
     } else if (CFEqual(nameKey, kCTFontFamilyNameKey)) {
-        informationalStringId = DWRITE_INFORMATIONAL_STRING_WIN32_FAMILY_NAMES;
+        // Instead of using DWRITE_INFORMATIONAL_STRING_WIN32_FAMILY_NAMES here, use GetFamilyNames(),
+        // WIN32_FAMILY_NAMES may return a more specific name than needed (ie: Arial Narrow instead of Arial)
+        // As it is limited by GDI allowing a maximum of four fonts per family
+        ComPtr<IDWriteFontFace3> dwriteFontFace3;
+        RETURN_NULL_IF_FAILED(fontFace.As(&dwriteFontFace3));
+        ComPtr<IDWriteLocalizedStrings> name;
+        RETURN_NULL_IF_FAILED(dwriteFontFace3->GetFamilyNames(&name));
+        return static_cast<CFStringRef>(CFRetain(_CFStringFromLocalizedString(name.Get())));
+
     } else if (CFEqual(nameKey, kCTFontSubFamilyNameKey)) {
+        // Similar to above, WIN32_SUBFAMILY_NAMES is limited to four fonts per family,
+        // but PREFERRED_SUBFAMILY_NAMES is only sometimes present (if it differs from WIN32_SUBFAMILY_NAMES)
+        // Try PREFERRED first
+        CFStringRef ret = _DWriteFontCopyInformationalString(fontFace, DWRITE_INFORMATIONAL_STRING_PREFERRED_SUBFAMILY_NAMES);
+        if (ret) {
+            return ret;
+        }
+
         informationalStringId = DWRITE_INFORMATIONAL_STRING_WIN32_SUBFAMILY_NAMES;
+
     } else if (CFEqual(nameKey, kCTFontStyleNameKey)) {
         ComPtr<IDWriteFontFace3> dwriteFontFace3;
         RETURN_NULL_IF_FAILED(fontFace.As(&dwriteFontFace3));

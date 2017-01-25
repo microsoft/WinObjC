@@ -111,7 +111,7 @@ void testing::DrawTest<TComparator>::TearDown() {
             if (delta.result == ImageComparisonResult::Incomparable) {
                 ADD_FAILURE() << "images are incomparable due to a mismatch in dimensions, presence, or byte length";
             } else {
-                ADD_FAILURE() << "images differ nontrivially";
+                ADD_FAILURE() << "images differ nontrivially with " << delta.differences << " registered differences";
             }
 
             woc::unique_cf<CFStringRef> deltaFilename{
@@ -193,9 +193,18 @@ void UIKitMimicTest<TComparator>::SetUpContext() {
 template class ::testing::DrawTest<>;
 template class WhiteBackgroundTest<>;
 template class UIKitMimicTest<>;
-template class ::testing::DrawTest<PixelByPixelImageComparator<ComparisonMode::Mask>>;
-template class WhiteBackgroundTest<PixelByPixelImageComparator<ComparisonMode::Mask>>;
-template class UIKitMimicTest<PixelByPixelImageComparator<ComparisonMode::Mask>>;
-template class ::testing::DrawTest<PixelByPixelImageComparator<ComparisonMode::Mask, 1024>>;
-template class WhiteBackgroundTest<PixelByPixelImageComparator<ComparisonMode::Mask, 1024>>;
-template class UIKitMimicTest<PixelByPixelImageComparator<ComparisonMode::Mask, 1024>>;
+template class ::testing::DrawTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>;
+template class WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>;
+template class UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>;
+template class ::testing::DrawTest<PixelByPixelImageComparator<PixelComparisonModeMask<2300>>>;
+template class ::testing::DrawTest<PixelByPixelImageComparator<PixelComparisonModeMask<1024>>>;
+template class ::testing::DrawTest<PixelByPixelImageComparator<PixelComparisonModeMask<512>>>;
+template class ::testing::DrawTest<PixelByPixelImageComparator<PixelComparisonModeMask<64>>>;
+template class WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<2300>>>;
+template class WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<1024>>>;
+template class WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<512>>>;
+template class WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<64>>>;
+template class UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<2300>>>;
+template class UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<1024>>>;
+template class UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<512>>>;
+template class UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<64>>>;
