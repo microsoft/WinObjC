@@ -2782,8 +2782,41 @@ bool CGContextIsPointInPath(CGContextRef context, bool eoFill, CGFloat x, CGFloa
 struct __CGBitmapContext : CoreFoundation::CppBase<__CGBitmapContext, __CGContext> {
     woc::unique_cf<CGImageRef> _image;
 
+    void* _data;
+
+    size_t _width;
+    size_t _height;
+    size_t _stride;
+
+    CGBitmapContextReleaseDataCallback _releaseDataCallback;
+    void* _releaseInfo;
+
     __CGBitmapContext(ID2D1RenderTarget* renderTarget, REFWICPixelFormatGUID outputPixelFormat)
         : Parent(renderTarget), _outputPixelFormat(outputPixelFormat) {
+    }
+
+    __CGBitmapContext(ID2D1RenderTarget* renderTarget,
+                      REFWICPixelFormatGUID outputPixelFormat,
+                      void* data,
+                      size_t width,
+                      size_t height,
+                      size_t stride,
+                      CGBitmapContextReleaseDataCallback releaseDataCallback,
+                      void* releaseInfo)
+        : Parent(renderTarget),
+          _outputPixelFormat(outputPixelFormat),
+          _data(data),
+          _width(width),
+          _height(height),
+          _stride(stride),
+          _releaseDataCallback(releaseDataCallback),
+          _releaseInfo(releaseInfo) {
+    }
+
+    ~__CGBitmapContext() {
+        if (_data && _releaseDataCallback) {
+            _releaseDataCallback(_releaseInfo, _data);
+        }
     }
 
     inline void SetImage(CGImageRef image) {
@@ -2814,39 +2847,55 @@ CGContextRef CGBitmapContextCreate(void* data,
 
 /**
  @Status Caveat
- @Notes releaseCallback and releaseInfo is ignored.
- We only support formats that are 32 bits per pixel, colorspace and bitmapinfo that are ARGB.
+ @Notes If data is provided, it can only be in one of the few pixel formats Direct2D can render to in system memory: (P)RGBA, (P)BGRA, or Alpha8. If a buffer is
+        provided for a grayscale image, render operations will be carried out into an Alpha8 buffer instead.
+        Luminance values will be discarded in favour of alpha values.
 */
 CGContextRef CGBitmapContextCreateWithData(void* data,
                                            size_t width,
                                            size_t height,
                                            size_t bitsPerComponent,
                                            size_t bytesPerRow,
-                                           CGColorSpaceRef space,
+                                           CGColorSpaceRef colorSpace,
                                            uint32_t bitmapInfo,
                                            CGBitmapContextReleaseDataCallback releaseCallback,
                                            void* releaseInfo) {
     RETURN_NULL_IF(!width);
     RETURN_NULL_IF(!height);
-    RETURN_NULL_IF(!space);
+    RETURN_NULL_IF(!colorSpace);
 
-    // bitsperpixel = ((bytesPerRow/width) * 8bits/byte)
     size_t bitsPerPixel = ((bytesPerRow / width) << 3);
-    WICPixelFormatGUID outputPixelFormat;
-    RETURN_NULL_IF_FAILED(_CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, space, bitmapInfo, &outputPixelFormat));
-    WICPixelFormatGUID pixelFormat = outputPixelFormat;
+    WICPixelFormatGUID requestedPixelFormat;
+    RETURN_NULL_IF_FAILED(
+        _CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, colorSpace, bitmapInfo, &requestedPixelFormat));
+    WICPixelFormatGUID internalPixelFormat = requestedPixelFormat;
 
-    if (!_CGIsValidRenderTargetPixelFormat(pixelFormat)) {
+    // If we clear this, CGIWICBitmap will allocate its own buffer.
+    void* wicImageBackingBuffer = data;
+
+    if (!_CGIsValidRenderTargetPixelFormat(internalPixelFormat)) {
+        internalPixelFormat = GUID_WICPixelFormat32bppPRGBA;
+
         if (data) {
-            UNIMPLEMENTED_WITH_MSG(
-                "CGBitmapContext does not currently support input conversion and can only render into 32bpp PRGBA buffers.");
-            return nullptr;
+            if (requestedPixelFormat == GUID_WICPixelFormat8bppGray) {
+                TraceWarning(TAG,
+                             L"Shared-buffer 8bpp grayscale context requested at %dx%d. Since Direct2D does not support this, the context "
+                             L"will be 8bpp alpha-only. There may be minor color aberrations.",
+                             width,
+                             height);
+
+                // Set requestedPixelFormat here as so that we don't do a copy on CGBitmapContextCGBitmapContextGetImage().
+                requestedPixelFormat = internalPixelFormat = GUID_WICPixelFormat8bppAlpha;
+            } else {
+                UNIMPLEMENTED_WITH_MSG(
+                    "CGBitmapContext does not currently support format conversion for shared buffers and can only render into 32bpp "
+                    "(P)RGBA, 32bpp (P)BGRA or 8bpp alpha-only buffers.");
+                return nullptr;
+            }
         }
-        pixelFormat = GUID_WICPixelFormat32bppPRGBA;
     }
 
-    // if data is null, enough memory is allocated via CGIWICBitmap
-    ComPtr<IWICBitmap> customBitmap = Make<CGIWICBitmap>(data, pixelFormat, height, width);
+    ComPtr<IWICBitmap> customBitmap = Make<CGIWICBitmap>(wicImageBackingBuffer, internalPixelFormat, height, width);
     RETURN_NULL_IF(!customBitmap);
 
     woc::unique_cf<CGImageRef> image(_CGImageCreateWithWICBitmap(customBitmap.Get()));
@@ -2857,7 +2906,11 @@ CGContextRef CGBitmapContextCreateWithData(void* data,
 
     ComPtr<ID2D1RenderTarget> renderTarget;
     RETURN_NULL_IF_FAILED(factory->CreateWicBitmapRenderTarget(customBitmap.Get(), D2D1::RenderTargetProperties(), &renderTarget));
-    CGContextRef context = _CGBitmapContextCreateWithRenderTarget(renderTarget.Get(), image.get(), outputPixelFormat);
+
+    __CGBitmapContext* context = __CGBitmapContext::CreateInstance(
+        kCFAllocatorDefault, renderTarget.Get(), requestedPixelFormat, data, width, height, bytesPerRow, releaseCallback, releaseInfo);
+    __CGContextPrepareDefaults(context);
+    context->SetImage(image);
     return context;
 }
 
