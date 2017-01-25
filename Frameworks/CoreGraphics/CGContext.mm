@@ -259,7 +259,6 @@ private:
     woc::unique_cf<CGMutablePathRef> _currentPath{ nullptr };
     woc::unique_cf<CGColorSpaceRef> _fillColorSpace;
     woc::unique_cf<CGColorSpaceRef> _strokeColorSpace;
-    __CGContextFlushHook _flushHook;
 
     inline HRESULT _SaveD2DDrawingState(ID2D1DrawingStateBlock** pDrawingState) {
         RETURN_HR_IF(E_POINTER, !pDrawingState);
@@ -381,11 +380,6 @@ public:
 
     inline bool ShouldDraw() {
         return CurrentGState().ShouldDraw();
-    }
-
-    // For bitmap, PDF, etc. consumers.
-    void SetFlushHook(__CGContextFlushHook flushHook) {
-        _flushHook = flushHook;
     }
 
     HRESULT Clip(CGPathDrawingMode pathMode);
@@ -2235,9 +2229,6 @@ HRESULT __CGContext::DrawImage(ID2D1Image* image) {
 
     // TODO GH#1194: We will need to re-evaluate Direct2D's D2DERR_RECREATE when we move to HW acceleration.
     RETURN_IF_FAILED(deviceContext->EndDraw());
-    if (_flushHook) {
-        _flushHook(this);
-    }
 
     return S_OK;
 }
@@ -2803,30 +2794,11 @@ CGContextRef CGBitmapContextCreate(void* data,
     return CGBitmapContextCreateWithData(data, width, height, bitsPerComponent, bytesPerRow, colorSpace, bitmapInfo, nullptr, nullptr);
 }
 
-void __CGBitmapContextCopyOutputFormatFlushHook(CGContextRef context) {
-    __CGBitmapContext* bitmapContext = (__CGBitmapContext*)context;
-
-    ComPtr<IWICImagingFactory> imageFactory;
-    FAIL_FAST_IF_FAILED(_CGGetWICFactory(&imageFactory));
-
-    ComPtr<IWICFormatConverter> converter;
-    FAIL_FAST_IF_FAILED(imageFactory->CreateFormatConverter(&converter));
-
-    // Unfortunately, we must create a format converter every time we do this:
-    // the converter could conceivably cache any regions it has touched, and
-    // we can't reinitialize an existing one to flush its caches.
-    ComPtr<IWICBitmap> imageSource;
-    FAIL_FAST_IF_FAILED(_CGImageGetWICImageSource(bitmapContext->_image, &imageSource));
-    FAIL_FAST_IF_FAILED(converter->Initialize(
-        imageSource.Get(), bitmapContext->GetOutputPixelFormat(), WICBitmapDitherTypeNone, nullptr, 0.f, WICBitmapPaletteTypeMedianCut));
-
-    FAIL_FAST_IF_FAILED(converter->CopyPixels(nullptr, bitmapContext->_stride, bitmapContext->_stride * bitmapContext->_width, static_cast<uint8_t*>(bitmapContext->_data)));
-}
-
 /**
  @Status Caveat
  @Notes If data is provided, it can only be in one of the few pixel formats Direct2D can render to in system memory: (P)RGBA, (P)BGRA, or Alpha8. If a buffer is
-        provided for a grayscale image, all render operations will trigger a format-converting copy into the buffer.
+        provided for a grayscale image, render operations will be carried out into an Alpha8 buffer instead.
+        Luminance values will be discarded in favour of alpha values.
 */
 CGContextRef CGBitmapContextCreateWithData(void* data,
                                            size_t width,
@@ -2841,23 +2813,21 @@ CGContextRef CGBitmapContextCreateWithData(void* data,
     RETURN_NULL_IF(!height);
     RETURN_NULL_IF(!colorSpace);
 
-    // bitsperpixel = ((bytesPerRow/width) * 8bits/byte)
     size_t bitsPerPixel = ((bytesPerRow / width) << 3);
     WICPixelFormatGUID outputPixelFormat;
     RETURN_NULL_IF_FAILED(_CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, colorSpace, bitmapInfo, &outputPixelFormat));
     WICPixelFormatGUID pixelFormat = outputPixelFormat;
 
-    bool grayscaleHack = false;
-    void* realBuffer = data;
+    void* actualBackingBuffer = data;
 
     if (!_CGIsValidRenderTargetPixelFormat(pixelFormat)) {
         pixelFormat = GUID_WICPixelFormat32bppPRGBA;
         if (data) {
             if (CGColorSpaceGetModel(colorSpace) == kCGColorSpaceModelMonochrome) {
-                TraceWarning(TAG, L"Grayscale context requested at %dx%d. Since Direct2D does not support this, this context will use full immediate mode. There will be a significant performance penalty.", width, height);
-                //outputPixelFormat = pixelFormat = GUID_WICPixelFormat8bppAlpha;
-                grayscaleHack = true;
-                realBuffer = nullptr;
+                TraceWarning(TAG, L"Shared-buffer grayscale context requested at %dx%d. Since Direct2D does not support this, the context will be in A8. There may be minor color aberrations.", width, height);
+
+                // Set outputPixelFormat here as so that we don't do a copy on CGBitmapContextCGBitmapContextGetImage().
+                outputPixelFormat = pixelFormat = GUID_WICPixelFormat8bppAlpha;
             } else {
                 UNIMPLEMENTED_WITH_MSG(
                     "CGBitmapContext does not currently support input conversion and can only render into 32bpp PRGBA buffers.");
@@ -2867,7 +2837,7 @@ CGContextRef CGBitmapContextCreateWithData(void* data,
     }
 
     // if data is null, enough memory is allocated via CGIWICBitmap
-    ComPtr<IWICBitmap> customBitmap = Make<CGIWICBitmap>(realBuffer, pixelFormat, height, width);
+    ComPtr<IWICBitmap> customBitmap = Make<CGIWICBitmap>(actualBackingBuffer, pixelFormat, height, width);
     RETURN_NULL_IF(!customBitmap);
 
     woc::unique_cf<CGImageRef> image(_CGImageCreateWithWICBitmap(customBitmap.Get()));
@@ -2882,9 +2852,6 @@ CGContextRef CGBitmapContextCreateWithData(void* data,
     __CGBitmapContext* context = __CGBitmapContext::CreateInstance(kCFAllocatorDefault, renderTarget.Get(), outputPixelFormat, data, width, height, bytesPerRow, releaseCallback, releaseInfo);
     __CGContextPrepareDefaults(context);
     context->SetImage(image);
-    if (grayscaleHack) {
-        context->SetFlushHook(&__CGBitmapContextCopyOutputFormatFlushHook);
-    }
     return context;
 }
 
