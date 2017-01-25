@@ -39,7 +39,7 @@ TEST(UIButton, GetXamlElement) {
 TEST(UIButton, TitleColorChanged) {
     __block BOOL signaled = NO;
     __block NSCondition* condition = [[NSCondition alloc] init];
-    __block UXTestAPI::XamlEventSubscription xamlSubscriber;
+    __block auto xamlSubscriber = std::make_shared<UXTestAPI::XamlEventSubscription>();
 
     UIButtonWithControlsViewController* buttonVC = [[UIButtonWithControlsViewController alloc] init];
     UXTestAPI::ViewControllerPresenter testHelper(buttonVC);
@@ -50,8 +50,8 @@ TEST(UIButton, TitleColorChanged) {
         ASSERT_TRUE(titleElement);
 
         // Register RAII event subscription handler
-        xamlSubscriber.Set(titleElement, [WXCTextBlock foregroundProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-            // Validate the state of the XAML object
+        xamlSubscriber->Set(titleElement, [WXCTextBlock foregroundProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
+            // Extract the foreground color from the XAML object
             WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], [sender getValue:dp]);
             LOG_INFO("XAML element color (rgba): %d,%d,%d,%d",
                      [solidBrush.color r],
@@ -99,12 +99,12 @@ TEST(UIButton, TitleColorChanged) {
 TEST(UIButton, TextChanged) {
     __block BOOL signaled = NO;
     __block NSCondition* condition = [[NSCondition alloc] init];
-    __block UXTestAPI::XamlEventSubscription xamlSubscriber;
+    __block auto xamlSubscriber = std::make_shared<UXTestAPI::XamlEventSubscription>();
 
     __block NSString* expectedString = @"Functional testing";
 
     UIButtonWithControlsViewController* buttonVC = [[UIButtonWithControlsViewController alloc] init];
-    UXTestAPI::ViewControllerPresenter testHelper(buttonVC, 3.0f);
+    UXTestAPI::ViewControllerPresenter testHelper(buttonVC);
 
     dispatch_async(dispatch_get_main_queue(), ^{
         // Extract UIButton.titleLabel control to verify its visual state
@@ -112,8 +112,8 @@ TEST(UIButton, TextChanged) {
         ASSERT_TRUE(titleElement);
 
         // Register RAII event subscription handler
-        xamlSubscriber.Set(titleElement, [WXCTextBlock textProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-            // Validate the state of the XAML object
+        xamlSubscriber->Set(titleElement, [WXCTextBlock textProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
+            // Extract the text from the XAML object
             NSString* text = UXTestAPI::NSStringFromPropertyValue([sender getValue:dp]);
             LOG_INFO("TextBlock text: %@", text);
 
@@ -131,9 +131,8 @@ TEST(UIButton, TextChanged) {
             [condition unlock];
         });
 
-        // TODO: Action - validate this action takes effect on the control
-        //[buttonVC textButtonLabel].text = @"Functional testing";
-        [[buttonVC button] setTitle:expectedString forState:UIControlStateNormal];
+        // Action - validate this action takes effect on the control
+        [buttonVC textTitleNormal].text = expectedString;
     });
 
     [condition lock];

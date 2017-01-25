@@ -69,7 +69,7 @@ public:
         Reset();
     }
 
-    // XamlEventSubscription(const XamlEventSubscription& other) = delete; // no copy
+    XamlEventSubscription(const XamlEventSubscription& other) = delete; // no copy
     XamlEventSubscription& operator=(const XamlEventSubscription& other) = delete;
 
     void Set(WXDependencyObject* xamlObject, WXDependencyProperty* propertyToObserve, XamlEventBlock callbackHandler);

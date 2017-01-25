@@ -17,6 +17,15 @@
 #import "UIButtonWithControlsViewController.h"
 #import <UIKit/UIButton.h>
 
+@implementation TestEnabledUITextField
+// NOTE: Programmatically setting the text via setText: does not trigger the text field delegates or events so we subclass
+// UITextField and fire our editing event manually
+- (void)setText:(NSString*)text {
+    [super setText:text];
+    [self sendActionsForControlEvents:UIControlEventEditingChanged];
+}
+@end
+
 @implementation UIButtonWithControlsViewController {
     MenuTableViewController* _menuTVC;
 }
@@ -40,17 +49,16 @@
     [self.view addSubview:_menuTVC.view];
 
     // UITextField that changes the text on UIButton.titleLabel for normal state
-    _textButtonNormal = [[UITextField alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 150.0f, 40.0f)];
-    _textButtonNormal.textColor = [UIColor blackColor];
-    _textButtonNormal.backgroundColor = [UIColor lightGrayColor];
-    _textButtonNormal.textAlignment = UITextAlignmentCenter;
-    _textButtonNormal.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
-    _textButtonNormal.borderStyle = UITextBorderStyleLine;
-    _textButtonNormal.font = [UIFont systemFontOfSize:15.0f];
-    _textButtonNormal.adjustsFontSizeToFitWidth = YES;
-    _textButtonNormal.delegate = self;
-    [_textButtonNormal addTarget:self action:@selector(onTextChanged:) forControlEvents:UIControlEventEditingChanged];
-    [_menuTVC addMenuItemView:_textButtonNormal andTitle:@"Text - normal state"];
+    _textTitleNormal = [[TestEnabledUITextField alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 150.0f, 40.0f)];
+    _textTitleNormal.textColor = [UIColor blackColor];
+    _textTitleNormal.backgroundColor = [UIColor lightGrayColor];
+    _textTitleNormal.textAlignment = UITextAlignmentCenter;
+    _textTitleNormal.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    _textTitleNormal.borderStyle = UITextBorderStyleLine;
+    _textTitleNormal.font = [UIFont systemFontOfSize:15.0f];
+    _textTitleNormal.adjustsFontSizeToFitWidth = YES;
+    [_textTitleNormal addTarget:self action:@selector(onTextChanged:) forControlEvents:UIControlEventEditingChanged];
+    [_menuTVC addMenuItemView:_textTitleNormal andTitle:@"Text - normal state"];
 
     // UISlider that changes the text color on UIButton titleLabel for normal state
     _sliderTitleColorNormal = [[UISlider alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 100.0f, 40.0f)];
