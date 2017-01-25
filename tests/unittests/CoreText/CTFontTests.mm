@@ -17,7 +17,14 @@
 #import <TestFramework.h>
 #import <Foundation/Foundation.h>
 #import <CoreText/CoreText.h>
+#import <Starboard/SmartTypes.h>
 #import <vector>
+
+static NSURL* __GetURLFromPathRelativeToModuleDirectory(NSString* relativePath) {
+    static char fullPath[_MAX_PATH];
+    static int unused = [](char* path) { return GetModuleFileNameA(NULL, path, _MAX_PATH); }(fullPath);
+    return [NSURL fileURLWithPath:[[@(fullPath) stringByDeletingLastPathComponent] stringByAppendingPathComponent:relativePath]];
+}
 
 class FontCopyName : public ::testing::TestWithParam<::testing::tuple<CFStringRef, const NSString*>> {
 public:
@@ -26,18 +33,24 @@ public:
 
 protected:
     virtual void SetUp() {
-        const CFStringRef fontName = static_cast<CFStringRef>(@"Segoe UI");
-        _font = CTFontCreateWithName(fontName, 0.0, NULL);
-        EXPECT_TRUE_MSG(_font != nil, "Failed: Font is nil.");
+        auto fontName = woc::MakeAutoCF<CFStringRef>(CFSTR("Metadata Test"));
+        _testFileURL = __GetURLFromPathRelativeToModuleDirectory(@"/data/MetadataTest-Regular.ttf");
+        CFErrorRef error = nullptr;
+        EXPECT_TRUE(CTFontManagerRegisterFontsForURL((__bridge CFURLRef)_testFileURL.get(), kCTFontManagerScopeSession, &error));
+        EXPECT_EQ(nullptr, error);
+
+        _font = woc::MakeAutoCF<CTFontRef>(CTFontCreateWithName(fontName, 20, nullptr));
+        ASSERT_NE(nullptr, _font);
     }
 
     virtual void TearDown() {
-        if (_font) {
-            CFRelease(_font);
-        }
+        CFErrorRef error = nullptr;
+        EXPECT_TRUE(CTFontManagerUnregisterFontsForURL((__bridge CFURLRef)_testFileURL.get(), kCTFontManagerScopeSession, &error));
+        EXPECT_EQ(nullptr, error);
     }
 
-    CTFontRef _font;
+    woc::AutoCF<CTFontRef> _font;
+    StrongId<NSURL> _testFileURL;
 };
 
 TEST_P(FontCopyName, VerifyProperties) {
@@ -46,35 +59,28 @@ TEST_P(FontCopyName, VerifyProperties) {
     CFRelease(propertyValue);
 }
 
-const NSString* c_copyrightName = @"© 2015 Microsoft Corporation. All Rights Reserved.";
-const NSString* c_familyName = @"Segoe UI";
+const NSString* c_familyName = @"Metadata Test";
 const NSString* c_subFamilyName = @"Regular";
 const NSString* c_styleName = @"Regular";
-const NSString* c_uniqueName = @"Segoe UI Regular";
-const NSString* c_fullName = @"Segoe UI";
+const NSString* c_uniqueName = @"Metadata Test Regular";
+const NSString* c_fullName = @"Metadata Test";
 
-// version name for Segoe UI font is different on ARM than on x86 platform, so we are using different version names for both platforms.
-#ifdef _M_ARM
-const NSString* c_versionName = @"Version 5.53; sf";
-#else
-const NSString* c_versionName = @"Version 5.53";
-#endif
-
-const NSString* c_postscriptName = @"SegoeUI";
-const NSString* c_trademarkName = @"Segoe is a trademark of the Microsoft group of companies.";
+const NSString* c_postscriptName = @"MetadataTest-Regular";
+const NSString* c_trademarkName = @"MetadataTest is not a trademark.";
 const NSString* c_manufacturerName = @"Microsoft Corporation";
 const NSString* c_designerName = nullptr;
 const NSString* c_descriptionName = nullptr;
-const NSString* c_vendorURLName = @"http://www.microsoft.com/typography/fonts/";
+const NSString* c_vendorURLName = @"https://developer.microsoft.com/en-us/windows/bridges/ios";
 const NSString* c_designerURLName = nullptr;
-const NSString* c_licenseURLName = @"http://www.microsoft.com/typography/fonts/";
+const NSString* c_licenseURLName = @"https://developer.microsoft.com/en-us/windows/bridges/ios";
 const NSString* c_sampleTextName = nullptr;
+const NSString* c_copyrightName = @"Copyright (c) Microsoft";
+const NSString* c_versionName = @"Version 1.01 ";
 const NSString* c_postscriptCIDName = nullptr;
 
 INSTANTIATE_TEST_CASE_P(CTFont,
                         FontCopyName,
-                        ::testing::Values(::testing::make_tuple(kCTFontCopyrightNameKey, c_copyrightName),
-                                          ::testing::make_tuple(kCTFontFamilyNameKey, c_familyName),
+                        ::testing::Values(::testing::make_tuple(kCTFontFamilyNameKey, c_familyName),
                                           ::testing::make_tuple(kCTFontSubFamilyNameKey, c_subFamilyName),
                                           ::testing::make_tuple(kCTFontStyleNameKey, c_styleName),
                                           ::testing::make_tuple(kCTFontUniqueNameKey, c_uniqueName),
@@ -88,6 +94,7 @@ INSTANTIATE_TEST_CASE_P(CTFont,
                                           ::testing::make_tuple(kCTFontDesignerURLNameKey, c_designerURLName),
                                           ::testing::make_tuple(kCTFontLicenseURLNameKey, c_licenseURLName),
                                           ::testing::make_tuple(kCTFontSampleTextNameKey, c_sampleTextName),
+                                          ::testing::make_tuple(kCTFontCopyrightNameKey, c_copyrightName),
                                           ::testing::make_tuple(kCTFontVersionNameKey, c_versionName),
                                           ::testing::make_tuple(kCTFontPostScriptCIDNameKey, c_postscriptCIDName)));
 
