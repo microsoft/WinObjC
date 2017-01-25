@@ -476,7 +476,8 @@ extern void UIActivityIndicatorViewGetXamlElement();
 
 extern void UIButtonCreateXamlElement();
 extern void UIButtonGetXamlElement();
-extern void UIButtonBackgroundColorChanged();
+extern void UIButtonTitleColorChanged();
+extern void UIButtonTextChanged();
 
 extern void UIScrollViewCreateXamlElement();
 extern void UIScrollViewGetXamlElement();
@@ -605,14 +606,12 @@ public:
         FrameworkHelper::RunOnUIThread(&UIButtonGetXamlElement);
     }
 
-    TEST_METHOD(UIButton_BackgroundColorChanged) {
-        // Disable this test for now since it previously relied on the async delay between setting a UI property
-        // and seeing the change applied to the backing XAML element during the next tick on the runloop
-        BEGIN_TEST_METHOD_PROPERTIES()
-        TEST_METHOD_PROPERTY(L"ignore", L"true")
-        END_TEST_METHOD_PROPERTIES()
+    TEST_METHOD(UIButton_TitleColorChanged) {
+        UIButtonTitleColorChanged();
+    }
 
-        UIButtonBackgroundColorChanged();
+    TEST_METHOD(UIButton_TextChanged) {
+        UIButtonTextChanged();
     }
 
     TEST_METHOD(UIScrollView_CreateXamlElement) {

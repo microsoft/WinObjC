@@ -110,7 +110,7 @@ static const int TAG_SUBVIEW_UITEXTFIELD = 1;
     [_textFields addObject:[self _createTextFieldWithColor:[UIColor blackColor]
                                                 background:[UIColor lightGrayColor]
                                            secureTextEntry:YES
-                                               placeHolder:@"password"
+                                               placeHolder:@"Password"
                                               keyboardType:UIKeyboardTypeNumberPad
                                                borderStyle:UITextBorderStyleRoundedRect
                                              textAlignment:UITextAlignmentLeft
@@ -120,7 +120,7 @@ static const int TAG_SUBVIEW_UITEXTFIELD = 1;
     [_textFields addObject:[self _createTextFieldWithColor:[UIColor blackColor]
                                                 background:[UIColor blueColor]
                                            secureTextEntry:NO
-                                               placeHolder:@"blue background, right aligned"
+                                               placeHolder:@"Blue background, right aligned"
                                               keyboardType:UIKeyboardTypeASCIICapable
                                                borderStyle:UITextBorderStyleRoundedRect
                                              textAlignment:UITextAlignmentRight
@@ -130,7 +130,7 @@ static const int TAG_SUBVIEW_UITEXTFIELD = 1;
     [_textFields addObject:[self _createTextFieldWithColor:[UIColor redColor]
                                                 background:[UIColor lightGrayColor]
                                            secureTextEntry:NO
-                                               placeHolder:@"red text, alignment center"
+                                               placeHolder:@"Red text, alignment center"
                                               keyboardType:UIKeyboardTypeDefault
                                                borderStyle:UITextBorderStyleLine
                                              textAlignment:UITextAlignmentCenter
@@ -150,7 +150,7 @@ static const int TAG_SUBVIEW_UITEXTFIELD = 1;
     [_textFields addObject:[self _createTextFieldWithColor:[UIColor blackColor]
                                                 background:[UIColor lightGrayColor]
                                            secureTextEntry:NO
-                                               placeHolder:@"type in URL"
+                                               placeHolder:@"Type in URL"
                                               keyboardType:UIKeyboardTypeURL
                                                borderStyle:UITextBorderStyleNone
                                              textAlignment:UITextAlignmentLeft
@@ -161,7 +161,7 @@ static const int TAG_SUBVIEW_UITEXTFIELD = 1;
     [_textFields addObject:[self _createTextFieldWithColor:[UIColor blackColor]
                                                 background:[UIColor lightGrayColor]
                                            secureTextEntry:NO
-                                               placeHolder:@"type in your Name and Phone"
+                                               placeHolder:@"Type in your Name and Phone"
                                               keyboardType:UIKeyboardTypeNamePhonePad
                                                borderStyle:UITextBorderStyleNone
                                              textAlignment:UITextBorderStyleBezel
@@ -171,7 +171,7 @@ static const int TAG_SUBVIEW_UITEXTFIELD = 1;
     [_textFields addObject:[self _createTextFieldWithColor:[UIColor blackColor]
                                                 background:[UIColor lightGrayColor]
                                            secureTextEntry:NO
-                                               placeHolder:@"type in your email address"
+                                               placeHolder:@"Type in your email address"
                                               keyboardType:UIKeyboardTypeEmailAddress
                                                borderStyle:UITextBorderStyleNone
                                              textAlignment:UITextBorderStyleLine
@@ -191,7 +191,7 @@ static const int TAG_SUBVIEW_UITEXTFIELD = 1;
     [_textFields addObject:[self _createTextFieldWithColor:[UIColor blackColor]
                                                 background:[UIColor lightGrayColor]
                                            secureTextEntry:NO
-                                               placeHolder:@"type in name or Phone Number"
+                                               placeHolder:@"Type in name or Phone Number"
                                               keyboardType:UIKeyboardTypeNamePhonePad
                                                borderStyle:UITextBorderStyleNone
                                              textAlignment:UITextBorderStyleLine
@@ -219,7 +219,7 @@ static const int TAG_SUBVIEW_UITEXTFIELD = 1;
 
     // Row 11. Background image
     [_textFields addObject:[self _createTextFieldWithColor:[UIColor redColor]
-                                               placeHolder:@"background image"
+                                               placeHolder:@"Background image"
                                                borderStyle:UITextBorderStyleLine
                                            backgroundImage:[UIImage imageNamed:@"photo1.jpg"]]];
 
@@ -248,7 +248,7 @@ static const int TAG_SUBVIEW_UITEXTFIELD = 1;
     UITextField* temp = [self _createTextFieldWithColor:[UIColor blackColor]
                                              background:[UIColor lightGrayColor]
                                         secureTextEntry:YES
-                                            placeHolder:@"From Securty to Non-Secure"
+                                            placeHolder:@"From Secure to Non-Secure"
                                            keyboardType:UIKeyboardTypeDefault
                                             borderStyle:UITextBorderStyleRoundedRect
                                           textAlignment:UITextAlignmentLeft

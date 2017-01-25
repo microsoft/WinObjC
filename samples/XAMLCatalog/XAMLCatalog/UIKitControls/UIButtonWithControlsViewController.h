@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,18 +14,18 @@
 //
 //******************************************************************************
 
-#pragma once
+#import "MenuTableViewController.h"
 
-// Setup method to call before every test class to initialize the UIApplication
-bool FunctionalTestSetupUIApplication();
+// Subclassed UITextField to support functional testing
+@interface TestEnabledUITextField : UITextField
+@end
 
-// Cleanup method to call after every test class to free the UIApplication
-bool FunctionalTestCleanupUIApplication();
+@interface UIButtonWithControlsViewController : UIViewController
 
-#ifdef __OBJC__
-#import <Foundation/Foundation.h>
-static const NSTimeInterval c_testTimeoutInSec = 5;
+@property (nonatomic, readonly) UIButton* button;
+@property (nonatomic, readonly) TestEnabledUITextField* textTitleNormal;
+@property (nonatomic, readonly) UISlider* sliderTitleColorNormal;
 
-NSString* appendPathRelativeToFTModule(NSString* pathAppendage);
-NSString* getModulePath();
-#endif
+@property (nonatomic, readonly) UIColor* titleColorNormal;
+
+@end
