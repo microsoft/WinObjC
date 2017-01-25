@@ -2826,27 +2826,27 @@ CGContextRef CGBitmapContextCreateWithData(void* data,
     RETURN_NULL_IF(!colorSpace);
 
     size_t bitsPerPixel = ((bytesPerRow / width) << 3);
-    WICPixelFormatGUID outputPixelFormat;
+    WICPixelFormatGUID requestedPixelFormat;
     RETURN_NULL_IF_FAILED(
-        _CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, colorSpace, bitmapInfo, &outputPixelFormat));
-    WICPixelFormatGUID pixelFormat = outputPixelFormat;
+        _CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, colorSpace, bitmapInfo, &requestedPixelFormat));
+    WICPixelFormatGUID internalPixelFormat = requestedPixelFormat;
 
     // If we clear this, CGIWICBitmap will allocate its own buffer.
     void* wicImageBackingBuffer = data;
 
-    if (!_CGIsValidRenderTargetPixelFormat(pixelFormat)) {
-        pixelFormat = GUID_WICPixelFormat32bppPRGBA;
+    if (!_CGIsValidRenderTargetPixelFormat(internalPixelFormat)) {
+        internalPixelFormat = GUID_WICPixelFormat32bppPRGBA;
 
         if (data) {
-            if (CGColorSpaceGetModel(colorSpace) == kCGColorSpaceModelMonochrome) {
+            if (requestedPixelFormat == GUID_WICPixelFormat8bppGray) {
                 TraceWarning(TAG,
                              L"Shared-buffer 8bpp grayscale context requested at %dx%d. Since Direct2D does not support this, the context "
                              L"will be 8bpp alpha-only. There may be minor color aberrations.",
                              width,
                              height);
 
-                // Set outputPixelFormat here as so that we don't do a copy on CGBitmapContextCGBitmapContextGetImage().
-                outputPixelFormat = pixelFormat = GUID_WICPixelFormat8bppAlpha;
+                // Set requestedPixelFormat here as so that we don't do a copy on CGBitmapContextCGBitmapContextGetImage().
+                requestedPixelFormat = internalPixelFormat = GUID_WICPixelFormat8bppAlpha;
             } else {
                 UNIMPLEMENTED_WITH_MSG(
                     "CGBitmapContext does not currently support format conversion for shared buffers and can only render into 32bpp "
@@ -2856,7 +2856,7 @@ CGContextRef CGBitmapContextCreateWithData(void* data,
         }
     }
 
-    ComPtr<IWICBitmap> customBitmap = Make<CGIWICBitmap>(wicImageBackingBuffer, pixelFormat, height, width);
+    ComPtr<IWICBitmap> customBitmap = Make<CGIWICBitmap>(wicImageBackingBuffer, internalPixelFormat, height, width);
     RETURN_NULL_IF(!customBitmap);
 
     woc::unique_cf<CGImageRef> image(_CGImageCreateWithWICBitmap(customBitmap.Get()));
@@ -2869,7 +2869,7 @@ CGContextRef CGBitmapContextCreateWithData(void* data,
     RETURN_NULL_IF_FAILED(factory->CreateWicBitmapRenderTarget(customBitmap.Get(), D2D1::RenderTargetProperties(), &renderTarget));
 
     __CGBitmapContext* context = __CGBitmapContext::CreateInstance(
-        kCFAllocatorDefault, renderTarget.Get(), outputPixelFormat, data, width, height, bytesPerRow, releaseCallback, releaseInfo);
+        kCFAllocatorDefault, renderTarget.Get(), requestedPixelFormat, data, width, height, bytesPerRow, releaseCallback, releaseInfo);
     __CGContextPrepareDefaults(context);
     context->SetImage(image);
     return context;
