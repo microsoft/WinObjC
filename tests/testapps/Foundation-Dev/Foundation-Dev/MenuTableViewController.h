@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,6 +16,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TaskInfoViewController : UITableViewController
+@interface MenuTableViewController : UITableViewController
+
+@property (nonatomic, retain) NSMutableArray* menuItems;
+
+- (void)addMenuItemViewController:(UIViewController*)controller andTitle:(NSString*)title;
 
 @end

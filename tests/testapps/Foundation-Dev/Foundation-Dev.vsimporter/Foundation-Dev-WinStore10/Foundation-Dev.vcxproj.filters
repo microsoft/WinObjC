@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{770d26b6-1e27-4c20-849d-a21925474b98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{4f975066-7fe5-4c3e-b9ee-185bb3fd3031}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Foundation-Dev">
+      <UniqueIdentifier>{2E49F227-968C-4904-A4DB-08BABCE74D34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Foundation-Dev\Supporting Files">
+      <UniqueIdentifier>{B3B16CD8-37A0-4E80-9761-DC22F8158EB7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Xcode Variable Files">
+      <UniqueIdentifier>{5F0A00D4-278B-4D24-B7BE-118F3CBF6201}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="default.rd.xml" />
+    <AppxManifest Include="Package.appxmanifest" />
+    <None Include="Foundation-Dev_TemporaryKey.pfx" />
+    <Image Include="Assets\LockScreenLogo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SplashScreen.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square150x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\StoreLogo.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Wide310x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <ClInclude Include="..\..\Foundation-Dev\AppDelegate.h">
+      <Filter>Foundation-Dev</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Foundation-Dev\FoundationsViewController.h" />
+    <ClInclude Include="..\..\Foundation-Dev\MenuTableViewController.h" />
+    <ClInclude Include="..\..\Foundation-Dev\TaskInfoViewController.h" />
+    <ClInclude Include="..\..\Foundation-Dev\URLDownloadCell.h" />
+    <ClInclude Include="..\..\Foundation-Dev\URLSessionViewController.h" />
+    <ClInclude Include="..\..\Foundation-Dev\UserDefaultsViewController.h" />
+    <ClangCompile Include="..\..\Foundation-Dev\AppDelegate.m">
+      <Filter>Foundation-Dev</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\Foundation-Dev\FoundationsViewController.m" />
+    <ClangCompile Include="..\..\Foundation-Dev\MenuTableViewController.m" />
+    <ClangCompile Include="..\..\Foundation-Dev\TaskInfoViewController.m" />
+    <ClangCompile Include="..\..\Foundation-Dev\URLDownloadCell.mm" />
+    <ClangCompile Include="..\..\Foundation-Dev\URLSessionViewController.mm" />
+    <ClangCompile Include="..\..\Foundation-Dev\UserDefaultsViewController.m" />
+    <ClangCompile Include="..\..\Foundation-Dev\main.m">
+      <Filter>Foundation-Dev\Supporting Files</Filter>
+    </ClangCompile>
+    <SBInfoPlistCopy Include="..\..\Foundation-Dev\Info.plist" />
+    <Text Include="Foundation-Dev-Debug-xcvars.txt">
+      <Filter>Xcode Variable Files</Filter>
+    </Text>
+    <Text Include="Foundation-Dev-Release-xcvars.txt">
+      <Filter>Xcode Variable Files</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

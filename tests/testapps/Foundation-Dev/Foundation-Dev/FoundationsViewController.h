@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,24 +14,8 @@
 //
 //******************************************************************************
 
-#pragma once
+#import "MenuTableViewController.h"
 
-#include <Foundation/Foundation.h>
-#include <UIKit/UIKit.h>
+@interface FoundationsViewController : MenuTableViewController
 
-@class NSURLSessionTask;
-
-@interface URLDownloadCell : UITableViewCell {
-    NSURLSessionTask* _download;
-    UIProgressView* _progressView;
-    UILabel* _nameLabel;
-    UILabel* _statusLabel;
-    UILabel* _sizeLabel;
-    UILabel* _progressLabel;
-    UIImageView* _iconImageView;
-}
-@property (nonatomic, retain) NSURLSessionTask* download;
-- (id)initWithReuseIdentifier:(NSString*)reuseIdentifier;
-- (void)updateDisplay;
-- (void)updateProgress;
 @end

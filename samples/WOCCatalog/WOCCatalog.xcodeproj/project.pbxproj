@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		143EAE4E1D075DD50068D90F /* UserDefaultsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 143EAE4D1D075DD50068D90F /* UserDefaultsViewController.m */; };
 		23FB26321CD3ED56009020FB /* XIBTest.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 23FB26311CD3ED56009020FB /* XIBTest.storyboard */; };
 		30DF38611D6E5C6D00CA28BB /* AccelerateViewController2.m in Sources */ = {isa = PBXBuildFile; fileRef = 30DF38601D6E5C6D00CA28BB /* AccelerateViewController2.m */; };
 		49FF82CF1C18BFED00798804 /* ApplicationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49FF82CE1C18BFED00798804 /* ApplicationViewController.m */; };
@@ -59,8 +58,6 @@
 		7BFC0CC81DB17E2C00797C13 /* GesturesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BFC0CC71DB17E2C00797C13 /* GesturesViewController.m */; };
 		8252DB791CA9EDDE00A202B6 /* PopoverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8252DB781CA9EDDE00A202B6 /* PopoverViewController.m */; };
 		8430AAC91BE7F2E500927545 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8430AAC81BE7F2E500927545 /* GLKit.framework */; };
-		AF8072C61C86238E00512FB6 /* URLDownloadCell.mm in Sources */ = {isa = PBXBuildFile; fileRef = AF8072C41C86238E00512FB6 /* URLDownloadCell.mm */; };
-		AF8072C71C86238E00512FB6 /* URLSessionViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = AF8072C51C86238E00512FB6 /* URLSessionViewController.mm */; };
 		C14942D11C77E1A700C2B67E /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C14942D01C77E1A700C2B67E /* Accelerate.framework */; };
 		C14942D41C77E1EE00C2B67E /* AccelerateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C14942D31C77E1EE00C2B67E /* AccelerateViewController.m */; };
 		C1BA9A091D27222C004D9E6E /* CoreLocationViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = C1BA9A061D27222C004D9E6E /* CoreLocationViewController.mm */; };
@@ -73,8 +70,6 @@
 		E19F61D21BCE9962005077C5 /* GLKitExampleController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E19F61D11BCE9962005077C5 /* GLKitExampleController.mm */; };
 		E789B2E01CC59D3C0044F169 /* ShadowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E789B2DF1CC59D3C0044F169 /* ShadowViewController.m */; };
 		F01C22551C1A3B120007FF0B /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F01C22541C1A3B120007FF0B /* MainViewController.m */; };
-		F01C22581C1A540E0007FF0B /* FoundationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F01C22571C1A540E0007FF0B /* FoundationsViewController.m */; };
-		F01C225B1C1A54450007FF0B /* TaskInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F01C225A1C1A54450007FF0B /* TaskInfoViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,8 +83,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		143EAE4C1D075DD50068D90F /* UserDefaultsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDefaultsViewController.h; sourceTree = "<group>"; };
-		143EAE4D1D075DD50068D90F /* UserDefaultsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaultsViewController.m; sourceTree = "<group>"; };
 		23FB26311CD3ED56009020FB /* XIBTest.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = XIBTest.storyboard; sourceTree = "<group>"; };
 		30DF385F1D6E5C6D00CA28BB /* AccelerateViewController2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccelerateViewController2.h; sourceTree = "<group>"; };
 		30DF38601D6E5C6D00CA28BB /* AccelerateViewController2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccelerateViewController2.m; sourceTree = "<group>"; };
@@ -174,8 +167,6 @@
 		8252DB771CA9EDDE00A202B6 /* PopoverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopoverViewController.h; sourceTree = "<group>"; };
 		8252DB781CA9EDDE00A202B6 /* PopoverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopoverViewController.m; sourceTree = "<group>"; };
 		8430AAC81BE7F2E500927545 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
-		AF8072C41C86238E00512FB6 /* URLDownloadCell.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = URLDownloadCell.mm; sourceTree = "<group>"; };
-		AF8072C51C86238E00512FB6 /* URLSessionViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = URLSessionViewController.mm; sourceTree = "<group>"; };
 		C14942D01C77E1A700C2B67E /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		C14942D21C77E1EE00C2B67E /* AccelerateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccelerateViewController.h; sourceTree = "<group>"; };
 		C14942D31C77E1EE00C2B67E /* AccelerateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccelerateViewController.m; sourceTree = "<group>"; };
@@ -195,10 +186,6 @@
 		E789B2DF1CC59D3C0044F169 /* ShadowViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShadowViewController.m; sourceTree = "<group>"; };
 		F01C22531C1A3B120007FF0B /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		F01C22541C1A3B120007FF0B /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
-		F01C22561C1A540E0007FF0B /* FoundationsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FoundationsViewController.h; sourceTree = "<group>"; };
-		F01C22571C1A540E0007FF0B /* FoundationsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FoundationsViewController.m; sourceTree = "<group>"; };
-		F01C22591C1A54450007FF0B /* TaskInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskInfoViewController.h; sourceTree = "<group>"; };
-		F01C225A1C1A54450007FF0B /* TaskInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskInfoViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -260,16 +247,12 @@
 				C1E414D51D52925300D1F062 /* GeocodingViewController.m */,
 				C1BA9A051D27222C004D9E6E /* CoreLocationViewController.h */,
 				C1BA9A061D27222C004D9E6E /* CoreLocationViewController.mm */,
-				143EAE4C1D075DD50068D90F /* UserDefaultsViewController.h */,
-				143EAE4D1D075DD50068D90F /* UserDefaultsViewController.m */,
 				4FAF43071CF67047009F29E8 /* UIPasteboardViewController.h */,
 				4FAF43081CF67047009F29E8 /* UIPasteboardViewController.m */,
 				77F3AD3D1CF3854D00485FBA /* AudioToolboxViewController.h */,
 				77F3AD3E1CF3854D00485FBA /* AudioToolboxViewController.mm */,
 				E789B2DF1CC59D3C0044F169 /* ShadowViewController.m */,
 				E789B2DE1CC59D320044F169 /* ShadowViewController.h */,
-				AF8072C41C86238E00512FB6 /* URLDownloadCell.mm */,
-				AF8072C51C86238E00512FB6 /* URLSessionViewController.mm */,
 				77D71D9F1C8F5AA000ED26A3 /* CoreMotionViewController.h */,
 				77D71D9D1C8F5A8C00ED26A3 /* CoreMotionViewController.mm */,
 				C14942D21C77E1EE00C2B67E /* AccelerateViewController.h */,
@@ -332,10 +315,6 @@
 				7B42BCF61B90FFD200D45782 /* BezierViewController.xib */,
 				F01C22531C1A3B120007FF0B /* MainViewController.h */,
 				F01C22541C1A3B120007FF0B /* MainViewController.m */,
-				F01C22561C1A540E0007FF0B /* FoundationsViewController.h */,
-				F01C22571C1A540E0007FF0B /* FoundationsViewController.m */,
-				F01C22591C1A54450007FF0B /* TaskInfoViewController.h */,
-				F01C225A1C1A54450007FF0B /* TaskInfoViewController.m */,
 				23FB26311CD3ED56009020FB /* XIBTest.storyboard */,
 			);
 			path = WOCCatalog;
@@ -522,19 +501,16 @@
 				7B42BCF51B90ECFE00D45782 /* BezierViewController.m in Sources */,
 				4FAF43091CF67047009F29E8 /* UIPasteboardViewController.m in Sources */,
 				4EE8615B1B5996BF00682BDB /* main.m in Sources */,
-				AF8072C61C86238E00512FB6 /* URLDownloadCell.mm in Sources */,
 				4EE861DA1B5997A500682BDB /* TransitionsViewController.m in Sources */,
 				7BCEEE4B1B70220300C31CF5 /* DisplayModeViewController.m in Sources */,
 				4EE861CF1B5997A500682BDB /* AlertsViewController.m in Sources */,
 				8252DB791CA9EDDE00A202B6 /* PopoverViewController.m in Sources */,
-				F01C22581C1A540E0007FF0B /* FoundationsViewController.m in Sources */,
 				7B363CFE1BF5CBFE001F08DD /* PageViewController.m in Sources */,
 				49FF82CF1C18BFED00798804 /* ApplicationViewController.m in Sources */,
 				4ED640231B717E470092921E /* SingleImageViewController.m in Sources */,
 				C1E414D61D52925300D1F062 /* GeocodingViewController.m in Sources */,
 				30DF38611D6E5C6D00CA28BB /* AccelerateViewController2.m in Sources */,
 				77F3AD3F1CF3854D00485FBA /* AudioToolboxViewController.mm in Sources */,
-				AF8072C71C86238E00512FB6 /* URLSessionViewController.mm in Sources */,
 				F01C22551C1A3B120007FF0B /* MainViewController.m in Sources */,
 				7BCEEE4D1B70220300C31CF5 /* OpenGLES20Controller.m in Sources */,
 				4EE861D61B5997A500682BDB /* SegmentsViewController.m in Sources */,
@@ -550,10 +526,8 @@
 				4EE861D51B5997A500682BDB /* SearchBarViewController.m in Sources */,
 				4EE861FA1B5997E400682BDB /* ImagesViewController.m in Sources */,
 				7BFC0CC81DB17E2C00797C13 /* GesturesViewController.m in Sources */,
-				F01C225B1C1A54450007FF0B /* TaskInfoViewController.m in Sources */,
 				E789B2E01CC59D3C0044F169 /* ShadowViewController.m in Sources */,
 				4EE861D91B5997A500682BDB /* ToolbarsViewController.m in Sources */,
-				143EAE4E1D075DD50068D90F /* UserDefaultsViewController.m in Sources */,
 				C14942D41C77E1EE00C2B67E /* AccelerateViewController.m in Sources */,
 				4EE861D41B5997A500682BDB /* PickersViewController.m in Sources */,
 			);

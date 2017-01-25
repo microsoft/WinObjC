@@ -34,7 +34,6 @@
 #import "AutoLayoutViewController.h"
 #import "PageViewController.h"
 #import "ApplicationViewController.h"
-#import "FoundationsViewController.h"
 #import "BasicAnimationViewController.h"
 #import "AccelerateViewController.h"
 #import "AccelerateViewController2.h"
@@ -71,9 +70,6 @@
 
     // CoreLocation
     [self addMenuItemViewController:[[CoreLocationViewController alloc] init] andTitle:@"CoreLocation"];
-
-    // Foundations tests
-    [self addMenuItemViewController:[[FoundationsViewController alloc] init] andTitle:@"Foundation Tests"];
 
     // Controls
     [self addMenuItemViewController:[[ControlsViewController alloc] init] andTitle:@"Controls"];

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>WOCCatalog</ProjectName>
+    <ProjectName>Foundation-Dev</ProjectName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
@@ -29,34 +29,34 @@
     <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <Keyword>IslandwoodProj</Keyword>
-    <ProjectGuid>{DEA0BDF0-0390-4A0A-AFE0-B1BDEA3020CE}</ProjectGuid>
-    <RootNamespace>WOCCatalog</RootNamespace>
-    <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">..\..\..\..</WINOBJC_SDK_ROOT>
+    <ProjectGuid>{F25AF509-B120-4CC4-B5B7-BE1E046B8FB1}</ProjectGuid>
+    <RootNamespace>Foundation-Dev</RootNamespace>
+    <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">..\..\..\..\..\..\winobjc</WINOBJC_SDK_ROOT>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v140</PlatformToolset>
-    <TargetName>WOCCatalog</TargetName>
+    <TargetName>Foundation-Dev</TargetName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v140</PlatformToolset>
-    <TargetName>WOCCatalog</TargetName>
+    <TargetName>Foundation-Dev</TargetName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v140</PlatformToolset>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
     <Optimize>true</Optimize>
-    <TargetName>WOCCatalog</TargetName>
+    <TargetName>Foundation-Dev</TargetName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v140</PlatformToolset>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
     <Optimize>true</Optimize>
-    <TargetName>WOCCatalog</TargetName>
+    <TargetName>Foundation-Dev</TargetName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -77,7 +77,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <PackageCertificateKeyFile>WOCCatalog_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>Foundation-Dev_TemporaryKey.pfx</PackageCertificateKeyFile>
     <PackageCertificateThumbprint>D095ED4071F7A0D93085697ECF15F78E76342CCF</PackageCertificateThumbprint>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -98,7 +98,7 @@
     </ClangCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);Accelerate.lib;AudioToolbox.lib;CoreImage.lib;CoreMotion.lib;GLKit.lib;OpenGLES.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <SBInfoPlistCopy>
       <ExcludedFromBuild>true</ExcludedFromBuild>
@@ -122,7 +122,7 @@
     </ClangCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);Accelerate.lib;AudioToolbox.lib;CoreImage.lib;CoreMotion.lib;GLKit.lib;OpenGLES.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <SBInfoPlistCopy>
       <ExcludedFromBuild>true</ExcludedFromBuild>
@@ -143,7 +143,7 @@
     </ClangCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);Accelerate.lib;AudioToolbox.lib;CoreImage.lib;CoreMotion.lib;GLKit.lib;OpenGLES.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <SBInfoPlistCopy>
       <ExcludedFromBuild>true</ExcludedFromBuild>
@@ -164,7 +164,7 @@
     </ClangCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);Accelerate.lib;AudioToolbox.lib;CoreImage.lib;CoreMotion.lib;GLKit.lib;OpenGLES.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <SBInfoPlistCopy>
       <ExcludedFromBuild>true</ExcludedFromBuild>
@@ -180,7 +180,7 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <Xml Include="default.rd.xml" />
-    <None Include="WOCCatalog_TemporaryKey.pfx" />
+    <None Include="Foundation-Dev_TemporaryKey.pfx" />
     <Image Include="Assets\LockScreenLogo.scale-200.png" />
     <Image Include="Assets\SplashScreen.scale-200.png" />
     <Image Include="Assets\Square150x150Logo.scale-200.png" />
@@ -188,110 +188,33 @@
     <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Image Include="Assets\StoreLogo.png" />
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
-    <ClInclude Include="..\..\WOCCatalog\AccelerateViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\AccelerateViewController2.h" />
-    <ClInclude Include="..\..\WOCCatalog\AlertsViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\AppDelegate.h" />
-    <ClInclude Include="..\..\WOCCatalog\ApplicationViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\AudioToolboxViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\AutoLayoutViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\BasicAnimationViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\BezierViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\ControlsViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\CoreLocationViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\CoreMotionViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\DisplayModeViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\GLKitExampleController.h" />
-    <ClInclude Include="..\..\WOCCatalog\GeocodingViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\GesturesViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\ImagesViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\MainViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\MenuTableViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\OpenGLES11Controller.h" />
-    <ClInclude Include="..\..\WOCCatalog\OpenGLES20Controller.h" />
-    <ClInclude Include="..\..\WOCCatalog\PageViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\PhotogridViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\PickersViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\PopoverViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\SearchBarViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\SegmentsViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\ShadowViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\SingleImageViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\TextDisplayViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\ToolbarsViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\TransitionsViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\UIPasteboardViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\ViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\WebViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\XamlViewController.h" />
-    <ClangCompile Include="..\..\WOCCatalog\AccelerateViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\AccelerateViewController2.m" />
-    <ClangCompile Include="..\..\WOCCatalog\AlertsViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\AppDelegate.m" />
-    <ClangCompile Include="..\..\WOCCatalog\ApplicationViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\AudioToolboxViewController.mm" />
-    <ClangCompile Include="..\..\WOCCatalog\AutoLayoutViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\BasicAnimationViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\BezierViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\ControlsViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\CoreLocationViewController.mm" />
-    <ClangCompile Include="..\..\WOCCatalog\CoreMotionViewController.mm" />
-    <ClangCompile Include="..\..\WOCCatalog\DisplayModeViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\GLKitExampleController.mm" />
-    <ClangCompile Include="..\..\WOCCatalog\GeocodingViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\GesturesViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\ImagesViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\MainViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\MenuTableViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\OpenGLES11Controller.m" />
-    <ClangCompile Include="..\..\WOCCatalog\OpenGLES20Controller.m" />
-    <ClangCompile Include="..\..\WOCCatalog\PageViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\PhotogridViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\PickersViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\PopoverViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\SearchBarViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\SegmentsViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\ShadowViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\SingleImageViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\TextDisplayViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\ToolbarsViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\TransitionsViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\UIPasteboardViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\ViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\WebViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\XamlViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\main.m" />
-    <SBInfoPlistCopy Include="..\..\WOCCatalog\Info.plist">
+    <ClInclude Include="..\..\Foundation-Dev\AppDelegate.h" />
+    <ClInclude Include="..\..\Foundation-Dev\FoundationsViewController.h" />
+    <ClInclude Include="..\..\Foundation-Dev\MenuTableViewController.h" />
+    <ClInclude Include="..\..\Foundation-Dev\TaskInfoViewController.h" />
+    <ClInclude Include="..\..\Foundation-Dev\URLDownloadCell.h" />
+    <ClInclude Include="..\..\Foundation-Dev\URLSessionViewController.h" />
+    <ClInclude Include="..\..\Foundation-Dev\UserDefaultsViewController.h" />
+    <ClangCompile Include="..\..\Foundation-Dev\AppDelegate.m" />
+    <ClangCompile Include="..\..\Foundation-Dev\FoundationsViewController.m" />
+    <ClangCompile Include="..\..\Foundation-Dev\MenuTableViewController.m" />
+    <ClangCompile Include="..\..\Foundation-Dev\TaskInfoViewController.m" />
+    <ClangCompile Include="..\..\Foundation-Dev\URLDownloadCell.mm" />
+    <ClangCompile Include="..\..\Foundation-Dev\URLSessionViewController.mm" />
+    <ClangCompile Include="..\..\Foundation-Dev\UserDefaultsViewController.m" />
+    <ClangCompile Include="..\..\Foundation-Dev\main.m" />
+    <SBInfoPlistCopy Include="..\..\Foundation-Dev\Info.plist">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Debug'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Release'">false</ExcludedFromBuild>
-      <VariableFile Condition="'$(Configuration)'=='Debug'">WOCCatalog-Debug-xcvars.txt</VariableFile>
-      <VariableFile Condition="'$(Configuration)'=='Release'">WOCCatalog-Release-xcvars.txt</VariableFile>
+      <VariableFile Condition="'$(Configuration)'=='Debug'">Foundation-Dev-Debug-xcvars.txt</VariableFile>
+      <VariableFile Condition="'$(Configuration)'=='Release'">Foundation-Dev-Release-xcvars.txt</VariableFile>
     </SBInfoPlistCopy>
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\blueButton.png" />
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo1.jpg" />
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo10.jpg" />
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo2.png" />
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo3.jpg" />
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo4.jpg" />
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo5.jpg" />
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo6.jpg" />
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo7.gif" />
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo8.tif" />
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo9.jpg" />
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\segment_check.png" />
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\segment_search.png" />
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\segment_tools.png" />
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\tf_bgimage.jpg" />
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\whiteButton.png" />
-    <SBResourceCopy Include="..\..\WOCCatalog\test.wav" />
-    <StoryboardCompile Include="..\..\WOCCatalog\XIBTest.storyboard" />
-    <Text Include="WOCCatalog-Debug-xcvars.txt">
+    <Text Include="Foundation-Dev-Debug-xcvars.txt">
       <DeploymentContent>false</DeploymentContent>
     </Text>
-    <Text Include="WOCCatalog-Release-xcvars.txt">
+    <Text Include="Foundation-Dev-Release-xcvars.txt">
       <DeploymentContent>false</DeploymentContent>
     </Text>
-    <XibCompile Include="..\..\WOCCatalog\BezierViewController.xib" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
