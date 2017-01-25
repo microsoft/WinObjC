@@ -2756,8 +2756,22 @@ struct __CGBitmapContext : CoreFoundation::CppBase<__CGBitmapContext, __CGContex
         : Parent(renderTarget), _outputPixelFormat(outputPixelFormat) {
     }
 
-    __CGBitmapContext(ID2D1RenderTarget* renderTarget, REFWICPixelFormatGUID outputPixelFormat, void* data, size_t width, size_t height, size_t stride, CGBitmapContextReleaseDataCallback releaseDataCallback, void* releaseInfo)
-        : Parent(renderTarget), _outputPixelFormat(outputPixelFormat), _data(data), _width(width), _height(height), _stride(stride), _releaseDataCallback(releaseDataCallback), _releaseInfo(releaseInfo) {
+    __CGBitmapContext(ID2D1RenderTarget* renderTarget,
+                      REFWICPixelFormatGUID outputPixelFormat,
+                      void* data,
+                      size_t width,
+                      size_t height,
+                      size_t stride,
+                      CGBitmapContextReleaseDataCallback releaseDataCallback,
+                      void* releaseInfo)
+        : Parent(renderTarget),
+          _outputPixelFormat(outputPixelFormat),
+          _data(data),
+          _width(width),
+          _height(height),
+          _stride(stride),
+          _releaseDataCallback(releaseDataCallback),
+          _releaseInfo(releaseInfo) {
     }
 
     ~__CGBitmapContext() {
@@ -2813,29 +2827,36 @@ CGContextRef CGBitmapContextCreateWithData(void* data,
 
     size_t bitsPerPixel = ((bytesPerRow / width) << 3);
     WICPixelFormatGUID outputPixelFormat;
-    RETURN_NULL_IF_FAILED(_CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, colorSpace, bitmapInfo, &outputPixelFormat));
+    RETURN_NULL_IF_FAILED(
+        _CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, colorSpace, bitmapInfo, &outputPixelFormat));
     WICPixelFormatGUID pixelFormat = outputPixelFormat;
 
-    void* actualBackingBuffer = data;
+    // If we clear this, CGIWICBitmap will allocate its own buffer.
+    void* wicImageBackingBuffer = data;
 
     if (!_CGIsValidRenderTargetPixelFormat(pixelFormat)) {
         pixelFormat = GUID_WICPixelFormat32bppPRGBA;
+
         if (data) {
             if (CGColorSpaceGetModel(colorSpace) == kCGColorSpaceModelMonochrome) {
-                TraceWarning(TAG, L"Shared-buffer grayscale context requested at %dx%d. Since Direct2D does not support this, the context will be in A8. There may be minor color aberrations.", width, height);
+                TraceWarning(TAG,
+                             L"Shared-buffer 8bpp grayscale context requested at %dx%d. Since Direct2D does not support this, the context "
+                             L"will be 8bpp alpha-only. There may be minor color aberrations.",
+                             width,
+                             height);
 
                 // Set outputPixelFormat here as so that we don't do a copy on CGBitmapContextCGBitmapContextGetImage().
                 outputPixelFormat = pixelFormat = GUID_WICPixelFormat8bppAlpha;
             } else {
                 UNIMPLEMENTED_WITH_MSG(
-                    "CGBitmapContext does not currently support input conversion and can only render into 32bpp PRGBA buffers.");
+                    "CGBitmapContext does not currently support format conversion for shared buffers and can only render into 32bpp "
+                    "(P)RGBA, 32bpp (P)BGRA or 8bpp alpha-only buffers.");
                 return nullptr;
             }
         }
     }
 
-    // if data is null, enough memory is allocated via CGIWICBitmap
-    ComPtr<IWICBitmap> customBitmap = Make<CGIWICBitmap>(actualBackingBuffer, pixelFormat, height, width);
+    ComPtr<IWICBitmap> customBitmap = Make<CGIWICBitmap>(wicImageBackingBuffer, pixelFormat, height, width);
     RETURN_NULL_IF(!customBitmap);
 
     woc::unique_cf<CGImageRef> image(_CGImageCreateWithWICBitmap(customBitmap.Get()));
@@ -2847,7 +2868,8 @@ CGContextRef CGBitmapContextCreateWithData(void* data,
     ComPtr<ID2D1RenderTarget> renderTarget;
     RETURN_NULL_IF_FAILED(factory->CreateWicBitmapRenderTarget(customBitmap.Get(), D2D1::RenderTargetProperties(), &renderTarget));
 
-    __CGBitmapContext* context = __CGBitmapContext::CreateInstance(kCFAllocatorDefault, renderTarget.Get(), outputPixelFormat, data, width, height, bytesPerRow, releaseCallback, releaseInfo);
+    __CGBitmapContext* context = __CGBitmapContext::CreateInstance(
+        kCFAllocatorDefault, renderTarget.Get(), outputPixelFormat, data, width, height, bytesPerRow, releaseCallback, releaseInfo);
     __CGContextPrepareDefaults(context);
     context->SetImage(image);
     return context;
