@@ -282,61 +282,69 @@ HRESULT _CGPathGetGeometry(CGPathRef path, ID2D1Geometry** pGeometry) {
 CFTypeID CGPathGetTypeID() {
     return __CGPath::GetTypeID();
 }
-
+namespace {
 // A helper for determining the number of points per path element type
-static inline int CGPathGetExpectedPointCountForType(CGPathElementType type) {
-    return type == kCGPathElementMoveToPoint || type == kCGPathElementAddLineToPoint ?
-               1 :
-               type == kCGPathElementAddQuadCurveToPoint ? 2 : type == kCGPathElementAddCurveToPoint ? 3 : 0;
+static inline size_t __CGPathGetExpectedPointCountForType(CGPathElementType type) {
+    switch (type) {
+        case kCGPathElementMoveToPoint:
+        case kCGPathElementAddLineToPoint:
+            return 1;
+        case kCGPathElementAddQuadCurveToPoint:
+            return 2;
+        case kCGPathElementAddCurveToPoint:
+            return 3;
+        case kCGPathElementCloseSubpath:
+            return 0;
+    }
 }
 
 // Create a mimic of CGPathElement that holds the points in a vector with a convenient copy constructor.
-struct _CGPathElementVector {
-    CGPathElementType _type;
-    std::vector<CGPoint> _points;
-    _CGPathElementVector(const CGPathElement el)
-        : _type(el.type), _points(el.points, el.points + CGPathGetExpectedPointCountForType(el.type)) {
+struct __CGPathElementVector {
+    CGPathElementType m_type;
+    std::vector<CGPoint> m_points;
+    __CGPathElementVector(const CGPathElement& el)
+        : m_type(el.type), m_points(el.points, el.points + __CGPathGetExpectedPointCountForType(el.type)) {
     }
 };
 
 // A struct to pass to the equality matching CGPathApply since only a single void* may be passed.
-struct CGPathElementMatch {
-    std::vector<_CGPathElementVector> elements;
-    bool equal = true;
-    int positionToMatch = 0;
+struct __CGPathElementMatch {
+    std::vector<__CGPathElementVector> m_elements;
+    bool m_equal = true;
+    int m_positionToMatch = 0;
 };
+}
 
 // A function to pass to CGPathApply to determine whether two paths are equal.
-static void _CGPathApplyCheckEquality(void* pathElements, const CGPathElement* element1) {
-    if (!((CGPathElementMatch*)pathElements)->equal) {
+static void __CGPathApplyCheckEquality(void* pathElements, const CGPathElement* element1) {
+    __CGPathElementMatch* elements = (__CGPathElementMatch*)pathElements;
+
+    // If the matching has already failed, simply return asap. There's no way to stop a CGPathApply early.
+    if (!elements->m_equal) {
         return;
     }
-    int i = ((CGPathElementMatch*)pathElements)->positionToMatch;
-    _CGPathElementVector element2 = ((CGPathElementMatch*)pathElements)->elements[i];
-    if (element2._type != element1->type) {
-        ((CGPathElementMatch*)pathElements)->equal = false;
-    } else {
-        for (int i = 0; i < CGPathGetExpectedPointCountForType(element1->type); i++) {
-            if (element1->points[i] != element2._points[i]) {
-                ((CGPathElementMatch*)pathElements)->equal = false;
+    int i = elements->m_positionToMatch;
+    __CGPathElementVector element2 = elements->m_elements[i];
+    if (element2.m_type != element1->type) {
+        elements->m_equal = false;
+    } else if (element2.m_type != kCGPathElementCloseSubpath) {
+        for (int i = 0; i < element2.m_points.size(); i++) {
+            if (element1->points[i] != element2.m_points[i]) {
+                elements->m_equal = false;
+                break;
             }
         }
     }
 
-    ((CGPathElementMatch*)pathElements)->positionToMatch++;
+    elements->m_positionToMatch++;
 }
 
 // A function to pass to CGPathApply to retrieve the individual path elements to check equality against.
 static void _CGPathApplyGetElements(void* pathElements, const CGPathElement* element) {
-    _CGPathElementVector newElement = _CGPathElementVector(*element);
-    ((std::vector<_CGPathElementVector>*)pathElements)->emplace_back(newElement);
+    ((std::vector<__CGPathElementVector>*)pathElements)->emplace_back(__CGPathElementVector(*element));
 }
 
 static Boolean __CGPathEqual(CFTypeRef cf1, CFTypeRef cf2) {
-    if (!cf1 && !cf2) {
-        return true;
-    }
-
     if (cf1 == cf2) {
         return true;
     }
@@ -359,13 +367,13 @@ static Boolean __CGPathEqual(CFTypeRef cf1, CFTypeRef cf2) {
         return false;
     }
 
-    std::vector<_CGPathElementVector> path1Elements;
+    std::vector<__CGPathElementVector> path1Elements;
     CGPathApply(path1, &path1Elements, _CGPathApplyGetElements);
-    struct CGPathElementMatch match;
-    match.elements = path1Elements;
-    CGPathApply(path2, &match, _CGPathApplyCheckEquality);
+    struct __CGPathElementMatch match;
+    match.m_elements = path1Elements;
+    CGPathApply(path2, &match, __CGPathApplyCheckEquality);
 
-    return match.equal;
+    return match.m_equal;
 }
 
 /**

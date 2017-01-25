@@ -759,7 +759,7 @@ static bool testSymmetricEquivalence(CGPathRef path1, CGPathRef path2) {
     return (CGPathEqualToPath(path1, path2) && CGPathEqualToPath(path2, path1));
 }
 
-DISABLED_TEST(CGPath, CGPathEqualsTest) {
+TEST(CGPath, CGPathEqualsTest) {
     CGMutablePathRef path1 = CGPathCreateMutable();
     CGMutablePathRef path2 = CGPathCreateMutable();
 
@@ -872,27 +872,31 @@ DISABLED_TEST(CGPath, CGPathEqualsTest) {
 }
 
 TEST(CGPath, CGPathEqualsCopyTest) {
-    CGMutablePathRef thepath = CGPathCreateMutable();
+    CGMutablePathRef thePath = CGPathCreateMutable();
     CGFloat width = 500.0f;
     CGFloat height = 500.0f;
     CGFloat xstart = 50.0f;
     CGFloat ystart = 50.0f;
 
-    CGPathMoveToPoint(thepath, NULL, xstart + .75 * width, ystart + .5 * height);
-    CGPathAddArc(thepath, NULL, xstart + .5 * width, ystart + .5 * height, .5 * height, 0, M_PI / 2, true);
-    CGPathAddArc(thepath, NULL, xstart + .5 * width, ystart + .5 * height, .5 * height, M_PI / 2, 0, true);
-    CGPathMoveToPoint(thepath, NULL, xstart + .25 * width, ystart + .5 * height);
-    CGPathAddArc(thepath, NULL, xstart + .375 * width, ystart + .5 * height, .25 * height, M_PI, 0, false);
-    CGPathMoveToPoint(thepath, NULL, xstart + .5 * width, ystart + .5 * height);
-    CGPathAddArc(thepath, NULL, xstart + .625 * width, ystart + .5 * height, .25 * height, M_PI, 0, true);
-    CGPathMoveToPoint(thepath, NULL, xstart + .4375 * width, ystart + .5 * height);
-    CGPathAddArc(thepath, NULL, xstart + .375 * width, ystart + .5 * height, .125 * height, 0, M_PI / 2, true);
-    CGPathAddArc(thepath, NULL, xstart + .375 * width, ystart + .5 * height, .125 * height, M_PI / 2, 0, true);
-    CGPathMoveToPoint(thepath, NULL, xstart + .6875 * width, ystart + .5 * height);
-    CGPathAddArc(thepath, NULL, xstart + .625 * width, ystart + .5 * height, .125 * height, 0, M_PI / 2, true);
-    CGPathAddArc(thepath, NULL, xstart + .625 * width, ystart + .5 * height, .125 * height, M_PI / 2, 0, true);
+    CGPathMoveToPoint(thePath, NULL, xstart + .75 * width, ystart + .5 * height);
+    CGPathAddArc(thePath, NULL, xstart + .5 * width, ystart + .5 * height, .5 * height, 0, M_PI / 2, true);
+    CGPathAddArc(thePath, NULL, xstart + .5 * width, ystart + .5 * height, .5 * height, M_PI / 2, 0, true);
+    CGPathMoveToPoint(thePath, NULL, xstart + .25 * width, ystart + .5 * height);
+    CGPathAddArc(thePath, NULL, xstart + .375 * width, ystart + .5 * height, .25 * height, M_PI, 0, false);
+    CGPathMoveToPoint(thePath, NULL, xstart + .5 * width, ystart + .5 * height);
+    CGPathAddArc(thePath, NULL, xstart + .625 * width, ystart + .5 * height, .25 * height, M_PI, 0, true);
+    CGPathMoveToPoint(thePath, NULL, xstart + .4375 * width, ystart + .5 * height);
+    CGPathAddArc(thePath, NULL, xstart + .375 * width, ystart + .5 * height, .125 * height, 0, M_PI / 2, true);
+    CGPathAddArc(thePath, NULL, xstart + .375 * width, ystart + .5 * height, .125 * height, M_PI / 2, 0, true);
+    CGPathMoveToPoint(thePath, NULL, xstart + .6875 * width, ystart + .5 * height);
+    CGPathAddArc(thePath, NULL, xstart + .625 * width, ystart + .5 * height, .125 * height, 0, M_PI / 2, true);
+    CGPathAddArc(thePath, NULL, xstart + .625 * width, ystart + .5 * height, .125 * height, M_PI / 2, 0, true);
 
-    EXPECT_TRUE(testSymmetricEquivalence(thepath, CGPathCreateCopy(thepath)));
+    CGMutablePathRef thePathCopy = CGPathCreateCopy(thePath);
+    EXPECT_TRUE(testSymmetricEquivalence(thePath, CGPathCreateCopy(thePath)));
+
+    CGPathRelease(thePath);
+    CGPathRelease(thePathCopy);
 }
 
 TEST(CGPath, SubShapesEqualityTest) {
