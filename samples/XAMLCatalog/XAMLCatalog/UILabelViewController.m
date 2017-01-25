@@ -46,7 +46,7 @@ static const int TAG_SUBVIEW_UILABEL = 1;
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    // creating lables
+    // creating labels
     _labels = [[NSMutableArray alloc] init];
 
     [_labels addObject:[self _createUILabelWithColor:[UIColor blackColor]
@@ -100,7 +100,7 @@ static const int TAG_SUBVIEW_UILABEL = 1;
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
-    return 15;
+    return 33;
 }
 
 - (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
@@ -119,6 +119,7 @@ static const int TAG_SUBVIEW_UILABEL = 1;
 
         cell.textLabel.text = nil;
         cell.textLabel.adjustsFontSizeToFitWidth = NO;
+        cell.accessoryView = nil;
     }
 
     // Tag UILabel subview with TAG_SUBVIEW_UILABEL before adding this subview into contentview
@@ -169,19 +170,153 @@ static const int TAG_SUBVIEW_UILABEL = 1;
         textLabel.lineBreakMode = UILineBreakModeWordWrap;
         cell.accessoryView = textLabel;
     }
+    // AdjustFontSizeToFitWidth tests
+
+    // testing single line, adjustFontSize to false
     if (indexPath.row == 13) {
-        UILabel* textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, c_width, c_height)];
-        textLabel.text = @"adjustFontSize = false, font is using default font";
-        cell.accessoryView = textLabel;
+        cell.accessoryView = [self _createLabelwithNumberOfLines:1
+                                        AdjustFontSizeToFitWidth:NO
+                                                   LineBreakMode:UILineBreakModeTailTruncation
+                                                 MinimumFontSize:0.0f];
     }
+
+    // testing single line, adjustFontSize to TRUE
     if (indexPath.row == 14) {
-        UILabel* textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, c_width, c_height)];
-        textLabel.text = @"adjustFontSize = YES, font is adjusted to fit the width of this UIlabel";
-        textLabel.adjustsFontSizeToFitWidth = YES;
-        cell.accessoryView = textLabel;
+        cell.accessoryView = [self _createLabelwithNumberOfLines:1
+                                        AdjustFontSizeToFitWidth:YES
+                                                   LineBreakMode:UILineBreakModeTailTruncation
+                                                 MinimumFontSize:0.0f];
+    }
+
+    // number of Lines = 2, unlimited, 3, 5 and adjustFontSize YES, TailTruncation
+    if (indexPath.row == 15) {
+        cell.accessoryView = [self _createLabelwithNumberOfLines:2
+                                        AdjustFontSizeToFitWidth:YES
+                                                   LineBreakMode:UILineBreakModeTailTruncation
+                                                 MinimumFontSize:0.0f];
+    }
+    if (indexPath.row == 16) {
+        cell.accessoryView = [self _createLabelwithNumberOfLines:0
+                                        AdjustFontSizeToFitWidth:YES
+                                                   LineBreakMode:UILineBreakModeTailTruncation
+                                                 MinimumFontSize:0.0f];
+    }
+    if (indexPath.row == 17) {
+        cell.accessoryView = [self _createLabelwithNumberOfLines:3
+                                        AdjustFontSizeToFitWidth:YES
+                                                   LineBreakMode:UILineBreakModeTailTruncation
+                                                 MinimumFontSize:0.0f];
+    }
+
+    // number of Lines = 2, unlimited, 3 and adjustFontSize YES, wordWrapping
+    if (indexPath.row == 18) {
+        cell.accessoryView =
+            [self _createLabelwithNumberOfLines:2 AdjustFontSizeToFitWidth:YES LineBreakMode:UILineBreakModeWordWrap MinimumFontSize:0.0f];
+    }
+    if (indexPath.row == 19) {
+        cell.accessoryView =
+            [self _createLabelwithNumberOfLines:0 AdjustFontSizeToFitWidth:YES LineBreakMode:UILineBreakModeWordWrap MinimumFontSize:0.0f];
+    }
+    if (indexPath.row == 20) {
+        cell.accessoryView =
+            [self _createLabelwithNumberOfLines:3 AdjustFontSizeToFitWidth:YES LineBreakMode:UILineBreakModeWordWrap MinimumFontSize:0.0f];
+    }
+
+    // number of Lines = 2, unlimited, 3 and adjustFontSize YES, CharacterWrap
+    if (indexPath.row == 21) {
+        cell.accessoryView = [self _createLabelwithNumberOfLines:2
+                                        AdjustFontSizeToFitWidth:YES
+                                                   LineBreakMode:UILineBreakModeCharacterWrap
+                                                 MinimumFontSize:0.0f];
+    }
+    if (indexPath.row == 22) {
+        cell.accessoryView = [self _createLabelwithNumberOfLines:0
+                                        AdjustFontSizeToFitWidth:YES
+                                                   LineBreakMode:UILineBreakModeCharacterWrap
+                                                 MinimumFontSize:0.0f];
+    }
+    if (indexPath.row == 23) {
+        cell.accessoryView = [self _createLabelwithNumberOfLines:3
+                                        AdjustFontSizeToFitWidth:YES
+                                                   LineBreakMode:UILineBreakModeCharacterWrap
+                                                 MinimumFontSize:0.0f];
+    }
+
+    // number of Lines = 2, unlimited, 3 and adjustFontSize YES, Clipping
+    if (indexPath.row == 24) {
+        cell.accessoryView =
+            [self _createLabelwithNumberOfLines:2 AdjustFontSizeToFitWidth:YES LineBreakMode:UILineBreakModeClip MinimumFontSize:0.0f];
+    }
+    if (indexPath.row == 25) {
+        cell.accessoryView =
+            [self _createLabelwithNumberOfLines:0 AdjustFontSizeToFitWidth:YES LineBreakMode:UILineBreakModeClip MinimumFontSize:0.0f];
+    }
+    if (indexPath.row == 26) {
+        cell.accessoryView =
+            [self _createLabelwithNumberOfLines:3 AdjustFontSizeToFitWidth:YES LineBreakMode:UILineBreakModeClip MinimumFontSize:0.0f];
+    }
+
+    // number of Lines = 2, unlimited, 3 and adjustFontSize YES, TailTruncation, change minimum size to different values
+    if (indexPath.row == 27) {
+        cell.accessoryView = [self _createLabelwithNumberOfLines:2
+                                        AdjustFontSizeToFitWidth:YES
+                                                   LineBreakMode:UILineBreakModeTailTruncation
+                                                 MinimumFontSize:8.0f];
+    }
+    if (indexPath.row == 28) {
+        cell.accessoryView = [self _createLabelwithNumberOfLines:0
+                                        AdjustFontSizeToFitWidth:YES
+                                                   LineBreakMode:UILineBreakModeTailTruncation
+                                                 MinimumFontSize:17.0f];
+    }
+    if (indexPath.row == 29) {
+        cell.accessoryView = [self _createLabelwithNumberOfLines:3
+                                        AdjustFontSizeToFitWidth:YES
+                                                   LineBreakMode:UILineBreakModeTailTruncation
+                                                 MinimumFontSize:32.0f];
+    }
+
+    // number of Lines = 2, unlimited, 3 and adjustFontSize NO, wordWrapping
+    if (indexPath.row == 30) {
+        cell.accessoryView =
+            [self _createLabelwithNumberOfLines:2 AdjustFontSizeToFitWidth:NO LineBreakMode:UILineBreakModeWordWrap MinimumFontSize:0.0f];
+    }
+    if (indexPath.row == 31) {
+        cell.accessoryView =
+            [self _createLabelwithNumberOfLines:0 AdjustFontSizeToFitWidth:NO LineBreakMode:UILineBreakModeWordWrap MinimumFontSize:0.0f];
+    }
+    if (indexPath.row == 32) {
+        cell.accessoryView =
+            [self _createLabelwithNumberOfLines:3 AdjustFontSizeToFitWidth:NO LineBreakMode:UILineBreakModeWordWrap MinimumFontSize:0.0f];
     }
 
     return cell;
+}
+
+- (UILabel*)_createLabelwithNumberOfLines:(int)numberOfLine
+                 AdjustFontSizeToFitWidth:(BOOL)adjustFontSizeToFitWidth
+                            LineBreakMode:(UILineBreakMode)lineBreakMode
+                          MinimumFontSize:(float)minimumFontSize {
+    UILabel* textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, c_width, c_height)];
+    textLabel.numberOfLines = numberOfLine;
+    textLabel.adjustsFontSizeToFitWidth = adjustFontSizeToFitWidth;
+    textLabel.lineBreakMode = lineBreakMode;
+
+    if (minimumFontSize > textLabel.minimumFontSize) {
+        textLabel.minimumFontSize = minimumFontSize;
+    }
+
+    BOOL shouldAdjustSize = adjustFontSizeToFitWidth && (lineBreakMode != UILineBreakModeWordWrap) &&
+                            (lineBreakMode != NSLineBreakByCharWrapping) && (minimumFontSize < 17.0);
+
+    textLabel.text = [NSString
+        stringWithFormat:@"adjustFontSize = %d, numberOflines = %d, linbreakMode=%d, text %@ adjust to fit the width of this UIlabel",
+                         textLabel.adjustsFontSizeToFitWidth,
+                         textLabel.numberOfLines,
+                         textLabel.lineBreakMode,
+                         shouldAdjustSize ? @"should" : @"should not"];
+
+    return textLabel;
 }
 
 @end

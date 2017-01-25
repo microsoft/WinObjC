@@ -51,63 +51,99 @@
     StrongId<WXCTextBlock> _textBlock;
 }
 
-- (void)_adjustFontSizeToFit {
-    if (_numberOfLines == 0) {
-        [self _adjustTextLayerSize];
-        return;
-    }
+// Helper searches max font size for a string that can fit into given rect using given font/linkbreak config .
+// if no fit is found (e.g., to satisfy minimum font size requirement, nil is returned.
+// Otherwise, it returns the maximum font size for that can fit
+- (UIFont*)_findMaxFontSizeToFit:(CGRect)rect
+                            Text:(NSString*)text
+                            Font:(UIFont*)font
+                   NumberOfLines:(int)numberOfLines
+                 MinimumFontSize:(float)mininumFontSize
+                StartingFontSize:(float)startingFontSize {
+    // Use FLT_MAX as search upper bound and mininumFontSize as search lower bound
+    float upperBound = FLT_MAX;
+    float lowerBound = mininumFontSize;
 
-    CGRect rect = [self bounds];
-    if (rect.size.width == 0.0f || rect.size.height == 0.0f || _text == nil) {
-        return;
-    }
-
-    // MaxFitFontSize records currently found maximum font size that fits the bounds,
-    // It starts with _minimumFontSize because it is smallest font size allowed by the UILabel
-    float maxFitFontSize = _minimumFontSize;
-
-    float curFontSize = [_font pointSize];
-    // Start our trial with fonts bigger than _minimumFontSize
-    if (curFontSize < maxFitFontSize) {
-        curFontSize = 2.0 * maxFitFontSize;
-        _font = [_font fontWithSize:curFontSize];
-    }
+    // Using max of lowerBound and current font size as search starting point
+    float curFontSize = std::max(startingFontSize, mininumFontSize);
+    StrongId<UIFont> _targetFont = [_font fontWithSize:curFontSize];
 
     // Do binary search on maximum font size that fits the bound
     do {
-        // Caculating rect size using font and line break settings
+        // Caculating constrains for allowedHeight
+        float lineHeight = [_targetFont ascender] - [_targetFont descender];
+        float allowedHeight = (numberOfLines == 0) ? rect.size.height : std::min(lineHeight * self.numberOfLines, rect.size.height);
+
         CGSize size = CGSizeZero;
-        if (_numberOfLines == 1) {
-            size = [_text sizeWithFont:_font constrainedToSize:CGSizeMake(0.0f, 0.0f) lineBreakMode:UILineBreakModeClip];
+        if (numberOfLines == 1) {
+            // In one line case, linebreak mode and allowed height really does not matter because we give it unlimited width for measure
+            size = [text sizeWithFont:_targetFont constrainedToSize:CGSizeMake(0.0f, allowedHeight) lineBreakMode:UILineBreakModeClip];
         } else {
-            size = [_text sizeWithFont:_font constrainedToSize:CGSizeMake(rect.size.width, 0.0f) lineBreakMode:UILineBreakModeWordWrap];
+            // In multi-line case, we want the line to be wrapping during measure, in this case, we want to give allowed hight as unlimited
+            size =
+                [text sizeWithFont:_targetFont constrainedToSize:CGSizeMake(rect.size.width, 0.0f) lineBreakMode:UILineBreakModeWordWrap];
         }
 
-        if (size.width < rect.size.width && size.height <= rect.size.height) {
-            // Update maxFitFontSize, and double current font size and retry
-            maxFitFontSize = curFontSize;
-            curFontSize *= 2.0f;
+        if (size.width <= rect.size.width && size.height <= allowedHeight) {
+            // Find a fit, update lowerBound
+            lowerBound = curFontSize;
+            if (upperBound == FLT_MAX) {
+                // No upper bound yet, retry with doubling current font size
+                curFontSize *= 2.0f;
+            } else {
+                // retry with middle value between lower bound and upper bound
+                curFontSize = (upperBound + lowerBound) / 2.0f;
+            }
         } else {
-            // Current font size does not fit
-            if (curFontSize - maxFitFontSize <= 1.0f) {
-                // Distance between current font size wwhich does nit fit
+            // Current font size does not fit, update upperBound
+            upperBound = std::min(upperBound, curFontSize);
+            if (curFontSize - lowerBound <= 1.0f) {
+                // Distance between current font size which does not fit
                 // and maximum font size which fits is less than 1.0, break out
                 break;
             } else {
-                // Re-try with middle value between maxFitFontSize and current Font Size
-                curFontSize = (curFontSize + maxFitFontSize) / 2.0f;
+                // Retry with middle value between lowerBound and upper bound
+                curFontSize = (lowerBound + upperBound) / 2.0f;
             }
         }
 
-        _font = [_font fontWithSize:curFontSize];
+        _targetFont = [_targetFont fontWithSize:curFontSize];
     } while (true);
 
-    _font = [_font fontWithSize:maxFitFontSize];
+    if (lowerBound == mininumFontSize) {
+        // If lowerBound is the same as minimum font size, it means no font size can be found to fit
+        // In this case, should not adjust font, same as reference platform does
+        return nil;
+    }
 
-    [self _adjustTextLayerSize];
+    return [_targetFont fontWithSize:lowerBound];
 }
 
-- (void)_adjustTextLayerSize {
+- (void)_adjustFontSizeToFit {
+    CGRect rect = [self bounds];
+
+    if (rect.size.width == 0.0f || rect.size.height == 0.0f || [_text length] == 0) {
+        return;
+    }
+
+    // Special:on reference platform, adjustFontSizeToFit is no-op when lineBreakMode is Wrapping
+    if (_lineBreakMode != UILineBreakModeWordWrap && _lineBreakMode != UILineBreakModeCharacterWrap) {
+        StrongId<UIFont> _targetFont = [self _findMaxFontSizeToFit:rect
+                                                              Text:_text
+                                                              Font:_font
+                                                     NumberOfLines:_numberOfLines
+                                                   MinimumFontSize:_minimumFontSize
+                                                  StartingFontSize:[_font pointSize]];
+        if (_targetFont != nil) {
+            // found a font that can be adjusted to fit, otherwise, do nothing
+            _font = _targetFont;
+        }
+    }
+
+    [self _updateXamlElement];
+}
+
+- (void)_updateXamlElement {
     [_textBlock setText:_text];
     [_textBlock setFontSize:[_font pointSize]];
 
@@ -188,7 +224,7 @@
         if (_adjustFontSize) {
             [self _adjustFontSizeToFit];
         } else {
-            [self _adjustTextLayerSize];
+            [self _updateXamlElement];
         }
     }
 
@@ -222,7 +258,10 @@
     _lineBreakMode = UILineBreakModeTailTruncation;
     _textColor = [UIColor blackColor];
     _shadowColor = _textColor;
-    _minimumFontSize = 8.0f;
+
+    // on reference platform, default minimum font size is zero but always slightly bigger than zero in reality acccording to the
+    // documentation
+    _minimumFontSize = 0.0001f;
     _numberOfLines = 1;
     [self setOpaque:FALSE];
 }
@@ -240,7 +279,7 @@
 
         _font = [UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]];
 
-        [self _adjustTextLayerSize];
+        [self _updateXamlElement];
     }
 
     return self;
@@ -259,7 +298,7 @@
 
         _font = [UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]];
 
-        [self _adjustTextLayerSize];
+        [self _updateXamlElement];
     }
 
     return self;
@@ -290,7 +329,7 @@
         if (_adjustFontSize) {
             [self _adjustFontSizeToFit];
         } else {
-            [self _adjustTextLayerSize];
+            [self _updateXamlElement];
         }
     }
 }
@@ -318,7 +357,7 @@
         if (_adjustFontSize) {
             [self _adjustFontSizeToFit];
         } else {
-            [self _adjustTextLayerSize];
+            [self _updateXamlElement];
         }
 
         self.accessibilityValue = newStr;
@@ -369,7 +408,7 @@
 - (void)setTextAlignment:(UITextAlignment)alignment {
     if (alignment != _alignment) {
         _alignment = alignment;
-        [self _adjustTextLayerSize];
+        [self _updateXamlElement];
     }
 }
 
@@ -390,7 +429,7 @@
     if (![_textColor isEqual:color]) {
         [[_textColor retain] autorelease];
         _textColor = color;
-        [self _adjustTextLayerSize];
+        [self _updateXamlElement];
     }
 }
 
@@ -488,7 +527,7 @@
 */
 - (void)setLineBreakMode:(UILineBreakMode)mode {
     _lineBreakMode = mode;
-    [self _adjustTextLayerSize];
+    [self _updateXamlElement];
 }
 
 /**
@@ -508,7 +547,7 @@
     } else {
         [self setBackgroundColor:_savedBackgroundColor];
     }
-    [self _adjustTextLayerSize];
+    [self _updateXamlElement];
 }
 
 /**
@@ -567,9 +606,9 @@
  @Status Interoperable
 */
 - (CGSize)sizeThatFits:(CGSize)curSize {
-    CGSize ret = { 0 };
+    CGSize ret = CGSizeZero;
 
-    if (_text != nil) {
+    if ([_text length] != 0) {
         if (self.numberOfLines != 0) {
             // for fixed number of lines, use hinted size as contraints for height
             CGFloat lineHeight = [_font ascender] - [_font descender];
@@ -631,7 +670,7 @@
     if (_adjustFontSize) {
         [self _adjustFontSizeToFit];
     } else {
-        [self _adjustTextLayerSize];
+        [self _updateXamlElement];
     }
     [self setNeedsDisplay];
 }
