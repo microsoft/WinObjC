@@ -784,12 +784,12 @@ DISABLED_TEST(CGPath, CGPathEqualsTest) {
     CGPathMoveToPoint(path1, nullptr, 50, 50);
     CGPathAddLineToPoint(path1, nullptr, 100, 100);
 
-    // Two segments should be the same as one longer segment.
+    // Two segments are not the same as one longer segment even if they may appear the same.
     CGPathMoveToPoint(path2, nullptr, 50, 50);
     CGPathAddLineToPoint(path2, nullptr, 75, 75);
     CGPathAddLineToPoint(path2, nullptr, 100, 100);
 
-    EXPECT_TRUE(testSymmetricEquivalence(path1, path2));
+    EXPECT_FALSE(testSymmetricEquivalence(path1, path2));
 
     // Rectangles
     CGRect theRectangle = CGRectMake(50, 50, 100, 100);
@@ -835,21 +835,21 @@ DISABLED_TEST(CGPath, CGPathEqualsTest) {
     CGPathRelease(rectPath1);
     CGPathRelease(rectPath2);
 
-    // Two complicated paths that should be equal.
+    // Two paths with multiple segments that should be equal.
     theRectangle = CGRectMake(50, 50, 100, 100);
     rectPath1 = CGPathCreateWithRect(theRectangle, nullptr);
     rectPath2 = CGPathCreateWithRect(theRectangle, nullptr);
 
     CGPathAddLineToPoint(rectPath1, nullptr, 200, 200);
 
-    // The multiple line segments should not affect equality since it's still a straight line to the same point.
+    // The multiple line segments affect equality since individual segments much match.
     CGPathAddLineToPoint(rectPath2, nullptr, 97, 97);
     CGPathAddLineToPoint(rectPath2, nullptr, 124, 124);
     CGPathAddLineToPoint(rectPath2, nullptr, 139, 139);
     CGPathAddLineToPoint(rectPath2, nullptr, 187, 187);
     CGPathAddLineToPoint(rectPath2, nullptr, 200, 200);
 
-    // Direction shoudl not matter either
+    // Direction matters
     CGPathAddLineToPoint(rectPath1, nullptr, 230, 200);
     CGPathAddLineToPoint(rectPath1, nullptr, 230, 230);
     CGPathAddLineToPoint(rectPath1, nullptr, 200, 200);
@@ -858,7 +858,7 @@ DISABLED_TEST(CGPath, CGPathEqualsTest) {
     CGPathAddLineToPoint(rectPath2, nullptr, 230, 200);
     CGPathAddLineToPoint(rectPath2, nullptr, 200, 200);
 
-    EXPECT_TRUE(testSymmetricEquivalence(rectPath1, rectPath2));
+    EXPECT_FALSE(testSymmetricEquivalence(rectPath1, rectPath2));
 
     CGPathRelease(path1);
     CGPathRelease(path2);
@@ -871,7 +871,31 @@ DISABLED_TEST(CGPath, CGPathEqualsTest) {
     CGPathRelease(containedRectangle);
 }
 
-DISABLED_TEST(CGPath, SubShapesEqualityTest) {
+TEST(CGPath, CGPathEqualsCopyTest) {
+    CGMutablePathRef thepath = CGPathCreateMutable();
+    CGFloat width = 500.0f;
+    CGFloat height = 500.0f;
+    CGFloat xstart = 50.0f;
+    CGFloat ystart = 50.0f;
+
+    CGPathMoveToPoint(thepath, NULL, xstart + .75 * width, ystart + .5 * height);
+    CGPathAddArc(thepath, NULL, xstart + .5 * width, ystart + .5 * height, .5 * height, 0, M_PI / 2, true);
+    CGPathAddArc(thepath, NULL, xstart + .5 * width, ystart + .5 * height, .5 * height, M_PI / 2, 0, true);
+    CGPathMoveToPoint(thepath, NULL, xstart + .25 * width, ystart + .5 * height);
+    CGPathAddArc(thepath, NULL, xstart + .375 * width, ystart + .5 * height, .25 * height, M_PI, 0, false);
+    CGPathMoveToPoint(thepath, NULL, xstart + .5 * width, ystart + .5 * height);
+    CGPathAddArc(thepath, NULL, xstart + .625 * width, ystart + .5 * height, .25 * height, M_PI, 0, true);
+    CGPathMoveToPoint(thepath, NULL, xstart + .4375 * width, ystart + .5 * height);
+    CGPathAddArc(thepath, NULL, xstart + .375 * width, ystart + .5 * height, .125 * height, 0, M_PI / 2, true);
+    CGPathAddArc(thepath, NULL, xstart + .375 * width, ystart + .5 * height, .125 * height, M_PI / 2, 0, true);
+    CGPathMoveToPoint(thepath, NULL, xstart + .6875 * width, ystart + .5 * height);
+    CGPathAddArc(thepath, NULL, xstart + .625 * width, ystart + .5 * height, .125 * height, 0, M_PI / 2, true);
+    CGPathAddArc(thepath, NULL, xstart + .625 * width, ystart + .5 * height, .125 * height, M_PI / 2, 0, true);
+
+    EXPECT_TRUE(testSymmetricEquivalence(thepath, CGPathCreateCopy(thepath)));
+}
+
+TEST(CGPath, SubShapesEqualityTest) {
     CGMutablePathRef path1 = CGPathCreateMutable();
     CGMutablePathRef path2 = CGPathCreateMutable();
 
