@@ -242,6 +242,10 @@ LIBRARY CoreGraphics
         _CGContextCreateWithD2DRenderTarget
         _CGGetD2DFactory
         _CGGetPixelFormatProperties
+        _CGContextPushBeginDraw
+        _CGContextPopEndDraw
+        _CGContextEscapeBeginEndDrawStack
+        _CGContextUnescapeBeginEndDrawStack
 
         ; CGDataConsumer.mm
         CGDataConsumerCreate
