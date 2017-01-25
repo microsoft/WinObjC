@@ -156,7 +156,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ucrtd.lib;msvcrtd.lib;msvcprtd.lib;vccorlibd.lib;vcruntimed.lib;oldnames.lib;DWrite.lib;RTObjCInterop.lib;mincore.lib;freetype.lib;libxml2.lib;Windowscodecs.lib;libdispatch.lib;UIKit.Xaml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ucrtd.lib;msvcrtd.lib;msvcprtd.lib;vccorlibd.lib;vcruntimed.lib;oldnames.lib;DWrite.lib;RTObjCInterop.lib;mincore.lib;libxml2.lib;Windowscodecs.lib;libdispatch.lib;UIKit.Xaml.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <AdditionalLibraryDirectories>$(VC_LibraryPath_x86);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -181,7 +181,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ucrtd.lib;msvcrtd.lib;msvcprtd.lib;vccorlibd.lib;vcruntimed.lib;oldnames.lib;DWrite.lib;RTObjCInterop.lib;mincore.lib;freetype.lib;libxml2.lib;Windowscodecs.lib;libdispatch.lib;UIKit.Xaml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ucrtd.lib;msvcrtd.lib;msvcprtd.lib;vccorlibd.lib;vcruntimed.lib;oldnames.lib;DWrite.lib;RTObjCInterop.lib;mincore.lib;libxml2.lib;Windowscodecs.lib;libdispatch.lib;UIKit.Xaml.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <AdditionalLibraryDirectories>$(VC_LibraryPath_ARM);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -210,7 +210,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ucrt.lib;msvcrt.lib;msvcprt.lib;vccorlib.lib;vcruntime.lib;oldnames.lib;DWrite.lib;RTObjCInterop.lib;mincore.lib;freetype.lib;libxml2.lib;Windowscodecs.lib;libdispatch.lib;UIKit.Xaml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ucrt.lib;msvcrt.lib;msvcprt.lib;vccorlib.lib;vcruntime.lib;oldnames.lib;DWrite.lib;RTObjCInterop.lib;mincore.lib;libxml2.lib;Windowscodecs.lib;libdispatch.lib;UIKit.Xaml.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <AdditionalLibraryDirectories>$(VC_LibraryPath_x86);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -239,7 +239,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ucrt.lib;msvcrt.lib;msvcprt.lib;vccorlib.lib;vcruntime.lib;oldnames.lib;DWrite.lib;RTObjCInterop.lib;mincore.lib;freetype.lib;libxml2.lib;Windowscodecs.lib;libdispatch.lib;UIKit.Xaml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ucrt.lib;msvcrt.lib;msvcprt.lib;vccorlib.lib;vcruntime.lib;oldnames.lib;DWrite.lib;RTObjCInterop.lib;mincore.lib;libxml2.lib;Windowscodecs.lib;libdispatch.lib;UIKit.Xaml.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
       <AdditionalLibraryDirectories>$(VC_LibraryPath_ARM);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
