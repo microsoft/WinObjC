@@ -50,6 +50,8 @@ struct ImageDelta {
     ImageDelta(ImageComparisonResult result, size_t differences, CGImageRef deltaImage)
         : result(result), differences(differences), deltaImage(CGImageRetain(deltaImage)) {
     }
+
+    ImageDelta(ImageDelta&& other) : result(other.result), differences(other.differences), deltaImage(other.deltaImage.release()) {}
 };
 
 class ImageComparator {
