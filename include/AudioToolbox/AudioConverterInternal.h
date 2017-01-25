@@ -30,6 +30,9 @@
 #include <wmcodecdsp.h>
 #include <COMIncludes_End.h>
 
+#import <Foundation/NSObject.h>
+#import <CoreAudio/CoreAudioTypes.h>
+
 using namespace Microsoft::WRL;
 using namespace Microsoft::WRL::Wrappers;
 
