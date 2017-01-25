@@ -252,8 +252,6 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext> {
 
     CGAffineTransform textMatrix{ CGAffineTransformIdentity };
 
-    using __CGContextFlushHook = void(*)(CGContextRef);
-
 private:
     std::stack<__CGContextLayer> _layerStack{};
     woc::unique_cf<CGMutablePathRef> _currentPath{ nullptr };
