@@ -46,7 +46,7 @@ public:
         return m_geometrySink.Get();
     }
 
-    _CGPathCustomSink(_In_ ID2D1GeometrySink* sink) : m_geometrySink(sink), m_isFigureOpen(false) {
+    _CGPathCustomSink(_In_ ID2D1GeometrySink* sink) : m_geometrySink(sink), m_lastPoint{0, 0}, m_isFigureOpen(false) {
     }
 
     STDMETHOD_(void, SetFillMode)(D2D1_FILL_MODE fillMode) {
