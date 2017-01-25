@@ -385,13 +385,13 @@ public:
 
     inline void PopEndDraw() {
         if (--(_beginEndDrawDepth) == 0) {
-            THROW_IF_FAILED(deviceContext->EndDraw());
+            FAIL_FAST_IF_FAILED(deviceContext->EndDraw());
         }
     }
 
     inline void EscapeBeginEndDrawStack() {
         if ((_beginEndDrawDepth > 0) && ((_escapeBeginEndDrawDepth)++ == 0)) {
-            THROW_IF_FAILED(deviceContext->EndDraw());
+            FAIL_FAST_IF_FAILED(deviceContext->EndDraw());
         }
     }
 

@@ -248,8 +248,6 @@ static idretain _defaultTextColor[2];
         }
     } else {
         if (!_noDefaultImages) {
-            CGContextRef ctx = ctx;
-
             if (_selected) {
                 // No border, just fill with background color
                 CGContextSetFillColorWithColor(ctx, [bgColor CGColor]);

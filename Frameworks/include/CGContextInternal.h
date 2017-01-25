@@ -55,8 +55,6 @@ COREGRAPHICS_EXPORT void _CGContextPopEndDraw(CGContextRef ctx);
 // For scenarios where a Begin/EndDraw pair needs to be temporarily escaped, to be returned to at a later time
 // Ie:
 //      - Switching render targets - Illegal to do so if currently in a Begin/EndDraw pair
-//      - Cairo - ID2D1RenderTarget is considered to 'own' the bitmap during Begin/EndDraw,
-//                unsafe to edit the same bitmap from cairo at this time
 // Also counts in a stack-like manner, so that the escape and unescape only happen once
 COREGRAPHICS_EXPORT void _CGContextEscapeBeginEndDrawStack(CGContextRef ctx);
 COREGRAPHICS_EXPORT void _CGContextUnescapeBeginEndDrawStack(CGContextRef ctx);
