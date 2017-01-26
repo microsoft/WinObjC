@@ -502,7 +502,7 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
     if (alertPriv->_cancelText != nil && alertPriv->_numButtons == 1 && alertPriv->_numberOfRows < 2) {
         float buttonsWidth = 270.0f;
         //  Make side by side buttons
-        alertPriv->_cancelView = (createButton(
+        alertPriv->_cancelView.attach(createButton(
             self, alertPriv->_cancelButtonIndex, alertPriv->_cancelText, boxWidth / 2.0f - buttonsWidth / 2.0f, curHeight, 130.0f));
         [alertPriv->_cancelView sendControlEventsOnBack:UIControlEventTouchUpInside];
 
@@ -530,7 +530,7 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
 
         if (alertPriv->_cancelText != nil) {
             curHeight += 10.0f;
-            alertPriv->_cancelView = (createButton(
+            alertPriv->_cancelView.attach(createButton(
                 self, alertPriv->_cancelButtonIndex, alertPriv->_cancelText, boxWidth / 2.0f - 280.0f / 2.0f, curHeight, 280.0f));
             [alertPriv->_cancelView sendControlEventsOnBack:UIControlEventTouchUpInside];
 

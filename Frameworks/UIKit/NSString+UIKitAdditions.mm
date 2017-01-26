@@ -268,7 +268,7 @@ static NSDictionary* _getDefaultUITextAttributes() {
 
 // Private helper that converts a UILineBreakMode -> NSParagraphStyle
 static inline NSParagraphStyle* _paragraphStyleWithLineBreakMode(UILineBreakMode lineBreakMode) {
-    NSMutableParagraphStyle* ret = [NSMutableParagraphStyle new];
+    NSMutableParagraphStyle* ret = [[[NSMutableParagraphStyle alloc] init] autorelease];
     ret.lineBreakMode = lineBreakMode;
     return ret;
 }
