@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
-  <!-- Primitive/Runtime Types -->
+     <!--objc_class is defined as an opaque struct outside of libobjc2.dll.  Forward the natvis to the libobjc2.dll version so that the type can be visualized.
+       The libobjc2 view of objc_class is defined within libobjc2.pdb.-->
+  <Type Name="objc_class" ExcludeView="Libobjc2">
+    <DisplayString>{*((libobjc2.dll!objc_class*)this),view(Libobjc2)}</DisplayString>
+    <Expand>
+      <ExpandedItem>*((libobjc2.dll!objc_class*)this),view(Libobjc2)</ExpandedItem>
+    </Expand>
+  </Type>
+  
+  <!-- TODO: Move this entry to libobjc2.pdb -->
   <Type Name="objc_selector">
+    <Version Name="libobjc2.dll" />
     <DisplayString Condition="((libobjc2.dll!objc_selector*)this)->index &lt; libobjc2.dll!selector_count">@selector({libobjc2.dll!selector_list[((libobjc2.dll!objc_selector*)this)->index]->value,s8b})</DisplayString>
     <DisplayString>@selector({((libobjc2.dll!objc_selector*)this)->name,s8b})</DisplayString>
     <Expand HideRawView="true">
@@ -40,6 +50,47 @@
         <DisplayString></DisplayString>
         <Expand />
       </Synthetic>
+    </Expand>
+  </Type>
+
+  <!-- Since any CFStringRef can point to any NSString, we have to go through the NSObject renderer. -->
+  <Type Name="__CFString">
+    <DisplayString>{*(NSObject*)this,na}</DisplayString>
+    <StringView>*(NSObject*)this,na</StringView>
+    <Expand HideRawView="true">
+      <ExpandedItem>*(NSObject*)this</ExpandedItem>
+    </Expand>
+  </Type>
+
+  <!-- Since any CFNumberRef can point to any NSNumber, we have to go through the NSObject renderer. -->
+  <Type Name="__CFNumber">
+    <DisplayString>{*(NSObject*)this,na}</DisplayString>
+    <Expand HideRawView="true">
+      <ExpandedItem>*(NSObject*)this</ExpandedItem>
+    </Expand>
+  </Type>
+
+  <!-- Since any CFArrayRef can point to any NSArray, we have to go through the NSObject renderer. -->
+  <Type Name="__CFArray">
+    <DisplayString>{*(NSObject*)this,na}</DisplayString>
+    <Expand HideRawView="true">
+      <ExpandedItem>*(NSObject*)this</ExpandedItem>
+    </Expand>
+  </Type>
+
+  <!-- Since any __CFBasicHash can point to any NSDictionary/NSSet, we have to go through the NSObject renderer. -->
+  <Type Name="__CFBasicHash">
+    <DisplayString>{*(NSObject*)this,na}</DisplayString>
+    <Expand HideRawView="true">
+      <ExpandedItem>*(NSObject*)this</ExpandedItem>
+    </Expand>
+  </Type>
+
+  <!-- Since any __CFData can point to any NSData, we have to go through the NSObject renderer. -->
+  <Type Name="__CFData">
+    <DisplayString>{*(NSObject*)this,na}</DisplayString>
+    <Expand HideRawView="true">
+      <ExpandedItem>*(NSObject*)this</ExpandedItem>
     </Expand>
   </Type>
 
