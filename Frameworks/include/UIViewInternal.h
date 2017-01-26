@@ -86,9 +86,9 @@ public:
         userInteractionEnabled = YES;
         multipleTouchEnabled = NO;
         contentMode = UIViewContentModeScaleToFill;
-        currentTouches.attach([[NSMutableArray alloc] initWithCapacity:16]);
-        gestures.attach([NSMutableArray new]);
-        constraints.attach([NSMutableArray new]);
+        currentTouches = [[NSMutableArray alloc] initWithCapacity:16];
+        gestures = [NSMutableArray new];
+        constraints = [NSMutableArray new];
         translatesAutoresizingMaskIntoConstraints = YES;
         _isChangingParent = false;
         _constraintsNeedUpdate = false;
@@ -96,7 +96,7 @@ public:
         _contentHuggingPriority.width = 250.0f;
         _contentCompressionResistancePriority.height = 750.0f;
         _contentCompressionResistancePriority.width = 750.0f;
-        _layoutGuides.attach([NSMutableArray new]);
+        _layoutGuides = [NSMutableArray new];
 
         memset(&_resizeRoundingError, 0, sizeof(_resizeRoundingError));
 
