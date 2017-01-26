@@ -183,7 +183,7 @@ static const wchar_t* TAG = L"NSTimer";
         _repeats = repeats;
         _canFire = YES;
         _valid = YES;
-        _addedToModes = (NSMutableArray*)CFArrayCreateMutable(NULL, 0, NULL);
+        _addedToModes.attach((NSMutableArray*)CFArrayCreateMutable(NULL, 0, NULL));
         _nextFireTime = [NSDate timeIntervalSinceReferenceDate] + _interval;
     }
 
