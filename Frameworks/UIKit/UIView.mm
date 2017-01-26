@@ -17,6 +17,7 @@
 #import <StubReturn.h>
 #import "Starboard.h"
 
+#import <UIKit/UIApplication.h>
 #import <UIKit/UIGraphics.h>
 #import <UIKit/UIImage.h>
 #import <UIKit/UIImageView.h>
@@ -39,6 +40,7 @@
 #import "UIWindowInternal.h"
 #import "UIViewControllerInternal.h"
 #import "UIGestureRecognizerInternal.h"
+#import "CACompositor.h"
 #import "CALayerInternal.h"
 #import "CAAnimationInternal.h"
 #import "CGContextInternal.h"
@@ -2299,6 +2301,13 @@ static float doRound(float f) {
     }
 
     if (!priv->superview) {
+        // This is probably safe to do in all cases, but for now, let's constrain 
+        // this to middleware scenarios.  We need to return a window in such cases
+        // so point/rect/etc. conversion works properly.
+        if (GetCACompositor()->IsRunningAsFramework()) {
+            return [[UIApplication sharedApplication] keyWindow];
+        }
+
         return nil;
     }
 
