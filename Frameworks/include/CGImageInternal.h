@@ -192,6 +192,7 @@ COREGRAPHICS_EXPORT void* _CGImageGetRawBytes(CGImageRef image);
 // Obtain the associated DisplayTexture
 __declspec(dllexport) std::shared_ptr<IDisplayTexture> _CGImageGetDisplayTexture(CGImageRef image);
 
+size_t _CGImageImputeBitsPerPixelFromFormat(CGColorSpaceRef colorSpace, size_t bitsPerComponent, CGBitmapInfo bitmapInfo);
 HRESULT _CGImageGetWICPixelFormatFromImageProperties(unsigned int bitsPerComponent,
                                                      unsigned int bitsPerPixel,
                                                      CGColorSpaceRef colorSpace,

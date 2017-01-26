@@ -710,6 +710,36 @@ NSData* _CGImageRepresentation(CGImageRef image, REFGUID guid, float quality) {
     return nil;
 }
 
+size_t _CGImageImputeBitsPerPixelFromFormat(CGColorSpaceRef colorSpace, size_t bitsPerComponent, CGBitmapInfo bitmapInfo) {
+    unsigned int alphaInfo = bitmapInfo & kCGBitmapAlphaInfoMask;
+    unsigned int byteOrder = bitmapInfo & kCGBitmapByteOrderMask;
+
+    // Try byte order first: The user can specify 32 or 16 directly.
+    switch (byteOrder) {
+        case kCGBitmapByteOrder32Little:
+        case kCGBitmapByteOrder32Big:
+            return 32;
+        case kCGBitmapByteOrder16Little:
+        case kCGBitmapByteOrder16Big:
+            return 16;
+    }
+
+    // Otherwise, try to figure out how many components there are.
+    size_t nComponents = CGColorSpaceGetNumberOfComponents(colorSpace);
+    switch (alphaInfo) {
+        case kCGImageAlphaNoneSkipFirst:
+        case kCGImageAlphaPremultipliedFirst:
+        case kCGImageAlphaFirst:
+        case kCGImageAlphaNoneSkipLast:
+        case kCGImageAlphaPremultipliedLast:
+        case kCGImageAlphaLast:
+            nComponents += 1;
+            break;
+    }
+
+    return (bitsPerComponent * nComponents);
+}
+
 // CG packed format key
 //  |Color  |bits/px|CGBitmapInfo   |
 //  |-------|-------|---------------|
@@ -766,23 +796,13 @@ HRESULT _CGImageGetWICPixelFormatFromImageProperties(
 
     RETURN_HR_IF(E_POINTER, !pixelFormat);
 
-    CGColorSpaceModel colorSpaceModel = CGColorSpaceGetModel(colorSpace);
-
-    unsigned int alphaInfo = bitmapInfo & kCGBitmapAlphaInfoMask;
-    unsigned int byteOrder = bitmapInfo & kCGBitmapByteOrderMask;
-    unsigned int formatImputedBpp = 0;
-    switch (byteOrder) {
-        case kCGBitmapByteOrder32Little:
-        case kCGBitmapByteOrder32Big:
-            formatImputedBpp = 32;
-            break;
-        case kCGBitmapByteOrder16Little:
-        case kCGBitmapByteOrder16Big:
-            formatImputedBpp = 16;
-            break;
+    size_t formatImputedBpp = _CGImageImputeBitsPerPixelFromFormat(colorSpace, bitsPerComponent, bitmapInfo);
+    if (bitsPerPixel == 0) {
+        bitsPerPixel = formatImputedBpp;
     }
 
-    if (formatImputedBpp == 0 || formatImputedBpp == bitsPerPixel) {
+    if (formatImputedBpp == bitsPerPixel) {
+        CGColorSpaceModel colorSpaceModel = CGColorSpaceGetModel(colorSpace);
         auto found = s_CGWICFormatMap.find(CG_FORMAT_KEY(colorSpaceModel, bitsPerPixel, bitmapInfo, 0));
         if (found != s_CGWICFormatMap.end()) {
             *pixelFormat = found->second;
