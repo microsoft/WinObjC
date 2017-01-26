@@ -234,7 +234,7 @@ COREGRAPHICS_EXPORT void CGContextShowGlyphs(CGContextRef c, const CGGlyph* g, s
 COREGRAPHICS_EXPORT void CGContextShowGlyphsAtPoint(CGContextRef c, CGFloat x, CGFloat y, const CGGlyph* glyphs, size_t count);
 COREGRAPHICS_EXPORT void CGContextShowGlyphsWithAdvances(CGContextRef c, const CGGlyph* glyphs, const CGSize* advances, size_t count);
 
-COREGRAPHICS_EXPORT void CGContextShowGlyphsAtPositions(CGContextRef c, const CGGlyph* glyphs, const CGPoint* Lpositions, size_t count)
+COREGRAPHICS_EXPORT void CGContextShowGlyphsAtPositions(CGContextRef c, const CGGlyph* glyphs, const CGPoint* positions, size_t count)
     STUB_METHOD;
 
 COREGRAPHICS_EXPORT CGAffineTransform CGContextGetTextMatrix(CGContextRef c);
