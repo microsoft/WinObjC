@@ -101,7 +101,7 @@ void UIGraphicsBeginImageContextWithOptions(CGSize size, BOOL opaque, float scal
                                                                 scaledSize.width * 4, // Stride for RGBA/RGBX
                                                                 rgbColorSpace.get(),
                                                                 (opaque ? kCGImageAlphaNoneSkipLast : kCGImageAlphaPremultipliedLast) |
-                                                                    kCGBitmapByteOrder32Little) };
+                                                                    kCGBitmapByteOrder32Big) };
 
     // Apply the UIKit ULO transform (and shadow projection transform)
     CGContextTranslateCTM(context.get(), 0.0f, size.height * scale);
