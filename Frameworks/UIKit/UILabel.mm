@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#import "AssertARCEnabled.h"
 #import "Starboard.h"
 
 #import <UIKit/NSString+UIKitAdditions.h>
@@ -102,9 +103,8 @@
     [_textBlock setText:_text];
     [_textBlock setFontSize:[_font pointSize]];
 
-    StrongId<WUTFontWeight> fontWeight;
-    fontWeight.attach([WUTFontWeight new]);
-    fontWeight.get().weight = static_cast<unsigned short>([_font _fontWeight]);
+    WUTFontWeight* fontWeight =[WUTFontWeight new];
+    fontWeight.weight = static_cast<unsigned short>([_font _fontWeight]);
     [_textBlock setFontWeight:fontWeight];
     [_textBlock setFontStyle:static_cast<WUTFontStyle>([_font _fontStyle])];
     [_textBlock setFontStretch:static_cast<WUTFontStretch>([_font _fontStretch])];
@@ -306,7 +306,7 @@
         newStr = [newStr description];
     }
     if (newStr == nil || ![_text isEqual:newStr]) {
-        _text.attach([newStr copy]);
+        _text = [newStr copy];
 
         if (_adjustFontSize) {
             [self adjustFontSizeToFit];
@@ -323,7 +323,7 @@
 */
 - (void)setAttributedText:(NSAttributedString*)newStr {
     UNIMPLEMENTED();
-    _attributedText.attach([newStr copy]);
+    _attributedText = [newStr copy];
     [self setText:[_attributedText string]];
 }
 
@@ -381,7 +381,6 @@
         return;
     }
     if (![_textColor isEqual:color]) {
-        [[_textColor retain] autorelease];
         _textColor = color;
         [self adjustTextLayerSize];
     }
@@ -620,21 +619,6 @@
     }
 
     return ret;
-}
-
-/**
- @Status Interoperable
-*/
-- (void)dealloc {
-    _text = nil;
-    _font = nil;
-    _textColor = nil;
-    _shadowColor = nil;
-    _highlightedTextColor = nil;
-    _savedBackgroundColor = nil;
-    _attributedText = nil;
-
-    [super dealloc];
 }
 
 /**

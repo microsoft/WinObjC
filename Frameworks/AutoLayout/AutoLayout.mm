@@ -463,6 +463,12 @@ public:
 - (BOOL)autoLayoutInvalidateContentSize {
     AutoLayoutProperties* layoutProperties = self._autoLayoutProperties;
 
+    if (DEBUG_AUTO_LAYOUT_LIGHT) {
+        TraceVerbose(TAG, L"autoLayoutInvalidateContentSize: %hs(0x%p).",
+            object_getClassName(self),
+            self);
+    }
+
     CGSize newContentSize = [self intrinsicContentSize];
     if (CGSizeEqualToSize(layoutProperties->_intrinsicContentSize, newContentSize)) {
         if (DEBUG_AUTO_LAYOUT_LIGHT) {
