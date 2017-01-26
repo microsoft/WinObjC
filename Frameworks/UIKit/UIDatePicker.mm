@@ -326,13 +326,13 @@ static void didSelectDate(UIDatePicker* self, int row, int component) {
     //  Check if the day is invalid
     bool isInvalid = false;
 
-    NSDateComponents* componentsCheck = [NSDateComponents new];
+    StrongId<NSDateComponents> componentsCheck;
+    componentsCheck.attach([[NSDateComponents alloc] init]);
     [componentsCheck setMonth:month];
     [componentsCheck setYear:year];
     [componentsCheck setHour:17];
 
     NSDate* dateCheck = [calendar dateFromComponents:componentsCheck];
-    [componentsCheck release];
 
     NSRange range;
 
@@ -348,7 +348,8 @@ static void didSelectDate(UIDatePicker* self, int row, int component) {
         isInvalid = true;
     }
 
-    NSDateComponents* components = [NSDateComponents new];
+    StrongId<NSDateComponents> components;
+    components.attach([[NSDateComponents alloc] init]);
     [components setMonth:month];
     [components setDay:day];
     [components setYear:year];
@@ -358,7 +359,6 @@ static void didSelectDate(UIDatePicker* self, int row, int component) {
     //[components setHour:17];
 
     NSDate* newDate = [calendar dateFromComponents:components];
-    [components release];
     NSDate* clampedDate = clampDate(self, newDate);
 
     if (![clampedDate isEqual:newDate]) {
