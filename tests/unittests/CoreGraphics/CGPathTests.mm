@@ -893,7 +893,7 @@ TEST(CGPath, CGPathEqualsCopyTest) {
     CGPathAddArc(thePath, NULL, xstart + .625 * width, ystart + .5 * height, .125 * height, M_PI / 2, 0, true);
 
     CGMutablePathRef thePathCopy = CGPathCreateCopy(thePath);
-    EXPECT_TRUE(testSymmetricEquivalence(thePath, CGPathCreateCopy(thePath)));
+    EXPECT_TRUE(testSymmetricEquivalence(thePath, thePathCopy));
 
     CGPathRelease(thePath);
     CGPathRelease(thePathCopy);

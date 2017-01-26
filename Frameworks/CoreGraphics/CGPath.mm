@@ -295,6 +295,9 @@ static inline size_t __CGPathGetExpectedPointCountForType(CGPathElementType type
             return 3;
         case kCGPathElementCloseSubpath:
             return 0;
+        default:
+            TraceError(TAG, L"Invalid CGPathElementType encountered.");
+            return 0;
     }
 }
 
@@ -341,7 +344,7 @@ static void __CGPathApplyCheckEquality(void* pathElements, const CGPathElement* 
 
 // A function to pass to CGPathApply to retrieve the individual path elements to check equality against.
 static void _CGPathApplyGetElements(void* pathElements, const CGPathElement* element) {
-    ((std::vector<__CGPathElementVector>*)pathElements)->emplace_back(__CGPathElementVector(*element));
+    ((std::vector<__CGPathElementVector>*)pathElements)->emplace_back(*element);
 }
 
 static Boolean __CGPathEqual(CFTypeRef cf1, CFTypeRef cf2) {
@@ -369,7 +372,7 @@ static Boolean __CGPathEqual(CFTypeRef cf1, CFTypeRef cf2) {
 
     std::vector<__CGPathElementVector> path1Elements;
     CGPathApply(path1, &path1Elements, _CGPathApplyGetElements);
-    struct __CGPathElementMatch match;
+    __CGPathElementMatch match;
     match.m_elements = path1Elements;
     CGPathApply(path2, &match, __CGPathApplyCheckEquality);
 
