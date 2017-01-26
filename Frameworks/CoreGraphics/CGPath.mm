@@ -303,43 +303,43 @@ static inline size_t __CGPathGetExpectedPointCountForType(CGPathElementType type
 
 // Create a mimic of CGPathElement that holds the points in a vector with a convenient copy constructor.
 struct __CGPathElementVector {
-    CGPathElementType m_type;
-    std::vector<CGPoint> m_points;
+    CGPathElementType type;
+    std::vector<CGPoint> points;
     __CGPathElementVector(const CGPathElement& el)
-        : m_type(el.type), m_points(el.points, el.points + __CGPathGetExpectedPointCountForType(el.type)) {
+        : type(el.type), points(el.points, el.points + __CGPathGetExpectedPointCountForType(el.type)) {
     }
 };
 
 // A struct to pass to the equality matching CGPathApply since only a single void* may be passed.
 struct __CGPathElementMatch {
-    std::vector<__CGPathElementVector> m_elements;
-    bool m_equal = true;
-    int m_positionToMatch = 0;
+    std::vector<__CGPathElementVector> elements;
+    bool equal = true;
+    int positionToMatch = 0;
 };
 }
 
 // A function to pass to CGPathApply to determine whether two paths are equal.
-static void __CGPathApplyCheckEquality(void* pathElements, const CGPathElement* element1) {
-    __CGPathElementMatch* elements = (__CGPathElementMatch*)pathElements;
+static void __CGPathApplyCheckEquality(void* pathMatchContext, const CGPathElement* element1) {
+    __CGPathElementMatch* matchingContext = (__CGPathElementMatch*)pathMatchContext;
 
     // If the matching has already failed, simply return asap. There's no way to stop a CGPathApply early.
-    if (!elements->m_equal) {
+    if (!matchingContext->equal) {
         return;
     }
-    int i = elements->m_positionToMatch;
-    __CGPathElementVector element2 = elements->m_elements[i];
-    if (element2.m_type != element1->type) {
-        elements->m_equal = false;
-    } else if (element2.m_type != kCGPathElementCloseSubpath) {
-        for (int i = 0; i < element2.m_points.size(); i++) {
-            if (element1->points[i] != element2.m_points[i]) {
-                elements->m_equal = false;
+    int i = matchingContext->positionToMatch;
+    __CGPathElementVector element2 = matchingContext->elements[i];
+    if (element2.type != element1->type) {
+        matchingContext->equal = false;
+    } else if (element2.type != kCGPathElementCloseSubpath) {
+        for (int i = 0; i < element2.points.size(); i++) {
+            if (element1->points[i] != element2.points[i]) {
+                matchingContext->equal = false;
                 break;
             }
         }
     }
 
-    elements->m_positionToMatch++;
+    matchingContext->positionToMatch++;
 }
 
 // A function to pass to CGPathApply to retrieve the individual path elements to check equality against.
@@ -373,10 +373,10 @@ static Boolean __CGPathEqual(CFTypeRef cf1, CFTypeRef cf2) {
     std::vector<__CGPathElementVector> path1Elements;
     CGPathApply(path1, &path1Elements, _CGPathApplyGetElements);
     __CGPathElementMatch match;
-    match.m_elements = path1Elements;
+    match.elements = path1Elements;
     CGPathApply(path2, &match, __CGPathApplyCheckEquality);
 
-    return match.m_equal;
+    return match.equal;
 }
 
 /**
