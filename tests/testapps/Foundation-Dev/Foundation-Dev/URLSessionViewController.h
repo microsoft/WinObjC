@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,8 +14,7 @@
 //
 //******************************************************************************
 
-#import "MenuTableViewController.h"
+#import <UIKit/UIKit.h>
 
-@interface FoundationsViewController : MenuTableViewController
-
+@interface URLSessionViewController : UIViewController
 @end
