@@ -97,8 +97,7 @@ static Class _NSCFString$classForCoder(id self, SEL _cmd) {
     va_list reader;
     va_start(reader, formatStr);
 
-    StrongId<NSString> endStr;
-    endStr.attach([[NSString alloc] initWithFormat:formatStr arguments:reader]);
+    NSString* endStr = [[NSString alloc] initWithFormat:formatStr arguments:reader];
     va_end(reader);
 
     [self appendString:endStr];

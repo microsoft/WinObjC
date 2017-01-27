@@ -27,8 +27,7 @@ bool g_isNSLogTestHookEnabled = false;
  @Status Interoperable
 */
 void NSLogv(NSString* format, va_list list) {
-    StrongId<NSString> formattedString;
-    formattedString.attach([[NSString alloc] initWithFormat:format arguments:list]);
+    StrongId<NSString> formattedString = [[NSString alloc] initWithFormat:format arguments:list];
     std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(formattedString);
 
     // This traces to ETW in debug and release modes.

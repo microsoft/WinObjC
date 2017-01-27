@@ -356,7 +356,7 @@ static void* _threadBody(void* context) {
     NSThread* currentThread = [[self class] _threadObjectFromCurrentThread];
 
     if (currentThread == nil) {
-        currentThread = [[[NSThread alloc] init] autorelease];
+        currentThread = [NSThread new];
         [currentThread _associateWithCurrentThread];
     }
     return currentThread;

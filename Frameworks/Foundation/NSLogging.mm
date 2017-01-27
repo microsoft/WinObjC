@@ -24,8 +24,7 @@ static const wchar_t* g_TraceFormat = L"%ws";
 void NSTraceVerbose(const wchar_t* tag, NSString* format, ...) {
     va_list list;
     va_start(list, format);
-    StrongId<NSString> formattedString;
-    formattedString.attach([[NSString alloc] initWithFormat:format arguments:list]);
+    StrongId<NSString> formattedString = [[NSString alloc] initWithFormat:format arguments:list];
     std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(formattedString);
     TraceVerbose(tag, g_TraceFormat, wideBuffer.c_str());
     va_end(list);
@@ -34,8 +33,7 @@ void NSTraceVerbose(const wchar_t* tag, NSString* format, ...) {
 void NSTraceInfo(const wchar_t* tag, NSString* format, ...) {
     va_list list;
     va_start(list, format);
-    StrongId<NSString> formattedString;
-    formattedString.attach([[NSString alloc] initWithFormat:format arguments:list]);
+    StrongId<NSString> formattedString = [[NSString alloc] initWithFormat:format arguments:list];
     std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(formattedString);
     TraceInfo(tag, g_TraceFormat, wideBuffer.c_str());
     va_end(list);
@@ -44,8 +42,7 @@ void NSTraceInfo(const wchar_t* tag, NSString* format, ...) {
 void NSTraceWarning(const wchar_t* tag, NSString* format, ...) {
     va_list list;
     va_start(list, format);
-    StrongId<NSString> formattedString;
-    formattedString.attach([[NSString alloc] initWithFormat:format arguments:list]);
+    StrongId<NSString> formattedString = [[NSString alloc] initWithFormat:format arguments:list];
     std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(formattedString);
     TraceWarning(tag, g_TraceFormat, wideBuffer.c_str());
     va_end(list);
@@ -54,8 +51,7 @@ void NSTraceWarning(const wchar_t* tag, NSString* format, ...) {
 void NSTraceError(const wchar_t* tag, NSString* format, ...) {
     va_list list;
     va_start(list, format);
-    StrongId<NSString> formattedString;
-    formattedString.attach([[NSString alloc] initWithFormat:format arguments:list]);
+    StrongId<NSString> formattedString = [[NSString alloc] initWithFormat:format arguments:list];
     std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(formattedString);
     TraceError(tag, g_TraceFormat, wideBuffer.c_str());
     va_end(list);
@@ -64,8 +60,7 @@ void NSTraceError(const wchar_t* tag, NSString* format, ...) {
 void NSTraceCritical(const wchar_t* tag, NSString* format, ...) {
     va_list list;
     va_start(list, format);
-    StrongId<NSString> formattedString;
-    formattedString.attach([[NSString alloc] initWithFormat:format arguments:list]);
+    StrongId<NSString> formattedString = [[NSString alloc] initWithFormat:format arguments:list];
     std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(formattedString);
     TraceCritical(tag, g_TraceFormat, wideBuffer.c_str());
     va_end(list);
