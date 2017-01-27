@@ -487,16 +487,10 @@ static inline CGImageRef getImage(UIImage* uiImage) {
     float img_height = CGImageGetHeight(img);
     float img_width = CGImageGetWidth(img);
 
-    CGRect srcRect;
     CGRect pos;
     pos.origin = point;
     pos.size.width = (img_height / _scale);
     pos.size.height = (img_width / _scale);
-
-    srcRect.origin.x = 0;
-    srcRect.origin.y = 0;
-    srcRect.size.width = img_width;
-    srcRect.size.height = img_height;
 
     // |1  0 0| is the transformation matrix for flipping a rect about its Y midpoint m. (m = (y + h/2))
     // |0 -1 0|
