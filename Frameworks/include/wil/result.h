@@ -1144,27 +1144,16 @@ typedef _Return_type_success_(return >= 0) LONG NTSTATUS;
             return;          \
         }                    \
     } while (0, 0)
-
-#define RETURN_RESULT_IF_NULL(input, result) \
-    do {                                     \
-        if (!input) {                        \
-            return result;                   \
-        }                                    \
+#define RETURN_RESULT_IF(input, result) \
+    do {                                \
+        if (input) {                    \
+            return result;              \
+        }                               \
     } while (0, 0)
 
-#define RETURN_RESULT_IF_FAILED(input, result) \
-    do {                                       \
-        if (FAILED(input)) {                   \
-            return result;                     \
-        }                                      \
-    } while (0, 0)
-#define RETURN_RESULT_IF(input, result)        \
-    do {                                       \
-        if (FAILED(input)) {                   \
-            return result;                     \
-        }                                      \
-    } while (0, 0)
 #define RETURN_FALSE_IF_FAILED(input) RETURN_FALSE_IF(FAILED(input));
+#define RETURN_RESULT_IF_NULL(input, result) RETURN_RESULT_IF(!input, result);
+#define RETURN_RESULT_IF_FAILED(input, result) RETURN_RESULT_IF(FAILED(input), result)
 //*****************************************************************************
 // Macros for logging failures (ignore or pass-through)
 //*****************************************************************************
