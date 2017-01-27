@@ -494,11 +494,16 @@ static inline CGImageRef getImage(UIImage* uiImage) {
     pos.size.height = (img_width / _scale);
 
     srcRect.origin.x = 0;
-    srcRect.origin.y = img_height;
+    srcRect.origin.y = 0;
     srcRect.size.width = img_width;
-    srcRect.size.height = -img_height;
+    srcRect.size.height = img_height;
 
-    _CGContextDrawImageRect(cur, img, srcRect, pos);
+    // |1  0 0| is the transformation matrix for flipping a rect about its Y midpoint m. (m = (y + h/2))
+    // |0 -1 0|
+    // |0 2m 1|
+    CGContextConcatCTM(cur, CGAffineTransformMake(1, 0, 0, -1, 0, 2 * (pos.origin.y + (pos.size.height / 2))));
+
+    CGContextDrawImage(cur, pos, img);
 }
 
 /**
@@ -544,6 +549,11 @@ static inline void drawPatches(CGContextRef context, UIImage* img, CGRect* dst) 
     const float dstBotCap = img->_imageInsets.bottom;
     const float dstLeftCap = img->_imageInsets.left;
     const float dstRightCap = img->_imageInsets.right;
+
+    // |1  0 0| is the transformation matrix for flipping a rect about its Y midpoint m. (m = (y + h/2))
+    // |0 -1 0|
+    // |0 2m 1|
+    CGContextConcatCTM(context, CGAffineTransformMake(1, 0, 0, -1, 0, 2 * (dstY + (dstHeight / 2))));
 
     // Center strip
     if (dstHeight - dstTopCap - dstBotCap > 0) {
