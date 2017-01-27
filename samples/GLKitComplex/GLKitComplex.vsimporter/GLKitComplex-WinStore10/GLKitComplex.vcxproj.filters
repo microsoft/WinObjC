@@ -2,19 +2,19 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{6497114e-8c49-47cf-bd7e-2caaaef4b9b5}</UniqueIdentifier>
+      <UniqueIdentifier>{f323b7c0-d930-48d0-8dd2-39244962d27a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{a8203dfd-e407-4106-a91f-45bb7976f98e}</UniqueIdentifier>
+      <UniqueIdentifier>{4c5448e0-435d-4567-9fa9-da65d7332ecc}</UniqueIdentifier>
     </Filter>
     <Filter Include="GLKitComplex">
-      <UniqueIdentifier>{5BB4745A-5EB8-4F23-B063-F9C7E9E2B269}</UniqueIdentifier>
+      <UniqueIdentifier>{31B1CDE7-B072-408F-81F2-AD3765659BD0}</UniqueIdentifier>
     </Filter>
     <Filter Include="GLKitComplex\Base">
-      <UniqueIdentifier>{CB2B31F2-8729-4BD9-A7EC-DAAEC2F082AD}</UniqueIdentifier>
+      <UniqueIdentifier>{541555BE-1E16-4C95-A8D7-978404476BCD}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{FE7114EF-5E09-4C55-8024-0F0F29E662B9}</UniqueIdentifier>
+      <UniqueIdentifier>{785494B2-9021-408C-807B-C8AB7BCBD1AA}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -65,6 +65,39 @@
     </ClangCompile>
     <SBInfoPlistCopy Include="..\..\GLKitComplex\Info.plist" />
     <SBResourceCopy Include="..\..\GLKitComplex\Data">
+      <Filter>GLKitComplex</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\lobbyxneg.JPG">
+      <Filter>GLKitComplex</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\lobbyxpos.JPG">
+      <Filter>GLKitComplex</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\lobbyyneg.JPG">
+      <Filter>GLKitComplex</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\lobbyypos.JPG">
+      <Filter>GLKitComplex</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\lobbyzneg.JPG">
+      <Filter>GLKitComplex</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\lobbyzpos.JPG">
+      <Filter>GLKitComplex</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\seafloor.png">
+      <Filter>GLKitComplex</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\teapot_decal.png">
+      <Filter>GLKitComplex</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\teapot_emissive.png">
+      <Filter>GLKitComplex</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\teapot_specular.pdn">
+      <Filter>GLKitComplex</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\teapot_specular.png">
       <Filter>GLKitComplex</Filter>
     </SBResourceCopy>
     <SBResourceCopy Include="..\..\GLKitComplex\Data\utah-teapot.obj">
