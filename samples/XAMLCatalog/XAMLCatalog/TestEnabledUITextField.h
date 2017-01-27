@@ -1,7 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Intel Corporation. All rights reserved.
-// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -15,26 +14,8 @@
 //
 //******************************************************************************
 
-#import <MainViewController.h>
+#import "UIKit/UITextField.h"
 
-#import "UIKit/UIColor.h"
-#import "UIKit/UIView.h"
-
-@interface MainViewController ()
-
-@end
-
-@implementation MainViewController
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-
-    self.view.backgroundColor = [UIColor lightGrayColor];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
+// Subclassed UITextField to support functional testing
+@interface TestEnabledUITextField : UITextField
 @end

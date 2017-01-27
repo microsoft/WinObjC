@@ -2,28 +2,28 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{5b63b4d9-4cf3-4ee7-9c07-979a1b7a2b90}</UniqueIdentifier>
+      <UniqueIdentifier>{a89af828-b1b0-43eb-a93c-f0365abb8a2e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{b90f1aee-77fa-432c-9e80-f335fb3ec883}</UniqueIdentifier>
+      <UniqueIdentifier>{e49647b2-ae29-46c1-a3e1-dacdf6b63691}</UniqueIdentifier>
     </Filter>
     <Filter Include="Images">
-      <UniqueIdentifier>{F640AAC6-FC86-4B3E-B494-AEFDE936AA7B}</UniqueIdentifier>
+      <UniqueIdentifier>{CEF02F3B-93FF-4D69-A57E-1FC1ED26F52F}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog">
-      <UniqueIdentifier>{F46AF905-132A-46B5-A5F7-198B6EF7BF89}</UniqueIdentifier>
+      <UniqueIdentifier>{0D8051F2-4386-4572-85B1-84C24FBCDA8B}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog\Supporting Files">
-      <UniqueIdentifier>{9C38E223-8855-4368-A64F-F9248851EAB7}</UniqueIdentifier>
+      <UniqueIdentifier>{AA46132E-2E52-4A04-8DC9-D4EC13902318}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog\UIKitControls">
-      <UniqueIdentifier>{DD2EAD14-F632-40F4-B349-3CCBE2AC94A6}</UniqueIdentifier>
+      <UniqueIdentifier>{B8A238B4-288E-47B5-8CEE-83EEB7FD892F}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog\XamlControls">
-      <UniqueIdentifier>{40CE0495-F3FF-4BE6-8050-A0AE1D45915D}</UniqueIdentifier>
+      <UniqueIdentifier>{91E7FE91-D8C9-490E-97AE-F54669A95E47}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{B50ADFCA-EEB5-466C-8241-136AA5DEB14A}</UniqueIdentifier>
+      <UniqueIdentifier>{4840D6B9-B14D-4CD3-AB60-25E11864F178}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -72,6 +72,9 @@
     <ClInclude Include="..\..\XAMLCatalog\StoryBoardViewController.h">
       <Filter>XAMLCatalog</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\XAMLCatalog\TestEnabledUITextField.h">
+      <Filter>XAMLCatalog</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UIActionSheetViewController.h">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClInclude>
@@ -112,6 +115,9 @@
       <Filter>XAMLCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\XAMLCatalog\StoryBoardViewController.m">
+      <Filter>XAMLCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\XAMLCatalog\TestEnabledUITextField.mm">
       <Filter>XAMLCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UIActionSheetViewController.m">

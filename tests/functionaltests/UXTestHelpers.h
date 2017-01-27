@@ -44,6 +44,9 @@ UIWindow* GetCurrentWindow();
 NSString* NSStringFromPropertyValue(RTObject* rtPropertyValue);
 NSString* NSStringFromPropertyValue(const Microsoft::WRL::ComPtr<IInspectable>& inspPropertyValue);
 
+// WUXMSolidColorBrush helper
+bool IsRGBAEqual(WUXMSolidColorBrush* brush, UIColor* color);
+
 // Class that is used to display and dismiss the viewController's view within the test
 class ViewControllerPresenter {
 public:
@@ -80,5 +83,23 @@ private:
     StrongId<WXDependencyObject> _xamlObject;
     StrongId<WXDependencyProperty> _propertyToObserve;
 }; // class XamlEventSubscription
+
+// Class used to signal and wait during a test run
+class UXEvent {
+public:
+    UXEvent() : _signaled(false) {
+        _condition.attach([[NSCondition alloc] init]);
+    }
+
+    UXEvent(const UXEvent& other) = delete; // no copy
+    UXEvent& operator=(const UXEvent& other) = delete;
+
+    void Signal();
+    bool Wait(int timeoutInSeconds);
+
+private:
+    bool _signaled;
+    StrongId<NSCondition> _condition;
+}; // class UXEvent
 
 } // namespace UXTestAPI

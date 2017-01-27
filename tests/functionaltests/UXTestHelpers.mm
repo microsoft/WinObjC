@@ -45,6 +45,14 @@ NSString* NSStringFromPropertyValue(const Microsoft::WRL::ComPtr<IInspectable>& 
     return nil;
 }
 
+bool IsRGBAEqual(WUXMSolidColorBrush* brush, UIColor* color) {
+    CGFloat red, green, blue, alpha;
+    [color getRed:&red green:&green blue:&blue alpha:&alpha];
+
+    return [brush.color r] == (int)(red * 255) && [brush.color g] == (int)(green * 255) && [brush.color b] == (int)(blue * 255) &&
+           [brush.color a] == (int)(alpha * 255);
+}
+
 //
 // ViewControllerPresenter methods
 //
@@ -104,6 +112,29 @@ void XamlEventSubscription::Reset() {
         [_xamlObject unregisterPropertyChangedCallback:_propertyToObserve token:_callbackToken];
         _callbackToken = -1;
     }
+}
+
+//
+// UXEvent methods
+//
+void UXEvent::Signal() {
+    [_condition lock];
+
+    _signaled = true;
+    [_condition signal];
+
+    [_condition unlock];
+}
+
+bool UXEvent::Wait(int timeOutInSeconds) {
+    [_condition lock];
+
+    if (!_signaled) {
+        _signaled = [_condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:timeOutInSeconds]] ? true : false;
+    }
+
+    [_condition unlock];
+    return _signaled;
 }
 
 } // namespace UXTestAPI
