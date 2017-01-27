@@ -2494,15 +2494,26 @@ void CGContextDrawImage(CGContextRef context, CGRect rect, CGImageRef image) {
     NOISY_RETURN_IF_NULL(context);
     NOISY_RETURN_IF_NULL(image);
 
+    CGSize imageSize{
+        CGImageGetWidth(image), CGImageGetHeight(image),
+    };
+
+    _CGContextDrawImageRect(context, image, { CGPointZero, imageSize }, rect);
+}
+
+void _CGContextDrawImageRect(CGContextRef context, CGImageRef image, CGRect sourceRegion, CGRect dest) {
+    NOISY_RETURN_IF_NULL(context);
+    NOISY_RETURN_IF_NULL(image);
+
     woc::unique_cf<CGImageRef> refImage{ __CGContextCreateRenderableImage(image) };
 
     ComPtr<ID2D1Bitmap> d2dBitmap;
     FAIL_FAST_IF_FAILED(__CreateD2DBitmapFromCGImage(context, refImage.get(), &d2dBitmap));
 
     // Flip the image to account for change in coordinate system origin.
-    CGAffineTransform flipImage = CGAffineTransformMakeTranslation(rect.origin.x, rect.origin.y + (rect.size.height / 2.0));
+    CGAffineTransform flipImage = CGAffineTransformMakeTranslation(dest.origin.x, dest.origin.y + (dest.size.height / 2.0));
     flipImage = CGAffineTransformScale(flipImage, 1.0, -1.0);
-    flipImage = CGAffineTransformTranslate(flipImage, -rect.origin.x, -(rect.origin.y + (rect.size.height / 2.0)));
+    flipImage = CGAffineTransformTranslate(flipImage, -dest.origin.x, -(dest.origin.y + (dest.size.height / 2.0)));
 
     ComPtr<ID2D1CommandList> commandList;
     FAIL_FAST_IF_FAILED(context->DrawToCommandList(_kCGCoordinateModeUserSpace,
@@ -2511,41 +2522,13 @@ void CGContextDrawImage(CGContextRef context, CGRect rect, CGImageRef image) {
                                                    [&](CGContextRef context, ID2D1DeviceContext* deviceContext) {
                                                        auto& state = context->CurrentGState();
                                                        deviceContext->DrawBitmap(d2dBitmap.Get(),
-                                                                                 __CGRectToD2D_F(rect),
+                                                                                 __CGRectToD2D_F(dest),
                                                                                  state.alpha,
-                                                                                 state.GetInterpolationModeForCGImage(refImage.get()));
+                                                                                 state.GetInterpolationModeForCGImage(refImage.get()),
+                                                                                 __CGRectToD2D_F(sourceRegion));
                                                        return S_OK;
                                                    }));
     FAIL_FAST_IF_FAILED(context->DrawImage(commandList.Get()));
-}
-
-void _CGContextDrawImageRect(CGContextRef context, CGImageRef image, CGRect src, CGRect dst) {
-    NOISY_RETURN_IF_NULL(context);
-    NOISY_RETURN_IF_NULL(image);
-
-    if (CGRectEqualToRect(src, dst)) {
-        CGContextDrawImage(context, dst, image);
-        return;
-    }
-
-    RETURN_IF(CGRectGetHeight(src) == 0);
-    RETURN_IF(CGRectGetWidth(src) == 0);
-
-    // we want the source region to be drawn into the dest region (scaled)
-    // The image needs to be scaled and translated for the destination.
-    CGRect drawRect = CGRectMake(0, 0, CGImageGetWidth(image), CGImageGetHeight(image));
-    // scale factor of the image
-    float scaleX = CGRectGetWidth(dst) / CGRectGetWidth(src);
-    float scaleY = CGRectGetHeight(dst) / CGRectGetHeight(src);
-    // calculate he translation offset
-    float deltaX = CGRectGetMinX(dst) - (CGRectGetMinX(src) * scaleX);
-    float deltaY = CGRectGetMinY(dst) - (CGRectGetMinY(src) * scaleY);
-    drawRect = CGRectMake(deltaX, deltaY, (float)CGImageGetWidth(image) * scaleX, (float)CGImageGetHeight(image) * scaleY);
-
-    CGContextSaveGState(context);
-    CGContextClipToRect(context, dst);
-    CGContextDrawImage(context, drawRect, image);
-    CGContextRestoreGState(context);
 }
 
 /**
