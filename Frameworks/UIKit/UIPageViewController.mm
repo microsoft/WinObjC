@@ -450,14 +450,16 @@ NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
 - (void)_populatePagesWithOffset:(inout CGPoint*)targetOffset interactive:(BOOL)interactive {
     if (DEBUG_VERBOSE) {
         TraceVerbose(TAG,
-                     L"populatePagesWithOffset: targetOffset=[%f, %f], interactive=%d, keepAdjacent=%d",
+                     L"populatePagesWithOffset: targetOffset=[%f, %f], interactive=%d, keepAdjacent=%d, [_controllers count]=%d",
                      targetOffset->x,
                      targetOffset->y,
                      interactive,
-                     _keepAdjacent);
+                     _keepAdjacent,
+                     [_controllers count]);
     }
 
-    if ([_controllers count] == 0 && _skipUpdates) {
+    // if no controller to populate with or was told to skip, return early
+    if ([_controllers count] == 0 || _skipUpdates) {
         return;
     }
 
