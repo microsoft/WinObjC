@@ -89,6 +89,9 @@ TEST(UIButton, CheckForLeaks) {
         ASSERT_TRUE_MSG(event->Wait(c_testTimeoutInSec), "FAILED: Waiting for dealloc call failed!");
     }
 
+    // Unfortunately we have to wait a bit for the button to actually finish deallocation
+    [NSThread sleepForTimeInterval:.25];
+
     // Validate that we can no longer acquire a strong reference to the UIButton's backing Xaml element
     Microsoft::WRL::ComPtr<IInspectable> xamlElement;
     weakXamlElement.As(&xamlElement);
