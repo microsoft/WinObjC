@@ -17,6 +17,17 @@
 		8BB6C8131E20512B00F0FF90 /* Data in Resources */ = {isa = PBXBuildFile; fileRef = 8BB6C8121E20512B00F0FF90 /* Data */; };
 		8BB6C8161E20514100F0FF90 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BB6C8151E20514100F0FF90 /* GLKit.framework */; };
 		8BB6C8181E20517000F0FF90 /* utah-teapot.obj in Resources */ = {isa = PBXBuildFile; fileRef = 8BB6C8171E20517000F0FF90 /* utah-teapot.obj */; };
+		99CE5D751E3AB494003E972E /* lobbyxneg.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 99CE5D6A1E3AB494003E972E /* lobbyxneg.JPG */; };
+		99CE5D761E3AB494003E972E /* lobbyxpos.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 99CE5D6B1E3AB494003E972E /* lobbyxpos.JPG */; };
+		99CE5D771E3AB494003E972E /* lobbyyneg.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 99CE5D6C1E3AB494003E972E /* lobbyyneg.JPG */; };
+		99CE5D781E3AB494003E972E /* lobbyypos.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 99CE5D6D1E3AB494003E972E /* lobbyypos.JPG */; };
+		99CE5D791E3AB494003E972E /* lobbyzneg.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 99CE5D6E1E3AB494003E972E /* lobbyzneg.JPG */; };
+		99CE5D7A1E3AB494003E972E /* lobbyzpos.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 99CE5D6F1E3AB494003E972E /* lobbyzpos.JPG */; };
+		99CE5D7B1E3AB494003E972E /* seafloor.png in Resources */ = {isa = PBXBuildFile; fileRef = 99CE5D701E3AB494003E972E /* seafloor.png */; };
+		99CE5D7C1E3AB494003E972E /* teapot_decal.png in Resources */ = {isa = PBXBuildFile; fileRef = 99CE5D711E3AB494003E972E /* teapot_decal.png */; };
+		99CE5D7D1E3AB494003E972E /* teapot_emissive.png in Resources */ = {isa = PBXBuildFile; fileRef = 99CE5D721E3AB494003E972E /* teapot_emissive.png */; };
+		99CE5D7E1E3AB494003E972E /* teapot_specular.pdn in Resources */ = {isa = PBXBuildFile; fileRef = 99CE5D731E3AB494003E972E /* teapot_specular.pdn */; };
+		99CE5D7F1E3AB494003E972E /* teapot_specular.png in Resources */ = {isa = PBXBuildFile; fileRef = 99CE5D741E3AB494003E972E /* teapot_specular.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +45,17 @@
 		8BB6C8121E20512B00F0FF90 /* Data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Data; sourceTree = "<group>"; };
 		8BB6C8151E20514100F0FF90 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		8BB6C8171E20517000F0FF90 /* utah-teapot.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "utah-teapot.obj"; path = "Data/utah-teapot.obj"; sourceTree = "<group>"; };
+		99CE5D6A1E3AB494003E972E /* lobbyxneg.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = lobbyxneg.JPG; path = Data/lobbyxneg.JPG; sourceTree = "<group>"; };
+		99CE5D6B1E3AB494003E972E /* lobbyxpos.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = lobbyxpos.JPG; path = Data/lobbyxpos.JPG; sourceTree = "<group>"; };
+		99CE5D6C1E3AB494003E972E /* lobbyyneg.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = lobbyyneg.JPG; path = Data/lobbyyneg.JPG; sourceTree = "<group>"; };
+		99CE5D6D1E3AB494003E972E /* lobbyypos.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = lobbyypos.JPG; path = Data/lobbyypos.JPG; sourceTree = "<group>"; };
+		99CE5D6E1E3AB494003E972E /* lobbyzneg.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = lobbyzneg.JPG; path = Data/lobbyzneg.JPG; sourceTree = "<group>"; };
+		99CE5D6F1E3AB494003E972E /* lobbyzpos.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = lobbyzpos.JPG; path = Data/lobbyzpos.JPG; sourceTree = "<group>"; };
+		99CE5D701E3AB494003E972E /* seafloor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = seafloor.png; path = Data/seafloor.png; sourceTree = "<group>"; };
+		99CE5D711E3AB494003E972E /* teapot_decal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = teapot_decal.png; path = Data/teapot_decal.png; sourceTree = "<group>"; };
+		99CE5D721E3AB494003E972E /* teapot_emissive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = teapot_emissive.png; path = Data/teapot_emissive.png; sourceTree = "<group>"; };
+		99CE5D731E3AB494003E972E /* teapot_specular.pdn */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = teapot_specular.pdn; path = Data/teapot_specular.pdn; sourceTree = "<group>"; };
+		99CE5D741E3AB494003E972E /* teapot_specular.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = teapot_specular.png; path = Data/teapot_specular.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +90,17 @@
 		8BB6C7F01E204FF500F0FF90 /* GLKitComplex */ = {
 			isa = PBXGroup;
 			children = (
+				99CE5D6A1E3AB494003E972E /* lobbyxneg.JPG */,
+				99CE5D6B1E3AB494003E972E /* lobbyxpos.JPG */,
+				99CE5D6C1E3AB494003E972E /* lobbyyneg.JPG */,
+				99CE5D6D1E3AB494003E972E /* lobbyypos.JPG */,
+				99CE5D6E1E3AB494003E972E /* lobbyzneg.JPG */,
+				99CE5D6F1E3AB494003E972E /* lobbyzpos.JPG */,
+				99CE5D701E3AB494003E972E /* seafloor.png */,
+				99CE5D711E3AB494003E972E /* teapot_decal.png */,
+				99CE5D721E3AB494003E972E /* teapot_emissive.png */,
+				99CE5D731E3AB494003E972E /* teapot_specular.pdn */,
+				99CE5D741E3AB494003E972E /* teapot_specular.png */,
 				8BB6C8121E20512B00F0FF90 /* Data */,
 				8BB6C8081E20512600F0FF90 /* GLKitComplex.mm */,
 				8BB6C8171E20517000F0FF90 /* utah-teapot.obj */,
@@ -151,10 +184,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				8BB6C8011E204FF500F0FF90 /* LaunchScreen.storyboard in Resources */,
+				99CE5D7F1E3AB494003E972E /* teapot_specular.png in Resources */,
 				8BB6C7FE1E204FF500F0FF90 /* Assets.xcassets in Resources */,
+				99CE5D7B1E3AB494003E972E /* seafloor.png in Resources */,
+				99CE5D791E3AB494003E972E /* lobbyzneg.JPG in Resources */,
 				8BB6C8131E20512B00F0FF90 /* Data in Resources */,
 				8BB6C8181E20517000F0FF90 /* utah-teapot.obj in Resources */,
+				99CE5D751E3AB494003E972E /* lobbyxneg.JPG in Resources */,
 				8BB6C7FC1E204FF500F0FF90 /* Main.storyboard in Resources */,
+				99CE5D781E3AB494003E972E /* lobbyypos.JPG in Resources */,
+				99CE5D7A1E3AB494003E972E /* lobbyzpos.JPG in Resources */,
+				99CE5D7C1E3AB494003E972E /* teapot_decal.png in Resources */,
+				99CE5D761E3AB494003E972E /* lobbyxpos.JPG in Resources */,
+				99CE5D771E3AB494003E972E /* lobbyyneg.JPG in Resources */,
+				99CE5D7E1E3AB494003E972E /* teapot_specular.pdn in Resources */,
+				99CE5D7D1E3AB494003E972E /* teapot_emissive.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -325,6 +369,7 @@
 				8BB6C8071E204FF500F0FF90 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
