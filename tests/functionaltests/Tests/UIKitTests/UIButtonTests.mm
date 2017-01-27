@@ -58,7 +58,8 @@ TEST(UIButton, GetXamlElement) {
 TEST(UIButton, CheckForLeaks) {
     Microsoft::WRL::WeakRef weakXamlElement;
     {
-        __block UIButtonWithControlsViewController* buttonVC = [[UIButtonWithControlsViewController alloc] init];
+        StrongId<UIButtonWithControlsViewController> buttonVC;
+        buttonVC.attach([[UIButtonWithControlsViewController alloc] init]);
         UXTestAPI::ViewControllerPresenter testHelper(buttonVC);
 
         __block UIDeallocTestButton* testButton = nil;
@@ -69,7 +70,7 @@ TEST(UIButton, CheckForLeaks) {
             testButton = [[UIDeallocTestButton alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
             testButton.backgroundColor = [UIColor redColor];
             [testButton setDeallocEvent:event];
-            [buttonVC.view addSubview:testButton];
+            [[buttonVC view] addSubview:testButton];
         });
 
         // Grab a weak reference to the backing Xaml element
