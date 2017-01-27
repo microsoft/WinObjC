@@ -28,8 +28,6 @@
 
 enum { NSOperationQueueDefaultMaxConcurrentOperationCount = -1 };
 
-// NOTE: This value appears to be a private detail that leaked into the public header. Unfortunately it is
-// difficult to know if it is used externally. At any rate it is wrong and should be 5.
 enum { NSOperationQueuePriority_Count = 3 };
 
 FOUNDATION_EXPORT_CLASS
