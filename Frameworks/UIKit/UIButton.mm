@@ -184,7 +184,7 @@ struct ButtonState {
     _contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     _contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
 
-    __block UIButton* weakSelf = self;
+    __weak UIButton* weakSelf = self;
     XamlControls::HookButtonPointerEvents(_xamlButton,
                                           ^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
                                               // We mark the event as handled here. The method _processPointerPressedCallback
