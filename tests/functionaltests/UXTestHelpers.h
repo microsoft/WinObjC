@@ -106,7 +106,7 @@ public:
 
     void Set();
     void Reset();
-    bool WaitFor(int timeoutInSeconds);
+    bool Wait(int timeoutInSeconds);
 
 private:
     bool _signaled;

@@ -67,7 +67,7 @@ TEST(UIButton, TitleColorChanged) {
         [buttonVC sliderTitleColorNormal].value = 150.0f;
     });
 
-    ASSERT_FALSE_MSG(uxEvent->WaitFor(c_testTimeoutInSec), "FAILED: Waiting for property changed event timed out!");
+    ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event timed out!");
 }
 
 TEST(UIButton, TextChanged) {
@@ -100,5 +100,5 @@ TEST(UIButton, TextChanged) {
         [buttonVC textTitleNormal].text = expectedString;
     });
 
-    ASSERT_FALSE_MSG(uxEvent->WaitFor(c_testTimeoutInSec), "FAILED: Waiting for property changed event timed out!");
+    ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event timed out!");
 }

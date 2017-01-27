@@ -71,7 +71,7 @@ TEST(CALayerAppearance, OpacityChanged) {
         caLayerVC.layer.opacity = expectedOpacity;
     });
 
-    ASSERT_FALSE_MSG(uxEvent->WaitFor(c_testTimeoutInSec), "FAILED: Waiting for property changed event timed out!");
+    ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event timed out!");
 }
 
 //
@@ -106,5 +106,5 @@ TEST(CALayerAppearance, BackgroundColorChanged) {
         caLayerVC.layer.backgroundColor = expectedColor.CGColor;
     });
 
-    ASSERT_FALSE_MSG(uxEvent->WaitFor(c_testTimeoutInSec), "FAILED: Waiting for property changed event timed out!");
+    ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event timed out!");
 }

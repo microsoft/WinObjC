@@ -130,21 +130,21 @@ void UXEvent::Reset() {
     [_condition unlock];
 }
 
-bool UXEvent::WaitFor(int timeOutInSeconds) {
+bool UXEvent::Wait(int timeOutInSeconds) {
     [_condition lock];
 
     if (!_signaled) {
         _signaled = [_condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:timeOutInSeconds]] ? true : false;
     }
 
-    bool timedOut = !_signaled;
+    bool waitSignal = _signaled;
     [_condition unlock];
 
     if (_eventType == AutoReset) {
         Reset();
     }
 
-    return timedOut;
+    return waitSignal;
 }
 
 } // namespace UXTestAPI
