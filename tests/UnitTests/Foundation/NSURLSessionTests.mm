@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#import <Foundation/Foundation.h>
+#import <Foundation/NSURLSession.h>
 #import <TestFramework.h>
 #import <Starboard/SmartTypes.h>
 

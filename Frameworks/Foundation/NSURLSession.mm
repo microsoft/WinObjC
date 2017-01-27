@@ -33,7 +33,7 @@ const int64_t NSURLSessionTransferSizeUnknown = -1LL;
 
 #import <StubReturn.h>
 
-#define THROW_IF_NULL_REQUEST(request)                                         \
+#define _THROW_IF_NULL_REQUEST(request)                                        \
 do {                                                                           \
     if (request == nil) {                                                      \
       @throw [NSException                                                      \
@@ -320,7 +320,7 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
 @Status Interoperable
 */
 - (NSURLSessionDataTask*)dataTaskWithRequest:(NSURLRequest*)request completionHandler:(NSURLSessionTaskCompletionHandler)completionHandler {
-    THROW_IF_NULL_REQUEST(request);
+    _THROW_IF_NULL_REQUEST(request);
     if (_invalidating) {
         return nil;
     }
@@ -360,7 +360,7 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
 */
 - (NSURLSessionDownloadTask*)downloadTaskWithRequest:(NSURLRequest*)request
                                    completionHandler:(NSURLSessionDownloadTaskCompletionHandler)completionHandler {
-    THROW_IF_NULL_REQUEST(request);
+    _THROW_IF_NULL_REQUEST(request);
     if (_invalidating) {
         return nil;
     }
@@ -385,7 +385,7 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
 */
 - (NSURLSessionDownloadTask*)downloadTaskWithResumeData:(NSData*)resumeData
                                       completionHandler:(NSURLSessionDownloadTaskCompletionHandler)completionHandler {
-    THROW_IF_NULL_REQUEST(resumeData);
+    _THROW_IF_NULL_REQUEST(resumeData);
     if (_invalidating) {
         return nil;
     }
