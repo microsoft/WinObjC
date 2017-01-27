@@ -39,23 +39,18 @@ TEST(UIButton, GetXamlElement) {
 }
 
 @interface UIDeallocTestButton : UIButton {
-    NSCondition* _condition;
-    BOOL* _signaled;
+    std::shared_ptr<UXEvent> _event;
 }
 @end
 
 @implementation UIDeallocTestButton
 
-- (void)setDeallocEvent:(NSCondition*)condition signaledFlag:(BOOL*)signaled {
-    _condition = condition;
-    _signaled = signaled;
+- (void)setDeallocEvent:(std::shared_ptr<UXEvent>)event {
+    _event = event;
 }
 
 -(void)dealloc {
-    [_condition lock];
-    *_signaled = YES;
-    [_condition signal];
-    [_condition unlock];
+    _event->Set();
     [super dealloc];
 }
 @end
@@ -67,14 +62,13 @@ TEST(UIButton, CheckForLeaks) {
         UXTestAPI::ViewControllerPresenter testHelper(buttonVC);
 
         __block UIDeallocTestButton* testButton = nil;
-        __block BOOL signaled = NO;
-        __block NSCondition* condition = [[NSCondition alloc] init];
+        __block auto event = UXEvent::CreateAuto();
 
         // Create and render the button
         dispatch_sync(dispatch_get_main_queue(), ^{
             testButton = [[UIDeallocTestButton alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
             testButton.backgroundColor = [UIColor redColor];
-            [testButton setDeallocEvent:condition signaledFlag:&signaled];
+            [testButton setDeallocEvent:event];
             [buttonVC.view addSubview:testButton];
         });
 
@@ -92,10 +86,7 @@ TEST(UIButton, CheckForLeaks) {
         });
 
         // Validate that dealloc was called
-        [condition lock];
-        ASSERT_TRUE_MSG(signaled || [condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]],
-                        "FAILED: Waiting for dealloc call failed!");
-        [condition unlock];
+        ASSERT_TRUE_MSG(event->Wait(c_testTimeoutInSec), "FAILED: Waiting for dealloc call failed!");
     }
 
     // Validate that we can no longer acquire a strong reference to the UIButton's backing Xaml element
