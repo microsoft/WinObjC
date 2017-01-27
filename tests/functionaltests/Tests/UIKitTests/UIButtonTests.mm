@@ -36,6 +36,72 @@ TEST(UIButton, GetXamlElement) {
     ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
 }
 
+@interface UIDeallocTestButton : UIButton {
+    NSCondition* _condition;
+    BOOL* _signaled;
+}
+@end
+
+@implementation UIDeallocTestButton
+
+- (void)setDeallocEvent:(NSCondition*)condition signaledFlag:(BOOL*)signaled {
+    _condition = condition;
+    _signaled = signaled;
+}
+
+-(void)dealloc {
+    [_condition lock];
+    *_signaled = YES;
+    [_condition signal];
+    [_condition unlock];
+    [super dealloc];
+}
+@end
+
+TEST(UIButton, CheckForLeaks) {
+    Microsoft::WRL::WeakRef weakXamlElement;
+    {
+        __block UIButtonWithControlsViewController* buttonVC = [[UIButtonWithControlsViewController alloc] init];
+        UXTestAPI::ViewControllerPresenter testHelper(buttonVC);
+
+        __block UIDeallocTestButton* testButton = nil;
+        __block BOOL signaled = NO;
+        __block NSCondition* condition = [[NSCondition alloc] init];
+
+        // Create and render the button
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            testButton = [[UIDeallocTestButton alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
+            testButton.backgroundColor = [UIColor redColor];
+            [testButton setDeallocEvent:condition signaledFlag:&signaled];
+            [buttonVC.view addSubview:testButton];
+        });
+
+        // Grab a weak reference to the backing Xaml element
+        Microsoft::WRL::ComPtr<IInspectable> xamlElement([[testButton xamlElement] comObj]);
+        ASSERT_TRUE_MSG(SUCCEEDED(xamlElement.AsWeak(&weakXamlElement)), "Failed to acquire a weak reference to the backing Xaml element.");
+        xamlElement = nullptr;
+
+        // Free the button
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            // Nil out testButton and remove it from its superview
+            [testButton removeFromSuperview];
+            [testButton release];
+            testButton = nil;
+        });
+
+        // Validate that dealloc was called
+        [condition lock];
+        ASSERT_TRUE_MSG(signaled || [condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]],
+                        "FAILED: Waiting for dealloc call failed!");
+        [condition unlock];
+    }
+
+    // Validate that we can no longer acquire a strong reference to the UIButton's backing Xaml element
+    Microsoft::WRL::ComPtr<IInspectable> xamlElement;
+    weakXamlElement.As(&xamlElement);
+    ASSERT_EQ_MSG(xamlElement.Get(), nullptr, "Unexpectedly able to reacquire a strong reference to the backing Xaml element.");
+}
+
 TEST(UIButton, TitleColorChanged) {
     __block BOOL signaled = NO;
     __block NSCondition* condition = [[NSCondition alloc] init];
