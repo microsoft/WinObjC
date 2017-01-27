@@ -87,18 +87,30 @@ private:
 // Class used to signal and wait during a test run
 class UXEvent {
 public:
-    UXEvent() : _signaled(false) {
+    enum EventType { Manual, AutoReset };
+
+    static std::shared_ptr<UXEvent> CreateManual() {
+        return std::make_shared<UXEvent>(Manual);
+    }
+
+    static std::shared_ptr<UXEvent> CreateAuto() {
+        return std::make_shared<UXEvent>(AutoReset);
+    }
+
+    UXEvent(EventType eventType) : _eventType(eventType), _signaled(false) {
         _condition.attach([[NSCondition alloc] init]);
     }
 
     UXEvent(const UXEvent& other) = delete; // no copy
     UXEvent& operator=(const UXEvent& other) = delete;
 
-    void Signal();
-    bool Wait(int timeoutInSeconds);
+    void Set();
+    void Reset();
+    bool WaitFor(int timeoutInSeconds);
 
 private:
     bool _signaled;
+    EventType _eventType;
     StrongId<NSCondition> _condition;
 }; // class UXEvent
 

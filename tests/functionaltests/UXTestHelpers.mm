@@ -117,24 +117,34 @@ void XamlEventSubscription::Reset() {
 //
 // UXEvent methods
 //
-void UXEvent::Signal() {
+void UXEvent::Set() {
     [_condition lock];
-
     _signaled = true;
     [_condition signal];
-
     [_condition unlock];
 }
 
-bool UXEvent::Wait(int timeOutInSeconds) {
+void UXEvent::Reset() {
+    [_condition lock];
+    _signaled = false;
+    [_condition unlock];
+}
+
+bool UXEvent::WaitFor(int timeOutInSeconds) {
     [_condition lock];
 
     if (!_signaled) {
         _signaled = [_condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:timeOutInSeconds]] ? true : false;
     }
 
+    bool timedOut = !_signaled;
     [_condition unlock];
-    return _signaled;
+
+    if (_eventType == AutoReset) {
+        Reset();
+    }
+
+    return timedOut;
 }
 
 } // namespace UXTestAPI

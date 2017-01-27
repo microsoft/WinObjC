@@ -19,6 +19,8 @@
 
 #import "CALayerInternal.h"
 
+using namespace UXTestAPI;
+
 @interface CALayerViewController : UIViewController
 @property (nonatomic, readonly) CALayer* layer;
 @property (nonatomic, readonly) UIView* viewForLayer;
@@ -42,8 +44,8 @@
 // Validate that the CALayer opacity property change invokes a property change in the backing XAML element
 //
 TEST(CALayerAppearance, OpacityChanged) {
-    __block auto uxEvent = std::make_shared<UXTestAPI::UXEvent>();
-    __block auto xamlSubscriber = std::make_shared<UXTestAPI::XamlEventSubscription>();
+    __block auto uxEvent = UXEvent::CreateManual();
+    __block auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
 
     float expectedOpacity = 0.5f;
 
@@ -62,22 +64,22 @@ TEST(CALayerAppearance, OpacityChanged) {
             // Manually unregister the event so we avoid further opacity property changed events
             xamlSubscriber->Reset();
 
-            uxEvent->Signal();
+            uxEvent->Set();
         });
 
         // Action
         caLayerVC.layer.opacity = expectedOpacity;
     });
 
-    ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event timed out!");
+    ASSERT_FALSE_MSG(uxEvent->WaitFor(c_testTimeoutInSec), "FAILED: Waiting for property changed event timed out!");
 }
 
 //
 // Validate that the CALayer background property change invokes a property change in the backing XAML element
 //
 TEST(CALayerAppearance, BackgroundColorChanged) {
-    __block auto uxEvent = std::make_shared<UXTestAPI::UXEvent>();
-    __block auto xamlSubscriber = std::make_shared<UXTestAPI::XamlEventSubscription>();
+    __block auto uxEvent = UXEvent::CreateManual();
+    __block auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
 
     UIColor* expectedColor = [UIColor redColor];
 
@@ -97,12 +99,12 @@ TEST(CALayerAppearance, BackgroundColorChanged) {
             EXPECT_TRUE_MSG(UXTestAPI::IsRGBAEqual(solidBrush, colorFromCGColor), @"Failed to match XAML- and CALayer background color");
             EXPECT_OBJCEQ_MSG(colorFromCGColor, expectedColor, @"Failed to match expected color");
 
-            uxEvent->Signal();
+            uxEvent->Set();
         });
 
         // Action
         caLayerVC.layer.backgroundColor = expectedColor.CGColor;
     });
 
-    ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event timed out!");
+    ASSERT_FALSE_MSG(uxEvent->WaitFor(c_testTimeoutInSec), "FAILED: Waiting for property changed event timed out!");
 }

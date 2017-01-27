@@ -21,6 +21,8 @@
 #import "UIKitControls/UIButtonViewController.h"
 #import "UIKitControls/UIButtonWithControlsViewController.h"
 
+using namespace UXTestAPI;
+
 TEST(UIButton, CreateXamlElement) {
     // TODO: Switch to UIKit.Xaml projections when they're available.
     Microsoft::WRL::ComPtr<IInspectable> xamlElement(XamlCreateButton());
@@ -37,8 +39,8 @@ TEST(UIButton, GetXamlElement) {
 }
 
 TEST(UIButton, TitleColorChanged) {
-    __block auto uxEvent = std::make_shared<UXTestAPI::UXEvent>();
-    __block auto xamlSubscriber = std::make_shared<UXTestAPI::XamlEventSubscription>();
+    __block auto uxEvent = UXEvent::CreateManual();
+    __block auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
 
     UIButtonWithControlsViewController* buttonVC = [[UIButtonWithControlsViewController alloc] init];
     UXTestAPI::ViewControllerPresenter testHelper(buttonVC);
@@ -58,19 +60,19 @@ TEST(UIButton, TitleColorChanged) {
             EXPECT_TRUE_MSG(UXTestAPI::IsRGBAEqual(solidBrush, titleColorNormal), @"Failed to match XAML- and UIButton title color");
             EXPECT_OBJCEQ_MSG(titleColorNormal, [buttonVC titleColorNormal], @"Failed to match expected color");
 
-            uxEvent->Signal();
+            uxEvent->Set();
         });
 
         // Action - validate this action takes effect on the control
         [buttonVC sliderTitleColorNormal].value = 150.0f;
     });
 
-    ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event timed out!");
+    ASSERT_FALSE_MSG(uxEvent->WaitFor(c_testTimeoutInSec), "FAILED: Waiting for property changed event timed out!");
 }
 
 TEST(UIButton, TextChanged) {
-    __block auto uxEvent = std::make_shared<UXTestAPI::UXEvent>();
-    __block auto xamlSubscriber = std::make_shared<UXTestAPI::XamlEventSubscription>();
+    __block auto uxEvent = UXEvent::CreateManual();
+    __block auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
 
     NSString* expectedString = @"Functional testing";
 
@@ -91,12 +93,12 @@ TEST(UIButton, TextChanged) {
             EXPECT_OBJCEQ_MSG(text, textNormal, @"Failed to match strings in XAML and UIButton");
             EXPECT_OBJCEQ_MSG(text, expectedString, @"Failed to match expected string");
 
-            uxEvent->Signal();
+            uxEvent->Set();
         });
 
         // Action - validate this action takes effect on the control
         [buttonVC textTitleNormal].text = expectedString;
     });
 
-    ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event timed out!");
+    ASSERT_FALSE_MSG(uxEvent->WaitFor(c_testTimeoutInSec), "FAILED: Waiting for property changed event timed out!");
 }
