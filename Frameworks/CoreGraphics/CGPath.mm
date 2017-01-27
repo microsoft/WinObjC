@@ -282,11 +282,76 @@ HRESULT _CGPathGetGeometry(CGPathRef path, ID2D1Geometry** pGeometry) {
 CFTypeID CGPathGetTypeID() {
     return __CGPath::GetTypeID();
 }
+namespace {
+// A helper for determining the number of points per path element type
+static inline size_t __CGPathGetExpectedPointCountForType(CGPathElementType type) {
+    switch (type) {
+        case kCGPathElementMoveToPoint:
+        case kCGPathElementAddLineToPoint:
+            return 1;
+        case kCGPathElementAddQuadCurveToPoint:
+            return 2;
+        case kCGPathElementAddCurveToPoint:
+            return 3;
+        case kCGPathElementCloseSubpath:
+            return 0;
+        default:
+            TraceError(TAG, L"Invalid CGPathElementType encountered.");
+            return 0;
+    }
+}
+
+// Create a mimic of CGPathElement that holds the points in a vector with a convenient copy constructor.
+struct __CGPathElementVector {
+    CGPathElementType type;
+    std::vector<CGPoint> points;
+    __CGPathElementVector(const CGPathElement& el)
+        : type(el.type), points(el.points, el.points + __CGPathGetExpectedPointCountForType(el.type)) {
+    }
+};
+
+// A struct to pass to the equality matching CGPathApply since only a single void* may be passed.
+struct __CGPathElementMatch {
+    std::vector<__CGPathElementVector> elements;
+    bool equal = true;
+    int positionToMatch = 0;
+};
+}
+
+// A function to pass to CGPathApply to determine whether two paths are equal.
+static void __CGPathApplyCheckEquality(void* pathMatchContext, const CGPathElement* element1) {
+    __CGPathElementMatch* matchingContext = (__CGPathElementMatch*)pathMatchContext;
+
+    // If the matching has already failed, simply return asap. There's no way to stop a CGPathApply early.
+    if (!matchingContext->equal) {
+        return;
+    }
+    int i = matchingContext->positionToMatch;
+    __CGPathElementVector element2 = matchingContext->elements[i];
+    if (element2.type != element1->type) {
+        matchingContext->equal = false;
+    } else if (element2.type != kCGPathElementCloseSubpath) {
+        for (int i = 0; i < element2.points.size(); i++) {
+            if (element1->points[i] != element2.points[i]) {
+                matchingContext->equal = false;
+                break;
+            }
+        }
+    }
+
+    matchingContext->positionToMatch++;
+}
+
+// A function to pass to CGPathApply to retrieve the individual path elements to check equality against.
+static void _CGPathApplyGetElements(void* pathElements, const CGPathElement* element) {
+    ((std::vector<__CGPathElementVector>*)pathElements)->emplace_back(*element);
+}
 
 static Boolean __CGPathEqual(CFTypeRef cf1, CFTypeRef cf2) {
-    if (!cf1 && !cf2) {
+    if (cf1 == cf2) {
         return true;
     }
+
     RETURN_FALSE_IF(!cf1);
     RETURN_FALSE_IF(!cf2);
 
@@ -296,20 +361,22 @@ static Boolean __CGPathEqual(CFTypeRef cf1, CFTypeRef cf2) {
     RETURN_FALSE_IF_FAILED(path1->ClosePath());
     RETURN_FALSE_IF_FAILED(path2->ClosePath());
 
-    // ID2D1 Geometries have no isEquals method. However, for two geometries to be equal they are both reported to contain the other.
-    // Thus we must do two comparisons.
-    D2D1_GEOMETRY_RELATION relation = D2D1_GEOMETRY_RELATION_UNKNOWN;
-    RETURN_FALSE_IF_FAILED(path1->GetPathGeometry()->CompareWithGeometry(path2->GetPathGeometry(), D2D1::IdentityMatrix(), &relation));
-
-    // Does path 1 contain path 2?
-    if (relation == D2D1_GEOMETRY_RELATION_IS_CONTAINED) {
-        RETURN_FALSE_IF_FAILED(path2->GetPathGeometry()->CompareWithGeometry(path1->GetPathGeometry(), D2D1::IdentityMatrix(), &relation));
-
-        // Return true if path 2 also contains path 1
-        return (relation == D2D1_GEOMETRY_RELATION_IS_CONTAINED ? true : false);
+    // Check the segment count of the path as they must be equal.
+    UINT32 count1;
+    UINT32 count2;
+    RETURN_FALSE_IF_FAILED(path1->GetPathGeometry()->GetSegmentCount(&count1));
+    RETURN_FALSE_IF_FAILED(path2->GetPathGeometry()->GetSegmentCount(&count2));
+    if (count1 != count2) {
+        return false;
     }
 
-    return false;
+    std::vector<__CGPathElementVector> path1Elements;
+    CGPathApply(path1, &path1Elements, _CGPathApplyGetElements);
+    __CGPathElementMatch match;
+    match.elements = path1Elements;
+    CGPathApply(path2, &match, __CGPathApplyCheckEquality);
+
+    return match.equal;
 }
 
 /**
