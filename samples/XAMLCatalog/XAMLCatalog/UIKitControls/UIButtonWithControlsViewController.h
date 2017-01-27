@@ -15,17 +15,22 @@
 //******************************************************************************
 
 #import "MenuTableViewController.h"
-
-// Subclassed UITextField to support functional testing
-@interface TestEnabledUITextField : UITextField
-@end
+#import "TestEnabledUITextField.h"
 
 @interface UIButtonWithControlsViewController : UIViewController
 
 @property (nonatomic, readonly) UIButton* button;
-@property (nonatomic, readonly) TestEnabledUITextField* textTitleNormal;
+
 @property (nonatomic, readonly) UISlider* sliderTitleColorNormal;
 
+@property (nonatomic, readonly) UISwitch* switchEnabled;
+
+@property (nonatomic, readonly) TestEnabledUITextField* textTitleNormal;
+@property (nonatomic, readonly) TestEnabledUITextField* textTitleHighlighted;
+@property (nonatomic, readonly) TestEnabledUITextField* textTitleDisabled;
+
 @property (nonatomic, readonly) UIColor* titleColorNormal;
+@property (nonatomic, readonly) UIColor* titleColorHighlighted;
+@property (nonatomic, readonly) UIColor* titleColorDisabled;
 
 @end

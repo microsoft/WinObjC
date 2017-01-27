@@ -1,7 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Intel Corporation. All rights reserved.
-// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -15,26 +14,15 @@
 //
 //******************************************************************************
 
-#import <MainViewController.h>
+#import "TestEnabledUITextField.h"
 
-#import "UIKit/UIColor.h"
-#import "UIKit/UIView.h"
+#import <UIKit/UITextField.h>
 
-@interface MainViewController ()
-
-@end
-
-@implementation MainViewController
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-
-    self.view.backgroundColor = [UIColor lightGrayColor];
+@implementation TestEnabledUITextField
+// NOTE: Programmatically setting the text via setText: does not trigger the text field delegates or events so we subclass
+// UITextField and fire our editing event manually
+- (void)setText:(NSString*)text {
+    [super setText:text];
+    [self sendActionsForControlEvents:UIControlEventEditingChanged];
 }
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 @end
