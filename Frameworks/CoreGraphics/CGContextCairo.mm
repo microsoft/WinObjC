@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -38,22 +38,13 @@
 
 #define CAIRO_WIN32_STATIC_BUILD
 
-#import "cairo-ft.h"
-
-extern "C" {
-#import <ft2build.h>
-#import FT_FREETYPE_H
-#import <ftadvanc.h>
-#import <ftglyph.h>
-#import <ftsizes.h>
-#import <tttables.h>
-}
-
 #include "LoggingNative.h"
 #import <StubReturn.h>
 
 #import <vector>
 #import <algorithm>
+
+#import <cairo.h>
 
 using namespace Microsoft::WRL;
 
