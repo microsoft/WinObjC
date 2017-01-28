@@ -22,6 +22,10 @@
 #include <Starboard/SmartTypes.h>
 #include <memory>
 
+#if WINOBJC // Test with _CGContextPushBegin/PopEndDraw
+#import "CGContextInternal.h"
+#endif
+
 static const CGSize g_defaultCanvasSize{ 512.f, 256.f };
 
 template <typename TComparator>
@@ -34,9 +38,13 @@ void testing::DrawTest<TComparator>::SetUp() {
     CGSize size = CanvasSize();
 
     auto deviceColorSpace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
-    _context.reset(CGBitmapContextCreate(
-        nullptr, size.width, size.height, 8, size.width * 4, deviceColorSpace, kCGImageAlphaPremultipliedFirst));
+    _context.reset(
+        CGBitmapContextCreate(nullptr, size.width, size.height, 8, size.width * 4, deviceColorSpace, kCGImageAlphaPremultipliedFirst));
     ASSERT_NE(nullptr, _context);
+
+#if WINOBJC // Validate that the results are correct even under batched drawing from _CGContextPushBegin/PopEndDraw
+    _CGContextPushBeginDraw(_context);
+#endif
 
     _bounds = { CGPointZero, size };
 
@@ -65,6 +73,10 @@ CFStringRef testing::DrawTest<TComparator>::CreateOutputFilename() {
 template <typename TComparator>
 void testing::DrawTest<TComparator>::TearDown() {
     CGContextRef context = GetDrawingContext();
+
+#if WINOBJC // Validate that the results are correct even under batched drawing from _CGContextPushBegin/PopEndDraw
+    _CGContextPopEndDraw(_context);
+#endif
 
     // Generate image from context.
     woc::unique_cf<CGImageRef> image{ CGBitmapContextCreateImage(context) };
