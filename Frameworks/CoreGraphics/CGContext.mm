@@ -2126,11 +2126,11 @@ void CGContextClearRect(CGContextRef context, CGRect rect) {
     NOISY_RETURN_IF_NULL(context);
     ComPtr<ID2D1DeviceContext> deviceContext = context->DeviceContext();
     if (!context->CurrentGState().clippingGeometry) {
-        deviceContext->BeginDraw();
+        _CGContextPushBeginDraw(context);
         deviceContext->PushAxisAlignedClip(__CGRectToD2D_F(rect), D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
         deviceContext->Clear(nullptr); // transparent black clear
         deviceContext->PopAxisAlignedClip();
-        deviceContext->EndDraw();
+        _CGContextPopEndDraw(context);
     }
 }
 
@@ -2830,8 +2830,9 @@ CGContextRef CGBitmapContextCreate(void* data,
 
 /**
  @Status Caveat
- @Notes If data is provided, it can only be in one of the few pixel formats Direct2D can render to in system memory: (P)RGBA, (P)BGRA, or Alpha8. If a buffer is
-        provided for a grayscale image, render operations will be carried out into an Alpha8 buffer instead.
+ @Notes If data is provided, it can only be in one of the few pixel formats Direct2D can render to in system memory:
+        (P)RGBA, (P)BGRA, or Alpha8.
+        If a buffer is provided for a grayscale image, render operations will be carried out into an Alpha8 buffer instead.
         Luminance values will be discarded in favour of alpha values.
 */
 CGContextRef CGBitmapContextCreateWithData(void* data,
