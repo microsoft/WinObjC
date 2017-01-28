@@ -2830,9 +2830,9 @@ CGContextRef CGBitmapContextCreate(void* data,
 
 /**
  @Status Caveat
- @Notes If data is provided, it can only be in one of the few pixel formats Direct2D can render to in system memory: (P)RGBA, (P)BGRA, or
- Alpha8. If a buffer is
-        provided for a grayscale image, render operations will be carried out into an Alpha8 buffer instead.
+ @Notes If data is provided, it can only be in one of the few pixel formats Direct2D can render to in system memory:
+        (P)RGBA, (P)BGRA, or Alpha8.
+        If a buffer is provided for a grayscale image, render operations will be carried out into an Alpha8 buffer instead.
         Luminance values will be discarded in favour of alpha values.
 */
 CGContextRef CGBitmapContextCreateWithData(void* data,
