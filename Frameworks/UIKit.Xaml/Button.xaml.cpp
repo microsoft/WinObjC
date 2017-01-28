@@ -189,9 +189,9 @@ void Button::OnApplyTemplate() {
 ////////////////////////////////////////////////////////////////////////////////////
 // ObjectiveC Interop
 ////////////////////////////////////////////////////////////////////////////////////
-UIKIT_XAML_EXPORT IInspectable* XamlCreateButton() {
-    auto button = ref new UIKit::Xaml::Button();
-    return InspectableFromObject(button).Detach();
+UIKIT_XAML_EXPORT void XamlCreateButton(IInspectable** created) {
+    ComPtr<IInspectable> inspectable = InspectableFromObject(ref new UIKit::Xaml::Button());
+    *created = inspectable.Detach();
 }
 
 UIKIT_XAML_EXPORT void XamlRemovePointerEvents(const ComPtr<IInspectable>& inspectableButton) {

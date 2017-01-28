@@ -28,8 +28,7 @@ namespace XamlControls {
 ////////////////////////////////////////////////////////////////////////////////////
 WXCButton* CreateButton() {
     ComPtr<IInspectable> inspectable;
-    // Use Attach for transfer-ownership semantics, else we +1 and leak
-    inspectable.Attach(XamlCreateButton());
+    XamlCreateButton(&inspectable);
     return _createRtProxy([WXCButton class], inspectable.Get());
 }
 
@@ -56,8 +55,7 @@ void HookLayoutEvent(WXCButton* button, WUXIPointerEventHandler layoutHook) {
 ////////////////////////////////////////////////////////////////////////////////////
 WXCContentDialog* CreateContentDialog() {
     ComPtr<IInspectable> inspectable;
-    // Use Attach for transfer-ownership semantics, else we +1 and leak
-    inspectable.Attach(XamlCreateContentDialog());
+    XamlCreateContentDialog(&inspectable);
     return _createRtProxy([WXCContentDialog class], inspectable.Get());
 }
 
@@ -100,8 +98,7 @@ void XamlContentDialogSetDestructiveButtonIndex(WXCContentDialog* contentDialog,
 ////////////////////////////////////////////////////////////////////////////////////
 WXCGrid* CreateLabel() {
     Microsoft::WRL::ComPtr<IInspectable> inspectable;
-    // Use Attach for transfer-ownership semantics, else we +1 and leak
-    inspectable.Attach(XamlCreateLabel());
+    XamlCreateLabel(&inspectable);
     return _createRtProxy([WXCGrid class], inspectable.Get());
 }
 

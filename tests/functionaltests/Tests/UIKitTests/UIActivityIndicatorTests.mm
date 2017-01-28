@@ -32,7 +32,8 @@
 
 TEST(UIActivityIndicatorView, CreateXamlElement) {
     // TODO: Switch to UIKit.Xaml projections when they're available.
-    Microsoft::WRL::ComPtr<IInspectable> xamlElement(XamlCreateProgressRing());
+    Microsoft::WRL::ComPtr<IInspectable> xamlElement;
+    XamlCreateProgressRing(&xamlElement);
     ASSERT_TRUE(xamlElement);
 }
 

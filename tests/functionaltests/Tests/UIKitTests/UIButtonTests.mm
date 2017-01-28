@@ -25,7 +25,8 @@ using namespace UXTestAPI;
 
 TEST(UIButton, CreateXamlElement) {
     // TODO: Switch to UIKit.Xaml projections when they're available.
-    Microsoft::WRL::ComPtr<IInspectable> xamlElement(XamlCreateButton());
+    Microsoft::WRL::ComPtr<IInspectable> xamlElement;
+    XamlCreateButton(&xamlElement);
     ASSERT_TRUE(xamlElement);
 }
 

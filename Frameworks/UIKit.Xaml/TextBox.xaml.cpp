@@ -36,8 +36,9 @@ void TextBox::OnApplyTemplate() {
 ////////////////////////////////////////////////////////////////////////////////////
 // ObjectiveC Interop
 ////////////////////////////////////////////////////////////////////////////////////
-UIKIT_XAML_EXPORT IInspectable* XamlCreateTextBox() {
-    return InspectableFromObject(ref new UIKit::Xaml::TextBox()).Detach();
+UIKIT_XAML_EXPORT void XamlCreateTextBox(IInspectable** created) {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable = InspectableFromObject(ref new UIKit::Xaml::TextBox());
+    *created = inspectable.Detach();
 }
 
 // clang-format on

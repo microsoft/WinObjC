@@ -32,7 +32,8 @@
 
 TEST(UIScrollView, CreateXamlElement) {
     // TODO: Switch to UIKit.Xaml projections when they're available.
-    Microsoft::WRL::ComPtr<IInspectable> xamlElement(XamlCreateScrollViewer());
+    Microsoft::WRL::ComPtr<IInspectable> xamlElement;
+    XamlCreateScrollViewer(&xamlElement);
     ASSERT_TRUE(xamlElement);
 }
 
