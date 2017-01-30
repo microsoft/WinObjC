@@ -110,7 +110,8 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
     va_list reader;
     va_start(reader, formatStr);
 
-    NSString* formattedString = [[NSString alloc] initWithFormat:formatStr arguments:reader];
+    StrongId<NSString> formattedString;
+    formattedString.attach([[NSString alloc] initWithFormat:formatStr arguments:reader]);
     return [self stringByAppendingString:formattedString];
 }
 
