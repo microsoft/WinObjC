@@ -349,6 +349,10 @@ static void* _threadBody(void* context) {
     return [[_name retain] autorelease];
 }
 
+static VOID WINAPI externalThreadCleanup(_In_ PVOID externalNSThread) {
+    [reinterpret_cast<NSThread*>(externalNSThread) release];
+}
+
 /**
 @Status Interoperable
 */
@@ -356,8 +360,17 @@ static void* _threadBody(void* context) {
     NSThread* currentThread = [[self class] _threadObjectFromCurrentThread];
 
     if (currentThread == nil) {
-        currentThread = [NSThread new];
+        // Underlying thread created outside the NSThread APIs
+
+        // So create a new instance
+        currentThread = [[NSThread alloc] init];
         [currentThread _associateWithCurrentThread];
+
+        // Release it on thread exit
+        DWORD flsIndex = ::FlsAlloc(externalThreadCleanup);
+        if (flsIndex != FLS_OUT_OF_INDEXES) {
+            ::FlsSetValue(flsIndex, reinterpret_cast<PVOID>(currentThread));
+        }
     }
     return currentThread;
 }

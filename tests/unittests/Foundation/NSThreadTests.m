@@ -17,6 +17,7 @@
 #include "gtest-api.h"
 #import <Foundation/Foundation.h>
 #import <future>
+#include <thread>
 #include <pthread.h>
 
 static int counter = 0;
@@ -75,6 +76,24 @@ TEST(NSThread, Priority) {
 
     // Let the thread die.
     testController.stop = YES;
+}
+
+TEST(NSThread, ExternalCurrentThreadLeak) {
+    NSThread* current = nil;
+
+    std::thread t([&current]() {
+        // Grab a strong reference to NSThread.currentThread
+        // on a thread not created via the NSThread APIs
+        current = [[NSThread currentThread] retain];
+    });
+
+    t.join();
+
+    // Ensure the reference grabbed above is
+    // the only one remaining after thread exit
+    EXPECT_EQ(1, [current retainCount]);
+
+    [current release];
 }
 
 TEST(pthread, StaticInitializer) {
