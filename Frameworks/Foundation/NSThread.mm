@@ -349,10 +349,6 @@ static void* _threadBody(void* context) {
     return [[_name retain] autorelease];
 }
 
-static VOID WINAPI externalThreadCleanup(_In_ PVOID externalNSThread) {
-    [reinterpret_cast<NSThread*>(externalNSThread) release];
-}
-
 /**
 @Status Interoperable
 */
@@ -366,11 +362,9 @@ static VOID WINAPI externalThreadCleanup(_In_ PVOID externalNSThread) {
         currentThread = [[NSThread alloc] init];
         [currentThread _associateWithCurrentThread];
 
-        // Release it on thread exit
-        DWORD flsIndex = ::FlsAlloc(externalThreadCleanup);
-        if (flsIndex != FLS_OUT_OF_INDEXES) {
-            ::FlsSetValue(flsIndex, reinterpret_cast<PVOID>(currentThread));
-        }
+        // Ensure it's released on thread exit
+        thread_local StrongId<NSThread> current;
+        current.attach(currentThread);
     }
     return currentThread;
 }
