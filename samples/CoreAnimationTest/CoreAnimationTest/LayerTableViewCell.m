@@ -26,7 +26,7 @@
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString*)reuseIdentifier {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-        self.backgroundColor = [UIColor whiteColor];
+        self.backgroundColor = [UIColor clearColor];
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         _titleLabel = [UILabel new];
         _titleLabel.backgroundColor = [UIColor clearColor];
@@ -63,18 +63,17 @@
                                                                      metrics:metrics
                                                                        views:views]];
         [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_titleLabel]|" options:0 metrics:metrics views:views]];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(>=0)-[_moveUpButton(50)]-pad-|"
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(>=0)-[_moveUpButton(20)]-pad-|"
                                                                      options:0
                                                                      metrics:metrics
                                                                        views:views]];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(>=0)-[_moveDownButton(50)]-pad-|"
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(>=0)-[_moveDownButton(20)]-pad-|"
                                                                      options:0
                                                                      metrics:metrics
                                                                        views:views]];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(>=0)-[_moveUpButton][_moveDownButton]-(>=0)-|"
-                                                                     options:0
-                                                                     metrics:metrics
-                                                                       views:views]];
+
+        [_moveUpButton.topAnchor constraintEqualToAnchor:self.topAnchor constant:kPadding / 2.0f].active = YES;
+        [_moveDownButton.bottomAnchor constraintEqualToAnchor:self.bottomAnchor constant:-kPadding / 2.0f].active = YES;
     }
 
     return self;
@@ -107,7 +106,7 @@
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-    self.backgroundColor = selected ? [UIColor colorWithWhite:0.9 alpha:1.0] : [UIColor whiteColor];
+    self.backgroundColor = selected ? [UIColor colorWithWhite:0.8 alpha:1.0] : [UIColor clearColor];
 }
 
 #pragma mark - Button handlers

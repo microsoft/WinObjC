@@ -14,22 +14,19 @@
 //
 //******************************************************************************
 
-#import "ViewHeaderFooterView.h"
+#import "HeaderTableViewCell.h"
 #import "CALayerMultipleViewController.h"
 
-@implementation ViewHeaderFooterView {
+@implementation HeaderTableViewCell {
     UILabel* _titleLabel;
     UIView* _layerView;
     UILabel* _countLabel;
+    CALayer* _separator;
 }
 
-- (instancetype)initWithReuseIdentifier:(NSString*)reuseIdentifier {
-    if (self = [super initWithReuseIdentifier:reuseIdentifier]) {
-        self.contentView.backgroundColor = [UIColor whiteColor];
-        self.layer.shadowColor = [UIColor blackColor].CGColor;
-        self.layer.shadowRadius = 0.5f;
-        self.layer.shadowOffset = CGSizeMake(0.0, 1.0f);
-        self.layer.shadowOpacity = 0.2f;
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString*)reuseIdentifier {
+    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+        self.backgroundColor = [UIColor clearColor];
 
         _titleLabel = [UILabel new];
         _titleLabel.backgroundColor = [UIColor clearColor];
@@ -59,15 +56,33 @@
                                                                      options:0
                                                                      metrics:metrics
                                                                        views:views]];
+
+        // Separator
+        _separator = [CALayer layer];
+        _separator.backgroundColor = [UIColor darkGrayColor].CGColor;
+        _separator.frame = CGRectMake(0, CGRectGetHeight(self.frame) - 0.5f, CGRectGetWidth(self.frame), 0.5f);
+        [self.layer addSublayer:_separator];
     }
 
     return self;
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    _separator.frame = CGRectMake(0, CGRectGetHeight(self.frame) - 0.5f, CGRectGetWidth(self.frame), 0.5f);
+}
+
 - (void)setUpWithView:(UIView*)view andTitle:(NSString*)title {
     _titleLabel.text = title;
     _countLabel.text = [NSString stringWithFormat:@"%lu layers", view.layer.sublayers.count + 1];
+    _countLabel.hidden = NO;
     _layerView = view;
+}
+
+- (void)setUpWithTitle:(NSString*)title {
+    _titleLabel.text = title;
+    _countLabel.hidden = YES;
+    _layerView = nil;
 }
 
 @end
