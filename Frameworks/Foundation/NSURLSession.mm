@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -32,6 +32,21 @@
 const int64_t NSURLSessionTransferSizeUnknown = -1LL;
 
 #import <StubReturn.h>
+
+#define _THROW_IF_NULL_REQUEST(request)                                        \
+do {                                                                           \
+    if (request == nil) {                                                      \
+      @throw [NSException                                                      \
+          exceptionWithName:NSInvalidArgumentException                         \
+                     reason:[NSString                                          \
+                                stringWithFormat:@"*** %@ Cannot create data " \
+                                                 @"task without request or "   \
+                                                 @"resume data",               \
+                                                 NSStringFromSelector(_cmd)]   \
+                   userInfo:nil];                                              \
+    }                                                                          \
+}                                                                              \
+  while (false)
 
 NSString* const NSURLErrorBackgroundTaskCancelledReasonKey = @"NSURLErrorBackgroundTaskCancelledReasonKey";
 
@@ -305,6 +320,7 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
 @Status Interoperable
 */
 - (NSURLSessionDataTask*)dataTaskWithRequest:(NSURLRequest*)request completionHandler:(NSURLSessionTaskCompletionHandler)completionHandler {
+    _THROW_IF_NULL_REQUEST(request);
     if (_invalidating) {
         return nil;
     }
@@ -344,6 +360,7 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
 */
 - (NSURLSessionDownloadTask*)downloadTaskWithRequest:(NSURLRequest*)request
                                    completionHandler:(NSURLSessionDownloadTaskCompletionHandler)completionHandler {
+    _THROW_IF_NULL_REQUEST(request);
     if (_invalidating) {
         return nil;
     }
@@ -368,6 +385,7 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
 */
 - (NSURLSessionDownloadTask*)downloadTaskWithResumeData:(NSData*)resumeData
                                       completionHandler:(NSURLSessionDownloadTaskCompletionHandler)completionHandler {
+    _THROW_IF_NULL_REQUEST(resumeData);
     if (_invalidating) {
         return nil;
     }

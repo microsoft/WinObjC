@@ -324,6 +324,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSPropertyList.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSTimeZone.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSUndoManagerTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\UnitTests\Foundation\NSURLSessionTests.mm" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt">
