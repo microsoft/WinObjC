@@ -32,7 +32,8 @@
 
 TEST(UITextField, CreateXamlElement) {
     // TODO: Switch to UIKit.Xaml projections when they're available.
-    Microsoft::WRL::ComPtr<IInspectable> xamlElement(XamlCreateTextBox());
+    Microsoft::WRL::ComPtr<IInspectable> xamlElement;
+    XamlCreateTextBox(&xamlElement);
     ASSERT_TRUE(xamlElement);
 }
 

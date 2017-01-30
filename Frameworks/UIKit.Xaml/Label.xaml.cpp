@@ -83,8 +83,9 @@ TextBlock^ Label::TextBlock::get() {
 ////////////////////////////////////////////////////////////////////////////////////
 
 // Returns a UIKit::Label as an IInspectable
-UIKIT_XAML_EXPORT IInspectable* XamlCreateLabel() {
-    return InspectableFromObject(ref new UIKit::Xaml::Label()).Detach();
+UIKIT_XAML_EXPORT void XamlCreateLabel(IInspectable** created) {
+    ComPtr<IInspectable> inspectable = InspectableFromObject(ref new UIKit::Xaml::Label());
+    *created = inspectable.Detach();
 }
 
 // Retrieves the UIKit::Label's backing TextBlock as an IInspectable

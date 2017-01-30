@@ -32,7 +32,8 @@
 
 TEST(UIActionSheet, CreateXamlElement) {
     // TODO: Switch to UIKit.Xaml projections when they're available.
-    Microsoft::WRL::ComPtr<IInspectable> xamlElement(XamlCreateContentDialog());
+    Microsoft::WRL::ComPtr<IInspectable> xamlElement;
+    XamlCreateContentDialog(&xamlElement);
     ASSERT_TRUE(xamlElement);
 }
 

@@ -476,6 +476,7 @@ extern void UIActivityIndicatorViewGetXamlElement();
 
 extern void UIButtonCreateXamlElement();
 extern void UIButtonGetXamlElement();
+extern void UIButtonCheckForLeaks();
 extern void UIButtonTitleColorChanged();
 extern void UIButtonTextChanged();
 
@@ -604,6 +605,10 @@ public:
 
     TEST_METHOD(UIButton_GetXamlElement) {
         FrameworkHelper::RunOnUIThread(&UIButtonGetXamlElement);
+    }
+
+    TEST_METHOD(UIButton_CheckForLeaks) {
+        UIButtonCheckForLeaks();
     }
 
     TEST_METHOD(UIButton_TitleColorChanged) {

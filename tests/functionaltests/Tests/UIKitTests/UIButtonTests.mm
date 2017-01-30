@@ -25,7 +25,8 @@ using namespace UXTestAPI;
 
 TEST(UIButton, CreateXamlElement) {
     // TODO: Switch to UIKit.Xaml projections when they're available.
-    Microsoft::WRL::ComPtr<IInspectable> xamlElement(XamlCreateButton());
+    Microsoft::WRL::ComPtr<IInspectable> xamlElement;
+    XamlCreateButton(&xamlElement);
     ASSERT_TRUE(xamlElement);
 }
 
@@ -36,6 +37,67 @@ TEST(UIButton, GetXamlElement) {
 
     // TODO: Fix up when UIButton moves fully to XAML
     ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
+}
+
+@interface UIDeallocTestButton : UIButton {
+    std::shared_ptr<UXEvent> _event;
+}
+@end
+
+@implementation UIDeallocTestButton
+
+- (void)setDeallocEvent:(std::shared_ptr<UXEvent>)event {
+    _event = event;
+}
+
+-(void)dealloc {
+    _event->Set();
+    [super dealloc];
+}
+@end
+
+TEST(UIButton, CheckForLeaks) {
+    Microsoft::WRL::WeakRef weakXamlElement;
+    {
+        StrongId<UIButtonWithControlsViewController> buttonVC;
+        buttonVC.attach([[UIButtonWithControlsViewController alloc] init]);
+        UXTestAPI::ViewControllerPresenter testHelper(buttonVC);
+
+        __block UIDeallocTestButton* testButton = nil;
+        __block auto event = UXEvent::CreateAuto();
+
+        // Create and render the button
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            testButton = [[UIDeallocTestButton alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
+            testButton.backgroundColor = [UIColor redColor];
+            [testButton setDeallocEvent:event];
+            [[buttonVC view] addSubview:testButton];
+        });
+
+        // Grab a weak reference to the backing Xaml element
+        Microsoft::WRL::ComPtr<IInspectable> xamlElement([[testButton xamlElement] comObj]);
+        ASSERT_TRUE_MSG(SUCCEEDED(xamlElement.AsWeak(&weakXamlElement)), "Failed to acquire a weak reference to the backing Xaml element.");
+        xamlElement = nullptr;
+
+        // Free the button
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            // Nil out testButton and remove it from its superview
+            [testButton removeFromSuperview];
+            [testButton release];
+            testButton = nil;
+        });
+
+        // Validate that dealloc was called
+        ASSERT_TRUE_MSG(event->Wait(c_testTimeoutInSec), "FAILED: Waiting for dealloc call failed!");
+    }
+
+    // Unfortunately we have to wait a bit for the button to actually finish deallocation
+    [NSThread sleepForTimeInterval:.25];
+
+    // Validate that we can no longer acquire a strong reference to the UIButton's backing Xaml element
+    Microsoft::WRL::ComPtr<IInspectable> xamlElement;
+    weakXamlElement.As(&xamlElement);
+    ASSERT_EQ_MSG(xamlElement.Get(), nullptr, "Unexpectedly able to reacquire a strong reference to the backing Xaml element.");
 }
 
 TEST(UIButton, TitleColorChanged) {

@@ -32,7 +32,8 @@
 
 TEST(UISlider, CreateXamlElement) {
     // TODO: Switch to UIKit.Xaml projections when they're available.
-    Microsoft::WRL::ComPtr<IInspectable> xamlElement(XamlCreateSlider());
+    Microsoft::WRL::ComPtr<IInspectable> xamlElement;
+    XamlCreateSlider(&xamlElement);
     ASSERT_TRUE(xamlElement);
 }
 
