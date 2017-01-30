@@ -50,3 +50,53 @@ DISABLED_DRAW_TEST_F(CGContext, ShadowWithRotatedCTM, WhiteBackgroundTest<>) {
 
     CGContextStrokeRect(context, rect);
 }
+
+DISABLED_DRAW_TEST_F(CGContext, ShadowOverlap, WhiteBackgroundTest<>) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGContextSetRGBStrokeColor(context, 1.0, 0.0, 0.0, 1.0);
+    CGContextSetLineWidth(context, 5);
+
+    CGContextSetShadow(context, CGSize{ 10.f, 10.f }, 1.0);
+
+    CGPoint center = _CGRectGetCenter(bounds);
+    CGRect rect = _CGRectCenteredOnPoint({ 150, 150 }, center);
+    CGRect rect2 = _CGRectCenteredOnPoint({ 150, 150 }, rect.origin);
+
+    CGContextStrokeRect(context, rect);
+    CGContextStrokeRect(context, rect2);
+}
+
+DISABLED_DRAW_TEST_F(CGContext, ShadowEnabledInMiddle, WhiteBackgroundTest<>) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGContextSetRGBStrokeColor(context, 1.0, 0.0, 0.0, 1.0);
+    CGContextSetLineWidth(context, 5);
+
+    CGPoint center = _CGRectGetCenter(bounds);
+    CGRect rect = _CGRectCenteredOnPoint({ 150, 150 }, center);
+    CGRect rect2 = _CGRectCenteredOnPoint({ 150, 150 }, rect.origin);
+
+    CGContextStrokeRect(context, rect);
+    CGContextSetShadow(context, CGSize{ 10.f, 10.f }, 1.0);
+    CGContextStrokeRect(context, rect2);
+}
+
+DISABLED_DRAW_TEST_F(CGContext, ShadowDisabledInMiddle, WhiteBackgroundTest<>) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGContextSetRGBStrokeColor(context, 1.0, 0.0, 0.0, 1.0);
+    CGContextSetLineWidth(context, 5);
+
+    CGPoint center = _CGRectGetCenter(bounds);
+    CGRect rect = _CGRectCenteredOnPoint({ 150, 150 }, center);
+    CGRect rect2 = _CGRectCenteredOnPoint({ 150, 150 }, rect.origin);
+
+    CGContextSetShadow(context, CGSize{ 10.f, 10.f }, 1.0);
+    CGContextStrokeRect(context, rect);
+    CGContextSetShadow(context, CGSize{ 0, 0 }, 0.0);
+    CGContextStrokeRect(context, rect2);
+}

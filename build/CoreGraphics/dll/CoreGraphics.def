@@ -244,8 +244,6 @@ LIBRARY CoreGraphics
         _CGGetPixelFormatProperties
         _CGContextPushBeginDraw
         _CGContextPopEndDraw
-        _CGContextEscapeBeginEndDrawStack
-        _CGContextUnescapeBeginEndDrawStack
 
         ; CGDataConsumer.mm
         CGDataConsumerCreate

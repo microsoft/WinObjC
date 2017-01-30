@@ -263,9 +263,6 @@ private:
     // Since nothing needs to actually be put on a stack, just increment a counter insteads
     std::atomic_uint32_t _beginEndDrawDepth = { 0 };
 
-    // Keeps track of the depth of a 'stack' of (Un)EscapeBeginEndDrawStack calls
-    std::atomic_uint32_t _escapeBeginEndDrawDepth = { 0 };
-
     inline HRESULT _SaveD2DDrawingState(ID2D1DrawingStateBlock** pDrawingState) {
         RETURN_HR_IF(E_POINTER, !pDrawingState);
 
@@ -401,31 +398,15 @@ public:
         return S_OK;
     }
 
-    inline HRESULT EscapeBeginEndDrawStack() {
-        if ((_beginEndDrawDepth > 0) && ((_escapeBeginEndDrawDepth)++ == 0)) {
-            RETURN_IF_FAILED(deviceContext->EndDraw());
-        }
-        return S_OK;
-    }
-
-    inline void UnescapeBeginEndDrawStack() {
-        if ((_beginEndDrawDepth > 0) && (--(_escapeBeginEndDrawDepth) == 0)) {
-            deviceContext->BeginDraw();
-        }
-    }
-
     HRESULT Clip(CGPathDrawingMode pathMode);
 
     HRESULT PushLayer(CGRect* rect = nullptr);
     HRESULT PopLayer();
 
     template <typename Lambda> // Lambda takes the form HRESULT (*)(CGContextRef, ID2D1DeviceContext*)
-    HRESULT DrawToCommandList(_CGCoordinateMode coordinateMode,
-                              CGAffineTransform* additionalTransform,
-                              ID2D1CommandList** outCommandList,
-                              Lambda&& drawLambda);
+    HRESULT Draw(_CGCoordinateMode coordinateMode, CGAffineTransform* additionalTransform, Lambda&& drawLambda);
+
     HRESULT DrawGeometry(_CGCoordinateMode coordinateMode, ID2D1Geometry* pGeometry, CGPathDrawingMode drawMode);
-    HRESULT DrawImage(ID2D1Image* image);
     HRESULT DrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, bool transformByGlyph = true);
     HRESULT ClipToD2DMaskBitmap(ID2D1Bitmap* bitmap, CGRect rect, D2D1_INTERPOLATION_MODE interpolationMode);
     HRESULT ClipToCGImageMask(CGImageRef image, CGRect rect);
@@ -537,9 +518,7 @@ HRESULT __CGContext::PushLayer(CGRect* rect) {
     ComPtr<ID2D1CommandList> commandList;
     RETURN_IF_FAILED(deviceContext->CreateCommandList(&commandList));
 
-    EscapeBeginEndDrawStack();
     deviceContext->SetTarget(commandList.Get());
-    UnescapeBeginEndDrawStack();
 
     // Copy the current layer's state to the new layer.
     auto& oldLayer = _layerStack.top();
@@ -612,11 +591,13 @@ HRESULT __CGContext::PopLayer() {
     ComPtr<ID2D1Image> incomingImageTarget;
     RETURN_IF_FAILED(incomingLayer.GetTarget(&incomingImageTarget));
 
-    EscapeBeginEndDrawStack();
     deviceContext->SetTarget(incomingImageTarget.Get());
-    UnescapeBeginEndDrawStack();
 
-    RETURN_IF_FAILED(DrawImage(outgoingCommandList.Get()));
+    RETURN_IF_FAILED(
+        Draw(_kCGCoordinateModeDeviceSpace, nullptr, [&outgoingCommandList](CGContextRef context, ID2D1DeviceContext* deviceContext) {
+            deviceContext->DrawImage(outgoingCommandList.Get());
+            return S_OK;
+        }));
 
     // Restore the previous D2D state block & drawing parameters from the incoming layer.
     RETURN_IF_FAILED(PopGState());
@@ -1938,55 +1919,45 @@ HRESULT __CGContext::DrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, bool transfo
 
     auto& state = CurrentGState();
 
-    ComPtr<ID2D1CommandList> textCommandList;
     // If text is only flipped vertically, we can draw it all at once rather than glyph by glyph
     if ((textTransform.a == 1.0f && fabs(textTransform.d) == 1.0f && textTransform.b == 0.0f && textTransform.c == 0.0f) ||
         !transformByGlyph) {
-        HRESULT hr = DrawToCommandList(_kCGCoordinateModeUserSpace,
-                                       &textTransform,
-                                       &textCommandList,
-                                       [&state, glyphRun](CGContextRef context, ID2D1DeviceContext* deviceContext) {
-                                           deviceContext->DrawGlyphRun(D2D1::Point2F(0, 0),
-                                                                       glyphRun,
-                                                                       state.fillBrush.Get(),
-                                                                       DWRITE_MEASURING_MODE_NATURAL);
-                                           return S_OK;
-                                       });
-        RETURN_IF_FAILED(hr);
+        RETURN_IF_FAILED(
+            Draw(_kCGCoordinateModeUserSpace, &textTransform, [&state, glyphRun](CGContextRef context, ID2D1DeviceContext* deviceContext) {
+                deviceContext->DrawGlyphRun(D2D1::Point2F(0, 0), glyphRun, state.fillBrush.Get(), DWRITE_MEASURING_MODE_NATURAL);
+                return S_OK;
+            }));
     } else {
         // Using device space here gives us finer-grained control over the transform.
-        HRESULT hr = DrawToCommandList(
-            _kCGCoordinateModeDeviceSpace,
-            nullptr,
-            &textCommandList,
-            [&state, &glyphRun, &deviceTransform, &textTransform](CGContextRef context, ID2D1DeviceContext* deviceContext) {
-                CGAffineTransform runningGlobalTransform = deviceTransform;
-                // Text scaling and rotation apply to each glyph relative to its origin, so we must draw each glyph transformed
-                // independently
-                DWRITE_GLYPH_RUN individualGlyphRun{ glyphRun->fontFace,
-                                                     glyphRun->fontEmSize,
-                                                     1, // Since this is glyph by glyph, glyphCount is one
-                                                     glyphRun->glyphIndices,
-                                                     nullptr,
-                                                     nullptr,
-                                                     glyphRun->isSideways,
-                                                     glyphRun->bidiLevel };
-                D2D1_POINT_2F origin{ 0, 0 };
-                // Iterate through every glyph by incrementing pointer in glyphIndices array
-                for (uint32_t i = 0; i < glyphRun->glyphCount; ++i, ++(individualGlyphRun.glyphIndices)) {
-                    CGAffineTransform finalTextTransform = CGAffineTransformConcat(textTransform, runningGlobalTransform);
-                    deviceContext->SetTransform(__CGAffineTransformToD2D_F(finalTextTransform));
-                    deviceContext->DrawGlyphRun(origin, &individualGlyphRun, state.fillBrush.Get(), DWRITE_MEASURING_MODE_NATURAL);
+        RETURN_IF_FAILED(
+            Draw(_kCGCoordinateModeDeviceSpace,
+                 nullptr,
+                 [&state, &glyphRun, &deviceTransform, &textTransform](CGContextRef context, ID2D1DeviceContext* deviceContext) {
+                     CGAffineTransform runningGlobalTransform = deviceTransform;
+                     // Text scaling and rotation apply to each glyph relative to its origin, so we must draw each glyph
+                     // transformed
+                     // independently
+                     DWRITE_GLYPH_RUN individualGlyphRun{ glyphRun->fontFace,
+                                                          glyphRun->fontEmSize,
+                                                          1, // Since this is glyph by glyph, glyphCount is one
+                                                          glyphRun->glyphIndices,
+                                                          nullptr,
+                                                          nullptr,
+                                                          glyphRun->isSideways,
+                                                          glyphRun->bidiLevel };
+                     D2D1_POINT_2F origin{ 0, 0 };
+                     // Iterate through every glyph by incrementing pointer in glyphIndices array
+                     for (uint32_t i = 0; i < glyphRun->glyphCount; ++i, ++(individualGlyphRun.glyphIndices)) {
+                         CGAffineTransform finalTextTransform = CGAffineTransformConcat(textTransform, runningGlobalTransform);
+                         deviceContext->SetTransform(__CGAffineTransformToD2D_F(finalTextTransform));
+                         deviceContext->DrawGlyphRun(origin, &individualGlyphRun, state.fillBrush.Get(), DWRITE_MEASURING_MODE_NATURAL);
 
-                    // Uses glyphAdvances to move each glyph
-                    runningGlobalTransform = CGAffineTransformTranslate(runningGlobalTransform, glyphRun->glyphAdvances[i], 0);
-                }
-                return S_OK;
-            });
-        RETURN_IF_FAILED(hr);
+                         // Uses glyphAdvances to move each glyph
+                         runningGlobalTransform = CGAffineTransformTranslate(runningGlobalTransform, glyphRun->glyphAdvances[i], 0);
+                     }
+                     return S_OK;
+                 }));
     }
-
-    RETURN_IF_FAILED(DrawImage(textCommandList.Get()));
 
     ClearPath();
     return S_OK;
@@ -2183,20 +2154,13 @@ HRESULT __CGContext::_CreateShadowEffect(ID2D1Image* inputImage, ID2D1Effect** o
 }
 
 template <typename Lambda> // Lambda takes the form HRESULT(*)(CGContextRef, ID2D1DeviceContext*)
-HRESULT __CGContext::DrawToCommandList(_CGCoordinateMode coordinateMode,
-                                       CGAffineTransform* additionalTransform,
-                                       ID2D1CommandList** outCommandList,
-                                       Lambda&& drawLambda) {
-    // Cache the original target to restore it later.
-    ComPtr<ID2D1Image> originalTarget;
-    deviceContext->GetTarget(&originalTarget);
+HRESULT __CGContext::Draw(_CGCoordinateMode coordinateMode, CGAffineTransform* additionalTransform, Lambda&& drawLambda) {
+    auto& state = CurrentGState();
 
-    ComPtr<ID2D1CommandList> commandList;
-    RETURN_IF_FAILED(deviceContext->CreateCommandList(&commandList));
-
-    EscapeBeginEndDrawStack();
-    deviceContext->SetTarget(commandList.Get());
-    deviceContext->BeginDraw();
+    if (!state.ShouldDraw()) {
+        // Being asked to draw nothing is valid!
+        return S_OK;
+    }
 
     CGAffineTransform transform = CGAffineTransformIdentity;
     switch (coordinateMode) {
@@ -2213,33 +2177,7 @@ HRESULT __CGContext::DrawToCommandList(_CGCoordinateMode coordinateMode,
         transform = CGAffineTransformConcat(*additionalTransform, transform);
     }
 
-    deviceContext->SetTransform(__CGAffineTransformToD2D_F(transform));
-
-    RETURN_IF_FAILED(std::forward<Lambda>(drawLambda)(this, deviceContext.Get()));
-
-    deviceContext->SetTransform(D2D1::IdentityMatrix());
-
-    RETURN_IF_FAILED(deviceContext->EndDraw());
-    RETURN_IF_FAILED(commandList->Close());
-
-    deviceContext->SetTarget(originalTarget.Get());
-    UnescapeBeginEndDrawStack();
-
-    *outCommandList = commandList.Detach();
-    return S_OK;
-}
-
-HRESULT __CGContext::DrawImage(ID2D1Image* image) {
-    auto& state = CurrentGState();
-
-    if (!image || !state.ShouldDraw()) {
-        // Being asked to draw nothing is valid!
-        return S_OK;
-    }
-
     PushBeginDraw();
-    // TODO GH#1194: We will need to re-evaluate Direct2D's D2DERR_RECREATE when we move to HW acceleration.
-    auto popEnd = wil::ScopeExit([this]() { this->PopEndDraw(); });
 
     bool layer = false;
     if (state.clippingGeometry || !IS_NEAR(state.globalAlpha, 1.0, .0001f) || state.opacityBrush) {
@@ -2253,55 +2191,77 @@ HRESULT __CGContext::DrawImage(ID2D1Image* image) {
                                  nullptr);
     }
 
-    ComPtr<ID2D1Image> currentImage{ image };
+    auto cleanup = wil::ScopeExit([this, layer]() {
+        if (layer) {
+            this->deviceContext->PopLayer();
+        }
 
-    ComPtr<ID2D1Effect> shadowEffect;
-    RETURN_IF_FAILED(_CreateShadowEffect(currentImage.Get(), &shadowEffect));
-    if (shadowEffect) {
-        RETURN_IF_FAILED(shadowEffect.As(&currentImage));
-    }
+        // TODO GH#1194: We will need to re-evaluate Direct2D's D2DERR_RECREATE when we move to HW acceleration.
+        this->PopEndDraw();
+    });
 
-    deviceContext->DrawImage(currentImage.Get());
+    if (state.HasShadow()) {
+        // Temporarily change the target to a command list, so that it can be 'replayed' into a shadow
+        ComPtr<ID2D1Image> originalTarget; // Cache the original target to restore it later.
+        deviceContext->GetTarget(&originalTarget);
 
-    if (layer) {
-        deviceContext->PopLayer();
+        ComPtr<ID2D1CommandList> commandList;
+        RETURN_IF_FAILED(deviceContext->CreateCommandList(&commandList));
+
+        deviceContext->SetTarget(commandList.Get());
+
+        deviceContext->SetTransform(__CGAffineTransformToD2D_F(transform));
+        RETURN_IF_FAILED(std::forward<Lambda>(drawLambda)(this, deviceContext.Get()));
+        deviceContext->SetTransform(D2D1::IdentityMatrix());
+
+        // Change the target back
+        RETURN_IF_FAILED(commandList->Close());
+        deviceContext->SetTarget(originalTarget.Get());
+
+        // Create the shadow effect and draw it
+        ComPtr<ID2D1Image> currentImage{ commandList };
+        ComPtr<ID2D1Effect> shadowEffect;
+        RETURN_IF_FAILED(_CreateShadowEffect(currentImage.Get(), &shadowEffect));
+        if (shadowEffect) {
+            RETURN_IF_FAILED(shadowEffect.As(&currentImage));
+        }
+
+        deviceContext->DrawImage(currentImage.Get());
+
+    } else {
+        deviceContext->SetTransform(__CGAffineTransformToD2D_F(transform));
+        RETURN_IF_FAILED(std::forward<Lambda>(drawLambda)(this, deviceContext.Get()));
+        deviceContext->SetTransform(D2D1::IdentityMatrix());
     }
 
     return S_OK;
 }
 
 HRESULT __CGContext::DrawGeometry(_CGCoordinateMode coordinateMode, ID2D1Geometry* pGeometry, CGPathDrawingMode drawMode) {
-    ComPtr<ID2D1CommandList> commandList;
     ComPtr<ID2D1Geometry> geometry(pGeometry);
-    HRESULT hr = DrawToCommandList(
-        coordinateMode, nullptr, &commandList, [geometry, drawMode](CGContextRef context, ID2D1DeviceContext* deviceContext) {
-            auto& state = context->CurrentGState();
-            if (drawMode & kCGPathFill) {
-                state.fillBrush->SetOpacity(state.alpha);
+    return Draw(coordinateMode, nullptr, [geometry, drawMode](CGContextRef context, ID2D1DeviceContext* deviceContext) {
+        auto& state = context->CurrentGState();
+        if (drawMode & kCGPathFill) {
+            state.fillBrush->SetOpacity(state.alpha);
 
-                ComPtr<ID2D1Geometry> geometryToFill;
-                D2D1_FILL_MODE d2dFillMode =
-                    (drawMode & kCGPathEOFill) == kCGPathEOFill ? D2D1_FILL_MODE_ALTERNATE : D2D1_FILL_MODE_WINDING;
-                RETURN_IF_FAILED(_CGConvertD2DGeometryToFillMode(geometry.Get(), d2dFillMode, &geometryToFill));
+            ComPtr<ID2D1Geometry> geometryToFill;
+            D2D1_FILL_MODE d2dFillMode = (drawMode & kCGPathEOFill) == kCGPathEOFill ? D2D1_FILL_MODE_ALTERNATE : D2D1_FILL_MODE_WINDING;
+            RETURN_IF_FAILED(_CGConvertD2DGeometryToFillMode(geometry.Get(), d2dFillMode, &geometryToFill));
 
-                deviceContext->FillGeometry(geometryToFill.Get(), state.fillBrush.Get());
-            }
+            deviceContext->FillGeometry(geometryToFill.Get(), state.fillBrush.Get());
+        }
 
-            if (drawMode & kCGPathStroke && std::fpclassify(state.lineWidth) != FP_ZERO) {
-                // This only computes the stroke style if its parameters have changed since the last draw.
-                state.ComputeStrokeStyle(deviceContext);
+        if (drawMode & kCGPathStroke && std::fpclassify(state.lineWidth) != FP_ZERO) {
+            // This only computes the stroke style if its parameters have changed since the last draw.
+            state.ComputeStrokeStyle(deviceContext);
 
-                state.strokeBrush->SetOpacity(state.alpha);
+            state.strokeBrush->SetOpacity(state.alpha);
 
-                deviceContext->DrawGeometry(geometry.Get(), state.strokeBrush.Get(), state.lineWidth, state.strokeStyle.Get());
-            }
+            deviceContext->DrawGeometry(geometry.Get(), state.strokeBrush.Get(), state.lineWidth, state.strokeStyle.Get());
+        }
 
-            return S_OK;
-        });
-
-    RETURN_IF_FAILED(hr);
-
-    return DrawImage(commandList.Get());
+        return S_OK;
+    });
 }
 
 /**
@@ -2515,20 +2475,16 @@ void _CGContextDrawImageRect(CGContextRef context, CGImageRef image, CGRect sour
     flipImage = CGAffineTransformScale(flipImage, 1.0, -1.0);
     flipImage = CGAffineTransformTranslate(flipImage, -dest.origin.x, -(dest.origin.y + (dest.size.height / 2.0)));
 
-    ComPtr<ID2D1CommandList> commandList;
-    FAIL_FAST_IF_FAILED(context->DrawToCommandList(_kCGCoordinateModeUserSpace,
-                                                   &flipImage,
-                                                   &commandList,
-                                                   [&](CGContextRef context, ID2D1DeviceContext* deviceContext) {
-                                                       auto& state = context->CurrentGState();
-                                                       deviceContext->DrawBitmap(d2dBitmap.Get(),
-                                                                                 __CGRectToD2D_F(dest),
-                                                                                 state.alpha,
-                                                                                 state.GetInterpolationModeForCGImage(refImage.get()),
-                                                                                 __CGRectToD2D_F(sourceRegion));
-                                                       return S_OK;
-                                                   }));
-    FAIL_FAST_IF_FAILED(context->DrawImage(commandList.Get()));
+    FAIL_FAST_IF_FAILED(
+        context->Draw(_kCGCoordinateModeUserSpace, &flipImage, [&](CGContextRef context, ID2D1DeviceContext* deviceContext) {
+            auto& state = context->CurrentGState();
+            deviceContext->DrawBitmap(d2dBitmap.Get(),
+                                      __CGRectToD2D_F(dest),
+                                      state.alpha,
+                                      state.GetInterpolationModeForCGImage(refImage.get()),
+                                      __CGRectToD2D_F(sourceRegion));
+            return S_OK;
+        }));
 }
 
 /**
@@ -2562,16 +2518,10 @@ void CGContextDrawTiledImage(CGContextRef context, CGRect rect, CGImageRef image
     D2D1_SIZE_F targetSize = deviceContext->GetSize();
     D2D1_RECT_F region = D2D1::RectF(0, 0, targetSize.width, targetSize.height);
 
-    ComPtr<ID2D1CommandList> commandList;
-    HRESULT hr = context->DrawToCommandList(_kCGCoordinateModeDeviceSpace,
-                                            nullptr,
-                                            &commandList,
-                                            [&](CGContextRef context, ID2D1DeviceContext* deviceContext) {
-                                                deviceContext->FillRectangle(&region, bitmapBrush.Get());
-                                                return S_OK;
-                                            });
-    FAIL_FAST_IF_FAILED(hr);
-    FAIL_FAST_IF_FAILED(context->DrawImage(commandList.Get()));
+    FAIL_FAST_IF_FAILED(context->Draw(_kCGCoordinateModeDeviceSpace, nullptr, [&](CGContextRef context, ID2D1DeviceContext* deviceContext) {
+        deviceContext->FillRectangle(&region, bitmapBrush.Get());
+        return S_OK;
+    }));
 }
 
 #pragma endregion
@@ -2657,15 +2607,10 @@ void CGContextDrawLinearGradient(
     D2D1_SIZE_F targetSize = deviceContext->GetSize();
     D2D1_RECT_F region = D2D1::RectF(0, 0, targetSize.width, targetSize.height);
 
-    ComPtr<ID2D1CommandList> commandList;
-    FAIL_FAST_IF_FAILED(context->DrawToCommandList(_kCGCoordinateModeDeviceSpace,
-                                                   nullptr,
-                                                   &commandList,
-                                                   [&](CGContextRef context, ID2D1DeviceContext* deviceContext) {
-                                                       deviceContext->FillRectangle(&region, linearGradientBrush.Get());
-                                                       return S_OK;
-                                                   }));
-    FAIL_FAST_IF_FAILED(context->DrawImage(commandList.Get()));
+    FAIL_FAST_IF_FAILED(context->Draw(_kCGCoordinateModeDeviceSpace, nullptr, [&](CGContextRef context, ID2D1DeviceContext* deviceContext) {
+        deviceContext->FillRectangle(&region, linearGradientBrush.Get());
+        return S_OK;
+    }));
 }
 
 /**
@@ -3024,14 +2969,6 @@ void _CGContextPushBeginDraw(CGContextRef context) {
 
 void _CGContextPopEndDraw(CGContextRef context) {
     FAIL_FAST_IF_FAILED(context->PopEndDraw());
-}
-
-void _CGContextEscapeBeginEndDrawStack(CGContextRef context) {
-    FAIL_FAST_IF_FAILED(context->EscapeBeginEndDrawStack());
-}
-
-void _CGContextUnescapeBeginEndDrawStack(CGContextRef context) {
-    context->UnescapeBeginEndDrawStack();
 }
 
 #pragma endregion
