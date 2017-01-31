@@ -127,6 +127,8 @@
         size = [title sizeWithFont:font constrainedToSize:CGSizeMake(0.0f, 0.0f) lineBreakMode:UILineBreakModeClip];
 
         CGRect textRect{};
+
+        // Horizontally center text
         textRect.origin.y = (rect.size.height - size.height) / 2.0;
         textRect.origin.x = rect.origin.x;
         textRect.size.width = rect.size.width;
