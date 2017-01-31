@@ -2982,8 +2982,14 @@ CGImageRef CGBitmapContextCreateImage(CGContextRef context) {
         return nullptr;
     }
 
-    // This copy is a no-op if the output format requested matches the backing image format.
     __CGBitmapContext* bitmapContext = (__CGBitmapContext*)context;
+    // If the bitmap context was provided with its own data buffer, *we must not share it*
+    // because the caller may free it at any time.
+    if (bitmapContext->_data) {
+        return CGImageCreateCopy(bitmapContext->_image);
+    }
+
+    // This copy is a no-op if the output format requested matches the backing image format.
     return _CGImageCreateCopyWithPixelFormat(bitmapContext->_image.get(), bitmapContext->GetOutputPixelFormat());
 }
 
