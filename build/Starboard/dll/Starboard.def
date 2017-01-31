@@ -164,7 +164,6 @@ LIBRARY Starboard
         EbrGetTimeOfDay
         EbrGetMediaTime
         EbrGetWantedOrientation
-        EbrGetRootMapping
         EbrGetWritableFolder
         EbrSetWritableFolder
         EbrBlockIfBackground

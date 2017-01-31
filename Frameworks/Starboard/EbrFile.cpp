@@ -149,18 +149,17 @@ int EbrFflush(int fd) {
 }
 
 bool EbrRemoveEmptyDir(const char* path) {
-    return RemoveDirectoryA(CPathMapper(path));
+    return RemoveDirectoryW(CPathMapper(path));
 }
 
 bool EbrRename(const char* path1, const char* path2) {
-    return rename(CPathMapper(path1), CPathMapper(path2)) == 0;
+    return _wrename(CPathMapper(path1), CPathMapper(path2)) == 0;
 }
 
 bool EbrUnlink(const char* path) {
-    return _unlink(CPathMapper(path)) == 0;
+    return _wunlink(CPathMapper(path)) == 0;
 }
 
-#define FSROOT "."
 #define mkdir _mkdir
 char g_WritableFolder[2048] = ".";
 
@@ -172,61 +171,12 @@ const char* EbrGetWritableFolder() {
     return g_WritableFolder;
 }
 
-bool EbrGetRootMapping(const char* dirName, char* dirOut, uint32_t maxLen) {
-    if (dirName == NULL) {
-        strcpy_s(dirOut, maxLen, FSROOT);
-        return true;
-    }
-    if (_stricmp(dirName, "Documents") == 0) {
-        sprintf_s(dirOut, maxLen, "%s\\Documents", g_WritableFolder);
-        mkdir(dirOut);
-
-        char tmpDir[4096];
-        strcpy_s(tmpDir, dirOut);
-        strcat_s(tmpDir, "\\Library");
-        mkdir(tmpDir);
-        return true;
-    }
-    if (_stricmp(dirName, "Cache") == 0) {
-        sprintf_s(dirOut, maxLen, "%s\\cache", g_WritableFolder);
-        mkdir(dirOut);
-        return true;
-    }
-    if (_stricmp(dirName, "Library") == 0) {
-        sprintf_s(dirOut, maxLen, "%s\\Library", g_WritableFolder);
-        mkdir(dirOut);
-        return true;
-    }
-    if (_stricmp(dirName, "AppSupport") == 0) {
-        sprintf_s(dirOut, maxLen, "%s\\AppSupport", g_WritableFolder);
-        mkdir(dirOut);
-        return true;
-    }
-    if (_stricmp(dirName, "tmp") == 0) {
-        sprintf_s(dirOut, maxLen, "%s\\tmp", g_WritableFolder);
-        mkdir(dirOut);
-        return true;
-    }
-    if (_stricmp(dirName, "shared") == 0) {
-        sprintf_s(dirOut, maxLen, "%s\\shared", g_WritableFolder);
-        mkdir(dirOut);
-        return true;
-    }
-    static std::regex drive("[a-zA-Z]:");
-    if (std::regex_match(dirName, drive)) {
-        sprintf_s(dirOut, maxLen, dirName);
-        return true;
-    }
-    sprintf_s(dirOut, maxLen, FSROOT "\\%s", dirName);
-    return true;
-}
-
 bool EbrMkdir(const char* path) {
-    return _mkdir(CPathMapper(path)) == 0;
+    return _wmkdir(CPathMapper(path)) == 0;
 }
 
 int EbrChmod(const char* path, int mode) {
-    return _chmod(CPathMapper(path), mode);
+    return _wchmod(CPathMapper(path), mode);
 }
 
 #define PATH_SEPARATOR "/"

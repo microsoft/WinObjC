@@ -19,10 +19,9 @@
 
 #include <sys\stat.h>
 
-
 std::shared_ptr<EbrFile> EbrIOFile::CreateInstance(const char* path, int mode, int share, int pmode) {
     int fid{};
-    int result = _sopen_s(&fid, CPathMapper(path), mode, share, pmode);
+    int result = _wsopen_s(&fid, CPathMapper(path), mode, share, pmode);
 
     if (result != 0) {
         return nullptr;

@@ -17,121 +17,83 @@
 #include <TestFramework.h>
 #include "pathmapper.h"
 
-bool fixPath(char* outPath, const char* relativePath);
-bool convertPath(char* filePath, const char* relativePath);
-
-TEST(PathMapper, fixPathNegativeTests) {
-    char outPath[4096];
-    EXPECT_FALSE(fixPath(outPath, "must start with /"));
-    EXPECT_EQ_MSG(outPath[0], 0, outPath);
-
-    EXPECT_FALSE(fixPath(outPath, "/.."));
-    EXPECT_EQ_MSG(outPath[0], 0, outPath);
-
-    EXPECT_FALSE(fixPath(outPath, "/./.."));
-    EXPECT_EQ_MSG(outPath[0], 0, outPath);
-
-    EXPECT_FALSE(fixPath(outPath, "/./src/../../.."));
-    // this test was failing before, it is a bug
-    EXPECT_EQ_MSG(outPath[0], 0, outPath);
-
-    EXPECT_FALSE(fixPath(outPath, "/src/../.."));
-    // this test was failing before, it is a bug
-    EXPECT_EQ_MSG(outPath[0], 0, outPath);
-}
-
-TEST(PathMapper, fixPathPositiveTests) {
-    char outPath[4096];
-    EXPECT_TRUE(fixPath(outPath, "/src/"));
-    EXPECT_EQ_MSG(0, strcmp(outPath, "/src"), outPath);
-
-    EXPECT_TRUE(fixPath(outPath, "//src/"));
-    EXPECT_EQ_MSG(0, strcmp(outPath, "/src"), outPath);
-
-    EXPECT_TRUE(fixPath(outPath, "///src/"));
-    EXPECT_EQ_MSG(0, strcmp(outPath, "/src"), outPath);
-
-    EXPECT_TRUE(fixPath(outPath, "/./src"));
-    EXPECT_EQ_MSG(0, strcmp(outPath, "/src"), outPath);
-
-    EXPECT_TRUE(fixPath(outPath, "/d:/src"));
-    EXPECT_EQ_MSG(0, strcmp(outPath, "/d:/src"), outPath);
-
-    EXPECT_TRUE(fixPath(outPath, "/./src/../src/"));
-    // fails, returns //src
-    EXPECT_EQ_MSG(0, strcmp(outPath, "/src"), outPath);
-
-    EXPECT_TRUE(fixPath(outPath, "/./src/winobjc/.."));
-    EXPECT_EQ_MSG(0, strcmp(outPath, "/src"), outPath);
-
-    EXPECT_TRUE(fixPath(outPath, "/./././src/winobjc/../winobjc/.././../src/winobjc/.."));
-    // fails, returns //src
-    EXPECT_EQ_MSG(0, strcmp(outPath, "/src"), outPath);
-}
-
 extern "C" void EbrSetWritableFolder(const char*);
 
-TEST(PathMapper, mapPathPositiveTests) {
+TEST(PathMapper, pathMapper) {
     EbrSetWritableFolder("d:\\temp");
 
-    char outPath[4096];
-    EXPECT_TRUE(convertPath(outPath, "/src/"));
-    EXPECT_EQ_MSG(0, strcmp(outPath, ".\\src"), outPath);
-
-    EXPECT_TRUE(convertPath(outPath, ""));
-    EXPECT_EQ_MSG(0, strcmp(outPath, "."), outPath);
-
-    EXPECT_TRUE(convertPath(outPath, "src"));
-    EXPECT_EQ_MSG(0, strcmp(outPath, ".\\src"), outPath);
-
-    EXPECT_TRUE(convertPath(outPath, "c:/src/"));
-    EXPECT_EQ_MSG(0, strcmp(outPath, "c:\\src"), outPath);
-
-    EXPECT_TRUE(convertPath(outPath, "/c:/src/"));
-    EXPECT_EQ_MSG(0, strcmp(outPath, "c:\\src"), outPath);
-
-    EXPECT_TRUE(convertPath(outPath, "/X:/src/"));
-    EXPECT_EQ_MSG(0, strcmp(outPath, "X:\\src"), outPath);
-
-    EXPECT_TRUE(convertPath(outPath, "/Documents/src/"));
-    EXPECT_EQ_MSG(0, strcmp(outPath, "d:\\temp\\Documents\\src"), outPath);
-
-    EXPECT_TRUE(convertPath(outPath, "/Documents/./"));
-    EXPECT_EQ_MSG(0, strcmp(outPath, "d:\\temp\\Documents"), outPath);
-
-    EXPECT_TRUE(convertPath(outPath, "/Cache/test/."));
-    EXPECT_EQ_MSG(0, strcmp(outPath, "d:\\temp\\cache\\test"), outPath);
-
-    EXPECT_TRUE(convertPath(outPath, "/library"));
-    EXPECT_EQ_MSG(0, strcmp(outPath, "d:\\temp\\Library"), outPath);
-
-    EXPECT_TRUE(convertPath(outPath, "/AppSupport/././"));
-    EXPECT_EQ_MSG(0, strcmp(outPath, "d:\\temp\\AppSupport"), outPath);
-
-    EXPECT_TRUE(convertPath(outPath, "/tmp"));
-    EXPECT_EQ_MSG(0, strcmp(outPath, "d:\\temp\\tmp"), outPath);
-
-    EXPECT_TRUE(convertPath(outPath, "/shared"));
-    EXPECT_EQ_MSG(0, strcmp(outPath, "d:\\temp\\shared"), outPath);
-
-    EXPECT_TRUE(convertPath(outPath, "/AppSupport/.\\?/"));
-    EXPECT_EQ_MSG(0, strcmp(outPath, "d:\\temp\\AppSupport\\+"), outPath);
-}
-
-TEST(PathMapper, mapPathNegativeTests) {
-    char outPath[4096];
-
-    // first slash must be / slash, is this just an artifact?
-    EXPECT_TRUE(convertPath(outPath, "\\AppSupport\\.\\?/"));
-    // fails previously
-    EXPECT_EQ_MSG(0, strcmp(outPath, ".\\AppSupport\\+"), outPath);
-}
-
-TEST(PathMapper, pathMapper) {
     CPathMapper mapper1("c:/users/winobjc-bot");
-    EXPECT_EQ_MSG(0, strcmp(mapper1, "c:\\users\\winobjc-bot"), (const char*)mapper1);
-    EXPECT_EQ_MSG(0, strcmp(mapper1.fixedPath, "/c:/users/winobjc-bot"), (const char*)mapper1.fixedPath);
+    EXPECT_EQ_MSG(0, wcscmp(mapper1, L"c:\\users\\winobjc-bot"), "%S", (const wchar_t*)mapper1);
 
     CPathMapper mapper2("~/winobjc-bot");
-    EXPECT_EQ_MSG(0, strcmp(mapper2, ".\\home\\winobjc-bot"), (const char*)mapper2);
+    EXPECT_EQ_MSG(0, wcscmp(mapper2, L".\\home\\winobjc-bot"), "%S", (const wchar_t*)mapper2);
+
+    CPathMapper mapper3("Documents\\mydocuments/subfolder/.././");
+    EXPECT_EQ_MSG(0, wcscmp(mapper3, L"d:\\temp\\Documents\\mydocuments"), "%S", (const wchar_t*)mapper3);
+
+    CPathMapper mapper4("");
+    EXPECT_EQ_MSG(0, wcscmp(mapper4, L"."), "%S", (const wchar_t*)mapper4);
+
+    CPathMapper mapper5("src");
+    EXPECT_EQ_MSG(0, wcscmp(mapper5, L".\\src"), "%S", (const wchar_t*)mapper5);
+
+    CPathMapper mapper6("c:/src/");
+    EXPECT_EQ_MSG(0, wcscmp(mapper6, L"c:\\src"), "%S", (const wchar_t*)mapper6);
+
+    CPathMapper mapper7("/c:/src/");
+    EXPECT_EQ_MSG(0, wcscmp(mapper7, L"c:\\src"), "%S", (const wchar_t*)mapper7);
+
+    CPathMapper mapper8("X:/src/");
+    EXPECT_EQ_MSG(0, wcscmp(mapper8, L"X:\\src"), "%S", (const wchar_t*)mapper8);
+
+    CPathMapper mapper9("/Documents/src/");
+    EXPECT_EQ_MSG(0, wcscmp(mapper9, L"d:\\temp\\Documents\\src"), "%S", (const wchar_t*)mapper9);
+
+    CPathMapper mapper10("/Documents/./");
+    EXPECT_EQ_MSG(0, wcscmp(mapper10, L"d:\\temp\\Documents"), "%S", (const wchar_t*)mapper10);
+
+    CPathMapper mapper11("/Cache/test/.");
+    EXPECT_EQ_MSG(0, wcscmp(mapper11, L"d:\\temp\\cache\\test"), "%S", (const wchar_t*)mapper11);
+
+    CPathMapper mapper12("/library");
+    EXPECT_EQ_MSG(0, wcscmp(mapper12, L"d:\\temp\\Library"), "%S", (const wchar_t*)mapper12);
+
+    CPathMapper mapper13("/AppSupport/././");
+    EXPECT_EQ_MSG(0, wcscmp(mapper13, L"d:\\temp\\AppSupport"), "%S", (const wchar_t*)mapper13);
+
+    CPathMapper mapper14("tmp");
+    EXPECT_EQ_MSG(0, wcscmp(mapper14, L"d:\\temp\\tmp"), "%S", (const wchar_t*)mapper14);
+
+    CPathMapper mapper15("/shared");
+    EXPECT_EQ_MSG(0, wcscmp(mapper15, L"d:\\temp\\shared"), "%S", (const wchar_t*)mapper15);
+
+    CPathMapper mapper16("/AppSupport/.\\?/");
+    EXPECT_EQ_MSG(0, wcscmp(mapper16, L"d:\\temp\\AppSupport\\+"), "%S", (const wchar_t*)mapper16);
+}
+
+TEST(PathMapper, RelativePathTests) {
+    CPathMapper mapper1("/..");
+    EXPECT_EQ_MSG(0, wcscmp(mapper1, L"."), "%S", (const wchar_t*)mapper1);
+
+    CPathMapper mapper2("/./..");
+    EXPECT_EQ_MSG(0, wcscmp(mapper2, L"."), "%S", (const wchar_t*)mapper2);
+
+    CPathMapper mapper3("/./src/../../..");
+    // this test was failing before, it is a bug
+    EXPECT_EQ_MSG(0, wcscmp(mapper3, L"."), "%S", (const wchar_t*)mapper3);
+
+    CPathMapper mapper4("/src/../..");
+    // this test was failing before, it is a bug
+    EXPECT_EQ_MSG(0, wcscmp(mapper4, L"."), "%S", (const wchar_t*)mapper4);
+
+    CPathMapper mapper5("/./src/../src/");
+    // fails, returns //src
+    EXPECT_EQ_MSG(0, wcscmp(mapper5, L".\\src"), "%S", (const wchar_t*)mapper5);
+
+    CPathMapper mapper6("/./src/winobjc/..");
+    EXPECT_EQ_MSG(0, wcscmp(mapper6, L".\\src"), "%S", (const wchar_t*)mapper6);
+
+    CPathMapper mapper7("/./././src/winobjc/../winobjc/.././../src/winobjc/..");
+    // fails, returns //src
+    EXPECT_EQ_MSG(0, wcscmp(mapper7, L".\\src"), "%S", (const wchar_t*)mapper7);
 }
