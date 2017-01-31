@@ -52,7 +52,7 @@ public:
   SBTarget* queueTarget(const PBXTarget* target, const StringSet* configNames = NULL);  
   SBTarget* queueTargetWithProductName(const String& productName, const StringSet* configNames = NULL);
   SBTarget* queueTargetWithProductReference(const String& productRef, const StringSet* configNames = NULL);
-  void constructVCProjects(VSSolution& sln, const StringSet& slnConfigs, std::multimap<SBTarget*, VCProject*>& vcProjects);
+  void constructVCProjects(VSSolution& sln, const StringSet& slnConfigs, std::multimap<SBTarget*, VCProject*>& vcProjects, bool packageable);
 
 private:
   typedef std::vector<const PBXTarget*> PBXTargetList;

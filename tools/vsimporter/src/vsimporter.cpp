@@ -66,6 +66,9 @@ void printUsage(const char *execName, bool full)
   std::cout << std::endl;
   std::cout << "\t" << sb_basename(execName) << " ";
   std::cout << "-list [-project projectname | -workspace workspacename]" << std::endl;
+  std::cout << std::endl;
+  std::cout << "\t" << sb_basename(execName) << " ";
+  std::cout << "[-genprojections] [-genpackaging[=0|1]]" << std::endl;
 
   // Don't print option descriptions if brief usage was requested
   if (full) {
@@ -73,6 +76,8 @@ void printUsage(const char *execName, bool full)
     std::cout << "Program Options" << std::endl;
     std::cout << "    -usage" << "\t\t    print brief usage message" << std::endl;
     std::cout << "    -help" << "\t\t    print full usage message" << std::endl;
+    std::cout << "    -genpackaging" << "\t    generate project able to package the solution" << std::endl;
+    std::cout << "\t\t\t    enabled when -genprojections is enabled by default (set -genpackaging=0 to override)" << std::endl;
     std::cout << "    -genprojections" << "\t    generate WinRT projections project" << std::endl;
     std::cout << "    -interactive" << "\t    enable interactive mode" << std::endl;
     std::cout << "    -loglevel LEVEL" << "\t    debug | info | warning | error" << std::endl;
@@ -101,6 +106,7 @@ int main(int argc, char* argv[])
   int interactiveFlag = 0;
   int relativeSdkFlag = 0;
   int genProjectionsFlag = 0;
+  int genPackagingFlag = -1;
   int allTargets = 0;
   int allSchemes = 0;
   int mode = GenerateMode;
@@ -122,7 +128,8 @@ int main(int argc, char* argv[])
     {"scheme", required_argument, 0, 0},
     {"allschemes", required_argument, &allSchemes, 1},
     {"relativepath", no_argument, &relativeSdkFlag, 1},
-    { "genprojections", no_argument, &genProjectionsFlag, 1 },
+    {"genprojections", no_argument, &genProjectionsFlag, 1 },
+    {"genpackaging", optional_argument, &genPackagingFlag, 1 },
     {0, 0, 0, 0}
   };
 
@@ -176,10 +183,17 @@ int main(int argc, char* argv[])
     case 13:
       schemes.insert(optarg);
       break;
+    case 17:
+      genPackagingFlag = optarg ? stoi(optarg) : 1;
+      break;
     default:
       // Do nothing
       break;
     }
+  }
+
+  if (genPackagingFlag == -1) {
+    genPackagingFlag = genProjectionsFlag;
   }
 
   // Set AI Telemetry_Init 
@@ -327,7 +341,7 @@ int main(int argc, char* argv[])
     } else {
       mainWorkspace->queueTargets(targets, configurations);
     }
-    mainWorkspace->generateFiles(genProjectionsFlag);
+    mainWorkspace->generateFiles(genProjectionsFlag, genPackagingFlag);
   } else {
 	  sbAssertWithTelemetry(0); // non-reachable
   }

@@ -22,7 +22,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings" VSImporterLabel="BuildExtensionProperties">
-    <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.props" />
+    <Import Project="$projectname$.props" />
   </ImportGroup>
   <ImportGroup Label="Shared" VSImporterLabel="SharedProjects" />
   <ImportGroup Label="PropertySheets" VSImporterLabel="ConfigurationPropertySheets">
@@ -39,7 +39,7 @@
     </ClCompile>
     <ClangCompile>
       <RuntimeLibrary VSImporterConfigName="Debug">MultiThreadedDebugDLL</RuntimeLibrary>
-    <IncludePaths>$(SolutionPublicHeadersDir);$(WINOBJC_SDK_ROOT)\include\xplat;$(WINOBJC_SDK_ROOT)\Frameworks\include;%(IncludePaths)</IncludePaths>
+      <IncludePaths>$(SolutionPublicHeadersDir);%(IncludePaths)</IncludePaths>
       <PreprocessorDefinitions>__MIDL_USE_C_ENUM</PreprocessorDefinitions>
       <OtherCFlags>-Wno-extern-initializer</OtherCFlags>
       <OtherCPlusPlusFlags>-Wno-extern-initializer</OtherCPlusPlusFlags>
@@ -54,20 +54,21 @@
       <GenerateServerFiles>None</GenerateServerFiles>
     </Midl>
     <Link>
-    <AdditionalDependencies>WinObjCRT.lib;Logging.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
   </ItemDefinitionGroup>
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="$projectname$.targets" />
+  </ImportGroup>
   <ItemGroup VSImporterLabel="ProjectItems">
     <ClCompile Include="Module.cpp" />
     <_MdMergeOutput Include="$(OutDir)\$(ProjectName).winmd" />
     <ClangCompile Condition="'$(Objc2WinmdGeneratedFilesDir)' != ''" Include="$(Objc2WinmdGeneratedFilesDir)\*.mm" />
     <Midl Condition="'$(Objc2WinmdGeneratedFilesDir)' != ''" Include="$(Objc2WinmdGeneratedFilesDir)\*.idl" />
     <ClInclude Condition="'$(Objc2WinmdGeneratedFilesDir)' != ''" Include="$(Objc2WinmdGeneratedFilesDir)\*.h" />
+    <None Include="project.json" />
   </ItemGroup>
   <ItemGroup VSImporterLabel="ProjectReferences" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets" VSImporterLabel="BuildExtensionTargets">
-    <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.targets" />
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets" VSImporterLabel="BuildExtensionTargets" />
 </Project>
