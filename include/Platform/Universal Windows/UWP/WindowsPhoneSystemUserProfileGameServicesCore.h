@@ -58,7 +58,7 @@ typedef unsigned WPSUGCGameServiceGameOutcome;
 OBJCUWP_WINDOWS_PHONE_SYSTEM_USERPROFILE_GAMESERVICES_CORE_EXPORT
 @interface WPSUGCGameServicePropertyCollection : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)getPropertyAsync:(NSString *)propertyName success:(void (^)(RTObject*))success failure:(void (^)(NSError*))failure;
 @end

@@ -192,9 +192,9 @@ OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 
 OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 @interface WGNSignificantDigitsNumberRounder : RTObject <WGNINumberRounder>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property unsigned int significantDigits;
 @property WGNRoundingAlgorithm roundingAlgorithm;
@@ -214,9 +214,9 @@ OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 
 OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 @interface WGNIncrementNumberRounder : RTObject <WGNINumberRounder>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WGNRoundingAlgorithm roundingAlgorithm;
 @property double increment;
@@ -236,10 +236,10 @@ OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 
 OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 @interface WGNDecimalFormatter : RTObject <WGNINumberFormatterOptions, WGNINumberFormatter, WGNINumberFormatter2, WGNINumberParser, WGNISignificantDigitsOption, WGNINumberRounderOption, WGNISignedZeroOption>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WGNDecimalFormatter*)makeDecimalFormatter:(id<NSFastEnumeration> /* NSString * */)languages geographicRegion:(NSString *)geographicRegion ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL isDecimalPointAlwaysDisplayed;
 @property int integerDigits;
@@ -270,9 +270,9 @@ OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 @interface WGNPercentFormatter : RTObject <WGNINumberFormatterOptions, WGNINumberFormatter, WGNINumberFormatter2, WGNINumberParser, WGNISignificantDigitsOption, WGNINumberRounderOption, WGNISignedZeroOption>
 + (WGNPercentFormatter*)makePercentFormatter:(id<NSFastEnumeration> /* NSString * */)languages geographicRegion:(NSString *)geographicRegion ACTIVATOR;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL isDecimalPointAlwaysDisplayed;
 @property int integerDigits;
@@ -303,9 +303,9 @@ OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 @interface WGNPermilleFormatter : RTObject <WGNINumberFormatterOptions, WGNINumberFormatter, WGNINumberFormatter2, WGNINumberParser, WGNISignificantDigitsOption, WGNINumberRounderOption, WGNISignedZeroOption>
 + (WGNPermilleFormatter*)makePermilleFormatter:(id<NSFastEnumeration> /* NSString * */)languages geographicRegion:(NSString *)geographicRegion ACTIVATOR;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL isDecimalPointAlwaysDisplayed;
 @property int integerDigits;
@@ -338,7 +338,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 + (WGNCurrencyFormatter*)makeCurrencyFormatterCode:(NSString *)currencyCode ACTIVATOR;
 + (WGNCurrencyFormatter*)makeCurrencyFormatterCodeContext:(NSString *)currencyCode languages:(id<NSFastEnumeration> /* NSString * */)languages geographicRegion:(NSString *)geographicRegion ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * currency;
 @property WGNCurrencyFormatterMode mode;
@@ -371,10 +371,10 @@ OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 
 OBJCUWP_WINDOWS_GLOBALIZATION_NUMBERFORMATTING_EXPORT
 @interface WGNNumeralSystemTranslator : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WGNNumeralSystemTranslator*)make:(id<NSFastEnumeration> /* NSString * */)languages ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * numeralSystem;
 @property (readonly) NSArray* /* NSString * */ languages;

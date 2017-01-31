@@ -281,7 +281,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNShownTileNotification : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * arguments;
 @end
@@ -294,9 +294,9 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNNotification : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WUNNotificationVisual* visual;
 @property (retain) id /* WFDateTime* */ expirationTime;
@@ -311,7 +311,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNNotificationBinding : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * Template;
 @property (retain) NSString * language;
@@ -327,9 +327,9 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNAdaptiveNotificationText : RTObject <WUNIAdaptiveNotificationContent>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSMutableDictionary* /* NSString *, NSString * */ hints;
 @property (readonly) WUNAdaptiveNotificationContentKind kind;
@@ -346,7 +346,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNTileUpdater : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUNNotificationSetting setting;
 - (void)update:(WUNTileNotification*)notification;
@@ -374,7 +374,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNTileUpdateManagerForUser : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSUser* user;
 - (WUNTileUpdater*)createTileUpdaterForApplication;
@@ -392,7 +392,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNTileNotification : RTObject
 + (WUNTileNotification*)makeTileNotification:(WDXDXmlDocument*)content ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * tag;
 @property (retain) id /* WFDateTime* */ expirationTime;
@@ -409,7 +409,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNScheduledTileNotification : RTObject
 + (WUNScheduledTileNotification*)makeScheduledTileNotification:(WDXDXmlDocument*)content deliveryTime:(WFDateTime*)deliveryTime ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * tag;
 @property (retain) NSString * id;
@@ -427,7 +427,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNTileFlyoutUpdater : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUNNotificationSetting setting;
 - (void)update:(WUNTileFlyoutNotification*)notification;
@@ -447,7 +447,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNTileFlyoutNotification : RTObject
 + (WUNTileFlyoutNotification*)makeTileFlyoutNotification:(WDXDXmlDocument*)content ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) id /* WFDateTime* */ expirationTime;
 @property (readonly) WDXDXmlDocument* content;
@@ -462,7 +462,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNBadgeUpdater : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)update:(WUNBadgeNotification*)notification;
 - (void)clear;
@@ -480,7 +480,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNBadgeUpdateManagerForUser : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSUser* user;
 - (WUNBadgeUpdater*)createBadgeUpdaterForApplication;
@@ -498,7 +498,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNBadgeNotification : RTObject
 + (WUNBadgeNotification*)makeBadgeNotification:(WDXDXmlDocument*)content ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) id /* WFDateTime* */ expirationTime;
 @property (readonly) WDXDXmlDocument* content;
@@ -513,7 +513,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNToastNotifier : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUNNotificationSetting setting;
 - (void)show:(WUNToastNotification*)notification;
@@ -533,7 +533,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNToastNotification : RTObject
 + (WUNToastNotification*)makeToastNotification:(WDXDXmlDocument*)content ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) id /* WFDateTime* */ expirationTime;
 @property (readonly) WDXDXmlDocument* content;
@@ -561,7 +561,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (WUNScheduledToastNotification*)makeScheduledToastNotification:(WDXDXmlDocument*)content deliveryTime:(WFDateTime*)deliveryTime ACTIVATOR;
 + (WUNScheduledToastNotification*)makeScheduledToastNotificationRecurring:(WDXDXmlDocument*)content deliveryTime:(WFDateTime*)deliveryTime snoozeInterval:(WFTimeSpan*)snoozeInterval maximumSnoozeCount:(unsigned int)maximumSnoozeCount ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * id;
 @property (readonly) WDXDXmlDocument* content;
@@ -584,7 +584,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNToastDismissedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUNToastDismissalReason reason;
 @end
@@ -598,7 +598,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNToastFailedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) HRESULT errorCode;
 @end
@@ -612,7 +612,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNNotificationVisual : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * language;
 @property (readonly) NSMutableArray* /* WUNNotificationBinding* */ bindings;
@@ -628,7 +628,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNToastNotificationHistory : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)removeGroup:(NSString *)group;
 - (void)removeGroupWithId:(NSString *)group applicationId:(NSString *)applicationId;
@@ -650,7 +650,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNToastNotificationManagerForUser : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUNToastNotificationHistory* history;
 @property (readonly) WSUser* user;
@@ -667,7 +667,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNUserNotificationChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUNUserNotificationChangedKind changeKind;
 @property (readonly) unsigned int userNotificationId;
@@ -682,7 +682,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNUserNotification : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WAAppInfo* appInfo;
 @property (readonly) WFDateTime* creationTime;
@@ -815,7 +815,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNToastActivatedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * arguments;
 @end
@@ -829,7 +829,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNToastNotificationHistoryChangedTriggerDetail : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUNToastHistoryChangedType changeType;
 @end
@@ -843,7 +843,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUNToastNotificationActionTriggerDetail : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * argument;
 @property (readonly) WFCValueSet* userInput;

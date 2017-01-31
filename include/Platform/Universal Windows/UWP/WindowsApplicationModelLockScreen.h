@@ -42,7 +42,7 @@
 OBJCUWP_WINDOWS_APPLICATIONMODEL_LOCKSCREEN_EXPORT
 @interface WALLockScreenInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) RTObject<WSSIRandomAccessStream>* alarmIcon;
 @property (readonly) NSArray* /* WALLockScreenBadge* */ badges;
@@ -67,7 +67,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_LOCKSCREEN_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_LOCKSCREEN_EXPORT
 @interface WALLockScreenBadge : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * automationName;
 @property (readonly) RTObject<WSSIRandomAccessStream>* glyph;
@@ -85,7 +85,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_LOCKSCREEN_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_LOCKSCREEN_EXPORT
 @interface WALLockScreenUnlockingDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)complete;
 @end
@@ -100,7 +100,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_LOCKSCREEN_EXPORT
 @interface WALLockApplicationHost : RTObject
 + (WALLockApplicationHost*)getForCurrentView;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (EventRegistrationToken)addUnlockingEvent:(void(^)(WALLockApplicationHost*, WALLockScreenUnlockingEventArgs*))del;
 - (void)removeUnlockingEvent:(EventRegistrationToken)tok;
@@ -116,7 +116,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_LOCKSCREEN_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_LOCKSCREEN_EXPORT
 @interface WALLockScreenUnlockingEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFDateTime* deadline;
 - (WALLockScreenUnlockingDeferral*)getDeferral;

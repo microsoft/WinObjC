@@ -55,7 +55,7 @@ typedef unsigned WDEPPnpObjectType;
 OBJCUWP_WINDOWS_DEVICES_ENUMERATION_PNP_EXPORT
 @interface WDEPPnpObjectUpdate : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * id;
 @property (readonly) NSDictionary* /* NSString *, RTObject* */ properties;
@@ -71,7 +71,7 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_PNP_EXPORT
 OBJCUWP_WINDOWS_DEVICES_ENUMERATION_PNP_EXPORT
 @interface WDEPPnpObjectCollection : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -91,7 +91,7 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_PNP_EXPORT
 OBJCUWP_WINDOWS_DEVICES_ENUMERATION_PNP_EXPORT
 @interface WDEPPnpObjectWatcher : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDEDeviceWatcherStatus status;
 - (EventRegistrationToken)addAddedEvent:(void(^)(WDEPPnpObjectWatcher*, WDEPPnpObject*))del;
@@ -122,7 +122,7 @@ OBJCUWP_WINDOWS_DEVICES_ENUMERATION_PNP_EXPORT
 + (WDEPPnpObjectWatcher*)createWatcher:(WDEPPnpObjectType)type requestedProperties:(id<NSFastEnumeration> /* NSString * */)requestedProperties;
 + (WDEPPnpObjectWatcher*)createWatcherAqsFilter:(WDEPPnpObjectType)type requestedProperties:(id<NSFastEnumeration> /* NSString * */)requestedProperties aqsFilter:(NSString *)aqsFilter;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * id;
 @property (readonly) NSDictionary* /* NSString *, RTObject* */ properties;

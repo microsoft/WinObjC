@@ -45,10 +45,10 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_EXPORT
 + (WARResourceLoader*)getForViewIndependentUse;
 + (WARResourceLoader*)getForViewIndependentUseWithName:(NSString *)name;
 + (NSString *)getStringForReference:(WFUri*)uri;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WARResourceLoader*)makeResourceLoaderByName:(NSString *)name ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (NSString *)getString:(NSString *)resource;
 - (NSString *)getStringForUri:(WFUri*)uri;

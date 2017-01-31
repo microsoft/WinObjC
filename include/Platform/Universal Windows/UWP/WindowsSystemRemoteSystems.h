@@ -92,7 +92,7 @@ OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
 + (WSRRemoteSystemWatcher*)createWatcherWithFilters:(id<NSFastEnumeration> /* RTObject<WSRIRemoteSystemFilter>* */)filters;
 + (void)requestAccessAsyncWithSuccess:(void (^)(WSRRemoteSystemAccessStatus))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * displayName;
 @property (readonly) NSString * id;
@@ -110,7 +110,7 @@ OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
 OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
 @interface WSRRemoteSystemWatcher : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (EventRegistrationToken)addRemoteSystemAddedEvent:(void(^)(WSRRemoteSystemWatcher*, WSRRemoteSystemAddedEventArgs*))del;
 - (void)removeRemoteSystemAddedEvent:(EventRegistrationToken)tok;
@@ -131,7 +131,7 @@ OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
 OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
 @interface WSRRemoteSystemAddedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSRRemoteSystem* remoteSystem;
 @end
@@ -145,7 +145,7 @@ OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
 OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
 @interface WSRRemoteSystemUpdatedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSRRemoteSystem* remoteSystem;
 @end
@@ -159,7 +159,7 @@ OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
 OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
 @interface WSRRemoteSystemRemovedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * remoteSystemId;
 @end
@@ -174,7 +174,7 @@ OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
 @interface WSRRemoteSystemConnectionRequest : RTObject
 + (WSRRemoteSystemConnectionRequest*)make:(WSRRemoteSystem*)remoteSystem ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSRRemoteSystem* remoteSystem;
 @end
@@ -204,7 +204,7 @@ OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
 @interface WSRRemoteSystemKindFilter : RTObject <WSRIRemoteSystemFilter>
 + (WSRRemoteSystemKindFilter*)make:(id<NSFastEnumeration> /* NSString * */)remoteSystemKinds ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* NSString * */ remoteSystemKinds;
 @end
@@ -219,7 +219,7 @@ OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
 @interface WSRRemoteSystemDiscoveryTypeFilter : RTObject <WSRIRemoteSystemFilter>
 + (WSRRemoteSystemDiscoveryTypeFilter*)make:(WSRRemoteSystemDiscoveryType)discoveryType ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSRRemoteSystemDiscoveryType remoteSystemDiscoveryType;
 @end
@@ -234,7 +234,7 @@ OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
 @interface WSRRemoteSystemStatusTypeFilter : RTObject <WSRIRemoteSystemFilter>
 + (WSRRemoteSystemStatusTypeFilter*)make:(WSRRemoteSystemStatusType)remoteSystemStatusType ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSRRemoteSystemStatusType remoteSystemStatusType;
 @end

@@ -81,7 +81,7 @@ typedef unsigned WACBPhoneLineProperties;
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_BACKGROUND_EXPORT
 @interface WACBPhoneCallBlockedTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WACBPhoneCallBlockedReason callBlockedReason;
 @property (readonly) WFGUID* lineId;
@@ -97,7 +97,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_BACKGROUND_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_BACKGROUND_EXPORT
 @interface WACBPhoneCallOriginDataRequestTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * phoneNumber;
 @property (readonly) WFGUID* requestId;
@@ -112,7 +112,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_BACKGROUND_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_BACKGROUND_EXPORT
 @interface WACBPhoneNewVoicemailMessageTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFGUID* lineId;
 @property (readonly) NSString * operatorMessage;
@@ -128,7 +128,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_BACKGROUND_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_BACKGROUND_EXPORT
 @interface WACBPhoneLineChangedTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WACBPhoneLineChangeKind changeType;
 @property (readonly) WFGUID* lineId;

@@ -297,7 +297,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
 OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
 @interface WGIHeadset : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * captureDeviceId;
 @property (readonly) NSString * renderDeviceId;
@@ -312,7 +312,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
 OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
 @interface WGIArcadeStick : RTObject <WGIIGameController>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WGIHeadset* headset;
 @property (readonly) BOOL isWireless;
@@ -341,7 +341,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
 OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
 @interface WGIGamepad : RTObject <WGIIGameController>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WGIHeadset* headset;
 @property (readonly) BOOL isWireless;
@@ -371,7 +371,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
 OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
 @interface WGIRacingWheel : RTObject <WGIIGameController>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WGIHeadset* headset;
 @property (readonly) BOOL isWireless;
@@ -406,7 +406,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
 OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
 @interface WGIUINavigationController : RTObject <WGIIGameController>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WGIHeadset* headset;
 @property (readonly) BOOL isWireless;

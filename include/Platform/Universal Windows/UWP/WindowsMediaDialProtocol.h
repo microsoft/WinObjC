@@ -82,7 +82,7 @@ typedef unsigned WMDDialDeviceDisplayStatus;
 OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
 @interface WMDDialAppStateDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * fullXml;
 @property (readonly) WMDDialAppState state;
@@ -97,7 +97,7 @@ OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
 OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
 @interface WMDDialApp : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * appName;
 - (void)requestLaunchAsync:(NSString *)appArgument success:(void (^)(WMDDialAppLaunchResult))success failure:(void (^)(NSError*))failure;
@@ -117,7 +117,7 @@ OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
 + (void)fromIdAsync:(NSString *)value success:(void (^)(WMDDialDevice*))success failure:(void (^)(NSError*))failure;
 + (void)deviceInfoSupportsDialAsync:(WDEDeviceInformation*)device success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * id;
 @property (readonly) NSString * friendlyName;
@@ -134,7 +134,7 @@ OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
 OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
 @interface WMDDialDeviceSelectedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMDDialDevice* selectedDialDevice;
 @end
@@ -148,7 +148,7 @@ OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
 OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
 @interface WMDDialDisconnectButtonClickedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMDDialDevice* device;
 @end
@@ -162,7 +162,7 @@ OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
 OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
 @interface WMDDialDevicePickerFilter : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSMutableArray* /* NSString * */ supportedAppNames;
 @end
@@ -175,9 +175,9 @@ OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
 
 OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
 @interface WMDDialDevicePicker : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDEDevicePickerAppearance* appearance;
 @property (readonly) WMDDialDevicePickerFilter* filter;

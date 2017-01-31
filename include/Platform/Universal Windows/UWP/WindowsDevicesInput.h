@@ -74,7 +74,7 @@ OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
 + (WDIPointerDevice*)getPointerDevice:(unsigned int)pointerId;
 + (NSArray* /* WDIPointerDevice* */)getPointerDevices;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL isIntegrated;
 @property (readonly) unsigned int maxContacts;
@@ -95,7 +95,7 @@ OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
 @interface WDIMouseDevice : RTObject
 + (WDIMouseDevice*)getForCurrentView;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (EventRegistrationToken)addMouseMovedEvent:(void(^)(WDIMouseDevice*, WDIMouseEventArgs*))del;
 - (void)removeMouseMovedEvent:(EventRegistrationToken)tok;
@@ -110,7 +110,7 @@ OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
 OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
 @interface WDIMouseEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDIMouseDelta* mouseDelta;
 @end
@@ -123,9 +123,9 @@ OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
 @interface WDIMouseCapabilities : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) int horizontalWheelPresent;
 @property (readonly) int mousePresent;
@@ -142,9 +142,9 @@ OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
 @interface WDIKeyboardCapabilities : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) int keyboardPresent;
 @end
@@ -157,9 +157,9 @@ OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
 @interface WDITouchCapabilities : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int contacts;
 @property (readonly) int touchPresent;

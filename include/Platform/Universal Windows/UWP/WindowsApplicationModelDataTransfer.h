@@ -84,7 +84,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADDataPackagePropertySetView : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFUri* applicationListingUri;
 @property (readonly) NSString * applicationName;
@@ -117,7 +117,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADDataPackagePropertySet : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) RTObject<WSSIRandomAccessStreamReference>* thumbnail;
 @property (retain) NSString * title;
@@ -158,7 +158,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADDataProviderDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)complete;
 @end
@@ -172,7 +172,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADDataProviderRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFDateTime* deadline;
 @property (readonly) NSString * formatId;
@@ -189,7 +189,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADOperationCompletedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WADDataPackageOperation operation;
 @property (readonly) NSString * acceptedFormatId;
@@ -204,7 +204,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADDataPackageView : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* NSString * */ availableFormats;
 @property (readonly) WADDataPackagePropertySetView* properties;
@@ -236,9 +236,9 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 
 OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADDataPackage : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WADDataPackageOperation requestedOperation;
 @property (readonly) WADDataPackagePropertySet* properties;
@@ -298,7 +298,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADDataRequestDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)complete;
 @end
@@ -312,7 +312,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADDataRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WADDataPackage* data;
 @property (readonly) WFDateTime* deadline;
@@ -329,7 +329,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADDataRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WADDataRequest* request;
 @end
@@ -343,7 +343,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 @interface WADTargetApplicationChosenEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * applicationName;
 @end
@@ -360,7 +360,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_EXPORT
 + (WADDataTransferManager*)getForCurrentView;
 + (BOOL)isSupported;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (EventRegistrationToken)addDataRequestedEvent:(void(^)(WADDataTransferManager*, WADDataRequestedEventArgs*))del;
 - (void)removeDataRequestedEvent:(EventRegistrationToken)tok;

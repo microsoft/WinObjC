@@ -62,7 +62,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceMap : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFUri* uri;
 @property (readonly) unsigned int size;
@@ -93,9 +93,9 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 + (void)resetGlobalQualifierValues;
 + (void)resetGlobalQualifierValuesForSpecifiedQualifiers:(id<NSFastEnumeration> /* NSString * */)qualifierNames;
 + (WARCResourceContext*)getForViewIndependentUse;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSArray* /* NSString * */ languages;
 @property (readonly) NSMutableDictionary<RTObservableCollection>* /* NSString *, NSString * */ qualifierValues;
@@ -114,7 +114,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCNamedResource : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* WARCResourceCandidate* */ candidates;
 @property (readonly) WFUri* uri;
@@ -134,7 +134,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceManager : RTObject
 + (BOOL)isResourceReference:(NSString *)resourceReference;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSDictionary* /* NSString *, WARCResourceMap* */ allResourceMaps;
 @property (readonly) WARCResourceContext* defaultContext;
@@ -155,7 +155,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceQualifier : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL isDefault;
 @property (readonly) BOOL isMatch;
@@ -173,7 +173,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceCandidate : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL isDefault;
 @property (readonly) BOOL isMatch;
@@ -208,7 +208,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceMapMapView : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int size;
 - (id)objectForKey: (id)key;
@@ -243,7 +243,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceQualifierObservableMap : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int size;
 // Could not generate add_MapChanged (Can't marshal Windows.Foundation.Collections.MapChangedEventHandler`2<String,String>)
@@ -276,7 +276,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceQualifierMapView : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int size;
 - (id)objectForKey: (id)key;
@@ -297,7 +297,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceQualifierVectorView : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -317,7 +317,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceCandidateVectorView : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -337,7 +337,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 @interface WARCResourceContextLanguagesVectorView : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;

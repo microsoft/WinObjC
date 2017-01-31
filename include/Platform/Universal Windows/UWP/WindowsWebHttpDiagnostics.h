@@ -61,7 +61,7 @@ typedef unsigned WWHDHttpDiagnosticRequestInitiator;
 OBJCUWP_WINDOWS_WEB_HTTP_DIAGNOSTICS_EXPORT
 @interface WWHDHttpDiagnosticSourceLocation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) uint64_t columnNumber;
 @property (readonly) uint64_t lineNumber;
@@ -77,7 +77,7 @@ OBJCUWP_WINDOWS_WEB_HTTP_DIAGNOSTICS_EXPORT
 OBJCUWP_WINDOWS_WEB_HTTP_DIAGNOSTICS_EXPORT
 @interface WWHDHttpDiagnosticProviderRequestSentEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFGUID* activityId;
 @property (readonly) WWHDHttpDiagnosticRequestInitiator initiator;
@@ -97,7 +97,7 @@ OBJCUWP_WINDOWS_WEB_HTTP_DIAGNOSTICS_EXPORT
 OBJCUWP_WINDOWS_WEB_HTTP_DIAGNOSTICS_EXPORT
 @interface WWHDHttpDiagnosticProviderResponseReceivedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFGUID* activityId;
 @property (readonly) WWHHttpResponseMessage* message;
@@ -113,7 +113,7 @@ OBJCUWP_WINDOWS_WEB_HTTP_DIAGNOSTICS_EXPORT
 OBJCUWP_WINDOWS_WEB_HTTP_DIAGNOSTICS_EXPORT
 @interface WWHDHttpDiagnosticProviderRequestResponseTimestamps : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) id /* WFDateTime* */ cacheCheckedTimestamp;
 @property (readonly) id /* WFDateTime* */ connectionCompletedTimestamp;
@@ -135,7 +135,7 @@ OBJCUWP_WINDOWS_WEB_HTTP_DIAGNOSTICS_EXPORT
 OBJCUWP_WINDOWS_WEB_HTTP_DIAGNOSTICS_EXPORT
 @interface WWHDHttpDiagnosticProviderRequestResponseCompletedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFGUID* activityId;
 @property (readonly) WWHDHttpDiagnosticRequestInitiator initiator;
@@ -156,7 +156,7 @@ OBJCUWP_WINDOWS_WEB_HTTP_DIAGNOSTICS_EXPORT
 @interface WWHDHttpDiagnosticProvider : RTObject
 + (WWHDHttpDiagnosticProvider*)createFromProcessDiagnosticInfo:(WSDProcessDiagnosticInfo*)processDiagnosticInfo;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (EventRegistrationToken)addRequestResponseCompletedEvent:(void(^)(WWHDHttpDiagnosticProvider*, WWHDHttpDiagnosticProviderRequestResponseCompletedEventArgs*))del;
 - (void)removeRequestResponseCompletedEvent:(EventRegistrationToken)tok;

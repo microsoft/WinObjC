@@ -97,9 +97,9 @@ OBJCUWP_WINDOWS_DATA_JSON_EXPORT
 @interface WDJJsonArray : RTObject <WDJIJsonValue, WFIStringable>
 + (WDJJsonArray*)parse:(NSString *)input;
 + (BOOL)tryParse:(NSString *)input result:(WDJJsonArray**)result;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDJJsonValueType valueType;
 @property (readonly) unsigned int size;
@@ -139,9 +139,9 @@ OBJCUWP_WINDOWS_DATA_JSON_EXPORT
 @interface WDJJsonObject : RTObject <WDJIJsonValue, WFIStringable>
 + (WDJJsonObject*)parse:(NSString *)input;
 + (BOOL)tryParse:(NSString *)input result:(WDJJsonObject**)result;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDJJsonValueType valueType;
 @property (readonly) unsigned int size;
@@ -197,7 +197,7 @@ OBJCUWP_WINDOWS_DATA_JSON_EXPORT
 + (WDJJsonValue*)createNumberValue:(double)input;
 + (WDJJsonValue*)createStringValue:(NSString *)input;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDJJsonValueType valueType;
 - (NSString *)stringify;

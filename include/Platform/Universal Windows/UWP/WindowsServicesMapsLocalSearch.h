@@ -57,7 +57,7 @@ typedef unsigned WSMLLocalLocationFinderStatus;
 OBJCUWP_WINDOWS_SERVICES_MAPS_LOCALSEARCH_EXPORT
 @interface WSMLLocalLocation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSMMapAddress* address;
 @property (readonly) NSString * dataAttribution;
@@ -80,7 +80,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_LOCALSEARCH_EXPORT
 OBJCUWP_WINDOWS_SERVICES_MAPS_LOCALSEARCH_EXPORT
 @interface WSMLLocalLocationFinderResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* WSMLLocalLocation* */ localLocations;
 @property (readonly) WSMLLocalLocationFinderStatus status;
@@ -95,7 +95,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_LOCALSEARCH_EXPORT
 OBJCUWP_WINDOWS_SERVICES_MAPS_LOCALSEARCH_EXPORT
 @interface WSMLLocalLocationRatingInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) id /* double */ aggregateRating;
 @property (readonly) NSString * providerIdentifier;
@@ -111,7 +111,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_LOCALSEARCH_EXPORT
 OBJCUWP_WINDOWS_SERVICES_MAPS_LOCALSEARCH_EXPORT
 @interface WSMLLocalLocationHoursOfOperationItem : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WGDayOfWeek day;
 @property (readonly) WFTimeSpan* span;

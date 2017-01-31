@@ -220,7 +220,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIPointer : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL isInContact;
 @property (readonly) BOOL isInRange;
@@ -236,9 +236,9 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIAccessKeyDisplayRequestedEventArgs : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * pressedKeys;
 @end
@@ -251,9 +251,9 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIAccessKeyDisplayDismissedEventArgs : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @end
 
@@ -265,9 +265,9 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIAccessKeyInvokedEventArgs : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL handled;
 @end
@@ -282,7 +282,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIAccessKeyManager : RTObject
 + (void)exitDisplayMode;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 + (BOOL)isDisplayModeEnabled;
 + (EventRegistrationToken)addIsDisplayModeEnabledChangedEvent:(void(^)(RTObject*, RTObject*))del;
@@ -302,7 +302,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 + (WXUIElement*)findNextFocusableElement:(WUXIFocusNavigationDirection)focusNavigationDirection;
 + (WXUIElement*)findNextFocusableElementWithHint:(WUXIFocusNavigationDirection)focusNavigationDirection hintRect:(WFRect*)hintRect;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @end
 
@@ -315,7 +315,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIInertiaExpansionBehavior : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double desiredExpansion;
 @property double desiredDeceleration;
@@ -330,7 +330,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIInertiaRotationBehavior : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double desiredRotation;
 @property double desiredDeceleration;
@@ -345,7 +345,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIInertiaTranslationBehavior : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double desiredDisplacement;
 @property double desiredDeceleration;
@@ -359,10 +359,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIManipulationPivot : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WUXIManipulationPivot*)makeInstanceWithCenterAndRadius:(WFPoint*)center radius:(double)radius ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double radius;
 @property (retain) WFPoint* center;
@@ -376,9 +376,9 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXRoutedEventArgs : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) RTObject* originalSource;
 @end
@@ -391,9 +391,9 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIContextRequestedEventArgs : WXRoutedEventArgs
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL handled;
 - (BOOL)tryGetPosition:(WXUIElement*)relativeTo point:(WFPoint**)point;
@@ -407,9 +407,9 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIDoubleTappedRoutedEventArgs : WXRoutedEventArgs
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL handled;
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
@@ -424,9 +424,9 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIHoldingRoutedEventArgs : WXRoutedEventArgs
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL handled;
 @property (readonly) WUIHoldingState holdingState;
@@ -443,7 +443,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
@@ -463,9 +463,9 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIInputScope : WXDependencyObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSMutableArray* /* WUXIInputScopeName* */ names;
 @end
@@ -478,10 +478,10 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIInputScopeName : WXDependencyObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WUXIInputScopeName*)makeInstance:(WUXIInputScopeNameValue)nameValue ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WUXIInputScopeNameValue nameValue;
 @end
@@ -495,7 +495,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIKeyRoutedEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL handled;
 @property (readonly) WSVirtualKey key;
@@ -512,9 +512,9 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIManipulationCompletedRoutedEventArgs : WXRoutedEventArgs
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL handled;
 @property (readonly) WXUIElement* container;
@@ -533,9 +533,9 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIManipulationDeltaRoutedEventArgs : WXRoutedEventArgs
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL handled;
 @property (readonly) WXUIElement* container;
@@ -556,9 +556,9 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIManipulationInertiaStartingRoutedEventArgs : WXRoutedEventArgs
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WUXIInertiaTranslationBehavior* translationBehavior;
 @property (retain) WUXIInertiaRotationBehavior* rotationBehavior;
@@ -579,9 +579,9 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIManipulationStartedRoutedEventArgs : WXRoutedEventArgs
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL handled;
 @property (readonly) WXUIElement* container;
@@ -599,9 +599,9 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIManipulationStartingRoutedEventArgs : WXRoutedEventArgs
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WUXIManipulationPivot* pivot;
 @property WUXIManipulationModes mode;
@@ -618,7 +618,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIPointerRoutedEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL handled;
 @property (readonly) WSVirtualKeyModifiers keyModifiers;
@@ -635,9 +635,9 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXIRightTappedRoutedEventArgs : WXRoutedEventArgs
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL handled;
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
@@ -652,9 +652,9 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXITappedRoutedEventArgs : WXRoutedEventArgs
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL handled;
 @property (readonly) WDIPointerDeviceType pointerDeviceType;

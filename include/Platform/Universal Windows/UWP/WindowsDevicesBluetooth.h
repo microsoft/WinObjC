@@ -214,7 +214,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (void)fromBluetoothAddressAsync:(uint64_t)address success:(void (^)(WDBBluetoothDevice*))success failure:(void (^)(NSError*))failure;
 + (NSString *)getDeviceSelector;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) uint64_t bluetoothAddress;
 @property (readonly) WDBBluetoothClassOfDevice* classOfDevice;
@@ -251,7 +251,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (WDBBluetoothClassOfDevice*)fromRawValue:(unsigned int)rawValue;
 + (WDBBluetoothClassOfDevice*)fromParts:(WDBBluetoothMajorClass)majorClass minorClass:(WDBBluetoothMinorClass)minorClass serviceCapabilities:(WDBBluetoothServiceCapabilities)serviceCapabilities;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDBBluetoothMajorClass majorClass;
 @property (readonly) WDBBluetoothMinorClass minorClass;
@@ -340,7 +340,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (WDBBluetoothLEAppearance*)fromRawValue:(unsigned short)rawValue;
 + (WDBBluetoothLEAppearance*)fromParts:(unsigned short)appearanceCategory appearanceSubCategory:(unsigned short)appearanceSubCategory;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned short category;
 @property (readonly) unsigned short rawValue;
@@ -366,7 +366,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (NSString *)getDeviceSelectorFromAppearance:(WDBBluetoothLEAppearance*)appearance;
 + (void)fromBluetoothAddressWithBluetoothAddressTypeAsync:(uint64_t)bluetoothAddress bluetoothAddressType:(WDBBluetoothAddressType)bluetoothAddressType success:(void (^)(WDBBluetoothLEDevice*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) uint64_t bluetoothAddress;
 @property (readonly) WDBBluetoothConnectionStatus connectionStatus;
@@ -394,9 +394,9 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBBluetoothSignalStrengthFilter : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) id /* WFTimeSpan* */ samplingInterval;
 @property (retain) id /* WFTimeSpan* */ outOfRangeTimeout;
