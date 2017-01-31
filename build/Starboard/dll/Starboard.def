@@ -154,8 +154,6 @@ LIBRARY Starboard
         EbrRename
         EbrUnlink
         EbrMkdir
-        EbrGetcwd
-        EbrChdir
         EbrChmod
         EbrRemove
         EbrRemoveEmptyDir

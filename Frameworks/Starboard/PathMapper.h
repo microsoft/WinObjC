@@ -20,20 +20,6 @@ public:
     char fixedPath[4096];
     bool fixedValid, mappedValid;
 
-    static char currentDir[4096];
-
-    static void setCWD(const char* directory) {
-        if (directory[0] != '/') {
-            strcat_s(currentDir, directory);
-        } else {
-            strcpy_s(currentDir, directory);
-        }
-    }
-
-    static void getCWD(char* directory) {
-        strcpy_s(directory, 4095, currentDir);
-    }
-
     char* FixedPath();
     char* MappedPath();
 

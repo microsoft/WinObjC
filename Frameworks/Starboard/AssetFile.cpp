@@ -32,8 +32,6 @@ static const wchar_t* TAG = L"AssetFile";
 
 #define strtok_r strtok_s
 
-char CPathMapper::currentDir[4096];
-
 void appendPath(char* curpath, const char* path) {
     char copy[4096];
 
@@ -199,7 +197,7 @@ CPathMapper::CPathMapper(const char* path) {
     strcpy_s(relativePath, "");
 
     if (path[0] != '/') {
-        appendPath(relativePath, currentDir);
+        appendPath(relativePath, "");
     }
     appendPath(relativePath, path);
     fixedValid = fixPath(fixedPath, relativePath);

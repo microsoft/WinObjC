@@ -50,8 +50,6 @@ SB_EXPORT int EbrTruncate64(int fd, __int64 size);
 SB_EXPORT bool EbrRename(const char* path1, const char* path2);
 SB_EXPORT bool EbrUnlink(const char* path);
 SB_EXPORT bool EbrMkdir(const char* path);
-SB_EXPORT char* EbrGetcwd(char* buf, size_t len);
-SB_EXPORT int EbrChdir(const char* path);
 
 SB_EXPORT int EbrChmod(const char* path, int mode);
 
@@ -107,4 +105,3 @@ typedef struct {
 
 SB_EXPORT int EbrEventTimedMultipleWait(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets);
 SB_EXPORT void EbrEventDestroy(EbrEvent event);
-
