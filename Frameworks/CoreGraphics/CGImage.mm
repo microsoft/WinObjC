@@ -733,7 +733,7 @@ HRESULT _CGImageGetWICPixelFormatFromImageProperties(
 
         { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 32, kCGBitmapByteOrder32Little, kCGImageAlphaNoneSkipFirst     ), GUID_WICPixelFormat32bppBGR       },
         { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 32, kCGBitmapByteOrder32Little, kCGImageAlphaPremultipliedFirst), GUID_WICPixelFormat32bppPBGRA     },
-        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 32, kCGBitmapByteOrder32Little, kCGImageAlphaFirst             ), GUID_WICPixelFormat32bppRGBA      },
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 32, kCGBitmapByteOrder32Little, kCGImageAlphaFirst             ), GUID_WICPixelFormat32bppBGRA      },
 
         { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 32, kCGBitmapByteOrder32Big,    kCGImageAlphaNoneSkipLast      ), GUID_WICPixelFormat32bppRGB       },
         { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 32, kCGBitmapByteOrder32Big,    kCGImageAlphaPremultipliedLast ), GUID_WICPixelFormat32bppPRGBA     },
