@@ -173,49 +173,33 @@ CGImageRef vImageCreateCGImageFromBuffer(vImage_Buffer* buffer,
         packedBufferAllocated = false;
     }
 
-    CGImageRef imageRef;
-
-    if ((flags & kvImageNoAllocate) != 0) {
-        const size_t bufferSize = packedWidthInBytes * buffer->height;
+    if ((flags & kvImageNoAllocate) != 0) { // Client is self-allocating buffer.
         if (packedBufferAllocated) {
             TraceWarning(TAG,
                          L"kvImageNoAllocate flag ignored since padded buffer passed in. Packed buffer allocated and used since padded "
                          L"buffers can't be used in CGImage.");
         }
+    }
 
-        NSData* data = [NSData dataWithBytesNoCopy:packedBuffer length:bufferSize freeWhenDone:YES];
+    const size_t bufferSize = packedWidthInBytes * buffer->height;
+    CGDataProviderRef dataProvider = CGDataProviderCreateWithData(nullptr, packedBuffer, bufferSize, nullptr);
 
-        CGDataProviderRef dataProvider = CGDataProviderCreateWithCFData((CFDataRef)data);
+    CGImageRef imageRef = CGImageCreate((size_t)buffer->width,
+                                        (size_t)buffer->height,
+                                        (size_t)format->bitsPerComponent,
+                                        (size_t)format->bitsPerPixel,
+                                        (size_t)packedWidthInBytes,
+                                        format->colorSpace,
+                                        format->bitmapInfo,
+                                        dataProvider,
+                                        NULL,
+                                        false,
+                                        format->renderingIntent);
 
-        imageRef = CGImageCreate((size_t)buffer->width,
-                                 (size_t)buffer->height,
-                                 (size_t)format->bitsPerComponent,
-                                 (size_t)format->bitsPerPixel,
-                                 (size_t)packedWidthInBytes,
-                                 format->colorSpace,
-                                 format->bitmapInfo,
-                                 dataProvider,
-                                 NULL,
-                                 false,
-                                 format->renderingIntent);
+    CGDataProviderRelease(dataProvider);
 
-        CGDataProviderRelease(dataProvider);
-    } else {
-        CGContextRef ctx = CGBitmapContextCreate(packedBuffer,
-                                                 (size_t)buffer->width,
-                                                 (size_t)buffer->height,
-                                                 (size_t)format->bitsPerComponent,
-                                                 packedWidthInBytes,
-                                                 format->colorSpace,
-                                                 format->bitmapInfo);
-
-        imageRef = CGBitmapContextCreateImage(ctx);
-
-        CGContextRelease(ctx);
-
-        if (packedBufferAllocated == true) {
-            IwFree(packedBuffer);
-        }
+    if (packedBufferAllocated == true) {
+        IwFree(packedBuffer);
     }
 
     if (imageRef == nullptr) {
