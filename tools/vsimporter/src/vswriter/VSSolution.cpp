@@ -122,6 +122,7 @@ void VSSolution::addConfiguration(const std::string& name)
   if (!name.empty())
     m_configurations.insert(name);
 }
+
 void VSSolution::addPlatform(const std::string& name)
 {
   if (!name.empty())
