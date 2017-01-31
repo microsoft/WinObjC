@@ -82,16 +82,31 @@ TEST(NSThread, ExternalCurrentThreadLeak) {
     NSThread* current = nil;
 
     std::thread t([&current]() {
-        // Grab a strong reference to NSThread.currentThread
-        // on a thread not created via the NSThread APIs
-        current = [[NSThread currentThread] retain];
+        // Calling |currentThread| when the underlying thread of execution was
+        // created outside of the NSThread APIs should create one on demand.
+        current = [NSThread currentThread];
+        EXPECT_EQ(1, [current retainCount]);
+
+        // Grab a strong reference to this thread in order to
+        // validate its retain count after exit.
+        [current retain];
+
+        // Another |currentThread| call shouldn't affect the retain count.
+        EXPECT_EQ(2, [[NSThread currentThread] retainCount]);
+        EXPECT_EQ(2, [current retainCount]);
+
+        // Sanity
+        EXPECT_OBJCEQ(current, [NSThread currentThread]);
     });
 
     t.join();
 
-    // Ensure the reference grabbed above is
-    // the only one remaining after thread exit
+    // Ensure the strong reference grabbed above is
+    // the only one remaining after thread exit.
     EXPECT_EQ(1, [current retainCount]);
+
+    // We're on a different thread. |current| should no longer be the current thread.
+    EXPECT_OBJCNE(current, [NSThread currentThread]);
 
     [current release];
 }
