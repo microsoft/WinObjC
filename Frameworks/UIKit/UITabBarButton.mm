@@ -126,15 +126,12 @@
         id font = [UIFont defaultFont];
         size = [title sizeWithFont:font constrainedToSize:CGSizeMake(0.0f, 0.0f) lineBreakMode:UILineBreakModeClip];
 
-        CGRect textRect;
-        textRect.origin.y = rect.size.height - size.height;
+        CGRect textRect{};
+        textRect.origin.y = (rect.size.height - size.height) / 2.0;
         textRect.origin.x = rect.origin.x;
         textRect.size.width = rect.size.width;
         textRect.size.height = size.height;
-        // TODO(DH)
-        // EbrCenterTextInRectVertically(&textRect, &size, font);
-
-        CGContextSetFillColorWithColor(context, (CGColorRef)[UIColor whiteColor]);
+        CGContextSetFillColorWithColor(context, CGColorGetConstantColor(kCGColorWhite));
         size = [title drawInRect:textRect withFont:font lineBreakMode:UILineBreakModeClip alignment:UITextAlignmentCenter];
     }
 }
