@@ -128,7 +128,7 @@
 
         CGRect textRect{};
 
-        // Horizontally center text
+        // Vertically center text
         textRect.origin.y = (rect.size.height - size.height) / 2.0;
         textRect.origin.x = rect.origin.x;
         textRect.size.width = rect.size.width;
