@@ -123,6 +123,7 @@ bool EbrIsDir(const char* path) {
 }
 
 int EbrStat(const char* filename, struct stat* ret) {
+#ifdef _USE_32BIT_TIME_T
     CPathMapper map(filename);
     if (!map) {
         TraceError(TAG, L"EbrStat failure!");
@@ -137,6 +138,12 @@ int EbrStat(const char* filename, struct stat* ret) {
     }
 
     return _wstat32(map, reinterpret_cast<struct _stat32*>(ret));
+#else
+    // This is from stat.h, unfortunately, it doesn't define the wstat apis for non 32-bit time_t
+    // essentially on our platform, EbrStat is same as EbrStat64i32.
+    // keeping this #ifdef just in case.
+    return EbrStat64i32(filename, reinterpret_cast<struct _stat64i32*>(ret));
+#endif
 }
 
 int EbrStat64i32(const char* filename, struct _stat64i32* ret) {

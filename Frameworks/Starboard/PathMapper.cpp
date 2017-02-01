@@ -95,7 +95,7 @@ std::wstring _MapPathRoot(const std::wstring& root) {
     if (root == c_currentDir) {
         return root;
     } else if (root == L"~") {
-        return std::wstring(L"home");
+        return std::wstring(L".\\home");
     }
 
     std::wregex drive(L"[a-zA-Z]:");
