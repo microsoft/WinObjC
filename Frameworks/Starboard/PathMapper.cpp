@@ -106,7 +106,7 @@ std::wstring _MapPathRoot(const std::wstring& root) {
 
     for (int i = 0; i < _countof(c_specialFolders); ++i) {
         if (_wcsicmp(root.c_str(), c_specialFolders[i].c_str()) == 0) {
-            return Strings::NarrowToWide<std::wstring>(EbrGetWritableFolder()) + std::wstring(L"\\") + c_specialFolders[i];
+            return EbrGetWritableFolder() + std::wstring(L"\\") + c_specialFolders[i];
         }
     }
 

@@ -17,10 +17,12 @@
 #include <TestFramework.h>
 #include "pathmapper.h"
 
-extern "C" void EbrSetWritableFolder(const char*);
+extern "C" void EbrSetWritableFolder(const wchar_t*);
+extern "C" const wchar_t* EbrGetWritableFolder();
 
 TEST(PathMapper, pathMapper) {
-    EbrSetWritableFolder("d:\\temp");
+    std::wstring writableFolder = EbrGetWritableFolder();
+    EbrSetWritableFolder(L"d:\\temp");
 
     CPathMapper mapper1("c:/users/winobjc-bot");
     EXPECT_EQ_MSG(0, wcscmp(mapper1, L"c:\\users\\winobjc-bot"), "%S", (const wchar_t*)mapper1);
@@ -69,6 +71,8 @@ TEST(PathMapper, pathMapper) {
 
     CPathMapper mapper16("/AppSupport/.\\?/");
     EXPECT_EQ_MSG(0, wcscmp(mapper16, L"d:\\temp\\AppSupport\\+"), "%S", (const wchar_t*)mapper16);
+
+    EbrSetWritableFolder(writableFolder.c_str());
 }
 
 TEST(PathMapper, RelativePathTests) {

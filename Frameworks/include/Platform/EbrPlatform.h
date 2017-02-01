@@ -82,8 +82,8 @@ SB_EXPORT int EbrGetTimeOfDay(struct EbrTimeval* curtime);
 SB_EXPORT double EbrGetMediaTime();
 SB_EXPORT int EbrGetWantedOrientation();
 
-SB_EXPORT const char* EbrGetWritableFolder();
-SB_EXPORT void EbrSetWritableFolder(const char* folder);
+SB_EXPORT const wchar_t* EbrGetWritableFolder();
+SB_EXPORT void EbrSetWritableFolder(const wchar_t* folder);
 
 SB_EXPORT void EbrBlockIfBackground();
 
