@@ -16,12 +16,20 @@
 #pragma once
 
 #import <CoreGraphics/CoreGraphicsExport.h>
+
+typedef struct __CGGradient* CGGradientRef;
+
 #import <CoreGraphics/CGGeometry.h>
 #import <CoreGraphics/CGColorSpace.h>
 
+#import <CoreFoundation/CFBase.h>
+
 CF_IMPLICIT_BRIDGING_ENABLED
 
-typedef enum { kCGGradientDrawsBeforeStartLocation = (1 << 0), kCGGradientDrawsAfterEndLocation = (1 << 1) } CGGradientDrawingOptions;
+typedef CF_OPTIONS(CFIndex, CGGradientDrawingOptions) {
+    kCGGradientDrawsBeforeStartLocation = (1 << 0),
+    kCGGradientDrawsAfterEndLocation = (1 << 1)
+};
 
 COREGRAPHICS_EXPORT CGGradientRef CGGradientCreateWithColorComponents(CGColorSpaceRef space,
                                                                       const CGFloat* components,

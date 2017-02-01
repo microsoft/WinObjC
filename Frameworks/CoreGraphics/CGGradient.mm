@@ -1,7 +1,7 @@
 //******************************************************************************
 //
 // Copyright (c) 2016 Intel Corporation. All rights reserved.
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -36,7 +36,7 @@
 @end
 
 __CGGradient::__CGGradient() : _components(NULL), _locations(NULL) {
-    object_setClass((id) this, [CGNSGradient class]);
+    object_setClass((id)this, [CGNSGradient class]);
 }
 
 __CGGradient::~__CGGradient() {
@@ -180,4 +180,24 @@ CGGradientRef CGGradientRetain(CGGradientRef gradient) {
 CFTypeID CGGradientGetTypeID() {
     UNIMPLEMENTED();
     return StubReturn();
+}
+
+CGFloat* _CGGradientGetStopLocation(CGGradientRef gradient) {
+    RETURN_NULL_IF(!gradient);
+    return gradient->_locations;
+}
+
+CGFloat* _CGGradientGetColorComponents(CGGradientRef gradient) {
+    RETURN_NULL_IF(!gradient);
+    return gradient->_components;
+}
+
+unsigned long _CGGradientGetCount(CGGradientRef gradient) {
+    RETURN_RESULT_IF_NULL(gradient, 0);
+    return gradient->_count;
+}
+
+CGColorSpaceModel _CGGradientGetColorSpaceModel(CGGradientRef gradient) {
+    RETURN_RESULT_IF_NULL(gradient, kCGColorSpaceModelRGB);
+    return gradient->_colorSpaceModel;
 }

@@ -39,8 +39,7 @@ CTFramesetterRef CTFramesetterCreateWithAttributedString(CFAttributedStringRef s
 */
 CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetterRef, CFRange range, CGPathRef path, CFDictionaryRef frameAttributes) {
     RETURN_NULL_IF(framesetterRef == nil || path == nullptr);
-    CGRect frameRect;
-    _CGPathGetBoundingBoxInternal(path, &frameRect);
+    CGRect frameRect = CGPathGetBoundingBox(path);
     _CTFramesetter* framesetter = static_cast<_CTFramesetter*>(framesetterRef);
 
     // Call _DWriteWrapper to get _CTLine object list that makes up this frame

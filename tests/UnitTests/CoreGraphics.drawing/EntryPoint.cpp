@@ -20,18 +20,12 @@
 
 #include <CoreFoundation/CoreFoundation.h>
 
-#ifdef WINOBJC
-// NOTE: Current implementation of CoreGraphics requires UIKit to be loaded
-//      Remove once CoreGraphics has been updated
-#include <UIKit/UIKit.h>
-#endif // WINOBJC
-
 #include "DrawingTestConfig.h"
 
 template <size_t N>
 static int strconstprefix(const char* left, const char (&right)[N]) {
     // The null terminator would fail a prefix match; don't count it.
-    return strncmp(left, right, N - 1);
+    return strncmp(left, right, N-1);
 }
 
 static std::string __ModuleDirectory() {
@@ -88,6 +82,11 @@ public:
     virtual std::string GetComparisonPath() override {
         return _comparisonPath;
     }
+
+    virtual std::string GetResourcePath(const std::string& resource) override {
+        // Using / as a path separator is valid on both Windows and OS X.
+        return __ModuleDirectory() + "/data/" + resource;
+    }
 };
 
 std::shared_ptr<DrawingTestConfigImpl> _configImpl;
@@ -110,11 +109,6 @@ int main(int argc, char** argv) {
         return -1;
     }
 #endif
-#ifdef WINOBJC
-    // NOTE: Current implementation of CoreGraphics requires UIKit to be loaded
-    //      Remove once CoreGraphics has been updated
-    [UIView class];
-#endif // WINOBJC
     testing::InitGoogleTest(&argc, argv);
 
     _configImpl = std::move(std::make_shared<CommandLineDrawingTestConfigImpl>(argc, argv));

@@ -25,6 +25,7 @@
 #import "UIResponderInternal.h"
 #import "UIApplicationInternal.h"
 #import <UIKit/UITextViewDelegate.h>
+#import <Starboard/SmartTypes.h>
 
 static const wchar_t* TAG = L"UITextView";
 
@@ -761,7 +762,8 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     centerRect.origin.x = 0;
     centerRect.origin.y = 0;
     centerRect.size = fontExtent;
-    EbrCenterTextInRectVertically(&centerRect, &fontExtent, _font);
+    // TODO(DH)
+    // EbrCenterTextInRectVertically(&centerRect, &fontExtent, _font);
     rect.origin.y += centerRect.origin.y;
 
     ret.width = ourRect.size.width;

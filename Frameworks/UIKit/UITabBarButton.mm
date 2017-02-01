@@ -131,7 +131,8 @@
         textRect.origin.x = rect.origin.x;
         textRect.size.width = rect.size.width;
         textRect.size.height = size.height;
-        EbrCenterTextInRectVertically(&textRect, &size, font);
+        // TODO(DH)
+        // EbrCenterTextInRectVertically(&textRect, &size, font);
 
         CGContextSetFillColorWithColor(context, (CGColorRef)[UIColor whiteColor]);
         size = [title drawInRect:textRect withFont:font lineBreakMode:UILineBreakModeClip alignment:UITextAlignmentCenter];

@@ -35,7 +35,7 @@ static NSAttributedString* getAttributedString(NSString* str) {
     return string;
 }
 
-TEST(CTFrame, GetStringRange) {
+DISABLED_TEST(CTFrame, GetStringRange) {
     EXPECT_EQ(0, CTFrameGetStringRange(nil).location);
     EXPECT_EQ(0, CTFrameGetStringRange(nil).length);
     EXPECT_EQ(0, CTFrameGetVisibleStringRange(nil).location);
@@ -78,7 +78,7 @@ TEST(CTFrame, GetStringRange) {
     CGPathRelease(path);
 }
 
-TEST(CTFrame, GetLines) {
+DISABLED_TEST(CTFrame, GetLines) {
     EXPECT_EQ(nil, CTFrameGetLines(nil));
     CFAttributedStringRef string = (__bridge CFAttributedStringRef)getAttributedString(@"");
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(string);
@@ -107,7 +107,7 @@ TEST(CTFrame, GetLines) {
     CGPathRelease(path);
 }
 
-TEST(CTFrame, GetLineOrigins) {
+DISABLED_TEST(CTFrame, GetLineOrigins) {
     std::vector<CGPoint> origins(5);
 
     std::fill(origins.begin(), origins.end(), CGPoint{ c_arbitraryFloat, c_arbitraryFloat });

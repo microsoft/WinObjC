@@ -16,6 +16,9 @@
 #pragma once
 
 #import <CoreGraphics/CoreGraphicsExport.h>
+
+typedef struct __CGShading* CGShadingRef;
+
 #import <CoreGraphics/CGGeometry.h>
 #import <CoreGraphics/CGColorSpace.h>
 #import <CoreGraphics/CGFunction.h>

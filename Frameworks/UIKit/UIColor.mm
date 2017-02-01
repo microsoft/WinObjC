@@ -15,26 +15,27 @@
 //
 //******************************************************************************
 
-#include <StubReturn.h>
-#include "Starboard.h"
+#import <StubReturn.h>
+#import <Starboard.h>
 
-#include <UIKit/UIColor.h>
-#include <UIKit/UIGraphics.h>
-#include <UIKit/UIImage.h>
-#include <UIKit/UIView.h>
+#import <UIKit/UIColor.h>
+#import <UIKit/UIGraphics.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UIView.h>
 
-#include <CoreGraphics/CGContext.h>
-#include <CoreGraphics/CGAffineTransform.h>
-#include <CoreGraphics/CGPattern.h>
+#import <CoreGraphics/CGContext.h>
+#import <CoreGraphics/CGAffineTransform.h>
+#import <CoreGraphics/CGPattern.h>
 
-#include "Foundation/NSString.h"
-#include "Foundation/NSMutableDictionary.h"
+#import <Foundation/NSString.h>
+#import <Foundation/NSMutableDictionary.h>
 
-#include "CGContextInternal.h"
-#include "CGPatternInternal.h"
+#import "CGContextInternal.h"
+#import "CGPatternInternal.h"
+#import "UIColorInternal.h"
 
-#include <math.h>
-#include "LoggingNative.h"
+#import <math.h>
+#import <LoggingNative.h>
 
 static const wchar_t* TAG = L"UIColor";
 

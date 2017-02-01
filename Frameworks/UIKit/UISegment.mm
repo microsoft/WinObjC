@@ -26,6 +26,7 @@
 #import <UIKit/UIView.h>
 #import <Foundation/NSString.h>
 #import <CoreGraphics/CGContext.h>
+#import "CGContextInternal.h"
 #import "UISegment.h"
 #import "UIViewInternal.h"
 #import "UISegmentedControlInternal.h"
@@ -224,11 +225,16 @@ static idretain _defaultTextColor[2];
         }
     }
 
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+
+    _CGContextPushBeginDraw(ctx);
+    auto popEnd = wil::ScopeExit([ctx]() { _CGContextPopEndDraw(ctx); });
+
     if (isOSTarget(@"7.0")) {
         if (_tintColor != nil) {
             if (_selected == 1) {
-                CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), [_tintColor CGColor]);
-                CGContextFillRect(UIGraphicsGetCurrentContext(), bounds);
+                CGContextSetFillColorWithColor(ctx, [_tintColor CGColor]);
+                CGContextFillRect(ctx, bounds);
             }
             if ((_type & 2) == 0) {
                 CGRect rect = bounds;
@@ -236,14 +242,12 @@ static idretain _defaultTextColor[2];
 
                 rect.origin.x = rect.size.width - lineWidth;
                 rect.size.width = lineWidth;
-                CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), [_tintColor CGColor]);
-                CGContextFillRect(UIGraphicsGetCurrentContext(), rect);
+                CGContextSetFillColorWithColor(ctx, [_tintColor CGColor]);
+                CGContextFillRect(ctx, rect);
             }
         }
     } else {
         if (!_noDefaultImages) {
-            CGContextRef ctx = UIGraphicsGetCurrentContext();
-
             if (_selected) {
                 // No border, just fill with background color
                 CGContextSetFillColorWithColor(ctx, [bgColor CGColor]);
@@ -293,7 +297,7 @@ static idretain _defaultTextColor[2];
     }
 
     if (_title != nil) {
-        CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), [textColor CGColor]);
+        CGContextSetFillColorWithColor(ctx, [textColor CGColor]);
 
         CGSize size;
         CGRect rect;

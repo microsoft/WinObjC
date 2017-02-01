@@ -15,36 +15,38 @@
 //******************************************************************************
 #pragma once
 
-#import <CoreGraphics/CGAffineTransform.h>
-#import <CoreGraphics/CGGeometry.h>
 #import <CoreGraphics/CoreGraphicsExport.h>
 
-typedef enum { kCGPathFill, kCGPathEOFill, kCGPathStroke, kCGPathFillStroke, kCGPathEOFillStroke } CGPathDrawingMode;
+typedef struct __CGPath* CGPathRef;
+typedef struct __CGPath* CGMutablePathRef;
 
-typedef enum {
+#import <CoreGraphics/CGAffineTransform.h>
+#import <CoreGraphics/CGGeometry.h>
+
+typedef CF_ENUM(CFIndex, CGPathElementType) {
     kCGPathElementMoveToPoint,
     kCGPathElementAddLineToPoint,
     kCGPathElementAddQuadCurveToPoint,
     kCGPathElementAddCurveToPoint,
     kCGPathElementCloseSubpath,
-} CGPathElementType;
+};
 
 typedef struct {
     CGPathElementType type;
     CGPoint* points;
 } CGPathElement;
 
-typedef enum {
-    kCGLineCapButt,
-    kCGLineCapRound,
+typedef CF_ENUM(CFIndex, CGLineCap) {
+    kCGLineCapButt, // Default
     kCGLineCapSquare,
-} CGLineCap;
+    kCGLineCapRound,
+};
 
-typedef enum {
-    kCGLineJoinMiter,
-    kCGLineJoinRound,
-    kCGLineJoinBevel,
-} CGLineJoin;
+typedef CF_ENUM(CFIndex, CGLineJoin) {
+    kCGLineJoinMiter = 0, // Default
+    kCGLineJoinBevel = 3, // D2D: Miter or Bevel
+    kCGLineJoinRound = 2, // D2D: Round
+};
 
 typedef void (*CGPathApplierFunction)(void* info, const CGPathElement* element);
 
@@ -55,11 +57,11 @@ COREGRAPHICS_EXPORT CGPathRef CGPathCreateWithRect(CGRect rect, const CGAffineTr
 COREGRAPHICS_EXPORT CGPathRef CGPathCreateWithRoundedRect(CGRect rect,
                                                           CGFloat cornerWidth,
                                                           CGFloat cornerHeight,
-                                                          const CGAffineTransform* transform) STUB_METHOD;
+                                                          const CGAffineTransform* transform);
 
 COREGRAPHICS_EXPORT CGPathRef CGPathCreateCopy(CGPathRef path);
 
-COREGRAPHICS_EXPORT CGPathRef CGPathCreateCopyByTransformingPath(CGPathRef path, const CGAffineTransform* transform) STUB_METHOD;
+COREGRAPHICS_EXPORT CGPathRef CGPathCreateCopyByTransformingPath(CGPathRef path, const CGAffineTransform* transform);
 
 COREGRAPHICS_EXPORT CGPathRef CGPathCreateCopyByDashingPath(
     CGPathRef path, const CGAffineTransform* transform, CGFloat phase, const CGFloat* lengths, size_t count) STUB_METHOD;
@@ -72,8 +74,7 @@ COREGRAPHICS_EXPORT CGPathRef CGPathCreateCopyByStrokingPath(CGPathRef path,
 
 COREGRAPHICS_EXPORT CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path);
 
-COREGRAPHICS_EXPORT CGMutablePathRef CGPathCreateMutableCopyByTransformingPath(CGPathRef path,
-                                                                               const CGAffineTransform* transform) STUB_METHOD;
+COREGRAPHICS_EXPORT CGMutablePathRef CGPathCreateMutableCopyByTransformingPath(CGPathRef path, const CGAffineTransform* transform);
 
 COREGRAPHICS_EXPORT void CGPathRelease(CGPathRef path);
 COREGRAPHICS_EXPORT CGPathRef CGPathRetain(CGPathRef path);
@@ -108,7 +109,7 @@ COREGRAPHICS_EXPORT void CGPathAddRect(CGMutablePathRef path, const CGAffineTran
 
 COREGRAPHICS_EXPORT void CGPathAddRects(CGMutablePathRef path, const CGAffineTransform* m, const CGRect* rects, size_t count) STUB_METHOD;
 COREGRAPHICS_EXPORT void CGPathAddRoundedRect(
-    CGMutablePathRef path, const CGAffineTransform* transform, CGRect rect, CGFloat cornerWidth, CGFloat cornerHeight) STUB_METHOD;
+    CGMutablePathRef path, const CGAffineTransform* transform, CGRect rect, CGFloat cornerWidth, CGFloat cornerHeight);
 COREGRAPHICS_EXPORT void CGPathApply(CGPathRef path, void* info, CGPathApplierFunction function);
 
 COREGRAPHICS_EXPORT void CGPathMoveToPoint(CGMutablePathRef path, const CGAffineTransform* m, CGFloat x, CGFloat y);
@@ -121,7 +122,7 @@ COREGRAPHICS_EXPORT CGRect CGPathGetBoundingBox(CGPathRef path);
 
 COREGRAPHICS_EXPORT CGRect CGPathGetPathBoundingBox(CGPathRef path) STUB_METHOD;
 COREGRAPHICS_EXPORT CGPoint CGPathGetCurrentPoint(CGPathRef path);
-COREGRAPHICS_EXPORT CFTypeID CGPathGetTypeID() STUB_METHOD;
+COREGRAPHICS_EXPORT CFTypeID CGPathGetTypeID();
 
 COREGRAPHICS_EXPORT bool CGPathIsEmpty(CGPathRef path);
 COREGRAPHICS_EXPORT bool CGPathIsRect(CGPathRef path, CGRect* rect) STUB_METHOD;

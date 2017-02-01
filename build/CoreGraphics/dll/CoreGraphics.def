@@ -32,7 +32,7 @@ LIBRARY CoreGraphics
         CGBitmapContextGetWidth
         
         ; private exports below
-        _CGBitmapContextCreateWithTexture
+        _CGBitmapContextCreateWithRenderTarget
         _CGBitmapContextCreateWithFormat
         CGBitmapContextGetImage
 
@@ -55,6 +55,9 @@ LIBRARY CoreGraphics
         _DWriteUnregisterFontsWithDatas
 
         ; CGColor.mm
+        kCGColorBlack DATA
+        kCGColorWhite DATA
+        kCGColorClear DATA
         CGColorRelease
         CGColorRetain
         CGColorCreate
@@ -229,16 +232,16 @@ LIBRARY CoreGraphics
 
         ; private exports below
         CGContextClearToColor
-        CGContextDrawImageRect
+        _CGContextDrawImageRect
         CGContextGetBlendMode
         CGContextIsDirty
         CGContextReleaseLock
         CGContextSetDirty
-        CGContextGetBacking
         CGContextDrawGlyphRun
-        CGContextIsPointInPath
-        EbrCenterTextInRectVertically
-        _CGContextSetScaleFactor
+        _CGContextSetShadowProjectionTransform
+        _CGContextCreateWithD2DRenderTarget
+        _CGGetD2DFactory
+        _CGGetPixelFormatProperties
         _CGContextPushBeginDraw
         _CGContextPopEndDraw
         _CGContextEscapeBeginEndDrawStack
@@ -265,6 +268,8 @@ LIBRARY CoreGraphics
         CGDataProviderCreateSequential
         CGDataProviderCreateDirect
         CGDataProviderCreateDirectAccess
+        _CGDataProviderGetData
+        _CGDataProviderGetSize
 
         ; CGFont.mm
         kCGFontVariationAxisName DATA
@@ -360,14 +365,20 @@ LIBRARY CoreGraphics
         CGImageGetWidth
         CGImageIsMask
 
+        ; CGImage private exports
+        _CGImageLoadImageWithWICDecoder
+        _CGImageGetImageFromData
+        _CGImagePNGRepresentation
+        _CGImageJPEGRepresentation
+        _CGImageRepresentation
+        _CGImageCreateWithWICBitmap
+        _CGImageGetWICImageSource
+        _CGImageCreateCopyWithPixelFormat
+        _CGImageGetRawBytes
+        _CGImageGetDisplayTexture
+
         ; private exports below
         CGImageAddDestructionListener
-        CGJPEGImageCreateFromData
-        CGPNGImageCreateFromData
-        CGJPEGImageCreateFromFile
-        CGPNGImageCreateFromFile
-        _CGImagePNGRepresentation
-        _CGImageGetData
 
         ; CGLayer.mm
         CGLayerCreateWithContext
@@ -415,10 +426,6 @@ LIBRARY CoreGraphics
         CGPathIsEmpty
         CGPathIsRect
         CGPathContainsPoint
-
-        ; private exports below
-        _CGPathApplyPath
-        _CGPathGetBoundingBoxInternal
 
         ; CGPattern.mm
         CGPatternCreate
