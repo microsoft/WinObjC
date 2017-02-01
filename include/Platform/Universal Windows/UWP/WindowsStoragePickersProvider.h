@@ -66,7 +66,7 @@ typedef unsigned WSPPSetFileNameResult;
 OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
 @interface WSPPFileRemovedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * id;
 @end
@@ -80,7 +80,7 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
 OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
 @interface WSPPFileOpenPickerUI : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * title;
 @property (readonly) NSArray* /* NSString * */ allowedFileTypes;
@@ -105,7 +105,7 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
 OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
 @interface WSPPPickerClosingEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSPPPickerClosingOperation* closingOperation;
 @property (readonly) BOOL isCanceled;
@@ -120,7 +120,7 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
 OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
 @interface WSPPPickerClosingOperation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFDateTime* deadline;
 - (WSPPPickerClosingDeferral*)getDeferral;
@@ -135,7 +135,7 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
 OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
 @interface WSPPPickerClosingDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)complete;
 @end
@@ -149,7 +149,7 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
 OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
 @interface WSPPFileSavePickerUI : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * title;
 @property (readonly) NSArray* /* NSString * */ allowedFileTypes;
@@ -171,7 +171,7 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
 OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
 @interface WSPPTargetFileRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSPPTargetFileRequest* request;
 @end
@@ -185,7 +185,7 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
 OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
 @interface WSPPTargetFileRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) RTObject<WSIStorageFile>* targetFile;
 - (WSPPTargetFileRequestDeferral*)getDeferral;
@@ -200,7 +200,7 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
 OBJCUWP_WINDOWS_STORAGE_PICKERS_PROVIDER_EXPORT
 @interface WSPPTargetFileRequestDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)complete;
 @end

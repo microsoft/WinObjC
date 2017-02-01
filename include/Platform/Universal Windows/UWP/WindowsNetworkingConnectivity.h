@@ -194,7 +194,7 @@ typedef void(^WNCNetworkStatusChangedEventHandler)(RTObject* sender);
 OBJCUWP_WINDOWS_NETWORKING_EXPORT
 @interface WNCIPInformation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WNCNetworkAdapter* networkAdapter;
 @property (readonly) id /* uint8_t */ prefixLength;
@@ -209,7 +209,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_EXPORT
 @interface WNCDataPlanUsage : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFDateTime* lastSyncTime;
 @property (readonly) unsigned int megabytesUsed;
@@ -224,7 +224,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_EXPORT
 @interface WNCConnectionCost : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL approachingDataLimit;
 @property (readonly) WNCNetworkCostType networkCostType;
@@ -242,7 +242,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_EXPORT
 @interface WNCDataPlanStatus : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) id /* unsigned int */ dataLimitInMegabytes;
 @property (readonly) WNCDataPlanUsage* dataPlanUsage;
@@ -261,7 +261,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_EXPORT
 @interface WNCNetworkAdapter : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int ianaInterfaceType;
 @property (readonly) uint64_t inboundMaxBitsPerSecond;
@@ -280,7 +280,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_EXPORT
 @interface WNCDataUsage : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) uint64_t bytesReceived;
 @property (readonly) uint64_t bytesSent;
@@ -295,7 +295,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_EXPORT
 @interface WNCNetworkSecuritySettings : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WNCNetworkAuthenticationType networkAuthenticationType;
 @property (readonly) WNCNetworkEncryptionType networkEncryptionType;
@@ -310,7 +310,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_EXPORT
 @interface WNCWlanConnectionProfileDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (NSString *)getConnectedSsid;
 @end
@@ -324,7 +324,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_EXPORT
 @interface WNCNetworkUsage : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) uint64_t bytesReceived;
 @property (readonly) uint64_t bytesSent;
@@ -340,7 +340,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_EXPORT
 @interface WNCConnectivityInterval : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFTimeSpan* connectionDuration;
 @property (readonly) WFDateTime* startTime;
@@ -355,7 +355,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_EXPORT
 @interface WNCAttributedNetworkUsage : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * attributionId;
 @property (readonly) NSString * attributionName;
@@ -373,7 +373,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_EXPORT
 @interface WNCLanIdentifierData : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int type;
 @property (readonly) NSArray* /* uint8_t */ value;
@@ -388,7 +388,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_EXPORT
 @interface WNCConnectionProfile : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WNCNetworkAdapter* networkAdapter;
 @property (readonly) WNCNetworkSecuritySettings* networkSecuritySettings;
@@ -420,7 +420,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_EXPORT
 @interface WNCLanIdentifier : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WNCLanIdentifierData* infrastructureId;
 @property (readonly) WFGUID* networkAdapterId;
@@ -436,7 +436,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_EXPORT
 @interface WNCProxyConfiguration : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL canConnectDirectly;
 @property (readonly) NSArray* /* WFUri* */ proxyUris;
@@ -450,9 +450,9 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 
 OBJCUWP_WINDOWS_NETWORKING_EXPORT
 @interface WNCConnectionProfileFilter : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) id /* WFGUID* */ serviceProviderGuid;
 @property WNCNetworkCostType networkCostType;
@@ -474,7 +474,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_EXPORT
 @interface WNCNetworkItem : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFGUID* networkId;
 - (WNCNetworkTypes)getNetworkTypes;
@@ -490,7 +490,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 @interface WNCRoutePolicy : RTObject
 + (WNCRoutePolicy*)makeRoutePolicy:(WNCConnectionProfile*)connectionProfile hostName:(WNHostName*)hostName type:(WNDomainNameType)type ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WNCConnectionProfile* connectionProfile;
 @property (readonly) WNHostName* hostName;
@@ -505,9 +505,9 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 
 OBJCUWP_WINDOWS_NETWORKING_EXPORT
 @interface WNCCellularApnContext : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * userName;
 @property (retain) NSString * providerId;
@@ -540,7 +540,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_EXPORT
 @interface WNCConnectionSession : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WNCConnectionProfile* connectionProfile;
 - (void)close;
@@ -587,7 +587,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_EXPORT
 @interface WNCNetworkStateChangeEventDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL hasNewConnectionCost;
 @property (readonly) BOOL hasNewDomainConnectivityLevel;
@@ -608,7 +608,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_EXPORT
 @interface WNCWwanConnectionProfileDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * accessPointName;
 @property (readonly) NSString * homeProviderId;

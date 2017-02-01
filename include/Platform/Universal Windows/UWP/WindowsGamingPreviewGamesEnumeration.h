@@ -92,7 +92,7 @@ OBJCUWP_WINDOWS_GAMING_PREVIEW_GAMESENUMERATION_EXPORT
 OBJCUWP_WINDOWS_GAMING_PREVIEW_GAMESENUMERATION_EXPORT
 @interface WGPGGameListEntry : RTObject <WGPGIGameListEntry>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WGPGGameListCategory category;
 @property (readonly) WAAppDisplayInfo* displayInfo;

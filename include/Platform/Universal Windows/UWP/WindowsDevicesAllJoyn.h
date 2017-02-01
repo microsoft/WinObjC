@@ -143,7 +143,7 @@ OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynAboutData : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * defaultDescription;
 @property (retain) NSString * defaultAppName;
@@ -170,9 +170,9 @@ OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 + (WDAAllJoynBusAttachment*)getDefault;
 + (WDEDeviceWatcher*)getWatcher:(id<NSFastEnumeration> /* NSString * */)requiredInterfaces;
 + (WDAAllJoynBusAttachment*)make:(NSString *)connectionSpecification ACTIVATOR;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDAAllJoynAboutData* aboutData;
 @property (readonly) NSMutableArray* /* WDAAllJoynAuthenticationMechanism */ authenticationMechanisms;
@@ -207,7 +207,7 @@ OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynBusAttachmentStateChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDAAllJoynBusAttachmentState state;
 @property (readonly) int status;
@@ -222,7 +222,7 @@ OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynCredentialsRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned short attemptCount;
 @property (readonly) WDAAllJoynCredentials* credentials;
@@ -240,7 +240,7 @@ OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynCredentialsVerificationRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDAAllJoynAuthenticationMechanism authenticationMechanism;
 @property (readonly) WSCCCertificate* peerCertificate;
@@ -261,7 +261,7 @@ OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynAuthenticationCompleteEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDAAllJoynAuthenticationMechanism authenticationMechanism;
 @property (readonly) NSString * peerUniqueName;
@@ -279,7 +279,7 @@ OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 + (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDAAllJoynServiceInfo*))success failure:(void (^)(NSError*))failure;
 + (WDAAllJoynServiceInfo*)make:(NSString *)uniqueName objectPath:(NSString *)objectPath sessionPort:(unsigned short)sessionPort ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * objectPath;
 @property (readonly) unsigned short sessionPort;
@@ -297,7 +297,7 @@ OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 + (void)getDataBySessionPortAsync:(NSString *)uniqueName busAttachment:(WDAAllJoynBusAttachment*)busAttachment sessionPort:(unsigned short)sessionPort success:(void (^)(WDAAllJoynAboutDataView*))success failure:(void (^)(NSError*))failure;
 + (void)getDataBySessionPortWithLanguageAsync:(NSString *)uniqueName busAttachment:(WDAAllJoynBusAttachment*)busAttachment sessionPort:(unsigned short)sessionPort language:(WGLanguage*)language success:(void (^)(WDAAllJoynAboutDataView*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * aJSoftwareVersion;
 @property (readonly) WFGUID* appId;
@@ -327,7 +327,7 @@ OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynAcceptSessionJoinerEventArgs : RTObject
 + (WDAAllJoynAcceptSessionJoinerEventArgs*)make:(NSString *)uniqueName sessionPort:(unsigned short)sessionPort trafficType:(WDAAllJoynTrafficType)trafficType proximity:(uint8_t)proximity acceptSessionJoiner:(RTObject<WDAIAllJoynAcceptSessionJoiner>*)acceptSessionJoiner ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL sameNetwork;
 @property (readonly) BOOL samePhysicalNode;
@@ -347,7 +347,7 @@ OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynSessionJoinedEventArgs : RTObject
 + (WDAAllJoynSessionJoinedEventArgs*)make:(WDAAllJoynSession*)session ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDAAllJoynSession* session;
 @end
@@ -361,7 +361,7 @@ OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynCredentials : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WFTimeSpan* timeout;
 @property (retain) WSCPasswordCredential* passwordCredential;
@@ -380,7 +380,7 @@ OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 + (void)getFromServiceInfoAsync:(WDAAllJoynServiceInfo*)serviceInfo success:(void (^)(WDAAllJoynSession*))success failure:(void (^)(NSError*))failure;
 + (void)getFromServiceInfoAndBusAttachmentAsync:(WDAAllJoynServiceInfo*)serviceInfo busAttachment:(WDAAllJoynBusAttachment*)busAttachment success:(void (^)(WDAAllJoynSession*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) int id;
 @property (readonly) int status;
@@ -403,7 +403,7 @@ OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynSessionMemberAddedEventArgs : RTObject
 + (WDAAllJoynSessionMemberAddedEventArgs*)make:(NSString *)uniqueName ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * uniqueName;
 @end
@@ -418,7 +418,7 @@ OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynSessionMemberRemovedEventArgs : RTObject
 + (WDAAllJoynSessionMemberRemovedEventArgs*)make:(NSString *)uniqueName ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * uniqueName;
 @end
@@ -433,7 +433,7 @@ OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynSessionLostEventArgs : RTObject
 + (WDAAllJoynSessionLostEventArgs*)make:(WDAAllJoynSessionLostReason)reason ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDAAllJoynSessionLostReason reason;
 @end
@@ -448,9 +448,9 @@ OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynBusObject : RTObject
 + (WDAAllJoynBusObject*)make:(NSString *)objectPath ACTIVATOR;
 + (WDAAllJoynBusObject*)makeWithBusAttachment:(NSString *)objectPath busAttachment:(WDAAllJoynBusAttachment*)busAttachment ACTIVATOR;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDAAllJoynBusAttachment* busAttachment;
 @property (readonly) WDAAllJoynSession* session;
@@ -471,7 +471,7 @@ OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynBusObjectStoppedEventArgs : RTObject
 + (WDAAllJoynBusObjectStoppedEventArgs*)make:(int)status ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) int status;
 @end
@@ -486,7 +486,7 @@ OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynProducerStoppedEventArgs : RTObject
 + (WDAAllJoynProducerStoppedEventArgs*)make:(int)status ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) int status;
 @end
@@ -501,7 +501,7 @@ OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynWatcherStoppedEventArgs : RTObject
 + (WDAAllJoynWatcherStoppedEventArgs*)make:(int)status ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) int status;
 @end
@@ -516,7 +516,7 @@ OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynServiceInfoRemovedEventArgs : RTObject
 + (WDAAllJoynServiceInfoRemovedEventArgs*)make:(NSString *)uniqueName ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * uniqueName;
 @end
@@ -531,7 +531,7 @@ OBJCUWP_WINDOWS_DEVICES_ALLJOYN_EXPORT
 @interface WDAAllJoynMessageInfo : RTObject
 + (WDAAllJoynMessageInfo*)make:(NSString *)senderUniqueName ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * senderUniqueName;
 @end

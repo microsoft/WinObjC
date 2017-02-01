@@ -165,9 +165,9 @@ typedef unsigned WSEEasMaxInactivityTimeLockResult;
 
 OBJCUWP_WINDOWS_SECURITY_EXCHANGEACTIVESYNCPROVISIONING_EXPORT
 @interface WSEEasClientDeviceInformation : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * friendlyName;
 @property (readonly) WFGUID* id;
@@ -188,7 +188,7 @@ OBJCUWP_WINDOWS_SECURITY_EXCHANGEACTIVESYNCPROVISIONING_EXPORT
 OBJCUWP_WINDOWS_SECURITY_EXCHANGEACTIVESYNCPROVISIONING_EXPORT
 @interface WSEEasComplianceResults : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL compliant;
 @property (readonly) WSEEasDisallowConvenienceLogonResult disallowConvenienceLogonResult;
@@ -210,9 +210,9 @@ OBJCUWP_WINDOWS_SECURITY_EXCHANGEACTIVESYNCPROVISIONING_EXPORT
 
 OBJCUWP_WINDOWS_SECURITY_EXCHANGEACTIVESYNCPROVISIONING_EXPORT
 @interface WSEEasClientSecurityPolicy : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL requireEncryption;
 @property unsigned int passwordHistory;

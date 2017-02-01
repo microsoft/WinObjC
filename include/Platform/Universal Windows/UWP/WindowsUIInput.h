@@ -189,7 +189,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUIEdgeGestureEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUIEdgeGestureKind kind;
 @end
@@ -204,7 +204,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUIEdgeGesture : RTObject
 + (WUIEdgeGesture*)getForCurrentView;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (EventRegistrationToken)addCanceledEvent:(void(^)(WUIEdgeGesture*, WUIEdgeGestureEventArgs*))del;
 - (void)removeCanceledEvent:(EventRegistrationToken)tok;
@@ -224,7 +224,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUIKeyboardDeliveryInterceptor : RTObject
 + (WUIKeyboardDeliveryInterceptor*)getForCurrentView;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL isInterceptionEnabledWhenInForeground;
 - (EventRegistrationToken)addKeyDownEvent:(void(^)(WUIKeyboardDeliveryInterceptor*, WUCKeyEventArgs*))del;
@@ -242,7 +242,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUIMouseWheelParameters : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WFPoint* pageTranslation;
 @property float deltaScale;
@@ -258,9 +258,9 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUIGestureRecognizer : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property float inertiaRotationDeceleration;
 @property float inertiaTranslationDeceleration;
@@ -316,7 +316,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUITappedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
 @property (readonly) WFPoint* position;
@@ -332,7 +332,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUIRightTappedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
 @property (readonly) WFPoint* position;
@@ -347,7 +347,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUIHoldingEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUIHoldingState holdingState;
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
@@ -363,7 +363,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUIDraggingEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUIDraggingState draggingState;
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
@@ -379,7 +379,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUIManipulationStartedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUIManipulationDelta* cumulative;
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
@@ -395,7 +395,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUIManipulationUpdatedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUIManipulationDelta* cumulative;
 @property (readonly) WUIManipulationDelta* delta;
@@ -413,7 +413,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUIManipulationInertiaStartingEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUIManipulationDelta* cumulative;
 @property (readonly) WUIManipulationDelta* delta;
@@ -431,7 +431,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUIManipulationCompletedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUIManipulationDelta* cumulative;
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
@@ -448,7 +448,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUICrossSlidingEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUICrossSlidingState crossSlidingState;
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
@@ -468,7 +468,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (WUIPointerPoint*)getCurrentPointTransformed:(unsigned int)pointerId transform:(RTObject<WUIIPointerPointTransform>*)transform;
 + (NSMutableArray* /* WUIPointerPoint* */)getIntermediatePointsTransformed:(unsigned int)pointerId transform:(RTObject<WUIIPointerPointTransform>*)transform;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int frameId;
 @property (readonly) BOOL isInContact;
@@ -489,7 +489,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUIPointerPointProperties : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFRect* contactRect;
 @property (readonly) WFRect* contactRectRaw;
@@ -528,7 +528,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUIPointerVisualizationSettings : RTObject
 + (WUIPointerVisualizationSettings*)getForCurrentView;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL isContactFeedbackEnabled;
 @property BOOL isBarrelButtonFeedbackEnabled;
@@ -543,7 +543,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUIRadialControllerScreenContact : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFRect* bounds;
 @property (readonly) WFPoint* position;
@@ -558,7 +558,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUIRadialControllerMenu : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL isEnabled;
 @property (readonly) NSMutableArray* /* WUIRadialControllerMenuItem* */ items;
@@ -578,7 +578,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (BOOL)isSupported;
 + (WUIRadialController*)createForCurrentView;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL useAutomaticHapticFeedback;
 @property double rotationResolutionInDegrees;
@@ -608,7 +608,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUIRadialControllerScreenContactStartedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUIRadialControllerScreenContact* contact;
 @end
@@ -622,7 +622,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUIRadialControllerScreenContactContinuedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUIRadialControllerScreenContact* contact;
 @end
@@ -636,7 +636,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUIRadialControllerRotationChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUIRadialControllerScreenContact* contact;
 @property (readonly) double rotationDeltaInDegrees;
@@ -651,7 +651,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUIRadialControllerButtonClickedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUIRadialControllerScreenContact* contact;
 @end
@@ -665,7 +665,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUIRadialControllerControlAcquiredEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUIRadialControllerScreenContact* contact;
 @end
@@ -681,7 +681,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (WUIRadialControllerMenuItem*)createFromIcon:(NSString *)displayText icon:(WSSRandomAccessStreamReference*)icon;
 + (WUIRadialControllerMenuItem*)createFromKnownIcon:(NSString *)displayText value:(WUIRadialControllerMenuKnownIcon)value;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) RTObject* tag;
 @property (readonly) NSString * displayText;
@@ -699,7 +699,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WUIRadialControllerConfiguration : RTObject
 + (WUIRadialControllerConfiguration*)getForCurrentView;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)setDefaultMenuItems:(id<NSFastEnumeration> /* WUIRadialControllerSystemMenuItemKind */)buttons;
 - (void)resetToDefaultMenuItems;

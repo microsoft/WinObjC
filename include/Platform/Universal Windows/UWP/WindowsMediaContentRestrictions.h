@@ -63,7 +63,7 @@ OBJCUWP_WINDOWS_MEDIA_CONTENTRESTRICTIONS_EXPORT
 @interface WMCRatedContentDescription : RTObject
 + (WMCRatedContentDescription*)make:(NSString *)id title:(NSString *)title category:(WMCRatedContentCategory)category ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * title;
 @property (retain) NSMutableArray* /* NSString * */ ratings;
@@ -81,7 +81,7 @@ OBJCUWP_WINDOWS_MEDIA_CONTENTRESTRICTIONS_EXPORT
 OBJCUWP_WINDOWS_MEDIA_CONTENTRESTRICTIONS_EXPORT
 @interface WMCContentRestrictionsBrowsePolicy : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * geographicRegion;
 @property (readonly) id /* unsigned int */ maxBrowsableAgeRating;
@@ -96,10 +96,10 @@ OBJCUWP_WINDOWS_MEDIA_CONTENTRESTRICTIONS_EXPORT
 
 OBJCUWP_WINDOWS_MEDIA_CONTENTRESTRICTIONS_EXPORT
 @interface WMCRatedContentRestrictions : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WMCRatedContentRestrictions*)makeWithMaxAgeRating:(unsigned int)maxAgeRating ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (EventRegistrationToken)addRestrictionsChangedEvent:(void(^)(RTObject*, RTObject*))del;
 - (void)removeRestrictionsChangedEvent:(EventRegistrationToken)tok;

@@ -81,7 +81,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 + (int)compare:(NSString *)value1 value2:(NSString *)value2;
 + (WNHostName*)makeHostName:(NSString *)hostName ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * canonicalName;
 @property (readonly) NSString * displayName;
@@ -102,7 +102,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 @interface WNEndpointPair : RTObject
 + (WNEndpointPair*)makeEndpointPair:(WNHostName*)localHostName localServiceName:(NSString *)localServiceName remoteHostName:(WNHostName*)remoteHostName remoteServiceName:(NSString *)remoteServiceName ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * remoteServiceName;
 @property (retain) WNHostName* remoteHostName;

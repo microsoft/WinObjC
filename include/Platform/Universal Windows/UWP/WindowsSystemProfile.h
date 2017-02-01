@@ -60,7 +60,7 @@ typedef unsigned WSPPlatformDataCollectionLevel;
 OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT
 @interface WSPAnalyticsVersionInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * deviceFamily;
 @property (readonly) NSString * deviceFamilyVersion;
@@ -87,7 +87,7 @@ OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT
 OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT
 @interface WSPSystemIdentificationInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) RTObject<WSSIBuffer>* id;
 @property (readonly) WSPSystemIdentificationSource source;
@@ -128,7 +128,7 @@ OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT
 OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT
 @interface WSPHardwareToken : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) RTObject<WSSIBuffer>* certificate;
 @property (readonly) RTObject<WSSIBuffer>* id;

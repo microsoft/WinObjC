@@ -42,7 +42,7 @@ OBJCUWP_WINDOWS_PHONE_DEVICES_NOTIFICATION_EXPORT
 @interface WPDNVibrationDevice : RTObject
 + (WPDNVibrationDevice*)getDefault;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)vibrate:(WFTimeSpan*)duration;
 - (void)cancel;

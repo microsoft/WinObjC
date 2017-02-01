@@ -68,7 +68,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDBRRfcommDeviceService*))success failure:(void (^)(NSError*))failure;
 + (NSString *)getDeviceSelector:(WDBRRfcommServiceId*)serviceId;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WNHostName* connectionHostName;
 @property (readonly) NSString * connectionServiceName;
@@ -92,7 +92,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBRRfcommDeviceServicesResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDBBluetoothError error;
 @property (readonly) NSArray* /* WDBRRfcommDeviceService* */ services;
@@ -109,7 +109,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (WDBRRfcommServiceId*)fromUuid:(WFGUID*)uuid;
 + (WDBRRfcommServiceId*)fromShortId:(unsigned int)shortId;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFGUID* uuid;
 + (WDBRRfcommServiceId*)genericFileTransfer;
@@ -132,7 +132,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBRRfcommServiceProvider : RTObject
 + (void)createAsync:(WDBRRfcommServiceId*)serviceId success:(void (^)(WDBRRfcommServiceProvider*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSMutableDictionary* /* unsigned int, RTObject<WSSIBuffer>* */ sdpRawAttributes;
 @property (readonly) WDBRRfcommServiceId* serviceId;

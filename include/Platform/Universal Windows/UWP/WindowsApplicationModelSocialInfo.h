@@ -73,7 +73,7 @@ typedef unsigned WASSocialFeedUpdateMode;
 OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_EXPORT
 @interface WASSocialUserInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * userName;
 @property (retain) WFUri* targetUri;
@@ -90,7 +90,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_EXPORT
 @interface WASSocialFeedContent : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * title;
 @property (retain) WFUri* targetUri;
@@ -105,9 +105,9 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_EXPORT
 
 OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_EXPORT
 @interface WASSocialItemThumbnail : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WFUri* targetUri;
 @property (retain) WFUri* imageUri;
@@ -123,9 +123,9 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_EXPORT
 
 OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_EXPORT
 @interface WASSocialFeedSharedItem : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WFDateTime* timestamp;
 @property (retain) WASSocialItemThumbnail* thumbnail;
@@ -142,9 +142,9 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_EXPORT
 
 OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_EXPORT
 @interface WASSocialFeedChildItem : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WFDateTime* timestamp;
 @property (retain) WFUri* targetUri;
@@ -163,9 +163,9 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_EXPORT
 
 OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_EXPORT
 @interface WASSocialFeedItem : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WFDateTime* timestamp;
 @property (retain) WFUri* targetUri;
