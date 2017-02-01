@@ -16,7 +16,7 @@
 
 #include "DrawingTest.h"
 
-DISABLED_DRAW_TEST_F(CGContext, Shadow, WhiteBackgroundTest<>) {
+DRAW_TEST_F(CGContext, Shadow, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -31,7 +31,7 @@ DISABLED_DRAW_TEST_F(CGContext, Shadow, WhiteBackgroundTest<>) {
     CGContextStrokeRect(context, rect);
 }
 
-DISABLED_DRAW_TEST_F(CGContext, ShadowWithRotatedCTM, WhiteBackgroundTest<>) {
+DRAW_TEST_F(CGContext, ShadowWithRotatedCTM, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -51,7 +51,7 @@ DISABLED_DRAW_TEST_F(CGContext, ShadowWithRotatedCTM, WhiteBackgroundTest<>) {
     CGContextStrokeRect(context, rect);
 }
 
-DISABLED_DRAW_TEST_F(CGContext, ShadowOverlap, WhiteBackgroundTest<>) {
+DRAW_TEST_F(CGContext, ShadowOverlap, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -68,7 +68,7 @@ DISABLED_DRAW_TEST_F(CGContext, ShadowOverlap, WhiteBackgroundTest<>) {
     CGContextStrokeRect(context, rect2);
 }
 
-DISABLED_DRAW_TEST_F(CGContext, ShadowEnabledInMiddle, WhiteBackgroundTest<>) {
+DRAW_TEST_F(CGContext, ShadowEnabledInMiddle, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -84,7 +84,7 @@ DISABLED_DRAW_TEST_F(CGContext, ShadowEnabledInMiddle, WhiteBackgroundTest<>) {
     CGContextStrokeRect(context, rect2);
 }
 
-DISABLED_DRAW_TEST_F(CGContext, ShadowDisabledInMiddle, WhiteBackgroundTest<>) {
+DRAW_TEST_F(CGContext, ShadowDisabledInMiddle, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 

@@ -2210,9 +2210,11 @@ HRESULT __CGContext::Draw(_CGCoordinateMode coordinateMode, CGAffineTransform* a
 
         deviceContext->SetTarget(commandList.Get());
 
-        deviceContext->SetTransform(__CGAffineTransformToD2D_F(transform));
-        RETURN_IF_FAILED(std::forward<Lambda>(drawLambda)(this, deviceContext.Get()));
-        deviceContext->SetTransform(D2D1::IdentityMatrix());
+        {
+            deviceContext->SetTransform(__CGAffineTransformToD2D_F(transform));
+            auto revertTransform = wil::ScopeExit([this]() { this->deviceContext->SetTransform(D2D1::IdentityMatrix()); });
+            RETURN_IF_FAILED(std::forward<Lambda>(drawLambda)(this, deviceContext.Get()));
+        }
 
         // Change the target back
         RETURN_IF_FAILED(commandList->Close());
@@ -2230,8 +2232,8 @@ HRESULT __CGContext::Draw(_CGCoordinateMode coordinateMode, CGAffineTransform* a
 
     } else {
         deviceContext->SetTransform(__CGAffineTransformToD2D_F(transform));
+        auto revertTransform = wil::ScopeExit([this]() { this->deviceContext->SetTransform(D2D1::IdentityMatrix()); });
         RETURN_IF_FAILED(std::forward<Lambda>(drawLambda)(this, deviceContext.Get()));
-        deviceContext->SetTransform(D2D1::IdentityMatrix());
     }
 
     return S_OK;
