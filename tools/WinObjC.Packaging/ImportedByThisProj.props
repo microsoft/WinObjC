@@ -1,4 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+
+<!--
+  WinObjC.Packaging PROPS
+  Description: The property definitions for WinObjC.Packaging.nuproj
+-->
+
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <PackageId>WinObjC.Packaging</PackageId>
@@ -18,6 +24,7 @@
     <NoPackageAnalysis>true</NoPackageAnalysis>
   </PropertyGroup>
 
+  <!-- Generate package version for WinObjC.Packaging package -->
   <PropertyGroup>
     <GetPackageVersionDependsOn>SetPackageVersion;$(GetPackageVersionDependsOn);</GetPackageVersionDependsOn>
   </PropertyGroup>

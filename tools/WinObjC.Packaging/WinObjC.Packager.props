@@ -8,19 +8,23 @@
 
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
+    <!-- NuGet specific properties -->
     <IsDevelopmentDependency>true</IsDevelopmentDependency>
     <IncludeSymbolsInPackage>false</IncludeSymbolsInPackage>
     <IncludeFrameworkReferencesInPackage>false</IncludeFrameworkReferencesInPackage>
     <NoPackageAnalysis>true</NoPackageAnalysis>
+
+    <!-- WinObjC.Packaging specific properties -->
+    <PresetPackageContents Condition="'$(PresetPackageContents)' == ''">true</PresetPackageContents>
   </PropertyGroup>
 
-  <!-- Create package version based on GitInfo and a timestamp -->
+  <!-- Create package version based on GitInfo (if available) and a timestamp -->
   <PropertyGroup>
     <GetPackageVersionDependsOn>SetPackageVersion;$(GetPackageVersionDependsOn);</GetPackageVersionDependsOn>
   </PropertyGroup>
-  <Target Name="SetPackageVersion" Returns="$(PackageVersion)" DependsOnTargets="$(GitVersionDependsOn)">
-    <Warning Condition="'$(PackageVersion)' == '' And '$(GitBranch)' == ''"
-        Text="Cannot determine git branch - default package version will be applied. Please make sure GitInfo is listed in the project.json for this project and that git.exe is part of the PATH environment variable." />
+  <Target Name="SetPackageVersion" Returns="$(PackageVersion)" DependsOnTargets="$(GitVersionDependsOn)" Condition="'$(PackageVersion)' == ''">
+    <Warning Condition="'$(GitBranch)' == ''"
+      Text="Cannot determine git branch - default package version will be applied. Please make sure GitInfo is listed in the project.json for this project and that git.exe is part of the PATH environment variable." />
 
     <PropertyGroup>
       <PackageTimestamp Condition="'$(PackageTimestamp)' == ''">$([System.DateTime]::Now.ToString(yyyyMMddHHmmss))</PackageTimestamp>

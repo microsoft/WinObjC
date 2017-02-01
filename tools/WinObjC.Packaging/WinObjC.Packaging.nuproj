@@ -19,6 +19,7 @@
   </PropertyGroup>
   <PropertyGroup Label="Configuration" />
   <ItemGroup>
+    <None Include="Package.Consumption.targets" />
     <None Include="WinObjC.Packager.props" />
     <None Include="WinObjC.Packager.targets" />
     <None Include="WinObjC.Packageable.props" />

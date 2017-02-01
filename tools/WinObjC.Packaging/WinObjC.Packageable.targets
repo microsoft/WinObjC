@@ -11,38 +11,78 @@
     <TargetOsAndVersion Condition="'$(TargetOsAndVersion)' == ''">Universal Windows</TargetOsAndVersion>
   </PropertyGroup>
 
+  <!-- Presets for a file's location in the package -->
   <PropertyGroup>
-    <HasConfigurationSpecificPackageContents Condition="'$(HasConfigurationSpecificPackageContents)' == '' ">false</HasConfigurationSpecificPackageContents>
     <ShouldAssignPackageContentBasePath Condition="'$(PackageContentBasePath)' == ''">true</ShouldAssignPackageContentBasePath>
+    <HasConfigurationSpecificPackageContents Condition="'$(HasConfigurationSpecificPackageContents)' == ''">false</HasConfigurationSpecificPackageContents>
     <PackageContentBasePath Condition="'$(ShouldAssignPackageContentBasePath)' == 'true'">build\lib\$(TargetOsAndVersion)\$(PlatformTarget)</PackageContentBasePath>
     <PackageContentBasePath Condition="'$(ShouldAssignPackageContentBasePath)' == 'true' and '$(HasConfigurationSpecificPackageContents)' == 'true'">$(PackageContentBasePath)\$(Configuration)</PackageContentBasePath>
+
+    <ShouldAssignPackageHeaderBasePath Condition="'$(PackageHeaderBasePath)' == ''">true</ShouldAssignPackageHeaderBasePath>
+    <PackageHeaderBasePath Condition="'$(ShouldAssignPackageHeaderBasePath)' == 'true'">build\include\$(MSBuildProjectName)</PackageHeaderBasePath>
+
+    <ShouldAssignPackageResourcesBasePath Condition="'$(PackageHeaderBasePath)' == ''">true</ShouldAssignPackageResourcesBasePath>
+    <PackageResourcesBasePath Condition="'$(ShouldAssignPackageHeaderBasePath)' == 'true'">build\content\$(MSBuildProjectName)</PackageResourcesBasePath>
+
+    <ShouldAssignPackageBundleBasePath Condition="'$(PackageBundleBasePath)' == ''">true</ShouldAssignPackageBundleBasePath>
+    <PackageBundleBasePath Condition="'$(ShouldAssignPackageBundleBasePath)' == 'true'">build\bundle\$(MSBuildProjectName)</PackageBundleBasePath>
   </PropertyGroup>
 
   <PropertyGroup>
     <GetPackageContentsDependsOn>$(GetPackageContentsDependsOn);$(ComputeLinkInputsTargets);FindPublicHeaders</GetPackageContentsDependsOn>
   </PropertyGroup>
 
-  <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents"  DependsOnTargets="$(GetPackageContentsDependsOn)">
-    <ItemGroup>
-      <_IncludeFiles Include="@(PublicHeader -> '%(Source)')" />
-      <_BuiltProjectOutputGroupOutput Include="@(BuiltProjectOutputGroupOutput -> '%(FinalOutputPath)')" />
+  <!-- Add MSBuild outputs into the package -->
+  <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents"  DependsOnTargets="$(GetPackageContentsDependsOn)" Condition="'$(PresetPackageContents)' == 'true'">
+    <!-- Framework / Static Library Projects -->
+    <ItemGroup Condition="'$(ConfigurationType)' == 'StaticLibrary'">
+      <!-- .lib Files -->
       <_ImportLibraryFileNames Include="$(OutDir)*.lib" />
-
-      <PackageFile Include="@(_IncludeFiles)" Condition="Exists('%(FullPath)')">
-        <PackagePath>build\include\$(MSBuildProjectName)\%(Filename)%(Extension)</PackagePath>
-      </PackageFile>
-
-      <PackageFile Include="@(_BuiltProjectOutputGroupOutput->Distinct())" Condition="Exists('%(FullPath)')">
-        <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
-      </PackageFile>
-
       <PackageFile Include="@(_ImportLibraryFileNames->Distinct())" Condition="Exists('%(FullPath)')">
         <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
       </PackageFile>
+      <!-- Headers -->
+      <_IncludeFiles Include="@(PublicHeader -> '%(Source)')" />
+      <PackageFile Include="@(_IncludeFiles)" Condition="Exists('%(FullPath)')">
+        <PackagePath>$(PackageHeaderBasePath)\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+      <!-- Resources -->
+      <PackageFile Include="@(SBResourceCopy->'%(FullPath)')" Condition="Exists('%(FullPath)')">
+        <PackagePath>$(PackageResourcesBasePath)\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+    </ItemGroup>
 
-      <PackageFile Include="@(WinMDFullPath)" Condition="'@(WinMDFullPath)' != ''">
+    <!-- Projections Projects -->
+    <ItemGroup Condition="'$(ConfigurationType)' == 'DynamicLibrary'">
+      <!-- .dll Files -->
+      <_BuiltProjectOutputGroupOutput Include="@(BuiltProjectOutputGroupOutput -> '%(FinalOutputPath)')" />
+      <PackageFile Include="@(_BuiltProjectOutputGroupOutput->Distinct())" Condition="Exists('%(FullPath)')">
         <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
       </PackageFile>
+      <!-- .winmd Files -->
+      <PackageFile Include="@(WinMDFullPath)" Condition="'@(WinMDFullPath)' != '' And Exists('@(WinMDFullPath)')">
+        <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+      <!-- Resources -->
+      <PackageFile Include="@(SBResourceCopy->'%(FullPath)')" Condition="Exists('%(FullPath)')">
+        <PackagePath>$(PackageResourcesBasePath)\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+    </ItemGroup>
+
+    <!-- Bundle Projects -->
+    <ItemGroup Condition="'$(ConfigurationType)' == 'Utility'">
+      <PackageFile Include="@(SBResourceCopy->'%(FullPath)')" Condition="Exists('%(FullPath)')">
+        <PackagePath>$(PackageBundleBasePath)\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+    </ItemGroup>
+  </Target>
+
+  <!-- Remove WinObjC.Packaging from project dependency in the output package nuspec -->
+  <Target Name="RemovePackageInheritance" DependsOnTargets="ReadLegacyDependencies" BeforeTargets="GetPackageContents" >
+    <ItemGroup>
+      <PackageReference Condition="'%(PackageReference.Identity)' == 'WinObjC.Packaging'">
+        <PrivateAssets>All</PrivateAssets>
+      </PackageReference>
     </ItemGroup>
   </Target>
 </Project>

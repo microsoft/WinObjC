@@ -8,8 +8,12 @@
 
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="Globals">
+    <!-- NuGet specific properties -->
     <IncludeOutputsInPackage>false</IncludeOutputsInPackage>
     <IncludeContentInPackage>false</IncludeContentInPackage>
+
+    <!-- WinObjC.Packaging specific properties -->
+    <PresetPackageContents Condition="'$(PresetPackageContents)' == ''">true</PresetPackageContents>
   </PropertyGroup>
 
   <ItemDefinitionGroup>

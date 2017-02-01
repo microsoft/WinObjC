@@ -1,7 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+
+<!--
+  WinObjC.Packaging TARGETS
+  Description: The target definitions for WinObjC.Packaging.nuproj
+-->
+
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Add items into the WinObjC.Packaging package -->
   <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents" Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">
     <ItemGroup>
+      <!-- Rename ImportedByAnyDependent because it must match the package name -->
       <PackageFile Include="$(MSBuildThisFileDirectory)ImportedByAnyDependent.props" Condition="Exists('$(MSBuildThisFileDirectory)ImportedByAnyDependent.props')">
         <PackagePath>build\$(PackageId).props</PackagePath>
       </PackageFile>
@@ -22,11 +30,15 @@
       <PackageFile Include="$(MSBuildThisFileDirectory)WinObjC.Packageable.targets" Condition="Exists('$(MSBuildThisFileDirectory)WinObjC.Packageable.targets')">
         <PackagePath>build\WinObjC.Packageable.targets</PackagePath>
       </PackageFile>
+
+      <PackageFile Include="$(MSBuildThisFileDirectory)Package.Linker.targets" Condition="Exists('$(MSBuildThisFileDirectory)Package.Linker.targets')">
+        <PackagePath>build\Package.Linker.targets</PackagePath>
+      </PackageFile>
     </ItemGroup>
   </Target>
 
   <!-- Undo what Nuget.Build.Packaging did to unset itself as a project dependency in the output package nuspec -->
-  <Target Name="AddBuiltPackageContent" DependsOnTargets="ReadLegacyDependencies" BeforeTargets="GetPackageContents" >
+  <Target Name="ModifyPackageInheritance" DependsOnTargets="ReadLegacyDependencies" BeforeTargets="GetPackageContents" >
     <ItemGroup>
       <PackageReference Condition="'%(PackageReference.Identity)' == 'NuGet.Build.Packaging'">
         <PrivateAssets></PrivateAssets>

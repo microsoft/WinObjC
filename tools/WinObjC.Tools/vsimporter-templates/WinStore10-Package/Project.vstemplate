@@ -2,10 +2,13 @@
   <TemplateData>
     <Name>WinObjC Package</Name>
     <ProjectType>NuGet</ProjectType>
+  </TemplateData>
   <TemplateContent>
     <Project OutputDirectory="$projectname$" File="Package.nuproj" TargetFileName="$projectname$.nuproj" Platforms="AnyCPU;Win32;ARM" ReplaceParameters="true">
       <ProjectItem ReplaceParameters="false" TargetFileName="project.json">project.json</ProjectItem>
       <ProjectItem TargetFileName="$projectname$.Packaging.props" ReplaceParameters="true">Package.Packaging.props</ProjectItem>
+      <ProjectItem TargetFileName="$projectname$.props" ReplaceParameters="true">Package.props</ProjectItem>
+      <ProjectItem TargetFileName="$projectname$.targets" ReplaceParameters="true">Package.targets</ProjectItem>
       <ProjectItem TargetFileName="Readme.txt" ReplaceParameters="true">Readme.txt</ProjectItem>
     </Project>
   </TemplateContent>

@@ -116,7 +116,7 @@ static String overrideCxxLibrary(const String& val, const String& prefix, const 
 }
 
 static const char* getVsImporterTemplatesDir() {
-    static String templatesDir = getBinaryLocation() + "/../msvc/vsimporter-templates";
+    static String templatesDir = joinPaths(sb_dirname(getBinaryLocation()), "../msvc/vsimporter-templates");
     return templatesDir.c_str();
 }
 

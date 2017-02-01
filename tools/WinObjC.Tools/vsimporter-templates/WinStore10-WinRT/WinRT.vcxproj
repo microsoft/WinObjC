@@ -21,9 +21,7 @@
     <UseDotNetNativeToolchain VSImporterConfigName="Release">true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings" VSImporterLabel="BuildExtensionProperties">
-    <Import Project="$projectname$.props" />
-  </ImportGroup>
+  <ImportGroup Label="ExtensionSettings" VSImporterLabel="BuildExtensionProperties" />
   <ImportGroup Label="Shared" VSImporterLabel="SharedProjects" />
   <ImportGroup Label="PropertySheets" VSImporterLabel="ConfigurationPropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -57,9 +55,6 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
   </ItemDefinitionGroup>
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="$projectname$.targets" />
-  </ImportGroup>
   <ItemGroup VSImporterLabel="ProjectItems">
     <ClCompile Include="Module.cpp" />
     <_MdMergeOutput Include="$(OutDir)\$(ProjectName).winmd" />

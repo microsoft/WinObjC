@@ -6,7 +6,6 @@
   <TemplateContent>
     <Project OutputDirectory="$projectname$-WinStore10" File="Utility.vcxproj" TargetFileName="$projectname$.vcxproj" Platforms="Win32;ARM" ReplaceParameters="true">
       <ProjectItem ReplaceParameters="true" TargetFileName="$projectname$.vcxproj.filters">Utility.vcxproj.filters</ProjectItem>
-      <ProjectItem ReplaceParameters="false" TargetFileName="project.json">..\$packageconfig$project.json</ProjectItem>
     </Project>
   </TemplateContent>
 </VSTemplate>

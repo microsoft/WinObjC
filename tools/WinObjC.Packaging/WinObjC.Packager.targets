@@ -7,10 +7,6 @@
 -->
 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Target Name="ImportNuProjTargets" BeforeTargets="Build">
-    <Warning Text="NuProj Targets" />
-  </Target>
-
   <PropertyGroup>
     <_CoreCompileOverrideDependsOn Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">Pack</_CoreCompileOverrideDependsOn>
   </PropertyGroup>
@@ -39,13 +35,36 @@
     </ItemGroup>
 
     <MSBuild Projects="$(MSBuildProjectFile)"
-         Targets="AddSingleConfigBuildOutput"
-         Properties="Platform=%(_PackTargetPlat.Identity)">
+       Targets="AddSingleConfigBuildOutput"
+       Properties="Platform=%(_PackTargetPlat.Identity)">
       <Output TaskParameter="TargetOutputs" ItemName="_OtherPackageContents" />
     </MSBuild>
 
     <ItemGroup>
       <PackageFile Include="@(_OtherPackageContents)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents" Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true' and '$(PresetPackageContents)' == 'true'">
+    <ItemGroup>
+      <PackageFile Include="$(MSBuildProjectDirectory)\$(PackageId).props" Condition="Exists('$(MSBuildProjectDirectory)\$(PackageId).props')">
+        <PackagePath>build\$(PackageId).props</PackagePath>
+      </PackageFile>
+      <PackageFile Include="$(MSBuildProjectDirectory)\$(PackageId).targets" Condition="Exists('$(MSBuildProjectDirectory)\$(PackageId).targets')">
+        <PackagePath>build\$(PackageId).targets</PackagePath>
+      </PackageFile>
+      <PackageFile Include="$(MSBuildThisFileDirectory)Package.Linker.targets" Condition="Exists('$(MSBuildThisFileDirectory)Package.Linker.targets')">
+        <PackagePath>build\$(PackageId).Linker.targets</PackagePath>
+      </PackageFile>
+    </ItemGroup>
+  </Target>
+
+  <!-- Remove WinObjC.Packaging from project dependency in the output package nuspec -->
+  <Target Name="RemovePackageInheritance" DependsOnTargets="ReadLegacyDependencies" BeforeTargets="GetPackageContents" >
+    <ItemGroup>
+      <PackageReference Condition="'%(PackageReference.Identity)' == 'WinObjC.Packaging'">
+        <PrivateAssets>All</PrivateAssets>
+      </PackageReference>
     </ItemGroup>
   </Target>
 </Project>

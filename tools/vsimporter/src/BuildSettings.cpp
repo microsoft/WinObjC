@@ -70,7 +70,6 @@ BuildSettings::BuildSettings(const PBXTarget* target, const String& configName)
 
   // Insert a few extra variables into the build settings
   m_overrideSettings["CONFIGURATION"] = configName;
-  m_overrideSettings["SDKROOT"] = "${WINOBJC_SDK_ROOT}";
 }
 
 void BuildSettings::addLevel(const VariableCollection* vc)

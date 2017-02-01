@@ -25,9 +25,6 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" VSImporterLabel="UserMacros" />
   <ItemDefinitionGroup VSImporterLabel="ConfigurationItemDefinitions" />
-  <ItemGroup VSImporterLabel="ProjectItems">
-    <None Include="project.json" />
-  </ItemGroup>
   <ItemGroup VSImporterLabel="ProjectReferences" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" VSImporterLabel="BuildExtensionTargets">
