@@ -757,15 +757,6 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     CGSize fontExtent = { 0, 0 };
 
     fontExtent = [[self _text] sizeWithFont:(id)_font forWidth:rect.size.width lineBreakMode:UILineBreakModeWordWrap];
-
-    CGRect centerRect;
-    centerRect.origin.x = 0;
-    centerRect.origin.y = 0;
-    centerRect.size = fontExtent;
-    // TODO(DH)
-    // EbrCenterTextInRectVertically(&centerRect, &fontExtent, _font);
-    rect.origin.y += centerRect.origin.y;
-
     ret.width = ourRect.size.width;
     ret.height = fontExtent.height + _marginSize * 2.0f;
 
