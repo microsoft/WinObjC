@@ -44,6 +44,7 @@
 #include <COMIncludes_end.h>
 
 #import <atomic>
+#import <cmath>
 #import <list>
 #import <vector>
 #import <stack>
@@ -1924,6 +1925,9 @@ HRESULT __CGContext::DrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, bool transfo
     // Undo assumed inversion about Y axis
     CGAffineTransform textTransform = CGAffineTransformScale(textMatrix, 1.0, -1.0);
     CGAffineTransform deviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(this);
+
+    // Snap the vertical baseline to the nearest pixel to avoid blurring on devices with vertical antialiasing
+    textTransform.ty = std::round(textTransform.ty);
 
     CGAffineTransform finalTextTransform = CGAffineTransformConcat(textTransform, deviceTransform);
     if ((fabs(finalTextTransform.a * glyphRun->fontEmSize) <= c_glyphThreshold &&
