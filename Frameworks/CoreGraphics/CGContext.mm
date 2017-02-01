@@ -281,6 +281,13 @@ private:
         return S_OK;
     }
 
+    // Indicates whether a Draw() should first draw to a command list before composition
+    // Currently this is only required for shadows, but this may change in the future
+    inline bool _ShouldDrawToCommandList() {
+        auto& state = CurrentGState();
+        return state.HasShadow();
+    }
+
     HRESULT _CreateShadowEffect(ID2D1Image* inputImage, ID2D1Effect** outShadowEffect);
 
 public:
@@ -2200,8 +2207,8 @@ HRESULT __CGContext::Draw(_CGCoordinateMode coordinateMode, CGAffineTransform* a
         this->PopEndDraw();
     });
 
-    if (state.HasShadow()) {
-        // Temporarily change the target to a command list, so that it can be 'replayed' into a shadow
+    if (_ShouldDrawToCommandList()) {
+        // Temporarily change the target to a command list
         ComPtr<ID2D1Image> originalTarget; // Cache the original target to restore it later.
         deviceContext->GetTarget(&originalTarget);
 
@@ -2220,7 +2227,7 @@ HRESULT __CGContext::Draw(_CGCoordinateMode coordinateMode, CGAffineTransform* a
         RETURN_IF_FAILED(commandList->Close());
         deviceContext->SetTarget(originalTarget.Get());
 
-        // Create the shadow effect and draw it
+        // If needed, create a shadow effect by 'replaying' the command list, and draw it
         ComPtr<ID2D1Image> currentImage{ commandList };
         ComPtr<ID2D1Effect> shadowEffect;
         RETURN_IF_FAILED(_CreateShadowEffect(currentImage.Get(), &shadowEffect));
