@@ -21,25 +21,88 @@
 #import "UIKitControls/UIButtonViewController.h"
 #import "UIKitControls/UIButtonWithControlsViewController.h"
 
+using namespace UXTestAPI;
+
 TEST(UIButton, CreateXamlElement) {
     // TODO: Switch to UIKit.Xaml projections when they're available.
-    Microsoft::WRL::ComPtr<IInspectable> xamlElement(XamlCreateButton());
+    Microsoft::WRL::ComPtr<IInspectable> xamlElement;
+    XamlCreateButton(&xamlElement);
     ASSERT_TRUE(xamlElement);
 }
 
 TEST(UIButton, GetXamlElement) {
     UIView* view = [[[UIButton alloc] init] autorelease];
     WXFrameworkElement* backingElement = [view xamlElement];
-    ASSERT_TRUE(backingElement);
+    ASSERT_OBJCNE(backingElement, nil);
 
     // TODO: Fix up when UIButton moves fully to XAML
     ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
 }
 
+@interface UIDeallocTestButton : UIButton {
+    std::shared_ptr<UXEvent> _event;
+}
+@end
+
+@implementation UIDeallocTestButton
+
+- (void)setDeallocEvent:(std::shared_ptr<UXEvent>)event {
+    _event = event;
+}
+
+-(void)dealloc {
+    _event->Set();
+    [super dealloc];
+}
+@end
+
+TEST(UIButton, CheckForLeaks) {
+    Microsoft::WRL::WeakRef weakXamlElement;
+    {
+        StrongId<UIButtonWithControlsViewController> buttonVC;
+        buttonVC.attach([[UIButtonWithControlsViewController alloc] init]);
+        UXTestAPI::ViewControllerPresenter testHelper(buttonVC);
+
+        __block UIDeallocTestButton* testButton = nil;
+        __block auto event = UXEvent::CreateAuto();
+
+        // Create and render the button
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            testButton = [[UIDeallocTestButton alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
+            testButton.backgroundColor = [UIColor redColor];
+            [testButton setDeallocEvent:event];
+            [[buttonVC view] addSubview:testButton];
+        });
+
+        // Grab a weak reference to the backing Xaml element
+        Microsoft::WRL::ComPtr<IInspectable> xamlElement([[testButton xamlElement] comObj]);
+        ASSERT_TRUE_MSG(SUCCEEDED(xamlElement.AsWeak(&weakXamlElement)), "Failed to acquire a weak reference to the backing Xaml element.");
+        xamlElement = nullptr;
+
+        // Free the button
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            // Nil out testButton and remove it from its superview
+            [testButton removeFromSuperview];
+            [testButton release];
+            testButton = nil;
+        });
+
+        // Validate that dealloc was called
+        ASSERT_TRUE_MSG(event->Wait(c_testTimeoutInSec), "FAILED: Waiting for dealloc call failed!");
+    }
+
+    // Unfortunately we have to wait a bit for the button to actually finish deallocation
+    [NSThread sleepForTimeInterval:.25];
+
+    // Validate that we can no longer acquire a strong reference to the UIButton's backing Xaml element
+    Microsoft::WRL::ComPtr<IInspectable> xamlElement;
+    weakXamlElement.As(&xamlElement);
+    ASSERT_EQ_MSG(xamlElement.Get(), nullptr, "Unexpectedly able to reacquire a strong reference to the backing Xaml element.");
+}
+
 TEST(UIButton, TitleColorChanged) {
-    __block BOOL signaled = NO;
-    __block NSCondition* condition = [[NSCondition alloc] init];
-    __block auto xamlSubscriber = std::make_shared<UXTestAPI::XamlEventSubscription>();
+    __block auto uxEvent = UXEvent::CreateManual();
+    __block auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
 
     UIButtonWithControlsViewController* buttonVC = [[UIButtonWithControlsViewController alloc] init];
     UXTestAPI::ViewControllerPresenter testHelper(buttonVC);
@@ -47,61 +110,33 @@ TEST(UIButton, TitleColorChanged) {
     dispatch_async(dispatch_get_main_queue(), ^{
         // Extract UIButton.titleLabel control to verify its visual state
         WXFrameworkElement* titleElement = [buttonVC.button.titleLabel xamlElement];
-        ASSERT_TRUE(titleElement);
+        ASSERT_OBJCNE(titleElement, nil);
 
         // Register RAII event subscription handler
         xamlSubscriber->Set(titleElement, [WXCTextBlock foregroundProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
             // Extract the foreground color from the XAML object
             WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], [sender getValue:dp]);
-            LOG_INFO("XAML element color (rgba): %d,%d,%d,%d",
-                     [solidBrush.color r],
-                     [solidBrush.color g],
-                     [solidBrush.color b],
-                     [solidBrush.color a]);
 
-            // Extract the title color for the normal state
+            // Validation
             UIColor* titleColorNormal = [buttonVC.button titleColorForState:UIControlStateNormal];
+            EXPECT_TRUE_MSG(UXTestAPI::IsRGBAEqual(solidBrush, titleColorNormal), @"Failed to match XAML- and UIButton title color");
+            EXPECT_OBJCEQ_MSG(titleColorNormal, [buttonVC titleColorNormal], @"Failed to match expected color");
 
-            CGFloat red, green, blue, alpha;
-            [titleColorNormal getRed:&red green:&green blue:&blue alpha:&alpha];
-            LOG_INFO("UIButton.titleColorForState:normal (rgba): %.2f,%.2f,%.2f,%.2f", red, green, blue, alpha);
-
-            // Validate that the change is reflected on the backing XAML control
-            EXPECT_EQ_MSG(solidBrush.color.r, (int)(red * 255), @"Failed to match red component");
-            EXPECT_EQ_MSG(solidBrush.color.g, (int)(green * 255), @"Failed to match green component");
-            EXPECT_EQ_MSG(solidBrush.color.b, (int)(blue * 255), @"Failed to match blue component");
-            EXPECT_EQ_MSG(solidBrush.color.a, (int)(alpha * 255), @"Failed to match alpha component");
-
-            // Ensure that the XAML color values match the viewcontroller property
-            CGFloat VCred, VCgreen, VCblue, VCalpha;
-            [[buttonVC titleColorNormal] getRed:&VCred green:&VCgreen blue:&VCblue alpha:&VCalpha];
-            EXPECT_EQ_MSG(solidBrush.color.r, (int)(red * 255), @"Failed to match red component on the VC");
-            EXPECT_EQ_MSG(solidBrush.color.g, (int)(green * 255), @"Failed to match green component on the VC");
-            EXPECT_EQ_MSG(solidBrush.color.b, (int)(blue * 255), @"Failed to match blue component on the VC");
-            EXPECT_EQ_MSG(solidBrush.color.a, (int)(alpha * 255), @"Failed to match alpha component on the VC");
-
-            [condition lock];
-            signaled = YES;
-            [condition signal];
-            [condition unlock];
+            uxEvent->Set();
         });
 
         // Action - validate this action takes effect on the control
         [buttonVC sliderTitleColorNormal].value = 150.0f;
     });
 
-    [condition lock];
-    ASSERT_TRUE_MSG(signaled || [condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]],
-                    "FAILED: Waiting for property changed event timed out!");
-    [condition unlock];
+    ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event timed out!");
 }
 
 TEST(UIButton, TextChanged) {
-    __block BOOL signaled = NO;
-    __block NSCondition* condition = [[NSCondition alloc] init];
-    __block auto xamlSubscriber = std::make_shared<UXTestAPI::XamlEventSubscription>();
+    __block auto uxEvent = UXEvent::CreateManual();
+    __block auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
 
-    __block NSString* expectedString = @"Functional testing";
+    NSString* expectedString = @"Functional testing";
 
     UIButtonWithControlsViewController* buttonVC = [[UIButtonWithControlsViewController alloc] init];
     UXTestAPI::ViewControllerPresenter testHelper(buttonVC);
@@ -113,30 +148,19 @@ TEST(UIButton, TextChanged) {
 
         // Register RAII event subscription handler
         xamlSubscriber->Set(titleElement, [WXCTextBlock textProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-            // Extract the text from the XAML object
             NSString* text = UXTestAPI::NSStringFromPropertyValue([sender getValue:dp]);
-            LOG_INFO("TextBlock text: %@", text);
-
-            // Extract the text for the normal state
             NSString* textNormal = [buttonVC.button titleForState:UIControlStateNormal];
-            LOG_INFO("UIButton title - normal: %@", textNormal);
 
-            // Validate that the change is reflected on the backing XAML control
+            // Validation
             EXPECT_OBJCEQ_MSG(text, textNormal, @"Failed to match strings in XAML and UIButton");
             EXPECT_OBJCEQ_MSG(text, expectedString, @"Failed to match expected string");
 
-            [condition lock];
-            signaled = YES;
-            [condition signal];
-            [condition unlock];
+            uxEvent->Set();
         });
 
         // Action - validate this action takes effect on the control
         [buttonVC textTitleNormal].text = expectedString;
     });
 
-    [condition lock];
-    ASSERT_TRUE_MSG(signaled || [condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:c_testTimeoutInSec]],
-                    "FAILED: Waiting for property changed event timed out!");
-    [condition unlock];
+    ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event timed out!");
 }

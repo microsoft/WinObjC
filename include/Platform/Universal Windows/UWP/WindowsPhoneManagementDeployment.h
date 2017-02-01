@@ -60,7 +60,7 @@ typedef unsigned WPMDEnterpriseEnrollmentStatus;
 OBJCUWP_WINDOWS_PHONE_MANAGEMENT_DEPLOYMENT_EXPORT
 @interface WPMDEnterprise : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFDateTime* enrollmentValidFrom;
 @property (readonly) WFDateTime* enrollmentValidTo;
@@ -79,7 +79,7 @@ OBJCUWP_WINDOWS_PHONE_MANAGEMENT_DEPLOYMENT_EXPORT
 OBJCUWP_WINDOWS_PHONE_MANAGEMENT_DEPLOYMENT_EXPORT
 @interface WPMDEnterpriseEnrollmentResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WPMDEnterprise* enrolledEnterprise;
 @property (readonly) WPMDEnterpriseEnrollmentStatus status;
@@ -94,7 +94,7 @@ OBJCUWP_WINDOWS_PHONE_MANAGEMENT_DEPLOYMENT_EXPORT
 OBJCUWP_WINDOWS_PHONE_MANAGEMENT_DEPLOYMENT_EXPORT
 @interface WPMDPackageInstallResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMDPackageInstallState installState;
 @property (readonly) NSString * productId;

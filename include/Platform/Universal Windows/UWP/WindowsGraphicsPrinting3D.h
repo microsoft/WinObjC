@@ -135,7 +135,7 @@ typedef void(^WGPPrint3DTaskSourceRequestedHandler)(WGPPrint3DTaskSourceRequeste
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 @interface WGPPrint3DTaskCompletedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WGPPrint3DTaskCompletion completion;
 @property (readonly) WGPPrint3DTaskDetail extendedStatus;
@@ -150,7 +150,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 @interface WGPPrint3DTaskSourceChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WGPPrinting3D3MFPackage* source;
 @end
@@ -164,7 +164,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 @interface WGPPrint3DTask : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WGPPrinting3D3MFPackage* source;
 - (EventRegistrationToken)addCompletedEvent:(void(^)(WGPPrint3DTask*, WGPPrint3DTaskCompletedEventArgs*))del;
@@ -184,7 +184,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 @interface WGPPrint3DTaskSourceRequestedArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)setSource:(WGPPrinting3D3MFPackage*)source;
 @end
@@ -198,7 +198,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 @interface WGPPrint3DTaskRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (WGPPrint3DTask*)createTask:(NSString *)title printerId:(NSString *)printerId handler:(WGPPrint3DTaskSourceRequestedHandler)handler;
 @end
@@ -212,7 +212,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 @interface WGPPrint3DTaskRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WGPPrint3DTaskRequest* request;
 @end
@@ -228,7 +228,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 + (WGPPrint3DManager*)getForCurrentView;
 + (void)showPrintUIAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (EventRegistrationToken)addTaskRequestedEvent:(void(^)(WGPPrint3DManager*, WGPPrint3DTaskRequestedEventArgs*))del;
 - (void)removeTaskRequestedEvent:(EventRegistrationToken)tok;
@@ -243,7 +243,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 @interface WGPPrinting3DMeshVerificationResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL isValid;
 @property (readonly) NSArray* /* unsigned int */ nonmanifoldTriangles;
@@ -258,9 +258,9 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 @interface WGPPrinting3DTextureResource : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) RTObject<WSSIRandomAccessStreamWithContentType>* textureData;
 @property (retain) NSString * name;
@@ -274,9 +274,9 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 @interface WGPPrinting3DComponent : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WGPPrinting3DObjectType type;
 @property (retain) WGPPrinting3DTextureResource* thumbnail;
@@ -294,9 +294,9 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 @interface WGPPrinting3DMesh : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WGPPrinting3DBufferDescription* vertexPositionsDescription;
 @property (retain) WGPPrinting3DBufferDescription* vertexNormalsDescription;
@@ -325,9 +325,9 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 @interface WGPPrinting3DComponentWithMatrix : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WFNMatrix4x4* matrix;
 @property (retain) WGPPrinting3DComponent* component;
@@ -341,9 +341,9 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 @interface WGPPrinting3DColorMaterial : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property unsigned int value;
 @property (retain) WUColor* color;
@@ -357,9 +357,9 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 @interface WGPPrinting3DModelTexture : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WGPPrinting3DTextureEdgeBehavior tileStyleV;
 @property WGPPrinting3DTextureEdgeBehavior tileStyleU;
@@ -376,7 +376,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 @interface WGPPrinting3DBaseMaterialGroup : RTObject
 + (WGPPrinting3DBaseMaterialGroup*)make:(unsigned int)MaterialGroupId ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSMutableArray* /* WGPPrinting3DBaseMaterial* */ bases;
 @property (readonly) unsigned int materialGroupId;
@@ -390,9 +390,9 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 @interface WGPPrinting3DBaseMaterial : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * name;
 @property (retain) WGPPrinting3DColorMaterial* color;
@@ -410,7 +410,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 @interface WGPPrinting3DColorMaterialGroup : RTObject
 + (WGPPrinting3DColorMaterialGroup*)make:(unsigned int)MaterialGroupId ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSMutableArray* /* WGPPrinting3DColorMaterial* */ colors;
 @property (readonly) unsigned int materialGroupId;
@@ -426,7 +426,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 @interface WGPPrinting3DTexture2CoordMaterialGroup : RTObject
 + (WGPPrinting3DTexture2CoordMaterialGroup*)make:(unsigned int)MaterialGroupId ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int materialGroupId;
 @property (readonly) NSMutableArray* /* WGPPrinting3DTexture2CoordMaterial* */ texture2Coords;
@@ -441,9 +441,9 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 @interface WGPPrinting3DTexture2CoordMaterial : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double v;
 @property double u;
@@ -460,7 +460,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 @interface WGPPrinting3DCompositeMaterialGroup : RTObject
 + (WGPPrinting3DCompositeMaterialGroup*)make:(unsigned int)MaterialGroupId ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSMutableArray* /* WGPPrinting3DCompositeMaterial* */ composites;
 @property (readonly) unsigned int materialGroupId;
@@ -476,9 +476,9 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 @interface WGPPrinting3DCompositeMaterial : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSMutableArray* /* double */ values;
 @end
@@ -493,7 +493,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 @interface WGPPrinting3DMultiplePropertyMaterialGroup : RTObject
 + (WGPPrinting3DMultiplePropertyMaterialGroup*)make:(unsigned int)MaterialGroupId ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int materialGroupId;
 @property (readonly) NSMutableArray* /* unsigned int */ materialGroupIndices;
@@ -508,9 +508,9 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 @interface WGPPrinting3DMultiplePropertyMaterial : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSMutableArray* /* unsigned int */ materialIndices;
 @end
@@ -523,9 +523,9 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 @interface WGPPrinting3DMaterial : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSMutableArray* /* WGPPrinting3DBaseMaterialGroup* */ baseGroups;
 @property (readonly) NSMutableArray* /* WGPPrinting3DColorMaterialGroup* */ colorGroups;
@@ -542,9 +542,9 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 @interface WGPPrinting3DModel : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * Version;
 @property WGPPrinting3DModelUnit unit;
@@ -573,9 +573,9 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 @interface WGPPrinting3DFaceReductionOptions : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property unsigned int targetTriangleCount;
 @property double maxReductionArea;
@@ -591,9 +591,9 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING3D_EXPORT
 @interface WGPPrinting3D3MFPackage : RTObject
 + (void)loadAsync:(RTObject<WSSIRandomAccessStream>*)value success:(void (^)(WGPPrinting3D3MFPackage*))success failure:(void (^)(NSError*))failure;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WGPPrinting3DTextureResource* thumbnail;
 @property (retain) RTObject<WSSIRandomAccessStream>* printTicket;

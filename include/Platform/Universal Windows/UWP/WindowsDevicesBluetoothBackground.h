@@ -46,7 +46,7 @@
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBBRfcommInboundConnectionInformation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WDBBluetoothServiceCapabilities serviceCapabilities;
 @property (retain) RTObject<WSSIBuffer>* sdpRecord;
@@ -62,7 +62,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBBRfcommOutboundConnectionInformation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WDBRRfcommServiceId* remoteServiceId;
 @end
@@ -76,7 +76,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBBRfcommConnectionTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL incoming;
 @property (readonly) WDBBluetoothDevice* remoteDevice;
@@ -92,7 +92,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBBGattCharacteristicNotificationTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDBGGattCharacteristic* characteristic;
 @property (readonly) RTObject<WSSIBuffer>* value;
@@ -107,7 +107,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBBBluetoothLEAdvertisementWatcherTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* WDBABluetoothLEAdvertisementReceivedEventArgs* */ advertisements;
 @property (readonly) WDBBluetoothError error;
@@ -123,7 +123,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBBBluetoothLEAdvertisementPublisherTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDBBluetoothError error;
 @property (readonly) WDBABluetoothLEAdvertisementPublisherStatus status;

@@ -41,7 +41,7 @@
 OBJCUWP_WINDOWS_PERCEPTION_PEOPLE_EXPORT
 @interface WPPHeadPose : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFNVector3* forwardDirection;
 @property (readonly) WFNVector3* position;

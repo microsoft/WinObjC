@@ -176,9 +176,9 @@ OBJCUWP_WINDOWS_UI_INPUT_PREVIEW_INJECTION_EXPORT
 
 OBJCUWP_WINDOWS_UI_INPUT_PREVIEW_INJECTION_EXPORT
 @interface WUIPIInjectedInputKeyboardInfo : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property unsigned short virtualKey;
 @property unsigned short scanCode;
@@ -193,9 +193,9 @@ OBJCUWP_WINDOWS_UI_INPUT_PREVIEW_INJECTION_EXPORT
 
 OBJCUWP_WINDOWS_UI_INPUT_PREVIEW_INJECTION_EXPORT
 @interface WUIPIInjectedInputMouseInfo : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property unsigned int timeOffsetInMilliseconds;
 @property WUIPIInjectedInputMouseOptions mouseOptions;
@@ -212,9 +212,9 @@ OBJCUWP_WINDOWS_UI_INPUT_PREVIEW_INJECTION_EXPORT
 
 OBJCUWP_WINDOWS_UI_INPUT_PREVIEW_INJECTION_EXPORT
 @interface WUIPIInjectedInputTouchInfo : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WUIPIInjectedInputTouchParameters touchParameters;
 @property double pressure;
@@ -231,9 +231,9 @@ OBJCUWP_WINDOWS_UI_INPUT_PREVIEW_INJECTION_EXPORT
 
 OBJCUWP_WINDOWS_UI_INPUT_PREVIEW_INJECTION_EXPORT
 @interface WUIPIInjectedInputPenInfo : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property int tiltY;
 @property int tiltX;
@@ -254,7 +254,7 @@ OBJCUWP_WINDOWS_UI_INPUT_PREVIEW_INJECTION_EXPORT
 @interface WUIPIInputInjector : RTObject
 + (WUIPIInputInjector*)tryCreate;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)injectKeyboardInput:(id<NSFastEnumeration> /* WUIPIInjectedInputKeyboardInfo* */)input;
 - (void)injectMouseInput:(id<NSFastEnumeration> /* WUIPIInjectedInputMouseInfo* */)input;

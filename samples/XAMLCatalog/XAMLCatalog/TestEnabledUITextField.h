@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,7 +14,8 @@
 //
 //******************************************************************************
 
-#import <UIKit/UIKit.h>
+#import "UIKit/UITextField.h"
 
-@interface URLSessionViewController : UIViewController
+// Subclassed UITextField to support functional testing
+@interface TestEnabledUITextField : UITextField
 @end

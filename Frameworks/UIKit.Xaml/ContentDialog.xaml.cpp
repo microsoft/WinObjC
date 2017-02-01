@@ -60,8 +60,9 @@ void ContentDialog::OnSelectionChanged(Platform::Object ^sender, SelectionChange
 // ObjectiveC Interop
 ////////////////////////////////////////////////////////////////////////////////////
 
-UIKIT_XAML_EXPORT IInspectable* XamlCreateContentDialog() {
-    return InspectableFromObject(ref new UIKit::Xaml::ContentDialog()).Detach();
+UIKIT_XAML_EXPORT void XamlCreateContentDialog(IInspectable** created) {
+    ComPtr<IInspectable> inspectable = InspectableFromObject(ref new UIKit::Xaml::ContentDialog());
+    *created = inspectable.Detach();
 }
 
 UIKIT_XAML_EXPORT int XamlContentDialogPressedIndex(const ComPtr<IInspectable>& inspectableContentDialog) {

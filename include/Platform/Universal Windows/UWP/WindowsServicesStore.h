@@ -100,7 +100,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 @interface WSSStoreProduct : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * Description;
 @property (readonly) NSString * extendedJsonData;
@@ -131,7 +131,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 @interface WSSStoreProductPagedQueryResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) HRESULT extendedError;
 @property (readonly) BOOL hasMoreResults;
@@ -148,9 +148,9 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 @interface WSSStorePurchaseProperties : RTObject
 + (WSSStorePurchaseProperties*)make:(NSString *)name ACTIVATOR;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * name;
 @property (retain) NSString * extendedJsonData;
@@ -165,7 +165,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 @interface WSSStoreLicense : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFDateTime* expirationDate;
 @property (readonly) NSString * extendedJsonData;
@@ -183,7 +183,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 @interface WSSStoreImage : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * caption;
 @property (readonly) unsigned int height;
@@ -201,7 +201,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 @interface WSSStoreVideo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * caption;
 @property (readonly) unsigned int height;
@@ -220,7 +220,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 @interface WSSStoreSku : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* WSSStoreAvailability* */ availabilities;
 @property (readonly) NSArray* /* NSString * */ bundledSkus;
@@ -252,7 +252,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 @interface WSSStorePrice : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * currencyCode;
 @property (readonly) NSString * formattedBasePrice;
@@ -271,7 +271,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 @interface WSSStorePurchaseResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) HRESULT extendedError;
 @property (readonly) WSSStorePurchaseStatus status;
@@ -286,7 +286,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 @interface WSSStoreAvailability : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFDateTime* endDate;
 @property (readonly) NSString * extendedJsonData;
@@ -305,7 +305,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 @interface WSSStoreCollectionData : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFDateTime* acquiredDate;
 @property (readonly) NSString * campaignId;
@@ -326,7 +326,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 @interface WSSStoreSubscriptionInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int billingPeriod;
 @property (readonly) WSSStoreDurationUnit billingPeriodUnit;
@@ -346,7 +346,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 + (WSSStoreContext*)getDefault;
 + (WSSStoreContext*)getForUser:(WSUser*)user;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSUser* user;
 - (EventRegistrationToken)addOfflineLicensesChangedEvent:(void(^)(WSSStoreContext*, RTObject*))del;
@@ -380,7 +380,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 @interface WSSStoreSendRequestResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) HRESULT extendedError;
 @property (readonly) NSString * response;
@@ -395,7 +395,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 @interface WSSStoreAppLicense : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSDictionary* /* NSString *, WSSStoreLicense* */ addOnLicenses;
 @property (readonly) WFDateTime* expirationDate;
@@ -417,7 +417,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 @interface WSSStoreProductResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) HRESULT extendedError;
 @property (readonly) WSSStoreProduct* product;
@@ -432,7 +432,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 @interface WSSStoreProductQueryResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) HRESULT extendedError;
 @property (readonly) NSDictionary* /* NSString *, WSSStoreProduct* */ products;
@@ -447,7 +447,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 @interface WSSStoreConsumableResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int balanceRemaining;
 @property (readonly) HRESULT extendedError;
@@ -464,7 +464,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 @interface WSSStoreAcquireLicenseResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) HRESULT extendedError;
 @property (readonly) WSSStorePackageLicense* storePackageLicense;
@@ -479,7 +479,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 @interface WSSStorePackageUpdate : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL mandatory;
 @property (readonly) WAPackage* package;
@@ -494,7 +494,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 @interface WSSStorePackageUpdateResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSSStorePackageUpdateState overallState;
 @property (readonly) NSArray* /* WSSStorePackageUpdateStatus* */ storePackageUpdateStatuses;
@@ -523,7 +523,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 @interface WSSStorePackageLicense : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL isValid;
 @property (readonly) WAPackage* package;

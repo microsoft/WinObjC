@@ -103,7 +103,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_PHONENUMBERFORMATTING_EXPORT
 + (WGPPhoneNumberParseResult)tryParseWithRegion:(NSString *)input regionCode:(NSString *)regionCode phoneNumber:(WGPPhoneNumberInfo**)phoneNumber;
 + (WGPPhoneNumberInfo*)make:(NSString *)number ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) int countryCode;
 @property (readonly) NSString * phoneNumber;
@@ -128,9 +128,9 @@ OBJCUWP_WINDOWS_GLOBALIZATION_PHONENUMBERFORMATTING_EXPORT
 + (int)getCountryCodeForRegion:(NSString *)regionCode;
 + (NSString *)getNationalDirectDialingPrefixForRegion:(NSString *)regionCode stripNonDigit:(BOOL)stripNonDigit;
 + (NSString *)wrapWithLeftToRightMarkers:(NSString *)number;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (NSString *)format:(WGPPhoneNumberInfo*)number;
 - (NSString *)formatWithOutputFormat:(WGPPhoneNumberInfo*)number numberFormat:(WGPPhoneNumberFormat)numberFormat;

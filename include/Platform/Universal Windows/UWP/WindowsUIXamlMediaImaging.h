@@ -105,7 +105,7 @@ OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
 @interface WUXMIDownloadProgressEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property int progress;
 @end
@@ -119,7 +119,7 @@ OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
@@ -140,7 +140,7 @@ OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
 @interface WUXMImageSource : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @end
 
@@ -153,7 +153,7 @@ OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
 @interface WUXMIBitmapSource : WUXMImageSource
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) int pixelHeight;
 @property (readonly) int pixelWidth;
@@ -171,9 +171,9 @@ OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
 @interface WUXMIRenderTargetBitmap : WUXMImageSource
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) int pixelHeight;
 @property (readonly) int pixelWidth;
@@ -195,7 +195,7 @@ OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
 + (WUXMISurfaceImageSource*)makeInstanceWithDimensions:(int)pixelWidth pixelHeight:(int)pixelHeight ACTIVATOR;
 + (WUXMISurfaceImageSource*)makeInstanceWithDimensionsAndOpacity:(int)pixelWidth pixelHeight:(int)pixelHeight isOpaque:(BOOL)isOpaque ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @end
 
@@ -208,9 +208,9 @@ OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
 @interface WUXMIBitmapImage : WUXMIBitmapSource
 + (WUXMIBitmapImage*)makeInstanceWithUriSource:(WFUri*)uriSource ACTIVATOR;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WFUri* uriSource;
 @property int decodePixelWidth;
@@ -249,7 +249,7 @@ OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
 + (WUXMIVirtualSurfaceImageSource*)makeInstanceWithDimensions:(int)pixelWidth pixelHeight:(int)pixelHeight ACTIVATOR;
 + (WUXMIVirtualSurfaceImageSource*)makeInstanceWithDimensionsAndOpacity:(int)pixelWidth pixelHeight:(int)pixelHeight isOpaque:(BOOL)isOpaque ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @end
 
@@ -263,7 +263,7 @@ OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
 @interface WUXMIWriteableBitmap : WUXMIBitmapSource
 + (WUXMIWriteableBitmap*)makeInstanceWithDimensions:(int)pixelWidth pixelHeight:(int)pixelHeight ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) RTObject<WSSIBuffer>* pixelBuffer;
 - (void)invalidate;
@@ -278,7 +278,7 @@ OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
 @interface WUXMIXamlRenderingBackgroundTask : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)onRun:(RTObject<WABIBackgroundTaskInstance>*)taskInstance;
 @end
@@ -305,9 +305,9 @@ OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_MEDIA_IMAGING_EXPORT
 @interface WUXMISoftwareBitmapSource : WUXMImageSource <WFIClosable>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (RTObject<WFIAsyncAction>*)setBitmapAsync:(WGISoftwareBitmap*)softwareBitmap;
 - (void)close;

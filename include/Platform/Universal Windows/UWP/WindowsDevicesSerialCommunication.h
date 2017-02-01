@@ -107,7 +107,7 @@ OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
 + (NSString *)getDeviceSelectorFromUsbVidPid:(unsigned short)vendorId productId:(unsigned short)productId;
 + (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDSSerialDevice*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL isDataTerminalReadyEnabled;
 @property unsigned short dataBits;
@@ -144,7 +144,7 @@ OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
 OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
 @interface WDSErrorReceivedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDSSerialError error;
 @end
@@ -158,7 +158,7 @@ OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
 OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
 @interface WDSPinChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDSSerialPinChange pinChange;
 @end

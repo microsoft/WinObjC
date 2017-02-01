@@ -248,7 +248,7 @@ OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 @interface WFDTracingStatusChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL enabled;
 @property (readonly) WFDCausalityTraceLevel traceLevel;
@@ -279,9 +279,9 @@ OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 
 OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 @interface WFDRuntimeBrokerErrorSettings : RTObject <WFDIErrorReportingSettings>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)setErrorOptions:(WFDErrorOptions)value;
 - (WFDErrorOptions)getErrorOptions;
@@ -297,7 +297,7 @@ OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 @interface WFDErrorDetails : RTObject
 + (void)createFromHResultAsync:(int)errorCode success:(void (^)(WFDErrorDetails*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * Description;
 @property (readonly) WFUri* helpUri;
@@ -313,9 +313,9 @@ OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 @interface WFDLoggingOptions : RTObject
 + (WFDLoggingOptions*)makeWithKeywords:(int64_t)keywords ACTIVATOR;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property int16_t task;
 @property int tags;
@@ -333,10 +333,10 @@ OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 
 OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 @interface WFDLoggingChannelOptions : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WFDLoggingChannelOptions*)make:(WFGUID*)group ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WFGUID* group;
 @end
@@ -349,9 +349,9 @@ OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 
 OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 @interface WFDLoggingFields : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)clear;
 - (void)beginStruct:(NSString *)name;
@@ -481,7 +481,7 @@ OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 + (WFDLoggingActivity*)makeLoggingActivity:(NSString *)activityName loggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel ACTIVATOR;
 + (WFDLoggingActivity*)makeLoggingActivityWithLevel:(NSString *)activityName loggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel level:(WFDLoggingLevel)level ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFGUID* id;
 @property (readonly) NSString * name;
@@ -515,7 +515,7 @@ OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 + (WFDLoggingChannel*)makeWithOptions:(NSString *)name options:(WFDLoggingChannelOptions*)options ACTIVATOR;
 + (WFDLoggingChannel*)makeWithOptionsAndId:(NSString *)name options:(WFDLoggingChannelOptions*)options id:(WFGUID*)id ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL enabled;
 @property (readonly) WFDLoggingLevel level;
@@ -551,7 +551,7 @@ OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 @interface WFDLoggingSession : RTObject <WFDILoggingSession, WFIClosable>
 + (WFDLoggingSession*)make:(NSString *)name ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * name;
 - (void)saveToFileAsync:(RTObject<WSIStorageFolder>*)folder fileName:(NSString *)fileName success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
@@ -570,7 +570,7 @@ OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 @interface WFDLogFileGeneratedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSStorageFile* file;
 @end
@@ -585,7 +585,7 @@ OBJCUWP_WINDOWS_FOUNDATION_DIAGNOSTICS_EXPORT
 @interface WFDFileLoggingSession : RTObject <WFDIFileLoggingSession, WFIClosable>
 + (WFDFileLoggingSession*)make:(NSString *)name ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * name;
 - (EventRegistrationToken)addLogFileGeneratedEvent:(void(^)(RTObject<WFDIFileLoggingSession>*, WFDLogFileGeneratedEventArgs*))del;

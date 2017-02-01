@@ -96,7 +96,7 @@ OBJCUWP_WINDOWS_SYSTEM_THREADING_EXPORT
 + (WSTThreadPoolTimer*)createPeriodicTimerWithCompletion:(WSTTimerElapsedHandler)handler period:(WFTimeSpan*)period destroyed:(WSTTimerDestroyedHandler)destroyed;
 + (WSTThreadPoolTimer*)createTimerWithCompletion:(WSTTimerElapsedHandler)handler delay:(WFTimeSpan*)delay destroyed:(WSTTimerDestroyedHandler)destroyed;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFTimeSpan* delay;
 @property (readonly) WFTimeSpan* period;

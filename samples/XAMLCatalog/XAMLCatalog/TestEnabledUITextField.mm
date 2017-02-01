@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,8 +14,15 @@
 //
 //******************************************************************************
 
-#import <UIKit/UIKit.h>
+#import "TestEnabledUITextField.h"
 
-@interface TaskInfoViewController : UITableViewController
+#import <UIKit/UITextField.h>
 
+@implementation TestEnabledUITextField
+// NOTE: Programmatically setting the text via setText: does not trigger the text field delegates or events so we subclass
+// UITextField and fire our editing event manually
+- (void)setText:(NSString*)text {
+    [super setText:text];
+    [self sendActionsForControlEvents:UIControlEventEditingChanged];
+}
 @end

@@ -70,7 +70,7 @@ typedef unsigned WAVVoiceCommandCompletionReason;
 OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
 @interface WAVVoiceCommandDefinition : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * language;
 @property (readonly) NSString * name;
@@ -97,9 +97,9 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
 
 OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
 @interface WAVVoiceCommandContentTile : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * title;
 @property (retain) NSString * textLine3;
@@ -119,9 +119,9 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
 
 OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
 @interface WAVVoiceCommandUserMessage : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * spokenMessage;
 @property (retain) NSString * displayMessage;
@@ -136,7 +136,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
 @interface WAVVoiceCommand : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * commandName;
 @property (readonly) NSDictionary* /* NSString *, NSArray* < NSString * > */ properties;
@@ -156,7 +156,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
 + (WAVVoiceCommandResponse*)createResponseForPrompt:(WAVVoiceCommandUserMessage*)message repeatMessage:(WAVVoiceCommandUserMessage*)repeatMessage;
 + (WAVVoiceCommandResponse*)createResponseForPromptWithTiles:(WAVVoiceCommandUserMessage*)message repeatMessage:(WAVVoiceCommandUserMessage*)repeatMessage contentTiles:(id<NSFastEnumeration> /* WAVVoiceCommandContentTile* */)contentTiles;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WAVVoiceCommandUserMessage* repeatMessage;
 @property (retain) WAVVoiceCommandUserMessage* message;
@@ -174,7 +174,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
 @interface WAVVoiceCommandConfirmationResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL confirmed;
 @end
@@ -188,7 +188,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
 @interface WAVVoiceCommandDisambiguationResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WAVVoiceCommandContentTile* selectedItem;
 @end
@@ -203,7 +203,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
 @interface WAVVoiceCommandServiceConnection : RTObject
 + (WAVVoiceCommandServiceConnection*)fromAppServiceTriggerDetails:(WAAAppServiceTriggerDetails*)triggerDetails;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WGLanguage* language;
 - (EventRegistrationToken)addVoiceCommandCompletedEvent:(void(^)(WAVVoiceCommandServiceConnection*, WAVVoiceCommandCompletedEventArgs*))del;
@@ -226,7 +226,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
 @interface WAVVoiceCommandCompletedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WAVVoiceCommandCompletionReason reason;
 @end

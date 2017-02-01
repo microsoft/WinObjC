@@ -42,7 +42,7 @@
 OBJCUWP_WINDOWS_DEVICES_POWER_EXPORT
 @interface WDPBatteryReport : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) id /* int */ chargeRateInMilliwatts;
 @property (readonly) id /* int */ designCapacityInMilliwattHours;
@@ -62,7 +62,7 @@ OBJCUWP_WINDOWS_DEVICES_POWER_EXPORT
 + (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDPBattery*))success failure:(void (^)(NSError*))failure;
 + (NSString *)getDeviceSelector;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * deviceId;
 + (WDPBattery*)aggregateBattery;

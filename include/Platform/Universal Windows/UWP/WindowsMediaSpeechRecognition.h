@@ -141,7 +141,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechRecognitionSemanticInterpretation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSDictionary* /* NSString *, NSArray* < NSString * > */ properties;
 @end
@@ -155,7 +155,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechRecognitionResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMSSpeechRecognitionConfidence confidence;
 @property (readonly) RTObject<WMSISpeechRecognitionConstraint>* constraint;
@@ -180,7 +180,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 + (WMSSpeechRecognitionTopicConstraint*)make:(WMSSpeechRecognitionScenario)scenario topicHint:(NSString *)topicHint ACTIVATOR;
 + (WMSSpeechRecognitionTopicConstraint*)makeWithTag:(WMSSpeechRecognitionScenario)scenario topicHint:(NSString *)topicHint tag:(NSString *)tag ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * tag;
 @property WMSSpeechRecognitionConstraintProbability probability;
@@ -201,7 +201,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 + (WMSSpeechRecognitionListConstraint*)make:(id<NSFastEnumeration> /* NSString * */)commands ACTIVATOR;
 + (WMSSpeechRecognitionListConstraint*)makeWithTag:(id<NSFastEnumeration> /* NSString * */)commands tag:(NSString *)tag ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * tag;
 @property WMSSpeechRecognitionConstraintProbability probability;
@@ -221,7 +221,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 + (WMSSpeechRecognitionGrammarFileConstraint*)make:(WSStorageFile*)file ACTIVATOR;
 + (WMSSpeechRecognitionGrammarFileConstraint*)makeWithTag:(WSStorageFile*)file tag:(NSString *)tag ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * tag;
 @property WMSSpeechRecognitionConstraintProbability probability;
@@ -239,7 +239,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechRecognizerTimeouts : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WFTimeSpan* initialSilenceTimeout;
 @property (retain) WFTimeSpan* endSilenceTimeout;
@@ -255,7 +255,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechRecognizerUIOptions : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL showConfirmation;
 @property BOOL isReadBackEnabled;
@@ -272,7 +272,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechRecognitionCompilationResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMSSpeechRecognitionResultStatus status;
 @end
@@ -300,9 +300,9 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechRecognizer : RTObject <WFIClosable>
 + (WMSSpeechRecognizer*)make:(WGLanguage*)language ACTIVATOR;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSMutableArray* /* RTObject<WMSISpeechRecognitionConstraint>* */ constraints;
 @property (readonly) WGLanguage* currentLanguage;
@@ -335,7 +335,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechRecognitionQualityDegradingEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMSSpeechRecognitionAudioProblem problem;
 @end
@@ -349,7 +349,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechRecognizerStateChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMSSpeechRecognizerState state;
 @end
@@ -363,7 +363,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechRecognitionVoiceCommandDefinitionConstraint : RTObject <WMSISpeechRecognitionConstraint>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * tag;
 @property WMSSpeechRecognitionConstraintProbability probability;
@@ -380,7 +380,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechContinuousRecognitionSession : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WFTimeSpan* autoStopSilenceTimeout;
 - (EventRegistrationToken)addCompletedEvent:(void(^)(WMSSpeechContinuousRecognitionSession*, WMSSpeechContinuousRecognitionCompletedEventArgs*))del;
@@ -404,7 +404,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechRecognitionHypothesisGeneratedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMSSpeechRecognitionHypothesis* hypothesis;
 @end
@@ -418,7 +418,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechRecognitionHypothesis : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * text;
 @end
@@ -432,7 +432,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechContinuousRecognitionCompletedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMSSpeechRecognitionResultStatus status;
 @end
@@ -446,7 +446,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSSpeechContinuousRecognitionResultGeneratedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMSSpeechRecognitionResult* result;
 @end
@@ -472,7 +472,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 OBJCUWP_WINDOWS_MEDIA_SPEECHRECOGNITION_EXPORT
 @interface WMSVoiceCommandSet : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * language;
 @property (readonly) NSString * name;

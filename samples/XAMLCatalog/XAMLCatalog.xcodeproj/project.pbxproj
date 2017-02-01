@@ -16,6 +16,7 @@
 		234767291E2EE058006D97CB /* UIViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 234767231E2EE058006D97CB /* UIViewViewController.m */; };
 		2347672C1E2EE090006D97CB /* UIButtonWithControlsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2347672B1E2EE090006D97CB /* UIButtonWithControlsViewController.m */; };
 		2347672F1E300CF0006D97CB /* UILabelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2347672E1E300CF0006D97CB /* UILabelViewController.m */; };
+		239EBAEB1E39559C00C845D0 /* TestEnabledUITextField.mm in Sources */ = {isa = PBXBuildFile; fileRef = 239EBAEA1E39559C00C845D0 /* TestEnabledUITextField.mm */; };
 		6EEB8A381CE4F4050021021E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EEB8A371CE4F4050021021E /* main.m */; };
 		6EEB8A3B1CE4F4050021021E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EEB8A3A1CE4F4050021021E /* AppDelegate.m */; };
 		6EEB8A3E1CE4F4050021021E /* ProgrammaticViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EEB8A3D1CE4F4050021021E /* ProgrammaticViewController.m */; };
@@ -47,6 +48,8 @@
 		2347672B1E2EE090006D97CB /* UIButtonWithControlsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIButtonWithControlsViewController.m; path = UIKitControls/UIButtonWithControlsViewController.m; sourceTree = "<group>"; };
 		2347672D1E300CF0006D97CB /* UILabelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UILabelViewController.h; path = UIKitControls/UILabelViewController.h; sourceTree = "<group>"; };
 		2347672E1E300CF0006D97CB /* UILabelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UILabelViewController.m; path = UIKitControls/UILabelViewController.m; sourceTree = "<group>"; };
+		239EBAE91E39559C00C845D0 /* TestEnabledUITextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestEnabledUITextField.h; sourceTree = "<group>"; };
+		239EBAEA1E39559C00C845D0 /* TestEnabledUITextField.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TestEnabledUITextField.mm; sourceTree = "<group>"; };
 		6EEB8A331CE4F4050021021E /* XAMLCatalog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XAMLCatalog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6EEB8A371CE4F4050021021E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6EEB8A391CE4F4050021021E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -135,6 +138,8 @@
 				6EEB8A3D1CE4F4050021021E /* ProgrammaticViewController.m */,
 				6EEB8A3F1CE4F4050021021E /* StoryBoardViewController.h */,
 				6EEB8A401CE4F4050021021E /* StoryBoardViewController.m */,
+				239EBAE91E39559C00C845D0 /* TestEnabledUITextField.h */,
+				239EBAEA1E39559C00C845D0 /* TestEnabledUITextField.mm */,
 				6EEB8A361CE4F4050021021E /* Supporting Files */,
 				2324634F1CE69E2C00B7AAE4 /* UIKitControls */,
 				7B67A2091DC366E1004BEF5D /* XamlControls */,
@@ -245,6 +250,7 @@
 				2347672C1E2EE090006D97CB /* UIButtonWithControlsViewController.m in Sources */,
 				234767281E2EE058006D97CB /* UITextFieldViewController.m in Sources */,
 				234767251E2EE058006D97CB /* UIActivityIndicatorViewController.m in Sources */,
+				239EBAEB1E39559C00C845D0 /* TestEnabledUITextField.mm in Sources */,
 				6EEB8A411CE4F4050021021E /* StoryBoardViewController.m in Sources */,
 				234767261E2EE058006D97CB /* UIButtonViewController.m in Sources */,
 				6EEB8A3B1CE4F4050021021E /* AppDelegate.m in Sources */,

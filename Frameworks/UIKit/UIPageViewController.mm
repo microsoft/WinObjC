@@ -183,8 +183,8 @@ NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
             [[_pages objectAtIndex:i] removeFromSuperview];
         }
 
-        _controllers = [NSMutableArray new];
-        _pages = [NSMutableArray new];
+        _controllers.attach([NSMutableArray new]);
+        _pages.attach([NSMutableArray new]);
 
         [self _pushController:controller direction:UIPageViewControllerNavigationDirectionForward targetOffset:&targetOffset];
 
@@ -229,7 +229,7 @@ NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
 
     if (currentControllers) {
         _controllers = [NSMutableArray arrayWithArray:currentControllers];
-        _pages = [NSMutableArray new];
+        _pages.attach([NSMutableArray new]);
         for (int i = 0; i < [_controllers count]; i++) {
             _UIPageViewPage* newPage = [[_UIPageViewPage alloc] initWithFrame:self.frame viewController:[_controllers objectAtIndex:i]];
             [_pages addObject:newPage];
@@ -237,8 +237,8 @@ NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
             [newPage release];
         }
     } else {
-        _controllers = [NSMutableArray new];
-        _pages = [NSMutableArray new];
+        _controllers.attach([NSMutableArray new]);
+        _pages.attach([NSMutableArray new]);
     }
 
     [self _updateVisible];
@@ -450,14 +450,16 @@ NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
 - (void)_populatePagesWithOffset:(inout CGPoint*)targetOffset interactive:(BOOL)interactive {
     if (DEBUG_VERBOSE) {
         TraceVerbose(TAG,
-                     L"populatePagesWithOffset: targetOffset=[%f, %f], interactive=%d, keepAdjacent=%d",
+                     L"populatePagesWithOffset: targetOffset=[%f, %f], interactive=%d, keepAdjacent=%d, [_controllers count]=%d",
                      targetOffset->x,
                      targetOffset->y,
                      interactive,
-                     _keepAdjacent);
+                     _keepAdjacent,
+                     [_controllers count]);
     }
 
-    if ([_controllers count] == 0 && _skipUpdates) {
+    // if no controller to populate with or was told to skip, return early
+    if ([_controllers count] == 0 || _skipUpdates) {
         return;
     }
 

@@ -27,7 +27,8 @@ namespace XamlControls {
 // Button
 ////////////////////////////////////////////////////////////////////////////////////
 WXCButton* CreateButton() {
-    ComPtr<IInspectable> inspectable(XamlCreateButton());
+    ComPtr<IInspectable> inspectable;
+    XamlCreateButton(&inspectable);
     return _createRtProxy([WXCButton class], inspectable.Get());
 }
 
@@ -53,7 +54,8 @@ void HookLayoutEvent(WXCButton* button, WUXIPointerEventHandler layoutHook) {
 // ContentDialog
 ////////////////////////////////////////////////////////////////////////////////////
 WXCContentDialog* CreateContentDialog() {
-    ComPtr<IInspectable> inspectable(XamlCreateContentDialog());
+    ComPtr<IInspectable> inspectable;
+    XamlCreateContentDialog(&inspectable);
     return _createRtProxy([WXCContentDialog class], inspectable.Get());
 }
 
@@ -95,7 +97,8 @@ void XamlContentDialogSetDestructiveButtonIndex(WXCContentDialog* contentDialog,
 // Label
 ////////////////////////////////////////////////////////////////////////////////////
 WXCGrid* CreateLabel() {
-    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlCreateLabel());
+    Microsoft::WRL::ComPtr<IInspectable> inspectable;
+    XamlCreateLabel(&inspectable);
     return _createRtProxy([WXCGrid class], inspectable.Get());
 }
 

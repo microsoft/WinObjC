@@ -14,8 +14,9 @@
 //
 //******************************************************************************
 
+#import "AssertARCEnabled.h"
 #import "Starboard.h"
-#import <StubReturn.h>
+#import "StubReturn.h"
 
 #import <UIKit/NSString+UIKitAdditions.h>
 #import <UIKit/UIButton.h>
@@ -173,17 +174,17 @@ struct ButtonState {
     WXCTextBlock* templateText = rt_dynamic_cast([WXCTextBlock class], [_xamlButton getTemplateChild:@"buttonText"]);
 
     if (templateText) {
-        _proxyLabel.attach([[_UILabel_Proxy alloc] initWithXamlElement:templateText font:[UIFont buttonFont]]);
+        _proxyLabel = [[_UILabel_Proxy alloc] initWithXamlElement:templateText font:[UIFont buttonFont]];
     }
 
     if (templateImage) {
-        _proxyImageView.attach([[_UIImageView_Proxy alloc] initWithXamlElement:templateImage]);
+        _proxyImageView = [[_UIImageView_Proxy alloc] initWithXamlElement:templateImage];
     }
 
     _contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     _contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
 
-    __block UIButton* weakSelf = self;
+    __weak UIButton* weakSelf = self;
     XamlControls::HookButtonPointerEvents(_xamlButton,
                                           ^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
                                               // We mark the event as handled here. The method _processPointerPressedCallback
@@ -269,7 +270,7 @@ Microsoft Extension
 - (void)setImage:(UIImage*)image forState:(UIControlState)state {
     _states[state].image = image;
 
-    // NOTE: check if image is nil before creating inspetableImage
+    // NOTE: check if image is nil before creating inspectableImage
     // ConvertUIImageToWUXMImageBrush:nil creates a valid imageBrush with null comObj
     // which isn't what we want
     if (image) {
@@ -443,14 +444,14 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
  @Status Interoperable
 */
 - (void)setEnabled:(BOOL)enabled {
-    _xamlButton.get().isEnabled = enabled;
+    _xamlButton.isEnabled = enabled;
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)isEnabled {
-    return _xamlButton.get().isEnabled;
+    return _xamlButton.isEnabled;
 }
 
 /**
@@ -500,7 +501,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
  @Status Interoperable
 */
 - (void)setTitle:(NSString*)title forState:(UIControlState)state {
-    _states[state].title.attach([title copy]);
+    _states[state].title = [title copy];
 
     // NOTE: check if title is nil before creating inspectableTitle
     // createString:nil creates a valid rtString with null comObj
@@ -552,8 +553,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     // ConvertUIColorToWUColor:nil creates a valid WUColor with null comObj
     // which isn't what we want
     if (color) {
-        WUColor* convertedColor = XamlUtilities::ConvertUIColorToWUColor(color);
-        WUXMSolidColorBrush* titleColorBrush = [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
+        WUXMSolidColorBrush* titleColorBrush = [WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor(color)];
         if (titleColorBrush) {
             _states[state].inspectableTitleColor = [titleColorBrush comObj];
         }
@@ -804,16 +804,6 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 - (void)dealloc {
     XamlRemovePointerEvents([_xamlButton comObj]);
     XamlRemoveLayoutEvent([_xamlButton comObj]);
-
-    for (auto& state : _states) {
-        state.second.backgroundImage = nil;
-        state.second.image = nil;
-        state.second.textColor = nil;
-        state.second.title = nil;
-    }
-
-    _xamlButton = nil;
-    [super dealloc];
 }
 
 /**
@@ -826,7 +816,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
         [ret setTitleColor:[UIColor colorWithRed:0.0f green:0.47843137f blue:1.0f alpha:1.0f] forState:UIControlStateNormal];
     }
 
-    return [ret autorelease];
+    return ret;
 }
 
 /**
@@ -889,7 +879,7 @@ static Microsoft::WRL::ComPtr<IInspectable> _currentInspectableImage(UIButton* s
  @Notes Returns a mock UILabel that proxies some common properties and selectors to the underlying TextBlock
 */
 - (UILabel*)titleLabel {
-    return (UILabel*)[[_proxyLabel retain] autorelease];
+    return (UILabel*)_proxyLabel;
 }
 
 /**
@@ -897,7 +887,7 @@ static Microsoft::WRL::ComPtr<IInspectable> _currentInspectableImage(UIButton* s
  @Notes Returns a mock UIImageView that proxies some common properties and selectors to the underlying Image
 */
 - (UIImageView*)imageView {
-    return (UIImageView*)[[_proxyImageView retain] autorelease];
+    return (UIImageView*)_proxyImageView;
 }
 
 /**

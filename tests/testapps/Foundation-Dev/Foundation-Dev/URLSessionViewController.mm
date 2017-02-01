@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -276,14 +276,17 @@
 
 - (void)resumeLastButtonPressed:(id)sender {
     NSURLSessionDownloadTask* newTask = nil;
-    if ([_blockSwitch isOn]) {
-        newTask = [_urlSession downloadTaskWithResumeData:_lastResumeData
-                                        completionHandler:^(NSURL* location, NSURLResponse* response, NSError* error) {
-                                            [self _printOutput:@"Resumed Task completed to %@: %@, %@\n", location, response, error];
-                                        }];
-    } else {
-        newTask = [_urlSession downloadTaskWithResumeData:_lastResumeData];
+    if (_lastResumeData != nil) {
+        if ([_blockSwitch isOn]) {
+            newTask = [_urlSession downloadTaskWithResumeData:_lastResumeData
+                                            completionHandler:^(NSURL* location, NSURLResponse* response, NSError* error) {
+                                                [self _printOutput:@"Resumed Task completed to %@: %@, %@\n", location, response, error];
+                                            }];
+        } else {
+            newTask = [_urlSession downloadTaskWithResumeData:_lastResumeData];
+        }
     }
+
     if (!newTask) {
         [self _printOutput:@"There wasn't anything to resume.\n"];
         return;

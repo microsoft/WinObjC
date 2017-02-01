@@ -66,7 +66,7 @@ OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT
 OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT
 @interface WWAResourceCollection : RTObject <WWSISyndicationNode>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* NSString * */ accepts;
 @property (readonly) NSArray* /* WWSSyndicationCategory* */ categories;
@@ -91,7 +91,7 @@ OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT
 OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT
 @interface WWAWorkspace : RTObject <WWSISyndicationNode>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* WWAResourceCollection* */ collections;
 @property (readonly) RTObject<WWSISyndicationText>* title;
@@ -114,7 +114,7 @@ OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT
 OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT
 @interface WWAServiceDocument : RTObject <WWSISyndicationNode>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* WWAWorkspace* */ workspaces;
 @property (retain) NSString * nodeValue;
@@ -155,10 +155,10 @@ OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT
 
 OBJCUWP_WINDOWS_WEB_ATOMPUB_EXPORT
 @interface WWAAtomPubClient : RTObject <WWSISyndicationClient>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WWAAtomPubClient*)makeAtomPubClientWithCredentials:(WSCPasswordCredential*)serverCredential ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property unsigned int timeout;
 @property (retain) WSCPasswordCredential* serverCredential;

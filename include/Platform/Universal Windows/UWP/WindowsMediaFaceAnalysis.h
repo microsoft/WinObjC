@@ -42,7 +42,7 @@
 OBJCUWP_WINDOWS_MEDIA_FACEANALYSIS_EXPORT
 @interface WMFDetectedFace : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WGIBitmapBounds* faceBox;
 @end
@@ -59,7 +59,7 @@ OBJCUWP_WINDOWS_MEDIA_FACEANALYSIS_EXPORT
 + (NSArray* /* WGIBitmapPixelFormat */)getSupportedBitmapPixelFormats;
 + (BOOL)isBitmapPixelFormatSupported:(WGIBitmapPixelFormat)bitmapPixelFormat;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WGIBitmapSize* minDetectableFaceSize;
 @property (retain) WGIBitmapSize* maxDetectableFaceSize;
@@ -79,7 +79,7 @@ OBJCUWP_WINDOWS_MEDIA_FACEANALYSIS_EXPORT
 + (NSArray* /* WGIBitmapPixelFormat */)getSupportedBitmapPixelFormats;
 + (BOOL)isBitmapPixelFormatSupported:(WGIBitmapPixelFormat)bitmapPixelFormat;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WGIBitmapSize* minDetectableFaceSize;
 @property (retain) WGIBitmapSize* maxDetectableFaceSize;

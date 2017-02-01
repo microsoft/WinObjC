@@ -81,7 +81,7 @@ OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 + (NSString *)getDeviceSelectorVidPid:(unsigned short)usagePage usageId:(unsigned short)usageId vendorId:(unsigned short)vendorId productId:(unsigned short)productId;
 + (void)fromIdAsync:(NSString *)deviceId accessMode:(WSFileAccessMode)accessMode success:(void (^)(WDHHidDevice*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned short productId;
 @property (readonly) unsigned short usageId;
@@ -114,7 +114,7 @@ OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @interface WDHHidInputReport : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* WDHHidBooleanControl* */ activatedBooleanControls;
 @property (readonly) RTObject<WSSIBuffer>* data;
@@ -135,7 +135,7 @@ OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @interface WDHHidFeatureReport : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) RTObject<WSSIBuffer>* data;
 @property (readonly) unsigned short id;
@@ -154,7 +154,7 @@ OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @interface WDHHidOutputReport : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) RTObject<WSSIBuffer>* data;
 @property (readonly) unsigned short id;
@@ -173,7 +173,7 @@ OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @interface WDHHidBooleanControlDescription : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int id;
 @property (readonly) NSArray* /* WDHHidCollection* */ parentCollections;
@@ -193,7 +193,7 @@ OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @interface WDHHidNumericControlDescription : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL hasNull;
 @property (readonly) unsigned int id;
@@ -222,7 +222,7 @@ OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @interface WDHHidInputReportReceivedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDHHidInputReport* report;
 @end
@@ -236,7 +236,7 @@ OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @interface WDHHidCollection : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int id;
 @property (readonly) WDHHidCollectionType type;
@@ -253,7 +253,7 @@ OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @interface WDHHidBooleanControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL isActive;
 @property (readonly) WDHHidBooleanControlDescription* controlDescription;
@@ -271,7 +271,7 @@ OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 OBJCUWP_WINDOWS_DEVICES_HUMANINTERFACEDEVICE_EXPORT
 @interface WDHHidNumericControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property int64_t value;
 @property int64_t scaledValue;

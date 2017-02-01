@@ -90,7 +90,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     _layoutManager = [NSLayoutManager new];
     [_layoutManager addTextContainer:_textContainer];
     _layoutManager.delegate = self;
-    _layoutManager.textStorage = [NSTextStorage new];
+    _layoutManager.textStorage = [[NSTextStorage new] autorelease];
 
     _textColor = [coder decodeObjectForKey:@"UITextColor"];
     if (_textColor == nil) {
@@ -151,7 +151,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     _layoutManager = [NSLayoutManager new];
     [_layoutManager addTextContainer:_textContainer];
     _layoutManager.delegate = self;
-    _layoutManager.textStorage = [NSTextStorage new];
+    _layoutManager.textStorage = [[NSTextStorage new] autorelease];
 
     _alignment = UITextAlignmentLeft;
     _font = [UIFont defaultFont];

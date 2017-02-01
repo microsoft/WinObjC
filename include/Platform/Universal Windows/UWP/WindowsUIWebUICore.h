@@ -112,7 +112,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
 OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
 @interface WUWCWebUICommandBarItemInvokedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL isPrimaryCommand;
 @end
@@ -125,9 +125,9 @@ OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
 
 OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
 @interface WUWCWebUICommandBarIconButton : RTObject <WUWCIWebUICommandBarElement>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * label;
 @property BOOL isToggleButton;
@@ -146,9 +146,9 @@ OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
 
 OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
 @interface WUWCWebUICommandBarConfirmationButton : RTObject <WUWCIWebUICommandBarElement>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * text;
 - (EventRegistrationToken)addItemInvokedEvent:(void(^)(WUWCWebUICommandBarConfirmationButton*, WUWCWebUICommandBarItemInvokedEventArgs*))del;
@@ -164,9 +164,9 @@ OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
 OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
 @interface WUWCWebUICommandBarBitmapIcon : RTObject <WUWCIWebUICommandBarIcon>
 + (WUWCWebUICommandBarBitmapIcon*)make:(WFUri*)uri ACTIVATOR;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WFUri* uri;
 @end
@@ -180,9 +180,9 @@ OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
 OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
 @interface WUWCWebUICommandBarSymbolIcon : RTObject <WUWCIWebUICommandBarIcon>
 + (WUWCWebUICommandBarSymbolIcon*)make:(NSString *)symbol ACTIVATOR;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * symbol;
 @end
@@ -196,7 +196,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
 OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
 @interface WUWCWebUICommandBarSizeChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFSize* size;
 @end
@@ -211,7 +211,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
 @interface WUWCWebUICommandBar : RTObject
 + (WUWCWebUICommandBar*)getForCurrentView;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL visible;
 @property double opacity;

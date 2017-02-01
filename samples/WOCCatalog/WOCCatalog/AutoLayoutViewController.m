@@ -38,7 +38,9 @@
 @end
 
 
-@implementation AutoLayoutViewController
+@implementation AutoLayoutViewController {
+    CenteredAutoLayoutLabel* _addRemoveLabel;
+};
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -64,7 +66,7 @@
     [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:[bottomLabel(30)]-[bottomGuide]" options:NO metrics:nil views:NSDictionaryOfVariableBindings(bottomLabel, bottomGuide)]];
     
     UIButton* button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    
+
     [button setTitle:@"Button For Baseline" forState:UIControlStateNormal];
     [button setTitle:@"Highlighted State Changes Intrinsic Content Size" forState:UIControlStateHighlighted];
     [button setContentHuggingPriority:251 forAxis:UILayoutConstraintAxisVertical];
@@ -73,7 +75,7 @@
     button.layer.cornerRadius = 5.0f;
     button.backgroundColor = [UIColor lightGrayColor];
     [self.view addSubview:button];
-    
+
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:button attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:bottomLabel attribute:NSLayoutAttributeTop multiplier:1.0 constant:-8.0f]];
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:button attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:button.superview attribute:NSLayoutAttributeLeft multiplier:1.0 constant:20.0f]];
     
@@ -107,6 +109,44 @@
 
     [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"|-[label1]-[label2(label1)]-[label3(label1)]-[label4(label1)]-|" options:NO metrics:nil views:NSDictionaryOfVariableBindings(label1, label2, label3, label4)]];
     [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:[topLabel]-[label1]-[label2(label1)]-[label3(label1)]-[label4(label1)]-[button]" options:NO metrics:nil views:NSDictionaryOfVariableBindings(topLabel, button, label1, label2, label3, label4)]];
+
+    UIButton* button2 = [UIButton buttonWithType : UIButtonTypeRoundedRect];
+    [button2 setTitle:@"Add a new label" forState:UIControlStateNormal];
+
+    [button2 setTitle:@"Delete the new label" forState:UIControlStateSelected];
+    [button2 setTitle:@"Delete the new label" forState:UIControlStateSelected | UIControlStateHighlighted];
+
+    [button2 setTitleColor:[UIColor blueColor] forState:UIControlStateHighlighted];
+    [button2 setTitleColor:[UIColor blueColor] forState:UIControlStateHighlighted | UIControlStateSelected];
+
+    [button2 setContentHuggingPriority:251 forAxis:UILayoutConstraintAxisVertical];
+    button2.contentEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10);
+    button2.translatesAutoresizingMaskIntoConstraints = NO;
+    button2.layer.cornerRadius = 5.0f;
+    button2.backgroundColor = [UIColor lightGrayColor];
+    [button2 addTarget:self action:@selector(_button2TouchUp:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:button2];
+
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:button2 attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:buttonLabel attribute:NSLayoutAttributeRight multiplier:1.0 constant:8.0f]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:button2 attribute:NSLayoutAttributeBaseline relatedBy:NSLayoutRelationEqual toItem:buttonLabel attribute:NSLayoutAttributeBaseline multiplier:1.0 constant:0]];
+}
+
+- (void)_button2TouchUp:(UIButton*)button {
+    BOOL wasSelected = button.isSelected;
+    [button setSelected:!wasSelected];
+
+    if (wasSelected) {
+        // Delete the label
+        [_addRemoveLabel removeFromSuperview];
+        _addRemoveLabel = nil;
+    } else {
+        // Add the new label
+        _addRemoveLabel = [CenteredAutoLayoutLabel new];
+        _addRemoveLabel.text = @"Temporary";
+        _addRemoveLabel.backgroundColor = [UIColor purpleColor];
+        [_addRemoveLabel sizeToFit];
+        [self.view addSubview:_addRemoveLabel];
+    }
 }
 
 @end

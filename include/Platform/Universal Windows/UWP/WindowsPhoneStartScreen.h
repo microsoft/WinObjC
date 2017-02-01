@@ -62,9 +62,9 @@ OBJCUWP_WINDOWS_PHONE_STARTSCREEN_EXPORT
 + (WUNBadgeUpdater*)createBadgeUpdaterForSim2;
 + (WUNToastNotifier*)createToastNotifierForSim1;
 + (WUNToastNotifier*)createToastNotifierForSim2;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * displayName;
 @property (readonly) BOOL isPinnedToStart;

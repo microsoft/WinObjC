@@ -43,7 +43,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_CUSTOM_EXPORT
 + (NSString *)getDeviceSelector:(WFGUID*)interfaceId;
 + (void)fromIdAsync:(NSString *)sensorId success:(void (^)(WDSCCustomSensor*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property unsigned int reportInterval;
 @property (readonly) NSString * deviceId;
@@ -62,7 +62,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_CUSTOM_EXPORT
 OBJCUWP_WINDOWS_DEVICES_SENSORS_CUSTOM_EXPORT
 @interface WDSCCustomSensorReading : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSDictionary* /* NSString *, RTObject* */ properties;
 @property (readonly) WFDateTime* timestamp;
@@ -77,7 +77,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_CUSTOM_EXPORT
 OBJCUWP_WINDOWS_DEVICES_SENSORS_CUSTOM_EXPORT
 @interface WDSCCustomSensorReadingChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDSCCustomSensorReading* reading;
 @end

@@ -258,9 +258,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapActualCameraChangedEventArgs : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUXCMMapCamera* camera;
 @property (readonly) WUXCMMapCameraChangeReason changeReason;
@@ -274,9 +274,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapActualCameraChangingEventArgs : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUXCMMapCamera* camera;
 @property (readonly) WUXCMMapCameraChangeReason changeReason;
@@ -290,9 +290,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapCustomExperienceChangedEventArgs : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @end
 
@@ -304,9 +304,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapElementClickEventArgs : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDGGeopoint* location;
 @property (readonly) NSMutableArray* /* WUXCMMapElement* */ mapElements;
@@ -321,9 +321,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapElementPointerEnteredEventArgs : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDGGeopoint* location;
 @property (readonly) WUXCMMapElement* mapElement;
@@ -338,9 +338,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapElementPointerExitedEventArgs : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDGGeopoint* location;
 @property (readonly) WUXCMMapElement* mapElement;
@@ -355,9 +355,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapRightTappedEventArgs : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDGGeopoint* location;
 @property (readonly) WFPoint* position;
@@ -371,9 +371,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapTargetCameraChangedEventArgs : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUXCMMapCamera* camera;
 @property (readonly) WUXCMMapCameraChangeReason changeReason;
@@ -387,9 +387,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapTileBitmapRequestDeferral : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)complete;
 @end
@@ -402,9 +402,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapTileBitmapRequest : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) RTObject<WSSIRandomAccessStreamReference>* pixelData;
 - (WUXCMMapTileBitmapRequestDeferral*)getDeferral;
@@ -418,9 +418,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapTileBitmapRequestedEventArgs : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUXCMMapTileBitmapRequest* request;
 @property (readonly) int x;
@@ -436,9 +436,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapTileUriRequestDeferral : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)complete;
 @end
@@ -451,9 +451,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapTileUriRequest : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WFUri* uri;
 - (WUXCMMapTileUriRequestDeferral*)getDeferral;
@@ -467,9 +467,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapTileUriRequestedEventArgs : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUXCMMapTileUriRequest* request;
 @property (readonly) int x;
@@ -486,7 +486,7 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
@@ -511,7 +511,7 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 + (WUXCMMapCamera*)makeInstanceWithLocationHeadingAndPitch:(WDGGeopoint*)location headingInDegrees:(double)headingInDegrees pitchInDegrees:(double)pitchInDegrees ACTIVATOR;
 + (WUXCMMapCamera*)makeInstanceWithLocationHeadingPitchRollAndFieldOfView:(WDGGeopoint*)location headingInDegrees:(double)headingInDegrees pitchInDegrees:(double)pitchInDegrees rollInDegrees:(double)rollInDegrees fieldOfViewInDegrees:(double)fieldOfViewInDegrees ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double roll;
 @property double pitch;
@@ -528,9 +528,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapCustomExperience : WXDependencyObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @end
 
@@ -542,9 +542,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapElement : WXDependencyObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property int zIndex;
 @property BOOL visible;
@@ -562,9 +562,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapInputEventArgs : WXDependencyObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDGGeopoint* location;
 @property (readonly) WFPoint* position;
@@ -578,9 +578,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapItemsControl : WXDependencyObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) RTObject* itemsSource;
 @property (retain) WXDataTemplate* itemTemplate;
@@ -600,7 +600,7 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapRouteView : WXDependencyObject
 + (WUXCMMapRouteView*)makeInstanceWithMapRoute:(WSMMapRoute*)route ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WUColor* routeColor;
 @property (retain) WUColor* outlineColor;
@@ -625,7 +625,7 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 + (WUXCMMapScene*)createFromLocations:(id<NSFastEnumeration> /* WDGGeopoint* */)locations;
 + (WUXCMMapScene*)createFromLocationsWithHeadingAndPitch:(id<NSFastEnumeration> /* WDGGeopoint* */)locations headingInDegrees:(double)headingInDegrees pitchInDegrees:(double)pitchInDegrees;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUXCMMapCamera* targetCamera;
 - (EventRegistrationToken)addTargetCameraChangedEvent:(void(^)(WUXCMMapScene*, WUXCMMapTargetCameraChangedEventArgs*))del;
@@ -640,9 +640,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapTileDataSource : WXDependencyObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @end
 
@@ -654,9 +654,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapTileSource : WXDependencyObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL isTransparencyEnabled;
 @property BOOL isRetryEnabled;
@@ -693,7 +693,7 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 + (void)findNearbyWithLocationAsync:(WDGGeopoint*)location success:(void (^)(WUXCMStreetsidePanorama*))success failure:(void (^)(NSError*))failure;
 + (void)findNearbyWithLocationAndRadiusAsync:(WDGGeopoint*)location radiusInMeters:(double)radiusInMeters success:(void (^)(WUXCMStreetsidePanorama*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDGGeopoint* location;
 @end
@@ -706,9 +706,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMCustomMapTileDataSource : WUXCMMapTileDataSource
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (EventRegistrationToken)addBitmapRequestedEvent:(void(^)(WUXCMCustomMapTileDataSource*, WUXCMMapTileBitmapRequestedEventArgs*))del;
 - (void)removeBitmapRequestedEvent:(EventRegistrationToken)tok;
@@ -722,9 +722,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMHttpMapTileDataSource : WUXCMMapTileDataSource
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * uriFormatString;
 @property BOOL allowCaching;
@@ -741,9 +741,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMLocalMapTileDataSource : WUXCMMapTileDataSource
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * uriFormatString;
 - (EventRegistrationToken)addUriRequestedEvent:(void(^)(WUXCMLocalMapTileDataSource*, WUXCMMapTileUriRequestedEventArgs*))del;
@@ -758,9 +758,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapIcon : WUXCMMapElement
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * title;
 @property (retain) WFPoint* normalizedAnchorPoint;
@@ -781,9 +781,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapPolygon : WUXCMMapElement
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double strokeThickness;
 @property BOOL strokeDashed;
@@ -804,9 +804,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapPolyline : WUXCMMapElement
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double strokeThickness;
 @property BOOL strokeDashed;
@@ -827,7 +827,7 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 + (WUXCMStreetsideExperience*)makeInstanceWithPanorama:(WUXCMStreetsidePanorama*)panorama ACTIVATOR;
 + (WUXCMStreetsideExperience*)makeInstanceWithPanoramaHeadingPitchAndFieldOfView:(WUXCMStreetsidePanorama*)panorama headingInDegrees:(double)headingInDegrees pitchInDegrees:(double)pitchInDegrees fieldOfViewInDegrees:(double)fieldOfViewInDegrees ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL zoomButtonsVisible;
 @property BOOL streetLabelsVisible;
@@ -931,7 +931,7 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WXUIElement : WXDependencyObject
 + (BOOL)tryStartDirectManipulation:(WUXIPointer*)value;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL isHitTestVisible;
 @property BOOL isDoubleTapEnabled;
@@ -1099,7 +1099,7 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WXFrameworkElement : WXUIElement
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double height;
 @property WXFlowDirection flowDirection;
@@ -1187,7 +1187,7 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 + (BOOL)getIsTemplateFocusTarget:(WXFrameworkElement*)element;
 + (void)setIsTemplateFocusTarget:(WXFrameworkElement*)element value:(BOOL)value;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double fontSize;
 @property (retain) WUXMFontFamily* fontFamily;
@@ -1299,9 +1299,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 + (void)setLocation:(WXDependencyObject*)element value:(WDGGeopoint*)value;
 + (WFPoint*)getNormalizedAnchorPoint:(WXDependencyObject*)element;
 + (void)setNormalizedAnchorPoint:(WXDependencyObject*)element value:(WFPoint*)value;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL landmarksVisible;
 @property double heading;
@@ -1437,9 +1437,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapControlBusinessLandmarkClickEventArgs : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* WSMLLocalLocation* */ localLocations;
 @end
@@ -1452,9 +1452,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapControlTransitFeatureClickEventArgs : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * displayName;
 @property (readonly) WDGGeopoint* location;
@@ -1469,9 +1469,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapControlBusinessLandmarkRightTappedEventArgs : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* WSMLLocalLocation* */ localLocations;
 @end
@@ -1484,9 +1484,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapControlTransitFeatureRightTappedEventArgs : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * displayName;
 @property (readonly) WDGGeopoint* location;
@@ -1501,9 +1501,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapControlBusinessLandmarkPointerEnteredEventArgs : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* WSMLLocalLocation* */ localLocations;
 @end
@@ -1516,9 +1516,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapControlTransitFeaturePointerEnteredEventArgs : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * displayName;
 @property (readonly) WDGGeopoint* location;
@@ -1533,9 +1533,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapControlBusinessLandmarkPointerExitedEventArgs : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* WSMLLocalLocation* */ localLocations;
 @end
@@ -1548,9 +1548,9 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapControlTransitFeaturePointerExitedEventArgs : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * displayName;
 @property (readonly) WDGGeopoint* location;
@@ -1567,7 +1567,7 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @interface WUXCMMapControlDataHelper : WXDependencyObject
 + (WUXCMMapControlDataHelper*)makeInstance:(WUXCMMapControl*)map ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (EventRegistrationToken)addBusinessLandmarkClickEvent:(void(^)(WUXCMMapControl*, WUXCMMapControlBusinessLandmarkClickEventArgs*))del;
 - (void)removeBusinessLandmarkClickEvent:(EventRegistrationToken)tok;
