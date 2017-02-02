@@ -37,7 +37,7 @@ static StrongId<NSThread> s_mainThread;
 static BOOL s_isMultiThreaded = NO;
 
 static NSThread* setOrGetCurrentThread(NSThread* thread) {
-    // Use a lazy initialized block scope thread_local to manage the liftime of currentThread.
+    // Use a lazy initialized block scope thread_local to manage the lifetime of currentThread.
     // Note that non-trivial file scope thread_locals are apparently not supported in current clang version.
     thread_local static StrongId<NSThread> tlsCurrentThread;
 
@@ -276,7 +276,7 @@ the default thread priority. Utilizes win32 thread priority.
 }
 
 static void* threadBody(void* context) {
-    NSThread* self = reinterpret_cast<NSThread*>(context);
+    NSThread* self = static_cast<NSThread*>(context);
 
     // Let current thread mechanism assume ownership.
     setCurrentThread(self);
@@ -320,7 +320,7 @@ static void* threadBody(void* context) {
     // Stay alive while underlying thread of execution starts.
     [self retain];
 
-    pthread_create(&_pthread, &attrs, threadBody, reinterpret_cast<void*>(self));
+    pthread_create(&_pthread, &attrs, threadBody, self);
 }
 
 /**
