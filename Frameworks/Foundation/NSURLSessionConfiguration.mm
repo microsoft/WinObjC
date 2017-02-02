@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -38,7 +38,7 @@
         _networkServiceType = NSURLNetworkServiceTypeDefault;
         _requestCachePolicy = NSURLRequestUseProtocolCachePolicy;
         _HTTPMaximumConnectionsPerHost = 6;
-        _TLSMaximumSupportedProtocol = kTLSProtocol12;
+        _TLSMaximumSupportedProtocol = kSSLProtocolUnknown;
         _TLSMinimumSupportedProtocol = kTLSProtocol1;
         _URLCredentialStorage = [[NSURLCredentialStorage sharedCredentialStorage] retain];
     }
