@@ -76,7 +76,7 @@ static const bool DEBUG_TOUCHES = DEBUG_TOUCHES_VERBOSE || false;
 static const bool DEBUG_TOUCHES_LIGHT = DEBUG_TOUCHES || false;
 static const bool DEBUG_HIT_TESTING = DEBUG_ALL || false;
 static const bool DEBUG_HIT_TESTING_LIGHT = DEBUG_HIT_TESTING || false;
-static const bool DEBUG_GESTURES = DEBUG_ALL || false;
+static const bool DEBUG_GESTURES = DEBUG_ALL || true;
 static const bool DEBUG_LAYOUT = DEBUG_ALL || false;
 
 const CGFloat UIViewNoIntrinsicMetric = -1.0f;
@@ -144,8 +144,6 @@ BOOL g_resetAllTrackingGestures = TRUE;
         g_currentlyTrackingGesturesList = [NSMutableArray new];
     }
 
-    BOOL shouldCancelTouches = false;
-
     const static int MAXIMUM_VIEW_ALLOWED = 128;
     UIView* views[MAXIMUM_VIEW_ALLOWED];
     int viewDepth = 0;
@@ -177,8 +175,6 @@ BOOL g_resetAllTrackingGestures = TRUE;
         }
     }
 
-    g_curGesturesDict = [NSMutableDictionary new];
-
     const static int MAXIMUM_GESTURE_ALLOWED = 128;
     const static int MAXIMUM_DMANIPGESTURE_ALLOWED = 16;
 
@@ -200,16 +196,6 @@ BOOL g_resetAllTrackingGestures = TRUE;
                 break;
             }
         }
-
-        id gestureClass = [curgesture class];
-        NSMutableArray* arr = [g_curGesturesDict objectForKey:gestureClass];
-        if (arr == nil) {
-            arr = [NSMutableArray new];
-            [g_curGesturesDict setObject:arr forKey:gestureClass];
-            [arr release];
-        }
-
-        [arr addObject:curgesture];
     }
 
     // sendTouch to gesture for state transiton
@@ -243,8 +229,8 @@ BOOL g_resetAllTrackingGestures = TRUE;
         }
     }
 
-    // scanning DManip Gestures, if one gesture is ongoing, cancel all DManip Gestures
-    // otherwise, send Touch to DManip gestures
+    // scanning DManip Gestures, if one Non-Dmanip gesture is already ongoing, cancel all DManip Gestures
+    // otherwise, send Touch to DManip gestures for state transition
     for (int i = 0; i < dManipGestureCount; i++) {
         UIGestureRecognizer* dManipGesture = dManipRecognizers[i];
         if (gestureOnGoing) {
@@ -274,29 +260,105 @@ BOOL g_resetAllTrackingGestures = TRUE;
         }
     }
 
-    // gesture priority list
-    const static id s_gesturesPriority[] = {[UIPinchGestureRecognizer class], [UISwipeGestureRecognizer class],
-                                            [UIPanGestureRecognizer class],   [UILongPressGestureRecognizer class],
-                                            [UITapGestureRecognizer class],   [_UIDMPanGestureRecognizer class] };
+    //
+    // After state transtion, we potentially get active gestures, we should remove any gestures that can not be recognized simultaneously
+    //
+    NSMutableSet* gesturesToRemove = [NSMutableSet set];
+    for (UIGestureRecognizer* curGesture in [g_currentlyTrackingGesturesList reverseObjectEnumerator]) {
+        UIGestureRecognizerState state = curGesture.state;
+        if (state != UIGestureRecognizerStatePossible && state != UIGestureRecognizerStateCancelled) {
+            UIGestureRecognizer* activeGesture = curGesture;
 
-    const static int s_numGestureTypes = sizeof(s_gesturesPriority) / sizeof(s_gesturesPriority[0]);
+            BOOL activeResponds = [activeGesture.delegate
+                respondsToSelector:@selector(gestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:)];
 
-    //  Process all gestures, including DM gesture
-    for (auto const& curgestureClass : s_gesturesPriority) {
-        id gestures = [g_curGesturesDict objectForKey:curgestureClass];
-        if ([curgestureClass _fireGestures:gestures shouldCancelTouches:shouldCancelTouches]) {
-            if (DEBUG_GESTURES) {
-                TraceVerbose(TAG, L"Gesture (%hs) handled.", object_getClassName(curgestureClass));
+            // now test it against the other gestures, removing if we do not handle simultaneous gestures
+            for (UIGestureRecognizer* curGesture in g_currentlyTrackingGesturesList) {
+                if (curGesture == activeGesture) {
+                    continue;
+                }
+
+                if (curGesture.state != UIGestureRecognizerStatePossible && state != UIGestureRecognizerStateCancelled) {
+                    // curGesture already active
+                    continue;
+                }
+
+                // Based on reference platform: test if active gesture can prevent other gesture, if so, further check if the other gesture
+                // can be prevented by active
+                // gesture if both result are YES, we need consult the delegates for both gesture. if both delegates saying NO for
+                // concurrent firing
+                // the other gesture will be prevented from firing by active gesture.
+                if ([activeGesture canPreventGestureRecognizer:curGesture] &&
+                    [curGesture canBePreventedByGestureRecognizer:activeGesture]) {
+                    BOOL currentResponds = [curGesture.delegate
+                        respondsToSelector:@selector(gestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:)];
+                    if ((currentResponds == NO ||
+                         ![curGesture.delegate gestureRecognizer:curGesture
+                             shouldRecognizeSimultaneouslyWithGestureRecognizer:activeGesture]) &&
+                        (activeResponds == NO ||
+                         ![activeGesture.delegate gestureRecognizer:activeGesture
+                             shouldRecognizeSimultaneouslyWithGestureRecognizer:curGesture])) {
+                        [gesturesToRemove addObject:curGesture];
+                    }
+                }
             }
         }
     }
 
-    //  Removed/reset failed/done gestures, including gestures and dManipGestures
+    // remove those gesturee that can not fire concurrently with current active Gestures
+    for (UIGestureRecognizer* curGesture in gesturesToRemove) {
+        if (DEBUG_GESTURES) {
+            TraceVerbose(TAG,
+                         L"Removing gesture %hs %x state=%d, reset its state",
+                         object_getClassName(curGesture),
+                         curGesture,
+                         curGesture.state);
+        }
+        [curGesture reset];
+        [g_currentlyTrackingGesturesList removeObject:curGesture];
+    }
+
+    BOOL shouldCancelTouches = NO;
+
+    BOOL recognized = NO;
+
+    //  fire Non-Dimanip gestures first
+    for (UIGestureRecognizer* curGesture in [g_currentlyTrackingGesturesList reverseObjectEnumerator]) {
+        id curgestureClass = [curGesture class];
+        if (![curGesture isKindOfClass:[_UIDMPanGestureRecognizer class]]) {
+            BOOL recognized = [curgestureClass _fireGesture:curGesture];
+            if (recognized && DEBUG_GESTURES) {
+                TraceVerbose(TAG, L"Gesture (%hs) handled.", object_getClassName(curgestureClass));
+            }
+
+            if ([curGesture isKindOfClass:[UIPanGestureRecognizer class]]) {
+                // TODO: moved from UIPanGestureRecognizer, it is unclear why this special treatment is required earlier
+                // or should not this be the common treatment for all gestures?
+                shouldCancelTouches |= curGesture.cancelsTouchesInView;
+            } else {
+                shouldCancelTouches |= recognized;
+            }
+        }
+    }
+
+    // Gesture has not been recognized, fire Dimanip Gesture.
+    if (!recognized) {
+        for (UIGestureRecognizer* curGesture in [g_currentlyTrackingGesturesList reverseObjectEnumerator]) {
+            id curgestureClass = [curGesture class];
+            if ([curGesture isKindOfClass:[_UIDMPanGestureRecognizer class]]) {
+                BOOL recognized = [curgestureClass _fireGesture:curGesture];
+                if (recognized && DEBUG_GESTURES) {
+                    TraceVerbose(TAG, L"Gesture (%hs) handled.", object_getClassName(curgestureClass));
+                }
+
+                shouldCancelTouches |= recognized;
+            }
+        }
+    }
+
+    //  Removed/reset failed/done/cancelled gestures, including gestures and dManipGestures
     [self _clearFailedOrEndedGesture:recognizers length:gestureCount];
     [self _clearFailedOrEndedGesture:dManipRecognizers length:dManipGestureCount];
-
-    [g_curGesturesDict release];
-    g_curGesturesDict = nil;
 
     return shouldCancelTouches;
 }
@@ -313,8 +375,6 @@ BOOL g_resetAllTrackingGestures = TRUE;
             }
 
             [g_currentlyTrackingGesturesList removeObject:recognizers[i]];
-            id gesturesArr = [g_curGesturesDict objectForKey:[recognizers[i] class]];
-            [gesturesArr removeObject:recognizers[i]];
         }
     }
 }
@@ -2301,7 +2361,7 @@ static float doRound(float f) {
     }
 
     if (!priv->superview) {
-        // This is probably safe to do in all cases, but for now, let's constrain 
+        // This is probably safe to do in all cases, but for now, let's constrain
         // this to middleware scenarios.  We need to return a window in such cases
         // so point/rect/etc. conversion works properly.
         if (GetCACompositor()->IsRunningAsFramework()) {

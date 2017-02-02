@@ -53,7 +53,6 @@ NSArray* curPanList = nil;
     float _dragSlack;
     double _disableVelocity;
 
-    _UIPanGestureStage _stage;
     bool _didFireEnded;
     bool _lockVertical, _lockHorizontal;
 }
@@ -269,10 +268,9 @@ static void deleteTouch(UITouch* touch, std::vector<TouchInfo>& touches) {
 
     if (_state == UIGestureRecognizerStatePossible && _priv->touches.size() >= _minimumNumberOfTouches &&
         _priv->touches.size() <= _maximumNumberOfTouches) {
-
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wobjc-method-access"
-// TODO: File bug
+        // TODO: File bug
         if ([_delegate respondsToSelector:@selector(_gestureRecognizerTouchesReached:)]) {
             [_delegate _gestureRecognizerTouchesReached:self];
         }
@@ -426,7 +424,7 @@ static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
     _dragSlack = slack;
 }
 
-- (float) _getDragSlack {
+- (float)_getDragSlack {
     return _dragSlack;
 }
 
@@ -469,13 +467,6 @@ static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
 /**
  @Status Interoperable
 */
-- (_UIPanGestureStage)_stage {
-    return _stage;
-}
-
-/**
- @Status Interoperable
-*/
 - (void)reset {
     _priv->touches.clear();
     _priv->currentTranslation.x = 0.f;
@@ -501,43 +492,6 @@ static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
             ((UIPanGestureRecognizer*)curgesture)->_lockHorizontal = true;
         }
     }
-}
-
-+ (BOOL)_fireGestures:(id)gestures shouldCancelTouches:(BOOL&)shouldCancelTouches {
-    bool didRecognize = false;
-    int count = [gestures count];
-
-    curPanList = gestures;
-
-    for (int curstage = 0; curstage < _UIPanGestureStageNumStages; curstage++) {
-        for (int i = count - 1; i >= 0; i--) {
-            UIPanGestureRecognizer* curgesture = [gestures objectAtIndex:i];
-
-            UIGestureRecognizerState state = (UIGestureRecognizerState)[curgesture state];
-
-            if (state == UIGestureRecognizerStateRecognized || state == UIGestureRecognizerStateBegan ||
-                state == UIGestureRecognizerStateChanged || state == UIGestureRecognizerStateEnded) {
-                if (state == UIGestureRecognizerStateEnded) {
-                    if (curgesture->_didFireEnded)
-                        continue;
-                    curgesture->_didFireEnded = true;
-                }
-
-                curgesture->_stage = static_cast<_UIPanGestureStage>(curstage);
-
-                if (curgesture->_state == UIGestureRecognizerStateBegan && curstage != 0) {
-                    curgesture->_state = UIGestureRecognizerStateChanged;
-                }
-                [curgesture _fire];
-                shouldCancelTouches |= curgesture.cancelsTouchesInView;
-                didRecognize = true;
-            }
-        }
-    }
-
-    curPanList = nil;
-
-    return didRecognize;
 }
 
 - (const std::vector<TouchInfo>&)_getTouches {

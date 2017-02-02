@@ -231,18 +231,15 @@ static void commonInit(UIGestureRecognizer* self) {
     UNIMPLEMENTED();
 }
 
-+ (BOOL)_fireGestures:(id)gestures shouldCancelTouches:(BOOL&)shouldCancelTouches {
++ (BOOL)_fireGesture:(UIGestureRecognizer*)gesture {
     bool didRecognize = false;
 
-    for (UIGestureRecognizer* curgesture in gestures) {
-        UIGestureRecognizerState state = (UIGestureRecognizerState)[curgesture state];
+    UIGestureRecognizerState state = (UIGestureRecognizerState)[gesture state];
 
-        if (state == UIGestureRecognizerStateRecognized || state == UIGestureRecognizerStateBegan ||
-            state == UIGestureRecognizerStateChanged || state == UIGestureRecognizerStateEnded) {
-            [curgesture _fire];
-            shouldCancelTouches |= curgesture.cancelsTouchesInView;
-            didRecognize = true;
-        }
+    if (state == UIGestureRecognizerStateRecognized || state == UIGestureRecognizerStateBegan || state == UIGestureRecognizerStateChanged ||
+        state == UIGestureRecognizerStateEnded) {
+        [gesture _fire];
+        didRecognize = true;
     }
 
     return didRecognize;
@@ -312,19 +309,19 @@ static void commonInit(UIGestureRecognizer* self) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer*)preventingGestureRecognizer {
-    UNIMPLEMENTED();
-    return StubReturn();
+    // default to YES per reference platform
+    return YES;
 }
 
 /**
- @Status Stub
+ @Status Interoperable;
 */
 - (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer*)preventedGestureRecognizer {
-    UNIMPLEMENTED();
-    return StubReturn();
+    // default to YES per reference platform
+    return YES;
 }
 
 /**
