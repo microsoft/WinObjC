@@ -40,7 +40,7 @@ void InitializeApp() {
 
     // Set our writable and temp folders
     auto pathData = Windows::Storage::ApplicationData::Current->LocalFolder->Path;
-    EbrSetWritableFolder(pathData->Data());
+    IwSetWritableFolder(pathData->Data());
 
     char writableFolder[2048];
     size_t outLen;

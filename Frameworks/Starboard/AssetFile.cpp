@@ -79,8 +79,9 @@ bool EbrFSDirReader::readNext(EbrDir* curDir, EbrDirEnt* ent) {
 EbrDir* EbrOpenDir(const char* path) {
     CPathMapper map(path);
 
-    if (!map)
+    if (!map) {
         return NULL;
+    }
 
     EbrDirReader* fsReader = EbrFSDirReader::open(map.MappedPath());
     if (!fsReader) {

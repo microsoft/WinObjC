@@ -163,15 +163,15 @@ bool EbrUnlink(const char* path) {
 #define mkdir _mkdir
 std::wstring g_WritableFolder(L".");
 
-void EbrSetWritableFolder(const wchar_t* folder) {
+void IwSetWritableFolder(const wchar_t* folder) {
     g_WritableFolder = folder;
 }
 
-const wchar_t* EbrGetWritableFolder() {
+const wchar_t* IwGetWritableFolder() {
     return g_WritableFolder.c_str();
 }
 
-const std::wstring& _EbrGetWritableFolder() {
+const std::wstring& _IwGetWritableFolder() {
     return g_WritableFolder;
 }
 

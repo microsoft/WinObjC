@@ -20,12 +20,11 @@
 
 #include <algorithm>
 #include <list>
-#include <regex>
 
 #include "Platform/EbrPlatform.h"
 #include "PathMapper.h"
 
-// utility function to tokenize string using delmiters
+// utility function to tokenize string using delimiters
 // d:\src/winobjc ==> d:, src, winobjc
 // /src/winobjc ==> "", src, winobjc
 // / ==> ""
@@ -59,9 +58,9 @@ static void _EscapeIllegalPathCharacters(std::wstring& str) {
 }
 
 // normalize relative path
-//  1 remove any "." or "" components
-//  2 from reverse, remove any ".." and preceeding component
-// if components becomes empty, return "."
+// 1 remove any "." or "" components
+// 2 remove any ".." and preceeding component
+// 3 if components becomes empty, return "."
 
 static void _NormalizeRelativePathComponents(std::list<std::wstring>& components) {
     for (auto it = components.begin(); it != components.end();) {
@@ -76,6 +75,8 @@ static void _NormalizeRelativePathComponents(std::list<std::wstring>& components
                 break;
             }
             // we have to do this in case the last component is ..
+            // erase the previous component first because erase returns the next item
+            // which would be "..".
             it = components.erase(--it);
             it = components.erase(it);
         } else {
@@ -98,15 +99,13 @@ std::wstring _MapPathRoot(const std::wstring& root) {
         return std::wstring(L".\\home");
     }
 
-    std::wregex drive(L"[a-zA-Z]:");
-
-    if (std::regex_match(root, drive)) {
+    if (root.length() == 2 && iswalpha(root[0]) && root[1] == L':') {
         return root;
     }
 
-    for (int i = 0; i < _countof(c_specialFolders); ++i) {
+    for (auto root : c_specialFolders) {
         if (_wcsicmp(root.c_str(), c_specialFolders[i].c_str()) == 0) {
-            return EbrGetWritableFolder() + std::wstring(L"\\") + c_specialFolders[i];
+            return IwGetWritableFolder() + std::wstring(L"\\") + c_specialFolders[i];
         }
     }
 
