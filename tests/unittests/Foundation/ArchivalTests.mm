@@ -409,7 +409,7 @@ TEST(Archival, NSKeyedArchiver_Static_ClassName_Inheritance) {
     [unarchiver release];
 }
 
-TEST(Archival, BackwardsCompatibilityWithOldWinObjCArchives) {
+OSX_DISABLED_TEST(Archival, BackwardsCompatibilityWithOldWinObjCArchives) {
     // This is a binary property list containing:
     // {
     //   $archiver: NSKeyedArchiver
