@@ -19,28 +19,28 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Foundation\dll\Foundation.vcxproj">
+    <ProjectReference Include="..\..\Foundation\dll\Foundation.vcxproj">
       <Project>{86127226-9A6E-439B-A070-420A572AF0C7}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
+    <ProjectReference Include="..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
       <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Logging\dll\Logging.vcxproj">
+    <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
       <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Starboard\dll\Starboard.vcxproj">
+    <ProjectReference Include="..\..\Starboard\dll\Starboard.vcxproj">
       <Project>{0AC27ECF-E2AB-420B-9359-4843FFF4CBFA}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\UIKit\dll\UIKit.vcxproj">
+    <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
       <Project>{8E79930B-7EF6-4A4E-B46C-EFC0A49C55D9}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
+    <ProjectReference Include="..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
       <Project>{26da08da-d0b9-4579-b168-e7f0a5f20e57}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\CoreText\dll\CoreText.vcxproj">
+    <ProjectReference Include="..\..\CoreText\dll\CoreText.vcxproj">
       <Project>{36deec5d-f77b-4c94-a63c-86fb716833de}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\WinObjCRT\dll\WinObjCRT.vcxproj">
+    <ProjectReference Include="..\..\WinObjCRT\dll\WinObjCRT.vcxproj">
       <Project>{585b4870-0d6b-43a6-8e7e-ad08f7f507b6}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -52,7 +52,7 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <ProjectGuid>{7A062AEC-5AED-4F83-8716-4C078F75177B}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Benchmark.UnitTests</RootNamespace>
+    <RootNamespace>Framework.Benchmark</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <ApplicationType>Windows Store</ApplicationType>
@@ -64,7 +64,7 @@
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <WindowsAppContainer>false</WindowsAppContainer>
     <TargetOsAndVersion>Universal Windows</TargetOsAndVersion>
-    <StarboardBasePath>..\..\..\..</StarboardBasePath>
+    <StarboardBasePath>..\..\..</StarboardBasePath>
     <UseStarboardSourceSdk>true</UseStarboardSourceSdk>
     <IslandwoodDRT>false</IslandwoodDRT>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(RootNamespace)\</OutDir>
@@ -104,7 +104,7 @@
     <Import Project="$(StarboardBasePath)\msvc\ut-build.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
-    <Import Project="..\..\Tests.Shared\Tests.Shared.vcxitems" />
+    <Import Project="..\Tests.Shared\Tests.Shared.vcxitems" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -230,16 +230,16 @@
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="$(StarboardBasePath)\tests\unittests\Framework\Framework.cpp" />
-    <ClCompile Include="..\..\..\..\tests\UnitTests\Benchmark\EntryPoint.cpp" />
+    <ClCompile Include="$(StarboardBasePath)\tests\UnitTests\Framework\Framework.cpp" />
+    <ClCompile Include="$(StarboardBasePath)\tests\Benchmark\EntryPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(StarboardBasePath)\tests\UnitTests\Benchmark\BenchmarkTest.h" />
-    <ClInclude Include="..\..\..\..\tests\UnitTests\Benchmark\BenchmarkTestPublisher.h" />
+    <ClInclude Include="$(StarboardBasePath)\tests\Benchmark\BenchmarkTest.h" />
+    <ClInclude Include="$(StarboardBasePath)\tests\Benchmark\BenchmarkTestPublisher.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="$(StarboardBasePath)\tests\UnitTests\Benchmark\BenchmarkSampleTests.mm" />
-    <ClangCompile Include="$(StarboardBasePath)\tests\UnitTests\Benchmark\TextBenchmarkTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\Benchmark\BenchmarkSampleTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\Benchmark\TextBenchmarkTests.mm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

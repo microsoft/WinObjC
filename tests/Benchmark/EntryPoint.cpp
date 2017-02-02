@@ -18,6 +18,7 @@
 #include <TestFramework.h>
 #include "BenchmarkTestPublisher.h"
 #include <fstream>
+#include <algorithm>
 
 #ifdef WIN32
 #include <wrl\wrappers\corewrappers.h>
@@ -25,40 +26,41 @@ using namespace Microsoft::WRL::Wrappers;
 #endif
 
 using namespace benchmark;
-class CSVBenchmarkTestPublisher : public BenchmarkTestPublisher {
-    struct result {
-        std::string testName;
-        Microseconds totalRuntime;
-        Microseconds meanRuntime;
-        Microseconds stdDeviation;
-    };
+struct __Result {
+    std::string testName;
+    Microseconds totalRuntime;
+    Microseconds meanRuntime;
+    Microseconds stdDeviation;
+};
+
+class TestPublisherBase : public BenchmarkTestPublisher {
+public:
+    // Expect results.size() > 1
+    virtual void RegisterTestResults(const std::string& testName, const std::vector<Microseconds>& results) {
+        // Algorithm for calculating sample mean and variance with minimal rounding errors
+        Microseconds netRuntime = 0.0;
+        Microseconds mean = 0.0;
+        Microseconds q = 0.0;
+        size_t runCount = results.size();
+        for (size_t i = 0; i < runCount; ++i) {
+            Microseconds previousMean = mean;
+            netRuntime += results[i];
+            mean += (results[i] - mean) / (i + 1);
+            q += (results[i] - previousMean) * (results[i] - mean);
+        }
+        Microseconds sampleStandardDeviation = std::sqrt(q / (runCount - 1));
+        m_results.emplace_back(__Result{ testName, netRuntime, mean, sampleStandardDeviation });
+    }
+
+protected:
+    std::vector<__Result> m_results;
+};
+
+class CSVBenchmarkTestPublisher : public TestPublisherBase {
     std::string m_outPath;
-    std::vector<result> m_results;
 
 public:
     CSVBenchmarkTestPublisher(std::string&& outPath) : m_outPath(outPath) {
-    }
-    virtual void RegisterTestResults(const std::string& testName, const std::vector<Microseconds>& results) {
-        size_t runCount = results.size();
-        if (runCount > 1) {
-            // Algorithm for calculating sample mean and variance with minimal rounding errors
-            Microseconds netRuntime = 0.0;
-            Microseconds mean = 0.0;
-            Microseconds q = 0.0;
-            for (size_t i = 0; i < runCount; ++i) {
-                Microseconds previousMean = mean;
-                netRuntime += results[i];
-                mean += (results[i] - mean) / (i + 1);
-                q += (results[i] - previousMean) * (results[i] - mean);
-            }
-            Microseconds sampleStandardDeviation = std::sqrt(q / (runCount - 1));
-            m_results.emplace_back(result{ testName, netRuntime, mean, sampleStandardDeviation });
-        } else {
-            m_results.emplace_back(result{ testName,
-                                           results[0],
-                                           std::numeric_limits<Microseconds>::infinity(),
-                                           std::numeric_limits<Microseconds>::infinity() });
-        }
     }
 
     virtual void PublishTestResults() {
@@ -80,6 +82,35 @@ public:
     }
 };
 
+class LogBenchmarkTestPublisher : public TestPublisherBase {
+    size_t m_maxNameWidth = 0;
+
+public:
+    virtual void RegisterTestResults(const std::string& testName, const std::vector<Microseconds>& results) {
+        m_maxNameWidth = max(m_maxNameWidth, testName.size());
+        TestPublisherBase::RegisterTestResults(testName, results);
+    }
+
+    virtual void PublishTestResults() {
+        // Align output horizontally
+        std::string spaces(m_maxNameWidth - 5, ' ');
+        std::cout << "Test Name" << spaces << "|"
+                  << "Total Runtime"
+                  << "\t\t|"
+                  << "Mean Runtime"
+                  << "\t\t|"
+                  << "Standard Deviation"
+                  << "\n";
+        for (auto res : m_results) {
+            std::string spaces(m_maxNameWidth - res.testName.size() + 4, ' ');
+            std::cout << std::fixed << res.testName << spaces << "|" << res.totalRuntime << "\t\t|" << res.meanRuntime << "\t\t|"
+                      << res.stdDeviation << "\n";
+        }
+
+        std::cout.flush();
+    }
+};
+
 static std::shared_ptr<BenchmarkTestPublisher> s_publisher;
 void BenchmarkTestCreator::CreatePublisher(int argc, char** argv) {
     // Currently only support CSV format
@@ -91,7 +122,8 @@ void BenchmarkTestCreator::CreatePublisher(int argc, char** argv) {
         }
     }
 
-    LOG_ERROR("Unknown arguments given to Benchmark Tests");
+    LOG_INFO("No arguments given to benchmark tests. Defaulting to logging results");
+    s_publisher.reset(new LogBenchmarkTestPublisher());
 }
 
 std::shared_ptr<BenchmarkTestPublisher> BenchmarkTestCreator::GetPublisher() {

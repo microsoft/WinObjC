@@ -29,9 +29,9 @@ class BenchmarkTestBase {
 public:
     inline void Run();
 
-    // Number of times to run each test, default to 1
+    // Number of times to run each test, default to 2
     size_t GetRunCount() const {
-        return 1;
+        return 2;
     }
 
     // Pre-run and Post-run equivalent to SetUp and TearDown per test case
@@ -54,16 +54,18 @@ template <typename T>
 static void __RunTest(T& test) {
     using Microseconds = double;
     size_t runCount = test.GetRunCount();
-    ASSERT_NE(0, runCount);
+    ASSERT_LT(1, runCount);
     std::vector<Microseconds> results(runCount);
-    for (size_t i = 0; i < runCount; ++i) {
-        test.PreRun();
-        auto start = std::chrono::high_resolution_clock::now();
-        test.Run();
-        auto end = std::chrono::high_resolution_clock::now();
-        test.PostRun();
-        std::chrono::duration<Microseconds, std::micro> duration = end - start;
-        results[i] = duration.count();
+    @autoreleasepool {
+        for (size_t i = 0; i < runCount; ++i) {
+            test.PreRun();
+            auto start = std::chrono::high_resolution_clock::now();
+            test.Run();
+            auto end = std::chrono::high_resolution_clock::now();
+            test.PostRun();
+            std::chrono::duration<Microseconds, std::micro> duration = end - start;
+            results[i] = duration.count();
+        }
     }
 
     std::shared_ptr<::benchmark::BenchmarkTestPublisher> publisher = ::benchmark::BenchmarkTestCreator::GetPublisher();

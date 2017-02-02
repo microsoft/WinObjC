@@ -31,12 +31,9 @@ static const NSString* sc_frameText = @"Lorem ipsum dolor sit amet, consectetur 
                                       @"proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 static constexpr UniChar sc_chars[4] = { 'T', 'E', 'S', 'T' };
 
-class CTFramesetterCreateFrameTest : public ::testing::BenchmarkTestBase {
-    woc::AutoCF<CTFramesetterRef> m_framesetter;
-    woc::AutoCF<CGPathRef> m_path;
-
+class CTFramesetterBase : public ::testing::BenchmarkTestBase {
 public:
-    CTFramesetterCreateFrameTest(CGSize size) {
+    CTFramesetterBase(CGSize size) {
         CTParagraphStyleSetting setting;
         CTTextAlignment alignment = kCTCenterTextAlignment;
         setting.spec = kCTParagraphStyleSpecifierAlignment;
@@ -56,21 +53,44 @@ public:
 
         auto attrString = woc::MakeAutoCF<CFAttributedStringRef>(CFAttributedStringCreate(nullptr, (CFStringRef)sc_frameText, dict));
         m_framesetter = woc::MakeAutoCF<CTFramesetterRef>(CTFramesetterCreateWithAttributedString(attrString));
-        m_path = woc::MakeAutoCF<CGMutablePathRef>(CGPathCreateMutable());
+        m_size = size;
+    }
+
+    size_t GetRunCount() const {
+        return 100;
+    }
+
+protected:
+    woc::AutoCF<CTFramesetterRef> m_framesetter;
+    CGSize m_size;
+};
+
+class CTFramesetterCreateFrameTest : public CTFramesetterBase {
+    woc::AutoCF<CGMutablePathRef> m_path;
+
+public:
+    CTFramesetterCreateFrameTest(CGSize size) : CTFramesetterBase(size), m_path(CGPathCreateMutable()) {
         CGPathAddRect(m_path, nullptr, CGRect{ CGPointZero, size });
     }
 
     inline void Run() {
         auto frame = woc::MakeAutoCF<CTFrameRef>(CTFramesetterCreateFrame(m_framesetter, CFRange{ 0, 0 }, m_path, nullptr));
     }
+};
 
-    size_t GetRunCount() const {
-        return 100;
+class CTFramesetterSuggestFrameSizeTest : public CTFramesetterBase {
+public:
+    CTFramesetterSuggestFrameSizeTest(CGSize size) : CTFramesetterBase(size) {
+    }
+
+    inline void Run() {
+        CTFramesetterSuggestFrameSizeWithConstraints(m_framesetter, CFRange{}, nullptr, m_size, nullptr);
     }
 };
 
 static constexpr CGSize c_sizes[] = { { 0, 0 }, { 0, 512 }, { 256, 0 }, { 256, 512 } };
 BENCHMARK_REGISTER_TEST_P(CoreText, CTFramesetterCreateFrameTest, ::testing::ValuesIn(c_sizes), CGSize);
+BENCHMARK_REGISTER_TEST_P(CoreText, CTFramesetterSuggestFrameSizeTest, ::testing::ValuesIn(c_sizes), CGSize);
 
 class CTLineCreateTest : public ::testing::BenchmarkTestBase {
     woc::AutoCF<CFAttributedStringRef> m_attrString;
@@ -175,6 +195,10 @@ public:
     void PostRun() {
         _CGContextPopEndDraw(m_context);
     }
+
+    size_t GetRunCount() const {
+        return 5;
+    }
 };
 
 TEST_BENCHMARK_F(CoreText, CTFrameDrawSingle);
@@ -264,14 +288,6 @@ TEST_BENCHMARK_F(CoreText, CTFrameDrawYuge);
 class CTLineDrawBase : public TextBenchmarkBase {
 public:
     CTLineDrawBase() {
-        auto colorspace = woc::MakeAutoCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
-        m_context = woc::MakeAutoCF<CGContextRef>(CGBitmapContextCreate(nullptr,
-                                                                        sc_defaultSize.width,
-                                                                        sc_defaultSize.height,
-                                                                        8,
-                                                                        sc_defaultSize.width * 4,
-                                                                        colorspace,
-                                                                        kCGImageAlphaPremultipliedFirst));
         UIFont* font = [UIFont systemFontOfSize:24];
 
         CFStringRef keys[1] = { kCTFontAttributeName };
@@ -324,14 +340,6 @@ TEST_BENCHMARK_F(CoreText, CTLineDrawGroup);
 class CTLineDrawComplete : public TextBenchmarkBase {
 public:
     inline void Run() {
-        auto colorspace = woc::MakeAutoCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
-        m_context = woc::MakeAutoCF<CGContextRef>(CGBitmapContextCreate(nullptr,
-                                                                        sc_defaultSize.width,
-                                                                        sc_defaultSize.height,
-                                                                        8,
-                                                                        sc_defaultSize.width * 4,
-                                                                        colorspace,
-                                                                        kCGImageAlphaPremultipliedFirst));
         UIFont* font = [UIFont systemFontOfSize:24];
 
         CFStringRef keys[1] = { kCTFontAttributeName };
@@ -360,7 +368,8 @@ public:
     }
 
 protected:
-    woc::AutoCF<CTRunRef> m_run;
+    // Weak reference to a run since it's owned by the CTLine in the base class
+    CTRunRef m_run;
 };
 
 class CTRunDrawSingle : public CTRunDrawBase {
