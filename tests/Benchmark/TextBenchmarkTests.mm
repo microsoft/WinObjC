@@ -57,7 +57,7 @@ public:
     }
 
     size_t GetRunCount() const {
-        return 100;
+        return 1000;
     }
 
 protected:
@@ -115,7 +115,7 @@ public:
     }
 
     size_t GetRunCount() const {
-        return 100;
+        return 1000;
     }
 };
 
@@ -176,7 +176,7 @@ public:
     }
 
     size_t GetRunCount() const {
-        return 100;
+        return 1000;
     }
 };
 
@@ -197,7 +197,7 @@ public:
     }
 
     size_t GetRunCount() const {
-        return 5;
+        return 50;
     }
 };
 
@@ -233,7 +233,7 @@ public:
     }
 
     size_t GetRunCount() const {
-        return 100;
+        return 1000;
     }
 };
 
@@ -276,7 +276,7 @@ public:
     }
 
     size_t GetRunCount() const {
-        return 10;
+        return 100;
     }
 
 private:
@@ -332,6 +332,10 @@ public:
     void PostRun() {
         _CGContextPopEndDraw(m_context);
     }
+
+    size_t GetRunCount() const {
+        return 50;
+    }
 };
 
 TEST_BENCHMARK_F(CoreText, CTLineDrawSingle);
@@ -356,7 +360,7 @@ public:
     }
 
     size_t GetRunCount() const {
-        return 100;
+        return 1000;
     }
 };
 
@@ -397,6 +401,10 @@ public:
 
     void PostRun() {
         _CGContextPopEndDraw(m_context);
+    }
+
+    size_t GetRunCount() const {
+        return 50;
     }
 };
 
@@ -482,7 +490,7 @@ public:
     }
 
     size_t GetRunCount() const {
-        return 100;
+        return 1000;
     }
 };
 
@@ -501,6 +509,10 @@ public:
     void PostRun() {
         _CGContextPopEndDraw(m_context);
     }
+
+    size_t GetRunCount() const {
+        return 50;
+    }
 };
 
 TEST_BENCHMARK_F(NSString, DrawAtPoint);
@@ -516,7 +528,7 @@ public:
     }
 
     size_t GetRunCount() const {
-        return 100;
+        return 1000;
     }
 
 protected:
@@ -535,7 +547,7 @@ public:
     }
 
     size_t GetRunCount() const {
-        return 100;
+        return 1000;
     }
 
 protected:
@@ -544,14 +556,32 @@ protected:
 
 BENCHMARK_REGISTER_TEST_P(NSString, SizeWithFont, ::testing::ValuesIn(c_sizes), CGSize);
 
-TEST_BENCHMARK(CoreText, CTFontCreateWithName, 1000) {
+TEST_BENCHMARK(CoreText, CTFontCreateWithName, 10000) {
     CTFontRef font = CTFontCreateWithName(CFSTR("Arial"), 24, nullptr);
     CFRelease(font);
 }
 
-TEST_BENCHMARK(CoreText, CTFontDescriptor, 1000) {
+TEST_BENCHMARK(CoreText, CTFontDescriptor, 10000) {
     CTFontDescriptorRef descriptor = CTFontDescriptorCreateWithNameAndSize(CFSTR("Arial"), 88.5);
     CTFontRef font = CTFontCreateWithFontDescriptor(descriptor, 25.25, nullptr);
     CFRelease(descriptor);
     CFRelease(font);
 }
+
+class CTFontGetGlyphsTest : public ::testing::BenchmarkTestBase {
+    woc::AutoCF<CTFontRef> m_font;
+    std::vector<CGGlyph> m_glyphs;
+
+public:
+    CTFontGetGlyphsTest() : m_font(CTFontCreateWithName(CFSTR("Arial"), 25, nullptr)), m_glyphs(std::extent<decltype(sc_chars)>::value) {
+    }
+    inline void Run() {
+        CTFontGetGlyphsForCharacters(m_font, sc_chars, m_glyphs.data(), m_glyphs.size());
+    }
+
+    size_t GetRunCount() const {
+        return 1000;
+    }
+};
+
+TEST_BENCHMARK_F(CoreText, CTFontGetGlyphsTest);

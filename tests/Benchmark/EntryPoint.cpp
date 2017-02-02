@@ -31,6 +31,7 @@ struct __Result {
     Microseconds totalRuntime;
     Microseconds meanRuntime;
     Microseconds stdDeviation;
+    size_t runCount;
 };
 
 class TestPublisherBase : public BenchmarkTestPublisher {
@@ -49,7 +50,7 @@ public:
             q += (results[i] - previousMean) * (results[i] - mean);
         }
         Microseconds sampleStandardDeviation = std::sqrt(q / (runCount - 1));
-        m_results.emplace_back(__Result{ testName, netRuntime, mean, sampleStandardDeviation });
+        m_results.emplace_back(__Result{ testName, netRuntime, mean, sampleStandardDeviation, runCount });
     }
 
 protected:
@@ -72,9 +73,12 @@ public:
                 << "Mean Runtime"
                 << ","
                 << "Standard Deviation"
+                << ","
+                << "Run Count"
                 << "\n";
         for (auto res : m_results) {
-            outFile << res.testName << "," << res.totalRuntime << "," << res.meanRuntime << "," << res.stdDeviation << "\n";
+            outFile << res.testName << "," << res.totalRuntime << "," << res.meanRuntime << "," << res.stdDeviation << "," << res.runCount
+                    << "\n";
         }
 
         outFile.flush();
@@ -100,14 +104,16 @@ public:
                   << "Mean Runtime"
                   << "\t\t|"
                   << "Standard Deviation"
+                  << "\t|"
+                  << "Run Count"
                   << "\n";
         for (auto res : m_results) {
             std::string spaces(m_maxNameWidth - res.testName.size() + 4, ' ');
             std::cout << std::fixed << res.testName << spaces << "|" << res.totalRuntime << "\t\t|" << res.meanRuntime << "\t\t|"
-                      << res.stdDeviation << "\n";
+                      << res.stdDeviation << "\t\t|" << res.runCount << "\n";
         }
 
-        std::cout.flush();
+        std::cout << std::endl;
     }
 };
 
