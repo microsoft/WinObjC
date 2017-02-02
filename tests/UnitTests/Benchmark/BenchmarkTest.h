@@ -22,6 +22,7 @@
 #include <numeric>
 #include <utility>
 #include <memory>
+#include "BenchmarkTestPublisher.h"
 
 namespace testing {
 class BenchmarkTestBase {
@@ -65,30 +66,9 @@ static void __RunTest(T& test) {
         results[i] = duration.count();
     }
 
-    if (runCount > 1) {
-        // Algorithm for calculating sample mean and variance with minimal rounding errors
-        Microseconds netRuntime = 0.0;
-        Microseconds mean = 0.0;
-        Microseconds q = 0.0;
-        for (size_t i = 0; i < runCount; ++i) {
-            Microseconds previousMean = mean;
-            netRuntime += results[i];
-            mean += (results[i] - mean) / (i + 1);
-            q += (results[i] - previousMean) * (results[i] - mean);
-        }
-
-        Microseconds sampleStandardDeviation = std::sqrt(q / (runCount - 1));
-
-        LOG_INFO(
-            "\nNet Runtime: %f microseconds\nSample Mean Runtime: %f microseconds\nSample Standard Deviation: %f microseconds\n%u test "
-            "runs",
-            netRuntime,
-            mean,
-            sampleStandardDeviation,
-            runCount);
-    } else {
-        LOG_INFO("\nNet Runtime: %f microseconds\n1 test run", results[0]);
-    }
+    std::shared_ptr<::benchmark::BenchmarkTestPublisher> publisher = ::benchmark::BenchmarkTestCreator::GetPublisher();
+    auto testName = std::string(::testing::UnitTest::GetInstance()->current_test_info()->name());
+    publisher->RegisterTestResults(testName, results);
 }
 
 template <typename TestClass>

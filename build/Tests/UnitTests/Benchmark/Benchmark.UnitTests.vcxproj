@@ -231,10 +231,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="$(StarboardBasePath)\tests\unittests\Framework\Framework.cpp" />
-    <ClCompile Include="$(StarboardBasePath)\tests\unittests\EntryPoint.cpp" />
+    <ClCompile Include="..\..\..\..\tests\UnitTests\Benchmark\EntryPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(StarboardBasePath)\tests\UnitTests\Benchmark\BenchmarkTest.h" />
+    <ClInclude Include="..\..\..\..\tests\UnitTests\Benchmark\BenchmarkTestPublisher.h" />
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="$(StarboardBasePath)\tests\UnitTests\Benchmark\BenchmarkSampleTests.mm" />
