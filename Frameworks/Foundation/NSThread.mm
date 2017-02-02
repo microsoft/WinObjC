@@ -36,7 +36,7 @@ static std::mutex s_mainThreadMutex;
 static StrongId<NSThread> s_mainThread;
 static BOOL s_isMultiThreaded = NO;
 
-static NSThread* setOrGetCurrentThread(NSThread* thread) {
+static NSThread* _setOrGetCurrentThread(NSThread* thread) {
     // Use a lazy initialized block scope thread_local to manage the lifetime of currentThread.
     // Note that non-trivial file scope thread_locals are apparently not supported in current clang version.
     thread_local static StrongId<NSThread> tlsCurrentThread;
@@ -54,12 +54,12 @@ static NSThread* setOrGetCurrentThread(NSThread* thread) {
     return tlsCurrentThread;
 }
 
-static void setCurrentThread(NSThread* thread) {
-    setOrGetCurrentThread(thread);
+static void _setCurrentThread(NSThread* thread) {
+    _setOrGetCurrentThread(thread);
 }
 
-static NSThread* getCurrentThread() {
-    return setOrGetCurrentThread(nil);
+static NSThread* _getCurrentThread() {
+    return _setOrGetCurrentThread(nil);
 }
 
 @interface NSThread () {
@@ -225,7 +225,7 @@ the default thread priority. Utilizes win32 thread priority.
 
 - (void)_associateWithMainThread {
     std::lock_guard<std::mutex> lock(s_mainThreadMutex);
-    setCurrentThread(self);
+    _setCurrentThread(self);
     if (s_mainThread && s_mainThread != self) {
         [NSException
              raise:NSInternalInconsistencyException
@@ -239,7 +239,7 @@ the default thread priority. Utilizes win32 thread priority.
 @Status Interoperable
 */
 + (BOOL)isMainThread {
-    return getCurrentThread() == [self mainThread];
+    return _getCurrentThread() == [self mainThread];
 }
 
 /**
@@ -275,11 +275,11 @@ the default thread priority. Utilizes win32 thread priority.
     return _threadDictionary;
 }
 
-static void* threadBody(void* context) {
+static void* _threadBody(void* context) {
     NSThread* self = static_cast<NSThread*>(context);
 
     // Let current thread mechanism assume ownership.
-    setCurrentThread(self);
+    _setCurrentThread(self);
     [self release];
 
     // The body of every NSThread boils down to calling -main.
@@ -320,7 +320,7 @@ static void* threadBody(void* context) {
     // Stay alive while underlying thread of execution starts.
     [self retain];
 
-    pthread_create(&_pthread, &attrs, threadBody, self);
+    pthread_create(&_pthread, &attrs, _threadBody, self);
 }
 
 /**
@@ -362,7 +362,7 @@ static void* threadBody(void* context) {
 @Status Interoperable
 */
 + (NSThread*)currentThread {
-    return getCurrentThread();
+    return _getCurrentThread();
 }
 
 /**
