@@ -51,6 +51,8 @@ public:
         return !mappedPath.empty();
     }
 
+    static bool CreateDefaultPaths();
+
 private:
     std::wstring mappedPath;
 };

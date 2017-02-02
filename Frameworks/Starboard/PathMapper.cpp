@@ -126,10 +126,23 @@ std::wstring _PathFromComponents(const std::list<std::wstring>& components) {
 }
 
 CPathMapper::CPathMapper(const char* path) {
+    // create default paths once
+    static bool createDefaultPaths = CreateDefaultPaths();
+
     std::wstring wpath = Strings::NarrowToWide<std::wstring>(path);
     std::list<std::wstring> components = _TokenizeString(wpath, L"/\\");
 
     _NormalizeRelativePathComponents(components);
     components.front() = _MapPathRoot(components.front());
     mappedPath = _PathFromComponents(components);
+}
+
+bool CPathMapper::CreateDefaultPaths() {
+    for (auto folder : c_specialFolders) {
+        _wmkdir((IwGetWritableFolder() + std::wstring(L"\\") + folder).c_str());
+    }
+    // also create "Documents\\Library"
+    _wmkdir((IwGetWritableFolder() + std::wstring(L"\\Documents\\Library")).c_str());
+
+    return true;
 }

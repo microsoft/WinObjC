@@ -165,6 +165,8 @@ std::wstring g_WritableFolder(L".");
 
 void IwSetWritableFolder(const wchar_t* folder) {
     g_WritableFolder = folder;
+    // recreate the default folders
+    CPathMapper::CreateDefaultPaths();
 }
 
 const wchar_t* IwGetWritableFolder() {
