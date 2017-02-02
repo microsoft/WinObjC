@@ -543,3 +543,15 @@ protected:
 };
 
 BENCHMARK_REGISTER_TEST_P(NSString, SizeWithFont, ::testing::ValuesIn(c_sizes), CGSize);
+
+TEST_BENCHMARK(CoreText, CTFontCreateWithName, 1000) {
+    CTFontRef font = CTFontCreateWithName(CFSTR("Arial"), 24, nullptr);
+    CFRelease(font);
+}
+
+TEST_BENCHMARK(CoreText, CTFontDescriptor, 1000) {
+    CTFontDescriptorRef descriptor = CTFontDescriptorCreateWithNameAndSize(CFSTR("Arial"), 88.5);
+    CTFontRef font = CTFontCreateWithFontDescriptor(descriptor, 25.25, nullptr);
+    CFRelease(descriptor);
+    CFRelease(font);
+}
