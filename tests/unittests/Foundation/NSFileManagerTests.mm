@@ -1,4 +1,4 @@
-//******************************************************************************
+﻿//******************************************************************************
 //
 // Copyright (c) Microsoft. All rights reserved.
 //
@@ -212,4 +212,15 @@ TEST(NSFileManager, MoveFileViaURL) {
 
     // Verify data.
     ASSERT_OBJCEQ([content dataUsingEncoding:NSUTF8StringEncoding], [NSData dataWithContentsOfURL:destURL]);
+}
+
+TEST(NSFileManager, DirectoryWithUTF16Chars) {
+    wchar_t* specialFolder = L"oÖo winobjc";
+    NSString* directoryName = [NSString stringWithCharacters:(const unichar*)specialFolder length:wcslen(specialFolder) * sizeof(wchar_t)];
+    NSString* testPath = getPathToFile(directoryName);
+
+    EXPECT_TRUE([[NSFileManager defaultManager] createDirectoryAtPath:testPath attributes:nil]);
+    EXPECT_TRUE([[NSFileManager defaultManager] fileExistsAtPath:testPath]);
+    EXPECT_TRUE([[NSFileManager defaultManager] removeItemAtPath:testPath error:nil]);
+    EXPECT_FALSE([[NSFileManager defaultManager] fileExistsAtPath:testPath]);
 }

@@ -154,8 +154,6 @@ LIBRARY Starboard
         EbrRename
         EbrUnlink
         EbrMkdir
-        EbrGetcwd
-        EbrChdir
         EbrChmod
         EbrRemove
         EbrRemoveEmptyDir
@@ -166,9 +164,6 @@ LIBRARY Starboard
         EbrGetTimeOfDay
         EbrGetMediaTime
         EbrGetWantedOrientation
-        EbrGetRootMapping
-        EbrGetWritableFolder
-        EbrSetWritableFolder
         EbrBlockIfBackground
         EbrEventInit
         EbrEventSignal
@@ -177,6 +172,9 @@ LIBRARY Starboard
         EbrEventTimedWait
         EbrEventTimedMultipleWait
         EbrEventDestroy
+
+        IwGetWritableFolder
+        IwSetWritableFolder
 
         ; REMOVE / CLEANUP C++ EXPORTS
         ?format@string@woc@@YA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PBDZZ
