@@ -103,9 +103,9 @@ std::wstring _MapPathRoot(const std::wstring& root) {
         return root;
     }
 
-    for (auto root : c_specialFolders) {
-        if (_wcsicmp(root.c_str(), c_specialFolders[i].c_str()) == 0) {
-            return IwGetWritableFolder() + std::wstring(L"\\") + c_specialFolders[i];
+    for (auto folder : c_specialFolders) {
+        if (_wcsicmp(root.c_str(), folder.c_str()) == 0) {
+            return IwGetWritableFolder() + std::wstring(L"\\") + folder;
         }
     }
 
