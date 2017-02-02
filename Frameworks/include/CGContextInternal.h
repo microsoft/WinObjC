@@ -51,11 +51,3 @@ COREGRAPHICS_EXPORT CGImageRef CGBitmapContextGetImage(CGContextRef ctx);
 // and only calling BeginDraw()/EndDraw() when the stack is empty/emptied
 COREGRAPHICS_EXPORT void _CGContextPushBeginDraw(CGContextRef ctx);
 COREGRAPHICS_EXPORT void _CGContextPopEndDraw(CGContextRef ctx);
-
-// If currently in a Begin/EndDraw stack, Escape will EndDraw(), Unescape will BeginDraw()
-// For scenarios where a Begin/EndDraw pair needs to be temporarily escaped, to be returned to at a later time
-// Ie:
-//      - Switching render targets - Illegal to do so if currently in a Begin/EndDraw pair
-// Also counts in a stack-like manner, so that the escape and unescape only happen once
-COREGRAPHICS_EXPORT void _CGContextEscapeBeginEndDrawStack(CGContextRef ctx);
-COREGRAPHICS_EXPORT void _CGContextUnescapeBeginEndDrawStack(CGContextRef ctx);

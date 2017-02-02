@@ -12,7 +12,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
-//****************************************************************************** 
+//******************************************************************************
 
 #include "DrawingTest.h"
 #include "DrawingTestConfig.h"
@@ -271,12 +271,12 @@ DRAW_TEST(CGContextClipping, NonOverlappingImageMasks) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
-    woc::unique_cf<CGImageRef> clipImage{
-        __CreateClipImage({64, 64}, ClippingTypeAlpha, [](CGContextRef context, CGSize size, ClippingType clipType) {
-            CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 1.0);
-            CGContextFillRect(context, { CGPointZero, size });
-        })
-    };
+    woc::unique_cf<CGImageRef> clipImage{ __CreateClipImage({ 64, 64 },
+                                                            ClippingTypeAlpha,
+                                                            [](CGContextRef context, CGSize size, ClippingType clipType) {
+                                                                CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 1.0);
+                                                                CGContextFillRect(context, { CGPointZero, size });
+                                                            }) };
 
     CGContextClipToMask(context, { CGPointZero, { 64, 64 } }, clipImage.get());
     CGContextClipToMask(context, { { 0, bounds.size.height - 64 }, { 64, 64 } }, clipImage.get());
@@ -291,12 +291,12 @@ DRAW_TEST(CGContextClipping, CrossTransformedImageMasks) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
-    woc::unique_cf<CGImageRef> clipImage{
-        __CreateClipImage({64, 64}, ClippingTypeAlpha, [](CGContextRef context, CGSize size, ClippingType clipType) {
-            CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 1.0);
-            CGContextFillRect(context, { CGPointZero, size });
-        })
-    };
+    woc::unique_cf<CGImageRef> clipImage{ __CreateClipImage({ 64, 64 },
+                                                            ClippingTypeAlpha,
+                                                            [](CGContextRef context, CGSize size, ClippingType clipType) {
+                                                                CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 1.0);
+                                                                CGContextFillRect(context, { CGPointZero, size });
+                                                            }) };
 
     CGContextClipToMask(context, { CGPointZero, { 64, 64 } }, clipImage.get());
     CGContextTranslateCTM(context, 2.0, 2.0);
@@ -310,19 +310,19 @@ DRAW_TEST(CGContextClipping, PushClipPopClip) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
-    woc::unique_cf<CGImageRef> clipImage1{
-        __CreateClipImage({64, 64}, ClippingTypeAlpha, [](CGContextRef context, CGSize size, ClippingType clipType) {
-            CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 0.5);
-            CGContextFillRect(context, { CGPointZero, size });
-        })
-    };
+    woc::unique_cf<CGImageRef> clipImage1{ __CreateClipImage({ 64, 64 },
+                                                             ClippingTypeAlpha,
+                                                             [](CGContextRef context, CGSize size, ClippingType clipType) {
+                                                                 CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 0.5);
+                                                                 CGContextFillRect(context, { CGPointZero, size });
+                                                             }) };
 
-    woc::unique_cf<CGImageRef> clipImage2{
-        __CreateClipImage({64, 64}, ClippingTypeAlpha, [](CGContextRef context, CGSize size, ClippingType clipType) {
-            CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 0.5);
-            CGContextFillEllipseInRect(context, { CGPointZero, size });
-        })
-    };
+    woc::unique_cf<CGImageRef> clipImage2{ __CreateClipImage({ 64, 64 },
+                                                             ClippingTypeAlpha,
+                                                             [](CGContextRef context, CGSize size, ClippingType clipType) {
+                                                                 CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 0.5);
+                                                                 CGContextFillEllipseInRect(context, { CGPointZero, size });
+                                                             }) };
 
     CGRect clippingRect{ CGPointZero, { 64, 64 } };
     CGContextClipToMask(context, clippingRect, clipImage1.get());
@@ -342,16 +342,49 @@ DRAW_TEST(CGContextClipping, PushClipPopClip) {
     CGContextFillRect(context, bounds);
 }
 
+DRAW_TEST(CGContextClipping, ClipDrawClipDraw) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    woc::unique_cf<CGImageRef> clipImage1{ __CreateClipImage({ 64, 64 },
+                                                             ClippingTypeAlpha,
+                                                             [](CGContextRef context, CGSize size, ClippingType clipType) {
+                                                                 CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 0.5);
+                                                                 CGContextFillRect(context, { CGPointZero, size });
+                                                             }) };
+
+    woc::unique_cf<CGImageRef> clipImage2{ __CreateClipImage({ 64, 64 },
+                                                             ClippingTypeAlpha,
+                                                             [](CGContextRef context, CGSize size, ClippingType clipType) {
+                                                                 CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 0.5);
+                                                                 CGContextFillEllipseInRect(context, { CGPointZero, size });
+                                                             }) };
+
+    CGRect clippingRect{ CGPointZero, { 64, 64 } };
+    CGContextClipToMask(context, clippingRect, clipImage1.get());
+
+    // This should draw a 50% alpha square.
+    CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 1.0);
+    CGContextFillRect(context, bounds);
+
+    CGRect clippingRect2{ { 32, 32 }, { 64, 64 } };
+    CGContextClipToMask(context, clippingRect2, clipImage2.get());
+
+    // This should draw a 25% alpha quarter-circle emanating from one corner of the square.
+    CGContextSetRGBFillColor(context, 0.0, 1.0, 1.0, 1.0);
+    CGContextFillRect(context, bounds);
+}
+
 DRAW_TEST(CGContextClipping, ClipATransparencyLayer) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
-    woc::unique_cf<CGImageRef> clipImage{
-        __CreateClipImage({64, 64}, ClippingTypeAlpha, [](CGContextRef context, CGSize size, ClippingType clipType) {
-            CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 0.5);
-            CGContextFillRect(context, { CGPointZero, size });
-        })
-    };
+    woc::unique_cf<CGImageRef> clipImage{ __CreateClipImage({ 64, 64 },
+                                                            ClippingTypeAlpha,
+                                                            [](CGContextRef context, CGSize size, ClippingType clipType) {
+                                                                CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 0.5);
+                                                                CGContextFillRect(context, { CGPointZero, size });
+                                                            }) };
 
     CGRect clippingRect{ CGPointZero, { 64, 64 } };
     CGContextClipToMask(context, clippingRect, clipImage.get());
@@ -376,18 +409,16 @@ DRAW_TEST(CGImage, CreateWithSameSizeMask) {
 
     CGSize imageSize{ static_cast<CGFloat>(CGImageGetWidth(image.get())), static_cast<CGFloat>(CGImageGetHeight(image.get())) };
 
-    woc::unique_cf<CGImageRef> alphaMask{
-        __CreateClipImage(imageSize,
-            ClippingTypeMask,
-            [](CGContextRef context, CGSize size, ClippingType clipType) {
-                CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 1.0);
-                CGContextFillRect(context, { CGPointZero, size });
+    woc::unique_cf<CGImageRef> alphaMask{ __CreateClipImage(imageSize,
+                                                            ClippingTypeMask,
+                                                            [](CGContextRef context, CGSize size, ClippingType clipType) {
+                                                                CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 1.0);
+                                                                CGContextFillRect(context, { CGPointZero, size });
 
-                CGContextSetRGBStrokeColor(context, 0.0, 0.0, 0.0, 1.0);
-                CGContextSetLineWidth(context, 10.0);
-                CGContextStrokeRect(context, CGRectInset({ CGPointZero, size }, 20, 20));
-            })
-    };
+                                                                CGContextSetRGBStrokeColor(context, 0.0, 0.0, 0.0, 1.0);
+                                                                CGContextSetLineWidth(context, 10.0);
+                                                                CGContextStrokeRect(context, CGRectInset({ CGPointZero, size }, 20, 20));
+                                                            }) };
 
     ASSERT_NE(nullptr, alphaMask);
 
@@ -410,21 +441,19 @@ DRAW_TEST(CGImage, CreateWithScaledMask) {
 
     CGSize imageSize{ static_cast<CGFloat>(CGImageGetWidth(image.get())), static_cast<CGFloat>(CGImageGetHeight(image.get())) };
 
-    woc::unique_cf<CGImageRef> alphaMask{
-        __CreateClipImage({ 64, 64 },
-            ClippingTypeMask,
-            [](CGContextRef context, CGSize size, ClippingType clipType) {
-                CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 1.0);
-                CGContextFillRect(context, { CGPointZero, size });
+    woc::unique_cf<CGImageRef> alphaMask{ __CreateClipImage({ 64, 64 },
+                                                            ClippingTypeMask,
+                                                            [](CGContextRef context, CGSize size, ClippingType clipType) {
+                                                                CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 1.0);
+                                                                CGContextFillRect(context, { CGPointZero, size });
 
-                CGContextSetRGBStrokeColor(context, 0.0, 0.0, 0.0, 1.0);
-                CGContextSetLineWidth(context, 4.0);
-                CGPoint points[]{
-                    { 0, 0 }, { 64, 64 }, { 0, 64 }, { 64, 0 },
-                };
-                CGContextStrokeLineSegments(context, points, 4);
-            })
-    };
+                                                                CGContextSetRGBStrokeColor(context, 0.0, 0.0, 0.0, 1.0);
+                                                                CGContextSetLineWidth(context, 4.0);
+                                                                CGPoint points[]{
+                                                                    { 0, 0 }, { 64, 64 }, { 0, 64 }, { 64, 0 },
+                                                                };
+                                                                CGContextStrokeLineSegments(context, points, 4);
+                                                            }) };
 
     ASSERT_NE(nullptr, alphaMask);
 
