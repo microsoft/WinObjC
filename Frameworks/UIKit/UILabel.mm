@@ -45,6 +45,9 @@
     UILineBreakMode _lineBreakMode;
     BOOL _adjustFontSize;
     float _minimumFontSize;
+    float _originalFontSize;
+    BOOL _minimumScaleFactorHasBeenSet;
+    float _minimumScaleFactor;
     int _numberOfLines;
     BOOL _isDisabled;
     BOOL _isHighlighted;
@@ -77,8 +80,8 @@
 
         CGSize size = CGSizeZero;
         if (numberOfLines == 1) {
-            // In one line case, linebreak mode and allowed height really does not matter because we give it unlimited width for measure
-            size = [text sizeWithFont:_targetFont constrainedToSize:CGSizeMake(0.0f, allowedHeight) lineBreakMode:UILineBreakModeClip];
+            // In one line case, linebreak mode, we give it unlimited width and unlimited hight for measure to get its natural widht/height
+            size = [text sizeWithFont:_targetFont constrainedToSize:CGSizeMake(0.0f, 0.0f) lineBreakMode:UILineBreakModeClip];
         } else {
             // In multi-line case, we want the line to be wrapping during measure, in this case, we want to give allowed hight as unlimited
             size =
@@ -129,11 +132,24 @@
 
     // Special:on reference platform, adjustFontSizeToFit is no-op when lineBreakMode is Wrapping
     if (_lineBreakMode != UILineBreakModeWordWrap && _lineBreakMode != UILineBreakModeCharacterWrap) {
+        float minimumFontSize = _minimumFontSize;
+
+        // if minimumScaleFactor is used, it should override _minimumFontSize which is deprecated
+        if (_minimumScaleFactorHasBeenSet) {
+            if (_minimumScaleFactor > 0.0) {
+                minimumFontSize = _minimumScaleFactor * _originalFontSize;
+            } else {
+                // per reference platform, if minimumScaleFactor is set and equal to 0.0
+                // use current font size is used as smallest font size
+                minimumFontSize = [_font pointSize];
+            }
+        }
+
         StrongId<UIFont> _targetFont = [self _findMaxFontSizeToFit:rect
                                                               Text:_text
                                                               Font:_font
                                                      NumberOfLines:_numberOfLines
-                                                   MinimumFontSize:_minimumFontSize
+                                                   MinimumFontSize:minimumFontSize
                                                   StartingFontSize:[_font pointSize]];
         if (_targetFont != nil) {
             // found a font that can be adjusted to fit, otherwise, do nothing
@@ -148,7 +164,7 @@
     [_textBlock setText:_text];
     [_textBlock setFontSize:[_font pointSize]];
 
-    WUTFontWeight* fontWeight =[WUTFontWeight new];
+    WUTFontWeight* fontWeight = [WUTFontWeight new];
     fontWeight.weight = static_cast<unsigned short>([_font _fontWeight]);
     [_textBlock setFontWeight:fontWeight];
     [_textBlock setFontStyle:static_cast<WUTFontStyle>([_font _fontStyle])];
@@ -193,7 +209,6 @@
         _font = font;
 
         _alignment = (UITextAlignment)[coder decodeInt32ForKey:@"UITextAlignment"];
-        _adjustFontSize = [coder decodeInt32ForKey:@"UIAdjustsFontSizeToFit"];
 
         if ([coder containsValueForKey:@"UINumberOfLines"]) {
             _numberOfLines = [coder decodeInt32ForKey:@"UINumberOfLines"];
@@ -201,7 +216,23 @@
             _numberOfLines = 1;
         }
 
-        _minimumFontSize = [coder decodeFloatForKey:@"UIMinimumFontSize"];
+        if ([coder containsValueForKey:@"UIMinimumScaleFactor"]) {
+            _minimumScaleFactor = [coder decodeFloatForKey:@"UIMinimumScaleFactor"];
+            _minimumScaleFactorHasBeenSet = YES;
+            _adjustFontSize = YES;
+        } else if ([coder containsValueForKey:@"UIMinimumFontSize"]) {
+            _minimumFontSize = [coder decodeFloatForKey:@"UIMinimumFontSize"];
+            _adjustFontSize = YES;
+        } else if ([coder containsValueForKey:@"UIAdjustsFontSizeToFit"]) {
+            _adjustFontSize = [coder decodeInt32ForKey:@"UIAdjustsFontSizeToFit"];
+            if (_adjustFontSize) {
+                FAIL_FAST_MSG(
+                    "invalid nib format, when UIMinimumScaleFactor and UIMinimumFontSize isn't set, UIAdjustsFontSizeToFit must be false");
+            }
+        } else {
+            FAIL_FAST_MSG(
+                "invalid nib format, one of properties in UIMinimumFontSize/UIAdjustsFontSizeToFit/UIAdjustsFontSizeToFit has to be set");
+        }
 
         if ([coder containsValueForKey:@"UILineBreakMode"]) {
             _lineBreakMode = (UILineBreakMode)[coder decodeInt32ForKey:@"UILineBreakMode"];
@@ -262,8 +293,18 @@
     // on reference platform, default minimum font size is zero but always slightly bigger than zero in reality acccording to the
     // documentation
     _minimumFontSize = 0.0001f;
+    _minimumScaleFactor = 0.0;
+    _minimumScaleFactorHasBeenSet = NO;
     _numberOfLines = 1;
     [self setOpaque:FALSE];
+
+    _originalFontSize = [UIFont labelFontSize];
+    _font = [UIFont fontWithName:@"Segoe UI" size:_originalFontSize];
+
+    // TODO: Reevaluate whether or not this is the correct default mode for UILabels that are initialized via initWithFrame.
+    //       Some of our test apps expect the initWithCoder path to default to UIViewContentModeScaleToFill (aka kCAGravityResize).
+    [self setContentMode:UIViewContentModeRedraw];
+    [self _updateXamlElement];
 }
 
 /**
@@ -272,14 +313,6 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         [self _initUILabel];
-
-        // TODO: Reevaluate whether or not this is the correct default mode for UILabels that are initialized via initWithFrame.
-        //       Some of our test apps expect the initWithCoder path to default to UIViewContentModeScaleToFill (aka kCAGravityResize).
-        [self setContentMode:UIViewContentModeRedraw];
-
-        _font = [UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]];
-
-        [self _updateXamlElement];
     }
 
     return self;
@@ -291,14 +324,6 @@
 - (instancetype)initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
     if (self = [super initWithFrame:frame xamlElement:xamlElement]) {
         [self _initUILabel];
-
-        // TODO: Reevaluate whether or not this is the correct default mode for UILabels that are initialized via initWithFrame.
-        //       Some of our test apps expect the initWithCoder path to default to UIViewContentModeScaleToFill (aka kCAGravityResize).
-        [self setContentMode:UIViewContentModeRedraw];
-
-        _font = [UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]];
-
-        [self _updateXamlElement];
     }
 
     return self;
@@ -326,6 +351,7 @@
 - (void)setFont:(UIFont*)font {
     if (![_font isEqual:font]) {
         _font = font;
+        _originalFontSize = [_font pointSize];
         if (_adjustFontSize) {
             [self _adjustFontSizeToFit];
         } else {
@@ -589,9 +615,18 @@
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)setMinimumScaleFactor:(float)scale {
+    _minimumScaleFactor = scale;
+    _minimumScaleFactorHasBeenSet = YES;
+}
+
+/**
+ @Status Interoperable
+*/
+- (float)minimumScaleFactor {
+    return _minimumScaleFactor;
 }
 
 /**
