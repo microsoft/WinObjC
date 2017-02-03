@@ -182,17 +182,11 @@ public:
 
 class CTFrameDrawGroup : public CTFrameDrawBase {
 public:
-    void PreRun() {
-        _CGContextPushBeginDraw(m_context);
-    }
-
     inline void Run() {
+        _CGContextPushBeginDraw(m_context);
         for (size_t i = 0; i < 100; ++i) {
             CTFrameDraw(m_frame, m_context);
         }
-    }
-
-    void PostRun() {
         _CGContextPopEndDraw(m_context);
     }
 
@@ -319,17 +313,11 @@ public:
 
 class CTLineDrawGroup : public CTLineDrawBase {
 public:
-    void PreRun() {
-        _CGContextPushBeginDraw(m_context);
-    }
-
     inline void Run() {
+        _CGContextPushBeginDraw(m_context);
         for (size_t i = 0; i < 10000; ++i) {
             CTLineDraw(m_line, m_context);
         }
-    }
-
-    void PostRun() {
         _CGContextPopEndDraw(m_context);
     }
 
@@ -389,17 +377,11 @@ public:
 
 class CTRunDrawGroup : public CTRunDrawBase {
 public:
-    void PreRun() {
-        _CGContextPushBeginDraw(m_context);
-    }
-
     inline void Run() {
+        _CGContextPushBeginDraw(m_context);
         for (size_t i = 0; i < 10000; ++i) {
             CTRunDraw(m_run, m_context, CFRange{});
         }
-    }
-
-    void PostRun() {
         _CGContextPopEndDraw(m_context);
     }
 
@@ -432,14 +414,6 @@ public:
 
     size_t GetRunCount() const {
         return 100000;
-    }
-
-    void PreRun() {
-        _CGContextPushBeginDraw(m_context);
-    }
-
-    void PostRun() {
-        _CGContextPopEndDraw(m_context);
     }
 
 protected:
@@ -496,17 +470,11 @@ public:
 
 class DrawAtPointGroup : public NSString_UIKitBase {
 public:
-    void PreRun() {
-        _CGContextPushBeginDraw(m_context);
-    }
-
     inline void Run() {
+        _CGContextPushBeginDraw(m_context);
         for (size_t i = 0; i < 100; ++i) {
             [sc_frameText drawAtPoint:{ 0, 0 } withFont:m_font];
         }
-    }
-
-    void PostRun() {
         _CGContextPopEndDraw(m_context);
     }
 
@@ -519,6 +487,8 @@ BENCHMARK_F(NSString, DrawAtPoint);
 BENCHMARK_F(NSString, DrawAtPointGroup);
 
 class DrawInRect : public NSString_UIKitBase {
+    CGSize m_rectSize;
+
 public:
     DrawInRect(CGSize size) : m_rectSize(size) {
     }
@@ -530,12 +500,30 @@ public:
     size_t GetRunCount() const {
         return 1000;
     }
+};
 
-protected:
+class DrawInRectGroup : public NSString_UIKitBase {
     CGSize m_rectSize;
+
+public:
+    DrawInRectGroup(CGSize size) : m_rectSize(size) {
+    }
+
+    inline void Run() {
+        _CGContextPushBeginDraw(m_context);
+        for (size_t i = 0; i < 100; ++i) {
+            [sc_frameText drawInRect:{ { 0, 0 }, m_rectSize } withFont:m_font];
+        }
+        _CGContextPopEndDraw(m_context);
+    }
+
+    size_t GetRunCount() const {
+        return 50;
+    }
 };
 
 BENCHMARK_REGISTER_CASE_P(NSString, DrawInRect, ::testing::ValuesIn(c_sizes), CGSize);
+BENCHMARK_REGISTER_CASE_P(NSString, DrawInRectGroup, ::testing::ValuesIn(c_sizes), CGSize);
 
 class SizeWithFont : public NSString_UIKitBase {
 public:

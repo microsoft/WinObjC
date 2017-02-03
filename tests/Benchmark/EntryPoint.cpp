@@ -122,16 +122,14 @@ public:
 static std::shared_ptr<BenchmarkPublisher> s_publisher;
 void BenchmarkPublisherFactory::CreatePublisher(int argc, char** argv) {
     // Currently only support CSV format
-    bool created = false;
     for (int i = 1; i < argc && argv[i]; ++i) {
         char* arg = argv[i];
         if (strncmp(arg, "--out=", 6) == 0) {
             s_publisher.reset(new CSVBenchmarkPublisher(std::move(std::string(arg + 6))));
-            created = true;
         }
     }
 
-    if (!created) {
+    if (s_publisher) {
         LOG_INFO("No arguments given to benchmark. Defaulting to logging results");
         s_publisher.reset(new LogBenchmarkPublisher());
     }
