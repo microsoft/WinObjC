@@ -58,6 +58,10 @@ std::basic_ostream<T>& operator<<(std::basic_ostream<T>& os, const CGSize& size)
     return os;
 }
 
+inline CGSize operator*(const CGSize& lhs, CGFloat multiplier) {
+    return{ lhs.width * multiplier, lhs.height * multiplier };
+}
+
 #pragma endregion
 
 #pragma region CGRect
