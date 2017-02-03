@@ -129,7 +129,7 @@ void BenchmarkPublisherFactory::CreatePublisher(int argc, char** argv) {
         }
     }
 
-    if (s_publisher) {
+    if (!s_publisher) {
         LOG_INFO("No arguments given to benchmark. Defaulting to logging results");
         s_publisher.reset(new LogBenchmarkPublisher());
     }
