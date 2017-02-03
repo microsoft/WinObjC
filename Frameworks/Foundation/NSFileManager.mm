@@ -841,7 +841,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 */
 - (id)stringWithFileSystemRepresentation:(const char*)path length:(NSUInteger)length {
     UNIMPLEMENTED();
-    return [NSString stringWithUTF8String:path length:length];
+    return [[NSString string] initWithBytes:path length:length encoding:NSUTF8StringEncoding];
 }
 
 // Managing the Delegate

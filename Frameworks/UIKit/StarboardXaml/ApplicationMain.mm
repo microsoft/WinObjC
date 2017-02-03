@@ -180,5 +180,5 @@ int ApplicationMainStart(const char* principalName,
 }
 
 void SetTemporaryFolder(const wchar_t* folder) {
-    NSSetTemporaryDirectory([NSString stringWithCharacters:(const unichar*)folder length:wcslen(folder)]);
+    NSSetTemporaryDirectory([NSString stringWithCharacters:reinterpret_cast<const unichar*>(folder) length:wcslen(folder)]);
 }
