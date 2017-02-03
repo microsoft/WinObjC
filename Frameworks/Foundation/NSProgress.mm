@@ -48,11 +48,7 @@ struct CurrentProgress {
 
 // Returns the stack of NSProgress objects that have becomeCurrent on the current thread, initializing it if necessary
 static std::shared_ptr<std::stack<CurrentProgress>> & _getProgressStackForCurrentThread() {
-    thread_local static std::shared_ptr<std::stack<CurrentProgress>> tlsCurrentProgressStack;
-
-    if (!tlsCurrentProgressStack) {
-        tlsCurrentProgressStack = std::make_shared<std::stack<CurrentProgress>>();
-    }
+    thread_local static std::shared_ptr<std::stack<CurrentProgress>> tlsCurrentProgressStack = std::make_shared<std::stack<CurrentProgress>>();
 
     return tlsCurrentProgressStack;
 }
