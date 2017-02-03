@@ -21,6 +21,16 @@ using namespace Microsoft::WRL;
 
 namespace {
 template <typename T>
+// HRComPtr is a ComPtr bundled with an HRESULT. Since the below factory functions
+// have two effective return values, both of which are statically computed on first
+// request, we need to use this to ensure defined behaviour.
+//
+// Contrast HRComPtr with this approach:
+// static ComPtr<IUnknown> x;
+// static HRESULT y = CoCreateInstance(... &x ...);
+//
+// It cannot safely be said that ComPtr::ComPtr() has been called before CoCreateInstance,
+// especially when multiple threads contend for the lock on x.
 struct HRComPtr {
     HRESULT hr;
     ComPtr<T> ptr;
