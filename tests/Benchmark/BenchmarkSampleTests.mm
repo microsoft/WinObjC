@@ -15,7 +15,7 @@
 //******************************************************************************
 
 #import <Starboard/SmartTypes.h>
-#import "BenchmarkTest.h"
+#import "Benchmark.h"
 #import <CppUtils.h>
 
 BENCHMARK(BenchmarkSample, BasicAddition, 1024) {
@@ -25,7 +25,7 @@ BENCHMARK(BenchmarkSample, BasicAddition, 1024) {
     }
 }
 
-class BenchmarkTestFSample : public ::testing::BenchmarkCaseBase {
+class BenchmarkTestFSample : public ::benchmark::BenchmarkCaseBase {
     NSMutableArray* m_array;
 
 public:
@@ -53,7 +53,7 @@ public:
 
 BENCHMARK_F(BenchmarkSample, BenchmarkTestFSample)
 
-class BenchmarkTestPreRunSample : public ::testing::BenchmarkCaseBase {
+class BenchmarkTestPreRunSample : public ::benchmark::BenchmarkCaseBase {
     NSMutableArray* m_array;
 
 public:
@@ -72,7 +72,7 @@ public:
 
 BENCHMARK_F(BenchmarkSample, BenchmarkTestPreRunSample)
 
-class BenchmarkTestPostRunSample : public ::testing::BenchmarkCaseBase {
+class BenchmarkTestPostRunSample : public ::benchmark::BenchmarkCaseBase {
     NSMutableArray* m_array;
 
 public:
@@ -99,7 +99,7 @@ BENCHMARK(BenchmarkSample, BigTest, 2) {
     [arr release];
 }
 
-class BenchmarkTestMultipleParameters : public ::testing::BenchmarkCaseBase {
+class BenchmarkTestMultipleParameters : public ::benchmark::BenchmarkCaseBase {
     CGSize m_size;
     CGFloat m_mult;
 

@@ -16,12 +16,12 @@
 
 #include <windows.h>
 #include <TestFramework.h>
-#include "BenchmarkTestPublisher.h"
+#include "BenchmarkPublisher.h"
 #include <fstream>
 #include <algorithm>
 
 #ifdef WIN32
-#include <wrl\wrappers\corewrappers.h>
+#include <wrl/wrappers/corewrappers.h>
 using namespace Microsoft::WRL::Wrappers;
 #endif
 
@@ -34,10 +34,10 @@ struct __Result {
     size_t runCount;
 };
 
-class TestPublisherBase : public BenchmarkTestPublisher {
+class PublisherBase : public BenchmarkPublisher {
 public:
     // Expect results.size() > 1
-    virtual void RegisterTestResults(const std::string& testName, const std::vector<Microseconds>& results) {
+    virtual void RegisterCaseResults(const std::string& caseName, const std::vector<Microseconds>& results) {
         // Algorithm for calculating sample mean and variance with minimal rounding errors
         Microseconds netRuntime = 0.0;
         Microseconds mean = 0.0;
@@ -50,23 +50,23 @@ public:
             q += (results[i] - previousMean) * (results[i] - mean);
         }
         Microseconds sampleStandardDeviation = std::sqrt(q / (runCount - 1));
-        m_results.emplace_back(__Result{ testName, netRuntime, mean, sampleStandardDeviation, runCount });
+        m_results.emplace_back(__Result{ caseName, netRuntime, mean, sampleStandardDeviation, runCount });
     }
 
 protected:
     std::vector<__Result> m_results;
 };
 
-class CSVBenchmarkTestPublisher : public TestPublisherBase {
+class CSVBenchmarkPublisher : public PublisherBase {
     std::string m_outPath;
 
 public:
-    CSVBenchmarkTestPublisher(std::string&& outPath) : m_outPath(outPath) {
+    CSVBenchmarkPublisher(std::string&& outPath) : m_outPath(outPath) {
     }
 
-    virtual void PublishTestResults() {
+    virtual void PublishResults() {
         std::ofstream outFile(m_outPath);
-        outFile << "Test Name"
+        outFile << "Case Name"
                 << ","
                 << "Total Runtime"
                 << ","
@@ -83,22 +83,23 @@ public:
 
         outFile.flush();
         outFile.close();
+        m_results.clear();
     }
 };
 
-class LogBenchmarkTestPublisher : public TestPublisherBase {
+class LogBenchmarkPublisher : public PublisherBase {
     size_t m_maxNameWidth = 0;
 
 public:
-    virtual void RegisterTestResults(const std::string& testName, const std::vector<Microseconds>& results) {
+    virtual void RegisterCaseResults(const std::string& testName, const std::vector<Microseconds>& results) {
         m_maxNameWidth = max(m_maxNameWidth, testName.size());
-        TestPublisherBase::RegisterTestResults(testName, results);
+        PublisherBase::RegisterCaseResults(testName, results);
     }
 
-    virtual void PublishTestResults() {
+    virtual void PublishResults() {
         // Align output horizontally
         std::string spaces(m_maxNameWidth - 5, ' ');
-        std::cout << "Test Name" << spaces << "|"
+        std::cout << "Case Name" << spaces << "|"
                   << "Total Runtime"
                   << "\t\t|"
                   << "Mean Runtime"
@@ -114,25 +115,29 @@ public:
         }
 
         std::cout << std::endl;
+        m_results.clear();
     }
 };
 
-static std::shared_ptr<BenchmarkTestPublisher> s_publisher;
-void BenchmarkTestCreator::CreatePublisher(int argc, char** argv) {
+static std::shared_ptr<BenchmarkPublisher> s_publisher;
+void BenchmarkPublisherFactory::CreatePublisher(int argc, char** argv) {
     // Currently only support CSV format
+    bool created = false;
     for (int i = 1; i < argc && argv[i]; ++i) {
         char* arg = argv[i];
         if (strncmp(arg, "--out=", 6) == 0) {
-            s_publisher.reset(new CSVBenchmarkTestPublisher(std::move(std::string(arg + 6))));
-            return;
+            s_publisher.reset(new CSVBenchmarkPublisher(std::move(std::string(arg + 6))));
+            created = true;
         }
     }
 
-    LOG_INFO("No arguments given to benchmark tests. Defaulting to logging results");
-    s_publisher.reset(new LogBenchmarkTestPublisher());
+    if (!created) {
+        LOG_INFO("No arguments given to benchmark. Defaulting to logging results");
+        s_publisher.reset(new LogBenchmarkPublisher());
+    }
 }
 
-std::shared_ptr<BenchmarkTestPublisher> BenchmarkTestCreator::GetPublisher() {
+std::shared_ptr<BenchmarkPublisher> BenchmarkPublisherFactory::GetPublisher() {
     return s_publisher;
 }
 
@@ -144,9 +149,9 @@ int main(int argc, char** argv) {
         return -1;
     }
 #endif
-    BenchmarkTestCreator::CreatePublisher(argc, argv);
+    BenchmarkPublisherFactory::CreatePublisher(argc, argv);
     testing::InitGoogleTest(&argc, argv);
     auto result = RUN_ALL_TESTS();
-    BenchmarkTestCreator::GetPublisher()->PublishTestResults();
+    BenchmarkPublisherFactory::GetPublisher()->PublishResults();
     return result;
 }

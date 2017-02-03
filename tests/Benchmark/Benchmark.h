@@ -22,9 +22,9 @@
 #include <numeric>
 #include <utility>
 #include <memory>
-#include "BenchmarkTestPublisher.h"
+#include "BenchmarkPublisher.h"
 
-namespace testing {
+namespace benchmark {
 class BenchmarkCaseBase {
 public:
     inline void Run();
@@ -47,11 +47,11 @@ public:
 
 namespace internal {
 
-// Helper method shared between BenchmarkTestRunner classes
+// Helper method shared between BenchmarkCaseRunner classes
 // This is called to actually run and benchmark the tests
 // Can't be shared internally because parameterized tests need a different inheritance than non
 template <typename T>
-static void __RunTest(T& test) {
+static void __RunCase(T& test, const char* caseName) {
     using Microseconds = double;
     size_t runCount = test.GetRunCount();
     ASSERT_LT(1, runCount);
@@ -68,47 +68,49 @@ static void __RunTest(T& test) {
         }
     }
 
-    std::shared_ptr<::benchmark::BenchmarkTestPublisher> publisher = ::benchmark::BenchmarkTestCreator::GetPublisher();
-    auto testName = std::string(::testing::UnitTest::GetInstance()->current_test_info()->name());
-    publisher->RegisterTestResults(testName, results);
+    std::shared_ptr<::benchmark::BenchmarkPublisher> publisher = ::benchmark::BenchmarkPublisherFactory::GetPublisher();
+    auto testName = std::string(caseName);
+    publisher->RegisterCaseResults(testName, results);
 }
 
-template <typename TestClass>
-class BenchmarkTestRunner : public ::testing::Test {
-    static_assert(std::is_base_of<BenchmarkCaseBase, TestClass>::value, "Benchmark Test should derive from ::testing::BenchmarkCaseBase");
-    static_assert(std::is_default_constructible<TestClass>::value, "Benchmark Test Class MUST be default constructible");
+template <typename CaseClass>
+class BenchmarkCaseRunner : public ::testing::Test {
+    static_assert(std::is_base_of<BenchmarkCaseBase, CaseClass>::value, "Benchmark Case should derive from ::benchmark::BenchmarkCaseBase");
+    static_assert(std::is_default_constructible<CaseClass>::value, "Benchmark Case Class MUST be default constructible");
 
 public:
-    BenchmarkTestRunner() : m_test() {
+    BenchmarkCaseRunner() : m_test() {
     }
 
 protected:
-    TestClass m_test;
+    CaseClass m_test;
 };
 
-template <typename TestClass, typename Arg>
-class BenchmarkTestRunnerP : public ::testing::TestWithParam<Arg> {
-    static_assert(std::is_base_of<BenchmarkCaseBase, TestClass>::value, "Benchmark Test should derive from ::testing::BenchmarkCaseBase");
-    static_assert(std::is_constructible<TestClass, Arg>::value,
-                  "Benchmark Test Class MUST be constructible from template arguments, if any");
+template <typename CaseClass, typename Arg>
+class BenchmarkCaseRunnerP : public ::testing::TestWithParam<Arg> {
+    static_assert(std::is_base_of<BenchmarkCaseBase, CaseClass>::value, "Benchmark Case should derive from ::benchmark::BenchmarkCaseBase");
+    static_assert(std::is_constructible<CaseClass, Arg>::value,
+                  "Benchmark Case Class MUST be constructible from template arguments, if any");
 
 public:
-    BenchmarkTestRunnerP() {
+    BenchmarkCaseRunnerP() {
         // Note: This will break when multiple args have the same type
-        m_test.reset(new TestClass(::testing::WithParamInterface<Arg>::GetParam()));
+        m_test.reset(new CaseClass(::testing::WithParamInterface<Arg>::GetParam()));
     }
 
 protected:
-    std::unique_ptr<TestClass> m_test;
+    std::unique_ptr<CaseClass> m_test;
 };
 }
 }
 
 // clang-format off
-#define _BENCHMARK_CLASSNAME(test_name, test_case_name) BenchmarkInternal##test_name##test_case_name
+#define _BENCHMARK_CLASSNAME(test_name, test_case_name) test_name##__##test_case_name
+#define _STRINGIFY_INTERNAL(var) #var
+#define _STRINGIFY(var) _STRINGIFY_INTERNAL(var)
 
 #define BENCHMARK(test_name, test_case_name, run_count)                                            \
-class _BENCHMARK_CLASSNAME(test_name, test_case_name) : public ::testing::BenchmarkCaseBase   {         \
+class _BENCHMARK_CLASSNAME(test_name, test_case_name) : public ::benchmark::BenchmarkCaseBase   {       \
 public:                                                                                                 \
         size_t GetRunCount() const {                                                                    \
             return run_count;                                                                           \
@@ -117,21 +119,23 @@ public:                                                                         
 };                                                                                                      \
 GTEST_TEST_(test_name,                                                                                  \
             test_case_name,                                                                             \
-            ::testing::internal::BenchmarkTestRunner<_BENCHMARK_CLASSNAME(test_name, test_case_name)>,  \
-            ::testing::internal::GetTestTypeId()) {                                                     \
-        ::testing::internal::__RunTest(m_test);                                                         \
-}                                                                                                       \
+            ::benchmark::internal::BenchmarkCaseRunner<_BENCHMARK_CLASSNAME(test_name, test_case_name)>,\
+            ::testing::internal::GetTestTypeId()) {                                                             \
+        ::benchmark::internal::__RunCase(m_test, _STRINGIFY(_BENCHMARK_CLASSNAME(test_name, test_case_name)));  \
+}                                                                                                               \
 inline void _BENCHMARK_CLASSNAME(test_name, test_case_name)::Run()
 
-#define BENCHMARK_F(test_name, test_class_name)                                                                                        \
-GTEST_TEST_(test_name, test_class_name, ::testing::internal::BenchmarkTestRunner<test_class_name>, ::testing::internal::GetTestTypeId()) {  \
-        ::testing::internal::__RunTest(m_test);                                                                                             \
+#define BENCHMARK_F(test_name, test_class_name)                                                                                                 \
+GTEST_TEST_(test_name, test_class_name, ::benchmark::internal::BenchmarkCaseRunner<test_class_name>, ::testing::internal::GetTestTypeId()) {    \
+        ::benchmark::internal::__RunCase(m_test, _STRINGIFY(_BENCHMARK_CLASSNAME(test_name, test_class_name)));                                 \
 }
 
 #define BENCHMARK_REGISTER_CASE_P(test_name, test_class, generator, ...)                                                \
-class _Benchmark_##test_class : public ::testing::internal::BenchmarkTestRunnerP<test_class, __VA_ARGS__> {};           \
+class _Benchmark_##test_class : public ::benchmark::internal::BenchmarkCaseRunnerP<test_class, __VA_ARGS__> {};         \
 TEST_P(_Benchmark_##test_class, test_name) {                                                                            \
-    ::testing::internal::__RunTest(*m_test);                                                                            \
+    const char* testName = _STRINGIFY(__##test_class);                                                                  \
+    auto fullName = std::string(::testing::UnitTest::GetInstance()->current_test_info()->name()) + testName;            \
+    ::benchmark::internal::__RunCase(*m_test, fullName.c_str());                                                        \
 }                                                                                                                       \
 INSTANTIATE_TEST_CASE_P(test_name, _Benchmark_##test_class, generator);
 

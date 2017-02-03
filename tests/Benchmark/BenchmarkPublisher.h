@@ -22,15 +22,15 @@
 namespace benchmark {
 using Microseconds = double;
 
-class BenchmarkTestPublisher {
+class BenchmarkPublisher {
 public:
-    virtual void RegisterTestResults(const std::string& testName, const std::vector<Microseconds>& results) = 0;
-    virtual void PublishTestResults() = 0;
+    virtual void RegisterCaseResults(const std::string& caseName, const std::vector<Microseconds>& results) = 0;
+    virtual void PublishResults() = 0;
 };
 
-class BenchmarkTestCreator {
+class BenchmarkPublisherFactory {
 public:
     static void CreatePublisher(int argc, char** argv);
-    static std::shared_ptr<BenchmarkTestPublisher> GetPublisher();
+    static std::shared_ptr<BenchmarkPublisher> GetPublisher();
 };
 }

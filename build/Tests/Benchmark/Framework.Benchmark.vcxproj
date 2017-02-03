@@ -234,8 +234,8 @@
     <ClCompile Include="$(StarboardBasePath)\tests\Benchmark\EntryPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(StarboardBasePath)\tests\Benchmark\BenchmarkTest.h" />
-    <ClInclude Include="$(StarboardBasePath)\tests\Benchmark\BenchmarkTestPublisher.h" />
+    <ClInclude Include="$(StarboardBasePath)\tests\Benchmark\Benchmark.h" />
+    <ClInclude Include="$(StarboardBasePath)\tests\Benchmark\BenchmarkPublisher.h" />
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="$(StarboardBasePath)\tests\Benchmark\BenchmarkSampleTests.mm" />

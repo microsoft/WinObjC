@@ -21,7 +21,7 @@
 #import <CGContextInternal.h>
 #import <CppUtils.h>
 
-#import "BenchmarkTest.h"
+#import "Benchmark.h"
 
 static constexpr CGSize sc_defaultSize{ 512.f, 256.f };
 static const NSString* sc_frameText = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut "
@@ -31,7 +31,7 @@ static const NSString* sc_frameText = @"Lorem ipsum dolor sit amet, consectetur 
                                       @"proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 static constexpr UniChar sc_chars[4] = { 'T', 'E', 'S', 'T' };
 
-class CTFramesetterBase : public ::testing::BenchmarkCaseBase {
+class CTFramesetterBase : public ::benchmark::BenchmarkCaseBase {
 public:
     CTFramesetterBase(CGSize size) {
         CTParagraphStyleSetting setting;
@@ -92,7 +92,7 @@ static constexpr CGSize c_sizes[] = { { 0, 0 }, { 0, 512 }, { 256, 0 }, { 256, 5
 BENCHMARK_REGISTER_CASE_P(CoreText, CTFramesetterCreateFrameTest, ::testing::ValuesIn(c_sizes), CGSize);
 BENCHMARK_REGISTER_CASE_P(CoreText, CTFramesetterSuggestFrameSizeTest, ::testing::ValuesIn(c_sizes), CGSize);
 
-class CTLineCreateTest : public ::testing::BenchmarkCaseBase {
+class CTLineCreateTest : public ::benchmark::BenchmarkCaseBase {
     woc::AutoCF<CFAttributedStringRef> m_attrString;
 
 public:
@@ -121,7 +121,7 @@ public:
 
 BENCHMARK_F(CoreText, CTLineCreateTest);
 
-class TextBenchmarkBase : public ::testing::BenchmarkCaseBase {
+class TextBenchmarkBase : public ::benchmark::BenchmarkCaseBase {
 public:
     TextBenchmarkBase() {
         auto colorspace = woc::MakeAutoCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
@@ -568,7 +568,7 @@ BENCHMARK(CoreText, CTFontDescriptor, 10000) {
     CFRelease(font);
 }
 
-class CTFontGetGlyphsTest : public ::testing::BenchmarkCaseBase {
+class CTFontGetGlyphsTest : public ::benchmark::BenchmarkCaseBase {
     woc::AutoCF<CTFontRef> m_font;
     std::vector<CGGlyph> m_glyphs;
 
