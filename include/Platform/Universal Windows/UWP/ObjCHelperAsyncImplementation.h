@@ -25,9 +25,6 @@ inline std::wstring getWString(const char* str) {
     return std::wstring(&str[0], &str[len - 1]);
 }
 
-// e.g.
-// resultType = ABI::FacebookSDK::FBSDKLoginKit::FBSDKLoginManagerLoginResult
-// resultInterfaceType = ABI::FacebookSDK::FBSDKLoginKit::IFBSDKLoginManagerLoginResult
 template<typename resultType, typename resultInterfaceType, bool = _is_COM_Object(resultInterfaceType)>
 class AsyncOperationImpl :
     public RuntimeClass<
