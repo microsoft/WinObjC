@@ -80,8 +80,8 @@
 
         CGSize size = CGSizeZero;
         if (numberOfLines == 1) {
-            // In one line case, linebreak mode, we give it unlimited width and unlimited hight for measure to get its natural widht/height
-            size = [text sizeWithFont:_targetFont constrainedToSize:CGSizeMake(0.0f, 0.0f) lineBreakMode:UILineBreakModeClip];
+            // In one line case, linebreak mode and allowed height really does not matter because we give it unlimited width for measure
+            size = [text sizeWithFont:_targetFont constrainedToSize:CGSizeMake(0.0f, allowedHeight) lineBreakMode:UILineBreakModeClip];
         } else {
             // In multi-line case, we want the line to be wrapping during measure, in this case, we want to give allowed hight as unlimited
             size =
@@ -223,15 +223,14 @@
         } else if ([coder containsValueForKey:@"UIMinimumFontSize"]) {
             _minimumFontSize = [coder decodeFloatForKey:@"UIMinimumFontSize"];
             _adjustFontSize = YES;
-        } else if ([coder containsValueForKey:@"UIAdjustsFontSizeToFit"]) {
+        }  else if ([coder containsValueForKey:@"UIAdjustsFontSizeToFit"]) {
             _adjustFontSize = [coder decodeInt32ForKey:@"UIAdjustsFontSizeToFit"];
-            if (_adjustFontSize) {
-                FAIL_FAST_MSG(
-                    "invalid nib format, when UIMinimumScaleFactor and UIMinimumFontSize isn't set, UIAdjustsFontSizeToFit must be false");
-            }
+            assert(_adjustFontSize == NO);
         } else {
-            FAIL_FAST_MSG(
-                "invalid nib format, one of properties in UIMinimumFontSize/UIAdjustsFontSizeToFit/UIAdjustsFontSizeToFit has to be set");
+            _adjustFontSize = NO;
+        }
+
+        if (_adjustFontSize) {
         }
 
         if ([coder containsValueForKey:@"UILineBreakMode"]) {
