@@ -46,16 +46,15 @@ struct CurrentProgress {
     bool childCreated;
 };
 
-// Stack of NSProgress objects that have becomeCurrent
-thread_local static std::shared_ptr<std::stack<CurrentProgress>> s_currentProgressStack;
-
 // Returns the stack of NSProgress objects that have becomeCurrent on the current thread, initializing it if necessary
-static decltype(s_currentProgressStack) & _getProgressStackForCurrentThread() {
-    if (!s_currentProgressStack) {
-        s_currentProgressStack = std::make_shared<std::stack<CurrentProgress>>();
+static std::shared_ptr<std::stack<CurrentProgress>> & _getProgressStackForCurrentThread() {
+    thread_local static std::shared_ptr<std::stack<CurrentProgress>> tlsCurrentProgressStack;
+
+    if (!tlsCurrentProgressStack) {
+        tlsCurrentProgressStack = std::make_shared<std::stack<CurrentProgress>>();
     }
 
-    return s_currentProgressStack;
+    return tlsCurrentProgressStack;
 }
 
 @implementation NSProgress {
@@ -105,8 +104,8 @@ static decltype(s_currentProgressStack) & _getProgressStackForCurrentThread() {
                 // Assign parent
                 _parent = parentProgressOrNil;
 
-                // s_currentProgressStack must not be empty to have reached here
-                CurrentProgress& current = s_currentProgressStack->top();
+                // Progress stack must not be empty to have reached here
+                CurrentProgress& current = _getProgressStackForCurrentThread()->top();
 
                 // Keep track of the pendingUnitCount to increment in the parent
                 _parentPendingUnitCount = current.pendingUnitCountToAssign;
