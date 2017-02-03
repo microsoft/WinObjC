@@ -19,32 +19,18 @@
 
 using namespace Microsoft::WRL;
 
-namespace {
-template <typename T>
-struct HRComPtr {
-    HRESULT hr;
-    ComPtr<T> ptr;
-};
-}
-
 HRESULT _CGGetD2DFactory(ID2D1Factory** factory) {
-    static auto sFactory = []() -> HRComPtr<ID2D1Factory> {
-        ComPtr<ID2D1Factory> factory;
-        HRESULT hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_MULTI_THREADED, factory.ReleaseAndGetAddressOf());
-        return { hr, std::move(factory) };
-    }();
-    sFactory.ptr.CopyTo(factory);
-    return sFactory.hr;
+    static ComPtr<ID2D1Factory> sFactory;
+    static HRESULT sHr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory), &sFactory);
+    sFactory.CopyTo(factory);
+    RETURN_HR(sHr);
 }
 
 HRESULT _CGGetWICFactory(IWICImagingFactory** factory) {
-    static auto sFactory = []() -> HRComPtr<IWICImagingFactory> {
-        ComPtr<IWICImagingFactory> factory;
-        HRESULT hr = CoCreateInstance(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&factory));
-        return { hr, std::move(factory) };
-    }();
-    sFactory.ptr.CopyTo(factory);
-    return sFactory.hr;
+    static ComPtr<IWICImagingFactory> sWicFactory;
+    static HRESULT sHr = CoCreateInstance(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&sWicFactory));
+    sWicFactory.CopyTo(factory);
+    RETURN_HR(sHr);
 }
 
 // TODO GH#1375: Remove this when CGPath's fill mode has been worked out.
