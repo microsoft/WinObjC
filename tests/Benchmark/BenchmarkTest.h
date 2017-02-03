@@ -25,7 +25,7 @@
 #include "BenchmarkTestPublisher.h"
 
 namespace testing {
-class BenchmarkTestBase {
+class BenchmarkCaseBase {
 public:
     inline void Run();
 
@@ -75,7 +75,7 @@ static void __RunTest(T& test) {
 
 template <typename TestClass>
 class BenchmarkTestRunner : public ::testing::Test {
-    static_assert(std::is_base_of<BenchmarkTestBase, TestClass>::value, "Benchmark Test should derive from ::testing::BenchmarkTestBase");
+    static_assert(std::is_base_of<BenchmarkCaseBase, TestClass>::value, "Benchmark Test should derive from ::testing::BenchmarkCaseBase");
     static_assert(std::is_default_constructible<TestClass>::value, "Benchmark Test Class MUST be default constructible");
 
 public:
@@ -88,7 +88,7 @@ protected:
 
 template <typename TestClass, typename Arg>
 class BenchmarkTestRunnerP : public ::testing::TestWithParam<Arg> {
-    static_assert(std::is_base_of<BenchmarkTestBase, TestClass>::value, "Benchmark Test should derive from ::testing::BenchmarkTestBase");
+    static_assert(std::is_base_of<BenchmarkCaseBase, TestClass>::value, "Benchmark Test should derive from ::testing::BenchmarkCaseBase");
     static_assert(std::is_constructible<TestClass, Arg>::value,
                   "Benchmark Test Class MUST be constructible from template arguments, if any");
 
@@ -107,8 +107,8 @@ protected:
 // clang-format off
 #define _BENCHMARK_CLASSNAME(test_name, test_case_name) BenchmarkInternal##test_name##test_case_name
 
-#define TEST_BENCHMARK(test_name, test_case_name, run_count)                                            \
-class _BENCHMARK_CLASSNAME(test_name, test_case_name) : public ::testing::BenchmarkTestBase   {         \
+#define BENCHMARK(test_name, test_case_name, run_count)                                            \
+class _BENCHMARK_CLASSNAME(test_name, test_case_name) : public ::testing::BenchmarkCaseBase   {         \
 public:                                                                                                 \
         size_t GetRunCount() const {                                                                    \
             return run_count;                                                                           \
@@ -123,12 +123,12 @@ GTEST_TEST_(test_name,                                                          
 }                                                                                                       \
 inline void _BENCHMARK_CLASSNAME(test_name, test_case_name)::Run()
 
-#define TEST_BENCHMARK_F(test_name, test_class_name)                                                                                        \
+#define BENCHMARK_F(test_name, test_class_name)                                                                                        \
 GTEST_TEST_(test_name, test_class_name, ::testing::internal::BenchmarkTestRunner<test_class_name>, ::testing::internal::GetTestTypeId()) {  \
         ::testing::internal::__RunTest(m_test);                                                                                             \
 }
 
-#define BENCHMARK_REGISTER_TEST_P(test_name, test_class, generator, ...)                                                \
+#define BENCHMARK_REGISTER_CASE_P(test_name, test_class, generator, ...)                                                \
 class _Benchmark_##test_class : public ::testing::internal::BenchmarkTestRunnerP<test_class, __VA_ARGS__> {};           \
 TEST_P(_Benchmark_##test_class, test_name) {                                                                            \
     ::testing::internal::__RunTest(*m_test);                                                                            \

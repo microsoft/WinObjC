@@ -18,14 +18,14 @@
 #import "BenchmarkTest.h"
 #import <CppUtils.h>
 
-TEST_BENCHMARK(BenchmarkSample, BasicAddition, 1024) {
+BENCHMARK(BenchmarkSample, BasicAddition, 1024) {
     size_t sum = 0;
     for (size_t i = 0; i < 1000; ++i) {
         sum += i;
     }
 }
 
-class BenchmarkTestFSample : public ::testing::BenchmarkTestBase {
+class BenchmarkTestFSample : public ::testing::BenchmarkCaseBase {
     NSMutableArray* m_array;
 
 public:
@@ -51,9 +51,9 @@ public:
     }
 };
 
-TEST_BENCHMARK_F(BenchmarkSample, BenchmarkTestFSample)
+BENCHMARK_F(BenchmarkSample, BenchmarkTestFSample)
 
-class BenchmarkTestPreRunSample : public ::testing::BenchmarkTestBase {
+class BenchmarkTestPreRunSample : public ::testing::BenchmarkCaseBase {
     NSMutableArray* m_array;
 
 public:
@@ -70,9 +70,9 @@ public:
     }
 };
 
-TEST_BENCHMARK_F(BenchmarkSample, BenchmarkTestPreRunSample)
+BENCHMARK_F(BenchmarkSample, BenchmarkTestPreRunSample)
 
-class BenchmarkTestPostRunSample : public ::testing::BenchmarkTestBase {
+class BenchmarkTestPostRunSample : public ::testing::BenchmarkCaseBase {
     NSMutableArray* m_array;
 
 public:
@@ -89,9 +89,9 @@ public:
     }
 };
 
-TEST_BENCHMARK_F(BenchmarkSample, BenchmarkTestPostRunSample)
+BENCHMARK_F(BenchmarkSample, BenchmarkTestPostRunSample)
 
-TEST_BENCHMARK(BenchmarkSample, BigTest, 2) {
+BENCHMARK(BenchmarkSample, BigTest, 2) {
     NSMutableArray* arr = [[NSMutableArray alloc] initWithCapacity:100000];
     for (size_t i = 0; i < 100000; ++i) {
         arr[i] = [NSMutableArray arrayWithCapacity:10000];
@@ -99,7 +99,7 @@ TEST_BENCHMARK(BenchmarkSample, BigTest, 2) {
     [arr release];
 }
 
-class BenchmarkTestMultipleParameters : public ::testing::BenchmarkTestBase {
+class BenchmarkTestMultipleParameters : public ::testing::BenchmarkCaseBase {
     CGSize m_size;
     CGFloat m_mult;
 
@@ -123,7 +123,7 @@ public:
 static constexpr CGSize c_sizes[] = { { 0, 0 }, { 0, 512 }, { 256, 0 }, { 256, 512 } };
 static constexpr CGFloat c_mults[] = { .1f, 3.25f, 99.99f, 1234.5f, .00001f };
 ;
-BENCHMARK_REGISTER_TEST_P(BenchmarkSample,
+BENCHMARK_REGISTER_CASE_P(BenchmarkSample,
                           BenchmarkTestMultipleParameters,
                           ::testing::Combine(::testing::ValuesIn(c_sizes), ::testing::ValuesIn(c_mults)),
                           ::testing::tuple<CGSize, CGFloat>);

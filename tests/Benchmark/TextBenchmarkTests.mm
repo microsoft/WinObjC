@@ -31,7 +31,7 @@ static const NSString* sc_frameText = @"Lorem ipsum dolor sit amet, consectetur 
                                       @"proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 static constexpr UniChar sc_chars[4] = { 'T', 'E', 'S', 'T' };
 
-class CTFramesetterBase : public ::testing::BenchmarkTestBase {
+class CTFramesetterBase : public ::testing::BenchmarkCaseBase {
 public:
     CTFramesetterBase(CGSize size) {
         CTParagraphStyleSetting setting;
@@ -89,10 +89,10 @@ public:
 };
 
 static constexpr CGSize c_sizes[] = { { 0, 0 }, { 0, 512 }, { 256, 0 }, { 256, 512 } };
-BENCHMARK_REGISTER_TEST_P(CoreText, CTFramesetterCreateFrameTest, ::testing::ValuesIn(c_sizes), CGSize);
-BENCHMARK_REGISTER_TEST_P(CoreText, CTFramesetterSuggestFrameSizeTest, ::testing::ValuesIn(c_sizes), CGSize);
+BENCHMARK_REGISTER_CASE_P(CoreText, CTFramesetterCreateFrameTest, ::testing::ValuesIn(c_sizes), CGSize);
+BENCHMARK_REGISTER_CASE_P(CoreText, CTFramesetterSuggestFrameSizeTest, ::testing::ValuesIn(c_sizes), CGSize);
 
-class CTLineCreateTest : public ::testing::BenchmarkTestBase {
+class CTLineCreateTest : public ::testing::BenchmarkCaseBase {
     woc::AutoCF<CFAttributedStringRef> m_attrString;
 
 public:
@@ -119,9 +119,9 @@ public:
     }
 };
 
-TEST_BENCHMARK_F(CoreText, CTLineCreateTest);
+BENCHMARK_F(CoreText, CTLineCreateTest);
 
-class TextBenchmarkBase : public ::testing::BenchmarkTestBase {
+class TextBenchmarkBase : public ::testing::BenchmarkCaseBase {
 public:
     TextBenchmarkBase() {
         auto colorspace = woc::MakeAutoCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
@@ -201,8 +201,8 @@ public:
     }
 };
 
-TEST_BENCHMARK_F(CoreText, CTFrameDrawSingle);
-TEST_BENCHMARK_F(CoreText, CTFrameDrawGroup);
+BENCHMARK_F(CoreText, CTFrameDrawSingle);
+BENCHMARK_F(CoreText, CTFrameDrawGroup);
 
 class CTFrameDrawComplete : public TextBenchmarkBase {
 public:
@@ -237,7 +237,7 @@ public:
     }
 };
 
-TEST_BENCHMARK_F(CoreText, CTFrameDrawComplete);
+BENCHMARK_F(CoreText, CTFrameDrawComplete);
 
 class CTFrameDrawYuge : public TextBenchmarkBase {
 public:
@@ -283,7 +283,7 @@ private:
     woc::AutoCF<CTFrameRef> m_frame;
 };
 
-TEST_BENCHMARK_F(CoreText, CTFrameDrawYuge);
+BENCHMARK_F(CoreText, CTFrameDrawYuge);
 
 class CTLineDrawBase : public TextBenchmarkBase {
 public:
@@ -338,8 +338,8 @@ public:
     }
 };
 
-TEST_BENCHMARK_F(CoreText, CTLineDrawSingle);
-TEST_BENCHMARK_F(CoreText, CTLineDrawGroup);
+BENCHMARK_F(CoreText, CTLineDrawSingle);
+BENCHMARK_F(CoreText, CTLineDrawGroup);
 
 class CTLineDrawComplete : public TextBenchmarkBase {
 public:
@@ -364,7 +364,7 @@ public:
     }
 };
 
-TEST_BENCHMARK_F(CoreText, CTLineDrawComplete);
+BENCHMARK_F(CoreText, CTLineDrawComplete);
 
 class CTRunDrawBase : public CTLineDrawBase {
 public:
@@ -416,9 +416,9 @@ public:
     }
 };
 
-TEST_BENCHMARK_F(CoreText, CTRunDrawSingle);
-TEST_BENCHMARK_F(CoreText, CTRunDrawGroup);
-TEST_BENCHMARK_F(CoreText, CTRunDrawRotated);
+BENCHMARK_F(CoreText, CTRunDrawSingle);
+BENCHMARK_F(CoreText, CTRunDrawGroup);
+BENCHMARK_F(CoreText, CTRunDrawRotated);
 
 class ShowGlyphsBase : public TextBenchmarkBase {
 public:
@@ -466,8 +466,8 @@ public:
     }
 };
 
-TEST_BENCHMARK_F(CGContext, ShowGlyphsTest);
-TEST_BENCHMARK_F(CGContext, ShowGlyphsWithAdvances);
+BENCHMARK_F(CGContext, ShowGlyphsTest);
+BENCHMARK_F(CGContext, ShowGlyphsWithAdvances);
 
 class NSString_UIKitBase : public TextBenchmarkBase {
 public:
@@ -515,8 +515,8 @@ public:
     }
 };
 
-TEST_BENCHMARK_F(NSString, DrawAtPoint);
-TEST_BENCHMARK_F(NSString, DrawAtPointGroup);
+BENCHMARK_F(NSString, DrawAtPoint);
+BENCHMARK_F(NSString, DrawAtPointGroup);
 
 class DrawInRect : public NSString_UIKitBase {
 public:
@@ -535,7 +535,7 @@ protected:
     CGSize m_rectSize;
 };
 
-BENCHMARK_REGISTER_TEST_P(NSString, DrawInRect, ::testing::ValuesIn(c_sizes), CGSize);
+BENCHMARK_REGISTER_CASE_P(NSString, DrawInRect, ::testing::ValuesIn(c_sizes), CGSize);
 
 class SizeWithFont : public NSString_UIKitBase {
 public:
@@ -554,21 +554,21 @@ protected:
     CGSize m_rectSize;
 };
 
-BENCHMARK_REGISTER_TEST_P(NSString, SizeWithFont, ::testing::ValuesIn(c_sizes), CGSize);
+BENCHMARK_REGISTER_CASE_P(NSString, SizeWithFont, ::testing::ValuesIn(c_sizes), CGSize);
 
-TEST_BENCHMARK(CoreText, CTFontCreateWithName, 10000) {
+BENCHMARK(CoreText, CTFontCreateWithName, 10000) {
     CTFontRef font = CTFontCreateWithName(CFSTR("Arial"), 24, nullptr);
     CFRelease(font);
 }
 
-TEST_BENCHMARK(CoreText, CTFontDescriptor, 10000) {
+BENCHMARK(CoreText, CTFontDescriptor, 10000) {
     CTFontDescriptorRef descriptor = CTFontDescriptorCreateWithNameAndSize(CFSTR("Arial"), 88.5);
     CTFontRef font = CTFontCreateWithFontDescriptor(descriptor, 25.25, nullptr);
     CFRelease(descriptor);
     CFRelease(font);
 }
 
-class CTFontGetGlyphsTest : public ::testing::BenchmarkTestBase {
+class CTFontGetGlyphsTest : public ::testing::BenchmarkCaseBase {
     woc::AutoCF<CTFontRef> m_font;
     std::vector<CGGlyph> m_glyphs;
 
@@ -584,4 +584,4 @@ public:
     }
 };
 
-TEST_BENCHMARK_F(CoreText, CTFontGetGlyphsTest);
+BENCHMARK_F(CoreText, CTFontGetGlyphsTest);
