@@ -23,3 +23,9 @@ TEST(NSString_UIKitAdditions, ShouldNotReturnSizeOfZeroWidth) {
     EXPECT_LT(0.0, size.width);
     EXPECT_LT(0.0, size.height);
 }
+
+TEST(NSString_UIKitAdditions, ShouldNotConstrainHeightWhenTextIsLarger) {
+    CGSize givenSize = { 0, 15 };
+    CGSize size = [@"TEST" sizeWithFont:[UIFont systemFontOfSize:144] constrainedToSize:givenSize];
+    EXPECT_GT(size.height, givenSize.height);
+}

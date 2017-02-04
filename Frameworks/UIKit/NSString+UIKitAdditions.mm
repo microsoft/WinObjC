@@ -259,9 +259,8 @@ static NSDictionary* _getDefaultUITextAttributes() {
         size.width = std::numeric_limits<CGFloat>::max();
     }
 
-    if (size.height == 0.0) {
-        size.height = std::numeric_limits<CGFloat>::max();
-    }
+    // Return the height that the text actually requires rather than the constrained size
+    size.height = std::numeric_limits<CGFloat>::max();
 
     return CTFramesetterSuggestFrameSizeWithConstraints(framesetter.get(), CFRangeMake(0, self.length), nullptr, size, nullptr);
 }
