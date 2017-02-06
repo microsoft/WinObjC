@@ -34,6 +34,8 @@
 #import "XamlControls.h"
 #import "XamlUtilities.h"
 
+static const wchar_t* TAG = L"UILabel";
+
 @implementation UILabel {
     idretaintype(NSString) _text;
     idretaintype(UIFont) _font;
@@ -228,9 +230,13 @@
             _adjustFontSize = YES;
         }  else if ([coder containsValueForKey:@"UIAdjustsFontSizeToFit"]) {
             _adjustFontSize = [coder decodeInt32ForKey:@"UIAdjustsFontSizeToFit"];
-            FAIL_FAST_IF_MSG(_adjustFontSize, "Invalid nib format, UIAdjustsFontSizeToFit must be set to FALSE if it is set");
+            if(_adjustFontSize) {
+                TraceWarning(TAG, L"Invalid nib format, UIAdjustsFontSizeToFit should be set to FALSE if it is set, currently set as TRUE, overwritting with FALSE");
+                _adjustFontSize = NO;
+            }
         } else {
-            FAIL_FAST_MSG("Invalid nib format, oen of these, UIMinimumScaleFactor or UIMinimumFontSize or UIAdjustsFontSizeToFit, must be set");
+            TraceWarning(TAG, L"Invalid nib format, None of UIMinimumScaleFactor/UIMinimumFontSize/UIAdjustsFontSizeToFit is set. default UIAdjustsFontSizeToFit to FALSE");
+            _adjustFontSize = NO;
         }
 
         if ([coder containsValueForKey:@"UILineBreakMode"]) {
