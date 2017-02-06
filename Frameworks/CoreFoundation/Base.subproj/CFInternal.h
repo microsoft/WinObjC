@@ -369,6 +369,17 @@ CF_PRIVATE Boolean __CFProcessIsRestricted();
 extern "C" Class _OBJC_CLASS__NSCFNumber;
 extern "C" Class _OBJC_CLASS__NSCFBoolean;
 
+// WINOBJC: Returns an empty protocol that is assigned only to bridged classes, so that bridged objects can be distinguished quickly
+static Protocol* __CFRuntimeGetBridgeProtocol() {
+    static Protocol* s_bridgeProtocol = []() {        
+        Protocol* ret = objc_allocateProtocol("_NSCFBridgedType");
+        objc_registerProtocol(ret);
+        return ret;
+    }();
+
+    return s_bridgeProtocol;
+}
+
 #ifdef __CONSTANT_CFSTRINGS__
 
 #if DEPLOYMENT_RUNTIME_SWIFT
@@ -684,8 +695,7 @@ extern uintptr_t __CFRuntimeObjCClassTable[];
 // WINOBJC: helper function to determine if a cf object is a bridged CF object.
 CF_INLINE bool __CF_IsBridgedObject(CFTypeRef obj) {
     CFRuntimeBase* object = (CFRuntimeBase*)obj;
-    if (!object || 
-        (object->_cfisa == 0)) {
+    if (!object || (object->_cfisa == 0)) {
         return false;
     }
 
@@ -696,28 +706,23 @@ CF_INLINE bool __CF_IsBridgedObject(CFTypeRef obj) {
         return true;
     }
 
-    for (unsigned int i = 0; i < __CFRuntimeClassTableSize; i++) {
-        if ((__CFRuntimeObjCClassTable[i] != 0) && 
-            ((object->_cfisa == __CFRuntimeObjCClassTable[i]) ||
-            ([object isKindOfClass:(Class)(__CFRuntimeObjCClassTable[i])]))) {
-            return true;
-        }
-    }
-
-    return false;
+    // Check if the object has the 'bridged object' protocol
+    // NOTE: because our class_conformsToProtocol() checks based only on name, 
+    // it is possible to spoof a bridged object by stating an object conforms to a protocol with the same name.
+    // However, this would not grant access to anything that could not be accessed by more conventional means
+    // (ie: overriding an existing CF/Foundation class)
+    // and as such would not constitute an escalation of privilege.
+    return [object conformsToProtocol:__CFRuntimeGetBridgeProtocol()];
 }
 
 
 // WINOBJC: helper function to determine if an object is actually a CF object.
 // Logically this is basically !CF_IS_OBJC except that the expected type is not known ahead of time.
+// This is also logically the same as __CF_IsBridgedObject, except for if the object's _cfisa == 0
+// (treated as a CF object but not a bridged one)
 CF_INLINE bool __CF_IsCFObject(CFTypeRef obj) {
     CFRuntimeBase* object = (CFRuntimeBase*)obj;
-    if ((object->_cfisa == 0) || 
-        (object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFType)) ||
-        (object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFString)) ||
-        (object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFNumber)) ||
-        (object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFBoolean)) ||
-        __CF_IsBridgedObject(obj)) {
+    if ((object->_cfisa == 0) || __CF_IsBridgedObject(obj)) {
         return true;
     }
 
