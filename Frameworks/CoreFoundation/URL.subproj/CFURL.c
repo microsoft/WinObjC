@@ -5014,7 +5014,7 @@ CFURLRef CFURLCreateCopyDeletingPathExtension(CFAllocatorRef allocator, CFURLRef
         result = NULL;
     }
     else {
-        // NOTE: The previous implementation deleted invalid extensions.
+        // WINOBJC: The previous implementation deleted invalid extensions.
         CFRange primaryExtRange;
         _CFGetPathExtensionRangesFromPathComponent(lastPathComponent, &primaryExtRange, NULL);
         if ( primaryExtRange.location != kCFNotFound ) {
