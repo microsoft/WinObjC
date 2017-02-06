@@ -2293,7 +2293,7 @@ static void adjustSubviews(UIView* self, CGSize parentSize, CGSize delta) {
     }
 
     if (!priv->superview) {
-        // This is probably safe to do in all cases, but for now, let's constrain 
+        // This is probably safe to do in all cases, but for now, let's constrain
         // this to middleware scenarios.  We need to return a window in such cases
         // so point/rect/etc. conversion works properly.
         if (GetCACompositor()->IsRunningAsFramework()) {

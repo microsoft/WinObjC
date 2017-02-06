@@ -69,7 +69,7 @@ UIKIT_XAML_EXPORT IInspectable* XamlGetLabelTextBox(const Microsoft::WRL::ComPtr
 UIKIT_XAML_EXPORT void XamlSetFrameworkElementLayerProperties(const Microsoft::WRL::ComPtr<IInspectable>& targetElement,
                                                               const Microsoft::WRL::ComPtr<IInspectable>& sublayerCanvasProperty,
                                                               const Microsoft::WRL::ComPtr<IInspectable>& layerContentProperty);
-                                                              
+
 // Get the layerContentProperty for the specified target xaml element
 UIKIT_XAML_EXPORT IInspectable* XamlGetFrameworkElementLayerContentProperty(const Microsoft::WRL::ComPtr<IInspectable>& targetElement);
 

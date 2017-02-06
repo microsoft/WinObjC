@@ -181,7 +181,8 @@ struct ButtonState {
     [_xamlButton updateLayout];
 
     // Create our child UILabel; its frame will be updated in layoutSubviews
-    // TODO: Ideally we'd grab this directly from the Xaml, but we're not able to launch some apps when doing so due to a XamlParseException.
+    // TODO: Ideally we'd grab this directly from the Xaml, but we're not able to launch some apps when doing so due to a
+    // XamlParseException.
     //       Tracked as #1919.  When fixed, we'll need to initWithXamlElement we retrieve from the control template, and *not* addSubView.
     _titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     [self addSubview:_titleLabel];
@@ -189,7 +190,7 @@ struct ButtonState {
     _titleLabel.userInteractionEnabled = NO;
 
     // Create our child UIImageView; its frame will be updated in layoutSubviews
-    WXCImage* templateImage = rt_dynamic_cast([WXCImage class], [_xamlButton getTemplateChild : @"buttonImage"]);
+    WXCImage* templateImage = rt_dynamic_cast([WXCImage class], [_xamlButton getTemplateChild:@"buttonImage"]);
     _proxyImageView = [[_UIImageView_Proxy alloc] initWithXamlElement:templateImage];
 
     _contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
@@ -291,9 +292,7 @@ Microsoft Extension
     }
 
     // Update our image and border background brush (which we use for applying 'adjustImageWhen' treatment)
-    XamlButtonApplyVisuals([_xamlButton comObj],
-                           currentImage,
-                           currentBorderBackgroundBrush);
+    XamlButtonApplyVisuals([_xamlButton comObj], currentImage, currentBorderBackgroundBrush);
 
     // Update our title label
     self.titleLabel.text = currentTitle;
@@ -475,9 +474,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     }
 
     // Update the Xaml elements immediately, so the image proxy reflects reality
-    XamlButtonApplyVisuals([_xamlButton comObj],
-                           _currentInspectableImage(self),
-                           _currentInspectableBorderBackgroundBrush(self));
+    XamlButtonApplyVisuals([_xamlButton comObj], _currentInspectableImage(self), _currentInspectableBorderBackgroundBrush(self));
 
     [self invalidateIntrinsicContentSize];
     [self setNeedsLayout];
@@ -487,7 +484,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 @Status Interoperable
 @Notes The xaml element may be modified directly and we could return stale values.
 */
--(UIImage*)imageForState:(UIControlState)state {
+- (UIImage*)imageForState:(UIControlState)state {
+    // Don't do index-based lookup to avoid inserting empty entries into the map
     const auto& statePair = _states.find(state);
     return statePair != _states.end() ? statePair->second.image : nullptr;
 }
@@ -497,6 +495,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
  @Notes The xaml element may be modified directly and we could return stale values.
 */
 - (UIImage*)currentImage {
+    // Don't do index-based lookup to avoid inserting empty entries into the map
     const auto& statePair = _states.find(self->_curState);
     if (statePair != _states.end() && statePair->second.image != nil) {
         return statePair->second.image;
@@ -509,7 +508,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 @Status Interoperable
 @Notes The xaml element may be modified directly and we could return stale values.
 */
--(void)setBackgroundImage:(UIImage*)image forState : (UIControlState)state {
+- (void)setBackgroundImage:(UIImage*)image forState:(UIControlState)state {
     _states[state].backgroundImage = image;
 
     [self invalidateIntrinsicContentSize];
@@ -520,7 +519,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 @Status Interoperable
 @Notes The xaml element may be modified directly and we could return stale values.
 */
--(UIImage*)backgroundImageForState:(UIControlState)state {
+- (UIImage*)backgroundImageForState:(UIControlState)state {
+    // Don't do index-based lookup to avoid inserting empty entries into the map
     const auto& statePair = _states.find(state);
     return statePair != _states.end() ? statePair->second.backgroundImage : nullptr;
 }
@@ -529,7 +529,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 @Status Interoperable
 @Notes The xaml element may be modified directly and we could return stale values.
 */
--(UIImage*)currentBackgroundImage {
+- (UIImage*)currentBackgroundImage {
+    // Don't do index-based lookup to avoid inserting empty entries into the map
     const auto& statePair = _states.find(self->_curState);
     if (statePair != _states.end() && statePair->second.backgroundImage != nil) {
         return statePair->second.backgroundImage;
@@ -556,6 +557,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
  @Notes The xaml element may be modified directly and we could return stale values.
 */
 - (NSString*)titleForState:(UIControlState)state {
+    // Don't do index-based lookup to avoid inserting empty entries into the map
     const auto& statePair = _states.find(state);
     return statePair != _states.end() ? statePair->second.title : nullptr;
 }
@@ -564,6 +566,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
  @Status Interoperable
 */
 - (NSString*)currentTitle {
+    // Don't do index-based lookup to avoid inserting empty entries into the map
     const auto& statePair = _states.find(self->_curState);
     if (statePair != _states.end() && statePair->second.title != nil) {
         return statePair->second.title;
@@ -590,6 +593,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
  @Notes The xaml element may be modified directly and we could return stale values.
 */
 - (UIColor*)titleColorForState:(UIControlState)state {
+    // Don't do index-based lookup to avoid inserting empty entries into the map
     const auto& statePair = _states.find(state);
     return statePair != _states.end() ? statePair->second.textColor : nullptr;
 }
@@ -598,6 +602,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
  @Status Interoperable
 */
 - (UIColor*)currentTitleColor {
+    // Don't do index-based lookup to avoid inserting empty entries into the map
     const auto& statePair = _states.find(self->_curState);
     if (statePair != _states.end() && statePair->second.textColor != nil) {
         return statePair->second.textColor;
@@ -724,7 +729,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 
 static bool _isStateCustomizationSet(UIButton* self, UIControlState state) {
     // Returns whether or not we have any customization set for the specified state.
-    // For example; checking for 'UIControlStateDisabled' would return true for a 'UIControlStateDisabled' state as well as 
+    // For example; checking for 'UIControlStateDisabled' would return true for a 'UIControlStateDisabled' state as well as
     // for a 'UIControlStateHighlighted | UIControlStateDisabled' state.
     for (const auto& statePair : self->_states) {
         if ((statePair.first & state) && !statePair.second.IsEmpty()) {
@@ -753,7 +758,7 @@ static ComPtr<IInspectable> _currentInspectableBorderBackgroundBrush(UIButton* s
         whereas on the reference platform the tint is only applied directly to the images.  You can opt out by disabling this setting,
         or by setting any UIControlStateDisabled properties.
 */
--(void)setAdjustsImageWhenDisabled:(BOOL)shouldAdjust {
+- (void)setAdjustsImageWhenDisabled:(BOOL)shouldAdjust {
     if (shouldAdjust && !_inspectableAdjustsWhenDisabledBrush) {
         // Semi-transparent white overlay
         WUXMSolidColorBrush* colorBrush = [WUXMSolidColorBrush makeInstanceWithColor:[WUColorHelper fromArgb:150 r:255 g:255 b:255]];
@@ -768,7 +773,7 @@ static ComPtr<IInspectable> _currentInspectableBorderBackgroundBrush(UIButton* s
 /**
  @Status Interoperable
 */
--(BOOL)adjustsImageWhenDisabled {
+- (BOOL)adjustsImageWhenDisabled {
     return _inspectableAdjustsWhenDisabledBrush != nullptr;
 }
 
@@ -778,7 +783,7 @@ static ComPtr<IInspectable> _currentInspectableBorderBackgroundBrush(UIButton* s
         whereas on the reference platform the tint is only applied directly to the images.  You can opt out by disabling this setting,
         or by setting any UIControlStateHighlighted properties.
 */
--(void)setAdjustsImageWhenHighlighted:(BOOL)shouldAdjust {
+- (void)setAdjustsImageWhenHighlighted:(BOOL)shouldAdjust {
     if (shouldAdjust && !_inspectableAdjustsWhenHighlightedBrush) {
         // Mostly transparent black overlay
         WUXMSolidColorBrush* colorBrush = [WUXMSolidColorBrush makeInstanceWithColor:[WUColorHelper fromArgb:65 r:0 g:0 b:0]];
@@ -793,7 +798,7 @@ static ComPtr<IInspectable> _currentInspectableBorderBackgroundBrush(UIButton* s
 /**
  @Status Interoperable
 */
--(BOOL)adjustsImageWhenHighlighted {
+- (BOOL)adjustsImageWhenHighlighted {
     return _inspectableAdjustsWhenHighlightedBrush != nullptr;
 }
 
@@ -830,7 +835,7 @@ static ComPtr<IInspectable> _currentInspectableBorderBackgroundBrush(UIButton* s
 /**
  @Status Interoperable
 */
--(UIEdgeInsets)titleEdgeInsets {
+- (UIEdgeInsets)titleEdgeInsets {
     return _titleInsets;
 }
 
@@ -846,14 +851,14 @@ static ComPtr<IInspectable> _currentInspectableBorderBackgroundBrush(UIButton* s
 /**
  @Status Interoperable
 */
--(UIEdgeInsets)imageEdgeInsets {
+- (UIEdgeInsets)imageEdgeInsets {
     return _imageInsets;
 }
 
 /**
  @Status Interoperable
 */
--(void)setContentEdgeInsets:(UIEdgeInsets)insets {
+- (void)setContentEdgeInsets:(UIEdgeInsets)insets {
     _contentInsets = insets;
     [self invalidateIntrinsicContentSize];
     [self setNeedsLayout];
@@ -1012,14 +1017,14 @@ static ComPtr<IInspectable> _currentInspectableImage(UIButton* self) {
 /**
  @Status Interoperable
 */
--(void)setLineBreakMode:(UILineBreakMode)mode {
+- (void)setLineBreakMode:(UILineBreakMode)mode {
     self.titleLabel.lineBreakMode = mode;
 }
 
 /**
  @Status Interoperable
 */
--(UILineBreakMode)lineBreakMode {
+- (UILineBreakMode)lineBreakMode {
     return self.titleLabel.lineBreakMode;
 }
 
