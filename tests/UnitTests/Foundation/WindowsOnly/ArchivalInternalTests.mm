@@ -1,0 +1,54 @@
+//******************************************************************************
+//
+// Copyright (c) Microsoft. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+
+#import <TestFramework.h>
+#import <Foundation/NSData.h>
+#import <Foundation/NSKeyedUnarchiver.h>
+
+TEST(Archival, BackwardsCompatibilityWithOldWinObjCArchives) {
+    // This is a binary property list containing:
+    // {
+    //   $archiver: NSKeyedArchiver
+    //   $objects: (
+    //               [0]: $null
+    //               [1]: RootObject
+    //             )
+    //   $top: {
+    //           root: {            <-
+    //                   CF$UID: 1  <- Invalid. This should be a real CFKeyedArchiverUID, not a dictionary.
+    //                 }            <-
+    //         }
+    //   $version: 100000
+    // }
+    //
+    // The section marked with arrows (<-) is invalid, but old versions of WinObjC
+    // emitted archives containing it. Therefore, we must make sure we support it.
+    //
+    // Successful unarchival of this archive will create the string @"RootObject".
+    unsigned char rawPlist[] = { 0x62, 0x70, 0x6c, 0x69, 0x73, 0x74, 0x30, 0x30, 0xd4, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x09, 0x0e, 0x59,
+                                 0x24, 0x61, 0x72, 0x63, 0x68, 0x69, 0x76, 0x65, 0x72, 0x58, 0x24, 0x6f, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x73,
+                                 0x54, 0x24, 0x74, 0x6f, 0x70, 0x58, 0x24, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x5f, 0x10, 0x0f, 0x4e,
+                                 0x53, 0x4b, 0x65, 0x79, 0x65, 0x64, 0x41, 0x72, 0x63, 0x68, 0x69, 0x76, 0x65, 0x72, 0xa2, 0x07, 0x08, 0x55,
+                                 0x24, 0x6e, 0x75, 0x6c, 0x6c, 0x5a, 0x52, 0x6f, 0x6f, 0x74, 0x4f, 0x62, 0x6a, 0x65, 0x63, 0x74, 0xd1, 0x0a,
+                                 0x0b, 0x54, 0x72, 0x6f, 0x6f, 0x74, 0xd1, 0x0c, 0x0d, 0x56, 0x43, 0x46, 0x24, 0x55, 0x49, 0x44, 0x10, 0x01,
+                                 0x12, 0x00, 0x01, 0x86, 0xa0, 0x08, 0x11, 0x1b, 0x24, 0x29, 0x32, 0x44, 0x47, 0x4d, 0x58, 0x5b, 0x60, 0x63,
+                                 0x6a, 0x6c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0f,
+                                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x71 };
+
+    NSData* plistData = [NSData dataWithBytes:rawPlist length:std::extent<decltype(rawPlist)>::value];
+    id rootObject = [NSKeyedUnarchiver unarchiveObjectWithData:plistData];
+    ASSERT_OBJCEQ(@"RootObject", rootObject);
+}
