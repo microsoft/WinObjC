@@ -66,7 +66,7 @@ void UILabel::InitFromXIB(XIBObject* obj) {
     _textAlignment = obj->GetInt("IBUITextAlignment", 0);
     _numberOfLines = obj->GetInt("IBUINumberOfLines", 1);
 
-    // default line break mode is tailTrucation
+    // default line break mode is tailTruncation
     _lineBreakMode = obj->GetInt("IBUILineBreakMode", 4);
     _font = (UIFont*)obj->FindMember("IBUIFontDescription");
     if (!_font)

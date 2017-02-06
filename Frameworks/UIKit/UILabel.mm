@@ -46,7 +46,7 @@
     BOOL _adjustFontSize;
     float _minimumFontSize;
     float _originalFontSize;
-    BOOL _minimumScaleFactorHasBeenSet;
+    BOOL _useMinimumScaleFactor;
     float _minimumScaleFactor;
     int _numberOfLines;
     BOOL _isDisabled;
@@ -135,7 +135,7 @@
         float minimumFontSize = _minimumFontSize;
 
         // if minimumScaleFactor is used, it should override _minimumFontSize which is deprecated
-        if (_minimumScaleFactorHasBeenSet) {
+        if (_useMinimumScaleFactor) {
             if (_minimumScaleFactor > 0.0) {
                 minimumFontSize = _minimumScaleFactor * _originalFontSize;
             } else {
@@ -216,21 +216,21 @@
             _numberOfLines = 1;
         }
 
+        // one of UIMinimumScaleFactor or UIMinimumFontSize or UIAdjustsFontSizeToFit has to be set
+        // if UIAdjustsFontSizeToFit is set, it must be NO.
+        // if UIMinimumScaleFactor or UIMinimumFontSize is set, UIAdjustsFontSizeToFit is dereived to be YES
         if ([coder containsValueForKey:@"UIMinimumScaleFactor"]) {
             _minimumScaleFactor = [coder decodeFloatForKey:@"UIMinimumScaleFactor"];
-            _minimumScaleFactorHasBeenSet = YES;
+            _useMinimumScaleFactor = YES;
             _adjustFontSize = YES;
         } else if ([coder containsValueForKey:@"UIMinimumFontSize"]) {
             _minimumFontSize = [coder decodeFloatForKey:@"UIMinimumFontSize"];
             _adjustFontSize = YES;
         }  else if ([coder containsValueForKey:@"UIAdjustsFontSizeToFit"]) {
             _adjustFontSize = [coder decodeInt32ForKey:@"UIAdjustsFontSizeToFit"];
-            assert(_adjustFontSize == NO);
+            FAIL_FAST_IF_MSG(_adjustFontSize, "Invalid nib format, UIAdjustsFontSizeToFit must be set to FALSE if it is set");
         } else {
-            _adjustFontSize = NO;
-        }
-
-        if (_adjustFontSize) {
+            FAIL_FAST_MSG("Invalid nib format, oen of these, UIMinimumScaleFactor or UIMinimumFontSize or UIAdjustsFontSizeToFit, must be set");
         }
 
         if ([coder containsValueForKey:@"UILineBreakMode"]) {
@@ -293,7 +293,7 @@
     // documentation
     _minimumFontSize = 0.0001f;
     _minimumScaleFactor = 0.0;
-    _minimumScaleFactorHasBeenSet = NO;
+    _useMinimumScaleFactor = NO;
     _numberOfLines = 1;
     [self setOpaque:FALSE];
 
@@ -521,6 +521,7 @@
 */
 - (void)setMinimumFontSize:(float)size {
     _minimumFontSize = size;
+    _useMinimumScaleFactor = NO;
 }
 
 /**
@@ -618,7 +619,7 @@
 */
 - (void)setMinimumScaleFactor:(float)scale {
     _minimumScaleFactor = scale;
-    _minimumScaleFactorHasBeenSet = YES;
+    _useMinimumScaleFactor = YES;
 }
 
 /**
