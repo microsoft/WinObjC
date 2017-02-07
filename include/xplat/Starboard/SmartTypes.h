@@ -528,6 +528,9 @@ public:
     unique_cf(T val): AutoCF<T, CFLifetimeRetain>(std::move(val)) {
     }
 
+    unique_cf(unique_cf<T>&& other): AutoCF<T, CFLifetimeRetain>(std::move(other)) {
+    }
+
     void reset(T val = nullptr) {
         AutoCF<T, CFLifetimeRetain>::attach(val);
     }
@@ -538,7 +541,11 @@ public:
 
     unique_cf<T>& operator=(T val) = delete;
     unique_cf<T>& operator=(const unique_cf<T>& other) = delete;
-    unique_cf<T>& operator=(unique_cf<T>&& other) = delete;
+
+    unique_cf<T>& operator=(unique_cf<T>&& other) {
+        this->AutoCF<T>::operator=(std::move(other));
+        return *this;
+    }
 };
 
 template <typename T = CFTypeRef>
