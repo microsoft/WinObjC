@@ -17,5 +17,5 @@
 #pragma once
 
 #import <CoreGraphics/CGDataProvider.h>
-const void* _CGDataProviderGetData(CGDataProviderRef provider);
-size_t _CGDataProviderGetSize(CGDataProviderRef provider);
+COREGRAPHICS_EXPORT const void* _CGDataProviderGetData(CGDataProviderRef provider);
+COREGRAPHICS_EXPORT size_t _CGDataProviderGetSize(CGDataProviderRef provider);

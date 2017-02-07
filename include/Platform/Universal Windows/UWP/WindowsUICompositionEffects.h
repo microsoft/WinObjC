@@ -67,9 +67,9 @@ OBJCUWP_WINDOWS_UI_COMPOSITION_EFFECTS_EXPORT
 
 OBJCUWP_WINDOWS_UI_COMPOSITION_EFFECTS_EXPORT
 @interface WUCESceneLightingEffect : RTObject <WGEIGraphicsEffect, WGEIGraphicsEffectSource>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * name;
 @property float specularShine;

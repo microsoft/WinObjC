@@ -92,9 +92,9 @@ typedef unsigned WDBABluetoothLEAdvertisementPublisherStatus;
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBABluetoothLEManufacturerData : RTObject
 + (WDBABluetoothLEManufacturerData*)make:(unsigned short)companyId data:(RTObject<WSSIBuffer>*)data ACTIVATOR;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) RTObject<WSSIBuffer>* data;
 @property unsigned short companyId;
@@ -108,10 +108,10 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBABluetoothLEAdvertisementDataSection : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WDBABluetoothLEAdvertisementDataSection*)make:(uint8_t)dataType data:(RTObject<WSSIBuffer>*)data ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property uint8_t dataType;
 @property (retain) RTObject<WSSIBuffer>* data;
@@ -125,9 +125,9 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBABluetoothLEAdvertisement : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * localName;
 @property (retain) id /* WDBABluetoothLEAdvertisementFlags */ flags;
@@ -147,9 +147,9 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBABluetoothLEAdvertisementBytePattern : RTObject
 + (WDBABluetoothLEAdvertisementBytePattern*)make:(uint8_t)dataType offset:(int16_t)offset data:(RTObject<WSSIBuffer>*)data ACTIVATOR;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property int16_t offset;
 @property uint8_t dataType;
@@ -164,9 +164,9 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBABluetoothLEAdvertisementFilter : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WDBABluetoothLEAdvertisement* advertisement;
 @property (readonly) NSMutableArray* /* WDBABluetoothLEAdvertisementBytePattern* */ bytePatterns;
@@ -181,7 +181,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBABluetoothLEAdvertisementWatcherStoppedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDBBluetoothError error;
 @end
@@ -194,10 +194,10 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBABluetoothLEAdvertisementWatcher : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WDBABluetoothLEAdvertisementWatcher*)make:(WDBABluetoothLEAdvertisementFilter*)advertisementFilter ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WDBBluetoothSignalStrengthFilter* signalStrengthFilter;
 @property WDBABluetoothLEScanningMode scanningMode;
@@ -224,7 +224,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBABluetoothLEAdvertisementReceivedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDBABluetoothLEAdvertisement* advertisement;
 @property (readonly) WDBABluetoothLEAdvertisementType advertisementType;
@@ -274,7 +274,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBABluetoothLEAdvertisementPublisherStatusChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDBBluetoothError error;
 @property (readonly) WDBABluetoothLEAdvertisementPublisherStatus status;
@@ -289,9 +289,9 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WDBABluetoothLEAdvertisementPublisher : RTObject
 + (WDBABluetoothLEAdvertisementPublisher*)make:(WDBABluetoothLEAdvertisement*)advertisement ACTIVATOR;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDBABluetoothLEAdvertisement* advertisement;
 @property (readonly) WDBABluetoothLEAdvertisementPublisherStatus status;

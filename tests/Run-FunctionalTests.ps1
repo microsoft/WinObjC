@@ -32,6 +32,8 @@
 .PARAMETER PackageRootPath
     Path to build share where the TAEF package can be found
 
+.PARAMETER RedirectTAEFErrors
+    Redirect TAEF errors/failures to stderr.  This is used to integrate with VSTS powershell task.
 
 .EXAMPLE
     Run-FunctionalTests.ps1 -TAEFDirectory D:\TAEF
@@ -59,8 +61,12 @@ param(
 
     [string]$TestWorkingDirectory = "",
 
-    [string]$PackageRootPath = $null
+    [string]$PackageRootPath = $null,
+
+    [switch]$RedirectTAEFErrors
 )
+
+$script:exitCode = 0
 
 if ($NoCopy)
 {
@@ -176,7 +182,31 @@ function ExecTest($argList)
     else
     {
         $arguments = "$testPath" + "$argList"
-        Invoke-Expression "$taefPath $arguments"
+        if ($RedirectTAEFErrors) {
+            $output = Invoke-Expression "$taefPath $arguments"
+            $script:exitCode = $LASTEXITCODE
+            foreach ($o in $output) {
+                            
+                if ($o.StartsWith("Error:") -or $o.Contains("[Failed]")) {
+
+                    #TAEF does not report exceptions/crashes/failures during test cleanup as test failures.
+                    #However, it will log a message like: "Error: TAEF: [HRESULT 0x8000FFFF] ...."
+                    #We want to detect and mark these as test failures.
+                    $script:exitCode = 1
+
+                    #Note: Adding ##[error]: is just to make the errors show up as red in VSTS output
+                    #Unfortunately, writing the output to stderr (write-error) creates a lot of noise in powershell.
+                    #And attempting to use Console.WriteError or $host.ui.WriteErrorLine results in lines be displayed out of order.
+                    write-host "##[error]: $o" -foregroundcolor red
+
+                } else {
+                    write-host $o
+                }
+            }
+        } else {
+            Invoke-Expression "$taefPath $arguments"
+            $script:exitCode = $LASTEXITCODE
+        }
     }
 }
 
@@ -250,4 +280,4 @@ if($TestFilter -ne [string]$null)
 
 ExecTest($argList)
 
-exit
+exit $script:exitCode

@@ -64,7 +64,7 @@ typedef unsigned WAEFExtendedExecutionForegroundReason;
 OBJCUWP_WINDOWS_APPLICATIONMODEL_EXTENDEDEXECUTION_FOREGROUND_EXPORT
 @interface WAEFExtendedExecutionForegroundRevokedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WAEFExtendedExecutionForegroundRevokedReason reason;
 @end
@@ -91,9 +91,9 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EXTENDEDEXECUTION_FOREGROUND_EXPORT
 
 OBJCUWP_WINDOWS_APPLICATIONMODEL_EXTENDEDEXECUTION_FOREGROUND_EXPORT
 @interface WAEFExtendedExecutionForegroundSession : RTObject <WFIClosable>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WAEFExtendedExecutionForegroundReason reason;
 @property (retain) NSString * Description;

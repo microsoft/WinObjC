@@ -24,6 +24,7 @@ public:
     virtual DrawingTestMode GetMode() = 0;
     virtual std::string GetOutputPath() = 0;
     virtual std::string GetComparisonPath() = 0;
+    virtual std::string GetResourcePath(const std::string& resource) = 0;
 };
 
 class DrawingTestConfig {

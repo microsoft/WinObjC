@@ -93,7 +93,7 @@
       <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
       <HeaderMap>Project</HeaderMap>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>true</ObjectiveCModules>
+      <ObjectiveCModules>false</ObjectiveCModules>
       <OptimizationLevel>Disabled</OptimizationLevel>
       <PreprocessorDefinitions>DEBUG=1</PreprocessorDefinitions>
     </ClangCompile>
@@ -116,7 +116,7 @@
       <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
       <HeaderMap>Project</HeaderMap>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>true</ObjectiveCModules>
+      <ObjectiveCModules>false</ObjectiveCModules>
       <OptimizationLevel>Disabled</OptimizationLevel>
       <PreprocessorDefinitions>DEBUG=1</PreprocessorDefinitions>
     </ClangCompile>
@@ -137,7 +137,7 @@
       <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
       <HeaderMap>Project</HeaderMap>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>true</ObjectiveCModules>
+      <ObjectiveCModules>false</ObjectiveCModules>
       <OptimizationLevel>MinSpace</OptimizationLevel>
     </ClangCompile>
     <Link>
@@ -157,7 +157,7 @@
       <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
       <HeaderMap>Project</HeaderMap>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>true</ObjectiveCModules>
+      <ObjectiveCModules>false</ObjectiveCModules>
       <OptimizationLevel>MinSpace</OptimizationLevel>
     </ClangCompile>
     <Link>
@@ -179,6 +179,19 @@
     </AppxManifest>
     <Xml Include="default.rd.xml" />
     <None Include="CGCatalog_TemporaryKey.pfx" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddArc.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddArcToPoint.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddCurveToPoint.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddElipseToRect.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddLineToPoint.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddPath.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddQuadCurveToPoint.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\CloseSubPath.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\GetBoundingBox.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\LogoAutodesk.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\PathAddRect.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\PathApply.png" />
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\RoundedRect.png" />
     <Image Include="Assets\LockScreenLogo.scale-200.png" />
     <Image Include="Assets\SplashScreen.scale-200.png" />
     <Image Include="Assets\Square150x150Logo.scale-200.png" />
@@ -186,7 +199,12 @@
     <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Image Include="Assets\StoreLogo.png" />
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
+    <ClangCompile Include="..\..\CGCatalog\CGContextShadowViewController.mm" />
     <ClangCompile Include="..\..\CGCatalog\CGDrawOptions.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddArcToPointViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddArcViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddRoundedRectViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathApplyCurveViewController.m" />
     <ClangCompile Include="..\..\CGCatalog\CGPathCloseSubpathViewController.m" />
     <ClangCompile Include="..\..\CGCatalog\Samples\CGContextNewTestsController.m" />
     <ClangCompile Include="..\..\CGCatalog\CGCRootViewController.m" />
@@ -213,20 +231,8 @@
     <ClangCompile Include="..\..\CGCatalog\main.m" />
     <ClangCompile Include="..\..\CGCatalog\CGPathGetBoundingBoxViewController.m" />
     <ClangCompile Include="..\..\CGCatalog\CGPathAddElipseViewController.m" />
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddLineToPoint.png" />
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\PathApply.png" />
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddElipseToRect.png" />
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddQuadCurveToPoint.png" />
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\CloseSubPath.png" />
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddCurveToPoint.png" />
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\AddPath.png" />
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\LogoAutodesk.png" />
     <StoryboardCompile Include="..\..\CGCatalog\Resources\Launch Screen.storyboard" />
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\GetBoundingBox.png" />
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\PathAddRect.png" />
     <AssetCatalogCompile Include="..\..\CGCatalog\Resources\Assets.xcassets" />
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\GetBoundingBox.png" />
-    <SBResourceCopy Include="..\..\CGCatalog\Resources\CloseSubPath.png" />
     <SBInfoPlistCopy Include="..\..\CGCatalog\Info.plist">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Debug'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Release'">false</ExcludedFromBuild>

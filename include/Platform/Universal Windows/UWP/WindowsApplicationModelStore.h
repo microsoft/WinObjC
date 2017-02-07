@@ -81,7 +81,7 @@ typedef void(^WSLicenseChangedEventHandler)();
 OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
 @interface WSLicenseInformation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFDateTime* expirationDate;
 @property (readonly) BOOL isActive;
@@ -100,7 +100,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
 @interface WSListingInformation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int ageRating;
 @property (readonly) NSString * currentMarket;
@@ -123,7 +123,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
 @interface WSPurchaseResults : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * offerId;
 @property (readonly) NSString * receiptXml;
@@ -140,9 +140,9 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
 @interface WSProductPurchaseDisplayProperties : RTObject
 + (WSProductPurchaseDisplayProperties*)makeProductPurchaseDisplayProperties:(NSString *)name ACTIVATOR;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * name;
 @property (retain) WFUri* image;
@@ -158,7 +158,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
 @interface WSUnfulfilledConsumable : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * offerId;
 @property (readonly) NSString * productId;
@@ -174,7 +174,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
 @interface WSProductLicense : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFDateTime* expirationDate;
 @property (readonly) BOOL isActive;
@@ -191,7 +191,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_EXPORT
 @interface WSProductListing : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * formattedPrice;
 @property (readonly) NSString * name;

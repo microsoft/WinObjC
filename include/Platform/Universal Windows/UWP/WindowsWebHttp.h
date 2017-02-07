@@ -210,9 +210,9 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHttpRequestMessage : RTObject <WFIClosable, WFIStringable>
 + (WWHHttpRequestMessage*)make:(WWHHttpMethod*)method uri:(WFUri*)uri ACTIVATOR;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WFUri* requestUri;
 @property (retain) WWHHttpMethod* method;
@@ -232,10 +232,10 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHttpResponseMessage : RTObject <WFIClosable, WFIStringable>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WWHHttpResponseMessage*)make:(WWHHttpStatusCode)statusCode ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WWHHttpVersion Version;
 @property WWHHttpStatusCode statusCode;
@@ -258,10 +258,10 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHttpClient : RTObject <WFIClosable, WFIStringable>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WWHHttpClient*)make:(RTObject<WWHFIHttpFilter>*)filter ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WWHHHttpRequestHeaderCollection* defaultRequestHeaders;
 - (void)deleteAsync:(WFUri*)uri success:(void (^)(WWHHttpResponseMessage*))success progress:(void (^)(WWHHttpProgress*))progress failure:(void (^)(NSError*))failure;
@@ -288,7 +288,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHttpCookie : RTObject <WFIStringable>
 + (WWHHttpCookie*)make:(NSString *)name domain:(NSString *)domain path:(NSString *)path ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * value;
 @property BOOL secure;
@@ -309,7 +309,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHttpCookieCollection : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -330,7 +330,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHttpMethod : RTObject <WFIStringable>
 + (WWHHttpMethod*)make:(NSString *)method ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * method;
 + (WWHHttpMethod*)Delete;
@@ -352,7 +352,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHttpTransportInformation : RTObject <WFIStringable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSCCCertificate* serverCertificate;
 @property (readonly) WNSSocketSslErrorSeverity serverCertificateErrorSeverity;
@@ -373,7 +373,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (WWHHttpStringContent*)makeFromStringWithEncoding:(NSString *)content encoding:(WSSUnicodeEncoding)encoding ACTIVATOR;
 + (WWHHttpStringContent*)makeFromStringWithEncodingAndMediaType:(NSString *)content encoding:(WSSUnicodeEncoding)encoding mediaType:(NSString *)mediaType ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
@@ -397,7 +397,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (WWHHttpBufferContent*)makeFromBuffer:(RTObject<WSSIBuffer>*)content ACTIVATOR;
 + (WWHHttpBufferContent*)makeFromBufferWithOffset:(RTObject<WSSIBuffer>*)content offset:(unsigned int)offset count:(unsigned int)count ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
@@ -420,7 +420,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHttpStreamContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
 + (WWHHttpStreamContent*)makeFromInputStream:(RTObject<WSSIInputStream>*)content ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
@@ -443,7 +443,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHttpFormUrlEncodedContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
 + (WWHHttpFormUrlEncodedContent*)make:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, NSString * > */)content ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
@@ -466,9 +466,9 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHttpMultipartContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
 + (WWHHttpMultipartContent*)makeWithSubtype:(NSString *)subtype ACTIVATOR;
 + (WWHHttpMultipartContent*)makeWithSubtypeAndBoundary:(NSString *)subtype boundary:(NSString *)boundary ACTIVATOR;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
@@ -490,10 +490,10 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHttpMultipartFormDataContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WWHHttpMultipartFormDataContent*)makeWithBoundary:(NSString *)boundary ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
@@ -518,7 +518,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WWHHttpCookieManager : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (BOOL)setCookie:(WWHHttpCookie*)cookie;
 - (BOOL)setCookieWithThirdParty:(WWHHttpCookie*)cookie thirdParty:(BOOL)thirdParty;

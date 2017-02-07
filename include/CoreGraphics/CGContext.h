@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -15,6 +15,10 @@
 //******************************************************************************
 #pragma once
 
+#import <CoreGraphics/CoreGraphicsExport.h>
+
+typedef struct __CGContext* CGContextRef;
+
 #import <CoreGraphics/CGAffineTransform.h>
 #import <CoreGraphics/CGColor.h>
 #import <CoreGraphics/CGColorSpace.h>
@@ -26,17 +30,31 @@
 #import <CoreGraphics/CGPath.h>
 #import <CoreGraphics/CGPattern.h>
 #import <CoreGraphics/CGShading.h>
-#import <CoreGraphics/CoreGraphicsExport.h>
 
-typedef enum { kCGEncodingFontSpecific, kCGEncodingMacRoman } CGTextEncoding;
-typedef enum {
+#import <CoreFoundation/CFBase.h>
+
+// clang-format off
+typedef CF_OPTIONS(CFIndex, CGPathDrawingMode) {
+//  CG Drawing Bitfield   |STROKE|   |FILL  |   |EO    |
+    kCGPathStroke =       (1 << 0),
+    kCGPathFill =                    (1 << 1),
+    kCGPathFillStroke =   (1 << 0) | (1 << 1),
+    kCGPathEOFill =                  (1 << 1) | (1 << 2),
+    kCGPathEOFillStroke = (1 << 0) | (1 << 1) | (1 << 2),
+};
+// clang-format on
+
+typedef CF_ENUM(CFIndex, CGTextEncoding) { kCGEncodingFontSpecific, kCGEncodingMacRoman };
+
+typedef CF_ENUM(CFIndex, CGInterpolationQuality) {
     kCGInterpolationDefault = 0,
     kCGInterpolationNone = 1,
     kCGInterpolationLow = 2,
     kCGInterpolationMedium = 4,
     kCGInterpolationHigh = 3
-} CGInterpolationQuality;
-typedef enum {
+};
+
+typedef CF_ENUM(CFIndex, CGBlendMode) {
     kCGBlendModeNormal,
     kCGBlendModeMultiply,
     kCGBlendModeScreen,
@@ -65,9 +83,10 @@ typedef enum {
     kCGBlendModeXOR,
     kCGBlendModePlusDarker,
     kCGBlendModePlusLighter
-} CGBlendMode;
-typedef enum {
-    kCGTextFill,
+};
+
+typedef CF_ENUM(CFIndex, CGTextDrawingMode) {
+    kCGTextFill = 0,
     kCGTextStroke,
     kCGTextFillStroke,
     kCGTextInvisible,
@@ -75,10 +94,10 @@ typedef enum {
     kCGTextStrokeClip,
     kCGTextFillStrokeClip,
     kCGTextClip
-} CGTextDrawingMode;
+};
 
 COREGRAPHICS_EXPORT void CGContextFlush(CGContextRef c) STUB_METHOD;
-COREGRAPHICS_EXPORT CFTypeID CGContextGetTypeID() STUB_METHOD;
+COREGRAPHICS_EXPORT CFTypeID CGContextGetTypeID();
 COREGRAPHICS_EXPORT void CGContextRelease(CGContextRef c);
 COREGRAPHICS_EXPORT CGContextRef CGContextRetain(CGContextRef c);
 COREGRAPHICS_EXPORT void CGContextSynchronize(CGContextRef c) STUB_METHOD;
@@ -100,7 +119,7 @@ COREGRAPHICS_EXPORT void CGContextSetFillPattern(CGContextRef c, CGPatternRef pa
 COREGRAPHICS_EXPORT void CGContextSetRenderingIntent(CGContextRef c, CGColorRenderingIntent intent) STUB_METHOD;
 
 COREGRAPHICS_EXPORT void CGContextSetShouldAntialias(CGContextRef c, bool shouldAntialias) STUB_METHOD;
-COREGRAPHICS_EXPORT void CGContextSetStrokePattern(CGContextRef c, CGPatternRef pattern, const CGFloat* components) STUB_METHOD;
+COREGRAPHICS_EXPORT void CGContextSetStrokePattern(CGContextRef c, CGPatternRef pattern, const CGFloat* components);
 
 COREGRAPHICS_EXPORT void CGContextSetBlendMode(CGContextRef c, CGBlendMode mode);
 COREGRAPHICS_EXPORT void CGContextSetAllowsAntialiasing(CGContextRef c, bool allowsAntialiasing) STUB_METHOD;
@@ -135,7 +154,7 @@ COREGRAPHICS_EXPORT void CGContextEOFillPath(CGContextRef c);
 COREGRAPHICS_EXPORT void CGContextFillPath(CGContextRef c);
 COREGRAPHICS_EXPORT void CGContextFillRect(CGContextRef c, CGRect rect);
 
-COREGRAPHICS_EXPORT void CGContextFillRects(CGContextRef c, const CGRect* rects, size_t count) STUB_METHOD;
+COREGRAPHICS_EXPORT void CGContextFillRects(CGContextRef c, const CGRect* rects, size_t count);
 
 COREGRAPHICS_EXPORT void CGContextFillEllipseInRect(CGContextRef c, CGRect rect);
 COREGRAPHICS_EXPORT void CGContextStrokePath(CGContextRef c);
@@ -161,12 +180,12 @@ COREGRAPHICS_EXPORT void CGContextClipToMask(CGContextRef c, CGRect rect, CGImag
 COREGRAPHICS_EXPORT void CGContextSetAlpha(CGContextRef c, CGFloat alpha);
 
 COREGRAPHICS_EXPORT void CGContextSetCMYKFillColor(
-    CGContextRef c, CGFloat cyan, CGFloat magenta, CGFloat yellow, CGFloat black, CGFloat alpha) STUB_METHOD;
+    CGContextRef c, CGFloat cyan, CGFloat magenta, CGFloat yellow, CGFloat black, CGFloat alpha);
 
 COREGRAPHICS_EXPORT void CGContextSetFillColor(CGContextRef c, const CGFloat* components);
 COREGRAPHICS_EXPORT void CGContextSetCMYKStrokeColor(
-    CGContextRef c, CGFloat cyan, CGFloat magenta, CGFloat yellow, CGFloat black, CGFloat alpha) STUB_METHOD;
-COREGRAPHICS_EXPORT void CGContextSetFillColorSpace(CGContextRef c, CGColorSpaceRef space) STUB_METHOD;
+    CGContextRef c, CGFloat cyan, CGFloat magenta, CGFloat yellow, CGFloat black, CGFloat alpha);
+COREGRAPHICS_EXPORT void CGContextSetFillColorSpace(CGContextRef c, CGColorSpaceRef space);
 
 COREGRAPHICS_EXPORT void CGContextSetFillColorWithColor(CGContextRef c, CGColorRef color);
 COREGRAPHICS_EXPORT void CGContextSetGrayFillColor(CGContextRef c, CGFloat gray, CGFloat alpha);
@@ -179,7 +198,7 @@ COREGRAPHICS_EXPORT void CGContextSetShadowWithColor(CGContextRef c, CGSize offs
 
 COREGRAPHICS_EXPORT void CGContextSetStrokeColor(CGContextRef c, const CGFloat* components);
 
-COREGRAPHICS_EXPORT void CGContextSetStrokeColorSpace(CGContextRef c, CGColorSpaceRef space) STUB_METHOD;
+COREGRAPHICS_EXPORT void CGContextSetStrokeColorSpace(CGContextRef c, CGColorSpaceRef space);
 
 COREGRAPHICS_EXPORT void CGContextSetStrokeColorWithColor(CGContextRef c, CGColorRef color);
 COREGRAPHICS_EXPORT void CGContextConcatCTM(CGContextRef c, CGAffineTransform transform);
@@ -215,7 +234,7 @@ COREGRAPHICS_EXPORT void CGContextShowGlyphs(CGContextRef c, const CGGlyph* g, s
 COREGRAPHICS_EXPORT void CGContextShowGlyphsAtPoint(CGContextRef c, CGFloat x, CGFloat y, const CGGlyph* glyphs, size_t count);
 COREGRAPHICS_EXPORT void CGContextShowGlyphsWithAdvances(CGContextRef c, const CGGlyph* glyphs, const CGSize* advances, size_t count);
 
-COREGRAPHICS_EXPORT void CGContextShowGlyphsAtPositions(CGContextRef c, const CGGlyph* glyphs, const CGPoint* Lpositions, size_t count)
+COREGRAPHICS_EXPORT void CGContextShowGlyphsAtPositions(CGContextRef c, const CGGlyph* glyphs, const CGPoint* positions, size_t count)
     STUB_METHOD;
 
 COREGRAPHICS_EXPORT CGAffineTransform CGContextGetTextMatrix(CGContextRef c);
@@ -233,10 +252,10 @@ COREGRAPHICS_EXPORT void CGContextShowText(CGContextRef c, const char* string, s
 
 COREGRAPHICS_EXPORT void CGContextShowTextAtPoint(CGContextRef c, CGFloat x, CGFloat y, const char* string, size_t length);
 
-COREGRAPHICS_EXPORT CGAffineTransform CGContextGetUserSpaceToDeviceSpaceTransform(CGContextRef c) STUB_METHOD;
-COREGRAPHICS_EXPORT CGPoint CGContextConvertPointToDeviceSpace(CGContextRef c, CGPoint point) STUB_METHOD;
-COREGRAPHICS_EXPORT CGPoint CGContextConvertPointToUserSpace(CGContextRef c, CGPoint point) STUB_METHOD;
-COREGRAPHICS_EXPORT CGSize CGContextConvertSizeToDeviceSpace(CGContextRef c, CGSize size) STUB_METHOD;
-COREGRAPHICS_EXPORT CGSize CGContextConvertSizeToUserSpace(CGContextRef c, CGSize size) STUB_METHOD;
-COREGRAPHICS_EXPORT CGRect CGContextConvertRectToDeviceSpace(CGContextRef c, CGRect rect) STUB_METHOD;
-COREGRAPHICS_EXPORT CGRect CGContextConvertRectToUserSpace(CGContextRef c, CGRect rect) STUB_METHOD;
+COREGRAPHICS_EXPORT CGAffineTransform CGContextGetUserSpaceToDeviceSpaceTransform(CGContextRef c);
+COREGRAPHICS_EXPORT CGPoint CGContextConvertPointToDeviceSpace(CGContextRef c, CGPoint point);
+COREGRAPHICS_EXPORT CGPoint CGContextConvertPointToUserSpace(CGContextRef c, CGPoint point);
+COREGRAPHICS_EXPORT CGSize CGContextConvertSizeToDeviceSpace(CGContextRef c, CGSize size);
+COREGRAPHICS_EXPORT CGSize CGContextConvertSizeToUserSpace(CGContextRef c, CGSize size);
+COREGRAPHICS_EXPORT CGRect CGContextConvertRectToDeviceSpace(CGContextRef c, CGRect rect);
+COREGRAPHICS_EXPORT CGRect CGContextConvertRectToUserSpace(CGContextRef c, CGRect rect);

@@ -529,7 +529,7 @@ TEST(CTFont, GetBoundingBoxes) {
 #endif
 }
 
-TEST(CTFont, CreatePathForGlyph) {
+DISABLED_TEST(CTFont, CreatePathForGlyph) {
     // Some background on Bezier curves:
     // A quadratic Bezier curve is specified by 3 points:     a start point, a control point, and an end point
     // A cubic Bezier curve is instead specified by 4 points: a start point, TWO control points, and an end point

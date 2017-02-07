@@ -64,7 +64,7 @@ OBJCUWP_WINDOWS_PHONE_MEDIA_DEVICES_EXPORT
 @interface WPMDAudioRoutingManager : RTObject
 + (WPMDAudioRoutingManager*)getDefault;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WPMDAvailableAudioRoutingEndpoints availableAudioEndpoints;
 - (EventRegistrationToken)addAudioEndpointChangedEvent:(void(^)(WPMDAudioRoutingManager*, RTObject*))del;

@@ -84,7 +84,7 @@ OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 + (void)createFromStreamAsync:(RTObject<WSSIInputStream>*)stream uri:(WFUri*)uri contentType:(NSString *)contentType success:(void (^)(WMSAAdaptiveMediaSourceCreationResult*))success failure:(void (^)(NSError*))failure;
 + (void)createFromStreamWithDownloaderAsync:(RTObject<WSSIInputStream>*)stream uri:(WFUri*)uri contentType:(NSString *)contentType httpClient:(WWHHttpClient*)httpClient success:(void (^)(WMSAAdaptiveMediaSourceCreationResult*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property unsigned int initialBitrate;
 @property (retain) WFTimeSpan* inboundBitsPerSecondWindow;
@@ -119,7 +119,7 @@ OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 @interface WMSAAdaptiveMediaSourceCreationResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WWHHttpResponseMessage* httpResponseMessage;
 @property (readonly) WMSAAdaptiveMediaSource* mediaSource;
@@ -135,7 +135,7 @@ OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 @interface WMSAAdaptiveMediaSourceDownloadBitrateChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int newValue;
 @property (readonly) unsigned int oldValue;
@@ -150,7 +150,7 @@ OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 @interface WMSAAdaptiveMediaSourcePlaybackBitrateChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL audioOnly;
 @property (readonly) unsigned int newValue;
@@ -166,7 +166,7 @@ OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 @interface WMSAAdaptiveMediaSourceDownloadRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) id /* uint64_t */ resourceByteRangeLength;
 @property (readonly) id /* uint64_t */ resourceByteRangeOffset;
@@ -185,7 +185,7 @@ OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 @interface WMSAAdaptiveMediaSourceDownloadCompletedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WWHHttpResponseMessage* httpResponseMessage;
 @property (readonly) id /* uint64_t */ resourceByteRangeLength;
@@ -203,7 +203,7 @@ OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 @interface WMSAAdaptiveMediaSourceDownloadFailedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WWHHttpResponseMessage* httpResponseMessage;
 @property (readonly) id /* uint64_t */ resourceByteRangeLength;
@@ -221,7 +221,7 @@ OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 @interface WMSAAdaptiveMediaSourceAdvancedSettings : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) id /* double */ desiredBitrateHeadroomRatio;
 @property (retain) id /* double */ bitrateDowngradeTriggerRatio;
@@ -237,7 +237,7 @@ OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 @interface WMSAAdaptiveMediaSourceDownloadResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WFUri* resourceUri;
 @property (retain) RTObject<WSSIInputStream>* inputStream;
@@ -257,7 +257,7 @@ OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 @interface WMSAAdaptiveMediaSourceDownloadRequestedDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)complete;
 @end

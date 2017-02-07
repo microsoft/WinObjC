@@ -77,7 +77,7 @@ OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
 OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
 @interface WGHHolographicCamera : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double viewportScaleFactor;
 @property (readonly) unsigned int id;
@@ -97,7 +97,7 @@ OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
 @interface WGHHolographicSpace : RTObject
 + (WGHHolographicSpace*)createForCoreWindow:(WUCCoreWindow*)window;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WGHHolographicAdapterId* primaryAdapterId;
 - (EventRegistrationToken)addCameraAddedEvent:(void(^)(WGHHolographicSpace*, WGHHolographicSpaceCameraAddedEventArgs*))del;
@@ -117,7 +117,7 @@ OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
 OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
 @interface WGHHolographicSpaceCameraAddedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WGHHolographicCamera* camera;
 - (WFDeferral*)getDeferral;
@@ -132,7 +132,7 @@ OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
 OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
 @interface WGHHolographicSpaceCameraRemovedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WGHHolographicCamera* camera;
 @end
@@ -146,7 +146,7 @@ OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
 OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
 @interface WGHHolographicFrame : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* WGHHolographicCamera* */ addedCameras;
 @property (readonly) WGHHolographicFramePrediction* currentPrediction;
@@ -168,7 +168,7 @@ OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
 OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
 @interface WGHHolographicCameraPose : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) double farPlaneDistance;
 @property (readonly) WGHHolographicCamera* holographicCamera;
@@ -189,7 +189,7 @@ OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
 OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
 @interface WGHHolographicCameraRenderingParameters : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) RTObject<WGDDIDirect3DSurface>* direct3D11BackBuffer;
 @property (readonly) RTObject<WGDDIDirect3DDevice>* direct3D11Device;
@@ -207,7 +207,7 @@ OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
 OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
 @interface WGHHolographicFramePrediction : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* WGHHolographicCameraPose* */ cameraPoses;
 @property (readonly) WPPerceptionTimestamp* timestamp;

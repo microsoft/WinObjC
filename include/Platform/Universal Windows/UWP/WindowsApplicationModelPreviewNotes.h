@@ -42,7 +42,7 @@
 OBJCUWP_WINDOWS_APPLICATIONMODEL_PREVIEW_NOTES_EXPORT
 @interface WAPNNotePlacementChangedPreviewEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) int viewId;
 @end
@@ -56,7 +56,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_PREVIEW_NOTES_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_PREVIEW_NOTES_EXPORT
 @interface WAPNNoteVisibilityChangedPreviewEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL isVisible;
 @property (readonly) int viewId;
@@ -72,7 +72,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_PREVIEW_NOTES_EXPORT
 @interface WAPNNotesWindowManagerPreview : RTObject
 + (WAPNNotesWindowManagerPreview*)getForCurrentApp;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL isScreenLocked;
 - (EventRegistrationToken)addNotePlacementChangedEvent:(void(^)(WAPNNotesWindowManagerPreview*, WAPNNotePlacementChangedPreviewEventArgs*))del;

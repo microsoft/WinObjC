@@ -417,7 +417,7 @@
       <PreprocessorDefinitions>UIKIT_IMPEXP=; %(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
       <AdditionalOptions>-DSTARBOARD_PORT=1 "-DUIKIT_IMPEXP= " "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " %(AdditionalOptions) -Wno-deprecated-declarations</AdditionalOptions>
@@ -430,7 +430,7 @@
       <PreprocessorDefinitions>UIKIT_IMPEXP=; %(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
       <AdditionalOptions>-DSTARBOARD_PORT=1 "-DUIKIT_IMPEXP= " "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " %(AdditionalOptions) -Wno-deprecated-declarations</AdditionalOptions>
@@ -444,7 +444,7 @@
       <PreprocessorDefinitions>UIKIT_IMPEXP=; %(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
       <AdditionalOptions>-DSTARBOARD_PORT=1 "-DUIKIT_IMPEXP= " "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " %(AdditionalOptions) -Wno-deprecated-declarations -Wno-ignored-attributes</AdditionalOptions>
@@ -457,7 +457,7 @@
       <PreprocessorDefinitions>UIKIT_IMPEXP=; %(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
       <AdditionalOptions>-DSTARBOARD_PORT=1 "-DUIKIT_IMPEXP= " "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " %(AdditionalOptions) -Wno-deprecated-declarations -Wno-ignored-attributes</AdditionalOptions>

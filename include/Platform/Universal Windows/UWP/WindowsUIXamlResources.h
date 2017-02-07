@@ -52,9 +52,9 @@ OBJCUWP_WINDOWS_UI_XAML_RESOURCES_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_RESOURCES_EXPORT
 @interface WUXRCustomXamlResourceLoader : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 + (WUXRCustomXamlResourceLoader*)current;
 + (void)setCurrent:(WUXRCustomXamlResourceLoader*)value;

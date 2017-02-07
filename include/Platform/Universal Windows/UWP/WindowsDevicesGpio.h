@@ -84,7 +84,7 @@ typedef unsigned WDGGpioPinEdge;
 OBJCUWP_WINDOWS_DEVICES_GPIO_EXPORT
 @interface WDGGpioPinValueChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDGGpioPinEdge edge;
 @end
@@ -112,7 +112,7 @@ OBJCUWP_WINDOWS_DEVICES_GPIO_EXPORT
 OBJCUWP_WINDOWS_DEVICES_GPIO_EXPORT
 @interface WDGGpioPin : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WFTimeSpan* debounceTimeout;
 @property (readonly) int pinNumber;
@@ -139,7 +139,7 @@ OBJCUWP_WINDOWS_DEVICES_GPIO_EXPORT
 + (void)getControllersAsync:(RTObject<WDGPIGpioProvider>*)provider success:(void (^)(NSArray* /* WDGGpioController* */))success failure:(void (^)(NSError*))failure;
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDGGpioController*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) int pinCount;
 - (WDGGpioPin*)openPin:(int)pinNumber;

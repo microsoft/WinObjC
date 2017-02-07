@@ -19,11 +19,6 @@
 
 @implementation CGPathAddCurveToPointViewController
 
-- (id)initWithDrawingOptions:(CGDrawOptions*)options {
-    self = [super initWithDrawingOptions:options];
-    return self;
-}
-
 - (void)loadView {
     [super loadView];
     [self.view setBackgroundColor:[UIColor clearColor]];
@@ -36,13 +31,15 @@
         CGContextSetStrokeColorWithColor(currentContext, self.options.lineColor);
         CGContextSetLineDash(currentContext, self.options.linePhase, self.options.lineDashPattern, self.options.lineDashCount);
 
-        CGMutablePathRef thepath = CGPathCreateMutable();
-        CGPathMoveToPoint(thepath, NULL, 30, 100);
-        CGPathAddCurveToPoint(thepath, NULL, 47.0f, 67.0f, 50.0f, 55.0f, 45.0f, 50.0f);
-        CGPathAddCurveToPoint(thepath, NULL, 42.0f, 47.0f, 37.0f, 46.0f, 30.0f, 55.0f);
+        CGAffineTransform transformation = self.options.affineTransform;
 
-        CGPathAddCurveToPoint(thepath, NULL, 23.0f, 46.0f, 18.0f, 47.0f, 15.0f, 50.0f);
-        CGPathAddCurveToPoint(thepath, NULL, 10.0f, 55.0f, 13.0f, 67.0f, 30.0f, 100.0f);
+        CGMutablePathRef thepath = CGPathCreateMutable();
+        CGPathMoveToPoint(thepath, &transformation, 30, 100);
+        CGPathAddCurveToPoint(thepath, &transformation, 47.0f, 67.0f, 50.0f, 55.0f, 45.0f, 50.0f);
+        CGPathAddCurveToPoint(thepath, &transformation, 42.0f, 47.0f, 37.0f, 46.0f, 30.0f, 55.0f);
+
+        CGPathAddCurveToPoint(thepath, &transformation, 23.0f, 46.0f, 18.0f, 47.0f, 15.0f, 50.0f);
+        CGPathAddCurveToPoint(thepath, &transformation, 10.0f, 55.0f, 13.0f, 67.0f, 30.0f, 100.0f);
 
         CGPathCloseSubpath(thepath);
         CGContextAddPath(currentContext, thepath);
