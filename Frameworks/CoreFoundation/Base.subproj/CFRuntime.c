@@ -1141,6 +1141,10 @@ void __CFInitialize(void) {
         for (CFIndex idx = 1; idx < __CFRuntimeClassTableSize; ++idx) {
             __CFRuntimeObjCClassTable[idx] = (uintptr_t)&_OBJC_CLASS__NSCFType;
         }
+
+        // WINOBJC: Label NSCFType with the 'bridged object' protocol
+        class_addProtocol(_OBJC_CLASS__NSCFType, __CFRuntimeGetBridgeProtocol());
+
 #endif
         
 #if DEPLOYMENT_RUNTIME_SWIFT
