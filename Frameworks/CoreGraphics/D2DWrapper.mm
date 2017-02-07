@@ -21,7 +21,7 @@ using namespace Microsoft::WRL;
 
 HRESULT _CGGetD2DFactory(ID2D1Factory** factory) {
     static ComPtr<ID2D1Factory> sFactory;
-    static HRESULT sHr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory), &sFactory);
+    static HRESULT sHr = D2D1CreateFactory(D2D1_FACTORY_TYPE_MULTI_THREADED, __uuidof(ID2D1Factory), &sFactory);
     sFactory.CopyTo(factory);
     RETURN_HR(sHr);
 }
