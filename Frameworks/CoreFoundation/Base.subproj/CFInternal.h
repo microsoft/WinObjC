@@ -712,7 +712,7 @@ CF_INLINE bool __CF_IsBridgedObject(CFTypeRef obj) {
     // However, this would not grant access to anything that could not be accessed by more conventional means
     // (ie: overriding an existing CF/Foundation class)
     // and as such would not constitute an escalation of privilege.
-    return [object conformsToProtocol:__CFRuntimeGetBridgeProtocol()];
+    return class_conformsToProtocol((Class)(object->_cfisa), __CFRuntimeGetBridgeProtocol());
 }
 
 
