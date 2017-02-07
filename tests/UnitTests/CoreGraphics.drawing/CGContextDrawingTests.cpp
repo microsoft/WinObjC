@@ -239,7 +239,7 @@ DISABLED_DRAW_TEST_F(CGContext, PatternFillWindowsLogoPath, UIKitMimicTest<>) {
     CGPathRelease(thepath);
 }
 
-DISABLED_DRAW_TEST_F(CGContext, RedBox, UIKitMimicTest<>) {
+DRAW_TEST_F(CGContext, RedBox, UIKitMimicTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
