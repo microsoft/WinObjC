@@ -29,8 +29,6 @@
 #import "UWP/InteropBase.h"
 #import "UWP/WindowsUIXamlControls.h"
 
-#import "UIViewInternal.h"
-
 @class UIWindow;
 @class WXFrameworkElement;
 @class WUXIPointerRoutedEventArgs;

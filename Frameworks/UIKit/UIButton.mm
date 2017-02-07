@@ -873,9 +873,10 @@ static ComPtr<IInspectable> _currentInspectableBorderBackgroundBrush(UIButton* s
 
 /**
  @Status NotInPlan
+ @Notes Xaml doesn't have built in support for showing 'glowing' touch feedback.
 */
 - (void)setShowsTouchWhenHighlighted:(BOOL)showsTouch {
-    UNIMPLEMENTED();
+    UNIMPLEMENTED_WITH_MSG("Xaml doesn't have built in support for showing 'glowing' touch feedback.");
 }
 
 /**
