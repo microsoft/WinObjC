@@ -59,6 +59,7 @@ static const wchar_t* TAG = L"CGContext";
 static const float s_kCGGradientOffsetPoint = 1E-45;
 
 enum _CGCoordinateMode : unsigned int { _kCGCoordinateModeDeviceSpace = 0, _kCGCoordinateModeUserSpace };
+enum _CGAntialiasToggle : unsigned int { _kCGToggleDefault = 2, _kCGToggleOff = 0, _kCGToggleOn = 1 };
 
 // A drawing context is represented by a number of layers, each with their own drawing state:
 // Context
@@ -122,6 +123,14 @@ struct __CGContextDrawingState {
     woc::StrongCF<CGFontRef> font;
     CGFloat fontSize = 0.f;
 
+    // Antialiasing
+    _CGAntialiasToggle shouldAntialias = _kCGToggleDefault;
+
+    // Subpixels
+    _CGAntialiasToggle shouldSubpixelPosition = _kCGToggleDefault;
+    _CGAntialiasToggle shouldSubpixelQuantizeFonts = _kCGToggleDefault;
+    _CGAntialiasToggle shouldSmoothFonts = _kCGToggleDefault;
+
     inline void ComputeStrokeStyle(ID2D1DeviceContext* deviceContext) {
         if (strokeStyle) {
             return;
@@ -150,6 +159,10 @@ struct __CGContextDrawingState {
 
     inline bool ShouldDraw() {
         return std::fpclassify(alpha) != FP_ZERO && std::fpclassify(globalAlpha) != FP_ZERO;
+    }
+
+    inline bool ShouldAntialias() {
+        return shouldAntialias;
     }
 
     inline HRESULT IntersectClippingGeometry(ID2D1Geometry* incomingGeometry, CGPathDrawingMode pathMode) {
@@ -248,11 +261,10 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext> {
     // See the comments above _CGContextSetShadowProjectionTransform.
     CGAffineTransform shadowProjectionTransform{ CGAffineTransformIdentity };
 
-    // TODO(DH) GH#1070 evaluate these defaults; they should be set by context creators.
-    bool allowsAntialiasing = false;
-    bool allowsFontSmoothing = false;
-    bool allowsFontSubpixelPositioning = false;
-    bool allowsFontSubpixelQuantization = false;
+    _CGAntialiasToggle allowsAntialiasing = _kCGToggleDefault;
+    _CGAntialiasToggle allowsFontSmoothing = _kCGToggleDefault;
+    _CGAntialiasToggle allowsFontSubpixelPositioning = _kCGToggleDefault;
+    _CGAntialiasToggle allowsFontSubpixelQuantization = _kCGToggleDefault;
 
     CGAffineTransform textMatrix{ CGAffineTransformIdentity };
 
@@ -301,6 +313,84 @@ private:
                                   ID2D1DeviceContext* deviceContext);
 
 public:
+    inline D2D1_ANTIALIAS_MODE GetAntialiasMode() {
+        if (CurrentGState().shouldAntialias == _kCGToggleDefault && allowsAntialiasing == _kCGToggleDefault) {
+            return D2D1_ANTIALIAS_MODE_PER_PRIMITIVE;
+        }
+
+        return CurrentGState().shouldAntialias == _kCGToggleOn && allowsAntialiasing == _kCGToggleOn ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE :
+                                                                                                       D2D1_ANTIALIAS_MODE_ALIASED;
+    }
+
+    inline D2D1_TEXT_ANTIALIAS_MODE GetTextAntialiasMode() {
+        if (CurrentGState().shouldSmoothFonts == _kCGToggleDefault && allowsFontSmoothing == _kCGToggleDefault) {
+            return D2D1_TEXT_ANTIALIAS_MODE_DEFAULT;
+        }
+
+        if (CurrentGState().shouldAntialias == _kCGToggleOn && allowsAntialiasing == _kCGToggleOn &&
+            CurrentGState().shouldSmoothFonts == _kCGToggleOn && allowsFontSmoothing == _kCGToggleOn) {
+            return D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE;
+        } else {
+            return D2D1_TEXT_ANTIALIAS_MODE_GRAYSCALE;
+        }
+
+        return D2D1_TEXT_ANTIALIAS_MODE_ALIASED;
+    }
+
+    inline DWRITE_RENDERING_MODE GetRenderingMode() {
+        if (CurrentGState().shouldAntialias == _kCGToggleDefault && allowsAntialiasing == _kCGToggleDefault) {
+            return DWRITE_RENDERING_MODE_DEFAULT;
+        }
+
+        if (CurrentGState().shouldAntialias == _kCGToggleOn && allowsAntialiasing == _kCGToggleOn &&
+            CurrentGState().shouldSubpixelPosition == _kCGToggleOn && allowsFontSubpixelPositioning == _kCGToggleOn) {
+            if (CurrentGState().shouldSubpixelQuantizeFonts == _kCGToggleOn && allowsFontSubpixelQuantization == _kCGToggleOn) {
+                return DWRITE_RENDERING_MODE_NATURAL_SYMMETRIC;
+            }
+            return DWRITE_RENDERING_MODE_NATURAL;
+        }
+        return DWRITE_RENDERING_MODE_DEFAULT;
+    }
+
+    inline IDWriteRenderingParams* GetTextRenderingParams(IDWriteRenderingParams* originalParams) {
+        IDWriteRenderingParams* workingParams = originalParams;
+
+        ComPtr<IDWriteFactory> dwriteFactory;
+        if (FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory))) {
+            return originalParams;
+        }
+        if (!originalParams) {
+            dwriteFactory->CreateRenderingParams(&workingParams);
+        }
+
+        IDWriteRenderingParams* textRenderingParams;
+
+        dwriteFactory->CreateCustomRenderingParams(workingParams->GetGamma(),
+                                                   workingParams->GetEnhancedContrast(),
+                                                   workingParams->GetClearTypeLevel(),
+                                                   workingParams->GetPixelGeometry(),
+                                                   GetRenderingMode(),
+                                                   &textRenderingParams);
+
+        return textRenderingParams;
+    }
+
+    inline void SetShouldAntialias(_CGAntialiasToggle shouldAntialias) {
+        CurrentGState().shouldAntialias = shouldAntialias;
+    }
+
+    inline void SetShouldSubpixelPositionFonts(_CGAntialiasToggle shouldSubpixelPosition) {
+        CurrentGState().shouldSubpixelPosition = shouldSubpixelPosition;
+    }
+
+    inline void SetShouldSubpixelQuantizeFonts(_CGAntialiasToggle shouldSubpixelQuantizeFonts) {
+        CurrentGState().shouldSubpixelQuantizeFonts = shouldSubpixelQuantizeFonts;
+    }
+
+    inline void SetShouldSmoothFonts(_CGAntialiasToggle shouldSmoothFonts) {
+        CurrentGState().shouldSmoothFonts = shouldSmoothFonts;
+    }
+
     __CGContext(ID2D1RenderTarget* renderTarget) {
         FAIL_FAST_IF_FAILED(renderTarget->QueryInterface(IID_PPV_ARGS(&deviceContext)));
 
@@ -1169,14 +1259,14 @@ HRESULT __CGContext::ClipToD2DMaskBitmap(ID2D1Bitmap* bitmap, CGRect rect, D2D1_
         compatibleContext->BeginDraw();
         compatibleContext->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(),
                                                            nullptr,
-                                                           D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
+                                                           GetAntialiasMode(),
                                                            D2D1::IdentityMatrix(),
                                                            1.0, // 1.0 global alpha for brush composition
                                                            state.opacityBrush.Get()),
                                      nullptr);
         compatibleContext->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(),
                                                            transformedRectClippingGeometry.Get(),
-                                                           D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
+                                                           GetAntialiasMode(),
                                                            D2D1::IdentityMatrix(),
                                                            1.0, // 1.0 global alpha for brush composition
                                                            newOpacityBrush.Get()),
@@ -1361,7 +1451,7 @@ CGPoint CGContextGetTextPosition(CGContextRef context) {
 */
 void CGContextSetAllowsFontSmoothing(CGContextRef context, bool allows) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    context->allowsFontSmoothing = allows ? _kCGToggleOn : _kCGToggleOff;
 }
 
 /**
@@ -1369,7 +1459,7 @@ void CGContextSetAllowsFontSmoothing(CGContextRef context, bool allows) {
 */
 void CGContextSetShouldSmoothFonts(CGContextRef context, bool shouldSmooth) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    context->SetShouldSmoothFonts(shouldSmooth ? _kCGToggleOn : _kCGToggleOff);
 }
 
 /**
@@ -1377,7 +1467,7 @@ void CGContextSetShouldSmoothFonts(CGContextRef context, bool shouldSmooth) {
 */
 void CGContextSetAllowsFontSubpixelPositioning(CGContextRef context, bool allows) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    context->allowsFontSubpixelPositioning = allows ? _kCGToggleOn : _kCGToggleOff;
 }
 
 /**
@@ -1385,7 +1475,7 @@ void CGContextSetAllowsFontSubpixelPositioning(CGContextRef context, bool allows
 */
 void CGContextSetShouldSubpixelPositionFonts(CGContextRef context, bool subpixel) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    context->SetShouldSubpixelPositionFonts(subpixel ? _kCGToggleOn : _kCGToggleOff);
 }
 
 /**
@@ -1393,7 +1483,7 @@ void CGContextSetShouldSubpixelPositionFonts(CGContextRef context, bool subpixel
 */
 void CGContextSetAllowsFontSubpixelQuantization(CGContextRef context, bool allows) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    context->allowsFontSubpixelQuantization = allows ? _kCGToggleOn : _kCGToggleOff;
 }
 
 /**
@@ -1401,7 +1491,7 @@ void CGContextSetAllowsFontSubpixelQuantization(CGContextRef context, bool allow
 */
 void CGContextSetShouldSubpixelQuantizeFonts(CGContextRef context, bool subpixel) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    context->SetShouldSubpixelQuantizeFonts(subpixel ? _kCGToggleOn : _kCGToggleOff);
 }
 #pragma endregion
 
@@ -1425,15 +1515,15 @@ CGBlendMode CGContextGetBlendMode(CGContextRef context) {
 */
 void CGContextSetShouldAntialias(CGContextRef context, bool shouldAntialias) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    context->SetShouldAntialias(shouldAntialias ? _kCGToggleOn : _kCGToggleOff);
 }
 
 /**
  @Status Stub
 */
-void CGContextSetAllowsAntialiasing(CGContextRef context, bool allows) {
+void CGContextSetAllowsAntialiasing(CGContextRef context, bool allowsAntialiasing) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    context->allowsAntialiasing = allowsAntialiasing ? _kCGToggleOn : _kCGToggleOff;
 }
 
 /**
@@ -2236,7 +2326,7 @@ void CGContextClearRect(CGContextRef context, CGRect rect) {
     ComPtr<ID2D1DeviceContext> deviceContext = context->DeviceContext();
     if (!context->CurrentGState().clippingGeometry) {
         _CGContextPushBeginDraw(context);
-        deviceContext->PushAxisAlignedClip(__CGRectToD2D_F(rect), D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
+        deviceContext->PushAxisAlignedClip(__CGRectToD2D_F(rect), context->GetAntialiasMode());
         deviceContext->Clear(nullptr); // transparent black clear
         deviceContext->PopAxisAlignedClip();
         _CGContextPopEndDraw(context);
@@ -2322,7 +2412,7 @@ HRESULT __CGContext::Draw(_CGCoordinateMode coordinateMode, CGAffineTransform* a
         layer = true;
         deviceContext->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(),
                                                        state.clippingGeometry.Get(),
-                                                       D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
+                                                       GetAntialiasMode(),
                                                        D2D1::IdentityMatrix(),
                                                        state.globalAlpha,
                                                        state.opacityBrush.Get()),
@@ -2337,6 +2427,16 @@ HRESULT __CGContext::Draw(_CGCoordinateMode coordinateMode, CGAffineTransform* a
         // TODO GH#1194: We will need to re-evaluate Direct2D's D2DERR_RECREATE when we move to HW acceleration.
         this->PopEndDraw();
     });
+
+    deviceContext->SetAntialiasMode(GetAntialiasMode());
+
+    ComPtr<IDWriteRenderingParams> originalTextRenderingParams;
+    deviceContext->GetTextRenderingParams(&originalTextRenderingParams);
+
+    ComPtr<IDWriteRenderingParams> customParams = GetTextRenderingParams(originalTextRenderingParams.Get());
+    deviceContext->SetTextRenderingParams(customParams.Get());
+
+    deviceContext->SetTextAntialiasMode(GetTextAntialiasMode());
 
     if (_ShouldDrawToCommandList()) {
         // Temporarily change the target to a command list
