@@ -17,6 +17,7 @@
 #import <TestFramework.h>
 #import <UIKit/UIKit.h>
 
+static constexpr double c_errorDelta = .0001;
 TEST(NSString_UIKitAdditions, ShouldNotReturnSizeOfZeroWidth) {
     CGSize size =
         [@"TEST" sizeWithFont:[UIFont systemFontOfSize:12.0f] constrainedToSize:CGSizeZero lineBreakMode:NSLineBreakByWordWrapping];
@@ -24,8 +25,13 @@ TEST(NSString_UIKitAdditions, ShouldNotReturnSizeOfZeroWidth) {
     EXPECT_LT(0.0, size.height);
 }
 
-TEST(NSString_UIKitAdditions, ShouldNotConstrainHeightWhenTextIsLarger) {
+TEST(NSString_UIKitAdditions, SizeWithFontShouldReturnLineHeightWhenConstrainedHeightIsTooSmall) {
     CGSize givenSize = { 0, 15 };
-    CGSize size = [@"TEST" sizeWithFont:[UIFont systemFontOfSize:144] constrainedToSize:givenSize];
-    EXPECT_GT(size.height, givenSize.height);
+    UIFont* font = [UIFont systemFontOfSize:144];
+    CGFloat lineHeight = [font ascender] - [font descender];
+    CGSize size = [@"TEST" sizeWithFont:font constrainedToSize:givenSize];
+    EXPECT_NEAR(lineHeight, size.height, c_errorDelta);
+
+    size = [@"TEST\nTEST" sizeWithFont:font constrainedToSize:givenSize];
+    EXPECT_NEAR(lineHeight, size.height, c_errorDelta);
 }

@@ -259,10 +259,18 @@ static NSDictionary* _getDefaultUITextAttributes() {
         size.width = std::numeric_limits<CGFloat>::max();
     }
 
-    // Return the height that the text actually requires rather than the constrained size
-    size.height = std::numeric_limits<CGFloat>::max();
+    if (size.height == 0.0) {
+        size.height = std::numeric_limits<CGFloat>::max();
+    }
 
-    return CTFramesetterSuggestFrameSizeWithConstraints(framesetter.get(), CFRangeMake(0, self.length), nullptr, size, nullptr);
+    CGSize ret = CTFramesetterSuggestFrameSizeWithConstraints(framesetter.get(), CFRangeMake(0, self.length), nullptr, size, nullptr);
+
+    // If the constrained height is less than a line height sizeWithFont will increase the returned size to fit at least one line
+    UIFont* font = attributes[NSFontAttributeName];
+    CGFloat lineHeight = [font ascender] - [font descender];
+    ret.height = std::max(ret.height, lineHeight);
+
+    return ret;
 }
 
 // Private helper that converts a UILineBreakMode -> NSParagraphStyle
