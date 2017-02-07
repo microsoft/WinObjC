@@ -62,7 +62,7 @@ TEST(NSURL, NSURLTests) {
                     nil,
                     [[NSURL alloc] initWithString:@"http://www.test.com/home.page/asdf"]);
 
-    testNSURLMethod(@selector(URLByDeletingPathExtension), testURL7, nil, [[NSURL alloc] initWithString:@"http://www.test.com/"]);
+    testNSURLMethod(@selector(URLByDeletingPathExtension), testURL7, nil, [[NSURL alloc] initWithString:@"http://www.test.com/.foo"]);
 
     // URLByDeletingLastPathComponent
     testNSURLMethod(@selector(URLByDeletingLastPathComponent),
