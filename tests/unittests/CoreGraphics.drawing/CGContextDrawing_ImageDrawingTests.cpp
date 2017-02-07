@@ -205,24 +205,6 @@ DRAW_TEST_F(CGImageDrawing, DrawAnImage, UIKitMimicTest<>) {
     CGContextDrawImage(context, bounds, image.get());
 }
 
-DISABLED_DRAW_TEST_F(CGContext, DrawAnImage, UIKitMimicTest<>) {
-    // Load an Image and draw it into the canvas context
-    auto drawingConfig = DrawingTestConfig::Get();
-
-    woc::unique_cf<CFStringRef> testFilename{ _CFStringCreateWithStdString(drawingConfig->GetResourcePath("jpg1.jpg")) };
-    woc::unique_cf<CGImageRef> image{ _CGImageCreateFromJPEGFile(testFilename.get()) };
-    ASSERT_NE(image, nullptr);
-
-    CGContextRef context = GetDrawingContext();
-    CGRect bounds = GetDrawingBounds();
-
-    CGAffineTransform flip = CGAffineTransformMakeScale(1, -1);
-    CGAffineTransform shift = CGAffineTransformTranslate(flip, 0, bounds.size.height * -1);
-    CGContextConcatCTM(context, shift);
-
-    CGContextDrawImage(context, bounds, image.get());
-}
-
 DRAW_TEST_F(CGContext, DrawAnImageWithOpacity, UIKitMimicTest<>) {
     // Load an Image and draw it into the canvas context
     auto drawingConfig = DrawingTestConfig::Get();
