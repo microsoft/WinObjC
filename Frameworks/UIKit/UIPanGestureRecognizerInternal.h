@@ -33,4 +33,7 @@ struct Private {
 
 @interface UIPanGestureRecognizer ()
 - (const std::vector<TouchInfo>&)_getTouches;
+- (UIView*)_touchedView;
+- (void)_setDragSlack:(float)slack;
+- (float)_getDragSlack;
 @end

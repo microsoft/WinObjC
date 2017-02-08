@@ -40,27 +40,11 @@ typedef struct {
 
     GestureTarget _targets[32];
     int _numTargets;
-
-    struct {
-        unsigned shouldBegin : 1;
-        unsigned shouldReceiveTouch : 1;
-        unsigned shouldRecognizeSimultaneouslyWithGestureRecognizer : 1;
-    } _delegateHas;
 }
 
-+ (void)_cancelActiveExcept:(UIGestureRecognizer*)gesture;
 - (void)_setView:(UIView*)view;
-- (void)_cancelIfActive;
 - (void)_fire;
 + (BOOL)_fireGesture:(UIGestureRecognizer*)gesture;
-+ (void)_failActiveExcept:(UIGestureRecognizer*)gesture;
 - (void)_addEventConnection:(UIRuntimeEventConnection*)connection;
-@end
-
-@class UIView;
-@interface UIPanGestureRecognizer ()
-- (UIView*)_touchedView;
-- (void)_setDragSlack:(float)slack;
-- (float)_getDragSlack;
-- (void)_lockDirection:(int)dir;
+- (void)_cancel;
 @end

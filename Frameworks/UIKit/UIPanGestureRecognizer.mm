@@ -478,22 +478,6 @@ static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
     [super reset];
 }
 
-- (void)_lockDirection:(int)dir {
-    if ([curPanList count] <= 1)
-        return;
-
-    for (UIPanGestureRecognizer* curgesture in curPanList) {
-        ((UIPanGestureRecognizer*)curgesture)->_lockVertical = false;
-        ((UIPanGestureRecognizer*)curgesture)->_lockHorizontal = false;
-
-        if (dir == 0) {
-            ((UIPanGestureRecognizer*)curgesture)->_lockVertical = true;
-        } else if (dir == 1) {
-            ((UIPanGestureRecognizer*)curgesture)->_lockHorizontal = true;
-        }
-    }
-}
-
 - (const std::vector<TouchInfo>&)_getTouches {
     return self->_priv->touches;
 }
