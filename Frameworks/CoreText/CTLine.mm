@@ -225,8 +225,8 @@ void CTLineDraw(CTLineRef lineRef, CGContextRef ctx) {
 
     _CTLine* line = static_cast<_CTLine*>(lineRef);
 
-    _CGContextPushBeginDraw(ctx);
-    auto popEnd = wil::ScopeExit([ctx]() { _CGContextPopEndDraw(ctx); });
+    _CGContextPushBeginDrawTextGroup(ctx);
+    auto popEnd = wil::ScopeExit([ctx]() { _CGContextPopEndDrawTextGroup(ctx); });
 
     for (size_t i = 0; i < [line->_runs count]; ++i) {
         _CTRun* curRun = [line->_runs objectAtIndex:i];

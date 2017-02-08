@@ -85,16 +85,19 @@ typedef CF_ENUM(CFIndex, CGBlendMode) {
     kCGBlendModePlusLighter
 };
 
-typedef CF_ENUM(CFIndex, CGTextDrawingMode) {
-    kCGTextFill = 0,
-    kCGTextStroke,
-    kCGTextFillStroke,
-    kCGTextInvisible,
-    kCGTextFillClip,
-    kCGTextStrokeClip,
-    kCGTextFillStrokeClip,
-    kCGTextClip
+// clang-format off
+typedef CF_OPTIONS(CFIndex, CGTextDrawingMode) {
+//  CG Drawing Bitfield     |FILL  |   |STROKE|   |CLIP  |
+    kCGTextInvisible = 0,
+    kCGTextFill =           (1 << 0),
+    kCGTextStroke =                    (1 << 1),
+    kCGTextFillStroke =     (1 << 0) | (1 << 1),
+    kCGTextClip =                                 (1 << 2),
+    kCGTextFillClip =       (1 << 0) |            (1 << 2),
+    kCGTextStrokeClip =                (1 << 1) | (1 << 2),
+    kCGTextFillStrokeClip = (1 << 0) | (1 << 1) | (1 << 2)
 };
+// clang-format on
 
 COREGRAPHICS_EXPORT void CGContextFlush(CGContextRef c) STUB_METHOD;
 COREGRAPHICS_EXPORT CFTypeID CGContextGetTypeID();

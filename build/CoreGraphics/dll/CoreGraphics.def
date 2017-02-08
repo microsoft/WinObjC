@@ -244,6 +244,8 @@ LIBRARY CoreGraphics
         _CGGetPixelFormatProperties
         _CGContextPushBeginDraw
         _CGContextPopEndDraw
+        _CGContextPushBeginDrawTextGroup
+        _CGContextPopEndDrawTextGroup
 
         ; CGDataConsumer.mm
         CGDataConsumerCreate

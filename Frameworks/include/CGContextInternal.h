@@ -51,3 +51,8 @@ COREGRAPHICS_EXPORT CGImageRef CGBitmapContextGetImage(CGContextRef ctx);
 // and only calling BeginDraw()/EndDraw() when the stack is empty/emptied
 COREGRAPHICS_EXPORT void _CGContextPushBeginDraw(CGContextRef ctx);
 COREGRAPHICS_EXPORT void _CGContextPopEndDraw(CGContextRef ctx);
+
+// Text drawing is broken into small groups drawing run by run, but clipping needs to be done at once, So we need to signal to the context
+// when we are done drawing a group of text that could be clipping as if it were drawn at once
+COREGRAPHICS_EXPORT void _CGContextPushBeginDrawTextGroup(CGContextRef context);
+COREGRAPHICS_EXPORT void _CGContextPopEndDrawTextGroup(CGContextRef context);
