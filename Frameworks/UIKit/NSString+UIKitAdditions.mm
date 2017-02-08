@@ -244,6 +244,11 @@ static NSDictionary* _getDefaultUITextAttributes() {
 // Returns the bounding box size this string would occupy when drawn as specified
 // All sizeWith... functions in this file funnel to this
 - (CGSize)_sizeWithAttributes:(NSDictionary<NSString*, id>*)attributes constrainedToSize:(CGSize)size {
+    UIFont* font = attributes[NSFontAttributeName];
+    if (font == nil) {
+        return CGSizeZero;
+    }
+
     if ([attributes objectForKey:NSParagraphStyleAttributeName]) {
         NSMutableDictionary* copied = [NSMutableDictionary dictionaryWithDictionary:attributes];
         woc::unique_cf<CTParagraphStyleRef>
@@ -266,7 +271,6 @@ static NSDictionary* _getDefaultUITextAttributes() {
     CGSize ret = CTFramesetterSuggestFrameSizeWithConstraints(framesetter.get(), CFRangeMake(0, self.length), nullptr, size, nullptr);
 
     // If the constrained height is less than a line height sizeWithFont will increase the returned size to fit at least one line
-    UIFont* font = attributes[NSFontAttributeName];
     CGFloat lineHeight = [font ascender] - [font descender];
     ret.height = std::max(ret.height, lineHeight);
 

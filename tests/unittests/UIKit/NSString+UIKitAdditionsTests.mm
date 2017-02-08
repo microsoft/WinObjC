@@ -16,6 +16,7 @@
 
 #import <TestFramework.h>
 #import <UIKit/UIKit.h>
+#import <CppUtils.h>
 
 static constexpr double c_errorDelta = .0001;
 TEST(NSString_UIKitAdditions, ShouldNotReturnSizeOfZeroWidth) {
@@ -34,4 +35,9 @@ TEST(NSString_UIKitAdditions, SizeWithFontShouldReturnLineHeightWhenConstrainedH
 
     size = [@"TEST\nTEST" sizeWithFont:font constrainedToSize:givenSize];
     EXPECT_NEAR(lineHeight, size.height, c_errorDelta);
+}
+
+TEST(NSString_UIKitAdditions, SizeWithNoFontShouldReturnCGSizeZero) {
+    CGSize arbitrarySize = { 100, 150 };
+    EXPECT_EQ(CGSizeZero, [@"TEST" sizeWithFont:nil constrainedToSize:arbitrarySize]);
 }
