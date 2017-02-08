@@ -299,7 +299,7 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
                 _state = UIGestureRecognizerStateRecognized;
 
                 // TODO: we should revisit. Fail all other active UITapGestureRecognizer should not
-                // reply this explict logic. intead of, should be through the delegates and method override
+                // rely on this explict logic. intead, it should go through the delegates and method override
                 for (UIGestureRecognizer* curGesture in g_currentlyTrackingGesturesList) {
                     if (curGesture != self && [curGesture isKindOfClass:[UITapGestureRecognizer class]]) {
                         if (curGesture->_state != UIGestureRecognizerStatePossible) {

@@ -133,7 +133,7 @@ int viewCount = 0;
 // TODO: This block of code will likely change when we incorporate WinRT GestureRecognizers
 id g_currentlyTrackingGesturesList;
 BOOL g_resetAllTrackingGestures = TRUE;
-static NSMutableSet* s_gesturesToRemove = nil;
+static NSMutableSet* g_gesturesToRemove = nil;
 - (bool)_processGesturesForTouch:(UITouch*)touch event:(UIEvent*)event touchEventName:(SEL)eventName {
     UIView* view = touch.view;
     if (view == nil) {
@@ -262,12 +262,12 @@ static NSMutableSet* s_gesturesToRemove = nil;
     //
     // After state transtion, we potentially get active gestures, we should remove any gestures that can not be recognized simultaneously
     //
-    if (!s_gesturesToRemove) {
-        s_gesturesToRemove = [NSMutableSet set];
+    if (g_gesturesToRemove == nil) {
+        g_gesturesToRemove = [NSMutableSet new];
     }
 
     for (UIGestureRecognizer* activeGesture in [g_currentlyTrackingGesturesList reverseObjectEnumerator]) {
-        UIGestureRecognizerState state = curGesture.state;
+        UIGestureRecognizerState state = activeGesture.state;
         // Gesture is active when its state is Began or Changed.
         if (state == UIGestureRecognizerStateBegan || state == UIGestureRecognizerStateChanged) {
             BOOL activeResponds = [activeGesture.delegate
@@ -298,12 +298,20 @@ static NSMutableSet* s_gesturesToRemove = nil;
                     BOOL otherResponds = [otherGesture.delegate
                         respondsToSelector:@selector(gestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:)];
                     if ((!otherResponds ||
-                         ![otherGesture.delegate gestureRecognizer:curGesture
+                         ![otherGesture.delegate gestureRecognizer:otherGesture
                              shouldRecognizeSimultaneouslyWithGestureRecognizer:activeGesture]) &&
                         (!activeResponds ||
                          ![activeGesture.delegate gestureRecognizer:activeGesture
                              shouldRecognizeSimultaneouslyWithGestureRecognizer:otherGesture])) {
-                        [s_gesturesToRemove addObject:otherGesture];
+                        [g_gesturesToRemove addObject:otherGesture];
+                        if (DEBUG_GESTURES) {
+                            TraceVerbose(TAG,
+                                         L"Prepare to remove gesture %hs state=%d, current active gesture %hs state=%d",
+                                         object_getClassName(otherGesture),
+                                         otherGesture.state,
+                                         object_getClassName(activeGesture),
+                                         activeGesture.state);
+                        }
                     }
                 }
             }
@@ -311,20 +319,20 @@ static NSMutableSet* s_gesturesToRemove = nil;
     }
 
     // Remove those gesture that can not fire concurrently with current active Gestures
-    for (UIGestureRecognizer* gestureToRemove in s_gesturesToRemove) {
+    for (UIGestureRecognizer* gestureToRemove in g_gesturesToRemove) {
         if (DEBUG_GESTURES) {
             TraceVerbose(TAG,
                          L"Removing gesture %hs %x state=%d, reset its state",
-                         object_getClassName(curGesture),
-                         curGesture,
-                         curGesture.state);
+                         object_getClassName(gestureToRemove),
+                         gestureToRemove,
+                         gestureToRemove.state);
         }
         [gestureToRemove reset];
         [g_currentlyTrackingGesturesList removeObject:gestureToRemove];
     }
 
     // Clean up gestureToRemove list, preparing for reuse next time
-    [s_gesturesToRemove removeAllObjects];
+    [g_gesturesToRemove removeAllObjects];
 
     BOOL shouldCancelTouches = NO;
     BOOL recognized = NO;
@@ -1605,7 +1613,12 @@ static float doRound(float f) {
 
     if (window == nil) {
         for (UIGestureRecognizer* curgesture in priv->gestures.get()) {
-            [curgesture _cancel];
+            for (UIGestureRecognizer* gesture in g_currentlyTrackingGesturesList) {
+                if (gesture == curgesture) {
+                    [curgesture _cancel];
+                    break;
+                }
+            }
         }
     }
 
