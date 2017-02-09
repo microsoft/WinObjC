@@ -18,14 +18,23 @@
 #import "NSLogging.h"
 #import "NSRaise.h"
 #import <StubReturn.h>
+#import "StringHelpers.h"
 #import <SafariServices/SFSafariViewController.h>
 #import "SFSafariViewControllerInternal.h"
 #import "SFSafariOAuthViewController.h"
 #import <Foundation/NSURLRequest.h>
-#import <UWP/WindowsSecurityAuthenticationWeb.h>
+
+#include <COMIncludes.h>
+#import <winrt/Windows.Foundation.h>
+#import <winrt/Windows.Security.Authentication.Web.h>
+#include <COMIncludes_End.h>
 
 #import <UIKit/UIApplication.h>
 #import <UIKit/UIApplicationDelegate.h>
+
+using namespace winrt;
+using namespace winrt::Windows::Foundation;
+using namespace winrt::Windows::Security::Authentication::Web;
 
 //
 // This implementation of SFSafariViewController is not Safari and is not a view controller.
@@ -108,34 +117,51 @@ static const wchar_t* TAG = L"SFSafariOAuthViewController";
     // Replace the caller's callback URL with our own
     NSString* mangledURL = [self _replaceCallbackURL];
 
-    WFUri* requestUri = [WFUri makeUri:mangledURL];
-    WFUri* callbackUri = [WFUri makeUri:_substituteRedirectURL];
+    Uri requestUri(Strings::NarrowToWide<std::wstring>(mangledURL));
+    Uri callbackUri(Strings::NarrowToWide<std::wstring>(_substituteRedirectURL));
 
-    void (^success)(WSAWWebAuthenticationResult*) = ^void(WSAWWebAuthenticationResult* result) {
-        if (result.responseStatus != WSAWWebAuthenticationStatusSuccess) {
-            switch (result.responseStatus) {
-                case WSAWWebAuthenticationStatusUserCancel:
+    auto async = WebAuthenticationBroker::AuthenticateAsync(WebAuthenticationOptions::None, requestUri, callbackUri);
+
+    // Register async completion handler
+    async.Completed([self](auto&& operation, auto&& status) {
+        BOOL completed = NO;
+
+        // Check if AsyncOperation completed
+        if (status != AsyncStatus::Completed) {
+            NSTraceError(TAG, @"Unexpected async status %u", static_cast<unsigned>(status));
+
+        // Check if WebAuth call succeeded
+        } else if (operation.get().ResponseStatus() != WebAuthenticationStatus::Success) {
+            auto result = operation.get();
+
+            switch (result.ResponseStatus()) {
+                case WebAuthenticationStatus::UserCancel:
                     NSTraceInfo(TAG, @"User cancelled web authentication");
                     break;
 
-                case WSAWWebAuthenticationStatusErrorHttp:
-                    NSTraceError(TAG, @"Web authentication failed with HTTP code %u", result.responseErrorDetail);
+                case WebAuthenticationStatus::ErrorHttp:
+                    NSTraceError(TAG, @"Web authentication failed with HTTP code %u", result.ResponseErrorDetail());
                     break;
 
                 default:
                     NSTraceError(TAG, @"Unrecognized web authentication status");
                     break;
             }
+        } else {
+            completed = YES;
+        }
 
+        if (!completed) {
             dispatch_sync(dispatch_get_main_queue(),
-                          ^{
-                              [self dismissViewControllerAnimated:NO completion:nil];
-                          });
+                            ^{
+                                [self dismissViewControllerAnimated:NO completion:nil];
+                            });
 
             return;
         }
 
-        NSString* redirectUri = result.responseData;
+        auto result = operation.get();
+        NSString* redirectUri = Strings::WideToNSString(get(result.ResponseData()));
 
         if (_substituteRedirectURL != nil) {
             // Substitute the caller's original callback URL
@@ -149,29 +175,14 @@ static const wchar_t* TAG = L"SFSafariOAuthViewController";
         id delegate = [[UIApplication sharedApplication] delegate];
         if ([delegate respondsToSelector:@selector(application:openURL:sourceApplication:annotation:)]) {
             dispatch_async(dispatch_get_main_queue(),
-                           ^{
-                               [delegate application:[UIApplication sharedApplication]
-                                             openURL:[NSURL URLWithString:redirectUri]
-                                   sourceApplication:[self _sourceApplication]
-                                          annotation:nil];
-                           });
+                            ^{
+                                [delegate application:[UIApplication sharedApplication]
+                                                openURL:[NSURL URLWithString:redirectUri]
+                                    sourceApplication:[self _sourceApplication]
+                                            annotation:nil];
+                            });
         }
-    };
-
-    void (^failure)(NSError*) = ^void(NSError* error) {
-        NSTraceError(TAG, @"Web authentication failed: %@", error.localizedDescription);
-
-        dispatch_sync(dispatch_get_main_queue(),
-                      ^{
-                          [self dismissViewControllerAnimated:NO completion:nil];
-                      });
-    };
-
-    [WSAWWebAuthenticationBroker authenticateWithCallbackUriAsync:WSAWWebAuthenticationOptionsNone
-                                                       requestUri:requestUri
-                                                      callbackUri:callbackUri
-                                                          success:success
-                                                          failure:failure];
+    });
 
     self.view = [UIView new];
 }
