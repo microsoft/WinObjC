@@ -14,15 +14,52 @@
 //
 //******************************************************************************
 
-#include <windows.h>
 #include <TestFramework.h>
 #include "BenchmarkPublisher.h"
 #include <fstream>
 #include <algorithm>
 
 #ifdef WIN32
+#include <roapi.h>
+#include <wrl/client.h>
 #include <wrl/wrappers/corewrappers.h>
-using namespace Microsoft::WRL::Wrappers;
+#include <windows.storage.h>
+
+using namespace ABI::Windows::Storage;
+using namespace Microsoft::WRL;
+using namespace Windows::Foundation;
+
+Wrappers::HString GetAppDataPath() {
+    Wrappers::HString toReturn;
+    ComPtr<IStorageFolder> folder;
+    ComPtr<IApplicationDataStatics> applicationDataStatics;
+    ComPtr<IApplicationData> applicationData;
+    ComPtr<IStorageItem> storageItem;
+
+    if (FAILED(GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_Storage_ApplicationData).Get(),
+                                    &applicationDataStatics))) {
+        return toReturn;
+    }
+
+    if (FAILED(applicationDataStatics->get_Current(&applicationData))) {
+        return toReturn;
+    }
+
+    if (FAILED(applicationData->get_LocalFolder(&folder))) {
+        return toReturn;
+    }
+
+    if (FAILED(folder.As<IStorageItem>(&storageItem))) {
+        return toReturn;
+    }
+
+    if (FAILED(storageItem->get_Path(toReturn.GetAddressOf()))) {
+        return toReturn;
+    }
+
+    return toReturn;
+}
+
 #endif
 
 using namespace benchmark;
@@ -121,13 +158,24 @@ public:
 
 static std::shared_ptr<BenchmarkPublisher> s_publisher;
 void BenchmarkPublisherFactory::CreatePublisher(int argc, char** argv) {
-    // Currently only support CSV format
+// Currently only support CSV format
+#ifdef WIN32
+    static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+
+    WEX::Common::String outputPath;
+    WEX::TestExecution::RuntimeParameters::TryGetValue(L"out", outputPath);
+    if (!outputPath.IsEmpty()) {
+        s_publisher.reset(new CSVBenchmarkPublisher(converter.to_bytes(std::wstring(outputPath))));
+    }
+
+#else
     for (int i = 1; i < argc && argv[i]; ++i) {
         char* arg = argv[i];
         if (strncmp(arg, "--out=", 6) == 0) {
             s_publisher.reset(new CSVBenchmarkPublisher(std::move(std::string(arg + 6))));
         }
     }
+#endif
 
     if (!s_publisher) {
         LOG_INFO("No arguments given to benchmark. Defaulting to logging results");
@@ -139,17 +187,46 @@ std::shared_ptr<BenchmarkPublisher> BenchmarkPublisherFactory::GetPublisher() {
     return s_publisher;
 }
 
-int main(int argc, char** argv) {
 #ifdef WIN32
-    // Initialize the windows runtime, with uninitialized upon destructor invocation.
-    RoInitializeWrapper initialize(RO_INIT_MULTITHREADED);
-    if (FAILED(initialize)) {
-        return -1;
-    }
+BEGIN_MODULE()
+MODULE_PROPERTY(L"RunAs", L"UAP")
+END_MODULE()
+
+MODULE_SETUP(ModuleSetup) {
+#else
+int main(int argc, char** argv) {
 #endif
+
+#ifdef WIN32
+    if (FAILED(RoInitialize(RO_INIT_MULTITHREADED))) {
+        return FALSE;
+    }
+
+    Wrappers::HString path = GetAppDataPath();
+    if (path.IsValid()) {
+        unsigned int rawLength;
+        _wchdir(WindowsGetStringRawBuffer(path.Get(), &rawLength));
+    }
+
+    int argc = 1;
+    char* argv[] = { "UnitTests" };
+#endif
+
     BenchmarkPublisherFactory::CreatePublisher(argc, argv);
     testing::InitGoogleTest(&argc, argv);
+#ifdef WIN32
+    return TRUE;
+#else
     auto result = RUN_ALL_TESTS();
     BenchmarkPublisherFactory::GetPublisher()->PublishResults();
     return result;
+#endif
 }
+
+#ifdef WIN32
+MODULE_CLEANUP(ModuleCleanup) {
+    BenchmarkPublisherFactory::GetPublisher()->PublishResults();
+    RoUninitialize();
+    return true;
+}
+#endif

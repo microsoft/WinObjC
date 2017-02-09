@@ -207,10 +207,13 @@ TEST(NSURL, URLByAppendingPathExtension) {
 }
 
 TEST(NSURL, CheckResourceIsReachable) {
+    NSFileManager* manager = [NSFileManager defaultManager];
+    NSString* originalPath = [manager currentDirectoryPath];
     // construct target URL using current directory and relative URL
     // get test startup full path
     wchar_t startUpPath[_MAX_PATH];
-    GetModuleFileNameW(nullptr, startUpPath, _MAX_PATH);
+    auto fullPath = GetCurrentTestDirectory();
+    std::mbstowcs(startUpPath, fullPath.c_str(), _MAX_PATH);
 
 // File systems differ between platforms - Windows needs separate handling for drive character, etc
 #if TARGET_OS_WIN32
@@ -229,7 +232,6 @@ TEST(NSURL, CheckResourceIsReachable) {
     ASSERT_TRUE(chdir(dirname(tempBuffer)) == 0);
 #endif
 
-    NSFileManager* manager = [NSFileManager defaultManager];
     NSURL* baseURL = [NSURL fileURLWithPath:[manager currentDirectoryPath]];
     NSURL* targetURL = [NSURL URLWithString:@"data/NSFileManagerUT.txt" relativeToURL:baseURL];
     ASSERT_TRUE_MSG([targetURL checkResourceIsReachableAndReturnError:nullptr], "The target URL %@ exists", targetURL);
@@ -238,6 +240,7 @@ TEST(NSURL, CheckResourceIsReachable) {
     ASSERT_FALSE_MSG([targetURLNonExist checkResourceIsReachableAndReturnError:nullptr],
                      "The target %@URL does not exist",
                      targetURLNonExist);
+    ASSERT_TRUE([manager changeCurrentDirectoryPath:originalPath]);
 }
 
 TEST(NSURL, GetFileSystemRepresentation) {

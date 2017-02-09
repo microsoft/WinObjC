@@ -59,32 +59,30 @@ MOCK_CLASS(MockFileActivatedEventArgs,
                MOCK_STDCALL_METHOD_1(get_Verb);
            });
 
-MOCK_CLASS(MockFileVectorView,
-           public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IVectorView<IStorageItem*>> {
+MOCK_CLASS(MockFileVectorView, public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IVectorView<IStorageItem*>> {
 
-               InspectableClass(L"MockVectorView", BaseTrust);
+    InspectableClass(L"MockVectorView", BaseTrust);
 
-               MOCK_STDCALL_METHOD_2(GetAt);
-               MOCK_STDCALL_METHOD_1(get_Size);
-               MOCK_STDCALL_METHOD_3(IndexOf);
-           });
+    MOCK_STDCALL_METHOD_2(GetAt);
+    MOCK_STDCALL_METHOD_1(get_Size);
+    MOCK_STDCALL_METHOD_3(IndexOf);
+});
 
-MOCK_CLASS(MockStorageItem,
-           public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IStorageItem> {
+MOCK_CLASS(MockStorageItem, public RuntimeClass<RuntimeClassFlags<WinRtClassicComMix>, IStorageItem> {
 
-               InspectableClass(RuntimeClass_Windows_Storage_StorageFile, BaseTrust);
+    InspectableClass(RuntimeClass_Windows_Storage_StorageFile, BaseTrust);
 
-               MOCK_STDCALL_METHOD_2(RenameAsyncOverloadDefaultOptions);
-               MOCK_STDCALL_METHOD_3(RenameAsync);
-               MOCK_STDCALL_METHOD_1(DeleteAsyncOverloadDefaultOptions);
-               MOCK_STDCALL_METHOD_2(DeleteAsync);
-               MOCK_STDCALL_METHOD_1(GetBasicPropertiesAsync);
-               MOCK_STDCALL_METHOD_1(get_Name);
-               MOCK_STDCALL_METHOD_1(get_Path);
-               MOCK_STDCALL_METHOD_1(get_Attributes);
-               MOCK_STDCALL_METHOD_1(get_DateCreated);
-               MOCK_STDCALL_METHOD_2(IsOfType);
-           });
+    MOCK_STDCALL_METHOD_2(RenameAsyncOverloadDefaultOptions);
+    MOCK_STDCALL_METHOD_3(RenameAsync);
+    MOCK_STDCALL_METHOD_1(DeleteAsyncOverloadDefaultOptions);
+    MOCK_STDCALL_METHOD_2(DeleteAsync);
+    MOCK_STDCALL_METHOD_1(GetBasicPropertiesAsync);
+    MOCK_STDCALL_METHOD_1(get_Name);
+    MOCK_STDCALL_METHOD_1(get_Path);
+    MOCK_STDCALL_METHOD_1(get_Attributes);
+    MOCK_STDCALL_METHOD_1(get_DateCreated);
+    MOCK_STDCALL_METHOD_2(IsOfType);
+});
 
 // Delegate for testing File foreground activation
 @interface FileActivationForegroundTestDelegate : NSObject <UIApplicationDelegate>
@@ -134,60 +132,71 @@ MOCK_CLASS(MockStorageItem,
 
 @end
 
-// Creates test method which we call in TEST_CLASS_SETUP to activate app
-void FileActivatedTestForegroundActivation() {
-    LOG_INFO("FileActivatedTest Foreground Activation Test: ");
+class FileActivationForegroundActivation {
+public:
+    BEGIN_TEST_CLASS(FileActivationForegroundActivation)
+    END_TEST_CLASS()
 
-    auto fakeArgs = Make<MockFileActivatedEventArgs>();
-    fakeArgs->Setget_Files([](IVectorView<IStorageItem*>** files) {
-        auto mockVector = Make<MockFileVectorView>();
+    TEST_CLASS_SETUP(FileActivationForegroundActivationClassSetup) {
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread([]() {
+            LOG_INFO("FileActivatedTest Foreground Activation Test: ");
 
-        mockVector->SetGetAt([](unsigned index, IStorageItem** item) {
-            if (index != 0) {
-                return E_BOUNDS;
-            }
+            auto fakeArgs = Make<MockFileActivatedEventArgs>();
+            fakeArgs->Setget_Files([](IVectorView<IStorageItem*>** files) {
+                auto mockVector = Make<MockFileVectorView>();
 
-            auto mockItem = Make<MockStorageItem>();
-            mockItem->Setget_Name([](HSTRING* name) {
-                Wrappers::HStringReference nameWrapper(L"FILEACTIVATED_TEST");
-                nameWrapper.CopyTo(name);
+                mockVector->SetGetAt([](unsigned index, IStorageItem** item) {
+                    if (index != 0) {
+                        return E_BOUNDS;
+                    }
+
+                    auto mockItem = Make<MockStorageItem>();
+                    mockItem->Setget_Name([](HSTRING* name) {
+                        Wrappers::HStringReference nameWrapper(L"FILEACTIVATED_TEST");
+                        nameWrapper.CopyTo(name);
+                        return S_OK;
+                    });
+
+                    mockItem.CopyTo(item);
+
+                    return S_OK;
+                });
+
+                mockVector->Setget_Size([](unsigned* size) {
+                    *size = 1;
+                    return S_OK;
+                });
+
+                mockVector.CopyTo(files);
                 return S_OK;
             });
 
-            mockItem.CopyTo(item);
+            fakeArgs->Setget_Kind([](ActivationKind* kind) {
+                *kind = ActivationKind_File;
+                return S_OK;
+            });
 
-            return S_OK;
-        });
+            fakeArgs->Setget_PreviousExecutionState([](ApplicationExecutionState* state) {
+                *state = ApplicationExecutionState_NotRunning;
+                return S_OK;
+            });
 
-        mockVector->Setget_Size([](unsigned* size) {
-            *size = 1;
-            return S_OK;
-        });
+            // Pass activation argument to method which activates the app
+            UIApplicationActivationTest(reinterpret_cast<IInspectable*>(fakeArgs.Get()),
+                                        NSStringFromClass([FileActivationForegroundTestDelegate class]));
+        }));
+    }
 
-        mockVector.CopyTo(files);
-        return S_OK;
-    });
+    TEST_CLASS_CLEANUP(FileActivationForegroundActivationClassCleanup) {
+        return FunctionalTestCleanupUIApplication();
+    }
 
-    fakeArgs->Setget_Kind([](ActivationKind* kind) {
-        *kind = ActivationKind_File;
-        return S_OK;
-    });
-
-    fakeArgs->Setget_PreviousExecutionState([](ApplicationExecutionState* state) {
-        *state = ApplicationExecutionState_NotRunning;
-        return S_OK;
-    });
-
-    // Pass activation argument to method which activates the app
-    UIApplicationActivationTest(reinterpret_cast<IInspectable*>(fakeArgs.Get()),
-                                NSStringFromClass([FileActivationForegroundTestDelegate class]));
-}
-
-void FileActivatedTestForegroundActivationDelegateMethodsCalled() {
-    FileActivationForegroundTestDelegate* testDelegate = [[UIApplication sharedApplication] delegate];
-    NSDictionary* methodsCalled = [testDelegate methodsCalled];
-    EXPECT_TRUE(methodsCalled);
-    EXPECT_TRUE([methodsCalled objectForKey:@"application:willFinishLaunchingWithOptions:"]);
-    EXPECT_TRUE([methodsCalled objectForKey:@"application:didFinishLaunchingWithOptions:"]);
-    EXPECT_TRUE([methodsCalled objectForKey:@"application:didReceiveFile:"]);
-}
+    TEST_METHOD(ForegroundActivationDelegateMethodsCalled) {
+        FileActivationForegroundTestDelegate* testDelegate = [[UIApplication sharedApplication] delegate];
+        NSDictionary* methodsCalled = [testDelegate methodsCalled];
+        EXPECT_TRUE(methodsCalled);
+        EXPECT_TRUE([methodsCalled objectForKey:@"application:willFinishLaunchingWithOptions:"]);
+        EXPECT_TRUE([methodsCalled objectForKey:@"application:didFinishLaunchingWithOptions:"]);
+        EXPECT_TRUE([methodsCalled objectForKey:@"application:didReceiveFile:"]);
+    }
+};

@@ -49,7 +49,7 @@
     <StarboardObjCRuntimeLib>libobjc2.lib</StarboardObjCRuntimeLib>
     <IslandwoodDRT Condition="'$(IslandwoodDRT)' == ''">true</IslandwoodDRT>
     <StarboardLinkWholeArchive Condition="'$(StarboardLinkWholeArchive)' == ''">false</StarboardLinkWholeArchive>
-    <CopyStarboardLibraries Condition="'$(ConfigurationType)' == 'Application'">true</CopyStarboardLibraries>
+    <CopyStarboardLibraries Condition="'$(CopyStarboardLibraries)' == '' And '$(ConfigurationType)' == 'Application'">true</CopyStarboardLibraries>
   </PropertyGroup>
   
   <!-- This need to be an absolute path, so we can successfully filter duplicates -->

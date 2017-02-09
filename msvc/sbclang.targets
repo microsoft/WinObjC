@@ -659,6 +659,18 @@
       </ClangCompile>
     </ItemGroup>
 
+    <!-- Add in the ClCompile additional include directories to clang. -->
+    <PropertyGroup>
+      <_ShouldMakeTmpClCompile Condition="'@(ClCompile)' == ''">true</_ShouldMakeTmpClCompile>
+    </PropertyGroup>
+    <ItemGroup>
+      <ClCompile Include="_tmp" Condition="'$(_ShouldMakeTmpClCompile)' == 'true'"/>
+      <ClangCompile Condition="'%(ClangCompile.Identity)' != ''">
+          <IncludePaths>@(ClCompile->Metadata('AdditionalIncludeDirectories')->Distinct()->ClearMetadata());%(ClangCompile.IncludePaths);</IncludePaths>
+      </ClangCompile>
+      <ClCompile Remove="_tmp" Condition="'$(_ShouldMakeTmpClCompile)' == 'true'"/>
+    </ItemGroup>
+
     <!-- Figure out WOCStdlib options to use -->
     <ItemGroup>
       <ClangCompile>

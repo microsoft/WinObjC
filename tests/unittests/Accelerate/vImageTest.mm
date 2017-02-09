@@ -1451,12 +1451,11 @@ TEST(Accelerate, Convert) {
 TEST(Accelerate, AlphaUnpremultiply) {
     SetCACompositor(new NullCompositor);
 
-    char fullPath[_MAX_PATH];
-    GetModuleFileNameA(NULL, fullPath, _MAX_PATH);
-    char* executablePath = strrchr(fullPath, '\\');
+    auto fullPath = GetCurrentTestDirectory();
+    char* executablePath = strrchr(&fullPath[0], '\\');
     const char* relativePathToPhoto = "\\Photo2.jpg";
     strncpy(executablePath, relativePathToPhoto, strlen(relativePathToPhoto) + 1);
-    UIImage* photo = [UIImage imageNamed:[NSString stringWithUTF8String:fullPath]];
+    UIImage* photo = [UIImage imageNamed:[NSString stringWithUTF8String:fullPath.c_str()]];
 
     woc::unique_cf<CGColorSpaceRef> rgbColorSpace(CGColorSpaceCreateDeviceRGB());
     woc::unique_cf<CGContextRef> rgbaConversionContext{ CGBitmapContextCreate(nullptr,

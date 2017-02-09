@@ -35,6 +35,9 @@
 .PARAMETER RedirectTAEFErrors
     Redirect TAEF errors/failures to stderr.  This is used to integrate with VSTS powershell task.
 
+.PARAMETER WTTLogPath
+    Path to find WTTLog dll
+
 .EXAMPLE
     Run-FunctionalTests.ps1 -TAEFDirectory D:\TAEF
     Run-FunctionalTests.ps1 -TAEFDirectory \data\test\bin -Platform ARM
@@ -63,7 +66,9 @@ param(
 
     [string]$PackageRootPath = $null,
 
-    [switch]$RedirectTAEFErrors
+    [switch]$RedirectTAEFErrors,
+
+    [string]$WTTLogPath = $null
 )
 
 $script:exitCode = 0
@@ -159,7 +164,7 @@ function ExecTest($argList)
 
     if ($TAEFDirectory -eq "")
     {
-        $taefPath = "te.exe"
+        $taefPath = Join-Path $TestSrcDirectory te.exe
     }
     else
     {
@@ -215,7 +220,7 @@ if (!$NoCopy)
     if ($TestDirectory -eq "")
     {
         $MyPath = (get-item $MyInvocation.MyCommand.Path).Directory.FullName;
-        $TestSrcDirectory = Join-Path $MyPath "..\build\$Platform\$Config\FunctionalTests"
+        $TestSrcDirectory = Join-Path $MyPath "..\build\$Platform\$Config"
     }
     else
     {
@@ -259,6 +264,9 @@ $outputFileName = "FunctionalTestsResult.wtl"
 # Decide where the WTL output files will live
 if ($WTLOutputDirectory -ne [string]$null)
 {
+    $WTTLogFullPath = Join-Path $WTTLogPath wttlog.dll 
+    Copy-Item $WTTLogFullPath -Destination $TestSrcDirectory -Force
+
     if ($TargetingDevice)
     {
         $outputLocalName = Join-Path -Path $WTLOutputDirectory -ChildPath $outputFileName
