@@ -38,8 +38,6 @@ void InitializeApp() {
     }
     initialized = true;
 
-    // Set our writable and temp folders
-    IwSetWritableFolder(Windows::Storage::ApplicationData::Current->LocalFolder->Path->Data());
     SetTemporaryFolder(Windows::Storage::ApplicationData::Current->TemporaryFolder->Path->Data());
 
     // Set the waiter routine for the main runloop to yield
