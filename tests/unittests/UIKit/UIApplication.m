@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#include <TestFramework.h>
 #include "UIKit/UIApplication.h"
 #include "UWP/WindowsSystem.h"
 

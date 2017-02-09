@@ -15,14 +15,11 @@
 //******************************************************************************
 
 #include <TestFramework.h>
-#include "pathmapper.h"
-
-extern "C" void IwSetWritableFolder(const wchar_t*);
-extern "C" const wchar_t* IwGetWritableFolder();
+#include "PathMapper.h"
+#include "EbrPlatform.h"
 
 TEST(PathMapper, pathMapper) {
     std::wstring writableFolder = IwGetWritableFolder();
-    IwSetWritableFolder(L"d:\\temp");
 
     CPathMapper mapper1("c:/users/winobjc-bot");
     EXPECT_STREQ(mapper1, L"c:\\users\\winobjc-bot");
@@ -31,7 +28,7 @@ TEST(PathMapper, pathMapper) {
     EXPECT_STREQ(mapper2, L".\\home\\winobjc-bot");
 
     CPathMapper mapper3("Documents\\mydocuments/subfolder/.././");
-    EXPECT_STREQ(mapper3, L"d:\\temp\\Documents\\mydocuments");
+    EXPECT_STREQ(mapper3, (writableFolder + L"\\Documents\\mydocuments").c_str());
 
     CPathMapper mapper4("");
     EXPECT_STREQ(mapper4, L".");
@@ -49,30 +46,28 @@ TEST(PathMapper, pathMapper) {
     EXPECT_STREQ(mapper8, L"X:\\src");
 
     CPathMapper mapper9("/Documents/src/");
-    EXPECT_STREQ(mapper9, L"d:\\temp\\Documents\\src");
+    EXPECT_STREQ(mapper9, (writableFolder + L"\\Documents\\src").c_str());
 
     CPathMapper mapper10("/Documents/./");
-    EXPECT_STREQ(mapper10, L"d:\\temp\\Documents");
+    EXPECT_STREQ(mapper10, (writableFolder + L"\\Documents").c_str());
 
     CPathMapper mapper11("/Cache/test/.");
-    EXPECT_STREQ(mapper11, L"d:\\temp\\cache\\test");
+    EXPECT_STREQ(mapper11, (writableFolder + L"\\cache\\test").c_str());
 
     CPathMapper mapper12("/library");
-    EXPECT_STREQ(mapper12, L"d:\\temp\\Library");
+    EXPECT_STREQ(mapper12, (writableFolder + L"\\Library").c_str());
 
     CPathMapper mapper13("/AppSupport/././");
-    EXPECT_STREQ(mapper13, L"d:\\temp\\AppSupport");
+    EXPECT_STREQ(mapper13, (writableFolder + L"\\AppSupport").c_str());
 
     CPathMapper mapper14("tmp");
-    EXPECT_STREQ(mapper14, L"d:\\temp\\tmp");
+    EXPECT_STREQ(mapper14, (writableFolder + L"\\tmp").c_str());
 
     CPathMapper mapper15("/shared");
-    EXPECT_STREQ(mapper15, L"d:\\temp\\shared");
+    EXPECT_STREQ(mapper15, (writableFolder + L"\\shared").c_str());
 
     CPathMapper mapper16("/AppSupport/.\\?/");
-    EXPECT_STREQ(mapper16, L"d:\\temp\\AppSupport\\+");
-
-    IwSetWritableFolder(writableFolder.c_str());
+    EXPECT_STREQ(mapper16, (writableFolder + L"\\AppSupport\\+").c_str());
 }
 
 TEST(PathMapper, RelativePathTests) {

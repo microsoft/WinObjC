@@ -51,11 +51,6 @@ long InterlockedDecrement(long volatile* Addend);
 
 void Sleep(DWORD dwMilliseconds);
 
-// Currently all usages of GetModuleFileName + variants use NULL for hModule, so its type doesn't matter
-// May need more complex shim if actual handle is used at any point
-DWORD GetModuleFileNameA(void* hModule, char* lpFilename, DWORD nSize);
-DWORD GetModuleFileNameW(void* hModule, wchar_t* lpFilename, DWORD nSize);
-
 bool SetCurrentDirectoryW(const wchar_t* lpPathName);
 DWORD GetCurrentDirectoryW(DWORD nBufferLength, wchar_t* lpBuffer);
 

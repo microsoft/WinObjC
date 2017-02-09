@@ -134,8 +134,7 @@ GTEST_TEST_(test_name, test_class_name, ::benchmark::internal::BenchmarkCaseRunn
 class _Benchmark_##test_class : public ::benchmark::internal::BenchmarkCaseRunnerP<test_class, __VA_ARGS__> {};         \
 TEST_P(_Benchmark_##test_class, test_name) {                                                                            \
     const char* testName = _STRINGIFY(__##test_class);                                                                  \
-    auto fullName = std::string(::testing::UnitTest::GetInstance()->current_test_info()->name()) + testName;            \
-    ::benchmark::internal::__RunCase(*m_test, fullName.c_str());                                                        \
+    ::benchmark::internal::__RunCase(*m_test, GetTestFullName().c_str());                                               \
 }                                                                                                                       \
 INSTANTIATE_TEST_CASE_P(test_name, _Benchmark_##test_class, generator);
 
