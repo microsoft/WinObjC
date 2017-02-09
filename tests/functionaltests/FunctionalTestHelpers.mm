@@ -30,11 +30,10 @@ extern "C" void UIApplicationInitializeFunctionalTest(const wchar_t*, const wcha
 
 // Launches the functional test app
 bool FunctionalTestSetupUIApplication() {
-    RunSynchronouslyOnMainThread(^{
-        // The name of our default 'AppDelegate' class
-        UIApplicationInitializeFunctionalTest(nullptr, Strings::NarrowToWide<std::wstring>(NSStringFromClass([AppDelegate class])).c_str());
-    });
-
+    //Note: Functional Tests (TAEF) are called on a background thread.  UIApplicationInitializeFunctionalTest will initialize 
+    //itself  (or the important parts) on the main thread.  I.e. there is no need for us to call RunSynchronouslyOnMainThread 
+    //since UIApplicationInitializeFunctionalTest already does that.
+    UIApplicationInitializeFunctionalTest(nullptr, Strings::NarrowToWide<std::wstring>(NSStringFromClass([AppDelegate class])).c_str());
     return true;
 }
 
