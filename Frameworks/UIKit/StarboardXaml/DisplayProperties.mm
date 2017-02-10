@@ -21,7 +21,10 @@
 #import "UIApplicationInternal.h"
 
 #import <algorithm>
-#import "UWP/WindowsUICore.h"
+
+#include "COMIncludes.h"
+#import "winrt/Windows.UI.Core.h"
+#include "COMIncludes_End.h"
 
 static const wchar_t* TAG = L"DisplayProperties";
 
@@ -60,7 +63,7 @@ float ScreenScale() {
     float scale = s_screenMagnification;
 
     // If we're not running in a UWP, return the default scale factor
-    if (![WUCCoreWindow getForCurrentThread]) {
+    if (!winrt::Windows::UI::Core::CoreWindow::GetForCurrentThread()) {
         return scale;
     }
 
