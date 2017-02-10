@@ -49,21 +49,6 @@ private:
 public:
     CommandLineDrawingTestConfigImpl(int argc, char** argv)
         : _mode(DrawingTestMode::Compare), _outputPath(__OutputDirectory()), _comparisonPath(__ModuleDirectory() + "/data/reference") {
-#ifdef WIN32
-        static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-
-        WEX::Common::String outputPath;
-        WEX::TestExecution::RuntimeParameters::TryGetValue(L"out", outputPath);
-        if (!outputPath.IsEmpty()) {
-            _outputPath = converter.to_bytes(std::wstring(outputPath));
-        }
-
-        WEX::Common::String comparisonPath;
-        WEX::TestExecution::RuntimeParameters::TryGetValue(L"compare", comparisonPath);
-        if (!comparisonPath.IsEmpty()) {
-            _comparisonPath = converter.to_bytes(std::wstring(comparisonPath));
-        }
-#else
         for (int i = 1; i < argc; ++i) {
             char* arg = argv[i];
             if (!arg) {
@@ -78,7 +63,6 @@ public:
                 _comparisonPath = std::move(std::string(arg + 10));
             }
         }
-#endif
     }
 
     virtual DrawingTestMode GetMode() override {
@@ -104,88 +88,11 @@ std::shared_ptr<DrawingTestConfigImpl> _configImpl;
     return _configImpl.get();
 }
 
-#ifdef WIN32
-#include <roapi.h>
-#include <WexTestClass.h>
-#include <wrl\client.h>
-#include <wrl\wrappers\corewrappers.h>
-#include <windows.storage.h>
-
-using namespace ABI::Windows::Storage;
-using namespace Microsoft::WRL;
-using namespace Windows::Foundation;
-
-Wrappers::HString GetAppDataPath() {
-    Wrappers::HString toReturn;
-    ComPtr<IStorageFolder> folder;
-    ComPtr<IApplicationDataStatics> applicationDataStatics;
-    ComPtr<IApplicationData> applicationData;
-    ComPtr<IStorageItem> storageItem;
-
-    if (FAILED(Windows::Foundation::GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_Storage_ApplicationData).Get(),
-                                                         &applicationDataStatics))) {
-        return toReturn;
-    }
-
-    if (FAILED(applicationDataStatics->get_Current(&applicationData))) {
-        return toReturn;
-    }
-
-    if (FAILED(applicationData->get_LocalFolder(&folder))) {
-        return toReturn;
-    }
-
-    if (FAILED(folder.As<IStorageItem>(&storageItem))) {
-        return toReturn;
-    }
-
-    if (FAILED(storageItem->get_Path(toReturn.GetAddressOf()))) {
-        return toReturn;
-    }
-
-    return toReturn;
-}
-#endif
-
-#ifdef WIN32
-BEGIN_MODULE()
-MODULE_PROPERTY(L"RunAs", L"UAP")
-END_MODULE()
-
-MODULE_SETUP(ModuleSetup) {
-#else
 int main(int argc, char** argv) {
-#endif
-
-#ifdef WIN32
-    if (FAILED(RoInitialize(RO_INIT_MULTITHREADED))) {
-        return FALSE;
-    }
-
-    Wrappers::HString path = GetAppDataPath();
-    if (path.IsValid()) {
-        unsigned int rawLength;
-        _wchdir(WindowsGetStringRawBuffer(path.Get(), &rawLength));
-    }
-
-    int argc = 1;
-    char* argv[] = { "UnitTests" };
-#endif
     testing::InitGoogleTest(&argc, argv);
 
     _configImpl = std::move(std::make_shared<CommandLineDrawingTestConfigImpl>(argc, argv));
 
-#ifdef WIN32
-    return TRUE;
-#else
     auto result = RUN_ALL_TESTS();
     return result;
-#endif
 }
-
-#ifdef WIN32
-MODULE_CLEANUP(ModuleCleanup) {
-    RoUninitialize();
-    return true;
-}
-#endif

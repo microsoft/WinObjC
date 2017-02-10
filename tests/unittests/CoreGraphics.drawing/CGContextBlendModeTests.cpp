@@ -58,7 +58,7 @@ class CGContextBlendMode : public WhiteBackgroundTest<>, public ::testing::WithP
     }
 };
 
-TEST_P(CGContextBlendMode, OverlappedEllipses) {
+DRAW_TEST_P(CGContextBlendMode, OverlappedEllipses) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
     CGBlendMode blendMode = ::testing::get<1>(GetParam()).blendMode;
