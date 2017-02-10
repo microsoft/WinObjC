@@ -47,7 +47,7 @@ If ($PsCmdlet.ParameterSetName -Eq "AutomaticStatus") {
 	$testCount = 0
 	$failureCount = 0
 	$disabledCount = 0
-	ForEach($xmlItem in (Get-ChildItem $TestXMLDirectory -ErrorAction SilentlyContinue -Recurse)) {
+	ForEach($xmlItem in (Get-ChildItem $TestXMLDirectory -ErrorAction SilentlyContinue -Recurse -File)) {
 		[xml]$xml = Get-Content $xmlItem.FullName
 		$testCount += $xml.PFRollup.Total
 		$failureCount += $xml.PFRollup.Failed
