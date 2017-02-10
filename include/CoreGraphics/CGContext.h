@@ -262,3 +262,21 @@ COREGRAPHICS_EXPORT CGSize CGContextConvertSizeToDeviceSpace(CGContextRef c, CGS
 COREGRAPHICS_EXPORT CGSize CGContextConvertSizeToUserSpace(CGContextRef c, CGSize size);
 COREGRAPHICS_EXPORT CGRect CGContextConvertRectToDeviceSpace(CGContextRef c, CGRect rect);
 COREGRAPHICS_EXPORT CGRect CGContextConvertRectToUserSpace(CGContextRef c, CGRect rect);
+
+// [WinObjC Extension]
+// CGContextIwEnableEnhancedErrorHandling allows a developer to turn on advanced context error
+// handling. A CGContext that encounters errors when rendering will, by default, assert and abort.
+// Enhanced handling both silences asserts and enables an interested consumer to determine whether a
+// context has encountered a fatal drawing error.
+// A developer using enhanced error handling MUST check the status of a completed set of drawing
+// operations using CGContextIwGetError() and determine whether to redraw the frame.
+COREGRAPHICS_EXPORT void CGContextIwEnableEnhancedErrorHandling(CGContextRef context);
+
+COREGRAPHICS_EXPORT const CFStringRef kCGErrorDomainIslandwood;
+
+typedef CF_ENUM(CFIndex, CGContextIwErrorCode) {
+    kCGContextErrorDeviceReset,
+    kCGContextErrorInvalidParameter,
+};
+
+COREGRAPHICS_EXPORT bool CGContextIwGetError(CGContextRef context, CFErrorRef* /* returns-retained */ error);

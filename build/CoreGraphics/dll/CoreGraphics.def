@@ -230,13 +230,14 @@ LIBRARY CoreGraphics
         CGContextConvertRectToDeviceSpace
         CGContextConvertRectToUserSpace
 
+        ; Public extension APIs
+        CGContextIwGetError
+        CGContextIwEnableEnhancedErrorHandling
+
         ; private exports below
         CGContextClearToColor
         _CGContextDrawImageRect
         CGContextGetBlendMode
-        CGContextIsDirty
-        CGContextReleaseLock
-        CGContextSetDirty
         _CGContextDrawGlyphRuns
         _CGContextSetShadowProjectionTransform
         _CGContextCreateWithD2DRenderTarget

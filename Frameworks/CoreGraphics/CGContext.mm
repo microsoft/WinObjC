@@ -47,6 +47,7 @@
 #import <cmath>
 #import <list>
 #import <vector>
+#import <array>
 #import <stack>
 #import <algorithm>
 #import <memory>
@@ -274,6 +275,9 @@ private:
     // Since nothing needs to actually be put on a stack, just increment a counter insteads
     std::atomic_uint32_t _beginEndDrawDepth = { 0 };
 
+    bool _useEnhancedErrorHandling{ false };
+    HRESULT _firstErrorHr{ S_OK };
+
     inline HRESULT _SaveD2DDrawingState(ID2D1DrawingStateBlock** pDrawingState) {
         RETURN_HR_IF(E_POINTER, !pDrawingState);
 
@@ -471,21 +475,32 @@ public:
     }
 
     inline bool ShouldDraw() {
-        return CurrentGState().ShouldDraw();
+        return FAILED(_firstErrorHr) || CurrentGState().ShouldDraw();
     }
 
     inline void PushBeginDraw() {
-        if ((_beginEndDrawDepth)++ == 0) {
+        if (!FAILED(_firstErrorHr) && (_beginEndDrawDepth)++ == 0) {
             deviceContext->BeginDraw();
         }
     }
 
     inline HRESULT PopEndDraw() {
+        HRESULT hr = S_OK;
         if (--(_beginEndDrawDepth) == 0) {
-            RETURN_IF_FAILED(deviceContext->EndDraw());
+            hr = deviceContext->EndDraw();
+            if (_useEnhancedErrorHandling && !FAILED(_firstErrorHr) && FAILED(hr)) {
+                // If we haven't yet stored an error, and we're about to return an error (not S_OK), store it.
+                _firstErrorHr = hr;
+                hr = S_OK;
+            }
         }
-        return S_OK;
+        return hr;
     }
+
+    inline void EnableEnhancedErrorHandling() {
+        _useEnhancedErrorHandling = true;
+    }
+    bool GetError(CFErrorRef* /* returns-retained */ outError);
 
     HRESULT Clip(CGPathDrawingMode pathMode);
 
@@ -2367,6 +2382,10 @@ template <typename Lambda> // Lambda takes the form HRESULT(*)(CGContextRef, ID2
 HRESULT __CGContext::Draw(_CGCoordinateMode coordinateMode, CGAffineTransform* additionalTransform, Lambda&& drawLambda) {
     auto& state = CurrentGState();
 
+    if (FAILED(_firstErrorHr)) {
+        return _firstErrorHr;
+    }
+
     if (!state.ShouldDraw()) {
         // Being asked to draw nothing is valid!
         return S_OK;
@@ -2402,12 +2421,6 @@ HRESULT __CGContext::Draw(_CGCoordinateMode coordinateMode, CGAffineTransform* a
     }
 
     auto cleanup = wil::ScopeExit([this, layer]() {
-        if (layer) {
-            this->deviceContext->PopLayer();
-        }
-
-        // TODO GH#1194: We will need to re-evaluate Direct2D's D2DERR_RECREATE when we move to HW acceleration.
-        this->PopEndDraw();
     });
 
     // If the context has requested antialiasing other than the defaults we now need to update the device context.
@@ -2465,7 +2478,11 @@ HRESULT __CGContext::Draw(_CGCoordinateMode coordinateMode, CGAffineTransform* a
         RETURN_IF_FAILED(std::forward<Lambda>(drawLambda)(this, deviceContext.Get()));
     }
 
-    return S_OK;
+    if (layer) {
+        this->deviceContext->PopLayer();
+    }
+
+    return this->PopEndDraw();
 }
 
 HRESULT __CGContext::_DrawGeometryInternal(ID2D1Geometry* geometry,
@@ -2917,25 +2934,47 @@ void CGContextClearToColor(CGContextRef context, CGFloat r, CGFloat g, CGFloat b
     UNIMPLEMENTED();
 }
 
-bool CGContextIsDirty(CGContextRef context) {
-    NOISY_RETURN_IF_NULL(context, StubReturn());
-    return true;
-}
-
-void CGContextSetDirty(CGContextRef context, bool dirty) {
-    NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
-}
-
-void CGContextReleaseLock(CGContextRef context) {
-    NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
-}
-
 bool CGContextIsPointInPath(CGContextRef context, bool eoFill, CGFloat x, CGFloat y) {
     NOISY_RETURN_IF_NULL(context, StubReturn());
     UNIMPLEMENTED();
     return StubReturn();
+}
+#pragma endregion
+
+#pragma region Enhanced Error Handling
+const CFStringRef kCGErrorDomainIslandwood = CFSTR("kCGErrorDomainIslandwood");
+
+void CGContextIwEnableEnhancedErrorHandling(CGContextRef context) {
+    NOISY_RETURN_IF_NULL(context);
+    context->EnableEnhancedErrorHandling();
+}
+
+bool __CGContext::GetError(CFErrorRef* /* returns-retained */ outError) {
+    RETURN_RESULT_IF(!_useEnhancedErrorHandling, false);
+
+    HRESULT hr = _firstErrorHr;
+    if (SUCCEEDED(hr)) {
+        return false;
+    }
+
+    CGContextIwErrorCode errorCode = kCGContextErrorInvalidParameter;
+    switch (hr) {
+        case D2DERR_RECREATE_TARGET:
+            errorCode = kCGContextErrorDeviceReset;
+            break;
+    }
+    auto error = woc::MakeStrongCF<CFErrorRef>(CFErrorCreate(nullptr, kCGErrorDomainIslandwood, errorCode, nullptr));
+
+    if (outError) {
+        *outError = error.detach();
+    }
+
+    return true;
+}
+
+bool CGContextIwGetError(CGContextRef context, CFErrorRef* /* returns-retained */ outError) {
+    NOISY_RETURN_IF_NULL(context, false);
+    return context->GetError(outError);
 }
 #pragma endregion
 

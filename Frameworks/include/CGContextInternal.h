@@ -32,9 +32,6 @@ COREGRAPHICS_EXPORT CGContextRef _CGContextCreateWithD2DRenderTarget(ID2D1Render
 COREGRAPHICS_EXPORT void _CGContextSetShadowProjectionTransform(CGContextRef context, CGAffineTransform transform);
 COREGRAPHICS_EXPORT void _CGContextDrawImageRect(CGContextRef ctx, CGImageRef img, CGRect src, CGRect dst);
 COREGRAPHICS_EXPORT void CGContextClearToColor(CGContextRef ctx, float r, float g, float b, float a);
-COREGRAPHICS_EXPORT bool CGContextIsDirty(CGContextRef ctx);
-COREGRAPHICS_EXPORT void CGContextSetDirty(CGContextRef ctx, bool dirty);
-COREGRAPHICS_EXPORT void CGContextReleaseLock(CGContextRef ctx);
 COREGRAPHICS_EXPORT CGBlendMode CGContextGetBlendMode(CGContextRef ctx);
 COREGRAPHICS_EXPORT bool CGContextIsPointInPath(CGContextRef c, bool eoFill, float x, float y);
 
