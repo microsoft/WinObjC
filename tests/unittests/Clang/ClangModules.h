@@ -16,8 +16,6 @@
 
 #pragma once
 
-#include "gtest-api.h"
-
 @import AdSupport;
 @import AddressBook;
 @import AddressBookUI;

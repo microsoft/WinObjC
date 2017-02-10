@@ -26,4 +26,4 @@ extern "C" int ApplicationMainStart(const char* principalName,
                                     ActivationType activationType,
                                     IInspectable* activationArg);
 
-void SetTemporaryFolder(const char* folder);
+void SetTemporaryFolder(const wchar_t* folder);

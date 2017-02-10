@@ -174,6 +174,7 @@ class Test;
 class TestCase;
 class TestInfo;
 class UnitTest;
+class TestRunner;
 
 // A class for indicating whether an assertion was successful.  When
 // the assertion wasn't successful, the AssertionResult object
@@ -372,6 +373,7 @@ GTEST_API_ AssertionResult AssertionFailure(const Message& msg);
 class GTEST_API_ Test {
  public:
   friend class TestInfo;
+  friend class TestRunner;
 
   // Defines types for pointers to functions that set up and tear down
   // a test case.
@@ -476,6 +478,23 @@ class GTEST_API_ Test {
 
   // We disallow copying Tests.
   GTEST_DISALLOW_COPY_AND_ASSIGN_(Test);
+};
+
+// Helper TestRunner class used to indirect from a TAEF test class which is named with a Prefix to a single
+// class that TEST_P can friend. TODO: move to a impl file to not violate ODR (doesn't matter since all defs are the same though)
+class TestRunner {
+public:
+    static void SetUp(Test* test) {
+        test->SetUp();
+    }
+
+    static void TestBody(Test* test) {
+        test->TestBody();
+    }
+
+    static void TearDown(Test* test) {
+        test->TearDown();
+    }
 };
 
 typedef internal::TimeInMillis TimeInMillis;

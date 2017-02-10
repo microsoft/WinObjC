@@ -174,7 +174,6 @@ LIBRARY Starboard
         EbrEventDestroy
 
         IwGetWritableFolder
-        IwSetWritableFolder
 
         ; REMOVE / CLEANUP C++ EXPORTS
         ?format@string@woc@@YA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PBDZZ

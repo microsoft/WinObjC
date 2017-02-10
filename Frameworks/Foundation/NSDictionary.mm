@@ -359,8 +359,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSDictionary, NSDictionaryPrototype, CFDictionaryGetTy
  @Notes Only file:// URLs supported
 */
 + (NSDictionary*)dictionaryWithContentsOfURL:(NSURL*)url {
-    const char* file = (char*)[[url path] UTF8String];
-    NSData* data = [NSData dataWithContentsOfFile:[NSString stringWithCString:file]];
+    NSData* data = [NSData dataWithContentsOfURL:url];
     if (data == nil) {
         return nil;
     }
@@ -378,8 +377,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSDictionary, NSDictionaryPrototype, CFDictionaryGetTy
  @Notes Only file:// URLs supported
 */
 - (NSDictionary*)initWithContentsOfURL:(id)url {
-    const char* file = (char*)[[url path] UTF8String];
-    NSData* data = [NSData dataWithContentsOfFile:[NSString stringWithCString:file]];
+    NSData* data = [NSData dataWithContentsOfURL:url];
 
     NSDictionary* dictionary = nil;
     if (data) {
@@ -800,12 +798,10 @@ BASE_CLASS_REQUIRED_IMPLS(NSDictionary, NSDictionaryPrototype, CFDictionaryGetTy
         return;
     }
 
-    _enumerateWithBlock([self keyEnumerator],
-                        options,
-                        ^(id key, BOOL* stop) {
-                            id value = [self objectForKey:key];
-                            block(key, value, stop);
-                        });
+    _enumerateWithBlock([self keyEnumerator], options, ^(id key, BOOL* stop) {
+        id value = [self objectForKey:key];
+        block(key, value, stop);
+    });
 }
 
 /**

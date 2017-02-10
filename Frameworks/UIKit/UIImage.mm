@@ -292,7 +292,7 @@ static inline CGImageRef getImage(UIImage* uiImage) {
 
             if (EbrAccess(pathStr, 0) == -1) {
                 id pathFind =
-                    [bundle pathForResource:[NSString stringWithCString:newStr] ofType:nil inDirectory:nil forLocalization:@"English"];
+                    [bundle pathForResource:[NSString stringWithUTF8String:newStr] ofType:nil inDirectory:nil forLocalization:@"English"];
 
                 if (pathFind != nil) {
                     path = (char*)[pathFind UTF8String];
@@ -359,7 +359,7 @@ static inline CGImageRef getImage(UIImage* uiImage) {
         }
 
         const UIImageCachedObject* cachedImage =
-            reinterpret_cast<const UIImageCachedObject*>(CFDictionaryGetValue(g_imageCache, [NSString stringWithCString:pathStr]));
+            reinterpret_cast<const UIImageCachedObject*>(CFDictionaryGetValue(g_imageCache, [NSString stringWithUTF8String:pathStr]));
 
         if (cachedImage) {
             if (pathStr) {
@@ -399,7 +399,7 @@ static inline CGImageRef getImage(UIImage* uiImage) {
         _imageStretch.size.height = 1.0f;
 
         //  Cache the image
-        _cacheImage = [UIImage cacheImage:self withName:[NSString stringWithCString:pathStr]];
+        _cacheImage = [UIImage cacheImage:self withName:[NSString stringWithUTF8String:pathStr]];
 
         if (pathStr) {
             IwFree(pathStr);

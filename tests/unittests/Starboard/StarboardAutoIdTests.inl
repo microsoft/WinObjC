@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#include <TestFramework.h>
 
 #import <Foundation/Foundation.h>
 #import <Starboard/SmartTypes.h>
@@ -122,7 +122,6 @@ TEST(Starboard, JOIN(AutoIdBlockCall_, STARBOARD_TEST_KIND)) {
         AutoId<void (^)(), LifetimeRetain> autoBlock1(block1);
 
         autoBlock1();
-
 
         EXPECT_TRUE(block1Called);
     }

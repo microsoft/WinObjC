@@ -30,18 +30,36 @@
 #include "ObjCXamlControls.h"
 #import "UWP/WindowsUIXamlControls.h"
 
-TEST(UIActivityIndicatorView, CreateXamlElement) {
-    // TODO: Switch to UIKit.Xaml projections when they're available.
-    Microsoft::WRL::ComPtr<IInspectable> xamlElement;
-    XamlCreateProgressRing(&xamlElement);
-    ASSERT_TRUE(xamlElement);
-}
+class UIKitActivityIndicatorTests {
+public:
+    BEGIN_TEST_CLASS(UIKitActivityIndicatorTests)
+    END_TEST_CLASS()
 
-TEST(UIActivityIndicatorView, GetXamlElement) {
-    UIView* view = [[[UIActivityIndicatorView alloc] init] autorelease];
-    WXFrameworkElement* backingElement = [view xamlElement];
-    ASSERT_TRUE(backingElement);
+    TEST_CLASS_SETUP(UIKitTestsSetup) {
+        return FunctionalTestSetupUIApplication();
+    }
 
-    // TODO: Fix up when UIActivityIndicator moves fully to XAML
-    ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
-}
+    TEST_CLASS_CLEANUP(UIKitTestsCleanup) {
+        return FunctionalTestCleanupUIApplication();
+    }
+
+    TEST_METHOD(CreateXamlElement) {
+        FrameworkHelper::RunOnUIThread([]() {
+            // TODO: Switch to UIKit.Xaml projections when they're available.
+            Microsoft::WRL::ComPtr<IInspectable> xamlElement;
+            XamlCreateProgressRing(&xamlElement);
+            ASSERT_TRUE(xamlElement);
+        });
+    }
+
+    TEST_METHOD(GetXamlElement) {
+        FrameworkHelper::RunOnUIThread([]() {
+            UIView* view = [[[UIActivityIndicatorView alloc] init] autorelease];
+            WXFrameworkElement* backingElement = [view xamlElement];
+            ASSERT_TRUE(backingElement);
+
+            // TODO: Fix up when UIActivityIndicator moves fully to XAML
+            ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
+        });
+    }
+};

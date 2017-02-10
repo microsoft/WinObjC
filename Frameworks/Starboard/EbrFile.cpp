@@ -19,7 +19,7 @@
 #include <io.h>
 #include <stdlib.h>
 #include <direct.h>
-#include <sys\stat.h>
+#include <sys/stat.h>
 #include <map>
 #include <climits>
 #include <regex>
@@ -32,6 +32,16 @@
 #include "EbrIOFile.h"
 #include "EbrDevRandomFile.h"
 #include "EbrStorageFile.h"
+
+#include <COMIncludes.h>
+#include <wrl/client.h>
+#include <wrl/wrappers/corewrappers.h>
+#include <windows.storage.h>
+#include <COMIncludes_End.h>
+
+using namespace ABI::Windows::Storage;
+using namespace Microsoft::WRL;
+using namespace Windows::Foundation;
 
 static const wchar_t* TAG = L"EbrFile";
 
@@ -161,20 +171,46 @@ bool EbrUnlink(const char* path) {
 }
 
 #define mkdir _mkdir
-std::wstring g_WritableFolder(L".");
 
-void IwSetWritableFolder(const wchar_t* folder) {
-    g_WritableFolder = folder;
-    // recreate the default folders
-    CPathMapper::CreateDefaultPaths();
+Wrappers::HString _IwGetWritableFolder() {
+    Wrappers::HString toReturn;
+    ComPtr<IStorageFolder> folder;
+    ComPtr<IApplicationDataStatics> applicationDataStatics;
+    ComPtr<IApplicationData> applicationData;
+    ComPtr<IStorageItem> storageItem;
+
+    if (FAILED(GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_Storage_ApplicationData).Get(),
+                                    &applicationDataStatics))) {
+        return toReturn;
+    }
+
+    if (FAILED(applicationDataStatics->get_Current(&applicationData))) {
+        return toReturn;
+    }
+
+    if (FAILED(applicationData->get_LocalFolder(&folder))) {
+        return toReturn;
+    }
+
+    if (FAILED(folder.As<IStorageItem>(&storageItem))) {
+        return toReturn;
+    }
+
+    if (FAILED(storageItem->get_Path(toReturn.GetAddressOf()))) {
+        return toReturn;
+    }
+
+    return toReturn;
 }
 
 const wchar_t* IwGetWritableFolder() {
-    return g_WritableFolder.c_str();
-}
+    static Wrappers::HString basePath = _IwGetWritableFolder();
 
-const std::wstring& _IwGetWritableFolder() {
-    return g_WritableFolder;
+    if (!basePath.IsValid()) {
+        return L".";
+    }
+
+    return WindowsGetStringRawBuffer(basePath.Get(), nullptr);
 }
 
 bool EbrMkdir(const char* path) {

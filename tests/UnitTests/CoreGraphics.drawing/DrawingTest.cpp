@@ -58,13 +58,11 @@ CFStringRef testing::DrawTest<TComparator>::CreateAdditionalTestDescription() {
 
 template <typename TComparator>
 CFStringRef testing::DrawTest<TComparator>::CreateOutputFilename() {
-    const ::testing::TestInfo* const test_info = ::testing::UnitTest::GetInstance()->current_test_info();
     woc::unique_cf<CFStringRef> additionalDesc{ CreateAdditionalTestDescription() };
     woc::unique_cf<CFStringRef> filename{ CFStringCreateWithFormat(nullptr,
                                                                    nullptr,
-                                                                   CFSTR("TestImage.%s.%s%s%@.png"),
-                                                                   test_info->test_case_name(),
-                                                                   test_info->name(),
+                                                                   CFSTR("TestImage.%s%s%@.png"),
+                                                                   GetTestFullName().c_str(),
                                                                    (additionalDesc ? "." : ""),
                                                                    (additionalDesc ? additionalDesc.get() : CFSTR(""))) };
     return filename.release();
@@ -135,9 +133,9 @@ void testing::DrawTest<TComparator>::TearDown() {
 
             _WriteCFDataToFile(encodedDeltaImageData.get(), deltaFilename.get());
 
-            RecordProperty("expectedImage", CFStringGetCStringPtr(referenceFilename.get(), kCFStringEncodingUTF8));
-            RecordProperty("actualImage", CFStringGetCStringPtr(outputPath.get(), kCFStringEncodingUTF8));
-            RecordProperty("deltaImage", CFStringGetCStringPtr(deltaFilename.get(), kCFStringEncodingUTF8));
+            LOG_TEST_PROPERTY("expectedImage", CFStringGetCStringPtr(referenceFilename.get(), kCFStringEncodingUTF8));
+            LOG_TEST_PROPERTY("actualImage", CFStringGetCStringPtr(outputPath.get(), kCFStringEncodingUTF8));
+            LOG_TEST_PROPERTY("deltaImage", CFStringGetCStringPtr(deltaFilename.get(), kCFStringEncodingUTF8));
         }
     }
 }

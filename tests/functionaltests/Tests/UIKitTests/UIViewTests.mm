@@ -20,154 +20,202 @@
 #import <UIKit/UIView.h>
 #import "UWP/WindowsUIXamlControls.h"
 
-TEST(UIView, Create) {
-    EXPECT_FALSE([NSThread isMainThread]);
-
-    // Try to create and destroy a UIView on a non-UI thread
-    [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)] release];
-}
-
-TEST(UIView, GetXamlElement) {
-    UIView* view = [[[UIView alloc] init] autorelease];
-    WXFrameworkElement* backingElement = [view xamlElement];
-    ASSERT_TRUE(backingElement);
-    ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
-    ASSERT_TRUE([backingElement.name isEqualToString:@"UIView"]);
-}
-
-class UIViewTestHelper {
+class UIKitViewTests {
 public:
-    UIViewTestHelper() {
-        _rootView = [[UIView alloc] init];
-        _view0 = [[UIView alloc] init];
-        _view1 = [[UIView alloc] init];
-        _view2 = [[UIView alloc] init];
-        _view3 = [[UIView alloc] init];
-        _viewNonSibling = [[UIView alloc] init];
+    BEGIN_TEST_CLASS(UIKitViewTests)
+    END_TEST_CLASS()
 
-        [_rootView addSubview:_view0];
-        [_rootView addSubview:_view1];
-        [_rootView addSubview:_view2];
-        [_rootView addSubview:_view3];
+    TEST_CLASS_SETUP(UIKitTestsSetup) {
+        return FunctionalTestSetupUIApplication();
     }
 
-    int indexOf(UIView* view) {
-        NSUInteger index = [[_rootView subviews] indexOfObject:view];
-
-        return (int)index;
+    TEST_CLASS_CLEANUP(UIKitTestsCleanup) {
+        return FunctionalTestCleanupUIApplication();
     }
 
-    void testInsertSubviewAtIndex(int index) {
-        [_rootView insertSubview:_view1 atIndex:index];
-        ASSERT_EQ(index, indexOf(_view1));
+    TEST_METHOD(Create) {
+        EXPECT_FALSE([NSThread isMainThread]);
+
+        // Try to create and destroy a UIView on a non-UI thread
+        [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)] release];
     }
 
-    void testInsertSubviewBelowSubview(UIView* belowSubview, int expectedIndex) {
-        [_rootView insertSubview:_view1 belowSubview:belowSubview];
-        ASSERT_EQ(expectedIndex, indexOf(_view1));
+    TEST_METHOD(GetXamlElement) {
+        FrameworkHelper::RunOnUIThread([]() {
+            UIView* view = [[[UIView alloc] init] autorelease];
+            WXFrameworkElement* backingElement = [view xamlElement];
+            ASSERT_TRUE(backingElement);
+            ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
+            ASSERT_TRUE([backingElement.name isEqualToString:@"UIView"]);
+        });
     }
 
-    void testInsertSubviewAboveSubview(UIView* aboveSubview, int expectedIndex) {
-        [_rootView insertSubview:_view1 aboveSubview:aboveSubview];
-        ASSERT_EQ(expectedIndex, indexOf(_view1));
+    class UIViewTestHelper {
+    public:
+        UIViewTestHelper() {
+            _rootView = [[UIView alloc] init];
+            _view0 = [[UIView alloc] init];
+            _view1 = [[UIView alloc] init];
+            _view2 = [[UIView alloc] init];
+            _view3 = [[UIView alloc] init];
+            _viewNonSibling = [[UIView alloc] init];
+
+            [_rootView addSubview:_view0];
+            [_rootView addSubview:_view1];
+            [_rootView addSubview:_view2];
+            [_rootView addSubview:_view3];
+        }
+
+        int indexOf(UIView* view) {
+            NSUInteger index = [[_rootView subviews] indexOfObject:view];
+
+            return (int)index;
+        }
+
+        void testInsertSubviewAtIndex(int index) {
+            [_rootView insertSubview:_view1 atIndex:index];
+            ASSERT_EQ(index, indexOf(_view1));
+        }
+
+        void testInsertSubviewBelowSubview(UIView* belowSubview, int expectedIndex) {
+            [_rootView insertSubview:_view1 belowSubview:belowSubview];
+            ASSERT_EQ(expectedIndex, indexOf(_view1));
+        }
+
+        void testInsertSubviewAboveSubview(UIView* aboveSubview, int expectedIndex) {
+            [_rootView insertSubview:_view1 aboveSubview:aboveSubview];
+            ASSERT_EQ(expectedIndex, indexOf(_view1));
+        }
+
+        StrongId<UIView> _rootView;
+        StrongId<UIView> _view0;
+        StrongId<UIView> _view1;
+        StrongId<UIView> _view2;
+        StrongId<UIView> _view3;
+        StrongId<UIView> _viewNonSibling;
+    };
+
+    TEST_METHOD(InsertSubviewAtIndex0) {
+        FrameworkHelper::RunOnUIThread([]() {
+            UIViewTestHelper testHelper;
+            testHelper.testInsertSubviewAtIndex(0);
+        });
     }
 
-    StrongId<UIView> _rootView;
-    StrongId<UIView> _view0;
-    StrongId<UIView> _view1;
-    StrongId<UIView> _view2;
-    StrongId<UIView> _view3;
-    StrongId<UIView> _viewNonSibling;
+    TEST_METHOD(InsertSubviewAtIndex1) {
+        FrameworkHelper::RunOnUIThread([]() {
+            UIViewTestHelper testHelper;
+            testHelper.testInsertSubviewAtIndex(1);
+        });
+    }
+
+    TEST_METHOD(InsertSubviewAtIndex2) {
+        FrameworkHelper::RunOnUIThread([]() {
+            UIViewTestHelper testHelper;
+            testHelper.testInsertSubviewAtIndex(2);
+        });
+    }
+
+    TEST_METHOD(InsertSubviewAtIndex3) {
+        FrameworkHelper::RunOnUIThread([]() {
+            UIViewTestHelper testHelper;
+            testHelper.testInsertSubviewAtIndex(3);
+        });
+    }
+
+    TEST_METHOD(InsertSubviewBelowSubview0) {
+        FrameworkHelper::RunOnUIThread([]() {
+            UIViewTestHelper testHelper;
+            testHelper.testInsertSubviewBelowSubview(testHelper._view0, 0);
+        });
+    }
+
+    TEST_METHOD(InsertSubviewBelowSubview1) {
+        FrameworkHelper::RunOnUIThread([]() {
+            UIViewTestHelper testHelper;
+
+            // Special case: pops on top
+            testHelper.testInsertSubviewBelowSubview(testHelper._view1, 3);
+        });
+    }
+
+    TEST_METHOD(InsertSubviewBelowSubview2) {
+        FrameworkHelper::RunOnUIThread([]() {
+            UIViewTestHelper testHelper;
+            testHelper.testInsertSubviewBelowSubview(testHelper._view2, 1);
+        });
+    }
+
+    TEST_METHOD(InsertSubviewBelowSubview3) {
+        FrameworkHelper::RunOnUIThread([]() {
+            UIViewTestHelper testHelper;
+            testHelper.testInsertSubviewBelowSubview(testHelper._view3, 2);
+        });
+    }
+
+    TEST_METHOD(InsertSubviewAboveSubview0) {
+        FrameworkHelper::RunOnUIThread([]() {
+            UIViewTestHelper testHelper;
+            testHelper.testInsertSubviewAboveSubview(testHelper._view0, 1);
+        });
+    }
+
+    TEST_METHOD(InsertSubviewAboveSubview1) {
+        FrameworkHelper::RunOnUIThread([]() {
+            UIViewTestHelper testHelper;
+
+            // Special case: pops on top
+            testHelper.testInsertSubviewAboveSubview(testHelper._view1, 3);
+        });
+    }
+
+    TEST_METHOD(InsertSubviewAboveSubview2) {
+        FrameworkHelper::RunOnUIThread([]() {
+            UIViewTestHelper testHelper;
+            testHelper.testInsertSubviewAboveSubview(testHelper._view2, 2);
+        });
+    }
+
+    TEST_METHOD(InsertSubviewAboveSubview3) {
+        FrameworkHelper::RunOnUIThread([]() {
+            UIViewTestHelper testHelper;
+            testHelper.testInsertSubviewAboveSubview(testHelper._view3, 3);
+        });
+    }
+
+    TEST_METHOD(InsertSubviewBelowSubviewNonSibling) {
+        FrameworkHelper::RunOnUIThread([]() {
+            UIViewTestHelper testHelper;
+
+            // Non-sibling pops on top
+            testHelper.testInsertSubviewBelowSubview(testHelper._viewNonSibling, 3);
+        });
+    }
+
+    TEST_METHOD(InsertSubviewAboveSubviewNonSibling) {
+        FrameworkHelper::RunOnUIThread([]() {
+            UIViewTestHelper testHelper;
+
+            // Non-sibling pops on top
+            testHelper.testInsertSubviewAboveSubview(testHelper._viewNonSibling, 3);
+        });
+    }
+
+    TEST_METHOD(InsertSubviewBelowSubviewNil) {
+        FrameworkHelper::RunOnUIThread([]() {
+            UIViewTestHelper testHelper;
+
+            // Nil unaffects index
+            testHelper.testInsertSubviewBelowSubview(nil, 1);
+        });
+    }
+
+    TEST_METHOD(InsertSubviewAboveSubviewNil) {
+        FrameworkHelper::RunOnUIThread([]() {
+            UIViewTestHelper testHelper;
+
+            // Nil unaffects index
+            testHelper.testInsertSubviewAboveSubview(nil, 1);
+        });
+    }
 };
-
-TEST(UIView, InsertSubviewAtIndex0) {
-    UIViewTestHelper testHelper;
-    testHelper.testInsertSubviewAtIndex(0);
-}
-
-TEST(UIView, InsertSubviewAtIndex1) {
-    UIViewTestHelper testHelper;
-    testHelper.testInsertSubviewAtIndex(1);
-}
-
-TEST(UIView, InsertSubviewAtIndex2) {
-    UIViewTestHelper testHelper;
-    testHelper.testInsertSubviewAtIndex(2);
-}
-
-TEST(UIView, InsertSubviewAtIndex3) {
-    UIViewTestHelper testHelper;
-    testHelper.testInsertSubviewAtIndex(3);
-}
-
-TEST(UIView, InsertSubviewBelowSubview0) {
-    UIViewTestHelper testHelper;
-    testHelper.testInsertSubviewBelowSubview(testHelper._view0, 0);
-}
-
-TEST(UIView, InsertSubviewBelowSubview1) {
-    UIViewTestHelper testHelper;
-
-    // Special case: pops on top
-    testHelper.testInsertSubviewBelowSubview(testHelper._view1, 3);
-}
-
-TEST(UIView, InsertSubviewBelowSubview2) {
-    UIViewTestHelper testHelper;
-    testHelper.testInsertSubviewBelowSubview(testHelper._view2, 1);
-}
-
-TEST(UIView, InsertSubviewBelowSubview3) {
-    UIViewTestHelper testHelper;
-    testHelper.testInsertSubviewBelowSubview(testHelper._view3, 2);
-}
-
-TEST(UIView, InsertSubviewAboveSubview0) {
-    UIViewTestHelper testHelper;
-    testHelper.testInsertSubviewAboveSubview(testHelper._view0, 1);
-}
-
-TEST(UIView, InsertSubviewAboveSubview1) {
-    UIViewTestHelper testHelper;
-
-    // Special case: pops on top
-    testHelper.testInsertSubviewAboveSubview(testHelper._view1, 3);
-}
-
-TEST(UIView, InsertSubviewAboveSubview2) {
-    UIViewTestHelper testHelper;
-    testHelper.testInsertSubviewAboveSubview(testHelper._view2, 2);
-}
-
-TEST(UIView, InsertSubviewAboveSubview3) {
-    UIViewTestHelper testHelper;
-    testHelper.testInsertSubviewAboveSubview(testHelper._view3, 3);
-}
-
-TEST(UIView, InsertSubviewBelowSubviewNonSibling) {
-    UIViewTestHelper testHelper;
-
-    // Non-sibling pops on top
-    testHelper.testInsertSubviewBelowSubview(testHelper._viewNonSibling, 3);
-}
-
-TEST(UIView, InsertSubviewAboveSubviewNonSibling) {
-    UIViewTestHelper testHelper;
-
-    // Non-sibling pops on top
-    testHelper.testInsertSubviewAboveSubview(testHelper._viewNonSibling, 3);
-}
-
-TEST(UIView, InsertSubviewBelowSubviewNil) {
-    UIViewTestHelper testHelper;
-
-    // Nil unaffects index
-    testHelper.testInsertSubviewBelowSubview(nil, 1);
-}
-
-TEST(UIView, InsertSubviewAboveSubviewNil) {
-    UIViewTestHelper testHelper;
-
-    // Nil unaffects index
-    testHelper.testInsertSubviewAboveSubview(nil, 1);
-}
