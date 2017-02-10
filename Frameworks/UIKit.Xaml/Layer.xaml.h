@@ -73,12 +73,15 @@ public:
         Windows::UI::Xaml::DependencyProperty^ get();
     }
 
+internal:
+    // Static entry point to register our dependency properties
+    static void _RegisterDependencyProperties();
+
 private:
     // Layer elements; created on demand
     Windows::UI::Xaml::Controls::Image^ _content;
 
     // Dependency properties for adding layer-like functionality to any FrameworkElement
-    static void _RegisterDependencyProperties();
     static bool s_dependencyPropertiesRegistered;
     static Windows::UI::Xaml::DependencyProperty^ s_layerContentProperty;
     static Windows::UI::Xaml::DependencyProperty^ s_sublayerCanvasProperty;

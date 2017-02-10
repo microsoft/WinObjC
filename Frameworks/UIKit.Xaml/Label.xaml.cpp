@@ -61,6 +61,7 @@ Canvas^ Label::SublayerCanvas::get() {
 
 Windows::Foundation::Size Label::ArrangeOverride(Windows::Foundation::Size finalSize) {
     // Make sure we render vertically-centered text if possible, else cap at the containing layer's height.
+    // TODO: Issue #1946: Do we actually need this call to Measure?
     TextBlock->Measure(finalSize);
     if (TextBlock->DesiredSize.Height >= finalSize.Height) {
         TextBlock->VerticalAlignment = Windows::UI::Xaml::VerticalAlignment::Top;
