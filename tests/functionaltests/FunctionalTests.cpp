@@ -779,4 +779,54 @@ public:
         // NOTE: We are not using the FrameworkHelper::RunOnUIThread because we need to set a waitable condition outside of it
         CALayerAppearanceBackgroundColorChanged();
     }
-}; /* class CoreAnimationTests */
+}; /* class CoreAnimatonTests */
+
+//
+// _UICoordinatorTests
+//
+
+extern void _UIGestureCoordinatorActiveGestureAllowPossibleGesture();
+extern void _UIGestureCoordinatorActiveGesturePreventPossibleGestureHasNotReceivedTouch();
+extern void _UIGestureCoordinatorActiveGesturePreventPossibleGestureHasReceivedTouch();
+extern void _UIGestureCoordinatorDelegateAllowConcurrentGestures();
+extern void _UIGestureCoordinatorDelegatesForbidConcurrentGestures();
+extern void _UIGestureCoordinatorTapGestureMiscFunctions();
+
+class _UIGestureCoordinatorTests {
+public:
+    BEGIN_TEST_CLASS(_UIGestureCoordinatorTests)
+    END_TEST_CLASS()
+
+    TEST_CLASS_SETUP(_UIGestureCoordinatorClassSetup) {
+        return FunctionalTestSetupUIApplication();
+    }
+
+    TEST_CLASS_CLEANUP(_UIGestureCoordinatorClassCleanup) {
+        return FunctionalTestCleanupUIApplication();
+    }
+
+    TEST_METHOD(_UIGestureCoordinator_ActiveGestureAllowPossibleGesture) {
+        _UIGestureCoordinatorActiveGestureAllowPossibleGesture();
+    }
+
+    TEST_METHOD(_UIGestureCoordinator_ActiveGesturePreventPossibleGestureHasNotReceivedTouch) {
+        _UIGestureCoordinatorActiveGesturePreventPossibleGestureHasNotReceivedTouch();
+    }
+
+    TEST_METHOD(_UIGestureCoordinator_ActiveGesturePreventPossibleGestureHasReceivedTouch) {
+        _UIGestureCoordinatorActiveGesturePreventPossibleGestureHasReceivedTouch();
+    }
+
+    TEST_METHOD(_UIGestureCoordinator_DelegateAllowConcurrentGestures) {
+        _UIGestureCoordinatorDelegateAllowConcurrentGestures();
+    }
+
+    TEST_METHOD(_UIGestureCoordinator_DelegatesForbidConcurrentGestures) {
+        _UIGestureCoordinatorDelegatesForbidConcurrentGestures();
+    }
+
+    TEST_METHOD(_UIGestureCoordinator_TapGestureMiscFunctions) {
+        _UIGestureCoordinatorTapGestureMiscFunctions();
+    }
+
+}; /* class _UICoordinatorTests */

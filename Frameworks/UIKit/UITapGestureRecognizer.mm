@@ -32,10 +32,11 @@
 #include "LoggingNative.h"
 #import <math.h>
 
+#import "_UIGestureCoordinator.h"
+
 static const wchar_t* TAG = L"UITapGestureRecognizer";
 
 static id _pendingTaps;
-extern id g_currentlyTrackingGesturesList;
 
 #define TAP_SLACK_AREA \
     (((DisplayProperties::ScreenWidth() / DisplayProperties::DeviceWidth()) * DisplayProperties::ScreenXDpi()) / 3.0f) //  1/3 inch
@@ -187,19 +188,9 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
         //  Delay the tap gesture recognition if there's more than one tap gesture recognizer
         bool shouldDelay = false;
 
-        // TODO: This is legacy. but this behaviour should not be hard coded in UITapGestureRecognizer
-        // instead, we should determine the default behaviour based on reference platform and
-        // using canPrevent/CanBePrevented and/or requestToFail together with delegates
-        // to implement default behaviour. That way, it allowes consumer to override default behavior
-        for (UIGestureRecognizer* curGesture in g_currentlyTrackingGesturesList) {
-            if ([curGesture isKindOfClass:[UITapGestureRecognizer class]] &&
-                [(UITapGestureRecognizer*)curGesture numberOfTapsRequired] > 1) {
-                // check if any other TAp gesture required more than one tap
-                // if so, we should delay firing current tap, to make sure multiple-tap get fired first.
-                shouldDelay = true;
-                break;
-            }
-        }
+        // TODO: if exist TAP gesture required more than one tap, we should delay firing current tap
+        // to make sure multiple-tap get fired first.
+        shouldDelay = [[_UIGestureCoordinator singleton] containsTapGestureRequiredMultipleTap];
 
         if (_recognizeTimer != nil) {
             [_recognizeTimer invalidate];
@@ -273,14 +264,7 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
         bool success = true;
 
         // get max numberofTapsRequired in current Tap gesture list.
-        unsigned maxNumberOfTapsRequired = 0;
-        for (id curGesture in g_currentlyTrackingGesturesList) {
-            if ([curGesture isKindOfClass:[UITapGestureRecognizer class]] &&
-                [(UITapGestureRecognizer*)curGesture numberOfTapsRequired] > maxNumberOfTapsRequired) {
-                maxNumberOfTapsRequired = [curGesture numberOfTapsRequired];
-            }
-        }
-
+        unsigned maxNumberOfTapsRequired = [[_UIGestureCoordinator singleton] maxNubmerOfTapsRequiredInAllTapGestures];
         for (id curTouch in allTouches) {
             unsigned tapCount = [curTouch tapCount];
             if ((maxNumberOfTapsRequired > _numberOfTapsRequired) && (tapCount > _numberOfTapsRequired)) {
@@ -299,15 +283,8 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
                 _state = UIGestureRecognizerStateRecognized;
 
                 // TODO: we should revisit. Fail all other active UITapGestureRecognizer should not
-                // rely on this explict logic. intead, it should go through the delegates and method override
-                for (UIGestureRecognizer* curGesture in g_currentlyTrackingGesturesList) {
-                    if (curGesture != self && [curGesture isKindOfClass:[UITapGestureRecognizer class]]) {
-                        if (curGesture->_state != UIGestureRecognizerStatePossible) {
-                            curGesture->_state = UIGestureRecognizerStateFailed;
-                        }
-                    }
-                }
-
+                // rely on this explict logic. instead, it should go through the delegates and method override
+                [[_UIGestureCoordinator singleton] failOtherTapGesturesExcept:self];
                 TraceVerbose(TAG, L"recognized.");
             }
         } else {

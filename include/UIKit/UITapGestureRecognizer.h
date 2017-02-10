@@ -43,4 +43,7 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic) NSUInteger numberOfTapsRequired;
 @property (nonatomic) NSUInteger numberOfTouchesRequired;
 
+// overwriting so that state can be set by GestureCoordinator
+@property (nonatomic) UIGestureRecognizerState state;
+
 @end
