@@ -2,22 +2,22 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{30bb36d5-430d-4c1e-be24-5116d7f08678}</UniqueIdentifier>
+      <UniqueIdentifier>{7a0a4a48-3dc8-4fa0-b54c-ef5e452c750f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{438b2c9d-69ec-4e2c-94f8-e394a4cb4b65}</UniqueIdentifier>
+      <UniqueIdentifier>{c75d19c7-ecb3-4e32-83f8-f9c55d7a7565}</UniqueIdentifier>
     </Filter>
     <Filter Include="CoreAnimationTest">
-      <UniqueIdentifier>{C25D6FE0-D89F-4D10-8D9D-C097EC9BAC48}</UniqueIdentifier>
+      <UniqueIdentifier>{C9B3AC0D-899F-4E90-854E-19F14B373212}</UniqueIdentifier>
     </Filter>
     <Filter Include="CoreAnimationTest\Supporting Files">
-      <UniqueIdentifier>{92945B02-B427-444B-8EDA-B5A5080181CE}</UniqueIdentifier>
+      <UniqueIdentifier>{C90BA809-719A-47D6-B674-C657027E3DC7}</UniqueIdentifier>
     </Filter>
     <Filter Include="Images">
-      <UniqueIdentifier>{8004D3FE-52AE-4487-8D65-A833F6F5C6C1}</UniqueIdentifier>
+      <UniqueIdentifier>{EB50F64C-F6BC-4DB1-AB01-7A6A0907C55B}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{50E1085B-DC0A-4CFE-98B2-93A106EA0EAC}</UniqueIdentifier>
+      <UniqueIdentifier>{DC9C4FEC-C732-4C7B-84DA-C08B143DCB71}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -78,6 +78,12 @@
     <ClInclude Include="..\..\CoreAnimationTest\Constants.h">
       <Filter>CoreAnimationTest</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\CoreAnimationTest\FooterTableViewCell.h">
+      <Filter>CoreAnimationTest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CoreAnimationTest\HeaderTableViewCell.h">
+      <Filter>CoreAnimationTest</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\CoreAnimationTest\LayerTableViewCell.h">
       <Filter>CoreAnimationTest</Filter>
     </ClInclude>
@@ -106,9 +112,6 @@
       <Filter>CoreAnimationTest</Filter>
     </ClInclude>
     <ClInclude Include="..\..\CoreAnimationTest\SwitchTableViewCell.h">
-      <Filter>CoreAnimationTest</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\CoreAnimationTest\ViewHeaderFooterView.h">
       <Filter>CoreAnimationTest</Filter>
     </ClInclude>
     <ClangCompile Include="..\..\CoreAnimationTest\AppDelegate.m">
@@ -144,6 +147,12 @@
     <ClangCompile Include="..\..\CoreAnimationTest\Constants.m">
       <Filter>CoreAnimationTest</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\CoreAnimationTest\FooterTableViewCell.m">
+      <Filter>CoreAnimationTest</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\CoreAnimationTest\HeaderTableViewCell.m">
+      <Filter>CoreAnimationTest</Filter>
+    </ClangCompile>
     <ClangCompile Include="..\..\CoreAnimationTest\LayerTableViewCell.m">
       <Filter>CoreAnimationTest</Filter>
     </ClangCompile>
@@ -172,9 +181,6 @@
       <Filter>CoreAnimationTest</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\CoreAnimationTest\SwitchTableViewCell.m">
-      <Filter>CoreAnimationTest</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\CoreAnimationTest\ViewHeaderFooterView.m">
       <Filter>CoreAnimationTest</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\CoreAnimationTest\main.m">

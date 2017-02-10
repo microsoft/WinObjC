@@ -16,8 +16,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewHeaderFooterView : UITableViewHeaderFooterView
+@interface HeaderTableViewCell : UITableViewCell
 
 - (void)setUpWithView:(UIView*)view andTitle:(NSString*)title;
+- (void)setUpWithTitle:(NSString*)title;
 
 @end

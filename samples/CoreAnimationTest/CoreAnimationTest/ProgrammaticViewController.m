@@ -41,10 +41,10 @@
     [self addMenuItemSegue:@"CAShapeLayer" andTitle:@"CAShapeLayer"];
 
     // CAScrollLayer
-    [self addMenuItemSegue:@"CAScrollLayer" andTitle:@"CAScrollLayer"];
+    [self addMenuItemSegue:@"CAScrollLayer" andTitle:@"CAScrollLayer - not supported"];
 
     // CAEmitterLayer
-    [self addMenuItemSegue:@"CAEmitterLayer" andTitle:@"CAEmitterLayer"];
+    [self addMenuItemSegue:@"CAEmitterLayer" andTitle:@"CAEmitterLayer - not supported"];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -29,7 +29,7 @@
     <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <Keyword>IslandwoodProj</Keyword>
-    <ProjectGuid>{F2CBB61E-B078-4CA8-8AF4-FE582E5966E5}</ProjectGuid>
+    <ProjectGuid>{C23ED109-41BE-42F6-B24A-4A30F45B7653}</ProjectGuid>
     <RootNamespace>CoreAnimationTest</RootNamespace>
     <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">..\..\..\..</WINOBJC_SDK_ROOT>
   </PropertyGroup>
@@ -199,6 +199,8 @@
     <ClInclude Include="..\..\CoreAnimationTest\CGPointTableViewCell.h" />
     <ClInclude Include="..\..\CoreAnimationTest\CGRectTableViewCell.h" />
     <ClInclude Include="..\..\CoreAnimationTest\Constants.h" />
+    <ClInclude Include="..\..\CoreAnimationTest\FooterTableViewCell.h" />
+    <ClInclude Include="..\..\CoreAnimationTest\HeaderTableViewCell.h" />
     <ClInclude Include="..\..\CoreAnimationTest\LayerTableViewCell.h" />
     <ClInclude Include="..\..\CoreAnimationTest\MenuTableViewController.h" />
     <ClInclude Include="..\..\CoreAnimationTest\PickerViewTableViewCell.h" />
@@ -209,7 +211,6 @@
     <ClInclude Include="..\..\CoreAnimationTest\StoryBoardViewController.h" />
     <ClInclude Include="..\..\CoreAnimationTest\StringTableViewCell.h" />
     <ClInclude Include="..\..\CoreAnimationTest\SwitchTableViewCell.h" />
-    <ClInclude Include="..\..\CoreAnimationTest\ViewHeaderFooterView.h" />
     <ClangCompile Include="..\..\CoreAnimationTest\AppDelegate.m" />
     <ClangCompile Include="..\..\CoreAnimationTest\CAEmitterLayerControlsViewController.m" />
     <ClangCompile Include="..\..\CoreAnimationTest\CAEmitterLayerViewController.m" />
@@ -221,6 +222,8 @@
     <ClangCompile Include="..\..\CoreAnimationTest\CGPointTableViewCell.m" />
     <ClangCompile Include="..\..\CoreAnimationTest\CGRectTableViewCell.m" />
     <ClangCompile Include="..\..\CoreAnimationTest\Constants.m" />
+    <ClangCompile Include="..\..\CoreAnimationTest\FooterTableViewCell.m" />
+    <ClangCompile Include="..\..\CoreAnimationTest\HeaderTableViewCell.m" />
     <ClangCompile Include="..\..\CoreAnimationTest\LayerTableViewCell.m" />
     <ClangCompile Include="..\..\CoreAnimationTest\MenuTableViewController.m" />
     <ClangCompile Include="..\..\CoreAnimationTest\PickerViewTableViewCell.m" />
@@ -231,7 +234,6 @@
     <ClangCompile Include="..\..\CoreAnimationTest\StoryBoardViewController.m" />
     <ClangCompile Include="..\..\CoreAnimationTest\StringTableViewCell.m" />
     <ClangCompile Include="..\..\CoreAnimationTest\SwitchTableViewCell.m" />
-    <ClangCompile Include="..\..\CoreAnimationTest\ViewHeaderFooterView.m" />
     <ClangCompile Include="..\..\CoreAnimationTest\main.m" />
     <SBInfoPlistCopy Include="..\..\CoreAnimationTest\Info.plist">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Debug'">false</ExcludedFromBuild>
