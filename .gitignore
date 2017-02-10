@@ -125,7 +125,7 @@ Frameworks/Include/CFRegularExpression.h
 !/**/deps/prebuilt/**/[Dd]ebug
 !/**/deps/prebuilt/**/[Rr]elease
 # The build package /bin, and the build tools bin/
-!/WinObjC.Build/bin
+!/tools/bin
 !/**/msvc/**/bin
 
 .tools
