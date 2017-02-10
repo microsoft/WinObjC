@@ -17,7 +17,7 @@ Param (
 	[ValidateSet('pending', 'success', 'failure')]
 	[string]$Status,
 
-	[Parameter(Mandatory=$true,ParameterSetName="AutomaticStatus", HelpMessage="Unit Test XML output directory for automatic status")]
+	[Parameter(Mandatory=$true,ParameterSetName="AutomaticStatus", HelpMessage="Test output directory for automatic status")]
 	[string]$TestXMLDirectory,
 
 	[Parameter(Mandatory=$true, HelpMessage="GitHub username with repo:status scope")]
@@ -47,11 +47,11 @@ If ($PsCmdlet.ParameterSetName -Eq "AutomaticStatus") {
 	$testCount = 0
 	$failureCount = 0
 	$disabledCount = 0
-	ForEach($xmlItem in (Get-ChildItem $TestXMLDirectory -ErrorAction SilentlyContinue)) {
+	ForEach($xmlItem in (Get-ChildItem $TestXMLDirectory -ErrorAction SilentlyContinue -Recurse)) {
 		[xml]$xml = Get-Content $xmlItem.FullName
-		$testCount += $xml.testSuites.tests
-		$failureCount += $xml.testSuites.failures
-		$disabledCount += $xml.testSuites.disabled
+		$testCount += $xml.PFRollup.Total
+		$failureCount += $xml.PFRollup.Failed
+		$disabledCount += $xml.PFRollup.Blocked
 	}
 
 	If ($testCount -Eq 0) {
