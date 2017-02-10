@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -188,8 +188,8 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
         //  Delay the tap gesture recognition if there's more than one tap gesture recognizer
         bool shouldDelay = false;
 
-        // TODO: if exist TAP gesture required more than one tap, we should delay firing current tap
-        // to make sure multiple-tap get fired first.
+        // TODO: if there exists TapGesture requires multi-taps, we should delay firing current TapGesture
+        // to make sure those required multi-taps fire first.
         shouldDelay = [[_UIGestureCoordinator singleton] containsTapGestureRequiredMultipleTap];
 
         if (_recognizeTimer != nil) {

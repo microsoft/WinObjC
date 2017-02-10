@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
- * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+ * Copyright (c) Microsoft Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
