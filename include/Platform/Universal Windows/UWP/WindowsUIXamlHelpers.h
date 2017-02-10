@@ -19,62 +19,62 @@
 
 // Class names are appended with Obj to differentiate them from delegate names.
 
-WINRT_EXPORT
+OBJCWINRT_EXPORT
 @interface WUXDoubleTappedEventHandlerObj : RTObject
 + (instancetype)makeWith:(WUXIDoubleTappedEventHandler)value ACTIVATOR;
 @end
 
-WINRT_EXPORT
+OBJCWINRT_EXPORT
 @interface WUXHoldingEventHandlerObj : RTObject
 + (instancetype)makeWith:(WUXIHoldingEventHandler)value ACTIVATOR;
 @end
 
-WINRT_EXPORT
+OBJCWINRT_EXPORT
 @interface WUXKeyEventHandlerObj : RTObject
 + (instancetype)makeWith:(WUXIKeyEventHandler)value ACTIVATOR;
 @end
 
-WINRT_EXPORT
+OBJCWINRT_EXPORT
 @interface WUXManipulationCompletedEventHandlerObj : RTObject
 + (instancetype)makeWith:(WUXIManipulationCompletedEventHandler)value ACTIVATOR;
 @end
 
-WINRT_EXPORT
+OBJCWINRT_EXPORT
 @interface WUXManipulationDeltaEventHandlerObj : RTObject
 + (instancetype)makeWith:(WUXIManipulationDeltaEventHandler)value ACTIVATOR;
 @end
 
-WINRT_EXPORT
+OBJCWINRT_EXPORT
 @interface WUXManipulationInertiaStartingEventHandlerObj : RTObject
 + (instancetype)makeWith:(WUXIManipulationInertiaStartingEventHandler)value ACTIVATOR;
 @end
 
-WINRT_EXPORT
+OBJCWINRT_EXPORT
 @interface WUXManipulationStartedEventHandlerObj : RTObject
 + (instancetype)makeWith:(WUXIManipulationStartedEventHandler)value ACTIVATOR;
 @end
 
-WINRT_EXPORT
+OBJCWINRT_EXPORT
 @interface WUXManipulationStartingEventHandlerObj : RTObject
 + (instancetype)makeWith:(WUXIManipulationStartingEventHandler)value ACTIVATOR;
 @end
 
-WINRT_EXPORT
+OBJCWINRT_EXPORT
 @interface WUXPointerEventHandlerObj : RTObject
 + (instancetype)makeWith : (WUXIPointerEventHandler)value ACTIVATOR;
 @end
 
-WINRT_EXPORT
+OBJCWINRT_EXPORT
 @interface WUXRightTappedEventHandlerObj : RTObject
 + (instancetype)makeWith:(WUXIRightTappedEventHandler)value ACTIVATOR;
 @end
 
-WINRT_EXPORT
+OBJCWINRT_EXPORT
 @interface WUXTappedEventHandlerObj : RTObject
 + (instancetype)makeWith:(WUXITappedEventHandler)value ACTIVATOR;
 @end
 
-WINRT_EXPORT
+OBJCWINRT_EXPORT
 @interface WXDragEventHandlerObj : RTObject
 + (instancetype)makeWith:(WXDragEventHandler)value ACTIVATOR;
 @end

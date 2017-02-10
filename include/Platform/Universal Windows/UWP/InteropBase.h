@@ -26,19 +26,19 @@
 #include <inttypes.h>
 #include <wchar.h>
 
-#ifndef WINRT_EXPORT
-#define WINRT_EXPORT __declspec(dllimport)
+#ifndef OBJCWINRT_EXPORT
+#define OBJCWINRT_EXPORT __declspec(dllimport)
 #endif
 
 #define ACTIVATOR __attribute((ns_returns_retained))
 
 #ifdef __cplusplus
-#define WINRT_EXPORT_FN extern "C" WINRT_EXPORT
+#define OBJCWINRT_EXPORT_FN extern "C" OBJCWINRT_EXPORT
 #else
-#define WINRT_EXPORT_FN WINRT_EXPORT
+#define OBJCWINRT_EXPORT_FN OBJCWINRT_EXPORT
 #endif
 
-WINRT_EXPORT
+OBJCWINRT_EXPORT
 @interface RTObject : NSObject
 
 // Even with the #ifdefs we will not violate ODR, because of dynamic ivars provided by ObjectiveC modern runtime.
@@ -54,7 +54,7 @@ WINRT_EXPORT
 // Does a safe cast of rtObject into a derived projected class type.
 // Returns nil if cast fails.
 // Throws on error.
-WINRT_EXPORT_FN
+OBJCWINRT_EXPORT_FN
 id rt_dynamic_cast(Class classType, RTObject* rtObject);
 
 #ifdef __cplusplus
@@ -83,7 +83,7 @@ typedef struct _GUID {
 #endif
 #endif
 
-WINRT_EXPORT
+OBJCWINRT_EXPORT
 @interface WFGUID : NSObject
 @property unsigned long Data1;
 @property unsigned short Data2;
@@ -94,7 +94,7 @@ WINRT_EXPORT
 - initWithGUID:(const GUID)guid;
 @end
 
-WINRT_EXPORT
+OBJCWINRT_EXPORT
 @interface RTKeyValuePair : RTObject
 @property (readonly) id Key;
 @property (readonly) id Value;

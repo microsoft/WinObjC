@@ -20,31 +20,31 @@
 #import <Foundation/Foundation.h>
 
 namespace CommonConvertors {
-    WINRT_EXPORT_FN
+    OBJCWINRT_EXPORT_FN
         Microsoft::WRL::ComPtr<IInspectable> convertNSDictionaryToPropertySet(id obj);
-    WINRT_EXPORT_FN
+    OBJCWINRT_EXPORT_FN
         Microsoft::WRL::ComPtr<IInspectable> convertNSErrorToPropertySet(id obj);
-    WINRT_EXPORT_FN
+    OBJCWINRT_EXPORT_FN
         id convertPropertySetToNSDictionary(Microsoft::WRL::ComPtr<ABI::Windows::Foundation::Collections::IMapView<HSTRING, IInspectable*>> ip);
-    WINRT_EXPORT_FN
+    OBJCWINRT_EXPORT_FN
         ComPtr<ABI::Windows::Foundation::IPropertyValueStatics> propertyValueCreator();
 
     // NSDate to IPropertyValue for DateTime.
-    WINRT_EXPORT_FN
+    OBJCWINRT_EXPORT_FN
         ABI::Windows::Foundation::DateTime convertNSDateToWinRT(NSDate* obj);
 
     // IReference<DateTime> to NSDate
-    WINRT_EXPORT_FN
+    OBJCWINRT_EXPORT_FN
         NSDate* convertWinRTToNSDate(ABI::Windows::Foundation::DateTime dt);
 
     // NSURL Convertors
-    WINRT_EXPORT_FN
+    OBJCWINRT_EXPORT_FN
         ComPtr<ABI::Windows::Storage::IStorageFile> convertNSURLToWinRTStorageFile(NSURL* obj);
-    WINRT_EXPORT_FN
+    OBJCWINRT_EXPORT_FN
         ComPtr<ABI::Windows::Foundation::IUriRuntimeClass> convertNSURLToWinRTUri(NSURL* obj);
-    WINRT_EXPORT_FN
+    OBJCWINRT_EXPORT_FN
         NSURL* convertWinRTStorageFileToNSURL(const ComPtr<ABI::Windows::Storage::IStorageFile> storageFile);
-    WINRT_EXPORT_FN
+    OBJCWINRT_EXPORT_FN
         NSURL* convertWinRTUriToNSURL(const ComPtr<ABI::Windows::Foundation::IUriRuntimeClass> uri);
     WINRT_EXPORT_FN
         ComPtr<IInspectable> convertNSNumberToPropertyValue(NSNumber* obj);
