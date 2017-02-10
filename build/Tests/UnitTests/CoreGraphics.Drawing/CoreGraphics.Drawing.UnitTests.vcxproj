@@ -232,7 +232,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.Drawing\EntryPoint.cpp" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.Drawing\TAEFEntryPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.drawing\CGTextDrawing.cpp" />
