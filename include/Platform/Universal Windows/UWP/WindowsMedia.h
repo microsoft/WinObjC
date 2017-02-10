@@ -203,7 +203,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMMediaProcessingTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFCValueSet* arguments;
 @end
@@ -219,7 +219,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 + (WMVideoFrame*)make:(WGIBitmapPixelFormat)format width:(int)width height:(int)height ACTIVATOR;
 + (WMVideoFrame*)makeWithAlpha:(WGIBitmapPixelFormat)format width:(int)width height:(int)height alpha:(WGIBitmapAlphaMode)alpha ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) id /* WFTimeSpan* */ systemRelativeTime;
 @property (retain) id /* WFTimeSpan* */ relativeTime;
@@ -258,7 +258,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMAudioBuffer : RTObject <WFIMemoryBuffer, WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property unsigned int length;
 @property (readonly) unsigned int capacity;
@@ -276,7 +276,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMAudioFrame : RTObject <WMIMediaFrame, WFIClosable>
 + (WMAudioFrame*)make:(unsigned int)capacity ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) id /* WFTimeSpan* */ systemRelativeTime;
 @property (retain) id /* WFTimeSpan* */ relativeTime;
@@ -308,9 +308,9 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 
 OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMSystemMediaTransportControlsTimelineProperties : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WFTimeSpan* startTime;
 @property (retain) WFTimeSpan* position;
@@ -328,7 +328,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMMusicDisplayProperties : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * title;
 @property (retain) NSString * artist;
@@ -348,7 +348,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMVideoDisplayProperties : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * title;
 @property (retain) NSString * subtitle;
@@ -364,7 +364,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMImageDisplayProperties : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * title;
 @property (retain) NSString * subtitle;
@@ -379,7 +379,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMSystemMediaTransportControlsDisplayUpdater : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WMMediaPlaybackType type;
 @property (retain) WSSRandomAccessStreamReference* thumbnail;
@@ -401,7 +401,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMSystemMediaTransportControlsButtonPressedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMSystemMediaTransportControlsButton button;
 @end
@@ -415,7 +415,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMSystemMediaTransportControlsPropertyChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMSystemMediaTransportControlsProperty property;
 @end
@@ -429,7 +429,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMPlaybackPositionChangeRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFTimeSpan* requestedPlaybackPosition;
 @end
@@ -443,7 +443,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMPlaybackRateChangeRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) double requestedPlaybackRate;
 @end
@@ -457,7 +457,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMShuffleEnabledChangeRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL requestedShuffleEnabled;
 @end
@@ -471,7 +471,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMAutoRepeatModeChangeRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMMediaPlaybackAutoRepeatMode requestedAutoRepeatMode;
 @end
@@ -486,7 +486,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMSystemMediaTransportControls : RTObject
 + (WMSystemMediaTransportControls*)getForCurrentView;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL isPlayEnabled;
 @property BOOL isPauseEnabled;
@@ -528,9 +528,9 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 
 OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMMediaExtensionManager : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)registerSchemeHandler:(NSString *)activatableClassId scheme:(NSString *)scheme;
 - (void)registerSchemeHandlerWithSettings:(NSString *)activatableClassId scheme:(NSString *)scheme configuration:(RTObject<WFCIPropertySet>*)configuration;
@@ -565,9 +565,9 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 
 OBJCUWP_WINDOWS_MEDIA_EXPORT
 @interface WMMediaTimelineController : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WFTimeSpan* position;
 @property double clockRate;

@@ -325,7 +325,7 @@ OBJCUWP_WINDOWS_STORAGE_STREAMS_EXPORT
 + (WSSDataReader*)fromBuffer:(RTObject<WSSIBuffer>*)buffer;
 + (WSSDataReader*)makeDataReader:(RTObject<WSSIInputStream>*)inputStream ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WSSUnicodeEncoding unicodeEncoding;
 @property WSSInputStreamOptions inputStreamOptions;
@@ -379,10 +379,10 @@ OBJCUWP_WINDOWS_STORAGE_STREAMS_EXPORT
 
 OBJCUWP_WINDOWS_STORAGE_STREAMS_EXPORT
 @interface WSSDataWriter : RTObject <WSSIDataWriter, WFIClosable>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WSSDataWriter*)makeDataWriter:(RTObject<WSSIOutputStream>*)outputStream ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WSSUnicodeEncoding unicodeEncoding;
 @property WSSByteOrder byteOrder;
@@ -437,7 +437,7 @@ OBJCUWP_WINDOWS_STORAGE_STREAMS_EXPORT
 + (WFMemoryBuffer*)createMemoryBufferOverIBuffer:(RTObject<WSSIBuffer>*)input;
 + (WSSBuffer*)make:(unsigned int)capacity ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property unsigned int length;
 @property (readonly) unsigned int capacity;
@@ -455,7 +455,7 @@ OBJCUWP_WINDOWS_STORAGE_STREAMS_EXPORT
 + (WSSRandomAccessStreamReference*)createFromUri:(WFUri*)uri;
 + (WSSRandomAccessStreamReference*)createFromStream:(RTObject<WSSIRandomAccessStream>*)stream;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)openReadAsyncWithSuccess:(void (^)(RTObject<WSSIRandomAccessStreamWithContentType>*))success failure:(void (^)(NSError*))failure;
 @end
@@ -469,7 +469,7 @@ OBJCUWP_WINDOWS_STORAGE_STREAMS_EXPORT
 OBJCUWP_WINDOWS_STORAGE_STREAMS_EXPORT
 @interface WSSFileRandomAccessStream : RTObject <WSSIRandomAccessStream, WSSIOutputStream, WFIClosable, WSSIInputStream>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property uint64_t size;
 @property (readonly) BOOL canRead;
@@ -494,7 +494,7 @@ OBJCUWP_WINDOWS_STORAGE_STREAMS_EXPORT
 OBJCUWP_WINDOWS_STORAGE_STREAMS_EXPORT
 @interface WSSFileInputStream : RTObject <WSSIInputStream, WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)close;
@@ -509,7 +509,7 @@ OBJCUWP_WINDOWS_STORAGE_STREAMS_EXPORT
 OBJCUWP_WINDOWS_STORAGE_STREAMS_EXPORT
 @interface WSSFileOutputStream : RTObject <WSSIOutputStream, WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
@@ -525,7 +525,7 @@ OBJCUWP_WINDOWS_STORAGE_STREAMS_EXPORT
 OBJCUWP_WINDOWS_STORAGE_STREAMS_EXPORT
 @interface WSSRandomAccessStreamOverStream : RTObject <WSSIRandomAccessStream, WSSIOutputStream, WFIClosable, WSSIInputStream>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property uint64_t size;
 @property (readonly) BOOL canRead;
@@ -550,7 +550,7 @@ OBJCUWP_WINDOWS_STORAGE_STREAMS_EXPORT
 OBJCUWP_WINDOWS_STORAGE_STREAMS_EXPORT
 @interface WSSInputStreamOverStream : RTObject <WSSIInputStream, WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)readAsync:(RTObject<WSSIBuffer>*)buffer count:(unsigned int)count options:(WSSInputStreamOptions)options success:(void (^)(RTObject<WSSIBuffer>*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)close;
@@ -565,7 +565,7 @@ OBJCUWP_WINDOWS_STORAGE_STREAMS_EXPORT
 OBJCUWP_WINDOWS_STORAGE_STREAMS_EXPORT
 @interface WSSOutputStreamOverStream : RTObject <WSSIOutputStream, WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)writeAsync:(RTObject<WSSIBuffer>*)buffer success:(void (^)(unsigned int))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
@@ -580,9 +580,9 @@ OBJCUWP_WINDOWS_STORAGE_STREAMS_EXPORT
 
 OBJCUWP_WINDOWS_STORAGE_STREAMS_EXPORT
 @interface WSSInMemoryRandomAccessStream : RTObject <WSSIRandomAccessStream, WSSIOutputStream, WFIClosable, WSSIInputStream>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property uint64_t size;
 @property (readonly) BOOL canRead;

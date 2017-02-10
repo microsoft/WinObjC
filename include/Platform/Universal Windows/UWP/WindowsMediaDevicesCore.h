@@ -52,7 +52,7 @@ typedef unsigned WMDCFrameFlashMode;
 OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 @interface WMDCCameraIntrinsics : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFNVector2* focalLength;
 @property (readonly) unsigned int imageHeight;
@@ -94,7 +94,7 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 @interface WMDCDepthCorrelatedCoordinateMapper : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (WFNVector3*)unprojectPoint:(WFPoint*)sourcePoint targetCoordinateSystem:(WPSSpatialCoordinateSystem*)targetCoordinateSystem;
 - (void)unprojectPoints:(NSArray* /* WFPoint* */)sourcePoints targetCoordinateSystem:(WPSSpatialCoordinateSystem*)targetCoordinateSystem results:(NSArray* /* WFNVector3* */*)results;
@@ -112,7 +112,7 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 @interface WMDCVariablePhotoSequenceController : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property float photosPerSecondLimit;
 @property (readonly) NSMutableArray* /* WMDCFrameController* */ desiredFrameControllers;
@@ -132,7 +132,7 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 @interface WMDCFrameExposureCapabilities : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFTimeSpan* max;
 @property (readonly) WFTimeSpan* min;
@@ -149,7 +149,7 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 @interface WMDCFrameExposureCompensationCapabilities : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) float max;
 @property (readonly) float min;
@@ -166,7 +166,7 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 @interface WMDCFrameIsoSpeedCapabilities : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int max;
 @property (readonly) unsigned int min;
@@ -183,7 +183,7 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 @interface WMDCFrameFocusCapabilities : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int max;
 @property (readonly) unsigned int min;
@@ -200,7 +200,7 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 @interface WMDCFrameFlashCapabilities : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL powerSupported;
 @property (readonly) BOOL redEyeReductionSupported;
@@ -216,7 +216,7 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 @interface WMDCFrameControlCapabilities : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMDCFrameExposureCapabilities* exposure;
 @property (readonly) WMDCFrameExposureCompensationCapabilities* exposureCompensation;
@@ -235,7 +235,7 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 @interface WMDCFrameExposureControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) id /* WFTimeSpan* */ value;
 @property BOOL Auto;
@@ -250,7 +250,7 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 @interface WMDCFrameExposureCompensationControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) id /* float */ value;
 @end
@@ -264,7 +264,7 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 @interface WMDCFrameIsoSpeedControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) id /* unsigned int */ value;
 @property BOOL Auto;
@@ -279,7 +279,7 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 @interface WMDCFrameFocusControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) id /* unsigned int */ value;
 @end
@@ -293,7 +293,7 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 @interface WMDCFrameFlashControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL redEyeReduction;
 @property float powerPercent;
@@ -309,9 +309,9 @@ OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 
 OBJCUWP_WINDOWS_MEDIA_DEVICES_CORE_EXPORT
 @interface WMDCFrameController : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) id /* BOOL */ photoConfirmationEnabled;
 @property (readonly) WMDCFrameExposureCompensationControl* exposureCompensationControl;

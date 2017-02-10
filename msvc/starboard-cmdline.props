@@ -25,8 +25,4 @@
       <AdditionalLibraryDirectories>$(MSBuildThisFileDirectory)..\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(MSBuildThisFileDirectory)..\deps;%(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
     </Link>  
   </ItemDefinitionGroup>
-  
-  <PropertyGroup>
-    <StripAppContainerBit>true</StripAppContainerBit>
-  </PropertyGroup>
 </Project>

@@ -118,7 +118,7 @@ typedef unsigned WSEEnforcementLevel;
 OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 @interface WSEFileProtectionInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * identity;
 @property (readonly) BOOL isRoamable;
@@ -134,7 +134,7 @@ OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 @interface WSEProtectedContainerExportResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSStorageFile* file;
 @property (readonly) WSEProtectedImportExportStatus status;
@@ -149,7 +149,7 @@ OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 @interface WSEProtectedContainerImportResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSStorageFile* file;
 @property (readonly) WSEProtectedImportExportStatus status;
@@ -164,7 +164,7 @@ OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 @interface WSEProtectedFileCreateResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSStorageFile* file;
 @property (readonly) WSEFileProtectionInfo* protectionInfo;
@@ -180,7 +180,7 @@ OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 @interface WSEBufferProtectUnprotectResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) RTObject<WSSIBuffer>* buffer;
 @property (readonly) WSEDataProtectionInfo* protectionInfo;
@@ -195,7 +195,7 @@ OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 @interface WSEDataProtectionInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * identity;
 @property (readonly) WSEDataProtectionStatus status;
@@ -212,7 +212,7 @@ OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 + (WSEProtectionPolicyAuditInfo*)make:(WSEProtectionPolicyAuditAction)action dataDescription:(NSString *)dataDescription sourceDescription:(NSString *)sourceDescription targetDescription:(NSString *)targetDescription ACTIVATOR;
 + (WSEProtectionPolicyAuditInfo*)makeWithActionAndDataDescription:(WSEProtectionPolicyAuditAction)action dataDescription:(NSString *)dataDescription ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * targetDescription;
 @property (retain) NSString * sourceDescription;
@@ -243,7 +243,7 @@ OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 @interface WSEThreadNetworkContext : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)close;
 @end
@@ -277,7 +277,7 @@ OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 + (void)requestAccessForAppWithMessageAsync:(NSString *)sourceIdentity appPackageFamilyName:(NSString *)appPackageFamilyName auditInfo:(WSEProtectionPolicyAuditInfo*)auditInfo messageFromApp:(NSString *)messageFromApp success:(void (^)(WSEProtectionPolicyEvaluationResult))success failure:(void (^)(NSError*))failure;
 + (void)logAuditEvent:(NSString *)sourceIdentity targetIdentity:(NSString *)targetIdentity auditInfo:(WSEProtectionPolicyAuditInfo*)auditInfo;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * identity;
 @property BOOL showEnterpriseIndicator;
@@ -301,7 +301,7 @@ OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 @interface WSEProtectedAccessSuspendingEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFDateTime* deadline;
 @property (readonly) NSArray* /* NSString * */ identities;
@@ -317,7 +317,7 @@ OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 @interface WSEProtectedAccessResumedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* NSString * */ identities;
 @end
@@ -331,7 +331,7 @@ OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 @interface WSEProtectedContentRevokedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* NSString * */ identities;
 @end

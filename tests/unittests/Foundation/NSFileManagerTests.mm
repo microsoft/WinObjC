@@ -1,4 +1,4 @@
-//******************************************************************************
+﻿//******************************************************************************
 //
 // Copyright (c) Microsoft. All rights reserved.
 //
@@ -17,6 +17,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <TestFramework.h>
+#include <cstdlib>
 #include <time.h>
 #include <stdio.h>
 #include <errno.h>
@@ -27,7 +28,8 @@
 #include "TestUtils.h"
 
 TEST(NSFileManager, GetAttributes) {
-    NSString* testFileFullPath = getPathToFile(@"/data/NSFileManagerUT.txt");
+    NSString* testFileFullPath =
+        [[NSString stringWithUTF8String:GetCurrentTestDirectory().c_str()] stringByAppendingPathComponent:@"/data/NSFileManagerUT.txt"];
 
     LOG_INFO("this test try to validate file creation date and modification date and size for %@", testFileFullPath);
     NSFileManager* manager = [NSFileManager defaultManager];
@@ -63,24 +65,16 @@ TEST(NSFileManager, GetAttributes) {
 }
 
 TEST(NSFileManager, EnumateDirectoryUsingURL) {
+    NSFileManager* manager = [NSFileManager defaultManager];
+    NSString* originalPath = [manager currentDirectoryPath];
+
     // get test startup full path
     wchar_t startUpPath[_MAX_PATH];
-    GetModuleFileNameW(NULL, startUpPath, _MAX_PATH);
+    auto fullPath = GetCurrentTestDirectory();
+    std::mbstowcs(startUpPath, fullPath.c_str(), _MAX_PATH);
 
-// Windows needs extra handling for the drive character
-#if TARGET_OS_WIN32
-    // construct the start up dir
-    wchar_t drive[_MAX_DRIVE];
-    wchar_t dir[_MAX_DIR];
-    ASSERT_TRUE(::_wsplitpath_s(startUpPath, drive, _countof(drive), dir, _countof(dir), NULL, 0, NULL, 0) == 0);
-    ASSERT_TRUE(::_wmakepath_s(startUpPath, _countof(startUpPath), drive, dir, L"", L"") == 0);
-
-    // change current dir to app start up path
-    ASSERT_TRUE(SetCurrentDirectoryW(startUpPath) != 0);
-#else
     std::wstring startUpDir(startUpPath);
-    ASSERT_TRUE(SetCurrentDirectoryW(startUpDir.substr(0, startUpDir.find_last_of('/')).c_str()) != 0);
-#endif
+    ASSERT_TRUE(SetCurrentDirectoryW(startUpDir.c_str()) != 0);
 
     wchar_t currentDir[_MAX_PATH];
     DWORD ret = GetCurrentDirectoryW(_MAX_PATH, currentDir);
@@ -95,7 +89,6 @@ TEST(NSFileManager, EnumateDirectoryUsingURL) {
 #endif
 
     // construct target URL using current directory and relative URL
-    NSFileManager* manager = [NSFileManager defaultManager];
     NSURL* baseURL = [NSURL fileURLWithPath:[manager currentDirectoryPath]];
     NSURL* targetURL = [NSURL URLWithString:@"data/" relativeToURL:baseURL];
 
@@ -105,14 +98,10 @@ TEST(NSFileManager, EnumateDirectoryUsingURL) {
                                                      options:(NSDirectoryEnumerationOptions)0
                                                        error:nullptr];
 
-    // verify only one file exists
-    const NSString* c_expectedFileName = @"NSFileManagerUT.txt";
-    ASSERT_TRUE_MSG([urlContents count] == 1, "Should have one file named %@", c_expectedFileName);
-
-    // break file URL into comopnents, get last object of it - which is the file name, and verify name is the expected
-    NSURL* targetFileURL = [urlContents firstObject];
-    NSString* acutalFileName = [[targetFileURL pathComponents] lastObject];
-    ASSERT_OBJCEQ_MSG(c_expectedFileName, acutalFileName, "FileName isn't the same");
+    ASSERT_NE(NSNotFound, [urlContents indexOfObjectPassingTest:^(NSURL* obj, NSUInteger idx, BOOL* stop) {
+                  // break file URL into components, get last object of it - which is the file name, and verify name is the expected
+                  return [[[obj pathComponents] lastObject] isEqualToString:@"NSFileManagerUT.txt"];
+              }]);
 
     // construct file path for target file and get its attrbutes from windows side
     wchar_t targetFileFullPath[_MAX_PATH];
@@ -145,18 +134,24 @@ TEST(NSFileManager, EnumateDirectoryUsingURL) {
     // NSDate* actualModificationDate = static_cast<NSDate*>(value);
     // ASSERT_TRUE_MSG(actualModificationDate != nil, "failed to get ModificationDate from %@", targetFileURL);
     // ASSERT_OBJCEQ_MSG(expectedModificationDate, actualModificationDate, "failed to check modification date for %@", targetFileURL);
+
+    ASSERT_TRUE([manager changeCurrentDirectoryPath:originalPath]);
 }
 
 TEST(NSFileManager, ChangeDirectory) {
     NSFileManager* manager = [NSFileManager defaultManager];
     NSString* originalPath = [manager currentDirectoryPath];
+    NSString* newPath = [originalPath stringByAppendingPathComponent:@"TestCWD"];
 
-    NSString* parentPath = [[[NSURL fileURLWithPath:originalPath] URLByDeletingLastPathComponent] path];
-    ASSERT_TRUE([manager changeCurrentDirectoryPath:parentPath]);
+    [manager createDirectoryAtPath:newPath withIntermediateDirectories:NO attributes:nullptr error:nullptr];
+    ASSERT_TRUE([manager changeCurrentDirectoryPath:newPath]);
 
     NSString* currentPath = [manager currentDirectoryPath];
     ASSERT_OBJCNE_MSG(originalPath, currentPath, "Expected change in current directory");
-    ASSERT_OBJCEQ_MSG(parentPath, currentPath, "Expected current directory to change to parentPath");
+    ASSERT_OBJCEQ_MSG(newPath, currentPath, "Expected current directory to change to newPath");
+
+    ASSERT_TRUE([manager changeCurrentDirectoryPath:originalPath]);
+    [manager removeItemAtPath:newPath error:nullptr];
 }
 
 TEST(NSFileManager, MoveFileViaPath) {
@@ -212,4 +207,15 @@ TEST(NSFileManager, MoveFileViaURL) {
 
     // Verify data.
     ASSERT_OBJCEQ([content dataUsingEncoding:NSUTF8StringEncoding], [NSData dataWithContentsOfURL:destURL]);
+}
+
+TEST(NSFileManager, DirectoryWithUTF16Chars) {
+    wchar_t* specialFolder = L"oÖo winobjc";
+    NSString* directoryName = [NSString stringWithCharacters:(const unichar*)specialFolder length:wcslen(specialFolder) * sizeof(wchar_t)];
+    NSString* testPath = getPathToFile(directoryName);
+
+    EXPECT_TRUE([[NSFileManager defaultManager] createDirectoryAtPath:testPath attributes:nil]);
+    EXPECT_TRUE([[NSFileManager defaultManager] fileExistsAtPath:testPath]);
+    EXPECT_TRUE([[NSFileManager defaultManager] removeItemAtPath:testPath error:nil]);
+    EXPECT_FALSE([[NSFileManager defaultManager] fileExistsAtPath:testPath]);
 }

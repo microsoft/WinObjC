@@ -16,9 +16,12 @@
 //******************************************************************************
 
 #import <StubReturn.h>
-#include <math.h>
-#include "CoreGraphics/CGContext.h"
-#include "CGContextInternal.h"
+#import <math.h>
+#import "CoreGraphics/CGContext.h"
+#import "CGContextInternal.h"
+#import "CGImageInternal.h"
+#import "CGIWICBitmap.h"
+#import <CoreGraphics/D2DWrapper.h>
 
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSMutableDictionary.h"
@@ -48,11 +51,20 @@
 
 #import <objc/objc-arc.h>
 
+#include <COMIncludes.h>
+#import <WRLHelpers.h>
+#import <ErrorHandling.h>
+#import <wrl/client.h>
+#import <wrl/implements.h>
+#include <COMIncludes_End.h>
+
 static const wchar_t* TAG = L"CALayer";
 
 static const bool DEBUG_ALL = false;
 static const bool DEBUG_VERBOSE = DEBUG_ALL || false;
 static const bool DEBUG_DRAWING = DEBUG_VERBOSE || false;
+
+static const int c_windowsDPI = 96;
 
 NSString* const kCAOnOrderIn = @"kCAOnOrderIn";
 NSString* const kCAOnOrderOut = @"kCAOnOrderOut";
@@ -289,13 +301,26 @@ CAPrivateInfo::~CAPrivateInfo() {
     }
 }
 
-CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
+CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float scale) {
     if ([NSThread isMainThread]) {
         std::shared_ptr<IDisplayTexture> texture = GetCACompositor()->CreateDisplayTexture(width, height);
-        return _CGBitmapContextCreateWithTexture(width, height, texture);
+
+        Microsoft::WRL::ComPtr<IWICBitmap> customWICBtmap =
+            Microsoft::WRL::Make<CGIWICBitmap>(texture, GUID_WICPixelFormat32bppPBGRA, height, width);
+        // We want to convert it to GUID_WICPixelFormat32bppPBGRA for D2D Render Target compatibility.
+        woc::unique_cf<CGImageRef> image(_CGImageCreateWithWICBitmap(customWICBtmap.Get()));
+
+        Microsoft::WRL::ComPtr<ID2D1Factory> factory;
+        RETURN_NULL_IF_FAILED(_CGGetD2DFactory(&factory));
+
+        Microsoft::WRL::ComPtr<ID2D1RenderTarget> renderTarget;
+        RETURN_NULL_IF_FAILED(factory->CreateWicBitmapRenderTarget(customWICBtmap.Get(), D2D1::RenderTargetProperties(), &renderTarget));
+        renderTarget->SetDpi(c_windowsDPI * scale, c_windowsDPI * scale);
+
+        return _CGBitmapContextCreateWithRenderTarget(renderTarget.Get(), image.get(), GUID_WICPixelFormat32bppPBGRA);
     }
 
-    return nil;
+    return nullptr;
 }
 
 @implementation CALayer
@@ -368,6 +393,13 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
     [self layoutIfNeeded];
 
     CGContextSaveGState(ctx);
+    _CGContextPushBeginDraw(ctx);
+
+    auto popEnd = wil::ScopeExit([ctx]() {
+        _CGContextPopEndDraw(ctx);
+        CGContextRestoreGState(ctx);
+    });
+
     CGContextTranslateCTM(ctx, priv->position.x, priv->position.y);
     CGContextTranslateCTM(ctx, -priv->bounds.size.width * priv->anchorPoint.x, -priv->bounds.size.height * priv->anchorPoint.y);
     CGRect destRect;
@@ -403,15 +435,13 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
         rect.size.width = priv->bounds.size.width * priv->contentsScale;
         rect.size.height = -priv->bounds.size.height * priv->contentsScale;
 
-        CGContextDrawImageRect(ctx, priv->contents, rect, destRect);
+        _CGContextDrawImageRect(ctx, priv->contents, rect, destRect);
     }
 
     //  Draw sublayers
     LLTREE_FOREACH(curLayer, priv) {
         [curLayer->self renderInContext:ctx];
     }
-
-    CGContextRestoreGState(ctx);
 }
 
 /**
@@ -449,8 +479,10 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
         }
 
         // Update content size, even in case of the early out below.
-        int width = (int)(ceilf(priv->bounds.size.width) * priv->contentsScale);
-        int height = (int)(ceilf(priv->bounds.size.height) * priv->contentsScale);
+        int widthInPoints = ceilf(priv->bounds.size.width);
+        int width = (int)(widthInPoints * priv->contentsScale);
+        int heightInPoints = ceilf(priv->bounds.size.height);
+        int height = (int)(heightInPoints * priv->contentsScale);
 
         if (width <= 0 || height <= 0) {
             TraceVerbose(TAG, L"Not drawing due to invalid layer dimensions; width=%d, height=%d", width, height);
@@ -488,12 +520,19 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
         }
 
         // Create the contents
-        CGContextRef drawContext = CreateLayerContentsBitmapContext32(width, height);
+        CGContextRef drawContext = CreateLayerContentsBitmapContext32(width, height, priv->contentsScale);
 
         priv->ownsContents = TRUE;
         CGImageRef target = CGBitmapContextGetImage(drawContext);
 
         CGContextRetain(drawContext);
+        _CGContextPushBeginDraw(drawContext);
+
+        auto popEnd = wil::ScopeExit([drawContext]() {
+            _CGContextPopEndDraw(drawContext);
+            CGContextRelease(drawContext);
+        });
+
         CGImageRetain(target);
         priv->savedContext = drawContext;
 
@@ -514,17 +553,13 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
             CGContextRestoreGState(drawContext);
         }
 
-        if (target->Backing()->Height() != 0) {
-            CGContextTranslateCTM(drawContext, 0, float(target->Backing()->Height()));
-        }
-        if (priv->contentsScale != 1.0f) {
-            // TODO 1077:: Remove once D2D render target is implemented
-            _CGContextSetScaleFactor(drawContext, priv->contentsScale);
-            CGContextScaleCTM(drawContext, priv->contentsScale, priv->contentsScale);
-        }
-
+        // UIKit and CALayer consumers expect the origin to be in the top left.
+        // CoreGraphics defaults to the bottom left, so we must flip and translate the canvas.
+        CGContextTranslateCTM(drawContext, 0, heightInPoints);
         CGContextScaleCTM(drawContext, 1.0f, -1.0f);
         CGContextTranslateCTM(drawContext, -priv->bounds.origin.x, -priv->bounds.origin.y);
+
+        _CGContextSetShadowProjectionTransform(drawContext, CGAffineTransformMakeScale(1.0, -1.0));
 
         CGContextSetDirty(drawContext, false);
         [self drawInContext:drawContext];
@@ -538,7 +573,6 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
         }
 
         CGContextReleaseLock(drawContext);
-        CGContextRelease(drawContext);
 
         // If we've drawn anything, set it as our contents
         if (!CGContextIsDirty(drawContext)) {
@@ -550,8 +584,8 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
             priv->contents = target;
         }
     } else if (priv->contents) {
-        priv->contentsSize.width = float(priv->contents->Backing()->Width());
-        priv->contentsSize.height = float(priv->contents->Backing()->Height());
+        priv->contentsSize.width = float(CGImageGetWidth(priv->contents));
+        priv->contentsSize.height = float(CGImageGetHeight(priv->contents));
     }
 }
 
@@ -1229,8 +1263,8 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
         CGImageRetain(static_cast<CGImageRef>(pImg));
         priv->ownsContents = FALSE;
 
-        priv->contentsSize.width = float(priv->contents->Backing()->Width());
-        priv->contentsSize.height = float(priv->contents->Backing()->Height());
+        priv->contentsSize.width = float(CGImageGetWidth(priv->contents));
+        priv->contentsSize.height = float(CGImageGetHeight(priv->contents));
     } else {
         priv->contents = NULL;
         priv->ownsContents = FALSE;
@@ -2348,7 +2382,7 @@ CGPoint _legacyConvertPoint(CGPoint point, CALayer* fromLayer, CALayer* toLayer)
     //  Convert the point to center-based position
     point.x -= fromLayer->priv->bounds.size.width * fromLayer->priv->anchorPoint.x;
     point.y -= fromLayer->priv->bounds.size.height * fromLayer->priv->anchorPoint.y;
- 
+
     //  Convert to world-view
     CGAffineTransform fromTransform;
     GetLayerTransform(fromLayer, &fromTransform);
@@ -2358,11 +2392,11 @@ CGPoint _legacyConvertPoint(CGPoint point, CALayer* fromLayer, CALayer* toLayer)
     GetLayerTransform(toLayer, &toTransform);
     toTransform = CGAffineTransformInvert(toTransform);
     point = CGPointApplyAffineTransform(point, toTransform);
- 
+
     //  Convert the point from center-based position
     point.x += toLayer->priv->bounds.size.width * toLayer->priv->anchorPoint.x;
     point.y += toLayer->priv->bounds.size.height * toLayer->priv->anchorPoint.y;
- 
+
     return point;
 }
 
@@ -2416,10 +2450,16 @@ bool _floatAlmostEqual(float a, float b) {
         // How does our new convertPoint logic compare to the legacy logic?
         CGPoint legacyPoint = _legacyConvertPoint(point, fromLayer, toLayer);
         if (!_floatAlmostEqual(ret.x, legacyPoint.x) || !_floatAlmostEqual(ret.y, legacyPoint.y)) {
-            TraceWarning(TAG, L"convertPoint: The legacy point {%f, %f} did not match the new point {%f, %f}!", legacyPoint.x, legacyPoint.y, ret.x, ret.y);
+            TraceWarning(TAG,
+                         L"convertPoint: The legacy point {%f, %f} did not match the new point {%f, %f}!",
+                         legacyPoint.x,
+                         legacyPoint.y,
+                         ret.x,
+                         ret.y);
         }
 
-        TraceVerbose(TAG, L"convertPoint:{%f, %f} to:{%f, %f}, legacyPoint={%f, %f}", point.x, point.y, ret.x, ret.y, legacyPoint.x, legacyPoint.y);
+        TraceVerbose(
+            TAG, L"convertPoint:{%f, %f} to:{%f, %f}, legacyPoint={%f, %f}", point.x, point.y, ret.x, ret.y, legacyPoint.x, legacyPoint.y);
     }
 
     return ret;

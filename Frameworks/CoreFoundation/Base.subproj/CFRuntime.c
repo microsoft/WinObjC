@@ -272,6 +272,10 @@ CFTypeID _CFRuntimeRegisterClass(const CFRuntimeClass * const cls) {
 void _CFRuntimeBridgeTypeToClass(CFTypeID cf_typeID, const void *cls_ref) {
     __CFLock(&__CFBigRuntimeFunnel);
     __CFRuntimeObjCClassTable[cf_typeID] = (uintptr_t)cls_ref;
+
+    // WINOBJC: Label the class with the 'bridged object' protocol, so that it can be quickly distinguished from non-bridged objects
+    class_addProtocol((Class)cls_ref, __CFRuntimeGetBridgeProtocol());
+    
     __CFUnlock(&__CFBigRuntimeFunnel);
 }
 
@@ -1137,6 +1141,10 @@ void __CFInitialize(void) {
         for (CFIndex idx = 1; idx < __CFRuntimeClassTableSize; ++idx) {
             __CFRuntimeObjCClassTable[idx] = (uintptr_t)&_OBJC_CLASS__NSCFType;
         }
+
+        // WINOBJC: Label NSCFType with the 'bridged object' protocol
+        class_addProtocol(_OBJC_CLASS__NSCFType, __CFRuntimeGetBridgeProtocol());
+
 #endif
         
 #if DEPLOYMENT_RUNTIME_SWIFT

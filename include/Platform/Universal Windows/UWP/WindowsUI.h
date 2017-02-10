@@ -51,7 +51,7 @@ OBJCUWP_WINDOWS_UI_EXPORT
 @interface WUColorHelper : RTObject
 + (WUColor*)fromArgb:(uint8_t)a r:(uint8_t)r g:(uint8_t)g b:(uint8_t)b;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @end
 
@@ -64,7 +64,7 @@ OBJCUWP_WINDOWS_UI_EXPORT
 OBJCUWP_WINDOWS_UI_EXPORT
 @interface WUColors : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 + (WUColor*)aliceBlue;
 + (WUColor*)antiqueWhite;

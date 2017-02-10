@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,14 +17,19 @@
 #pragma once
 
 #import <CoreImage/CIImage.h>
-#include "Starboard.h"
+#import <CoreGraphics/CGImage.h>
+#import <memory>
+#import <Foundation/NSDictionary.h>
+#import <Starboard.h>
 
 @interface CIImage () {
-    idretain _cgImage;
-    idretain _color;
+    woc::unique_cf<CGImageRef> _cgImage;
+    StrongId<CIColor> _color;
+    StrongId<NSDictionary> _options;
     CIFilter* _filter;
+    CGRect _extent;
 }
 
--(CGImageRef)_CGImageFromRect:(CGRect)rect;
+- (CGImageRef)_CGImageFromRect:(CGRect)rect;
 
 @end

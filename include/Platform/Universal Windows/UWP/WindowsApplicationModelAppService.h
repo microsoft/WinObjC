@@ -78,7 +78,7 @@ typedef unsigned WAAAppServiceResponseStatus;
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
 @interface WAAAppServiceRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFCValueSet* message;
 - (void)sendResponseAsync:(WFCValueSet*)message success:(void (^)(WAAAppServiceResponseStatus))success failure:(void (^)(NSError*))failure;
@@ -93,7 +93,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
 @interface WAAAppServiceDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)complete;
 @end
@@ -107,7 +107,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
 @interface WAAAppServiceResponse : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFCValueSet* message;
 @property (readonly) WAAAppServiceResponseStatus status;
@@ -135,9 +135,9 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
 
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
 @interface WAAAppServiceConnection : RTObject <WFIClosable>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * packageFamilyName;
 @property (retain) NSString * appServiceName;
@@ -161,7 +161,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
 @interface WAAAppServiceRequestReceivedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WAAAppServiceRequest* request;
 - (WAAAppServiceDeferral*)getDeferral;
@@ -176,7 +176,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
 @interface WAAAppServiceClosedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WAAAppServiceClosedStatus status;
 @end
@@ -190,7 +190,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
 @interface WAAAppServiceTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WAAAppServiceConnection* appServiceConnection;
 @property (readonly) NSString * callerPackageFamilyName;

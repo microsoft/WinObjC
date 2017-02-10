@@ -33,6 +33,24 @@
 
 static const double meanDivisor = 100;
 
+static CGImageRef _CGImageCreate32bppCopy(CGImageRef image) {
+    size_t originalBpp = CGImageGetBitsPerPixel(image);
+    if (originalBpp == 32) {
+        return CGImageRetain(image);
+    }
+    size_t width = CGImageGetWidth(image);
+    size_t height = CGImageGetHeight(image);
+    CGColorSpaceRef rgbColorSpace = CGColorSpaceCreateDeviceRGB();
+    CGContextRef bitmapContext =
+        CGBitmapContextCreate(NULL, width, height, 8, width * 4, rgbColorSpace, kCGBitmapByteOrder32Big | kCGImageAlphaNoneSkipLast);
+    CGColorSpaceRelease(rgbColorSpace);
+
+    CGContextDrawImage(bitmapContext, (CGRect){ { 0, 0 }, { width, height } }, image);
+    image = CGBitmapContextCreateImage(bitmapContext);
+    CGContextRelease(bitmapContext);
+    return image;
+}
+
 @implementation AccelerateViewController {
     int _accelerateImageNumber;
     int _valueRed;
@@ -99,7 +117,10 @@ static const double meanDivisor = 100;
     _bLabel = [[UILabel alloc] init];
     _boxLabel = [[UILabel alloc] init];
 
-    _img = [UIImage imageNamed:[NSString stringWithFormat:@"photo%d.jpg", _accelerateImageNumber]];
+    UIImage* image = [UIImage imageNamed:[NSString stringWithFormat:@"photo%d.jpg", _accelerateImageNumber]];
+    CGImageRef convertedImage = _CGImageCreate32bppCopy(image.CGImage);
+    _img = [UIImage imageWithCGImage:convertedImage];
+    CGImageRelease(convertedImage);
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
@@ -254,7 +275,9 @@ static const double meanDivisor = 100;
 }
 
 - (void)imageFromController:(UIImage*)image {
-    _img = image;
+    CGImageRef convertedImage = _CGImageCreate32bppCopy(image.CGImage);
+    _img = [UIImage imageWithCGImage:convertedImage];
+    CGImageRelease(convertedImage);
     _indexPathArray = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:0]];
     [self.tableView reloadRowsAtIndexPaths:_indexPathArray withRowAnimation:UITableViewRowAnimationNone];
 }
@@ -306,80 +329,116 @@ static const double meanDivisor = 100;
     const int byteOrder = bitmapInfo & kCGBitmapByteOrderMask;
 
     unsigned int redIndex, greenIndex, blueIndex, alphaIndex;
+    bool valid = true;
 
     // Use the byteorder and alpha info of the input image to get the byte index of each component
-    if (byteOrder == kCGBitmapByteOrder32Big) {
-        // RGBX or XRGB
-        if (alphaInfo == kCGImageAlphaLast || alphaInfo == kCGImageAlphaNoneSkipLast) {
-            alphaIndex = 0;
-            redIndex = 3;
-            greenIndex = 2;
-            blueIndex = 1;
-        } else {
-            alphaIndex = 3;
-            redIndex = 2;
-            greenIndex = 1;
-            blueIndex = 0;
-        }
-    } else {
-        // XBGR or BGRX
-        if (alphaInfo == kCGImageAlphaLast || alphaInfo == kCGImageAlphaNoneSkipLast) {
-            alphaIndex = 3;
+    switch (byteOrder) {
+    case kCGBitmapByteOrder32Big: // RGBA or ARGB
+    case kCGBitmapByteOrderDefault: // On the reference platform, "default" for a 32bpp image is RGBA or ARGB. WinObjC will never return Default.
+        switch (alphaInfo) {
+        case kCGImageAlphaLast:
+        case kCGImageAlphaPremultipliedLast:
+        case kCGImageAlphaNoneSkipLast:
             redIndex = 0;
             greenIndex = 1;
             blueIndex = 2;
-        } else {
-            alphaIndex = 0;
+            alphaIndex = 3;
+            break;
+        case kCGImageAlphaFirst:
+        case kCGImageAlphaPremultipliedFirst:
+        case kCGImageAlphaNoneSkipFirst:
             redIndex = 1;
             greenIndex = 2;
             blueIndex = 3;
+            alphaIndex = 0;
+            break;
+        default:
+            valid = false;
+            break;
         }
+        break;
+    case kCGBitmapByteOrder32Little: // ABGR or BGRA
+        switch (alphaInfo) {
+        case kCGImageAlphaLast:
+        case kCGImageAlphaPremultipliedLast:
+        case kCGImageAlphaNoneSkipLast:
+            redIndex = 3;
+            greenIndex = 2;
+            blueIndex = 1;
+            alphaIndex = 0;
+            break;
+        case kCGImageAlphaFirst:
+        case kCGImageAlphaPremultipliedFirst:
+        case kCGImageAlphaNoneSkipFirst:
+            redIndex = 2;
+            greenIndex = 1;
+            blueIndex = 0;
+            alphaIndex = 3;
+            break;
+        default:
+            valid = false;
+            break;
+        }
+        break;
+    default:
+        valid = false;
+        break;
     }
 
-    // Convert the component index to the matrix diagonal index and set the appropriate values for each component
-    int16_t A[16] = { 0 };
-    A[(alphaIndex << 2) + alphaIndex] = 100;
-    A[(redIndex << 2) + redIndex] = _valueRed;
-    A[(greenIndex << 2) + greenIndex] = _valueGreen;
-    A[(blueIndex << 2) + blueIndex] = _valueBlue;
+    UIImage* returnImage = nil;
 
-    error = vImageMatrixMultiply_ARGB8888(&inBuffer, &midBuffer, A, meanDivisor, NULL, NULL, 0);
+    if (valid) {
+        // Convert the component index to the matrix diagonal index and set the appropriate values for each component
+        int16_t A[16] = { 0 };
+        A[(alphaIndex << 2) + alphaIndex] = 100;
+        A[(redIndex << 2) + redIndex] = _valueRed;
+        A[(greenIndex << 2) + greenIndex] = _valueGreen;
+        A[(blueIndex << 2) + blueIndex] = _valueBlue;
 
-    if (error) {
-        NSLog(@"error from matrix multiply %ld", error);
+        error = vImageMatrixMultiply_ARGB8888(&inBuffer, &midBuffer, A, meanDivisor, NULL, NULL, 0);
+
+        if (error) {
+            NSLog(@"error from matrix multiply %ld", error);
+        }
+
+        Pixel_8888 background;
+        background[0] = 0;
+        background[1] = 0;
+        background[2] = 0;
+        background[3] = 0;
+
+        // Perform convolution
+        error = vImageBoxConvolve_ARGB8888(&midBuffer, &outBuffer, NULL, 0, 0, _convolveSize, _convolveSize, background, kvImageEdgeExtend);
+
+        if (error) {
+            NSLog(@"error from convolution %ld", error);
+        }
+
+        // Create CGImageRef from vImage_Buffer output
+        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+
+        CGContextRef ctx = CGBitmapContextCreate(outBuffer.data,
+                                                 outBuffer.width,
+                                                 outBuffer.height,
+                                                 8,
+                                                 outBuffer.rowBytes,
+                                                 colorSpace,
+                                                 kCGBitmapByteOrder32Big | kCGImageAlphaNoneSkipLast);
+
+        CGImageRef imageRef = CGBitmapContextCreateImage(ctx);
+
+        returnImage = [UIImage imageWithCGImage:imageRef];
+
+        CGContextRelease(ctx);
+        CGColorSpaceRelease(colorSpace);
+        free(midPixelBuffer);
+        free(pixelBuffer);
+        CGImageRelease(imageRef);
+    } else {
+        NSLog(@"Somehow, we didn't end up with a 32bpp+alpha image here. Bailing out.");
     }
 
-    Pixel_8888 background;
-    background[0] = 0;
-    background[1] = 0;
-    background[2] = 0;
-    background[3] = 0;
-
-    // Perform convolution
-    error = vImageBoxConvolve_ARGB8888(&midBuffer, &outBuffer, NULL, 0, 0, _convolveSize, _convolveSize, background, kvImageEdgeExtend);
-
-    if (error) {
-        NSLog(@"error from convolution %ld", error);
-    }
-
-    // Create CGImageRef from vImage_Buffer output
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-
-    CGContextRef ctx =
-        CGBitmapContextCreate(outBuffer.data, outBuffer.width, outBuffer.height, 8, outBuffer.rowBytes, colorSpace, bitmapInfo);
-
-    CGImageRef imageRef = CGBitmapContextCreateImage(ctx);
-
-    UIImage* returnImage = [UIImage imageWithCGImage:imageRef];
-
-    // Clean up
-    CGContextRelease(ctx);
-    CGColorSpaceRelease(colorSpace);
-    free(midPixelBuffer);
-    free(pixelBuffer);
     CFRelease(inBitmapData);
-    CGImageRelease(imageRef);
-
     return returnImage;
 }
 @end

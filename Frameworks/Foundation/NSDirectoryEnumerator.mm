@@ -98,7 +98,7 @@ static void searchRecursive(const char* rootpath,
                 if (keys != nil) { // caller wants to fetch some properties for this URL
                     NSDictionary* fileAttributes = fileAttributesForFilePath(fileFullPath.c_str());
                     if (fileAttributes != nil) {
-                        NSURL* newURL = [NSURL fileURLWithPath:[NSString stringWithCString:fileFullPath.c_str()]];
+                        NSURL* newURL = [NSURL fileURLWithPath:[NSString stringWithUTF8String:fileFullPath.c_str()]];
                         for (NSString* key in keys) {
                             if ([key isEqualToString:NSURLContentModificationDateKey]) {
                                 // TODO 7491994: Implement CFURL resourceValue APIs
@@ -116,7 +116,7 @@ static void searchRecursive(const char* rootpath,
                 }
 
             } else {
-                NSString* newStr = [NSString stringWithCString:filename.c_str()];
+                NSString* newStr = [NSString stringWithUTF8String:filename.c_str()];
                 [objArray addObject:newStr];
             }
 
@@ -137,12 +137,12 @@ static void searchRecursive(const char* rootpath,
  @Public No
 */
 - (instancetype)_initWithPath:(const char*)path
-                      shallow:(BOOL)shallow
-   includingPropertiesForKeys:(NSArray*)keys
-                      options:(NSDirectoryEnumerationOptions)mask
-                  returnNSURL:(BOOL)returnNSURL {
+                       shallow:(BOOL)shallow
+    includingPropertiesForKeys:(NSArray*)keys
+                       options:(NSDirectoryEnumerationOptions)mask
+                   returnNSURL:(BOOL)returnNSURL {
     _rootFiles.attach([NSMutableArray new]);
-    _searchPath = [NSString stringWithCString:path];
+    _searchPath = [NSString stringWithUTF8String:path];
     searchRecursive(path, "", shallow, _rootFiles, keys, mask, returnNSURL);
     _currrentEnumerator.push_back([_rootFiles objectEnumerator]);
     _currentDepth = 0;

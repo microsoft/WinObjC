@@ -239,7 +239,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 @interface WSFStorageItemThumbnail : RTObject <WSSIRandomAccessStreamWithContentType, WSSIContentTypeProvider, WSSIRandomAccessStream, WSSIOutputStream, WFIClosable, WSSIInputStream>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int originalHeight;
 @property (readonly) unsigned int originalWidth;
@@ -269,7 +269,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 @interface WSFMusicProperties : RTObject <WSFIStorageItemExtraProperties>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property unsigned int rating;
 @property (retain) NSString * albumArtist;
@@ -301,7 +301,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 @interface WSFVideoProperties : RTObject <WSFIStorageItemExtraProperties>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property unsigned int year;
 @property (retain) NSString * title;
@@ -333,7 +333,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 @interface WSFImageProperties : RTObject <WSFIStorageItemExtraProperties>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * title;
 @property unsigned int rating;
@@ -361,7 +361,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 @interface WSFDocumentProperties : RTObject <WSFIStorageItemExtraProperties>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * title;
 @property (retain) NSString * comment;
@@ -381,7 +381,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 @interface WSFStorageItemContentProperties : RTObject <WSFIStorageItemExtraProperties>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)getMusicPropertiesAsyncWithSuccess:(void (^)(WSFMusicProperties*))success failure:(void (^)(NSError*))failure;
 - (void)getVideoPropertiesAsyncWithSuccess:(void (^)(WSFVideoProperties*))success failure:(void (^)(NSError*))failure;
@@ -401,7 +401,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 @interface WSFBasicProperties : RTObject <WSFIStorageItemExtraProperties>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFDateTime* dateModified;
 @property (readonly) WFDateTime* itemDate;

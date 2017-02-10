@@ -267,9 +267,9 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
  @Notes attributes parameter not supported. error parameter not supported.
 */
 - (BOOL)createDirectoryAtURL:(NSURL*)url
- withIntermediateDirectories:(BOOL)createIntermediates
-                  attributes:(NSDictionary*)attrs
-                       error:(NSError**)err {
+    withIntermediateDirectories:(BOOL)createIntermediates
+                     attributes:(NSDictionary*)attrs
+                          error:(NSError**)err {
     id path = [url path];
 
     return [self createDirectoryAtPath:path withIntermediateDirectories:createIntermediates attributes:attrs error:err];
@@ -280,9 +280,9 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
  @Notes attributes parameter not supported.  error parameter is not populated
 */
 - (BOOL)createDirectoryAtPath:(NSString*)pathAddr
-  withIntermediateDirectories:(BOOL)createIntermediates
-                   attributes:(NSDictionary*)attrs
-                        error:(NSError**)err {
+    withIntermediateDirectories:(BOOL)createIntermediates
+                     attributes:(NSDictionary*)attrs
+                          error:(NSError**)err {
     if (createIntermediates) {
         const char* path = [pathAddr UTF8String];
         id components = [pathAddr pathComponents];
@@ -400,10 +400,9 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
     [outputStream open];
     [inputStream open];
     auto closeStreams = wil::ScopeExit([&outputStream, &inputStream]() {
-        [outputStream close]; 
-        [inputStream close]; 
+        [outputStream close];
+        [inputStream close];
     });
-
 
     if (NSStreamStatusOpen != inputStream.streamStatus) {
         TraceError(TAG, L"Error opening %hs", src);
@@ -417,7 +416,6 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 
     uint8_t in[4096];
     while ([inputStream hasBytesAvailable]) {
-
         NSInteger readResult = [inputStream read:in maxLength:_countof(in)];
         if (readResult == -1) {
             return NO;
@@ -427,7 +425,6 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
         const unsigned char* baseAddress = (const unsigned char*)in;
 
         while (bytesToWrite > 0) {
-
             auto result = [outputStream write:(baseAddress + (readResult - bytesToWrite)) maxLength:bytesToWrite];
             if (result == -1) {
                 return NO;
@@ -844,7 +841,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 */
 - (id)stringWithFileSystemRepresentation:(const char*)path length:(NSUInteger)length {
     UNIMPLEMENTED();
-    return [NSString stringWithCString:path length:length];
+    return [[NSString string] initWithBytes:path length:length encoding:NSUTF8StringEncoding];
 }
 
 // Managing the Delegate

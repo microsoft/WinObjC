@@ -290,36 +290,36 @@ TEST(CTRun, GetPositions) {
     // Length larger than available positions, does nothing
     std::fill(positions.begin(), positions.end(), CGPointMake(c_arbitraryFloat, c_arbitraryFloat));
     CTRunGetPositions(run, CFRangeMake(0, 5000), positions.data());
-    EXPECT_NEAR(c_arbitraryFloat, positions[0].x, c_errorDelta);
-    EXPECT_NEAR(c_arbitraryFloat, positions[0].y, c_errorDelta);
-    EXPECT_NEAR(c_arbitraryFloat, positions[6].x, c_errorDelta);
-    EXPECT_NEAR(c_arbitraryFloat, positions[6].y, c_errorDelta);
+    EXPECT_EQ(std::round(c_arbitraryFloat), std::round(positions[0].x));
+    EXPECT_EQ(std::round(c_arbitraryFloat), std::round(positions[0].y));
+    EXPECT_EQ(std::round(c_arbitraryFloat), std::round(positions[6].x));
+    EXPECT_EQ(std::round(c_arbitraryFloat), std::round(positions[6].y));
 
     std::fill(positions.begin(), positions.end(), CGPointMake(c_arbitraryFloat, c_arbitraryFloat));
     CTRunGetPositions(run, CFRangeMake(1, 2), positions.data());
-    EXPECT_NEAR(12.5197, positions[0].x, c_errorDelta);
-    EXPECT_NEAR(43.1641, positions[0].y, c_errorDelta);
-    EXPECT_NEAR(35.9570, positions[1].x, c_errorDelta);
-    EXPECT_NEAR(43.1641, positions[1].y, c_errorDelta);
-    EXPECT_NEAR(c_arbitraryFloat, positions[2].x, c_errorDelta);
-    EXPECT_NEAR(c_arbitraryFloat, positions[2].y, c_errorDelta);
+    EXPECT_EQ(std::round(12.5197), std::round(positions[0].x));
+    EXPECT_EQ(std::round(43.1641), std::round(positions[0].y));
+    EXPECT_EQ(std::round(35.9570), std::round(positions[1].x));
+    EXPECT_EQ(std::round(43.1641), std::round(positions[1].y));
+    EXPECT_EQ(std::round(c_arbitraryFloat), std::round(positions[2].x));
+    EXPECT_EQ(std::round(c_arbitraryFloat), std::round(positions[2].y));
 
     std::fill(positions.begin(), positions.end(), CGPointMake(c_arbitraryFloat, c_arbitraryFloat));
     CTRunGetPositions(run, CFRangeMake(0, 0), positions.data());
-    EXPECT_NEAR(0, positions[0].x, c_errorDelta);
-    EXPECT_NEAR(43.1641, positions[0].y, c_errorDelta);
-    EXPECT_NEAR(12.5197, positions[1].x, c_errorDelta);
-    EXPECT_NEAR(43.1641, positions[1].y, c_errorDelta);
-    EXPECT_NEAR(35.9570, positions[2].x, c_errorDelta);
-    EXPECT_NEAR(43.1641, positions[2].y, c_errorDelta);
-    EXPECT_NEAR(59.3945, positions[3].x, c_errorDelta);
-    EXPECT_NEAR(43.1641, positions[3].y, c_errorDelta);
-    EXPECT_NEAR(82.9101, positions[4].x, c_errorDelta);
-    EXPECT_NEAR(43.1641, positions[4].y, c_errorDelta);
-    EXPECT_NEAR(103.2617, positions[5].x, c_errorDelta);
-    EXPECT_NEAR(43.1641, positions[5].y, c_errorDelta);
-    EXPECT_NEAR(c_arbitraryFloat, positions[6].x, c_errorDelta);
-    EXPECT_NEAR(c_arbitraryFloat, positions[6].y, c_errorDelta);
+    EXPECT_EQ(std::round(0), std::round(positions[0].x));
+    EXPECT_EQ(std::round(43.1641), std::round(positions[0].y));
+    EXPECT_EQ(std::round(12.5197), std::round(positions[1].x));
+    EXPECT_EQ(std::round(43.1641), std::round(positions[1].y));
+    EXPECT_EQ(std::round(35.9570), std::round(positions[2].x));
+    EXPECT_EQ(std::round(43.1641), std::round(positions[2].y));
+    EXPECT_EQ(std::round(59.3945), std::round(positions[3].x));
+    EXPECT_EQ(std::round(43.1641), std::round(positions[3].y));
+    EXPECT_EQ(std::round(82.9101), std::round(positions[4].x));
+    EXPECT_EQ(std::round(43.1641), std::round(positions[4].y));
+    EXPECT_EQ(std::round(103.2617), std::round(positions[5].x));
+    EXPECT_EQ(std::round(43.1641), std::round(positions[5].y));
+    EXPECT_EQ(std::round(c_arbitraryFloat), std::round(positions[6].x));
+    EXPECT_EQ(std::round(c_arbitraryFloat), std::round(positions[6].y));
 
     CFRelease(line);
 }
@@ -333,18 +333,18 @@ TEST(CTRun, GetPositionsPtr) {
     EXPECT_NO_THROW(CTRunGetPositionsPtr(nullptr));
 
     const CGPoint* positionsPtr = CTRunGetPositionsPtr(run);
-    EXPECT_NEAR(0, (positionsPtr + 0)->x, c_errorDelta);
-    EXPECT_NEAR(43.1641, (positionsPtr + 0)->y, c_errorDelta);
-    EXPECT_NEAR(12.5197, (positionsPtr + 1)->x, c_errorDelta);
-    EXPECT_NEAR(43.1641, (positionsPtr + 1)->y, c_errorDelta);
-    EXPECT_NEAR(35.9570, (positionsPtr + 2)->x, c_errorDelta);
-    EXPECT_NEAR(43.1641, (positionsPtr + 2)->y, c_errorDelta);
-    EXPECT_NEAR(59.3945, (positionsPtr + 3)->x, c_errorDelta);
-    EXPECT_NEAR(43.1641, (positionsPtr + 3)->y, c_errorDelta);
-    EXPECT_NEAR(82.9101, (positionsPtr + 4)->x, c_errorDelta);
-    EXPECT_NEAR(43.1641, (positionsPtr + 4)->y, c_errorDelta);
-    EXPECT_NEAR(103.2617, (positionsPtr + 5)->x, c_errorDelta);
-    EXPECT_NEAR(43.1641, (positionsPtr + 5)->y, c_errorDelta);
+    EXPECT_EQ(std::round(0), std::round((positionsPtr + 0)->x));
+    EXPECT_EQ(std::round(43.1641), std::round((positionsPtr + 0)->y));
+    EXPECT_EQ(std::round(12.5197), std::round((positionsPtr + 1)->x));
+    EXPECT_EQ(std::round(43.1641), std::round((positionsPtr + 1)->y));
+    EXPECT_EQ(std::round(35.9570), std::round((positionsPtr + 2)->x));
+    EXPECT_EQ(std::round(43.1641), std::round((positionsPtr + 2)->y));
+    EXPECT_EQ(std::round(59.3945), std::round((positionsPtr + 3)->x));
+    EXPECT_EQ(std::round(43.1641), std::round((positionsPtr + 3)->y));
+    EXPECT_EQ(std::round(82.9101), std::round((positionsPtr + 4)->x));
+    EXPECT_EQ(std::round(43.1641), std::round((positionsPtr + 4)->y));
+    EXPECT_EQ(std::round(103.2617), std::round((positionsPtr + 5)->x));
+    EXPECT_EQ(std::round(43.1641), std::round((positionsPtr + 5)->y));
 
     CFRelease(line);
 }

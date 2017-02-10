@@ -33,19 +33,6 @@
 #pragma clang diagnostic pop
 #endif
 
-#ifdef __OBJC__
-#include <objc/objc.h>
-#include <objc/runtime.h>
-#include <Foundation/NSObject.h>
-#include <Foundation/NSAutoreleasePool.h>
-#include <Foundation/NSString.h>
-
-// We are free to redefine TEST() since we set GTEST_DONT_DEFINE_TEST earlier.
-#define TEST(test_case_name, test_name)\
-  GTEST_TEST_(test_case_name, test_name, \
-              ::woc::testing::ObjCTest, ::testing::internal::GetTestTypeId())
-#endif
-
 namespace GTestLogPrivate
 {
 
@@ -83,66 +70,8 @@ std::vector<char> Format(const char* message, Args ... args)
 
 }
 
-#ifndef __has_feature
-#define __has_feature(x) 0
-#endif
+#ifdef __OBJC__
 
-#if defined(__OBJC__) && ! __has_feature(objc_arc)
-namespace GTestLogPrivate
-{
-template<typename ... Args>
-std::vector<char> Format(NSString* message, Args ... args)
-{
-    return Format([message UTF8String], std::forward<Args>(args)...);
-}
-}
-
-inline std::ostream& operator<<(std::ostream& os, const id& object) {
-    return os << (char*)([[object description] UTF8String]);
-}
-
-namespace woc {
-namespace testing {
-
-inline ::testing::AssertionResult CompareObjectsEqual(
-    const char* expectedExpression,
-    const char* actualExpression,
-    const id& expected,
-    const id& actual) {
-    if ((!expected && !actual) || (expected && actual && [expected isEqual:actual])) {
-        return ::testing::AssertionSuccess();
-    }
-
-    return ::testing::internal::CmpHelperEQFailure(expectedExpression, actualExpression, expected, actual);
-}
-
-inline ::testing::AssertionResult CompareObjectsNotEqual(
-    const char* expectedExpression,
-    const char* actualExpression,
-    const id& expected,
-    const id& actual) {
-    if (!(expected && actual && [expected isEqual:actual]) && (expected != actual)) {
-        return ::testing::AssertionSuccess();
-    }
-
-    return ::testing::internal::CmpHelperOpFailure(expectedExpression, actualExpression, expected, actual, "!=");
-}
-
-class ObjCTest : public ::testing::Test {
-protected:
-    id _autoreleasePool;
-    virtual void SetUp() {
-        _autoreleasePool = [[NSAutoreleasePool alloc] init];
-    }
-    virtual void TearDown() {
-#if !__has_feature(objc_arc)
-        [_autoreleasePool release];
-#endif
-        _autoreleasePool = nil;
-    }
-};
-}
-}
 
 #define EXPECT_OBJCEQ(expected, actual) \
   EXPECT_PRED_FORMAT2(::woc::testing::CompareObjectsEqual, expected, actual)

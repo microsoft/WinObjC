@@ -48,6 +48,9 @@ tmp
 *.lock.json
 .vscode/
 
+*.nuget.targets
+*.nuget.props
+
 # Mac desktop service store files
 .DS_Store
 xcuserdata/

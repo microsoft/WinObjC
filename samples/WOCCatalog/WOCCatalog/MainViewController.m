@@ -16,7 +16,6 @@
 //******************************************************************************
 
 #import "MainViewController.h"
-#import "ButtonsViewController.h"
 #import "ControlsViewController.h"
 #import "TextDisplayViewController.h"
 #import "TransitionsViewController.h"
@@ -35,7 +34,6 @@
 #import "AutoLayoutViewController.h"
 #import "PageViewController.h"
 #import "ApplicationViewController.h"
-#import "FoundationsViewController.h"
 #import "BasicAnimationViewController.h"
 #import "AccelerateViewController.h"
 #import "AccelerateViewController2.h"
@@ -73,17 +71,11 @@
     // CoreLocation
     [self addMenuItemViewController:[[CoreLocationViewController alloc] init] andTitle:@"CoreLocation"];
 
-    // Foundations tests
-    [self addMenuItemViewController:[[FoundationsViewController alloc] init] andTitle:@"Foundation Tests"];
-
     // Controls
     [self addMenuItemViewController:[[ControlsViewController alloc] init] andTitle:@"Controls"];
 
     // Gestures
     [self addMenuItemViewController:[[GesturesViewController alloc] init] andTitle:@"Gestures"];
-    
-    // Buttons
-    [self addMenuItemViewController:[[ButtonsViewController alloc] init] andTitle:@"ButtonsViewController"];
 
     // AutoLayout
     [self addMenuItemViewController:[[AutoLayoutViewController alloc] init] andTitle:@"Constraint Based Layout"];

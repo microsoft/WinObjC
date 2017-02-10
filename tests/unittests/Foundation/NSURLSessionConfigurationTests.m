@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -49,10 +49,10 @@ TEST(NSURLSessionConfiguration, defaultSessionConfiguration) {
     ASSERT_NE_MSG(nil, sessionConfiguration, "FAILED: sessionConfiguration should be non-null!");
 
     EXPECT_EQ_MSG(YES, sessionConfiguration.allowsCellularAccess, "FAILED: allowsCellularAccess should be YES");
-    EXPECT_EQ_MSG(kTLSProtocol12,
+    EXPECT_EQ_MSG(kSSLProtocolUnknown,
                   sessionConfiguration.TLSMaximumSupportedProtocol,
                   "FAILED: TLSMaximumSupportedProtocol should be %d",
-                  kTLSProtocol12);
+                  kSSLProtocolUnknown);
     EXPECT_EQ_MSG(kTLSProtocol1,
                   sessionConfiguration.TLSMinimumSupportedProtocol,
                   "FAILED: TLSMinimumSupportedProtocol should be %d",
@@ -63,10 +63,10 @@ TEST(NSURLSessionConfiguration, ephemeralSessionConfiguration) {
     NSURLSessionConfiguration* sessionConfiguration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
     ASSERT_NE_MSG(nil, sessionConfiguration, "FAILED: sessionConfiguration should be non-null!");
 
-    EXPECT_EQ_MSG(kTLSProtocol12,
+    EXPECT_EQ_MSG(kSSLProtocolUnknown,
                   sessionConfiguration.TLSMaximumSupportedProtocol,
                   "FAILED: TLSMaximumSupportedProtocol should be %d",
-                  kTLSProtocol12);
+                  kSSLProtocolUnknown);
     EXPECT_EQ_MSG(kTLSProtocol1,
                   sessionConfiguration.TLSMinimumSupportedProtocol,
                   "FAILED: TLSMinimumSupportedProtocol should be %d",
@@ -79,10 +79,10 @@ TEST(NSURLSessionConfiguration, backgroundSessionConfigurationWithIdentifier) {
     NSURLSessionConfiguration* sessionConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
     ASSERT_NE_MSG(nil, sessionConfiguration, "FAILED: sessionConfiguration should be non-null!");
 
-    EXPECT_EQ_MSG(kTLSProtocol12,
+    EXPECT_EQ_MSG(kSSLProtocolUnknown,
                   sessionConfiguration.TLSMaximumSupportedProtocol,
                   "FAILED: TLSMaximumSupportedProtocol should be %d",
-                  kTLSProtocol12);
+                  kSSLProtocolUnknown);
     EXPECT_EQ_MSG(kTLSProtocol1,
                   sessionConfiguration.TLSMinimumSupportedProtocol,
                   "FAILED: TLSMinimumSupportedProtocol should be %d",

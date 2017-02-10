@@ -51,7 +51,7 @@ typedef unsigned WASCSearchSuggestionKind;
 OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_CORE_EXPORT
 @interface WASCSearchSuggestion : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * detailText;
 @property (readonly) RTObject<WSSIRandomAccessStreamReference>* image;
@@ -69,9 +69,9 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_CORE_EXPORT
 
 OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_CORE_EXPORT
 @interface WASCSearchSuggestionManager : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL searchHistoryEnabled;
 @property (retain) NSString * searchHistoryContext;
@@ -98,7 +98,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_CORE_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_CORE_EXPORT
 @interface WASCSearchSuggestionsRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * language;
 @property (readonly) WASSearchQueryLinguisticDetails* linguisticDetails;
@@ -115,7 +115,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_CORE_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_CORE_EXPORT
 @interface WASCRequestingFocusOnKeyboardInputEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @end
 

@@ -262,7 +262,12 @@ TEST(NSDecimalNumber, Subtraction2) {
     TEST_SUBTRACT([[[NSDecimalNumber alloc] initWithInt:(2 * USHRT_MAX)] autorelease],
                   [[[NSDecimalNumber alloc] initWithInt:USHRT_MAX] autorelease],
                   [[[NSDecimalNumber alloc] initWithInt:USHRT_MAX] autorelease]);
+}
 
+// Disabled on OSX due to the results produced by OSX 10.12 are prone to rounding issues.
+// After OSX 10.11 NSDecimalComparision has been changed from Decimal struct comparison to just double value comparison.
+// Which is currently not supported in our system
+OSX_DISABLED_TEST(NSDecimalNumber, Subtraction3) {
     TEST_SUBTRACT([[[NSDecimalNumber alloc] initWithDouble:1186805866786] autorelease],
                   [[[NSDecimalNumber alloc] initWithDouble:212169414290] autorelease],
                   [[[NSDecimalNumber alloc] initWithDouble:974636452496] autorelease]);

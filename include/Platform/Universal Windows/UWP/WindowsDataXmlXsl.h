@@ -42,7 +42,7 @@ OBJCUWP_WINDOWS_DATA_XML_XSL_EXPORT
 @interface WDXXXsltProcessor : RTObject
 + (WDXXXsltProcessor*)makeInstance:(WDXDXmlDocument*)document ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (NSString *)transformToString:(RTObject<WDXDIXmlNode>*)inputNode;
 - (WDXDXmlDocument*)transformToDocument:(RTObject<WDXDIXmlNode>*)inputNode;

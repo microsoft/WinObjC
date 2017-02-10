@@ -25,19 +25,13 @@
 // Due to how templates are compiled as needed, any new usage of templates needs to be "forced" in DrawingTest.cpp
 
 namespace testing {
-template <typename TComparator = PixelByPixelImageComparator<ComparisonMode::Exact>>
+template <typename TComparator = PixelByPixelImageComparator<>>
 class DrawTest : public ::testing::Test {
 private:
     woc::unique_cf<CGContextRef> _context;
     CGRect _bounds;
 
-protected:
-    static woc::unique_cf<CGColorSpaceRef> s_deviceColorSpace;
-
 public:
-    static void SetUpTestCase();
-    static void TearDownTestCase();
-
     virtual CFStringRef CreateAdditionalTestDescription();
     virtual CFStringRef CreateOutputFilename();
     virtual CGSize CanvasSize();

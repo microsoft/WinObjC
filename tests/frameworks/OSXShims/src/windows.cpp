@@ -53,16 +53,6 @@ void Sleep(DWORD dwMilliseconds) {
     sleep(dwMilliseconds);
 }
 
-DWORD GetModuleFileNameA(void* hModule, char* lpFilename, DWORD nSize) {
-    return _NSGetExecutablePath(lpFilename, &nSize);
-}
-
-DWORD GetModuleFileNameW(void* hModule, wchar_t* lpFilename, DWORD nSize) {
-    char tempBuffer[nSize];
-    _NSGetExecutablePath(tempBuffer, &nSize);
-    return mbstowcs(lpFilename, tempBuffer, nSize);
-}
-
 bool SetCurrentDirectoryW(const wchar_t* lpPathName) {
     char tempBuffer[_MAX_PATH];
     wcstombs(tempBuffer, lpPathName, _MAX_PATH);

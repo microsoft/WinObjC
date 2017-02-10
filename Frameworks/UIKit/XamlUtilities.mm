@@ -13,6 +13,7 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#import "AssertARCEnabled.h"
 #import "XamlUtilities.h"
 
 #import <UIKit/UIActivityIndicatorView.h>

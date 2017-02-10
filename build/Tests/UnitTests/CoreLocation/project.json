@@ -1,9 +1,14 @@
 ﻿{
   "dependencies": {
     "WinObjC.Language": "0.2.160915-*"
+    "Taef.Redist.Wlk": "1.0.170206001-nativeTargets"
   },
   "frameworks": {
-    "uap10.0": { }
+    "uap10.0": {
+      "imports": [
+        "native"
+      ]
+    }
   },
   "runtimes": {
     "win-arm": {},

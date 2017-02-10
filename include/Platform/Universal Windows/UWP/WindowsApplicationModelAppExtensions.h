@@ -45,7 +45,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPEXTENSIONS_EXPORT
 @interface WAAAppExtensionCatalog : RTObject
 + (WAAAppExtensionCatalog*)open:(NSString *)appExtensionName;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (EventRegistrationToken)addPackageInstalledEvent:(void(^)(WAAAppExtensionCatalog*, WAAAppExtensionPackageInstalledEventArgs*))del;
 - (void)removePackageInstalledEvent:(EventRegistrationToken)tok;
@@ -70,7 +70,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPEXTENSIONS_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPEXTENSIONS_EXPORT
 @interface WAAAppExtension : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WAAppInfo* appInfo;
 @property (readonly) NSString * Description;
@@ -90,7 +90,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPEXTENSIONS_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPEXTENSIONS_EXPORT
 @interface WAAAppExtensionPackageInstalledEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * appExtensionName;
 @property (readonly) NSArray* /* WAAAppExtension* */ extensions;
@@ -106,7 +106,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPEXTENSIONS_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPEXTENSIONS_EXPORT
 @interface WAAAppExtensionPackageUpdatingEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * appExtensionName;
 @property (readonly) WAPackage* package;
@@ -121,7 +121,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPEXTENSIONS_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPEXTENSIONS_EXPORT
 @interface WAAAppExtensionPackageUpdatedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * appExtensionName;
 @property (readonly) NSArray* /* WAAAppExtension* */ extensions;
@@ -137,7 +137,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPEXTENSIONS_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPEXTENSIONS_EXPORT
 @interface WAAAppExtensionPackageUninstallingEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * appExtensionName;
 @property (readonly) WAPackage* package;
@@ -152,7 +152,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPEXTENSIONS_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPEXTENSIONS_EXPORT
 @interface WAAAppExtensionPackageStatusChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * appExtensionName;
 @property (readonly) WAPackage* package;

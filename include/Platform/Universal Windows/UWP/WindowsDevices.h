@@ -64,7 +64,7 @@ OBJCUWP_WINDOWS_DEVICES_EXPORT
 @interface WDLowLevelDevicesAggregateProvider : RTObject <WDILowLevelDevicesAggregateProvider>
 + (WDLowLevelDevicesAggregateProvider*)make:(RTObject<WDAPIAdcControllerProvider>*)adc pwm:(RTObject<WDPPIPwmControllerProvider>*)pwm gpio:(RTObject<WDGPIGpioControllerProvider>*)gpio i2c:(RTObject<WDIPII2cControllerProvider>*)i2c spi:(RTObject<WDSPISpiControllerProvider>*)spi ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) RTObject<WDAPIAdcControllerProvider>* adcControllerProvider;
 @property (readonly) RTObject<WDGPIGpioControllerProvider>* gpioControllerProvider;
@@ -82,7 +82,7 @@ OBJCUWP_WINDOWS_DEVICES_EXPORT
 OBJCUWP_WINDOWS_DEVICES_EXPORT
 @interface WDLowLevelDevicesController : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 + (RTObject<WDILowLevelDevicesAggregateProvider>*)defaultProvider;
 + (void)setDefaultProvider:(RTObject<WDILowLevelDevicesAggregateProvider>*)value;

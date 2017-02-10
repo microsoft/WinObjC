@@ -20,7 +20,6 @@
 #import <UIKit/NSTextContainer.h>
 #import <UIKit/NSParagraphStyle.h>
 #import <UIKit/UIBezierPath.h>
-#include <CGContextInternal.h>
 
 #include <vector>
 #include <algorithm>
@@ -29,10 +28,8 @@ static constexpr CGFloat c_defaultPadding = 5.0f;
 @implementation NSTextContainer {
     CGSize _size;
     NSLayoutManager* _layoutManager;
-    StrongId<NSArray> _exclusionPaths;
-    // TODO 1394: Remove for CGD2D
     // All of the _exclusion* lists are expected to maintain the same lengths
-    std::vector<woc::unique_cf<CGContextRef>> _exclusionContexts;
+    StrongId<NSArray> _exclusionPaths;
     std::vector<CGRect> _exclusionPathBoundingRects;
 }
 
@@ -67,14 +64,9 @@ static constexpr CGFloat c_defaultPadding = 5.0f;
 
 - (void)setExclusionPaths:(NSArray*)paths {
     _exclusionPaths.attach([paths copy]);
-    // TODO 1394: Remove for CGD2D
-    _exclusionContexts.clear();
     _exclusionPathBoundingRects.clear();
     for (UIBezierPath* path in static_cast<NSArray*>(_exclusionPaths)) {
         // Create an empty bitmap context to be as small as possible
-        woc::unique_cf<CGContextRef> context{ CGBitmapContextCreate(nullptr, 1, 1, 1, 1, nullptr, 0) };
-        CGContextAddPath(context.get(), path.CGPath);
-        _exclusionContexts.emplace_back(std::move(context));
         _exclusionPathBoundingRects.emplace_back(CGPathGetBoundingBox(path.CGPath));
     }
 
@@ -99,7 +91,7 @@ static CGRect __FirstPossibleRectForProposed(CGRect proposed,
             }
         }
         if (path.origin.x + path.size.width > proposed.origin.x) {
-            proposed.origin.x = (path.origin.x + path.size.width) + padding;
+            proposed.origin.x = std::min((path.origin.x + path.size.width) + padding, maxWidth);
             proposed.size.width = maxWidth - proposed.origin.x;
         }
     }
@@ -108,11 +100,11 @@ static CGRect __FirstPossibleRectForProposed(CGRect proposed,
 }
 
 // Finds the first point at which the given rect intersects the given exclusionContext, moving by delta each iteration
-static CGFloat __GetXPositionIntersectingZone(CGRect rect, const CGContextRef exclusionContext, CGFloat delta, CGFloat maxWidth) {
+static CGFloat __GetXPositionIntersectingZone(CGRect rect, const CGPathRef cgpath, CGFloat delta, CGFloat maxWidth) {
     while (0 <= rect.origin.x && rect.origin.x < maxWidth &&
-           !CGContextIsPointInPath(exclusionContext, true, rect.origin.x + delta, rect.origin.y) &&
-           !CGContextIsPointInPath(exclusionContext, true, rect.origin.x + delta, rect.origin.y + rect.size.height / 2.0) &&
-           !CGContextIsPointInPath(exclusionContext, true, rect.origin.x + delta, rect.origin.y + rect.size.height)) {
+           !CGPathContainsPoint(cgpath, nullptr, { rect.origin.x + delta, rect.origin.y }, YES) &&
+           !CGPathContainsPoint(cgpath, nullptr, { rect.origin.x + delta, rect.origin.y + rect.size.height / 2.0 }, YES) &&
+           !CGPathContainsPoint(cgpath, nullptr, { rect.origin.x + delta, rect.origin.y + rect.size.height }, YES)) {
         rect.origin.x += delta;
     }
 
@@ -152,17 +144,15 @@ static CGFloat __GetXPositionIntersectingZone(CGRect rect, const CGContextRef ex
         if (CGRectIntersectsRect(proposed, boundingRect)) {
             // Get maximum outer points to minimize stepping
             CGRect lineIntersection = CGRectMake(boundingRect.origin.x, proposed.origin.y, boundingRect.size.width, proposed.size.height);
-            // TODO 1394: Remove and replace with CGPath
-            CGContextRef exclusionContext = _exclusionContexts[i].get();
+            UIBezierPath* path = [_exclusionPaths objectAtIndex:i];
 
-            // TODO 1394: Convert to CGPathContainsPoint for CGD2D
             // Find the leftmost and rightmost points of the exclusion zone intersecting the same horizontal region as the proposed rect
-            lineIntersection.origin.x = __GetXPositionIntersectingZone(lineIntersection, exclusionContext, padding, _size.width);
+            lineIntersection.origin.x = __GetXPositionIntersectingZone(lineIntersection, path.CGPath, padding, _size.width);
             CGFloat rightmostPosition = __GetXPositionIntersectingZone(CGRectMake(lineIntersection.origin.x + lineIntersection.size.width,
                                                                                   lineIntersection.origin.y,
                                                                                   lineIntersection.size.width,
                                                                                   lineIntersection.size.height),
-                                                                       exclusionContext,
+                                                                       path.CGPath,
                                                                        -padding,
                                                                        _size.width);
             lineIntersection.size.width = rightmostPosition - lineIntersection.origin.x;

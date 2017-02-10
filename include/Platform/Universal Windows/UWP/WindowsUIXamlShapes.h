@@ -189,7 +189,7 @@ OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
@@ -211,7 +211,7 @@ OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 @interface WXUIElement : WXDependencyObject
 + (BOOL)tryStartDirectManipulation:(WUXIPointer*)value;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL isHitTestVisible;
 @property BOOL isDoubleTapEnabled;
@@ -379,7 +379,7 @@ OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 @interface WXFrameworkElement : WXUIElement
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double height;
 @property WXFlowDirection flowDirection;
@@ -465,7 +465,7 @@ OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 @interface WUXSShape : WXFrameworkElement
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WUXMDoubleCollection* strokeDashArray;
 @property (retain) WUXMBrush* stroke;
@@ -501,9 +501,9 @@ OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 @interface WUXSEllipse : WUXSShape
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @end
 
@@ -515,9 +515,9 @@ OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 @interface WUXSLine : WUXSShape
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double y2;
 @property double y1;
@@ -537,9 +537,9 @@ OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 @interface WUXSPath : WUXSShape
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WUXMGeometry* data;
 + (WXDependencyProperty*)dataProperty;
@@ -553,9 +553,9 @@ OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 @interface WUXSPolygon : WUXSShape
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WUXMPointCollection* points;
 @property WUXMFillRule fillRule;
@@ -571,9 +571,9 @@ OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 @interface WUXSPolyline : WUXSShape
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WUXMPointCollection* points;
 @property WUXMFillRule fillRule;
@@ -589,9 +589,9 @@ OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 @interface WUXSRectangle : WUXSShape
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double radiusY;
 @property double radiusX;

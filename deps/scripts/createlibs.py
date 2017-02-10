@@ -7,7 +7,6 @@ THIRDPARTY_PATH = '..\\3rdparty\\'
 
 LIBJPEG_PROJ = '..\\3rdparty\\libjpeg\\build\\libjpegWin10\\libjpeg.vcxproj'
 LIBXML_PROJ = '..\\3rdparty\\libxml2legacy\\Win10\\libxml2.Win10.vcxproj'
-PIXMAN_PROJ = '..\\3rdparty\\pixmanlegacy\\Win10\\pixmanlegacy.Windows10\\pixmanlegacy.Windows10.vcxproj'
 OPENAL_PROJ = '..\\3rdparty\\openal-soft-winphone\\winrt.vs2015\\OpenAL\\OpenAL.vcxproj'
 CASSOWARY_PROJ = '..\\3rdparty\\cassowary-0.60\\cassowary-0.60-Windows.vcxproj'
 LIBOBJC_PROJ = '..\\3rdparty\\libobjc2\\msvc\\libobjc2.vcxproj'
@@ -30,26 +29,13 @@ def run():
         subprocess.call(MSBUILD_PATH + ' ' + LIBXML_PROJ + ' ' + RELEASE_X64)
         subprocess.call(MSBUILD_PATH + ' ' + LIBXML_PROJ + ' ' + RELEASE_ARM)
 
-        subprocess.call(MSBUILD_PATH + ' ' + PIXMAN_PROJ + ' ' + RELEASE_X86)
-        subprocess.call(MSBUILD_PATH + ' ' + PIXMAN_PROJ + ' ' + RELEASE_X64)
-        subprocess.call(MSBUILD_PATH + ' ' + PIXMAN_PROJ + ' ' + RELEASE_ARM)
-
-    print "Building freetype2"
-    subprocess.call("python freetype2.py")
     print "Building zlib"
     subprocess.call("python zlib.py")
-    print "Building libpng"
-    subprocess.call("python libpng.py")
-
-    print "Building cairo"
-    subprocess.call(VCVARSALL_PATH + ' x86 && cairo.bat x86')
-    subprocess.call(VCVARSALL_PATH + ' x86_x64 && cairo.bat x64')
-    subprocess.call(VCVARSALL_PATH + ' x86_arm && cairo.bat arm')
 
     print "Building openssl"
     # Need to update openssl submodule
     #subprocess.call(".\openssl.bat ARM x86 x64")
-    
+
     if BUILD_MSBUILD_LIBS == True:
         subprocess.call(MSBUILD_PATH + ' ' + OPENAL_PROJ + ' ' + RELEASE_X86)
         subprocess.call(MSBUILD_PATH + ' ' + OPENAL_PROJ + ' ' + RELEASE_X64)

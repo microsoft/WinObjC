@@ -129,7 +129,7 @@ static void initInternal(UISearchBar* self) {
     _placeholder = [coder decodeObjectForKey:@"UIPlaceholder"];
 
     if (scopeBarTitles) {
-        _scopeButtons = [[UISegmentedControl alloc] initWithItems:scopeBarTitles];
+        _scopeButtons.attach([[UISegmentedControl alloc] initWithItems:scopeBarTitles]);
         [self addSubview:(id)_scopeButtons];
 
         [_scopeButtons setSelectedSegmentIndex:0];

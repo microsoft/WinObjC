@@ -97,7 +97,7 @@ OBJCUWP_WINDOWS_WEB_HTTP_FILTERS_EXPORT
 OBJCUWP_WINDOWS_WEB_HTTP_FILTERS_EXPORT
 @interface WWHFHttpCacheControl : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WWHFHttpCacheWriteBehavior writeBehavior;
 @property WWHFHttpCacheReadBehavior readBehavior;
@@ -111,9 +111,9 @@ OBJCUWP_WINDOWS_WEB_HTTP_FILTERS_EXPORT
 
 OBJCUWP_WINDOWS_WEB_HTTP_FILTERS_EXPORT
 @interface WWHFHttpBaseProtocolFilter : RTObject <WWHFIHttpFilter, WFIClosable>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL useProxy;
 @property (retain) WSCPasswordCredential* serverCredential;
@@ -144,7 +144,7 @@ OBJCUWP_WINDOWS_WEB_HTTP_FILTERS_EXPORT
 OBJCUWP_WINDOWS_WEB_HTTP_FILTERS_EXPORT
 @interface WWHFHttpServerCustomValidationRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WWHHttpRequestMessage* requestMessage;
 @property (readonly) WSCCCertificate* serverCertificate;

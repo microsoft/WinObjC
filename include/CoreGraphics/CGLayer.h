@@ -16,6 +16,9 @@
 #pragma once
 
 #import <CoreGraphics/CoreGraphicsExport.h>
+
+typedef struct __CGLayer* CGLayerRef;
+
 #import <CoreGraphics/CGGeometry.h>
 #import <CoreGraphics/CGContext.h>
 

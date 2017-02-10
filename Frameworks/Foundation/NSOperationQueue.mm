@@ -30,326 +30,167 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import "LoggingNative.h"
 #import "NSOperationInternal.h"
 
-#include <deque>
-#include <mutex>
-#include <condition_variable>
-#include <algorithm>
-#include <memory>
-
 static const wchar_t* TAG = L"NSOperationQueue";
 
-// NOTE: NSOperationQueuePriv is totally not needed. This class is just acting as the logic encapsulation of state and data ownership for
-// the
-// operation queue class. The ObjectiveC class itself is perfectly capable of storing and using all this information. This is simply a
-// vestige
-// of the previous implementation.
-class NSOperationQueuePriv {
-public:
-    NSOperationQueuePriv(NSOperationQueue* parent) : _thread(nullptr), _maxConcurrentOperationCount(1), _isSuspended(NO) {
-        _name.attach([[NSString alloc] initWithFormat:@"NSOperationQueue %08x", parent]);
-    }
+typedef void* gpointer;
 
-    NSString* Name() {
-        std::lock_guard<std::mutex> lock(_lock);
-        return _name;
-    }
+struct NSAtomicListNode {
+    struct NSAtomicListNode* next;
+    StrongId<NSObject> elt;
+};
+typedef struct NSAtomicListNode* NSAtomicListRef;
 
-    void SetName(NSString* name) {
-        std::lock_guard<std::mutex> lock(_lock);
-        _name.attach([name copy]);
-    }
+struct NSOperationQueuePriv {
+    NSAtomicListRef myQueues[NSOperationQueuePriority_Count];
+    NSAtomicListRef queues[NSOperationQueuePriority_Count];
 
-    BOOL RunOperationFromLists(unsigned int priority) {
-        StrongId<NSOperation> candidateOperation;
-
-        {
-            std::lock_guard<std::mutex> lock(_lock);
-            if (_candidateOperationsToRunNext[priority].empty()) {
-                // No operations "on deck". Go pull some more in from the holding area.
-                // Holding area lists are in LIFO order, but we want to execute operations in the order they were enqueued
-                // so we reverse the list before we do anything with it.
-                _candidateOperationsToRunNext[priority].swap(_operationsHoldingArea[priority]);
-                std::reverse(_candidateOperationsToRunNext[priority].begin(), _candidateOperationsToRunNext[priority].end());
-            }
-
-            if (!_candidateOperationsToRunNext[priority].empty()) {
-                candidateOperation = _candidateOperationsToRunNext[priority].back();
-                _candidateOperationsToRunNext[priority].pop_back();
-            }
-        }
-
-        // Now that a candidate has been determined, drop the lock so that it can potientially run.
-        // NOTE: a [operation start] call will potienitally run the operation on this thread.
-
-        if (candidateOperation != nil) {
-            // Valid candidate to start. Make sure its actually ready for liftoff.
-            if ([candidateOperation isReady]) {
-                {
-                    std::lock_guard<std::mutex> lock(_lock);
-
-                    // Start it and set to current operation so that accounting methods (operationCount and friends)
-                    // can still include this guy even though it is no longer in any list.
-                    // NOTE: this (incorrectly) assumes that only one operation is ever running at a time. This is easily
-                    // seen to be false whe considering asynchronous operations and any values of _maxConcurrentOperationCount
-                    // other than 1 (currently ignored but should be added in the future).
-                    _curOperation = candidateOperation;
-                }
-
-                [candidateOperation start];
-
-                {
-                    std::lock_guard<std::mutex> lock(_lock);
-
-                    // Clear the current operation now that start is finished.
-                    // NOTE: the assumption (inccorect) here is that the operation is now finished and
-                    // we no longer need any accounting of the current operation.
-                    // This is wrong because an operation could be a new fangled asynchronous
-                    // one and it could finish muc later (not synchronously executed with [operation start]).
-                    _curOperation = nil;
-                }
-            } else {
-                {
-                    std::lock_guard<std::mutex> lock(_lock);
-                    // Not yet ready. Demote it to the holding area. Will pick it up again later.
-                    _operationsHoldingArea[priority].emplace_back(std::move(candidateOperation));
-                }
-
-                // We claim that we have done some work here. This keeps the queue pumping and
-                // will eventually bring this item back out for consideration and will continue
-                // through this list for anyother ready operations.
-                return TRUE;
-            }
-        }
-
-        return candidateOperation != nil;
-    }
-
-    void WaitUntilNotSuspended() {
-        std::unique_lock<std::mutex> lock(_lock);
-        while (_isSuspended) {
-            _suspendedCondition.wait(lock);
-        }
-        lock.unlock();
-    }
-
-    void ClearCandidateLists() {
-        std::lock_guard<std::mutex> lock(_lock);
-        for (int i = 0; i < NSOperationQueuePriority_Count; i++) {
-            _candidateOperationsToRunNext[i].clear();
-        }
-    }
-
-    BOOL HasMoreWork() {
-        std::lock_guard<std::mutex> lock(_lock);
-
-        BOOL toReturn = _HasMoreWorkNoLock();
-
-        if (!toReturn) {
-            // No work left to do. Clear out the thread here. This signals that a new work thread is needed to be created and
-            // current one can end its execution.
-            //
-            // NOTE: its awfully weird to have a "getter" have a side effect like nil'ing out _thread. This is needed because the
-            // decision to stop the work thread is made based on not having more work and this means that the thread needs restarted
-            // on the next go around. A real fix is to not manage the thread manually and use a threadpool or other mechanism to run the
-            // operations.
-            _thread = nil;
-        }
-
-        return toReturn;
-    }
-
-    void AddOperation(NSOperation* operation, unsigned int priority, NSOperationQueue* queue, SEL selector) {
-        {
-            std::lock_guard<std::mutex> lock(_lock);
-
-            StrongId<NSOperation> strongOperation = operation;
-            _operationsHoldingArea[priority].emplace_back(std::move(strongOperation));
-            if (_thread == nil || _thread.get().finished) {
-                _thread.attach([[NSThread alloc] initWithTarget:queue selector:selector object:nil]);
-                [_thread start];
-            }
-        }
-
-        _workAvailableCondition.notify_one();
-    }
-
-    void SignalAllWorkDone() {
-        _allWorkDoneCondition.notify_one();
-    }
-
-    void WaitUntilAllOperationsAreFinished() {
-        std::unique_lock<std::mutex> lock(_lock);
-
-        while (_HasMoreWorkNoLock()) {
-            _allWorkDoneCondition.wait(lock);
-        }
-    }
-
-    void SetMaxConcurrentOperationCount(NSInteger count) {
-        std::lock_guard<std::mutex> lock(_lock);
-        _maxConcurrentOperationCount = count;
-    }
-
-    NSInteger MaxConcurrentOperationCount() {
-        std::lock_guard<std::mutex> lock(_lock);
-        return _maxConcurrentOperationCount;
-    }
-
-    NSArray<NSOperation*>* GetOperations() {
-        std::lock_guard<std::mutex> lock(_lock);
-
-        id ret = [NSMutableArray array];
-
-        if (_curOperation != nil) {
-            [ret addObject:_curOperation];
-        }
-
-        for (int i = 0; i < NSOperationQueuePriority_Count; i++) {
-            if (!_operationsHoldingArea[i].empty()) {
-                for (const auto& op : _operationsHoldingArea[i]) {
-                    [ret addObject:op];
-                }
-            }
-
-            if (!_candidateOperationsToRunNext[i].empty()) {
-                for (const auto& op : _candidateOperationsToRunNext[i]) {
-                    [ret addObject:op];
-                }
-            }
-        }
-
-        return ret;
-    }
-
-    unsigned int GetOperationCount() {
-        std::lock_guard<std::mutex> lock(_lock);
-
-        unsigned int ret = 0;
-
-        if (_curOperation != nil) {
-            ret++;
-        }
-
-        for (int i = 0; i < NSOperationQueuePriority_Count; i++) {
-            ret += _operationsHoldingArea[i].size();
-            ret += _candidateOperationsToRunNext[i].size();
-        }
-
-        return ret;
-    }
-
-    void CancelAllOperations() {
-        std::lock_guard<std::mutex> lock(_lock);
-
-        if (_curOperation != nil) {
-            [_curOperation cancel];
-        }
-
-        for (int i = 0; i < NSOperationQueuePriority_Count; i++) {
-            if (!_operationsHoldingArea[i].empty()) {
-                for (const auto& op : _operationsHoldingArea[i]) {
-                    [op cancel];
-                }
-            }
-
-            if (!_candidateOperationsToRunNext[i].empty()) {
-                for (const auto& op : _candidateOperationsToRunNext[i]) {
-                    [op cancel];
-                }
-            }
-        }
-    }
-
-    void Resume() {
-        BOOL shouldBroadcast = FALSE;
-        {
-            std::lock_guard<std::mutex> lock(_lock);
-            if (_isSuspended) {
-                _isSuspended = FALSE;
-                shouldBroadcast = TRUE;
-            }
-        }
-
-        if (shouldBroadcast) {
-            _suspendedCondition.notify_all();
-        }
-    }
-
-    void Suspend() {
-        std::lock_guard<std::mutex> lock(_lock);
-        _isSuspended = TRUE;
-    }
-
-    BOOL IsSuspended() {
-        std::lock_guard<std::mutex> lock(_lock);
-        return _isSuspended;
-    }
-
-private:
-    // NOTE: this method is intended to be run under the lock but does not take the lock itself.
-    BOOL _HasMoreWorkNoLock() {
-        if (_curOperation != nil) {
-            return TRUE;
-        }
-
-        // NOTE: This may be insufficient / racy. This only checks the holding area and not "on deck" items.
-        // Its possible that the check is made right after a transfer to on deck which would incorrectly report
-        // all done when some items may go back into holding and certainly all of them aren't completed. This particularly
-        // would affect WaitUntilAllOperationsAreFinished.
-        for (int i = 0; i < NSOperationQueuePriority_Count; i++) {
-            if (_operationsHoldingArea[i].empty()) {
-                return TRUE;
-            }
-        }
-
-        return FALSE;
-    }
-
-    std::deque<StrongId<NSOperation>> _candidateOperationsToRunNext[NSOperationQueuePriority_Count];
-    std::deque<StrongId<NSOperation>> _operationsHoldingArea[NSOperationQueuePriority_Count];
-
-    StrongId<NSThread> _thread;
+    NSThread* _thread;
+    pthread_mutex_t _threadRunningLock;
 
     DWORD _maxConcurrentOperationCount;
-    std::condition_variable _workAvailableCondition;
-    std::condition_variable _suspendedCondition;
-    std::condition_variable _allWorkDoneCondition;
-    StrongId<NSOperation> _curOperation;
-    BOOL _isSuspended;
+    id workAvailable;
+    id suspendedCondition;
+    id allWorkDone;
+    id curOperation;
+    BOOL isSuspended;
 
-    StrongId<NSString> _name;
+    id _name;
 
-    // NOTE: a normal (as opposed to recursive) mutex is used here to interop with condition variable.
-    // This helps simplify the locking in this class in that fewer locks are used so the overall ownership
-    // of the state this class owns is encapsulated under the single lock. However, this also means that
-    // special care is needed to ensure that no re-entrant functions are used while under the lock.
-    std::mutex _lock;
+    NSOperationQueuePriv() {
+        memset(this, 0, sizeof(NSOperationQueuePriv));
+        _threadRunningLock = PTHREAD_MUTEX_INITIALIZER;
+    }
 };
 
+extern pthread_key_t g_currentDispatchQueue;
+
+static inline gpointer CompareExchangePointer(volatile gpointer* dest, gpointer exch, gpointer comp) {
+    return (gpointer)EbrCompareExchange((volatile int*)dest, (long)exch, (long)comp);
+}
+
+NSAtomicListRef NSAtomicListSteal(NSAtomicListRef* listPtr) {
+    NSAtomicListRef ret;
+    do {
+        ret = *listPtr;
+    } while (CompareExchangePointer((void**)listPtr, NULL, ret) != ret);
+    return ret;
+}
+
+void NSAtomicListReverse(NSAtomicListRef* listPtr) {
+    struct NSAtomicListNode* cur = *listPtr;
+    struct NSAtomicListNode* prev = NULL;
+    struct NSAtomicListNode* next = NULL;
+
+    if (!cur) {
+        return;
+    }
+
+    do {
+        next = cur->next;
+        cur->next = prev;
+
+        if (next) {
+            prev = cur;
+            cur = next;
+        }
+    } while (next);
+
+    *listPtr = cur;
+}
+
+NSObject* NSAtomicListPop(NSAtomicListRef* listPtr) {
+    struct NSAtomicListNode* node = *listPtr;
+    if (!node) {
+        return NULL;
+    }
+
+    *listPtr = node->next;
+
+    NSObject* elt = [[node->elt retain] autorelease];
+    delete node;
+    return elt;
+}
+
+NSObject* NSAtomicListPeek(NSAtomicListRef* listPtr) {
+    struct NSAtomicListNode* node = *listPtr;
+    if (!node) {
+        return NULL;
+    }
+
+    return node->elt;
+}
+
+void NSAtomicListInsert(NSAtomicListRef* listPtr, NSObject* elt) {
+    struct NSAtomicListNode* node = new NSAtomicListNode();
+    node->elt = elt;
+
+    do {
+        node->next = *listPtr;
+    } while (CompareExchangePointer((void**)listPtr, node, node->next) != node->next);
+}
+
+static id _mainQueue;
+
 @interface NSOperationQueue () {
-    std::unique_ptr<NSOperationQueuePriv> _priv;
+    struct NSOperationQueuePriv* priv;
     dispatch_queue_t _completionQueue;
 }
 @end
 
 @implementation NSOperationQueue
+static void ClearList(NSAtomicListRef* listPtr) {
+    for (int i = 0; i < NSOperationQueuePriority_Count; i++) {
+        while (NSAtomicListPop(&listPtr[i])) {
+            ;
+        }
+    }
+}
+
+static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sourceListPtr, id* curOperation) {
+    StrongId<NSOperation> op = NSAtomicListPop(listPtr);
+    if (op == nil) {
+        *listPtr = NSAtomicListSteal(sourceListPtr);
+        // source lists are in LIFO order, but we want to execute operations in the order they were enqueued
+        // so we reverse the list before we do anything with it
+        NSAtomicListReverse(listPtr);
+        op = NSAtomicListPop(listPtr);
+    }
+
+    if (op != nil) {
+        if ([op isReady]) {
+            *curOperation = op;
+            [op start];
+            *curOperation = nil;
+        } else {
+            NSAtomicListInsert(sourceListPtr, op);
+            // We claim that we have done some work here.
+            // Otherwise, this work session is considered to be over and we clear the pending queue.
+            return TRUE;
+        }
+    }
+
+    return op != nil;
+}
 
 - (id)_workThread {
-    do {
-        [self _doMainWork];
-    } while (_priv->HasMoreWork());
+    BOOL stop = FALSE;
 
-    _priv->SignalAllWorkDone();
+    while (!stop) {
+        [self _doMainWork];
+        pthread_mutex_lock(&priv->_threadRunningLock);
+        if (![self hasMoreWork]) {
+            stop = TRUE;
+            priv->_thread = nil;
+        }
+        pthread_mutex_unlock(&priv->_threadRunningLock);
+    }
+    [priv->allWorkDone signal];
 
     return self;
 }
 
 - (NSOperationQueue*)_doMainWork {
-    // Start from a clean slate by clearing out the candidate lists.
-    // NOTE: This assumes that the candidate lists are already empty as clearing the candidate list
-    // when not empty would mean permanently losing that operation. Its probably advisable to remove this
-    // all together or restructuring the holding area -> candidate list transition to make sure this always holds true.
-    _priv->ClearCandidateLists();
+    memset(priv->myQueues, 0, sizeof(priv->myQueues));
 
     BOOL didWork;
 
@@ -359,11 +200,15 @@ private:
         didWork = FALSE;
 
         for (int i = 0; i < NSOperationQueuePriority_Count; i++) {
-            // Wait until the operation queue is no longer suspended.
-            // NOTE: if an operation queue becomes suspended after this point, the "in flight" operation
-            // will not be suspended, it will continue as if the queue is still running.
-            _priv->WaitUntilNotSuspended();
-            didWork |= _priv->RunOperationFromLists(i);
+            [priv->suspendedCondition lock];
+            while (priv->isSuspended) {
+                [priv->suspendedCondition wait];
+            }
+            [priv->suspendedCondition unlock];
+
+            if (RunOperationFromLists(&priv->myQueues[i], &priv->queues[i], &priv->curOperation)) {
+                didWork = TRUE;
+            }
         }
     } while (didWork);
 
@@ -375,11 +220,47 @@ private:
 /**
  @Status Interoperable
 */
+- (BOOL)hasMoreWork {
+    if (priv->curOperation != nil) {
+        return TRUE;
+    }
+
+    for (int i = 0; i < NSOperationQueuePriority_Count; i++) {
+        if (priv->queues[i] != NULL) {
+            return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+
+/**
+ @Status Interoperable
+*/
 - (id)init {
     if (self = [super init]) {
+        priv = new NSOperationQueuePriv();
+
+        priv->_maxConcurrentOperationCount = 1;
+        priv->workAvailable = [[NSCondition alloc] init];
+        priv->suspendedCondition = [[NSCondition alloc] init];
+        priv->allWorkDone = [[NSCondition alloc] init];
+        priv->isSuspended = 0;
+
         _completionQueue = dispatch_queue_create("NSOperation finish queue", nullptr);
-        _priv = std::make_unique<NSOperationQueuePriv>(self);
     }
+
+    return self;
+}
+
+- (id)_initMainThread {
+    priv = new NSOperationQueuePriv();
+
+    priv->_maxConcurrentOperationCount = 1;
+    priv->workAvailable = [[NSCondition alloc] init];
+    priv->suspendedCondition = [[NSCondition alloc] init];
+    priv->allWorkDone = [[NSCondition alloc] init];
+    priv->isSuspended = 0;
 
     return self;
 }
@@ -388,6 +269,16 @@ private:
  @Status Interoperable
 */
 - (void)addOperation:(id)op {
+    /*
+    //  Add any dependencies
+    id dependencies = [op dependencies];
+    int count = [dependencies count];
+    for ( int i = 0; i < count; i ++ ) {
+    id curDep = [dependencies objectAtIndex:i];
+    [self addOperation:curDep];
+    }
+    */
+
     [op _setCompletionQueue:_completionQueue];
 
     unsigned priority = 1;
@@ -397,7 +288,16 @@ private:
         priority = 0;
     }
 
-    _priv->AddOperation(op, priority, self, @selector(_workThread));
+    NSAtomicListInsert(&priv->queues[priority], op);
+    [priv->workAvailable signal];
+
+    pthread_mutex_lock(&priv->_threadRunningLock);
+    if (priv->_thread == nil) {
+        priv->_thread = [[NSThread alloc] initWithTarget:self selector:@selector(_workThread) object:nil];
+        [priv->_thread start];
+        [priv->_thread release];
+    }
+    pthread_mutex_unlock(&priv->_threadRunningLock);
 }
 
 /**
@@ -430,7 +330,7 @@ private:
 */
 - (void)setMaxConcurrentOperationCount:(NSInteger)count {
     UNIMPLEMENTED();
-    _priv->SetMaxConcurrentOperationCount(count);
+    priv->_maxConcurrentOperationCount = count;
 }
 
 /**
@@ -438,35 +338,124 @@ private:
 */
 - (NSInteger)maxConcurrentOperationCount {
     UNIMPLEMENTED();
-    return _priv->MaxConcurrentOperationCount();
+    return priv->_maxConcurrentOperationCount;
 }
 
 /**
  @Status Interoperable
 */
-- (NSArray<NSOperation*>*)operations {
-    return _priv->GetOperations();
+- (id)operations {
+    id ret = [NSMutableArray array];
+
+    TraceVerbose(TAG, L"Should lock queue for this");
+    id cur = priv->curOperation;
+    if (cur != nil) {
+        [ret addObject:cur];
+    }
+
+    for (int i = 0; i < NSOperationQueuePriority_Count; i++) {
+        if (priv->queues[i] != NULL) {
+            NSAtomicListNode* curNode = priv->queues[i];
+
+            while (curNode != NULL) {
+                id node = curNode->elt;
+                [ret addObject:node];
+                curNode = curNode->next;
+            }
+        }
+        if (priv->myQueues[i] != NULL) {
+            NSAtomicListNode* curNode = priv->myQueues[i];
+
+            while (curNode != NULL) {
+                id node = curNode->elt;
+                [ret addObject:node];
+                curNode = curNode->next;
+            }
+        }
+    }
+
+    return ret;
 }
 
 /**
  @Status Interoperable
 */
 - (unsigned)operationCount {
-    return _priv->GetOperationCount();
+    DWORD ret = 0;
+
+    id cur = priv->curOperation;
+    if (cur != nil) {
+        ret++;
+    }
+    for (int i = 0; i < NSOperationQueuePriority_Count; i++) {
+        if (priv->queues[i] != NULL) {
+            NSAtomicListNode* curNode = priv->queues[i];
+
+            while (curNode != NULL) {
+                ret++;
+                curNode = curNode->next;
+            }
+        }
+        if (priv->myQueues[i] != NULL) {
+            NSAtomicListNode* curNode = priv->myQueues[i];
+
+            while (curNode != NULL) {
+                ret++;
+                curNode = curNode->next;
+            }
+        }
+    }
+
+    return ret;
 }
 
 /**
  @Status Interoperable
 */
 - (void)cancelAllOperations {
-    return _priv->CancelAllOperations();
+    TraceVerbose(TAG, L"Should lock queue for this");
+
+    id cur = priv->curOperation;
+    if (cur != nil) {
+        [cur cancel];
+    }
+
+    for (int i = 0; i < NSOperationQueuePriority_Count; i++) {
+        if (priv->queues[i] != NULL) {
+            NSAtomicListNode* curNode = priv->queues[i];
+
+            while (curNode != NULL) {
+                id node = curNode->elt;
+                [node cancel];
+                curNode = curNode->next;
+            }
+        }
+        if (priv->myQueues[i] != NULL) {
+            NSAtomicListNode* curNode = priv->myQueues[i];
+
+            while (curNode != NULL) {
+                id node = curNode->elt;
+                [node cancel];
+                curNode = curNode->next;
+            }
+        }
+    }
 }
 
 /**
  @Status Interoperable
 */
 - (void)waitUntilAllOperationsAreFinished {
-    _priv->WaitUntilAllOperationsAreFinished();
+    BOOL isWorking;
+
+    [priv->workAvailable lock];
+    isWorking = [self hasMoreWork];
+
+    if (isWorking) {
+        [priv->allWorkDone wait];
+        isWorking = [self hasMoreWork];
+    }
+    [priv->workAvailable unlock];
 }
 
 /**
@@ -483,8 +472,25 @@ private:
 /**
  @Status Interoperable
 */
+- (BOOL)isSuspended {
+    [priv->suspendedCondition lock];
+    int ret = priv->isSuspended;
+    [priv->suspendedCondition unlock];
+
+    return ret;
+}
+
+/**
+ @Status Interoperable
+*/
 - (id)resume {
-    _priv->Resume();
+    [priv->suspendedCondition lock];
+    if (priv->isSuspended) {
+        priv->isSuspended = FALSE;
+        [priv->suspendedCondition broadcast];
+    }
+    [priv->suspendedCondition unlock];
+
     return self;
 }
 
@@ -492,7 +498,10 @@ private:
  @Status Interoperable
 */
 - (id)suspend {
-    _priv->Suspend();
+    [priv->suspendedCondition lock];
+    priv->isSuspended = TRUE;
+    [priv->suspendedCondition unlock];
+
     return self;
 }
 
@@ -500,25 +509,32 @@ private:
  @Status Interoperable
 */
 - (void)setName:(id)name {
-    _priv->SetName(name);
+    id oldName = priv->_name;
+    priv->_name = [name copy];
+    [oldName release];
 }
 
 /**
  @Status Interoperable
 */
 - (id)name {
-    return _priv->Name();
-}
+    if (priv->_name == nil) {
+        char szName[255];
+        sprintf_s(szName, sizeof(szName), "NSOperationQueue %08x", (unsigned int)self);
+        priv->_name = [[NSString stringWithCString:szName] retain];
+    }
 
-- (BOOL)isSuspended {
-    return _priv->IsSuspended();
+    return priv->_name;
 }
 
 /**
  @Status Interoperable
 */
 + (id)mainQueue {
-    static StrongId<NSOperationQueue> _mainQueue = [[[self alloc] init] autorelease];
+    if (_mainQueue == nil) {
+        _mainQueue = [[self alloc] _initMainThread];
+    }
+
     return _mainQueue;
 }
 
@@ -526,8 +542,29 @@ private:
  @Status Interoperable
 */
 - (void)dealloc {
+    [priv->workAvailable release];
+    [priv->suspendedCondition release];
+    [priv->allWorkDone release];
+    pthread_mutex_destroy(&priv->_threadRunningLock);
+    delete priv;
+
     dispatch_release(_completionQueue);
+
     [super dealloc];
+}
+
+/**
+ @Status Interoperable
+*/
+- (id)retain {
+    return [super retain];
+}
+
+/**
+ @Status Interoperable
+*/
+- (oneway void)release {
+    [super release];
 }
 
 /**
@@ -538,8 +575,6 @@ private:
         return [self mainQueue];
     }
 
-    // NOTE: this is obviously wrong as self is a META class not an instance of the class.
-    // Likely there needs to be thread local storage queue or perhaps just only return the mainQueue
     assert(0);
 
     return self;

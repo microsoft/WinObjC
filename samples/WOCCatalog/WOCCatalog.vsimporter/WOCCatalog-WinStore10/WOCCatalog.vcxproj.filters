@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
@@ -75,9 +75,6 @@
     <ClInclude Include="..\..\WOCCatalog\BezierViewController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WOCCatalog\ButtonsViewController.h">
-      <Filter>WOCCatalog</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\WOCCatalog\ControlsViewController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>
@@ -88,9 +85,6 @@
       <Filter>WOCCatalog</Filter>
     </ClInclude>
     <ClInclude Include="..\..\WOCCatalog\DisplayModeViewController.h">
-      <Filter>WOCCatalog</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\WOCCatalog\FoundationsViewController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>
     <ClInclude Include="..\..\WOCCatalog\GLKitExampleController.h">
@@ -141,9 +135,6 @@
     <ClInclude Include="..\..\WOCCatalog\SingleImageViewController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WOCCatalog\TaskInfoViewController.h">
-      <Filter>WOCCatalog</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\WOCCatalog\TextDisplayViewController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>
@@ -154,9 +145,6 @@
       <Filter>WOCCatalog</Filter>
     </ClInclude>
     <ClInclude Include="..\..\WOCCatalog\UIPasteboardViewController.h">
-      <Filter>WOCCatalog</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\WOCCatalog\UserDefaultsViewController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>
     <ClInclude Include="..\..\WOCCatalog\ViewController.h">
@@ -195,9 +183,6 @@
     <ClangCompile Include="..\..\WOCCatalog\BezierViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\ButtonsViewController.m">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\ControlsViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
@@ -210,9 +195,6 @@
     <ClangCompile Include="..\..\WOCCatalog\DisplayModeViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\FoundationsViewController.m">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\GLKitExampleController.mm">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
@@ -221,7 +203,7 @@
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\GesturesViewController.m">
       <Filter>WOCCatalog</Filter>
-    </ClangCompile>    
+    </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\ImagesViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
@@ -261,9 +243,6 @@
     <ClangCompile Include="..\..\WOCCatalog\SingleImageViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\TaskInfoViewController.m">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\TextDisplayViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
@@ -274,15 +253,6 @@
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\UIPasteboardViewController.m">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\URLDownloadCell.mm">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\URLSessionViewController.mm">
-      <Filter>WOCCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\UserDefaultsViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\ViewController.m">
@@ -361,5 +331,16 @@
     <XibCompile Include="..\..\WOCCatalog\BezierViewController.xib">
       <Filter>WOCCatalog</Filter>
     </XibCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="App.xaml.cpp" />
+    <ClCompile Include="pch.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="App.xaml.h" />
   </ItemGroup>
 </Project>

@@ -22,20 +22,11 @@
 #include <Starboard/SmartTypes.h>
 #include <memory>
 
+#if WINOBJC // Test with _CGContextPushBegin/PopEndDraw
+#import "CGContextInternal.h"
+#endif
+
 static const CGSize g_defaultCanvasSize{ 512.f, 256.f };
-
-template <typename TComparator>
-woc::unique_cf<CGColorSpaceRef> testing::DrawTest<TComparator>::s_deviceColorSpace;
-
-template <typename TComparator>
-void testing::DrawTest<TComparator>::SetUpTestCase() {
-    s_deviceColorSpace.reset(CGColorSpaceCreateDeviceRGB());
-}
-
-template <typename TComparator>
-void testing::DrawTest<TComparator>::TearDownTestCase() {
-    s_deviceColorSpace.release();
-}
 
 template <typename TComparator>
 CGSize testing::DrawTest<TComparator>::CanvasSize() {
@@ -46,9 +37,14 @@ template <typename TComparator>
 void testing::DrawTest<TComparator>::SetUp() {
     CGSize size = CanvasSize();
 
-    _context.reset(CGBitmapContextCreate(
-        nullptr, size.width, size.height, 8, size.width * 4, s_deviceColorSpace.get(), kCGImageAlphaPremultipliedFirst));
+    auto deviceColorSpace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
+    _context.reset(
+        CGBitmapContextCreate(nullptr, size.width, size.height, 8, size.width * 4, deviceColorSpace, kCGImageAlphaPremultipliedFirst));
     ASSERT_NE(nullptr, _context);
+
+#if WINOBJC // Validate that the results are correct even under batched drawing from _CGContextPushBegin/PopEndDraw
+    _CGContextPushBeginDraw(_context);
+#endif
 
     _bounds = { CGPointZero, size };
 
@@ -62,13 +58,11 @@ CFStringRef testing::DrawTest<TComparator>::CreateAdditionalTestDescription() {
 
 template <typename TComparator>
 CFStringRef testing::DrawTest<TComparator>::CreateOutputFilename() {
-    const ::testing::TestInfo* const test_info = ::testing::UnitTest::GetInstance()->current_test_info();
     woc::unique_cf<CFStringRef> additionalDesc{ CreateAdditionalTestDescription() };
     woc::unique_cf<CFStringRef> filename{ CFStringCreateWithFormat(nullptr,
                                                                    nullptr,
-                                                                   CFSTR("TestImage.%s.%s%s%@.png"),
-                                                                   test_info->test_case_name(),
-                                                                   test_info->name(),
+                                                                   CFSTR("TestImage.%s%s%@.png"),
+                                                                   GetTestFullName().c_str(),
                                                                    (additionalDesc ? "." : ""),
                                                                    (additionalDesc ? additionalDesc.get() : CFSTR(""))) };
     return filename.release();
@@ -77,6 +71,10 @@ CFStringRef testing::DrawTest<TComparator>::CreateOutputFilename() {
 template <typename TComparator>
 void testing::DrawTest<TComparator>::TearDown() {
     CGContextRef context = GetDrawingContext();
+
+#if WINOBJC // Validate that the results are correct even under batched drawing from _CGContextPushBegin/PopEndDraw
+    _CGContextPopEndDraw(_context);
+#endif
 
     // Generate image from context.
     woc::unique_cf<CGImageRef> image{ CGBitmapContextCreateImage(context) };
@@ -123,7 +121,7 @@ void testing::DrawTest<TComparator>::TearDown() {
             if (delta.result == ImageComparisonResult::Incomparable) {
                 ADD_FAILURE() << "images are incomparable due to a mismatch in dimensions, presence, or byte length";
             } else {
-                ADD_FAILURE() << "images differ nontrivially";
+                ADD_FAILURE() << "images differ nontrivially with " << delta.differences << " registered differences";
             }
 
             woc::unique_cf<CFStringRef> deltaFilename{
@@ -135,9 +133,9 @@ void testing::DrawTest<TComparator>::TearDown() {
 
             _WriteCFDataToFile(encodedDeltaImageData.get(), deltaFilename.get());
 
-            RecordProperty("expectedImage", CFStringGetCStringPtr(referenceFilename.get(), kCFStringEncodingUTF8));
-            RecordProperty("actualImage", CFStringGetCStringPtr(outputPath.get(), kCFStringEncodingUTF8));
-            RecordProperty("deltaImage", CFStringGetCStringPtr(deltaFilename.get(), kCFStringEncodingUTF8));
+            LOG_TEST_PROPERTY("expectedImage", CFStringGetCStringPtr(referenceFilename.get(), kCFStringEncodingUTF8));
+            LOG_TEST_PROPERTY("actualImage", CFStringGetCStringPtr(outputPath.get(), kCFStringEncodingUTF8));
+            LOG_TEST_PROPERTY("deltaImage", CFStringGetCStringPtr(deltaFilename.get(), kCFStringEncodingUTF8));
         }
     }
 }
@@ -205,9 +203,18 @@ void UIKitMimicTest<TComparator>::SetUpContext() {
 template class ::testing::DrawTest<>;
 template class WhiteBackgroundTest<>;
 template class UIKitMimicTest<>;
-template class ::testing::DrawTest<PixelByPixelImageComparator<ComparisonMode::Mask>>;
-template class WhiteBackgroundTest<PixelByPixelImageComparator<ComparisonMode::Mask>>;
-template class UIKitMimicTest<PixelByPixelImageComparator<ComparisonMode::Mask>>;
-template class ::testing::DrawTest<PixelByPixelImageComparator<ComparisonMode::Mask, 1024>>;
-template class WhiteBackgroundTest<PixelByPixelImageComparator<ComparisonMode::Mask, 1024>>;
-template class UIKitMimicTest<PixelByPixelImageComparator<ComparisonMode::Mask, 1024>>;
+template class ::testing::DrawTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>;
+template class WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>;
+template class UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>;
+template class ::testing::DrawTest<PixelByPixelImageComparator<PixelComparisonModeMask<2300>>>;
+template class ::testing::DrawTest<PixelByPixelImageComparator<PixelComparisonModeMask<1024>>>;
+template class ::testing::DrawTest<PixelByPixelImageComparator<PixelComparisonModeMask<512>>>;
+template class ::testing::DrawTest<PixelByPixelImageComparator<PixelComparisonModeMask<64>>>;
+template class WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<2300>>>;
+template class WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<1024>>>;
+template class WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<512>>>;
+template class WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<64>>>;
+template class UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<2300>>>;
+template class UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<1024>>>;
+template class UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<512>>>;
+template class UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<64>>>;

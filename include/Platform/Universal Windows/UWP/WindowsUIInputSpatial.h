@@ -70,7 +70,7 @@ typedef unsigned WUISSpatialGestureSettings;
 OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 @interface WUISSpatialInteractionSourceLocation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) id /* WFNVector3* */ position;
 @property (readonly) id /* WFNVector3* */ velocity;
@@ -87,7 +87,7 @@ OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 @interface WUISSpatialPointerPose : RTObject
 + (WUISSpatialPointerPose*)tryGetAtTimestamp:(WPSSpatialCoordinateSystem*)coordinateSystem timestamp:(WPPerceptionTimestamp*)timestamp;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WPPHeadPose* head;
 @property (readonly) WPPerceptionTimestamp* timestamp;
@@ -102,7 +102,7 @@ OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 @interface WUISSpatialInteractionSource : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int id;
 @property (readonly) WUISSpatialInteractionSourceKind kind;
@@ -117,7 +117,7 @@ OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 @interface WUISSpatialInteractionSourceProperties : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) double sourceLossRisk;
 - (id /* WFNVector3* */)tryGetSourceLossMitigationDirection:(WPSSpatialCoordinateSystem*)coordinateSystem;
@@ -133,7 +133,7 @@ OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 @interface WUISSpatialManipulationDelta : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFNVector3* translation;
 @end
@@ -147,7 +147,7 @@ OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 @interface WUISSpatialInteractionSourceState : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL isPressed;
 @property (readonly) WUISSpatialInteractionSourceProperties* properties;
@@ -166,7 +166,7 @@ OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 @interface WUISSpatialGestureRecognizer : RTObject
 + (WUISSpatialGestureRecognizer*)make:(WUISSpatialGestureSettings)settings ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUISSpatialGestureSettings gestureSettings;
 - (EventRegistrationToken)addHoldCanceledEvent:(void(^)(WUISSpatialGestureRecognizer*, WUISSpatialHoldCanceledEventArgs*))del;
@@ -211,7 +211,7 @@ OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 @interface WUISSpatialRecognitionStartedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUISSpatialInteractionSourceKind interactionSourceKind;
 - (WUISSpatialPointerPose*)tryGetPointerPose:(WPSSpatialCoordinateSystem*)coordinateSystem;
@@ -227,7 +227,7 @@ OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 @interface WUISSpatialRecognitionEndedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUISSpatialInteractionSourceKind interactionSourceKind;
 @end
@@ -241,7 +241,7 @@ OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 @interface WUISSpatialTappedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUISSpatialInteractionSourceKind interactionSourceKind;
 @property (readonly) unsigned int tapCount;
@@ -257,7 +257,7 @@ OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 @interface WUISSpatialHoldStartedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUISSpatialInteractionSourceKind interactionSourceKind;
 - (WUISSpatialPointerPose*)tryGetPointerPose:(WPSSpatialCoordinateSystem*)coordinateSystem;
@@ -272,7 +272,7 @@ OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 @interface WUISSpatialHoldCompletedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUISSpatialInteractionSourceKind interactionSourceKind;
 @end
@@ -286,7 +286,7 @@ OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 @interface WUISSpatialHoldCanceledEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUISSpatialInteractionSourceKind interactionSourceKind;
 @end
@@ -300,7 +300,7 @@ OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 @interface WUISSpatialManipulationStartedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUISSpatialInteractionSourceKind interactionSourceKind;
 - (WUISSpatialPointerPose*)tryGetPointerPose:(WPSSpatialCoordinateSystem*)coordinateSystem;
@@ -315,7 +315,7 @@ OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 @interface WUISSpatialManipulationUpdatedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUISSpatialInteractionSourceKind interactionSourceKind;
 - (WUISSpatialManipulationDelta*)tryGetCumulativeDelta:(WPSSpatialCoordinateSystem*)coordinateSystem;
@@ -330,7 +330,7 @@ OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 @interface WUISSpatialManipulationCompletedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUISSpatialInteractionSourceKind interactionSourceKind;
 - (WUISSpatialManipulationDelta*)tryGetCumulativeDelta:(WPSSpatialCoordinateSystem*)coordinateSystem;
@@ -345,7 +345,7 @@ OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 @interface WUISSpatialManipulationCanceledEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUISSpatialInteractionSourceKind interactionSourceKind;
 @end
@@ -359,7 +359,7 @@ OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 @interface WUISSpatialNavigationStartedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUISSpatialInteractionSourceKind interactionSourceKind;
 @property (readonly) BOOL isNavigatingX;
@@ -377,7 +377,7 @@ OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 @interface WUISSpatialNavigationUpdatedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUISSpatialInteractionSourceKind interactionSourceKind;
 @property (readonly) WFNVector3* normalizedOffset;
@@ -392,7 +392,7 @@ OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 @interface WUISSpatialNavigationCompletedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUISSpatialInteractionSourceKind interactionSourceKind;
 @property (readonly) WFNVector3* normalizedOffset;
@@ -407,7 +407,7 @@ OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 @interface WUISSpatialNavigationCanceledEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUISSpatialInteractionSourceKind interactionSourceKind;
 @end
@@ -421,7 +421,7 @@ OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 @interface WUISSpatialInteraction : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUISSpatialInteractionSourceState* sourceState;
 @end
@@ -436,7 +436,7 @@ OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 @interface WUISSpatialInteractionManager : RTObject
 + (WUISSpatialInteractionManager*)getForCurrentView;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (EventRegistrationToken)addInteractionDetectedEvent:(void(^)(WUISSpatialInteractionManager*, WUISSpatialInteractionDetectedEventArgs*))del;
 - (void)removeInteractionDetectedEvent:(EventRegistrationToken)tok;
@@ -462,7 +462,7 @@ OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 @interface WUISSpatialInteractionSourceEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUISSpatialInteractionSourceState* state;
 @end
@@ -476,7 +476,7 @@ OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_SPATIAL_EXPORT
 @interface WUISSpatialInteractionDetectedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUISSpatialInteraction* interaction;
 @property (readonly) WUISSpatialInteractionSourceKind interactionSourceKind;

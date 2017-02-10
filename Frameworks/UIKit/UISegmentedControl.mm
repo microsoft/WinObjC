@@ -28,10 +28,12 @@
 #import <Foundation/NSBundle.h>
 #import <Foundation/NSMutableDictionary.h>
 
+#import "UIControlInternal.h"
 #import "UISegment.h"
-#import <math.h>
-#import "UIViewInternal.h"
 #import "UISegmentedControlInternal.h"
+#import "UIViewInternal.h"
+
+#import <math.h>
 
 @implementation UISegmentedControl {
     StrongId<NSMutableArray> _segments;
