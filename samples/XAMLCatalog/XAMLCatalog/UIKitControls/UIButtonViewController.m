@@ -78,12 +78,15 @@
 
     if (indexPath.row == 0) {
         UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop, _labelWidth, _labelHeight)];
-        label.text = @"UIButton, no backgroundColor";
+        label.text = @"UIButton, no backgroundColor with green border";
 
         UIButton* button =
             [[UIButton alloc] initWithFrame:CGRectMake(_marginLeft, _marginTop + _labelHeight, _defaultWidth, _defaultHeight)];
         [button setTitle:@"Button" forState:UIControlStateNormal];
         [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+
+        button.layer.borderColor = [[UIColor greenColor] CGColor];
+        button.layer.borderWidth = 1.0;
 
         [cell addSubview:label];
         [cell addSubview:button];

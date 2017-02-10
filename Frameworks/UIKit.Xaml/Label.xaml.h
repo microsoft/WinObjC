@@ -44,15 +44,24 @@ public:
         Windows::UI::Xaml::Controls::Canvas^ get();
     }
 
+    // Accessor for the LayerProperty that manages the BorderBrush of this label
+    virtual Private::CoreAnimation::LayerProperty^ GetBorderBrushProperty();
+
+    // Accessor for the LayerProperty that manages the BorderThickness of this label
+    virtual Private::CoreAnimation::LayerProperty^ GetBorderThicknessProperty();
+
 internal:
     property Windows::UI::Xaml::Controls::TextBlock^ TextBlock {
         Windows::UI::Xaml::Controls::TextBlock^ get();
     }
 
 private:
+    Windows::UI::Xaml::Controls::Border^ _GetBorder();
+
     // Layer elements; created on demand
     Windows::UI::Xaml::Controls::Image^ _content;
     Windows::UI::Xaml::Controls::Canvas^ _sublayerCanvas;
+    Windows::UI::Xaml::Controls::Border^ _border;
 };
 
 } /* Xaml*/

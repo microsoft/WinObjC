@@ -52,6 +52,12 @@ public:
         Windows::UI::Xaml::Controls::Canvas^ get();
     }
 
+    // Accessor for the LayerProperty that manages the BorderBrush of this button
+    virtual Private::CoreAnimation::LayerProperty^ GetBorderBrushProperty();
+
+    // Accessor for the LayerProperty that manages the BorderThickness of this button
+    virtual Private::CoreAnimation::LayerProperty^ GetBorderThicknessProperty();
+
 internal:
     void HookPointerEvents(
         const Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Input::IPointerEventHandler>& pointerPressedHook,
