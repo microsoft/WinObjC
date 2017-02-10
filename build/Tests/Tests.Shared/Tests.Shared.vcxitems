@@ -6,7 +6,7 @@
     <ItemsProjectGuid>{EE68A240-536D-4557-AB96-D164E93059A1}</ItemsProjectGuid>
     <NuGetTargetMoniker>UAP,Version=v10.0</NuGetTargetMoniker>
     <CopyStarboardLibraries>true</CopyStarboardLibraries>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\Tests\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
