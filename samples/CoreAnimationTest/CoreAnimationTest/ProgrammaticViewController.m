@@ -38,7 +38,7 @@
     [self addMenuItemViewController:[[CALayerAnimationViewController alloc] init] andTitle:@"CALayer Animation (CAAnimation)"];
 
     // CAShapeLayer
-    [self addMenuItemSegue:@"CAShapeLayer" andTitle:@"CAShapeLayer - not supported"];
+    [self addMenuItemSegue:@"CAShapeLayer" andTitle:@"CAShapeLayer"];
 
     // CAScrollLayer
     [self addMenuItemSegue:@"CAScrollLayer" andTitle:@"CAScrollLayer - not supported"];
