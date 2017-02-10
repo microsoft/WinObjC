@@ -37,12 +37,22 @@ namespace UXTestAPI {
 
 using XamlEventBlock = void (^)(WXDependencyObject*, WXDependencyProperty*);
 
+// Forward declaration
+class UXEvent;
+
 // Extract the current key window for the app
 UIWindow* GetCurrentWindow();
 
-// Utility string functions to convert PropertyValue strings to NSString
+// Walk the XAML child tree starting at control and find a child element matching name
+WXFrameworkElement* FindXamlChild(WXFrameworkElement* parent, NSString* name);
+
+// Looks at the UIControl for specified state and confirms that the expected value is present
+void UIControlCheckStateTransition(
+    UIControl* controlToTest, std::shared_ptr<UXEvent> waitForEvent, UIControlState controlState, SEL selector, id expectedValue);
+
+// Utility string functions to convert PropertyValue types into NSString, primitive types, etc.
 NSString* NSStringFromPropertyValue(RTObject* rtPropertyValue);
-NSString* NSStringFromPropertyValue(const Microsoft::WRL::ComPtr<IInspectable>& inspPropertyValue);
+double DoubleFromPropertyValue(RTObject* rtPropertyValue);
 
 // WUXMSolidColorBrush helper
 bool IsRGBAEqual(WUXMSolidColorBrush* brush, UIColor* color);
@@ -80,6 +90,7 @@ public:
 
 private:
     int64_t _callbackToken;
+
     StrongId<WXDependencyObject> _xamlObject;
     StrongId<WXDependencyProperty> _propertyToObserve;
 }; // class XamlEventSubscription
@@ -97,7 +108,7 @@ public:
         return std::make_shared<UXEvent>(AutoReset);
     }
 
-    UXEvent(EventType eventType) : _eventType(eventType), _signaled(false) {
+    UXEvent(EventType eventType) : _eventType(eventType), _signaled(false), _signalCount(0), _signalCountTarget(0) {
         _condition.attach([[NSCondition alloc] init]);
     }
 
@@ -107,9 +118,13 @@ public:
     void Set();
     void Reset();
     bool Wait(int timeoutInSeconds);
+    bool Wait(int timeoutInSeconds, int signalCount);
 
 private:
     bool _signaled;
+    unsigned int _signalCount; // number of signal activations
+    unsigned int _signalCountTarget; // target number of signal activations to reach before we signal
+
     EventType _eventType;
     StrongId<NSCondition> _condition;
 }; // class UXEvent

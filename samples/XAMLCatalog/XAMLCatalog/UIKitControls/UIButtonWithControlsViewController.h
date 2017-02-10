@@ -19,18 +19,37 @@
 
 @interface UIButtonWithControlsViewController : UIViewController
 
-@property (nonatomic, readonly) UIButton* button;
+@property (nonatomic, readonly) UIButton* defaultButton;
+@property (nonatomic, readonly) UIButton* customButton;
+@property (nonatomic, readonly) UIButton* systemButton;
 
-@property (nonatomic, readonly) UISlider* sliderTitleColorNormal;
+@property (nonatomic, readonly) UISegmentedControl* segmentButtonType;
 
 @property (nonatomic, readonly) UISwitch* switchEnabled;
+@property (nonatomic, readonly) UISwitch* switchHighlighted;
+@property (nonatomic, readonly) UISwitch* switchSelected;
 
-@property (nonatomic, readonly) TestEnabledUITextField* textTitleNormal;
-@property (nonatomic, readonly) TestEnabledUITextField* textTitleHighlighted;
-@property (nonatomic, readonly) TestEnabledUITextField* textTitleDisabled;
+@property (nonatomic, readonly) UIControlState titleControlState;
+@property (nonatomic, readonly) TestEnabledUITextField* textTitleStateField;
+@property (nonatomic, readonly) TestEnabledUITextField* textTitle;
 
-@property (nonatomic, readonly) UIColor* titleColorNormal;
-@property (nonatomic, readonly) UIColor* titleColorHighlighted;
-@property (nonatomic, readonly) UIColor* titleColorDisabled;
+@property (nonatomic, readonly) UIControlState titleColorControlState;
+@property (nonatomic, readonly) TestEnabledUITextField* textTitleColorStateField;
+@property (nonatomic, readonly) TestEnabledUITextField* textTitleColor;
+
+@property (nonatomic, readonly) UIControlState imageControlState;
+@property (nonatomic, readonly) TestEnabledUITextField* textImageStateField;
+@property (nonatomic, readonly) TestEnabledUITextField* textImage;
+
+@property (nonatomic, readonly) UIControlState backgroundImageControlState;
+@property (nonatomic, readonly) TestEnabledUITextField* textBackgroundImageStateField;
+@property (nonatomic, readonly) TestEnabledUITextField* textBackgroundImage;
+
+// Public properties that represent the last assigned values for the selected button
+@property (nonatomic, readonly) UIColor* titleColor;
+@property (nonatomic, readonly) UIImage* image;
+@property (nonatomic, readonly) UIImage* backgroundImage;
+
+- (UIButton*)selectButton:(UIButtonType)buttonType;
 
 @end

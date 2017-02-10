@@ -18,7 +18,117 @@
 #import <UIKit/UIButton.h>
 
 @implementation UIButtonWithControlsViewController {
+    UIButton* _selectedButton;
     MenuTableViewController* _menuTVC;
+}
+
+// TODO: Move these methods into TestEnabledUITextField
+- (UIColor*)getColor:(NSString*)colorString {
+    UIColor* color = nil;
+
+    SEL selector = NSSelectorFromString(colorString);
+    if ([UIColor respondsToSelector:selector]) {
+        color = [UIColor performSelector:selector];
+    }
+
+    return color;
+}
+
+- (UIImage*)getImage:(NSString*)imageString {
+    UIImage* image = nil;
+
+    // TODO: We should probably do more checking before we try and load this image
+    if ([imageString hasSuffix:@".jpg"] || [imageString hasSuffix:@".png"]) {
+        image = [UIImage imageNamed:imageString];
+    }
+
+    return image;
+}
+
+- (UIControlState)getControlState:(NSString*)stateString {
+    UIControlState state = UIControlStateNormal;
+
+    if ([stateString rangeOfString:@"N"].location != NSNotFound) {
+        state |= UIControlStateNormal;
+    }
+    if ([stateString rangeOfString:@"H"].location != NSNotFound) {
+        state |= UIControlStateHighlighted;
+    }
+    if ([stateString rangeOfString:@"D"].location != NSNotFound) {
+        state |= UIControlStateDisabled;
+    }
+    if ([stateString rangeOfString:@"S"].location != NSNotFound) {
+        state |= UIControlStateSelected;
+    }
+
+    return state;
+}
+
+- (TestEnabledUITextField*)createTestEnabledUITextField {
+    TestEnabledUITextField* testEnabledUITextField = [[TestEnabledUITextField alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 150.0f, 40.0f)];
+    testEnabledUITextField.textColor = [UIColor blackColor];
+    testEnabledUITextField.backgroundColor = [UIColor lightGrayColor];
+    testEnabledUITextField.textAlignment = UITextAlignmentCenter;
+    testEnabledUITextField.spellCheckingType = UITextSpellCheckingTypeNo;
+    testEnabledUITextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    testEnabledUITextField.borderStyle = UITextBorderStyleLine;
+    testEnabledUITextField.font = [UIFont systemFontOfSize:15.0f];
+    testEnabledUITextField.adjustsFontSizeToFitWidth = YES;
+
+    return testEnabledUITextField;
+}
+
+- (void)createButtonWithTypeControls {
+    NSArray* segmentButtonTypeContent = [NSArray arrayWithObjects:@"Default", @"UIButtonTypeCustom", @"UIButtonTypeSystem", nil];
+    _segmentButtonType = [[UISegmentedControl alloc] initWithItems:segmentButtonTypeContent];
+    _segmentButtonType.frame = CGRectMake(0.0f, 0.0f, 540.0f, 40.0f);
+    [_segmentButtonType addTarget:self action:@selector(onButtonWithTypeChanged:) forControlEvents:UIControlEventValueChanged];
+    _segmentButtonType.selectedSegmentIndex = 0;
+    [_menuTVC addMenuItemView:_segmentButtonType andTitle:@"Button Type"];
+}
+
+- (void)createTitleControls {
+    _textTitleStateField = [self createTestEnabledUITextField];
+    [_textTitleStateField addTarget:self action:@selector(onTitleStateFieldChanged:) forControlEvents:UIControlEventEditingChanged];
+    [_menuTVC addMenuItemView:_textTitleStateField andTitle:@"Title - state field (e.g. 'N;')"];
+
+    _textTitle = [self createTestEnabledUITextField];
+    [_textTitle addTarget:self action:@selector(onTitleChanged:) forControlEvents:UIControlEventEditingChanged];
+    [_menuTVC addMenuItemView:_textTitle andTitle:@"Title - e.g. Normal"];
+}
+
+- (void)createTitleColorControls {
+    _textTitleColorStateField = [self createTestEnabledUITextField];
+    [_textTitleColorStateField addTarget:self
+                                  action:@selector(onTitleColorStateFieldChanged:)
+                        forControlEvents:UIControlEventEditingChanged];
+    [_menuTVC addMenuItemView:_textTitleColorStateField andTitle:@"Title Color - state field (e.g. 'N;')"];
+
+    _textTitleColor = [self createTestEnabledUITextField];
+    [_textTitleColor addTarget:self action:@selector(onTitleColorChanged:) forControlEvents:UIControlEventEditingChanged];
+    [_menuTVC addMenuItemView:_textTitleColor andTitle:@"Title Color - e.g. redColor"];
+}
+
+- (void)createImageControls {
+    _textImageStateField = [self createTestEnabledUITextField];
+    [_textImageStateField addTarget:self action:@selector(onImageStateFieldChanged:) forControlEvents:UIControlEventEditingChanged];
+    [_menuTVC addMenuItemView:_textImageStateField andTitle:@"Image - state field (e.g. 'N;')"];
+
+    _textImage = [self createTestEnabledUITextField];
+    [_textImage addTarget:self action:@selector(onImageChanged:) forControlEvents:UIControlEventEditingChanged];
+    [_menuTVC addMenuItemView:_textImage andTitle:@"Image - (e.g. button_image.png)"];
+}
+
+- (void)createBackgroundImageControls {
+    _textBackgroundImageStateField = [self createTestEnabledUITextField];
+    [_textBackgroundImageStateField addTarget:self
+                                       action:@selector(onBackgroundImageStateFieldChanged:)
+                             forControlEvents:UIControlEventEditingChanged];
+    [_menuTVC addMenuItemView:_textBackgroundImageStateField andTitle:@"Background Image - state field (e.g. 'N;')"];
+
+    _textBackgroundImage = [self createTestEnabledUITextField];
+    [_textBackgroundImage addTarget:self action:@selector(onBackgroundImageChanged:) forControlEvents:UIControlEventEditingChanged];
+    [_menuTVC addMenuItemView:_textBackgroundImage andTitle:@"Background Image - (e.g. yellow_backgroung.jpg)"];
 }
 
 - (void)viewDidLoad {
@@ -27,104 +137,202 @@
     // Set up the stage for the UIButton that will be manipulated
     self.title = @"UIButton with controls";
     self.view.backgroundColor = [UIColor whiteColor];
-    self.view.frame = CGRectMake(0.0f, 0.0f, 200.0f, 200.0f);
+    self.view.frame = CGRectMake(0.0f, 0.0f, 200.0f, 0.0f);
 
     // Configure the button
-    [self setupButton];
+    [self setupButtons];
 
     // TableViewController hosting the controls that manipulate UIButton
     _menuTVC = [[MenuTableViewController alloc] init];
     _menuTVC.view.frame = CGRectMake(0.0f, 200.0f, 200.0f, 0.0f /* setting it to 0 allows vertical scrolling */);
     _menuTVC.tableView.allowsSelection = NO;
-    [self.view addSubview:_button];
     [self.view addSubview:_menuTVC.view];
+
+    [self createButtonWithTypeControls];
 
     _switchEnabled = [[UISwitch alloc] init];
     _switchEnabled.on = YES;
     [_switchEnabled addTarget:self action:@selector(onEnabled) forControlEvents:UIControlEventValueChanged];
     [_menuTVC addMenuItemView:_switchEnabled andTitle:@"Enabled"];
 
-    // UITextField that changes the text on UIButton.titleLabel for normal state
-    _textTitleNormal = [[TestEnabledUITextField alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 150.0f, 40.0f)];
-    _textTitleNormal.textColor = [UIColor blackColor];
-    _textTitleNormal.backgroundColor = [UIColor lightGrayColor];
-    _textTitleNormal.textAlignment = UITextAlignmentCenter;
-    _textTitleNormal.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
-    _textTitleNormal.borderStyle = UITextBorderStyleLine;
-    _textTitleNormal.font = [UIFont systemFontOfSize:15.0f];
-    _textTitleNormal.adjustsFontSizeToFitWidth = YES;
-    [_textTitleNormal addTarget:self action:@selector(onTextChanged:) forControlEvents:UIControlEventEditingChanged];
-    [_menuTVC addMenuItemView:_textTitleNormal andTitle:@"Text - normal state"];
+    _switchHighlighted = [[UISwitch alloc] init];
+    [_switchHighlighted addTarget:self action:@selector(onHighlighted) forControlEvents:UIControlEventValueChanged];
+    [_menuTVC addMenuItemView:_switchHighlighted andTitle:@"Highlighted"];
 
-    // UITextField that changes the text on UIButton.titleLabel for highlighted state
-    _textTitleHighlighted = [[TestEnabledUITextField alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 150.0f, 40.0f)];
-    _textTitleHighlighted.textColor = [UIColor blackColor];
-    _textTitleHighlighted.backgroundColor = [UIColor lightGrayColor];
-    _textTitleHighlighted.textAlignment = UITextAlignmentCenter;
-    _textTitleHighlighted.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
-    _textTitleHighlighted.borderStyle = UITextBorderStyleLine;
-    _textTitleHighlighted.font = [UIFont systemFontOfSize:15.0f];
-    _textTitleHighlighted.adjustsFontSizeToFitWidth = YES;
-    [_textTitleHighlighted addTarget:self action:@selector(onTextChangedHighlighted:) forControlEvents:UIControlEventEditingChanged];
-    [_menuTVC addMenuItemView:_textTitleHighlighted andTitle:@"Text - highlighted state"];
+    _switchSelected = [[UISwitch alloc] init];
+    [_switchSelected addTarget:self action:@selector(onSelected) forControlEvents:UIControlEventValueChanged];
+    [_menuTVC addMenuItemView:_switchSelected andTitle:@"Selected"];
 
-    // UITextField that changes the text on UIButton.titleLabel for disabled state
-    _textTitleDisabled = [[TestEnabledUITextField alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 150.0f, 40.0f)];
-    _textTitleDisabled.textColor = [UIColor blackColor];
-    _textTitleDisabled.backgroundColor = [UIColor lightGrayColor];
-    _textTitleDisabled.textAlignment = UITextAlignmentCenter;
-    _textTitleDisabled.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
-    _textTitleDisabled.borderStyle = UITextBorderStyleLine;
-    _textTitleDisabled.font = [UIFont systemFontOfSize:15.0f];
-    _textTitleDisabled.adjustsFontSizeToFitWidth = YES;
-    [_textTitleDisabled addTarget:self action:@selector(onTextChangedDisabled:) forControlEvents:UIControlEventEditingChanged];
-    [_menuTVC addMenuItemView:_textTitleDisabled andTitle:@"Text - disabled state"];
-
-    // UISlider that changes the text color on UIButton titleLabel for normal state
-    _sliderTitleColorNormal = [[UISlider alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 100.0f, 40.0f)];
-    _sliderTitleColorNormal.minimumValue = 0.0f;
-    _sliderTitleColorNormal.maximumValue = 360.0f;
-    _sliderTitleColorNormal.continuous = YES;
-    _sliderTitleColorNormal.value = 0.0f;
-    [_sliderTitleColorNormal addTarget:self action:@selector(titleColorNormalValueChanged) forControlEvents:UIControlEventValueChanged];
-    [_menuTVC addMenuItemView:_sliderTitleColorNormal andTitle:@"Title color - normal state"];
+    [self createTitleControls];
+    [self createTitleColorControls];
+    [self createImageControls];
+    [self createBackgroundImageControls];
 }
 
 // Initial configuration parameters for the UIButton
-- (void)setupButton {
-    _button = [[UIButton alloc] initWithFrame:self.view.bounds];
+- (void)setupButtons {
+    _defaultButton = [[UIButton alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 200.0f, 200.0f)];
+
+    _customButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _customButton.frame = CGRectMake(200.0f, 0.0f, 200.0f, 200.0f);
+
+    _systemButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    _systemButton.frame = CGRectMake(400.0f, 0.0f, 200.0f, 200.0f);
+
+    [self.view addSubview:_defaultButton];
+    [self.view addSubview:_customButton];
+    [self.view addSubview:_systemButton];
+
+    _selectedButton = _defaultButton;
+}
+
+- (UIButton*)selectButton:(UIButtonType)buttonType {
+    switch (buttonType) {
+        case UIButtonTypeCustom:
+            _segmentButtonType.selectedSegmentIndex = 1;
+            _selectedButton = _customButton;
+            break;
+        case UIButtonTypeSystem:
+            _segmentButtonType.selectedSegmentIndex = 2;
+            _selectedButton = _systemButton;
+            break;
+        case UIButtonTypeDetailDisclosure:
+        case UIButtonTypeInfoLight:
+        case UIButtonTypeInfoDark:
+        case UIButtonTypeContactAdd:
+        default:
+            _segmentButtonType.selectedSegmentIndex = 0;
+            _selectedButton = _defaultButton;
+            break;
+    }
+
+    return _selectedButton;
 }
 
 // Toggle if the button is enabled or disabled
 - (void)onEnabled {
-    _button.enabled = _switchEnabled.on;
+    _selectedButton.enabled = _switchEnabled.on;
 }
 
-// Delegate to set the UIButton.titleLabel text
-- (void)onTextChanged:(UITextField*)textField {
-    [_button setTitle:textField.text forState:UIControlStateNormal];
+// Toggle if the button is highlighted (alternate to a pressed button)
+- (void)onHighlighted {
+    _selectedButton.highlighted = _switchHighlighted.on;
 }
 
-- (void)onTextChangedHighlighted:(UITextField*)textField {
-    [_button setTitle:textField.text forState:UIControlStateHighlighted];
+// Toggle if the button is selected
+- (void)onSelected {
+    _selectedButton.selected = _switchSelected.on;
 }
 
-- (void)onTextChangedDisabled:(UITextField*)textField {
-    [_button setTitle:textField.text forState:UIControlStateDisabled];
+//
+// ButtonWithType
+//
+- (void)onButtonWithTypeChanged:(UISegmentedControl*)segmentedControl {
+    if (segmentedControl.selectedSegmentIndex == 0) {
+        _selectedButton = _defaultButton;
+    } else if (segmentedControl.selectedSegmentIndex == 1) {
+        _selectedButton = _customButton;
+    } else if (segmentedControl.selectedSegmentIndex == 2) {
+        _selectedButton = _systemButton;
+    }
 }
+
+//
+// Title
+//
+- (void)onTitleStateFieldChanged:(UITextField*)textField {
+    // Need a way to signal that the bit field should only be interpreted when a sentinel character is present
+    if ([textField.text hasSuffix:@";"]) {
+        UIControlState newControlState = [self getControlState:textField.text];
+        if (newControlState != _titleControlState) {
+            _titleControlState = newControlState;
+
+            // Draw attention to the old text
+            _textTitle.backgroundColor = [UIColor redColor];
+        }
+    }
+}
+
+- (void)onTitleChanged:(UITextField*)textField {
+    NSString* changedText = textField.text;
+    [_selectedButton setTitle:changedText forState:_titleControlState];
+
+    // Text has been updated - revert to previous background color
+    _textTitle.backgroundColor = [UIColor lightGrayColor];
+}
+
+//
+// TitleColor
+//
+- (void)onTitleColorStateFieldChanged:(UITextField*)textField {
+    UIControlState newControlState = [self getControlState:textField.text];
+    if (newControlState != _titleColorControlState) {
+        _titleColorControlState = newControlState;
+
+        // Draw attention to the old text
+        _textTitleColor.backgroundColor = [UIColor redColor];
+    }
+}
+
+- (void)onTitleColorChanged:(UITextField*)textField {
+    _titleColor = [self getColor:textField.text];
+    [_selectedButton setTitleColor:_titleColor forState:_titleColorControlState];
+
+    // Text has been updated - revert to previous background color
+    _textTitleColor.backgroundColor = [UIColor lightGrayColor];
+}
+
+//
+// Image
+//
+- (void)onImageStateFieldChanged:(UITextField*)textField {
+    UIControlState newControlState = [self getControlState:textField.text];
+    if (newControlState != _imageControlState) {
+        _imageControlState = newControlState;
+
+        // Draw attention to the old text
+        _textImage.backgroundColor = [UIColor redColor];
+    }
+}
+
+- (void)onImageChanged:(UITextField*)textField {
+    _image = [self getImage:textField.text];
+    [_selectedButton setImage:_image forState:_imageControlState];
+
+    // Text has been updated - revert to previous background color
+    _textImage.backgroundColor = [UIColor lightGrayColor];
+}
+
+//
+// Background Image
+//
+- (void)onBackgroundImageStateFieldChanged:(UITextField*)textField {
+    UIControlState newControlState = [self getControlState:textField.text];
+    if (newControlState != _backgroundImageControlState) {
+        _backgroundImageControlState = newControlState;
+
+        // Draw attention to the old text
+        _textBackgroundImage.backgroundColor = [UIColor redColor];
+    }
+}
+
+- (void)onBackgroundImageChanged:(UITextField*)textField {
+    _backgroundImage = [self getImage:textField.text];
+    [_selectedButton setBackgroundImage:_backgroundImage forState:_backgroundImageControlState];
+
+    // Text has been updated - revert to previous background color
+    _textBackgroundImage.backgroundColor = [UIColor lightGrayColor];
+}
+
+//
+// Dismiss keyboard
+//
 
 // Delegate to dismiss the keyboard
 - (BOOL)textFieldShouldReturn:(UITextField*)textField {
     [textField resignFirstResponder];
 
     return YES;
-}
-
-// Delegate triggererd if slider is changed for UIButton in the normal state
-- (void)titleColorNormalValueChanged {
-    CGFloat hue = _sliderTitleColorNormal.value / 359.0f;
-    _titleColorNormal = [UIColor colorWithHue:hue saturation:hue brightness:0.4f alpha:1.0f];
-    [_button setTitleColor:_titleColorNormal forState:UIControlStateNormal];
 }
 
 @end

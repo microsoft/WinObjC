@@ -29,7 +29,7 @@
     <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <Keyword>IslandwoodProj</Keyword>
-    <ProjectGuid>{17FE0EC9-715B-4AB0-8491-5D31D3772A0A}</ProjectGuid>
+    <ProjectGuid>{D676667D-C435-43AE-A596-180EC6F15F0B}</ProjectGuid>
     <RootNamespace>XAMLCatalog</RootNamespace>
     <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">..\..\..\..</WINOBJC_SDK_ROOT>
   </PropertyGroup>
@@ -198,7 +198,6 @@
     <ClInclude Include="..\..\XAMLCatalog\TestEnabledUITextField.h" />
     <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UIActionSheetViewController.h" />
     <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UIActivityIndicatorViewController.h" />
-    <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UIButtonViewController.h" />
     <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UIButtonWithControlsViewController.h" />
     <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UILabelViewController.h" />
     <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UISliderViewController.h" />
@@ -213,7 +212,6 @@
     <ClangCompile Include="..\..\XAMLCatalog\TestEnabledUITextField.mm" />
     <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UIActionSheetViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UIActivityIndicatorViewController.m" />
-    <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UIButtonViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UIButtonWithControlsViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UILabelViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UISliderViewController.m" />
@@ -226,6 +224,11 @@
       <VariableFile Condition="'$(Configuration)'=='Debug'">XAMLCatalog-Debug-xcvars.txt</VariableFile>
       <VariableFile Condition="'$(Configuration)'=='Release'">XAMLCatalog-Release-xcvars.txt</VariableFile>
     </SBInfoPlistCopy>
+    <SBResourceCopy Include="..\..\XAMLCatalog\Images\100x100.png" />
+    <SBResourceCopy Include="..\..\XAMLCatalog\Images\125x125.png" />
+    <SBResourceCopy Include="..\..\XAMLCatalog\Images\150x150.png" />
+    <SBResourceCopy Include="..\..\XAMLCatalog\Images\50x50.png" />
+    <SBResourceCopy Include="..\..\XAMLCatalog\Images\75x75.png" />
     <SBResourceCopy Include="..\..\XAMLCatalog\Images\blue_background.jpg" />
     <SBResourceCopy Include="..\..\XAMLCatalog\Images\button_image.png" />
     <SBResourceCopy Include="..\..\XAMLCatalog\Images\yellow_background.jpg" />

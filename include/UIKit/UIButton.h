@@ -86,7 +86,7 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic) UIEdgeInsets contentEdgeInsets;
 @property (nonatomic) UIEdgeInsets imageEdgeInsets;
 @property (nonatomic) UIEdgeInsets titleEdgeInsets;
-@property (nonatomic, readonly) UIButtonType buttonType;
+@property (nonatomic, readonly) UIButtonType buttonType STUB_PROPERTY;
 @property (nonatomic, readonly, retain) NSString* currentTitle;
 @property (nonatomic, readonly, retain) UIColor* currentTitleColor;
 @property (nonatomic, readonly, retain) UIColor* currentTitleShadowColor;
