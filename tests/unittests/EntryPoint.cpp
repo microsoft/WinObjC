@@ -14,10 +14,10 @@
 //
 //******************************************************************************
 
-#include "pch.h"
 #include <gtest-api.h>
 
 #ifdef WIN32
+#include "pch.h"
 #include <roapi.h>
 #include <WexTestClass.h>
 #include <wrl\client.h>

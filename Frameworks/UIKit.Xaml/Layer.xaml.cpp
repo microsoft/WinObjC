@@ -105,6 +105,11 @@ void Layer::_RegisterDependencyProperties() {
 // ObjectiveC Interop
 ////////////////////////////////////////////////////////////////////////////////////
 
+// Initializes our library for use; registers dependency properties, etc.
+UIKIT_XAML_EXPORT void UIKitXamlInitialize() {
+    UIKit::Xaml::Private::CoreAnimation::Layer::_RegisterDependencyProperties();
+}
+
 // Set one or more layer properties for the specified target xaml element
 UIKIT_XAML_EXPORT void XamlSetFrameworkElementLayerProperties(
     const Microsoft::WRL::ComPtr<IInspectable>& targetElement,

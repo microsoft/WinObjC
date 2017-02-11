@@ -66,6 +66,9 @@ UIKIT_XAML_EXPORT IInspectable* XamlGetLabelTextBox(const Microsoft::WRL::ComPtr
 // Layer.xaml.cpp
 ////////////////////////////////////////////////////////////////////////////////////
 
+// Initializes our library for use; registers dependency properties, etc.
+UIKIT_XAML_EXPORT void UIKitXamlInitialize();
+
 // Set one or more layer properties for the specified target xaml element
 UIKIT_XAML_EXPORT void XamlSetFrameworkElementLayerProperties(const Microsoft::WRL::ComPtr<IInspectable>& targetElement,
                                                               const Microsoft::WRL::ComPtr<IInspectable>& sublayerCanvasProperty,

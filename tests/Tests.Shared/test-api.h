@@ -566,7 +566,7 @@ __declspec(noinline) inline std::string _ExchangeAlternateTestName(
 
 // clang-format on
 
-__if_not_exists(GetCurrentTestDirectory) {
+IF_NOT_EXISTS_BEGIN(GetCurrentTestDirectory)
     static std::string GetCurrentTestDirectory() {
         WEX::Common::String testDeploymentPath;
         WEX::TestExecution::RuntimeParameters::TryGetValue(L"TestDeploymentDir", testDeploymentPath);
@@ -575,9 +575,9 @@ __if_not_exists(GetCurrentTestDirectory) {
         static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
         return converter.to_bytes(toReturn);
     }
-}
+IF_NOT_EXISTS_END
 
-__if_not_exists(GetTestFullName) {
+IF_NOT_EXISTS_BEGIN(GetTestFullName)
     static std::string GetTestFullName() {
         std::string alternateTestName = _ExchangeAlternateTestName(std::string(), false);
         if (!alternateTestName.empty()) {
@@ -594,7 +594,7 @@ __if_not_exists(GetTestFullName) {
         toReturn.replace(toReturn.find("_"), 1, ".");
         return toReturn;
     }
-}
+IF_NOT_EXISTS_END
 
 #ifndef LOG_TEST_PROPERTY
 #define LOG_TEST_PROPERTY(key, value)                                            \

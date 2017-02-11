@@ -1377,9 +1377,9 @@ internal::CartesianProductHolder10<Generator1, Generator2, Generator3,
 
 
 
-# define TEST_P(test_case_name, test_name) \
+# define GTEST_TEST_P_(test_case_name, test_name, test_fixture_name) \
   class GTEST_TEST_CLASS_NAME_(test_case_name, test_name) \
-      : public test_case_name { \
+      : public test_fixture_name { \
    public: \
     GTEST_TEST_CLASS_NAME_(test_case_name, test_name)() {} \
     virtual void TestBody(); \
@@ -1405,6 +1405,8 @@ internal::CartesianProductHolder10<Generator1, Generator2, Generator3,
                              test_name)::gtest_registering_dummy_ = \
       GTEST_TEST_CLASS_NAME_(test_case_name, test_name)::AddToRegistry(); \
   void GTEST_TEST_CLASS_NAME_(test_case_name, test_name)::TestBody()
+
+# define TEST_P(test_case_name, test_name) GTEST_TEST_P_(test_case_name, test_name, test_case_name)
 
 // The optional last argument to INSTANTIATE_TEST_CASE_P allows the user
 // to specify a function or functor that generates custom test name suffixes
