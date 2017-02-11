@@ -51,7 +51,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>CoreGraphics.def</ModuleDefinitionFile>
-      <AdditionalDependencies>dxguid.lib;libdispatch.lib;libjpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dxguid.lib;libjpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -64,7 +64,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>CoreGraphics.def</ModuleDefinitionFile>
-      <AdditionalDependencies>dxguid.lib;libdispatch.lib;libjpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dxguid.lib;libjpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -77,7 +77,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>CoreGraphics.def</ModuleDefinitionFile>
-      <AdditionalDependencies>dxguid.lib;libdispatch.lib;libjpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dxguid.lib;libjpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -90,7 +90,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>CoreGraphics.def</ModuleDefinitionFile>
-      <AdditionalDependencies>dxguid.lib;libdispatch.lib;libjpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dxguid.lib;libjpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -107,10 +107,6 @@
     <ItemGroup>
 
         <!-- Include Extra Deps for this project. TODO: This would be super extra double awesome to be its own package. -->
-        <_DepsFiles Include="$(StarboardBasePath)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\cairo.dll"/>
-        <_DepsFiles Include="$(StarboardBasePath)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\freetype.dll"/>
-        <_DepsFiles Include="$(StarboardBasePath)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\libpng.dll"/>
-        <_DepsFiles Include="$(StarboardBasePath)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\libz.dll"/>
         <_DepsFiles Include="$(StarboardBasePath)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\libjpeg.dll"/>
 
         <PackageFile Include="@(_DepsFiles)">

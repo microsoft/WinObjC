@@ -59,9 +59,6 @@
     <TargetName>CTCatalog</TargetName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-    <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.props" />
-  </ImportGroup>
   <ImportGroup Label="Shared">
     <Import Project="../CTCatalog-Headers-WinStore10/CTCatalog-Headers.vcxitems" Label="Shared" />
   </ImportGroup>
@@ -239,7 +236,5 @@
     <Font Include="..\..\CTCatalog\Fonts\WinObjC.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.targets" />
-  </ImportGroup>
+
 </Project>

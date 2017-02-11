@@ -21,4 +21,7 @@
     <Asset Type="NativeVisualizer" d:Source="File" Path="Visualizers\ObjectiveC.natvis" />
     <Asset Type="StepFilter" d:Source="File" Path="Visualizers\ObjectiveC.natstepfilter" />
   </Assets>
+  <Prerequisites>
+    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[14.0,15.0)" DisplayName="Visual Studio core editor" />
+  </Prerequisites>
 </PackageManifest>

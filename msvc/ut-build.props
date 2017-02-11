@@ -3,19 +3,11 @@
 
   <ItemDefinitionGroup>
     <ClangCompile>
-      <AdditionalOptions>-Werror=microsoft %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>_WINOBJC_DO_NOT_USE_NSLOG=;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
 
   <PropertyGroup Label="Configuration">
     <StarboardLinkWholeArchive>false</StarboardLinkWholeArchive>
-    <NuGetTargetMoniker>UAP,Version=v10.0</NuGetTargetMoniker>
   </PropertyGroup>
-
-  <PropertyGroup>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(RootNamespace)\</OutDir>
-    <GenerateAppxPackageOnBuild>true</GenerateAppxPackageOnBuild>
-  </PropertyGroup>
-
 </Project>

@@ -25,7 +25,6 @@
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
       <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
     </ProjectReference>
-
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\..\Starboard\dll\Starboard.vcxproj">
       <Project>{0AC27ECF-E2AB-420B-9359-4843FFF4CBFA}</Project>
     </ProjectReference>
@@ -47,7 +46,6 @@
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\..\GLKit\lib\GLKitShaderLib\GLKitShaderLib.vcxproj">
       <Project>{80B52109-9764-40D9-B55E-22CFB804CC17}</Project>
     </ProjectReference>
-
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6F1DE751-C9EE-4868-B040-B2A5933569E8}</ProjectGuid>
@@ -65,7 +63,6 @@
     <WindowsAppContainer>false</WindowsAppContainer>
     <TargetOsAndVersion>Universal Windows</TargetOsAndVersion>
     <StarboardBasePath>..\..\..\..</StarboardBasePath>
-    
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -95,7 +92,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-    <Import Project="$(StarboardBasePath)\msvc\starboard-cmdline.props" />
+  <Import Project="$(StarboardBasePath)\msvc\starboard-cmdline.props" />
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(StarboardBasePath)\msvc\ut-build.props" />
   </ImportGroup>
@@ -230,16 +227,12 @@
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    
     <ClCompile Include="$(StarboardBasePath)\tests\unittests\EntryPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="..\..\..\..\tests\unittests\GLKit\GLKitTest.mm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ItemGroup>
-    <None Include="Project.json" />
-  </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />
   </ItemGroup>

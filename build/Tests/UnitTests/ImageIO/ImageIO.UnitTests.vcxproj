@@ -20,12 +20,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
-        <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
+      <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
     </ProjectReference>
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\..\Foundation\dll\Foundation.vcxproj">
       <Project>{86127226-9A6E-439B-A070-420A572AF0C7}</Project>
     </ProjectReference>
-
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\..\Starboard\dll\Starboard.vcxproj">
       <Project>{0AC27ECF-E2AB-420B-9359-4843FFF4CBFA}</Project>
     </ProjectReference>
@@ -38,7 +37,6 @@
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\..\ImageIO\dll\ImageIO.vcxproj">
       <Project>{81B44F5A-DA8C-4699-BB4D-2C6DA20DD324}</Project>
     </ProjectReference>
-
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{44B89F7E-CCD8-8CEA-8566-EF51B6666B82}</ProjectGuid>
@@ -56,7 +54,6 @@
     <WindowsAppContainer>false</WindowsAppContainer>
     <TargetOsAndVersion>Universal Windows</TargetOsAndVersion>
     <StarboardBasePath>..\..\..\..</StarboardBasePath>
-    
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -86,7 +83,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-    <Import Project="$(StarboardBasePath)\msvc\starboard-cmdline.props" />
+  <Import Project="$(StarboardBasePath)\msvc\starboard-cmdline.props" />
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(StarboardBasePath)\msvc\ut-build.props" />
   </ImportGroup>
@@ -143,7 +140,7 @@
     </ClangCompile>
     <PostBuildEvent>
       <Command>For %%f in ("$(ProjectDir)..\..\..\..\tests\unittests\ImageIO\*.jpg" "$(ProjectDir)..\..\..\..\tests\unittests\ImageIO\*.ico" "$(ProjectDir)..\..\..\..\tests\unittests\ImageIO\*.gif" "$(ProjectDir)..\..\..\..\tests\unittests\ImageIO\*.tif" "$(ProjectDir)..\..\..\..\tests\unittests\ImageIO\*.png" "$(ProjectDir)..\..\..\..\tests\unittests\ImageIO\*.bmp") do (xcopy /y %%f "$(TargetDir)\data\")</Command>
-    </PostBuildEvent>    
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>
@@ -229,7 +226,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    
     <ClCompile Include="$(StarboardBasePath)\tests\unittests\EntryPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -240,7 +236,7 @@
       <ExcludedFromBuild>true</ExcludedFromBuild>
       <DeploymentContent>true</DeploymentContent>
       <FileType>Image</FileType>
-    </Image>  
+    </Image>
     <Image Include="..\..\..\..\tests\unittests\ImageIO\photo6_1024x670.jpg">
       <ExcludedFromBuild>true</ExcludedFromBuild>
       <DeploymentContent>true</DeploymentContent>
@@ -255,7 +251,7 @@
       <ExcludedFromBuild>true</ExcludedFromBuild>
       <DeploymentContent>true</DeploymentContent>
       <FileType>Image</FileType>
-    </Image>      
+    </Image>
     <Image Include="..\..\..\..\tests\unittests\ImageIO\photo8_4layers_1024x683.tif">
       <ExcludedFromBuild>true</ExcludedFromBuild>
       <DeploymentContent>true</DeploymentContent>
@@ -273,9 +269,6 @@
     </Image>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ItemGroup>
-    <None Include="Project.json" />
-  </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />
   </ItemGroup>

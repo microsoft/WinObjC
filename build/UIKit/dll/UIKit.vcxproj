@@ -31,7 +31,7 @@
     <ProjectReference Include="..\..\ImageIO\dll\ImageIO.vcxproj">
       <Project>{81B44F5A-DA8C-4699-BB4D-2C6DA20DD324}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\MobileCoreServices\dll\MobileCoreServicesdll.vcxproj">
+    <ProjectReference Include="..\..\MobileCoreServices\dll\MobileCoreServices.vcxproj">
       <Project>{f1c44e27-6599-49c3-b4c2-d812c114b166}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\QuartzCore\dll\QuartzCore.vcxproj">
@@ -79,7 +79,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>UIKit.def</ModuleDefinitionFile>
-      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -92,7 +92,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>UIKit.def</ModuleDefinitionFile>
-      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -105,7 +105,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>UIKit.def</ModuleDefinitionFile>
-      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -118,7 +118,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>UIKit.def</ModuleDefinitionFile>
-      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DWrite.lib;RTObjCInterop.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>

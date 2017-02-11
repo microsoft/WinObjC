@@ -6,7 +6,7 @@
     <ItemsProjectGuid>{EE68A240-536D-4557-AB96-D164E93059A1}</ItemsProjectGuid>
     <NuGetTargetMoniker>UAP,Version=v10.0</NuGetTargetMoniker>
     <CopyStarboardLibraries>true</CopyStarboardLibraries>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(TargetOsAndVersion)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
@@ -14,13 +14,17 @@
       <PreprocessorDefinitions>INLINE_TEST_METHOD_MARKUP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
+      <AdditionalOptions>-Wno-nullability-completeness %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>INLINE_TEST_METHOD_MARKUP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <IncludePaths>%(IncludePaths);$(MSBuildThisFileDirectory);$(MSBuildThisFileDirectory)..\..\..\tests\Tests.Shared\;$(MSBuildThisFileDirectory)..\..\..\Frameworks\Include\;$(MSBuildThisFileDirectory)..\..\..\include\Platform\$(TargetOsAndVersion);$(MSBuildThisFileDirectory)..\..\..\include\xplat;</IncludePaths>
+      <IncludePaths>%(IncludePaths);$(MSBuildThisFileDirectory);$(MSBuildThisFileDirectory)..\..\..\tests\Tests.Shared\;$(MSBuildThisFileDirectory)..\..\..\Frameworks\Include\;$(MSBuildThisFileDirectory)..\..\..\include\Platform\$(TargetOsAndVersion);$(MSBuildThisFileDirectory)..\..\..\include\xplat;$(MSBuildThisFileDirectory)..\..\..\include\Platform\$(TargetOsAndVersion);</IncludePaths>
     </ClangCompile>
     <ClangCompile Condition="'$(Platform)'=='ARM'">
       <!-- Remove this once exception handling works on ARM -->
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WINOBJC_DISABLE_TESTS</PreprocessorDefinitions>
     </ClangCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(MSBuildThisFileDirectory)..\..\..\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ProjectReference Include="$(MSBuildThisFileDirectory)Tests.Shared.Logger.vcxproj">
@@ -29,6 +33,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\..\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\*.dll" />
   </ItemGroup>
   <ItemGroup>
     <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\Frameworks\CoreFoundation\CharacterSets\*">

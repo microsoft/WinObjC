@@ -220,7 +220,7 @@ if (!$NoCopy)
     if ($TestDirectory -eq "")
     {
         $MyPath = (get-item $MyInvocation.MyCommand.Path).Directory.FullName;
-        $TestSrcDirectory = Join-Path $MyPath "..\build\$Platform\$Config"
+        $TestSrcDirectory = Join-Path $MyPath "..\build\$Platform\$Config\Universal Windows\"
     }
     else
     {
