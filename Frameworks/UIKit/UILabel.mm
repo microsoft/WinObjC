@@ -24,6 +24,7 @@
 #import <Foundation/NSString.h>
 
 #import "UIFontInternal.h"
+#import "UILabelInternal.h"
 #import "CGContextInternal.h"
 #import "StarboardXaml/DisplayProperties.h"
 #import "XamlControls.h"
@@ -224,6 +225,14 @@
     }
 
     return self;
+}
+
+// Returns access to the underlying TextBlock within the UILabel's Xaml representation
+// Note: This is used for UX testing and won't be necessary when we are projecting
+// UIKit.Label into ObjectiveC, as at that point we can just expose the TextBlock directly
+// off of our UIKit.Label implementation.
+- (WXCTextBlock*)_getXamlTextBlock {
+    return _textBlock;
 }
 
 - (void)_initUILabel {
