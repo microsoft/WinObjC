@@ -36,7 +36,7 @@ UIKIT_EXPORT_CLASS
 // thus all gestures are reset
 - (void)resetTrackingGestureList;
 
-// Cancelled a gesture if it is in innteral tracked lists
+// Cancelled a gesture if it is in tracked gesture list
 - (void)cancelTrackedGesture:(UIGestureRecognizer*)curgesture;
 
 //
@@ -56,11 +56,6 @@ UIKIT_EXPORT_CLASS
 //
 // The following are test methods
 //
-
-// Test override to build up custom lists of gestures before processing a touch by GestureCoorindator
-- (void)buildTrackingGesturesListWith:(NSMutableArray*)regularRecognizers
-                     PossibleGestures:(NSMutableSet*)gesturesInPossibleState
-                        DManipGesture:(NSMutableArray*)dManipRecognizers;
 
 // Get tracking regular gestures
 - (NSArray*)getRegularGestureRecognizers;

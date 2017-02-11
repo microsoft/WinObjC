@@ -311,7 +311,7 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIVisualEffectView.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICTFont.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICTFontDescriptor.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\_UIGestureCoordinator.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\_UIGestureCoordinator.mm" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIAnimationNotification.h" />
@@ -350,8 +350,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\XamlUtilities.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICTFont.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICTFontDescriptor.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\_UIDirectManipulationRecognizer.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\_UIGestureCoordinator.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\_UIDirectManipulationRecognizer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\_UIGestureCoordinator.h" />
   </ItemGroup>
   <!-- StarboardXaml files -->
   <ItemGroup>
