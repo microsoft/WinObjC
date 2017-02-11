@@ -272,6 +272,9 @@ DISABLED_TEST(NSPointerArray, Weak) {
 }
 
 TEST(NSPointerArray, Strong) {
+    // Create a autorelease pool for this test so that the objects' used by this test are managed locally.
+    NSAutoreleasePool* pool = [NSAutoreleasePool new];
+
     NSPointerArray* array = [NSPointerArray strongObjectsPointerArray];
 
     NSUInteger notify = 0;
@@ -289,6 +292,8 @@ TEST(NSPointerArray, Strong) {
     ASSERT_EQ_MSG(array.count, 1, @"Incorrect size");
     ptr = [array pointerAtIndex:0];
     ASSERT_EQ_MSG(ptr, static_cast<void*>(dtc), @"Incorrect pointer");
+
+    [pool release];
 }
 
 // Note: NSPointerArray isEqual seems to have been not implemented on the reference platform (even creating two empty

@@ -26,7 +26,7 @@
 
 namespace testing {
 template <typename TComparator = PixelByPixelImageComparator<>>
-class DrawTest : public ::testing::Test {
+class DrawTest: public ::testing::Test {
 private:
     woc::unique_cf<CGContextRef> _context;
     CGRect _bounds;
@@ -36,8 +36,11 @@ public:
     virtual CFStringRef CreateOutputFilename();
     virtual CGSize CanvasSize();
     virtual void SetUpContext();
-    virtual void SetUp();
-    virtual void TearDown();
+
+    virtual void PreDraw();
+    virtual void Draw();
+    virtual void PostDraw();
+
     virtual void TestBody();
 
     CGContextRef GetDrawingContext();
@@ -74,28 +77,48 @@ protected:
     virtual void SetUpContext();
 };
 
-#define DRAW_TEST(test_case_name, test_name) \
-    GTEST_TEST_(test_case_name, test_name, ::testing::DrawTest<>, ::testing::internal::GetTestTypeId())
+#define _DRAW_TEST_INTERSTITIAL_CLASS_NAME(test_case_name, test_name) \
+    test_case_name##_##test_name##_Drawing
+#define _DRAW_TEST_INTERSTITIAL_CLASS(test_case_name, test_name, test_fixture) \
+    class _DRAW_TEST_INTERSTITIAL_CLASS_NAME(test_case_name, test_name): public test_fixture { \
+    public: \
+        virtual void Draw(); \
+    };
+#define _DRAW_TEST_INTERSTITIAL_BODY { \
+    PreDraw(); \
+    Draw(); \
+    PostDraw(); \
+}
+
 #define DRAW_TEST_F(test_case_name, test_name, test_fixture) \
-    GTEST_TEST_(test_case_name, test_name, test_fixture, ::testing::internal::GetTestTypeId())
+    _DRAW_TEST_INTERSTITIAL_CLASS(test_case_name, test_name, test_fixture) \
+    GTEST_TEST_(test_case_name, test_name, _DRAW_TEST_INTERSTITIAL_CLASS_NAME(test_case_name, test_name), ::testing::internal::GetTestTypeId()) \
+        _DRAW_TEST_INTERSTITIAL_BODY \
+    void _DRAW_TEST_INTERSTITIAL_CLASS_NAME(test_case_name, test_name)::Draw()
+
+#define DRAW_TEST(test_case_name, test_name) \
+    DRAW_TEST_F(test_case_name, test_name, ::testing::DrawTest<>)
 
 #define DISABLED_DRAW_TEST(test_case_name, test_name) DRAW_TEST(test_case_name, DISABLED_##test_name)
 #define DISABLED_DRAW_TEST_F(test_case_name, test_name, test_fixture) DRAW_TEST_F(test_case_name, DISABLED_##test_name, test_fixture)
 
-#define DRAW_TEST_P(test_case_name, test_name) TEST_P(test_case_name, test_name)
+#define DRAW_TEST_P(test_case_name, test_name) \
+    _DRAW_TEST_INTERSTITIAL_CLASS(test_case_name, test_name, test_case_name) \
+    GTEST_TEST_P_(test_case_name, test_name, _DRAW_TEST_INTERSTITIAL_CLASS_NAME(test_case_name, test_name)) \
+        _DRAW_TEST_INTERSTITIAL_BODY \
+    void _DRAW_TEST_INTERSTITIAL_CLASS_NAME(test_case_name, test_name)::Draw()
 #define DISABLED_DRAW_TEST_P(test_case_name, test_name) DRAW_TEST_P(test_case_name, DISABLED_##test_name)
 
 #define TEXT_DRAW_TEST(test_case_name, test_name)                                       \
-    GTEST_TEST_(test_case_name,                                                         \
+    DRAW_TEST_F(test_case_name,                                                         \
                 test_name,                                                              \
-                ::testing::DrawTest<PixelByPixelImageComparator<ComparisonMode::Mask>>, \
-                ::testing::internal::GetTestTypeId())
+                ::testing::DrawTest<PixelByPixelImageComparator<ComparisonMode::Mask>>)
 #define TEXT_DRAW_TEST_F(test_case_name, test_name, test_fixture) \
-    GTEST_TEST_(test_case_name, test_name, test_fixture, ::testing::internal::GetTestTypeId())
+    DRAW_TEST_F(test_case_name, test_name, test_fixture)
 
 #define DISABLED_TEXT_DRAW_TEST(test_case_name, test_name) TEXT_DRAW_TEST(test_case_name, DISABLED_##test_name)
 #define DISABLED_TEXT_DRAW_TEST_F(test_case_name, test_name, test_fixture) \
     TEXT_DRAW_TEST_F(test_case_name, DISABLED_##test_name, test_fixture)
 
-#define TEXT_DRAW_TEST_P(test_case_name, test_name) TEST_P(test_case_name, test_name)
+#define TEXT_DRAW_TEST_P(test_case_name, test_name) DRAW_TEST_P(test_case_name, test_name)
 #define DISABLED_TEXT_DRAW_TEST_P(test_case_name, test_name) TEXT_DRAW_TEST_P(test_case_name, DISABLED_##test_name)

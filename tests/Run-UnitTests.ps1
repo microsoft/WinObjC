@@ -1,38 +1,97 @@
 <#
 .SYNOPSIS
-    Runs Tests for Islandwood project.
+    Runs Functional Tests for Islandwood project.
+
+.PARAMETER TAEFDirectory
+    The path to TAEF binaries
+
+.PARAMETER TestDirectory
+    The path to test binaries
+
+.PARAMETER Platform
+    platform to run tests on. Valid values are Win32 or ARM
+
+.PARAMETER Config
+    Test configuration to use for the test. Valid values are Debug or Release
+
+.PARAMETER Device
+    IP or MAC address of the device to run tests on
+
+.PARAMETER TestFilter
+    Test filter to use for the test. Supports wildcard characters
+
+.PARAMETER ModuleFilter
+    Regex of Test Modules to look for
+
+.PARAMETER WTLOutputDirectory
+    Path to test output. If not set, no result file will be saved.
+
+.PARAMETER NoCopy
+    Switch to disable copying test to the device
+
+.PARAMETER TestWorkingDirectory
+    Path to the working test directory from where the tests will be run
+
+.PARAMETER PackageRootPath
+    Path to build share where the TAEF package can be found
+
+.PARAMETER RedirectTAEFErrors
+    Redirect TAEF errors/failures to stderr.  This is used to integrate with VSTS powershell task.
+
+.PARAMETER WTTLogPath
+    Path to find WTTLog dll
+
+
+.EXAMPLE
+    Run-UnitTests.ps1 -TAEFDirectory D:\TAEF
+    Run-UnitTests.ps1 -TAEFDirectory \data\test\bin -Platform ARM
+
 #>
 param(
-    [Parameter(ParameterSetName="TestLocation", HelpMessage="Directory of Tests to run")]
+    [string]$TAEFDirectory = "",
+
     [string]$TestDirectory = "",
 
-    [Parameter(HelpMessage="Architecture of tests to run")]
     [string][ValidateSet("Win32", "ARM")]
     $Platform = "Win32",
 
-    [Parameter(ParameterSetName="TestLocation", HelpMessage="Directory of Tests to run")]
     [string][ValidateSet("Debug", "Release")]
     $Config = "Debug",
 
-    [Parameter(HelpMessage="IP or MAC address of remote device to run tests on")]
     [string]$Device = "127.0.0.1",
 
-    [Parameter(HelpMessage="Regex of Test Modules to look for")]
-    [string]$ModuleFilter = $null,
-
-    [Parameter(HelpMessage="Regex of Tests to run")]
     [string]$TestFilter = $null,
 
-    [Parameter(HelpMessage="Location to place output xml files. If not set, no result files will be saved.")]
-    [string]$XMLOutputDirectory = $null,
+    [string]$ModuleFilter = "*.UnitTests.dll",
 
-    [Parameter(HelpMessage="Output Verbosity")]
-    [string][ValidateSet("Minimal", "Verbose")]
-    $Verbosity = "Verbose",
-    
-    [Parameter(HelpMessage="Wont Deploy in ARM. Assumes already deployed bits exist")]
-    [switch] $DontDeploy
+    [string]$WTLOutputDirectory = $null,
+
+    [switch]$NoCopy,
+
+    [string]$TestWorkingDirectory = "",
+
+    [string]$PackageRootPath = $null,
+
+    [switch]$RedirectTAEFErrors,
+
+    [string]$WTTLogPath = $null
 )
+
+if ($NoCopy)
+{
+    if ($TestWorkingDirectory -eq "")
+    {
+         throw "Please specify -TestWorkingDirectory argument with -NoCopy option."
+    }
+}
+
+if ($TestWorkingDirectory -ne "")
+{
+    if (!$NoCopy)
+    {
+         throw "Please specify -NoCopy option when using -TestWorkingDirectory argument."
+    }
+}
 
 $TargetingDevice = ($Platform -eq "ARM")
 
@@ -52,39 +111,49 @@ function EnsureDeviceConnection
     }
 }
 
-function DeployTests($testList)
+function DeployTests
 {
     if ($TargetingDevice)
     {
-        # Copy the tests to the device
+        # Make sure TAEF package is installed on the device
+        Try
+        {
+            # Checking for installed packages is not trivial. For now keep it simple.
+            dird \data\test\bin\TE.TestMode.UAP.dll | Out-Null
+        }
+        Catch
+        {
+            $TAEFPackageName = "Microsoft.Windows.Test.Taef"
 
-        Write-Host "Copying tests to the device - this may take a while... (about 2 minutes)"
-
-        Try {
-            mdd $TestDstDirectory
-        } Catch {
-            # putd fails if the directory doesn't already exist.
-            # mdd fails if the directory does already exist.
-            # This is awkward.
+            Write-Host -ForegroundColor Cyan "Installing $TAEFPackageName package - this may take about a minute"
+            if ($PackageRootPath -eq [string]$null)
+            {
+                deployd -Packages $TAEFPackageName -OnDevice
+            }
+            else
+            {
+                deployd -Packages $TAEFPackageName -PackageRootPath $PackageRootPath
+            }
         }
 
-        foreach($test in $testList) {
-          $testPath = Join-Path $TestSrcDirectory $test
-          $testDirectory = [System.IO.Path]::GetDirectoryName($testPath);
-          
-          $testOutputPath = Join-Path $TestDstDirectory $test
-          $testOutputDirectory = [System.IO.Path]::GetDirectoryName($testOutputPath);
-          
-          Try {
-            mdd $testOutputDirectory
-          } Catch {
-              # putd fails if the directory doesn't already exist.
-              # mdd fails if the directory does already exist.
-              # This is awkward.
-          }
+        if (!$NoCopy)
+        {
 
-          write-host "Copying $testDirectory to $testOutputDirectory"
-          putd -recurse $testDirectory $testOutputDirectory
+            # Copy the tests to the device
+            Write-Host -ForegroundColor Cyan "Copying tests to the device - this may take about a minute"
+
+            Try
+            {
+                mdd $TestDstDirectory
+            }
+            Catch
+            {
+                # putd fails if the directory doesn't already exist.
+                # mdd fails if the directory does already exist.
+                # This is awkward.
+            }
+
+            putd -recurse $TestSrcDirectory\* $TestDstDirectory
         }
     }
     else
@@ -93,48 +162,87 @@ function DeployTests($testList)
     }
 }
 
-function ExecTest($test, $argList, $outputRemoteName, $outputLocalName)
+function ExecTest($argList)
 {
-    $testPath = Join-Path $TestDstDirectory $test
+    Write-Host -ForegroundColor Cyan "Starting test execution..."
 
-    if ($TargetingDevice)
+    if ($TAEFDirectory -eq "")
     {
-        execd $testPath $argList
-
-        # Fetch the output from the device
-        getd $outputRemoteName $outputLocalName
-        deld $outputRemoteName
+        $taefPath = Join-Path $TestSrcDirectory te.exe
     }
     else
     {
-        if ($Verbosity -eq "Minimal")
+        $taefPath = Join-Path $TAEFDirectory te.exe
+    }
+
+    $testPath = Join-Path $TestDstDirectory $ModuleFilter
+
+    if ($TargetingDevice)
+    {
+        cmdd $taefPath $testPath $argList
+
+        if ($WTLOutputDirectory -ne [string]$null)
         {
-            & $testPath $argList >$null
+            # Fetch the output from the device
+            getd $outputRemoteName $outputLocalName
+            deld $outputRemoteName
         }
-        else
-        {
-            & $testPath $argList
+    }
+    else
+    {
+        $arguments = "$testPath" + "$argList"
+        if ($RedirectTAEFErrors) {
+            $output = Invoke-Expression "$taefPath $arguments"
+            $script:exitCode = $LASTEXITCODE
+            foreach ($o in $output) {
+                            
+                if ($o.StartsWith("Error:") -or $o.Contains("[Failed]")) {
+
+                    #TAEF does not report exceptions/crashes/failures during test cleanup as test failures.
+                    #However, it will log a message like: "Error: TAEF: [HRESULT 0x8000FFFF] ...."
+                    #We want to detect and mark these as test failures.
+                    $script:exitCode = 1
+
+                    #Note: Adding ##[error]: is just to make the errors show up as red in VSTS output
+                    #Unfortunately, writing the output to stderr (write-error) creates a lot of noise in powershell.
+                    #And attempting to use Console.WriteError or $host.ui.WriteErrorLine results in lines be displayed out of order.
+                    write-host "##[error]: $o" -foregroundcolor red
+
+                } else {
+                    write-host $o
+                }
+            }
+        } else {
+            Invoke-Expression "$taefPath $arguments"
+            $script:exitCode = $LASTEXITCODE
         }
     }
 }
 
-if ($TestDirectory -eq "") 
+if (!$NoCopy)
 {
-    $MyPath = (get-item $MyInvocation.MyCommand.Path).Directory.FullName;
-    $TestSrcDirectory = Join-Path $MyPath "..\build\$Platform\$Config"
-}
-else
-{
-    $TestSrcDirectory = $TestDirectory
-}
+    if ($TestDirectory -eq "")
+    {
+        $MyPath = (get-item $MyInvocation.MyCommand.Path).Directory.FullName;
+        $TestSrcDirectory = Join-Path $MyPath "..\build\$Platform\$Config\Tests"
+    }
+    else
+    {
+        $TestSrcDirectory = $TestDirectory
+    }
 
-if ($TargetingDevice)
-{
-    $TestDstDirectory = "C:\data\test\bin\islandwood"
+    if ($TargetingDevice)
+    {
+        $TestDstDirectory = "\data\test\bin\islandwood\UnitTests"
+    }
+    else
+    {
+        $TestDstDirectory = $TestSrcDirectory
+    }
 }
 else
 {
-    $TestDstDirectory = $TestSrcDirectory
+    $TestDstDirectory = $TestWorkingDirectory
 }
 
 if ($TargetingDevice)
@@ -142,158 +250,44 @@ if ($TargetingDevice)
     EnsureDeviceConnection
 }
 
-$DefaultModuleFilter = ".*((u|U)nit)(t|T)ests.*\.(exe)"
+DeployTests
 
-$Tests = $null
-
-Push-Location $TestSrcDirectory
-
-if ($ModuleFilter -ne [string]$null) {
-    $Tests = Get-ChildItem -Recurse | Where-Object {($_.Name -Match $DefaultModuleFilter) -and ($_.Name -Like ($ModuleFilter + "*exe") -or $_.Name -Like ($ModuleFilter))} | Resolve-Path -Relative
-} else {
-    $Tests = Get-ChildItem -Recurse | Where-Object {$_.Name -Match $DefaultModuleFilter} | Resolve-Path -Relative
+if (($WTLOutputDirectory -ne [string]$null) -and ((Test-Path -Path $WTLOutputDirectory -PathType Container) -eq 0))
+{
+    New-Item -ItemType Directory -Path $WTLOutputDirectory
 }
 
-Pop-Location
+$outputLocalName = $null;
+$outputRemoteName = $null;
+$argList = "";
 
-if(-not $DontDeploy) {
-  DeployTests $Tests
-}
+$outputFileName = "UnitTestsResult.wtl"
 
-if (($XMLOutputDirectory -ne [string]$null) -and ((Test-Path -Path $XMLOutputDirectory -PathType Container) -eq 0)) {
-    New-Item -ItemType Directory -Path $XMLOutputDirectory
-}
+# Decide where the WTL output files will live
+if ($WTLOutputDirectory -ne [string]$null)
+{
+    $WTTLogFullPath = Join-Path $WTTLogPath wttlog.dll 
+    Copy-Item $WTTLogFullPath -Destination $TestSrcDirectory -Force
 
-$xmlOutputArray = @()
-$crashingTestArray = @()
-foreach ($test in $Tests) {
-    $testInfo = Get-Item (Join-Path $TestSrcDirectory $test)
-
-    $outputLocalName = $null;
-    $outputRemoteName = $null;
-
-    # Decide where the XML output files will live
-
-    if ($XMLOutputDirectory -eq [string]$null) {
-        $outputLocalName = [System.IO.Path]::GetRandomFileName()
-    } else {
-        $outputLocalName = Join-Path -Path $XMLOutputDirectory -ChildPath ($testInfo.Name + ".xml")
+    if ($TargetingDevice)
+    {
+        $outputLocalName = Join-Path -Path $WTLOutputDirectory -ChildPath $outputFileName
+        $outputRemoteName = Join-Path -Path $TestDstDirectory -ChildPath $outputFileName
+        $argList += " /logFile:$outputRemoteName /enableWttLogging"
     }
-
-    if ($TargetingDevice) {
-        $outputRemoteName = Join-Path -Path $TestDstDirectory -ChildPath ([System.IO.Path]::GetRandomFileName())
-    } else {
-        $outputRemoteName = $outputLocalName
-    }
-
-    Try {
-        $argList = @("--gtest_output=xml:$outputRemoteName")
-
-        if($TestFilter -ne [string]$null) {
-            $argList += "--gtest_filter=$TestFilter"
-        }
-
-        if($Verbosity -eq "Minimal") {
-            $argList += "--quiet --no-verbose"
-        }
-
-        ExecTest $test $argList $outputRemoteName $outputLocalName
-
-        [xml]$xml = Get-Content $outputLocalName
-        $xmlOutputArray += [tuple]::Create($testInfo.FullName, $xml)
-
-        if ($XMLOutputDirectory -eq [string]$null) {
-            Remove-Item $outputLocalName -Force
-        }
-    } Catch {
-
-        $crashingTestArray += ($testInfo.FullName)
-    }
-    
-}
-
-$testCount = 0;
-$failureCount = 0;
-$disabledCount = 0;
-
-$failureMessageArray = @()
-$disabledMessageArray = @()
-
-foreach ($xmlTuple in $xmlOutputArray) {
-    foreach($testsuite in $xmlTuple.Item2.testsuites.testsuite) {
-
-        $testCount += $testsuite.tests
-        $failureCount += $testsuite.failures
-        $disabledCount += $testsuite.disabled
-
-        if ($testsuite.failures -ne 0) {
-            foreach ($testcase in $testsuite.testcase) {
-                $testFailureArray = @()
-                foreach ($failure in $testcase.failure) {
-                    $testFailureArray += $failure.message
-                }
-
-                if ($testFailureArray.length -ne 0) {
-                    $failureMessageArray += [tuple]::Create([tuple]::Create($xmlTuple.Item1, $testsuite.name, $testcase.Name), $testFailureArray)
-                }
-            }
-        }
-        
-        if ($testsuite.disabled -ne 0) {
-            foreach ($testcase in $testsuite.testcase) {
-                if ($testcase.status -ne "run") {
-                    $disabledMessageArray += [tuple]::Create([tuple]::Create($xmlTuple.Item1, $testsuite.name, $testcase.Name), 0)
-                }
-            }
-        }
-
+    else
+    {
+        $outputLocalName = Join-Path -Path $WTLOutputDirectory -ChildPath $outputFileName
+        $argList += " /logFile:$outputLocalName /enableWttLogging"
     }
 }
 
 
-Write-Host "-----------------------------------------------------"
-Write-Host "SUMMARY Passed: " -NoNewLine
-Write-Host ($testCount - $failureCount - $disabledCount) -foregroundcolor "Green" -NoNewLine
-Write-Host  " Failed: " -NoNewLine 
-Write-Host ($failureCount) -foregroundcolor "Red" -NoNewLine
-Write-Host  " Disabled: " -NoNewLine 
-Write-Host ($disabledCount) -foregroundcolor "Yellow" -NoNewLine
-Write-Host  " Total: " -NoNewLine 
-Write-Host  $testCount
-Write-Host  ""
-
-if ($disabledMessageArray.length -ne 0) {
-    Write-Host  "DISABLED TESTS:" -foregroundcolor "Yellow"
-
-    foreach ($disabledMessage in $disabledMessageArray) {
-        Write-Host  "  " $disabledMessage.Item1.Item2 -foregroundcolor "Yellow" -NoNewLine 
-        Write-Host  "." -foregroundcolor "Yellow" -NoNewLine
-        Write-Host  $disabledMessage.Item1.Item3 -foregroundcolor "Yellow"
-    }
-    
-    Write-Host  ""
+if($TestFilter -ne [string]$null)
+{
+    $argList += " /name:$TestFilter"
 }
 
-if ($crashingTestArray.length -ne 0) {
-    Write-Host  "PROBLEMS RUNNING MODULES:" -foregroundcolor "Red"
+ExecTest $argList
 
-    foreach ($crash in $crashingTestArray) {
-        Write-Host  "  " $crash -foregroundcolor "Red"
-    }
-
-    Write-Host  ""
-}
-
-if ($failureMessageArray.length -ne 0) {
-    Write-Host  "FAILING TESTS:" -foregroundcolor "Red"
-
-    foreach ($errorMessage in $failureMessageArray) {
-        Write-Host  "  " $errorMessage.Item1.Item2 -foregroundcolor "Red" -NoNewLine 
-        Write-Host  "." -foregroundcolor "Red" -NoNewLine
-        Write-Host  $errorMessage.Item1.Item3 -foregroundcolor "Red" -NoNewLine
-        $reproLine = "  ( " + $errorMessage.Item1.Item1 + " --gtest_filter=" + $errorMessage.Item1.Item2 + "." + $errorMessage.Item1.Item3 + " )"
-        Write-Host  $reproLine -foregroundcolor "Red"
-    }
-}
-
-exit $failureCount + $crashingTestArray.length
+exit $script:exitCode

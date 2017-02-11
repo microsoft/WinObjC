@@ -25,25 +25,19 @@
 template <size_t N>
 static int strconstprefix(const char* left, const char (&right)[N]) {
     // The null terminator would fail a prefix match; don't count it.
-    return strncmp(left, right, N-1);
+    return strncmp(left, right, N - 1);
 }
 
 static std::string __ModuleDirectory() {
-    static std::string modulePath = []() {
-        std::string modulePath(MAX_PATH, '\0');
-        GetModuleFileNameA(nullptr, &modulePath[0], modulePath.capacity());
-        auto pos = modulePath.rfind('\\');
-        if (pos == std::string::npos) {
-            pos = modulePath.rfind('/');
-        }
-
-        if (pos != std::string::npos) {
-            modulePath.erase(pos);
-        }
-
-        return modulePath;
-    }();
+    static std::string modulePath = GetCurrentTestDirectory();
     return modulePath;
+}
+
+static std::string __OutputDirectory() {
+    std::string toReturn;
+    toReturn.resize(_MAX_PATH, '\0');
+    _getcwd(&toReturn[0], _MAX_PATH);
+    return toReturn;
 }
 
 class CommandLineDrawingTestConfigImpl : public DrawingTestConfigImpl {
@@ -54,7 +48,7 @@ private:
 
 public:
     CommandLineDrawingTestConfigImpl(int argc, char** argv)
-        : _mode(DrawingTestMode::Compare), _outputPath(__ModuleDirectory()), _comparisonPath(__ModuleDirectory() + "/data/reference") {
+        : _mode(DrawingTestMode::Compare), _outputPath(__OutputDirectory()), _comparisonPath(__ModuleDirectory() + "/data/reference") {
         for (int i = 1; i < argc; ++i) {
             char* arg = argv[i];
             if (!arg) {
@@ -94,21 +88,7 @@ std::shared_ptr<DrawingTestConfigImpl> _configImpl;
     return _configImpl.get();
 }
 
-#ifdef WIN32
-#include <COMIncludes.h>
-#include <wrl\wrappers\corewrappers.h>
-#include <COMIncludes_end.h>
-using namespace Microsoft::WRL::Wrappers;
-#endif
-
 int main(int argc, char** argv) {
-#ifdef WIN32
-    // Initialize the windows runtime, with uninitialized upon destructor invocation.
-    RoInitializeWrapper initialize(RO_INIT_MULTITHREADED);
-    if (FAILED(initialize)) {
-        return -1;
-    }
-#endif
     testing::InitGoogleTest(&argc, argv);
 
     _configImpl = std::move(std::make_shared<CommandLineDrawingTestConfigImpl>(argc, argv));

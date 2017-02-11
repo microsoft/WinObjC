@@ -18,4 +18,6 @@
 
 // If this file compiles successfully the test is considered to have passed
 // and implies that all imported headers are C compliant
-
+extern int ReturnsThree() {
+    return 3;
+}

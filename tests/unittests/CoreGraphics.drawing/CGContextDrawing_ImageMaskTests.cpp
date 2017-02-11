@@ -122,7 +122,6 @@ private:
 
 protected:
     CFStringRef CreateOutputFilename() {
-        const ::testing::TestInfo* const test_info = ::testing::UnitTest::GetInstance()->current_test_info();
         ClippingShape shape = ::testing::get<0>(GetParam());
         ClippingType type = ::testing::get<1>(GetParam());
         const char* shapeName = "unk";
@@ -146,12 +145,7 @@ protected:
                 typeName = "alpha";
                 break;
         }
-        return CFStringCreateWithFormat(nullptr,
-                                        nullptr,
-                                        CFSTR("TestImage.CGContextClipping.%s.%s.%s.png"),
-                                        test_info->name(),
-                                        shapeName,
-                                        typeName);
+        return CFStringCreateWithFormat(nullptr, nullptr, CFSTR("TestImage.%s.%s.%s.png"), GetTestFullName().c_str(), shapeName, typeName);
     }
 
     CGImageRef GetClippingImage(ClippingShape shape, ClippingType type) {
@@ -187,7 +181,7 @@ std::vector<std::tuple<ClippingShape, CGSize, std::function<void(CGContextRef, C
     { ClippingShapeRectangle, CGSize{ 256, 128 }, __GradientMaskGenerator },
 };
 
-TEST_P(CGContextClipping, StraightMask) {
+DRAW_TEST_P(CGContextClipping, StraightMask) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
     ClippingShape shape = ::testing::get<0>(GetParam());
@@ -199,7 +193,7 @@ TEST_P(CGContextClipping, StraightMask) {
     _FillContext();
 }
 
-TEST_P(CGContextClipping, TransformedMask) {
+DRAW_TEST_P(CGContextClipping, TransformedMask) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
     ClippingShape shape = ::testing::get<0>(GetParam());
@@ -213,7 +207,7 @@ TEST_P(CGContextClipping, TransformedMask) {
     _FillContext();
 }
 
-TEST_P(CGContextClipping, StackedMaskSameType) {
+DRAW_TEST_P(CGContextClipping, StackedMaskSameType) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
     ClippingShape shape = ::testing::get<0>(GetParam());
@@ -228,7 +222,7 @@ TEST_P(CGContextClipping, StackedMaskSameType) {
     _FillContext();
 }
 
-TEST_P(CGContextClipping, StackedMaskOtherType) {
+DRAW_TEST_P(CGContextClipping, StackedMaskOtherType) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
     ClippingShape shape = ::testing::get<0>(GetParam());
@@ -244,7 +238,7 @@ TEST_P(CGContextClipping, StackedMaskOtherType) {
     _FillContext();
 }
 
-TEST_P(CGContextClipping, MaskedAndClipped) {
+DRAW_TEST_P(CGContextClipping, MaskedAndClipped) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
     ClippingShape shape = ::testing::get<0>(GetParam());

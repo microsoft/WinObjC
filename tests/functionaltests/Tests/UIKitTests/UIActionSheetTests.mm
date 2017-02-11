@@ -30,38 +30,60 @@
 #include "ObjCXamlControls.h"
 #import "UWP/WindowsUIXamlControls.h"
 
-TEST(UIActionSheet, CreateXamlElement) {
-    // TODO: Switch to UIKit.Xaml projections when they're available.
-    Microsoft::WRL::ComPtr<IInspectable> xamlElement;
-    XamlCreateContentDialog(&xamlElement);
-    ASSERT_TRUE(xamlElement);
-}
+class UIKitActionSheetTests {
+public:
+    BEGIN_TEST_CLASS(UIKitActionSheetTests)
+    END_TEST_CLASS()
 
-TEST(UIActionSheet, GetXamlElement) {
-    UIActionSheet* actionSheet = [[[UIActionSheet alloc] init] autorelease];
-    WXFrameworkElement* backingElement = [actionSheet xamlElement];
-    ASSERT_TRUE(backingElement);
+    TEST_CLASS_SETUP(UIKitTestsSetup) {
+        return FunctionalTestSetupUIApplication();
+    }
 
-    ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
-}
+    TEST_CLASS_CLEANUP(UIKitTestsCleanup) {
+        return FunctionalTestCleanupUIApplication();
+    }
 
-TEST(UIActionSheet, NilParameters) {
-    UIActionSheet* actionSheet =
-        [[[UIActionSheet alloc] initWithTitle:nil delegate:nil cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil]
-            autorelease];
-    WXFrameworkElement* backingElement = [actionSheet xamlElement];
-    ASSERT_TRUE(backingElement);
+    TEST_METHOD(CreateXamlElement) {
+        FrameworkHelper::RunOnUIThread([]() {
+            // TODO: Switch to UIKit.Xaml projections when they're available.
+            Microsoft::WRL::ComPtr<IInspectable> xamlElement;
+            XamlCreateContentDialog(&xamlElement);
+            ASSERT_TRUE(xamlElement);
+        });
+    }
 
-    // Check that cancel button index, destructive button index, other button index are correct
-    NSInteger numButtons = [actionSheet numberOfButtons];
-    ASSERT_TRUE(numButtons == 0);
+    TEST_METHOD(GetXamlElement) {
+        FrameworkHelper::RunOnUIThread([]() {
+            UIActionSheet* actionSheet = [[[UIActionSheet alloc] init] autorelease];
+            WXFrameworkElement* backingElement = [actionSheet xamlElement];
+            ASSERT_TRUE(backingElement);
 
-    NSInteger cancelIndex = [actionSheet cancelButtonIndex];
-    ASSERT_TRUE(cancelIndex == -1);
+            ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
+        });
+    }
 
-    NSInteger destructiveIndex = [actionSheet destructiveButtonIndex];
-    ASSERT_TRUE(cancelIndex == -1);
+    TEST_METHOD(NilParameters) {
+        FrameworkHelper::RunOnUIThread([]() {
+            UIActionSheet* actionSheet = [[[UIActionSheet alloc] initWithTitle:nil
+                                                                      delegate:nil
+                                                             cancelButtonTitle:nil
+                                                        destructiveButtonTitle:nil
+                                                             otherButtonTitles:nil] autorelease];
+            WXFrameworkElement* backingElement = [actionSheet xamlElement];
+            ASSERT_TRUE(backingElement);
 
-    NSInteger otherIndex = [actionSheet firstOtherButtonIndex];
-    ASSERT_TRUE(otherIndex == -1);
-}
+            // Check that cancel button index, destructive button index, other button index are correct
+            NSInteger numButtons = [actionSheet numberOfButtons];
+            ASSERT_TRUE(numButtons == 0);
+
+            NSInteger cancelIndex = [actionSheet cancelButtonIndex];
+            ASSERT_TRUE(cancelIndex == -1);
+
+            NSInteger destructiveIndex = [actionSheet destructiveButtonIndex];
+            ASSERT_TRUE(cancelIndex == -1);
+
+            NSInteger otherIndex = [actionSheet firstOtherButtonIndex];
+            ASSERT_TRUE(otherIndex == -1);
+        });
+    }
+};

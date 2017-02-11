@@ -28,7 +28,6 @@
     NSArray* _contentsGravityValues;
 
     UISwitch* _switchDisplayContents;
-    UISwitch* _switchGeometryFlipped;
     UISwitch* _switchHidden;
 
     UISlider* _sliderGravity;
@@ -81,10 +80,6 @@
     [_switchDisplayContents addTarget:self action:@selector(displayContentsToggle) forControlEvents:UIControlEventValueChanged];
     [_menuTVC addMenuItemView:_switchDisplayContents andTitle:@"Display Contents"];
 
-    _switchGeometryFlipped = [[UISwitch alloc] init];
-    [_switchGeometryFlipped addTarget:self action:@selector(geometryFlippedToggle) forControlEvents:UIControlEventValueChanged];
-    [_menuTVC addMenuItemView:_switchGeometryFlipped andTitle:@"Geometry Flipped"];
-
     _switchHidden = [[UISwitch alloc] init];
     [_switchHidden addTarget:self action:@selector(hiddenToggle) forControlEvents:UIControlEventValueChanged];
     [_menuTVC addMenuItemView:_switchHidden andTitle:@"Hidden"];
@@ -112,10 +107,6 @@
 
 - (void)displayContentsToggle {
     _layer.contents = _switchDisplayContents.on ? _safeImage : nil;
-}
-
-- (void)geometryFlippedToggle {
-    _layer.geometryFlipped = _switchGeometryFlipped.on;
 }
 
 - (void)hiddenToggle {
@@ -151,20 +142,8 @@
     // _layer.masksToBounds
     // _layer.mask
     // _layer.doubleSided
-
-#ifndef WINOBJC
-    _layer.cornerRadius = 100.0;
-    _layer.borderWidth = 12.0;
-    _layer.borderColor = [UIColor whiteColor].CGColor;
-#endif
-
     _layer.backgroundColor = [UIColor orangeColor].CGColor;
 
-#ifndef WINOBJC
-    _layer.shadowOpacity = 0.75;
-    _layer.shadowRadius = 3.0;
-    _layer.shadowOffset = CGSizeMake(0, 3);
-#endif
     // _layer.shadowPath
     // _layer.style
     // _layer.allowsEdgeAntiAliasing

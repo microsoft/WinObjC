@@ -157,10 +157,9 @@ TEST(CGDataProvider, CreateWithCFData) {
 }
 
 TEST(CGDataProvider, CreateWithFilename) {
-    char fullPath[_MAX_PATH];
-    GetModuleFileNameA(nullptr, fullPath, _MAX_PATH);
+    auto fullPath = GetCurrentTestDirectory();
     NSString* relativePath = @"/data/WinObjC.ttf";
-    NSString* path = [[@(fullPath) stringByDeletingLastPathComponent] stringByAppendingPathComponent:relativePath];
+    NSString* path = [@(fullPath.c_str()) stringByAppendingPathComponent:relativePath];
     const char* filename = [path UTF8String];
     woc::unique_cf<CGDataProviderRef> provider{ CGDataProviderCreateWithFilename(filename) };
     woc::unique_cf<CFDataRef> data{ CGDataProviderCopyData(provider.get()) };

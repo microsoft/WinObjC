@@ -1,3 +1,4 @@
+// clang-format off
 // Copyright 2008 Google Inc.
 // All Rights Reserved.
 //
@@ -598,6 +599,15 @@ class ParameterizedTestCaseInfo : public ParameterizedTestCaseInfoBase {
     }  // for test_it
   }  // RegisterTests
 
+  std::vector<std::pair<std::string, TestMetaFactoryBase<typename TestCase::ParamType>*>> GetTestMetaFactories() {
+    std::vector<std::pair<std::string, TestMetaFactoryBase<typename TestCase::ParamType>*>> toReturn;
+    for (auto& test_info : tests_) {
+      toReturn.push_back(std::make_pair(test_info->test_base_name, test_info->test_meta_factory.get()));
+    }
+
+    return toReturn;
+  }
+
  private:
   // LocalTestInfo structure keeps information about a single test registered
   // with TEST_P macro.
@@ -729,3 +739,5 @@ class ParameterizedTestCaseRegistry {
 #endif  //  GTEST_HAS_PARAM_TEST
 
 #endif  // GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PARAM_UTIL_H_
+
+// clang-format on

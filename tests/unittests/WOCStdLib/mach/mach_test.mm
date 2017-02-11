@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#include <TestFramework.h>
 #import <mach/mach.h>
 #include <mach/mach_defs.h>
 
