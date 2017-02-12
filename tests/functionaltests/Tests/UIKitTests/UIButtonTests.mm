@@ -142,13 +142,21 @@ public:
         });
 
         // Title color
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            WUXMSolidColorBrush* solidForegroundBrush = rt_dynamic_cast([WUXMSolidColorBrush class], textBlock.foreground);
+        __block auto uxEvent = UXEvent::CreateAuto();
+        __block auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
 
-            // BUGBUG: Thought the default should be whiteColor
-            UIColor* expectedTitleColor = [UIColor blackColor];
-            EXPECT_TRUE(UXTestAPI::IsRGBAEqual(solidForegroundBrush, expectedTitleColor));
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // Register RAII event subscription handler
+            xamlSubscriber->Set(textBlock, [WXCTextBlock foregroundProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
+                WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], [sender getValue:dp]);
+
+                // Validation
+                if (UXTestAPI::IsRGBAEqual(solidBrush, [UIColor whiteColor])) {
+                    uxEvent->Set();
+                }
+            });
         });
+        ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event state timed out!");
 
         // Title
         ASSERT_EQ(buttonToTest.currentTitle, nil);
@@ -179,13 +187,21 @@ public:
         });
 
         // Title color
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            WUXMSolidColorBrush* solidForegroundBrush = rt_dynamic_cast([WUXMSolidColorBrush class], textBlock.foreground);
+        __block auto uxEvent = UXEvent::CreateAuto();
+        __block auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
 
-            // BUGBUG: Thought the default should be whiteColor
-            UIColor* expectedTitleColor = [UIColor blackColor];
-            EXPECT_TRUE(UXTestAPI::IsRGBAEqual(solidForegroundBrush, expectedTitleColor));
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // Register RAII event subscription handler
+            xamlSubscriber->Set(textBlock, [WXCTextBlock foregroundProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
+                WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], [sender getValue:dp]);
+
+                // Validation
+                if (UXTestAPI::IsRGBAEqual(solidBrush, [UIColor whiteColor])) {
+                    uxEvent->Set();
+                }
+            });
         });
+        ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event state timed out!");
 
         // Title
         EXPECT_EQ(buttonToTest.currentTitle, nil);

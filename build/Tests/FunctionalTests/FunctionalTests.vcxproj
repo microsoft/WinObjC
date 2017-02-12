@@ -294,11 +294,10 @@
     <Media Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\AssetsLibraryTests\AssetsLibraryTestVideo.mp4" />
   </ItemGroup>
   <ItemGroup>
-    <UXResources Include="$(MSBuildThisFileDirectory)..\..\..\samples\XAMLCatalog\XAMLCatalog\Images\*" />
+    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)..\..\..\samples\XAMLCatalog\XAMLCatalog\Images\*" />
   </ItemGroup>
   <Target Name="CopyContent" AfterTargets="Build">
     <Copy DestinationFolder="$(OutDir)" SkipUnchangedFiles="True" SourceFiles="@(Xml)" />
-    <Copy DestinationFolder="$(OutDir)" SkipUnchangedFiles="True" SourceFiles="@(UXResources)" />
   </Target>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
