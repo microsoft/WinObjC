@@ -68,8 +68,8 @@ struct CGPathElementInternal : CGPathElement {
 };
 typedef struct CGPathElementInternal CGPathElementInternal;
 
-HRESULT _CGPathGetGeometry(CGPathRef path, ID2D1Geometry** pGeometry);
 HRESULT _CGPathApplyInternal(ID2D1PathGeometry* pathGeometry, void* info, CGPathApplierFunction function);
+HRESULT _CGPathGetGeometryWithFillMode(CGPathRef path, CGPathDrawingMode fillMode, ID2D1Geometry** pNewGeometry);
 
 #if defined __clang__
 #pragma clang diagnostic pop

@@ -500,7 +500,7 @@ DRAW_TEST_F(CGPath, FillStraightLines, UIKitMimicTest<>) {
     CGPathRelease(thepath);
 }
 
-DRAW_TEST_F(CGPath, FillModeCircles, UIKitMimicTest<>) {
+DRAW_TEST_F(CGPath, FillModeEOCircles, UIKitMimicTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
     CGFloat width = bounds.size.width;
@@ -531,6 +531,42 @@ DRAW_TEST_F(CGPath, FillModeCircles, UIKitMimicTest<>) {
     CGContextAddPath(context, thepath);
     CGContextSetRGBFillColor(context, 0, 0, 1, 1);
     CGContextEOFillPath(context);
+    CGContextStrokePath(context);
+
+    CGPathRelease(thepath);
+}
+
+DRAW_TEST_F(CGPath, FillModeDefaultCircles, UIKitMimicTest<>) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+    CGFloat width = bounds.size.width;
+    CGFloat height = bounds.size.height;
+    CGFloat xstart = bounds.origin.x;
+    CGFloat ystart = bounds.origin.y;
+
+    CGMutablePathRef thepath = CGPathCreateMutable();
+
+    CGPathMoveToPoint(thepath, NULL, xstart + .5 * width + .4 * height, ystart + .5 * height);
+    CGPathAddArc(thepath, NULL, xstart + .5 * width, ystart + .5 * height, .4 * height, 0, M_PI, true);
+    CGPathAddArc(thepath, NULL, xstart + .5 * width, ystart + .5 * height, .4 * height, M_PI, 0, true);
+
+    CGPathMoveToPoint(thepath, NULL, xstart + .5 * width + .3 * height, ystart + .5 * height);
+    CGPathAddArc(thepath, NULL, xstart + .5 * width, ystart + .5 * height, .3 * height, 0, M_PI, true);
+    CGPathAddArc(thepath, NULL, xstart + .5 * width, ystart + .5 * height, .3 * height, M_PI, 0, true);
+
+    CGPathMoveToPoint(thepath, NULL, xstart + .5 * width + .2 * height, ystart + .5 * height);
+    CGPathAddArc(thepath, NULL, xstart + .5 * width, ystart + .5 * height, .2 * height, 0, M_PI, true);
+    CGPathAddArc(thepath, NULL, xstart + .5 * width, ystart + .5 * height, .2 * height, M_PI, 0, true);
+
+    CGPathMoveToPoint(thepath, NULL, xstart + .5 * width + .1 * height, ystart + .5 * height);
+    CGPathAddArc(thepath, NULL, xstart + .5 * width, ystart + .5 * height, .1 * height, 0, M_PI, true);
+    CGPathAddArc(thepath, NULL, xstart + .5 * width, ystart + .5 * height, .1 * height, M_PI, 0, true);
+
+    CGPathCloseSubpath(thepath);
+
+    CGContextAddPath(context, thepath);
+    CGContextSetRGBFillColor(context, 0, 0, 1, 1);
+    CGContextFillPath(context);
     CGContextStrokePath(context);
 
     CGPathRelease(thepath);

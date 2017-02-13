@@ -30,8 +30,6 @@ HRESULT _CGGetD2DFactory(ID2D1Factory** factory);
 
 HRESULT _CGGetWICFactory(IWICImagingFactory** factory);
 
-HRESULT _CGConvertD2DGeometryToFillMode(ID2D1Geometry* geometry, D2D1_FILL_MODE fillMode, ID2D1Geometry** pNewGeometry);
-
 inline D2D_POINT_2F _CGPointToD2D_F(CGPoint point) {
     return { point.x, point.y };
 }

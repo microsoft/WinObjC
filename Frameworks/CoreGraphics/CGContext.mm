@@ -156,8 +156,9 @@ struct __CGContextDrawingState {
         D2D1_FILL_MODE d2dFillMode = (pathMode & kCGPathEOFill) == kCGPathEOFill ? D2D1_FILL_MODE_ALTERNATE : D2D1_FILL_MODE_WINDING;
 
         if (!clippingGeometry) {
-            // If we don't have a clipping geometry, we are free to take this one wholesale (after EO/Winding conversion.)
-            return _CGConvertD2DGeometryToFillMode(incomingGeometry, d2dFillMode, &clippingGeometry);
+            // If we don't have a clipping geometry, we are free to take this one wholesale.
+            clippingGeometry = incomingGeometry;
+            return S_OK;
         }
 
         ComPtr<ID2D1Factory> factory;
@@ -1053,7 +1054,7 @@ HRESULT __CGContext::Clip(CGPathDrawingMode pathMode) {
     }
 
     ComPtr<ID2D1Geometry> additionalClippingGeometry;
-    RETURN_IF_FAILED(_CGPathGetGeometry(Path(), &additionalClippingGeometry));
+    RETURN_IF_FAILED(_CGPathGetGeometryWithFillMode(Path(), pathMode, &additionalClippingGeometry));
     ClearPath();
 
     auto& state = CurrentGState();
@@ -2383,12 +2384,7 @@ HRESULT __CGContext::_DrawGeometryInternal(ID2D1Geometry* geometry,
     auto& state = context->CurrentGState();
     if (drawMode & kCGPathFill) {
         state.fillBrush->SetOpacity(state.alpha);
-
-        ComPtr<ID2D1Geometry> geometryToFill;
-        D2D1_FILL_MODE d2dFillMode = (drawMode & kCGPathEOFill) == kCGPathEOFill ? D2D1_FILL_MODE_ALTERNATE : D2D1_FILL_MODE_WINDING;
-        RETURN_IF_FAILED(_CGConvertD2DGeometryToFillMode(geometry, d2dFillMode, &geometryToFill));
-
-        deviceContext->FillGeometry(geometryToFill.Get(), state.fillBrush.Get());
+        deviceContext->FillGeometry(geometry, state.fillBrush.Get());
     }
 
     if (drawMode & kCGPathStroke && std::fpclassify(state.lineWidth) != FP_ZERO) {
@@ -2551,7 +2547,7 @@ void CGContextDrawPath(CGContextRef context, CGPathDrawingMode mode) {
 
     if (context->HasPath()) {
         ComPtr<ID2D1Geometry> pGeometry;
-        FAIL_FAST_IF_FAILED(_CGPathGetGeometry(context->Path(), &pGeometry));
+        FAIL_FAST_IF_FAILED(_CGPathGetGeometryWithFillMode(context->Path(), mode, &pGeometry));
         FAIL_FAST_IF_FAILED(context->DrawGeometry(_kCGCoordinateModeDeviceSpace, pGeometry.Get(), mode));
         context->ClearPath();
     }
