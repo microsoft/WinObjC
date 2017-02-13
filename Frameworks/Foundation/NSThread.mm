@@ -363,7 +363,7 @@ static void* _threadBody(void* context) {
 @Status Interoperable
 */
 - (NSString*)name {
-    return _name;
+    return [[_name retain] autorelease];
 }
 
 /**
