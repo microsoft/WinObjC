@@ -433,8 +433,8 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 #endif
 @property (readonly) NSString * emailFolderId;
 @property (readonly) NSString * emailMailboxId;
-@property (readonly) NSString * newFolderName;
-@property (readonly) NSString * newParentFolderId;
+@property (readonly) NSString * newFolderName __attribute__ ((ns_returns_not_retained));
+@property (readonly) NSString * newParentFolderId __attribute__ ((ns_returns_not_retained));
 - (RTObject<WFIAsyncAction>*)reportCompletedAsync;
 - (RTObject<WFIAsyncAction>*)reportFailedAsync;
 @end
@@ -496,8 +496,8 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_EMAIL_DATAPROVIDER_EXPORT
 @property (readonly) NSString * comment;
 @property (readonly) NSString * emailMailboxId;
 @property (readonly) NSString * emailMessageId;
-@property (readonly) WFTimeSpan* newDuration;
-@property (readonly) WFDateTime* newStartTime;
+@property (readonly) WFTimeSpan* newDuration __attribute__ ((ns_returns_not_retained));
+@property (readonly) WFDateTime* newStartTime __attribute__ ((ns_returns_not_retained));
 @property (readonly) NSString * subject;
 - (RTObject<WFIAsyncAction>*)reportCompletedAsync;
 - (RTObject<WFIAsyncAction>*)reportFailedAsync;

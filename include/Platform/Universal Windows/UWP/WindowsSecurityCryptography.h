@@ -52,7 +52,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_EXPORT
 + (RTObject<WSSIBuffer>*)generateRandom:(unsigned int)length;
 + (unsigned int)generateRandomNumber;
 + (RTObject<WSSIBuffer>*)createFromByteArray:(NSArray* /* uint8_t */)value;
-+ (void)copyToByteArray:(RTObject<WSSIBuffer>*)buffer value:(NSArray* /* uint8_t */*)value;
++ (void)copyToByteArray:(RTObject<WSSIBuffer>*)buffer value:(NSArray* /* uint8_t */*)value __attribute__ ((ns_returns_not_retained));
 + (RTObject<WSSIBuffer>*)decodeFromHexString:(NSString *)value;
 + (NSString *)encodeToHexString:(RTObject<WSSIBuffer>*)buffer;
 + (RTObject<WSSIBuffer>*)decodeFromBase64String:(NSString *)value;

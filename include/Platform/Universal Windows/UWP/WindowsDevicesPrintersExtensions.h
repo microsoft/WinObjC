@@ -169,7 +169,7 @@ OBJCUWP_WINDOWS_DEVICES_PRINTERS_EXTENSIONS_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property (readonly) NSString * newDeviceId;
+@property (readonly) NSString * newDeviceId __attribute__ ((ns_returns_not_retained));
 @end
 
 #endif // __WDPEPrint3DWorkflowPrinterChangedEventArgs_DEFINED__

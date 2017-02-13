@@ -362,7 +362,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property (readonly) uint64_t newLimit;
+@property (readonly) uint64_t newLimit __attribute__ ((ns_returns_not_retained));
 @property (readonly) uint64_t oldLimit;
 @end
 
@@ -514,7 +514,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSUserAuthenticationStatus currentStatus;
-@property (readonly) WSUserAuthenticationStatus newStatus;
+@property (readonly) WSUserAuthenticationStatus newStatus __attribute__ ((ns_returns_not_retained));
 @property (readonly) WSUser* user;
 - (WSUserAuthenticationStatusChangeDeferral*)getDeferral;
 @end
@@ -582,7 +582,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * deviceId;
-@property (readonly) WSUser* newUser;
+@property (readonly) WSUser* newUser __attribute__ ((ns_returns_not_retained));
 @property (readonly) WSUser* oldUser;
 @end
 

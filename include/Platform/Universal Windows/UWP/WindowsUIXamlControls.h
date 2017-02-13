@@ -1889,7 +1889,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property (readonly) id /* WFDateTime* */ newDate;
+@property (readonly) id /* WFDateTime* */ newDate __attribute__ ((ns_returns_not_retained));
 @property (readonly) id /* WFDateTime* */ oldDate;
 @end
 
@@ -2005,7 +2005,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property (readonly) WFDateTime* newDate;
+@property (readonly) WFDateTime* newDate __attribute__ ((ns_returns_not_retained));
 @property (readonly) WFDateTime* oldDate;
 @end
 
@@ -2203,7 +2203,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property (readonly) WFTimeSpan* newTime;
+@property (readonly) WFTimeSpan* newTime __attribute__ ((ns_returns_not_retained));
 @property (readonly) WFTimeSpan* oldTime;
 @end
 
@@ -6763,7 +6763,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property (readonly) WFDateTime* newDate;
+@property (readonly) WFDateTime* newDate __attribute__ ((ns_returns_not_retained));
 @property (readonly) WFDateTime* oldDate;
 @end
 
@@ -6847,7 +6847,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property (readonly) WFTimeSpan* newTime;
+@property (readonly) WFTimeSpan* newTime __attribute__ ((ns_returns_not_retained));
 @property (readonly) WFTimeSpan* oldTime;
 @end
 

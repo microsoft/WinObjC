@@ -345,7 +345,7 @@ OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 @interface WSEFileRevocationManager : RTObject
 + (void)protectAsync:(RTObject<WSIStorageItem>*)storageItem enterpriseIdentity:(NSString *)enterpriseIdentity success:(void (^)(WSEFileProtectionStatus))success failure:(void (^)(NSError*))failure;
-+ (void)copyProtectionAsync:(RTObject<WSIStorageItem>*)sourceStorageItem targetStorageItem:(RTObject<WSIStorageItem>*)targetStorageItem success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
++ (void)copyProtectionAsync:(RTObject<WSIStorageItem>*)sourceStorageItem targetStorageItem:(RTObject<WSIStorageItem>*)targetStorageItem success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure __attribute__ ((ns_returns_not_retained));
 + (void)revoke:(NSString *)enterpriseIdentity;
 + (void)getStatusAsync:(RTObject<WSIStorageItem>*)storageItem success:(void (^)(WSEFileProtectionStatus))success failure:(void (^)(NSError*))failure;
 @end
@@ -359,7 +359,7 @@ OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 @interface WSEFileProtectionManager : RTObject
 + (void)protectAsync:(RTObject<WSIStorageItem>*)target identity:(NSString *)identity success:(void (^)(WSEFileProtectionInfo*))success failure:(void (^)(NSError*))failure;
-+ (void)copyProtectionAsync:(RTObject<WSIStorageItem>*)source target:(RTObject<WSIStorageItem>*)target success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
++ (void)copyProtectionAsync:(RTObject<WSIStorageItem>*)source target:(RTObject<WSIStorageItem>*)target success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure __attribute__ ((ns_returns_not_retained));
 + (void)getProtectionInfoAsync:(RTObject<WSIStorageItem>*)source success:(void (^)(WSEFileProtectionInfo*))success failure:(void (^)(NSError*))failure;
 + (void)saveFileAsContainerAsync:(RTObject<WSIStorageFile>*)protectedFile success:(void (^)(WSEProtectedContainerExportResult*))success failure:(void (^)(NSError*))failure;
 + (void)loadFileFromContainerAsync:(RTObject<WSIStorageFile>*)containerFile success:(void (^)(WSEProtectedContainerImportResult*))success failure:(void (^)(NSError*))failure;

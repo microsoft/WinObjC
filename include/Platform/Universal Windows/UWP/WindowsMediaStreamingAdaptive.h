@@ -137,7 +137,7 @@ OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property (readonly) unsigned int newValue;
+@property (readonly) unsigned int newValue __attribute__ ((ns_returns_not_retained));
 @property (readonly) unsigned int oldValue;
 @end
 
@@ -153,7 +153,7 @@ OBJCUWP_WINDOWS_MEDIA_STREAMING_ADAPTIVE_EXPORT
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL audioOnly;
-@property (readonly) unsigned int newValue;
+@property (readonly) unsigned int newValue __attribute__ ((ns_returns_not_retained));
 @property (readonly) unsigned int oldValue;
 @end
 

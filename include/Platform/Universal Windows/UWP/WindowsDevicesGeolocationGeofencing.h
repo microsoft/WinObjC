@@ -128,7 +128,7 @@ OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_GEOFENCING_EXPORT
 #endif
 @property (readonly) WDGGGeofence* geofence;
 @property (readonly) WDGGeoposition* geoposition;
-@property (readonly) WDGGGeofenceState newState;
+@property (readonly) WDGGGeofenceState newState __attribute__ ((ns_returns_not_retained));
 @property (readonly) WDGGGeofenceRemovalReason removalReason;
 @end
 

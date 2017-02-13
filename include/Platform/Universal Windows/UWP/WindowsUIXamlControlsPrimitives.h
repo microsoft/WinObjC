@@ -798,7 +798,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property (readonly) double newValue;
+@property (readonly) double newValue __attribute__ ((ns_returns_not_retained));
 @property (readonly) double oldValue;
 @end
 
@@ -814,7 +814,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property (readonly) double newValue;
+@property (readonly) double newValue __attribute__ ((ns_returns_not_retained));
 @property (readonly) WUXCPScrollEventType scrollEventType;
 @end
 
