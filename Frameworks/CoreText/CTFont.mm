@@ -864,10 +864,10 @@ void CTFontDrawGlyphs(CTFontRef font, const CGGlyph glyphs[], const CGPoint posi
             return DWRITE_GLYPH_OFFSET{ point.x, point.y };
         });
         std::vector<FLOAT> advances(count, 0);
-
-        DWRITE_GLYPH_RUN run = { font->_dwriteFontFace.Get(), font->_pointSize, count, glyphs, advances.data(), offsets.data(), FALSE, 0 };
+        DWRITE_GLYPH_RUN run{ font->_dwriteFontFace.Get(), font->_pointSize, count, glyphs, advances.data(), offsets.data(), FALSE, 0 };
+        GlyphRunData data = { &run, CGPointZero, nullptr };
         CGContextSetTextPosition(context, 0, 0);
-        CGContextDrawGlyphRun(context, &run);
+        _CGContextDrawGlyphRuns(context, &data, 1);
     }
 }
 

@@ -237,15 +237,13 @@ LIBRARY CoreGraphics
         CGContextIsDirty
         CGContextReleaseLock
         CGContextSetDirty
-        CGContextDrawGlyphRun
+        _CGContextDrawGlyphRuns
         _CGContextSetShadowProjectionTransform
         _CGContextCreateWithD2DRenderTarget
         _CGGetD2DFactory
         _CGGetPixelFormatProperties
         _CGContextPushBeginDraw
         _CGContextPopEndDraw
-        _CGContextPushBeginDrawTextGroup
-        _CGContextPopEndDrawTextGroup
 
         ; CGDataConsumer.mm
         CGDataConsumerCreate

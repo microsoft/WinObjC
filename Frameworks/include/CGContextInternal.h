@@ -38,8 +38,6 @@ COREGRAPHICS_EXPORT void CGContextReleaseLock(CGContextRef ctx);
 COREGRAPHICS_EXPORT CGBlendMode CGContextGetBlendMode(CGContextRef ctx);
 COREGRAPHICS_EXPORT bool CGContextIsPointInPath(CGContextRef c, bool eoFill, float x, float y);
 
-COREGRAPHICS_EXPORT void CGContextDrawGlyphRun(CGContextRef ctx, const DWRITE_GLYPH_RUN* glyphRun);
-
 // Bitmap Context Internal
 COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithRenderTarget(ID2D1RenderTarget* renderTarget,
                                                                         CGImageRef img,
@@ -52,7 +50,11 @@ COREGRAPHICS_EXPORT CGImageRef CGBitmapContextGetImage(CGContextRef ctx);
 COREGRAPHICS_EXPORT void _CGContextPushBeginDraw(CGContextRef ctx);
 COREGRAPHICS_EXPORT void _CGContextPopEndDraw(CGContextRef ctx);
 
-// Text drawing is broken into small groups drawing run by run, but clipping needs to be done at once, So we need to signal to the context
-// when we are done drawing a group of text that could be clipping as if it were drawn at once
-COREGRAPHICS_EXPORT void _CGContextPushBeginDrawTextGroup(CGContextRef context);
-COREGRAPHICS_EXPORT void _CGContextPopEndDrawTextGroup(CGContextRef context);
+// Struct used to hold information about glyph run for drawing in _CGContextDrawGlyphRuns
+struct GlyphRunData {
+    DWRITE_GLYPH_RUN* run;
+    CGPoint relativePosition;
+    CFDictionaryRef attributes;
+};
+
+COREGRAPHICS_EXPORT void _CGContextDrawGlyphRuns(CGContextRef ctx, GlyphRunData* glyphRuns, size_t runCount);
