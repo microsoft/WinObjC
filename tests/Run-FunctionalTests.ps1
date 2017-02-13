@@ -48,11 +48,11 @@ param(
 
     [string]$Device = "127.0.0.1",
 
-    [string]$ModuleFilter,
+    [string]$ModuleFilter = "FunctionalTests.dll",
     
     [string]$TestFilter,
 
-    [string]$WTLOutputDirectory,
+    [string]$WTLOutputFile,
 
     [switch]$NoCopy,
 
@@ -62,14 +62,13 @@ param(
 )
 
 $args = @()
-$args += ("-TestType", "FunctionalTest")
 if ($TestDirectory) { $args += ("-TestDirectory", $TestDirectory) }
 if ($Platform) { $args += ("-Platform", $Platform) }
 if ($Config) { $args += ("-Config", $Config) }
 if ($Device) { $args += ("-Device", $Device) }
 if ($ModuleFilter) { $args += ("-ModuleFilter", $ModuleFilter) }
 if ($TestFilter) { $args += ("-TestFilter", $TestFilter) }
-if ($WTLOutputDirectory) { $args += ("-WTLOutputDirectory", $WTLOutputDirectory) }
+if ($WTLOutputFile) { $args += ("-WTLOutputFile", $WTLOutputFile) }
 if ($NoCopy) { $args += ("-NoCopy") }
 if ($RedirectTAEFErrors) { $args += ("-RedirectTAEFErrors") }
 if ($WTTLogPath) { $args += ("-WTTLogPath", $WTTLogPath) }

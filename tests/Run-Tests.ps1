@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Runs Functional Tests for Islandwood project.
+    Runs Tests using TAEF for Islandwood project.
 
 .PARAMETER TestDirectory
     The path to test binaries
@@ -20,8 +20,8 @@
 .PARAMETER TestFilter
     Test filter to use for the test. Supports wildcard characters
 
-.PARAMETER WTLOutputDirectory
-    Path to test output. If not set, no result file will be saved.
+.PARAMETER WTLOutputFile
+    Name of the file to write TAEF output. If not set, no result file will be saved.
 
 .PARAMETER NoCopy
     Switch to disable copying test to the device
@@ -40,9 +40,6 @@
 
 #>
 param(
-    [Parameter(Mandatory=$true)]
-    [string][ValidateSet("FunctionalTest", "UnitTest")]
-    $TestType,
 
     [string]$TestDirectory,
 
@@ -58,7 +55,7 @@ param(
     
     [string]$TestFilter,
 
-    [string]$WTLOutputDirectory,
+    [string]$WTLOutputFile,
 
     [switch]$NoCopy,
 
@@ -69,24 +66,6 @@ param(
 $script:exitCode = 0
 
 $TargetingDevice = ($Platform -eq "ARM")
-
-$outputFileName;
-if ($TestType -eq "FunctionalTest")
-{
-    $outputFileName = "FunctionalTestsResult.wtl"
-    if (!$ModuleFilter) 
-    {
-        $ModuleFilter = "FunctionalTests.dll"
-    }
-}
-else
-{
-    $outputFileName = "UnitTestsResult.wtl"
-    if (!$ModuleFilter) 
-    {
-        $ModuleFilter = "*.UnitTests.dll"
-    }
-}
 
 function EnsureDeviceConnection
 {
@@ -131,7 +110,7 @@ function DeployTests
             }
 
             #Copy wttlog if output is requested.
-            if ($WTLOutputDirectory)
+            if ($WTLOutputFile)
             {
                 $WTTLogFullPath = Join-Path $WTTLogPath wttlog.dll 
                 putd $WTTLogFullPath $TestDstDirectory
@@ -143,7 +122,7 @@ function DeployTests
             # For Desktop, we can run tests in place
             
             #Copy wttlog if output is requested.
-            if ($WTLOutputDirectory)
+            if ($WTLOutputFile)
             {
                 $WTTLogFullPath = Join-Path $WTTLogPath wttlog.dll 
                 Copy-Item $WTTLogFullPath -Destination $TestDstDirectory -Force           
@@ -165,7 +144,7 @@ function ExecTest($argList)
         Write-Host -ForegroundColor Cyan  "cmdd $taefPath $testPath $argList"
         cmdd $taefPath $testPath $argList
 
-        if ($WTLOutputDirectory)
+        if ($WTLOutputFile)
         {
             # Fetch the output from the device
             getd $outputRemoteName $outputLocalName
@@ -233,27 +212,22 @@ $DefaultTestBinary = "FunctionalTests.dll"
 
 DeployTests
 
-if (($WTLOutputDirectory) -and ((Test-Path -Path $WTLOutputDirectory -PathType Container) -eq 0))
-{
-    New-Item -ItemType Directory -Path $WTLOutputDirectory
-}
-
 $outputLocalName
 $outputRemoteName
 $argList = "";
 
 # Decide where the WTL output files will live
-if ($WTLOutputDirectory)
+if ($WTLOutputFile)
 {
     if ($TargetingDevice)
     {
-        $outputLocalName = Join-Path -Path $WTLOutputDirectory -ChildPath $outputFileName
-        $outputRemoteName = Join-Path -Path $TestDstDirectory -ChildPath $outputFileName
+        $outputLocalName = $WTLOutputFile
+        $outputRemoteName = Join-Path -Path $TestDstDirectory -ChildPath ([system.IO.Fileinfo]$WTLOutputFile).Name
         $argList += " /logFile:$outputRemoteName /enableWttLogging"
     }
     else
     {
-        $outputLocalName = Join-Path -Path $WTLOutputDirectory -ChildPath $outputFileName
+        $outputLocalName = $WTLOutputFile
         $argList += " /logFile:$outputLocalName /enableWttLogging"
     }
 }
