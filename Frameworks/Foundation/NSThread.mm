@@ -36,7 +36,7 @@ static std::mutex s_mainThreadMutex;
 static StrongId<NSThread> s_mainThread;
 static BOOL s_isMultiThreaded = NO;
 
-static NSThread* _setOrGetCurrentThread(NSThread* thread) {
+static NSThread* _setOrGetCurrentThread(NSThread* thread, bool createIfNil) {
     // Use a lazy initialized block scope thread_local to manage the lifetime of currentThread.
     // Note that non-trivial file scope thread_locals are apparently not supported in current clang version.
     thread_local static StrongId<NSThread> tlsCurrentThread;
@@ -44,22 +44,24 @@ static NSThread* _setOrGetCurrentThread(NSThread* thread) {
     if (thread != nil) {
         // We've been passed a thread. Designate as current thread and assume ownership.
         tlsCurrentThread = thread;
-    } else if (tlsCurrentThread == nil) {
-        // We've been passed no thread. Create a new one, assuming ownership, and designate as current thread.
+    } else if (tlsCurrentThread == nil && createIfNil) {
+        // No current thread exists. Create a new one, as requested.
         tlsCurrentThread.attach([[NSThread alloc] init]);
-    } else {
-        // No thread passed and current thread exists.
     }
 
     return tlsCurrentThread;
 }
 
 static void _setCurrentThread(NSThread* thread) {
-    _setOrGetCurrentThread(thread);
+    _setOrGetCurrentThread(thread, false);
 }
 
-static NSThread* _getCurrentThread() {
-    return _setOrGetCurrentThread(nil);
+static NSThread* _getCurrentThreadOrNil() {
+    return _setOrGetCurrentThread(nil, false);
+}
+
+static NSThread* _getOrCreateCurrentThread() {
+    return _setOrGetCurrentThread(nil, true);
 }
 
 @interface NSThread () {
@@ -239,7 +241,13 @@ the default thread priority. Utilizes win32 thread priority.
 @Status Interoperable
 */
 + (BOOL)isMainThread {
-    return _getCurrentThread() == [self mainThread];
+    NSThread* main = [self mainThread];
+
+    if (main == nil) {
+        return NO;
+    }
+
+    return _getCurrentThreadOrNil() == main;
 }
 
 /**
@@ -362,7 +370,7 @@ static void* _threadBody(void* context) {
 @Status Interoperable
 */
 + (NSThread*)currentThread {
-    return _getCurrentThread();
+    return _getOrCreateCurrentThread();
 }
 
 /**
