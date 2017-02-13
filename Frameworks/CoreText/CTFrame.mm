@@ -135,9 +135,9 @@ void CTFrameDraw(CTFrameRef frameRef, CGContextRef ctx) {
         for (size_t i = 0; i < frame->_lineOrigins.size() && (frame->_lineOrigins[i].y < frame->_frameRect.size.height); ++i) {
             _CTLine* line = static_cast<_CTLine*>([frame->_lines objectAtIndex:i]);
             CGPoint relativePosition = frame->_lineOrigins[i];
-            for (size_t i = 0; i < [line->_runs count]; ++i) {
-                _CTRun* curRun = [line->_runs objectAtIndex:i];
-                if (i > 0) {
+            for (size_t j = 0; j < [line->_runs count]; ++j) {
+                _CTRun* curRun = [line->_runs objectAtIndex:j];
+                if (j > 0) {
                     // Adjusts x position relative to the last run drawn
                     relativePosition.x += curRun->_relativeXOffset;
                 }

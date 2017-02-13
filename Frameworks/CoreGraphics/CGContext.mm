@@ -264,12 +264,6 @@ private:
     // Since nothing needs to actually be put on a stack, just increment a counter insteads
     std::atomic_uint32_t _beginEndDrawDepth = { 0 };
 
-    // Similar to _beginEndDrawDepth, but only for CoreText calls which draw multiple glyph runs
-    // Allows us to accumulate clipping geometries from each run together
-    // Since intersecting them would lead to an empty region
-    std::atomic_uint32_t _glyphRunClippingDepth = { 0 };
-    ComPtr<ID2D1Geometry> _accumulatedTextClippingGeometry;
-
     inline HRESULT _SaveD2DDrawingState(ID2D1DrawingStateBlock** pDrawingState) {
         RETURN_HR_IF(E_POINTER, !pDrawingState);
 
@@ -296,6 +290,13 @@ private:
     }
 
     HRESULT _CreateShadowEffect(ID2D1Image* inputImage, ID2D1Effect** outShadowEffect);
+
+    // Does the drawing inside the Draw call in DrawGeometry, to be used for multiple draws to prevent
+    // Shadowing multiple times
+    HRESULT _DrawGeometryInternal(ID2D1Geometry* geometry,
+                                  CGPathDrawingMode drawMode,
+                                  CGContextRef context,
+                                  ID2D1DeviceContext* deviceContext);
 
 public:
     __CGContext(ID2D1RenderTarget* renderTarget) {
@@ -421,10 +422,6 @@ public:
     HRESULT Draw(_CGCoordinateMode coordinateMode, CGAffineTransform* additionalTransform, Lambda&& drawLambda);
 
     HRESULT DrawGeometry(_CGCoordinateMode coordinateMode, ID2D1Geometry* pGeometry, CGPathDrawingMode drawMode);
-    HRESULT DrawGeometryInternal(ID2D1Geometry* geometry,
-                                 CGPathDrawingMode drawMode,
-                                 CGContextRef context,
-                                 ID2D1DeviceContext* deviceContext);
     HRESULT DrawGlyphRuns(GlyphRunData* glyphRuns, size_t runsCount, bool transformByGlyph = true);
     HRESULT ClipToD2DMaskBitmap(ID2D1Bitmap* bitmap, CGRect rect, D2D1_INTERPOLATION_MODE interpolationMode);
     HRESULT ClipToCGImageMask(CGImageRef image, CGRect rect);
@@ -1910,8 +1907,21 @@ void CGContextSetPatternPhase(CGContextRef context, CGSize phase) {
 #pragma region Drawing Operations - Text
 
 // Attributes are needed in DrawGlyphRuns but names are defined in CoreText
-const CFStringRef _kCGForegroundColorAttributeName = static_cast<CFStringRef>(@"NSForegroundColor");
-const CFStringRef _kCGForegroundColorFromContextAttributeName = static_cast<CFStringRef>(@"kCTForegroundColorFromContextAttributeName");
+const CFStringRef _kCGCharacterShapeAttributeName = CFSTR("kCTCharacterShapeAttributeName");
+const CFStringRef _kCGFontAttributeName = CFSTR("NSFont");
+const CFStringRef _kCGKernAttributeName = CFSTR("kCTKernAttributeName");
+const CFStringRef _kCGLigatureAttributeName = CFSTR("kCTLigatureAttributeName");
+const CFStringRef _kCGForegroundColorAttributeName = CFSTR("NSForegroundColor");
+const CFStringRef _kCGForegroundColorFromContextAttributeName = CFSTR("kCTForegroundColorFromContextAttributeName");
+const CFStringRef _kCGParagraphStyleAttributeName = CFSTR("kCTParagraphStyleAttributeName");
+const CFStringRef _kCGStrokeWidthAttributeName = CFSTR("kCTStrokeWidthAttributeName");
+const CFStringRef _kCGStrokeColorAttributeName = CFSTR("kCTStrokeColorAttributeName");
+const CFStringRef _kCGSuperscriptAttributeName = CFSTR("kCTSuperscriptAttributeName");
+const CFStringRef _kCGUnderlineColorAttributeName = CFSTR("kCTUnderlineColorAttributeName");
+const CFStringRef _kCGUnderlineStyleAttributeName = CFSTR("kCTUnderlineStyleAttributeName");
+const CFStringRef _kCGVerticalFormsAttributeName = CFSTR("kCTVerticalFormsAttributeName");
+const CFStringRef _kCGGlyphInfoAttributeName = CFSTR("kCTGlyphInfoAttributeName");
+const CFStringRef _kCGRunDelegateAttributeName = CFSTR("kCTRunDelegateAttributeName");
 /**
  * Helper method to render text with the given DWRITE_GLYPH_RUN.
  *
@@ -1962,31 +1972,29 @@ HRESULT __CGContext::DrawGlyphRuns(GlyphRunData* glyphRuns, size_t runsCount, bo
     size_t maxGlyphCount = 0;
 
     for (size_t i = 0; i < runsCount; ++i) {
-        positionsVectors[i].resize(glyphRuns[i].run->glyphCount);
-        maxGlyphCount = std::max(maxGlyphCount, glyphRuns[i].run->glyphCount);
+        auto& positions = positionsVectors[i];
+        auto& run = glyphRuns[i].run;
+        positions.resize(run->glyphCount);
+        maxGlyphCount = std::max(maxGlyphCount, run->glyphCount);
         if (transformByGlyph) {
             // First glyph's origin is at the given relative position for the glyph run
             CGPoint runningPosition{ glyphRuns[i].relativePosition.x, std::round(glyphRuns[i].relativePosition.y) };
-            DWRITE_GLYPH_OFFSET previousOffset{ 0, 0 };
-            for (size_t j = 0; j < glyphRuns[i].run->glyphCount; ++j) {
+            for (size_t j = 0; j < run->glyphCount; ++j) {
                 // Invert position by text transformation
                 CGPoint transformedPosition = CGPointApplyAffineTransform(runningPosition, invertedTextTransformation);
 
                 // Set current glyph's position to be the actual position transformed by the inverted text position
                 // So when the space is transformed by the text position it will be drawn in the correct real position
-                positionsVectors[i][j] =
-                    DWRITE_GLYPH_OFFSET{ transformedPosition.x + glyphRuns[i].run->glyphOffsets[j].advanceOffset,
-                                         std::round(transformedPosition.y + glyphRuns[i].run->glyphOffsets[j].ascenderOffset) };
+                positions[j] = DWRITE_GLYPH_OFFSET{ transformedPosition.x + run->glyphOffsets[j].advanceOffset,
+                                                    std::round(transformedPosition.y + run->glyphOffsets[j].ascenderOffset) };
 
                 // Translate position of next glyph by current glyph's advance
-                runningPosition.x += glyphRuns[i].run->glyphAdvances[j];
+                runningPosition.x += run->glyphAdvances[j];
             }
         } else {
             // CG text drawing mathods use the text matrix to transform about the origin, not about each glyph's origin
             // We can simply use the positions directly from the glyph run
-            std::copy(glyphRuns[i].run->glyphOffsets,
-                      glyphRuns[i].run->glyphOffsets + glyphRuns[i].run->glyphCount,
-                      positionsVectors[i].begin());
+            std::copy(run->glyphOffsets, run->glyphOffsets + run->glyphCount, positions.begin());
         }
     }
 
@@ -2024,15 +2032,15 @@ HRESULT __CGContext::DrawGlyphRuns(GlyphRunData* glyphRuns, size_t runsCount, bo
             for (size_t i = 0; i < positionsVectors.size(); ++i) {
                 if (glyphRuns[i].attributes) {
                     CGColorRef fontColor = (CGColorRef)CFDictionaryGetValue(glyphRuns[i].attributes, _kCGForegroundColorAttributeName);
-                    if (!fontColor) {
+                    if (fontColor) {
+                        CGContextSetFillColorWithColor(context, fontColor);
+                    } else {
                         CFBooleanRef useContextColor =
                             (CFBooleanRef)CFDictionaryGetValue(glyphRuns[i].attributes, _kCGForegroundColorFromContextAttributeName);
                         if (!useContextColor || !CFBooleanGetValue(useContextColor)) {
                             // Neither given a color nor use current context color, so set the fill color to black
                             CGContextSetRGBFillColor(context, 0, 0, 0, 1);
                         }
-                    } else {
-                        CGContextSetFillColorWithColor(context, fontColor);
                     }
                 }
 
@@ -2046,7 +2054,8 @@ HRESULT __CGContext::DrawGlyphRuns(GlyphRunData* glyphRuns, size_t runsCount, bo
         }
 
         if (state.textDrawingMode & kCGTextStroke) {
-            RETURN_IF_FAILED(DrawGeometry(_kCGCoordinateModeDeviceSpace, transformedGeometry.Get(), kCGPathStroke));
+            deviceContext->SetTransform(__CGAffineTransformToD2D_F(deviceTransform));
+            RETURN_IF_FAILED(_DrawGeometryInternal(transformedGeometry.Get(), kCGPathStroke, context, deviceContext));
         }
 
         return S_OK;
@@ -2322,10 +2331,10 @@ HRESULT __CGContext::Draw(_CGCoordinateMode coordinateMode, CGAffineTransform* a
     return S_OK;
 }
 
-HRESULT __CGContext::DrawGeometryInternal(ID2D1Geometry* geometry,
-                                          CGPathDrawingMode drawMode,
-                                          CGContextRef context,
-                                          ID2D1DeviceContext* deviceContext) {
+HRESULT __CGContext::_DrawGeometryInternal(ID2D1Geometry* geometry,
+                                           CGPathDrawingMode drawMode,
+                                           CGContextRef context,
+                                           ID2D1DeviceContext* deviceContext) {
     auto& state = context->CurrentGState();
     if (drawMode & kCGPathFill) {
         state.fillBrush->SetOpacity(state.alpha);
@@ -2352,7 +2361,7 @@ HRESULT __CGContext::DrawGeometryInternal(ID2D1Geometry* geometry,
 HRESULT __CGContext::DrawGeometry(_CGCoordinateMode coordinateMode, ID2D1Geometry* pGeometry, CGPathDrawingMode drawMode) {
     ComPtr<ID2D1Geometry> geometry(pGeometry);
     return Draw(coordinateMode, nullptr, [geometry, drawMode, this](CGContextRef context, ID2D1DeviceContext* deviceContext) {
-        return DrawGeometryInternal(geometry.Get(), drawMode, context, deviceContext);
+        return _DrawGeometryInternal(geometry.Get(), drawMode, context, deviceContext);
     });
 }
 

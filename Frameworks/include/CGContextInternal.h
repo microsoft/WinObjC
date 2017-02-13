@@ -58,3 +58,19 @@ struct GlyphRunData {
 };
 
 COREGRAPHICS_EXPORT void _CGContextDrawGlyphRuns(CGContextRef ctx, GlyphRunData* glyphRuns, size_t runCount);
+
+COREGRAPHICS_EXPORT const CFStringRef _kCGCharacterShapeAttributeName;
+COREGRAPHICS_EXPORT const CFStringRef _kCGFontAttributeName;
+COREGRAPHICS_EXPORT const CFStringRef _kCGKernAttributeName;
+COREGRAPHICS_EXPORT const CFStringRef _kCGLigatureAttributeName;
+COREGRAPHICS_EXPORT const CFStringRef _kCGForegroundColorAttributeName;
+COREGRAPHICS_EXPORT const CFStringRef _kCGForegroundColorFromContextAttributeName;
+COREGRAPHICS_EXPORT const CFStringRef _kCGParagraphStyleAttributeName;
+COREGRAPHICS_EXPORT const CFStringRef _kCGStrokeWidthAttributeName;
+COREGRAPHICS_EXPORT const CFStringRef _kCGStrokeColorAttributeName;
+COREGRAPHICS_EXPORT const CFStringRef _kCGSuperscriptAttributeName;
+COREGRAPHICS_EXPORT const CFStringRef _kCGUnderlineColorAttributeName;
+COREGRAPHICS_EXPORT const CFStringRef _kCGUnderlineStyleAttributeName;
+COREGRAPHICS_EXPORT const CFStringRef _kCGVerticalFormsAttributeName;
+COREGRAPHICS_EXPORT const CFStringRef _kCGGlyphInfoAttributeName;
+COREGRAPHICS_EXPORT const CFStringRef _kCGRunDelegateAttributeName;

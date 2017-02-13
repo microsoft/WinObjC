@@ -244,6 +244,21 @@ LIBRARY CoreGraphics
         _CGGetPixelFormatProperties
         _CGContextPushBeginDraw
         _CGContextPopEndDraw
+        _kCGCharacterShapeAttributeName DATA
+        _kCGFontAttributeName DATA
+        _kCGKernAttributeName DATA
+        _kCGLigatureAttributeName DATA
+        _kCGForegroundColorAttributeName DATA
+        _kCGForegroundColorFromContextAttributeName DATA
+        _kCGParagraphStyleAttributeName DATA
+        _kCGStrokeWidthAttributeName DATA
+        _kCGStrokeColorAttributeName DATA
+        _kCGSuperscriptAttributeName DATA
+        _kCGUnderlineColorAttributeName DATA
+        _kCGUnderlineStyleAttributeName DATA
+        _kCGVerticalFormsAttributeName DATA
+        _kCGGlyphInfoAttributeName DATA
+        _kCGRunDelegateAttributeName DATA
 
         ; CGDataConsumer.mm
         CGDataConsumerCreate
