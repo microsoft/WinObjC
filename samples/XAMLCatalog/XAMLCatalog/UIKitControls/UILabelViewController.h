@@ -17,5 +17,30 @@
 
 #import "MenuTableViewController.h"
 
-@interface UILabelViewController : MenuTableViewController
+@interface UILabelViewController : UIViewController <UITextFieldDelegate>
+@property (nonatomic) UITextField* text;
+@property (nonatomic) UISlider* fontSize;
+@property (nonatomic) UITextField* x;
+@property (nonatomic) UITextField* y;
+@property (nonatomic) UITextField* w;
+@property (nonatomic) UITextField* h;
+@property (nonatomic) UITextField* numberOfLines;
+@property (nonatomic) UITextField* lineBreakMode;
+@property (nonatomic) UISwitch* autoShrink;
+@property (nonatomic) UITextField* minimumFontSize;
+@property (nonatomic) UITextField* minimumScaleFactor;
+@property (nonatomic) UILabel* label;
+
+@property (nonatomic) UILabel* fontSizeLabel;
+@property (nonatomic) UIButton* start;
+@property (nonatomic) UITextView* log;
+
+@property (nonatomic) UIButton* logResult;
+
+@property (nonatomic) NSString* result;
+
+@property (nonatomic) CGRect textRect;
+@property (nonatomic) CGSize sizeThatFits;
+@property (nonatomic) CGSize intrinsicContentSize;
+
 @end
