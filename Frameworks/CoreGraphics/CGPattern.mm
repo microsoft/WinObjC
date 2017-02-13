@@ -233,3 +233,8 @@ CGRect _CGPatternGetFinalPatternSize(CGPatternRef pattern) {
     RETURN_RESULT_IF_NULL(pattern, CGRectNull);
     return { CGPointZero, { ((CGPattern*)pattern)->xStep, ((CGPattern*)pattern)->yStep } };
 }
+
+bool _CGPatternIsColored(CGPatternRef pattern) {
+    FAIL_FAST_IF_NULL(pattern);
+    return ((CGPattern*)pattern)->isColored;
+}

@@ -48,7 +48,7 @@ CGNamedBlendMode compositionModes[] = {
     { "kCGBlendModePlusDarker", kCGBlendModePlusDarker },
 };
 
-CGFloat alphas[] = { 0.5f, 1.f };
+static CGFloat alphas[] = { 0.5f, 1.f };
 
 class CGContextBlendMode : public WhiteBackgroundTest<>, public ::testing::WithParamInterface<::testing::tuple<CGFloat, CGNamedBlendMode>> {
     CFStringRef CreateOutputFilename() {
