@@ -240,7 +240,9 @@ void CTLineDraw(CTLineRef lineRef, CGContextRef ctx) {
         runs.emplace_back(GlyphRunData{ &curRun->_dwriteGlyphRun, relativePosition, (CFDictionaryRef)curRun->_attributes.get() });
     }
 
-    _CGContextDrawGlyphRuns(ctx, runs.data(), runs.size());
+    if (!runs.empty()) {
+        _CGContextDrawGlyphRuns(ctx, runs.data(), runs.size());
+    }
 }
 
 /**

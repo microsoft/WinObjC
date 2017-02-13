@@ -605,14 +605,12 @@ TEXT_DRAW_TEST_P(TextDrawingMode, CGTextDrawingMode) {
     CFStringRef keys[3] = { kCTFontAttributeName, kCTParagraphStyleAttributeName, kCTForegroundColorFromContextAttributeName };
     CFTypeRef values[3] = { myCFFont.get(), paragraphStyle.get(), kCFBooleanTrue };
 
-    const CGFloat red[] = { 1, 0, 0, 1 };
-    const CGFloat green[] = { 0, 1, 0, 1 };
-    CGContextSetFillColor(context, red);
-    CGContextSetStrokeColor(context, green);
+    CGContextSetRGBFillColor(context, 1, 0, 0, 1);
+    CGContextSetRGBStrokeColor(context, 0, 1, 0, 1);
+    CGContextSetShadow(context, { 3, 5 }, 1);
     __DrawLoremIpsum(context, path.get(), keys, values);
 
-    const CGFloat blue[] = { 0, 0, 1, 1 };
-    CGContextSetFillColor(context, blue);
+    CGContextSetRGBFillColor(context, 0, 0, 1, 1);
     CGContextFillRect(context, CGRectMake(0, 0, bounds.size.width / 2.0, bounds.size.height));
 }
 

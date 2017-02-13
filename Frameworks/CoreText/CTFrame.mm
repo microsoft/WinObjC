@@ -145,7 +145,9 @@ void CTFrameDraw(CTFrameRef frameRef, CGContextRef ctx) {
             }
         }
 
-        _CGContextDrawGlyphRuns(ctx, runs.data(), runs.size());
+        if (!runs.empty()) {
+            _CGContextDrawGlyphRuns(ctx, runs.data(), runs.size());
+        }
     }
 }
 
