@@ -16,6 +16,7 @@
 #import <TestFramework.h>
 #import "FunctionalTestHelpers.h"
 #import "UXTestHelpers.h"
+#import "UILabelInternal.h"
 
 // Re-use existing sample code for validation
 #import "UIKitControls/UIButtonViewController.h"
@@ -127,13 +128,14 @@ public:
 
         dispatch_async(dispatch_get_main_queue(), ^{
             // Extract UIButton.titleLabel control to verify its visual state
-            WXFrameworkElement* titleElement = [buttonVC.button.titleLabel xamlElement];
+            WXFrameworkElement* titleElement = [buttonVC.button.titleLabel _getXamlTextBlock];
             ASSERT_OBJCNE(titleElement, nil);
 
             // Register RAII event subscription handler
             xamlSubscriber->Set(titleElement, [WXCTextBlock foregroundProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
                 // Extract the foreground color from the XAML object
                 WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], [sender getValue:dp]);
+
 
                 // Validation
                 UIColor* titleColorNormal = [buttonVC.button titleColorForState:UIControlStateNormal];
@@ -161,7 +163,7 @@ public:
 
         dispatch_async(dispatch_get_main_queue(), ^{
             // Extract UIButton.titleLabel control to verify its visual state
-            WXFrameworkElement* titleElement = [buttonVC.button.titleLabel xamlElement];
+            WXFrameworkElement* titleElement = [buttonVC.button.titleLabel _getXamlTextBlock];
             ASSERT_TRUE(titleElement);
 
             // Register RAII event subscription handler

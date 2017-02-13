@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,27 +16,15 @@
 
 #pragma once
 
-@class UIFont, WXFrameworkElement;
+#import <UIKit/UILabel.h>
 
-// Provides basic mocking support
-@interface _MockObjectBase : NSObject
+@class WXCTextBlock;
 
-// Override this in your implmentation to specify which class you'd like to mock
-+ (Class)_mockClass;
-
-@end
-
-// Provides basic UIView pass-throughs
-@interface _UIView_Proxy : _MockObjectBase
-
-- (instancetype)initWithXamlElement:(WXFrameworkElement*)xamlElement;
-
-@property (nonatomic, readonly, retain) WXFrameworkElement* xamlElement;
-
-@end
-
-@interface _UIImageView_Proxy : _UIView_Proxy
-
-@property (nonatomic, retain) UIImage* image;
-
+@interface UILabel (Internal) {
+}
+// Returns access to the underlying TextBlock within the UILabel's Xaml representation
+// Note: This is used for UX testing and won't be necessary when we are projecting
+// UIKit.Label into ObjectiveC, as at that point we can just expose the TextBlock directly
+// off of our UIKit.Label implementation.
+- (WXCTextBlock*)_getXamlTextBlock;
 @end
