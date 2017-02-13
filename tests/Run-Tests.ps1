@@ -33,10 +33,10 @@
     Path to find WTTLog dll
 
 .EXAMPLE
-    Desktop: Run-Tests.ps1 -TestType FunctionalTest
-             Run-Tests.ps1 -TestType UnitTest
-    Phone:  Run-Tests.ps1 -TestType FunctionalTest -Platform ARM
-            Run-Tests.ps1 -TestType UnitTest -Platform ARM
+    Desktop: Run-Tests.ps1 -ModuleFilter *unittests.dll
+             Run-Tests.ps1 -ModuleFilter functionaltests.dll
+    Phone:  Run-Tests.ps1 -ModuleFilter *unittests.dll -platform ARM
+            Run-Tests.ps1 -ModuleFilter functionaltests.dll -platform ARM
 
 #>
 param(
