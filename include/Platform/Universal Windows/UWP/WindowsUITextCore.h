@@ -329,7 +329,7 @@ OBJCUWP_WINDOWS_UI_TEXT_CORE_EXPORT
 @property WUTCCoreTextTextUpdatingResult result;
 @property (readonly) WGLanguage* inputLanguage;
 @property (readonly) BOOL isCanceled;
-@property (readonly) WUTCCoreTextRange* newSelection;
+@property (readonly) WUTCCoreTextRange* newSelection __attribute__ ((ns_returns_not_retained));
 @property (readonly) WUTCCoreTextRange* range;
 @property (readonly) NSString * text;
 - (WFDeferral*)getDeferral;

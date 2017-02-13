@@ -155,7 +155,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 - (WFRect*)moveSelected:(WFPoint*)translation;
 - (WFRect*)selectWithPolyLine:(id<NSFastEnumeration> /* WFPoint* */)polyline;
 - (WFRect*)selectWithLine:(WFPoint*)from to:(WFPoint*)to;
-- (void)copySelectedToClipboard;
+- (void)copySelectedToClipboard __attribute__ ((ns_returns_not_retained));
 - (WFRect*)pasteFromClipboard:(WFPoint*)position;
 - (BOOL)canPasteFromClipboard;
 // Failed to generate member LoadAsync (Can't marshal Windows.Foundation.IAsyncActionWithProgress`1<UInt64>)
@@ -286,7 +286,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 - (void)removeStrokesCollectedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addStrokesErasedEvent:(void(^)(WUIIInkPresenter*, WUIIInkStrokesErasedEventArgs*))del;
 - (void)removeStrokesErasedEvent:(EventRegistrationToken)tok;
-- (WUIIInkDrawingAttributes*)copyDefaultDrawingAttributes;
+- (WUIIInkDrawingAttributes*)copyDefaultDrawingAttributes __attribute__ ((ns_returns_not_retained));
 - (void)updateDefaultDrawingAttributes:(WUIIInkDrawingAttributes*)value;
 - (WUIIInkSynchronizer*)activateCustomDrying;
 - (void)setPredefinedConfiguration:(WUIIInkPresenterPredefinedConfiguration)value;
@@ -490,7 +490,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 - (WFRect*)moveSelected:(WFPoint*)translation;
 - (WFRect*)selectWithPolyLine:(id<NSFastEnumeration> /* WFPoint* */)polyline;
 - (WFRect*)selectWithLine:(WFPoint*)from to:(WFPoint*)to;
-- (void)copySelectedToClipboard;
+- (void)copySelectedToClipboard __attribute__ ((ns_returns_not_retained));
 - (WFRect*)pasteFromClipboard:(WFPoint*)position;
 - (BOOL)canPasteFromClipboard;
 // Failed to generate member LoadAsync (Can't marshal Windows.Foundation.IAsyncActionWithProgress`1<UInt64>)
@@ -557,7 +557,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 - (WFRect*)moveSelected:(WFPoint*)translation;
 - (WFRect*)selectWithPolyLine:(id<NSFastEnumeration> /* WFPoint* */)polyline;
 - (WFRect*)selectWithLine:(WFPoint*)from to:(WFPoint*)to;
-- (void)copySelectedToClipboard;
+- (void)copySelectedToClipboard __attribute__ ((ns_returns_not_retained));
 - (WFRect*)pasteFromClipboard:(WFPoint*)position;
 - (BOOL)canPasteFromClipboard;
 // Failed to generate member LoadAsync (Can't marshal Windows.Foundation.IAsyncActionWithProgress`1<UInt64>)

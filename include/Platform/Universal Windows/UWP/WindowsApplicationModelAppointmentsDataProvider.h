@@ -256,8 +256,8 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 @property (readonly) NSString * appointmentLocalId;
 @property (readonly) id /* WFDateTime* */ appointmentOriginalStartTime;
 @property (readonly) NSString * comment;
-@property (readonly) WFTimeSpan* newDuration;
-@property (readonly) WFDateTime* newStartTime;
+@property (readonly) WFTimeSpan* newDuration __attribute__ ((ns_returns_not_retained));
+@property (readonly) WFDateTime* newStartTime __attribute__ ((ns_returns_not_retained));
 @property (readonly) NSString * subject;
 - (RTObject<WFIAsyncAction>*)reportCompletedAsync;
 - (RTObject<WFIAsyncAction>*)reportFailedAsync;

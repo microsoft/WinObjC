@@ -230,7 +230,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 @property (readonly) NSString * type;
 @property (readonly) RTObject<WGDDIDirect3DSurface>* direct3DSurface;
 @property (readonly) WGISoftwareBitmap* softwareBitmap;
-- (RTObject<WFIAsyncAction>*)copyToAsync:(WMVideoFrame*)frame;
+- (RTObject<WFIAsyncAction>*)copyToAsync:(WMVideoFrame*)frame __attribute__ ((ns_returns_not_retained));
 - (void)close;
 @end
 
@@ -387,7 +387,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 @property (readonly) WMImageDisplayProperties* imageProperties;
 @property (readonly) WMMusicDisplayProperties* musicProperties;
 @property (readonly) WMVideoDisplayProperties* videoProperties;
-- (void)copyFromFileAsync:(WMMediaPlaybackType)type source:(WSStorageFile*)source success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
+- (void)copyFromFileAsync:(WMMediaPlaybackType)type source:(WSStorageFile*)source success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure __attribute__ ((ns_returns_not_retained));
 - (void)clearAll;
 - (void)update;
 @end
