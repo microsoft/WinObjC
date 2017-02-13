@@ -83,6 +83,8 @@ SB_EXPORT double EbrGetMediaTime();
 SB_EXPORT int EbrGetWantedOrientation();
 
 SB_EXPORT const wchar_t* IwGetWritableFolder();
+SB_EXPORT void IwSetWritableFolder(const wchar_t* folder);
+
 SB_EXPORT void EbrBlockIfBackground();
 
 typedef void* EbrEvent;
