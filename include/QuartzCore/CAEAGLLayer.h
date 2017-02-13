@@ -24,8 +24,13 @@ CA_EXPORT_CLASS
 @property (copy) NSDictionary* drawableProperties;
 @end
 
-@class WXCSwapChainPanel;
+#ifdef __cplusplus
+namespace winrt { namespace Windows { namespace UI { namespace Xaml { namespace Controls {
+class SwapChainPanel;
+} } } } }
 
 @interface CAEAGLLayer (WinObjC)
-@property (readonly) WXCSwapChainPanel* swapChainPanel;
+@property (readonly) winrt::Windows::UI::Xaml::Controls::SwapChainPanel swapChainPanel;
 @end
+
+#endif

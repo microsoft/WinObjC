@@ -21,6 +21,10 @@
 #import <UIKit/UIImage.h>
 #import "UIColorInternal.h"
 
+#include "COMIncludes.h"
+#import <winrt/Windows.UI.Xaml.h>
+#include "COMIncludes_End.h"
+
 @class CAAnimation;
 @class CALayer;
 struct ILayerProxy;
@@ -66,10 +70,10 @@ public:
     std::shared_ptr<ILayerProxy> _layerProxy;
 
     // The Xaml element backing this CALayer
-    StrongId<WXFrameworkElement> _xamlElement;
+    winrt::Windows::UI::Xaml::FrameworkElement _xamlElement;
 
     // The Xaml element used for hosting this layer's sublayer element
-    StrongId<WXFrameworkElement> _sublayerXamlElement;
+    winrt::Windows::UI::Xaml::FrameworkElement _sublayerXamlElement;
 
     idretain _undefinedKeys;
     idretain _actions;
@@ -81,14 +85,14 @@ public:
     BOOL didLayout;
     bool _displayPending;
 
-    CAPrivateInfo(CALayer* self, WXFrameworkElement* xamlElement);
+    CAPrivateInfo(CALayer* self, const winrt::Windows::UI::Xaml::FrameworkElement& xamlElement);
     ~CAPrivateInfo();
 };
 
 @interface CALayer (Internal)
 // Xaml interop
-- (instancetype)_initWithXamlElement:(WXFrameworkElement*)xamlElement;
-@property (nonatomic, readonly, strong) WXFrameworkElement* _xamlElement;
+- (instancetype)_initWithXamlElement:(const winrt::Windows::UI::Xaml::FrameworkElement&)xamlElement;
+@property (nonatomic, readonly) winrt::Windows::UI::Xaml::FrameworkElement _xamlElement;
 
 - (NSObject*)_presentationValueForKey:(NSString*)key;
 
