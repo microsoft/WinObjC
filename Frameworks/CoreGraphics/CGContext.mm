@@ -49,6 +49,7 @@
 #import <vector>
 #import <stack>
 #import <algorithm>
+#import <memory>
 
 using namespace Microsoft::WRL;
 
@@ -1960,6 +1961,11 @@ HRESULT __CGContext::DrawGlyphRuns(GlyphRunData* glyphRuns, size_t runsCount, bo
     // Though this value is approximate, it is small enough to not be noticeable while still safe
     static constexpr float c_glyphThreshold = 0.5f;
     std::vector<GlyphRunData> runs;
+
+    // For cases where we need to create glyphOffsets and runs
+    std::vector<std::vector<DWRITE_GLYPH_OFFSET>> createdOffsets;
+    std::vector<std::shared_ptr<DWRITE_GLYPH_RUN>> createdRuns;
+
     for (size_t i = 0; i < runsCount; ++i) {
         auto& run = glyphRuns[i].run;
         if ((fabs(combinedTransform.a * run->fontEmSize) <= c_glyphThreshold &&
@@ -1983,7 +1989,8 @@ HRESULT __CGContext::DrawGlyphRuns(GlyphRunData* glyphRuns, size_t runsCount, bo
                                        1,
                                        -1));
 
-            DWRITE_GLYPH_OFFSET* positions = new DWRITE_GLYPH_OFFSET[run->glyphCount];
+            createdOffsets.emplace_back(run->glyphCount);
+            auto& positions = createdOffsets.back();
             // First glyph's origin is at the given relative position for the glyph run
             CGPoint runningPosition{ glyphRuns[i].relativePosition.x, std::round(glyphRuns[i].relativePosition.y) };
             for (size_t j = 0; j < run->glyphCount; ++j) {
@@ -1999,23 +2006,18 @@ HRESULT __CGContext::DrawGlyphRuns(GlyphRunData* glyphRuns, size_t runsCount, bo
                 runningPosition.x += run->glyphAdvances[j];
             }
 
-            DWRITE_GLYPH_RUN* transformedGlyphRun =
-                new DWRITE_GLYPH_RUN{ run->fontFace,      run->fontEmSize, run->glyphCount, run->glyphIndices,
-                                      zeroAdvances.get(), positions,       run->isSideways, run->bidiLevel };
-            runs.emplace_back(GlyphRunData{ transformedGlyphRun, CGPointZero, glyphRuns[i].attributes });
+            auto transformedGlyphRun = std::make_shared<DWRITE_GLYPH_RUN>(DWRITE_GLYPH_RUN{ run->fontFace,
+                                                                                            run->fontEmSize,
+                                                                                            run->glyphCount,
+                                                                                            run->glyphIndices,
+                                                                                            zeroAdvances.get(),
+                                                                                            positions.data(),
+                                                                                            run->isSideways,
+                                                                                            run->bidiLevel });
+            createdRuns.emplace_back(transformedGlyphRun);
+            runs.emplace_back(GlyphRunData{ transformedGlyphRun.get(), CGPointZero, glyphRuns[i].attributes });
         }
     }
-
-    auto popEnd = wil::ScopeExit([&runs, fastPathTextDrawing]() {
-        if (!fastPathTextDrawing) {
-            // Need to delete all of the created glyphOffsets and DWRITE_GLYPH_RUNS
-            for (auto& runData : runs) {
-                delete[] runData.run->glyphOffsets;
-                delete runData.run;
-                runData.run = nullptr;
-            }
-        }
-    });
 
     // Iterate through every glyph by incrementing pointer in glyphIndices array
     ComPtr<ID2D1TransformedGeometry> transformedGeometry;
