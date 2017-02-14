@@ -225,10 +225,6 @@ void CTLineDraw(CTLineRef lineRef, CGContextRef ctx) {
     }
 
     _CTLine* line = static_cast<_CTLine*>(lineRef);
-
-    _CGContextPushBeginDraw(ctx);
-    auto popEnd = wil::ScopeExit([ctx]() { _CGContextPopEndDraw(ctx); });
-
     std::vector<GlyphRunData> runs;
     CGPoint relativePosition = CGPointZero;
     for (size_t i = 0; i < [line->_runs count]; ++i) {
@@ -241,6 +237,8 @@ void CTLineDraw(CTLineRef lineRef, CGContextRef ctx) {
     }
 
     if (!runs.empty()) {
+        _CGContextPushBeginDraw(ctx);
+        auto popEnd = wil::ScopeExit([ctx]() { _CGContextPopEndDraw(ctx); });
         _CGContextDrawGlyphRuns(ctx, runs.data(), runs.size());
     }
 }

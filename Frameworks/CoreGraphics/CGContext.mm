@@ -1936,10 +1936,6 @@ HRESULT __CGContext::DrawGlyphRuns(GlyphRunData* glyphRuns, size_t runsCount, bo
         return S_OK;
     }
 
-    // DWrite will crash if we try to give it glyphs that are below this threshold
-    // Though this value is approximate, it is small enough to not be noticeable while still safe
-    static constexpr float c_glyphThreshold = 0.5f;
-
     // Undo assumed inversion about Y axis
     CGAffineTransform textTransform = CGAffineTransformScale(textMatrix, 1.0, -1.0);
     CGAffineTransform deviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(this);
@@ -1953,8 +1949,6 @@ HRESULT __CGContext::DrawGlyphRuns(GlyphRunData* glyphRuns, size_t runsCount, bo
          !transformByGlyph) &&
         state.textDrawingMode == kCGTextFill;
 
-    std::vector<GlyphRunData> runs;
-
     size_t maxGlyphCount = std::max_element(glyphRuns, glyphRuns + runsCount, [](const GlyphRunData& left, const GlyphRunData& right) {
                                return left.run->glyphCount < right.run->glyphCount;
                            })->run->glyphCount;
@@ -1962,49 +1956,66 @@ HRESULT __CGContext::DrawGlyphRuns(GlyphRunData* glyphRuns, size_t runsCount, bo
     // Shared between transformed glyph runs
     std::unique_ptr<CGFloat[]> zeroAdvances(new CGFloat[maxGlyphCount]());
 
+    // DWrite will crash if we try to give it glyphs that are below this threshold
+    // Though this value is approximate, it is small enough to not be noticeable while still safe
+    static constexpr float c_glyphThreshold = 0.5f;
+    std::vector<GlyphRunData> runs;
     for (size_t i = 0; i < runsCount; ++i) {
         auto& run = glyphRuns[i].run;
         if ((fabs(combinedTransform.a * run->fontEmSize) <= c_glyphThreshold &&
              fabs(combinedTransform.b * run->fontEmSize) <= c_glyphThreshold) ||
             (fabs(combinedTransform.d * run->fontEmSize) <= c_glyphThreshold &&
              fabs(combinedTransform.c * run->fontEmSize) <= c_glyphThreshold)) {
-            // Not a failure state! Not drawing the glyphs is *okay*.
             TraceWarning(TAG, L"Glyphs too small to be rendered");
+            // Not a failure state! Not drawing the glyphs is *okay*.
+            continue;
+        }
+
+        // Otherwise glyphs are large enough to render
+        if (fastPathTextDrawing) {
+            runs.emplace_back(glyphRuns[i]);
         } else {
-            if (fastPathTextDrawing) {
-                runs.emplace_back(glyphRuns[i]);
-            } else {
-                // Get the linear transformation that is the inverse of the text transform
-                // We transform the positions of each glyph by the inverse so they will be positioned correctly
-                // While still being transformed per glyph by the text transformation
-                CGAffineTransform invertedTextTransformation = CGAffineTransformInvert(
-                    CGAffineTransformScale(CGAffineTransformMake(textTransform.a, textTransform.b, textTransform.c, textTransform.d, 0, 0),
-                                           1,
-                                           -1));
+            // Get the linear transformation that is the inverse of the text transform
+            // We transform the positions of each glyph by the inverse so they will be positioned correctly
+            // While still being transformed per glyph by the text transformation
+            CGAffineTransform invertedTextTransformation = CGAffineTransformInvert(
+                CGAffineTransformScale(CGAffineTransformMake(textTransform.a, textTransform.b, textTransform.c, textTransform.d, 0, 0),
+                                       1,
+                                       -1));
 
-                DWRITE_GLYPH_OFFSET* positions = new DWRITE_GLYPH_OFFSET[run->glyphCount];
-                // First glyph's origin is at the given relative position for the glyph run
-                CGPoint runningPosition{ glyphRuns[i].relativePosition.x, std::round(glyphRuns[i].relativePosition.y) };
-                for (size_t j = 0; j < run->glyphCount; ++j) {
-                    // Invert position by text transformation
-                    CGPoint transformedPosition = CGPointApplyAffineTransform(runningPosition, invertedTextTransformation);
+            DWRITE_GLYPH_OFFSET* positions = new DWRITE_GLYPH_OFFSET[run->glyphCount];
+            // First glyph's origin is at the given relative position for the glyph run
+            CGPoint runningPosition{ glyphRuns[i].relativePosition.x, std::round(glyphRuns[i].relativePosition.y) };
+            for (size_t j = 0; j < run->glyphCount; ++j) {
+                // Invert position by text transformation
+                CGPoint transformedPosition = CGPointApplyAffineTransform(runningPosition, invertedTextTransformation);
 
-                    // Set current glyph's position to be the actual position transformed by the inverted text position
-                    // So when the space is transformed by the text position it will be drawn in the correct real position
-                    positions[j] = DWRITE_GLYPH_OFFSET{ transformedPosition.x + run->glyphOffsets[j].advanceOffset,
-                                                        std::round(transformedPosition.y + run->glyphOffsets[j].ascenderOffset) };
+                // Set current glyph's position to be the actual position transformed by the inverted text position
+                // So when the space is transformed by the text position it will be drawn in the correct real position
+                positions[j] = DWRITE_GLYPH_OFFSET{ transformedPosition.x + run->glyphOffsets[j].advanceOffset,
+                                                    std::round(transformedPosition.y + run->glyphOffsets[j].ascenderOffset) };
 
-                    // Translate position of next glyph by current glyph's advance
-                    runningPosition.x += run->glyphAdvances[j];
-                }
-
-                DWRITE_GLYPH_RUN* transformedGlyphRun =
-                    new DWRITE_GLYPH_RUN{ run->fontFace,      run->fontEmSize, run->glyphCount, run->glyphIndices,
-                                          zeroAdvances.get(), positions,       run->isSideways, run->bidiLevel };
-                runs.emplace_back(GlyphRunData{ transformedGlyphRun, CGPointZero, glyphRuns[i].attributes });
+                // Translate position of next glyph by current glyph's advance
+                runningPosition.x += run->glyphAdvances[j];
             }
+
+            DWRITE_GLYPH_RUN* transformedGlyphRun =
+                new DWRITE_GLYPH_RUN{ run->fontFace,      run->fontEmSize, run->glyphCount, run->glyphIndices,
+                                      zeroAdvances.get(), positions,       run->isSideways, run->bidiLevel };
+            runs.emplace_back(GlyphRunData{ transformedGlyphRun, CGPointZero, glyphRuns[i].attributes });
         }
     }
+
+    auto popEnd = wil::ScopeExit([&runs, fastPathTextDrawing]() {
+        if (!fastPathTextDrawing) {
+            // Need to delete all of the created glyphOffsets and DWRITE_GLYPH_RUNS
+            for (auto& runData : runs) {
+                delete[] runData.run->glyphOffsets;
+                delete runData.run;
+                runData.run = nullptr;
+            }
+        }
+    });
 
     // Iterate through every glyph by incrementing pointer in glyphIndices array
     ComPtr<ID2D1TransformedGeometry> transformedGeometry;
@@ -2069,19 +2080,11 @@ HRESULT __CGContext::DrawGlyphRuns(GlyphRunData* glyphRuns, size_t runsCount, bo
 
         return S_OK;
     });
+
     RETURN_IF_FAILED(ret);
 
     if (state.textDrawingMode & kCGTextClip) {
         RETURN_IF_FAILED(state.IntersectClippingGeometry(transformedGeometry.Get(), kCGPathFill));
-    }
-
-    if (!fastPathTextDrawing) {
-        // Need to delete all of the created glyphOffsets and DWRITE_GLYPH_RUNS
-        for (auto& runData : runs) {
-            delete[] runData.run->glyphOffsets;
-            delete runData.run;
-            runData.run = nullptr;
-        }
     }
 
     ClearPath();
