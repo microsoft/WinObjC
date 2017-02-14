@@ -208,7 +208,7 @@ OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
 #endif
 @property (readonly) WUXINotifyCollectionChangedAction action;
 @property (readonly) RTObject<WUXIIBindableVector>* newItems __attribute__ ((ns_returns_not_retained));
-@property (readonly) int newStartingIndex __attribute__ ((ns_returns_not_retained));
+@property (readonly) int newStartingIndex;
 @property (readonly) RTObject<WUXIIBindableVector>* oldItems;
 @property (readonly) int oldStartingIndex;
 @end

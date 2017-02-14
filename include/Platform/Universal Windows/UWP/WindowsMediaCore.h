@@ -1232,7 +1232,7 @@ OBJCUWP_WINDOWS_MEDIA_CORE_PROTECTION_PLAYBACK_CAPTURE_DEVICES_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property (readonly) WMCMediaSourceState newState __attribute__ ((ns_returns_not_retained));
+@property (readonly) WMCMediaSourceState newState;
 @property (readonly) WMCMediaSourceState oldState;
 @end
 
