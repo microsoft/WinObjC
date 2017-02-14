@@ -34,6 +34,12 @@
     <ProjectGuid>bef15618-e03f-4a44-a797-9150c979b09f</ProjectGuid>
     <InferLegacyPackageReferences>false</InferLegacyPackageReferences>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
   <ItemGroup>
     <None Include="project.json" />
     <None Include="WinObjC.Frameworks.Packaging.props" />
@@ -90,7 +96,6 @@
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\MediaPlayer\dll\MediaPlayer.vcxproj" />
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\MessageUI\dll\MessageUI.vcxproj" />
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\Metal\dll\Metal.vcxproj" />
-    <ProjectReference Include="$(MSBuildThisFileDirectory)..\MobileCoreServices\dll\MobileCoreServices.vcxproj" />
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\OpenGLES\dll\OpenGLES.vcxproj" />
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\QuartzCore\dll\QuartzCore.vcxproj" />
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\QuickLook\dll\QuickLook.vcxproj" />

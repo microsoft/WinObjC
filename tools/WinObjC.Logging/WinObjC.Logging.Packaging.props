@@ -77,7 +77,7 @@
            Text="Cannot determine solution build time. Package version dependencies may be inconsistent as a result. Please make sure to build using .sln file." />
 
     <CreateTimestampFileIfNeeded Condition="'$(SolutionDir)' != ''" 
-                                 TimestampFile="$(SolutionDir)$(PackageId).timestamp">
+                                 TimestampFile="$(SolutionDir)$(SolutionName).timestamp">
         <Output PropertyName="PackageTimestamp" TaskParameter="Timestamp" />  
     </CreateTimestampFileIfNeeded>
 
@@ -91,10 +91,5 @@
       <PackageVersion Condition="'$(PackageVersion)' == ''">$(GitBaseVersionMajor).$(GitBaseVersionMinor).$([MSBuild]::Add('$(GitBaseVersionPatch)', '1'))-$(PackageTimestamp).pr</PackageVersion>
     </PropertyGroup>
   </Target>
-  <Target Name="DeletePackageTimestampFile" Condition="'$(SolutionDir)' != ''" DependsOnTargets="SetPackageVersion" BeforeTargets="Pack">
-
-    <!-- This target should only run for the actual packaging project as the pack target itself should never be run on anything but a .nuproj -->
-    <Delete Files="$(SolutionDir)$(PackageId).timestamp" TreatErrorsAsWarnings="true"/>
-  </Target>
-
+  
 </Project>

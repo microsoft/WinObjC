@@ -31,6 +31,12 @@
     <OutputPath>$(SolutionDir)\OutputPackages\$(Configuration)\</OutputPath>
     <ProjectGuid>0a23b6b4-94bb-4b3a-ba73-a7cb5ef7d8f9</ProjectGuid>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
   <ItemGroup>
     <None Include="project.json" />
     <None Include="WinObjC.Tools.targets" />
@@ -44,8 +50,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BuildMonitor\BuildMonitor.csproj" />
-    <ProjectReference Include="..\ObjectiveC\ObjectiveC.csproj" />
     <ProjectReference Include="..\vsimporter\vsimporter.vcxproj" />
     <ProjectReference Include="..\VSIX\ObjectiveCVSIX.csproj" />
   </ItemGroup>

@@ -54,6 +54,12 @@
     <OutputPath>$(SolutionDir)\OutputPackages\$(Configuration)\</OutputPath>
     <ProjectGuid>acc82389-f9eb-49e2-8f8a-c3a8d9360569</ProjectGuid>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
   <ItemGroup>
     <None Include="project.json" />
     <None Include="WinObjC.Language.Packaging.targets" />

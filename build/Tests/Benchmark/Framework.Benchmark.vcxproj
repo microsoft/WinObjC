@@ -25,9 +25,6 @@
     <ProjectReference Include="..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
       <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
-      <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\Starboard\dll\Starboard.vcxproj">
       <Project>{0AC27ECF-E2AB-420B-9359-4843FFF4CBFA}</Project>
     </ProjectReference>
@@ -40,9 +37,6 @@
     <ProjectReference Include="..\..\CoreText\dll\CoreText.vcxproj">
       <Project>{36deec5d-f77b-4c94-a63c-86fb716833de}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\WinObjCRT\dll\WinObjCRT.vcxproj">
-      <Project>{585b4870-0d6b-43a6-8e7e-ad08f7f507b6}</Project>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{7A062AEC-5AED-4F83-8716-4C078F75177B}</ProjectGuid>
@@ -51,14 +45,14 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <ApplicationType>Windows Store</ApplicationType>
-    <AppContainerApplication>false</AppContainerApplication>
+    <AppContainerApplication>true</AppContainerApplication>
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
     <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
     <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
-    <WindowsAppContainer>false</WindowsAppContainer>
-    <TargetOsAndVersion>Universal Windows</TargetOsAndVersion>
+    
+    
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <UseStarboardSourceSdk>true</UseStarboardSourceSdk>
     <IslandwoodDRT>false</IslandwoodDRT>

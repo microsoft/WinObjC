@@ -40,10 +40,10 @@
     <ProjectReference Include="..\..\..\QuartzCore\dll\QuartzCore.vcxproj">
       <Project>{037B568F-4104-417E-9FB8-B6899E398903}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\MobileCoreServices\dll\MobileCoreServicesdll.vcxproj">
+    <ProjectReference Include="..\..\..\MobileCoreServices\dll\MobileCoreServices.vcxproj">
       <Project>{F1C44E27-6599-49C3-B4C2-D812C114B166}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\UIKIt\dll\UIKIt.vcxproj">
+    <ProjectReference Include="..\..\..\UIKit\dll\UIKit.vcxproj">
       <Project>{8E79930B-7EF6-4A4E-B46C-EFC0A49C55D9}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\..\UIKit.Xaml\dll\UIKit.Xaml.vcxproj">
@@ -57,14 +57,14 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <ApplicationType>Windows Store</ApplicationType>
-    <AppContainerApplication>false</AppContainerApplication>
+    <AppContainerApplication>true</AppContainerApplication>
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
     <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
     <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
-    <WindowsAppContainer>false</WindowsAppContainer>
-    <TargetOsAndVersion>Universal Windows</TargetOsAndVersion>
+    
+    
     <StarboardBasePath>..\..\..\..</StarboardBasePath>
     <UseStarboardSourceSdk>true</UseStarboardSourceSdk>
     <IslandwoodDRT>false</IslandwoodDRT>

@@ -18,9 +18,6 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)MemoryManagement.cpp" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{faebdba2-dff7-4944-9b13-bcc4da340804}</ProjectGuid>
     <ProjectName>WinObjCRTLib</ProjectName>
@@ -34,7 +31,9 @@
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(MSBuildThisFileDirectory)..\..\common\common-build.props" />
   </ImportGroup>
-
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)MemoryManagement.cpp" />
+  </ItemGroup>
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(MSBuildThisFileDirectory)..\..\common\common-build.targets" />
   </ImportGroup>
