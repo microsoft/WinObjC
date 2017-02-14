@@ -27,7 +27,6 @@
 #import <UIKit/UIView.h>
 #import <UIKit/UIWindow.h>
 
-#import <UIKit/UIGestureRecognizerDelegate.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import <UIKit/UILongPressGestureRecognizer.h>
 #import <UIKit/UIPinchGestureRecognizer.h>

@@ -20,7 +20,6 @@
 #import <UIKit/UIGestureRecognizer.h>
 #import <UIKit/UIView.h>
 #import <UIKit/UITouch.h>
-#import <UIKit/UIGestureRecognizerDelegate.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
 
 #import "UIViewInternal.h"

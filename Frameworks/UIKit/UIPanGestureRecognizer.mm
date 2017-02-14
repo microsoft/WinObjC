@@ -16,7 +16,6 @@
 
 #import "Starboard.h"
 
-#import <UIKit/UIGestureRecognizerDelegate.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import <UIKit/UIPanGestureRecognizer.h>
 #import <UIKit/UITouch.h>
