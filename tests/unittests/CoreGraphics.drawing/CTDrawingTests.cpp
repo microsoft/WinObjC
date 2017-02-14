@@ -145,7 +145,7 @@ TEXT_DRAW_TEST_F(CTFrame, BasicUnicodeTest, WhiteBackgroundTest<PixelByPixelImag
     CTFrameDraw(frame.get(), context);
 }
 
-class CTFrame : public WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>,
+class CTFrame : public WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<64>>>,
                 public ::testing::WithParamInterface<::testing::tuple<CTTextAlignment, CTLineBreakMode, CTWritingDirection, CGFloat>> {
     CFStringRef CreateOutputFilename() {
         CTTextAlignment alignment = ::testing::get<0>(GetParam());
