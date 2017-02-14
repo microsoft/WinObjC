@@ -35,6 +35,19 @@ DependencyProperty^ Layer::s_layerContentProperty = nullptr;
 DependencyProperty^ Layer::s_sublayerCanvasProperty = nullptr;
 bool Layer::s_dependencyPropertiesRegistered = false;
 
+LayerProperty::LayerProperty(DependencyObject^ target, DependencyProperty^ property) : _target(target), _property(property) {
+}
+
+void LayerProperty::SetValue(Platform::Object^ value) {
+    // Set the specified value on our underlying target/property pair
+    _target->SetValue(_property, value);
+}
+
+Platform::Object^ LayerProperty::GetValue() {
+    // Retrieve the current value from our underlying target/property pair
+    return _target->GetValue(_property);
+}
+
 Layer::Layer() {
     InitializeComponent();
 
@@ -70,6 +83,18 @@ bool Layer::HasLayerContent::get() {
 Canvas^ Layer::SublayerCanvas::get() {
     // We *are* the sublayer canvas
     return this;
+}
+
+// Accessor for the LayerProperty that manages the BorderBrush of this layer
+LayerProperty^ Layer::GetBorderBrushProperty() {
+    // We don't support borders on basic layers yet, because Canvas doesn't support one intrinsically
+    return nullptr;
+}
+
+// Accessor for the LayerProperty that manages the BorderThickness of this layer
+LayerProperty^ Layer::GetBorderThicknessProperty() {
+    // We don't support borders on basic layers yet, because Canvas doesn't support one intrinsically
+    return nullptr;
 }
 
 DependencyProperty^ Layer::LayerContentProperty::get() {

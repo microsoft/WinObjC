@@ -53,10 +53,43 @@ Canvas^ Label::SublayerCanvas::get() {
     if (!_sublayerCanvas) {
         _sublayerCanvas = ref new Canvas();
         _sublayerCanvas->Name = "Sublayers";
-        Children->Append(_sublayerCanvas);
+
+        // If we have a border make sure the sublayer canvas is inserted before it
+        if (_border) {
+            unsigned int insertIndex = 0;
+            Children->IndexOf(_border, &insertIndex);
+            Children->InsertAt(insertIndex, _sublayerCanvas);
+        } else {
+            // Just add the sublayer canvas to the end because we don't yet have a border on this element
+            Children->Append(_sublayerCanvas);
+        }
     }
 
     return _sublayerCanvas;
+}
+
+Border^ Label::_GetBorder() {
+    if (!_border) {
+        // We always want the border added to the end of the Children collection
+        _border = ref new Border();
+        Children->Append(_border);
+    }
+
+    return _border;
+}
+
+// Accessor for the LayerProperty that manages the BorderBrush of this label
+Private::CoreAnimation::LayerProperty^ Label::GetBorderBrushProperty() {
+    // Make sure we have a border element, and return it along with its associated border property
+    Border^ border = _GetBorder();
+    return ref new Private::CoreAnimation::LayerProperty(border, border->BorderBrushProperty);
+}
+
+// Accessor for the LayerProperty that manages the BorderThickness of this label
+Private::CoreAnimation::LayerProperty^ Label::GetBorderThicknessProperty() {
+    // Make sure we have a border element, and return it along with its associated border property
+    Border^ border = _GetBorder();
+    return ref new Private::CoreAnimation::LayerProperty(border, border->BorderThicknessProperty);
 }
 
 Windows::Foundation::Size Label::ArrangeOverride(Windows::Foundation::Size finalSize) {

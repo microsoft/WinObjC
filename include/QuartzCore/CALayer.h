@@ -95,8 +95,8 @@ CA_EXPORT_CLASS
 @property (retain) CALayer* mask STUB_PROPERTY;
 @property (getter=isDoubleSided) BOOL doubleSided STUB_PROPERTY;
 @property CGFloat cornerRadius STUB_PROPERTY;
-@property CGFloat borderWidth STUB_PROPERTY;
-@property CGColorRef borderColor STUB_PROPERTY;
+@property CGFloat borderWidth;
+@property CGColorRef borderColor;
 @property CGColorRef backgroundColor;
 @property float shadowOpacity STUB_PROPERTY;
 @property CGFloat shadowRadius STUB_PROPERTY;
