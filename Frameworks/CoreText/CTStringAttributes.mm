@@ -16,19 +16,20 @@
 
 #import <CoreText/CTStringAttributes.h>
 #import <StubReturn.h>
+#import <CGContextInternal.h>
 
-const CFStringRef kCTCharacterShapeAttributeName = static_cast<CFStringRef>(@"kCTCharacterShapeAttributeName");
-const CFStringRef kCTFontAttributeName = static_cast<CFStringRef>(@"NSFont");
-const CFStringRef kCTKernAttributeName = static_cast<CFStringRef>(@"kCTKernAttributeName");
-const CFStringRef kCTLigatureAttributeName = static_cast<CFStringRef>(@"kCTLigatureAttributeName");
-const CFStringRef kCTForegroundColorAttributeName = static_cast<CFStringRef>(@"NSForegroundColor");
-const CFStringRef kCTForegroundColorFromContextAttributeName = static_cast<CFStringRef>(@"kCTForegroundColorFromContextAttributeName");
-const CFStringRef kCTParagraphStyleAttributeName = static_cast<CFStringRef>(@"kCTParagraphStyleAttributeName");
-const CFStringRef kCTStrokeWidthAttributeName = static_cast<CFStringRef>(@"kCTStrokeWidthAttributeName");
-const CFStringRef kCTStrokeColorAttributeName = static_cast<CFStringRef>(@"kCTStrokeColorAttributeName");
-const CFStringRef kCTSuperscriptAttributeName = static_cast<CFStringRef>(@"kCTSuperscriptAttributeName");
-const CFStringRef kCTUnderlineColorAttributeName = static_cast<CFStringRef>(@"kCTUnderlineColorAttributeName");
-const CFStringRef kCTUnderlineStyleAttributeName = static_cast<CFStringRef>(@"kCTUnderlineStyleAttributeName");
-const CFStringRef kCTVerticalFormsAttributeName = static_cast<CFStringRef>(@"kCTVerticalFormsAttributeName");
-const CFStringRef kCTGlyphInfoAttributeName = static_cast<CFStringRef>(@"kCTGlyphInfoAttributeName");
-const CFStringRef kCTRunDelegateAttributeName = static_cast<CFStringRef>(@"kCTRunDelegateAttributeName");
+const CFStringRef kCTCharacterShapeAttributeName = _kCGCharacterShapeAttributeName;
+const CFStringRef kCTFontAttributeName = _kCGFontAttributeName;
+const CFStringRef kCTKernAttributeName = _kCGKernAttributeName;
+const CFStringRef kCTLigatureAttributeName = _kCGLigatureAttributeName;
+const CFStringRef kCTForegroundColorAttributeName = _kCGForegroundColorAttributeName;
+const CFStringRef kCTForegroundColorFromContextAttributeName = _kCGForegroundColorFromContextAttributeName;
+const CFStringRef kCTParagraphStyleAttributeName = _kCGParagraphStyleAttributeName;
+const CFStringRef kCTStrokeWidthAttributeName = _kCGStrokeWidthAttributeName;
+const CFStringRef kCTStrokeColorAttributeName = _kCGStrokeColorAttributeName;
+const CFStringRef kCTSuperscriptAttributeName = _kCGSuperscriptAttributeName;
+const CFStringRef kCTUnderlineColorAttributeName = _kCGUnderlineColorAttributeName;
+const CFStringRef kCTUnderlineStyleAttributeName = _kCGUnderlineStyleAttributeName;
+const CFStringRef kCTVerticalFormsAttributeName = _kCGVerticalFormsAttributeName;
+const CFStringRef kCTGlyphInfoAttributeName = _kCGGlyphInfoAttributeName;
+const CFStringRef kCTRunDelegateAttributeName = _kCGRunDelegateAttributeName;
