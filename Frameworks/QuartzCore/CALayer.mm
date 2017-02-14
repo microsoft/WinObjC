@@ -288,7 +288,6 @@ CAPrivateInfo::~CAPrivateInfo() {
     _undefinedKeys = nil;
     _actions = nil;
     CGColorRelease(_backgroundColor);
-    CGColorRelease(_borderColor);
     _name = nil;
     if (_animations) {
         [_animations release];
@@ -1582,64 +1581,55 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     return priv->_backgroundColor;
 }
 
-- (void)_setContentColor:(CGColorRef)newColor {
-    UNIMPLEMENTED();
-}
-
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)setBorderColor:(CGColorRef)color {
-    UNIMPLEMENTED();
-    if (color != nil) {
-        priv->borderColor = *[static_cast<UIColor*>(color) _getColors];
-    } else {
-        _ClearColorQuad(priv->borderColor);
-    }
-
-    CGColorRef old = priv->_borderColor;
-    priv->_borderColor = CGColorRetain(color);
-    CGColorRelease(old);
+    // Set the border color via CATransaction
+    [CATransaction _setPropertyForLayer:self name:@"borderColor" value:(NSObject*)color];
+    [self setNeedsDisplay];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (CGColorRef)borderColor {
-    UNIMPLEMENTED();
-    return priv->_borderColor;
+    // Grab the current border color directly off of the layer proxy
+    return [(UIColor*)priv->_layerProxy->GetPropertyValue("borderColor") CGColor];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)setBorderWidth:(float)width {
-    UNIMPLEMENTED();
-    priv->borderWidth = width;
+    // Set the border width via CATransaction
+    [CATransaction _setPropertyForLayer:self name:@"borderWidth" value:[NSNumber numberWithFloat:width]];
+    [self setNeedsDisplay];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (float)borderWidth {
-    UNIMPLEMENTED();
-    return priv->borderWidth;
+    // Grab the current border width directly off of the layer proxy
+    return [(NSNumber*)priv->_layerProxy->GetPropertyValue("borderWidth") floatValue];
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes Rounded corners with clipped children are not currently achievable in Xaml.
 */
 - (void)setCornerRadius:(float)radius {
-    UNIMPLEMENTED();
-    priv->cornerRadius = radius;
+    UNIMPLEMENTED_WITH_MSG("Rounded corners with clipped children are not achievable in Xaml.");
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes Rounded corners with clipped children are not currently achievable in Xaml.
 */
 - (float)cornerRadius {
-    UNIMPLEMENTED();
-    return priv->cornerRadius;
+    UNIMPLEMENTED_WITH_MSG("Rounded corners with clipped children are not achievable in Xaml.");
+    return StubReturn();
 }
 
 /**
@@ -2518,7 +2508,7 @@ bool _floatAlmostEqual(float a, float b) {
     return ret;
 }
 
-- (NSObject*)presentationValueForKey:(NSString*)key {
+- (NSObject*)_presentationValueForKey:(NSString*)key {
     return reinterpret_cast<NSObject*>(priv->_layerProxy->GetPropertyValue([key UTF8String]));
 }
 

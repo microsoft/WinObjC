@@ -230,7 +230,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 @property (readonly) NSString * type;
 @property (readonly) RTObject<WGDDIDirect3DSurface>* direct3DSurface;
 @property (readonly) WGISoftwareBitmap* softwareBitmap;
-- (RTObject<WFIAsyncAction>*)copyToAsync:(WMVideoFrame*)frame;
+- (RTObject<WFIAsyncAction>*)copyToAsync:(WMVideoFrame*)frame __attribute__ ((ns_returns_not_retained));
 - (void)close;
 @end
 

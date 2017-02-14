@@ -2908,7 +2908,7 @@ static void adjustSubviews(UIView* self, CGSize parentSize, CGSize delta) {
             CABasicAnimation* ret = [CABasicAnimation animationWithKeyPath:key];
 
             if (_animationProperties[stackLevel]._beginsFromCurrentState && ![key isEqualToString:@"opacity"]) {
-                [ret setFromValue:[actionLayer presentationValueForKey:key]];
+                [ret setFromValue:[actionLayer _presentationValueForKey:key]];
             } else {
                 [ret setFromValue:[actionLayer valueForKey:key]];
             }

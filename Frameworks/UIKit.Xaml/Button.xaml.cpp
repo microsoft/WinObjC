@@ -66,6 +66,16 @@ Canvas^ Button::SublayerCanvas::get() {
     return _contentCanvas;
 }
 
+// Accessor for the LayerProperty that manages the BorderBrush of this button
+Private::CoreAnimation::LayerProperty^ Button::GetBorderBrushProperty() {
+    return ref new Private::CoreAnimation::LayerProperty(_border, _border->BorderBrushProperty);
+}
+
+// Accessor for the LayerProperty that manages the BorderThickness of this button
+Private::CoreAnimation::LayerProperty^ Button::GetBorderThicknessProperty() {
+    return ref new Private::CoreAnimation::LayerProperty(_border, _border->BorderThicknessProperty);
+}
+
 void Button::OnPointerPressed(PointerRoutedEventArgs^ e) {
     // Call the pointer hook if it exists
     if (_pointerPressedHook) {
