@@ -18,4 +18,5 @@
 
 @interface NSOperation ()
 @property (nonatomic, assign, getter=_completionQueue, setter=_setCompletionQueue:) dispatch_queue_t _completionQueue;
+- (BOOL)_acquirePermissionToAddToQueue;
 @end

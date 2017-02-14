@@ -23,13 +23,7 @@
 @class NSString;
 @class NSArray;
 
-#define NSOperationQualityOfService NSQualityOfService
-#define NSOperationQualityOfServiceUserInteractive NSQualityOfServiceUserInteractive
-#define NSOperationQualityOfServiceUserInitiated NSQualityOfServiceUserInitiated
-#define NSOperationQualityOfServiceUtility NSQualityOfServiceUtility
-#define NSOperationQualityOfServiceBackground NSQualityOfServiceBackground
-
-enum {
+typedef NS_ENUM(NSUInteger, NSOperationQueuePriority) {
     NSOperationQueuePriorityVeryLow = -8,
     NSOperationQueuePriorityLow = -4,
     NSOperationQueuePriorityNormal = 0,
@@ -37,16 +31,13 @@ enum {
     NSOperationQueuePriorityVeryHigh = 8
 };
 
-enum {
+typedef NS_ENUM(NSInteger, NSQualityOfService) {
     NSQualityOfServiceDefault,
     NSQualityOfServiceUserInteractive,
     NSQualityOfServiceUserInitiated,
     NSQualityOfServiceUtility,
     NSQualityOfServiceBackground
 };
-
-typedef NSInteger NSOperationQueuePriority;
-typedef NSUInteger NSQualityOfService;
 
 FOUNDATION_EXPORT_CLASS
 @interface NSOperation : NSObject
@@ -64,7 +55,7 @@ FOUNDATION_EXPORT_CLASS
 - (void)addDependency:(NSOperation*)operation;
 - (void)removeDependency:(NSOperation*)operation;
 @property (readonly, copy) NSArray* dependencies;
-@property NSQualityOfService qualityOfService STUB_PROPERTY;
+@property NSQualityOfService qualityOfService;
 @property double threadPriority STUB_PROPERTY;
 @property NSOperationQueuePriority queuePriority;
 - (void)waitUntilFinished;

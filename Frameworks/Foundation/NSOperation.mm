@@ -53,6 +53,8 @@ static wchar_t TAG[] = L"NSOperation";
     std::recursive_mutex _finishLock; // guards _finished and _cancelled
     std::recursive_mutex _dependenciesLock; // guards _dependencies, _outstandingDependenciesCount and _ready
     std::recursive_mutex _completionBlockLock; // guards _completionBlock
+
+    BOOL _inQueue;
 }
 
 @synthesize cancelled = _cancelled;
@@ -98,20 +100,19 @@ static const NSString* NSOperationContext = @"context";
         completionQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     }
 
-    dispatch_async(completionQueue,
-                   ^{
-                       decltype(_completionBlock) localCompletion;
+    dispatch_async(completionQueue, ^{
+        decltype(_completionBlock) localCompletion;
 
-                       { // _completionBlockLock scope
-                           std::lock_guard<std::recursive_mutex> lock(_completionBlockLock);
-                           localCompletion = std::move(_completionBlock);
-                           _completionBlock = nil;
-                       } // end _completionBlockLock scope
+        { // _completionBlockLock scope
+            std::lock_guard<std::recursive_mutex> lock(_completionBlockLock);
+            localCompletion = std::move(_completionBlock);
+            _completionBlock = nil;
+        } // end _completionBlockLock scope
 
-                       if (localCompletion) {
-                           localCompletion();
-                       }
-                   });
+        if (localCompletion) {
+            localCompletion();
+        }
+    });
 }
 
 - (void)observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void*)context {
@@ -340,13 +341,23 @@ static const NSString* NSOperationContext = @"context";
 - (void)dealloc {
     { // _dependenciesLock scope
         std::lock_guard<std::recursive_mutex> lock(_dependenciesLock);
-        for (NSOperation* op in(NSSet*)_dependencies) {
+        for (NSOperation* op in (NSSet*)_dependencies) {
             [op removeObserver:self forKeyPath:@"isFinished" context:(void*)NSOperationContext];
         }
     }
 
     [self removeObserver:self forKeyPath:@"isFinished" context:(void*)NSOperationContext];
     [super dealloc];
+}
+
+- (BOOL)_acquirePermissionToAddToQueue {
+    @synchronized(self) {
+        if (!_inQueue) {
+            _inQueue = YES;
+            return YES;
+        }
+        return NO;
+    }
 }
 
 @end

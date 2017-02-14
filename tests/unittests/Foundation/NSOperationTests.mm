@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -36,6 +36,85 @@ static void (^_completionBlockPopulatingConditionAndFlag(void (^completionBlock)
     });
 }
 
+// Convenience class that wraps an NSCondition and an associated boolean, and implements the NSCondition usage pattern documented in:
+// https://developer.apple.com/reference/foundation/nscondition?language=objc
+// This can be replaced/re-implemented based on NSConditionLock once that has a stable implementation
+@interface _NSBooleanCondition : NSObject
+- (BOOL)waitUntilDate:(NSDate*)limit;
+- (void)broadcast;
+@property (readonly) NSCondition* condition;
+@property (readonly) bool isOpen;
+@end
+
+@implementation _NSBooleanCondition
+- (instancetype)init {
+    if (self = [super init]) {
+        _condition = [[NSCondition new] autorelease];
+        _isOpen = false;
+    }
+    return self;
+}
+
+- (void)dealloc {
+    [_condition release];
+    [super dealloc];
+}
+
+- (BOOL)waitUntilDate:(NSDate*)limit {
+    BOOL ret = YES;
+    [_condition lock];
+    while (!_isOpen) {
+        ret = [_condition waitUntilDate:limit];
+    }
+    [_condition unlock];
+    return ret;
+}
+
+- (void)broadcast {
+    [_condition lock];
+    _isOpen = YES;
+    [_condition broadcast];
+    [_condition unlock];
+}
+@end
+
+// Convenience class that executes a block on a separate thread
+@interface BlockThread : NSThread
+- (instancetype)initWithBlock:(void (^)())block;
+@property (copy) void (^block)();
+@property (readonly) _NSBooleanCondition* finishCondition;
+@end
+
+@implementation BlockThread
+- (instancetype)initWithBlock:(void (^)())block {
+    if (self = [super init]) {
+        self->_block = block;
+        self->_finishCondition = [[_NSBooleanCondition new] autorelease];
+    }
+    return self;
+}
+
+- (void)dealloc {
+    [_finishCondition release];
+    [super dealloc];
+}
+
+- (void)main {
+    self.block();
+    [_finishCondition broadcast];
+}
+
+@end
+
+// Test helper that waits on a block to finish for a specified period of time
+// Primarily intended to add a timeout to wait functions that could otherwise go on indefinitely
+// Returns whether the block completed successfully
+static BOOL _waitOnBlockToFinish(void (^block)(), NSTimeInterval secondsToWait) {
+    BlockThread* blockThread = [[[BlockThread alloc] initWithBlock:block] autorelease];
+    [blockThread start];
+    return [blockThread.finishCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:secondsToWait]];
+}
+
 TEST(NSOperation, NSOperationDealloc) {
     NSOperationQueue* queue = [[NSOperationQueue alloc] init];
     ASSERT_NO_THROW([queue release]);
@@ -51,10 +130,13 @@ TEST(NSOperation, NSOperation) {
 
     NSCondition* completionCondition = nil;
     BOOL completionBlockCalled = NO;
-    [operation setCompletionBlock:_completionBlockPopulatingConditionAndFlag(^{
-                   [operation waitUntilFinished]; // Should not deadlock, but we cannot test this
-                   ASSERT_TRUE([operation isFinished]);
-               }, &completionCondition, &completionBlockCalled)];
+    [operation setCompletionBlock:_completionBlockPopulatingConditionAndFlag(
+                                      ^{
+                                          [operation waitUntilFinished]; // Should not deadlock, but we cannot test this
+                                          ASSERT_TRUE([operation isFinished]);
+                                      },
+                                      &completionCondition,
+                                      &completionBlockCalled)];
 
     [completionCondition lock];
 
@@ -70,6 +152,14 @@ TEST(NSOperation, NSOperation) {
     ASSERT_FALSE([operation isExecuting]);
 }
 
+TEST(NSOperation, CancelOutOfQueue) {
+    NSOperation* operation = [[NSOperation new] autorelease];
+    [operation cancel];
+    EXPECT_TRUE([operation isCancelled]);
+    EXPECT_FALSE([operation isExecuting]);
+    EXPECT_FALSE([operation isFinished]);
+}
+
 TEST(NSOperation, NSOperationCancellation) {
     NSOperationQueue* queue = [[NSOperationQueue new] autorelease];
 
@@ -77,10 +167,13 @@ TEST(NSOperation, NSOperationCancellation) {
 
     NSCondition* completionCondition = nil;
     BOOL completionBlockCalled = NO;
-    [cancelledOperation setCompletionBlock:_completionBlockPopulatingConditionAndFlag(^{
-                            [cancelledOperation waitUntilFinished]; // Should not deadlock, but we cannot test this
-                            ASSERT_TRUE([cancelledOperation isFinished]);
-                        }, &completionCondition, &completionBlockCalled)];
+    [cancelledOperation setCompletionBlock:_completionBlockPopulatingConditionAndFlag(
+                                               ^{
+                                                   [cancelledOperation waitUntilFinished]; // Should not deadlock, but we cannot test this
+                                                   ASSERT_TRUE([cancelledOperation isFinished]);
+                                               },
+                                               &completionCondition,
+                                               &completionBlockCalled)];
 
     [completionCondition lock];
 
@@ -244,16 +337,14 @@ OSX_DISABLED_TEST(NSOperation, NSOperationKVO) {
 
 - (void)doSomething {
     // Do some async task.
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
-                   ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
 
-                       // Do another async task
-                       dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
-                                      ^{
-                                          // Do some async task.
-                                          self.executing = NO;
-                                      });
-                   });
+        // Do another async task
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+            // Do some async task.
+            self.executing = NO;
+        });
+    });
 }
 
 @end
@@ -265,10 +356,13 @@ TEST(NSOperation, NSOperationConcurrentSubclass) {
 
     NSCondition* completionCondition = nil;
     BOOL completionBlockCalled = NO;
-    [operation setCompletionBlock:_completionBlockPopulatingConditionAndFlag(^{
-                   [operation waitUntilFinished]; // Should not deadlock, but we cannot test this
-                   ASSERT_TRUE([operation isFinished]);
-               }, &completionCondition, &completionBlockCalled)];
+    [operation setCompletionBlock:_completionBlockPopulatingConditionAndFlag(
+                                      ^{
+                                          [operation waitUntilFinished]; // Should not deadlock, but we cannot test this
+                                          ASSERT_TRUE([operation isFinished]);
+                                      },
+                                      &completionCondition,
+                                      &completionBlockCalled)];
 
     [completionCondition lock];
 
@@ -309,10 +403,13 @@ TEST(NSOperation, NSOperationNonconcurrentSubclass) {
 
     NSCondition* completionCondition = nil;
     BOOL completionBlockCalled = NO;
-    [operation setCompletionBlock:_completionBlockPopulatingConditionAndFlag(^{
-                   [operation waitUntilFinished]; // Should not deadlock, but we cannot test this
-                   ASSERT_TRUE([operation isFinished]);
-               }, &completionCondition, &completionBlockCalled)];
+    [operation setCompletionBlock:_completionBlockPopulatingConditionAndFlag(
+                                      ^{
+                                          [operation waitUntilFinished]; // Should not deadlock, but we cannot test this
+                                          ASSERT_TRUE([operation isFinished]);
+                                      },
+                                      &completionCondition,
+                                      &completionBlockCalled)];
 
     [completionCondition lock];
 
@@ -507,17 +604,19 @@ TEST(NSOperation, RunConcurrentOperationManually) {
 
     NSCondition* completionCondition = nil;
     BOOL completionBlockCalled = NO;
-    [operation setCompletionBlock:_completionBlockPopulatingConditionAndFlag(^{
-                   [operation waitUntilFinished]; // Should not deadlock, but we cannot test this
-                   ASSERT_TRUE([operation isFinished]);
-               }, &completionCondition, &completionBlockCalled)];
+    [operation setCompletionBlock:_completionBlockPopulatingConditionAndFlag(
+                                      ^{
+                                          [operation waitUntilFinished]; // Should not deadlock, but we cannot test this
+                                          ASSERT_TRUE([operation isFinished]);
+                                      },
+                                      &completionCondition,
+                                      &completionBlockCalled)];
 
     [completionCondition lock];
 
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
-                   ^{
-                       [operation start];
-                   });
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [operation start];
+    });
 
     [operation waitUntilFinished];
 
@@ -535,17 +634,19 @@ TEST(NSOperation, RunNonconcurrentOperationManually) {
 
     NSCondition* completionCondition = nil;
     BOOL completionBlockCalled = NO;
-    [operation setCompletionBlock:_completionBlockPopulatingConditionAndFlag(^{
-                   [operation waitUntilFinished]; // Should not deadlock, but we cannot test this
-                   ASSERT_TRUE([operation isFinished]);
-               }, &completionCondition, &completionBlockCalled)];
+    [operation setCompletionBlock:_completionBlockPopulatingConditionAndFlag(
+                                      ^{
+                                          [operation waitUntilFinished]; // Should not deadlock, but we cannot test this
+                                          ASSERT_TRUE([operation isFinished]);
+                                      },
+                                      &completionCondition,
+                                      &completionBlockCalled)];
 
     [completionCondition lock];
 
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
-                   ^{
-                       [operation start];
-                   });
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [operation start];
+    });
 
     [operation waitUntilFinished];
 
@@ -568,11 +669,14 @@ TEST(NSOperation, NSBlockOperationInQueue) {
 
     NSCondition* completionCondition = nil;
     BOOL completionBlockCalled = NO;
-    [operation setCompletionBlock:_completionBlockPopulatingConditionAndFlag(^{
-                   [operation waitUntilFinished]; // Should not deadlock, but we cannot test this
-                   ASSERT_TRUE([operation isFinished]);
-                   ASSERT_TRUE(executedBlock);
-               }, &completionCondition, &completionBlockCalled)];
+    [operation setCompletionBlock:_completionBlockPopulatingConditionAndFlag(
+                                      ^{
+                                          [operation waitUntilFinished]; // Should not deadlock, but we cannot test this
+                                          ASSERT_TRUE([operation isFinished]);
+                                          ASSERT_TRUE(executedBlock);
+                                      },
+                                      &completionCondition,
+                                      &completionBlockCalled)];
 
     [completionCondition lock];
 
@@ -586,4 +690,628 @@ TEST(NSOperation, NSBlockOperationInQueue) {
     ASSERT_TRUE(completionBlockCalled);
     ASSERT_TRUE([operation isFinished]);
     ASSERT_FALSE([operation isExecuting]);
+}
+
+TEST(NSOperation, MainQueue) {
+    NSOperationQueue* mainQueue = [NSOperationQueue mainQueue];
+
+    ASSERT_OBJCNE(mainQueue, nil);
+
+    // Quality of service can't be changed
+    NSQualityOfService quality = mainQueue.qualityOfService;
+    mainQueue.qualityOfService = NSQualityOfServiceBackground;
+    EXPECT_EQ(quality, mainQueue.qualityOfService);
+
+    // mainQueue has an unchangeable underlying queue
+    ASSERT_NO_THROW([mainQueue setUnderlyingQueue:nil]);
+    ASSERT_EQ([mainQueue underlyingQueue], dispatch_get_main_queue());
+    ASSERT_NO_THROW([mainQueue setUnderlyingQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)]);
+    ASSERT_EQ([mainQueue underlyingQueue], dispatch_get_main_queue());
+    ASSERT_NO_THROW([mainQueue setUnderlyingQueue:dispatch_get_main_queue()]);
+    ASSERT_EQ([mainQueue underlyingQueue], dispatch_get_main_queue());
+}
+
+TEST(NSOperation, CurrentQueue) {
+// TODO #: WinObjC's implementation of NSThread does not consider this context the main thread - this is a bug
+#if !WINOBJC
+    // Check that the current queue on the main thread is the main queue
+    EXPECT_OBJCEQ([NSOperationQueue mainQueue], [NSOperationQueue currentQueue]);
+#endif
+
+    // Check that the current queue is correct at each stage
+    __block NSOperationQueue* currentQueue;
+    __block NSOperationQueue* queue = [[NSOperationQueue new] autorelease];
+    __block NSOperation* operation = [NSBlockOperation blockOperationWithBlock:^{
+        currentQueue = [NSOperationQueue currentQueue];
+    }];
+
+    __block NSOperationQueue* currentQueue2;
+    NSOperationQueue* queue2 = [[NSOperationQueue new] autorelease];
+    __block NSOperation* operation2 = [NSBlockOperation blockOperationWithBlock:^{
+        [queue addOperation:operation];
+        [operation waitUntilFinished];
+        currentQueue2 = [NSOperationQueue currentQueue];
+    }];
+
+    [queue2 addOperation:operation2];
+    ASSERT_TRUE_MSG(_waitOnBlockToFinish(
+                        ^(void) {
+                            [operation2 waitUntilFinished];
+                        },
+                        2),
+                    "Operation did not finish in time.");
+    EXPECT_OBJCEQ(queue, currentQueue);
+    EXPECT_OBJCEQ(queue2, currentQueue2);
+}
+
+// Test observer for NSOperationQueue that counts the number of changes that occurred for each property
+@interface NSOperationQueue_KeyObserver : NSObject
++ (instancetype)observerWithQueue:(NSOperationQueue*)queue;
+- (void)observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void*)context;
+- (void)reset;
+@property (readonly) NSUInteger suspendedChanges;
+@property (readonly) NSUInteger operationsChanges;
+@property (readonly) NSUInteger operationCountChanges;
+@property (readonly, retain) NSOperationQueue* queue;
+@end
+
+@implementation NSOperationQueue_KeyObserver
++ (instancetype)observerWithQueue:(NSOperationQueue*)queue {
+    NSOperationQueue_KeyObserver* ret = [[[self class] new] autorelease];
+    if (ret) {
+        ret->_queue = [queue retain];
+        [queue addObserver:ret forKeyPath:@"suspended" options:0 context:nil];
+        [queue addObserver:ret forKeyPath:@"operations" options:0 context:nil];
+        [queue addObserver:ret forKeyPath:@"operationCount" options:0 context:nil];
+    }
+    return ret;
+}
+
+- (void)dealloc {
+    [_queue removeObserver:self forKeyPath:@"suspended" context:nil];
+    [_queue removeObserver:self forKeyPath:@"operations" context:nil];
+    [_queue removeObserver:self forKeyPath:@"operationCount" context:nil];
+    [_queue release];
+    [super dealloc];
+}
+
+- (void)observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void*)context {
+    if ([keyPath isEqualToString:@"suspended"]) {
+        ++_suspendedChanges;
+    } else if ([keyPath isEqualToString:@"operations"]) {
+        ++_operationsChanges;
+    } else if ([keyPath isEqualToString:@"operationCount"]) {
+        ++_operationCountChanges;
+    } else {
+        ASSERT_TRUE_MSG(false, "Observed an unexpected key change");
+    }
+}
+
+- (void)reset {
+    _suspendedChanges = 0;
+    _operationsChanges = 0;
+    _operationCountChanges = 0;
+}
+
+@end
+
+TEST(NSOperation, AddOperation_AndValidateState) {
+    __block NSOperationQueue* queue = [[NSOperationQueue new] autorelease];
+
+    // Enable KVO observation
+    NSOperationQueue_KeyObserver* observer = [NSOperationQueue_KeyObserver observerWithQueue:queue];
+
+    [queue setSuspended:YES];
+    EXPECT_EQ(1, observer.suspendedChanges);
+    [observer reset];
+
+    __block _NSBooleanCondition* startedCondition = [[_NSBooleanCondition new] autorelease];
+    __block _NSBooleanCondition* finishCondition = [[_NSBooleanCondition new] autorelease];
+    NSOperation* operation = [NSBlockOperation blockOperationWithBlock:^void() {
+        [startedCondition broadcast];
+        ASSERT_TRUE_MSG([finishCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]],
+                        "Operation was not allowed to finish in time.");
+    }];
+
+    // Validate the initial state of the queue and operation
+    ASSERT_EQ(0, queue.operationCount);
+    ASSERT_OBJCEQ(@[], queue.operations);
+    ASSERT_FALSE(operation.isExecuting);
+    ASSERT_FALSE(operation.isFinished);
+
+    // Add the operation to the queue. The operations/count should reflect the add, but the operation should not have started.
+    [queue addOperation:operation];
+    ASSERT_EQ(1, queue.operationCount);
+    ASSERT_OBJCEQ(@[ operation ], queue.operations);
+    ASSERT_FALSE(operation.isExecuting);
+    ASSERT_FALSE(operation.isFinished);
+    EXPECT_EQ(1, observer.operationsChanges);
+    EXPECT_EQ(1, observer.operationCountChanges);
+    [observer reset];
+
+    // Unsuspend the queue. The operation should start shortly.
+    [queue setSuspended:NO];
+    ASSERT_TRUE_MSG([startedCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]], "Operation did not start in time.");
+    ASSERT_EQ(1, queue.operationCount);
+    ASSERT_OBJCEQ(@[ operation ], queue.operations);
+    ASSERT_TRUE(operation.isExecuting);
+    ASSERT_FALSE(operation.isFinished);
+    EXPECT_EQ(1, observer.suspendedChanges);
+    EXPECT_EQ(0, observer.operationsChanges);
+    EXPECT_EQ(0, observer.operationCountChanges);
+    [observer reset];
+
+    // Allow the operation to run. The operation should finish shortly.
+    [finishCondition broadcast];
+    ASSERT_TRUE_MSG(_waitOnBlockToFinish(
+                        ^(void) {
+                            [queue waitUntilAllOperationsAreFinished];
+                        },
+                        2),
+                    "Operation did not finish in time.");
+    ASSERT_EQ(0, queue.operationCount);
+    ASSERT_OBJCEQ(@[], queue.operations);
+    ASSERT_FALSE(operation.isExecuting);
+    ASSERT_TRUE(operation.isFinished);
+    EXPECT_EQ(0, observer.suspendedChanges);
+    EXPECT_EQ(1, observer.operationsChanges);
+    EXPECT_EQ(1, observer.operationCountChanges);
+    [observer reset];
+}
+
+TEST(NSOperation, AddOperation_AlreadyInQueue) {
+    NSOperationQueue* queue1 = [[NSOperationQueue new] autorelease];
+    NSOperationQueue* queue2 = [[NSOperationQueue new] autorelease];
+    queue1.suspended = YES;
+    queue2.suspended = YES;
+    NSOperation* op = [[NSOperation new] autorelease];
+
+    ASSERT_NO_THROW([queue1 addOperation:op]);
+    ASSERT_ANY_THROW([queue2 addOperation:op]);
+
+    // Same queue shouldn't work, either
+    ASSERT_ANY_THROW([queue1 addOperation:op]);
+}
+
+TEST(NSOperation, AddOperationWithBlock) {
+    __block NSOperationQueue* queue = [[NSOperationQueue new] autorelease];
+    __block bool flag = false;
+    [queue addOperationWithBlock:^void() {
+        flag = true;
+    }];
+    ASSERT_TRUE_MSG(_waitOnBlockToFinish(
+                        ^(void) {
+                            [queue waitUntilAllOperationsAreFinished];
+                        },
+                        2),
+                    "Operation did not finish in time.");
+    ASSERT_TRUE(flag);
+}
+
+TEST(NSOperation, AddOperations) {
+    __block NSOperationQueue* queue = [[NSOperationQueue new] autorelease];
+
+    // Enable KVO observation
+    __block NSOperationQueue_KeyObserver* observer = [NSOperationQueue_KeyObserver observerWithQueue:queue];
+
+    __block size_t opsFinished = 0;
+    __block _NSBooleanCondition* startCondition = [[_NSBooleanCondition new] autorelease];
+    void (^incrementOpsFinished)() = ^void() {
+        ASSERT_TRUE_MSG([startCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]],
+                        "Operation was not allowed to start in time.");
+        ++opsFinished;
+    };
+
+    __block NSArray<NSOperation*>* ops = @[
+        [NSBlockOperation blockOperationWithBlock:Block_copy(incrementOpsFinished)],
+        [NSBlockOperation blockOperationWithBlock:Block_copy(incrementOpsFinished)],
+        [NSBlockOperation blockOperationWithBlock:Block_copy(incrementOpsFinished)]
+    ];
+
+    // Add operations with waitUntilFinished:YES
+    BlockThread* addOperationsThread = [[[BlockThread alloc] initWithBlock:^void() {
+        [queue addOperations:ops waitUntilFinished:YES];
+    }] autorelease];
+    [addOperationsThread start];
+
+    // Wait until the operations have all been added
+    ASSERT_TRUE_MSG(_waitOnBlockToFinish(
+                        ^(void) {
+                            while (observer.operationsChanges == 0 || queue.operationCount < 3) {
+                            }
+                        },
+                        2),
+                    "Operations were not added in time.");
+
+    ASSERT_OBJCEQ(ops, [queue operations]);
+    ASSERT_EQ([ops count], [queue operationCount]);
+    ASSERT_TRUE([addOperationsThread isExecuting]);
+    ASSERT_FALSE([addOperationsThread isFinished]);
+    ASSERT_EQ(0, opsFinished);
+    EXPECT_EQ(1, observer.operationsChanges);
+    EXPECT_EQ(1, observer.operationCountChanges);
+    [observer reset];
+
+    __block _NSBooleanCondition* startCondition2 = [[_NSBooleanCondition new] autorelease];
+    void (^incrementOpsFinished2)() = ^void() {
+        ASSERT_TRUE_MSG([startCondition2 waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]],
+                        "Operation was not allowed to start in time.");
+        ++opsFinished;
+    };
+
+    __block NSArray<NSOperation*>* ops2 = @[
+        [NSBlockOperation blockOperationWithBlock:Block_copy(incrementOpsFinished2)],
+        [NSBlockOperation blockOperationWithBlock:Block_copy(incrementOpsFinished2)],
+    ];
+    NSThread* addOperationsThread2 = [[[BlockThread alloc] initWithBlock:^void() {
+        [queue addOperations:ops2 waitUntilFinished:NO];
+    }] autorelease];
+    [addOperationsThread2 start];
+
+    // Wait until the operations have all been added
+    ASSERT_TRUE_MSG(_waitOnBlockToFinish(
+                        ^(void) {
+                            while (observer.operationsChanges == 0 || queue.operationCount < 5) {
+                            }
+                        },
+                        2),
+                    "Operations were not added in time.");
+
+    ASSERT_EQ(5, [queue operationCount]);
+    ASSERT_EQ(0, opsFinished);
+    EXPECT_EQ(1, observer.operationsChanges);
+    EXPECT_EQ(1, observer.operationCountChanges);
+    [observer reset];
+
+    // Allow the first set of ops to start
+    [startCondition broadcast];
+    ASSERT_TRUE_MSG(_waitOnBlockToFinish(
+                        ^(void) {
+                            for (NSOperation* op in ops) {
+                                [op waitUntilFinished];
+                            }
+                        },
+                        2),
+                    "Operations did not finish in time.");
+
+    [addOperationsThread.finishCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]];
+
+    ASSERT_EQ(3, opsFinished);
+
+    // Allow the second set of ops to start
+    [startCondition2 broadcast];
+    ASSERT_TRUE_MSG(_waitOnBlockToFinish(
+                        ^(void) {
+                            for (NSOperation* op in ops2) {
+                                [op waitUntilFinished];
+                            }
+                        },
+                        2),
+                    "Operations did not finish in time.");
+    ASSERT_EQ(5, opsFinished);
+    EXPECT_LT(0, observer.operationsChanges); // Changes to operations may be batched together
+    EXPECT_LT(0, observer.operationCountChanges);
+    [observer reset];
+}
+
+TEST(NSOperation, CancelAllOperations_Suspended) {
+    __block NSOperationQueue* queue = [[NSOperationQueue new] autorelease];
+
+    // Enable KVO observation
+    NSOperationQueue_KeyObserver* observer = [NSOperationQueue_KeyObserver observerWithQueue:queue];
+
+    [queue setSuspended:YES];
+    EXPECT_EQ(1, observer.suspendedChanges);
+    [observer reset];
+
+    for (size_t i = 0; i < 5; ++i) {
+        [queue addOperation:[[NSOperation new] autorelease]];
+    }
+    EXPECT_EQ(5, observer.operationsChanges);
+    EXPECT_EQ(5, observer.operationCountChanges);
+    [observer reset];
+
+    ASSERT_EQ(5, queue.operationCount);
+    for (NSOperation* op in queue.operations) {
+        ASSERT_FALSE(op.isCancelled);
+        ASSERT_FALSE(op.isExecuting);
+        ASSERT_FALSE(op.isFinished);
+    }
+
+    [queue cancelAllOperations];
+    ASSERT_EQ(5, queue.operationCount);
+    for (NSOperation* op in queue.operations) {
+        ASSERT_TRUE(op.isCancelled);
+        ASSERT_FALSE(op.isExecuting);
+        ASSERT_FALSE(op.isFinished);
+    }
+    EXPECT_EQ(0, observer.operationsChanges);
+    EXPECT_EQ(0, observer.operationCountChanges);
+    [observer reset];
+
+    [queue setSuspended:NO];
+    ASSERT_TRUE_MSG(_waitOnBlockToFinish(
+                        ^(void) {
+                            [queue waitUntilAllOperationsAreFinished];
+                        },
+                        2),
+                    "Operations did not cancel/finish in time.");
+    ASSERT_EQ(0, queue.operationCount);
+    for (NSOperation* op in queue.operations) {
+        ASSERT_TRUE(op.isCancelled);
+        ASSERT_FALSE(op.isExecuting);
+        ASSERT_TRUE(op.isFinished);
+    }
+
+    EXPECT_EQ(1, observer.suspendedChanges);
+    EXPECT_LT(0, observer.operationsChanges); // Changes to operations may be batched together
+    EXPECT_LT(0, observer.operationCountChanges);
+    [observer reset];
+}
+
+// An NSOperation for testing that only finishes if cancelled
+@interface CancellableOperation : NSOperation
+@property (retain, readonly) _NSBooleanCondition* started;
+@end
+
+@implementation CancellableOperation : NSOperation
+- (instancetype)init {
+    if (self = [super init]) {
+        _started = [_NSBooleanCondition new];
+    }
+    return self;
+}
+- (void)main {
+    [_started broadcast];
+    while (!self.isCancelled) {
+    }
+}
+@end
+
+TEST(NSOperation, CancelAllOperations_Running) {
+    NSOperationQueue* queue = [[NSOperationQueue new] autorelease];
+
+    for (size_t i = 0; i < 5; ++i) {
+        [queue addOperation:[[CancellableOperation new] autorelease]];
+    }
+
+    ASSERT_EQ(5, queue.operationCount);
+
+    [queue cancelAllOperations];
+    ASSERT_TRUE_MSG(_waitOnBlockToFinish(
+                        ^(void) {
+                            [queue waitUntilAllOperationsAreFinished];
+                        },
+                        2),
+                    "Operations did not cancel/finish in time.");
+    ASSERT_EQ(0, queue.operationCount);
+    for (NSOperation* op in queue.operations) {
+        ASSERT_TRUE(op.isCancelled);
+        ASSERT_FALSE(op.isExecuting);
+        ASSERT_TRUE(op.isFinished);
+    }
+}
+
+TEST(NSOperation, WaitUntilAllOperationsAreFinished) {
+    __block NSOperationQueue* queue = [[NSOperationQueue new] autorelease];
+
+    __block _NSBooleanCondition* startCondition = [[_NSBooleanCondition new] autorelease];
+    void (^waitForStartCondition)() = ^void() {
+        ASSERT_TRUE_MSG([startCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]], "Operation did not start in time.");
+    };
+
+    __block NSArray<NSOperation*>* ops = @[
+        [NSBlockOperation blockOperationWithBlock:Block_copy(waitForStartCondition)],
+        [NSBlockOperation blockOperationWithBlock:Block_copy(waitForStartCondition)],
+        [NSBlockOperation blockOperationWithBlock:Block_copy(waitForStartCondition)],
+        [NSBlockOperation blockOperationWithBlock:Block_copy(waitForStartCondition)],
+        [NSBlockOperation blockOperationWithBlock:Block_copy(waitForStartCondition)]
+    ];
+
+    // On a separate thread, add a bunch of operations, then wait until they're all finished
+    __block _NSBooleanCondition* addedOperationsCondition = [[_NSBooleanCondition new] autorelease];
+    __block _NSBooleanCondition* finishedWaitingCondition = [[_NSBooleanCondition new] autorelease];
+
+    BlockThread* addOperationsAndWaitThread = [[[BlockThread alloc] initWithBlock:^void() {
+        [queue addOperations:ops waitUntilFinished:NO];
+        [addedOperationsCondition broadcast];
+        [queue waitUntilAllOperationsAreFinished];
+    }] autorelease];
+    [addOperationsAndWaitThread start];
+    ASSERT_TRUE_MSG([addedOperationsCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]], "Operations were not added in time.");
+
+    // Validate that at least one operation is currently running, with a little bit of leeway for time.
+    bool atLeastOneOperationRunning = false;
+    size_t numTries = 0;
+    while ((!atLeastOneOperationRunning) && (numTries < 2)) {
+        for (NSOperation* op in ops) {
+            if (op.isExecuting && !op.isFinished) {
+                atLeastOneOperationRunning = true;
+                break;
+            }
+        }
+
+        if (!atLeastOneOperationRunning) {
+            ++numTries;
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
+    }
+    ASSERT_TRUE(atLeastOneOperationRunning);
+
+    // Validate the current state
+    ASSERT_TRUE(addOperationsAndWaitThread.isExecuting);
+    ASSERT_FALSE(addOperationsAndWaitThread.isFinished);
+
+    // Allow the operations to run
+    [startCondition broadcast];
+
+    // waitUntilAllOperationsAreFinished should stop blocking not long after
+    ASSERT_TRUE_MSG([addOperationsAndWaitThread.finishCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]],
+                    "waitUntilAllOperationsAreFinished did not unblock in time.");
+    for (NSOperation* op in ops) {
+        ASSERT_FALSE(op.isExecuting);
+        ASSERT_TRUE(op.isFinished);
+    }
+}
+
+TEST(NSOperation, UnderlyingQueue_QualityOfService) {
+    NSOperationQueue* queue = [[NSOperationQueue new] autorelease];
+
+    ASSERT_EQ(nil, queue.underlyingQueue);
+
+    // Should not change underlyingQueue
+    queue.qualityOfService = NSQualityOfServiceBackground;
+    ASSERT_EQ(nil, queue.underlyingQueue);
+
+    // Should not change quality of service
+    dispatch_queue_t dispatchQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    queue.underlyingQueue = dispatchQueue;
+    ASSERT_EQ(dispatchQueue, queue.underlyingQueue);
+    ASSERT_EQ(NSQualityOfServiceBackground, queue.qualityOfService);
+}
+
+TEST(NSOperation, MaxConcurrentOperationCount) {
+    __block NSOperationQueue* queue = [[NSOperationQueue new] autorelease];
+
+    // Limit maxConcurrentOperationCount to 1
+    queue.maxConcurrentOperationCount = 1;
+    ASSERT_EQ(1, queue.maxConcurrentOperationCount);
+
+    // Verify that only one operation is running at a time
+    __block NSUInteger currentlyRunningOperations = 0;
+    __block NSUInteger highestSimultaneousOperations = 0;
+
+    void (^checkSimultaneousOperations)() = ^void() {
+        ++currentlyRunningOperations;
+        highestSimultaneousOperations = std::max(currentlyRunningOperations, highestSimultaneousOperations);
+        --currentlyRunningOperations;
+    };
+
+    __block NSArray<NSOperation*>* ops = @[
+        [NSBlockOperation blockOperationWithBlock:Block_copy(checkSimultaneousOperations)],
+        [NSBlockOperation blockOperationWithBlock:Block_copy(checkSimultaneousOperations)],
+        [NSBlockOperation blockOperationWithBlock:Block_copy(checkSimultaneousOperations)],
+        [NSBlockOperation blockOperationWithBlock:Block_copy(checkSimultaneousOperations)],
+        [NSBlockOperation blockOperationWithBlock:Block_copy(checkSimultaneousOperations)],
+        [NSBlockOperation blockOperationWithBlock:Block_copy(checkSimultaneousOperations)]
+    ];
+
+    ASSERT_TRUE_MSG(_waitOnBlockToFinish(
+                        ^(void) {
+                            [queue addOperations:ops waitUntilFinished:YES];
+                        },
+                        2),
+                    "Operations did not finish in time.");
+    ASSERT_EQ(1, highestSimultaneousOperations);
+
+    // Add one operation that's stuck
+    CancellableOperation* cancellableOperation = [[CancellableOperation new] autorelease];
+    [queue addOperation:cancellableOperation];
+
+    // Add a bunch of empty operations
+    __block NSArray<NSOperation*>* ops2 = @[
+        [[NSOperation new] autorelease],
+        [[NSOperation new] autorelease],
+        [[NSOperation new] autorelease],
+        [[NSOperation new] autorelease],
+        [[NSOperation new] autorelease],
+        [[NSOperation new] autorelease],
+        [[NSOperation new] autorelease],
+        [[NSOperation new] autorelease]
+    ];
+    [queue addOperations:ops2 waitUntilFinished:NO];
+
+    // Wait until the stuck operation starts
+    ASSERT_TRUE_MSG([cancellableOperation.started waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]],
+                    "Operation did not start in time.");
+    ASSERT_TRUE(cancellableOperation.isExecuting);
+
+    // The other operations should not be able to start
+    for (NSOperation* op in ops2) {
+        ASSERT_FALSE(op.isExecuting);
+        ASSERT_FALSE(op.isFinished);
+    }
+
+    // Raise the max concurrent operation count, which should allow the other operations to execute
+    queue.maxConcurrentOperationCount = 3;
+    ASSERT_EQ(3, queue.maxConcurrentOperationCount);
+
+    ASSERT_TRUE_MSG(_waitOnBlockToFinish(
+                        ^(void) {
+                            for (NSOperation* op in ops2) {
+                                [op waitUntilFinished];
+                            }
+                        },
+                        2),
+                    "Operations did not finish in time.");
+
+    [cancellableOperation cancel]; // cleanup
+}
+
+// Testable NSOperation that has a mutable, KVO-compliant isReady property
+@interface ReadiableOperation : NSOperation
+@property (getter=isReady) BOOL ready;
+@end
+
+@implementation ReadiableOperation
+@synthesize ready = _ready;
+
+- (BOOL)isReady {
+    return [super isReady] && _ready;
+}
+
+- (void)setReady:(BOOL)ready {
+    [self willChangeValueForKey:@"isReady"];
+    _ready = ready;
+    [self didChangeValueForKey:@"isReady"];
+}
+
+@end
+
+TEST(NSOperation, NotReady_SuspendedOperations) {
+    NSOperationQueue* queue = [[NSOperationQueue new] autorelease];
+
+    // A non-ready operation executes once it becomes ready
+    __block ReadiableOperation* op1 = [[ReadiableOperation new] autorelease];
+
+    [queue addOperation:op1];
+    ASSERT_EQ(1, queue.operationCount);
+    ASSERT_FALSE(op1.isExecuting || op1.isFinished);
+    ASSERT_FALSE(op1.isReady);
+
+    op1.ready = YES;
+    ASSERT_TRUE_MSG(_waitOnBlockToFinish(
+                        ^(void) {
+                            [op1 waitUntilFinished];
+                        },
+                        2),
+                    "Operation did not finish in time.");
+
+    // Add a non-ready operation during a suspension
+    __block ReadiableOperation* op2 = [[ReadiableOperation new] autorelease];
+
+    queue.suspended = YES;
+    [queue addOperation:op2];
+    ASSERT_EQ(1, queue.operationCount);
+    ASSERT_FALSE(op2.isExecuting || op2.isFinished);
+
+    // If the suspension is lifted, the operation still doesn't execute if not ready
+    queue.suspended = NO;
+    ASSERT_EQ(1, queue.operationCount);
+    ASSERT_FALSE(op2.isExecuting || op2.isFinished);
+
+    // If the operation is ready but the queue is suspended, the operation still does not execute
+    queue.suspended = YES;
+    op2.ready = YES;
+    ASSERT_EQ(1, queue.operationCount);
+    ASSERT_FALSE(op2.isExecuting || op2.isFinished);
+
+    // If both conditions are lifted, the operation should execute
+    queue.suspended = NO;
+    ASSERT_TRUE_MSG(_waitOnBlockToFinish(
+                        ^(void) {
+                            [op2 waitUntilFinished];
+                        },
+                        2),
+                    "Operation did not finish in time.");
 }

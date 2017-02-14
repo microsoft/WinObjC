@@ -2,7 +2,7 @@
 //
 // Original Author: Michael Ash on 11/9/08
 // Copyright (c) 2008 Rogue Amoeba Software LLC
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -19,25 +19,23 @@
 
 #import <dispatch/dispatch.h>
 #import <Foundation/FoundationExport.h>
+#import <Foundation/NSArray.h>
 #import <Foundation/NSObject.h>
 #import <Foundation/NSOperation.h>
 
 @class NSOperation;
-@class NSArray;
 @class NSString;
 
 enum { NSOperationQueueDefaultMaxConcurrentOperationCount = -1 };
-
-enum { NSOperationQueuePriority_Count = 3 };
 
 FOUNDATION_EXPORT_CLASS
 @interface NSOperationQueue : NSObject
 + (NSOperationQueue*)currentQueue;
 + (NSOperationQueue*)mainQueue;
 - (void)addOperation:(NSOperation*)operation;
-- (void)addOperations:(NSArray*)ops waitUntilFinished:(BOOL)wait;
+- (void)addOperations:(NSArray<NSOperation*>*)ops waitUntilFinished:(BOOL)wait;
 - (void)addOperationWithBlock:(void (^)(void))block;
-@property (readonly, copy) NSArray* operations;
+@property (readonly, copy) NSArray<__kindof NSOperation*>* operations;
 @property (readonly) NSUInteger operationCount;
 - (void)cancelAllOperations;
 - (void)waitUntilAllOperationsAreFinished;

@@ -222,6 +222,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="$(StarboardBasePath)\tests\Benchmark\BenchmarkSampleTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\Benchmark\NSOperationQueueBenchmarkTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\Benchmark\TextBenchmarkTests.mm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
