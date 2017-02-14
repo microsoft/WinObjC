@@ -29,11 +29,6 @@
     }
 }
 
-- (id)initWithDrawingOptions:(CGDrawOptions*)options {
-    self = [super initWithDrawingOptions:options];
-    return self;
-}
-
 - (void)loadView {
     [super loadView];
 
@@ -51,20 +46,22 @@
         CGContextSetStrokeColorWithColor(currentContext, weakSelf.options.lineColor);
         CGContextSetLineDash(currentContext, weakSelf.options.linePhase, weakSelf.options.lineDashPattern, weakSelf.options.lineDashCount);
 
+        CGAffineTransform transformation = self.options.affineTransform;
+
         weakSelf.containingPath = CGPathCreateMutable();
-        CGPathMoveToPoint(weakSelf.containingPath, NULL, 200, 35);
-        CGPathAddLineToPoint(weakSelf.containingPath, NULL, 165, 100);
-        CGPathAddLineToPoint(weakSelf.containingPath, NULL, 100, 100);
-        CGPathAddLineToPoint(weakSelf.containingPath, NULL, 150, 150);
-        CGPathAddLineToPoint(weakSelf.containingPath, NULL, 135, 225);
-        CGPathAddLineToPoint(weakSelf.containingPath, NULL, 200, 170);
-        CGPathAddLineToPoint(weakSelf.containingPath, NULL, 265, 225);
-        CGPathAddLineToPoint(weakSelf.containingPath, NULL, 250, 150);
-        CGPathAddLineToPoint(weakSelf.containingPath, NULL, 300, 100);
-        CGPathAddLineToPoint(weakSelf.containingPath, NULL, 235, 100);
+        CGPathMoveToPoint(weakSelf.containingPath, &transformation, 200, 35);
+        CGPathAddLineToPoint(weakSelf.containingPath, &transformation, 165, 100);
+        CGPathAddLineToPoint(weakSelf.containingPath, &transformation, 100, 100);
+        CGPathAddLineToPoint(weakSelf.containingPath, &transformation, 150, 150);
+        CGPathAddLineToPoint(weakSelf.containingPath, &transformation, 135, 225);
+        CGPathAddLineToPoint(weakSelf.containingPath, &transformation, 200, 170);
+        CGPathAddLineToPoint(weakSelf.containingPath, &transformation, 265, 225);
+        CGPathAddLineToPoint(weakSelf.containingPath, &transformation, 250, 150);
+        CGPathAddLineToPoint(weakSelf.containingPath, &transformation, 300, 100);
+        CGPathAddLineToPoint(weakSelf.containingPath, &transformation, 235, 100);
 
         // Unnecessary as close subpath will finish this line off but for the sake of consistency, have this here.
-        CGPathAddLineToPoint(weakSelf.containingPath, NULL, 200, 35);
+        CGPathAddLineToPoint(weakSelf.containingPath, &transformation, 200, 35);
         CGPathCloseSubpath(weakSelf.containingPath);
 
         CGContextAddPath(currentContext, weakSelf.containingPath);

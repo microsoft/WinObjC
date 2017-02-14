@@ -90,9 +90,9 @@ typedef unsigned WAUSDeviceAccountIconId;
 
 OBJCUWP_WINDOWS_APPLICATIONMODEL_USERDATAACCOUNTS_SYSTEMACCESS_EXPORT
 @interface WAUSDeviceAccountConfiguration : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * emailAddress;
 @property (retain) NSString * domain;

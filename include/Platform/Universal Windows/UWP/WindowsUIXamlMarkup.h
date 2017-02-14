@@ -174,7 +174,7 @@ OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
 @interface WUXMXamlBinaryWriter : RTObject
 + (WUXMXamlBinaryWriterErrorInformation*)write:(NSMutableArray* /* RTObject<WSSIRandomAccessStream>* */)inputStreams outputStreams:(NSMutableArray* /* RTObject<WSSIRandomAccessStream>* */)outputStreams xamlMetadataProvider:(RTObject<WUXMIXamlMetadataProvider>*)xamlMetadataProvider;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @end
 
@@ -189,7 +189,7 @@ OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
 + (RTObject*)Load:(NSString *)xaml;
 + (RTObject*)loadWithInitialTemplateValidation:(NSString *)xaml;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @end
 
@@ -224,7 +224,7 @@ OBJCUWP_WINDOWS_UI_XAML_MARKUP_EXPORT
 + (void)setPropertyFromUri:(RTObject*)dependencyObject propertyToSet:(WXDependencyProperty*)propertyToSet value:(WFUri*)value;
 + (void)setPropertyFromObject:(RTObject*)dependencyObject propertyToSet:(WXDependencyProperty*)propertyToSet value:(RTObject*)value;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 + (WXDependencyProperty*)dataTemplateComponentProperty;
 @end

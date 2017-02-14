@@ -144,7 +144,7 @@ OBJCUWP_WINDOWS_DEVICES_SCANNERS_EXPORT
 OBJCUWP_WINDOWS_DEVICES_SCANNERS_EXPORT
 @interface WDSImageScannerAutoConfiguration : RTObject <WDSIImageScannerFormatConfiguration>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WDSImageScannerFormat format;
 @property (readonly) WDSImageScannerFormat defaultFormat;
@@ -160,7 +160,7 @@ OBJCUWP_WINDOWS_DEVICES_SCANNERS_EXPORT
 OBJCUWP_WINDOWS_DEVICES_SCANNERS_EXPORT
 @interface WDSImageScannerFlatbedConfiguration : RTObject <WDSIImageScannerFormatConfiguration, WDSIImageScannerSourceConfiguration>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WDSImageScannerFormat format;
 @property (readonly) WDSImageScannerFormat defaultFormat;
@@ -199,7 +199,7 @@ OBJCUWP_WINDOWS_DEVICES_SCANNERS_EXPORT
 OBJCUWP_WINDOWS_DEVICES_SCANNERS_EXPORT
 @interface WDSImageScannerFeederConfiguration : RTObject <WDSIImageScannerFormatConfiguration, WDSIImageScannerSourceConfiguration>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL scanAhead;
 @property BOOL autoDetectPageSize;
@@ -249,7 +249,7 @@ OBJCUWP_WINDOWS_DEVICES_SCANNERS_EXPORT
 OBJCUWP_WINDOWS_DEVICES_SCANNERS_EXPORT
 @interface WDSImageScannerScanResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* WSStorageFile* */ scannedFiles;
 @end
@@ -263,7 +263,7 @@ OBJCUWP_WINDOWS_DEVICES_SCANNERS_EXPORT
 OBJCUWP_WINDOWS_DEVICES_SCANNERS_EXPORT
 @interface WDSImageScannerPreviewResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDSImageScannerFormat format;
 @property (readonly) BOOL succeeded;
@@ -280,7 +280,7 @@ OBJCUWP_WINDOWS_DEVICES_SCANNERS_EXPORT
 + (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDSImageScanner*))success failure:(void (^)(NSError*))failure;
 + (NSString *)getDeviceSelector;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDSImageScannerAutoConfiguration* autoConfiguration;
 @property (readonly) WDSImageScannerScanSource defaultScanSource;

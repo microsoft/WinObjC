@@ -52,7 +52,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_CORE_EXPORT
 @interface WUIICCoreInkIndependentInputSource : RTObject
 + (WUIICCoreInkIndependentInputSource*)create:(WUIIInkPresenter*)inkPresenter;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUIIInkPresenter* inkPresenter;
 - (EventRegistrationToken)addPointerEnteringEvent:(void(^)(WUIICCoreInkIndependentInputSource*, WUCPointerEventArgs*))del;
@@ -80,7 +80,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_CORE_EXPORT
 OBJCUWP_WINDOWS_UI_INPUT_INKING_CORE_EXPORT
 @interface WUIICCoreWetStrokeUpdateEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WUIICCoreWetStrokeDisposition disposition;
 @property (readonly) NSMutableArray* /* WUIIInkPoint* */ newInkPoints;
@@ -97,7 +97,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_CORE_EXPORT
 @interface WUIICCoreWetStrokeUpdateSource : RTObject
 + (WUIICCoreWetStrokeUpdateSource*)create:(WUIIInkPresenter*)inkPresenter;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUIIInkPresenter* inkPresenter;
 - (EventRegistrationToken)addWetStrokeCanceledEvent:(void(^)(WUIICCoreWetStrokeUpdateSource*, WUIICCoreWetStrokeUpdateEventArgs*))del;

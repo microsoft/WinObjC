@@ -56,32 +56,50 @@
     // Use the byteorder and alpha info of the input image to get the byte index of each component
     // Note: vImage uses little endian notation for byte order as opposed to CoreGraphics which uses big endian or networkByte order
     // notation
-    if (byteOrder == kCGBitmapByteOrder32Big) {
-        // XBGR_le or BGRX_le
-        if (alphaInfo == kCGImageAlphaLast || alphaInfo == kCGImageAlphaNoneSkipLast) {
-            indexA = 0;
-            indexB = 1;
-            indexG = 2;
+    // Unlike the example from AccelerateViewController(1), we must flip the orders of the channels before we push them into
+    // vImage_Convert.
+    switch (byteOrder) {
+    case kCGBitmapByteOrder32Little: // ABGR or BGRA
+        switch (alphaInfo) {
+        case kCGImageAlphaLast:
+        case kCGImageAlphaPremultipliedLast:
+        case kCGImageAlphaNoneSkipLast:
             indexR = 3;
-        } else {
-            indexB = 0;
-            indexG = 1;
+            indexG = 2;
+            indexB = 1;
+            indexA = 0;
+            break;
+        case kCGImageAlphaFirst:
+        case kCGImageAlphaPremultipliedFirst:
+        case kCGImageAlphaNoneSkipFirst:
             indexR = 2;
+            indexG = 1;
+            indexB = 0;
             indexA = 3;
+            break;
         }
-    } else {
-        // RGBX_le or XRGB_le
-        if (alphaInfo == kCGImageAlphaLast || alphaInfo == kCGImageAlphaNoneSkipLast) {
+        break;
+    case kCGBitmapByteOrder32Big: // RGBA or ARGB
+    case kCGBitmapByteOrderDefault: // On the reference platform, "default" for a 32bpp image is RGBA or ARGB. WinObjC will never return Default.
+        switch (alphaInfo) {
+        case kCGImageAlphaLast:
+        case kCGImageAlphaPremultipliedLast:
+        case kCGImageAlphaNoneSkipLast:
             indexR = 0;
             indexG = 1;
             indexB = 2;
             indexA = 3;
-        } else {
-            indexA = 0;
+            break;
+        case kCGImageAlphaFirst:
+        case kCGImageAlphaPremultipliedFirst:
+        case kCGImageAlphaNoneSkipFirst:
             indexR = 1;
             indexG = 2;
             indexB = 3;
+            indexA = 0;
+            break;
         }
+        break;
     }
     
     vImage_Error result;

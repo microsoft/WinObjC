@@ -182,7 +182,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_CUSTOM_EXPORT
 OBJCUWP_WINDOWS_GAMING_INPUT_CUSTOM_EXPORT
 @interface WGICGipFirmwareUpdateResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int extendedErrorCode;
 @property (readonly) unsigned int finalComponentId;
@@ -198,7 +198,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_CUSTOM_EXPORT
 OBJCUWP_WINDOWS_GAMING_INPUT_CUSTOM_EXPORT
 @interface WGICGipGameControllerProvider : RTObject <WGICIGameControllerProvider>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WGICGameControllerVersionInfo* firmwareVersionInfo;
 @property (readonly) unsigned short hardwareProductId;
@@ -219,7 +219,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_CUSTOM_EXPORT
 OBJCUWP_WINDOWS_GAMING_INPUT_CUSTOM_EXPORT
 @interface WGICXusbGameControllerProvider : RTObject <WGICIGameControllerProvider>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WGICGameControllerVersionInfo* firmwareVersionInfo;
 @property (readonly) unsigned short hardwareProductId;

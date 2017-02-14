@@ -61,6 +61,7 @@ Canvas^ Label::SublayerCanvas::get() {
 
 Windows::Foundation::Size Label::ArrangeOverride(Windows::Foundation::Size finalSize) {
     // Make sure we render vertically-centered text if possible, else cap at the containing layer's height.
+    // TODO: Issue #1946: Do we actually need this call to Measure?
     TextBlock->Measure(finalSize);
     if (TextBlock->DesiredSize.Height >= finalSize.Height) {
         TextBlock->VerticalAlignment = Windows::UI::Xaml::VerticalAlignment::Top;
@@ -83,8 +84,9 @@ TextBlock^ Label::TextBlock::get() {
 ////////////////////////////////////////////////////////////////////////////////////
 
 // Returns a UIKit::Label as an IInspectable
-UIKIT_XAML_EXPORT IInspectable* XamlCreateLabel() {
-    return InspectableFromObject(ref new UIKit::Xaml::Label()).Detach();
+UIKIT_XAML_EXPORT void XamlCreateLabel(IInspectable** created) {
+    ComPtr<IInspectable> inspectable = InspectableFromObject(ref new UIKit::Xaml::Label());
+    *created = inspectable.Detach();
 }
 
 // Retrieves the UIKit::Label's backing TextBlock as an IInspectable

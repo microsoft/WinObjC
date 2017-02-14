@@ -157,3 +157,31 @@ TEST(AutoCF, LegacyUniqueCF) {
     // Only one retain, even though the default ctor is being used.
     ASSERT_EQ(1, CFGetRetainCount(testObject));
 }
+
+TEST(AutoCF, LegacyUniqueCFMove) {
+    woc::unique_cf<CFTestClassRef> testObject{ CFTestClassCreate(nullptr) };
+
+    // Only one retain, even though the default ctor is being used.
+    ASSERT_EQ(1, CFGetRetainCount(testObject));
+
+    woc::unique_cf<CFTestClassRef> testMovedObject{ std::move(testObject) };
+
+    // Still only one retain.
+    ASSERT_EQ(1, CFGetRetainCount(testMovedObject));
+}
+
+TEST(AutoCF, LegacyUniqueCFMoveAssignment) {
+    woc::unique_cf<CFTestClassRef> testMovedObject{};
+
+    {
+        woc::unique_cf<CFTestClassRef> testObject{ CFTestClassCreate(nullptr) };
+
+        // Only one retain, even though the default ctor is being used.
+        ASSERT_EQ(1, CFGetRetainCount(testObject));
+
+        testMovedObject = std::move(testObject);
+    }
+
+    // Still only one retain.
+    ASSERT_EQ(1, CFGetRetainCount(testMovedObject));
+}

@@ -39,34 +39,46 @@
 #import <UWP/WindowsUIXamlMedia.h>
 #import <UWP/WIndowsStoragePickers.h>
 
-static const NSTimeInterval c_testTimeoutInSec = 5;
+class ProjectionsWithARCTest {
+public:
+    BEGIN_TEST_CLASS(ProjectionsWithARCTest)
+    END_TEST_CLASS()
 
-TEST(Projection, ContainerOfContainers) {
-    StrongId<WSPFileSavePicker> fileSavePicker = [WSPFileSavePicker make];
-    StrongId<NSMutableArray> arr = [[NSMutableArray alloc] init];
-    [arr addObject:@".txt"];
-    NSMutableDictionary* dict = [fileSavePicker fileTypeChoices];
-    EXPECT_NO_THROW([dict setObject:arr forKey:@"Plain Text"]);
-}
-TEST(Projection, CreateWithARCEnabled) {
-    EXPECT_NO_THROW(@autoreleasepool {
-        StrongId<NSAutoreleasePool> pool = [[NSAutoreleasePool alloc] init];
-        ComPtr<ABI::Windows::UI::Xaml::Media::IFontFamilyFactory> fontFamilyFactory;
-        ASSERT_HRESULT_SUCCEEDED_MSG(ABI::Windows::Foundation::GetActivationFactory(
-                                         Microsoft::WRL::Wrappers::HString::MakeReference(L"Windows.UI.Xaml.Media.FontFamily").Get(),
-                                         &fontFamilyFactory),
-                                     "Failed: Could not get activation factory");
+    TEST_CLASS_SETUP(ProjectionTestClassSetup) {
+        return FunctionalTestSetupUIApplication();
+    }
 
-        // Get the dispatcher for the main thread.
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            ComPtr<ABI::Windows::UI::Xaml::Media::IFontFamily> fontFamilyInstance;
-            HString hstr;
-            ASSERT_HRESULT_SUCCEEDED_MSG(hstr.Set(L"Comic Sans MS"), "Failed: HString::Set failed");
-            HRESULT hr = fontFamilyFactory->CreateInstanceWithName(hstr.Get(), nullptr, nullptr, fontFamilyInstance.GetAddressOf());
-            ASSERT_HRESULT_SUCCEEDED_MSG(hr, "Failed: CreateInstanceWithName failed");
-            StrongId<WUXMFontFamily> fontFamily;
-            ASSERT_NO_THROW_MSG(fontFamily = [WUXMFontFamily createWith:fontFamilyInstance.Get()], "Failed: createWith failed");
-        });
-    } // autoreleasepool
-                    );
-}
+    TEST_CLASS_CLEANUP(ProjectionTestCleanup) {
+        return FunctionalTestCleanupUIApplication();
+    }
+
+    TEST_METHOD(ContainerOfContainers) {
+        StrongId<WSPFileSavePicker> fileSavePicker = [WSPFileSavePicker make];
+        StrongId<NSMutableArray> arr = [[NSMutableArray alloc] init];
+        [arr addObject:@".txt"];
+        NSMutableDictionary* dict = [fileSavePicker fileTypeChoices];
+        EXPECT_NO_THROW([dict setObject:arr forKey:@"Plain Text"]);
+    }
+    TEST_METHOD(CreateWithARCEnabled) {
+        EXPECT_NO_THROW(@autoreleasepool {
+            StrongId<NSAutoreleasePool> pool = [[NSAutoreleasePool alloc] init];
+            ComPtr<ABI::Windows::UI::Xaml::Media::IFontFamilyFactory> fontFamilyFactory;
+            ASSERT_HRESULT_SUCCEEDED_MSG(ABI::Windows::Foundation::GetActivationFactory(
+                                             Microsoft::WRL::Wrappers::HString::MakeReference(L"Windows.UI.Xaml.Media.FontFamily").Get(),
+                                             &fontFamilyFactory),
+                                         "Failed: Could not get activation factory");
+
+            // Get the dispatcher for the main thread.
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                ComPtr<ABI::Windows::UI::Xaml::Media::IFontFamily> fontFamilyInstance;
+                HString hstr;
+                ASSERT_HRESULT_SUCCEEDED_MSG(hstr.Set(L"Comic Sans MS"), "Failed: HString::Set failed");
+                HRESULT hr = fontFamilyFactory->CreateInstanceWithName(hstr.Get(), nullptr, nullptr, fontFamilyInstance.GetAddressOf());
+                ASSERT_HRESULT_SUCCEEDED_MSG(hr, "Failed: CreateInstanceWithName failed");
+                StrongId<WUXMFontFamily> fontFamily;
+                ASSERT_NO_THROW_MSG(fontFamily = [WUXMFontFamily createWith:fontFamilyInstance.Get()], "Failed: createWith failed");
+            });
+        } // autoreleasepool
+                        );
+    }
+};

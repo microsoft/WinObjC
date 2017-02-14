@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#include <TestFramework.h>
 #include <CoreFoundation/CFStringTokenizer.h>
 #include <CoreFoundation/CFString.h>
 

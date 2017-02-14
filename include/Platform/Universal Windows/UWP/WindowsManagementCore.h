@@ -42,7 +42,7 @@ OBJCUWP_WINDOWS_MANAGEMENT_CORE_EXPORT
 @interface WMCApplicationDataManager : RTObject
 + (WSApplicationData*)createForPackageFamily:(NSString *)packageFamilyName;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @end
 

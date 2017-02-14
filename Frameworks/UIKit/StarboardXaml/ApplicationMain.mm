@@ -1,4 +1,4 @@
-//******************************************************************************
+﻿//******************************************************************************
 //
 // Copyright (c) Microsoft. All rights reserved.
 //
@@ -179,6 +179,6 @@ int ApplicationMainStart(const char* principalName,
     return 0;
 }
 
-void SetTemporaryFolder(const char* folder) {
-    NSSetTemporaryDirectory([NSString stringWithCString:folder]);
+void SetTemporaryFolder(const wchar_t* folder) {
+    NSSetTemporaryDirectory([NSString stringWithCharacters:reinterpret_cast<const unichar*>(folder) length:wcslen(folder)]);
 }

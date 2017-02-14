@@ -100,7 +100,7 @@ static const int TAG_SUBVIEW_UILABEL = 1;
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
-    return 33;
+    return 36;
 }
 
 - (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
@@ -290,6 +290,25 @@ static const int TAG_SUBVIEW_UILABEL = 1;
             [self _createLabelwithNumberOfLines:3 AdjustFontSizeToFitWidth:NO LineBreakMode:UILineBreakModeWordWrap MinimumFontSize:0.0f];
     }
 
+    if (indexPath.row == 33) {
+        cell.accessoryView = [self _createLabelwithNumberOfLines:2
+                                        AdjustFontSizeToFitWidth:YES
+                                                   LineBreakMode:UILineBreakModeTailTruncation
+                                              MinimumScaleFactor:0.0f];
+    }
+    if (indexPath.row == 34) {
+        cell.accessoryView = [self _createLabelwithNumberOfLines:2
+                                        AdjustFontSizeToFitWidth:YES
+                                                   LineBreakMode:UILineBreakModeTailTruncation
+                                              MinimumScaleFactor:0.1];
+    }
+    if (indexPath.row == 35) {
+        cell.accessoryView = [self _createLabelwithNumberOfLines:2
+                                        AdjustFontSizeToFitWidth:YES
+                                                   LineBreakMode:UILineBreakModeTailTruncation
+                                              MinimumScaleFactor:0.9f];
+    }
+
     return cell;
 }
 
@@ -308,6 +327,29 @@ static const int TAG_SUBVIEW_UILABEL = 1;
 
     BOOL shouldAdjustSize = adjustFontSizeToFitWidth && (lineBreakMode != UILineBreakModeWordWrap) &&
                             (lineBreakMode != NSLineBreakByCharWrapping) && (minimumFontSize < 17.0);
+
+    textLabel.text = [NSString
+        stringWithFormat:@"adjustFontSize = %d, numberOflines = %d, linbreakMode=%d, text %@ adjust to fit the width of this UIlabel",
+                         textLabel.adjustsFontSizeToFitWidth,
+                         textLabel.numberOfLines,
+                         textLabel.lineBreakMode,
+                         shouldAdjustSize ? @"should" : @"should not"];
+
+    return textLabel;
+}
+
+- (UILabel*)_createLabelwithNumberOfLines:(int)numberOfLine
+                 AdjustFontSizeToFitWidth:(BOOL)adjustFontSizeToFitWidth
+                            LineBreakMode:(UILineBreakMode)lineBreakMode
+                       MinimumScaleFactor:(float)minimumScaleFactor {
+    UILabel* textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, c_width, c_height)];
+    textLabel.numberOfLines = numberOfLine;
+    textLabel.adjustsFontSizeToFitWidth = adjustFontSizeToFitWidth;
+    textLabel.lineBreakMode = lineBreakMode;
+    textLabel.minimumScaleFactor = minimumScaleFactor;
+
+    BOOL shouldAdjustSize =
+        adjustFontSizeToFitWidth && (lineBreakMode != UILineBreakModeWordWrap) && (lineBreakMode != NSLineBreakByCharWrapping);
 
     textLabel.text = [NSString
         stringWithFormat:@"adjustFontSize = %d, numberOflines = %d, linbreakMode=%d, text %@ adjust to fit the width of this UIlabel",

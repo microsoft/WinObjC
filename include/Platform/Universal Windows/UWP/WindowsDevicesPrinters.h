@@ -43,7 +43,7 @@ OBJCUWP_WINDOWS_DEVICES_PRINTERS_EXPORT
 + (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDPPrint3DDevice*))success failure:(void (^)(NSError*))failure;
 + (NSString *)getDeviceSelector;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDPPrintSchema* printSchema;
 @end
@@ -57,7 +57,7 @@ OBJCUWP_WINDOWS_DEVICES_PRINTERS_EXPORT
 OBJCUWP_WINDOWS_DEVICES_PRINTERS_EXPORT
 @interface WDPPrintSchema : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)getDefaultPrintTicketAsyncWithSuccess:(void (^)(RTObject<WSSIRandomAccessStreamWithContentType>*))success failure:(void (^)(NSError*))failure;
 - (void)getCapabilitiesAsync:(RTObject<WSSIRandomAccessStreamWithContentType>*)constrainTicket success:(void (^)(RTObject<WSSIRandomAccessStreamWithContentType>*))success failure:(void (^)(NSError*))failure;

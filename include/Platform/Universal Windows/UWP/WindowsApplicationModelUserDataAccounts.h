@@ -69,7 +69,7 @@ typedef unsigned WAUUserDataAccountContentKinds;
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAUUserDataAccount : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * userDisplayName;
 @property WAUUserDataAccountOtherAppReadAccess otherAppReadAccess;
@@ -98,7 +98,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAUUserDataAccountStore : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (EventRegistrationToken)addStoreChangedEvent:(void(^)(WAUUserDataAccountStore*, WAUUserDataAccountStoreChangedEventArgs*))del;
 - (void)removeStoreChangedEvent:(EventRegistrationToken)tok;
@@ -117,7 +117,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAUUserDataAccountStoreChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (WFDeferral*)getDeferral;
 @end
@@ -131,7 +131,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAUUserDataAccountManagerForUser : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSUser* user;
 - (void)requestStoreAsync:(WAUUserDataAccountStoreAccessType)storeAccessType success:(void (^)(WAUUserDataAccountStore*))success failure:(void (^)(NSError*))failure;

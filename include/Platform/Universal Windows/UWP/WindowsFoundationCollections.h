@@ -96,9 +96,9 @@ OBJCUWP_WINDOWS_FOUNDATION_COLLECTIONS_EXPORT
 
 OBJCUWP_WINDOWS_FOUNDATION_COLLECTIONS_EXPORT
 @interface WFCPropertySet : RTObject <WFCIPropertySet>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int size;
 // Could not generate add_MapChanged (Can't marshal Windows.Foundation.Collections.MapChangedEventHandler`2<String,System.Object>)
@@ -130,9 +130,9 @@ OBJCUWP_WINDOWS_FOUNDATION_COLLECTIONS_EXPORT
 
 OBJCUWP_WINDOWS_FOUNDATION_COLLECTIONS_EXPORT
 @interface WFCValueSet : RTObject <WFCIPropertySet>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int size;
 // Could not generate add_MapChanged (Can't marshal Windows.Foundation.Collections.MapChangedEventHandler`2<String,System.Object>)
@@ -164,9 +164,9 @@ OBJCUWP_WINDOWS_FOUNDATION_COLLECTIONS_EXPORT
 
 OBJCUWP_WINDOWS_FOUNDATION_COLLECTIONS_EXPORT
 @interface WFCStringMap : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int size;
 // Could not generate add_MapChanged (Can't marshal Windows.Foundation.Collections.MapChangedEventHandler`2<String,String>)

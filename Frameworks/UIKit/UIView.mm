@@ -1167,10 +1167,6 @@ static void adjustSubviews(UIView* self, CGSize parentSize, CGSize delta) {
     return;
 }
 
-static float doRound(float f) {
-    return (float)(floor((f * 2) + 0.5) / 2.0f);
-}
-
 /**
  @Status Interoperable
 */
@@ -1184,17 +1180,11 @@ static float doRound(float f) {
     [self _updateHitTestability];
 
     //  Get our existing frame
-    CGRect curFrame;
-    curFrame = [self frame];
+    CGRect curFrame = [self frame];
 
-    if (memcmp(&frame, &curFrame, sizeof(CGRect)) == 0) {
-        return;
-    }
-
-    frame.origin.x = doRound(frame.origin.x);
-    frame.origin.y = doRound(frame.origin.y);
-    frame.size.width = doRound(frame.size.width);
-    frame.size.height = doRound(frame.size.height);
+    // Round off the frame values to avoid sub-pixel layout
+    frame = doPixelRound(frame);
+    curFrame = doPixelRound(curFrame);
 
     if (DEBUG_LAYOUT) {
         TraceVerbose(TAG,
@@ -1207,10 +1197,8 @@ static float doRound(float f) {
                      frame.size.height);
     }
 
-    CGRect startFrame = frame;
-
-    if (frame.origin.x == doRound(curFrame.origin.x) && frame.origin.y == doRound(curFrame.origin.y) &&
-        frame.size.width == doRound(curFrame.size.width) && frame.size.height == doRound(curFrame.size.height)) {
+    // Don't bother doing work if there's no work to be done
+    if (memcmp(&frame, &curFrame, sizeof(CGRect)) == 0) {
         return;
     }
 
@@ -1295,6 +1283,7 @@ static float doRound(float f) {
         adjustSubviews(self, curBounds.size, delta);
     }
 
+    // TODO: Should we be rounding to the nearest pixel like we do in setFrame?
     [layer setBounds:bounds];
 }
 
@@ -1307,6 +1296,7 @@ static float doRound(float f) {
     curFrame = [layer frame];
     curFrame.origin = origin;
 
+    // TODO: Should we be rounding to the nearest pixel like we do in setFrame?
     [layer setFrame:curFrame];
 }
 
@@ -2061,7 +2051,9 @@ static float doRound(float f) {
     });
 
     CGRect bounds;
-    bounds = CGContextGetClipBoundingBox(context);
+    // TODO(DH)
+    bounds = self.bounds;
+    // bounds = CGContextGetClipBoundingBox(context);
     [self drawRect:bounds];
 }
 

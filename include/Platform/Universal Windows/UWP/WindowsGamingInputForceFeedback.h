@@ -105,7 +105,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_FORCEFEEDBACK_EXPORT
 @interface WGIFConditionForceEffect : RTObject <WGIFIForceFeedbackEffect>
 + (WGIFConditionForceEffect*)makeInstance:(WGIFConditionForceEffectKind)effectKind ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WGIFConditionForceEffectKind kind;
 @property double gain;
@@ -125,7 +125,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_FORCEFEEDBACK_EXPORT
 @interface WGIFPeriodicForceEffect : RTObject <WGIFIForceFeedbackEffect>
 + (WGIFPeriodicForceEffect*)makeInstance:(WGIFPeriodicForceEffectKind)effectKind ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double gain;
 @property (readonly) WGIFForceFeedbackEffectState state;
@@ -144,9 +144,9 @@ OBJCUWP_WINDOWS_GAMING_INPUT_FORCEFEEDBACK_EXPORT
 
 OBJCUWP_WINDOWS_GAMING_INPUT_FORCEFEEDBACK_EXPORT
 @interface WGIFConstantForceEffect : RTObject <WGIFIForceFeedbackEffect>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double gain;
 @property (readonly) WGIFForceFeedbackEffectState state;
@@ -164,9 +164,9 @@ OBJCUWP_WINDOWS_GAMING_INPUT_FORCEFEEDBACK_EXPORT
 
 OBJCUWP_WINDOWS_GAMING_INPUT_FORCEFEEDBACK_EXPORT
 @interface WGIFRampForceEffect : RTObject <WGIFIForceFeedbackEffect>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double gain;
 @property (readonly) WGIFForceFeedbackEffectState state;
@@ -185,7 +185,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_FORCEFEEDBACK_EXPORT
 OBJCUWP_WINDOWS_GAMING_INPUT_FORCEFEEDBACK_EXPORT
 @interface WGIFForceFeedbackMotor : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double masterGain;
 @property (readonly) BOOL areEffectsPaused;

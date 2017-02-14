@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -39,9 +39,16 @@
 
 #include <map>
 
+using namespace Microsoft::WRL;
+
 static const wchar_t* TAG = L"UIButton";
 
 struct ButtonState {
+    // Returns whether or not the state contains any currently-set values
+    bool IsEmpty() const {
+        return !title && !textColor && !image && !backgroundImage;
+    }
+
     StrongId<UIImage> image;
     StrongId<UIImage> backgroundImage;
     StrongId<UIColor> textColor;
@@ -49,17 +56,8 @@ struct ButtonState {
 
     // We also save the converted data types that we need to set on the XAML Button, so that we do not convert
     // from UIKit datatype to XAML datatype every time layoutSubviews is called.
-    Microsoft::WRL::ComPtr<IInspectable> inspectableImage;
-    Microsoft::WRL::ComPtr<IInspectable> inspectableTitleColor;
-    Microsoft::WRL::ComPtr<IInspectable> inspectableTitle;
+    ComPtr<IInspectable> inspectableImage;
 };
-
-@interface UIRoundedRectButton : UIButton {
-}
-@end
-
-@implementation UIRoundedRectButton
-@end
 
 @implementation UIButton {
     StrongId<WXCButton> _xamlButton;
@@ -71,16 +69,20 @@ struct ButtonState {
     UIEdgeInsets _imageInsets;
     UIEdgeInsets _titleInsets;
 
-    // Proxies
-    StrongId<_UILabel_Proxy> _proxyLabel;
+    // Child elements
+    StrongId<UILabel> _titleLabel;
     StrongId<_UIImageView_Proxy> _proxyImageView;
 
     bool _isPressed;
+    UIButtonType _buttonType;
+
+    ComPtr<IInspectable> _inspectableAdjustsWhenDisabledBrush;
+    ComPtr<IInspectable> _inspectableAdjustsWhenHighlightedBrush;
 }
 
 /**
  @Status Caveat
- @Notes May not be fully implemented
+ @Notes Not all properties are supported.
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super initWithCoder:coder]) {
@@ -167,24 +169,34 @@ struct ButtonState {
         FAIL_FAST();
     }
 
+    // Default to a custom button type
+    _buttonType = UIButtonTypeCustom;
+
+    // Default to showing pressed/disabled states
+    self.adjustsImageWhenDisabled = YES;
+    self.adjustsImageWhenHighlighted = YES;
+
     // Force-load the template, and get the TextBlock and Image for use in our proxies.
     [_xamlButton applyTemplate];
+    [_xamlButton updateLayout];
 
+    // Create our child UILabel; its frame will be updated in layoutSubviews
+    // TODO: Ideally we'd grab this directly from the Xaml, but we're not able to launch some apps when doing so due to a
+    // XamlParseException.
+    //       Tracked as #1919.  When fixed, we'll need to initWithXamlElement we retrieve from the control template, and *not* addSubView.
+    _titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    [self addSubview:_titleLabel];
+    _titleLabel.font = [UIFont buttonFont];
+    _titleLabel.userInteractionEnabled = NO;
+
+    // Create our child UIImageView; its frame will be updated in layoutSubviews
     WXCImage* templateImage = rt_dynamic_cast([WXCImage class], [_xamlButton getTemplateChild:@"buttonImage"]);
-    WXCTextBlock* templateText = rt_dynamic_cast([WXCTextBlock class], [_xamlButton getTemplateChild:@"buttonText"]);
-
-    if (templateText) {
-        _proxyLabel = [[_UILabel_Proxy alloc] initWithXamlElement:templateText font:[UIFont buttonFont]];
-    }
-
-    if (templateImage) {
-        _proxyImageView = [[_UIImageView_Proxy alloc] initWithXamlElement:templateImage];
-    }
+    _proxyImageView = [[_UIImageView_Proxy alloc] initWithXamlElement:templateImage];
 
     _contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     _contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
 
-    __block UIButton* weakSelf = self;
+    __weak UIButton* weakSelf = self;
     XamlControls::HookButtonPointerEvents(_xamlButton,
                                           ^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
                                               // We mark the event as handled here. The method _processPointerPressedCallback
@@ -264,44 +276,27 @@ Microsoft Extension
 }
 
 /**
- @Status Caveat
- @Notes UIControlStateSelected, UIControlStateApplication and UIControlStateReserved states not supported
-*/
-- (void)setImage:(UIImage*)image forState:(UIControlState)state {
-    _states[state].image = image;
-
-    // NOTE: check if image is nil before creating inspectableImage
-    // ConvertUIImageToWUXMImageBrush:nil creates a valid imageBrush with null comObj
-    // which isn't what we want
-    if (image) {
-        WUXMImageBrush* imageBrush = XamlUtilities::ConvertUIImageToWUXMImageBrush(image);
-        if (imageBrush) {
-            _states[state].inspectableImage = [imageBrush comObj];
-        }
-    } else {
-        // this enforces the fallback of using Image of normalState
-        // when a image for other states does not exis
-        _states[state].inspectableImage = nullptr;
-    }
-
-    // Update the Xaml elements immediately, so the proxies reflect reality
-    XamlButtonApplyVisuals([_xamlButton comObj],
-                           _currentInspectableTitle(self),
-                           _currentInspectableImage(self),
-                           _currentInspectableTitleColor(self));
-
-    [self invalidateIntrinsicContentSize];
-    [self setNeedsLayout];
-}
-
-/**
  @Status Interoperable
 */
 - (void)layoutSubviews {
-    XamlButtonApplyVisuals([_xamlButton comObj],
-                           _currentInspectableTitle(self),
-                           _currentInspectableImage(self),
-                           _currentInspectableTitleColor(self));
+    // Grab our current values
+    NSString* currentTitle = self.currentTitle;
+    ComPtr<IInspectable> currentImage = _currentInspectableImage(self);
+    UIImage* currentBackgroundImage = self.currentBackgroundImage;
+
+    // Determine whether or not we should use a disabled or highlighted overlay.
+    // Only do so if we have any content to render and we're in a disabled or highlighted state.
+    ComPtr<IInspectable> currentBorderBackgroundBrush;
+    if (([currentTitle length] > 0) || currentImage || currentBackgroundImage) {
+        currentBorderBackgroundBrush = _currentInspectableBorderBackgroundBrush(self);
+    }
+
+    // Update our image and border background brush (which we use for applying 'adjustImageWhen' treatment)
+    XamlButtonApplyVisuals([_xamlButton comObj], currentImage, currentBorderBackgroundBrush);
+
+    // Update our title label
+    self.titleLabel.text = currentTitle;
+    self.titleLabel.textColor = self.currentTitleColor;
 
     // Set frame after updating the visuals
     CGRect contentFrame = [self contentRectForBounds:self.bounds];
@@ -311,7 +306,7 @@ Microsoft Extension
     self.imageView.frame = imageFrame;
 
     // Use the layer contents to draw the background image, similar to UIImageView.
-    UIImageSetLayerContents([self layer], self.currentBackgroundImage);
+    UIImageSetLayerContents([self layer], currentBackgroundImage);
 
     // UIButton should always stretch its background.  Since we're leveraging our backing CALayer's background for
     // the UIButton background, we stretch it via the CALayer's contentsGravity.
@@ -322,7 +317,7 @@ Microsoft Extension
 }
 
 static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRect) {
-    CGRect rect = { { 0, 0 }, size };
+    CGRect rect = CGRectMake(0, 0, size.width, size.height);
 
     switch (self.contentHorizontalAlignment) {
         case UIControlContentHorizontalAlignmentCenter:
@@ -409,7 +404,10 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
  @Status Interoperable
 */
 - (CGRect)titleRectForContentRect:(CGRect)contentRect {
-    CGSize titleSize = [self.currentTitle sizeWithFont:self.font];
+    // TODO: Should we be asking our label for its intrinsicContentSize?
+    // We need to round the font size to the nearest pixel value to avoid rounding errors when used in conjunction with the
+    // frame values that are rounded by UIView.
+    CGSize titleSize = doPixelRound([self.currentTitle sizeWithFont:self.font]);
     CGSize totalSize = titleSize;
     // TODO  #1365 :: Currently cannot assume getting size from nil will return CGSizeZero
     CGSize imageSize = self.currentImage ? [self.currentImage size] : CGSizeZero;
@@ -445,6 +443,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 */
 - (void)setEnabled:(BOOL)enabled {
     _xamlButton.isEnabled = enabled;
+    [super setEnabled:enabled];
 }
 
 /**
@@ -456,7 +455,58 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 
 /**
  @Status Interoperable
- @Notes The xaml element may be modified directly and we could still return stale values.
+*/
+- (void)setImage:(UIImage*)image forState:(UIControlState)state {
+    _states[state].image = image;
+
+    // NOTE: check if image is nil before creating inspectableImage
+    // ConvertUIImageToWUXMImageBrush:nil creates a valid imageBrush with null comObj
+    // which isn't what we want
+    if (image) {
+        WUXMImageBrush* imageBrush = XamlUtilities::ConvertUIImageToWUXMImageBrush(image);
+        if (imageBrush) {
+            _states[state].inspectableImage = [imageBrush comObj];
+        }
+    } else {
+        // this enforces the fallback of using Image of normalState
+        // when a image for other states does not exis
+        _states[state].inspectableImage = nullptr;
+    }
+
+    // Update the Xaml elements immediately, so the image proxy reflects reality
+    XamlButtonApplyVisuals([_xamlButton comObj], _currentInspectableImage(self), _currentInspectableBorderBackgroundBrush(self));
+
+    [self invalidateIntrinsicContentSize];
+    [self setNeedsLayout];
+}
+
+/**
+@Status Interoperable
+@Notes The xaml element may be modified directly and we could return stale values.
+*/
+- (UIImage*)imageForState:(UIControlState)state {
+    // Don't do index-based lookup to avoid inserting empty entries into the map
+    const auto& statePair = _states.find(state);
+    return statePair != _states.end() ? statePair->second.image : nullptr;
+}
+
+/**
+ @Status Interoperable
+ @Notes The xaml element may be modified directly and we could return stale values.
+*/
+- (UIImage*)currentImage {
+    // Don't do index-based lookup to avoid inserting empty entries into the map
+    const auto& statePair = _states.find(self->_curState);
+    if (statePair != _states.end() && statePair->second.image != nil) {
+        return statePair->second.image;
+    }
+
+    return self->_states[UIControlStateNormal].image;
+}
+
+/**
+@Status Interoperable
+@Notes The xaml element may be modified directly and we could return stale values.
 */
 - (void)setBackgroundImage:(UIImage*)image forState:(UIControlState)state {
     _states[state].backgroundImage = image;
@@ -466,32 +516,24 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 }
 
 /**
- @Status Interoperable
- @Notes The xaml element may be modified directly and we could still return stale values.
+@Status Interoperable
+@Notes The xaml element may be modified directly and we could return stale values.
 */
 - (UIImage*)backgroundImageForState:(UIControlState)state {
-    return _states[state].backgroundImage;
+    // Don't do index-based lookup to avoid inserting empty entries into the map
+    const auto& statePair = _states.find(state);
+    return statePair != _states.end() ? statePair->second.backgroundImage : nullptr;
 }
 
 /**
- @Status Interoperable
- @Notes The xaml element may be modified directly and we could still return stale values.
-*/
-- (UIImage*)currentImage {
-    if (self->_states[self->_curState].image != nil) {
-        return self->_states[self->_curState].image;
-    }
-
-    return self->_states[UIControlStateNormal].image;
-}
-
-/**
- @Status Interoperable
- @Notes The xaml element may be modified directly and we could still return stale values.
+@Status Interoperable
+@Notes The xaml element may be modified directly and we could return stale values.
 */
 - (UIImage*)currentBackgroundImage {
-    if (self->_states[self->_curState].backgroundImage != nil) {
-        return self->_states[self->_curState].backgroundImage;
+    // Don't do index-based lookup to avoid inserting empty entries into the map
+    const auto& statePair = _states.find(self->_curState);
+    if (statePair != _states.end() && statePair->second.backgroundImage != nil) {
+        return statePair->second.backgroundImage;
     }
 
     return self->_states[UIControlStateNormal].backgroundImage;
@@ -503,25 +545,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 - (void)setTitle:(NSString*)title forState:(UIControlState)state {
     _states[state].title = [title copy];
 
-    // NOTE: check if title is nil before creating inspectableTitle
-    // createString:nil creates a valid rtString with null comObj
-    // which isn't what we want
-    if (title) {
-        RTObject* rtString = [WFPropertyValue createString:title];
-        if (rtString) {
-            _states[state].inspectableTitle = [rtString comObj];
-        }
-    } else {
-        // this enforces the fallback of using title of normalState
-        // when a title for other states does not exist
-        _states[state].inspectableTitle = nullptr;
-    }
-
-    // Update the Xaml elements immediately, so the proxies reflect reality
-    XamlButtonApplyVisuals([_xamlButton comObj],
-                           _currentInspectableTitle(self),
-                           _currentInspectableImage(self),
-                           _currentInspectableTitleColor(self));
+    // Update our title label immediately
+    self.titleLabel.text = self.currentTitle;
 
     [self invalidateIntrinsicContentSize];
     [self setNeedsLayout];
@@ -529,18 +554,25 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 
 /**
  @Status Interoperable
- @Notes The xaml element may be modified directly and we could still return stale values.
+ @Notes The xaml element may be modified directly and we could return stale values.
 */
 - (NSString*)titleForState:(UIControlState)state {
-    return _states[state].title;
+    // Don't do index-based lookup to avoid inserting empty entries into the map
+    const auto& statePair = _states.find(state);
+    return statePair != _states.end() ? statePair->second.title : nullptr;
 }
 
 /**
  @Status Interoperable
- @Notes The xaml element may be modified directly and we could still return stale values.
 */
-- (UIImage*)imageForState:(UIControlState)state {
-    return _states[state].image;
+- (NSString*)currentTitle {
+    // Don't do index-based lookup to avoid inserting empty entries into the map
+    const auto& statePair = _states.find(self->_curState);
+    if (statePair != _states.end() && statePair->second.title != nil) {
+        return statePair->second.title;
+    }
+
+    return self->_states[UIControlStateNormal].title;
 }
 
 /**
@@ -549,25 +581,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 - (void)setTitleColor:(UIColor*)color forState:(UIControlState)state {
     _states[state].textColor = color;
 
-    // NOTE: check if image is nil before creating convertedColor
-    // ConvertUIColorToWUColor:nil creates a valid WUColor with null comObj
-    // which isn't what we want
-    if (color) {
-        WUXMSolidColorBrush* titleColorBrush = [WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor(color)];
-        if (titleColorBrush) {
-            _states[state].inspectableTitleColor = [titleColorBrush comObj];
-        }
-    } else {
-        // this enforces the fallback of using titleColor of normalState
-        // when a titleColor for other states does not exist
-        _states[state].inspectableTitleColor = nullptr;
-    }
-
-    // Update the Xaml elements immediately, so the proxies reflect reality
-    XamlButtonApplyVisuals([_xamlButton comObj],
-                           _currentInspectableTitle(self),
-                           _currentInspectableImage(self),
-                           _currentInspectableTitleColor(self));
+    // Update our title label color
+    self.titleLabel.textColor = self.currentTitleColor;
 
     [self invalidateIntrinsicContentSize];
     [self setNeedsLayout];
@@ -575,39 +590,60 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 
 /**
  @Status Interoperable
- @Notes The xaml element may be modified directly and we could still return stale values.
+ @Notes The xaml element may be modified directly and we could return stale values.
 */
 - (UIColor*)titleColorForState:(UIControlState)state {
-    return _states[state].textColor;
+    // Don't do index-based lookup to avoid inserting empty entries into the map
+    const auto& statePair = _states.find(state);
+    return statePair != _states.end() ? statePair->second.textColor : nullptr;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
+*/
+- (UIColor*)currentTitleColor {
+    // Don't do index-based lookup to avoid inserting empty entries into the map
+    const auto& statePair = _states.find(self->_curState);
+    if (statePair != _states.end() && statePair->second.textColor != nil) {
+        return statePair->second.textColor;
+    } else if (self->_states[UIControlStateNormal].textColor != nil) {
+        return self->_states[UIControlStateNormal].textColor;
+    } else {
+        return [UIColor whiteColor];
+    }
+}
+
+/**
+ @Status NotInPlan
+ @Notes TintColor is not a feature currently supported by Xaml.
 */
 - (void)setTintColor:(UIColor*)color {
-    UNIMPLEMENTED();
+    UNIMPLEMENTED_WITH_MSG("TintColor is not a feature currently supported by Xaml.");
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes Text shadows are not currently supported by Xaml.
 */
 - (void)setTitleShadowColor:(UIColor*)color forState:(UIControlState)state {
-    UNIMPLEMENTED();
+    UNIMPLEMENTED_WITH_MSG("Text shadows are not currently supported by Xaml.");
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes Text shadows are not currently supported by Xaml.
 */
 - (UIColor*)titleShadowColorForState:(UIControlState)state {
-    UNIMPLEMENTED();
+    UNIMPLEMENTED_WITH_MSG("Text shadows are not currently supported by Xaml.");
     return StubReturn();
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes Text shadows are not currently supported by Xaml.
 */
 - (UIColor*)currentTitleShadowColor {
-    UNIMPLEMENTED();
+    UNIMPLEMENTED_WITH_MSG("Text shadows are not currently supported by Xaml.");
     return StubReturn();
 }
 
@@ -691,26 +727,79 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     [_xamlButton releasePointerCapture:routedEvent.pointer];
 }
 
-/**
- @Status Stub
-*/
-- (void)setAdjustsImageWhenHighlighted:(BOOL)doAdjust {
-    UNIMPLEMENTED();
+static bool _isStateCustomizationSet(UIButton* self, UIControlState state) {
+    // Returns whether or not we have any customization set for the specified state.
+    // For example; checking for 'UIControlStateDisabled' would return true for a 'UIControlStateDisabled' state as well as
+    // for a 'UIControlStateHighlighted | UIControlStateDisabled' state.
+    for (const auto& statePair : self->_states) {
+        if ((statePair.first & state) && !statePair.second.IsEmpty()) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+static ComPtr<IInspectable> _currentInspectableBorderBackgroundBrush(UIButton* self) {
+    // Only use the brush if we're in the current state, and no customization has yet been set
+    // for any permutation of that state.
+    if (!self.isEnabled && !_isStateCustomizationSet(self, UIControlStateDisabled)) {
+        return self->_inspectableAdjustsWhenDisabledBrush;
+    } else if (self.isHighlighted && !_isStateCustomizationSet(self, UIControlStateHighlighted)) {
+        return self->_inspectableAdjustsWhenHighlightedBrush;
+    }
+
+    return nullptr;
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes We use this value to determine whether or not we add a lightening overlay to the button background, background image, and image,
+        whereas on the reference platform the tint is only applied directly to the images.  You can opt out by disabling this setting,
+        or by setting any UIControlStateDisabled properties.
+*/
+- (void)setAdjustsImageWhenDisabled:(BOOL)shouldAdjust {
+    if (shouldAdjust && !_inspectableAdjustsWhenDisabledBrush) {
+        // Semi-transparent white overlay
+        WUXMSolidColorBrush* colorBrush = [WUXMSolidColorBrush makeInstanceWithColor:[WUColorHelper fromArgb:150 r:255 g:255 b:255]];
+        _inspectableAdjustsWhenDisabledBrush = [colorBrush comObj];
+        [self setNeedsLayout];
+    } else if (!shouldAdjust && _inspectableAdjustsWhenDisabledBrush) {
+        _inspectableAdjustsWhenDisabledBrush = nullptr;
+        [self setNeedsLayout];
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)adjustsImageWhenDisabled {
+    return _inspectableAdjustsWhenDisabledBrush != nullptr;
+}
+
+/**
+ @Status Caveat
+ @Notes We use this value to determine whether or not we add a darkening overlay to the button background, background image, and image,
+        whereas on the reference platform the tint is only applied directly to the images.  You can opt out by disabling this setting,
+        or by setting any UIControlStateHighlighted properties.
+*/
+- (void)setAdjustsImageWhenHighlighted:(BOOL)shouldAdjust {
+    if (shouldAdjust && !_inspectableAdjustsWhenHighlightedBrush) {
+        // Mostly transparent black overlay
+        WUXMSolidColorBrush* colorBrush = [WUXMSolidColorBrush makeInstanceWithColor:[WUColorHelper fromArgb:65 r:0 g:0 b:0]];
+        _inspectableAdjustsWhenHighlightedBrush = [colorBrush comObj];
+        [self setNeedsLayout];
+    } else if (!shouldAdjust && _inspectableAdjustsWhenHighlightedBrush) {
+        _inspectableAdjustsWhenHighlightedBrush = nullptr;
+        [self setNeedsLayout];
+    }
+}
+
+/**
+ @Status Interoperable
 */
 - (BOOL)adjustsImageWhenHighlighted {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
-*/
-- (void)setAdjustsImageWhenDisabled:(BOOL)doAdjust {
-    UNIMPLEMENTED();
+    return _inspectableAdjustsWhenHighlightedBrush != nullptr;
 }
 
 /**
@@ -731,8 +820,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
  @Status Stub
 */
 - (UIButtonType)buttonType {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return _buttonType;
 }
 
 /**
@@ -747,17 +835,15 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 /**
  @Status Interoperable
 */
-- (void)setImageEdgeInsets:(UIEdgeInsets)insets {
-    _imageInsets = insets;
-    [self invalidateIntrinsicContentSize];
-    [self setNeedsLayout];
+- (UIEdgeInsets)titleEdgeInsets {
+    return _titleInsets;
 }
 
 /**
  @Status Interoperable
 */
-- (void)setContentEdgeInsets:(UIEdgeInsets)insets {
-    _contentInsets = insets;
+- (void)setImageEdgeInsets:(UIEdgeInsets)insets {
+    _imageInsets = insets;
     [self invalidateIntrinsicContentSize];
     [self setNeedsLayout];
 }
@@ -772,8 +858,10 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 /**
  @Status Interoperable
 */
-- (UIEdgeInsets)titleEdgeInsets {
-    return _titleInsets;
+- (void)setContentEdgeInsets:(UIEdgeInsets)insets {
+    _contentInsets = insets;
+    [self invalidateIntrinsicContentSize];
+    [self setNeedsLayout];
 }
 
 /**
@@ -784,17 +872,19 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes Xaml doesn't have built in support for showing 'glowing' touch feedback.
 */
 - (void)setShowsTouchWhenHighlighted:(BOOL)showsTouch {
-    UNIMPLEMENTED();
+    UNIMPLEMENTED_WITH_MSG("Xaml doesn't have built in support for showing 'glowing' touch feedback.");
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes Xaml doesn't have built in support for showing 'glowing' touch feedback.
 */
 - (BOOL)showsTouchWhenHighlighted {
-    UNIMPLEMENTED();
+    UNIMPLEMENTED_WITH_MSG("Xaml doesn't have built in support for showing 'glowing' touch feedback.");
     return StubReturn();
 }
 
@@ -808,52 +898,31 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 
 /**
  @Status Caveat
- @Notes type not supported fully
+ @Notes Only UIButtonTypeSystem and UIButtonTypeRoundedRect receive special treatment; all other types are treated as UIButtonTypeCustom.
 */
 + (UIButton*)buttonWithType:(UIButtonType)type {
     UIButton* ret = [[UIButton alloc] initWithFrame:CGRectZero];
     if (type == UIButtonTypeRoundedRect || type == UIButtonTypeSystem) {
+        ret->_buttonType = type;
+        // Default title color
         [ret setTitleColor:[UIColor colorWithRed:0.0f green:0.47843137f blue:1.0f alpha:1.0f] forState:UIControlStateNormal];
+
+        // Default disabled title color
+        [ret setTitleColor:[UIColor lightTextColor] forState:UIControlStateDisabled];
     }
 
     return ret;
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes Text shadows are not currently supported by Xaml.
 */
 - (void)setReversesTitleShadowWhenHighlighted:(BOOL)reverses {
-    UNIMPLEMENTED();
+    UNIMPLEMENTED_WITH_MSG("Text shadows are not currently supported by Xaml.");
 }
 
-/**
- @Status Interoperable
-*/
-- (NSString*)currentTitle {
-    if (self->_states[self->_curState].title != nil) {
-        return self->_states[self->_curState].title;
-    }
-
-    return self->_states[UIControlStateNormal].title;
-}
-
-static Microsoft::WRL::ComPtr<IInspectable> _currentInspectableTitle(UIButton* self) {
-    if (self->_states[self->_curState].inspectableTitle) {
-        return self->_states[self->_curState].inspectableTitle;
-    }
-
-    return self->_states[UIControlStateNormal].inspectableTitle;
-}
-
-static Microsoft::WRL::ComPtr<IInspectable> _currentInspectableTitleColor(UIButton* self) {
-    if (self->_states[self->_curState].inspectableTitleColor) {
-        return self->_states[self->_curState].inspectableTitleColor;
-    }
-
-    return self->_states[UIControlStateNormal].inspectableTitleColor;
-}
-
-static Microsoft::WRL::ComPtr<IInspectable> _currentInspectableImage(UIButton* self) {
+static ComPtr<IInspectable> _currentInspectableImage(UIButton* self) {
     if (self->_states[self->_curState].inspectableImage) {
         return self->_states[self->_curState].inspectableImage;
     }
@@ -864,22 +933,8 @@ static Microsoft::WRL::ComPtr<IInspectable> _currentInspectableImage(UIButton* s
 /**
  @Status Interoperable
 */
-- (UIColor*)currentTitleColor {
-    if (self->_states[self->_curState].textColor != nil) {
-        return self->_states[self->_curState].textColor;
-    } else if (self->_states[UIControlStateNormal].textColor != nil) {
-        return self->_states[UIControlStateNormal].textColor;
-    } else {
-        return [UIColor whiteColor];
-    }
-}
-
-/**
- @Status Caveat
- @Notes Returns a mock UILabel that proxies some common properties and selectors to the underlying TextBlock
-*/
 - (UILabel*)titleLabel {
-    return (UILabel*)_proxyLabel;
+    return _titleLabel;
 }
 
 /**
@@ -891,14 +946,6 @@ static Microsoft::WRL::ComPtr<IInspectable> _currentInspectableImage(UIButton* s
 }
 
 /**
- @Status Caveat
- @Notes Returns the receiving view
-*/
-- (UIView*)viewForBaselineLayout {
-    return self;
-}
-
-/**
  @Status Interoperable
 */
 - (CGSize)intrinsicContentSize {
@@ -906,7 +953,11 @@ static Microsoft::WRL::ComPtr<IInspectable> _currentInspectableImage(UIButton* s
 
     UIImage* img = self.currentImage;
     UIEdgeInsets contentInsets = self.contentEdgeInsets;
-    CGSize textSize = [[self currentTitle] sizeWithFont:self.font];
+
+    // TODO: Should we be asking our label for its intrinsicContentSize?
+    // We need to round the font size to the nearest pixel value to avoid rounding errors when used in conjunction with the
+    // frame values that are rounded by UIView.
+    CGSize textSize = doPixelRound([[self currentTitle] sizeWithFont:self.font]);
 
     // Size should at least fit the image in a normal state.
     if (img != nil) {
@@ -939,26 +990,43 @@ static Microsoft::WRL::ComPtr<IInspectable> _currentInspectableImage(UIButton* s
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes Custom rendering over derived UIButtons is not currently supported.
 */
 - (CGRect)backgroundRectForBounds:(CGRect)bounds {
-    UNIMPLEMENTED();
+    UNIMPLEMENTED_WITH_MSG("Custom rendering over derived UIButtons is not currently supported.");
     return StubReturn();
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes Attributed text is not easily supported by Xaml.
 */
 - (NSAttributedString*)attributedTitleForState:(UIControlState)state {
-    UNIMPLEMENTED();
+    UNIMPLEMENTED_WITH_MSG("Attributed text is not easily supported by Xaml.");
     return StubReturn();
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes Attributed text is not easily supported by Xaml.
 */
 - (void)setAttributedTitle:(NSAttributedString*)title forState:(UIControlState)state {
-    UNIMPLEMENTED();
+    UNIMPLEMENTED_WITH_MSG("Attributed text is not easily supported by Xaml.");
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setLineBreakMode:(UILineBreakMode)mode {
+    self.titleLabel.lineBreakMode = mode;
+}
+
+/**
+ @Status Interoperable
+*/
+- (UILineBreakMode)lineBreakMode {
+    return self.titleLabel.lineBreakMode;
 }
 
 @end

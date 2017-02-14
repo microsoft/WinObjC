@@ -29,12 +29,11 @@ enum ControlStates { ControlStateNormal = 0, ControlStateHighlighted = 1 << 0, C
 ////////////////////////////////////////////////////////////////////////////////////
 
 // Returns a UIKit::Button as an IInspectable
-UIKIT_XAML_EXPORT IInspectable* XamlCreateButton();
+UIKIT_XAML_EXPORT void XamlCreateButton(IInspectable** created);
 
 UIKIT_XAML_EXPORT void XamlButtonApplyVisuals(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton,
-                                              const Microsoft::WRL::ComPtr<IInspectable>& inspectableText,
                                               const Microsoft::WRL::ComPtr<IInspectable>& inspectableImage,
-                                              const Microsoft::WRL::ComPtr<IInspectable>& inspectableTitleColor);
+                                              const Microsoft::WRL::ComPtr<IInspectable>& inspectableBorderBackgroundBrush);
 
 // Hooks pointer events on a UIKit::Button passed in as IInspectable
 UIKIT_XAML_EXPORT void XamlHookButtonPointerEvents(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton,
@@ -57,7 +56,7 @@ UIKIT_XAML_EXPORT void XamlRemoveLayoutEvent(const Microsoft::WRL::ComPtr<IInspe
 ////////////////////////////////////////////////////////////////////////////////////
 
 // Returns a UIKit::Label as an IInspectable
-UIKIT_XAML_EXPORT IInspectable* XamlCreateLabel();
+UIKIT_XAML_EXPORT void XamlCreateLabel(IInspectable** created);
 
 // Retrieves the UIKit::Label's backing TextBlock as an IInspectable
 UIKIT_XAML_EXPORT IInspectable* XamlGetLabelTextBox(const Microsoft::WRL::ComPtr<IInspectable>& label);
@@ -66,11 +65,14 @@ UIKIT_XAML_EXPORT IInspectable* XamlGetLabelTextBox(const Microsoft::WRL::ComPtr
 // Layer.xaml.cpp
 ////////////////////////////////////////////////////////////////////////////////////
 
+// Initializes our library for use; registers dependency properties, etc.
+UIKIT_XAML_EXPORT void UIKitXamlInitialize();
+
 // Set one or more layer properties for the specified target xaml element
 UIKIT_XAML_EXPORT void XamlSetFrameworkElementLayerProperties(const Microsoft::WRL::ComPtr<IInspectable>& targetElement,
                                                               const Microsoft::WRL::ComPtr<IInspectable>& sublayerCanvasProperty,
                                                               const Microsoft::WRL::ComPtr<IInspectable>& layerContentProperty);
-                                                              
+
 // Get the layerContentProperty for the specified target xaml element
 UIKIT_XAML_EXPORT IInspectable* XamlGetFrameworkElementLayerContentProperty(const Microsoft::WRL::ComPtr<IInspectable>& targetElement);
 
@@ -82,35 +84,35 @@ UIKIT_XAML_EXPORT IInspectable* XamlGetFrameworkElementSublayerCanvasProperty(co
 ////////////////////////////////////////////////////////////////////////////////////
 
 // Returns a UIKit::ProgressRing as an IInspectable
-UIKIT_XAML_EXPORT IInspectable* XamlCreateProgressRing();
+UIKIT_XAML_EXPORT void XamlCreateProgressRing(IInspectable** created);
 
 ////////////////////////////////////////////////////////////////////////////////////
 // ScrollViewer.xaml.cpp
 ////////////////////////////////////////////////////////////////////////////////////
 
 // Returns a UIKit::ScrollViewer as an IInspectable
-UIKIT_XAML_EXPORT IInspectable* XamlCreateScrollViewer();
+UIKIT_XAML_EXPORT void XamlCreateScrollViewer(IInspectable** created);
 
 ////////////////////////////////////////////////////////////////////////////////////
 // Slider.xaml.cpp
 ////////////////////////////////////////////////////////////////////////////////////
 
 // Returns a UIKit::Slider as an IInspectable
-UIKIT_XAML_EXPORT IInspectable* XamlCreateSlider();
+UIKIT_XAML_EXPORT void XamlCreateSlider(IInspectable** created);
 
 ////////////////////////////////////////////////////////////////////////////////////
 // TextBox.xaml.cpp
 ////////////////////////////////////////////////////////////////////////////////////
 
 // Returns a UIKit::TextBox as an IInspectable
-UIKIT_XAML_EXPORT IInspectable* XamlCreateTextBox();
+UIKIT_XAML_EXPORT void XamlCreateTextBox(IInspectable** created);
 
 ////////////////////////////////////////////////////////////////////////////////////
 // ContentDialog.xaml.cpp
 ////////////////////////////////////////////////////////////////////////////////////
 
 // Returns a UIKit::ContentDialog as an IInspectable
-UIKIT_XAML_EXPORT IInspectable* XamlCreateContentDialog();
+UIKIT_XAML_EXPORT void XamlCreateContentDialog(IInspectable** created);
 
 // Get the index of the button pressed
 UIKIT_XAML_EXPORT int XamlContentDialogPressedIndex(const Microsoft::WRL::ComPtr<IInspectable>& inspectableContentDialog);

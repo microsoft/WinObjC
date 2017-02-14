@@ -37,7 +37,11 @@
 
         NSDictionary* views = @{ @"titleLabel" : self.titleLabel, @"pickerView" : self.pickerView };
         NSDictionary* metrics = @{ @"pad" : @(kPadding) };
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-pad-[titleLabel]-[pickerView]-pad-|"
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-pad-[titleLabel]-(>=pad)-|"
+                                                                     options:0
+                                                                     metrics:metrics
+                                                                       views:views]];
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(>=pad)-[pickerView]-pad-|"
                                                                      options:0
                                                                      metrics:metrics
                                                                        views:views]];
@@ -93,7 +97,7 @@
         label = [UILabel new];
         label.font = [UIFont systemFontOfSize:[UIFont smallSystemFontSize]];
         label.textColor = [UIColor darkGrayColor];
-        label.textAlignment = NSTextAlignmentCenter;
+        label.textAlignment = NSTextAlignmentRight;
     }
 
     label.text = _options[row];

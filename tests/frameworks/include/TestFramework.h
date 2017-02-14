@@ -20,14 +20,101 @@
 #include <Foundation/Foundation.h>
 #endif
 
-// Unit tests will include only GTest header.
-// Functional tests will unclude GTest and a functional test api header that diverts some of the logging macros to use Microsoft TAEF APIs.
+#ifndef IF_NOT_EXISTS_BEGIN
+#ifdef _MSC_VER
+#define IF_NOT_EXISTS_BEGIN(name) __if_not_exists(name) {
+#define IF_NOT_EXISTS_END }
+#else
+#define IF_NOT_EXISTS_BEGIN(name)
+#define IF_NOT_EXISTS_END
+#endif
+#endif
+
+#if TARGET_OS_MAC
 #include "gtest-api.h"
-#if defined FUNCTIONAL_TEST_FRAMEWORK
-#include "functionaltest-api.h"
+#include <mach-o/dyld.h>
+#else
+#include "test-api.h"
+#endif
+
+#ifdef __OBJC__
+#include <objc/objc.h>
+#include <objc/runtime.h>
+#include <Foundation/NSObject.h>
+#include <Foundation/NSAutoreleasePool.h>
+#include <Foundation/NSString.h>
+
+// We are free to redefine TEST() since we set GTEST_DONT_DEFINE_TEST earlier.
+#define TEST(test_case_name, test_name) \
+    GTEST_TEST_(test_case_name, test_name, ::woc::testing::ObjCTest, ::testing::internal::GetTestTypeId())
+#endif
+
+#ifndef __has_feature
+#define __has_feature(x) 0
+#endif
+
+#if defined(__OBJC__) && !__has_feature(objc_arc)
+namespace GTestLogPrivate {
+template <typename... Args>
+std::vector<char> Format(NSString* message, Args... args) {
+    return Format([message UTF8String], std::forward<Args>(args)...);
+}
+}
+
+inline std::ostream& operator<<(std::ostream& os, const id& object) {
+    return os << (char*)([[object description] UTF8String]);
+}
+
+namespace woc {
+namespace testing {
+
+inline ::testing::AssertionResult CompareObjectsEqual(const char* expectedExpression,
+                                                      const char* actualExpression,
+                                                      const id& expected,
+                                                      const id& actual) {
+    if ((!expected && !actual) || (expected && actual && [expected isEqual:actual])) {
+        return ::testing::AssertionSuccess();
+    }
+
+    return ::testing::internal::CmpHelperEQFailure(expectedExpression, actualExpression, expected, actual);
+}
+
+inline ::testing::AssertionResult CompareObjectsNotEqual(const char* expectedExpression,
+                                                         const char* actualExpression,
+                                                         const id& expected,
+                                                         const id& actual) {
+    if (!(expected && actual && [expected isEqual:actual]) && (expected != actual)) {
+        return ::testing::AssertionSuccess();
+    }
+
+    return ::testing::internal::CmpHelperOpFailure(expectedExpression, actualExpression, expected, actual, "!=");
+}
+
+class ObjCTest : public ::testing::Test {
+protected:
+    id _autoreleasePool;
+    virtual void SetUp() {
+        _autoreleasePool = [[NSAutoreleasePool alloc] init];
+    }
+    virtual void TearDown() {
+#if !__has_feature(objc_arc)
+        [_autoreleasePool release];
+#endif
+        _autoreleasePool = nil;
+    }
+};
+}
+}
+
+#endif
+
+#ifdef FUNCTIONAL_TEST_FRAMEWORK
+#include "FunctionalTestHelpers.h"
 #endif
 
 #include <vector>
+#include <string>
+#include <codecvt>
 
 // Test helper macros that selectively disable tests.
 
@@ -69,24 +156,22 @@
 
 // Parameterized Test. To handle making it easy to disable specific test cases above, this variaton combines the
 // normal and disabled values back into one list and runs them all under a single instantiation.
-#define ARM_DISABLED_INSTANTIATE_TEST_CASE_P(instantiationName, testClass, values, disabledValues)                  \
-    INSTANTIATE_TEST_CASE_P(instantiationName,                                                                      \
-                            testClass,                                                                              \
-                            []() {                                                                                  \
-                                ::testing::internal::ParamGenerator<testClass::ParamType> values1 = values;         \
-                                ::testing::internal::ParamGenerator<testClass::ParamType> values2 = disabledValues; \
-                                std::vector<testClass::ParamType> combined;                                         \
-                                for (const auto& item : values1) {                                                  \
-                                    combined.push_back(item);                                                       \
-                                }                                                                                   \
-                                                                                                                    \
-                                for (const auto& item : values2) {                                                  \
-                                    combined.push_back(item);                                                       \
-                                }                                                                                   \
-                                                                                                                    \
-                                return ::testing::ValuesIn(combined);                                               \
-                                                                                                                    \
-                            }())
+#define ARM_DISABLED_INSTANTIATE_TEST_CASE_P(instantiationName, testClass, values, disabledValues) \
+    INSTANTIATE_TEST_CASE_P(instantiationName, testClass, []() {                                   \
+        ::testing::internal::ParamGenerator<testClass::ParamType> values1 = values;                \
+        ::testing::internal::ParamGenerator<testClass::ParamType> values2 = disabledValues;        \
+        std::vector<testClass::ParamType> combined;                                                \
+        for (const auto& item : values1) {                                                         \
+            combined.push_back(item);                                                              \
+        }                                                                                          \
+                                                                                                   \
+        for (const auto& item : values2) {                                                         \
+            combined.push_back(item);                                                              \
+        }                                                                                          \
+                                                                                                   \
+        return ::testing::ValuesIn(combined);                                                      \
+                                                                                                   \
+    }())
 #endif
 
 // Macros to disable tests only for the OSX platform
@@ -101,24 +186,22 @@
 
 #define OSX_DISABLED_TEST(category, testName) TEST(category, testName)
 #define OSX_DISABLED_TEST_F(category, testName) TEST_F(category, testName)
-#define OSX_DISABLED_INSTANTIATE_TEST_CASE_P(instantiationName, testClass, values, disabledValues)                  \
-    INSTANTIATE_TEST_CASE_P(instantiationName,                                                                      \
-                            testClass,                                                                              \
-                            []() {                                                                                  \
-                                ::testing::internal::ParamGenerator<testClass::ParamType> values1 = values;         \
-                                ::testing::internal::ParamGenerator<testClass::ParamType> values2 = disabledValues; \
-                                std::vector<testClass::ParamType> combined;                                         \
-                                for (const auto& item : values1) {                                                  \
-                                    combined.push_back(item);                                                       \
-                                }                                                                                   \
-                                                                                                                    \
-                                for (const auto& item : values2) {                                                  \
-                                    combined.push_back(item);                                                       \
-                                }                                                                                   \
-                                                                                                                    \
-                                return ::testing::ValuesIn(combined);                                               \
-                                                                                                                    \
-                            }())
+#define OSX_DISABLED_INSTANTIATE_TEST_CASE_P(instantiationName, testClass, values, disabledValues) \
+    INSTANTIATE_TEST_CASE_P(instantiationName, testClass, []() {                                   \
+        ::testing::internal::ParamGenerator<testClass::ParamType> values1 = values;                \
+        ::testing::internal::ParamGenerator<testClass::ParamType> values2 = disabledValues;        \
+        std::vector<testClass::ParamType> combined;                                                \
+        for (const auto& item : values1) {                                                         \
+            combined.push_back(item);                                                              \
+        }                                                                                          \
+                                                                                                   \
+        for (const auto& item : values2) {                                                         \
+            combined.push_back(item);                                                              \
+        }                                                                                          \
+                                                                                                   \
+        return ::testing::ValuesIn(combined);                                                      \
+                                                                                                   \
+    }())
 #endif
 
 // Macros to disable tests only for the WIN32 platform. This is for ensuring our tests match the reference platform's behavior
@@ -134,27 +217,46 @@
 
 #define WIN32_DISABLED_TEST(category, testName) TEST(category, testName)
 #define WIN32_DISABLED_TEST_F(category, testName) TEST_F(category, testName)
-#define WIN32_DISABLED_INSTANTIATE_TEST_CASE_P(instantiationName, testClass, values, disabledValues)                \
-    INSTANTIATE_TEST_CASE_P(instantiationName,                                                                      \
-                            testClass,                                                                              \
-                            []() {                                                                                  \
-                                ::testing::internal::ParamGenerator<testClass::ParamType> values1 = values;         \
-                                ::testing::internal::ParamGenerator<testClass::ParamType> values2 = disabledValues; \
-                                std::vector<testClass::ParamType> combined;                                         \
-                                for (const auto& item : values1) {                                                  \
-                                    combined.push_back(item);                                                       \
-                                }                                                                                   \
-                                                                                                                    \
-                                for (const auto& item : values2) {                                                  \
-                                    combined.push_back(item);                                                       \
-                                }                                                                                   \
-                                                                                                                    \
-                                return ::testing::ValuesIn(combined);                                               \
-                                                                                                                    \
-                            }())
+#define WIN32_DISABLED_INSTANTIATE_TEST_CASE_P(instantiationName, testClass, values, disabledValues) \
+    INSTANTIATE_TEST_CASE_P(instantiationName, testClass, []() {                                     \
+        ::testing::internal::ParamGenerator<testClass::ParamType> values1 = values;                  \
+        ::testing::internal::ParamGenerator<testClass::ParamType> values2 = disabledValues;          \
+        std::vector<testClass::ParamType> combined;                                                  \
+        for (const auto& item : values1) {                                                           \
+            combined.push_back(item);                                                                \
+        }                                                                                            \
+                                                                                                     \
+        for (const auto& item : values2) {                                                           \
+            combined.push_back(item);                                                                \
+        }                                                                                            \
+                                                                                                     \
+        return ::testing::ValuesIn(combined);                                                        \
+                                                                                                     \
+    }())
 #endif
 
 // OSX defines for compatibility
 #ifndef boolean
 #define boolean Boolean
+#endif
+
+IF_NOT_EXISTS_BEGIN(GetCurrentTestDirectory)
+    static std::string GetCurrentTestDirectory() {
+        std::string tempBuffer;
+        uint32_t maxPath = PATH_MAX;
+        tempBuffer.resize(maxPath);
+        _NSGetExecutablePath(&tempBuffer[0], &maxPath);
+        return tempBuffer.substr(0, tempBuffer.find_last_of('/')).c_str();
+    }
+IF_NOT_EXISTS_END
+
+IF_NOT_EXISTS_BEGIN(GetTestFullName)
+    static std::string GetTestFullName() {
+        return std::string(::testing::UnitTest::GetInstance()->current_test_info()->test_case_name()) + "." +
+               ::testing::UnitTest::GetInstance()->current_test_info()->name();
+    }
+IF_NOT_EXISTS_END
+
+#ifndef LOG_TEST_PROPERTY
+#define LOG_TEST_PROPERTY(key, value) RecordProperty(key, value)
 #endif

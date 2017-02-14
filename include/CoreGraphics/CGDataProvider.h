@@ -37,12 +37,14 @@ typedef struct CGDataProviderCallbacks {
     CGDataProviderRewindCallback rewind;
     CGDataProviderReleaseInfoCallback releaseProvider;
 } CGDataProviderCallbacks;
+
 typedef struct CGDataProviderDirectAccessCallbacks {
     CGDataProviderGetBytePointerCallback getBytePointer;
     CGDataProviderReleaseBytePointerCallback releaseBytePointer;
     CGDataProviderGetBytesAtOffsetCallback getBytes;
     CGDataProviderReleaseInfoCallback releaseProvider;
 } CGDataProviderDirectAccessCallbacks;
+
 typedef struct CGDataProviderDirectCallbacks {
     unsigned int version;
     CGDataProviderGetBytePointerCallback getBytePointer;
@@ -50,6 +52,7 @@ typedef struct CGDataProviderDirectCallbacks {
     CGDataProviderGetBytesAtPositionCallback getBytesAtPosition;
     CGDataProviderReleaseInfoCallback releaseInfo;
 } CGDataProviderDirectCallbacks;
+
 typedef struct CGDataProviderSequentialCallbacks {
     unsigned int version;
     CGDataProviderGetBytesCallback getBytes;
@@ -57,6 +60,7 @@ typedef struct CGDataProviderSequentialCallbacks {
     CGDataProviderRewindCallback rewind;
     CGDataProviderReleaseInfoCallback releaseInfo;
 } CGDataProviderSequentialCallbacks;
+
 typedef void (*CGDataProviderReleaseDataCallback)(void* info, const void* data, size_t size);
 
 COREGRAPHICS_EXPORT CGDataProviderRef CGDataProviderCreate(void* info, const CGDataProviderCallbacks* callbacks);

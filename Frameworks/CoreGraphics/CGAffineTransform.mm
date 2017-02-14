@@ -192,10 +192,11 @@ bool CGAffineTransformEqualToTransform(CGAffineTransform t2, CGAffineTransform t
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 CGSize CGSizeApplyAffineTransform(CGSize size, CGAffineTransform t) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return {
+        (CGFloat)((double)t.a * size.width + (double)t.c * size.height),
+        (CGFloat)((double)t.b * size.width + (double)t.d * size.height)
+    };
 }

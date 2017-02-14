@@ -39,7 +39,7 @@
 OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_PREVIEW_EXPORT
 @interface WMDPInstalledClassicAppInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * displayName;
 @property (readonly) NSString * displayVersion;

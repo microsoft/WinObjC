@@ -70,7 +70,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAUPUserDataAccountPartnerAccountInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WAUPUserDataAccountProviderPartnerAccountKind accountKind;
 @property (readonly) NSString * displayName;
@@ -86,7 +86,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAUPUserDataAccountProviderAddAccountOperation : RTObject <WAUPIUserDataAccountProviderOperation>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WAUUserDataAccountContentKinds contentKinds;
 @property (readonly) NSArray* /* WAUPUserDataAccountPartnerAccountInfo* */ partnerAccountInfos;
@@ -103,7 +103,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAUPUserDataAccountProviderSettingsOperation : RTObject <WAUPIUserDataAccountProviderOperation>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WAUPUserDataAccountProviderOperationKind kind;
 @property (readonly) NSString * userDataAccountId;
@@ -119,7 +119,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAUPUserDataAccountProviderResolveErrorsOperation : RTObject <WAUPIUserDataAccountProviderOperation>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WAUPUserDataAccountProviderOperationKind kind;
 @property (readonly) NSString * userDataAccountId;

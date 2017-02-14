@@ -40,9 +40,9 @@
 
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CALLS_PROVIDER_EXPORT
 @interface WACPPhoneCallOrigin : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * location;
 @property (retain) NSString * categoryDescription;

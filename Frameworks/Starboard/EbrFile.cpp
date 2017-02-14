@@ -19,7 +19,7 @@
 #include <io.h>
 #include <stdlib.h>
 #include <direct.h>
-#include <sys\stat.h>
+#include <sys/stat.h>
 #include <map>
 #include <climits>
 #include <regex>
@@ -33,11 +33,21 @@
 #include "EbrDevRandomFile.h"
 #include "EbrStorageFile.h"
 
+#include <COMIncludes.h>
+#include <wrl/client.h>
+#include <wrl/wrappers/corewrappers.h>
+#include <windows.storage.h>
+#include <COMIncludes_End.h>
+
+using namespace ABI::Windows::Storage;
+using namespace Microsoft::WRL;
+using namespace Windows::Foundation;
+
 static const wchar_t* TAG = L"EbrFile";
 
 std::mutex EbrFile::s_fileMapLock{};
 std::map<int, std::shared_ptr<EbrFile>> EbrFile::s_fileMap{};
-int EbrFile::s_maxFileId{0};
+int EbrFile::s_maxFileId{ 0 };
 
 std::shared_ptr<EbrFile> EbrFile::GetFile(int fid) {
     std::lock_guard<std::mutex> guard(s_fileMapLock);
@@ -80,17 +90,16 @@ int EbrOpen(const char* file, int mode, int share) {
 }
 
 int EbrOpenWithPermission(const char* file, int mode, int share, int pmode) {
-
     std::shared_ptr<EbrFile> fileToAdd;
 
     // Special random number device. Just a stub.
     fileToAdd = EbrDevRandomFile::CreateInstance(file, mode, share, pmode);
-    
+
     if (!fileToAdd) {
         // Special file type for cached storage files.
         fileToAdd = EbrStorageFile::CreateInstance(file, mode, share, pmode);
-    } 
-    
+    }
+
     if (!fileToAdd) {
         // No more special types. Assume its a real file.
         fileToAdd = EbrIOFile::CreateInstance(file, mode, share, pmode);
@@ -150,95 +159,66 @@ int EbrFflush(int fd) {
 }
 
 bool EbrRemoveEmptyDir(const char* path) {
-    return RemoveDirectoryA(CPathMapper(path));
+    return RemoveDirectoryW(CPathMapper(path));
 }
 
 bool EbrRename(const char* path1, const char* path2) {
-    return rename(CPathMapper(path1), CPathMapper(path2)) == 0;
+    return _wrename(CPathMapper(path1), CPathMapper(path2)) == 0;
 }
 
 bool EbrUnlink(const char* path) {
-    return _unlink(CPathMapper(path)) == 0;
+    return _wunlink(CPathMapper(path)) == 0;
 }
 
-#define FSROOT "."
 #define mkdir _mkdir
-char g_WritableFolder[2048] = ".";
 
-void EbrSetWritableFolder(const char* folder) {
-    strcpy_s(g_WritableFolder, folder);
+Wrappers::HString _IwGetWritableFolder() {
+    Wrappers::HString toReturn;
+    ComPtr<IStorageFolder> folder;
+    ComPtr<IApplicationDataStatics> applicationDataStatics;
+    ComPtr<IApplicationData> applicationData;
+    ComPtr<IStorageItem> storageItem;
+
+    if (FAILED(GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_Storage_ApplicationData).Get(),
+                                    &applicationDataStatics))) {
+        return toReturn;
+    }
+
+    if (FAILED(applicationDataStatics->get_Current(&applicationData))) {
+        return toReturn;
+    }
+
+    if (FAILED(applicationData->get_LocalFolder(&folder))) {
+        return toReturn;
+    }
+
+    if (FAILED(folder.As<IStorageItem>(&storageItem))) {
+        return toReturn;
+    }
+
+    if (FAILED(storageItem->get_Path(toReturn.GetAddressOf()))) {
+        return toReturn;
+    }
+
+    return toReturn;
 }
 
-const char* EbrGetWritableFolder() {
-    return g_WritableFolder;
-}
+const wchar_t* IwGetWritableFolder() {
+    static Wrappers::HString basePath = _IwGetWritableFolder();
 
-bool EbrGetRootMapping(const char* dirName, char* dirOut, uint32_t maxLen) {
-    if (dirName == NULL) {
-        strcpy_s(dirOut, maxLen, FSROOT);
-        return true;
+    if (!basePath.IsValid()) {
+        return L".";
     }
-    if (_stricmp(dirName, "Documents") == 0) {
-        sprintf_s(dirOut, maxLen, "%s\\Documents", g_WritableFolder);
-        mkdir(dirOut);
 
-        char tmpDir[4096];
-        strcpy_s(tmpDir, dirOut);
-        strcat_s(tmpDir, "\\Library");
-        mkdir(tmpDir);
-        return true;
-    }
-    if (_stricmp(dirName, "Cache") == 0) {
-        sprintf_s(dirOut, maxLen, "%s\\cache", g_WritableFolder);
-        mkdir(dirOut);
-        return true;
-    }
-    if (_stricmp(dirName, "Library") == 0) {
-        sprintf_s(dirOut, maxLen, "%s\\Library", g_WritableFolder);
-        mkdir(dirOut);
-        return true;
-    }
-    if (_stricmp(dirName, "AppSupport") == 0) {
-        sprintf_s(dirOut, maxLen, "%s\\AppSupport", g_WritableFolder);
-        mkdir(dirOut);
-        return true;
-    }
-    if (_stricmp(dirName, "tmp") == 0) {
-        sprintf_s(dirOut, maxLen, "%s\\tmp", g_WritableFolder);
-        mkdir(dirOut);
-        return true;
-    }
-    if (_stricmp(dirName, "shared") == 0) {
-        sprintf_s(dirOut, maxLen, "%s\\shared", g_WritableFolder);
-        mkdir(dirOut);
-        return true;
-    }
-    static std::regex drive("[a-zA-Z]:");
-    if (std::regex_match(dirName, drive)) {
-        sprintf_s(dirOut, maxLen, dirName);
-        return true;
-    }
-    sprintf_s(dirOut, maxLen, FSROOT "\\%s", dirName);
-    return true;
+    return WindowsGetStringRawBuffer(basePath.Get(), nullptr);
 }
 
 bool EbrMkdir(const char* path) {
-    return _mkdir(CPathMapper(path)) == 0;
-}
-
-char* EbrGetcwd(char* buf, size_t len) {
-    strncpy_s(buf, len, CPathMapper::currentDir, len);
-    return buf;
-}
-
-int EbrChdir(const char* path) {
-    CPathMapper::setCWD(path);
-
-    return 0;
+    return _wmkdir(CPathMapper(path)) == 0;
 }
 
 int EbrChmod(const char* path, int mode) {
-    return _chmod(CPathMapper(path), mode);
+    return _wchmod(CPathMapper(path), mode);
 }
 
 #define PATH_SEPARATOR "/"
