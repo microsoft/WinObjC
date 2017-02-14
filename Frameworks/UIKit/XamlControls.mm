@@ -103,7 +103,7 @@ WXCGrid* CreateLabel() {
 }
 
 WXCTextBlock* GetLabelTextBlock(WXCGrid* labelGrid) {
-    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetLabelTextBox([labelGrid comObj]));
+    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetLabelTextBlock([labelGrid comObj]));
     return _createRtProxy([WXCTextBlock class], inspectable.Get());
 }
 

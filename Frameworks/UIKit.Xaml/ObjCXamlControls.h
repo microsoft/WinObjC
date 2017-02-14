@@ -59,7 +59,7 @@ UIKIT_XAML_EXPORT void XamlRemoveLayoutEvent(const Microsoft::WRL::ComPtr<IInspe
 UIKIT_XAML_EXPORT void XamlCreateLabel(IInspectable** created);
 
 // Retrieves the UIKit::Label's backing TextBlock as an IInspectable
-UIKIT_XAML_EXPORT IInspectable* XamlGetLabelTextBox(const Microsoft::WRL::ComPtr<IInspectable>& label);
+UIKIT_XAML_EXPORT IInspectable* XamlGetLabelTextBlock(const Microsoft::WRL::ComPtr<IInspectable>& label);
 
 ////////////////////////////////////////////////////////////////////////////////////
 // Layer.xaml.cpp
