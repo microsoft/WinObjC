@@ -312,9 +312,9 @@ OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsBinaryMessage : RTObject <WDSISmsBinaryMessage, WDSISmsMessage>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WDSSmsDataFormat format;
 @property (readonly) unsigned int id;
@@ -333,9 +333,9 @@ OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsTextMessage : RTObject <WDSISmsTextMessage, WDSISmsMessage>
 + (WDSSmsTextMessage*)fromBinaryMessage:(WDSSmsBinaryMessage*)binaryMessage;
 + (WDSSmsTextMessage*)fromBinaryData:(WDSSmsDataFormat)format value:(NSArray* /* uint8_t */)value;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int id;
 @property (readonly) WDSSmsMessageClass messageClass;
@@ -394,7 +394,7 @@ OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSDeleteSmsMessageOperation : RTObject <WFIAsyncAction, WFIAsyncInfo>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) HRESULT errorCode;
 @property (readonly) unsigned int id;
@@ -414,7 +414,7 @@ OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSDeleteSmsMessagesOperation : RTObject <WFIAsyncAction, WFIAsyncInfo>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) HRESULT errorCode;
 @property (readonly) unsigned int id;
@@ -471,7 +471,7 @@ OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsDeviceMessageStore : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int maxMessages;
 - (RTObject<WFIAsyncAction>*)deleteMessageAsync:(unsigned int)messageId;
@@ -489,7 +489,7 @@ OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSendSmsMessageOperation : RTObject <WFIAsyncAction, WFIAsyncInfo>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) HRESULT errorCode;
 @property (readonly) unsigned int id;
@@ -509,7 +509,7 @@ OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsMessageReceivedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDSSmsBinaryMessage* binaryMessage;
 @property (readonly) WDSSmsTextMessage* textMessage;
@@ -528,7 +528,7 @@ OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 + (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDSSmsDevice*))success failure:(void (^)(NSError*))failure;
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDSSmsDevice*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * accountPhoneNumber;
 @property (readonly) WDSCellularClass cellularClass;
@@ -569,7 +569,7 @@ OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsReceivedEventDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * deviceId;
 @property (readonly) unsigned int messageIndex;
@@ -585,9 +585,9 @@ OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsTextMessage2 : RTObject <WDSISmsMessageBase>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDSSmsMessageType messageType;
 @property (readonly) NSString * deviceId;
@@ -615,7 +615,7 @@ OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsWapMessage : RTObject <WDSISmsMessageBase>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDSCellularClass cellularClass;
 @property (readonly) NSString * deviceId;
@@ -639,9 +639,9 @@ OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsAppMessage : RTObject <WDSISmsMessageBase>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property int protocolId;
 @property int portNumber;
@@ -671,7 +671,7 @@ OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsBroadcastMessage : RTObject <WDSISmsMessageBase>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * body;
 @property (readonly) WDSSmsBroadcastType broadcastType;
@@ -699,7 +699,7 @@ OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsVoicemailMessage : RTObject <WDSISmsMessageBase>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDSCellularClass cellularClass;
 @property (readonly) NSString * deviceId;
@@ -721,7 +721,7 @@ OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsStatusMessage : RTObject <WDSISmsMessageBase>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDSCellularClass cellularClass;
 @property (readonly) NSString * deviceId;
@@ -746,7 +746,7 @@ OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsSendMessageResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDSCellularClass cellularClass;
 @property (readonly) BOOL isErrorTransient;
@@ -770,7 +770,7 @@ OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 + (WDSSmsDevice2*)getDefault;
 + (WDSSmsDevice2*)fromParentId:(NSString *)parentDeviceId;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * smscAddress;
 @property (readonly) NSString * accountPhoneNumber;
@@ -793,7 +793,7 @@ OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsMessageReceivedTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDSSmsAppMessage* appMessage;
 @property (readonly) WDSSmsBroadcastMessage* broadcastMessage;
@@ -816,7 +816,7 @@ OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsFilterRule : RTObject
 + (WDSSmsFilterRule*)makeFilterRule:(WDSSmsMessageType)messageType ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WDSCellularClass cellularClass;
 @property (readonly) NSMutableArray* /* int */ broadcastChannels;
@@ -843,7 +843,7 @@ OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsFilterRules : RTObject
 + (WDSSmsFilterRules*)makeFilterRules:(WDSSmsFilterActionType)actionType ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDSSmsFilterActionType actionType;
 @property (readonly) NSMutableArray* /* WDSSmsFilterRule* */ rules;
@@ -859,7 +859,7 @@ OBJCUWP_WINDOWS_DEVICES_SMS_EXPORT
 @interface WDSSmsMessageRegistration : RTObject
 + (WDSSmsMessageRegistration*)Register:(NSString *)id filterRules:(WDSSmsFilterRules*)filterRules;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * id;
 + (NSArray* /* WDSSmsMessageRegistration* */)allRegistrations;

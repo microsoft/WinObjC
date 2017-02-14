@@ -22,7 +22,6 @@
 
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\AssetFile.cpp" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\pthread.cpp" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\CommonDigest.cpp" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\CommonHMAC.cpp" />
@@ -39,6 +38,8 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\RawBuffer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\EbrStorageFile.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\PathMapper.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\AssetFile.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2A00FC26-2ECF-4DF7-8ECF-2D18C5AC61C9}</ProjectGuid>
@@ -63,7 +64,7 @@
       <PreprocessorDefinitions>SB_IMPEXP=;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\include;$(StarboardBasePath)\..\wp\deps\icu\include;$(StarboardBasePath)\..\wp\deps\freetype2\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include;</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\include;$(StarboardBasePath)\..\wp\deps\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include;</IncludePaths>
       <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DSB_IMPEXP="" %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -74,7 +75,7 @@
       <PreprocessorDefinitions>SB_IMPEXP=;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\include;$(StarboardBasePath)\..\wp\deps\icu\include;$(StarboardBasePath)\..\wp\deps\freetype2\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include;</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\include;$(StarboardBasePath)\..\wp\deps\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include;</IncludePaths>
       <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DSB_IMPEXP="" %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
@@ -86,7 +87,7 @@
       <PreprocessorDefinitions>SB_IMPEXP=;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\include;$(StarboardBasePath)\..\wp\deps\icu\include;$(StarboardBasePath)\..\wp\deps\freetype2\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include;</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\include;$(StarboardBasePath)\..\wp\deps\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include;</IncludePaths>
       <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DSB_IMPEXP="" %(AdditionalOptions) -Wno-error</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -97,7 +98,7 @@
       <PreprocessorDefinitions>SB_IMPEXP=;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\include;$(StarboardBasePath)\..\wp\deps\icu\include;$(StarboardBasePath)\..\wp\deps\freetype2\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include;</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\include;$(StarboardBasePath)\..\wp\deps\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include;</IncludePaths>
       <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 -DSB_IMPEXP="" %(AdditionalOptions) -Wno-error</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>

@@ -75,7 +75,7 @@ typedef unsigned WMCCastingConnectionState;
 OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 @interface WMCCastingSource : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WFUri* preferredSourceUri;
 @end
@@ -89,7 +89,7 @@ OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 @interface WMCCastingConnectionErrorOccurredEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMCCastingConnectionErrorStatus errorStatus;
 @property (readonly) NSString * message;
@@ -108,7 +108,7 @@ OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 + (void)fromIdAsync:(NSString *)value success:(void (^)(WMCCastingDevice*))success failure:(void (^)(NSError*))failure;
 + (void)deviceInfoSupportsCastingAsync:(WDEDeviceInformation*)device success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * friendlyName;
 @property (readonly) RTObject<WSSIRandomAccessStreamWithContentType>* icon;
@@ -140,7 +140,7 @@ OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 @interface WMCCastingConnection : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WMCCastingSource* source;
 @property (readonly) WMCCastingDevice* device;
@@ -163,7 +163,7 @@ OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 @interface WMCCastingDeviceSelectedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMCCastingDevice* selectedCastingDevice;
 @end
@@ -177,7 +177,7 @@ OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 @interface WMCCastingDevicePickerFilter : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL supportsVideo;
 @property BOOL supportsPictures;
@@ -193,9 +193,9 @@ OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 
 OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 @interface WMCCastingDevicePicker : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDEDevicePickerAppearance* appearance;
 @property (readonly) WMCCastingDevicePickerFilter* filter;

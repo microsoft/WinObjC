@@ -343,7 +343,7 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnRoute : RTObject
 + (WNVVpnRoute*)makeVpnRoute:(WNHostName*)address prefixSize:(uint8_t)prefixSize ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property uint8_t prefixSize;
 @property (retain) WNHostName* address;
@@ -359,7 +359,7 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnNamespaceInfo : RTObject
 + (WNVVpnNamespaceInfo*)makeVpnNamespaceInfo:(NSString *)name dnsServerList:(NSMutableArray* /* WNHostName* */)dnsServerList proxyServerList:(NSMutableArray* /* WNHostName* */)proxyServerList ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSMutableArray* /* WNHostName* */ webProxyServers;
 @property (retain) NSString * Namespace;
@@ -376,7 +376,7 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnInterfaceId : RTObject
 + (WNVVpnInterfaceId*)makeVpnInterfaceId:(NSArray* /* uint8_t */)address ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)getAddressInfo:(NSArray* /* uint8_t */*)id;
 @end
@@ -389,9 +389,9 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 
 OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnRouteAssignment : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSMutableArray* /* WNVVpnRoute* */ ipv6InclusionRoutes;
 @property (retain) NSMutableArray* /* WNVVpnRoute* */ ipv6ExclusionRoutes;
@@ -408,9 +408,9 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 
 OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnNamespaceAssignment : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WFUri* proxyAutoConfigUri;
 @property (retain) NSMutableArray* /* WNVVpnNamespaceInfo* */ namespaceList;
@@ -425,7 +425,7 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnPickedCredential : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * additionalPin;
 @property (readonly) WSCPasswordCredential* oldPasswordCredential;
@@ -442,7 +442,7 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnPacketBuffer : RTObject
 + (WNVVpnPacketBuffer*)makeVpnPacketBuffer:(WNVVpnPacketBuffer*)parentBuffer offset:(unsigned int)offset length:(unsigned int)length ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property unsigned int transportAffinity;
 @property WNVVpnPacketBufferStatus status;
@@ -459,7 +459,7 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnChannelConfiguration : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * customField;
 @property (readonly) NSArray* /* WNHostName* */ serverHostNameList;
@@ -477,7 +477,7 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnChannel : RTObject
 + (void)processEventAsync:(RTObject*)thirdPartyPlugIn event:(RTObject*)event;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) RTObject* plugInContext;
 @property (readonly) WNVVpnChannelConfiguration* configuration;
@@ -517,7 +517,7 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnChannelActivityEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WNVVpnChannelActivityEventType type;
 @end
@@ -531,7 +531,7 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnSystemHealth : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSSBuffer* statementOfHealth;
 @end
@@ -544,9 +544,9 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 
 OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnDomainNameAssignment : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WFUri* proxyAutoConfigurationUri;
 @property (readonly) NSMutableArray* /* WNVVpnDomainNameInfo* */ domainNameList;
@@ -561,7 +561,7 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnChannelActivityStateChangedArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WNVVpnChannelActivityEventType activityState;
 @end
@@ -575,7 +575,7 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnCredential : RTObject <WNVIVpnCredential>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * additionalPin;
 @property (readonly) WSCCCertificate* certificateCredential;
@@ -591,9 +591,9 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 
 OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnTrafficFilterAssignment : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL allowOutbound;
 @property BOOL allowInbound;
@@ -610,7 +610,7 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnAppId : RTObject
 + (WNVVpnAppId*)make:(WNVVpnAppIdType)type value:(NSString *)value ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * value;
 @property WNVVpnAppIdType type;
@@ -626,7 +626,7 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnDomainNameInfo : RTObject
 + (WNVVpnDomainNameInfo*)makeVpnDomainNameInfo:(NSString *)name nameType:(WNVVpnDomainNameType)nameType dnsServerList:(id<NSFastEnumeration> /* WNHostName* */)dnsServerList proxyServerList:(id<NSFastEnumeration> /* WNHostName* */)proxyServerList ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WNVVpnDomainNameType domainNameType;
 @property (retain) WNHostName* domainName;
@@ -645,7 +645,7 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnTrafficFilter : RTObject
 + (WNVVpnTrafficFilter*)make:(WNVVpnAppId*)appId ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WNVVpnRoutingPolicyType routingPolicyType;
 @property WNVVpnIPProtocol protocol;
@@ -666,7 +666,7 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnPacketBufferList : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WNVVpnPacketBufferStatus status;
 @property (readonly) unsigned int size;
@@ -685,9 +685,9 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 
 OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnCustomEditBox : RTObject <WNVIVpnCustomPrompt>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL noEcho;
 @property (retain) NSString * defaultText;
@@ -705,9 +705,9 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 
 OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnCustomPromptTextInput : RTObject <WNVIVpnCustomPromptElement>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL emphasized;
 @property (retain) NSString * displayName;
@@ -725,9 +725,9 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 
 OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnCustomComboBox : RTObject <WNVIVpnCustomPrompt>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSArray* /* NSString * */ optionsText;
 @property (readonly) unsigned int selected;
@@ -744,9 +744,9 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 
 OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnCustomPromptOptionSelector : RTObject <WNVIVpnCustomPromptElement>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL emphasized;
 @property (retain) NSString * displayName;
@@ -763,9 +763,9 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 
 OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnCustomTextBox : RTObject <WNVIVpnCustomPrompt>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * label;
 @property BOOL compulsory;
@@ -781,9 +781,9 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 
 OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnCustomPromptText : RTObject <WNVIVpnCustomPromptElement>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL emphasized;
 @property (retain) NSString * displayName;
@@ -799,9 +799,9 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 
 OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnCustomCheckBox : RTObject <WNVIVpnCustomPrompt>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL initialCheckState;
 @property (readonly) BOOL checked;
@@ -818,9 +818,9 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 
 OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnCustomPromptBooleanInput : RTObject <WNVIVpnCustomPromptElement>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL initialValue;
 @property (readonly) BOOL value;
@@ -837,9 +837,9 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 
 OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnCustomErrorBox : RTObject <WNVIVpnCustomPrompt>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * label;
 @property BOOL compulsory;
@@ -854,9 +854,9 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 
 OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnPlugInProfile : RTObject <WNVIVpnProfile>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * vpnPluginPackageFamilyName;
 @property (retain) NSString * customConfiguration;
@@ -880,9 +880,9 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 
 OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnNativeProfile : RTObject <WNVIVpnProfile>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WNVVpnAuthenticationMethod userAuthenticationMethod;
 @property WNVVpnAuthenticationMethod tunnelAuthenticationMethod;
@@ -909,9 +909,9 @@ OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 
 OBJCUWP_WINDOWS_NETWORKING_VPN_EXPORT
 @interface WNVVpnManagementAgent : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)addProfileFromXmlAsync:(NSString *)xml success:(void (^)(WNVVpnManagementErrorStatus))success failure:(void (^)(NSError*))failure;
 - (void)addProfileFromObjectAsync:(RTObject<WNVIVpnProfile>*)profile success:(void (^)(WNVVpnManagementErrorStatus))success failure:(void (^)(NSError*))failure;

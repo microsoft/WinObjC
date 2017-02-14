@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="Globals">
     <HasSharedItems>true</HasSharedItems>
@@ -9,12 +9,16 @@
     <SharedGUID>{1A3847F4-5684-4B1C-8AAA-24A80180D8D6}</SharedGUID>
   </PropertyGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddArcToPointViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddArcViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddCurveToPointViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddElipseViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddLineToPointViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddPathViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddQuadCurveToPointViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddRectViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddRoundedRectViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathApplyCurveViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathApplyViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathCloseSubpathViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathContainsPointViewController.h" />

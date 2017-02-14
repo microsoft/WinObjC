@@ -36,12 +36,7 @@ void assertOrderedSetContent(NSOrderedSet* set, NSObject* first, ...) {
 }
 
 NSString* getPathToFile(NSString* fileName) {
-    static StrongId<NSString*> refPath = []() {
-        char fullPath[_MAX_PATH];
-        GetModuleFileNameA(NULL, fullPath, _MAX_PATH);
-        return [@(fullPath) stringByDeletingLastPathComponent];
-    }();
-    return [refPath stringByAppendingPathComponent:fileName];
+    return [[[NSFileManager defaultManager] currentDirectoryPath] stringByAppendingPathComponent:fileName];
 }
 
 void createFileWithContentAndVerify(NSString* fileName, NSString* content) {

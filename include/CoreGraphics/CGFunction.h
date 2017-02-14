@@ -16,6 +16,9 @@
 #pragma once
 
 #import <CoreGraphics/CoreGraphicsExport.h>
+
+typedef struct __CGFunction* CGFunctionRef;
+
 #import <CoreGraphics/CGGeometry.h>
 
 typedef void (*CGFunctionEvaluateCallback)(void* info, const float* inData, float* outData);

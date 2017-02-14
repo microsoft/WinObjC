@@ -31,8 +31,6 @@ const CFStringRef kCTBackgroundFillColorAttributeName = static_cast<CFStringRef>
 const CFStringRef kCTBackgroundCornerRadiusAttributeName = static_cast<CFStringRef>(@"kCTBackgroundCornerRadiusAttributeName");
 const CFStringRef kCTBackgroundLineWidthAttributeName = static_cast<CFStringRef>(@"kCTBackgroundLineWidthAttributeName");
 
-static IWLazyClassLookup _LazyUIColor("UIColor");
-
 @implementation _CTRun : NSObject
 - (void)dealloc {
     _stringFragment = nil;
@@ -279,16 +277,15 @@ void CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange) {
         return;
     }
 
-    id fontColor = [curRun->_attributes objectForKey:(id)kCTForegroundColorAttributeName];
-    if (fontColor == nil) {
+    CGColorRef fontColor = reinterpret_cast<CGColorRef>([curRun->_attributes objectForKey:(id)kCTForegroundColorAttributeName]);
+    if (!fontColor) {
         CFBooleanRef useContextColor =
             static_cast<CFBooleanRef>([curRun->_attributes objectForKey:(id)kCTForegroundColorFromContextAttributeName]);
         if (!useContextColor || !CFBooleanGetValue(useContextColor)) {
-            fontColor = [_LazyUIColor blackColor];
-            CGContextSetFillColorWithColor(ctx, reinterpret_cast<CGColorRef>(fontColor));
+            CGContextSetRGBFillColor(ctx, 0.0, 0.0, 0.0, 1.0);
         }
     } else {
-        CGContextSetFillColorWithColor(ctx, reinterpret_cast<CGColorRef>(fontColor));
+        CGContextSetFillColorWithColor(ctx, fontColor);
     }
 
     if (textRange.location == 0L && (textRange.length == 0L || textRange.length == curRun->_dwriteGlyphRun.glyphCount)) {

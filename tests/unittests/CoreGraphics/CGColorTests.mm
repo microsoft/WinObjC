@@ -23,7 +23,7 @@
     EXPECT_EQ((a)[2], (b)[2]);     \
     EXPECT_EQ((a)[3], (b)[3])
 
-TEST(CGColor, CGColorGetComponents) {
+DISABLED_TEST(CGColor, CGColorGetComponents) {
     CGFloat colors[] = { 1, 0, 0, 1 }; // bright red
 
     CGColorSpaceRef clrRgb = CGColorSpaceCreateDeviceRGB();
@@ -42,7 +42,7 @@ TEST(CGColor, CGColorGetComponents) {
     CGColorSpaceRelease(clrRgb);
 }
 
-TEST(CGColor, CGColorEquals) {
+DISABLED_TEST(CGColor, CGColorEquals) {
     CGFloat colors[] = { 1, 0, 0, 1 }; // bright red
 
     CGColorSpaceRef clrRgb = CGColorSpaceCreateDeviceRGB();

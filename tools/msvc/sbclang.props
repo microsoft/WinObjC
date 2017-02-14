@@ -52,6 +52,7 @@
     <StarboardLinkObjCRuntime Condition="'$(StarboardLinkObjCRuntime)' == ''">true</StarboardLinkObjCRuntime>
     <StarboardObjCRuntimeLib>libobjc2.lib</StarboardObjCRuntimeLib>
     <StarboardLinkWholeArchive Condition="'$(StarboardLinkWholeArchive)' == ''">false</StarboardLinkWholeArchive>
+    <CopyStarboardLibraries Condition="'$(CopyStarboardLibraries)' == '' And '$(ConfigurationType)' == 'Application'">true</CopyStarboardLibraries>
   </PropertyGroup>
   
   <!-- This need to be an absolute path, so we can successfully filter duplicates -->

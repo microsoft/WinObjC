@@ -101,7 +101,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 @interface WPSSpatialCoordinateSystem : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (id /* WFNMatrix4x4* */)tryGetTransformTo:(WPSSpatialCoordinateSystem*)target;
 @end
@@ -118,7 +118,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 + (WPSSpatialAnchor*)tryCreateWithPositionRelativeTo:(WPSSpatialCoordinateSystem*)coordinateSystem position:(WFNVector3*)position;
 + (WPSSpatialAnchor*)tryCreateWithPositionAndOrientationRelativeTo:(WPSSpatialCoordinateSystem*)coordinateSystem position:(WFNVector3*)position orientation:(WFNQuaternion*)orientation;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WPSSpatialCoordinateSystem* coordinateSystem;
 @property (readonly) WPSSpatialCoordinateSystem* rawCoordinateSystem;
@@ -136,7 +136,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 @interface WPSSpatialAnchorRawCoordinateSystemAdjustedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFNMatrix4x4* oldRawCoordinateSystemToNewRawCoordinateSystemTransform;
 @end
@@ -150,7 +150,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 @interface WPSSpatialAnchorStore : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (NSDictionary* /* NSString *, WPSSpatialAnchor* */)getAllSavedAnchors;
 - (BOOL)trySave:(NSString *)id anchor:(WPSSpatialAnchor*)anchor;
@@ -168,7 +168,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 @interface WPSSpatialLocator : RTObject
 + (WPSSpatialLocator*)getDefault;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WPSSpatialLocatability locatability;
 - (EventRegistrationToken)addLocatabilityChangedEvent:(void(^)(WPSSpatialLocator*, RTObject*))del;
@@ -195,7 +195,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 @interface WPSSpatialLocatorPositionalTrackingDeactivatingEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL canceled;
 @end
@@ -209,7 +209,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 @interface WPSSpatialLocation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFNQuaternion* absoluteAngularAcceleration;
 @property (readonly) WFNQuaternion* absoluteAngularVelocity;
@@ -228,7 +228,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 @interface WPSSpatialLocatorAttachedFrameOfReference : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WFNVector3* relativePosition;
 @property (retain) WFNQuaternion* relativeOrientation;
@@ -246,7 +246,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 @interface WPSSpatialStationaryFrameOfReference : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WPSSpatialCoordinateSystem* coordinateSystem;
 @end
@@ -288,7 +288,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 + (WPSSpatialBoundingVolume*)fromSphere:(WPSSpatialCoordinateSystem*)coordinateSystem sphere:(WPSSpatialBoundingSphere*)sphere;
 + (WPSSpatialBoundingVolume*)fromFrustum:(WPSSpatialCoordinateSystem*)coordinateSystem frustum:(WPSSpatialBoundingFrustum*)frustum;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @end
 

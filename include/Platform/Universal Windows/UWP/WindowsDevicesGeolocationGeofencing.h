@@ -82,7 +82,7 @@ OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_GEOFENCING_EXPORT
 + (WDGGGeofence*)makeWithMonitorStatesAndDwellTime:(NSString *)id geoshape:(RTObject<WDGIGeoshape>*)geoshape monitoredStates:(WDGGMonitoredGeofenceStates)monitoredStates singleUse:(BOOL)singleUse dwellTime:(WFTimeSpan*)dwellTime ACTIVATOR;
 + (WDGGGeofence*)makeWithMonitorStatesDwellTimeStartTimeAndDuration:(NSString *)id geoshape:(RTObject<WDGIGeoshape>*)geoshape monitoredStates:(WDGGMonitoredGeofenceStates)monitoredStates singleUse:(BOOL)singleUse dwellTime:(WFTimeSpan*)dwellTime startTime:(WFDateTime*)startTime duration:(WFTimeSpan*)duration ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFTimeSpan* duration;
 @property (readonly) WFTimeSpan* dwellTime;
@@ -102,7 +102,7 @@ OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_GEOFENCING_EXPORT
 OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_GEOFENCING_EXPORT
 @interface WDGGGeofenceMonitor : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSMutableArray* /* WDGGGeofence* */ geofences;
 @property (readonly) WDGGeoposition* lastKnownGeoposition;
@@ -124,7 +124,7 @@ OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_GEOFENCING_EXPORT
 OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_GEOFENCING_EXPORT
 @interface WDGGGeofenceStateChangeReport : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDGGGeofence* geofence;
 @property (readonly) WDGGeoposition* geoposition;

@@ -88,7 +88,7 @@ OBJCUWP_WINDOWS_UI_POPUPS_EXPORT
 + (WUPMessageDialog*)make:(NSString *)content ACTIVATOR;
 + (WUPMessageDialog*)makeWithTitle:(NSString *)content title:(NSString *)title ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * title;
 @property WUPMessageDialogOptions options;
@@ -107,12 +107,12 @@ OBJCUWP_WINDOWS_UI_POPUPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_POPUPS_EXPORT
 @interface WUPUICommand : RTObject <WUPIUICommand>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WUPUICommand*)make:(NSString *)label ACTIVATOR;
 + (WUPUICommand*)makeWithHandler:(NSString *)label action:(WUPUICommandInvokedHandler)action ACTIVATOR;
 + (WUPUICommand*)makeWithHandlerAndId:(NSString *)label action:(WUPUICommandInvokedHandler)action commandId:(RTObject*)commandId ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * label;
 @property (copy) WUPUICommandInvokedHandler invoked;
@@ -127,9 +127,9 @@ OBJCUWP_WINDOWS_UI_POPUPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_POPUPS_EXPORT
 @interface WUPUICommandSeparator : RTObject <WUPIUICommand>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * label;
 @property (copy) WUPUICommandInvokedHandler invoked;
@@ -144,9 +144,9 @@ OBJCUWP_WINDOWS_UI_POPUPS_EXPORT
 
 OBJCUWP_WINDOWS_UI_POPUPS_EXPORT
 @interface WUPPopupMenu : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSMutableArray* /* RTObject<WUPIUICommand>* */ commands;
 - (void)showAsync:(WFPoint*)invocationPoint success:(void (^)(RTObject<WUPIUICommand>*))success failure:(void (^)(NSError*))failure;

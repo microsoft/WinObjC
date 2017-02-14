@@ -116,9 +116,9 @@ OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
 
 OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
 @interface WPPContactAddress : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * streetAddress;
 @property (retain) NSString * region;
@@ -136,9 +136,9 @@ OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
 OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
 @interface WPPContactInformation : RTObject <WPPIContactInformation>
 + (void)parseVcardAsync:(RTObject<WSSIInputStream>*)vcard success:(void (^)(WPPContactInformation*))success failure:(void (^)(NSError*))failure;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * honorificSuffix;
 @property (retain) NSString * honorificPrefix;
@@ -164,7 +164,7 @@ OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
 + (void)createOrOpenAsyncWithSuccess:(void (^)(WPPContactStore*))success failure:(void (^)(NSError*))failure;
 + (void)createOrOpenWithOptionsAsync:(WPPContactStoreSystemAccessMode)access sharing:(WPPContactStoreApplicationAccessMode)sharing success:(void (^)(WPPContactStore*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) uint64_t revisionNumber;
 - (void)findContactByRemoteIdAsync:(NSString *)id success:(void (^)(WPPStoredContact*))success failure:(void (^)(NSError*))failure;
@@ -190,7 +190,7 @@ OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
 + (WPPStoredContact*)makeStoredContact:(WPPContactStore*)store ACTIVATOR;
 + (WPPStoredContact*)makeStoredContactFromInformation:(WPPContactStore*)store contact:(WPPContactInformation*)contact ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * honorificSuffix;
 @property (retain) NSString * honorificPrefix;
@@ -265,9 +265,9 @@ OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
 
 OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
 @interface WPPContactQueryOptions : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WPPContactQueryResultOrdering orderBy;
 @property (readonly) NSMutableArray* /* NSString * */ desiredFields;
@@ -282,7 +282,7 @@ OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
 OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
 @interface WPPContactQueryResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)getContactCountAsyncWithSuccess:(void (^)(unsigned int))success failure:(void (^)(NSError*))failure;
 - (void)getContactsAsyncWithSuccess:(void (^)(NSArray* /* WPPStoredContact* */))success failure:(void (^)(NSError*))failure;
@@ -299,7 +299,7 @@ OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
 OBJCUWP_WINDOWS_PHONE_PERSONALINFORMATION_EXPORT
 @interface WPPContactChangeRecord : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WPPContactChangeType changeType;
 @property (readonly) NSString * id;

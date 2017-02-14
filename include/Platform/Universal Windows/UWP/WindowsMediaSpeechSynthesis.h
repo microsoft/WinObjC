@@ -50,7 +50,7 @@ typedef unsigned WMSVoiceGender;
 OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
 @interface WMSVoiceInformation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * Description;
 @property (readonly) NSString * displayName;
@@ -173,7 +173,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
 OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
 @interface WMSSpeechSynthesisStream : RTObject <WSSIRandomAccessStreamWithContentType, WSSIContentTypeProvider, WSSIRandomAccessStream, WSSIOutputStream, WFIClosable, WSSIInputStream>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* RTObject<WMIMediaMarker>* */ markers;
 @property (readonly) NSString * contentType;
@@ -199,9 +199,9 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
 
 OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
 @interface WMSSpeechSynthesizer : RTObject <WFIClosable>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WMSVoiceInformation* voice;
 + (NSArray* /* WMSVoiceInformation* */)allVoices;

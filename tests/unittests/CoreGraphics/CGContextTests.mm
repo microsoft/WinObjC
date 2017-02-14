@@ -16,111 +16,25 @@
 
 #import <TestFramework.h>
 
-#define __CGCONTEXTIMPL_TEST_FRIENDS                                        \
-    FRIEND_TEST(CGContext, CGContextSetPatternPhasePatternIsNil);           \
-    FRIEND_TEST(CGContext, CGContextSetPatternPhaseColorObjectIsFillColor); \
-    FRIEND_TEST(CGContext, CGContextSetPatternPhasePositiveChange);         \
-    FRIEND_TEST(CGContext, CGContextSetPatternPhaseNegativeChange);
-
 #import <Starboard.h>
-#import "CGPatternInternal.h"
+#import <Foundation/Foundation.h>
 #import <CoreGraphics/CGContext.h>
+#import <CoreGraphics/CGBitmapContext.h>
+#import <CoreGraphics/CGPattern.h>
+#import <CppUtils.h>
+
+#if TARGET_OS_WIN32
+#include <COMIncludes.h>
+#import <wrl/client.h>
+#import <d2d1.h>
+#import <wincodec.h>
+#include <COMIncludes_end.h>
+
 #import "CGContextInternal.h"
-#import "CGContextImpl.h"
-#import <Foundation\Foundation.h>
-#import <CoreGraphics\CGBitmapContext.h>
-#import <CoreGraphics\CGPattern.h>
-#import "CppUtils.h"
+#import "TestUtils.h"
 
-void _DrawCustomPattern(void* info, CGContextRef context) {
-    // Draw a circle inset from the pattern size
-    CGRect circleRect = CGRectMake(0, 0, 50, 50);
-    circleRect = CGRectInset(circleRect, 4, 4);
-    CGContextFillEllipseInRect(context, circleRect);
-    CGContextStrokeEllipseInRect(context, circleRect);
-}
-
-TEST(CGContext, CGContextSetPatternPhasePatternIsNil) {
-    // Given
-    CGContextRef ctx = _CGBitmapContextCreateWithFormat(1000, 1000, _ColorBGR);
-    CGContextImpl* backing = CGContextGetBacking(ctx);
-
-    backing->curState->curFillColorObject = nil;
-
-    // When
-    CGContextSetPatternPhase(ctx, CGSizeMake(100, 100));
-
-    // Then
-    ASSERT_EQ(0, backing->curState->curFillColorObject);
-
-    CGContextRelease(ctx);
-}
-
-TEST(CGContext, CGContextSetPatternPhaseColorObjectIsFillColor) {
-    // Given
-    CGContextRef ctx = _CGBitmapContextCreateWithFormat(1000, 1000, _ColorBGR);
-    CGContextImpl* backing = CGContextGetBacking(ctx);
-
-    CGContextSetFillColorWithColor(ctx, [UIColor blueColor].CGColor);
-
-    // When
-    CGContextSetPatternPhase(ctx, CGSizeMake(100, 100));
-
-    // Then
-    ASSERT_EQ(0, (CGColorRef)backing->curState->curFillColorObject);
-
-    CGContextRelease(ctx);
-}
-
-TEST(CGContext, CGContextSetPatternPhasePositiveChange) {
-    // Given
-    CGContextRef ctx = _CGBitmapContextCreateWithFormat(1000, 1000, _ColorBGR);
-    CGContextImpl* backing = CGContextGetBacking(ctx);
-
-    CGRect boundsRect = CGRectMake(0, 0, 1000, 1000);
-    const CGPatternCallbacks callbacks = { 0, &_DrawCustomPattern, NULL };
-    CGFloat alpha = 1;
-    CGAffineTransform transform = CGAffineTransformMakeTranslation(10, 10);
-    CGPatternRef pattern = CGPatternCreate(NULL, boundsRect, transform, 50, 50, kCGPatternTilingConstantSpacing, true, &callbacks);
-    CGContextSetFillPattern(ctx, pattern, &alpha);
-    CGPatternRelease(pattern);
-
-    // When
-    CGContextSetPatternPhase(ctx, CGSizeMake(100, 200));
-
-    // Then
-    CGPattern* actualPattern = (CGPattern*)backing->curState->curFillColorObject;
-    CGAffineTransform matrix = [actualPattern getPatternTransform];
-    ASSERT_EQ(110, matrix.tx);
-    ASSERT_EQ(210, matrix.ty);
-
-    CGContextRelease(ctx);
-}
-
-TEST(CGContext, CGContextSetPatternPhaseNegativeChange) {
-    // Given
-    CGContextRef ctx = _CGBitmapContextCreateWithFormat(1000, 1000, _ColorBGR);
-    CGContextImpl* backing = CGContextGetBacking(ctx);
-
-    CGRect boundsRect = CGRectMake(0, 0, 1000, 1000);
-    const CGPatternCallbacks callbacks = { 0, &_DrawCustomPattern, NULL };
-    CGFloat alpha = 1;
-    CGAffineTransform transform = CGAffineTransformMakeTranslation(300, 500);
-    CGPatternRef pattern = CGPatternCreate(NULL, boundsRect, transform, 50, 50, kCGPatternTilingConstantSpacing, true, &callbacks);
-    CGContextSetFillPattern(ctx, pattern, &alpha);
-    CGPatternRelease(pattern);
-
-    // When
-    CGContextSetPatternPhase(ctx, CGSizeMake(-100, -200));
-
-    // Then
-    CGPattern* actualPattern = (CGPattern*)backing->curState->curFillColorObject;
-    CGAffineTransform matrix = [actualPattern getPatternTransform];
-    ASSERT_EQ(200, matrix.tx);
-    ASSERT_EQ(300, matrix.ty);
-
-    CGContextRelease(ctx);
-}
+using namespace Microsoft::WRL;
+#endif
 
 static NSString* const kPointsKey = @"PointsKey";
 static NSString* const kTypeKey = @"TypeKey";
@@ -186,7 +100,7 @@ void cgContextPathCompare(NSArray* expected, NSArray* result) {
     }];
 }
 
-TEST(CGContext, CGContextCopyPathEllipse) {
+DISABLED_TEST(CGContext, CGContextCopyPathEllipse) {
     CGColorSpaceRef rgbColorSpace = CGColorSpaceCreateDeviceRGB();
     CGContextRef context = CGBitmapContextCreate(0, 0, 0, 8, 0, rgbColorSpace, 0);
     // Ellipse Path Copy
@@ -232,7 +146,7 @@ TEST(CGContext, CGContextCopyPathEllipse) {
     CGContextRelease(context);
     CGColorSpaceRelease(rgbColorSpace);
 }
-TEST(CGContext, CGContextCopyPathArc) {
+DISABLED_TEST(CGContext, CGContextCopyPathArc) {
     CGColorSpaceRef rgbColorSpace = CGColorSpaceCreateDeviceRGB();
     CGContextRef context = CGBitmapContextCreate(0, 0, 0, 8, 0, rgbColorSpace, 0);
 
@@ -275,7 +189,7 @@ TEST(CGContext, CGContextCopyPathArc) {
     CGContextRelease(context);
     CGColorSpaceRelease(rgbColorSpace);
 }
-TEST(CGContext, CGContextCopyPathCGPathApplyAddArcToPoint) {
+DISABLED_TEST(CGContext, CGContextCopyPathCGPathApplyAddArcToPoint) {
     CGColorSpaceRef rgbColorSpace = CGColorSpaceCreateDeviceRGB();
     CGContextRef context = CGBitmapContextCreate(0, 0, 0, 8, 0, rgbColorSpace, 0);
 
@@ -313,7 +227,7 @@ TEST(CGContext, CGContextCopyPathCGPathApplyAddArcToPoint) {
     CGColorSpaceRelease(rgbColorSpace);
 }
 
-TEST(CGPath, CGContextCopyPathCGPathAddQuadCurveToPoint) {
+DISABLED_TEST(CGPath, CGContextCopyPathCGPathAddQuadCurveToPoint) {
     CGColorSpaceRef rgbColorSpace = CGColorSpaceCreateDeviceRGB();
     CGContextRef context = CGBitmapContextCreate(0, 0, 0, 8, 0, rgbColorSpace, 0);
 
@@ -363,9 +277,206 @@ TEST(CGPath, CGContextCopyPathCGPathAddQuadCurveToPoint) {
     CGColorSpaceRelease(rgbColorSpace);
 }
 
+#if TARGET_OS_WIN32
+class ContextCoordinateTest
+    : public ::testing::TestWithParam<::testing::tuple<CGAffineTransform, std::vector<CGPoint>, std::vector<CGPoint>>> {
+public:
+    woc::unique_cf<CGContextRef> context;
+
+    static ComPtr<ID2D1RenderTarget> renderTarget;
+    static void SetUpTestCase() {
+        // TODO GH#1124: When CGBitmapContext lands, we don't need to do this manually.
+        MULTI_QI multi{
+            .pIID = &IID_IWICImagingFactory, .pItf = nullptr,
+        };
+
+        CGSize dimensions{ 100, 100 };
+
+        ComPtr<IWICImagingFactory> wicFactory;
+        THROW_IF_FAILED(CoCreateInstanceFromApp(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, nullptr, 1, &multi));
+        wicFactory.Attach(static_cast<IWICImagingFactory*>(multi.pItf));
+
+        ComPtr<IWICBitmap> wicBitmap;
+        THROW_IF_FAILED(wicFactory->CreateBitmap(dimensions.width,
+                                                 dimensions.height,
+                                                 GUID_WICPixelFormat32bppPRGBA,
+                                                 WICBitmapCacheOnDemand,
+                                                 &wicBitmap));
+
+        ComPtr<ID2D1Factory> d2dFactory;
+        FAIL_FAST_IF_FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory), &d2dFactory));
+
+        THROW_IF_FAILED(d2dFactory->CreateWicBitmapRenderTarget(wicBitmap.Get(), D2D1::RenderTargetProperties(), &renderTarget));
+    }
+
+    static void TearDownTestCase() {
+        renderTarget = nullptr;
+    }
+
+    virtual void SetUp() {
+        context.reset(_CGContextCreateWithD2DRenderTarget(renderTarget.Get()));
+        ASSERT_NE(nullptr, context);
+
+        CGAffineTransform contextTransform = ::testing::get<0>(GetParam());
+        if (!CGAffineTransformIsIdentity(contextTransform)) {
+            CGContextConcatCTM(context.get(), contextTransform);
+        }
+    }
+};
+
+/* static */
+ComPtr<ID2D1RenderTarget> ContextCoordinateTest::renderTarget;
+
+TEST_P(ContextCoordinateTest, ConvertToDeviceSpace) {
+    const std::vector<CGPoint>& userSpacePoints = ::testing::get<1>(GetParam());
+    const std::vector<CGPoint>& deviceSpacePoints = ::testing::get<2>(GetParam());
+    for (unsigned int i = 0; i < userSpacePoints.size(); ++i) {
+        const CGPoint& userSpacePoint = userSpacePoints[i];
+        const CGPoint& deviceSpacePoint = deviceSpacePoints[i];
+        EXPECT_EQ(deviceSpacePoint, CGContextConvertPointToDeviceSpace(context.get(), userSpacePoint));
+    }
+}
+
+TEST_P(ContextCoordinateTest, ConvertToUserSpace) {
+    const std::vector<CGPoint>& userSpacePoints = ::testing::get<1>(GetParam());
+    const std::vector<CGPoint>& deviceSpacePoints = ::testing::get<2>(GetParam());
+    for (unsigned int i = 0; i < userSpacePoints.size(); ++i) {
+        const CGPoint& userSpacePoint = userSpacePoints[i];
+        const CGPoint& deviceSpacePoint = deviceSpacePoints[i];
+        EXPECT_EQ(userSpacePoint, CGContextConvertPointToUserSpace(context.get(), deviceSpacePoint));
+    }
+}
+
+// clang-format off
+::testing::tuple<CGAffineTransform, std::vector<CGPoint>, std::vector<CGPoint>> coordinateTestTuples[] = {
+    // { Context Transform, Vector of user points, Vector of device points }
+    {
+        // CoreGraphics is a LLO drawing system, but Direct2D is ULO.
+        // In device space, all coordinates are therefore inverted on the Y axis.
+        // Our test images are 100x100, so 0, 0 maps to 100, 100.
+        CGAffineTransformIdentity,
+        { {  0,   0}, { 50,  50}, {100, 100} },
+        { {  0, 100}, { 50,  50}, {100,   0} },
+    },
+    {
+        // Coordinate system scaled by 2x
+        CGAffineTransformMakeScale(2.0, 2.0),
+        { {  0,   0}, { 25,  25}, { 50,  50} },
+        { {  0, 100}, { 50,  50}, {100,   0} },
+    },
+    {
+        // Coordinate system translated by 20, 20
+        CGAffineTransformMakeTranslation(20, 20),
+        { {  0,   0}, { 50,  50}, {100, 100} },
+        { { 20,  80}, { 70,  30}, {120, -20} },
+    },
+    {
+        // Coordinate system rotated by 45deg
+        // Rotation should be COUNTERCLOCKWISE by default.
+        CGAffineTransformMakeRotation(45. * M_PI / 180.),
+        { {  0,   0}, { 20. * (M_SQRT2/2.), 20. * (M_SQRT2/2.)}, {                 0.,                        20.} },
+        { {  0, 100}, {                 0.,                80.}, {-20. * (M_SQRT2/2.), 100. - (20. * (M_SQRT2/2))} },
+    },
+    {
+        // Coordinate system transformed into ULO
+        CGAffineTransformScale(CGAffineTransformMakeTranslation(0, 100), 1.0, -1.0),
+        { {  0,   0}, { 50,  50}, {100, 100} },
+        { {  0,   0}, { 50,  50}, {100, 100} },
+    },
+    {
+        // Coordinate system transformed into ULO + 2x scale
+        CGAffineTransformScale(CGAffineTransformScale(CGAffineTransformMakeTranslation(0, 100), 1.0, -1.0), 2.0, 2.0),
+        { {  0,   0}, { 25,  25}, { 50,  50} },
+        { {  0,   0}, { 50,  50}, {100, 100} },
+    },
+    {
+        // Coordinate system transformed into ULO + 45deg rotation
+        // Rotation should now be CLOCKWISE.
+        CGAffineTransformRotate(CGAffineTransformScale(CGAffineTransformMakeTranslation(0, 100), 1.0, -1.0), 45. * M_PI / 180.),
+        { {  0,   0}, { 20. * (M_SQRT2/2.), 20. * (M_SQRT2/2.)}, {                 0.,               20.} },
+        { {  0,   0}, {                 0.,                20.}, {-20. * (M_SQRT2/2.), 20. * (M_SQRT2/2)} },
+    },
+};
+// clang-format on
+
+INSTANTIATE_TEST_CASE_P(CGContextCoordinateSpace, ContextCoordinateTest, ::testing::ValuesIn(coordinateTestTuples));
+#endif
+
+TEST(CGContext, DrawAnImageIntoContext) {
+    woc::unique_cf<CGColorSpaceRef> rgbColorSpace(CGColorSpaceCreateDeviceRGB());
+
+    // Create a canvas context
+    woc::unique_cf<CGContextRef> context(CGBitmapContextCreate(
+        nullptr, 512, 256, 8, 4 * 512 /* bytesPerRow = bytesPerPixel*width*/, rgbColorSpace.get(), kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big));
+
+    // Load an image from file
+    CFDataRef data = (CFDataRef)[NSData dataWithContentsOfFile:getPathToFile(@"data/jpg1.jpg")];
+    woc::unique_cf<CGDataProviderRef> dataProvider(CGDataProviderCreateWithCFData(data));
+
+    woc::unique_cf<CGImageRef> cgImage(CGImageCreateWithJPEGDataProvider(dataProvider.get(), NULL, NO, kCGRenderingIntentDefault));
+    ASSERT_NE(cgImage, nullptr);
+
+    CGRect bounds = { 0, 0, 512, 256 };
+    CGAffineTransform flip = CGAffineTransformMakeScale(1, -1);
+    CGAffineTransform shift = CGAffineTransformTranslate(flip, 0, bounds.size.height * -1);
+    CGContextConcatCTM(context.get(), shift);
+
+    // Check the canvas context pixel before drawing
+    BYTE* dataPtr = static_cast<BYTE*>(CGBitmapContextGetData(context.get()));
+    ASSERT_NE(dataPtr, nullptr);
+
+    // Draw the image into the canvas context
+    CGContextDrawImage(context.get(), bounds, cgImage.get());
+
+    // Check the canvas context pixel after drawing
+    dataPtr = static_cast<BYTE*>(CGBitmapContextGetData(context.get()));
+    ASSERT_NE(dataPtr, nullptr);
+    // Check the first pixel value of the drawn image.
+    EXPECT_EQ(dataPtr[0], 0x98);
+}
+
+TEST(CGContext, DrawAContextImageIntoAContext) {
+    woc::unique_cf<CGColorSpaceRef> rgbColorSpace(CGColorSpaceCreateDeviceRGB());
+
+    // Create a bitmap context to draw into
+    woc::unique_cf<CGContextRef> contextImage(CGBitmapContextCreate(
+        nullptr, 10, 10, 8, 4 * 10 /* bytesPerRow = bytesPerPixel*width*/, rgbColorSpace.get(), kCGImageAlphaPremultipliedFirst));
+    ASSERT_NE(contextImage, nullptr);
+
+    // flood the bitmap context with a pretty color.
+    CGContextSetRGBFillColor(contextImage.get(), 1.0, 0.0, 0.0, 1.0);
+    CGContextFillRect(contextImage.get(), { 0, 0, 10, 10 });
+
+    // Create a image out of the bitmap context
+    woc::unique_cf<CGImageRef> image(CGBitmapContextCreateImage(contextImage.get()));
+    ASSERT_NE(image, nullptr);
+
+    // This will be the pseudo canvas context which we will draw into
+    woc::unique_cf<CGContextRef> context(CGBitmapContextCreate(
+        nullptr, 512, 256, 8, 4 * 512 /* bytesPerRow = bytesPerPixel*width*/, rgbColorSpace.get(), kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big));
+
+    CGRect bounds = { 0, 0, 512, 256 };
+
+    CGAffineTransform flip = CGAffineTransformMakeScale(1, -1);
+    CGAffineTransform shift = CGAffineTransformTranslate(flip, 0, bounds.size.height * -1);
+    CGContextConcatCTM(context.get(), shift);
+
+    // Check the canvas context pixel before drawing
+    BYTE* dataPtr = static_cast<BYTE*>(CGBitmapContextGetData(context.get()));
+    ASSERT_NE(dataPtr, nullptr);
+
+    // Draw the image into the canvas context
+    CGContextDrawImage(context.get(), bounds, image.get());
+
+    // Check the canvas context pixel after drawing
+    dataPtr = static_cast<BYTE*>(CGBitmapContextGetData(context.get()));
+    ASSERT_NE(dataPtr, nullptr);
+    EXPECT_EQ(dataPtr[0], 0xff);
+}
+
 TEST(CGContext, TextPositionShouldBeInMatrix) {
-    woc::unique_cf<CGColorSpaceRef> rgbColorSpace{ CGColorSpaceCreateDeviceRGB() };
-    woc::unique_cf<CGContextRef> context{ CGBitmapContextCreate(0, 0, 0, 8, 0, rgbColorSpace.get(), 0) };
+    woc::unique_cf<CGColorSpaceRef> grayColorSpace{ CGColorSpaceCreateDeviceGray() };
+    woc::unique_cf<CGContextRef> context{ CGBitmapContextCreate(0, 1, 1, 8, 1, grayColorSpace.get(), kCGImageAlphaOnly) };
     EXPECT_EQ(CGAffineTransformIdentity, CGContextGetTextMatrix(context.get()));
     EXPECT_EQ(CGPointMake(0, 0), CGContextGetTextPosition(context.get()));
     CGContextSetTextPosition(context.get(), 25, 50);

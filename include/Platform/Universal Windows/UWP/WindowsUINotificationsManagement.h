@@ -50,7 +50,7 @@ typedef unsigned WUNMUserNotificationListenerAccessStatus;
 OBJCUWP_WINDOWS_UI_NOTIFICATIONS_MANAGEMENT_EXPORT
 @interface WUNMUserNotificationListener : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 + (WUNMUserNotificationListener*)current;
 - (EventRegistrationToken)addNotificationChangedEvent:(void(^)(WUNMUserNotificationListener*, WUNUserNotificationChangedEventArgs*))del;

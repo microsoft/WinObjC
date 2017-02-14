@@ -130,7 +130,7 @@ OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
 @interface WUASettingsCommand : RTObject <WUPIUICommand>
 + (WUASettingsCommand*)makeSettingsCommand:(RTObject*)settingsCommandId label:(NSString *)label handler:(WUPUICommandInvokedHandler)handler ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * label;
 @property (copy) WUPUICommandInvokedHandler invoked;
@@ -148,7 +148,7 @@ OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
 @interface WUAWebAccountProviderCommand : RTObject
 + (WUAWebAccountProviderCommand*)makeWebAccountProviderCommand:(WSCWebAccountProvider*)webAccountProvider invoked:(WUAWebAccountProviderCommandInvokedHandler)invoked ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUAWebAccountProviderCommandInvokedHandler invoked;
 @property (readonly) WSCWebAccountProvider* webAccountProvider;
@@ -164,7 +164,7 @@ OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
 @interface WUAWebAccountCommand : RTObject
 + (WUAWebAccountCommand*)makeWebAccountCommand:(WSCWebAccount*)webAccount invoked:(WUAWebAccountCommandInvokedHandler)invoked actions:(WUASupportedWebAccountActions)actions ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUASupportedWebAccountActions actions;
 @property (readonly) WUAWebAccountCommandInvokedHandler invoked;
@@ -180,7 +180,7 @@ OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
 OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
 @interface WUAWebAccountInvokedArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUAWebAccountAction action;
 @end
@@ -196,7 +196,7 @@ OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
 + (WUACredentialCommand*)makeCredentialCommand:(WSCPasswordCredential*)passwordCredential ACTIVATOR;
 + (WUACredentialCommand*)makeCredentialCommandWithHandler:(WSCPasswordCredential*)passwordCredential deleted:(WUACredentialCommandCredentialDeletedHandler)deleted ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUACredentialCommandCredentialDeletedHandler credentialDeleted;
 @property (readonly) WSCPasswordCredential* passwordCredential;
@@ -211,7 +211,7 @@ OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
 OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
 @interface WUAAccountsSettingsPaneEventDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)complete;
 @end
@@ -225,7 +225,7 @@ OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
 OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
 @interface WUAAccountsSettingsPaneCommandsRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * headerText;
 @property (readonly) NSMutableArray* /* WUASettingsCommand* */ commands;
@@ -250,7 +250,7 @@ OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
 + (WUAAccountsSettingsPane*)getForCurrentView;
 + (void)show;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (EventRegistrationToken)addAccountCommandsRequestedEvent:(void(^)(WUAAccountsSettingsPane*, WUAAccountsSettingsPaneCommandsRequestedEventArgs*))del;
 - (void)removeAccountCommandsRequestedEvent:(EventRegistrationToken)tok;
@@ -265,7 +265,7 @@ OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
 OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
 @interface WUASettingsPaneCommandsRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSMutableArray* /* WUASettingsCommand* */ applicationCommands;
 @end
@@ -279,7 +279,7 @@ OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
 OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
 @interface WUASettingsPaneCommandsRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUASettingsPaneCommandsRequest* request;
 @end
@@ -295,7 +295,7 @@ OBJCUWP_WINDOWS_UI_APPLICATIONSETTINGS_EXPORT
 + (WUASettingsPane*)getForCurrentView;
 + (void)show;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 + (WUASettingsEdgeLocation)edge;
 - (EventRegistrationToken)addCommandsRequestedEvent:(void(^)(WUASettingsPane*, WUASettingsPaneCommandsRequestedEventArgs*))del;

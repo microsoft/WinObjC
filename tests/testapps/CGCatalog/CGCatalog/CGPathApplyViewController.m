@@ -19,11 +19,6 @@
 
 @implementation CGPathApplyViewController
 
-- (id)initWithDrawingOptions:(CGDrawOptions*)options {
-    self = [super initWithDrawingOptions:options];
-    return self;
-}
-
 - (void)loadView {
     [super loadView];
 
@@ -37,7 +32,6 @@
         CGContextSetLineDash(currentContext, self.options.linePhase, self.options.lineDashPattern, self.options.lineDashCount);
 
         CGMutablePathRef thepath = CGPathCreateMutable();
-        void CGPathApplyCallback(void* context, const CGPathElement* element);
 
         CGPathMoveToPoint(thepath, NULL, 200, 35);
         CGPathAddLineToPoint(thepath, NULL, 165, 100);
@@ -77,7 +71,7 @@
     [super addComparisonLabel];
 }
 
-void CGPathApplyCallback(void* context, const CGPathElement* element) {
+static void CGPathApplyCallback(void* context, const CGPathElement* element) {
     CGPoint* points = element->points;
     CGContextMoveToPoint(context, 200, 125);
     CGContextAddLineToPoint(context, points[0].x, points[0].y);

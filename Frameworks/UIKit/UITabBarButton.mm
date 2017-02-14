@@ -45,6 +45,8 @@
     CGRect rect;
     rect = [self bounds];
 
+    CGContextRef context = UIGraphicsGetCurrentContext();
+
     id tabBar = [self superview];
     id selectedItem = [tabBar selectedItem];
     if (selectedItem == _item) {
@@ -52,8 +54,8 @@
         if (selectionIndicatorImage != nil) {
             [selectionIndicatorImage drawInRect:rect];
         } else {
-            CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), (CGColorRef)[UIColor grayColor]);
-            CGContextFillRect(UIGraphicsGetCurrentContext(), rect);
+            CGContextSetFillColorWithColor(context, (CGColorRef)[UIColor grayColor]);
+            CGContextFillRect(context, rect);
         }
     }
 
@@ -107,28 +109,26 @@
         clipRect.origin.y = 5.0f;
         clipRect.size.width = rect.size.width - clipRect.origin.x - 3.0f;
         clipRect.size.height = rect.size.height - clipRect.origin.y - 13.0f;
-        CGContextSaveGState(UIGraphicsGetCurrentContext());
-        CGContextClipToRect(UIGraphicsGetCurrentContext(), clipRect);
-        CGContextDrawImage(UIGraphicsGetCurrentContext(), drawRect, CGBitmapContextGetImage(context));
-        CGContextRestoreGState(UIGraphicsGetCurrentContext());
+        CGContextSaveGState(context);
+        CGContextClipToRect(context, clipRect);
+        CGContextDrawImage(context, drawRect, CGBitmapContextGetImage(context));
+        CGContextRestoreGState(context);
 
         CGContextRelease(context);
     }
 
     NSString* title = [_item title];
     if (title != nil) {
+        _CGContextPushBeginDraw(context);
+        auto popEnd = wil::ScopeExit([context]() { _CGContextPopEndDraw(context); });
+
         CGSize size;
         id font = [UIFont defaultFont];
         size = [title sizeWithFont:font constrainedToSize:CGSizeMake(0.0f, 0.0f) lineBreakMode:UILineBreakModeClip];
 
-        CGRect textRect;
-        textRect.origin.y = rect.size.height - size.height;
-        textRect.origin.x = rect.origin.x;
-        textRect.size.width = rect.size.width;
-        textRect.size.height = size.height;
-        EbrCenterTextInRectVertically(&textRect, &size, font);
-
-        CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), (CGColorRef)[UIColor whiteColor]);
+        // Vertically center text
+        CGRect textRect = CGRectMake((rect.size.height - size.height) / 2.0, rect.origin.x, rect.size.width, size.height);
+        CGContextSetFillColorWithColor(context, CGColorGetConstantColor(kCGColorWhite));
         size = [title drawInRect:textRect withFont:font lineBreakMode:UILineBreakModeClip alignment:UITextAlignmentCenter];
     }
 }

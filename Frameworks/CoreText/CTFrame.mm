@@ -19,6 +19,7 @@
 
 #import "DWriteWrapper_CoreText.h"
 #import "CoreTextInternal.h"
+#import "CGContextInternal.h"
 #import "CGPathInternal.h"
 
 const CFStringRef kCTFrameProgressionAttributeName = static_cast<CFStringRef>(@"kCTFrameProgressionAttributeName");
@@ -113,8 +114,7 @@ void CTFrameDraw(CTFrameRef frameRef, CGContextRef ctx) {
     if (frame && ctx) {
         // Need to invert and translate coordinates so frame draws from top-left
         CGContextSaveGState(ctx);
-        CGRect boundingRect;
-        _CGPathGetBoundingBoxInternal(frame->_path.get(), &boundingRect);
+        CGRect boundingRect = CGPathGetBoundingBox(frame->_path.get());
         CGContextTranslateCTM(ctx, 0, boundingRect.size.height);
 
         // Invert Text Matrix and CTM so glyphs are drawn in correct orientation and correct position
@@ -122,6 +122,9 @@ void CTFrameDraw(CTFrameRef frameRef, CGContextRef ctx) {
         CGContextSetTextMatrix(
             ctx, CGAffineTransformMake(textMatrix.a, -textMatrix.b, textMatrix.c, -textMatrix.d, textMatrix.tx, textMatrix.ty));
         CGContextScaleCTM(ctx, 1.0f, -1.0f);
+
+        _CGContextPushBeginDraw(ctx);
+        auto popEnd = wil::ScopeExit([ctx]() { _CGContextPopEndDraw(ctx); });
 
         for (size_t i = 0; i < frame->_lineOrigins.size() && (frame->_lineOrigins[i].y < frame->_frameRect.size.height); ++i) {
             _CTLine* line = static_cast<_CTLine*>([frame->_lines objectAtIndex:i]);

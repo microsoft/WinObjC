@@ -480,27 +480,32 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
     // font 1
     NSURL* url = [NSURL fileURLWithPath:@"C:/Windows/Fonts/gadugi.ttf"];
     bool result = CTFontManagerRegisterFontsForURL((__bridge CFURLRef)(url), kCTFontManagerScopeProcess, NULL);
-    UIFont* font = [UIFont fontWithName:@"Gadugi" size:22.0];
-    CTTypesetterRef typesetter =
-        CTTypesetterCreateWithAttributedString((__bridge CFAttributedStringRef)[self getAttributedStringForFont:font]);
-    CFRange range = { 0, 11 };
-    CTLineRef line = CTTypesetterCreateLineWithOffset(typesetter, range, 0.0f);
-    CTLineDraw(line, context);
-    CFRelease(typesetter);
-    CFRelease(line);
+    if (result) {
+        UIFont* font = [UIFont fontWithName:@"Gadugi" size:22.0];
+        CTTypesetterRef typesetter =
+            CTTypesetterCreateWithAttributedString((__bridge CFAttributedStringRef)[self getAttributedStringForFont:font]);
+        CFRange range = { 0, 11 };
+        CTLineRef line = CTTypesetterCreateLineWithOffset(typesetter, range, 0.0f);
+        CTLineDraw(line, context);
+        CFRelease(typesetter);
+        CFRelease(line);
+    }
 
     // font 2
     url = [NSURL fileURLWithPath:@"C:/Windows/Fonts/times.ttf"];
     result = CTFontManagerRegisterFontsForURL((__bridge CFURLRef)(url), kCTFontManagerScopeProcess, NULL);
-    font = [UIFont fontWithName:@"Times New Roman" size:22.0];
-    typesetter = CTTypesetterCreateWithAttributedString((__bridge CFAttributedStringRef)[self getAttributedStringForFont:font]);
-    range = CFRangeMake(0, 11);
-    line = CTTypesetterCreateLineWithOffset(typesetter, range, 0.0f);
-    CGContextSetTextPosition(context, 0.0, 25.0);
+    if (result) {
+        UIFont* font = [UIFont fontWithName:@"Times New Roman" size:22.0];
+        CTTypesetterRef typesetter =
+            CTTypesetterCreateWithAttributedString((__bridge CFAttributedStringRef)[self getAttributedStringForFont:font]);
+        CFRange range = CFRangeMake(0, 11);
+        CTLineRef line = CTTypesetterCreateLineWithOffset(typesetter, range, 0.0f);
+        CGContextSetTextPosition(context, 0.0, 25.0);
 
-    CTLineDraw(line, context);
-    CFRelease(typesetter);
-    CFRelease(line);
+        CTLineDraw(line, context);
+        CFRelease(typesetter);
+        CFRelease(line);
+    }
 }
 
 - (NSAttributedString*)getAttributedStringForFont:(UIFont*)font {

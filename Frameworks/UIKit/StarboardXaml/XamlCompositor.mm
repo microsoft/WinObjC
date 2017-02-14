@@ -23,6 +23,7 @@
 #import "LayerAnimation.h"
 #import "LayerProxy.h"
 #import "LayerTransaction.h"
+#import "CGImageInternal.h"
 
 #import "CGContextInternal.h"
 #import "UIApplicationInternal.h"

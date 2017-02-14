@@ -104,7 +104,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_DATETIMEFORMATTING_EXPORT
 + (WGDDateTimeFormatter*)makeDateTimeFormatterDateTimeLanguages:(WGDYearFormat)yearFormat monthFormat:(WGDMonthFormat)monthFormat dayFormat:(WGDDayFormat)dayFormat dayOfWeekFormat:(WGDDayOfWeekFormat)dayOfWeekFormat hourFormat:(WGDHourFormat)hourFormat minuteFormat:(WGDMinuteFormat)minuteFormat secondFormat:(WGDSecondFormat)secondFormat languages:(id<NSFastEnumeration> /* NSString * */)languages ACTIVATOR;
 + (WGDDateTimeFormatter*)makeDateTimeFormatterDateTimeContext:(WGDYearFormat)yearFormat monthFormat:(WGDMonthFormat)monthFormat dayFormat:(WGDDayFormat)dayFormat dayOfWeekFormat:(WGDDayOfWeekFormat)dayOfWeekFormat hourFormat:(WGDHourFormat)hourFormat minuteFormat:(WGDMinuteFormat)minuteFormat secondFormat:(WGDSecondFormat)secondFormat languages:(id<NSFastEnumeration> /* NSString * */)languages geographicRegion:(NSString *)geographicRegion calendar:(NSString *)calendar clock:(NSString *)clock ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * numeralSystem;
 @property (readonly) NSString * clock;

@@ -98,7 +98,7 @@ typedef unsigned WASPStoreLogOptions;
 OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT
 @interface WASPStorePreviewSkuInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * currencyCode;
 @property (readonly) NSString * customDeveloperData;
@@ -120,7 +120,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT
 @interface WASPStorePreviewPurchaseResults : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WASPStorePreviewProductPurchaseStatus productPurchaseStatus;
 @end
@@ -134,7 +134,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT
 @interface WASPStorePreviewProductInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * Description;
 @property (readonly) NSString * productId;
@@ -152,7 +152,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT
 @interface WASPStoreHardwareManufacturerInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * hardwareManufacturerId;
 @property (readonly) NSString * manufacturerName;

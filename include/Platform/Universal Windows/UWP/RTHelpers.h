@@ -19,6 +19,8 @@
 #include <COMIncludes.h>
 #include <windows.foundation.h>
 #include <windows.foundation.collections.h>
+#include <wrl.h>
+#include <wrl/async.h>
 #include <wrl/client.h>
 #include <wrl/event.h>
 #include <wrl/implements.h>
@@ -49,8 +51,8 @@
 #include <UWP/interopBase.h>
 
 #if __has_feature(objc_arc)
-#define AUTORELEASE(x)
-#define RETAIN(x)
+#define AUTORELEASE(x) x
+#define RETAIN(x) x
 #define RELEASE(x)
 #else
 #define AUTORELEASE(x) [x autorelease]

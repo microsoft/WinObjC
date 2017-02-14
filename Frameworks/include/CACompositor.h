@@ -32,6 +32,7 @@
 #import <wrl/async.h>
 #import <wrl/wrappers/corewrappers.h>
 #import <windows.foundation.h>
+#import <IDisplayTexture.h>
 #include <COMIncludes_end.h>
 
 #pragma clang diagnostic pop
@@ -40,13 +41,14 @@
 
 #include <memory>
 #include <wrl/client.h>
+#include <IDisplayTexture.h>
 
 #endif
 
 // Proxy between CALayer and its Xaml representation
 struct ILayerProxy {
 public:
-    virtual ~ILayerProxy() {};
+    virtual ~ILayerProxy(){};
 
     // Returns the Xaml element backing this layer
     virtual Microsoft::WRL::ComPtr<IInspectable> GetXamlElement() = 0;
@@ -65,18 +67,7 @@ public:
 // Proxy between CAAnimation and its Xaml representation
 struct ILayerAnimation {
 public:
-    virtual ~ILayerAnimation() {};
-};
-
-// Proxy for CG-rendered content
-struct IDisplayTexture {
-public:
-    virtual ~IDisplayTexture() {};
-
-    virtual Microsoft::WRL::ComPtr<IInspectable> GetContent() = 0;
-    // Returns a pointer to the start of the backing buffer
-    virtual void* Lock(int* stride) = 0;
-    virtual void Unlock() = 0;
+    virtual ~ILayerAnimation(){};
 };
 
 #if defined(__cplusplus) && defined(__OBJC__)
@@ -84,7 +75,7 @@ public:
 // Proxy between CATransaction and its backing implementation
 struct ILayerTransaction {
 public:
-    virtual ~ILayerTransaction() {};
+    virtual ~ILayerTransaction(){};
 
     // Sublayer management
     virtual void AddLayer(const std::shared_ptr<ILayerProxy>& layer,
@@ -114,7 +105,7 @@ struct CAMediaTimingProperties;
 
 class CACompositorInterface {
 public:
-    virtual ~CACompositorInterface() {};
+    virtual ~CACompositorInterface(){};
 
     // Compositor APIs
     virtual bool IsRunningAsFramework() = 0;

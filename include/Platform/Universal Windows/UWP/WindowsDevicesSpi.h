@@ -76,7 +76,7 @@ OBJCUWP_WINDOWS_DEVICES_SPI_EXPORT
 @interface WDSSpiConnectionSettings : RTObject
 + (WDSSpiConnectionSettings*)make:(int)chipSelectLine ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WDSSpiSharingMode sharingMode;
 @property WDSSpiMode mode;
@@ -94,7 +94,7 @@ OBJCUWP_WINDOWS_DEVICES_SPI_EXPORT
 OBJCUWP_WINDOWS_DEVICES_SPI_EXPORT
 @interface WDSSpiBusInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) int chipSelectLineCount;
 @property (readonly) int maxClockFrequency;
@@ -129,7 +129,7 @@ OBJCUWP_WINDOWS_DEVICES_SPI_EXPORT
 + (WDSSpiBusInfo*)getBusInfo:(NSString *)busId;
 + (void)fromIdAsync:(NSString *)busId settings:(WDSSpiConnectionSettings*)settings success:(void (^)(WDSSpiDevice*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDSSpiConnectionSettings* connectionSettings;
 @property (readonly) NSString * deviceId;
@@ -151,7 +151,7 @@ OBJCUWP_WINDOWS_DEVICES_SPI_EXPORT
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDSSpiController*))success failure:(void (^)(NSError*))failure;
 + (void)getControllersAsync:(RTObject<WDSPISpiProvider>*)provider success:(void (^)(NSArray* /* WDSSpiController* */))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (WDSSpiDevice*)getDevice:(WDSSpiConnectionSettings*)settings;
 @end

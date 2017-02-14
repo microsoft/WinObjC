@@ -204,7 +204,7 @@ OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
 @interface WUXINotifyCollectionChangedEventArgs : RTObject
 + (WUXINotifyCollectionChangedEventArgs*)makeInstanceWithAllParameters:(WUXINotifyCollectionChangedAction)action newItems:(RTObject<WUXIIBindableVector>*)newItems oldItems:(RTObject<WUXIIBindableVector>*)oldItems newIndex:(int)newIndex oldIndex:(int)oldIndex ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUXINotifyCollectionChangedAction action;
 @property (readonly) RTObject<WUXIIBindableVector>* newItems;

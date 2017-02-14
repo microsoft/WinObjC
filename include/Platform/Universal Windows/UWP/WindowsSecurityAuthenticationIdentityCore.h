@@ -90,7 +90,7 @@ typedef unsigned WSAICMicrosoftAccountMultiFactorSessionApprovalStatus;
 OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_CORE_EXPORT
 @interface WSAICMicrosoftAccountMultiFactorSessionInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSAICMicrosoftAccountMultiFactorSessionApprovalStatus approvalStatus;
 @property (readonly) WSAICMicrosoftAccountMultiFactorAuthenticationType authenticationType;
@@ -110,7 +110,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_CORE_EXPORT
 OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_CORE_EXPORT
 @interface WSAICMicrosoftAccountMultiFactorOneTimeCodedInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * code;
 @property (readonly) WSAICMicrosoftAccountMultiFactorServiceResponse serviceResponse;
@@ -127,7 +127,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_CORE_EXPORT
 OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_CORE_EXPORT
 @interface WSAICMicrosoftAccountMultiFactorGetSessionsResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSAICMicrosoftAccountMultiFactorServiceResponse serviceResponse;
 @property (readonly) NSArray* /* WSAICMicrosoftAccountMultiFactorSessionInfo* */ sessions;
@@ -142,7 +142,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_CORE_EXPORT
 OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_CORE_EXPORT
 @interface WSAICMicrosoftAccountMultiFactorUnregisteredAccountsAndSessionInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSAICMicrosoftAccountMultiFactorServiceResponse serviceResponse;
 @property (readonly) NSArray* /* WSAICMicrosoftAccountMultiFactorSessionInfo* */ sessions;
@@ -158,7 +158,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_CORE_EXPORT
 OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_CORE_EXPORT
 @interface WSAICMicrosoftAccountMultiFactorAuthenticationManager : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 + (WSAICMicrosoftAccountMultiFactorAuthenticationManager*)current;
 - (void)getOneTimePassCodeAsync:(NSString *)userAccountId codeLength:(unsigned int)codeLength success:(void (^)(WSAICMicrosoftAccountMultiFactorOneTimeCodedInfo*))success failure:(void (^)(NSError*))failure;

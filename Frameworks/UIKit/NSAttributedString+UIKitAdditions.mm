@@ -147,9 +147,9 @@ static void _initForHtmlSubtree(NSMutableAttributedString* self, NSDictionary* p
         if (curNode->type == XML_TEXT_NODE) {
             // If text, append to the string with the current set of attributes
             // Note that libxml uses UTF8 as its internal encoding, so the decode below ought to be safe
-            NSAttributedString* appendString =
-                [[NSAttributedString alloc] initWithString:[NSString stringWithUTF8String:reinterpret_cast<char*>(curNode->content)]
-                                                attributes:parentAttributes];
+            StrongId<NSAttributedString> appendString;
+            appendString.attach([[NSAttributedString alloc] initWithString:[NSString stringWithUTF8String:reinterpret_cast<char*>(curNode->content)]
+                                                                attributes:parentAttributes]);
             [self appendAttributedString:appendString];
 
         } else if (curNode->type == XML_ELEMENT_NODE) {
@@ -229,7 +229,8 @@ static void _initWithHtml(NSMutableAttributedString* self, NSDictionary* attribu
     NSStringEncoding encoding =
         static_cast<NSStringEncoding>((encodingNumber) ? [encodingNumber intValue] : [NSString defaultCStringEncoding]);
     // Decode the data
-    NSString* stringData = [[NSString alloc] initWithData:data encoding:encoding];
+    StrongId<NSString> stringData;
+    stringData.attach([[NSString alloc] initWithData:data encoding:encoding]);
 
     if (stringData) {
         // Get NSDefaultAttributes from options

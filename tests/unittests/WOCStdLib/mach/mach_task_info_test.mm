@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#include <TestFramework.h>
 #import <mach/mach.h>
 
 TEST(Mach, MachTaskInfoBasics) {

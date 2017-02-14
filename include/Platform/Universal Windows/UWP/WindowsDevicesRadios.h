@@ -73,7 +73,7 @@ OBJCUWP_WINDOWS_DEVICES_RADIOS_EXPORT
 + (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDRRadio*))success failure:(void (^)(NSError*))failure;
 + (void)requestAccessAsyncWithSuccess:(void (^)(WDRRadioAccessStatus))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDRRadioKind kind;
 @property (readonly) NSString * name;

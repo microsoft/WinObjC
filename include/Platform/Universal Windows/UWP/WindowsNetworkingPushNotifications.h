@@ -53,7 +53,7 @@ typedef unsigned WNPPushNotificationType;
 OBJCUWP_WINDOWS_NETWORKING_PUSHNOTIFICATIONS_EXPORT
 @interface WNPPushNotificationChannel : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFDateTime* expirationTime;
 @property (readonly) NSString * uri;
@@ -71,7 +71,7 @@ OBJCUWP_WINDOWS_NETWORKING_PUSHNOTIFICATIONS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_PUSHNOTIFICATIONS_EXPORT
 @interface WNPPushNotificationChannelManagerForUser : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSUser* user;
 - (void)createPushNotificationChannelForApplicationAsyncWithSuccess:(void (^)(WNPPushNotificationChannel*))success failure:(void (^)(NSError*))failure;
@@ -88,7 +88,7 @@ OBJCUWP_WINDOWS_NETWORKING_PUSHNOTIFICATIONS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_PUSHNOTIFICATIONS_EXPORT
 @interface WNPPushNotificationReceivedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL cancel;
 @property (readonly) WUNBadgeNotification* badgeNotification;
@@ -107,7 +107,7 @@ OBJCUWP_WINDOWS_NETWORKING_PUSHNOTIFICATIONS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_PUSHNOTIFICATIONS_EXPORT
 @interface WNPRawNotification : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * content;
 @end

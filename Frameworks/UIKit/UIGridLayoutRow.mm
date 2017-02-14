@@ -19,6 +19,7 @@
 //
 //******************************************************************************
 
+#import "AssertARCEnabled.h"
 #import <UIKit/UIKit.h>
 #import "UIGridLayoutRow.h"
 #import "UIGridLayoutSection.h"

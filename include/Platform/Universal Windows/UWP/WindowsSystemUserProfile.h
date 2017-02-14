@@ -72,7 +72,7 @@ typedef unsigned WSUSetImageFeedResult;
 OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT
 @interface WSUAdvertisingManagerForUser : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * advertisingId;
 @property (readonly) WSUser* user;
@@ -100,7 +100,7 @@ OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT
 @interface WSUUserProfilePersonalizationSettings : RTObject
 + (BOOL)isSupported;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 + (WSUUserProfilePersonalizationSettings*)current;
 - (void)trySetLockScreenImageAsync:(WSStorageFile*)imageFile success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
@@ -133,7 +133,7 @@ OBJCUWP_WINDOWS_SYSTEM_USERPROFILE_EXPORT
 @interface WSUFirstSignInSettings : RTObject
 + (WSUFirstSignInSettings*)getDefault;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int size;
 - (id)objectForKey: (id)key;

@@ -1,7 +1,7 @@
 //******************************************************************************
 //
 // Copyright (c) 2016 Intel Corporation. All rights reserved.
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -20,596 +20,225 @@
 #import <math.h>
 #import <vector>
 #import <CoreGraphics/CGContext.h>
+#import <CoreGraphics/CGBitmapContext.h>
 #import <CoreGraphics/CGGeometry.h>
+#import <CoreGraphics/CGDataProvider.h>
 #import <Foundation/NSData.h>
-#import <UIKit/UIImage.h>
+#import <LoggingNative.h>
+#import <CFRuntime.h>
+#import <CFBridgeUtilities.h>
+#import <CoreGraphics/D2DWrapper.h>
 #import "CGColorSpaceInternal.h"
 #import "CGImageInternal.h"
-#import "_CGLifetimeBridgingType.h"
-#import "CGSurfaceInfoInternal.h"
-#import <CoreFoundation/CFData.h>
+#import "CGIWICBitmap.h"
+#import "CGDataProviderInternal.h"
 
-extern "C" {
-#import <png.h>
-};
+#import <algorithm>
 
-// This is the format libpng expects.
-struct _RGBA_swizzle {
-    BYTE r, g, b, a;
-};
-
-// This is what comes out of pixman.
-struct _BGRA_swizzle {
-    BYTE b, g, r, a;
-};
-
-#include "LoggingNative.h"
+using namespace Microsoft::WRL;
 
 static const wchar_t* TAG = L"CGImage";
 
-@interface CGNSImage : _CGLifetimeBridgingType
-@end
-@implementation CGNSImage
-- (instancetype)copyWithZone:(NSZone*)zone {
-    return [self retain];
-}
-
-- (void)dealloc {
-#pragma diagnostic push
-#pragma clang diagnostic ignored "-Wobjc-missing-super-calls"
-    // __CGImage is a C++ class massaged into an objc object.
-    delete (__CGImage*)self;
-#pragma diagnostic pop
-}
-@end
-
-static IWLazyClassLookup _LazyUIImage("UIImage");
-
-int numCGImages = 0;
-
-__CGImage::__CGImage() {
-    numCGImages++;
-
-    _has32BitAlpha = true;
-
-#ifdef DEBUG_IMG_COUNT
-    TraceVerbose(TAG, L"Number of CGImages: %d created=%x", numCGImages, this);
-#endif
-
-    object_setClass((id)this, [CGNSImage class]);
-}
-
+// TODO #1124: remove old code
+#pragma region OLD_CODE
 static std::vector<CGImageDestructionListener> _imageDestructionListeners;
 COREGRAPHICS_EXPORT void CGImageAddDestructionListener(CGImageDestructionListener listener) {
     _imageDestructionListeners.push_back(listener);
 }
 
-__CGImage::~__CGImage() {
-    numCGImages--;
-#ifdef DEBUG_IMG_COUNT
-    TraceVerbose(TAG, L"destroyed=%x from=%x", this, _ReturnAddress());
-#endif
-    for (CGImageDestructionListener& curListener : _imageDestructionListeners) {
-        curListener(this);
+#pragma endregion OLD_CODE
+
+#pragma region CGImageImplementation
+
+struct __CGImageImpl {
+    Microsoft::WRL::ComPtr<IWICBitmap> bitmapImageSource;
+    bool isMask;
+    bool interpolate;
+    woc::unique_cf<CGColorSpaceRef> colorSpace;
+    CGImageAlphaInfo alphaInfo;
+    size_t height;
+    size_t width;
+    size_t bitsPerPixel;
+    size_t bitsPerComponent;
+    size_t bytesPerRow;
+    CGBitmapInfo bitmapInfo;
+    CGColorRenderingIntent renderingIntent;
+
+    __CGImageImpl() {
+        height = 0;
+        width = 0;
+        bitsPerComponent = 0;
+        bitsPerPixel = 0;
+        bytesPerRow = 0;
+        bitmapInfo = kCGBitmapByteOrderDefault;
+        alphaInfo = kCGImageAlphaNone;
+        isMask = false;
+        interpolate = false;
+        renderingIntent = kCGRenderingIntentDefault;
     }
 
-    if (_img) {
-        delete _img;
-    }
-    _provider = nil;
-}
-
-CGImageBacking* __CGImage::DetachBacking(CGImageRef newParent) {
-    CGImageBacking* ret = _img;
-
-    _img->_parent = newParent;
-    _img = NULL;
-
-    return ret;
-}
-
-//  Default implementation does a deep copy
-CGImageRef CGImageBacking::CopyOnWrite() {
-    CGImageRef ret;
-
-    ret = new CGBitmapImage(_parent);
-
-    return ret;
-}
-
-/**
- @Status Caveat
- @Notes decode parameter not supported and must be nullptr.
-*/
-CGImageRef CGImageCreateWithJPEGDataProvider(CGDataProviderRef source,
-                                             const CGFloat decode[],
-                                             bool shouldInterpolate,
-                                             CGColorRenderingIntent intent) {
-    FAIL_FAST_IF_FALSE(decode == nullptr);
-
-    id img = [[_LazyUIImage alloc] initWithData:(NSData*)CGDataProviderCopyData(source)];
-    return (CGImageRef)[img CGImage];
-}
-
-/**
- @Status Caveat
- @Notes decode parameter not supported and must be nullptr.
-*/
-CGImageRef CGImageCreateWithPNGDataProvider(CGDataProviderRef source,
-                                            const CGFloat decode[],
-                                            bool shouldInterpolate,
-                                            CGColorRenderingIntent intent) {
-    FAIL_FAST_IF_FALSE(decode == nullptr);
-
-    id img = [[_LazyUIImage alloc] initWithData:(NSData*)CGDataProviderCopyData(source)];
-
-    return (CGImageRef)[img CGImage];
-}
-
-/**
- @Status Caveat
- @Notes Doesn't support copy-on-write semantics - returns an unlinked copy of the source
-        image cropped to the specified rectangle.
-*/
-CGImageRef CGImageCreateWithImageInRect(CGImageRef ref, CGRect rect) {
-    if (ref == NULL) {
-        TraceWarning(TAG, L"CGImageCreateWithImageInRect: ref = NULL!");
-        return 0;
+    inline WICPixelFormatGUID PixelFormat() const {
+        WICPixelFormatGUID pixelFormat;
+        RETURN_RESULT_IF_FAILED(bitmapImageSource->GetPixelFormat(&pixelFormat), GUID_WICPixelFormatUndefined);
+        return pixelFormat;
     }
 
-    rect = CGRectIntegral(rect);
-
-    CGRect imgRefSize;
-    imgRefSize.origin.x = 0;
-    imgRefSize.origin.y = 0;
-    imgRefSize.size.width = (float)ref->Backing()->Width();
-    imgRefSize.size.height = (float)ref->Backing()->Height();
-
-    rect = CGRectIntersection(rect, imgRefSize);
-
-    __CGSurfaceInfo surfaceInfo;
-    ref->Backing()->GetSurfaceInfoWithoutPixelPtr(&surfaceInfo);
-
-    // Override width and height with the rect
-    surfaceInfo.width = rect.size.width;
-    surfaceInfo.height = rect.size.height;
-
-    assert(surfaceInfo.surfaceData == NULL);
-
-    CGImageRef newImage = new CGBitmapImage(surfaceInfo);
-
-    int startX = (int)rect.origin.x;
-    int startY = (int)rect.origin.y;
-    int sizeX = (int)rect.size.width;
-    int sizeY = (int)rect.size.height;
-
-    BYTE* srcIn =
-        ((BYTE*)ref->Backing()->LockImageData()) + startY * ref->Backing()->BytesPerRow() + startX * ref->Backing()->BytesPerPixel();
-    BYTE* destOut = (BYTE*)newImage->Backing()->LockImageData();
-
-    for (int curY = 0; curY < sizeY; curY++) {
-        memmove(destOut, srcIn, newImage->Backing()->BytesPerRow());
-
-        srcIn += ref->Backing()->BytesPerRow();
-        destOut += newImage->Backing()->BytesPerRow();
+    inline const __CGImagePixelProperties* Properties() const {
+        WICPixelFormatGUID pixelFormat = PixelFormat();
+        return _CGGetPixelFormatProperties(pixelFormat);
     }
 
-    ref->Backing()->ReleaseImageData();
-    newImage->Backing()->ReleaseImageData();
-
-    return (CGImageRef)newImage;
-}
-
-/**
- @Status Interoperable
- @Notes Doesn't support copy-on-write semantics - returns an unlinked copy of the source
-        image.
-*/
-CGImageRef CGImageCreateCopy(CGImageRef ref) {
-    if (!ref)
-        return nullptr;
-
-    __CGSurfaceInfo surfaceInfo;
-    ref->Backing()->GetSurfaceInfoWithoutPixelPtr(&surfaceInfo);
-
-    assert(surfaceInfo.surfaceData == NULL);
-
-    CGImageRef newImage = new CGBitmapImage(surfaceInfo);
-
-    int startX = 0;
-    int startY = 0;
-    int sizeX = ref->Backing()->Width();
-    int sizeY = ref->Backing()->Height();
-
-    if (startY < 0) {
-        startY = 0;
+    inline size_t BitsPerPixel() const {
+        const __CGImagePixelProperties* properties = Properties();
+        RETURN_RESULT_IF_NULL(properties, 0);
+        return properties->bitsPerPixel;
     }
 
-    BYTE* srcIn =
-        ((BYTE*)ref->Backing()->LockImageData()) + startY * ref->Backing()->BytesPerRow() + startX * ref->Backing()->BytesPerPixel();
-    BYTE* destOut = (BYTE*)newImage->Backing()->LockImageData();
-
-    for (int curY = 0; curY < sizeY; curY++) {
-        memcpy(destOut, srcIn, newImage->Backing()->BytesPerRow());
-
-        srcIn += ref->Backing()->BytesPerRow();
-        destOut += newImage->Backing()->BytesPerRow();
+    inline size_t BitsPerComponent() const {
+        const __CGImagePixelProperties* properties = Properties();
+        RETURN_RESULT_IF_NULL(properties, 0);
+        return properties->bitsPerComponent;
     }
 
-    ref->Backing()->ReleaseImageData();
-    newImage->Backing()->ReleaseImageData();
-
-    return (CGImageRef)newImage;
-}
-
-/**
- @Status Caveat
- @Notes No actual conversion between colorspaces, simply copies and reinterprets data in new colorspace
-*/
-CGImageRef CGImageCreateCopyWithColorSpace(CGImageRef ref, CGColorSpaceRef colorSpace) {
-    __CGSurfaceInfo surfaceInfo;
-    ref->Backing()->GetSurfaceInfoWithoutPixelPtr(&surfaceInfo);
-
-    // Override colorSpaceModel
-    surfaceInfo.colorSpaceModel = ((__CGColorSpace*)colorSpace)->colorSpaceModel;
-
-    assert(surfaceInfo.surfaceData == NULL);
-
-    CGImageRef newImage = new CGBitmapImage(surfaceInfo);
-
-    int startX = 0;
-    int startY = 0;
-    int sizeX = ref->Backing()->Width();
-    int sizeY = ref->Backing()->Height();
-
-    if (startY < 0) {
-        startY = 0;
+    inline CGBitmapInfo BitmapInfo() const {
+        const __CGImagePixelProperties* properties = Properties();
+        RETURN_RESULT_IF_NULL(properties, 0);
+        return properties->bitmapInfo;
     }
 
-    BYTE* srcIn =
-        ((BYTE*)ref->Backing()->LockImageData()) + startY * ref->Backing()->BytesPerRow() + startX * ref->Backing()->BytesPerPixel();
-    BYTE* destOut = (BYTE*)newImage->Backing()->LockImageData();
-
-    for (int curY = 0; curY < sizeY; curY++) {
-        memcpy(destOut, srcIn, newImage->Backing()->BytesPerRow());
-
-        srcIn += ref->Backing()->BytesPerRow();
-        destOut += newImage->Backing()->BytesPerRow();
+    inline CGImageAlphaInfo AlphaInfo() const {
+        return static_cast<CGImageAlphaInfo>(BitmapInfo() & kCGBitmapAlphaInfoMask);
     }
 
-    ref->Backing()->ReleaseImageData();
-    newImage->Backing()->ReleaseImageData();
+    inline CGColorSpaceRef ColorSpace() {
+        const __CGImagePixelProperties* properties = Properties();
+        RETURN_NULL_IF(!properties);
+        return _CGColorSpaceCreate(properties->colorSpaceModel);
+    }
 
-    return (CGImageRef)newImage;
-}
-
-/**
- @Status Caveat
- @Notes Source image must be RGBA32.
-*/
-CGImageRef CGImageCreateWithMask(CGImageRef image, CGImageRef mask) {
-    CGImageRef newImage;
-
-    {
-        const DWORD bytesPerRow = image->Backing()->Width() * 4;
-        DWORD* newImageData = (DWORD*)IwMalloc(bytesPerRow * image->Backing()->Height());
-        DWORD* src = (DWORD*)image->Backing()->LockImageData();
-        BYTE* maskData = (BYTE*)mask->Backing()->LockImageData();
-        DWORD incX = ((mask->Backing()->Width()) << 16) / image->Backing()->Width();
-        DWORD incY = ((mask->Backing()->Height()) << 16) / image->Backing()->Height();
-
-        __CGSurfaceInfo surfaceInfo =
-            _CGSurfaceInfoInit(image->Backing()->Width(), image->Backing()->Height(), _ColorABGR, newImageData, bytesPerRow);
-
-        newImage = new CGBitmapImage(surfaceInfo);
-        newImage->Backing()->SetFreeWhenDone(TRUE);
-
-        int imgWidth = image->Backing()->Width();
-
-        for (int i = 0; i < image->Backing()->Height(); i++) {
-            BYTE* srcMask = ((BYTE*)maskData) + ((i * incY) >> 16) * mask->Backing()->BytesPerRow();
-            DWORD* srcRow = (DWORD*)(((BYTE*)src) + (i * image->Backing()->BytesPerRow()));
-            DWORD srcMaskX = 0;
-            DWORD maskFmt = mask->Backing()->SurfaceFormat();
-
-            for (int j = 0; j < imgWidth; j++) {
-                DWORD srcPixel = *srcRow;
-                DWORD r = srcPixel & 0xFF;
-                DWORD g = (srcPixel >> 8) & 0xFF;
-                DWORD b = (srcPixel >> 16) & 0xFF;
-                DWORD a = (srcPixel >> 24) & 0xFF;
-                DWORD maskRA = 255, maskGA = 255, maskBA = 255, maskAA = 255;
-
-                switch (maskFmt) {
-                    case _ColorA8:
-                    case _ColorGrayscale:
-                        maskAA = maskRA = maskGA = maskBA = srcMask[srcMaskX >> 16];
-                        break;
-
-                    case _ColorABGR:
-                        maskRA = srcMask[(srcMaskX >> 16) * 4];
-                        maskGA = srcMask[(srcMaskX >> 16) * 4 + 1];
-                        maskBA = srcMask[(srcMaskX >> 16) * 4 + 2];
-                        maskAA = (maskRA + maskGA + maskBA) / 3;
-                        break;
-
-                    case _ColorBGR:
-                        maskRA = srcMask[(srcMaskX >> 16) * 3];
-                        maskGA = srcMask[(srcMaskX >> 16) * 3 + 1];
-                        maskBA = srcMask[(srcMaskX >> 16) * 3 + 2];
-                        maskAA = (maskRA + maskGA + maskBA) / 3;
-                        break;
-
-                    case _ColorARGB:
-                        maskBA = srcMask[(srcMaskX >> 16) * 4];
-                        maskGA = srcMask[(srcMaskX >> 16) * 4 + 1];
-                        maskRA = srcMask[(srcMaskX >> 16) * 4 + 2];
-                        maskAA = (maskRA + maskGA + maskBA) / 3;
-                        break;
-                }
-
-                r *= maskAA;
-                r /= 255;
-                g *= maskAA;
-                g /= 255;
-                b *= maskAA;
-                b /= 255;
-                a *= maskAA;
-                a /= 255;
-
-                *newImageData = r | (g << 8) | (b << 16) | (a << 24);
-
-                newImageData++;
-                srcRow++;
-                srcMaskX += incX;
-            }
+    inline void SetImageSource(Microsoft::WRL::ComPtr<IWICBitmap> source) {
+        bitmapImageSource = std::move(source);
+        // populate the image info.
+        if (FAILED(bitmapImageSource->GetSize(&width, &height))) {
+            height = 0;
+            width = 0;
         }
 
-        image->Backing()->ReleaseImageData();
-        mask->Backing()->ReleaseImageData();
-    }
-
-    return (CGImageRef)newImage;
-}
-
-/**
- @Status Caveat
- @Notes Only 32bpp RGBA source format supported. Returns an 8bpp grayscale alpha mask one-time
-        copy of source bitmap.
-*/
-CGImageRef CGImageMaskCreate(size_t width,
-                             size_t height,
-                             size_t bitsPerComponent,
-                             size_t bitsPerPixel,
-                             size_t bytesPerRow,
-                             CGDataProviderRef provider,
-                             const CGFloat* decode,
-                             bool shouldInterpolate) {
-    FAIL_FAST_HR_IF_FALSE(E_UNEXPECTED, ((bitsPerComponent == 8) && (bitsPerPixel == 32)));
-
-    NSData* dataProvider = (__bridge NSData*)CGDataProviderCopyData(provider);
-    char* pData = (char*)[dataProvider bytes];
-    size_t dataLen = (size_t)[dataProvider length];
-
-    //  Create an 8-bit mask from the data
-    __CGSurfaceInfo surfaceInfo = _CGSurfaceInfoInit(width, height, _ColorGrayscale);
-
-    CGImageRef newImage = new CGBitmapImage(surfaceInfo);
-    char* pNewImage = (char*)newImage->Backing()->LockImageData();
-
-    int pixOut = 0;
-    int outImageBytesPerRow = newImage->Backing()->BytesPerRow();
-
-    for (unsigned y = 0; y < height; y++) {
-        char* rowIn = &pData[y * bytesPerRow];
-        char* rowOut = &pNewImage[pixOut];
-
-        for (unsigned x = 0; x < width; x++) {
-            BYTE r = *rowIn++;
-            BYTE g = *rowIn++;
-            BYTE b = *rowIn++;
-            BYTE a = *rowIn++;
-
-            BYTE alphaOut = (r + g + b) * a / 255 / 3;
-            *rowOut++ = 255 - alphaOut;
+        bitmapInfo = BitmapInfo();
+        alphaInfo = AlphaInfo();
+        bitsPerPixel = BitsPerPixel();
+        bitsPerComponent = BitsPerComponent();
+        bytesPerRow = (bitsPerPixel >> 3) * width;
+        if (!colorSpace) {
+            colorSpace.reset(ColorSpace());
         }
+    }
+};
 
-        pixOut += outImageBytesPerRow;
+struct __CGImage : CoreFoundation::CppBase<__CGImage> {
+    // TODO(JJ) REMOVE THIS; Merge Impl into __CGImage.
+    __CGImageImpl _impl;
+
+    inline Microsoft::WRL::ComPtr<IWICBitmap>& ImageSource() {
+        return _impl.bitmapImageSource;
     }
 
-    newImage->Backing()->ReleaseImageData();
-
-    return (CGImageRef)newImage;
-}
-
-/**
- @Status Interoperable
-*/
-CGImageAlphaInfo CGImageGetAlphaInfo(CGImageRef img) {
-    int32_t ret;
-
-    if (img) {
-        ret = img->Backing()->BitmapInfo() & kCGBitmapAlphaInfoMask;
-    } else {
-        TraceWarning(TAG, L"CGImageGetAlphaInfo: Null CGImageRef!");
-        ret = 0;
+    inline void* Data() const {
+        Microsoft::WRL::ComPtr<IWICBitmapLock> lock;
+        RETURN_NULL_IF_FAILED(_impl.bitmapImageSource->Lock(nullptr, WICBitmapLockWrite, &lock));
+        BYTE* data;
+        UINT size;
+        RETURN_NULL_IF_FAILED(lock->GetDataPointer(&size, &data));
+        return static_cast<void*>(data);
     }
 
-    return (CGImageAlphaInfo)ret;
-}
-
-@interface CGImageDataProvider : NSData {
-@public
-    CGImageRef _img;
-}
-
-- (instancetype)init;
-- (instancetype)initWithBytesNoCopy:(void*)bytes length:(NSUInteger)length freeWhenDone:(BOOL)freeWhenDone;
-- (const void*)bytes;
-- (NSUInteger)length;
-
-@end
-
-// TODO: Task 7188763 This class makes no sense to be derived from NSData as it exposes a public _img field
-// and apparently does all operations via that rather than actually acting like an NSData.
-// To make it work, just add in the appropriate NSData methods using an inner NSData to hold anything
-// with the assumption it is not used.
-@implementation CGImageDataProvider {
-@private
-    StrongId<NSData> _data;
-}
-- (void)dealloc {
-    _img->Backing()->ReleaseImageData();
-    [super dealloc];
-}
-
-- (instancetype)init {
-    return [self initWithBytes:"" length:0];
-}
-
-- (instancetype)initWithBytesNoCopy:(void*)bytes length:(NSUInteger)length freeWhenDone:(BOOL)freeWhenDone {
-    if (self = [super init]) {
-        _data.attach([[NSData alloc] initWithBytesNoCopy:bytes length:length freeWhenDone:freeWhenDone]);
-    }
-    return self;
-}
-
-- (const void*)bytes {
-    return [_data bytes];
-}
-
-- (NSUInteger)length {
-    return [_data length];
-}
-
-@end
-
-/**
- @Status Interoperable
-*/
-CGDataProviderRef CGImageGetDataProvider(CGImageRef img) {
-    const UInt8* pPtr = (const UInt8*)img->Backing()->LockImageData();
-    CFIndex length = img->Backing()->Height() * img->Backing()->BytesPerRow();
-    CGDataProviderRef dataProvider = CGDataProviderCreateWithData(nullptr, pPtr, length, nullptr);
-    return (CGDataProviderRef)CFAutorelease(dataProvider);
-}
-
-void* _CGImageGetData(CGImageRef img) {
-    return img->Backing()->StaticImageData();
-}
-
-/**
- @Status Interoperable
-*/
-CGColorSpaceRef CGImageGetColorSpace(CGImageRef img) {
-    // TODO: Consider caching colorspaceRef in CGImageRef
-    CGColorSpaceRef ret = (CGColorSpaceRef) new __CGColorSpace(img->Backing()->ColorSpaceModel());
-
-    return ret;
-}
-
-/**
- @Status Interoperable
-*/
-size_t CGImageGetBitsPerPixel(CGImageRef img) {
-    if (!img) {
-        TraceWarning(TAG, L"CGImageGetBitsPerPixel: nil!");
-        return 0;
+    inline size_t Height() const {
+        return _impl.height;
     }
 
-    return (img->Backing()->BytesPerPixel() << 3);
-}
-
-/**
- @Status Interoperable
-*/
-size_t CGImageGetBitsPerComponent(CGImageRef img) {
-    if (!img) {
-        TraceWarning(TAG, L"CGImageGetBitsPerComponent: nil!");
-        return 0;
+    inline size_t Width() const {
+        return _impl.width;
     }
 
-    return (img->Backing()->BitsPerComponent());
-}
-
-/**
- @Status Interoperable
-*/
-size_t CGImageGetWidth(CGImageRef img) {
-    if (!img)
-        return 0;
-
-    return img->Backing()->Width();
-}
-
-/**
- @Status Interoperable
-*/
-size_t CGImageGetHeight(CGImageRef img) {
-    if (!img)
-        return 0;
-
-    return img->Backing()->Height();
-}
-
-/**
- @Status Interoperable
-*/
-void CGImageRelease(CGImageRef img) {
-    CFRelease((id)img);
-}
-
-/**
- @Status Interoperable
-*/
-CGImageRef CGImageRetain(CGImageRef img) {
-    CFRetain((id)img);
-    return img;
-}
-
-/**
- @Status Interoperable
-*/
-CGBitmapInfo CGImageGetBitmapInfo(CGImageRef img) {
-    int ret;
-
-    if (img) {
-        ret = img->Backing()->BitmapInfo();
-    } else {
-        TraceWarning(TAG, L"CGImageGetBitmapInfo: Null CGImageRef!");
-        ret = 0;
+    inline bool IsMask() const {
+        return _impl.isMask;
     }
 
-    return ret;
-}
+    inline bool Interpolate() const {
+        return _impl.interpolate;
+    }
+
+    inline CGColorSpaceRef ColorSpace() {
+        return _impl.colorSpace.get();
+    }
+
+    inline CGColorRenderingIntent RenderingIntent() const {
+        return _impl.renderingIntent;
+    }
+
+    inline CGBitmapInfo BitmapInfo() const {
+        return _impl.bitmapInfo;
+    }
+
+    inline CGImageAlphaInfo AlphaInfo() const {
+        return _impl.alphaInfo;
+    }
+
+    inline size_t BitsPerPixel() const {
+        return _impl.bitsPerPixel;
+    }
+
+    inline size_t BytesPerRow() const {
+        return _impl.bytesPerRow;
+    }
+
+    inline size_t BitsPerComponent() const {
+        return _impl.bitsPerComponent;
+    }
+
+    inline WICPixelFormatGUID PixelFormat() const {
+        return _impl.PixelFormat();
+    }
+
+    inline __CGImage& SetImageSource(Microsoft::WRL::ComPtr<IWICBitmap> source) {
+        _impl.SetImageSource(source);
+        return *this;
+    }
+
+    inline __CGImage& SetIsMask(bool mask) {
+        _impl.isMask = mask;
+        return *this;
+    }
+
+    inline __CGImage& SetInterpolate(bool interpolate) {
+        _impl.interpolate = interpolate;
+        return *this;
+    }
+
+    inline __CGImage& SetColorSpace(CGColorSpaceRef space) {
+        _impl.colorSpace.reset(space);
+        CGColorSpaceRetain(space);
+        return *this;
+    }
+
+    inline __CGImage& SetRenderingIntent(CGColorRenderingIntent intent) {
+        _impl.renderingIntent = intent;
+        return *this;
+    }
+};
+
+#pragma endregion CGImageImplementation
 
 /**
  @Status Interoperable
 */
-size_t CGImageGetBytesPerRow(CGImageRef img) {
-    if (!img)
-        return 0;
-
-    DWORD ret = 0;
-
-    switch (img->Backing()->SurfaceFormat()) {
-        case _ColorARGB:
-        case _ColorABGR:
-        case _ColorBGRX:
-            ret = img->Backing()->BytesPerRow();
-            break;
-
-        default:
-            FAIL_FAST();
-            break;
-    }
-    return ret;
+CFTypeID CGImageGetTypeID() {
+    return __CGImage::GetTypeID();
 }
 
 /**
  @Status Caveat
- @Notes Limited bitmap formats available. Decode, shouldInterpolate, intent parameters
-        and some byte orders ignored.
+ @Notes Limited bitmap formats available and decode is not supported.
 */
 CGImageRef CGImageCreate(size_t width,
                          size_t height,
@@ -622,357 +251,311 @@ CGImageRef CGImageCreate(size_t width,
                          const float* decode,
                          bool shouldInterpolate,
                          CGColorRenderingIntent intent) {
-    CGBitmapImage* newImage;
-    NSData* dataProvider = (__bridge NSData*)CGDataProviderCopyData(provider);
+    RETURN_NULL_IF(provider == nullptr || colorSpace == nullptr);
 
-    char* data = (char*)[dataProvider bytes];
+    ComPtr<IWICBitmap> image;
+    ComPtr<IWICImagingFactory> imageFactory;
+    RETURN_NULL_IF_FAILED(_CGGetWICFactory(&imageFactory));
 
-    bool colorSpaceAllocated = false;
+    GUID pixelFormat;
+    RETURN_NULL_IF_FAILED(
+        _CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, colorSpace, bitmapInfo, &pixelFormat));
 
-    if (colorSpace == NULL) {
-        if (bytesPerRow >= (width * 3)) {
-            TraceWarning(TAG, L"Warning: colorSpace = NULL, assuming RGB based on bytesPerRow.");
-            colorSpace = CGColorSpaceCreateDeviceRGB();
-        } else {
-            TraceWarning(TAG, L"Warning: colorSpace = NULL, assuming Gray based on bytesPerRow.");
-            colorSpace = CGColorSpaceCreateDeviceGray();
-        }
+    unsigned char* bytes = static_cast<unsigned char*>(const_cast<void*>(_CGDataProviderGetData(provider)));
+    RETURN_NULL_IF_FAILED(
+        imageFactory->CreateBitmapFromMemory(width, height, pixelFormat, bytesPerRow, height * bytesPerRow, bytes, &image));
 
-        colorSpaceAllocated = true;
-    }
+    CGImageRef imageRef = __CGImage::CreateInstance();
+    imageRef->SetImageSource(image).SetColorSpace(colorSpace).SetRenderingIntent(intent).SetInterpolate(shouldInterpolate);
 
-    __CGSurfaceFormat format = _CGImageGetFormat(bitsPerComponent, bitsPerPixel, colorSpace, bitmapInfo);
-
-    if (format != _ColorIndexed) {
-        __CGSurfaceInfo surfaceInfo = __CGSurfaceInfo(((__CGColorSpace*)colorSpace)->colorSpaceModel,
-                                                      bitmapInfo,
-                                                      bitsPerComponent,
-                                                      bitsPerPixel >> 3,
-                                                      width,
-                                                      height,
-                                                      bytesPerRow,
-                                                      data,
-                                                      format);
-
-        newImage = new CGBitmapImage(surfaceInfo);
-    } else {
-        __CGSurfaceInfo surfaceInfo = _CGSurfaceInfoInit(width, height, _ColorBGR);
-
-        newImage = new CGBitmapImage(surfaceInfo);
-        void* pData = newImage->Backing()->LockImageData();
-        int stride = newImage->Backing()->BytesPerRow();
-
-        char* curPosOut = (char*)pData;
-        char* curPosIn = (char*)data;
-        for (unsigned y = 0; y < height; y++) {
-            char* curLineOut = curPosOut;
-            char* curLineIn = curPosIn;
-            for (unsigned x = 0; x < width; x++) {
-                BYTE c = *curLineIn;
-
-                if (c <= ((__CGColorSpace*)colorSpace)->lastColor) {
-                    BYTE* palette = (BYTE*)&((__CGColorSpace*)colorSpace)->palette[c * 3];
-                    *(curLineOut++) = *(palette++);
-                    *(curLineOut++) = *(palette++);
-                    *(curLineOut++) = *(palette++);
-                } else {
-                    *(curLineOut++) = 0;
-                    *(curLineOut++) = 0;
-                    *(curLineOut++) = 0;
-                }
-                curLineIn++;
-            }
-
-            curPosOut += stride;
-            curPosIn += width;
-        }
-
-        newImage->Backing()->ReleaseImageData();
-    }
-
-    newImage->_provider = dataProvider;
-
-    if (colorSpaceAllocated == true) {
-        CGColorSpaceRelease(colorSpace);
-    }
-
-    return (CGImageRef)newImage;
+    return imageRef;
 }
 
-static void PNGWriteFunc(png_structp png_ptr, png_bytep data, png_size_t length) {
-    id dataOut = (id)png_get_io_ptr(png_ptr);
+/**
+ @Status Interoperable
+*/
+CGImageRef CGImageCreateWithImageInRect(CGImageRef ref, CGRect rect) {
+    RETURN_NULL_IF(!ref);
 
-    [dataOut appendBytes:data length:length];
+    ComPtr<IWICImagingFactory> imageFactory;
+    RETURN_NULL_IF_FAILED(_CGGetWICFactory(&imageFactory));
+
+    ComPtr<IWICBitmap> rectImage;
+    RETURN_NULL_IF_FAILED(imageFactory->CreateBitmapFromSourceRect(
+        ref->ImageSource().Get(), rect.origin.x, rect.origin.y, rect.size.width, rect.size.height, &rectImage));
+
+    CGImageRef imageRef = __CGImage::CreateInstance();
+    imageRef->SetImageSource(rectImage)
+        .SetColorSpace(ref->ColorSpace())
+        .SetRenderingIntent(ref->RenderingIntent())
+        .SetInterpolate(ref->Interpolate());
+
+    return imageRef;
 }
 
-NSData* _CGImagePNGRepresentation(UIImage* img) {
-    if (img == nil) {
-        TraceWarning(TAG, L"UIImagePNGRepresentation: img = nil!");
-        return nil;
-    }
+/**
+ @Status Interoperable
+*/
+CGImageRef CGImageCreateCopy(CGImageRef ref) {
+    RETURN_NULL_IF(!ref);
 
-    CGImageRef pImage = (CGImageRef)[img CGImage];
-    if (pImage == NULL) {
-        TraceWarning(TAG, L"No image passed to UIImagePNGRepresentation");
-        return nil;
-    }
-    NSMutableData* ret = [NSMutableData data];
+    ComPtr<IWICImagingFactory> imageFactory;
+    RETURN_NULL_IF_FAILED(_CGGetWICFactory(&imageFactory));
 
-    if (pImage == NULL || pImage->Backing()->Width() == 0 || pImage->Backing()->Height() == 0) {
-        TraceVerbose(TAG, L"%x", pImage);
-        FAIL_FAST_HR(E_UNEXPECTED);
-    }
+    ComPtr<IWICBitmap> image;
 
-    png_structp png_ptr;
-    png_infop info_ptr;
+    RETURN_NULL_IF_FAILED(imageFactory->CreateBitmapFromSource(ref->ImageSource().Get(), WICBitmapCacheOnLoad, &image));
 
-    // Initialize write structure
-    png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+    CGImageRef imageRef = __CGImage::CreateInstance();
+    imageRef->SetImageSource(image)
+        .SetIsMask(ref->IsMask())
+        .SetInterpolate(ref->Interpolate())
+        .SetColorSpace(ref->ColorSpace())
+        .SetRenderingIntent(ref->RenderingIntent());
 
-    // Initialize info structure
-    info_ptr = png_create_info_struct(png_ptr);
-
-    if (setjmp(png_jmpbuf(png_ptr))) {
-        TraceError(TAG, L"Error during png creation");
-        return nil;
-    }
-
-    png_set_write_fn(png_ptr, (void*)ret, PNGWriteFunc, NULL);
-
-    int width = pImage->Backing()->Width();
-    int height = pImage->Backing()->Height();
-    int xStrideImg = pImage->Backing()->BytesPerPixel();
-    int yStrideImg = pImage->Backing()->BytesPerRow();
-    BYTE* pImgData = (BYTE*)pImage->Backing()->LockImageData();
-
-    int orientation = [img imageOrientation];
-    switch (orientation) {
-        case UIImageOrientationDown:
-            pImgData += yStrideImg * (height - 1);
-            yStrideImg = -yStrideImg;
-            break;
-        case UIImageOrientationRight: {
-            pImgData += xStrideImg * (width - 1);
-
-            int tmp = yStrideImg;
-            yStrideImg = -xStrideImg;
-            xStrideImg = tmp;
-
-            tmp = width;
-            width = height;
-            height = tmp;
-        } break;
-        case UIImageOrientationLeft: {
-            pImgData += yStrideImg * (height - 1);
-
-            int tmp = yStrideImg;
-            yStrideImg = xStrideImg;
-            xStrideImg = -tmp;
-
-            tmp = width;
-            width = height;
-            height = tmp;
-        } break;
-
-        case UIImageOrientationUp:
-            break;
-
-        default:
-            TraceWarning(TAG, L"Unknown image orientation %d", orientation);
-            break;
-    }
-
-    int xStrideOut;
-    int yStrideOut;
-    __CGSurfaceFormat backingFormat = pImage->Backing()->SurfaceFormat();
-
-    // Write header (8 bit colour depth)
-    switch (backingFormat) {
-        case _Color565:
-        case _ColorBGR:
-            png_set_IHDR(png_ptr,
-                         info_ptr,
-                         width,
-                         height,
-                         8,
-                         PNG_COLOR_TYPE_RGB,
-                         PNG_INTERLACE_NONE,
-                         PNG_COMPRESSION_TYPE_BASE,
-                         PNG_FILTER_TYPE_BASE);
-            xStrideOut = 3;
-            break;
-
-        case _ColorGrayscale:
-        case _ColorA8:
-            png_set_IHDR(png_ptr,
-                         info_ptr,
-                         width,
-                         height,
-                         8,
-                         PNG_COLOR_TYPE_GRAY,
-                         PNG_INTERLACE_NONE,
-                         PNG_COMPRESSION_TYPE_BASE,
-                         PNG_FILTER_TYPE_BASE);
-            xStrideOut = 1;
-            break;
-
-        case _ColorARGB:
-        case _ColorABGR:
-        case _ColorBGRX:
-        case _ColorXBGR:
-            png_set_IHDR(png_ptr,
-                         info_ptr,
-                         width,
-                         height,
-                         8,
-                         PNG_COLOR_TYPE_RGB_ALPHA,
-                         PNG_INTERLACE_NONE,
-                         PNG_COMPRESSION_TYPE_BASE,
-                         PNG_FILTER_TYPE_BASE);
-            xStrideOut = 4;
-            break;
-
-        default:
-            // Any other backing formats are outside the scope of libpng, and extremely unlikely to be used.
-            FAIL_FAST_HR_MSG(E_UNEXPECTED, "Unsupported backing format!");
-            break;
-    }
-
-    yStrideOut = xStrideOut * width;
-
-    png_write_info(png_ptr, info_ptr);
-
-    int x, y;
-    int bytesperpixel = pImage->Backing()->BytesPerPixel();
-    BYTE* pRow = static_cast<BYTE*>(IwMalloc(yStrideOut));
-    FAIL_FAST_HR_IF_NULL(E_OUTOFMEMORY, pRow);
-    for (y = 0; y < height; y++) {
-        BYTE* rowStart = pImgData;
-        BYTE* rowOut = pRow;
-
-        for (x = 0; x < width; x++) {
-            BYTE* pixel = rowStart;
-            _RGBA_swizzle* outSwizzle = reinterpret_cast<_RGBA_swizzle*>(rowOut);
-            _BGRA_swizzle* pixelSwizzle = reinterpret_cast<_BGRA_swizzle*>(pixel);
-            switch (backingFormat) {
-                // PIXMAN_g8 | PIXMAN_a8
-                case _ColorGrayscale:
-                case _ColorA8:
-                    *rowOut = *pixel;
-                    break;
-
-                // PIXMAN_b8g8r8
-                case _ColorBGR: {
-                    outSwizzle->r = pixelSwizzle->b;
-                    outSwizzle->g = pixelSwizzle->g;
-                    outSwizzle->b = pixelSwizzle->r;
-                } break;
-
-                // PIXMAN_r5g6b5
-                case _Color565: {
-                    unsigned short shortPixel = *reinterpret_cast<unsigned short*>(pixel);
-
-                    // Mask out the RGB portions
-                    outSwizzle->r = (BYTE)(shortPixel >> 11);
-                    outSwizzle->g = (BYTE)((shortPixel >> 5) & 0x3F);
-                    outSwizzle->b = (BYTE)(shortPixel & 0x1F);
-
-                    // Scale component to BYTE with LSB extension. (00011b << 3 becomes 11111b, 00010b becomes 10000b)
-                    outSwizzle->r = (outSwizzle->r << 3) | (((outSwizzle->r & 0x1) << 3) - (outSwizzle->r & 0x1));
-                    outSwizzle->g = (outSwizzle->g << 2) | (((outSwizzle->g & 0x1) << 2) - (outSwizzle->g & 0x1));
-                    outSwizzle->b = (outSwizzle->b << 3) | (((outSwizzle->b & 0x1) << 3) - (outSwizzle->b & 0x1));
-                } break;
-
-                // PIXMAN_a8r8g8b8
-                case _ColorARGB: {
-                    outSwizzle->r = pixelSwizzle->r;
-                    outSwizzle->g = pixelSwizzle->g;
-                    outSwizzle->b = pixelSwizzle->b;
-                    outSwizzle->a = pixelSwizzle->a;
-                } break;
-
-                // PIXMAN_x8b8g8r8 | PIXMAN_a8b8g8r8
-                case _ColorXBGR:
-                case _ColorABGR: {
-                    outSwizzle->r = pixelSwizzle->b;
-                    outSwizzle->g = pixelSwizzle->g;
-                    outSwizzle->b = pixelSwizzle->r;
-                    outSwizzle->a = pixelSwizzle->a;
-                } break;
-
-                // PIXMAN_b8g8r8x8
-                case _ColorBGRX: {
-                    outSwizzle->r = pixelSwizzle->b;
-                    outSwizzle->g = pixelSwizzle->g;
-                    outSwizzle->b = pixelSwizzle->r;
-                    outSwizzle->a = pixelSwizzle->a;
-                } break;
-
-                default:
-                    // Impossible state, we should have failed higher up.
-                    FAIL_FAST_HR(E_UNEXPECTED);
-                    break;
-            }
-            rowOut += xStrideOut;
-            rowStart += xStrideImg;
-        }
-        pImgData += yStrideImg;
-        png_write_row(png_ptr, pRow);
-    }
-    IwFree(pRow);
-    pImage->Backing()->ReleaseImageData();
-
-    png_write_end(png_ptr, NULL);
-    png_destroy_write_struct(&png_ptr, &info_ptr);
-
-    return ret;
+    return imageRef;
 }
 
-@interface _UIImageWriterCallback : NSObject
-- (void)image:(UIImage*)image didFinishSavingWithError:(NSError*)err contextInfo:(void*)contextInfo;
-@end
+/**
+ @Status Caveat
+ @Notes decode parameter is ignored
+*/
+CGImageRef CGImageMaskCreate(size_t width,
+                             size_t height,
+                             size_t bitsPerComponent,
+                             size_t bitsPerPixel,
+                             size_t bytesPerRow,
+                             CGDataProviderRef provider,
+                             const CGFloat* decode,
+                             bool shouldInterpolate) {
+    RETURN_NULL_IF(provider == nullptr);
+
+    ComPtr<IWICBitmap> image;
+    ComPtr<IWICImagingFactory> imageFactory;
+    RETURN_NULL_IF_FAILED(_CGGetWICFactory(&imageFactory));
+
+    woc::unique_cf<CGColorSpaceRef> colorSpace(CGColorSpaceCreateDeviceGray());
+    GUID pixelFormat;
+    RETURN_NULL_IF_FAILED(
+        _CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, colorSpace, kCGBitmapByteOrderDefault, &pixelFormat));
+
+    unsigned char* bytes = static_cast<unsigned char*>(const_cast<void*>(_CGDataProviderGetData(provider)));
+    RETURN_NULL_IF_FAILED(
+        imageFactory->CreateBitmapFromMemory(width, height, pixelFormat, bytesPerRow, height * bytesPerRow, bytes, &image));
+
+    CGImageRef imageRef = __CGImage::CreateInstance();
+    imageRef->SetImageSource(image).SetIsMask(true).SetInterpolate(shouldInterpolate);
+
+    return imageRef;
+}
+
+/**
+ @Status Interoperable
+*/
+CGDataProviderRef CGImageGetDataProvider(CGImageRef img) {
+    RETURN_NULL_IF(!img);
+
+    const unsigned int stride = CGImageGetBytesPerRow(img);
+    const unsigned int size = CGImageGetHeight(img) * stride;
+    woc::unique_iw<unsigned char> buffer(static_cast<unsigned char*>(IwMalloc(size)));
+
+    RETURN_NULL_IF_FAILED(img->ImageSource()->CopyPixels(nullptr, stride, size, buffer.get()));
+
+    CGDataProviderRef dataProvider =
+        CGDataProviderCreateWithData(nullptr, buffer.release(), size, [](void* info, const void* data, size_t size) { IwFree(const_cast<void*>(data)); });
+    CFAutorelease(dataProvider);
+    return dataProvider;
+}
+
+/**
+ @Status Interoperable
+*/
+CGColorRenderingIntent CGImageGetRenderingIntent(CGImageRef image) {
+    if (!image) {
+        return kCGRenderingIntentDefault;
+    }
+
+    return image->RenderingIntent();
+}
+
+/**
+ @Status Interoperable
+*/
+bool CGImageGetShouldInterpolate(CGImageRef image) {
+    RETURN_FALSE_IF(!image);
+    return image->Interpolate();
+}
+
+/**
+ @Status Interoperable
+*/
+bool CGImageIsMask(CGImageRef image) {
+    RETURN_FALSE_IF(!image);
+    return image->IsMask();
+}
+
+/**
+ @Status Interoperable
+*/
+CGColorSpaceRef CGImageGetColorSpace(CGImageRef img) {
+    RETURN_NULL_IF(!img);
+    return img->ColorSpace();
+}
+
+/**
+ @Status Interoperable
+*/
+CGBitmapInfo CGImageGetBitmapInfo(CGImageRef img) {
+    RETURN_RESULT_IF_NULL(img, kCGBitmapByteOrderDefault);
+    return img->BitmapInfo();
+}
+
+/**
+ @Status Interoperable
+*/
+size_t CGImageGetWidth(CGImageRef img) {
+    RETURN_RESULT_IF_NULL(img, 0);
+    return img->Width();
+}
+
+/**
+ @Status Interoperable
+*/
+size_t CGImageGetHeight(CGImageRef img) {
+    RETURN_RESULT_IF_NULL(img, 0);
+    return img->Height();
+}
+
+/**
+ @Status Interoperable
+*/
+void CGImageRelease(CGImageRef img) {
+    RETURN_IF(!img);
+    CFRelease((CFTypeRef)img);
+}
+
+/**
+ @Status Interoperable
+*/
+CGImageRef CGImageRetain(CGImageRef img) {
+    RETURN_NULL_IF(!img);
+    CFRetain((CFTypeRef)img);
+    return img;
+}
+
+/**
+ @Status Caveat
+ @Notes decode parameter not supported and must be nullptr.
+*/
+CGImageRef CGImageCreateWithJPEGDataProvider(CGDataProviderRef source,
+                                             const CGFloat decode[],
+                                             bool shouldInterpolate,
+                                             CGColorRenderingIntent intent) {
+    RETURN_NULL_IF(source == nullptr);
+
+    unsigned char* bytes = static_cast<unsigned char*>(const_cast<void*>(_CGDataProviderGetData(source)));
+    CGImageRef imageRef = _CGImageLoadJPEG(bytes, _CGDataProviderGetSize(source));
+
+    RETURN_NULL_IF(!imageRef);
+    imageRef->SetInterpolate(shouldInterpolate).SetRenderingIntent(intent);
+
+    return imageRef;
+}
+
+/**
+ @Status Caveat
+ @Notes decode parameter not supported and must be nullptr.
+*/
+CGImageRef CGImageCreateWithPNGDataProvider(CGDataProviderRef source,
+                                            const CGFloat decode[],
+                                            bool shouldInterpolate,
+                                            CGColorRenderingIntent intent) {
+    RETURN_NULL_IF(source == nullptr);
+
+    unsigned char* bytes = static_cast<unsigned char*>(const_cast<void*>(_CGDataProviderGetData(source)));
+    CGImageRef imageRef = _CGImageLoadPNG(bytes, _CGDataProviderGetSize(source));
+
+    RETURN_NULL_IF(!imageRef);
+    imageRef->SetInterpolate(shouldInterpolate).SetRenderingIntent(intent);
+
+    return imageRef;
+}
+
+/**
+ @Status Interoperable
+*/
+size_t CGImageGetBitsPerPixel(CGImageRef img) {
+    RETURN_RESULT_IF_NULL(img, 0);
+    return img->BitsPerPixel();
+}
+
+/**
+ @Status Interoperable
+*/
+size_t CGImageGetBitsPerComponent(CGImageRef img) {
+    RETURN_RESULT_IF_NULL(img, 0);
+    return img->BitsPerComponent();
+}
+
+/**
+ @Status Interoperable
+*/
+size_t CGImageGetBytesPerRow(CGImageRef img) {
+    RETURN_RESULT_IF_NULL(img, 0);
+    return img->BytesPerRow();
+}
+
+/**
+ @Status Interoperable
+*/
+CGImageAlphaInfo CGImageGetAlphaInfo(CGImageRef img) {
+    RETURN_RESULT_IF_NULL(img, kCGImageAlphaNone);
+    return img->AlphaInfo();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CGImageRef CGImageCreateCopyWithColorSpace(CGImageRef ref, CGColorSpaceRef colorSpace) {
+    RETURN_NULL_IF(!ref);
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Interoperable
+ @Notes This function does not defer the composition of its mask.
+        This function supports non-grayscale alpha masks, unlike the reference platform.
+ */
+CGImageRef CGImageCreateWithMask(CGImageRef image, CGImageRef mask) {
+    RETURN_NULL_IF(!image);
+    RETURN_NULL_IF(!mask);
+    RETURN_NULL_IF(CGImageIsMask(image));
+
+    size_t width = CGImageGetWidth(image);
+    size_t height = CGImageGetHeight(image);
+
+    woc::unique_cf<CGContextRef> context{
+        CGBitmapContextCreate(nullptr, width, height, 8, width * 4, CGImageGetColorSpace(image), kCGImageAlphaPremultipliedLast)
+    };
+    RETURN_NULL_IF(!context);
+
+    CGRect rect{
+        CGPointZero, { width, height },
+    };
+    CGContextClipToMask(context.get(), rect, mask);
+    CGContextDrawImage(context.get(), rect, image);
+
+    return CGBitmapContextCreateImage(context.get());
+}
 
 /**
  @Status Stub
  @Notes
 */
 const CGFloat* CGImageGetDecode(CGImageRef image) {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-CGColorRenderingIntent CGImageGetRenderingIntent(CGImageRef image) {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-bool CGImageGetShouldInterpolate(CGImageRef image) {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-CFTypeID CGImageGetTypeID() {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-bool CGImageIsMask(CGImageRef image) {
+    RETURN_NULL_IF(!image);
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -982,6 +565,342 @@ bool CGImageIsMask(CGImageRef image) {
  @Notes
 */
 CGImageRef CGImageCreateWithMaskingColors(CGImageRef image, const CGFloat* components) {
+    RETURN_NULL_IF(!image);
     UNIMPLEMENTED();
     return StubReturn();
 }
+
+#pragma region WIC_HELPERS
+
+WICPixelFormatGUID _CGImageGetWICPixelFormat(CGImageRef image) {
+    RETURN_RESULT_IF_NULL(image, GUID_WICPixelFormatUndefined);
+    return image->PixelFormat();
+}
+
+bool _CGIsValidRenderTargetPixelFormat(WICPixelFormatGUID pixelFormat) {
+    auto iterator = s_ValidRenderTargetPixelFormat.find(pixelFormat);
+    return iterator != s_ValidRenderTargetPixelFormat.end();
+}
+
+const __CGImagePixelProperties* _CGGetPixelFormatProperties(WICPixelFormatGUID pixelFormat) {
+    RETURN_NULL_IF(pixelFormat == GUID_WICPixelFormatUndefined);
+
+    auto iterator = s_PixelFormats.find(pixelFormat);
+    RETURN_NULL_IF(iterator == s_PixelFormats.end());
+
+    return &iterator->second;
+}
+
+HRESULT _CGImageGetWICImageSource(CGImageRef image, IWICBitmap** source) {
+    RETURN_HR_IF_NULL(E_INVALIDARG, image);
+    RETURN_HR_IF_NULL(E_POINTER, source);
+    return image->ImageSource().CopyTo(source);
+}
+
+__declspec(dllexport) std::shared_ptr<IDisplayTexture> _CGImageGetDisplayTexture(CGImageRef image) {
+    RETURN_NULL_IF(!image);
+
+    ComPtr<ICGDisplayTexture> displayTextureAccess;
+    RETURN_NULL_IF_FAILED(image->ImageSource().Get()->QueryInterface(IID_PPV_ARGS(&displayTextureAccess)));
+    RETURN_NULL_IF(!displayTextureAccess);
+
+    return displayTextureAccess->DisplayTexture();
+}
+
+// Return the data pointer to the Image data.
+void* _CGImageGetRawBytes(CGImageRef image) {
+    RETURN_NULL_IF(!image);
+    return image->Data();
+}
+
+CGImageRef _CGImageCreateWithWICBitmap(IWICBitmap* bitmap) {
+    RETURN_NULL_IF(!bitmap);
+    CGImageRef imageRef = __CGImage::CreateInstance();
+    imageRef->SetImageSource(bitmap);
+
+    return imageRef;
+}
+
+CGImageRef _CGImageCreateCopyWithPixelFormat(CGImageRef image, WICPixelFormatGUID pixelFormat) {
+    RETURN_NULL_IF(!image);
+    if (IsEqualGUID(image->PixelFormat(), pixelFormat)) {
+        CGImageRetain(image);
+        return image;
+    }
+
+    ComPtr<IWICImagingFactory> imageFactory;
+    RETURN_NULL_IF_FAILED(_CGGetWICFactory(&imageFactory));
+
+    ComPtr<IWICFormatConverter> converter;
+    RETURN_NULL_IF_FAILED(imageFactory->CreateFormatConverter(&converter));
+
+    RETURN_NULL_IF_FAILED(converter->Initialize(
+        image->ImageSource().Get(), pixelFormat, WICBitmapDitherTypeNone, nullptr, 0.f, WICBitmapPaletteTypeMedianCut));
+
+    ComPtr<IWICBitmap> convertedImage;
+    RETURN_NULL_IF_FAILED(imageFactory->CreateBitmapFromSource(converter.Get(), WICBitmapCacheOnLoad, &convertedImage));
+
+    CGImageRef imageRef = __CGImage::CreateInstance();
+    imageRef->SetImageSource(convertedImage);
+
+    return imageRef;
+}
+
+CGImageRef _CGImageGetImageFromData(void* data, int length) {
+    return _CGImageLoadImageWithWICDecoder(GUID_NULL, data, length);
+}
+
+CGImageRef _CGImageLoadGIF(void* bytes, int length) {
+    return _CGImageLoadImageWithWICDecoder(GUID_ContainerFormatGif, bytes, length);
+}
+
+CGImageRef _CGImageLoadBMP(void* bytes, size_t length) {
+    return _CGImageLoadImageWithWICDecoder(GUID_ContainerFormatBmp, bytes, length);
+}
+
+CGImageRef _CGImageLoadTIFF(void* bytes, int length) {
+    return _CGImageLoadImageWithWICDecoder(GUID_ContainerFormatTiff, bytes, length);
+}
+
+CGImageRef _CGImageLoadPNG(void* bytes, int length) {
+    return _CGImageLoadImageWithWICDecoder(GUID_ContainerFormatPng, bytes, length);
+}
+
+CGImageRef _CGImageLoadJPEG(void* bytes, int length) {
+    return _CGImageLoadImageWithWICDecoder(GUID_ContainerFormatJpeg, bytes, length);
+}
+
+CGImageRef _CGImageLoadImageWithWICDecoder(REFGUID decoderCls, void* bytes, int length) {
+    ComPtr<IWICImagingFactory> imageFactory;
+    RETURN_NULL_IF_FAILED(_CGGetWICFactory(&imageFactory));
+
+    ComPtr<IWICBitmapDecoder> pDecoder;
+    ComPtr<IWICStream> spStream;
+    RETURN_NULL_IF_FAILED(imageFactory->CreateStream(&spStream));
+    RETURN_NULL_IF_FAILED(spStream->InitializeFromMemory(static_cast<unsigned char*>(bytes), length));
+
+    if (!IsEqualGUID(decoderCls, GUID_NULL)) {
+        RETURN_NULL_IF_FAILED(imageFactory->CreateDecoder(decoderCls, nullptr, &pDecoder));
+        RETURN_NULL_IF_FAILED(pDecoder->Initialize(spStream.Get(), WICDecodeMetadataCacheOnLoad));
+    } else {
+        RETURN_NULL_IF_FAILED(imageFactory->CreateDecoderFromStream(spStream.Get(), nullptr, WICDecodeMetadataCacheOnLoad, &pDecoder));
+    }
+
+    ComPtr<IWICBitmapFrameDecode> bitMapFrameDecoder;
+    RETURN_NULL_IF_FAILED(pDecoder->GetFrame(0, &bitMapFrameDecoder));
+
+    ComPtr<IWICBitmap> bitmap;
+    RETURN_NULL_IF_FAILED(imageFactory->CreateBitmapFromSource(bitMapFrameDecoder.Get(), WICBitmapCacheOnLoad, &bitmap));
+
+    CGImageRef imageRef = __CGImage::CreateInstance();
+    imageRef->SetImageSource(bitmap);
+    return imageRef;
+}
+
+NSData* _CGImagePNGRepresentation(CGImageRef image) {
+    return _CGImageRepresentation(image, GUID_ContainerFormatPng, -1);
+}
+
+NSData* _CGImageJPEGRepresentation(CGImageRef image, float quality) {
+    return _CGImageRepresentation(image, GUID_ContainerFormatJpeg, quality);
+}
+
+NSData* _CGImageRepresentation(CGImageRef image, REFGUID guid, float quality) {
+    // TODO #1124 implement encoder.
+    return nil;
+}
+
+// CG packed format key
+//  |Color  |bits/px|CGBitmapInfo   |
+//  |-------|-------|---------------|
+// 32      24      16               0
+#define CG_FORMAT_KEY(colorSpaceModel, bpp, byteOrder, alpha) \
+    (((colorSpaceModel & 0xFF) << 24) | ((bpp & 0xFF) << 16) | ((alpha | byteOrder) & 0xFFFF))
+
+HRESULT _CGImageGetWICPixelFormatFromImageProperties(
+    unsigned int bitsPerComponent, unsigned int bitsPerPixel, CGColorSpaceRef colorSpace, CGBitmapInfo bitmapInfo, GUID* pixelFormat) {
+
+    // clang-format off
+    static std::map<uint32_t, WICPixelFormatGUID> s_CGWICFormatMap{
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 24, kCGBitmapByteOrderDefault,  kCGImageAlphaNone),               GUID_WICPixelFormat24bppRGB       },
+
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 32, kCGBitmapByteOrderDefault,  kCGImageAlphaNoneSkipFirst     ), GUID_WICPixelFormat32bppBGR       },
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 32, kCGBitmapByteOrderDefault,  kCGImageAlphaNoneSkipLast      ), GUID_WICPixelFormat32bppRGB       },
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 32, kCGBitmapByteOrderDefault,  kCGImageAlphaPremultipliedFirst), GUID_WICPixelFormat32bppPBGRA     },
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 32, kCGBitmapByteOrderDefault,  kCGImageAlphaPremultipliedLast ), GUID_WICPixelFormat32bppPRGBA     },
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 32, kCGBitmapByteOrderDefault,  kCGImageAlphaFirst             ), GUID_WICPixelFormat32bppRGBA      },
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 32, kCGBitmapByteOrderDefault,  kCGImageAlphaLast              ), GUID_WICPixelFormat32bppRGBA      },
+
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 32, kCGBitmapByteOrder32Little, kCGImageAlphaNoneSkipFirst     ), GUID_WICPixelFormat32bppBGR       },
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 32, kCGBitmapByteOrder32Little, kCGImageAlphaPremultipliedFirst), GUID_WICPixelFormat32bppPBGRA     },
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 32, kCGBitmapByteOrder32Little, kCGImageAlphaFirst             ), GUID_WICPixelFormat32bppBGRA      },
+
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 32, kCGBitmapByteOrder32Big,    kCGImageAlphaNoneSkipLast      ), GUID_WICPixelFormat32bppRGB       },
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 32, kCGBitmapByteOrder32Big,    kCGImageAlphaPremultipliedLast ), GUID_WICPixelFormat32bppPRGBA     },
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 32, kCGBitmapByteOrder32Big,    kCGImageAlphaLast              ), GUID_WICPixelFormat32bppRGBA      },
+
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 64, kCGBitmapByteOrderDefault,  kCGImageAlphaPremultipliedLast ), GUID_WICPixelFormat64bppPRGBA     },
+        { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 64, kCGBitmapByteOrderDefault,  kCGImageAlphaLast              ), GUID_WICPixelFormat64bppRGBA      },
+
+        { CG_FORMAT_KEY(kCGColorSpaceModelCMYK      , 32, kCGBitmapByteOrderDefault,  kCGImageAlphaNone              ), GUID_WICPixelFormat32bppCMYK      },
+        { CG_FORMAT_KEY(kCGColorSpaceModelCMYK      , 32, kCGBitmapByteOrder32Big  ,  kCGImageAlphaNone              ), GUID_WICPixelFormat32bppCMYK      },
+        { CG_FORMAT_KEY(kCGColorSpaceModelCMYK      , 40, kCGBitmapByteOrderDefault,  kCGImageAlphaLast              ), GUID_WICPixelFormat40bppCMYKAlpha },
+        { CG_FORMAT_KEY(kCGColorSpaceModelCMYK      , 64, kCGBitmapByteOrderDefault,  kCGImageAlphaNone              ), GUID_WICPixelFormat64bppCMYK      },
+        { CG_FORMAT_KEY(kCGColorSpaceModelCMYK      , 80, kCGBitmapByteOrderDefault,  kCGImageAlphaLast              ), GUID_WICPixelFormat80bppCMYKAlpha },
+
+        { CG_FORMAT_KEY(kCGColorSpaceModelMonochrome,  1, kCGBitmapByteOrderDefault,  kCGImageAlphaNone              ), GUID_WICPixelFormatBlackWhite     },
+        { CG_FORMAT_KEY(kCGColorSpaceModelMonochrome,  2, kCGBitmapByteOrderDefault,  kCGImageAlphaNone              ), GUID_WICPixelFormat2bppGray       },
+        { CG_FORMAT_KEY(kCGColorSpaceModelMonochrome,  4, kCGBitmapByteOrderDefault,  kCGImageAlphaNone              ), GUID_WICPixelFormat4bppGray       },
+        { CG_FORMAT_KEY(kCGColorSpaceModelMonochrome,  8, kCGBitmapByteOrderDefault,  kCGImageAlphaNone              ), GUID_WICPixelFormat8bppGray       },
+        { CG_FORMAT_KEY(kCGColorSpaceModelMonochrome, 16, kCGBitmapByteOrderDefault,  kCGImageAlphaNone              ), GUID_WICPixelFormat16bppGray      },
+        { CG_FORMAT_KEY(kCGColorSpaceModelMonochrome, 16, kCGBitmapByteOrder16Little, kCGImageAlphaNone              ), GUID_WICPixelFormat16bppGray      },
+
+        { CG_FORMAT_KEY(kCGColorSpaceModelMonochrome,  8, kCGBitmapByteOrderDefault,  kCGImageAlphaOnly              ), GUID_WICPixelFormat8bppAlpha      },
+
+        { CG_FORMAT_KEY(kCGColorSpaceModelIndexed   ,  1, kCGBitmapByteOrderDefault,  kCGImageAlphaNone              ), GUID_WICPixelFormat1bppIndexed    },
+        { CG_FORMAT_KEY(kCGColorSpaceModelIndexed   ,  2, kCGBitmapByteOrderDefault,  kCGImageAlphaNone              ), GUID_WICPixelFormat2bppIndexed    },
+        { CG_FORMAT_KEY(kCGColorSpaceModelIndexed   ,  4, kCGBitmapByteOrderDefault,  kCGImageAlphaNone              ), GUID_WICPixelFormat4bppIndexed    },
+        { CG_FORMAT_KEY(kCGColorSpaceModelIndexed   ,  8, kCGBitmapByteOrderDefault,  kCGImageAlphaNone              ), GUID_WICPixelFormat8bppIndexed    },
+    };
+    // clang-format on
+
+    RETURN_HR_IF(E_POINTER, !pixelFormat);
+
+    CGColorSpaceModel colorSpaceModel = CGColorSpaceGetModel(colorSpace);
+
+    unsigned int alphaInfo = bitmapInfo & kCGBitmapAlphaInfoMask;
+    unsigned int byteOrder = bitmapInfo & kCGBitmapByteOrderMask;
+    unsigned int formatImputedBpp = 0;
+    switch (byteOrder) {
+        case kCGBitmapByteOrder32Little:
+        case kCGBitmapByteOrder32Big:
+            formatImputedBpp = 32;
+            break;
+        case kCGBitmapByteOrder16Little:
+        case kCGBitmapByteOrder16Big:
+            formatImputedBpp = 16;
+            break;
+    }
+
+    if (formatImputedBpp == 0 || formatImputedBpp == bitsPerPixel) {
+        auto found = s_CGWICFormatMap.find(CG_FORMAT_KEY(colorSpaceModel, bitsPerPixel, bitmapInfo, 0));
+        if (found != s_CGWICFormatMap.end()) {
+            *pixelFormat = found->second;
+            return S_OK;
+        }
+    }
+
+    size_t nComponents = CGColorSpaceGetNumberOfComponents(colorSpace);
+    TraceError(TAG,
+               L"Unfulfillable request for format with %dbpp%s (%d/component), %d-component color space, bitmap info %x",
+               bitsPerPixel,
+               (bitmapInfo & kCGBitmapFloatComponents) != 0 ? " (floating-point)" : "",
+               bitsPerComponent,
+               nComponents,
+               bitmapInfo);
+    return E_NOTIMPL;
+}
+
+static void __InvertMemcpy(void* dest, const void* src, size_t len) {
+    uint32_t* d32 = (uint32_t*)dest;
+    const uint32_t* s32 = (const uint32_t*)src;
+
+    for (; len >= 4; len -= 4) {
+        *d32++ = ~*s32++;
+    }
+
+    uint8_t* d8 = (uint8_t*)d32;
+    const uint8_t* s8 = (const uint8_t*)s32;
+
+    for (; len > 0; --len) {
+        *d8++ = ~*s8++;
+    }
+}
+
+// __CGImageMaskConvertToWICAlphaBitmap converts a 1, 2, 4, or 8-bpp grayscale "mask" into an alpha-only image for a D2D opacity brush.
+// On the reference platform, mask images are grayscale images whose pixel values signify the pixel's alpha transmissivity.
+// A fully black region (S = 0.0) is translated to a fully opaque region (A = 1.0).
+// A fully white region (S = 1.0), on the other hand, becomes a fully transparent region (A = 0.0).
+// Values that fall within the range (0.0, 1.0) are converted into complementary alpha values (A = 1.0 - S).
+//
+// Conversion of 8bpp grayscale images is simple: Subtract the pixel's value from 255 and use the result as the alpha value.
+// Images of other bit depths have their pixels scaled to values between 0 and 255.
+static HRESULT __CGImageMaskConvertToWICAlphaBitmap(CGImageRef image, IWICBitmap** pAlphaBitmap) {
+    RETURN_HR_IF_NULL(E_INVALIDARG, image);
+    RETURN_HR_IF_NULL(E_POINTER, pAlphaBitmap);
+
+    RETURN_HR_IF(E_INVALIDARG, !CGImageIsMask(image));
+
+    ComPtr<IWICImagingFactory> imagingFactory;
+    RETURN_IF_FAILED(_CGGetWICFactory(&imagingFactory));
+
+    woc::unique_cf<CGImageRef> gray8Bitmap{ _CGImageCreateCopyWithPixelFormat(image, GUID_WICPixelFormat8bppGray) };
+    RETURN_HR_IF_NULL(E_INVALIDARG, gray8Bitmap);
+
+    ComPtr<IWICBitmap> gray8Source;
+    RETURN_IF_FAILED(_CGImageGetWICImageSource(gray8Bitmap.get(), &gray8Source));
+
+    unsigned int w = 0, h = 0;
+    RETURN_IF_FAILED(gray8Source->GetSize(&w, &h));
+
+    ComPtr<IWICBitmapLock> gray8Lock;
+    RETURN_IF_FAILED(gray8Source->Lock(nullptr, WICBitmapLockRead, &gray8Lock));
+
+    unsigned char* gray8Data;
+    size_t gray8Len, gray8Stride;
+    RETURN_IF_FAILED(gray8Lock->GetStride(&gray8Stride));
+    RETURN_IF_FAILED(gray8Lock->GetDataPointer(&gray8Len, &gray8Data));
+
+    ComPtr<IWICBitmap> alphaBitmap;
+    RETURN_IF_FAILED(imagingFactory->CreateBitmap(w, h, GUID_WICPixelFormat8bppAlpha, WICBitmapCacheOnDemand, &alphaBitmap));
+
+    ComPtr<IWICBitmapLock> alpha8Lock;
+    RETURN_IF_FAILED(alphaBitmap->Lock(nullptr, WICBitmapLockWrite, &alpha8Lock));
+
+    unsigned char* alpha8Data;
+    size_t alpha8Len, alpha8Stride;
+    RETURN_IF_FAILED(alpha8Lock->GetStride(&alpha8Stride));
+    RETURN_IF_FAILED(alpha8Lock->GetDataPointer(&alpha8Len, &alpha8Data));
+
+    RETURN_HR_IF(E_UNEXPECTED, alpha8Len < gray8Len || alpha8Stride < gray8Stride);
+
+    if (alpha8Len == gray8Len && alpha8Stride == gray8Stride) {
+        __InvertMemcpy(alpha8Data, gray8Data, gray8Len);
+    } else {
+        // stride or length (likely both) differ
+        uint8_t* destEnd = alpha8Data + alpha8Len;
+        for (uint8_t *src = gray8Data, *dest = alpha8Data; dest < destEnd; src += gray8Stride, dest += alpha8Stride) {
+            __InvertMemcpy(dest, src, gray8Stride);
+        }
+    }
+
+    *pAlphaBitmap = alphaBitmap.Detach();
+    return S_OK;
+}
+
+HRESULT _CGImageConvertToMaskCompatibleWICBitmap(CGImageRef image, IWICBitmap** pBitmap) {
+    RETURN_HR_IF_NULL(E_INVALIDARG, image);
+    RETURN_HR_IF_NULL(E_POINTER, pBitmap);
+
+    if (CGImageIsMask(image)) {
+        // Hard way: Convert the image's gray values to alpha values A where G = <pixel gray value>; A = (1 - G)
+        // We can perhaps take the easy way out and create an A8 only image, since D2D supports them.
+
+        // We can safely assume the image is already in Gray, so its pixels will be 1, 2, 4, or 8bpp grayscale.
+        // Upconvert to 8bpp grayscale to simplify the code here. If it's bad perf-wise we can break it down.
+        return __CGImageMaskConvertToWICAlphaBitmap(image, pBitmap);
+    }
+
+    // "Easy" way: Convert the image to an acceptable D2D pixel format (if necessary) and turn it into a D2D bitmap.
+    WICPixelFormatGUID imagePixelFormat = _CGImageGetWICPixelFormat(image);
+
+    woc::unique_cf<CGImageRef> convertedImage{ CGImageRetain(image) };
+    if (!_CGIsValidRenderTargetPixelFormat(imagePixelFormat)) {
+        // convert it to a valid pixelformat
+        convertedImage.reset(_CGImageCreateCopyWithPixelFormat(image, GUID_WICPixelFormat32bppPRGBA));
+    }
+
+    return _CGImageGetWICImageSource(convertedImage.get(), pBitmap);
+}
+
+#pragma endregion WIC_HELPERS

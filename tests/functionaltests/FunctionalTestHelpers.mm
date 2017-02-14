@@ -20,6 +20,7 @@
 
 #include "UIKit/UIApplication.h"
 #include "UIViewInternal.h"
+
 #import <Starboard/SmartTypes.h>
 #import <StringHelpers.h>
 #import <UWP/WindowsApplicationModel.h>
@@ -57,5 +58,6 @@ NSString* getModulePath() {
 NSString* appendPathRelativeToFTModule(NSString* pathAppendage) {
     StrongId<NSString> refPath = getModulePath();
     refPath = [refPath stringByAppendingPathComponent:pathAppendage];
+
     return [refPath stringByReplacingOccurrencesOfString:@"/" withString:@"\\"];
 }

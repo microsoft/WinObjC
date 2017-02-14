@@ -17,11 +17,17 @@ Write-Host "Adding `'$toolsDir`' to the path and the current shell path"
 Install-ChocolateyPath "$toolsDir"
 $env:Path = "$($env:Path);$toolsDir"
 
-Write-Host "Installing Objective-C Visual Studio Extension ... "
+Write-Host "Installing Objective-C Visual Studio 2015 Extension ... "
 Install-ChocolateyVsixPackage -PackageName "objc-syntax-highlighting" -VsixUrl "file:///$toolsDir/objc-syntax-highlighting.vsix"
 
-Write-Host "Installing Nugetizer Visual Studio Extension ... "
+Write-Host "Installing Objective-C Visual Studio 2017 Extension ... "
+Install-ChocolateyVsixPackage -PackageName "objc-syntax-highlighting" -VsixUrl "file:///$toolsDir/objc-language-services-VS2017.vsix"
+
+Write-Host "Installing Nugetizer Visual Studio 2015 Extension ... "
 Install-ChocolateyVsixPackage -PackageName "Nugetizer3000" -VsixUrl "http://bit.ly/nugetizer2015"
+
+Write-Host "Installing Nugetizer Visual Studio 2017 Extension ... "
+Install-ChocolateyVsixPackage -PackageName "Nugetizer3000" -VsixUrl "http://bit.ly/nugetizer2017"
 
 # if removing $url64, please remove from here
 # despite the name "Install-ChocolateyZipPackage" this also works with 7z archives

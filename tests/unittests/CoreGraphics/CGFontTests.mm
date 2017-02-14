@@ -109,10 +109,8 @@ TEST(CGFont, GetDescent) {
 }
 
 TEST(CGFont, CreateWithDataProvider) {
-    char fullPath[_MAX_PATH];
-    GetModuleFileNameA(NULL, fullPath, _MAX_PATH);
-    NSURL* testFileURL =
-        [NSURL fileURLWithPath:[[@(fullPath) stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"/data/WinObjC.ttf"]];
+    auto fullPath = GetCurrentTestDirectory();
+    NSURL* testFileURL = [NSURL fileURLWithPath:[@(fullPath.c_str()) stringByAppendingPathComponent:@"/data/WinObjC.ttf"]];
 
     CGDataProviderRef dataProvider = CGDataProviderCreateWithURL((__bridge CFURLRef)testFileURL);
     CFAutorelease(dataProvider);

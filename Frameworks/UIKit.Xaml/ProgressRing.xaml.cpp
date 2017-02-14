@@ -31,8 +31,9 @@ ProgressRing::ProgressRing() {
 ////////////////////////////////////////////////////////////////////////////////////
 // ObjectiveC Interop
 ////////////////////////////////////////////////////////////////////////////////////
-UIKIT_XAML_EXPORT IInspectable* XamlCreateProgressRing() {
-    return InspectableFromObject(ref new UIKit::Xaml::ProgressRing()).Detach();
+UIKIT_XAML_EXPORT void XamlCreateProgressRing(IInspectable** created) {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable = InspectableFromObject(ref new UIKit::Xaml::ProgressRing());
+    *created = inspectable.Detach();
 }
 
 // clang-format on

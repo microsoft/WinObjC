@@ -29,7 +29,7 @@
     <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <Keyword>IslandwoodProj</Keyword>
-    <ProjectGuid>{E45BBE1B-1E64-4C3C-9D81-433F9AB81749}</ProjectGuid>
+    <ProjectGuid>{35213666-E979-4A72-AAE1-0BB309110B0D}</ProjectGuid>
     <RootNamespace>GLKitComplex</RootNamespace>
     <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">..\..\..\..</WINOBJC_SDK_ROOT>
   </PropertyGroup>
@@ -59,9 +59,6 @@
     <TargetName>GLKitComplex</TargetName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-    <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.props" />
-  </ImportGroup>
   <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -92,7 +89,7 @@
       <HeaderMap>Project</HeaderMap>
       <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>true</ObjectiveCModules>
+      <ObjectiveCModules>false</ObjectiveCModules>
       <OptimizationLevel>Disabled</OptimizationLevel>
       <PreprocessorDefinitions>DEBUG=1</PreprocessorDefinitions>
     </ClangCompile>
@@ -116,7 +113,7 @@
       <HeaderMap>Project</HeaderMap>
       <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>true</ObjectiveCModules>
+      <ObjectiveCModules>false</ObjectiveCModules>
       <OptimizationLevel>Disabled</OptimizationLevel>
       <PreprocessorDefinitions>DEBUG=1</PreprocessorDefinitions>
     </ClangCompile>
@@ -138,7 +135,7 @@
       <HeaderMap>Project</HeaderMap>
       <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>true</ObjectiveCModules>
+      <ObjectiveCModules>false</ObjectiveCModules>
       <OptimizationLevel>MinSpace</OptimizationLevel>
     </ClangCompile>
     <Link>
@@ -159,7 +156,7 @@
       <HeaderMap>Project</HeaderMap>
       <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>true</ObjectiveCModules>
+      <ObjectiveCModules>false</ObjectiveCModules>
       <OptimizationLevel>MinSpace</OptimizationLevel>
     </ClangCompile>
     <Link>
@@ -202,6 +199,17 @@
       <VariableFile Condition="'$(Configuration)'=='Release'">GLKitComplex-Release-xcvars.txt</VariableFile>
     </SBInfoPlistCopy>
     <SBResourceCopy Include="..\..\GLKitComplex\Data" />
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\lobbyxneg.JPG" />
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\lobbyxpos.JPG" />
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\lobbyyneg.JPG" />
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\lobbyypos.JPG" />
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\lobbyzneg.JPG" />
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\lobbyzpos.JPG" />
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\seafloor.png" />
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\teapot_decal.png" />
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\teapot_emissive.png" />
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\teapot_specular.pdn" />
+    <SBResourceCopy Include="..\..\GLKitComplex\Data\teapot_specular.png" />
     <SBResourceCopy Include="..\..\GLKitComplex\Data\utah-teapot.obj" />
     <StoryboardCompile Include="..\..\GLKitComplex\Base.lproj\LaunchScreen.storyboard">
       <VariantDir>Base.lproj</VariantDir>
@@ -232,7 +240,5 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.targets" />
-  </ImportGroup>
+
 </Project>

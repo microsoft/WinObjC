@@ -19,8 +19,12 @@
 #include <CoreFoundation/CoreFoundation.h>
 #include <CoreGraphics/CoreGraphics.h>
 
+#include <string>
+
 CGImageRef _CGImageCreateFromPNGFile(CFStringRef filename);
+CGImageRef _CGImageCreateFromJPEGFile(CFStringRef filename);
 CFDataRef _CFDataCreatePNGFromCGImage(CGImageRef image);
 bool _WriteCFDataToFile(CFDataRef data, CFStringRef filename);
 CFDataRef _CFDataCreateFromCGImage(CGImageRef image);
 CFStringRef _CFStringCreateAbsolutePath(CFStringRef relativePath);
+CFStringRef _CFStringCreateWithStdString(const std::string& string);

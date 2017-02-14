@@ -66,7 +66,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 + (WMEMediaOverlay*)make:(WMEMediaClip*)clip ACTIVATOR;
 + (WMEMediaOverlay*)makeWithPositionAndOpacity:(WMEMediaClip*)clip position:(WFRect*)position opacity:(double)opacity ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WFRect* position;
 @property double opacity;
@@ -89,7 +89,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 + (void)createFromImageFileAsync:(RTObject<WSIStorageFile>*)file originalDuration:(WFTimeSpan*)originalDuration success:(void (^)(WMEMediaClip*))success failure:(void (^)(NSError*))failure;
 + (WMEMediaClip*)createFromSurface:(RTObject<WGDDIDirect3DSurface>*)surface originalDuration:(WFTimeSpan*)originalDuration;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property unsigned int selectedEmbeddedAudioTrackIndex;
 @property (retain) WFTimeSpan* trimTimeFromEnd;
@@ -116,7 +116,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEEmbeddedAudioTrack : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (WMMAudioEncodingProperties*)getAudioEncodingProperties;
 @end
@@ -132,7 +132,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 + (WMEBackgroundAudioTrack*)createFromEmbeddedAudioTrack:(WMEEmbeddedAudioTrack*)embeddedAudioTrack;
 + (void)createFromFileAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(WMEBackgroundAudioTrack*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double volume;
 @property (retain) WFTimeSpan* trimTimeFromStart;
@@ -155,9 +155,9 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEMediaComposition : RTObject
 + (void)loadAsync:(WSStorageFile*)file success:(void (^)(WMEMediaComposition*))success failure:(void (^)(NSError*))failure;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSMutableArray* /* WMEBackgroundAudioTrack* */ backgroundAudioTracks;
 @property (readonly) NSMutableArray* /* WMEMediaClip* */ clips;
@@ -186,9 +186,9 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEMediaOverlayLayer : RTObject
 + (WMEMediaOverlayLayer*)makeWithCompositorDefinition:(RTObject<WMEIVideoCompositorDefinition>*)compositorDefinition ACTIVATOR;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) RTObject<WMEIVideoCompositorDefinition>* customCompositorDefinition;
 @property (readonly) NSMutableArray* /* WMEMediaOverlay* */ overlays;

@@ -41,7 +41,7 @@
 OBJCUWP_WINDOWS_PHONE_UI_INPUT_EXPORT
 @interface WPUIBackPressedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL handled;
 @end
@@ -55,7 +55,7 @@ OBJCUWP_WINDOWS_PHONE_UI_INPUT_EXPORT
 OBJCUWP_WINDOWS_PHONE_UI_INPUT_EXPORT
 @interface WPUICameraEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @end
 

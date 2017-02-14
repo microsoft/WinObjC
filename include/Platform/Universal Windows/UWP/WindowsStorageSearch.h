@@ -186,7 +186,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 + (WSSContentIndexer*)getIndexerWithName:(NSString *)indexName;
 + (WSSContentIndexer*)getIndexer;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) uint64_t revision;
 - (RTObject<WFIAsyncAction>*)addAsync:(RTObject<WSSIIndexableContent>*)indexableContent;
@@ -208,9 +208,9 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 
 OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSValueAndLanguage : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) RTObject* value;
 @property (retain) NSString * language;
@@ -225,7 +225,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSContentIndexerQuery : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSStorageFolder* queryFolder;
 - (void)getCountAsyncWithSuccess:(void (^)(unsigned int))success failure:(void (^)(NSError*))failure;
@@ -243,9 +243,9 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 
 OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSIndexableContent : RTObject <WSSIIndexableContent>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * streamContentType;
 @property (retain) RTObject<WSSIRandomAccessStream>* stream;
@@ -263,9 +263,9 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSQueryOptions : RTObject
 + (WSSQueryOptions*)makeCommonFileQuery:(WSSCommonFileQuery)query fileTypeFilter:(id<NSFastEnumeration> /* NSString * */)fileTypeFilter ACTIVATOR;
 + (WSSQueryOptions*)makeCommonFolderQuery:(WSSCommonFolderQuery)query ACTIVATOR;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * userSearchFilter;
 @property (retain) NSString * language;
@@ -292,7 +292,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSStorageFileQueryResult : RTObject <WSSIStorageQueryResultBase>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSStorageFolder* folder;
 - (EventRegistrationToken)addContentsChangedEvent:(void(^)(RTObject<WSSIStorageQueryResultBase>*, RTObject*))del;
@@ -317,7 +317,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSStorageFolderQueryResult : RTObject <WSSIStorageQueryResultBase>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSStorageFolder* folder;
 - (EventRegistrationToken)addContentsChangedEvent:(void(^)(RTObject<WSSIStorageQueryResultBase>*, RTObject*))del;
@@ -341,7 +341,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSStorageItemQueryResult : RTObject <WSSIStorageQueryResultBase>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSStorageFolder* folder;
 - (EventRegistrationToken)addContentsChangedEvent:(void(^)(RTObject<WSSIStorageQueryResultBase>*, RTObject*))del;
@@ -365,7 +365,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSSortEntryVector : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -391,7 +391,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 OBJCUWP_WINDOWS_STORAGE_EXPORT
 @interface WSSStorageLibraryContentChangedTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSStorageFolder* folder;
 - (WSSStorageItemQueryResult*)createModifiedSinceQuery:(WFDateTime*)lastQueryTime;

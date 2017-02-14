@@ -117,7 +117,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 + (NSString *)getDeviceSelector;
 + (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDWWiFiDirectDevice*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDWWiFiDirectConnectionStatus connectionStatus;
 @property (readonly) NSString * deviceId;
@@ -149,9 +149,9 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 @interface WDWWiFiDirectConnectionParameters : RTObject <WDEIDevicePairingSettings>
 + (WDEDevicePairingKinds)getDevicePairingKinds:(WDWWiFiDirectConfigurationMethod)configurationMethod;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property int16_t groupOwnerIntent;
 @property WDWWiFiDirectPairingProcedure preferredPairingProcedure;
@@ -168,9 +168,9 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 @interface WDWWiFiDirectInformationElement : RTObject
 + (NSMutableArray* /* WDWWiFiDirectInformationElement* */)createFromBuffer:(RTObject<WSSIBuffer>*)buffer;
 + (NSMutableArray* /* WDWWiFiDirectInformationElement* */)createFromDeviceInformation:(WDEDeviceInformation*)deviceInformation;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) RTObject<WSSIBuffer>* value;
 @property uint8_t ouiType;
@@ -186,7 +186,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 @interface WDWWiFiDirectLegacySettings : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * ssid;
 @property (retain) WSCPasswordCredential* passphrase;
@@ -202,7 +202,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 @interface WDWWiFiDirectAdvertisement : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WDWWiFiDirectAdvertisementListenStateDiscoverability listenStateDiscoverability;
 @property BOOL isAutonomousGroupOwnerEnabled;
@@ -220,7 +220,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 @interface WDWWiFiDirectAdvertisementPublisherStatusChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDWWiFiDirectError error;
 @property (readonly) WDWWiFiDirectAdvertisementPublisherStatus status;
@@ -234,9 +234,9 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 @interface WDWWiFiDirectAdvertisementPublisher : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDWWiFiDirectAdvertisement* advertisement;
 @property (readonly) WDWWiFiDirectAdvertisementPublisherStatus status;
@@ -255,7 +255,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 @interface WDWWiFiDirectConnectionRequest : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDEDeviceInformation* deviceInformation;
 - (void)close;
@@ -270,7 +270,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 @interface WDWWiFiDirectConnectionRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (WDWWiFiDirectConnectionRequest*)getConnectionRequest;
 @end
@@ -283,9 +283,9 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 
 OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_EXPORT
 @interface WDWWiFiDirectConnectionListener : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (EventRegistrationToken)addConnectionRequestedEvent:(void(^)(WDWWiFiDirectConnectionListener*, WDWWiFiDirectConnectionRequestedEventArgs*))del;
 - (void)removeConnectionRequestedEvent:(EventRegistrationToken)tok;

@@ -23,6 +23,7 @@
 - (id)initWithFrame:(CGRect)rect drawOptions:(CGDrawOptions*)options {
     if (self = [super initWithFrame:rect]) {
         _options = options;
+        [self setBackgroundColor:[UIColor whiteColor]];
     }
     return self;
 }
@@ -32,6 +33,7 @@
 }
 
 - (void)drawRect:(CGRect)rect {
+    [super drawRect:rect];
     if (drawBlock) {
         drawBlock();
     }

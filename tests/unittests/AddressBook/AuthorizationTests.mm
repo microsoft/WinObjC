@@ -16,11 +16,11 @@
 
 #include <TestFramework.h>
 
-#import <COMIncludes.h>
-#import "MockClass.h"
+#include <COMIncludes.h>
+#include "MockClass.h"
 #include <windows.devices.enumeration.h>
 #include <windows.foundation.h>
-#import <COMIncludes_End.h>
+#include <COMIncludes_End.h>
 
 #import <CoreFoundation/CoreFoundation.h>
 #import <Foundation/Foundation.h>

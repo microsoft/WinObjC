@@ -50,9 +50,9 @@ typedef unsigned WMPPlaylistFormat;
 OBJCUWP_WINDOWS_MEDIA_PLAYLISTS_EXPORT
 @interface WMPPlaylist : RTObject
 + (void)loadAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(WMPPlaylist*))success failure:(void (^)(NSError*))failure;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSMutableArray* /* WSStorageFile* */ files;
 - (RTObject<WFIAsyncAction>*)saveAsync;

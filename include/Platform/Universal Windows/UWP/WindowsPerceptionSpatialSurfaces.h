@@ -45,7 +45,7 @@
 OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_SURFACES_EXPORT
 @interface WPSSSpatialSurfaceInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFGUID* id;
 @property (readonly) WFDateTime* updateTime;
@@ -63,7 +63,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_SURFACES_EXPORT
 OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_SURFACES_EXPORT
 @interface WPSSSpatialSurfaceMeshBuffer : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) RTObject<WSSIBuffer>* data;
 @property (readonly) unsigned int elementCount;
@@ -80,7 +80,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_SURFACES_EXPORT
 OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_SURFACES_EXPORT
 @interface WPSSSpatialSurfaceMesh : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WPSSpatialCoordinateSystem* coordinateSystem;
 @property (readonly) WPSSSpatialSurfaceInfo* surfaceInfo;
@@ -98,9 +98,9 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_SURFACES_EXPORT
 
 OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_SURFACES_EXPORT
 @interface WPSSSpatialSurfaceMeshOptions : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WGDDirectXPixelFormat vertexPositionFormat;
 @property WGDDirectXPixelFormat vertexNormalFormat;
@@ -120,9 +120,9 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_SURFACES_EXPORT
 OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_SURFACES_EXPORT
 @interface WPSSSpatialSurfaceObserver : RTObject
 + (void)requestAccessAsyncWithSuccess:(void (^)(WPSSpatialPerceptionAccessStatus))success failure:(void (^)(NSError*))failure;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (EventRegistrationToken)addObservedSurfacesChangedEvent:(void(^)(WPSSSpatialSurfaceObserver*, RTObject*))del;
 - (void)removeObservedSurfacesChangedEvent:(EventRegistrationToken)tok;
