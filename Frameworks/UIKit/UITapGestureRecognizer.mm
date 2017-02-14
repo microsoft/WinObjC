@@ -282,7 +282,7 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
             } else {
                 _state = UIGestureRecognizerStateRecognized;
 
-                // TODO: we should revisit. Fail all other active UITapGestureRecognizer should not
+                // TODO: #1961 we should revisit. Fail all other active UITapGestureRecognizer should not
                 // rely on this explict logic. instead, it should go through the delegates and method override
                 [[_UIGestureCoordinator singleton] failOtherTapGesturesExcept:self];
                 TraceVerbose(TAG, L"recognized.");
