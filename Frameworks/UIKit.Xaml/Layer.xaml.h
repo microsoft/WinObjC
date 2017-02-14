@@ -69,7 +69,7 @@ public:
     }
 
     // Allows arbitrary framework elements to opt-into hosting sublayers
-        static property Windows::UI::Xaml::DependencyProperty^ SublayerCanvasProperty {
+    static property Windows::UI::Xaml::DependencyProperty^ SublayerCanvasProperty {
         Windows::UI::Xaml::DependencyProperty^ get();
     }
 

@@ -33,6 +33,27 @@
 @class WXFrameworkElement;
 @class WUXIPointerRoutedEventArgs;
 
+// Round subpixel values to be able to perform per-pixel UI placement/calculations
+inline float doPixelRound(float f) {
+    return (float)(floorf((f * 2) + 0.5) / 2.0f);
+}
+
+// Round subpixel values to be able to perform per-pixel UI placement/calculations
+inline CGSize doPixelRound(CGSize size) {
+    size.width = doPixelRound(size.width);
+    size.height = doPixelRound(size.height);
+    return size;
+}
+
+// Round subpixel values to be able to perform per-pixel UI placement/calculations
+inline CGRect doPixelRound(CGRect frame) {
+    frame.origin.x = doPixelRound(frame.origin.x);
+    frame.origin.y = doPixelRound(frame.origin.y);
+    frame.size.width = doPixelRound(frame.size.width);
+    frame.size.height = doPixelRound(frame.size.height);
+    return frame;
+}
+
 class UIViewPrivateState : public LLTreeNode<UIViewPrivateState, UIView> {
 public:
     id superview; //  id
