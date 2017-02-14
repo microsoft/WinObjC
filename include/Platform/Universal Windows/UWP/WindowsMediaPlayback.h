@@ -235,7 +235,7 @@ OBJCUWP_WINDOWS_MEDIA_CORE_PROTECTION_PLAYBACK_CAPTURE_DEVICES_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property (readonly) double newRate __attribute__ ((ns_returns_not_retained));
+@property (readonly) double newRate;
 @end
 
 #endif // __WMPMediaPlayerRateChangedEventArgs_DEFINED__
@@ -1023,7 +1023,7 @@ OBJCUWP_WINDOWS_MEDIA_CORE_PROTECTION_PLAYBACK_CAPTURE_DEVICES_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property (readonly) WMPTimedMetadataTrackPresentationMode newPresentationMode __attribute__ ((ns_returns_not_retained));
+@property (readonly) WMPTimedMetadataTrackPresentationMode newPresentationMode;
 @property (readonly) WMPTimedMetadataTrackPresentationMode oldPresentationMode;
 @property (readonly) WMCTimedMetadataTrack* track;
 @end

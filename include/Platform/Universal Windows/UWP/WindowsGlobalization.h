@@ -453,7 +453,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
 - (NSString *)nanosecondAsPaddedString:(int)minDigits;
 - (int)compare:(WGCalendar*)other;
 - (int)compareDateTime:(WFDateTime*)other;
-- (void)copyTo:(WGCalendar*)other __attribute__ ((ns_returns_not_retained));
+- (void)copyTo:(WGCalendar*)other;
 - (NSString *)getTimeZone;
 - (void)changeTimeZone:(NSString *)timeZoneId;
 - (NSString *)timeZoneAsFullString;

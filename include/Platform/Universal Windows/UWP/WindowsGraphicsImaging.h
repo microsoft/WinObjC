@@ -648,9 +648,9 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 @property (readonly) int pixelHeight;
 @property (readonly) int pixelWidth;
 - (WGIBitmapBuffer*)lockBuffer:(WGIBitmapBufferAccessMode)mode;
-- (void)copyTo:(WGISoftwareBitmap*)bitmap __attribute__ ((ns_returns_not_retained));
-- (void)copyFromBuffer:(RTObject<WSSIBuffer>*)buffer __attribute__ ((ns_returns_not_retained));
-- (void)copyToBuffer:(RTObject<WSSIBuffer>*)buffer __attribute__ ((ns_returns_not_retained));
+- (void)copyTo:(WGISoftwareBitmap*)bitmap;
+- (void)copyFromBuffer:(RTObject<WSSIBuffer>*)buffer;
+- (void)copyToBuffer:(RTObject<WSSIBuffer>*)buffer;
 - (WGISoftwareBitmap*)getReadOnlyView;
 - (void)close;
 @end
