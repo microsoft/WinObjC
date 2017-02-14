@@ -6720,21 +6720,19 @@ void CFShowStr(CFStringRef str) {
 #undef HANGUL_NCOUNT
 
 /**
- @Status Stub
- @Notes
+ @Status NotInPlan
+ @Notes String hypenation is non-trivial and not used widely.  For regular text layout, Coretext provides hypenation through Dwrite.
 */
 CF_EXPORT CFIndex CFStringGetHyphenationLocationBeforeIndex(CFStringRef string, CFIndex location, CFRange limitRange, CFOptionFlags options, CFLocaleRef locale, UTF32Char *character) {
-    // TODO: 7495205: Needs implementation
     UNIMPLEMENTED();
     return StubReturn();
 }
 
 /**
- @Status Stub
- @Notes
+ @Status NotInPlan
+ @Notes String hypenation is non-trivial and not used widely.  For regular text layout, Coretext provides hypenation through Dwrite.
 */
 CF_EXPORT Boolean CFStringIsHyphenationAvailableForLocale(CFLocaleRef locale) {
-    // TODO: 7495205: Needs implementation
     UNIMPLEMENTED();
     return StubReturn();
 }
