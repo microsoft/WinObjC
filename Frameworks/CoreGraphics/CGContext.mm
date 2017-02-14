@@ -1943,37 +1943,105 @@ HRESULT __CGContext::DrawGlyphRuns(GlyphRunData* glyphRuns, size_t runsCount, bo
     // Undo assumed inversion about Y axis
     CGAffineTransform textTransform = CGAffineTransformScale(textMatrix, 1.0, -1.0);
     CGAffineTransform deviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(this);
+    CGAffineTransform combinedTransform = CGAffineTransformConcat(textTransform, deviceTransform);
 
     // Snap the vertical baseline to the nearest pixel to avoid blurring on devices with vertical antialiasing
     textTransform.ty = std::round(textTransform.ty);
 
-    CGAffineTransform finalTextTransform = CGAffineTransformConcat(textTransform, deviceTransform);
-    for (size_t i = 0; i < runsCount; ++i) {
-        if ((fabs(finalTextTransform.a * glyphRuns[i].run->fontEmSize) <= c_glyphThreshold &&
-             fabs(finalTextTransform.b * glyphRuns[i].run->fontEmSize) <= c_glyphThreshold) ||
-            (fabs(finalTextTransform.d * glyphRuns[i].run->fontEmSize) <= c_glyphThreshold &&
-             fabs(finalTextTransform.c * glyphRuns[i].run->fontEmSize) <= c_glyphThreshold)) {
-            TraceWarning(TAG, L"Glyphs too small to be rendered");
+    bool fastPathTextDrawing =
+        ((textTransform.a == 1.0f && fabs(textTransform.d) == 1.0f && textTransform.b == 0.0f && textTransform.c == 0.0f) ||
+         !transformByGlyph) &&
+        state.textDrawingMode == kCGTextFill;
 
+    std::vector<GlyphRunData> runs;
+
+    size_t maxGlyphCount = std::max_element(glyphRuns, glyphRuns + runsCount, [](const GlyphRunData& left, const GlyphRunData& right) {
+                               return left.run->glyphCount < right.run->glyphCount;
+                           })->run->glyphCount;
+
+    // Shared between transformed glyph runs
+    std::unique_ptr<CGFloat[]> zeroAdvances(new CGFloat[maxGlyphCount]());
+
+    for (size_t i = 0; i < runsCount; ++i) {
+        auto& run = glyphRuns[i].run;
+        if ((fabs(combinedTransform.a * run->fontEmSize) <= c_glyphThreshold &&
+             fabs(combinedTransform.b * run->fontEmSize) <= c_glyphThreshold) ||
+            (fabs(combinedTransform.d * run->fontEmSize) <= c_glyphThreshold &&
+             fabs(combinedTransform.c * run->fontEmSize) <= c_glyphThreshold)) {
             // Not a failure state! Not drawing the glyphs is *okay*.
-            return S_FALSE;
+            TraceWarning(TAG, L"Glyphs too small to be rendered");
+        } else {
+            if (fastPathTextDrawing) {
+                runs.emplace_back(glyphRuns[i]);
+            } else {
+                // Get the linear transformation that is the inverse of the text transform
+                // We transform the positions of each glyph by the inverse so they will be positioned correctly
+                // While still being transformed per glyph by the text transformation
+                CGAffineTransform invertedTextTransformation = CGAffineTransformInvert(
+                    CGAffineTransformScale(CGAffineTransformMake(textTransform.a, textTransform.b, textTransform.c, textTransform.d, 0, 0),
+                                           1,
+                                           -1));
+
+                DWRITE_GLYPH_OFFSET* positions = new DWRITE_GLYPH_OFFSET[run->glyphCount];
+                // First glyph's origin is at the given relative position for the glyph run
+                CGPoint runningPosition{ glyphRuns[i].relativePosition.x, std::round(glyphRuns[i].relativePosition.y) };
+                for (size_t j = 0; j < run->glyphCount; ++j) {
+                    // Invert position by text transformation
+                    CGPoint transformedPosition = CGPointApplyAffineTransform(runningPosition, invertedTextTransformation);
+
+                    // Set current glyph's position to be the actual position transformed by the inverted text position
+                    // So when the space is transformed by the text position it will be drawn in the correct real position
+                    positions[j] = DWRITE_GLYPH_OFFSET{ transformedPosition.x + run->glyphOffsets[j].advanceOffset,
+                                                        std::round(transformedPosition.y + run->glyphOffsets[j].ascenderOffset) };
+
+                    // Translate position of next glyph by current glyph's advance
+                    runningPosition.x += run->glyphAdvances[j];
+                }
+
+                DWRITE_GLYPH_RUN* transformedGlyphRun =
+                    new DWRITE_GLYPH_RUN{ run->fontFace,      run->fontEmSize, run->glyphCount, run->glyphIndices,
+                                          zeroAdvances.get(), positions,       run->isSideways, run->bidiLevel };
+                runs.emplace_back(GlyphRunData{ transformedGlyphRun, CGPointZero, glyphRuns[i].attributes });
+            }
         }
     }
 
-    if (((textTransform.a == 1.0f && fabs(textTransform.d) == 1.0f && textTransform.b == 0.0f && textTransform.c == 0.0f) ||
-         !transformByGlyph) &&
-        state.textDrawingMode == kCGTextFill) {
-        // Able to fast-path simple text drawing that doesn't need to clip/stroke nor has text transformations
-        RETURN_IF_FAILED(Draw(_kCGCoordinateModeDeviceSpace, nullptr, [&](CGContextRef context, ID2D1DeviceContext* deviceContext) {
+    // Iterate through every glyph by incrementing pointer in glyphIndices array
+    ComPtr<ID2D1TransformedGeometry> transformedGeometry;
+    if (state.textDrawingMode & kCGTextStrokeClip) {
+        ComPtr<ID2D1PathGeometry> pathGeometry;
+        RETURN_IF_FAILED(Factory()->CreatePathGeometry(&pathGeometry));
+        ComPtr<ID2D1GeometrySink> sink;
+        RETURN_IF_FAILED(pathGeometry->Open(&sink));
+        for (auto& runData : runs) {
+            RETURN_IF_FAILED(runData.run->fontFace->GetGlyphRunOutline(runData.run->fontEmSize,
+                                                                       (runData.run->glyphIndices),
+                                                                       runData.run->glyphAdvances,
+                                                                       runData.run->glyphOffsets,
+                                                                       runData.run->glyphCount,
+                                                                       runData.run->isSideways,
+                                                                       ((runData.run->bidiLevel & 1) == 1),
+                                                                       sink.Get()));
+        }
+        RETURN_IF_FAILED(sink->Close());
+
+        // Transform the geometry by the final transformation to be stroked/clipped correctly
+        RETURN_IF_FAILED(
+            Factory()->CreateTransformedGeometry(pathGeometry.Get(), __CGAffineTransformToD2D_F(combinedTransform), &transformedGeometry));
+    }
+
+    HRESULT ret = Draw(_kCGCoordinateModeDeviceSpace, nullptr, [&](CGContextRef context, ID2D1DeviceContext* deviceContext) {
+        if (state.textDrawingMode & kCGTextFill) {
+            deviceContext->SetTransform(__CGAffineTransformToD2D_F(combinedTransform));
             D2D1_POINT_2F origin{ 0, 0 };
-            for (size_t i = 0; i < runsCount; ++i) {
-                if (glyphRuns[i].attributes) {
-                    CGColorRef fontColor = (CGColorRef)CFDictionaryGetValue(glyphRuns[i].attributes, _kCGForegroundColorAttributeName);
+            for (auto& runData : runs) {
+                if (runData.attributes) {
+                    CGColorRef fontColor = (CGColorRef)CFDictionaryGetValue(runData.attributes, _kCGForegroundColorAttributeName);
                     if (fontColor) {
                         CGContextSetFillColorWithColor(context, fontColor);
                     } else {
                         CFBooleanRef useContextColor =
-                            (CFBooleanRef)CFDictionaryGetValue(glyphRuns[i].attributes, _kCGForegroundColorFromContextAttributeName);
+                            (CFBooleanRef)CFDictionaryGetValue(runData.attributes, _kCGForegroundColorFromContextAttributeName);
                         if (!useContextColor || !CFBooleanGetValue(useContextColor)) {
                             // Neither given a color nor use current context color, so set the fill color to black
                             CGContextSetRGBFillColor(context, 0, 0, 0, 1);
@@ -1981,117 +2049,38 @@ HRESULT __CGContext::DrawGlyphRuns(GlyphRunData* glyphRuns, size_t runsCount, bo
                     }
                 }
 
-                CGAffineTransform totalTransform =
-                    CGAffineTransformConcat(textTransform,
-                                            CGAffineTransformTranslate(deviceTransform,
-                                                                       glyphRuns[i].relativePosition.x,
-                                                                       std::round(glyphRuns[i].relativePosition.y)));
-                deviceContext->SetTransform(__CGAffineTransformToD2D_F(totalTransform));
-                deviceContext->DrawGlyphRun(origin, glyphRuns[i].run, state.fillBrush.Get(), DWRITE_MEASURING_MODE_NATURAL);
-            }
-            return S_OK;
-        }));
-    } else {
-        // Get the linear transformation that is the inverse of the text transform
-        // We transform the positions of each glyph by the inverse so they will be positioned correctly
-        // While still being transformed per glyph by the text transformation
-        CGAffineTransform invertedTextTransformation = CGAffineTransformInvert(
-            CGAffineTransformScale(CGAffineTransformMake(textTransform.a, textTransform.b, textTransform.c, textTransform.d, 0, 0), 1, -1));
-
-        // Vectors which hold the positions of each glyph that we give to DWRITE for drawing
-        std::vector<std::vector<DWRITE_GLYPH_OFFSET>> positionsVectors(runsCount);
-
-        // Used for creating vector of advances to be shared
-        size_t maxGlyphCount = 0;
-
-        for (size_t i = 0; i < runsCount; ++i) {
-            auto& positions = positionsVectors[i];
-            auto& run = glyphRuns[i].run;
-            positions.resize(run->glyphCount);
-            maxGlyphCount = std::max(maxGlyphCount, run->glyphCount);
-            // First glyph's origin is at the given relative position for the glyph run
-            CGPoint runningPosition{ glyphRuns[i].relativePosition.x, std::round(glyphRuns[i].relativePosition.y) };
-            for (size_t j = 0; j < run->glyphCount; ++j) {
-                // Invert position by text transformation
-                CGPoint transformedPosition = CGPointApplyAffineTransform(runningPosition, invertedTextTransformation);
-
-                // Set current glyph's position to be the actual position transformed by the inverted text position
-                // So when the space is transformed by the text position it will be drawn in the correct real position
-                positions[j] = DWRITE_GLYPH_OFFSET{ transformedPosition.x + run->glyphOffsets[j].advanceOffset,
-                                                    std::round(transformedPosition.y + run->glyphOffsets[j].ascenderOffset) };
-
-                // Translate position of next glyph by current glyph's advance
-                runningPosition.x += run->glyphAdvances[j];
-            }
-        }
-
-        // DWRITE will misbehave if we don't give it a pointer to zero advances so just create one vector for all advances
-        std::vector<FLOAT> emptyAdvances(maxGlyphCount, 0);
-
-        // Iterate through every glyph by incrementing pointer in glyphIndices array
-        ComPtr<ID2D1TransformedGeometry> transformedGeometry;
-        if (state.textDrawingMode & kCGTextStrokeClip) {
-            ComPtr<ID2D1PathGeometry> pathGeometry;
-            RETURN_IF_FAILED(Factory()->CreatePathGeometry(&pathGeometry));
-            ComPtr<ID2D1GeometrySink> sink;
-            RETURN_IF_FAILED(pathGeometry->Open(&sink));
-            for (size_t i = 0; i < runsCount; ++i) {
-                RETURN_IF_FAILED(glyphRuns[i].run->fontFace->GetGlyphRunOutline(glyphRuns[i].run->fontEmSize,
-                                                                                (glyphRuns[i].run->glyphIndices),
-                                                                                emptyAdvances.data(),
-                                                                                positionsVectors[i].data(),
-                                                                                positionsVectors[i].size(),
-                                                                                glyphRuns[i].run->isSideways,
-                                                                                (glyphRuns[i].run->bidiLevel % 2 == 1),
-                                                                                sink.Get()));
-            }
-            RETURN_IF_FAILED(sink->Close());
-
-            // Transform the geometry by the final transformation to be stroked/clipped correctly
-            RETURN_IF_FAILED(Factory()->CreateTransformedGeometry(pathGeometry.Get(),
-                                                                  __CGAffineTransformToD2D_F(finalTextTransform),
-                                                                  &transformedGeometry));
-        }
-
-        HRESULT ret = Draw(_kCGCoordinateModeDeviceSpace, nullptr, [&](CGContextRef context, ID2D1DeviceContext* deviceContext) {
-            if (state.textDrawingMode & kCGTextFill) {
-                deviceContext->SetTransform(__CGAffineTransformToD2D_F(finalTextTransform));
-                D2D1_POINT_2F origin{ 0, 0 };
-                for (size_t i = 0; i < positionsVectors.size(); ++i) {
-                    if (glyphRuns[i].attributes) {
-                        CGColorRef fontColor = (CGColorRef)CFDictionaryGetValue(glyphRuns[i].attributes, _kCGForegroundColorAttributeName);
-                        if (fontColor) {
-                            CGContextSetFillColorWithColor(context, fontColor);
-                        } else {
-                            CFBooleanRef useContextColor =
-                                (CFBooleanRef)CFDictionaryGetValue(glyphRuns[i].attributes, _kCGForegroundColorFromContextAttributeName);
-                            if (!useContextColor || !CFBooleanGetValue(useContextColor)) {
-                                // Neither given a color nor use current context color, so set the fill color to black
-                                CGContextSetRGBFillColor(context, 0, 0, 0, 1);
-                            }
-                        }
-                    }
-
-                    DWRITE_GLYPH_RUN transformedGlyphRun{ glyphRuns[i].run->fontFace,   glyphRuns[i].run->fontEmSize,
-                                                          glyphRuns[i].run->glyphCount, glyphRuns[i].run->glyphIndices,
-                                                          emptyAdvances.data(),         positionsVectors[i].data(),
-                                                          glyphRuns[i].run->isSideways, glyphRuns[i].run->bidiLevel };
-
-                    deviceContext->DrawGlyphRun(origin, &transformedGlyphRun, state.fillBrush.Get(), DWRITE_MEASURING_MODE_NATURAL);
+                if (fastPathTextDrawing) {
+                    CGAffineTransform totalTransform =
+                        CGAffineTransformConcat(textTransform,
+                                                CGAffineTransformTranslate(deviceTransform,
+                                                                           runData.relativePosition.x,
+                                                                           std::round(runData.relativePosition.y)));
+                    deviceContext->SetTransform(__CGAffineTransformToD2D_F(totalTransform));
                 }
+
+                deviceContext->DrawGlyphRun(origin, runData.run, state.fillBrush.Get(), DWRITE_MEASURING_MODE_NATURAL);
             }
+        }
 
-            if (state.textDrawingMode & kCGTextStroke) {
-                deviceContext->SetTransform(__CGAffineTransformToD2D_F(deviceTransform));
-                RETURN_IF_FAILED(_DrawGeometryInternal(transformedGeometry.Get(), kCGPathStroke, context, deviceContext));
-            }
+        if (state.textDrawingMode & kCGTextStroke) {
+            deviceContext->SetTransform(__CGAffineTransformToD2D_F(deviceTransform));
+            RETURN_IF_FAILED(_DrawGeometryInternal(transformedGeometry.Get(), kCGPathStroke, context, deviceContext));
+        }
 
-            return S_OK;
-        });
-        RETURN_IF_FAILED(ret);
+        return S_OK;
+    });
+    RETURN_IF_FAILED(ret);
 
-        if (state.textDrawingMode & kCGTextClip) {
-            RETURN_IF_FAILED(state.IntersectClippingGeometry(transformedGeometry.Get(), kCGPathFill));
+    if (state.textDrawingMode & kCGTextClip) {
+        RETURN_IF_FAILED(state.IntersectClippingGeometry(transformedGeometry.Get(), kCGPathFill));
+    }
+
+    if (!fastPathTextDrawing) {
+        // Need to delete all of the created glyphOffsets and DWRITE_GLYPH_RUNS
+        for (auto& runData : runs) {
+            delete[] runData.run->glyphOffsets;
+            delete runData.run;
+            runData.run = nullptr;
         }
     }
 
