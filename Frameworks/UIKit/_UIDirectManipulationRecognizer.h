@@ -20,5 +20,6 @@
 
 UIKIT_EXPORT_CLASS
 @interface _UIDMPanGestureRecognizer : UIPanGestureRecognizer
-
+- (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer*)preventingGestureRecognizer;
+- (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer*)preventedGestureRecognizer;
 @end

@@ -20,12 +20,13 @@
 #include <UIKit/UIImage.h>
 #include <UIKit/UIImageView.h>
 #include <UIKit/UIGestureRecognizer.h>
+#include <UIKit/UIPanGestureRecognizer.h>
 #include <UIKit/UITapGestureRecognizer.h>
 #include <UIKit/UISwitch.h>
 
 #include "CoreGraphics/CGContext.h"
 
-#include "UIGestureRecognizerInternal.h"
+#include "UIPanGestureRecognizerInternal.h"
 
 #include <math.h>
 
