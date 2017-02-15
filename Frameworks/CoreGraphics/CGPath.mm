@@ -282,10 +282,7 @@ HRESULT _CGPathGetGeometryWithFillMode(CGPathRef path, CGPathDrawingMode fillMod
         geometry->GetFactory(&factory);
 
         ComPtr<ID2D1GeometryGroup> geometryGroup;
-        RETURN_IF_FAILED(factory->CreateGeometryGroup(fillMode == kCGPathEOFill ? D2D1_FILL_MODE_ALTERNATE : D2D1_FILL_MODE_WINDING,
-                                                      &geometry,
-                                                      1,
-                                                      &geometryGroup));
+        RETURN_IF_FAILED(factory->CreateGeometryGroup(D2D1_FILL_MODE_ALTERNATE, &geometry, 1, &geometryGroup));
 
         ComPtr<ID2D1Geometry> outGeometry;
         RETURN_IF_FAILED(geometryGroup.As(&outGeometry));
