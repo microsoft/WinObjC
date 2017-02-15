@@ -1769,7 +1769,7 @@ static CGImageRef __CGContextCreateRenderableImage(CGImageRef image) {
 
 #pragma region Drawing Parameters - Stroke / Fill Patterns
 
-template <typename ContextStageLambda> // Takes the form HRESULT(*)(CGContextRef)
+template <typename ContextStageLambda> // Takes the form HRESULT(*)(CGContextRef,bool)
 static HRESULT _CreatePatternBrush(CGContextRef context,
                                    CGPatternRef pattern,
                                    ID2D1BitmapBrush1** brush,

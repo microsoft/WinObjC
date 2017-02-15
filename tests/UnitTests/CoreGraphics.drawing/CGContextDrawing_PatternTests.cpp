@@ -106,8 +106,10 @@ INSTANTIATE_TEST_CASE_P(CGPatternTests,
 void drawColoredPatternMultiSquare(void* info, CGContextRef context) {
     CGFloat subunit = 5; // the pattern cell itself is 16 by 18
 
-    CGRect myRect1 = { { 0, 0 }, { subunit, subunit } }, myRect2 = { { subunit, subunit }, { subunit, subunit } },
-           myRect3 = { { 0, subunit }, { subunit, subunit } }, myRect4 = { { subunit, 0 }, { subunit, subunit } };
+    CGRect myRect1 = { { 0, 0 }, { subunit, subunit } };
+    CGRect myRect2 = { { subunit, subunit }, { subunit, subunit } };
+    CGRect myRect3 = { { 0, subunit }, { subunit, subunit } };
+    CGRect myRect4 = { { subunit, 0 }, { subunit, subunit } };
 
     CGContextSetRGBFillColor(context, 0, 0, 1, 0.5);
     CGContextFillRect(context, myRect1);
