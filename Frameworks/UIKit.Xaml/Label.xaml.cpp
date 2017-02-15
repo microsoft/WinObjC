@@ -123,7 +123,7 @@ UIKIT_XAML_EXPORT void XamlCreateLabel(IInspectable** created) {
 }
 
 // Retrieves the UIKit::Label's backing TextBlock as an IInspectable
-UIKIT_XAML_EXPORT IInspectable* XamlGetLabelTextBox(const Microsoft::WRL::ComPtr<IInspectable>& label) {
+UIKIT_XAML_EXPORT IInspectable* XamlGetLabelTextBlock(const Microsoft::WRL::ComPtr<IInspectable>& label) {
     auto labelGrid = safe_cast<UIKit::Xaml::Label^>(reinterpret_cast<Platform::Object^>(label.Get()));
     return InspectableFromObject(labelGrid->TextBlock).Detach();
 }
