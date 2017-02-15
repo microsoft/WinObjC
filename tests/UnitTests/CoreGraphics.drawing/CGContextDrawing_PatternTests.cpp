@@ -370,4 +370,14 @@ DISABLED_DRAW_TEST_F(CGPatternTests, PatternDrawPath, UIKitMimicTest<>) {
     CGPathRelease(theFirstPath);
     CGPathRelease(theSecondPath);
 }
+
+DISABLED_DRAW_TEST_F(CGPatternTests, PatternFillWindowsLogoRotate, UIKitMimicTest<>) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    _SetPatternForFill(context, CGRectMake(0, 0, 100, 100), 100, 100, drawPatternWindowsLogo, 1);
+    CGContextRotateCTM(context, 0.4);
+    CGContextFillRect(context, bounds);
+}
+
 #pragma endregion Colored Pattern
