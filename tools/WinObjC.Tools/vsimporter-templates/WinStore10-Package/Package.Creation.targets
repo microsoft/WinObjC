@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<!--
+  Include any customizations specific to the creation of the package here.
+
+  This file can be removed from the packaging project if no customizations are required.
+-->
+</Project>

@@ -31,8 +31,18 @@
         <PackagePath>build\WinObjC.Packageable.targets</PackagePath>
       </PackageFile>
 
-      <PackageFile Include="$(MSBuildThisFileDirectory)Package.Linker.targets" Condition="Exists('$(MSBuildThisFileDirectory)Package.Linker.targets')">
-        <PackagePath>build\Package.Linker.targets</PackagePath>
+      <PackageFile Include="$(MSBuildThisFileDirectory)Package.props" Condition="Exists('$(MSBuildThisFileDirectory)Package.props')">
+        <PackagePath>build\Package.props</PackagePath>
+      </PackageFile>
+      <PackageFile Include="$(MSBuildThisFileDirectory)Package.targets" Condition="Exists('$(MSBuildThisFileDirectory)Package.targets')">
+        <PackagePath>build\Package.targets</PackagePath>
+      </PackageFile>
+
+      <PackageFile Include="$(MSBuildThisFileDirectory)Package.Default.props" Condition="Exists('$(MSBuildThisFileDirectory)Package.Default.props')">
+        <PackagePath>build\Package.Default.props</PackagePath>
+      </PackageFile>
+      <PackageFile Include="$(MSBuildThisFileDirectory)Package.Default.targets" Condition="Exists('$(MSBuildThisFileDirectory)Package.Default.targets')">
+        <PackagePath>build\Package.Default.targets</PackagePath>
       </PackageFile>
     </ItemGroup>
   </Target>

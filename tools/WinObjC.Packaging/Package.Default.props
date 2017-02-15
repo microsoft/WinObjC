@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
 
 <!--
-  PACKAGE LINKER TARGETS
-  Description: Linking of default package internals
-  For Use By: A VcxProj that consumes this package
+  PACKAGE DEFAULT PROPS
+  Description: Default package properties
+  For Use By: A project that consumes this package
 -->
 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">

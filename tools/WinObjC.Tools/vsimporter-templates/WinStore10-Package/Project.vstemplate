@@ -6,9 +6,10 @@
   <TemplateContent>
     <Project OutputDirectory="$projectname$" File="Package.nuproj" TargetFileName="$projectname$.nuproj" Platforms="AnyCPU;Win32;ARM" ReplaceParameters="true">
       <ProjectItem ReplaceParameters="false" TargetFileName="project.json">project.json</ProjectItem>
-      <ProjectItem TargetFileName="$projectname$.Packaging.props" ReplaceParameters="true">Package.Packaging.props</ProjectItem>
-      <ProjectItem TargetFileName="$projectname$.props" ReplaceParameters="true">Package.props</ProjectItem>
-      <ProjectItem TargetFileName="$projectname$.targets" ReplaceParameters="true">Package.targets</ProjectItem>
+      <ProjectItem TargetFileName="$projectname$.Creation.props" ReplaceParameters="true">Package.Creation.props</ProjectItem>
+      <ProjectItem TargetFileName="$projectname$.Creation.targets" ReplaceParameters="true">Package.Creation.targets</ProjectItem>
+      <ProjectItem TargetFileName="$projectname$.Custom.props" ReplaceParameters="true">Package.Custom.props</ProjectItem>
+      <ProjectItem TargetFileName="$projectname$.Custom.targets" ReplaceParameters="true">Package.Custom.targets</ProjectItem>
       <ProjectItem TargetFileName="Readme.txt" ReplaceParameters="true">Readme.txt</ProjectItem>
     </Project>
   </TemplateContent>
