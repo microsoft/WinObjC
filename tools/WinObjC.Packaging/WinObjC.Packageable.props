@@ -12,8 +12,10 @@
     <IncludeOutputsInPackage>false</IncludeOutputsInPackage>
     <IncludeContentInPackage>false</IncludeContentInPackage>
 
-    <!-- WinObjC.Packaging specific properties -->
-    <PresetPackageContents Condition="'$(PresetPackageContents)' == ''">true</PresetPackageContents>
+    <!-- Packaging defaults from WinObjC.Packaging -->
+    <IncludeDefaultPackageContents Condition="'$(IncludeDefaultPackageContents)' == ''">true</IncludeDefaultPackageContents>
+    <!-- If the package is intended to only include WinRT components set IncludeStaticLibraryInPackage to false -->
+    <IncludeStaticLibraryInPackage Condition="'$(IncludeStaticLibraryInPackage)' == ''">true</IncludeStaticLibraryInPackage>
   </PropertyGroup>
 
   <ItemDefinitionGroup>

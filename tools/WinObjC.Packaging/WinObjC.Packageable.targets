@@ -21,8 +21,8 @@
     <ShouldAssignPackageHeaderBasePath Condition="'$(PackageHeaderBasePath)' == ''">true</ShouldAssignPackageHeaderBasePath>
     <PackageHeaderBasePath Condition="'$(ShouldAssignPackageHeaderBasePath)' == 'true'">build\include\$(MSBuildProjectName)</PackageHeaderBasePath>
 
-    <ShouldAssignPackageResourcesBasePath Condition="'$(PackageHeaderBasePath)' == ''">true</ShouldAssignPackageResourcesBasePath>
-    <PackageResourcesBasePath Condition="'$(ShouldAssignPackageHeaderBasePath)' == 'true'">build\content\$(MSBuildProjectName)</PackageResourcesBasePath>
+    <ShouldAssignPackageResourcesBasePath Condition="'$(PackageResourcesBasePath)' == ''">true</ShouldAssignPackageResourcesBasePath>
+    <PackageResourcesBasePath Condition="'$(ShouldAssignPackageResourcesBasePath)' == 'true'">build\content\$(MSBuildProjectName)</PackageResourcesBasePath>
 
     <ShouldAssignPackageBundleBasePath Condition="'$(PackageBundleBasePath)' == ''">true</ShouldAssignPackageBundleBasePath>
     <PackageBundleBasePath Condition="'$(ShouldAssignPackageBundleBasePath)' == 'true'">build\bundle\$(MSBuildProjectName)</PackageBundleBasePath>
@@ -33,12 +33,12 @@
   </PropertyGroup>
 
   <!-- Add MSBuild outputs into the package -->
-  <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents"  DependsOnTargets="$(GetPackageContentsDependsOn)" Condition="'$(PresetPackageContents)' == 'true'">
-    <!-- Framework / Static Library Projects -->
-    <ItemGroup Condition="'$(ConfigurationType)' == 'StaticLibrary'">
-      <!-- .lib Files -->
-      <_ImportLibraryFileNames Include="$(OutDir)*.lib" />
-      <PackageFile Include="@(_ImportLibraryFileNames->Distinct())" Condition="Exists('%(FullPath)')">
+  <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents"  DependsOnTargets="$(GetPackageContentsDependsOn)" Condition="'$(IncludeDefaultPackageContents)' == 'true'">
+    <!-- Static Library Projects -->
+    <ItemGroup Condition="'$(ConfigurationType)' == 'StaticLibrary' And $(IncludeStaticLibraryInPackage)' == 'true'">
+      <!-- .lib -->
+      <_BuiltProjectOutputGroupStaticLib Include="@(BuiltProjectOutputGroupKeyOutput -> '%(FinalOutputPath)')" />
+      <PackageFile Include="@(_BuiltProjectOutputGroupStaticLib->Distinct())" Condition="Exists('%(FullPath)')">
         <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
       </PackageFile>
       <!-- Headers -->
@@ -52,14 +52,14 @@
       </PackageFile>
     </ItemGroup>
 
-    <!-- Projections Projects -->
+    <!-- WinRT Projects -->
     <ItemGroup Condition="'$(ConfigurationType)' == 'DynamicLibrary'">
-      <!-- .dll Files -->
-      <_BuiltProjectOutputGroupOutput Include="@(BuiltProjectOutputGroupOutput -> '%(FinalOutputPath)')" />
-      <PackageFile Include="@(_BuiltProjectOutputGroupOutput->Distinct())" Condition="Exists('%(FullPath)')">
+      <!-- .dll -->
+      <_BuiltProjectOutputImportLib Include="@(BuiltProjectOutputGroupKeyOutput -> '%(FinalOutputPath)')" />
+      <PackageFile Include="@(_BuiltProjectOutputImportLib->Distinct())" Condition="Exists('%(FullPath)')">
         <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
       </PackageFile>
-      <!-- .winmd Files -->
+      <!-- .winmd -->
       <PackageFile Include="@(WinMDFullPath)" Condition="'@(WinMDFullPath)' != '' And Exists('@(WinMDFullPath)')">
         <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
       </PackageFile>
