@@ -316,7 +316,7 @@ INSTANTIATE_TEST_CASE_P(CGPatternTests,
                                            ::testing::ValuesIn(tileSteps),
                                            ::testing::ValuesIn(tileRects)));
 
-DRAW_TEST_F(CGPatternTests, PatternFillWindowsLogoPath, UIKitMimicTest<>) {
+DISABLED_DRAW_TEST_F(CGPatternTests, PatternFillWindowsLogoPath, UIKitMimicTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -336,7 +336,7 @@ DRAW_TEST_F(CGPatternTests, PatternFillWindowsLogoPath, UIKitMimicTest<>) {
     CGPathRelease(thepath);
 }
 
-DRAW_TEST_F(CGPatternTests, PatternDrawPath, UIKitMimicTest<>) {
+DISABLED_DRAW_TEST_F(CGPatternTests, PatternDrawPath, UIKitMimicTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
