@@ -65,6 +65,7 @@ struct __Result {
     Microseconds totalRuntime;
     Microseconds minRuntime;
     Microseconds meanRuntime;
+    Microseconds medianRuntime;
     Microseconds stdDeviation;
     size_t runCount;
 };
@@ -72,7 +73,7 @@ struct __Result {
 class PublisherBase : public BenchmarkPublisher {
 public:
     // Expect results.size() > 1
-    virtual void RegisterCaseResults(const std::string& caseName, const std::vector<Microseconds>& results) {
+    virtual void RegisterCaseResults(const std::string& caseName, std::vector<Microseconds>& results) {
         // Algorithm for calculating sample mean and variance with minimal rounding errors
         Microseconds netRuntime = 0.0;
         Microseconds minRuntime = FLT_MAX;
@@ -86,8 +87,18 @@ public:
             mean += (results[i] - mean) / (i + 1);
             q += (results[i] - previousMean) * (results[i] - mean);
         }
+
         Microseconds sampleStandardDeviation = std::sqrt(q / (runCount - 1));
-        m_results.emplace_back(__Result{ caseName, netRuntime, minRuntime, mean, sampleStandardDeviation, runCount });
+        std::nth_element(results.begin(), results.begin() + runCount / 2, results.end());
+        Microseconds median = results[runCount / 2];
+
+        if ((runCount & 1) == 0) {
+            // Median is the mean of the two central elements
+            std::nth_element(results.begin(), results.begin() + (runCount / 2) - 1, results.end());
+            median = (median + results[(runCount / 2) - 1]) / 2.0;
+        }
+
+        m_results.emplace_back(__Result{ caseName, netRuntime, minRuntime, mean, median, sampleStandardDeviation, runCount });
     }
 
 protected:
@@ -111,12 +122,14 @@ public:
                 << ","
                 << "Mean Runtime"
                 << ","
+                << "Median Runtime"
+                << ","
                 << "Standard Deviation"
                 << ","
                 << "Run Count" << std::endl;
         for (auto res : m_results) {
-            outFile << res.testName << "," << res.totalRuntime << "," << res.minRuntime << "," << res.meanRuntime << "," << res.stdDeviation
-                    << "," << res.runCount << std::endl;
+            outFile << res.testName << "," << res.totalRuntime << "," << res.minRuntime << "," << res.meanRuntime << ","
+                    << res.medianRuntime << "," << res.stdDeviation << "," << res.runCount << std::endl;
         }
 
         outFile.flush();
