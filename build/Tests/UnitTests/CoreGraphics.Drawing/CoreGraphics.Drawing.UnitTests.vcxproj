@@ -231,8 +231,8 @@
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.Drawing\TAEFEntryPoint.cpp" />
+    <ClangCompile Include="..\..\..\..\tests\unittests\CoreGraphics.drawing\CGContextDrawing_FillModeTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.drawing\CGTextDrawing.cpp" />
