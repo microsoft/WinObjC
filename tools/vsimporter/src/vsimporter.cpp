@@ -74,8 +74,8 @@ void printUsage(const char *execName, bool full)
     std::cout << "    -alltargets" << "\t\t    process all targets" << std::endl;
     std::cout << "    -allschemes" << "\t\t    process all schemes" << std::endl;
     std::cout << "    -configuration NAME" << "\t    specify configuration to use" << std::endl;
-    std::cout << "    -genpackaging" << "\t    generate project able to package the solution" << std::endl;
-    std::cout << "\t\t\t    enabled when -genprojections is enabled by default (set -genpackaging=0 to override)" << std::endl;
+    std::cout << "    -genpackaging=[0|1]" << "\t    generate project able to package the solution" << std::endl;
+    std::cout << "\t\t\t    enabled by default (set -genpackaging=0 to override)" << std::endl;
     std::cout << "    -genprojections" << "\t    generate WinRT projections project" << std::endl;
     std::cout << "    -help" << "\t\t    print full usage message" << std::endl;
     std::cout << "    -interactive" << "\t    enable interactive mode" << std::endl;
@@ -101,7 +101,7 @@ int main(int argc, char* argv[])
   int workspaceSet = 0;
   int interactiveFlag = 0;
   int genProjectionsFlag = 0;
-  int genPackagingFlag = -1;
+  int genPackagingFlag = 1;
   int allTargets = 0;
   int allSchemes = 0;
   int mode = GenerateMode;
@@ -184,10 +184,6 @@ int main(int argc, char* argv[])
       // Do nothing
       break;
     }
-  }
-
-  if (genPackagingFlag == -1) {
-    genPackagingFlag = genProjectionsFlag;
   }
 
   // Set AI Telemetry_Init 
