@@ -223,12 +223,12 @@ if ($WTLOutputFile)
     {
         $outputLocalName = $WTLOutputFile
         $outputRemoteName = Join-Path -Path $TestDstDirectory -ChildPath ([system.IO.Fileinfo]$WTLOutputFile).Name
-        $argList += " /logFile:$outputRemoteName /enableWttLogging"
+        $argList += " /logFile:$outputRemoteName /enableWttLogging /enableetwlogging=false"
     }
     else
     {
         $outputLocalName = $WTLOutputFile
-        $argList += " /logFile:$outputLocalName /enableWttLogging"
+        $argList += " /logFile:$outputLocalName /enableWttLogging /enableetwlogging=false"
     }
 }
 
