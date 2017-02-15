@@ -1774,7 +1774,6 @@ static HRESULT _CreatePatternBrush(CGContextRef context,
                                    CGPatternRef pattern,
                                    ID2D1BitmapBrush1** brush,
                                    ContextStageLambda&& contextStage) {
-    // TODO #1592: change to support grayscale (masks) after dustins change.
     woc::unique_cf<CGColorSpaceRef> colorspace{ CGColorSpaceCreateDeviceRGB() };
 
     // We need to generate the pattern as an image (then tile it)
@@ -1811,10 +1810,9 @@ static HRESULT _CreatePatternBrush(CGContextRef context,
     // TODO #1591: We have an issue with rotation, the CTM rotation should not affect the brush
     CGSize size = CGSizeApplyAffineTransform(tileSize.size, CGAffineTransformInvert(context->CurrentGState().transform));
 
-    CGAffineTransform transform = __BitmapBrushTransformation(context,
-                                                              { CGPointZero, size.width, size.height },
-                                                              d2dBitmap->GetPixelSize(),
-                                                              _CGPatternGetTransformation(pattern));
+    CGAffineTransform patternTransformation = _CGPatternGetTransformation(pattern);
+    CGAffineTransform transform =
+        __BitmapBrushTransformation(context, { CGPointZero, size.width, size.height }, d2dBitmap->GetPixelSize(), patternTransformation);
 
     ComPtr<ID2D1BitmapBrush1> bitmapBrush;
     ComPtr<ID2D1DeviceContext> deviceContext = context->DeviceContext();

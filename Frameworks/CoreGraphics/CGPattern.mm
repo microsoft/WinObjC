@@ -235,6 +235,5 @@ CGRect _CGPatternGetFinalPatternSize(CGPatternRef pattern) {
 }
 
 bool _CGPatternIsColored(CGPatternRef pattern) {
-    FAIL_FAST_IF_NULL(pattern);
     return ((CGPattern*)pattern)->isColored;
 }
