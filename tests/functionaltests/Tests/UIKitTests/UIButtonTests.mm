@@ -119,6 +119,10 @@ public:
     }
 
     TEST_METHOD(UIButton_CreateButtonWithDefaultInit) {
+        BEGIN_TEST_METHOD_PROPERTIES()
+        TEST_METHOD_PROPERTY(L"ignore", L"true")
+        END_TEST_METHOD_PROPERTIES()
+
         StrongId<UIButtonWithControlsViewController> buttonVC;
         buttonVC.attach([[UIButtonWithControlsViewController alloc] init]);
         UXTestAPI::ViewControllerPresenter testHelper(buttonVC);
@@ -160,7 +164,7 @@ public:
         ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event state timed out!");
 
         // Title
-        ASSERT_EQ(buttonToTest.currentTitle, nil);
+        EXPECT_OBJCEQ(buttonToTest.currentTitle, nil);
     }
 
     TEST_METHOD(UIButton_CreateButtonWithTypeCustom) {
@@ -196,7 +200,6 @@ public:
             xamlSubscriber->Set(textBlock, [WXCTextBlock foregroundProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
                 WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], [sender getValue:dp]);
 
-
                 // Validation
                 if (UXTestAPI::IsRGBAEqual(solidBrush, [UIColor whiteColor])) {
                     uxEvent->Set();
@@ -206,7 +209,7 @@ public:
         ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event state timed out!");
 
         // Title
-        EXPECT_EQ(buttonToTest.currentTitle, nil);
+        EXPECT_OBJCEQ(buttonToTest.currentTitle, nil);
     }
 
     TEST_METHOD(UIButton_CreateButtonWithTypeSystem) {
@@ -244,7 +247,7 @@ public:
         });
 
         // Title
-        EXPECT_EQ(buttonToTest.currentTitle, nil);
+        EXPECT_OBJCEQ(buttonToTest.currentTitle, nil);
     }
 
     TEST_METHOD(UIButton_TitleForStateCumulative) {
@@ -1182,6 +1185,10 @@ public:
     }
 
     TEST_METHOD(UIButton_CurrentBackgroundImage) {
+        BEGIN_TEST_METHOD_PROPERTIES()
+        TEST_METHOD_PROPERTY(L"ignore", L"true")
+        END_TEST_METHOD_PROPERTIES()
+
         StrongId<UIButtonWithControlsViewController> buttonVC;
         buttonVC.attach([[UIButtonWithControlsViewController alloc] init]);
         UXTestAPI::ViewControllerPresenter testHelper(buttonVC);
