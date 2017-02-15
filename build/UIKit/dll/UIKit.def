@@ -1173,3 +1173,9 @@ LIBRARY UIKit
         UIOrientationFromString
         UIApplicationDidChangeDisplayModeNofication
         UIViewControllerFirePageEvent
+
+        ;_UIGestureCoordinator.mm 
+        _OBJC_CLASS__UIGestureCoordinator DATA
+        __objc_class_name__UIGestureCoordinator CONSTANT
+
+        

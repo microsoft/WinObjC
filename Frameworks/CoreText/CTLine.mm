@@ -22,8 +22,9 @@
 #import "DWriteWrapper_CoreText.h"
 #import <CoreText/CTTypesetter.h>
 
-#include <algorithm>
-#include <numeric>
+#import <algorithm>
+#import <numeric>
+#import <vector>
 
 static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef line,
                                                                     CTLineTruncationType truncationType,
@@ -224,19 +225,21 @@ void CTLineDraw(CTLineRef lineRef, CGContextRef ctx) {
     }
 
     _CTLine* line = static_cast<_CTLine*>(lineRef);
-
-    _CGContextPushBeginDraw(ctx);
-    auto popEnd = wil::ScopeExit([ctx]() { _CGContextPopEndDraw(ctx); });
-
+    std::vector<GlyphRunData> runs;
+    CGPoint relativePosition = CGPointZero;
     for (size_t i = 0; i < [line->_runs count]; ++i) {
         _CTRun* curRun = [line->_runs objectAtIndex:i];
         if (i > 0) {
             // Adjusts x position relative to the last run drawn
-            CGPoint curTextPos = CGContextGetTextPosition(ctx);
-            CGContextSetTextPosition(ctx, curTextPos.x + curRun->_relativeXOffset, curTextPos.y);
+            relativePosition.x += curRun->_relativeXOffset;
         }
+        runs.emplace_back(GlyphRunData{ &curRun->_dwriteGlyphRun, relativePosition, (CFDictionaryRef)curRun->_attributes.get() });
+    }
 
-        CTRunDraw(static_cast<CTRunRef>(curRun), ctx, CFRange{});
+    if (!runs.empty()) {
+        _CGContextPushBeginDraw(ctx);
+        auto popEnd = wil::ScopeExit([ctx]() { _CGContextPopEndDraw(ctx); });
+        _CGContextDrawGlyphRuns(ctx, runs.data(), runs.size());
     }
 }
 
