@@ -229,17 +229,18 @@ class CGPatternColoredRectBasedStroke
         float xStep = ::testing::get<2>(GetParam());
         float yStep = ::testing::get<3>(GetParam());
         CGRect rect = ::testing::get<4>(GetParam());
-        char rectDesc[100];
-        snprintf(rectDesc, sizeof(rectDesc), "(%0.0f.%0.0f)%0.0fx%0.0f", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
-        return CFStringCreateWithFormat(
-            nullptr,
-            nullptr,
-            CFSTR("TestImage.CGContext.CGPatternColoredRectBasedStroke.%s.rect.%s.xStep.%.02f.yStep.%.02f.alpha%.02f.png"),
-            pattern.name,
-            rectDesc,
-            xStep,
-            yStep,
-            alpha);
+        return CFStringCreateWithFormat(nullptr,
+                                        nullptr,
+                                        CFSTR("TestImage.CGContext.CGPatternColoredRectBasedStroke.%s.rect.(%0.0f.%0.0f)%0.0fx%0.0f.xStep.%"
+                                              ".02f.yStep.%.02f.alpha%.02f.png"),
+                                        pattern.name,
+                                        rect.origin.x,
+                                        rect.origin.y,
+                                        rect.size.width,
+                                        rect.size.height,
+                                        xStep,
+                                        yStep,
+                                        alpha);
     }
 };
 
