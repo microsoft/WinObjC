@@ -257,10 +257,10 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext> {
     // See the comments above _CGContextSetShadowProjectionTransform.
     CGAffineTransform shadowProjectionTransform{ CGAffineTransformIdentity };
 
-    _CGTrinary allowsAntialiasing = _kCGTrinaryDefault;
-    _CGTrinary allowsFontSmoothing = _kCGTrinaryDefault;
-    _CGTrinary allowsFontSubpixelPositioning = _kCGTrinaryDefault;
-    _CGTrinary allowsFontSubpixelQuantization = _kCGTrinaryDefault;
+    bool allowsAntialiasing = true;
+    bool allowsFontSmoothing = true;
+    bool allowsFontSubpixelPositioning = true;
+    bool allowsFontSubpixelQuantization = true;
 
     CGAffineTransform textMatrix{ CGAffineTransformIdentity };
 
@@ -310,14 +310,14 @@ private:
 
 public:
     inline D2D1_ANTIALIAS_MODE GetAntialiasMode() {
-        return CurrentGState().shouldAntialias == _kCGTrinaryOn && allowsAntialiasing == _kCGTrinaryOn ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE :
-                                                                                                         D2D1_ANTIALIAS_MODE_ALIASED;
+        return CurrentGState().shouldAntialias == _kCGTrinaryOn && allowsAntialiasing ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE :
+                                                                                        D2D1_ANTIALIAS_MODE_ALIASED;
     }
 
     inline D2D1_TEXT_ANTIALIAS_MODE GetTextAntialiasMode() {
-        if (CurrentGState().shouldAntialias == _kCGTrinaryOn && allowsAntialiasing == _kCGTrinaryOn &&
-            CurrentGState().shouldSmoothFonts == _kCGTrinaryOn && allowsFontSmoothing == _kCGTrinaryOn) {
-            if (CurrentGState().shouldSubpixelPosition == _kCGTrinaryOn && allowsFontSubpixelPositioning == _kCGTrinaryOn) {
+        if (CurrentGState().shouldAntialias == _kCGTrinaryOn && allowsAntialiasing && CurrentGState().shouldSmoothFonts == _kCGTrinaryOn &&
+            allowsFontSmoothing) {
+            if (CurrentGState().shouldSubpixelPosition == _kCGTrinaryOn && allowsFontSubpixelPositioning) {
                 return D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE;
             } else {
                 return D2D1_TEXT_ANTIALIAS_MODE_GRAYSCALE;
@@ -327,9 +327,9 @@ public:
     }
 
     inline DWRITE_RENDERING_MODE GetTextRenderingMode() {
-        if (CurrentGState().shouldAntialias == _kCGTrinaryOn && allowsAntialiasing == _kCGTrinaryOn &&
-            CurrentGState().shouldSubpixelPosition == _kCGTrinaryOn && allowsFontSubpixelPositioning == _kCGTrinaryOn &&
-            CurrentGState().shouldSmoothFonts == _kCGTrinaryOn && allowsFontSmoothing == _kCGTrinaryOn) {
+        if (CurrentGState().shouldAntialias == _kCGTrinaryOn && allowsAntialiasing &&
+            CurrentGState().shouldSubpixelPosition == _kCGTrinaryOn && allowsFontSubpixelPositioning &&
+            CurrentGState().shouldSmoothFonts == _kCGTrinaryOn && allowsFontSmoothing) {
             if (CurrentGState().shouldSubpixelQuantizeFonts == _kCGTrinaryOn && allowsFontSubpixelQuantization == _kCGTrinaryOn) {
                 return DWRITE_RENDERING_MODE_NATURAL_SYMMETRIC;
             }
@@ -1428,15 +1428,15 @@ CGPoint CGContextGetTextPosition(CGContextRef context) {
 }
 
 /**
- @Status Caveat
+ @Status Interoperable
 */
 void CGContextSetAllowsFontSmoothing(CGContextRef context, bool allows) {
     NOISY_RETURN_IF_NULL(context);
-    context->allowsFontSmoothing = allows ? _kCGTrinaryOn : _kCGTrinaryOff;
+    context->allowsFontSmoothing = allows;
 }
 
 /**
- @Status Caveat
+ @Status Interoperable
 */
 void CGContextSetShouldSmoothFonts(CGContextRef context, bool shouldSmooth) {
     NOISY_RETURN_IF_NULL(context);
@@ -1444,15 +1444,15 @@ void CGContextSetShouldSmoothFonts(CGContextRef context, bool shouldSmooth) {
 }
 
 /**
- @Status Caveat
+ @Status Interoperable
 */
 void CGContextSetAllowsFontSubpixelPositioning(CGContextRef context, bool allows) {
     NOISY_RETURN_IF_NULL(context);
-    context->allowsFontSubpixelPositioning = allows ? _kCGTrinaryOn : _kCGTrinaryOff;
+    context->allowsFontSubpixelPositioning = allows;
 }
 
 /**
- @Status Caveat
+ @Status Interoperable
 */
 void CGContextSetShouldSubpixelPositionFonts(CGContextRef context, bool subpixel) {
     NOISY_RETURN_IF_NULL(context);
@@ -1460,15 +1460,15 @@ void CGContextSetShouldSubpixelPositionFonts(CGContextRef context, bool subpixel
 }
 
 /**
- @Status Caveat
+ @Status Interoperable
 */
 void CGContextSetAllowsFontSubpixelQuantization(CGContextRef context, bool allows) {
     NOISY_RETURN_IF_NULL(context);
-    context->allowsFontSubpixelQuantization = allows ? _kCGTrinaryOn : _kCGTrinaryOff;
+    context->allowsFontSubpixelQuantization = allows;
 }
 
 /**
- @Status Caveat
+ @Status Interoperable
 */
 void CGContextSetShouldSubpixelQuantizeFonts(CGContextRef context, bool subpixel) {
     NOISY_RETURN_IF_NULL(context);
@@ -1492,7 +1492,7 @@ CGBlendMode CGContextGetBlendMode(CGContextRef context) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 void CGContextSetShouldAntialias(CGContextRef context, bool shouldAntialias) {
     NOISY_RETURN_IF_NULL(context);
@@ -1500,11 +1500,11 @@ void CGContextSetShouldAntialias(CGContextRef context, bool shouldAntialias) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 void CGContextSetAllowsAntialiasing(CGContextRef context, bool allowsAntialiasing) {
     NOISY_RETURN_IF_NULL(context);
-    context->allowsAntialiasing = allowsAntialiasing ? _kCGTrinaryOn : _kCGTrinaryOff;
+    context->allowsAntialiasing = allowsAntialiasing;
 }
 
 /**
@@ -2410,13 +2410,13 @@ HRESULT __CGContext::Draw(_CGCoordinateMode coordinateMode, CGAffineTransform* a
     });
 
     // If the context has requested antialiasing other than the defaults we now need to update the device context.
-    if (CurrentGState().shouldAntialias != _kCGTrinaryDefault || allowsAntialiasing != _kCGTrinaryDefault) {
+    if (allowsAntialiasing && CurrentGState().shouldAntialias != _kCGTrinaryDefault) {
         deviceContext->SetAntialiasMode(GetAntialiasMode());
 
         // If any text rendering parameters have been updated, we need to update the device context.
-        if (CurrentGState().shouldSmoothFonts != _kCGTrinaryDefault || allowsFontSmoothing != _kCGTrinaryDefault ||
-            CurrentGState().shouldSubpixelPosition != _kCGTrinaryDefault || allowsFontSubpixelPositioning != _kCGTrinaryDefault ||
-            CurrentGState().shouldSubpixelQuantizeFonts != _kCGTrinaryDefault || allowsFontSubpixelQuantization != _kCGTrinaryDefault) {
+        if ((CurrentGState().shouldSmoothFonts != _kCGTrinaryDefault && allowsFontSmoothing) ||
+            (CurrentGState().shouldSubpixelPosition != _kCGTrinaryDefault && allowsFontSubpixelPositioning) ||
+            (CurrentGState().shouldSubpixelQuantizeFonts != _kCGTrinaryDefault && allowsFontSubpixelQuantization)) {
             ComPtr<IDWriteRenderingParams> originalTextRenderingParams;
             deviceContext->GetTextRenderingParams(&originalTextRenderingParams);
 
