@@ -1780,12 +1780,13 @@ static HRESULT _CreatePatternBrush(CGContextRef context,
     CGRect tileSize = _CGPatternGetFinalPatternSize(pattern);
     RETURN_HR_IF(E_UNEXPECTED, CGRectIsNull(tileSize));
 
-    size_t bitsPerComponent = 8;
-    size_t bytesPerRow = 4 * tileSize.size.width;
-    CGBitmapInfo bitmapInfo = kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrderDefault;
-
-    woc::unique_cf<CGContextRef> patternContext{ CGBitmapContextCreate(
-        nullptr, tileSize.size.width, tileSize.size.height, bitsPerComponent, bytesPerRow, colorspace.get(), bitmapInfo) };
+    woc::unique_cf<CGContextRef> patternContext{ CGBitmapContextCreate(nullptr,
+                                                                       tileSize.size.width,
+                                                                       tileSize.size.height,
+                                                                       8,
+                                                                       4 * tileSize.size.width,
+                                                                       colorspace.get(),
+                                                                       kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big) };
     RETURN_HR_IF_NULL(E_UNEXPECTED, patternContext);
 
     // Determine if this pattern is a colored pattern (the coloring is specified in the pattern callback) or if it is stencil pattern (the
