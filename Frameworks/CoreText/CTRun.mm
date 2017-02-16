@@ -23,8 +23,11 @@
 #import "DWriteWrapper_CoreText.h"
 #import "CoreTextInternal.h"
 #import "CGContextInternal.h"
+#import <CppUtils.h>
 
 #include <numeric>
+#include <algorithm>
+#include <functional>
 
 const CFStringRef kCTBackgroundStrokeColorAttributeName = static_cast<CFStringRef>(@"kCTBackgroundStrokeColorAttributeName");
 const CFStringRef kCTBackgroundFillColorAttributeName = static_cast<CFStringRef>(@"kCTBackgroundFillColorAttributeName");
@@ -45,6 +48,7 @@ const CFStringRef kCTBackgroundLineWidthAttributeName = static_cast<CFStringRef>
 - (id)init {
     if (self = [super init]) {
         _attributes.attach([NSMutableDictionary new]);
+        _textMatrix = CGAffineTransformIdentity;
     }
 
     return self;
@@ -95,12 +99,29 @@ CFDictionaryRef CTRunGetAttributes(CTRunRef run) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
-CTRunStatus CTRunGetStatus(CTRunRef run) {
-    UNIMPLEMENTED();
-    return StubReturn();
+CTRunStatus CTRunGetStatus(CTRunRef runRef) {
+    CTRunStatus ret = kCTRunStatusNoStatus;
+    if (runRef) {
+        _CTRun* run = static_cast<_CTRun*>(runRef);
+
+        if (run->_dwriteGlyphRun.bidiLevel & 1) {
+            ret |= kCTRunStatusRightToLeft;
+            if (!std::is_sorted(run->_stringIndices.cbegin(), run->_stringIndices.cend(), std::greater<UINT16>())) {
+                ret |= kCTRunStatusNonMonotonic;
+            }
+        } else if (!std::is_sorted(run->_stringIndices.cbegin(), run->_stringIndices.cend())) {
+            ret |= kCTRunStatusNonMonotonic;
+        }
+
+        if (run->_textMatrix != CGAffineTransformIdentity) {
+            ret |= kCTRunStatusHasNonIdentityMatrix;
+        }
+    }
+
+    return ret;
 }
 
 /**
@@ -294,12 +315,11 @@ void CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CGAffineTransform CTRunGetTextMatrix(CTRunRef run) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return run ? static_cast<_CTRun*>(run)->_textMatrix : CGAffineTransformIdentity;
 }
 
 /**

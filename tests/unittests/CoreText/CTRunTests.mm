@@ -20,6 +20,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreText/CoreText.h>
 #import <CoreFoundation/CFAttributedString.h>
+#import <CppUtils.h>
 
 #include <functional>
 
@@ -347,4 +348,34 @@ TEST(CTRun, GetPositionsPtr) {
     EXPECT_EQ(std::round(43.1641), std::round((positionsPtr + 5)->y));
 
     CFRelease(line);
+}
+
+TEST(CTRun, GetTextMatrix) {
+    EXPECT_EQ(CGAffineTransformIdentity, CTRunGetTextMatrix(nullptr));
+
+    CFMutableAttributedStringRef string = (__bridge CFMutableAttributedStringRef)getString(@"foobar");
+    CFAttributedStringSetAttribute(string, CFRangeMake(0, 3), kCTForegroundColorAttributeName, CGColorGetConstantColor(kCGColorWhite));
+    auto line = woc::MakeAutoCF<CTLineRef>(CTLineCreateWithAttributedString(string));
+    CFArrayRef runsArray = CTLineGetGlyphRuns(line);
+    CTRunRef run = (CTRunRef)CFArrayGetValueAtIndex(runsArray, 0);
+    EXPECT_EQ(CGAffineTransformIdentity, CTRunGetTextMatrix(run));
+
+    run = (CTRunRef)CFArrayGetValueAtIndex(runsArray, 1);
+    EXPECT_EQ(CGAffineTransformIdentity, CTRunGetTextMatrix(run));
+}
+
+TEST(CTRun, GetStatus) {
+    EXPECT_EQ(kCTRunStatusNoStatus, CTRunGetStatus(nullptr));
+
+    CFAttributedStringRef string = (__bridge CFAttributedStringRef)getString(@"foobar");
+    auto line = woc::MakeAutoCF<CTLineRef>(CTLineCreateWithAttributedString(string));
+    CFArrayRef runsArray = CTLineGetGlyphRuns(line);
+    CTRunRef run = (CTRunRef)CFArrayGetValueAtIndex(runsArray, 0);
+    EXPECT_EQ(kCTRunStatusNoStatus, CTRunGetStatus(run));
+
+    string = (__bridge CFAttributedStringRef)getString(@"نص اختبار");
+    line = woc::MakeAutoCF<CTLineRef>(CTLineCreateWithAttributedString(string));
+    runsArray = CTLineGetGlyphRuns(line);
+    run = (CTRunRef)CFArrayGetValueAtIndex(runsArray, 0);
+    EXPECT_EQ(kCTRunStatusRightToLeft | kCTRunStatusNonMonotonic, CTRunGetStatus(run));
 }
