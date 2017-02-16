@@ -1777,32 +1777,37 @@ static CGImageRef __CGContextCreateRenderableImage(CGImageRef image) {
 
 #pragma region Drawing Parameters - Stroke / Fill Patterns
 
-template <typename ContextStageLambda> // Takes the form HRESULT(*)(CGContextRef)
-static HRESULT _CreatePatternBrush(
-    CGContextRef context, CGPatternRef pattern, const CGFloat* components, ID2D1BitmapBrush1** brush, ContextStageLambda&& contextStage) {
-    // TODO #1592: change to support grayscale (masks) after dustins change.
+template <typename ContextStageLambda> // Takes the form HRESULT(*)(CGContextRef,bool)
+static HRESULT _CreatePatternBrush(CGContextRef context,
+                                   CGPatternRef pattern,
+                                   ID2D1BitmapBrush1** brush,
+                                   ContextStageLambda&& contextStage) {
     woc::unique_cf<CGColorSpaceRef> colorspace{ CGColorSpaceCreateDeviceRGB() };
 
     // We need to generate the pattern as an image (then tile it)
     CGRect tileSize = _CGPatternGetFinalPatternSize(pattern);
     RETURN_HR_IF(E_UNEXPECTED, CGRectIsNull(tileSize));
 
-    size_t bitsPerComponent = 8;
-    size_t bytesPerRow = 4 * tileSize.size.width;
-    CGBitmapInfo bitmapInfo = kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Big;
-
-    woc::unique_cf<CGContextRef> patternContext{ CGBitmapContextCreate(
-        nullptr, tileSize.size.width, tileSize.size.height, bitsPerComponent, bytesPerRow, colorspace.get(), bitmapInfo) };
+    woc::unique_cf<CGContextRef> patternContext{ CGBitmapContextCreate(nullptr,
+                                                                       tileSize.size.width,
+                                                                       tileSize.size.height,
+                                                                       8,
+                                                                       4 * tileSize.size.width,
+                                                                       colorspace.get(),
+                                                                       kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big) };
     RETURN_HR_IF_NULL(E_UNEXPECTED, patternContext);
 
+    // Determine if this pattern is a colored pattern (the coloring is specified in the pattern callback) or if it is stencil pattern (the
+    // color is set outside and not within the pattern callback)
+    bool isColored = _CGPatternIsColored(pattern);
+
     // Stage the drawing context
-    RETURN_IF_FAILED(std::forward<ContextStageLambda>(contextStage)(patternContext.get()));
+    RETURN_IF_FAILED(std::forward<ContextStageLambda>(contextStage)(patternContext.get(), isColored));
 
     // Now we ask the user to draw
     _CGPatternIssueCallBack(patternContext.get(), pattern);
 
     // Get the image out of it
-
     woc::unique_cf<CGImageRef> bitmapTiledimage{ CGBitmapContextCreateImage(patternContext.get()) };
     woc::unique_cf<CGImageRef> tileImage{ __CGContextCreateRenderableImage(bitmapTiledimage.get()) };
     RETURN_HR_IF_NULL(E_UNEXPECTED, tileImage);
@@ -1856,9 +1861,18 @@ void CGContextSetFillPattern(CGContextRef context, CGPatternRef pattern, const C
     }
 
     ComPtr<ID2D1BitmapBrush1> bitmapBrush;
-    FAIL_FAST_IF_FAILED(_CreatePatternBrush(context, pattern, components, &bitmapBrush, [&](CGContextRef drawingContext) {
+    FAIL_FAST_IF_FAILED(_CreatePatternBrush(context, pattern, &bitmapBrush, [&](CGContextRef drawingContext, bool isColored) {
         CGContextSetFillColorSpace(drawingContext, context->FillColorSpace());
-        CGContextSetFillColor(drawingContext, components);
+        if (isColored) {
+            // It's a colored pattern, the color is specified by the pattern callback.
+            // The 'components' are alpha value.
+            CGContextSetAlpha(drawingContext, components[0]);
+        } else {
+            // It is a stencil pattern, we should stage the context's color
+            // The 'components' are the color for the stencil.
+            CGContextSetFillColor(drawingContext, components);
+        }
+
         return S_OK;
     }));
     // set the fill brush
@@ -1887,9 +1901,17 @@ void CGContextSetStrokePattern(CGContextRef context, CGPatternRef pattern, const
     }
 
     ComPtr<ID2D1BitmapBrush1> bitmapBrush;
-    FAIL_FAST_IF_FAILED(_CreatePatternBrush(context, pattern, components, &bitmapBrush, [&](CGContextRef drawingContext) {
+    FAIL_FAST_IF_FAILED(_CreatePatternBrush(context, pattern, &bitmapBrush, [&](CGContextRef drawingContext, bool isColored) {
         CGContextSetStrokeColorSpace(drawingContext, context->StrokeColorSpace());
-        CGContextSetStrokeColor(drawingContext, components);
+        if (isColored) {
+            // It's a colored pattern, the color is specified by the pattern callback.
+            // The 'components' are alpha value.
+            CGContextSetAlpha(drawingContext, components[0]);
+        } else {
+            // It is a stencil pattern, we should stage the context's color
+            // The 'components' are the color for the stencil.
+            CGContextSetStrokeColor(drawingContext, components);
+        }
         return S_OK;
     }));
     // set the stroke brush
