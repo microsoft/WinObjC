@@ -6721,7 +6721,7 @@ void CFShowStr(CFStringRef str) {
 
 /**
  @Status NotInPlan
- @Notes String hypenation is non-trivial and not used widely.  For regular text layout, Coretext provides hypenation through Dwrite.
+ @Notes String hyphenation is non-trivial and not used widely.  For regular text layout, Coretext provides hypenation through Dwrite.
 */
 CF_EXPORT CFIndex CFStringGetHyphenationLocationBeforeIndex(CFStringRef string, CFIndex location, CFRange limitRange, CFOptionFlags options, CFLocaleRef locale, UTF32Char *character) {
     UNIMPLEMENTED();
@@ -6730,7 +6730,7 @@ CF_EXPORT CFIndex CFStringGetHyphenationLocationBeforeIndex(CFStringRef string, 
 
 /**
  @Status NotInPlan
- @Notes String hypenation is non-trivial and not used widely.  For regular text layout, Coretext provides hypenation through Dwrite.
+ @Notes String hyphenation is non-trivial and not used widely.  For regular text layout, Coretext provides hypenation through Dwrite.
 */
 CF_EXPORT Boolean CFStringIsHyphenationAvailableForLocale(CFLocaleRef locale) {
     UNIMPLEMENTED();

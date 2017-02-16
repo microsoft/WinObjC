@@ -37,7 +37,7 @@ void* CTRunDelegateGetRefCon(CTRunDelegateRef runDelegate) {
 
 /**
  @Status NotInPlan
- @Notes this would require us to move to using briged type implementation, seems of little value at this point
+ @Notes this would require us to move to using bridged type implementation, seems of little value at this point
 */
 CFTypeID CTRunDelegateGetTypeID() {
     UNIMPLEMENTED();
