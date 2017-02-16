@@ -275,12 +275,17 @@ double CTLineGetPenOffsetForFlush(CTLineRef line, CGFloat flushFactor, double fl
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CGRect CTLineGetImageBounds(CTLineRef line, CGContextRef context) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (!line || !context) {
+        return CGRectNull;
+    }
+
+    CGFloat ascent, descent, leading;
+    double width = CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
+    return { CGContextGetTextPosition(context), { width, ascent - descent + leading } };
 }
 
 /**

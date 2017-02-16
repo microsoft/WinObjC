@@ -50,7 +50,7 @@ CORETEXT_EXPORT CFIndex CTLineGetGlyphCount(CTLineRef line);
 CORETEXT_EXPORT CFArrayRef CTLineGetGlyphRuns(CTLineRef line);
 CORETEXT_EXPORT CFRange CTLineGetStringRange(CTLineRef line);
 CORETEXT_EXPORT double CTLineGetPenOffsetForFlush(CTLineRef line, CGFloat flushFactor, double flushWidth);
-CORETEXT_EXPORT CGRect CTLineGetImageBounds(CTLineRef line, CGContextRef context) STUB_METHOD;
+CORETEXT_EXPORT CGRect CTLineGetImageBounds(CTLineRef line, CGContextRef context);
 CORETEXT_EXPORT CGRect CTLineGetBoundsWithOptions(CTLineRef line, CTLineBoundsOptions options) NOTINPLAN_METHOD;
 CORETEXT_EXPORT double CTLineGetTypographicBounds(CTLineRef line, CGFloat* ascent, CGFloat* descent, CGFloat* leading);
 CORETEXT_EXPORT double CTLineGetTrailingWhitespaceWidth(CTLineRef line) STUB_METHOD;

@@ -279,12 +279,22 @@ double CTRunGetTypographicBounds(CTRunRef run, CFRange range, CGFloat* ascent, C
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
-CGRect CTRunGetImageBounds(CTRunRef run, CGContextRef context, CFRange range) {
-    UNIMPLEMENTED();
-    return StubReturn();
+CGRect CTRunGetImageBounds(CTRunRef runRef, CGContextRef context, CFRange range) {
+    _CTRun* run = static_cast<_CTRun*>(runRef);
+    if (!run || !context || range.location < 0L || range.length < 0L || range.location + range.length > run->_dwriteGlyphRun.glyphCount) {
+        return CGRectNull;
+    }
+
+    if (range.location == 0L) {
+        range.location = run->_dwriteGlyphRun.glyphCount - range.location;
+    }
+
+    CGFloat ascent, descent, leading;
+    double width = CTRunGetTypographicBounds(runRef, range, &ascent, &descent, &leading);
+    return { CGContextGetTextPosition(context), { width, ascent - descent + leading } };
 }
 
 /**
