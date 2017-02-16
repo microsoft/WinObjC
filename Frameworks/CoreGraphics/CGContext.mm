@@ -338,18 +338,19 @@ public:
         return DWRITE_RENDERING_MODE_DEFAULT;
     }
 
-    inline HRESULT GetTextRenderingParams(IDWriteRenderingParams** originalParams, IDWriteRenderingParams** newParams) {
+    inline HRESULT GetTextRenderingParams(IDWriteRenderingParams* originalParams, IDWriteRenderingParams** newParams) {
         ComPtr<IDWriteFactory> dwriteFactory;
         RETURN_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
 
-        if (!*originalParams) {
-            RETURN_IF_FAILED(dwriteFactory->CreateRenderingParams(originalParams));
+        ComPtr<IDWriteRenderingParams> defaultParams = originalParams;
+        if (!defaultParams) {
+            RETURN_IF_FAILED(dwriteFactory->CreateRenderingParams(&defaultParams));
         }
 
-        dwriteFactory->CreateCustomRenderingParams((*originalParams)->GetGamma(),
-                                                   (*originalParams)->GetEnhancedContrast(),
-                                                   (*originalParams)->GetClearTypeLevel(),
-                                                   (*originalParams)->GetPixelGeometry(),
+        dwriteFactory->CreateCustomRenderingParams(defaultParams->GetGamma(),
+                                                   defaultParams->GetEnhancedContrast(),
+                                                   defaultParams->GetClearTypeLevel(),
+                                                   originalParams->GetPixelGeometry(),
                                                    GetTextRenderingMode(),
                                                    newParams);
 
@@ -2421,7 +2422,7 @@ HRESULT __CGContext::Draw(_CGCoordinateMode coordinateMode, CGAffineTransform* a
             deviceContext->GetTextRenderingParams(&originalTextRenderingParams);
 
             ComPtr<IDWriteRenderingParams> customParams;
-            GetTextRenderingParams(&originalTextRenderingParams, &customParams);
+            GetTextRenderingParams(originalTextRenderingParams.Get(), &customParams);
             deviceContext->SetTextRenderingParams(customParams.Get());
 
             deviceContext->SetTextAntialiasMode(GetTextAntialiasMode());
