@@ -24,7 +24,7 @@ using Microseconds = double;
 
 class BenchmarkPublisher {
 public:
-    virtual void RegisterCaseResults(const std::string& caseName, const std::vector<Microseconds>& results) = 0;
+    virtual void RegisterCaseResults(const std::string& caseName, std::vector<Microseconds>& results) = 0;
     virtual void PublishResults() = 0;
 };
 
