@@ -1,7 +1,7 @@
 //******************************************************************************
 //
 // Copyright (c) 2016 Intel Corporation. All rights reserved.
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -35,15 +35,15 @@ COREGRAPHICS_EXPORT size_t CGBitmapContextGetBitsPerComponent(CGContextRef conte
 COREGRAPHICS_EXPORT size_t CGBitmapContextGetBytesPerRow(CGContextRef context);
 
 COREGRAPHICS_EXPORT CGContextRef CGBitmapContextCreateWithData(void* data,
-    size_t width,
-    size_t height,
-    size_t bitsPerComponent,
-    size_t bytesPerRow,
-    CGColorSpaceRef space,
-    uint32_t bitmapInfo,
-    CGBitmapContextReleaseDataCallback releaseCallback,
-    void* releaseInfo) STUB_METHOD;
+                                                               size_t width,
+                                                               size_t height,
+                                                               size_t bitsPerComponent,
+                                                               size_t bytesPerRow,
+                                                               CGColorSpaceRef space,
+                                                               uint32_t bitmapInfo,
+                                                               CGBitmapContextReleaseDataCallback releaseCallback,
+                                                               void* releaseInfo);
 
 COREGRAPHICS_EXPORT CGBitmapInfo CGBitmapContextGetBitmapInfo(CGContextRef context);
 COREGRAPHICS_EXPORT size_t CGBitmapContextGetBitsPerPixel(CGContextRef context);
-COREGRAPHICS_EXPORT CGColorSpaceRef CGBitmapContextGetColorSpace(CGContextRef context) STUB_METHOD;
+COREGRAPHICS_EXPORT CGColorSpaceRef CGBitmapContextGetColorSpace(CGContextRef context);

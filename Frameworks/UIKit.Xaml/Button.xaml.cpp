@@ -66,6 +66,16 @@ Canvas^ Button::SublayerCanvas::get() {
     return _contentCanvas;
 }
 
+// Accessor for the LayerProperty that manages the BorderBrush of this button
+Private::CoreAnimation::LayerProperty^ Button::GetBorderBrushProperty() {
+    return ref new Private::CoreAnimation::LayerProperty(_border, _border->BorderBrushProperty);
+}
+
+// Accessor for the LayerProperty that manages the BorderThickness of this button
+Private::CoreAnimation::LayerProperty^ Button::GetBorderThicknessProperty() {
+    return ref new Private::CoreAnimation::LayerProperty(_border, _border->BorderThicknessProperty);
+}
+
 void Button::OnPointerPressed(PointerRoutedEventArgs^ e) {
     // Call the pointer hook if it exists
     if (_pointerPressedHook) {
@@ -178,8 +188,8 @@ Windows::Foundation::Size Button::ArrangeOverride(Windows::Foundation::Size fina
 
 void Button::OnApplyTemplate() {
     // Call GetTemplateChild to grab references to UIElements in our custom control template
-    _textBlock = safe_cast<TextBlock^>(GetTemplateChild("buttonText"));
     _image = safe_cast<Image^>(GetTemplateChild("buttonImage"));
+    _border = safe_cast<Border^>(GetTemplateChild("buttonBorder"));
     _contentCanvas = safe_cast<Canvas^>(GetTemplateChild(L"contentCanvas"));
 }
 
@@ -189,9 +199,9 @@ void Button::OnApplyTemplate() {
 ////////////////////////////////////////////////////////////////////////////////////
 // ObjectiveC Interop
 ////////////////////////////////////////////////////////////////////////////////////
-UIKIT_XAML_EXPORT IInspectable* XamlCreateButton() {
-    auto button = ref new UIKit::Xaml::Button();
-    return InspectableFromObject(button).Detach();
+UIKIT_XAML_EXPORT void XamlCreateButton(IInspectable** created) {
+    ComPtr<IInspectable> inspectable = InspectableFromObject(ref new UIKit::Xaml::Button());
+    *created = inspectable.Detach();
 }
 
 UIKIT_XAML_EXPORT void XamlRemovePointerEvents(const ComPtr<IInspectable>& inspectableButton) {
@@ -204,21 +214,11 @@ UIKIT_XAML_EXPORT void XamlRemoveLayoutEvent(const ComPtr<IInspectable>& inspect
     button->RemoveLayoutEvent();
 }
 
-UIKIT_XAML_EXPORT void XamlButtonApplyVisuals(const ComPtr<IInspectable>& inspectableButton,
-    const ComPtr<IInspectable>& inspectableText,
+UIKIT_XAML_EXPORT void XamlButtonApplyVisuals(
+    const ComPtr<IInspectable>& inspectableButton,
     const ComPtr<IInspectable>& inspectableButtonImage,
-    const ComPtr<IInspectable>& inspectableTitleColor) {
-
+    const ComPtr<IInspectable>& inspectableBorderBackgroundBrush) {
     auto button = safe_cast<UIKit::Xaml::Button^>(reinterpret_cast<Platform::Object^>(inspectableButton.Get()));
-    auto title = safe_cast<Platform::String^>(reinterpret_cast<Platform::Object^>(inspectableText.Get()));
-    auto titleColor = safe_cast<Brush^>(reinterpret_cast<Platform::Object^>(inspectableTitleColor.Get()));
-    if (!titleColor) {
-        titleColor = UIKit::Xaml::GetDefaultWhiteForegroundBrush();
-    }
-
-    // Set the Textblock's title and Foreground Brush color
-    button->_textBlock->Text = title;
-    button->_textBlock->Foreground = titleColor;
 
     // Set the Button's Image
     auto image = safe_cast<Brush^>(reinterpret_cast<Platform::Object^>(inspectableButtonImage.Get()));
@@ -226,6 +226,9 @@ UIKIT_XAML_EXPORT void XamlButtonApplyVisuals(const ComPtr<IInspectable>& inspec
         ImageBrush^ imageBrush = safe_cast<ImageBrush^>(image);
         button->_image->Source = safe_cast<BitmapSource^>(imageBrush->ImageSource);
     }
+
+    // Set the border background brush (if any)
+    button->_border->Background = safe_cast<Brush^>(reinterpret_cast<Platform::Object^>(inspectableBorderBackgroundBrush.Get()));
 }
 
 UIKIT_XAML_EXPORT void XamlHookButtonPointerEvents(

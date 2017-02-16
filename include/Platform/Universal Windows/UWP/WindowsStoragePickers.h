@@ -64,7 +64,7 @@ typedef unsigned WSPPickerLocationId;
 OBJCUWP_WINDOWS_STORAGE_PICKERS_EXPORT
 @interface WSPFilePickerSelectedFilesArray : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -84,7 +84,7 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_EXPORT
 OBJCUWP_WINDOWS_STORAGE_PICKERS_EXPORT
 @interface WSPFilePickerFileTypesOrderedMap : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int size;
 - (id)objectForKey: (id)key;
@@ -113,7 +113,7 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_EXPORT
 OBJCUWP_WINDOWS_STORAGE_PICKERS_EXPORT
 @interface WSPFileExtensionVector : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -139,9 +139,9 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_EXPORT
 OBJCUWP_WINDOWS_STORAGE_PICKERS_EXPORT
 @interface WSPFileOpenPicker : RTObject
 + (void)resumePickSingleFileAsyncWithSuccess:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WSPPickerViewMode viewMode;
 @property WSPPickerLocationId suggestedStartLocation;
@@ -164,9 +164,9 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_EXPORT
 
 OBJCUWP_WINDOWS_STORAGE_PICKERS_EXPORT
 @interface WSPFileSavePicker : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WSPPickerLocationId suggestedStartLocation;
 @property (retain) WSStorageFile* suggestedSaveFile;
@@ -189,9 +189,9 @@ OBJCUWP_WINDOWS_STORAGE_PICKERS_EXPORT
 
 OBJCUWP_WINDOWS_STORAGE_PICKERS_EXPORT
 @interface WSPFolderPicker : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WSPPickerViewMode viewMode;
 @property WSPPickerLocationId suggestedStartLocation;

@@ -42,7 +42,7 @@ OBJCUWP_WINDOWS_PHONE_DEVICES_POWER_EXPORT
 @interface WPDPBattery : RTObject
 + (WPDPBattery*)getDefault;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) int remainingChargePercent;
 @property (readonly) WFTimeSpan* remainingDischargeTime;

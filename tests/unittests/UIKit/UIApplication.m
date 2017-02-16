@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#include <TestFramework.h>
 #include "UIKit/UIApplication.h"
 #include "UWP/WindowsSystem.h"
 
@@ -59,6 +59,12 @@ static NSCondition* s_launchCompleteCondition;
 static NSCondition* s_queryCompleteCondition;
 static NSCondition* s_testCondition;
 static NSCondition* s_invokeLaunchCompleteCondition;
+
+static bool s_launchCompleteConditionFlag = false;
+static bool s_queryCompleteConditionFlag = false;
+static bool s_testConditionFlag = false;
+static bool s_invokeLaunchCompleteConditionFlag = false;
+
 static NSInteger s_count;
 static BOOL s_launchReady;
 
@@ -84,18 +90,28 @@ static BOOL s_launchReady;
     _launchFailureFunction = nil;
     _querySuccessFunction = nil;
     _queryFailureFunction = nil;
+
     [s_launchCompleteCondition lock];
+    s_launchCompleteConditionFlag = false;
     [s_launchCompleteCondition unlock];
+
     [s_queryCompleteCondition lock];
+    s_queryCompleteConditionFlag = false;
     [s_queryCompleteCondition unlock];
+
     [s_testCondition lock];
+    s_testConditionFlag = false;
     [s_testCondition unlock];
+
     [s_invokeLaunchCompleteCondition lock];
+    s_invokeLaunchCompleteConditionFlag = false;
     [s_invokeLaunchCompleteCondition unlock];
+
     [s_launchCompleteCondition release];
     [s_queryCompleteCondition release];
     [s_testCondition release];
     [s_invokeLaunchCompleteCondition release];
+
     s_launchCompleteCondition = nil;
     s_queryCompleteCondition = nil;
     s_testCondition = nil;
@@ -110,6 +126,7 @@ static BOOL s_launchReady;
     }
 
     s_launchReady = YES;
+    s_launchCompleteConditionFlag = true;
     [s_launchCompleteCondition signal];
     [s_launchCompleteCondition unlock];
 }
@@ -125,6 +142,7 @@ static BOOL s_launchReady;
     }
 
     s_launchReady = YES;
+    s_queryCompleteConditionFlag = true;
     [s_queryCompleteCondition signal];
     [s_queryCompleteCondition unlock];
 }
@@ -132,9 +150,10 @@ static BOOL s_launchReady;
 + (void)invokeLaunchSuccess:(NSNumber*)didLaunch {
     [s_launchCompleteCondition lock];
     [self signalTestCondition];
-    while (!s_launchReady) {
+    while (!s_launchReady && !s_launchCompleteConditionFlag) {
         [s_launchCompleteCondition wait];
     }
+    s_launchCompleteConditionFlag = false;
 
     s_launchReady = NO;
     s_count++;
@@ -146,9 +165,10 @@ static BOOL s_launchReady;
 + (void)invokeLaunchFailure:(NSError*)failure {
     [s_launchCompleteCondition lock];
     [self signalTestCondition];
-    while (!s_launchReady) {
+    while (!s_launchReady && !s_launchCompleteConditionFlag) {
         [s_launchCompleteCondition wait];
     }
+    s_launchCompleteConditionFlag = false;
 
     s_launchReady = NO;
     _launchFailureFunction(failure);
@@ -159,9 +179,10 @@ static BOOL s_launchReady;
 + (void)invokeQuerySuccess:(NSNumber*)status {
     [s_queryCompleteCondition lock];
     [self signalTestCondition];
-    while (!s_launchReady) {
+    while (!s_launchReady && !s_queryCompleteConditionFlag) {
         [s_queryCompleteCondition wait];
     }
+    s_queryCompleteConditionFlag = false;
 
     s_launchReady = NO;
     s_count++;
@@ -172,9 +193,10 @@ static BOOL s_launchReady;
 + (void)invokeQueryFailure:(NSError*)failure {
     [s_queryCompleteCondition lock];
     [self signalTestCondition];
-    while (!s_launchReady) {
+    while (!s_launchReady && !s_queryCompleteConditionFlag) {
         [s_queryCompleteCondition wait];
     }
+    s_queryCompleteConditionFlag = false;
 
     s_launchReady = NO;
     _queryFailureFunction(failure);
@@ -183,24 +205,34 @@ static BOOL s_launchReady;
 
 + (void)waitForTestCondition {
     [s_testCondition lock];
-    [s_testCondition wait];
+    while (!s_testConditionFlag) {
+        [s_testCondition wait];
+    }
+    s_testConditionFlag = false;
+
     [s_testCondition unlock];
 }
 
 + (void)signalTestCondition {
     [s_testCondition lock];
+    s_testConditionFlag = true;
     [s_testCondition signal];
     [s_testCondition unlock];
 }
 
 + (void)waitForInvokeLaunchCompleteCondition {
     [s_invokeLaunchCompleteCondition lock];
-    [s_invokeLaunchCompleteCondition wait];
+    while (!s_invokeLaunchCompleteConditionFlag) {
+        [s_invokeLaunchCompleteCondition wait];
+    }
+    s_invokeLaunchCompleteConditionFlag = false;
+
     [s_invokeLaunchCompleteCondition unlock];
 }
 
 + (void)signalInvokeLaunchCompleteCondition {
     [s_invokeLaunchCompleteCondition lock];
+    s_invokeLaunchCompleteConditionFlag = true;
     [s_invokeLaunchCompleteCondition signal];
     [s_invokeLaunchCompleteCondition unlock];
 }

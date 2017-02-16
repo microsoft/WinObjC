@@ -63,7 +63,7 @@ OBJCUWP_WINDOWS_DEVICES_PWM_EXPORT
 OBJCUWP_WINDOWS_DEVICES_PWM_EXPORT
 @interface WDPPwmPin : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WDPPwmPulsePolarity polarity;
 @property (readonly) WDPPwmController* controller;
@@ -86,7 +86,7 @@ OBJCUWP_WINDOWS_DEVICES_PWM_EXPORT
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDPPwmController*))success failure:(void (^)(NSError*))failure;
 + (void)getControllersAsync:(RTObject<WDPPIPwmProvider>*)provider success:(void (^)(NSArray* /* WDPPwmController* */))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) double actualFrequency;
 @property (readonly) double maxFrequency;

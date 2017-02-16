@@ -31,6 +31,8 @@
 #include <wrl/client.h>
 #include "COMIncludes_End.h"
 
+#import <CGImageInternal.h>
+
 using namespace Microsoft::WRL;
 
 static const wchar_t* TAG = L"CGImageSource";
@@ -1684,48 +1686,10 @@ CGImageRef CGImageSourceCreateImageAtIndex(CGImageSourceRef isrc, size_t index, 
     ComPtr<IWICBitmapFrameDecode> imageFrame;
     RETURN_NULL_IF_FAILED(imageDecoder->GetFrame(index, &imageFrame));
 
-    unsigned int frameWidth = 0;
-    unsigned int frameHeight = 0;
-    RETURN_NULL_IF_FAILED(imageFrame->GetSize(&frameWidth, &frameHeight));
+    ComPtr<IWICBitmap> imageBitmap;
+    RETURN_NULL_IF_FAILED(imageFactory->CreateBitmapFromSource(imageFrame.Get(), WICBitmapCacheOnDemand, &imageBitmap));
 
-    ComPtr<IWICFormatConverter> imageFormatConverter;
-    RETURN_NULL_IF_FAILED(imageFactory->CreateFormatConverter(&imageFormatConverter));
-
-    if (options && CFDictionaryContainsKey(options, kCGImageSourceShouldAllowFloat)) {
-        UNIMPLEMENTED_WITH_MSG("kCGImageSourceShouldAllowFloat is not supported in current implementation.");
-    }
-
-    RETURN_NULL_IF_FAILED(imageFormatConverter->Initialize(
-        imageFrame.Get(), GUID_WICPixelFormat32bppRGBA, WICBitmapDitherTypeNone, nullptr, 0.f, WICBitmapPaletteTypeCustom));
-
-    const unsigned int frameSize = frameWidth * frameHeight * 4;
-    unsigned char* frameByteArray = static_cast<unsigned char*>(IwMalloc(frameSize));
-    if (!frameByteArray) {
-        NSTraceInfo(TAG, @"CGImageSourceCreateImageAtIndex cannot allocate memory");
-        return nullptr;
-    }
-
-    auto cleanup = wil::ScopeExit([&]() { IwFree(frameByteArray); });
-    RETURN_NULL_IF_FAILED(imageFormatConverter->CopyPixels(0, frameWidth * 4, frameSize, frameByteArray));
-    cleanup.Dismiss();
-
-    NSData* frameData = [NSData dataWithBytesNoCopy:frameByteArray length:frameSize freeWhenDone:YES];
-    CGDataProviderRef frameDataProvider = CGDataProviderCreateWithCFData((CFDataRef)frameData);
-    CGColorSpaceRef colorspaceRgb = CGColorSpaceCreateDeviceRGB();
-    CGImageRef imageRef = CGImageCreate(frameWidth,
-                                        frameHeight,
-                                        8,
-                                        32,
-                                        frameWidth * 4,
-                                        colorspaceRgb,
-                                        kCGImageAlphaLast,
-                                        frameDataProvider,
-                                        nullptr,
-                                        true,
-                                        kCGRenderingIntentDefault);
-    CGDataProviderRelease(frameDataProvider);
-    CGColorSpaceRelease(colorspaceRgb);
-    return imageRef;
+    return _CGImageCreateWithWICBitmap(imageBitmap.Get());
 }
 
 /**
@@ -1825,37 +1789,10 @@ CGImageRef CGImageSourceCreateThumbnailAtIndex(CGImageSourceRef isrc, size_t ind
         UNIMPLEMENTED_WITH_MSG("kCGImageSourceShouldAllowFloat is not supported in current implementation.");
     }
 
-    RETURN_NULL_IF_FAILED(imageFormatConverter->Initialize(
-        imageScaler.Get(), GUID_WICPixelFormat32bppRGBA, WICBitmapDitherTypeNone, nullptr, 0.f, WICBitmapPaletteTypeCustom));
+    ComPtr<IWICBitmap> imageBitmap;
+    RETURN_NULL_IF_FAILED(imageFactory->CreateBitmapFromSource(imageScaler.Get(), WICBitmapCacheOnDemand, &imageBitmap));
 
-    const unsigned int thumbnailSize = thumbnailWidth * thumbnailHeight * 4;
-    unsigned char* thumbnailByteArray = static_cast<unsigned char*>(IwMalloc(thumbnailSize));
-    if (!thumbnailByteArray) {
-        NSTraceInfo(TAG, @"CGImageSourceCreateThumbnailAtIndex cannot allocate memory");
-        return nullptr;
-    }
-
-    auto cleanup = wil::ScopeExit([&]() { IwFree(thumbnailByteArray); });
-    RETURN_NULL_IF_FAILED(imageFormatConverter->CopyPixels(0, thumbnailWidth * 4, thumbnailSize, thumbnailByteArray));
-    cleanup.Dismiss();
-
-    NSData* thumbnailData = [NSData dataWithBytesNoCopy:thumbnailByteArray length:thumbnailSize freeWhenDone:YES];
-    CGDataProviderRef thumbnailDataProvider = CGDataProviderCreateWithCFData((CFDataRef)thumbnailData);
-    CGColorSpaceRef colorspaceRgb = CGColorSpaceCreateDeviceRGB();
-    CGImageRef imageRef = CGImageCreate(thumbnailWidth,
-                                        thumbnailHeight,
-                                        8,
-                                        32,
-                                        thumbnailWidth * 4,
-                                        colorspaceRgb,
-                                        kCGImageAlphaLast,
-                                        thumbnailDataProvider,
-                                        nullptr,
-                                        true,
-                                        kCGRenderingIntentDefault);
-    CGDataProviderRelease(thumbnailDataProvider);
-    CGColorSpaceRelease(colorspaceRgb);
-    return imageRef;
+    return _CGImageCreateWithWICBitmap(imageBitmap.Get());
 }
 
 /**

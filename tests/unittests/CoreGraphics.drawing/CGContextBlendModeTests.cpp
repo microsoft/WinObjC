@@ -48,7 +48,7 @@ CGNamedBlendMode compositionModes[] = {
     { "kCGBlendModePlusDarker", kCGBlendModePlusDarker },
 };
 
-CGFloat alphas[] = { 0.5f, 1.f };
+static CGFloat alphas[] = { 0.5f, 1.f };
 
 class CGContextBlendMode : public WhiteBackgroundTest<>, public ::testing::WithParamInterface<::testing::tuple<CGFloat, CGNamedBlendMode>> {
     CFStringRef CreateOutputFilename() {
@@ -58,7 +58,7 @@ class CGContextBlendMode : public WhiteBackgroundTest<>, public ::testing::WithP
     }
 };
 
-TEST_P(CGContextBlendMode, OverlappedEllipses) {
+DRAW_TEST_P(CGContextBlendMode, OverlappedEllipses) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
     CGBlendMode blendMode = ::testing::get<1>(GetParam()).blendMode;

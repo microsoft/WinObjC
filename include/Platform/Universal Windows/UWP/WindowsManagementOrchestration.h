@@ -42,7 +42,7 @@ OBJCUWP_WINDOWS_MANAGEMENT_ORCHESTRATION_EXPORT
 @interface WMOCurrentAppOrchestration : RTObject
 + (WMOCurrentAppOrchestration*)getForCurrentView;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (WMOSingleAppModeContext*)startSingleAppMode;
 @end
@@ -70,7 +70,7 @@ OBJCUWP_WINDOWS_MANAGEMENT_ORCHESTRATION_EXPORT
 OBJCUWP_WINDOWS_MANAGEMENT_ORCHESTRATION_EXPORT
 @interface WMOSingleAppModeContext : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)close;
 @end

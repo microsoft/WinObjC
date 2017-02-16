@@ -16,9 +16,12 @@
 //******************************************************************************
 
 #import <StubReturn.h>
-#include <math.h>
-#include "CoreGraphics/CGContext.h"
-#include "CGContextInternal.h"
+#import <math.h>
+#import "CoreGraphics/CGContext.h"
+#import "CGContextInternal.h"
+#import "CGImageInternal.h"
+#import "CGIWICBitmap.h"
+#import <CoreGraphics/D2DWrapper.h>
 
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSMutableDictionary.h"
@@ -48,11 +51,20 @@
 
 #import <objc/objc-arc.h>
 
+#include <COMIncludes.h>
+#import <WRLHelpers.h>
+#import <ErrorHandling.h>
+#import <wrl/client.h>
+#import <wrl/implements.h>
+#include <COMIncludes_End.h>
+
 static const wchar_t* TAG = L"CALayer";
 
 static const bool DEBUG_ALL = false;
 static const bool DEBUG_VERBOSE = DEBUG_ALL || false;
 static const bool DEBUG_DRAWING = DEBUG_VERBOSE || false;
+
+static const int c_windowsDPI = 96;
 
 NSString* const kCAOnOrderIn = @"kCAOnOrderIn";
 NSString* const kCAOnOrderOut = @"kCAOnOrderOut";
@@ -276,7 +288,6 @@ CAPrivateInfo::~CAPrivateInfo() {
     _undefinedKeys = nil;
     _actions = nil;
     CGColorRelease(_backgroundColor);
-    CGColorRelease(_borderColor);
     _name = nil;
     if (_animations) {
         [_animations release];
@@ -289,13 +300,26 @@ CAPrivateInfo::~CAPrivateInfo() {
     }
 }
 
-CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
+CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float scale) {
     if ([NSThread isMainThread]) {
         std::shared_ptr<IDisplayTexture> texture = GetCACompositor()->CreateDisplayTexture(width, height);
-        return _CGBitmapContextCreateWithTexture(width, height, texture);
+
+        Microsoft::WRL::ComPtr<IWICBitmap> customWICBtmap =
+            Microsoft::WRL::Make<CGIWICBitmap>(texture, GUID_WICPixelFormat32bppPBGRA, height, width);
+        // We want to convert it to GUID_WICPixelFormat32bppPBGRA for D2D Render Target compatibility.
+        woc::unique_cf<CGImageRef> image(_CGImageCreateWithWICBitmap(customWICBtmap.Get()));
+
+        Microsoft::WRL::ComPtr<ID2D1Factory> factory;
+        RETURN_NULL_IF_FAILED(_CGGetD2DFactory(&factory));
+
+        Microsoft::WRL::ComPtr<ID2D1RenderTarget> renderTarget;
+        RETURN_NULL_IF_FAILED(factory->CreateWicBitmapRenderTarget(customWICBtmap.Get(), D2D1::RenderTargetProperties(), &renderTarget));
+        renderTarget->SetDpi(c_windowsDPI * scale, c_windowsDPI * scale);
+
+        return _CGBitmapContextCreateWithRenderTarget(renderTarget.Get(), image.get(), GUID_WICPixelFormat32bppPBGRA);
     }
 
-    return nil;
+    return nullptr;
 }
 
 @implementation CALayer
@@ -410,7 +434,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
         rect.size.width = priv->bounds.size.width * priv->contentsScale;
         rect.size.height = -priv->bounds.size.height * priv->contentsScale;
 
-        CGContextDrawImageRect(ctx, priv->contents, rect, destRect);
+        _CGContextDrawImageRect(ctx, priv->contents, rect, destRect);
     }
 
     //  Draw sublayers
@@ -454,8 +478,10 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
         }
 
         // Update content size, even in case of the early out below.
-        int width = (int)(ceilf(priv->bounds.size.width) * priv->contentsScale);
-        int height = (int)(ceilf(priv->bounds.size.height) * priv->contentsScale);
+        int widthInPoints = ceilf(priv->bounds.size.width);
+        int width = (int)(widthInPoints * priv->contentsScale);
+        int heightInPoints = ceilf(priv->bounds.size.height);
+        int height = (int)(heightInPoints * priv->contentsScale);
 
         if (width <= 0 || height <= 0) {
             TraceVerbose(TAG, L"Not drawing due to invalid layer dimensions; width=%d, height=%d", width, height);
@@ -493,7 +519,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
         }
 
         // Create the contents
-        CGContextRef drawContext = CreateLayerContentsBitmapContext32(width, height);
+        CGContextRef drawContext = CreateLayerContentsBitmapContext32(width, height, priv->contentsScale);
 
         priv->ownsContents = TRUE;
         CGImageRef target = CGBitmapContextGetImage(drawContext);
@@ -526,17 +552,13 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
             CGContextRestoreGState(drawContext);
         }
 
-        if (target->Backing()->Height() != 0) {
-            CGContextTranslateCTM(drawContext, 0, float(target->Backing()->Height()));
-        }
-        if (priv->contentsScale != 1.0f) {
-            // TODO 1077:: Remove once D2D render target is implemented
-            _CGContextSetScaleFactor(drawContext, priv->contentsScale);
-            CGContextScaleCTM(drawContext, priv->contentsScale, priv->contentsScale);
-        }
-
+        // UIKit and CALayer consumers expect the origin to be in the top left.
+        // CoreGraphics defaults to the bottom left, so we must flip and translate the canvas.
+        CGContextTranslateCTM(drawContext, 0, heightInPoints);
         CGContextScaleCTM(drawContext, 1.0f, -1.0f);
         CGContextTranslateCTM(drawContext, -priv->bounds.origin.x, -priv->bounds.origin.y);
+
+        _CGContextSetShadowProjectionTransform(drawContext, CGAffineTransformMakeScale(1.0, -1.0));
 
         CGContextSetDirty(drawContext, false);
         [self drawInContext:drawContext];
@@ -561,8 +583,8 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
             priv->contents = target;
         }
     } else if (priv->contents) {
-        priv->contentsSize.width = float(priv->contents->Backing()->Width());
-        priv->contentsSize.height = float(priv->contents->Backing()->Height());
+        priv->contentsSize.width = float(CGImageGetWidth(priv->contents));
+        priv->contentsSize.height = float(CGImageGetHeight(priv->contents));
     }
 }
 
@@ -1240,8 +1262,8 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
         CGImageRetain(static_cast<CGImageRef>(pImg));
         priv->ownsContents = FALSE;
 
-        priv->contentsSize.width = float(priv->contents->Backing()->Width());
-        priv->contentsSize.height = float(priv->contents->Backing()->Height());
+        priv->contentsSize.width = float(CGImageGetWidth(priv->contents));
+        priv->contentsSize.height = float(CGImageGetHeight(priv->contents));
     } else {
         priv->contents = NULL;
         priv->ownsContents = FALSE;
@@ -1559,64 +1581,55 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     return priv->_backgroundColor;
 }
 
-- (void)_setContentColor:(CGColorRef)newColor {
-    UNIMPLEMENTED();
-}
-
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)setBorderColor:(CGColorRef)color {
-    UNIMPLEMENTED();
-    if (color != nil) {
-        priv->borderColor = *[static_cast<UIColor*>(color) _getColors];
-    } else {
-        _ClearColorQuad(priv->borderColor);
-    }
-
-    CGColorRef old = priv->_borderColor;
-    priv->_borderColor = CGColorRetain(color);
-    CGColorRelease(old);
+    // Set the border color via CATransaction
+    [CATransaction _setPropertyForLayer:self name:@"borderColor" value:(NSObject*)color];
+    [self setNeedsDisplay];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (CGColorRef)borderColor {
-    UNIMPLEMENTED();
-    return priv->_borderColor;
+    // Grab the current border color directly off of the layer proxy
+    return [(UIColor*)priv->_layerProxy->GetPropertyValue("borderColor") CGColor];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)setBorderWidth:(float)width {
-    UNIMPLEMENTED();
-    priv->borderWidth = width;
+    // Set the border width via CATransaction
+    [CATransaction _setPropertyForLayer:self name:@"borderWidth" value:[NSNumber numberWithFloat:width]];
+    [self setNeedsDisplay];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (float)borderWidth {
-    UNIMPLEMENTED();
-    return priv->borderWidth;
+    // Grab the current border width directly off of the layer proxy
+    return [(NSNumber*)priv->_layerProxy->GetPropertyValue("borderWidth") floatValue];
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes Rounded corners with clipped children are not currently achievable in Xaml.
 */
 - (void)setCornerRadius:(float)radius {
-    UNIMPLEMENTED();
-    priv->cornerRadius = radius;
+    UNIMPLEMENTED_WITH_MSG("Rounded corners with clipped children are not achievable in Xaml.");
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes Rounded corners with clipped children are not currently achievable in Xaml.
 */
 - (float)cornerRadius {
-    UNIMPLEMENTED();
-    return priv->cornerRadius;
+    UNIMPLEMENTED_WITH_MSG("Rounded corners with clipped children are not achievable in Xaml.");
+    return StubReturn();
 }
 
 /**
@@ -2495,7 +2508,7 @@ bool _floatAlmostEqual(float a, float b) {
     return ret;
 }
 
-- (NSObject*)presentationValueForKey:(NSString*)key {
+- (NSObject*)_presentationValueForKey:(NSString*)key {
     return reinterpret_cast<NSObject*>(priv->_layerProxy->GetPropertyValue([key UTF8String]));
 }
 

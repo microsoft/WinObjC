@@ -138,7 +138,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_PROVIDER_EXPORT
 + (RTObject<WFIAsyncAction>*)unregisterDeviceAsync:(NSString *)deviceId;
 + (RTObject<WFIAsyncAction>*)updateDeviceConfigurationDataAsync:(NSString *)deviceId deviceConfigurationData:(RTObject<WSSIBuffer>*)deviceConfigurationData;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (RTObject<WFIAsyncAction>*)finishRegisteringDeviceAsync:(RTObject<WSSIBuffer>*)deviceConfigurationData;
 - (RTObject<WFIAsyncAction>*)abortRegisteringDeviceAsync:(NSString *)errorLogMessage;
@@ -153,7 +153,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_PROVIDER_EXPORT
 OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_PROVIDER_EXPORT
 @interface WSAIPSecondaryAuthenticationFactorRegistrationResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSAIPSecondaryAuthenticationFactorRegistration* registration;
 @property (readonly) WSAIPSecondaryAuthenticationFactorRegistrationStatus status;
@@ -171,7 +171,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_PROVIDER_EXPORT
 + (void)startAuthenticationAsync:(NSString *)deviceId serviceAuthenticationNonce:(RTObject<WSSIBuffer>*)serviceAuthenticationNonce success:(void (^)(WSAIPSecondaryAuthenticationFactorAuthenticationResult*))success failure:(void (^)(NSError*))failure;
 + (void)getAuthenticationStageInfoAsyncWithSuccess:(void (^)(WSAIPSecondaryAuthenticationFactorAuthenticationStageInfo*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) RTObject<WSSIBuffer>* deviceConfigurationData;
 @property (readonly) RTObject<WSSIBuffer>* deviceNonce;
@@ -192,7 +192,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_PROVIDER_EXPORT
 OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_PROVIDER_EXPORT
 @interface WSAIPSecondaryAuthenticationFactorAuthenticationResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSAIPSecondaryAuthenticationFactorAuthentication* authentication;
 @property (readonly) WSAIPSecondaryAuthenticationFactorAuthenticationStatus status;
@@ -207,7 +207,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_PROVIDER_EXPORT
 OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_PROVIDER_EXPORT
 @interface WSAIPSecondaryAuthenticationFactorInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) RTObject<WSSIBuffer>* deviceConfigurationData;
 @property (readonly) NSString * deviceFriendlyName;
@@ -224,7 +224,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_PROVIDER_EXPORT
 OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_PROVIDER_EXPORT
 @interface WSAIPSecondaryAuthenticationFactorAuthenticationStageChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSAIPSecondaryAuthenticationFactorAuthenticationStageInfo* stageInfo;
 @end
@@ -238,7 +238,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_PROVIDER_EXPORT
 OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_PROVIDER_EXPORT
 @interface WSAIPSecondaryAuthenticationFactorAuthenticationStageInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * deviceId;
 @property (readonly) WSAIPSecondaryAuthenticationFactorAuthenticationScenario scenario;

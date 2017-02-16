@@ -104,7 +104,7 @@ CGColorSpaceRef CGColorSpaceCreateDeviceRGB() {
 */
 CGColorSpaceRef CGColorSpaceCreatePattern(CGColorSpaceRef source) {
     UNIMPLEMENTED();
-    return (CGColorSpaceRef) new __CGColorSpace(kCGColorSpaceModelRGB);
+    return (CGColorSpaceRef) new __CGColorSpace(kCGColorSpaceModelPattern);
 }
 
 /**
@@ -112,6 +112,10 @@ CGColorSpaceRef CGColorSpaceCreatePattern(CGColorSpaceRef source) {
 */
 CGColorSpaceRef CGColorSpaceCreateDeviceGray() {
     return (CGColorSpaceRef) new __CGColorSpace(kCGColorSpaceModelMonochrome);
+}
+
+CGColorSpaceRef _CGColorSpaceCreate(CGColorSpaceModel model) {
+    return static_cast<CGColorSpaceRef>(new __CGColorSpace(model));
 }
 
 /**
@@ -181,25 +185,6 @@ CGColorSpaceRef CGColorSpaceRetain(CGColorSpaceRef colorSpace) {
     CFRetain((id)colorSpace);
 
     return colorSpace;
-}
-
-/**
- @Status Caveat
- @Notes Limited constants supported
-*/
-CGColorRef CGColorGetConstantColor(CFStringRef name) {
-    UIColor* ret;
-
-    char* pName = (char*)[(NSString*)name UTF8String];
-    if (strcmp(pName, "BLACK") == 0) {
-        ret = [_LazyUIColor2 blackColor];
-    } else if (strcmp(pName, "WHITE") == 0) {
-        ret = [_LazyUIColor2 whiteColor];
-    } else {
-        assert(0);
-    }
-
-    return (CGColorRef)[ret retain];
 }
 
 /**

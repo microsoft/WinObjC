@@ -119,7 +119,7 @@ OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
 OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
 @interface WMMMediaRatio : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property unsigned int numerator;
 @property unsigned int denominator;
@@ -133,9 +133,9 @@ OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
 
 OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
 @interface WMMMediaPropertySet : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int size;
 - (id)objectForKey: (id)key;
@@ -168,9 +168,9 @@ OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
 + (WMMAudioEncodingProperties*)createMp3:(unsigned int)sampleRate channelCount:(unsigned int)channelCount bitrate:(unsigned int)bitrate;
 + (WMMAudioEncodingProperties*)createPcm:(unsigned int)sampleRate channelCount:(unsigned int)channelCount bitsPerSample:(unsigned int)bitsPerSample;
 + (WMMAudioEncodingProperties*)createWma:(unsigned int)sampleRate channelCount:(unsigned int)channelCount bitrate:(unsigned int)bitrate;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property unsigned int sampleRate;
 @property unsigned int channelCount;
@@ -279,9 +279,9 @@ OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
 + (WMMVideoEncodingProperties*)createH264;
 + (WMMVideoEncodingProperties*)createMpeg2;
 + (WMMVideoEncodingProperties*)createUncompressed:(NSString *)subtype width:(unsigned int)width height:(unsigned int)height;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * subtype;
 @property (readonly) WMMMediaPropertySet* properties;
@@ -310,9 +310,9 @@ OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
 + (WMMImageEncodingProperties*)createJpeg;
 + (WMMImageEncodingProperties*)createPng;
 + (WMMImageEncodingProperties*)createJpegXR;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property unsigned int width;
 @property unsigned int height;
@@ -329,9 +329,9 @@ OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
 
 OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
 @interface WMMContainerEncodingProperties : RTObject <WMMIMediaEncodingProperties>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * subtype;
 @property (readonly) WMMMediaPropertySet* properties;
@@ -355,9 +355,9 @@ OBJCUWP_WINDOWS_MEDIA_MEDIAPROPERTIES_EXPORT
 + (void)createFromStreamAsync:(RTObject<WSSIRandomAccessStream>*)stream success:(void (^)(WMMMediaEncodingProfile*))success failure:(void (^)(NSError*))failure;
 + (WMMMediaEncodingProfile*)createWav:(WMMAudioEncodingQuality)quality;
 + (WMMMediaEncodingProfile*)createAvi:(WMMVideoEncodingQuality)quality;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WMMVideoEncodingProperties* video;
 @property (retain) WMMContainerEncodingProperties* container;

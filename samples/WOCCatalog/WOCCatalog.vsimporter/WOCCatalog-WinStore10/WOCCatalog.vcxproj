@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -92,7 +92,7 @@
       <HeaderMap>Project</HeaderMap>
       <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>true</ObjectiveCModules>
+      <ObjectiveCModules>false</ObjectiveCModules>
       <OptimizationLevel>Disabled</OptimizationLevel>
       <PreprocessorDefinitions>DEBUG=1</PreprocessorDefinitions>
     </ClangCompile>
@@ -116,7 +116,7 @@
       <HeaderMap>Project</HeaderMap>
       <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>true</ObjectiveCModules>
+      <ObjectiveCModules>false</ObjectiveCModules>
       <OptimizationLevel>Disabled</OptimizationLevel>
       <PreprocessorDefinitions>DEBUG=1</PreprocessorDefinitions>
     </ClangCompile>
@@ -138,7 +138,7 @@
       <HeaderMap>Project</HeaderMap>
       <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>true</ObjectiveCModules>
+      <ObjectiveCModules>false</ObjectiveCModules>
       <OptimizationLevel>MinSpace</OptimizationLevel>
     </ClangCompile>
     <Link>
@@ -159,7 +159,7 @@
       <HeaderMap>Project</HeaderMap>
       <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>true</ObjectiveCModules>
+      <ObjectiveCModules>false</ObjectiveCModules>
       <OptimizationLevel>MinSpace</OptimizationLevel>
     </ClangCompile>
     <Link>
@@ -201,7 +201,6 @@
     <ClInclude Include="..\..\WOCCatalog\CoreLocationViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\CoreMotionViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\DisplayModeViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\FoundationsViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\GLKitExampleController.h" />
     <ClInclude Include="..\..\WOCCatalog\GeocodingViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\GesturesViewController.h" />
@@ -218,12 +217,10 @@
     <ClInclude Include="..\..\WOCCatalog\SegmentsViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\ShadowViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\SingleImageViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\TaskInfoViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\TextDisplayViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\ToolbarsViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\TransitionsViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\UIPasteboardViewController.h" />
-    <ClInclude Include="..\..\WOCCatalog\UserDefaultsViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\ViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\WebViewController.h" />
     <ClInclude Include="..\..\WOCCatalog\XamlViewController.h" />
@@ -240,7 +237,6 @@
     <ClangCompile Include="..\..\WOCCatalog\CoreLocationViewController.mm" />
     <ClangCompile Include="..\..\WOCCatalog\CoreMotionViewController.mm" />
     <ClangCompile Include="..\..\WOCCatalog\DisplayModeViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\FoundationsViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\GLKitExampleController.mm" />
     <ClangCompile Include="..\..\WOCCatalog\GeocodingViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\GesturesViewController.m" />
@@ -257,14 +253,10 @@
     <ClangCompile Include="..\..\WOCCatalog\SegmentsViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\ShadowViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\SingleImageViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\TaskInfoViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\TextDisplayViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\ToolbarsViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\TransitionsViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\UIPasteboardViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\URLDownloadCell.mm" />
-    <ClangCompile Include="..\..\WOCCatalog\URLSessionViewController.mm" />
-    <ClangCompile Include="..\..\WOCCatalog\UserDefaultsViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\ViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\WebViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\XamlViewController.m" />

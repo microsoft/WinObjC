@@ -20,9 +20,7 @@
 
 #ifdef WINOBJC
 static NSURL* __GetURLFromPathRelativeToModuleDirectory(NSString* relativePath) {
-    static char fullPath[_MAX_PATH];
-    static int unused = [](char* path) { return GetModuleFileNameA(NULL, path, _MAX_PATH); }(fullPath);
-    return [NSURL fileURLWithPath:[[@(fullPath) stringByDeletingLastPathComponent] stringByAppendingPathComponent:relativePath]];
+    return [NSURL fileURLWithPath:[@(GetCurrentTestDirectory().c_str()) stringByAppendingPathComponent:relativePath]];
 }
 #endif // WINOBJC
 
@@ -145,7 +143,7 @@ TEXT_DRAW_TEST_F(CTFrame, BasicUnicodeTest, WhiteBackgroundTest<PixelByPixelImag
     CTFrameDraw(frame.get(), context);
 }
 
-class CTFrame : public WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>,
+class CTFrame : public WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<64>>>,
                 public ::testing::WithParamInterface<::testing::tuple<CTTextAlignment, CTLineBreakMode, CTWritingDirection, CGFloat>> {
     CFStringRef CreateOutputFilename() {
         CTTextAlignment alignment = ::testing::get<0>(GetParam());
@@ -569,3 +567,56 @@ TEXT_DRAW_TEST_F(CTFont, DrawGlyphs, WhiteBackgroundTest<PixelByPixelImageCompar
     CGPoint positions[4] = { { 0, 0 }, { 10, 10 }, { 25, 25 }, { 65, 15 } };
     CTFontDrawGlyphs(font.get(), glyphs, positions, 4, context);
 }
+
+class TextDrawingMode : public WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>,
+                        public ::testing::WithParamInterface<::testing::tuple<CGTextDrawingMode, CGFloat>> {
+    CFStringRef CreateOutputFilename() {
+        CGTextDrawingMode textDrawingMode = ::testing::get<0>(GetParam());
+        CGFloat textRotation = ::testing::get<1>(GetParam());
+        return CFStringCreateWithFormat(nullptr, nullptr, CFSTR("TestImage.TextDrawingMode.%d.%.0f.png"), textDrawingMode, textRotation);
+    }
+};
+
+TEXT_DRAW_TEST_P(TextDrawingMode, CGTextDrawingMode) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    // Creates path with current rectangle
+    woc::unique_cf<CGMutablePathRef> path{ CGPathCreateMutable() };
+    CGPathAddRect(path.get(), nullptr, bounds);
+
+    CGTextDrawingMode textDrawingMode = ::testing::get<0>(GetParam());
+    CGContextSetTextDrawingMode(context, textDrawingMode);
+
+    CGAffineTransform textMatrix = CGContextGetTextMatrix(context);
+    CGContextSetTextMatrix(context, CGAffineTransformRotate(textMatrix, ::testing::get<1>(GetParam()) * M_PI / 180.0));
+    // Create style setting to match given alignment
+    CTParagraphStyleSetting setting[1];
+    CTTextAlignment alignment = kCTLeftTextAlignment;
+    setting[0].spec = kCTParagraphStyleSpecifierAlignment;
+    setting[0].valueSize = sizeof(CTTextAlignment);
+    setting[0].value = &alignment;
+
+    woc::unique_cf<CTParagraphStyleRef> paragraphStyle{ CTParagraphStyleCreate(setting, std::extent<decltype(setting)>::value) };
+    woc::unique_cf<CTFontRef> myCFFont{ CTFontCreateWithName(CFSTR("Arial"), 20, nullptr) };
+
+    CFStringRef keys[3] = { kCTFontAttributeName, kCTParagraphStyleAttributeName, kCTForegroundColorFromContextAttributeName };
+    CFTypeRef values[3] = { myCFFont.get(), paragraphStyle.get(), kCFBooleanTrue };
+
+    CGContextSetRGBFillColor(context, 1, 0, 0, 1);
+    CGContextSetRGBStrokeColor(context, 0, 1, 0, 1);
+    CGContextSetShadow(context, { 3, 5 }, 1);
+    __DrawLoremIpsum(context, path.get(), keys, values);
+
+    CGContextSetRGBFillColor(context, 0, 0, 1, 1);
+    CGContextFillRect(context, CGRectMake(0, 0, bounds.size.width / 2.0, bounds.size.height));
+}
+
+static constexpr CGTextDrawingMode c_textDrawingModes[] = { kCGTextInvisible, kCGTextFill,     kCGTextStroke,     kCGTextFillStroke,
+                                                            kCGTextClip,      kCGTextFillClip, kCGTextStrokeClip, kCGTextFillStrokeClip };
+
+static constexpr CGFloat c_rotations[] = { 0.0, 45.0, -30.0 };
+
+INSTANTIATE_TEST_CASE_P(TextDrawing,
+                        TextDrawingMode,
+                        ::testing::Combine(::testing::ValuesIn(c_textDrawingModes), ::testing::ValuesIn(c_rotations)));

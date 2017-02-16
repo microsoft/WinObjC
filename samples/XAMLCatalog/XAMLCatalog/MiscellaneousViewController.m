@@ -16,6 +16,7 @@
 
 #import "MiscellaneousViewController.h"
 #import <UIKit/UIButton.h>
+#import <UIKit/UIColor.h>
 #import <UIKit/UILabel.h>
 
 @implementation MiscellaneousViewController {

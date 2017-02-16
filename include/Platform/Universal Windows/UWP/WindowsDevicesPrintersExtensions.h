@@ -63,7 +63,7 @@ typedef unsigned WDPEPrint3DWorkflowDetail;
 OBJCUWP_WINDOWS_DEVICES_PRINTERS_EXTENSIONS_EXPORT
 @interface WDPEPrintTaskConfigurationSaveRequestedDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)complete;
 @end
@@ -77,7 +77,7 @@ OBJCUWP_WINDOWS_DEVICES_PRINTERS_EXTENSIONS_EXPORT
 OBJCUWP_WINDOWS_DEVICES_PRINTERS_EXTENSIONS_EXPORT
 @interface WDPEPrintTaskConfigurationSaveRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFDateTime* deadline;
 - (void)cancel;
@@ -94,7 +94,7 @@ OBJCUWP_WINDOWS_DEVICES_PRINTERS_EXTENSIONS_EXPORT
 OBJCUWP_WINDOWS_DEVICES_PRINTERS_EXTENSIONS_EXPORT
 @interface WDPEPrintTaskConfigurationSaveRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDPEPrintTaskConfigurationSaveRequest* request;
 @end
@@ -108,7 +108,7 @@ OBJCUWP_WINDOWS_DEVICES_PRINTERS_EXTENSIONS_EXPORT
 OBJCUWP_WINDOWS_DEVICES_PRINTERS_EXTENSIONS_EXPORT
 @interface WDPEPrintTaskConfiguration : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) RTObject* printerExtensionContext;
 - (EventRegistrationToken)addSaveRequestedEvent:(void(^)(WDPEPrintTaskConfiguration*, WDPEPrintTaskConfigurationSaveRequestedEventArgs*))del;
@@ -124,7 +124,7 @@ OBJCUWP_WINDOWS_DEVICES_PRINTERS_EXTENSIONS_EXPORT
 OBJCUWP_WINDOWS_DEVICES_PRINTERS_EXTENSIONS_EXPORT
 @interface WDPEPrintNotificationEventDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * eventData;
 @property (readonly) NSString * printerName;
@@ -150,7 +150,7 @@ OBJCUWP_WINDOWS_DEVICES_PRINTERS_EXTENSIONS_EXPORT
 OBJCUWP_WINDOWS_DEVICES_PRINTERS_EXTENSIONS_EXPORT
 @interface WDPEPrint3DWorkflowPrintRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDPEPrint3DWorkflowStatus status;
 - (void)setExtendedStatus:(WDPEPrint3DWorkflowDetail)value;
@@ -167,9 +167,9 @@ OBJCUWP_WINDOWS_DEVICES_PRINTERS_EXTENSIONS_EXPORT
 OBJCUWP_WINDOWS_DEVICES_PRINTERS_EXTENSIONS_EXPORT
 @interface WDPEPrint3DWorkflowPrinterChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property (readonly) NSString * newDeviceId;
+@property (readonly) NSString * newDeviceId __attribute__ ((ns_returns_not_retained));
 @end
 
 #endif // __WDPEPrint3DWorkflowPrinterChangedEventArgs_DEFINED__
@@ -181,7 +181,7 @@ OBJCUWP_WINDOWS_DEVICES_PRINTERS_EXTENSIONS_EXPORT
 OBJCUWP_WINDOWS_DEVICES_PRINTERS_EXTENSIONS_EXPORT
 @interface WDPEPrint3DWorkflow : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL isPrintReady;
 @property (readonly) NSString * deviceID;

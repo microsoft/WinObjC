@@ -115,7 +115,7 @@ OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 @interface WMDDeploymentResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFGUID* activityId;
 @property (readonly) NSString * errorText;
@@ -131,7 +131,7 @@ OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 @interface WMDPackageUserInformation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMDPackageInstallState installState;
 @property (readonly) NSString * userSecurityId;
@@ -146,7 +146,7 @@ OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 @interface WMDPackageVolume : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL isOffline;
 @property (readonly) BOOL isSystemVolume;
@@ -181,9 +181,9 @@ OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 
 OBJCUWP_WINDOWS_MANAGEMENT_DEPLOYMENT_EXPORT
 @interface WMDPackageManager : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)addPackageAsync:(WFUri*)packageUri dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris deploymentOptions:(WMDDeploymentOptions)deploymentOptions success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;
 - (void)updatePackageAsync:(WFUri*)packageUri dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris deploymentOptions:(WMDDeploymentOptions)deploymentOptions success:(void (^)(WMDDeploymentResult*))success progress:(void (^)(WMDDeploymentProgress*))progress failure:(void (^)(NSError*))failure;

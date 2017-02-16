@@ -72,7 +72,7 @@ OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
 + (WSBFileInformationFactory*)makeWithModeAndSizeAndOptions:(RTObject<WSSIStorageQueryResultBase>*)queryResult mode:(WSFThumbnailMode)mode requestedThumbnailSize:(unsigned int)requestedThumbnailSize thumbnailOptions:(WSFThumbnailOptions)thumbnailOptions ACTIVATOR;
 + (WSBFileInformationFactory*)makeWithModeAndSizeAndOptionsAndFlags:(RTObject<WSSIStorageQueryResultBase>*)queryResult mode:(WSFThumbnailMode)mode requestedThumbnailSize:(unsigned int)requestedThumbnailSize thumbnailOptions:(WSFThumbnailOptions)thumbnailOptions delayLoad:(BOOL)delayLoad ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)getItemsAsync:(unsigned int)startIndex maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve success:(void (^)(NSArray* /* RTObject<WSBIStorageItemInformation>* */))success failure:(void (^)(NSError*))failure;
 - (void)getItemsAsyncDefaultStartAndCountWithSuccess:(void (^)(NSArray* /* RTObject<WSBIStorageItemInformation>* */))success failure:(void (^)(NSError*))failure;
@@ -150,7 +150,7 @@ OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
 - (void)copyOverloadDefaultNameAndOptions:(RTObject<WSIStorageFolder>*)destinationFolder success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 - (void)copyOverloadDefaultOptions:(RTObject<WSIStorageFolder>*)destinationFolder desiredNewName:(NSString *)desiredNewName success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 - (void)copyOverload:(RTObject<WSIStorageFolder>*)destinationFolder desiredNewName:(NSString *)desiredNewName option:(WSNameCollisionOption)option success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
-- (RTObject<WFIAsyncAction>*)copyAndReplaceAsync:(RTObject<WSIStorageFile>*)fileToReplace;
+- (RTObject<WFIAsyncAction>*)copyAndReplaceAsync:(RTObject<WSIStorageFile>*)fileToReplace __attribute__ ((ns_returns_not_retained));
 - (RTObject<WFIAsyncAction>*)moveOverloadDefaultNameAndOptions:(RTObject<WSIStorageFolder>*)destinationFolder;
 - (RTObject<WFIAsyncAction>*)moveOverloadDefaultOptions:(RTObject<WSIStorageFolder>*)destinationFolder desiredNewName:(NSString *)desiredNewName;
 - (RTObject<WFIAsyncAction>*)moveOverload:(RTObject<WSIStorageFolder>*)destinationFolder desiredNewName:(NSString *)desiredNewName option:(WSNameCollisionOption)option;
@@ -265,7 +265,7 @@ OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
 OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
 @interface WSBFileInformation : RTObject <WSBIStorageItemInformation, WSIStorageFile, WSSIInputStreamReference, WSSIRandomAccessStreamReference, WSIStorageItem, WSIStorageItemProperties, WSIStorageItem2, WSIStorageItemPropertiesWithProvider, WSIStorageFilePropertiesWithAvailability, WSIStorageFile2>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSFBasicProperties* basicProperties;
 @property (readonly) WSFDocumentProperties* documentProperties;
@@ -294,7 +294,7 @@ OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
 - (void)copyOverloadDefaultNameAndOptions:(RTObject<WSIStorageFolder>*)destinationFolder success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 - (void)copyOverloadDefaultOptions:(RTObject<WSIStorageFolder>*)destinationFolder desiredNewName:(NSString *)desiredNewName success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 - (void)copyOverload:(RTObject<WSIStorageFolder>*)destinationFolder desiredNewName:(NSString *)desiredNewName option:(WSNameCollisionOption)option success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
-- (RTObject<WFIAsyncAction>*)copyAndReplaceAsync:(RTObject<WSIStorageFile>*)fileToReplace;
+- (RTObject<WFIAsyncAction>*)copyAndReplaceAsync:(RTObject<WSIStorageFile>*)fileToReplace __attribute__ ((ns_returns_not_retained));
 - (RTObject<WFIAsyncAction>*)moveOverloadDefaultNameAndOptions:(RTObject<WSIStorageFolder>*)destinationFolder;
 - (RTObject<WFIAsyncAction>*)moveOverloadDefaultOptions:(RTObject<WSIStorageFolder>*)destinationFolder desiredNewName:(NSString *)desiredNewName;
 - (RTObject<WFIAsyncAction>*)moveOverload:(RTObject<WSIStorageFolder>*)destinationFolder desiredNewName:(NSString *)desiredNewName option:(WSNameCollisionOption)option;
@@ -398,7 +398,7 @@ OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
 OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
 @interface WSBFolderInformation : RTObject <WSBIStorageItemInformation, WSIStorageFolder, WSIStorageItem, WSIStorageItemProperties, WSSIStorageFolderQueryOperations, WSIStorageItem2, WSIStorageFolder2, WSIStorageItemPropertiesWithProvider>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSFBasicProperties* basicProperties;
 @property (readonly) WSFDocumentProperties* documentProperties;

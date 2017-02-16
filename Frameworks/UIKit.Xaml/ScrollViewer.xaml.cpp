@@ -31,8 +31,9 @@ ScrollViewer::ScrollViewer() {
 ////////////////////////////////////////////////////////////////////////////////////
 // ObjectiveC Interop
 ////////////////////////////////////////////////////////////////////////////////////
-UIKIT_XAML_EXPORT IInspectable* XamlCreateScrollViewer() {
-    return InspectableFromObject(ref new UIKit::Xaml::ScrollViewer()).Detach();
+UIKIT_XAML_EXPORT void XamlCreateScrollViewer(IInspectable** created) {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable = InspectableFromObject(ref new UIKit::Xaml::ScrollViewer());
+    *created = inspectable.Detach();
 }
 
 // clang-format on

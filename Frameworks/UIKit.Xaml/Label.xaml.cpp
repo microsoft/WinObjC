@@ -53,14 +53,48 @@ Canvas^ Label::SublayerCanvas::get() {
     if (!_sublayerCanvas) {
         _sublayerCanvas = ref new Canvas();
         _sublayerCanvas->Name = "Sublayers";
-        Children->Append(_sublayerCanvas);
+
+        // If we have a border make sure the sublayer canvas is inserted before it
+        if (_border) {
+            unsigned int insertIndex = 0;
+            Children->IndexOf(_border, &insertIndex);
+            Children->InsertAt(insertIndex, _sublayerCanvas);
+        } else {
+            // Just add the sublayer canvas to the end because we don't yet have a border on this element
+            Children->Append(_sublayerCanvas);
+        }
     }
 
     return _sublayerCanvas;
 }
 
+Border^ Label::_GetBorder() {
+    if (!_border) {
+        // We always want the border added to the end of the Children collection
+        _border = ref new Border();
+        Children->Append(_border);
+    }
+
+    return _border;
+}
+
+// Accessor for the LayerProperty that manages the BorderBrush of this label
+Private::CoreAnimation::LayerProperty^ Label::GetBorderBrushProperty() {
+    // Make sure we have a border element, and return it along with its associated border property
+    Border^ border = _GetBorder();
+    return ref new Private::CoreAnimation::LayerProperty(border, border->BorderBrushProperty);
+}
+
+// Accessor for the LayerProperty that manages the BorderThickness of this label
+Private::CoreAnimation::LayerProperty^ Label::GetBorderThicknessProperty() {
+    // Make sure we have a border element, and return it along with its associated border property
+    Border^ border = _GetBorder();
+    return ref new Private::CoreAnimation::LayerProperty(border, border->BorderThicknessProperty);
+}
+
 Windows::Foundation::Size Label::ArrangeOverride(Windows::Foundation::Size finalSize) {
     // Make sure we render vertically-centered text if possible, else cap at the containing layer's height.
+    // TODO: Issue #1946: Do we actually need this call to Measure?
     TextBlock->Measure(finalSize);
     if (TextBlock->DesiredSize.Height >= finalSize.Height) {
         TextBlock->VerticalAlignment = Windows::UI::Xaml::VerticalAlignment::Top;
@@ -83,12 +117,13 @@ TextBlock^ Label::TextBlock::get() {
 ////////////////////////////////////////////////////////////////////////////////////
 
 // Returns a UIKit::Label as an IInspectable
-UIKIT_XAML_EXPORT IInspectable* XamlCreateLabel() {
-    return InspectableFromObject(ref new UIKit::Xaml::Label()).Detach();
+UIKIT_XAML_EXPORT void XamlCreateLabel(IInspectable** created) {
+    ComPtr<IInspectable> inspectable = InspectableFromObject(ref new UIKit::Xaml::Label());
+    *created = inspectable.Detach();
 }
 
 // Retrieves the UIKit::Label's backing TextBlock as an IInspectable
-UIKIT_XAML_EXPORT IInspectable* XamlGetLabelTextBox(const Microsoft::WRL::ComPtr<IInspectable>& label) {
+UIKIT_XAML_EXPORT IInspectable* XamlGetLabelTextBlock(const Microsoft::WRL::ComPtr<IInspectable>& label) {
     auto labelGrid = safe_cast<UIKit::Xaml::Label^>(reinterpret_cast<Platform::Object^>(label.Get()));
     return InspectableFromObject(labelGrid->TextBlock).Detach();
 }

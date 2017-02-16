@@ -90,7 +90,7 @@ OBJCUWP_WINDOWS_DEVICES_I2C_EXPORT
 @interface WDII2cConnectionSettings : RTObject
 + (WDII2cConnectionSettings*)make:(int)slaveAddress ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property int slaveAddress;
 @property WDII2cSharingMode sharingMode;
@@ -123,7 +123,7 @@ OBJCUWP_WINDOWS_DEVICES_I2C_EXPORT
 + (NSString *)getDeviceSelectorFromFriendlyName:(NSString *)friendlyName;
 + (void)fromIdAsync:(NSString *)deviceId settings:(WDII2cConnectionSettings*)settings success:(void (^)(WDII2cDevice*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDII2cConnectionSettings* connectionSettings;
 @property (readonly) NSString * deviceId;
@@ -147,7 +147,7 @@ OBJCUWP_WINDOWS_DEVICES_I2C_EXPORT
 + (void)getControllersAsync:(RTObject<WDIPII2cProvider>*)provider success:(void (^)(NSArray* /* WDII2cController* */))success failure:(void (^)(NSError*))failure;
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDII2cController*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (WDII2cDevice*)getDevice:(WDII2cConnectionSettings*)settings;
 @end

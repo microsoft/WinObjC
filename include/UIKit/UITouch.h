@@ -78,7 +78,7 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, readonly) NSTimeInterval timestamp;
 @property (nonatomic, readonly) NSUInteger tapCount;
 @property (nonatomic, readonly) UITouchPhase phase;
-@property (nonatomic, readonly, copy) NSArray* gestureRecognizers;
+@property (nonatomic, readonly, copy) NSArray* gestureRecognizers STUB_PROPERTY;
 @property (nonatomic, readonly, retain) UIView* view;
 @property (nonatomic, readonly, retain) UIWindow* window;
 @property (readonly, nonatomic) CGFloat altitudeAngle STUB_PROPERTY;

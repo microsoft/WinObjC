@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#include <TestFramework.h>
 #import <Foundation/Foundation.h>
 
 void VerifyJSONObjectWithDataSucceeds(NSString* dataString, NSJSONWritingOptions opts, id expectedResult) {
@@ -96,12 +96,11 @@ TEST(NSJSON, JSONObjectWithDataTests) {
     VerifyJSONObjectWithDataSucceeds(testString6, 0, @{ @"foo" : @"1", @"bar" : @"2" });
     VerifyJSONObjectWithDataSucceeds(testString5, 1, @[ @1, @2, @3, @4, @5 ]);
     VerifyJSONObjectWithDataSucceeds(testString6, 1, @{ @"foo" : @"1", @"bar" : @"2" });
-    VerifyJSONObjectWithDataSucceeds(
-        testString9,
-        0,
-        @{ @"key" : @"value",
-           @"nullkey" : [NSNull null],
-           @"array" : @[ @{ @"subnullkey" : [NSNull null] } ] });
+    VerifyJSONObjectWithDataSucceeds(testString9, 0, @{
+        @"key" : @"value",
+        @"nullkey" : [NSNull null],
+        @"array" : @[ @{ @"subnullkey" : [NSNull null] } ]
+    });
 
     // error cases
     VerifyJSONObjectWithDataFails(testString1, 0, 3840);

@@ -21,6 +21,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 #import <CoreFoundation/CFDictionary.h>
 #import <stdbool.h>
 
+#import <CoreFoundation/CFBase.h>
+
 #if defined(__LP64__) && __LP64__
 #define CGFLOAT_MIN 2.2250738585072014e-308
 #define CGFLOAT_MAX 1.7976931348623157e+308
@@ -35,7 +37,13 @@ typedef struct {
     CGFloat dx;
     CGFloat dy;
 } CGVector;
-typedef enum { CGRectMinXEdge, CGRectMinYEdge, CGRectMaxXEdge, CGRectMaxYEdge } CGRectEdge;
+
+typedef CF_ENUM(CFIndex, CGRectEdge) {
+    CGRectMinXEdge,
+    CGRectMinYEdge,
+    CGRectMaxXEdge,
+    CGRectMaxYEdge
+};
 
 COREGRAPHICS_EXPORT const CGRect CGRectInfinite;
 COREGRAPHICS_EXPORT const CGPoint CGPointZero;

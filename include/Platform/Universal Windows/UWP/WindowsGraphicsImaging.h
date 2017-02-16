@@ -232,9 +232,9 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 
 OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 @interface WGIBitmapTransform : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property unsigned int scaledWidth;
 @property unsigned int scaledHeight;
@@ -254,7 +254,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 @interface WGIBitmapTypedValue : RTObject
 + (WGIBitmapTypedValue*)make:(RTObject*)value type:(WFPropertyType)type ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFPropertyType type;
 @property (readonly) RTObject* value;
@@ -268,9 +268,9 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 
 OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 @interface WGIBitmapPropertySet : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int size;
 - (id)objectForKey: (id)key;
@@ -299,7 +299,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 @interface WGIBitmapPropertiesView : RTObject <WGIIBitmapPropertiesView>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)getPropertiesAsync:(id<NSFastEnumeration> /* NSString * */)propertiesToRetrieve success:(void (^)(WGIBitmapPropertySet*))success failure:(void (^)(NSError*))failure;
 @end
@@ -313,7 +313,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 @interface WGIBitmapProperties : RTObject <WGIIBitmapPropertiesView>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (RTObject<WFIAsyncAction>*)setPropertiesAsync:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, WGIBitmapTypedValue* > */)propertiesToSet;
 - (void)getPropertiesAsync:(id<NSFastEnumeration> /* NSString * */)propertiesToRetrieve success:(void (^)(WGIBitmapPropertySet*))success failure:(void (^)(NSError*))failure;
@@ -328,7 +328,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 @interface WGIPixelDataProvider : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (NSArray* /* uint8_t */)detachPixelData;
 @end
@@ -447,7 +447,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 @interface WGIImageStream : RTObject <WSSIRandomAccessStreamWithContentType, WSSIContentTypeProvider, WSSIRandomAccessStream, WSSIOutputStream, WFIClosable, WSSIInputStream>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * contentType;
 @property uint64_t size;
@@ -473,7 +473,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 @interface WGIBitmapFrame : RTObject <WGIIBitmapFrame, WGIIBitmapFrameWithSoftwareBitmap>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WGIBitmapAlphaMode bitmapAlphaMode;
 @property (readonly) WGIBitmapPixelFormat bitmapPixelFormat;
@@ -501,7 +501,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 @interface WGIBitmapCodecInformation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFGUID* codecId;
 @property (readonly) NSArray* /* NSString * */ fileExtensions;
@@ -521,7 +521,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 + (void)createAsync:(RTObject<WSSIRandomAccessStream>*)stream success:(void (^)(WGIBitmapDecoder*))success failure:(void (^)(NSError*))failure;
 + (void)createWithIdAsync:(WFGUID*)decoderId stream:(RTObject<WSSIRandomAccessStream>*)stream success:(void (^)(WGIBitmapDecoder*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WGIBitmapPropertiesView* bitmapContainerProperties;
 @property (readonly) WGIBitmapCodecInformation* decoderInformation;
@@ -566,7 +566,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 + (void)createForTranscodingAsync:(RTObject<WSSIRandomAccessStream>*)stream bitmapDecoder:(WGIBitmapDecoder*)bitmapDecoder success:(void (^)(WGIBitmapEncoder*))success failure:(void (^)(NSError*))failure;
 + (void)createForInPlacePropertyEncodingAsync:(WGIBitmapDecoder*)bitmapDecoder success:(void (^)(WGIBitmapEncoder*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL isThumbnailGenerated;
 @property unsigned int generatedThumbnailWidth;
@@ -612,7 +612,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 @interface WGIBitmapBuffer : RTObject <WFIMemoryBuffer, WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (int)getPlaneCount;
 - (WGIBitmapPlaneDescription*)getPlaneDescription:(int)index;
@@ -638,7 +638,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 + (WGISoftwareBitmap*)make:(WGIBitmapPixelFormat)format width:(int)width height:(int)height ACTIVATOR;
 + (WGISoftwareBitmap*)makeWithAlpha:(WGIBitmapPixelFormat)format width:(int)width height:(int)height alpha:(WGIBitmapAlphaMode)alpha ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double dpiY;
 @property double dpiX;

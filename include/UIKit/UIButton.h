@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
- * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+ * Copyright (c) Microsoft Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -60,14 +60,14 @@ UIKIT_EXPORT_CLASS
                                  UITraitEnvironment>
 
 + (instancetype)buttonWithType:(UIButtonType)buttonType;
-- (CGRect)backgroundRectForBounds:(CGRect)bounds;
+- (CGRect)backgroundRectForBounds:(CGRect)bounds STUB_METHOD;
 - (CGRect)contentRectForBounds:(CGRect)bounds;
 - (CGRect)imageRectForContentRect:(CGRect)contentRect;
 - (CGRect)titleRectForContentRect:(CGRect)contentRect;
 - (NSAttributedString*)attributedTitleForState:(UIControlState)state STUB_METHOD;
 - (NSString*)titleForState:(UIControlState)state;
 - (UIColor*)titleColorForState:(UIControlState)state;
-- (UIColor*)titleShadowColorForState:(UIControlState)state;
+- (UIColor*)titleShadowColorForState:(UIControlState)state STUB_METHOD;
 - (UIImage*)backgroundImageForState:(UIControlState)state;
 - (UIImage*)imageForState:(UIControlState)state;
 - (void)setAttributedTitle:(NSAttributedString*)title forState:(UIControlState)state STUB_METHOD;
@@ -75,14 +75,14 @@ UIKIT_EXPORT_CLASS
 - (void)setImage:(UIImage*)image forState:(UIControlState)state;
 - (void)setTitle:(NSString*)title forState:(UIControlState)state;
 - (void)setTitleColor:(UIColor*)color forState:(UIControlState)state;
-- (void)setTitleShadowColor:(UIColor*)color forState:(UIControlState)state;
+- (void)setTitleShadowColor:(UIColor*)color forState:(UIControlState)state STUB_METHOD;
 
-@property (nonatomic) BOOL adjustsImageWhenDisabled STUB_PROPERTY;
-@property (nonatomic) BOOL adjustsImageWhenHighlighted STUB_PROPERTY;
+@property (nonatomic) BOOL adjustsImageWhenDisabled;
+@property (nonatomic) BOOL adjustsImageWhenHighlighted;
 @property (nonatomic) BOOL reversesTitleShadowWhenHighlighted STUB_PROPERTY;
 @property (nonatomic) BOOL showsTouchWhenHighlighted STUB_PROPERTY;
 @property (nonatomic) CGSize titleShadowOffset STUB_PROPERTY;
-@property (nonatomic) NSLineBreakMode lineBreakMode STUB_PROPERTY;
+@property (nonatomic) NSLineBreakMode lineBreakMode;
 @property (nonatomic) UIEdgeInsets contentEdgeInsets;
 @property (nonatomic) UIEdgeInsets imageEdgeInsets;
 @property (nonatomic) UIEdgeInsets titleEdgeInsets;

@@ -20,7 +20,28 @@
 
 #import "UIColorInternal.h"
 
+const CFStringRef kCGColorBlack = CFSTR("BLACK");
+const CFStringRef kCGColorWhite = CFSTR("WHITE");
+const CFStringRef kCGColorClear = CFSTR("CLEAR");
+
 static IWLazyClassLookup _LazyUIColor("UIColor");
+
+/**
+ @Status Caveat
+ @Notes Limited constants supported
+*/
+CGColorRef CGColorGetConstantColor(CFStringRef name) {
+    if (CFEqual(kCGColorBlack, name)) {
+        return [[_LazyUIColor blackColor] CGColor];
+    } else if (CFEqual(kCGColorWhite, name)) {
+        return [[_LazyUIColor whiteColor] CGColor];
+    } else if (CFEqual(kCGColorClear, name)) {
+        return [[_LazyUIColor clearColor] CGColor];
+    }
+
+    UNIMPLEMENTED_WITH_MSG("CGColorGetConstantColor does not support color %s", CFStringGetCStringPtr(name, kCFStringEncodingUTF8));
+    return nullptr;
+}
 
 /**
  @Status Interoperable

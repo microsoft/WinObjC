@@ -14,12 +14,29 @@
 //
 //******************************************************************************
 
+#pragma once
+
 #ifndef __CGPATHINTERNAL_H
 #define __CGPATHINTERNAL_H
 
 #include "CFBridgeBase.h"
 #include "CoreGraphics/CGContext.h"
 #include "CoreGraphics/CGPath.h"
+
+#if defined __clang__
+
+#pragma clang diagnostic push
+#ifdef _M_ARM
+// Disable 'invalid calling convention' warnings for __stdcall usage in ARM builds
+#pragma clang diagnostic ignored "-Wignored-attributes"
+#endif // _M_ARM
+
+#endif // __clang__
+
+#include <COMIncludes.h>
+#include <d2d1.h>
+#import <WRLHelpers.h>
+#include <COMIncludes_End.h>
 
 const int kCGPathMaxPointCount = 3;
 
@@ -51,17 +68,11 @@ struct CGPathElementInternal : CGPathElement {
 };
 typedef struct CGPathElementInternal CGPathElementInternal;
 
-struct __CGPath : public CFBridgeBase<__CGPath> {
-    CGPathElementInternal* _elements;
-    NSUInteger _count;
-    NSUInteger _max;
+HRESULT _CGPathApplyInternal(ID2D1PathGeometry* pathGeometry, void* info, CGPathApplierFunction function);
+HRESULT _CGPathGetGeometryWithFillMode(CGPathRef path, CGPathDrawingMode fillMode, ID2D1Geometry** pNewGeometry);
 
-    ~__CGPath();
-    void _getBoundingBox(CGRect* rectOut);
-    void _applyPath(CGContextRef context);
-};
-
-COREGRAPHICS_EXPORT void _CGPathApplyPath(CGPathRef pathref, CGContextRef context);
-COREGRAPHICS_EXPORT void _CGPathGetBoundingBoxInternal(CGPathRef pathref, CGRect* rectOut);
+#if defined __clang__
+#pragma clang diagnostic pop
+#endif
 
 #endif

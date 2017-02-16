@@ -25,10 +25,10 @@ static const wchar_t* TAG = L"_UIDMPanGestureRecognizer";
 }
 
 static void commonInit(UIPanGestureRecognizer* self) {
-    // setting the dragSlack to be 1.0 larger than PanGestureRecognizer, 
+    // setting the dragSlack to be 1.0 larger than PanGestureRecognizer,
     // this is to ensure PanGestureRecognizer kicks in first before us.
     float dragSlack = [self _getDragSlack];
-    [self _setDragSlack: ++dragSlack];
+    [self _setDragSlack:++dragSlack];
 }
 
 - (instancetype)initWithTarget:(id)target action:(SEL)selector {
@@ -53,6 +53,16 @@ static void commonInit(UIPanGestureRecognizer* self) {
     }
 
     return self;
+}
+
+- (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer*)preventingGestureRecognizer {
+    // No gesture should prevent Dmanip Gesture, including Dmanip Gesture themselves
+    return NO;
+}
+
+- (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer*)preventedGestureRecognizer {
+    // Dmanip should not prevent any Gesture, including Dmanip Gesture themselves
+    return NO;
 }
 
 @end

@@ -135,7 +135,7 @@ OBJCUWP_WINDOWS_DEVICES_I2C_PROVIDER_EXPORT
 OBJCUWP_WINDOWS_DEVICES_I2C_PROVIDER_EXPORT
 @interface WDIPProviderI2cConnectionSettings : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property int slaveAddress;
 @property WDIPProviderI2cSharingMode sharingMode;

@@ -51,11 +51,12 @@ static const wchar_t* TAG = L"UITabBarController";
  @Status Interoperable
 */
 - (instancetype)init {
-    [super init];
+    if (self = [super init]) {
+        StrongId<UITabMoreTableView> table;
+        table.attach([[UITabMoreTableView alloc] init]);
+        [self pushViewController:table animated:FALSE];
+    }
 
-    id table = [UITabMoreTableView new];
-
-    [self pushViewController:table animated:FALSE];
     return self;
 }
 
@@ -86,7 +87,7 @@ static const wchar_t* TAG = L"UITabBarController";
     if (_tabBar == nil) {
         TraceVerbose(TAG, L"No tab!");
     }
-    _moreNavigationController = [UITabMoreController new];
+    _moreNavigationController.attach([UITabMoreController new]);
     [self setViewControllers:viewControllers];
     priv->_wantsFullScreenLayout = TRUE;
     _tabBarChanged = true;
@@ -101,11 +102,11 @@ static const wchar_t* TAG = L"UITabBarController";
     _selectedIndex = -1;
 
     CGRect frame = { 0.0f, 0.0f, DisplayProperties::ScreenWidth(), 50.0f };
-    _tabBar = [[UITabBar alloc] initWithFrame:frame];
+    _tabBar.attach([[UITabBar alloc] initWithFrame:frame]);
     [_tabBar setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin];
     [_tabBar setDelegate:self];
     priv->_wantsFullScreenLayout = TRUE;
-    _moreNavigationController = [UITabMoreController new];
+    _moreNavigationController.attach([UITabMoreController new]);
     _tabBarChanged = true;
 
     return [super initWithNibName:name bundle:bundle];
@@ -115,7 +116,7 @@ static const wchar_t* TAG = L"UITabBarController";
  @Status Interoperable
 */
 - (void)setViewControllers:(NSArray*)controllers {
-    _viewControllers = [controllers copy];
+    _viewControllers.attach([controllers copy]);
 
     //  Setup tabs
     NSMutableArray* tabItems = [NSMutableArray array];
@@ -234,7 +235,7 @@ static const wchar_t* TAG = L"UITabBarController";
 */
 - (void)loadView {
     if (_moreNavigationController == nil) {
-        _moreNavigationController = [UITabMoreController new];
+        _moreNavigationController.attach([UITabMoreController new]);
     }
     if ([self nibName] != nil) {
         [super loadView];

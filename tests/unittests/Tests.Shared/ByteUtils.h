@@ -18,7 +18,7 @@
 
 #include <windows.h>
 #include <string>
-#include "gtest-api.h"
+#include <TestFramework.h>
 
 static inline std::string stringFromBytes(BYTE* buf, size_t len) {
     static const BYTE lookup[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
