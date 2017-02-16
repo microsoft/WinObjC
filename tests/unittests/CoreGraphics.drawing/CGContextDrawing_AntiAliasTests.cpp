@@ -86,7 +86,7 @@ static void __SetContextToggles(CGContextRef context, int useAA, int useSmoothin
     }
 }
 
-TEST_P(CGContextArcAA, ContextAntialiasArcs) {
+DRAW_TEST_P(CGContextArcAA, ContextAntialiasArcs) {
     CGContextRef context = GetDrawingContext();
 
     int useAA = ::testing::get<0>(GetParam());
@@ -125,7 +125,7 @@ TEST_P(CGContextArcAA, ContextAntialiasArcs) {
     CGPathRelease(thepath);
 }
 
-TEST_P(CGContextLineAA, ContextAntialiasLines) {
+DRAW_TEST_P(CGContextLineAA, ContextAntialiasLines) {
     CGContextRef context = GetDrawingContext();
 
     int useAA = ::testing::get<0>(GetParam());
@@ -154,7 +154,7 @@ TEST_P(CGContextLineAA, ContextAntialiasLines) {
     CGPathRelease(thepath);
 }
 
-TEST_P(CGContextTextAA, ContextAntialiasText) {
+DRAW_TEST_P(CGContextTextAA, ContextAntialiasText) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
