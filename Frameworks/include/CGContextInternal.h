@@ -51,6 +51,7 @@ COREGRAPHICS_EXPORT void _CGContextPushBeginDraw(CGContextRef ctx);
 COREGRAPHICS_EXPORT void _CGContextPopEndDraw(CGContextRef ctx);
 
 // Struct used to hold information about glyph run for drawing in _CGContextDrawGlyphRuns
+// TODO #1987: Add support for CTRun text matrix
 struct GlyphRunData {
     DWRITE_GLYPH_RUN* run;
     CGPoint relativePosition;

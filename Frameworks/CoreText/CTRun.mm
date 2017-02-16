@@ -315,8 +315,8 @@ void CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange) {
 }
 
 /**
- @Status Interoperable
- @Notes
+ @Status Caveat
+ @Notes Only support identity matrix
 */
 CGAffineTransform CTRunGetTextMatrix(CTRunRef run) {
     return run ? static_cast<_CTRun*>(run)->_textMatrix : CGAffineTransformIdentity;
