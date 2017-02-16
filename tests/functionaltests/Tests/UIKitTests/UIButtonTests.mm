@@ -715,7 +715,7 @@ public:
         UIButton* buttonToTest = [buttonVC defaultButton];
 
         __block auto uxLayoutEvent = UXEvent::CreateManual();
-        __block WXFrameworkElement* layerContent = nil;
+        __block StrongId<WXFrameworkElement> layerContent = nil;
 
         __block auto uxEvent = UXEvent::CreateAuto();
         __block auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
@@ -1032,6 +1032,10 @@ public:
     }
 
     TEST_METHOD(UIButton_ImageEdgeInsets) {
+        BEGIN_TEST_METHOD_PROPERTIES()
+        TEST_METHOD_PROPERTY(L"ignore", L"true")
+        END_TEST_METHOD_PROPERTIES()
+
         StrongId<UIButtonWithControlsViewController> buttonVC;
         buttonVC.attach([[UIButtonWithControlsViewController alloc] init]);
         UXTestAPI::ViewControllerPresenter testHelper(buttonVC);
@@ -1195,7 +1199,7 @@ public:
         UIButton* buttonToTest = [buttonVC defaultButton];
 
         __block auto uxLayoutEvent = UXEvent::CreateManual();
-        __block WXFrameworkElement* layerContent = nil;
+        __block StrongId<WXFrameworkElement> layerContent = nil;
 
         __block auto uxEvent = UXEvent::CreateAuto();
         __block auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
