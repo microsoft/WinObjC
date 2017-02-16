@@ -19,7 +19,7 @@
 
 #include <stdint.h>
 
-CORETEXT_EXPORT uint32_t CTGetCoreTextVersion() STUB_METHOD;
+CORETEXT_EXPORT uint32_t CTGetCoreTextVersion();
 
 #define kCTVersionNumber10_5 0x00020000
 #define kCTVersionNumber10_5_2 0x00020001

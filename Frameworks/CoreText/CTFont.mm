@@ -274,8 +274,8 @@ CTFontRef CTFontCreateWithFontDescriptorAndOptions(CTFontDescriptorRef descripto
 }
 
 /**
- @Status Stub
- @Notes
+ @Status NotInPlan
+ @Notes docs not clear for uiType, not much usage
 */
 CTFontRef CTFontCreateUIFontForLanguage(CTFontUIFontType uiType, CGFloat size, CFStringRef language) {
     UNIMPLEMENTED();
@@ -371,8 +371,8 @@ CTFontRef CTFontCreateCopyWithFamily(CTFontRef font, CGFloat size, const CGAffin
 }
 
 /**
- @Status Stub
- @Notes
+ @Status NotInPlan
+ @Notes would require implementation over dwrite
 */
 CTFontRef CTFontCreateForString(CTFontRef currentFont, CFStringRef string, CFRange range) {
     UNIMPLEMENTED();

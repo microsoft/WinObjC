@@ -193,7 +193,7 @@ CORETEXT_EXPORT CTFontRef CTFontCreateWithFontDescriptorAndOptions(CTFontDescrip
                                                                    CGFloat size,
                                                                    const CGAffineTransform* matrix,
                                                                    CTFontOptions options);
-CORETEXT_EXPORT CTFontRef CTFontCreateUIFontForLanguage(CTFontUIFontType uiType, CGFloat size, CFStringRef language) STUB_METHOD;
+CORETEXT_EXPORT CTFontRef CTFontCreateUIFontForLanguage(CTFontUIFontType uiType, CGFloat size, CFStringRef language) NOTINPLAN_METHOD;
 CORETEXT_EXPORT CTFontRef CTFontCreateCopyWithAttributes(CTFontRef font,
                                                          CGFloat size,
                                                          const CGAffineTransform* matrix,
@@ -201,7 +201,7 @@ CORETEXT_EXPORT CTFontRef CTFontCreateCopyWithAttributes(CTFontRef font,
 CORETEXT_EXPORT CTFontRef CTFontCreateCopyWithSymbolicTraits(
     CTFontRef font, CGFloat size, const CGAffineTransform* matrix, CTFontSymbolicTraits symTraitValue, CTFontSymbolicTraits symTraitMask);
 CORETEXT_EXPORT CTFontRef CTFontCreateCopyWithFamily(CTFontRef font, CGFloat size, const CGAffineTransform* matrix, CFStringRef family);
-CORETEXT_EXPORT CTFontRef CTFontCreateForString(CTFontRef currentFont, CFStringRef string, CFRange range) STUB_METHOD;
+CORETEXT_EXPORT CTFontRef CTFontCreateForString(CTFontRef currentFont, CFStringRef string, CFRange range) NOTINPLAN_METHOD;
 CORETEXT_EXPORT CTFontDescriptorRef CTFontCopyFontDescriptor(CTFontRef font);
 CORETEXT_EXPORT CFTypeRef CTFontCopyAttribute(CTFontRef font, CFStringRef attribute);
 CORETEXT_EXPORT CGFloat CTFontGetSize(CTFontRef font);

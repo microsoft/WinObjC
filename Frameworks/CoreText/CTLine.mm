@@ -208,9 +208,10 @@ static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef so
 }
 
 /**
- @Status Stub
- @Notes
+ @Status NotInPlan
+ @Notes This would be hard to get right for justfication factors (0, 1).
 */
+
 CTLineRef CTLineCreateJustifiedLine(CTLineRef line, CGFloat justificationFactor, double justificationWidth) {
     UNIMPLEMENTED();
     return StubReturn();
@@ -265,7 +266,7 @@ CFRange CTLineGetStringRange(CTLineRef line) {
 }
 
 /**
- @Status Stub
+ @Status Caveat
  @Notes Returns 0.0
 */
 double CTLineGetPenOffsetForFlush(CTLineRef line, CGFloat flushFactor, double flushWidth) {
@@ -389,8 +390,18 @@ CGFloat CTLineGetOffsetForStringIndex(CTLineRef lineRef, CFIndex charIndex, CGFl
 }
 
 /**
- @Status Stub
- @Notes
+ @Status NotInPlan
+ @Notes This API is mostly un-documented and appears to be very low usage.
+*/
+
+CGRect CTLineGetBoundsWithOptions(CTLineRef line, CTLineBoundsOptions options) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status NotInPlan
+ @Notes this would require us to move to using briged type implementation, seems of little value at this point
 */
 CFTypeID CTLineGetTypeID() {
     UNIMPLEMENTED();

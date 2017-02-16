@@ -30,13 +30,13 @@ enum { kCTFontCollectionCopyDefaultOptions = 0, kCTFontCollectionCopyUnique = (1
 
 CORETEXT_EXPORT const CFStringRef kCTFontCollectionRemoveDuplicatesOption;
 
-CORETEXT_EXPORT CTFontCollectionRef CTFontCollectionCreateFromAvailableFonts(CFDictionaryRef options) STUB_METHOD;
+CORETEXT_EXPORT CTFontCollectionRef CTFontCollectionCreateFromAvailableFonts(CFDictionaryRef options) NOTINPLAN_METHOD;
 CORETEXT_EXPORT CTFontCollectionRef CTFontCollectionCreateWithFontDescriptors(CFArrayRef queryDescriptors,
-                                                                              CFDictionaryRef options) STUB_METHOD;
+                                                                              CFDictionaryRef options) NOTINPLAN_METHOD;
 CORETEXT_EXPORT CTFontCollectionRef CTFontCollectionCreateCopyWithFontDescriptors(CTFontCollectionRef original,
                                                                                   CFArrayRef queryDescriptors,
-                                                                                  CFDictionaryRef options) STUB_METHOD;
-CORETEXT_EXPORT CFArrayRef CTFontCollectionCreateMatchingFontDescriptors(CTFontCollectionRef collection) STUB_METHOD;
+                                                                                  CFDictionaryRef options) NOTINPLAN_METHOD;
+CORETEXT_EXPORT CFArrayRef CTFontCollectionCreateMatchingFontDescriptors(CTFontCollectionRef collection) NOTINPLAN_METHOD;
 CORETEXT_EXPORT CFArrayRef CTFontCollectionCreateMatchingFontDescriptorsSortedWithCallback(
-    CTFontCollectionRef collection, CTFontCollectionSortDescriptorsCallback sortCallback, void* refCon) STUB_METHOD;
-CORETEXT_EXPORT CFTypeID CTFontCollectionGetTypeID() STUB_METHOD;
+    CTFontCollectionRef collection, CTFontCollectionSortDescriptorsCallback sortCallback, void* refCon) NOTINPLAN_METHOD;
+CORETEXT_EXPORT CFTypeID CTFontCollectionGetTypeID() NOTINPLAN_METHOD;

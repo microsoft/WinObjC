@@ -18,8 +18,8 @@
 #import <StubReturn.h>
 
 /**
- @Status Stub
- @Notes
+ @Status NotInPlan
+ @Notes run delegates cannot be supported easily with dwrite
 */
 CTRunDelegateRef CTRunDelegateCreate(const CTRunDelegateCallbacks* callbacks, void* refCon) {
     UNIMPLEMENTED();
@@ -27,8 +27,8 @@ CTRunDelegateRef CTRunDelegateCreate(const CTRunDelegateCallbacks* callbacks, vo
 }
 
 /**
- @Status Stub
- @Notes
+ @Status NotInPlan
+ @Notes run delegates cannot be supported easliy with dwrite
 */
 void* CTRunDelegateGetRefCon(CTRunDelegateRef runDelegate) {
     UNIMPLEMENTED();
@@ -36,8 +36,8 @@ void* CTRunDelegateGetRefCon(CTRunDelegateRef runDelegate) {
 }
 
 /**
- @Status Stub
- @Notes
+ @Status NotInPlan
+ @Notes this would require us to move to using briged type implementation, seems of little value at this point
 */
 CFTypeID CTRunDelegateGetTypeID() {
     UNIMPLEMENTED();
