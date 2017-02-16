@@ -98,24 +98,8 @@ DRAW_TEST_P(CGContextFillMode, OverlappedEllipses) {
     CGContextAddPath(context, leftCircles);
     CGContextAddPath(context, rightCircles);
     CGContextSetRGBFillColor(context, 0, 0, 1, 1);
-    switch (fillMode) {
-        case kCGPathFill:
-            CGContextFillPath(context);
-            break;
-        case kCGPathFillStroke:
-            CGContextFillPath(context);
-            CGContextStrokePath(context);
-            break;
-        case kCGPathEOFill:
-            CGContextEOFillPath(context);
-            break;
-        case kCGPathEOFillStroke:
-            CGContextEOFillPath(context);
-            CGContextStrokePath(context);
-            break;
-        default:
-            break;
-    }
+    CGContextSetRGBStrokeColor(context, 1, 0, 0, 1);
+    CGContextDrawPath(context, fillMode);
 
     CGPathRelease(leftCircles);
     CGPathRelease(rightCircles);
