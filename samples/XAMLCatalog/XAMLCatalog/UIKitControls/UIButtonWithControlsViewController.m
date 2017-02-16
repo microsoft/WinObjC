@@ -64,6 +64,22 @@
     return state;
 }
 
+- (void)dealloc {
+    [_segmentButtonType removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+
+    [_textTitleStateField removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    [_textTitle removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+
+    [_textTitleColorStateField removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    [_textTitleColor removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+
+    [_textImageStateField removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    [_textImage removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+
+    [_textBackgroundImageStateField removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    [_textBackgroundImage removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+}
+
 - (TestEnabledUITextField*)createTestEnabledUITextField {
     TestEnabledUITextField* testEnabledUITextField = [[TestEnabledUITextField alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 150.0f, 40.0f)];
     testEnabledUITextField.textColor = [UIColor blackColor];

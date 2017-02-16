@@ -168,6 +168,10 @@ public:
     }
 
     TEST_METHOD(UIButton_CreateButtonWithTypeCustom) {
+        BEGIN_TEST_METHOD_PROPERTIES()
+        TEST_METHOD_PROPERTY(L"ignore", L"true")
+        END_TEST_METHOD_PROPERTIES()
+
         StrongId<UIButtonWithControlsViewController> buttonVC;
         buttonVC.attach([[UIButtonWithControlsViewController alloc] init]);
         UXTestAPI::ViewControllerPresenter testHelper(buttonVC);
@@ -712,7 +716,6 @@ public:
 
         __block auto uxLayoutEvent = UXEvent::CreateManual();
         __block WXFrameworkElement* layerContent = nil;
-        __block EventRegistrationToken ert;
 
         __block auto uxEvent = UXEvent::CreateAuto();
         __block auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
@@ -723,7 +726,7 @@ public:
 
         // Wait for the layerContent to be part of the visual tree
         dispatch_sync(dispatch_get_main_queue(), ^{
-            ert = [xamlElement addLayoutUpdatedEvent:^(RTObject* sender, RTObject* args) {
+            EventRegistrationToken ert = [xamlElement addLayoutUpdatedEvent:^(RTObject* sender, RTObject* args) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     // Initially there is no LayerContent element unless we set a background image
                     if (layerContent == nil) {
@@ -1185,10 +1188,6 @@ public:
     }
 
     TEST_METHOD(UIButton_CurrentBackgroundImage) {
-        BEGIN_TEST_METHOD_PROPERTIES()
-        TEST_METHOD_PROPERTY(L"ignore", L"true")
-        END_TEST_METHOD_PROPERTIES()
-
         StrongId<UIButtonWithControlsViewController> buttonVC;
         buttonVC.attach([[UIButtonWithControlsViewController alloc] init]);
         UXTestAPI::ViewControllerPresenter testHelper(buttonVC);
@@ -1197,7 +1196,6 @@ public:
 
         __block auto uxLayoutEvent = UXEvent::CreateManual();
         __block WXFrameworkElement* layerContent = nil;
-        __block EventRegistrationToken ert;
 
         __block auto uxEvent = UXEvent::CreateAuto();
         __block auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
@@ -1208,7 +1206,7 @@ public:
 
         // Wait for the layerContent to be part of the visual tree
         dispatch_sync(dispatch_get_main_queue(), ^{
-            ert = [xamlElement addLayoutUpdatedEvent:^(RTObject* sender, RTObject* args) {
+            EventRegistrationToken ert = [xamlElement addLayoutUpdatedEvent:^(RTObject* sender, RTObject* args) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     // Initially there is no LayerContent element unless we set a background image
                     if (layerContent == nil) {
