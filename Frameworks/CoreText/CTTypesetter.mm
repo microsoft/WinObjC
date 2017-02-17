@@ -129,7 +129,7 @@ CFIndex CTTypesetterSuggestClusterBreakWithOffset(CTTypesetterRef typesetter, CF
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
  @Notes
 */
 CFTypeID CTTypesetterGetTypeID() {

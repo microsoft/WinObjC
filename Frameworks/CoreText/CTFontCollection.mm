@@ -20,8 +20,8 @@
 const CFStringRef kCTFontCollectionRemoveDuplicatesOption = static_cast<CFStringRef>(@"kCTFontCollectionRemoveDuplicatesOption");
 
 /**
- @Status Stub
- @Notes
+ @Status NotInPlan
+ @Notes font collection support can be added as needed.
 */
 CTFontCollectionRef CTFontCollectionCreateFromAvailableFonts(CFDictionaryRef options) {
     UNIMPLEMENTED();
@@ -29,8 +29,8 @@ CTFontCollectionRef CTFontCollectionCreateFromAvailableFonts(CFDictionaryRef opt
 }
 
 /**
- @Status Stub
- @Notes
+ @Status NotInPlan
+ @Notes font collection support can be added as needed.
 */
 CTFontCollectionRef CTFontCollectionCreateWithFontDescriptors(CFArrayRef queryDescriptors, CFDictionaryRef options) {
     UNIMPLEMENTED();
@@ -38,8 +38,8 @@ CTFontCollectionRef CTFontCollectionCreateWithFontDescriptors(CFArrayRef queryDe
 }
 
 /**
- @Status Stub
- @Notes
+ @Status NotInPlan
+ @Notes font collection support can be added as needed.
 */
 CTFontCollectionRef CTFontCollectionCreateCopyWithFontDescriptors(CTFontCollectionRef original,
                                                                   CFArrayRef queryDescriptors,
@@ -49,8 +49,8 @@ CTFontCollectionRef CTFontCollectionCreateCopyWithFontDescriptors(CTFontCollecti
 }
 
 /**
- @Status Stub
- @Notes
+ @Status NotInPlan
+ @Notes font collection support can be added as needed.
 */
 CFArrayRef CTFontCollectionCreateMatchingFontDescriptors(CTFontCollectionRef collection) {
     UNIMPLEMENTED();
@@ -58,8 +58,8 @@ CFArrayRef CTFontCollectionCreateMatchingFontDescriptors(CTFontCollectionRef col
 }
 
 /**
- @Status Stub
- @Notes
+ @Status NotInPlan
+ @Notes font collection support can be added as needed.
 */
 CFArrayRef CTFontCollectionCreateMatchingFontDescriptorsSortedWithCallback(CTFontCollectionRef collection,
                                                                            CTFontCollectionSortDescriptorsCallback sortCallback,
@@ -69,8 +69,8 @@ CFArrayRef CTFontCollectionCreateMatchingFontDescriptorsSortedWithCallback(CTFon
 }
 
 /**
- @Status Stub
- @Notes
+ @Status NotInPlan
+ @Notes not applicable (no type)
 */
 CFTypeID CTFontCollectionGetTypeID() {
     UNIMPLEMENTED();

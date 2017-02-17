@@ -18,10 +18,9 @@
 #import <StubReturn.h>
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes returns kCTVersionNumber10_5 but we don't support all apis at that level
 */
 uint32_t CTGetCoreTextVersion() {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return kCTVersionNumber10_5;
 }

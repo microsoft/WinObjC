@@ -303,8 +303,8 @@ CGAffineTransform CTRunGetTextMatrix(CTRunRef run) {
 }
 
 /**
- @Status Stub
- @Notes
+ @Status NotInPlan
+ @Notes this would require us to move to using bridged type implementation, seems of little value at this point
 */
 CFTypeID CTRunGetTypeID() {
     UNIMPLEMENTED();

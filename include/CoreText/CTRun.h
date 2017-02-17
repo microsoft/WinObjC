@@ -49,4 +49,4 @@ CORETEXT_EXPORT double CTRunGetTypographicBounds(CTRunRef run, CFRange range, CG
 CORETEXT_EXPORT CGRect CTRunGetImageBounds(CTRunRef run, CGContextRef context, CFRange range) STUB_METHOD;
 CORETEXT_EXPORT void CTRunDraw(CTRunRef run, CGContextRef context, CFRange range);
 CORETEXT_EXPORT CGAffineTransform CTRunGetTextMatrix(CTRunRef run) STUB_METHOD;
-CORETEXT_EXPORT CFTypeID CTRunGetTypeID() STUB_METHOD;
+CORETEXT_EXPORT CFTypeID CTRunGetTypeID() NOTINPLAN_METHOD;
