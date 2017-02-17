@@ -35,7 +35,7 @@ enum {
 
 CORETEXT_EXPORT CFIndex CTRunGetGlyphCount(CTRunRef run);
 CORETEXT_EXPORT CFDictionaryRef CTRunGetAttributes(CTRunRef run);
-CORETEXT_EXPORT CTRunStatus CTRunGetStatus(CTRunRef run) STUB_METHOD;
+CORETEXT_EXPORT CTRunStatus CTRunGetStatus(CTRunRef run);
 CORETEXT_EXPORT const CGGlyph* CTRunGetGlyphsPtr(CTRunRef run);
 CORETEXT_EXPORT void CTRunGetGlyphs(CTRunRef run, CFRange range, CGGlyph buffer[]);
 CORETEXT_EXPORT const CGPoint* CTRunGetPositionsPtr(CTRunRef run);
@@ -48,5 +48,6 @@ CORETEXT_EXPORT CFRange CTRunGetStringRange(CTRunRef run);
 CORETEXT_EXPORT double CTRunGetTypographicBounds(CTRunRef run, CFRange range, CGFloat* ascent, CGFloat* descent, CGFloat* leading);
 CORETEXT_EXPORT CGRect CTRunGetImageBounds(CTRunRef run, CGContextRef context, CFRange range) STUB_METHOD;
 CORETEXT_EXPORT void CTRunDraw(CTRunRef run, CGContextRef context, CFRange range);
-CORETEXT_EXPORT CGAffineTransform CTRunGetTextMatrix(CTRunRef run) STUB_METHOD;
+CORETEXT_EXPORT CGAffineTransform CTRunGetTextMatrix(CTRunRef run);
+CORETEXT_EXPORT CFTypeID CTRunGetTypeID() STUB_METHOD;
 CORETEXT_EXPORT CFTypeID CTRunGetTypeID() NOTINPLAN_METHOD;
