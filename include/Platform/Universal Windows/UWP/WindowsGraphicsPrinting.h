@@ -478,9 +478,9 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 @interface WGPPrintPageInfo : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WFSize* pageSize;
 @property WGPPrintOrientation orientation;
@@ -498,7 +498,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 @interface WGPPrintTaskOptions : RTObject <WGPIPrintTaskOptionsCore, WGPIPrintTaskOptionsCoreProperties, WGPIPrintTaskOptionsCoreUIConfiguration>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WGPPrintBordering bordering;
 @property WGPPrintMediaType mediaType;
@@ -552,7 +552,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 @interface WGPPrintTaskProgressingEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int documentPageCount;
 @end
@@ -566,7 +566,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 @interface WGPPrintTaskCompletedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WGPPrintTaskCompletion completion;
 @end
@@ -580,7 +580,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 @interface WGPPrintTask : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WGPPrintTaskOptions* options;
 @property (readonly) WADDataPackagePropertySet* properties;
@@ -607,7 +607,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 @interface WGPPrintTaskSourceRequestedDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)complete;
 @end
@@ -621,7 +621,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 @interface WGPPrintTaskSourceRequestedArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFDateTime* deadline;
 - (void)setSource:(RTObject<WGPIPrintDocumentSource>*)source;
@@ -637,7 +637,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 @interface WGPPrintTaskRequestedDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)complete;
 @end
@@ -651,7 +651,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 @interface WGPPrintTaskRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFDateTime* deadline;
 - (WGPPrintTask*)createPrintTask:(NSString *)title handler:(WGPPrintTaskSourceRequestedHandler)handler;
@@ -667,7 +667,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 @interface WGPPrintTaskRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WGPPrintTaskRequest* request;
 @end
@@ -684,7 +684,7 @@ OBJCUWP_WINDOWS_GRAPHICS_PRINTING_EXPORT
 + (WGPPrintManager*)getForCurrentView;
 + (void)showPrintUIAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (EventRegistrationToken)addPrintTaskRequestedEvent:(void(^)(WGPPrintManager*, WGPPrintTaskRequestedEventArgs*))del;
 - (void)removePrintTaskRequestedEvent:(EventRegistrationToken)tok;

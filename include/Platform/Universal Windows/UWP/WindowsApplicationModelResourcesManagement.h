@@ -49,7 +49,7 @@ typedef unsigned WARMIndexedResourceType;
 OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_MANAGEMENT_EXPORT
 @interface WARMIndexedResourceCandidate : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSDictionary* /* NSString *, NSString * */ metadata;
 @property (readonly) NSArray* /* WARMIndexedResourceQualifier* */ qualifiers;
@@ -70,7 +70,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_MANAGEMENT_EXPORT
 + (WARMResourceIndexer*)makeResourceIndexer:(WFUri*)projectRoot ACTIVATOR;
 + (WARMResourceIndexer*)makeResourceIndexerWithExtension:(WFUri*)projectRoot extensionDllPath:(WFUri*)extensionDllPath ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (WARMIndexedResourceCandidate*)indexFilePath:(WFUri*)filePath;
 - (void)indexFileContentsAsync:(WFUri*)file success:(void (^)(NSArray* /* WARMIndexedResourceCandidate* */))success failure:(void (^)(NSError*))failure;
@@ -85,7 +85,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_MANAGEMENT_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_MANAGEMENT_EXPORT
 @interface WARMIndexedResourceQualifier : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * qualifierName;
 @property (readonly) NSString * qualifierValue;

@@ -134,7 +134,7 @@ OBJCUWP_WINDOWS_UI_CORE_ANIMATIONMETRICS_EXPORT
 @interface WUCAAnimationDescription : RTObject
 + (WUCAAnimationDescription*)makeInstance:(WUCAAnimationEffect)effect target:(WUCAAnimationEffectTarget)target ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* RTObject<WUCAIPropertyAnimation>* */ animations;
 @property (readonly) WFTimeSpan* delayLimit;
@@ -152,7 +152,7 @@ OBJCUWP_WINDOWS_UI_CORE_ANIMATIONMETRICS_EXPORT
 OBJCUWP_WINDOWS_UI_CORE_ANIMATIONMETRICS_EXPORT
 @interface WUCAPropertyAnimation : RTObject <WUCAIPropertyAnimation>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFPoint* control1;
 @property (readonly) WFPoint* control2;
@@ -170,7 +170,7 @@ OBJCUWP_WINDOWS_UI_CORE_ANIMATIONMETRICS_EXPORT
 OBJCUWP_WINDOWS_UI_CORE_ANIMATIONMETRICS_EXPORT
 @interface WUCAScaleAnimation : RTObject <WUCAIPropertyAnimation>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFPoint* control1;
 @property (readonly) WFPoint* control2;
@@ -193,7 +193,7 @@ OBJCUWP_WINDOWS_UI_CORE_ANIMATIONMETRICS_EXPORT
 OBJCUWP_WINDOWS_UI_CORE_ANIMATIONMETRICS_EXPORT
 @interface WUCATranslationAnimation : RTObject <WUCAIPropertyAnimation>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFPoint* control1;
 @property (readonly) WFPoint* control2;
@@ -211,7 +211,7 @@ OBJCUWP_WINDOWS_UI_CORE_ANIMATIONMETRICS_EXPORT
 OBJCUWP_WINDOWS_UI_CORE_ANIMATIONMETRICS_EXPORT
 @interface WUCAOpacityAnimation : RTObject <WUCAIPropertyAnimation>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) float finalOpacity;
 @property (readonly) id /* float */ initialOpacity;

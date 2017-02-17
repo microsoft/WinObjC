@@ -58,9 +58,6 @@
     <TargetName>WinRTSample</TargetName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-    <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.props" />
-  </ImportGroup>
   <ImportGroup Label="Shared">
     <Import Project="../WinRTSample-Headers-WinStore10/WinRTSample-Headers.vcxitems" Label="Shared" />
   </ImportGroup>
@@ -90,7 +87,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <HeaderMap>Project</HeaderMap>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>true</ObjectiveCModules>
+      <ObjectiveCModules>false</ObjectiveCModules>
       <OptimizationLevel>Disabled</OptimizationLevel>
       <PreprocessorDefinitions>DEBUG=1</PreprocessorDefinitions>
     </ClangCompile>
@@ -112,7 +109,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <HeaderMap>Project</HeaderMap>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>true</ObjectiveCModules>
+      <ObjectiveCModules>false</ObjectiveCModules>
       <OptimizationLevel>Disabled</OptimizationLevel>
       <PreprocessorDefinitions>DEBUG=1</PreprocessorDefinitions>
     </ClangCompile>
@@ -132,7 +129,7 @@
     <ClangCompile>
       <HeaderMap>Project</HeaderMap>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>true</ObjectiveCModules>
+      <ObjectiveCModules>false</ObjectiveCModules>
       <OptimizationLevel>MinSpace</OptimizationLevel>
     </ClangCompile>
     <Link>
@@ -151,7 +148,7 @@
     <ClangCompile>
       <HeaderMap>Project</HeaderMap>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>true</ObjectiveCModules>
+      <ObjectiveCModules>false</ObjectiveCModules>
       <OptimizationLevel>MinSpace</OptimizationLevel>
     </ClangCompile>
     <Link>
@@ -204,7 +201,5 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.targets" />
-  </ImportGroup>
+
 </Project>

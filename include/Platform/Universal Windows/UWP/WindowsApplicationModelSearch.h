@@ -59,7 +59,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 @interface WASSearchPaneVisibilityChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL visible;
 @end
@@ -73,7 +73,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 @interface WASSearchPaneQueryChangedEventArgs : RTObject <WASISearchPaneQueryChangedEventArgs>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * language;
 @property (readonly) WASSearchPaneQueryLinguisticDetails* linguisticDetails;
@@ -89,7 +89,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 @interface WASSearchPaneQuerySubmittedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * language;
 @property (readonly) NSString * queryText;
@@ -105,7 +105,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 @interface WASSearchPaneResultSuggestionChosenEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * tag;
 @end
@@ -119,7 +119,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 @interface WASSearchPaneSuggestionsRequestDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)complete;
 @end
@@ -133,7 +133,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 @interface WASSearchPaneSuggestionsRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL isCanceled;
 @property (readonly) WASSearchSuggestionCollection* searchSuggestionCollection;
@@ -149,7 +149,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 @interface WASSearchPaneSuggestionsRequestedEventArgs : RTObject <WASISearchPaneQueryChangedEventArgs>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * language;
 @property (readonly) WASSearchPaneQueryLinguisticDetails* linguisticDetails;
@@ -168,7 +168,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 + (void)hideThisApplication;
 + (WASSearchPane*)getForCurrentView;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL showOnKeyboardInput;
 @property BOOL searchHistoryEnabled;
@@ -202,7 +202,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 @interface WASSearchPaneQueryLinguisticDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* NSString * */ queryTextAlternatives;
 @property (readonly) unsigned int queryTextCompositionLength;
@@ -218,7 +218,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 @interface WASSearchSuggestionCollection : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int size;
 - (void)appendQuerySuggestion:(NSString *)text;
@@ -235,9 +235,9 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 
 OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 @interface WASLocalContentSuggestionSettings : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL enabled;
 @property (retain) NSString * aqsFilter;
@@ -255,7 +255,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 @interface WASSearchQueryLinguisticDetails : RTObject
 + (WASSearchQueryLinguisticDetails*)makeInstance:(id<NSFastEnumeration> /* NSString * */)queryTextAlternatives queryTextCompositionStart:(unsigned int)queryTextCompositionStart queryTextCompositionLength:(unsigned int)queryTextCompositionLength ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* NSString * */ queryTextAlternatives;
 @property (readonly) unsigned int queryTextCompositionLength;
@@ -271,7 +271,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 @interface WASSearchSuggestionsRequestDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)complete;
 @end
@@ -285,7 +285,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 @interface WASSearchSuggestionsRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL isCanceled;
 @property (readonly) WASSearchSuggestionCollection* searchSuggestionCollection;

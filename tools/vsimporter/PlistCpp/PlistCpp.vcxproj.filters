@@ -15,41 +15,41 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="third-party\PlistCpp\src\base64.hpp">
+    <ClInclude Include="..\third-party\PlistCpp\src\base64.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="third-party\PlistCpp\src\Plist.hpp">
+    <ClInclude Include="..\third-party\PlistCpp\src\Plist.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="third-party\PlistCpp\src\PlistDate.hpp">
+    <ClInclude Include="..\third-party\PlistCpp\src\PlistDate.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="third-party\PlistCpp\third-party\NSPlist\src\NSPlist.h">
+    <ClInclude Include="..\third-party\PlistCpp\third-party\NSPlist\src\NSPlist.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="third-party\PlistCpp\third-party\NSPlist\src\NSPlistParser.h">
+    <ClInclude Include="..\third-party\PlistCpp\third-party\NSPlist\src\NSPlistParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="third-party\PlistCpp\src\Plist.cpp">
+    <ClCompile Include="..\third-party\PlistCpp\src\Plist.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="third-party\PlistCpp\src\PlistDate.cpp">
+    <ClCompile Include="..\third-party\PlistCpp\src\PlistDate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="third-party\PlistCpp\third-party\NSPlist\src\NSPlist.cpp">
+    <ClCompile Include="..\third-party\PlistCpp\third-party\NSPlist\src\NSPlist.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="third-party\PlistCpp\third-party\NSPlist\src\NSPlistLexer.cpp">
+    <ClCompile Include="..\third-party\PlistCpp\third-party\NSPlist\src\NSPlistLexer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="third-party\PlistCpp\third-party\NSPlist\src\NSPlistParser.cpp">
+    <ClCompile Include="..\third-party\PlistCpp\third-party\NSPlist\src\NSPlistParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="third-party\PlistCpp\third-party\NSPlist\src\NSPlistLexer.l" />
-    <None Include="third-party\PlistCpp\third-party\NSPlist\src\NSPlistParser.y" />
+    <None Include="..\third-party\PlistCpp\third-party\NSPlist\src\NSPlistLexer.l" />
+    <None Include="..\third-party\PlistCpp\third-party\NSPlist\src\NSPlistParser.y" />
   </ItemGroup>
 </Project>

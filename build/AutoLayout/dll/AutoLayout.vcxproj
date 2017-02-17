@@ -51,7 +51,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>AutoLayout.def</ModuleDefinitionFile>
-      <AdditionalDependencies>freetype.lib;cassowary-0.60-Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>cassowary-0.60-Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -64,7 +64,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>AutoLayout.def</ModuleDefinitionFile>
-      <AdditionalDependencies>freetype.lib;cassowary-0.60.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>cassowary-0.60.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -77,7 +77,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>AutoLayout.def</ModuleDefinitionFile>
-      <AdditionalDependencies>freetype.lib;cassowary-0.60-Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>cassowary-0.60-Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -90,7 +90,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>AutoLayout.def</ModuleDefinitionFile>
-      <AdditionalDependencies>freetype.lib;cassowary-0.60.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>cassowary-0.60.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -103,15 +103,4 @@
   <ItemGroup>
     <None Include="Project.json" />
   </ItemGroup>
-  <Target Name="AddExtraPackageItems" BeforeTargets="GetPackageContents">
-    <ItemGroup>
-
-        <!-- Include Extra Deps for this project. TODO: This would be super extra double awesome to be its own package. -->
-        <_DepsFiles Include="$(StarboardBasePath)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\freetype.dll"/>
-
-        <PackageFile Include="@(_DepsFiles)">
-            <PackagePath>build\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\%(Filename)%(Extension)</PackagePath>
-        </PackageFile>
-    </ItemGroup>
-  </Target>
 </Project>

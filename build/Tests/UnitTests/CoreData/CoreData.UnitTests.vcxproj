@@ -25,21 +25,14 @@
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\..\Foundation\dll\Foundation.vcxproj">
       <Project>{86127226-9A6E-439B-A070-420A572AF0C7}</Project>
     </ProjectReference>
-
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\..\Starboard\dll\Starboard.vcxproj">
       <Project>{0AC27ECF-E2AB-420B-9359-4843FFF4CBFA}</Project>
     </ProjectReference>
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\..\CoreData\lib\CoreDataLib.vcxproj">
       <Project>{D5BD554B-11CB-47FF-87F2-85709389DA27}</Project>
     </ProjectReference>
-
-  </ItemGroup>
-  <ItemGroup>
-    <PropertyPageSchema Include="$(VCTargetsPath)$(LangID)\debugger_general.xml" />
-    <PropertyPageSchema Include="$(VCTargetsPath)$(LangID)\debugger_local_windows.xml" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <ProjectGuid>{ACD0E309-4AE5-440D-AB09-006EEA6AFB60}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>CoreData.UnitTests</RootNamespace>
@@ -55,37 +48,36 @@
     <WindowsAppContainer>false</WindowsAppContainer>
     <TargetOsAndVersion>Universal Windows</TargetOsAndVersion>
     <StarboardBasePath>..\..\..\..</StarboardBasePath>
-    
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-    <Import Project="$(StarboardBasePath)\msvc\starboard-cmdline.props" />
+  <Import Project="$(StarboardBasePath)\msvc\starboard-cmdline.props" />
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(StarboardBasePath)\msvc\ut-build.props" />
   </ImportGroup>
@@ -134,7 +126,7 @@
       <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(IncludePaths)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
       <OtherCPlusPlusFlags>-Wdeprecated-declarations</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -157,7 +149,7 @@
       <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(IncludePaths)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
       <OtherCPlusPlusFlags>-Wdeprecated-declarations</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -184,7 +176,7 @@
       <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(IncludePaths)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
       <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -211,7 +203,7 @@
       <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(IncludePaths)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
       <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -220,7 +212,6 @@
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="$(StarboardBasePath)\tests\unittests\Framework\Framework.cpp" />
     <ClCompile Include="$(StarboardBasePath)\tests\unittests\EntryPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -228,6 +219,6 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ItemGroup>
-    <None Include="Project.json" />
+    <None Include="project.json" />
   </ItemGroup>
 </Project>

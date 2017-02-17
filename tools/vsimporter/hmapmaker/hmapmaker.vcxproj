@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -14,7 +14,7 @@
     <ProjectGuid>{A3789952-83A5-49E1-A9FC-5280EBD9F499}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>hmapmaker</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
     <IncludeOutputsInPackage>false</IncludeOutputsInPackage>
     <IncludeFrameworkReferencesInPackage>false</IncludeFrameworkReferencesInPackage>
     <IncludeContentInPackage>false</IncludeContentInPackage>
@@ -23,13 +23,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -121,11 +121,11 @@
       </PackageFile>
     </ItemGroup>
   </Target>
-    <ItemDefinitionGroup>  
+  <ItemDefinitionGroup>
     <!-- Design Time is annoying and uses a different output item group to return this. Also adjust nugetizer metadata injection here. -->
-     <_MainProjectOutput>
-       <IsPackable>$(IsPackable)</IsPackable>
-       <IsNuGetized>$(IsNuGetized)</IsNuGetized>
-     </_MainProjectOutput>
+    <_MainProjectOutput>
+      <IsPackable>$(IsPackable)</IsPackable>
+      <IsNuGetized>$(IsNuGetized)</IsNuGetized>
+    </_MainProjectOutput>
   </ItemDefinitionGroup>
 </Project>

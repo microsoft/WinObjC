@@ -19,11 +19,6 @@
 
 @implementation CGPathAddPathViewController
 
-- (id)initWithDrawingOptions:(CGDrawOptions*)options {
-    self = [super initWithDrawingOptions:options];
-    return self;
-}
-
 - (void)loadView {
     [super loadView];
 
@@ -38,21 +33,23 @@
         CGMutablePathRef theFirstPath = CGPathCreateMutable();
         CGMutablePathRef theSecondPath = CGPathCreateMutable();
 
-        CGPathMoveToPoint(theFirstPath, NULL, 200, 35);
-        CGPathAddLineToPoint(theFirstPath, NULL, 165, 100);
-        CGPathAddLineToPoint(theFirstPath, NULL, 100, 100);
-        CGPathAddLineToPoint(theFirstPath, NULL, 150, 150);
-        CGPathAddLineToPoint(theFirstPath, NULL, 135, 225);
-        CGPathAddLineToPoint(theFirstPath, NULL, 200, 170);
-        CGPathAddLineToPoint(theFirstPath, NULL, 265, 225);
+        CGAffineTransform transformation = self.options.affineTransform;
 
-        CGPathMoveToPoint(theSecondPath, NULL, 265, 225);
+        CGPathMoveToPoint(theFirstPath, &transformation, 200, 35);
+        CGPathAddLineToPoint(theFirstPath, &transformation, 165, 100);
+        CGPathAddLineToPoint(theFirstPath, &transformation, 100, 100);
+        CGPathAddLineToPoint(theFirstPath, &transformation, 150, 150);
+        CGPathAddLineToPoint(theFirstPath, &transformation, 135, 225);
+        CGPathAddLineToPoint(theFirstPath, &transformation, 200, 170);
+        CGPathAddLineToPoint(theFirstPath, &transformation, 265, 225);
 
-        CGPathAddLineToPoint(theSecondPath, NULL, 350, 225);
-        CGPathAddLineToPoint(theSecondPath, NULL, 350, 35);
-        CGPathAddLineToPoint(theSecondPath, NULL, 200, 35);
+        CGPathMoveToPoint(theSecondPath, &transformation, 265, 225);
 
-        CGPathAddPath(theFirstPath, NULL, theSecondPath);
+        CGPathAddLineToPoint(theSecondPath, &transformation, 350, 225);
+        CGPathAddLineToPoint(theSecondPath, &transformation, 350, 35);
+        CGPathAddLineToPoint(theSecondPath, &transformation, 200, 35);
+
+        CGPathAddPath(theFirstPath, &transformation, theSecondPath);
         CGContextAddPath(currentContext, theFirstPath);
 
         // Closing the path will close the subpath created from adding the second path to the first.

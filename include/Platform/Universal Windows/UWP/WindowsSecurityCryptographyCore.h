@@ -82,7 +82,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT
 + (WSCCKeyDerivationParameters*)buildForSP800108:(RTObject<WSSIBuffer>*)label context:(RTObject<WSSIBuffer>*)context;
 + (WSCCKeyDerivationParameters*)buildForSP80056a:(RTObject<WSSIBuffer>*)algorithmId partyUInfo:(RTObject<WSSIBuffer>*)partyUInfo partyVInfo:(RTObject<WSSIBuffer>*)partyVInfo suppPubInfo:(RTObject<WSSIBuffer>*)suppPubInfo suppPrivInfo:(RTObject<WSSIBuffer>*)suppPrivInfo;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) RTObject<WSSIBuffer>* kdfGenericBinary;
 @property (readonly) unsigned int iterationCount;
@@ -98,7 +98,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT
 OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT
 @interface WSCCCryptographicKey : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int keySize;
 - (RTObject<WSSIBuffer>*)exportDefaultPrivateKeyBlobType;
@@ -116,7 +116,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT
 OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT
 @interface WSCCCryptographicHash : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)append:(RTObject<WSSIBuffer>*)data;
 - (RTObject<WSSIBuffer>*)getValueAndReset;
@@ -143,7 +143,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT
 OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT
 @interface WSCCEncryptedAndAuthenticatedData : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) RTObject<WSSIBuffer>* authenticationTag;
 @property (readonly) RTObject<WSSIBuffer>* encryptedData;
@@ -181,7 +181,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT
 @interface WSCCHashAlgorithmProvider : RTObject
 + (WSCCHashAlgorithmProvider*)openAlgorithm:(NSString *)algorithm;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * algorithmName;
 @property (readonly) unsigned int hashLength;
@@ -199,7 +199,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT
 @interface WSCCMacAlgorithmProvider : RTObject
 + (WSCCMacAlgorithmProvider*)openAlgorithm:(NSString *)algorithm;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * algorithmName;
 @property (readonly) unsigned int macLength;
@@ -217,7 +217,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT
 @interface WSCCKeyDerivationAlgorithmProvider : RTObject
 + (WSCCKeyDerivationAlgorithmProvider*)openAlgorithm:(NSString *)algorithm;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * algorithmName;
 - (WSCCCryptographicKey*)createKey:(RTObject<WSSIBuffer>*)keyMaterial;
@@ -233,7 +233,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT
 @interface WSCCSymmetricKeyAlgorithmProvider : RTObject
 + (WSCCSymmetricKeyAlgorithmProvider*)openAlgorithm:(NSString *)algorithm;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * algorithmName;
 @property (readonly) unsigned int blockLength;
@@ -250,7 +250,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CORE_EXPORT
 @interface WSCCAsymmetricKeyAlgorithmProvider : RTObject
 + (WSCCAsymmetricKeyAlgorithmProvider*)openAlgorithm:(NSString *)algorithm;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * algorithmName;
 - (WSCCCryptographicKey*)createKeyPair:(unsigned int)keySize;

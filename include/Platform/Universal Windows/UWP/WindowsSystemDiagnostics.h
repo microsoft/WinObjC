@@ -43,7 +43,7 @@ OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
 + (NSArray* /* WSDProcessDiagnosticInfo* */)getForProcesses;
 + (WSDProcessDiagnosticInfo*)getForCurrentProcess;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSDProcessCpuUsage* cpuUsage;
 @property (readonly) WSDProcessDiskUsage* diskUsage;
@@ -63,7 +63,7 @@ OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
 OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
 @interface WSDProcessDiskUsage : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (WSDProcessDiskUsageReport*)getReport;
 @end
@@ -77,7 +77,7 @@ OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
 OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
 @interface WSDProcessMemoryUsage : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (WSDProcessMemoryUsageReport*)getReport;
 @end
@@ -91,7 +91,7 @@ OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
 OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
 @interface WSDProcessCpuUsage : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (WSDProcessCpuUsageReport*)getReport;
 @end
@@ -105,7 +105,7 @@ OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
 OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
 @interface WSDProcessMemoryUsageReport : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) uint64_t nonPagedPoolSizeInBytes;
 @property (readonly) unsigned int pageFaultCount;
@@ -130,7 +130,7 @@ OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
 OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
 @interface WSDProcessDiskUsageReport : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) int64_t bytesReadCount;
 @property (readonly) int64_t bytesWrittenCount;
@@ -149,7 +149,7 @@ OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
 OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
 @interface WSDProcessCpuUsageReport : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFTimeSpan* kernelTime;
 @property (readonly) WFTimeSpan* userTime;

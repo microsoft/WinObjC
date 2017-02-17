@@ -19,30 +19,23 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\..\Foundation\dll\Foundation.vcxproj">
+    <ProjectReference Include="..\..\..\Foundation\dll\Foundation.vcxproj">
       <Project>{86127226-9A6E-439B-A070-420A572AF0C7}</Project>
     </ProjectReference>
-    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
+    <ProjectReference Include="..\..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
       <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
     </ProjectReference>
-
-    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\..\Starboard\dll\Starboard.vcxproj">
+    <ProjectReference Include="..\..\..\Starboard\dll\Starboard.vcxproj">
       <Project>{0AC27ECF-E2AB-420B-9359-4843FFF4CBFA}</Project>
     </ProjectReference>
-
-    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
+    <ProjectReference Include="..\..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
       <Project>{26DA08DA-D0B9-4579-B168-E7F0A5F20E57}</Project>
     </ProjectReference>
-    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\..\QuartzCore\lib\QuartzCoreLib.vcxproj">
+    <ProjectReference Include="..\..\..\QuartzCore\lib\QuartzCoreLib.vcxproj">
       <Project>{A7C90816-B6F1-4E80-B1CC-C485DA18D770}</Project>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <PropertyPageSchema Include="$(VCTargetsPath)$(LangID)\debugger_general.xml" />
-    <PropertyPageSchema Include="$(VCTargetsPath)$(LangID)\debugger_local_windows.xml" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <ProjectGuid>{1090389B-D4C2-49B9-8AE5-B889821AFD49}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>QuartzCore.UnitTests</RootNamespace>
@@ -58,37 +51,37 @@
     <WindowsAppContainer>false</WindowsAppContainer>
     <TargetOsAndVersion>Universal Windows</TargetOsAndVersion>
     <StarboardBasePath>..\..\..\..</StarboardBasePath>
-    
+    <UseStarboardSourceSdk>true</UseStarboardSourceSdk>
+    <IslandwoodDRT>false</IslandwoodDRT>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-    <Import Project="$(StarboardBasePath)\msvc\starboard-cmdline.props" />
   <ImportGroup Label="Shared">
     <Import Project="..\..\Tests.Shared\Tests.Shared.vcxitems" />
   </ImportGroup>
@@ -134,7 +127,7 @@
       <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(IncludePaths)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
       <OtherCPlusPlusFlags>-Wdeprecated-declarations</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -157,7 +150,7 @@
       <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(IncludePaths)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
       <OtherCPlusPlusFlags>-Wdeprecated-declarations</OtherCPlusPlusFlags>
       <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -184,7 +177,7 @@
       <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(IncludePaths)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
       <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -211,7 +204,7 @@
       <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(IncludePaths)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
       <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -220,15 +213,13 @@
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="$(StarboardBasePath)\tests\unittests\Framework\Framework.cpp" />
     <ClCompile Include="$(StarboardBasePath)\tests\unittests\EntryPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="..\..\..\..\tests\unittests\QuartzCore\QuartzCoreTest.mm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <Import Project="$(StarboardBasePath)\msvc\ut-build.props" />
   <ItemGroup>
-    <None Include="Project.json" />
+    <None Include="project.json" />
   </ItemGroup>
 </Project>

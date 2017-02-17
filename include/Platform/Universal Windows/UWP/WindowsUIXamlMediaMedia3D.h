@@ -76,7 +76,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 + (BOOL)getIsIdentity:(WUXMMMatrix3D*)target;
 + (WUXMMMatrix3D*)invert:(WUXMMMatrix3D*)target;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 + (WUXMMMatrix3D*)identity;
 @end
@@ -90,7 +90,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
@@ -111,7 +111,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMMTransform3D : WXDependencyObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @end
 
@@ -123,9 +123,9 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMMCompositeTransform3D : WUXMMTransform3D
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double rotationZ;
 @property double rotationY;
@@ -161,9 +161,9 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXMMPerspectiveTransform3D : WUXMMTransform3D
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double offsetY;
 @property double offsetX;

@@ -53,8 +53,6 @@ SB_EXPORT int EbrTruncate64(int fd, __int64 size);
 SB_EXPORT bool EbrRename(const char* path1, const char* path2);
 SB_EXPORT bool EbrUnlink(const char* path);
 SB_EXPORT bool EbrMkdir(const char* path);
-SB_EXPORT char* EbrGetcwd(char* buf, size_t len);
-SB_EXPORT int EbrChdir(const char* path);
 
 SB_EXPORT int EbrChmod(const char* path, int mode);
 
@@ -87,11 +85,7 @@ SB_EXPORT int EbrGetTimeOfDay(struct EbrTimeval* curtime);
 SB_EXPORT double EbrGetMediaTime();
 SB_EXPORT int EbrGetWantedOrientation();
 
-//  maxLen should be MAX_PATH.  Sorry Jordan.
-SB_EXPORT bool EbrGetRootMapping(const char* dirName, char* dirOut, uint32_t maxLen);
-SB_EXPORT const char* EbrGetWritableFolder();
-SB_EXPORT void EbrSetWritableFolder(const char* folder);
-
+SB_EXPORT const wchar_t* IwGetWritableFolder();
 SB_EXPORT void EbrBlockIfBackground();
 
 typedef void* EbrEvent;

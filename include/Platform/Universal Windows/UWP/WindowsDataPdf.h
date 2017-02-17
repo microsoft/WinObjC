@@ -52,9 +52,9 @@ typedef unsigned WDPPdfPageRotation;
 
 OBJCUWP_WINDOWS_DATA_PDF_EXPORT
 @interface WDPPdfPageRenderOptions : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WFRect* sourceRect;
 @property BOOL isIgnoringHighContrast;
@@ -73,7 +73,7 @@ OBJCUWP_WINDOWS_DATA_PDF_EXPORT
 OBJCUWP_WINDOWS_DATA_PDF_EXPORT
 @interface WDPPdfPageDimensions : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFRect* artBox;
 @property (readonly) WFRect* bleedBox;
@@ -105,7 +105,7 @@ OBJCUWP_WINDOWS_DATA_PDF_EXPORT
 OBJCUWP_WINDOWS_DATA_PDF_EXPORT
 @interface WDPPdfPage : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDPPdfPageDimensions* dimensions;
 @property (readonly) unsigned int index;
@@ -131,7 +131,7 @@ OBJCUWP_WINDOWS_DATA_PDF_EXPORT
 + (void)loadFromStreamAsync:(RTObject<WSSIRandomAccessStream>*)inputStream success:(void (^)(WDPPdfDocument*))success failure:(void (^)(NSError*))failure;
 + (void)loadFromStreamWithPasswordAsync:(RTObject<WSSIRandomAccessStream>*)inputStream password:(NSString *)password success:(void (^)(WDPPdfDocument*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL isPasswordProtected;
 @property (readonly) unsigned int pageCount;

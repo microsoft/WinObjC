@@ -42,7 +42,7 @@
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 @interface WAADAppointmentDataProviderConnection : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (EventRegistrationToken)addCancelMeetingRequestedEvent:(void(^)(WAADAppointmentDataProviderConnection*, WAADAppointmentCalendarCancelMeetingRequestEventArgs*))del;
 - (void)removeCancelMeetingRequestedEvent:(EventRegistrationToken)tok;
@@ -68,7 +68,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 @interface WAADAppointmentCalendarSyncManagerSyncRequestEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WAADAppointmentCalendarSyncManagerSyncRequest* request;
 - (WFDeferral*)getDeferral;
@@ -83,7 +83,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 @interface WAADAppointmentCalendarCreateOrUpdateAppointmentRequestEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WAADAppointmentCalendarCreateOrUpdateAppointmentRequest* request;
 - (WFDeferral*)getDeferral;
@@ -98,7 +98,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 @interface WAADAppointmentCalendarCancelMeetingRequestEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WAADAppointmentCalendarCancelMeetingRequest* request;
 - (WFDeferral*)getDeferral;
@@ -113,7 +113,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 @interface WAADAppointmentCalendarForwardMeetingRequestEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WAADAppointmentCalendarForwardMeetingRequest* request;
 - (WFDeferral*)getDeferral;
@@ -128,7 +128,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 @interface WAADAppointmentCalendarProposeNewTimeForMeetingRequestEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WAADAppointmentCalendarProposeNewTimeForMeetingRequest* request;
 - (WFDeferral*)getDeferral;
@@ -143,7 +143,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 @interface WAADAppointmentCalendarUpdateMeetingResponseRequestEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WAADAppointmentCalendarUpdateMeetingResponseRequest* request;
 - (WFDeferral*)getDeferral;
@@ -158,7 +158,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 @interface WAADAppointmentDataProviderTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WAADAppointmentDataProviderConnection* connection;
 @end
@@ -172,7 +172,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 @interface WAADAppointmentCalendarSyncManagerSyncRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * appointmentCalendarLocalId;
 - (RTObject<WFIAsyncAction>*)reportCompletedAsync;
@@ -188,7 +188,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 @interface WAADAppointmentCalendarCreateOrUpdateAppointmentRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WAAAppointment* appointment;
 @property (readonly) NSString * appointmentCalendarLocalId;
@@ -207,7 +207,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 @interface WAADAppointmentCalendarCancelMeetingRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * appointmentCalendarLocalId;
 @property (readonly) NSString * appointmentLocalId;
@@ -228,7 +228,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 @interface WAADAppointmentCalendarForwardMeetingRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * appointmentCalendarLocalId;
 @property (readonly) NSString * appointmentLocalId;
@@ -250,7 +250,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 @interface WAADAppointmentCalendarProposeNewTimeForMeetingRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * appointmentCalendarLocalId;
 @property (readonly) NSString * appointmentLocalId;
@@ -272,7 +272,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 @interface WAADAppointmentCalendarUpdateMeetingResponseRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * appointmentCalendarLocalId;
 @property (readonly) NSString * appointmentLocalId;

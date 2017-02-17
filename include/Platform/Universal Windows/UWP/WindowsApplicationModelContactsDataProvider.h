@@ -42,7 +42,7 @@
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_DATAPROVIDER_EXPORT
 @interface WACDContactDataProviderConnection : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (EventRegistrationToken)addServerSearchReadBatchRequestedEvent:(void(^)(WACDContactDataProviderConnection*, WACDContactListServerSearchReadBatchRequestEventArgs*))del;
 - (void)removeServerSearchReadBatchRequestedEvent:(EventRegistrationToken)tok;
@@ -60,7 +60,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_DATAPROVIDER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_DATAPROVIDER_EXPORT
 @interface WACDContactListSyncManagerSyncRequestEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WACDContactListSyncManagerSyncRequest* request;
 - (WFDeferral*)getDeferral;
@@ -75,7 +75,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_DATAPROVIDER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_DATAPROVIDER_EXPORT
 @interface WACDContactListServerSearchReadBatchRequestEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WACDContactListServerSearchReadBatchRequest* request;
 - (WFDeferral*)getDeferral;
@@ -90,7 +90,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_DATAPROVIDER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_DATAPROVIDER_EXPORT
 @interface WACDContactDataProviderTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WACDContactDataProviderConnection* connection;
 @end
@@ -104,7 +104,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_DATAPROVIDER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_DATAPROVIDER_EXPORT
 @interface WACDContactListSyncManagerSyncRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * contactListId;
 - (RTObject<WFIAsyncAction>*)reportCompletedAsync;
@@ -120,7 +120,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_DATAPROVIDER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_DATAPROVIDER_EXPORT
 @interface WACDContactListServerSearchReadBatchRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * contactListId;
 @property (readonly) WACContactQueryOptions* options;

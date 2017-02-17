@@ -153,7 +153,7 @@ OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 + (int)getApplicationViewIdForWindow:(RTObject<WUCICoreWindow>*)window;
 + (BOOL)tryUnsnap;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * title;
 @property BOOL isScreenCaptureEnabled;
@@ -197,7 +197,7 @@ OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVApplicationViewConsolidatedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL isUserInitiated;
 @end
@@ -211,7 +211,7 @@ OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVApplicationViewTitleBar : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) id /* WUColor* */ buttonInactiveBackgroundColor;
 @property (retain) id /* WUColor* */ buttonHoverForegroundColor;
@@ -255,7 +255,7 @@ OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVActivationViewSwitcher : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (RTObject<WFIAsyncAction>*)showAsStandaloneAsync:(int)viewId;
 - (RTObject<WFIAsyncAction>*)showAsStandaloneWithSizePreferenceAsync:(int)viewId sizePreference:(WUVViewSizePreference)sizePreference;
@@ -270,9 +270,9 @@ OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 
 OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVApplicationViewTransferContext : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property int viewId;
 + (NSString *)dataPackageFormatId;
@@ -287,7 +287,7 @@ OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVInputPaneVisibilityEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL ensuredFocusedElementInView;
 @property (readonly) WFRect* occludedRect;
@@ -303,7 +303,7 @@ OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVInputPane : RTObject
 + (WUVInputPane*)getForCurrentView;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFRect* occludedRect;
 @property BOOL visible;
@@ -345,7 +345,7 @@ OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVUIViewSettings : RTObject
 + (WUVUIViewSettings*)getForCurrentView;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUVUserInteractionMode userInteractionMode;
 @end
@@ -358,9 +358,9 @@ OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 
 OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVAccessibilitySettings : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL highContrast;
 @property (readonly) NSString * highContrastScheme;
@@ -376,9 +376,9 @@ OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 
 OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVUISettings : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL animationsEnabled;
 @property (readonly) unsigned int caretBlinkRate;
@@ -411,7 +411,7 @@ OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVStatusBar : RTObject
 + (WUVStatusBar*)getForCurrentView;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) id /* WUColor* */ foregroundColor;
 @property double backgroundOpacity;
@@ -435,7 +435,7 @@ OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVStatusBarProgressIndicator : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * text;
 @property (retain) id /* double */ progressValue;
@@ -453,7 +453,7 @@ OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 @interface WUVApplicationViewScaling : RTObject
 + (BOOL)trySetDisableLayoutScaling:(BOOL)disableLayoutScaling;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 + (BOOL)disableLayoutScaling;
 @end

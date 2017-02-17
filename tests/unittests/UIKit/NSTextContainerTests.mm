@@ -21,10 +21,13 @@
 
 TEST(NSTextContainer, LineFragmentRectForProposedRect) {
     NSTextContainer* textContainer = [[[NSTextContainer alloc] initWithSize:CGSizeMake(1000, FLT_MAX)] autorelease];
+
+    // Exclusion paths not in horizontal order to make sure non-ordered are sorted properly
     textContainer.exclusionPaths = @[
         [UIBezierPath bezierPathWithRect:CGRectMake(100, 0, 100, 100)],
+        [UIBezierPath bezierPathWithRect:CGRectMake(700, 0, 150, 300)],
         [UIBezierPath bezierPathWithRect:CGRectMake(300, 0, 200, 150)],
-        [UIBezierPath bezierPathWithRect:CGRectMake(700, 0, 150, 300)]
+        [UIBezierPath bezierPathWithRect:CGRectMake(950, 0, 1000, 300)]
     ];
 
     // First rect starts at beginning of area, ends before first exclusion
@@ -53,7 +56,7 @@ TEST(NSTextContainer, LineFragmentRectForProposedRect) {
                                                  writingDirection:NSWritingDirectionNatural
                                                     remainingRect:&remaining];
     EXPECT_EQ(CGRectMake(550, 0, 145, 10), fragmentRect);
-    EXPECT_EQ(CGRectMake(855, 0, 145, 10), remaining);
+    EXPECT_EQ(CGRectMake(855, 0, 90, 10), remaining);
 
     // First rect starts at beginning of text container, passes under first exclusion and ends before second
     // Remaining rect starts after second exclusion, ends before third
@@ -71,5 +74,14 @@ TEST(NSTextContainer, LineFragmentRectForProposedRect) {
                                                  writingDirection:NSWritingDirectionNatural
                                                     remainingRect:&remaining];
     EXPECT_EQ(CGRectMake(0, 400, 1000, 10), fragmentRect);
+    EXPECT_EQ(CGRectZero, remaining);
+
+    // First rect starts at end of text container, has width of 0
+    // There is no remaining rect
+    fragmentRect = [textContainer lineFragmentRectForProposedRect:CGRectMake(975, 0, 1000, 10)
+                                                          atIndex:0
+                                                 writingDirection:NSWritingDirectionNatural
+                                                    remainingRect:&remaining];
+    EXPECT_EQ(CGRectMake(1000, 0, 0, 10), fragmentRect);
     EXPECT_EQ(CGRectZero, remaining);
 }

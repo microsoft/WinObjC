@@ -1,7 +1,7 @@
 //******************************************************************************
 //
 // Copyright (c) 2016 Intel Corporation. All rights reserved.
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,11 +14,9 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef __CGCOLORSPACE_H
-#define __CGCOLORSPACE_H
-
-#include <objc/runtime.h>
+#import <objc/runtime.h>
 
 class __CGColorSpace : private objc_object {
 public:
@@ -30,4 +28,4 @@ public:
     ~__CGColorSpace();
 };
 
-#endif
+CGColorSpaceRef _CGColorSpaceCreate(CGColorSpaceModel model);

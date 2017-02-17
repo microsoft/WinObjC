@@ -41,8 +41,8 @@ UILabel::UILabel() {
     _textColor = NULL;
     _numberOfLines = 1;
     _baselineAdjustment = 0;
-    _adjustsFontSizeToFit = false;
     _minimumFontSize = -1.0f;
+    _minimumScaleFactor = -1.0f;
     _font = NULL;
 
     // default line break mode is tailTrucation
@@ -66,7 +66,7 @@ void UILabel::InitFromXIB(XIBObject* obj) {
     _textAlignment = obj->GetInt("IBUITextAlignment", 0);
     _numberOfLines = obj->GetInt("IBUINumberOfLines", 1);
 
-    // default line break mode is tailTrucation
+    // default line break mode is tailTruncation
     _lineBreakMode = obj->GetInt("IBUILineBreakMode", 4);
     _font = (UIFont*)obj->FindMember("IBUIFontDescription");
     if (!_font)
@@ -74,7 +74,8 @@ void UILabel::InitFromXIB(XIBObject* obj) {
 
     if (FindMember("IBUIMinimumFontSize")) {
         _minimumFontSize = FindMember("IBUIMinimumFontSize")->floatValue();
-        _adjustsFontSizeToFit = true;
+    } else if (FindMember("IBUIMinimumScaleFactor")) {
+        _minimumScaleFactor = FindMember("IBUIMinimumScaleFactor")->floatValue();
     }
 
     obj->_outputClassName = "UILabel";
@@ -138,13 +139,10 @@ void UILabel::InitFromStory(XIBObject* obj) {
         }
     }
 
-    if (getAttrib("minimumFontSize")) {
+    if (getAttrib("minimumScaleFactor")) {
+        _minimumScaleFactor = strtod(getAttrAndHandle("minimumScaleFactor"), NULL);
+    } else if (getAttrib("minimumFontSize")) {
         _minimumFontSize = strtod(getAttrAndHandle("minimumFontSize"), NULL);
-        const char* adjust = getAttrAndHandle("adjustsFontSizeToFit");
-
-        if (!adjust || strcmp(adjust, "NO") != 0) {
-            _adjustsFontSizeToFit = true;
-        }
     }
 
     obj->_outputClassName = "UILabel";
@@ -170,8 +168,6 @@ void UILabel::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
         obj->AddOutputMember(writer, "UIHighlightedColor", _highlightedColor);
     }
 
-    AddOutputMember(writer, "UIMinimumScaleFactor", new XIBObjectFloat(1.0f));
-
     if (_textAlignment != 0) {
         AddInt(writer, "UITextAlignment", _textAlignment);
     }
@@ -188,14 +184,12 @@ void UILabel::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
         AddInt(writer, "UIBaselineAdjustment", _baselineAdjustment);
     }
 
-    if (_numberOfLines == 1) {
-        if (_adjustsFontSizeToFit) {
-            AddBool(writer, "UIAdjustsFontSizeToFit", _adjustsFontSizeToFit);
-        }
-
-        if (_minimumFontSize != -1.0f) {
-            AddOutputMember(writer, "UIMinimumFontSize", new XIBObjectFloat(_minimumFontSize));
-        }
+    if (_minimumFontSize != -1.0f) {
+        AddOutputMember(writer, "UIMinimumFontSize", new XIBObjectFloat(_minimumFontSize));
+    } else if (_minimumScaleFactor != -1.0f) {
+        AddOutputMember(writer, "UIMinimumScaleFactor", new XIBObjectFloat(_minimumScaleFactor));
+    } else {
+        AddBool(writer, "UIAdjustsFontSizeToFit", false);
     }
 
     if (_font) {

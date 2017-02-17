@@ -213,7 +213,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 + (WMEVideoCompositorDefinition*)make:(NSString *)activatableClassId ACTIVATOR;
 + (WMEVideoCompositorDefinition*)makeWithProperties:(NSString *)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
@@ -228,7 +228,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMECompositeVideoFrameContext : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMVideoFrame* backgroundFrame;
 @property (readonly) WMVideoFrame* outputFrame;
@@ -245,7 +245,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEAudioEffect : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMEAudioEffectType audioEffectType;
 @end
@@ -259,7 +259,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEAudioRenderEffectsManager : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * effectsProviderSettingsLabel;
 @property (readonly) RTObject<WSSIRandomAccessStreamWithContentType>* effectsProviderThumbnail;
@@ -278,7 +278,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEAudioCaptureEffectsManager : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (EventRegistrationToken)addAudioCaptureEffectsChangedEvent:(void(^)(WMEAudioCaptureEffectsManager*, RTObject*))del;
 - (void)removeAudioCaptureEffectsChangedEvent:(EventRegistrationToken)tok;
@@ -310,7 +310,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 + (WMEVideoEffectDefinition*)make:(NSString *)activatableClassId ACTIVATOR;
 + (WMEVideoEffectDefinition*)makeWithProperties:(NSString *)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
@@ -327,7 +327,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 + (WMEAudioEffectDefinition*)make:(NSString *)activatableClassId ACTIVATOR;
 + (WMEAudioEffectDefinition*)makeWithProperties:(NSString *)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
@@ -342,7 +342,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEProcessVideoFrameContext : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMVideoFrame* inputFrame;
 @property (readonly) WMVideoFrame* outputFrame;
@@ -357,7 +357,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEProcessAudioFrameContext : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMAudioFrame* inputFrame;
 @property (readonly) WMAudioFrame* outputFrame;
@@ -371,9 +371,9 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 
 OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMEVideoTransformEffectDefinition : RTObject <WMEIVideoEffectDefinition>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
@@ -393,9 +393,9 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 
 OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @interface WMESlowMotionEffectDefinition : RTObject <WMEIVideoEffectDefinition>
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double timeStretchRate;
 @property (readonly) NSString * activatableClassId;

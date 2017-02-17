@@ -89,7 +89,7 @@ OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
 + (WUSJumpListItem*)createWithArguments:(NSString *)arguments displayName:(NSString *)displayName;
 + (WUSJumpListItem*)createSeparator;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WFUri* logo;
 @property (retain) NSString * groupName;
@@ -111,7 +111,7 @@ OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
 + (void)loadCurrentAsyncWithSuccess:(void (^)(WUSJumpList*))success failure:(void (^)(NSError*))failure;
 + (BOOL)isSupported;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WUSJumpListSystemGroupKind systemGroupKind;
 @property (readonly) NSMutableArray* /* WUSJumpListItem* */ items;
@@ -127,7 +127,7 @@ OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
 OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
 @interface WUSSecondaryTileVisualElements : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WFUri* square150x150Logo;
 @property BOOL showNameOnWide310x150Logo;
@@ -155,13 +155,13 @@ OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
 + (void)findAllAsyncWithSuccess:(void (^)(NSArray* /* WUSSecondaryTile* */))success failure:(void (^)(NSError*))failure;
 + (void)findAllForApplicationAsync:(NSString *)applicationId success:(void (^)(NSArray* /* WUSSecondaryTile* */))success failure:(void (^)(NSError*))failure;
 + (void)findAllForPackageAsyncWithSuccess:(void (^)(NSArray* /* WUSSecondaryTile* */))success failure:(void (^)(NSError*))failure;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WUSSecondaryTile*)makeTile:(NSString *)tileId shortName:(NSString *)shortName displayName:(NSString *)displayName arguments:(NSString *)arguments tileOptions:(WUSTileOptions)tileOptions logoReference:(WFUri*)logoReference ACTIVATOR;
 + (WUSSecondaryTile*)makeWideTile:(NSString *)tileId shortName:(NSString *)shortName displayName:(NSString *)displayName arguments:(NSString *)arguments tileOptions:(WUSTileOptions)tileOptions logoReference:(WFUri*)logoReference wideLogoReference:(WFUri*)wideLogoReference ACTIVATOR;
 + (WUSSecondaryTile*)makeWithId:(NSString *)tileId ACTIVATOR;
 + (WUSSecondaryTile*)makeMinimalTile:(NSString *)tileId displayName:(NSString *)displayName arguments:(NSString *)arguments square150x150Logo:(WFUri*)square150x150Logo desiredSize:(WUSTileSize)desiredSize ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * shortName;
 @property (retain) WFUri* logo;
@@ -200,7 +200,7 @@ OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
 OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
 @interface WUSVisualElementsRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUSVisualElementsRequest* request;
 @end
@@ -214,7 +214,7 @@ OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
 OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
 @interface WUSVisualElementsRequest : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* WUSSecondaryTileVisualElements* */ alternateVisualElements;
 @property (readonly) WFDateTime* deadline;
@@ -231,7 +231,7 @@ OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
 OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
 @interface WUSVisualElementsRequestDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)complete;
 @end

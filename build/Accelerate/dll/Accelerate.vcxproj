@@ -48,56 +48,56 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <CompileAsWinRT>false</CompileAsWinRT>
-      <PreprocessorDefinitions>EIGEN_MPL2_ONLY</PreprocessorDefinitions>
-      <AdditionalOptions>-DACCELERATE_IMPEXP</AdditionalOptions>
+      <PreprocessorDefinitions>EIGEN_MPL2_ONLY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>-DACCELERATE_IMPEXP %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>Accelerate.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;$(StarboardBasePath)\include\xplat</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;$(StarboardBasePath)\include\xplat;%(IncludePaths)</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <CompileAsWinRT>false</CompileAsWinRT>
-      <PreprocessorDefinitions>EIGEN_MPL2_ONLY</PreprocessorDefinitions>
-      <AdditionalOptions>-DACCELERATE_IMPEXP</AdditionalOptions>
+      <PreprocessorDefinitions>EIGEN_MPL2_ONLY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>-DACCELERATE_IMPEXP %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>Accelerate.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;$(StarboardBasePath)\include\xplat</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;$(StarboardBasePath)\include\xplat;%(IncludePaths)</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
     <ClCompile>
       <CompileAsWinRT>false</CompileAsWinRT>
-      <PreprocessorDefinitions>EIGEN_MPL2_ONLY</PreprocessorDefinitions>
-      <AdditionalOptions>-DACCELERATE_IMPEXP</AdditionalOptions>
+      <PreprocessorDefinitions>EIGEN_MPL2_ONLY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>-DACCELERATE_IMPEXP %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>Accelerate.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;$(StarboardBasePath)\include\xplat</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;$(StarboardBasePath)\include\xplat;%(IncludePaths)</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
     <ClCompile>
       <CompileAsWinRT>false</CompileAsWinRT>
-      <PreprocessorDefinitions>EIGEN_MPL2_ONLY</PreprocessorDefinitions>
-      <AdditionalOptions>-DACCELERATE_IMPEXP</AdditionalOptions>
+      <PreprocessorDefinitions>EIGEN_MPL2_ONLY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>-DACCELERATE_IMPEXP %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>Accelerate.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;$(StarboardBasePath)\include\xplat</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;$(StarboardBasePath)\include\xplat;%(IncludePaths)</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>

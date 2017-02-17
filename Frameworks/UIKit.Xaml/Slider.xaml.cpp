@@ -36,8 +36,9 @@ void Slider::OnApplyTemplate() {
 ////////////////////////////////////////////////////////////////////////////////////
 // ObjectiveC Interop
 ////////////////////////////////////////////////////////////////////////////////////
-UIKIT_XAML_EXPORT IInspectable* XamlCreateSlider() {
-    return InspectableFromObject(ref new UIKit::Xaml::Slider()).Detach();
+UIKIT_XAML_EXPORT void XamlCreateSlider(IInspectable** created) {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable = InspectableFromObject(ref new UIKit::Xaml::Slider());
+    *created = inspectable.Detach();
 }
 
 // clang-format on

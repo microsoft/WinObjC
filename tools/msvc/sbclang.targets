@@ -588,7 +588,6 @@
       </ClangCompile>
     </ItemGroup>
 
-
     <!-- Add in the ClCompile additional include directories to clang. -->
     <PropertyGroup>
       <_ShouldMakeTmpClCompile Condition="'@(ClCompile)' == ''">true</_ShouldMakeTmpClCompile>
@@ -600,7 +599,6 @@
       </ClangCompile>
       <ClCompile Remove="_tmp" Condition="'$(_ShouldMakeTmpClCompile)' == 'true'"/>
     </ItemGroup>
-    
 
     <!-- Figure out WOCStdlib options to use -->
     <ItemGroup>

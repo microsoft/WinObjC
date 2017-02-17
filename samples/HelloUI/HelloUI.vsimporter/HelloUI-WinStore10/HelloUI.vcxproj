@@ -59,9 +59,6 @@
     <TargetName>HelloUI</TargetName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-    <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.props" />
-  </ImportGroup>
   <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -92,7 +89,7 @@
       <HeaderMap>Project</HeaderMap>
       <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>true</ObjectiveCModules>
+      <ObjectiveCModules>false</ObjectiveCModules>
       <OptimizationLevel>Disabled</OptimizationLevel>
       <PreprocessorDefinitions>DEBUG=1</PreprocessorDefinitions>
     </ClangCompile>
@@ -116,7 +113,7 @@
       <HeaderMap>Project</HeaderMap>
       <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>true</ObjectiveCModules>
+      <ObjectiveCModules>false</ObjectiveCModules>
       <OptimizationLevel>Disabled</OptimizationLevel>
       <PreprocessorDefinitions>DEBUG=1</PreprocessorDefinitions>
     </ClangCompile>
@@ -138,7 +135,7 @@
       <HeaderMap>Project</HeaderMap>
       <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>true</ObjectiveCModules>
+      <ObjectiveCModules>false</ObjectiveCModules>
       <OptimizationLevel>MinSpace</OptimizationLevel>
     </ClangCompile>
     <Link>
@@ -159,7 +156,7 @@
       <HeaderMap>Project</HeaderMap>
       <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>true</ObjectiveCModules>
+      <ObjectiveCModules>false</ObjectiveCModules>
       <OptimizationLevel>MinSpace</OptimizationLevel>
     </ClangCompile>
     <Link>
@@ -220,7 +217,5 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.targets" />
-  </ImportGroup>
+
 </Project>

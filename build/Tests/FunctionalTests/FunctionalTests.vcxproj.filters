@@ -23,21 +23,33 @@
     <Filter Include="Tests\UIKitTests">
       <UniqueIdentifier>{34bd5c19-86ba-4661-bbb6-63295c1ca90f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tests\ExternalUXResources">
+      <UniqueIdentifier>{4c703c5d-0c21-4205-9e17-55fed2d45b67}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\pch.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\targetver.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Logger.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\functionaltest-api.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\test-api.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Framework\Framework.h">
       <Filter>Framework</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\FunctionalTestHelpers.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\samples\XAMLCatalog\XAMLCatalog\UIButtonViewController.h">
-      <Filter>Tests\UIKitTests</Filter>
-    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\UXTestHelpers.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\AppDelegate.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\MainViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\samples\XAMLCatalog\XAMLCatalog\MenuTableViewController.h">
-      <Filter>Tests\UIKitTests</Filter>
+      <Filter>Tests\ExternalUXResources</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\samples\XAMLCatalog\XAMLCatalog\TestEnabledUITextField.h">
+      <Filter>Tests\ExternalUXResources</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\samples\XAMLCatalog\XAMLCatalog\UIKitControls\UIButtonViewController.h">
+      <Filter>Tests\ExternalUXResources</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\samples\XAMLCatalog\XAMLCatalog\UIKitControls\UIButtonWithControlsViewController.h">
+      <Filter>Tests\ExternalUXResources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -49,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\FunctionalTestHelpers.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\UXTestHelpers.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\NSURLConnection.mm">
       <Filter>Tests</Filter>
     </ClangCompile>
@@ -100,12 +113,6 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIKitTests\UIButtonTests.mm">
       <Filter>Tests\UIKitTests</Filter>
     </ClangCompile>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\samples\XAMLCatalog\XAMLCatalog\UIButtonViewController.m">
-      <Filter>Tests\UIKitTests</Filter>
-    </ClangCompile>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\samples\XAMLCatalog\XAMLCatalog\MenuTableViewController.m">
-      <Filter>Tests\UIKitTests</Filter>
-    </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIKitTests\UIActivityIndicatorTests.mm">
       <Filter>Tests\UIKitTests</Filter>
     </ClangCompile>
@@ -120,6 +127,20 @@
     </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIKitTests\UIViewTests.mm">
       <Filter>Tests\UIKitTests</Filter>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\AppDelegate.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\MainViewController.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\samples\XAMLCatalog\XAMLCatalog\MenuTableViewController.m">
+      <Filter>Tests\ExternalUXResources</Filter>
+    </ClangCompile>
+        <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\samples\XAMLCatalog\XAMLCatalog\TestEnabledUITextField.mm">
+      <Filter>Tests\ExternalUXResources</Filter>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\samples\XAMLCatalog\XAMLCatalog\UIKitControls\UIButtonViewController.m">
+      <Filter>Tests\ExternalUXResources</Filter>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\samples\XAMLCatalog\XAMLCatalog\UIKitControls\UIButtonWithControlsViewController.m">
+      <Filter>Tests\ExternalUXResources</Filter>
     </ClangCompile>
   </ItemGroup>
   <ItemGroup>

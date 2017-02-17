@@ -25,6 +25,7 @@
 #import "UIResponderInternal.h"
 #import "UIApplicationInternal.h"
 #import <UIKit/UITextViewDelegate.h>
+#import <Starboard/SmartTypes.h>
 
 static const wchar_t* TAG = L"UITextView";
 
@@ -89,7 +90,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     _layoutManager = [NSLayoutManager new];
     [_layoutManager addTextContainer:_textContainer];
     _layoutManager.delegate = self;
-    _layoutManager.textStorage = [NSTextStorage new];
+    _layoutManager.textStorage = [[NSTextStorage new] autorelease];
 
     _textColor = [coder decodeObjectForKey:@"UITextColor"];
     if (_textColor == nil) {
@@ -150,7 +151,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     _layoutManager = [NSLayoutManager new];
     [_layoutManager addTextContainer:_textContainer];
     _layoutManager.delegate = self;
-    _layoutManager.textStorage = [NSTextStorage new];
+    _layoutManager.textStorage = [[NSTextStorage new] autorelease];
 
     _alignment = UITextAlignmentLeft;
     _font = [UIFont defaultFont];
@@ -397,7 +398,11 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
  @Status Interoperable
 */
 - (void)drawRect:(CGRect)rect {
-    CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), [_textColor CGColor]);
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    _CGContextPushBeginDraw(ctx);
+    auto popEnd = wil::ScopeExit([ctx]() { _CGContextPopEndDraw(ctx); });
+
+    CGContextSetFillColorWithColor(ctx, [_textColor CGColor]);
 
     NSRange range{ 0, INT_MAX };
     CGPoint origin = self.bounds.origin;
@@ -752,14 +757,6 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     CGSize fontExtent = { 0, 0 };
 
     fontExtent = [[self _text] sizeWithFont:(id)_font forWidth:rect.size.width lineBreakMode:UILineBreakModeWordWrap];
-
-    CGRect centerRect;
-    centerRect.origin.x = 0;
-    centerRect.origin.y = 0;
-    centerRect.size = fontExtent;
-    EbrCenterTextInRectVertically(&centerRect, &fontExtent, _font);
-    rect.origin.y += centerRect.origin.y;
-
     ret.width = ourRect.size.width;
     ret.height = fontExtent.height + _marginSize * 2.0f;
 

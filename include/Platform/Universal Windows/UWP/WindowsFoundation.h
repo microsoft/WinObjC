@@ -384,7 +384,7 @@ OBJCUWP_WINDOWS_FOUNDATION_EXPORT
 @interface WFDeferral : RTObject <WFIClosable>
 + (WFDeferral*)make:(WFDeferralCompletedHandler)handler ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)complete;
 - (void)close;
@@ -400,7 +400,7 @@ OBJCUWP_WINDOWS_FOUNDATION_EXPORT
 @interface WFWwwFormUrlDecoder : RTObject
 + (WFWwwFormUrlDecoder*)makeWwwFormUrlDecoder:(NSString *)query ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -425,7 +425,7 @@ OBJCUWP_WINDOWS_FOUNDATION_EXPORT
 + (WFUri*)makeUri:(NSString *)uri ACTIVATOR;
 + (WFUri*)makeWithRelativeUri:(NSString *)baseUri relativeUri:(NSString *)relativeUri ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * absoluteUri;
 @property (readonly) NSString * displayUri;
@@ -458,7 +458,7 @@ OBJCUWP_WINDOWS_FOUNDATION_EXPORT
 OBJCUWP_WINDOWS_FOUNDATION_EXPORT
 @interface WFWwwFormUrlDecoderEntry : RTObject <WFIWwwFormUrlDecoderEntry>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * name;
 @property (readonly) NSString * value;
@@ -474,7 +474,7 @@ OBJCUWP_WINDOWS_FOUNDATION_EXPORT
 @interface WFMemoryBuffer : RTObject <WFIMemoryBuffer, WFIClosable>
 + (WFMemoryBuffer*)make:(unsigned int)capacity ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (RTObject<WFIMemoryBufferReference>*)createReference;
 - (void)close;

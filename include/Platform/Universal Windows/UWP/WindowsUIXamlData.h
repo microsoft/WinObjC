@@ -307,9 +307,9 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDCurrentChangingEventArgs : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL cancel;
 @property (readonly) BOOL isCancelable;
@@ -325,7 +325,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDPropertyChangedEventArgs : RTObject
 + (WUXDPropertyChangedEventArgs*)makeInstance:(NSString *)name ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * propertyName;
 @end
@@ -339,7 +339,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDBindingExpressionBase : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @end
 
@@ -353,7 +353,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDBindingOperations : RTObject
 + (void)setBinding:(WXDependencyObject*)target dp:(WXDependencyProperty*)dp binding:(WUXDBindingBase*)binding;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @end
 
@@ -366,7 +366,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
@@ -386,9 +386,9 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDBindingBase : WXDependencyObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @end
 
@@ -401,7 +401,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDBindingExpression : WUXDBindingExpressionBase
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) RTObject* dataItem;
 @property (readonly) WUXDBinding* parentBinding;
@@ -416,9 +416,9 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDRelativeSource : WXDependencyObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WUXDRelativeSourceMode mode;
 @end
@@ -431,9 +431,9 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDBinding : WUXDBindingBase
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WXPropertyPath* path;
 @property WUXDBindingMode mode;
@@ -458,7 +458,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDItemIndexRange : RTObject
 + (WUXDItemIndexRange*)makeInstance:(int)firstIndex length:(unsigned int)length ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) int firstIndex;
 @property (readonly) int lastIndex;
@@ -473,9 +473,9 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXDCollectionViewSource : WXDependencyObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) RTObject* source;
 @property (retain) WXPropertyPath* itemsPath;
