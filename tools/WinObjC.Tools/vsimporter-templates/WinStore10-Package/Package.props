@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+
+<!--
+  PACKAGE PROPS
+  Description: The property definitions specific to $projectname$
+  For Use By: A VcxProj that depends on the $projectname$ package
+-->
+
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- 
+    Include any properties specific to the package here
+
+    This file can be deleted and removed from the .nuproj if no additional
+    properties are needed
+  -->
+</Project>

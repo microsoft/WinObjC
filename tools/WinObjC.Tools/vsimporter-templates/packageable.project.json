@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "WinObjC.Frameworks": "*",
+    "WinObjC.Frameworks.UWP": "*",
+    "WinObjC.Frameworks.Core": "*",
+    "WinObjC.Language": "*",
+    "WinObjC.Logging": "*",
+    "WinObjC.Packaging": "*"
+  },
+  "frameworks": {
+    "uap10.0": {
+      "imports": "native"
+    }
+  },
+  "runtimes": {
+    "win10-arm": {},
+    "win10-x86": {},
+    "win10-arm-aot": {},
+    "win10-x86-aot": {}
+  }
+}

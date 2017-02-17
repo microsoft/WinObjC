@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+
+<!--
+  PACKAGE PROPS
+  Description: Entry point for package props imports
+  For Use By: A project that consumes this package
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Defaults from WinObjC.Packaging -->
+  <Import Project="$(MSBuildThisFileDirectory)\$(MSBuildThisFileName).Default.props" Condition="Exists('$(MSBuildThisFileDirectory)\$(MSBuildThisFileName).Default.props')" />
+  <!-- Package customizations -->
+  <Import Project="$(MSBuildThisFileDirectory)\$(MSBuildThisFileName).Custom.props" Condition="Exists('$(MSBuildThisFileDirectory)\$(MSBuildThisFileName).Custom.props')" />
+</Project>

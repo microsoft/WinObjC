@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+
+<!--
+  PACKAGER TARGETS
+  Description: The target definitions specific to a Nugetizing project for WinObjC
+  For Use By: A NuProj that is doing the packaging of one or more projects
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_CoreCompileOverrideDependsOn Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">Pack</_CoreCompileOverrideDependsOn>
+  </PropertyGroup>
+
+  <Target Name="CoreCompile" DependsOnTargets="$(_CoreCompileOverrideDependsOn)" />
+
+  <Target Name="AddSingleConfigBuildOutput"  Returns="@(_PackageContentsForPlat)">
+    <MSBuild Projects="$(SolutionPath)"
+       Targets="GetSolutionConfigurationContents"
+       Properties="Configuration=$(Configuration);Platform=$(Platform)">
+      <Output TaskParameter="TargetOutputs" ItemName="_SolutionConfigurationContents" />
+    </MSBuild>
+
+    <Message Text="Build starting for $(MSBuildProjectFile) with Configuration=$(Configuration) Platform=$(Platform)" Importance="Low"/>
+
+    <MSBuild Projects="$(MSBuildProjectFile)"
+       Targets="GetPackageContents"
+       Properties="SkipGetPackageContentsForOtherPlatforms=true;BuildingInsideVisualStudio=false;BuildProjectReferences=true;IsPackable=false;Configuration=$(Configuration);Platform=$(Platform);CurrentSolutionConfigurationContents=%(_SolutionConfigurationContents.Identity);GetPackageContentsDependsOn=Build;$(GetPackageContentsDependsOn)">
+      <Output TaskParameter="TargetOutputs" ItemName="_PackageContentsForPlat" />
+    </MSBuild>
+  </Target>
+
+  <Target Name="AddOtherConfigsBuiltOutput" BeforeTargets="GetPackageContents" Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true' AND '$(Platform)' == 'AnyCPU'">
+    <ItemGroup>
+      <_PackTargetPlat Include="%(ProjectConfiguration.Platform)" Condition="'%(ProjectConfiguration.Configuration)' == '$(Configuration)' AND '%(ProjectConfiguration.Platform)' != '$(Platform)'" />
+    </ItemGroup>
+
+    <MSBuild Projects="$(MSBuildProjectFile)"
+       Targets="AddSingleConfigBuildOutput"
+       Properties="Platform=%(_PackTargetPlat.Identity)">
+      <Output TaskParameter="TargetOutputs" ItemName="_OtherPackageContents" />
+    </MSBuild>
+
+    <ItemGroup>
+      <PackageFile Include="@(_OtherPackageContents)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents" Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true' and '$(PresetPackageContents)' == 'true'">
+    <ItemGroup>
+      <PackageFile Include="$(MSBuildThisFileDirectory)Package.props" Condition="Exists('$(MSBuildThisFileDirectory)Package.props')">
+        <PackagePath>build\$(PackageId).props</PackagePath>
+      </PackageFile>
+      <PackageFile Include="$(MSBuildThisFileDirectory)Package.targets" Condition="Exists('$(MSBuildThisFileDirectory)Package.targets')">
+        <PackagePath>build\$(PackageId).targets</PackagePath>
+      </PackageFile>
+      <PackageFile Include="$(MSBuildThisFileDirectory)Package.Default.props" Condition="Exists('$(MSBuildThisFileDirectory)Package.Default.props')">
+        <PackagePath>build\$(PackageId).Default.props</PackagePath>
+      </PackageFile>
+      <PackageFile Include="$(MSBuildThisFileDirectory)Package.Default.targets" Condition="Exists('$(MSBuildThisFileDirectory)Package.Default.targets')">
+        <PackagePath>build\$(PackageId).Default.targets</PackagePath>
+      </PackageFile>
+      <PackageFile Include="$(MSBuildProjectDirectory)\$(PackageId).Custom.targets" Condition="Exists('$(MSBuildProjectDirectory)\$(PackageId).Custom.targets')">
+        <PackagePath>build\$(PackageId).Custom.targets</PackagePath>
+      </PackageFile>
+      <PackageFile Include="$(MSBuildProjectDirectory)\$(PackageId).Custom.props" Condition="Exists('$(MSBuildProjectDirectory)\$(PackageId).Custom.props')">
+        <PackagePath>build\$(PackageId).Custom.props</PackagePath>
+      </PackageFile>
+    </ItemGroup>
+  </Target>
+
+  <!-- Remove WinObjC.Packaging from project dependency in the output package nuspec -->
+  <Target Name="RemovePackageInheritance" DependsOnTargets="ReadLegacyDependencies" BeforeTargets="GetPackageContents" >
+    <ItemGroup>
+      <PackageReference Condition="'%(PackageReference.Identity)' == 'WinObjC.Packaging'">
+        <PrivateAssets>All</PrivateAssets>
+      </PackageReference>
+    </ItemGroup>
+  </Target>
+</Project>
