@@ -55,11 +55,8 @@
 #import "UIEventInternal.h"
 #import "UITouchInternal.h"
 #import "_UIDirectManipulationRecognizer.h"
-<<<<<<< 17c9442ca7373bbb57c3f561cd59160aa9296832
 #import "_UIGestureCoordinator.h"
-=======
 #import "StringHelpers.h"
->>>>>>> Switch UIKit from projections to C++/WinRT (rough draft)
 
 #import <QuartzCore/CABasicAnimation.h>
 #import <QuartzCore/CALayer.h>

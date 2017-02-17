@@ -40,11 +40,8 @@
 
 #include <map>
 
-<<<<<<< 17c9442ca7373bbb57c3f561cd59160aa9296832
 using namespace Microsoft::WRL;
-=======
 using namespace winrt::Windows::UI::Xaml;
->>>>>>> Switch UIKit from projections to C++/WinRT (rough draft)
 
 static const wchar_t* TAG = L"UIButton";
 
@@ -204,29 +201,20 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
     self.adjustsImageWhenDisabled = YES;
     self.adjustsImageWhenHighlighted = YES;
 
+    // Force-load the template, and get the TextBlock and Image for use in our proxies.
+    _xamlButton.ApplyTemplate();
+    _xamlButton.UpdateLayout();
+
     // Create our child UILabel; its frame will be updated in layoutSubviews
     WXFrameworkElement* buttonLabel = XamlControls::GetButtonLabel(_xamlButton);
     _titleLabel = [[UILabel alloc] initWithFrame:CGRectZero xamlElement:buttonLabel];
     _titleLabel.userInteractionEnabled = NO;
 
     // Create our child UIImageView; its frame will be updated in layoutSubviews
-    WXCImage* buttonImage = XamlControls::GetButtonImage(_xamlButton);
-    _proxyImageView = [[_UIImageView_Proxy alloc] initWithXamlElement:buttonImage];
-=======
-    _xamlButton.ApplyTemplate();
-
     auto control = _xamlButton.as<Controls::IControlProtected>();
-    auto templateImage = control.GetTemplateChild(winrt::hstring_ref(L"buttonImage")).as<Controls::Image>();
-    auto templateText = control.GetTemplateChild(winrt::hstring_ref(L"buttonText")).as<Controls::TextBlock>();
+    auto templateImage = control.GetTemplateChild(L"buttonImage").as<Controls::Image>();
 
-    if (templateText) {
-        _proxyLabel = [[_UILabel_Proxy alloc] initWithXamlElement:templateText font:[UIFont buttonFont]];
-    }
-
-    if (templateImage) {
-        _proxyImageView = [[_UIImageView_Proxy alloc] initWithXamlElement:templateImage];
-    }
->>>>>>> Switch UIKit from projections to C++/WinRT (rough draft)
+    _proxyImageView = [[_UIImageView_Proxy alloc] initWithXamlElement:templateImage];
 
     _contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     _contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
@@ -325,7 +313,6 @@ Microsoft Extension
 /**
  @Status Interoperable
 */
-<<<<<<< 17c9442ca7373bbb57c3f561cd59160aa9296832
 - (void)layoutSubviews {
     // Grab our current values
     NSString* currentTitle = self.currentTitle;
@@ -340,48 +327,11 @@ Microsoft Extension
     }
 
     // Update our image and border background brush (which we use for applying 'adjustImageWhen' treatment)
-    XamlButtonApplyVisuals([_xamlButton comObj], currentImage, currentBorderBackgroundBrush);
+    XamlButtonApplyVisuals(objcwinrt::to_insp(_xamlButton), currentImage, currentBorderBackgroundBrush);
 
     // Update our title label
     self.titleLabel.text = currentTitle;
     self.titleLabel.textColor = self.currentTitleColor;
-=======
-- (void)setImage:(UIImage*)image forState:(UIControlState)state {
-    _states[state].image = image;
-
-    // NOTE: check if image is nil before creating inspectableImage
-    // ConvertUIImageToWUXMImageBrush:nil creates a valid imageBrush with null comObj
-    // which isn't what we want
-    if (image) {
-        Media::ImageBrush imageBrush = XamlUtilities::ConvertUIImageToWUXMImageBrush(image);
-        if (imageBrush) {
-            _states[state].inspectableImage = objcwinrt::to_insp(imageBrush);
-        }
-    } else {
-        // this enforces the fallback of using Image of normalState
-        // when a image for other states does not exis
-        _states[state].inspectableImage = nullptr;
-    }
-
-    // Update the Xaml elements immediately, so the proxies reflect reality
-    XamlButtonApplyVisuals(objcwinrt::to_insp(_xamlButton),
-                           _currentInspectableTitle(self),
-                           _currentInspectableImage(self),
-                           _currentInspectableTitleColor(self));
-
-    [self invalidateIntrinsicContentSize];
-    [self setNeedsLayout];
-}
-
-/**
- @Status Interoperable
-*/
-- (void)layoutSubviews {
-    XamlButtonApplyVisuals(objcwinrt::to_insp(_xamlButton),
-                           _currentInspectableTitle(self),
-                           _currentInspectableImage(self),
-                           _currentInspectableTitleColor(self));
->>>>>>> Switch UIKit from projections to C++/WinRT (rough draft)
 
     // Set frame after updating the visuals
     CGRect contentFrame = [self contentRectForBounds:self.bounds];
@@ -553,12 +503,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
  @Status Interoperable
 */
 - (void)setEnabled:(BOOL)enabled {
-<<<<<<< 17c9442ca7373bbb57c3f561cd59160aa9296832
-    _xamlButton.isEnabled = enabled;
-    [super setEnabled:enabled];
-=======
     _xamlButton.IsEnabled(enabled);
->>>>>>> Switch UIKit from projections to C++/WinRT (rough draft)
+    [super setEnabled:enabled];
 }
 
 /**
@@ -578,9 +524,9 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     // ConvertUIImageToWUXMImageBrush:nil creates a valid imageBrush with null comObj
     // which isn't what we want
     if (image) {
-        WUXMImageBrush* imageBrush = XamlUtilities::ConvertUIImageToWUXMImageBrush(image);
+        Media::ImageBrush imageBrush = XamlUtilities::ConvertUIImageToWUXMImageBrush(image);
         if (imageBrush) {
-            _states[state].inspectableImage = [imageBrush comObj];
+            _states[state].inspectableImage = objcwinrt::to_insp(imageBrush);
         }
     } else {
         // this enforces the fallback of using Image of normalState
@@ -589,7 +535,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     }
 
     // Update the Xaml elements immediately, so the image proxy reflects reality
-    XamlButtonApplyVisuals([_xamlButton comObj], _currentInspectableImage(self), _currentInspectableBorderBackgroundBrush(self));
+    XamlButtonApplyVisuals(objcwinrt::to_insp(_xamlButton), _currentInspectableImage(self), _currentInspectableBorderBackgroundBrush(self));
 
     [self invalidateIntrinsicContentSize];
     [self setNeedsLayout];
@@ -660,30 +606,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 - (void)setTitle:(NSString*)title forState:(UIControlState)state {
     _states[state].title = [title copy];
 
-<<<<<<< 17c9442ca7373bbb57c3f561cd59160aa9296832
     // Update our title label immediately
     self.titleLabel.text = self.currentTitle;
-=======
-    // NOTE: check if title is nil before creating inspectableTitle
-    // createString:nil creates a valid rtString with null comObj
-    // which isn't what we want
-    if (title) {
-        RTObject* rtString = [WFPropertyValue createString:title];
-        if (rtString) {
-            _states[state].inspectableTitle = [rtString comObj];
-        }
-    } else {
-        // this enforces the fallback of using title of normalState
-        // when a title for other states does not exist
-        _states[state].inspectableTitle = nullptr;
-    }
-
-    // Update the Xaml elements immediately, so the proxies reflect reality
-    XamlButtonApplyVisuals(objcwinrt::to_insp(_xamlButton),
-                           _currentInspectableTitle(self),
-                           _currentInspectableImage(self),
-                           _currentInspectableTitleColor(self));
->>>>>>> Switch UIKit from projections to C++/WinRT (rough draft)
 
     [self invalidateIntrinsicContentSize];
     [self setNeedsLayout];
@@ -718,32 +642,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 - (void)setTitleColor:(UIColor*)color forState:(UIControlState)state {
     _states[state].textColor = color;
 
-<<<<<<< 17c9442ca7373bbb57c3f561cd59160aa9296832
     // Update our title label color
     self.titleLabel.textColor = self.currentTitleColor;
-=======
-    // NOTE: check if image is nil before creating convertedColor
-    // ConvertUIColorToWUColor:nil creates a valid WUColor with null comObj
-    // which isn't what we want
-    if (color) {
-    /*
-        WUXMSolidColorBrush* titleColorBrush = [WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor(color)];
-        if (titleColorBrush) {
-            _states[state].inspectableTitleColor = [titleColorBrush comObj];
-        }
-    */
-    } else {
-        // this enforces the fallback of using titleColor of normalState
-        // when a titleColor for other states does not exist
-        _states[state].inspectableTitleColor = nullptr;
-    }
-
-    // Update the Xaml elements immediately, so the proxies reflect reality
-    XamlButtonApplyVisuals(objcwinrt::to_insp(_xamlButton),
-                           _currentInspectableTitle(self),
-                           _currentInspectableImage(self),
-                           _currentInspectableTitleColor(self));
->>>>>>> Switch UIKit from projections to C++/WinRT (rough draft)
 
     [self invalidateIntrinsicContentSize];
     [self setNeedsLayout];

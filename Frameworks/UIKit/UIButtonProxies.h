@@ -39,19 +39,6 @@
 
 @end
 
-<<<<<<< 17c9442ca7373bbb57c3f561cd59160aa9296832
-=======
-// NOTE: current _UILabel_Proxy is merely a bridge to xaml TextBlock, which is only
-// used to in a very confined scope - that is when accessing some properties
-// of UIButton.titleLabel.  So it has very limited usage right now.
-// However, we will replace UILabel the full implemention of _UILabel in the future
-@interface _UILabel_Proxy : _UIView_Proxy
-
-- (instancetype)initWithXamlElement:(const winrt::Windows::UI::Xaml::FrameworkElement&)xamlElement font:(UIFont*)font;
-
-@end
-
->>>>>>> Switch UIKit from projections to C++/WinRT (rough draft)
 @interface _UIImageView_Proxy : _UIView_Proxy
 
 @property (nonatomic, retain) UIImage* image;
