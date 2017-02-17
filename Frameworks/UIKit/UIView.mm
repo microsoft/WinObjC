@@ -544,7 +544,7 @@ static std::string _printViewhierarchy(UIView* leafView) {
     }
 
     // Create and initialize our backing presentation layer
-    if (!xamlElement) {
+    if (!element) {
         // No Xaml element was specified, so default layer init is fine
         self->layer.attach([[[[self class] layerClass] alloc] init]);
     } else {
@@ -635,7 +635,7 @@ static std::string _printViewhierarchy(UIView* leafView) {
     // Run on the main thread because the underlying XAML objects can only be
     // called from the UI thread
     RunSynchronouslyOnMainThread(^{
-        [self _initPrivWithFrame:frame xamlElement:nil];
+        [self _initPrivWithFrame:frame xamlElement:nullptr];
 
         // Default state
         [self setOpaque:TRUE];
@@ -692,7 +692,7 @@ static std::string _printViewhierarchy(UIView* leafView) {
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
     // Init priv, get our backing Xaml element, etc.
-    [self _initPrivWithFrame:CGRectZero xamlElement:nil];
+    [self _initPrivWithFrame:CGRectZero xamlElement:nullptr];
 
     CGRect bounds;
     id boundsObj = [coder decodeObjectForKey:@"UIBounds"];

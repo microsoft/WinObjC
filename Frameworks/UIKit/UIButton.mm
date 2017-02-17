@@ -608,7 +608,6 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 
     // Update our title label immediately
     self.titleLabel.text = self.currentTitle;
-
     [self invalidateIntrinsicContentSize];
     [self setNeedsLayout];
 }
@@ -644,7 +643,6 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 
     // Update our title label color
     self.titleLabel.textColor = self.currentTitleColor;
-
     [self invalidateIntrinsicContentSize];
     [self setNeedsLayout];
 }
