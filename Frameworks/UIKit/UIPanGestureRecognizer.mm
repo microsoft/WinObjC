@@ -37,7 +37,6 @@
 static const wchar_t* TAG = L"UIPanGestureRecognizer";
 
 #define VELOCITY_THRESHOLD 50.0f
-NSArray* curPanList = nil;
 
 @implementation UIPanGestureRecognizer {
     CGPoint _translation;
@@ -409,10 +408,7 @@ static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
     const CGPoint origin = { 0, 0 };
 
     CGPoint pos = pointFromView(translation, viewAddr) - pointFromView(origin, viewAddr);
-
-    for (UIGestureRecognizer* curgesture in curPanList) {
-        ((UIPanGestureRecognizer*)curgesture)->_priv->currentTranslation = pos;
-    }
+    _priv->currentTranslation = pos;
 }
 
 - (UIView*)_touchedView {
