@@ -350,7 +350,7 @@ public:
         dwriteFactory->CreateCustomRenderingParams(defaultParams->GetGamma(),
                                                    defaultParams->GetEnhancedContrast(),
                                                    defaultParams->GetClearTypeLevel(),
-                                                   originalParams->GetPixelGeometry(),
+                                                   defaultParams->GetPixelGeometry(),
                                                    GetTextRenderingMode(),
                                                    newParams);
 
