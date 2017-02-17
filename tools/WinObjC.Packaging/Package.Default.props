@@ -56,10 +56,5 @@
     <ClangCompile>
       <InternalSystemIncludePaths>$(MSBuildThisFileDirectory)\include\;%(InternalSystemIncludePaths);</InternalSystemIncludePaths>
     </ClangCompile>
-
-    <!-- Add in the link bits only if its a "final" linked product like a dll or exe -->
-    <Link Condition="'$(ConfigurationType)' != 'StaticLibrary'">
-      <AdditionalLibraryDirectories>$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\;$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\;%(AdditionalLibraryDirectories);</AdditionalLibraryDirectories>
-    </Link>
   </ItemDefinitionGroup>
 </Project>
