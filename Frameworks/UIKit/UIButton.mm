@@ -818,8 +818,8 @@ static ComPtr<IInspectable> _currentInspectableBorderBackgroundBrush(UIButton* s
 - (void)setAdjustsImageWhenDisabled:(BOOL)shouldAdjust {
     if (shouldAdjust && !_inspectableAdjustsWhenDisabledBrush) {
         // Semi-transparent white overlay
-        WUXMSolidColorBrush* colorBrush = [WUXMSolidColorBrush makeInstanceWithColor:[WUColorHelper fromArgb:150 r:255 g:255 b:255]];
-        _inspectableAdjustsWhenDisabledBrush = [colorBrush comObj];
+        Media::SolidColorBrush colorBrush = winrt::Windows::UI::ColorHelper::FromArgb(150, 255, 255, 255);
+        _inspectableAdjustsWhenDisabledBrush = objcwinrt::to_insp(colorBrush);
         [self setNeedsLayout];
     } else if (!shouldAdjust && _inspectableAdjustsWhenDisabledBrush) {
         _inspectableAdjustsWhenDisabledBrush = nullptr;
@@ -843,8 +843,8 @@ static ComPtr<IInspectable> _currentInspectableBorderBackgroundBrush(UIButton* s
 - (void)setAdjustsImageWhenHighlighted:(BOOL)shouldAdjust {
     if (shouldAdjust && !_inspectableAdjustsWhenHighlightedBrush) {
         // Mostly transparent black overlay
-        WUXMSolidColorBrush* colorBrush = [WUXMSolidColorBrush makeInstanceWithColor:[WUColorHelper fromArgb:65 r:0 g:0 b:0]];
-        _inspectableAdjustsWhenHighlightedBrush = [colorBrush comObj];
+        Media::SolidColorBrush colorBrush = winrt::Windows::UI::ColorHelper::FromArgb(65, 0, 0, 0);
+        _inspectableAdjustsWhenHighlightedBrush = objcwinrt::to_insp(colorBrush);
         [self setNeedsLayout];
     } else if (!shouldAdjust && _inspectableAdjustsWhenHighlightedBrush) {
         _inspectableAdjustsWhenHighlightedBrush = nullptr;
