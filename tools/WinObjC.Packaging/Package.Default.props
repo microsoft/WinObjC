@@ -24,15 +24,16 @@
   </ItemGroup>
 
   <!-- Add references to package files for projects that consume this package -->
-  <ItemGroup Condition="'$(ConfigurationType)' != 'StaticLibrary'"> 
+  <ItemGroup> 
+    <!-- Add each .lib to the linker -->
+    <Link Include="@(_ImportLibsFromPackage->'%(FullPath)')"/>
+  </ItemGroup>
+  <ItemGroup Condition="'$(ConfigurationType)' != 'StaticLibrary'">
     <!-- Add references for clang -->
     <ReferenceCopyLocalPaths Include="@(_DllsFromPackage)"/>
     <Reference Include="@(_ReferencesFromPackage)">
       <Implementation>%(Filename).dll</Implementation>
     </Reference>
-
-    <!-- Add each .lib to the linker -->
-    <Link Include="@(_ImportLibsFromPackage)"/>
 
     <!-- Add references for .xaml files -->
     <ReferenceCopyLocalPaths Include="@(_XamlFilesFromPackage)">
