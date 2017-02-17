@@ -215,22 +215,22 @@ CFRange CTRunGetStringRange(CTRunRef run) {
 */
 double CTRunGetTypographicBounds(CTRunRef run, CFRange range, CGFloat* ascent, CGFloat* descent, CGFloat* leading) {
     if (run == nullptr || range.length < 0L) {
-        return 0;
+        return 0.0;
     }
 
     _CTRun* curRun = static_cast<_CTRun*>(run);
 
-    if (range.length == 0) {
+    if (range.length == 0L) {
         range = curRun->_range;
     }
 
-    if (range.location < 0) {
+    if (range.location < 0L) {
         range.length += range.location;
-        range.location = 0;
+        range.location = 0L;
     }
 
-    if ((range.location + range.length) > (curRun->_range.location + curRun->_range.length) || range.length <= 0) {
-        return 0;
+    if ((range.location + range.length) > (curRun->_range.location + curRun->_range.length) || range.length <= 0L) {
+        return 0.0;
     }
 
     if (ascent || descent || leading) {
@@ -252,13 +252,14 @@ double CTRunGetTypographicBounds(CTRunRef run, CFRange range, CGFloat* ascent, C
 
         CGFloat newAscent = -FLT_MAX;
         CGFloat newDescent = -FLT_MAX;
-        for (size_t i = range.location - curRun->_range.location; i < range.location + range.length - curRun->_range.location; ++i) {
+        for (size_t i = 0; i < range.length; ++i) {
             // CoreText ascent is equivalent of DWrite verticalOriginY, and descent the value of bottomSideBearing
             // which are in designUnits, so they need to be converted to points for CoreText
-            // The ascent and descent of the run is the max and min of the respective values per glyph
+            // The ascent and descent of the run are the max of the respective values per glyph
             newAscent = std::max(newAscent, glyphMetrics[i].verticalOriginY * scalingFactor);
             newDescent = std::max(newDescent, glyphMetrics[i].bottomSideBearing * scalingFactor);
         }
+
         if (ascent) {
             *ascent = newAscent;
         }
@@ -292,9 +293,9 @@ CGRect CTRunGetImageBounds(CTRunRef runRef, CGContextRef context, CFRange range)
         range.location = run->_dwriteGlyphRun.glyphCount - range.location;
     }
 
-    CGFloat ascent, descent, leading;
-    double width = CTRunGetTypographicBounds(runRef, range, &ascent, &descent, &leading);
-    return { CGContextGetTextPosition(context), { width, ascent - descent + leading } };
+    CGFloat ascent, descent;
+    double width = CTRunGetTypographicBounds(runRef, range, &ascent, &descent, nullptr);
+    return { CGContextGetTextPosition(context), { width, ascent - descent } };
 }
 
 /**

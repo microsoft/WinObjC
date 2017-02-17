@@ -357,9 +357,9 @@ TEST(CTLine, GetImageBounds) {
     EXPECT_EQ(CGRectNull, CTLineGetImageBounds(line, nullptr));
 
     // Size of the rect is exactly the size of the line
-    CGFloat ascent, descent, leading;
-    double width = CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
-    CGSize lineSize{ width, ascent - descent + leading };
+    CGFloat ascent, descent;
+    double width = CTLineGetTypographicBounds(line, &ascent, &descent, nullptr);
+    CGSize lineSize{ width, ascent - descent };
     CGRect lineRect{ CGPointZero, lineSize };
     EXPECT_EQ(lineRect, CTLineGetImageBounds(line, context));
 

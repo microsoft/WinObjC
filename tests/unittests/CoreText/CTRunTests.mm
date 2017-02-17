@@ -401,9 +401,9 @@ TEST(CTRun, GetImageBounds) {
     EXPECT_EQ(CGRectNull, CTRunGetImageBounds(run, nullptr, {}));
 
     // Size of the rect is exactly the size of the run
-    CGFloat ascent, descent, leading;
-    double width = CTRunGetTypographicBounds(run, {}, &ascent, &descent, &leading);
-    CGSize runSize{ width, ascent - descent + leading };
+    CGFloat ascent, descent;
+    double width = CTRunGetTypographicBounds(run, {}, &ascent, &descent, nullptr);
+    CGSize runSize{ width, ascent - descent };
     CGRect runRect{ CGPointZero, runSize };
     EXPECT_EQ(runRect, CTRunGetImageBounds(run, context, {}));
 
@@ -418,9 +418,8 @@ TEST(CTRun, GetImageBounds) {
 
     // Range works the same for ImageBounds as TypographicBounds
     CFRange range{ 1, 3 };
-    width = CTRunGetTypographicBounds(run, range, &ascent, &descent, &leading);
-    runSize = { width, ascent - descent + leading };
-    runRect = { origin, runSize };
+    width = CTRunGetTypographicBounds(run, range, &ascent, &descent, nullptr);
+    runRect.size = { width, ascent - descent };
     EXPECT_EQ(runRect, CTRunGetImageBounds(run, context, range));
 
     // And returns CGRectNull for invalid ranges
@@ -430,3 +429,18 @@ TEST(CTRun, GetImageBounds) {
     EXPECT_EQ(CGRectNull, CTRunGetImageBounds(run, context, { -1, 1 }));
 }
 
+TEST(CTRun, GetTypographicBoundsShouldHandleNonzeroLocation) {
+    CFAttributedStringRef string = (__bridge CFAttributedStringRef)getString(@"foobar");
+    auto line = woc::MakeAutoCF<CTLineRef>(CTLineCreateWithAttributedString(string));
+    CFArrayRef runsArray = CTLineGetGlyphRuns(line);
+    CTRunRef run = (CTRunRef)CFArrayGetValueAtIndex(runsArray, 0);
+    EXPECT_EQ(CGRectNull, CTRunGetImageBounds(run, nullptr, {}));
+
+    // Size of the rect is exactly the size of the run
+    CGFloat ascent, descent, leading;
+    double width = CTRunGetTypographicBounds(run, { 1, 2 }, &ascent, &descent, &leading);
+    EXPECT_NEAR(ascent, 29.1211, c_errorDelta);
+    EXPECT_NEAR(descent, 7.9492, c_errorDelta);
+    EXPECT_NEAR(leading, 0, c_errorDelta);
+    EXPECT_NEAR(width, 46.875, c_errorDelta);
+}
