@@ -23,10 +23,11 @@
 
 #import "UIViewInternal.h"
 #import "UITouchInternal.h"
-#import "UWP/WindowsUIInput.h"
 #import "RingBuffer.h"
 
 #import "StarboardXaml/DisplayProperties.h"
+
+using namespace winrt::Windows::UI;
 
 static const wchar_t* TAG = L"UITouch";
 static const bool INPUT_TRACING_ENABLED = false;
@@ -164,17 +165,17 @@ static void recordTouchVelocity(RingBuffer<TouchRecord, 50>& touchHistory, CGPoi
     return newObj;
 }
 
-- (void)_updateWithPoint:(WUIPointerPoint*)pointerPoint
-         routedEventArgs:(WUXIPointerRoutedEventArgs*)routedEventArgs
+- (void)_updateWithPoint:(const Input::PointerPoint&)pointerPoint
+         routedEventArgs:(const Xaml::Input::PointerRoutedEventArgs&)routedEventArgs
                 forPhase:(UITouchPhase)touchPhase {
     _routedEventArgs = routedEventArgs;
 
     // Grab the postion of the event
-    WFPoint* position = [pointerPoint position];
-    CGPoint point = CGPointMake(position.x, position.y);
+    auto position = pointerPoint.Position();
+    CGPoint point = CGPointMake(position.X, position.Y);
 
     // First update the tapcount
-    _tapCount = _calculateTapCount(self, point, touchPhase, pointerPoint.timestamp);
+    _tapCount = _calculateTapCount(self, point, touchPhase, pointerPoint.Timestamp());
 
     if (touchPhase == UITouchPhaseBegan && INPUT_TRACING_ENABLED) {
         TraceVerbose(TAG, L"Tap count: %d.", _tapCount);
@@ -186,7 +187,7 @@ static void recordTouchVelocity(RingBuffer<TouchRecord, 50>& touchHistory, CGPoi
     _touchX = point.x;
     _touchY = point.y;
     _phase = touchPhase;
-    _timestamp = (pointerPoint.timestamp / c_microsecondsToSeconds);
+    _timestamp = (pointerPoint.Timestamp() / c_microsecondsToSeconds);
     _pointerPoint = pointerPoint;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////

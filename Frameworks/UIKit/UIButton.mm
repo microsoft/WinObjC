@@ -35,11 +35,16 @@
 
 #import "XamlUtilities.h"
 #include "XamlControls.h"
+#import "CppWinRTHelpers.h"
 #include "../UIKit.Xaml/ObjCXamlControls.h"
 
 #include <map>
 
+<<<<<<< 17c9442ca7373bbb57c3f561cd59160aa9296832
 using namespace Microsoft::WRL;
+=======
+using namespace winrt::Windows::UI::Xaml;
+>>>>>>> Switch UIKit from projections to C++/WinRT (rough draft)
 
 static const wchar_t* TAG = L"UIButton";
 
@@ -60,7 +65,7 @@ struct ButtonState {
 };
 
 @implementation UIButton {
-    StrongId<WXCButton> _xamlButton;
+    TrivialDefaultConstructor<Controls::Button> _xamlButton;
 
     // UIControlState is a bitmask, _states is a map that maps a UIControlState to a set of values for that state.
     std::map<UIControlState, ButtonState> _states;
@@ -187,7 +192,7 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
 
 - (void)_initUIButton {
     // Store a strongly-typed backing button
-    _xamlButton = rt_dynamic_cast<WXCButton>([self xamlElement]);
+    _xamlButton = [self xamlElement].try_as<Controls::Button>();
     if (!_xamlButton) {
         FAIL_FAST();
     }
@@ -207,6 +212,21 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
     // Create our child UIImageView; its frame will be updated in layoutSubviews
     WXCImage* buttonImage = XamlControls::GetButtonImage(_xamlButton);
     _proxyImageView = [[_UIImageView_Proxy alloc] initWithXamlElement:buttonImage];
+=======
+    _xamlButton.ApplyTemplate();
+
+    auto control = _xamlButton.as<Controls::IControlProtected>();
+    auto templateImage = control.GetTemplateChild(winrt::hstring_ref(L"buttonImage")).as<Controls::Image>();
+    auto templateText = control.GetTemplateChild(winrt::hstring_ref(L"buttonText")).as<Controls::TextBlock>();
+
+    if (templateText) {
+        _proxyLabel = [[_UILabel_Proxy alloc] initWithXamlElement:templateText font:[UIFont buttonFont]];
+    }
+
+    if (templateImage) {
+        _proxyImageView = [[_UIImageView_Proxy alloc] initWithXamlElement:templateImage];
+    }
+>>>>>>> Switch UIKit from projections to C++/WinRT (rough draft)
 
     _contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     _contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
@@ -214,7 +234,7 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
     // Register for cooperative pointer events
     __weak UIButton* weakSelf = self;
     XamlControls::HookButtonPointerEvents(_xamlButton,
-                                          ^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
+                                          [weakSelf] (auto&& sender, auto&& e) {
                                               // We mark the event as handled here. The method _processPointerPressedCallback
                                               // generates a call to touchesBegan:withEvent method,
                                               // and we mark it unhandled there, and then OnPointerPressed
@@ -223,23 +243,23 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
                                               // touchesBegan:withEvent method and does not call touchesBegan:withEvent method
                                               // on the super view, then event remains marked as handled
                                               // and OnPointerPressed is not called on the backing XAML Button.
-                                              e.handled = YES;
+                                              e.Handled(true);
                                               [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseBegan];
                                           },
-                                          ^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
-                                              e.handled = YES;
+                                          [weakSelf] (auto&& sender, auto&& e) {
+                                              e.Handled(true);
                                               [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseMoved];
                                           },
-                                          ^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
-                                              e.handled = YES;
+                                          [weakSelf] (auto&& sender, auto&& e) {
+                                              e.Handled(true);
                                               [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseEnded];
                                           },
-                                          ^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
-                                              e.handled = YES;
+                                          [weakSelf] (auto&& sender, auto&& e) {
+                                              e.Handled(true);
                                               [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseCancelled];
                                           },
-                                          ^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
-                                              e.handled = YES;
+                                          [weakSelf] (auto&& sender, auto&& e) {
+                                              e.Handled(true);
                                               [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseCancelled];
                                           });
 
@@ -277,7 +297,7 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
 /**
 Microsoft Extension
 */
-- (instancetype)initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
+- (instancetype)initWithFrame:(CGRect)frame xamlElement:(const FrameworkElement&)xamlElement {
     if (self = [super initWithFrame:frame xamlElement:xamlElement]) {
         [self _initUIButton];
         self.font = [UIFont buttonFont];
@@ -289,7 +309,7 @@ Microsoft Extension
 /**
  Microsoft Extension
 */
-+ (WXFrameworkElement*)createXamlElement {
++ (FrameworkElement)createXamlElement {
     // No autorelease needed because CreateButton is autoreleased
     return XamlControls::CreateButton();
 }
@@ -305,6 +325,7 @@ Microsoft Extension
 /**
  @Status Interoperable
 */
+<<<<<<< 17c9442ca7373bbb57c3f561cd59160aa9296832
 - (void)layoutSubviews {
     // Grab our current values
     NSString* currentTitle = self.currentTitle;
@@ -324,6 +345,43 @@ Microsoft Extension
     // Update our title label
     self.titleLabel.text = currentTitle;
     self.titleLabel.textColor = self.currentTitleColor;
+=======
+- (void)setImage:(UIImage*)image forState:(UIControlState)state {
+    _states[state].image = image;
+
+    // NOTE: check if image is nil before creating inspectableImage
+    // ConvertUIImageToWUXMImageBrush:nil creates a valid imageBrush with null comObj
+    // which isn't what we want
+    if (image) {
+        Media::ImageBrush imageBrush = XamlUtilities::ConvertUIImageToWUXMImageBrush(image);
+        if (imageBrush) {
+            _states[state].inspectableImage = objcwinrt::to_insp(imageBrush);
+        }
+    } else {
+        // this enforces the fallback of using Image of normalState
+        // when a image for other states does not exis
+        _states[state].inspectableImage = nullptr;
+    }
+
+    // Update the Xaml elements immediately, so the proxies reflect reality
+    XamlButtonApplyVisuals(objcwinrt::to_insp(_xamlButton),
+                           _currentInspectableTitle(self),
+                           _currentInspectableImage(self),
+                           _currentInspectableTitleColor(self));
+
+    [self invalidateIntrinsicContentSize];
+    [self setNeedsLayout];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)layoutSubviews {
+    XamlButtonApplyVisuals(objcwinrt::to_insp(_xamlButton),
+                           _currentInspectableTitle(self),
+                           _currentInspectableImage(self),
+                           _currentInspectableTitleColor(self));
+>>>>>>> Switch UIKit from projections to C++/WinRT (rough draft)
 
     // Set frame after updating the visuals
     CGRect contentFrame = [self contentRectForBounds:self.bounds];
@@ -495,15 +553,19 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
  @Status Interoperable
 */
 - (void)setEnabled:(BOOL)enabled {
+<<<<<<< 17c9442ca7373bbb57c3f561cd59160aa9296832
     _xamlButton.isEnabled = enabled;
     [super setEnabled:enabled];
+=======
+    _xamlButton.IsEnabled(enabled);
+>>>>>>> Switch UIKit from projections to C++/WinRT (rough draft)
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)isEnabled {
-    return _xamlButton.isEnabled;
+    return _xamlButton.IsEnabled() ? YES : NO;
 }
 
 /**
@@ -598,8 +660,30 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 - (void)setTitle:(NSString*)title forState:(UIControlState)state {
     _states[state].title = [title copy];
 
+<<<<<<< 17c9442ca7373bbb57c3f561cd59160aa9296832
     // Update our title label immediately
     self.titleLabel.text = self.currentTitle;
+=======
+    // NOTE: check if title is nil before creating inspectableTitle
+    // createString:nil creates a valid rtString with null comObj
+    // which isn't what we want
+    if (title) {
+        RTObject* rtString = [WFPropertyValue createString:title];
+        if (rtString) {
+            _states[state].inspectableTitle = [rtString comObj];
+        }
+    } else {
+        // this enforces the fallback of using title of normalState
+        // when a title for other states does not exist
+        _states[state].inspectableTitle = nullptr;
+    }
+
+    // Update the Xaml elements immediately, so the proxies reflect reality
+    XamlButtonApplyVisuals(objcwinrt::to_insp(_xamlButton),
+                           _currentInspectableTitle(self),
+                           _currentInspectableImage(self),
+                           _currentInspectableTitleColor(self));
+>>>>>>> Switch UIKit from projections to C++/WinRT (rough draft)
 
     [self invalidateIntrinsicContentSize];
     [self setNeedsLayout];
@@ -634,8 +718,32 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 - (void)setTitleColor:(UIColor*)color forState:(UIControlState)state {
     _states[state].textColor = color;
 
+<<<<<<< 17c9442ca7373bbb57c3f561cd59160aa9296832
     // Update our title label color
     self.titleLabel.textColor = self.currentTitleColor;
+=======
+    // NOTE: check if image is nil before creating convertedColor
+    // ConvertUIColorToWUColor:nil creates a valid WUColor with null comObj
+    // which isn't what we want
+    if (color) {
+    /*
+        WUXMSolidColorBrush* titleColorBrush = [WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor(color)];
+        if (titleColorBrush) {
+            _states[state].inspectableTitleColor = [titleColorBrush comObj];
+        }
+    */
+    } else {
+        // this enforces the fallback of using titleColor of normalState
+        // when a titleColor for other states does not exist
+        _states[state].inspectableTitleColor = nullptr;
+    }
+
+    // Update the Xaml elements immediately, so the proxies reflect reality
+    XamlButtonApplyVisuals(objcwinrt::to_insp(_xamlButton),
+                           _currentInspectableTitle(self),
+                           _currentInspectableImage(self),
+                           _currentInspectableTitleColor(self));
+>>>>>>> Switch UIKit from projections to C++/WinRT (rough draft)
 
     [self invalidateIntrinsicContentSize];
     [self setNeedsLayout];
@@ -720,8 +828,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     // If the derived UIButton overrides this method and does not call this super implementation, then the
     // event remains *handled*, which results in the Button.Xaml not calling into its super for further processing.
     // Else, we mark the event as *not handled*, so Button.Xaml calls into its super for further event processing.
-    WUXIPointerRoutedEventArgs* routedEvent = [event _touchEvent]->_routedEventArgs;
-    [routedEvent setHandled:NO];
+    Input::PointerRoutedEventArgs routedEvent = [event _touchEvent]->_routedEventArgs;
+    routedEvent.Handled(false);
 
     if (![self isEnabled]) {
         return;

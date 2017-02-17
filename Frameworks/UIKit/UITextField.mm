@@ -31,6 +31,7 @@
 
 #import "XamlControls.h"
 #import "XamlUtilities.h"
+#import "CppWinRTHelpers.h"
 
 #import "CGContextInternal.h"
 #import <CoreGraphics/CGContext.h>
@@ -42,7 +43,8 @@
 #import <Foundation/NSNotificationCenter.h>
 #import <Foundation/NSTimer.h>
 
-#import <UWP/WindowsUIXamlControls.h>
+using namespace winrt::Windows::UI::Xaml;
+using namespace winrt::Windows::UI::Text;
 
 // Empirically discovered global minimum font size
 static const CGFloat g_minimumFontSize = 14.0f;
@@ -60,17 +62,17 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
 @implementation _UIHiddenButtonView
 @end
 
-void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlignment alignment) {
-    WXFrameworkElement* elem = XamlUtilities::FindTemplateChild(control, @"ContentElement");
+void SetTextControlContentVerticalAlignment(const Controls::Control& control, VerticalAlignment alignment) {
+    FrameworkElement elem = XamlUtilities::FindTemplateChild(control, @"ContentElement");
 
     // set verticalAligment of both content and placeholder of TextBox (or PasswordBox) to be the same value
-    if (elem != nullptr) {
-        elem.verticalAlignment = alignment;
+    if (elem) {
+        elem.VerticalAlignment(alignment);
     }
 
     elem = XamlUtilities::FindTemplateChild(control, @"PlaceholderTextContentPresenter");
-    if (elem != nullptr) {
-        elem.verticalAlignment = alignment;
+    if (elem) {
+        elem.VerticalAlignment(alignment);
     }
 }
 
@@ -94,16 +96,16 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 
     // backing xaml textbox and passwordBox
     StrongId<UIView> _subView; // Container UIView for the Xaml textbox or passwordbox
-    StrongId<WXCTextBox> _textBox; // Backing xaml textbox
-    StrongId<WXCPasswordBox> _passwordBox; // Backing xaml passwordbox
-    StrongId<WXCControl> _textContentElement; // ContentElement from the TextBox template to calculate width
-    StrongId<WXCControl> _passwordContentElement; // ContentElement from the PasswordBox template to calculate width
+    TrivialDefaultConstructor<Controls::TextBox> _textBox; // Backing xaml textbox
+    TrivialDefaultConstructor<Controls::PasswordBox> _passwordBox; // Backing xaml passwordbox
+    TrivialDefaultConstructor<Controls::Control> _textContentElement; // ContentElement from the TextBox template to calculate width
+    TrivialDefaultConstructor<Controls::Control> _passwordContentElement; // ContentElement from the PasswordBox template to calculate width
 
     // lock use to access the properties
     StrongId<NSRecursiveLock> _secureModeLock;
 
     // dummy control to steal the focus
-    StrongId<WXCButton> _dummyButton;
+    TrivialDefaultConstructor<Controls::Button> _dummyButton;
     StrongId<_UIHiddenButtonView> _hiddenView;
 }
 
@@ -116,13 +118,13 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 - (void)setText:(NSString*)text {
     [_secureModeLock lock];
     if (_secureTextMode) {
-        _passwordBox.password = [text copy];
+        _passwordBox.Password(objcwinrt::string(text));
     } else {
-        _textBox.text = [text copy];
+        _textBox.Text(objcwinrt::string(text));
         // Ensure caret at end of field in case we programmatically
         // gain focus (becomeFirstResponder) after the text is set:
-        _textBox.selectionStart = [text length];
-        _textBox.selectionLength = 0;
+        _textBox.SelectionStart([text length]);
+        _textBox.SelectionLength(0);
     }
     [_secureModeLock unlock];
 
@@ -134,9 +136,9 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 */
 - (NSString*)text {
     if (_secureTextMode) {
-        return _passwordBox.password;
+        return objcwinrt::string(_passwordBox.Password());
     } else {
-        return _textBox.text;
+        return objcwinrt::string(_textBox.Text());
     }
 }
 
@@ -161,9 +163,9 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 - (void)setPlaceholder:(NSString*)placeholder {
     [_secureModeLock lock];
     if (_secureTextMode) {
-        _passwordBox.placeholderText = [placeholder copy];
+        _passwordBox.PlaceholderText(objcwinrt::string(placeholder));
     } else {
-        _textBox.placeholderText = [placeholder copy];
+        _textBox.PlaceholderText(objcwinrt::string(placeholder));
     }
     [_secureModeLock unlock];
 }
@@ -173,9 +175,9 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 */
 - (NSString*)placeholder {
     if (_secureTextMode) {
-        return _passwordBox.placeholderText;
+        return objcwinrt::string(_passwordBox.PlaceholderText());
     } else {
-        return _textBox.placeholderText;
+        return objcwinrt::string(_textBox.PlaceholderText());
     }
 }
 
@@ -223,61 +225,69 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 }
 
 - (void)_applyFont:(UIFont*)font {
-    _passwordBox.fontFamily = _textBox.fontFamily = [WUXMFontFamily makeInstanceWithName:[font _compatibleFamilyName]];
+    Media::FontFamily fontFamily(objcwinrt::string([font _compatibleFamilyName]));
+    _textBox.FontFamily(fontFamily);
+    _passwordBox.FontFamily(fontFamily);
 
     // The following enums map from DWrite directly to Xaml
-    _passwordBox.fontStretch = _textBox.fontStretch = (WUTFontStretch)[font _fontStretch];
-    _passwordBox.fontStyle = _textBox.fontStyle = (WUTFontStyle)[font _fontStyle];
-    _passwordBox.fontSize = _textBox.fontSize = font.pointSize;
+    _textBox.FontStretch((FontStretch)[font _fontStretch]);
+    _passwordBox.FontStretch((FontStretch)[font _fontStretch]);
 
-    WUTFontWeight* weight = nil;
+    _textBox.FontStyle((FontStyle)[font _fontStyle]);
+    _passwordBox.FontStyle((FontStyle)[font _fontStyle]);
+
+    _textBox.FontSize(font.pointSize);
+    _passwordBox.FontSize(font.pointSize);
+
+    winrt::Windows::UI::Text::FontWeight weight;
 
     switch ([font _fontWeight]) {
         case DWRITE_FONT_WEIGHT_THIN:
-            weight = [WUTFontWeights thin];
+            weight = FontWeights::Thin();
             break;
         // case DWRITE_FONT_WEIGHT_EXTRA_LIGHT:
         case DWRITE_FONT_WEIGHT_ULTRA_LIGHT:
-            weight = [WUTFontWeights extraLight];
+            weight = FontWeights::ExtraLight();
             break;
         case DWRITE_FONT_WEIGHT_LIGHT:
-            weight = [WUTFontWeights light];
+            weight = FontWeights::Light();
             break;
         case DWRITE_FONT_WEIGHT_SEMI_LIGHT:
-            weight = [WUTFontWeights semiLight];
+            weight = FontWeights::SemiLight();
         // case DWRITE_FONT_WEIGHT_NORMAL:
         case DWRITE_FONT_WEIGHT_REGULAR:
-            weight = [WUTFontWeights normal];
+            weight = FontWeights::Normal();
             break;
         case DWRITE_FONT_WEIGHT_MEDIUM:
-            weight = [WUTFontWeights medium];
+            weight = FontWeights::Medium();
             break;
         // case DWRITE_FONT_WEIGHT_DEMI_BOLD:
         case DWRITE_FONT_WEIGHT_SEMI_BOLD:
-            weight = [WUTFontWeights semiBold];
+            weight = FontWeights::SemiBold();
             break;
         case DWRITE_FONT_WEIGHT_BOLD:
-            weight = [WUTFontWeights bold];
+            weight = FontWeights::Bold();
             break;
         // case DWRITE_FONT_WEIGHT_EXTRA_BOLD:
         case DWRITE_FONT_WEIGHT_ULTRA_BOLD:
-            weight = [WUTFontWeights extraBold];
+            weight = FontWeights::ExtraBold();
             break;
         // case DWRITE_FONT_WEIGHT_BLACK:
         case DWRITE_FONT_WEIGHT_HEAVY:
-            weight = [WUTFontWeights black];
+            weight = FontWeights::Black();
             break;
         // case DWRITE_FONT_WEIGHT_EXTRA_BLACK
         case DWRITE_FONT_WEIGHT_ULTRA_BLACK:
-            weight = [WUTFontWeights extraBlack];
+            weight = FontWeights::ExtraBlack();
             break;
         default:
             TraceWarning(TAG, L"Unknown font weight, using normal");
-            weight = [WUTFontWeights normal];
+            weight = FontWeights::Normal();
             break;
     }
 
-    _passwordBox.fontWeight = _textBox.fontWeight = weight;
+    _textBox.FontWeight(weight);
+    _passwordBox.FontWeight(weight);
 }
 
 /**
@@ -291,6 +301,7 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
  @Status Interoperable
 */
 - (void)setTextColor:(UIColor*)color {
+/*
     WUColor* convertedColor = XamlUtilities::ConvertUIColorToWUColor(color);
     WUXMSolidColorBrush* brush = [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
 
@@ -301,21 +312,22 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
         _textBox.foreground = brush;
     }
     [_secureModeLock unlock];
+*/
 }
 
 /**
  @Status Interoperable
 */
 - (UIColor*)textColor {
-    WUXMSolidColorBrush* colorBrush = nil;
+    Media::SolidColorBrush colorBrush = nullptr;
     if (_secureTextMode) {
-        colorBrush = rt_dynamic_cast<WUXMSolidColorBrush>(_passwordBox.foreground);
+        colorBrush = _passwordBox.Foreground().try_as<Media::SolidColorBrush>();
     } else {
-        colorBrush = rt_dynamic_cast<WUXMSolidColorBrush>(_textBox.foreground);
+        colorBrush = _textBox.Foreground().try_as<Media::SolidColorBrush>();
     }
 
-    if (colorBrush != nil) {
-        return XamlUtilities::ConvertWUColorToUIColor(colorBrush.color);
+    if (colorBrush) {
+        //return XamlUtilities::ConvertWUColorToUIColor(colorBrush.color);
     }
 
     return nil;
@@ -328,7 +340,7 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
     // In class WXCTextBox and WXCPasswordBox, there is just one ivar 'background' for both background color and background image.
     // When setting background color, clear out _backgroundImage assigning it to nil.
     _backgroundImage = nil;
-
+    /*
     WUColor* convertedColor = XamlUtilities::ConvertUIColorToWUColor(color);
     WUXMSolidColorBrush* brush = [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
 
@@ -339,21 +351,22 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
         _textBox.background = brush;
     }
     [_secureModeLock unlock];
+    */
 }
 
 /**
  @Status Interoperable
 */
 - (UIColor*)backgroundColor {
-    WUXMSolidColorBrush* colorBrush = nil;
-    if (_secureTextMode && _passwordBox.background != nullptr) {
-        colorBrush = rt_dynamic_cast<WUXMSolidColorBrush>(_passwordBox.background);
-    } else if (!_secureTextMode && _textBox.background != nullptr) {
-        colorBrush = rt_dynamic_cast<WUXMSolidColorBrush>(_textBox.background);
+    Media::SolidColorBrush colorBrush = nullptr;
+    if (_secureTextMode && _passwordBox.Background()) {
+        colorBrush = _passwordBox.Background().try_as<Media::SolidColorBrush>();
+    } else if (!_secureTextMode && _textBox.Background()) {
+        colorBrush = _textBox.Background().try_as<Media::SolidColorBrush>();
     }
 
-    if (colorBrush != nil) {
-        return XamlUtilities::ConvertWUColorToUIColor(colorBrush.color);
+    if (colorBrush) {
+        //return XamlUtilities::ConvertWUColorToUIColor(colorBrush.color);
     }
 
     return nil;
@@ -366,7 +379,7 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
     [_secureModeLock lock];
     if (!_secureTextMode) {
         // passwordBox does not support text alignment
-        _textBox.textAlignment = XamlUtilities::ConvertUITextAlignmentToWXTextAlignment(alignment);
+        _textBox.TextAlignment(XamlUtilities::ConvertUITextAlignmentToWXTextAlignment(alignment));
     } else {
         UNIMPLEMENTED_WITH_MSG("SecureTextEntry mode does not support UITextAlignment");
     }
@@ -380,7 +393,7 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
     if (_secureTextMode) {
         return UITextAlignmentLeft;
     } else {
-        return XamlUtilities::ConvertWXTextAlignmentToUITextAlignment(_textBox.textAlignment);
+        return XamlUtilities::ConvertWXTextAlignmentToUITextAlignment(_textBox.TextAlignment());
     }
 }
 
@@ -433,21 +446,21 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 
         // Measure using the password masking character, not the verbatim text
         if (self->_secureTextMode) {
-            if (_passwordContentElement == nil) {
+            if (!_passwordContentElement) {
                 // Not an error, we just might not be loaded yet.
                 [self _applyFont:_adjustedFont];
                 return;
             }
-            passwordString = [@"" stringByPaddingToLength:self.text.length withString:_passwordBox.passwordChar startingAtIndex:0];
+            passwordString = [@"" stringByPaddingToLength:self.text.length withString:objcwinrt::string(_passwordBox.PasswordChar()) startingAtIndex:0];
             elementWidth =
-                _passwordContentElement.actualWidth - _passwordContentElement.padding.left - _passwordContentElement.padding.right;
+                _passwordContentElement.ActualWidth() - _passwordContentElement.Padding().Left - _passwordContentElement.Padding().Right;
         } else {
-            if (_textContentElement == nil) {
+            if (!_textContentElement) {
                 // Not an error, we just might not be loaded yet.
                 [self _applyFont:_adjustedFont];
                 return;
             }
-            elementWidth = _textContentElement.actualWidth - _textContentElement.padding.left - _textContentElement.padding.right;
+            elementWidth = _textContentElement.ActualWidth() - _textContentElement.Padding().Left - _textContentElement.Padding().Right;
         }
 
         // Try smaller and smaller fonts until it fits within the size, or mins out
@@ -455,12 +468,12 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
             // Grab the width directly from the ContentElement, to allow the cancel button to be considered.
             if (self->_secureTextMode) {
                 CGSize size = [passwordString sizeWithFont:_adjustedFont];
-                if ((_passwordContentElement == nil) || (size.width <= elementWidth)) {
+                if (!_passwordContentElement || (size.width <= elementWidth)) {
                     break;
                 }
             } else {
                 CGSize size = [self.text sizeWithFont:_adjustedFont];
-                if ((_textContentElement == nil) || (size.width <= elementWidth)) {
+                if (!_textContentElement || (size.width <= elementWidth)) {
                     break;
                 }
             }
@@ -505,9 +518,9 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 */
 - (BOOL)isEditing {
     if (_secureTextMode) {
-        return _passwordBox.focusState != WXFocusStateUnfocused;
+        return _passwordBox.FocusState() != FocusState::Unfocused;
     } else {
-        return _textBox.focusState != WXFocusStateUnfocused;
+        return _textBox.FocusState() != FocusState::Unfocused;
     }
 }
 
@@ -574,7 +587,7 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
         } else {
             XamlUtilities::SetControlBorderStyle(_textBox, _borderStyle);
         }
-
+        /*
         WUColor* convertedColor = XamlUtilities::ConvertUIColorToWUColor(self.backgroundColor);
         WUXMSolidColorBrush* brush = [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
 
@@ -590,7 +603,7 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
             }
         }
         [_secureModeLock unlock];
-
+        */
         // If _borderStyle is not set to the UITextBorderStyleRoundedRect,
         // the custom background image associated with the text field is shown.
         // oldStyle == UITextBorderStyleRoundedRect means to
@@ -624,15 +637,15 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 
     if (_borderStyle != UITextBorderStyleRoundedRect) {
         Microsoft::WRL::ComPtr<IInspectable> inspectableNode(DisplayTexture::GetBitmapForCGImage(cgImg));
-        WUXMIBitmapSource* bitmapImageSource = XamlUtilities::CreateRtProxy([WUXMIBitmapSource class], inspectableNode.Get());
-        WUXMImageBrush* imageBrush = [WUXMImageBrush make];
-        imageBrush.imageSource = bitmapImageSource;
+        auto bitmapImageSource = objcwinrt::from_insp<Media::Imaging::BitmapSource>(inspectableNode);
+        Media::ImageBrush imageBrush;
+        imageBrush.ImageSource(bitmapImageSource);
 
         [_secureModeLock lock];
         if (_secureTextMode) {
-            _passwordBox.background = imageBrush;
+            _passwordBox.Background(imageBrush);
         } else {
-            _textBox.background = imageBrush;
+            _textBox.Background(imageBrush);
         }
         [_secureModeLock unlock];
     }
@@ -928,9 +941,9 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 
     [_secureModeLock lock];
     if (_secureTextMode) {
-        _passwordBox.inputScope = XamlUtilities::ConvertKeyboardTypeToInputScope(_keyboardType, YES);
+        _passwordBox.InputScope(XamlUtilities::ConvertKeyboardTypeToInputScope(_keyboardType, YES));
     } else {
-        _textBox.inputScope = XamlUtilities::ConvertKeyboardTypeToInputScope(_keyboardType, NO);
+        _textBox.InputScope(XamlUtilities::ConvertKeyboardTypeToInputScope(_keyboardType, NO));
     }
     [_secureModeLock unlock];
 }
@@ -1039,10 +1052,10 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
     return self;
 }
 
-- (id)initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
-    // TODO: We're passing nil to initWithFrame:xamlElement: because we have to *contain* either a TextBox or a PasswordBox.
+- (id)initWithFrame:(CGRect)frame xamlElement:(const FrameworkElement&)xamlElement {
+    // TODO: We're passing nullptr to initWithFrame:xamlElement: because we have to *contain* either a TextBox or a PasswordBox.
     // Note: Pass 'xamlElement' instead, once we move to a *single* backing Xaml element for UITextField.
-    if (self = [super initWithFrame:frame xamlElement:nil]) {
+    if (self = [super initWithFrame:frame xamlElement:nullptr]) {
         // move to top so that setting properties below can happen on xamlElement
         [self _initUITextField:xamlElement];
 
@@ -1072,9 +1085,9 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 */
 - (void)setEnabled:(BOOL)enabled {
     if (self.secureTextEntry) {
-        self->_passwordBox.isEnabled = enabled;
+        self->_passwordBox.IsEnabled(enabled);
     } else {
-        self->_textBox.isEnabled = enabled;
+        self->_textBox.IsEnabled(enabled);
     }
 }
 
@@ -1083,9 +1096,9 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 */
 - (BOOL)isEnabled {
     if (self.secureTextEntry) {
-        return self->_passwordBox.isEnabled;
+        return self->_passwordBox.IsEnabled() ? YES : NO;
     } else {
-        return self->_textBox.isEnabled;
+        return self->_textBox.IsEnabled() ? YES : NO;
     }
 }
 
@@ -1102,9 +1115,9 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 
     // Try to become first responder by setting focus
     if (self.secureTextEntry) {
-        _isFirstResponder = [self->_passwordBox focus:WXFocusStateProgrammatic];
+        _isFirstResponder = self->_passwordBox.Focus(FocusState::Programmatic);
     } else {
-        _isFirstResponder = [self->_textBox focus:WXFocusStateProgrammatic];
+        _isFirstResponder = self->_textBox.Focus(FocusState::Programmatic);
     }
 
     return _isFirstResponder;
@@ -1155,7 +1168,7 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 - (void)setContentVerticalAlignment:(UIControlContentVerticalAlignment)alignment {
     [super setContentVerticalAlignment:alignment];
 
-    WXVerticalAlignment verticalAlignment =
+    VerticalAlignment verticalAlignment =
         XamlUtilities::ConvertUIControlContentVerticalAlignmentToWXVerticalAlignment(self.contentVerticalAlignment);
 
     [_secureModeLock lock];
@@ -1226,61 +1239,59 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 
 // Kill the focus on this UITextField
 - (void)_killFocus {
-    [_dummyButton focus:WXFocusStateProgrammatic];
+    _dummyButton.Focus(FocusState::Programmatic);
 }
 
 // Handler when control GotFocus
-- (void)_setupControlGotFocusHandler:(WXCControl*)control {
-    __weak WXCControl* weakControl = control;
+- (void)_setupControlGotFocusHandler:(const Controls::Control&)control {
     __weak UITextField* weakSelf = self;
-
-    [control addGotFocusEvent:^void(RTObject* sender, WXRoutedEventArgs* e) {
+    control.GotFocus([&control, weakSelf] (auto&& sender, auto&& e) {
         __strong UITextField* strongSelf = weakSelf;
-        if (strongSelf) {
-            // when GotFocus, check delegate (if exits) to see if it allows start editing
-            if ([strongSelf.delegate respondsToSelector:@selector(textFieldShouldBeginEditing:)] &&
-                ![strongSelf.delegate textFieldShouldBeginEditing:strongSelf]) {
-                // delegate says NO, but we already got the focus at this point, need to kill the focus on this control
-                [strongSelf _killFocus];
-                return;
-            }
-
-            // no one says NO, update first responder to YES
-            strongSelf->_isFirstResponder = YES;
-
-            // more delegate update
-            if ([strongSelf.delegate respondsToSelector:@selector(textFieldDidBeginEditing:)]) {
-                [strongSelf.delegate textFieldDidBeginEditing:strongSelf];
-            }
-
-            // more notification
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [strongSelf sendActionsForControlEvents:UIControlEventEditingDidBegin];
-                [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidBeginEditingNotification object:strongSelf];
-            });
-
-            // Update the collapsed/visible state of the cancel button and adjust text size.
-            [weakControl updateLayout];
-            [strongSelf _adjustFontSizeToFitWidthOrApplyCurrentFont];
+        // when GotFocus, check delegate (if exists) to see if it allows start editing
+        if ([strongSelf.delegate respondsToSelector:@selector(textFieldShouldBeginEditing:)] &&
+            ![strongSelf.delegate textFieldShouldBeginEditing:strongSelf]) {
+            // delegate says NO, but we already got the focus at this point, need to kill the focus on this control
+            [strongSelf _killFocus];
+            return;
         }
-    }];
+
+        // no one says NO, update first responder to YES
+        strongSelf->_isFirstResponder = YES;
+
+        // more delegate update
+        if ([strongSelf.delegate respondsToSelector:@selector(textFieldDidBeginEditing:)]) {
+            [strongSelf.delegate textFieldDidBeginEditing:strongSelf];
+        }
+
+        // more notification
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [strongSelf sendActionsForControlEvents:UIControlEventEditingDidBegin];
+            [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidBeginEditingNotification object:strongSelf];
+        });
+
+        // Update the collapsed/visible state of the cancel button and adjust text size.
+        control.UpdateLayout();
+        [strongSelf _adjustFontSizeToFitWidthOrApplyCurrentFont];
+    });
 }
 
 // Handler when control LostFocus
-- (void)_setupControlLostFocusHandler:(WXCControl*)control {
-    __weak WXCControl* weakControl = control;
+- (void)_setupControlLostFocusHandler:(const Controls::Control&)control {
+    auto weakControl = winrt::make_weak(control);
     __weak UITextField* weakSelf = self;
 
-    [control addLostFocusEvent:^void(RTObject* sender, WXRoutedEventArgs* e) {
+    control.LostFocus([weakSelf, weakControl] (auto&& sender, auto &&e) {
         __strong UITextField* strongSelf = weakSelf;
-        if (strongSelf) {
+        auto strongControl = weakControl.get();
+
+        if (strongSelf && strongControl) {
             // when LostFocus, check delegate (if exits) to see if it allows end Editing
             if ([strongSelf.delegate respondsToSelector:@selector(textFieldShouldEndEditing:)] &&
                 ![strongSelf.delegate textFieldShouldEndEditing:strongSelf]) {
                 // delegate does not allow edting to be ended, but we already lost the focus
                 // we need re-setting the focus back. it will trigger GotFocusEvent again on this control
                 // and then it will update the firstResponder status as YES
-                [weakControl focus:WXFocusStateProgrammatic];
+                strongControl.Focus(FocusState::Programmatic);
                 return;
             }
 
@@ -1299,20 +1310,20 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
             });
 
             // Update the collapsed/visible state of the cancel button and adjust text size.
-            [weakControl updateLayout];
+            strongControl.UpdateLayout();
             [strongSelf _adjustFontSizeToFitWidthOrApplyCurrentFont];
         }
-    }];
+    });
 }
 
 // Handler when KeyDown
-- (void)_setupControlKeyDownHandler:(WXCControl*)control {
+- (void)_setupControlKeyDownHandler:(const Controls::Control&)control {
     __weak UITextField* weakSelf = self;
 
     // hooking up keydown event to process ENTER key
-    [control addKeyDownEvent:^void(RTObject* sender, WUXIKeyRoutedEventArgs* e) {
+    control.KeyDown([weakSelf] (auto&& sender, auto&& e) {
         __strong UITextField* strongSelf = weakSelf;
-        if (strongSelf && e.key == WSVirtualKeyEnter) {
+        if (strongSelf && e.Key() == winrt::Windows::System::VirtualKey::Enter) {
             BOOL dismissKeyboard = TRUE;
 
             // check with delegate if should resign firstResponder and dismiss the keyboard
@@ -1324,19 +1335,21 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
                 [strongSelf resignFirstResponder];
             }
 
-            e.handled = YES;
+            e.Handled(true);
         } else {
-            e.handled = NO;
+            e.Handled(false);
         }
-    }];
+    });
 }
 
 // Helper to initialize textbox
-- (void)_initTextBox:(WXFrameworkElement*)xamlElement {
-    if (xamlElement != nil && [xamlElement isKindOfClass:[WXCTextBox class]]) {
-        _textBox = static_cast<WXCTextBox*>(xamlElement);
-    } else {
-        _textBox = [WXCTextBox make];
+- (void)_initTextBox:(const FrameworkElement&)xamlElement {
+    if (xamlElement) {
+        _textBox = xamlElement.try_as<Controls::TextBox>();
+    }
+
+    if (!_textBox) {
+        _textBox = Controls::TextBox();
     }
 
     // Remove the old subview (if it exists)
@@ -1350,47 +1363,51 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
     // if passwordbox exits, need to transfer the properties that we set on passwordbox to textbox
     if (_passwordBox != nil) {
         if (_backgroundImage == nil || self.borderStyle == UITextBorderStyleRoundedRect) {
+        /*
             WUColor* convertedColor = XamlUtilities::ConvertUIColorToWUColor(self.backgroundColor);
             WUXMSolidColorBrush* brush = [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
             _textBox.background = brush;
+        */
         }
 
+        /*
         WUColor* convertedTextColor = XamlUtilities::ConvertUIColorToWUColor(self.textColor);
         WUXMSolidColorBrush* textBrush = [WUXMSolidColorBrush makeInstanceWithColor:convertedTextColor];
         _textBox.foreground = textBrush;
+        */
 
-        _textBox.textAlignment = XamlUtilities::ConvertUITextAlignmentToWXTextAlignment(self.textAlignment);
-        _textBox.inputScope = XamlUtilities::ConvertKeyboardTypeToInputScope(_keyboardType, NO);
-        _textBox.text = self.text;
-        _textBox.placeholderText = self.placeholder;
-        _textBox.isSpellCheckEnabled = (self.spellCheckingType == UITextSpellCheckingTypeYes);
+        _textBox.TextAlignment(XamlUtilities::ConvertUITextAlignmentToWXTextAlignment(self.textAlignment));
+        _textBox.InputScope(XamlUtilities::ConvertKeyboardTypeToInputScope(_keyboardType, NO));
+        _textBox.Text(objcwinrt::string(self.text));
+        _textBox.PlaceholderText(objcwinrt::string(self.placeholder));
+        _textBox.IsSpellCheckEnabled(self.spellCheckingType == UITextSpellCheckingTypeYes);
 
         // clean up passwordbox after transfering the properties
-        self->_passwordBox = nil;
+        self->_passwordBox = nullptr;
     }
 
     // setting up addtional textbox properties in loaded listener that requires looking into control template
     __weak UITextField* weakSelf = self;
-    [self->_textBox addLoadedEvent:^void(RTObject* sender, WXRoutedEventArgs* e) {
+    self->_textBox.Loaded([weakSelf] (auto&& sender, auto&& e) {
         __strong UITextField* strongSelf = weakSelf;
         XamlUtilities::SetControlBorderStyle(strongSelf->_textBox, strongSelf.borderStyle);
-        WXVerticalAlignment verticalAlignment =
+        VerticalAlignment verticalAlignment =
             XamlUtilities::ConvertUIControlContentVerticalAlignmentToWXVerticalAlignment(strongSelf.contentVerticalAlignment);
         SetTextControlContentVerticalAlignment(strongSelf->_textBox, verticalAlignment);
 
         // retrieve the ContentElement from the template
-        WXFrameworkElement* frameworkElement = XamlUtilities::FindTemplateChild(strongSelf->_textBox, @"ContentElement");
-        strongSelf->_textContentElement = (frameworkElement != nullptr) ? rt_dynamic_cast<WXCControl>(frameworkElement) : nullptr;
+        FrameworkElement frameworkElement = XamlUtilities::FindTemplateChild(strongSelf->_textBox, @"ContentElement");
+        strongSelf->_textContentElement = frameworkElement ? frameworkElement.as<Controls::Control>() : nullptr;
 
-        if (strongSelf->_textContentElement == nullptr) {
+        if (!strongSelf->_textContentElement) {
             TraceWarning(TAG, L"Could not find ContentElement in control template: adjustsFontSizeToFitWidth will not function");
         }
 
         [strongSelf _adjustFontSizeToFitWidthOrApplyCurrentFont];
-    }];
+    });
 
     // set up text change event handler
-    [self->_textBox addTextChangedEvent:^void(RTObject* sender, WXRoutedEventArgs* e) {
+    self->_textBox.TextChanged([weakSelf] (auto&& sender, auto&& e) {
         __strong UITextField* strongSelf = weakSelf;
         if (strongSelf) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -1398,7 +1415,7 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
                 [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidChangeNotification object:strongSelf];
             });
         }
-    }];
+    });
 
     // set up focus and keydown handlers
     [self _setupControlGotFocusHandler:_textBox];
@@ -1407,8 +1424,8 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
 }
 
 // Helper to Initialize passwordBox
-- (void)_initPasswordBox:(WXFrameworkElement*)xamlElement {
-    _passwordBox = [WXCPasswordBox make];
+- (void)_initPasswordBox:(const FrameworkElement&)xamlElement {
+    _passwordBox = Controls::PasswordBox();
 
     // set up focus and keydown handlers
     [self _setupControlGotFocusHandler:_passwordBox];
@@ -1424,78 +1441,82 @@ void SetTextControlContentVerticalAlignment(WXCControl* control, WXVerticalAlign
     [self addSubview:_subView];
 
     // if textbox exists, need to transfer the properties from textbox to passwordbox
-    if (_textBox != nil) {
+    if (_textBox) {
         if (_backgroundImage == nil || self.borderStyle == UITextBorderStyleRoundedRect) {
+            /*
             WUColor* convertedColor = XamlUtilities::ConvertUIColorToWUColor(self.backgroundColor);
             WUXMSolidColorBrush* brush = [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
             _passwordBox.background = brush;
+            */
         }
 
+        /*
         WUColor* convertedTextColor = XamlUtilities::ConvertUIColorToWUColor(self.textColor);
         WUXMSolidColorBrush* textBrush = [WUXMSolidColorBrush makeInstanceWithColor:convertedTextColor];
         _passwordBox.foreground = textBrush;
         // passwordBox does not support textAlignment
+        */
 
         // border manipulate the control tempate and must be done after loaded
         XamlUtilities::SetControlBorderStyle(_passwordBox, self.borderStyle);
-        WXVerticalAlignment verticalAlignment =
+        VerticalAlignment verticalAlignment =
             XamlUtilities::ConvertUIControlContentVerticalAlignmentToWXVerticalAlignment(self.contentVerticalAlignment);
         SetTextControlContentVerticalAlignment(_passwordBox, verticalAlignment);
-        _passwordBox.inputScope = XamlUtilities::ConvertKeyboardTypeToInputScope(_keyboardType, YES);
+        _passwordBox.InputScope(XamlUtilities::ConvertKeyboardTypeToInputScope(_keyboardType, YES));
 
-        _passwordBox.password = self.text;
-        _passwordBox.placeholderText = self.placeholder;
+        _passwordBox.Password(objcwinrt::string(self.text));
+        _passwordBox.PlaceholderText(objcwinrt::string(self.placeholder));
 
         // clean up textbox after transfering the properties
-        _textBox = nil;
+        _textBox = nullptr;
     }
 
     // set up password change handler
     __weak UITextField* weakSelf = self;
 
-    [self->_passwordBox addLoadedEvent:^void(RTObject* sender, WXRoutedEventArgs* e) {
+    self->_passwordBox.Loaded([weakSelf] (auto&& sender, auto&& e) {
         __strong UITextField* strongSelf = weakSelf;
         XamlUtilities::SetControlBorderStyle(strongSelf->_passwordBox, strongSelf.borderStyle);
-        WXVerticalAlignment verticalAlignment =
+        VerticalAlignment verticalAlignment =
             XamlUtilities::ConvertUIControlContentVerticalAlignmentToWXVerticalAlignment(strongSelf.contentVerticalAlignment);
         SetTextControlContentVerticalAlignment(strongSelf->_passwordBox, verticalAlignment);
 
         // retrieve the ContentElement from the template
-        WXFrameworkElement* frameworkElement = XamlUtilities::FindTemplateChild(strongSelf->_passwordBox, @"ContentElement");
-        strongSelf->_textContentElement = (frameworkElement != nullptr) ? rt_dynamic_cast<WXCControl>(frameworkElement) : nullptr;
+        FrameworkElement frameworkElement = XamlUtilities::FindTemplateChild(strongSelf->_passwordBox, @"ContentElement");
+        strongSelf->_textContentElement = frameworkElement ? frameworkElement.as<Controls::Control>() : nullptr;
 
-        if (strongSelf->_textContentElement == nullptr) {
+        if (!strongSelf->_textContentElement) {
             TraceWarning(TAG, L"Could not find ContentElement in control template: adjustsFontSizeToFitWidth will not function");
         }
 
         [strongSelf _adjustFontSizeToFitWidthOrApplyCurrentFont];
-    }];
+    });
 
-    [self->_passwordBox addPasswordChangedEvent:^void(RTObject* sender, WXRoutedEventArgs* e) {
+    self->_passwordBox.PasswordChanged([weakSelf] (auto&& sender, auto&& e) {
         __strong UITextField* strongSelf = weakSelf;
         if (strongSelf) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [strongSelf sendActionsForControlEvents:UIControlEventEditingChanged];
             });
         }
-    }];
+    });
 }
 
 // Main entrance to initialize TextField
-- (void)_initUITextField:(WXFrameworkElement*)xamlElement {
+- (void)_initUITextField:(const FrameworkElement&)xamlElement {
     self->_secureModeLock = [NSRecursiveLock new];
 
     // creating dummy button and hidden view so that it can be used to steal/kill the focus for this UITextField
-    self->_dummyButton = [WXCButton make];
-    self->_dummyButton.visibility = WXVisibilityVisible;
-    self->_dummyButton.isEnabled = YES;
-    self->_dummyButton.isTabStop = YES;
+    self->_dummyButton = Controls::Button();
+    self->_dummyButton.Visibility(Visibility::Visible);
+    self->_dummyButton.IsEnabled(true);
+    self->_dummyButton.IsTabStop(true);
 
     _hiddenView = [[_UIHiddenButtonView alloc] initWithFrame:CGRectZero xamlElement:_dummyButton];
     [self addSubview:_hiddenView];
 
     if (self->_secureTextMode) {
-        [self _initPasswordBox:nil];
+        [self _initPasswordBox:nullptr];
     } else {
         [self _initTextBox:xamlElement];
     }

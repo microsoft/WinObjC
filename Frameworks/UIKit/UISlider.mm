@@ -27,29 +27,33 @@
 
 #import "UIGestureRecognizerInternal.h"
 
-#import "UWP/WindowsUIXamlControls.h"
+#include "COMIncludes.h"
+#import <winrt/Windows.UI.Xaml.Controls.h>
+#include "COMIncludes_End.h"
+
+using namespace winrt::Windows::UI::Xaml;
 
 static const double c_defaultStepFrequency = 0.1;
 
 @implementation UISlider {
     BOOL _continuous;
-    StrongId<WXCSlider> _xamlSlider;
+    TrivialDefaultConstructor<Controls::Slider> _xamlSlider;
 
-    EventRegistrationToken _manipulationStartingEvent;
-    EventRegistrationToken _manipulationCompletedEvent;
-    EventRegistrationToken _valueChangedEvent;
+    winrt::event_token _manipulationStartingEvent;
+    winrt::event_token _manipulationCompletedEvent;
+    winrt::event_token _valueChangedEvent;
 }
 
 - (void)_initUISlider {
     // Store a strongly-typed backing slider
-    _xamlSlider = rt_dynamic_cast<WXCSlider>([self xamlElement]);
+    _xamlSlider = [self xamlElement].try_as<Controls::Slider>();
     if (!_xamlSlider) {
         FAIL_FAST();
     }
 
-    _xamlSlider.maximum = 1.0f;
-    _xamlSlider.minimum = 0.0f;
-    _xamlSlider.value = 0.0f;
+    _xamlSlider.Maximum(1.0f);
+    _xamlSlider.Minimum(0.0f);
+    _xamlSlider.Value(0.0f);
 
     [self _updateStepFrequency];
     [self setContinuous:YES];
@@ -59,10 +63,10 @@ static const double c_defaultStepFrequency = 0.1;
 - (void)_updateStepFrequency {
     // The frame size, minimumValue and maximumValue of UISlider can change dynamically, so we need to update the step frequency when they
     // do.
-    if ((_xamlSlider.maximum - _xamlSlider.minimum) > 0 && self.frame.size.width > 0) {
-        _xamlSlider.stepFrequency = (_xamlSlider.maximum - _xamlSlider.minimum) / (self.frame.size.width);
+    if ((_xamlSlider.Maximum() - _xamlSlider.Minimum()) > 0 && self.frame.size.width > 0) {
+        _xamlSlider.StepFrequency((_xamlSlider.Maximum() - _xamlSlider.Minimum()) / (self.frame.size.width));
     } else {
-        _xamlSlider.stepFrequency = c_defaultStepFrequency;
+        _xamlSlider.StepFrequency(c_defaultStepFrequency);
     }
 }
 
@@ -84,14 +88,14 @@ static const double c_defaultStepFrequency = 0.1;
 
         if ([coder containsValueForKey:@"UIValue"]) {
             id valueStr = [coder decodeObjectForKey:@"UIValue"];
-            _xamlSlider.value = [valueStr floatValue];
+            _xamlSlider.Value([valueStr floatValue]);
         }
 
         if ([coder containsValueForKey:@"UIMaxValue"]) {
-            _xamlSlider.maximum = [[coder decodeObjectForKey:@"UIMaxValue"] floatValue];
+            _xamlSlider.Maximum([[coder decodeObjectForKey:@"UIMaxValue"] floatValue]);
         }
         if ([coder containsValueForKey:@"UIMinValue"]) {
-            _xamlSlider.minimum = [[coder decodeObjectForKey:@"UIMinValue"] floatValue];
+            _xamlSlider.Minimum([[coder decodeObjectForKey:@"UIMinValue"] floatValue]);
         }
     }
 
@@ -112,7 +116,7 @@ static const double c_defaultStepFrequency = 0.1;
 /**
  Microsoft Extension
 */
-- (instancetype)initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
+- (instancetype)initWithFrame:(CGRect)frame xamlElement:(const FrameworkElement&)xamlElement {
     if (self = [super initWithFrame:frame xamlElement:xamlElement]) {
         [self _initUISlider];
     }
@@ -123,36 +127,33 @@ static const double c_defaultStepFrequency = 0.1;
 /**
  Microsoft Extension
 */
-+ (WXFrameworkElement*)createXamlElement {
-    // No autorelease needed because we compile with ARC
-    return [WXCSlider make];
++ (FrameworkElement)createXamlElement {
+    return Controls::Slider();
 }
 
 /**
  @Status Interoperable
 */
 - (float)value {
-    return _xamlSlider.value;
+    return _xamlSlider.Value();
 }
 
 /**
  @Status Interoperable
 */
 - (void)setMinimumValue:(float)value {
-    _xamlSlider.minimum = value;
+    _xamlSlider.Minimum(value);
     [self _updateStepFrequency];
 }
 
 - (void)_registerForEventsWithXaml {
-    __weak UISlider* weakSelf = self;
-    _valueChangedEvent = [_xamlSlider addValueChangedEvent:^void(RTObject* sender, WXRoutedEventArgs* e) {
-        __strong UISlider* strongSelf = weakSelf;
-        if (strongSelf && strongSelf->_continuous) {
-            [strongSelf _sendValueChangedEvents];
+    _valueChangedEvent = _xamlSlider.ValueChanged([&self] (auto&& sender, auto&& e) {
+        if (self->_continuous) {
+            [self _sendValueChangedEvents];
         }
-    }];
+    });
 
-    _xamlSlider.manipulationMode = WUXIManipulationModesAll;
+    _xamlSlider.ManipulationMode(Input::ManipulationModes::All);
 
     // The value of a UISlider on ios cannot be changed by clicking anywhere on the track.
     // The thumb has to be hold and dragged.
@@ -161,23 +162,21 @@ static const double c_defaultStepFrequency = 0.1;
     // the track and not by dragging the thumb.
     // TODO: 7877568- Move to handling pointer events when available with projections, instead of manipulation events.
     _manipulationStartingEvent =
-        [_xamlSlider addManipulationStartingEvent:^void(RTObject* sender, WUXIManipulationStartingRoutedEventArgs* e) {
-            __strong UISlider* strongSelf = weakSelf;
-            if (strongSelf && (strongSelf->_continuous == NO)) {
-                [strongSelf _sendValueChangedEvents];
+        _xamlSlider.ManipulationStarting([&self] (auto&& sender, auto&& e) {
+            if (self->_continuous == NO) {
+                [self _sendValueChangedEvents];
             }
-        }];
+        });
 
-    // ManipulationCompletedEvent will be fired when dragging has been completed
+    // ManipulationCompleted will be fired when dragging has been completed
     // This allows us to fire UIControlEventValueChanged event and UIControlEventTouchUpInside event
     _manipulationCompletedEvent =
-        [_xamlSlider addManipulationCompletedEvent:^void(RTObject* sender, WUXIManipulationCompletedRoutedEventArgs* e) {
-            __strong UISlider* strongSelf = weakSelf;
-            if (strongSelf && (strongSelf->_continuous == NO)) {
-                [strongSelf _sendValueChangedEvents];
-                [strongSelf sendActionsForControlEvents:UIControlEventTouchUpInside];
+        _xamlSlider.ManipulationCompleted([&self] (auto&& sender, auto&& e) {
+            if (self->_continuous == NO) {
+                [self _sendValueChangedEvents];
+                [self sendActionsForControlEvents:UIControlEventTouchUpInside];
             }
-        }];
+        });
 }
 
 - (void)_sendValueChangedEvents {
@@ -187,14 +186,14 @@ static const double c_defaultStepFrequency = 0.1;
  @Status Interoperable
 */
 - (float)minimumValue {
-    return _xamlSlider.minimum;
+    return _xamlSlider.Minimum();
 }
 
 /**
  @Status Interoperable
 */
 - (void)setMaximumValue:(float)value {
-    _xamlSlider.maximum = value;
+    _xamlSlider.Maximum(value);
     [self _updateStepFrequency];
 }
 
@@ -202,7 +201,7 @@ static const double c_defaultStepFrequency = 0.1;
  @Status Interoperable
 */
 - (float)maximumValue {
-    return _xamlSlider.maximum;
+    return _xamlSlider.Maximum();
 }
 
 /**
@@ -217,7 +216,7 @@ static const double c_defaultStepFrequency = 0.1;
  @Notes animation is not supported
 */
 - (void)setValue:(float)value animated:(BOOL)animated {
-    _xamlSlider.value = value;
+    _xamlSlider.Value(value);
 }
 
 /**
@@ -256,9 +255,9 @@ static const double c_defaultStepFrequency = 0.1;
 }
 
 - (void)dealloc {
-    [_xamlSlider removeManipulationStartingEvent:_manipulationStartingEvent];
-    [_xamlSlider removeManipulationCompletedEvent:_manipulationCompletedEvent];
-    [_xamlSlider removeValueChangedEvent:_valueChangedEvent];
+    _xamlSlider.ManipulationStarting(_manipulationStartingEvent);
+    _xamlSlider.ManipulationCompleted(_manipulationCompletedEvent);
+    _xamlSlider.ValueChanged(_valueChangedEvent);
 }
 
 /**

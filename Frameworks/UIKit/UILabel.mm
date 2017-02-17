@@ -31,7 +31,11 @@
 #import "XamlControls.h"
 #import "XamlUtilities.h"
 
+<<<<<<< 17c9442ca7373bbb57c3f561cd59160aa9296832
 static const wchar_t* TAG = L"UILabel";
+=======
+using namespace winrt::Windows::UI::Xaml;
+>>>>>>> Switch UIKit from projections to C++/WinRT (rough draft)
 
 @implementation UILabel {
     idretaintype(NSString) _text;
@@ -50,7 +54,7 @@ static const wchar_t* TAG = L"UILabel";
     BOOL _isDisabled;
     BOOL _isHighlighted;
     UIBaselineAdjustment _baselineAdjustment;
-    StrongId<WXCTextBlock> _textBlock;
+    TrivialDefaultConstructor<Controls::TextBlock> _textBlock;
 }
 
 - (float)_searchAdjustedFontSizeToFit {
@@ -87,6 +91,7 @@ static const wchar_t* TAG = L"UILabel";
 - (void)_updateTextBlockWithFont:(UIFont*)font {
     [_textBlock setFontSize:[font pointSize]];
     [_textBlock setLineHeight:[font ascender] - [font descender]];
+
     WUTFontWeight* fontWeight = [WUTFontWeight new];
     fontWeight.weight = static_cast<unsigned short>([font _fontWeight]);
     [_textBlock setFontWeight:fontWeight];
@@ -184,8 +189,8 @@ static const wchar_t* TAG = L"UILabel";
     // it will expose its backing TextBlock.  For now, we'll have to
     // know that it's truly backed by a Grid and we must reach down
     // to retrieve its TextBlock.
-    WXCGrid* labelGrid = rt_dynamic_cast<WXCGrid>([self xamlElement]);
-    WXCTextBlock* textBlock = nil;
+    auto labelGrid = [self xamlElement].try_as<Controls::Grid>();
+    Controls::TextBlock textBlock = nullptr;
     if (labelGrid) {
         textBlock = XamlControls::GetLabelTextBlock(labelGrid);
     }
@@ -257,7 +262,7 @@ static const wchar_t* TAG = L"UILabel";
 /**
  Microsoft Extension
 */
-- (instancetype)initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
+- (instancetype)initWithFrame:(CGRect)frame xamlElement:(const FrameworkElement&)xamlElement {
     if (self = [super initWithFrame:frame xamlElement:xamlElement]) {
         [self _initUILabel];
         [self _applyPropertesOnTextBlock];
@@ -269,8 +274,7 @@ static const wchar_t* TAG = L"UILabel";
 /**
  Microsoft Extension
 */
-+ (WXFrameworkElement*)createXamlElement {
-    // No autorelease needed because CreateLabel is autoreleased
++ (FrameworkElement)createXamlElement {
     return XamlControls::CreateLabel();
 }
 

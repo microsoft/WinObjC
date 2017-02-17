@@ -24,6 +24,7 @@
 
 #include "COMIncludes.h"
 #import "winrt/Windows.UI.Core.h"
+#import "winrt/Windows.Devices.Input.h"
 #include "COMIncludes_End.h"
 
 static const wchar_t* TAG = L"DisplayProperties";
@@ -90,12 +91,12 @@ float ScreenScale() {
             prevHeight = [UIApplication displayMode].fixedHeight;
 
             float maxDimension = 0;
-            NSArray* pointerDevices = [WDIPointerDevice getPointerDevices];
+            auto pointerDevices = winrt::Windows::Devices::Input::PointerDevice::GetPointerDevices();
 
-            for (int i = 0; i < [pointerDevices count]; i++) {
-                WFRect* screenRect = [(WDIPointerDevice*)[pointerDevices objectAtIndex:i] screenRect];
+            for (int i = 0; i < pointerDevices.Size(); i++) {
+                auto screenRect = pointerDevices.GetAt(i).ScreenRect();
                 float hostScreenScale = [UIApplication displayMode].hostScreenScale;
-                maxDimension = std::max(maxDimension, std::max(screenRect.width * hostScreenScale, screenRect.height * hostScreenScale));
+                maxDimension = std::max(maxDimension, std::max(screenRect.Width * hostScreenScale, screenRect.Height * hostScreenScale));
             }
 
             // We can't know whether the app will be rotated, or moved from screen to screen. We have to take the

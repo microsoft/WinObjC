@@ -19,6 +19,10 @@
 #import <UIKit/UIViewControllerAnimatedTransitioning.h>
 #import <UIKit/UIViewControllerContextTransitioning.h>
 
+#include "COMIncludes.h"
+#import <winrt/Windows.UI.Xaml.Controls.h>
+#include "COMIncludes_End.h"
+
 enum ControllerVisibiltyState {
     controllerNotVisible,
     controllerWillAppear,
@@ -36,7 +40,6 @@ enum ControllerVisibiltyState {
 @class UISearchDisplayController;
 @class UIStoryboard;
 @class UITabBarItem;
-@class WXCPage;
 
 struct UIViewControllerPriv {
     idretaintype(UINavigationItem) navigationItem;
@@ -77,8 +80,10 @@ struct UIViewControllerPriv {
     idretaintype(UIView) view;
     idretaintype(NSMutableArray) _childViewControllers;
 
-    idretaintype(WXCPage) _page;
+    winrt::Windows::UI::Xaml::Controls::Page _page;
     idretaintype(NSString) _xamlClassName;
+
+    UIViewControllerPriv() : _page(nullptr) { }
 };
 
 @interface _UIViewControllerContextTransitioning : NSObject <UIViewControllerContextTransitioning>

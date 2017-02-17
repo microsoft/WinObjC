@@ -69,11 +69,15 @@
 #import "UIResponderInternal.h"
 #import "NSCoderInternal.h"
 
-#import "UWP/WindowsUIXaml.h"
-#import "UWP/WindowsFoundation.h"
+#include "COMIncludes.h"
+#import <winrt/Windows.UI.Xaml.h>
+#import <winrt/Windows.UI.Xaml.Navigation.h>
+#include "COMIncludes_End.h"
 
 #import <ErrorHandling.h>
 #import <unordered_map>
+
+using namespace winrt::Windows::UI::Xaml;
 
 extern BOOL g_presentingAnimated;
 
@@ -276,6 +280,10 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 
 // Proxy class that wraps up parent INavigationEventArgs which is later used to trigger OnNavigatedTo in viewWillAppear
 class EventArgs : public ABI::Windows::UI::Xaml::Navigation::INavigationEventArgs {
+public:
+    EventArgs() {
+    }
+
     virtual HRESULT STDMETHODCALLTYPE QueryInterface(
         /* [in] */ REFIID riid,
         /* [iid_is][out] */ _COM_Outptr_ void __RPC_FAR* __RPC_FAR* ppvObject) {
@@ -1739,12 +1747,12 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
  @Status Interoperable
 */
 - (void)viewWillAppear:(BOOL)isAnimated {
-    if (priv->_page != nil) {
-        EventArgs* args = new EventArgs();
-        WUXNNavigationEventArgs* navArgs = NSAllocateObject([WUXNNavigationEventArgs class], 0, NULL);
-        [navArgs setComObj:args];
+    if (priv->_page) {
+        static EventArgs eventArgs;
+        Navigation::NavigationEventArgs navArgs = nullptr;
+        winrt::attach(navArgs, reinterpret_cast<winrt::ABI::Windows::UI::Xaml::Navigation::INavigationEventArgs*>(&eventArgs));
 
-        [priv->_page onNavigatedTo:navArgs];
+        priv->_page.OnNavigatedTo(navArgs);
     }
 }
 
@@ -1829,7 +1837,11 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     [_pageMappings setObject:self forKey:(id)(void*)pageObj.Get()];
 
     // Create a template UIView
-    priv->_page = [WXCPage createWith:pageObj.Get()];
+    winrt::abi_default_interface<Controls::Page>* pageAbi;
+    if (SUCCEEDED(pageObj.CopyTo(&pageAbi))) {
+        winrt::attach(priv->_page, pageAbi);
+    }
+
     UIView* view = [[[UIEmptyView alloc] initWithFrame:frame xamlElement:priv->_page] autorelease];
     [view setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
     [self setView:view];
@@ -1844,7 +1856,8 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
         const char* propName = property_getName(curProp);
         if (propName) {
             NSString* propNameString = [NSString stringWithCString:propName];
-            RTObject* obj = [priv->_page findName:propNameString];
+            auto propNameHString = Strings::NarrowToWide<HSTRING>(propName);
+            auto obj = priv->_page.FindName(winrt::hstring_ref(propNameHString.Get()));
             UIView* control = XamlUtilities::GenerateUIKitControlFromXamlType(obj);
             if (control != nil) {
                 [self setValue:control forKey:propNameString];

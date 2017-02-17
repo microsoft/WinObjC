@@ -27,21 +27,30 @@
 #include "UIKit/UIApplication.h"
 #include "UIKit/UIColor.h"
 #include "UIViewInternal.h"
+#include "StringHelpers.h"
 
 #include "UIKit/UIWebView.h"
-#include "UWP/WindowsUIXamlControls.h"
+
+#include "COMIncludes.h"
+#import <winrt/Windows.UI.Xaml.Controls.h>
+#import <winrt/Windows.Web.Http.h>
+#include "COMIncludes_End.h"
 
 #include <algorithm>
+
+using namespace winrt::Windows::UI::Xaml;
+using namespace winrt::Windows::Web;
+using namespace winrt::Windows::Foundation;
 
 @implementation UIWebView {
     id _delegate;
     idretaintype(NSURLRequest) _request;
     bool _isLoading;
     StrongId<UIScrollView> _scrollView;
-    StrongId<WXCWebView> _xamlWebControl;
-    EventRegistrationToken _xamlLoadCompletedEventCookie;
-    EventRegistrationToken _xamlLoadStartedEventCookie;
-    EventRegistrationToken _xamlUnsupportedUriSchemeEventCookie;
+    TrivialDefaultConstructor<Controls::WebView> _xamlWebControl;
+    winrt::event_token _xamlLoadCompletedEventCookie;
+    winrt::event_token _xamlLoadStartedEventCookie;
+    winrt::event_token _xamlUnsupportedUriSchemeEventCookie;
 }
 
 /**
@@ -81,88 +90,94 @@
     NSURL* url = [request URL];
     NSString* urlStr = [url absoluteString];
 
-    StrongId<WWHHttpMethod*> method;
-    StrongId<WWHHttpRequestMessage*> msg;
-    StrongId<WFUri*> uri;
+    // TODO: Avoid duplicating strings
+    auto methodHstr = Strings::NarrowToWide<HSTRING>(request.HTTPMethod);
+    auto urlHstr = Strings::NarrowToWide<HSTRING>(urlStr);
+    Http::HttpMethod method = winrt::hstring_ref(methodHstr.Get());
+    Uri uri = winrt::hstring_ref(urlHstr.Get());
 
-    method.attach([WWHHttpMethod make:request.HTTPMethod]);
-    uri.attach([WFUri makeUri:urlStr]);
-    msg.attach([WWHHttpRequestMessage make:method uri:uri]);
+    Http::HttpRequestMessage msg(method, uri);
 
     [request.allHTTPHeaderFields enumerateKeysAndObjectsUsingBlock:^(NSString* field, NSString* value, BOOL* stop) {
-        [[msg headers] append:field value:value];
+        auto fieldHstr = Strings::NarrowToWide<HSTRING>(field);
+        auto valueHstr = Strings::NarrowToWide<HSTRING>(value);
+
+        msg.Headers().Append(winrt::hstring_ref(fieldHstr.Get()), winrt::hstring_ref(valueHstr.Get()));
     }];
 
     _isLoading = true;
 
     RunSynchronouslyOnMainThread(^{
-        [_xamlWebControl navigateWithHttpRequestMessage:msg];
+        _xamlWebControl.NavigateWithHttpRequestMessage(msg);
     });
 }
 
 static void _initUIWebView(UIWebView* self) {
     // Store a strongly-typed backing scrollviewer
-    self->_xamlWebControl = rt_dynamic_cast<WXCWebView>([self xamlElement]);
+    self->_xamlWebControl = [self xamlElement].try_as<Controls::WebView>();
     if (!self->_xamlWebControl) {
         FAIL_FAST();
     }
 
-    __block UIWebView* weakSelf = self;
-    self->_xamlLoadCompletedEventCookie = [self->_xamlWebControl addLoadCompletedEvent:^void(RTObject* sender, WUXNNavigationEventArgs* e) {
-        weakSelf->_isLoading = false;
+    self->_xamlLoadCompletedEventCookie = self->_xamlWebControl.LoadCompleted([&self] (auto&& sender, auto&& e) {
+        self->_isLoading = false;
 
-        if ([weakSelf->_delegate respondsToSelector:@selector(webViewDidFinishLoad:)]) {
-            [weakSelf->_delegate webViewDidFinishLoad:weakSelf];
+        if ([self->_delegate respondsToSelector:@selector(webViewDidFinishLoad:)]) {
+            [self->_delegate webViewDidFinishLoad:self];
         }
-    }];
+    });
 
     self->_xamlLoadStartedEventCookie =
-        [self->_xamlWebControl addNavigationStartingEvent:^void(RTObject* sender, WXCWebViewNavigationStartingEventArgs* e) {
+        self->_xamlWebControl.NavigationStarting([&self] (auto&& sender, auto&& e) {
             // Give the client a chance to cancel the navigation
-            if ([weakSelf->_delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
-                NSURL* url = [NSURL URLWithString:e.uri.absoluteUri];
+            if ([self.delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
+                NSString* urlStr = [NSString _stringWithHSTRING:winrt::get(e.Uri().AbsoluteUri())];
+                NSURL* url = [NSURL URLWithString:urlStr];
                 NSURLRequest* request = [NSURLRequest requestWithURL:url];
 
                 // ???? XAML doesn't expose this information to us
                 UIWebViewNavigationType navigationType = UIWebViewNavigationTypeOther;
 
-                if (![weakSelf->_delegate webView:weakSelf shouldStartLoadWithRequest:request navigationType:navigationType]) {
-                    e.cancel = YES;
+                if (![self.delegate webView:self shouldStartLoadWithRequest:request navigationType:navigationType]) {
+                    e.Cancel(true);
                     return;
                 }
             }
 
             // Cancellation declined, navigation is proceeding
-            if ([weakSelf->_delegate respondsToSelector:@selector(webViewDidStartLoad:)]) {
-                [weakSelf->_delegate webViewDidStartLoad:weakSelf];
+            if ([self.delegate respondsToSelector:@selector(webViewDidStartLoad:)]) {
+                [self.delegate webViewDidStartLoad:self];
             }
-        }];
+        });
 
-    self->_xamlUnsupportedUriSchemeEventCookie = [self->_xamlWebControl
-        addUnsupportedUriSchemeIdentifiedEvent:^(RTObject* sender, WXCWebViewUnsupportedUriSchemeIdentifiedEventArgs* e) {
-            if ([weakSelf->_delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
-                NSURL* url = [NSURL URLWithString:e.uri.absoluteUri];
+    self->_xamlUnsupportedUriSchemeEventCookie =
+        self->_xamlWebControl.UnsupportedUriSchemeIdentified([&self] (auto&& sender, auto&& e) {
+            if ([self.delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
+                NSString* urlStr = [NSString _stringWithHSTRING:winrt::get(e.Uri().AbsoluteUri())];
+                NSURL* url = [NSURL URLWithString:urlStr];
                 NSURLRequest* request = [NSURLRequest requestWithURL:url];
                 UIWebViewNavigationType navigationType = UIWebViewNavigationTypeOther;
 
                 // The WebView doesn't know what to do with this URL, but give our client a crack at it
-                if ([weakSelf->_delegate webView:weakSelf shouldStartLoadWithRequest:request navigationType:navigationType]) {
+                if ([self.delegate webView:self shouldStartLoadWithRequest:request navigationType:navigationType]) {
                     // Client said to proceed, so pass the URL off to the system URI resolver
                 } else {
                     // Client took care of the URL
-                    e.handled = YES;
+                    e.Handled(true);
                 }
             }
-        }];
+        });
 
     // Add handler which will be invoked when user calls window.external.notify(msg) function in javascript
-    [self->_xamlWebControl addScriptNotifyEvent:^void(RTObject* sender, WXCNotifyEventArgs* e) {
+    self->_xamlWebControl.ScriptNotify([&self] (auto&& sender, auto&& e) {
         // Send event to webView delegate
-        NSURL* url = [NSURL URLWithString:e.callingUri.absoluteUri];
-        if ([weakSelf->_delegate respondsToSelector:@selector(webView:scriptNotify:value:)]) {
-            [weakSelf->_delegate webView:weakSelf scriptNotify:url value:e.value];
+        NSString* urlStr = [NSString _stringWithHSTRING:winrt::get(e.CallingUri().AbsoluteUri())];
+        NSURL* url = [NSURL URLWithString:urlStr];
+        if ([self.delegate respondsToSelector:@selector(webView:scriptNotify:value:)]) {
+            NSString* value = [NSString _stringWithHSTRING:winrt::get(e.Value())];
+            [self.delegate webView:self scriptNotify:url value:value];
         }
-    }];
+    });
 
     CGRect bounds;
     bounds = [self bounds];
@@ -189,7 +204,7 @@ static void _initUIWebView(UIWebView* self) {
 /**
  Microsoft Extension
 */
-- (instancetype)initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
+- (instancetype)initWithFrame:(CGRect)frame xamlElement:(const FrameworkElement&)xamlElement {
     if (self = [super initWithFrame:frame xamlElement:xamlElement]) {
         RunSynchronouslyOnMainThread(^{
             _initUIWebView(self);
@@ -202,8 +217,8 @@ static void _initUIWebView(UIWebView* self) {
 /**
  Microsoft Extension
 */
-+ (WXFrameworkElement*)createXamlElement {
-    return [[WXCWebView make] autorelease];
++ (FrameworkElement)createXamlElement {
+    return Controls::WebView();
 }
 
 /**
@@ -225,8 +240,8 @@ static void _initUIWebView(UIWebView* self) {
 - (void)loadHTMLString:(NSString*)string baseURL:(NSURL*)baseURL {
     _isLoading = true;
 
-    NSString* urlStr = [baseURL absoluteString];
-    [_xamlWebControl navigateToString:string];
+    auto hstring = Strings::NarrowToWide<HSTRING>(string);
+    _xamlWebControl.NavigateToString(winrt::hstring_ref(hstring.Get()));
 
     [self sizeToFit];
 }
@@ -246,7 +261,7 @@ static void _initUIWebView(UIWebView* self) {
 */
 - (void)stopLoading {
     _isLoading = false;
-    [_xamlWebControl stop];
+    _xamlWebControl.Stop();
 }
 
 - (void)setDetectsPhoneNumbers:(BOOL)detect {
@@ -266,7 +281,11 @@ static void _initUIWebView(UIWebView* self) {
   @Notes This is a workaround. Original UIWebView does not have this method
 */
 - (void)evaluateJavaScript:(NSString*)javaScriptString completionHandler:(void (^)(id, NSError*))completionHandler {
-    [_xamlWebControl invokeScriptAsync:@"eval"
+    auto jsString = Strings::NarrowToWide<HSTRING>(javaScriptString);
+    auto jsStringRef = winrt::hstring_ref(jsString.Get());
+
+    _xamlWebControl.InvokeScriptAsync(winrt::hstring_ref(L"eval"), { jsStringRef });
+    /*
         arguments:[NSArray arrayWithObject:javaScriptString]
         success:^void(NSString* success) {
             if (completionHandler != nil) {
@@ -278,6 +297,7 @@ static void _initUIWebView(UIWebView* self) {
                 completionHandler(nil, failure);
             }
         }];
+    */
 }
 
 /**
@@ -291,35 +311,35 @@ static void _initUIWebView(UIWebView* self) {
  @Status Interoperable
 */
 - (BOOL)canGoBack {
-    return _xamlWebControl.get().canGoBack;
+    return _xamlWebControl.CanGoBack() ? YES : NO;
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)canGoForward {
-    return _xamlWebControl.get().canGoForward;
+    return _xamlWebControl.CanGoForward() ? YES : NO;
 }
 
 /**
  @Status Interoperable
 */
 - (void)reload {
-    [_xamlWebControl refresh];
+    _xamlWebControl.Refresh();
 }
 
 /**
  @Status Interoperable
 */
 - (void)goBack {
-    [_xamlWebControl goBack];
+    _xamlWebControl.GoBack();
 }
 
 /**
  @Status Interoperable
 */
 - (void)goForward {
-    [_xamlWebControl goForward];
+    _xamlWebControl.GoForward();
 }
 
 /**
@@ -344,12 +364,12 @@ static void _initUIWebView(UIWebView* self) {
 
     // XAML WebView transparency is not used unless it's set to the transparent system color.
     if (a != 1.0f) {
-        [_xamlWebControl setDefaultBackgroundColor:[WUColors transparent]];
+        _xamlWebControl.DefaultBackgroundColor(winrt::Windows::UI::Colors::Transparent());
     } else {
-        [_xamlWebControl setDefaultBackgroundColor:[WUColorHelper fromArgb:255
-                                                                         r:(unsigned char)(r * 255.0)
-                                                                         g:(unsigned char)(g * 255.0)
-                                                                         b:(unsigned char)(b * 255.0)]];
+        _xamlWebControl.DefaultBackgroundColor(winrt::Windows::UI::ColorHelper::FromArgb(255,
+                                                                         (unsigned char)(r * 255.0),
+                                                                         (unsigned char)(g * 255.0),
+                                                                         (unsigned char)(b * 255.0)));
     }
 }
 
@@ -358,10 +378,10 @@ static void _initUIWebView(UIWebView* self) {
 */
 - (void)dealloc {
     RunSynchronouslyOnMainThread(^{
-        [_xamlWebControl removeLoadCompletedEvent:_xamlLoadCompletedEventCookie];
-        [_xamlWebControl removeNavigationStartingEvent:_xamlLoadStartedEventCookie];
-        [_xamlWebControl removeUnsupportedUriSchemeIdentifiedEvent:_xamlUnsupportedUriSchemeEventCookie];
-        _xamlWebControl = nil;
+        _xamlWebControl.LoadCompleted(_xamlLoadCompletedEventCookie);
+        _xamlWebControl.NavigationStarting(_xamlLoadStartedEventCookie);
+        _xamlWebControl.UnsupportedUriSchemeIdentified(_xamlUnsupportedUriSchemeEventCookie);
+        _xamlWebControl = nullptr;
     });
 
     [super dealloc];

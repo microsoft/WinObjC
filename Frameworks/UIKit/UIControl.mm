@@ -30,6 +30,8 @@
 #import "StubReturn.h"
 #import "UIControlInternal.h"
 
+using namespace winrt::Windows::UI::Xaml;
+
 static const wchar_t* TAG = L"UIControl";
 
 @implementation UIControl
@@ -55,7 +57,7 @@ static const wchar_t* TAG = L"UIControl";
 /**
 Microsoft Extension
 */
-- (instancetype)initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
+- (instancetype)initWithFrame:(CGRect)frame xamlElement:(const FrameworkElement&)xamlElement {
     if (self = [super initWithFrame:frame xamlElement:xamlElement]) {
         [self _initUIControl];
     }

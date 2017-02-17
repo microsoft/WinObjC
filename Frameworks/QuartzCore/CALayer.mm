@@ -58,6 +58,8 @@
 #import <wrl/implements.h>
 #import <winrt/Windows.Foundation.h>
 #import <winrt/Windows.UI.Xaml.h>
+#import <winrt/Windows.UI.Xaml.Controls.h>
+#import <winrt/Windows.UI.Xaml.Media.h>
 #import <Windows.UI.Xaml.h>
 #include <COMIncludes_End.h>
 
