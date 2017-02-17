@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -1138,7 +1138,22 @@ typedef _Return_type_success_(return >= 0) LONG NTSTATUS;
             return false;          \
         }                          \
     } while (0, 0)
+#define RETURN_IF(condition) \
+    do {                     \
+        if (condition) {     \
+            return;          \
+        }                    \
+    } while (0, 0)
+#define RETURN_RESULT_IF(condition, result) \
+    do {                                    \
+        if (condition) {                    \
+            return result;                  \
+        }                                   \
+    } while (0, 0)
 
+#define RETURN_FALSE_IF_FAILED(hr) RETURN_FALSE_IF(FAILED(hr));
+#define RETURN_RESULT_IF_NULL(ptr, result) RETURN_RESULT_IF((ptr == nullptr), result);
+#define RETURN_RESULT_IF_FAILED(hr, result) RETURN_RESULT_IF(FAILED(hr), result)
 //*****************************************************************************
 // Macros for logging failures (ignore or pass-through)
 //*****************************************************************************
@@ -1932,8 +1947,7 @@ private:
         }
 
         template <typename param_t>
-        RefAndObject(param_t&& param1)
-            : m_refCount(1), m_object(wistd::forward<param_t>(param1)) {
+        RefAndObject(param_t&& param1) : m_refCount(1), m_object(wistd::forward<param_t>(param1)) {
         }
     };
 
@@ -5082,14 +5096,13 @@ void _rethrowNormalizedCaughtExceptionObjC(__R_FN_PARAMS_FULL, _In_opt_ PCWSTR m
 }
 
 // Misspelling is intentional
-WI_HEADER_INITITALIZATION_FUNCTION(InitializeObjCExceptions,
-                                   [] {
-                                       g_resultFromUncaughtExceptionObjC = _resultFromUncaughtExceptionObjC;
-                                       g_rethrowAsNSException = _rethrowAsNSException;
-                                       g_objcThrowFailureInfo = _objcThrowFailureInfo;
-                                       g_rethrowNormalizedCaughtExceptionObjC = _rethrowNormalizedCaughtExceptionObjC;
-                                       return 1;
-                                   });
+WI_HEADER_INITITALIZATION_FUNCTION(InitializeObjCExceptions, [] {
+    g_resultFromUncaughtExceptionObjC = _resultFromUncaughtExceptionObjC;
+    g_rethrowAsNSException = _rethrowAsNSException;
+    g_objcThrowFailureInfo = _objcThrowFailureInfo;
+    g_rethrowNormalizedCaughtExceptionObjC = _rethrowNormalizedCaughtExceptionObjC;
+    return 1;
+});
 
 #endif
 

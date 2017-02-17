@@ -286,7 +286,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandAccount : RTObject
 + (WNNMobileBroadbandAccount*)createFromNetworkAccountId:(NSString *)networkAccountId;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WNNMobileBroadbandDeviceInformation* currentDeviceInformation;
 @property (readonly) WNNMobileBroadbandNetwork* currentNetwork;
@@ -306,7 +306,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandNetwork : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * accessPointName;
 @property (readonly) unsigned int activationNetworkError;
@@ -331,7 +331,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandDeviceInformation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDSCellularClass cellularClass;
 @property (readonly) WNNMobileBroadbandRadioState currentRadioState;
@@ -361,7 +361,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandPinManager : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* WNNMobileBroadbandPinType */ supportedPins;
 - (WNNMobileBroadbandPin*)getPin:(WNNMobileBroadbandPinType)pinType;
@@ -376,7 +376,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandUiccApp : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) RTObject<WSSIBuffer>* id;
 @property (readonly) WNNUiccAppKind kind;
@@ -392,9 +392,9 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNNetworkOperatorTetheringAccessPointConfiguration : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * ssid;
 @property (retain) NSString * passphrase;
@@ -409,7 +409,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNNetworkOperatorTetheringOperationResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * additionalErrorMessage;
 @property (readonly) WNNTetheringOperationStatus status;
@@ -429,7 +429,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 + (WNNTetheringCapability)getTetheringCapability:(NSString *)networkAccountId;
 + (WNNNetworkOperatorTetheringManager*)createFromNetworkAccountId:(NSString *)networkAccountId;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int clientCount;
 @property (readonly) unsigned int maxClientCount;
@@ -450,7 +450,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNNetworkOperatorTetheringClient : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* WNHostName* */ hostNames;
 @property (readonly) NSString * macAddress;
@@ -465,7 +465,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandAccountEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * networkAccountId;
 @end
@@ -479,7 +479,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandAccountUpdatedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL hasDeviceInformationChanged;
 @property (readonly) BOOL hasNetworkChanged;
@@ -494,9 +494,9 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandAccountWatcher : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WNNMobileBroadbandAccountWatcherStatus status;
 - (EventRegistrationToken)addAccountAddedEvent:(void(^)(WNNMobileBroadbandAccountWatcher*, WNNMobileBroadbandAccountEventArgs*))del;
@@ -525,7 +525,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 + (WNNMobileBroadbandModem*)fromId:(NSString *)deviceId;
 + (WNNMobileBroadbandModem*)getDefault;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WNNMobileBroadbandAccount* currentAccount;
 @property (readonly) WNNMobileBroadbandNetwork* currentNetwork;
@@ -548,7 +548,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandUicc : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * simIccId;
 - (void)getUiccAppsAsyncWithSuccess:(void (^)(WNNMobileBroadbandUiccAppsResult*))success failure:(void (^)(NSError*))failure;
@@ -563,7 +563,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandModemConfiguration : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * homeProviderId;
 @property (readonly) NSString * homeProviderName;
@@ -579,7 +579,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandDeviceServiceInformation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFGUID* deviceServiceId;
 @property (readonly) BOOL isDataReadSupported;
@@ -595,7 +595,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandDeviceService : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFGUID* deviceServiceId;
 @property (readonly) NSArray* /* unsigned int */ supportedCommands;
@@ -612,7 +612,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandPin : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int attemptsRemaining;
 @property (readonly) BOOL enabled;
@@ -637,7 +637,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandPinOperationResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int attemptsRemaining;
 @property (readonly) BOOL isSuccessful;
@@ -652,7 +652,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandDeviceServiceDataSession : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (EventRegistrationToken)addDataReceivedEvent:(void(^)(WNNMobileBroadbandDeviceServiceDataSession*, WNNMobileBroadbandDeviceServiceDataReceivedEventArgs*))del;
 - (void)removeDataReceivedEvent:(EventRegistrationToken)tok;
@@ -669,7 +669,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandDeviceServiceCommandSession : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)sendQueryCommandAsync:(unsigned int)commandId data:(RTObject<WSSIBuffer>*)data success:(void (^)(WNNMobileBroadbandDeviceServiceCommandResult*))success failure:(void (^)(NSError*))failure;
 - (void)sendSetCommandAsync:(unsigned int)commandId data:(RTObject<WSSIBuffer>*)data success:(void (^)(WNNMobileBroadbandDeviceServiceCommandResult*))success failure:(void (^)(NSError*))failure;
@@ -685,7 +685,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandDeviceServiceDataReceivedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) RTObject<WSSIBuffer>* receivedData;
 @end
@@ -699,7 +699,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandDeviceServiceCommandResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) RTObject<WSSIBuffer>* responseData;
 @property (readonly) unsigned int statusCode;
@@ -714,7 +714,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandUiccAppsResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WNNMobileBroadbandUiccAppOperationStatus status;
 @property (readonly) NSArray* /* WNNMobileBroadbandUiccApp* */ uiccApps;
@@ -729,7 +729,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandUiccAppRecordDetailsResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WNNUiccAppRecordKind kind;
 @property (readonly) WNNUiccAccessCondition readAccessCondition;
@@ -748,7 +748,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandUiccAppReadRecordResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) RTObject<WSSIBuffer>* data;
 @property (readonly) WNNMobileBroadbandUiccAppOperationStatus status;
@@ -763,7 +763,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandNetworkRegistrationStateChange : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * deviceId;
 @property (readonly) WNNMobileBroadbandNetwork* network;
@@ -778,7 +778,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandNetworkRegistrationStateChangeTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* WNNMobileBroadbandNetworkRegistrationStateChange* */ networkRegistrationStateChanges;
 @end
@@ -792,7 +792,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandRadioStateChange : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * deviceId;
 @property (readonly) WNNMobileBroadbandRadioState radioState;
@@ -807,7 +807,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandRadioStateChangeTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* WNNMobileBroadbandRadioStateChange* */ radioStateChanges;
 @end
@@ -821,7 +821,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandPinLockStateChange : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * deviceId;
 @property (readonly) WNNMobileBroadbandPinLockState pinLockState;
@@ -837,7 +837,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandPinLockStateChangeTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* WNNMobileBroadbandPinLockStateChange* */ pinLockStateChanges;
 @end
@@ -851,7 +851,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNMobileBroadbandDeviceServiceTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * deviceId;
 @property (readonly) WFGUID* deviceServiceId;
@@ -922,7 +922,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNHotspotAuthenticationEventDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * eventToken;
 @end
@@ -937,7 +937,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNHotspotAuthenticationContext : RTObject
 + (BOOL)tryGetAuthenticationContext:(NSString *)evenToken context:(WNNHotspotAuthenticationContext**)context;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFUri* authenticationUrl;
 @property (readonly) WNCNetworkAdapter* networkAdapter;
@@ -960,7 +960,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNHotspotCredentialsAuthenticationResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDXDXmlDocument* authenticationReplyXml;
 @property (readonly) BOOL hasNetworkErrorOccurred;
@@ -977,7 +977,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNProvisionFromXmlDocumentResults : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL allElementsProvisioned;
 @property (readonly) NSString * provisionResultsXml;
@@ -992,7 +992,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNProvisionedProfile : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)updateCost:(WNCNetworkCostType)value;
 - (void)updateUsage:(WNNProfileUsage*)value;
@@ -1007,9 +1007,9 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNProvisioningAgent : RTObject
 + (WNNProvisioningAgent*)createFromNetworkAccountId:(NSString *)networkAccountId;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)provisionFromXmlDocumentAsync:(NSString *)provisioningXmlDocument success:(void (^)(WNNProvisionFromXmlDocumentResults*))success failure:(void (^)(NSError*))failure;
 - (WNNProvisionedProfile*)getProvisionedProfile:(WNNProfileMediaType)mediaType profileName:(NSString *)profileName;
@@ -1025,7 +1025,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNUssdMessage : RTObject
 + (WNNUssdMessage*)makeMessage:(NSString *)messageText ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * payloadAsText;
 @property uint8_t dataCodingScheme;
@@ -1042,7 +1042,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNUssdReply : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WNNUssdMessage* message;
 @property (readonly) WNNUssdResultCode resultCode;
@@ -1059,7 +1059,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 + (WNNUssdSession*)createFromNetworkAccountId:(NSString *)networkAccountId;
 + (WNNUssdSession*)createFromNetworkInterfaceId:(NSString *)networkInterfaceId;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)sendMessageAndGetReplyAsync:(WNNUssdMessage*)message success:(void (^)(WNNUssdReply*))success failure:(void (^)(NSError*))failure;
 - (void)close;
@@ -1074,7 +1074,7 @@ OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 OBJCUWP_WINDOWS_NETWORKING_NETWORKOPERATORS_EXPORT
 @interface WNNNetworkOperatorNotificationEventDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) uint8_t encodingType;
 @property (readonly) NSString * message;

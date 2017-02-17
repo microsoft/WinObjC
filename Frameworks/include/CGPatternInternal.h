@@ -17,8 +17,9 @@
 
 #pragma once
 
-#include "CoreGraphics/CGPattern.h"
-#include "CoreGraphicsInternal.h"
+#import <CoreGraphics/CGPattern.h>
+#import <CoreGraphics/CGContext.h>
+#import "CoreGraphicsInternal.h"
 
 @interface CGPattern : NSObject {
 @public
@@ -35,3 +36,24 @@
 - (CGAffineTransform)getPatternTransform;
 + (instancetype)patternWithImage:(CGImageRef)img;
 @end
+
+CGRect _CGPatternGetBounds(CGPatternRef pattern);
+
+/*
+* Call the CGPatternCallbacks associated with the pattern.
+*/
+void _CGPatternIssueCallBack(CGContextRef context, CGPatternRef pattern);
+
+CGAffineTransform _CGPatternGetTransformation(CGPatternRef pattern);
+
+/*
+* Get the final size of the pattern tile (after xStep and xStep has been applied).
+*/
+CGRect _CGPatternGetFinalPatternSize(CGPatternRef pattern);
+
+/*
+* Get the pattern colored value.
+* If it is colored, then we have a colored pattern has inherent color,
+* if it's false then we have a stencil pattern does not have inherent color.
+*/
+bool _CGPatternIsColored(CGPatternRef pattern);

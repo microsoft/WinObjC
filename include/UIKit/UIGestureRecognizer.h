@@ -82,3 +82,16 @@ UIKIT_EXPORT_CLASS
 @property (copy, nonatomic) NSArray* allowedTouchTypes STUB_PROPERTY;
 
 @end
+
+
+@protocol UIGestureRecognizerDelegate <NSObject>
+@optional
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer*)gestureRecognizer;
+-(BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldReceiveTouch : (UITouch*)touch;
+-(BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer
+shouldRecognizeSimultaneouslyWithGestureRecognizer : (UIGestureRecognizer*)otherGestureRecognizer;
+-(BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer
+shouldRequireFailureOfGestureRecognizer : (UIGestureRecognizer*)otherGestureRecognizer;
+-(BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer
+shouldBeRequiredToFailByGestureRecognizer : (UIGestureRecognizer*)otherGestureRecognizer;
+@end

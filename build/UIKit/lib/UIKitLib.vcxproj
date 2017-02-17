@@ -39,7 +39,9 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIBarButtonItem.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIBarItem.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIBezierPath.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIButton.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIButton.mm">
+      <ObjectiveCARC>true</ObjectiveCARC>
+    </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIButtonContent.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIClassSwapper.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIColor.mm" />
@@ -57,7 +59,9 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIImageCachedObject.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIImageNibPlaceholder.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIImageView.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UILabel.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UILabel.mm">
+      <ObjectiveCARC>true</ObjectiveCARC>
+    </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIButtonProxies.mm">
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
@@ -143,7 +147,9 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewCell.mm">
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutSection.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutSection.mm">
+      <ObjectiveCARC>true</ObjectiveCARC>
+    </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewController.mm">
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
@@ -156,7 +162,9 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewData.mm">
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutRow.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutRow.mm">
+      <ObjectiveCARC>true</ObjectiveCARC>
+    </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewLayout.mm">
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
@@ -164,7 +172,9 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewUpdateItem.mm">
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutInfo.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutInfo.mm">
+      <ObjectiveCARC>true</ObjectiveCARC>
+    </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UrlLauncher.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSLayoutManager.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSParagraphStyle.mm" />
@@ -301,6 +311,7 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIVisualEffectView.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICTFont.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICTFontDescriptor.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\_UIGestureCoordinator.mm" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIAnimationNotification.h" />
@@ -339,6 +350,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\XamlUtilities.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICTFont.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICTFontDescriptor.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\_UIDirectManipulationRecognizer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\_UIGestureCoordinator.h" />
   </ItemGroup>
   <!-- StarboardXaml files -->
   <ItemGroup>
@@ -356,9 +369,9 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\XamlCompositor.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\DisplayProperties.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\DisplayTexture.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\LayerAnimation.mm"/>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\LayerProxy.mm"/>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\LayerTransaction.mm"/>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\LayerAnimation.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\LayerProxy.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\LayerTransaction.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\Quaternion.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\StringConversion.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\ApplicationMain.mm" />
@@ -407,7 +420,7 @@
       <PreprocessorDefinitions>UIKIT_IMPEXP=; %(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
       <AdditionalOptions>-DSTARBOARD_PORT=1 "-DUIKIT_IMPEXP= " "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " %(AdditionalOptions) -Wno-deprecated-declarations</AdditionalOptions>
@@ -420,7 +433,7 @@
       <PreprocessorDefinitions>UIKIT_IMPEXP=; %(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
       <AdditionalOptions>-DSTARBOARD_PORT=1 "-DUIKIT_IMPEXP= " "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " %(AdditionalOptions) -Wno-deprecated-declarations</AdditionalOptions>
@@ -434,7 +447,7 @@
       <PreprocessorDefinitions>UIKIT_IMPEXP=; %(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
       <AdditionalOptions>-DSTARBOARD_PORT=1 "-DUIKIT_IMPEXP= " "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " %(AdditionalOptions) -Wno-deprecated-declarations -Wno-ignored-attributes</AdditionalOptions>
@@ -447,7 +460,7 @@
       <PreprocessorDefinitions>UIKIT_IMPEXP=; %(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
+      <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
       <AdditionalOptions>-DSTARBOARD_PORT=1 "-DUIKIT_IMPEXP= " "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " %(AdditionalOptions) -Wno-deprecated-declarations -Wno-ignored-attributes</AdditionalOptions>

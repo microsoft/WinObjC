@@ -15,7 +15,7 @@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#include <TestFramework.h>
 #import "Accelerate/Accelerate.h"
 
 // Constants defining array strides and lengths

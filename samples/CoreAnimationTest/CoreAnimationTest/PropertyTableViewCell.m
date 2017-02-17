@@ -16,7 +16,9 @@
 
 #import "PropertyTableViewCell.h"
 
-@implementation PropertyTableViewCell
+@implementation PropertyTableViewCell {
+    CALayer* _separator;
+}
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString*)reuseIdentifier {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
@@ -27,9 +29,20 @@
         self.titleLabel.textColor = [UIColor darkTextColor];
         self.titleLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
         [self addSubview:self.titleLabel];
+
+        // Separator
+        _separator = [CALayer layer];
+        _separator.backgroundColor = [UIColor colorWithWhite:0.8 alpha:1.0].CGColor;
+        _separator.frame = CGRectMake(0, CGRectGetHeight(self.frame) - 0.5f, CGRectGetWidth(self.frame), 0.5f);
+        [self.layer addSublayer:_separator];
     }
 
     return self;
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    _separator.frame = CGRectMake(0, CGRectGetHeight(self.frame) - 0.5f, CGRectGetWidth(self.frame), 0.5f);
 }
 
 - (void)setDisabled:(BOOL)disabled {

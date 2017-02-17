@@ -128,6 +128,9 @@ CGAffineTransform* getTransform(UIBezierPath* path) {
                               clockwise:(BOOL)clockwise {
     UIBezierPath* ret = [self new];
 
+    // Path needs to move to the actual start of the arc location otherwise CGPathAddArc will draw a line to this
+    // start point instead.
+    CGPathMoveToPoint(ret->_path, NULL, center.x + cos(startAngle) * radius, center.y + sin(startAngle) * radius);
     CGPathAddArc(ret->_path, NULL, center.x, center.y, radius, startAngle, endAngle, clockwise == FALSE);
 
     return [ret autorelease];

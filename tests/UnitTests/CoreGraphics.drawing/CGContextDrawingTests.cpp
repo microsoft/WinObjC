@@ -15,8 +15,27 @@
 //******************************************************************************
 
 #include "DrawingTest.h"
+#include "DrawingTestConfig.h"
+#include "ImageHelpers.h"
+#include <windows.h>
 
-DISABLED_DRAW_TEST_F(CGContext, RedBox, UIKitMimicTest<>) {
+DISABLED_DRAW_TEST_F(CGContext, Canva, UIKitMimicTest<>) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGFloat red[] = { 1, 0, 0, 1 };
+    CGContextSetStrokeColor(context, red);
+
+    CGPoint points[] = { { 0.0, 0.0 }, { 100, 100 }, { 100, 0.0 }, { 0.0, 100 } };
+    CGContextStrokeLineSegments(context, points, 4);
+
+    CGFloat green[] = { 0, 1, 0, 1 };
+    CGContextSetFillColor(context, green);
+    CGRect middleSpot = CGRectMake(100 / 8 * 3, 100 / 8 * 3, 2 * 100 / 8, 2 * 100 / 8);
+    CGContextFillRect(context, middleSpot);
+}
+
+DRAW_TEST_F(CGContext, RedBox, UIKitMimicTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -146,4 +165,12 @@ DISABLED_DRAW_TEST_F(CGContext, ChangeCTMAfterCreatingPath, WhiteBackgroundTest<
     CGContextScaleCTM(context, 3.0, 3.0);
     CGContextStrokePath(context);
     CGContextRestoreGState(context);
+}
+
+DRAW_TEST(CGContext, PremultipliedAlphaImage) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGContextSetRGBFillColor(context, 1.0, 0.0, 0.0, 0.5);
+    CGContextFillRect(context, { 0, 0, 100, 100 });
 }

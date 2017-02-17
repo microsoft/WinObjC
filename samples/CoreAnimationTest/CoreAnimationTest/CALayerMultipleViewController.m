@@ -22,23 +22,24 @@
 #import "SwitchTableViewCell.h"
 #import "CGPointTableViewCell.h"
 #import "CGRectTableViewCell.h"
-#import "ViewHeaderFooterView.h"
+#import "HeaderTableViewCell.h"
+#import "FooterTableViewCell.h"
 
 #define VC_WIDTH self.view.frame.size.width
 #define VC_HEIGHT self.view.frame.size.height
 
-#define HIDDEN_POS [_exposedProperties.allKeys indexOfObject:kHiddenProperty]
-#define OPACITY_POS [_exposedProperties.allKeys indexOfObject:kOpacityProperty]
-#define CONTENTS_GRAVITY_POS [_exposedProperties.allKeys indexOfObject:kContentsGravityProperty]
-#define CONTENTS_POS [_exposedProperties.allKeys indexOfObject:kContentsProperty]
-#define SHOULD_RASTERIZE_POS [_exposedProperties.allKeys indexOfObject:kShouldRasterizeProperty]
-#define RASTERIZATION_SCALE_POS [_exposedProperties.allKeys indexOfObject:kRasterizationScaleProperty]
-#define CONTENTS_SCALE_POS [_exposedProperties.allKeys indexOfObject:kContentsScaleProperty]
-#define DOUBLE_SIDED_POS [_exposedProperties.allKeys indexOfObject:kDoubleSidedProperty]
-#define GEOMETRY_FLIPPED_POS [_exposedProperties.allKeys indexOfObject:kGeometryFlippedProperty]
-#define CORNER_RADIUS_POS [_exposedProperties.allKeys indexOfObject:kCornerRadiusProperty]
-#define BORDER_WIDTH_POS [_exposedProperties.allKeys indexOfObject:kBorderWidthProperty]
-#define MASKS_TO_BOUNDS_POS [_exposedProperties.allKeys indexOfObject:kMasksToBoundsProperty]
+#define HIDDEN_POS [_exposedProperties indexOfObject:kHiddenProperty] + 1
+#define OPACITY_POS [_exposedProperties indexOfObject:kOpacityProperty] + 1
+#define CONTENTS_GRAVITY_POS [_exposedProperties indexOfObject:kContentsGravityProperty] + 1
+#define CONTENTS_POS [_exposedProperties indexOfObject:kContentsProperty] + 1
+#define SHOULD_RASTERIZE_POS [_exposedProperties indexOfObject:kShouldRasterizeProperty] + 1
+#define RASTERIZATION_SCALE_POS [_exposedProperties indexOfObject:kRasterizationScaleProperty] + 1
+#define CONTENTS_SCALE_POS [_exposedProperties indexOfObject:kContentsScaleProperty] + 1
+#define DOUBLE_SIDED_POS [_exposedProperties indexOfObject:kDoubleSidedProperty] + 1
+#define GEOMETRY_FLIPPED_POS [_exposedProperties indexOfObject:kGeometryFlippedProperty] + 1
+#define CORNER_RADIUS_POS [_exposedProperties indexOfObject:kCornerRadiusProperty] + 1
+#define BORDER_WIDTH_POS [_exposedProperties indexOfObject:kBorderWidthProperty] + 1
+#define MASKS_TO_BOUNDS_POS [_exposedProperties indexOfObject:kMasksToBoundsProperty] + 1
 
 typedef NS_ENUM(NSInteger, TransformProperty) { PositionX = 0, PositionY, Rotation, Scaling, UseAffine };
 
@@ -62,7 +63,8 @@ typedef NS_ENUM(NSInteger, TransformProperty) { PositionX = 0, PositionY, Rotati
     NSArray* _colors; // Colors to use for generated views
     NSDictionary* _images; // Images for setting contents of layers
     NSMutableDictionary* _transformSettings; // Cache transform mode, position and rotation of generated views
-    NSDictionary* _exposedProperties; // Properties exposed to control in the UI and whether they are enabled
+    NSArray* _exposedProperties; // Properties exposed to control in the UI
+    NSArray* _enabledProperties; // Properties enabled to be manipulated in the UI
     NSArray* _contentsGravityOptionsArray; // Contents gravity option constants
 }
 
@@ -74,6 +76,8 @@ static NSString* const kSwitchCellIdentifier = @"SwitchCell";
 static NSString* const kPickerCellIdentifier = @"PickerCell";
 static NSString* const kCGPointCellIdentifier = @"CGPointCell";
 static NSString* const kCGRectCellIdentifier = @"CGRectCell";
+static NSString* const kHeaderCellIdentifier = @"HeaderCell";
+static NSString* const kFooterCellIdentifier = @"FooterCell";
 
 // Header identifiers
 static NSString* const kViewHeaderViewIdentifier = @"ViewHeaderView";
@@ -96,13 +100,23 @@ static NSString* const kCornerRadiusProperty = @"Corner radius";
 static NSString* const kBorderWidthProperty = @"Border width";
 static NSString* const kMasksToBoundsProperty = @"Masks to bounds";
 
+static NSString* const kLayerBoundsProperty = @"Bounds";
+static NSString* const kLayerPositionProperty = @"Position";
+static NSString* const kLayerAnchorPointProperty = @"Anchor point";
+static NSString* const kTransformAffineProperty = @"Affine transform";
+static NSString* const kTransformRotationProperty = @"Rotation";
+static NSString* const kTransformScaleProperty = @"Scaling";
+static NSString* const kTransformXProperty = @"X offset";
+static NSString* const kTransformYProperty = @"Y offset";
+
 // Constants
 static NSInteger const kNumGeneratedViews = 3; // Number of views to initially generate
-static NSInteger const kSublayersForNewViews = 2; // Number of sublayers to add for new views
+static NSInteger const kSublayersForNewViews = 3; // Number of sublayers to add for new views
 static CGFloat const kLayerViewSize = 150.0f; // Size of new views
 static CGFloat const kLayerViewOverlap = 0.333f; // Overlap of batch generated views, proportion
 static CGFloat const kSublayerSpacing = 25.0f; // Spacing of generated sublayers, pixels
-static CGFloat const kMenuMinWidth = 180.0f; // Min width for right and left menus
+static CGFloat const kLeftMenuMinWidth = 180.0f; // Min width for left menu
+static CGFloat const kRightMenuMinWidth = 360.0f; // Min width for right menu
 static CGFloat const kLayerCellHeight = 60.0f; // Height of cells in left menu
 static CGFloat const kViewHeaderHeight = 96.0f; // Height of headers in left menu
 static CGFloat const kPropertyHeaderHeight = 96.0f; // Height of headers in right menu
@@ -151,21 +165,41 @@ CGFloat const kPadding = 16.0f;
             kCAGravityBottomRight
         ];
 
-        // Properties to be exposed to the property inspector and whether they should be enabled or not
-        _exposedProperties = @{
-            kHiddenProperty : @(YES),
-            kOpacityProperty : @(YES),
-            kContentsGravityProperty : @(YES),
-            kContentsProperty : @(YES),
-            kShouldRasterizeProperty : @(YES),
-            kRasterizationScaleProperty : @(YES),
-            kContentsScaleProperty : @(YES),
-            kDoubleSidedProperty : @(NO),
-            kGeometryFlippedProperty : @(NO),
-            kCornerRadiusProperty : @(NO),
-            kBorderWidthProperty : @(NO),
-            kMasksToBoundsProperty : @(NO)
-        };
+        // Properties to be exposed to the property inspector
+        _exposedProperties = @[
+            kHiddenProperty,
+            kOpacityProperty,
+            kContentsGravityProperty,
+            kContentsProperty,
+            kShouldRasterizeProperty,
+            kRasterizationScaleProperty,
+            kContentsScaleProperty,
+            kMasksToBoundsProperty,
+            kDoubleSidedProperty,
+            kGeometryFlippedProperty,
+            kCornerRadiusProperty,
+            kBorderWidthProperty
+        ];
+
+        // Properties to be enabled in the property inspector
+        _enabledProperties = @[
+            kHiddenProperty,
+            kOpacityProperty,
+            kContentsGravityProperty,
+            kContentsProperty,
+            kShouldRasterizeProperty,
+            kRasterizationScaleProperty,
+            kContentsScaleProperty,
+            kMasksToBoundsProperty,
+            kLayerBoundsProperty,
+            kLayerPositionProperty,
+            kLayerAnchorPointProperty,
+            kTransformAffineProperty,
+            kTransformRotationProperty,
+            kTransformScaleProperty,
+            kTransformXProperty,
+            kTransformYProperty
+        ];
     }
 
     return self;
@@ -182,18 +216,15 @@ CGFloat const kPadding = 16.0f;
 
     // Left menu - views
     self.leftMenu = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, VC_WIDTH / 5.0, VC_HEIGHT) style:UITableViewStylePlain];
+    self.leftMenu.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.leftMenu.delegate = self;
     self.leftMenu.dataSource = self;
     self.leftMenu.alwaysBounceVertical = NO;
-    self.leftMenu.backgroundColor = [UIColor whiteColor];
-    self.leftMenu.layer.masksToBounds = NO;
-    self.leftMenu.layer.shadowColor = [UIColor blackColor].CGColor;
-    self.leftMenu.layer.shadowRadius = 0.5f;
-    self.leftMenu.layer.shadowOffset = CGSizeMake(1.0f, 0.0f);
-    self.leftMenu.layer.shadowOpacity = 0.2f;
+    self.leftMenu.backgroundColor = [UIColor colorWithWhite:0.95 alpha:1.0];
     self.leftMenu.translatesAutoresizingMaskIntoConstraints = NO;
     [self.leftMenu registerClass:[LayerTableViewCell class] forCellReuseIdentifier:kLayerCellIdentifier];
-    [self.leftMenu registerClass:[ViewHeaderFooterView class] forHeaderFooterViewReuseIdentifier:kViewHeaderViewIdentifier];
+    [self.leftMenu registerClass:[HeaderTableViewCell class] forCellReuseIdentifier:kHeaderCellIdentifier];
+    [self.leftMenu registerClass:[FooterTableViewCell class] forCellReuseIdentifier:kFooterCellIdentifier];
     [self.view addSubview:self.leftMenu];
 
     // Set up left menu toggle button
@@ -217,20 +248,17 @@ CGFloat const kPadding = 16.0f;
 
     // Right menu - properties, position
     self.rightMenu = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, VC_WIDTH / 4.0, VC_HEIGHT) style:UITableViewStylePlain];
+    self.rightMenu.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.rightMenu.delegate = self;
     self.rightMenu.dataSource = self;
     self.rightMenu.alwaysBounceVertical = NO;
-    self.rightMenu.layer.masksToBounds = NO;
-    self.rightMenu.layer.shadowColor = [UIColor blackColor].CGColor;
-    self.rightMenu.layer.shadowRadius = 0.5f;
-    self.rightMenu.layer.shadowOffset = CGSizeMake(-1.0f, 0.0f);
-    self.rightMenu.layer.shadowOpacity = 0.2f;
-    self.rightMenu.backgroundColor = [UIColor whiteColor];
+    self.rightMenu.backgroundColor = [UIColor colorWithWhite:0.95 alpha:1.0];
     self.rightMenu.translatesAutoresizingMaskIntoConstraints = NO;
     self.rightMenu.allowsSelection = NO;
     [self.view addSubview:self.rightMenu];
 
-    // Register cell classes to represent different properties
+    // Register cell classes to represent different properties, headers
+    [self.rightMenu registerClass:[HeaderTableViewCell class] forCellReuseIdentifier:kHeaderCellIdentifier];
     [self.rightMenu registerClass:[SliderTableViewCell class] forCellReuseIdentifier:kSliderCellIdentifier];
     [self.rightMenu registerClass:[StringTableViewCell class] forCellReuseIdentifier:kStringCellIdentifier];
     [self.rightMenu registerClass:[SwitchTableViewCell class] forCellReuseIdentifier:kSwitchCellIdentifier];
@@ -259,7 +287,7 @@ CGFloat const kPadding = 16.0f;
     NSLayoutConstraint* widthConstraint = [self.leftMenu.widthAnchor constraintEqualToAnchor:self.view.widthAnchor multiplier:0.2];
     widthConstraint.priority = UILayoutPriorityDefaultLow;
     widthConstraint.active = YES;
-    NSLayoutConstraint* minWidthConstraint = [self.leftMenu.widthAnchor constraintGreaterThanOrEqualToConstant:kMenuMinWidth];
+    NSLayoutConstraint* minWidthConstraint = [self.leftMenu.widthAnchor constraintGreaterThanOrEqualToConstant:kLeftMenuMinWidth];
     minWidthConstraint.priority = UILayoutPriorityDefaultHigh;
     minWidthConstraint.active = YES;
 
@@ -277,7 +305,7 @@ CGFloat const kPadding = 16.0f;
     NSLayoutConstraint* rightWidthConstraint = [self.rightMenu.widthAnchor constraintEqualToAnchor:self.view.widthAnchor multiplier:0.2];
     rightWidthConstraint.priority = UILayoutPriorityDefaultLow;
     rightWidthConstraint.active = YES;
-    NSLayoutConstraint* rightMinWidthConstraint = [self.rightMenu.widthAnchor constraintGreaterThanOrEqualToConstant:kMenuMinWidth];
+    NSLayoutConstraint* rightMinWidthConstraint = [self.rightMenu.widthAnchor constraintGreaterThanOrEqualToConstant:kRightMenuMinWidth];
     rightMinWidthConstraint.priority = UILayoutPriorityDefaultHigh;
     rightMinWidthConstraint.active = YES;
     [self.rightMenu layoutIfNeeded];
@@ -340,7 +368,21 @@ CGFloat const kPadding = 16.0f;
             colorIdx++;
             newLayer.frame = CGRectMake(0, (n + 1) * kSublayerSpacing, kLayerViewSize, kLayerViewSize);
             [view.layer addSublayer:newLayer];
+
+            // Set initial cache for transforms
+            [_transformSettings setObject:@(YES) forKey:[self identifierForLayer:newLayer andProperty:UseAffine]];
+            [_transformSettings setObject:@(0) forKey:[self identifierForLayer:newLayer andProperty:PositionX]];
+            [_transformSettings setObject:@(0) forKey:[self identifierForLayer:newLayer andProperty:PositionY]];
+            [_transformSettings setObject:@(0) forKey:[self identifierForLayer:newLayer andProperty:Rotation]];
+            [_transformSettings setObject:@(1.0f) forKey:[self identifierForLayer:newLayer andProperty:Scaling]];
         }
+
+        // Set initial cache for super layer
+        [_transformSettings setObject:@(YES) forKey:[self identifierForLayer:view.layer andProperty:UseAffine]];
+        [_transformSettings setObject:@(0) forKey:[self identifierForLayer:view.layer andProperty:PositionX]];
+        [_transformSettings setObject:@(0) forKey:[self identifierForLayer:view.layer andProperty:PositionY]];
+        [_transformSettings setObject:@(0) forKey:[self identifierForLayer:view.layer andProperty:Rotation]];
+        [_transformSettings setObject:@(1.0f) forKey:[self identifierForLayer:view.layer andProperty:Scaling]];
 
         // Origin is offset from center based on total number of views to generate
         CGFloat offset = (-(kLayerViewOverlap * kLayerViewSize * numberOfViews) / 2.0f) + (i * kLayerViewOverlap * kLayerViewSize) +
@@ -349,13 +391,6 @@ CGFloat const kPadding = 16.0f;
         [view.heightAnchor constraintEqualToConstant:kLayerViewSize].active = YES;
         [view.centerYAnchor constraintEqualToAnchor:_stage.centerYAnchor constant:offset / 3.0].active = YES;
         [view.centerXAnchor constraintEqualToAnchor:_stage.centerXAnchor constant:offset].active = YES;
-
-        // Set initial cache for transform mode, x, y and rotation
-        [_transformSettings setObject:@(YES) forKey:[self identifierForView:view andProperty:UseAffine]];
-        [_transformSettings setObject:@(offset) forKey:[self identifierForView:view andProperty:PositionX]];
-        [_transformSettings setObject:@(offset / 3.0) forKey:[self identifierForView:view andProperty:PositionY]];
-        [_transformSettings setObject:@(0) forKey:[self identifierForView:view andProperty:Rotation]];
-        [_transformSettings setObject:@(1.0f) forKey:[self identifierForView:view andProperty:Scaling]];
     }
 
     [self.leftMenu reloadData];
@@ -375,15 +410,15 @@ CGFloat const kPadding = 16.0f;
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
     if (tableView == self.leftMenu) {
-        return ((UIView*)[_stage.subviews objectAtIndex:section]).layer.sublayers.count + 1;
+        return ((UIView*)[_stage.subviews objectAtIndex:section]).layer.sublayers.count + 3; // Superlayer, header, and footer
     } else if (tableView == self.rightMenu && _currentView) {
         switch (section) {
             case 0:
-                return _exposedProperties.count; // Layer properties
+                return _exposedProperties.count + 1; // Layer properties + header
                 break;
 
             case 1:
-                return 8; // Transform settings
+                return 9; // Transform settings + header
                 break;
 
             default:
@@ -396,100 +431,20 @@ CGFloat const kPadding = 16.0f;
 
 - (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
     if (tableView == self.leftMenu) {
-        return kLayerCellHeight;
+        return indexPath.row == 0 ? kViewHeaderHeight : kLayerCellHeight;
     } else if (tableView == self.rightMenu) {
-        return kPropertyCellHeight;
+        return indexPath.row == 0 ? kPropertyHeaderHeight : kPropertyCellHeight;
     }
 
     return 0;
 }
 
 - (CGFloat)tableView:(UITableView*)tableView heightForHeaderInSection:(NSInteger)section {
-    if (tableView == self.leftMenu) {
-        return kViewHeaderHeight;
-    } else if (tableView == self.rightMenu) {
-        return kPropertyHeaderHeight;
-    }
-
     return 0;
 }
 
 - (CGFloat)tableView:(UITableView*)tableView heightForFooterInSection:(NSInteger)section {
-    if (tableView == self.leftMenu) {
-        return kLayerCellHeight;
-    }
-
     return 0;
-}
-
-- (UIView*)tableView:(UITableView*)tableView viewForFooterInSection:(NSInteger)section {
-    if (tableView == _leftMenu) {
-        UIView* footerView = [[UIView alloc]
-            initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, [self tableView:tableView heightForFooterInSection:section])];
-        footerView.backgroundColor = [UIColor whiteColor];
-
-        UIButton* addLayerButton = [UIButton new];
-        [addLayerButton setTitle:@"+ Add layer" forState:UIControlStateNormal];
-        [addLayerButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-        addLayerButton.tag = section;
-        addLayerButton.titleLabel.font = [UIFont systemFontOfSize:[UIFont labelFontSize]];
-        addLayerButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-        addLayerButton.translatesAutoresizingMaskIntoConstraints = NO;
-        [addLayerButton addTarget:self action:@selector(addLayer:) forControlEvents:UIControlEventTouchUpInside];
-        [footerView addSubview:addLayerButton];
-
-        NSDictionary* metrics = @{ @"pad" : @(kPadding) };
-        NSDictionary* views = NSDictionaryOfVariableBindings(addLayerButton);
-        [footerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-pad-[addLayerButton]-pad-|"
-                                                                           options:0
-                                                                           metrics:metrics
-                                                                             views:views]];
-        [footerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-pad-[addLayerButton]-pad-|"
-                                                                           options:0
-                                                                           metrics:metrics
-                                                                             views:views]];
-        return footerView;
-    }
-
-    return [UIView new];
-}
-
-- (UIView*)tableView:(UITableView*)tableView viewForHeaderInSection:(NSInteger)section {
-    if (tableView == _rightMenu) {
-        UIView* headerView = [[UIView alloc]
-            initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, [self tableView:tableView heightForHeaderInSection:section])];
-        headerView.backgroundColor = [UIColor whiteColor];
-        headerView.layer.shadowColor = [UIColor blackColor].CGColor;
-        headerView.layer.shadowRadius = 0.5f;
-        headerView.layer.shadowOffset = CGSizeMake(0.0, 1.0f);
-        headerView.layer.shadowOpacity = 0.2f;
-
-        UILabel* titleLabel = [UILabel new];
-        titleLabel.font = [UIFont boldSystemFontOfSize:[UIFont smallSystemFontSize]];
-        titleLabel.textColor = [UIColor darkTextColor];
-        titleLabel.text = [self tableView:tableView titleForHeaderInSection:section];
-        titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
-
-        [headerView addSubview:titleLabel];
-
-        NSDictionary* metrics = @{ @"pad" : @(kPadding), @"height" : @(titleLabel.font.lineHeight) };
-        NSDictionary* views = NSDictionaryOfVariableBindings(titleLabel);
-        [headerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-pad-[titleLabel]-pad-|"
-                                                                           options:0
-                                                                           metrics:metrics
-                                                                             views:views]];
-        [headerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(>=0)-[titleLabel(height)]-pad-|"
-                                                                           options:0
-                                                                           metrics:metrics
-                                                                             views:views]];
-        return headerView;
-    } else if (tableView == _leftMenu) {
-        ViewHeaderFooterView* headerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:kViewHeaderViewIdentifier];
-        [headerView setUpWithView:_stage.subviews[section] andTitle:[NSString stringWithFormat:@"View %lu", section]];
-        return headerView;
-    }
-
-    return nil;
 }
 
 - (NSString*)tableView:(UITableView*)tableView titleForHeaderInSection:(NSInteger)section {
@@ -513,32 +468,58 @@ CGFloat const kPadding = 16.0f;
 
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath {
     if (tableView == self.leftMenu) {
-        LayerTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:kLayerCellIdentifier forIndexPath:indexPath];
-        cell.delegate = self;
-        UIView* view = _stage.subviews[indexPath.section];
+        // Header
         if (indexPath.row == 0) {
-            [cell setUpWithLayer:view.layer andTitle:@"Layer" shouldShowUpButton:NO shouldShowDownButton:NO];
-        } else {
-            CALayer* layer = view.layer.sublayers[indexPath.row - 1];
-            [cell setUpWithLayer:layer
-                            andTitle:[NSString stringWithFormat:@"\u2937 Sublayer %lu", indexPath.row - 1]
-                  shouldShowUpButton:(indexPath.row == 1) ? NO : YES
-                shouldShowDownButton:(view.layer.sublayers.lastObject == layer) ? NO : YES];
+            HeaderTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:kHeaderCellIdentifier forIndexPath:indexPath];
+            [cell setUpWithView:_stage.subviews[indexPath.section] andTitle:[NSString stringWithFormat:@"View %lu", indexPath.section]];
+            return cell;
         }
 
-        return cell;
+        // Last row in section
+        else if (indexPath.row == [self tableView:tableView numberOfRowsInSection:indexPath.section] - 1) {
+            FooterTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:kFooterCellIdentifier forIndexPath:indexPath];
+            [cell setUpWithSection:indexPath.section withTarget:self andAction:@selector(addLayer:)];
+            return cell;
+        }
+
+        else {
+            LayerTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:kLayerCellIdentifier forIndexPath:indexPath];
+            cell.delegate = self;
+            UIView* view = _stage.subviews[indexPath.section];
+            if (indexPath.row == 1) {
+                [cell setUpWithLayer:view.layer andTitle:@"Layer" shouldShowUpButton:NO shouldShowDownButton:NO];
+            }
+
+            else {
+                CALayer* layer = view.layer.sublayers[indexPath.row - 2];
+                [cell setUpWithLayer:layer
+                                andTitle:[NSString stringWithFormat:@"\u2937 Sublayer %lu", indexPath.row - 1]
+                      shouldShowUpButton:(indexPath.row == 1) ? NO : YES
+                    shouldShowDownButton:(view.layer.sublayers.lastObject == layer) ? NO : YES];
+            }
+
+            return cell;
+        }
     } else if (tableView == self.rightMenu) {
         // Property controls
         if (indexPath.section == 0) {
+            // Header
+            if (indexPath.row == 0) {
+                HeaderTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:kHeaderCellIdentifier forIndexPath:indexPath];
+                [cell setUpWithTitle:[self tableView:tableView titleForHeaderInSection:indexPath.section]];
+                return cell;
+            }
+
             // Opacity
-            if (indexPath.row == OPACITY_POS) {
+            else if (indexPath.row == OPACITY_POS) {
                 SliderTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:kSliderCellIdentifier forIndexPath:indexPath];
                 [cell setUpWithText:kOpacityProperty
-                           minValue:-1.0f
-                           maxValue:2.0f
+                           minValue:0.0f
+                           maxValue:1.0f
                        currentValue:(_currentLayer) ? _currentLayer.opacity : 1.0f
                              target:self
                              action:@selector(opacityChanged:)];
+                [cell setDisabled:![_enabledProperties containsObject:kOpacityProperty]];
                 return cell;
 
             }
@@ -550,6 +531,7 @@ CGFloat const kPadding = 16.0f;
                             options:_contentsGravityOptionsArray
                        currentIndex:(_currentLayer) ? [_contentsGravityOptionsArray indexOfObject:_currentLayer.contentsGravity] : 0
                            delegate:self];
+                [cell setDisabled:![_enabledProperties containsObject:kContentsGravityProperty]];
                 return cell;
 
             }
@@ -558,6 +540,7 @@ CGFloat const kPadding = 16.0f;
             else if (indexPath.row == CONTENTS_POS) {
                 PickerViewTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:kPickerCellIdentifier forIndexPath:indexPath];
                 [cell setUpWithName:kContentsProperty options:_images.allKeys currentIndex:0 delegate:self];
+                [cell setDisabled:![_enabledProperties containsObject:kContentsProperty]];
                 return cell;
             }
 
@@ -568,6 +551,7 @@ CGFloat const kPadding = 16.0f;
                               value:(_currentLayer) ? _currentLayer.hidden : NO
                              target:self
                              action:@selector(hiddenChanged:)];
+                [cell setDisabled:![_enabledProperties containsObject:kHiddenProperty]];
                 return cell;
             }
 
@@ -578,6 +562,7 @@ CGFloat const kPadding = 16.0f;
                               value:(_currentLayer) ? _currentLayer.shouldRasterize : NO
                              target:self
                              action:@selector(shouldRasterizeChanged:)];
+                [cell setDisabled:![_enabledProperties containsObject:kShouldRasterizeProperty]];
                 return cell;
             }
 
@@ -590,6 +575,7 @@ CGFloat const kPadding = 16.0f;
                        currentValue:(_currentLayer) ? _currentLayer.rasterizationScale : 1.0f
                              target:self
                              action:@selector(rasterizationScaleChanged:)];
+                [cell setDisabled:![_enabledProperties containsObject:kRasterizationScaleProperty]];
                 return cell;
 
             }
@@ -603,6 +589,7 @@ CGFloat const kPadding = 16.0f;
                        currentValue:(_currentLayer) ? _currentLayer.contentsScale : 1.0f
                              target:self
                              action:@selector(contentsScaleChanged:)];
+                [cell setDisabled:![_enabledProperties containsObject:kContentsScaleProperty]];
                 return cell;
 
             }
@@ -614,6 +601,7 @@ CGFloat const kPadding = 16.0f;
                               value:(_currentLayer) ? _currentLayer.doubleSided : NO
                              target:self
                              action:@selector(doubleSidedChanged:)];
+                [cell setDisabled:![_enabledProperties containsObject:kDoubleSidedProperty]];
                 return cell;
             }
 
@@ -626,6 +614,7 @@ CGFloat const kPadding = 16.0f;
                        currentValue:(_currentLayer) ? _currentLayer.cornerRadius : 0.0f
                              target:self
                              action:@selector(cornerRadiusChanged:)];
+                [cell setDisabled:![_enabledProperties containsObject:kCornerRadiusProperty]];
                 return cell;
 
             }
@@ -639,6 +628,7 @@ CGFloat const kPadding = 16.0f;
                        currentValue:(_currentLayer) ? _currentLayer.borderWidth : 0.0f
                              target:self
                              action:@selector(borderWidthChanged:)];
+                [cell setDisabled:![_enabledProperties containsObject:kBorderWidthProperty]];
                 return cell;
 
             }
@@ -650,6 +640,7 @@ CGFloat const kPadding = 16.0f;
                               value:(_currentLayer) ? _currentLayer.masksToBounds : NO
                              target:self
                              action:@selector(masksToBoundsChanged:)];
+                [cell setDisabled:![_enabledProperties containsObject:kMasksToBoundsProperty]];
                 return cell;
             }
 
@@ -660,122 +651,138 @@ CGFloat const kPadding = 16.0f;
                               value:(_currentLayer) ? _currentLayer.geometryFlipped : NO
                              target:self
                              action:@selector(geometryFlippedChanged:)];
+                [cell setDisabled:![_enabledProperties containsObject:kGeometryFlippedProperty]];
                 return cell;
             }
         }
 
         // Transform settings
         else if (indexPath.section == 1) {
-            // Bounds
+            // Header
             if (indexPath.row == 0) {
+                HeaderTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:kHeaderCellIdentifier forIndexPath:indexPath];
+                [cell setUpWithTitle:[self tableView:tableView titleForHeaderInSection:indexPath.section]];
+                return cell;
+            }
+
+            // Bounds
+            else if (indexPath.row == 1) {
                 CGRectTableViewCell* rectCell = [tableView dequeueReusableCellWithIdentifier:kCGRectCellIdentifier forIndexPath:indexPath];
 
-                [rectCell setUpWithText:@"Bounds"
+                [rectCell setUpWithText:kLayerBoundsProperty
                            currentValue:_currentLayer.bounds
                                  target:self
                                 actionX:@selector(boundsXChanged:)
                                 actionY:@selector(boundsYChanged:)
                             actionWidth:@selector(boundsWidthChanged:)
                            actionHeight:@selector(boundsHeightChanged:)];
+                [rectCell setDisabled:![_enabledProperties containsObject:kLayerBoundsProperty]];
                 return rectCell;
             }
 
             // Position
-            else if (indexPath.row == 1) {
-                CGPointTableViewCell* pointCell =
-                    [tableView dequeueReusableCellWithIdentifier:kCGPointCellIdentifier forIndexPath:indexPath];
-
-                [pointCell setUpWithText:@"Position"
-                            currentValue:_currentLayer.position
-                                  target:self
-                                 actionX:@selector(positionXChanged:)
-                                 actionY:@selector(positionYChanged:)];
-                return pointCell;
-            }
-
-            // Anchor point
             else if (indexPath.row == 2) {
                 CGPointTableViewCell* pointCell =
                     [tableView dequeueReusableCellWithIdentifier:kCGPointCellIdentifier forIndexPath:indexPath];
 
-                [pointCell setUpWithText:@"Anchor point"
+                [pointCell setUpWithText:kLayerPositionProperty
+                            currentValue:_currentLayer.position
+                                  target:self
+                                 actionX:@selector(positionXChanged:)
+                                 actionY:@selector(positionYChanged:)];
+                [pointCell setDisabled:![_enabledProperties containsObject:kLayerPositionProperty]];
+                return pointCell;
+            }
+
+            // Anchor point
+            else if (indexPath.row == 3) {
+                CGPointTableViewCell* pointCell =
+                    [tableView dequeueReusableCellWithIdentifier:kCGPointCellIdentifier forIndexPath:indexPath];
+
+                [pointCell setUpWithText:kLayerAnchorPointProperty
                             currentValue:_currentLayer.anchorPoint
                                   target:self
                                  actionX:@selector(anchorPointXChanged:)
                                  actionY:@selector(anchorPointYChanged:)];
+                [pointCell setDisabled:![_enabledProperties containsObject:kLayerAnchorPointProperty]];
                 return pointCell;
             }
 
             // Transform mode - affine vs 3D
-            else if (indexPath.row == 3) {
+            else if (indexPath.row == 4) {
                 SwitchTableViewCell* switchCell =
                     [tableView dequeueReusableCellWithIdentifier:kSwitchCellIdentifier forIndexPath:indexPath];
 
-                NSString* viewIdentifier = [self identifierForView:_currentView andProperty:UseAffine];
-                [switchCell setUpWithText:@"Affine transform"
+                NSString* viewIdentifier = [self identifierForLayer:_currentLayer andProperty:UseAffine];
+                [switchCell setUpWithText:kTransformAffineProperty
                                     value:((NSNumber*)[_transformSettings objectForKey:viewIdentifier]).boolValue
                                    target:self
                                    action:@selector(transformModeChanged:)];
+                [switchCell setDisabled:![_enabledProperties containsObject:kTransformAffineProperty]];
                 return switchCell;
             }
 
             // Rotation
-            else if (indexPath.row == 4) {
-                SliderTableViewCell* sliderCell =
-                    [tableView dequeueReusableCellWithIdentifier:kSliderCellIdentifier forIndexPath:indexPath];
-
-                NSString* viewIdentifier = [self identifierForView:_currentView andProperty:Rotation];
-                [sliderCell setUpWithText:@"Rotation"
-                                 minValue:0
-                                 maxValue:360
-                             currentValue:((NSNumber*)[_transformSettings objectForKey:viewIdentifier]).floatValue
-                                   target:self
-                                   action:@selector(rotationChanged:)];
-                return sliderCell;
-            }
-
-            // Scaling
             else if (indexPath.row == 5) {
                 SliderTableViewCell* sliderCell =
                     [tableView dequeueReusableCellWithIdentifier:kSliderCellIdentifier forIndexPath:indexPath];
 
-                NSString* viewIdentifier = [self identifierForView:_currentView andProperty:Scaling];
-                [sliderCell setUpWithText:@"Scaling"
+                NSString* viewIdentifier = [self identifierForLayer:_currentLayer andProperty:Rotation];
+                [sliderCell setUpWithText:kTransformRotationProperty
+                                 minValue:-360
+                                 maxValue:360
+                             currentValue:((NSNumber*)[_transformSettings objectForKey:viewIdentifier]).floatValue
+                                   target:self
+                                   action:@selector(rotationChanged:)];
+                [sliderCell setDisabled:![_enabledProperties containsObject:kTransformRotationProperty]];
+                return sliderCell;
+            }
+
+            // Scaling
+            else if (indexPath.row == 6) {
+                SliderTableViewCell* sliderCell =
+                    [tableView dequeueReusableCellWithIdentifier:kSliderCellIdentifier forIndexPath:indexPath];
+
+                NSString* viewIdentifier = [self identifierForLayer:_currentLayer andProperty:Scaling];
+                [sliderCell setUpWithText:kTransformScaleProperty
                                  minValue:0
                                  maxValue:3
                              currentValue:((NSNumber*)[_transformSettings objectForKey:viewIdentifier]).floatValue
                                    target:self
                                    action:@selector(scalingChanged:)];
+                [sliderCell setDisabled:![_enabledProperties containsObject:kTransformScaleProperty]];
                 return sliderCell;
             }
 
             // X offset
-            else if (indexPath.row == 6) {
+            else if (indexPath.row == 7) {
                 SliderTableViewCell* sliderCell =
                     [tableView dequeueReusableCellWithIdentifier:kSliderCellIdentifier forIndexPath:indexPath];
 
-                NSString* viewIdentifier = [self identifierForView:_currentView andProperty:PositionX];
-                [sliderCell setUpWithText:@"X offset"
+                NSString* viewIdentifier = [self identifierForLayer:_currentLayer andProperty:PositionX];
+                [sliderCell setUpWithText:kTransformXProperty
                                  minValue:-VC_WIDTH / 2.0
                                  maxValue:VC_WIDTH / 2.0
                              currentValue:((NSNumber*)[_transformSettings objectForKey:viewIdentifier]).floatValue
                                    target:self
                                    action:@selector(xOffsetChanged:)];
+                [sliderCell setDisabled:![_enabledProperties containsObject:kTransformXProperty]];
                 return sliderCell;
             }
 
             // Y offset
-            else if (indexPath.row == 7) {
+            else if (indexPath.row == 8) {
                 SliderTableViewCell* sliderCell =
                     [tableView dequeueReusableCellWithIdentifier:kSliderCellIdentifier forIndexPath:indexPath];
 
-                NSString* viewIdentifier = [self identifierForView:_currentView andProperty:PositionY];
-                [sliderCell setUpWithText:@"Y offset"
+                NSString* viewIdentifier = [self identifierForLayer:_currentLayer andProperty:PositionY];
+                [sliderCell setUpWithText:kTransformYProperty
                                  minValue:-VC_HEIGHT / 2.0
                                  maxValue:VC_HEIGHT / 2.0
                              currentValue:((NSNumber*)[_transformSettings objectForKey:viewIdentifier]).floatValue
                                    target:self
                                    action:@selector(yOffsetChanged:)];
+                [sliderCell setDisabled:![_enabledProperties containsObject:kTransformYProperty]];
                 return sliderCell;
             }
         }
@@ -797,8 +804,6 @@ CGFloat const kPadding = 16.0f;
 #pragma mark - View layer property control handlers
 
 - (void)opacityChanged:(UISlider*)sender {
-    // TODO: Would we useful to also display the properties value in the cells label (e.g. cell.textLabel.text == @"Opacity: " +
-    // layer.opacity)
     _currentLayer.opacity = sender.value;
 }
 
@@ -917,8 +922,8 @@ CGFloat const kPadding = 16.0f;
 
 #pragma mark - Transform handlers
 
-- (NSString*)identifierForView:(UIView*)view andProperty:(TransformProperty)property {
-    return [NSString stringWithFormat:@"%lu_%ld", [view hash], property];
+- (NSString*)identifierForLayer:(CALayer*)layer andProperty:(TransformProperty)property {
+    return [NSString stringWithFormat:@"%lu_%ld", [layer hash], property];
 }
 
 - (void)boundsXChanged:(UITextField*)textField {
@@ -975,7 +980,7 @@ CGFloat const kPadding = 16.0f;
 
 - (void)transformModeChanged:(UISwitch*)sender {
     // Cache sender value
-    [_transformSettings setObject:@(sender.on) forKey:[self identifierForView:_currentView andProperty:UseAffine]];
+    [_transformSettings setObject:@(sender.on) forKey:[self identifierForLayer:_currentLayer andProperty:UseAffine]];
 
     NSLog(@"transform matrix:\n%f %f %f %f\n%f %f %f %f\n%f %f %f %f\n%f %f %f %f",
           _currentLayer.transform.m11,
@@ -1004,76 +1009,98 @@ CGFloat const kPadding = 16.0f;
           _currentLayer.affineTransform.ty);
 }
 
-- (void)rotationChanged:(UISlider*)sender {
-    // Only the delta from the previous cached value should be used in the translation
-    NSString* viewIdentifier = [self identifierForView:_currentView andProperty:Rotation];
-    CGFloat diffRotation = ((NSNumber*)[_transformSettings objectForKey:viewIdentifier]).floatValue - sender.value;
+- (CGAffineTransform)transformForComponents:(NSArray*)components {
+    CGAffineTransform ret = CGAffineTransformIdentity;
 
+    if ([components containsObject:@(PositionX)]) {
+        NSString* xIdentifier = [self identifierForLayer:_currentLayer andProperty:PositionX];
+        CGFloat xValue = ((NSNumber*)[_transformSettings objectForKey:xIdentifier]).floatValue;
+        ret = CGAffineTransformTranslate(ret, xValue, 0);
+    }
+
+    if ([components containsObject:@(PositionY)]) {
+        NSString* yIdentifier = [self identifierForLayer:_currentLayer andProperty:PositionY];
+        CGFloat yValue = ((NSNumber*)[_transformSettings objectForKey:yIdentifier]).floatValue;
+        ret = CGAffineTransformTranslate(ret, 0, yValue);
+    }
+
+    if ([components containsObject:@(Scaling)]) {
+        NSString* scalingIdentifier = [self identifierForLayer:_currentLayer andProperty:Scaling];
+        CGFloat scaleValue = ((NSNumber*)[_transformSettings objectForKey:scalingIdentifier]).floatValue;
+        ret = CGAffineTransformScale(ret, scaleValue, scaleValue);
+    }
+
+    if ([components containsObject:@(Rotation)]) {
+        NSString* rotationIdentifier = [self identifierForLayer:_currentLayer andProperty:Rotation];
+        CGFloat rotationValue = ((NSNumber*)[_transformSettings objectForKey:rotationIdentifier]).floatValue;
+        ret = CGAffineTransformRotate(ret, rotationValue / 180.0f * M_PI);
+    }
+
+    return ret;
+}
+
+- (void)rotationChanged:(UISlider*)sender {
     // Cache sender value
-    [_transformSettings setObject:@(sender.value) forKey:[self identifierForView:_currentView andProperty:Rotation]];
+    [_transformSettings setObject:@(sender.value) forKey:[self identifierForLayer:_currentLayer andProperty:Rotation]];
 
     // Toggle between affine (2D) or 3D rotation on the z-axis
-    BOOL useAffine = ((NSNumber*)[_transformSettings objectForKey:[self identifierForView:_currentView andProperty:UseAffine]]).boolValue;
+    BOOL useAffine = ((NSNumber*)[_transformSettings objectForKey:[self identifierForLayer:_currentLayer andProperty:UseAffine]]).boolValue;
     if (useAffine) {
-        _currentLayer.affineTransform = CGAffineTransformRotate(_currentLayer.affineTransform, diffRotation / 180.0f * M_PI);
+        _currentLayer.affineTransform = CGAffineTransformRotate([self transformForComponents:@[ @(Scaling), @(PositionX), @(PositionY) ]],
+                                                                sender.value / 180.0f * M_PI);
     } else {
-        _currentLayer.transform = CATransform3DRotate(_currentLayer.transform, diffRotation / 180.0f * M_PI, 0.0f, 0.0f, 1.0f);
+        _currentLayer.transform = CATransform3DRotate(_currentLayer.transform, sender.value / 180.0f * M_PI, 0.0f, 0.0f, 1.0f);
     }
 }
 
 - (void)scalingChanged:(UISlider*)sender {
     // Cache sender value
-    [_transformSettings setObject:@(sender.value) forKey:[self identifierForView:_currentView andProperty:Scaling]];
+    [_transformSettings setObject:@(sender.value) forKey:[self identifierForLayer:_currentLayer andProperty:Scaling]];
 
     // Toggle between affine (2D) or 3D rotation on the z-axis
-    BOOL useAffine = ((NSNumber*)[_transformSettings objectForKey:[self identifierForView:_currentView andProperty:UseAffine]]).boolValue;
+    BOOL useAffine = ((NSNumber*)[_transformSettings objectForKey:[self identifierForLayer:_currentLayer andProperty:UseAffine]]).boolValue;
     if (useAffine) {
-        _currentLayer.affineTransform = CGAffineTransformMakeScale(sender.value, sender.value);
+        _currentLayer.affineTransform =
+            CGAffineTransformScale([self transformForComponents:@[ @(PositionX), @(PositionY), @(Rotation) ]], sender.value, sender.value);
     } else {
         _currentLayer.transform = CATransform3DMakeScale(sender.value, sender.value, 1.0f);
     }
 }
 
 - (void)xOffsetChanged:(UISlider*)sender {
-    // Only the delta from the previous cached value should be used in the translation
-    NSString* viewIdentifier = [self identifierForView:_currentView andProperty:PositionX];
-    CGFloat diffX = ((NSNumber*)[_transformSettings objectForKey:viewIdentifier]).floatValue - sender.value;
-
     // Cache sender value
-    [_transformSettings setObject:@(sender.value) forKey:[self identifierForView:_currentView andProperty:PositionX]];
+    [_transformSettings setObject:@(sender.value) forKey:[self identifierForLayer:_currentLayer andProperty:PositionX]];
 
     // Toggle between affine (2D) or 3D translation on the x-axis
-    BOOL useAffine = ((NSNumber*)[_transformSettings objectForKey:[self identifierForView:_currentView andProperty:UseAffine]]).boolValue;
+    BOOL useAffine = ((NSNumber*)[_transformSettings objectForKey:[self identifierForLayer:_currentLayer andProperty:UseAffine]]).boolValue;
     if (useAffine) {
-        _currentLayer.affineTransform = CGAffineTransformTranslate(_currentLayer.affineTransform, diffX, 0.0f);
+        _currentLayer.affineTransform =
+            CGAffineTransformTranslate([self transformForComponents:@[ @(Scaling), @(PositionY), @(Rotation) ]], sender.value, 0);
     } else {
-        _currentLayer.transform = CATransform3DTranslate(_currentLayer.transform, diffX, 0.0f, 0.0f);
+        _currentLayer.transform = CATransform3DTranslate(_currentLayer.transform, sender.value, 0.0f, 0.0f);
     }
 }
 
 - (void)yOffsetChanged:(UISlider*)sender {
-    // Only the delta from the previous cached value should be used in the translation
-    NSString* viewIdentifier = [self identifierForView:_currentView andProperty:PositionY];
-    CGFloat diffY = ((NSNumber*)[_transformSettings objectForKey:viewIdentifier]).floatValue - sender.value;
-
     // Cache sender value
-    [_transformSettings setObject:@(sender.value) forKey:[self identifierForView:_currentView andProperty:PositionY]];
+    [_transformSettings setObject:@(sender.value) forKey:[self identifierForLayer:_currentLayer andProperty:PositionY]];
 
     // Toggle between affine (2D) or 3D translation on the y-axis
-    BOOL useAffine = ((NSNumber*)[_transformSettings objectForKey:[self identifierForView:_currentView andProperty:UseAffine]]).boolValue;
+    BOOL useAffine = ((NSNumber*)[_transformSettings objectForKey:[self identifierForLayer:_currentLayer andProperty:UseAffine]]).boolValue;
     if (useAffine) {
-        _currentLayer.affineTransform = CGAffineTransformTranslate(_currentLayer.affineTransform, 0.0f, diffY);
+        _currentLayer.affineTransform =
+            CGAffineTransformTranslate([self transformForComponents:@[ @(Scaling), @(PositionX), @(Rotation) ]], 0, sender.value);
     } else {
-        _currentLayer.transform = CATransform3DTranslate(_currentLayer.transform, 0.0f, diffY, 0.0f);
+        _currentLayer.transform = CATransform3DTranslate(_currentLayer.transform, 0.0f, sender.value, 0.0f);
     }
 }
 
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath {
-    if (tableView == _leftMenu) {
+    if (tableView == _leftMenu && indexPath.row != 0) {
         _currentView = _stage.subviews[indexPath.section];
-        _currentLayer = (indexPath.row == 0) ? _currentView.layer : _currentView.layer.sublayers[indexPath.row - 1];
+        _currentLayer = (indexPath.row == 1) ? _currentView.layer : _currentView.layer.sublayers[indexPath.row - 2];
         [self.rightMenu reloadData];
         [self openRightMenu];
     }

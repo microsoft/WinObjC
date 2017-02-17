@@ -440,6 +440,9 @@ ClSimplexSolver::RemoveConstraintInternal(const ClConstraint *const pcn)
     cerr << "delete@ " << pexpr << endl;
 #endif
     delete pexpr;
+
+    // Delete the ClAbstractVarable that backs marker, else we leak
+    delete marker.get_pclv();
     }
 
   // Delete any error variables.  If cn is an inequality, it also
@@ -453,9 +456,11 @@ ClSimplexSolver::RemoveConstraintInternal(const ClConstraint *const pcn)
       {
       ClVariable v = (*it);
       if (v != marker)
-	{
-	RemoveColumn(v);
-	}
+        {
+        RemoveColumn(v);
+        // Delete the ClAbstractVarable that backs v, else we leak
+        delete v.get_pclv();
+        }
       }
     }
 

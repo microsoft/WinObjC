@@ -153,7 +153,7 @@ typedef unsigned WSMGGuidanceLaneMarkers;
 OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
 @interface WSMGGuidanceRoadSignpost : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUColor* backgroundColor;
 @property (readonly) NSString * exit;
@@ -171,7 +171,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
 OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
 @interface WSMGGuidanceManeuver : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * departureRoadName;
 @property (readonly) NSString * departureShortRoadName;
@@ -198,7 +198,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
 + (BOOL)canCreateFromMapRoute:(WSMMapRoute*)mapRoute;
 + (WSMGGuidanceRoute*)tryCreateFromMapRoute:(WSMMapRoute*)mapRoute;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDGGeoboundingBox* boundingBox;
 @property (readonly) int distance;
@@ -218,7 +218,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
 OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
 @interface WSMGGuidanceMapMatchedCoordinate : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) double currentHeading;
 @property (readonly) double currentSpeed;
@@ -236,7 +236,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
 OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
 @interface WSMGGuidanceLaneInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL isOnRoute;
 @property (readonly) WSMGGuidanceLaneMarkers laneMarkers;
@@ -251,7 +251,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
 OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
 @interface WSMGGuidanceUpdatedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSMGGuidanceManeuver* afterNextManeuver;
 @property (readonly) int afterNextManeuverDistance;
@@ -278,7 +278,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
 OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
 @interface WSMGGuidanceReroutedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSMGGuidanceRoute* route;
 @end
@@ -292,7 +292,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
 OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
 @interface WSMGGuidanceAudioNotificationRequestedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* NSString * */ audioFilePaths;
 @property (readonly) WSMGGuidanceAudioNotificationKind audioNotification;
@@ -309,7 +309,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
 @interface WSMGGuidanceNavigator : RTObject
 + (WSMGGuidanceNavigator*)getCurrent;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WSMGGuidanceAudioNotifications audioNotifications;
 @property WSMGGuidanceAudioMeasurementSystem audioMeasurementSystem;
@@ -352,7 +352,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
 OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
 @interface WSMGGuidanceRoadSegment : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * id;
 @property (readonly) BOOL isHighway;
@@ -375,7 +375,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_GUIDANCE_EXPORT
 @interface WSMGGuidanceTelemetryCollector : RTObject
 + (WSMGGuidanceTelemetryCollector*)getCurrent;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property int uploadFrequency;
 @property double speedTrigger;

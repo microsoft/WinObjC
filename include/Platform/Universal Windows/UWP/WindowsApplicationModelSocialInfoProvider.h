@@ -42,7 +42,7 @@
 OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_PROVIDER_EXPORT
 @interface WASPSocialFeedUpdater : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSMutableArray* /* WASSocialFeedItem* */ items;
 @property (readonly) WASSocialFeedKind kind;
@@ -59,7 +59,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_PROVIDER_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_PROVIDER_EXPORT
 @interface WASPSocialDashboardItemUpdater : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WFDateTime* timestamp;
 @property (retain) WASSocialItemThumbnail* thumbnail;

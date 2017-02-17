@@ -41,7 +41,7 @@
 OBJCUWP_WINDOWS_PERCEPTION_EXPORT
 @interface WPPerceptionTimestamp : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WFTimeSpan* predictionAmount;
 @property (readonly) WFDateTime* targetTime;

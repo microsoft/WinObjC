@@ -229,7 +229,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @interface WMAAudioGraph : RTObject <WFIClosable>
 + (void)createAsync:(WMAAudioGraphSettings*)settings success:(void (^)(WMACreateAudioGraphResult*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) uint64_t completedQuantumCount;
 @property (readonly) WMMAudioEncodingProperties* encodingProperties;
@@ -276,7 +276,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @interface WMACreateAudioGraphResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMAAudioGraph* graph;
 @property (readonly) WMAAudioGraphCreationStatus status;
@@ -292,7 +292,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @interface WMAAudioGraphSettings : RTObject
 + (WMAAudioGraphSettings*)make:(WMRAudioRenderCategory)audioRenderCategory ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WMAQuantumSizeSelectionMode quantumSizeSelectionMode;
 @property (retain) WDEDeviceInformation* primaryRenderDevice;
@@ -311,7 +311,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @interface WMAAudioDeviceInputNode : RTObject <WMAIAudioInputNode, WMAIAudioNode, WFIClosable, WMAIAudioInputNode2>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDEDeviceInformation* device;
 @property (readonly) NSArray* /* WMAAudioGraphConnection* */ outgoingConnections;
@@ -340,7 +340,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @interface WMACreateAudioDeviceInputNodeResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMAAudioDeviceInputNode* deviceInputNode;
 @property (readonly) WMAAudioDeviceNodeCreationStatus status;
@@ -355,7 +355,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @interface WMAAudioDeviceOutputNode : RTObject <WMAIAudioNode, WFIClosable, WMAIAudioNodeWithListener>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDEDeviceInformation* device;
 @property double outgoingGain;
@@ -380,7 +380,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @interface WMACreateAudioDeviceOutputNodeResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMAAudioDeviceOutputNode* deviceOutputNode;
 @property (readonly) WMAAudioDeviceNodeCreationStatus status;
@@ -395,7 +395,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @interface WMAAudioFileInputNode : RTObject <WMAIAudioInputNode, WMAIAudioNode, WFIClosable, WMAIAudioInputNode2>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double playbackSpeedFactor;
 @property (retain) id /* int */ loopCount;
@@ -433,7 +433,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @interface WMACreateAudioFileInputNodeResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMAAudioFileInputNode* fileInputNode;
 @property (readonly) WMAAudioFileNodeCreationStatus status;
@@ -448,7 +448,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @interface WMAAudioFileOutputNode : RTObject <WMAIAudioNode, WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) RTObject<WSIStorageFile>* file;
 @property (readonly) WMMMediaEncodingProfile* fileEncodingProfile;
@@ -474,7 +474,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @interface WMACreateAudioFileOutputNodeResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMAAudioFileOutputNode* fileOutputNode;
 @property (readonly) WMAAudioFileNodeCreationStatus status;
@@ -489,7 +489,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @interface WMAAudioGraphUnrecoverableErrorOccurredEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMAAudioGraphUnrecoverableError error;
 @end
@@ -503,7 +503,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @interface WMAAudioGraphBatchUpdater : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)close;
 @end
@@ -517,7 +517,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @interface WMAAudioFrameInputNode : RTObject <WMAIAudioInputNode, WMAIAudioNode, WFIClosable, WMAIAudioInputNode2>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double playbackSpeedFactor;
 @property (readonly) uint64_t queuedSampleCount;
@@ -553,7 +553,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @interface WMAAudioFrameOutputNode : RTObject <WMAIAudioNode, WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double outgoingGain;
 @property BOOL consumeInput;
@@ -577,7 +577,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @interface WMAAudioSubmixNode : RTObject <WMAIAudioInputNode, WMAIAudioNode, WFIClosable, WMAIAudioInputNode2>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* WMAAudioGraphConnection* */ outgoingConnections;
 @property (readonly) WMAAudioNodeEmitter* emitter;
@@ -605,9 +605,9 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @interface WMAAudioNodeEmitter : RTObject
 + (WMAAudioNodeEmitter*)makeAudioNodeEmitter:(WMAAudioNodeEmitterShape*)shape decayModel:(WMAAudioNodeEmitterDecayModel*)decayModel settings:(WMAAudioNodeEmitterSettings)settings ACTIVATOR;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WFNVector3* position;
 @property double gain;
@@ -629,9 +629,9 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 
 OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @interface WMAAudioNodeListener : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double speedOfSound;
 @property (retain) WFNVector3* position;
@@ -648,7 +648,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @interface WMAAudioGraphConnection : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double gain;
 @property (readonly) RTObject<WMAIAudioNode>* destination;
@@ -663,7 +663,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @interface WMAAudioFrameCompletedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMAudioFrame* frame;
 @end
@@ -677,7 +677,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @interface WMAFrameInputNodeQuantumStartedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) int requiredSamples;
 @end
@@ -691,7 +691,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @interface WMAEqualizerBand : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double gain;
 @property double frequencyCenter;
@@ -723,7 +723,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @interface WMAEqualizerEffectDefinition : RTObject <WMEIAudioEffectDefinition>
 + (WMAEqualizerEffectDefinition*)make:(WMAAudioGraph*)audioGraph ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* WMAEqualizerBand* */ bands;
 @property (readonly) NSString * activatableClassId;
@@ -740,7 +740,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @interface WMAReverbEffectDefinition : RTObject <WMEIAudioEffectDefinition>
 + (WMAReverbEffectDefinition*)make:(WMAAudioGraph*)audioGraph ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property uint8_t highEQGain;
 @property uint8_t highEQCutoff;
@@ -779,7 +779,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @interface WMAEchoEffectDefinition : RTObject <WMEIAudioEffectDefinition>
 + (WMAEchoEffectDefinition*)make:(WMAAudioGraph*)audioGraph ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property double wetDryMix;
 @property double feedback;
@@ -798,7 +798,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @interface WMALimiterEffectDefinition : RTObject <WMEIAudioEffectDefinition>
 + (WMALimiterEffectDefinition*)make:(WMAAudioGraph*)audioGraph ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property unsigned int Release;
 @property unsigned int loudness;
@@ -815,7 +815,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @interface WMAAudioNodeEmitterConeProperties : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) double innerAngle;
 @property (readonly) double outerAngle;
@@ -833,7 +833,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 + (WMAAudioNodeEmitterShape*)createCone:(double)innerAngle outerAngle:(double)outerAngle outerAngleGain:(double)outerAngleGain;
 + (WMAAudioNodeEmitterShape*)createOmnidirectional;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMAAudioNodeEmitterConeProperties* coneProperties;
 @property (readonly) WMAAudioNodeEmitterShapeKind kind;
@@ -848,7 +848,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @interface WMAAudioNodeEmitterNaturalDecayModelProperties : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) double cutoffDistance;
 @property (readonly) double unityGainDistance;
@@ -865,7 +865,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 + (WMAAudioNodeEmitterDecayModel*)createNatural:(double)minGain maxGain:(double)maxGain unityGainDistance:(double)unityGainDistance cutoffDistance:(double)cutoffDistance;
 + (WMAAudioNodeEmitterDecayModel*)createCustom:(double)minGain maxGain:(double)maxGain;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WMAAudioNodeEmitterDecayKind kind;
 @property (readonly) double maxGain;

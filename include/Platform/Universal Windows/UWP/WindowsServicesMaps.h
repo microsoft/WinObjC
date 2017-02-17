@@ -134,7 +134,7 @@ typedef unsigned WSMMapLocationDesiredAccuracy;
 OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapAddress : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * buildingFloor;
 @property (readonly) NSString * buildingName;
@@ -163,7 +163,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapLocation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSMMapAddress* address;
 @property (readonly) NSString * Description;
@@ -180,7 +180,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapRouteManeuver : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * exitNumber;
 @property (readonly) NSString * instructionText;
@@ -202,7 +202,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapRouteLeg : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDGGeoboundingBox* boundingBox;
 @property (readonly) WFTimeSpan* estimatedDuration;
@@ -220,7 +220,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapRoute : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDGGeoboundingBox* boundingBox;
 @property (readonly) WFTimeSpan* estimatedDuration;
@@ -241,7 +241,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapLocationFinderResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* WSMMapLocation* */ locations;
 @property (readonly) WSMMapLocationFinderStatus status;
@@ -256,7 +256,7 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapRouteFinderResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSMMapRoute* route;
 @property (readonly) WSMMapRouteFinderStatus status;
@@ -271,9 +271,9 @@ OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 
 OBJCUWP_WINDOWS_SERVICES_MAPS_EXPORT
 @interface WSMMapRouteDrivingOptions : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WSMMapRouteRestrictions routeRestrictions;
 @property WSMMapRouteOptimization routeOptimization;

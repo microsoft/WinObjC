@@ -25,6 +25,11 @@
 @property UITextField* textFieldWidth;
 @property UITextField* textFieldHeight;
 
+@property UILabel* labelX;
+@property UILabel* labelY;
+@property UILabel* labelWidth;
+@property UILabel* labelHeight;
+
 @end
 
 @implementation CGRectTableViewCell
@@ -35,54 +40,103 @@
         self.textFieldX.translatesAutoresizingMaskIntoConstraints = NO;
         self.textFieldX.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
 
+        self.labelX = [UILabel new];
+        self.labelX.translatesAutoresizingMaskIntoConstraints = NO;
+        self.labelX.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+        self.labelX.textColor = [UIColor lightGrayColor];
+        self.labelX.text = @"X:";
+
         self.textFieldY = [UITextField new];
         self.textFieldY.translatesAutoresizingMaskIntoConstraints = NO;
         self.textFieldY.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+
+        self.labelY = [UILabel new];
+        self.labelY.translatesAutoresizingMaskIntoConstraints = NO;
+        self.labelY.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+        self.labelY.textColor = [UIColor lightGrayColor];
+        self.labelY.text = @"Y:";
 
         self.textFieldWidth = [UITextField new];
         self.textFieldWidth.translatesAutoresizingMaskIntoConstraints = NO;
         self.textFieldWidth.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
 
+        self.labelWidth = [UILabel new];
+        self.labelWidth.translatesAutoresizingMaskIntoConstraints = NO;
+        self.labelWidth.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+        self.labelWidth.textColor = [UIColor lightGrayColor];
+        self.labelWidth.text = @"W:";
+
         self.textFieldHeight = [UITextField new];
         self.textFieldHeight.translatesAutoresizingMaskIntoConstraints = NO;
         self.textFieldHeight.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+
+        self.labelHeight = [UILabel new];
+        self.labelHeight.translatesAutoresizingMaskIntoConstraints = NO;
+        self.labelHeight.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+        self.labelHeight.textColor = [UIColor lightGrayColor];
+        self.labelHeight.text = @"H:";
 
         [self addSubview:self.textFieldX];
         [self addSubview:self.textFieldY];
         [self addSubview:self.textFieldWidth];
         [self addSubview:self.textFieldHeight];
 
+        [self addSubview:self.labelX];
+        [self addSubview:self.labelY];
+        [self addSubview:self.labelWidth];
+        [self addSubview:self.labelHeight];
+
+#ifdef WINOBJC
+        // Override the use of autolayout using its visual language for this cell
+        [self.titleLabel setFrame:CGRectMake(20.0f, 30.0f, 100.0f, 16.0f)];
+        [self.labelX setFrame:CGRectMake(150.0f, 16.0f, 20.0f, 16.0f)];
+        [self.labelY setFrame:CGRectMake(150.0f, 48.0f, 20.0f, 16.0f)];
+        [self.textFieldX setFrame:CGRectMake(170.0f, 16.0f, 70.0f, 20.0f)];
+        [self.textFieldY setFrame:CGRectMake(170.0f, 48.0f, 70.0f, 20.0f)];
+        [self.labelWidth setFrame:CGRectMake(255.0f, 16.0f, 20.0f, 16.0f)];
+        [self.labelHeight setFrame:CGRectMake(255.0f, 48.0f, 20.0f, 16.0f)];
+        [self.textFieldWidth setFrame:CGRectMake(275.0f, 16.0f, 70.0f, 20.0f)];
+        [self.textFieldHeight setFrame:CGRectMake(275.0f, 48.0f, 70.0f, 20.0f)];
+#else
         NSDictionary* views = @{
             @"titleLabel" : self.titleLabel,
             @"textFieldX" : self.textFieldX,
             @"textFieldY" : self.textFieldY,
             @"textFieldWidth" : self.textFieldWidth,
-            @"textFieldHeight" : self.textFieldHeight
+            @"textFieldHeight" : self.textFieldHeight,
+            @"labelX" : self.labelX,
+            @"labelY" : self.labelY,
+            @"labelWidth" : self.labelWidth,
+            @"labelHeight" : self.labelHeight
         };
-        NSDictionary* metrics = @{ @"pad" : @(kPadding) };
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-pad-[titleLabel]-pad-[textFieldX]-pad-|"
+        NSDictionary* metrics = @{ @"pad" : @(kPadding), @"w" : @(kPadding * 3.0) };
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-pad-[titleLabel]-(>=pad)-|"
                                                                      options:0
                                                                      metrics:metrics
                                                                        views:views]];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[titleLabel]-pad-[textFieldY]-pad-|"
-                                                                     options:0
-                                                                     metrics:metrics
-                                                                       views:views]];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[titleLabel]-pad-[textFieldWidth]-pad-|"
-                                                                     options:0
-                                                                     metrics:metrics
-                                                                       views:views]];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[titleLabel]-pad-[textFieldHeight]-pad-|"
-                                                                     options:0
-                                                                     metrics:metrics
-                                                                       views:views]];
-
         [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[titleLabel]|" options:0 metrics:metrics views:views]];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[textFieldX(25)]-(>=0)-[textFieldY(25)]-(>=0)-"
-                                                                             @"[textFieldWidth(25)]-(>=0)-[textFieldHeight(25)]"
-                                                                     options:0
-                                                                     metrics:metrics
-                                                                       views:views]];
+        [self addConstraints:[NSLayoutConstraint
+                                 constraintsWithVisualFormat:@"H:|-(>=pad)-[labelX]-[textFieldX(w)]-[labelWidth]-[textFieldWidth(w)]-pad-|"
+                                                     options:0
+                                                     metrics:metrics
+                                                       views:views]];
+        [self
+            addConstraints:[NSLayoutConstraint
+                               constraintsWithVisualFormat:@"H:|-(>=pad)-[labelY]-[textFieldY(w)]-[labelHeight]-[textFieldHeight(w)]-pad-|"
+                                                   options:0
+                                                   metrics:metrics
+                                                     views:views]];
+
+        [self.textFieldX.topAnchor constraintEqualToAnchor:self.topAnchor constant:kPadding].active = YES;
+        [self.textFieldWidth.topAnchor constraintEqualToAnchor:self.topAnchor constant:kPadding].active = YES;
+        [self.labelX.topAnchor constraintEqualToAnchor:self.topAnchor constant:kPadding].active = YES;
+        [self.labelWidth.topAnchor constraintEqualToAnchor:self.topAnchor constant:kPadding].active = YES;
+
+        [self.textFieldY.bottomAnchor constraintEqualToAnchor:self.bottomAnchor constant:-kPadding].active = YES;
+        [self.textFieldHeight.bottomAnchor constraintEqualToAnchor:self.bottomAnchor constant:-kPadding].active = YES;
+        [self.labelY.bottomAnchor constraintEqualToAnchor:self.bottomAnchor constant:-kPadding].active = YES;
+        [self.labelHeight.bottomAnchor constraintEqualToAnchor:self.bottomAnchor constant:-kPadding].active = YES;
+#endif
     }
 
     return self;

@@ -72,6 +72,40 @@ __inline Panel^ _SubLayerPanelFromInspectable(const ComPtr<IInspectable>& elemen
     return dynamic_cast<Canvas^>(value);
 };
 
+__inline LayerProperty^ _GetBorderBrushProperty(FrameworkElement^ xamlLayer) {
+    // Look for a pre-canned BorderBrush dependency property on the types that we know support it
+    if (ILayer^ layer = dynamic_cast<ILayer^>(xamlLayer)) {
+        return layer->GetBorderBrushProperty();
+    } else if (Grid^ grid = dynamic_cast<Grid^>(xamlLayer)) {
+        return ref new LayerProperty(grid, grid->BorderBrushProperty);
+    } else if (Control^ control = dynamic_cast<Control^>(xamlLayer)) {
+        return ref new LayerProperty(control, control->BorderBrushProperty);
+    } else {
+        UNIMPLEMENTED_WITH_MSG(
+            "BorderBrush not supported on this Xaml element: [%ws].",
+            xamlLayer->GetType()->FullName->Data());
+    }
+
+    return nullptr;
+}
+
+__inline LayerProperty^ _GetBorderThicknessProperty(FrameworkElement^ xamlLayer) {
+    // Look for a pre-canned BorderThicknessProperty dependency property on the types that we know support it
+    if (ILayer^ layer = dynamic_cast<ILayer^>(xamlLayer)) {
+        return layer->GetBorderThicknessProperty();
+    } else if (Grid^ grid = dynamic_cast<Grid^>(xamlLayer)) {
+        return ref new LayerProperty(grid, grid->BorderThicknessProperty);
+    } else if (Control^ control = dynamic_cast<Control^>(xamlLayer)) {
+        return ref new LayerProperty(control, control->BorderThicknessProperty);
+    } else {
+        UNIMPLEMENTED_WITH_MSG(
+            "BorderWidth not supported on this Xaml element: [%ws].",
+            xamlLayer->GetType()->FullName->Data());
+    }
+
+    return nullptr;
+}
+
 LayerProxy::LayerProxy(IInspectable* xamlElement) :
     _xamlElement(nullptr),
     _isRoot(false),
@@ -150,7 +184,29 @@ void LayerProxy::SetTopMost() {
     }
 }
 
-void LayerProxy::_SetBackgroundColor(float r, float g, float b, float a) {
+SolidColorBrush^ _SolidColorBrushFromLayerColor(const LayerColor& color) {
+    Windows::UI::Color windowsColor;
+    windowsColor.R = static_cast<unsigned char>(color.r * 255.0);
+    windowsColor.G = static_cast<unsigned char>(color.g * 255.0);
+    windowsColor.B = static_cast<unsigned char>(color.b * 255.0);
+    windowsColor.A = static_cast<unsigned char>(color.a * 255.0);
+    return ref new SolidColorBrush(windowsColor);
+}
+
+LayerColor _LayerColorFromSolidColorBrush(SolidColorBrush^ brush) {
+    LayerColor color;
+    if (brush) {
+        Windows::UI::Color windowsColor = brush->Color;
+        color.r = static_cast<float>(windowsColor.R / 255.0);
+        color.g = static_cast<float>(windowsColor.G / 255.0);
+        color.b = static_cast<float>(windowsColor.B / 255.0);
+        color.a = static_cast<float>(windowsColor.A / 255.0);
+    }
+
+    return color;
+}
+
+void LayerProxy::_SetBackgroundColor(const LayerColor& color) {
     FrameworkElement^ xamlLayer = _FrameworkElementFromInspectable(_xamlElement);
 
     // A null brush is transparent and not hit-testable; we only want this for 'root' or 'topmost' layers/views.
@@ -158,12 +214,7 @@ void LayerProxy::_SetBackgroundColor(float r, float g, float b, float a) {
     // Note that UIView hit-testability is handled in UIView via its 'userInteractionEnabled', 'isHidden', and 'alpha' property values.
     SolidColorBrush^ backgroundBrush = nullptr; 
     if (!_isRoot && !_topMost) {
-        Windows::UI::Color backgroundColor;
-        backgroundColor.R = static_cast<unsigned char>(r * 255.0);
-        backgroundColor.G = static_cast<unsigned char>(g * 255.0);
-        backgroundColor.B = static_cast<unsigned char>(b * 255.0);
-        backgroundColor.A = static_cast<unsigned char>(a * 255.0);
-        backgroundBrush = ref new SolidColorBrush(backgroundColor);
+        backgroundBrush = _SolidColorBrushFromLayerColor(color);
     }
 
     // Panel and Control each have a Background property that we can set
@@ -176,6 +227,55 @@ void LayerProxy::_SetBackgroundColor(float r, float g, float b, float a) {
             "SetBackgroundColor not supported on this Xaml element: [%ws].",
             xamlLayer->GetType()->FullName->Data());
     }
+}
+
+void LayerProxy::_SetBorderColor(const LayerColor& color) {
+    // Set the BorderBrush property if this layer supports it
+    FrameworkElement^ xamlLayer = _FrameworkElementFromInspectable(_xamlElement);
+    LayerProperty^ borderBrushProperty = _GetBorderBrushProperty(xamlLayer);
+    if (borderBrushProperty) {
+        SolidColorBrush^ borderBrush = _SolidColorBrushFromLayerColor(color);
+        borderBrushProperty->SetValue(borderBrush);
+    }
+}
+
+LayerColor LayerProxy::_GetBorderColor() {
+    FrameworkElement^ xamlLayer = _FrameworkElementFromInspectable(_xamlElement);
+    SolidColorBrush^ borderBrush = nullptr;
+
+    // Get the BorderBrush property if this layer supports it
+    LayerProperty^ borderBrushProperty = _GetBorderBrushProperty(xamlLayer);
+    if (borderBrushProperty) {
+        borderBrush = safe_cast<SolidColorBrush^>(borderBrushProperty->GetValue());
+    }
+
+    return _LayerColorFromSolidColorBrush(borderBrush);
+}
+
+void LayerProxy::_SetBorderWidth(float width) {
+    // Set the BorderThickness property if this layer supports it
+    FrameworkElement^ xamlLayer = _FrameworkElementFromInspectable(_xamlElement);
+    LayerProperty^ borderThicknessProperty = _GetBorderThicknessProperty(xamlLayer);
+    if (borderThicknessProperty) {
+        Thickness thickness(width);
+        borderThicknessProperty->SetValue(thickness);
+    }
+}
+
+float LayerProxy::_GetBorderWidth() {
+    // Get the BorderThickness property if this layer supports it
+    FrameworkElement^ xamlLayer = _FrameworkElementFromInspectable(_xamlElement);
+    LayerProperty^ borderThicknessProperty = _GetBorderThicknessProperty(xamlLayer);
+    if (borderThicknessProperty) {
+        Thickness thickness = static_cast<Thickness>(borderThicknessProperty->GetValue());
+
+        assert(thickness.Left == thickness.Right && thickness.Left == thickness.Top && thickness.Left == thickness.Bottom);
+
+        // Return an arbitrary field of the thickness as our width, since they should all be equal
+        return static_cast<float>(thickness.Left);
+    }
+
+    return 0.0;
 }
 
 void LayerProxy::SetShouldRasterize(bool rasterize) {

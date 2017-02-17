@@ -39,7 +39,7 @@
 OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_EXPORT
 @interface WSAIEnterpriseKeyCredentialRegistrationInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * keyId;
 @property (readonly) NSString * keyName;
@@ -57,7 +57,7 @@ OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_EXPORT
 OBJCUWP_WINDOWS_SECURITY_AUTHENTICATION_IDENTITY_EXPORT
 @interface WSAIEnterpriseKeyCredentialRegistrationManager : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 + (WSAIEnterpriseKeyCredentialRegistrationManager*)current;
 - (void)getRegistrationsAsyncWithSuccess:(void (^)(NSArray* /* WSAIEnterpriseKeyCredentialRegistrationInfo* */))success failure:(void (^)(NSError*))failure;

@@ -333,9 +333,9 @@ typedef unsigned WAEEmailMailboxDeleteFolderStatus;
 
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMessage : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * subject;
 @property (retain) NSString * body;
@@ -385,7 +385,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailStore : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)findMailboxesAsyncWithSuccess:(void (^)(NSArray* /* WAEEmailMailbox* */))success failure:(void (^)(NSError*))failure;
 - (WAEEmailConversationReader*)getConversationReader;
@@ -409,7 +409,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailManagerForUser : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WSUser* user;
 - (RTObject<WFIAsyncAction>*)showComposeNewEmailAsync:(WAEEmailMessage*)message;
@@ -425,7 +425,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMailbox : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WAEEmailMailboxOtherAppWriteAccess otherAppWriteAccess;
 @property (retain) NSString * mailAddress;
@@ -493,7 +493,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailConversationReader : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)readBatchAsyncWithSuccess:(void (^)(WAEEmailConversationBatch*))success failure:(void (^)(NSError*))failure;
 @end
@@ -508,9 +508,9 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailQueryOptions : RTObject
 + (WAEEmailQueryOptions*)makeWithText:(NSString *)text ACTIVATOR;
 + (WAEEmailQueryOptions*)makeWithTextAndFields:(NSString *)text fields:(WAEEmailQuerySearchFields)fields ACTIVATOR;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WAEEmailQuerySortProperty sortProperty;
 @property WAEEmailQuerySortDirection sortDirection;
@@ -528,7 +528,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMessageReader : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)readBatchAsyncWithSuccess:(void (^)(WAEEmailMessageBatch*))success failure:(void (^)(NSError*))failure;
 @end
@@ -542,7 +542,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailConversation : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WAEEmailFlagState flagState;
 @property (readonly) BOOL hasAttachment;
@@ -570,7 +570,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailFolder : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * remoteId;
 @property (retain) WFDateTime* lastSuccessfulSyncTime;
@@ -605,9 +605,9 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailRecipient : RTObject
 + (WAEEmailRecipient*)make:(NSString *)address ACTIVATOR;
 + (WAEEmailRecipient*)makeWithName:(NSString *)address name:(NSString *)name ACTIVATOR;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * name;
 @property (retain) NSString * address;
@@ -622,9 +622,9 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailIrmTemplate : RTObject
 + (WAEEmailIrmTemplate*)make:(NSString *)id name:(NSString *)name description:(NSString *)description ACTIVATOR;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * name;
 @property (retain) NSString * id;
@@ -639,10 +639,10 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailIrmInfo : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WAEEmailIrmInfo*)make:(WFDateTime*)expiration irmTemplate:(WAEEmailIrmTemplate*)irmTemplate ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL canRemoveIrmOnResponse;
 @property BOOL canPrintData;
@@ -666,11 +666,11 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailAttachment : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WAEEmailAttachment*)make:(NSString *)fileName data:(RTObject<WSSIRandomAccessStreamReference>*)data mimeType:(NSString *)mimeType ACTIVATOR;
 + (WAEEmailAttachment*)make:(NSString *)fileName data:(RTObject<WSSIRandomAccessStreamReference>*)data ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * fileName;
 @property (retain) RTObject<WSSIRandomAccessStreamReference>* data;
@@ -692,9 +692,9 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMeetingInfo : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * location;
 @property BOOL isResponseRequested;
@@ -721,7 +721,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMailboxChangedDeferral : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)complete;
 @end
@@ -735,7 +735,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMailboxCapabilities : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL canSmartSend;
 @property BOOL canUpdateMeetingResponses;
@@ -762,7 +762,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMailboxChangeTracker : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL isTracking;
 - (void)enable;
@@ -779,7 +779,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMailboxPolicies : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) id /* WAEEmailMailboxSmimeSigningAlgorithm */ requiredSmimeSigningAlgorithm;
 @property (retain) id /* WAEEmailMailboxSmimeEncryptionAlgorithm */ requiredSmimeEncryptionAlgorithm;
@@ -798,7 +798,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMailboxSyncManager : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WAEEmailMailboxSyncStatus status;
 @property (retain) WFDateTime* lastSuccessfulSyncTime;
@@ -817,7 +817,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMailboxChangedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (WAEEmailMailboxChangedDeferral*)getDeferral;
 @end
@@ -830,9 +830,9 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMailboxAutoReplySettings : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) id /* WFDateTime* */ startTime;
 @property WAEEmailMailboxAutoReplyMessageResponseKind responseKind;
@@ -851,9 +851,9 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailRecipientResolutionResult : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WAEEmailRecipientResolutionStatus status;
 @property (readonly) NSArray* /* WSCCCertificate* */ publicKeys;
@@ -869,7 +869,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMailboxCreateFolderResult : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WAEEmailFolder* folder;
 @property (readonly) WAEEmailMailboxCreateFolderStatus status;
@@ -884,7 +884,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMailboxAutoReply : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * response;
 @property BOOL isEnabled;
@@ -899,7 +899,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailItemCounts : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int flagged;
 @property (readonly) unsigned int important;
@@ -916,7 +916,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailQueryTextSearch : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * text;
 @property WAEEmailQuerySearchScope searchScope;
@@ -932,7 +932,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailConversationBatch : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* WAEEmailConversation* */ conversations;
 @property (readonly) WAEEmailBatchStatus status;
@@ -947,7 +947,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMessageBatch : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* WAEEmailMessage* */ messages;
 @property (readonly) WAEEmailBatchStatus status;
@@ -962,7 +962,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMailboxAction : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) uint64_t changeNumber;
 @property (readonly) WAEEmailMailboxActionKind kind;
@@ -977,7 +977,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMailboxChange : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WAEEmailMailboxChangeType changeType;
 @property (readonly) WAEEmailFolder* folder;
@@ -994,7 +994,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailMailboxChangeReader : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 - (void)acceptChanges;
 - (void)acceptChangesThrough:(WAEEmailMailboxChange*)lastChangeToAcknowledge;
@@ -1023,7 +1023,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WAEEmailStoreNotificationTriggerDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @end
 

@@ -50,7 +50,7 @@ typedef unsigned WACPAddContactResult;
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WACPContactRemovedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * id;
 @end
@@ -64,7 +64,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @interface WACPContactPickerUI : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSArray* /* NSString * */ desiredFields;
 @property (readonly) WACContactSelectionMode selectionMode;

@@ -22,7 +22,5 @@
 	<string>1</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors</string>
-	<key>NSPrincipalClass</key>
-	<string></string>
 </dict>
 </plist>

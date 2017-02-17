@@ -36,10 +36,11 @@
 		233DE3641DD15E5A00680F5E /* StringTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 233DE35F1DD15E5A00680F5E /* StringTableViewCell.m */; };
 		233DE3651DD15E5A00680F5E /* SwitchTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 233DE3611DD15E5A00680F5E /* SwitchTableViewCell.m */; };
 		233DE3661DD15E5A00680F5E /* CALayerMultipleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 233DE3631DD15E5A00680F5E /* CALayerMultipleViewController.m */; };
-		233DE36C1DD3D9F700680F5E /* ViewHeaderFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 233DE36B1DD3D9F700680F5E /* ViewHeaderFooterView.m */; };
 		233DE36E1DD5153400680F5E /* 3x3grid.png in Resources */ = {isa = PBXBuildFile; fileRef = 233DE36D1DD5153400680F5E /* 3x3grid.png */; };
 		233DE3761DDAA42300680F5E /* CGPointTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 233DE3731DDAA42300680F5E /* CGPointTableViewCell.m */; };
 		233DE3771DDAA42300680F5E /* CGRectTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 233DE3751DDAA42300680F5E /* CGRectTableViewCell.m */; };
+		348AD6C71E2831AC00ABC130 /* HeaderTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 348AD6C61E2831AC00ABC130 /* HeaderTableViewCell.m */; };
+		348AD6CA1E28383A00ABC130 /* FooterTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 348AD6C91E28383A00ABC130 /* FooterTableViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -93,13 +94,15 @@
 		233DE3611DD15E5A00680F5E /* SwitchTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwitchTableViewCell.m; sourceTree = "<group>"; };
 		233DE3621DD15E5A00680F5E /* CALayerMultipleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CALayerMultipleViewController.h; sourceTree = "<group>"; };
 		233DE3631DD15E5A00680F5E /* CALayerMultipleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CALayerMultipleViewController.m; sourceTree = "<group>"; };
-		233DE36A1DD3D9F700680F5E /* ViewHeaderFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewHeaderFooterView.h; sourceTree = "<group>"; };
-		233DE36B1DD3D9F700680F5E /* ViewHeaderFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewHeaderFooterView.m; sourceTree = "<group>"; };
 		233DE36D1DD5153400680F5E /* 3x3grid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 3x3grid.png; path = CoreAnimationTest/Images/3x3grid.png; sourceTree = "<group>"; };
 		233DE3721DDAA42300680F5E /* CGPointTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPointTableViewCell.h; sourceTree = "<group>"; };
 		233DE3731DDAA42300680F5E /* CGPointTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPointTableViewCell.m; sourceTree = "<group>"; };
 		233DE3741DDAA42300680F5E /* CGRectTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGRectTableViewCell.h; sourceTree = "<group>"; };
 		233DE3751DDAA42300680F5E /* CGRectTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGRectTableViewCell.m; sourceTree = "<group>"; };
+		348AD6C51E2831AC00ABC130 /* HeaderTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeaderTableViewCell.h; sourceTree = "<group>"; };
+		348AD6C61E2831AC00ABC130 /* HeaderTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeaderTableViewCell.m; sourceTree = "<group>"; };
+		348AD6C81E28383A00ABC130 /* FooterTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FooterTableViewCell.h; sourceTree = "<group>"; };
+		348AD6C91E28383A00ABC130 /* FooterTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FooterTableViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,6 +162,10 @@
 				2312E1361DAD95AC00998C74 /* Info.plist */,
 				233DE3521DD15E2E00680F5E /* LayerTableViewCell.h */,
 				233DE3531DD15E2E00680F5E /* LayerTableViewCell.m */,
+				348AD6C51E2831AC00ABC130 /* HeaderTableViewCell.h */,
+				348AD6C61E2831AC00ABC130 /* HeaderTableViewCell.m */,
+				348AD6C81E28383A00ABC130 /* FooterTableViewCell.h */,
+				348AD6C91E28383A00ABC130 /* FooterTableViewCell.m */,
 				2312E13C1DAD988B00998C74 /* MenuTableViewController.h */,
 				2312E13D1DAD988B00998C74 /* MenuTableViewController.m */,
 				233DE3551DD15E3C00680F5E /* PickerViewTableViewCell.h */,
@@ -177,8 +184,6 @@
 				233DE35F1DD15E5A00680F5E /* StringTableViewCell.m */,
 				233DE3601DD15E5A00680F5E /* SwitchTableViewCell.h */,
 				233DE3611DD15E5A00680F5E /* SwitchTableViewCell.m */,
-				233DE36A1DD3D9F700680F5E /* ViewHeaderFooterView.h */,
-				233DE36B1DD3D9F700680F5E /* ViewHeaderFooterView.m */,
 				2312E1251DAD95AC00998C74 /* Supporting Files */,
 			);
 			path = CoreAnimationTest;
@@ -288,8 +293,10 @@
 			files = (
 				2312E1451DADC5C400998C74 /* ProgrammaticViewController.m in Sources */,
 				233DE3571DD15E3C00680F5E /* PickerViewTableViewCell.m in Sources */,
+				348AD6CA1E28383A00ABC130 /* FooterTableViewCell.m in Sources */,
 				2312E12A1DAD95AC00998C74 /* AppDelegate.m in Sources */,
 				2312E16F1DB6F88300998C74 /* ScrollingView.m in Sources */,
+				348AD6C71E2831AC00ABC130 /* HeaderTableViewCell.m in Sources */,
 				2312E1691DB6F87600998C74 /* CAEmitterLayerViewController.m in Sources */,
 				2312E14F1DB1733D00998C74 /* CALayerAnimationViewController.m in Sources */,
 				2312E16B1DB6F87600998C74 /* CAShapeLayerViewController.m in Sources */,
@@ -298,7 +305,6 @@
 				2312E13E1DAD988B00998C74 /* MenuTableViewController.m in Sources */,
 				2312E1271DAD95AC00998C74 /* main.m in Sources */,
 				233DE3641DD15E5A00680F5E /* StringTableViewCell.m in Sources */,
-				233DE36C1DD3D9F700680F5E /* ViewHeaderFooterView.m in Sources */,
 				233DE3771DDAA42300680F5E /* CGRectTableViewCell.m in Sources */,
 				2312E1481DAED8D100998C74 /* CALayerViewController.m in Sources */,
 				233DE35A1DD15E4500680F5E /* PropertyTableViewCell.m in Sources */,

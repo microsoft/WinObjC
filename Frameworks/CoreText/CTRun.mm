@@ -31,8 +31,6 @@ const CFStringRef kCTBackgroundFillColorAttributeName = static_cast<CFStringRef>
 const CFStringRef kCTBackgroundCornerRadiusAttributeName = static_cast<CFStringRef>(@"kCTBackgroundCornerRadiusAttributeName");
 const CFStringRef kCTBackgroundLineWidthAttributeName = static_cast<CFStringRef>(@"kCTBackgroundLineWidthAttributeName");
 
-static IWLazyClassLookup _LazyUIColor("UIColor");
-
 @implementation _CTRun : NSObject
 - (void)dealloc {
     _stringFragment = nil;
@@ -279,21 +277,10 @@ void CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange) {
         return;
     }
 
-    id fontColor = [curRun->_attributes objectForKey:(id)kCTForegroundColorAttributeName];
-    if (fontColor == nil) {
-        CFBooleanRef useContextColor =
-            static_cast<CFBooleanRef>([curRun->_attributes objectForKey:(id)kCTForegroundColorFromContextAttributeName]);
-        if (!useContextColor || !CFBooleanGetValue(useContextColor)) {
-            fontColor = [_LazyUIColor blackColor];
-            CGContextSetFillColorWithColor(ctx, reinterpret_cast<CGColorRef>(fontColor));
-        }
-    } else {
-        CGContextSetFillColorWithColor(ctx, reinterpret_cast<CGColorRef>(fontColor));
-    }
-
     if (textRange.location == 0L && (textRange.length == 0L || textRange.length == curRun->_dwriteGlyphRun.glyphCount)) {
         // Print the whole glyph run
-        CGContextDrawGlyphRun(ctx, &curRun->_dwriteGlyphRun);
+        GlyphRunData data{ &curRun->_dwriteGlyphRun, CGPointZero, (CFDictionaryRef)curRun->_attributes.get() };
+        _CGContextDrawGlyphRuns(ctx, &data, 1);
     } else {
         if (textRange.length == 0L) {
             textRange.length = curRun->_dwriteGlyphRun.glyphCount - textRange.location;
@@ -301,7 +288,8 @@ void CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange) {
 
         // Only print glyphs in range
         DWRITE_GLYPH_RUN runInRange = __GetGlyphRunForDrawingInRange(curRun->_dwriteGlyphRun, textRange);
-        CGContextDrawGlyphRun(ctx, &runInRange);
+        GlyphRunData data{ &runInRange, CGPointZero, (CFDictionaryRef)curRun->_attributes.get() };
+        _CGContextDrawGlyphRuns(ctx, &data, 1);
     }
 }
 

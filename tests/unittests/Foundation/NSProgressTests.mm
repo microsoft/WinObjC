@@ -583,3 +583,16 @@ TEST(NSProgress, KVOLocalizedDescription) {
         andExpectChangeCallbacks:nil];
     EXPECT_EQ(1, kvoListener.hits);
 }
+
+TEST(NSProgress, CurrentProgressLeak) {
+    NSProgress* progress = [NSProgress progressWithTotalUnitCount:100];
+
+    std::thread t([&progress]() {
+        [progress becomeCurrentWithPendingUnitCount:50];
+    });
+
+    t.join();
+
+    // Progress unfinished upon thread exit. Ensure we're not keeping progress alive:
+    EXPECT_EQ(1, [progress retainCount]);
+}

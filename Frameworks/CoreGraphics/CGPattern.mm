@@ -17,6 +17,9 @@
 
 #import <StubReturn.h>
 #import <Starboard.h>
+
+#import <CoreGraphics/CGBitmapContext.h>
+
 #import "CGPatternInternal.h"
 #import "CGContextInternal.h"
 
@@ -60,7 +63,13 @@
         colorSpace = CGColorSpaceCreateDeviceGray();
     }
 
-    patternCtx = CGBitmapContextCreate(NULL, (DWORD)ceilf(width), (DWORD)ceilf(height), 8, 0, colorSpace, bitmapInfo);
+    patternCtx = CGBitmapContextCreate(nullptr,
+                                       ceilf(width),
+                                       ceilf(height),
+                                       8,
+                                       4 * ceilf(width),
+                                       CGColorSpaceCreateDeviceRGB(),
+                                       kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Big);
 
     CGContextTranslateCTM(patternCtx, 0.0f, height);
     CGContextScaleCTM(patternCtx, 1.0f, -1.0f);
@@ -89,8 +98,13 @@
         colorSpace = CGColorSpaceCreateDeviceGray();
     }
 
-    patternCtx = CGBitmapContextCreate(NULL, (DWORD)ceilf(outWidth), (DWORD)ceilf(outHeight), 8, 0, colorSpace, bitmapInfo);
-
+    patternCtx = CGBitmapContextCreate(NULL,
+                                       ceilf(outWidth),
+                                       ceilf(outHeight),
+                                       8,
+                                       4 * ceilf(outWidth),
+                                       CGColorSpaceCreateDeviceRGB(),
+                                       kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Big);
     CGRect rect = { 0, 0, width, height };
     CGContextDrawTiledImage(patternCtx, rect, tilePattern);
 
@@ -197,4 +211,29 @@ CFTypeID CGPatternGetTypeID() {
 CGPatternRef CGPatternRetain(CGPatternRef pattern) {
     CFRetain((id)pattern);
     return pattern;
+}
+
+CGRect _CGPatternGetBounds(CGPatternRef pattern) {
+    RETURN_RESULT_IF_NULL(pattern, CGRectNull);
+    return ((CGPattern*)pattern)->bounds;
+}
+
+void _CGPatternIssueCallBack(CGContextRef context, CGPatternRef pattern) {
+    FAIL_FAST_IF_NULL(context);
+    FAIL_FAST_IF_NULL(pattern);
+    ((CGPattern*)pattern)->callbacks.drawPattern(((CGPattern*)pattern)->info, context);
+}
+
+CGAffineTransform _CGPatternGetTransformation(CGPatternRef pattern) {
+    RETURN_RESULT_IF_NULL(pattern, CGAffineTransformIdentity);
+    return ((CGPattern*)pattern)->matrix;
+}
+
+CGRect _CGPatternGetFinalPatternSize(CGPatternRef pattern) {
+    RETURN_RESULT_IF_NULL(pattern, CGRectNull);
+    return { CGPointZero, { ((CGPattern*)pattern)->xStep, ((CGPattern*)pattern)->yStep } };
+}
+
+bool _CGPatternIsColored(CGPatternRef pattern) {
+    return ((CGPattern*)pattern)->isColored;
 }

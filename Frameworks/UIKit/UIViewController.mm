@@ -56,6 +56,8 @@
 #import <QuartzCore/CALayer.h>
 #import <QuartzCore/CoreAnimationFunctions.h>
 
+#import "_UIPopupViewController.h"
+#import "CACompositor.h"
 #import "UIApplicationInternal.h"
 #import "UIEmptyView.h"
 #import "UIViewInternal.h"
@@ -1167,10 +1169,17 @@ NSMutableDictionary* _pageMappings;
 
     UIViewController* visibleParent = self;
     bool shouldShow = false;
-    do {
-        // Allow presentation only if an ancestor is not NotVisible.
-        shouldShow = visibleParent->priv->_visibility != controllerNotVisible;
-    } while (!shouldShow && (visibleParent = [visibleParent parentViewController]));
+
+    // We have a special case for our _UIPopupViewController in middleware scenarios; in such cases
+    // we won't have a visible parentViewController but we'll still want the present to succeed
+    if (GetCACompositor()->IsRunningAsFramework() && [self isKindOfClass:[_UIPopupViewController class]]) {
+        shouldShow = true;
+    } else {
+        do {
+            // Allow presentation only if an ancestor is not NotVisible.
+            shouldShow = visibleParent->priv->_visibility != controllerNotVisible;
+        } while (!shouldShow && (visibleParent = [visibleParent parentViewController]));
+    }
 
     if (!shouldShow) {
         TraceWarning(TAG, L"Controller is not visible!");

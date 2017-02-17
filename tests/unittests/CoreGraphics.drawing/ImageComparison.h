@@ -21,22 +21,28 @@
 
 enum class ImageComparisonResult : unsigned int { Unknown = 0, Incomparable, Different, Same };
 
-struct rgbaPixel {
+struct Pixel {
     uint8_t r, g, b, a;
+    bool operator==(const Pixel& o) const {
+        return r == o.r && g == o.g && g == o.g && a == o.a;
+    }
+    bool operator!=(const Pixel& o) const {
+        return !(*this == o);
+    }
 };
 
 template <size_t FailureThreshold = 1>
 struct PixelComparisonModeExact {
     static constexpr size_t Threshold = FailureThreshold;
     template <typename LP, typename RP>
-    rgbaPixel ComparePixels(const LP& background, const LP& bp, const RP& cp, size_t& npxchg);
+    Pixel ComparePixels(const LP& background, const LP& bp, const RP& cp, size_t& npxchg);
 };
 
 template <size_t FailureThreshold = 1>
 struct PixelComparisonModeMask {
     static constexpr size_t Threshold = FailureThreshold;
     template <typename LP, typename RP>
-    rgbaPixel ComparePixels(const LP& background, const LP& bp, const RP& cp, size_t& npxchg);
+    Pixel ComparePixels(const LP& background, const LP& bp, const RP& cp, size_t& npxchg);
 };
 
 struct ImageDelta {
@@ -50,6 +56,8 @@ struct ImageDelta {
     ImageDelta(ImageComparisonResult result, size_t differences, CGImageRef deltaImage)
         : result(result), differences(differences), deltaImage(CGImageRetain(deltaImage)) {
     }
+
+    ImageDelta(ImageDelta&& other) : result(other.result), differences(other.differences), deltaImage(other.deltaImage.release()) {}
 };
 
 class ImageComparator {

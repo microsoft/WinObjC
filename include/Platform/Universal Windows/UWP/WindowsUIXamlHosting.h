@@ -91,7 +91,7 @@ OBJCUWP_WINDOWS_UI_XAML_HOSTING_EXPORT
 + (void)setElementChildVisual:(WXUIElement*)element visual:(WUCVisual*)visual;
 + (WUCCompositionPropertySet*)getScrollViewerManipulationPropertySet:(WXCScrollViewer*)scrollViewer;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @end
 
@@ -108,7 +108,7 @@ OBJCUWP_WINDOWS_UI_XAML_HOSTING_EXPORT
 + (WFRect*)getFlyoutPlacementTargetInfo:(WXFrameworkElement*)placementTarget preferredPlacement:(WUXCPFlyoutPlacementMode)preferredPlacement targetPreferredPlacement:(WUXCPFlyoutPlacementMode*)targetPreferredPlacement allowFallbacks:(BOOL*)allowFallbacks;
 + (WFRect*)getFlyoutPlacement:(WFRect*)placementTargetBounds controlSize:(WFSize*)controlSize minControlSize:(WFSize*)minControlSize containerRect:(WFRect*)containerRect targetPreferredPlacement:(WUXCPFlyoutPlacementMode)targetPreferredPlacement allowFallbacks:(BOOL)allowFallbacks chosenPlacement:(WUXCPFlyoutPlacementMode*)chosenPlacement;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) NSString * themeResourcesXaml;
 @property (retain) NSString * themeKey;

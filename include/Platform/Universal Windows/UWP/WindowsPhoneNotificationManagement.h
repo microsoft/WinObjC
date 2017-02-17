@@ -210,7 +210,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 @interface WPNMTextResponse : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * content;
 @property (readonly) unsigned int id;
@@ -225,7 +225,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 @interface WPNMAppNotificationInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * id;
 @property (readonly) NSString * name;
@@ -240,7 +240,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 @interface WPNMEmailAccountInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * displayName;
 @property (readonly) BOOL isNotificationEnabled;
@@ -255,7 +255,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 @interface WPNMEmailFolderInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * displayName;
 @property (readonly) BOOL isNotificationEnabled;
@@ -270,7 +270,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 @interface WPNMBinaryId : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) uint8_t id;
 @property (readonly) unsigned int length;
@@ -285,7 +285,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 @interface WPNMAlarmNotificationTriggerDetails : RTObject <WPNMIAccessoryNotificationTriggerDetails>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL startedProcessing;
 @property (readonly) WPNMAccessoryNotificationType accessoryNotificationType;
@@ -308,7 +308,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 @interface WPNMEmailReadNotificationTriggerDetails : RTObject <WPNMIAccessoryNotificationTriggerDetails>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL startedProcessing;
 @property (readonly) WPNMAccessoryNotificationType accessoryNotificationType;
@@ -330,7 +330,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 @interface WPNMEmailNotificationTriggerDetails : RTObject <WPNMIAccessoryNotificationTriggerDetails>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL startedProcessing;
 @property (readonly) WPNMAccessoryNotificationType accessoryNotificationType;
@@ -355,7 +355,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 @interface WPNMPhoneLineDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) BOOL defaultOutgoingLine;
 @property (readonly) NSString * displayName;
@@ -375,7 +375,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 @interface WPNMPhoneCallDetails : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WPNMPhoneCallDirection callDirection;
 @property (readonly) unsigned int callId;
@@ -400,7 +400,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 @interface WPNMPhoneNotificationTriggerDetails : RTObject <WPNMIAccessoryNotificationTriggerDetails>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL startedProcessing;
 @property (readonly) WPNMAccessoryNotificationType accessoryNotificationType;
@@ -421,7 +421,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 @interface WPNMSpeedDialEntry : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * contactName;
 @property (readonly) NSString * numberType;
@@ -437,7 +437,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 @interface WPNMReminderNotificationTriggerDetails : RTObject <WPNMIAccessoryNotificationTriggerDetails>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL startedProcessing;
 @property (readonly) WPNMAccessoryNotificationType accessoryNotificationType;
@@ -463,7 +463,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 @interface WPNMCalendarChangedNotificationTriggerDetails : RTObject <WPNMIAccessoryNotificationTriggerDetails>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL startedProcessing;
 @property (readonly) WPNMAccessoryNotificationType accessoryNotificationType;
@@ -483,7 +483,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 @interface WPNMToastNotificationTriggerDetails : RTObject <WPNMIAccessoryNotificationTriggerDetails>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL startedProcessing;
 @property (readonly) WPNMAccessoryNotificationType accessoryNotificationType;
@@ -507,7 +507,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 @interface WPNMCortanaTileNotificationTriggerDetails : RTObject <WPNMIAccessoryNotificationTriggerDetails>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL startedProcessing;
 @property (readonly) WPNMAccessoryNotificationType accessoryNotificationType;
@@ -535,7 +535,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 @interface WPNMMediaMetadata : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * album;
 @property (readonly) NSString * artist;
@@ -555,7 +555,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 @interface WPNMMediaControlsTriggerDetails : RTObject <WPNMIAccessoryNotificationTriggerDetails>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL startedProcessing;
 @property (readonly) WPNMAccessoryNotificationType accessoryNotificationType;
@@ -575,7 +575,7 @@ OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 OBJCUWP_WINDOWS_PHONE_NOTIFICATION_MANAGEMENT_EXPORT
 @interface WPNMVolumeInfo : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) unsigned int callVolume;
 @property (readonly) BOOL isMuted;

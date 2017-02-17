@@ -315,10 +315,10 @@ OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
 OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
 @interface WGGeographicRegion : RTObject
 + (BOOL)isSupported:(NSString *)geographicRegionCode;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WGGeographicRegion*)makeGeographicRegion:(NSString *)geographicRegionCode ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * code;
 @property (readonly) NSString * codeThreeDigit;
@@ -341,7 +341,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
 + (BOOL)isWellFormed:(NSString *)languageTag;
 + (WGLanguage*)makeLanguage:(NSString *)languageTag ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * displayName;
 @property (readonly) NSString * languageTag;
@@ -360,11 +360,11 @@ OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
 OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
 @interface WGCalendar : RTObject
 + (WGCalendar*)makeCalendarWithTimeZone:(id<NSFastEnumeration> /* NSString * */)languages calendar:(NSString *)calendar clock:(NSString *)clock timeZoneId:(NSString *)timeZoneId ACTIVATOR;
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 + (WGCalendar*)makeCalendarDefaultCalendarAndClock:(id<NSFastEnumeration> /* NSString * */)languages ACTIVATOR;
 + (WGCalendar*)makeCalendar:(id<NSFastEnumeration> /* NSString * */)languages calendar:(NSString *)calendar clock:(NSString *)clock ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property int year;
 @property int second;
@@ -483,7 +483,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
 OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
 @interface WGJapanesePhoneme : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * displayText;
 @property (readonly) BOOL isPhraseStart;

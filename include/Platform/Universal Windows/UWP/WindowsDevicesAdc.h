@@ -63,7 +63,7 @@ OBJCUWP_WINDOWS_DEVICES_ADC_EXPORT
 OBJCUWP_WINDOWS_DEVICES_ADC_EXPORT
 @interface WDAAdcChannel : RTObject <WFIClosable>
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDAAdcController* controller;
 - (int)readValue;
@@ -82,7 +82,7 @@ OBJCUWP_WINDOWS_DEVICES_ADC_EXPORT
 + (void)getControllersAsync:(RTObject<WDAPIAdcProvider>*)provider success:(void (^)(NSArray* /* WDAAdcController* */))success failure:(void (^)(NSError*))failure;
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDAAdcController*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WDAAdcChannelMode channelMode;
 @property (readonly) int channelCount;

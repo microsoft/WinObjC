@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include "gtest-api.h"
+#include <TestFramework.h>
 #import <Foundation/Foundation.h>
 #include <CoreFoundation/CFBase.h>
 #include <CoreFoundation/CFBinaryHeap.h>

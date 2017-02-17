@@ -98,7 +98,7 @@ typedef void(^WUXNNavigationStoppedEventHandler)(RTObject* sender, WUXNNavigatio
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXNNavigationEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WFUri* uri;
 @property (readonly) RTObject* content;
@@ -117,7 +117,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXNNavigatingCancelEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL cancel;
 @property (readonly) WUXNNavigationMode navigationMode;
@@ -135,7 +135,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXNNavigationFailedEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL handled;
 @property (readonly) HRESULT exception;
@@ -151,7 +151,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
@@ -173,7 +173,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @interface WUXNPageStackEntry : WXDependencyObject
 + (WUXNPageStackEntry*)makeInstance:(WUXITypeName*)sourcePageType parameter:(RTObject*)parameter navigationTransitionInfo:(WUXMANavigationTransitionInfo*)navigationTransitionInfo ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUXMANavigationTransitionInfo* navigationTransitionInfo;
 @property (readonly) RTObject* parameter;

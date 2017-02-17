@@ -79,7 +79,7 @@ typedef unsigned WASPIAutoUpdateSetting;
 OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
 @interface WASPIAppInstallStatus : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) uint64_t bytesDownloaded;
 @property (readonly) uint64_t downloadSizeInBytes;
@@ -99,7 +99,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
 @interface WASPIAppInstallItem : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WASPIAppInstallType installType;
 @property (readonly) BOOL isUserInitiated;
@@ -127,7 +127,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
 OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
 @interface WASPIAppInstallManagerItemEventArgs : RTObject
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WASPIAppInstallItem* item;
 @end
@@ -140,9 +140,9 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
 
 OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
 @interface WASPIAppInstallManager : RTObject
-+ (instancetype)make ACTIVATOR;
++ (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WASPIAutoUpdateSetting autoUpdateSetting;
 @property (retain) NSString * acquisitionIdentity;

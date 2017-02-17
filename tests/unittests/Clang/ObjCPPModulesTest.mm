@@ -16,7 +16,7 @@
 
 #import "ClangModules.h"
 
-// We use GTEST_TEST here to not emit a dependency on NSAutoreleasePool.
-GTEST_TEST(ClangModules, BasicSanityForObjCPP) {
-    // If this file compiles successfully the test is considered to have passed.
+// If this file compiles successfully the test is considered to have passed
+extern int ReturnsOne() {
+    return 1;
 }

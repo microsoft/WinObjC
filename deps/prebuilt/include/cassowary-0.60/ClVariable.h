@@ -90,6 +90,7 @@ public:
   }
 
   ClAbstractVariable *get_pclv() const { return pclv; } 
+  ClAbstractVariable *get_pclv() { return pclv; }
   bool IsNil() const { return pclv == NULL; }
 
   virtual FDNumber DesiredValue() const

@@ -1,9 +1,4 @@
 //******************************************************************************
-//
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
-//
-// This code is licensed under the MIT License (MIT).
-//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -14,6 +9,7 @@
 //
 //******************************************************************************
 
+#import "AssertARCEnabled.h"
 #import "Starboard.h"
 
 #import <UIKit/NSString+UIKitAdditions.h>
@@ -28,10 +24,13 @@
 #import <Foundation/NSString.h>
 
 #import "UIFontInternal.h"
+#import "UILabelInternal.h"
 #import "CGContextInternal.h"
 #import "StarboardXaml/DisplayProperties.h"
 #import "XamlControls.h"
 #import "XamlUtilities.h"
+
+static const wchar_t* TAG = L"UILabel";
 
 @implementation UILabel {
     idretaintype(NSString) _text;
@@ -45,6 +44,8 @@
     BOOL _adjustFontSize;
     float _minimumFontSize;
     float _originalFontSize;
+    BOOL _useMinimumScaleFactor;
+    float _minimumScaleFactor;
     int _numberOfLines;
     BOOL _isDisabled;
     BOOL _isHighlighted;
@@ -52,59 +53,117 @@
     StrongId<WXCTextBlock> _textBlock;
 }
 
-- (void)adjustFontSizeToFit {
-    if (_numberOfLines == 0) {
-        [self adjustTextLayerSize];
-        return;
-    }
+// Helper searches max font size for a string that can fit into given rect using given font/linkbreak config .
+// if no fit is found (e.g., to satisfy minimum font size requirement, nil is returned.
+// Otherwise, it returns the maximum font size for that can fit
+- (UIFont*)_findMaxFontSizeToFit:(CGRect)rect
+                            Text:(NSString*)text
+                            Font:(UIFont*)font
+                   NumberOfLines:(int)numberOfLines
+                 MinimumFontSize:(float)mininumFontSize
+                StartingFontSize:(float)startingFontSize {
+    // Use FLT_MAX as search upper bound and mininumFontSize as search lower bound
+    float upperBound = FLT_MAX;
+    float lowerBound = mininumFontSize;
 
-    float curFontSize = _originalFontSize;
-    _font = [_font fontWithSize:curFontSize];
+    // Using max of lowerBound and current font size as search starting point
+    float curFontSize = std::max(startingFontSize, mininumFontSize);
+    StrongId<UIFont> _targetFont = [_font fontWithSize:curFontSize];
 
-    CGRect rect;
-    rect = [self bounds];
-    if (rect.size.width == 0.0f || rect.size.height == 0.0f) {
-        return;
-    }
+    // Do binary search on maximum font size that fits the bound
+    do {
+        // Caculating constrains for allowedHeight
+        float lineHeight = [_targetFont ascender] - [_targetFont descender];
+        float allowedHeight = (numberOfLines == 0) ? rect.size.height : std::min(lineHeight * self.numberOfLines, rect.size.height);
 
-    while (curFontSize > _minimumFontSize && curFontSize > 0.0f) {
         CGSize size = CGSizeZero;
-
-        //  A single line of text should be clipped
-        if (_numberOfLines == 1) {
-            size = [_text sizeWithFont:_font constrainedToSize:CGSizeMake(rect.size.width, 0.0f) lineBreakMode:UILineBreakModeClip];
+        if (numberOfLines == 1) {
+            // In one line case, linebreak mode and allowed height really does not matter because we give it unlimited width for measure
+            size = [text sizeWithFont:_targetFont constrainedToSize:CGSizeMake(0.0f, allowedHeight) lineBreakMode:UILineBreakModeClip];
         } else {
-            //  Multiple lines of text should be wrapped
-            size = [_text sizeWithFont:_font constrainedToSize:CGSizeMake(rect.size.width, 0.0f) lineBreakMode:UILineBreakModeWordWrap];
+            // In multi-line case, we want the line to be wrapping during measure, in this case, we want to give allowed hight as unlimited
+            size =
+                [text sizeWithFont:_targetFont constrainedToSize:CGSizeMake(rect.size.width, 0.0f) lineBreakMode:UILineBreakModeWordWrap];
         }
 
-        if (size.width < rect.size.width && size.height <= rect.size.height) {
-            break;
+        if (size.width <= rect.size.width && size.height <= allowedHeight) {
+            // Find a fit, update lowerBound
+            lowerBound = curFontSize;
+            if (upperBound == FLT_MAX) {
+                // No upper bound yet, retry with doubling current font size
+                curFontSize *= 2.0f;
+            } else {
+                // retry with middle value between lower bound and upper bound
+                curFontSize = (upperBound + lowerBound) / 2.0f;
+            }
+        } else {
+            // Current font size does not fit, update upperBound
+            upperBound = std::min(upperBound, curFontSize);
+            if (curFontSize - lowerBound <= 1.0f) {
+                // Distance between current font size which does not fit
+                // and maximum font size which fits is less than 1.0, break out
+                break;
+            } else {
+                // Retry with middle value between lowerBound and upper bound
+                curFontSize = (lowerBound + upperBound) / 2.0f;
+            }
         }
 
-        curFontSize -= 1.0f;
-        _font = [_font fontWithSize:curFontSize];
+        _targetFont = [_targetFont fontWithSize:curFontSize];
+    } while (true);
+
+    if (lowerBound == mininumFontSize) {
+        // If lowerBound is the same as minimum font size, it means no font size can be found to fit
+        // In this case, should not adjust font, same as reference platform does
+        return nil;
     }
 
-    if (curFontSize < _minimumFontSize) {
-        curFontSize = _minimumFontSize;
-    }
-    if (curFontSize < 0.0f) {
-        curFontSize = 1.0f;
-    }
-
-    _font = [_font fontWithSize:curFontSize];
-
-    [self adjustTextLayerSize];
+    return [_targetFont fontWithSize:lowerBound];
 }
 
-- (void)adjustTextLayerSize {
+- (void)_adjustFontSizeToFit {
+    CGRect rect = [self bounds];
+
+    if (rect.size.width == 0.0f || rect.size.height == 0.0f || [_text length] == 0) {
+        return;
+    }
+
+    // Special:on reference platform, adjustFontSizeToFit is no-op when lineBreakMode is Wrapping
+    if (_lineBreakMode != UILineBreakModeWordWrap && _lineBreakMode != UILineBreakModeCharacterWrap) {
+        float minimumFontSize = _minimumFontSize;
+
+        // if minimumScaleFactor is used, it should override _minimumFontSize which is deprecated
+        if (_useMinimumScaleFactor) {
+            if (_minimumScaleFactor > 0.0) {
+                minimumFontSize = _minimumScaleFactor * _originalFontSize;
+            } else {
+                // per reference platform, if minimumScaleFactor is set and equal to 0.0
+                // use current font size is used as smallest font size
+                minimumFontSize = [_font pointSize];
+            }
+        }
+
+        StrongId<UIFont> _targetFont = [self _findMaxFontSizeToFit:rect
+                                                              Text:_text
+                                                              Font:_font
+                                                     NumberOfLines:_numberOfLines
+                                                   MinimumFontSize:minimumFontSize
+                                                  StartingFontSize:[_font pointSize]];
+        if (_targetFont != nil) {
+            // found a font that can be adjusted to fit, otherwise, do nothing
+            _font = _targetFont;
+        }
+    }
+
+    [self _updateXamlElement];
+}
+
+- (void)_updateXamlElement {
     [_textBlock setText:_text];
     [_textBlock setFontSize:[_font pointSize]];
 
-    StrongId<WUTFontWeight> fontWeight;
-    fontWeight.attach([WUTFontWeight new]);
-    fontWeight.get().weight = static_cast<unsigned short>([_font _fontWeight]);
+    WUTFontWeight* fontWeight = [WUTFontWeight new];
+    fontWeight.weight = static_cast<unsigned short>([_font _fontWeight]);
     [_textBlock setFontWeight:fontWeight];
     [_textBlock setFontStyle:static_cast<WUTFontStyle>([_font _fontStyle])];
     [_textBlock setFontStretch:static_cast<WUTFontStretch>([_font _fontStretch])];
@@ -148,7 +207,6 @@
         _font = font;
 
         _alignment = (UITextAlignment)[coder decodeInt32ForKey:@"UITextAlignment"];
-        _adjustFontSize = [coder decodeInt32ForKey:@"UIAdjustsFontSizeToFit"];
 
         if ([coder containsValueForKey:@"UINumberOfLines"]) {
             _numberOfLines = [coder decodeInt32ForKey:@"UINumberOfLines"];
@@ -156,7 +214,26 @@
             _numberOfLines = 1;
         }
 
-        _minimumFontSize = [coder decodeFloatForKey:@"UIMinimumFontSize"];
+        // one of UIMinimumScaleFactor or UIMinimumFontSize or UIAdjustsFontSizeToFit has to be set
+        // if UIAdjustsFontSizeToFit is set, it must be NO.
+        // if UIMinimumScaleFactor or UIMinimumFontSize is set, UIAdjustsFontSizeToFit is dereived to be YES
+        if ([coder containsValueForKey:@"UIMinimumScaleFactor"]) {
+            _minimumScaleFactor = [coder decodeFloatForKey:@"UIMinimumScaleFactor"];
+            _useMinimumScaleFactor = YES;
+            _adjustFontSize = YES;
+        } else if ([coder containsValueForKey:@"UIMinimumFontSize"]) {
+            _minimumFontSize = [coder decodeFloatForKey:@"UIMinimumFontSize"];
+            _adjustFontSize = YES;
+        }  else if ([coder containsValueForKey:@"UIAdjustsFontSizeToFit"]) {
+            _adjustFontSize = [coder decodeInt32ForKey:@"UIAdjustsFontSizeToFit"];
+            if(_adjustFontSize) {
+                TraceWarning(TAG, L"Invalid nib format, UIAdjustsFontSizeToFit should be set to FALSE if it is set, currently set as TRUE, overwritting with FALSE");
+                _adjustFontSize = NO;
+            }
+        } else {
+            TraceWarning(TAG, L"Invalid nib format, None of UIMinimumScaleFactor/UIMinimumFontSize/UIAdjustsFontSizeToFit is set. default UIAdjustsFontSizeToFit to FALSE");
+            _adjustFontSize = NO;
+        }
 
         if ([coder containsValueForKey:@"UILineBreakMode"]) {
             _lineBreakMode = (UILineBreakMode)[coder decodeInt32ForKey:@"UILineBreakMode"];
@@ -177,13 +254,21 @@
         }
 
         if (_adjustFontSize) {
-            [self adjustFontSizeToFit];
+            [self _adjustFontSizeToFit];
         } else {
-            [self adjustTextLayerSize];
+            [self _updateXamlElement];
         }
     }
 
     return self;
+}
+
+// Returns access to the underlying TextBlock within the UILabel's Xaml representation
+// Note: This is used for UX testing and won't be necessary when we are projecting
+// UIKit.Label into ObjectiveC, as at that point we can just expose the TextBlock directly
+// off of our UIKit.Label implementation.
+- (WXCTextBlock*)_getXamlTextBlock {
+    return _textBlock;
 }
 
 - (void)_initUILabel {
@@ -213,9 +298,22 @@
     _lineBreakMode = UILineBreakModeTailTruncation;
     _textColor = [UIColor blackColor];
     _shadowColor = _textColor;
-    _minimumFontSize = 8.0f;
+
+    // on reference platform, default minimum font size is zero but always slightly bigger than zero in reality acccording to the
+    // documentation
+    _minimumFontSize = 0.0001f;
+    _minimumScaleFactor = 0.0;
+    _useMinimumScaleFactor = NO;
     _numberOfLines = 1;
     [self setOpaque:FALSE];
+
+    _originalFontSize = [UIFont labelFontSize];
+    _font = [UIFont fontWithName:@"Segoe UI" size:_originalFontSize];
+
+    // TODO: Reevaluate whether or not this is the correct default mode for UILabels that are initialized via initWithFrame.
+    //       Some of our test apps expect the initWithCoder path to default to UIViewContentModeScaleToFill (aka kCAGravityResize).
+    [self setContentMode:UIViewContentModeRedraw];
+    [self _updateXamlElement];
 }
 
 /**
@@ -224,14 +322,6 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         [self _initUILabel];
-
-        // TODO: Reevaluate whether or not this is the correct default mode for UILabels that are initialized via initWithFrame.
-        //       Some of our test apps expect the initWithCoder path to default to UIViewContentModeScaleToFill (aka kCAGravityResize).
-        [self setContentMode:UIViewContentModeRedraw];
-
-        _font = [UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]];
-
-        [self adjustTextLayerSize];
     }
 
     return self;
@@ -243,14 +333,6 @@
 - (instancetype)initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
     if (self = [super initWithFrame:frame xamlElement:xamlElement]) {
         [self _initUILabel];
-
-        // TODO: Reevaluate whether or not this is the correct default mode for UILabels that are initialized via initWithFrame.
-        //       Some of our test apps expect the initWithCoder path to default to UIViewContentModeScaleToFill (aka kCAGravityResize).
-        [self setContentMode:UIViewContentModeRedraw];
-
-        _font = [UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]];
-
-        [self adjustTextLayerSize];
     }
 
     return self;
@@ -279,11 +361,10 @@
     if (![_font isEqual:font]) {
         _font = font;
         _originalFontSize = [_font pointSize];
-
         if (_adjustFontSize) {
-            [self adjustFontSizeToFit];
+            [self _adjustFontSizeToFit];
         } else {
-            [self adjustTextLayerSize];
+            [self _updateXamlElement];
         }
     }
 }
@@ -306,12 +387,12 @@
         newStr = [newStr description];
     }
     if (newStr == nil || ![_text isEqual:newStr]) {
-        _text.attach([newStr copy]);
+        _text = [newStr copy];
 
         if (_adjustFontSize) {
-            [self adjustFontSizeToFit];
+            [self _adjustFontSizeToFit];
         } else {
-            [self adjustTextLayerSize];
+            [self _updateXamlElement];
         }
 
         self.accessibilityValue = newStr;
@@ -323,7 +404,7 @@
 */
 - (void)setAttributedText:(NSAttributedString*)newStr {
     UNIMPLEMENTED();
-    _attributedText.attach([newStr copy]);
+    _attributedText = [newStr copy];
     [self setText:[_attributedText string]];
 }
 
@@ -362,7 +443,7 @@
 - (void)setTextAlignment:(UITextAlignment)alignment {
     if (alignment != _alignment) {
         _alignment = alignment;
-        [self adjustTextLayerSize];
+        [self _updateXamlElement];
     }
 }
 
@@ -381,9 +462,8 @@
         return;
     }
     if (![_textColor isEqual:color]) {
-        [[_textColor retain] autorelease];
         _textColor = color;
-        [self adjustTextLayerSize];
+        [self _updateXamlElement];
     }
 }
 
@@ -451,6 +531,7 @@
 */
 - (void)setMinimumFontSize:(float)size {
     _minimumFontSize = size;
+    _useMinimumScaleFactor = NO;
 }
 
 /**
@@ -481,7 +562,7 @@
 */
 - (void)setLineBreakMode:(UILineBreakMode)mode {
     _lineBreakMode = mode;
-    [self adjustTextLayerSize];
+    [self _updateXamlElement];
 }
 
 /**
@@ -501,7 +582,7 @@
     } else {
         [self setBackgroundColor:_savedBackgroundColor];
     }
-    [self adjustTextLayerSize];
+    [self _updateXamlElement];
 }
 
 /**
@@ -539,14 +620,23 @@
     _adjustFontSize = adjusts;
 
     if (_adjustFontSize) {
-        [self adjustFontSizeToFit];
+        [self _adjustFontSizeToFit];
     }
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)setMinimumScaleFactor:(float)scale {
+    _minimumScaleFactor = scale;
+    _useMinimumScaleFactor = YES;
+}
+
+/**
+ @Status Interoperable
+*/
+- (float)minimumScaleFactor {
+    return _minimumScaleFactor;
 }
 
 /**
@@ -560,37 +650,17 @@
  @Status Interoperable
 */
 - (CGSize)sizeThatFits:(CGSize)curSize {
-    CGSize ret = { 0 };
+    CGSize ret = CGSizeZero;
 
-    if (_text != nil) {
-        //  Grab the font at the original point size set in setFont:
-        UIFont* measurementFont = [_font fontWithSize:_originalFontSize];
-
-        //  Measure the height of a single line of text of this font
-        CGSize fontHeight = [@" " sizeWithFont:measurementFont];
-
-        //  If we have to fit everything on one line, or if the current width
-        //  is incalculable (we can't wrap to a width of 0), set the
-        //  fit width to inifinite
-        if (curSize.width == 0 || self.numberOfLines == 1) {
-            curSize.width = FLT_MAX;
-        }
-
-        if ((self.numberOfLines == 0) || (self.numberOfLines == 1)) {
-            curSize.height = FLT_MAX;
-        } else {
-            curSize.height = fontHeight.height * self.numberOfLines;
+    if ([_text length] != 0) {
+        if (self.numberOfLines != 0) {
+            // for fixed number of lines, use hinted size as contraints for height
+            CGFloat lineHeight = [_font ascender] - [_font descender];
+            curSize.height = std::min(lineHeight * self.numberOfLines, curSize.height);
         }
 
         //  Calculate the size of the text set in our label
-        ret = [_text sizeWithFont:measurementFont
-                constrainedToSize:CGSizeMake(curSize.width, curSize.height)
-                    lineBreakMode:self.lineBreakMode];
-
-        //  The returned height to 1 line if the number of lines is 1
-        if (self.numberOfLines == 1) {
-            ret.height = fontHeight.height;
-        }
+        ret = [_text sizeWithFont:_font constrainedToSize:CGSizeMake(curSize.width, curSize.height) lineBreakMode:self.lineBreakMode];
     }
 
     return ret;
@@ -625,26 +695,11 @@
 /**
  @Status Interoperable
 */
-- (void)dealloc {
-    _text = nil;
-    _font = nil;
-    _textColor = nil;
-    _shadowColor = nil;
-    _highlightedTextColor = nil;
-    _savedBackgroundColor = nil;
-    _attributedText = nil;
-
-    [super dealloc];
-}
-
-/**
- @Status Interoperable
-*/
 - (void)layoutSubviews {
     if (_adjustFontSize) {
-        [self adjustFontSizeToFit];
+        [self _adjustFontSizeToFit];
     } else {
-        [self adjustTextLayerSize];
+        [self _updateXamlElement];
     }
     [self setNeedsDisplay];
 }

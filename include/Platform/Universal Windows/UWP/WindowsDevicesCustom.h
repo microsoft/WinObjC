@@ -104,7 +104,7 @@ OBJCUWP_WINDOWS_DEVICES_CUSTOM_EXPORT
 @interface WDCIOControlCode : RTObject <WDCIIOControlCode>
 + (WDCIOControlCode*)makeIOControlCode:(unsigned short)deviceType function:(unsigned short)function accessMode:(WDCIOControlAccessMode)accessMode bufferingMethod:(WDCIOControlBufferingMethod)bufferingMethod ACTIVATOR;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WDCIOControlAccessMode accessMode;
 @property (readonly) WDCIOControlBufferingMethod bufferingMethod;
@@ -124,7 +124,7 @@ OBJCUWP_WINDOWS_DEVICES_CUSTOM_EXPORT
 + (NSString *)getDeviceSelector:(WFGUID*)classGuid;
 + (void)fromIdAsync:(NSString *)deviceId desiredAccess:(WDCDeviceAccessMode)desiredAccess sharingMode:(WDCDeviceSharingMode)sharingMode success:(void (^)(WDCCustomDevice*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
-+ (instancetype)createWith:(IInspectable*)obj;
++ (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) RTObject<WSSIInputStream>* inputStream;
 @property (readonly) RTObject<WSSIOutputStream>* outputStream;

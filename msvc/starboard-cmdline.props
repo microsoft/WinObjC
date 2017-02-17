@@ -9,8 +9,4 @@
   <ImportGroup>
     <Import Project="$(MSBuildThisFileDirectory)starboard-sdk.props" />
   </ImportGroup>
-
-  <PropertyGroup>
-    <StripAppContainerBit>true</StripAppContainerBit>
-  </PropertyGroup>
 </Project>

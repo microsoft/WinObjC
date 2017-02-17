@@ -19,11 +19,6 @@
 
 @implementation CGPathAddElipseViewController
 
-- (id)initWithDrawingOptions:(CGDrawOptions*)options {
-    self = [super initWithDrawingOptions:options];
-    return self;
-}
-
 - (void)loadView {
     [super loadView];
 
@@ -39,7 +34,9 @@
 
         CGMutablePathRef thepath = CGPathCreateMutable();
 
-        CGPathAddEllipseInRect(thepath, NULL, theRectangle);
+        CGAffineTransform transformation = self.options.affineTransform;
+
+        CGPathAddEllipseInRect(thepath, &transformation, theRectangle);
         CGPathCloseSubpath(thepath);
         CGContextAddPath(currentContext, thepath);
         CGContextStrokePath(currentContext);
