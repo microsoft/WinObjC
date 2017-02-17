@@ -29,6 +29,7 @@
 
 #include "COMIncludes.h"
 #import <winrt/Windows.UI.Xaml.Controls.h>
+#import <winrt/Windows.UI.Xaml.Input.h>
 #include "COMIncludes_End.h"
 
 using namespace winrt::Windows::UI::Xaml;
@@ -147,9 +148,13 @@ static const double c_defaultStepFrequency = 0.1;
 }
 
 - (void)_registerForEventsWithXaml {
-    _valueChangedEvent = _xamlSlider.ValueChanged([&self] (auto&& sender, auto&& e) {
-        if (self->_continuous) {
-            [self _sendValueChangedEvents];
+    __weak UISlider* weakSelf = self;
+
+    _valueChangedEvent = _xamlSlider.ValueChanged([weakSelf] (auto&& sender, auto&& e) {
+        __strong UISlider* strongSelf = weakSelf;
+
+        if (strongSelf && strongSelf->_continuous) {
+            [strongSelf _sendValueChangedEvents];
         }
     });
 
@@ -162,19 +167,23 @@ static const double c_defaultStepFrequency = 0.1;
     // the track and not by dragging the thumb.
     // TODO: 7877568- Move to handling pointer events when available with projections, instead of manipulation events.
     _manipulationStartingEvent =
-        _xamlSlider.ManipulationStarting([&self] (auto&& sender, auto&& e) {
-            if (self->_continuous == NO) {
-                [self _sendValueChangedEvents];
+        _xamlSlider.ManipulationStarting([weakSelf] (auto&& sender, auto&& e) {
+            __strong UISlider* strongSelf = weakSelf;
+
+            if (strongSelf && strongSelf->_continuous == NO) {
+                [strongSelf _sendValueChangedEvents];
             }
         });
 
     // ManipulationCompleted will be fired when dragging has been completed
     // This allows us to fire UIControlEventValueChanged event and UIControlEventTouchUpInside event
     _manipulationCompletedEvent =
-        _xamlSlider.ManipulationCompleted([&self] (auto&& sender, auto&& e) {
-            if (self->_continuous == NO) {
-                [self _sendValueChangedEvents];
-                [self sendActionsForControlEvents:UIControlEventTouchUpInside];
+        _xamlSlider.ManipulationCompleted([weakSelf] (auto&& sender, auto&& e) {
+            __strong UISlider* strongSelf = weakSelf;
+
+            if (strongSelf && strongSelf->_continuous == NO) {
+                [strongSelf _sendValueChangedEvents];
+                [strongSelf sendActionsForControlEvents:UIControlEventTouchUpInside];
             }
         });
 }

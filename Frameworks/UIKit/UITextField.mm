@@ -43,6 +43,10 @@
 #import <Foundation/NSNotificationCenter.h>
 #import <Foundation/NSTimer.h>
 
+#include "COMIncludes.h"
+#import <winrt/Windows.UI.Text.h>
+#include "COMIncludes_End.h"
+
 using namespace winrt::Windows::UI::Xaml;
 using namespace winrt::Windows::UI::Text;
 

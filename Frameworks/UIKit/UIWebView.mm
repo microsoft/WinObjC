@@ -33,7 +33,9 @@
 
 #include "COMIncludes.h"
 #import <winrt/Windows.UI.Xaml.Controls.h>
+#import <winrt/Windows.UI.Xaml.Navigation.h>
 #import <winrt/Windows.Web.Http.h>
+#import <winrt/Windows.Web.Http.Headers.h>
 #include "COMIncludes_End.h"
 
 #include <algorithm>
@@ -41,6 +43,10 @@
 using namespace winrt::Windows::UI::Xaml;
 using namespace winrt::Windows::Web;
 using namespace winrt::Windows::Foundation;
+
+@interface UIWebView ()
+@property (nonatomic, getter=isLoading) BOOL loading;
+@end
 
 @implementation UIWebView {
     id _delegate;
@@ -82,6 +88,13 @@ using namespace winrt::Windows::Foundation;
 }
 
 /**
+ @Public No
+*/
+- (void)setLoading:(BOOL)loading {
+    _isLoading = loading;
+}
+
+/**
  @Status Caveat
  @Notes Only URL property in request is used
 */
@@ -119,16 +132,16 @@ static void _initUIWebView(UIWebView* self) {
         FAIL_FAST();
     }
 
-    self->_xamlLoadCompletedEventCookie = self->_xamlWebControl.LoadCompleted([&self] (auto&& sender, auto&& e) {
-        self->_isLoading = false;
+    self->_xamlLoadCompletedEventCookie = self->_xamlWebControl.LoadCompleted([self] (auto&& sender, auto&& e) {
+        self.loading = NO;
 
-        if ([self->_delegate respondsToSelector:@selector(webViewDidFinishLoad:)]) {
-            [self->_delegate webViewDidFinishLoad:self];
+        if ([self.delegate respondsToSelector:@selector(webViewDidFinishLoad:)]) {
+            [self.delegate webViewDidFinishLoad:self];
         }
     });
 
     self->_xamlLoadStartedEventCookie =
-        self->_xamlWebControl.NavigationStarting([&self] (auto&& sender, auto&& e) {
+        self->_xamlWebControl.NavigationStarting([self] (auto&& sender, auto&& e) {
             // Give the client a chance to cancel the navigation
             if ([self.delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
                 NSString* urlStr = [NSString _stringWithHSTRING:winrt::get(e.Uri().AbsoluteUri())];
@@ -151,7 +164,7 @@ static void _initUIWebView(UIWebView* self) {
         });
 
     self->_xamlUnsupportedUriSchemeEventCookie =
-        self->_xamlWebControl.UnsupportedUriSchemeIdentified([&self] (auto&& sender, auto&& e) {
+        self->_xamlWebControl.UnsupportedUriSchemeIdentified([self] (auto&& sender, auto&& e) {
             if ([self.delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
                 NSString* urlStr = [NSString _stringWithHSTRING:winrt::get(e.Uri().AbsoluteUri())];
                 NSURL* url = [NSURL URLWithString:urlStr];
@@ -169,7 +182,7 @@ static void _initUIWebView(UIWebView* self) {
         });
 
     // Add handler which will be invoked when user calls window.external.notify(msg) function in javascript
-    self->_xamlWebControl.ScriptNotify([&self] (auto&& sender, auto&& e) {
+    self->_xamlWebControl.ScriptNotify([self] (auto&& sender, auto&& e) {
         // Send event to webView delegate
         NSString* urlStr = [NSString _stringWithHSTRING:winrt::get(e.CallingUri().AbsoluteUri())];
         NSURL* url = [NSURL URLWithString:urlStr];
