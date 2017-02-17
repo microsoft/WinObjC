@@ -2,16 +2,13 @@
 
 <!--
   PACKAGE PROPS
-  Description: Default package properties
+  Description: Entry point for package props imports
   For Use By: A project that consumes this package
 -->
 
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <!-- Import package defaults if they exist -->
+  <!-- Defaults from WinObjC.Packaging -->
   <Import Project="$(MSBuildThisFileDirectory)\$(MSBuildThisFileName).Default.props" Condition="Exists('$(MSBuildThisFileDirectory)\$(MSBuildThisFileName).Default.props')" />
-  <Import Project="$(MSBuildThisFileDirectory)\$(MSBuildThisFileName).Default.targets" Condition="Exists('$(MSBuildThisFileDirectory)\$(MSBuildThisFileName).Default.targets')" />
-
-  <!-- Import package customizations if they exist -->
+  <!-- Package customizations -->
   <Import Project="$(MSBuildThisFileDirectory)\$(MSBuildThisFileName).Custom.props" Condition="Exists('$(MSBuildThisFileDirectory)\$(MSBuildThisFileName).Custom.props')" />
-  <Import Project="$(MSBuildThisFileDirectory)\$(MSBuildThisFileName).Custom.targets" Condition="Exists('$(MSBuildThisFileDirectory)\$(MSBuildThisFileName).Custom.targets')" />
 </Project>
