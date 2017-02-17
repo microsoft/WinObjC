@@ -7,9 +7,9 @@
 -->
 
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <!-- Props for NuGet NuProj packager projects -->
+  <!-- Props for NuGet ***NuProj*** packager projects -->
   <Import Condition="$(MSBuildProjectExtension) == '.nuproj'" Project="WinObjC.Packager.props" />
 
-  <!-- Props for WinObjC VcxProj packageable projects -->
+  <!-- Props for WinObjC ***VcxProj*** packageable projects -->
   <Import Condition="$(MSBuildProjectExtension) == '.vcxproj'" Project="WinObjC.Packageable.props" />
 </Project>
