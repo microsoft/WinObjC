@@ -46,7 +46,7 @@ CORETEXT_EXPORT const CFIndex* CTRunGetStringIndicesPtr(CTRunRef run);
 CORETEXT_EXPORT void CTRunGetStringIndices(CTRunRef run, CFRange range, CFIndex buffer[]);
 CORETEXT_EXPORT CFRange CTRunGetStringRange(CTRunRef run);
 CORETEXT_EXPORT double CTRunGetTypographicBounds(CTRunRef run, CFRange range, CGFloat* ascent, CGFloat* descent, CGFloat* leading);
-CORETEXT_EXPORT CGRect CTRunGetImageBounds(CTRunRef run, CGContextRef context, CFRange range) STUB_METHOD;
+CORETEXT_EXPORT CGRect CTRunGetImageBounds(CTRunRef run, CGContextRef context, CFRange range);
 CORETEXT_EXPORT void CTRunDraw(CTRunRef run, CGContextRef context, CFRange range);
 CORETEXT_EXPORT CGAffineTransform CTRunGetTextMatrix(CTRunRef run);
 CORETEXT_EXPORT CFTypeID CTRunGetTypeID() STUB_METHOD;

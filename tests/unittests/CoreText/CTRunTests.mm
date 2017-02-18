@@ -379,3 +379,68 @@ TEST(CTRun, GetStatus) {
     run = (CTRunRef)CFArrayGetValueAtIndex(runsArray, 0);
     EXPECT_EQ(kCTRunStatusRightToLeft | kCTRunStatusNonMonotonic, CTRunGetStatus(run));
 }
+
+TEST(CTRun, GetImageBounds) {
+    // Should return CGRectNull for null run or context
+    EXPECT_EQ(CGRectNull, CTRunGetImageBounds(nullptr, nullptr, {}));
+
+    auto rgbColorSpace = woc::MakeAutoCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
+    auto context = woc::MakeAutoCF<CGContextRef>(CGBitmapContextCreate(nullptr,
+                                                                       512,
+                                                                       256,
+                                                                       8,
+                                                                       4 * 512 /* bytesPerRow = bytesPerPixel*width */,
+                                                                       rgbColorSpace.get(),
+                                                                       kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big));
+    EXPECT_EQ(CGRectNull, CTRunGetImageBounds(nullptr, context, {}));
+
+    CFAttributedStringRef string = (__bridge CFAttributedStringRef)getString(@"foobar");
+    auto line = woc::MakeAutoCF<CTLineRef>(CTLineCreateWithAttributedString(string));
+    CFArrayRef runsArray = CTLineGetGlyphRuns(line);
+    CTRunRef run = (CTRunRef)CFArrayGetValueAtIndex(runsArray, 0);
+    EXPECT_EQ(CGRectNull, CTRunGetImageBounds(run, nullptr, {}));
+
+    // Size of the rect is exactly the size of the run
+    CGFloat ascent, descent;
+    double width = CTRunGetTypographicBounds(run, {}, &ascent, &descent, nullptr);
+    CGSize runSize{ width, ascent - descent };
+    CGRect runRect{ CGPointZero, runSize };
+    EXPECT_EQ(runRect, CTRunGetImageBounds(run, context, {}));
+
+    // Size should be independent of CTM or Text Matrix, but origin is the text position
+    CGContextScaleCTM(context, 2, 3);
+    CGContextTranslateCTM(context, 35, 75);
+    CGContextSetTextMatrix(context, CGAffineTransform{ 1, 2, 3, 4, 0, 0 });
+    CGPoint origin{ 17, 23 };
+    CGContextSetTextPosition(context, origin.x, origin.y);
+    runRect = { origin, runSize };
+    EXPECT_EQ(runRect, CTRunGetImageBounds(run, context, {}));
+
+    // Range works the same for ImageBounds as TypographicBounds
+    CFRange range{ 1, 3 };
+    width = CTRunGetTypographicBounds(run, range, &ascent, &descent, nullptr);
+    runRect.size = { width, ascent - descent };
+    EXPECT_EQ(runRect, CTRunGetImageBounds(run, context, range));
+
+    // And returns CGRectNull for invalid ranges
+    EXPECT_EQ(CGRectNull, CTRunGetImageBounds(run, context, { 7, 0 }));
+    EXPECT_EQ(CGRectNull, CTRunGetImageBounds(run, context, { 7, 1 }));
+    EXPECT_EQ(CGRectNull, CTRunGetImageBounds(run, context, { 1, -1 }));
+    EXPECT_EQ(CGRectNull, CTRunGetImageBounds(run, context, { -1, 1 }));
+}
+
+TEST(CTRun, GetTypographicBoundsShouldHandleNonzeroLocation) {
+    CFAttributedStringRef string = (__bridge CFAttributedStringRef)getString(@"foobar");
+    auto line = woc::MakeAutoCF<CTLineRef>(CTLineCreateWithAttributedString(string));
+    CFArrayRef runsArray = CTLineGetGlyphRuns(line);
+    CTRunRef run = (CTRunRef)CFArrayGetValueAtIndex(runsArray, 0);
+    EXPECT_EQ(CGRectNull, CTRunGetImageBounds(run, nullptr, {}));
+
+    // Size of the rect is exactly the size of the run
+    CGFloat ascent, descent, leading;
+    double width = CTRunGetTypographicBounds(run, { 1, 2 }, &ascent, &descent, &leading);
+    EXPECT_NEAR(ascent, 29.1211, c_errorDelta);
+    EXPECT_NEAR(descent, 7.9492, c_errorDelta);
+    EXPECT_NEAR(leading, 0, c_errorDelta);
+    EXPECT_NEAR(width, 46.875, c_errorDelta);
+}

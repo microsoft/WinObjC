@@ -327,13 +327,16 @@ public:
 /* static */
 ComPtr<ID2D1RenderTarget> ContextCoordinateTest::renderTarget;
 
+static constexpr double c_errorDelta = 0.0001;
 TEST_P(ContextCoordinateTest, ConvertToDeviceSpace) {
     const std::vector<CGPoint>& userSpacePoints = ::testing::get<1>(GetParam());
     const std::vector<CGPoint>& deviceSpacePoints = ::testing::get<2>(GetParam());
     for (unsigned int i = 0; i < userSpacePoints.size(); ++i) {
         const CGPoint& userSpacePoint = userSpacePoints[i];
         const CGPoint& deviceSpacePoint = deviceSpacePoints[i];
-        EXPECT_EQ(deviceSpacePoint, CGContextConvertPointToDeviceSpace(context.get(), userSpacePoint));
+        CGPoint result = CGContextConvertPointToDeviceSpace(context.get(), userSpacePoint);
+        EXPECT_NEAR(deviceSpacePoint.x, result.x, c_errorDelta);
+        EXPECT_NEAR(deviceSpacePoint.y, result.y, c_errorDelta);
     }
 }
 
@@ -343,7 +346,9 @@ TEST_P(ContextCoordinateTest, ConvertToUserSpace) {
     for (unsigned int i = 0; i < userSpacePoints.size(); ++i) {
         const CGPoint& userSpacePoint = userSpacePoints[i];
         const CGPoint& deviceSpacePoint = deviceSpacePoints[i];
-        EXPECT_EQ(userSpacePoint, CGContextConvertPointToUserSpace(context.get(), deviceSpacePoint));
+        CGPoint result = CGContextConvertPointToUserSpace(context.get(), deviceSpacePoint);
+        EXPECT_NEAR(userSpacePoint.x, result.x, c_errorDelta);
+        EXPECT_NEAR(userSpacePoint.y, result.y, c_errorDelta);
     }
 }
 
@@ -406,8 +411,13 @@ TEST(CGContext, DrawAnImageIntoContext) {
     woc::unique_cf<CGColorSpaceRef> rgbColorSpace(CGColorSpaceCreateDeviceRGB());
 
     // Create a canvas context
-    woc::unique_cf<CGContextRef> context(CGBitmapContextCreate(
-        nullptr, 512, 256, 8, 4 * 512 /* bytesPerRow = bytesPerPixel*width*/, rgbColorSpace.get(), kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big));
+    woc::unique_cf<CGContextRef> context(CGBitmapContextCreate(nullptr,
+                                                               512,
+                                                               256,
+                                                               8,
+                                                               4 * 512 /* bytesPerRow = bytesPerPixel*width*/,
+                                                               rgbColorSpace.get(),
+                                                               kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big));
 
     // Load an image from file
     CFDataRef data = (CFDataRef)[NSData dataWithContentsOfFile:getPathToFile(@"data/jpg1.jpg")];
@@ -452,8 +462,13 @@ TEST(CGContext, DrawAContextImageIntoAContext) {
     ASSERT_NE(image, nullptr);
 
     // This will be the pseudo canvas context which we will draw into
-    woc::unique_cf<CGContextRef> context(CGBitmapContextCreate(
-        nullptr, 512, 256, 8, 4 * 512 /* bytesPerRow = bytesPerPixel*width*/, rgbColorSpace.get(), kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big));
+    woc::unique_cf<CGContextRef> context(CGBitmapContextCreate(nullptr,
+                                                               512,
+                                                               256,
+                                                               8,
+                                                               4 * 512 /* bytesPerRow = bytesPerPixel*width*/,
+                                                               rgbColorSpace.get(),
+                                                               kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big));
 
     CGRect bounds = { 0, 0, 512, 256 };
 

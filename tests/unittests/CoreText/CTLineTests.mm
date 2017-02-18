@@ -17,6 +17,7 @@
 #import <UIKit/UIKit.h>
 #include <TestFramework.h>
 #import <CoreFoundation/CoreFoundation.h>
+#import <CppUtils.h>
 
 NSMutableAttributedString* getAttributedString(NSString* str) {
     UIFontDescriptor* fontDescriptor = [UIFontDescriptor fontDescriptorWithName:@"Segoe UI" size:40];
@@ -335,4 +336,39 @@ TEST(CTLine, ShouldBeAbleToDrawOnBackgroundThread) {
 
     dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
     dispatch_release(group);
+}
+
+TEST(CTLine, GetImageBounds) {
+    // Should return CGRectNull for null line or context
+    EXPECT_EQ(CGRectNull, CTLineGetImageBounds(nullptr, nullptr));
+
+    auto rgbColorSpace = woc::MakeAutoCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
+    auto context = woc::MakeAutoCF<CGContextRef>(CGBitmapContextCreate(nullptr,
+                                                                       512,
+                                                                       256,
+                                                                       8,
+                                                                       4 * 512 /* bytesPerRow = bytesPerPixel*width */,
+                                                                       rgbColorSpace.get(),
+                                                                       kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big));
+    EXPECT_EQ(CGRectNull, CTLineGetImageBounds(nullptr, context));
+
+    CFAttributedStringRef string = (__bridge CFAttributedStringRef)getAttributedString(@"foobar");
+    auto line = woc::MakeAutoCF<CTLineRef>(CTLineCreateWithAttributedString(string));
+    EXPECT_EQ(CGRectNull, CTLineGetImageBounds(line, nullptr));
+
+    // Size of the rect is exactly the size of the line
+    CGFloat ascent, descent;
+    double width = CTLineGetTypographicBounds(line, &ascent, &descent, nullptr);
+    CGSize lineSize{ width, ascent - descent };
+    CGRect lineRect{ CGPointZero, lineSize };
+    EXPECT_EQ(lineRect, CTLineGetImageBounds(line, context));
+
+    // Size should be independent of CTM or Text Matrix, but origin is the text position
+    CGContextScaleCTM(context, 2, 3);
+    CGContextTranslateCTM(context, 35, 75);
+    CGContextSetTextMatrix(context, CGAffineTransform{ 1, 2, 3, 4, 0, 0 });
+    CGPoint origin{ 17, 23 };
+    CGContextSetTextPosition(context, origin.x, origin.y);
+    lineRect = { origin, lineSize };
+    EXPECT_EQ(lineRect, CTLineGetImageBounds(line, context));
 }
