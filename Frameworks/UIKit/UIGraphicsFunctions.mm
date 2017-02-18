@@ -139,7 +139,7 @@ UIImage* UIGraphicsGetImageFromCurrentImageContext() {
     }
 
     CGContextRef context = topRecord.context.get();
-    return [UIImage imageWithCGImage:CGBitmapContextGetImage(context) scale:topRecord.scale orientation:UIImageOrientationUp];
+    return [UIImage imageWithCGImage:_CGBitmapContextGetImage(context) scale:topRecord.scale orientation:UIImageOrientationUp];
 }
 
 /**

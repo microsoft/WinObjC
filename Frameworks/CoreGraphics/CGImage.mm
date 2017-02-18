@@ -42,7 +42,7 @@ static const wchar_t* TAG = L"CGImage";
 // TODO #1124: remove old code
 #pragma region OLD_CODE
 static std::vector<CGImageDestructionListener> _imageDestructionListeners;
-COREGRAPHICS_EXPORT void CGImageAddDestructionListener(CGImageDestructionListener listener) {
+COREGRAPHICS_EXPORT void _CGImageAddDestructionListener(CGImageDestructionListener listener) {
     _imageDestructionListeners.push_back(listener);
 }
 

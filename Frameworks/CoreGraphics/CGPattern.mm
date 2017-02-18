@@ -192,7 +192,7 @@ void CGPatternRelease(CGPatternRef pattern) {
 /**
  @Status Interoperable
 */
-CGPatternRef CGPatternCreateFromImage(CGImageRef img) {
+CGPatternRef _CGPatternCreateFromImage(CGImageRef img) {
     return [CGPattern patternWithImage:img];
 }
 

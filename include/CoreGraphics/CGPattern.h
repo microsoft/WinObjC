@@ -41,7 +41,7 @@ typedef CF_ENUM(CFIndex, CGPatternTiling) {
 };
 
 // Starboard-only:
-COREGRAPHICS_EXPORT CGPatternRef CGPatternCreateFromImage(CGImageRef img); // TODO: need to move out this maybe to UIKit ???
+COREGRAPHICS_EXPORT CGPatternRef _CGPatternCreateFromImage(CGImageRef img); // TODO: need to move out this maybe to UIKit ???
 
 COREGRAPHICS_EXPORT CGPatternRef CGPatternCreate(void* info,
                                                  CGRect bounds,

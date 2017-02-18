@@ -111,7 +111,7 @@
         clipRect.size.height = rect.size.height - clipRect.origin.y - 13.0f;
         CGContextSaveGState(context);
         CGContextClipToRect(context, clipRect);
-        CGContextDrawImage(context, drawRect, CGBitmapContextGetImage(context));
+        CGContextDrawImage(context, drawRect, _CGBitmapContextGetImage(context));
         CGContextRestoreGState(context);
 
         CGContextRelease(context);
@@ -128,7 +128,7 @@
 
         // Vertically center text
         CGRect textRect = CGRectMake((rect.size.height - size.height) / 2.0, rect.origin.x, rect.size.width, size.height);
-        CGContextSetFillColorWithColor(context, CGColorGetConstantColor(kCGColorWhite));
+        CGContextSetFillColorWithColor(context, _CGColorGetConstantColor(kCGColorWhite));
         size = [title drawInRect:textRect withFont:font lineBreakMode:UILineBreakModeClip alignment:UITextAlignmentCenter];
     }
 }
