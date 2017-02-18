@@ -397,7 +397,7 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property (readonly) RTObject* newValue;
+@property (readonly) RTObject* newValue __attribute__ ((ns_returns_not_retained));
 @property (readonly) WDPPerceptionFrameSourcePropertyChangeStatus status;
 @end
 

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -28,8 +28,6 @@
 #include "LoggingNative.h"
 
 static const wchar_t* TAG = L"UIGestureRecognizer";
-
-extern NSMutableDictionary* g_curGesturesDict;
 
 @implementation UIGestureRecognizer
 
@@ -231,59 +229,24 @@ static void commonInit(UIGestureRecognizer* self) {
     UNIMPLEMENTED();
 }
 
-+ (BOOL)_fireGestures:(id)gestures shouldCancelTouches:(BOOL&)shouldCancelTouches {
-    bool didRecognize = false;
++ (BOOL)_fireGesture:(UIGestureRecognizer*)gesture {
+    UIGestureRecognizerState state = [gesture state];
 
-    for (UIGestureRecognizer* curgesture in gestures) {
-        UIGestureRecognizerState state = (UIGestureRecognizerState)[curgesture state];
-
-        if (state == UIGestureRecognizerStateRecognized || state == UIGestureRecognizerStateBegan ||
-            state == UIGestureRecognizerStateChanged || state == UIGestureRecognizerStateEnded) {
-            [curgesture _fire];
-            shouldCancelTouches |= curgesture.cancelsTouchesInView;
-            didRecognize = true;
-        }
+    if (state == UIGestureRecognizerStateRecognized || state == UIGestureRecognizerStateBegan || state == UIGestureRecognizerStateChanged ||
+        state == UIGestureRecognizerStateEnded) {
+        [gesture _fire];
+        return YES;
     }
 
-    return didRecognize;
+    return NO;
 }
 
-- (void)cancel {
+- (void)_cancel {
     if (_state == UIGestureRecognizerStateBegan || _state == UIGestureRecognizerStateChanged) {
         _state = UIGestureRecognizerStateCancelled;
         [self _fire];
     } else {
         _state = UIGestureRecognizerStateCancelled;
-    }
-}
-
-- (void)_cancelIfActive {
-    id curList = [g_curGesturesDict objectForKey:[self class]];
-    if ([curList containsObject:self]) {
-        [self cancel];
-    }
-}
-
-+ (void)_cancelActiveExcept:(UIGestureRecognizer*)gesture {
-    id curList = [g_curGesturesDict objectForKey:self];
-    for (UIGestureRecognizer* curGesture in curList) {
-        if (curGesture != gesture) {
-            TraceVerbose(TAG, L"Cancelling %hs", object_getClassName(curGesture));
-            [curGesture cancel];
-        }
-    }
-}
-
-+ (void)_failActiveExcept:(UIGestureRecognizer*)gesture {
-    NSArray* curList = [g_curGesturesDict objectForKey:self];
-    for (UIGestureRecognizer* curGesture in curList) {
-        if (curGesture != gesture) {
-            UIGestureRecognizer* gesture = curGesture;
-
-            if (gesture->_state != UIGestureRecognizerStatePossible) {
-                gesture->_state = UIGestureRecognizerStateFailed;
-            }
-        }
     }
 }
 
@@ -312,19 +275,19 @@ static void commonInit(UIGestureRecognizer* self) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer*)preventingGestureRecognizer {
-    UNIMPLEMENTED();
-    return StubReturn();
+    // default to YES per reference platform
+    return YES;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer*)preventedGestureRecognizer {
-    UNIMPLEMENTED();
-    return StubReturn();
+    // default to YES per reference platform
+    return YES;
 }
 
 /**

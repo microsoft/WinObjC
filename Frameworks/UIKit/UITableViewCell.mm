@@ -856,9 +856,9 @@ static void setInternalAccessoryColor(UITableViewCell* self) {
             }
         }
 
-        CGColorRef color =
-            static_cast<CGColorRef>([UIColor colorWithRed:contentColor.r green:contentColor.g blue:contentColor.b alpha:contentColor.a]);
-        [[self->_internalAccessoryView layer] _setContentColor:color];
+        // TODO: This used to call into a private/unimplemented CALayer function
+        // Not sure what we should be doing here.
+        UNIMPLEMENTED();
     }
 }
 

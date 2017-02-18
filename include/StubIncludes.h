@@ -40,16 +40,22 @@
 
 #if defined(NO_STUB_METHODS)
 #define STUB_METHOD __attribute__((unavailable("method not yet implemented")))
+#define NOTINPLAN_METHOD __attribute__((unavailable("method not in current implementation roadmap")))
 #elif defined(WARN_STUB_METHODS)
 #define STUB_METHOD __attribute__((deprecated("method not yet implemented")))
+#define NOTINPLAN_METHOD __attribute__((deprecated("method not in current implementation roadmap")))
 #else
 #define STUB_METHOD
+#define NOTINPLAN_METHOD
 #endif
 
 #if defined(NO_STUB_PROPERTIES)
 #define STUB_PROPERTY __attribute__((unavailable("property not yet implemented")))
+#define NOTINPLAN_PROPERTY __attribute__((unavailable("property not in current implementation roadmap")))
 #elif defined(WARN_STUB_PROPERTIES)
 #define STUB_PROPERTY __attribute__((deprecated("property not yet implemented")))
+#define NOTINPLAN_PROPERTY __attribute__((deprecated("property not in current implementation roadmap")))
 #else
 #define STUB_PROPERTY
+#define NOTINPLAN_PROPERTY
 #endif

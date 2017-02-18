@@ -236,8 +236,8 @@ OBJCUWP_WINDOWS_DEVICES_PERCEPTION_PROVIDER_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-- (WDPPPerceptionFrame*)allocateFrame;
-- (WDPPPerceptionFrame*)copyFromVideoFrame:(WMVideoFrame*)frame;
+- (WDPPPerceptionFrame*)allocateFrame __attribute__ ((ns_returns_not_retained));
+- (WDPPPerceptionFrame*)copyFromVideoFrame:(WMVideoFrame*)frame __attribute__ ((ns_returns_not_retained));
 - (void)close;
 @end
 

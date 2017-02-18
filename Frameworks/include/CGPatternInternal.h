@@ -50,3 +50,10 @@ CGAffineTransform _CGPatternGetTransformation(CGPatternRef pattern);
 * Get the final size of the pattern tile (after xStep and xStep has been applied).
 */
 CGRect _CGPatternGetFinalPatternSize(CGPatternRef pattern);
+
+/*
+* Get the pattern colored value.
+* If it is colored, then we have a colored pattern has inherent color,
+* if it's false then we have a stencil pattern does not have inherent color.
+*/
+bool _CGPatternIsColored(CGPatternRef pattern);

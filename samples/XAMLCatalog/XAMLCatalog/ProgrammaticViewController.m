@@ -18,7 +18,6 @@
 
 #import "UIActionSheetViewController.h"
 #import "UIActivityIndicatorViewController.h"
-#import "UIButtonViewController.h"
 #import "UIButtonWithControlsViewController.h"
 #import "UILabelViewController.h"
 #import "UISliderViewController.h"
@@ -37,9 +36,6 @@
 
     // UIActivityIndicatorView
     [self addMenuItemViewController:[[UIActivityIndicatorViewController alloc] init] andTitle:@"UIActivityIndicatorView"];
-
-    // UIButton
-    [self addMenuItemViewController:[[UIButtonViewController alloc] init] andTitle:@"UIButton"];
 
     // UIButton
     [self addMenuItemViewController:[[UIButtonWithControlsViewController alloc] init]

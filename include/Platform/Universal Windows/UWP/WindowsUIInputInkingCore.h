@@ -83,7 +83,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_CORE_EXPORT
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property WUIICCoreWetStrokeDisposition disposition;
-@property (readonly) NSMutableArray* /* WUIIInkPoint* */ newInkPoints;
+@property (readonly) NSMutableArray* /* WUIIInkPoint* */ newInkPoints __attribute__ ((ns_returns_not_retained));
 @property (readonly) unsigned int pointerId;
 @end
 

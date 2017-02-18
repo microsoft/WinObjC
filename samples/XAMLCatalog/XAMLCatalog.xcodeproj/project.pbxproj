@@ -10,13 +10,17 @@
 		230C2CD41CEE839C0095E3E5 /* XAMLCatalog.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2324634D1CE69DC600B7AAE4 /* XAMLCatalog.storyboard */; };
 		234767241E2EE058006D97CB /* UIActionSheetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 234767191E2EE058006D97CB /* UIActionSheetViewController.m */; };
 		234767251E2EE058006D97CB /* UIActivityIndicatorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2347671B1E2EE058006D97CB /* UIActivityIndicatorViewController.m */; };
-		234767261E2EE058006D97CB /* UIButtonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2347671D1E2EE058006D97CB /* UIButtonViewController.m */; };
 		234767271E2EE058006D97CB /* UISliderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2347671F1E2EE058006D97CB /* UISliderViewController.m */; };
 		234767281E2EE058006D97CB /* UITextFieldViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 234767211E2EE058006D97CB /* UITextFieldViewController.m */; };
 		234767291E2EE058006D97CB /* UIViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 234767231E2EE058006D97CB /* UIViewViewController.m */; };
 		2347672C1E2EE090006D97CB /* UIButtonWithControlsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2347672B1E2EE090006D97CB /* UIButtonWithControlsViewController.m */; };
 		2347672F1E300CF0006D97CB /* UILabelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2347672E1E300CF0006D97CB /* UILabelViewController.m */; };
 		239EBAEB1E39559C00C845D0 /* TestEnabledUITextField.mm in Sources */ = {isa = PBXBuildFile; fileRef = 239EBAEA1E39559C00C845D0 /* TestEnabledUITextField.mm */; };
+		239EBAF11E453D1F00C845D0 /* 50x50.png in Resources */ = {isa = PBXBuildFile; fileRef = 239EBAEC1E453D1F00C845D0 /* 50x50.png */; };
+		239EBAF21E453D1F00C845D0 /* 75x75.png in Resources */ = {isa = PBXBuildFile; fileRef = 239EBAED1E453D1F00C845D0 /* 75x75.png */; };
+		239EBAF31E453D1F00C845D0 /* 100x100.png in Resources */ = {isa = PBXBuildFile; fileRef = 239EBAEE1E453D1F00C845D0 /* 100x100.png */; };
+		239EBAF41E453D1F00C845D0 /* 125x125.png in Resources */ = {isa = PBXBuildFile; fileRef = 239EBAEF1E453D1F00C845D0 /* 125x125.png */; };
+		239EBAF51E453D1F00C845D0 /* 150x150.png in Resources */ = {isa = PBXBuildFile; fileRef = 239EBAF01E453D1F00C845D0 /* 150x150.png */; };
 		6EEB8A381CE4F4050021021E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EEB8A371CE4F4050021021E /* main.m */; };
 		6EEB8A3B1CE4F4050021021E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EEB8A3A1CE4F4050021021E /* AppDelegate.m */; };
 		6EEB8A3E1CE4F4050021021E /* ProgrammaticViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EEB8A3D1CE4F4050021021E /* ProgrammaticViewController.m */; };
@@ -36,8 +40,6 @@
 		234767191E2EE058006D97CB /* UIActionSheetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIActionSheetViewController.m; path = UIKitControls/UIActionSheetViewController.m; sourceTree = "<group>"; };
 		2347671A1E2EE058006D97CB /* UIActivityIndicatorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIActivityIndicatorViewController.h; path = UIKitControls/UIActivityIndicatorViewController.h; sourceTree = "<group>"; };
 		2347671B1E2EE058006D97CB /* UIActivityIndicatorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIActivityIndicatorViewController.m; path = UIKitControls/UIActivityIndicatorViewController.m; sourceTree = "<group>"; };
-		2347671C1E2EE058006D97CB /* UIButtonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIButtonViewController.h; path = UIKitControls/UIButtonViewController.h; sourceTree = "<group>"; };
-		2347671D1E2EE058006D97CB /* UIButtonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIButtonViewController.m; path = UIKitControls/UIButtonViewController.m; sourceTree = "<group>"; };
 		2347671E1E2EE058006D97CB /* UISliderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UISliderViewController.h; path = UIKitControls/UISliderViewController.h; sourceTree = "<group>"; };
 		2347671F1E2EE058006D97CB /* UISliderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UISliderViewController.m; path = UIKitControls/UISliderViewController.m; sourceTree = "<group>"; };
 		234767201E2EE058006D97CB /* UITextFieldViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UITextFieldViewController.h; path = UIKitControls/UITextFieldViewController.h; sourceTree = "<group>"; };
@@ -50,6 +52,11 @@
 		2347672E1E300CF0006D97CB /* UILabelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UILabelViewController.m; path = UIKitControls/UILabelViewController.m; sourceTree = "<group>"; };
 		239EBAE91E39559C00C845D0 /* TestEnabledUITextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestEnabledUITextField.h; sourceTree = "<group>"; };
 		239EBAEA1E39559C00C845D0 /* TestEnabledUITextField.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TestEnabledUITextField.mm; sourceTree = "<group>"; };
+		239EBAEC1E453D1F00C845D0 /* 50x50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 50x50.png; path = XAMLCatalog/Images/50x50.png; sourceTree = "<group>"; };
+		239EBAED1E453D1F00C845D0 /* 75x75.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 75x75.png; path = XAMLCatalog/Images/75x75.png; sourceTree = "<group>"; };
+		239EBAEE1E453D1F00C845D0 /* 100x100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 100x100.png; path = XAMLCatalog/Images/100x100.png; sourceTree = "<group>"; };
+		239EBAEF1E453D1F00C845D0 /* 125x125.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 125x125.png; path = XAMLCatalog/Images/125x125.png; sourceTree = "<group>"; };
+		239EBAF01E453D1F00C845D0 /* 150x150.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 150x150.png; path = XAMLCatalog/Images/150x150.png; sourceTree = "<group>"; };
 		6EEB8A331CE4F4050021021E /* XAMLCatalog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XAMLCatalog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6EEB8A371CE4F4050021021E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6EEB8A391CE4F4050021021E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -89,8 +96,6 @@
 				234767191E2EE058006D97CB /* UIActionSheetViewController.m */,
 				2347671A1E2EE058006D97CB /* UIActivityIndicatorViewController.h */,
 				2347671B1E2EE058006D97CB /* UIActivityIndicatorViewController.m */,
-				2347671C1E2EE058006D97CB /* UIButtonViewController.h */,
-				2347671D1E2EE058006D97CB /* UIButtonViewController.m */,
 				2347672A1E2EE090006D97CB /* UIButtonWithControlsViewController.h */,
 				2347672B1E2EE090006D97CB /* UIButtonWithControlsViewController.m */,
 				2347672D1E300CF0006D97CB /* UILabelViewController.h */,
@@ -167,6 +172,11 @@
 		822F85B41D8F9031001DC8A5 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				239EBAEC1E453D1F00C845D0 /* 50x50.png */,
+				239EBAED1E453D1F00C845D0 /* 75x75.png */,
+				239EBAEE1E453D1F00C845D0 /* 100x100.png */,
+				239EBAEF1E453D1F00C845D0 /* 125x125.png */,
+				239EBAF01E453D1F00C845D0 /* 150x150.png */,
 				822F85BB1D8F908C001DC8A5 /* blue_background.jpg */,
 				822F85BC1D8F908C001DC8A5 /* button_image.png */,
 				822F85BD1D8F908C001DC8A5 /* yellow_background.jpg */,
@@ -232,11 +242,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				239EBAF31E453D1F00C845D0 /* 100x100.png in Resources */,
 				822F85C01D8F908C001DC8A5 /* yellow_background.jpg in Resources */,
 				822F85BE1D8F908C001DC8A5 /* blue_background.jpg in Resources */,
+				239EBAF21E453D1F00C845D0 /* 75x75.png in Resources */,
 				822F85BF1D8F908C001DC8A5 /* button_image.png in Resources */,
 				6EEB8A461CE4F4050021021E /* Assets.xcassets in Resources */,
+				239EBAF51E453D1F00C845D0 /* 150x150.png in Resources */,
+				239EBAF11E453D1F00C845D0 /* 50x50.png in Resources */,
 				230C2CD41CEE839C0095E3E5 /* XAMLCatalog.storyboard in Resources */,
+				239EBAF41E453D1F00C845D0 /* 125x125.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,7 +267,6 @@
 				234767251E2EE058006D97CB /* UIActivityIndicatorViewController.m in Sources */,
 				239EBAEB1E39559C00C845D0 /* TestEnabledUITextField.mm in Sources */,
 				6EEB8A411CE4F4050021021E /* StoryBoardViewController.m in Sources */,
-				234767261E2EE058006D97CB /* UIButtonViewController.m in Sources */,
 				6EEB8A3B1CE4F4050021021E /* AppDelegate.m in Sources */,
 				234767291E2EE058006D97CB /* UIViewViewController.m in Sources */,
 				6EEB8A3E1CE4F4050021021E /* ProgrammaticViewController.m in Sources */,

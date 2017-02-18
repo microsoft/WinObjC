@@ -221,7 +221,7 @@ Microsoft Extension
 */
 - (void)setEnabled:(BOOL)enabled {
     // only update the value and then relayout if value actually changed
-    if ((_curState & UIControlStateDisabled) != enabled) {
+    if ((_curState & UIControlStateDisabled) != !enabled) {
         if (!enabled) {
             _curState |= UIControlStateDisabled;
         } else {

@@ -14,6 +14,8 @@
 //
 //******************************************************************************
 
+#import <TestFramework.h>
+#import "FunctionalTestHelpers.h"
 #import "UXTestHelpers.h"
 #import "StringHelpers.h"
 
@@ -23,26 +25,60 @@ UIWindow* GetCurrentWindow() {
     return [[UIApplication sharedApplication] keyWindow];
 }
 
-NSString* NSStringFromPropertyValue(RTObject* rtPropertyValue) {
-    // BUGBUG:8791977 - WFIPropertyValue is not publicly exposed via projections so we used a workaround
-    Microsoft::WRL::ComPtr<IInspectable> inspPropVal = [rtPropertyValue comObj];
-    return NSStringFromPropertyValue(inspPropVal);
+WXFrameworkElement* FindXamlChild(WXFrameworkElement* parent, NSString* name) {
+    WXFrameworkElement* foundChild = nullptr;
+
+    unsigned int childCount = [WUXMVisualTreeHelper getChildrenCount:parent];
+    for (unsigned int i = 0; i < childCount && !foundChild; i++) {
+        WXFrameworkElement* child = rt_dynamic_cast<WXFrameworkElement>([WUXMVisualTreeHelper getChild:parent childIndex:i]);
+
+        NSString* childName = [child name];
+        if ([childName isEqualToString:name]) {
+            foundChild = child;
+            break;
+        }
+
+        // Recurse
+        foundChild = FindXamlChild(child, name);
+    }
+
+    return foundChild;
 }
 
-NSString* NSStringFromPropertyValue(const Microsoft::WRL::ComPtr<IInspectable>& inspPropertyValue) {
-    Microsoft::WRL::ComPtr<ABI::Windows::Foundation::IPropertyValue> propVal;
-    HRESULT hr = inspPropertyValue.As(&propVal);
-    if (SUCCEEDED(hr)) {
-        HSTRING str;
-        auto freeHSTRING = wil::ScopeExit([&]() { WindowsDeleteString(str); });
+void UIControlCheckStateTransition(
+    UIControl* controlToTest, std::shared_ptr<UXEvent> waitForEvent, UIControlState controlState, SEL selector, id expectedValue) {
+    LOG_INFO("State transition - current control state: %d", controlState);
 
-        hr = propVal->GetString(&str);
-        if (SUCCEEDED(hr)) {
-            return Strings::WideToNSString<HSTRING>(str);
-        }
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        controlToTest.highlighted = controlState & UIControlStateHighlighted;
+        controlToTest.selected = controlState & UIControlStateSelected;
+        controlToTest.enabled = !(controlState & UIControlStateDisabled);
+    });
+
+    if (waitForEvent) {
+        ASSERT_TRUE_MSG(waitForEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for state transition event failed!");
+    }
+
+    id currentValue = [controlToTest performSelector:selector];
+    ASSERT_OBJCEQ(currentValue, expectedValue);
+}
+
+NSString* NSStringFromPropertyValue(RTObject* rtPropertyValue) {
+    WFIPropertyValue* propVal = rt_dynamic_cast<WFIPropertyValue>(rtPropertyValue);
+    if (propVal) {
+        return [propVal getString];
     }
 
     return nil;
+}
+
+double DoubleFromPropertyValue(RTObject* rtPropertyValue) {
+    WFIPropertyValue* propVal = rt_dynamic_cast<WFIPropertyValue>(rtPropertyValue);
+    if (propVal) {
+        return [propVal getDouble];
+    }
+
+    return 0.0f;
 }
 
 bool IsRGBAEqual(WUXMSolidColorBrush* brush, UIColor* color) {
@@ -108,10 +144,12 @@ void XamlEventSubscription::Set(WXDependencyObject* xamlObject, WXDependencyProp
 
 void XamlEventSubscription::Reset() {
     if (_callbackToken != -1) {
-        // Unregister the callback
         [_xamlObject unregisterPropertyChangedCallback:_propertyToObserve token:_callbackToken];
         _callbackToken = -1;
     }
+
+    _xamlObject = nil;
+    _propertyToObserve = nil;
 }
 
 //
@@ -119,8 +157,13 @@ void XamlEventSubscription::Reset() {
 //
 void UXEvent::Set() {
     [_condition lock];
-    _signaled = true;
-    [_condition signal];
+    _signalCount++;
+
+    if (_signalCount >= _signalCountTarget) {
+        _signaled = true;
+        [_condition signal];
+    }
+
     [_condition unlock];
 }
 
@@ -145,6 +188,14 @@ bool UXEvent::Wait(int timeOutInSeconds) {
     }
 
     return waitSignal;
+}
+
+bool UXEvent::Wait(int timeOutInSeconds, int signalCountTarget) {
+    [_condition lock];
+    _signalCountTarget = signalCountTarget;
+    [_condition unlock];
+
+    return Wait(timeOutInSeconds);
 }
 
 } // namespace UXTestAPI

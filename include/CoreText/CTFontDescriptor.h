@@ -26,12 +26,13 @@
 #import <CoreGraphics/CGBase.h>
 
 typedef const struct __CTFontDescriptor* CTFontDescriptorRef;
+
 typedef uint32_t CTFontOrientation;
 typedef uint32_t CTFontFormat;
 typedef uint32_t CTFontPriority;
 typedef uint32_t CTFontSymbolicTraits;
 typedef uint32_t CTFontStylisticClass;
-
+typedef uint32_t CTFontDescriptorMatchingState;
 enum { kCTFontDefaultOrientation = 0, kCTFontHorizontalOrientation = 1, kCTFontVerticalOrientation = 2 };
 enum {
     kCTFontFormatUnrecognized = 0,
@@ -86,6 +87,19 @@ enum {
     kCTFontScriptsClass = (10 << kCTFontClassMaskShift),
     kCTFontSymbolicClass = (12 << kCTFontClassMaskShift)
 };
+enum {
+    kCTFontDescriptorMatchingDidBegin,
+    kCTFontDescriptorMatchingDidFailWithError,
+    kCTFontDescriptorMatchingDidFinish,
+    kCTFontDescriptorMatchingDidFinishDownloading,
+    kCTFontDescriptorMatchingDidMatch,
+    kCTFontDescriptorMatchingDownloading,
+    kCTFontDescriptorMatchingStalled,
+    kCTFontDescriptorMatchingWillBeginDownloading,
+    kCTFontDescriptorMatchingWillBeginQuerying
+};
+
+typedef bool (^CTFontDescriptorProgressHandler)(CTFontDescriptorMatchingState state, CFDictionaryRef progressParameter);
 
 CORETEXT_EXPORT const CFStringRef kCTFontURLAttribute;
 CORETEXT_EXPORT const CFStringRef kCTFontNameAttribute;
@@ -132,4 +146,6 @@ CORETEXT_EXPORT CFTypeRef CTFontDescriptorCopyAttribute(CTFontDescriptorRef desc
 CORETEXT_EXPORT CFTypeRef CTFontDescriptorCopyLocalizedAttribute(CTFontDescriptorRef descriptor,
                                                                  CFStringRef attribute,
                                                                  CFStringRef _Nullable* language);
+CORETEXT_EXPORT bool CTFontDescriptorMatchFontDescriptorsWithProgressHandler(
+    CFArrayRef descriptors, CFSetRef mandatoryAttributes, CTFontDescriptorProgressHandler progressBlock) NOTINPLAN_METHOD;
 CORETEXT_EXPORT CFTypeID CTFontDescriptorGetTypeID();

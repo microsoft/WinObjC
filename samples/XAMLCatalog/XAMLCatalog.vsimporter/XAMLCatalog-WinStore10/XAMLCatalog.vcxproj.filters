@@ -2,28 +2,28 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{a89af828-b1b0-43eb-a93c-f0365abb8a2e}</UniqueIdentifier>
+      <UniqueIdentifier>{d76a9b7b-b5a4-4c53-a5fd-2b27521321c5}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{e49647b2-ae29-46c1-a3e1-dacdf6b63691}</UniqueIdentifier>
+      <UniqueIdentifier>{d267b6ba-d37a-47b6-aedf-4bc0102d99a7}</UniqueIdentifier>
     </Filter>
     <Filter Include="Images">
-      <UniqueIdentifier>{CEF02F3B-93FF-4D69-A57E-1FC1ED26F52F}</UniqueIdentifier>
+      <UniqueIdentifier>{7ABC620C-0579-4228-A19D-6ECB213EC019}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog">
-      <UniqueIdentifier>{0D8051F2-4386-4572-85B1-84C24FBCDA8B}</UniqueIdentifier>
+      <UniqueIdentifier>{2E4E4A68-D2F8-4771-B53F-0BCBF01DF04E}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog\Supporting Files">
-      <UniqueIdentifier>{AA46132E-2E52-4A04-8DC9-D4EC13902318}</UniqueIdentifier>
+      <UniqueIdentifier>{6BEFFDB1-5403-4240-B9D9-EC5A0823DD15}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog\UIKitControls">
-      <UniqueIdentifier>{B8A238B4-288E-47B5-8CEE-83EEB7FD892F}</UniqueIdentifier>
+      <UniqueIdentifier>{26110A8D-9A20-4B21-8767-25180C0F2E94}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog\XamlControls">
-      <UniqueIdentifier>{91E7FE91-D8C9-490E-97AE-F54669A95E47}</UniqueIdentifier>
+      <UniqueIdentifier>{2893A9F9-BBAE-4368-BBB3-6DE81541B4F2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{4840D6B9-B14D-4CD3-AB60-25E11864F178}</UniqueIdentifier>
+      <UniqueIdentifier>{A3877577-57D9-47AC-83BE-6D675B72821B}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -81,9 +81,6 @@
     <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UIActivityIndicatorViewController.h">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UIButtonViewController.h">
-      <Filter>XAMLCatalog\UIKitControls</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UIButtonWithControlsViewController.h">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClInclude>
@@ -126,9 +123,6 @@
     <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UIActivityIndicatorViewController.m">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UIButtonViewController.m">
-      <Filter>XAMLCatalog\UIKitControls</Filter>
-    </ClangCompile>
     <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UIButtonWithControlsViewController.m">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClangCompile>
@@ -148,6 +142,21 @@
       <Filter>XAMLCatalog\Supporting Files</Filter>
     </ClangCompile>
     <SBInfoPlistCopy Include="..\..\XAMLCatalog\Info.plist" />
+    <SBResourceCopy Include="..\..\XAMLCatalog\Images\100x100.png">
+      <Filter>Images</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\XAMLCatalog\Images\125x125.png">
+      <Filter>Images</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\XAMLCatalog\Images\150x150.png">
+      <Filter>Images</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\XAMLCatalog\Images\50x50.png">
+      <Filter>Images</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\XAMLCatalog\Images\75x75.png">
+      <Filter>Images</Filter>
+    </SBResourceCopy>
     <SBResourceCopy Include="..\..\XAMLCatalog\Images\blue_background.jpg">
       <Filter>Images</Filter>
     </SBResourceCopy>

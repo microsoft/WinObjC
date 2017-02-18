@@ -505,7 +505,7 @@ OBJCUWP_WINDOWS_MEDIA_CORE_PROTECTION_PLAYBACK_CAPTURE_DEVICES_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property (readonly) WFTimeSpan* newPosition;
+@property (readonly) WFTimeSpan* newPosition __attribute__ ((ns_returns_not_retained));
 @property (readonly) WFTimeSpan* oldPosition;
 @property (readonly) NSArray* /* WMPMediaBreak* */ seekedOverBreaks;
 @end
@@ -994,7 +994,7 @@ OBJCUWP_WINDOWS_MEDIA_CORE_PROTECTION_PLAYBACK_CAPTURE_DEVICES_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property (readonly) WMPMediaPlaybackItem* newItem;
+@property (readonly) WMPMediaPlaybackItem* newItem __attribute__ ((ns_returns_not_retained));
 @property (readonly) WMPMediaPlaybackItem* oldItem;
 @end
 

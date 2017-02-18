@@ -24,6 +24,21 @@ namespace Xaml {
 namespace Private {
 namespace CoreAnimation {
 
+// Pairs a DependencyProperty and its associated DependencyObject for setting/getting values on objects within an ILayer instance.
+// For example, can wrap an internal FrameworkElement and its associated BorderBrushProperty.
+[Windows::Foundation::Metadata::WebHostHidden]
+public ref class LayerProperty sealed {
+public:
+    LayerProperty(Windows::UI::Xaml::DependencyObject^ target, Windows::UI::Xaml::DependencyProperty^ property);
+
+    void SetValue(Platform::Object^ value);
+    Platform::Object^ GetValue();
+
+private:
+    Windows::UI::Xaml::DependencyObject^ _target;
+    Windows::UI::Xaml::DependencyProperty^ _property;
+};
+
 [Windows::Foundation::Metadata::WebHostHidden]
 public interface class ILayer {
 public:
@@ -41,6 +56,12 @@ public:
     property Windows::UI::Xaml::Controls::Canvas^ SublayerCanvas {
         Windows::UI::Xaml::Controls::Canvas^ get();
     }
+
+    // Accessor for the LayerProperty that manages the BorderBrush of this layer
+    LayerProperty^ GetBorderBrushProperty();
+
+    // Accessor for the LayerProperty that manages the BorderThickness of this layer
+    LayerProperty^ GetBorderThicknessProperty();
 };
 
 [Windows::Foundation::Metadata::WebHostHidden]
@@ -63,22 +84,31 @@ public:
         Windows::UI::Xaml::Controls::Canvas^ get();
     }
 
+    // Accessor for the LayerProperty that manages the BorderBrush of this layer
+    virtual LayerProperty^ GetBorderBrushProperty();
+
+    // Accessor for the LayerProperty that manages the BorderThickness of this layer
+    virtual LayerProperty^ GetBorderThicknessProperty();
+
     // Allows arbitrary framework elements to opt-into hosting layer content
     static property Windows::UI::Xaml::DependencyProperty^ LayerContentProperty {
         Windows::UI::Xaml::DependencyProperty^ get();
     }
 
     // Allows arbitrary framework elements to opt-into hosting sublayers
-        static property Windows::UI::Xaml::DependencyProperty^ SublayerCanvasProperty {
+    static property Windows::UI::Xaml::DependencyProperty^ SublayerCanvasProperty {
         Windows::UI::Xaml::DependencyProperty^ get();
     }
+
+internal:
+    // Static entry point to register our dependency properties
+    static void _RegisterDependencyProperties();
 
 private:
     // Layer elements; created on demand
     Windows::UI::Xaml::Controls::Image^ _content;
 
     // Dependency properties for adding layer-like functionality to any FrameworkElement
-    static void _RegisterDependencyProperties();
     static bool s_dependencyPropertiesRegistered;
     static Windows::UI::Xaml::DependencyProperty^ s_layerContentProperty;
     static Windows::UI::Xaml::DependencyProperty^ s_sublayerCanvasProperty;

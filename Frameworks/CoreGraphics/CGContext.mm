@@ -49,6 +49,7 @@
 #import <vector>
 #import <stack>
 #import <algorithm>
+#import <memory>
 
 using namespace Microsoft::WRL;
 
@@ -58,6 +59,7 @@ static const wchar_t* TAG = L"CGContext";
 static const float s_kCGGradientOffsetPoint = 1E-45;
 
 enum _CGCoordinateMode : unsigned int { _kCGCoordinateModeDeviceSpace = 0, _kCGCoordinateModeUserSpace };
+enum _CGTrinary : unsigned int { _kCGTrinaryOff = 0, _kCGTrinaryOn = 1, _kCGTrinaryDefault = 2 };
 
 // A drawing context is represented by a number of layers, each with their own drawing state:
 // Context
@@ -121,6 +123,14 @@ struct __CGContextDrawingState {
     woc::StrongCF<CGFontRef> font;
     CGFloat fontSize = 0.f;
 
+    // Antialiasing
+    _CGTrinary shouldAntialias = _kCGTrinaryDefault;
+
+    // Font Antialiasing
+    _CGTrinary shouldSubpixelPosition = _kCGTrinaryDefault;
+    _CGTrinary shouldSubpixelQuantizeFonts = _kCGTrinaryDefault;
+    _CGTrinary shouldSmoothFonts = _kCGTrinaryDefault;
+
     inline void ComputeStrokeStyle(ID2D1DeviceContext* deviceContext) {
         if (strokeStyle) {
             return;
@@ -155,8 +165,9 @@ struct __CGContextDrawingState {
         D2D1_FILL_MODE d2dFillMode = (pathMode & kCGPathEOFill) == kCGPathEOFill ? D2D1_FILL_MODE_ALTERNATE : D2D1_FILL_MODE_WINDING;
 
         if (!clippingGeometry) {
-            // If we don't have a clipping geometry, we are free to take this one wholesale (after EO/Winding conversion.)
-            return _CGConvertD2DGeometryToFillMode(incomingGeometry, d2dFillMode, &clippingGeometry);
+            // If we don't have a clipping geometry, we are free to take this one wholesale.
+            clippingGeometry = incomingGeometry;
+            return S_OK;
         }
 
         ComPtr<ID2D1Factory> factory;
@@ -246,11 +257,10 @@ struct __CGContext : CoreFoundation::CppBase<__CGContext> {
     // See the comments above _CGContextSetShadowProjectionTransform.
     CGAffineTransform shadowProjectionTransform{ CGAffineTransformIdentity };
 
-    // TODO(DH) GH#1070 evaluate these defaults; they should be set by context creators.
-    bool allowsAntialiasing = false;
-    bool allowsFontSmoothing = false;
-    bool allowsFontSubpixelPositioning = false;
-    bool allowsFontSubpixelQuantization = false;
+    bool allowsAntialiasing = true;
+    bool allowsFontSmoothing = true;
+    bool allowsFontSubpixelPositioning = true;
+    bool allowsFontSubpixelQuantization = true;
 
     CGAffineTransform textMatrix{ CGAffineTransformIdentity };
 
@@ -291,7 +301,78 @@ private:
 
     HRESULT _CreateShadowEffect(ID2D1Image* inputImage, ID2D1Effect** outShadowEffect);
 
+    // Does the drawing inside the Draw call in DrawGeometry, to be used for multiple draws to prevent
+    // Shadowing multiple times
+    HRESULT _DrawGeometryInternal(ID2D1Geometry* geometry,
+                                  CGPathDrawingMode drawMode,
+                                  CGContextRef context,
+                                  ID2D1DeviceContext* deviceContext);
+
 public:
+    inline D2D1_ANTIALIAS_MODE GetAntialiasMode() {
+        return CurrentGState().shouldAntialias == _kCGTrinaryOn && allowsAntialiasing ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE :
+                                                                                        D2D1_ANTIALIAS_MODE_ALIASED;
+    }
+
+    inline D2D1_TEXT_ANTIALIAS_MODE GetTextAntialiasMode() {
+        if (CurrentGState().shouldAntialias == _kCGTrinaryOn && allowsAntialiasing && CurrentGState().shouldSmoothFonts == _kCGTrinaryOn &&
+            allowsFontSmoothing) {
+            if (CurrentGState().shouldSubpixelPosition == _kCGTrinaryOn && allowsFontSubpixelPositioning) {
+                return D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE;
+            } else {
+                return D2D1_TEXT_ANTIALIAS_MODE_GRAYSCALE;
+            }
+        }
+        return D2D1_TEXT_ANTIALIAS_MODE_ALIASED;
+    }
+
+    inline DWRITE_RENDERING_MODE GetTextRenderingMode() {
+        if (CurrentGState().shouldAntialias == _kCGTrinaryOn && allowsAntialiasing &&
+            CurrentGState().shouldSubpixelPosition == _kCGTrinaryOn && allowsFontSubpixelPositioning &&
+            CurrentGState().shouldSmoothFonts == _kCGTrinaryOn && allowsFontSmoothing) {
+            if (CurrentGState().shouldSubpixelQuantizeFonts == _kCGTrinaryOn && allowsFontSubpixelQuantization == _kCGTrinaryOn) {
+                return DWRITE_RENDERING_MODE_NATURAL_SYMMETRIC;
+            }
+            return DWRITE_RENDERING_MODE_NATURAL;
+        }
+        return DWRITE_RENDERING_MODE_DEFAULT;
+    }
+
+    inline HRESULT GetTextRenderingParams(IDWriteRenderingParams* originalParams, IDWriteRenderingParams** newParams) {
+        ComPtr<IDWriteFactory> dwriteFactory;
+        RETURN_IF_FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &dwriteFactory));
+
+        ComPtr<IDWriteRenderingParams> defaultParams = originalParams;
+        if (!defaultParams) {
+            RETURN_IF_FAILED(dwriteFactory->CreateRenderingParams(&defaultParams));
+        }
+
+        dwriteFactory->CreateCustomRenderingParams(defaultParams->GetGamma(),
+                                                   defaultParams->GetEnhancedContrast(),
+                                                   defaultParams->GetClearTypeLevel(),
+                                                   defaultParams->GetPixelGeometry(),
+                                                   GetTextRenderingMode(),
+                                                   newParams);
+
+        return S_OK;
+    }
+
+    inline void SetShouldAntialias(_CGTrinary shouldAntialias) {
+        CurrentGState().shouldAntialias = shouldAntialias;
+    }
+
+    inline void SetShouldSubpixelPositionFonts(_CGTrinary shouldSubpixelPosition) {
+        CurrentGState().shouldSubpixelPosition = shouldSubpixelPosition;
+    }
+
+    inline void SetShouldSubpixelQuantizeFonts(_CGTrinary shouldSubpixelQuantizeFonts) {
+        CurrentGState().shouldSubpixelQuantizeFonts = shouldSubpixelQuantizeFonts;
+    }
+
+    inline void SetShouldSmoothFonts(_CGTrinary shouldSmoothFonts) {
+        CurrentGState().shouldSmoothFonts = shouldSmoothFonts;
+    }
+
     __CGContext(ID2D1RenderTarget* renderTarget) {
         FAIL_FAST_IF_FAILED(renderTarget->QueryInterface(IID_PPV_ARGS(&deviceContext)));
 
@@ -415,7 +496,7 @@ public:
     HRESULT Draw(_CGCoordinateMode coordinateMode, CGAffineTransform* additionalTransform, Lambda&& drawLambda);
 
     HRESULT DrawGeometry(_CGCoordinateMode coordinateMode, ID2D1Geometry* pGeometry, CGPathDrawingMode drawMode);
-    HRESULT DrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, bool transformByGlyph = true);
+    HRESULT DrawGlyphRuns(GlyphRunData* glyphRuns, size_t runsCount, bool transformByGlyph = true);
     HRESULT ClipToD2DMaskBitmap(ID2D1Bitmap* bitmap, CGRect rect, D2D1_INTERPOLATION_MODE interpolationMode);
     HRESULT ClipToCGImageMask(CGImageRef image, CGRect rect);
 };
@@ -1045,7 +1126,7 @@ HRESULT __CGContext::Clip(CGPathDrawingMode pathMode) {
     }
 
     ComPtr<ID2D1Geometry> additionalClippingGeometry;
-    RETURN_IF_FAILED(_CGPathGetGeometry(Path(), &additionalClippingGeometry));
+    RETURN_IF_FAILED(_CGPathGetGeometryWithFillMode(Path(), pathMode, &additionalClippingGeometry));
     ClearPath();
 
     auto& state = CurrentGState();
@@ -1160,14 +1241,14 @@ HRESULT __CGContext::ClipToD2DMaskBitmap(ID2D1Bitmap* bitmap, CGRect rect, D2D1_
         compatibleContext->BeginDraw();
         compatibleContext->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(),
                                                            nullptr,
-                                                           D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
+                                                           GetAntialiasMode(),
                                                            D2D1::IdentityMatrix(),
                                                            1.0, // 1.0 global alpha for brush composition
                                                            state.opacityBrush.Get()),
                                      nullptr);
         compatibleContext->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(),
                                                            transformedRectClippingGeometry.Get(),
-                                                           D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
+                                                           GetAntialiasMode(),
                                                            D2D1::IdentityMatrix(),
                                                            1.0, // 1.0 global alpha for brush composition
                                                            newOpacityBrush.Get()),
@@ -1348,51 +1429,51 @@ CGPoint CGContextGetTextPosition(CGContextRef context) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 void CGContextSetAllowsFontSmoothing(CGContextRef context, bool allows) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    context->allowsFontSmoothing = allows;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 void CGContextSetShouldSmoothFonts(CGContextRef context, bool shouldSmooth) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    context->SetShouldSmoothFonts(shouldSmooth ? _kCGTrinaryOn : _kCGTrinaryOff);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 void CGContextSetAllowsFontSubpixelPositioning(CGContextRef context, bool allows) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    context->allowsFontSubpixelPositioning = allows;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 void CGContextSetShouldSubpixelPositionFonts(CGContextRef context, bool subpixel) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    context->SetShouldSubpixelPositionFonts(subpixel ? _kCGTrinaryOn : _kCGTrinaryOff);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 void CGContextSetAllowsFontSubpixelQuantization(CGContextRef context, bool allows) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    context->allowsFontSubpixelQuantization = allows;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 void CGContextSetShouldSubpixelQuantizeFonts(CGContextRef context, bool subpixel) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    context->SetShouldSubpixelQuantizeFonts(subpixel ? _kCGTrinaryOn : _kCGTrinaryOff);
 }
 #pragma endregion
 
@@ -1412,19 +1493,19 @@ CGBlendMode CGContextGetBlendMode(CGContextRef context) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 void CGContextSetShouldAntialias(CGContextRef context, bool shouldAntialias) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    context->SetShouldAntialias(shouldAntialias ? _kCGTrinaryOn : _kCGTrinaryOff);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
-void CGContextSetAllowsAntialiasing(CGContextRef context, bool allows) {
+void CGContextSetAllowsAntialiasing(CGContextRef context, bool allowsAntialiasing) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    context->allowsAntialiasing = allowsAntialiasing;
 }
 
 /**
@@ -1769,32 +1850,37 @@ static CGImageRef __CGContextCreateRenderableImage(CGImageRef image) {
 
 #pragma region Drawing Parameters - Stroke / Fill Patterns
 
-template <typename ContextStageLambda> // Takes the form HRESULT(*)(CGContextRef)
-static HRESULT _CreatePatternBrush(
-    CGContextRef context, CGPatternRef pattern, const CGFloat* components, ID2D1BitmapBrush1** brush, ContextStageLambda&& contextStage) {
-    // TODO #1592: change to support grayscale (masks) after dustins change.
+template <typename ContextStageLambda> // Takes the form HRESULT(*)(CGContextRef,bool)
+static HRESULT _CreatePatternBrush(CGContextRef context,
+                                   CGPatternRef pattern,
+                                   ID2D1BitmapBrush1** brush,
+                                   ContextStageLambda&& contextStage) {
     woc::unique_cf<CGColorSpaceRef> colorspace{ CGColorSpaceCreateDeviceRGB() };
 
     // We need to generate the pattern as an image (then tile it)
     CGRect tileSize = _CGPatternGetFinalPatternSize(pattern);
     RETURN_HR_IF(E_UNEXPECTED, CGRectIsNull(tileSize));
 
-    size_t bitsPerComponent = 8;
-    size_t bytesPerRow = 4 * tileSize.size.width;
-    CGBitmapInfo bitmapInfo = kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Big;
-
-    woc::unique_cf<CGContextRef> patternContext{ CGBitmapContextCreate(
-        nullptr, tileSize.size.width, tileSize.size.height, bitsPerComponent, bytesPerRow, colorspace.get(), bitmapInfo) };
+    woc::unique_cf<CGContextRef> patternContext{ CGBitmapContextCreate(nullptr,
+                                                                       tileSize.size.width,
+                                                                       tileSize.size.height,
+                                                                       8,
+                                                                       4 * tileSize.size.width,
+                                                                       colorspace.get(),
+                                                                       kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big) };
     RETURN_HR_IF_NULL(E_UNEXPECTED, patternContext);
 
+    // Determine if this pattern is a colored pattern (the coloring is specified in the pattern callback) or if it is stencil pattern (the
+    // color is set outside and not within the pattern callback)
+    bool isColored = _CGPatternIsColored(pattern);
+
     // Stage the drawing context
-    RETURN_IF_FAILED(std::forward<ContextStageLambda>(contextStage)(patternContext.get()));
+    RETURN_IF_FAILED(std::forward<ContextStageLambda>(contextStage)(patternContext.get(), isColored));
 
     // Now we ask the user to draw
     _CGPatternIssueCallBack(patternContext.get(), pattern);
 
     // Get the image out of it
-
     woc::unique_cf<CGImageRef> bitmapTiledimage{ CGBitmapContextCreateImage(patternContext.get()) };
     woc::unique_cf<CGImageRef> tileImage{ __CGContextCreateRenderableImage(bitmapTiledimage.get()) };
     RETURN_HR_IF_NULL(E_UNEXPECTED, tileImage);
@@ -1848,9 +1934,18 @@ void CGContextSetFillPattern(CGContextRef context, CGPatternRef pattern, const C
     }
 
     ComPtr<ID2D1BitmapBrush1> bitmapBrush;
-    FAIL_FAST_IF_FAILED(_CreatePatternBrush(context, pattern, components, &bitmapBrush, [&](CGContextRef drawingContext) {
+    FAIL_FAST_IF_FAILED(_CreatePatternBrush(context, pattern, &bitmapBrush, [&](CGContextRef drawingContext, bool isColored) {
         CGContextSetFillColorSpace(drawingContext, context->FillColorSpace());
-        CGContextSetFillColor(drawingContext, components);
+        if (isColored) {
+            // It's a colored pattern, the color is specified by the pattern callback.
+            // The 'components' are alpha value.
+            CGContextSetAlpha(drawingContext, components[0]);
+        } else {
+            // It is a stencil pattern, we should stage the context's color
+            // The 'components' are the color for the stencil.
+            CGContextSetFillColor(drawingContext, components);
+        }
+
         return S_OK;
     }));
     // set the fill brush
@@ -1879,9 +1974,17 @@ void CGContextSetStrokePattern(CGContextRef context, CGPatternRef pattern, const
     }
 
     ComPtr<ID2D1BitmapBrush1> bitmapBrush;
-    FAIL_FAST_IF_FAILED(_CreatePatternBrush(context, pattern, components, &bitmapBrush, [&](CGContextRef drawingContext) {
+    FAIL_FAST_IF_FAILED(_CreatePatternBrush(context, pattern, &bitmapBrush, [&](CGContextRef drawingContext, bool isColored) {
         CGContextSetStrokeColorSpace(drawingContext, context->StrokeColorSpace());
-        CGContextSetStrokeColor(drawingContext, components);
+        if (isColored) {
+            // It's a colored pattern, the color is specified by the pattern callback.
+            // The 'components' are alpha value.
+            CGContextSetAlpha(drawingContext, components[0]);
+        } else {
+            // It is a stencil pattern, we should stage the context's color
+            // The 'components' are the color for the stencil.
+            CGContextSetStrokeColor(drawingContext, components);
+        }
         return S_OK;
     }));
     // set the stroke brush
@@ -1898,76 +2001,187 @@ void CGContextSetPatternPhase(CGContextRef context, CGSize phase) {
 #pragma endregion
 
 #pragma region Drawing Operations - Text
+
+// Attributes are needed in DrawGlyphRuns but names are defined in CoreText
+const CFStringRef _kCGCharacterShapeAttributeName = CFSTR("kCTCharacterShapeAttributeName");
+const CFStringRef _kCGFontAttributeName = CFSTR("NSFont");
+const CFStringRef _kCGKernAttributeName = CFSTR("kCTKernAttributeName");
+const CFStringRef _kCGLigatureAttributeName = CFSTR("kCTLigatureAttributeName");
+const CFStringRef _kCGForegroundColorAttributeName = CFSTR("NSForegroundColor");
+const CFStringRef _kCGForegroundColorFromContextAttributeName = CFSTR("kCTForegroundColorFromContextAttributeName");
+const CFStringRef _kCGParagraphStyleAttributeName = CFSTR("kCTParagraphStyleAttributeName");
+const CFStringRef _kCGStrokeWidthAttributeName = CFSTR("kCTStrokeWidthAttributeName");
+const CFStringRef _kCGStrokeColorAttributeName = CFSTR("kCTStrokeColorAttributeName");
+const CFStringRef _kCGSuperscriptAttributeName = CFSTR("kCTSuperscriptAttributeName");
+const CFStringRef _kCGUnderlineColorAttributeName = CFSTR("kCTUnderlineColorAttributeName");
+const CFStringRef _kCGUnderlineStyleAttributeName = CFSTR("kCTUnderlineStyleAttributeName");
+const CFStringRef _kCGVerticalFormsAttributeName = CFSTR("kCTVerticalFormsAttributeName");
+const CFStringRef _kCGGlyphInfoAttributeName = CFSTR("kCTGlyphInfoAttributeName");
+const CFStringRef _kCGRunDelegateAttributeName = CFSTR("kCTRunDelegateAttributeName");
+
 /**
  * Helper method to render text with the given DWRITE_GLYPH_RUN.
  *
  * @parameter glyphRun DWRITE_GLYPH_RUN object to render
  */
-HRESULT __CGContext::DrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, bool transformByGlyph /* default true */) {
-    RETURN_HR_IF(E_INVALIDARG, !glyphRun);
-
-    // DWrite will crash if we try to give it glyphs that are below this threshold
-    // Though this value is approximate, it is small enough to not be noticeable while still safe
-    static constexpr float c_glyphThreshold = 0.5f;
+HRESULT __CGContext::DrawGlyphRuns(GlyphRunData* glyphRuns, size_t runsCount, bool transformByGlyph /* default true */) {
+    RETURN_HR_IF(E_INVALIDARG, !glyphRuns || runsCount == 0);
+    auto& state = CurrentGState();
+    if ((state.textDrawingMode & kCGTextFillStrokeClip) == 0) {
+        // Nothing to draw
+        return S_OK;
+    }
 
     // Undo assumed inversion about Y axis
     CGAffineTransform textTransform = CGAffineTransformScale(textMatrix, 1.0, -1.0);
     CGAffineTransform deviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(this);
+    CGAffineTransform combinedTransform = CGAffineTransformConcat(textTransform, deviceTransform);
 
     // Snap the vertical baseline to the nearest pixel to avoid blurring on devices with vertical antialiasing
     textTransform.ty = std::round(textTransform.ty);
 
-    CGAffineTransform finalTextTransform = CGAffineTransformConcat(textTransform, deviceTransform);
-    if ((fabs(finalTextTransform.a * glyphRun->fontEmSize) <= c_glyphThreshold &&
-         fabs(finalTextTransform.b * glyphRun->fontEmSize) <= c_glyphThreshold) ||
-        (fabs(finalTextTransform.d * glyphRun->fontEmSize) <= c_glyphThreshold &&
-         fabs(finalTextTransform.c * glyphRun->fontEmSize) <= c_glyphThreshold)) {
-        TraceWarning(TAG, L"Glyphs too small to be rendered");
+    bool fastPathTextDrawing =
+        ((textTransform.a == 1.0f && fabs(textTransform.d) == 1.0f && textTransform.b == 0.0f && textTransform.c == 0.0f) ||
+         !transformByGlyph) &&
+        state.textDrawingMode == kCGTextFill;
 
-        // Not a failure state! Not drawing the glyphs is *okay*.
-        return S_FALSE;
+    size_t maxGlyphCount = std::max_element(glyphRuns, glyphRuns + runsCount, [](const GlyphRunData& left, const GlyphRunData& right) {
+                               return left.run->glyphCount < right.run->glyphCount;
+                           })->run->glyphCount;
+
+    // Shared between transformed glyph runs
+    std::unique_ptr<CGFloat[]> zeroAdvances(new CGFloat[maxGlyphCount]());
+
+    // DWrite will crash if we try to give it glyphs that are below this threshold
+    // Though this value is approximate, it is small enough to not be noticeable while still safe
+    static constexpr float c_glyphThreshold = 0.5f;
+    std::vector<GlyphRunData> runs;
+
+    // For cases where we need to create glyphOffsets and runs
+    std::vector<std::vector<DWRITE_GLYPH_OFFSET>> createdOffsets;
+    std::vector<std::shared_ptr<DWRITE_GLYPH_RUN>> createdRuns;
+
+    for (size_t i = 0; i < runsCount; ++i) {
+        auto& run = glyphRuns[i].run;
+        if ((fabs(combinedTransform.a * run->fontEmSize) <= c_glyphThreshold &&
+             fabs(combinedTransform.b * run->fontEmSize) <= c_glyphThreshold) ||
+            (fabs(combinedTransform.d * run->fontEmSize) <= c_glyphThreshold &&
+             fabs(combinedTransform.c * run->fontEmSize) <= c_glyphThreshold)) {
+            TraceWarning(TAG, L"Glyphs too small to be rendered");
+            // Not a failure state! Not drawing the glyphs is *okay*.
+            continue;
+        }
+
+        // Otherwise glyphs are large enough to render
+        if (fastPathTextDrawing) {
+            runs.emplace_back(glyphRuns[i]);
+        } else {
+            // Get the linear transformation that is the inverse of the text transform
+            // We transform the positions of each glyph by the inverse so they will be positioned correctly
+            // While still being transformed per glyph by the text transformation
+            CGAffineTransform invertedTextTransformation = CGAffineTransformInvert(
+                CGAffineTransformScale(CGAffineTransformMake(textTransform.a, textTransform.b, textTransform.c, textTransform.d, 0, 0),
+                                       1,
+                                       -1));
+
+            createdOffsets.emplace_back(run->glyphCount);
+            auto& positions = createdOffsets.back();
+            // First glyph's origin is at the given relative position for the glyph run
+            CGPoint runningPosition{ glyphRuns[i].relativePosition.x, std::round(glyphRuns[i].relativePosition.y) };
+            for (size_t j = 0; j < run->glyphCount; ++j) {
+                // Invert position by text transformation
+                CGPoint transformedPosition = CGPointApplyAffineTransform(runningPosition, invertedTextTransformation);
+
+                // Set current glyph's position to be the actual position transformed by the inverted text position
+                // So when the space is transformed by the text position it will be drawn in the correct real position
+                positions[j] = DWRITE_GLYPH_OFFSET{ transformedPosition.x + run->glyphOffsets[j].advanceOffset,
+                                                    std::round(transformedPosition.y + run->glyphOffsets[j].ascenderOffset) };
+
+                // Translate position of next glyph by current glyph's advance
+                runningPosition.x += run->glyphAdvances[j];
+            }
+
+            auto transformedGlyphRun = std::make_shared<DWRITE_GLYPH_RUN>(DWRITE_GLYPH_RUN{ run->fontFace,
+                                                                                            run->fontEmSize,
+                                                                                            run->glyphCount,
+                                                                                            run->glyphIndices,
+                                                                                            zeroAdvances.get(),
+                                                                                            positions.data(),
+                                                                                            run->isSideways,
+                                                                                            run->bidiLevel });
+            createdRuns.emplace_back(transformedGlyphRun);
+            runs.emplace_back(GlyphRunData{ transformedGlyphRun.get(), CGPointZero, glyphRuns[i].attributes });
+        }
     }
 
-    auto& state = CurrentGState();
+    // Iterate through every glyph by incrementing pointer in glyphIndices array
+    ComPtr<ID2D1TransformedGeometry> transformedGeometry;
+    if (state.textDrawingMode & kCGTextStrokeClip) {
+        ComPtr<ID2D1PathGeometry> pathGeometry;
+        RETURN_IF_FAILED(Factory()->CreatePathGeometry(&pathGeometry));
+        ComPtr<ID2D1GeometrySink> sink;
+        RETURN_IF_FAILED(pathGeometry->Open(&sink));
+        for (auto& runData : runs) {
+            RETURN_IF_FAILED(runData.run->fontFace->GetGlyphRunOutline(runData.run->fontEmSize,
+                                                                       (runData.run->glyphIndices),
+                                                                       runData.run->glyphAdvances,
+                                                                       runData.run->glyphOffsets,
+                                                                       runData.run->glyphCount,
+                                                                       runData.run->isSideways,
+                                                                       ((runData.run->bidiLevel & 1) == 1),
+                                                                       sink.Get()));
+        }
+        RETURN_IF_FAILED(sink->Close());
 
-    // If text is only flipped vertically, we can draw it all at once rather than glyph by glyph
-    if ((textTransform.a == 1.0f && fabs(textTransform.d) == 1.0f && textTransform.b == 0.0f && textTransform.c == 0.0f) ||
-        !transformByGlyph) {
+        // Transform the geometry by the final transformation to be stroked/clipped correctly
         RETURN_IF_FAILED(
-            Draw(_kCGCoordinateModeUserSpace, &textTransform, [&state, glyphRun](CGContextRef context, ID2D1DeviceContext* deviceContext) {
-                deviceContext->DrawGlyphRun(D2D1::Point2F(0, 0), glyphRun, state.fillBrush.Get(), DWRITE_MEASURING_MODE_NATURAL);
-                return S_OK;
-            }));
-    } else {
-        // Using device space here gives us finer-grained control over the transform.
-        RETURN_IF_FAILED(
-            Draw(_kCGCoordinateModeDeviceSpace,
-                 nullptr,
-                 [&state, &glyphRun, &deviceTransform, &textTransform](CGContextRef context, ID2D1DeviceContext* deviceContext) {
-                     CGAffineTransform runningGlobalTransform = deviceTransform;
-                     // Text scaling and rotation apply to each glyph relative to its origin, so we must draw each glyph
-                     // transformed
-                     // independently
-                     DWRITE_GLYPH_RUN individualGlyphRun{ glyphRun->fontFace,
-                                                          glyphRun->fontEmSize,
-                                                          1, // Since this is glyph by glyph, glyphCount is one
-                                                          glyphRun->glyphIndices,
-                                                          nullptr,
-                                                          nullptr,
-                                                          glyphRun->isSideways,
-                                                          glyphRun->bidiLevel };
-                     D2D1_POINT_2F origin{ 0, 0 };
-                     // Iterate through every glyph by incrementing pointer in glyphIndices array
-                     for (uint32_t i = 0; i < glyphRun->glyphCount; ++i, ++(individualGlyphRun.glyphIndices)) {
-                         CGAffineTransform finalTextTransform = CGAffineTransformConcat(textTransform, runningGlobalTransform);
-                         deviceContext->SetTransform(__CGAffineTransformToD2D_F(finalTextTransform));
-                         deviceContext->DrawGlyphRun(origin, &individualGlyphRun, state.fillBrush.Get(), DWRITE_MEASURING_MODE_NATURAL);
+            Factory()->CreateTransformedGeometry(pathGeometry.Get(), __CGAffineTransformToD2D_F(combinedTransform), &transformedGeometry));
+    }
 
-                         // Uses glyphAdvances to move each glyph
-                         runningGlobalTransform = CGAffineTransformTranslate(runningGlobalTransform, glyphRun->glyphAdvances[i], 0);
-                     }
-                     return S_OK;
-                 }));
+    HRESULT ret = Draw(_kCGCoordinateModeDeviceSpace, nullptr, [&](CGContextRef context, ID2D1DeviceContext* deviceContext) {
+        if (state.textDrawingMode & kCGTextFill) {
+            deviceContext->SetTransform(__CGAffineTransformToD2D_F(combinedTransform));
+            D2D1_POINT_2F origin{ 0, 0 };
+            for (auto& runData : runs) {
+                if (runData.attributes) {
+                    CGColorRef fontColor = (CGColorRef)CFDictionaryGetValue(runData.attributes, _kCGForegroundColorAttributeName);
+                    if (fontColor) {
+                        CGContextSetFillColorWithColor(context, fontColor);
+                    } else {
+                        CFBooleanRef useContextColor =
+                            (CFBooleanRef)CFDictionaryGetValue(runData.attributes, _kCGForegroundColorFromContextAttributeName);
+                        if (!useContextColor || !CFBooleanGetValue(useContextColor)) {
+                            // Neither given a color nor use current context color, so set the fill color to black
+                            CGContextSetRGBFillColor(context, 0, 0, 0, 1);
+                        }
+                    }
+                }
+
+                if (fastPathTextDrawing) {
+                    CGAffineTransform totalTransform =
+                        CGAffineTransformConcat(textTransform,
+                                                CGAffineTransformTranslate(deviceTransform,
+                                                                           runData.relativePosition.x,
+                                                                           std::round(runData.relativePosition.y)));
+                    deviceContext->SetTransform(__CGAffineTransformToD2D_F(totalTransform));
+                }
+
+                deviceContext->DrawGlyphRun(origin, runData.run, state.fillBrush.Get(), DWRITE_MEASURING_MODE_NATURAL);
+            }
+        }
+
+        if (state.textDrawingMode & kCGTextStroke) {
+            deviceContext->SetTransform(__CGAffineTransformToD2D_F(deviceTransform));
+            RETURN_IF_FAILED(_DrawGeometryInternal(transformedGeometry.Get(), kCGPathStroke, context, deviceContext));
+        }
+
+        return S_OK;
+    });
+
+    RETURN_IF_FAILED(ret);
+
+    if (state.textDrawingMode & kCGTextClip) {
+        RETURN_IF_FAILED(state.IntersectClippingGeometry(transformedGeometry.Get(), kCGPathFill));
     }
 
     ClearPath();
@@ -1975,9 +2189,9 @@ HRESULT __CGContext::DrawGlyphRun(const DWRITE_GLYPH_RUN* glyphRun, bool transfo
 }
 
 // Internal: used by CoreText.
-void CGContextDrawGlyphRun(CGContextRef context, const DWRITE_GLYPH_RUN* glyphRun) {
+void _CGContextDrawGlyphRuns(CGContextRef context, GlyphRunData* glyphRuns, size_t runsCount) {
     NOISY_RETURN_IF_NULL(context);
-    FAIL_FAST_IF_FAILED(context->DrawGlyphRun(glyphRun));
+    FAIL_FAST_IF_FAILED(context->DrawGlyphRuns(glyphRuns, runsCount));
 }
 
 /**
@@ -2035,31 +2249,15 @@ void CGContextShowGlyphsAtPoint(CGContextRef context, CGFloat x, CGFloat y, cons
                        return CGSize{ advanceWidth, 0 };
                    });
 
-    switch (state.textDrawingMode) {
-        case kCGTextFill:
-        case kCGTextStroke:
-        case kCGTextFillStroke:
-        case kCGTextFillClip:
-        case kCGTextStrokeClip:
-        case kCGTextFillStrokeClip:
-            CGContextSetTextPosition(context, x, y);
-            CGContextShowGlyphsWithAdvances(context, glyphs, advances.data(), count);
-            break;
-
-        case kCGTextClip:
-        case kCGTextInvisible:
-            // Do nothing, set text position at end
-            break;
-    }
-
-    CGContextSetTextPosition(context, x + size.width, y);
+    CGContextSetTextPosition(context, x, y);
+    CGContextShowGlyphsWithAdvances(context, glyphs, advances.data(), count);
 }
 
 /**
  @Status Stub
  @Notes
 */
-void CGContextShowGlyphsAtPositions(CGContextRef context, const CGGlyph* glyphs, const CGPoint* Lpositions, size_t count) {
+void CGContextShowGlyphsAtPositions(CGContextRef context, const CGGlyph* glyphs, const CGPoint* positions, size_t count) {
     NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
 }
@@ -2089,7 +2287,8 @@ void CGContextShowGlyphsWithAdvances(CGContextRef context, const CGGlyph* glyphs
     // Give array of advances of zero so it will use positions correctly
     std::vector<FLOAT> dwriteAdvances(count, 0);
     DWRITE_GLYPH_RUN run = { fontFace.Get(), state.fontSize, count, glyphs, dwriteAdvances.data(), positions.data(), FALSE, 0 };
-    FAIL_FAST_IF_FAILED(context->DrawGlyphRun(&run, false));
+    GlyphRunData data{ &run, CGPointZero, nullptr };
+    FAIL_FAST_IF_FAILED(context->DrawGlyphRuns(&data, 1, false));
 
     // Set text position to after the end of the last glyph drawn
     CGPoint textPosition = CGContextGetTextPosition(context);
@@ -2109,7 +2308,7 @@ void CGContextClearRect(CGContextRef context, CGRect rect) {
     ComPtr<ID2D1DeviceContext> deviceContext = context->DeviceContext();
     if (!context->CurrentGState().clippingGeometry) {
         _CGContextPushBeginDraw(context);
-        deviceContext->PushAxisAlignedClip(__CGRectToD2D_F(rect), D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
+        deviceContext->PushAxisAlignedClip(__CGRectToD2D_F(rect), context->GetAntialiasMode());
         deviceContext->Clear(nullptr); // transparent black clear
         deviceContext->PopAxisAlignedClip();
         _CGContextPopEndDraw(context);
@@ -2195,7 +2394,7 @@ HRESULT __CGContext::Draw(_CGCoordinateMode coordinateMode, CGAffineTransform* a
         layer = true;
         deviceContext->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(),
                                                        state.clippingGeometry.Get(),
-                                                       D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
+                                                       GetAntialiasMode(),
                                                        D2D1::IdentityMatrix(),
                                                        state.globalAlpha,
                                                        state.opacityBrush.Get()),
@@ -2210,6 +2409,25 @@ HRESULT __CGContext::Draw(_CGCoordinateMode coordinateMode, CGAffineTransform* a
         // TODO GH#1194: We will need to re-evaluate Direct2D's D2DERR_RECREATE when we move to HW acceleration.
         this->PopEndDraw();
     });
+
+    // If the context has requested antialiasing other than the defaults we now need to update the device context.
+    if (allowsAntialiasing && CurrentGState().shouldAntialias != _kCGTrinaryDefault) {
+        deviceContext->SetAntialiasMode(GetAntialiasMode());
+
+        // If any text rendering parameters have been updated, we need to update the device context.
+        if ((CurrentGState().shouldSmoothFonts != _kCGTrinaryDefault && allowsFontSmoothing) ||
+            (CurrentGState().shouldSubpixelPosition != _kCGTrinaryDefault && allowsFontSubpixelPositioning) ||
+            (CurrentGState().shouldSubpixelQuantizeFonts != _kCGTrinaryDefault && allowsFontSubpixelQuantization)) {
+            ComPtr<IDWriteRenderingParams> originalTextRenderingParams;
+            deviceContext->GetTextRenderingParams(&originalTextRenderingParams);
+
+            ComPtr<IDWriteRenderingParams> customParams;
+            GetTextRenderingParams(originalTextRenderingParams.Get(), &customParams);
+            deviceContext->SetTextRenderingParams(customParams.Get());
+
+            deviceContext->SetTextAntialiasMode(GetTextAntialiasMode());
+        }
+    }
 
     if (_ShouldDrawToCommandList()) {
         // Temporarily change the target to a command list
@@ -2250,30 +2468,32 @@ HRESULT __CGContext::Draw(_CGCoordinateMode coordinateMode, CGAffineTransform* a
     return S_OK;
 }
 
+HRESULT __CGContext::_DrawGeometryInternal(ID2D1Geometry* geometry,
+                                           CGPathDrawingMode drawMode,
+                                           CGContextRef context,
+                                           ID2D1DeviceContext* deviceContext) {
+    auto& state = context->CurrentGState();
+    if (drawMode & kCGPathFill) {
+        state.fillBrush->SetOpacity(state.alpha);
+        deviceContext->FillGeometry(geometry, state.fillBrush.Get());
+    }
+
+    if (drawMode & kCGPathStroke && std::fpclassify(state.lineWidth) != FP_ZERO) {
+        // This only computes the stroke style if its parameters have changed since the last draw.
+        state.ComputeStrokeStyle(deviceContext);
+
+        state.strokeBrush->SetOpacity(state.alpha);
+
+        deviceContext->DrawGeometry(geometry, state.strokeBrush.Get(), state.lineWidth, state.strokeStyle.Get());
+    }
+
+    return S_OK;
+}
+
 HRESULT __CGContext::DrawGeometry(_CGCoordinateMode coordinateMode, ID2D1Geometry* pGeometry, CGPathDrawingMode drawMode) {
     ComPtr<ID2D1Geometry> geometry(pGeometry);
-    return Draw(coordinateMode, nullptr, [geometry, drawMode](CGContextRef context, ID2D1DeviceContext* deviceContext) {
-        auto& state = context->CurrentGState();
-        if (drawMode & kCGPathFill) {
-            state.fillBrush->SetOpacity(state.alpha);
-
-            ComPtr<ID2D1Geometry> geometryToFill;
-            D2D1_FILL_MODE d2dFillMode = (drawMode & kCGPathEOFill) == kCGPathEOFill ? D2D1_FILL_MODE_ALTERNATE : D2D1_FILL_MODE_WINDING;
-            RETURN_IF_FAILED(_CGConvertD2DGeometryToFillMode(geometry.Get(), d2dFillMode, &geometryToFill));
-
-            deviceContext->FillGeometry(geometryToFill.Get(), state.fillBrush.Get());
-        }
-
-        if (drawMode & kCGPathStroke && std::fpclassify(state.lineWidth) != FP_ZERO) {
-            // This only computes the stroke style if its parameters have changed since the last draw.
-            state.ComputeStrokeStyle(deviceContext);
-
-            state.strokeBrush->SetOpacity(state.alpha);
-
-            deviceContext->DrawGeometry(geometry.Get(), state.strokeBrush.Get(), state.lineWidth, state.strokeStyle.Get());
-        }
-
-        return S_OK;
+    return Draw(coordinateMode, nullptr, [geometry, drawMode, this](CGContextRef context, ID2D1DeviceContext* deviceContext) {
+        return _DrawGeometryInternal(geometry.Get(), drawMode, context, deviceContext);
     });
 }
 
@@ -2418,7 +2638,7 @@ void CGContextDrawPath(CGContextRef context, CGPathDrawingMode mode) {
 
     if (context->HasPath()) {
         ComPtr<ID2D1Geometry> pGeometry;
-        FAIL_FAST_IF_FAILED(_CGPathGetGeometry(context->Path(), &pGeometry));
+        FAIL_FAST_IF_FAILED(_CGPathGetGeometryWithFillMode(context->Path(), mode, &pGeometry));
         FAIL_FAST_IF_FAILED(context->DrawGeometry(_kCGCoordinateModeDeviceSpace, pGeometry.Get(), mode));
         context->ClearPath();
     }

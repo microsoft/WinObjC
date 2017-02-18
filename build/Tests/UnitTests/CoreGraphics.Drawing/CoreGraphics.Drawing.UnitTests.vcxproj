@@ -222,7 +222,7 @@
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.Drawing\EntryPoint.cpp" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.Drawing\TAEFEntryPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.drawing\CGTextDrawing.cpp" />
@@ -235,6 +235,9 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.Drawing\CGContextDrawing_ImageMaskTests.cpp" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.Drawing\CGContextDrawing_GradientTests.cpp" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.Drawing\CGContextDrawing_ImageDrawingTests.cpp" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.Drawing\CGContextDrawing_PatternTests.cpp" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.drawing\CGContextDrawing_FillModeTests.cpp" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.drawing\CGContextDrawing_AntiAliasTests.cpp" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.Drawing\CGPathDrawingTests.cpp" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.Drawing\DrawingTest.cpp" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.drawing\ImageComparison.cpp" />

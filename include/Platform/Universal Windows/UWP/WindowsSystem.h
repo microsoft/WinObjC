@@ -582,7 +582,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) NSString * deviceId;
-@property (readonly) WSUser* newUser;
+@property (readonly) WSUser* newUser __attribute__ ((ns_returns_not_retained));
 @property (readonly) WSUser* oldUser;
 @end
 

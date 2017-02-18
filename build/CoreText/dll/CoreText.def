@@ -186,6 +186,7 @@ LIBRARY CoreText
         CTFontDescriptorCopyAttributes
         CTFontDescriptorCopyAttribute
         CTFontDescriptorCopyLocalizedAttribute
+        CTFontDescriptorMatchFontDescriptorsWithProgressHandler
         CTFontDescriptorGetTypeID
 
         ; CTFrame Reference.mm
@@ -230,6 +231,7 @@ LIBRARY CoreText
         CTLineGetStringRange
         CTLineGetPenOffsetForFlush
         CTLineGetImageBounds
+        CTLineGetBoundsWithOptions
         CTLineGetTypographicBounds
         CTLineGetTrailingWhitespaceWidth
         CTLineGetStringIndexForPosition

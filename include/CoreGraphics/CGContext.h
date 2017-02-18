@@ -85,16 +85,19 @@ typedef CF_ENUM(CFIndex, CGBlendMode) {
     kCGBlendModePlusLighter
 };
 
-typedef CF_ENUM(CFIndex, CGTextDrawingMode) {
-    kCGTextFill = 0,
-    kCGTextStroke,
-    kCGTextFillStroke,
-    kCGTextInvisible,
-    kCGTextFillClip,
-    kCGTextStrokeClip,
-    kCGTextFillStrokeClip,
-    kCGTextClip
+// clang-format off
+typedef CF_OPTIONS(CFIndex, CGTextDrawingMode) {
+//  CG Drawing Bitfield     |FILL  |   |STROKE|   |CLIP  |
+    kCGTextInvisible = 0,
+    kCGTextFill =           (1 << 0),
+    kCGTextStroke =                    (1 << 1),
+    kCGTextFillStroke =     (1 << 0) | (1 << 1),
+    kCGTextClip =                                 (1 << 2),
+    kCGTextFillClip =       (1 << 0) |            (1 << 2),
+    kCGTextStrokeClip =                (1 << 1) | (1 << 2),
+    kCGTextFillStrokeClip = (1 << 0) | (1 << 1) | (1 << 2)
 };
+// clang-format on
 
 COREGRAPHICS_EXPORT void CGContextFlush(CGContextRef c) STUB_METHOD;
 COREGRAPHICS_EXPORT CFTypeID CGContextGetTypeID();
@@ -118,17 +121,17 @@ COREGRAPHICS_EXPORT void CGContextSetPatternPhase(CGContextRef c, CGSize phase);
 COREGRAPHICS_EXPORT void CGContextSetFillPattern(CGContextRef c, CGPatternRef pattern, const CGFloat* components);
 COREGRAPHICS_EXPORT void CGContextSetRenderingIntent(CGContextRef c, CGColorRenderingIntent intent) STUB_METHOD;
 
-COREGRAPHICS_EXPORT void CGContextSetShouldAntialias(CGContextRef c, bool shouldAntialias) STUB_METHOD;
+COREGRAPHICS_EXPORT void CGContextSetShouldAntialias(CGContextRef c, bool shouldAntialias);
 COREGRAPHICS_EXPORT void CGContextSetStrokePattern(CGContextRef c, CGPatternRef pattern, const CGFloat* components);
 
 COREGRAPHICS_EXPORT void CGContextSetBlendMode(CGContextRef c, CGBlendMode mode);
-COREGRAPHICS_EXPORT void CGContextSetAllowsAntialiasing(CGContextRef c, bool allowsAntialiasing) STUB_METHOD;
-COREGRAPHICS_EXPORT void CGContextSetAllowsFontSmoothing(CGContextRef c, bool allowsFontSmoothing) STUB_METHOD;
-COREGRAPHICS_EXPORT void CGContextSetShouldSmoothFonts(CGContextRef c, bool shouldSmoothFonts) STUB_METHOD;
-COREGRAPHICS_EXPORT void CGContextSetAllowsFontSubpixelPositioning(CGContextRef c, bool allowsFontSubpixelPositioning) STUB_METHOD;
-COREGRAPHICS_EXPORT void CGContextSetShouldSubpixelPositionFonts(CGContextRef c, bool shouldSubpixelPositionFonts) STUB_METHOD;
-COREGRAPHICS_EXPORT void CGContextSetAllowsFontSubpixelQuantization(CGContextRef c, bool allowsFontSubpixelQuantization) STUB_METHOD;
-COREGRAPHICS_EXPORT void CGContextSetShouldSubpixelQuantizeFonts(CGContextRef c, bool shouldSubpixelQuantizeFonts) STUB_METHOD;
+COREGRAPHICS_EXPORT void CGContextSetAllowsAntialiasing(CGContextRef c, bool allowsAntialiasing);
+COREGRAPHICS_EXPORT void CGContextSetAllowsFontSmoothing(CGContextRef c, bool allowsFontSmoothing);
+COREGRAPHICS_EXPORT void CGContextSetShouldSmoothFonts(CGContextRef c, bool shouldSmoothFonts);
+COREGRAPHICS_EXPORT void CGContextSetAllowsFontSubpixelPositioning(CGContextRef c, bool allowsFontSubpixelPositioning);
+COREGRAPHICS_EXPORT void CGContextSetShouldSubpixelPositionFonts(CGContextRef c, bool shouldSubpixelPositionFonts);
+COREGRAPHICS_EXPORT void CGContextSetAllowsFontSubpixelQuantization(CGContextRef c, bool allowsFontSubpixelQuantization);
+COREGRAPHICS_EXPORT void CGContextSetShouldSubpixelQuantizeFonts(CGContextRef c, bool shouldSubpixelQuantizeFonts);
 
 COREGRAPHICS_EXPORT void CGContextAddArc(
     CGContextRef c, CGFloat x, CGFloat y, CGFloat radius, CGFloat startAngle, CGFloat endAngle, int clockwise);

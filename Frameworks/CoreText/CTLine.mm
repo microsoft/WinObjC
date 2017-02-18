@@ -22,8 +22,9 @@
 #import "DWriteWrapper_CoreText.h"
 #import <CoreText/CTTypesetter.h>
 
-#include <algorithm>
-#include <numeric>
+#import <algorithm>
+#import <numeric>
+#import <vector>
 
 static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef line,
                                                                     CTLineTruncationType truncationType,
@@ -207,9 +208,10 @@ static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef so
 }
 
 /**
- @Status Stub
- @Notes
+ @Status NotInPlan
+ @Notes This would be hard to get right for justfication factors (0, 1).
 */
+
 CTLineRef CTLineCreateJustifiedLine(CTLineRef line, CGFloat justificationFactor, double justificationWidth) {
     UNIMPLEMENTED();
     return StubReturn();
@@ -224,19 +226,21 @@ void CTLineDraw(CTLineRef lineRef, CGContextRef ctx) {
     }
 
     _CTLine* line = static_cast<_CTLine*>(lineRef);
-
-    _CGContextPushBeginDraw(ctx);
-    auto popEnd = wil::ScopeExit([ctx]() { _CGContextPopEndDraw(ctx); });
-
+    std::vector<GlyphRunData> runs;
+    CGPoint relativePosition = CGPointZero;
     for (size_t i = 0; i < [line->_runs count]; ++i) {
         _CTRun* curRun = [line->_runs objectAtIndex:i];
         if (i > 0) {
             // Adjusts x position relative to the last run drawn
-            CGPoint curTextPos = CGContextGetTextPosition(ctx);
-            CGContextSetTextPosition(ctx, curTextPos.x + curRun->_relativeXOffset, curTextPos.y);
+            relativePosition.x += curRun->_relativeXOffset;
         }
+        runs.emplace_back(GlyphRunData{ &curRun->_dwriteGlyphRun, relativePosition, (CFDictionaryRef)curRun->_attributes.get() });
+    }
 
-        CTRunDraw(static_cast<CTRunRef>(curRun), ctx, CFRange{});
+    if (!runs.empty()) {
+        _CGContextPushBeginDraw(ctx);
+        auto popEnd = wil::ScopeExit([ctx]() { _CGContextPopEndDraw(ctx); });
+        _CGContextDrawGlyphRuns(ctx, runs.data(), runs.size());
     }
 }
 
@@ -262,7 +266,7 @@ CFRange CTLineGetStringRange(CTLineRef line) {
 }
 
 /**
- @Status Stub
+ @Status Caveat
  @Notes Returns 0.0
 */
 double CTLineGetPenOffsetForFlush(CTLineRef line, CGFloat flushFactor, double flushWidth) {
@@ -271,12 +275,17 @@ double CTLineGetPenOffsetForFlush(CTLineRef line, CGFloat flushFactor, double fl
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CGRect CTLineGetImageBounds(CTLineRef line, CGContextRef context) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (!line || !context) {
+        return CGRectNull;
+    }
+
+    CGFloat ascent, descent;
+    double width = CTLineGetTypographicBounds(line, &ascent, &descent, nullptr);
+    return { CGContextGetTextPosition(context), { width, ascent - descent } };
 }
 
 /**
@@ -386,8 +395,18 @@ CGFloat CTLineGetOffsetForStringIndex(CTLineRef lineRef, CFIndex charIndex, CGFl
 }
 
 /**
- @Status Stub
- @Notes
+ @Status NotInPlan
+ @Notes This API is mostly un-documented and appears to be very low usage.
+*/
+
+CGRect CTLineGetBoundsWithOptions(CTLineRef line, CTLineBoundsOptions options) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status NotInPlan
+ @Notes this would require us to move to using bridged type implementation, seems of little value at this point
 */
 CFTypeID CTLineGetTypeID() {
     UNIMPLEMENTED();

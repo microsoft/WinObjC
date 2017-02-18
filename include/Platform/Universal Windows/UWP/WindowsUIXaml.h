@@ -904,7 +904,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property (readonly) RTObject* newValue;
+@property (readonly) RTObject* newValue __attribute__ ((ns_returns_not_retained));
 @property (readonly) RTObject* oldValue;
 @property (readonly) WXDependencyProperty* property;
 @end
@@ -953,7 +953,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (retain) WXVisualState* oldState;
-@property (retain) WXVisualState* newState;
+@property (retain) WXVisualState* newState __attribute__ ((ns_returns_not_retained));
 @property (retain) WXCControl* control;
 @end
 
@@ -969,7 +969,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property BOOL handled;
-@property (readonly) RTObject* newValue;
+@property (readonly) RTObject* newValue __attribute__ ((ns_returns_not_retained));
 @end
 
 #endif // __WXDataContextChangedEventArgs_DEFINED__
@@ -1476,7 +1476,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
-@property (readonly) WFSize* newSize;
+@property (readonly) WFSize* newSize __attribute__ ((ns_returns_not_retained));
 @property (readonly) WFSize* previousSize;
 @end
 

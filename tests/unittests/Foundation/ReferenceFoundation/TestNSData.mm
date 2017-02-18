@@ -28,7 +28,7 @@
 
 TEST(NSData, WriteToURLOptions) {
     NSData* saveData = [NSData dataWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"Test" withExtension:@"plist"]];
-    auto savePath = @"/tmp/Test.plist";
+    auto savePath = @"Test.plist";
 
     NSError* error = nil;
     [saveData writeToFile:savePath options:NSDataWritingAtomic error:&error];

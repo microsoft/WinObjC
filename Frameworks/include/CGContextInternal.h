@@ -38,8 +38,6 @@ COREGRAPHICS_EXPORT void CGContextReleaseLock(CGContextRef ctx);
 COREGRAPHICS_EXPORT CGBlendMode CGContextGetBlendMode(CGContextRef ctx);
 COREGRAPHICS_EXPORT bool CGContextIsPointInPath(CGContextRef c, bool eoFill, float x, float y);
 
-COREGRAPHICS_EXPORT void CGContextDrawGlyphRun(CGContextRef ctx, const DWRITE_GLYPH_RUN* glyphRun);
-
 // Bitmap Context Internal
 COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithRenderTarget(ID2D1RenderTarget* renderTarget,
                                                                         CGImageRef img,
@@ -51,3 +49,29 @@ COREGRAPHICS_EXPORT CGImageRef CGBitmapContextGetImage(CGContextRef ctx);
 // and only calling BeginDraw()/EndDraw() when the stack is empty/emptied
 COREGRAPHICS_EXPORT void _CGContextPushBeginDraw(CGContextRef ctx);
 COREGRAPHICS_EXPORT void _CGContextPopEndDraw(CGContextRef ctx);
+
+// Struct used to hold information about glyph run for drawing in _CGContextDrawGlyphRuns
+// TODO #1987: Add support for CTRun text matrix
+struct GlyphRunData {
+    DWRITE_GLYPH_RUN* run;
+    CGPoint relativePosition;
+    CFDictionaryRef attributes;
+};
+
+COREGRAPHICS_EXPORT void _CGContextDrawGlyphRuns(CGContextRef ctx, GlyphRunData* glyphRuns, size_t runCount);
+
+COREGRAPHICS_EXPORT const CFStringRef _kCGCharacterShapeAttributeName;
+COREGRAPHICS_EXPORT const CFStringRef _kCGFontAttributeName;
+COREGRAPHICS_EXPORT const CFStringRef _kCGKernAttributeName;
+COREGRAPHICS_EXPORT const CFStringRef _kCGLigatureAttributeName;
+COREGRAPHICS_EXPORT const CFStringRef _kCGForegroundColorAttributeName;
+COREGRAPHICS_EXPORT const CFStringRef _kCGForegroundColorFromContextAttributeName;
+COREGRAPHICS_EXPORT const CFStringRef _kCGParagraphStyleAttributeName;
+COREGRAPHICS_EXPORT const CFStringRef _kCGStrokeWidthAttributeName;
+COREGRAPHICS_EXPORT const CFStringRef _kCGStrokeColorAttributeName;
+COREGRAPHICS_EXPORT const CFStringRef _kCGSuperscriptAttributeName;
+COREGRAPHICS_EXPORT const CFStringRef _kCGUnderlineColorAttributeName;
+COREGRAPHICS_EXPORT const CFStringRef _kCGUnderlineStyleAttributeName;
+COREGRAPHICS_EXPORT const CFStringRef _kCGVerticalFormsAttributeName;
+COREGRAPHICS_EXPORT const CFStringRef _kCGGlyphInfoAttributeName;
+COREGRAPHICS_EXPORT const CFStringRef _kCGRunDelegateAttributeName;

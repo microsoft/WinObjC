@@ -46,7 +46,7 @@ public:
         return m_geometrySink.Get();
     }
 
-    _CGPathCustomSink(_In_ ID2D1GeometrySink* sink) : m_geometrySink(sink), m_lastPoint{0, 0}, m_isFigureOpen(false) {
+    _CGPathCustomSink(_In_ ID2D1GeometrySink* sink) : m_geometrySink(sink), m_lastPoint{ 0, 0 }, m_isFigureOpen(false) {
     }
 
     STDMETHOD_(void, SetFillMode)(D2D1_FILL_MODE fillMode) {
@@ -271,11 +271,26 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
     }
 };
 
-HRESULT _CGPathGetGeometry(CGPathRef path, ID2D1Geometry** pGeometry) {
-    RETURN_HR_IF_NULL(E_POINTER, pGeometry);
+HRESULT _CGPathGetGeometryWithFillMode(CGPathRef path, CGPathDrawingMode fillMode, ID2D1Geometry** pNewGeometry) {
+    RETURN_HR_IF_NULL(E_POINTER, pNewGeometry);
     RETURN_HR_IF_NULL(E_POINTER, path);
+
     RETURN_IF_FAILED(path->ClosePath());
-    path->pathGeometry.CopyTo(pGeometry);
+    if (fillMode == kCGPathEOFill || fillMode == kCGPathEOFillStroke) {
+        ID2D1Geometry* geometry = path->GetPathGeometry();
+        ComPtr<ID2D1Factory> factory;
+        geometry->GetFactory(&factory);
+
+        ComPtr<ID2D1GeometryGroup> geometryGroup;
+        RETURN_IF_FAILED(factory->CreateGeometryGroup(D2D1_FILL_MODE_ALTERNATE, &geometry, 1, &geometryGroup));
+
+        ComPtr<ID2D1Geometry> outGeometry;
+        RETURN_IF_FAILED(geometryGroup.As(&outGeometry));
+
+        *pNewGeometry = outGeometry.Detach();
+    } else {
+        path->pathGeometry.CopyTo(pNewGeometry);
+    }
     return S_OK;
 }
 
