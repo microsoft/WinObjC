@@ -24,23 +24,6 @@ typedef struct {
     SEL _selector;
 } GestureTarget;
 
-// Pan gestures stack, and the rules for whether they consume the gesture are based on its content extents.
-// At the end of its content, a UIScrollView will "stick" to its extents, and won't unstick until the pan returns to where it was initially
-// stuck. Pan gestures are sent multiple times to the same UIScrollViews, in this order:
-// _UIPanGestureStageImmediate:
-//		Gives all "unstuck" UIScrollViews the chance to immediately consume a portion of the pan delta.
-// _UIPanGestureStageDeferred:
-//		All "stuck" UIScrollViews are given another chance to consume and transition to an unstuck state.
-// _UIPanGestureStageRemainder:
-//		Whatever unconsumed delta may be used for over-drag (dragging past content extents)
-typedef NS_ENUM(NSUInteger, _UIPanGestureStage) {
-    _UIPanGestureStageImmediate,
-    _UIPanGestureStageDeferred,
-    _UIPanGestureStageRemainder,
-};
-
-#define _UIPanGestureStageNumStages 3
-
 @class UIRuntimeEventConnection;
 
 @interface UIGestureRecognizer () <NSCoding> {
@@ -57,28 +40,11 @@ typedef NS_ENUM(NSUInteger, _UIPanGestureStage) {
 
     GestureTarget _targets[32];
     int _numTargets;
-
-    struct {
-        unsigned shouldBegin : 1;
-        unsigned shouldReceiveTouch : 1;
-        unsigned shouldRecognizeSimultaneouslyWithGestureRecognizer : 1;
-    } _delegateHas;
 }
 
-+ (void)_cancelActiveExcept:(UIGestureRecognizer*)gesture;
 - (void)_setView:(UIView*)view;
-- (void)_cancelIfActive;
 - (void)_fire;
-+ (BOOL)_fireGestures:(id)gestures shouldCancelTouches:(BOOL&)shouldCancelTouches;
-+ (void)_failActiveExcept:(UIGestureRecognizer*)gesture;
++ (BOOL)_fireGesture:(UIGestureRecognizer*)gesture;
 - (void)_addEventConnection:(UIRuntimeEventConnection*)connection;
-@end
-
-@class UIView;
-@interface UIPanGestureRecognizer ()
-- (UIView*)_touchedView;
-- (void)_setDragSlack:(float)slack;
-- (float)_getDragSlack;
-- (void)_lockDirection:(int)dir;
-- (_UIPanGestureStage)_stage;
+- (void)_cancel;
 @end

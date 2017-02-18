@@ -52,6 +52,12 @@ public:
         Windows::UI::Xaml::Controls::Canvas^ get();
     }
 
+    // Accessor for the LayerProperty that manages the BorderBrush of this button
+    virtual Private::CoreAnimation::LayerProperty^ GetBorderBrushProperty();
+
+    // Accessor for the LayerProperty that manages the BorderThickness of this button
+    virtual Private::CoreAnimation::LayerProperty^ GetBorderThicknessProperty();
+
 internal:
     void HookPointerEvents(
         const Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Input::IPointerEventHandler>& pointerPressedHook,
@@ -67,8 +73,8 @@ internal:
     void RemovePointerEvents();
     void RemoveLayoutEvent();
 
-    Windows::UI::Xaml::Controls::TextBlock^ _textBlock;
     Windows::UI::Xaml::Controls::Image^ _image;
+    Windows::UI::Xaml::Controls::Border^ _border;
 
 private:
     Windows::UI::Xaml::Controls::Canvas^ _contentCanvas; // Contains pre-canned button content, as well as any sublayers added by CoreAnimation.

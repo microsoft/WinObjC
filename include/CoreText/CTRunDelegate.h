@@ -37,6 +37,6 @@ enum {
     kCTRunDelegateCurrentVersion = kCTRunDelegateVersion1,
 };
 
-CORETEXT_EXPORT CTRunDelegateRef CTRunDelegateCreate(const CTRunDelegateCallbacks* callbacks, void* refCon) STUB_METHOD;
-CORETEXT_EXPORT void* CTRunDelegateGetRefCon(CTRunDelegateRef runDelegate) STUB_METHOD;
-CORETEXT_EXPORT CFTypeID CTRunDelegateGetTypeID() STUB_METHOD;
+CORETEXT_EXPORT CTRunDelegateRef CTRunDelegateCreate(const CTRunDelegateCallbacks* callbacks, void* refCon) NOTINPLAN_METHOD;
+CORETEXT_EXPORT void* CTRunDelegateGetRefCon(CTRunDelegateRef runDelegate) NOTINPLAN_METHOD;
+CORETEXT_EXPORT CFTypeID CTRunDelegateGetTypeID() NOTINPLAN_METHOD;

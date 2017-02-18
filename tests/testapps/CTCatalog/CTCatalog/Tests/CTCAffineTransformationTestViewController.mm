@@ -63,8 +63,8 @@ static const NSString* text = @"This frame is manipulated by the above sliders. 
     CGAffineTransform tm = CGContextGetTextMatrix(context);
     tm = CGAffineTransformRotate(tm, _rotationText);
     tm = CGAffineTransformScale(tm, _scaleText.x, _scaleText.y);
-    tm = CGAffineTransformTranslate(tm, _translationText.x, _translationText.y);
     CGContextSetTextMatrix(context, tm);
+    CGContextSetTextPosition(context, _translationText.x, _translationText.y);
 
     // Creates path with current rectangle
     CGMutablePathRef path = CGPathCreateMutable();
@@ -105,6 +105,9 @@ static const NSString* text = @"This frame is manipulated by the above sliders. 
 
     // Draws the text in the frame
     CTFrameDraw(frame, context);
+    CFArrayRef lines = CTFrameGetLines(frame);
+    CTLineRef line = (CTLineRef)CFArrayGetValueAtIndex(lines, 0);
+    CTLineDraw(line, context);
 
     // Creates outline
     CGContextSetLineWidth(context, 2.0);

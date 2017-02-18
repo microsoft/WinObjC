@@ -69,7 +69,9 @@ void UIImageSetLayerContents(CALayer* layer, UIImage* image) {
     if ([layer contentsOrientation] != [image imageOrientation]) {
         [layer setContentsOrientation:[image imageOrientation]];
     }
-    CGRect stretch = [image _imageStretch];
+
+    // Working around #1965; only call '_imageStretch' if 'image' is non-nil
+    CGRect stretch = (image ? [image _imageStretch] : CGRectZero);
     if (!CGRectEqualToRect([layer contentsCenter], stretch)) {
         [layer setContentsCenter:stretch];
     }

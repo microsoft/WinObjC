@@ -334,7 +334,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 + (WFGUID*)manufacturerNameString;
 + (WFGUID*)modelNumberString;
 + (WFGUID*)navigation;
-+ (WFGUID*)newAlert;
++ (WFGUID*)newAlert __attribute__ ((ns_returns_not_retained));
 + (WFGUID*)pnpId;
 + (WFGUID*)positionQuality;
 + (WFGUID*)protocolMode;

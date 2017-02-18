@@ -286,7 +286,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 - (void)removeStrokesCollectedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addStrokesErasedEvent:(void(^)(WUIIInkPresenter*, WUIIInkStrokesErasedEventArgs*))del;
 - (void)removeStrokesErasedEvent:(EventRegistrationToken)tok;
-- (WUIIInkDrawingAttributes*)copyDefaultDrawingAttributes;
+- (WUIIInkDrawingAttributes*)copyDefaultDrawingAttributes __attribute__ ((ns_returns_not_retained));
 - (void)updateDefaultDrawingAttributes:(WUIIInkDrawingAttributes*)value;
 - (WUIIInkSynchronizer*)activateCustomDrying;
 - (void)setPredefinedConfiguration:(WUIIInkPresenterPredefinedConfiguration)value;

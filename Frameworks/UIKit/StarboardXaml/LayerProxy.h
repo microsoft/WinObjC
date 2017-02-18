@@ -20,6 +20,13 @@
 #include <memory>
 #include <set>
 
+struct LayerColor {
+    float r = 0.0;
+    float g = 0.0;
+    float b = 0.0;
+    float a = 0.0;
+};
+
 // A LayerProxy is CALayer's proxy to its backing Xaml FrameworkElement.
 // LayerProxy is used to update the Xaml FrameworkElement's visual state (positioning, animations, etc.) based upon CALayer API calls,
 // and it's also responsible for the CALayer's sublayer management (*if* that backing Xaml FrameworkElement supports sublayers).
@@ -34,9 +41,7 @@ public:
     Microsoft::WRL::ComPtr<IInspectable> GetSublayerXamlElement() override;
     void* GetPropertyValue(const char* propertyName) override;
     void SetShouldRasterize(bool shouldRasterize) override;
-
-    // TODO: Can we remove this altogether at some point?
-    void SetTopMost() override;
+    void SetTopMost() override; // TODO: Can we remove this altogether at some point?
 
     // General property management
     void SetTexture(const std::shared_ptr<IDisplayTexture>& texture, float width, float height, float scale);
@@ -56,7 +61,11 @@ private:
     void _SetPropertyInt(const char* name, int value);
     void _SetHidden(bool hidden);
     void _SetMasksToBounds(bool masksToBounds);
-    void _SetBackgroundColor(float r, float g, float b, float a);
+    void _SetBackgroundColor(const LayerColor& color);
+    void _SetBorderColor(const LayerColor& color);
+    LayerColor _GetBorderColor();
+    void _SetBorderWidth(float width);
+    float _GetBorderWidth();
     void _SetContents(const Microsoft::WRL::ComPtr<IInspectable>& bitmap, float width, float height, float scale);
     void _SetContentsCenter(float x, float y, float width, float height);
 

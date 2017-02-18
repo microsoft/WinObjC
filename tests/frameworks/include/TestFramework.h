@@ -20,8 +20,19 @@
 #include <Foundation/Foundation.h>
 #endif
 
+#ifndef IF_NOT_EXISTS_BEGIN
+#ifdef _MSC_VER
+#define IF_NOT_EXISTS_BEGIN(name) __if_not_exists(name) {
+#define IF_NOT_EXISTS_END }
+#else
+#define IF_NOT_EXISTS_BEGIN(name)
+#define IF_NOT_EXISTS_END
+#endif
+#endif
+
 #if TARGET_OS_MAC
 #include "gtest-api.h"
+#include <mach-o/dyld.h>
 #else
 #include "test-api.h"
 #endif
@@ -229,22 +240,22 @@ protected:
 #define boolean Boolean
 #endif
 
-__if_not_exists(GetCurrentTestDirectory) {
+IF_NOT_EXISTS_BEGIN(GetCurrentTestDirectory)
     static std::string GetCurrentTestDirectory() {
         std::string tempBuffer;
-        uint32_t maxPath = _MAX_PATH;
+        uint32_t maxPath = PATH_MAX;
         tempBuffer.resize(maxPath);
         _NSGetExecutablePath(&tempBuffer[0], &maxPath);
         return tempBuffer.substr(0, tempBuffer.find_last_of('/')).c_str();
     }
-}
+IF_NOT_EXISTS_END
 
-__if_not_exists(GetTestFullName) {
+IF_NOT_EXISTS_BEGIN(GetTestFullName)
     static std::string GetTestFullName() {
         return std::string(::testing::UnitTest::GetInstance()->current_test_info()->test_case_name()) + "." +
                ::testing::UnitTest::GetInstance()->current_test_info()->name();
     }
-}
+IF_NOT_EXISTS_END
 
 #ifndef LOG_TEST_PROPERTY
 #define LOG_TEST_PROPERTY(key, value) RecordProperty(key, value)

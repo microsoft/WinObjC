@@ -150,7 +150,7 @@ OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
 - (void)copyOverloadDefaultNameAndOptions:(RTObject<WSIStorageFolder>*)destinationFolder success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 - (void)copyOverloadDefaultOptions:(RTObject<WSIStorageFolder>*)destinationFolder desiredNewName:(NSString *)desiredNewName success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 - (void)copyOverload:(RTObject<WSIStorageFolder>*)destinationFolder desiredNewName:(NSString *)desiredNewName option:(WSNameCollisionOption)option success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
-- (RTObject<WFIAsyncAction>*)copyAndReplaceAsync:(RTObject<WSIStorageFile>*)fileToReplace;
+- (RTObject<WFIAsyncAction>*)copyAndReplaceAsync:(RTObject<WSIStorageFile>*)fileToReplace __attribute__ ((ns_returns_not_retained));
 - (RTObject<WFIAsyncAction>*)moveOverloadDefaultNameAndOptions:(RTObject<WSIStorageFolder>*)destinationFolder;
 - (RTObject<WFIAsyncAction>*)moveOverloadDefaultOptions:(RTObject<WSIStorageFolder>*)destinationFolder desiredNewName:(NSString *)desiredNewName;
 - (RTObject<WFIAsyncAction>*)moveOverload:(RTObject<WSIStorageFolder>*)destinationFolder desiredNewName:(NSString *)desiredNewName option:(WSNameCollisionOption)option;
@@ -294,7 +294,7 @@ OBJCUWP_WINDOWS_STORAGE_BULKACCESS_EXPORT
 - (void)copyOverloadDefaultNameAndOptions:(RTObject<WSIStorageFolder>*)destinationFolder success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 - (void)copyOverloadDefaultOptions:(RTObject<WSIStorageFolder>*)destinationFolder desiredNewName:(NSString *)desiredNewName success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 - (void)copyOverload:(RTObject<WSIStorageFolder>*)destinationFolder desiredNewName:(NSString *)desiredNewName option:(WSNameCollisionOption)option success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
-- (RTObject<WFIAsyncAction>*)copyAndReplaceAsync:(RTObject<WSIStorageFile>*)fileToReplace;
+- (RTObject<WFIAsyncAction>*)copyAndReplaceAsync:(RTObject<WSIStorageFile>*)fileToReplace __attribute__ ((ns_returns_not_retained));
 - (RTObject<WFIAsyncAction>*)moveOverloadDefaultNameAndOptions:(RTObject<WSIStorageFolder>*)destinationFolder;
 - (RTObject<WFIAsyncAction>*)moveOverloadDefaultOptions:(RTObject<WSIStorageFolder>*)destinationFolder desiredNewName:(NSString *)desiredNewName;
 - (RTObject<WFIAsyncAction>*)moveOverload:(RTObject<WSIStorageFolder>*)destinationFolder desiredNewName:(NSString *)desiredNewName option:(WSNameCollisionOption)option;

@@ -32,9 +32,8 @@ enum ControlStates { ControlStateNormal = 0, ControlStateHighlighted = 1 << 0, C
 UIKIT_XAML_EXPORT void XamlCreateButton(IInspectable** created);
 
 UIKIT_XAML_EXPORT void XamlButtonApplyVisuals(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton,
-                                              const Microsoft::WRL::ComPtr<IInspectable>& inspectableText,
                                               const Microsoft::WRL::ComPtr<IInspectable>& inspectableImage,
-                                              const Microsoft::WRL::ComPtr<IInspectable>& inspectableTitleColor);
+                                              const Microsoft::WRL::ComPtr<IInspectable>& inspectableBorderBackgroundBrush);
 
 // Hooks pointer events on a UIKit::Button passed in as IInspectable
 UIKIT_XAML_EXPORT void XamlHookButtonPointerEvents(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton,
@@ -60,17 +59,20 @@ UIKIT_XAML_EXPORT void XamlRemoveLayoutEvent(const Microsoft::WRL::ComPtr<IInspe
 UIKIT_XAML_EXPORT void XamlCreateLabel(IInspectable** created);
 
 // Retrieves the UIKit::Label's backing TextBlock as an IInspectable
-UIKIT_XAML_EXPORT IInspectable* XamlGetLabelTextBox(const Microsoft::WRL::ComPtr<IInspectable>& label);
+UIKIT_XAML_EXPORT IInspectable* XamlGetLabelTextBlock(const Microsoft::WRL::ComPtr<IInspectable>& label);
 
 ////////////////////////////////////////////////////////////////////////////////////
 // Layer.xaml.cpp
 ////////////////////////////////////////////////////////////////////////////////////
 
+// Initializes our library for use; registers dependency properties, etc.
+UIKIT_XAML_EXPORT void UIKitXamlInitialize();
+
 // Set one or more layer properties for the specified target xaml element
 UIKIT_XAML_EXPORT void XamlSetFrameworkElementLayerProperties(const Microsoft::WRL::ComPtr<IInspectable>& targetElement,
                                                               const Microsoft::WRL::ComPtr<IInspectable>& sublayerCanvasProperty,
                                                               const Microsoft::WRL::ComPtr<IInspectable>& layerContentProperty);
-                                                              
+
 // Get the layerContentProperty for the specified target xaml element
 UIKIT_XAML_EXPORT IInspectable* XamlGetFrameworkElementLayerContentProperty(const Microsoft::WRL::ComPtr<IInspectable>& targetElement);
 

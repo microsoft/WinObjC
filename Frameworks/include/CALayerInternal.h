@@ -41,8 +41,7 @@ public:
     BOOL isOpaque;
 
     CATransform3D transform;
-    __CGColorQuad backgroundColor, borderColor;
-    float borderWidth, cornerRadius;
+    __CGColorQuad backgroundColor;
     float opacity;
 };
 
@@ -59,7 +58,7 @@ public:
     BOOL needsUpdate;
     idretain _name;
     NSMutableDictionary* _animations;
-    CGColorRef _backgroundColor, _borderColor;
+    CGColorRef _backgroundColor;
     BOOL needsDisplayOnBoundsChange;
 
     BOOL _shouldRasterize;
@@ -91,12 +90,11 @@ public:
 - (instancetype)_initWithXamlElement:(WXFrameworkElement*)xamlElement;
 @property (nonatomic, readonly, strong) WXFrameworkElement* _xamlElement;
 
-- (NSObject*)presentationValueForKey:(NSString*)key;
+- (NSObject*)_presentationValueForKey:(NSString*)key;
 
 - (int)_pixelWidth;
 - (int)_pixelHeight;
 
-- (void)_setContentColor:(CGColorRef)newColor;
 - (void)_setOrigin:(CGPoint)origin;
 - (void)_setShouldLayout;
 - (void)setContentsOrientation:(UIImageOrientation)orientation;

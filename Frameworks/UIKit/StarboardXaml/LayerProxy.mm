@@ -34,29 +34,27 @@ void LayerProxy::SetTexture(const std::shared_ptr<IDisplayTexture>& texture, flo
 }
 
 void* LayerProxy::GetPropertyValue(const char* name) {
-    NSObject* ret = nil;
-
     if (strcmp(name, "position") == 0) {
         CGPoint pos;
 
         pos.x = _GetPresentationPropertyValue("position.x");
         pos.y = _GetPresentationPropertyValue("position.y");
 
-        ret = [NSValue valueWithCGPoint:pos];
+        return [NSValue valueWithCGPoint:pos];
     } else if (strcmp(name, "bounds.origin") == 0) {
         CGPoint pos;
 
         pos.x = _GetPresentationPropertyValue("origin.x");
         pos.y = _GetPresentationPropertyValue("origin.y");
 
-        ret = [NSValue valueWithCGPoint:pos];
+        return [NSValue valueWithCGPoint:pos];
     } else if (strcmp(name, "bounds.size") == 0) {
         CGSize size;
 
         size.width = _GetPresentationPropertyValue("size.width");
         size.height = _GetPresentationPropertyValue("size.height");
 
-        ret = [NSValue valueWithCGSize:size];
+        return [NSValue valueWithCGSize:size];
     } else if (strcmp(name, "bounds") == 0) {
         CGRect rect;
 
@@ -65,11 +63,10 @@ void* LayerProxy::GetPropertyValue(const char* name) {
         rect.origin.x = _GetPresentationPropertyValue("origin.x");
         rect.origin.y = _GetPresentationPropertyValue("origin.y");
 
-        ret = [NSValue valueWithCGRect:rect];
+        return [NSValue valueWithCGRect:rect];
     } else if (strcmp(name, "opacity") == 0) {
         float value = _GetPresentationPropertyValue("opacity");
-
-        ret = [NSNumber numberWithFloat:value];
+        return [NSNumber numberWithFloat:value];
     } else if (strcmp(name, "transform") == 0) {
         float angle = _GetPresentationPropertyValue("transform.rotation");
         float scale[2];
@@ -85,12 +82,16 @@ void* LayerProxy::GetPropertyValue(const char* name) {
         trans = CATransform3DScale(trans, scale[0], scale[1], 0.0f);
         trans = CATransform3DTranslate(trans, translation[0], translation[1], 0.0f);
 
-        ret = [NSValue valueWithCATransform3D:trans];
-    } else {
-        FAIL_FAST_HR(E_NOTIMPL);
-    }
+        return [NSValue valueWithCATransform3D:trans];
+    } else if (strcmp(name, "borderColor") == 0) {
+        LayerColor color = _GetBorderColor();
+        return [UIColor colorWithRed:color.r green:color.g blue:color.b alpha:color.a];
+    } else if (strcmp(name, "borderWidth") == 0) {
+        return [NSNumber numberWithFloat:_GetBorderWidth()];
+    } 
 
-    return ret;
+    FAIL_FAST_HR(E_NOTIMPL);
+    return nil;
 }
 
 void LayerProxy::UpdateProperty(const char* name, void* value) {
@@ -171,12 +172,30 @@ void LayerProxy::UpdateProperty(const char* name, void* value) {
     } else if (strcmp(name, "gravity") == 0) {
         _SetPropertyInt("gravity", [(NSNumber*)newValue intValue]);
     } else if (strcmp(name, "backgroundColor") == 0) {
-        const __CGColorQuad* color = [(UIColor*)newValue _getColors];
-        if (color) {
-            _SetBackgroundColor(color->r, color->g, color->b, color->a);
-        } else {
-            _SetBackgroundColor(0.0f, 0.0f, 0.0f, 0.0f);
+        LayerColor layerColor;
+        if (newValue) {
+            const __CGColorQuad* color = [(UIColor*)newValue _getColors];
+            layerColor.r = color->r;
+            layerColor.g = color->g;
+            layerColor.b = color->b;
+            layerColor.a = color->a;
         }
+
+        _SetBackgroundColor(layerColor);
+    } else if (strcmp(name, "borderColor") == 0) {
+        LayerColor layerColor;
+        if (newValue) {
+            const __CGColorQuad* color = [(UIColor*)newValue _getColors];
+            layerColor.r = color->r;
+            layerColor.g = color->g;
+            layerColor.b = color->b;
+            layerColor.a = color->a;
+        }
+
+        _SetBorderColor(layerColor);
+    } else if (strcmp(name, "borderWidth") == 0) {
+        float value = [(NSNumber*)newValue floatValue];
+        _SetBorderWidth(value);
     } else {
         FAIL_FAST_HR(E_NOTIMPL);
     }

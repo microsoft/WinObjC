@@ -23,8 +23,11 @@
 #import "DWriteWrapper_CoreText.h"
 #import "CoreTextInternal.h"
 #import "CGContextInternal.h"
+#import <CppUtils.h>
 
 #include <numeric>
+#include <algorithm>
+#include <functional>
 
 const CFStringRef kCTBackgroundStrokeColorAttributeName = static_cast<CFStringRef>(@"kCTBackgroundStrokeColorAttributeName");
 const CFStringRef kCTBackgroundFillColorAttributeName = static_cast<CFStringRef>(@"kCTBackgroundFillColorAttributeName");
@@ -45,6 +48,7 @@ const CFStringRef kCTBackgroundLineWidthAttributeName = static_cast<CFStringRef>
 - (id)init {
     if (self = [super init]) {
         _attributes.attach([NSMutableDictionary new]);
+        _textMatrix = CGAffineTransformIdentity;
     }
 
     return self;
@@ -95,12 +99,29 @@ CFDictionaryRef CTRunGetAttributes(CTRunRef run) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
-CTRunStatus CTRunGetStatus(CTRunRef run) {
-    UNIMPLEMENTED();
-    return StubReturn();
+CTRunStatus CTRunGetStatus(CTRunRef runRef) {
+    CTRunStatus ret = kCTRunStatusNoStatus;
+    if (runRef) {
+        _CTRun* run = static_cast<_CTRun*>(runRef);
+
+        if (run->_dwriteGlyphRun.bidiLevel & 1) {
+            ret |= kCTRunStatusRightToLeft;
+            if (!std::is_sorted(run->_stringIndices.cbegin(), run->_stringIndices.cend(), std::greater<UINT16>())) {
+                ret |= kCTRunStatusNonMonotonic;
+            }
+        } else if (!std::is_sorted(run->_stringIndices.cbegin(), run->_stringIndices.cend())) {
+            ret |= kCTRunStatusNonMonotonic;
+        }
+
+        if (run->_textMatrix != CGAffineTransformIdentity) {
+            ret |= kCTRunStatusHasNonIdentityMatrix;
+        }
+    }
+
+    return ret;
 }
 
 /**
@@ -194,22 +215,22 @@ CFRange CTRunGetStringRange(CTRunRef run) {
 */
 double CTRunGetTypographicBounds(CTRunRef run, CFRange range, CGFloat* ascent, CGFloat* descent, CGFloat* leading) {
     if (run == nullptr || range.length < 0L) {
-        return 0;
+        return 0.0;
     }
 
     _CTRun* curRun = static_cast<_CTRun*>(run);
 
-    if (range.length == 0) {
+    if (range.length == 0L) {
         range = curRun->_range;
     }
 
-    if (range.location < 0) {
+    if (range.location < 0L) {
         range.length += range.location;
-        range.location = 0;
+        range.location = 0L;
     }
 
-    if ((range.location + range.length) > (curRun->_range.location + curRun->_range.length) || range.length <= 0) {
-        return 0;
+    if ((range.location + range.length) > (curRun->_range.location + curRun->_range.length) || range.length <= 0L) {
+        return 0.0;
     }
 
     if (ascent || descent || leading) {
@@ -231,13 +252,14 @@ double CTRunGetTypographicBounds(CTRunRef run, CFRange range, CGFloat* ascent, C
 
         CGFloat newAscent = -FLT_MAX;
         CGFloat newDescent = -FLT_MAX;
-        for (size_t i = range.location - curRun->_range.location; i < range.location + range.length - curRun->_range.location; ++i) {
+        for (size_t i = 0; i < range.length; ++i) {
             // CoreText ascent is equivalent of DWrite verticalOriginY, and descent the value of bottomSideBearing
             // which are in designUnits, so they need to be converted to points for CoreText
-            // The ascent and descent of the run is the max and min of the respective values per glyph
+            // The ascent and descent of the run are the max of the respective values per glyph
             newAscent = std::max(newAscent, glyphMetrics[i].verticalOriginY * scalingFactor);
             newDescent = std::max(newDescent, glyphMetrics[i].bottomSideBearing * scalingFactor);
         }
+
         if (ascent) {
             *ascent = newAscent;
         }
@@ -258,12 +280,22 @@ double CTRunGetTypographicBounds(CTRunRef run, CFRange range, CGFloat* ascent, C
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
-CGRect CTRunGetImageBounds(CTRunRef run, CGContextRef context, CFRange range) {
-    UNIMPLEMENTED();
-    return StubReturn();
+CGRect CTRunGetImageBounds(CTRunRef runRef, CGContextRef context, CFRange range) {
+    _CTRun* run = static_cast<_CTRun*>(runRef);
+    if (!run || !context || range.location < 0L || range.length < 0L || range.location + range.length > run->_dwriteGlyphRun.glyphCount) {
+        return CGRectNull;
+    }
+
+    if (range.location == 0L) {
+        range.location = run->_dwriteGlyphRun.glyphCount - range.location;
+    }
+
+    CGFloat ascent, descent;
+    double width = CTRunGetTypographicBounds(runRef, range, &ascent, &descent, nullptr);
+    return { CGContextGetTextPosition(context), { width, ascent - descent } };
 }
 
 /**
@@ -277,20 +309,10 @@ void CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange) {
         return;
     }
 
-    CGColorRef fontColor = reinterpret_cast<CGColorRef>([curRun->_attributes objectForKey:(id)kCTForegroundColorAttributeName]);
-    if (!fontColor) {
-        CFBooleanRef useContextColor =
-            static_cast<CFBooleanRef>([curRun->_attributes objectForKey:(id)kCTForegroundColorFromContextAttributeName]);
-        if (!useContextColor || !CFBooleanGetValue(useContextColor)) {
-            CGContextSetRGBFillColor(ctx, 0.0, 0.0, 0.0, 1.0);
-        }
-    } else {
-        CGContextSetFillColorWithColor(ctx, fontColor);
-    }
-
     if (textRange.location == 0L && (textRange.length == 0L || textRange.length == curRun->_dwriteGlyphRun.glyphCount)) {
         // Print the whole glyph run
-        CGContextDrawGlyphRun(ctx, &curRun->_dwriteGlyphRun);
+        GlyphRunData data{ &curRun->_dwriteGlyphRun, CGPointZero, (CFDictionaryRef)curRun->_attributes.get() };
+        _CGContextDrawGlyphRuns(ctx, &data, 1);
     } else {
         if (textRange.length == 0L) {
             textRange.length = curRun->_dwriteGlyphRun.glyphCount - textRange.location;
@@ -298,22 +320,22 @@ void CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange) {
 
         // Only print glyphs in range
         DWRITE_GLYPH_RUN runInRange = __GetGlyphRunForDrawingInRange(curRun->_dwriteGlyphRun, textRange);
-        CGContextDrawGlyphRun(ctx, &runInRange);
+        GlyphRunData data{ &runInRange, CGPointZero, (CFDictionaryRef)curRun->_attributes.get() };
+        _CGContextDrawGlyphRuns(ctx, &data, 1);
     }
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes CTRunRef will only ever have CGAffineTransformIdentity until #1987
 */
 CGAffineTransform CTRunGetTextMatrix(CTRunRef run) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return run ? static_cast<_CTRun*>(run)->_textMatrix : CGAffineTransformIdentity;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status NotInPlan
+ @Notes this would require us to move to using bridged type implementation, seems of little value at this point
 */
 CFTypeID CTRunGetTypeID() {
     UNIMPLEMENTED();

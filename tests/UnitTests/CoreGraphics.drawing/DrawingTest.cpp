@@ -26,6 +26,21 @@
 #import "CGContextInternal.h"
 #endif
 
+#ifdef TARGET_OS_MAC
+#define LOG_TEST_FILE(...)
+#else
+#define LOG_TEST_FILE(...) WEX::Logging::Log::File(__VA_ARGS__)
+std::wstring _CFStringToWString(CFStringRef string) {
+    const UniChar* characters16 = CFStringGetCharactersPtr(string);
+    if (characters16) {
+        return {characters16, characters16 + CFStringGetLength(string)};
+    }
+
+    static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+    return converter.from_bytes(CFStringGetCStringPtr(string, kCFStringEncodingUTF8));
+}
+#endif
+
 static const CGSize g_defaultCanvasSize{ 512.f, 256.f };
 
 template <typename TComparator>
@@ -34,7 +49,7 @@ CGSize testing::DrawTest<TComparator>::CanvasSize() {
 }
 
 template <typename TComparator>
-void testing::DrawTest<TComparator>::SetUp() {
+void testing::DrawTest<TComparator>::PreDraw() {
     CGSize size = CanvasSize();
 
     auto deviceColorSpace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
@@ -69,7 +84,7 @@ CFStringRef testing::DrawTest<TComparator>::CreateOutputFilename() {
 }
 
 template <typename TComparator>
-void testing::DrawTest<TComparator>::TearDown() {
+void testing::DrawTest<TComparator>::PostDraw() {
     CGContextRef context = GetDrawingContext();
 
 #if WINOBJC // Validate that the results are correct even under batched drawing from _CGContextPushBegin/PopEndDraw
@@ -133,10 +148,12 @@ void testing::DrawTest<TComparator>::TearDown() {
 
             _WriteCFDataToFile(encodedDeltaImageData.get(), deltaFilename.get());
 
-            LOG_TEST_PROPERTY("expectedImage", CFStringGetCStringPtr(referenceFilename.get(), kCFStringEncodingUTF8));
-            LOG_TEST_PROPERTY("actualImage", CFStringGetCStringPtr(outputPath.get(), kCFStringEncodingUTF8));
-            LOG_TEST_PROPERTY("deltaImage", CFStringGetCStringPtr(deltaFilename.get(), kCFStringEncodingUTF8));
+            LOG_TEST_FILE(_CFStringToWString(referenceFilename).c_str());
+            LOG_TEST_FILE(_CFStringToWString(outputPath).c_str());
+            LOG_TEST_FILE(_CFStringToWString(deltaFilename).c_str());
         }
+    } else if (drawingConfig->GetMode() == DrawingTestMode::Generate) {
+        LOG_TEST_FILE(_CFStringToWString(outputPath).c_str());
     }
 }
 
@@ -147,6 +164,11 @@ void testing::DrawTest<TComparator>::SetUpContext() {
 
 template <typename TComparator>
 void testing::DrawTest<TComparator>::TestBody() {
+    // Nothing.
+}
+
+template <typename TComparator>
+void testing::DrawTest<TComparator>::Draw() {
     // Nothing.
 }
 

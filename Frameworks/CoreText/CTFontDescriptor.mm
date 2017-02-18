@@ -266,6 +266,18 @@ CFTypeRef CTFontDescriptorCopyLocalizedAttribute(CTFontDescriptorRef descriptor,
 }
 
 /**
+ @Status NotInPlan
+ @Notes  Not documented
+*/
+
+bool CTFontDescriptorMatchFontDescriptorsWithProgressHandler(CFArrayRef descriptors,
+                                                             CFSetRef mandatoryAttributes,
+                                                             CTFontDescriptorProgressHandler progressBlock) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
  @Status Interoperable
  @Notes
 */

@@ -31,6 +31,7 @@
 
 #include "DisplayProperties.h"
 #include "LayerProxy.h"
+#include "../UIKit.Xaml/ObjCXamlControls.h"
 
 using namespace Microsoft::WRL;
 using namespace UIKit::Xaml::Private::CoreAnimation;
@@ -69,6 +70,8 @@ void Initialize(Windows::UI::Xaml::Controls::Grid^ rootGrid, ActivationType acti
     s_rootGrid->InvalidateArrange();
 
     s_rootGrid->SizeChanged += ref new SizeChangedEventHandler(&OnGridSizeChanged);
+
+    UIKitXamlInitialize();
 }
 
 ComPtr<IInspectable> GetRootElement() {

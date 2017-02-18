@@ -70,6 +70,7 @@ inline void _SafeRelease(T** p) {
     CGFloat _relativeYOffset;
     std::vector<CGSize> _glyphAdvances;
     std::vector<CGPoint> _glyphOrigins;
+    CGAffineTransform _textMatrix;
 }
 @end
 

@@ -10,7 +10,9 @@
         <ControlTemplate TargetType="Button" x:Name="UIKitButtonControlTemplate">
             <Canvas x:Name="contentCanvas" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Background="{TemplateBinding Background}">
                 <Image x:Name="buttonImage" Stretch="Fill" IsHitTestVisible="False" />
-                <TextBlock x:Name="buttonText" MaxLines="1" TextTrimming="CharacterEllipsis" IsHitTestVisible="False"/>
+                <Border x:Name="buttonBorder" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" />
+                <!--TODO: This hits a XamlParseException in some apps; tracked as #1919.
+                <local:Label x:Name="buttonLabel" IsHitTestVisible="False"/>-->
             </Canvas>
         </ControlTemplate>
     </Button.Template>
