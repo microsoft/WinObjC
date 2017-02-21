@@ -18,7 +18,7 @@
 
     <MSBuild Projects="$(MSBuildProjectFile)"
        Targets="GetPackageContents"
-       Properties="SkipGetPackageContentsForOtherPlatforms=true;BuildingInsideVisualStudio=false;BuildProjectReferences=true;IsPackable=false;Configuration=$(Configuration);Platform=$(Platform);CurrentSolutionConfigurationContents=%(_SolutionConfigurationContents.Identity);GetPackageContentsDependsOn=Build;$(GetPackageContentsDependsOn)">
+       Properties="SkipGetPackageContentsForOtherPlatforms=true;BuildingInsideVisualStudio=false;BuildProjectReferences=true;Configuration=$(Configuration);Platform=$(Platform);CurrentSolutionConfigurationContents=%(_SolutionConfigurationContents.Identity);GetPackageContentsDependsOn=Build;$(GetPackageContentsDependsOn)">
       <Output TaskParameter="TargetOutputs" ItemName="_PackageContentsForPlat" />
     </MSBuild>
   </Target>
@@ -46,11 +46,6 @@
   <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents" DependsOnTargets="$(GitVersionDependsOn)" Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">
 
       <ItemGroup>
-        <PackageFile Include="WinObjC.Frameworks.Core">
-          <Kind>Dependency</Kind>
-          <Version>$(GitBaseVersionMajor).$(GitBaseVersionMinor).$([MSBuild]::Add('$(GitBaseVersionPatch)', '1'))--</Version>
-        </PackageFile>
-
         <!-- Include Extra Deps for this project -->
         <_DepsFiles Include="$(StarboardBasePath)\deps\prebuilt\**\ObjCUWP*.dll"/>
         <_DepsFiles Include="$(StarboardBasePath)\deps\prebuilt\**\ObjCUWP*.lib"/>

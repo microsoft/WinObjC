@@ -1,7 +1,7 @@
 ﻿{
   "dependencies": {
     "GitInfo": "1.1.32",
-    "NuGet.Build.Packaging": "0.1.173",
+    "NuGet.Build.Packaging": "0.1.186",
     "WinObjC.Language": "0.2.160915-*"
   },
   "frameworks": {

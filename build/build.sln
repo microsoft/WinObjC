@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26206.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Starboard", "Starboard", "{ADFDC5D9-3048-4E53-A9B7-41731D7AD8CF}"
 EndProject
@@ -775,6 +775,17 @@ EndProject
 Project("{5DD5E4FA-CB73-4610-85AB-557B54E96AA9}") = "WinObjC.Frameworks.UWP", "WinObjC.Frameworks.UWP\WinObjC.Frameworks.UWP.nuproj", "{B0F24416-5500-4A60-815B-8E08E9F3717A}"
 EndProject
 Project("{5DD5E4FA-CB73-4610-85AB-557B54E96AA9}") = "WinObjC.Frameworks", "WinObjC.Frameworks\WinObjC.Frameworks.nuproj", "{BEF15618-E03F-4A44-A797-9150C979B09F}"
+EndProject
+Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "TestPlatformMultiplexer", "BuildSupport\TestPlatformMultiplexer.msbuildproj", "{60A07842-5D75-45E8-9FCF-C126E608B654}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildSupport", "BuildSupport", "{7B338049-F463-44B0-B7BD-F8EA16750085}"
+EndProject
+Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "BuildFinalizer", "BuildSupport\BuildFinalizer.msbuildproj", "{2967D06B-1CE1-45D9-B4CC-1E07D2851B6F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{CC27F0AE-184D-42F9-9633-B526C2887BE6}"
+	ProjectSection(SolutionItems) = preProject
+		nuget.config = nuget.config
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -2260,6 +2271,30 @@ Global
 		{BEF15618-E03F-4A44-A797-9150C979B09F}.Release|ARM.Build.0 = Release|ARM
 		{BEF15618-E03F-4A44-A797-9150C979B09F}.Release|x86.ActiveCfg = Release|x86
 		{BEF15618-E03F-4A44-A797-9150C979B09F}.Release|x86.Build.0 = Release|x86
+		{60A07842-5D75-45E8-9FCF-C126E608B654}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60A07842-5D75-45E8-9FCF-C126E608B654}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60A07842-5D75-45E8-9FCF-C126E608B654}.Debug|ARM.ActiveCfg = Debug|ARM
+		{60A07842-5D75-45E8-9FCF-C126E608B654}.Debug|ARM.Build.0 = Debug|ARM
+		{60A07842-5D75-45E8-9FCF-C126E608B654}.Debug|x86.ActiveCfg = Debug|x86
+		{60A07842-5D75-45E8-9FCF-C126E608B654}.Debug|x86.Build.0 = Debug|x86
+		{60A07842-5D75-45E8-9FCF-C126E608B654}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60A07842-5D75-45E8-9FCF-C126E608B654}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60A07842-5D75-45E8-9FCF-C126E608B654}.Release|ARM.ActiveCfg = Release|ARM
+		{60A07842-5D75-45E8-9FCF-C126E608B654}.Release|ARM.Build.0 = Release|ARM
+		{60A07842-5D75-45E8-9FCF-C126E608B654}.Release|x86.ActiveCfg = Release|x86
+		{60A07842-5D75-45E8-9FCF-C126E608B654}.Release|x86.Build.0 = Release|x86
+		{2967D06B-1CE1-45D9-B4CC-1E07D2851B6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2967D06B-1CE1-45D9-B4CC-1E07D2851B6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2967D06B-1CE1-45D9-B4CC-1E07D2851B6F}.Debug|ARM.ActiveCfg = Debug|ARM
+		{2967D06B-1CE1-45D9-B4CC-1E07D2851B6F}.Debug|ARM.Build.0 = Debug|ARM
+		{2967D06B-1CE1-45D9-B4CC-1E07D2851B6F}.Debug|x86.ActiveCfg = Debug|x86
+		{2967D06B-1CE1-45D9-B4CC-1E07D2851B6F}.Debug|x86.Build.0 = Debug|x86
+		{2967D06B-1CE1-45D9-B4CC-1E07D2851B6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2967D06B-1CE1-45D9-B4CC-1E07D2851B6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2967D06B-1CE1-45D9-B4CC-1E07D2851B6F}.Release|ARM.ActiveCfg = Release|ARM
+		{2967D06B-1CE1-45D9-B4CC-1E07D2851B6F}.Release|ARM.Build.0 = Release|ARM
+		{2967D06B-1CE1-45D9-B4CC-1E07D2851B6F}.Release|x86.ActiveCfg = Release|x86
+		{2967D06B-1CE1-45D9-B4CC-1E07D2851B6F}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -2619,5 +2654,7 @@ Global
 		{F0F1B2A3-6924-4A09-99CE-D08CD8BCF392} = {E1BA5F74-6863-437D-9AF5-72666F6D25B5}
 		{B0F24416-5500-4A60-815B-8E08E9F3717A} = {312A2B08-9A28-468E-B74C-E194ACD154A6}
 		{BEF15618-E03F-4A44-A797-9150C979B09F} = {F0F1B2A3-6924-4A09-99CE-D08CD8BCF392}
+		{60A07842-5D75-45E8-9FCF-C126E608B654} = {7B338049-F463-44B0-B7BD-F8EA16750085}
+		{2967D06B-1CE1-45D9-B4CC-1E07D2851B6F} = {7B338049-F463-44B0-B7BD-F8EA16750085}
 	EndGlobalSection
 EndGlobal

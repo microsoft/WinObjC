@@ -28,6 +28,12 @@
       <Platform>ARM</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
   <Import Project="WinObjC.Frameworks.UWP.Packaging.props" />
   <PropertyGroup Label="Globals">
     <OutputPath>$(SolutionDir)\OutputPackages\$(Configuration)\</OutputPath>
@@ -49,12 +55,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="$(MSBuildThisFileDirectory)..\WinObjC.Frameworks.Core\WinObjC.Frameworks.Core.nuproj">
-            <!-- NOTE: this is manually included in the package in the packaging.targets because
-                 of complications in ensuring a stable, time based version nmumber. Instead
-                 we manually use Major.Minor.Patch"-""-" to get latest pre-release dep.  -->
-       <IncludeInPackage>false</IncludeInPackage>
-    </ProjectReference>
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\WinObjC.Frameworks.Core\WinObjC.Frameworks.Core.nuproj"/>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets')" />

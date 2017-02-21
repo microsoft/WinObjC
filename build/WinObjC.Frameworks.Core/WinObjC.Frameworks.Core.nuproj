@@ -33,6 +33,12 @@
     <OutputPath>$(SolutionDir)\OutputPackages\$(Configuration)\</OutputPath>
     <ProjectGuid>1751f526-3ce3-46cb-8724-e250410d600e</ProjectGuid>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
   <ItemGroup>
     <None Include="project.json" />
     <None Include="WinObjC.Frameworks.Core.Packaging.props" />
@@ -50,6 +56,7 @@
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\CFNetwork\dll\CFNetwork.vcxproj" />
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\CoreFoundation\dll\CoreFoundation.vcxproj" />
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\Foundation\dll\Foundation.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\MobileCoreServices\dll\MobileCoreServices.vcxproj" />
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\Starboard\dll\Starboard.vcxproj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />

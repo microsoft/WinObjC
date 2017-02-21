@@ -1,5 +1,6 @@
 ﻿{
   "dependencies": {
+    "NuGet.Build.Packaging": "0.1.186",
     "WinObjC.Language": "0.2.160915-*"
   },
   "frameworks": {

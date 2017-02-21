@@ -61,7 +61,7 @@
     <Target Name="AddSingleConfigBuildOutput"  Returns="@(_PackageContentsForPlat)"> 
       <MSBuild Projects="$(SolutionPath)"
          Targets="GetSolutionConfigurationContents"
-         Properties="Configuration=$(Configuration);Platform=$(Platform)">
+         Properties="Configuration=$(Configuration);Platform=$(PlatformTarget)">
         <Output TaskParameter="TargetOutputs" ItemName="_SolutionConfigurationContents" />
       </MSBuild>
 

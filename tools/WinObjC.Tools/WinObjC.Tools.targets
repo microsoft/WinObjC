@@ -55,7 +55,7 @@
            Text="Cannot determine solution build time. Package version dependencies may be inconsistent as a result. Please make sure to build using .sln file." />
 
     <CreateTimestampFileIfNeeded Condition="'$(SolutionDir)' != ''" 
-                                 TimestampFile="$(SolutionDir)$(PackageId).timestamp">
+                                 TimestampFile="$(SolutionDir)$(SolutionName).timestamp">
         <Output PropertyName="PackageTimestamp" TaskParameter="Timestamp" />  
     </CreateTimestampFileIfNeeded>
 
