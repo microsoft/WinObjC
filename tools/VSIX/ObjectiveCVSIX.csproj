@@ -29,6 +29,7 @@
     </NuGetPackageImportStamp>
     <IncludeOutputsInPackage>false</IncludeOutputsInPackage>
     <IncludeContentInPackage>false</IncludeContentInPackage>
+    <InferLegacyPackageReferences>false</InferLegacyPackageReferences>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -86,6 +87,7 @@
       <VSIXSubPath>BM</VSIXSubPath>
       <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3bPkgdefProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
       <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+      <IncludeInPackage>false</IncludeInPackage>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
