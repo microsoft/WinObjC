@@ -620,3 +620,68 @@ static constexpr CGFloat c_rotations[] = { 0.0, 45.0, -30.0 };
 INSTANTIATE_TEST_CASE_P(TextDrawing,
                         TextDrawingMode,
                         ::testing::Combine(::testing::ValuesIn(c_textDrawingModes), ::testing::ValuesIn(c_rotations)));
+
+class RTLText : public WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>,
+                public ::testing::WithParamInterface<CGFloat> {
+    CFStringRef CreateOutputFilename() {
+        CGFloat degrees = GetParam();
+        return CFStringCreateWithFormat(nullptr, nullptr, CFSTR("TestImage.RTLText.Rotated.%.0f.png"), degrees);
+    }
+};
+
+TEXT_DRAW_TEST_P(RTLText, DrawRTLText) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    // Creates path with current rectangle
+    woc::unique_cf<CGMutablePathRef> path{ CGPathCreateMutable() };
+    CGPathAddRect(path.get(), nullptr, bounds);
+
+    CGAffineTransform textMatrix = CGContextGetTextMatrix(context);
+    CGContextSetTextMatrix(context, CGAffineTransformRotate(textMatrix, GetParam() * M_PI / 180.0));
+    // Create style setting to match given alignment
+    CTParagraphStyleSetting setting[2];
+    CTTextAlignment alignment = kCTRightTextAlignment;
+    setting[0].spec = kCTParagraphStyleSpecifierAlignment;
+    setting[0].valueSize = sizeof(CTTextAlignment);
+    setting[0].value = &alignment;
+    CTWritingDirection writingDirection = kCTWritingDirectionRightToLeft;
+    setting[1].spec = kCTParagraphStyleSpecifierBaseWritingDirection;
+    setting[1].valueSize = sizeof(CTWritingDirection);
+    setting[1].value = &writingDirection;
+
+    woc::unique_cf<CTParagraphStyleRef> paragraphStyle{ CTParagraphStyleCreate(setting, std::extent<decltype(setting)>::value) };
+    woc::unique_cf<CTFontRef> myCFFont{ CTFontCreateWithName(CFSTR("Arial"), 20, nullptr) };
+
+    CFStringRef keys[2] = { kCTFontAttributeName, kCTParagraphStyleAttributeName };
+    CFTypeRef values[2] = { myCFFont.get(), paragraphStyle.get() };
+
+    woc::unique_cf<CFDictionaryRef> dict{ CFDictionaryCreate(nullptr,
+                                                             (const void**)keys,
+                                                             (const void**)values,
+                                                             std::extent<decltype(keys)>::value,
+                                                             &kCFTypeDictionaryKeyCallBacks,
+                                                             &kCFTypeDictionaryValueCallBacks) };
+
+    woc::unique_cf<CFAttributedStringRef> attrString{
+        CFAttributedStringCreate(nullptr,
+                                 CFSTR("אבל אני חייב להסביר לך איך כל הרעיון מוטעה של בגנות הנאה ומשבחי כאב נולד ואני אתן לך את חשבון מלא "
+                                       "של המערכת, להרצות את משנתו בפועל של החוקר הגדול של האמת, הבונה-אדון האדם אושר. אף אחד לא דוחה, לא "
+                                       "אוהב, או נמנע התענוג עצמו, כי זה תענוג, אלא בגלל מי לא יודע איך להמשיך הנאה רציונלי נתקלים התוצאות "
+                                       "כי הם מאוד כואב. גם שוב האם יש מישהו שאוהב או רודף או רצונות לקבל הכאב של עצמה, כי זה כאב, אבל "
+                                       "בגלל לעתים הנסיבות להתרחש בו עמל וכאב יכולים להשיג לו קצת עונג רב. כדי לקחת דוגמה טריוויאלית, מי "
+                                       "מאיתנו לא מתחייבת פעילות גופנית מאומצת, אלא כדי להשיג יתרון כלשהו ממנו? אבל למי יש זכות למצוא דופי "
+                                       "אדם שבוחר ליהנות הנאה שאין לה השלכות מעצבנות, או מי ימנע כאב מייצר שום הנאה כתוצאה?"),
+                                 dict.get())
+    };
+
+    woc::unique_cf<CTFramesetterRef> framesetter{ CTFramesetterCreateWithAttributedString(attrString.get()) };
+
+    // Creates frame for framesetter with current attributed string
+    woc::unique_cf<CTFrameRef> frame{ CTFramesetterCreateFrame(framesetter.get(), CFRangeMake(0, 0), path, NULL) };
+
+    // Draws the text in the frame
+    CTFrameDraw(frame.get(), context);
+}
+
+INSTANTIATE_TEST_CASE_P(RTLTextDrawing, RTLText, ::testing::ValuesIn(c_rotations));

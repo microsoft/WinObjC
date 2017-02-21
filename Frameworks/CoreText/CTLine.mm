@@ -48,7 +48,6 @@ static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef li
     ret->_glyphCount = _glyphCount;
     ret->_runs.attach([_runs copy]);
     ret->_relativeXOffset = _relativeXOffset;
-    ret->_relativeYOffset = _relativeYOffset;
 
     return ret;
 }
@@ -227,13 +226,13 @@ void CTLineDraw(CTLineRef lineRef, CGContextRef ctx) {
 
     _CTLine* line = static_cast<_CTLine*>(lineRef);
     std::vector<GlyphRunData> runs;
-    CGPoint relativePosition = CGPointZero;
+
+    // Translate by the inverse of the relativeXOffset to draw at the text position
+    CGPoint relativePosition = { -line->_relativeXOffset, 0 };
     for (size_t i = 0; i < [line->_runs count]; ++i) {
         _CTRun* curRun = [line->_runs objectAtIndex:i];
-        if (i > 0) {
-            // Adjusts x position relative to the last run drawn
-            relativePosition.x += curRun->_relativeXOffset;
-        }
+        // Adjusts x position relative to the last run drawn
+        relativePosition.x += curRun->_relativeXOffset;
         runs.emplace_back(GlyphRunData{ &curRun->_dwriteGlyphRun, relativePosition, (CFDictionaryRef)curRun->_attributes.get() });
     }
 
@@ -341,22 +340,27 @@ CFIndex CTLineGetStringIndexForPosition(CTLineRef lineRef, CGPoint position) {
         return kCFNotFound;
     }
 
-    CGFloat currPos = 0;
-
+    CGFloat curPos = 0;
     for (_CTRun* run in static_cast<id<NSFastEnumeration>>(line->_runs)) {
+        curPos += run->_relativeXOffset;
+        CGFloat runPos = curPos;
         for (int i = 0; i < run->_dwriteGlyphRun.glyphCount; i++) {
-            currPos += run->_dwriteGlyphRun.glyphAdvances[i];
-            if (currPos >= position.x) {
-                return run->_stringIndices[i];
+            if (run->_dwriteGlyphRun.bidiLevel & 1) {
+                if (runPos <= position.x) {
+                    return run->_stringIndices[i];
+                }
+
+                runPos -= run->_dwriteGlyphRun.glyphAdvances[i];
+            } else {
+                runPos += run->_dwriteGlyphRun.glyphAdvances[i];
+                if (runPos >= position.x) {
+                    return run->_stringIndices[i];
+                }
             }
         }
     }
 
-    if (currPos < position.x) {
-        return line->_strRange.location + line->_strRange.length;
-    }
-
-    return kCFNotFound;
+    return line->_strRange.location + line->_strRange.length;
 }
 
 /**
@@ -375,15 +379,22 @@ CGFloat CTLineGetOffsetForStringIndex(CTLineRef lineRef, CFIndex charIndex, CGFl
                                 run->_stringIndices.begin() - 1;
 
                     if (index >= 0) {
-                        ret = std::accumulate(run->_dwriteGlyphRun.glyphAdvances, run->_dwriteGlyphRun.glyphAdvances + index, ret);
+                        if (run->_dwriteGlyphRun.bidiLevel & 1) {
+                            ret += std::accumulate(run->_dwriteGlyphRun.glyphAdvances,
+                                                   run->_dwriteGlyphRun.glyphAdvances + index,
+                                                   run->_relativeXOffset,
+                                                   std::minus<CGFloat>());
+                        } else {
+                            ret += std::accumulate(run->_dwriteGlyphRun.glyphAdvances,
+                                                   run->_dwriteGlyphRun.glyphAdvances + index,
+                                                   run->_relativeXOffset);
+                        }
                     }
 
                     break;
                 }
 
-                ret = std::accumulate(run->_dwriteGlyphRun.glyphAdvances,
-                                      run->_dwriteGlyphRun.glyphAdvances + run->_dwriteGlyphRun.glyphCount,
-                                      ret);
+                ret += run->_relativeXOffset;
             }
         }
     }
