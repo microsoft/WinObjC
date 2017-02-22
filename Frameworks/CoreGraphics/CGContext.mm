@@ -3026,7 +3026,20 @@ CGContextRef CGBitmapContextCreateWithData(void* data,
     RETURN_NULL_IF(!height);
     RETURN_NULL_IF(!colorSpace);
 
+    size_t imputedBitsPerPixel = _CGImageImputeBitsPerPixelFromFormat(colorSpace, bitsPerComponent, bitmapInfo);
     size_t bitsPerPixel = ((bytesPerRow / width) << 3);
+    size_t estimatedBytesPerRow = (imputedBitsPerPixel >> 3) * width;
+
+    if (data && estimatedBytesPerRow > bytesPerRow) {
+        TraceError(TAG, L"Invalid data stride: a %ux%u %ubpp context requires at least a %u-byte stride (requested: %u bytes/row).", width, height, imputedBitsPerPixel, estimatedBytesPerRow, bytesPerRow);
+        return nullptr;
+    }
+
+    if (!bytesPerRow) { // When data is not provided, we are allowed to use our estimates.
+        bitsPerPixel = imputedBitsPerPixel;
+        bytesPerRow = estimatedBytesPerRow;
+    }
+
     WICPixelFormatGUID requestedPixelFormat;
     RETURN_NULL_IF_FAILED(
         _CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, colorSpace, bitmapInfo, &requestedPixelFormat));
