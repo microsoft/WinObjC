@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26206.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Starboard", "Starboard", "{ADFDC5D9-3048-4E53-A9B7-41731D7AD8CF}"
 EndProject
@@ -786,6 +786,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{CC27F0
 	ProjectSection(SolutionItems) = preProject
 		nuget.config = nuget.config
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WinObjC Frameworks Dependencies Package", "WinObjC Frameworks Dependencies Package", "{4BC1549F-F4C2-42D0-9F77-C323F751EA04}"
+EndProject
+Project("{5DD5E4FA-CB73-4610-85AB-557B54E96AA9}") = "WinObjC.Frameworks.Dependencies", "WinObjC.Frameworks.Dependencies\WinObjC.Frameworks.Dependencies.nuproj", "{DFDF94D9-2A0A-4F9B-953B-6BF383858AD3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -2295,6 +2299,18 @@ Global
 		{2967D06B-1CE1-45D9-B4CC-1E07D2851B6F}.Release|ARM.Build.0 = Release|ARM
 		{2967D06B-1CE1-45D9-B4CC-1E07D2851B6F}.Release|x86.ActiveCfg = Release|x86
 		{2967D06B-1CE1-45D9-B4CC-1E07D2851B6F}.Release|x86.Build.0 = Release|x86
+		{DFDF94D9-2A0A-4F9B-953B-6BF383858AD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFDF94D9-2A0A-4F9B-953B-6BF383858AD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFDF94D9-2A0A-4F9B-953B-6BF383858AD3}.Debug|ARM.ActiveCfg = Debug|ARM
+		{DFDF94D9-2A0A-4F9B-953B-6BF383858AD3}.Debug|ARM.Build.0 = Debug|ARM
+		{DFDF94D9-2A0A-4F9B-953B-6BF383858AD3}.Debug|x86.ActiveCfg = Debug|x86
+		{DFDF94D9-2A0A-4F9B-953B-6BF383858AD3}.Debug|x86.Build.0 = Debug|x86
+		{DFDF94D9-2A0A-4F9B-953B-6BF383858AD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFDF94D9-2A0A-4F9B-953B-6BF383858AD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFDF94D9-2A0A-4F9B-953B-6BF383858AD3}.Release|ARM.ActiveCfg = Release|ARM
+		{DFDF94D9-2A0A-4F9B-953B-6BF383858AD3}.Release|ARM.Build.0 = Release|ARM
+		{DFDF94D9-2A0A-4F9B-953B-6BF383858AD3}.Release|x86.ActiveCfg = Release|x86
+		{DFDF94D9-2A0A-4F9B-953B-6BF383858AD3}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -2656,5 +2672,6 @@ Global
 		{BEF15618-E03F-4A44-A797-9150C979B09F} = {F0F1B2A3-6924-4A09-99CE-D08CD8BCF392}
 		{60A07842-5D75-45E8-9FCF-C126E608B654} = {7B338049-F463-44B0-B7BD-F8EA16750085}
 		{2967D06B-1CE1-45D9-B4CC-1E07D2851B6F} = {7B338049-F463-44B0-B7BD-F8EA16750085}
+		{DFDF94D9-2A0A-4F9B-953B-6BF383858AD3} = {4BC1549F-F4C2-42D0-9F77-C323F751EA04}
 	EndGlobalSection
 EndGlobal

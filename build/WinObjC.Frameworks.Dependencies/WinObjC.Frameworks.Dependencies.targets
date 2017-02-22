@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+      <TargetOsAndVersion Condition="'$(TargetOsAndVersion)' == ''">Universal Windows</TargetOsAndVersion>
+    </PropertyGroup>
+    <!-- Make sure that the output artifacts are included in the build. This means adding include paths and link libraries for it.
+
+         NOTE: It is important that this information is added at the end in the .targets instead of in the .props so that consumers don't
+         accidentally stomp it and get really confused. This is contrary to a configurable type property that a consumer may want / need to adjust. 
+         To depend on this package means the consumer gets these these things.  -->
+
+    <ItemGroup Condition="'$(ConfigurationType)' != 'StaticLibrary'">
+
+      <_LibsFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\*.dll"/>    
+      <_LibsFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.dll"/>
+
+      <_LibsFromPackage Include="$(MSBuildThisFileDirectory)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\*.dll"/>
+      <_LibsFromPackage Include="$(MSBuildThisFileDirectory)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.dll"/>
+
+      <_ImportLibsFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\*.lib"/>    
+      <_ImportLibsFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.lib"/>
+
+      <_ImportLibsFromPackage Include="$(MSBuildThisFileDirectory)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\*.lib"/>    
+      <_ImportLibsFromPackage Include="$(MSBuildThisFileDirectory)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.lib"/>
+
+    </ItemGroup>
+
+    <ItemDefinitionGroup>
+        <ClangCompile>
+          <InternalSystemIncludePaths>$(MSBuildThisFileDirectory)\include\;$(MSBuildThisFileDirectory)\deps\prebuilt\include\;%(InternalSystemIncludePaths);</InternalSystemIncludePaths>
+        </ClangCompile>
+    </ItemDefinitionGroup>
+
+  <!-- TODO: This should use XMLPoke or similar to dynamically figure out where the important bits are packaged to.-->
+  <ItemGroup Condition="'$(ConfigurationType)' != 'StaticLibrary'">
+
+    <ReferenceCopyLocalPaths Include="@(_LibsFromPackage)"/>
+    <Link Include="@(_ImportLibsFromPackage)"/>
+  </ItemGroup>
+</Project>

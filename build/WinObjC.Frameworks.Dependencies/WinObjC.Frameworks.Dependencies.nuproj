@@ -28,23 +28,25 @@
       <Platform>ARM</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <Import Project="WinObjC.Frameworks.Core.Packaging.props" />
-  <PropertyGroup Label="Globals">
-    <OutputPath>$(SolutionDir)\OutputPackages\$(Configuration)\</OutputPath>
-    <ProjectGuid>1751f526-3ce3-46cb-8724-e250410d600e</ProjectGuid>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
+  <Import Project="WinObjC.Frameworks.Dependencies.Packaging.props" />
+  <PropertyGroup Label="Globals">
+    <OutputPath>$(SolutionDir)\OutputPackages\$(Configuration)\</OutputPath>
+    <ProjectGuid>DFDF94D9-2A0A-4F9B-953B-6BF383858AD3</ProjectGuid>
+    <InferLegacyPackageReferences>false</InferLegacyPackageReferences>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\</StarboardBasePath>
+  </PropertyGroup>
   <ItemGroup>
     <None Include="project.json" />
-    <None Include="WinObjC.Frameworks.Core.Packaging.props" />
-    <None Include="WinObjC.Frameworks.Core.Packaging.targets" />
-    <None Include="WinObjC.Frameworks.Core.props" />
-    <None Include="WinObjC.Frameworks.Core.targets" />
+    <None Include="WinObjC.Frameworks.Dependencies.Packaging.props" />
+    <None Include="WinObjC.Frameworks.Dependencies.Packaging.targets" />
+    <None Include="WinObjC.Frameworks.Dependencies.props" />
+    <None Include="WinObjC.Frameworks.Dependencies.targets" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt">
@@ -52,15 +54,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="$(MSBuildThisFileDirectory)..\CFNetwork\dll\CFNetwork.vcxproj" />
-    <ProjectReference Include="$(MSBuildThisFileDirectory)..\CoreFoundation\dll\CoreFoundation.vcxproj" />
-    <ProjectReference Include="$(MSBuildThisFileDirectory)..\Foundation\dll\Foundation.vcxproj" />
-    <ProjectReference Include="$(MSBuildThisFileDirectory)..\MobileCoreServices\dll\MobileCoreServices.vcxproj" />
-    <ProjectReference Include="$(MSBuildThisFileDirectory)..\Starboard\dll\Starboard.vcxproj" />
-    <ProjectReference Include="..\WinObjC.Frameworks.Dependencies\WinObjC.Frameworks.Dependencies.nuproj" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets')" />
-  <Import Project="WinObjC.Frameworks.Core.Packaging.targets" />
+  <Import Project="WinObjC.Frameworks.Dependencies.Packaging.targets" />
 </Project>
