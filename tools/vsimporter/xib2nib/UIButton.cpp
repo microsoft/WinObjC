@@ -235,15 +235,7 @@ void UIButton::InitFromXIB(XIBObject* obj) {
     if (!_font)
         _font = (UIFont*)obj->FindMember("IBUIFont");
 
-    switch (_buttonType) {
-        case 1:
-            obj->_outputClassName = "UIRoundedRectButton";
-            break;
-
-        default:
-            obj->_outputClassName = "UIButton";
-            break;
-    }
+    obj->_outputClassName = "UIButton";
 }
 
 void UIButton::InitFromStory(XIBObject* obj) {
@@ -253,6 +245,7 @@ void UIButton::InitFromStory(XIBObject* obj) {
     if (type) {
         if (strcmp(type, "roundedRect") == 0) {
             getAttrAndHandle("buttonType");
+             // TODO: Investigate why this value deviates from UIButtonType
             _buttonType = 1;
         } else {
             printf("Unknown button type <%s>\n", type);
@@ -260,15 +253,7 @@ void UIButton::InitFromStory(XIBObject* obj) {
         }
     }
 
-    switch (_buttonType) {
-        case 1:
-            obj->_outputClassName = "UIRoundedRectButton";
-            break;
-
-        default:
-            obj->_outputClassName = "UIButton";
-            break;
-    }
+    obj->_outputClassName = "UIButton";
 }
 
 void UIButton::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
