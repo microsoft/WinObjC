@@ -317,7 +317,7 @@ UIView* XamlUtilities::GenerateUIKitControlFromXamlType(const winrt::Windows::II
 
         if (SUCCEEDED(winrt::get(xamlObject)->QueryInterface(xamlControl.first, reinterpret_cast<void**>(winrt::put(xamlElement))))) {
             Class controlClass = xamlControl.second;
-            control = [[controlClass alloc] initWithFrame:CGRectZero xamlElement:xamlElement];
+            control = [[controlClass alloc] initWithFrame:CGRectZero xamlElement:objcwinrt::to_rtobj(xamlElement)];
             break;
         }
     }

@@ -72,7 +72,7 @@ using namespace Microsoft::WRL;
         _mediaElement = Controls::MediaElement();
         _mediaElement.AutoPlay(false);
         _mediaElement.Volume(1.0f);
-        _hiddenView = [[_UIHiddenMediaView alloc] initWithFrame:{ 0, 0, 0, 0 } xamlElement:_mediaElement];
+        _hiddenView = [[_UIHiddenMediaView alloc] initWithFrame:{ 0, 0, 0, 0 } xamlElement:objcwinrt::to_rtobj(_mediaElement)];
 
         _lastState = _mediaElement.CurrentState();
 

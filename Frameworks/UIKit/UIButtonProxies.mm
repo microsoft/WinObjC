@@ -21,22 +21,6 @@
 #import <Foundation/NSString.h>
 #include "CppWinRTHelpers.h"
 
-// TOOD: Bug 8706843:Constructor or Helper to create FontFamily isn't projected - thus no way to create a FontFamily from Objective C side.
-// remove this once 8706843 is resolved
-#ifdef __OBJC__
-#pragma push_macro("interface")
-#ifndef interface
-#define interface struct
-#endif
-#pragma push_macro("Nil")
-#undef Nil
-#endif
-#include <UWP/RTHelpers.h>
-#ifdef __OBJC__
-#pragma pop_macro("Nil")
-#pragma pop_macro("interface")
-#endif
-
 #import <CoreGraphics/CGContext.h>
 #import <UIKit/UIView.h>
 #import <UIKit/UIFont.h>

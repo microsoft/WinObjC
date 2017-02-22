@@ -24,12 +24,14 @@
 
 #import <Foundation/NSString.h>
 
+#import "UIViewInternal.h"
 #import "UIFontInternal.h"
 #import "UILabelInternal.h"
 #import "CGContextInternal.h"
 #import "StarboardXaml/DisplayProperties.h"
 #import "XamlControls.h"
 #import "XamlUtilities.h"
+#import "CppWinRTHelpers.h"
 
 <<<<<<< 17c9442ca7373bbb57c3f561cd59160aa9296832
 static const wchar_t* TAG = L"UILabel";
@@ -189,10 +191,14 @@ using namespace winrt::Windows::UI::Xaml;
     // it will expose its backing TextBlock.  For now, we'll have to
     // know that it's truly backed by a Grid and we must reach down
     // to retrieve its TextBlock.
-    auto labelGrid = [self xamlElement].try_as<Controls::Grid>();
+    auto labelGrid = [self _xamlElementInternal].try_as<Controls::Grid>();
     Controls::TextBlock textBlock = nullptr;
     if (labelGrid) {
         textBlock = XamlControls::GetLabelTextBlock(labelGrid);
+    } else {
+        // If we didn't get a UIKit.Label, that's ok - as long as
+        // we've received a TextBlock directly.
+        textBlock = [self _xamlElementInternal].try_as<Controls::TextBlock>();
     }
 
     if (!textBlock) {
@@ -262,7 +268,7 @@ using namespace winrt::Windows::UI::Xaml;
 /**
  Microsoft Extension
 */
-- (instancetype)initWithFrame:(CGRect)frame xamlElement:(const FrameworkElement&)xamlElement {
+- (instancetype)initWithFrame:(CGRect)frame xamlElement:(RTObject*)xamlElement {
     if (self = [super initWithFrame:frame xamlElement:xamlElement]) {
         [self _initUILabel];
         [self _applyPropertesOnTextBlock];
@@ -274,8 +280,8 @@ using namespace winrt::Windows::UI::Xaml;
 /**
  Microsoft Extension
 */
-+ (FrameworkElement)createXamlElement {
-    return XamlControls::CreateLabel();
++ (RTObject*)createXamlElement {
+    return objcwinrt::to_rtobj(XamlControls::CreateLabel());
 }
 
 /**

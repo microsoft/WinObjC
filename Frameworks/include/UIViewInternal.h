@@ -31,6 +31,8 @@
 
 #include "COMIncludes.h"
 #import <winrt/Windows.Foundation.h>
+#import <winrt/Windows.UI.Xaml.h>
+#import <winrt/Windows.UI.Xaml.Input.h>
 #include "COMIncludes_End.h"
 
 @class UIWindow;
@@ -149,6 +151,10 @@ public:
 - (void)__setContentsImage:(id)image;
 - (UIWindow*)_getWindowInternal;
 - (BOOL)_isEnabled;
+
+#ifdef __cplusplus
+- (winrt::Windows::UI::Xaml::FrameworkElement)_xamlElementInternal;
+#endif
 
 @end
 

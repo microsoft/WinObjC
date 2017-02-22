@@ -378,20 +378,12 @@ UIKIT_EXPORT_CLASS
 @property (copy) NSString* accessibilityIdentifier;
 @end
 
-#ifdef __cplusplus
-
-#include "COMIncludes.h"
-#import <winrt/Windows.UI.Xaml.h>
-#include "COMIncludes_End.h"
-
 // WinObjC Xaml Extensions
 @interface UIView (UIKitXamlExtensions)
-+ (winrt::Windows::UI::Xaml::FrameworkElement)createXamlElement;
-@property (nonatomic, readonly) winrt::Windows::UI::Xaml::FrameworkElement xamlElement;
-- (instancetype)initWithFrame:(CGRect)frame xamlElement:(const winrt::Windows::UI::Xaml::FrameworkElement&)xamlElement;
++ (RTObject*)createXamlElement;
+@property (nonatomic, readonly, strong) RTObject* xamlElement;
+- (instancetype)initWithFrame:(CGRect)frame xamlElement:(RTObject*)xamlElement;
 @end
-
-#endif
 
 @interface UIView (StarboardActions)
 - (void)setBackButtonDelegate:(id)delegate action:(SEL)action withParam:(id)param;

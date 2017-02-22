@@ -28,6 +28,7 @@
 #include "UIKit/UIColor.h"
 #include "UIViewInternal.h"
 #include "StringHelpers.h"
+#include "CppWinRTHelpers.h"
 
 #include "UIKit/UIWebView.h"
 
@@ -42,7 +43,7 @@
 
 using namespace winrt::Windows::UI::Xaml;
 using namespace winrt::Windows::Web;
-using namespace winrt::Windows::Foundation;
+namespace WF = winrt::Windows::Foundation;
 
 @interface UIWebView ()
 @property (nonatomic, getter=isLoading) BOOL loading;
@@ -103,19 +104,13 @@ using namespace winrt::Windows::Foundation;
     NSURL* url = [request URL];
     NSString* urlStr = [url absoluteString];
 
-    // TODO: Avoid duplicating strings
-    auto methodHstr = Strings::NarrowToWide<HSTRING>(request.HTTPMethod);
-    auto urlHstr = Strings::NarrowToWide<HSTRING>(urlStr);
-    Http::HttpMethod method = winrt::hstring_ref(methodHstr.Get());
-    Uri uri = winrt::hstring_ref(urlHstr.Get());
+    Http::HttpMethod method = winrt::hstring_ref(objcwinrt::string(request.HTTPMethod));
+    WF::Uri uri = winrt::hstring_ref(objcwinrt::string(urlStr));
 
     Http::HttpRequestMessage msg(method, uri);
 
     [request.allHTTPHeaderFields enumerateKeysAndObjectsUsingBlock:^(NSString* field, NSString* value, BOOL* stop) {
-        auto fieldHstr = Strings::NarrowToWide<HSTRING>(field);
-        auto valueHstr = Strings::NarrowToWide<HSTRING>(value);
-
-        msg.Headers().Append(winrt::hstring_ref(fieldHstr.Get()), winrt::hstring_ref(valueHstr.Get()));
+        msg.Headers().Append(objcwinrt::string(field), objcwinrt::string(value));
     }];
 
     _isLoading = true;
@@ -127,7 +122,7 @@ using namespace winrt::Windows::Foundation;
 
 static void _initUIWebView(UIWebView* self) {
     // Store a strongly-typed backing scrollviewer
-    self->_xamlWebControl = [self xamlElement].try_as<Controls::WebView>();
+    self->_xamlWebControl = [self _xamlElementInternal].try_as<Controls::WebView>();
     if (!self->_xamlWebControl) {
         FAIL_FAST();
     }
@@ -217,7 +212,7 @@ static void _initUIWebView(UIWebView* self) {
 /**
  Microsoft Extension
 */
-- (instancetype)initWithFrame:(CGRect)frame xamlElement:(const FrameworkElement&)xamlElement {
+- (instancetype)initWithFrame:(CGRect)frame xamlElement:(RTObject*)xamlElement {
     if (self = [super initWithFrame:frame xamlElement:xamlElement]) {
         RunSynchronouslyOnMainThread(^{
             _initUIWebView(self);
@@ -230,8 +225,9 @@ static void _initUIWebView(UIWebView* self) {
 /**
  Microsoft Extension
 */
-+ (FrameworkElement)createXamlElement {
-    return Controls::WebView();
++ (RTObject*)createXamlElement {
+    Controls::WebView webView;
+    return objcwinrt::to_rtobj(webView);
 }
 
 /**

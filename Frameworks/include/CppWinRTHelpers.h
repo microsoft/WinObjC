@@ -19,8 +19,24 @@
 #import <Foundation/Foundation.h>
 #import "StringHelpers.h"
 
+// TODO: Make RTHelpers.h includable from Objective-C++ without these gymnastics
+#ifdef __OBJC__
+#pragma push_macro("interface")
+#ifndef interface
+#define interface struct
+#endif
+#pragma push_macro("Nil")
+#undef Nil
+#endif
+#include <UWP/RTHelpers.h>
+#ifdef __OBJC__
+#pragma pop_macro("Nil")
+#pragma pop_macro("interface")
+#endif
+
 #include "COMIncludes.h"
 #import <winrt/Windows.Foundation.h>
+#import <winrt/Windows.UI.Xaml.Controls.h>
 #import <wrl/client.h>
 #include "COMIncludes_End.h"
 
@@ -59,6 +75,20 @@ T from_insp(IInspectable* insp) {
 template <typename T>
 T from_insp(const Microsoft::WRL::ComPtr<IInspectable>& insp) {
     return from_insp<T>(insp.Get());
+}
+
+//
+// Convert to and from RTObject
+//
+
+template <typename T>
+RTObject* to_rtobj(const T& t) {
+    return _createBareRTObj(to_insp(t));
+}
+
+template <typename T>
+T from_rtobj(RTObject* obj) {
+    return from_insp<T>([obj comObj]);
 }
 
 

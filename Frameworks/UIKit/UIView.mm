@@ -57,6 +57,7 @@
 #import "_UIDirectManipulationRecognizer.h"
 #import "_UIGestureCoordinator.h"
 #import "StringHelpers.h"
+#import "CppWinRTHelpers.h"
 
 #import <QuartzCore/CABasicAnimation.h>
 #import <QuartzCore/CALayer.h>
@@ -519,9 +520,7 @@ static std::string _printViewhierarchy(UIView* leafView) {
     self.layer._xamlElement.IsHitTestVisible(isHitTestable);
 }
 
-- (void)_initPrivWithFrame:(CGRect)frame xamlElement:(const FrameworkElement&)xamlElement {
-    FrameworkElement element = xamlElement;
-
+- (void)_initPrivWithFrame:(CGRect)frame xamlElement:(RTObject*)xamlElement {
     // Nothing to do if we're already initialized
     if (self->priv) {
         return;
@@ -539,16 +538,17 @@ static std::string _printViewhierarchy(UIView* leafView) {
     viewCount++;
 
     // If we don't have a backing xamlElement, create one for this UIView type
-    if (!element) {
-        element = [[self class] createXamlElement];
+    if (xamlElement == nil) {
+        xamlElement = [[self class] createXamlElement];
     }
 
     // Create and initialize our backing presentation layer
-    if (!element) {
+    if (xamlElement == nil) {
         // No Xaml element was specified, so default layer init is fine
         self->layer.attach([[[[self class] layerClass] alloc] init]);
     } else {
         // A Xaml element was specified, so we must initialize the layer with this backing xaml element
+        FrameworkElement element = objcwinrt::from_rtobj<FrameworkElement>(xamlElement);
         self->layer.attach([[[[self class] layerClass] alloc] _initWithXamlElement:element]);
     }
 
@@ -650,7 +650,7 @@ static std::string _printViewhierarchy(UIView* leafView) {
 /**
  Microsoft extension
 */
-- (instancetype)initWithFrame:(CGRect)frame xamlElement:(const FrameworkElement&)xamlElement {
+- (instancetype)initWithFrame:(CGRect)frame xamlElement:(RTObject*)xamlElement {
     // Run on the main thread because the underlying XAML objects can only be
     // called from the UI thread
     RunSynchronouslyOnMainThread(^{
@@ -692,7 +692,7 @@ static std::string _printViewhierarchy(UIView* leafView) {
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
     // Init priv, get our backing Xaml element, etc.
-    [self _initPrivWithFrame:CGRectZero xamlElement:nullptr];
+    [self _initPrivWithFrame:CGRectZero xamlElement:nil];
 
     CGRect bounds;
     id boundsObj = [coder decodeObjectForKey:@"UIBounds"];
@@ -3457,32 +3457,37 @@ static void adjustSubviews(UIView* self, CGSize parentSize, CGSize delta) {
     return [viewScreenShot autorelease];
 }
 
-/**
- Microsoft Extension
- Retrieves the XAML FrameworkElement backing this UIView.
-*/
-- (FrameworkElement)xamlElement {
+- (FrameworkElement)_xamlElementInternal {
     return self.layer._xamlElement;
 }
 
 /**
  Microsoft Extension
+ Retrieves the XAML FrameworkElement backing this UIView.
 */
-+ (FrameworkElement)createXamlElement {
+- (RTObject*)xamlElement {
+    return objcwinrt::to_rtobj([self _xamlElementInternal]);
+}
+
+/**
+ Microsoft Extension
+*/
++ (RTObject*)createXamlElement {
     // Use CALayer's default backing Xaml element
-    return nullptr;
+    return nil;
 }
 
 // Retrieve the backing XAML element's Automation Id
 - (NSString*)accessibilityIdentifier {
-    auto identifier = Automation::AutomationProperties::GetAutomationId([self xamlElement]);
-    return [NSString _stringWithHSTRING:winrt::get(identifier)];
+    auto identifier = Automation::AutomationProperties::GetAutomationId([self _xamlElementInternal]);
+    return objcwinrt::string(identifier);
 }
 
 // Set the backing XAML element's Automation Id
 - (void)setAccessibilityIdentifier:(NSString*)accessibilityId {
-    auto identifier = Strings::NarrowToWide<HSTRING>(accessibilityId);
-    Automation::AutomationProperties::SetAutomationId([self xamlElement], winrt::hstring_ref(identifier.Get()));
+    Automation::AutomationProperties::SetAutomationId(
+        [self _xamlElementInternal],
+        objcwinrt::string(accessibilityId));
 }
 
 /**

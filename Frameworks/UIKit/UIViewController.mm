@@ -68,6 +68,7 @@
 #import "UIStoryboardInternal.h"
 #import "UIResponderInternal.h"
 #import "NSCoderInternal.h"
+#import "CppWinRTHelpers.h"
 
 #include "COMIncludes.h"
 #import <winrt/Windows.UI.Xaml.h>
@@ -1842,7 +1843,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
         winrt::attach(priv->_page, pageAbi);
     }
 
-    UIView* view = [[[UIEmptyView alloc] initWithFrame:frame xamlElement:priv->_page] autorelease];
+    UIView* view = [[[UIEmptyView alloc] initWithFrame:frame xamlElement:objcwinrt::to_rtobj(priv->_page)] autorelease];
     [view setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
     [self setView:view];
 

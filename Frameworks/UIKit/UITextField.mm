@@ -1056,10 +1056,10 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
     return self;
 }
 
-- (id)initWithFrame:(CGRect)frame xamlElement:(const FrameworkElement&)xamlElement {
+- (id)initWithFrame:(CGRect)frame xamlElement:(RTObject*)xamlElement {
     // TODO: We're passing nullptr to initWithFrame:xamlElement: because we have to *contain* either a TextBox or a PasswordBox.
     // Note: Pass 'xamlElement' instead, once we move to a *single* backing Xaml element for UITextField.
-    if (self = [super initWithFrame:frame xamlElement:nullptr]) {
+    if (self = [super initWithFrame:frame xamlElement:nil]) {
         // move to top so that setting properties below can happen on xamlElement
         [self _initUITextField:xamlElement];
 
@@ -1347,9 +1347,9 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
 }
 
 // Helper to initialize textbox
-- (void)_initTextBox:(const FrameworkElement&)xamlElement {
-    if (xamlElement) {
-        _textBox = xamlElement.try_as<Controls::TextBox>();
+- (void)_initTextBox:(RTObject*)xamlElement {
+    if (xamlElement != nil) {
+        _textBox = objcwinrt::from_rtobj<Controls::TextBox>(xamlElement);
     }
 
     if (!_textBox) {
@@ -1360,7 +1360,7 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
     [_subView removeFromSuperview];
 
     // Create a new view for the xaml element and add it as a subview of ourselves
-    _subView = [[UIView alloc] initWithFrame:self.bounds xamlElement:_textBox];
+    _subView = [[UIView alloc] initWithFrame:self.bounds xamlElement:objcwinrt::to_rtobj(_textBox)];
     [_subView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
     [self addSubview:_subView];
 
@@ -1428,7 +1428,7 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
 }
 
 // Helper to Initialize passwordBox
-- (void)_initPasswordBox:(const FrameworkElement&)xamlElement {
+- (void)_initPasswordBox:(RTObject*)xamlElement {
     _passwordBox = Controls::PasswordBox();
 
     // set up focus and keydown handlers
@@ -1440,7 +1440,7 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
     [_subView removeFromSuperview];
 
     // Create a new view for the xaml element and add it as a subview of ourselves
-    _subView = [[UIView alloc] initWithFrame:self.bounds xamlElement:_passwordBox];
+    _subView = [[UIView alloc] initWithFrame:self.bounds xamlElement:objcwinrt::to_rtobj(_passwordBox)];
     [_subView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
     [self addSubview:_subView];
 
@@ -1507,7 +1507,7 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
 }
 
 // Main entrance to initialize TextField
-- (void)_initUITextField:(const FrameworkElement&)xamlElement {
+- (void)_initUITextField:(RTObject*)xamlElement {
     self->_secureModeLock = [NSRecursiveLock new];
 
     // creating dummy button and hidden view so that it can be used to steal/kill the focus for this UITextField
@@ -1516,11 +1516,11 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
     self->_dummyButton.IsEnabled(true);
     self->_dummyButton.IsTabStop(true);
 
-    _hiddenView = [[_UIHiddenButtonView alloc] initWithFrame:CGRectZero xamlElement:_dummyButton];
+    _hiddenView = [[_UIHiddenButtonView alloc] initWithFrame:CGRectZero xamlElement:objcwinrt::to_rtobj(_dummyButton)];
     [self addSubview:_hiddenView];
 
     if (self->_secureTextMode) {
-        [self _initPasswordBox:nullptr];
+        [self _initPasswordBox:nil];
     } else {
         [self _initTextBox:xamlElement];
     }

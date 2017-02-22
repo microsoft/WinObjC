@@ -189,7 +189,7 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
 
 - (void)_initUIButton {
     // Store a strongly-typed backing button
-    _xamlButton = [self xamlElement].try_as<Controls::Button>();
+    _xamlButton = [self _xamlElementInternal].try_as<Controls::Button>();
     if (!_xamlButton) {
         FAIL_FAST();
     }
@@ -285,7 +285,7 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
 /**
 Microsoft Extension
 */
-- (instancetype)initWithFrame:(CGRect)frame xamlElement:(const FrameworkElement&)xamlElement {
+- (instancetype)initWithFrame:(CGRect)frame xamlElement:(RTObject*)xamlElement {
     if (self = [super initWithFrame:frame xamlElement:xamlElement]) {
         [self _initUIButton];
         self.font = [UIFont buttonFont];
@@ -297,9 +297,8 @@ Microsoft Extension
 /**
  Microsoft Extension
 */
-+ (FrameworkElement)createXamlElement {
-    // No autorelease needed because CreateButton is autoreleased
-    return XamlControls::CreateButton();
++ (RTObject*)createXamlElement {
+    return objcwinrt::to_rtobj(XamlControls::CreateButton());
 }
 
 /**

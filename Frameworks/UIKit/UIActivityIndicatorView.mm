@@ -23,6 +23,7 @@
 #import <UIKit/UIColor.h>
 
 #import "XamlUtilities.h"
+#import "CppWinRTHelpers.h"
 
 #include "COMIncludes.h"
 #import <winrt/Windows.UI.Xaml.Controls.h>
@@ -62,7 +63,7 @@ struct ProgressRing : Controls::ProgressRing {
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super initWithCoder:coder]) {
-        [self _initUIActivityIndicatorView:nullptr];
+        [self _initUIActivityIndicatorView:nil];
 
         if ([coder containsValueForKey:@"UIHidesWhenStopped"]) {
             [self setHidesWhenStopped:[coder decodeInt32ForKey:@"UIHidesWhenStopped"]];
@@ -115,7 +116,7 @@ struct ProgressRing : Controls::ProgressRing {
 */
 - (instancetype)initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyle)style {
     if (self = [super initWithFrame:CGRectZero]) {
-        [self _initUIActivityIndicatorView:nullptr];
+        [self _initUIActivityIndicatorView:nil];
         [self setActivityIndicatorViewStyle:style];
     }
 
@@ -127,7 +128,7 @@ struct ProgressRing : Controls::ProgressRing {
 */
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        [self _initUIActivityIndicatorView:nullptr];
+        [self _initUIActivityIndicatorView:nil];
     }
 
     return self;
@@ -136,7 +137,7 @@ struct ProgressRing : Controls::ProgressRing {
 /**
  Microsoft Extension
 */
-- (instancetype)initWithFrame:(CGRect)frame xamlElement:(const FrameworkElement&)xamlElement {
+- (instancetype)initWithFrame:(CGRect)frame xamlElement:(RTObject*)xamlElement {
     // TODO: We're passing nil to initWithFrame:xamlElement: because we have to *contain* a _subview for padding/layout.
     // Note: Pass 'xamlElement' instead, once we move to a *single* backing Xaml element for UIActivityIndicatorView.
     if (self = [super initWithFrame:frame xamlElement:nil]) {
@@ -155,9 +156,9 @@ struct ProgressRing : Controls::ProgressRing {
     _subView.center = { self.center.x - self.frame.origin.x, self.center.y - self.frame.origin.y };
 }
 
-- (void)_initUIActivityIndicatorView:(const FrameworkElement&)xamlElement {
-    if (xamlElement) {
-        _progressRing = xamlElement.try_as<Controls::ProgressRing>();
+- (void)_initUIActivityIndicatorView:(RTObject*)xamlElement {
+    if (xamlElement != nil) {
+        _progressRing = objcwinrt::from_rtobj<Controls::ProgressRing>(xamlElement);
     }
 
     if (!_progressRing) {

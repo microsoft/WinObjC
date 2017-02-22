@@ -25,7 +25,9 @@
 #import <UIKit/UIGestureRecognizer.h>
 #import <UIKit/UISlider.h>
 
+#import "UIViewInternal.h"
 #import "UIGestureRecognizerInternal.h"
+#import "CppWinRTHelpers.h"
 
 #include "COMIncludes.h"
 #import <winrt/Windows.UI.Xaml.Controls.h>
@@ -47,7 +49,7 @@ static const double c_defaultStepFrequency = 0.1;
 
 - (void)_initUISlider {
     // Store a strongly-typed backing slider
-    _xamlSlider = [self xamlElement].try_as<Controls::Slider>();
+    _xamlSlider = [self _xamlElementInternal].try_as<Controls::Slider>();
     if (!_xamlSlider) {
         FAIL_FAST();
     }
@@ -117,7 +119,7 @@ static const double c_defaultStepFrequency = 0.1;
 /**
  Microsoft Extension
 */
-- (instancetype)initWithFrame:(CGRect)frame xamlElement:(const FrameworkElement&)xamlElement {
+- (instancetype)initWithFrame:(CGRect)frame xamlElement:(RTObject*)xamlElement {
     if (self = [super initWithFrame:frame xamlElement:xamlElement]) {
         [self _initUISlider];
     }
@@ -128,8 +130,8 @@ static const double c_defaultStepFrequency = 0.1;
 /**
  Microsoft Extension
 */
-+ (FrameworkElement)createXamlElement {
-    return Controls::Slider();
++ (RTObject*)createXamlElement {
+    return objcwinrt::to_rtobj(Controls::Slider());
 }
 
 /**
