@@ -345,7 +345,7 @@ CFIndex CTLineGetStringIndexForPosition(CTLineRef lineRef, CGPoint position) {
         curPos += run->_relativeXOffset;
         CGFloat runPos = curPos;
         for (int i = 0; i < run->_dwriteGlyphRun.glyphCount; i++) {
-            if (run->_dwriteGlyphRun.bidiLevel & 1) {
+            if (_GlyphRunIsRTL(run->_dwriteGlyphRun)) {
                 if (runPos <= position.x) {
                     return run->_stringIndices[i];
                 }
@@ -379,7 +379,7 @@ CGFloat CTLineGetOffsetForStringIndex(CTLineRef lineRef, CFIndex charIndex, CGFl
                                 run->_stringIndices.begin() - 1;
 
                     if (index >= 0) {
-                        if (run->_dwriteGlyphRun.bidiLevel & 1) {
+                        if (_GlyphRunIsRTL(run->_dwriteGlyphRun)) {
                             ret += std::accumulate(run->_dwriteGlyphRun.glyphAdvances,
                                                    run->_dwriteGlyphRun.glyphAdvances + index,
                                                    run->_relativeXOffset,

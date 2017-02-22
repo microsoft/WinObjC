@@ -2089,7 +2089,7 @@ HRESULT __CGContext::DrawGlyphRuns(GlyphRunData* glyphRuns, size_t runsCount, bo
             // First glyph's origin is at the given relative position for the glyph run
             CGPoint runningPosition{ glyphRuns[i].relativePosition.x, std::round(glyphRuns[i].relativePosition.y) };
             for (size_t j = 0; j < run->glyphCount; ++j) {
-                if (run->bidiLevel & 1) {
+                if (_GlyphRunIsRTL(*run)) {
                     // Translate position of glyph by advance
                     // Need to translate each glyph by its own advance because it's RTL
                     runningPosition.x -= run->glyphAdvances[j];
@@ -2103,13 +2103,13 @@ HRESULT __CGContext::DrawGlyphRuns(GlyphRunData* glyphRuns, size_t runsCount, bo
                 positions[j] = DWRITE_GLYPH_OFFSET{ transformedPosition.x + run->glyphOffsets[j].advanceOffset,
                                                     std::round(transformedPosition.y + run->glyphOffsets[j].ascenderOffset) };
 
-                if ((run->bidiLevel & 1) == 0) {
+                if (!_GlyphRunIsRTL(*run)) {
                     // Translate position of next glyph by current glyph's advance
                     runningPosition.x += run->glyphAdvances[j];
                 }
             }
 
-            // Even if text is RTL set bidiLevel to 0 to draw in correct orientation for proper transformation by glyph
+            // Already compensated for RTL glyph positions, so set bidiLevel to 0
             auto transformedGlyphRun = std::make_shared<DWRITE_GLYPH_RUN>(DWRITE_GLYPH_RUN{ run->fontFace,
                                                                                             run->fontEmSize,
                                                                                             run->glyphCount,
@@ -2137,7 +2137,7 @@ HRESULT __CGContext::DrawGlyphRuns(GlyphRunData* glyphRuns, size_t runsCount, bo
                                                                        runData.run->glyphOffsets,
                                                                        runData.run->glyphCount,
                                                                        runData.run->isSideways,
-                                                                       ((runData.run->bidiLevel & 1) == 1),
+                                                                       _GlyphRunIsRTL(*(runData.run)),
                                                                        sink.Get()));
         }
         RETURN_IF_FAILED(sink->Close());

@@ -82,3 +82,4 @@ inline uint32_t _CTToDWriteFontTableTag(uint32_t tag) {
     // CT has the opposite byte order of DWrite, so we need 'BASE' -> 'ESAB'
     return ((tag & 0xff) << 24) | ((tag & 0xff00) << 8) | ((tag & 0xff0000) >> 8) | ((tag & 0xff000000) >> 24);
 }
+

@@ -20,6 +20,7 @@
 
 #import "DWriteWrapper_CoreText.h"
 #import "CoreTextInternal.h"
+#import "CGContextInternal.h"
 
 #import <LoggingNative.h>
 #import <StringHelpers.h>
@@ -505,19 +506,19 @@ static _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CG
         if ([runs count] > 0) {
             prevYPosForDraw = yPos;
             line->_runs = runs;
-            line->_strRange.location = static_cast<_CTRun*>(line->_runs[0])->_range.location;
+            _CTRun* firstRun = static_cast<_CTRun*>(runs[0]);
+            line->_strRange.location = firstRun->_range.location;
             line->_strRange.length = stringRange;
             line->_glyphCount = glyphCount;
-            line->_relativeXOffset = static_cast<_CTRun*>(line->_runs[0])->_relativeXOffset;
-            if (static_cast<_CTRun*>([line->_runs objectAtIndex:0])->_dwriteGlyphRun.bidiLevel & 1) {
+            line->_relativeXOffset = firstRun->_relativeXOffset;
+            if (_GlyphRunIsRTL(firstRun->_dwriteGlyphRun)) {
                 // First run is RTL so line's offset is position isn't the same
                 line->_relativeXOffset -= line->_width;
             }
 
             CGPoint lineOrigin = CGPointZero;
-            if (static_cast<_CTRun*>([line->_runs objectAtIndex:0])->_dwriteGlyphRun.glyphCount != 0) {
-                lineOrigin = { static_cast<_CTRun*>(line->_runs[0])->_glyphOrigins[0].x,
-                               static_cast<_CTRun*>(line->_runs[0])->_glyphOrigins[0].y };
+            if (firstRun->_dwriteGlyphRun.glyphCount != 0) {
+                lineOrigin = { firstRun->_glyphOrigins[0].x, firstRun->_glyphOrigins[0].y };
             }
 
             [frame->_lines addObject:line];
