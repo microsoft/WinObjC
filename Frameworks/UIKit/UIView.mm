@@ -265,7 +265,12 @@ static std::string _printViewhierarchy(UIView* leafView) {
     }
 
     // Get the point value in this view's parent UIWindow's coordinates
-    auto pointerPoint = pointerEventArgs.GetCurrentPoint(owningWindow ? owningWindow.layer._xamlElement : nullptr);
+    UIElement owningWindowElement = nullptr;
+    if (owningWindow != nil) {
+        owningWindowElement = owningWindow.layer._xamlElement;
+    }
+
+    auto pointerPoint = pointerEventArgs.GetCurrentPoint(owningWindowElement);
 
     // Locate the static TouchPoint object for this pointerId
     TouchPoint& touchPoint = _touchPointFromPointerId(pointerPoint.PointerId());
@@ -567,7 +572,7 @@ static std::string _printViewhierarchy(UIView* leafView) {
 
     // Subscribe to the XAML node's input events
     self->priv->_pointerPressedEventRegistration =
-        self.layer._xamlElement.PointerPressed([&self] (auto&& sender, auto&& e) {
+        self.layer._xamlElement.PointerPressed([self] (auto&& sender, auto&& e) {
             // Capture the pointer within this xaml element
             if (!self.layer._xamlElement.CapturePointer(e.Pointer())) {
                 TraceWarning(TAG, L"Failed to capture pointer...");
@@ -579,14 +584,14 @@ static std::string _printViewhierarchy(UIView* leafView) {
         });
 
     self->priv->_pointerMovedEventRegistration =
-        self.layer._xamlElement.PointerMoved([&self] (auto&& sender, auto&& e) {
+        self.layer._xamlElement.PointerMoved([self] (auto&& sender, auto&& e) {
             // Set the event to handled, then process it as a UITouch
             e.Handled(true);
             [self _processPointerEvent:e forTouchPhase:UITouchPhaseMoved];
         });
 
     self->priv->_pointerReleasedEventRegistration =
-        self.layer._xamlElement.PointerReleased([&self] (auto&& sender, auto&& e) {
+        self.layer._xamlElement.PointerReleased([self] (auto&& sender, auto&& e) {
             // Set the event to handled, then process it as a UITouch
             e.Handled(true);
             [self _processPointerEvent:e forTouchPhase:UITouchPhaseEnded];
@@ -596,7 +601,7 @@ static std::string _printViewhierarchy(UIView* leafView) {
         });
 
     self->priv->_pointerCanceledEventRegistration =
-        self.layer._xamlElement.PointerCanceled([&self] (auto&& sender, auto&& e) {
+        self.layer._xamlElement.PointerCanceled([self] (auto&& sender, auto&& e) {
             // Set the event to handled, then process it as a UITouch
             e.Handled(true);
             // Uncommon event; we'll use the same handling as pointer capture lost (below)
@@ -604,7 +609,7 @@ static std::string _printViewhierarchy(UIView* leafView) {
         });
 
     self->priv->_pointerCaptureLostEventRegistration =
-        self.layer._xamlElement.PointerCaptureLost([&self] (auto&& sender, auto&& e) {
+        self.layer._xamlElement.PointerCaptureLost([self] (auto&& sender, auto&& e) {
             // Set the event to handled, then process it as a UITouch
             e.Handled(true);
             // Treat capture lost just like a pointer canceled (which is actually quite uncommon)
