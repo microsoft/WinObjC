@@ -229,7 +229,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
         _shapeImage.delegate = self;
 
         [self addSublayer:_shapeImage];
-        _fillColor = (CGColorRef)_CGColorGetConstantColor((CFStringRef) @"BLACK");
+        _fillColor = (CGColorRef)CGColorGetConstantColor(kCGColorBlack);
         CGColorRetain(_fillColor);
         _lineWidth = 1.0f;
     }

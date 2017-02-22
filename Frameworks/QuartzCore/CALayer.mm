@@ -1669,7 +1669,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 */
 - (CGColorRef)shadowColor {
     UNIMPLEMENTED();
-    return _CGColorGetConstantColor((CFStringRef) @"BLACK");
+    return CGColorGetConstantColor(kCGColorBlack);
 }
 
 /**

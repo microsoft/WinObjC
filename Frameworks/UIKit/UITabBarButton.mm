@@ -128,7 +128,7 @@
 
         // Vertically center text
         CGRect textRect = CGRectMake((rect.size.height - size.height) / 2.0, rect.origin.x, rect.size.width, size.height);
-        CGContextSetFillColorWithColor(context, _CGColorGetConstantColor(kCGColorWhite));
+        CGContextSetFillColorWithColor(context, CGColorGetConstantColor(kCGColorWhite));
         size = [title drawInRect:textRect withFont:font lineBreakMode:UILineBreakModeClip alignment:UITextAlignmentCenter];
     }
 }

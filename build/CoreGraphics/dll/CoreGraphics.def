@@ -71,9 +71,7 @@ LIBRARY CoreGraphics
         CGColorGetNumberOfComponents
         CGColorGetPattern
         CGColorGetTypeID
-
-        ; private exports below
-        _CGColorGetConstantColor
+        CGColorGetConstantColor
 
         ; CGColorSpace Reference.mm
         kCGColorSpaceGenericGray DATA

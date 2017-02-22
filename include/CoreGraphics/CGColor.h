@@ -32,7 +32,7 @@ COREGRAPHICS_EXPORT CGColorRef CGColorCreate(CGColorSpaceRef space, const CGFloa
 COREGRAPHICS_EXPORT CGColorRef CGColorCreateWithPattern(CGColorSpaceRef colorSpace, CGPatternRef pattern, const CGFloat* components);
 COREGRAPHICS_EXPORT CGColorRef CGColorCreateCopy(CGColorRef color);
 COREGRAPHICS_EXPORT CGColorRef CGColorCreateCopyWithAlpha(CGColorRef color, CGFloat alpha);
-COREGRAPHICS_EXPORT CGColorRef _CGColorGetConstantColor(CFStringRef name);
+COREGRAPHICS_EXPORT CGColorRef CGColorGetConstantColor(CFStringRef name);
 COREGRAPHICS_EXPORT bool CGColorEqualToColor(CGColorRef color1, CGColorRef color2);
 COREGRAPHICS_EXPORT CGFloat CGColorGetAlpha(CGColorRef color);
 COREGRAPHICS_EXPORT CGColorSpaceRef CGColorGetColorSpace(CGColorRef color);

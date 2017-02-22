@@ -30,7 +30,7 @@ static IWLazyClassLookup __LazyUIColor("UIColor");
  @Status Caveat
  @Notes Limited constants supported
 */
-CGColorRef _CGColorGetConstantColor(CFStringRef name) {
+CGColorRef CGColorGetConstantColor(CFStringRef name) {
     if (CFEqual(kCGColorBlack, name)) {
         return [[__LazyUIColor blackColor] CGColor];
     } else if (CFEqual(kCGColorWhite, name)) {
@@ -39,7 +39,7 @@ CGColorRef _CGColorGetConstantColor(CFStringRef name) {
         return [[__LazyUIColor clearColor] CGColor];
     }
 
-    UNIMPLEMENTED_WITH_MSG("_CGColorGetConstantColor does not support color %s", CFStringGetCStringPtr(name, kCFStringEncodingUTF8));
+    UNIMPLEMENTED_WITH_MSG("CGColorGetConstantColor does not support color %s", CFStringGetCStringPtr(name, kCFStringEncodingUTF8));
     return nullptr;
 }
 

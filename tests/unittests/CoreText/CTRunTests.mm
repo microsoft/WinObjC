@@ -354,7 +354,7 @@ TEST(CTRun, GetTextMatrix) {
     EXPECT_EQ(CGAffineTransformIdentity, CTRunGetTextMatrix(nullptr));
 
     CFMutableAttributedStringRef string = (__bridge CFMutableAttributedStringRef)getString(@"foobar");
-    CFAttributedStringSetAttribute(string, CFRangeMake(0, 3), kCTForegroundColorAttributeName, _CGColorGetConstantColor(kCGColorWhite));
+    CFAttributedStringSetAttribute(string, CFRangeMake(0, 3), kCTForegroundColorAttributeName, CGColorGetConstantColor(kCGColorWhite));
     auto line = woc::MakeAutoCF<CTLineRef>(CTLineCreateWithAttributedString(string));
     CFArrayRef runsArray = CTLineGetGlyphRuns(line);
     CTRunRef run = (CTRunRef)CFArrayGetValueAtIndex(runsArray, 0);
