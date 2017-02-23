@@ -27,7 +27,7 @@
 
     <ItemDefinitionGroup>
         <ClangCompile>
-          <InternalSystemIncludePaths>$(MSBuildThisFileDirectory)\include\;$(MSBuildThisFileDirectory)\deps\prebuilt\include\;%(InternalSystemIncludePaths);</InternalSystemIncludePaths>
+          <InternalSystemIncludePaths>$(MSBuildThisFileDirectory)\include\icu;$(MSBuildThisFileDirectory)\include\;$(MSBuildThisFileDirectory)\deps\prebuilt\include\;%(InternalSystemIncludePaths);</InternalSystemIncludePaths>
         </ClangCompile>
 
         <Link>

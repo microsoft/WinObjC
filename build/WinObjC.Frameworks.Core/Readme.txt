@@ -1,9 +1,5 @@
 ﻿# WinObjC.Frameworks.Core Readme
 
-Building this project will create a .nupkg containing just this Readme file. 
+WinObjC.Frameworks.Core package provides the build and runtime support for core objective C frameworks like Foundation.
 
-It's always a good idea to provide a more useful package to your users, 
-alongside a nice descriptive Readme like this one that will open automatically
-when the add your package to a project.
-
-Happy nugetizing!
+See https://github.com/Microsoft/WinObjC for more information

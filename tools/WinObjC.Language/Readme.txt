@@ -1,9 +1,5 @@
-﻿# WinObjC.Logging Readme
+﻿# WinObjC.Language Readme
 
-Building this project will create a .nupkg containing just this Readme file. 
+WinObjC.Language package provides the build and runtime support for the Objective C on Windows.
 
-It's always a good idea to provide a more useful package to your users, 
-alongside a nice descriptive Readme like this one that will open automatically
-when the add your package to a project.
-
-Happy nugetizing!
+See https://github.com/Microsoft/WinObjC for more information

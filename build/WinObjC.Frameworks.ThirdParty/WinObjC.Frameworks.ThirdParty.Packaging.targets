@@ -42,7 +42,6 @@
 
   </Target>
 
-
   <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents" DependsOnTargets="$(GitVersionDependsOn)" Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">
 
       <ItemGroup>
