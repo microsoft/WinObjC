@@ -54,6 +54,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>AVFoundation.def</ModuleDefinitionFile>
+      <AdditionalDependencies>;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -66,6 +67,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>AVFoundation.def</ModuleDefinitionFile>
+      <AdditionalDependencies>;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -78,6 +80,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>AVFoundation.def</ModuleDefinitionFile>
+      <AdditionalDependencies>;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -90,6 +93,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>AVFoundation.def</ModuleDefinitionFile>
+      <AdditionalDependencies>;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
