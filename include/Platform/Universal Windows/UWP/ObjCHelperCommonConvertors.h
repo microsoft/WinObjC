@@ -46,4 +46,8 @@ namespace CommonConvertors {
         NSURL* convertWinRTStorageFileToNSURL(const ComPtr<ABI::Windows::Storage::IStorageFile> storageFile);
     WINRT_EXPORT_FN
         NSURL* convertWinRTUriToNSURL(const ComPtr<ABI::Windows::Foundation::IUriRuntimeClass> uri);
+    WINRT_EXPORT_FN
+        ComPtr<IInspectable> convertNSNumberToPropertyValue(NSNumber* obj);
+    WINRT_EXPORT_FN
+        ComPtr<IInspectable> convertNSStringToPropertyValue(NSString* obj);
 }
