@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -20,7 +20,6 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>CTCatalog</ProjectName>
-    <RootNamespace>CTCatalog</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
@@ -30,8 +29,8 @@
     <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <Keyword>IslandwoodProj</Keyword>
-    <ProjectGuid>{E679AA4E-A973-44DD-996B-267E3971725D}</ProjectGuid>
-    <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">..\..\..\..\..</WINOBJC_SDK_ROOT>
+    <ProjectGuid>{5FB16118-BF5A-4E1E-A5FD-E2452505BAD6}</ProjectGuid>
+    <RootNamespace>CTCatalog</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -59,9 +58,8 @@
     <TargetName>CTCatalog</TargetName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="Shared">
-    <Import Project="../CTCatalog-Headers-WinStore10/CTCatalog-Headers.vcxitems" Label="Shared" />
-  </ImportGroup>
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -89,8 +87,9 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
       <HeaderMap>Project</HeaderMap>
+      <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>false</ObjectiveCModules>
+      <ObjectiveCModules>true</ObjectiveCModules>
       <OptimizationLevel>Disabled</OptimizationLevel>
       <PreprocessorDefinitions>DEBUG=1</PreprocessorDefinitions>
     </ClangCompile>
@@ -112,8 +111,9 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
       <HeaderMap>Project</HeaderMap>
+      <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>false</ObjectiveCModules>
+      <ObjectiveCModules>true</ObjectiveCModules>
       <OptimizationLevel>Disabled</OptimizationLevel>
       <PreprocessorDefinitions>DEBUG=1</PreprocessorDefinitions>
     </ClangCompile>
@@ -133,8 +133,9 @@
     <ClangCompile>
       <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
       <HeaderMap>Project</HeaderMap>
+      <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>false</ObjectiveCModules>
+      <ObjectiveCModules>true</ObjectiveCModules>
       <OptimizationLevel>MinSpace</OptimizationLevel>
     </ClangCompile>
     <Link>
@@ -153,8 +154,9 @@
     <ClangCompile>
       <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
       <HeaderMap>Project</HeaderMap>
+      <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>false</ObjectiveCModules>
+      <ObjectiveCModules>true</ObjectiveCModules>
       <OptimizationLevel>MinSpace</OptimizationLevel>
     </ClangCompile>
     <Link>
@@ -174,16 +176,9 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <ClangCompile Include="..\..\CTCatalog\Tests\CTCAffineTransformationTestViewController.mm" />
-    <ClangCompile Include="..\..\CTCatalog\Tests\CTCFontTestViewController.mm" />
-    <ClangCompile Include="..\..\CTCatalog\Tests\CTCFramesetterTestViewController.mm" />
-    <ClangCompile Include="..\..\CTCatalog\Tests\CTCFrameTestViewController.mm" />
-    <ClangCompile Include="..\..\CTCatalog\Tests\CTCLineTestViewController.mm" />
-    <ClangCompile Include="..\..\CTCatalog\Tests\CTCParagraphStyleTestViewController.mm" />
-    <ClangCompile Include="..\..\CTCatalog\Tests\CTCPathForGlyphTestViewController.mm" />
-    <ClangCompile Include="..\..\CTCatalog\Tests\CTCRunTestViewController.mm" />
     <Xml Include="default.rd.xml" />
     <None Include="CTCatalog_TemporaryKey.pfx" />
+    <None Include="project.json" />
     <Image Include="Assets\LockScreenLogo.scale-200.png" />
     <Image Include="Assets\SplashScreen.scale-200.png" />
     <Image Include="Assets\Square150x150Logo.scale-200.png" />
@@ -191,24 +186,54 @@
     <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Image Include="Assets\StoreLogo.png" />
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
-    <ClangCompile Include="..\..\CTCatalog\CTCRootViewController.m" />
-    <ClangCompile Include="..\..\CTCatalog\Tests\CTCAlignmentTestViewController.m" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="App.xaml.h">
+      <DependentUpon>App.xaml</DependentUpon>
+    </ClInclude>
+    <ClCompile Include="App.xaml.cpp">
+      <DependentUpon>App.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+    <AssetCatalogCompile Include="..\..\CTCatalog\Assets.xcassets" />
+    <ClInclude Include="..\..\CTCatalog\AppDelegate.h" />
+    <ClInclude Include="..\..\CTCatalog\CTCBaseViewController.h" />
+    <ClInclude Include="..\..\CTCatalog\CTCRootViewController.h" />
+    <ClInclude Include="..\..\CTCatalog\Tests\CTCAffineTransformationTestViewController.h" />
+    <ClInclude Include="..\..\CTCatalog\Tests\CTCAlignmentTestViewController.h" />
+    <ClInclude Include="..\..\CTCatalog\Tests\CTCFontTestViewController.h" />
+    <ClInclude Include="..\..\CTCatalog\Tests\CTCFrameTestViewController.h" />
+    <ClInclude Include="..\..\CTCatalog\Tests\CTCFramesetterTestViewController.h" />
+    <ClInclude Include="..\..\CTCatalog\Tests\CTCLineTestViewController.h" />
+    <ClInclude Include="..\..\CTCatalog\Tests\CTCParagraphStyleTestViewController.h" />
+    <ClInclude Include="..\..\CTCatalog\Tests\CTCPathForGlyphTestViewController.h" />
+    <ClInclude Include="..\..\CTCatalog\Tests\CTCRunTestViewController.h" />
     <ClangCompile Include="..\..\CTCatalog\AppDelegate.m" />
     <ClangCompile Include="..\..\CTCatalog\CTCBaseViewController.mm" />
+    <ClangCompile Include="..\..\CTCatalog\CTCRootViewController.m" />
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCAffineTransformationTestViewController.mm" />
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCAlignmentTestViewController.m" />
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCFontTestViewController.mm" />
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCFrameTestViewController.mm" />
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCFramesetterTestViewController.mm" />
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCLineTestViewController.mm" />
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCParagraphStyleTestViewController.mm" />
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCPathForGlyphTestViewController.mm" />
+    <ClangCompile Include="..\..\CTCatalog\Tests\CTCRunTestViewController.mm" />
     <ClangCompile Include="..\..\CTCatalog\main.m" />
-    <StoryboardCompile Include="..\..\CTCatalog\Base.lproj\LaunchScreen.storyboard">
-      <VariantDir>Base.lproj</VariantDir>
-    </StoryboardCompile>
-    <AssetCatalogCompile Include="..\..\CTCatalog\Assets.xcassets" />
-    <StoryboardCompile Include="..\..\CTCatalog\Base.lproj\Main.storyboard">
-      <VariantDir>Base.lproj</VariantDir>
-    </StoryboardCompile>
     <SBInfoPlistCopy Include="..\..\CTCatalog\Info.plist">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Debug'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Release'">false</ExcludedFromBuild>
       <VariableFile Condition="'$(Configuration)'=='Debug'">CTCatalog-Debug-xcvars.txt</VariableFile>
       <VariableFile Condition="'$(Configuration)'=='Release'">CTCatalog-Release-xcvars.txt</VariableFile>
     </SBInfoPlistCopy>
+    <StoryboardCompile Include="..\..\CTCatalog\Base.lproj\LaunchScreen.storyboard">
+      <VariantDir>Base.lproj</VariantDir>
+    </StoryboardCompile>
+    <StoryboardCompile Include="..\..\CTCatalog\Base.lproj\Main.storyboard">
+      <VariantDir>Base.lproj</VariantDir>
+    </StoryboardCompile>
     <Text Include="CTCatalog-Debug-xcvars.txt">
       <DeploymentContent>false</DeploymentContent>
     </Text>
@@ -216,25 +241,7 @@
       <DeploymentContent>false</DeploymentContent>
     </Text>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="pch.h" />
-    <ClInclude Include="App.xaml.h">
-      <DependentUpon>App.xaml</DependentUpon>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="App.xaml.cpp">
-      <DependentUpon>App.xaml</DependentUpon>
-    </ClCompile>
-    <ClCompile Include="pch.cpp">
-      <PrecompiledHeader>Create</PrecompiledHeader>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Font Include="..\..\CTCatalog\Fonts\WinObjC-Bold.ttf" />
-    <Font Include="..\..\CTCatalog\Fonts\WinObjC-Italic.ttf" />
-    <Font Include="..\..\CTCatalog\Fonts\WinObjC.ttf" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-
+  <ImportGroup Label="ExtensionTargets" />
 </Project>

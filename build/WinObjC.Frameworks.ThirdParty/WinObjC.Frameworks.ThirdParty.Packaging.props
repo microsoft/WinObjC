@@ -77,8 +77,6 @@
         <Output PropertyName="PackageTimestamp" TaskParameter="Timestamp" />  
     </CreateTimestampFileIfNeeded>
 
-
-
     <PropertyGroup>
       <PackageTimestamp Condition="'$(PackageTimestamp)' == ''">$([System.DateTime]::Now.ToString(yyyyMMddHHmmss))</PackageTimestamp>
 

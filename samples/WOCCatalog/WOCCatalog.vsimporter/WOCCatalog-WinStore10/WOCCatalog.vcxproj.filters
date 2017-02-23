@@ -1,26 +1,26 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{5bed6950-d05a-479d-b2b8-730ebba80ec9}</UniqueIdentifier>
+      <UniqueIdentifier>{2db6a19f-ba20-4274-8c4a-2c3951de2f2b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{6d009a9c-7c3e-45ad-8498-8caaca978d86}</UniqueIdentifier>
+      <UniqueIdentifier>{9607e1b9-7ad3-4ea7-9c10-e91a1ae5bc21}</UniqueIdentifier>
     </Filter>
     <Filter Include="Images">
-      <UniqueIdentifier>{D83B8F18-D2C6-4F82-BB54-0E722095D2BF}</UniqueIdentifier>
+      <UniqueIdentifier>{B2082C03-98AB-469C-BAAC-DA208E9A8229}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sounds">
-      <UniqueIdentifier>{A5600A6F-599B-4319-883B-4A94776520F8}</UniqueIdentifier>
+      <UniqueIdentifier>{19B1AF42-149E-4144-B159-6D4E4D26C099}</UniqueIdentifier>
     </Filter>
     <Filter Include="WOCCatalog">
-      <UniqueIdentifier>{DBAA030E-FD36-4236-AB0F-880A412383BC}</UniqueIdentifier>
+      <UniqueIdentifier>{617A1F4C-29EA-44A7-898D-E140F7BC7530}</UniqueIdentifier>
     </Filter>
     <Filter Include="WOCCatalog\Supporting Files">
-      <UniqueIdentifier>{4AFB8E19-FAC9-4EA7-8758-143B7BA80AF7}</UniqueIdentifier>
+      <UniqueIdentifier>{5A1F18BB-EFD1-4269-A7CD-4DAB9CBF35E6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{05701669-1AEF-428C-AF38-DA27FAE571B3}</UniqueIdentifier>
+      <UniqueIdentifier>{E0CB6F8D-6468-4443-B731-90433DAF5C69}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -331,16 +331,5 @@
     <XibCompile Include="..\..\WOCCatalog\BezierViewController.xib">
       <Filter>WOCCatalog</Filter>
     </XibCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ApplicationDefinition Include="App.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="App.xaml.cpp" />
-    <ClCompile Include="pch.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="pch.h" />
-    <ClInclude Include="App.xaml.h" />
   </ItemGroup>
 </Project>
