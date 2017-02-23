@@ -40,7 +40,7 @@
 
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 
-  <Target Name="CoreCompile"/>
+  <Target Name="CoreCompile" />
   <Target Name="CreateManifestResourceNames" />
   <Target Name="GetReferenceAssemblyPaths" />
   <Target Name="CopyFilesToOutputDirectory" />
@@ -51,6 +51,6 @@
   </ItemGroup>
 
   <Target Name="DeleteTimestampFile" AfterTargets="AfterBuild">
-    <Delete Files="$(SolutionDir)$(SolutionName).timestamp" TreatErrorsAsWarnings="true"/>
+    <Delete Files="$(SolutionDir)$(SolutionName).timestamp" TreatErrorsAsWarnings="true" />
   </Target>
 </Project>

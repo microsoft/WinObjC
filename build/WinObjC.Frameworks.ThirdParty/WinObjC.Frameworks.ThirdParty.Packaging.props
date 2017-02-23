@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+      <GitThisAssembly>true</GitThisAssembly>
+  </PropertyGroup>
+    
+  <PropertyGroup>
+      <PackageId>WinObjC.Frameworks.ThirdParty</PackageId>
+      <Title>WinObjC.Frameworks.ThirdParty</Title>
+      <Authors>Microsoft</Authors>
+      <Owners>Microsoft</Owners>
+      <Summary>WinObjC.Frameworks.ThirdParty</Summary>
+      <Description>WinObjC.Frameworks.ThirdParty</Description>
+      <PackageReleaseNotes>
+      </PackageReleaseNotes>
+      <PackageProjectUrl>
+      </PackageProjectUrl>
+      <PackageLicenseUrl>
+      </PackageLicenseUrl>
+      <Copyright>Copyright © Microsoft</Copyright>
+      <PackageTags>WinObjC.Frameworks.ThirdParty</PackageTags>
+      <IncludeSymbolsInPackage>false</IncludeSymbolsInPackage>
+      <IncludeFrameworkReferencesInPackage>false</IncludeFrameworkReferencesInPackage>
+      <NoPackageAnalysis>true</NoPackageAnalysis>
+  </PropertyGroup>
+
+  <!-- Inline task to check for timestamp file existence and creation-->  
+  <UsingTask  
+    TaskName="CreateTimestampFileIfNeeded"  
+    TaskFactory="CodeTaskFactory"  
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll" >  
+    <ParameterGroup>
+      <TimestampFile ParameterType="System.String" Required="true" />
+      <Timestamp ParameterType="System.String" Output="true" />  
+    </ParameterGroup>
+    <Task>
+      <Reference Include="System" />
+      <Reference Include="System.IO" />
+      <Reference Include="System.Threading" />
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.Threading" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+          var mutex = new Mutex(false, TimestampFile.Replace("\\", "."));
+          try
+          {
+            mutex.WaitOne();
+          } catch (AbandonedMutexException e)
+          {
+          }
+          if (!File.Exists(TimestampFile)) {
+              File.Create(TimestampFile);
+          }  
+
+          Timestamp = File.GetCreationTimeUtc(TimestampFile).ToString("yyyyMMddHHmmss");
+          mutex.ReleaseMutex();
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+  
+  <PropertyGroup>
+    <GetPackageVersionDependsOn>SetPackageVersion;$(GetPackageVersionDependsOn);</GetPackageVersionDependsOn>
+  </PropertyGroup>
+  <Target Name="SetPackageVersion" DependsOnTargets="$(GitVersionDependsOn)" >
+
+    <Error Condition="'$(GitBranch)' == ''"
+           Text="Cannot determine git branch. Please make sure GitInfo is listed in the project.json for this project and that git.exe is part of the PATH environment variable." />
+
+    <Warning Condition="'$(SolutionPath)' == ''"
+           Text="Cannot determine solution build time. Package version ThirdParty may be inconsistent as a result. Please make sure to build using .sln file." />
+
+    <CreateTimestampFileIfNeeded Condition="'$(SolutionDir)' != ''" 
+                                 TimestampFile="$(SolutionDir)$(SolutionName).timestamp">
+        <Output PropertyName="PackageTimestamp" TaskParameter="Timestamp" />  
+    </CreateTimestampFileIfNeeded>
+
+
+
+    <PropertyGroup>
+      <PackageTimestamp Condition="'$(PackageTimestamp)' == ''">$([System.DateTime]::Now.ToString(yyyyMMddHHmmss))</PackageTimestamp>
+
+      <PackageVersion Condition="'$(PackageVersion)' == '' And '$(GitBranch)' == 'master'">$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(PackageTimestamp)</PackageVersion>
+      <PackageVersion Condition="'$(PackageVersion)' == '' And '$(GitBranch)' == 'develop'">$(GitBaseVersionMajor).$(GitBaseVersionMinor).$([MSBuild]::Add('$(GitBaseVersionPatch)', '1'))-$(PackageTimestamp).dev</PackageVersion>
+      <PackageVersion Condition="'$(PackageVersion)' == ''">$(GitBaseVersionMajor).$(GitBaseVersionMinor).$([MSBuild]::Add('$(GitBaseVersionPatch)', '1'))-$(PackageTimestamp).pr</PackageVersion>
+    </PropertyGroup>
+  </Target>
+</Project>

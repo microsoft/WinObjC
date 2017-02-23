@@ -58,6 +58,7 @@
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\Foundation\dll\Foundation.vcxproj" />
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\MobileCoreServices\dll\MobileCoreServices.vcxproj" />
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\Starboard\dll\Starboard.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\WinObjC.Frameworks.ThirdParty\WinObjC.Frameworks.ThirdParty.nuproj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets')" />

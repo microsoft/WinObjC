@@ -231,15 +231,6 @@
 
   <Target Name="AddExtraPackageItems" BeforeTargets="GetPackageContents">
     <ItemGroup>
-
-        <!-- Include Extra Deps for this project -->
-        <_DepsFiles Include="$(StarboardBasePath)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\libxml2.dll"/>
-        <_DepsFiles Include="$(StarboardBasePath)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\icu*.dll"/>
-
-        <PackageFile Include="@(_DepsFiles)">
-            <PackagePath>build\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\%(Filename)%(Extension)</PackagePath>
-        </PackageFile>
-
         <_CoreFoundationContent Include="$(StarboardBasePath)\Frameworks\CoreFoundation\CharacterSets\**\*.*"/>
 
         <PackageFile Include="@(_CoreFoundationContent)">
