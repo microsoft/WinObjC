@@ -131,6 +131,8 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
     CGPoint startingPoint{ 0, 0 };
     CGAffineTransform lastTransform;
 
+    bool isFirstCall = true;
+
     __CGPath() : lastTransform(CGAffineTransformIdentity) {
     }
 
@@ -150,6 +152,14 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
         return startingPoint;
     }
 
+    bool GetIsFirstCall() {
+        return isFirstCall;
+    }
+
+    void SetIsFirstCall(bool firstCall) {
+        isFirstCall = firstCall;
+    }
+
     void SetCurrentPoint(CGPoint newPoint) {
         currentPoint = newPoint;
     }
@@ -159,6 +169,9 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
     }
 
     void SetLastTransform(const CGAffineTransform* transform) {
+        // Every PathAdd API will call SetLastTransform with the exception of Arcs which will call
+        // this manually.
+        SetIsFirstCall(false);
         if (transform) {
             lastTransform = *transform;
         } else {
@@ -433,6 +446,7 @@ CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path) {
     mutableRet->SetCurrentPoint(path->GetCurrentPoint());
     mutableRet->SetStartingPoint(path->GetStartingPoint());
     mutableRet->SetLastTransform(path->GetLastTransform());
+    mutableRet->SetIsFirstCall(path->GetIsFirstCall());
 
     return mutableRet;
 }
@@ -482,6 +496,21 @@ static HRESULT _createPathReadyForFigure(CGPathRef previousPath,
     return S_OK;
 }
 
+static CGFloat __normalizeAngle(CGFloat originalAngle) {
+    CGFloat returnAngle = fmod(originalAngle, 2 * M_PI);
+    if (returnAngle == 0) {
+        if (originalAngle > 0) {
+            return 2 * M_PI;
+        } else if (originalAngle < 0) {
+            return -2 * M_PI;
+        }
+    }
+    if (returnAngle < 0) {
+        returnAngle += M_PI * 2;
+    }
+    return returnAngle;
+}
+
 /**
  @Status Interoperable
 */
@@ -499,14 +528,8 @@ void CGPathAddArcToPoint(
     CGFloat dy2 = y1 - y2;
 
     // Normalize the angles of the tangent lines.
-    CGFloat startAngle = fmod(atan2(dy1, dx1), 2 * M_PI);
-    CGFloat endAngle = fmod(atan2(dy2, dx2), 2 * M_PI);
-    if (startAngle < 0) {
-        startAngle += M_PI * 2;
-    }
-    if (endAngle < 0) {
-        endAngle += M_PI * 2;
-    }
+    CGFloat startAngle = __normalizeAngle(atan2(dy1, dx1));
+    CGFloat endAngle = __normalizeAngle(atan2(dy2, dx2));
 
     // Calculate the angle of the bisector between the tangent line's angles.
     CGFloat bisector = (endAngle - startAngle) / 2;
@@ -549,6 +572,7 @@ void CGPathAddArcToPoint(
     if (transform) {
         endPoint = CGPointApplyAffineTransform(endPoint, *transform);
     }
+    path->SetIsFirstCall(false);
     path->SetCurrentPoint(endPoint);
 }
 
@@ -565,32 +589,47 @@ void CGPathAddArc(CGMutablePathRef path,
                   bool clockwise) {
     RETURN_IF(!path);
 
-    CGPoint startPoint = CGPointMake(x + radius * cos(startAngle), y + radius * sin(startAngle));
-    CGPoint endPoint = CGPointMake(x + radius * cos(endAngle), y + radius * sin(endAngle));
+    // Normalize the angles to work with to values between 0 and 2*PI
+    CGFloat normalizedStartAngle = __normalizeAngle(startAngle);
+    CGFloat normalizedEndAngle = __normalizeAngle(endAngle);
+
+    CGPoint startPoint = CGPointMake(x + radius * cos(normalizedStartAngle), y + radius * sin(normalizedStartAngle));
+    CGPoint endPoint = CGPointMake(x + radius * cos(normalizedEndAngle), y + radius * sin(normalizedEndAngle));
 
     // Create the parameters for the AddArc method.
     const D2D1_POINT_2F endPointD2D = _CGPointToD2D_F(endPoint);
     const D2D1_SIZE_F radiusD2D = { radius, radius };
-    CGFloat rotationAngle = abs(startAngle - endAngle);
+    CGFloat rotationAngle = (clockwise ? -1 : 1) * abs(normalizedStartAngle - normalizedEndAngle);
     D2D1_ARC_SIZE arcSize = D2D1_ARC_SIZE_SMALL;
-    CGFloat expectedAngle = (clockwise ? startAngle + rotationAngle : startAngle - rotationAngle);
 
     // D2D does not understand that the ending angle must be pointing in the proper direction, thus we must translate
     // what it means to have an ending angle to the proper small arc or large arc that D2D will use since a circle will
     // intersect that point regardless of which direction it is drawn in.
-    if (expectedAngle == endAngle) {
-        arcSize = D2D1_ARC_SIZE_LARGE;
+    CGFloat difference = 0;
+    if (clockwise) {
+        difference = normalizedStartAngle - normalizedEndAngle;
     } else {
-        rotationAngle = (2 * M_PI) - rotationAngle;
+        difference = normalizedEndAngle - normalizedStartAngle;
     }
+    if (difference < 0) {
+        difference += 2 * M_PI;
+    }
+    if (difference > M_PI) {
+        arcSize = D2D1_ARC_SIZE_LARGE;
+    }
+
     D2D1_SWEEP_DIRECTION sweepDirection = { clockwise ? D2D1_SWEEP_DIRECTION_COUNTER_CLOCKWISE : D2D1_SWEEP_DIRECTION_CLOCKWISE };
-    D2D1_ARC_SEGMENT arcSegment = D2D1::ArcSegment(endPointD2D, radiusD2D, rotationAngle, sweepDirection, arcSize);
 
     ComPtr<ID2D1PathGeometry> newPath;
     ComPtr<ID2D1GeometrySink> newSink;
+    if (path->GetIsFirstCall()) {
+        CGPathMoveToPoint(path, transform, startPoint.x, startPoint.y);
+    }
     FAIL_FAST_IF_FAILED(_createPathReadyForFigure(path, startPoint, &newPath, &newSink));
 
+    D2D1_ARC_SEGMENT arcSegment = D2D1::ArcSegment(endPointD2D, radiusD2D, rotationAngle, sweepDirection, arcSize);
     newSink->AddArc(arcSegment);
+
     newSink->EndFigure(D2D1_FIGURE_END_OPEN);
     FAIL_FAST_IF_FAILED(newSink->Close());
 
@@ -599,6 +638,7 @@ void CGPathAddArc(CGMutablePathRef path,
     if (transform) {
         endPoint = CGPointApplyAffineTransform(endPoint, *transform);
     }
+    path->SetIsFirstCall(false);
     path->SetCurrentPoint(endPoint);
 }
 
@@ -616,6 +656,7 @@ void CGPathMoveToPoint(CGMutablePathRef path, const CGAffineTransform* transform
     path->SetStartingPoint(pt);
     path->SetCurrentPoint(pt);
     path->SetLastTransform(transform);
+    path->SetIsFirstCall(false);
 }
 
 /**
@@ -627,6 +668,7 @@ void CGPathAddLines(CGMutablePathRef path, const CGAffineTransform* transform, c
     for (int i = 0; i < count; i++) {
         CGPathAddLineToPoint(path, transform, points[i].x, points[i].y);
     }
+    path->SetIsFirstCall(false);
 }
 
 /**
@@ -954,6 +996,7 @@ CGMutablePathRef CGPathCreateMutableCopyByTransformingPath(CGPathRef path, const
 
         transformedPath->SetCurrentPoint(CGPointApplyAffineTransform(path->GetCurrentPoint(), *transform));
         transformedPath->SetLastTransform(transform);
+        transformedPath->SetIsFirstCall(path->GetIsFirstCall());
         return transformedPath;
     }
     return CGPathCreateMutableCopy(path);

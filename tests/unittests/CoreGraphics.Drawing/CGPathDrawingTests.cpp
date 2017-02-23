@@ -291,6 +291,154 @@ DRAW_TEST_F(CGPath, PathApplyDraw, UIKitMimicTest<>) {
     CGPathRelease(thepath);
 }
 
+static void _drawArcWithParams(CGContextRef context,
+                               CGFloat width,
+                               CGFloat height,
+                               CGFloat xstart,
+                               CGFloat ystart,
+                               CGAffineTransform transformation,
+                               CGFloat startAngle,
+                               CGFloat endAngle,
+                               bool clockwise,
+                               CGPathDrawingMode mode,
+                               int moveToPoint) {
+    CGMutablePathRef thepath = CGPathCreateMutable();
+    switch (moveToPoint) {
+        case 1:
+            CGPathMoveToPoint(thepath, &transformation, xstart + .75 * width, ystart);
+            break;
+        case 2:
+            CGPathMoveToPoint(thepath, &transformation, xstart + .75 * width, ystart + .5 * height);
+            break;
+        case 0:
+        default:
+            break;
+    }
+    if (moveToPoint == 0) {
+    }
+    CGPathAddArc(thepath, &transformation, xstart + .5 * width, ystart + .5 * height, .5 * height, startAngle, endAngle, clockwise);
+
+    CGContextAddPath(context, thepath);
+    CGContextDrawPath(context, mode);
+
+    CGPathRelease(thepath);
+}
+
+static void _drawTest(CGContextRef context,
+                      CGFloat width,
+                      CGFloat height,
+                      CGFloat xstart,
+                      CGFloat ystart,
+                      CGAffineTransform transformation,
+                      CGFloat startAngle,
+                      CGFloat endAngle,
+                      CGPathDrawingMode mode,
+                      int moveToPoint) {
+    _drawArcWithParams(context, width, height, xstart, ystart, transformation, startAngle, endAngle, true, mode, moveToPoint);
+    transformation = CGAffineTransformTranslate(transformation, .60 * width, 0);
+    _drawArcWithParams(context, width, height, xstart, ystart, transformation, endAngle, startAngle, true, mode, moveToPoint);
+    transformation = CGAffineTransformTranslate(transformation, width, 0);
+    _drawArcWithParams(context, width, height, xstart, ystart, transformation, startAngle, endAngle, false, mode, moveToPoint);
+    transformation = CGAffineTransformTranslate(transformation, 1.2 * width, 0);
+    _drawArcWithParams(context, width, height, xstart, ystart, transformation, endAngle, startAngle, false, mode, moveToPoint);
+}
+
+DRAW_TEST_F(CGPath, ArcCircles_MoveToStart, UIKitMimicTest<>) {
+    CGContextRef context = GetDrawingContext();
+    applyBounds = GetDrawingBounds();
+    CGFloat width = applyBounds.size.width;
+    CGFloat height = applyBounds.size.height;
+    CGFloat xstart = applyBounds.origin.x;
+    CGFloat ystart = applyBounds.origin.y;
+
+    CGContextSetRGBFillColor(context, 0, 0, 1, 1);
+    CGContextSetRGBStrokeColor(context, 1, 0, 0, 1);
+
+    CGAffineTransform transformation = CGAffineTransformIdentity;
+    transformation = CGAffineTransformTranslate(transformation, 0, .1 * height);
+    transformation = CGAffineTransformScale(transformation, .25, .25);
+
+    _drawTest(context, width, height, xstart, ystart, transformation, 0, 2 * M_PI, kCGPathFillStroke, 2);
+
+    transformation = CGAffineTransformIdentity;
+    transformation = CGAffineTransformTranslate(transformation, 0, .6 * height);
+    transformation = CGAffineTransformScale(transformation, .25, .25);
+
+    _drawTest(context, width, height, xstart, ystart, transformation, 0, 2 * M_PI, kCGPathEOFillStroke, 2);
+}
+
+DRAW_TEST_F(CGPath, ArcCircles_MoveToSidePoint, UIKitMimicTest<>) {
+    CGContextRef context = GetDrawingContext();
+    applyBounds = GetDrawingBounds();
+    CGFloat width = applyBounds.size.width;
+    CGFloat height = applyBounds.size.height;
+    CGFloat xstart = applyBounds.origin.x;
+    CGFloat ystart = applyBounds.origin.y;
+
+    CGContextSetRGBFillColor(context, 0, 0, 1, 1);
+    CGContextSetRGBStrokeColor(context, 1, 0, 0, 1);
+
+    CGAffineTransform transformation = CGAffineTransformIdentity;
+    transformation = CGAffineTransformTranslate(transformation, 0, .1 * height);
+    transformation = CGAffineTransformScale(transformation, .25, .25);
+
+    _drawTest(context, width, height, xstart, ystart, transformation, 0, 2 * M_PI, kCGPathFillStroke, 1);
+
+    transformation = CGAffineTransformIdentity;
+    transformation = CGAffineTransformTranslate(transformation, 0, .6 * height);
+    transformation = CGAffineTransformScale(transformation, .25, .25);
+
+    _drawTest(context, width, height, xstart, ystart, transformation, 0, 2 * M_PI, kCGPathEOFillStroke, 1);
+}
+
+DRAW_TEST_F(CGPath, ArcCircles_NoMove, UIKitMimicTest<>) {
+    CGContextRef context = GetDrawingContext();
+    applyBounds = GetDrawingBounds();
+    CGFloat width = applyBounds.size.width;
+    CGFloat height = applyBounds.size.height;
+    CGFloat xstart = applyBounds.origin.x;
+    CGFloat ystart = applyBounds.origin.y;
+
+    CGContextSetRGBFillColor(context, 0, 0, 1, 1);
+    CGContextSetRGBStrokeColor(context, 1, 0, 0, 1);
+
+    CGAffineTransform transformation = CGAffineTransformIdentity;
+    transformation = CGAffineTransformTranslate(transformation, 0, .1 * height);
+    transformation = CGAffineTransformScale(transformation, .25, .25);
+
+    _drawTest(context, width, height, xstart, ystart, transformation, 0, 2 * M_PI, kCGPathFillStroke, 0);
+
+    transformation = CGAffineTransformIdentity;
+    transformation = CGAffineTransformTranslate(transformation, 0, .6 * height);
+    transformation = CGAffineTransformScale(transformation, .25, .25);
+
+    _drawTest(context, width, height, xstart, ystart, transformation, 0, 2 * M_PI, kCGPathEOFillStroke, 0);
+}
+
+DRAW_TEST_F(CGPath, ArcCircles_HalfCircle, UIKitMimicTest<>) {
+    CGContextRef context = GetDrawingContext();
+    applyBounds = GetDrawingBounds();
+    CGFloat width = applyBounds.size.width;
+    CGFloat height = applyBounds.size.height;
+    CGFloat xstart = applyBounds.origin.x;
+    CGFloat ystart = applyBounds.origin.y;
+
+    CGContextSetRGBFillColor(context, 0, 0, 1, 1);
+    CGContextSetRGBStrokeColor(context, 1, 0, 0, 1);
+
+    CGAffineTransform transformation = CGAffineTransformIdentity;
+    transformation = CGAffineTransformTranslate(transformation, 0, .1 * height);
+    transformation = CGAffineTransformScale(transformation, .25, .25);
+
+    _drawTest(context, width, height, xstart, ystart, transformation, 0, M_PI, kCGPathFillStroke, 1);
+
+    transformation = CGAffineTransformIdentity;
+    transformation = CGAffineTransformTranslate(transformation, 0, .6 * height);
+    transformation = CGAffineTransformScale(transformation, .25, .25);
+
+    _drawTest(context, width, height, xstart, ystart, transformation, 0, M_PI, kCGPathEOFillStroke, 2);
+}
+
 static void _CGContextOutlinePoint(CGContextRef context, CGPoint point, CGFloat r, CGFloat g, CGFloat b) {
     CGContextSetRGBStrokeColor(context, r, g, b, 1);
 
