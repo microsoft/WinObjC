@@ -491,6 +491,7 @@ public:
 
     HRESULT PushLayer(CGRect* rect = nullptr);
     HRESULT PopLayer();
+    HRESULT ClearRect(CGRect rect);
 
     template <typename Lambda> // Lambda takes the form HRESULT (*)(CGContextRef, ID2D1DeviceContext*)
     HRESULT Draw(_CGCoordinateMode coordinateMode, CGAffineTransform* additionalTransform, Lambda&& drawLambda);
@@ -2297,22 +2298,41 @@ void CGContextShowGlyphsWithAdvances(CGContextRef context, const CGGlyph* glyphs
 #pragma endregion
 
 #pragma region Drawing Operations - Basic Shapes
+
+HRESULT __CGContext::ClearRect(CGRect rect) {
+    PushBeginDraw();
+    auto endDraw = wil::ScopeExit([this]() { PopEndDraw(); });
+
+    ComPtr<ID2D1Factory> factory = Factory();
+    ComPtr<ID2D1RectangleGeometry> rectangle;
+    RETURN_IF_FAILED(factory->CreateRectangleGeometry(__CGRectToD2D_F(rect), &rectangle));
+
+    // Transformed geometry
+    ComPtr<ID2D1TransformedGeometry> transformedRectangle;
+    RETURN_IF_FAILED(factory->CreateTransformedGeometry(rectangle.Get(),
+                                                        __CGAffineTransformToD2D_F(CGContextGetUserSpaceToDeviceSpaceTransform(this)),
+                                                        &transformedRectangle));
+
+    RETURN_IF_FAILED(PushGState());
+
+    RETURN_IF_FAILED(CurrentGState().IntersectClippingGeometry(transformedRectangle.Get(), kCGPathEOFill));
+
+    ComPtr<ID2D1SolidColorBrush> brush;
+    RETURN_IF_FAILED(deviceContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black, 0.0f), &brush));
+
+    deviceContext->SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND_COPY);
+    deviceContext->FillGeometry(CurrentGState().clippingGeometry.Get(), brush.Get());
+    deviceContext->SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND_SOURCE_OVER);
+    RETURN_IF_FAILED(PopGState());
+    return S_OK;
+}
+
 /**
- @Status Caveat
- @Notes only supports the scenario where clipping is not set.
- Also only works on untransformed coordinates.
- The cleared region will be cleared in device space.
+ @Status Interoperable
 */
 void CGContextClearRect(CGContextRef context, CGRect rect) {
     NOISY_RETURN_IF_NULL(context);
-    ComPtr<ID2D1DeviceContext> deviceContext = context->DeviceContext();
-    if (!context->CurrentGState().clippingGeometry) {
-        _CGContextPushBeginDraw(context);
-        deviceContext->PushAxisAlignedClip(__CGRectToD2D_F(rect), context->GetAntialiasMode());
-        deviceContext->Clear(nullptr); // transparent black clear
-        deviceContext->PopAxisAlignedClip();
-        _CGContextPopEndDraw(context);
-    }
+    FAIL_FAST_IF_FAILED(context->ClearRect(rect));
 }
 
 HRESULT __CGContext::_CreateShadowEffect(ID2D1Image* inputImage, ID2D1Effect** outShadowEffect) {
@@ -3031,7 +3051,13 @@ CGContextRef CGBitmapContextCreateWithData(void* data,
     size_t estimatedBytesPerRow = (imputedBitsPerPixel >> 3) * width;
 
     if (data && estimatedBytesPerRow > bytesPerRow) {
-        TraceError(TAG, L"Invalid data stride: a %ux%u %ubpp context requires at least a %u-byte stride (requested: %u bytes/row).", width, height, imputedBitsPerPixel, estimatedBytesPerRow, bytesPerRow);
+        TraceError(TAG,
+                   L"Invalid data stride: a %ux%u %ubpp context requires at least a %u-byte stride (requested: %u bytes/row).",
+                   width,
+                   height,
+                   imputedBitsPerPixel,
+                   estimatedBytesPerRow,
+                   bytesPerRow);
         return nullptr;
     }
 
