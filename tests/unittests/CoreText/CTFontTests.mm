@@ -742,7 +742,7 @@ DISABLED_TEST(CTFont, CreatePathForGlyph) {
     ASSERT_EQ(expectedElements.size(), comparePathContext.count);
 }
 
-const NSString* c_localeName = @"en-us";
+static const NSString* sc_localeName = @"en-us";
 TEST(CTFont, CopyLocalizedName) {
     auto fontName = woc::MakeAutoCF<CFStringRef>(CFSTR("Metadata Test"));
     StrongId<NSURL> testFileURL = __GetURLFromPathRelativeToModuleDirectory(@"/data/MetadataTest-Regular.ttf");
@@ -758,7 +758,7 @@ TEST(CTFont, CopyLocalizedName) {
     EXPECT_OBJCEQ(c_copyrightName, (__bridge NSString*)copyrightName.get());
     ASSERT_NE(nil, actualLanguage);
     ASSERT_EQ(5, CFStringGetLength(actualLanguage));
-    EXPECT_OBJCEQ(c_localeName, (__bridge NSString*)actualLanguage);
+    EXPECT_OBJCEQ(sc_localeName, (__bridge NSString*)actualLanguage);
 
     // Actual language out-param should be optional
     auto copyrightName2 = woc::MakeAutoCF<CFStringRef>(CTFontCopyLocalizedName(font, kCTFontCopyrightNameKey, nullptr));

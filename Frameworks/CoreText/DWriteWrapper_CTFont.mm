@@ -327,7 +327,7 @@ CFStringRef _DWriteFontCopyName(const ComPtr<IDWriteFontFace>& fontFace, CFStrin
                                         nullptr,
                                         CFSTR("%@ %@"),
                                         // Only want to assign to actualLanguage once
-                                        CFAutorelease(_DWriteFontCopyName(fontFace, kCTFontFullNameKey, nullptr)),
+                                        CFAutorelease(_DWriteFontCopyName(fontFace, kCTFontFullNameKey)),
                                         CFAutorelease(_DWriteFontCopyName(fontFace, kCTFontStyleNameKey, actualLanuguage)));
 
     } else if (CFEqual(nameKey, kCTFontFullNameKey)) {

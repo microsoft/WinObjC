@@ -191,7 +191,7 @@ CTFontRef __CTFontCreateWithAttributes(CFDictionaryRef attributes, CGFloat size,
 CTFontDescriptorRef __CTFontDescriptorCreateWithDWriteFontFace(CGFloat size,
                                                                const CGAffineTransform* matrix,
                                                                Microsoft::WRL::ComPtr<IDWriteFontFace> fontFace) {
-    CFStringRef name = _DWriteFontCopyName(fontFace, kCTFontPostScriptNameKey, nullptr);
+    CFStringRef name = _DWriteFontCopyName(fontFace, kCTFontPostScriptNameKey);
     CFAutorelease(name);
     if (matrix) {
         CFStringRef keys[] = { kCTFontNameAttribute, kCTFontSizeAttribute, kCTFontMatrixAttribute };

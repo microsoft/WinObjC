@@ -45,7 +45,7 @@ CFMutableArrayRef DWriteFontCollectionHelper::CopyFontFamilyNames() {
         ComPtr<IDWriteLocalizedStrings> familyNames;
         RETURN_NULL_IF_FAILED(fontFamily->GetFamilyNames(&familyNames));
 
-        CFStringRef name = _CFStringFromLocalizedString(familyNames.Get(), nullptr);
+        CFStringRef name = _CFStringFromLocalizedString(familyNames.Get());
         if (CFStringGetLength(name) == 0) {
             TraceError(TAG, L"Failed to convert the localized string to wide string.");
             continue;
@@ -81,7 +81,7 @@ CFMutableArrayRef DWriteFontCollectionHelper::CopyFontNamesForFamilyName(CFStrin
         }
 
         if (exists) {
-            CFStringRef name = _CFStringFromLocalizedString(fullName.Get(), nullptr);
+            CFStringRef name = _CFStringFromLocalizedString(fullName.Get());
             if (CFStringGetLength(name) == 0) {
                 TraceError(TAG, L"Failed to convert the localized string to wide string.");
                 continue;
@@ -195,13 +195,13 @@ void DWriteFontCollectionHelper::_InitializePropertiesMap() {
             BOOL exist;
 
             if (SUCCEEDED(font->GetInformationalStrings(DWRITE_INFORMATIONAL_STRING_FULL_NAME, &displayName, &exist)) && exist) {
-                info->displayName.reset(_CFStringCreateUppercaseCopy(_CFStringFromLocalizedString(displayName.Get(), nullptr)));
+                info->displayName.reset(_CFStringCreateUppercaseCopy(_CFStringFromLocalizedString(displayName.Get())));
                 woc::unique_cf<CFStringRef> uppercaseNameKey(CFStringCreateCopy(kCFAllocatorDefault, info->displayName.get()));
                 m_propertiesMap->emplace(std::move(uppercaseNameKey), info);
             }
 
             if (SUCCEEDED(font->GetInformationalStrings(DWRITE_INFORMATIONAL_STRING_POSTSCRIPT_NAME, &postScriptName, &exist)) && exist) {
-                info->postScriptName.reset(static_cast<CFStringRef>(CFRetain(_CFStringFromLocalizedString(postScriptName.Get(), nullptr))));
+                info->postScriptName.reset(static_cast<CFStringRef>(CFRetain(_CFStringFromLocalizedString(postScriptName.Get()))));
                 woc::unique_cf<CFStringRef> uppercaseNameKey(_CFStringCreateUppercaseCopy(info->postScriptName.get()));
                 m_propertiesMap->emplace(std::move(uppercaseNameKey), info);
             }
