@@ -6,12 +6,12 @@
   </PropertyGroup>
     
   <PropertyGroup>
-      <PackageId>WinObjC.Frameworks.Dependencies</PackageId>
-      <Title>WinObjC.Frameworks.Dependencies</Title>
+      <PackageId>WinObjC.Frameworks.ThirdParty</PackageId>
+      <Title>WinObjC.Frameworks.ThirdParty</Title>
       <Authors>Microsoft</Authors>
       <Owners>Microsoft</Owners>
-      <Summary>WinObjC.Frameworks.Dependencies</Summary>
-      <Description>WinObjC.Frameworks.Dependencies</Description>
+      <Summary>WinObjC.Frameworks.ThirdParty</Summary>
+      <Description>WinObjC.Frameworks.ThirdParty</Description>
       <PackageReleaseNotes>
       </PackageReleaseNotes>
       <PackageProjectUrl>
@@ -19,7 +19,7 @@
       <PackageLicenseUrl>
       </PackageLicenseUrl>
       <Copyright>Copyright © Microsoft</Copyright>
-      <PackageTags>WinObjC.Frameworks.Dependencies</PackageTags>
+      <PackageTags>WinObjC.Frameworks.ThirdParty</PackageTags>
       <IncludeSymbolsInPackage>false</IncludeSymbolsInPackage>
       <IncludeFrameworkReferencesInPackage>false</IncludeFrameworkReferencesInPackage>
       <NoPackageAnalysis>true</NoPackageAnalysis>
@@ -70,7 +70,7 @@
            Text="Cannot determine git branch. Please make sure GitInfo is listed in the project.json for this project and that git.exe is part of the PATH environment variable." />
 
     <Warning Condition="'$(SolutionPath)' == ''"
-           Text="Cannot determine solution build time. Package version dependencies may be inconsistent as a result. Please make sure to build using .sln file." />
+           Text="Cannot determine solution build time. Package version ThirdParty may be inconsistent as a result. Please make sure to build using .sln file." />
 
     <CreateTimestampFileIfNeeded Condition="'$(SolutionDir)' != ''" 
                                  TimestampFile="$(SolutionDir)$(SolutionName).timestamp">

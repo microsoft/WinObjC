@@ -29,6 +29,10 @@
         <ClangCompile>
           <InternalSystemIncludePaths>$(MSBuildThisFileDirectory)\include\;$(MSBuildThisFileDirectory)\deps\prebuilt\include\;%(InternalSystemIncludePaths);</InternalSystemIncludePaths>
         </ClangCompile>
+
+        <Link>
+          <AdditionalLibraryDirectories>$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\;$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\;$(MSBuildThisFileDirectory)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\;$(MSBuildThisFileDirectory)\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\;%(AdditionalLibraryDirectories);</AdditionalLibraryDirectories>
+        </Link>
     </ItemDefinitionGroup>
 
   <!-- TODO: This should use XMLPoke or similar to dynamically figure out where the important bits are packaged to.-->

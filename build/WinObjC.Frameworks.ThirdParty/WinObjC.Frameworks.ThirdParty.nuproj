@@ -34,7 +34,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
-  <Import Project="WinObjC.Frameworks.Dependencies.Packaging.props" />
+  <Import Project="WinObjC.Frameworks.ThirdParty.Packaging.props" />
   <PropertyGroup Label="Globals">
     <OutputPath>$(SolutionDir)\OutputPackages\$(Configuration)\</OutputPath>
     <ProjectGuid>DFDF94D9-2A0A-4F9B-953B-6BF383858AD3</ProjectGuid>
@@ -43,10 +43,10 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="project.json" />
-    <None Include="WinObjC.Frameworks.Dependencies.Packaging.props" />
-    <None Include="WinObjC.Frameworks.Dependencies.Packaging.targets" />
-    <None Include="WinObjC.Frameworks.Dependencies.props" />
-    <None Include="WinObjC.Frameworks.Dependencies.targets" />
+    <None Include="WinObjC.Frameworks.ThirdParty.Packaging.props" />
+    <None Include="WinObjC.Frameworks.ThirdParty.Packaging.targets" />
+    <None Include="WinObjC.Frameworks.ThirdParty.props" />
+    <None Include="WinObjC.Frameworks.ThirdParty.targets" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt">
@@ -56,5 +56,5 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets')" />
-  <Import Project="WinObjC.Frameworks.Dependencies.Packaging.targets" />
+  <Import Project="WinObjC.Frameworks.ThirdParty.Packaging.targets" />
 </Project>

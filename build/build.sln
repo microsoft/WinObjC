@@ -787,9 +787,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{CC27F0
 		nuget.config = nuget.config
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WinObjC Frameworks Dependencies Package", "WinObjC Frameworks Dependencies Package", "{4BC1549F-F4C2-42D0-9F77-C323F751EA04}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WinObjC Frameworks Third Party Package", "WinObjC Frameworks Third Party Package", "{4BC1549F-F4C2-42D0-9F77-C323F751EA04}"
 EndProject
-Project("{5DD5E4FA-CB73-4610-85AB-557B54E96AA9}") = "WinObjC.Frameworks.Dependencies", "WinObjC.Frameworks.Dependencies\WinObjC.Frameworks.Dependencies.nuproj", "{DFDF94D9-2A0A-4F9B-953B-6BF383858AD3}"
+Project("{5DD5E4FA-CB73-4610-85AB-557B54E96AA9}") = "WinObjC.Frameworks.ThirdParty", "WinObjC.Frameworks.ThirdParty\WinObjC.Frameworks.ThirdParty.nuproj", "{DFDF94D9-2A0A-4F9B-953B-6BF383858AD3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

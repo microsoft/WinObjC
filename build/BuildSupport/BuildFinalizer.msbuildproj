@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <ItemGroup Label="ProjectConfigurations">
@@ -37,20 +37,16 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
-
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-
-  <Target Name="CoreCompile"/>
+  <Target Name="CoreCompile" />
   <Target Name="CreateManifestResourceNames" />
   <Target Name="GetReferenceAssemblyPaths" />
   <Target Name="CopyFilesToOutputDirectory" />
-
   <!-- This is where the fun starts. Any custom generic msbuild project goop goes here. -->
   <ItemGroup>
     <ProjectReference Include="$(SolutionDir)\**\WinObjC.*.nuproj" />
   </ItemGroup>
-
   <Target Name="DeleteTimestampFile" AfterTargets="AfterBuild">
-    <Delete Files="$(SolutionDir)$(SolutionName).timestamp" TreatErrorsAsWarnings="true"/>
+    <Delete Files="$(SolutionDir)$(SolutionName).timestamp" TreatErrorsAsWarnings="true" />
   </Target>
 </Project>
