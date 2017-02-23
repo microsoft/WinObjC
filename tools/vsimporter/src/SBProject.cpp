@@ -163,6 +163,17 @@ bool SBProject::checkTargetCycle(const PBXTarget* target)
   }
 }
 
+bool SBProject::containsPackagebleProject()
+{
+  for (auto target : m_existingTargets) {
+    TargetProductType productType = target.second->getProductType();
+    if (productType == TargetStaticLib || productType == TargetBundle || target.first->getType() == "PBXAggregateTarget") {
+      return true;
+    }
+  }
+  return false;
+}
+
 void SBProject::selectBuildConfigurations(const StringSet* configNames)
 {
   // Use previously-selected configurations, if possible

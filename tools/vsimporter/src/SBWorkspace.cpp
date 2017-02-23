@@ -526,6 +526,13 @@ void SBWorkspace::generateFiles(bool genProjectionsProj, bool genPackagingProj)
   // Detect and warn about about any collisions
   detectProjectCollisions();
 
+  // Don't generate packaging project if the solution only contains an app
+  bool solutionContainsPackagebleProject = false;
+  for (auto project : m_openProjects) {
+    solutionContainsPackagebleProject = solutionContainsPackagebleProject || project.second->containsPackagebleProject();
+  }
+  genPackagingProj = genPackagingProj && solutionContainsPackagebleProject;
+
   // Get a set of all configurations appearing in all projects
   StringSet slnConfigs;
   for (auto project : m_openProjects) {

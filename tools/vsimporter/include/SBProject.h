@@ -45,6 +45,7 @@ public:
   void getQueuedTargets(SBTargetList& ret) const;
   const BuildSettings& getBuildSettings() const;
   const PBXProject* getPBXProject() const;
+  bool containsPackagebleProject();
 
   void queueAllTargets(const StringSet* configNames = NULL);
   SBTarget* queueTargetWithId(const String& targetId, const StringSet* configNames = NULL);
