@@ -310,8 +310,8 @@ private:
 
 public:
     inline D2D1_ANTIALIAS_MODE GetAntialiasMode() {
-        return CurrentGState().shouldAntialias == _kCGTrinaryOn && allowsAntialiasing ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE :
-                                                                                        D2D1_ANTIALIAS_MODE_ALIASED;
+        return CurrentGState().shouldAntialias == _kCGTrinaryOff || !allowsAntialiasing ? D2D1_ANTIALIAS_MODE_ALIASED :
+                                                                                          D2D1_ANTIALIAS_MODE_PER_PRIMITIVE;
     }
 
     inline D2D1_TEXT_ANTIALIAS_MODE GetTextAntialiasMode() {
@@ -2411,13 +2411,13 @@ HRESULT __CGContext::Draw(_CGCoordinateMode coordinateMode, CGAffineTransform* a
     });
 
     // If the context has requested antialiasing other than the defaults we now need to update the device context.
-    if (allowsAntialiasing && CurrentGState().shouldAntialias != _kCGTrinaryDefault) {
+    if (CurrentGState().shouldAntialias != _kCGTrinaryDefault || !allowsAntialiasing) {
         deviceContext->SetAntialiasMode(GetAntialiasMode());
 
         // If any text rendering parameters have been updated, we need to update the device context.
-        if ((CurrentGState().shouldSmoothFonts != _kCGTrinaryDefault && allowsFontSmoothing) ||
-            (CurrentGState().shouldSubpixelPosition != _kCGTrinaryDefault && allowsFontSubpixelPositioning) ||
-            (CurrentGState().shouldSubpixelQuantizeFonts != _kCGTrinaryDefault && allowsFontSubpixelQuantization)) {
+        if ((CurrentGState().shouldSmoothFonts != _kCGTrinaryDefault || !allowsFontSmoothing) ||
+            (CurrentGState().shouldSubpixelPosition != _kCGTrinaryDefault || !allowsFontSubpixelPositioning) ||
+            (CurrentGState().shouldSubpixelQuantizeFonts != _kCGTrinaryDefault || !allowsFontSubpixelQuantization)) {
             ComPtr<IDWriteRenderingParams> originalTextRenderingParams;
             deviceContext->GetTextRenderingParams(&originalTextRenderingParams);
 
