@@ -36,7 +36,6 @@
 #include "COMIncludes_End.h"
 
 @class UIWindow;
-@class WUXIPointerRoutedEventArgs;
 
 // Round subpixel values to be able to perform per-pixel UI placement/calculations
 inline float doPixelRound(float f) {
@@ -151,11 +150,7 @@ public:
 - (void)__setContentsImage:(id)image;
 - (UIWindow*)_getWindowInternal;
 - (BOOL)_isEnabled;
-
-#ifdef __cplusplus
 - (winrt::Windows::UI::Xaml::FrameworkElement)_xamlElementInternal;
-#endif
-
 @end
 
 @interface NSLayoutConstraint ()

@@ -34,24 +34,13 @@ using namespace winrt::Windows::UI::Xaml;
 static const int c_normalSquareLength = 20;
 static const int c_largeSquareLength = 37;
 
-// Data members can only be default-constructed, so create a wrapper for ProgressRing
-// that has a trivial default constructor
-struct ProgressRing : Controls::ProgressRing {
-    ProgressRing() : Controls::ProgressRing(nullptr) {
-    }
-
-    auto operator=(Controls::ProgressRing&& other) {
-        return Controls::ProgressRing::operator=(std::move(other));
-    }
-};
-
 @implementation UIActivityIndicatorView {
     BOOL _hidesWhenStopped;
     BOOL _isAnimating;
     BOOL _startAnimating;
 
     StrongId<UIColor> _color;
-    ProgressRing _progressRing;
+    TrivialDefaultConstructor<Controls::ProgressRing> _progressRing;
     StrongId<UIView> _subView;
 
     UIActivityIndicatorViewStyle _style;
@@ -168,7 +157,9 @@ struct ProgressRing : Controls::ProgressRing {
     // TODO: We should move this over to a single Xaml element which we return from a createXamlElement implementation.
     //       Which would also mean that we'd just reach into [self xamlElement] to get the backing _progressRing,
     //       and we would no longer have a _subview.
-    //_subView = [[UIView alloc] initWithFrame:CGRectZero xamlElement:_progressRing];
+    _subView = [[UIView alloc] initWithFrame:CGRectZero
+                                 xamlElement:(xamlElement ? xamlElement : objcwinrt::to_rtobj(_progressRing))];
+
     [self addSubview:_subView];
     _isAnimating = NO;
     [self setHidesWhenStopped:YES];
@@ -242,7 +233,6 @@ struct ProgressRing : Controls::ProgressRing {
     _isAnimating = YES;
     [self setHidden:NO];
     _progressRing.IsActive(true);
-    //[_progressRing setIsActive:YES];
 }
 
 /**
@@ -255,7 +245,6 @@ struct ProgressRing : Controls::ProgressRing {
     }
 
     _progressRing.IsActive(false);
-    //[_progressRing setIsActive:NO];
     if (_hidesWhenStopped) {
         [self setHidden:YES];
     }

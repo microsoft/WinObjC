@@ -1246,7 +1246,7 @@ static void _sendMemoryWarningToViewControllers(UIView* subview) {
     }
 
     if ([delegate respondsToSelector:@selector(application:openURL:sourceApplication:annotation:)]) {
-        NSURL* url = [NSURL URLWithString:protocolUri.absoluteUri];;
+        NSURL* url = [NSURL URLWithString:protocolUri.absoluteUri];
 
         [delegate application:sharedApplication openURL:url sourceApplication:source annotation:nil];
     }

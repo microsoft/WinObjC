@@ -18,7 +18,7 @@
 #import "NSLogging.h"
 #import "NSRaise.h"
 #import <StubReturn.h>
-#import "StringHelpers.h"
+#import "CppWinRTHelpers.h"
 #import <SafariServices/SFSafariViewController.h>
 #import "SFSafariViewControllerInternal.h"
 #import "SFSafariOAuthViewController.h"
@@ -32,8 +32,8 @@
 #import <UIKit/UIApplication.h>
 #import <UIKit/UIApplicationDelegate.h>
 
-using namespace winrt;
-using namespace winrt::Windows::Foundation;
+
+namespace WF = winrt::Windows::Foundation;
 using namespace winrt::Windows::Security::Authentication::Web;
 
 //
@@ -117,8 +117,8 @@ static const wchar_t* TAG = L"SFSafariOAuthViewController";
     // Replace the caller's callback URL with our own
     NSString* mangledURL = [self _replaceCallbackURL];
 
-    Uri requestUri(Strings::NarrowToWide<std::wstring>(mangledURL));
-    Uri callbackUri(Strings::NarrowToWide<std::wstring>(_substituteRedirectURL));
+    WF::Uri requestUri(objcwinrt::string(mangledURL));
+    WF::Uri callbackUri(objcwinrt::string(_substituteRedirectURL));
 
     auto async = WebAuthenticationBroker::AuthenticateAsync(WebAuthenticationOptions::None, requestUri, callbackUri);
 
@@ -127,7 +127,7 @@ static const wchar_t* TAG = L"SFSafariOAuthViewController";
         BOOL completed = NO;
 
         // Check if AsyncOperation completed
-        if (status != AsyncStatus::Completed) {
+        if (status != WF::AsyncStatus::Completed) {
             NSTraceError(TAG, @"Unexpected async status %u", static_cast<unsigned>(status));
 
         // Check if WebAuth call succeeded
@@ -161,7 +161,7 @@ static const wchar_t* TAG = L"SFSafariOAuthViewController";
         }
 
         auto result = operation.get();
-        NSString* redirectUri = Strings::WideToNSString(get(result.ResponseData()));
+        NSString* redirectUri = objcwinrt::string(result.ResponseData());
 
         if (_substituteRedirectURL != nil) {
             // Substitute the caller's original callback URL

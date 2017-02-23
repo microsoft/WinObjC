@@ -295,11 +295,7 @@ CAPrivateInfo::CAPrivateInfo(CALayer* self, const FrameworkElement& xamlElement)
     // Query for our backing XAML node.
     // ILayerProxy will have created one if the xamlElement passed into the previous CreateLayerProxy call was nullptr.
     Microsoft::WRL::ComPtr<IInspectable> inspectable(_layerProxy->GetXamlElement());
-
-    winrt::abi_default_interface<FrameworkElement>* element;
-    if (SUCCEEDED(inspectable->QueryInterface(IID_PPV_ARGS(&element)))) {
-        winrt::attach(_xamlElement, element);
-    }
+    _xamlElement = objcwinrt::from_insp<FrameworkElement>(inspectable);
 }
 
 CAPrivateInfo::~CAPrivateInfo() {
@@ -2330,11 +2326,7 @@ static CALayer* _findSuperLayerForLayer(CALayer* layer) {
 - (FrameworkElement)_getSublayerXamlElement {
     if (!priv->_sublayerXamlElement) {
         Microsoft::WRL::ComPtr<IInspectable> inspectable(priv->_layerProxy->GetSublayerXamlElement());
-
-        winrt::abi_default_interface<FrameworkElement>* element;
-        if (SUCCEEDED(inspectable->QueryInterface(IID_PPV_ARGS(&element)))) {
-            winrt::attach(priv->_sublayerXamlElement, element);
-        }
+        priv->_sublayerXamlElement = objcwinrt::from_insp<FrameworkElement>(inspectable);
     }
 
     return priv->_sublayerXamlElement;

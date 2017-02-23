@@ -34,7 +34,6 @@
 #include <COMIncludes_End.h>
 #import "AssertARCEnabled.h"
 
-
 // 100 nanoseconds per tick
 static const double c_durationCoef = 10000000.0;
 static const wchar_t* TAG = L"AVFoundation";
@@ -44,6 +43,7 @@ using namespace ABI::Windows::Foundation;
 using namespace ABI::Windows::Storage::Streams;
 
 using namespace Microsoft::WRL;
+namespace WSS = winrt::Windows::Storage::Streams;
 
 @interface _UIHiddenMediaView : UIView
 
@@ -56,6 +56,7 @@ using namespace Microsoft::WRL;
 @implementation AVAudioPlayer {
     _UIHiddenMediaView* _hiddenView;
     TrivialDefaultConstructor<Controls::MediaElement> _mediaElement;
+    TrivialDefaultConstructor<WSS::InMemoryRandomAccessStream> _stream;
     Media::MediaElementState _lastState;
 
     NSDate* _startTime;
@@ -149,10 +150,10 @@ using namespace Microsoft::WRL;
         }
 
         _data = data;
+        _stream = WSS::InMemoryRandomAccessStream();
 
-        winrt::Windows::Storage::Streams::InMemoryRandomAccessStream stream;
-        winrt::Windows::Storage::Streams::DataWriter rw = stream.GetOutputStreamAt(0);
-        ComPtr<IBuffer> buffer;
+        WSS::DataWriter rw = _stream.GetOutputStreamAt(0);
+        WSS::Buffer buffer = nullptr;
         IBuffer* rawBuffer = nullptr;
         HRESULT result;
 
@@ -164,27 +165,21 @@ using namespace Microsoft::WRL;
                                          userInfo:nil];
         }
 
-        buffer.Attach(rawBuffer);
+        winrt::attach(buffer, reinterpret_cast<winrt::ABI::Windows::Storage::Streams::IBuffer*>(rawBuffer));
 
-        // WARNING: If someone deletes this AVAudioPlayer before the StoreAsync is completed, _data may be released
-        // causing IBuffer to segfault.
+        rw.WriteBuffer(buffer);
+        auto async = rw.StoreAsync();
 
-        // TODO: subclassed IAsyncOperation<T>s don't get generated correctly in ObjCUWP yet, when that happens it'll
-        // open up StoreAsync.
-        IDataWriter* writer;
-        ComPtr<IAsyncOperation<UInt32>> comp;
-
-        writer = reinterpret_cast<IDataWriter*>(
-            static_cast<winrt::ABI::Windows::Storage::Streams::IDataWriter*>(
-                winrt::get(rw)));
-
-        writer->WriteBuffer(buffer.Get());
-        writer->StoreAsync(&comp);
-
-        _mediaElement.SetSource(stream, L"");
-
-        // TODO: Is this needed?
-        rw.DetachStream();
+        // Hook the stream up to the media control when the load is complete
+        async.Completed([self] (auto&& operation, auto&& status) {
+            if (status == winrt::Windows::Foundation::AsyncStatus::Completed) {
+                // Access XAML control on main thread
+                dispatch_sync(dispatch_get_main_queue(), ^{
+                    self->_mediaElement.SetSource(self->_stream, L"");
+                    self->_stream = nullptr;
+                });
+            }
+        });
 
         if (outError) {
             // TODO: Some modicum of failure returns. Right now everything is async and bound to the Xaml thread, so
