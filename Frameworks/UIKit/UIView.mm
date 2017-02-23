@@ -640,7 +640,7 @@ static std::string _printViewhierarchy(UIView* leafView) {
     // Run on the main thread because the underlying XAML objects can only be
     // called from the UI thread
     RunSynchronouslyOnMainThread(^{
-        [self _initPrivWithFrame:frame xamlElement:nullptr];
+        [self _initPrivWithFrame:frame xamlElement:nil];
 
         // Default state
         [self setOpaque:TRUE];

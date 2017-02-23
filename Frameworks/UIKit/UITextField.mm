@@ -305,18 +305,16 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
  @Status Interoperable
 */
 - (void)setTextColor:(UIColor*)color {
-/*
-    WUColor* convertedColor = XamlUtilities::ConvertUIColorToWUColor(color);
-    WUXMSolidColorBrush* brush = [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
+    auto convertedColor = XamlUtilities::ConvertUIColorToWUColor(color);
+    Media::SolidColorBrush brush(convertedColor);
 
     [_secureModeLock lock];
     if (_secureTextMode) {
-        _passwordBox.foreground = brush;
+        _passwordBox.Foreground(brush);
     } else {
-        _textBox.foreground = brush;
+        _textBox.Foreground(brush);
     }
     [_secureModeLock unlock];
-*/
 }
 
 /**
@@ -331,7 +329,7 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
     }
 
     if (colorBrush) {
-        //return XamlUtilities::ConvertWUColorToUIColor(colorBrush.color);
+        return XamlUtilities::ConvertWUColorToUIColor(colorBrush.Color());
     }
 
     return nil;
@@ -344,18 +342,17 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
     // In class WXCTextBox and WXCPasswordBox, there is just one ivar 'background' for both background color and background image.
     // When setting background color, clear out _backgroundImage assigning it to nil.
     _backgroundImage = nil;
-    /*
-    WUColor* convertedColor = XamlUtilities::ConvertUIColorToWUColor(color);
-    WUXMSolidColorBrush* brush = [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
+
+    auto convertedColor = XamlUtilities::ConvertUIColorToWUColor(color);
+    Media::SolidColorBrush brush(convertedColor);
 
     [_secureModeLock lock];
     if (_secureTextMode) {
-        _passwordBox.background = brush;
+        _passwordBox.Background(brush);
     } else {
-        _textBox.background = brush;
+        _textBox.Background(brush);
     }
     [_secureModeLock unlock];
-    */
 }
 
 /**
@@ -370,7 +367,7 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
     }
 
     if (colorBrush) {
-        //return XamlUtilities::ConvertWUColorToUIColor(colorBrush.color);
+        return XamlUtilities::ConvertWUColorToUIColor(colorBrush.Color());
     }
 
     return nil;
@@ -591,9 +588,9 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
         } else {
             XamlUtilities::SetControlBorderStyle(_textBox, _borderStyle);
         }
-        /*
-        WUColor* convertedColor = XamlUtilities::ConvertUIColorToWUColor(self.backgroundColor);
-        WUXMSolidColorBrush* brush = [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
+
+        auto convertedColor = XamlUtilities::ConvertUIColorToWUColor(self.backgroundColor);
+        Media::SolidColorBrush brush(convertedColor);
 
         // If _borderStyle is set to the UITextBorderStyleRoundedRect,
         // the custom background image associated with the text field is ignored.
@@ -601,13 +598,13 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
         // change _borderStyle from another style to UITextBorderStyleRoundedRect.
         if (_borderStyle == UITextBorderStyleRoundedRect && _backgroundImage != nil) {
             if (_secureTextMode) {
-                _passwordBox.background = brush;
+                _passwordBox.Background(brush);
             } else {
-                _textBox.background = brush;
+                _textBox.Background(brush);
             }
         }
         [_secureModeLock unlock];
-        */
+
         // If _borderStyle is not set to the UITextBorderStyleRoundedRect,
         // the custom background image associated with the text field is shown.
         // oldStyle == UITextBorderStyleRoundedRect means to
@@ -1057,7 +1054,7 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
 }
 
 - (id)initWithFrame:(CGRect)frame xamlElement:(RTObject*)xamlElement {
-    // TODO: We're passing nullptr to initWithFrame:xamlElement: because we have to *contain* either a TextBox or a PasswordBox.
+    // TODO: We're passing nil to initWithFrame:xamlElement: because we have to *contain* either a TextBox or a PasswordBox.
     // Note: Pass 'xamlElement' instead, once we move to a *single* backing Xaml element for UITextField.
     if (self = [super initWithFrame:frame xamlElement:nil]) {
         // move to top so that setting properties below can happen on xamlElement
@@ -1249,53 +1246,54 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
 // Handler when control GotFocus
 - (void)_setupControlGotFocusHandler:(const Controls::Control&)control {
     __weak UITextField* weakSelf = self;
-    control.GotFocus([&control, weakSelf] (auto&& sender, auto&& e) {
+    control.GotFocus([weakSelf] (const winrt::Windows::IInspectable& sender, auto&&) {
         __strong UITextField* strongSelf = weakSelf;
-        // when GotFocus, check delegate (if exists) to see if it allows start editing
-        if ([strongSelf.delegate respondsToSelector:@selector(textFieldShouldBeginEditing:)] &&
-            ![strongSelf.delegate textFieldShouldBeginEditing:strongSelf]) {
-            // delegate says NO, but we already got the focus at this point, need to kill the focus on this control
-            [strongSelf _killFocus];
-            return;
+        if (strongSelf) {
+            // when GotFocus, check delegate (if exists) to see if it allows start editing
+            if ([strongSelf.delegate respondsToSelector:@selector(textFieldShouldBeginEditing:)] &&
+                ![strongSelf.delegate textFieldShouldBeginEditing:strongSelf]) {
+                // delegate says NO, but we already got the focus at this point, need to kill the focus on this control
+                [strongSelf _killFocus];
+                return;
+            }
+
+            // no one says NO, update first responder to YES
+            strongSelf->_isFirstResponder = YES;
+
+            // more delegate update
+            if ([strongSelf.delegate respondsToSelector:@selector(textFieldDidBeginEditing:)]) {
+                [strongSelf.delegate textFieldDidBeginEditing:strongSelf];
+            }
+
+            // more notification
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [strongSelf sendActionsForControlEvents:UIControlEventEditingDidBegin];
+                [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidBeginEditingNotification object:strongSelf];
+            });
+
+            // Update the collapsed/visible state of the cancel button and adjust text size.
+            sender.as<Controls::Control>().UpdateLayout();
+            [strongSelf _adjustFontSizeToFitWidthOrApplyCurrentFont];
         }
-
-        // no one says NO, update first responder to YES
-        strongSelf->_isFirstResponder = YES;
-
-        // more delegate update
-        if ([strongSelf.delegate respondsToSelector:@selector(textFieldDidBeginEditing:)]) {
-            [strongSelf.delegate textFieldDidBeginEditing:strongSelf];
-        }
-
-        // more notification
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [strongSelf sendActionsForControlEvents:UIControlEventEditingDidBegin];
-            [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidBeginEditingNotification object:strongSelf];
-        });
-
-        // Update the collapsed/visible state of the cancel button and adjust text size.
-        control.UpdateLayout();
-        [strongSelf _adjustFontSizeToFitWidthOrApplyCurrentFont];
     });
 }
 
 // Handler when control LostFocus
 - (void)_setupControlLostFocusHandler:(const Controls::Control&)control {
-    auto weakControl = winrt::make_weak(control);
     __weak UITextField* weakSelf = self;
 
-    control.LostFocus([weakSelf, weakControl] (auto&& sender, auto &&e) {
+    control.LostFocus([weakSelf] (const winrt::Windows::IInspectable& sender, auto&&) {
         __strong UITextField* strongSelf = weakSelf;
-        auto strongControl = weakControl.get();
+        auto control = sender.as<Controls::Control>();
 
-        if (strongSelf && strongControl) {
-            // when LostFocus, check delegate (if exits) to see if it allows end Editing
+        if (strongSelf) {
+            // when LostFocus, check delegate (if exists) to see if it allows end Editing
             if ([strongSelf.delegate respondsToSelector:@selector(textFieldShouldEndEditing:)] &&
                 ![strongSelf.delegate textFieldShouldEndEditing:strongSelf]) {
                 // delegate does not allow edting to be ended, but we already lost the focus
                 // we need re-setting the focus back. it will trigger GotFocusEvent again on this control
                 // and then it will update the firstResponder status as YES
-                strongControl.Focus(FocusState::Programmatic);
+                control.Focus(FocusState::Programmatic);
                 return;
             }
 
@@ -1314,7 +1312,7 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
             });
 
             // Update the collapsed/visible state of the cancel button and adjust text size.
-            strongControl.UpdateLayout();
+            control.UpdateLayout();
             [strongSelf _adjustFontSizeToFitWidthOrApplyCurrentFont];
         }
     });
@@ -1364,21 +1362,17 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
     [_subView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
     [self addSubview:_subView];
 
-    // if passwordbox exits, need to transfer the properties that we set on passwordbox to textbox
+    // if passwordbox exists, need to transfer the properties that we set on passwordbox to textbox
     if (_passwordBox != nil) {
         if (_backgroundImage == nil || self.borderStyle == UITextBorderStyleRoundedRect) {
-        /*
-            WUColor* convertedColor = XamlUtilities::ConvertUIColorToWUColor(self.backgroundColor);
-            WUXMSolidColorBrush* brush = [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
-            _textBox.background = brush;
-        */
+            auto convertedColor = XamlUtilities::ConvertUIColorToWUColor(self.backgroundColor);
+            Media::SolidColorBrush brush(convertedColor);
+            _textBox.Background(brush);
         }
 
-        /*
-        WUColor* convertedTextColor = XamlUtilities::ConvertUIColorToWUColor(self.textColor);
-        WUXMSolidColorBrush* textBrush = [WUXMSolidColorBrush makeInstanceWithColor:convertedTextColor];
-        _textBox.foreground = textBrush;
-        */
+        auto convertedTextColor = XamlUtilities::ConvertUIColorToWUColor(self.textColor);
+        Media::SolidColorBrush textBrush(convertedTextColor);
+        _textBox.Foreground(textBrush);
 
         _textBox.TextAlignment(XamlUtilities::ConvertUITextAlignmentToWXTextAlignment(self.textAlignment));
         _textBox.InputScope(XamlUtilities::ConvertKeyboardTypeToInputScope(_keyboardType, NO));
@@ -1447,19 +1441,15 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
     // if textbox exists, need to transfer the properties from textbox to passwordbox
     if (_textBox) {
         if (_backgroundImage == nil || self.borderStyle == UITextBorderStyleRoundedRect) {
-            /*
-            WUColor* convertedColor = XamlUtilities::ConvertUIColorToWUColor(self.backgroundColor);
-            WUXMSolidColorBrush* brush = [WUXMSolidColorBrush makeInstanceWithColor:convertedColor];
-            _passwordBox.background = brush;
-            */
+            auto convertedColor = XamlUtilities::ConvertUIColorToWUColor(self.backgroundColor);
+            Media::SolidColorBrush brush(convertedColor);
+            _passwordBox.Background(brush);
         }
 
-        /*
-        WUColor* convertedTextColor = XamlUtilities::ConvertUIColorToWUColor(self.textColor);
-        WUXMSolidColorBrush* textBrush = [WUXMSolidColorBrush makeInstanceWithColor:convertedTextColor];
-        _passwordBox.foreground = textBrush;
+        auto convertedTextColor = XamlUtilities::ConvertUIColorToWUColor(self.textColor);
+        Media::SolidColorBrush textBrush(convertedTextColor);
+        _passwordBox.Foreground(textBrush);
         // passwordBox does not support textAlignment
-        */
 
         // border manipulate the control tempate and must be done after loaded
         XamlUtilities::SetControlBorderStyle(_passwordBox, self.borderStyle);

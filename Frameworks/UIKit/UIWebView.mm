@@ -139,7 +139,7 @@ static void _initUIWebView(UIWebView* self) {
         self->_xamlWebControl.NavigationStarting([self] (auto&& sender, auto&& e) {
             // Give the client a chance to cancel the navigation
             if ([self.delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
-                NSString* urlStr = [NSString _stringWithHSTRING:winrt::get(e.Uri().AbsoluteUri())];
+                NSString* urlStr = objcwinrt::string(e.Uri().AbsoluteUri());
                 NSURL* url = [NSURL URLWithString:urlStr];
                 NSURLRequest* request = [NSURLRequest requestWithURL:url];
 
@@ -161,7 +161,7 @@ static void _initUIWebView(UIWebView* self) {
     self->_xamlUnsupportedUriSchemeEventCookie =
         self->_xamlWebControl.UnsupportedUriSchemeIdentified([self] (auto&& sender, auto&& e) {
             if ([self.delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
-                NSString* urlStr = [NSString _stringWithHSTRING:winrt::get(e.Uri().AbsoluteUri())];
+                NSString* urlStr = objcwinrt::string(e.Uri().AbsoluteUri());
                 NSURL* url = [NSURL URLWithString:urlStr];
                 NSURLRequest* request = [NSURLRequest requestWithURL:url];
                 UIWebViewNavigationType navigationType = UIWebViewNavigationTypeOther;
@@ -179,7 +179,7 @@ static void _initUIWebView(UIWebView* self) {
     // Add handler which will be invoked when user calls window.external.notify(msg) function in javascript
     self->_xamlWebControl.ScriptNotify([self] (auto&& sender, auto&& e) {
         // Send event to webView delegate
-        NSString* urlStr = [NSString _stringWithHSTRING:winrt::get(e.CallingUri().AbsoluteUri())];
+        NSString* urlStr = objcwinrt::string(e.CallingUri().AbsoluteUri());
         NSURL* url = [NSURL URLWithString:urlStr];
         if ([self.delegate respondsToSelector:@selector(webView:scriptNotify:value:)]) {
             NSString* value = [NSString _stringWithHSTRING:winrt::get(e.Value())];
@@ -249,8 +249,7 @@ static void _initUIWebView(UIWebView* self) {
 - (void)loadHTMLString:(NSString*)string baseURL:(NSURL*)baseURL {
     _isLoading = true;
 
-    auto hstring = Strings::NarrowToWide<HSTRING>(string);
-    _xamlWebControl.NavigateToString(winrt::hstring_ref(hstring.Get()));
+    _xamlWebControl.NavigateToString(objcwinrt::string(string));
 
     [self sizeToFit];
 }
@@ -290,23 +289,19 @@ static void _initUIWebView(UIWebView* self) {
   @Notes This is a workaround. Original UIWebView does not have this method
 */
 - (void)evaluateJavaScript:(NSString*)javaScriptString completionHandler:(void (^)(id, NSError*))completionHandler {
-    auto jsString = Strings::NarrowToWide<HSTRING>(javaScriptString);
-    auto jsStringRef = winrt::hstring_ref(jsString.Get());
+    auto async = _xamlWebControl.InvokeScriptAsync(L"eval", { objcwinrt::string(javaScriptString) });
 
-    _xamlWebControl.InvokeScriptAsync(winrt::hstring_ref(L"eval"), { jsStringRef });
-    /*
-        arguments:[NSArray arrayWithObject:javaScriptString]
-        success:^void(NSString* success) {
-            if (completionHandler != nil) {
-                completionHandler(success, nil);
-            }
+    [completionHandler retain];
+    async.Completed([completionHandler] (auto&& operation, auto&& status) {
+        if (status == WF::AsyncStatus::Completed) {
+            completionHandler(objcwinrt::string(operation.GetResults()), nil);
+        } else {
+            NSError* error = [NSError errorWithDomain:@"Async" code:(int)status userInfo:nil];
+            completionHandler(nil, error);
         }
-        failure:^void(NSError* failure) {
-            if (completionHandler != nil) {
-                completionHandler(nil, failure);
-            }
-        }];
-    */
+
+        [completionHandler release];
+    });
 }
 
 /**

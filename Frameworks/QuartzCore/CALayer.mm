@@ -48,6 +48,7 @@
 #include "LoggingNative.h"
 #include "NSLogging.h"
 #include "CALayerInternal.h"
+#include "CppWinRTHelpers.h"
 
 #import <objc/objc-arc.h>
 

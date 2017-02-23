@@ -325,20 +325,6 @@ UIView* XamlUtilities::GenerateUIKitControlFromXamlType(const winrt::Windows::II
     return control;
 }
 
-/*
-id XamlUtilities::CreateRtProxy(Class cls, IInspectable* iface) {
-    // Oddly, WinRT can hand us back NULL objects from successful function calls. Plumb these through as nil.
-    if (!iface) {
-        return nil;
-    }
-
-    RTObject* ret = [NSAllocateObject(cls, 0, 0) init];
-    [ret setComObj:iface];
-
-    return ret;
-}
-*/
-
 void XamlUtilities::ApplyLineBreakModeOnTextBlock(const WX::Controls::TextBlock& textBlock, UILineBreakMode mode, int numberOfLines) {
     // wrapping or not on reference platform is ultimatly decided by numberofLines of UILabel
     // e.g., if nubmerOfLines is 1, even though lineBreakMode can be set as UILineBreakModeWordWrap etc, no wrapping is happening.

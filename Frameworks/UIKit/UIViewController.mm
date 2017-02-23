@@ -1838,11 +1838,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     [_pageMappings setObject:self forKey:(id)(void*)pageObj.Get()];
 
     // Create a template UIView
-    winrt::abi_default_interface<Controls::Page>* pageAbi;
-    if (SUCCEEDED(pageObj.CopyTo(&pageAbi))) {
-        winrt::attach(priv->_page, pageAbi);
-    }
-
+    priv->_page = objcwinrt::from_insp<Controls::Page>(pageObj);
     UIView* view = [[[UIEmptyView alloc] initWithFrame:frame xamlElement:objcwinrt::to_rtobj(priv->_page)] autorelease];
     [view setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth];
     [self setView:view];
@@ -1857,8 +1853,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
         const char* propName = property_getName(curProp);
         if (propName) {
             NSString* propNameString = [NSString stringWithCString:propName];
-            auto propNameHString = Strings::NarrowToWide<HSTRING>(propName);
-            auto obj = priv->_page.FindName(winrt::hstring_ref(propNameHString.Get()));
+            auto obj = priv->_page.FindName(objcwinrt::string(propNameString));
             UIView* control = XamlUtilities::GenerateUIKitControlFromXamlType(obj);
             if (control != nil) {
                 [self setValue:control forKey:propNameString];
