@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -497,7 +497,7 @@ CFStringRef CTFontCopyName(CTFontRef font, CFStringRef nameKey) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CFStringRef CTFontCopyLocalizedName(CTFontRef font, CFStringRef nameKey, CFStringRef _Nullable* actualLanguage) {
