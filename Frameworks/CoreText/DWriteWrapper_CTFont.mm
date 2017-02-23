@@ -284,7 +284,7 @@ static CFDictionaryRef _DWriteFontCreateTraitsDict(const ComPtr<IDWriteFontFace>
 /**
  * Gets a name/informational string from a DWrite font face corresponding to a CTFont constant
  */
-CFStringRef _DWriteFontCopyName(const ComPtr<IDWriteFontFace>& fontFace, CFStringRef nameKey, CFStringRef* actualLanuguage) {
+CFStringRef _DWriteFontCopyName(const ComPtr<IDWriteFontFace>& fontFace, CFStringRef nameKey, CFStringRef* actualLanguage) {
     if (nameKey == nullptr || fontFace == nullptr) {
         return nullptr;
     }
@@ -301,14 +301,14 @@ CFStringRef _DWriteFontCopyName(const ComPtr<IDWriteFontFace>& fontFace, CFStrin
         RETURN_NULL_IF_FAILED(fontFace.As(&dwriteFontFace3));
         ComPtr<IDWriteLocalizedStrings> name;
         RETURN_NULL_IF_FAILED(dwriteFontFace3->GetFamilyNames(&name));
-        return static_cast<CFStringRef>(CFRetain(_CFStringFromLocalizedString(name.Get(), actualLanuguage)));
+        return static_cast<CFStringRef>(CFRetain(_CFStringFromLocalizedString(name.Get(), actualLanguage)));
 
     } else if (CFEqual(nameKey, kCTFontSubFamilyNameKey)) {
         // Similar to above, WIN32_SUBFAMILY_NAMES is limited to four fonts per family,
         // but PREFERRED_SUBFAMILY_NAMES is only sometimes present (if it differs from WIN32_SUBFAMILY_NAMES)
         // Try PREFERRED first
         CFStringRef ret =
-            _DWriteFontCopyInformationalString(fontFace, DWRITE_INFORMATIONAL_STRING_PREFERRED_SUBFAMILY_NAMES, actualLanuguage);
+            _DWriteFontCopyInformationalString(fontFace, DWRITE_INFORMATIONAL_STRING_PREFERRED_SUBFAMILY_NAMES, actualLanguage);
         if (ret) {
             return ret;
         }
@@ -320,7 +320,7 @@ CFStringRef _DWriteFontCopyName(const ComPtr<IDWriteFontFace>& fontFace, CFStrin
         RETURN_NULL_IF_FAILED(fontFace.As(&dwriteFontFace3));
         ComPtr<IDWriteLocalizedStrings> name;
         RETURN_NULL_IF_FAILED(dwriteFontFace3->GetFaceNames(&name));
-        return static_cast<CFStringRef>(CFRetain(_CFStringFromLocalizedString(name.Get(), actualLanuguage)));
+        return static_cast<CFStringRef>(CFRetain(_CFStringFromLocalizedString(name.Get(), actualLanguage)));
 
     } else if (CFEqual(nameKey, kCTFontUniqueNameKey)) {
         return CFStringCreateWithFormat(kCFAllocatorDefault,
@@ -328,7 +328,7 @@ CFStringRef _DWriteFontCopyName(const ComPtr<IDWriteFontFace>& fontFace, CFStrin
                                         CFSTR("%@ %@"),
                                         // Only want to assign to actualLanguage once
                                         CFAutorelease(_DWriteFontCopyName(fontFace, kCTFontFullNameKey)),
-                                        CFAutorelease(_DWriteFontCopyName(fontFace, kCTFontStyleNameKey, actualLanuguage)));
+                                        CFAutorelease(_DWriteFontCopyName(fontFace, kCTFontStyleNameKey, actualLanguage)));
 
     } else if (CFEqual(nameKey, kCTFontFullNameKey)) {
         informationalStringId = DWRITE_INFORMATIONAL_STRING_FULL_NAME;
@@ -360,7 +360,7 @@ CFStringRef _DWriteFontCopyName(const ComPtr<IDWriteFontFace>& fontFace, CFStrin
         informationalStringId = DWRITE_INFORMATIONAL_STRING_NONE;
     }
 
-    return _DWriteFontCopyInformationalString(fontFace, informationalStringId, actualLanuguage);
+    return _DWriteFontCopyInformationalString(fontFace, informationalStringId, actualLanguage);
 }
 
 static constexpr CTFontTableTag sc_tags[] = { kCTFontTableBASE, kCTFontTableCFF,  kCTFontTableDSIG, kCTFontTableEBDT, kCTFontTableEBLC,

@@ -753,16 +753,16 @@ TEST(CTFont, CopyLocalizedName) {
     auto font = woc::MakeAutoCF<CTFontRef>(CTFontCreateWithName(fontName, 20, nullptr));
     ASSERT_NE(nullptr, font);
 
+    // Actual language out-param should be optional
+    auto copyrightNameWithoutLang = woc::MakeAutoCF<CFStringRef>(CTFontCopyLocalizedName(font, kCTFontCopyrightNameKey, nullptr));
+    EXPECT_OBJCEQ(c_copyrightName, (__bridge NSString*)copyrightNameWithoutLang.get());
+
     CFStringRef actualLanguage = nullptr;
     auto copyrightName = woc::MakeAutoCF<CFStringRef>(CTFontCopyLocalizedName(font, kCTFontCopyrightNameKey, &actualLanguage));
     EXPECT_OBJCEQ(c_copyrightName, (__bridge NSString*)copyrightName.get());
     ASSERT_NE(nil, actualLanguage);
     ASSERT_EQ(5, CFStringGetLength(actualLanguage));
     EXPECT_OBJCEQ(sc_localeName, (__bridge NSString*)actualLanguage);
-
-    // Actual language out-param should be optional
-    auto copyrightName2 = woc::MakeAutoCF<CFStringRef>(CTFontCopyLocalizedName(font, kCTFontCopyrightNameKey, nullptr));
-    EXPECT_OBJCEQ(c_copyrightName, (__bridge NSString*)copyrightName2.get());
 
     EXPECT_TRUE(CTFontManagerUnregisterFontsForURL((__bridge CFURLRef)testFileURL.get(), kCTFontManagerScopeSession, &error));
     EXPECT_EQ(nullptr, error);
@@ -781,4 +781,5 @@ TEST(CTFont, CopyAvailableTables) {
     // Don't want to make test too precise so that it may fail should fonts change, but 'cmap' is a required font table
     // So it should be safe to always test that this value is available
     EXPECT_TRUE(CFArrayContainsValue(availableTables, { 0, count }, (const void*)kCTFontTableCmap));
+    __debugbreak();
 }
