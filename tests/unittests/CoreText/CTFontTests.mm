@@ -781,5 +781,4 @@ TEST(CTFont, CopyAvailableTables) {
     // Don't want to make test too precise so that it may fail should fonts change, but 'cmap' is a required font table
     // So it should be safe to always test that this value is available
     EXPECT_TRUE(CFArrayContainsValue(availableTables, { 0, count }, (const void*)kCTFontTableCmap));
-    __debugbreak();
 }
