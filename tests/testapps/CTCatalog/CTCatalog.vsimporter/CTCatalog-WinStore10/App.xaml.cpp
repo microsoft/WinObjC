@@ -3,6 +3,8 @@
 // Implementation of the App class.
 //
 
+// clang-format off
+
 #include "pch.h"
 
 using namespace CTCatalog;
@@ -31,10 +33,10 @@ App::App() {
 }
 
 extern "C" int main(int argc, char* argv[]);
-extern "C" void UIApplicationActivated(Windows::ApplicationModel::Activation::IActivatedEventArgs ^ e);
-extern "C" void UIApplicationLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs ^ e);
+extern "C" void UIApplicationActivated(Windows::ApplicationModel::Activation::IActivatedEventArgs^ e);
+extern "C" void UIApplicationLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ e);
 #ifdef ENABLE_BACKGROUND_TASK
-extern "C" void UIApplicationBackgroundActivated(Windows::ApplicationModel::Activation::BackgroundActivatedEventArgs ^ e);
+extern "C" void UIApplicationBackgroundActivated(Windows::ApplicationModel::Activation::BackgroundActivatedEventArgs^ e);
 #endif
 
 /// <summary>
@@ -42,18 +44,24 @@ extern "C" void UIApplicationBackgroundActivated(Windows::ApplicationModel::Acti
 /// will be used such as when the application is launched to open a specific file.
 /// </summary>
 /// <param name="e">Details about the launch request and process.</param>
-void App::OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs ^ e) {
+void App::OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ e) {
     main(0, NULL);
     UIApplicationLaunched(e);
 }
 
-void App::OnActivated(Windows::ApplicationModel::Activation::IActivatedEventArgs ^ e) {
+void App::OnActivated(Windows::ApplicationModel::Activation::IActivatedEventArgs^ e) {
     main(0, NULL);
     UIApplicationActivated(e);
 }
 
+void App::OnFileActivated(FileActivatedEventArgs^ args)
+{
+    main(0, NULL);
+    UIApplicationActivated(args);
+}
+
 #ifdef ENABLE_BACKGROUND_TASK
-void App::OnBackgroundActivated(Windows::ApplicationModel::Activation::BackgroundActivatedEventArgs ^ e) {
+void App::OnBackgroundActivated(Windows::ApplicationModel::Activation::BackgroundActivatedEventArgs^ e) {
     __super ::OnBackgroundActivated(e);
     UIApplicationBackgroundActivated(e);
 }
@@ -66,7 +74,7 @@ void App::OnBackgroundActivated(Windows::ApplicationModel::Activation::Backgroun
 /// </summary>
 /// <param name="sender">The source of the suspend request.</param>
 /// <param name="e">Details about the suspend request.</param>
-void App::OnSuspending(Object ^ /*sender*/, SuspendingEventArgs ^ /*e*/) {
+void App::OnSuspending(Object^ /*sender*/, SuspendingEventArgs^ /*e*/) {
     // TODO: Save application state and stop any background activity
 }
 
@@ -75,6 +83,8 @@ void App::OnSuspending(Object ^ /*sender*/, SuspendingEventArgs ^ /*e*/) {
 /// </summary>
 /// <param name="sender">The Frame which failed navigation</param>
 /// <param name="e">Details about the navigation failure</param>
-void App::OnNavigationFailed(Platform::Object ^ sender, Windows::UI::Xaml::Navigation::NavigationFailedEventArgs ^ e) {
+void App::OnNavigationFailed(Platform::Object^ sender, Windows::UI::Xaml::Navigation::NavigationFailedEventArgs^ e) {
     throw ref new FailureException("Failed to load Page " + e->SourcePageType.Name);
 }
+
+// clang-format on

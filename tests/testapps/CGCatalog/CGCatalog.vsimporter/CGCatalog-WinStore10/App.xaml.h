@@ -3,6 +3,7 @@
 // Declaration of the App class.
 //
 
+// clang-format off
 #pragma once
 
 #include "App.g.h"
@@ -19,6 +20,8 @@ protected:
     virtual void OnBackgroundActivated(Windows::ApplicationModel::Activation::BackgroundActivatedEventArgs^ e) override;
 #endif
 
+    void OnFileActivated(Windows::ApplicationModel::Activation::FileActivatedEventArgs^ args) override;
+
     internal : App();
 
 private:
@@ -26,3 +29,5 @@ private:
     void OnNavigationFailed(Platform::Object ^ sender, Windows::UI::Xaml::Navigation::NavigationFailedEventArgs^ e);
 };
 }
+
+// clang-format on

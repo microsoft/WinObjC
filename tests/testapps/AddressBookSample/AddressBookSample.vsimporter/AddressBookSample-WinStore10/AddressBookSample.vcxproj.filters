@@ -2,22 +2,22 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{52ee00d3-5c96-4b91-aa7e-dc9c212a5f9b}</UniqueIdentifier>
+      <UniqueIdentifier>{16feba67-1c02-47af-a060-fe13cfcbbeca}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{f0b2b0d3-cd54-49a3-bcce-547376477f82}</UniqueIdentifier>
+      <UniqueIdentifier>{f9ef4e12-e602-42c6-8362-2879133b73c3}</UniqueIdentifier>
     </Filter>
     <Filter Include="AddressBookSample">
-      <UniqueIdentifier>{D66BA5F5-6A1D-4C92-82F3-27B8580BA194}</UniqueIdentifier>
+      <UniqueIdentifier>{8E65E57A-9C72-42B5-8819-BD8FB6179984}</UniqueIdentifier>
     </Filter>
     <Filter Include="AddressBookSample\Base">
-      <UniqueIdentifier>{8D1AA883-4FBF-45D2-8BF9-263167E7C33E}</UniqueIdentifier>
+      <UniqueIdentifier>{F1D22149-B82C-4B3B-A536-E27BC56906C8}</UniqueIdentifier>
     </Filter>
     <Filter Include="AddressBookSample\Supporting Files">
-      <UniqueIdentifier>{809F275A-79D7-4BDB-9C71-5AB9A6090449}</UniqueIdentifier>
+      <UniqueIdentifier>{2DAF2A09-33FA-47C5-B421-6167CF84640F}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{E39DCE44-F778-4C9E-8DB7-AF4411216FDE}</UniqueIdentifier>
+      <UniqueIdentifier>{9FB7F9E8-F27E-40F9-AFE7-E4F0A62220BB}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -45,31 +45,43 @@
     <Image Include="Assets\Wide310x150Logo.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
-    <ClangCompile Include="..\..\AddressBook\ViewController.m">
+    <AssetCatalogCompile Include="..\..\AddressBook\Assets.xcassets">
+      <Filter>AddressBookSample</Filter>
+    </AssetCatalogCompile>
+    <ClInclude Include="..\..\AddressBook\AppDelegate.h">
+      <Filter>AddressBookSample</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\AddressBook\SingleContactViewController.h">
+      <Filter>AddressBookSample</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\AddressBook\ViewAllContactsViewController.h">
+      <Filter>AddressBookSample</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\AddressBook\ViewController.h">
+      <Filter>AddressBookSample</Filter>
+    </ClInclude>
+    <ClangCompile Include="..\..\AddressBook\AppDelegate.m">
       <Filter>AddressBookSample</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\AddressBook\SingleContactViewController.m">
       <Filter>AddressBookSample</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\AddressBook\AppDelegate.m">
+    <ClangCompile Include="..\..\AddressBook\ViewAllContactsViewController.m">
       <Filter>AddressBookSample</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\AddressBook\ViewAllContactsViewController.m">
+    <ClangCompile Include="..\..\AddressBook\ViewController.m">
       <Filter>AddressBookSample</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\AddressBook\main.m">
       <Filter>AddressBookSample\Supporting Files</Filter>
     </ClangCompile>
+    <SBInfoPlistCopy Include="..\..\AddressBook\Info.plist" />
     <StoryboardCompile Include="..\..\AddressBook\Base.lproj\LaunchScreen.storyboard">
       <Filter>AddressBookSample\Base</Filter>
     </StoryboardCompile>
-    <AssetCatalogCompile Include="..\..\AddressBook\Assets.xcassets">
-      <Filter>AddressBookSample</Filter>
-    </AssetCatalogCompile>
     <StoryboardCompile Include="..\..\AddressBook\Base.lproj\Main.storyboard">
       <Filter>AddressBookSample\Base</Filter>
     </StoryboardCompile>
-    <SBInfoPlistCopy Include="..\..\AddressBook\Info.plist" />
     <Text Include="AddressBookSample-Debug-xcvars.txt">
       <Filter>Xcode Variable Files</Filter>
     </Text>
