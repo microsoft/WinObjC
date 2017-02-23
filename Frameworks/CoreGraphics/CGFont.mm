@@ -151,7 +151,7 @@ CGFontRef CGFontCreateCopyWithVariations(CGFontRef font, CFDictionaryRef variati
 */
 CFStringRef CGFontCopyPostScriptName(CGFontRef font) {
     RETURN_NULL_IF(!font);
-    return _DWriteFontCopyInformationalString(font->_dwriteFontFace, DWRITE_INFORMATIONAL_STRING_POSTSCRIPT_NAME);
+    return _DWriteFontCopyInformationalString(font->_dwriteFontFace, DWRITE_INFORMATIONAL_STRING_POSTSCRIPT_NAME, nullptr);
 }
 
 /**
@@ -226,7 +226,7 @@ CFDictionaryRef CGFontCopyVariations(CGFontRef font) {
 */
 CFStringRef CGFontCopyFullName(CGFontRef font) {
     RETURN_NULL_IF(!font);
-    return _DWriteFontCopyInformationalString(font->_dwriteFontFace, DWRITE_INFORMATIONAL_STRING_FULL_NAME);
+    return _DWriteFontCopyInformationalString(font->_dwriteFontFace, DWRITE_INFORMATIONAL_STRING_FULL_NAME, nullptr);
 }
 
 // Private helper for getting a DWRITE_FONT_METRICS struct, to avoid code duplication

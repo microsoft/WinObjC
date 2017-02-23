@@ -35,7 +35,7 @@ static inline CFStringRef _CFStringCreateUppercaseCopy(CFStringRef string) {
     return ret;
 }
 
-COREGRAPHICS_EXPORT CFStringRef _CFStringFromLocalizedString(IDWriteLocalizedStrings* localizedString);
+COREGRAPHICS_EXPORT CFStringRef _CFStringFromLocalizedString(IDWriteLocalizedStrings* localizedString, CFStringRef* language);
 
 struct _DWriteFontProperties {
     DWRITE_FONT_WEIGHT weight = DWRITE_FONT_WEIGHT_NORMAL;
@@ -65,7 +65,8 @@ COREGRAPHICS_EXPORT HRESULT _DWriteCreateTextFormatWithFontNameAndSize(CFStringR
 
 // DWriteFont getters that convert to a CF/CG object or struct
 COREGRAPHICS_EXPORT CFStringRef _DWriteFontCopyInformationalString(const Microsoft::WRL::ComPtr<IDWriteFontFace>& fontFace,
-                                                                   DWRITE_INFORMATIONAL_STRING_ID informationalStringId);
+                                                                   DWRITE_INFORMATIONAL_STRING_ID informationalStringId,
+                                                                   CFStringRef* language);
 COREGRAPHICS_EXPORT CFDataRef _DWriteFontCopyTable(const Microsoft::WRL::ComPtr<IDWriteFontFace>& fontFace, uint32_t tag);
 COREGRAPHICS_EXPORT CGFloat _DWriteFontGetSlantDegrees(const Microsoft::WRL::ComPtr<IDWriteFontFace>& fontFace);
 COREGRAPHICS_EXPORT CGRect _DWriteFontGetBoundingBox(const Microsoft::WRL::ComPtr<IDWriteFontFace>& fontFace);
@@ -76,3 +77,8 @@ COREGRAPHICS_EXPORT HRESULT _DWriteFontGetBoundingBoxesForGlyphs(
 COREGRAPHICS_EXPORT HRESULT _DWriteRegisterFontsWithDatas(CFArrayRef fontDatas, CFArrayRef* errors);
 COREGRAPHICS_EXPORT HRESULT _DWriteUnregisterFontsWithDatas(CFArrayRef fontDatas, CFArrayRef* errors);
 COREGRAPHICS_EXPORT HRESULT _DWriteCreateFontFaceWithData(CGDataProviderRef data, IDWriteFontFace** outFontFace);
+
+inline uint32_t _CTToDWriteFontTableTag(uint32_t tag) {
+    // CT has the opposite byte order of DWrite, so we need 'BASE' -> 'ESAB'
+    return ((tag & 0xff) << 24) | ((tag & 0xff00) << 8) | ((tag & 0xff0000) >> 8) | ((tag & 0xff000000) >> 24);
+}

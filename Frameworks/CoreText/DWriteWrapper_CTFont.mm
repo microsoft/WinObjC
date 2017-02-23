@@ -284,7 +284,7 @@ static CFDictionaryRef _DWriteFontCreateTraitsDict(const ComPtr<IDWriteFontFace>
 /**
  * Gets a name/informational string from a DWrite font face corresponding to a CTFont constant
  */
-CFStringRef _DWriteFontCopyName(const ComPtr<IDWriteFontFace>& fontFace, CFStringRef nameKey) {
+CFStringRef _DWriteFontCopyName(const ComPtr<IDWriteFontFace>& fontFace, CFStringRef nameKey, CFStringRef* actualLanuguage) {
     if (nameKey == nullptr || fontFace == nullptr) {
         return nullptr;
     }
@@ -301,13 +301,14 @@ CFStringRef _DWriteFontCopyName(const ComPtr<IDWriteFontFace>& fontFace, CFStrin
         RETURN_NULL_IF_FAILED(fontFace.As(&dwriteFontFace3));
         ComPtr<IDWriteLocalizedStrings> name;
         RETURN_NULL_IF_FAILED(dwriteFontFace3->GetFamilyNames(&name));
-        return static_cast<CFStringRef>(CFRetain(_CFStringFromLocalizedString(name.Get())));
+        return static_cast<CFStringRef>(CFRetain(_CFStringFromLocalizedString(name.Get(), actualLanuguage)));
 
     } else if (CFEqual(nameKey, kCTFontSubFamilyNameKey)) {
         // Similar to above, WIN32_SUBFAMILY_NAMES is limited to four fonts per family,
         // but PREFERRED_SUBFAMILY_NAMES is only sometimes present (if it differs from WIN32_SUBFAMILY_NAMES)
         // Try PREFERRED first
-        CFStringRef ret = _DWriteFontCopyInformationalString(fontFace, DWRITE_INFORMATIONAL_STRING_PREFERRED_SUBFAMILY_NAMES);
+        CFStringRef ret =
+            _DWriteFontCopyInformationalString(fontFace, DWRITE_INFORMATIONAL_STRING_PREFERRED_SUBFAMILY_NAMES, actualLanuguage);
         if (ret) {
             return ret;
         }
@@ -319,14 +320,15 @@ CFStringRef _DWriteFontCopyName(const ComPtr<IDWriteFontFace>& fontFace, CFStrin
         RETURN_NULL_IF_FAILED(fontFace.As(&dwriteFontFace3));
         ComPtr<IDWriteLocalizedStrings> name;
         RETURN_NULL_IF_FAILED(dwriteFontFace3->GetFaceNames(&name));
-        return static_cast<CFStringRef>(CFRetain(_CFStringFromLocalizedString(name.Get())));
+        return static_cast<CFStringRef>(CFRetain(_CFStringFromLocalizedString(name.Get(), actualLanuguage)));
 
     } else if (CFEqual(nameKey, kCTFontUniqueNameKey)) {
         return CFStringCreateWithFormat(kCFAllocatorDefault,
                                         nullptr,
                                         CFSTR("%@ %@"),
-                                        CFAutorelease(_DWriteFontCopyName(fontFace, kCTFontFullNameKey)),
-                                        CFAutorelease(_DWriteFontCopyName(fontFace, kCTFontStyleNameKey)));
+                                        // Only want to assign to actualLanguage once
+                                        CFAutorelease(_DWriteFontCopyName(fontFace, kCTFontFullNameKey, nullptr)),
+                                        CFAutorelease(_DWriteFontCopyName(fontFace, kCTFontStyleNameKey, actualLanuguage)));
 
     } else if (CFEqual(nameKey, kCTFontFullNameKey)) {
         informationalStringId = DWRITE_INFORMATIONAL_STRING_FULL_NAME;
@@ -358,5 +360,41 @@ CFStringRef _DWriteFontCopyName(const ComPtr<IDWriteFontFace>& fontFace, CFStrin
         informationalStringId = DWRITE_INFORMATIONAL_STRING_NONE;
     }
 
-    return _DWriteFontCopyInformationalString(fontFace, informationalStringId);
+    return _DWriteFontCopyInformationalString(fontFace, informationalStringId, actualLanuguage);
+}
+
+static constexpr CTFontTableTag sc_tags[] = { kCTFontTableBASE, kCTFontTableCFF,  kCTFontTableDSIG, kCTFontTableEBDT, kCTFontTableEBLC,
+                                              kCTFontTableEBSC, kCTFontTableGDEF, kCTFontTableGPOS, kCTFontTableGSUB, kCTFontTableJSTF,
+                                              kCTFontTableLTSH, kCTFontTableOS2,  kCTFontTablePCLT, kCTFontTableVDMX, kCTFontTableVORG,
+                                              kCTFontTableZapf, kCTFontTableAcnt, kCTFontTableAvar, kCTFontTableBdat, kCTFontTableBhed,
+                                              kCTFontTableBloc, kCTFontTableBsln, kCTFontTableCmap, kCTFontTableCvar, kCTFontTableCvt,
+                                              kCTFontTableFdsc, kCTFontTableFeat, kCTFontTableFmtx, kCTFontTableFpgm, kCTFontTableFvar,
+                                              kCTFontTableGasp, kCTFontTableGlyf, kCTFontTableGvar, kCTFontTableHdmx, kCTFontTableHead,
+                                              kCTFontTableHhea, kCTFontTableHmtx, kCTFontTableHsty, kCTFontTableJust, kCTFontTableKern,
+                                              kCTFontTableKerx, kCTFontTableLcar, kCTFontTableLoca, kCTFontTableMaxp, kCTFontTableMort,
+                                              kCTFontTableMorx, kCTFontTableName, kCTFontTableOpbd, kCTFontTablePost, kCTFontTablePrep,
+                                              kCTFontTableProp, kCTFontTableSbit, kCTFontTableSbix, kCTFontTableTrak, kCTFontTableVhea,
+                                              kCTFontTableVmtx };
+
+CFArrayRef _DWriteCopyAvailableFontTables(const ComPtr<IDWriteFontFace>& fontFace) {
+    auto ret = woc::MakeAutoCF<CFMutableArrayRef>(CFArrayCreateMutable(nullptr, 0, nullptr));
+    for (CTFontTableTag tag : sc_tags) {
+        const void* tableData;
+        uint32_t tableSize;
+        void* tableContext;
+        BOOL exists;
+
+        RETURN_NULL_IF_FAILED(fontFace->TryGetFontTable(_CTToDWriteFontTableTag(tag), &tableData, &tableSize, &tableContext, &exists));
+        if (exists) {
+            // Returned array is expected to have unboxed CTFontTableTag values
+            CFArrayAppendValue(ret, (const void*)tag);
+        }
+
+        // As part of the contact for TryGetFontTable, tableContext must always be released via ReleaseFontTable
+        if (tableContext) {
+            fontFace->ReleaseFontTable(tableContext);
+        }
+    }
+
+    return ret.detach();
 }

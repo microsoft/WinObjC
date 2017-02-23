@@ -191,7 +191,7 @@ CTFontRef __CTFontCreateWithAttributes(CFDictionaryRef attributes, CGFloat size,
 CTFontDescriptorRef __CTFontDescriptorCreateWithDWriteFontFace(CGFloat size,
                                                                const CGAffineTransform* matrix,
                                                                Microsoft::WRL::ComPtr<IDWriteFontFace> fontFace) {
-    CFStringRef name = _DWriteFontCopyName(fontFace, kCTFontPostScriptNameKey);
+    CFStringRef name = _DWriteFontCopyName(fontFace, kCTFontPostScriptNameKey, nullptr);
     CFAutorelease(name);
     if (matrix) {
         CFStringRef keys[] = { kCTFontNameAttribute, kCTFontSizeAttribute, kCTFontMatrixAttribute };
@@ -493,8 +493,7 @@ CFStringRef CTFontCopyDisplayName(CTFontRef font) {
  @Status Interoperable
 */
 CFStringRef CTFontCopyName(CTFontRef font, CFStringRef nameKey) {
-    RETURN_NULL_IF(!font);
-    return _DWriteFontCopyName(font->_dwriteFontFace, nameKey);
+    return CTFontCopyLocalizedName(font, nameKey, nullptr);
 }
 
 /**
@@ -502,8 +501,8 @@ CFStringRef CTFontCopyName(CTFontRef font, CFStringRef nameKey) {
  @Notes
 */
 CFStringRef CTFontCopyLocalizedName(CTFontRef font, CFStringRef nameKey, CFStringRef _Nullable* actualLanguage) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    RETURN_NULL_IF(!font);
+    return _DWriteFontCopyName(font->_dwriteFontFace, nameKey, actualLanguage);
 }
 
 /**
@@ -901,12 +900,11 @@ CTFontRef CTFontCreateWithGraphicsFont(CGFontRef cgFont, CGFloat size, const CGA
     return (CTFontRef)ret;
 }
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
+ @Notes options is not supported, and is deprecated anyway
 */
 CFArrayRef CTFontCopyAvailableTables(CTFontRef font, CTFontTableOptions options) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return font ? _DWriteCopyAvailableFontTables(font->_dwriteFontFace) : nil;
 }
 
 /**
@@ -914,7 +912,7 @@ CFArrayRef CTFontCopyAvailableTables(CTFontRef font, CTFontTableOptions options)
  @Notes options is not supported, and is deprecated anyway
 */
 CFDataRef CTFontCopyTable(CTFontRef font, CTFontTableTag table, CTFontTableOptions options) {
-    return _DWriteFontCopyTable(font->_dwriteFontFace, table);
+    return font ? _DWriteFontCopyTable(font->_dwriteFontFace, table) : nil;
 }
 
 /**
