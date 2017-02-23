@@ -97,9 +97,8 @@ static std::shared_ptr<UserFontCollectionHelper> __GetUserFontCollectionHelper()
 }
 
 // Private helper, wraps around GetUserDefaultLocaleName() and returns a default of "en-us" if it fails
-template <size_t size>
-static inline const wchar_t* __GetUserDefaultLocaleName(wchar_t (&buf)[size]) {
-    int defaultLocaleSuccess = GetUserDefaultLocaleName(buf, size);
+static inline const wchar_t* __GetUserDefaultLocaleName(wchar_t* buf, size_t bufferSize) {
+    int defaultLocaleSuccess = GetUserDefaultLocaleName(buf, bufferSize);
     return defaultLocaleSuccess ? buf : c_defaultUserLanguage;
 }
 
@@ -117,7 +116,7 @@ CFStringRef _CFStringFromLocalizedString(IDWriteLocalizedStrings* localizedStrin
     }
 
     wchar_t localeBuffer[LOCALE_NAME_MAX_LENGTH];
-    const wchar_t* localeName = __GetUserDefaultLocaleName(localeBuffer);
+    const wchar_t* localeName = __GetUserDefaultLocaleName(localeBuffer, LOCALE_NAME_MAX_LENGTH);
 
     uint32_t index = 0;
     BOOL exists = FALSE;
@@ -281,7 +280,7 @@ HRESULT _DWriteCreateTextFormatWithFontNameAndSize(CFStringRef optionalFontName,
     }
 
     wchar_t localeBuffer[LOCALE_NAME_MAX_LENGTH];
-    const wchar_t* localeName = __GetUserDefaultLocaleName(localeBuffer);
+    const wchar_t* localeName = __GetUserDefaultLocaleName(localeBuffer, LOCALE_NAME_MAX_LENGTH);
 
     if (info) {
         RETURN_IF_FAILED(

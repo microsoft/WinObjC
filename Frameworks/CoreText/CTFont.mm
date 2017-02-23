@@ -900,16 +900,16 @@ CTFontRef CTFontCreateWithGraphicsFont(CGFontRef cgFont, CGFloat size, const CGA
     return (CTFontRef)ret;
 }
 /**
- @Status Interoperable
- @Notes options is not supported, and is deprecated anyway
+ @Status Caveat
+ @Notes options is not supported
 */
 CFArrayRef CTFontCopyAvailableTables(CTFontRef font, CTFontTableOptions options) {
     return font ? _DWriteCopyAvailableFontTables(font->_dwriteFontFace) : nil;
 }
 
 /**
- @Status Interoperable
- @Notes options is not supported, and is deprecated anyway
+ @Status Caveat
+ @Notes options is not supported
 */
 CFDataRef CTFontCopyTable(CTFontRef font, CTFontTableTag table, CTFontTableOptions options) {
     return font ? _DWriteFontCopyTable(font->_dwriteFontFace, table) : nil;
