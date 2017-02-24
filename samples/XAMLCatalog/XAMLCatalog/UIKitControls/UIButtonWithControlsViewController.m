@@ -95,7 +95,7 @@
 }
 
 - (void)createButtonWithTypeControls {
-    NSArray* segmentButtonTypeContent = [NSArray arrayWithObjects:@"Default", @"UIButtonTypeCustom", @"UIButtonTypeSystem", nil];
+    NSArray* segmentButtonTypeContent = [NSArray arrayWithObjects:@"Default", @"Custom", @"System", nil];
     _segmentButtonType = [[UISegmentedControl alloc] initWithItems:segmentButtonTypeContent];
     _segmentButtonType.frame = CGRectMake(0.0f, 0.0f, 540.0f, 40.0f);
     [_segmentButtonType addTarget:self action:@selector(onButtonWithTypeChanged:) forControlEvents:UIControlEventValueChanged];
@@ -166,18 +166,28 @@
 
     [self createButtonWithTypeControls];
 
+    _switchHighlighted = [[UISwitch alloc] init];
+    [_switchHighlighted addTarget : self action : @selector(onHighlighted)forControlEvents : UIControlEventValueChanged];
+    [_menuTVC addMenuItemView : _switchHighlighted andTitle : @"Highlighted"];
+
     _switchEnabled = [[UISwitch alloc] init];
     _switchEnabled.on = YES;
     [_switchEnabled addTarget:self action:@selector(onEnabled) forControlEvents:UIControlEventValueChanged];
     [_menuTVC addMenuItemView:_switchEnabled andTitle:@"Enabled"];
 
-    _switchHighlighted = [[UISwitch alloc] init];
-    [_switchHighlighted addTarget:self action:@selector(onHighlighted) forControlEvents:UIControlEventValueChanged];
-    [_menuTVC addMenuItemView:_switchHighlighted andTitle:@"Highlighted"];
-
     _switchSelected = [[UISwitch alloc] init];
     [_switchSelected addTarget:self action:@selector(onSelected) forControlEvents:UIControlEventValueChanged];
     [_menuTVC addMenuItemView:_switchSelected andTitle:@"Selected"];
+
+    _switchAdjustsImageWhenHighlighted = [[UISwitch alloc] init];
+    _switchAdjustsImageWhenHighlighted.on = YES;
+    [_switchAdjustsImageWhenHighlighted addTarget:self action:@selector(onAdjustsImageWhenHighlighted) forControlEvents:UIControlEventValueChanged];
+    [_menuTVC addMenuItemView:_switchAdjustsImageWhenHighlighted andTitle:@"AdjustsImageWhenHighlighted"];
+
+    _switchAdjustsImageWhenDisabled = [[UISwitch alloc] init];
+    _switchAdjustsImageWhenDisabled.on = YES;
+    [_switchAdjustsImageWhenDisabled addTarget:self action:@selector(onAdjustsImageWhenDisabled) forControlEvents:UIControlEventValueChanged];
+    [_menuTVC addMenuItemView:_switchAdjustsImageWhenDisabled andTitle:@"AdjustsImageWhenDisabled"];
 
     [self createTitleControls];
     [self createTitleColorControls];
@@ -225,19 +235,29 @@
     return _selectedButton;
 }
 
-// Toggle if the button is enabled or disabled
-- (void)onEnabled {
-    _selectedButton.enabled = _switchEnabled.on;
-}
-
 // Toggle if the button is highlighted (alternate to a pressed button)
 - (void)onHighlighted {
     _selectedButton.highlighted = _switchHighlighted.on;
 }
 
+// Toggle if the button is enabled or disabled
+-(void)onEnabled {
+    _selectedButton.enabled = _switchEnabled.on;
+}
+
 // Toggle if the button is selected
 - (void)onSelected {
     _selectedButton.selected = _switchSelected.on;
+}
+
+// Toggles the button's adjustsImageWhenHighlighted property
+-(void)onAdjustsImageWhenHighlighted {
+    _selectedButton.adjustsImageWhenHighlighted = _switchAdjustsImageWhenHighlighted.on;
+}
+
+// Toggles the button's adjustsImageWhenDisabled property
+-(void)onAdjustsImageWhenDisabled {
+    _selectedButton.adjustsImageWhenDisabled = _switchAdjustsImageWhenDisabled.on;
 }
 
 //
