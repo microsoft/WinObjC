@@ -1,10 +1,7 @@
 {
   "dependencies": {
     "WinObjC.Frameworks": "*",
-    "WinObjC.Frameworks.UWP": "*",
-    "WinObjC.Frameworks.Core": "*",
     "WinObjC.Language": "*",
-    "WinObjC.Logging": "*",
     "WinObjC.Packaging": "*"
   },
   "frameworks": {
