@@ -3,9 +3,8 @@
     "WinObjC.Packaging": "*"
   },
   "frameworks": {
-    "native,Version=v1.0": {
+    "dotnet": {
       "imports": [
-        "dotnet",
         "netstandard1.0",
         "netstandard1.1",
         "netstandard1.2",
