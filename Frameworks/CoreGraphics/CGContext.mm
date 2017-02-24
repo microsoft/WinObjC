@@ -270,6 +270,8 @@ private:
     woc::unique_cf<CGColorSpaceRef> _fillColorSpace;
     woc::unique_cf<CGColorSpaceRef> _strokeColorSpace;
 
+    ComPtr<ID2D1SolidColorBrush> transparentBrush{ nullptr };
+
     // Keeps track of the depth of a 'stack' of PushBeginDraw/PopEndDraw calls
     // Since nothing needs to actually be put on a stack, just increment a counter insteads
     std::atomic_uint32_t _beginEndDrawDepth = { 0 };
@@ -2321,11 +2323,12 @@ HRESULT __CGContext::ClearRect(CGRect rect) {
 
     RETURN_IF_FAILED(CurrentGState().IntersectClippingGeometry(transformedRectangle.Get(), kCGPathEOFill));
 
-    ComPtr<ID2D1SolidColorBrush> brush;
-    RETURN_IF_FAILED(deviceContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black, 0.0f), &brush));
+    if (!transparentBrush) {
+        RETURN_IF_FAILED(deviceContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black, 0.0f), &transparentBrush));
+    }
 
     deviceContext->SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND_COPY);
-    deviceContext->FillGeometry(CurrentGState().clippingGeometry.Get(), brush.Get());
+    deviceContext->FillGeometry(CurrentGState().clippingGeometry.Get(), transparentBrush.Get());
     deviceContext->SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND_SOURCE_OVER);
     RETURN_IF_FAILED(PopGState());
     return S_OK;
