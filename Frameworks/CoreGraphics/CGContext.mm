@@ -2315,6 +2315,10 @@ HRESULT __CGContext::ClearRect(CGRect rect) {
 
     RETURN_IF_FAILED(PushGState());
 
+    if (CurrentGState().shouldAntialias != _kCGTrinaryDefault || !allowsAntialiasing) {
+        deviceContext->SetAntialiasMode(GetAntialiasMode());
+    }
+
     RETURN_IF_FAILED(CurrentGState().IntersectClippingGeometry(transformedRectangle.Get(), kCGPathEOFill));
 
     ComPtr<ID2D1SolidColorBrush> brush;
