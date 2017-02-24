@@ -28,7 +28,7 @@
 
   <PropertyGroup>
     <!-- Pass all SBResourceCopy items to the APPX packager, instead of copying them ourselves -->
-    <SBResourceCopyToAPPX Condition="'$(AppContainerApplication)' == 'true'">true</SBResourceCopyToAPPX>
+    <SBResourceCopyToAPPX Condition="'$(AppContainerApplication)' == 'true' AND '$(IslandwoodConfigurationType)' != 'Bundle'">true</SBResourceCopyToAPPX>
     <Xib2NibExe>$(MSBuildThisFileDirectory)..\bin\Xib2Nib.exe</Xib2NibExe>
     <SbExpandVarsExe>$(MSBuildThisFileDirectory)..\bin\sb-expandvars.exe</SbExpandVarsExe>
     <ACBuilderExe>$(MSBuildThisFileDirectory)..\bin\acbuilder.exe</ACBuilderExe>
@@ -44,7 +44,7 @@
          AppxPackagePayload takes care of the copying in that case -->
     <SBResourcesDir Condition="'$(SBResourceCopyToAPPX)' != 'true'">$(OutDir)</SBResourcesDir>
     <SBResourcesDir Condition="'$(SBResourceCopyToAPPX)' == 'true'"></SBResourcesDir>
-    <SBResourcesDir Condition="'$(IslandwoodConfigurationType)' == 'Bundle'">$(OutDir)\$(TargetName).bundle</SBResourcesDir>
+    <SBResourcesDir Condition="'$(IslandwoodConfigurationType)' == 'Bundle'">$(OutDir)$(TargetName).bundle</SBResourcesDir>
   </PropertyGroup>
 
   <Target
