@@ -29,7 +29,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <GetPackageContentsDependsOn>$(GetPackageContentsDependsOn);$(ComputeLinkInputsTargets);FindPublicHeaders</GetPackageContentsDependsOn>
+    <GetPackageContentsDependsOn>$(GetPackageContentsDependsOn);$(ComputeLinkInputsTargets)</GetPackageContentsDependsOn>
+    <GetPackageContentsDependsOn Condition="'$(ConfigurationType)' == 'StaticLibrary'">$(GetPackageContentsDependsOn);FindPublicHeaders</GetPackageContentsDependsOn>
   </PropertyGroup>
 
   <!-- Add MSBuild outputs into the package -->

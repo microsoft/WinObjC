@@ -2,7 +2,9 @@
   "dependencies": {
   },
   "frameworks": {
-    ".NETFramework,Version=v4.0": {}
+    "uap10.0": {
+      "imports": "native"
+    }
   },
   "runtimes": {
     "win10-arm": {},

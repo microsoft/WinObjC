@@ -3,10 +3,14 @@
     "WinObjC.Packaging": "*"
   },
   "frameworks": {
-    ".NETFramework,Version=v4.0": {}
+    "uap10.0": {
+      "imports": "native"
+    }
   },
   "runtimes": {
-    "win": {},
-    "win-x86": {}
+    "win10-arm": {},
+    "win10-x86": {},
+    "win10-arm-aot": {},
+    "win10-x86-aot": {}
   }
 }
