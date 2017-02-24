@@ -1246,7 +1246,7 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
 // Handler when control GotFocus
 - (void)_setupControlGotFocusHandler:(const Controls::Control&)control {
     __weak UITextField* weakSelf = self;
-    control.GotFocus([weakSelf] (const winrt::Windows::IInspectable& sender, auto&&) {
+    control.GotFocus([weakSelf] (const winrt::Windows::Foundation::IInspectable& sender, auto&&) {
         __strong UITextField* strongSelf = weakSelf;
         if (strongSelf) {
             // when GotFocus, check delegate (if exists) to see if it allows start editing
@@ -1282,7 +1282,7 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
 - (void)_setupControlLostFocusHandler:(const Controls::Control&)control {
     __weak UITextField* weakSelf = self;
 
-    control.LostFocus([weakSelf] (const winrt::Windows::IInspectable& sender, auto&&) {
+    control.LostFocus([weakSelf] (const winrt::Windows::Foundation::IInspectable& sender, auto&&) {
         __strong UITextField* strongSelf = weakSelf;
         auto control = sender.as<Controls::Control>();
 

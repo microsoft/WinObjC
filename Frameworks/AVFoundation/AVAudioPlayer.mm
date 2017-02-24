@@ -124,7 +124,7 @@ namespace WSS = winrt::Windows::Storage::Streams;
         }
 
         _url = [[NSBundle mainBundle] _msAppxURLForResourceWithURL:url];
-        winrt::Windows::Foundation::Uri mediaUri = winrt::hstring_ref(objcwinrt::string(_url.absoluteString));
+        winrt::Windows::Foundation::Uri mediaUri = winrt::hstring_view(objcwinrt::string(_url.absoluteString));
 
         TraceInfo(TAG, L"Loading media at URI: %ls\n", mediaUri.AbsoluteUri().c_str());
         _mediaElement.Source(mediaUri);
@@ -165,7 +165,7 @@ namespace WSS = winrt::Windows::Storage::Streams;
                                          userInfo:nil];
         }
 
-        winrt::attach(buffer, reinterpret_cast<winrt::ABI::Windows::Storage::Streams::IBuffer*>(rawBuffer));
+        winrt::attach_abi(buffer, reinterpret_cast<winrt::ABI::Windows::Storage::Streams::IBuffer*>(rawBuffer));
 
         rw.WriteBuffer(buffer);
         auto async = rw.StoreAsync();
@@ -191,7 +191,7 @@ namespace WSS = winrt::Windows::Storage::Streams;
     return self;
 }
 
-- (void)_handleMediaElementStateChange:(const winrt::Windows::IInspectable&)sender args:(const RoutedEventArgs&)e {
+- (void)_handleMediaElementStateChange:(const winrt::Windows::Foundation::IInspectable&)sender args:(const RoutedEventArgs&)e {
     if (_mediaElement.CurrentState() != _lastState) {
         switch (_mediaElement.CurrentState()) {
             case Media::MediaElementState::Opening:
@@ -233,11 +233,11 @@ namespace WSS = winrt::Windows::Storage::Streams;
     }
 }
 
-- (void)_handleMediaElementMediaEnded:(const winrt::Windows::IInspectable&)sender args:(const RoutedEventArgs&)e {
+- (void)_handleMediaElementMediaEnded:(const winrt::Windows::Foundation::IInspectable&)sender args:(const RoutedEventArgs&)e {
     TraceInfo(TAG, L"Media ended\n");
 }
 
-- (void)_handleMediaElementMediaFailed:(const winrt::Windows::IInspectable&)sender args:(const RoutedEventArgs&)e {
+- (void)_handleMediaElementMediaFailed:(const winrt::Windows::Foundation::IInspectable&)sender args:(const RoutedEventArgs&)e {
     TraceWarning(TAG, L"Media failed\n");
 }
 

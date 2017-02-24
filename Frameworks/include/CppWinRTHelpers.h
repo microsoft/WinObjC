@@ -51,8 +51,8 @@ namespace objcwinrt {
 template <typename T>
 IInspectable* to_insp(const T& t) {
     return reinterpret_cast<IInspectable*>(
-        static_cast<winrt::ABI::Windows::IInspectable*>(
-            winrt::get(t)));
+        static_cast<winrt::ABI::Windows::Foundation::IInspectable*>(
+            winrt::get_abi(t)));
 }
 
 template <typename T>
@@ -63,10 +63,10 @@ IInspectable* to_insp(const TrivialDefaultConstructor<T>& t) {
 template <typename T>
 T from_insp(IInspectable* insp) {
     T retval = nullptr;
-    winrt::abi_default_interface<T>* retvalAbi;
+    winrt::ABI::default_interface<winrt::abi<T>>* retvalAbi;
 
     if (SUCCEEDED(insp->QueryInterface(IID_PPV_ARGS(&retvalAbi)))) {
-        winrt::attach(retval, retvalAbi);
+        winrt::attach_abi(retval, retvalAbi);
     }
 
     return retval;
@@ -101,14 +101,14 @@ winrt::hstring string(NSString* str) {
     auto hstr1 = Strings::NarrowToWide<HSTRING>(str);
 
     winrt::hstring hstr2;
-    winrt::attach(hstr2, hstr1.Detach());
+    winrt::attach_abi(hstr2, hstr1.Detach());
 
     return hstr2;
 }
 
 inline
-NSString* string(winrt::hstring_ref str) {
-    return [NSString _stringWithHSTRING:winrt::get(str)];
+NSString* string(winrt::hstring_view str) {
+    return [NSString _stringWithHSTRING:winrt::get_abi(str)];
 }
 
 

@@ -30,7 +30,7 @@
 #include <Windows.UI.Xaml.Media.h>
 
 using namespace Microsoft::WRL;
-namespace WF = Windows::Foundation;
+namespace WF = winrt::Windows::Foundation;
 namespace WU = winrt::Windows::UI;
 namespace WX = winrt::Windows::UI::Xaml;
 
@@ -224,7 +224,7 @@ WX::FrameworkElement XamlUtilities::FindTemplateChild(const WX::Controls::Contro
     return target;
 }
 
-NSString* XamlUtilities::NSStringFromPropertyValue(const winrt::Windows::IInspectable& rtPropertyValue) {
+NSString* XamlUtilities::NSStringFromPropertyValue(const WF::IInspectable& rtPropertyValue) {
     // BUGBUG:8791977 - WFIPropertyValue is not publicly exposed via projections so we used a workaround
     ComPtr<IInspectable> inspPropVal = objcwinrt::to_insp(rtPropertyValue);
     return NSStringFromPropertyValue(inspPropVal);
@@ -295,7 +295,7 @@ ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlType> XamlUtilities::ReturnXamlType(
     return nullptr;
 }
 
-UIView* XamlUtilities::GenerateUIKitControlFromXamlType(const winrt::Windows::IInspectable& xamlObject) {
+UIView* XamlUtilities::GenerateUIKitControlFromXamlType(const WF::IInspectable& xamlObject) {
     if (!xamlObject) {
         return nil;
     }
@@ -304,18 +304,18 @@ UIView* XamlUtilities::GenerateUIKitControlFromXamlType(const winrt::Windows::II
 
     // TODO: For prototyping, this will suffice but it would be better to consolidate with Xib2Xaml in the long term
     std::vector<std::pair<IID, id>> xamlSupportedControls {
-        { __uuidof(winrt::abi_default_interface<WX::Controls::TextBlock>), [UILabel class] },
-        { __uuidof(winrt::abi_default_interface<WX::Controls::TextBox>), [UITextField class] },
-        { __uuidof(winrt::abi_default_interface<WX::Controls::Button>), [UIButton class] },
-        { __uuidof(winrt::abi_default_interface<WX::Controls::ProgressRing>), [UIActivityIndicatorView class] },
-        { __uuidof(winrt::abi_default_interface<WX::Controls::Slider>), [UISlider class] }
+        { __uuidof(winrt::ABI::default_interface<winrt::abi<WX::Controls::TextBlock>>), [UILabel class] },
+        { __uuidof(winrt::ABI::default_interface<winrt::abi<WX::Controls::TextBox>>), [UITextField class] },
+        { __uuidof(winrt::ABI::default_interface<winrt::abi<WX::Controls::Button>>), [UIButton class] },
+        { __uuidof(winrt::ABI::default_interface<winrt::abi<WX::Controls::ProgressRing>>), [UIActivityIndicatorView class] },
+        { __uuidof(winrt::ABI::default_interface<winrt::abi<WX::Controls::Slider>>), [UISlider class] }
     };
 
     // Create the UIKit control based on the XAML type and return it to the caller
     for (auto&& xamlControl : xamlSupportedControls) {
         WX::FrameworkElement xamlElement = nullptr;
 
-        if (SUCCEEDED(winrt::get(xamlObject)->QueryInterface(xamlControl.first, reinterpret_cast<void**>(winrt::put(xamlElement))))) {
+        if (SUCCEEDED(winrt::get_abi(xamlObject)->QueryInterface(xamlControl.first, reinterpret_cast<void**>(winrt::put_abi(xamlElement))))) {
             Class controlClass = xamlControl.second;
             control = [[controlClass alloc] initWithFrame:CGRectZero xamlElement:objcwinrt::to_rtobj(xamlElement)];
             break;

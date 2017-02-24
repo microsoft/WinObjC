@@ -568,7 +568,7 @@ static std::string _printViewhierarchy(UIView* leafView) {
 
     // Set the XAML element's name so it's easily found in the VS live tree viewer
     auto elementName = Strings::NarrowToWide<HSTRING>(object_getClassName(self));
-    self.layer._xamlElement.Name(winrt::hstring_ref(elementName.Get()));
+    self.layer._xamlElement.Name(winrt::hstring_view(elementName.Get()));
 
     // Subscribe to the XAML node's input events
     self->priv->_pointerPressedEventRegistration =

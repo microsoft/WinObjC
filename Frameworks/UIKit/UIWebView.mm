@@ -104,8 +104,8 @@ namespace WF = winrt::Windows::Foundation;
     NSURL* url = [request URL];
     NSString* urlStr = [url absoluteString];
 
-    Http::HttpMethod method = winrt::hstring_ref(objcwinrt::string(request.HTTPMethod));
-    WF::Uri uri = winrt::hstring_ref(objcwinrt::string(urlStr));
+    Http::HttpMethod method = winrt::hstring_view(objcwinrt::string(request.HTTPMethod));
+    WF::Uri uri = winrt::hstring_view(objcwinrt::string(urlStr));
 
     Http::HttpRequestMessage msg(method, uri);
 
@@ -182,8 +182,7 @@ static void _initUIWebView(UIWebView* self) {
         NSString* urlStr = objcwinrt::string(e.CallingUri().AbsoluteUri());
         NSURL* url = [NSURL URLWithString:urlStr];
         if ([self.delegate respondsToSelector:@selector(webView:scriptNotify:value:)]) {
-            NSString* value = [NSString _stringWithHSTRING:winrt::get(e.Value())];
-            [self.delegate webView:self scriptNotify:url value:value];
+            [self.delegate webView:self scriptNotify:url value:objcwinrt::string(e.Value())];
         }
     });
 

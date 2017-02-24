@@ -1751,7 +1751,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     if (priv->_page) {
         static EventArgs eventArgs;
         Navigation::NavigationEventArgs navArgs = nullptr;
-        winrt::attach(navArgs, reinterpret_cast<winrt::ABI::Windows::UI::Xaml::Navigation::INavigationEventArgs*>(&eventArgs));
+        winrt::attach_abi(navArgs, reinterpret_cast<winrt::ABI::Windows::UI::Xaml::Navigation::INavigationEventArgs*>(&eventArgs));
 
         priv->_page.OnNavigatedTo(navArgs);
     }
