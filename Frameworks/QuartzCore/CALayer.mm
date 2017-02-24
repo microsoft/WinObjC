@@ -479,21 +479,14 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
 
         // Update content size, even in case of the early out below.
         int widthInPoints = ceilf(priv->bounds.size.width);
-        int width = (int)(widthInPoints * priv->contentsScale);
         int heightInPoints = ceilf(priv->bounds.size.height);
+
+        int width = (int)(widthInPoints * priv->contentsScale);
         int height = (int)(heightInPoints * priv->contentsScale);
 
         if (width <= 0 || height <= 0) {
             TraceVerbose(TAG, L"Not drawing due to invalid layer dimensions; width=%d, height=%d", width, height);
             return;
-        }
-
-        // TODO: Why cap to 2048x2048?
-        if (width > 2048) {
-            width = 2048;
-        }
-        if (height > 2048) {
-            height = 2048;
         }
 
         priv->contentsSize.width = (float)width;
