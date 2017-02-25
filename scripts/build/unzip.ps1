@@ -10,8 +10,8 @@ param(
     [string]$outputDir = $(throw 'Madatory parameter "outputDir" is not set.')
     )
 
-$zipFile = gci $zipFile
 write-host $MyInvocation.Line
+$zipFile = gi $zipFile
 
 Add-Type -assembly "system.io.compression.filesystem";
 [io.compression.zipfile]::ExtractToDirectory($zipFile, $outputDir);
