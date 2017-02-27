@@ -64,7 +64,7 @@
     <PropertyGroup>
       <PackageTimestamp Condition="'$(PackageTimestamp)' == ''">$([System.DateTime]::Now.ToString(yyyyMMddHHmmss))</PackageTimestamp>
       <PackageVersion Condition="'$(GitBranch)' == 'master'">$(GitBaseVersionMajor).$(GitBaseVersionMinor).$(PackageTimestamp)</PackageVersion>
-      <PackageVersion Condition="'$(PackageVersion)' == ''">$(GitBaseVersionMajor).$(GitBaseVersionMinor).$([MSBuild]::Add('$(GitBaseVersionPatch)', '1'))-$(PackageTimestamp)pr</PackageVersion>
+      <PackageVersion Condition="'$(PackageVersion)' == ''">$(GitBaseVersionMajor).$(GitBaseVersionMinor).$([MSBuild]::Add('$(GitBaseVersionPatch)', '1'))-pr-$(PackageTimestamp)</PackageVersion>
     </PropertyGroup>
   </Target>
   <Target Name="DeletePackageTimestampFile" Condition="'$(SolutionDir)' != ''" DependsOnTargets="SetPackageVersion" BeforeTargets="Pack">
