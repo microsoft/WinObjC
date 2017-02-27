@@ -904,7 +904,8 @@ CTFontRef CTFontCreateWithGraphicsFont(CGFontRef cgFont, CGFloat size, const CGA
  @Notes options is not supported
 */
 CFArrayRef CTFontCopyAvailableTables(CTFontRef font, CTFontTableOptions options) {
-    return font ? _DWriteCopyAvailableFontTables(font->_dwriteFontFace) : nil;
+    RETURN_NULL_IF(!font);
+    return _DWriteCopyAvailableFontTables(font->_dwriteFontFace);
 }
 
 /**
@@ -912,7 +913,8 @@ CFArrayRef CTFontCopyAvailableTables(CTFontRef font, CTFontTableOptions options)
  @Notes options is not supported
 */
 CFDataRef CTFontCopyTable(CTFontRef font, CTFontTableTag table, CTFontTableOptions options) {
-    return font ? _DWriteFontCopyTable(font->_dwriteFontFace, table) : nil;
+    RETURN_NULL_IF(!font);
+    return _DWriteFontCopyTable(font->_dwriteFontFace, table);
 }
 
 /**
