@@ -279,8 +279,7 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
 */
 + (GLKTextureInfo*)textureWithContentsOfFile:(NSString*)fname options:(NSDictionary*)opts error:(NSError**)err {
     CGDataProviderRef provider = CGDataProviderCreateWithFilename([fname UTF8String]);
-    unsigned char* dataBytes = static_cast<unsigned char*>(const_cast<void*>(_CGDataProviderGetData(provider)));
-    CGImageRef img = _CGImageGetImageFromData(dataBytes, _CGDataProviderGetSize(provider));
+    CGImageRef img = CGImageCreateWithPNGDataProvider(provider, NULL, NO, kCGRenderingIntentDefault);
 
     GLKTextureInfo* res = [self textureWithCGImage:img options:opts error:err];
 
@@ -398,9 +397,7 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
     if (!provider) {
         return nil;
     }
-
-    unsigned char* dataBytes = static_cast<unsigned char*>(const_cast<void*>(_CGDataProviderGetData(provider)));
-    CGImageRef img = _CGImageGetImageFromData(dataBytes, _CGDataProviderGetSize(provider));
+    CGImageRef img = CGImageCreateWithPNGDataProvider(provider, NULL, NO, kCGRenderingIntentDefault);
     if (!img) {
         CGDataProviderRelease(provider);
         return nil;
@@ -547,8 +544,8 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
             continue;
         }
 
-        unsigned char* dataBytes = static_cast<unsigned char*>(const_cast<void*>(_CGDataProviderGetData(provider)));
-        CGImageRef img = _CGImageGetImageFromData(dataBytes, _CGDataProviderGetSize(provider));
+		unsigned char* dataBytes = static_cast<unsigned char*>(const_cast<void*>(_CGDataProviderGetData(provider)));
+		CGImageRef img = _CGImageGetImageFromData(dataBytes, _CGDataProviderGetSize(provider));
         if (!img) {
             CGDataProviderRelease(provider);
             NSTraceWarning(TAG, @"Unable to create image from cube side texture %@", fn);
