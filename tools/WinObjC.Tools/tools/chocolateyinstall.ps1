@@ -1,8 +1,6 @@
 ﻿#NOTE: Please remove any commented lines to tidy up prior to releasing the package, including this one
 
-# stop on all errors
 $ErrorActionPreference = 'SilentlyContinue';
-
 
 $packageName = 'WinObjC.tools' # arbitrary name for the package, used in messages
 $registryUninstallerKeyName = 'WinObjC.tools' #ensure this is the value in the registry
@@ -16,6 +14,10 @@ $toolsDir = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
 Write-Host "Adding `'$toolsDir`' to the path and the current shell path"
 Install-ChocolateyPath "$toolsDir"
 $env:Path = "$($env:Path);$toolsDir"
+
+#
+# TODO: Remove 2015 support when VS2017 ships. At that point, treat errors as failures since only one version will be supported.
+#
 
 Try
 {
@@ -40,7 +42,7 @@ Catch [Exception]
 Try
 {
     Write-Host "Installing Objective-C Visual Studio 2017 Extension ... "
-    Install-ChocolateyVsixPackage -PackageName "objc-syntax-highlighting" -VsixUrl "file:///$toolsDir/objc-language-services-VS2017.vsix" -VsVersion 14
+    Install-ChocolateyVsixPackage -PackageName "objc-syntax-highlighting" -VsixUrl "file:///$toolsDir/objc-language-services-VS2017.vsix" -VsVersion 15
 }
 Catch [Exception]
 {
@@ -50,7 +52,7 @@ Catch [Exception]
 Try
 {
     Write-Host "Installing Nugetizer Visual Studio 2017 Extension ... "
-    Install-ChocolateyVsixPackage -PackageName "Nugetizer3000" -VsixUrl "file:///$toolsDir/NuGetizer3000-VS2017.vsix" -VsVersion 15
+    Install-ChocolateyVsixPackage -PackageName "Nugetizer3000" -VsixUrl "http://bit.ly/nugetizer-2017" -VsVersion 15
 }
 Catch [Exception]
 {
