@@ -39,14 +39,12 @@ using namespace Microsoft::WRL;
 
 static const wchar_t* TAG = L"CGImage";
 
-// TODO #1124: remove old code
-#pragma region OLD_CODE
+// This is used by XamlCompositor to flush the DisplayTexture cache.
+// TODO GH#2098 look at where we're using the image cache and what we can do to avoid it.
 static std::vector<CGImageDestructionListener> _imageDestructionListeners;
 COREGRAPHICS_EXPORT void CGImageAddDestructionListener(CGImageDestructionListener listener) {
     _imageDestructionListeners.push_back(listener);
 }
-
-#pragma endregion OLD_CODE
 
 #pragma region CGImageImplementation
 
@@ -224,6 +222,12 @@ struct __CGImage : CoreFoundation::CppBase<__CGImage> {
     inline __CGImage& SetRenderingIntent(CGColorRenderingIntent intent) {
         _impl.renderingIntent = intent;
         return *this;
+    }
+
+    ~__CGImage() {
+        for (auto listener: _imageDestructionListeners) {
+            listener(this);
+        }
     }
 };
 
