@@ -119,10 +119,6 @@ public:
     }
 
     TEST_METHOD(UIButton_CreateButtonWithDefaultInit) {
-        BEGIN_TEST_METHOD_PROPERTIES()
-        TEST_METHOD_PROPERTY(L"ignore", L"true")
-        END_TEST_METHOD_PROPERTIES()
-
         StrongId<UIButtonWithControlsViewController> buttonVC;
         buttonVC.attach([[UIButtonWithControlsViewController alloc] init]);
         UXTestAPI::ViewControllerPresenter testHelper(buttonVC);
@@ -139,6 +135,9 @@ public:
         WXCTextBlock* textBlock = rt_dynamic_cast([WXCTextBlock class], titleLabelXamlElement);
         ASSERT_OBJCNE(textBlock, nil);
 
+        // buttonType
+        ASSERT_EQ(buttonToTest.buttonType, UIButtonTypeCustom);
+
         // Background color
         dispatch_sync(dispatch_get_main_queue(), ^{
             WUXMSolidColorBrush* solidBackgroundBrush = rt_dynamic_cast([WUXMSolidColorBrush class], xamlControl.background);
@@ -147,31 +146,40 @@ public:
         });
 
         // Title color
-        __block auto uxEvent = UXEvent::CreateAuto();
+        __block auto uxEvent = UXEvent::CreateManual();
         __block auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
 
-        dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            UIColor* expectedColor = [UIColor whiteColor];
+
             // Register RAII event subscription handler
             xamlSubscriber->Set(textBlock, [WXCTextBlock foregroundProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
                 WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], [sender getValue:dp]);
 
                 // Validation
-                if (UXTestAPI::IsRGBAEqual(solidBrush, [UIColor whiteColor])) {
+                if (UXTestAPI::IsRGBAEqual(solidBrush, expectedColor)) {
                     uxEvent->Set();
                 }
             });
+
+            // Check the current state of the foreground brush in case it is already set which means the property callback will not get triggered
+            WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], textBlock.foreground);
+            if (UXTestAPI::IsRGBAEqual(solidBrush, expectedColor)) {
+                uxEvent->Set();
+            }
         });
+
         ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event state timed out!");
+
+        // adjustImageWhen* is YES by default
+        EXPECT_TRUE(buttonToTest.adjustsImageWhenHighlighted);
+        EXPECT_TRUE(buttonToTest.adjustsImageWhenDisabled);
 
         // Title
         EXPECT_OBJCEQ(buttonToTest.currentTitle, nil);
     }
 
     TEST_METHOD(UIButton_CreateButtonWithTypeCustom) {
-        BEGIN_TEST_METHOD_PROPERTIES()
-        TEST_METHOD_PROPERTY(L"ignore", L"true")
-        END_TEST_METHOD_PROPERTIES()
-
         StrongId<UIButtonWithControlsViewController> buttonVC;
         buttonVC.attach([[UIButtonWithControlsViewController alloc] init]);
         UXTestAPI::ViewControllerPresenter testHelper(buttonVC);
@@ -188,6 +196,9 @@ public:
         WXCTextBlock* textBlock = rt_dynamic_cast([WXCTextBlock class], titleLabelXamlElement);
         ASSERT_OBJCNE(textBlock, nil);
 
+        // buttonType
+        ASSERT_EQ(buttonToTest.buttonType, UIButtonTypeCustom);
+
         // Background color
         dispatch_sync(dispatch_get_main_queue(), ^{
             WUXMSolidColorBrush* solidBackgroundBrush = rt_dynamic_cast([WUXMSolidColorBrush class], xamlControl.background);
@@ -196,21 +207,34 @@ public:
         });
 
         // Title color
-        __block auto uxEvent = UXEvent::CreateAuto();
+        __block auto uxEvent = UXEvent::CreateManual();
         __block auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
 
-        dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            UIColor* expectedColor = [UIColor whiteColor];
+
             // Register RAII event subscription handler
             xamlSubscriber->Set(textBlock, [WXCTextBlock foregroundProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
                 WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], [sender getValue:dp]);
 
                 // Validation
-                if (UXTestAPI::IsRGBAEqual(solidBrush, [UIColor whiteColor])) {
+                if (UXTestAPI::IsRGBAEqual(solidBrush, expectedColor)) {
                     uxEvent->Set();
                 }
             });
+
+            // Check the current state of the foreground brush in case it is already set which means the property callback will not get triggered
+            WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], textBlock.foreground);
+            if (UXTestAPI::IsRGBAEqual(solidBrush, expectedColor)) {
+                uxEvent->Set();
+            }
         });
+
         ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event state timed out!");
+
+        // adjustImageWhen* is YES by default
+        EXPECT_TRUE(buttonToTest.adjustsImageWhenHighlighted);
+        EXPECT_TRUE(buttonToTest.adjustsImageWhenDisabled);
 
         // Title
         EXPECT_OBJCEQ(buttonToTest.currentTitle, nil);
@@ -234,6 +258,9 @@ public:
         WXCTextBlock* textBlock = rt_dynamic_cast([WXCTextBlock class], titleLabelXamlElement);
         ASSERT_OBJCNE(textBlock, nil);
 
+        // buttonType
+        ASSERT_EQ(buttonToTest.buttonType, UIButtonTypeSystem);
+
         // Background color
         dispatch_sync(dispatch_get_main_queue(), ^{
             WUXMSolidColorBrush* solidBackgroundBrush = rt_dynamic_cast([WUXMSolidColorBrush class], xamlControl.background);
@@ -242,16 +269,182 @@ public:
         });
 
         // Title color
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            // Extract the backgroundColor which required this call to be done on the UI thread
-            WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], textBlock.foreground);
+        __block auto uxEvent = UXEvent::CreateManual();
+        __block auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
 
+        dispatch_sync(dispatch_get_main_queue(), ^{
             UIColor* expectedColor = [UIColor colorWithRed:0.0f green:0.47843137f blue:1.0f alpha:1.0f];
-            EXPECT_TRUE(UXTestAPI::IsRGBAEqual(solidBrush, expectedColor));
+
+            // Register RAII event subscription handler
+            xamlSubscriber->Set(textBlock, [WXCTextBlock foregroundProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
+                WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], [sender getValue:dp]);
+
+                // Validation
+                if (UXTestAPI::IsRGBAEqual(solidBrush, expectedColor)) {
+                    uxEvent->Set();
+                }
+            });
+
+            // Check the current state of the foreground brush in case it is already set which means the property callback will not get triggered
+            WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], textBlock.foreground);
+            if (UXTestAPI::IsRGBAEqual(solidBrush, expectedColor)) {
+                uxEvent->Set();
+            }
         });
+
+        ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event state timed out!");
+
+        // adjustImageWhen* is YES by default
+        EXPECT_TRUE(buttonToTest.adjustsImageWhenHighlighted);
+        EXPECT_TRUE(buttonToTest.adjustsImageWhenDisabled);
 
         // Title
         EXPECT_OBJCEQ(buttonToTest.currentTitle, nil);
+    }
+
+    TEST_METHOD(UIButton_AdjustImageWhenHighlighted) {
+        StrongId<UIButtonWithControlsViewController> buttonVC;
+        buttonVC.attach([[UIButtonWithControlsViewController alloc] init]);
+        UXTestAPI::ViewControllerPresenter testHelper(buttonVC);
+
+        UIButton* buttonToTest = [buttonVC defaultButton];
+
+        __block auto uxEvent = UXEvent::CreateAuto();
+        __block auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
+        __block StrongId<WXFrameworkElement> buttonBorder;
+        __block StrongId<UIColor> expectedColor;
+
+        WXFrameworkElement* xamlElement = [buttonToTest xamlElement];
+        ASSERT_OBJCNE(xamlElement, nil);
+
+        // Find buttonBorder in the visual tree
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            buttonBorder = FindXamlChild(xamlElement, @"buttonBorder");
+        });
+        ASSERT_OBJCNE(buttonBorder, nil);
+
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            // Register RAII event subscription handler
+            xamlSubscriber->Set(buttonBorder, [WXCBorder backgroundProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
+                if (expectedColor) {
+                    WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], [sender getValue:dp]);
+
+                    // Validation
+                    EXPECT_TRUE(UXTestAPI::IsRGBAEqual(solidBrush, expectedColor));
+                }
+                else {
+                    // In adjustsImageWhenHighlighted == NO scenario, we set the border background brush to nil
+                    EXPECT_OBJCEQ([sender getValue:dp], nil);
+                }
+
+                uxEvent->Set();
+            });
+        });
+
+        // There should be no border background color change if there is no title/image/background image set on the button
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            buttonToTest.highlighted = YES;
+        });
+        ASSERT_FALSE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Unexpected background color changed event fired!");
+
+        // Set a title and validate that the border background color has changed
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            expectedColor = [UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:0.255f];
+            [buttonVC textTitle].text = @"adjustsImageWhenHighlighted";
+        });
+        ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event timed out!");
+
+        // Set adjustsImageWhenHiglighted to NO
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            expectedColor = nil;
+            buttonToTest.adjustsImageWhenHighlighted = NO;
+        });
+        ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event timed out!");
+
+        // Set adjustsImageWhenHiglighted to YES again
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            expectedColor = [UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:0.255f];
+            buttonToTest.adjustsImageWhenHighlighted = YES;
+        });
+        ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event timed out!");
+
+        // Setting an image for state UIControlStateHighlighted should not generate a border background color
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            expectedColor = nil;
+            [buttonVC textImageStateField].text = @"H;";
+            [buttonVC textImage].text = @"button_image.png";
+        });
+        ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event timed out!");
+    }
+
+    TEST_METHOD(UIButton_AdjustImageWhenDisabled) {
+        StrongId<UIButtonWithControlsViewController> buttonVC;
+        buttonVC.attach([[UIButtonWithControlsViewController alloc] init]);
+        UXTestAPI::ViewControllerPresenter testHelper(buttonVC);
+
+        UIButton* buttonToTest = [buttonVC defaultButton];
+
+        __block auto uxEvent = UXEvent::CreateAuto();
+        __block auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
+        __block StrongId<WXFrameworkElement> buttonBorder;
+        __block StrongId<UIColor> expectedColor;
+
+        WXFrameworkElement* xamlElement = [buttonToTest xamlElement];
+        ASSERT_OBJCNE(xamlElement, nil);
+
+        // Find buttonBorder in the visual tree
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            buttonBorder = FindXamlChild(xamlElement, @"buttonBorder");
+        });
+        ASSERT_OBJCNE(buttonBorder, nil);
+
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            // Register RAII event subscription handler
+            xamlSubscriber->Set(buttonBorder, [WXCBorder backgroundProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
+                if (expectedColor) {
+                    WUXMSolidColorBrush* solidBrush = rt_dynamic_cast([WUXMSolidColorBrush class], [sender getValue:dp]);
+
+                    // Validation
+                    EXPECT_TRUE(UXTestAPI::IsRGBAEqual(solidBrush, expectedColor));
+                }
+                else {
+                    // In adjustsImageWhenDisabled == NO scenario, we set the border background brush to nil
+                    EXPECT_OBJCEQ([sender getValue:dp], nil);
+                }
+
+                uxEvent->Set();
+            });
+        });
+
+        // Set a title and validate that the border background color has changed when disabled
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            buttonToTest.enabled = NO;
+            expectedColor = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.59f];
+            [buttonVC textTitle].text = @"adjustsImageWhenDisabled";
+        });
+        ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event timed out!");
+
+        // Set adjustsImageWhenDisabled to NO
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            expectedColor = nil;
+            buttonToTest.adjustsImageWhenDisabled = NO;
+        });
+        ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event timed out!");
+
+        // Set adjustsImageWhenDisabled to YES again
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            expectedColor = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.59f];
+            buttonToTest.adjustsImageWhenDisabled = YES;
+        });
+        ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event timed out!");
+
+        // Setting the image for state UIControlStateDisabled should not generate a border background color
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            expectedColor = nil;
+            [buttonVC textImageStateField].text = @"D;";
+            [buttonVC textImage].text = @"button_image.png";
+        });
+        ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event timed out!");
     }
 
     TEST_METHOD(UIButton_TitleForStateCumulative) {
@@ -715,7 +908,7 @@ public:
         UIButton* buttonToTest = [buttonVC defaultButton];
 
         __block auto uxLayoutEvent = UXEvent::CreateManual();
-        __block StrongId<WXFrameworkElement> layerContent = nil;
+        __block StrongId<WXFrameworkElement> layerContent;
 
         __block auto uxEvent = UXEvent::CreateAuto();
         __block auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
@@ -1199,7 +1392,7 @@ public:
         UIButton* buttonToTest = [buttonVC defaultButton];
 
         __block auto uxLayoutEvent = UXEvent::CreateManual();
-        __block StrongId<WXFrameworkElement> layerContent = nil;
+        __block StrongId<WXFrameworkElement> layerContent;
 
         __block auto uxEvent = UXEvent::CreateAuto();
         __block auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
