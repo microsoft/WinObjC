@@ -25,7 +25,6 @@
 #import <GLKit/GLKitExport.h>
 #import <GLKit/GLKTexture.h>
 #import "NSLogging.h"
-#import "CGDataProviderInternal.h"
 #import "CGImageInternal.h"
 
 static const wchar_t* TAG = L"GLKTexture";
@@ -279,8 +278,7 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
 */
 + (GLKTextureInfo*)textureWithContentsOfFile:(NSString*)fname options:(NSDictionary*)opts error:(NSError**)err {
     CGDataProviderRef provider = CGDataProviderCreateWithFilename([fname UTF8String]);
-    unsigned char* dataBytes = static_cast<unsigned char*>(const_cast<void*>(_CGDataProviderGetData(provider)));
-    CGImageRef img = _CGImageGetImageFromData(dataBytes, _CGDataProviderGetSize(provider));
+    CGImageRef img = _CGImageGetImageFromDataProvider(provider);
 
     GLKTextureInfo* res = [self textureWithCGImage:img options:opts error:err];
 
@@ -399,8 +397,7 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
         return nil;
     }
 
-    unsigned char* dataBytes = static_cast<unsigned char*>(const_cast<void*>(_CGDataProviderGetData(provider)));
-    CGImageRef img = _CGImageGetImageFromData(dataBytes, _CGDataProviderGetSize(provider));
+    CGImageRef img = _CGImageGetImageFromDataProvider(provider);
     if (!img) {
         CGDataProviderRelease(provider);
         return nil;
@@ -547,8 +544,7 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
             continue;
         }
 
-        unsigned char* dataBytes = static_cast<unsigned char*>(const_cast<void*>(_CGDataProviderGetData(provider)));
-        CGImageRef img = _CGImageGetImageFromData(dataBytes, _CGDataProviderGetSize(provider));
+        CGImageRef img = _CGImageGetImageFromDataProvider(provider);
         if (!img) {
             CGDataProviderRelease(provider);
             NSTraceWarning(TAG, @"Unable to create image from cube side texture %@", fn);

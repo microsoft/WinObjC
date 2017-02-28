@@ -49,11 +49,13 @@ struct GuidPixelLess : public std::binary_function<GUID, GUID, bool> {
     }
 };
 
-static const std::map<GUID, int, GuidPixelLess> s_ValidRenderTargetPixelFormat = { { GUID_WICPixelFormat8bppAlpha, 1 },    // A8 Straight
-                                                                                   { GUID_WICPixelFormat32bppRGB, 1 },     // RGBX
-                                                                                   { GUID_WICPixelFormat32bppPRGBA, 1 },   // RGBA Premultiplied
-                                                                                   { GUID_WICPixelFormat32bppBGR, 1 },     // BGRX
-                                                                                   { GUID_WICPixelFormat32bppPBGRA, 1 } }; // BGRX Premultiplied
+static const std::map<GUID, int, GuidPixelLess> s_ValidRenderTargetPixelFormat = { { GUID_WICPixelFormat8bppAlpha, 1 }, // A8 Straight
+                                                                                   { GUID_WICPixelFormat32bppRGB, 1 }, // RGBX
+                                                                                   { GUID_WICPixelFormat32bppPRGBA,
+                                                                                     1 }, // RGBA Premultiplied
+                                                                                   { GUID_WICPixelFormat32bppBGR, 1 }, // BGRX
+                                                                                   { GUID_WICPixelFormat32bppPBGRA,
+                                                                                     1 } }; // BGRX Premultiplied
 
 static const std::map<GUID, __CGImagePixelProperties, GuidPixelLess> s_PixelFormats = {
     // RGB(A) formats
@@ -189,15 +191,14 @@ COREGRAPHICS_EXPORT HRESULT _CGImageGetWICImageSource(CGImageRef image, IWICBitm
 // Obtain a direct pointer to the data.
 COREGRAPHICS_EXPORT void* _CGImageGetRawBytes(CGImageRef image);
 
+COREGRAPHICS_EXPORT CGImageRef _CGImageGetImageFromDataProvider(CGDataProviderRef provider);
+
 // Obtain the associated DisplayTexture
 __declspec(dllexport) std::shared_ptr<IDisplayTexture> _CGImageGetDisplayTexture(CGImageRef image);
 
 size_t _CGImageImputeBitsPerPixelFromFormat(CGColorSpaceRef colorSpace, size_t bitsPerComponent, CGBitmapInfo bitmapInfo);
-HRESULT _CGImageGetWICPixelFormatFromImageProperties(unsigned int bitsPerComponent,
-                                                     unsigned int bitsPerPixel,
-                                                     CGColorSpaceRef colorSpace,
-                                                     CGBitmapInfo bitmapInfo,
-                                                     GUID* pixelFormat);
+HRESULT _CGImageGetWICPixelFormatFromImageProperties(
+    unsigned int bitsPerComponent, unsigned int bitsPerPixel, CGColorSpaceRef colorSpace, CGBitmapInfo bitmapInfo, GUID* pixelFormat);
 
 // If the image is of the same format, the image is retained and returned.
 COREGRAPHICS_EXPORT CGImageRef _CGImageCreateCopyWithPixelFormat(CGImageRef image, WICPixelFormatGUID pixelFormat);
