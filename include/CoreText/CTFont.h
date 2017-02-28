@@ -229,13 +229,12 @@ CORETEXT_EXPORT CGFloat CTFontGetSlantAngle(CTFontRef font);
 CORETEXT_EXPORT CGFloat CTFontGetCapHeight(CTFontRef font);
 CORETEXT_EXPORT CGFloat CTFontGetXHeight(CTFontRef font);
 CORETEXT_EXPORT CGPathRef CTFontCreatePathForGlyph(CTFontRef font, CGGlyph glyph, const CGAffineTransform* matrix);
-CORETEXT_EXPORT CGGlyph CTFontGetGlyphWithName(CTFontRef font, CFStringRef glyphName) STUB_METHOD;
+CORETEXT_EXPORT CGGlyph CTFontGetGlyphWithName(CTFontRef font, CFStringRef glyphName) NOTINPLAN_METHOD;
 CORETEXT_EXPORT CGRect CTFontGetBoundingRectsForGlyphs(
     CTFontRef font, CTFontOrientation orientation, const CGGlyph glyphs[], CGRect* boundingRects, CFIndex count);
 CORETEXT_EXPORT double CTFontGetAdvancesForGlyphs(
     CTFontRef font, CTFontOrientation orientation, const CGGlyph glyphs[], CGSize* advances, CFIndex count);
-CORETEXT_EXPORT void CTFontGetVerticalTranslationsForGlyphs(CTFontRef font, const CGGlyph glyphs[], CGSize translations[], CFIndex count)
-    STUB_METHOD;
+CORETEXT_EXPORT void CTFontGetVerticalTranslationsForGlyphs(CTFontRef font, const CGGlyph glyphs[], CGSize translations[], CFIndex count);
 CORETEXT_EXPORT CFArrayRef CTFontCopyVariationAxes(CTFontRef font) STUB_METHOD;
 CORETEXT_EXPORT CFDictionaryRef CTFontCopyVariation(CTFontRef font) STUB_METHOD;
 CORETEXT_EXPORT CFArrayRef CTFontCopyFeatures(CTFontRef font) STUB_METHOD;
