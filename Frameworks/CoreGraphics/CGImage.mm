@@ -225,7 +225,7 @@ struct __CGImage : CoreFoundation::CppBase<__CGImage> {
     }
 
     ~__CGImage() {
-        for (auto listener: _imageDestructionListeners) {
+        for (auto listener : _imageDestructionListeners) {
             listener(this);
         }
     }
@@ -366,7 +366,9 @@ CGDataProviderRef CGImageGetDataProvider(CGImageRef img) {
     RETURN_NULL_IF_FAILED(img->ImageSource()->CopyPixels(nullptr, stride, size, buffer.get()));
 
     CGDataProviderRef dataProvider =
-        CGDataProviderCreateWithData(nullptr, buffer.release(), size, [](void* info, const void* data, size_t size) { IwFree(const_cast<void*>(data)); });
+        CGDataProviderCreateWithData(nullptr, buffer.release(), size, [](void* info, const void* data, size_t size) {
+            IwFree(const_cast<void*>(data));
+        });
     CFAutorelease(dataProvider);
     return dataProvider;
 }
@@ -650,6 +652,12 @@ CGImageRef _CGImageCreateCopyWithPixelFormat(CGImageRef image, WICPixelFormatGUI
     return imageRef;
 }
 
+CGImageRef _CGImageCreateFromDataProvider(CGDataProviderRef provider) {
+    RETURN_NULL_IF(!provider);
+    unsigned char* dataBytes = static_cast<unsigned char*>(const_cast<void*>(_CGDataProviderGetData(provider)));
+    return _CGImageGetImageFromData(dataBytes, _CGDataProviderGetSize(provider));
+}
+
 CGImageRef _CGImageGetImageFromData(void* data, int length) {
     return _CGImageLoadImageWithWICDecoder(GUID_NULL, data, length);
 }
@@ -753,7 +761,6 @@ size_t _CGImageImputeBitsPerPixelFromFormat(CGColorSpaceRef colorSpace, size_t b
 
 HRESULT _CGImageGetWICPixelFormatFromImageProperties(
     unsigned int bitsPerComponent, unsigned int bitsPerPixel, CGColorSpaceRef colorSpace, CGBitmapInfo bitmapInfo, GUID* pixelFormat) {
-
     // clang-format off
     static std::map<uint32_t, WICPixelFormatGUID> s_CGWICFormatMap{
         { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 24, kCGBitmapByteOrderDefault,  kCGImageAlphaNone),               GUID_WICPixelFormat24bppRGB       },
