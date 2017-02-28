@@ -1650,7 +1650,7 @@ void CGContextSetLineWidth(CGContextRef context, CGFloat width) {
 */
 void CGContextSetStrokeColor(CGContextRef context, const CGFloat* components) {
     NOISY_RETURN_IF_NULL(context);
-    // TODO #1592: based on the color space, we should be setting the fill color componenets.
+    // TODO #2041: based on the color space, we should be setting the fill color componenets.
     // as color is not fully supported, assume RGBA for now.
     CGContextSetRGBFillColor(context, components[0], components[1], components[2], components[3]);
 }
@@ -1763,7 +1763,7 @@ void CGContextSetShadowWithColor(CGContextRef context, CGSize offset, CGFloat bl
 void CGContextSetFillColor(CGContextRef context, const CGFloat* components) {
     NOISY_RETURN_IF_NULL(context);
     NOISY_RETURN_IF_NULL(components);
-    // TODO #1592: based on the color space, we should be setting the fill color componenets.
+    // TODO #2041: based on the color space, we should be setting the fill color componenets.
     // as color is not fully supported, assume RGBA for now.
     CGContextSetRGBFillColor(context, components[0], components[1], components[2], components[3]);
 }
@@ -1889,7 +1889,7 @@ static HRESULT _CreatePatternBrush(CGContextRef context,
     RETURN_IF_FAILED(__CreateD2DBitmapFromCGImage(context, tileImage.get(), &d2dBitmap));
 
     // Scale it by the inverted transform
-    // TODO #1591: We have an issue with rotation, the CTM rotation should not affect the brush
+    // TODO #2108: We have an issue with rotation, the CTM rotation should not affect the brush
     CGSize size = CGSizeApplyAffineTransform(tileSize.size, CGAffineTransformInvert(context->CurrentGState().transform));
 
     CGAffineTransform transform = __BitmapBrushTransformation(context,
@@ -3031,7 +3031,13 @@ CGContextRef CGBitmapContextCreateWithData(void* data,
     size_t estimatedBytesPerRow = (imputedBitsPerPixel >> 3) * width;
 
     if (data && estimatedBytesPerRow > bytesPerRow) {
-        TraceError(TAG, L"Invalid data stride: a %ux%u %ubpp context requires at least a %u-byte stride (requested: %u bytes/row).", width, height, imputedBitsPerPixel, estimatedBytesPerRow, bytesPerRow);
+        TraceError(TAG,
+                   L"Invalid data stride: a %ux%u %ubpp context requires at least a %u-byte stride (requested: %u bytes/row).",
+                   width,
+                   height,
+                   imputedBitsPerPixel,
+                   estimatedBytesPerRow,
+                   bytesPerRow);
         return nullptr;
     }
 
