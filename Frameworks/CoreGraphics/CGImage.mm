@@ -652,7 +652,7 @@ CGImageRef _CGImageCreateCopyWithPixelFormat(CGImageRef image, WICPixelFormatGUI
     return imageRef;
 }
 
-CGImageRef _CGImageGetImageFromDataProvider(CGDataProviderRef provider) {
+CGImageRef _CGImageCreateFromDataProvider(CGDataProviderRef provider) {
     RETURN_NULL_IF(!provider);
     unsigned char* dataBytes = static_cast<unsigned char*>(const_cast<void*>(_CGDataProviderGetData(provider)));
     return _CGImageGetImageFromData(dataBytes, _CGDataProviderGetSize(provider));

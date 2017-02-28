@@ -191,7 +191,7 @@ COREGRAPHICS_EXPORT HRESULT _CGImageGetWICImageSource(CGImageRef image, IWICBitm
 // Obtain a direct pointer to the data.
 COREGRAPHICS_EXPORT void* _CGImageGetRawBytes(CGImageRef image);
 
-COREGRAPHICS_EXPORT CGImageRef _CGImageGetImageFromDataProvider(CGDataProviderRef provider);
+COREGRAPHICS_EXPORT CGImageRef _CGImageCreateFromDataProvider(CGDataProviderRef provider);
 
 // Obtain the associated DisplayTexture
 __declspec(dllexport) std::shared_ptr<IDisplayTexture> _CGImageGetDisplayTexture(CGImageRef image);

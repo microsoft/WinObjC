@@ -381,7 +381,7 @@ LIBRARY CoreGraphics
         ; CGImage private exports
         _CGImageLoadImageWithWICDecoder
         _CGImageGetImageFromData
-        _CGImageGetImageFromDataProvider
+        _CGImageCreateFromDataProvider
         _CGImagePNGRepresentation
         _CGImageJPEGRepresentation
         _CGImageRepresentation
