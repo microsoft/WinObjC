@@ -86,6 +86,10 @@ NSString* const kCAFilterLinear = @"kCAFilterLinear";
 NSString* const kCAFilterNearest = @"kCAFilterNearest";
 NSString* const kCAFilterTrilinear = @"kCAFilterTrilinear";
 
+// The number of rendering attempts a CALayer will make when
+// its backing device disappears.
+static const unsigned int _kCALayerRenderAttempts = 3;
+
 @interface CALayer () {
 @public
     CAPrivateInfo* priv;
@@ -584,7 +588,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
             priv->savedContext = CGContextRetain(drawContext);
             priv->contents = CGImageRetain(target);
             break;
-        } while (tries < 3);
+        } while (tries < _kCALayerRenderAttempts);
 
         if (!priv->contents) {
             NSTraceError(TAG, @"Failed to render layer %@", self);

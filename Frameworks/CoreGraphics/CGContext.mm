@@ -475,12 +475,14 @@ public:
     }
 
     inline bool ShouldDraw() {
-        return FAILED(_firstErrorHr) || CurrentGState().ShouldDraw();
+        return SUCCEEDED(_firstErrorHr) && CurrentGState().ShouldDraw();
     }
 
     inline void PushBeginDraw() {
-        if (!FAILED(_firstErrorHr) && (_beginEndDrawDepth)++ == 0) {
-            deviceContext->BeginDraw();
+        if ((_beginEndDrawDepth)++ == 0) {
+            if (__builtin_expect(SUCCEEDED(_firstErrorHr), true)) {
+                deviceContext->BeginDraw();
+            }
         }
     }
 
@@ -488,7 +490,7 @@ public:
         HRESULT hr = S_OK;
         if (--(_beginEndDrawDepth) == 0) {
             hr = deviceContext->EndDraw();
-            if (_useEnhancedErrorHandling && !FAILED(_firstErrorHr) && FAILED(hr)) {
+            if (_useEnhancedErrorHandling && SUCCEEDED(_firstErrorHr) && FAILED(hr)) {
                 // If we haven't yet stored an error, and we're about to return an error (not S_OK), store it.
                 _firstErrorHr = hr;
                 hr = S_OK;
@@ -500,6 +502,7 @@ public:
     inline void EnableEnhancedErrorHandling() {
         _useEnhancedErrorHandling = true;
     }
+
     bool GetError(CFErrorRef* /* returns-retained */ outError);
 
     HRESULT Clip(CGPathDrawingMode pathMode);
@@ -2420,9 +2423,6 @@ HRESULT __CGContext::Draw(_CGCoordinateMode coordinateMode, CGAffineTransform* a
                                  nullptr);
     }
 
-    auto cleanup = wil::ScopeExit([this, layer]() {
-    });
-
     // If the context has requested antialiasing other than the defaults we now need to update the device context.
     if (CurrentGState().shouldAntialias != _kCGTrinaryDefault || !allowsAntialiasing) {
         deviceContext->SetAntialiasMode(GetAntialiasMode());
@@ -2963,10 +2963,9 @@ bool __CGContext::GetError(CFErrorRef* /* returns-retained */ outError) {
             errorCode = kCGContextErrorDeviceReset;
             break;
     }
-    auto error = woc::MakeStrongCF<CFErrorRef>(CFErrorCreate(nullptr, kCGErrorDomainIslandwood, errorCode, nullptr));
 
     if (outError) {
-        *outError = error.detach();
+        *outError = CFErrorCreate(nullptr, kCGErrorDomainIslandwood, errorCode, nullptr);
     }
 
     return true;

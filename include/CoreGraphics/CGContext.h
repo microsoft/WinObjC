@@ -263,20 +263,35 @@ COREGRAPHICS_EXPORT CGSize CGContextConvertSizeToUserSpace(CGContextRef c, CGSiz
 COREGRAPHICS_EXPORT CGRect CGContextConvertRectToDeviceSpace(CGContextRef c, CGRect rect);
 COREGRAPHICS_EXPORT CGRect CGContextConvertRectToUserSpace(CGContextRef c, CGRect rect);
 
-// [WinObjC Extension]
-// CGContextIwEnableEnhancedErrorHandling allows a developer to turn on advanced context error
-// handling. A CGContext that encounters errors when rendering will, by default, assert and abort.
-// Enhanced handling both silences asserts and enables an interested consumer to determine whether a
-// context has encountered a fatal drawing error.
-// A developer using enhanced error handling MUST check the status of a completed set of drawing
-// operations using CGContextIwGetError() and determine whether to redraw the frame.
+/*!
+ @function CGContextIwEnableEnhancedErrorHandling
+ [WinObjC Extension]
+ Turns on enhanced error handling for a CoreGraphics context.
+ A CGContext that encounters errors when rendering will, by default, assert and abort.
+ Enhanced handling both silences asserts and enables an interested consumer to determine whether a
+ context has encountered a fatal drawing error.
+ A consumer using enhanced error handling MUST check the status of a completed set of drawing
+ operations using CGContextIwGetError() and determine whether to redraw the frame.
+
+ @param  context the context to enlighten
+*/
 COREGRAPHICS_EXPORT void CGContextIwEnableEnhancedErrorHandling(CGContextRef context);
 
 COREGRAPHICS_EXPORT const CFStringRef kCGErrorDomainIslandwood;
 
 typedef CF_ENUM(CFIndex, CGContextIwErrorCode) {
-    kCGContextErrorDeviceReset,
+    kCGContextErrorDeviceReset = 0x01,
     kCGContextErrorInvalidParameter,
 };
 
+/*!
+ @function CGContextIwGetError
+ [WinObjC Extension]
+ Returns the error state of an enlightened context.
+
+ @param  context the enlightened context
+ @param  error   an output pointer that, upon a true return, will hold a retained CFErrorRef
+ @result A boolean summarizing whether the context had an error state. If true, and if error
+         is provided, *error will be populated.
+*/
 COREGRAPHICS_EXPORT bool CGContextIwGetError(CGContextRef context, CFErrorRef* /* returns-retained */ error);
