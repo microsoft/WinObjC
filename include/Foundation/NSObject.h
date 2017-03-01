@@ -97,7 +97,7 @@ __attribute__((objc_root_class)) @interface NSObject<NSObject> {
 + (BOOL)resolveClassMethod:(SEL)selector;
 + (BOOL)resolveInstanceMethod:(SEL)selector;
 - (id)forwardingTargetForSelector:(SEL)aSelector;
-- (void)forwardInvocation:(NSInvocation*)invocation STUB_METHOD;
+- (void)forwardInvocation:(NSInvocation*)invocation;
 
 + (NSString*)description;
 @property (readonly, copy) NSString* description;
