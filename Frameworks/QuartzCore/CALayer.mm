@@ -427,14 +427,20 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
             [priv->delegate drawLayer:self inContext:ctx];
         }
     } else {
-        CGRect rect;
+        // If the layer has cached contents, blit them directly.
 
-        rect.origin.x = 0;
-        rect.origin.y = priv->bounds.size.height * priv->contentsScale;
-        rect.size.width = priv->bounds.size.width * priv->contentsScale;
-        rect.size.height = -priv->bounds.size.height * priv->contentsScale;
+        // Since the layer was rendered in Quartz referential (ULO) AND the current context
+        // is assumed to be Quartz referential (ULO), BUT the layer's cached contents
+        // were captured in a CGImage (CGImage referential, LLO), we have to flip
+        // the context again before we render it.
 
-        _CGContextDrawImageRect(ctx, priv->contents, rect, destRect);
+        // |1  0 0| is the transformation matrix for flipping a rect anchored at 0,0 about its Y midpoint.
+        // |0 -1 0|
+        // |0  h 1|
+        CGContextSaveGState(ctx);
+        CGContextConcatCTM(ctx, CGAffineTransformMake(1, 0, 0, -1, 0, destRect.size.height));
+        CGContextDrawImage(ctx, destRect, priv->contents);
+        CGContextRestoreGState(ctx);
     }
 
     //  Draw sublayers
