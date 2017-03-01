@@ -366,7 +366,7 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     while (--count >= 0) {
         NSOrderedPerform* check = [_orderedPerforms objectAtIndex:count];
 
-        if ([check selector] == selector && [check target] == target && [check argument] == argument) {
+        if (sel_isEqual([check selector], selector) && [check target] == target && [check argument] == argument) {
             [_orderedPerforms removeObjectAtIndex:count];
         }
     }
