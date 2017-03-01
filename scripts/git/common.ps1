@@ -13,7 +13,7 @@ function Check-Result() {
 function Get-RepoRoot {
     $root = & git.exe rev-parse --show-toplevel 2>&1
     Check-Result
-    
+
     return $root.Trim()
 }
 
@@ -25,7 +25,7 @@ function Filter-SourceFiles {
 
     $filter = {$_ -like "*.mm" -or $_ -like "*.m" -or $_ -like "*.c" -or $_ -like "*.cpp" -or $_ -like "*.h"}
     [array]$files = $args | Where-Object -FilterScript $filter
-    
+
     return $files
 }
 
@@ -55,9 +55,9 @@ function Get-StagedFiles {
 
 # Formats the given file using ClangFormat
 function ClangFormatFile([string]$repoRoot, [string]$filename, [bool]$isDryRun){
-    $clangCommand = "$repoRoot/tools/scripts/clang-format.ps1"
+    $clangCommand = "$repoRoot/scripts/git/clang-format.ps1"
     $filename = $filename.Trim()
-    
+
     if ($isDryRun) {
         & "$clangCommand" -Directory "" -File $filename -DryRun 2>&1
     } else {
