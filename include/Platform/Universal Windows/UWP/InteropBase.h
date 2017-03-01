@@ -51,11 +51,11 @@ WINRT_EXPORT
 
 @end
 
-// Does a safe cast of rtObject into a derived projected class type. Throws if it is an invalid cast.
+// Does a safe cast of rtObject into a derived projected class type. Returns nil if cast fails.
+#ifdef __cplusplus
 WINRT_EXPORT_FN
 id rt_dynamic_cast(Class classType, RTObject* rtObject);
 
-#ifdef __cplusplus
 template <typename ClassType>
 ClassType* rt_dynamic_cast(RTObject* rtObject) {
     return rt_dynamic_cast([ClassType class], rtObject);
