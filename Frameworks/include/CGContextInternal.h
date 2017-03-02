@@ -31,19 +31,13 @@
 COREGRAPHICS_EXPORT CGContextRef _CGContextCreateWithD2DRenderTarget(ID2D1RenderTarget* renderTarget);
 COREGRAPHICS_EXPORT void _CGContextSetShadowProjectionTransform(CGContextRef context, CGAffineTransform transform);
 COREGRAPHICS_EXPORT void _CGContextDrawImageRect(CGContextRef ctx, CGImageRef img, CGRect src, CGRect dst);
-COREGRAPHICS_EXPORT void CGContextClearToColor(CGContextRef ctx, float r, float g, float b, float a);
-COREGRAPHICS_EXPORT bool CGContextIsDirty(CGContextRef ctx);
-COREGRAPHICS_EXPORT void CGContextSetDirty(CGContextRef ctx, bool dirty);
-COREGRAPHICS_EXPORT void CGContextReleaseLock(CGContextRef ctx);
-COREGRAPHICS_EXPORT CGBlendMode CGContextGetBlendMode(CGContextRef ctx);
-COREGRAPHICS_EXPORT bool CGContextIsPointInPath(CGContextRef c, bool eoFill, float x, float y);
 
 // Bitmap Context Internal
 COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithRenderTarget(ID2D1RenderTarget* renderTarget,
                                                                         CGImageRef img,
                                                                         WICPixelFormatGUID outputPixelFormat);
 COREGRAPHICS_EXPORT CGContextRef _CGBitmapContextCreateWithFormat(int width, int height, __CGSurfaceFormat fmt);
-COREGRAPHICS_EXPORT CGImageRef CGBitmapContextGetImage(CGContextRef ctx);
+COREGRAPHICS_EXPORT CGImageRef _CGBitmapContextGetImage(CGContextRef ctx);
 
 // Reduces the number of BeginDraw() and EndDraw() calls needed, by counting in a stack-like manner,
 // and only calling BeginDraw()/EndDraw() when the stack is empty/emptied

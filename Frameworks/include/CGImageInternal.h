@@ -204,6 +204,6 @@ HRESULT _CGImageGetWICPixelFormatFromImageProperties(
 COREGRAPHICS_EXPORT CGImageRef _CGImageCreateCopyWithPixelFormat(CGImageRef image, WICPixelFormatGUID pixelFormat);
 
 typedef void (*CGImageDestructionListener)(CGImageRef img);
-COREGRAPHICS_EXPORT void CGImageAddDestructionListener(CGImageDestructionListener listener);
+COREGRAPHICS_EXPORT void _CGImageAddDestructionListener(CGImageDestructionListener listener);
 
 HRESULT _CGImageConvertToMaskCompatibleWICBitmap(CGImageRef image, IWICBitmap** pBitmap);

@@ -528,7 +528,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
         CGContextRef drawContext = CreateLayerContentsBitmapContext32(width, height, priv->contentsScale);
 
         priv->ownsContents = TRUE;
-        CGImageRef target = CGBitmapContextGetImage(drawContext);
+        CGImageRef target = _CGBitmapContextGetImage(drawContext);
 
         CGContextRetain(drawContext);
         _CGContextPushBeginDraw(drawContext);
@@ -541,15 +541,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
         CGImageRetain(target);
         priv->savedContext = drawContext;
 
-        if (priv->_backgroundColor == nil || (int)[static_cast<UIColor*>(priv->_backgroundColor) _type] == solidBrush) {
-            CGContextClearToColor(drawContext,
-                                  priv->backgroundColor.r,
-                                  priv->backgroundColor.g,
-                                  priv->backgroundColor.b,
-                                  priv->backgroundColor.a);
-        } else {
-            CGContextClearToColor(drawContext, 0, 0, 0, 0);
-
+        if (priv->_backgroundColor != nil && (int)[static_cast<UIColor*>(priv->_backgroundColor) _type] != solidBrush) {
             CGContextSaveGState(drawContext);
             CGContextSetFillColorWithColor(drawContext, [static_cast<UIColor*>(priv->_backgroundColor) CGColor]);
 
@@ -566,7 +558,6 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
 
         _CGContextSetShadowProjectionTransform(drawContext, CGAffineTransformMakeScale(1.0, -1.0));
 
-        CGContextSetDirty(drawContext, false);
         [self drawInContext:drawContext];
 
         if (priv->delegate != 0) {
@@ -577,17 +568,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
             }
         }
 
-        CGContextReleaseLock(drawContext);
-
-        // If we've drawn anything, set it as our contents
-        if (!CGContextIsDirty(drawContext)) {
-            CGImageRelease(target);
-            CGContextRelease(drawContext);
-            priv->savedContext = NULL;
-            priv->contents = NULL;
-        } else {
-            priv->contents = target;
-        }
+        priv->contents = target;
     } else if (priv->contents) {
         priv->contentsSize.width = float(CGImageGetWidth(priv->contents));
         priv->contentsSize.height = float(CGImageGetHeight(priv->contents));
@@ -1694,7 +1675,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 */
 - (CGColorRef)shadowColor {
     UNIMPLEMENTED();
-    return CGColorGetConstantColor((CFStringRef) @"BLACK");
+    return CGColorGetConstantColor(kCGColorBlack);
 }
 
 /**
