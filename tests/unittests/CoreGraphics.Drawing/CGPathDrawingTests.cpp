@@ -314,8 +314,6 @@ static void _drawArcWithParams(CGContextRef context,
         default:
             break;
     }
-    if (moveToPoint == 0) {
-    }
     CGPathAddArc(thepath, &transformation, xstart + .5 * width, ystart + .5 * height, .5 * height, startAngle, endAngle, clockwise);
 
     CGContextAddPath(context, thepath);
