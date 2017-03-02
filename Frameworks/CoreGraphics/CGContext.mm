@@ -1650,6 +1650,8 @@ void CGContextSetLineWidth(CGContextRef context, CGFloat width) {
 */
 void CGContextSetStrokeColor(CGContextRef context, const CGFloat* components) {
     NOISY_RETURN_IF_NULL(context);
+    NOISY_RETURN_IF_NULL(components);
+
     // TODO #2041: based on the color space, we should be setting the fill color componenets.
     // as color is not fully supported, assume RGBA for now.
     CGContextSetRGBFillColor(context, components[0], components[1], components[2], components[3]);
@@ -1661,6 +1663,7 @@ void CGContextSetStrokeColor(CGContextRef context, const CGFloat* components) {
 */
 void CGContextSetStrokeColorWithColor(CGContextRef context, CGColorRef color) {
     NOISY_RETURN_IF_NULL(context);
+    NOISY_RETURN_IF_NULL(color);
     const CGFloat* comp = CGColorGetComponents(color);
     CGContextSetRGBStrokeColor(context, comp[0], comp[1], comp[2], comp[3]);
 }
@@ -1774,6 +1777,7 @@ void CGContextSetFillColor(CGContextRef context, const CGFloat* components) {
 */
 void CGContextSetFillColorWithColor(CGContextRef context, CGColorRef color) {
     NOISY_RETURN_IF_NULL(context);
+    NOISY_RETURN_IF_NULL(color);
     const CGFloat* comp = CGColorGetComponents(color);
     CGContextSetRGBFillColor(context, comp[0], comp[1], comp[2], comp[3]);
 }

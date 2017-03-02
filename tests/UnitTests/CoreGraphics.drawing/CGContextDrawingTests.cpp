@@ -214,3 +214,20 @@ DRAW_TEST_F(CGContext, AntialiasToggleTranscendsGState, WhiteBackgroundTest<>) {
     };
     CGContextStrokeLineSegments(context, blurryLineSegments2, 2);
 }
+
+DRAW_TEST_F(CGContext, NullFillColor, WhiteBackgroundTest<>) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGContextSetFillColorWithColor(context, nullptr);
+    CGContextFillRect(context, bounds);
+}
+
+DRAW_TEST_F(CGContext, NullStrokeColor, WhiteBackgroundTest<>) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGContextSetStrokeColorWithColor(context, nullptr);
+
+    CGContextStrokeRect(context, bounds);
+}
