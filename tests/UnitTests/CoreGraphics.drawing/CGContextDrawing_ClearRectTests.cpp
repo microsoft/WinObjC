@@ -18,7 +18,7 @@
 
 #pragma region ClearRect
 
-class CGClearRect : public WhiteBackgroundTest<>,
+class CGClearRect : public WhiteBackgroundTest<PixelByPixelImageComparator<PixelComparisonModeMask<>>>,
                     public ::testing::WithParamInterface<::testing::tuple<CGRect, CGAffineTransform, CGRect>> {
     CFStringRef CreateOutputFilename() {
         CGRect rect = ::testing::get<0>(GetParam());
