@@ -16,8 +16,8 @@
     <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
   </Dependencies>
   <Assets>
-    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ObjectiveC" d:VsixSubPath="Asset" Path="|ObjectiveC|" />
-    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:VsixSubPath="BM" Path="|BuildMonitor;PkgdefProjectOutputGroup|" />
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="Legacy_ObjectiveC" d:VsixSubPath="Asset" Path="|Legacy_ObjectiveC|" />
+    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:VsixSubPath="BM" Path="|Legacy_BuildMonitor;PkgdefProjectOutputGroup|" d:ProjectName="Legacy_BuildMonitor" />
     <Asset Type="NativeVisualizer" d:Source="File" Path="Visualizers\ObjectiveC.natvis" />
     <Asset Type="StepFilter" d:Source="File" Path="Visualizers\ObjectiveC.natstepfilter" />
   </Assets>
