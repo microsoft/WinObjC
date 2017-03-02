@@ -18,57 +18,51 @@
 
 #pragma region ClearRect
 
-class CGClearRect : public WhiteBackgroundTest<>, public ::testing::WithParamInterface<::testing::tuple<CGRect, CGAffineTransform>> {
+class CGClearRect : public WhiteBackgroundTest<>,
+                    public ::testing::WithParamInterface<::testing::tuple<CGRect, CGAffineTransform, CGRect>> {
     CFStringRef CreateOutputFilename() {
         CGRect rect = ::testing::get<0>(GetParam());
         CGAffineTransform transformation = ::testing::get<1>(GetParam());
+        CGRect addRect = ::testing::get<2>(GetParam());
 
-        return CFStringCreateWithFormat(nullptr,
-                                        nullptr,
-                                        CFSTR("TestImage.CGContext.ClearRect.(%0.0f.%0.0f)%0.0fx%0.0f.[%0.1f,%0."
-                                              "1f,%0.1f,%0.1f,%0.1f,%0.1f].png"),
-                                        rect.origin.x,
-                                        rect.origin.y,
-                                        rect.size.width,
-                                        rect.size.height,
-                                        transformation.a,
-                                        transformation.b,
-                                        transformation.c,
-                                        transformation.d,
-                                        transformation.tx,
-                                        transformation.ty);
+        return CFStringCreateWithFormat(
+            nullptr,
+            nullptr,
+            CFSTR("TestImage.CGContext.ClearRect.(%0.0f.%0.0f)%0.0fx%0.0f.clear.(%0.0f.%0.0f)%0.0fx%0.0f.[%0.1f,%0."
+                  "1f,%0.1f,%0.1f,%0.1f,%0.1f].png"),
+            rect.origin.x,
+            rect.origin.y,
+            rect.size.width,
+            rect.size.height,
+            addRect.origin.x,
+            addRect.origin.y,
+            addRect.size.width,
+            addRect.size.height,
+            transformation.a,
+            transformation.b,
+            transformation.c,
+            transformation.d,
+            transformation.tx,
+            transformation.ty);
     }
 };
 
 DRAW_TEST_P(CGClearRect, Transformed) {
     CGRect rect = ::testing::get<0>(GetParam());
     CGAffineTransform transformation = ::testing::get<1>(GetParam());
-
-    CGContextRef context = GetDrawingContext();
-
-    CGContextAddRect(context, CGRectMake(100, 50, 50, 50));
-    CGContextConcatCTM(context, transformation);
-    CGContextClip(context);
-
-    CGContextSetRGBFillColor(context, 0.48, 0.73, 0, 1);
-    CGContextClearRect(context, rect);
-}
-
-DRAW_TEST_P(CGClearRect, Transformed2) {
-    CGRect rect = ::testing::get<0>(GetParam());
-    CGAffineTransform transformation = ::testing::get<1>(GetParam());
+    CGRect addRect = ::testing::get<2>(GetParam());
 
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
-    CGContextAddRect(context, CGRectMake(0, 0, 250, 250));
+    CGContextAddRect(context, addRect);
     CGContextConcatCTM(context, transformation);
     CGContextClip(context);
 
-    CGContextSetRGBFillColor(context, 0.48, 0.73, 0, 1);
     CGContextClearRect(context, rect);
 }
 
+static CGRect addRects[] = { CGRectMake(10, 20, 300, 400), CGRectMake(0, 0, 250, 250) };
 static CGRect rects[] = { CGRectMake(0, 0, 100, 100), CGRectMake(0, 0, 50, 250), CGRectMake(100, 100, 125, 250) };
 static CGAffineTransform transformation[] = { CGAffineTransformMakeRotation(0.4),
                                               CGAffineTransformMakeTranslation(3, 6),
@@ -76,7 +70,9 @@ static CGAffineTransform transformation[] = { CGAffineTransformMakeRotation(0.4)
                                               CGAffineTransformMake(1.f, 0.f, 0.3f, 1.f, 0.f, 0.f),
                                               CGAffineTransformIdentity };
 
-INSTANTIATE_TEST_CASE_P(CGContextTests, CGClearRect, ::testing::Combine(::testing::ValuesIn(rects), ::testing::ValuesIn(transformation)));
+INSTANTIATE_TEST_CASE_P(CGContextTests,
+                        CGClearRect,
+                        ::testing::Combine(::testing::ValuesIn(rects), ::testing::ValuesIn(transformation), ::testing::ValuesIn(addRects)));
 
 DRAW_TEST_F(CGContext, ClearRect, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
@@ -165,8 +161,9 @@ DRAW_TEST_F(CGContext, CustomPathClearRect, WhiteBackgroundTest<>) {
     CGPathCloseSubpath(thepath);
     CGContextAddPath(context, thepath);
 
+    CGContextConcatCTM(context, CGAffineTransformMakeRotation(0.2));
     CGContextClip(context);
-    CGContextClearRect(context, CGRectMake(0, 0, 50, 70));
+    CGContextClearRect(context, CGRectMake(0, 0, 50, 98));
     CGPathRelease(thepath);
 }
 #pragma endregion ClearRect
