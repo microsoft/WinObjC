@@ -2328,8 +2328,10 @@ void CGContextShowGlyphsWithAdvances(CGContextRef context, const CGGlyph* glyphs
 #pragma region Drawing Operations - Basic Shapes
 
 HRESULT __CGContext::ClearRect(CGRect rect) {
+    // Skip drawing if the context has failed; this is not an error in ClearRect.
+    RETURN_RESULT_IF(FAILED(_firstErrorHr), S_OK);
+
     PushBeginDraw();
-    auto endDraw = wil::ScopeExit([this]() { PopEndDraw(); });
 
     ComPtr<ID2D1Factory> factory = Factory();
     ComPtr<ID2D1RectangleGeometry> rectangle;
@@ -2357,7 +2359,8 @@ HRESULT __CGContext::ClearRect(CGRect rect) {
     deviceContext->FillGeometry(CurrentGState().clippingGeometry.Get(), transparentBrush.Get());
     deviceContext->SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND_SOURCE_OVER);
     RETURN_IF_FAILED(PopGState());
-    return S_OK;
+
+    return PopEndDraw();
 }
 
 /**
@@ -2418,11 +2421,10 @@ HRESULT __CGContext::_CreateShadowEffect(ID2D1Image* inputImage, ID2D1Effect** o
 
 template <typename Lambda> // Lambda takes the form HRESULT(*)(CGContextRef, ID2D1DeviceContext*)
 HRESULT __CGContext::Draw(__CGCoordinateMode coordinateMode, CGAffineTransform* additionalTransform, Lambda&& drawLambda) {
-    auto& state = CurrentGState();
+    // Skip drawing if the context has failed; this is not an error in Draw.
+    RETURN_RESULT_IF(FAILED(_firstErrorHr), S_OK);
 
-    if (FAILED(_firstErrorHr)) {
-        return _firstErrorHr;
-    }
+    auto& state = CurrentGState();
 
     if (!state.ShouldDraw()) {
         // Being asked to draw nothing is valid!
