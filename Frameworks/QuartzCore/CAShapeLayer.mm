@@ -119,7 +119,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
         CGContextStrokePath(drawContext);
     }
 
-    CGImageRef target = CGBitmapContextGetImage(drawContext);
+    CGImageRef target = _CGBitmapContextGetImage(drawContext);
 
     _shapeImage.contents = (id)target;
 
@@ -229,7 +229,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
         _shapeImage.delegate = self;
 
         [self addSublayer:_shapeImage];
-        _fillColor = (CGColorRef)CGColorGetConstantColor((CFStringRef) @"BLACK");
+        _fillColor = (CGColorRef)CGColorGetConstantColor(kCGColorBlack);
         CGColorRetain(_fillColor);
         _lineWidth = 1.0f;
     }
