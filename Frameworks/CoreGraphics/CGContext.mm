@@ -2964,7 +2964,14 @@ bool __CGContext::GetError(CFErrorRef* /* returns-retained */ outError) {
     // in differentiating them here.
 
     if (outError) {
-        *outError = CFErrorCreate(nullptr, kCGErrorDomainIslandwood, errorCode, nullptr);
+        CFIndex embeddedHresultDowncast = static_cast<CFIndex>(hr);
+        auto embeddedHresult = woc::MakeStrongCF<CFNumberRef>(CFNumberCreate(nullptr, kCFNumberCFIndexType, &embeddedHresultDowncast));
+
+        CFTypeRef key = CFSTR("hresult"); // This matches the hresult exception key used in Foundation, which we can't import.
+        CFTypeRef value = embeddedHresult.get();
+        auto userInfo = woc::MakeStrongCF<CFDictionaryRef>(CFDictionaryCreate(nullptr, &key, &value, 1, &kCFCopyStringDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks));
+
+        *outError = CFErrorCreate(nullptr, kCGErrorDomainIslandwood, errorCode, userInfo);
     }
 
     return true;
