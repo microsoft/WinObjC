@@ -18,6 +18,9 @@
 #import "FunctionalTestHelpers.h"
 #import "UXTestHelpers.h"
 #import "StringHelpers.h"
+#import "CppWinRTHelpers.h"
+
+using namespace winrt::Windows::UI::Xaml;
 
 namespace UXTestAPI {
 
@@ -25,14 +28,14 @@ UIWindow* GetCurrentWindow() {
     return [[UIApplication sharedApplication] keyWindow];
 }
 
-WXFrameworkElement* FindXamlChild(WXFrameworkElement* parent, NSString* name) {
-    WXFrameworkElement* foundChild = nullptr;
+FrameworkElement FindXamlChild(const FrameworkElement& parent, NSString* name) {
+    FrameworkElement foundChild = nullptr;
 
-    unsigned int childCount = [WUXMVisualTreeHelper getChildrenCount:parent];
+    unsigned int childCount = Media::VisualTreeHelper::GetChildrenCount(parent);
     for (unsigned int i = 0; i < childCount && !foundChild; i++) {
-        WXFrameworkElement* child = rt_dynamic_cast<WXFrameworkElement>([WUXMVisualTreeHelper getChild:parent childIndex:i]);
+        auto child = Media::VisualTreeHelper::GetChild(parent, i).as<FrameworkElement>();
 
-        NSString* childName = [child name];
+        NSString* childName = objcwinrt::string(child.Name());
         if ([childName isEqualToString:name]) {
             foundChild = child;
             break;
@@ -63,30 +66,30 @@ void UIControlCheckStateTransition(
     ASSERT_OBJCEQ(currentValue, expectedValue);
 }
 
-NSString* NSStringFromPropertyValue(RTObject* rtPropertyValue) {
-    WFIPropertyValue* propVal = rt_dynamic_cast<WFIPropertyValue>(rtPropertyValue);
+NSString* NSStringFromPropertyValue(const winrt::Windows::Foundation::IInspectable& rtPropertyValue) {
+    auto propVal = rtPropertyValue.as<winrt::Windows::Foundation::IPropertyValue>();
     if (propVal) {
-        return [propVal getString];
+        return objcwinrt::string(propVal.GetString());
     }
 
     return nil;
 }
 
-double DoubleFromPropertyValue(RTObject* rtPropertyValue) {
-    WFIPropertyValue* propVal = rt_dynamic_cast<WFIPropertyValue>(rtPropertyValue);
+double DoubleFromPropertyValue(const winrt::Windows::Foundation::IInspectable& rtPropertyValue) {
+    auto propVal = rtPropertyValue.as<winrt::Windows::Foundation::IPropertyValue>();
     if (propVal) {
-        return [propVal getDouble];
+        return propVal.GetDouble();
     }
 
     return 0.0f;
 }
 
-bool IsRGBAEqual(WUXMSolidColorBrush* brush, UIColor* color) {
+bool IsRGBAEqual(const Media::SolidColorBrush& brush, UIColor* color) {
     CGFloat red, green, blue, alpha;
     [color getRed:&red green:&green blue:&blue alpha:&alpha];
 
-    return [brush.color r] == (int)(red * 255) && [brush.color g] == (int)(green * 255) && [brush.color b] == (int)(blue * 255) &&
-           [brush.color a] == (int)(alpha * 255);
+    return brush.Color().R == (int)(red * 255) && brush.Color().G == (int)(green * 255) && brush.Color().B == (int)(blue * 255) &&
+           brush.Color().A == (int)(alpha * 255);
 }
 
 //
@@ -129,27 +132,26 @@ ViewControllerPresenter::~ViewControllerPresenter() {
 //
 // XamlEventSubscription methods
 //
-void XamlEventSubscription::Set(WXDependencyObject* xamlObject, WXDependencyProperty* propertyToObserve, XamlEventBlock callbackHandler) {
+void XamlEventSubscription::Set(const DependencyObject& xamlObject, const DependencyProperty& propertyToObserve, XamlEventBlock callbackHandler) {
     Reset();
 
     _xamlObject = xamlObject;
     _propertyToObserve = propertyToObserve;
 
     // Register callback and wait for the property changed event to trigger
-    _callbackToken = [_xamlObject registerPropertyChangedCallback:_propertyToObserve
-                                                         callback:^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                                                             callbackHandler(sender, dp);
-                                                         }];
+    _callbackToken = _xamlObject.RegisterPropertyChangedCallback(_propertyToObserve, [callbackHandler] (auto&& sender, auto&& prop) {
+        callbackHandler(sender, prop);
+    });
 }
 
 void XamlEventSubscription::Reset() {
     if (_callbackToken != -1) {
-        [_xamlObject unregisterPropertyChangedCallback:_propertyToObserve token:_callbackToken];
+        _xamlObject.UnregisterPropertyChangedCallback(_propertyToObserve, _callbackToken);
         _callbackToken = -1;
     }
 
-    _xamlObject = nil;
-    _propertyToObserve = nil;
+    _xamlObject = nullptr;
+    _propertyToObserve = nullptr;
 }
 
 //
