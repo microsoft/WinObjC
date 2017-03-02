@@ -577,7 +577,10 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
                         ++tries;
                         continue;
                     default: {
-                        NSTraceError(TAG, @"Error %@ rendering %@.", renderError.get(), self);
+                        FAIL_FAST_MSG("Failed to render <%hs %p>: %hs",
+                                      object_getClassName(self),
+                                      self,
+                                      [[static_cast<NSError*>(renderError.get()) description] UTF8String]);
                         break;
                     }
                 }

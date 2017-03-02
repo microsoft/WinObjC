@@ -479,7 +479,7 @@ public:
 
     inline void PushBeginDraw() {
         if ((_beginEndDrawDepth)++ == 0) {
-            if (__builtin_expect(SUCCEEDED(_firstErrorHr), true)) {
+            if (SUCCEEDED(_firstErrorHr)) {
                 deviceContext->BeginDraw();
             }
         }
@@ -2957,11 +2957,11 @@ bool __CGContext::GetError(CFErrorRef* /* returns-retained */ outError) {
     }
 
     CGContextIwErrorCode errorCode = kCGContextErrorInvalidParameter;
-    switch (hr) {
-        case D2DERR_RECREATE_TARGET:
-            errorCode = kCGContextErrorDeviceReset;
-            break;
+    if (hr == D2DERR_RECREATE_TARGET) {
+        errorCode = kCGContextErrorDeviceReset;
     }
+    // All other errors are likely to be catastrophic; there's no point
+    // in differentiating them here.
 
     if (outError) {
         *outError = CFErrorCreate(nullptr, kCGErrorDomainIslandwood, errorCode, nullptr);
