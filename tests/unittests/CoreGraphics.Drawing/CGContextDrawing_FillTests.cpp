@@ -82,17 +82,6 @@ DISABLED_DRAW_TEST_F(CGContextFill, ConcentricRectsWinding, WhiteBackgroundTest<
     CGPathRelease(path);
 }
 
-DRAW_TEST_F(CGContextFill, ClearRect, WhiteBackgroundTest<>) {
-    CGContextRef context = GetDrawingContext();
-    CGRect bounds = GetDrawingBounds();
-
-    CGContextSetRGBFillColor(context, 1.0, 0.0, 0.0, 1);
-    CGContextFillRect(context, bounds);
-
-    CGRect borderRect = CGRectInset(bounds, 30, 50);
-    CGContextClearRect(context, borderRect);
-}
-
 DISABLED_DRAW_TEST_F(CGContextFill, ConcentricRectsEvenOdd, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
