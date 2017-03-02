@@ -78,7 +78,6 @@ inline void _SafeRelease(T** p) {
 @public
     CFRange _strRange;
     CGFloat _relativeXOffset;
-    CGFloat _relativeYOffset;
     CGFloat _width;
     NSUInteger _glyphCount;
     StrongId<NSMutableArray<_CTRun*>> _runs;

@@ -54,6 +54,10 @@ struct GlyphRunData {
 
 COREGRAPHICS_EXPORT void _CGContextDrawGlyphRuns(CGContextRef ctx, GlyphRunData* glyphRuns, size_t runCount);
 
+inline bool _GlyphRunIsRTL(const DWRITE_GLYPH_RUN& run) {
+    return (run.bidiLevel & 1);
+}
+
 COREGRAPHICS_EXPORT const CFStringRef _kCGCharacterShapeAttributeName;
 COREGRAPHICS_EXPORT const CFStringRef _kCGFontAttributeName;
 COREGRAPHICS_EXPORT const CFStringRef _kCGKernAttributeName;
