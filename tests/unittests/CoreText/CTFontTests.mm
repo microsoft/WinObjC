@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -740,4 +740,26 @@ DISABLED_TEST(CTFont, CreatePathForGlyph) {
                    });
     CGPathApply(pathWithFontSizeAndTransforms, &comparePathContext, comparePathToExpected);
     ASSERT_EQ(expectedElements.size(), comparePathContext.count);
+}
+
+TEST(CTFont, GetVerticalTranslationsForGLyphs) {
+    auto font = woc::MakeAutoCF<CTFontRef>(CTFontCreateWithName(CFSTR("Arial"), 20, nullptr));
+    UniChar chars[6] = { 'T', 'e', 's', 't', ' ', '_' };
+    CGGlyph glyphs[6];
+    CTFontGetGlyphsForCharacters(font, chars, glyphs, 6);
+
+    CGSize translations[6];
+    CTFontGetVerticalTranslationsForGlyphs(font, glyphs, translations, 6);
+    EXPECT_NEAR(-6.1035, translations[0].width, c_errorMargin);
+    EXPECT_NEAR(-5.5566, translations[1].width, c_errorMargin);
+    EXPECT_NEAR(-5.000, translations[2].width, c_errorMargin);
+    EXPECT_NEAR(-2.7734, translations[3].width, c_errorMargin);
+    EXPECT_NEAR(0, translations[4].width, c_errorMargin);
+    EXPECT_NEAR(-5.5566, translations[5].width, c_errorMargin);
+    EXPECT_NEAR(-15.3125, translations[0].height, c_errorMargin);
+    EXPECT_NEAR(-11.6016, translations[1].height, c_errorMargin);
+    EXPECT_NEAR(-11.6016, translations[2].height, c_errorMargin);
+    EXPECT_NEAR(-14.9902, translations[3].height, c_errorMargin);
+    EXPECT_NEAR(0, translations[4].height, c_errorMargin);
+    EXPECT_NEAR(1.70898, translations[5].height, c_errorMargin);
 }
