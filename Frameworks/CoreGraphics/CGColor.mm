@@ -64,7 +64,7 @@ CGColorRef CGColorRetain(CGColorRef color) {
 /**
  @Status Interoperable
 */
-CGColorRef CGColorCreate(CGColorSpaceRef colorSpace, const float* components) {
+CGColorRef CGColorCreate(CGColorSpaceRef colorSpace, const CGFloat* components) {
     CGColorRef ret =
         (CGColorRef)[[_LazyUIColor colorWithRed:components[0] green:components[1] blue:components[2] alpha:components[3]] retain];
 

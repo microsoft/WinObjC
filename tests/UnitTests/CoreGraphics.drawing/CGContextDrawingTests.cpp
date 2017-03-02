@@ -219,6 +219,12 @@ DRAW_TEST_F(CGContext, NullFillColor, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
+    auto colorSpace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
+
+    CGFloat red[] = { 1, 0, 0, 1 };
+    auto color = woc::MakeStrongCF<CGColorRef>(CGColorCreate(colorSpace, red));
+    CGContextSetFillColorWithColor(context, color);
+
     CGContextSetFillColorWithColor(context, nullptr);
     CGContextFillRect(context, bounds);
 }
@@ -227,7 +233,12 @@ DRAW_TEST_F(CGContext, NullStrokeColor, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
-    CGContextSetStrokeColorWithColor(context, nullptr);
+    auto colorSpace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
+
+    CGFloat red[] = { 1, 0, 0, 1 };
+    auto color = woc::MakeStrongCF<CGColorRef>(CGColorCreate(colorSpace, red));
+
+    CGContextSetStrokeColorWithColor(context, color);
 
     CGContextStrokeRect(context, bounds);
 }
