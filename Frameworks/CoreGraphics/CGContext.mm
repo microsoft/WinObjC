@@ -607,7 +607,6 @@ void CGContextFlush(CGContextRef context) {
 
 /**
  @Status Stub
- @Notes
 */
 void CGContextSynchronize(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context);
@@ -741,7 +740,6 @@ void CGContextEndTransparencyLayer(CGContextRef context) {
 #pragma region Global State - Pagination
 /**
  @Status Stub
- @Notes
 */
 void CGContextBeginPage(CGContextRef context, const CGRect* mediaBox) {
     NOISY_RETURN_IF_NULL(context);
@@ -750,7 +748,6 @@ void CGContextBeginPage(CGContextRef context, const CGRect* mediaBox) {
 
 /**
  @Status Stub
- @Notes
 */
 void CGContextEndPage(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context);
@@ -1088,7 +1085,6 @@ void CGContextAddLines(CGContextRef context, const CGPoint* points, unsigned cou
 #pragma region Global State - Path Queries
 /**
  @Status Interoperable
- @Notes
 */
 CGPathRef CGContextCopyPath(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context, nullptr);
@@ -1112,8 +1108,7 @@ CGPathRef CGContextCopyPath(CGContextRef context) {
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Inteoperable
 */
 CGPoint CGContextGetPathCurrentPoint(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context, CGPointZero);
@@ -1127,8 +1122,7 @@ CGPoint CGContextGetPathCurrentPoint(CGContextRef context) {
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 bool CGContextPathContainsPoint(CGContextRef context, CGPoint point, CGPathDrawingMode mode) {
     NOISY_RETURN_IF_NULL(context, false);
@@ -1499,17 +1493,11 @@ void CGContextSetShouldSubpixelQuantizeFonts(CGContextRef context, bool subpixel
 
 #pragma region Drawing Parameters - Generic
 /**
- @Status Interoperable
+ @Status Stub
 */
 void CGContextSetBlendMode(CGContextRef context, CGBlendMode mode) {
     NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
-}
-
-CGBlendMode CGContextGetBlendMode(CGContextRef context) {
-    NOISY_RETURN_IF_NULL(context, StubReturn());
-    UNIMPLEMENTED();
-    return StubReturn();
 }
 
 /**
@@ -1590,7 +1578,6 @@ void CGContextSetAlpha(CGContextRef context, CGFloat alpha) {
 
 /**
  @Status Stub
- @Notes
 */
 void CGContextSetFlatness(CGContextRef context, CGFloat flatness) {
     NOISY_RETURN_IF_NULL(context);
@@ -2012,7 +1999,7 @@ void CGContextSetStrokePattern(CGContextRef context, CGPatternRef pattern, const
 }
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 void CGContextSetPatternPhase(CGContextRef context, CGSize phase) {
     NOISY_RETURN_IF_NULL(context);
@@ -2284,7 +2271,6 @@ void CGContextShowGlyphsAtPoint(CGContextRef context, CGFloat x, CGFloat y, cons
 
 /**
  @Status Stub
- @Notes
 */
 void CGContextShowGlyphsAtPositions(CGContextRef context, const CGGlyph* glyphs, const CGPoint* positions, size_t count) {
     NOISY_RETURN_IF_NULL(context);
@@ -2952,7 +2938,6 @@ void CGContextDrawLayerAtPoint(CGContextRef context, CGPoint destPoint, CGLayerR
 #pragma region Drawing Operations - PDF
 /**
  @Status Stub
- @Notes
 */
 void CGContextDrawPDFPage(CGContextRef context, CGPDFPageRef page) {
     NOISY_RETURN_IF_NULL(context);
