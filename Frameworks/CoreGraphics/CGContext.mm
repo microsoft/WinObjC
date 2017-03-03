@@ -276,6 +276,9 @@ private:
     // Since nothing needs to actually be put on a stack, just increment a counter insteads
     std::atomic_uint32_t _beginEndDrawDepth = { 0 };
 
+    bool _useEnhancedErrorHandling{ false };
+    HRESULT _firstErrorHr{ S_OK };
+
     inline HRESULT _SaveD2DDrawingState(ID2D1DrawingStateBlock** pDrawingState) {
         RETURN_HR_IF(E_POINTER, !pDrawingState);
 
@@ -473,21 +476,35 @@ public:
     }
 
     inline bool ShouldDraw() {
-        return CurrentGState().ShouldDraw();
+        return SUCCEEDED(_firstErrorHr) && CurrentGState().ShouldDraw();
     }
 
     inline void PushBeginDraw() {
         if ((_beginEndDrawDepth)++ == 0) {
-            deviceContext->BeginDraw();
+            if (SUCCEEDED(_firstErrorHr)) {
+                deviceContext->BeginDraw();
+            }
         }
     }
 
     inline HRESULT PopEndDraw() {
+        HRESULT hr = S_OK;
         if (--(_beginEndDrawDepth) == 0) {
-            RETURN_IF_FAILED(deviceContext->EndDraw());
+            hr = deviceContext->EndDraw();
+            if (_useEnhancedErrorHandling && SUCCEEDED(_firstErrorHr) && FAILED(hr)) {
+                // If we haven't yet stored an error, and we're about to return an error (not S_OK), store it.
+                _firstErrorHr = hr;
+                hr = S_OK;
+            }
         }
-        return S_OK;
+        return hr;
     }
+
+    inline void EnableEnhancedErrorHandling() {
+        _useEnhancedErrorHandling = true;
+    }
+
+    bool GetError(CFErrorRef* /* returns-retained */ outError);
 
     HRESULT Clip(CGPathDrawingMode pathMode);
 
@@ -2311,8 +2328,10 @@ void CGContextShowGlyphsWithAdvances(CGContextRef context, const CGGlyph* glyphs
 #pragma region Drawing Operations - Basic Shapes
 
 HRESULT __CGContext::ClearRect(CGRect rect) {
+    // Skip drawing if the context has failed; this is not an error in ClearRect.
+    RETURN_RESULT_IF(FAILED(_firstErrorHr), S_OK);
+
     PushBeginDraw();
-    auto endDraw = wil::ScopeExit([this]() { PopEndDraw(); });
 
     ComPtr<ID2D1Factory> factory = Factory();
     ComPtr<ID2D1RectangleGeometry> rectangle;
@@ -2340,7 +2359,8 @@ HRESULT __CGContext::ClearRect(CGRect rect) {
     deviceContext->FillGeometry(CurrentGState().clippingGeometry.Get(), transparentBrush.Get());
     deviceContext->SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND_SOURCE_OVER);
     RETURN_IF_FAILED(PopGState());
-    return S_OK;
+
+    return PopEndDraw();
 }
 
 /**
@@ -2401,6 +2421,9 @@ HRESULT __CGContext::_CreateShadowEffect(ID2D1Image* inputImage, ID2D1Effect** o
 
 template <typename Lambda> // Lambda takes the form HRESULT(*)(CGContextRef, ID2D1DeviceContext*)
 HRESULT __CGContext::Draw(__CGCoordinateMode coordinateMode, CGAffineTransform* additionalTransform, Lambda&& drawLambda) {
+    // Skip drawing if the context has failed; this is not an error in Draw.
+    RETURN_RESULT_IF(FAILED(_firstErrorHr), S_OK);
+
     auto& state = CurrentGState();
 
     if (!state.ShouldDraw()) {
@@ -2436,15 +2459,6 @@ HRESULT __CGContext::Draw(__CGCoordinateMode coordinateMode, CGAffineTransform* 
                                                        state.opacityBrush.Get()),
                                  nullptr);
     }
-
-    auto cleanup = wil::ScopeExit([this, layer]() {
-        if (layer) {
-            this->deviceContext->PopLayer();
-        }
-
-        // TODO GH#1194: We will need to re-evaluate Direct2D's D2DERR_RECREATE when we move to HW acceleration.
-        this->PopEndDraw();
-    });
 
     // If the context has requested antialiasing other than the defaults we now need to update the device context.
     if (CurrentGState().shouldAntialias != _kCGTrinaryDefault || !allowsAntialiasing) {
@@ -2501,7 +2515,11 @@ HRESULT __CGContext::Draw(__CGCoordinateMode coordinateMode, CGAffineTransform* 
         RETURN_IF_FAILED(std::forward<Lambda>(drawLambda)(this, deviceContext.Get()));
     }
 
-    return S_OK;
+    if (layer) {
+        this->deviceContext->PopLayer();
+    }
+
+    return this->PopEndDraw();
 }
 
 HRESULT __CGContext::_DrawGeometryInternal(ID2D1Geometry* geometry,
@@ -2941,6 +2959,49 @@ void CGContextDrawPDFPage(CGContextRef context, CGPDFPageRef page) {
     RETURN_IF(!context->ShouldDraw());
 
     UNIMPLEMENTED();
+}
+#pragma endregion
+
+#pragma region Enhanced Error Handling
+const CFStringRef kCGErrorDomainIslandwood = CFSTR("kCGErrorDomainIslandwood");
+
+void CGContextIwEnableEnhancedErrorHandling(CGContextRef context) {
+    NOISY_RETURN_IF_NULL(context);
+    context->EnableEnhancedErrorHandling();
+}
+
+bool __CGContext::GetError(CFErrorRef* /* returns-retained */ outError) {
+    RETURN_RESULT_IF(!_useEnhancedErrorHandling, false);
+
+    HRESULT hr = _firstErrorHr;
+    if (SUCCEEDED(hr)) {
+        return false;
+    }
+
+    CGContextIwErrorCode errorCode = kCGContextErrorInvalidParameter;
+    if (hr == D2DERR_RECREATE_TARGET) {
+        errorCode = kCGContextErrorDeviceReset;
+    }
+    // All other errors are likely to be catastrophic; there's no point
+    // in differentiating them here.
+
+    if (outError) {
+        CFIndex embeddedHresultDowncast = static_cast<CFIndex>(hr);
+        auto embeddedHresult = woc::MakeStrongCF<CFNumberRef>(CFNumberCreate(nullptr, kCFNumberCFIndexType, &embeddedHresultDowncast));
+
+        CFTypeRef key = CFSTR("hresult"); // This matches the hresult exception key used in Foundation, which we can't import.
+        CFTypeRef value = embeddedHresult.get();
+        auto userInfo = woc::MakeStrongCF<CFDictionaryRef>(CFDictionaryCreate(nullptr, &key, &value, 1, &kCFCopyStringDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks));
+
+        *outError = CFErrorCreate(nullptr, kCGErrorDomainIslandwood, errorCode, userInfo);
+    }
+
+    return true;
+}
+
+bool CGContextIwGetError(CGContextRef context, CFErrorRef* /* returns-retained */ outError) {
+    NOISY_RETURN_IF_NULL(context, false);
+    return context->GetError(outError);
 }
 #pragma endregion
 

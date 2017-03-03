@@ -228,6 +228,10 @@ LIBRARY CoreGraphics
         CGContextConvertRectToDeviceSpace
         CGContextConvertRectToUserSpace
 
+        ; Public extension APIs
+        CGContextIwGetError
+        CGContextIwEnableEnhancedErrorHandling
+
         ; private exports below
         _CGContextDrawImageRect
         _CGContextDrawGlyphRuns
