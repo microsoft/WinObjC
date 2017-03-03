@@ -131,8 +131,6 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
     CGPoint startingPoint{ 0, 0 };
     CGAffineTransform lastTransform;
 
-    bool isFirstCall = true;
-
     __CGPath() : lastTransform(CGAffineTransformIdentity) {
     }
 
@@ -152,14 +150,6 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
         return startingPoint;
     }
 
-    bool GetIsFirstCall() {
-        return isFirstCall;
-    }
-
-    void SetIsFirstCall(bool firstCall) {
-        isFirstCall = firstCall;
-    }
-
     void SetCurrentPoint(CGPoint newPoint) {
         currentPoint = newPoint;
     }
@@ -169,9 +159,6 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
     }
 
     void SetLastTransform(const CGAffineTransform* transform) {
-        // Every PathAdd API will call SetLastTransform with the exception of Arcs which will call
-        // this manually.
-        SetIsFirstCall(false);
         if (transform) {
             lastTransform = *transform;
         } else {
@@ -244,8 +231,12 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
         return S_OK;
     }
 
+    bool IsFigureOpen() {
+        return geometrySink->IsFigureOpen();
+    }
+
     void BeginFigure() {
-        if (!geometrySink->IsFigureOpen()) {
+        if (geometrySink && !geometrySink->IsFigureOpen()) {
             geometrySink->BeginFigure(_CGPointToD2D_F(currentPoint), D2D1_FIGURE_BEGIN_FILLED);
         }
     }
@@ -446,7 +437,6 @@ CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path) {
     mutableRet->SetCurrentPoint(path->GetCurrentPoint());
     mutableRet->SetStartingPoint(path->GetStartingPoint());
     mutableRet->SetLastTransform(path->GetLastTransform());
-    mutableRet->SetIsFirstCall(path->GetIsFirstCall());
 
     return mutableRet;
 }
@@ -572,7 +562,6 @@ void CGPathAddArcToPoint(
     if (transform) {
         endPoint = CGPointApplyAffineTransform(endPoint, *transform);
     }
-    path->SetIsFirstCall(false);
     path->SetCurrentPoint(endPoint);
 }
 
@@ -599,18 +588,18 @@ void CGPathAddArc(CGMutablePathRef path,
     // Create the parameters for the AddArc method.
     const D2D1_POINT_2F endPointD2D = _CGPointToD2D_F(endPoint);
     const D2D1_SIZE_F radiusD2D = { radius, radius };
-    CGFloat rotationAngle = (clockwise ? -1 : 1) * abs(normalizedStartAngle - normalizedEndAngle);
     D2D1_ARC_SIZE arcSize = D2D1_ARC_SIZE_SMALL;
 
     // D2D does not understand that the ending angle must be pointing in the proper direction, thus we must translate
     // what it means to have an ending angle to the proper small arc or large arc that D2D will use since a circle will
     // intersect that point regardless of which direction it is drawn in.
-    CGFloat difference = 0;
+    CGFloat rawDifference = 0;
     if (clockwise) {
-        difference = normalizedStartAngle - normalizedEndAngle;
+        rawDifference = normalizedStartAngle - normalizedEndAngle;
     } else {
-        difference = normalizedEndAngle - normalizedStartAngle;
+        rawDifference = normalizedEndAngle - normalizedStartAngle;
     }
+    CGFloat difference = rawDifference;
     if (difference < 0) {
         difference += 2 * M_PI;
     }
@@ -618,16 +607,23 @@ void CGPathAddArc(CGMutablePathRef path,
         arcSize = D2D1_ARC_SIZE_LARGE;
     }
 
+    rawDifference = abs(rawDifference);
+    if (!clockwise) {
+        rawDifference *= -1;
+    }
+
+    // The direction of the arc's sweep must be reversed since the coordinate systems for D2D and CoreGraphics are reversed.
+    // CW in D2D is CCW in CoreGraphics.
     D2D1_SWEEP_DIRECTION sweepDirection = { clockwise ? D2D1_SWEEP_DIRECTION_COUNTER_CLOCKWISE : D2D1_SWEEP_DIRECTION_CLOCKWISE };
 
     ComPtr<ID2D1PathGeometry> newPath;
     ComPtr<ID2D1GeometrySink> newSink;
-    if (path->GetIsFirstCall()) {
+    if (!path->IsFigureOpen()) {
         CGPathMoveToPoint(path, transform, startPoint.x, startPoint.y);
     }
     FAIL_FAST_IF_FAILED(_createPathReadyForFigure(path, startPoint, &newPath, &newSink));
 
-    D2D1_ARC_SEGMENT arcSegment = D2D1::ArcSegment(endPointD2D, radiusD2D, rotationAngle, sweepDirection, arcSize);
+    D2D1_ARC_SEGMENT arcSegment = D2D1::ArcSegment(endPointD2D, radiusD2D, rawDifference, sweepDirection, arcSize);
     newSink->AddArc(arcSegment);
 
     newSink->EndFigure(D2D1_FIGURE_END_OPEN);
@@ -638,7 +634,6 @@ void CGPathAddArc(CGMutablePathRef path,
     if (transform) {
         endPoint = CGPointApplyAffineTransform(endPoint, *transform);
     }
-    path->SetIsFirstCall(false);
     path->SetCurrentPoint(endPoint);
 }
 
@@ -656,7 +651,7 @@ void CGPathMoveToPoint(CGMutablePathRef path, const CGAffineTransform* transform
     path->SetStartingPoint(pt);
     path->SetCurrentPoint(pt);
     path->SetLastTransform(transform);
-    path->SetIsFirstCall(false);
+    path->BeginFigure();
 }
 
 /**
@@ -665,10 +660,12 @@ void CGPathMoveToPoint(CGMutablePathRef path, const CGAffineTransform* transform
 void CGPathAddLines(CGMutablePathRef path, const CGAffineTransform* transform, const CGPoint* points, size_t count) {
     RETURN_IF(count == 0 || !points || !path);
 
+    if (!path->IsFigureOpen()) {
+        CGPathMoveToPoint(path, transform, points[0].x, points[0].y);
+    }
     for (int i = 0; i < count; i++) {
         CGPathAddLineToPoint(path, transform, points[i].x, points[i].y);
     }
-    path->SetIsFirstCall(false);
 }
 
 /**
@@ -996,7 +993,6 @@ CGMutablePathRef CGPathCreateMutableCopyByTransformingPath(CGPathRef path, const
 
         transformedPath->SetCurrentPoint(CGPointApplyAffineTransform(path->GetCurrentPoint(), *transform));
         transformedPath->SetLastTransform(transform);
-        transformedPath->SetIsFirstCall(path->GetIsFirstCall());
         return transformedPath;
     }
     return CGPathCreateMutableCopy(path);
