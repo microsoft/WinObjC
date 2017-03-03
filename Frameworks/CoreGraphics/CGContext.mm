@@ -1663,7 +1663,10 @@ void CGContextSetStrokeColor(CGContextRef context, const CGFloat* components) {
 */
 void CGContextSetStrokeColorWithColor(CGContextRef context, CGColorRef color) {
     NOISY_RETURN_IF_NULL(context);
-    NOISY_RETURN_IF_NULL(color);
+    if (color == nullptr) {
+        CGContextSetRGBStrokeColor(context, 0, 0, 0, 1);
+        return;
+    }
     const CGFloat* comp = CGColorGetComponents(color);
     CGContextSetRGBStrokeColor(context, comp[0], comp[1], comp[2], comp[3]);
 }
@@ -1777,7 +1780,11 @@ void CGContextSetFillColor(CGContextRef context, const CGFloat* components) {
 */
 void CGContextSetFillColorWithColor(CGContextRef context, CGColorRef color) {
     NOISY_RETURN_IF_NULL(context);
-    NOISY_RETURN_IF_NULL(color);
+    if (color == nullptr) {
+        CGContextSetRGBFillColor(context, 0, 0, 0, 1);
+        return;
+    }
+
     const CGFloat* comp = CGColorGetComponents(color);
     CGContextSetRGBFillColor(context, comp[0], comp[1], comp[2], comp[3]);
 }

@@ -215,30 +215,49 @@ DRAW_TEST_F(CGContext, AntialiasToggleTranscendsGState, WhiteBackgroundTest<>) {
     CGContextStrokeLineSegments(context, blurryLineSegments2, 2);
 }
 
-DRAW_TEST_F(CGContext, NullFillColor, WhiteBackgroundTest<>) {
+DRAW_TEST_F(CGContext, NullColorFill, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
-    auto colorSpace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
-
-    CGFloat red[] = { 1, 0, 0, 1 };
-    auto color = woc::MakeStrongCF<CGColorRef>(CGColorCreate(colorSpace, red));
-    CGContextSetFillColorWithColor(context, color);
-
-    CGContextSetFillColorWithColor(context, nullptr);
+    CGContextSetRGBFillColor(context, 1.0, 0.0, 0.0, 1.0);
     CGContextFillRect(context, bounds);
+
+    CGContextSetRGBFillColor(context, 0.0, 1.0, 0.0, 1.0);
+    CGContextSetFillColorWithColor(context, nullptr);
+
+    CGRect borderRect = CGRectInset(bounds, 30, 50);
+    CGContextFillRect(context, borderRect);
+
+    CGContextSetRGBFillColor(context, 0.0, 1.0, 0.0, 1.0);
+    borderRect = CGRectInset(bounds, 50, 80);
+    CGContextFillRect(context, borderRect);
+
+    CGContextSetFillColor(context, nullptr);
+
+    borderRect = CGRectInset(bounds, 60, 100);
+    CGContextFillRect(context, borderRect);
 }
 
-DRAW_TEST_F(CGContext, NullStrokeColor, WhiteBackgroundTest<>) {
+DRAW_TEST_F(CGContext, NullColorStroke, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
+    CGContextSetLineWidth(context, 15);
 
-    auto colorSpace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
-
-    CGFloat red[] = { 1, 0, 0, 1 };
-    auto color = woc::MakeStrongCF<CGColorRef>(CGColorCreate(colorSpace, red));
-
-    CGContextSetStrokeColorWithColor(context, color);
-
+    CGContextSetRGBStrokeColor(context, 1.0, 0.0, 0.0, 1.0);
     CGContextStrokeRect(context, bounds);
+
+    CGContextSetRGBStrokeColor(context, 0.0, 1.0, 0.0, 1.0);
+    CGContextSetStrokeColorWithColor(context, nullptr);
+
+    CGRect borderRect = CGRectInset(bounds, 30, 50);
+    CGContextStrokeRect(context, borderRect);
+
+    CGContextSetRGBStrokeColor(context, 0.0, 1.0, 0.0, 1.0);
+    borderRect = CGRectInset(bounds, 50, 80);
+    CGContextStrokeRect(context, borderRect);
+
+    CGContextSetStrokeColor(context, nullptr);
+
+    borderRect = CGRectInset(bounds, 60, 100);
+    CGContextStrokeRect(context, borderRect);
 }
