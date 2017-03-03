@@ -1093,18 +1093,12 @@ CGPathRef CGContextCopyPath(CGContextRef context) {
         return nullptr;
     }
 
-// TODO GH#xxxx When CGPathCreateCopyByTransformingPath is no longer stubbed, remove the diagnostic suppression.
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-
     // All queries take place on transformed paths, but return pre-CTM context units.
     // This means that the path the user gets back will be in units equivalent to
     // their inputs. We therefore must de-transform the path into which we inserted
     // transformed points.
     CGAffineTransform invertedDeviceSpaceTransform = CGAffineTransformInvert(CGContextGetUserSpaceToDeviceSpaceTransform(context));
     return CGPathCreateCopyByTransformingPath(context->Path(), &invertedDeviceSpaceTransform);
-
-#pragma clang diagnostic pop
 }
 
 /**
