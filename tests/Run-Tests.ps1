@@ -26,6 +26,9 @@
 .PARAMETER NoCopy
     Switch to disable copying test to the device
 
+.PARAMETER Parameters
+    Parameters to pass to the library or libraries under test.
+
 .PARAMETER RedirectTAEFErrors
     Redirect TAEF errors/failures to stderr.  This is used to integrate with VSTS powershell task.
 
@@ -61,7 +64,9 @@ param(
 
     [switch]$RedirectTAEFErrors,
 
-    [string]$WTTLogPath
+    [string]$WTTLogPath,
+
+    [System.Collections.HashTable]$Parameters = $null
 )
 $script:exitCode = 0
 
@@ -236,6 +241,13 @@ if ($WTLOutputFile)
 if($TestFilter)
 {
     $argList += " /name:$TestFilter"
+}
+
+If($Parameters)
+{
+    ForEach ($p in $Parameters.GetEnumerator()) {
+        $argList += " /p:$($p.Name)=$($p.Value)"
+    }
 }
 
 ExecTest($argList)
