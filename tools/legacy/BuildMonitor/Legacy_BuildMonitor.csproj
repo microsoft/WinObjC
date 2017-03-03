@@ -198,9 +198,9 @@
     <Folder Include="..\..\BuildMonitor\Resources\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ObjectiveC\ObjectiveC.csproj">
-      <Project>{D92AF1E6-7318-4CC0-9E1E-074E96C7E0FB}</Project>
-      <Name>ObjectiveC</Name>
+    <ProjectReference Include="..\ObjectiveC\Legacy_ObjectiveC.csproj">
+      <Project>{B08BBCF2-01A1-42E7-8611-DE8CFAB88B3F}</Project>
+      <Name>Legacy_ObjectiveC</Name>
       <VSIXSubPath>Asset</VSIXSubPath>
       <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
       <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>

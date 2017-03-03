@@ -71,6 +71,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="VC_Pkg_Core_Registration_ObjC.pkgdef">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="Visualizers\ObjectiveC.natstepfilter">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
@@ -124,7 +128,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents"  DependsOnTargets="$(GetPackageContentsDependsOn)">
+  <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents" DependsOnTargets="$(GetPackageContentsDependsOn)">
     <ItemGroup>
       <_VSIXFile Include="$(TargetPath)" />
       <PackageFile Include="@(_VSIXFile -> '%(RootDir)%(Directory)%(Filename).vsix')" Condition="Exists('%(RootDir)%(Directory)%(Filename).vsix')">
