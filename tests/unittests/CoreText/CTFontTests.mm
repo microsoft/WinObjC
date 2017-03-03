@@ -741,3 +741,44 @@ DISABLED_TEST(CTFont, CreatePathForGlyph) {
     CGPathApply(pathWithFontSizeAndTransforms, &comparePathContext, comparePathToExpected);
     ASSERT_EQ(expectedElements.size(), comparePathContext.count);
 }
+
+static const NSString* sc_localeName = @"en-us";
+TEST(CTFont, CopyLocalizedName) {
+    auto fontName = woc::MakeAutoCF<CFStringRef>(CFSTR("Metadata Test"));
+    StrongId<NSURL> testFileURL = __GetURLFromPathRelativeToModuleDirectory(@"/data/MetadataTest-Regular.ttf");
+    CFErrorRef error = nullptr;
+    EXPECT_TRUE(CTFontManagerRegisterFontsForURL((__bridge CFURLRef)testFileURL.get(), kCTFontManagerScopeSession, &error));
+    EXPECT_EQ(nullptr, error);
+
+    auto font = woc::MakeAutoCF<CTFontRef>(CTFontCreateWithName(fontName, 20, nullptr));
+    ASSERT_NE(nullptr, font);
+
+    // Actual language out-param should be optional
+    auto copyrightNameWithoutLang = woc::MakeAutoCF<CFStringRef>(CTFontCopyLocalizedName(font, kCTFontCopyrightNameKey, nullptr));
+    EXPECT_OBJCEQ(c_copyrightName, (__bridge NSString*)copyrightNameWithoutLang.get());
+
+    CFStringRef actualLanguage = nullptr;
+    auto copyrightName = woc::MakeAutoCF<CFStringRef>(CTFontCopyLocalizedName(font, kCTFontCopyrightNameKey, &actualLanguage));
+    EXPECT_OBJCEQ(c_copyrightName, (__bridge NSString*)copyrightName.get());
+    ASSERT_NE(nil, actualLanguage);
+    ASSERT_EQ(5, CFStringGetLength(actualLanguage));
+    EXPECT_OBJCEQ(sc_localeName, (__bridge NSString*)actualLanguage);
+
+    EXPECT_TRUE(CTFontManagerUnregisterFontsForURL((__bridge CFURLRef)testFileURL.get(), kCTFontManagerScopeSession, &error));
+    EXPECT_EQ(nullptr, error);
+}
+
+TEST(CTFont, CopyAvailableTables) {
+    auto font = woc::MakeAutoCF<CTFontRef>(CTFontCreateWithName(CFSTR("Arial"), 20, nullptr));
+    auto availableTables = woc::MakeAutoCF<CFArrayRef>(CTFontCopyAvailableTables(font, kCTFontTableOptionNoOptions));
+    ASSERT_NE(nil, availableTables);
+    CFIndex count = CFArrayGetCount(availableTables);
+    EXPECT_LT(0, count);
+
+    // There are 55 supported font tables
+    EXPECT_GE(55, count);
+
+    // Don't want to make test too precise so that it may fail should fonts change, but 'cmap' is a required font table
+    // So it should be safe to always test that this value is available
+    EXPECT_TRUE(CFArrayContainsValue(availableTables, { 0, count }, (const void*)kCTFontTableCmap));
+}

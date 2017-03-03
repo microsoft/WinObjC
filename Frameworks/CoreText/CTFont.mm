@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -493,17 +493,16 @@ CFStringRef CTFontCopyDisplayName(CTFontRef font) {
  @Status Interoperable
 */
 CFStringRef CTFontCopyName(CTFontRef font, CFStringRef nameKey) {
-    RETURN_NULL_IF(!font);
-    return _DWriteFontCopyName(font->_dwriteFontFace, nameKey);
+    return CTFontCopyLocalizedName(font, nameKey, nullptr);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CFStringRef CTFontCopyLocalizedName(CTFontRef font, CFStringRef nameKey, CFStringRef _Nullable* actualLanguage) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    RETURN_NULL_IF(!font);
+    return _DWriteFontCopyName(font->_dwriteFontFace, nameKey, actualLanguage);
 }
 
 /**
@@ -901,19 +900,20 @@ CTFontRef CTFontCreateWithGraphicsFont(CGFontRef cgFont, CGFloat size, const CGA
     return (CTFontRef)ret;
 }
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes options is not supported
 */
 CFArrayRef CTFontCopyAvailableTables(CTFontRef font, CTFontTableOptions options) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    RETURN_NULL_IF(!font);
+    return _DWriteCopyAvailableFontTables(font->_dwriteFontFace);
 }
 
 /**
- @Status Interoperable
- @Notes options is not supported, and is deprecated anyway
+ @Status Caveat
+ @Notes options is not supported
 */
 CFDataRef CTFontCopyTable(CTFontRef font, CTFontTableTag table, CTFontTableOptions options) {
+    RETURN_NULL_IF(!font);
     return _DWriteFontCopyTable(font->_dwriteFontFace, table);
 }
 

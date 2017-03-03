@@ -42,7 +42,7 @@ static const wchar_t* TAG = L"CGImage";
 // This is used by XamlCompositor to flush the DisplayTexture cache.
 // TODO GH#2098 look at where we're using the image cache and what we can do to avoid it.
 static std::vector<CGImageDestructionListener> _imageDestructionListeners;
-COREGRAPHICS_EXPORT void CGImageAddDestructionListener(CGImageDestructionListener listener) {
+COREGRAPHICS_EXPORT void _CGImageAddDestructionListener(CGImageDestructionListener listener) {
     _imageDestructionListeners.push_back(listener);
 }
 
