@@ -32,11 +32,37 @@ static const wchar_t* TAG = L"NSThread";
 static const NSUInteger kNSThreadDefaultStackSize = 1024 * 1024;
 static const double kNSThreadDefaultPriority = 0.5;
 
-pthread_key_t tlsNSThread, tlsNSThreadRunLoop;
-
 static std::mutex s_mainThreadMutex;
 static StrongId<NSThread> s_mainThread;
 static BOOL s_isMultiThreaded = NO;
+
+static NSThread* _setOrGetCurrentThread(NSThread* thread, bool createIfNil) {
+    // Use a lazy initialized block scope thread_local to manage the lifetime of currentThread.
+    // Note that non-trivial file scope thread_locals are apparently not supported in current clang version.
+    thread_local static StrongId<NSThread> tlsCurrentThread;
+
+    if (thread != nil) {
+        // We've been passed a thread. Designate as current thread and assume ownership.
+        tlsCurrentThread = thread;
+    } else if (tlsCurrentThread == nil && createIfNil) {
+        // No current thread exists. Create a new one, as requested.
+        tlsCurrentThread.attach([[NSThread alloc] init]);
+    }
+
+    return tlsCurrentThread;
+}
+
+static void _setCurrentThread(NSThread* thread) {
+    _setOrGetCurrentThread(thread, false);
+}
+
+static NSThread* _getCurrentThreadOrNil() {
+    return _setOrGetCurrentThread(nil, false);
+}
+
+static NSThread* _getOrCreateCurrentThread() {
+    return _setOrGetCurrentThread(nil, true);
+}
 
 @interface NSThread () {
     StrongId<NSObject> _target;
@@ -52,8 +78,6 @@ static BOOL s_isMultiThreaded = NO;
 
     pthread_t _pthread;
 }
-+ (NSThread*)_threadObjectFromCurrentThread;
-- (void)_associateWithCurrentThread;
 
 @property (atomic, readwrite, getter=isExecuting) BOOL executing;
 @property (atomic, readwrite, getter=isCancelled) BOOL cancelled;
@@ -173,7 +197,7 @@ the default thread priority. Utilizes win32 thread priority.
 /**
 @Status Interoperable
 */
-- (NSObject*)init {
+- (NSThread*)init {
     if (self = [super init]) {
         _stackSize = kNSThreadDefaultStackSize;
         _threadPriority = kNSThreadDefaultPriority;
@@ -201,13 +225,9 @@ the default thread priority. Utilizes win32 thread priority.
     self.cancelled = YES;
 }
 
-- (void)_associateWithCurrentThread {
-    pthread_setspecific(tlsNSThread, reinterpret_cast<void*>(self));
-}
-
 - (void)_associateWithMainThread {
     std::lock_guard<std::mutex> lock(s_mainThreadMutex);
-    [self _associateWithCurrentThread];
+    _setCurrentThread(self);
     if (s_mainThread && s_mainThread != self) {
         [NSException
              raise:NSInternalInconsistencyException
@@ -217,15 +237,17 @@ the default thread priority. Utilizes win32 thread priority.
     s_mainThread = self;
 }
 
-+ (NSThread*)_threadObjectFromCurrentThread {
-    return reinterpret_cast<NSThread*>(pthread_getspecific(tlsNSThread));
-}
-
 /**
 @Status Interoperable
 */
 + (BOOL)isMainThread {
-    return [self _threadObjectFromCurrentThread] == [self mainThread];
+    NSThread* main = [self mainThread];
+
+    if (main == nil) {
+        return NO;
+    }
+
+    return _getCurrentThreadOrNil() == main;
 }
 
 /**
@@ -261,23 +283,18 @@ the default thread priority. Utilizes win32 thread priority.
     return _threadDictionary;
 }
 
-struct ThreadBodyData {
-    StrongId<NSThread> thread;
-};
-
 static void* _threadBody(void* context) {
-    ThreadBodyData* bodyData = reinterpret_cast<ThreadBodyData*>(context);
+    NSThread* self = static_cast<NSThread*>(context);
 
-    [bodyData->thread _associateWithCurrentThread];
+    // Let current thread mechanism assume ownership.
+    _setCurrentThread(self);
+    [self release];
 
     // The body of every NSThread boils down to calling -main.
-    [bodyData->thread setExecuting:YES];
-    [bodyData->thread main];
-    [bodyData->thread setFinished:YES];
-    [bodyData->thread setExecuting:NO];
-
-    // Allocated in -start.
-    delete bodyData;
+    [self setExecuting:YES];
+    [self main];
+    [self setFinished:YES];
+    [self setExecuting:NO];
 
     return NULL;
 }
@@ -287,9 +304,6 @@ static void* _threadBody(void* context) {
 */
 - (void)start {
     s_isMultiThreaded = YES;
-
-    ThreadBodyData* bodyData = new ThreadBodyData{ self };
-    // bodyData is deleted in _threadBody when the thread exits.
 
     struct sched_param param = { _convertPriorityToThreadPriority(_threadPriority, 0) };
 
@@ -311,7 +325,10 @@ static void* _threadBody(void* context) {
         return;
     }
 
-    pthread_create(&_pthread, &attrs, _threadBody, bodyData);
+    // Stay alive while underlying thread of execution starts.
+    [self retain];
+
+    pthread_create(&_pthread, &attrs, _threadBody, self);
 }
 
 /**
@@ -353,13 +370,7 @@ static void* _threadBody(void* context) {
 @Status Interoperable
 */
 + (NSThread*)currentThread {
-    NSThread* currentThread = [[self class] _threadObjectFromCurrentThread];
-
-    if (currentThread == nil) {
-        currentThread = [NSThread new];
-        [currentThread _associateWithCurrentThread];
-    }
-    return currentThread;
+    return _getOrCreateCurrentThread();
 }
 
 /**
@@ -376,15 +387,6 @@ static void* _threadBody(void* context) {
 + (NSArray*)callStackSymbols {
     UNIMPLEMENTED();
     return nil;
-}
-
-/**
- @Status Interoperable
-*/
-+ (void)initialize {
-    if (tlsNSThread == 0) {
-        pthread_key_create(&tlsNSThread, NULL);
-    }
 }
 
 @end
