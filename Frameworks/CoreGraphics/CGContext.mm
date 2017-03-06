@@ -202,12 +202,12 @@ class __CGContextLayer {
     ComPtr<ID2D1Image> _target;
 
 public:
-    __CGContextLayer(ID2D1Image* target, CGRect* region) : _target(target) {
+    __CGContextLayer(ID2D1Image* target) : _target(target) {
         // Each newly-pushed default-constructed layer has an empty base state.
         _stateStack.emplace();
     }
 
-    __CGContextLayer(ID2D1Image* target, CGRect* region, __CGContextLayer& parentLayer) : _target(target) {
+    __CGContextLayer(ID2D1Image* target, __CGContextLayer& parentLayer) : _target(target) {
         _stateStack.emplace(parentLayer.CurrentGState());
     }
 
@@ -401,7 +401,7 @@ public:
         deviceContext->GetTarget(&baselineTarget);
 
         // Set up the default/baseline layer.
-        _layerStack.emplace(baselineTarget.Get(), nullptr);
+        _layerStack.emplace(baselineTarget.Get());
     }
 
     inline void SetFillColorSpace(CGColorSpaceRef colorspace) {
@@ -631,7 +631,7 @@ HRESULT __CGContext::PushLayer(CGRect* rect) {
     // Copy the current layer's state to the new layer.
     auto& oldLayer = _layerStack.top();
 
-    _layerStack.emplace(commandList.Get(), rect, oldLayer);
+    _layerStack.emplace(commandList.Get(), oldLayer);
     auto& newLayer = _layerStack.top(); // C++17 makes .emplace return a stack<T>::reference; alas, we are C++14.
 
     // These properties are not to be preserved across transparency layers.
@@ -2981,7 +2981,8 @@ bool __CGContext::GetError(CFErrorRef* /* returns-retained */ outError) {
 
         CFTypeRef key = CFSTR("hresult"); // This matches the hresult exception key used in Foundation, which we can't import.
         CFTypeRef value = embeddedHresult.get();
-        auto userInfo = woc::MakeStrongCF<CFDictionaryRef>(CFDictionaryCreate(nullptr, &key, &value, 1, &kCFCopyStringDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks));
+        auto userInfo = woc::MakeStrongCF<CFDictionaryRef>(
+            CFDictionaryCreate(nullptr, &key, &value, 1, &kCFCopyStringDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks));
 
         *outError = CFErrorCreate(nullptr, kCGErrorDomainIslandwood, errorCode, userInfo);
     }
