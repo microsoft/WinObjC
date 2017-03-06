@@ -56,4 +56,29 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets')" />
   <Import Project="WinObjC.Tools.targets" />
+
+
+  <Target Name="GitPopulateVersionInfoLatestTag" BeforeTargets= "_GitPopulateVersionInfo" DependsOnTargets="$(GitInfoDependsOn)">
+   
+    <Exec Command='$(GitExe) describe $(GitDefaultBranch) --tags'
+        StandardErrorImportance="low"
+        StandardOutputImportance="low"
+        ConsoleToMSBuild="true"
+        WorkingDirectory="$(GitRoot)"
+        ContinueOnError="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="GitLatestTag"/>
+      <Output TaskParameter="ExitCode" PropertyName="MSBuildLastExitCode" />
+    </Exec>
+
+    <PropertyGroup>
+      <IsValidLatestTag>
+        $([System.Text.RegularExpressions.Regex]::IsMatch($(GitLatestTag), $(_GitBaseVersionExpr)))
+      </IsValidLatestTag>
+      <IsValidLatestTag>$(IsValidLatestTag.Trim())</IsValidLatestTag>
+
+      <GitBaseVersion Condition="'$(IsValidLatestTag)' == 'true'">$(GitLatestTag)</GitBaseVersion>
+    </PropertyGroup>
+
+  </Target>
+  
 </Project>

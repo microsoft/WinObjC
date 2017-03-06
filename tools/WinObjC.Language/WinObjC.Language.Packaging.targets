@@ -153,4 +153,28 @@
       <PackageVersion Condition="'$(PackageVersion)' == ''">$(GitBaseVersionMajor).$(GitBaseVersionMinor).$([MSBuild]::Add('$(GitBaseVersionPatch)', '1'))-$(PackageTimestamp).pr</PackageVersion>
     </PropertyGroup>
   </Target>
+
+  <Target Name="GitPopulateVersionInfoLatestTag" BeforeTargets= "_GitPopulateVersionInfo" DependsOnTargets="$(GitInfoDependsOn)">
+   
+    <Exec Command='$(GitExe) describe $(GitDefaultBranch) --tags'
+        StandardErrorImportance="low"
+        StandardOutputImportance="low"
+        ConsoleToMSBuild="true"
+        WorkingDirectory="$(GitRoot)"
+        ContinueOnError="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="GitLatestTag"/>
+      <Output TaskParameter="ExitCode" PropertyName="MSBuildLastExitCode" />
+    </Exec>
+
+    <PropertyGroup>
+      <IsValidLatestTag>
+        $([System.Text.RegularExpressions.Regex]::IsMatch($(GitLatestTag), $(_GitBaseVersionExpr)))
+      </IsValidLatestTag>
+      <IsValidLatestTag>$(IsValidLatestTag.Trim())</IsValidLatestTag>
+
+      <GitBaseVersion Condition="'$(IsValidLatestTag)' == 'true'">$(GitLatestTag)</GitBaseVersion>
+    </PropertyGroup>
+
+  </Target>
+  
 </Project>
