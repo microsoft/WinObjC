@@ -173,8 +173,7 @@ BASE_CLASS_REQUIRED_IMPLS(UIFontDescriptor, UIFontDescriptorPrototype, CTFontDes
  @Status Stub
 */
 - (NSArray*)matchingFontDescriptorsWithMandatoryKeys:(NSSet*)mandatoryKeys {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**

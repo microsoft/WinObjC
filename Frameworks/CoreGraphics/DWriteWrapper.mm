@@ -165,6 +165,14 @@ std::shared_ptr<const _DWriteFontProperties> _DWriteGetFontPropertiesFromName(CF
     return std::make_shared<const _DWriteFontProperties>();
 }
 
+HRESULT _DWriteGetAllFonts(std::vector<ComPtr<IDWriteFont>>& outList) {
+    RETURN_IF_FAILED(__GetSystemFontCollectionHelper()->GetAvailableFonts(outList));
+    std::vector<ComPtr<IDWriteFont>> userFonts;
+    RETURN_IF_FAILED(__GetUserFontCollectionHelper()->GetAvailableFonts(userFonts));
+    outList.insert(outList.end(), userFonts.cbegin(), userFonts.cend());
+    return S_OK;
+}
+
 /**
  * Helper method to retrieve font family names installed in the system.
  *

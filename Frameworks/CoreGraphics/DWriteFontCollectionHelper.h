@@ -55,6 +55,7 @@ public:
     CFMutableArrayRef CopyFontNamesForFamilyName(CFStringRef familyName);
     std::shared_ptr<const _DWriteFontProperties> GetFontPropertiesFromUppercaseFontName(const woc::unique_cf<CFStringRef>& upperFontName);
     HRESULT CreateFontFamilyWithName(const wchar_t* unicharFamilyName, IDWriteFontFamily** outFontFamily);
+    HRESULT GetAvailableFonts(std::vector<Microsoft::WRL::ComPtr<IDWriteFont>>& outFontList);
     virtual Microsoft::WRL::ComPtr<IDWriteFontCollection> GetFontCollection() = 0;
 
 protected:

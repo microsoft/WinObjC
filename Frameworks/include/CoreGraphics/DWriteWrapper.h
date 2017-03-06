@@ -27,6 +27,7 @@
 #import <Starboard.h>
 #import <string>
 #import <memory>
+#import <vector>
 
 // General DWrite helpers
 static inline CFStringRef _CFStringCreateUppercaseCopy(CFStringRef string) {
@@ -62,6 +63,7 @@ COREGRAPHICS_EXPORT HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, IDWr
 COREGRAPHICS_EXPORT HRESULT _DWriteCreateTextFormatWithFontNameAndSize(CFStringRef optionalFontName,
                                                                        CGFloat fontSize,
                                                                        IDWriteTextFormat** outTextFormat);
+COREGRAPHICS_EXPORT HRESULT _DWriteGetAllFonts(std::vector<Microsoft::WRL::ComPtr<IDWriteFont>>& outList);
 
 // DWriteFont getters that convert to a CF/CG object or struct
 COREGRAPHICS_EXPORT CFStringRef _DWriteFontCopyInformationalString(const Microsoft::WRL::ComPtr<IDWriteFontFace>& fontFace,

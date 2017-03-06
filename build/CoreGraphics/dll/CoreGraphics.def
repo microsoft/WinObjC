@@ -53,6 +53,7 @@ LIBRARY CoreGraphics
         _DWriteFontGetBoundingBoxesForGlyphs
         _DWriteRegisterFontsWithDatas
         _DWriteUnregisterFontsWithDatas
+        _DWriteGetAllFonts
 
         ; CGColor.mm
         kCGColorBlack DATA
