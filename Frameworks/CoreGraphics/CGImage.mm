@@ -941,19 +941,8 @@ HRESULT _CGImageConvertToMaskCompatibleWICBitmap(CGImageRef image, IWICBitmap** 
 CGImageRef _CGImageCreateFromFileWithWICFormat(CFStringRef filename, WICPixelFormatGUID format) {
     RETURN_NULL_IF(!filename);
 
-    std::vector<char> buffer;
-    const char* fname = CFStringGetCStringPtr(filename, kCFStringEncodingUTF8);
-    if (fname == nullptr) {
-        CFIndex length = CFStringGetLength(filename) + 1;
-        buffer.reserve(length);
-        if (CFStringGetCString(filename, buffer.data(), length, kCFStringEncodingUTF8)) {
-            fname = buffer.data();
-        }
-    }
-
-    RETURN_NULL_IF(!fname);
-
-    woc::StrongCF<CGDataProviderRef> provider{ woc::MakeStrongCF(CGDataProviderCreateWithFilename(fname)) };
+    woc::StrongCF<CFURLRef> url{ woc::MakeStrongCF(CFURLCreateWithFileSystemPath(nullptr, filename, kCFURLWindowsPathStyle, NO)) };
+    woc::StrongCF<CGDataProviderRef> provider{ woc::MakeStrongCF(CGDataProviderCreateWithURL(url)) };
 
     woc::StrongCF<CGImageRef> image{ woc::MakeStrongCF(_CGImageCreateFromDataProvider(provider)) };
 
