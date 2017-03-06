@@ -579,6 +579,48 @@ DRAW_TEST_F(CGPath, FillArcsSimple, UIKitMimicTest<>) {
     CGPathRelease(thepath);
 }
 
+DRAW_TEST_F(CGPath, BoundingBoxes, UIKitMimicTest<>) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+    CGFloat width = bounds.size.width;
+    CGFloat height = bounds.size.height;
+    CGFloat xstart = bounds.origin.x;
+    CGFloat ystart = bounds.origin.y;
+
+    CGMutablePathRef thepath = CGPathCreateMutable();
+
+    CGAffineTransform transformation = CGAffineTransformIdentity;
+    transformation = CGAffineTransformScale(transformation, .8, .8);
+    transformation = CGAffineTransformTranslate(transformation, .1 * width, .1 * height);
+
+    CGPathMoveToPoint(thepath, &transformation, xstart + .75 * width, ystart + .5 * height);
+    CGPathAddArc(thepath, &transformation, xstart + .5 * width, ystart + .5 * height, .5 * height, 0, M_PI / 2, true);
+    CGPathAddArc(thepath, &transformation, xstart + .5 * width, ystart + .5 * height, .5 * height, M_PI / 2, 0, true);
+    CGPathMoveToPoint(thepath, &transformation, xstart + .25 * width, ystart + .5 * height);
+    CGPathAddArc(thepath, &transformation, xstart + .375 * width, ystart + .5 * height, .25 * height, M_PI, 0, false);
+    CGPathMoveToPoint(thepath, &transformation, xstart + .5 * width, ystart + .5 * height);
+    CGPathAddArc(thepath, &transformation, xstart + .625 * width, ystart + .5 * height, .25 * height, M_PI, 0, true);
+    CGPathMoveToPoint(thepath, &transformation, xstart + .4375 * width, ystart + .5 * height);
+    CGPathAddArc(thepath, &transformation, xstart + .375 * width, ystart + .5 * height, .125 * height, 0, M_PI / 2, true);
+    CGPathAddArc(thepath, &transformation, xstart + .375 * width, ystart + .5 * height, .125 * height, M_PI / 2, 0, true);
+    CGPathMoveToPoint(thepath, &transformation, xstart + .6875 * width, ystart + .5 * height);
+    CGPathAddArc(thepath, &transformation, xstart + .625 * width, ystart + .5 * height, .125 * height, 0, M_PI / 2, true);
+    CGPathAddArc(thepath, &transformation, xstart + .625 * width, ystart + .5 * height, .125 * height, M_PI / 2, 0, true);
+
+    // Draw the control points as those affect the bounding box.
+    CGPathApply(thepath, context, CGPathControlPointCallback);
+
+    // Don't draw the path itself, we only care about the bounding boxes for these paths.
+    CGContextAddRect(context, CGPathGetPathBoundingBox(thepath));
+    CGContextSetRGBStrokeColor(context, 1, 0, 0, 1);
+    CGContextStrokePath(context);
+
+    CGContextAddRect(context, CGPathGetBoundingBox(thepath));
+    CGContextSetRGBStrokeColor(context, 0, 0, 1, 1);
+    CGContextStrokePath(context);
+
+    CGPathRelease(thepath);
+}
 DRAW_TEST_F(CGPath, FillArcsComplex, UIKitMimicTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
