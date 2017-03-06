@@ -26,6 +26,7 @@
 #import <GLKit/GLKTexture.h>
 #import "NSLogging.h"
 #import "CGImageInternal.h"
+#import "CGDataProviderInternal.h"
 #import <Starboard/SmartTypes.h>
 
 static const wchar_t* TAG = L"GLKTexture";
@@ -275,23 +276,11 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
 }
 
 /**
-* Creates an image from file, if the image is not a GUID_WICPixelFormat32bppPRGBA format, it is converted to
-* GUID_WICPixelFormat32bppPRGBA and returned.
-*/
-static inline CGImageRef __Create32bppPRGBAImageFromFile(NSString* fname) {
-    RETURN_NULL_IF(!fname);
-    woc::StrongCF<CGDataProviderRef> provider{ woc::MakeStrongCF(CGDataProviderCreateWithFilename([fname UTF8String])) };
-
-    woc::StrongCF<CGImageRef> image{ woc::MakeStrongCF(_CGImageCreateFromDataProvider(provider)) };
-
-    return _CGImageCreateCopyWithPixelFormat(image, GUID_WICPixelFormat32bppPRGBA);
-}
-
-/**
  @Status Interoperable
 */
 + (GLKTextureInfo*)textureWithContentsOfFile:(NSString*)fname options:(NSDictionary*)opts error:(NSError**)err {
-    woc::StrongCF<CGImageRef> image{ woc::MakeStrongCF(__Create32bppPRGBAImageFromFile(fname)) };
+    woc::StrongCF<CGImageRef> image{ woc::MakeStrongCF(
+        _CGImageCreateFromFileWithWICFormat(static_cast<CFStringRef>(fname), GUID_WICPixelFormat32bppPRGBA)) };
     RETURN_NULL_IF(!image);
 
     return [self textureWithCGImage:image options:opts error:err];
@@ -311,9 +300,7 @@ static inline CGImageRef __Create32bppPRGBAImageFromFile(NSString* fname) {
 + (GLKTextureInfo*)textureWithCGImage:(CGImageRef)image options:(NSDictionary*)opts error:(NSError**)err {
     woc::StrongCF<CGImageRef> img = { woc::MakeStrongCF(_CGImageCreateCopyWithPixelFormat(image, GUID_WICPixelFormat32bppPRGBA)) };
 
-    if (!img) {
-        return nil;
-    }
+    RETURN_NULL_IF(!img);
 
     size_t w = CGImageGetWidth(img);
     size_t h = CGImageGetHeight(img);
@@ -324,10 +311,8 @@ static inline CGImageRef __Create32bppPRGBAImageFromFile(NSString* fname) {
         NSTraceWarning(TAG, @"WARNING - Image (%dx%d) - expected row size %d, got row size %d\n", w, h, expectedRowSize, rowSize);
     }
 
-    CGDataProviderRef provider = CGImageGetDataProvider(img);
-    NSData* data = (id)CGDataProviderCopyData(provider);
-    [data autorelease];
-    auto bytesIn = (unsigned char*)[data bytes];
+    unsigned char* bytesIn = static_cast<unsigned char*>(const_cast<void*>(_CGDataProviderGetData(CGImageGetDataProvider(img))));
+    RETURN_NULL_IF(!bytesIn);
 
     if (getOpt(opts, GLKTextureLoaderOriginBottomLeft)) {
         swapRows(bytesIn, rowSize, h);
@@ -407,7 +392,8 @@ static inline CGImageRef __Create32bppPRGBAImageFromFile(NSString* fname) {
  @Status Interoperable
 */
 + (GLKTextureInfo*)cubeMapWithContentsOfFile:(NSString*)fname options:(NSDictionary*)opts error:(NSError**)err {
-    woc::StrongCF<CGImageRef> img = { woc::MakeStrongCF(__Create32bppPRGBAImageFromFile(fname)) };
+    woc::StrongCF<CGImageRef> img = { woc::MakeStrongCF(
+        _CGImageCreateFromFileWithWICFormat(static_cast<CFStringRef>(fname), GUID_WICPixelFormat32bppPRGBA)) };
     RETURN_NULL_IF(!img);
 
     size_t w = CGImageGetWidth(img);
@@ -424,10 +410,8 @@ static inline CGImageRef __Create32bppPRGBAImageFromFile(NSString* fname) {
         return nil;
     }
 
-    CGDataProviderRef provider = CGImageGetDataProvider(img);
-    NSData* data = (id)CGDataProviderCopyData(provider);
-    [data autorelease];
-    auto bytesIn = (unsigned char*)[data bytes];
+    unsigned char* bytesIn = static_cast<unsigned char*>(const_cast<void*>(_CGDataProviderGetData(CGImageGetDataProvider(img))));
+    RETURN_NULL_IF(!bytesIn);
 
     if (getOpt(opts, GLKTextureLoaderOriginBottomLeft)) {
         swapRows(bytesIn, rowSize, h);
@@ -539,17 +523,20 @@ static inline CGImageRef __Create32bppPRGBAImageFromFile(NSString* fname) {
 
     GLKTextureInfoAlphaState as;
     for (NSString* fn in fnames) {
-        woc::StrongCF<CGImageRef> img = { woc::MakeStrongCF(__Create32bppPRGBAImageFromFile(fn)) };
+        woc::StrongCF<CGImageRef> img = { woc::MakeStrongCF(
+            _CGImageCreateFromFileWithWICFormat(static_cast<CFStringRef>(fn), GUID_WICPixelFormat32bppPRGBA)) };
         if (!img) {
             NSTraceWarning(TAG, @"Unable to open cube side texture %@", fn);
             curSide++;
             continue;
         }
 
-        CGDataProviderRef provider = CGImageGetDataProvider(img);
-        NSData* data = (id)CGDataProviderCopyData(provider);
-        [data autorelease];
-        auto bytesIn = (unsigned char*)[data bytes];
+        unsigned char* bytesIn = static_cast<unsigned char*>(const_cast<void*>(_CGDataProviderGetData(CGImageGetDataProvider(img))));
+        if (!bytesIn) {
+            NSTraceWarning(TAG, @"Unable to obtain bytes of texture %@", fn);
+            curSide++;
+            continue;
+        }
 
         size_t w = CGImageGetWidth(img);
         size_t h = CGImageGetHeight(img);

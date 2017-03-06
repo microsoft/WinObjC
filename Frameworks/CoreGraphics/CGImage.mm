@@ -934,4 +934,30 @@ HRESULT _CGImageConvertToMaskCompatibleWICBitmap(CGImageRef image, IWICBitmap** 
     return _CGImageGetWICImageSource(convertedImage.get(), pBitmap);
 }
 
+/**
+* Creates an image from file, if the image is not in the requested format, it is converted to
+* the requested format and returned.
+*/
+CGImageRef _CGImageCreateFromFileWithWICFormat(CFStringRef filename, WICPixelFormatGUID format) {
+    RETURN_NULL_IF(!filename);
+
+    std::vector<char> buffer;
+    const char* fname = CFStringGetCStringPtr(filename, kCFStringEncodingUTF8);
+    if (fname == nullptr) {
+        CFIndex length = CFStringGetLength(filename) + 1;
+        buffer.reserve(length);
+        if (CFStringGetCString(filename, buffer.data(), length, kCFStringEncodingUTF8)) {
+            fname = buffer.data();
+        }
+    }
+
+    RETURN_NULL_IF(!fname);
+
+    woc::StrongCF<CGDataProviderRef> provider{ woc::MakeStrongCF(CGDataProviderCreateWithFilename(fname)) };
+
+    woc::StrongCF<CGImageRef> image{ woc::MakeStrongCF(_CGImageCreateFromDataProvider(provider)) };
+
+    return _CGImageCreateCopyWithPixelFormat(image, format);
+}
+
 #pragma endregion WIC_HELPERS
