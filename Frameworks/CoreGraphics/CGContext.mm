@@ -1102,7 +1102,7 @@ CGPathRef CGContextCopyPath(CGContextRef context) {
 }
 
 /**
- @Status Inteoperable
+ @Status Interoperable
 */
 CGPoint CGContextGetPathCurrentPoint(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context, CGPointZero);
