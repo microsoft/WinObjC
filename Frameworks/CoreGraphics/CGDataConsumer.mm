@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,56 +16,112 @@
 
 #import <StubReturn.h>
 #import <CoreGraphics/CGDataConsumer.h>
+#import <CFCppBase.h>
+#import <Starboard/SmartTypes.h>
+#import "CGDataConsumerInternal.h"
+
+#pragma region CGDataConsumer
+
+static const CGDataConsumerCallbacks sc_CGDataConsumerCFDataCallbacks{ [](void* info, const void* data, size_t size) {
+                                                                          CFDataAppendBytes(static_cast<CFMutableDataRef>(info),
+                                                                                            (const UInt8*)data,
+                                                                                            size);
+                                                                          return size;
+                                                                      },
+                                                                       [](void* info) { CFRelease(static_cast<CFTypeRef>(info)); } };
+
+static const CGDataConsumerCallbacks sc_CGDataConsumerCFURLCallbacks{
+    [](void* info, const void* data, size_t size) {
+        auto dataWrapper = woc::MakeAutoCF<CFDataRef>(CFDataCreateWithBytesNoCopy(nullptr, (const UInt8*)data, size, kCFAllocatorNull));
+        int errorCode = 0;
+        CFURLWriteDataAndPropertiesToResource(static_cast<CFURLRef>(info), dataWrapper, nullptr, &errorCode);
+        return (errorCode == 0) ? size : 0;
+    },
+    [](void* info) { CFRelease(static_cast<CFTypeRef>(info)); }
+};
+
+struct CGDataConsumer : CoreFoundation::CppBase<CGDataConsumer> {
+    CGDataConsumer(void* info, const CGDataConsumerCallbacks* callbacks) : m_info(info), m_callbacks(*callbacks) {
+    }
+    CGDataConsumer(CFMutableDataRef data) : CGDataConsumer((void*)CFRetain(data), &sc_CGDataConsumerCFDataCallbacks) {
+    }
+    CGDataConsumer(CFURLRef url) : CGDataConsumer((void*)CFRetain(url), &sc_CGDataConsumerCFURLCallbacks) {
+    }
+
+    size_t WriteData(const void* data, size_t size) {
+        return m_callbacks.putBytes ? m_callbacks.putBytes(m_info, data, size) : 0;
+    }
+
+    ~CGDataConsumer() {
+        if (m_callbacks.releaseConsumer != nullptr) {
+            m_callbacks.releaseConsumer(m_info);
+        }
+    }
+
+private:
+    void* m_info;
+    CGDataConsumerCallbacks m_callbacks;
+};
+
+#pragma endregion // CGDataConsumer
+
+#pragma region CGDataConsumer Functions
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
-CGDataConsumerRef CGDataConsumerCreate(void* info, const CGDataConsumerCallbacks* cbks) {
-    UNIMPLEMENTED();
-    return StubReturn();
+CGDataConsumerRef CGDataConsumerCreate(void* info, const CGDataConsumerCallbacks* callbacks) {
+    return callbacks ? CGDataConsumer::CreateInstance(nullptr, info, callbacks) : nullptr;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CGDataConsumerRef CGDataConsumerCreateWithURL(CFURLRef url) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return url ? CGDataConsumer::CreateInstance(nullptr, url) : nullptr;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CGDataConsumerRef CGDataConsumerCreateWithCFData(CFMutableDataRef data) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return data ? CGDataConsumer::CreateInstance(nullptr, data) : nullptr;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CFTypeID CGDataConsumerGetTypeID() {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return CGDataConsumer::GetTypeID();
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 void CGDataConsumerRelease(CGDataConsumerRef consumer) {
-    UNIMPLEMENTED();
+    CFRelease(consumer);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 CGDataConsumerRef CGDataConsumerRetain(CGDataConsumerRef consumer) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    CFRetain(consumer);
+    return consumer;
 }
+
+#pragma endregion // CGDataConsumer Functions
+
+#pragma region Internal CGDataConsumer Functions
+
+size_t _CGDataConsumerWriteData(CGDataConsumerRef consumer, const void* data, size_t size) {
+    return consumer ? consumer->WriteData(data, size) : 0;
+}
+
+#pragma endregion // Internal CGDataConsumer Functions

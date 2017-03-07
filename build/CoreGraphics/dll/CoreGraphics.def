@@ -264,6 +264,7 @@ LIBRARY CoreGraphics
         CGDataConsumerGetTypeID
         CGDataConsumerRelease
         CGDataConsumerRetain
+        _CGDataConsumerWriteData
 
         ; CGDataProvider.mm
         CGDataProviderCreate

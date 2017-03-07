@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -19,7 +19,7 @@
 #import <CoreFoundation/CFURL.h>
 #import <CoreFoundation/CFData.h>
 
-typedef struct __CGDataConsumer* CGDataConsumerRef;
+typedef struct CGDataConsumer* CGDataConsumerRef;
 
 typedef size_t (*CGDataConsumerPutBytesCallback)(void* info, const void* buffer, size_t count);
 typedef void (*CGDataConsumerReleaseInfoCallback)(void* info);
@@ -29,9 +29,9 @@ typedef struct CGDataConsumerCallbacks {
     CGDataConsumerReleaseInfoCallback releaseConsumer;
 } CGDataConsumerCallbacks;
 
-COREGRAPHICS_EXPORT CGDataConsumerRef CGDataConsumerCreate(void* info, const CGDataConsumerCallbacks* cbks) STUB_METHOD;
-COREGRAPHICS_EXPORT CGDataConsumerRef CGDataConsumerCreateWithURL(CFURLRef url) STUB_METHOD;
-COREGRAPHICS_EXPORT CGDataConsumerRef CGDataConsumerCreateWithCFData(CFMutableDataRef data) STUB_METHOD;
-COREGRAPHICS_EXPORT CFTypeID CGDataConsumerGetTypeID() STUB_METHOD;
-COREGRAPHICS_EXPORT void CGDataConsumerRelease(CGDataConsumerRef consumer) STUB_METHOD;
-COREGRAPHICS_EXPORT CGDataConsumerRef CGDataConsumerRetain(CGDataConsumerRef consumer) STUB_METHOD;
+COREGRAPHICS_EXPORT CGDataConsumerRef CGDataConsumerCreate(void* info, const CGDataConsumerCallbacks* cbks);
+COREGRAPHICS_EXPORT CGDataConsumerRef CGDataConsumerCreateWithURL(CFURLRef url);
+COREGRAPHICS_EXPORT CGDataConsumerRef CGDataConsumerCreateWithCFData(CFMutableDataRef data);
+COREGRAPHICS_EXPORT CFTypeID CGDataConsumerGetTypeID();
+COREGRAPHICS_EXPORT void CGDataConsumerRelease(CGDataConsumerRef consumer);
+COREGRAPHICS_EXPORT CGDataConsumerRef CGDataConsumerRetain(CGDataConsumerRef consumer);
