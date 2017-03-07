@@ -105,5 +105,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathApplyCurveViewController.h">
       <Filter>CGCatalog\NewSamples</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddArcFullCircleViewController.h">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

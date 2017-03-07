@@ -9,6 +9,7 @@
     <SharedGUID>{1A3847F4-5684-4B1C-8AAA-24A80180D8D6}</SharedGUID>
   </PropertyGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddArcFullCircleViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddArcToPointViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddArcViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\CGPathAddCurveToPointViewController.h" />

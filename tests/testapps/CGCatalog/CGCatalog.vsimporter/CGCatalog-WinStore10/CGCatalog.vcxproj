@@ -201,6 +201,7 @@
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
     <ClangCompile Include="..\..\CGCatalog\CGContextShadowViewController.mm" />
     <ClangCompile Include="..\..\CGCatalog\CGDrawOptions.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddArcFullCircleViewController.m" />
     <ClangCompile Include="..\..\CGCatalog\CGPathAddArcToPointViewController.m" />
     <ClangCompile Include="..\..\CGCatalog\CGPathAddArcViewController.m" />
     <ClangCompile Include="..\..\CGCatalog\CGPathAddRoundedRectViewController.m" />

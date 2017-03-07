@@ -490,7 +490,7 @@ static HRESULT _createPathReadyForFigure(CGPathRef previousPath,
 // the calculations for arcs since 0, 2pi, 4pi, etc... are all visually the same angle.
 static CGFloat __normalizeAngle(CGFloat originalAngle) {
     CGFloat returnAngle = fmod(originalAngle, 2 * M_PI);
-    if (returnAngle < .00001) {
+    if (abs(returnAngle) < .00001) {
         returnAngle = 0;
     }
     if (returnAngle == 0) {

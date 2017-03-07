@@ -11,6 +11,7 @@
 		552816081D062F6B0082C178 /* CGCCGContextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 552816071D062F6B0082C178 /* CGCCGContextViewController.m */; };
 		5528160A1D0630300082C178 /* LogoAutodesk.png in Resources */ = {isa = PBXBuildFile; fileRef = 552816091D0630300082C178 /* LogoAutodesk.png */; };
 		5579D6771D1B73EC00B33059 /* CGCCGPathContainsPointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5579D6761D1B73EC00B33059 /* CGCCGPathContainsPointViewController.m */; };
+		8B0BD3211E6F3D3D00866BF1 /* CGPathAddArcFullCircleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B0BD3201E6F3D3D00866BF1 /* CGPathAddArcFullCircleViewController.m */; };
 		8B2360531DC92A90008F4EBF /* CGPathAddArcViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B2360521DC92A90008F4EBF /* CGPathAddArcViewController.m */; };
 		8B2360561DD690CC008F4EBF /* CGPathAddArcToPointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B2360551DD690CC008F4EBF /* CGPathAddArcToPointViewController.m */; };
 		8B2360591DDAACAE008F4EBF /* AddArc.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B2360571DDAACAE008F4EBF /* AddArc.png */; };
@@ -66,6 +67,8 @@
 		552816091D0630300082C178 /* LogoAutodesk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LogoAutodesk.png; sourceTree = "<group>"; };
 		5579D6751D1B73EC00B33059 /* CGCCGPathContainsPointViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGCCGPathContainsPointViewController.h; sourceTree = "<group>"; };
 		5579D6761D1B73EC00B33059 /* CGCCGPathContainsPointViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGCCGPathContainsPointViewController.m; sourceTree = "<group>"; };
+		8B0BD3201E6F3D3D00866BF1 /* CGPathAddArcFullCircleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathAddArcFullCircleViewController.m; sourceTree = "<group>"; };
+		8B0BD3221E6F3E3400866BF1 /* CGPathAddArcFullCircleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CGPathAddArcFullCircleViewController.h; sourceTree = "<group>"; };
 		8B2360511DC92A90008F4EBF /* CGPathAddArcViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathAddArcViewController.h; sourceTree = "<group>"; };
 		8B2360521DC92A90008F4EBF /* CGPathAddArcViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGPathAddArcViewController.m; sourceTree = "<group>"; };
 		8B2360541DD690CC008F4EBF /* CGPathAddArcToPointViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGPathAddArcToPointViewController.h; sourceTree = "<group>"; };
@@ -188,6 +191,8 @@
 				8BF7B3EF1D9C63FA00C25A86 /* CGPathGetBoundingBoxViewController.m */,
 				AF797AD71DC2A90700C6825F /* CGContextShadowViewController.h */,
 				AF797AD81DC2A90700C6825F /* CGContextShadowViewController.mm */,
+				8B0BD3201E6F3D3D00866BF1 /* CGPathAddArcFullCircleViewController.m */,
+				8B0BD3221E6F3E3400866BF1 /* CGPathAddArcFullCircleViewController.h */,
 			);
 			name = NewSamples;
 			sourceTree = "<group>";
@@ -378,6 +383,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B0BD3211E6F3D3D00866BF1 /* CGPathAddArcFullCircleViewController.m in Sources */,
 				AF797AD91DC2A90700C6825F /* CGContextShadowViewController.mm in Sources */,
 				8B2D2E951D9DA63400B8E557 /* CGDrawOptions.m in Sources */,
 				8BF7B3F71D9C63FA00C25A86 /* CGPathCloseSubpathViewController.m in Sources */,
