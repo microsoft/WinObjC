@@ -40,7 +40,7 @@ DISABLED_DRAW_TEST_F(CGPath, AddEllipse, UIKitMimicTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
-    CGRect theRectangle = CGRectMake(50, 50, 300, 200);
+    CGRect theRectangle = CGRectMake(50, 50, 300, 60);
 
     CGMutablePathRef thepath = CGPathCreateMutable();
 
@@ -63,19 +63,19 @@ DRAW_TEST_F(CGPath, AddLineToPoint, UIKitMimicTest<>) {
     CGRect bounds = GetDrawingBounds();
 
     CGMutablePathRef thepath = CGPathCreateMutable();
-    CGPathMoveToPoint(thepath, NULL, 200, 35);
+    CGPathMoveToPoint(thepath, NULL, 60, 35);
     CGPathAddLineToPoint(thepath, NULL, 165, 100);
     CGPathAddLineToPoint(thepath, NULL, 100, 100);
     CGPathAddLineToPoint(thepath, NULL, 150, 150);
     CGPathAddLineToPoint(thepath, NULL, 135, 225);
-    CGPathAddLineToPoint(thepath, NULL, 200, 170);
+    CGPathAddLineToPoint(thepath, NULL, 60, 170);
     CGPathAddLineToPoint(thepath, NULL, 265, 225);
     CGPathAddLineToPoint(thepath, NULL, 250, 150);
     CGPathAddLineToPoint(thepath, NULL, 300, 100);
     CGPathAddLineToPoint(thepath, NULL, 235, 100);
 
     // Unnecessary as close subpath will finish this line off but for the sake of consistency, have this here.
-    CGPathAddLineToPoint(thepath, NULL, 200, 35);
+    CGPathAddLineToPoint(thepath, NULL, 60, 35);
 
     CGPathCloseSubpath(thepath);
     CGContextAddPath(context, thepath);
@@ -91,19 +91,19 @@ DRAW_TEST_F(CGPath, AddPath, UIKitMimicTest<>) {
     CGMutablePathRef theFirstPath = CGPathCreateMutable();
     CGMutablePathRef theSecondPath = CGPathCreateMutable();
 
-    CGPathMoveToPoint(theFirstPath, NULL, 200, 35);
+    CGPathMoveToPoint(theFirstPath, NULL, 60, 35);
     CGPathAddLineToPoint(theFirstPath, NULL, 165, 100);
     CGPathAddLineToPoint(theFirstPath, NULL, 100, 100);
     CGPathAddLineToPoint(theFirstPath, NULL, 150, 150);
     CGPathAddLineToPoint(theFirstPath, NULL, 135, 225);
-    CGPathAddLineToPoint(theFirstPath, NULL, 200, 170);
+    CGPathAddLineToPoint(theFirstPath, NULL, 60, 170);
     CGPathAddLineToPoint(theFirstPath, NULL, 265, 225);
 
     CGPathMoveToPoint(theSecondPath, NULL, 265, 225);
 
     CGPathAddLineToPoint(theSecondPath, NULL, 350, 225);
     CGPathAddLineToPoint(theSecondPath, NULL, 350, 35);
-    CGPathAddLineToPoint(theSecondPath, NULL, 200, 35);
+    CGPathAddLineToPoint(theSecondPath, NULL, 60, 35);
 
     CGPathAddPath(theFirstPath, NULL, theSecondPath);
     CGContextAddPath(context, theFirstPath);
@@ -125,11 +125,11 @@ DRAW_TEST_F(CGPath, AddQuadCurveToPoint, UIKitMimicTest<>) {
     CGPathMoveToPoint(thePath, NULL, 100, 50);
     CGPathAddQuadCurveToPoint(thePath, NULL, 125, 25, 150, 50);
 
-    CGPathMoveToPoint(thePath, NULL, 200, 50);
+    CGPathMoveToPoint(thePath, NULL, 60, 50);
     CGPathAddQuadCurveToPoint(thePath, NULL, 225, 25, 250, 50);
 
     CGPathMoveToPoint(thePath, NULL, 100, 150);
-    CGPathAddQuadCurveToPoint(thePath, NULL, 200, 200, 300, 100);
+    CGPathAddQuadCurveToPoint(thePath, NULL, 60, 60, 300, 100);
 
     CGPathMoveToPoint(thePath, NULL, 285, 105);
     CGPathAddQuadCurveToPoint(thePath, NULL, 300, 90, 310, 110);
@@ -150,7 +150,7 @@ DRAW_TEST_F(CGPath, AddRect, UIKitMimicTest<>) {
     CGPathMoveToPoint(thePath, NULL, 50, 50);
     CGPathAddLineToPoint(thePath, NULL, 100, 100);
 
-    CGPathAddRect(thePath, NULL, CGRectMake(100, 100, 200, 100));
+    CGPathAddRect(thePath, NULL, CGRectMake(100, 100, 60, 100));
 
     CGContextAddPath(context, thePath);
 
@@ -166,28 +166,28 @@ DRAW_TEST_F(CGPath, Apply, UIKitMimicTest<>) {
     auto CGPathApplyCallback = [](void* voidContext, const CGPathElement* element) {
         CGContextRef context = (CGContextRef)voidContext;
         CGPoint* points = element->points;
-        CGContextMoveToPoint(context, 200, 125);
+        CGContextMoveToPoint(context, 60, 125);
         CGContextAddLineToPoint(context, points[0].x, points[0].y);
         CGContextStrokePath(context);
     };
 
     CGMutablePathRef thepath = CGPathCreateMutable();
 
-    CGPathMoveToPoint(thepath, NULL, 200, 35);
+    CGPathMoveToPoint(thepath, NULL, 60, 35);
     CGPathAddLineToPoint(thepath, NULL, 165, 100);
     CGPathAddLineToPoint(thepath, NULL, 100, 100);
     CGPathAddLineToPoint(thepath, NULL, 150, 150);
     CGPathAddLineToPoint(thepath, NULL, 135, 225);
-    CGPathAddLineToPoint(thepath, NULL, 200, 170);
+    CGPathAddLineToPoint(thepath, NULL, 60, 170);
     CGPathAddLineToPoint(thepath, NULL, 265, 225);
     CGPathAddLineToPoint(thepath, NULL, 250, 150);
     CGPathAddLineToPoint(thepath, NULL, 300, 100);
     CGPathAddLineToPoint(thepath, NULL, 235, 100);
-    // This function draws a line from the center of the star (200,125) to each segment's starting point.
+    // This function draws a line from the center of the star (60,125) to each segment's starting point.
     CGPathApply(thepath, context, CGPathApplyCallback);
 
     // Unnecessary as close subpath will finish this line off but for the sake of consistency, have this here.
-    CGPathAddLineToPoint(thepath, NULL, 200, 35);
+    CGPathAddLineToPoint(thepath, NULL, 60, 35);
 
     CGPathCloseSubpath(thepath);
     CGContextAddPath(context, thepath);
@@ -206,14 +206,14 @@ DRAW_TEST_F(CGPath, CloseSubpath, UIKitMimicTest<>) {
     CGPathAddLineToPoint(thePath, NULL, 100, 100);
     CGPathCloseSubpath(thePath);
 
-    CGPathMoveToPoint(thePath, NULL, 200, 50);
-    CGPathAddLineToPoint(thePath, NULL, 200, 100);
+    CGPathMoveToPoint(thePath, NULL, 60, 50);
+    CGPathAddLineToPoint(thePath, NULL, 60, 100);
     CGPathAddLineToPoint(thePath, NULL, 150, 100);
     CGPathCloseSubpath(thePath);
 
-    CGPathMoveToPoint(thePath, NULL, 100, 200);
+    CGPathMoveToPoint(thePath, NULL, 100, 60);
     CGPathAddLineToPoint(thePath, NULL, 125, 150);
-    CGPathAddLineToPoint(thePath, NULL, 150, 200);
+    CGPathAddLineToPoint(thePath, NULL, 150, 60);
     CGPathCloseSubpath(thePath);
 
     CGPathCloseSubpath(thePath);
@@ -228,17 +228,17 @@ DRAW_TEST_F(CGPath, GetBoundingBox, UIKitMimicTest<>) {
     CGRect bounds = GetDrawingBounds();
 
     CGMutablePathRef thepath = CGPathCreateMutable();
-    CGPathMoveToPoint(thepath, NULL, 200, 35);
+    CGPathMoveToPoint(thepath, NULL, 60, 35);
     CGPathAddLineToPoint(thepath, NULL, 165, 100);
     CGPathAddLineToPoint(thepath, NULL, 100, 100);
     CGPathAddLineToPoint(thepath, NULL, 150, 150);
     CGPathAddLineToPoint(thepath, NULL, 135, 225);
-    CGPathAddLineToPoint(thepath, NULL, 200, 170);
+    CGPathAddLineToPoint(thepath, NULL, 60, 170);
     CGPathAddLineToPoint(thepath, NULL, 265, 225);
     CGPathAddLineToPoint(thepath, NULL, 250, 150);
     CGPathAddLineToPoint(thepath, NULL, 300, 100);
     CGPathAddLineToPoint(thepath, NULL, 235, 100);
-    CGPathAddLineToPoint(thepath, NULL, 200, 35);
+    CGPathAddLineToPoint(thepath, NULL, 60, 35);
     CGPathCloseSubpath(thepath);
 
     CGContextAddPath(context, thepath);
@@ -639,6 +639,28 @@ DRAW_TEST_F(CGPath, FillStraightLines, UIKitMimicTest<>) {
     CGContextAddPath(context, thepath);
     CGContextSetRGBFillColor(context, 0, 0, 1, 1);
     CGContextFillPath(context);
+
+    CGPathRelease(thepath);
+}
+
+DRAW_TEST_F(CGPath, AddLinesWithoutMove, UIKitMimicTest<>) {
+    CGContextRef context = GetDrawingContext();
+    applyBounds = GetDrawingBounds();
+    CGFloat width = applyBounds.size.width;
+    CGFloat height = applyBounds.size.height;
+    CGFloat xstart = applyBounds.origin.x;
+    CGFloat ystart = applyBounds.origin.y;
+
+    CGMutablePathRef thepath = CGPathCreateMutable();
+    CGPoint points[20];
+
+    for (int i = 0; i < 20; i += 2) {
+        points[i] = { xstart + ((i + 1) / 20.0) * width, ystart + height * .2 };
+        points[i + 1] = { xstart + ((i + 1) / 20.0) * width, ystart + height * .8 };
+    }
+    CGPathAddLines(thepath, NULL, points, 20);
+    CGContextAddPath(context, thepath);
+    CGContextStrokePath(context);
 
     CGPathRelease(thepath);
 }
