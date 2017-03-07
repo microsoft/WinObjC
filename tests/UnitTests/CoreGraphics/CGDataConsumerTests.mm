@@ -28,7 +28,7 @@ TEST(CGDataConsumer, Create) {
     char compareData[100]{ 0 };
     EXPECT_EQ(nullptr, CGDataConsumerCreate(compareData, nullptr));
 
-    CGDataConsumerCallbacks emptyCallbacks{ nullptr, [](void* info) {} };
+    CGDataConsumerCallbacks emptyCallbacks{ nullptr, nullptr };
     auto consumer = woc::MakeAutoCF<CGDataConsumerRef>(CGDataConsumerCreate(compareData, &emptyCallbacks));
     EXPECT_NE(nullptr, consumer);
 

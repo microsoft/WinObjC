@@ -20,39 +20,52 @@
 #import <Starboard/SmartTypes.h>
 #import "CGDataConsumerInternal.h"
 
-#pragma region CGDataConsumer
+#pragma region __CGDataConsumer
 
-static const CGDataConsumerCallbacks sc_CGDataConsumerCFDataCallbacks{ [](void* info, const void* data, size_t size) {
-                                                                          CFDataAppendBytes(static_cast<CFMutableDataRef>(info),
-                                                                                            (const UInt8*)data,
-                                                                                            size);
-                                                                          return size;
-                                                                      },
-                                                                       [](void* info) { CFRelease(static_cast<CFTypeRef>(info)); } };
+static const CGDataConsumerCallbacks sc_CGDataConsumerCFDataCallbacks{ // CGDataConsumerPutBytesCallback
+                                                                       [](void* info, const void* data, size_t size) {
+                                                                           CFDataAppendBytes(static_cast<CFMutableDataRef>(info),
+                                                                                             (const UInt8*)data,
+                                                                                             size);
+                                                                           return size;
+                                                                       },
 
-static const CGDataConsumerCallbacks sc_CGDataConsumerCFURLCallbacks{
-    [](void* info, const void* data, size_t size) {
-        auto dataWrapper = woc::MakeAutoCF<CFDataRef>(CFDataCreateWithBytesNoCopy(nullptr, (const UInt8*)data, size, kCFAllocatorNull));
-        int errorCode = 0;
-        CFURLWriteDataAndPropertiesToResource(static_cast<CFURLRef>(info), dataWrapper, nullptr, &errorCode);
-        return (errorCode == 0) ? size : 0;
-    },
-    [](void* info) { CFRelease(static_cast<CFTypeRef>(info)); }
+                                                                       // CGDataConsumerReleaseInfoCallback
+                                                                       [](void* info) { CFRelease(static_cast<CFTypeRef>(info)); }
 };
 
-struct CGDataConsumer : CoreFoundation::CppBase<CGDataConsumer> {
-    CGDataConsumer(void* info, const CGDataConsumerCallbacks* callbacks) : m_info(info), m_callbacks(*callbacks) {
+static const CGDataConsumerCallbacks sc_CGDataConsumerCFURLCallbacks{ // CGDataConsumerPutBytesCallback
+                                                                      [](void* info, const void* data, size_t size) -> size_t {
+                                                                          auto writeStream = woc::MakeAutoCF<CFWriteStreamRef>(
+                                                                              CFWriteStreamCreateWithFile(nullptr,
+                                                                                                          static_cast<CFURLRef>(info)));
+                                                                          if (!CFWriteStreamOpen(writeStream)) {
+                                                                              return 0;
+                                                                          }
+
+                                                                          CFIndex written =
+                                                                              CFWriteStreamWrite(writeStream, (const UInt8*)data, size);
+                                                                          CFWriteStreamClose(writeStream);
+                                                                          return (written < 0L) ? 0 : written;
+                                                                      },
+
+                                                                      // CGDataConsumerReleaseInfoCallback
+                                                                      [](void* info) { CFRelease(static_cast<CFTypeRef>(info)); }
+};
+
+struct __CGDataConsumer : CoreFoundation::CppBase<__CGDataConsumer> {
+    __CGDataConsumer(void* info, const CGDataConsumerCallbacks* callbacks) : m_info(info), m_callbacks(*callbacks) {
     }
-    CGDataConsumer(CFMutableDataRef data) : CGDataConsumer((void*)CFRetain(data), &sc_CGDataConsumerCFDataCallbacks) {
+    __CGDataConsumer(CFMutableDataRef data) : __CGDataConsumer((void*)CFRetain(data), &sc_CGDataConsumerCFDataCallbacks) {
     }
-    CGDataConsumer(CFURLRef url) : CGDataConsumer((void*)CFRetain(url), &sc_CGDataConsumerCFURLCallbacks) {
+    __CGDataConsumer(CFURLRef url) : __CGDataConsumer((void*)CFRetain(url), &sc_CGDataConsumerCFURLCallbacks) {
     }
 
     size_t WriteData(const void* data, size_t size) {
         return m_callbacks.putBytes ? m_callbacks.putBytes(m_info, data, size) : 0;
     }
 
-    ~CGDataConsumer() {
+    ~__CGDataConsumer() {
         if (m_callbacks.releaseConsumer != nullptr) {
             m_callbacks.releaseConsumer(m_info);
         }
@@ -63,45 +76,40 @@ private:
     CGDataConsumerCallbacks m_callbacks;
 };
 
-#pragma endregion // CGDataConsumer
+#pragma endregion // __CGDataConsumer
 
 #pragma region CGDataConsumer Functions
 
 /**
  @Status Interoperable
- @Notes
 */
 CGDataConsumerRef CGDataConsumerCreate(void* info, const CGDataConsumerCallbacks* callbacks) {
-    return callbacks ? CGDataConsumer::CreateInstance(nullptr, info, callbacks) : nullptr;
+    return callbacks ? __CGDataConsumer::CreateInstance(nullptr, info, callbacks) : nullptr;
 }
 
 /**
  @Status Interoperable
- @Notes
 */
 CGDataConsumerRef CGDataConsumerCreateWithURL(CFURLRef url) {
-    return url ? CGDataConsumer::CreateInstance(nullptr, url) : nullptr;
+    return url ? __CGDataConsumer::CreateInstance(nullptr, url) : nullptr;
 }
 
 /**
  @Status Interoperable
- @Notes
 */
 CGDataConsumerRef CGDataConsumerCreateWithCFData(CFMutableDataRef data) {
-    return data ? CGDataConsumer::CreateInstance(nullptr, data) : nullptr;
+    return data ? __CGDataConsumer::CreateInstance(nullptr, data) : nullptr;
 }
 
 /**
  @Status Interoperable
- @Notes
 */
 CFTypeID CGDataConsumerGetTypeID() {
-    return CGDataConsumer::GetTypeID();
+    return __CGDataConsumer::GetTypeID();
 }
 
 /**
  @Status Interoperable
- @Notes
 */
 void CGDataConsumerRelease(CGDataConsumerRef consumer) {
     CFRelease(consumer);
@@ -109,7 +117,6 @@ void CGDataConsumerRelease(CGDataConsumerRef consumer) {
 
 /**
  @Status Interoperable
- @Notes
 */
 CGDataConsumerRef CGDataConsumerRetain(CGDataConsumerRef consumer) {
     CFRetain(consumer);
