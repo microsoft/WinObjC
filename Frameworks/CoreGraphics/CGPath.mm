@@ -232,7 +232,7 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
     }
 
     bool IsFigureOpen() {
-        return geometrySink->IsFigureOpen();
+        return geometrySink && geometrySink->IsFigureOpen();
     }
 
     void BeginFigure() {
@@ -486,13 +486,16 @@ static HRESULT _createPathReadyForFigure(CGPathRef previousPath,
     return S_OK;
 }
 
+// This function will return a normalized angle in radians between 0 and 2pi. This is to standardize
+// the calculations for arcs since 0, 2pi, 4pi, etc... are all visually the same angle.
 static CGFloat __normalizeAngle(CGFloat originalAngle) {
     CGFloat returnAngle = fmod(originalAngle, 2 * M_PI);
+    if (returnAngle < .00001) {
+        returnAngle = 0;
+    }
     if (returnAngle == 0) {
-        if (originalAngle > 0) {
+        if (abs(originalAngle) > 0) {
             return 2 * M_PI;
-        } else if (originalAngle < 0) {
-            return -2 * M_PI;
         }
     }
     if (returnAngle < 0) {
@@ -567,6 +570,9 @@ void CGPathAddArcToPoint(
 
 /**
  @Status Interoperable
+ @Notes For the scenario of drawing a full circle, any distance of 2pi will result in a circle being drawn
+        regardless of the direction being drawn. The reference platform however, will not draw a circle
+        given certain parameters such as 0 to 2pi in a counterclockwise direction.
 */
 void CGPathAddArc(CGMutablePathRef path,
                   const CGAffineTransform* transform,
@@ -623,8 +629,20 @@ void CGPathAddArc(CGMutablePathRef path,
     }
     FAIL_FAST_IF_FAILED(_createPathReadyForFigure(path, startPoint, &newPath, &newSink));
 
-    D2D1_ARC_SEGMENT arcSegment = D2D1::ArcSegment(endPointD2D, radiusD2D, rawDifference, sweepDirection, arcSize);
-    newSink->AddArc(arcSegment);
+    // This will only happen when drawing a circle in the clockwise direction from 2pi to 0, a scenario
+    // supported on the reference platform.
+    if (abs(abs(rawDifference) - 2 * M_PI) < .00001) {
+        CGFloat midPointAngle = normalizedStartAngle + rawDifference / 2;
+        CGPoint midPoint = CGPointMake(x + radius * cos(midPointAngle), y + radius * sin(midPointAngle));
+        D2D1_ARC_SEGMENT arcSegment1 =
+            D2D1::ArcSegment(_CGPointToD2D_F(midPoint), radiusD2D, rawDifference / 2, sweepDirection, D2D1_ARC_SIZE_SMALL);
+        D2D1_ARC_SEGMENT arcSegment2 = D2D1::ArcSegment(endPointD2D, radiusD2D, rawDifference / 2, sweepDirection, D2D1_ARC_SIZE_SMALL);
+        newSink->AddArc(arcSegment1);
+        newSink->AddArc(arcSegment2);
+    } else {
+        D2D1_ARC_SEGMENT arcSegment = D2D1::ArcSegment(endPointD2D, radiusD2D, rawDifference, sweepDirection, arcSize);
+        newSink->AddArc(arcSegment);
+    }
 
     newSink->EndFigure(D2D1_FIGURE_END_OPEN);
     FAIL_FAST_IF_FAILED(newSink->Close());

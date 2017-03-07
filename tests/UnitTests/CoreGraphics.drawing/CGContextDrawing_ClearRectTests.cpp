@@ -141,10 +141,8 @@ DRAW_TEST_P(CGClearRectArc, ClearArc) {
 }
 
 static CGPoint sweep[] = { CGPointMake(0, M_PI), CGPointMake(M_PI, 0), CGPointMake(0.3 * M_PI, 0.6 * M_PI), CGPointMake(0, 1.9 * M_PI) };
-// TODO: enable when #2062 is fixed.
-INSTANTIATE_TEST_CASE_P(DISABLED_CGContextTests,
-                        CGClearRectArc,
-                        ::testing::Combine(::testing::ValuesIn(rects), ::testing::ValuesIn(sweep)));
+
+INSTANTIATE_TEST_CASE_P(CGContextTests, CGClearRectArc, ::testing::Combine(::testing::ValuesIn(rects), ::testing::ValuesIn(sweep)));
 
 DRAW_TEST_F(CGContext, CustomPathClearRect, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
