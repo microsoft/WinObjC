@@ -846,6 +846,7 @@
     <ItemGroup Condition="'@(_StarboardReferencesRequiringObjectiveC)'!='' and '$(StarboardLinkWholeArchive)'=='true'">
       <Link>
         <AdditionalOptions>%(Link.AdditionalOptions) "/WHOLEARCHIVE:@(_StarboardReferencesRequiringObjectiveC, '" /WHOLEARCHIVE:"')"</AdditionalOptions>
+        <LinkIncremental>false</LinkIncremental>
       </Link>
     </ItemGroup>
   </Target>
