@@ -102,12 +102,16 @@ TEST(CGDataConsumer, CreateWithURL) {
     EXPECT_EQ(nullptr, CGDataConsumerCreateWithURL(nullptr));
 
     auto url = woc::MakeAutoCF<CFURLRef>(CFURLCreateWithFileSystemPath(nullptr, CFSTR("./testfile.txt"), kCFURLWindowsPathStyle, NO));
-    auto consumer = woc::MakeAutoCF<CGDataConsumerRef>(CGDataConsumerCreateWithURL(url));
-    ASSERT_NE(nullptr, consumer);
 
-    const char* dataToWrite = "TEST123";
-    EXPECT_NE(0, _CGDataConsumerWriteData(consumer, dataToWrite, 7));
-    EXPECT_NE(0, _CGDataConsumerWriteData(consumer, dataToWrite, 4));
+    // Destroy consumer to guarantee data is flushed for testing values in URL
+    {
+        auto consumer = woc::MakeAutoCF<CGDataConsumerRef>(CGDataConsumerCreateWithURL(url));
+        ASSERT_NE(nullptr, consumer);
+
+        const char* dataToWrite = "TEST123";
+        EXPECT_NE(0, _CGDataConsumerWriteData(consumer, dataToWrite, 7));
+        EXPECT_NE(0, _CGDataConsumerWriteData(consumer, dataToWrite, 4));
+    }
 
     auto provider = woc::MakeAutoCF<CGDataProviderRef>(CGDataProviderCreateWithURL(url));
     ASSERT_NE(nullptr, provider);
@@ -119,4 +123,9 @@ TEST(CGDataConsumer, CreateWithURL) {
     const UInt8* dataPtr = CFDataGetBytePtr(data);
     const char* expectedData = "TEST123TEST";
     EXPECT_EQ(0, std::memcmp(expectedData, dataPtr, 11));
+}
+
+TEST(CGDataConsumer, RetainReleaseShouldBeValidForNullConsumer) {
+    EXPECT_EQ(nullptr, CGDataConsumerRetain(nullptr));
+    EXPECT_NO_THROW(CGDataConsumerRelease(nullptr));
 }

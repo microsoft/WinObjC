@@ -115,14 +115,19 @@ CFTypeID CGDataConsumerGetTypeID() {
  @Status Interoperable
 */
 void CGDataConsumerRelease(CGDataConsumerRef consumer) {
-    CFRelease(consumer);
+    if (consumer) {
+        CFRelease(consumer);
+    }
 }
 
 /**
  @Status Interoperable
 */
 CGDataConsumerRef CGDataConsumerRetain(CGDataConsumerRef consumer) {
-    CFRetain(consumer);
+    if (consumer) {
+        CFRetain(consumer);
+    }
+
     return consumer;
 }
 
