@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_MEDIA_CORE_PROTECTION_PLAYBACK_CAPTURE_DEVICES_EXPORT
-#define OBJCUWP_WINDOWS_MEDIA_CORE_PROTECTION_PLAYBACK_CAPTURE_DEVICES_EXPORT __declspec(dllimport)
+#ifndef OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+#define OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT __declspec(dllimport)
 #ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Media_Core_Protection_Playback_Capture_Devices.lib")
+#pragma comment(lib, "ObjCUWP_Windows_Media_Playback_Protection_Core_Capture_Devices.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -39,7 +39,7 @@
 #ifndef __WMCCVariablePhotoSequenceCapture_DEFINED__
 #define __WMCCVariablePhotoSequenceCapture_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_CORE_PROTECTION_PLAYBACK_CAPTURE_DEVICES_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 @interface WMCCVariablePhotoSequenceCapture : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -60,7 +60,7 @@ OBJCUWP_WINDOWS_MEDIA_CORE_PROTECTION_PLAYBACK_CAPTURE_DEVICES_EXPORT
 #ifndef __WMCCVariablePhotoCapturedEventArgs_DEFINED__
 #define __WMCCVariablePhotoCapturedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_CORE_PROTECTION_PLAYBACK_CAPTURE_DEVICES_EXPORT
+OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 @interface WMCCVariablePhotoCapturedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
