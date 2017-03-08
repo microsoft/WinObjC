@@ -213,7 +213,7 @@ CORETEXT_EXPORT CFStringRef CTFontCopyFamilyName(CTFontRef font);
 CORETEXT_EXPORT CFStringRef CTFontCopyFullName(CTFontRef font);
 CORETEXT_EXPORT CFStringRef CTFontCopyDisplayName(CTFontRef font);
 CORETEXT_EXPORT CFStringRef CTFontCopyName(CTFontRef font, CFStringRef nameKey);
-CORETEXT_EXPORT CFStringRef CTFontCopyLocalizedName(CTFontRef font, CFStringRef nameKey, CFStringRef _Nullable* actualLanguage) STUB_METHOD;
+CORETEXT_EXPORT CFStringRef CTFontCopyLocalizedName(CTFontRef font, CFStringRef nameKey, CFStringRef _Nullable* actualLanguage);
 CORETEXT_EXPORT CFCharacterSetRef CTFontCopyCharacterSet(CTFontRef font) STUB_METHOD;
 CORETEXT_EXPORT CFStringEncoding CTFontGetStringEncoding(CTFontRef font) STUB_METHOD;
 CORETEXT_EXPORT CFArrayRef CTFontCopySupportedLanguages(CTFontRef font) STUB_METHOD;
@@ -249,6 +249,6 @@ CORETEXT_EXPORT CTFontRef CTFontCreateWithGraphicsFont(CGFontRef graphicsFont,
                                                        CGFloat size,
                                                        const CGAffineTransform* matrix,
                                                        CTFontDescriptorRef attributes);
-CORETEXT_EXPORT CFArrayRef CTFontCopyAvailableTables(CTFontRef font, CTFontTableOptions options) STUB_METHOD;
+CORETEXT_EXPORT CFArrayRef CTFontCopyAvailableTables(CTFontRef font, CTFontTableOptions options);
 CORETEXT_EXPORT CFDataRef CTFontCopyTable(CTFontRef font, CTFontTableTag table, CTFontTableOptions options);
 CORETEXT_EXPORT CFTypeID CTFontGetTypeID();

@@ -288,3 +288,43 @@ static BitmapFormatTestCase bitmapFormatTestCases[]{
 // clang-format on
 
 INSTANTIATE_TEST_CASE_P(CGBitmapContextFormat, BitmapFormats, ::testing::ValuesIn(bitmapFormatTestCases));
+
+TEST(CGBitmapContext, BadStrides) {
+    uint32_t data = 0;
+    auto colorSpace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
+
+    {
+        auto context = woc::MakeStrongCF<CGContextRef>(CGBitmapContextCreateWithData(&data, 1, 1, 8, 0, colorSpace, kCGImageAlphaLast, nullptr, nullptr));
+        ASSERT_EQ(nullptr, context);
+    }
+
+    {
+        auto context = woc::MakeStrongCF<CGContextRef>(CGBitmapContextCreateWithData(&data, 1, 1, 8, 1, colorSpace, kCGImageAlphaLast, nullptr, nullptr));
+        ASSERT_EQ(nullptr, context);
+    }
+}
+
+TEST(CGBitmapContext, MismatchedConfigurationValues) {
+    auto colorSpace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
+
+    {
+        // Provided 1 byte per row, but using 3-component + alpha = 32bpp (4 byte/pixel)
+        auto context = woc::MakeStrongCF<CGContextRef>(CGBitmapContextCreateWithData(nullptr, 1, 1, 8, 1, colorSpace, kCGImageAlphaLast, nullptr, nullptr));
+        ASSERT_EQ(nullptr, context);
+    }
+
+    {
+        // Provided 2 bytes per row, requested 32bpp, but using 3-component no alpha = 24bpp (3 byte/pixel)
+        // Context imputes format to be 32, but provided values should not match.
+        auto context = woc::MakeStrongCF<CGContextRef>(CGBitmapContextCreateWithData(nullptr, 1, 1, 8, 2, colorSpace, kCGImageAlphaNone | kCGBitmapByteOrder32Big, nullptr, nullptr));
+        ASSERT_EQ(nullptr, context);
+    }
+}
+
+TEST(CGBitmapContext, ImputeStrideRGBA) {
+    auto colorSpace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
+    auto context = woc::MakeStrongCF<CGContextRef>(CGBitmapContextCreateWithData(nullptr, 1, 1, 8, 0, colorSpace, kCGImageAlphaPremultipliedLast, nullptr, nullptr));
+    ASSERT_NE(nullptr, context);
+    EXPECT_EQ(32, CGBitmapContextGetBitsPerPixel(context));
+    EXPECT_LE(4, CGBitmapContextGetBytesPerRow(context)); // 4 <= stride
+}

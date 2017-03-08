@@ -47,6 +47,7 @@
 #include "Quaternion.h"
 
 #include "LoggingNative.h"
+#include "NSLogging.h"
 #include "CALayerInternal.h"
 
 #import <objc/objc-arc.h>
@@ -84,6 +85,10 @@ NSString* const kCAGravityResizeAspectFill = @"kCAGravityResizeAspectFill";
 NSString* const kCAFilterLinear = @"kCAFilterLinear";
 NSString* const kCAFilterNearest = @"kCAFilterNearest";
 NSString* const kCAFilterTrilinear = @"kCAFilterTrilinear";
+
+// The number of rendering attempts a CALayer will make when
+// its backing device disappears.
+static const unsigned int _kCALayerRenderAttempts = 3;
 
 @interface CALayer () {
 @public
@@ -316,7 +321,9 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
         RETURN_NULL_IF_FAILED(factory->CreateWicBitmapRenderTarget(customWICBtmap.Get(), D2D1::RenderTargetProperties(), &renderTarget));
         renderTarget->SetDpi(c_windowsDPI * scale, c_windowsDPI * scale);
 
-        return _CGBitmapContextCreateWithRenderTarget(renderTarget.Get(), image.get(), GUID_WICPixelFormat32bppPBGRA);
+        CGContextRef context = _CGBitmapContextCreateWithRenderTarget(renderTarget.Get(), image.get(), GUID_WICPixelFormat32bppPBGRA);
+        CGContextIwEnableEnhancedErrorHandling(context);
+        return context;
     }
 
     return nullptr;
@@ -427,14 +434,20 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
             [priv->delegate drawLayer:self inContext:ctx];
         }
     } else {
-        CGRect rect;
+        // If the layer has cached contents, blit them directly.
 
-        rect.origin.x = 0;
-        rect.origin.y = priv->bounds.size.height * priv->contentsScale;
-        rect.size.width = priv->bounds.size.width * priv->contentsScale;
-        rect.size.height = -priv->bounds.size.height * priv->contentsScale;
+        // Since the layer was rendered in Quartz referential (ULO) AND the current context
+        // is assumed to be Quartz referential (ULO), BUT the layer's cached contents
+        // were captured in a CGImage (CGImage referential, LLO), we have to flip
+        // the context again before we render it.
 
-        _CGContextDrawImageRect(ctx, priv->contents, rect, destRect);
+        // |1  0 0| is the transformation matrix for flipping a rect anchored at 0,0 about its Y midpoint.
+        // |0 -1 0|
+        // |0  h 1|
+        CGContextSaveGState(ctx);
+        CGContextConcatCTM(ctx, CGAffineTransformMake(1, 0, 0, -1, 0, destRect.size.height));
+        CGContextDrawImage(ctx, destRect, priv->contents);
+        CGContextRestoreGState(ctx);
     }
 
     //  Draw sublayers
@@ -479,21 +492,14 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
 
         // Update content size, even in case of the early out below.
         int widthInPoints = ceilf(priv->bounds.size.width);
-        int width = (int)(widthInPoints * priv->contentsScale);
         int heightInPoints = ceilf(priv->bounds.size.height);
+
+        int width = (int)(widthInPoints * priv->contentsScale);
         int height = (int)(heightInPoints * priv->contentsScale);
 
         if (width <= 0 || height <= 0) {
             TraceVerbose(TAG, L"Not drawing due to invalid layer dimensions; width=%d, height=%d", width, height);
             return;
-        }
-
-        // TODO: Why cap to 2048x2048?
-        if (width > 2048) {
-            width = 2048;
-        }
-        if (height > 2048) {
-            height = 2048;
         }
 
         priv->contentsSize.width = (float)width;
@@ -518,69 +524,68 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
             return;
         }
 
-        // Create the contents
-        CGContextRef drawContext = CreateLayerContentsBitmapContext32(width, height, priv->contentsScale);
+        unsigned int tries = 0;
+        do {
+            // Create the contents
+            woc::StrongCF<CGContextRef> drawContext{ woc::MakeStrongCF(
+                CreateLayerContentsBitmapContext32(width, height, priv->contentsScale)) };
+            _CGContextPushBeginDraw(drawContext);
 
-        priv->ownsContents = TRUE;
-        CGImageRef target = CGBitmapContextGetImage(drawContext);
+            if (priv->_backgroundColor != nil && (int)[static_cast<UIColor*>(priv->_backgroundColor) _type] != solidBrush) {
+                CGContextSaveGState(drawContext);
+                CGContextSetFillColorWithColor(drawContext, [static_cast<UIColor*>(priv->_backgroundColor) CGColor]);
 
-        CGContextRetain(drawContext);
-        _CGContextPushBeginDraw(drawContext);
-
-        auto popEnd = wil::ScopeExit([drawContext]() {
-            _CGContextPopEndDraw(drawContext);
-            CGContextRelease(drawContext);
-        });
-
-        CGImageRetain(target);
-        priv->savedContext = drawContext;
-
-        if (priv->_backgroundColor == nil || (int)[static_cast<UIColor*>(priv->_backgroundColor) _type] == solidBrush) {
-            CGContextClearToColor(drawContext,
-                                  priv->backgroundColor.r,
-                                  priv->backgroundColor.g,
-                                  priv->backgroundColor.b,
-                                  priv->backgroundColor.a);
-        } else {
-            CGContextClearToColor(drawContext, 0, 0, 0, 0);
-
-            CGContextSaveGState(drawContext);
-            CGContextSetFillColorWithColor(drawContext, [static_cast<UIColor*>(priv->_backgroundColor) CGColor]);
-
-            CGRect wholeRect = CGRectMake(0, 0, width, height);
-            CGContextFillRect(drawContext, wholeRect);
-            CGContextRestoreGState(drawContext);
-        }
-
-        // UIKit and CALayer consumers expect the origin to be in the top left.
-        // CoreGraphics defaults to the bottom left, so we must flip and translate the canvas.
-        CGContextTranslateCTM(drawContext, 0, heightInPoints);
-        CGContextScaleCTM(drawContext, 1.0f, -1.0f);
-        CGContextTranslateCTM(drawContext, -priv->bounds.origin.x, -priv->bounds.origin.y);
-
-        _CGContextSetShadowProjectionTransform(drawContext, CGAffineTransformMakeScale(1.0, -1.0));
-
-        CGContextSetDirty(drawContext, false);
-        [self drawInContext:drawContext];
-
-        if (priv->delegate != 0) {
-            if ([priv->delegate respondsToSelector:@selector(displayLayer:)]) {
-                [priv->delegate displayLayer:self];
-            } else {
-                [priv->delegate drawLayer:self inContext:drawContext];
+                CGRect wholeRect = CGRectMake(0, 0, width, height);
+                CGContextFillRect(drawContext, wholeRect);
+                CGContextRestoreGState(drawContext);
             }
-        }
 
-        CGContextReleaseLock(drawContext);
+            // UIKit and CALayer consumers expect the origin to be in the top left.
+            // CoreGraphics defaults to the bottom left, so we must flip and translate the canvas.
+            CGContextTranslateCTM(drawContext, 0, heightInPoints);
+            CGContextScaleCTM(drawContext, 1.0f, -1.0f);
+            CGContextTranslateCTM(drawContext, -priv->bounds.origin.x, -priv->bounds.origin.y);
 
-        // If we've drawn anything, set it as our contents
-        if (!CGContextIsDirty(drawContext)) {
-            CGImageRelease(target);
-            CGContextRelease(drawContext);
-            priv->savedContext = NULL;
-            priv->contents = NULL;
-        } else {
-            priv->contents = target;
+            _CGContextSetShadowProjectionTransform(drawContext, CGAffineTransformMakeScale(1.0, -1.0));
+
+            [self drawInContext:drawContext];
+
+            if (priv->delegate != 0) {
+                if ([priv->delegate respondsToSelector:@selector(displayLayer:)]) {
+                    [priv->delegate displayLayer:self];
+                } else {
+                    [priv->delegate drawLayer:self inContext:drawContext];
+                }
+            }
+
+            _CGContextPopEndDraw(drawContext);
+
+            woc::StrongCF<CFErrorRef> renderError;
+            if (CGContextIwGetError(drawContext, &renderError)) {
+                switch (CFErrorGetCode(renderError)) {
+                    case kCGContextErrorDeviceReset:
+                        NSTraceInfo(TAG, @"Hardware device disappeared when rendering %@; retrying.", self);
+                        ++tries;
+                        continue;
+                    default: {
+                        FAIL_FAST_MSG("Failed to render <%hs %p>: %hs",
+                                      object_getClassName(self),
+                                      self,
+                                      [[static_cast<NSError*>(renderError.get()) debugDescription] UTF8String]);
+                        break;
+                    }
+                }
+            }
+
+            CGImageRef target = _CGBitmapContextGetImage(drawContext);
+            priv->ownsContents = TRUE;
+            priv->savedContext = CGContextRetain(drawContext);
+            priv->contents = CGImageRetain(target);
+            break;
+        } while (tries < _kCALayerRenderAttempts);
+
+        if (!priv->contents) {
+            NSTraceError(TAG, @"Failed to render layer %@", self);
         }
     } else if (priv->contents) {
         priv->contentsSize.width = float(CGImageGetWidth(priv->contents));
@@ -1688,7 +1693,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 */
 - (CGColorRef)shadowColor {
     UNIMPLEMENTED();
-    return CGColorGetConstantColor((CFStringRef) @"BLACK");
+    return CGColorGetConstantColor(kCGColorBlack);
 }
 
 /**

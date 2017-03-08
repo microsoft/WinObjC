@@ -17,6 +17,7 @@
 #include <TestFramework.h>
 #import <Foundation/Foundation.h>
 #import <future>
+#include <thread>
 #include <pthread.h>
 
 static int counter = 0;
@@ -75,6 +76,39 @@ TEST(NSThread, Priority) {
 
     // Let the thread die.
     testController.stop = YES;
+}
+
+TEST(NSThread, ExternalCurrentThreadLeak) {
+    NSThread* current = nil;
+
+    std::thread t([&current]() {
+        // Calling |currentThread| when the underlying thread of execution was
+        // created outside of the NSThread APIs should create one on demand.
+        current = [NSThread currentThread];
+        EXPECT_EQ(1, [current retainCount]);
+
+        // Grab a strong reference to this thread in order to
+        // validate its retain count after exit.
+        [current retain];
+
+        // Another |currentThread| call shouldn't affect the retain count.
+        EXPECT_EQ(2, [[NSThread currentThread] retainCount]);
+        EXPECT_EQ(2, [current retainCount]);
+
+        // Sanity
+        EXPECT_OBJCEQ(current, [NSThread currentThread]);
+    });
+
+    t.join();
+
+    // Ensure the strong reference grabbed above is
+    // the only one remaining after thread exit.
+    EXPECT_EQ(1, [current retainCount]);
+
+    // We're on a different thread. |current| should no longer be the current thread.
+    EXPECT_OBJCNE(current, [NSThread currentThread]);
+
+    [current release];
 }
 
 TEST(pthread, StaticInitializer) {

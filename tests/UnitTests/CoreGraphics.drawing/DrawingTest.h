@@ -30,6 +30,7 @@ class DrawTest: public ::testing::Test {
 private:
     woc::unique_cf<CGContextRef> _context;
     CGRect _bounds;
+    void* _opaqueAutoreleasePool;
 
 public:
     virtual CFStringRef CreateAdditionalTestDescription();
@@ -37,9 +38,11 @@ public:
     virtual CGSize CanvasSize();
     virtual void SetUpContext();
 
+    virtual void SetUp();
     virtual void PreDraw();
     virtual void Draw();
     virtual void PostDraw();
+    virtual void TearDown();
 
     virtual void TestBody();
 

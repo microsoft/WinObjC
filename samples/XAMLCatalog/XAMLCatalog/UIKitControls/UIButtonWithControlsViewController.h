@@ -25,9 +25,12 @@
 
 @property (nonatomic, readonly) UISegmentedControl* segmentButtonType;
 
-@property (nonatomic, readonly) UISwitch* switchEnabled;
 @property (nonatomic, readonly) UISwitch* switchHighlighted;
+@property (nonatomic, readonly) UISwitch* switchEnabled;
 @property (nonatomic, readonly) UISwitch* switchSelected;
+
+@property (nonatomic, readonly) UISwitch* switchAdjustsImageWhenHighlighted;
+@property (nonatomic, readonly) UISwitch* switchAdjustsImageWhenDisabled;
 
 @property (nonatomic, readonly) UIControlState titleControlState;
 @property (nonatomic, readonly) TestEnabledUITextField* textTitleStateField;

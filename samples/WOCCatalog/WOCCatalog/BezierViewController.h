@@ -19,7 +19,9 @@
 @class WOCBezierPathView;
 
 @interface BezierViewController : UIViewController
-@property (strong, nonatomic) IBOutlet WOCBezierPathView *bezierPath1;
-@property (strong, nonatomic) IBOutlet WOCBezierPathView *bezierPath2;
-@property (strong, nonatomic) IBOutlet WOCBezierPathView *bezierPath3;
+@property (strong, nonatomic) IBOutlet WOCBezierPathView* bezierPath1;
+@property (strong, nonatomic) IBOutlet WOCBezierPathView* bezierPath2;
+@property (strong, nonatomic) IBOutlet WOCBezierPathView* bezierPath3;
+@property (strong, nonatomic) IBOutletCollection(WOCBezierPathView) NSArray<WOCBezierPathView*>* endCapViews;
+@property (strong, nonatomic) IBOutletCollection(WOCBezierPathView) NSArray<WOCBezierPathView*>* fillModeViews;
 @end

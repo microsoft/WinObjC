@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -25,6 +25,9 @@
 #import <GLKit/GLKitExport.h>
 #import <GLKit/GLKTexture.h>
 #import "NSLogging.h"
+#import "CGImageInternal.h"
+#import "CGDataProviderInternal.h"
+#import <Starboard/SmartTypes.h>
 
 static const wchar_t* TAG = L"GLKTexture";
 
@@ -276,15 +279,11 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
  @Status Interoperable
 */
 + (GLKTextureInfo*)textureWithContentsOfFile:(NSString*)fname options:(NSDictionary*)opts error:(NSError**)err {
-    CGDataProviderRef provider = CGDataProviderCreateWithFilename([fname UTF8String]);
-    CGImageRef img = CGImageCreateWithPNGDataProvider(provider, NULL, NO, kCGRenderingIntentDefault);
+    woc::StrongCF<CGImageRef> image{ woc::MakeStrongCF(
+        _CGImageCreateFromFileWithWICFormat(static_cast<CFStringRef>(fname), GUID_WICPixelFormat32bppPRGBA)) };
+    RETURN_NULL_IF(!image);
 
-    GLKTextureInfo* res = [self textureWithCGImage:img options:opts error:err];
-
-    CGImageRelease(img);
-    CGDataProviderRelease(provider);
-
-    return res;
+    return [self textureWithCGImage:image options:opts error:err];
 }
 
 /**
@@ -298,7 +297,11 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
 /**
  @Status Interoperable
 */
-+ (GLKTextureInfo*)textureWithCGImage:(CGImageRef)img options:(NSDictionary*)opts error:(NSError**)err {
++ (GLKTextureInfo*)textureWithCGImage:(CGImageRef)image options:(NSDictionary*)opts error:(NSError**)err {
+    woc::StrongCF<CGImageRef> img = { woc::MakeStrongCF(_CGImageCreateCopyWithPixelFormat(image, GUID_WICPixelFormat32bppPRGBA)) };
+
+    RETURN_NULL_IF(!img);
+
     size_t w = CGImageGetWidth(img);
     size_t h = CGImageGetHeight(img);
     size_t bpp = CGImageGetBitsPerPixel(img);
@@ -308,10 +311,8 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
         NSTraceWarning(TAG, @"WARNING - Image (%dx%d) - expected row size %d, got row size %d\n", w, h, expectedRowSize, rowSize);
     }
 
-    CGDataProviderRef provider = CGImageGetDataProvider(img);
-    NSData* data = (id)CGDataProviderCopyData(provider);
-    [data autorelease];
-    auto bytesIn = (unsigned char*)[data bytes];
+    unsigned char* bytesIn = static_cast<unsigned char*>(const_cast<void*>(_CGDataProviderGetData(CGImageGetDataProvider(img))));
+    RETURN_NULL_IF(!bytesIn);
 
     if (getOpt(opts, GLKTextureLoaderOriginBottomLeft)) {
         swapRows(bytesIn, rowSize, h);
@@ -391,15 +392,9 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
  @Status Interoperable
 */
 + (GLKTextureInfo*)cubeMapWithContentsOfFile:(NSString*)fname options:(NSDictionary*)opts error:(NSError**)err {
-    CGDataProviderRef provider = CGDataProviderCreateWithFilename([fname UTF8String]);
-    if (!provider) {
-        return nil;
-    }
-    CGImageRef img = CGImageCreateWithPNGDataProvider(provider, NULL, NO, kCGRenderingIntentDefault);
-    if (!img) {
-        CGDataProviderRelease(provider);
-        return nil;
-    }
+    woc::StrongCF<CGImageRef> img = { woc::MakeStrongCF(
+        _CGImageCreateFromFileWithWICFormat(static_cast<CFStringRef>(fname), GUID_WICPixelFormat32bppPRGBA)) };
+    RETURN_NULL_IF(!img);
 
     size_t w = CGImageGetWidth(img);
     size_t h = CGImageGetHeight(img);
@@ -412,16 +407,11 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
 
     if (h != 6 * w) {
         NSTraceError(TAG, @"ERROR - Unexpected cube map format, expected 6 square textures aligned vertically.");
-        CGImageRelease(img);
-        CGDataProviderRelease(provider);
         return nil;
     }
 
-    CGDataProviderRelease(provider);
-    provider = CGImageGetDataProvider(img);
-    NSData* data = (id)CGDataProviderCopyData(provider);
-    [data autorelease];
-    auto bytesIn = (unsigned char*)[data bytes];
+    unsigned char* bytesIn = static_cast<unsigned char*>(const_cast<void*>(_CGDataProviderGetData(CGImageGetDataProvider(img))));
+    RETURN_NULL_IF(!bytesIn);
 
     if (getOpt(opts, GLKTextureLoaderOriginBottomLeft)) {
         swapRows(bytesIn, rowSize, h);
@@ -445,7 +435,6 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
     GLint fmt, type;
     GLKTextureInfoAlphaState as;
     if (!getBitmapFormat(fmt, type, as, bpp)) {
-        CGImageRelease(img);
         return nil;
     }
 
@@ -502,7 +491,6 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
     if (deleteBytes) {
         delete[] bytes;
     }
-    CGImageRelease(img);
     return [[GLKTextureInfo alloc] initWith:tex target:GL_TEXTURE_2D width:w height:sideh alphaState:as];
 }
 
@@ -535,25 +523,20 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
 
     GLKTextureInfoAlphaState as;
     for (NSString* fn in fnames) {
-        CGDataProviderRef provider = CGDataProviderCreateWithFilename([fn UTF8String]);
-        if (!provider) {
+        woc::StrongCF<CGImageRef> img = { woc::MakeStrongCF(
+            _CGImageCreateFromFileWithWICFormat(static_cast<CFStringRef>(fn), GUID_WICPixelFormat32bppPRGBA)) };
+        if (!img) {
             NSTraceWarning(TAG, @"Unable to open cube side texture %@", fn);
             curSide++;
             continue;
         }
-        CGImageRef img = CGImageCreateWithPNGDataProvider(provider, NULL, NO, kCGRenderingIntentDefault);
-        if (!img) {
-            CGDataProviderRelease(provider);
-            NSTraceWarning(TAG, @"Unable to create image from cube side texture %@", fn);
+
+        unsigned char* bytesIn = static_cast<unsigned char*>(const_cast<void*>(_CGDataProviderGetData(CGImageGetDataProvider(img))));
+        if (!bytesIn) {
+            NSTraceWarning(TAG, @"Unable to obtain bytes of texture %@", fn);
             curSide++;
             continue;
         }
-
-        CGDataProviderRelease(provider);
-        provider = CGImageGetDataProvider(img);
-        NSData* data = (id)CGDataProviderCopyData(provider);
-        [data autorelease];
-        auto bytesIn = (unsigned char*)[data bytes];
 
         size_t w = CGImageGetWidth(img);
         size_t h = CGImageGetHeight(img);
@@ -563,7 +546,6 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
         if (w != h || rowSize != expectedRowSize) {
             NSTraceWarning(TAG, @"WARNING - Image %@ (%dx%d) - is in an invalid format.", fn, w, h);
             curSide++;
-            CGImageRelease(img);
             continue;
         }
 
@@ -581,14 +563,12 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
             if ((w != sideW) || (h != sideH) || (imgBpp != bpp)) {
                 NSTraceWarning(TAG, @"WARNING - Image %@ (%dx%d) - does not match existing format.", fn, w, h);
                 curSide++;
-                CGImageRelease(img);
                 continue;
             }
         }
 
         GLint fmt, type;
         if (!getBitmapFormat(fmt, type, as, bpp)) {
-            CGImageRelease(img);
             return nil;
         }
 
@@ -637,7 +617,6 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
         if (deleteBytes) {
             delete[] bytes;
         }
-        CGImageRelease(img);
         curSide++;
     }
     if (!fmtInited) {

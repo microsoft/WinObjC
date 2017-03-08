@@ -1,4 +1,4 @@
-//******************************************************************************
+﻿//******************************************************************************
 //
 // Copyright (c) Microsoft. All rights reserved.
 //
@@ -33,58 +33,88 @@ NSMutableAttributedString* getAttributedString(NSString* str) {
 
 TEST(CTLine, CTLineGetStringIndexForPosition) {
     CFAttributedStringRef string = (__bridge CFAttributedStringRef)getAttributedString(@"hello");
-    CTLineRef line = CTLineCreateWithAttributedString(string);
+    auto line = woc::MakeAutoCF<CTLineRef>(CTLineCreateWithAttributedString(string));
 
     // testing with position < 0
     CGPoint position = { -1, 0 };
     CFIndex index = CTLineGetStringIndexForPosition(line, position);
-    EXPECT_EQ_MSG(index, 0, "Failed: Wrong Index for given position");
+    EXPECT_EQ(index, 0);
 
     // testing with position > length of line.
     position = { 873214, 0 };
     index = CTLineGetStringIndexForPosition(line, position);
-    EXPECT_EQ_MSG(index, CFAttributedStringGetLength(string), "Failed: Wrong Index for given position");
+    EXPECT_EQ(index, CFAttributedStringGetLength(string));
 
     position = { 23, 0 };
     index = CTLineGetStringIndexForPosition(line, position);
-    EXPECT_EQ_MSG(index, 1, "Failed: Wrong Index for given position");
+    EXPECT_EQ(index, 1);
 
     position = { 44, 0 };
     index = CTLineGetStringIndexForPosition(line, position);
-    EXPECT_EQ_MSG(index, 2, "Failed: Wrong Index for given position");
+    EXPECT_EQ(index, 2);
+
+    string = (__bridge CFAttributedStringRef)getAttributedString(@"وهذا هو نص عينة للتحقق من الصحة");
+    line = woc::MakeAutoCF<CTLineRef>(CTLineCreateWithAttributedString(string));
+
+    // testing with position < 0
+    position = { -1, 0 };
+    index = CTLineGetStringIndexForPosition(line, position);
+    EXPECT_EQ(index, CFAttributedStringGetLength(string));
+
+    // testing with position > length of line.
+    position = { 873214, 0 };
+    index = CTLineGetStringIndexForPosition(line, position);
+    EXPECT_EQ(index, 0);
+
+    position = { 50, 0 };
+    index = CTLineGetStringIndexForPosition(line, position);
+    EXPECT_EQ(index, 29);
+
+    position = { 100, 0 };
+    index = CTLineGetStringIndexForPosition(line, position);
+    EXPECT_EQ(index, 27);
 }
 
 TEST(CTLine, CTLineGetOffsetForStringIndex) {
     const double errorDelta = 1;
     CFAttributedStringRef string = (__bridge CFAttributedStringRef)getAttributedString(@"hello");
-    CTLineRef line = CTLineCreateWithAttributedString(string);
+    auto line = woc::MakeAutoCF<CTLineRef>(CTLineCreateWithAttributedString(string));
 
     CGFloat secOffset;
     // testing with index < 0
     CGFloat offset = CTLineGetOffsetForStringIndex(line, -1, &secOffset);
-    EXPECT_EQ_MSG(offset, 0, "Failed: Wrong offset for given index");
+    EXPECT_EQ(offset, 0);
 
     // testing with index = 0
     offset = CTLineGetOffsetForStringIndex(line, 0, &secOffset);
-    EXPECT_EQ_MSG(offset, 0, "Failed: Wrong offset for given index");
+    EXPECT_EQ(offset, 0);
 
     // testing with index > last index.
     offset = CTLineGetOffsetForStringIndex(line, 928347, &secOffset);
-    EXPECT_GT_MSG(offset, 58, "Failed: Wrong offset for given index");
+    EXPECT_GT(offset, 58);
 
     offset = CTLineGetOffsetForStringIndex(line, 2, &secOffset);
-    EXPECT_NEAR_MSG(43.55, offset, errorDelta, "Failed: Wrong offset for given index");
+    EXPECT_NEAR(43.55, offset, errorDelta);
 
     offset = CTLineGetOffsetForStringIndex(line, 4, &secOffset);
-    EXPECT_NEAR_MSG(62.93, offset, errorDelta, "Failed: Wrong offset for given index");
+    EXPECT_NEAR(62.93, offset, errorDelta);
 
     // passing secondaryOffset reference as NULL
-    offset = CTLineGetOffsetForStringIndex(line, 4, NULL);
-    EXPECT_NEAR_MSG(62.93, offset, errorDelta, "Failed: Wrong offset for given index");
+    offset = CTLineGetOffsetForStringIndex(line, 4, nullptr);
+    EXPECT_NEAR(62.93, offset, errorDelta);
 
     // comparing secondaryOffset and offset.
     offset = CTLineGetOffsetForStringIndex(line, 4, &secOffset);
-    EXPECT_EQ_MSG(offset, secOffset, "Failed: Wrong offset for given index");
+    EXPECT_EQ(offset, secOffset);
+
+    string = (__bridge CFAttributedStringRef)getAttributedString(@"وهذا هو نص عينة للتحقق من الصحة.");
+    line = woc::MakeAutoCF<CTLineRef>(CTLineCreateWithAttributedString(string));
+
+    offset = CTLineGetOffsetForStringIndex(line, 5, nullptr);
+    EXPECT_NEAR(509.04, offset, errorDelta);
+
+    offset = CTLineGetOffsetForStringIndex(line, 14, nullptr);
+    EXPECT_NEAR(323.45, offset, errorDelta);
 }
 
 TEST(CTLine, CTLineCreateWithAttributedString) {

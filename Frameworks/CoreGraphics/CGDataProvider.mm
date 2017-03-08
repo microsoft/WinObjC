@@ -363,7 +363,7 @@ CGDataProviderRef CGDataProviderCreateSequential(void* info, const CGDataProvide
 }
 
 /**
-# @Status Interoperable
+ @Status Interoperable
 */
 CGDataProviderRef CGDataProviderCreateWithData(void* info, const void* data, size_t size, CGDataProviderReleaseDataCallback releaseData) {
     return data ? __CGDataProvider::CreateInstance(nullptr, info, data, size, releaseData) : nullptr;
