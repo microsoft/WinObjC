@@ -1070,10 +1070,6 @@ void CGContextReplacePathWithStrokedPath(CGContextRef context) {
 
     auto& state = context->CurrentGState();
 
-// TODO GH#xxxx When CGPathCreateCopyByStrokingPath is no longer stubbed, remove the diagnostic suppression.
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-
     woc::unique_cf<CGPathRef> newPath{
         CGPathCreateCopyByStrokingPath(context->Path(),
                                        nullptr, // The points in the path are already transformed; do not transform again!
@@ -1082,8 +1078,6 @@ void CGContextReplacePathWithStrokedPath(CGContextRef context) {
                                        (CGLineJoin)state.strokeProperties.lineJoin,
                                        state.strokeProperties.miterLimit)
     };
-
-#pragma clang diagnostic pop
 
     woc::unique_cf<CGMutablePathRef> newMutablePath{ CGPathCreateMutableCopy(newPath.get()) };
     context->SetPath(newMutablePath.get());

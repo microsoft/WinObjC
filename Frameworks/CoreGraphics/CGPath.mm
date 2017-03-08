@@ -273,6 +273,44 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
         SetLastTransform(transform);
         return S_OK;
     }
+
+    HRESULT WidenByStroking(
+        CGPathRef path, CGFloat lineWidth, CGLineCap lineCap, CGLineJoin lineJoin, CGFloat miterLimit, const CGAffineTransform* transform) {
+        RETURN_IF_FAILED(path->ClosePath());
+        ComPtr<ID2D1StrokeStyle> newStrokeStyle = NULL;
+
+        ComPtr<ID2D1Factory> factory;
+        pathGeometry->GetFactory(&factory);
+
+        ComPtr<ID2D1PathGeometry> newPath;
+        ComPtr<ID2D1GeometrySink> newBackingSink;
+        RETURN_IF_FAILED(factory->CreatePathGeometry(&newPath));
+        RETURN_IF_FAILED(newPath->Open(&newBackingSink));
+
+        RETURN_IF_FAILED(factory->CreateStrokeStyle(D2D1::StrokeStyleProperties((D2D1_CAP_STYLE)lineCap,
+                                                                                (D2D1_CAP_STYLE)lineCap,
+                                                                                (D2D1_CAP_STYLE)lineCap,
+                                                                                (D2D1_LINE_JOIN)lineJoin,
+                                                                                lineWidth,
+                                                                                D2D1_DASH_STYLE_SOLID,
+                                                                                0),
+                                                    nullptr,
+                                                    0,
+                                                    &newStrokeStyle));
+
+        D2D1_MATRIX_3X2_F d2dTransform = D2D1::IdentityMatrix();
+        if (transform) {
+            d2dTransform = __CGAffineTransformToD2D_F(*transform);
+        }
+        RETURN_IF_FAILED(path->GetPathGeometry()->Widen(lineWidth, newStrokeStyle.Get(), d2dTransform, newBackingSink.Get()));
+
+        newBackingSink->SetFillMode(D2D1_FILL_MODE_WINDING);
+
+        pathGeometry = newPath;
+        geometrySink = Make<_CGPathCustomSink>(newBackingSink.Get());
+
+        return S_OK;
+    }
 };
 
 HRESULT _CGPathGetGeometryWithFillMode(CGPathRef path, CGPathDrawingMode fillMode, ID2D1Geometry** pNewGeometry) {
@@ -1022,13 +1060,17 @@ CGPathRef CGPathCreateCopyByDashingPath(
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes Creates a mutable copy. This API will approximate curves using straight line segments. This is simply a consequence
+        of using the Widen API.
 */
 CGPathRef CGPathCreateCopyByStrokingPath(
     CGPathRef path, const CGAffineTransform* transform, CGFloat lineWidth, CGLineCap lineCap, CGLineJoin lineJoin, CGFloat miterLimit) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    RETURN_NULL_IF(!path);
+    CGPathRef newPath = CGPathCreateMutable();
+    FAIL_FAST_IF_FAILED(newPath->WidenByStroking(path, lineWidth, lineCap, lineJoin, miterLimit, transform));
+
+    return newPath;
 }
 
 /**
