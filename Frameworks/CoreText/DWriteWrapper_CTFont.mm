@@ -225,11 +225,14 @@ static void __FilterFontsByTraits(const std::vector<ComPtr<IDWriteFont>>& fonts,
 static HRESULT __FilterFontsByStyleName(const std::vector<ComPtr<IDWriteFont>>& fonts,
                                         CFStringRef styleName,
                                         std::vector<ComPtr<IDWriteFont>>& matchingFonts) {
+    CFIndex styleLength = CFStringGetLength(styleName);
     for (auto& font : fonts) {
         ComPtr<IDWriteLocalizedStrings> dwriteFontName;
         RETURN_IF_FAILED(font->GetFaceNames(&dwriteFontName));
         CFStringRef name = _CFStringFromLocalizedString(dwriteFontName.Get());
-        if (CFStringCompare(name, styleName, kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
+        CFIndex fontStyleLength = CFStringGetLength(name);
+        if (fontStyleLength == styleLength &&
+            CFStringFindWithOptions(name, styleName, { 0, styleLength }, kCFCompareCaseInsensitive, nullptr)) {
             matchingFonts.emplace_back(font);
         }
     }
@@ -240,6 +243,7 @@ static HRESULT __FilterFontsByStyleName(const std::vector<ComPtr<IDWriteFont>>& 
 static HRESULT __FilterFontsByFamilyName(const std::vector<ComPtr<IDWriteFont>>& fonts,
                                          CFStringRef familyName,
                                          std::vector<ComPtr<IDWriteFont>>& matchingFonts) {
+    CFIndex familyNameLength = CFStringGetLength(familyName);
     for (auto& font : fonts) {
         // Need to create font family to get correct name
         ComPtr<IDWriteFontFamily> family;
@@ -247,7 +251,9 @@ static HRESULT __FilterFontsByFamilyName(const std::vector<ComPtr<IDWriteFont>>&
         ComPtr<IDWriteLocalizedStrings> dwriteFamilyName;
         RETURN_IF_FAILED(family->GetFamilyNames(&dwriteFamilyName));
         CFStringRef fontFamilyName = _CFStringFromLocalizedString(dwriteFamilyName.Get());
-        if (CFStringCompare(familyName, fontFamilyName, kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
+        CFIndex fontFamilyNameLength = CFStringGetLength(fontFamilyName);
+        if (familyNameLength == fontFamilyNameLength &&
+            CFStringFindWithOptions(familyName, fontFamilyName, { 0, familyNameLength }, kCFCompareCaseInsensitive, nullptr)) {
             matchingFonts.emplace_back(font);
         }
     }
@@ -259,13 +265,16 @@ static HRESULT __FilterFontsByInformationalString(const std::vector<ComPtr<IDWri
                                                   CFStringRef name,
                                                   DWRITE_INFORMATIONAL_STRING_ID id,
                                                   std::vector<ComPtr<IDWriteFont>>& matchingFonts) {
+    CFIndex nameLength = CFStringGetLength(name);
     for (auto& font : fonts) {
         BOOL exists;
         ComPtr<IDWriteLocalizedStrings> dwriteString;
         RETURN_IF_FAILED(font->GetInformationalStrings(id, &dwriteString, &exists));
         if (exists) {
             CFStringRef fontName = _CFStringFromLocalizedString(dwriteString.Get());
-            if (CFStringCompare(name, fontName, kCFCompareCaseInsensitive) == kCFCompareEqualTo) {
+            CFIndex fontNameLength = CFStringGetLength(fontName);
+            if (nameLength == fontNameLength &&
+                CFStringFindWithOptions(name, fontName, { 0, nameLength }, kCFCompareCaseInsensitive, nullptr)) {
                 matchingFonts.emplace_back(font);
             }
         }
