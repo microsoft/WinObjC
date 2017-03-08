@@ -473,10 +473,10 @@ public:
     if (CGSizeEqualToSize(layoutProperties->_intrinsicContentSize, newContentSize)) {
         if (DEBUG_AUTO_LAYOUT_LIGHT) {
             TraceVerbose(TAG, L"autoLayoutInvalidateContentSize: Size {%f, %f} didn't change; no need to revalidate constraints; no need to re-layout %hs(0x%p).",
-                object_getClassName(self),
-                self,
                 newContentSize.width,
-                newContentSize.height);
+                newContentSize.height,
+                object_getClassName(self),
+                self);
         }
 
         // No more work left to be done; the size didn't actually change.
@@ -484,12 +484,12 @@ public:
     } else {
         if (DEBUG_AUTO_LAYOUT_LIGHT) {
             TraceVerbose(TAG, L"autoLayoutInvalidateContentSize: intrinsicContentSize changed from {%f, %f} to {%f, %f}; need to revalidate constraints and re-layout %hs(0x%p).",
-                object_getClassName(self),
-                self,
                 newContentSize.width,
                 newContentSize.height,
                 layoutProperties->_intrinsicContentSize.width,
-                layoutProperties->_intrinsicContentSize.height);
+                layoutProperties->_intrinsicContentSize.height,
+                object_getClassName(self),
+                self);
         }
 
         // Store the new intrinsicContentSize
@@ -610,6 +610,12 @@ public:
 
 - (void)autoLayoutUpdateConstraints {
     AutoLayoutProperties* layoutProperties = self._autoLayoutProperties;
+
+    if (DEBUG_AUTO_LAYOUT_LIGHT) {
+        TraceVerbose(TAG, L"autoLayoutUpdateConstraints: %hs(0x%p).",
+            object_getClassName(self),
+            self);
+    }
 
     if (![layoutProperties->_associatedConstraints count]) {
         return;

@@ -39,14 +39,12 @@ using namespace Microsoft::WRL;
 
 static const wchar_t* TAG = L"CGImage";
 
-// TODO #1124: remove old code
-#pragma region OLD_CODE
+// This is used by XamlCompositor to flush the DisplayTexture cache.
+// TODO GH#2098 look at where we're using the image cache and what we can do to avoid it.
 static std::vector<CGImageDestructionListener> _imageDestructionListeners;
-COREGRAPHICS_EXPORT void CGImageAddDestructionListener(CGImageDestructionListener listener) {
+COREGRAPHICS_EXPORT void _CGImageAddDestructionListener(CGImageDestructionListener listener) {
     _imageDestructionListeners.push_back(listener);
 }
-
-#pragma endregion OLD_CODE
 
 #pragma region CGImageImplementation
 
@@ -225,6 +223,12 @@ struct __CGImage : CoreFoundation::CppBase<__CGImage> {
         _impl.renderingIntent = intent;
         return *this;
     }
+
+    ~__CGImage() {
+        for (auto listener : _imageDestructionListeners) {
+            listener(this);
+        }
+    }
 };
 
 #pragma endregion CGImageImplementation
@@ -362,7 +366,9 @@ CGDataProviderRef CGImageGetDataProvider(CGImageRef img) {
     RETURN_NULL_IF_FAILED(img->ImageSource()->CopyPixels(nullptr, stride, size, buffer.get()));
 
     CGDataProviderRef dataProvider =
-        CGDataProviderCreateWithData(nullptr, buffer.release(), size, [](void* info, const void* data, size_t size) { IwFree(const_cast<void*>(data)); });
+        CGDataProviderCreateWithData(nullptr, buffer.release(), size, [](void* info, const void* data, size_t size) {
+            IwFree(const_cast<void*>(data));
+        });
     CFAutorelease(dataProvider);
     return dataProvider;
 }
@@ -646,6 +652,12 @@ CGImageRef _CGImageCreateCopyWithPixelFormat(CGImageRef image, WICPixelFormatGUI
     return imageRef;
 }
 
+CGImageRef _CGImageCreateFromDataProvider(CGDataProviderRef provider) {
+    RETURN_NULL_IF(!provider);
+    unsigned char* dataBytes = static_cast<unsigned char*>(const_cast<void*>(_CGDataProviderGetData(provider)));
+    return _CGImageGetImageFromData(dataBytes, _CGDataProviderGetSize(provider));
+}
+
 CGImageRef _CGImageGetImageFromData(void* data, int length) {
     return _CGImageLoadImageWithWICDecoder(GUID_NULL, data, length);
 }
@@ -710,6 +722,36 @@ NSData* _CGImageRepresentation(CGImageRef image, REFGUID guid, float quality) {
     return nil;
 }
 
+size_t _CGImageImputeBitsPerPixelFromFormat(CGColorSpaceRef colorSpace, size_t bitsPerComponent, CGBitmapInfo bitmapInfo) {
+    unsigned int alphaInfo = bitmapInfo & kCGBitmapAlphaInfoMask;
+    unsigned int byteOrder = bitmapInfo & kCGBitmapByteOrderMask;
+
+    // Try byte order first: The user can specify 32 or 16 directly.
+    switch (byteOrder) {
+        case kCGBitmapByteOrder32Little:
+        case kCGBitmapByteOrder32Big:
+            return 32;
+        case kCGBitmapByteOrder16Little:
+        case kCGBitmapByteOrder16Big:
+            return 16;
+    }
+
+    // Otherwise, try to figure out how many components there are.
+    size_t nComponents = CGColorSpaceGetNumberOfComponents(colorSpace);
+    switch (alphaInfo) {
+        case kCGImageAlphaNoneSkipFirst:
+        case kCGImageAlphaPremultipliedFirst:
+        case kCGImageAlphaFirst:
+        case kCGImageAlphaNoneSkipLast:
+        case kCGImageAlphaPremultipliedLast:
+        case kCGImageAlphaLast:
+            nComponents += 1;
+            break;
+    }
+
+    return (bitsPerComponent * nComponents);
+}
+
 // CG packed format key
 //  |Color  |bits/px|CGBitmapInfo   |
 //  |-------|-------|---------------|
@@ -719,7 +761,6 @@ NSData* _CGImageRepresentation(CGImageRef image, REFGUID guid, float quality) {
 
 HRESULT _CGImageGetWICPixelFormatFromImageProperties(
     unsigned int bitsPerComponent, unsigned int bitsPerPixel, CGColorSpaceRef colorSpace, CGBitmapInfo bitmapInfo, GUID* pixelFormat) {
-
     // clang-format off
     static std::map<uint32_t, WICPixelFormatGUID> s_CGWICFormatMap{
         { CG_FORMAT_KEY(kCGColorSpaceModelRGB       , 24, kCGBitmapByteOrderDefault,  kCGImageAlphaNone),               GUID_WICPixelFormat24bppRGB       },
@@ -766,23 +807,13 @@ HRESULT _CGImageGetWICPixelFormatFromImageProperties(
 
     RETURN_HR_IF(E_POINTER, !pixelFormat);
 
-    CGColorSpaceModel colorSpaceModel = CGColorSpaceGetModel(colorSpace);
-
-    unsigned int alphaInfo = bitmapInfo & kCGBitmapAlphaInfoMask;
-    unsigned int byteOrder = bitmapInfo & kCGBitmapByteOrderMask;
-    unsigned int formatImputedBpp = 0;
-    switch (byteOrder) {
-        case kCGBitmapByteOrder32Little:
-        case kCGBitmapByteOrder32Big:
-            formatImputedBpp = 32;
-            break;
-        case kCGBitmapByteOrder16Little:
-        case kCGBitmapByteOrder16Big:
-            formatImputedBpp = 16;
-            break;
+    size_t formatImputedBpp = _CGImageImputeBitsPerPixelFromFormat(colorSpace, bitsPerComponent, bitmapInfo);
+    if (bitsPerPixel == 0) {
+        bitsPerPixel = formatImputedBpp;
     }
 
-    if (formatImputedBpp == 0 || formatImputedBpp == bitsPerPixel) {
+    if (formatImputedBpp == bitsPerPixel) {
+        CGColorSpaceModel colorSpaceModel = CGColorSpaceGetModel(colorSpace);
         auto found = s_CGWICFormatMap.find(CG_FORMAT_KEY(colorSpaceModel, bitsPerPixel, bitmapInfo, 0));
         if (found != s_CGWICFormatMap.end()) {
             *pixelFormat = found->second;
@@ -901,6 +932,21 @@ HRESULT _CGImageConvertToMaskCompatibleWICBitmap(CGImageRef image, IWICBitmap** 
     }
 
     return _CGImageGetWICImageSource(convertedImage.get(), pBitmap);
+}
+
+/**
+* Creates an image from file, if the image is not in the requested format, it is converted to
+* the requested format and returned.
+*/
+CGImageRef _CGImageCreateFromFileWithWICFormat(CFStringRef filename, WICPixelFormatGUID format) {
+    RETURN_NULL_IF(!filename);
+
+    woc::StrongCF<CFURLRef> url{ woc::MakeStrongCF(CFURLCreateWithFileSystemPath(nullptr, filename, kCFURLWindowsPathStyle, NO)) };
+    woc::StrongCF<CGDataProviderRef> provider{ woc::MakeStrongCF(CGDataProviderCreateWithURL(url)) };
+
+    woc::StrongCF<CGImageRef> image{ woc::MakeStrongCF(_CGImageCreateFromDataProvider(provider)) };
+
+    return _CGImageCreateCopyWithPixelFormat(image, format);
 }
 
 #pragma endregion WIC_HELPERS

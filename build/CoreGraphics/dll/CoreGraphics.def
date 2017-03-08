@@ -34,7 +34,7 @@ LIBRARY CoreGraphics
         ; private exports below
         _CGBitmapContextCreateWithRenderTarget
         _CGBitmapContextCreateWithFormat
-        CGBitmapContextGetImage
+        _CGBitmapContextGetImage
 
         ; DWriteWrapper Additions
         _CFStringFromLocalizedString
@@ -71,8 +71,6 @@ LIBRARY CoreGraphics
         CGColorGetNumberOfComponents
         CGColorGetPattern
         CGColorGetTypeID
-
-        ; private exports below
         CGColorGetConstantColor
 
         ; CGColorSpace Reference.mm
@@ -230,13 +228,12 @@ LIBRARY CoreGraphics
         CGContextConvertRectToDeviceSpace
         CGContextConvertRectToUserSpace
 
+        ; Public extension APIs
+        CGContextIwGetError
+        CGContextIwEnableEnhancedErrorHandling
+
         ; private exports below
-        CGContextClearToColor
         _CGContextDrawImageRect
-        CGContextGetBlendMode
-        CGContextIsDirty
-        CGContextReleaseLock
-        CGContextSetDirty
         _CGContextDrawGlyphRuns
         _CGContextSetShadowProjectionTransform
         _CGContextCreateWithD2DRenderTarget
@@ -381,6 +378,7 @@ LIBRARY CoreGraphics
         ; CGImage private exports
         _CGImageLoadImageWithWICDecoder
         _CGImageGetImageFromData
+        _CGImageCreateFromDataProvider
         _CGImagePNGRepresentation
         _CGImageJPEGRepresentation
         _CGImageRepresentation
@@ -389,9 +387,10 @@ LIBRARY CoreGraphics
         _CGImageCreateCopyWithPixelFormat
         _CGImageGetRawBytes
         _CGImageGetDisplayTexture
+        _CGImageCreateFromFileWithWICFormat
 
         ; private exports below
-        CGImageAddDestructionListener
+        _CGImageAddDestructionListener
 
         ; CGLayer.mm
         CGLayerCreateWithContext
@@ -447,7 +446,7 @@ LIBRARY CoreGraphics
         CGPatternRelease
 
         ; private exports below
-        CGPatternCreateFromImage
+        _CGPatternCreateFromImage
 
         ; CGPDFArray.mm
         CGPDFArrayGetArray

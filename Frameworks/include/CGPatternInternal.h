@@ -57,3 +57,6 @@ CGRect _CGPatternGetFinalPatternSize(CGPatternRef pattern);
 * if it's false then we have a stencil pattern does not have inherent color.
 */
 bool _CGPatternIsColored(CGPatternRef pattern);
+
+// Starboard-only:
+COREGRAPHICS_EXPORT CGPatternRef _CGPatternCreateFromImage(CGImageRef img); // TODO: need to move out this maybe to UIKit ???

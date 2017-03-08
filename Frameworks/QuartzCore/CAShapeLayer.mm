@@ -14,131 +14,78 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "QuartzCore/CALayer.h"
-#include "CALayerInternal.h"
-#include "CoreGraphics/CGContext.h"
-#include "Foundation/NSString.h"
-#include "CoreGraphics/CGPath.h"
-#include "CoreGraphics/CGImage.h"
-#include "CGPathInternal.h"
-#include "CGContextInternal.h"
-#include "QuartzCore/CAShapeLayer.h"
+#import <Starboard/SmartTypes.h>
+#import <CoreGraphics/CoreGraphics.h>
+#import <QuartzCore/CAShapeLayer.h>
 
 NSString* const kCAFillRuleNonZero = @"kCAFillRuleNonZero";
 NSString* const kCAFillRuleEvenOdd = @"kCAFillRuleEvenOdd";
+
 NSString* const kCALineJoinMiter = @"kCALineJoinMiter";
 NSString* const kCALineJoinRound = @"kCALineJoinRound";
 NSString* const kCALineJoinBevel = @"kCALineJoinBevel";
+
 NSString* const kCALineCapButt = @"kCALineCapButt";
 NSString* const kCALineCapRound = @"kCALineCapRound";
 NSString* const kCALineCapSquare = @"kCALineCapSquare";
 
-CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float scale);
+@interface CAShapeLayer () {
+    woc::StrongCF<CGPathRef> _path;
+    woc::StrongCF<CGColorRef> _strokeColor;
+    woc::StrongCF<CGColorRef> _fillColor;
 
-@implementation CAShapeLayer {
-    CGPathRef _path;
+    CGPathDrawingMode _fillMode;
+    CGLineCap _lineCap;
     float _lineWidth;
-    CGColorRef _strokeColor, _fillColor;
-    CALayer* _shapeImage;
-    BOOL _needsRender;
+}
+@end
+
+@implementation CAShapeLayer
+- (instancetype)init {
+    if (self = [super init]) {
+        _fillColor = CGColorGetConstantColor(kCGColorBlack);
+        _lineWidth = 1.0f;
+        _fillMode = kCGPathFill;
+        _lineCap = kCGLineCapButt;
+    }
+
+    return self;
 }
 
-/**
- @Status Interoperable
- @Public No
- @Notes CALayerDelegate informal protocol.
-*/
-- (id<CAAction>)actionForLayer:(CALayer*)layer forKey:(NSString*)key {
-    if (layer == _shapeImage) {
-        //  We do not want any animations on our shape bitmap sublayer
-        return (id<CAAction>)[NSNull null];
-    }
-
-    return nil;
-}
-
-/**
- @Status Interoperable
- @Public No
-*/
-- (void)layoutSublayers {
-    //  Performed in layoutSublayers because we need to reposition _shapeImage
-    if (_needsRender == NO) {
+- (void)drawInContext:(CGContextRef)context {
+    if (!_path) {
         return;
     }
 
-    if (_path == nil) {
-        _shapeImage.contents = nil;
-        return;
-    }
-
-    CGRect bbox = CGPathGetBoundingBox(_path);
-    if (bbox.size.width == 0 || bbox.size.height == 0) {
-        _shapeImage.contents = nil;
-        return;
-    }
-
-    bbox.size.width += _lineWidth * 2.0f;
-    bbox.size.height += _lineWidth * 2.0f;
-    bbox.origin.x -= _lineWidth;
-    bbox.origin.y -= _lineWidth;
-
-    bbox = CGRectStandardize(bbox);
-    bbox = CGRectIntegral(bbox);
-
-    float scale = _shapeImage.contentsScale;
-    int width = (int)(bbox.size.width * scale);
-    int height = (int)(bbox.size.height * scale);
-
-    CGContextRef drawContext = CreateLayerContentsBitmapContext32(width, height, scale);
-
-    CGContextTranslateCTM(drawContext, 0, height);
-    if (scale != 1.0f) {
-        CGContextScaleCTM(drawContext, scale, scale);
-    }
-
-    CGContextScaleCTM(drawContext, 1.0f, -1.0f);
-    CGContextTranslateCTM(drawContext, -bbox.origin.x, -bbox.origin.y);
-
-    _shapeImage.position = bbox.origin;
-
-    // Set the sublayer's bounds so it's visible
-    _shapeImage.bounds = self.bounds;
-
-    if (_fillColor) {
-        CGContextAddPath(drawContext, _path);
-        CGContextSetFillColorWithColor(drawContext, _fillColor);
-        CGContextEOFillPath(drawContext);
-    }
+    CGPathDrawingMode drawMode = 0;
 
     if (_strokeColor) {
-        CGContextAddPath(drawContext, _path);
-        CGContextSetStrokeColorWithColor(drawContext, _strokeColor);
-        CGContextSetLineWidth(drawContext, _lineWidth);
-        CGContextStrokePath(drawContext);
+        CGContextSetStrokeColorWithColor(context, _strokeColor);
+        CGContextSetLineWidth(context, _lineWidth);
+        drawMode = kCGPathStroke;
     }
 
-    CGImageRef target = CGBitmapContextGetImage(drawContext);
+    if (_fillColor) {
+        CGContextSetFillColorWithColor(context, _fillColor);
+        drawMode |= _fillMode;
+    }
 
-    _shapeImage.contents = (id)target;
-
-    CGContextRelease(drawContext);
+    if (drawMode) {
+        CGContextSetLineCap(context, _lineCap);
+        CGContextAddPath(context, _path);
+        CGContextDrawPath(context, drawMode);
+    }
 }
 
 /**
  @Status Interoperable
 */
 - (void)setPath:(CGPathRef)path {
-    if (_path == path) {
-        return;
-    }
+    if (_path != path) {
+        _path.attach(CGPathCreateCopy(path));
 
-    path = CGPathCreateCopy(path);
-    CFRelease(_path);
-    _path = path;
-    _needsRender = TRUE;
-    [self setNeedsLayout];
+        [self setNeedsDisplay];
+    }
 }
 
 /**
@@ -152,16 +99,11 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
  @Status Interoperable
 */
 - (void)setFillColor:(CGColorRef)color {
-    if (_fillColor == color) {
-        return;
+    if (_fillColor != color) {
+        _fillColor = color;
+
+        [self setNeedsDisplay];
     }
-
-    CGColorRetain(color);
-    CGColorRelease(_fillColor);
-    _fillColor = color;
-
-    _needsRender = TRUE;
-    [self setNeedsLayout];
 }
 
 /**
@@ -175,16 +117,11 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
  @Status Interoperable
 */
 - (void)setStrokeColor:(CGColorRef)color {
-    if (_strokeColor == color) {
-        return;
+    if (_strokeColor != color) {
+        _strokeColor = color;
+
+        [self setNeedsDisplay];
     }
-
-    CGColorRetain(color);
-    CGColorRelease(_strokeColor);
-    _strokeColor = color;
-
-    _needsRender = TRUE;
-    [self setNeedsDisplay];
 }
 
 /**
@@ -195,67 +132,67 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height, float sca
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)setLineWidth:(float)width {
-    UNIMPLEMENTED();
-    if (_lineWidth == width) {
-        return;
+    if (_lineWidth != width) {
+        _lineWidth = width;
+
+        [self setNeedsDisplay];
     }
-
-    _lineWidth = width;
-
-    _needsRender = TRUE;
-    [self setNeedsLayout];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (CGFloat)lineWidth {
-    UNIMPLEMENTED();
     return _lineWidth;
 }
 
 /**
  @Status Interoperable
 */
-- (instancetype)init {
-    if (self = [super init]) {
-        _shapeImage = [CALayer new];
-        _shapeImage.anchorPoint = CGPointMake(0.0f, 0.0f);
-        _shapeImage.contentsGravity = kCAGravityBottomLeft;
-        _shapeImage.contentsScale = self.contentsScale;
-        _shapeImage.delegate = self;
-
-        [self addSublayer:_shapeImage];
-        _fillColor = (CGColorRef)CGColorGetConstantColor((CFStringRef) @"BLACK");
-        CGColorRetain(_fillColor);
-        _lineWidth = 1.0f;
+- (void)setFillRule:(NSString*)fillRule {
+    CGPathDrawingMode newFillMode = kCGPathFill;
+    if ([kCAFillRuleEvenOdd isEqual:fillRule]) {
+        newFillMode = kCGPathEOFill;
     }
 
-    return self;
+    if (_fillMode != newFillMode) {
+        _fillMode = newFillMode;
+        [self setNeedsDisplay];
+    }
 }
 
 /**
  @Status Interoperable
- @Public No
 */
-- (void)setContentsScale:(float)scale {
-    [super setContentsScale:scale];
-    [_shapeImage setContentsScale:scale];
+- (NSString*)fillRule {
+    return _fillMode == kCGPathFill ? kCAFillRuleNonZero : kCAFillRuleEvenOdd;
 }
 
-- (void)dealloc {
-    CGPathRelease(_path);
-    _path = nil;
-    CGColorRelease(_strokeColor);
-    _strokeColor = nullptr;
-    CGColorRelease(_fillColor);
-    _fillColor = nullptr;
-    [_shapeImage release];
-    _shapeImage = nil;
+/**
+ @Status Interoperable
+*/
+- (void)setLineCap:(NSString*)lineCap {
+    CGLineCap newLineCap = kCGLineCapButt;
+    if ([kCALineCapRound isEqual:lineCap]) {
+        newLineCap = kCGLineCapRound;
+    } else if ([kCALineCapSquare isEqual:lineCap]) {
+        newLineCap = kCGLineCapSquare;
+    }
 
-    [super dealloc];
+    if (_lineCap != newLineCap) {
+        _lineCap = newLineCap;
+        [self setNeedsDisplay];
+    }
 }
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)lineCap {
+    return _lineCap == kCGLineCapSquare ? kCALineCapSquare : (_lineCap == kCGLineCapRound ? kCALineCapRound : kCALineCapButt);
+}
+
 @end

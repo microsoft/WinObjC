@@ -107,7 +107,7 @@ CTRunStatus CTRunGetStatus(CTRunRef runRef) {
     if (runRef) {
         _CTRun* run = static_cast<_CTRun*>(runRef);
 
-        if (run->_dwriteGlyphRun.bidiLevel & 1) {
+        if (_GlyphRunIsRTL(run->_dwriteGlyphRun)) {
             ret |= kCTRunStatusRightToLeft;
             if (!std::is_sorted(run->_stringIndices.cbegin(), run->_stringIndices.cend(), std::greater<UINT16>())) {
                 ret |= kCTRunStatusNonMonotonic;

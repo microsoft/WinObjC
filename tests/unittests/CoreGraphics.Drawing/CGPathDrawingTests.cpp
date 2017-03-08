@@ -429,7 +429,6 @@ DRAW_TEST_F(CGPath, FillArcsSimple, UIKitMimicTest<>) {
     CGContextAddPath(context, thepath);
     CGContextSetRGBFillColor(context, 0, 0, 1, 1);
     CGContextFillPath(context);
-    CGContextStrokePath(context);
 
     CGPathRelease(thepath);
 }
@@ -465,7 +464,6 @@ DRAW_TEST_F(CGPath, FillArcsComplex, UIKitMimicTest<>) {
     CGContextAddPath(context, thepath);
     CGContextSetRGBFillColor(context, 0, 0, 1, 1);
     CGContextFillPath(context);
-    CGContextStrokePath(context);
 
     CGPathRelease(thepath);
 }
@@ -495,7 +493,6 @@ DRAW_TEST_F(CGPath, FillStraightLines, UIKitMimicTest<>) {
     CGContextAddPath(context, thepath);
     CGContextSetRGBFillColor(context, 0, 0, 1, 1);
     CGContextFillPath(context);
-    CGContextStrokePath(context);
 
     CGPathRelease(thepath);
 }
