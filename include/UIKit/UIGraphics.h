@@ -32,6 +32,7 @@
 
 #import "UIKitExport.h"
 #import "UIKitTypes.h"
+#import "UIGeometry.h"
 #import <ApplicationServices/ApplicationServices.h>
 
 @class UIImage;
@@ -56,3 +57,5 @@ UIKIT_EXPORT void UIRectFrame(CGRect rect);
 UIKIT_EXPORT void UIRectFrameUsingBlendMode(CGRect rect, CGBlendMode blendMode);
 
 UIKIT_EXPORT CTTextAlignment NSTextAlignmentToCTTextAlignment(NSTextAlignment nsTextAlignment);
+
+UIKIT_EXPORT UIEdgeInsets UIEdgeInsetsFromString(NSString* string);

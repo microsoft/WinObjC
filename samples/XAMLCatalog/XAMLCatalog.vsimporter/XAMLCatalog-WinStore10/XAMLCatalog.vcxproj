@@ -207,6 +207,7 @@
     <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UIActivityIndicatorViewController.h" />
     <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UIButtonWithControlsViewController.h" />
     <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UILabelViewController.h" />
+    <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UIScrollViewController.h" />
     <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UISliderViewController.h" />
     <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UITextFieldViewController.h" />
     <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UIViewViewController.h" />
@@ -221,6 +222,7 @@
     <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UIActivityIndicatorViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UIButtonWithControlsViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UILabelViewController.m" />
+    <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UIScrollViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UISliderViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UITextFieldViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UIViewViewController.m" />
