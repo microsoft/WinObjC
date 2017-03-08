@@ -486,20 +486,16 @@ static HRESULT _createPathReadyForFigure(CGPathRef previousPath,
     return S_OK;
 }
 
+static const CGFloat sc_zeroAngleThreshold = .00001;
 // This function will return a normalized angle in radians between 0 and 2pi. This is to standardize
 // the calculations for arcs since 0, 2pi, 4pi, etc... are all visually the same angle.
 static CGFloat __normalizeAngle(CGFloat originalAngle) {
     CGFloat returnAngle = fmod(originalAngle, 2 * M_PI);
-    if (abs(returnAngle) < .00001) {
+    if (abs(returnAngle) < sc_zeroAngleThreshold) {
         returnAngle = 0;
     }
-    if (returnAngle == 0) {
-        if (abs(originalAngle) > 0) {
-            return 2 * M_PI;
-        }
-    }
-    if (returnAngle < 0) {
-        returnAngle += M_PI * 2;
+    if (returnAngle == 0 && originalAngle != 0) {
+        return 2 * M_PI;
     }
     return returnAngle;
 }
@@ -631,7 +627,7 @@ void CGPathAddArc(CGMutablePathRef path,
 
     // This will only happen when drawing a circle in the clockwise direction from 2pi to 0, a scenario
     // supported on the reference platform.
-    if (abs(abs(rawDifference) - 2 * M_PI) < .00001) {
+    if (abs(abs(rawDifference) - 2 * M_PI) < sc_zeroAngleThreshold) {
         CGFloat midPointAngle = normalizedStartAngle + rawDifference / 2;
         CGPoint midPoint = CGPointMake(x + radius * cos(midPointAngle), y + radius * sin(midPointAngle));
         D2D1_ARC_SEGMENT arcSegment1 =
