@@ -22,20 +22,54 @@
 
 #pragma region __CGDataConsumer
 
-class __CGDataConsumerInternal {
-public:
-    virtual size_t WriteData(const void* data, size_t size) = 0;
+static const CGDataConsumerCallbacks sc_CGDataConsumerCFDataCallbacks{ // CGDataConsumerPutBytesCallback
+                                                                       [](void* info, const void* data, size_t size) {
+                                                                           CFDataAppendBytes(static_cast<CFMutableDataRef>(info),
+                                                                                             (const UInt8*)data,
+                                                                                             size);
+                                                                           return size;
+                                                                       },
+
+                                                                       // CGDataConsumerReleaseInfoCallback
+                                                                       [](void* info) { CFRelease(static_cast<CFTypeRef>(info)); }
 };
 
-class __GeneralDataConsumer : public __CGDataConsumerInternal {
-public:
-    __GeneralDataConsumer(void* info, const CGDataConsumerCallbacks* callbacks) : m_info(info), m_callbacks(*callbacks) {
+static const CGDataConsumerCallbacks sc_CGDataConsumerCFURLCallbacks{ // CGDataConsumerPutBytesCallback
+                                                                      [](void* info, const void* data, size_t size) -> size_t {
+                                                                          CFWriteStreamRef writeStream =
+                                                                              static_cast<CFWriteStreamRef>(info);
+                                                                          if (CFWriteStreamGetStatus(writeStream) != kCFStreamStatusOpen) {
+                                                                              CFWriteStreamOpen(writeStream);
+                                                                          }
+
+                                                                          CFIndex written =
+                                                                              CFWriteStreamWrite(writeStream, (const UInt8*)data, size);
+                                                                          return (written < 0L) ? 0 : written;
+                                                                      },
+
+                                                                      // CGDataConsumerReleaseInfoCallback
+                                                                      [](void* info) {
+                                                                          CFWriteStreamRef writeStream =
+                                                                              static_cast<CFWriteStreamRef>(info);
+                                                                          CFWriteStreamClose(writeStream);
+                                                                          CFRelease(writeStream);
+                                                                      }
+};
+
+struct __CGDataConsumer : CoreFoundation::CppBase<__CGDataConsumer> {
+    __CGDataConsumer(void* info, const CGDataConsumerCallbacks* callbacks) : m_info(info), m_callbacks(*callbacks) {
     }
-    size_t WriteData(const void* data, size_t size) override {
+    __CGDataConsumer(CFMutableDataRef data) : __CGDataConsumer((void*)CFRetain(data), &sc_CGDataConsumerCFDataCallbacks) {
+    }
+    __CGDataConsumer(CFURLRef url) : __CGDataConsumer((void*)CFWriteStreamCreateWithFile(nullptr, url), &sc_CGDataConsumerCFURLCallbacks) {
+    }
+
+    size_t WriteData(const void* data, size_t size) {
         return m_callbacks.putBytes ? m_callbacks.putBytes(m_info, data, size) : 0;
     }
-    ~__GeneralDataConsumer() {
-        if (m_callbacks.releaseConsumer) {
+
+    ~__CGDataConsumer() {
+        if (m_callbacks.releaseConsumer != nullptr) {
             m_callbacks.releaseConsumer(m_info);
         }
     }
@@ -43,60 +77,6 @@ public:
 private:
     void* m_info;
     CGDataConsumerCallbacks m_callbacks;
-};
-
-class __CFDataDataConsumer : public __CGDataConsumerInternal {
-public:
-    __CFDataDataConsumer(CFMutableDataRef data) : m_data(data) {
-    }
-    size_t WriteData(const void* data, size_t size) override {
-        CFDataAppendBytes(m_data, (const UInt8*)data, size);
-        return size;
-    }
-
-private:
-    woc::AutoCF<CFMutableDataRef> m_data;
-};
-
-class __CFURLDataConsumer : public __CGDataConsumerInternal {
-public:
-    __CFURLDataConsumer(CFURLRef url) : m_url(url), m_stream(CFWriteStreamCreateWithFile(nullptr, m_url)) {
-    }
-
-    size_t WriteData(const void* data, size_t size) override {
-        if (CFWriteStreamGetStatus(m_stream) != kCFStreamStatusOpen) {
-            CFWriteStreamOpen(m_stream);
-        }
-
-        CFIndex totalWritten = CFWriteStreamWrite(m_stream, (const UInt8*)data, size);
-
-        // Write returns -1 for failure, return 0 bytes written
-        return totalWritten < 0 ? 0 : totalWritten;
-    }
-
-    ~__CFURLDataConsumer() {
-        CFWriteStreamClose(m_stream);
-    }
-
-private:
-    woc::AutoCF<CFURLRef> m_url;
-    woc::AutoCF<CFWriteStreamRef> m_stream;
-};
-
-struct __CGDataConsumer : CoreFoundation::CppBase<__CGDataConsumer> {
-    __CGDataConsumer(void* info, const CGDataConsumerCallbacks* callbacks) : m_internal(new __GeneralDataConsumer(info, callbacks)) {
-    }
-    __CGDataConsumer(CFMutableDataRef data) : m_internal(new __CFDataDataConsumer(data)) {
-    }
-    __CGDataConsumer(CFURLRef url) : m_internal(new __CFURLDataConsumer(url)) {
-    }
-
-    size_t WriteData(const void* data, size_t size) {
-        return m_internal->WriteData(data, size);
-    }
-
-private:
-    std::unique_ptr<__CGDataConsumerInternal> m_internal;
 };
 
 #pragma endregion // __CGDataConsumer
