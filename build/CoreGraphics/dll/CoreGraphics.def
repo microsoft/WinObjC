@@ -43,6 +43,7 @@ LIBRARY CoreGraphics
         _DWriteGetFamilyNameForFontName
         _DWriteGetFontPropertiesFromName
         _DWriteCreateFontFamilyWithName
+        _DWriteCreateFontWithName
         _DWriteCreateFontFaceWithName
         _DWriteCreateTextFormatWithFontNameAndSize
         _DWriteCreateFontFaceWithData

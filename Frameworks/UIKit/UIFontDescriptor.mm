@@ -170,7 +170,10 @@ BASE_CLASS_REQUIRED_IMPLS(UIFontDescriptor, UIFontDescriptorPrototype, CTFontDes
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Will have different return values than reference platform due to reference platform's inconsistency
+        This implementation will return fonts that match all mandatoryAttributes, and will attempt to reduce the list by any other
+        attributes in the descriptor, but will not do so if no font descriptors match
 */
 - (NSArray*)matchingFontDescriptorsWithMandatoryKeys:(NSSet*)mandatoryKeys {
     return NSInvalidAbstractInvocationReturn();

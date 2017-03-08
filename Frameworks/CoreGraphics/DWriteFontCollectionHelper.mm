@@ -134,18 +134,16 @@ HRESULT DWriteFontCollectionHelper::GetAvailableFonts(std::vector<ComPtr<IDWrite
     std::lock_guard<std::recursive_mutex> lock(m_lock);
 
     ComPtr<IDWriteFontCollection> fontCollection = GetFontCollection();
-    if (!fontCollection) {
-        return S_OK;
-    }
+    RETURN_HR_IF_NULL(S_OK, fontCollection);
 
-    uint32_t count = fontCollection->GetFontFamilyCount();
-    for (uint32_t i = 0; i < count; ++i) {
+    const uint32_t familyCount = fontCollection->GetFontFamilyCount();
+    for (uint32_t i = 0; i < familyCount; ++i) {
         ComPtr<IDWriteFontFamily> fontFamily;
         RETURN_IF_FAILED(fontCollection->GetFontFamily(i, &fontFamily));
         ComPtr<IDWriteFontList> fontList;
         RETURN_IF_FAILED(
             fontFamily->GetMatchingFonts(DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STRETCH_NORMAL, DWRITE_FONT_STYLE_NORMAL, &fontList));
-        uint32_t fontCount = fontList->GetFontCount();
+        const uint32_t fontCount = fontList->GetFontCount();
         for (size_t j = 0; j < fontCount; ++j) {
             ComPtr<IDWriteFont> font;
             RETURN_IF_FAILED(fontList->GetFont(j, &font));

@@ -59,6 +59,7 @@ COREGRAPHICS_EXPORT CFStringRef _DWriteGetFamilyNameForFontName(CFStringRef font
 
 // Creation of DWrite font face/family objects
 COREGRAPHICS_EXPORT HRESULT _DWriteCreateFontFamilyWithName(CFStringRef familyName, IDWriteFontFamily** outFontFamily);
+COREGRAPHICS_EXPORT HRESULT _DWriteCreateFontWithName(CFStringRef name, IDWriteFont** outFont);
 COREGRAPHICS_EXPORT HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, IDWriteFontFace** outFontFace);
 COREGRAPHICS_EXPORT HRESULT _DWriteCreateTextFormatWithFontNameAndSize(CFStringRef optionalFontName,
                                                                        CGFloat fontSize,

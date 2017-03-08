@@ -185,7 +185,7 @@ CTFontDescriptorRef CTFontDescriptorCreateCopyWithFeature(CTFontDescriptorRef or
  @Status Caveat
  @Notes Will have different return values than reference platform due to reference platform's inconsistency
         This implementation will return fonts that match all mandatoryAttributes, and will attempt to reduce the list by any other
- attributes in the descriptor, but will no do so if no font descriptors match
+        attributes in the descriptor, but will not do so if no font descriptors match
 */
 CFArrayRef CTFontDescriptorCreateMatchingFontDescriptors(CTFontDescriptorRef descriptor, CFSetRef mandatoryAttributes) {
     RETURN_NULL_IF(!descriptor);
@@ -193,7 +193,7 @@ CFArrayRef CTFontDescriptorCreateMatchingFontDescriptors(CTFontDescriptorRef des
                           : static_cast<NSSet*>(mandatoryAttributes));
     woc::AutoCF<CFArrayRef> ret;
     RETURN_NULL_IF_FAILED(_DWriteCreateMatchingFontDescriptors(descriptor->_attributes, mandatoryAttributes, &ret));
-    return ret.detach();
+    return ret ? ret.detach() : CFArrayCreate(nullptr, nullptr, 0, &kCFTypeArrayCallBacks);
 }
 
 /**
