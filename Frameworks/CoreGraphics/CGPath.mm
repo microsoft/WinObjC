@@ -490,14 +490,14 @@ static const CGFloat sc_zeroAngleThreshold = .00001;
 // This function will return a normalized angle in radians between 0 and 2pi. This is to standardize
 // the calculations for arcs since 0, 2pi, 4pi, etc... are all visually the same angle.
 static CGFloat __normalizeAngle(CGFloat originalAngle) {
-    CGFloat returnAngle = fmod(originalAngle, 2 * M_PI);
-    if (abs(returnAngle) < sc_zeroAngleThreshold) {
-        returnAngle = 0;
+    CGFloat normalizedAngle = fmod(originalAngle, 2 * M_PI);
+    if (abs(normalizedAngle) < sc_zeroAngleThreshold) {
+        normalizedAngle = 0;
     }
-    if (returnAngle == 0 && originalAngle != 0) {
+    if (normalizedAngle == 0 && originalAngle != 0) {
         return 2 * M_PI;
     }
-    return returnAngle;
+    return normalizedAngle;
 }
 
 /**
