@@ -1218,7 +1218,6 @@ OBJCUWP_WINDOWS_UI_XAML_CONTROLS_MAPS_EXPORT
 @property BOOL isFocusEngagementEnabled;
 @property WXElementSoundMode elementSoundMode;
 @property (retain) WXDependencyObject* xYFocusUp;
-@property (retain) RTObject* defaultStyleKey;
 + (WXDependencyProperty*)isEnabledProperty;
 + (WXDependencyProperty*)backgroundProperty;
 + (WXDependencyProperty*)borderBrushProperty;
