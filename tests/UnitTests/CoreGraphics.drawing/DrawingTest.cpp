@@ -26,6 +26,9 @@
 #import "CGContextInternal.h"
 #endif
 
+extern "C" void* objc_autoreleasePoolPush(void);
+extern "C" void objc_autoreleasePoolPop(void*);
+
 #ifdef TARGET_OS_MAC
 #define LOG_TEST_FILE(...)
 #else
@@ -155,6 +158,16 @@ void testing::DrawTest<TComparator>::PostDraw() {
     } else if (drawingConfig->GetMode() == DrawingTestMode::Generate) {
         LOG_TEST_FILE(_CFStringToWString(outputPath).c_str());
     }
+}
+
+template <typename TComparator>
+void testing::DrawTest<TComparator>::SetUp() {
+    _opaqueAutoreleasePool = objc_autoreleasePoolPush();
+}
+
+template <typename TComparator>
+void testing::DrawTest<TComparator>::TearDown() {
+    objc_autoreleasePoolPop(_opaqueAutoreleasePool);
 }
 
 template <typename TComparator>

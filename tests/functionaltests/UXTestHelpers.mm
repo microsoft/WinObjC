@@ -176,8 +176,9 @@ void UXEvent::Reset() {
 bool UXEvent::Wait(int timeOutInSeconds) {
     [_condition lock];
 
-    if (!_signaled) {
-        _signaled = [_condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:timeOutInSeconds]] ? true : false;
+    BOOL timeLimitReached = NO;
+    while (!_signaled && !timeLimitReached) {
+        timeLimitReached = ![_condition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:timeOutInSeconds]];
     }
 
     bool waitSignal = _signaled;

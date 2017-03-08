@@ -371,21 +371,32 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
  @Status Interoperable
 */
 - (CGRect)imageRectForContentRect:(CGRect)contentRect {
-    CGSize titleSize = [self.currentTitle sizeWithFont:self.font];
-    // TODO  #1365 :: Currently cannot assume getting size from nil will return CGSizeZero
-    CGSize imageSize = CGSizeZero;
-    CGRect insetsRect = UIEdgeInsetsInsetRect(contentRect, self.imageEdgeInsets);
-
-    if (!self.currentImage) {
+    /////////////////////////////////////////////////////////////////////
+    // Note: #1365 All size calculations here must check for nil, 
+    // as we cannot assume getting a size from nil will return CGSizeZero
+    /////////////////////////////////////////////////////////////////////
+    UIImage* currentImage = self.currentImage;
+    if (!currentImage) {
+        // No image, so we return zero for the entire content rect
         return CGRectZero;
     }
 
-    imageSize = self.currentImage.size;
+    // Grab the size of the current title
+    // TODO: Should we be asking our label for this?
+    NSString* currentTitle = self.currentTitle;
+    CGSize titleSize = CGSizeZero;
+    if (currentTitle) {
+        // We need to round the font size to the nearest pixel value to avoid rounding errors when used in conjunction with the
+        // frame values that are rounded by UIView.
+        titleSize = doPixelRound([currentTitle sizeWithFont:self.font]);
+    }
 
-    CGSize totalSize = imageSize;
+    // Now calculate the total size based on the image and title sizes
+    CGSize totalSize = currentImage.size;
     totalSize.width += titleSize.width;
 
     // Get the frame based on the control alignment.
+    CGRect insetsRect = UIEdgeInsetsInsetRect(contentRect, self.imageEdgeInsets);
     CGRect ret = calculateContentRect(self, totalSize, insetsRect);
 
     ret.size.width -= titleSize.width;
@@ -404,19 +415,34 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
  @Status Interoperable
 */
 - (CGRect)titleRectForContentRect:(CGRect)contentRect {
-    // TODO: Should we be asking our label for its intrinsicContentSize?
-    // We need to round the font size to the nearest pixel value to avoid rounding errors when used in conjunction with the
-    // frame values that are rounded by UIView.
-    CGSize titleSize = doPixelRound([self.currentTitle sizeWithFont:self.font]);
-    CGSize totalSize = titleSize;
-    // TODO  #1365 :: Currently cannot assume getting size from nil will return CGSizeZero
-    CGSize imageSize = self.currentImage ? [self.currentImage size] : CGSizeZero;
-    CGRect insetsRect = UIEdgeInsetsInsetRect(contentRect, self.titleEdgeInsets);
+    /////////////////////////////////////////////////////////////////////
+    // Note: #1365 All size calculations here must check for nil, 
+    // as we cannot assume getting a size from nil will return CGSizeZero
+    /////////////////////////////////////////////////////////////////////
 
-    if ([self currentTitle].length == 0) {
+    // Grab the size of the current title
+    // TODO: Should we be asking our label for this?
+    NSString* currentTitle = self.currentTitle;
+    CGSize titleSize = CGSizeZero;
+    if (currentTitle && currentTitle.length > 0) {
+        // We need to round the font size to the nearest pixel value to avoid rounding errors when used in conjunction with the
+        // frame values that are rounded by UIView.
+        titleSize = doPixelRound([currentTitle sizeWithFont:self.font]);
+    } else {
+        // No title, so we return zero for the entire content rect
         return CGRectZero;
     }
 
+    // Grab the size of the current image
+    UIImage* currentImage = self.currentImage;
+    CGSize imageSize = CGSizeZero;
+    if (currentImage) {
+        imageSize = [currentImage size];
+    }
+
+    CGRect insetsRect = UIEdgeInsetsInsetRect(contentRect, self.titleEdgeInsets);
+
+    CGSize totalSize = titleSize;
     totalSize.width += imageSize.width;
 
     // Get the frame based on the control alignment.
@@ -951,32 +977,35 @@ static ComPtr<IInspectable> _currentInspectableImage(UIButton* self) {
 - (CGSize)intrinsicContentSize {
     CGSize ret = CGSizeZero;
 
-    UIImage* img = self.currentImage;
-    UIEdgeInsets contentInsets = self.contentEdgeInsets;
-
-    // TODO: Should we be asking our label for its intrinsicContentSize?
-    // We need to round the font size to the nearest pixel value to avoid rounding errors when used in conjunction with the
-    // frame values that are rounded by UIView.
-    CGSize textSize = doPixelRound([[self currentTitle] sizeWithFont:self.font]);
+    ////////////////////////////////////////////////////////////////////
+    // Note: #1365 All size calculations here must check for nil, 
+    // as we cannot assume getting a size from nil will return CGSizeZero
+    ////////////////////////////////////////////////////////////////////
 
     // Size should at least fit the image in a normal state.
-    if (img != nil) {
-        ret = [img size];
+    UIImage* currentImage = self.currentImage;
+    if (currentImage) {
+        ret = [currentImage size];
     }
 
-    if ([self currentTitle].length) {
+    // TODO: Should we be asking our label for its intrinsicContentSize?
+    CGSize textSize = CGSizeZero;
+    NSString* currentTitle = self.currentTitle;
+    if (currentTitle && (currentTitle.length > 0)) {
+        // We need to round the font size to the nearest pixel value to avoid rounding errors when used in conjunction with the
+        // frame values that are rounded by UIView.
+        textSize = doPixelRound([currentTitle sizeWithFont:self.font]);
         ret.width = std::max(textSize.width, ret.width);
         ret.height = std::max(textSize.height, ret.height);
     }
 
     // If we have a background, its image size dictates the smallest size.
-    if (self.currentBackgroundImage) {
-        UIImage* background = self.currentBackgroundImage;
-        // TODO  #1365 :: Currently cannot assume getting size from nil will return CGSizeZero
-        CGSize size = background ? [background size] : CGSizeZero;
-
-        ret.width = std::max(size.width, ret.width);
-        ret.height = std::max(size.height, ret.height);
+    UIEdgeInsets contentInsets = self.contentEdgeInsets;
+    UIImage* currentBackgroundImage = self.currentBackgroundImage;
+    if (currentBackgroundImage) {
+        CGSize imageSize = [currentBackgroundImage size];
+        ret.width = std::max(imageSize.width, ret.width);
+        ret.height = std::max(imageSize.height, ret.height);
     } else if (UIEdgeInsetsEqualToEdgeInsets(contentInsets, UIEdgeInsetsZero)) {
         // Min values found emperically; set if no contentInsets are set.
         ret.width = std::max(ret.width, 30.0f);

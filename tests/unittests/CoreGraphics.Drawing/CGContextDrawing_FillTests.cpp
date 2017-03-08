@@ -82,17 +82,6 @@ DISABLED_DRAW_TEST_F(CGContextFill, ConcentricRectsWinding, WhiteBackgroundTest<
     CGPathRelease(path);
 }
 
-DRAW_TEST_F(CGContextFill, ClearRect, WhiteBackgroundTest<>) {
-    CGContextRef context = GetDrawingContext();
-    CGRect bounds = GetDrawingBounds();
-
-    CGContextSetRGBFillColor(context, 1.0, 0.0, 0.0, 1);
-    CGContextFillRect(context, bounds);
-
-    CGRect borderRect = CGRectInset(bounds, 30, 50);
-    CGContextClearRect(context, borderRect);
-}
-
 DISABLED_DRAW_TEST_F(CGContextFill, ConcentricRectsEvenOdd, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
@@ -114,3 +103,34 @@ DISABLED_DRAW_TEST_F(CGContextFill, ConcentricRectsEvenOdd, WhiteBackgroundTest<
 
     CGPathRelease(path);
 }
+
+class CGContextArcFill : public WhiteBackgroundTest<>, public ::testing::WithParamInterface<::testing::tuple<CGPoint, int>> {
+    CFStringRef CreateOutputFilename() {
+        CGPoint sweep = ::testing::get<0>(GetParam());
+        int direction = ::testing::get<1>(GetParam());
+        return CFStringCreateWithFormat(nullptr,
+                                        nullptr,
+                                        CFSTR("TestImage.CGContextFill.Arc.sweep(%0.0f--%0.0f).direction.%d.png"),
+                                        sweep.x,
+                                        sweep.y,
+                                        direction);
+    }
+};
+
+DRAW_TEST_P(CGContextArcFill, FillArc) {
+    CGContextRef context = GetDrawingContext();
+    CGPoint sweep = ::testing::get<0>(GetParam());
+    int direction = ::testing::get<1>(GetParam());
+    CGContextAddArc(context, 50, 50, 50, sweep.x, sweep.y, direction);
+    CGContextFillPath(context);
+}
+
+static CGPoint sweep[] = { CGPointMake(0, M_PI),
+                           CGPointMake(2 * M_PI, 0),
+                           CGPointMake(0.3 * M_PI, 0.6 * M_PI),
+                           CGPointMake(0, 1.9 * M_PI) };
+static int directions[] = { 0, 1 };
+// TODO: enable when #2062 is fixed.
+INSTANTIATE_TEST_CASE_P(DISABLED_CGContextFill,
+                        CGContextArcFill,
+                        ::testing::Combine(::testing::ValuesIn(sweep), ::testing::ValuesIn(directions)));
