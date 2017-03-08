@@ -97,3 +97,26 @@ TEST(CGDataConsumer, CreateWithCFData) {
     const UInt8* dataPtr = CFDataGetBytePtr(data);
     EXPECT_EQ(0, std::memcmp(rawData, dataPtr, 100));
 }
+
+TEST(CGDataConsumer, CreateWithURL) {
+    EXPECT_EQ(nullptr, CGDataConsumerCreateWithURL(nullptr));
+
+    auto url = woc::MakeAutoCF<CFURLRef>(CFURLCreateWithFileSystemPath(nullptr, CFSTR("./testfile.txt"), kCFURLWindowsPathStyle, NO));
+    auto consumer = woc::MakeAutoCF<CGDataConsumerRef>(CGDataConsumerCreateWithURL(url));
+    ASSERT_NE(nullptr, consumer);
+
+    const char* dataToWrite = "TEST123";
+    EXPECT_NE(0, _CGDataConsumerWriteData(consumer, dataToWrite, 7));
+    EXPECT_NE(0, _CGDataConsumerWriteData(consumer, dataToWrite, 4));
+
+    auto provider = woc::MakeAutoCF<CGDataProviderRef>(CGDataProviderCreateWithURL(url));
+    ASSERT_NE(nullptr, provider);
+
+    auto data = woc::MakeAutoCF<CFDataRef>(CGDataProviderCopyData(provider));
+    ASSERT_NE(nullptr, data);
+    ASSERT_EQ(11L, CFDataGetLength(data));
+
+    const UInt8* dataPtr = CFDataGetBytePtr(data);
+    const char* expectedData = "TEST123TEST";
+    EXPECT_EQ(0, std::memcmp(expectedData, dataPtr, 11));
+}
