@@ -34,8 +34,8 @@ CA_EXPORT_CLASS
 
 @property CGPathRef path;
 @property CGColorRef fillColor;
-@property (copy) NSString* fillRule STUB_PROPERTY;
-@property (copy) NSString* lineCap STUB_PROPERTY;
+@property (copy) NSString* fillRule;
+@property (copy) NSString* lineCap;
 @property (copy) NSArray* lineDashPattern STUB_PROPERTY;
 @property CGFloat lineDashPhase STUB_PROPERTY;
 @property (copy) NSString* lineJoin STUB_PROPERTY;

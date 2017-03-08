@@ -2391,6 +2391,9 @@ public:
     }
 };
 
+WINRT_EXPORT_FN
+void getPropertyValueArrayInfo(ComPtr<IPropertyValue> comPtr, unsigned int &res, void** resPtr);
+
 template <typename WRLT,
           typename WRLContainerT,
           typename OBJCT,
@@ -2401,27 +2404,58 @@ class RTArrayObj {
 public:
     unsigned int count(const ComPtr<IInspectable> o) const {
         ComPtr<WRLContainerT> array;
-        THROW_NS_IF_FAILED(o.As(&array));
         unsigned int res = 0;
-        array->get_Size(&res);
+        if (SUCCEEDED(o.As(&array))) {
+            array->get_Size(&res);
+        } else {
+            ComPtr<IPropertyValue> propValueArr;
+            THROW_NS_IF_FAILED(o.As(&propValueArr));
+            void* ptr;
+            getPropertyValueArrayInfo(propValueArr, res, &ptr);
+            CoTaskMemFree(ptr);
+        }
         return res;
     }
 
     template <typename T = WRLT>
     typename std::enable_if<_is_COM_Object(T), id>::type get(const ComPtr<IInspectable> o, unsigned int idx) const {
         ComPtr<WRLContainerT> array;
-        THROW_NS_IF_FAILED(o.As(&array));
         ComPtr<typename std::remove_pointer<WRLT>::type> val;
-        array->GetAt(idx, val.GetAddressOf());
+        if (SUCCEEDED(o.As(&array))) {
+            THROW_NS_IF_FAILED(array->GetAt(idx, val.GetAddressOf()));
+        } else {
+            ComPtr<IPropertyValue> propValueArr;
+            THROW_NS_IF_FAILED(o.As(&propValueArr));
+            void* ptr;
+            unsigned int res;
+            getPropertyValueArrayInfo(propValueArr, res, &ptr);
+            if (idx >= res) {
+                THROW_NS_HR(E_BOUNDS);
+            }
+            val = ((WRLT*)ptr)[idx];
+            CoTaskMemFree(ptr);
+        }
         return ToObjcConvertor<OBJCT, WRLT, objcTCreatorFunc>::convert(val.Get());
     }
 
     template <typename T = WRLT>
     typename std::enable_if<_is_COM_Object(T) == false, id>::type get(const ComPtr<IInspectable> o, unsigned int idx) const {
         ComPtr<WRLContainerT> array;
-        THROW_NS_IF_FAILED(o.As(&array));
         WRLT val;
-        array->GetAt(idx, &val);
+        if (SUCCEEDED(o.As(&array))) {
+            THROW_NS_IF_FAILED(array->GetAt(idx, &val));
+        } else {
+            ComPtr<IPropertyValue> propValueArr;
+            THROW_NS_IF_FAILED(o.As(&propValueArr));
+            void* ptr;
+            unsigned int res;
+            ::getPropertyValueArrayInfo(propValueArr, res, &ptr);
+            if (idx >= res) {
+                THROW_NS_HR(E_BOUNDS);
+            }
+            val = ((WRLT*)ptr)[idx];
+            CoTaskMemFree(ptr);
+        }
         return ToObjcConvertor<OBJCT, WRLT, objcTCreatorFunc>::convert(val);
     }
 

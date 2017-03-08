@@ -24,7 +24,7 @@ const CFStringRef kCGColorBlack = CFSTR("BLACK");
 const CFStringRef kCGColorWhite = CFSTR("WHITE");
 const CFStringRef kCGColorClear = CFSTR("CLEAR");
 
-static IWLazyClassLookup _LazyUIColor("UIColor");
+static IWLazyClassLookup __LazyUIColor("UIColor");
 
 /**
  @Status Caveat
@@ -32,11 +32,11 @@ static IWLazyClassLookup _LazyUIColor("UIColor");
 */
 CGColorRef CGColorGetConstantColor(CFStringRef name) {
     if (CFEqual(kCGColorBlack, name)) {
-        return [[_LazyUIColor blackColor] CGColor];
+        return [[__LazyUIColor blackColor] CGColor];
     } else if (CFEqual(kCGColorWhite, name)) {
-        return [[_LazyUIColor whiteColor] CGColor];
+        return [[__LazyUIColor whiteColor] CGColor];
     } else if (CFEqual(kCGColorClear, name)) {
-        return [[_LazyUIColor clearColor] CGColor];
+        return [[__LazyUIColor clearColor] CGColor];
     }
 
     UNIMPLEMENTED_WITH_MSG("CGColorGetConstantColor does not support color %s", CFStringGetCStringPtr(name, kCFStringEncodingUTF8));
@@ -64,9 +64,9 @@ CGColorRef CGColorRetain(CGColorRef color) {
 /**
  @Status Interoperable
 */
-CGColorRef CGColorCreate(CGColorSpaceRef colorSpace, const float* components) {
+CGColorRef CGColorCreate(CGColorSpaceRef colorSpace, const CGFloat* components) {
     CGColorRef ret =
-        (CGColorRef)[[_LazyUIColor colorWithRed:components[0] green:components[1] blue:components[2] alpha:components[3]] retain];
+        (CGColorRef)[[__LazyUIColor colorWithRed:components[0] green:components[1] blue:components[2] alpha:components[3]] retain];
 
     return ret;
 }
@@ -89,14 +89,14 @@ CGColorRef CGColorCreateCopyWithAlpha(CGColorRef color, float alpha) {
         curColor = &defaultColor;
     }
 
-    return static_cast<CGColorRef>([[_LazyUIColor colorWithRed:curColor->r green:curColor->g blue:curColor->b alpha:alpha] retain]);
+    return static_cast<CGColorRef>([[__LazyUIColor colorWithRed:curColor->r green:curColor->g blue:curColor->b alpha:alpha] retain]);
 }
 
 /**
  @Status Interoperable
 */
 CGColorRef CGColorCreateWithPattern(CGColorSpaceRef colorSpace, CGPatternRef pattern, const CGFloat* components) {
-    CGColorRef ret = (CGColorRef)[[_LazyUIColor _colorWithCGPattern:(CGPatternRef)pattern] retain];
+    CGColorRef ret = (CGColorRef)[[__LazyUIColor _colorWithCGPattern:(CGPatternRef)pattern] retain];
 
     return ret;
 }

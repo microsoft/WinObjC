@@ -64,6 +64,9 @@ ehthumbs.db
 Generated/
 Generated Files/
 
+#Ignore WexLogFileOutput, this is will get created by the WexLogger if WTTRunWorkingDir is not set
+WexLogFileOutput
+
 # Ignore all CF public headers. They get copied in from the Frameworks directory as a pre build step.
 Include/CoreFoundation/CFStream.h
 Include/CoreFoundation/CFStringEncodingExt.h

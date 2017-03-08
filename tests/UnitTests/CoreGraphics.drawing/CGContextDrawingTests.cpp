@@ -214,3 +214,50 @@ DRAW_TEST_F(CGContext, AntialiasToggleTranscendsGState, WhiteBackgroundTest<>) {
     };
     CGContextStrokeLineSegments(context, blurryLineSegments2, 2);
 }
+
+DRAW_TEST_F(CGContext, NullColorFill, WhiteBackgroundTest<>) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGContextSetRGBFillColor(context, 1.0, 0.0, 0.0, 1.0);
+    CGContextFillRect(context, bounds);
+
+    CGContextSetRGBFillColor(context, 0.0, 1.0, 0.0, 1.0);
+    CGContextSetFillColorWithColor(context, nullptr);
+
+    CGRect borderRect = CGRectInset(bounds, 30, 50);
+    CGContextFillRect(context, borderRect);
+
+    CGContextSetRGBFillColor(context, 0.0, 1.0, 0.0, 1.0);
+    borderRect = CGRectInset(bounds, 50, 80);
+    CGContextFillRect(context, borderRect);
+
+    CGContextSetFillColor(context, nullptr);
+
+    borderRect = CGRectInset(bounds, 60, 100);
+    CGContextFillRect(context, borderRect);
+}
+
+DRAW_TEST_F(CGContext, NullColorStroke, WhiteBackgroundTest<>) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+    CGContextSetLineWidth(context, 15);
+
+    CGContextSetRGBStrokeColor(context, 1.0, 0.0, 0.0, 1.0);
+    CGContextStrokeRect(context, bounds);
+
+    CGContextSetRGBStrokeColor(context, 0.0, 1.0, 0.0, 1.0);
+    CGContextSetStrokeColorWithColor(context, nullptr);
+
+    CGRect borderRect = CGRectInset(bounds, 30, 50);
+    CGContextStrokeRect(context, borderRect);
+
+    CGContextSetRGBStrokeColor(context, 0.0, 1.0, 0.0, 1.0);
+    borderRect = CGRectInset(bounds, 50, 80);
+    CGContextStrokeRect(context, borderRect);
+
+    CGContextSetStrokeColor(context, nullptr);
+
+    borderRect = CGRectInset(bounds, 60, 100);
+    CGContextStrokeRect(context, borderRect);
+}

@@ -125,7 +125,7 @@
     [self addMenuItemViewController:[[PageViewController alloc] init] andTitle:@"Page View"];
 
     // Bezier
-    [self addMenuItemViewController:[[BezierViewController alloc] init] andTitle:@"Bezier Paths"];
+    [self addMenuItemViewController:[[BezierViewController alloc] init] andTitle:@"Bezier Paths / CAShapeLayer"];
 
     // Application
     [self addMenuItemViewController:[[ApplicationViewController alloc] init] andTitle:@"Application"];

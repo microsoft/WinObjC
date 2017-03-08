@@ -121,7 +121,7 @@ namespace Internal {
 
 void CreateXamlCompositor(CompositionMode compositionMode) {
     g_compositionMode = compositionMode;
-    CGImageAddDestructionListener(UIReleaseDisplayTextureForCGImage);
+    _CGImageAddDestructionListener(UIReleaseDisplayTextureForCGImage);
     static CAXamlCompositor* s_compositor = new CAXamlCompositor();
     SetCACompositor(s_compositor);
 }

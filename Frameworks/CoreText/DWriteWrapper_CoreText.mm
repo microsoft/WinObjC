@@ -20,6 +20,7 @@
 
 #import "DWriteWrapper_CoreText.h"
 #import "CoreTextInternal.h"
+#import "CGContextInternal.h"
 
 #import <LoggingNative.h>
 #import <StringHelpers.h>
@@ -113,25 +114,29 @@ bool _CloneDWriteGlyphRun(_In_ DWRITE_GLYPH_RUN const* src, _Outptr_ DWRITE_GLYP
 static inline HRESULT __DWriteTextFormatApplyParagraphStyle(const ComPtr<IDWriteTextFormat>& textFormat, CTParagraphStyleRef settings) {
     CTTextAlignment alignment = kCTNaturalTextAlignment;
     if (CTParagraphStyleGetValueForSpecifier(settings, kCTParagraphStyleSpecifierAlignment, sizeof(CTTextAlignment), &alignment)) {
-        RETURN_IF_FAILED(textFormat->SetTextAlignment(__CTAlignmentToDWrite(alignment)));
+        if (alignment != kCTNaturalTextAlignment) {
+            RETURN_IF_FAILED(textFormat->SetTextAlignment(__CTAlignmentToDWrite(alignment)));
+        }
     }
 
     CTWritingDirection direction;
     if (CTParagraphStyleGetValueForSpecifier(settings, kCTParagraphStyleSpecifierBaseWritingDirection, sizeof(direction), &direction)) {
-        DWRITE_READING_DIRECTION dwriteDirection = DWRITE_READING_DIRECTION_LEFT_TO_RIGHT;
-        if (direction == kCTWritingDirectionRightToLeft) {
-            dwriteDirection = DWRITE_READING_DIRECTION_RIGHT_TO_LEFT;
+        if (direction != kCTWritingDirectionNatural) {
+            DWRITE_READING_DIRECTION dwriteDirection = DWRITE_READING_DIRECTION_LEFT_TO_RIGHT;
+            if (direction == kCTWritingDirectionRightToLeft) {
+                dwriteDirection = DWRITE_READING_DIRECTION_RIGHT_TO_LEFT;
 
-            // DWrite alignment is based upon reading direction whereas CoreText alignment is constant
-            // so we have to flip the writing direction
-            if (alignment == kCTRightTextAlignment || alignment == kCTNaturalTextAlignment) {
-                RETURN_IF_FAILED(textFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING));
-            } else if (alignment == kCTLeftTextAlignment) {
-                RETURN_IF_FAILED(textFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_TRAILING));
+                // DWrite alignment is based upon reading direction whereas CoreText alignment is constant
+                // so we have to flip the writing direction
+                if (alignment == kCTRightTextAlignment || alignment == kCTNaturalTextAlignment) {
+                    RETURN_IF_FAILED(textFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING));
+                } else if (alignment == kCTLeftTextAlignment) {
+                    RETURN_IF_FAILED(textFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_TRAILING));
+                }
             }
-        }
 
-        RETURN_IF_FAILED(textFormat->SetReadingDirection(dwriteDirection));
+            RETURN_IF_FAILED(textFormat->SetReadingDirection(dwriteDirection));
+        }
     }
 
     CTLineBreakMode lineBreakMode;
@@ -371,7 +376,7 @@ public:
     };
 
     HRESULT STDMETHODCALLTYPE GetCurrentTransform(_In_opt_ void* clientDrawingContext, _Out_ DWRITE_MATRIX* transform) throw() {
-        *transform = {1, 0, 0, 1, 0, 0};
+        *transform = { 1, 0, 0, 1, 0, 0 };
         return S_OK;
     };
 
@@ -501,16 +506,19 @@ static _CTFrame* _DWriteGetFrame(CFAttributedStringRef string, CFRange range, CG
         if ([runs count] > 0) {
             prevYPosForDraw = yPos;
             line->_runs = runs;
-            line->_strRange.location = static_cast<_CTRun*>(line->_runs[0])->_range.location;
+            _CTRun* firstRun = static_cast<_CTRun*>(runs[0]);
+            line->_strRange.location = firstRun->_range.location;
             line->_strRange.length = stringRange;
             line->_glyphCount = glyphCount;
-            line->_relativeXOffset = static_cast<_CTRun*>(line->_runs[0])->_relativeXOffset;
-            line->_relativeYOffset = static_cast<_CTRun*>(line->_runs[0])->_relativeYOffset;
+            line->_relativeXOffset = firstRun->_relativeXOffset;
+            if (_GlyphRunIsRTL(firstRun->_dwriteGlyphRun)) {
+                // First run is RTL so line's offset is position isn't the same
+                line->_relativeXOffset -= line->_width;
+            }
 
             CGPoint lineOrigin = CGPointZero;
-            if (static_cast<_CTRun*>([line->_runs objectAtIndex:0])->_dwriteGlyphRun.glyphCount != 0) {
-                lineOrigin = { static_cast<_CTRun*>(line->_runs[0])->_glyphOrigins[0].x,
-                               static_cast<_CTRun*>(line->_runs[0])->_glyphOrigins[0].y };
+            if (firstRun->_dwriteGlyphRun.glyphCount != 0) {
+                lineOrigin = { firstRun->_glyphOrigins[0].x, firstRun->_glyphOrigins[0].y };
             }
 
             [frame->_lines addObject:line];
