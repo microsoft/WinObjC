@@ -76,14 +76,14 @@ public:
                 EXPECT_EQ_MSG(xamlElement.Opacity(), caLayerVC.layer.opacity, "Failed to match opacity");
                 EXPECT_EQ_MSG(xamlElement.Opacity(), expectedOpacity, "Failed to match opacity with expected value");
 
-                // Manually unregister the event so we avoid further opacity property changed events
-                xamlSubscriber->Reset();
-
                 uxEvent->Set();
             });
 
             // Action
             caLayerVC.layer.opacity = expectedOpacity;
+
+            // Manually unregister the event so we avoid further opacity property changed events
+            xamlSubscriber->Reset();
         });
 
         ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event timed out!");

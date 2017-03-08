@@ -64,12 +64,14 @@ static const double c_defaultStepFrequency = 0.1;
 }
 
 - (void)_updateStepFrequency {
-    // The frame size, minimumValue and maximumValue of UISlider can change dynamically, so we need to update the step frequency when they
-    // do.
-    if ((_xamlSlider.Maximum() - _xamlSlider.Minimum()) > 0 && self.frame.size.width > 0) {
-        _xamlSlider.StepFrequency((_xamlSlider.Maximum() - _xamlSlider.Minimum()) / (self.frame.size.width));
-    } else {
-        _xamlSlider.StepFrequency(c_defaultStepFrequency);
+    if (_xamlSlider) {
+        // The frame size, minimumValue and maximumValue of UISlider can change dynamically, so we need to update the step frequency when they
+        // do.
+        if ((_xamlSlider.Maximum() - _xamlSlider.Minimum()) > 0 && self.frame.size.width > 0) {
+            _xamlSlider.StepFrequency((_xamlSlider.Maximum() - _xamlSlider.Minimum()) / (self.frame.size.width));
+        } else {
+            _xamlSlider.StepFrequency(c_defaultStepFrequency);
+        }
     }
 }
 

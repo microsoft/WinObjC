@@ -15,6 +15,7 @@
 //******************************************************************************
 #include <TestFramework.h>
 #import <UIKit/UITextField.h>
+#import "UIViewInternal.h"
 
 #include <COMIncludes.h>
 #import <WRLHelpers.h>
@@ -25,10 +26,12 @@
 #import <wrl/async.h>
 #import <wrl/wrappers/corewrappers.h>
 #import <windows.foundation.h>
+#import <winrt/Windows.UI.Xaml.Controls.h>
 #include <COMIncludes_end.h>
 
 #include "ObjCXamlControls.h"
-#import "UWP/WindowsUIXamlControls.h"
+
+using namespace winrt::Windows::UI::Xaml;
 
 class UIKitTextFieldTests {
 public:
@@ -55,11 +58,11 @@ public:
     TEST_METHOD(GetXamlElement) {
         FrameworkHelper::RunOnUIThread([]() {
             UIView* view = [[[UITextField alloc] init] autorelease];
-            WXFrameworkElement* backingElement = [view xamlElement];
+            FrameworkElement backingElement = [view _xamlElementInternal];
             ASSERT_TRUE(backingElement);
 
             // TODO: Fix up when UITextField moves fully to XAML
-            ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
+            ASSERT_TRUE(backingElement.as<FrameworkElement>());
         });
     }
 };
