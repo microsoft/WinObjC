@@ -120,7 +120,4 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
-  <ItemGroup>
-    <None Include="Project.json" />
-  </ItemGroup>
 </Project>

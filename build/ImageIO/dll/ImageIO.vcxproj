@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -27,9 +27,6 @@
   <ItemGroup>
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
       <Project>{26DA08DA-D0B9-4579-B168-E7F0A5F20E57}</Project>
-    </ProjectReference>
-    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
-        <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
     </ProjectReference>
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\ImageIOLib.vcxproj">
       <Project>{ba535474-97e6-4fcf-8711-0f0374487fa9}</Project>
@@ -107,7 +104,4 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
-  <ItemGroup>
-    <None Include="Project.json" />
-  </ItemGroup>
 </Project>

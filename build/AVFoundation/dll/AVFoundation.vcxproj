@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -19,9 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\Starboard\dll\Starboard.vcxproj">
-      <Project>{0AC27ECF-E2AB-420B-9359-4843FFF4CBFA}</Project>
-    </ProjectReference>
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\QuartzCore\dll\QuartzCore.vcxproj">
       <Project>{037b568f-4104-417e-9fb8-b6899e398903}</Project>
     </ProjectReference>
@@ -102,7 +99,4 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
-  <ItemGroup>
-    <None Include="Project.json" />
-  </ItemGroup>
 </Project>

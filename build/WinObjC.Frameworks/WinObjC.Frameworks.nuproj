@@ -32,7 +32,11 @@
   <Import Project="WinObjC.Frameworks.Packaging.props" />
   <PropertyGroup Label="Globals">
     <ProjectGuid>bef15618-e03f-4a44-a797-9150c979b09f</ProjectGuid>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\</StarboardBasePath>
   </PropertyGroup>
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(StarboardBasePath)\msvc\package-build.props" />
+  </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" />
@@ -40,7 +44,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
   <ItemGroup>
-    <None Include="project.json" />
     <None Include="WinObjC.Frameworks.Packaging.props" />
     <None Include="WinObjC.Frameworks.Packaging.targets" />
     <None Include="WinObjC.Frameworks.props" />

@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\pthread.cpp" />
@@ -48,7 +47,6 @@
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>StarboardLib</OutputName>
-    
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -56,7 +54,6 @@
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.props" />
   </ImportGroup>
-
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <CompileAsWinRT>false</CompileAsWinRT>
@@ -106,7 +103,4 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
-  <ItemGroup>
-    <None Include="Project.json" />
-  </ItemGroup>
 </Project>

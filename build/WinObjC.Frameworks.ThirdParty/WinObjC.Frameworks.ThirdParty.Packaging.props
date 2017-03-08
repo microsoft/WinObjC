@@ -6,7 +6,7 @@
   </PropertyGroup>
     
   <PropertyGroup>
-      <PackageId>WinObjC.Frameworks.ThirdParty</PackageId>
+      <PackageId Condition="'$(IsPackagingProject)' == 'true'">WinObjC.Frameworks.ThirdParty</PackageId>
       <Title>WinObjC.Frameworks.ThirdParty</Title>
       <Authors>Microsoft</Authors>
       <Owners>Microsoft</Owners>

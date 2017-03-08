@@ -19,9 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
-      <Project>{81f30af6-eac3-4dfa-929a-c25d69e8080b}</Project>
-    </ProjectReference>
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
       <Project>{26DA08DA-D0B9-4579-B168-E7F0A5F20E57}</Project>
     </ProjectReference>
@@ -99,7 +96,4 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
-  <ItemGroup>
-    <None Include="Project.json" />
-  </ItemGroup>
 </Project>

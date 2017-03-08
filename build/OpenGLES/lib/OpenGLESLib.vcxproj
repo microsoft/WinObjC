@@ -79,6 +79,9 @@
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.props" />
   </ImportGroup>
+  <ItemGroup>
+    <PackageReference Include="ANGLE.WindowsStore" Version="2.1.13" />
+  </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <CompileAsWinRT>false</CompileAsWinRT>
@@ -151,7 +154,4 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
-  <ItemGroup>
-    <None Include="Project.json" />
-  </ItemGroup>
 </Project>
