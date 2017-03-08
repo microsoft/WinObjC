@@ -564,11 +564,14 @@ void CGPathAddArcToPoint(
     path->SetCurrentPoint(endPoint);
 }
 
+static inline CGPoint _createCGPointOnAngle(CGFloat angle, CGFloat radius, int xOrigin, int yOrigin) {
+    return CGPointMake(xOrigin + radius * cos(angle), yOrigin + radius * sin(angle));
+}
+
 /**
  @Status Interoperable
- @Notes For the scenario of drawing a full circle, any distance of 2pi will result in a circle being drawn
-        regardless of the direction being drawn. The reference platform however, will not draw a circle
-        given certain parameters such as 0 to 2pi in a counterclockwise direction.
+ @Notes All arcs from 0 to 2pi in either direction will result in a circle;
+        the reference platform, by contrast, does not honor this behavior.
 */
 void CGPathAddArc(CGMutablePathRef path,
                   const CGAffineTransform* transform,
@@ -584,8 +587,8 @@ void CGPathAddArc(CGMutablePathRef path,
     CGFloat normalizedStartAngle = __normalizeAngle(startAngle);
     CGFloat normalizedEndAngle = __normalizeAngle(endAngle);
 
-    CGPoint startPoint = CGPointMake(x + radius * cos(normalizedStartAngle), y + radius * sin(normalizedStartAngle));
-    CGPoint endPoint = CGPointMake(x + radius * cos(normalizedEndAngle), y + radius * sin(normalizedEndAngle));
+    CGPoint startPoint = _createCGPointOnAngle(normalizedStartAngle, radius, x, y);
+    CGPoint endPoint = _createCGPointOnAngle(normalizedEndAngle, radius, x, y);
 
     // Create the parameters for the AddArc method.
     const D2D1_POINT_2F endPointD2D = _CGPointToD2D_F(endPoint);
@@ -629,7 +632,7 @@ void CGPathAddArc(CGMutablePathRef path,
     // supported on the reference platform.
     if (abs(abs(rawDifference) - 2 * M_PI) < sc_zeroAngleThreshold) {
         CGFloat midPointAngle = normalizedStartAngle + rawDifference / 2;
-        CGPoint midPoint = CGPointMake(x + radius * cos(midPointAngle), y + radius * sin(midPointAngle));
+        CGPoint midPoint = _createCGPointOnAngle(midPointAngle, radius, x, y);
         D2D1_ARC_SEGMENT arcSegment1 =
             D2D1::ArcSegment(_CGPointToD2D_F(midPoint), radiusD2D, rawDifference / 2, sweepDirection, D2D1_ARC_SIZE_SMALL);
         D2D1_ARC_SEGMENT arcSegment2 = D2D1::ArcSegment(endPointD2D, radiusD2D, rawDifference / 2, sweepDirection, D2D1_ARC_SIZE_SMALL);
