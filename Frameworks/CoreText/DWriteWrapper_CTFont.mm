@@ -403,7 +403,6 @@ HRESULT _DWriteCreateMatchingFontDescriptors(CFDictionaryRef attributes, CFSetRe
         }
     }
 
-    std::unique_ptr<CFTypeRef[]> outDescriptors(new CFTypeRef[fonts.size()]);
     auto outArray = woc::MakeAutoCF<CFMutableArrayRef>(CFArrayCreateMutable(nullptr, fonts.size(), &kCFTypeArrayCallBacks));
     for (size_t i = 0; i < fonts.size(); ++i) {
         BOOL exists;
