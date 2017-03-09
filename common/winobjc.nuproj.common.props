@@ -3,7 +3,6 @@
 
   <PropertyGroup>
     <OutputPath>$(SolutionDir)\OutputPackages\$(Configuration)\</OutputPath>
-    <InferLegacyPackageReferences>false</InferLegacyPackageReferences>
     <IncludeSymbolsInPackage>false</IncludeSymbolsInPackage>
     <IncludeFrameworkReferencesInPackage>false</IncludeFrameworkReferencesInPackage>
     <InferLegacyPackageReferences>false</InferLegacyPackageReferences>
