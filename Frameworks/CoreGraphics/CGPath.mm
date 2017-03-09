@@ -757,7 +757,7 @@ void CGPathCloseSubpath(CGMutablePathRef path) {
 }
 
 namespace {
-static void __updateRectWithControlPoint(CGRect* rect, CGPoint point) {
+void __updateRectWithControlPoint(CGRect* rect, CGPoint point) {
     if (point.x < rect->origin.x) {
         rect->size.width += rect->origin.x - point.x;
         rect->origin.x = point.x;
@@ -772,8 +772,8 @@ static void __updateRectWithControlPoint(CGRect* rect, CGPoint point) {
     }
 }
 
-static void __CGPathApplyGetBoundingBoxWithControlPoints(void* rectangle, const CGPathElement* element) {
-    CGRect* rect = (CGRect*)rectangle;
+void __CGPathApplyGetBoundingBoxWithControlPoints(void* rectangle, const CGPathElement* element) {
+    CGRect* rect = static_cast<CGRect*>(rectangle);
     switch (element->type) {
         case kCGPathElementAddQuadCurveToPoint:
             __updateRectWithControlPoint(rect, element->points[0]);
@@ -797,8 +797,6 @@ CGRect CGPathGetBoundingBox(CGPathRef path) {
     if (path == NULL) {
         return CGRectNull;
     }
-
-    D2D1_RECT_F bounds;
 
     if (FAILED(path->ClosePath())) {
         return CGRectNull;
@@ -932,12 +930,11 @@ CGRect CGPathGetPathBoundingBox(CGPathRef path) {
         return CGRectNull;
     }
 
-    D2D1_RECT_F bounds;
-
     if (FAILED(path->ClosePath())) {
         return CGRectNull;
     }
 
+    D2D1_RECT_F bounds;
     if (FAILED(path->GetPathGeometry()->GetBounds(D2D1::IdentityMatrix(), &bounds))) {
         return CGRectNull;
     }

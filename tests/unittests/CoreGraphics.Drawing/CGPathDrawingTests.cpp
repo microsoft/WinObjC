@@ -641,7 +641,9 @@ DRAW_TEST_F(CGPath, AddRects, UIKitMimicTest<>) {
     CGContextAddPath(context, thepath);
     CGContextStrokePath(context);
     CGPathRelease(thepath);
-}DRAW_TEST_F(CGPath, FillArcsComplex, UIKitMimicTest<>) {
+}
+
+DRAW_TEST_F(CGPath, FillArcsComplex, UIKitMimicTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
     CGFloat width = bounds.size.width;
