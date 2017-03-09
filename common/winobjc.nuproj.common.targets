@@ -84,7 +84,7 @@
     </PropertyGroup>
 
     <Error Condition="'$(GitVersion_BranchName)' == ''"
-           Text="Cannot determine git branch. Please make sure GitInfo is listed in the project.json for this project and that git.exe is part of the PATH environment variable." />
+           Text="Cannot determine git branch. Please make sure GitVersionTask is listed as a nuget dependency for this project and that git.exe is part of the PATH environment variable." />
 
     <Warning Condition="'$(SolutionPath)' == ''"
            Text="Cannot determine solution build time. Package version dependencies may be inconsistent as a result. Please make sure to build using .sln file." />
@@ -108,9 +108,9 @@
       <PackageVersion_PreReleaseLabel>$(GitVersion_PreReleaseLabel)</PackageVersion_PreReleaseLabel>
       <PackageVersion_Timestamp>$(PackageTimestamp)</PackageVersion_Timestamp>
 
-      <!-- Replace PreReleaseFormat msbuild propert names with positional String.Format args.
+      <!-- Replace PreReleaseFormat msbuild property names with positional String.Format args.
 
-           NOTE: If additional porperty replacements are needed, they must show up here. 
+           NOTE: If additional property replacements are needed, they must show up here. 
            An extra cool improvement would be to figure out how to delay property expansion until this point to pass the format directly.  -->
       <PackageVersion_PreReleaseFormat>$(PackageVersion_PreReleaseFormat.Replace('PackageVersion_Timestamp', '0'))</PackageVersion_PreReleaseFormat>
       <PackageVersion_PreReleaseFormat>$(PackageVersion_PreReleaseFormat.Replace('PackageVersion_PreReleaseLabel', '1'))</PackageVersion_PreReleaseFormat>
