@@ -42,8 +42,6 @@
     <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
     <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
-    
-    
     <StarboardBasePath>..\..\..\..</StarboardBasePath>
     <UseStarboardSourceSdk>true</UseStarboardSourceSdk>
     <IslandwoodDRT>false</IslandwoodDRT>
@@ -339,7 +337,4 @@
     </ItemGroup>
     <Copy SourceFiles="@(ReferenceFoundationTestResourceFile)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="True" />
   </Target>
-  <ItemGroup>
-    <None Include="project.json" />
-  </ItemGroup>
 </Project>

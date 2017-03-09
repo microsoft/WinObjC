@@ -235,7 +235,4 @@
     <ClangCompile Include="..\..\..\..\tests\unittests\CoreImage\CIContextTests.mm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ItemGroup>
-    <None Include="project.json" />
-  </ItemGroup>
 </Project>

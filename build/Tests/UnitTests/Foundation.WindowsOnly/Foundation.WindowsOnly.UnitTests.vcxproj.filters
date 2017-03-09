@@ -24,8 +24,9 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\WindowsOnly\NSRecursiveLockInternalTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\WindowsOnly\NSStringInternalTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\WindowsOnly\NSPointerArrayInternalTests.mm" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Project.json" />
+    <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSObject_NSCoding.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSKeyValueCoding.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSString+HSTRING.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\WindowsOnly\ArchivalInternalTests.mm" />
   </ItemGroup>
 </Project>

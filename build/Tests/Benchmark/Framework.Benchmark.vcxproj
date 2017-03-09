@@ -51,8 +51,6 @@
     <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
     <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
-    
-    
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <UseStarboardSourceSdk>true</UseStarboardSourceSdk>
     <IslandwoodDRT>false</IslandwoodDRT>
@@ -227,7 +225,4 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\Benchmark\TextBenchmarkTests.mm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ItemGroup>
-    <None Include="project.json" />
-  </ItemGroup>
 </Project>

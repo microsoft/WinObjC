@@ -48,8 +48,6 @@
     <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
     <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
-    
-    
     <StarboardBasePath>..\..\..\..</StarboardBasePath>
     <UseStarboardSourceSdk>true</UseStarboardSourceSdk>
     <IslandwoodDRT>false</IslandwoodDRT>
@@ -82,6 +80,9 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(StarboardBasePath)\msvc\ut-build.props" />
+  </ImportGroup>
   <ImportGroup Label="Shared">
     <Import Project="..\..\Tests.Shared\Tests.Shared.vcxitems" />
   </ImportGroup>
@@ -219,7 +220,4 @@
     <ClangCompile Include="..\..\..\..\tests\unittests\QuartzCore\QuartzCoreTest.mm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ItemGroup>
-    <None Include="project.json" />
-  </ItemGroup>
 </Project>
