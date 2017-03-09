@@ -230,5 +230,8 @@
     <ClangCompile Include="..\..\CGCatalog\CGPathApplyCurveViewController.m">
       <Filter>CGCatalog\NewSamples</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddArcFullCircleViewController.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
   </ItemGroup>
 </Project>

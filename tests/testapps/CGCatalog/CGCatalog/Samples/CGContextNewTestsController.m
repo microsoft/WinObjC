@@ -33,6 +33,7 @@
 #import "CGPathAddArcViewController.h"
 #import "CGPathAddArcToPointViewController.h"
 #import "CGPathAddRoundedRectViewController.h"
+#import "CGPathAddArcFullCircleViewController.h"
 
 @interface CGContextNewTestsController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -73,6 +74,7 @@
             [CGContextSampleRow row:@"CGPathAddArc" class:[CGPathAddArcViewController class]],
             [CGContextSampleRow row:@"CGPathAddArcToPoint" class:[CGPathAddArcToPointViewController class]],
             [CGContextSampleRow row:@"CGPathAddRoundedRect" class:[CGPathAddRoundedRectViewController class]],
+            [CGContextSampleRow row:@"CGPathAddArcFullCircle" class:[CGPathAddArcFullCircleViewController class]],
         ];
     }
     return _samples;
