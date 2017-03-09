@@ -95,9 +95,9 @@ CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetterRef, CFRange ran
         (lineBreakMode == kCTLineBreakByClipping || lineBreakMode == kCTLineBreakByTruncatingHead ||
          lineBreakMode == kCTLineBreakByTruncatingTail || lineBreakMode == kCTLineBreakByTruncatingMiddle)) {
         for (size_t i = 0; i < ret->_lineOrigins.size(); ++i) {
-            if (CTLineGetTypographicBounds(static_cast<CTLineRef>([ret->_lines objectAtIndex:i]), nullptr, nullptr, nullptr) >
-                frameRect.size.width) {
-                ret->_lineOrigins[i].x = frameRect.origin.x;
+            _CTLine* line = [ret->_lines objectAtIndex:i];
+            if (line->_width > frameRect.size.width) {
+                ret->_lineOrigins[i].x -= line->_relativeXOffset;
             }
         }
     }

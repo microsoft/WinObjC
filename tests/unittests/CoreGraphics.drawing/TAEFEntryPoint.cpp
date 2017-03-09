@@ -98,7 +98,7 @@ public:
 
         WEX::Common::String generateMode;
         WEX::TestExecution::RuntimeParameters::TryGetValue(L"generate", generateMode);
-        if (generateMode.CompareNoCase(L"true") || generateMode.CompareNoCase(L"yes")) {
+        if (generateMode.CompareNoCase(L"true") == 0 || generateMode.CompareNoCase(L"yes") == 0) {
             _mode = DrawingTestMode::Generate;
         }
     }

@@ -109,14 +109,14 @@ static inline const wchar_t* __GetUserDefaultLocaleName(wchar_t* buf, size_t buf
  *
  * @return CFString object.
  */
-CFStringRef _CFStringFromLocalizedString(IDWriteLocalizedStrings* localizedString) {
+CFStringRef _CFStringFromLocalizedString(IDWriteLocalizedStrings* localizedString, CFStringRef* actualLanguage) {
     if (localizedString == NULL) {
         TraceError(TAG, L"The input parameter is invalid!");
         return nil;
     }
 
-    wchar_t localeNameBuf[LOCALE_NAME_MAX_LENGTH];
-    const wchar_t* localeName = __GetUserDefaultLocaleName(localeNameBuf, LOCALE_NAME_MAX_LENGTH);
+    wchar_t localeBuffer[LOCALE_NAME_MAX_LENGTH];
+    const wchar_t* localeName = __GetUserDefaultLocaleName(localeBuffer, LOCALE_NAME_MAX_LENGTH);
 
     uint32_t index = 0;
     BOOL exists = FALSE;
@@ -129,6 +129,11 @@ CFStringRef _CFStringFromLocalizedString(IDWriteLocalizedStrings* localizedStrin
     // If the specified locale doesn't exist, select the first on the list.
     if (!exists) {
         index = 0;
+    }
+
+    if (actualLanguage) {
+        RETURN_NULL_IF_FAILED(localizedString->GetLocaleName(index, localeBuffer, LOCALE_NAME_MAX_LENGTH));
+        *actualLanguage = CFStringCreateWithCharacters(nullptr, (const UniChar*)localeBuffer, wcslen(localeBuffer));
     }
 
     // Get the string length.
@@ -288,8 +293,8 @@ HRESULT _DWriteCreateTextFormatWithFontNameAndSize(CFStringRef optionalFontName,
         userFontInfo = __GetUserFontCollectionHelper()->GetFontPropertiesFromUppercaseFontName(upperFontName);
     }
 
-    wchar_t localeNameBuf[LOCALE_NAME_MAX_LENGTH];
-    const wchar_t* localeName = __GetUserDefaultLocaleName(localeNameBuf, LOCALE_NAME_MAX_LENGTH);
+    wchar_t localeBuffer[LOCALE_NAME_MAX_LENGTH];
+    const wchar_t* localeName = __GetUserDefaultLocaleName(localeBuffer, LOCALE_NAME_MAX_LENGTH);
 
     if (info) {
         RETURN_IF_FAILED(
@@ -326,7 +331,8 @@ HRESULT _DWriteCreateTextFormatWithFontNameAndSize(CFStringRef optionalFontName,
  * Gets an informational string as a CFString from a DWrite font face.
  */
 CFStringRef _DWriteFontCopyInformationalString(const ComPtr<IDWriteFontFace>& fontFace,
-                                               DWRITE_INFORMATIONAL_STRING_ID informationalStringId) {
+                                               DWRITE_INFORMATIONAL_STRING_ID informationalStringId,
+                                               CFStringRef* actualLanguage) {
     RETURN_NULL_IF(!fontFace);
 
     ComPtr<IDWriteFontFace3> dwriteFontFace3;
@@ -336,7 +342,7 @@ CFStringRef _DWriteFontCopyInformationalString(const ComPtr<IDWriteFontFace>& fo
     BOOL exists;
 
     RETURN_NULL_IF_FAILED(dwriteFontFace3->GetInformationalStrings(informationalStringId, &name, &exists));
-    return exists ? static_cast<CFStringRef>(CFRetain(_CFStringFromLocalizedString(name.Get()))) : nullptr;
+    return exists ? static_cast<CFStringRef>(CFRetain(_CFStringFromLocalizedString(name.Get(), actualLanguage))) : nullptr;
 }
 
 /**
@@ -348,7 +354,7 @@ CFDataRef _DWriteFontCopyTable(const ComPtr<IDWriteFontFace>& fontFace, uint32_t
     void* tableContext;
     BOOL exists;
 
-    RETURN_NULL_IF_FAILED(fontFace->TryGetFontTable(tag, &tableData, &tableSize, &tableContext, &exists));
+    RETURN_NULL_IF_FAILED(fontFace->TryGetFontTable(_CTToDWriteFontTableTag(tag), &tableData, &tableSize, &tableContext, &exists));
     RETURN_NULL_IF(!exists);
 
     // Copy the font table's binary data to a CFDataRef

@@ -58,8 +58,8 @@ static const wchar_t* TAG = L"CGContext";
 // Coordinate offset to support CGGradientDrawingOptions
 static const float s_kCGGradientOffsetPoint = 1E-45;
 
-enum _CGCoordinateMode : unsigned int { _kCGCoordinateModeDeviceSpace = 0, _kCGCoordinateModeUserSpace };
-enum _CGTrinary : unsigned int { _kCGTrinaryOff = 0, _kCGTrinaryOn = 1, _kCGTrinaryDefault = 2 };
+enum __CGCoordinateMode : unsigned int { _kCGCoordinateModeDeviceSpace = 0, _kCGCoordinateModeUserSpace };
+enum __CGTrinary : unsigned int { _kCGTrinaryOff = 0, _kCGTrinaryOn = 1, _kCGTrinaryDefault = 2 };
 
 // A drawing context is represented by a number of layers, each with their own drawing state:
 // Context
@@ -124,12 +124,12 @@ struct __CGContextDrawingState {
     CGFloat fontSize = 0.f;
 
     // Antialiasing
-    _CGTrinary shouldAntialias = _kCGTrinaryDefault;
+    __CGTrinary shouldAntialias = _kCGTrinaryDefault;
 
     // Font Antialiasing
-    _CGTrinary shouldSubpixelPosition = _kCGTrinaryDefault;
-    _CGTrinary shouldSubpixelQuantizeFonts = _kCGTrinaryDefault;
-    _CGTrinary shouldSmoothFonts = _kCGTrinaryDefault;
+    __CGTrinary shouldSubpixelPosition = _kCGTrinaryDefault;
+    __CGTrinary shouldSubpixelQuantizeFonts = _kCGTrinaryDefault;
+    __CGTrinary shouldSmoothFonts = _kCGTrinaryDefault;
 
     inline void ComputeStrokeStyle(ID2D1DeviceContext* deviceContext) {
         if (strokeStyle) {
@@ -202,12 +202,12 @@ class __CGContextLayer {
     ComPtr<ID2D1Image> _target;
 
 public:
-    __CGContextLayer(ID2D1Image* target, CGRect* region) : _target(target) {
+    __CGContextLayer(ID2D1Image* target) : _target(target) {
         // Each newly-pushed default-constructed layer has an empty base state.
         _stateStack.emplace();
     }
 
-    __CGContextLayer(ID2D1Image* target, CGRect* region, __CGContextLayer& parentLayer) : _target(target) {
+    __CGContextLayer(ID2D1Image* target, __CGContextLayer& parentLayer) : _target(target) {
         _stateStack.emplace(parentLayer.CurrentGState());
     }
 
@@ -270,9 +270,14 @@ private:
     woc::unique_cf<CGColorSpaceRef> _fillColorSpace;
     woc::unique_cf<CGColorSpaceRef> _strokeColorSpace;
 
+    ComPtr<ID2D1SolidColorBrush> transparentBrush{ nullptr };
+
     // Keeps track of the depth of a 'stack' of PushBeginDraw/PopEndDraw calls
     // Since nothing needs to actually be put on a stack, just increment a counter insteads
     std::atomic_uint32_t _beginEndDrawDepth = { 0 };
+
+    bool _useEnhancedErrorHandling{ false };
+    HRESULT _firstErrorHr{ S_OK };
 
     inline HRESULT _SaveD2DDrawingState(ID2D1DrawingStateBlock** pDrawingState) {
         RETURN_HR_IF(E_POINTER, !pDrawingState);
@@ -310,8 +315,8 @@ private:
 
 public:
     inline D2D1_ANTIALIAS_MODE GetAntialiasMode() {
-        return CurrentGState().shouldAntialias == _kCGTrinaryOn && allowsAntialiasing ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE :
-                                                                                        D2D1_ANTIALIAS_MODE_ALIASED;
+        return CurrentGState().shouldAntialias == _kCGTrinaryOff || !allowsAntialiasing ? D2D1_ANTIALIAS_MODE_ALIASED :
+                                                                                          D2D1_ANTIALIAS_MODE_PER_PRIMITIVE;
     }
 
     inline D2D1_TEXT_ANTIALIAS_MODE GetTextAntialiasMode() {
@@ -357,19 +362,19 @@ public:
         return S_OK;
     }
 
-    inline void SetShouldAntialias(_CGTrinary shouldAntialias) {
+    inline void SetShouldAntialias(__CGTrinary shouldAntialias) {
         CurrentGState().shouldAntialias = shouldAntialias;
     }
 
-    inline void SetShouldSubpixelPositionFonts(_CGTrinary shouldSubpixelPosition) {
+    inline void SetShouldSubpixelPositionFonts(__CGTrinary shouldSubpixelPosition) {
         CurrentGState().shouldSubpixelPosition = shouldSubpixelPosition;
     }
 
-    inline void SetShouldSubpixelQuantizeFonts(_CGTrinary shouldSubpixelQuantizeFonts) {
+    inline void SetShouldSubpixelQuantizeFonts(__CGTrinary shouldSubpixelQuantizeFonts) {
         CurrentGState().shouldSubpixelQuantizeFonts = shouldSubpixelQuantizeFonts;
     }
 
-    inline void SetShouldSmoothFonts(_CGTrinary shouldSmoothFonts) {
+    inline void SetShouldSmoothFonts(__CGTrinary shouldSmoothFonts) {
         CurrentGState().shouldSmoothFonts = shouldSmoothFonts;
     }
 
@@ -396,7 +401,7 @@ public:
         deviceContext->GetTarget(&baselineTarget);
 
         // Set up the default/baseline layer.
-        _layerStack.emplace(baselineTarget.Get(), nullptr);
+        _layerStack.emplace(baselineTarget.Get());
     }
 
     inline void SetFillColorSpace(CGColorSpaceRef colorspace) {
@@ -471,31 +476,46 @@ public:
     }
 
     inline bool ShouldDraw() {
-        return CurrentGState().ShouldDraw();
+        return SUCCEEDED(_firstErrorHr) && CurrentGState().ShouldDraw();
     }
 
     inline void PushBeginDraw() {
         if ((_beginEndDrawDepth)++ == 0) {
-            deviceContext->BeginDraw();
+            if (SUCCEEDED(_firstErrorHr)) {
+                deviceContext->BeginDraw();
+            }
         }
     }
 
     inline HRESULT PopEndDraw() {
+        HRESULT hr = S_OK;
         if (--(_beginEndDrawDepth) == 0) {
-            RETURN_IF_FAILED(deviceContext->EndDraw());
+            hr = deviceContext->EndDraw();
+            if (_useEnhancedErrorHandling && SUCCEEDED(_firstErrorHr) && FAILED(hr)) {
+                // If we haven't yet stored an error, and we're about to return an error (not S_OK), store it.
+                _firstErrorHr = hr;
+                hr = S_OK;
+            }
         }
-        return S_OK;
+        return hr;
     }
+
+    inline void EnableEnhancedErrorHandling() {
+        _useEnhancedErrorHandling = true;
+    }
+
+    bool GetError(CFErrorRef* /* returns-retained */ outError);
 
     HRESULT Clip(CGPathDrawingMode pathMode);
 
     HRESULT PushLayer(CGRect* rect = nullptr);
     HRESULT PopLayer();
+    HRESULT ClearRect(CGRect rect);
 
     template <typename Lambda> // Lambda takes the form HRESULT (*)(CGContextRef, ID2D1DeviceContext*)
-    HRESULT Draw(_CGCoordinateMode coordinateMode, CGAffineTransform* additionalTransform, Lambda&& drawLambda);
+    HRESULT Draw(__CGCoordinateMode coordinateMode, CGAffineTransform* additionalTransform, Lambda&& drawLambda);
 
-    HRESULT DrawGeometry(_CGCoordinateMode coordinateMode, ID2D1Geometry* pGeometry, CGPathDrawingMode drawMode);
+    HRESULT DrawGeometry(__CGCoordinateMode coordinateMode, ID2D1Geometry* pGeometry, CGPathDrawingMode drawMode);
     HRESULT DrawGlyphRuns(GlyphRunData* glyphRuns, size_t runsCount, bool transformByGlyph = true);
     HRESULT ClipToD2DMaskBitmap(ID2D1Bitmap* bitmap, CGRect rect, D2D1_INTERPOLATION_MODE interpolationMode);
     HRESULT ClipToCGImageMask(CGImageRef image, CGRect rect);
@@ -587,7 +607,6 @@ void CGContextFlush(CGContextRef context) {
 
 /**
  @Status Stub
- @Notes
 */
 void CGContextSynchronize(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context);
@@ -612,7 +631,7 @@ HRESULT __CGContext::PushLayer(CGRect* rect) {
     // Copy the current layer's state to the new layer.
     auto& oldLayer = _layerStack.top();
 
-    _layerStack.emplace(commandList.Get(), rect, oldLayer);
+    _layerStack.emplace(commandList.Get(), oldLayer);
     auto& newLayer = _layerStack.top(); // C++17 makes .emplace return a stack<T>::reference; alas, we are C++14.
 
     // These properties are not to be preserved across transparency layers.
@@ -721,7 +740,6 @@ void CGContextEndTransparencyLayer(CGContextRef context) {
 #pragma region Global State - Pagination
 /**
  @Status Stub
- @Notes
 */
 void CGContextBeginPage(CGContextRef context, const CGRect* mediaBox) {
     NOISY_RETURN_IF_NULL(context);
@@ -730,7 +748,6 @@ void CGContextBeginPage(CGContextRef context, const CGRect* mediaBox) {
 
 /**
  @Status Stub
- @Notes
 */
 void CGContextEndPage(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context);
@@ -1068,7 +1085,6 @@ void CGContextAddLines(CGContextRef context, const CGPoint* points, unsigned cou
 #pragma region Global State - Path Queries
 /**
  @Status Interoperable
- @Notes
 */
 CGPathRef CGContextCopyPath(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context, nullptr);
@@ -1077,23 +1093,16 @@ CGPathRef CGContextCopyPath(CGContextRef context) {
         return nullptr;
     }
 
-// TODO GH#xxxx When CGPathCreateCopyByTransformingPath is no longer stubbed, remove the diagnostic suppression.
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-
     // All queries take place on transformed paths, but return pre-CTM context units.
     // This means that the path the user gets back will be in units equivalent to
     // their inputs. We therefore must de-transform the path into which we inserted
     // transformed points.
     CGAffineTransform invertedDeviceSpaceTransform = CGAffineTransformInvert(CGContextGetUserSpaceToDeviceSpaceTransform(context));
     return CGPathCreateCopyByTransformingPath(context->Path(), &invertedDeviceSpaceTransform);
-
-#pragma clang diagnostic pop
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 CGPoint CGContextGetPathCurrentPoint(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context, CGPointZero);
@@ -1107,8 +1116,7 @@ CGPoint CGContextGetPathCurrentPoint(CGContextRef context) {
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 bool CGContextPathContainsPoint(CGContextRef context, CGPoint point, CGPathDrawingMode mode) {
     NOISY_RETURN_IF_NULL(context, false);
@@ -1479,17 +1487,11 @@ void CGContextSetShouldSubpixelQuantizeFonts(CGContextRef context, bool subpixel
 
 #pragma region Drawing Parameters - Generic
 /**
- @Status Interoperable
+ @Status Stub
 */
 void CGContextSetBlendMode(CGContextRef context, CGBlendMode mode) {
     NOISY_RETURN_IF_NULL(context);
     UNIMPLEMENTED();
-}
-
-CGBlendMode CGContextGetBlendMode(CGContextRef context) {
-    NOISY_RETURN_IF_NULL(context, StubReturn());
-    UNIMPLEMENTED();
-    return StubReturn();
 }
 
 /**
@@ -1570,7 +1572,6 @@ void CGContextSetAlpha(CGContextRef context, CGFloat alpha) {
 
 /**
  @Status Stub
- @Notes
 */
 void CGContextSetFlatness(CGContextRef context, CGFloat flatness) {
     NOISY_RETURN_IF_NULL(context);
@@ -1650,7 +1651,9 @@ void CGContextSetLineWidth(CGContextRef context, CGFloat width) {
 */
 void CGContextSetStrokeColor(CGContextRef context, const CGFloat* components) {
     NOISY_RETURN_IF_NULL(context);
-    // TODO #1592: based on the color space, we should be setting the fill color componenets.
+    NOISY_RETURN_IF_NULL(components);
+
+    // TODO #2041: based on the color space, we should be setting the fill color componenets.
     // as color is not fully supported, assume RGBA for now.
     CGContextSetRGBFillColor(context, components[0], components[1], components[2], components[3]);
 }
@@ -1661,6 +1664,10 @@ void CGContextSetStrokeColor(CGContextRef context, const CGFloat* components) {
 */
 void CGContextSetStrokeColorWithColor(CGContextRef context, CGColorRef color) {
     NOISY_RETURN_IF_NULL(context);
+    if (color == nullptr) {
+        CGContextSetRGBStrokeColor(context, 0, 0, 0, 1);
+        return;
+    }
     const CGFloat* comp = CGColorGetComponents(color);
     CGContextSetRGBStrokeColor(context, comp[0], comp[1], comp[2], comp[3]);
 }
@@ -1763,7 +1770,7 @@ void CGContextSetShadowWithColor(CGContextRef context, CGSize offset, CGFloat bl
 void CGContextSetFillColor(CGContextRef context, const CGFloat* components) {
     NOISY_RETURN_IF_NULL(context);
     NOISY_RETURN_IF_NULL(components);
-    // TODO #1592: based on the color space, we should be setting the fill color componenets.
+    // TODO #2041: based on the color space, we should be setting the fill color componenets.
     // as color is not fully supported, assume RGBA for now.
     CGContextSetRGBFillColor(context, components[0], components[1], components[2], components[3]);
 }
@@ -1774,6 +1781,11 @@ void CGContextSetFillColor(CGContextRef context, const CGFloat* components) {
 */
 void CGContextSetFillColorWithColor(CGContextRef context, CGColorRef color) {
     NOISY_RETURN_IF_NULL(context);
+    if (color == nullptr) {
+        CGContextSetRGBFillColor(context, 0, 0, 0, 1);
+        return;
+    }
+
     const CGFloat* comp = CGColorGetComponents(color);
     CGContextSetRGBFillColor(context, comp[0], comp[1], comp[2], comp[3]);
 }
@@ -1889,7 +1901,7 @@ static HRESULT _CreatePatternBrush(CGContextRef context,
     RETURN_IF_FAILED(__CreateD2DBitmapFromCGImage(context, tileImage.get(), &d2dBitmap));
 
     // Scale it by the inverted transform
-    // TODO #1591: We have an issue with rotation, the CTM rotation should not affect the brush
+    // TODO #2108: We have an issue with rotation, the CTM rotation should not affect the brush
     CGSize size = CGSizeApplyAffineTransform(tileSize.size, CGAffineTransformInvert(context->CurrentGState().transform));
 
     CGAffineTransform transform = __BitmapBrushTransformation(context,
@@ -1992,7 +2004,7 @@ void CGContextSetStrokePattern(CGContextRef context, CGPatternRef pattern, const
 }
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 void CGContextSetPatternPhase(CGContextRef context, CGSize phase) {
     NOISY_RETURN_IF_NULL(context);
@@ -2089,6 +2101,12 @@ HRESULT __CGContext::DrawGlyphRuns(GlyphRunData* glyphRuns, size_t runsCount, bo
             // First glyph's origin is at the given relative position for the glyph run
             CGPoint runningPosition{ glyphRuns[i].relativePosition.x, std::round(glyphRuns[i].relativePosition.y) };
             for (size_t j = 0; j < run->glyphCount; ++j) {
+                if (_GlyphRunIsRTL(*run)) {
+                    // Translate position of glyph by advance
+                    // Need to translate each glyph by its own advance because it's RTL
+                    runningPosition.x -= run->glyphAdvances[j];
+                }
+
                 // Invert position by text transformation
                 CGPoint transformedPosition = CGPointApplyAffineTransform(runningPosition, invertedTextTransformation);
 
@@ -2097,10 +2115,13 @@ HRESULT __CGContext::DrawGlyphRuns(GlyphRunData* glyphRuns, size_t runsCount, bo
                 positions[j] = DWRITE_GLYPH_OFFSET{ transformedPosition.x + run->glyphOffsets[j].advanceOffset,
                                                     std::round(transformedPosition.y + run->glyphOffsets[j].ascenderOffset) };
 
-                // Translate position of next glyph by current glyph's advance
-                runningPosition.x += run->glyphAdvances[j];
+                if (!_GlyphRunIsRTL(*run)) {
+                    // Translate position of next glyph by current glyph's advance
+                    runningPosition.x += run->glyphAdvances[j];
+                }
             }
 
+            // Already compensated for RTL glyph positions, so set bidiLevel to 0
             auto transformedGlyphRun = std::make_shared<DWRITE_GLYPH_RUN>(DWRITE_GLYPH_RUN{ run->fontFace,
                                                                                             run->fontEmSize,
                                                                                             run->glyphCount,
@@ -2108,7 +2129,7 @@ HRESULT __CGContext::DrawGlyphRuns(GlyphRunData* glyphRuns, size_t runsCount, bo
                                                                                             zeroAdvances.get(),
                                                                                             positions.data(),
                                                                                             run->isSideways,
-                                                                                            run->bidiLevel });
+                                                                                            0 });
             createdRuns.emplace_back(transformedGlyphRun);
             runs.emplace_back(GlyphRunData{ transformedGlyphRun.get(), CGPointZero, glyphRuns[i].attributes });
         }
@@ -2128,7 +2149,7 @@ HRESULT __CGContext::DrawGlyphRuns(GlyphRunData* glyphRuns, size_t runsCount, bo
                                                                        runData.run->glyphOffsets,
                                                                        runData.run->glyphCount,
                                                                        runData.run->isSideways,
-                                                                       ((runData.run->bidiLevel & 1) == 1),
+                                                                       _GlyphRunIsRTL(*(runData.run)),
                                                                        sink.Get()));
         }
         RETURN_IF_FAILED(sink->Close());
@@ -2255,7 +2276,6 @@ void CGContextShowGlyphsAtPoint(CGContextRef context, CGFloat x, CGFloat y, cons
 
 /**
  @Status Stub
- @Notes
 */
 void CGContextShowGlyphsAtPositions(CGContextRef context, const CGGlyph* glyphs, const CGPoint* positions, size_t count) {
     NOISY_RETURN_IF_NULL(context);
@@ -2297,22 +2317,49 @@ void CGContextShowGlyphsWithAdvances(CGContextRef context, const CGGlyph* glyphs
 #pragma endregion
 
 #pragma region Drawing Operations - Basic Shapes
+
+HRESULT __CGContext::ClearRect(CGRect rect) {
+    // Skip drawing if the context has failed; this is not an error in ClearRect.
+    RETURN_RESULT_IF(FAILED(_firstErrorHr), S_OK);
+
+    PushBeginDraw();
+
+    ComPtr<ID2D1Factory> factory = Factory();
+    ComPtr<ID2D1RectangleGeometry> rectangle;
+    RETURN_IF_FAILED(factory->CreateRectangleGeometry(__CGRectToD2D_F(rect), &rectangle));
+
+    // Transformed geometry
+    ComPtr<ID2D1TransformedGeometry> transformedRectangle;
+    RETURN_IF_FAILED(factory->CreateTransformedGeometry(rectangle.Get(),
+                                                        __CGAffineTransformToD2D_F(CGContextGetUserSpaceToDeviceSpaceTransform(this)),
+                                                        &transformedRectangle));
+
+    RETURN_IF_FAILED(PushGState());
+
+    if (CurrentGState().shouldAntialias != _kCGTrinaryDefault || !allowsAntialiasing) {
+        deviceContext->SetAntialiasMode(GetAntialiasMode());
+    }
+
+    RETURN_IF_FAILED(CurrentGState().IntersectClippingGeometry(transformedRectangle.Get(), kCGPathEOFill));
+
+    if (!transparentBrush) {
+        RETURN_IF_FAILED(deviceContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black, 0.0f), &transparentBrush));
+    }
+
+    deviceContext->SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND_COPY);
+    deviceContext->FillGeometry(CurrentGState().clippingGeometry.Get(), transparentBrush.Get());
+    deviceContext->SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND_SOURCE_OVER);
+    RETURN_IF_FAILED(PopGState());
+
+    return PopEndDraw();
+}
+
 /**
- @Status Caveat
- @Notes only supports the scenario where clipping is not set.
- Also only works on untransformed coordinates.
- The cleared region will be cleared in device space.
+ @Status Interoperable
 */
 void CGContextClearRect(CGContextRef context, CGRect rect) {
     NOISY_RETURN_IF_NULL(context);
-    ComPtr<ID2D1DeviceContext> deviceContext = context->DeviceContext();
-    if (!context->CurrentGState().clippingGeometry) {
-        _CGContextPushBeginDraw(context);
-        deviceContext->PushAxisAlignedClip(__CGRectToD2D_F(rect), context->GetAntialiasMode());
-        deviceContext->Clear(nullptr); // transparent black clear
-        deviceContext->PopAxisAlignedClip();
-        _CGContextPopEndDraw(context);
-    }
+    FAIL_FAST_IF_FAILED(context->ClearRect(rect));
 }
 
 HRESULT __CGContext::_CreateShadowEffect(ID2D1Image* inputImage, ID2D1Effect** outShadowEffect) {
@@ -2364,7 +2411,10 @@ HRESULT __CGContext::_CreateShadowEffect(ID2D1Image* inputImage, ID2D1Effect** o
 }
 
 template <typename Lambda> // Lambda takes the form HRESULT(*)(CGContextRef, ID2D1DeviceContext*)
-HRESULT __CGContext::Draw(_CGCoordinateMode coordinateMode, CGAffineTransform* additionalTransform, Lambda&& drawLambda) {
+HRESULT __CGContext::Draw(__CGCoordinateMode coordinateMode, CGAffineTransform* additionalTransform, Lambda&& drawLambda) {
+    // Skip drawing if the context has failed; this is not an error in Draw.
+    RETURN_RESULT_IF(FAILED(_firstErrorHr), S_OK);
+
     auto& state = CurrentGState();
 
     if (!state.ShouldDraw()) {
@@ -2401,23 +2451,14 @@ HRESULT __CGContext::Draw(_CGCoordinateMode coordinateMode, CGAffineTransform* a
                                  nullptr);
     }
 
-    auto cleanup = wil::ScopeExit([this, layer]() {
-        if (layer) {
-            this->deviceContext->PopLayer();
-        }
-
-        // TODO GH#1194: We will need to re-evaluate Direct2D's D2DERR_RECREATE when we move to HW acceleration.
-        this->PopEndDraw();
-    });
-
     // If the context has requested antialiasing other than the defaults we now need to update the device context.
-    if (allowsAntialiasing && CurrentGState().shouldAntialias != _kCGTrinaryDefault) {
+    if (CurrentGState().shouldAntialias != _kCGTrinaryDefault || !allowsAntialiasing) {
         deviceContext->SetAntialiasMode(GetAntialiasMode());
 
         // If any text rendering parameters have been updated, we need to update the device context.
-        if ((CurrentGState().shouldSmoothFonts != _kCGTrinaryDefault && allowsFontSmoothing) ||
-            (CurrentGState().shouldSubpixelPosition != _kCGTrinaryDefault && allowsFontSubpixelPositioning) ||
-            (CurrentGState().shouldSubpixelQuantizeFonts != _kCGTrinaryDefault && allowsFontSubpixelQuantization)) {
+        if ((CurrentGState().shouldSmoothFonts != _kCGTrinaryDefault || !allowsFontSmoothing) ||
+            (CurrentGState().shouldSubpixelPosition != _kCGTrinaryDefault || !allowsFontSubpixelPositioning) ||
+            (CurrentGState().shouldSubpixelQuantizeFonts != _kCGTrinaryDefault || !allowsFontSubpixelQuantization)) {
             ComPtr<IDWriteRenderingParams> originalTextRenderingParams;
             deviceContext->GetTextRenderingParams(&originalTextRenderingParams);
 
@@ -2465,7 +2506,11 @@ HRESULT __CGContext::Draw(_CGCoordinateMode coordinateMode, CGAffineTransform* a
         RETURN_IF_FAILED(std::forward<Lambda>(drawLambda)(this, deviceContext.Get()));
     }
 
-    return S_OK;
+    if (layer) {
+        this->deviceContext->PopLayer();
+    }
+
+    return this->PopEndDraw();
 }
 
 HRESULT __CGContext::_DrawGeometryInternal(ID2D1Geometry* geometry,
@@ -2490,7 +2535,7 @@ HRESULT __CGContext::_DrawGeometryInternal(ID2D1Geometry* geometry,
     return S_OK;
 }
 
-HRESULT __CGContext::DrawGeometry(_CGCoordinateMode coordinateMode, ID2D1Geometry* pGeometry, CGPathDrawingMode drawMode) {
+HRESULT __CGContext::DrawGeometry(__CGCoordinateMode coordinateMode, ID2D1Geometry* pGeometry, CGPathDrawingMode drawMode) {
     ComPtr<ID2D1Geometry> geometry(pGeometry);
     return Draw(coordinateMode, nullptr, [geometry, drawMode, this](CGContextRef context, ID2D1DeviceContext* deviceContext) {
         return _DrawGeometryInternal(geometry.Get(), drawMode, context, deviceContext);
@@ -2898,7 +2943,6 @@ void CGContextDrawLayerAtPoint(CGContextRef context, CGPoint destPoint, CGLayerR
 #pragma region Drawing Operations - PDF
 /**
  @Status Stub
- @Notes
 */
 void CGContextDrawPDFPage(CGContextRef context, CGPDFPageRef page) {
     NOISY_RETURN_IF_NULL(context);
@@ -2908,34 +2952,47 @@ void CGContextDrawPDFPage(CGContextRef context, CGPDFPageRef page) {
 }
 #pragma endregion
 
-#pragma region Internal Functions - To Be Removed
-// TODO(DH) GH#1077 remove all of these internal functions.
-// TODO: functions below are not part of offical exports, but they are also exported
-// to be used by other framework components, we should consider moving them to a shared library
-void CGContextClearToColor(CGContextRef context, CGFloat r, CGFloat g, CGFloat b, CGFloat a) {
+#pragma region Enhanced Error Handling
+const CFStringRef kCGErrorDomainIslandwood = CFSTR("kCGErrorDomainIslandwood");
+
+void CGContextIwEnableEnhancedErrorHandling(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    context->EnableEnhancedErrorHandling();
 }
 
-bool CGContextIsDirty(CGContextRef context) {
-    NOISY_RETURN_IF_NULL(context, StubReturn());
+bool __CGContext::GetError(CFErrorRef* /* returns-retained */ outError) {
+    RETURN_RESULT_IF(!_useEnhancedErrorHandling, false);
+
+    HRESULT hr = _firstErrorHr;
+    if (SUCCEEDED(hr)) {
+        return false;
+    }
+
+    CGContextIwErrorCode errorCode = kCGContextErrorInvalidParameter;
+    if (hr == D2DERR_RECREATE_TARGET) {
+        errorCode = kCGContextErrorDeviceReset;
+    }
+    // All other errors are likely to be catastrophic; there's no point
+    // in differentiating them here.
+
+    if (outError) {
+        CFIndex embeddedHresultDowncast = static_cast<CFIndex>(hr);
+        auto embeddedHresult = woc::MakeStrongCF<CFNumberRef>(CFNumberCreate(nullptr, kCFNumberCFIndexType, &embeddedHresultDowncast));
+
+        CFTypeRef key = CFSTR("hresult"); // This matches the hresult exception key used in Foundation, which we can't import.
+        CFTypeRef value = embeddedHresult.get();
+        auto userInfo = woc::MakeStrongCF<CFDictionaryRef>(
+            CFDictionaryCreate(nullptr, &key, &value, 1, &kCFCopyStringDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks));
+
+        *outError = CFErrorCreate(nullptr, kCGErrorDomainIslandwood, errorCode, userInfo);
+    }
+
     return true;
 }
 
-void CGContextSetDirty(CGContextRef context, bool dirty) {
-    NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
-}
-
-void CGContextReleaseLock(CGContextRef context) {
-    NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
-}
-
-bool CGContextIsPointInPath(CGContextRef context, bool eoFill, CGFloat x, CGFloat y) {
-    NOISY_RETURN_IF_NULL(context, StubReturn());
-    UNIMPLEMENTED();
-    return StubReturn();
+bool CGContextIwGetError(CGContextRef context, CFErrorRef* /* returns-retained */ outError) {
+    NOISY_RETURN_IF_NULL(context, false);
+    return context->GetError(outError);
 }
 #pragma endregion
 
@@ -2994,7 +3051,10 @@ private:
 
 /**
  @Status Caveat
- We only support formats that are 32 bits per pixel, colorspace and bitmapinfo that are ARGB.
+ @Notes If data is provided, it can only be in one of the few pixel formats Direct2D can render to in system memory:
+        (P)RGBA, (P)BGRA, or Alpha8.
+        If a buffer is provided for a grayscale image, render operations will be carried out into an Alpha8 buffer instead.
+        Luminance values will be discarded in favour of alpha values.
 */
 CGContextRef CGBitmapContextCreate(void* data,
                                    size_t width,
@@ -3026,7 +3086,26 @@ CGContextRef CGBitmapContextCreateWithData(void* data,
     RETURN_NULL_IF(!height);
     RETURN_NULL_IF(!colorSpace);
 
+    size_t imputedBitsPerPixel = _CGImageImputeBitsPerPixelFromFormat(colorSpace, bitsPerComponent, bitmapInfo);
     size_t bitsPerPixel = ((bytesPerRow / width) << 3);
+    size_t estimatedBytesPerRow = (imputedBitsPerPixel >> 3) * width;
+
+    if (data && estimatedBytesPerRow > bytesPerRow) {
+        TraceError(TAG,
+                   L"Invalid data stride: a %ux%u %ubpp context requires at least a %u-byte stride (requested: %u bytes/row).",
+                   width,
+                   height,
+                   imputedBitsPerPixel,
+                   estimatedBytesPerRow,
+                   bytesPerRow);
+        return nullptr;
+    }
+
+    if (!bytesPerRow) { // When data is not provided, we are allowed to use our estimates.
+        bitsPerPixel = imputedBitsPerPixel;
+        bytesPerRow = estimatedBytesPerRow;
+    }
+
     WICPixelFormatGUID requestedPixelFormat;
     RETURN_NULL_IF_FAILED(
         _CGImageGetWICPixelFormatFromImageProperties(bitsPerComponent, bitsPerPixel, colorSpace, bitmapInfo, &requestedPixelFormat));
@@ -3081,7 +3160,7 @@ CGContextRef CGBitmapContextCreateWithData(void* data,
 */
 CGBitmapInfo CGBitmapContextGetBitmapInfo(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context, kCGBitmapByteOrderDefault);
-    return CGImageGetBitmapInfo(CGBitmapContextGetImage(context));
+    return CGImageGetBitmapInfo(_CGBitmapContextGetImage(context));
 }
 
 /**
@@ -3089,7 +3168,7 @@ CGBitmapInfo CGBitmapContextGetBitmapInfo(CGContextRef context) {
 */
 CGImageAlphaInfo CGBitmapContextGetAlphaInfo(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context, kCGImageAlphaNone);
-    return CGImageGetAlphaInfo(CGBitmapContextGetImage(context));
+    return CGImageGetAlphaInfo(_CGBitmapContextGetImage(context));
 }
 
 /**
@@ -3097,7 +3176,7 @@ CGImageAlphaInfo CGBitmapContextGetAlphaInfo(CGContextRef context) {
 */
 size_t CGBitmapContextGetBitsPerComponent(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context, 0);
-    return CGImageGetBitsPerComponent(CGBitmapContextGetImage(context));
+    return CGImageGetBitsPerComponent(_CGBitmapContextGetImage(context));
 }
 
 /**
@@ -3105,7 +3184,7 @@ size_t CGBitmapContextGetBitsPerComponent(CGContextRef context) {
 */
 size_t CGBitmapContextGetBitsPerPixel(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context, 0);
-    return CGImageGetBitsPerPixel(CGBitmapContextGetImage(context));
+    return CGImageGetBitsPerPixel(_CGBitmapContextGetImage(context));
 }
 
 /**
@@ -3113,7 +3192,7 @@ size_t CGBitmapContextGetBitsPerPixel(CGContextRef context) {
 */
 CGColorSpaceRef CGBitmapContextGetColorSpace(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context, nullptr);
-    return CGImageGetColorSpace(CGBitmapContextGetImage(context));
+    return CGImageGetColorSpace(_CGBitmapContextGetImage(context));
 }
 
 /**
@@ -3121,7 +3200,7 @@ CGColorSpaceRef CGBitmapContextGetColorSpace(CGContextRef context) {
 */
 size_t CGBitmapContextGetWidth(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context, 0);
-    return CGImageGetWidth(CGBitmapContextGetImage(context));
+    return CGImageGetWidth(_CGBitmapContextGetImage(context));
 }
 
 /**
@@ -3129,7 +3208,7 @@ size_t CGBitmapContextGetWidth(CGContextRef context) {
 */
 size_t CGBitmapContextGetHeight(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context, 0);
-    return CGImageGetHeight(CGBitmapContextGetImage(context));
+    return CGImageGetHeight(_CGBitmapContextGetImage(context));
 }
 
 /**
@@ -3137,7 +3216,7 @@ size_t CGBitmapContextGetHeight(CGContextRef context) {
 */
 size_t CGBitmapContextGetBytesPerRow(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context, 0);
-    return CGImageGetBytesPerRow(CGBitmapContextGetImage(context));
+    return CGImageGetBytesPerRow(_CGBitmapContextGetImage(context));
 }
 
 /**
@@ -3145,7 +3224,7 @@ size_t CGBitmapContextGetBytesPerRow(CGContextRef context) {
 */
 void* CGBitmapContextGetData(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context, nullptr);
-    return _CGImageGetRawBytes(CGBitmapContextGetImage(context));
+    return _CGImageGetRawBytes(_CGBitmapContextGetImage(context));
 }
 
 /**
@@ -3171,7 +3250,7 @@ CGImageRef CGBitmapContextCreateImage(CGContextRef context) {
     return _CGImageCreateCopyWithPixelFormat(bitmapContext->_image.get(), bitmapContext->GetOutputPixelFormat());
 }
 
-CGImageRef CGBitmapContextGetImage(CGContextRef context) {
+CGImageRef _CGBitmapContextGetImage(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context, nullptr);
     if (CFGetTypeID(context) != __CGBitmapContext::GetTypeID()) {
         TraceError(TAG, L"Image requested from non-bitmap CGContext.");

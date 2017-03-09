@@ -1,0 +1,29 @@
+mode: ContinuousDelivery
+increment: None
+branches:
+  master:
+    regex: master
+    tag: ''
+    increment: Patch
+    prevent-increment-of-merged-branch-version: true
+    track-merge-target: true
+    tracks-release-branches: false
+    is-release-branch: true
+    is-mainline: true
+  develop:
+    regex: develop
+    increment: None
+    tag: 'dev'
+    track-merge-target: true
+    tracks-release-branches: true
+    is-release-branch: false
+  .*:
+    regex: .*
+    tag: 'pr'
+    increment: None
+    track-merge-target: false
+    tracks-release-branches: true
+    is-release-branch: false
+    prevent-increment-of-merged-branch-version: true
+ignore:
+  sha: []

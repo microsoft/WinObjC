@@ -518,10 +518,10 @@ callbacks.drawPattern = __UIColorPatternFill;
 
 _pattern = (id) CGPatternCreateColorspace(self, bounds, m, bounds.size.width, bounds.size.height, 0, NO, &callbacks, pImg->_has32BitAlpha ? _ColorABGR : _ColorBGR);
 } else {
-_pattern = (id) CGPatternCreateFromImage(pImg);
+_pattern = (id) _CGPatternCreateFromImage(pImg);
 }
 #else
-    _pattern = (id)CGPatternCreateFromImage(pImg);
+    _pattern = (id)_CGPatternCreateFromImage(pImg);
 #endif
     _image = [image retain];
     _type = cgPatternBrush;

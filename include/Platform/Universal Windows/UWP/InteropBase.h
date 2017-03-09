@@ -51,7 +51,9 @@ WINRT_EXPORT
 
 @end
 
-// Does a safe cast of rtObject into a derived projected class type. Throws if it is an invalid cast.
+// Does a safe cast of rtObject into a derived projected class type.
+// Returns nil if cast fails.
+// Throws on error.
 WINRT_EXPORT_FN
 id rt_dynamic_cast(Class classType, RTObject* rtObject);
 

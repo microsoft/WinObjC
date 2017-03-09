@@ -111,7 +111,7 @@
         clipRect.size.height = rect.size.height - clipRect.origin.y - 13.0f;
         CGContextSaveGState(context);
         CGContextClipToRect(context, clipRect);
-        CGContextDrawImage(context, drawRect, CGBitmapContextGetImage(context));
+        CGContextDrawImage(context, drawRect, _CGBitmapContextGetImage(context));
         CGContextRestoreGState(context);
 
         CGContextRelease(context);
