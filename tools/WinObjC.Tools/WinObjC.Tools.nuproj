@@ -2,6 +2,7 @@
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.props" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.props')" />
+  <Import Project="$(SolutionDir)\..\common\winobjc.nuproj.common.props" Condition="Exists('$(SolutionDir)\..\common\winobjc.nuproj.common.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|AnyCPU">
       <Configuration>Debug</Configuration>
@@ -28,15 +29,11 @@
     <PackageTags>WinObjC.Tools</PackageTags>
   </PropertyGroup>
   <PropertyGroup Label="Globals">
-    <OutputPath>$(SolutionDir)\OutputPackages\$(Configuration)\</OutputPath>
     <ProjectGuid>0a23b6b4-94bb-4b3a-ba73-a7cb5ef7d8f9</ProjectGuid>
+    <PackageVersion_PreReleaseFormat>{PackageVersion_PreReleaseLabel}-{PackageVersion_Timestamp}</PackageVersion_PreReleaseFormat>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
   <ItemGroup>
     <None Include="project.json" />
     <None Include="WinObjC.Tools.targets" />
@@ -56,29 +53,5 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets')" />
   <Import Project="WinObjC.Tools.targets" />
-
-
-  <Target Name="GitPopulateVersionInfoLatestTag" BeforeTargets= "_GitPopulateVersionInfo" DependsOnTargets="$(GitInfoDependsOn)">
-   
-    <Exec Command='$(GitExe) describe $(GitDefaultBranch) --tags'
-        StandardErrorImportance="low"
-        StandardOutputImportance="low"
-        ConsoleToMSBuild="true"
-        WorkingDirectory="$(GitRoot)"
-        ContinueOnError="true">
-      <Output TaskParameter="ConsoleOutput" PropertyName="GitLatestTag"/>
-      <Output TaskParameter="ExitCode" PropertyName="MSBuildLastExitCode" />
-    </Exec>
-
-    <PropertyGroup>
-      <IsValidLatestTag>
-        $([System.Text.RegularExpressions.Regex]::IsMatch($(GitLatestTag), $(_GitBaseVersionExpr)))
-      </IsValidLatestTag>
-      <IsValidLatestTag>$(IsValidLatestTag.Trim())</IsValidLatestTag>
-
-      <GitBaseVersion Condition="'$(IsValidLatestTag)' == 'true'">$(GitLatestTag)</GitBaseVersion>
-    </PropertyGroup>
-
-  </Target>
-  
+  <Import Project="$(SolutionDir)\..\common\winobjc.nuproj.common.targets" Condition="Exists('$(SolutionDir)\..\common\winobjc.nuproj.common.targets')" />
 </Project>

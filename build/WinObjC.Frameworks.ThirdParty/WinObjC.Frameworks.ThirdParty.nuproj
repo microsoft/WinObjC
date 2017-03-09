@@ -2,6 +2,7 @@
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.props" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.props')" />
+  <Import Project="$(SolutionDir)\..\common\winobjc.nuproj.common.props" Condition="Exists('$(SolutionDir)\..\common\winobjc.nuproj.common.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|AnyCPU">
       <Configuration>Debug</Configuration>
@@ -36,9 +37,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
   <Import Project="WinObjC.Frameworks.ThirdParty.Packaging.props" />
   <PropertyGroup Label="Globals">
-    <OutputPath>$(SolutionDir)\OutputPackages\$(Configuration)\</OutputPath>
     <ProjectGuid>DFDF94D9-2A0A-4F9B-953B-6BF383858AD3</ProjectGuid>
-    <InferLegacyPackageReferences>false</InferLegacyPackageReferences>
     <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\</StarboardBasePath>
   </PropertyGroup>
   <ItemGroup>
@@ -57,4 +56,5 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets')" />
   <Import Project="WinObjC.Frameworks.ThirdParty.Packaging.targets" />
+  <Import Project="$(SolutionDir)\..\common\winobjc.nuproj.common.targets" Condition="Exists('$(SolutionDir)\..\common\winobjc.nuproj.common.targets')" />
 </Project>

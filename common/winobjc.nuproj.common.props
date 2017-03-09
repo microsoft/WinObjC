@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <OutputPath>$(SolutionDir)\OutputPackages\$(Configuration)\</OutputPath>
+    <InferLegacyPackageReferences>false</InferLegacyPackageReferences>
+    <IncludeSymbolsInPackage>false</IncludeSymbolsInPackage>
+    <IncludeFrameworkReferencesInPackage>false</IncludeFrameworkReferencesInPackage>
+    <InferLegacyPackageReferences>false</InferLegacyPackageReferences>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <UpdateAssemblyInfo>false</UpdateAssemblyInfo>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageVersion_PreReleaseFormat>{PackageVersion_Timestamp}.{PackageVersion_PreReleaseLabel}</PackageVersion_PreReleaseFormat>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <_CoreCompileOverrideDependsOn Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">Pack</_CoreCompileOverrideDependsOn>
+    <IsPackable Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">true</IsPackable>
+  </PropertyGroup>
+
+</Project>

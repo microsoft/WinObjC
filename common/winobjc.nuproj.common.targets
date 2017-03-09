@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="CoreCompile" DependsOnTargets="$(_CoreCompileOverrideDependsOn)" />
+
+  <Target Name="AddSingleConfigBuildOutput"  Returns="@(_PackageContentsForPlat)"> 
+    <MSBuild Projects="$(SolutionPath)"
+       Targets="GetSolutionConfigurationContents"
+       Properties="Configuration=$(Configuration);Platform=$(Platform)">
+      <Output TaskParameter="TargetOutputs" ItemName="_SolutionConfigurationContents" />
+    </MSBuild>
+
+    <Message Text="AddSingleConfigBuildOutput Platform: $(Platform)" Importance="High"/>
+
+    <MSBuild Projects="$(MSBuildProjectFile)"
+       Targets="GetPackageContents"
+       Properties="SkipGetPackageContentsForOtherPlatforms=true;BuildingInsideVisualStudio=false;BuildProjectReferences=true;Configuration=$(Configuration);Platform=$(Platform);CurrentSolutionConfigurationContents=%(_SolutionConfigurationContents.Identity);GetPackageContentsDependsOn=Build;$(GetPackageContentsDependsOn)">
+      <Output TaskParameter="TargetOutputs" ItemName="_PackageContentsForPlat" />
+    </MSBuild>
+  </Target>
+
+  <Target Name="AddOtherConfigsBuiltOutput" BeforeTargets="GetPackageContents" Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true' AND '$(Platform)' == 'AnyCPU'">
+
+    <ItemGroup>
+      <_PackTargetPlat Include="%(ProjectConfiguration.Platform)"
+              Condition="'%(ProjectConfiguration.Configuration)' == '$(Configuration)' AND '%(ProjectConfiguration.Platform)' != '$(Platform)'" />
+    </ItemGroup>
+    
+    <MSBuild Projects="$(MSBuildProjectFile)"
+         Targets="AddSingleConfigBuildOutput"
+         Properties="Platform=%(_PackTargetPlat.Identity)">
+      <Output TaskParameter="TargetOutputs" ItemName="_OtherPackageContents" />
+    </MSBuild>
+
+    <ItemGroup>
+      <PackageFile Include="@(_OtherPackageContents)" />
+    </ItemGroup>
+
+  </Target>
+
+  <!-- Inline task to check for timestamp file existence and creation-->  
+  <UsingTask  
+    TaskName="CreateTimestampFileIfNeeded"  
+    TaskFactory="CodeTaskFactory"  
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll" >  
+    <ParameterGroup>
+      <TimestampFile ParameterType="System.String" Required="true" />
+      <Timestamp ParameterType="System.String" Output="true" />  
+    </ParameterGroup>
+    <Task>
+      <Reference Include="System" />
+      <Reference Include="System.IO" />
+      <Reference Include="System.Threading" />
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.Threading" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+          var mutex = new Mutex(false, TimestampFile.Replace("\\", "."));
+          try
+          {
+            mutex.WaitOne();
+          } catch (AbandonedMutexException e)
+          {
+          }
+          if (!File.Exists(TimestampFile)) {
+              File.Create(TimestampFile);
+          }  
+
+          Timestamp = File.GetCreationTimeUtc(TimestampFile).ToString("yyyyMMddHHmmss");
+          mutex.ReleaseMutex();
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <PropertyGroup>
+    <GetPackageVersionDependsOn>SetPackageVersion;$(GetPackageVersionDependsOn);</GetPackageVersionDependsOn>
+  </PropertyGroup>
+
+  <Target Name="SetPackageVersion" DependsOnTargets="GetVersion" >
+    <PropertyGroup>
+        <PackageVersion></PackageVersion>
+    </PropertyGroup>
+
+    <Error Condition="'$(GitVersion_BranchName)' == ''"
+           Text="Cannot determine git branch. Please make sure GitInfo is listed in the project.json for this project and that git.exe is part of the PATH environment variable." />
+
+    <Warning Condition="'$(SolutionPath)' == ''"
+           Text="Cannot determine solution build time. Package version dependencies may be inconsistent as a result. Please make sure to build using .sln file." />
+
+    <CreateTimestampFileIfNeeded Condition="'$(SolutionDir)' != ''" 
+                                 TimestampFile="$(SolutionDir)$(SolutionName).timestamp">
+        <Output PropertyName="PackageTimestamp" TaskParameter="Timestamp" />  
+    </CreateTimestampFileIfNeeded>
+
+
+
+    <PropertyGroup>
+      <PackageTimestamp Condition="'$(PackageTimestamp)' == ''">$([System.DateTime]::Now.ToString(yyyyMMddHHmmss))</PackageTimestamp>
+      
+      <PackageVersion_Major>$(GitVersion_Major)</PackageVersion_Major>
+      <PackageVersion_Minor>$(GitVersion_Minor)</PackageVersion_Minor>
+      
+      <PackageVersion_Patch Condition="'$(PackageVersion_Patch)' == '' And '$(GitVersion_PreReleaseLabel)' == ''">$(GitVersion_Patch)</PackageVersion_Patch>
+      <PackageVersion_Patch Condition="'$(PackageVersion_Patch)' == '' And '$(GitVersion_PreReleaseLabel)' != ''">$([MSBuild]::Add('$(GitVersion_Patch)', '1'))</PackageVersion_Patch>
+
+      <PackageVersion_PreReleaseLabel>$(GitVersion_PreReleaseLabel)</PackageVersion_PreReleaseLabel>
+      <PackageVersion_Timestamp>$(PackageTimestamp)</PackageVersion_Timestamp>
+
+      <!-- Replace PreReleaseFormat msbuild propert names with positional String.Format args.
+
+           NOTE: If additional porperty replacements are needed, they must show up here. 
+           An extra cool improvement would be to figure out how to delay property expansion until this point to pass the format directly.  -->
+      <PackageVersion_PreReleaseFormat>$(PackageVersion_PreReleaseFormat.Replace('PackageVersion_Timestamp', '0'))</PackageVersion_PreReleaseFormat>
+      <PackageVersion_PreReleaseFormat>$(PackageVersion_PreReleaseFormat.Replace('PackageVersion_PreReleaseLabel', '1'))</PackageVersion_PreReleaseFormat>
+
+      <PackageVersion_PreRelease Condition="'$(PackageVersion_PreRelease)' == '' And '$(PackageVersion_PreReleaseLabel)' != ''">-$([System.String]::Format('$(PackageVersion_PreReleaseFormat)', $(PackageVersion_Timestamp), $(PackageVersion_PreReleaseLabel)))</PackageVersion_PreRelease>
+
+      <PackageVersion Condition="'$(PackageVersion)' == ''">$(PackageVersion_Major).$(PackageVersion_Minor).$(PackageVersion_Patch)$(PackageVersion_PreRelease)</PackageVersion>
+    </PropertyGroup>
+  </Target>
+
+</Project>

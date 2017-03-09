@@ -1,48 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <PropertyGroup>
-    <_CoreCompileOverrideDependsOn Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">Pack</_CoreCompileOverrideDependsOn>
-  </PropertyGroup>
-
-  <Target Name="CoreCompile" DependsOnTargets="$(_CoreCompileOverrideDependsOn)" />
-
-  <Target Name="AddSingleConfigBuildOutput"  Returns="@(_PackageContentsForPlat)"> 
-    <MSBuild Projects="$(SolutionPath)"
-       Targets="GetSolutionConfigurationContents"
-       Properties="Configuration=$(Configuration);Platform=$(Platform)">
-      <Output TaskParameter="TargetOutputs" ItemName="_SolutionConfigurationContents" />
-    </MSBuild>
-
-    <Message Text="AddSingleConfigBuildOutput Platform: $(Platform)" Importance="High"/>
-
-    <MSBuild Projects="$(MSBuildProjectFile)"
-       Targets="GetPackageContents"
-       Properties="SkipGetPackageContentsForOtherPlatforms=true;BuildingInsideVisualStudio=false;BuildProjectReferences=true;Configuration=$(Configuration);Platform=$(Platform);CurrentSolutionConfigurationContents=%(_SolutionConfigurationContents.Identity);GetPackageContentsDependsOn=Build;$(GetPackageContentsDependsOn)">
-      <Output TaskParameter="TargetOutputs" ItemName="_PackageContentsForPlat" />
-    </MSBuild>
-  </Target>
-
-  <Target Name="AddOtherConfigsBuiltOutput" BeforeTargets="GetPackageContents" Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true' AND '$(Platform)' == 'AnyCPU'">
-
-    <ItemGroup>
-      <_PackTargetPlat Include="%(ProjectConfiguration.Platform)"
-              Condition="'%(ProjectConfiguration.Configuration)' == '$(Configuration)' AND '%(ProjectConfiguration.Platform)' != '$(Platform)'" />
-    </ItemGroup>
-    
-    <MSBuild Projects="$(MSBuildProjectFile)"
-         Targets="AddSingleConfigBuildOutput"
-         Properties="Platform=%(_PackTargetPlat.Identity)">
-      <Output TaskParameter="TargetOutputs" ItemName="_OtherPackageContents" />
-    </MSBuild>
-
-    <ItemGroup>
-      <PackageFile Include="@(_OtherPackageContents)" />
-    </ItemGroup>
-
-  </Target>
-
-  <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents" DependsOnTargets="$(GitVersionDependsOn)" Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">
+   <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents" DependsOnTargets="$(GitVersionDependsOn)" Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">
 
       <ItemGroup>
         <!-- Include Deps for this project -->
