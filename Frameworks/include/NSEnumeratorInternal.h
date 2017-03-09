@@ -18,6 +18,11 @@
 
 #include <Foundation/NSEnumerator.h>
 
+#define NS_COLLECTION_THROW_ILLEGAL_KVO(KEYPATH)                                                                                         \
+    do {                                                                                                                                 \
+        [NSException raise:NSInvalidArgumentException format:@"%@ is not supported. Key path: %@", NSStringFromSelector(_cmd), KEYPATH]; \
+    } while (false)
+
 @class NSArray;
 
 typedef void (*initIteratorFunc)(id obj, void* enumeratorHolder);
@@ -45,11 +50,9 @@ __inline void _enumerateWithBlock(id<NSFastEnumeration> enumerator, NSEnumeratio
     __block BOOL stop = FALSE;
     for (id key in enumerator) {
         if (options & NSEnumerationConcurrent) {
-            dispatch_group_async(group,
-                                 queue,
-                                 ^() {
-                                     block(key, &stop);
-                                 });
+            dispatch_group_async(group, queue, ^() {
+                block(key, &stop);
+            });
         } else {
             block(key, &stop);
         }

@@ -112,16 +112,13 @@ FOUNDATION_EXPORT_CLASS
 - (BOOL)writeToFile:(NSString*)path atomically:(BOOL)flag;
 - (BOOL)writeToURL:(NSURL*)aURL atomically:(BOOL)flag;
 - (NSArray<NSString*>*)pathsMatchingExtensions:(NSArray<NSString*>*)filterTypes;
-- (void)removeObserver:(NSObject*)observer
-    fromObjectsAtIndexes:(NSIndexSet*)indexes
-              forKeyPath:(NSString*)keyPath
-                 context:(void*)context STUB_METHOD;
+- (void)removeObserver:(NSObject*)observer fromObjectsAtIndexes:(NSIndexSet*)indexes forKeyPath:(NSString*)keyPath context:(void*)context;
 - (void)addObserver:(NSObject*)anObserver
     toObjectsAtIndexes:(NSIndexSet*)indexes
             forKeyPath:(NSString*)keyPath
                options:(NSKeyValueObservingOptions)options
-               context:(void*)context STUB_METHOD;
-- (void)removeObserver:(NSObject*)anObserver fromObjectsAtIndexes:(NSIndexSet*)indexes forKeyPath:(NSString*)keyPath STUB_METHOD;
+               context:(void*)context;
+- (void)removeObserver:(NSObject*)anObserver fromObjectsAtIndexes:(NSIndexSet*)indexes forKeyPath:(NSString*)keyPath;
 - (void)setValue:(id)value forKey:(NSString*)key;
 - (id)valueForKey:(NSString*)key;
 @end

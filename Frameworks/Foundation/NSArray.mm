@@ -911,31 +911,56 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
-- (void)addObserver:(NSObject*)anObserver
+- (void)addObserver:(id)observer forKeyPath:(NSString*)keyPath options:(NSKeyValueObservingOptions)options context:(void*)context {
+    NS_COLLECTION_THROW_ILLEGAL_KVO(keyPath);
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)removeObserver:(id)observer forKeyPath:(NSString*)keyPath context:(void*)context {
+    NS_COLLECTION_THROW_ILLEGAL_KVO(keyPath);
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)removeObserver:(id)observer forKeyPath:(NSString*)keyPath {
+    NS_COLLECTION_THROW_ILLEGAL_KVO(keyPath);
+}
+
+/**
+ @Status Caveat
+ @Notes This is a convenience method, no performance gains for using this over individual calls to addObserver to affected objects
+*/
+- (void)addObserver:(NSObject*)observer
     toObjectsAtIndexes:(NSIndexSet*)indexes
             forKeyPath:(NSString*)keyPath
                options:(NSKeyValueObservingOptions)options
                context:(void*)context {
-    UNIMPLEMENTED();
+    [indexes enumerateIndexesUsingBlock:^(NSUInteger index, BOOL* stop) {
+        [[self objectAtIndex:index] addObserver:observer forKeyPath:keyPath options:options context:context];
+    }];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes This is a convenience method, no performance gains for using this over individual calls to removeObserver to affected objects
 */
-- (void)removeObserver:(NSObject*)anObserver fromObjectsAtIndexes:(NSIndexSet*)indexes forKeyPath:(NSString*)keyPath {
-    UNIMPLEMENTED();
+- (void)removeObserver:(NSObject*)observer fromObjectsAtIndexes:(NSIndexSet*)indexes forKeyPath:(NSString*)keyPath {
+    [self removeObserver:observer fromObjectsAtIndexes:indexes forKeyPath:keyPath context:nullptr];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes This is a convenience method, no performance gains for using this over individual calls to removeObserver to affected objects
 */
 - (void)removeObserver:(NSObject*)observer fromObjectsAtIndexes:(NSIndexSet*)indexes forKeyPath:(NSString*)keyPath context:(void*)context {
-    UNIMPLEMENTED();
+    [indexes enumerateIndexesUsingBlock:^(NSUInteger index, BOOL* stop) {
+        [[self objectAtIndex:index] removeObserver:observer forKeyPath:keyPath context:context];
+    }];
 }
 
 /**
