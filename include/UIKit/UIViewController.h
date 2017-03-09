@@ -117,6 +117,7 @@ UIKIT_EXPORT_CLASS
 @property (readonly, nonatomic, strong) NSExtensionContext* extensionContext STUB_PROPERTY;
 @property (readonly, nonatomic, strong) UISearchDisplayController* searchDisplayController;
 @property (readonly, nonatomic, strong) UIView* viewIfLoaded STUB_PROPERTY;
+@property (readonly, nonatomic, strong) UIView* modalOverlayView; // WinObjC extension
 
 @property (copy) UIBezierPath* accessibilityPath;
 @property (nonatomic) CGRect accessibilityFrame;

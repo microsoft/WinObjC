@@ -1268,6 +1268,9 @@ NSMutableDictionary* _pageMappings;
     // Keep modal alive past completion despite unlinking from parent.
     StrongId<UIViewController> presented = self->priv->_presentedViewController;
 
+    [presented->priv->_modalOverlayView removeFromSuperview];
+    presented->priv->_modalOverlayView = nil;
+
     // Prevent default view appearance handling in UIView occuring when we
     // remove the presented controller's view from its window.
     presented->priv->_managesViewEvents = YES;
@@ -1382,6 +1385,7 @@ NSMutableDictionary* _pageMappings;
             options:UIViewAnimationOptionCurveEaseInOut
             animations:^{
                 presentedView.center = position;
+                [presented->priv->_modalOverlayView setAlpha:0.0f];
             }
             completion:^(BOOL completed) {
                 [self _finishModalDismissAnimated:YES completion:completion];
@@ -1465,6 +1469,14 @@ NSMutableDictionary* _pageMappings;
 
     [self _notifyViewWillAppear:animated];
 
+    if ([self modalPresentationStyle] == UIModalPresentationFormSheet && ![self _hidesParent]) {
+        CGRect overlayFrame = [[UIScreen mainScreen] applicationFrame];
+        priv->_modalOverlayView.attach([[UIView alloc] initWithFrame:overlayFrame]);
+        [priv->_modalOverlayView setBackgroundColor:[UIColor blackColor]];
+        [priv->_modalOverlayView setAlpha:0.0f];
+        [parentWindow addSubview:priv->_modalOverlayView];
+    }
+
     // Avoid default view appearance mechanisms in UIView.mm (which e.g. handle view
     // appearence events for views with an owning controller manually added to a window).
     // Note that mechanism in UIView.mm currently overeagerly calls viewDidAppear when adding
@@ -1497,12 +1509,14 @@ NSMutableDictionary* _pageMappings;
             delay:0.0f
             options:UIViewAnimationOptionCurveEaseInOut
             animations:^{
+                [priv->_modalOverlayView setAlpha:.5f];
                 [view setCenter:origPos];
             }
             completion:^(BOOL finished) {
                 [self _finishAddToTopAnimated:YES completion:completion];
             }];
     } else {
+        [priv->_modalOverlayView setAlpha:.5f];
         [self _finishAddToTopAnimated:NO completion:completion];
     }
 }
@@ -2108,6 +2122,15 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
 */
 - (UIModalPresentationStyle)modalPresentationStyle {
     return priv->_presentationStyle;
+}
+
+/**
+ @Status Caveat
+ @Notes  WinObjC-only extension providing access
+         to UIModalPresentationFormSheet overlay.
+*/
+- (UIView*)modalOverlayView {
+    return priv->_modalOverlayView;
 }
 
 /**

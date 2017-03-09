@@ -67,6 +67,7 @@ struct UIViewControllerPriv {
     UIModalPresentationStyle _presentationStyle;
     BOOL _hidesBottomBar;
     UIModalTransitionStyle _modalTransitionStyle;
+    StrongId<UIView> _modalOverlayView;
     BOOL _isRootView;
     CGSize _contentSizeForViewInPopover;
     unsigned _edgesForExtendedLayout;
