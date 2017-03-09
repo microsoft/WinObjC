@@ -17,6 +17,14 @@ branches:
     track-merge-target: true
     tracks-release-branches: true
     is-release-branch: false
+  release/.*:
+    regex: release/.*
+    tag: ''
+    prevent-increment-of-merged-branch-version: true
+    track-merge-target: true
+    tracks-release-branches: false
+    is-release-branch: true
+    is-mainline: true
   .*:
     regex: .*
     tag: 'pr'

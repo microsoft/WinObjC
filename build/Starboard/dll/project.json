@@ -1,6 +1,6 @@
 ﻿{
   "dependencies": {
-    "GitInfo": "1.1.32",
+    "GitVersionTask": "4.0.0-beta0011",
     "NuGet.Build.Packaging": "0.1.186",
     "WinObjC.Language": "0.2.160915-*",
     "WinObjC.Logging": "0.2.160915-*"
