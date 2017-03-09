@@ -174,7 +174,7 @@ UIKIT_EXPORT_CLASS
 - (id<UIViewControllerPreviewing>)registerForPreviewingWithDelegate:(id<UIViewControllerPreviewingDelegate>)delegate
                                                          sourceView:(UIView*)sourceView STUB_METHOD;
 - (id<UIViewControllerTransitionCoordinator>)transitionCoordinator STUB_METHOD;
--(instancetype)initWithNibName:(NSString*)nibName bundle:(NSBundle*)nibBundle NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithNibName:(NSString*)nibName bundle:(NSBundle*)nibBundle NS_DESIGNATED_INITIALIZER;
 - (void)addChildViewController:(UIViewController*)childController;
 - (void)addKeyCommand:(UIKeyCommand*)keyCommand STUB_METHOD;
 - (void)applicationFinishedRestoringState STUB_METHOD;

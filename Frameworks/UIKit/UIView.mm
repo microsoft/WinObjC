@@ -1356,9 +1356,10 @@ static void adjustSubviews(UIView* self, CGSize parentSize, CGSize delta) {
     if (controller != nil && window != nil) {
         UIViewController* rootController = [[[[UIApplication sharedApplication] windows] objectAtIndex:0] rootViewController];
         UIViewController* parentController = [UIViewController controllerForView:superview];
-        if (![controller _managesViewEvents] && (rootController == controller || [controller parentViewController] != nil ||
-            [controller isKindOfClass:[UINavigationController class]] || [parentController isKindOfClass:[UINavigationController class]] ||
-            g_alwaysSendViewEvents)) {
+        if (![controller _managesViewEvents] &&
+            (rootController == controller || [controller parentViewController] != nil ||
+             [controller isKindOfClass:[UINavigationController class]] || [parentController isKindOfClass:[UINavigationController class]] ||
+             g_alwaysSendViewEvents)) {
             if (stackLevel == 0) {
                 // viewWillAppear: must be sent when a view controller's view is added directly to a view hierarchy.
                 [controller _notifyViewWillAppear:FALSE];
@@ -1379,8 +1380,8 @@ static void adjustSubviews(UIView* self, CGSize parentSize, CGSize delta) {
 
         UIViewController* parentController = [UIViewController controllerForView:superview];
         if (![controller _managesViewEvents] && (rootController == controller || [controller parentViewController] != nil ||
-            [controller isKindOfClass:[UINavigationController class]] || [parentController isKindOfClass:[UINavigationController class]] ||
-            g_alwaysSendViewEvents))
+                                                 [controller isKindOfClass:[UINavigationController class]] ||
+                                                 [parentController isKindOfClass:[UINavigationController class]] || g_alwaysSendViewEvents))
             [controller _notifyViewDidDisappear:FALSE];
     }
 
