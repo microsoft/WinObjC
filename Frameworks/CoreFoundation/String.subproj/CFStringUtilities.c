@@ -434,7 +434,7 @@ static UCollator *__CFStringCopyDefaultCollator(CFLocaleRef compareLocale) {
 static void __collatorFinalize(UCollator *collator) {
     // WINOBJC: Make the cast explicit
     // CFLocaleRef locale = _CFGetTSD(__CFTSDKeyCollatorLocale);
-    CFLocaleRef locale = static_cast<CFLocaleRef>(_CFGetTSD(__CFTSDKeyCollatorLocale));
+    CFLocaleRef locale = (CFLocaleRef)_CFGetTSD(__CFTSDKeyCollatorLocale);
 
     _CFSetTSD(__CFTSDKeyCollatorUCollator, NULL, NULL);
     _CFSetTSD(__CFTSDKeyCollatorLocale, NULL, NULL);
@@ -626,8 +626,8 @@ CF_PRIVATE CFComparisonResult _CFCompareStringsWithLocale(CFStringInlineBuffer *
     // WINOBJC: Explicit casts
     // UCollator *threadCollator = _CFGetTSD(__CFTSDKeyCollatorUCollator);
     // CFLocaleRef threadLocale = _CFGetTSD(__CFTSDKeyCollatorLocale);
-    UCollator *threadCollator = static_cast<UCollator*>(_CFGetTSD(__CFTSDKeyCollatorUCollator));
-    CFLocaleRef threadLocale = static_cast<CFLocaleRef>(_CFGetTSD(__CFTSDKeyCollatorLocale));
+    UCollator *threadCollator = (UCollator*)_CFGetTSD(__CFTSDKeyCollatorUCollator);
+    CFLocaleRef threadLocale = (CFLocaleRef)_CFGetTSD(__CFTSDKeyCollatorLocale);
 
     if (compareLocale == threadLocale) {
     collator = threadCollator;
@@ -768,7 +768,7 @@ CF_PRIVATE CFComparisonResult _CFCompareStringsWithLocale(CFStringInlineBuffer *
 
     // WINOBJC: Make the casts explicit
     // _CFSetTSD(__CFTSDKeyCollatorUCollator, collator, (void *)__collatorFinalize);
-    _CFSetTSD(__CFTSDKeyCollatorUCollator, static_cast<void *>(collator), (void (*)(void *))__collatorFinalize);
+    _CFSetTSD(__CFTSDKeyCollatorUCollator, (void *)collator, (void (*)(void *))__collatorFinalize);
     _CFSetTSD(__CFTSDKeyCollatorLocale, (void *)CFRetain(compareLocale), NULL);
     }
 #endif
