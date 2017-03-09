@@ -428,9 +428,14 @@ static UCollator *__CFStringCopyDefaultCollator(CFLocaleRef compareLocale) {
     return collator;
 }
 
-#if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED
+// WINOBJC: Make this available on Windows
+// #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED
+#if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_WINDOWS || DEPLOYMENT_TARGET_LINUX
 static void __collatorFinalize(UCollator *collator) {
-    CFLocaleRef locale = _CFGetTSD(__CFTSDKeyCollatorLocale);
+    // WINOBJC: Make the cast explicit
+    // CFLocaleRef locale = _CFGetTSD(__CFTSDKeyCollatorLocale);
+    CFLocaleRef locale = static_cast<CFLocaleRef>(_CFGetTSD(__CFTSDKeyCollatorLocale));
+
     _CFSetTSD(__CFTSDKeyCollatorUCollator, NULL, NULL);
     _CFSetTSD(__CFTSDKeyCollatorLocale, NULL, NULL);
     __CFLock(&__CFDefaultCollatorLock);
@@ -613,24 +618,30 @@ CF_PRIVATE CFComparisonResult _CFCompareStringsWithLocale(CFStringInlineBuffer *
     }
     
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_WINDOWS || DEPLOYMENT_TARGET_LINUX
-#if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED
+// WINOBJC: Do this in Windows also
+// #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED
     // First we try to use the last one used on this thread, if the locale is the same,
     // otherwise we try to check out a default one, or then we create one.
-    UCollator *threadCollator = _CFGetTSD(__CFTSDKeyCollatorUCollator);
-    CFLocaleRef threadLocale = _CFGetTSD(__CFTSDKeyCollatorLocale);
+
+    // WINOBJC: Explicit casts
+    // UCollator *threadCollator = _CFGetTSD(__CFTSDKeyCollatorUCollator);
+    // CFLocaleRef threadLocale = _CFGetTSD(__CFTSDKeyCollatorLocale);
+    UCollator *threadCollator = static_cast<UCollator*>(_CFGetTSD(__CFTSDKeyCollatorUCollator));
+    CFLocaleRef threadLocale = static_cast<CFLocaleRef>(_CFGetTSD(__CFTSDKeyCollatorLocale));
+
     if (compareLocale == threadLocale) {
     collator = threadCollator;
     } else {
-#endif
+// #endif
     collator = __CFStringCopyDefaultCollator((CFLocaleRef)compareLocale);
     defaultCollator = true;
     if (NULL == collator) {
         collator = __CFStringCreateCollator((CFLocaleRef)compareLocale);
         defaultCollator = false;
     }
-#if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED
+// #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED
     }
-#endif
+// #endif
 #endif
     
     characters1 = CFStringGetCharactersPtrFromInlineBuffer(str1, range1);
@@ -747,13 +758,17 @@ CF_PRIVATE CFComparisonResult _CFCompareStringsWithLocale(CFStringInlineBuffer *
         if (buffer2Len > 0) CFAllocatorDeallocate(kCFAllocatorSystemDefault, buffer2);
     }
 
-#if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED
+// WINOBJC: Do this cleanup on Windows also
+// #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED
+#if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_WINDOWS || DEPLOYMENT_TARGET_LINUX
     if (collator == threadCollator) {
     // do nothing, already cached
     } else {
     if (threadLocale) __collatorFinalize((UCollator *)_CFGetTSD(__CFTSDKeyCollatorUCollator)); // need to dealloc collators
 
-    _CFSetTSD(__CFTSDKeyCollatorUCollator, collator, (void *)__collatorFinalize);
+    // WINOBJC: Make the casts explicit
+    // _CFSetTSD(__CFTSDKeyCollatorUCollator, collator, (void *)__collatorFinalize);
+    _CFSetTSD(__CFTSDKeyCollatorUCollator, static_cast<void *>(collator), (void (*)(void *))__collatorFinalize);
     _CFSetTSD(__CFTSDKeyCollatorLocale, (void *)CFRetain(compareLocale), NULL);
     }
 #endif
