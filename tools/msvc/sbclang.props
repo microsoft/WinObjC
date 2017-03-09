@@ -35,7 +35,7 @@
       <RuntimeLibrary Condition="'%(ClangCompile.RuntimeLibrary)' == ''">MultiThreadedDLL</RuntimeLibrary>
       <ReadTLogFile Condition="'%(ClangCompile.ReadTLogFile)' == ''">$(TLogLocation)clang.read.1.tlog</ReadTLogFile>
       <WOCStdlib Condition="'%(ClangCompile.WOCStdlib)' == ''">true</WOCStdlib>
-      <InternalSystemIncludePaths Condition="'%(ClangCompile.InternalSystemIncludePaths)' == ''">%(InternalSystemIncludePaths);$(StarboardSdkRoot)\deps\prebuilt\include\;$(StarboardSdkRoot)\include\;</InternalSystemIncludePaths>
+      <InternalSystemIncludePaths Condition="'%(ClangCompile.InternalSystemIncludePaths)' == ''">%(InternalSystemIncludePaths);$(IncludePath);$(StarboardSdkRoot)\deps\prebuilt\include\;$(StarboardSdkRoot)\include\;</InternalSystemIncludePaths>
       <InternalForceIncludes Condition="'%(ClangCompile.InternalSystemIncludes)' == ''"> </InternalForceIncludes>
       <SystemHeaderDeps Condition="'%(ClangCompile.SystemHeaderDeps)' == ''">false</SystemHeaderDeps>
       <MaxClangProcesses Condition="'%(ClangCompile.MaxClangProcesses)' == ''">-1</MaxClangProcesses>
