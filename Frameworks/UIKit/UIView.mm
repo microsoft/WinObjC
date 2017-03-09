@@ -1317,13 +1317,13 @@ static void adjustSubviews(UIView* self, CGSize parentSize, CGSize delta) {
         }
 
         UIViewController* parentController = [UIViewController controllerForView:superview];
-        if (rootController == controller || g_alwaysSendViewEvents)
+        if (![controller _managesViewEvents] && (rootController == controller || g_alwaysSendViewEvents))
             [controller _notifyViewWillAppear:g_presentingAnimated]; /*** should we do this? ****/
     }
     if (controller != nil && window == nil) {
         UIViewController* rootController = [[[[UIApplication sharedApplication] windows] objectAtIndex:0] rootViewController];
         UIViewController* parentController = [UIViewController controllerForView:superview];
-        if (rootController == controller || g_alwaysSendViewEvents)
+        if (![controller _managesViewEvents] && (rootController == controller || g_alwaysSendViewEvents))
             [controller _notifyViewWillDisappear:g_presentingAnimated]; /*** should we do this? ****/
     }
 
@@ -1356,11 +1356,17 @@ static void adjustSubviews(UIView* self, CGSize parentSize, CGSize delta) {
     if (controller != nil && window != nil) {
         UIViewController* rootController = [[[[UIApplication sharedApplication] windows] objectAtIndex:0] rootViewController];
         UIViewController* parentController = [UIViewController controllerForView:superview];
-        if (rootController == controller || [controller parentViewController] != nil ||
+        if (![controller _managesViewEvents] && (rootController == controller || [controller parentViewController] != nil ||
             [controller isKindOfClass:[UINavigationController class]] || [parentController isKindOfClass:[UINavigationController class]] ||
-            g_alwaysSendViewEvents) {
+            g_alwaysSendViewEvents)) {
             if (stackLevel == 0) {
+                // viewWillAppear: must be sent when a view controller's view is added directly to a view hierarchy.
                 [controller _notifyViewWillAppear:FALSE];
+
+                // But calling viewDidAppear: in all cases, e.g. when a controller owned view is manually
+                // added to a window, is not consistent with ref platform. TODO: investigate consequences of
+                // turning off g_alwaysSetViewEvents, validate (dis)appearance event handling, and address "should
+                // we do this?" comments. See issue #2115.
                 [controller _notifyViewDidAppear:FALSE];
             }
         }
@@ -1372,9 +1378,9 @@ static void adjustSubviews(UIView* self, CGSize parentSize, CGSize delta) {
         }
 
         UIViewController* parentController = [UIViewController controllerForView:superview];
-        if (rootController == controller || [controller parentViewController] != nil ||
+        if (![controller _managesViewEvents] && (rootController == controller || [controller parentViewController] != nil ||
             [controller isKindOfClass:[UINavigationController class]] || [parentController isKindOfClass:[UINavigationController class]] ||
-            g_alwaysSendViewEvents)
+            g_alwaysSendViewEvents))
             [controller _notifyViewDidDisappear:FALSE];
     }
 

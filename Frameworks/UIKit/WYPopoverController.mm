@@ -23,9 +23,10 @@
  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+#include "Starboard.h"
 #import "WYPopoverController.h"
-
 #import <objc/runtime.h>
+#import "UIViewControllerInternal.h"
 
 #if !__has_feature(objc_arc)
     #error ARC must be enabled
@@ -1929,8 +1930,12 @@ static WYPopoverTheme *defaultTheme_ = nil;
             rect = CGRectMake((int)inView.bounds.size.width / 2 - 5, (int)inView.bounds.size.height / 2 - 5, 10, 10);
         }
     }
+
+    [viewController _setManagesViewEvents:YES];
     
     CGSize contentViewSize = self.popoverContentSize;
+
+    [viewController viewWillAppear:animated];
     
     if (overlayView == nil)
     {
@@ -1978,6 +1983,8 @@ static WYPopoverTheme *defaultTheme_ = nil;
             }
             
             strongSelf->backgroundView.appearing = NO;
+
+            [strongSelf->viewController _setManagesViewEvents:NO];
         }
         
         if (completion)
@@ -2014,8 +2021,6 @@ static WYPopoverTheme *defaultTheme_ = nil;
             backgroundView.alpha = 0;
         }
         
-        [viewController viewWillAppear:YES];
-        
         CGAffineTransform endTransform = backgroundView.transform;
         
         if ((options & WYPopoverAnimationOptionScale) == WYPopoverAnimationOptionScale)
@@ -2041,7 +2046,6 @@ static WYPopoverTheme *defaultTheme_ = nil;
     else
     {
         adjustTintDimmed();
-        [viewController viewWillAppear:NO];
         completionBlock(NO);
     }
     
@@ -2621,7 +2625,10 @@ static WYPopoverTheme *defaultTheme_ = nil;
     WYPopoverAnimationOptions style = aOptions;
     
     __weak __typeof__(self) weakSelf = self;
-    
+
+    [viewController _setBeingDismissed:YES];
+
+    [viewController _setManagesViewEvents:YES];
     
     void (^adjustTintAutomatic)() = ^() {
 #ifdef WY_BASE_SDK_7_ENABLED
@@ -2634,8 +2641,12 @@ static WYPopoverTheme *defaultTheme_ = nil;
         }
 #endif
     };
+
+    UIPopoverPresentationController* popoverPresentationController = [viewController popoverPresentationController];
     
     void (^completionBlock)() = ^() {
+        // Keep popoverPresentationController alive via block-capture during teardown.
+        (void)popoverPresentationController;
         
         __typeof__(self) strongSelf = weakSelf;
         
@@ -2646,11 +2657,16 @@ static WYPopoverTheme *defaultTheme_ = nil;
             
             [strongSelf->overlayView removeFromSuperview];
             strongSelf->overlayView = nil;
+
+            [[strongSelf->viewController presentingViewController] _unlinkPresentedController];
             
             if ([strongSelf->viewController isKindOfClass:[UINavigationController class]] == NO)
             {
                 [strongSelf->viewController viewDidDisappear:aAnimated];
             }
+
+            [strongSelf->viewController _setManagesViewEvents:NO];
+            [strongSelf->viewController _setBeingDismissed:NO];
         }
         
         if (completion)

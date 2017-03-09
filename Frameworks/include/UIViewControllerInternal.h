@@ -57,6 +57,7 @@ struct UIViewControllerPriv {
     StrongId<UIStoryboard> _storyboard;
     BOOL hasLoaded, isLoading;
     BOOL _isEditing;
+    BOOL _managesViewEvents;
     UIInterfaceOrientation _curOrientation;
     BOOL _didSetRotation;
     BOOL _resizeToScreen;
@@ -67,9 +68,6 @@ struct UIViewControllerPriv {
     BOOL _hidesBottomBar;
     UIModalTransitionStyle _modalTransitionStyle;
     BOOL _isRootView;
-    idretainp<void (^)(void)> _dismissCompletionBlock;
-    idretainp<void (^)(void)> _presentCompletionBlock;
-    idretaintype(UIViewController) _dismissController;
     CGSize _contentSizeForViewInPopover;
     unsigned _edgesForExtendedLayout;
     BOOL _modalInPopover;
@@ -101,6 +99,12 @@ struct UIViewControllerPriv {
 - (void)_notifyViewDidAppear:(BOOL)isAnimated;
 - (void)_notifyViewWillDisappear:(BOOL)isAnimated;
 - (void)_notifyViewDidDisappear:(BOOL)isAnimated;
+
+- (BOOL)_managesViewEvents;
+- (void)_setManagesViewEvents:(BOOL)managesViewEvents;
+- (void)_setBeingPresented:(BOOL)beingPresented;
+- (void)_setBeingDismissed:(BOOL)beingDismissed;
+- (void)_unlinkPresentedController;
 
 - (void)_setResizeToScreen:(BOOL)resize;
 - (void)_doResizeToScreen;
