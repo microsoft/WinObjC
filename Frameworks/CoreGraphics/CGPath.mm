@@ -803,12 +803,12 @@ CGRect CGPathGetBoundingBox(CGPathRef path) {
     if (FAILED(path->ClosePath())) {
         return CGRectNull;
     }
-    CGRect returnRect = CGPathGetPathBoundingBox(path);
-    if (returnRect == CGRectNull) {
+    CGRect boundingBoxWithControlPoints = CGPathGetPathBoundingBox(path);
+    if (boundingBoxWithControlPoints == CGRectNull) {
         return CGRectNull;
     }
-    CGPathApply(path, &returnRect, __CGPathApplyGetBoundingBoxWithControlPoints);
-    return returnRect;
+    CGPathApply(path, &boundingBoxWithControlPoints, __CGPathApplyGetBoundingBoxWithControlPoints);
+    return boundingBoxWithControlPoints;
 }
 
 /**

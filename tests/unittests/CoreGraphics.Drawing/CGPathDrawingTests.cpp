@@ -621,7 +621,27 @@ DRAW_TEST_F(CGPath, BoundingBoxes, UIKitMimicTest<>) {
 
     CGPathRelease(thepath);
 }
-DRAW_TEST_F(CGPath, FillArcsComplex, UIKitMimicTest<>) {
+
+DRAW_TEST_F(CGPath, AddRects, UIKitMimicTest<>) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+    CGFloat width = bounds.size.width;
+    CGFloat height = bounds.size.height;
+    CGFloat xstart = bounds.origin.x;
+    CGFloat ystart = bounds.origin.y;
+
+    CGRect rects[] = { CGRectMake(xstart + width * .1, ystart + height * .1, width * .3, height * .3),
+                       CGRectMake(xstart + width * .6, ystart + height * .1, width * .3, height * .3),
+                       CGRectMake(xstart + width * .1, ystart + height * .6, width * .3, height * .3),
+                       CGRectMake(xstart + width * .6, ystart + height * .6, width * .3, height * .3) };
+
+    CGMutablePathRef thepath = CGPathCreateMutable();
+    CGPathMoveToPoint(thepath, NULL, xstart + width * .1, ystart + height * .1);
+    CGPathAddRects(thepath, NULL, rects, 4);
+    CGContextAddPath(context, thepath);
+    CGContextStrokePath(context);
+    CGPathRelease(thepath);
+}DRAW_TEST_F(CGPath, FillArcsComplex, UIKitMimicTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
     CGFloat width = bounds.size.width;
