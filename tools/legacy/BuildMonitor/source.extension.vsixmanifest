@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="BuildMonitor..0a528553-98c4-4948-a43c-bef2784df92c" Version="1.5" Language="en-US" Publisher="Microsoft" />
+    <Identity Id="BuildMonitor..0a528553-98c4-4948-a43c-bef2784df92c" Version="1.6.1" Language="en-US" Publisher="Microsoft" />
     <DisplayName>BuildMonitor</DisplayName>
     <Description xml:space="preserve">BuildMonitor watches the solution build process and reports WinObjC errors.</Description>
   </Metadata>
