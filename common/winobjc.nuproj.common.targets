@@ -131,57 +131,56 @@
     AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll" >  
     <ParameterGroup>
       <SolutionPath ParameterType="System.String" Required="true" />
+      <Unlock ParameterType="System.Boolean" Required="true" />
     </ParameterGroup>
     <Task>
       <Reference Include="System" />
-      <Reference Include="System.IO" />
       <Reference Include="System.Threading" />
-      <Using Namespace="System" />
-      <Using Namespace="System.IO" />
-      <Using Namespace="System.Threading" />
-      <Code Type="Fragment" Language="cs">
+      <Code Type="Class" Language="cs">
         <![CDATA[
-          var mutex = new Mutex(false, SolutionPath.Replace("\\", "."));
-          try
+        
+          using System;
+          using System.Threading;
+          using Microsoft.Build.Framework;
+          using Microsoft.Build.Utilities;
+          
+          public class LockGitVersion : Task
           {
-            mutex.WaitOne();
-          } catch (AbandonedMutexException e)
-          {
+              static ThreadLocal<Mutex> mutex = new ThreadLocal<Mutex>();
+
+              [Required]
+              public string SolutionPath { get; set;}
+
+              [Required]
+              public bool Unlock { get; set;}
+
+              public override bool Execute()
+              {
+
+                  if (!Unlock) {
+                      mutex.Value = new Mutex(false, SolutionPath.Replace("\\", "."));
+                      try {
+                        mutex.Value.WaitOne();
+                      } catch (AbandonedMutexException e) {
+                      }
+                  } else {
+                      mutex.Value.ReleaseMutex();
+                  }
+
+                  return true;
+              }
           }
         ]]>
       </Code>
     </Task>
   </UsingTask>
 
-  <UsingTask  
-    TaskName="UnlockGitVersion"  
-    TaskFactory="CodeTaskFactory"  
-    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll" >  
-    <ParameterGroup>
-      <SolutionPath ParameterType="System.String" Required="true" />
-    </ParameterGroup>
-    <Task>
-      <Reference Include="System" />
-      <Reference Include="System.IO" />
-      <Reference Include="System.Threading" />
-      <Using Namespace="System" />
-      <Using Namespace="System.IO" />
-      <Using Namespace="System.Threading" />
-      <Code Type="Fragment" Language="cs">
-        <![CDATA[
-          var mutex = Mutex.OpenExisting(SolutionPath.Replace("\\", "."));
-          mutex.ReleaseMutex();
-        ]]>
-      </Code>
-    </Task>
-  </UsingTask>
-
   <Target Name="_GetVersion_Lock" BeforeTargets="GetVersion" >
-    <LockGitVersion Condition="'$(SolutionDir)' != ''" SolutionPath="$(SolutionDir)$(SolutionName)" />
+    <LockGitVersion Condition="'$(SolutionDir)' != ''" SolutionPath="$(SolutionDir)$(SolutionName)" Unlock="false"/>
   </Target>
 
   <Target Name="_GetVersion_Unlock" AfterTargets="GetVersion" >
-    <UnlockGitVersion Condition="'$(SolutionDir)' != ''" SolutionPath="$(SolutionDir)$(SolutionName)" />
+    <LockGitVersion Condition="'$(SolutionDir)' != ''" SolutionPath="$(SolutionDir)$(SolutionName)" Unlock="true"/>
   </Target>
 
 
