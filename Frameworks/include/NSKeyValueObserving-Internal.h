@@ -17,10 +17,20 @@
 #import <Foundation/Foundation.h>
 #include <Starboard.h>
 
+#define NS_COLLECTION_THROW_ILLEGAL_KVO(keyPath)                                                                                 \
+    do {                                                                                                                         \
+        [NSException raise:NSInvalidArgumentException                                                                            \
+                    format:@"-[%hs %hs] is not supported. Key path: %@", object_getClassName(self), sel_getName(_cmd), keyPath]; \
+    } while (false)
+
 @class _NSKVOKeypathObserver;
 
-@interface _NSKVOKeyObserver: NSObject
-- (instancetype)initWithObject:(id)object keypathObserver:(_NSKVOKeypathObserver*)keypathObserver key:(NSString*)key restOfKeypath:(NSString*)restOfKeypath affectedObservers:(NSArray*)affectedObservers;
+@interface _NSKVOKeyObserver : NSObject
+- (instancetype)initWithObject:(id)object
+               keypathObserver:(_NSKVOKeypathObserver*)keypathObserver
+                           key:(NSString*)key
+                 restOfKeypath:(NSString*)restOfKeypath
+             affectedObservers:(NSArray*)affectedObservers;
 @property (nonatomic, retain) _NSKVOKeypathObserver* keypathObserver;
 @property (nonatomic, retain) _NSKVOKeyObserver* restOfKeypathObserver;
 @property (nonatomic, retain) NSArray* dependentObservers;
@@ -31,8 +41,12 @@
 @property (nonatomic, assign) bool root;
 @end
 
-@interface _NSKVOKeypathObserver: NSObject
-- (instancetype)initWithObject:(id)object observer:(id)observer keyPath:(NSString*)keypath options:(NSKeyValueObservingOptions)options context:(void*)context;
+@interface _NSKVOKeypathObserver : NSObject
+- (instancetype)initWithObject:(id)object
+                      observer:(id)observer
+                       keyPath:(NSString*)keypath
+                       options:(NSKeyValueObservingOptions)options
+                       context:(void*)context;
 @property (nonatomic, assign) id object;
 @property (nonatomic, assign) id observer;
 @property (nonatomic, copy) NSString* keypath;
@@ -42,7 +56,7 @@
 @property (atomic, retain) NSMutableDictionary* pendingChange;
 @end
 
-@interface _NSKVOObservationInfo: NSObject {
+@interface _NSKVOObservationInfo : NSObject {
     NSMutableDictionary<NSString*, NSArray<_NSKVOKeyObserver*>*>* _keyObserverMap;
     NSInteger _dependencyDepth;
     NSMutableSet<NSString*>* _existingDependentKeys;
