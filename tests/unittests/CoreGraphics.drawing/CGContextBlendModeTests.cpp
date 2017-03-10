@@ -48,13 +48,11 @@ CGNamedBlendMode compositionModes[] = {
     { "kCGBlendModePlusDarker", kCGBlendModePlusDarker },
 };
 
-static CGFloat alphas[] = { 0.5f, 1.f };
-
-class CGContextBlendMode : public WhiteBackgroundTest<>, public ::testing::WithParamInterface<::testing::tuple<CGFloat, CGNamedBlendMode>> {
+class CGContextBlendMode : public WhiteBackgroundTest<>, public ::testing::WithParamInterface<::testing::tuple<bool, CGNamedBlendMode>> {
     CFStringRef CreateOutputFilename() {
         const char* blendModeName = ::testing::get<1>(GetParam()).name;
-        CGFloat alpha = ::testing::get<0>(GetParam());
-        return CFStringCreateWithFormat(nullptr, nullptr, CFSTR("TestImage.CGContext.Blending_%s.A%1.01f.png"), blendModeName, alpha);
+        bool useTransparencyLayer = ::testing::get<0>(GetParam());
+        return CFStringCreateWithFormat(nullptr, nullptr, CFSTR("TestImage.CGContext.Blending_%s%s.png"), useTransparencyLayer ? "Layered_" : "", blendModeName);
     }
 };
 
@@ -62,30 +60,77 @@ DRAW_TEST_P(CGContextBlendMode, OverlappedRects) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
     CGBlendMode blendMode = ::testing::get<1>(GetParam()).blendMode;
-    CGFloat alpha = ::testing::get<0>(GetParam());
+    bool useTransparencyLayer = ::testing::get<0>(GetParam());
 
-    bounds = CGRectInset(bounds, 16.f, 16.f);
+    bounds = CGRectInset(bounds, 8.f, 8.f);
 
-    CGPoint firstEllipseCenter{ bounds.origin.x + bounds.size.width / 3.f, bounds.origin.y + bounds.size.height / 2.f };
-    CGPoint secondEllipseCenter{ firstEllipseCenter.x + (bounds.size.width / 3.f), firstEllipseCenter.y };
+    CGFloat unitHeight = bounds.size.height / 4.f;
 
-    CGContextSetRGBFillColor(context, .25, .71, .95, alpha);
-    CGContextFillRect(context, _CGRectCenteredOnPoint({ bounds.size.height, bounds.size.height }, firstEllipseCenter));
+    CGContextSetLineWidth(context, 6.0f);
+
+    // Draw two rects and two lines, at both alphas.
+    CGRect cursor = _CGRectCenteredOnPoint({2.f * bounds.size.width / 3.f, unitHeight}, {bounds.origin.x +(bounds.size.width / 3.f), bounds.origin.y + (unitHeight / 2.f)});
+
+    CGContextSetRGBFillColor(context, .25, .71, .95, 1.0);
+    CGContextSetRGBStrokeColor(context, .25, .71, .95, 1.0);
+
+    CGContextFillRect(context, cursor);
+    cursor.origin.y += unitHeight;
+    CGContextMoveToPoint(context, CGRectGetMinX(cursor), CGRectGetMinY(cursor));
+    CGContextAddLineToPoint(context, CGRectGetMaxX(cursor), CGRectGetMaxY(cursor));
+    CGContextStrokePath(context);
+    cursor.origin.y += unitHeight;
+
+    CGContextSetRGBFillColor(context, .25, .71, .95, 0.5);
+    CGContextSetRGBStrokeColor(context, .25, .71, .95, 0.5);
+
+    CGContextFillRect(context, cursor);
+    cursor.origin.y += unitHeight;
+    CGContextMoveToPoint(context, CGRectGetMinX(cursor), CGRectGetMinY(cursor));
+    CGContextAddLineToPoint(context, CGRectGetMaxX(cursor), CGRectGetMaxY(cursor));
+    CGContextStrokePath(context);
+    cursor.origin.y += unitHeight;
 
     CGContextSetBlendMode(context, blendMode);
 
-    CGContextSetRGBFillColor(context, .95, .25, .66, alpha);
-    CGContextFillRect(context, _CGRectCenteredOnPoint({ bounds.size.height, bounds.size.height }, secondEllipseCenter));
+    if (useTransparencyLayer) {
+        CGContextBeginTransparencyLayer(context, nullptr);
+    }
+
+    cursor = _CGRectCenteredOnPoint({2.f * bounds.size.width / 3.f, unitHeight}, {bounds.origin.x +(2.f * bounds.size.width / 3.f), bounds.origin.y + (unitHeight / 2.f)});
+    CGContextSetRGBFillColor(context, .95, .25, .66, 1.0);
+    CGContextSetRGBStrokeColor(context, .95, .25, .66, 1.0);
+
+    CGContextFillRect(context, cursor);
+    cursor.origin.y += unitHeight;
+    CGContextMoveToPoint(context, CGRectGetMinX(cursor), CGRectGetMaxY(cursor));
+    CGContextAddLineToPoint(context, CGRectGetMaxX(cursor), CGRectGetMinY(cursor));
+    CGContextStrokePath(context);
+    cursor.origin.y += unitHeight;
+
+    CGContextSetRGBFillColor(context, .95, .25, .66, 0.5);
+    CGContextSetRGBStrokeColor(context, .95, .25, .66, 0.5);
+
+    CGContextFillRect(context, cursor);
+    cursor.origin.y += unitHeight;
+    CGContextMoveToPoint(context, CGRectGetMinX(cursor), CGRectGetMaxY(cursor));
+    CGContextAddLineToPoint(context, CGRectGetMaxX(cursor), CGRectGetMinY(cursor));
+    CGContextStrokePath(context);
+    cursor.origin.y += unitHeight;
+
+    if (useTransparencyLayer) {
+        CGContextEndTransparencyLayer(context);
+    }
 }
 
-INSTANTIATE_TEST_CASE_P(DISABLED_CompositionModes,
+INSTANTIATE_TEST_CASE_P(CompositionModes,
                         CGContextBlendMode,
-                        ::testing::Combine(::testing::ValuesIn(alphas), ::testing::ValuesIn(compositionModes)));
+                        ::testing::Combine(::testing::Values(false, true), ::testing::ValuesIn(compositionModes)));
 
-INSTANTIATE_TEST_CASE_P(DISABLED_PorterDuffModes,
+INSTANTIATE_TEST_CASE_P(PorterDuffModes,
                         CGContextBlendMode,
-                        ::testing::Combine(::testing::ValuesIn(alphas), ::testing::ValuesIn(porterDuffBlendModes)));
+                        ::testing::Combine(::testing::Values(false, true), ::testing::ValuesIn(porterDuffBlendModes)));
 
-INSTANTIATE_TEST_CASE_P(DISABLED_OperatorBlendModes,
+INSTANTIATE_TEST_CASE_P(OperatorBlendModes,
                         CGContextBlendMode,
-                        ::testing::Combine(::testing::ValuesIn(alphas), ::testing::ValuesIn(blendOperators)));
+                        ::testing::Combine(::testing::Values(false, true), ::testing::ValuesIn(blendOperators)));

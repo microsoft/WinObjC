@@ -304,7 +304,7 @@ private:
     // Currently this is only required for shadows, but this may change in the future
     inline bool _ShouldDrawToCommandList() {
         auto& state = CurrentGState();
-        return state.HasShadow();
+        return state.HasShadow() || state.blendMode != kCGBlendModeSourceOver;
     }
 
     HRESULT _CreateShadowEffect(ID2D1Image* inputImage, ID2D1Effect** outShadowEffect);
@@ -2472,19 +2472,27 @@ HRESULT __CGContext::Draw(__CGCoordinateMode coordinateMode, CGAffineTransform* 
 
     PushBeginDraw();
 
-    if (compositeEffect) {
-        deviceContext->Clear({0,0,0,0});
-    }
-
     bool layer = false;
-    if (state.clippingGeometry || !IS_NEAR(state.globalAlpha, 1.0, .0001f) || state.opacityBrush) {
+    D2D1_COMPOSITE_MODE compositeMode = D2D1_COMPOSITE_MODE_SOURCE_OVER;
+    if ((state.blendMode & _kCGContextBlendD2DCompose)) {
+        // If the user has requested a different composition mode, we'll honor it.
+        // If they have requested a porter-duff blend mode, however, we'll use SOURCE_OVER regardless:
+        // It doesn't truly matter, as our porter-duff blends are implemented in terms of a full
+        // target readback, clear and blend effect. There /is/ no destination to compose once we're done.
+        compositeMode = static_cast<D2D1_COMPOSITE_MODE>(state.blendMode & 0xFF);
+    }
+    if (state.clippingGeometry || !IS_NEAR(state.globalAlpha, 1.0, .0001f) || state.opacityBrush || compositeMode != D2D1_COMPOSITE_MODE_SOURCE_OVER) {
         layer = true;
-        deviceContext->PushLayer(D2D1::LayerParameters(D2D1::InfiniteRect(),
+        if (compositeMode != D2D1_COMPOSITE_MODE_SOURCE_OVER) {
+            this->deviceContext->SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND_COPY);
+        }
+        deviceContext->PushLayer(D2D1::LayerParameters1(D2D1::InfiniteRect(),
                                                        state.clippingGeometry.Get(),
                                                        GetAntialiasMode(),
                                                        D2D1::IdentityMatrix(),
                                                        state.globalAlpha,
-                                                       state.opacityBrush.Get()),
+                                                       state.opacityBrush.Get(),
+            compositeMode != D2D1_COMPOSITE_MODE_SOURCE_OVER ? D2D1_LAYER_OPTIONS1_INITIALIZE_FROM_BACKGROUND : D2D1_LAYER_OPTIONS1_NONE),
                                  nullptr);
     }
 
@@ -2535,16 +2543,18 @@ HRESULT __CGContext::Draw(__CGCoordinateMode coordinateMode, CGAffineTransform* 
             RETURN_IF_FAILED(shadowEffect.As(&currentImage));
         }
 
+        /*
         D2D1_COMPOSITE_MODE compositeMode = D2D1_COMPOSITE_MODE_SOURCE_OVER;
         ComPtr<ID2D1Bitmap> renderTargetImage;
         ComPtr<ID2D1Effect> compositeEffect;
-        if ((state.blendMode & _kCGContextBlendD2DCompose) == _kCGContextBlendD2DCompose) {
+        if ((state.blendMode & _kCGContextBlendD2DCompose)) {
             // If the user has requested a different composition mode, we'll honor it.
             // If they have requested a porter-duff blend mode, however, we'll use SOURCE_OVER regardless:
             // It doesn't truly matter, as our porter-duff blends are implemented in terms of a full
             // target readback, clear and blend effect. There /is/ no destination to compose once we're done.
             compositeMode = static_cast<D2D1_COMPOSITE_MODE>(state.blendMode & 0xFF);
             if (compositeMode != D2D1_COMPOSITE_MODE_SOURCE_OVER) {
+                / *
                 ComPtr<ID2D1Effect> compositeEffect;
 
                 deviceContext->CreateEffect(CLSID_D2D1Composite, &compositeEffect);
@@ -2557,9 +2567,27 @@ HRESULT __CGContext::Draw(__CGCoordinateMode coordinateMode, CGAffineTransform* 
                 compositeEffect->SetValue(D2D1_COMPOSITE_PROP_MODE, state.blendMode & 0xFF);
                 compositeEffect->SetInput(1, currentImage.Get());
                 compositeEffect.As(&currentImage);
-                //*outBlendEffect = blendEffect.Detach();
+                // *outBlendEffect = blendEffect.Detach();
+                * /
             }
+        } else if ((state.blendMode & _kCGContextBlendD2DBlend)) {
+            D2D1_BLEND_MODE blendMode = static_cast<D2D1_BLEND_MODE>(state.blendMode & 0xFF);
+            ComPtr<ID2D1Effect> blendEffect;
+
+            deviceContext->CreateEffect(CLSID_D2D1Blend, &blendEffect);
+
+            D2D1_SIZE_U dcPSize = deviceContext->GetPixelSize();
+            RETURN_IF_FAILED(deviceContext->CreateBitmap(dcPSize, nullptr, 0, D2D1::BitmapProperties(D2D1::PixelFormat(DXGI_FORMAT_R8G8B8A8_UNORM, D2D1_ALPHA_MODE_PREMULTIPLIED)), &renderTargetImage));
+            RETURN_IF_FAILED(renderTargetImage->CopyFromRenderTarget(nullptr, deviceContext.Get(), nullptr));
+
+            deviceContext->Clear({0,0,0,0});
+
+            blendEffect->SetInput(0, renderTargetImage.Get());
+            blendEffect->SetValue(D2D1_BLEND_PROP_MODE, blendMode);
+            blendEffect->SetInput(1, currentImage.Get());
+            blendEffect.As(&currentImage);
         }
+        */
 
         // We use NEAREST_NEIGHBOR here since every CommandList or Image we are rendering will already be context-scaled,
         // and we assume that there will not be a final interpolation pass.
@@ -2573,6 +2601,9 @@ HRESULT __CGContext::Draw(__CGCoordinateMode coordinateMode, CGAffineTransform* 
 
     if (layer) {
         this->deviceContext->PopLayer();
+        if (compositeMode != D2D1_COMPOSITE_MODE_SOURCE_OVER) {
+            this->deviceContext->SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND_SOURCE_OVER);
+        }
     }
 
     return this->PopEndDraw();
