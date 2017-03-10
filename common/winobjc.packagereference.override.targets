@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <WinObjCPackageOverridePath Include="$(WINOBJC_SDK_ROOT)\build\OutputPackages"/>
-    <WinObjCPackageOverridePath Include="$(WINOBJC_SDK_ROOT)\tools\OutputPackages"/>
+    <WinObjCPackageOverridePath Include="$(MSBuildThisFileDirectory)..\build\OutputPackages"/>
+    <WinObjCPackageOverridePath Include="$(MSBuildThisFileDirectory)..\tools\OutputPackages"/>
   </ItemGroup>
 
     <UsingTask  
     TaskName="FixupVersionOfWinObjCProjectReferences"
     TaskFactory="CodeTaskFactory"  
-    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll" >  
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll" >
     <ParameterGroup>
       <PackageReferences ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
       <SearchPaths ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
@@ -44,7 +44,7 @@
                     var file = Directory.GetFiles(path, packageNameSearchPattern).OrderByDescending(f => (new FileInfo(f)).LastWriteTimeUtc).FirstOrDefault();
 
                     if (file != null) {
-                      // Remove 1 for the . in between PackageName and version
+                      // Remove 1 extra for the . in between PackageName and version
                       string version = Path.GetFileNameWithoutExtension(file).Remove(0, packageName.Length + 1);
                       Log.LogMessage("Adjusting " + packageName + " to new version " + version);
                       packageItem.SetMetadata("Version", version);
