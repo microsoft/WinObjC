@@ -233,5 +233,5 @@
   </ItemGroup>
   <!-- End NuGet Section -->
   
-  <Import Project="$(WINOBJC_SDK_ROOT)\common\winobjc.packagereference.override.targets" Condition="Exists('$(WINOBJC_SDK_ROOT)\common\winobjc.packagereference.override.targets')"/>
+  <Import Project="$(MSBuildThisFileDirectory)\..\..\..\..\common\winobjc.packagereference.override.targets" Condition="Exists('$(MSBuildThisFileDirectory)\..\..\..\..\common\winobjc.packagereference.override.targets')"/>
 </Project>

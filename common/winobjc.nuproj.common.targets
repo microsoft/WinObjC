@@ -121,4 +121,68 @@
     </PropertyGroup>
   </Target>
 
+
+    <!-- Inline tasks (and targets) to make sure GitVersion only runs one at a time. This is an improvement that should 
+         probably be contributed back (see https://github.com/GitTools/GitVersion/issues/1031) -->
+
+  <UsingTask  
+    TaskName="LockGitVersion"  
+    TaskFactory="CodeTaskFactory"  
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll" >  
+    <ParameterGroup>
+      <SolutionPath ParameterType="System.String" Required="true" />
+      <Unlock ParameterType="System.Boolean" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Reference Include="System" />
+      <Reference Include="System.Threading" />
+      <Code Type="Class" Language="cs">
+        <![CDATA[
+        
+          using System;
+          using System.Threading;
+          using Microsoft.Build.Framework;
+          using Microsoft.Build.Utilities;
+          
+          public class LockGitVersion : Task
+          {
+              static ThreadLocal<Mutex> mutex = new ThreadLocal<Mutex>();
+
+              [Required]
+              public string SolutionPath { get; set;}
+
+              [Required]
+              public bool Unlock { get; set;}
+
+              public override bool Execute()
+              {
+
+                  if (!Unlock) {
+                      mutex.Value = new Mutex(false, SolutionPath.Replace("\\", "."));
+                      try {
+                        mutex.Value.WaitOne();
+                      } catch (AbandonedMutexException e) {
+                      }
+                  } else {
+                      mutex.Value.ReleaseMutex();
+                  }
+
+                  return true;
+              }
+          }
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <Target Name="_GetVersion_Lock" BeforeTargets="GetVersion" >
+    <LockGitVersion Condition="'$(SolutionDir)' != ''" SolutionPath="$(SolutionDir)$(SolutionName)" Unlock="false"/>
+  </Target>
+
+  <Target Name="_GetVersion_Unlock" AfterTargets="GetVersion" >
+    <LockGitVersion Condition="'$(SolutionDir)' != ''" SolutionPath="$(SolutionDir)$(SolutionName)" Unlock="true"/>
+  </Target>
+
+
+
 </Project>
