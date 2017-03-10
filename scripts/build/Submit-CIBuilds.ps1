@@ -7,7 +7,7 @@ Param (
     [string]$RemoteURL,
     [string]$Remote,
     [string]$Ref,
-    [string]$Config,
+    [string]$Config='Release',
     [switch]$Reconfigure,
     [switch]$SkipRemoteCheck,
     [string]$BuildFilter,
