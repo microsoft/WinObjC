@@ -178,7 +178,6 @@
     </AppxManifest>
     <Xml Include="default.rd.xml" />
     <None Include="Foundation-Dev_TemporaryKey.pfx" />
-    <None Include="project.json" />
     <Image Include="Assets\LockScreenLogo.scale-200.png" />
     <Image Include="Assets\SplashScreen.scale-200.png" />
     <Image Include="Assets\Square150x150Logo.scale-200.png" />
@@ -227,4 +226,20 @@
   <ItemGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
+
+  <!-- Begin NuGet Section -->
+  <PropertyGroup>
+    <TargetFramework>uap10.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="WinObjC.Frameworks" Version="*" />
+    <PackageReference Include="WinObjC.Frameworks.UWP" Version="*" />
+    <PackageReference Include="WinObjC.Frameworks.Core" Version="*" />
+    <PackageReference Include="WinObjC.Language" Version="*" />
+    <PackageReference Include="WinObjC.Logging" Version="*" />
+  </ItemGroup>
+  <!-- End NuGet Section -->
+  
+  <Import Project="$(WINOBJC_SDK_ROOT)\common\winobjc.packagereference.override.targets" Condition="Exists('$(WINOBJC_SDK_ROOT)\common\winobjc.packagereference.override.targets')"/>
+
 </Project>
