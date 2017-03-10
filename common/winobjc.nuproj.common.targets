@@ -121,4 +121,69 @@
     </PropertyGroup>
   </Target>
 
+
+    <!-- Inline tasks (and targets) to make sure GitVersion only runs one at a time. This is an improvement that should 
+         probably be contributed back (see https://github.com/GitTools/GitVersion/issues/1031) -->
+
+  <UsingTask  
+    TaskName="LockGitVersion"  
+    TaskFactory="CodeTaskFactory"  
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll" >  
+    <ParameterGroup>
+      <SolutionPath ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Reference Include="System" />
+      <Reference Include="System.IO" />
+      <Reference Include="System.Threading" />
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.Threading" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+          var mutex = new Mutex(false, SolutionPath.Replace("\\", "."));
+          try
+          {
+            mutex.WaitOne();
+          } catch (AbandonedMutexException e)
+          {
+          }
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <UsingTask  
+    TaskName="UnlockGitVersion"  
+    TaskFactory="CodeTaskFactory"  
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll" >  
+    <ParameterGroup>
+      <SolutionPath ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Reference Include="System" />
+      <Reference Include="System.IO" />
+      <Reference Include="System.Threading" />
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.Threading" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+          var mutex = Mutex.OpenExisting(SolutionPath.Replace("\\", "."));
+          mutex.ReleaseMutex();
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <Target Name="_GetVersion_Lock" BeforeTargets="GetVersion" >
+    <LockGitVersion Condition="'$(SolutionDir)' != ''" SolutionPath="$(SolutionDir)$(SolutionName)" />
+  </Target>
+
+  <Target Name="_GetVersion_Unlock" AfterTargets="GetVersion" >
+    <UnlockGitVersion Condition="'$(SolutionDir)' != ''" SolutionPath="$(SolutionDir)$(SolutionName)" />
+  </Target>
+
+
+
 </Project>
