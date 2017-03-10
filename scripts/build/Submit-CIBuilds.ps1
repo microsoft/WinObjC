@@ -7,7 +7,7 @@ Param (
     [string]$RemoteURL,
     [string]$Remote,
     [string]$Ref,
-    [string]$Config='Release',
+    [string]$Config='Release, Debug',
     [switch]$Reconfigure,
     [switch]$SkipRemoteCheck,
     [string]$BuildFilter,
@@ -271,22 +271,18 @@ ForEach($definitionSet in $matchingDefinitions) {
     $parameters = @{}
     $requestBody = @{}
     ForEach($parameter in $definitionSet.ConfigMappings.Parameter) {
-        $parameters[$parameter.Key] = $parameter.InnerText.Replace("`$REMOTEURL", $RemoteURL).Replace("`$BRANCH", $Ref)
+        $parameters[$parameter.Key] = $parameter.InnerText.Replace("`$REMOTEURL", $RemoteURL).Replace("`$BRANCH", $Ref).Replace("`$CONFIG", $Config)
     }
     If ($definitionSet.ConfigMappings.SourceBranch) {
         $requestBody.sourceBranch = $definitionSet.ConfigMappings.SourceBranch.Replace("`$SOURCEBRANCH", $SourceBranch)
     }
     $requestBody.parameters = (ConvertTo-JSON -Compress $parameters)
 
-    $filteredIDs = [Object[]]($definitionSet.ID | ? {
-        If ([string]::IsNullOrEmpty($Config) -Or $_.Configuration -Eq $Config) {
-            $_
-        }
-    })
+    $filteredIDs = $definitionSet.ID
 
     Write-Verbose "Submitting $($filteredIDs.Count) build$(If ($filteredIDs.Count -Ne 1) { "s" }) in $($definitionSet.Name) configuration."
     ForEach($defId in $filteredIDs) {
-        $defIdNumber = [int]$defId.InnerText
+        $defIdNumber = [int]$defId
         $outgoingReq = $requestBody.Clone()
         $outgoingReq.definition = @{
             id = [int]$defIdNumber;

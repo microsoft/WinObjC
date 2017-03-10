@@ -4,9 +4,10 @@
         <Project>WinObjC</Project>
         <BuildDefinitions>
             <BuildDefinitionSet Name="Github Pull Request" MatchRemote="*github*">
-                <ID Configuration="Release">98</ID>
+                <ID>98</ID>
                 <ConfigMappings>
                     <Parameter Key="PullRequest">$REMOTEURL $BRANCH</Parameter>
+                    <Parameter Key="BuildConfiguration">$CONFIG</Parameter>
                     <SourceBranch>$SOURCEBRANCH</SourceBranch>
                 </ConfigMappings>
             </BuildDefinitionSet>
