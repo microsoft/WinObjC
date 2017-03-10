@@ -88,8 +88,7 @@ id CreateRtProxy(Class cls, IInspectable* iface);
 // apply LineBreakMode on xaml TextBock
 void ApplyLineBreakModeOnTextBlock(WXCTextBlock* textBlock, UILineBreakMode mode, int numberOfLines);
 
-// Helper searches max font size for a string that can fit into given rect using given font/linkbreak config .
-// if no fit is found (e.g., to satisfy minimum font size requirement, nil is returned.
-// Otherwise, it returns the maximum font size that can fit which must be a fontSize between mininumFontSize and maximumFontSize.
-UIFont* FindMaxFontSizeToFit(CGRect rect, NSString* text, UIFont* font, int numberOfLines, float mininumFontSize, float maximumFontSize);
+// Helper searches max font size for a string that can fit into given rect using given font/linebreak/numerOfLines config .
+// font size returned must be between mininumFontSize and maximumFontSize.
+float FindMaxFontSizeToFit(CGRect rect, NSString* text, UIFont* font, int numberOfLines, float mininumFontSize, float maximumFontSize);
 }

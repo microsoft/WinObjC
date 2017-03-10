@@ -379,7 +379,7 @@ void XamlUtilities::ApplyLineBreakModeOnTextBlock(WXCTextBlock* textBlock, UILin
     }
 }
 
-UIFont* XamlUtilities::FindMaxFontSizeToFit(
+float XamlUtilities::FindMaxFontSizeToFit(
     CGRect rect, NSString* text, UIFont* font, int numberOfLines, float mininumFontSize, float maximumFontSize) {
     float upperBound = maximumFontSize;
     float lowerBound = mininumFontSize;
@@ -430,5 +430,5 @@ UIFont* XamlUtilities::FindMaxFontSizeToFit(
         _targetFont = [_targetFont fontWithSize:curFontSize];
     } while (true);
 
-    return [_targetFont fontWithSize:lowerBound];
+    return lowerBound;
 }

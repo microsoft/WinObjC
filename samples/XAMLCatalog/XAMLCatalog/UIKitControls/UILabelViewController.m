@@ -20,69 +20,80 @@
 
 @implementation UILabelViewController {
     int _eventId;
+    MenuTableViewController* _menuTVC;
+
+#ifndef WINOBJC
+    // log array used only in reference platform to keep the expected values
+    NSMutableArray* logArray;
+#endif
 }
 
 // setting up the controls to update the UILabel config
 - (void)_setup {
-    self.text = [[UITextField alloc] initWithFrame:CGRectMake(105.0f, 20.0f, 216.0f, 30.0f)];
-    [self.view addSubview:self.text];
+    _menuTVC = [[MenuTableViewController alloc] init];
+    _menuTVC.view.frame = CGRectMake(0.0f, 108.0f, 200.0f, 0.0f /* setting it to 0 allows vertical scrolling */);
+    _menuTVC.tableView.allowsSelection = NO;
+    [self.view addSubview:_menuTVC.view];
+
+    self.text = [[UITextField alloc] initWithFrame:CGRectMake(105.0f, 20.0f, 400.0f, 30.0f)];
+    [_menuTVC addMenuItemView:self.text andTitle:@"text on label"];
 
     self.fontSize = [[UISlider alloc] initWithFrame:CGRectMake(101.0f, 54.0f, 187.0f, 31.0f)];
     self.fontSize.minimumValue = 4.01f;
     self.fontSize.maximumValue = 80;
-    [self.view addSubview:self.fontSize];
-
-    self.x = [[UITextField alloc] initWithFrame:CGRectMake(74.0f, 92.0f, 45.0f, 30.0f)];
-    [self.view addSubview:self.x];
-
-    self.y = [[UITextField alloc] initWithFrame:CGRectMake(141.0f, 92.0f, 45.0f, 30.0f)];
-    [self.view addSubview:self.y];
-
-    self.w = [[UITextField alloc] initWithFrame:CGRectMake(211.0f, 92.0f, 45.0f, 30.0f)];
-    [self.view addSubview:self.w];
-
-    self.h = [[UITextField alloc] initWithFrame:CGRectMake(293.0f, 92.0f, 45.0f, 30.0f)];
-    [self.view addSubview:self.h];
-
-    self.numberOfLines = [[UITextField alloc] initWithFrame:CGRectMake(104.0f, 132.0f, 32.0f, 30.0f)];
-    [self.view addSubview:self.numberOfLines];
-
-    self.lineBreakMode = [[UITextField alloc] initWithFrame:CGRectMake(207.0f, 132.0f, 32.0f, 30.0f)];
-    [self.view addSubview:self.lineBreakMode];
-
-    self.autoShrink = [[UISwitch alloc] initWithFrame:CGRectMake(310.0f, 131.0f, 51.0f, 31.0f)];
-    [self.view addSubview:self.autoShrink];
-
-    self.minimumFontSize = [[UITextField alloc] initWithFrame:CGRectMake(80.0f, 167.0f, 56.0f, 30.0f)];
-    [self.view addSubview:self.minimumFontSize];
-
-    self.minimumScaleFactor = [[UITextField alloc] initWithFrame:CGRectMake(239.0f, 167.0f, 41.0f, 30.0f)];
-    [self.view addSubview:self.minimumScaleFactor];
-
-    self.label = [[UILabel alloc] initWithFrame:CGRectMake(4.0f, 254.0f, 353.0f, 107.0f)];
-    self.label.text = @"This is a test string used to test UILabel - and it should wrap and can be as long as three lines";
-    self.label.backgroundColor = [UIColor redColor];
-    [self.view addSubview:self.label];
+    [_menuTVC addMenuItemView:self.fontSize andTitle:@"Font Size"];
 
     self.fontSizeLabel = [[UILabel alloc] initWithFrame:CGRectMake(297.0f, 57.0f, 53.0f, 25.0f)];
-    [self.view addSubview:self.fontSizeLabel];
+    [_menuTVC addMenuItemView:self.fontSizeLabel andTitle:@"current Font Size"];
+
+    self.numberOfLines = [[UITextField alloc] initWithFrame:CGRectMake(104.0f, 132.0f, 32.0f, 30.0f)];
+    [_menuTVC addMenuItemView:self.numberOfLines andTitle:@"Number of lines"];
+
+    self.lineBreakMode = [[UITextField alloc] initWithFrame:CGRectMake(207.0f, 132.0f, 32.0f, 30.0f)];
+    [_menuTVC addMenuItemView:self.lineBreakMode andTitle:@"line break Mode"];
+
+    self.autoShrink = [[UISwitch alloc] initWithFrame:CGRectMake(310.0f, 131.0f, 51.0f, 31.0f)];
+    [_menuTVC addMenuItemView:self.autoShrink andTitle:@"Adjust font size to fit width"];
+
+    self.minimumFontSize = [[UITextField alloc] initWithFrame:CGRectMake(80.0f, 167.0f, 56.0f, 30.0f)];
+    [_menuTVC addMenuItemView:self.minimumFontSize andTitle:@"Minimum font size"];
+
+    self.minimumScaleFactor = [[UITextField alloc] initWithFrame:CGRectMake(239.0f, 167.0f, 56.0f, 30.0f)];
+    [_menuTVC addMenuItemView:self.minimumScaleFactor andTitle:@"Minimum scale factor"];
+
+    self.x = [[UITextField alloc] initWithFrame:CGRectMake(74.0f, 92.0f, 45.0f, 30.0f)];
+    [_menuTVC addMenuItemView:self.x andTitle:@"Bounding Rect origin x"];
+
+    self.y = [[UITextField alloc] initWithFrame:CGRectMake(141.0f, 92.0f, 45.0f, 30.0f)];
+    [_menuTVC addMenuItemView:self.y andTitle:@"Bounding Rect origin y"];
+
+    self.w = [[UITextField alloc] initWithFrame:CGRectMake(211.0f, 92.0f, 45.0f, 30.0f)];
+    [_menuTVC addMenuItemView:self.w andTitle:@"Bounding Rect width"];
+
+    self.h = [[UITextField alloc] initWithFrame:CGRectMake(293.0f, 92.0f, 45.0f, 30.0f)];
+    [_menuTVC addMenuItemView:self.h andTitle:@"Bounding Rect height"];
+
+    self.label = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 353.0f, 107.0f)];
+    [self.view addSubview:self.label];
 
     self.start = [[UIButton alloc] initWithFrame:CGRectMake(4.0f, 426.0f, 46.0f, 30.0f)];
     [self.start setTitle:@"Start" forState:UIControlStateNormal];
     [self.start setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-    [self.view addSubview:self.start];
+    [_menuTVC addMenuItemView:self.start andTitle:@"Click to generate test"];
 
-    self.log = [[UITextView alloc] initWithFrame:CGRectMake(6.0f, 488.0f, 355.0f, 128.0f)];
-    [self.view addSubview:self.log];
-
-    self.logResult = [[UIButton alloc] initWithFrame:CGRectMake(293.0f, 426.0f, 46.0f, 30.0f)];
-    [self.logResult setTitle:@"Copy" forState:UIControlStateNormal];
-    [self.logResult setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-    [self.view addSubview:self.logResult];
+    self.defaultLabelText = @"This is a test string used to test UILabel - and it should wrap and can be as long as three lines";
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.frame = CGRectMake(0.0f, 0.0f, 200.0f, 0.0f);
+
+#ifndef WINOBJC
+    // init the log array
+    logArray = [[NSMutableArray alloc] init];
+#endif
 
     // creating control default value using label value
     [self _setup];
@@ -143,20 +154,22 @@
     [self.autoShrink addTarget:self action:@selector(autoShrinkChanged:) forControlEvents:UIControlEventValueChanged];
 
     [self.start addTarget:self action:@selector(startTests:) forControlEvents:UIControlEventTouchUpInside];
-    [self.logResult addTarget:self action:@selector(copyTestResult:) forControlEvents:UIControlEventTouchUpInside];
-}
-
-- (void)copyTestResult:(UIButton*)sender {
-    UIPasteboard* pasteBoard = [UIPasteboard generalPasteboard];
-    NSString* logResult = self.log.text;
-    [pasteBoard setValue:logResult forPasteboardType:(NSString*)kUTTypePlainText];
 }
 
 - (void)startTests:(UIButton*)sender {
+    // if user didn't provide any text for UILabel, use default labelText
+    // in autoMode
+    if ([self.label.text length] == 0) {
+        self.label.text = self.defaultLabelText;
+    }
+
     // reset the log
     _eventId = 0;
 
     __weak UILabelViewController* weakSelf = self;
+
+    // push the enumeration to background thread so that main thread isn't caught
+    // up with busy looping and enumerating all configurations
     dispatch_queue_t g = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);
     dispatch_async(g, ^{
         __strong UILabelViewController* strongSelf = weakSelf;
@@ -170,7 +183,7 @@
                 });
 
                 if (autoFit == 1) {
-                    // autFit is on, enumerate miniFontSize/ScaleFactor
+                    // autoFit is on, enumerate miniFontSize/ScaleFactor
                     for (int useMinScaleFactor = 0; useMinScaleFactor <= 1; useMinScaleFactor++) {
                         if (useMinScaleFactor) {
                             for (float minScaleFactor = 0.1; minScaleFactor < 1.0; minScaleFactor += 0.4) {
@@ -197,6 +210,24 @@
                     [strongSelf enumerateNumberOfLinesLinBreakFontSize];
                 }
             }
+
+#ifndef WINOBJC
+            // write log array to external file so that it can be used as expected value
+            // we take advantage of the fact that app run iOS simulator is not sandboxed, thus
+            // can write the log file to a specific location
+            BOOL logPersisted = [self->logArray writeToFile:@"/Users/yiyang/temp/testlog.txt" atomically:YES];
+            UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Generate Log"
+                                                                           message:logPersisted ? @"Succeeded" : @"Failed"
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+
+            UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                    style:UIAlertActionStyleDefault
+                                                                  handler:^(UIAlertAction* action){
+                                                                  }];
+
+            [alert addAction:defaultAction];
+            [self presentViewController:alert animated:YES completion:nil];
+#endif
         }
     });
 }
@@ -257,32 +288,41 @@
     self.fontSizeLabel.text = [NSString stringWithFormat:@"%5.2f", slider.value];
 }
 
-- (void)textFieldEditDidEnd:(UITextField*)t {
-    if (t == self.text) {
-        self.label.text = t.text;
-    } else if (t == self.x) {
+- (void)textFieldEditDidEnd:(UITextField*)sender {
+    if (sender == self.text) {
+        // update label text
+        self.label.text = sender.text;
+    } else if (sender == self.x) {
+        // update bound rect x
         CGRect rect = self.label.frame;
         rect.origin.x = [self.x.text floatValue];
         self.label.frame = rect;
-    } else if (t == self.y) {
+    } else if (sender == self.y) {
+        // update bound rect y
         CGRect rect = self.label.frame;
         rect.origin.y = [self.y.text floatValue];
         self.label.frame = rect;
-    } else if (t == self.w) {
+    } else if (sender == self.w) {
+        // update bound rect width
         CGRect rect = self.label.frame;
         rect.size.width = [self.w.text floatValue];
         self.label.frame = rect;
-    } else if (t == self.h) {
+    } else if (sender == self.h) {
+        // update bound rect height
         CGRect rect = self.label.frame;
         rect.size.height = [self.h.text floatValue];
         self.label.frame = rect;
-    } else if (t == self.numberOfLines) {
+    } else if (sender == self.numberOfLines) {
+        // update number of Lines
         self.label.numberOfLines = [self.numberOfLines.text intValue];
-    } else if (t == self.lineBreakMode) {
+    } else if (sender == self.lineBreakMode) {
+        // update line break mode
         self.label.lineBreakMode = (NSLineBreakMode)[self.lineBreakMode.text intValue];
-    } else if (t == self.minimumFontSize) {
+    } else if (sender == self.minimumFontSize) {
+        // update minimum font size
         self.label.minimumFontSize = [self.minimumFontSize.text floatValue];
-    } else if (t == self.minimumScaleFactor) {
+    } else if (sender == self.minimumScaleFactor) {
+        // update minimum font scale
         self.label.minimumScaleFactor = [self.minimumScaleFactor.text floatValue];
     }
 }
@@ -316,6 +356,28 @@
                                              self.sizeThatFits.height];
 
     NSLog(self.result);
+
+#ifndef WINOBJC
+    // on reference platform, add expected result dictionary into log array so that it can
+    // be serialized to a file and then compared to the actual result on our platform for the
+    // the same config
+    NSMutableDictionary* resultDict = [[NSMutableDictionary alloc] init];
+
+    [resultDict setObject:[NSString stringWithFormat:@"%04d", self->_eventId] forKey:@"id"];
+    [resultDict setObject:NSStringFromCGRect(self.label.frame) forKey:@"frame"];
+    [resultDict setObject:[NSString stringWithFormat:@"%d", (int)self.label.numberOfLines] forKey:@"#OfLines"];
+    [resultDict setObject:[NSString stringWithFormat:@"%5.2f", self.label.font.pointSize] forKey:@"fontSize"];
+    [resultDict setObject:[NSString stringWithFormat:@"%d", (int)self.label.lineBreakMode] forKey:@"lineBreak"];
+    [resultDict setObject:[NSString stringWithFormat:@"%d", self.autoShrink.on] forKey:@"AutoShrink"];
+    [resultDict setObject:[NSString stringWithFormat:@"%5.2f", self.label.minimumFontSize] forKey:@"MinFontSize"];
+    [resultDict setObject:[NSString stringWithFormat:@"%1.2f", self.label.minimumScaleFactor] forKey:@"MinScale"];
+    [resultDict setObject:NSStringFromCGSize(self.intrinsicContentSize) forKey:@"IntrinicContentSize"];
+    [resultDict setObject:NSStringFromCGRect(self.textRect) forKey:@"textRect"];
+    [resultDict setObject:NSStringFromCGSize(self.sizeThatFits) forKey:@"sizeThatFits"];
+
+    [self->logArray addObject:resultDict];
+#endif
+
     self->_eventId++;
 }
 

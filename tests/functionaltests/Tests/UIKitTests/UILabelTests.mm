@@ -92,6 +92,12 @@ public:
         textRectForBoundsTestIgnoreCount = 0;
 
         if (self) {
+            // use the default Label text which is the one used
+            // to generate the expected value on reference platform
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                self.label.text = self.defaultLabelText;
+            });
+
             // enumerate the setAdjustFontSizeToFitWidth (or autoFit)
             for (int autoFit = 0; autoFit <= 1; autoFit++) {
                 dispatch_sync(dispatch_get_main_queue(), ^{
@@ -292,7 +298,7 @@ public:
         UILabel* label = [labelVC label];
 
         dispatch_sync(dispatch_get_main_queue(), ^{
-            // get the backing xaml element, which is Gird contains textBlock
+            // get the backing xaml element, which is Grid contains textBlock
             WXCGrid* labelGrid = rt_dynamic_cast<WXCGrid>([label xamlElement]);
             Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetLabelTextBlock([labelGrid comObj]));
             WXCTextBlock* textBlock = _createRtProxy([WXCTextBlock class], inspectable.Get());
@@ -315,24 +321,6 @@ public:
         });
     }
 
-    WUColor* ConvertUIColorToWUColor(UIColor* uiColor) {
-        CGFloat r, g, b, a;
-        [uiColor getRed:&r green:&g blue:&b alpha:&a];
-
-        return [WUColorHelper fromArgb:(unsigned char)(a * 255)
-                                     r:(unsigned char)(r * 255)
-                                     g:(unsigned char)(g * 255)
-                                     b:(unsigned char)(b * 255)];
-    }
-
-    UIColor* ConvertWUColorToUIColor(WUColor* wuColor) {
-        CGFloat r = wuColor.r / 255.0;
-        CGFloat g = wuColor.g / 255.0;
-        CGFloat b = wuColor.b / 255.0;
-        CGFloat a = wuColor.a / 255.0;
-        return [UIColor colorWithRed:r green:g blue:b alpha:a];
-    }
-
     TEST_METHOD(UILabel_VerifyLinBreakMode) {
         StrongId<UILabelViewController> labelVC;
         labelVC.attach([[UILabelViewController alloc] init]);
@@ -341,7 +329,7 @@ public:
         UILabel* label = [labelVC label];
 
         dispatch_sync(dispatch_get_main_queue(), ^{
-            // get the backing xaml element, which is Gird contains textBlock
+            // get the backing xaml element, which is Grid contains textBlock
             WXCGrid* labelGrid = rt_dynamic_cast<WXCGrid>([label xamlElement]);
             Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetLabelTextBlock([labelGrid comObj]));
             WXCTextBlock* textBlock = _createRtProxy([WXCTextBlock class], inspectable.Get());
@@ -397,7 +385,7 @@ public:
         UILabel* label = [labelVC label];
 
         dispatch_sync(dispatch_get_main_queue(), ^{
-            // get the backing xaml element, which is Gird contains textBlock
+            // get the backing xaml element, which is Grid contains textBlock
             WXCGrid* labelGrid = rt_dynamic_cast<WXCGrid>([label xamlElement]);
             Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetLabelTextBlock([labelGrid comObj]));
             WXCTextBlock* textBlock = _createRtProxy([WXCTextBlock class], inspectable.Get());
@@ -426,7 +414,7 @@ public:
         UILabel* label = [labelVC label];
 
         dispatch_sync(dispatch_get_main_queue(), ^{
-            // get the backing xaml element, which is Gird contains textBlock
+            // get the backing xaml element, which is Grid contains textBlock
             WXCGrid* labelGrid = rt_dynamic_cast<WXCGrid>([label xamlElement]);
             Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetLabelTextBlock([labelGrid comObj]));
             WXCTextBlock* textBlock = _createRtProxy([WXCTextBlock class], inspectable.Get());
@@ -456,7 +444,7 @@ public:
         UILabel* label = [labelVC label];
 
         dispatch_sync(dispatch_get_main_queue(), ^{
-            // get the backing xaml element, which is Gird contains textBlock
+            // get the backing xaml element, which is Grid contains textBlock
             WXCGrid* labelGrid = rt_dynamic_cast<WXCGrid>([label xamlElement]);
             Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetLabelTextBlock([labelGrid comObj]));
             WXCTextBlock* textBlock = _createRtProxy([WXCTextBlock class], inspectable.Get());
@@ -470,37 +458,37 @@ public:
 
             WUXMSolidColorBrush* colorBrush = rt_dynamic_cast<WUXMSolidColorBrush>(textBlock.foreground);
             ASSERT_TRUE(colorBrush != nil);
-            EXPECT_OBJCEQ(ConvertWUColorToUIColor(colorBrush.color), label.textColor);
+            EXPECT_OBJCEQ(UXTestAPI::ConvertWUColorToUIColor(colorBrush.color), label.textColor);
 
             // verify setting color to others
             label.textColor = [UIColor redColor];
             colorBrush = rt_dynamic_cast<WUXMSolidColorBrush>(textBlock.foreground);
             ASSERT_TRUE(colorBrush != nil);
-            EXPECT_OBJCEQ(ConvertWUColorToUIColor(colorBrush.color), label.textColor);
+            EXPECT_OBJCEQ(UXTestAPI::ConvertWUColorToUIColor(colorBrush.color), label.textColor);
 
             label.textColor = [UIColor greenColor];
             colorBrush = rt_dynamic_cast<WUXMSolidColorBrush>(textBlock.foreground);
             ASSERT_TRUE(colorBrush != nil);
-            EXPECT_OBJCEQ(ConvertWUColorToUIColor(colorBrush.color), label.textColor);
+            EXPECT_OBJCEQ(UXTestAPI::ConvertWUColorToUIColor(colorBrush.color), label.textColor);
 
             // verify setting highlightedColor without changing UILabel state to highlighted state
             // the label's text color should not change
             label.highlightedTextColor = [UIColor greenColor];
             colorBrush = rt_dynamic_cast<WUXMSolidColorBrush>(textBlock.foreground);
             ASSERT_TRUE(colorBrush != nil);
-            EXPECT_OBJCEQ(ConvertWUColorToUIColor(colorBrush.color), label.textColor);
+            EXPECT_OBJCEQ(UXTestAPI::ConvertWUColorToUIColor(colorBrush.color), label.textColor);
 
             // now change the UILabel's state to be highlighted, and textblock's foreground should be using highlightedTextColor
             label.highlighted = YES;
             colorBrush = rt_dynamic_cast<WUXMSolidColorBrush>(textBlock.foreground);
             ASSERT_TRUE(colorBrush != nil);
-            EXPECT_OBJCEQ(ConvertWUColorToUIColor(colorBrush.color), label.highlightedTextColor);
+            EXPECT_OBJCEQ(UXTestAPI::ConvertWUColorToUIColor(colorBrush.color), label.highlightedTextColor);
 
             // now change the UILabel's state to be normal, verify textBlock's forground return to use original textColor
             label.highlighted = NO;
             colorBrush = rt_dynamic_cast<WUXMSolidColorBrush>(textBlock.foreground);
             ASSERT_TRUE(colorBrush != nil);
-            EXPECT_OBJCEQ(ConvertWUColorToUIColor(colorBrush.color), label.textColor);
+            EXPECT_OBJCEQ(UXTestAPI::ConvertWUColorToUIColor(colorBrush.color), label.textColor);
         });
     }
 
@@ -512,7 +500,7 @@ public:
         UILabel* label = [labelVC label];
 
         dispatch_sync(dispatch_get_main_queue(), ^{
-            // get the backing xaml element, which is Gird contains textBlock
+            // get the backing xaml element, which is Grid contains textBlock
             WXCGrid* labelGrid = rt_dynamic_cast<WXCGrid>([label xamlElement]);
             Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetLabelTextBlock([labelGrid comObj]));
             WXCTextBlock* textBlock = _createRtProxy([WXCTextBlock class], inspectable.Get());

@@ -44,7 +44,6 @@ static const wchar_t* TAG = L"UILabel";
     UILineBreakMode _lineBreakMode;
     BOOL _adjustFontSize;
     float _minimumFontSize;
-    float _originalFontSize;
     BOOL _useMinimumScaleFactor;
     float _minimumScaleFactor;
     int _numberOfLines;
@@ -54,11 +53,11 @@ static const wchar_t* TAG = L"UILabel";
     StrongId<WXCTextBlock> _textBlock;
 }
 
-- (UIFont*)_searchAdjustedFontToFit {
+- (float)_searchAdjustedFontSizeToFit {
     CGRect rect = [self bounds];
 
     if (rect.size.width == 0.0f || rect.size.height == 0.0f || [_text length] == 0) {
-        return nil;
+        return -1.0f;
     }
 
     // Special:on reference platform, adjustFontSizeToFit is no-op when lineBreakMode is Wrapping
@@ -68,7 +67,7 @@ static const wchar_t* TAG = L"UILabel";
         // if minimumScaleFactor is used, it should override _minimumFontSize which is deprecated
         if (_useMinimumScaleFactor) {
             if (_minimumScaleFactor > 0.0) {
-                minimumFontSize = _minimumScaleFactor * _originalFontSize;
+                minimumFontSize = _minimumScaleFactor * [_font pointSize];
             } else {
                 // per reference platform, if minimumScaleFactor is set and equal to 0.0
                 // use current font size is used as smallest font size
@@ -78,46 +77,22 @@ static const wchar_t* TAG = L"UILabel";
 
         // findMaxFontSizeToFit return maximnum Font Size which should not exceed
         // original fontSize, thus never scale up. use original font size as upper bound
-        // if not found, return nil
-        return XamlUtilities::FindMaxFontSizeToFit(rect, _text, _font, _numberOfLines, minimumFontSize, _originalFontSize);
+        // if not found, return minimumFontSize
+        return XamlUtilities::FindMaxFontSizeToFit(rect, _text, _font, _numberOfLines, minimumFontSize, [_font pointSize]);
     }
 
-    return nil;
+    return -1.0f;
 }
 
-- (void)_updateXamlElementWithAdjustedFont:(UIFont*)adjustedFont {
-    // if adjustedFont is not nil, use that to update xaml element
-    // otherwise, use the original font to update xaml element
-    UIFont* fontToUse = adjustedFont ? adjustedFont : _font;
-
-    [_textBlock setText:_text];
-    [_textBlock setFontSize:[fontToUse pointSize]];
-
+- (void)_updateTextBlockWithFont:(UIFont*)font {
+    [_textBlock setFontSize:[font pointSize]];
     WUTFontWeight* fontWeight = [WUTFontWeight new];
-    fontWeight.weight = static_cast<unsigned short>([fontToUse _fontWeight]);
+    fontWeight.weight = static_cast<unsigned short>([font _fontWeight]);
     [_textBlock setFontWeight:fontWeight];
-    [_textBlock setFontStyle:static_cast<WUTFontStyle>([fontToUse _fontStyle])];
-    [_textBlock setFontStretch:static_cast<WUTFontStretch>([fontToUse _fontStretch])];
-
-    [_textBlock setFontFamily:[WUXMFontFamily makeInstanceWithName:[fontToUse _compatibleFamilyName]]];
-
-    [_textBlock setTextAlignment:XamlUtilities::ConvertUITextAlignmentToWXTextAlignment(_alignment)];
-
-    [_textBlock setLineHeight:[fontToUse ascender] - [fontToUse descender]];
-
-    XamlUtilities::ApplyLineBreakModeOnTextBlock(_textBlock, _lineBreakMode, self.numberOfLines);
-    [_textBlock setMaxLines:self.numberOfLines];
-
-    [_textBlock setLineStackingStrategy:WXLineStackingStrategyBlockLineHeight];
-
-    UIColor* color = _textColor;
-    if (_isHighlighted && _highlightedTextColor != nil) {
-        color = _highlightedTextColor;
-    }
-    [_textBlock setForeground:[WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor(color)]];
-
-    [self invalidateIntrinsicContentSize];
-    [self setNeedsDisplay];
+    [_textBlock setFontStyle:static_cast<WUTFontStyle>([font _fontStyle])];
+    [_textBlock setFontStretch:static_cast<WUTFontStretch>([font _fontStretch])];
+    [_textBlock setFontFamily:[WUXMFontFamily makeInstanceWithName:[font _compatibleFamilyName]]];
+    [_textBlock setLineHeight:[font ascender] - [font descender]];
 }
 
 /**
@@ -134,10 +109,9 @@ static const wchar_t* TAG = L"UILabel";
         _shadowColor = [coder decodeObjectForKey:@"UIShadowColor"];
 
         UIFont* font = [coder decodeObjectForKey:@"UIFont"];
-        if (font == nil) {
-            font = [UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]];
+        if (font != nil) {
+            _font = font;
         }
-        _font = font;
 
         _alignment = (UITextAlignment)[coder decodeInt32ForKey:@"UITextAlignment"];
 
@@ -167,7 +141,7 @@ static const wchar_t* TAG = L"UILabel";
             }
         } else {
             TraceWarning(TAG,
-                         L"Invalid nib format, None of UIMinimumScaleFactor/UIMinimumFontSize/UIAdjustsFontSizeToFit is set. default "
+                         L"Invalid nib format, None of UIMinimumScaleFactor/UIMinimumFontSize/UIAdjustsFontSizeToFit is set. Setting "
                          L"UIAdjustsFontSizeToFit to FALSE");
             _adjustFontSize = NO;
         }
@@ -190,7 +164,7 @@ static const wchar_t* TAG = L"UILabel";
             }
         }
 
-        [self _adjustFontSizeForXamlElement];
+        [self _applyPropertesOnTextBlock];
     }
 
     return self;
@@ -226,6 +200,7 @@ static const wchar_t* TAG = L"UILabel";
     }
 
     _textBlock = textBlock;
+    [_textBlock setLineStackingStrategy:WXLineStackingStrategyBlockLineHeight];
 
     _alignment = UITextAlignmentLeft;
     _lineBreakMode = UILineBreakModeTailTruncation;
@@ -234,19 +209,39 @@ static const wchar_t* TAG = L"UILabel";
 
     // on reference platform, default minimum font size is zero but always slightly bigger than zero in reality acccording to the
     // documentation
+    _adjustFontSize = NO;
     _minimumFontSize = 0.0001f;
     _minimumScaleFactor = 0.0;
     _useMinimumScaleFactor = NO;
     _numberOfLines = 1;
     [self setOpaque:FALSE];
 
-    _originalFontSize = [UIFont labelFontSize];
-    _font = [UIFont fontWithName:@"Segoe UI" size:_originalFontSize];
+    _font = [UIFont fontWithName:@"Segoe UI" size:[UIFont labelFontSize]];
 
     // TODO: Reevaluate whether or not this is the correct default mode for UILabels that are initialized via initWithFrame.
     //       Some of our test apps expect the initWithCoder path to default to UIViewContentModeScaleToFill (aka kCAGravityResize).
     [self setContentMode:UIViewContentModeRedraw];
-    [self _updateXamlElementWithAdjustedFont:nil];
+}
+
+- (void)_applyPropertesOnTextBlock {
+    [_textBlock setText:_text];
+    [_textBlock setTextAlignment:XamlUtilities::ConvertUITextAlignmentToWXTextAlignment(_alignment)];
+    XamlUtilities::ApplyLineBreakModeOnTextBlock(_textBlock, _lineBreakMode, self.numberOfLines);
+    [_textBlock setMaxLines:_numberOfLines];
+    UIColor* color = _textColor;
+    if (_isHighlighted && _highlightedTextColor != nil) {
+        color = _highlightedTextColor;
+    }
+    [_textBlock setForeground:[WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor(color)]];
+    [self _updateTextBlockWithFont:_font];
+
+    if (_adjustFontSize) {
+        // search for font that can fit - but it might not exist, in which case we get nil font
+        float adjustedFontSize = [self _searchAdjustedFontSizeToFit];
+        if (adjustedFontSize != -1.0f) {
+            [_textBlock setFontSize:adjustedFontSize];
+        }
+    }
 }
 
 /**
@@ -255,6 +250,7 @@ static const wchar_t* TAG = L"UILabel";
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         [self _initUILabel];
+        [self _applyPropertesOnTextBlock];
     }
 
     return self;
@@ -266,6 +262,7 @@ static const wchar_t* TAG = L"UILabel";
 - (instancetype)initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
     if (self = [super initWithFrame:frame xamlElement:xamlElement]) {
         [self _initUILabel];
+        [self _applyPropertesOnTextBlock];
     }
 
     return self;
@@ -291,10 +288,17 @@ static const wchar_t* TAG = L"UILabel";
  @Status Interoperable
 */
 - (void)setFont:(UIFont*)font {
+    if (_font == nil && font == nil) {
+        return;
+    }
+
     if (![_font isEqual:font]) {
         _font = font;
-        _originalFontSize = [_font pointSize];
-        [self _adjustFontSizeForXamlElement];
+        [self _updateTextBlockWithFont:_font];
+        if (![self _adjustTextBlockFontSizeIfNecessary]) {
+            [self invalidateIntrinsicContentSize];
+            [self setNeedsDisplay];
+        }
     }
 }
 
@@ -315,10 +319,12 @@ static const wchar_t* TAG = L"UILabel";
     if (![newStr isKindOfClass:[NSString class]]) {
         newStr = [newStr description];
     }
+
     if (newStr == nil || ![_text isEqual:newStr]) {
         _text = [newStr copy];
-        [self _adjustFontSizeForXamlElement];
+        [_textBlock setText:_text];
         self.accessibilityValue = newStr;
+        [self _adjustTextBlockFontSizeIfNecessary];
     }
 }
 
@@ -342,18 +348,20 @@ static const wchar_t* TAG = L"UILabel";
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes this isn't a property that XAML has available for TextBlock
 */
 - (void)setEnabled:(BOOL)enable {
-    UNIMPLEMENTED();
+    UNIMPLEMENTED_WITH_MSG("eabnled is not a property that XAML has available for TextBlock");
     _isDisabled = !enable;
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes this isn't a property that XAML has available for TextBlock
 */
 - (BOOL)isEnabled {
-    UNIMPLEMENTED();
+    UNIMPLEMENTED_WITH_MSG("eabnled is not a  property that XAML has available for TextBlock");
     return _isDisabled;
 }
 
@@ -370,7 +378,9 @@ static const wchar_t* TAG = L"UILabel";
 - (void)setTextAlignment:(UITextAlignment)alignment {
     if (alignment != _alignment) {
         _alignment = alignment;
-        [self _updateXamlElementWithAdjustedFont:nil];
+        [_textBlock setTextAlignment:XamlUtilities::ConvertUITextAlignmentToWXTextAlignment(_alignment)];
+
+        [self setNeedsDisplay];
     }
 }
 
@@ -388,9 +398,17 @@ static const wchar_t* TAG = L"UILabel";
     if (color == nil && _textColor == nil) {
         return;
     }
+
     if (![_textColor isEqual:color]) {
+        // update textColor for label normal state
         _textColor = color;
-        [self _updateXamlElementWithAdjustedFont:nil];
+
+        // if label is not in highlighted state or it is in highlighted state but without highlighted Color
+        // both cases need use normal text color to update the foreground
+        if (!_isHighlighted || _highlightedTextColor == nil) {
+            [_textBlock setForeground:[WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor(_textColor)]];
+            [self setNeedsDisplay];
+        }
     }
 }
 
@@ -453,7 +471,8 @@ static const wchar_t* TAG = L"UILabel";
 - (void)setNumberOfLines:(NSInteger)numberOfLines {
     if (numberOfLines != _numberOfLines) {
         _numberOfLines = numberOfLines;
-        [self _adjustFontSizeForXamlElement];
+        [_textBlock setMaxLines:self.numberOfLines];
+        [self _adjustTextBlockFontSizeIfNecessary];
     }
 }
 
@@ -470,7 +489,7 @@ static const wchar_t* TAG = L"UILabel";
 - (void)setMinimumFontSize:(float)size {
     if (_minimumFontSize != size) {
         _minimumFontSize = size;
-        [self _adjustFontSizeForXamlElement];
+        [self _adjustTextBlockFontSizeIfNecessary];
     }
 
     _useMinimumScaleFactor = NO;
@@ -484,18 +503,20 @@ static const wchar_t* TAG = L"UILabel";
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes baselineAdjustment is not currently supported by Xaml.
 */
 - (void)setBaselineAdjustment:(UIBaselineAdjustment)adjustment {
-    UNIMPLEMENTED();
+    UNIMPLEMENTED_WITH_MSG("baselineAdjustment is not a feature currently supported by Xaml.");
     _baselineAdjustment = adjustment;
 }
 
 /**
- @Status Stub
+ @Status NotInPlan
+ @Notes baselineAdjustment is not currently supported by Xaml.
 */
 - (UIBaselineAdjustment)baselineAdjustment {
-    UNIMPLEMENTED();
+    UNIMPLEMENTED_WITH_MSG("baselineAdjustment is not a feature currently supported by Xaml.");
     return _baselineAdjustment;
 }
 
@@ -506,8 +527,11 @@ static const wchar_t* TAG = L"UILabel";
  NSLineBreakByTruncatingHead/NSLineBreakByTruncatingMiddle is using NSLineBreakByTruncatingTail instead
 */
 - (void)setLineBreakMode:(UILineBreakMode)mode {
-    _lineBreakMode = mode;
-    [self _adjustFontSizeForXamlElement];
+    if (_lineBreakMode != mode) {
+        _lineBreakMode = mode;
+        XamlUtilities::ApplyLineBreakModeOnTextBlock(_textBlock, _lineBreakMode, self.numberOfLines);
+        [self _adjustTextBlockFontSizeIfNecessary];
+    }
 }
 
 /**
@@ -521,13 +545,26 @@ static const wchar_t* TAG = L"UILabel";
  @Status Interoperable
 */
 - (void)setHighlighted:(BOOL)highlighted {
-    _isHighlighted = highlighted;
-    if (highlighted) {
-        [self setBackgroundColor:nil];
-    } else {
-        [self setBackgroundColor:_savedBackgroundColor];
+    if (highlighted != _isHighlighted) {
+        _isHighlighted = highlighted;
+        if (_isHighlighted) {
+            [self setBackgroundColor:nil];
+        } else {
+            [self setBackgroundColor:_savedBackgroundColor];
+        }
+
+        // update textblock foreground when highlighted color is different textcolor
+        if (![_highlightedTextColor isEqual:_textColor]) {
+            if (_isHighlighted) {
+                [_textBlock setForeground:[WUXMSolidColorBrush
+                                              makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor(_highlightedTextColor)]];
+            } else {
+                [_textBlock setForeground:[WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor(_textColor)]];
+            }
+
+            [self setNeedsDisplay];
+        }
     }
-    [self _updateXamlElementWithAdjustedFont:nil];
 }
 
 /**
@@ -541,7 +578,17 @@ static const wchar_t* TAG = L"UILabel";
  @Status Interoperable
 */
 - (void)setHighlightedTextColor:(UIColor*)color {
-    _highlightedTextColor = color;
+    if (color == nil && _highlightedTextColor == nil) {
+        return;
+    }
+
+    if (![color isEqual:_highlightedTextColor]) {
+        _highlightedTextColor = color;
+        if (_isHighlighted) {
+            [_textBlock setForeground:[WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor(_textColor)]];
+            [self setNeedsDisplay];
+        }
+    }
 }
 
 /**
@@ -552,10 +599,11 @@ static const wchar_t* TAG = L"UILabel";
 }
 
 /**
-@Status Stub
+@Status NotInPlan
+@Notes drawTextInRect is not currently supported by Xaml.
 */
 - (void)drawTextInRect:(CGRect)rect {
-    UNIMPLEMENTED();
+    UNIMPLEMENTED_WITH_MSG("drawTextInRect is not a feature currently supported by Xaml.");
 }
 
 /**
@@ -604,17 +652,19 @@ static const wchar_t* TAG = L"UILabel";
 }
 
 /**
-@Status Stub
+@Status NotInPlan
+@Notes allowsDefaultTighteningForTruncation is not supported by xaml
 */
 - (void)setAllowsDefaultTighteningForTruncation:(BOOL)value {
-    UNIMPLEMENTED();
+    UNIMPLEMENTED_WITH_MSG("setAllowsDefaultTighteningForTruncation is not a feature currently supported by Xaml.");
 }
 
 /**
-@Status Stub
+@Status NotInPlan
+@Notes allowsDefaultTighteningForTruncation is not supported by xaml
 */
 - (BOOL)allowsDefaultTighteningForTruncation {
-    UNIMPLEMENTED();
+    UNIMPLEMENTED_WITH_MSG("setAllowsDefaultTighteningForTruncation is not a feature currently supported by Xaml.");
     return StubReturn();
 }
 
@@ -624,26 +674,38 @@ static const wchar_t* TAG = L"UILabel";
 - (void)setAdjustsFontSizeToFitWidth:(BOOL)adjusts {
     if (adjusts != _adjustFontSize) {
         _adjustFontSize = adjusts;
-        [self _adjustFontSizeForXamlElement];
+        [self _adjustTextBlockFontSizeIfNecessary];
     }
 }
 
-- (void)_adjustFontSizeForXamlElement {
-    StrongId<UIFont> adjustedFont = nil;
-
+- (BOOL)_adjustTextBlockFontSizeIfNecessary {
+    BOOL textBlockFontSizeUpdated = NO;
+    float curTextBlockFontSize = [_textBlock fontSize];
     if (_adjustFontSize) {
-        adjustedFont = [self _searchAdjustedFontToFit];
+        // search for font that can fit - but it might not exist, in which case we get nil font
+        float adjustedFontSize = [self _searchAdjustedFontSizeToFit];
+        if (adjustedFontSize != -1.0f && adjustedFontSize != curTextBlockFontSize) {
+            [_textBlock setFontSize:adjustedFontSize];
+            textBlockFontSizeUpdated = YES;
+        }
     } else {
-        if ([_font pointSize] != _originalFontSize) {
-            // current used font is different from original font
-            // since we switch back the *NO* adjustFontSize mode
-            // we should recover currently used font back to original
-            // font.
-            _font = [_font fontWithSize:_originalFontSize];
+        // in NO adjustment mode, check if textblock fontsize is different from current font size
+        // if so, textBlock fontsize was adjusted, need to swich it back
+        float curFontSize = [_font pointSize];
+        if (curTextBlockFontSize != curFontSize) {
+            [_textBlock setFontSize:curFontSize];
+            textBlockFontSizeUpdated = YES;
         }
     }
 
-    [self _updateXamlElementWithAdjustedFont:adjustedFont];
+    if (textBlockFontSizeUpdated) {
+        [self invalidateIntrinsicContentSize];
+        [self setNeedsDisplay];
+    }
+
+    // return YES/NO to indicate whether layout has been triggered
+    // so that caller can avoid calling layout again if necessary
+    return textBlockFontSizeUpdated;
 }
 
 /**
@@ -652,7 +714,7 @@ static const wchar_t* TAG = L"UILabel";
 - (void)setMinimumScaleFactor:(float)scale {
     if (_minimumScaleFactor != scale) {
         _minimumScaleFactor = scale;
-        [self _adjustFontSizeForXamlElement];
+        [self _adjustTextBlockFontSizeIfNecessary];
     }
 
     _useMinimumScaleFactor = YES;
@@ -680,7 +742,6 @@ static const wchar_t* TAG = L"UILabel";
 
     if ([_text length] != 0) {
         if (self.numberOfLines != 0) {
-            // for fixed number of lines, use hinted size as contraints for height
             CGFloat lineHeight = [_font ascender] - [_font descender];
             curSize.height = lineHeight * self.numberOfLines;
 
@@ -708,10 +769,6 @@ static const wchar_t* TAG = L"UILabel";
     if (_text != nil) {
         CGSize size;
 
-        if (_font == nil) {
-            _font = [UIFont defaultFont];
-        }
-
         size = [_text sizeWithFont:_font
                  constrainedToSize:CGSizeMake(DisplayProperties::ScreenWidth(), bounds.size.height)
                      lineBreakMode:_lineBreakMode];
@@ -722,14 +779,6 @@ static const wchar_t* TAG = L"UILabel";
     }
 
     return ret;
-}
-
-/**
- @Status Interoperable
-*/
-- (void)layoutSubviews {
-    [self _adjustFontSizeForXamlElement];
-    [self setNeedsDisplay];
 }
 
 /**
