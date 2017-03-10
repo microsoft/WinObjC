@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,17 +17,21 @@
 #import <StubReturn.h>
 #import <Starboard.h>
 #import <CoreGraphics/CGGeometry.h>
+#import <LoggingNative.h>
 #import <limits>
+#import <algorithm>
 
 #import "Etc.h"
+
+static const wchar_t* TAG = L"CGGeometry";
 
 const CGRect CGRectInfinite = CGRectMake(0, 0, std::numeric_limits<float>::infinity(), std::numeric_limits<float>::infinity());
 const CGPoint CGPointZero = CGPointMake(0, 0);
 const CGRect CGRectZero = CGRectMake(0, 0, 0, 0);
 const CGSize CGSizeZero = CGSizeMake(0, 0);
 
-/** 
- @Status caveat 
+/**
+ @Status caveat
  @Notes TODO: unclear the value is correct or not based on reference doc. Need Revisit
 */
 const CGRect CGRectNull = { std::numeric_limits<float>::infinity(), std::numeric_limits<float>::infinity(), 0.0f, 0.0f };
@@ -87,11 +91,94 @@ bool CGRectMakeWithDictionaryRepresentation(CFDictionaryRef dict, CGRect* rect) 
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 void CGRectDivide(CGRect rect, CGRect* slice, CGRect* remainder, CGFloat amount, CGRectEdge edge) {
-    UNIMPLEMENTED();
+    RETURN_IF(slice == nullptr);
+    RETURN_IF(remainder == nullptr);
+
+    if (CGRectIsNull(rect)) {
+        *slice = CGRectNull;
+        *remainder = CGRectNull;
+        return;
+    }
+
+    amount = std::max(0.0f, amount);
+    rect = CGRectStandardize(rect);
+
+    /*
+    * (0,0)                      (width,0)
+    * x-----------------------------x
+    * |                             |
+    * |                             |
+    * |                             |
+    * |                             |
+    * |                             |
+    * x-----------------------------x
+    * (0,height)               (width,height)
+    *
+    *
+    * The division is based on CGRectEdge, which edge to divide.
+    * e.g CGRectMinYEdge
+    *
+    *   (0,0)                      (width,0)
+    *    x-----------------------------x
+    *    | slice            | (amount) |
+    *    |                  v          |
+    * (0,amount)------------------(width,amount)
+    *    | reminder                    |
+    *    |                             |
+    *    x-----------------------------x
+    *   0,height-amount)               (width,height-amount)
+    */
+
+    // Set both to rect, then update the sizes.
+    *slice = rect;
+    *remainder = rect;
+
+    switch (edge) {
+        case CGRectMinYEdge:
+            amount = (amount > rect.size.height) ? rect.size.height : amount;
+            remainder->origin.y += amount;
+            if (amount >= rect.size.height) {
+                remainder->size.height = 0;
+            } else {
+                slice->size.height = amount;
+                remainder->size.height -= amount;
+            }
+            break;
+        case CGRectMaxYEdge:
+            if (amount >= rect.size.height) {
+                remainder->size.height = 0;
+            } else {
+                slice->origin.y += (rect.size.height - amount);
+                slice->size.height = amount;
+                remainder->size.height -= amount;
+            }
+            break;
+        case CGRectMinXEdge:
+            amount = (amount > rect.size.width) ? rect.size.width : amount;
+            remainder->origin.x += amount;
+            if (amount >= rect.size.width) {
+                remainder->size.width = 0;
+            } else {
+                slice->size.width = amount;
+                remainder->size.width -= amount;
+            }
+            break;
+        case CGRectMaxXEdge:
+            if (amount >= rect.size.width) {
+                remainder->size.width = 0;
+            } else {
+                remainder->size.width -= amount;
+                slice->origin.x += rect.size.width - amount;
+                slice->size.width = amount;
+            }
+            break;
+        default:
+            TraceError(TAG, L"Invalid CGRectEdge.");
+            break;
+    }
 }
 
 /**
