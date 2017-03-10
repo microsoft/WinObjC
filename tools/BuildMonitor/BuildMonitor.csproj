@@ -51,6 +51,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DeployExtension>False</DeployExtension>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -221,7 +222,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents"  DependsOnTargets="$(GetPackageContentsDependsOn)">
+  <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents" DependsOnTargets="$(GetPackageContentsDependsOn)">
     <ItemGroup>
       <_VSIXFile Include="$(TargetPath)" />
       <PackageFile Include="@(_VSIXFile -> '%(RootDir)%(Directory)%(Filename).vsix')" Condition="Exists('%(RootDir)%(Directory)%(Filename).vsix')">

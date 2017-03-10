@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="VSIX..9c35fff1-f084-44c1-a38e-68c707163aa2" Version="1.5" Language="en-US" Publisher="Microsoft" />
+    <Identity Id="VSIX..9c35fff1-f084-44c1-a38e-68c707163aa2" Version="1.6.1" Language="en-US" Publisher="Microsoft" />
     <DisplayName>Objective-C Language Service</DisplayName>
     <Description xml:space="preserve">This package contains Objective-C language service components such as Native Visualization support etc.</Description>
   </Metadata>
