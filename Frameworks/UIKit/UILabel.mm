@@ -238,8 +238,10 @@ static const wchar_t* TAG = L"UILabel";
     if (_adjustFontSize) {
         // search for font that can fit - but it might not exist, in which case we get nil font
         float adjustedFontSize = [self _searchAdjustedFontSizeToFit];
-        if (adjustedFontSize != -1.0f) {
+        if (adjustedFontSize != -1.0f && adjustedFontSize != [_font pointSize]) {
             [_textBlock setFontSize:adjustedFontSize];
+            UIFont* adjustFont = [_font fontWithSize:adjustedFontSize]; 
+            [_textBlock setLineHeight:[adjustFont ascender] - [adjustFont descender]];
         }
     }
 }
@@ -686,6 +688,8 @@ static const wchar_t* TAG = L"UILabel";
         float adjustedFontSize = [self _searchAdjustedFontSizeToFit];
         if (adjustedFontSize != -1.0f && adjustedFontSize != curTextBlockFontSize) {
             [_textBlock setFontSize:adjustedFontSize];
+            UIFont* adjustFont = [_font fontWithSize:adjustedFontSize]; 
+            [_textBlock setLineHeight:[adjustFont ascender] - [adjustFont descender]];
             textBlockFontSizeUpdated = YES;
         }
     } else {
@@ -694,6 +698,7 @@ static const wchar_t* TAG = L"UILabel";
         float curFontSize = [_font pointSize];
         if (curTextBlockFontSize != curFontSize) {
             [_textBlock setFontSize:curFontSize];
+            [_textBlock setLineHeight:[_font ascender] - [_font descender]];
             textBlockFontSizeUpdated = YES;
         }
     }
