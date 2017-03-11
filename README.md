@@ -17,7 +17,7 @@ To use the bridge you'll need:
    2. Universal Windows App Development Tools (all)
 
 To get started with an existing Xcode Project, you will also need:
-- **Chocolately**, a package manager for windows. See how to install the latest version [here] (https://chocolatey.org/)
+- **Chocolatey**, a package manager for windows. See how to install the latest version [here] (https://chocolatey.org/)
 - **WinObjC.Tools**, the command line tools for WinObjC. Run the below command from **powershell** to get the latest version:
 ```
 choco upgrade WinObjC.Tools
@@ -34,7 +34,7 @@ If you're having trouble downloading & installing the bridge, see the [Known Iss
 ### Importing your Xcode Project
 When using the bridge, the first thing you'll want to do is generate a Visual Studio solution from your Xcode project:
 
-1. Open the Windows PowerShell (type **powershell** in the Start Menu to find it) and navigate to your Xcode project directory using the **cd** command. Note: use the directory containing your .workspace or .xcodeproj folder.
+1. Open Windows PowerShell (type **powershell** in the Start Menu to find it) and navigate to your Xcode project directory using the **cd** command. Note: use the directory containing your .workspace or .xcodeproj folder.
 
   ```
     C:\> cd C:\MyProject
