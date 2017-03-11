@@ -25,16 +25,14 @@
 
 static const wchar_t* TAG = L"CGGeometry";
 
-const CGRect CGRectInfinite = CGRectMake(0, 0, std::numeric_limits<float>::infinity(), std::numeric_limits<float>::infinity());
+const CGRect CGRectInfinite = CGRectMake(std::numeric_limits<float>::infinity(),
+                                         std::numeric_limits<float>::infinity(),
+                                         std::numeric_limits<float>::infinity(),
+                                         std::numeric_limits<float>::infinity());
 const CGPoint CGPointZero = CGPointMake(0, 0);
 const CGRect CGRectZero = CGRectMake(0, 0, 0, 0);
 const CGSize CGSizeZero = CGSizeMake(0, 0);
-
-/**
- @Status caveat
- @Notes TODO: unclear the value is correct or not based on reference doc. Need Revisit
-*/
-const CGRect CGRectNull = { std::numeric_limits<float>::infinity(), std::numeric_limits<float>::infinity(), 0.0f, 0.0f };
+const CGRect CGRectNull = CGRectMake(std::numeric_limits<float>::infinity(), std::numeric_limits<float>::infinity(), 0.0f, 0.0f);
 
 /**
  @Status Stub
