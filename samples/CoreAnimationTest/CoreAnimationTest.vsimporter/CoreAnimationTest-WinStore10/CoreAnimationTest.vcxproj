@@ -271,7 +271,7 @@
 
   <!-- Begin NuGet Section -->
   <PropertyGroup>
-    <TargetFrameworkMoniker>uap10.0</TargetFrameworkMoniker>
+    <TargetFramework>uap10.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="WinObjC.Frameworks" Version="*" />
