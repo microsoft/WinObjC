@@ -4,17 +4,10 @@
         <Project>WinObjC</Project>
         <BuildDefinitions>
             <BuildDefinitionSet Name="Github Pull Request" MatchRemote="*github*">
-                <ID Configuration="Debug">74</ID>
-                <ID Configuration="Release">72</ID>
+                <ID>98</ID>
                 <ConfigMappings>
                     <Parameter Key="PullRequest">$REMOTEURL $BRANCH</Parameter>
-                    <SourceBranch>$SOURCEBRANCH</SourceBranch>
-                </ConfigMappings>
-            </BuildDefinitionSet>
-            <BuildDefinitionSet Name="Full"> <!-- No MatchRemote as this one must be specified by BuildFilter -->
-                <ID Configuration="Debug">82</ID>
-                <ID Configuration="Release">83</ID>
-                <ConfigMappings>
+                    <Parameter Key="BuildConfiguration">$CONFIG</Parameter>
                     <SourceBranch>$SOURCEBRANCH</SourceBranch>
                 </ConfigMappings>
             </BuildDefinitionSet>
