@@ -6,7 +6,7 @@
   </PropertyGroup>
     
   <PropertyGroup>
-      <PackageId Condition="'$(IsPackagingProject)' == 'true'">WinObjC.Frameworks.UWP</PackageId>
+      <PackageId>WinObjC.Frameworks.UWP</PackageId>
       <Title>WinObjC.Frameworks.UWP</Title>
       <Authors>Microsoft</Authors>
       <Owners>Microsoft</Owners>

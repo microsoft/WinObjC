@@ -3,7 +3,7 @@
     
   <PropertyGroup>
       <!-- Failsafe: '$(MSBuildProjectExtension)' == '.nuproj' -->
-      <PackageId Condition="'$(IsPackagingProject)' == 'true'">WinObjC.Frameworks.Core</PackageId>
+      <PackageId>WinObjC.Frameworks.Core</PackageId>
       <Title>WinObjC.Frameworks.Core</Title>
       <Authors>Microsoft</Authors>
       <Owners>Microsoft</Owners>
@@ -17,6 +17,5 @@
       </PackageLicenseUrl>
       <Copyright>Copyright © Microsoft</Copyright>
       <PackageTags>WinObjC.Frameworks.Core</PackageTags>
-      <BuildingFrameworksCore>true</BuildingFrameworksCore>
   </PropertyGroup>
 </Project>

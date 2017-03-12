@@ -2,7 +2,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     
   <PropertyGroup>
-      <PackageId Condition="'$(IsPackagingProject)' == 'true'">WinObjC.Frameworks</PackageId>
+      <PackageId>WinObjC.Frameworks</PackageId>
       <Title>WinObjC.Frameworks</Title>
       <Authors>Microsoft</Authors>
       <Owners>Microsoft</Owners>

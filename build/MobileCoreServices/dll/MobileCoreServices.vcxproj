@@ -36,6 +36,7 @@
     <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>MobileCoreServices</OutputName>
     <ProjectName>MobileCoreServices</ProjectName>
+    <BuildingFrameworksCore>true</BuildingFrameworksCore>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>

@@ -46,6 +46,7 @@
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>Foundation</OutputName>
+    <BuildingFrameworksCore>true</BuildingFrameworksCore>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
