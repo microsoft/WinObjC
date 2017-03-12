@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GitInfo" Version="1.1.32">
+    <PackageReference Include="GitVersionTask" Version="4.0.0-beta0011">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="NuGet.Build.Packaging" Version="0.1.186">
