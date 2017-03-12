@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -54,8 +54,7 @@
       <ModuleDefinitionFile>StoreKit.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
-      <IncludePaths>
-      </IncludePaths>
+      <IncludePaths></IncludePaths>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -68,8 +67,7 @@
       <ModuleDefinitionFile>StoreKit.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
-      <IncludePaths>
-      </IncludePaths>
+      <IncludePaths></IncludePaths>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -82,8 +80,7 @@
       <ModuleDefinitionFile>StoreKit.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
-      <IncludePaths>
-      </IncludePaths>
+      <IncludePaths></IncludePaths>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -96,13 +93,14 @@
       <ModuleDefinitionFile>StoreKit.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
-      <IncludePaths>
-      </IncludePaths>
+      <IncludePaths></IncludePaths>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
-  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
+  <ItemGroup>
+    <None Include="Project.json" />
+  </ItemGroup>
 </Project>

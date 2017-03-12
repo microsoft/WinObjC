@@ -40,6 +40,9 @@
     <ProjectReference Include="..\..\CoreData\dll\CoreData.vcxproj">
       <Project>{42F15337-A124-47EB-A6EB-AF6681416C86}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
+      <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\UIKit\lib\UIKitLib.vcxproj">
       <Project>{C0A51F53-73EE-435D-81D9-FE8FE625C431}</Project>
     </ProjectReference>
@@ -125,5 +128,4 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
-  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
 </Project>

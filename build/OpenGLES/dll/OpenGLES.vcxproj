@@ -45,9 +45,6 @@
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.props" />
   </ImportGroup>
-  <ItemGroup>
-    <PackageReference Include="ANGLE.WindowsStore" Version="2.1.13" />
-  </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <CompileAsWinRT>false</CompileAsWinRT>
@@ -104,7 +101,9 @@
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
   <ItemGroup>
-    <Link Include="$(angle-BinPath)\*lib" />
+    <None Include="Project.json" />
   </ItemGroup>
-  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
+  <ItemGroup>
+      <Link Include="$(angle-BinPath)\*lib" />
+  </ItemGroup>
 </Project>

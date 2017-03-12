@@ -40,10 +40,8 @@
     <ProjectGuid>DFDF94D9-2A0A-4F9B-953B-6BF383858AD3</ProjectGuid>
     <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\</StarboardBasePath>
   </PropertyGroup>
-  <ImportGroup Label="ExtensionSettings">
-    <Import Project="$(StarboardBasePath)\msvc\package-build.props" />
-  </ImportGroup>
   <ItemGroup>
+    <None Include="project.json" />
     <None Include="WinObjC.Frameworks.ThirdParty.Packaging.props" />
     <None Include="WinObjC.Frameworks.ThirdParty.Packaging.targets" />
     <None Include="WinObjC.Frameworks.ThirdParty.props" />

@@ -10,13 +10,4 @@
   <PropertyGroup Label="Configuration">
     <StarboardLinkWholeArchive>false</StarboardLinkWholeArchive>
   </PropertyGroup>
-  
-  <PropertyGroup Label="Globals">
-    <TargetFramework>uap10.0</TargetFramework>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="WinObjC.Language" Version="*" />
-    <PackageReference Include="Taef.Redist.Wlk" Version="1.0.170206001-nativeTargets" />
-  </ItemGroup>
 </Project>

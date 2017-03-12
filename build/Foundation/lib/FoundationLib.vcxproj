@@ -310,6 +310,7 @@
       <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <ClangCompile>
+      
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=return-type -Werror=objc-protocol-property-synthesis -Werror=protocol</AdditionalOptions>
       <PreprocessorDefinitions>NO_STUBS;NSBUILDINGFOUNDATION;FOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)";DEPLOYMENT_TARGET_WINDOWS</PreprocessorDefinitions>
     </ClangCompile>
@@ -323,6 +324,7 @@
       <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <ClangCompile>
+      
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=return-type -Werror=objc-protocol-property-synthesis -Werror=protocol</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
       <PreprocessorDefinitions>NO_STUBS;NSBUILDINGFOUNDATION;FOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)";DEPLOYMENT_TARGET_WINDOWS</PreprocessorDefinitions>
@@ -336,6 +338,7 @@
       <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <ClangCompile>
+      
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=return-type -Werror=objc-protocol-property-synthesis -Werror=protocol</AdditionalOptions>
       <PreprocessorDefinitions>NO_STUBS;NSBUILDINGFOUNDATION;FOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)";DEPLOYMENT_TARGET_WINDOWS</PreprocessorDefinitions>
     </ClangCompile>
@@ -349,6 +352,7 @@
       <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <ClangCompile>
+      
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=return-type -Werror=objc-protocol-property-synthesis -Werror=protocol</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
       <PreprocessorDefinitions>NO_STUBS;NSBUILDINGFOUNDATION;FOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)";DEPLOYMENT_TARGET_WINDOWS</PreprocessorDefinitions>
@@ -360,14 +364,16 @@
   </ImportGroup>
   <Target Condition="'$(Platform)'=='ARM'" Name="ComputeARMASMInput" AfterTargets="ClCompile">
     <ItemGroup>
-      <ARMASM Include="@(ClCompile-&gt;WithMetadataValue('ARMASM', 'true')-&gt;'$(IntDir)%(Filename).i')" Condition="'%(ClCompile.ExcludedFromBuild)' != 'true'">
+      <ARMASM Include="@(ClCompile->WithMetadataValue('ARMASM', 'true')->'$(IntDir)%(Filename).i')"  Condition="'%(ClCompile.ExcludedFromBuild)' != 'true'">
         <ObjectFileName>$(IntDir)\%(Filename).obj</ObjectFileName>
       </ARMASM>
     </ItemGroup>
   </Target>
   <Target Condition="'$(Platform)'=='ARM'" Name="ARMASM" AfterTargets="ClCompile" Outputs="%(ARMASM.ObjectFileName)">
-    <Message Condition="'@(ARMASM)' != '' and '%(ARMASM.ExcludedFromBuild)' != 'true'" Importance="High" Text="Assembling %(ARMASM.Identity)..." />
+    <Message Condition="'@(ARMASM)' != '' and '%(ARMASM.ExcludedFromBuild)' != 'true'" Importance="High" Text="Assembling %(ARMASM.Identity)..."/>
     <Exec Condition="'@(ARMASM)' != '' and '%(ARMASM.ExcludedFromBuild)' != 'true'" Command="armasm.exe -16 -g &quot;%(ARMASM.FullPath)&quot; -o &quot;%(ARMASM.ObjectFileName)&quot;" />
   </Target>
-  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
+  <ItemGroup>
+    <None Include="Project.json" />
+  </ItemGroup>
 </Project>

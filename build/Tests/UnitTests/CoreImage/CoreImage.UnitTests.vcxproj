@@ -235,5 +235,7 @@
     <ClangCompile Include="..\..\..\..\tests\unittests\CoreImage\CIContextTests.mm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
+  <ItemGroup>
+    <None Include="project.json" />
+  </ItemGroup>
 </Project>
