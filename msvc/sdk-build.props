@@ -4,15 +4,9 @@
   <ItemGroup Condition="'$(ConfigurationType)'=='DynamicLibrary'">
     <ProjectReference Condition="'$(LinkWithFoundation)' != 'false'" Include="$(MSBuildThisFileDirectory)..\build\Foundation\dll\Foundation.vcxproj">
       <Project>{86127226-9a6e-439b-a070-420a572af0c7}</Project>
-      <IncludeInPackage Condition="'$(BuildingFrameworksCore)' != 'true'">false</IncludeInPackage>
     </ProjectReference>
     <ProjectReference Condition="'$(LinkWithStarboard)' != 'false'" Include="$(MSBuildThisFileDirectory)..\build\Starboard\dll\Starboard.vcxproj">
       <Project>{0ac27ecf-e2ab-420b-9359-4843fff4cbfa}</Project>
-      <IncludeInPackage Condition="'$(BuildingFrameworksCore)' != 'true'">false</IncludeInPackage>
-    </ProjectReference>
-    <ProjectReference Condition="'$(LinkWithCoreFoundation)' != 'false'" Include="$(MSBuildThisFileDirectory)..\build\CoreFoundation\dll\CoreFoundation.vcxproj">
-      <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
-      <IncludeInPackage Condition="'$(BuildingFrameworksCore)' != 'true'">false</IncludeInPackage>
     </ProjectReference>
   </ItemGroup>
 
@@ -27,13 +21,7 @@
     <WindowsTargetPlatformMinVersion Condition="'$(WindowsTargetPlatformMinVersion)'==''">10.0.10586.0</WindowsTargetPlatformMinVersion>
     <EnableDotNetNativeCompatibleProfile Condition="'$(EnableDotNetNativeCompatibleProfile)'==''">true</EnableDotNetNativeCompatibleProfile>
     <IncludeOutputsInPackage>false</IncludeOutputsInPackage>
-    <TargetFramework>uap10.0</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="NuGet.Build.Packaging" Version="0.1.186" />
-    <PackageReference Include="WinObjC.Language" Version="*" />
-  </ItemGroup>
 
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
 
@@ -67,6 +55,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeLibrary Condition="'$(Configuration)'=='Debug'">MultiThreadedDebugDLL</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>    
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)..\include\VCInclude</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -83,7 +72,7 @@
       <SystemHeaderDeps>true</SystemHeaderDeps>
       <AdditionalOptions>-Werror -Wno-microsoft %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>_WINOBJC_DO_NOT_USE_NSLOG=;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <InternalSystemIncludePaths>%(InternalSystemIncludePaths);$(IncludePath);$(MSBuildThisFileDirectory)..\include\;$(MSBuildThisFileDirectory)..\include\xplat;$(MSBuildThisFileDirectory)..\deps\prebuilt\include\;$(MSBuildThisFileDirectory)..\deps\prebuilt\include\icu;$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)..\include\Platform', '$(TargetOsAndVersion)'))</InternalSystemIncludePaths>
+      <InternalSystemIncludePaths>%(InternalSystemIncludePaths);$(IncludePath);$(MSBuildThisFileDirectory)..\include\;$(MSBuildThisFileDirectory)..\include\xplat;$(MSBuildThisFileDirectory)..\include\VCInclude\;$(MSBuildThisFileDirectory)..\deps\prebuilt\include\;$(MSBuildThisFileDirectory)..\deps\prebuilt\include\icu;$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)..\include\Platform', '$(TargetOsAndVersion)'))</InternalSystemIncludePaths>
       <IncludePaths>%(IncludePaths);$(MSBuildThisFileDirectory)..\Frameworks\include\;</IncludePaths>
       <InternalForceIncludes>%(InternalForceIncludes);StubIncludes.h;</InternalForceIncludes>
     </ClangCompile>
