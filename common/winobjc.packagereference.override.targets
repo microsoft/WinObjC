@@ -79,5 +79,5 @@
       </ItemGroup>
   </Target>
 
-
+  <Import Project="$(MSBuildThisFileDirectory)\workaround\Microsoft.Nuget.Workaround.targets"/>
 </Project>

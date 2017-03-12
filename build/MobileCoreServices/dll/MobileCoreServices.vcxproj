@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(SolutionDir)\..\common\winobjc.nuproj.common.props" Condition="Exists('$(SolutionDir)\..\common\winobjc.nuproj.common.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
       <Configuration>Debug</Configuration>
@@ -26,9 +25,6 @@
     <None Include="MobileCoreServices.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
-      <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
-    </ProjectReference>
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\MobileCoreServicesLib.vcxproj">
       <Project>{3fb3dd16-59e3-4cb6-b91d-5095a933b645}</Project>
     </ProjectReference>
@@ -40,6 +36,7 @@
     <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>MobileCoreServices</OutputName>
     <ProjectName>MobileCoreServices</ProjectName>
+    <BuildingFrameworksCore>true</BuildingFrameworksCore>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -48,7 +45,6 @@
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.props" />
   </ImportGroup>
-  <Import Project="$(MSBuildThisFileDirectory)..\..\WinObjC.Frameworks.Core\WinObjC.Frameworks.Core.Packaging.props" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <CompileAsWinRT>false</CompileAsWinRT>
@@ -108,8 +104,5 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
-  <ItemGroup>
-    <None Include="Project.json" />
-  </ItemGroup>
-  <Import Project="$(SolutionDir)\..\common\winobjc.nuproj.common.targets" Condition="Exists('$(SolutionDir)\..\common\winobjc.nuproj.common.targets')" />
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
 </Project>

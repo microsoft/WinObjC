@@ -221,14 +221,6 @@
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Themes\Generic.xaml" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\Starboard\dll\Starboard.vcxproj">
-      <Project>{0ac27ecf-e2ab-420b-9359-4843fff4cbfa}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="project.json"/>
-  </ItemGroup>
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
@@ -239,14 +231,12 @@
   </ItemGroup>
   <Target Name="AddExtraPackageItems" BeforeTargets="GetPackageContents">
     <ItemGroup>
-
-        <!-- Include Extra Deps for this project -->
-        <_XamlFiles Include="$(MSBuildThisFileDirectory)$(XamlGeneratedOutputPath)\**\*.xaml"/>
-
-        <PackageFile Include="@(_XamlFiles)">
-            <PackagePath>build\xaml\$(MSBuildProjectName)\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
-        </PackageFile>
+      <!-- Include Extra Deps for this project -->
+      <_XamlFiles Include="$(MSBuildThisFileDirectory)$(XamlGeneratedOutputPath)\**\*.xaml" />
+      <PackageFile Include="@(_XamlFiles)">
+        <PackagePath>build\xaml\$(MSBuildProjectName)\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
     </ItemGroup>
   </Target>
-  
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
 </Project>
