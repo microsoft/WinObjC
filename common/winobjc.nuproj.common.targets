@@ -117,7 +117,8 @@
 
       <PackageVersion_PreRelease Condition="'$(PackageVersion_PreRelease)' == '' And '$(PackageVersion_PreReleaseLabel)' != ''">-$([System.String]::Format('$(PackageVersion_PreReleaseFormat)', $(PackageVersion_Timestamp), $(PackageVersion_PreReleaseLabel)))</PackageVersion_PreRelease>
 
-      <PackageVersion Condition="'$(PackageVersion)' == ''">$(PackageVersion_Major).$(PackageVersion_Minor).$(PackageVersion_Patch)$(PackageVersion_PreRelease)</PackageVersion>
+      <PackageVersion Condition="'$(PackageVersionOverride)' == ''">$(PackageVersion_Major).$(PackageVersion_Minor).$(PackageVersion_Patch)$(PackageVersion_PreRelease)</PackageVersion>
+      <PackageVersion Condition="'$(PackageVersionOverride)' != ''">$(PackageVersionOverride)</PackageVersion>
     </PropertyGroup>
   </Target>
 
