@@ -106,4 +106,5 @@
   <ItemGroup>
     <Link Include="$(angle-BinPath)\*lib" />
   </ItemGroup>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
 </Project>

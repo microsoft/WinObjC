@@ -229,4 +229,5 @@
       </PackageFile>
     </ItemGroup>
   </Target>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
 </Project>

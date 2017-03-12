@@ -369,4 +369,5 @@
     <Message Condition="'@(ARMASM)' != '' and '%(ARMASM.ExcludedFromBuild)' != 'true'" Importance="High" Text="Assembling %(ARMASM.Identity)..." />
     <Exec Condition="'@(ARMASM)' != '' and '%(ARMASM.ExcludedFromBuild)' != 'true'" Command="armasm.exe -16 -g &quot;%(ARMASM.FullPath)&quot; -o &quot;%(ARMASM.ObjectFileName)&quot;" />
   </Target>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
 </Project>
