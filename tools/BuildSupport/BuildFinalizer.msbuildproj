@@ -44,6 +44,7 @@
   <Target Name="CreateManifestResourceNames" />
   <Target Name="GetReferenceAssemblyPaths" />
   <Target Name="CopyFilesToOutputDirectory" />
+  <Target Name="_GenerateCompileDependencyCache" />
 
   <!-- This is where the fun starts. Any custom generic msbuild project goop goes here. -->
   <ItemGroup>
