@@ -36,6 +36,8 @@
     <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CFNetwork</OutputName>
     <BuildingFrameworksCore>true</BuildingFrameworksCore>
+    <LinkWithMobileCoreServices>false</LinkWithMobileCoreServices>
+    <LinkWithCFNetwork>false</LinkWithCFNetwork>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>

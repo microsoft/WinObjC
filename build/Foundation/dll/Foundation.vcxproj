@@ -24,12 +24,6 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSString+HSTRING.mm" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CFNetwork\dll\CFNetwork.vcxproj">
-      <Project>{16E0E9AE-8B17-4C4A-9960-BF90FB9F3424}</Project>
-    </ProjectReference>
-    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\MobileCoreServices\dll\MobileCoreServices.vcxproj">
-      <Project>{F1C44E27-6599-49C3-B4C2-D812C114B166}</Project>
-    </ProjectReference>
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\FoundationLib.vcxproj">
       <Project>{7D635E25-0D8D-4B9A-B9DA-53185AB8A9E5}</Project>
     </ProjectReference>

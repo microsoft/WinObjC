@@ -14,6 +14,14 @@
       <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
       <IncludeInPackage Condition="'$(BuildingFrameworksCore)' != 'true'">false</IncludeInPackage>
     </ProjectReference>
+    <ProjectReference Condition="'$(LinkWithCFNetwork)' != 'false'" Include="$(MSBuildThisFileDirectory)..\build\CFNetwork\dll\CFNetwork.vcxproj">
+      <Project>{16E0E9AE-8B17-4C4A-9960-BF90FB9F3424}</Project>
+      <IncludeInPackage Condition="'$(BuildingFrameworksCore)' != 'true'">false</IncludeInPackage>
+    </ProjectReference>
+    <ProjectReference Condition="'$(LinkWithMobileCoreServices)' != 'false'" Include="$(MSBuildThisFileDirectory)..\build\MobileCoreServices\dll\MobileCoreServices.vcxproj">
+      <Project>{f1c44e27-6599-49c3-b4c2-d812c114b166}</Project>
+      <IncludeInPackage Condition="'$(BuildingFrameworksCore)' != 'true'">false</IncludeInPackage>
+    </ProjectReference>
   </ItemGroup>
 
   <PropertyGroup Label="Globals">

@@ -42,6 +42,8 @@
     <LinkWithFoundation>false</LinkWithFoundation>
     <LinkWithCoreFoundation>false</LinkWithCoreFoundation>
     <LinkWithStarboard>false</LinkWithStarboard>
+    <LinkWithMobileCoreServices>false</LinkWithMobileCoreServices>
+    <LinkWithCFNetwork>false</LinkWithCFNetwork>
     <StarboardLinkObjCRuntime>false</StarboardLinkObjCRuntime>
   </PropertyGroup>
   <ImportGroup Label="ExtensionSettings">
