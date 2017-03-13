@@ -12,13 +12,34 @@ The Windows Bridge for iOS (also referred to as WinObjC) is a Microsoft open-sou
 ## Download and Installation
 To use the bridge you'll need:
 - **Windows 10**, build 10586 or higher. Validate your version number [here](http://windows.microsoft.com/en-US/windows/which-operating-system).
-- **Visual Studio 2017** with Windows developer tools. Visual Studio 2017 Community is available for free [here](https://dev.windows.com/downloads). Select (at least) the following components during installation:
-   1. Programming Languages -> Visual C++
-   2. Universal Windows App Development Tools (all)
+- **Visual Studio 2017** with Windows developer tools. Visual Studio 2017 Community is available for free [here](https://dev.windows.com/downloads). Ensure the following individual components are selected during installation (Selecting the **Universal Windows Platform development** workflow should give most of the below):
+   1. Visual Studio Core Editor
+   2. Nuget Package Manager
+   3. C# and Visual Basic Roslyn compilers
+   4. Static analysis tools
+   5. Windows 10 SDK (10.0.14393.0)
+   6. Visual Studio C++ core features
+   7. VC++ 2017 v141 toolset (x86, x64)
+   8. Visual C++ copmilers and libraries for ARM
+   9. Visual C++ runtime for UWP
+   10. Windows 10 SDK (10.0.10240.0)
+   11. Windows 10 SDK (10.0.10586.0)
+   12. MSBuild
+   13. Windows Universal CRT SDK
+   14. Standard Library Modules
+   15. VC++ 2015.3 v140 toolset (x86,x64)
+   16. Windows Universal C Runtime
+
+Additional Components Needed if Contributing:
+   1. C# and Visual Basic
+   2. Visual Studio SDK
+   3. .NET Framework 4.6 targeting pack
+   4. C++ Profiling Tools
+
 
 To get started with an existing Xcode Project, you will also need:
 - **Chocolatey**, a package manager for windows. See how to install the latest version [here] (https://chocolatey.org/)
-- **WinObjC.Tools**, the command line tools for WinObjC. Run the below command from **powershell** to get the latest version:
+- **WinObjC.Tools**, the command line tools for WinObjC. Run the below command from **powershell (Admin)** to get the latest version:
 ```
 choco upgrade WinObjC.Tools
 ```
