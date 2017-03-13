@@ -61,6 +61,8 @@ static const float s_kCGGradientOffsetPoint = 1E-45;
 enum __CGCoordinateMode : unsigned int { _kCGCoordinateModeDeviceSpace = 0, _kCGCoordinateModeUserSpace };
 enum __CGTrinary : unsigned int { _kCGTrinaryOff = 0, _kCGTrinaryOn = 1, _kCGTrinaryDefault = 2 };
 
+class _CRenderOpCopyBackBase;
+
 // A drawing context is represented by a number of layers, each with their own drawing state:
 // Context
 // +-- Layer (base layer)
@@ -101,7 +103,7 @@ struct __CGContextDrawingState {
     D2D1_INTERPOLATION_MODE bitmapInterpolationMode = D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR;
 
     // Composition
-    CGBlendMode blendMode{kCGBlendModeNormal};
+    CGBlendMode blendMode{ kCGBlendModeNormal };
 
     // Userspace Coordinate Transformation
     CGAffineTransform transform{ CGAffineTransformIdentity };
@@ -203,6 +205,16 @@ struct __CGContextDrawingState {
 class __CGContextLayer {
     std::stack<__CGContextDrawingState> _stateStack;
     ComPtr<ID2D1Image> _target;
+
+    friend class _CRenderOpCopyBackBase;
+    inline HRESULT _ExchangeTarget(ID2D1Image* newTarget, ID2D1Image** oldTarget) {
+        RETURN_HR_IF(E_POINTER, !newTarget);
+        if (oldTarget) {
+            *oldTarget = _target.Detach();
+        }
+        _target = newTarget;
+        return S_OK;
+    }
 
 public:
     __CGContextLayer(ID2D1Image* target) : _target(target) {
@@ -307,7 +319,10 @@ private:
         return state.HasShadow() || state.blendMode != kCGBlendModeSourceOver;
     }
 
-    HRESULT _CreateShadowEffect(ID2D1Image* inputImage, ID2D1Effect** outShadowEffect);
+    friend class _CRenderOpCopyBackBase;
+    inline __CGContextLayer& _TopLayer() {
+        return _layerStack.top();
+    }
 
     // Does the drawing inside the Draw call in DrawGeometry, to be used for multiple draws to prevent
     // Shadowing multiple times
@@ -1498,7 +1513,7 @@ void CGContextSetBlendMode(CGContextRef context, CGBlendMode mode) {
 
     // TODO(DH): Support Porter-Duff blend modes and operators.
     if ((mode & _kCGContextBlendD2DCompose) == 0) {
-        UNIMPLEMENTED_WITH_MSG("Unsupported non-composite blend mode %4.04x", mode);
+        // UNIMPLEMENTED_WITH_MSG("Unsupported non-composite blend mode %4.04x", mode);
     }
 
     auto& state = context->CurrentGState();
@@ -2373,41 +2388,149 @@ void CGContextClearRect(CGContextRef context, CGRect rect) {
     FAIL_FAST_IF_FAILED(context->ClearRect(rect));
 }
 
-static bool __CGContextCreateBlendEffect(CGContextRef context,
-                                         ID2D1DeviceContext* deviceContext,
-                                         ID2D1Image* inputImage,
-                                         ID2D1Effect** outBlendEffect) {
-    auto& state = context->CurrentGState();
-    if ((state.blendMode & 0x0100) == 0x0100) {
-        ComPtr<ID2D1Effect> blendEffect;
-        ComPtr<ID2D1Effect> affineTransformEffect;
-        ComPtr<ID2D1Effect> compositeEffect;
+class IRenderOperation {
+public:
+    virtual HRESULT Stage(CGContextRef context, ID2D1DeviceContext*) = 0;
+    virtual HRESULT Complete(CGContextRef context, ID2D1DeviceContext*) = 0;
+};
 
-        deviceContext->CreateEffect(CLSID_D2D1Blend, &blendEffect);
+class CRenderOpBeginEndDraw : public IRenderOperation {
+    HRESULT Stage(CGContextRef context, ID2D1DeviceContext* deviceContext) override {
+        context->PushBeginDraw();
+        return S_OK;
+    }
+    HRESULT Complete(CGContextRef context, ID2D1DeviceContext* deviceContext) override {
+        return context->PopEndDraw();
+    }
+};
 
-        blendEffect->SetInput(0, inputImage);
-        blendEffect->SetValue(D2D1_BLEND_PROP_MODE, state.blendMode & 0xFF);
-        *outBlendEffect = blendEffect.Detach();
-        return true;
+class CRenderOpTransformWorldspace : public IRenderOperation {
+    D2D1_MATRIX_3X2_F _transform;
+
+public:
+    CRenderOpTransformWorldspace(CGAffineTransform transform) : _transform(__CGAffineTransformToD2D_F(transform)) {
     }
 
-    *outBlendEffect = nullptr;
-    return false;
-}
+    HRESULT Stage(CGContextRef context, ID2D1DeviceContext* deviceContext) override {
+        deviceContext->SetTransform(_transform);
+        return S_OK;
+    }
+    HRESULT Complete(CGContextRef context, ID2D1DeviceContext* deviceContext) override {
+        deviceContext->SetTransform(D2D1::IdentityMatrix());
+        return S_OK;
+    }
+};
 
-HRESULT __CGContext::_CreateShadowEffect(ID2D1Image* inputImage, ID2D1Effect** outShadowEffect) {
-    auto& state = CurrentGState();
-    if (state.HasShadow()) {
+class CRenderOpClipMaskLayer : public IRenderOperation {
+    CGFloat _alpha;
+    ComPtr<ID2D1Geometry> _clippingGeometry;
+    ComPtr<ID2D1Brush> _opacityBrush;
+
+public:
+    CRenderOpClipMaskLayer(CGFloat alpha, ID2D1Geometry* clippingGeometry, ID2D1Brush* opacityBrush)
+        : _alpha(alpha), _clippingGeometry(clippingGeometry), _opacityBrush(opacityBrush) {
+    }
+
+    HRESULT Stage(CGContextRef context, ID2D1DeviceContext* deviceContext) override {
+        deviceContext->PushLayer(D2D1::LayerParameters1(D2D1::InfiniteRect(),
+                                                        _clippingGeometry.Get(),
+                                                        context->GetAntialiasMode(),
+                                                        D2D1::IdentityMatrix(),
+                                                        _alpha,
+                                                        _opacityBrush.Get()),
+                                 nullptr);
+        return S_OK;
+    }
+
+    HRESULT Complete(CGContextRef context, ID2D1DeviceContext* deviceContext) override {
+        deviceContext->PopLayer();
+        return S_OK;
+    }
+};
+
+class _CRenderOpCommandListBase : public IRenderOperation {
+protected:
+    ComPtr<ID2D1Image> originalTarget;
+    ComPtr<ID2D1CommandList> commandList;
+
+public:
+    _CRenderOpCommandListBase() {
+    }
+
+    HRESULT Stage(CGContextRef context, ID2D1DeviceContext* deviceContext) override {
+        deviceContext->GetTarget(&originalTarget);
+        RETURN_IF_FAILED(deviceContext->CreateCommandList(&commandList));
+        deviceContext->SetTarget(commandList.Get());
+        return S_OK;
+    }
+
+    HRESULT Complete(CGContextRef context, ID2D1DeviceContext* deviceContext) override {
+        RETURN_IF_FAILED(commandList->Close());
+        deviceContext->SetTarget(originalTarget.Get());
+        return S_OK;
+    }
+};
+
+class _CRenderOpCopyBackBase : public _CRenderOpCommandListBase {
+protected:
+    ComPtr<ID2D1Image> copiedImage;
+
+public:
+    HRESULT Stage(CGContextRef context, ID2D1DeviceContext* deviceContext) override {
+        ComPtr<ID2D1CommandList> inputCommandList;
+
+        deviceContext->GetTarget(&originalTarget);
+
+        if (SUCCEEDED(originalTarget.As(&inputCommandList))) {
+            // If the device context's current target is a command list, we can take a shortcut
+            // and do a target swap. We'll take the existing command list, close it, and use it
+            // as the input to our blend effect later.
+            // We then make a new command list and set that to be the drawing destination.
+            ComPtr<ID2D1CommandList> newTargetCommandList;
+            deviceContext->CreateCommandList(&newTargetCommandList);
+
+            auto& topLayer = context->_TopLayer();
+            RETURN_IF_FAILED(topLayer._ExchangeTarget(newTargetCommandList.Get(), nullptr));
+
+            RETURN_IF_FAILED(inputCommandList->Close());
+            RETURN_IF_FAILED(inputCommandList.As(&copiedImage));
+
+            deviceContext->SetTarget(newTargetCommandList.Get());
+        } else {
+            // If the device context's current target is a bitmap, we have to
+            // copy it out and clear it.
+            ComPtr<ID2D1Bitmap> inputBitmap;
+            D2D1_SIZE_U targetPixelSize = deviceContext->GetPixelSize();
+            D2D1_PIXEL_FORMAT pixelFormat = deviceContext->GetPixelFormat();
+            FLOAT dpiX, dpiY;
+            deviceContext->GetDpi(&dpiX, &dpiY);
+            RETURN_IF_FAILED(
+                deviceContext->CreateBitmap(targetPixelSize, D2D1::BitmapProperties(pixelFormat, dpiX, dpiY), &inputBitmap));
+            RETURN_IF_FAILED(inputBitmap->CopyFromRenderTarget(nullptr, deviceContext, nullptr));
+            deviceContext->Clear({ 0, 0, 0, 0 }); // Clear the original target to transparent black.
+            RETURN_IF_FAILED(inputBitmap.As(&copiedImage));
+        }
+        return __super::Stage(context, deviceContext);
+    }
+};
+
+class CRenderOpEffectShadow : public _CRenderOpCommandListBase {
+    ComPtr<ID2D1Effect> _shadowEffect; // input 0 = image from which to cast shadow (consumes/destroys image)
+    ComPtr<ID2D1Effect> _compositeEffect; // input 1 = image to display on top of shadow
+
+public:
+    // Stage is handled by _CRenderOpCommandListBase, which switches the target
+    // to a command list.
+    HRESULT Stage(CGContextRef context, ID2D1DeviceContext* deviceContext) override {
+        auto& state = context->CurrentGState();
         // The Shadow Effect takes an input image (or command list) and projects a shadow from
         // it with the specified parameters.
         //
         // INPUTS
         // 0: The input image/command list
-        ComPtr<ID2D1Effect> shadowEffect;
-        RETURN_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D1Shadow, &shadowEffect));
-        shadowEffect->SetInput(0, inputImage);
-        RETURN_IF_FAILED(shadowEffect->SetValue(D2D1_SHADOW_PROP_COLOR, state.shadowColor));
-        RETURN_IF_FAILED(shadowEffect->SetValue(D2D1_SHADOW_PROP_BLUR_STANDARD_DEVIATION, state.shadowBlur));
+        RETURN_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D1Shadow, &_shadowEffect));
+        RETURN_IF_FAILED(_shadowEffect->SetValue(D2D1_SHADOW_PROP_COLOR, state.shadowColor));
+        RETURN_IF_FAILED(_shadowEffect->SetValue(D2D1_SHADOW_PROP_BLUR_STANDARD_DEVIATION, state.shadowBlur));
 
         // By default, the shadow projects straight down. Stacking it with an
         // Affine Transform effect allows us to change the shadow's projection.
@@ -2416,9 +2539,9 @@ HRESULT __CGContext::_CreateShadowEffect(ID2D1Image* inputImage, ID2D1Effect** o
         // 0: The untransformed shadow
         ComPtr<ID2D1Effect> affineTransformEffect;
         RETURN_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D12DAffineTransform, &affineTransformEffect));
-        affineTransformEffect->SetInputEffect(0, shadowEffect.Get());
+        affineTransformEffect->SetInputEffect(0, _shadowEffect.Get());
 
-        CGSize deviceTransformedShadowOffset = CGSizeApplyAffineTransform(state.shadowOffset, deviceTransform);
+        CGSize deviceTransformedShadowOffset = CGSizeApplyAffineTransform(state.shadowOffset, context->deviceTransform);
         RETURN_IF_FAILED(affineTransformEffect->SetValue(D2D1_2DAFFINETRANSFORM_PROP_TRANSFORM_MATRIX,
                                                          D2D1::Matrix3x2F::Translation(deviceTransformedShadowOffset.width,
                                                                                        deviceTransformedShadowOffset.height)));
@@ -2430,18 +2553,185 @@ HRESULT __CGContext::_CreateShadowEffect(ID2D1Image* inputImage, ID2D1Effect** o
         // INPUTS
         // 0: The transformed shadow
         // 1: The input image/command list
-        ComPtr<ID2D1Effect> compositeEffect;
-        RETURN_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D1Composite, &compositeEffect));
-        compositeEffect->SetInputEffect(0, affineTransformEffect.Get());
-        compositeEffect->SetInput(1, inputImage);
-
-        *outShadowEffect = compositeEffect.Detach();
-    } else {
-        *outShadowEffect = nullptr;
+        RETURN_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D1Composite, &_compositeEffect));
+        _compositeEffect->SetInputEffect(0, affineTransformEffect.Get());
+        return S_OK;
     }
 
-    return S_OK;
-}
+    HRESULT Complete(CGContextRef context, ID2D1DeviceContext* deviceContext) override {
+        RETURN_IF_FAILED(__super::Complete(context, deviceContext));
+        _shadowEffect->SetInput(0, __super::commandList.Get());
+        _compositeEffect->SetInput(1, __super::commandList.Get());
+        deviceContext->DrawImage(_compositeEffect.Get());
+        return S_OK;
+    }
+};
+
+class CRenderOpEffectBlend : public _CRenderOpCopyBackBase {
+    D2D1_BLEND_MODE _blendMode;
+
+public:
+    CRenderOpEffectBlend(D2D1_BLEND_MODE blendMode) : _blendMode(blendMode) {
+    }
+
+    // Stage is handled by _CRenderOpCopyBackBase.
+    // _CRenderOpCopyBackBase switches the target to be a command list and
+    // copies the destination (be it a bitmap or a command list)
+    // into the member "copiedImage".
+
+    HRESULT Complete(CGContextRef context, ID2D1DeviceContext* deviceContext) override {
+        RETURN_IF_FAILED(__super::Complete(context, deviceContext));
+
+        // The blend effect takes two images and a blend mode.
+        //
+        // INPUTS
+        // 0: The "destination" image (the context backing)
+        // 1: The "source" image (what we just rendered)
+        // PROPERTIES
+        // D2D1_BLEND_PROP_MODE: blend mode
+        ComPtr<ID2D1Effect> blendEffect;
+        FAIL_FAST_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D1Blend, &blendEffect));
+        blendEffect->SetValue(D2D1_BLEND_PROP_MODE, _blendMode);
+        blendEffect->SetInput(0, __super::copiedImage.Get());
+        blendEffect->SetInput(1, __super::commandList.Get());
+
+        deviceContext->SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND_COPY);
+        deviceContext->DrawImage(blendEffect.Get());
+        deviceContext->SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND_SOURCE_OVER);
+        return S_OK;
+    }
+};
+
+class CRenderOpEffectComposite : public _CRenderOpCopyBackBase {
+    D2D1_COMPOSITE_MODE _compositeMode;
+
+public:
+    CRenderOpEffectComposite(D2D1_COMPOSITE_MODE compositeMode): _compositeMode(compositeMode) {
+    }
+
+    // Stage is handled by _CRenderOpCopyBackBase.
+    // _CRenderOpCopyBackBase switches the target to be a command list and
+    // copies the destination (be it a bitmap or a command list)
+    // into the member "copiedImage".
+
+    HRESULT Complete(CGContextRef context, ID2D1DeviceContext* deviceContext) override {
+        RETURN_IF_FAILED(__super::Complete(context, deviceContext));
+
+        // The composite effect takes two images and a composite mode.
+        //
+        // INPUTS
+        // 0: The "destination" image (the context backing)
+        // 1: The "source" image (what we just rendered)
+        // PROPERTIES
+        // D2D1_COMPOSITE_PROP_MODE: composite mode
+        ComPtr<ID2D1Effect> compositeEffect;
+        FAIL_FAST_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D1Composite, &compositeEffect));
+        compositeEffect->SetValue(D2D1_COMPOSITE_PROP_MODE, _compositeMode);
+        compositeEffect->SetInput(0, __super::copiedImage.Get());
+        compositeEffect->SetInput(1, __super::commandList.Get());
+
+        deviceContext->SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND_COPY);
+        deviceContext->DrawImage(compositeEffect.Get());
+        deviceContext->SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND_SOURCE_OVER);
+        return S_OK;
+    }
+};
+
+class CRenderOpLayerComposite : public _CRenderOpCommandListBase {
+    D2D1_COMPOSITE_MODE _compositeMode;
+
+public:
+    CRenderOpLayerComposite(D2D1_COMPOSITE_MODE compositeMode): _compositeMode(compositeMode) {
+    }
+
+    HRESULT Stage(CGContextRef context, ID2D1DeviceContext* deviceContext) override {
+        deviceContext->SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND_COPY);
+        deviceContext->PushLayer(D2D1::LayerParameters1(D2D1::InfiniteRect(),
+                                                        nullptr,
+                                                        D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
+                                                        D2D1::IdentityMatrix(),
+                                                        1.0,
+                                                        nullptr,
+                                                        D2D1_LAYER_OPTIONS1_INITIALIZE_FROM_BACKGROUND),
+            nullptr);
+        return __super::Stage(context, deviceContext);
+    }
+
+    HRESULT Complete(CGContextRef context, ID2D1DeviceContext* deviceContext) override {
+        RETURN_IF_FAILED(__super::Complete(context, deviceContext));
+        deviceContext->DrawImage(__super::commandList.Get(), D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR, _compositeMode);
+        deviceContext->PopLayer();
+        deviceContext->SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND_SOURCE_OVER);
+        return S_OK;
+    }
+};
+
+class CRenderOpPrimitiveComposite : public _CRenderOpCommandListBase {
+    D2D1_COMPOSITE_MODE _compositeMode;
+
+public:
+    CRenderOpPrimitiveComposite(D2D1_COMPOSITE_MODE compositeMode): _compositeMode(compositeMode) {
+    }
+
+    HRESULT Complete(CGContextRef context, ID2D1DeviceContext* deviceContext) override {
+        RETURN_IF_FAILED(__super::Complete(context, deviceContext));
+        deviceContext->DrawImage(__super::commandList.Get(), D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR, _compositeMode);
+        return S_OK;
+    }
+};
+
+class CRenderOpSetAntialiasMode : public IRenderOperation {
+    D2D1_ANTIALIAS_MODE _antialiasMode;
+
+public:
+    CRenderOpSetAntialiasMode(D2D1_ANTIALIAS_MODE antialiasMode): _antialiasMode(antialiasMode) {
+    }
+
+    HRESULT Stage(CGContextRef context, ID2D1DeviceContext* deviceContext) override {
+        deviceContext->SetAntialiasMode(_antialiasMode);
+        return S_OK;
+    }
+
+    HRESULT Complete(CGContextRef context, ID2D1DeviceContext* deviceContext) override {
+        return S_OK;
+    }
+};
+
+class CRenderOpSetTextRenderingMode : public IRenderOperation {
+    ComPtr<IDWriteRenderingParams> _textRenderingParams;
+    D2D1_TEXT_ANTIALIAS_MODE _textAntialiasMode;
+
+public:
+    CRenderOpSetTextRenderingMode(IDWriteRenderingParams* textRenderingParams, D2D1_TEXT_ANTIALIAS_MODE textAntialiasMode): _textRenderingParams(textRenderingParams), _textAntialiasMode(textAntialiasMode) {
+    }
+
+    HRESULT Stage(CGContextRef context, ID2D1DeviceContext* deviceContext) override {
+        deviceContext->SetTextRenderingParams(_textRenderingParams.Get());
+        deviceContext->SetTextAntialiasMode(_textAntialiasMode);
+        return S_OK;
+    }
+
+    HRESULT Complete(CGContextRef context, ID2D1DeviceContext* deviceContext) override {
+        return S_OK;
+    }
+};
+
+template <typename T>
+class CRenderOpCallLambda : public IRenderOperation {
+    T _lambda;
+
+public:
+    CRenderOpCallLambda(T lambda) : _lambda(lambda) {
+    }
+
+    HRESULT Stage(CGContextRef context, ID2D1DeviceContext* deviceContext) override {
+        return S_OK;
+    }
+
+    HRESULT Complete(CGContextRef context, ID2D1DeviceContext* deviceContext) override {
+        return _lambda(context, deviceContext);
+    }
+};
 
 template <typename Lambda> // Lambda takes the form HRESULT(*)(CGContextRef, ID2D1DeviceContext*)
 HRESULT __CGContext::Draw(__CGCoordinateMode coordinateMode, CGAffineTransform* additionalTransform, Lambda&& drawLambda) {
@@ -2470,35 +2760,34 @@ HRESULT __CGContext::Draw(__CGCoordinateMode coordinateMode, CGAffineTransform* 
         transform = CGAffineTransformConcat(*additionalTransform, transform);
     }
 
-    PushBeginDraw();
+    std::vector<std::unique_ptr<IRenderOperation>> ops;
+    ops.reserve(16);
 
-    bool layer = false;
-    D2D1_COMPOSITE_MODE compositeMode = D2D1_COMPOSITE_MODE_SOURCE_OVER;
-    if ((state.blendMode & _kCGContextBlendD2DCompose)) {
-        // If the user has requested a different composition mode, we'll honor it.
-        // If they have requested a porter-duff blend mode, however, we'll use SOURCE_OVER regardless:
-        // It doesn't truly matter, as our porter-duff blends are implemented in terms of a full
-        // target readback, clear and blend effect. There /is/ no destination to compose once we're done.
-        compositeMode = static_cast<D2D1_COMPOSITE_MODE>(state.blendMode & 0xFF);
+    ops.emplace_back(new CRenderOpBeginEndDraw());
+
+    if (state.blendMode & _kCGContextBlendD2DBlend) {
+        ops.emplace_back(new CRenderOpEffectBlend(static_cast<D2D1_BLEND_MODE>(state.blendMode & 0xFF)));
+    } else if (state.blendMode & _kCGContextBlendD2DCompose && state.blendMode != kCGBlendModeNormal) {
+        // Primitive composition can use DrawImage(... D2D1_COMPOSITE_MODE ...)
+        ops.emplace_back(new CRenderOpPrimitiveComposite(static_cast<D2D1_COMPOSITE_MODE>(state.blendMode & 0xFF)));
+    } else if (state.blendMode & _kCGContextBlendD2DComposeWithEffect) {
+        ops.emplace_back(new CRenderOpLayerComposite(static_cast<D2D1_COMPOSITE_MODE>(state.blendMode & 0xFF)));
     }
-    if (state.clippingGeometry || !IS_NEAR(state.globalAlpha, 1.0, .0001f) || state.opacityBrush || compositeMode != D2D1_COMPOSITE_MODE_SOURCE_OVER) {
-        layer = true;
-        if (compositeMode != D2D1_COMPOSITE_MODE_SOURCE_OVER) {
-            this->deviceContext->SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND_COPY);
-        }
-        deviceContext->PushLayer(D2D1::LayerParameters1(D2D1::InfiniteRect(),
-                                                       state.clippingGeometry.Get(),
-                                                       GetAntialiasMode(),
-                                                       D2D1::IdentityMatrix(),
-                                                       state.globalAlpha,
-                                                       state.opacityBrush.Get(),
-            compositeMode != D2D1_COMPOSITE_MODE_SOURCE_OVER ? D2D1_LAYER_OPTIONS1_INITIALIZE_FROM_BACKGROUND : D2D1_LAYER_OPTIONS1_NONE),
-                                 nullptr);
+
+    if (state.clippingGeometry || !IS_NEAR(state.globalAlpha, 1.0, .0001f) || state.opacityBrush) {
+        ops.emplace_back(new CRenderOpClipMaskLayer(state.globalAlpha, state.clippingGeometry.Get(), state.opacityBrush.Get()));
     }
+
+    if (state.HasShadow()) {
+        ops.emplace_back(new CRenderOpEffectShadow());
+    }
+
+    // Make sure the worldspace is always at a known transformation.
+    ops.emplace_back(new CRenderOpTransformWorldspace(transform));
 
     // If the context has requested antialiasing other than the defaults we now need to update the device context.
     if (CurrentGState().shouldAntialias != _kCGTrinaryDefault || !allowsAntialiasing) {
-        deviceContext->SetAntialiasMode(GetAntialiasMode());
+        ops.emplace_back(new CRenderOpSetAntialiasMode(GetAntialiasMode()));
 
         // If any text rendering parameters have been updated, we need to update the device context.
         if ((CurrentGState().shouldSmoothFonts != _kCGTrinaryDefault || !allowsFontSmoothing) ||
@@ -2509,104 +2798,22 @@ HRESULT __CGContext::Draw(__CGCoordinateMode coordinateMode, CGAffineTransform* 
 
             ComPtr<IDWriteRenderingParams> customParams;
             GetTextRenderingParams(originalTextRenderingParams.Get(), &customParams);
-            deviceContext->SetTextRenderingParams(customParams.Get());
 
-            deviceContext->SetTextAntialiasMode(GetTextAntialiasMode());
+            ops.emplace_back(new CRenderOpSetTextRenderingMode(customParams.Get(), GetTextAntialiasMode()));
         }
     }
 
-    if (_ShouldDrawToCommandList()) {
-        // Temporarily change the target to a command list
-        ComPtr<ID2D1Image> originalTarget; // Cache the original target to restore it later.
-        deviceContext->GetTarget(&originalTarget);
+    ops.emplace_back(new CRenderOpCallLambda<typename std::decay<decltype(drawLambda)>::type>(drawLambda));
 
-        ComPtr<ID2D1CommandList> commandList;
-        RETURN_IF_FAILED(deviceContext->CreateCommandList(&commandList));
-
-        deviceContext->SetTarget(commandList.Get());
-
-        {
-            deviceContext->SetTransform(__CGAffineTransformToD2D_F(transform));
-            auto revertTransform = wil::ScopeExit([this]() { this->deviceContext->SetTransform(D2D1::IdentityMatrix()); });
-            RETURN_IF_FAILED(std::forward<Lambda>(drawLambda)(this, deviceContext.Get()));
-        }
-
-        // Change the target back
-        RETURN_IF_FAILED(commandList->Close());
-        deviceContext->SetTarget(originalTarget.Get());
-
-        // If needed, create a shadow effect by 'replaying' the command list, and draw it
-        ComPtr<ID2D1Image> currentImage{ commandList };
-        ComPtr<ID2D1Effect> shadowEffect;
-        RETURN_IF_FAILED(_CreateShadowEffect(currentImage.Get(), &shadowEffect));
-        if (shadowEffect) {
-            RETURN_IF_FAILED(shadowEffect.As(&currentImage));
-        }
-
-        /*
-        D2D1_COMPOSITE_MODE compositeMode = D2D1_COMPOSITE_MODE_SOURCE_OVER;
-        ComPtr<ID2D1Bitmap> renderTargetImage;
-        ComPtr<ID2D1Effect> compositeEffect;
-        if ((state.blendMode & _kCGContextBlendD2DCompose)) {
-            // If the user has requested a different composition mode, we'll honor it.
-            // If they have requested a porter-duff blend mode, however, we'll use SOURCE_OVER regardless:
-            // It doesn't truly matter, as our porter-duff blends are implemented in terms of a full
-            // target readback, clear and blend effect. There /is/ no destination to compose once we're done.
-            compositeMode = static_cast<D2D1_COMPOSITE_MODE>(state.blendMode & 0xFF);
-            if (compositeMode != D2D1_COMPOSITE_MODE_SOURCE_OVER) {
-                / *
-                ComPtr<ID2D1Effect> compositeEffect;
-
-                deviceContext->CreateEffect(CLSID_D2D1Composite, &compositeEffect);
-
-                D2D1_SIZE_U dcPSize = deviceContext->GetPixelSize();
-                RETURN_IF_FAILED(deviceContext->CreateBitmap(dcPSize, nullptr, 0, D2D1::BitmapProperties(D2D1::PixelFormat(DXGI_FORMAT_R8G8B8A8_UNORM, D2D1_ALPHA_MODE_PREMULTIPLIED)), &renderTargetImage));
-                RETURN_IF_FAILED(renderTargetImage->CopyFromRenderTarget(nullptr, deviceContext.Get(), nullptr));
-
-                compositeEffect->SetInput(0, renderTargetImage.Get());
-                compositeEffect->SetValue(D2D1_COMPOSITE_PROP_MODE, state.blendMode & 0xFF);
-                compositeEffect->SetInput(1, currentImage.Get());
-                compositeEffect.As(&currentImage);
-                // *outBlendEffect = blendEffect.Detach();
-                * /
-            }
-        } else if ((state.blendMode & _kCGContextBlendD2DBlend)) {
-            D2D1_BLEND_MODE blendMode = static_cast<D2D1_BLEND_MODE>(state.blendMode & 0xFF);
-            ComPtr<ID2D1Effect> blendEffect;
-
-            deviceContext->CreateEffect(CLSID_D2D1Blend, &blendEffect);
-
-            D2D1_SIZE_U dcPSize = deviceContext->GetPixelSize();
-            RETURN_IF_FAILED(deviceContext->CreateBitmap(dcPSize, nullptr, 0, D2D1::BitmapProperties(D2D1::PixelFormat(DXGI_FORMAT_R8G8B8A8_UNORM, D2D1_ALPHA_MODE_PREMULTIPLIED)), &renderTargetImage));
-            RETURN_IF_FAILED(renderTargetImage->CopyFromRenderTarget(nullptr, deviceContext.Get(), nullptr));
-
-            deviceContext->Clear({0,0,0,0});
-
-            blendEffect->SetInput(0, renderTargetImage.Get());
-            blendEffect->SetValue(D2D1_BLEND_PROP_MODE, blendMode);
-            blendEffect->SetInput(1, currentImage.Get());
-            blendEffect.As(&currentImage);
-        }
-        */
-
-        // We use NEAREST_NEIGHBOR here since every CommandList or Image we are rendering will already be context-scaled,
-        // and we assume that there will not be a final interpolation pass.
-        // Bitmaps drawn through CGContextDrawImage will have the interpolation mode applied during input generation.
-        deviceContext->DrawImage(currentImage.Get(), D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR, compositeMode);
-    } else {
-        deviceContext->SetTransform(__CGAffineTransformToD2D_F(transform));
-        auto revertTransform = wil::ScopeExit([this]() { this->deviceContext->SetTransform(D2D1::IdentityMatrix()); });
-        RETURN_IF_FAILED(std::forward<Lambda>(drawLambda)(this, deviceContext.Get()));
+    for (auto& op : ops) {
+        RETURN_IF_FAILED(op->Stage(this, deviceContext.Get()));
     }
 
-    if (layer) {
-        this->deviceContext->PopLayer();
-        if (compositeMode != D2D1_COMPOSITE_MODE_SOURCE_OVER) {
-            this->deviceContext->SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND_SOURCE_OVER);
-        }
+    for (auto it = ops.rbegin(); it != ops.rend(); ++it) {
+        RETURN_IF_FAILED((*it)->Complete(this, deviceContext.Get()));
     }
 
-    return this->PopEndDraw();
+    return S_OK;
 }
 
 HRESULT __CGContext::_DrawGeometryInternal(ID2D1Geometry* geometry,

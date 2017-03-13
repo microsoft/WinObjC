@@ -30,7 +30,8 @@
 enum _CGContextBlendType {
     _kCGContextBlendD2DBlend = 0x0100,
     _kCGContextBlendD2DCompose = 0x0200,
-    _kCGContextBlendOperator = 0x0400,
+    _kCGContextBlendD2DComposeWithEffect = 0x0400,
+    _kCGContextBlendOperator = 0x0800,
 };
 
 // Context Internal
