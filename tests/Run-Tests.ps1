@@ -148,6 +148,7 @@ function ExecTest($argList)
 
     if ($TargetingDevice)
     {
+        #Note: cmdd or some other tool on the phone does not like "`"$testPath`"" and results in taef not running the test.
         Write-Host -ForegroundColor Cyan  "cmdd $taefPath $testPath $argList"
         cmdd $taefPath $testPath $argList
 
