@@ -145,7 +145,6 @@ function ExecTest($argList)
     $testPath = Join-Path $TestDstDirectory $ModuleFilter
 
     $taefPath = "`"$taefPath`""
-    $testPath = "`"$testPath`""
 
     if ($TargetingDevice)
     {
@@ -161,6 +160,7 @@ function ExecTest($argList)
     }
     else
     {
+        $testPath = "`"$testPath`""
         Write-Host -ForegroundColor Cyan  "Running $taefPath $testPath $argList"
         $arguments = "$testPath" + "$argList"
         if ($RedirectTAEFErrors) {            
