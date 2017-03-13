@@ -40,7 +40,7 @@ static const struct {
                     { DWRITE_FONT_WEIGHT_ULTRA_BLACK, kCTFontWeightBlack } };
 
 /**
- * Helper function that effeciently compares two CFStringRef and returns true if they are equal (case insensitive)
+ * Helper function that efficiently compares two CFStringRef and returns true if they are equal (case insensitive)
  */
 static inline bool __CFStringEqual(CFStringRef left, CFStringRef right) {
     CFIndex leftLength = CFStringGetLength(left);
@@ -335,12 +335,8 @@ HRESULT _DWriteCreateMatchingFontDescriptors(CFDictionaryRef attributes, CFSetRe
                                                 &matchingFont))) {
             fonts.emplace_back(matchingFont);
         } else {
-            if (mandatoryKeys) {
-                // Not matching is not a fatal error, but we can just return now rather than try to match against any other attributes
-                return S_FALSE;
-            } else {
-                // Not required to match font name so just attempt to match other attributes later
-            }
+            // Not matching is not a fatal error, but we can just return now rather than try to match against any other attributes
+            RETURN_HR_IF(S_FALSE, mandatoryKeys != nullptr);
         }
     }
 
@@ -362,12 +358,8 @@ HRESULT _DWriteCreateMatchingFontDescriptors(CFDictionaryRef attributes, CFSetRe
                 fonts.emplace_back(font);
             }
         } else {
-            if (mandatoryKeys) {
-                // Not matching is not a fatal error, but we can just return now rather than try to match against any other attributes
-                return S_FALSE;
-            } else {
-                // Not required to match family name so just attempt to match other attributes later
-            }
+            // Not matching is not a fatal error, but we can just return now rather than try to match against any other attributes
+            RETURN_HR_IF(S_FALSE, mandatoryKeys != nullptr);
         }
     }
 
