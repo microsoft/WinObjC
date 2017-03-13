@@ -2,10 +2,6 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
-      <GitThisAssembly>true</GitThisAssembly>
-  </PropertyGroup>
-    
-  <PropertyGroup>
       <PackageId>WinObjC.Frameworks.ThirdParty</PackageId>
       <Title>WinObjC.Frameworks.ThirdParty</Title>
       <Authors>Microsoft</Authors>
