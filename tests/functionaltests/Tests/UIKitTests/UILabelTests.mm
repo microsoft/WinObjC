@@ -473,7 +473,7 @@ public:
 
             // verify setting highlightedColor without changing UILabel state to highlighted state
             // the label's text color should not change
-            label.highlightedTextColor = [UIColor greenColor];
+            label.highlightedTextColor = [UIColor blueColor];
             colorBrush = rt_dynamic_cast<WUXMSolidColorBrush>(textBlock.foreground);
             ASSERT_TRUE(colorBrush != nil);
             EXPECT_OBJCEQ(UXTestAPI::ConvertWUColorToUIColor(colorBrush.color), label.textColor);

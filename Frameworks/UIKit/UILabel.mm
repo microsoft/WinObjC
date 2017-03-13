@@ -86,13 +86,13 @@ static const wchar_t* TAG = L"UILabel";
 
 - (void)_updateTextBlockWithFont:(UIFont*)font {
     [_textBlock setFontSize:[font pointSize]];
+    [_textBlock setLineHeight:[font ascender] - [font descender]];
     WUTFontWeight* fontWeight = [WUTFontWeight new];
     fontWeight.weight = static_cast<unsigned short>([font _fontWeight]);
     [_textBlock setFontWeight:fontWeight];
     [_textBlock setFontStyle:static_cast<WUTFontStyle>([font _fontStyle])];
     [_textBlock setFontStretch:static_cast<WUTFontStretch>([font _fontStretch])];
     [_textBlock setFontFamily:[WUXMFontFamily makeInstanceWithName:[font _compatibleFamilyName]]];
-    [_textBlock setLineHeight:[font ascender] - [font descender]];
 }
 
 /**
@@ -200,8 +200,6 @@ static const wchar_t* TAG = L"UILabel";
     }
 
     _textBlock = textBlock;
-    [_textBlock setLineStackingStrategy:WXLineStackingStrategyBlockLineHeight];
-
     _alignment = UITextAlignmentLeft;
     _lineBreakMode = UILineBreakModeTailTruncation;
     _textColor = [UIColor blackColor];
@@ -236,11 +234,13 @@ static const wchar_t* TAG = L"UILabel";
     [self _updateTextBlockWithFont:_font];
 
     if (_adjustFontSize) {
-        // search for font that can fit - but it might not exist, in which case we get nil font
+        // search for font that can fit - but it might not exist, in which case it return -1.0f
         float adjustedFontSize = [self _searchAdjustedFontSizeToFit];
         if (adjustedFontSize != -1.0f && adjustedFontSize != [_font pointSize]) {
             [_textBlock setFontSize:adjustedFontSize];
             UIFont* adjustFont = [_font fontWithSize:adjustedFontSize]; 
+
+            // when updating font size, also need update lineheight
             [_textBlock setLineHeight:[adjustFont ascender] - [adjustFont descender]];
         }
     }
@@ -555,7 +555,7 @@ static const wchar_t* TAG = L"UILabel";
             [self setBackgroundColor:_savedBackgroundColor];
         }
 
-        // update textblock foreground when highlighted color is different textcolor
+        // update textblock foreground when highlighted color is different from textcolor
         if (![_highlightedTextColor isEqual:_textColor]) {
             if (_isHighlighted) {
                 [_textBlock setForeground:[WUXMSolidColorBrush
@@ -587,7 +587,7 @@ static const wchar_t* TAG = L"UILabel";
     if (![color isEqual:_highlightedTextColor]) {
         _highlightedTextColor = color;
         if (_isHighlighted) {
-            [_textBlock setForeground:[WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor(_textColor)]];
+            [_textBlock setForeground:[WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor(_highlightedTextColor)]];
             [self setNeedsDisplay];
         }
     }
@@ -684,11 +684,13 @@ static const wchar_t* TAG = L"UILabel";
     BOOL textBlockFontSizeUpdated = NO;
     float curTextBlockFontSize = [_textBlock fontSize];
     if (_adjustFontSize) {
-        // search for font that can fit - but it might not exist, in which case we get nil font
+        // search for font that can fit - but it might not exist, in which case it return -1.0f
         float adjustedFontSize = [self _searchAdjustedFontSizeToFit];
         if (adjustedFontSize != -1.0f && adjustedFontSize != curTextBlockFontSize) {
             [_textBlock setFontSize:adjustedFontSize];
             UIFont* adjustFont = [_font fontWithSize:adjustedFontSize]; 
+
+            // when updating font size, also need update lineheight
             [_textBlock setLineHeight:[adjustFont ascender] - [adjustFont descender]];
             textBlockFontSizeUpdated = YES;
         }
@@ -698,6 +700,8 @@ static const wchar_t* TAG = L"UILabel";
         float curFontSize = [_font pointSize];
         if (curTextBlockFontSize != curFontSize) {
             [_textBlock setFontSize:curFontSize];
+
+            // when updating font size, also need update lineheight
             [_textBlock setLineHeight:[_font ascender] - [_font descender]];
             textBlockFontSizeUpdated = YES;
         }
