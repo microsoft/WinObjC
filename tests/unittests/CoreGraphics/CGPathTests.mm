@@ -983,7 +983,7 @@ TEST(CGPath, CGPathAddArcToPoint) {
     CGPathRelease(thepath);
 }
 
-#define compareRectsWithSlack(lhs, rhs)                      \
+#define COMPARE_RECTS_WITH_SLACK(lhs, rhs)                   \
     {                                                        \
         EXPECT_NEAR(lhs.origin.x, rhs.origin.x, .001);       \
         EXPECT_NEAR(lhs.origin.y, rhs.origin.y, .001);       \
@@ -1017,10 +1017,10 @@ TEST(CGPath, GetBoundingBoxes) {
     CGPathAddArc(thepath, &transformation, .625 * width, .5 * height, .125 * height, M_PI / 2, 0, true);
 
     CGRect boundingBox = CGPathGetBoundingBox(thepath);
-    compareRectsWithSlack(boundingBox, CGRectMake(67.6526, 6.21259, 106.43, 106.427));
+    COMPARE_RECTS_WITH_SLACK(boundingBox, CGRectMake(67.6526, 6.21259, 106.43, 106.427));
 
     boundingBox = CGPathGetPathBoundingBox(thepath);
-    compareRectsWithSlack(boundingBox, CGRectMake(71.6785, 10.2385, 102.401, 102.401));
+    COMPARE_RECTS_WITH_SLACK(boundingBox, CGRectMake(71.6785, 10.2385, 102.401, 102.401));
 
     CGPathRelease(thepath);
 }
