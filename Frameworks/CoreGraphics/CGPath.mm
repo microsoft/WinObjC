@@ -231,8 +231,12 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
         return S_OK;
     }
 
+    bool IsFigureOpen() {
+        return geometrySink && geometrySink->IsFigureOpen();
+    }
+
     void BeginFigure() {
-        if (!geometrySink->IsFigureOpen()) {
+        if (geometrySink && !geometrySink->IsFigureOpen()) {
             geometrySink->BeginFigure(_CGPointToD2D_F(currentPoint), D2D1_FIGURE_BEGIN_FILLED);
         }
     }
@@ -482,6 +486,20 @@ static HRESULT _createPathReadyForFigure(CGPathRef previousPath,
     return S_OK;
 }
 
+static const CGFloat sc_zeroAngleThreshold = .00001;
+// This function will return a normalized angle in radians between 0 and 2pi. This is to standardize
+// the calculations for arcs since 0, 2pi, 4pi, etc... are all visually the same angle.
+static CGFloat __normalizeAngle(CGFloat originalAngle) {
+    CGFloat normalizedAngle = fmod(originalAngle, 2 * M_PI);
+    if (abs(normalizedAngle) < sc_zeroAngleThreshold) {
+        normalizedAngle = 0;
+    }
+    if (normalizedAngle == 0 && originalAngle != 0) {
+        return 2 * M_PI;
+    }
+    return normalizedAngle;
+}
+
 /**
  @Status Interoperable
 */
@@ -499,14 +517,8 @@ void CGPathAddArcToPoint(
     CGFloat dy2 = y1 - y2;
 
     // Normalize the angles of the tangent lines.
-    CGFloat startAngle = fmod(atan2(dy1, dx1), 2 * M_PI);
-    CGFloat endAngle = fmod(atan2(dy2, dx2), 2 * M_PI);
-    if (startAngle < 0) {
-        startAngle += M_PI * 2;
-    }
-    if (endAngle < 0) {
-        endAngle += M_PI * 2;
-    }
+    CGFloat startAngle = __normalizeAngle(atan2(dy1, dx1));
+    CGFloat endAngle = __normalizeAngle(atan2(dy2, dx2));
 
     // Calculate the angle of the bisector between the tangent line's angles.
     CGFloat bisector = (endAngle - startAngle) / 2;
@@ -552,8 +564,14 @@ void CGPathAddArcToPoint(
     path->SetCurrentPoint(endPoint);
 }
 
+static inline CGPoint _createCGPointOnAngle(CGFloat angle, CGFloat radius, int xOrigin, int yOrigin) {
+    return CGPointMake(xOrigin + radius * cos(angle), yOrigin + radius * sin(angle));
+}
+
 /**
  @Status Interoperable
+ @Notes All arcs from 0 to 2pi in either direction will result in a circle;
+        the reference platform, by contrast, does not honor this behavior.
 */
 void CGPathAddArc(CGMutablePathRef path,
                   const CGAffineTransform* transform,
@@ -565,32 +583,66 @@ void CGPathAddArc(CGMutablePathRef path,
                   bool clockwise) {
     RETURN_IF(!path);
 
-    CGPoint startPoint = CGPointMake(x + radius * cos(startAngle), y + radius * sin(startAngle));
-    CGPoint endPoint = CGPointMake(x + radius * cos(endAngle), y + radius * sin(endAngle));
+    // Normalize the angles to work with to values between 0 and 2*PI
+    CGFloat normalizedStartAngle = __normalizeAngle(startAngle);
+    CGFloat normalizedEndAngle = __normalizeAngle(endAngle);
+
+    CGPoint startPoint = _createCGPointOnAngle(normalizedStartAngle, radius, x, y);
+    CGPoint endPoint = _createCGPointOnAngle(normalizedEndAngle, radius, x, y);
 
     // Create the parameters for the AddArc method.
     const D2D1_POINT_2F endPointD2D = _CGPointToD2D_F(endPoint);
     const D2D1_SIZE_F radiusD2D = { radius, radius };
-    CGFloat rotationAngle = abs(startAngle - endAngle);
     D2D1_ARC_SIZE arcSize = D2D1_ARC_SIZE_SMALL;
-    CGFloat expectedAngle = (clockwise ? startAngle + rotationAngle : startAngle - rotationAngle);
 
     // D2D does not understand that the ending angle must be pointing in the proper direction, thus we must translate
     // what it means to have an ending angle to the proper small arc or large arc that D2D will use since a circle will
     // intersect that point regardless of which direction it is drawn in.
-    if (expectedAngle == endAngle) {
-        arcSize = D2D1_ARC_SIZE_LARGE;
+    CGFloat rawDifference = 0;
+    if (clockwise) {
+        rawDifference = normalizedStartAngle - normalizedEndAngle;
     } else {
-        rotationAngle = (2 * M_PI) - rotationAngle;
+        rawDifference = normalizedEndAngle - normalizedStartAngle;
     }
+    CGFloat difference = rawDifference;
+    if (difference < 0) {
+        difference += 2 * M_PI;
+    }
+    if (difference > M_PI) {
+        arcSize = D2D1_ARC_SIZE_LARGE;
+    }
+
+    rawDifference = abs(rawDifference);
+    if (!clockwise) {
+        rawDifference *= -1;
+    }
+
+    // The direction of the arc's sweep must be reversed since the coordinate systems for D2D and CoreGraphics are reversed.
+    // CW in D2D is CCW in CoreGraphics.
     D2D1_SWEEP_DIRECTION sweepDirection = { clockwise ? D2D1_SWEEP_DIRECTION_COUNTER_CLOCKWISE : D2D1_SWEEP_DIRECTION_CLOCKWISE };
-    D2D1_ARC_SEGMENT arcSegment = D2D1::ArcSegment(endPointD2D, radiusD2D, rotationAngle, sweepDirection, arcSize);
 
     ComPtr<ID2D1PathGeometry> newPath;
     ComPtr<ID2D1GeometrySink> newSink;
+    if (!path->IsFigureOpen()) {
+        CGPathMoveToPoint(path, transform, startPoint.x, startPoint.y);
+    }
     FAIL_FAST_IF_FAILED(_createPathReadyForFigure(path, startPoint, &newPath, &newSink));
 
-    newSink->AddArc(arcSegment);
+    // This will only happen when drawing a circle in the clockwise direction from 2pi to 0, a scenario
+    // supported on the reference platform.
+    if (abs(abs(rawDifference) - 2 * M_PI) < sc_zeroAngleThreshold) {
+        CGFloat midPointAngle = normalizedStartAngle + rawDifference / 2;
+        CGPoint midPoint = _createCGPointOnAngle(midPointAngle, radius, x, y);
+        D2D1_ARC_SEGMENT arcSegment1 =
+            D2D1::ArcSegment(_CGPointToD2D_F(midPoint), radiusD2D, rawDifference / 2, sweepDirection, D2D1_ARC_SIZE_SMALL);
+        D2D1_ARC_SEGMENT arcSegment2 = D2D1::ArcSegment(endPointD2D, radiusD2D, rawDifference / 2, sweepDirection, D2D1_ARC_SIZE_SMALL);
+        newSink->AddArc(arcSegment1);
+        newSink->AddArc(arcSegment2);
+    } else {
+        D2D1_ARC_SEGMENT arcSegment = D2D1::ArcSegment(endPointD2D, radiusD2D, rawDifference, sweepDirection, arcSize);
+        newSink->AddArc(arcSegment);
+    }
+
     newSink->EndFigure(D2D1_FIGURE_END_OPEN);
     FAIL_FAST_IF_FAILED(newSink->Close());
 
@@ -616,6 +668,7 @@ void CGPathMoveToPoint(CGMutablePathRef path, const CGAffineTransform* transform
     path->SetStartingPoint(pt);
     path->SetCurrentPoint(pt);
     path->SetLastTransform(transform);
+    path->BeginFigure();
 }
 
 /**
@@ -624,6 +677,9 @@ void CGPathMoveToPoint(CGMutablePathRef path, const CGAffineTransform* transform
 void CGPathAddLines(CGMutablePathRef path, const CGAffineTransform* transform, const CGPoint* points, size_t count) {
     RETURN_IF(count == 0 || !points || !path);
 
+    if (!path->IsFigureOpen()) {
+        CGPathMoveToPoint(path, transform, points[0].x, points[0].y);
+    }
     for (int i = 0; i < count; i++) {
         CGPathAddLineToPoint(path, transform, points[i].x, points[i].y);
     }

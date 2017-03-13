@@ -934,4 +934,19 @@ HRESULT _CGImageConvertToMaskCompatibleWICBitmap(CGImageRef image, IWICBitmap** 
     return _CGImageGetWICImageSource(convertedImage.get(), pBitmap);
 }
 
+/**
+* Creates an image from file, if the image is not in the requested format, it is converted to
+* the requested format and returned.
+*/
+CGImageRef _CGImageCreateFromFileWithWICFormat(CFStringRef filename, WICPixelFormatGUID format) {
+    RETURN_NULL_IF(!filename);
+
+    woc::StrongCF<CFURLRef> url{ woc::MakeStrongCF(CFURLCreateWithFileSystemPath(nullptr, filename, kCFURLWindowsPathStyle, NO)) };
+    woc::StrongCF<CGDataProviderRef> provider{ woc::MakeStrongCF(CGDataProviderCreateWithURL(url)) };
+
+    woc::StrongCF<CGImageRef> image{ woc::MakeStrongCF(_CGImageCreateFromDataProvider(provider)) };
+
+    return _CGImageCreateCopyWithPixelFormat(image, format);
+}
+
 #pragma endregion WIC_HELPERS
