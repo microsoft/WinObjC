@@ -5,7 +5,7 @@ $silentArgs = '' # "/s /S /q /Q /quiet /silent /SILENT /VERYSILENT" # try any of
 $validExitCodes = @(0) #please insert other valid exit codes here, exit codes for ms http://msdn.microsoft.com/en-us/library/aa368542(VS.85).aspx
 $toolsDir = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
 
-$installPath = & $toolsDir\vswhere.exe -latest -property installationPath
+$installPath = & vswhere -latest -property installationPath
 
 if(!$installPath) {
     throw "There was an error finding latest Visual Studio Install location. Please make sure Visual Studio (2017 or later) is installed correctly."

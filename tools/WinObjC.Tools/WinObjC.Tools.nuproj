@@ -14,19 +14,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Configuration">
-    <PackageId>WinObjC.Tools</PackageId>
-    <Title>WinObjC.Tools</Title>
+    <PackageId>winobjc-tools</PackageId>
+    <Title>winobjc-tools</Title>
     <Authors>Microsoft</Authors>
     <Owners>Microsoft</Owners>
-    <Summary>WinObjC.Tools</Summary>
-    <Description>WinObjC.Tools</Description>
+    <Summary>Command Line tools and Visual Studio Extensions for the WinObjC Project.</Summary>
+    <Description>Command Line tools and Visual Studio Extensions for the WinObjC Project. This package includes vsimporter, the tool to convert an existing xcode objective c project to a visual studio solution, as well as the Visual Studio Extensions for Objective C syntax highlighting and Nuget package creation. See https://github.com/Microsoft/WinObjC for more details.</Description>
     <PackageReleaseNotes>
     </PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/Microsoft/WinObjC</PackageProjectUrl>
-    <PackageLicenseUrl>
-    </PackageLicenseUrl>
+    <PackageLicenseUrl>https://github.com/Microsoft/WinObjC/blob/develop/license.txt</PackageLicenseUrl>
     <Copyright>Copyright © Microsoft</Copyright>
-    <PackageTags>WinObjC.Tools</PackageTags>
+    <PackageTags>winobjc-tools;winobjc;vsimporter;</PackageTags>
   </PropertyGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>0a23b6b4-94bb-4b3a-ba73-a7cb5ef7d8f9</ProjectGuid>
@@ -49,6 +48,12 @@
   <ItemGroup>
     <ProjectReference Include="..\vsimporter\vsimporter.vcxproj" />
     <ProjectReference Include="..\VSIX\ObjectiveCVSIX.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageFile Include="vswhere">
+      <Kind>Dependency</Kind>
+      <Version>1.0.50</Version>
+    </PackageFile>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets')" />
