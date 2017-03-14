@@ -37,7 +37,7 @@ To get started with an existing Xcode Project, you will also need:
 - **Chocolatey**, a package manager for windows. See how to install the latest version [here] (https://chocolatey.org/)
 - **WinObjC.Tools**, the command line tools for WinObjC. Run the below command from **powershell (Admin)** to get the latest version:
 ```
-choco upgrade WinObjC.Tools
+choco upgrade winobjc-tools
 ```
 (more information about this command and its options can be found [here](https://chocolatey.org/docs/commands-upgrade))
 
