@@ -21,7 +21,7 @@ struct CGNamedBlendMode {
     CGBlendMode blendMode;
 };
 
-CGNamedBlendMode porterDuffBlendModes[] =
+CGNamedBlendMode pdfBlendModes[] =
     { { "kCGBlendModeMultiply", kCGBlendModeMultiply },     { "kCGBlendModeScreen", kCGBlendModeScreen },
       { "kCGBlendModeDarken", kCGBlendModeDarken },         { "kCGBlendModeLighten", kCGBlendModeLighten },
       { "kCGBlendModeColorBurn", kCGBlendModeColorBurn },   { "kCGBlendModeColorDodge", kCGBlendModeColorDodge },
@@ -32,6 +32,20 @@ CGNamedBlendMode porterDuffBlendModes[] =
       { "kCGBlendModeLuminosity", kCGBlendModeLuminosity } };
 
 CGNamedBlendMode blendOperators[] = { { "kCGBlendModeClear", kCGBlendModeClear } };
+
+CGNamedBlendMode compositionModesWithoutPlusDarker[] = {
+    { "kCGBlendModeNormal", kCGBlendModeNormal },
+    { "kCGBlendModeDestinationOver", kCGBlendModeDestinationOver },
+    { "kCGBlendModeSourceIn", kCGBlendModeSourceIn },
+    { "kCGBlendModeDestinationIn", kCGBlendModeDestinationIn },
+    { "kCGBlendModeSourceOut", kCGBlendModeSourceOut },
+    { "kCGBlendModeDestinationOut", kCGBlendModeDestinationOut },
+    { "kCGBlendModeSourceAtop", kCGBlendModeSourceAtop },
+    { "kCGBlendModeDestinationAtop", kCGBlendModeDestinationAtop },
+    { "kCGBlendModeXOR", kCGBlendModeXOR },
+    { "kCGBlendModePlusLighter", kCGBlendModePlusLighter },
+    { "kCGBlendModeCopy", kCGBlendModeCopy },
+};
 
 CGNamedBlendMode compositionModes[] = {
     { "kCGBlendModeNormal", kCGBlendModeNormal },
@@ -123,14 +137,20 @@ DRAW_TEST_P(CGContextBlendMode, OverlappedRects) {
     }
 }
 
-INSTANTIATE_TEST_CASE_P(CompositionModes,
-                        CGContextBlendMode,
-                        ::testing::Combine(::testing::Values(false, true), ::testing::ValuesIn(compositionModes)));
+// Disabled: layered = false; not supported. plus darker; not supported.
+DISABLED_INSTANTIATE_TEST_CASE_P(CompositionModes,
+                                 CGContextBlendMode,
+                                 ::testing::Combine(::testing::Values(true), ::testing::ValuesIn(compositionModesWithoutPlusDarker)),
+                                 ::testing::Combine(::testing::Values(false), ::testing::ValuesIn(compositionModes)));
 
-INSTANTIATE_TEST_CASE_P(PorterDuffModes,
+INSTANTIATE_TEST_CASE_P(AdobePDFBlendModes,
                         CGContextBlendMode,
-                        ::testing::Combine(::testing::Values(false, true), ::testing::ValuesIn(porterDuffBlendModes)));
+                        ::testing::Combine(::testing::Values(false, true), ::testing::ValuesIn(pdfBlendModes)));
 
+#if 0
+// Disabled: there is no supported configuration of this test, so we cannot fulfill the requirement
+// that DISABLED_INSTANTIATE_TEST_CASE_P have a set of "enabled" values.
 INSTANTIATE_TEST_CASE_P(OperatorBlendModes,
                         CGContextBlendMode,
                         ::testing::Combine(::testing::Values(false, true), ::testing::ValuesIn(blendOperators)));
+#endif

@@ -1502,14 +1502,19 @@ void CGContextSetShouldSubpixelQuantizeFonts(CGContextRef context, bool subpixel
 #pragma region Drawing Parameters - Generic
 /**
  @Status Caveat
- @Notes Only supports basic composition.
+ @Notes Does not support the [Clear] operator. If the [Source In], [Destination In], [Source Out], [Destination Atop], and [Source Copy]
+        blend modes are used, unusual effects will be observed if the operator is not first combined with a transparency layer. Per-
+        primitive blending in these modes is not fully supported. [Plus Darker] is not supported and will be mapped to [Plus Lighter].
 */
 void CGContextSetBlendMode(CGContextRef context, CGBlendMode mode) {
     NOISY_RETURN_IF_NULL(context);
 
-    // TODO(DH): Support Porter-Duff blend modes and operators.
-    if ((mode & _kCGContextBlendD2DCompose) == 0) {
-        // UNIMPLEMENTED_WITH_MSG("Unsupported non-composite blend mode %4.04x", mode);
+    if ((mode & _kCGContextBlendOperator) == 0) {
+        // We cannot fulfill this request.
+        UNIMPLEMENTED_WITH_MSG("Unsupported operator blend mode %4.04x", mode);
+    } else if (mode == kCGBlendModePlusDarker) {
+        // No UNIMPLEMENTED here: we will proceed but with an unusual output.
+        TraceWarning(TAG, L"Unsupported composite blend mode %4.04x (Plus Darker)", mode);
     }
 
     auto& state = context->CurrentGState();
@@ -2564,7 +2569,8 @@ public:
         // 1: The input image/command list
         RETURN_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D1Composite, &_compositeEffect));
         _compositeEffect->SetInputEffect(0, affineTransformEffect.Get());
-        return S_OK;
+
+        return __super::Stage(context, deviceContext);
     }
 
     HRESULT Complete(CGContextRef context, ID2D1DeviceContext* deviceContext) override {
@@ -2613,43 +2619,8 @@ public:
     }
 };
 
-// CRenderOpEffectComposite is like CRenderOpEffectBlend above, but it uses
-// a composite effect instead of a blend effect.
-class CRenderOpEffectComposite : public _CRenderOpCopyBackBase {
-    D2D1_COMPOSITE_MODE _compositeMode;
-
-public:
-    CRenderOpEffectComposite(D2D1_COMPOSITE_MODE compositeMode) : _compositeMode(compositeMode) {
-    }
-
-    // Stage is handled by _CRenderOpCopyBackBase.
-    // _CRenderOpCopyBackBase switches the target to be a command list and
-    // copies the destination (be it a bitmap or a command list)
-    // into the member "copiedImage".
-
-    HRESULT Complete(CGContextRef context, ID2D1DeviceContext* deviceContext) override {
-        RETURN_IF_FAILED(__super::Complete(context, deviceContext));
-
-        // The composite effect takes two images and a composite mode.
-        //
-        // INPUTS
-        // 0: The "destination" image (the context backing)
-        // 1: The "source" image (what we just rendered)
-        // PROPERTIES
-        // D2D1_COMPOSITE_PROP_MODE: composite mode
-        ComPtr<ID2D1Effect> compositeEffect;
-        FAIL_FAST_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D1Composite, &compositeEffect));
-        compositeEffect->SetValue(D2D1_COMPOSITE_PROP_MODE, _compositeMode);
-        compositeEffect->SetInput(0, __super::copiedImage.Get());
-        compositeEffect->SetInput(1, __super::commandList.Get());
-
-        deviceContext->SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND_COPY);
-        deviceContext->DrawImage(compositeEffect.Get());
-        deviceContext->SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND_SOURCE_OVER);
-        return S_OK;
-    }
-};
-
+// CRenderOpLayerComposite attempts to compose primitives with a specified composite mode
+// by pushing on a D2D transparency layer.
 class CRenderOpLayerComposite : public _CRenderOpCommandListBase {
     D2D1_COMPOSITE_MODE _compositeMode;
 
@@ -2790,17 +2761,21 @@ HRESULT __CGContext::Draw(__CGCoordinateMode coordinateMode,
 
     operations.emplace_back(new CRenderOpBeginEndDraw());
 
-    if (state.blendMode & _kCGContextBlendD2DBlend) {
-        operations.emplace_back(new CRenderOpEffectBlend(static_cast<D2D1_BLEND_MODE>(state.blendMode & 0xFF)));
-    } else if (state.blendMode & _kCGContextBlendD2DCompose && state.blendMode != kCGBlendModeNormal) {
-        // Primitive composition can use DrawImage(... D2D1_COMPOSITE_MODE ...)
-        operations.emplace_back(new CRenderOpPrimitiveComposite(static_cast<D2D1_COMPOSITE_MODE>(state.blendMode & 0xFF)));
-    } else if (state.blendMode & _kCGContextBlendD2DComposeWithEffect) {
-        if (fromTransparencyLayer) {
-            // Composing a transparency layer works just like primitive composite! Short-circuit here.
-            operations.emplace_back(new CRenderOpPrimitiveComposite(static_cast<D2D1_COMPOSITE_MODE>(state.blendMode & 0xFF)));
-        } else {
-            operations.emplace_back(new CRenderOpLayerComposite(static_cast<D2D1_COMPOSITE_MODE>(state.blendMode & 0xFF)));
+    if (state.blendMode != kCGBlendModeNormal) {
+        unsigned int blendConstant = (state.blendMode & 0xFF);
+        if (state.blendMode & _kCGContextBlendD2DBlend) {
+            // Full effect stack blending.
+            operations.emplace_back(new CRenderOpEffectBlend(static_cast<D2D1_BLEND_MODE>(blendConstant)));
+        } else if (state.blendMode & _kCGContextBlendD2DCompose) {
+            // Primitive composition can use DrawImage(... D2D1_COMPOSITE_MODE ...)
+            operations.emplace_back(new CRenderOpPrimitiveComposite(static_cast<D2D1_COMPOSITE_MODE>(blendConstant)));
+        } else if (state.blendMode & _kCGContextBlendD2DComposeWithEffect) {
+            if (fromTransparencyLayer) {
+                // Composing a transparency layer works just like primitive composite! Short-circuit here.
+                operations.emplace_back(new CRenderOpPrimitiveComposite(static_cast<D2D1_COMPOSITE_MODE>(blendConstant)));
+            } else {
+                operations.emplace_back(new CRenderOpLayerComposite(static_cast<D2D1_COMPOSITE_MODE>(blendConstant)));
+            }
         }
     }
 
