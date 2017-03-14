@@ -203,7 +203,7 @@ CFArrayRef CTFontDescriptorCreateMatchingFontDescriptors(CTFontDescriptorRef des
 */
 CTFontDescriptorRef CTFontDescriptorCreateMatchingFontDescriptor(CTFontDescriptorRef descriptor, CFSetRef mandatoryAttributes) {
     auto matching = woc::MakeAutoCF<CFArrayRef>(CTFontDescriptorCreateMatchingFontDescriptors(descriptor, mandatoryAttributes));
-    if (matching && CFArrayGetCount(matching) > 0) {
+    if (matching && CFArrayGetCount(matching) > 0L) {
         return static_cast<CTFontDescriptorRef>(CFRetain(CFArrayGetValueAtIndex(matching, 0)));
     }
 

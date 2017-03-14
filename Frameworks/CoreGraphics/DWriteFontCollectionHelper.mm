@@ -147,7 +147,7 @@ HRESULT DWriteFontCollectionHelper::GetAvailableFonts(std::vector<ComPtr<IDWrite
         for (size_t j = 0; j < fontCount; ++j) {
             ComPtr<IDWriteFont> font;
             RETURN_IF_FAILED(fontList->GetFont(j, &font));
-            outFontList.emplace_back(font);
+            outFontList.emplace_back(std::move(font));
         }
     }
 

@@ -265,7 +265,7 @@ static HRESULT __FilterFontsByFamilyName(const std::vector<ComPtr<IDWriteFont>>&
 }
 
 static HRESULT __FilterFontsByInformationalString(const std::vector<ComPtr<IDWriteFont>>& fonts,
-                                                  CFStringRef name,
+                                                  CFStringRef infoString,
                                                   DWRITE_INFORMATIONAL_STRING_ID id,
                                                   std::vector<ComPtr<IDWriteFont>>& matchingFonts) {
     for (auto& font : fonts) {
@@ -273,8 +273,8 @@ static HRESULT __FilterFontsByInformationalString(const std::vector<ComPtr<IDWri
         ComPtr<IDWriteLocalizedStrings> dwriteString;
         RETURN_IF_FAILED(font->GetInformationalStrings(id, &dwriteString, &exists));
         if (exists) {
-            CFStringRef fontName = _CFStringFromLocalizedString(dwriteString.Get());
-            if (__CFStringEqual(name, fontName)) {
+            CFStringRef fontInfoString = _CFStringFromLocalizedString(dwriteString.Get());
+            if (__CFStringEqual(infoString, fontInfoString)) {
                 matchingFonts.emplace_back(font);
             }
         }
@@ -284,6 +284,11 @@ static HRESULT __FilterFontsByInformationalString(const std::vector<ComPtr<IDWri
 }
 
 static HRESULT __FilterFontsByKeyAndValue(std::vector<ComPtr<IDWriteFont>>& fonts, CFStringRef key, CFTypeRef value, bool forceMatch) {
+    if (__CFStringEqual(key, kCTFontSizeAttribute)) {
+        // Ignored on reference platform so simply return here
+        return S_OK;
+    }
+
     std::vector<ComPtr<IDWriteFont>> matchingFonts;
     matchingFonts.reserve(fonts.size());
     CFRange range{ 0, CFStringGetLength(key) };
@@ -305,7 +310,10 @@ static HRESULT __FilterFontsByKeyAndValue(std::vector<ComPtr<IDWriteFont>>& font
         __FilterFontsByTraits(fonts, static_cast<CFDictionaryRef>(value), matchingFonts);
     } else {
         // Other attributes are currently unsupported by CTFont
-        UNIMPLEMENTED();
+        CFIndex length = CFStringGetLength(key);
+        std::unique_ptr<UniChar[]> keyChars{ new UniChar[length] };
+        CFStringGetCharacters(key, { 0, length }, keyChars.get());
+        UNIMPLEMENTED_WITH_MSG("Unsupported matching font descriptor attribute %ls", keyChars.get());
     }
 
     // Do not filter if there's no match and forceMatch isn't true
