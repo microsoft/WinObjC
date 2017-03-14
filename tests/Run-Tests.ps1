@@ -145,10 +145,10 @@ function ExecTest($argList)
     $testPath = Join-Path $TestDstDirectory $ModuleFilter
 
     $taefPath = "`"$taefPath`""
-    $testPath = "`"$testPath`""
 
     if ($TargetingDevice)
     {
+        #Note: cmdd or some other tool on the phone does not like "`"$testPath`"" and results in taef not running the test.
         Write-Host -ForegroundColor Cyan  "cmdd $taefPath $testPath $argList"
         cmdd $taefPath $testPath $argList
 
@@ -161,6 +161,7 @@ function ExecTest($argList)
     }
     else
     {
+        $testPath = "`"$testPath`""
         Write-Host -ForegroundColor Cyan  "Running $taefPath $testPath $argList"
         $arguments = "$testPath" + "$argList"
         if ($RedirectTAEFErrors) {            
