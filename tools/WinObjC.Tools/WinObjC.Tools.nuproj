@@ -19,11 +19,11 @@
     <Authors>Microsoft</Authors>
     <Owners>Microsoft</Owners>
     <Summary>Command Line tools and Visual Studio Extensions for the WinObjC Project.</Summary>
-    <Description>Command Line tools and Visual Studio Extensions for the WinObjC Project. This package includes vsimporter, the tool to convert an existing xcode objective c project to a visual studio solution, as well as the Visual Studio Extensions for Objective C syntax highlighting and Nuget package creation. See https://github.com/Microsoft/WinObjC for more details.</Description>
+    <Description>Command Line tools and Visual Studio Extensions for the WinObjC Project. This package includes vsimporter, the tool to convert an existing Xcode Cbjective-C project to a Visual Studio solution, as well as the Visual Studio Extensions (requires Visual Studio 2017 or later) for Objective C syntax highlighting and Nuget package creation. See https://github.com/Microsoft/WinObjC for more details.</Description>
     <PackageReleaseNotes>
     </PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/Microsoft/WinObjC</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/Microsoft/WinObjC/blob/develop/license.txt</PackageLicenseUrl>
+    <PackageLicenseUrl>https://github.com/Microsoft/WinObjC/blob/master/license.txt</PackageLicenseUrl>
     <Copyright>Copyright © Microsoft</Copyright>
     <PackageTags>winobjc-tools;winobjc;vsimporter;</PackageTags>
   </PropertyGroup>

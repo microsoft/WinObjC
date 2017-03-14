@@ -8,7 +8,7 @@ $toolsDir = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
 $installPath = & vswhere -latest -property installationPath
 
 if(!$installPath) {
-    throw "There was an error finding latest Visual Studio Install location. Please make sure Visual Studio (2017 or later) is installed correctly."
+    throw "There was an error finding latest Visual Studio install location. Please make sure Visual Studio (2017 or later) is installed correctly."
 }
 
 $vsixInstaller = gci -File -Recurse -Filter vsixinstaller.exe -Path $installPath

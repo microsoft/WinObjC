@@ -7,29 +7,28 @@ $toolsDir = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
 
 $installPath = & vswhere -latest -property installationPath
 
-if(!$installPath) {
-    throw "There was an error finding latest Visual Studio Install location. Please make sure Visual Studio (2017 or later) is installed correctly."
-}
+    if($installPath) {
 
-$vsixInstaller = gci -File -Recurse -Filter vsixinstaller.exe -Path $installPath
+    $vsixInstaller = gci -File -Recurse -Filter vsixinstaller.exe -Path $installPath
 
-Write-Host "Uninstalling Objective-C Visual Studio 2017 Extension ... " -ForegroundColor Blue
+    Write-Host "Uninstalling Objective-C Visual Studio 2017 Extension ... " -ForegroundColor Blue
 
-$result = & $vsixInstaller.FullName /q /uninstall:VSIX..9c35fff1-f084-44c1-a38e-68c707163aa2
-if($result -eq 2004) { #2004: Blocking Process (need to close VS)
-    throw "A process is blocking the uninstallation of the Visual Studio Extension. Please close all Visual Studio instances and try again."
-}
+    $result = & $vsixInstaller.FullName /q /uninstall:VSIX..9c35fff1-f084-44c1-a38e-68c707163aa2
+    if($result -eq 2004) { #2004: Blocking Process (need to close VS)
+        throw "A process is blocking the uninstallation of the Visual Studio Extension. Please close all Visual Studio instances and try again."
+    }
 
-if($result -gt 0 -and $result -ne 1002) { #1002: Not installed
-    throw "There was an error uninstalling the Objective-C Visual Studio 2017 Extension. The exit code returned was $result."
-}
+    if($result -gt 0 -and $result -ne 1002) { #1002: Not installed
+        throw "There was an error uninstalling the Objective-C Visual Studio 2017 Extension. The exit code returned was $result."
+    }
 
-Write-Host "Uninstalling Nugetizer Visual Studio 2017 Extension ... " -ForegroundColor Blue
-$result =  & $vsixInstaller.FullName /q /uninstall:NuGet.Packaging
-if($result -eq 2004) { #2004: Blocking Process (need to close VS)
-    throw "A process is blocking the uninstallation of the Visual Studio Extension. Please close all Visual Studio instances and try again."
-}
+    Write-Host "Uninstalling Nugetizer Visual Studio 2017 Extension ... " -ForegroundColor Blue
+    $result =  & $vsixInstaller.FullName /q /uninstall:NuGet.Packaging
+    if($result -eq 2004) { #2004: Blocking Process (need to close VS)
+        throw "A process is blocking the uninstallation of the Visual Studio Extension. Please close all Visual Studio instances and try again."
+    }
 
-if($result -gt 0 -and $result -ne 1002) { #1002: Not installed
-    throw "There was an error uninstalling the Objective-C Visual Studio 2017 Extension. The exit code returned was $result."
+    if($result -gt 0 -and $result -ne 1002) { #1002: Not installed
+        throw "There was an error uninstalling the Objective-C Visual Studio 2017 Extension. The exit code returned was $result."
+    }
 }
