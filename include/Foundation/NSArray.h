@@ -42,14 +42,14 @@ FOUNDATION_EXPORT_CLASS
 + (instancetype)array;
 + (instancetype)arrayWithArray:(NSArray<ObjectType>*)anArray;
 + (instancetype)arrayWithContentsOfFile:(NSString*)aPath;
-+ (instancetype)arrayWithContentsOfURL:(NSURL*)aURL STUB_METHOD;
++ (instancetype)arrayWithContentsOfURL:(NSURL*)aURL;
 + (instancetype)arrayWithObject:(ObjectType)anObject;
 + (instancetype)arrayWithObjects:(ObjectType)firstObj, ...;
 + (instancetype)arrayWithObjects:(const ObjectType _Nonnull[])objects count:(NSUInteger)count;
 - (instancetype)initWithArray:(NSArray<ObjectType>*)anArray;
 - (instancetype)initWithArray:(NSArray<ObjectType>*)array copyItems:(BOOL)flag;
 - (instancetype)initWithContentsOfFile:(NSString*)aPath;
-- (instancetype)initWithContentsOfURL:(NSURL*)aURL STUB_METHOD;
+- (instancetype)initWithContentsOfURL:(NSURL*)aURL;
 - (instancetype)initWithObjects:(ObjectType)firstObj, ...;
 - (instancetype)initWithObjects:(const ObjectType _Nonnull[])objects count:(NSUInteger)count;
 - (BOOL)containsObject:(ObjectType)anObject;
@@ -110,17 +110,17 @@ FOUNDATION_EXPORT_CLASS
 - (NSString*)descriptionWithLocale:(id)locale STUB_METHOD;
 - (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level STUB_METHOD;
 - (BOOL)writeToFile:(NSString*)path atomically:(BOOL)flag;
-- (BOOL)writeToURL:(NSURL*)aURL atomically:(BOOL)flag STUB_METHOD;
+- (BOOL)writeToURL:(NSURL*)aURL atomically:(BOOL)flag;
 - (NSArray<NSString*>*)pathsMatchingExtensions:(NSArray<NSString*>*)filterTypes;
 - (void)removeObserver:(NSObject*)observer
-  fromObjectsAtIndexes:(NSIndexSet*)indexes
-            forKeyPath:(NSString*)keyPath
-               context:(void*)context STUB_METHOD;
+    fromObjectsAtIndexes:(NSIndexSet*)indexes
+              forKeyPath:(NSString*)keyPath
+                 context:(void*)context STUB_METHOD;
 - (void)addObserver:(NSObject*)anObserver
- toObjectsAtIndexes:(NSIndexSet*)indexes
-         forKeyPath:(NSString*)keyPath
-            options:(NSKeyValueObservingOptions)options
-            context:(void*)context STUB_METHOD;
+    toObjectsAtIndexes:(NSIndexSet*)indexes
+            forKeyPath:(NSString*)keyPath
+               options:(NSKeyValueObservingOptions)options
+               context:(void*)context STUB_METHOD;
 - (void)removeObserver:(NSObject*)anObserver fromObjectsAtIndexes:(NSIndexSet*)indexes forKeyPath:(NSString*)keyPath STUB_METHOD;
 - (void)setValue:(id)value forKey:(NSString*)key;
 - (id)valueForKey:(NSString*)key;
