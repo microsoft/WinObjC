@@ -22,6 +22,7 @@
 #import <UIKit/UIControl.h>
 #import <UIKit/UITextField.h>
 #import <UIKit/UITextInputTraits.h>
+#import <UIKit/UIFont.h>
 
 #import "UWP/WindowsUIXaml.h"
 #import "UWP/WindowsUIXamlControls.h"
@@ -86,4 +87,8 @@ id CreateRtProxy(Class cls, IInspectable* iface);
 
 // apply LineBreakMode on xaml TextBock
 void ApplyLineBreakModeOnTextBlock(WXCTextBlock* textBlock, UILineBreakMode mode, int numberOfLines);
+
+// Helper searches max font size for a string that can fit into given rect using given font/linebreak/numerOfLines config .
+// font size returned must be between mininumFontSize and maximumFontSize.
+float FindMaxFontSizeToFit(CGRect rect, NSString* text, UIFont* font, int numberOfLines, float mininumFontSize, float maximumFontSize);
 }

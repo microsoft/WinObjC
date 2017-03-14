@@ -26,6 +26,9 @@
     <Filter Include="Tests\ExternalUXResources">
       <UniqueIdentifier>{4c703c5d-0c21-4205-9e17-55fed2d45b67}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tests\UIKitTests\Assets">
+      <UniqueIdentifier>{f7dcb73b-7804-43c2-bed5-5fc4c68b2bb5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\pch.h" />
@@ -47,6 +50,9 @@
       <Filter>Tests\ExternalUXResources</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\samples\XAMLCatalog\XAMLCatalog\UIKitControls\UIButtonWithControlsViewController.h">
+      <Filter>Tests\ExternalUXResources</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\samples\XAMLCatalog\XAMLCatalog\UIKitControls\UILabelViewController.h">
       <Filter>Tests\ExternalUXResources</Filter>
     </ClInclude>
   </ItemGroup>
@@ -131,6 +137,9 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIKitTests\UIGestureCoordinatorTests.mm">
       <Filter>Tests\UIKitTests</Filter>
     </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIKitTests\UILabelTests.mm">
+      <Filter>Tests\UIKitTests</Filter>
+    </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\AppDelegate.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\MainViewController.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\samples\XAMLCatalog\XAMLCatalog\MenuTableViewController.m">
@@ -140,6 +149,9 @@
       <Filter>Tests\ExternalUXResources</Filter>
     </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\samples\XAMLCatalog\XAMLCatalog\UIKitControls\UIButtonWithControlsViewController.m">
+      <Filter>Tests\ExternalUXResources</Filter>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\samples\XAMLCatalog\XAMLCatalog\UIKitControls\UILabelViewController.m">
       <Filter>Tests\ExternalUXResources</Filter>
     </ClangCompile>
   </ItemGroup>
@@ -159,5 +171,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <xml Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIKitTests\Assets\uilabel-ios.xml">
+      <Filter>Tests\UIKitTests\Assets</Filter>
+    </xml>
   </ItemGroup>
 </Project>

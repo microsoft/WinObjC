@@ -45,21 +45,21 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic) BOOL adjustsFontSizeToFitWidth;
 @property (nonatomic) BOOL adjustsLetterSpacingToFitWidth STUB_PROPERTY;
 @property (nonatomic) BOOL allowsDefaultTighteningForTruncation STUB_PROPERTY;
-@property (nonatomic) BOOL clipsToBounds;
+@property (nonatomic) BOOL clipsToBounds STUB_PROPERTY;
 @property (nonatomic) CGFloat minimumFontSize;
 @property (nonatomic) CGFloat minimumScaleFactor;
-@property (nonatomic) CGFloat preferredMaxLayoutWidth;
-@property (nonatomic) CGSize shadowOffset;
-@property (nonatomic) NSInteger numberOfLines; // currently only supports 0 or 1
+@property (nonatomic) CGFloat preferredMaxLayoutWidth STUB_PROPERTY;
+@property (nonatomic) CGSize shadowOffset STUB_PROPERTY;
+@property (nonatomic) NSInteger numberOfLines;
 @property (nonatomic) UIBaselineAdjustment baselineAdjustment STUB_PROPERTY;
 @property (nonatomic) UILineBreakMode lineBreakMode;
 @property (nonatomic) UITextAlignment textAlignment;
 @property (nonatomic, copy) NSAttributedString* attributedText STUB_PROPERTY;
 @property (nonatomic, copy) NSString* text;
-@property (nonatomic, getter=isEnabled) BOOL enabled;
+@property (nonatomic, getter=isEnabled) BOOL enabled STUB_PROPERTY;
 @property (nonatomic, getter=isHighlighted) BOOL highlighted;
 @property (nonatomic, retain) UIColor* highlightedTextColor;
-@property (nonatomic, retain) UIColor* shadowColor;
+@property (nonatomic, retain) UIColor* shadowColor STUB_PROPERTY;
 @property (nonatomic, retain) UIColor* textColor;
 @property (nonatomic, retain) UIFont* font;
 

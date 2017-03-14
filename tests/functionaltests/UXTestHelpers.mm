@@ -199,4 +199,12 @@ bool UXEvent::Wait(int timeOutInSeconds, int signalCountTarget) {
     return Wait(timeOutInSeconds);
 }
 
+UIColor* ConvertWUColorToUIColor(WUColor* wuColor) {
+    CGFloat r = wuColor.r / 255.0;
+    CGFloat g = wuColor.g / 255.0;
+    CGFloat b = wuColor.b / 255.0;
+    CGFloat a = wuColor.a / 255.0;
+    return [UIColor colorWithRed:r green:g blue:b alpha:a];
+}
+
 } // namespace UXTestAPI
