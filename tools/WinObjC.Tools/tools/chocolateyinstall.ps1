@@ -1,27 +1,38 @@
-﻿#NOTE: Please remove any commented lines to tidy up prior to releasing the package, including this one
+﻿$ErrorActionPreference = 'Stop';
 
-$ErrorActionPreference = 'Stop';
-
-$packageName = 'WinObjC.tools' # arbitrary name for the package, used in messages
-$registryUninstallerKeyName = 'WinObjC.tools' #ensure this is the value in the registry
-$installerType = 'EXE_MSI_OR_MSU' #only one of these: exe, msi, msu
-$url = '' # download url
-$url64 = '' # 64bit URL here or remove - if installer decides, then use $url
+$packageName = 'WinObjC.tools'
 $silentArgs = '' # "/s /S /q /Q /quiet /silent /SILENT /VERYSILENT" # try any of these to get the silent installer #msi is always /quiet
 $validExitCodes = @(0) #please insert other valid exit codes here, exit codes for ms http://msdn.microsoft.com/en-us/library/aa368542(VS.85).aspx
 $toolsDir = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
 
-Write-Host "Adding `'$toolsDir`' to the path and the current shell path"
-Install-ChocolateyPath "$toolsDir"
-$env:Path = "$($env:Path);$toolsDir"
+$installPath = & vswhere -latest -property installationPath
 
-Write-Host "Installing Objective-C Visual Studio 2017 Extension ... "
-Install-ChocolateyVsixPackage -PackageName "objc-syntax-highlighting" -VsixUrl "file:///$toolsDir/objc-language-services-VS2017.vsix"
+if(!$installPath) {
+    throw "There was an error finding latest Visual Studio install location. Please make sure Visual Studio (2017 or later) is installed correctly."
+}
 
-Write-Host "Installing Nugetizer Visual Studio 2017 Extension ... "
-Install-ChocolateyVsixPackage -PackageName "Nugetizer3000" -VsixUrl "http://bit.ly/nugetizer-2017"
+$vsixInstaller = gci -File -Recurse -Filter vsixinstaller.exe -Path $installPath
 
-# if removing $url64, please remove from here
-# despite the name "Install-ChocolateyZipPackage" this also works with 7z archives
-#Install-ChocolateyZipPackage "$packageName" "$url" "$installDir" "$url64"
-# END PORTABLE EXAMPLE
+Write-Host "Installing Objective-C Visual Studio 2017 Extension ... " -ForegroundColor Blue
+
+$result = Install-Vsix -Installer $vsixInstaller.FullName -InstallFile "$toolsDir\objc-language-services-VS2017.vsix"
+if($result -eq 2004) { #2004: Blocking Process (need to close VS)
+    throw "A process is blocking the installation of the Visual Studio Extension. Please close all Visual Studio instances and try again."
+}
+
+if($result -gt 0 -and $result -ne 1001) { #1001: Already installed
+    throw "There was an error installing the Objective-C Visual Studio 2017 Extension. The exit code returned was $result."
+}
+
+Write-Host "Downloading Nugetizer Visual Studio 2017 Extension ... " -ForegroundColor Blue
+Get-ChocolateyWebFile -PackageName $packageName -FileFullPath "$toolsDir\nugetizer-2017.vsix" -Url 'http://bit.ly/nugetizer-2017'
+
+Write-Host "Installing Nugetizer Visual Studio 2017 Extension ... " -ForegroundColor Blue
+$result = Install-Vsix -Installer $vsixInstaller.FullName -InstallFile "$toolsDir\nugetizer-2017.vsix"
+if($result -eq 2004) { #2004: Blocking Process (need to close VS)
+    throw "A process is blocking the installation of the Visual Studio Extension. Please close all Visual Studio instances and try again."
+}
+
+if($result -gt 0 -and $result -ne 1001) { #1001: Already installed
+    throw "There was an error installing the Objective-C Visual Studio 2017 Extension. The exit code returned was $result."
+}
