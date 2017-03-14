@@ -1513,7 +1513,7 @@ void CGContextSetBlendMode(CGContextRef context, CGBlendMode mode) {
         // We cannot fulfill this request.
         UNIMPLEMENTED_WITH_MSG("Unsupported operator blend mode %4.04x", mode);
     } else if (mode == kCGBlendModePlusDarker) {
-        // No UNIMPLEMENTED here: we will proceed but with an unusual output.
+        // Not throwing UNIMPLEMENTED here: we will proceed but with an unusual output.
         TraceWarning(TAG, L"Unsupported composite blend mode %4.04x (Plus Darker)", mode);
     }
 
@@ -2391,12 +2391,15 @@ void CGContextClearRect(CGContextRef context, CGRect rect) {
 
 class IRenderOperation {
 public:
+    virtual ~IRenderOperation() = default;
+
     virtual HRESULT Stage(CGContextRef context, ID2D1DeviceContext*) = 0;
     virtual HRESULT Complete(CGContextRef context, ID2D1DeviceContext*) = 0;
 };
 
 // CRenderOpBeginEndDraw wraps a PushBeginDraw and PopEndDraw pair.
 class CRenderOpBeginEndDraw : public IRenderOperation {
+public:
     HRESULT Stage(CGContextRef context, ID2D1DeviceContext* deviceContext) override {
         context->PushBeginDraw();
         return S_OK;
@@ -2462,9 +2465,6 @@ protected:
     ComPtr<ID2D1CommandList> commandList;
 
 public:
-    _CRenderOpCommandListBase() {
-    }
-
     HRESULT Stage(CGContextRef context, ID2D1DeviceContext* deviceContext) override {
         deviceContext->GetTarget(&originalTarget);
         RETURN_IF_FAILED(deviceContext->CreateCommandList(&commandList));
@@ -2607,7 +2607,7 @@ public:
         // PROPERTIES
         // D2D1_BLEND_PROP_MODE: blend mode
         ComPtr<ID2D1Effect> blendEffect;
-        FAIL_FAST_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D1Blend, &blendEffect));
+        RETURN_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D1Blend, &blendEffect));
         blendEffect->SetValue(D2D1_BLEND_PROP_MODE, _blendMode);
         blendEffect->SetInput(0, __super::copiedImage.Get());
         blendEffect->SetInput(1, __super::commandList.Get());
@@ -2755,7 +2755,8 @@ HRESULT __CGContext::Draw(__CGCoordinateMode coordinateMode,
 
     // We have to go through unique_ptr here to both manage lifetimes and get the polymorphism we need.
     // It would be ideal to store each operation on the local stack, but that is infeasible because
-    // of scoping concerns.
+    // of scoping concerns. We assume that 1-16 operations will be queued, so we allocate a baseline
+    // amount of space to avoid growth later.
     std::vector<std::unique_ptr<IRenderOperation>> operations;
     operations.reserve(16);
 
