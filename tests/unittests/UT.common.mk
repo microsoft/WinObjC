@@ -28,12 +28,12 @@ OSX_VERSION_MIN := 10.10
 _UT_OBJECTS := $(addsuffix .o,$(addprefix $(_UT_OBJ_DIR)/,$(subst $(_UT_PROJECT_DIR)/,,$(UT_FILES))))
 
 # Common shims for all tests.
-_UT_OBJECTS += $(_UT_OBJ_DIR)/windows.o $(_UT_OBJ_DIR)/IwMalloc.o $(_UT_OBJ_DIR)/LoggingNative.o
+_UT_OBJECTS += $(_UT_OBJ_DIR)/windows.o
 ifeq ($(strip $(filter EntryPoint.cpp,$(UT_FILES))),)
 _UT_OBJECTS += $(_UT_OBJ_DIR)/EntryPoint.o
 endif
 
-_INC := $(_UT_BASE_DIR)/../frameworks/include $(_UT_BASE_DIR)/../frameworks/gtest $(_UT_BASE_DIR)/../frameworks/gtest/include 
+_INC := $(_UT_BASE_DIR)/../frameworks/include $(_UT_BASE_DIR)/../frameworks/gtest $(_UT_BASE_DIR)/../frameworks/gtest/include
 _INC += $(_UT_BASE_DIR)/../frameworks/OSXShims/include $(_UT_BASE_DIR)/../../include/xplat
 
 _ALL_CXXFLAGS := -std=c++14
@@ -58,23 +58,15 @@ _ALL_LDFLAGS += $(UT_LDFLAGS)
 # LDFLAGS from the commandline (to make certain build scenarios easier.)
 _ALL_LDFLAGS += $(LDFLAGS)
 
-ECHO_CC = @(echo "[ CC ] $^"; 
+ECHO_CC = @(echo "[ CC ] $^";
 ECHO_LD = @(echo "[ LD ] $@";
 ECHO_RES = @(echo "[ RES ] $^";
 ECHO_RESDIR = @(echo "[ DIR ] $^";
 ECHO_END = )
 
-$(_UT_OBJ_DIR)/IwMalloc.o : $(_UT_BASE_DIR)/../../Frameworks/WinObjCRT/MemoryManagement.cpp
-	@mkdir -p $(dir $@)
-	$(ECHO_CC)$(CLANG) -c -o $@ $(_ALL_CFLAGS) $(_ALL_CXXFLAGS) $<$(ECHO_END)
-
 $(_UT_OBJ_DIR)/windows.o : $(_UT_BASE_DIR)/../frameworks/OSXShims/src/windows.cpp
 	@mkdir -p $(dir $@)
 	$(ECHO_CC)$(CLANG) -c -o $@ $(_ALL_CFLAGS) $(_ALL_CXXFLAGS) $<$(ECHO_END)
-
-$(_UT_OBJ_DIR)/LoggingNative.o : $(_UT_BASE_DIR)/../frameworks/OSXShims/src/LoggingNative.mm
-	@mkdir -p $(dir $@)
-	$(ECHO_CC)$(CLANG) -c -o $@ $(_ALL_CFLAGS) $(_ALL_CXXFLAGS) -x objective-c++ $<$(ECHO_END)
 
 $(_UT_OBJ_DIR)/EntryPoint.o : $(_UT_BASE_DIR)/EntryPoint.cpp
 	@mkdir -p $(dir $@)

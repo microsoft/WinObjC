@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import "NSInvocationInternal.h"
+#import <IwMalloc.h>
 
 #import <objc/runtime.h>
 #import <objc/encoding.h>

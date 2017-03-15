@@ -25,7 +25,6 @@
 #import <Foundation/Foundation.h>
 #import <TestFramework.h>
 #import "TestUtils.h"
-#import <LoggingNative.h>
 
 #import <array>
 #import <windows.h>
@@ -71,14 +70,19 @@ static NSArray* getTestData() {
     NSError* error = nil;
     id testRoot =
         [NSPropertyListSerialization propertyListWithData:data options:static_cast<NSPropertyListReadOptions>(0) format:nil error:&error];
+
+    // WINOBJC: Change to macros to remove LoggingNative
     if (!testRoot || error) {
-        TraceError(L"TestNSURL", L"Unable to deserialize property list data");
+        EXPECT_NE(nil, testRoot);
+        EXPECT_EQ(nil, error);
         return nil;
     }
 
     NSArray* parsingTests = testRoot[kURLTestParsingTestsKey];
     if (!parsingTests || error) {
-        TraceError(L"TestNSURL", L"Unable to create the parsingTests dictionary");
+        // WINOBJC: Change to macros to remove LoggingNative
+        EXPECT_NE(nil, parsingTests);
+        EXPECT_EQ(nil, error);
         return nil;
     }
     return parsingTests;
@@ -86,37 +90,35 @@ static NSArray* getTestData() {
 
 static boolean setup_test_paths() {
     static dispatch_once_t predicate;
-    dispatch_once(&predicate,
-                  ^{
-                      // MAXPATHLEN is platform specific; this is the lowest common denominator for darwin and most linuxes;
-                      std::array<char, 1024> buf;
-                      _getcwd(buf.data(), buf.size());
+    dispatch_once(&predicate, ^{
+        // MAXPATHLEN is platform specific; this is the lowest common denominator for darwin and most linuxes;
+        std::array<char, 1024> buf;
+        _getcwd(buf.data(), buf.size());
 
-                      // WINOBJC: replace backslashes with forward slashes here
-                      std::string currentDir(buf.data());
-                      std::replace(currentDir.begin(), currentDir.end(), '\\', '/');
-                      gBaseCurrentWorkingDirectoryPath = currentDir.data();
+        // WINOBJC: replace backslashes with forward slashes here
+        std::string currentDir(buf.data());
+        std::replace(currentDir.begin(), currentDir.end(), '\\', '/');
+        gBaseCurrentWorkingDirectoryPath = currentDir.data();
 
-                      // WINOBJC: test environment is different
-                      // gBaseTemporaryDirectoryPath = [NSTemporaryDirectory() UTF8String];
-                      gBaseTemporaryDirectoryPath = gBaseCurrentWorkingDirectoryPath + "/tmp/";
+        // WINOBJC: test environment is different
+        // gBaseTemporaryDirectoryPath = [NSTemporaryDirectory() UTF8String];
+        gBaseTemporaryDirectoryPath = gBaseCurrentWorkingDirectoryPath + "/tmp/";
 
-                      gFileExistsName =
-                          std::string("TestCFURL_file_exists") + std::string([[NSProcessInfo processInfo].globallyUniqueString UTF8String]);
-                      gFileDoesNotExistName = "TestCFURL_file_does_not_exist";
-                      gDirectoryExistsName = std::string("TestCFURL_directory_exists") +
-                                             std::string([[NSProcessInfo processInfo].globallyUniqueString UTF8String]);
-                      gDirectoryDoesNotExistName = "TestCFURL_directory_does_not_exist";
-                      gFileExistsPath = gBaseTemporaryDirectoryPath + gFileExistsName;
-                      gFileDoesNotExistPath = gBaseTemporaryDirectoryPath + gFileDoesNotExistName;
-                      gDirectoryExistsPath = gBaseTemporaryDirectoryPath + gDirectoryExistsName;
-                      gDirectoryDoesNotExistPath = gBaseTemporaryDirectoryPath + gDirectoryDoesNotExistName;
+        gFileExistsName = std::string("TestCFURL_file_exists") + std::string([[NSProcessInfo processInfo].globallyUniqueString UTF8String]);
+        gFileDoesNotExistName = "TestCFURL_file_does_not_exist";
+        gDirectoryExistsName =
+            std::string("TestCFURL_directory_exists") + std::string([[NSProcessInfo processInfo].globallyUniqueString UTF8String]);
+        gDirectoryDoesNotExistName = "TestCFURL_directory_does_not_exist";
+        gFileExistsPath = gBaseTemporaryDirectoryPath + gFileExistsName;
+        gFileDoesNotExistPath = gBaseTemporaryDirectoryPath + gFileDoesNotExistName;
+        gDirectoryExistsPath = gBaseTemporaryDirectoryPath + gDirectoryExistsName;
+        gDirectoryDoesNotExistPath = gBaseTemporaryDirectoryPath + gDirectoryDoesNotExistName;
 
-                      auto cwd = [NSFileManager defaultManager].currentDirectoryPath;
-                      NSURL* cwdURL = [NSURL fileURLWithPath:cwd isDirectory:YES];
-                      // 1 for path separator
-                      gRelativeOffsetFromBaseCurrentWorkingDirectory = strlen(cwdURL.fileSystemRepresentation) + 1;
-                  });
+        auto cwd = [NSFileManager defaultManager].currentDirectoryPath;
+        NSURL* cwdURL = [NSURL fileURLWithPath:cwd isDirectory:YES];
+        // 1 for path separator
+        gRelativeOffsetFromBaseCurrentWorkingDirectory = strlen(cwdURL.fileSystemRepresentation) + 1;
+    });
 
 // File system functions/constants differ between platforms
 #if TARGET_OS_WIN32
