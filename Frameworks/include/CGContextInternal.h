@@ -27,6 +27,13 @@
 
 #import "CoreGraphicsInternal.h"
 
+enum _CGContextBlendType {
+    _kCGContextBlendD2DBlend = 0x0100,
+    _kCGContextBlendD2DCompose = 0x0200,
+    _kCGContextBlendD2DComposeWithEffect = 0x0400,
+    _kCGContextBlendOperator = 0x0800,
+};
+
 // Context Internal
 COREGRAPHICS_EXPORT CGContextRef _CGContextCreateWithD2DRenderTarget(ID2D1RenderTarget* renderTarget);
 COREGRAPHICS_EXPORT void _CGContextSetShadowProjectionTransform(CGContextRef context, CGAffineTransform transform);
