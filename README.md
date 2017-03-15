@@ -3,7 +3,7 @@ The Windows Bridge for iOS (also referred to as WinObjC) is a Microsoft open-sou
 
 [develop-build-badge]:        https://img.shields.io/vso/build/winobjc/03960378-fe55-4577-a8cc-1a874f7cf008/109.svg?style=flat-square
 [github-rel]:                 https://github.com/Microsoft/WinObjC/releases/latest
-[github-rel-badge]:           https://img.shields.io/github/release/microsoft/winobjc.svg?style=flat-square
+[github-rel-badge]:           https://img.shields.io/github/tag/microsoft/winobjc.svg?style=flat-square
 [choco]:                      https://chocolatey.org/packages/winobjc-tools
 [choco-badge]:                https://img.shields.io/chocolatey/v/winobjc-tools.svg?style=flat-square                 
 [choco-badge-pre]:            https://img.shields.io/chocolatey/vpre/winobjc-tools.svg?style=flat-square
