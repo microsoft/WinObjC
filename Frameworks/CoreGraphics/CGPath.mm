@@ -756,6 +756,40 @@ void CGPathCloseSubpath(CGMutablePathRef path) {
     path->EndFigure(D2D1_FIGURE_END_OPEN);
 }
 
+namespace {
+void __updateRectWithControlPoint(CGRect* rect, CGPoint point) {
+    if (point.x < rect->origin.x) {
+        rect->size.width += rect->origin.x - point.x;
+        rect->origin.x = point.x;
+    } else if (point.x > rect->origin.x + rect->size.width) {
+        rect->size.width += point.x - rect->origin.x - rect->size.width;
+    }
+    if (point.y < rect->origin.y) {
+        rect->size.height += rect->origin.y - point.y;
+        rect->origin.y = point.y;
+    } else if (point.y > rect->origin.y + rect->size.height) {
+        rect->size.height += point.y - rect->origin.y - rect->size.height;
+    }
+}
+
+void __CGPathApplyGetBoundingBoxWithControlPoints(void* rectangle, const CGPathElement* element) {
+    CGRect* rect = static_cast<CGRect*>(rectangle);
+    switch (element->type) {
+        case kCGPathElementAddQuadCurveToPoint:
+            __updateRectWithControlPoint(rect, element->points[0]);
+            break;
+        case kCGPathElementAddCurveToPoint:
+            __updateRectWithControlPoint(rect, element->points[0]);
+            __updateRectWithControlPoint(rect, element->points[1]);
+            break;
+        case kCGPathElementMoveToPoint:
+        case kCGPathElementAddLineToPoint:
+        default:
+            break;
+    }
+}
+}
+
 /**
  @Status Interoperable
 */
@@ -764,17 +798,15 @@ CGRect CGPathGetBoundingBox(CGPathRef path) {
         return CGRectNull;
     }
 
-    D2D1_RECT_F bounds;
-
     if (FAILED(path->ClosePath())) {
         return CGRectNull;
     }
-
-    if (FAILED(path->GetPathGeometry()->GetBounds(D2D1::IdentityMatrix(), &bounds))) {
+    CGRect boundingBoxWithControlPoints = CGPathGetPathBoundingBox(path);
+    if (boundingBoxWithControlPoints == CGRectNull) {
         return CGRectNull;
     }
-
-    return _D2DRectToCGRect(bounds);
+    CGPathApply(path, &boundingBoxWithControlPoints, __CGPathApplyGetBoundingBoxWithControlPoints);
+    return boundingBoxWithControlPoints;
 }
 
 /**
@@ -891,19 +923,34 @@ CGPathRef CGPathCreateWithEllipseInRect(CGRect rect, const CGAffineTransform* tr
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
-CGRect CGPathGetPathBoundingBox(CGPathRef self) {
-    UNIMPLEMENTED();
-    return StubReturn();
+CGRect CGPathGetPathBoundingBox(CGPathRef path) {
+    if (path == NULL) {
+        return CGRectNull;
+    }
+
+    if (FAILED(path->ClosePath())) {
+        return CGRectNull;
+    }
+
+    D2D1_RECT_F bounds;
+    if (FAILED(path->GetPathGeometry()->GetBounds(D2D1::IdentityMatrix(), &bounds))) {
+        return CGRectNull;
+    }
+
+    return _D2DRectToCGRect(bounds);
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 void CGPathAddRects(CGMutablePathRef path, const CGAffineTransform* transform, const CGRect* rects, size_t count) {
-    UNIMPLEMENTED();
+    RETURN_IF(count == 0 || !rects || !path);
+
+    for (int i = 0; i < count; i++) {
+        CGPathAddRect(path, transform, rects[i]);
+    }
 }
 
 /**
@@ -917,7 +964,6 @@ void CGPathAddRelativeArc(
 
 /**
  @Status Interoperable
- @Notes
 */
 void CGPathAddRoundedRect(
     CGMutablePathRef path, const CGAffineTransform* transform, CGRect rect, CGFloat cornerWidth, CGFloat cornerHeight) {

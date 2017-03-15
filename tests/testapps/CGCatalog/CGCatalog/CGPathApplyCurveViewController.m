@@ -71,6 +71,14 @@
 
         CGPathApply(thepath, currentContext, CGPathApplyCallback);
 
+        CGContextAddRect(currentContext, CGPathGetPathBoundingBox(thepath));
+        CGContextSetRGBStrokeColor(currentContext, 1, 0, 0, 1);
+        CGContextStrokePath(currentContext);
+
+        CGContextAddRect(currentContext, CGPathGetBoundingBox(thepath));
+        CGContextSetRGBStrokeColor(currentContext, 0, 0, 1, 1);
+        CGContextStrokePath(currentContext);
+
         CGPathRelease(thepath);
     }];
 
