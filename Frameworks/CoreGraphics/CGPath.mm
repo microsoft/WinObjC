@@ -291,7 +291,7 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
                                                                                 (D2D1_CAP_STYLE)lineCap,
                                                                                 (D2D1_CAP_STYLE)lineCap,
                                                                                 (D2D1_LINE_JOIN)lineJoin,
-                                                                                lineWidth,
+                                                                                lineJoin == kCGLineJoinMiter ? miterLimit : 0,
                                                                                 D2D1_DASH_STYLE_SOLID,
                                                                                 0),
                                                     nullptr,
@@ -303,8 +303,6 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
             d2dTransform = __CGAffineTransformToD2D_F(*transform);
         }
         RETURN_IF_FAILED(path->GetPathGeometry()->Widen(lineWidth, newStrokeStyle.Get(), d2dTransform, newBackingSink.Get()));
-
-        newBackingSink->SetFillMode(D2D1_FILL_MODE_WINDING);
 
         pathGeometry = newPath;
         geometrySink = Make<_CGPathCustomSink>(newBackingSink.Get());
@@ -1067,6 +1065,11 @@ CGPathRef CGPathCreateCopyByDashingPath(
 CGPathRef CGPathCreateCopyByStrokingPath(
     CGPathRef path, const CGAffineTransform* transform, CGFloat lineWidth, CGLineCap lineCap, CGLineJoin lineJoin, CGFloat miterLimit) {
     RETURN_NULL_IF(!path);
+
+    // Widenening with a width of 0 removes the path entirely, thus we need to return a regular copy here.
+    if (lineWidth == 0) {
+        return CGPathCreateCopy(path);
+    }
     CGPathRef newPath = CGPathCreateMutable();
     FAIL_FAST_IF_FAILED(newPath->WidenByStroking(path, lineWidth, lineCap, lineJoin, miterLimit, transform));
 

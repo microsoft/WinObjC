@@ -43,8 +43,8 @@ typedef CF_ENUM(CFIndex, CGLineCap) {
 };
 
 typedef CF_ENUM(CFIndex, CGLineJoin) {
-    kCGLineJoinMiter = 0, // Default
-    kCGLineJoinBevel = 3, // D2D: Miter or Bevel
+    kCGLineJoinMiter = 0, // Default/Miter
+    kCGLineJoinBevel = 1, // D2D: Bevel
     kCGLineJoinRound = 2, // D2D: Round
 };
 
