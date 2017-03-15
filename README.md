@@ -1,11 +1,24 @@
 # Welcome to the Windows Bridge for iOS Project
 The Windows Bridge for iOS (also referred to as WinObjC) is a Microsoft open-source project that provides an Objective-C development environment for Visual Studio and support for iOS APIs. The bridge allows you to create Universal Windows Platform (UWP) apps that will run on many Windows devices by re-using your Objective-C code and iOS APIs alongside Windows 10 features like Cortana and Windows Notifications.
 
+[develop-build-badge]:        https://img.shields.io/vso/build/winobjc/03960378-fe55-4577-a8cc-1a874f7cf008/109.svg?style=flat-square
+[github-rel]:                 https://github.com/Microsoft/WinObjC/releases/latest
+[github-rel-badge]:           https://img.shields.io/github/release/microsoft/winobjc.svg?style=flat-square
+[choco]:                      https://chocolatey.org/packages/winobjc-tools
+[choco-badge]:                https://img.shields.io/chocolatey/v/winobjc-tools.svg?style=flat-square                 
+[choco-badge-pre]:            https://img.shields.io/chocolatey/vpre/winobjc-tools.svg?style=flat-square
+[nuget-frmwrk]:               https://www.nuget.org/packages/WinObjC.Frameworks
+[nuget-frmwrk-badge]:         https://img.shields.io/nuget/v/WinObjC.Frameworks.svg?style=flat-square
+[nuget-frmwrk-badge-pre]:     https://img.shields.io/nuget/vpre/WinObjC.Frameworks.svg?style=flat-square
+[nuget-lang]:                 https://www.nuget.org/packages/WinObjC.Language
+[nuget-lang-badge]:           https://img.shields.io/nuget/v/WinObjC.Language.svg?style=flat-square
+[nuget-lang-badge-pre]:       https://img.shields.io/nuget/vpre/WinObjC.Language.svg?style=flat-square
+
 |                      |           Stable (master)                        |            Pre-release (develop)          |
 | -------------------: | :----------------------------------------------: | :---------------------------------------: |
 |           **Build**  |                  -                               |       ![VSTS][develop-build-badge]        |
 |  **GitHub Release**  |[![Github Release][github-rel-badge]][github-rel] |               -                           |
-|    **WinObjC.Tools** |     [![Tools][choco-badge]][choco]               |   [![Tools][choco-badge-pre]][choco]      |
+|    **winobjc-tools** |     [![Tools][choco-badge]][choco]               |   [![Tools][choco-badge-pre]][choco]      |
 | **WinObjC.Language** |[![Language][nuget-lang-badge]][nuget-lang]       |[![Language][nuget-lang-badge-pre]][nuget-lang]   |
 |**WinObjC.Frameworks**|[![Frameworks][nuget-frmwrk-badge]][nuget-frmwrk] |[![Frameworks][nuget-frmwrk-badge-pre]][nuget-frmwrk]|
 
@@ -35,7 +48,7 @@ To use the bridge you'll need:
 
 To get started with an existing Xcode Project, you will also need:
 - **Chocolatey**, a package manager for windows. See how to install the latest version [here] (https://chocolatey.org/)
-- **WinObjC.Tools**, the command line tools for WinObjC. Run the below command from **powershell (Admin)** to get the latest version:
+- **winobjc-tools**, the command line tools for WinObjC. Run the below command from **powershell (Admin)** to get the latest version:
 ```
 choco upgrade winobjc-tools
 ```
@@ -122,16 +135,3 @@ For details on our planned features and future direction sort the list of issues
 
 ## Known Issues
 - **Do not use the Download ZIP option via the "Clone or download" button at the top of the page.** You will not be able to build the bridge using the resulting .zip file. See ["I'm getting errors after downloading the bridge through the "Download ZIP" button on Github. What should I do?"](https://github.com/Microsoft/WinObjC/wiki/FAQ#im-getting-errors-after-downloading-the-bridge-through-the-download-zip-button-on-github-what-should-i-do) for more information.
-
-[develop-build-badge]:        https://img.shields.io/vso/build/winobjc/03960378-fe55-4577-a8cc-1a874f7cf008/109.svg?style=flat-square
-[github-rel]:                 https://github.com/Microsoft/WinObjC/releases/latest
-[github-rel-badge]:           https://img.shields.io/github/release/microsoft/winobjc.svg?style=flat-square
-[choco]:                      https://chocolatey.org/packages/WinObjC.Tools
-[choco-badge]:                https://img.shields.io/chocolatey/v/WinObjC.Tools.svg?style=flat-square                 
-[choco-badge-pre]:            https://img.shields.io/chocolatey/vpre/WinObjC.Tools.svg?style=flat-square
-[nuget-frmwrk]:               https://www.nuget.org/packages/WinObjC.Frameworks
-[nuget-frmwrk-badge]:         https://img.shields.io/nuget/v/WinObjC.Frameworks.svg?style=flat-square
-[nuget-frmwrk-badge-pre]:     https://img.shields.io/nuget/vpre/WinObjC.Frameworks.svg?style=flat-square
-[nuget-lang]:                 https://www.nuget.org/packages/WinObjC.Language
-[nuget-lang-badge]:           https://img.shields.io/nuget/v/WinObjC.Language.svg?style=flat-square
-[nuget-lang-badge-pre]:       https://img.shields.io/nuget/vpre/WinObjC.Language.svg?style=flat-square
