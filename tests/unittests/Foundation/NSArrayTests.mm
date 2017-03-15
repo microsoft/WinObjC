@@ -460,3 +460,155 @@ TEST(NSArray, ShouldNotBeAbleToWriteInvalidToURL) {
     [mutableArr addObject:mutableArr];
     EXPECT_FALSE([mutableArr writeToURL:url atomically:NO]);
 }
+
+TEST(NSArray, IndexOfObjectIdenticalTo) {
+    NSArray* arr = @[ @"FIRST", @2, @3, @4, @4 ];
+
+    EXPECT_EQ(NSNotFound, [arr indexOfObjectIdenticalTo:@6]);
+
+    // Should not use isEqual, rather compare pointers
+    UniChar chars[5] = { 'F', 'I', 'R', 'S', 'T' };
+    EXPECT_EQ(NSNotFound, [arr indexOfObjectIdenticalTo:[NSString stringWithCharacters:chars length:5]]);
+
+    EXPECT_EQ(0, [arr indexOfObjectIdenticalTo:arr[0]]);
+    EXPECT_EQ(3, [arr indexOfObjectIdenticalTo:arr[4]]);
+}
+
+TEST(NSArray, IndexOfObjectIdenticalToInRange) {
+    NSArray* arr = @[ @1, @2, @2, @4, @5 ];
+
+    EXPECT_EQ(NSNotFound, [arr indexOfObjectIdenticalTo:arr[0] inRange:NSMakeRange(1, 3)]);
+    EXPECT_EQ(NSNotFound, [arr indexOfObjectIdenticalTo:@0 inRange:NSMakeRange(0, 5)]);
+    EXPECT_EQ(1, [arr indexOfObjectIdenticalTo:arr[1] inRange:NSMakeRange(1, 2)]);
+    EXPECT_EQ(2, [arr indexOfObjectIdenticalTo:arr[1] inRange:NSMakeRange(2, 2)]);
+
+    EXPECT_ANY_THROW([arr indexOfObjectIdenticalTo:@0 inRange:NSMakeRange(0, 7)]);
+}
+
+TEST(NSArray, IndexOfObjectPassingTest) {
+    NSArray* arr = @[ @1, @2, @3, @4, @5 ];
+    BOOL (^predicate)
+    (id, NSUInteger, BOOL*) = ^(id obj, NSUInteger index, BOOL* stop) {
+        return ([obj isEqual:@5] || index == 2) ? YES : NO;
+    };
+
+    NSMutableIndexSet* expected = [NSMutableIndexSet indexSetWithIndex:4];
+    [expected addIndex:2];
+
+    EXPECT_EQ(2, [arr indexOfObjectPassingTest:predicate]);
+}
+
+TEST(NSArray, IndexOfObjectWithOptionsPassingTest) {
+    NSArray* arr = @[ @1, @4, @3, @4, @5 ];
+    BOOL (^predicate)
+    (id, NSUInteger, BOOL*) = ^(id obj, NSUInteger index, BOOL* stop) {
+        if ([obj isEqual:@4]) {
+            *stop = YES;
+            return YES;
+        }
+
+        return NO;
+    };
+
+    EXPECT_EQ(1, [arr indexOfObjectWithOptions:0 passingTest:predicate]);
+    EXPECT_EQ(3, [arr indexOfObjectWithOptions:NSEnumerationReverse passingTest:predicate]);
+}
+
+TEST(NSArray, IndexOfObjectAtIndexesOptionsPassingTest) {
+    NSArray* arr = @[ @1, @4, @3, @4, @5 ];
+    BOOL (^predicate)
+    (id, NSUInteger, BOOL*) = ^(id obj, NSUInteger index, BOOL* stop) {
+        if ([obj isEqual:@4]) {
+            *stop = YES;
+            return YES;
+        }
+
+        return NO;
+    };
+
+    NSIndexSet* ranges = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 5)];
+    EXPECT_EQ(1, [arr indexOfObjectAtIndexes:ranges options:0 passingTest:predicate]);
+    EXPECT_EQ(3, [arr indexOfObjectAtIndexes:ranges options:NSEnumerationReverse passingTest:predicate]);
+
+    NSIndexSet* illegal = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 50)];
+    EXPECT_ANY_THROW([arr indexOfObjectAtIndexes:illegal options:NSEnumerationReverse passingTest:predicate]);
+}
+
+TEST(NSArray, IndexesOfObjectsPassingTest) {
+    NSArray* arr = @[ @1, @2, @3, @4, @5 ];
+    BOOL (^predicate)
+    (id, NSUInteger, BOOL*) = ^(id obj, NSUInteger index, BOOL* stop) {
+        return ([obj isEqual:@5] || index == 2) ? YES : NO;
+    };
+
+    NSMutableIndexSet* expected = [NSMutableIndexSet indexSetWithIndex:4];
+    [expected addIndex:2];
+
+    EXPECT_OBJCEQ(expected, [arr indexesOfObjectsPassingTest:predicate]);
+}
+
+TEST(NSArray, IndexesOfObjectsWithOptionsPassingTest) {
+    NSArray* arr = @[ @1, @4, @3, @4, @5 ];
+    BOOL (^predicate)
+    (id, NSUInteger, BOOL*) = ^(id obj, NSUInteger index, BOOL* stop) {
+        if ([obj isEqual:@4]) {
+            *stop = YES;
+            return YES;
+        }
+
+        return NO;
+    };
+
+    NSIndexSet* expected = [NSIndexSet indexSetWithIndex:1];
+    EXPECT_OBJCEQ(expected, [arr indexesOfObjectsWithOptions:0 passingTest:predicate]);
+
+    expected = [NSIndexSet indexSetWithIndex:3];
+    EXPECT_OBJCEQ(expected, [arr indexesOfObjectsWithOptions:NSEnumerationReverse passingTest:predicate]);
+}
+
+TEST(NSArray, IndexesOfObjectsAtIndexesOptionsPassingTest) {
+    NSArray* arr = @[ @1, @4, @3, @4, @5 ];
+    BOOL (^predicate)
+    (id, NSUInteger, BOOL*) = ^(id obj, NSUInteger index, BOOL* stop) {
+        if ([obj isEqual:@4]) {
+            *stop = YES;
+            return YES;
+        }
+
+        return NO;
+    };
+
+    NSIndexSet* expected = [NSIndexSet indexSetWithIndex:1];
+    EXPECT_OBJCEQ(expected, [arr indexesOfObjectsAtIndexes:expected options:0 passingTest:predicate]);
+
+    expected = [NSIndexSet indexSetWithIndex:3];
+    EXPECT_OBJCEQ(expected, [arr indexesOfObjectsAtIndexes:expected options:NSEnumerationReverse passingTest:predicate]);
+
+    NSIndexSet* ranges = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 5)];
+    EXPECT_OBJCEQ(expected, [arr indexesOfObjectsAtIndexes:ranges options:NSEnumerationReverse passingTest:predicate]);
+
+    NSIndexSet* illegal = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 50)];
+    EXPECT_ANY_THROW([arr indexesOfObjectsAtIndexes:illegal options:NSEnumerationReverse passingTest:predicate]);
+}
+
+TEST(NSArray, EnumerateObjectsAtIndexesOptionsUsingBlock) {
+    NSArray* arr = @[ @1, @2, @3, @4, @5 ];
+    __block NSMutableArray* test = [NSMutableArray array];
+    void (^block)(id, NSUInteger, BOOL*) = ^(id obj, NSUInteger index, BOOL* stop) {
+        NSNumber* val = static_cast<NSNumber*>(obj);
+        [test addObject:[NSNumber numberWithInt:val.intValue + index]];
+    };
+
+    NSIndexSet* indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, 3)];
+    [arr enumerateObjectsAtIndexes:indexes options:0 usingBlock:block];
+    NSArray* expected = @[ @3, @5, @7 ];
+    EXPECT_OBJCEQ(expected, test);
+
+    test = [NSMutableArray array];
+    [arr enumerateObjectsAtIndexes:indexes options:NSEnumerationReverse usingBlock:block];
+    expected = @[ @7, @5, @3 ];
+    EXPECT_OBJCEQ(expected, test);
+
+    indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(11, 11)];
+    EXPECT_ANY_THROW([arr enumerateObjectsAtIndexes:indexes options:0 usingBlock:block]);
+}
