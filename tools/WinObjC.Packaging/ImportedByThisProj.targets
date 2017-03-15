@@ -46,13 +46,4 @@
       </PackageFile>
     </ItemGroup>
   </Target>
-
-  <!-- Undo what Nuget.Build.Packaging did to unset itself as a project dependency in the output package nuspec -->
-  <Target Name="ModifyPackageInheritance" DependsOnTargets="ReadLegacyDependencies" BeforeTargets="GetPackageContents" >
-    <ItemGroup>
-      <PackageReference Condition="'%(PackageReference.Identity)' == 'NuGet.Build.Packaging'">
-        <PrivateAssets></PrivateAssets>
-      </PackageReference>
-    </ItemGroup>
-  </Target>
 </Project>
