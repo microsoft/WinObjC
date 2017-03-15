@@ -21,13 +21,14 @@ class UIFont :
     public ObjectConverter
 {
 public:
-    const char *_fontName;
+    const char* _fontName;
+    const char* _fontFamilyName;
     float _fontSize;
     bool _systemFont;
 
     UIFont();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };
 

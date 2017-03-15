@@ -29,9 +29,6 @@ static void InvertBool(struct _PropertyMapper* prop, NIBWriter* writer, XIBObjec
     obj->AddOutputMember(writer, prop->nibName, new XIBObjectBool(newVal));
 }
 
-void ConvertNSFlags(struct _PropertyMapper* prop, NIBWriter* writer, XIBObject* propObj, XIBObject* obj) {
-}
-
 static PropertyMapper propertyMappings[] = {
     "IBUIUserInteractionEnabled", "UIUserInteractionDisabled", InvertBool, "IBUITag", "UITag", NULL, "IBUIAlpha", "UIAlpha", NULL,
 };
@@ -56,6 +53,10 @@ UIView::UIView() {
     _enabled = true;
     _translatesAutoresizeToConstraints = true;
     _tag = -1;
+    _horizontalHuggingPriority = -1.0;
+    _verticalHuggingPriority = -1.0;
+    _horizontalCompressionResistancePriority = -1.0;
+    _verticalCompressionResistancePriority = -1.0;
 }
 
 void UIView::InitFromXIB(XIBObject* obj) {
@@ -127,39 +128,51 @@ void UIView::InitFromStory(XIBObject* obj) {
     ObjectConverterSwapper::InitFromStory(obj);
 
     _subviews = (XIBArray*)obj->FindMemberClass("subviews");
-    if (!_subviews)
+    if (!_subviews) {
         _subviews = new XIBArray();
+    }
 
     _constraints = (XIBArray*)obj->FindMemberClass("constraints");
-    if (!_constraints)
+    if (!_constraints) {
         _constraints = new XIBArray();
+    }
 
     if (getAttrib("tag")) {
-        _tag = strtod(getAttrAndHandle("tag"), NULL);
+        _tag = static_cast<int>(strtod(getAttrAndHandle("tag"), NULL));
     }
 
     if (getAttrib("opaque")) {
         const char* pVal = getAttrAndHandle("opaque");
 
-        if (strcmp(pVal, "NO") == 0)
+        if (strcmp(pVal, "NO") == 0) {
             _opaque = false;
+        }
     }
+
     if (getAttrib("multipleTouchEnabled")) {
-        if (strcmp(getAttrAndHandle("multipleTouchEnabled"), "YES") == 0)
+        if (strcmp(getAttrAndHandle("multipleTouchEnabled"), "YES") == 0) {
             _multipleTouchEnabled = true;
+        }
     }
+
     if (getAttrib("clipsSubviews")) {
-        if (strcmp(getAttrAndHandle("clipsSubviews"), "YES") == 0)
+        if (strcmp(getAttrAndHandle("clipsSubviews"), "YES") == 0) {
             _clipsToBounds = true;
+        }
     }
+
     if (getAttrib("userInteractionEnabled")) {
-        if (strcmp(getAttrAndHandle("userInteractionEnabled"), "NO") == 0)
+        if (strcmp(getAttrAndHandle("userInteractionEnabled"), "NO") == 0) {
             _userInteractionDisabled = true;
+        }
     }
+
     if (getAttrib("clearsContextBeforeDrawing")) {
-        if (strcmp(getAttrAndHandle("clearsContextBeforeDrawing"), "NO") == 0)
+        if (strcmp(getAttrAndHandle("clearsContextBeforeDrawing"), "NO") == 0) {
             _clearsContextBeforeDrawing = false;
+        }
     }
+
     if (getAttrib("contentMode")) {
         const char* mode = getAttrib("contentMode");
 
@@ -196,19 +209,20 @@ void UIView::InitFromStory(XIBObject* obj) {
         }
     }
     if (getAttrib("hidden")) {
-        if (strcmp(getAttrAndHandle("hidden"), "YES") == 0)
+        if (strcmp(getAttrAndHandle("hidden"), "YES") == 0) {
             _hidden = true;
+        }
     }
     XIBObject* frameRect = FindMemberAndHandle("frame");
 
     if (frameRect) {
         _bounds.x = 0;
         _bounds.y = 0;
-        _bounds.width = strtod(frameRect->getAttrAndHandle("width"), NULL);
-        _bounds.height = strtod(frameRect->getAttrAndHandle("height"), NULL);
+        _bounds.width = static_cast<float>(strtod(frameRect->getAttrAndHandle("width"), NULL));
+        _bounds.height = static_cast<float>(strtod(frameRect->getAttrAndHandle("height"), NULL));
 
-        _center.x = strtod(frameRect->getAttrAndHandle("x"), NULL);
-        _center.y = strtod(frameRect->getAttrAndHandle("y"), NULL);
+        _center.x = static_cast<float>(strtod(frameRect->getAttrAndHandle("x"), NULL));
+        _center.y = static_cast<float>(strtod(frameRect->getAttrAndHandle("y"), NULL));
 
         _center.x += _bounds.width / 2.0f;
         _center.y += _bounds.height / 2.0f;
@@ -216,34 +230,61 @@ void UIView::InitFromStory(XIBObject* obj) {
 
     XIBObject* resizeMask = FindMemberAndHandle("autoresizingMask");
     if (resizeMask) {
-        if (resizeMask->getAttrAndHandle("widthSizable"))
+        if (resizeMask->getAttrAndHandle("widthSizable")) {
             _autoresizingMask |= (int)UIViewAutoresizingFlexibleWidth;
-        if (resizeMask->getAttrAndHandle("heightSizable"))
+        }
+
+        if (resizeMask->getAttrAndHandle("heightSizable")) {
             _autoresizingMask |= (int)UIViewAutoresizingFlexibleHeight;
-        if (resizeMask->getAttrAndHandle("flexibleMinX"))
+        }
+
+        if (resizeMask->getAttrAndHandle("flexibleMinX")) {
             _autoresizingMask |= (int)UIViewAutoresizingFlexibleLeftMargin;
-        if (resizeMask->getAttrAndHandle("flexibleMaxX"))
+        }
+
+        if (resizeMask->getAttrAndHandle("flexibleMaxX")) {
             _autoresizingMask |= (int)UIViewAutoresizingFlexibleRightMargin;
-        if (resizeMask->getAttrAndHandle("flexibleMinY"))
+        }
+
+        if (resizeMask->getAttrAndHandle("flexibleMinY")) {
             _autoresizingMask |= (int)UIViewAutoresizingFlexibleTopMargin;
-        if (resizeMask->getAttrAndHandle("flexibleMaxY"))
+        }
+
+        if (resizeMask->getAttrAndHandle("flexibleMaxY")) {
             _autoresizingMask |= (int)UIViewAutoresizingFlexibleBottomMargin;
+        }
     }
     _backgroundColor = (UIColor*)FindMemberAndHandle("backgroundColor");
 
     if (getAttrib("translatesAutoresizingMaskIntoConstraints")) {
-        if (strcmp(getAttrAndHandle("translatesAutoresizingMaskIntoConstraints"), "NO") == 0)
+        if (strcmp(getAttrAndHandle("translatesAutoresizingMaskIntoConstraints"), "NO") == 0) {
             _translatesAutoresizeToConstraints = false;
+        }
+    }
+
+    if (getAttrib("horizontalHuggingPriority")) {
+        _horizontalHuggingPriority = strtof(getAttrAndHandle("horizontalHuggingPriority"), NULL);
+    }
+
+    if (getAttrib("verticalHuggingPriority")) {
+        _verticalHuggingPriority = strtof(getAttrAndHandle("verticalHuggingPriority"), NULL);
+    }
+
+    if (getAttrib("horizontalCompressionResistancePriority")) {
+        _horizontalCompressionResistancePriority = strtof(getAttrAndHandle("horizontalCompressionResistancePriority"), NULL);
+    }
+
+    if (getAttrib("verticalCompressionResistancePriority")) {
+        _verticalCompressionResistancePriority = strtof(getAttrAndHandle("verticalCompressionResistancePriority"), NULL);
     }
 
     _outputClassName = "UIView";
 }
 
-
-
 void UIView::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
-    if (!_ignoreUIObject)
+    if (!_ignoreUIObject) {
         writer->_allUIObjects->AddMember(NULL, this);
+    }
 
     if (_connections) {
         for (int i = 0; i < _connections->count(); i++) {
@@ -265,8 +306,9 @@ void UIView::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
         int count = _subviews->count();
         for (int i = 0; i < count; i++) {
             XIBObject* curObj = _subviews->objectAtIndex(i);
-            if (!curObj->_ignoreUIObject)
+            if (!curObj->_ignoreUIObject) {
                 writer->_allUIObjects->AddMember(NULL, curObj);
+            }
         }
     }
 
@@ -277,40 +319,82 @@ void UIView::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     }
 
     Map(writer, obj, propertyMappings, numPropertyMappings);
-    if (_subviews->count() > 0)
+    if (_subviews->count() > 0) {
         AddOutputMember(writer, "UISubviews", _subviews);
-    if (_constraints->count() > 0)
-        AddOutputMember(writer, "UIViewAutolayoutConstraints", _constraints);
+    }
 
-    if (_autoresizeSubviews)
+    if (_constraints->count() > 0) {
+        AddOutputMember(writer, "UIViewAutolayoutConstraints", _constraints);
+    }
+
+    if (_autoresizeSubviews) {
         AddBool(writer, "UIAutoresizeSubviews", _autoresizeSubviews);
-    if (_autoresizingMask)
+    }
+
+    if (_autoresizingMask) {
         AddInt(writer, "UIAutoresizingMask", _autoresizingMask);
-    if (_clipsToBounds)
+    }
+
+    if (_clipsToBounds) {
         AddBool(writer, "UIClipsToBounds", _clipsToBounds);
-    if (_backgroundColor)
+    }
+
+    if (_backgroundColor) {
         AddOutputMember(writer, "UIBackgroundColor", _backgroundColor);
-    if (_contentMode)
+    }
+
+    if (_contentMode) {
         AddInt(writer, "UIContentMode", _contentMode);
-    if (_userInteractionDisabled)
+    }
+
+    if (_userInteractionDisabled) {
         AddBool(writer, "UIUserInteractionDisabled", _userInteractionDisabled);
-    if (_hidden)
+    }
+
+    if (_hidden) {
         AddBool(writer, "UIHidden", _hidden);
-    if (!_enabled)
+    }
+
+    if (!_enabled) {
         AddBool(writer, "UIDisabled", true);
-    if (_multipleTouchEnabled)
+    }
+
+    if (_multipleTouchEnabled) {
         AddBool(writer, "UIMultipleTouchEnabled", _multipleTouchEnabled);
-    if (!_clearsContextBeforeDrawing)
+    }
+
+    if (!_clearsContextBeforeDrawing) {
         AddBool(writer, "UIClearsContextBeforeDrawing", _clearsContextBeforeDrawing);
+    }
 
     // Metadata
-    if (!_translatesAutoresizeToConstraints || !obj->GetBool("IBViewMetadataTranslatesAutoresizingMaskIntoConstraints", true))
+    if (!_translatesAutoresizeToConstraints || !obj->GetBool("IBViewMetadataTranslatesAutoresizingMaskIntoConstraints", true)) {
         AddBool(writer, "UIViewDoesNotTranslateAutoresizingMaskIntoConstraints", true);
+    }
 
-    if (_opaque)
+    if (_opaque) {
         obj->AddBool(writer, "UIOpaque", _opaque);
-	if (_tag >= 0)
-		obj->AddInt(writer, "UITag", _tag);
+    }
+
+    if (_tag >= 0) {
+        obj->AddInt(writer, "UITag", _tag);
+    }
+
+    if (_horizontalHuggingPriority >= 0.0) {
+        AddOutputMember(writer, "UIViewHorizontalHuggingPriority", new XIBObjectFloat(_horizontalHuggingPriority));
+    }
+
+    if (_verticalHuggingPriority >= 0.0) {
+        AddOutputMember(writer, "UIViewVerticalHuggingPriority", new XIBObjectFloat(_verticalHuggingPriority));
+    }
+
+    if (_horizontalCompressionResistancePriority >= 0.0) {
+        AddOutputMember(writer, "UIViewHorizontalCompressionResistancePriority", new XIBObjectFloat(_horizontalCompressionResistancePriority));
+    }
+
+    if (_verticalCompressionResistancePriority >= 0.0) {
+        AddOutputMember(writer, "UIViewVerticalCompressionResistancePriority", new XIBObjectFloat(_verticalCompressionResistancePriority));
+    }
 
     ObjectConverterSwapper::ConvertStaticMappings(writer, obj);
 }

@@ -23,26 +23,20 @@
 #include <assert.h>
 
 void ConvertInsets(struct _PropertyMapper* prop, NIBWriter* writer, XIBObject* propObj, XIBObject* obj) {
-    struct {
-        float top, left, bottom, right;
-    } EdgeInsets;
-
+    EdgeInsets edgeInsets;
     char szName[255];
 
     sprintf(szName, "IBUI%sEdgeInsets.top", prop->nibName);
-    EdgeInsets.top = obj->FindMember(szName)->floatValue();
+    edgeInsets.top = obj->FindMember(szName)->floatValue();
     sprintf(szName, "IBUI%sEdgeInsets.left", prop->nibName);
-    EdgeInsets.left = obj->FindMember(szName)->floatValue();
+    edgeInsets.left = obj->FindMember(szName)->floatValue();
     sprintf(szName, "IBUI%sEdgeInsets.bottom", prop->nibName);
-    EdgeInsets.bottom = obj->FindMember(szName)->floatValue();
+    edgeInsets.bottom = obj->FindMember(szName)->floatValue();
     sprintf(szName, "IBUI%sEdgeInsets.right", prop->nibName);
-    EdgeInsets.right = obj->FindMember(szName)->floatValue();
+    edgeInsets.right = obj->FindMember(szName)->floatValue();
 
-    char* dataOut = (char*)malloc(sizeof(EdgeInsets) + 1);
-    dataOut[0] = 6;
-    memcpy(&dataOut[1], &EdgeInsets, sizeof(EdgeInsets));
     sprintf(szName, "UI%sEdgeInsets", prop->nibName);
-    obj->AddOutputMember(writer, strdup(szName), new XIBObjectDataWriter(dataOut, sizeof(EdgeInsets) + 1));
+    obj->AddData(writer, szName, edgeInsets);
 }
 
 static XIBObject* GetButtonContent(NIBWriter* writer, XIBObject* obj, char* mode) {
@@ -165,18 +159,15 @@ void UIButton::WriteStatefulContent(NIBWriter* writer, XIBObject* obj) {
     if (normalContent->_outputMembers.size() > 0) {
         contentDict->AddObjectForKey(normalState, normalContent);
     }
+
     if (highlightedContent->_outputMembers.size() > 0) {
         contentDict->AddObjectForKey(highlightedState, highlightedContent);
-        obj->AddOutputMember(writer, "UIAdjustsImageWhenHighlighted", new XIBObjectBool(true));
-    } else {
-        obj->AddOutputMember(writer, "UIAdjustsImageWhenHighlighted", new XIBObjectBool(true));
     }
+
     if (disabledContent->_outputMembers.size() > 0) {
         contentDict->AddObjectForKey(disabledState, disabledContent);
-        obj->AddOutputMember(writer, "UIAdjustsImageWhenDisabled", new XIBObjectBool(true));
-    } else {
-        obj->AddOutputMember(writer, "UIAdjustsImageWhenDisabled", new XIBObjectBool(true));
     }
+
     if (selectedContent->_outputMembers.size() > 0) {
         contentDict->AddObjectForKey(selectedState, selectedContent);
     }
@@ -225,6 +216,10 @@ UIButton::UIButton() {
     _buttonType = 0;
     _statefulContent = NULL;
     _font = NULL;
+
+    // Default is true for both of these, so no need to write to nib if that's the case
+    _adjustsImageWhenHighlighted = true; 
+    _adjustsImageWhenDisabled = true;
 }
 
 void UIButton::InitFromXIB(XIBObject* obj) {
@@ -232,10 +227,21 @@ void UIButton::InitFromXIB(XIBObject* obj) {
 
     _buttonType = GetInt("IBUIButtonType", 0);
     _font = (UIFont*)obj->FindMember("IBUIFontDescription");
-    if (!_font)
+    if (!_font) {
         _font = (UIFont*)obj->FindMember("IBUIFont");
+    }
 
     obj->_outputClassName = "UIButton";
+}
+
+void PopulateInsetsFromStoryboard(XIBObject* obj, const char* insetType, EdgeInsets& insets) {
+    XIBObject* insetNode = obj->FindMemberAndHandle(const_cast<char*>(insetType));
+    if (insetNode) {
+        insets.top = strtof(insetNode->getAttrAndHandle("minY"), NULL);
+        insets.left = strtof(insetNode->getAttrAndHandle("minX"), NULL);
+        insets.bottom = strtof(insetNode->getAttrAndHandle("maxY"), NULL);
+        insets.right = strtof(insetNode->getAttrAndHandle("maxX"), NULL);
+    }
 }
 
 void UIButton::InitFromStory(XIBObject* obj) {
@@ -252,16 +258,61 @@ void UIButton::InitFromStory(XIBObject* obj) {
             _buttonType = 0;
         }
     }
+    
+    _font = (UIFont*)obj->FindMemberAndHandle("fontDescription");
+
+    if (getAttrib("adjustsImageWhenDisabled")) {
+        if (strcmp(getAttrAndHandle("adjustsImageWhenDisabled"), "NO") == 0) {
+            _adjustsImageWhenDisabled = false;
+        }
+    }
+
+    if (getAttrib("adjustsImageWhenHighlighted")) {
+        if (strcmp(getAttrAndHandle("adjustsImageWhenHighlighted"), "NO") == 0) {
+            _adjustsImageWhenHighlighted = false;
+        }
+    }
+
+    // Insets
+    PopulateInsetsFromStoryboard(obj, "imageEdgeInsets", _imageEdgeInsets);
+    PopulateInsetsFromStoryboard(obj, "contentEdgeInsets", _contentEdgeInsets);
+    PopulateInsetsFromStoryboard(obj, "titleEdgeInsets", _titleEdgeInsets);
 
     obj->_outputClassName = "UIButton";
 }
 
 void UIButton::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     Map(writer, obj, propertyMappings, numPropertyMappings);
-    if (_buttonType != 0)
+    if (_buttonType != 0) {
         AddInt(writer, "UIButtonType", _buttonType);
-    if (_font)
+    }
+
+    if (_font) {
         obj->AddOutputMember(writer, "UIFont", _font);
+    }
+
+    // Default is true, so no need to write to nib if that's the case
+    if (!_adjustsImageWhenHighlighted) {
+        AddBool(writer, "UIAdjustsImageWhenHighlighted", false);
+    }
+
+    // Default is true, so no need to write to nib if that's the case
+    if (!_adjustsImageWhenDisabled) {
+        AddBool(writer, "UIAdjustsImageWhenDisabled", false);
+    }
+
+    // Insets
+    if (_imageEdgeInsets.IsValid()) {
+        obj->AddData(writer, "UIImageEdgeInsets", _imageEdgeInsets);
+    }
+
+    if (_contentEdgeInsets.IsValid()) {
+        obj->AddData(writer, "UIContentEdgeInsets", _contentEdgeInsets);
+    }
+
+    if (_titleEdgeInsets.IsValid()) {
+        obj->AddData(writer, "UITitleEdgeInsets", _titleEdgeInsets);
+    }
 
     if (_connections) {
         for (int i = 0; i < _connections->count(); i++) {
@@ -280,6 +331,7 @@ void UIButton::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
             }
         }
     }
+
     WriteStatefulContent(writer, this);
     UIControl::ConvertStaticMappings(writer, obj);
 }

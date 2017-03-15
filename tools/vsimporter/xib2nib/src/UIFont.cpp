@@ -25,6 +25,7 @@ const float c_buttonFontSize = 14.0f;
 
 UIFont::UIFont() {
     _fontName = NULL;
+    _fontFamilyName = NULL;
     _fontSize = 0.0f;
     _systemFont = false;
 }
@@ -105,6 +106,7 @@ void UIFont::InitFromStory(XIBObject* obj) {
         }
     } else {
         _fontName = getAttrAndHandle("name");
+        _fontFamilyName = getAttrAndHandle("family");
     }
 
     if (getAttrib("size")) {
@@ -131,6 +133,7 @@ void UIFont::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     ObjectConverter::ConvertStaticMappings(writer, obj);
     
     AddString(writer, "UIFontName", _fontName);
+    AddString(writer, "UIFontFamilyName", _fontFamilyName);
     AddOutputMember(writer, "UIFontPointSize", new XIBObjectDouble(_fontSize));
 
     if (_systemFont) {
