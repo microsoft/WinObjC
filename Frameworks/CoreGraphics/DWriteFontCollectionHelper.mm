@@ -130,6 +130,30 @@ HRESULT DWriteFontCollectionHelper::CreateFontFamilyWithName(const wchar_t* unic
     return S_FALSE;
 }
 
+HRESULT DWriteFontCollectionHelper::GetAvailableFonts(std::vector<ComPtr<IDWriteFont>>& outFontList) {
+    std::lock_guard<std::recursive_mutex> lock(m_lock);
+
+    ComPtr<IDWriteFontCollection> fontCollection = GetFontCollection();
+    RETURN_HR_IF_NULL(S_OK, fontCollection);
+
+    const uint32_t familyCount = fontCollection->GetFontFamilyCount();
+    for (uint32_t i = 0; i < familyCount; ++i) {
+        ComPtr<IDWriteFontFamily> fontFamily;
+        RETURN_IF_FAILED(fontCollection->GetFontFamily(i, &fontFamily));
+        ComPtr<IDWriteFontList> fontList;
+        RETURN_IF_FAILED(
+            fontFamily->GetMatchingFonts(DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STRETCH_NORMAL, DWRITE_FONT_STYLE_NORMAL, &fontList));
+        const uint32_t fontCount = fontList->GetFontCount();
+        for (size_t j = 0; j < fontCount; ++j) {
+            ComPtr<IDWriteFont> font;
+            RETURN_IF_FAILED(fontList->GetFont(j, &font));
+            outFontList.emplace_back(std::move(font));
+        }
+    }
+
+    return S_OK;
+}
+
 HRESULT DWriteFontCollectionHelper::_GetFontListForFamilyName(CFStringRef familyName, IDWriteFontList** outFontList) {
     std::lock_guard<std::recursive_mutex> lock(m_lock);
 

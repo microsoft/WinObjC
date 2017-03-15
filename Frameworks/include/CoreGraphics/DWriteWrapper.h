@@ -27,6 +27,7 @@
 #import <Starboard.h>
 #import <string>
 #import <memory>
+#import <vector>
 
 // General DWrite helpers
 static inline CFStringRef _CFStringCreateUppercaseCopy(CFStringRef string) {
@@ -58,10 +59,12 @@ COREGRAPHICS_EXPORT CFStringRef _DWriteGetFamilyNameForFontName(CFStringRef font
 
 // Creation of DWrite font face/family objects
 COREGRAPHICS_EXPORT HRESULT _DWriteCreateFontFamilyWithName(CFStringRef familyName, IDWriteFontFamily** outFontFamily);
+COREGRAPHICS_EXPORT HRESULT _DWriteCreateFontWithName(CFStringRef name, IDWriteFont** outFont);
 COREGRAPHICS_EXPORT HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, IDWriteFontFace** outFontFace);
 COREGRAPHICS_EXPORT HRESULT _DWriteCreateTextFormatWithFontNameAndSize(CFStringRef optionalFontName,
                                                                        CGFloat fontSize,
                                                                        IDWriteTextFormat** outTextFormat);
+COREGRAPHICS_EXPORT HRESULT _DWriteGetAllFonts(std::vector<Microsoft::WRL::ComPtr<IDWriteFont>>& outList);
 
 // DWriteFont getters that convert to a CF/CG object or struct
 COREGRAPHICS_EXPORT CFStringRef _DWriteFontCopyInformationalString(const Microsoft::WRL::ComPtr<IDWriteFontFace>& fontFace,
@@ -82,4 +85,3 @@ inline uint32_t _CTToDWriteFontTableTag(uint32_t tag) {
     // CT has the opposite byte order of DWrite, so we need 'BASE' -> 'ESAB'
     return ((tag & 0xff) << 24) | ((tag & 0xff00) << 8) | ((tag & 0xff0000) >> 8) | ((tag & 0xff000000) >> 24);
 }
-

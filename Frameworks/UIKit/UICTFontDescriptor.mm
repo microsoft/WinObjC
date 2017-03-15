@@ -55,6 +55,12 @@ BRIDGED_CLASS_FOR_CODER(UIFontDescriptor)
         autorelease];
 }
 
+- (NSArray<UIFontDescriptor*>*)matchingFontDescriptorsWithMandatoryKeys:(NSSet<NSString*>*)mandatoryKeys {
+    return [static_cast<NSArray<UIFontDescriptor*>*>(
+        CTFontDescriptorCreateMatchingFontDescriptors(static_cast<CTFontDescriptorRef>(self), (__bridge CFSetRef)mandatoryKeys))
+        autorelease];
+}
+
 - (NSUInteger)hash {
     return CFHash((CTFontRef)self);
 }
