@@ -5,7 +5,7 @@
     <ClangCompile>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClangCompile>
-    <ClangCompile Condition="'$(AllowNSLog) != 'true'">
+    <ClangCompile Condition="'$(AllowNSLog)' != 'true'">
       <PreprocessorDefinitions>_WINOBJC_DO_NOT_USE_NSLOG=;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
