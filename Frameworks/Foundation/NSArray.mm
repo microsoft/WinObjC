@@ -749,31 +749,7 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
  @Status Interoperable
 */
 - (NSString*)description {
-    thread_local unsigned int indent = 0;
-    NSMutableString* s = [NSMutableString string];
-    for (unsigned int i = 0; i < indent; ++i) {
-        [s appendString:@"    "];
-    }
-    [s appendString:@"(\n"];
-    {
-        ++indent;
-        auto deferPop = wil::ScopeExit([]() { --indent; });
-        for (id val in self) {
-            for (unsigned int i = 0; i < indent; ++i) {
-                [s appendString:@"    "];
-            }
-            [s appendFormat:@"%@,\n", val];
-        }
-
-        if ([self count] > 0) {
-            [s deleteCharactersInRange:{[s length] - 2, 1 }];
-        }
-    }
-    for (unsigned int i = 0; i < indent; ++i) {
-        [s appendString:@"    "];
-    }
-    [s appendString:@")"];
-    return s;
+    return [self descriptionWithLocale:nil];
 }
 
 /**
@@ -947,21 +923,69 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSString*)descriptionWithLocale:(id)locale {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self descriptionWithLocale:locale indent:0];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level {
-    UNIMPLEMENTED();
-    return StubReturn();
+    thread_local unsigned int indent = 0;
+    NSMutableString* s = [NSMutableString string];
+    NSString* indentStr = (level == 0) ? @"    " : @"\t";
+    for (unsigned int i = 0; i < indent; ++i) {
+        [s appendString:indentStr];
+    }
+
+    [s appendString:@"(\n"];
+
+    {
+        ++indent;
+        auto deferPop = wil::ScopeExit([]() { --indent; });
+        for (id val in self) {
+            for (unsigned int i = 0; i < indent; ++i) {
+                [s appendString:indentStr];
+            }
+
+            // Documentation states order to determine what values are printed
+            NSString* valToWrite = nil;
+            if ([val isKindOfClass:[NSString class]]) {
+                // If val is an NSString, use it directly
+                valToWrite = val;
+            }
+
+            if (valToWrite.length == 0 && [val respondsToSelector:@selector(descriptionWithLocale:indent:)]) {
+                // If val is not a string but responds to descriptionWithLocale:indent, use that value
+                valToWrite = [val descriptionWithLocale:locale indent:level];
+            }
+
+            if (valToWrite.length == 0 && [val respondsToSelector:@selector(descriptionWithLocale:)]) {
+                // If not an NSString and doesn't respond to descriptionWithLocale:indent but does descriptionWithLocale:, use that
+                valToWrite = [val descriptionWithLocale:locale];
+            }
+
+            if (valToWrite.length == 0) {
+                // If all else fails, use description
+                valToWrite = [val description];
+            }
+
+            [s appendFormat:@"%@,\n", valToWrite];
+        }
+
+        if ([self count] > 0) {
+            [s deleteCharactersInRange:{[s length] - 2, 1 }];
+        }
+    }
+
+    for (unsigned int i = 0; i < indent; ++i) {
+        [s appendString:indentStr];
+    }
+
+    [s appendString:@")"];
+    return s;
 }
 
 /**
