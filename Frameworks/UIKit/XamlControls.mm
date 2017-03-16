@@ -108,6 +108,20 @@ WXCTextBlock* GetLabelTextBlock(WXCGrid* labelGrid) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
+// ScrollViewer
+////////////////////////////////////////////////////////////////////////////////////
+WXCGrid* CreateScrollViewer() {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable;
+    XamlCreateScrollViewer(&inspectable);
+    return _createRtProxy([WXCGrid class], inspectable.Get());
+}
+
+WXCScrollViewer* GetScrollViewer(WXCGrid* labelGrid) {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetScrollViewer([labelGrid comObj]));
+    return _createRtProxy([WXCScrollViewer class], inspectable.Get());
+}
+
+////////////////////////////////////////////////////////////////////////////////////
 // CoreAnimation Layer Support
 ////////////////////////////////////////////////////////////////////////////////////
 void SetFrameworkElementLayerProperties(WXFrameworkElement* targetElement,

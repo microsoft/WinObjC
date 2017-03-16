@@ -87,11 +87,14 @@ UIKIT_XAML_EXPORT IInspectable* XamlGetFrameworkElementSublayerCanvasProperty(co
 UIKIT_XAML_EXPORT void XamlCreateProgressRing(IInspectable** created);
 
 ////////////////////////////////////////////////////////////////////////////////////
-// ScrollViewer.xaml.cpp
+// ScrollView.xaml.cpp
 ////////////////////////////////////////////////////////////////////////////////////
 
-// Returns a UIKit::ScrollViewer as an IInspectable
+// Returns a UIKit::Xaml::ScrollViewer as an IInspectable
 UIKIT_XAML_EXPORT void XamlCreateScrollViewer(IInspectable** created);
+
+// Retrieves the UIKit::ScrollView's backing ScrollViewer as an IInspectable
+UIKIT_XAML_EXPORT IInspectable* XamlGetScrollViewer(const Microsoft::WRL::ComPtr<IInspectable>& scrollView);
 
 ////////////////////////////////////////////////////////////////////////////////////
 // Slider.xaml.cpp
