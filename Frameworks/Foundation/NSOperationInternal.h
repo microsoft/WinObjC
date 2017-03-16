@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -18,5 +18,5 @@
 
 @interface NSOperation ()
 @property (nonatomic, assign, getter=_completionQueue, setter=_setCompletionQueue:) dispatch_queue_t _completionQueue;
-- (BOOL)_acquirePermissionToAddToQueue;
+- (BOOL)_markInQueue;
 @end

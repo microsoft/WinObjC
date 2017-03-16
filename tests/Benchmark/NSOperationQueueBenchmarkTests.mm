@@ -30,9 +30,7 @@ class AddOperation : public ::benchmark::BenchmarkCaseBase {
 
 public:
     void PreRun() {
-        @autoreleasepool {
-            m_queue = [[NSOperationQueue new] autorelease];
-        }
+        m_queue.attach([NSOperationQueue new]);
     }
 
     inline void Run() {
@@ -64,10 +62,10 @@ public:
     }
 
     void PreRun() {
-        @autoreleasepool {
-            m_array = [[[NSMutableArray<NSOperation*> alloc] initWithCapacity:1000] autorelease];
-            m_queue = [[NSOperationQueue new] autorelease];
+        m_array.attach([[NSMutableArray<NSOperation*> alloc] initWithCapacity:1000]);
+        m_queue.attach([NSOperationQueue new]);
 
+        @autoreleasepool {
             for (size_t i = 0; i < 1000; ++i) {
                 [m_array addObject:[[NSOperation new] autorelease]];
             }

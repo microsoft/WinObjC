@@ -23,7 +23,7 @@
 @class NSString;
 @class NSArray;
 
-typedef NS_ENUM(NSUInteger, NSOperationQueuePriority) {
+typedef NS_ENUM(NSInteger, NSOperationQueuePriority) {
     NSOperationQueuePriorityVeryLow = -8,
     NSOperationQueuePriorityLow = -4,
     NSOperationQueuePriorityNormal = 0,

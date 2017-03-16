@@ -19,7 +19,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -36,6 +36,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import <Starboard.h>
 #import <StubReturn.h>
 #import <Foundation/NSOperation.h>
+#import <atomic>
 #import <condition_variable>
 #import <mutex>
 
@@ -50,11 +51,12 @@ static wchar_t TAG[] = L"NSOperation";
     std::condition_variable_any _finishCondition;
 
     // The locks. _finishLock should be taken before _completionBlockLock if both need to be taken. No other locks should overlap.
-    std::recursive_mutex _finishLock; // guards _finished and _cancelled
+    std::recursive_mutex _finishLock; // guards _finished, _executing, and _cancelled
     std::recursive_mutex _dependenciesLock; // guards _dependencies, _outstandingDependenciesCount and _ready
     std::recursive_mutex _completionBlockLock; // guards _completionBlock
 
-    BOOL _inQueue;
+    std::atomic<NSOperationQueuePriority> _queuePriority;
+    std::atomic<BOOL> _inQueue;
 }
 
 @synthesize cancelled = _cancelled;
@@ -222,6 +224,7 @@ static const NSString* NSOperationContext = @"context";
  @Status Interoperable
 */
 - (BOOL)isCancelled {
+    std::lock_guard<std::recursive_mutex> lock(_finishLock);
     return _cancelled;
 }
 
@@ -229,6 +232,7 @@ static const NSString* NSOperationContext = @"context";
  @Status Interoperable
 */
 - (BOOL)isFinished {
+    std::lock_guard<std::recursive_mutex> lock(_finishLock);
     return _finished;
 }
 
@@ -236,6 +240,7 @@ static const NSString* NSOperationContext = @"context";
  @Status Interoperable
 */
 - (BOOL)isExecuting {
+    std::lock_guard<std::recursive_mutex> lock(_finishLock);
     return _executing;
 }
 
@@ -261,7 +266,7 @@ static const NSString* NSOperationContext = @"context";
         return;
     }
 
-    THROW_NS_IF(E_INVALIDARG, (_executing || ![self isReady]));
+    THROW_NS_IF(E_INVALIDARG, (self.executing || !self.ready));
 
     BOOL shouldExecute;
     { // _finishLock scope
@@ -350,14 +355,37 @@ static const NSString* NSOperationContext = @"context";
     [super dealloc];
 }
 
-- (BOOL)_acquirePermissionToAddToQueue {
-    @synchronized(self) {
-        if (!_inQueue) {
-            _inQueue = YES;
-            return YES;
-        }
-        return NO;
+/**
+ @Status Interoperable
+*/
+- (NSOperationQueuePriority)queuePriority {
+    return _queuePriority;
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setQueuePriority:(NSOperationQueuePriority)queuePriority {
+    // queuePriority floors to the closest constant to Normal
+    if (queuePriority >= NSOperationQueuePriorityVeryHigh) {
+        _queuePriority = NSOperationQueuePriorityVeryHigh;
+
+    } else if (queuePriority >= NSOperationQueuePriorityHigh) {
+        _queuePriority = NSOperationQueuePriorityHigh;
+
+    } else if (queuePriority > NSOperationQueuePriorityLow) {
+        _queuePriority = NSOperationQueuePriorityNormal;
+
+    } else if (queuePriority > NSOperationQueuePriorityVeryLow) {
+        _queuePriority = NSOperationQueuePriorityLow;
+
+    } else {
+        _queuePriority = NSOperationQueuePriorityVeryLow;
     }
+}
+
+- (BOOL)_markInQueue {
+    return !_inQueue.fetch_or(YES); // only returns true for the first caller
 }
 
 @end
