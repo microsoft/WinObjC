@@ -40,6 +40,15 @@ static const struct {
                     { DWRITE_FONT_WEIGHT_ULTRA_BLACK, kCTFontWeightBlack } };
 
 /**
+ * Helper function that efficiently compares two CFStringRef and returns true if they are equal (case insensitive)
+ */
+static inline bool __CFStringEqual(CFStringRef left, CFStringRef right) {
+    CFIndex leftLength = CFStringGetLength(left);
+    return leftLength == CFStringGetLength(right) &&
+           CFStringFindWithOptions(left, right, { 0, leftLength }, kCFCompareCaseInsensitive, nullptr);
+}
+
+/**
  * Helper function that converts a DWRITE_FONT_WEIGHT into a float usable for kCTFontWeightTrait.
  */
 static CGFloat __DWriteFontWeightToCT(DWRITE_FONT_WEIGHT weight) {
@@ -206,6 +215,211 @@ HRESULT _DWriteCreateFontFaceWithFontDescriptor(CTFontDescriptorRef fontDescript
 
     TraceError(TAG, L"Must specify either kCTFontFamilyNameAttribute or kCTFontNameAttribute in font descriptor");
     return E_INVALIDARG;
+}
+
+// Helper methods for removing fonts that do not match given attributes for CTFontDescriptorCreateMatchingFontDescriptors
+#pragma region Helper Filter Methods
+
+static void __FilterFontsByTraits(const std::vector<ComPtr<IDWriteFont>>& fonts,
+                                  CFDictionaryRef traits,
+                                  std::vector<ComPtr<IDWriteFont>>& matchingFonts) {
+    _DWriteFontProperties properties = __DWriteFontPropertiesFromTraits(traits);
+    for (auto& font : fonts) {
+        if (font->GetWeight() == properties.weight && font->GetStretch() == properties.stretch && font->GetStyle() == properties.style) {
+            matchingFonts.emplace_back(font);
+        }
+    }
+}
+
+static HRESULT __FilterFontsByStyleName(const std::vector<ComPtr<IDWriteFont>>& fonts,
+                                        CFStringRef styleName,
+                                        std::vector<ComPtr<IDWriteFont>>& matchingFonts) {
+    for (auto& font : fonts) {
+        ComPtr<IDWriteLocalizedStrings> dwriteFontName;
+        RETURN_IF_FAILED(font->GetFaceNames(&dwriteFontName));
+        CFStringRef name = _CFStringFromLocalizedString(dwriteFontName.Get());
+        if (__CFStringEqual(styleName, name)) {
+            matchingFonts.emplace_back(font);
+        }
+    }
+
+    return S_OK;
+}
+
+static HRESULT __FilterFontsByFamilyName(const std::vector<ComPtr<IDWriteFont>>& fonts,
+                                         CFStringRef familyName,
+                                         std::vector<ComPtr<IDWriteFont>>& matchingFonts) {
+    for (auto& font : fonts) {
+        // Need to create font family to get correct name
+        ComPtr<IDWriteFontFamily> family;
+        RETURN_IF_FAILED(font->GetFontFamily(&family));
+        ComPtr<IDWriteLocalizedStrings> dwriteFamilyName;
+        RETURN_IF_FAILED(family->GetFamilyNames(&dwriteFamilyName));
+        CFStringRef fontFamilyName = _CFStringFromLocalizedString(dwriteFamilyName.Get());
+        if (__CFStringEqual(familyName, fontFamilyName)) {
+            matchingFonts.emplace_back(font);
+        }
+    }
+
+    return S_OK;
+}
+
+static HRESULT __FilterFontsByInformationalString(const std::vector<ComPtr<IDWriteFont>>& fonts,
+                                                  CFStringRef infoString,
+                                                  DWRITE_INFORMATIONAL_STRING_ID id,
+                                                  std::vector<ComPtr<IDWriteFont>>& matchingFonts) {
+    for (auto& font : fonts) {
+        BOOL exists;
+        ComPtr<IDWriteLocalizedStrings> dwriteString;
+        RETURN_IF_FAILED(font->GetInformationalStrings(id, &dwriteString, &exists));
+        if (exists) {
+            CFStringRef fontInfoString = _CFStringFromLocalizedString(dwriteString.Get());
+            if (__CFStringEqual(infoString, fontInfoString)) {
+                matchingFonts.emplace_back(font);
+            }
+        }
+    }
+
+    return S_OK;
+}
+
+static HRESULT __FilterFontsByKeyAndValue(std::vector<ComPtr<IDWriteFont>>& fonts, CFStringRef key, CFTypeRef value, bool forceMatch) {
+    if (__CFStringEqual(key, kCTFontSizeAttribute)) {
+        // Ignored on reference platform so simply return here
+        return S_OK;
+    }
+
+    std::vector<ComPtr<IDWriteFont>> matchingFonts;
+    matchingFonts.reserve(fonts.size());
+    CFRange range{ 0, CFStringGetLength(key) };
+    if (__CFStringEqual(key, kCTFontFamilyNameAttribute)) {
+        RETURN_IF_FAILED(__FilterFontsByFamilyName(fonts, static_cast<CFStringRef>(value), matchingFonts));
+    } else if (__CFStringEqual(key, kCTFontNameAttribute)) {
+        RETURN_IF_FAILED(__FilterFontsByInformationalString(fonts,
+                                                            static_cast<CFStringRef>(value),
+                                                            DWRITE_INFORMATIONAL_STRING_POSTSCRIPT_NAME,
+                                                            matchingFonts));
+    } else if (__CFStringEqual(key, kCTFontDisplayNameAttribute)) {
+        RETURN_IF_FAILED(__FilterFontsByInformationalString(fonts,
+                                                            static_cast<CFStringRef>(value),
+                                                            DWRITE_INFORMATIONAL_STRING_FULL_NAME,
+                                                            matchingFonts));
+    } else if (__CFStringEqual(key, kCTFontStyleNameAttribute)) {
+        RETURN_IF_FAILED(__FilterFontsByStyleName(fonts, static_cast<CFStringRef>(value), matchingFonts));
+    } else if (__CFStringEqual(key, kCTFontTraitsAttribute)) {
+        __FilterFontsByTraits(fonts, static_cast<CFDictionaryRef>(value), matchingFonts);
+    } else {
+        // Other attributes are currently unsupported by CTFont
+        CFIndex length = CFStringGetLength(key);
+        std::unique_ptr<UniChar[]> keyChars{ new UniChar[length] };
+        CFStringGetCharacters(key, { 0, length }, keyChars.get());
+        UNIMPLEMENTED_WITH_MSG("Unsupported matching font descriptor attribute %ls", keyChars.get());
+    }
+
+    // Do not filter if there's no match and forceMatch isn't true
+    // Used to share filtering between mandatory and optional attributes
+    if (!matchingFonts.empty() || forceMatch) {
+        fonts = std::move(matchingFonts);
+    }
+
+    return S_OK;
+}
+
+#pragma endregion // Helper Filter Methods
+
+/**
+ * Creates a CFArray of CTFontDescriptors values for all fonts that match the given attributes best and completely match mandatoryKeys
+ */
+HRESULT _DWriteCreateMatchingFontDescriptors(CFDictionaryRef attributes, CFSetRef mandatoryKeys, CFArrayRef* matchingNames) {
+    RETURN_HR_IF(E_POINTER, !attributes || !matchingNames);
+    *matchingNames = nullptr;
+
+    std::vector<ComPtr<IDWriteFont>> fonts;
+    if (CFDictionaryContainsKey(attributes, kCTFontNameAttribute) &&
+        (!mandatoryKeys || CFSetContainsValue(mandatoryKeys, kCTFontNameAttribute))) {
+        // Font name is either mandatory or there are no mandatory keys, so we can start match from font
+        ComPtr<IDWriteFont> matchingFont;
+        if (SUCCEEDED(_DWriteCreateFontWithName(static_cast<CFStringRef>(CFDictionaryGetValue(attributes, kCTFontNameAttribute)),
+                                                &matchingFont))) {
+            fonts.emplace_back(matchingFont);
+        } else {
+            // Not matching is not a fatal error, but we can just return now rather than try to match against any other attributes
+            RETURN_HR_IF(S_FALSE, mandatoryKeys != nullptr);
+        }
+    }
+
+    if (fonts.empty() && CFDictionaryContainsKey(attributes, kCTFontFamilyNameAttribute) &&
+        (!mandatoryKeys || CFSetContainsValue(mandatoryKeys, kCTFontFamilyNameAttribute))) {
+        // Family name is either mandatory or there are no mandatory keys, so we can start match from family
+        ComPtr<IDWriteFontFamily> fontFamily;
+        if (SUCCEEDED(
+                _DWriteCreateFontFamilyWithName(static_cast<CFStringRef>(CFDictionaryGetValue(attributes, kCTFontFamilyNameAttribute)),
+                                                &fontFamily))) {
+            ComPtr<IDWriteFontList> fontList;
+            RETURN_IF_FAILED(
+                fontFamily->GetMatchingFonts(DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STRETCH_NORMAL, DWRITE_FONT_STYLE_NORMAL, &fontList));
+            uint32_t fontCount = fontList->GetFontCount();
+            fonts.reserve(fontCount);
+            for (size_t i = 0; i < fontCount; ++i) {
+                ComPtr<IDWriteFont> font;
+                RETURN_IF_FAILED(fontList->GetFont(i, &font));
+                fonts.emplace_back(font);
+            }
+        } else {
+            // Not matching is not a fatal error, but we can just return now rather than try to match against any other attributes
+            RETURN_HR_IF(S_FALSE, mandatoryKeys != nullptr);
+        }
+    }
+
+    if (fonts.empty()) {
+        // Could not get a list of matching fonts from font or family names, so need to get a list of all fonts
+        RETURN_IF_FAILED(_DWriteGetAllFonts(fonts));
+    }
+
+    if (mandatoryKeys) {
+        // Filter by the mandatory keys first
+        CFIndex count = CFSetGetCount(mandatoryKeys);
+        std::vector<CFStringRef> keys(count);
+        CFSetGetValues(mandatoryKeys, (const void**)keys.data());
+        for (auto& key : keys) {
+            if (!CFDictionaryContainsKey(attributes, key)) {
+                // Mandatory key does not exist, so no fonts can match
+                return S_OK;
+            }
+
+            RETURN_IF_FAILED(__FilterFontsByKeyAndValue(fonts, key, CFDictionaryGetValue(attributes, key), true));
+            if (fonts.empty()) {
+                // No fonts that match mandatory keys, can stop filtering now
+                return S_OK;
+            }
+        }
+    }
+
+    // Left with list of fonts matching mandatoryKeys, can now try to match any non-mandatory attributes
+    CFIndex count = CFDictionaryGetCount(attributes);
+    if (count > 0L) {
+        std::vector<CFStringRef> keys(count);
+        std::vector<CFTypeRef> values(count);
+        CFDictionaryGetKeysAndValues(attributes, (const void**)keys.data(), (const void**)values.data());
+        for (size_t i = 0; i < count; ++i) {
+            if (!mandatoryKeys || !CFSetContainsValue(mandatoryKeys, keys[i])) {
+                RETURN_IF_FAILED(__FilterFontsByKeyAndValue(fonts, keys[i], values[i], false));
+            }
+        }
+    }
+
+    auto outArray = woc::MakeAutoCF<CFMutableArrayRef>(CFArrayCreateMutable(nullptr, fonts.size(), &kCFTypeArrayCallBacks));
+    for (size_t i = 0; i < fonts.size(); ++i) {
+        BOOL exists;
+        ComPtr<IDWriteLocalizedStrings> dwriteString;
+        RETURN_IF_FAILED(fonts[i]->GetInformationalStrings(DWRITE_INFORMATIONAL_STRING_POSTSCRIPT_NAME, &dwriteString, &exists));
+        CFStringRef name = _CFStringFromLocalizedString(dwriteString.Get());
+        auto descriptor = woc::MakeAutoCF<CTFontDescriptorRef>(CTFontDescriptorCreateWithNameAndSize(name, kCTFontSystemFontSize));
+        CFArrayAppendValue(outArray, descriptor);
+    }
+
+    *matchingNames = outArray.detach();
+    return S_OK;
 }
 
 /**

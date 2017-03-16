@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\LocalAuthentication\lib\LocalAuthenticationLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\LocalAuthentication\lib\LocalAuthenticationLib.vcxproj">
       <Project>{A905201C-4CF2-4FF3-8D99-9DE5EF4959FD}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -33,7 +33,7 @@
     <ProjectGuid>{4C01987C-FEE1-445A-B7E6-BA31EA229047}</ProjectGuid>
     <RootNamespace>LocalAuthentication</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>LocalAuthentication</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
@@ -51,7 +51,8 @@
       <ModuleDefinitionFile>LocalAuthentication.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
-      <IncludePaths></IncludePaths>
+      <IncludePaths>
+      </IncludePaths>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -64,7 +65,8 @@
       <ModuleDefinitionFile>LocalAuthentication.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
-      <IncludePaths></IncludePaths>
+      <IncludePaths>
+      </IncludePaths>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -77,7 +79,8 @@
       <ModuleDefinitionFile>LocalAuthentication.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
-      <IncludePaths></IncludePaths>
+      <IncludePaths>
+      </IncludePaths>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -90,11 +93,13 @@
       <ModuleDefinitionFile>LocalAuthentication.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
-      <IncludePaths></IncludePaths>
+      <IncludePaths>
+      </IncludePaths>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
 </Project>

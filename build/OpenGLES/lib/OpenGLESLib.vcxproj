@@ -65,15 +65,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\OpenGLES\GLES1122\OpenGLESString.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\OpenGLES\GLES1122\OpenGLESUtil.h" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FFDA450C-E149-4622-BC6C-7DE323DC581A}</ProjectGuid>
     <ProjectName>OpenGLESLib</ProjectName>
     <RootNamespace>OpenGLESLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>OpenGLESLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
@@ -82,6 +79,9 @@
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.props" />
   </ImportGroup>
+  <ItemGroup>
+    <PackageReference Include="ANGLE.WindowsStore" Version="2.1.13" />
+  </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <CompileAsWinRT>false</CompileAsWinRT>
@@ -153,12 +153,6 @@
   </ItemDefinitionGroup>
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
-    <Import Project="..\..\packages\ANGLE.WindowsStore.2.1.13\build\native\ANGLE.WindowsStore.targets" Condition="Exists('..\..\packages\ANGLE.WindowsStore.2.1.13\build\native\ANGLE.WindowsStore.targets')" />
   </ImportGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\ANGLE.WindowsStore.2.1.13\build\native\ANGLE.WindowsStore.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\ANGLE.WindowsStore.2.1.13\build\native\ANGLE.WindowsStore.targets'))" />
-  </Target>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
 </Project>

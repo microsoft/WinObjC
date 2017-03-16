@@ -41,7 +41,7 @@ public:
 
   /* Called from main */
   void printSummary() const;
-  void generateFiles(bool genProjectionsProj);
+  void generateFiles(bool genProjectionsProj, bool genPackagingProj);
   void queueSchemes(const StringSet& schemeNames, const StringSet& configNames);
   void queueTargets(const StringSet& targetNames, const StringSet& configNames);
   /********************/
@@ -68,7 +68,8 @@ private:
   void getSchemes(const StringSet& schemeNames, SchemeVec& ret) const;
   void selectTargets(PotentialTargetsVec& ret);
   void detectProjectCollisions() const;
-  VCProject* generateGlueProject() const;
+  VCProject* generateGlueProject(bool packageable) const;
+  VCProject* generatePackageProject() const;
   void getAllTargets(PotentialTargetsVec& targets) const;
   TargetProjectPair findTargetWithName(const String& targetName) const;
 

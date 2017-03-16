@@ -37,6 +37,8 @@
 
 static const wchar_t* TAG = L"NSArray";
 
+static const CFPropertyListFormat sc_plistFormat = kCFPropertyListBinaryFormat_v1_0;
+
 @implementation NSArray
 
 BASE_CLASS_REQUIRED_IMPLS(NSArray, NSArrayPrototype, CFArrayGetTypeID);
@@ -809,16 +811,14 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
         reverse = false;
     }
 
-    _enumerateWithBlock(enumerator,
-                        options,
-                        ^(id key, BOOL* stop) {
-                            block(key, index, stop);
-                            if (reverse) {
-                                index--;
-                            } else {
-                                index++;
-                            }
-                        });
+    _enumerateWithBlock(enumerator, options, ^(id key, BOOL* stop) {
+        block(key, index, stop);
+        if (reverse) {
+            index--;
+        } else {
+            index++;
+        }
+    });
 }
 
 /**
@@ -915,10 +915,10 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
  @Notes
 */
 - (void)addObserver:(NSObject*)anObserver
- toObjectsAtIndexes:(NSIndexSet*)indexes
-         forKeyPath:(NSString*)keyPath
-            options:(NSKeyValueObservingOptions)options
-            context:(void*)context {
+    toObjectsAtIndexes:(NSIndexSet*)indexes
+            forKeyPath:(NSString*)keyPath
+               options:(NSKeyValueObservingOptions)options
+               context:(void*)context {
     UNIMPLEMENTED();
 }
 
@@ -939,12 +939,11 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 + (NSArray*)arrayWithContentsOfURL:(NSURL*)aURL {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [[[self alloc] initWithContentsOfURL:aURL] autorelease];
 }
 
 /**
@@ -996,21 +995,29 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (NSArray*)initWithContentsOfURL:(NSURL*)aURL {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSData* data = [NSData dataWithContentsOfURL:aURL];
+    return static_cast<NSArray*>(
+        CFPropertyListCreateWithData(nullptr, static_cast<CFDataRef>(data), kCFPropertyListImmutable, nullptr, nullptr));
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes Only file:// URLs supported. atomically parameter not supported.
 */
 - (BOOL)writeToURL:(NSURL*)aURL atomically:(BOOL)flag {
-    UNIMPLEMENTED();
-    return StubReturn();
+    CFPropertyListRef plist = static_cast<CFPropertyListRef>(self);
+    if (CFPropertyListIsValid(plist, sc_plistFormat)) {
+        auto data = woc::AutoCF<CFDataRef>(CFPropertyListCreateData(nullptr, plist, sc_plistFormat, 0, nullptr));
+        if (data) {
+            return [static_cast<NSData*>(data.get()) writeToURL:aURL atomically:flag];
+        }
+    }
+
+    return NO;
 }
 
 /**

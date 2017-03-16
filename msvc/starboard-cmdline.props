@@ -1,12 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <!-- This file SHOULD NOT be included in the SDK! Add customizations not meant to be in the SDK here! -->
   <PropertyGroup Label="Starboard In-Situ Defaults">
     <TargetOsAndVersion Condition="'$(TargetOsAndVersion)'==''">Universal Windows</TargetOsAndVersion>
-    <UseStarboardSourceSdk>true</UseStarboardSourceSdk>
   </PropertyGroup>
 
-  <ImportGroup>
-    <Import Project="$(MSBuildThisFileDirectory)starboard-sdk.props" />
-  </ImportGroup>
+  <ItemDefinitionGroup>
+    <ClangCompile>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)'=='Debug'">MultiThreadedDebugDLL</RuntimeLibrary>
+      <InternalSystemIncludePaths>%(InternalSystemIncludePaths);$(IncludePath);$(MSBuildThisFileDirectory)..\include\;$(MSBuildThisFileDirectory)..\include\xplat;$(MSBuildThisFileDirectory)..\include\VCInclude\;$(MSBuildThisFileDirectory)..\deps\prebuilt\include\;$(MSBuildThisFileDirectory)..\deps\prebuilt\include\icu;$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)..\include\Platform', '$(TargetOsAndVersion)'))</InternalSystemIncludePaths>
+      <IncludePaths>%(IncludePaths);$(MSBuildThisFileDirectory)..\Frameworks\include\;</IncludePaths>
+      <InternalForceIncludes>%(InternalForceIncludes);StubIncludes.h;</InternalForceIncludes>
+    </ClangCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalOptions>/ignore:4087 /ignore:4001 %(AdditionalOptions)</AdditionalOptions>
+      <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
+
+      <!-- Ensure we pick up operator new from our project rather than the C runtime -->
+      <ForceSymbolReferences>??2@YAPAXI@Z</ForceSymbolReferences>
+      <AdditionalLibraryDirectories>$(MSBuildThisFileDirectory)..\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(MSBuildThisFileDirectory)..\deps;%(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
+    </Link>  
+  </ItemDefinitionGroup>
 </Project>

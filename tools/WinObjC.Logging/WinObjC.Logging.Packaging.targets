@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents" Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">
+      <ItemGroup>
+          <!-- Inlcude *all* of Logging/include/ -->
+          <_IncludeFiles Include="$(MSBuildThisFileDirectory)..\Logging\include\**\*.*"/>
+
+          <PackageFile Include="@(_IncludeFiles)">
+              <PackagePath>build\include\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
+          </PackageFile>
+      </ItemGroup>
+
+      <ItemGroup>
+          <PackageFile Include="$(MSBuildThisFileDirectory)$(PackageId).props" Condition="Exists('$(MSBuildThisFileDirectory)$(PackageId).props')">
+              <PackagePath>build\$(PackageId).props</PackagePath>
+          </PackageFile>
+          <PackageFile Include="$(MSBuildThisFileDirectory)$(PackageId).targets" Condition="Exists('$(MSBuildThisFileDirectory)$(PackageId).targets')">
+              <PackagePath>build\$(PackageId).targets</PackagePath>
+          </PackageFile>
+      </ItemGroup>
+  </Target>
+
+</Project>

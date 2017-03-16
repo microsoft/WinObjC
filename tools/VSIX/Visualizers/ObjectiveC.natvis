@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+  <!-- Primitive/Runtime Types -->
+  <Type Name="objc_selector">
+    <DisplayString Condition="((libobjc2.dll!objc_selector*)this)->index &lt; libobjc2.dll!selector_count">@selector({libobjc2.dll!selector_list[((libobjc2.dll!objc_selector*)this)->index]->value,s8b})</DisplayString>
+    <DisplayString>@selector({((libobjc2.dll!objc_selector*)this)->name,s8b})</DisplayString>
+    <Expand HideRawView="true">
+      <Item Name="[Type Encoding]">((libobjc2.dll!objc_selector*)this)->types,s8b</Item>
+    </Expand>
+  </Type>
+
+  <Type Name="AutoId&lt;*,*&gt;">
+    <!-- AutoId with known subtype -->
+    <DisplayString Condition="(*(void**)this) == 0">nil</DisplayString>
+    <DisplayString>{*($T1 **)(this)}</DisplayString>
+    <Expand HideRawView="true">
+      <Synthetic Name="[Automatic Lifetime]">
+        <DisplayString>{&quot;$T2&quot;,s8b}</DisplayString>
+        <Expand />
+      </Synthetic>
+      <ExpandedItem Condition="(*(void**)this) != 0">*($T1 **)(this)</ExpandedItem>
+      <Synthetic Condition="(*(void**)this) == 0" Name="[Empty]">
+        <DisplayString></DisplayString>
+        <Expand />
+      </Synthetic>
+    </Expand>
+  </Type>
+
+  <Type Name="AutoId&lt;??,*&gt;">
+    <!-- AutoId with unknown/erased subtype -->
+    <DisplayString Condition="(*(void**)this) == 0">nil</DisplayString>
+    <DisplayString>{*(Foundation.dll!NSObject **)(this)}</DisplayString>
+    <Expand HideRawView="true">
+      <Synthetic Name="[Automatic Lifetime]">
+        <DisplayString>{&quot;$T1&quot;,s8b}</DisplayString>
+        <Expand />
+      </Synthetic>
+      <ExpandedItem Condition="(*(void**)this) != 0">*(Foundation.dll!NSObject **)(this)</ExpandedItem>
+      <Synthetic Condition="(*(void**)this) == 0" Name="[Empty]">
+        <DisplayString></DisplayString>
+        <Expand />
+      </Synthetic>
+    </Expand>
+  </Type>
+
+  <Type Name="NSObject">
+    <!-- Don't include the description and debug description node in the preview string (via auto-expansion).  The display string should just show the first three
+    members of the objects, as it would if this natvis entry did not exist.-->
+    <DisplayString>{*this,!}</DisplayString>
+    <Expand HideRawView="true">
+      <!-- We're strictly adding nodes here, not removing any, so the 'raw view' node has no value.-->
+      <!-- Description node-->
+      <Synthetic Name="description" Expression="*this,expand(0)">
+        <CustomVisualizer VisualizerId="7f4e0d61-4720-4dfb-aff7-b611935df606" />
+      </Synthetic>
+      <!-- debugDescription node-->
+      <Synthetic Name="debugDescription" Expression="*this,expand(1)">
+        <CustomVisualizer VisualizerId="454155fb-921d-4eeb-a2dd-bce2bafdc89c" />
+      </Synthetic>
+      <!-- Now, show the raw fields of the object here.-->
+      <ExpandedItem>*this,!</ExpandedItem>
+    </Expand>
+  </Type>
+</AutoVisualizer>

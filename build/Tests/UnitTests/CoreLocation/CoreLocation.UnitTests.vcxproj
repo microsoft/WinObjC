@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -19,19 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Foundation\dll\Foundation.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\..\Foundation\dll\Foundation.vcxproj">
       <Project>{86127226-9A6E-439B-A070-420A572AF0C7}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Logging\dll\Logging.vcxproj">
-      <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Starboard\dll\Starboard.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\..\Starboard\dll\Starboard.vcxproj">
       <Project>{0AC27ECF-E2AB-420B-9359-4843FFF4CBFA}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\WinObjCRT\dll\WinObjCRT.vcxproj">
-      <Project>{585b4870-0d6b-43a6-8e7e-ad08f7f507b6}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\CoreLocation\lib\CoreLocationLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\..\CoreLocation\lib\CoreLocationLib.vcxproj">
       <Project>{96CEAFB4-5BDC-4972-97D7-302840B3CDA0}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -42,17 +36,13 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <ApplicationType>Windows Store</ApplicationType>
-    <AppContainerApplication>false</AppContainerApplication>
+    <AppContainerApplication>true</AppContainerApplication>
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
     <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
     <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
-    <WindowsAppContainer>false</WindowsAppContainer>
-    <TargetOsAndVersion>Universal Windows</TargetOsAndVersion>
     <StarboardBasePath>..\..\..\..</StarboardBasePath>
-    <UseStarboardSourceSdk>true</UseStarboardSourceSdk>
-    <IslandwoodDRT>false</IslandwoodDRT>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -82,9 +72,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-    <Import Project="$(StarboardBasePath)\msvc\starboard-cmdline.props" />
-  </ImportGroup>
+  <Import Project="$(StarboardBasePath)\msvc\starboard-cmdline.props" />
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(StarboardBasePath)\msvc\ut-build.props" />
   </ImportGroup>
@@ -129,7 +117,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>mincore.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>
@@ -152,7 +140,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>mincore.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>
@@ -179,7 +167,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>mincore.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>
@@ -206,7 +194,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>mincore.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mincore.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>
@@ -219,17 +207,11 @@
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    
     <ClCompile Include="$(StarboardBasePath)\tests\unittests\EntryPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="..\..\..\..\tests\unittests\CoreLocation\CLLocationTests.mm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="$(StarboardBasePath)\msvc\starboard-cmdline.targets" />
-  </ImportGroup>
-  <ItemGroup>
-    <None Include="project.json" />
-  </ItemGroup>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
 </Project>

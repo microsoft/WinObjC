@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -25,10 +25,7 @@
     <None Include="CoreMIDI.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
-      <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\lib\CoreMIDILib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\CoreMIDILib.vcxproj">
       <Project>{D6701AFA-9CBC-4F78-90CC-10F3CF7C07A5}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -36,7 +33,7 @@
     <ProjectGuid>{A8756C00-D289-4807-9D9A-1F077394DCA6}</ProjectGuid>
     <RootNamespace>CoreMIDI</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CoreMIDI</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
@@ -108,4 +105,5 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
 </Project>

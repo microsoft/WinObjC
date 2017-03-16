@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -19,11 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AddressBook\lib\AddressBookLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\AddressBook\lib\AddressBookLib.vcxproj">
       <Project>{E3250233-2EFE-4BFB-BDC3-1E4FD4B7B4F4}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
-      <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -39,7 +36,7 @@
     <ProjectGuid>{5F537067-96B8-4D84-A5D2-BF32AAB7A454}</ProjectGuid>
     <RootNamespace>AddressBook</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>AddressBook</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
@@ -54,7 +51,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>AddressBook.def</ModuleDefinitionFile>
-      <AdditionalDependencies>libdispatch.lib;RTObjcInterop.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>RTObjcInterop.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -67,7 +64,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>AddressBook.def</ModuleDefinitionFile>
-      <AdditionalDependencies>libdispatch.lib;RTObjcInterop.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>RTObjcInterop.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -80,7 +77,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>AddressBook.def</ModuleDefinitionFile>
-      <AdditionalDependencies>libdispatch.lib;RTObjcInterop.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>RTObjcInterop.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -93,7 +90,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>AddressBook.def</ModuleDefinitionFile>
-      <AdditionalDependencies>libdispatch.lib;RTObjcInterop.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>RTObjcInterop.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -103,4 +100,5 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
 </Project>

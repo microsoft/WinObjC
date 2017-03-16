@@ -56,6 +56,16 @@ void VSTemplateParameters::setPublisherName(const std::string& val)
   }
 }
 
+void VSTemplateParameters::setIsPackageable(const bool val)
+{
+  setPackageConfig((val ? "packageable." : ""));
+}
+
+void VSTemplateParameters::setPackageConfig(const std::string& val)
+{
+  m_params["$packageconfig$"] = val;
+}
+
 void VSTemplateParameters::setValue(const std::string& key, const std::string& value)
 {
   m_params[key] = value;

@@ -19,30 +19,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\pthread.cpp" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\UTSName.cpp" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\CommonDigest.cpp" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\mach.cpp" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\CommonHMAC.cpp" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\MurmurHash3.cpp" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\pevents.cpp" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\String.cpp" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\TaskInfo.cpp" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\unistd.cpp" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\PlatformSupport.cpp" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\CommonCryptor.cpp" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\sched.cpp" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\sysctl.cpp" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\version.cpp" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\dlfcn.cpp" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\OSMisc.cpp" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\OSEndian.cpp" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\inet.cpp" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\random.cpp" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\time.cpp" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\DNSService.cpp" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\EbrFile.cpp" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\EbrIOFile.cpp" />
@@ -59,9 +45,8 @@
     <ProjectName>StarboardLib</ProjectName>
     <RootNamespace>StarboardLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>StarboardLib</OutputName>
-    <StarboardIncludeDefaultLibs>false</StarboardIncludeDefaultLibs>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -72,7 +57,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <CompileAsWinRT>false</CompileAsWinRT>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\include;$(StarboardBasePath)\..\wp\deps\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include;%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SB_IMPEXP=;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
@@ -83,7 +68,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <CompileAsWinRT>false</CompileAsWinRT>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\include;$(StarboardBasePath)\..\wp\deps\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include;%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SB_IMPEXP=;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
@@ -95,7 +80,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
     <ClCompile>
       <CompileAsWinRT>false</CompileAsWinRT>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\include;$(StarboardBasePath)\..\wp\deps\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include;%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SB_IMPEXP=;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
@@ -106,7 +91,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
     <ClCompile>
       <CompileAsWinRT>false</CompileAsWinRT>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\include;$(StarboardBasePath)\..\wp\deps\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;$(StarboardBasePath)\include\xplat;$(StarboardBasePath)\include;%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SB_IMPEXP=;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
@@ -118,4 +103,5 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
 </Project>

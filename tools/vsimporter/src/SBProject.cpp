@@ -163,6 +163,17 @@ bool SBProject::checkTargetCycle(const PBXTarget* target)
   }
 }
 
+bool SBProject::containsPackagebleProject()
+{
+  for (auto target : m_existingTargets) {
+    TargetProductType productType = target.second->getProductType();
+    if (productType == TargetStaticLib || productType == TargetBundle || target.first->getType() == "PBXAggregateTarget") {
+      return true;
+    }
+  }
+  return false;
+}
+
 void SBProject::selectBuildConfigurations(const StringSet* configNames)
 {
   // Use previously-selected configurations, if possible
@@ -291,7 +302,7 @@ static bool headerTypeMatch(const PBXFile* file)
   return matchWildcardList(file->getFileType(), getHeaderTypes());
 }
 
-void SBProject::constructVCProjects(VSSolution& sln, const StringSet& slnConfigs, std::multimap<SBTarget*, VCProject*>& vcProjects)
+void SBProject::constructVCProjects(VSSolution& sln, const StringSet& slnConfigs, std::multimap<SBTarget*, VCProject*>& vcProjects, bool packageable)
 {
   // Nothing to do if project contains no queued targets
   if (m_existingTargets.empty()) {
@@ -329,17 +340,18 @@ void SBProject::constructVCProjects(VSSolution& sln, const StringSet& slnConfigs
 
     // Get the template
     VSTemplate* vstemplate = VSTemplate::getTemplate(templateName);
-	sbAssertWithTelemetry(vstemplate, "Failed to get " + templateName + " VS template");
+    sbAssertWithTelemetry(vstemplate, "Failed to get " + templateName + " VS template");
 
     // Set up template parameters
     VSTemplateParameters templateParams;
     templateParams.setProjectName(target.second->getName());
     templateParams.setPublisherName(m_buildSettings->getValue("USER"));
+    templateParams.setIsPackageable(packageable);
 
     // Expand the template
     vstemplate->expand(outputDir, templateParams);
     const VSTemplateProjectVec& projTemplates = vstemplate->getProjects();
-	sbAssertWithTelemetry(projTemplates.size() == 1, "Unexpected " + templateName + " VS template size");
+    sbAssertWithTelemetry(projTemplates.size() == 1, "Unexpected " + templateName + " VS template size");
 
     for (auto projTemplate : projTemplates) {
       // Create the project from template

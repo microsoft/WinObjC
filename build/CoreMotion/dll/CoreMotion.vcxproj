@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -25,7 +25,7 @@
     <None Include="CoreMotion.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\lib\CoreMotionLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\CoreMotionLib.vcxproj">
       <Project>{af9dad32-9b21-41da-9b36-a6b53d008523}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -33,7 +33,7 @@
     <ProjectGuid>{29AE9623-4C26-4E0A-97B6-6A1E7FB2645F}</ProjectGuid>
     <RootNamespace>CoreMotion</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CoreMotion</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
@@ -47,7 +47,6 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      
       <ModuleDefinitionFile>CoreMotion.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -61,7 +60,6 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      
       <ModuleDefinitionFile>CoreMotion.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -75,7 +73,6 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      
       <ModuleDefinitionFile>CoreMotion.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -89,7 +86,6 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      
       <ModuleDefinitionFile>CoreMotion.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -101,4 +97,5 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
 </Project>

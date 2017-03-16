@@ -359,14 +359,14 @@ static void DispatchMainRunLoopWakeup(void* arg) {
 /**
  @Status Interoperable
 */
-- (void)cancelPerformSelector:(const char*)selector target:(NSObject*)target argument:(NSObject*)argument {
+- (void)cancelPerformSelector:(SEL)selector target:(id)target argument:(id)argument {
     [_orderedLock lock];
     int count = [_orderedPerforms count];
 
     while (--count >= 0) {
         NSOrderedPerform* check = [_orderedPerforms objectAtIndex:count];
 
-        if (strcmp(sel_getName([check selector]), selector) == 0 && [check target] == target && [check argument] == argument) {
+        if (sel_isEqual([check selector], selector) && [check target] == target && [check argument] == argument) {
             [_orderedPerforms removeObjectAtIndex:count];
         }
     }

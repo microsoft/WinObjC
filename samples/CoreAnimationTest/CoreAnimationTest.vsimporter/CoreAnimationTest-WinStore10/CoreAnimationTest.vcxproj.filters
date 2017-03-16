@@ -2,22 +2,22 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{7a0a4a48-3dc8-4fa0-b54c-ef5e452c750f}</UniqueIdentifier>
+      <UniqueIdentifier>{24f666a8-23c2-4b7d-8006-b3832d7162bf}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{c75d19c7-ecb3-4e32-83f8-f9c55d7a7565}</UniqueIdentifier>
+      <UniqueIdentifier>{fc046873-b530-483a-be8a-98762f9d618d}</UniqueIdentifier>
     </Filter>
     <Filter Include="CoreAnimationTest">
-      <UniqueIdentifier>{C9B3AC0D-899F-4E90-854E-19F14B373212}</UniqueIdentifier>
+      <UniqueIdentifier>{CBCF8F83-9FB2-4C08-AB1E-FDAF05FF80B7}</UniqueIdentifier>
     </Filter>
     <Filter Include="CoreAnimationTest\Supporting Files">
-      <UniqueIdentifier>{C90BA809-719A-47D6-B674-C657027E3DC7}</UniqueIdentifier>
+      <UniqueIdentifier>{59E6FCF2-D639-4FBE-BDCD-6A0C0EA1053F}</UniqueIdentifier>
     </Filter>
     <Filter Include="Images">
-      <UniqueIdentifier>{EB50F64C-F6BC-4DB1-AB01-7A6A0907C55B}</UniqueIdentifier>
+      <UniqueIdentifier>{81A22325-0BA8-4396-84BC-6EB1F070B9FA}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{DC9C4FEC-C732-4C7B-84DA-C08B143DCB71}</UniqueIdentifier>
+      <UniqueIdentifier>{402C1DDA-8A9B-42DE-81F0-DB5FDDC37426}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

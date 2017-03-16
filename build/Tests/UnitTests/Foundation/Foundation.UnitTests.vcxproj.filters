@@ -61,6 +61,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\CFStringTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSIndexSetTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSThreadTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\UnitTests\Foundation\NSRunLoopTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSArray.mm">
       <Filter>ReferenceFoundation</Filter>
     </ClangCompile>

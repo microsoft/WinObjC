@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\NuGet.Build.Packaging.0.1.186\build\NuGet.Build.Packaging.props" Condition="Exists('..\..\packages\NuGet.Build.Packaging.0.1.186\build\NuGet.Build.Packaging.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -14,7 +15,10 @@
     <ProjectGuid>{6EAF3089-F641-4FC2-BEE5-512CB4C43DFF}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>vsimporter</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+    <IncludeOutputsInPackage>false</IncludeOutputsInPackage>
+    <IncludeFrameworkReferencesInPackage>false</IncludeFrameworkReferencesInPackage>
+    <IncludeContentInPackage>false</IncludeContentInPackage>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -32,7 +36,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
-    <Import Project="..\..\msvc\tools-build.props" />
+    <Import Project="..\common\tools-build.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
@@ -46,12 +50,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IntDir>$(Configuration)\$(TargetName)\</IntDir>
-    <OutDir>$(SolutionDir)..\bin\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IntDir>$(Configuration)\$(TargetName)\</IntDir>
-    <OutDir>$(SolutionDir)..\bin\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -265,24 +267,46 @@
     <ClInclude Include="third-party\sole\sole.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\deps\3rdparty\AppInsights\Projects\AppInsights_Win32\core\core.vcxproj">
+    <ProjectReference Include="..\AppInsights\Projects\AppInsights_Win32\core\core.vcxproj">
       <Project>{f2377726-d69d-4a26-a3af-969fd0399427}</Project>
+      <IncludeInPackage>false</IncludeInPackage>
     </ProjectReference>
-    <ProjectReference Include="PlistCpp.vcxproj">
+    <ProjectReference Include="PlistCpp\PlistCpp.vcxproj">
       <Project>{b25dbff1-1138-4413-8dc0-a2eebb4a7c28}</Project>
+      <IncludeInPackage>false</IncludeInPackage>
     </ProjectReference>
-    <ProjectReference Include="pugixml.vcxproj">
+    <ProjectReference Include="pugixml\pugixml.vcxproj">
       <Project>{07cf01c0-b887-499d-ad9c-799cb6a9fe64}</Project>
+      <IncludeInPackage>false</IncludeInPackage>
     </ProjectReference>
-    <ProjectReference Include="WBITelemetry.vcxproj">
+    <ProjectReference Include="WBITelemetry\WBITelemetry.vcxproj">
       <Project>{23a635aa-6d82-4faa-b208-11c4c51bdb9d}</Project>
+      <IncludeInPackage>false</IncludeInPackage>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="vsimporter.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\..\msvc\tools-build.targets" />
+    <Import Project="..\common\tools-build.targets" />
+    <Import Project="..\..\packages\NuGet.Build.Packaging.0.1.186\build\NuGet.Build.Packaging.targets" Condition="Exists('..\..\packages\NuGet.Build.Packaging.0.1.186\build\NuGet.Build.Packaging.targets')" />
   </ImportGroup>
+  <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents">
+    <ItemGroup>
+      <PackageFile Include="@(BuiltProjectOutputGroupOutput -> '%(FinalOutputPath)')">
+        <PackagePath>tools\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+    </ItemGroup>
+  </Target>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\NuGet.Build.Packaging.0.1.186\build\NuGet.Build.Packaging.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NuGet.Build.Packaging.0.1.186\build\NuGet.Build.Packaging.props'))" />
+    <Error Condition="!Exists('..\..\packages\NuGet.Build.Packaging.0.1.186\build\NuGet.Build.Packaging.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NuGet.Build.Packaging.0.1.186\build\NuGet.Build.Packaging.targets'))" />
+  </Target>
 </Project>

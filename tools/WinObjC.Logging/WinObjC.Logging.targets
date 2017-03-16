@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+      <TargetOsAndVersion Condition="'$(TargetOsAndVersion)' == ''">Universal Windows</TargetOsAndVersion>
+    </PropertyGroup>
+    <!-- Make sure that the output artifacts are included in the build. This means adding include paths and link libraries for it.
+
+         NOTE: It is important that this information is added at the end in the .targets instead of in the .props so that consumers don't
+         accidentally stomp it. This is contrary to a configurable type property that a consumer may want / need to adjust. To depend on
+         this package means the consumer gets these these things.  -->
+
+    <ItemDefinitionGroup>
+        <ClCompile>
+          <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)\include\;%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
+        </ClCompile>
+
+        <!-- Add in the link bits only if its a "final" linked product likea  dll or exe -->
+        <Link Condition="'$(ConfigurationType)' != 'StaticLibrary'">
+          <AdditionalDependencies>Logging.lib;%(AdditionalDependencies);</AdditionalDependencies>
+          <AdditionalLibraryDirectories>$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\;%(AdditionalLibraryDirectories);</AdditionalLibraryDirectories>
+        </Link>
+    </ItemDefinitionGroup>
+
+    <!-- TODO: This should use XMLPoke or similar to dynamically figure out where the important bits are packaged to.-->
+    <ItemGroup Condition="'$(ConfigurationType)' != 'StaticLibrary'">
+      <_ReferencesFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\*.winmd"/>
+      <Reference Include="@(_ReferencesFromPackage)">
+        <Implementation>%(Filename).dll</Implementation>
+      </Reference>
+      <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\*.dll"/>
+    </ItemGroup>
+</Project>

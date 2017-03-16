@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.props" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.props')" />
+  <Import Project="$(SolutionDir)\..\common\winobjc.nuproj.common.props" Condition="Exists('$(SolutionDir)\..\common\winobjc.nuproj.common.props')" />
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|AnyCPU">
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|AnyCPU">
+      <Configuration>Release</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x86">
+      <Configuration>Debug</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x86">
+      <Configuration>Release</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Configuration">
+    <PackageId>WinObjC.Language</PackageId>
+    <Title>WinObjC.Language</Title>
+    <Authors>Microsoft</Authors>
+    <Owners>Microsoft</Owners>
+    <Summary>WinObjC.Language</Summary>
+    <Description>WinObjC.Language</Description>
+    <PackageReleaseNotes>
+    </PackageReleaseNotes>
+    <PackageProjectUrl>
+    </PackageProjectUrl>
+    <PackageLicenseUrl>
+    </PackageLicenseUrl>
+    <Copyright>Copyright © Microsoft</Copyright>
+    <PackageTags>WinObjC.Language</PackageTags>
+    <IsDevelopmentDependency>true</IsDevelopmentDependency>
+    <IncludeContentInPackage>false</IncludeContentInPackage>
+  </PropertyGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>acc82389-f9eb-49e2-8f8a-c3a8d9360569</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
+  <ItemGroup>
+    <None Include="project.json" />
+    <None Include="WinObjC.Language.Packaging.targets" />
+    <None Include="WinObjC.Language.props" />
+    <None Include="WinObjC.Language.targets" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Readme.txt">
+      <IncludeInPackage>true</IncludeInPackage>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AssetCatalogBuilder\AssetCatalogBuilder.csproj" />
+    <ProjectReference Include="..\ClangCompileTask\ClangCompile.csproj" />
+    <ProjectReference Include="..\PropSchemaGen\PropSchemaGen.csproj" />
+    <ProjectReference Include="..\vsimporter\hmapmaker\hmapmaker.vcxproj" />
+    <ProjectReference Include="..\vsimporter\sb-expandvars\sb-expandvars.vcxproj" />
+    <ProjectReference Include="..\vsimporter\xib2nib\xib2nib.vcxproj" />
+    <ProjectReference Include="..\WOCStdLib\dll\WOCStdLib.vcxproj" />
+    <ProjectReference Include="..\xib2xaml\xamltools\xamltools.csproj" />
+    <ProjectReference Include="..\xib2xaml\xib2xaml\xib2xaml.csproj" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
+  <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets')" />
+  <Import Project="WinObjC.Language.Packaging.targets" />
+  <Import Project="$(SolutionDir)\..\common\winobjc.nuproj.common.targets" Condition="Exists('$(SolutionDir)\..\common\winobjc.nuproj.common.targets')" />
+</Project>

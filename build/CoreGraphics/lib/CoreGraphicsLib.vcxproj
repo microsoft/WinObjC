@@ -55,18 +55,18 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreGraphics\D2DWrapper_CGPathApply.mm" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\include\CoreGraphics\DWriteFontBinaryDataLoader.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\include\CoreGraphics\DWriteFontBinaryDataCollectionLoader.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\include\CoreGraphics\DWriteFontCollectionHelper.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\DWriteFontBinaryDataLoader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\DWriteFontBinaryDataCollectionLoader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\DWriteFontCollectionHelper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\include\CoreGraphics\DWriteWrapper.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreGraphics\D2DWrapper.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\include\CoreGraphics\D2DWrapper.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6293444C-1461-4CC7-9634-44AB90B8BBC3}</ProjectGuid>
     <ProjectName>CoreGraphicsLib</ProjectName>
     <RootNamespace>CoreGraphicsLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CoreGraphicsLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
@@ -120,4 +120,5 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
 </Project>

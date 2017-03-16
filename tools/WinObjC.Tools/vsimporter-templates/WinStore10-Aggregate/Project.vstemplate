@@ -1,0 +1,11 @@
+<VSTemplate Version="0.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
+  <TemplateData>
+    <Name>Aggregate</Name>
+    <ProjectType>VC</ProjectType>
+  </TemplateData>
+  <TemplateContent>
+    <Project OutputDirectory="$projectname$-WinStore10" File="Utility.vcxproj" TargetFileName="$projectname$.vcxproj" Platforms="Win32;ARM" ReplaceParameters="true">
+      <ProjectItem ReplaceParameters="true" TargetFileName="$projectname$.vcxproj.filters">Utility.vcxproj.filters</ProjectItem>
+    </Project>
+  </TemplateContent>
+</VSTemplate>

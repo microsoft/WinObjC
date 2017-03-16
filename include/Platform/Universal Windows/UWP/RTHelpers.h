@@ -51,8 +51,8 @@
 #include <UWP/interopBase.h>
 
 #if __has_feature(objc_arc)
-#define AUTORELEASE(x)
-#define RETAIN(x)
+#define AUTORELEASE(x) x
+#define RETAIN(x) x
 #define RELEASE(x)
 #else
 #define AUTORELEASE(x) [x autorelease]

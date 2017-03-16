@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="b47eff78-8c11-4e0b-9b57-a5e564fd3b33"
+    Name="8d3451d7-70cc-45d3-890d-9c4498e920e5"
     Publisher="CN=islandwood"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="b47eff78-8c11-4e0b-9b57-a5e564fd3b33" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="8d3451d7-70cc-45d3-890d-9c4498e920e5" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>Foundation-Dev</DisplayName>
-    <PublisherDisplayName>alballw</PublisherDisplayName>
+    <PublisherDisplayName>bbowman</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 

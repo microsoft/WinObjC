@@ -170,6 +170,14 @@ std::shared_ptr<const _DWriteFontProperties> _DWriteGetFontPropertiesFromName(CF
     return std::make_shared<const _DWriteFontProperties>();
 }
 
+HRESULT _DWriteGetAllFonts(std::vector<ComPtr<IDWriteFont>>& outList) {
+    RETURN_IF_FAILED(__GetSystemFontCollectionHelper()->GetAvailableFonts(outList));
+    std::vector<ComPtr<IDWriteFont>> userFonts;
+    RETURN_IF_FAILED(__GetUserFontCollectionHelper()->GetAvailableFonts(userFonts));
+    outList.insert(outList.end(), userFonts.cbegin(), userFonts.cend());
+    return S_OK;
+}
+
 /**
  * Helper method to retrieve font family names installed in the system.
  *
@@ -232,9 +240,9 @@ HRESULT _DWriteCreateFontFamilyWithName(CFStringRef familyName, IDWriteFontFamil
 }
 
 /**
- * Helper function that creates an IDWriteFontFace object for a given font name.
+ * Helper function that creates an IDWriteFont object for a given font name.
  */
-HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, IDWriteFontFace** outFontFace) {
+HRESULT _DWriteCreateFontWithName(CFStringRef name, IDWriteFont** outFont) {
     // Parse the font name for font weight, stretch, and style
     // Eg: Bold, Condensed, Light, Italic
     std::shared_ptr<const _DWriteFontProperties> properties = _DWriteGetFontPropertiesFromName(name);
@@ -252,9 +260,15 @@ HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, IDWriteFontFace** outFon
     RETURN_IF_FAILED(_DWriteCreateFontFamilyWithName(properties->familyName.get(), &fontFamily));
     RETURN_HR_IF_NULL(E_INVALIDARG, fontFamily);
 
-    ComPtr<IDWriteFont> font;
-    RETURN_IF_FAILED(fontFamily->GetFirstMatchingFont(properties->weight, properties->stretch, properties->style, &font));
+    return fontFamily->GetFirstMatchingFont(properties->weight, properties->stretch, properties->style, outFont);
+}
 
+/**
+ * Helper function that creates an IDWriteFontFace object for a given font name.
+ */
+HRESULT _DWriteCreateFontFaceWithName(CFStringRef name, IDWriteFontFace** outFontFace) {
+    ComPtr<IDWriteFont> font;
+    RETURN_IF_FAILED(_DWriteCreateFontWithName(name, &font));
     return font->CreateFontFace(outFontFace);
 }
 

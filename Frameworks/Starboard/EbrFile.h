@@ -15,7 +15,6 @@
 //******************************************************************************
 #pragma once
 
-#include <Starboard.h>
 #include <Windows.h>
 #include <stdint.h>
 #include <mutex>

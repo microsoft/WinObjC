@@ -24,16 +24,7 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSString+HSTRING.mm" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
-      <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\CFNetwork\dll\CFNetwork.vcxproj">
-      <Project>{16E0E9AE-8B17-4C4A-9960-BF90FB9F3424}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\MobileCoreServices\dll\MobileCoreServicesdll.vcxproj">
-      <Project>{F1C44E27-6599-49C3-B4C2-D812C114B166}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\lib\FoundationLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\FoundationLib.vcxproj">
       <Project>{7D635E25-0D8D-4B9A-B9DA-53185AB8A9E5}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -47,8 +38,9 @@
     <ProjectGuid>{86127226-9A6E-439B-A070-420A572AF0C7}</ProjectGuid>
     <RootNamespace>Foundation</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>Foundation</OutputName>
+    <BuildingFrameworksCore>true</BuildingFrameworksCore>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -62,13 +54,12 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>windowsapp.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>windowsapp.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Foundation.def</ModuleDefinitionFile>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
       <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>FOUNDATION_IMPEXP="";COREFOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)"</PreprocessorDefinitions>
     </ClangCompile>
@@ -78,14 +69,13 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>windowsapp.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>windowsapp.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Foundation.def</ModuleDefinitionFile>
       <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
       <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
       <PreprocessorDefinitions>FOUNDATION_IMPEXP="";COREFOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)"</PreprocessorDefinitions>
@@ -96,13 +86,12 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>windowsapp.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>windowsapp.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Foundation.def</ModuleDefinitionFile>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
       <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>FOUNDATION_IMPEXP="";COREFOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)"</PreprocessorDefinitions>
     </ClangCompile>
@@ -112,14 +101,13 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>windowsapp.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>windowsapp.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Foundation.def</ModuleDefinitionFile>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
       <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
       <PreprocessorDefinitions>FOUNDATION_IMPEXP="";COREFOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)"</PreprocessorDefinitions>
@@ -128,4 +116,5 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
 </Project>

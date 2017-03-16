@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -60,7 +60,7 @@
     <ProjectName>CloudKitLib</ProjectName>
     <RootNamespace>CloudKitLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CloudKitLib</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
@@ -76,7 +76,6 @@
     </ClCompile>
     <ClangCompile>
       <AdditionalOptions>"-DCLOUDKIT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -87,7 +86,6 @@
     </ClCompile>
     <ClangCompile>
       <AdditionalOptions>"-DCLOUDKIT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
@@ -99,7 +97,6 @@
     </ClCompile>
     <ClangCompile>
       <AdditionalOptions>"-DCLOUDKIT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -110,7 +107,6 @@
     </ClCompile>
     <ClangCompile>
       <AdditionalOptions>"-DCLOUDKIT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
       <OptimizationLevel>Full</OptimizationLevel>
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
@@ -118,4 +114,5 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
 </Project>

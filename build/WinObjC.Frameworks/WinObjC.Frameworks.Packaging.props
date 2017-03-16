@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    
+  <PropertyGroup>
+      <PackageId>WinObjC.Frameworks</PackageId>
+      <Title>WinObjC.Frameworks</Title>
+      <Authors>Microsoft</Authors>
+      <Owners>Microsoft</Owners>
+      <Summary>WinObjC.Frameworks</Summary>
+      <Description>WinObjC.Frameworks</Description>
+      <PackageReleaseNotes>
+      </PackageReleaseNotes>
+      <PackageProjectUrl>
+      </PackageProjectUrl>
+      <PackageLicenseUrl>
+      </PackageLicenseUrl>
+      <Copyright>Copyright © Microsoft</Copyright>
+      <PackageTags>WinObjC.Frameworks</PackageTags>
+  </PropertyGroup>
+  
+</Project>

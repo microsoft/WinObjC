@@ -1,0 +1,12 @@
+<VSTemplate Version="0.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
+  <TemplateData>
+    <Name>WinObjC Bundle</Name>
+    <ProjectType>VC</ProjectType>
+  </TemplateData>
+  <TemplateContent>
+    <Project OutputDirectory="$projectname$-WinStore10" File="Bundle.vcxproj" TargetFileName="$projectname$.vcxproj" Platforms="Win32;ARM" ReplaceParameters="true">
+      <ProjectItem ReplaceParameters="true" TargetFileName="$projectname$.vcxproj.filters">Bundle.vcxproj.filters</ProjectItem>
+      <ProjectItem ReplaceParameters="false" TargetFileName="project.json">$packageconfig$project.json</ProjectItem>
+    </Project>
+  </TemplateContent>
+</VSTemplate>

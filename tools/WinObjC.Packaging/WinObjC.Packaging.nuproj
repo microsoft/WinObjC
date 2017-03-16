@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.props" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.props')" />
+  <Import Project="$(SolutionDir)\..\common\winobjc.nuproj.common.props" Condition="Exists('$(SolutionDir)\..\common\winobjc.nuproj.common.props')" />
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|AnyCPU">
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|AnyCPU">
+      <Configuration>Release</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <Import Project="ImportedByThisProj.props" />
+  <PropertyGroup Label="Globals">
+    <OutputPath>$(SolutionDir)\OutputPackages\$(Configuration)\</OutputPath>
+    <ProjectGuid>ddc2aa5f-c8ae-48cb-adb7-9278985c3db7</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" />
+  <ItemGroup>
+    <None Include="Package.Default.props" />
+    <None Include="Package.Default.targets" />
+    <None Include="Package.props" />
+    <None Include="Package.targets" />
+    <None Include="WinObjC.Packager.props" />
+    <None Include="WinObjC.Packager.targets" />
+    <None Include="WinObjC.Packageable.props" />
+    <None Include="WinObjC.Packageable.targets" />
+    <None Include="project.json" />
+    <None Include="ImportedByThisProj.targets" />
+    <None Include="ImportedByThisProj.props" />
+    <None Include="ImportedByAnyDependent.targets" />
+    <None Include="ImportedByAnyDependent.props" />
+    <None Include="Readme.txt">
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
+  <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets')" />
+  <Import Project="ImportedByThisProj.targets" />
+  <Import Project="$(SolutionDir)\..\common\winobjc.nuproj.common.targets" Condition="Exists('$(SolutionDir)\..\common\winobjc.nuproj.common.targets')" />
+</Project>
