@@ -1031,8 +1031,10 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
                            [self count]];
     }
 
+    id objects[range.length];
+    [self getObjects:objects range:range];
     for (NSUInteger i = range.location; i < end; ++i) {
-        if ([self objectAtIndex:i] == anObject) {
+        if (objects[i - range.location] == anObject) {
             return i;
         }
     }
