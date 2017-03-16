@@ -35,7 +35,7 @@
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
     <DefaultLanguage>en-US</DefaultLanguage>
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
-    <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <OutputName>Tests.Shared.Logger</OutputName>
     <ProjectGuid>{ED31F79B-D4B3-4D15-A134-1108B0659C98}</ProjectGuid>
     <ProjectName>Tests.Shared.Logger</ProjectName>

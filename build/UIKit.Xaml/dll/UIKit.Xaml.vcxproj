@@ -24,7 +24,7 @@
     <RootNamespace>UIKit.Xaml</RootNamespace>
     <OutputName>UIKit.Xaml</OutputName>
     <DefaultLanguage>en-US</DefaultLanguage>
-    <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <ApplicationType>Windows Store</ApplicationType>
