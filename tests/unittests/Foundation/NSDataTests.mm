@@ -348,10 +348,8 @@ TEST(NSData, Copying_NSMutableData) {
     ASSERT_OBJCNE(copiedData, mutableData);
 }
 
-#ifdef WINOBJC
-
 TEST(NSData, Copying_CustomBufferWithOwnership) {
-    woc::unique_iw<char> backingBuffer(IwStrDup("hello world"));
+    std::unique_ptr<char[]> backingBuffer(new char[11]{ 'h', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd' });
     NSData* originalOwningData = [NSData dataWithBytesNoCopy:backingBuffer.release() length:11 freeWhenDone:YES];
     NSData* copiedData = [[originalOwningData copy] autorelease];
 
@@ -360,7 +358,7 @@ TEST(NSData, Copying_CustomBufferWithOwnership) {
 }
 
 TEST(NSData, Copying_CustomBufferWithoutOwnership) {
-    woc::unique_iw<char> backingBuffer(IwStrDup("hello world"));
+    std::unique_ptr<char[]> backingBuffer(new char[11]{ 'h', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd' });
     NSData* originalNonOwningData = [NSData dataWithBytesNoCopy:backingBuffer.get() length:11 freeWhenDone:NO];
     NSData* copiedData = [[originalNonOwningData copy] autorelease];
 
@@ -370,8 +368,6 @@ TEST(NSData, Copying_CustomBufferWithoutOwnership) {
     *(backingBuffer.get() + 5) = '!';
     ASSERT_OBJCNE(copiedData, originalNonOwningData);
 }
-
-#endif
 
 TEST(NSData, MutableInstanceArchivesAsMutable) {
     NSMutableData* input = [NSMutableData dataWithBytes:"hello" length:5];
