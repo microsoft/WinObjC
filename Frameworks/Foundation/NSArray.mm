@@ -888,7 +888,6 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
 
 /**
  @Status Stub
- @Notes
 */
 - (void)addObserver:(NSObject*)anObserver
     toObjectsAtIndexes:(NSIndexSet*)indexes
@@ -900,7 +899,6 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
 
 /**
  @Status Stub
- @Notes
 */
 - (void)removeObserver:(NSObject*)anObserver fromObjectsAtIndexes:(NSIndexSet*)indexes forKeyPath:(NSString*)keyPath {
     UNIMPLEMENTED();
@@ -908,7 +906,6 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
 
 /**
  @Status Stub
- @Notes
 */
 - (void)removeObserver:(NSObject*)observer fromObjectsAtIndexes:(NSIndexSet*)indexes forKeyPath:(NSString*)keyPath context:(void*)context {
     UNIMPLEMENTED();
@@ -916,7 +913,6 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
 
 /**
  @Status Interoperable
- @Notes
 */
 + (NSArray*)arrayWithContentsOfURL:(NSURL*)aURL {
     return [[[self alloc] initWithContentsOfURL:aURL] autorelease];
@@ -924,7 +920,6 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
 
 /**
  @Status Stub
- @Notes
 */
 - (NSString*)descriptionWithLocale:(id)locale {
     UNIMPLEMENTED();
@@ -933,7 +928,6 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
 
 /**
  @Status Stub
- @Notes
 */
 - (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level {
     UNIMPLEMENTED();
@@ -942,7 +936,6 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
 
 /**
  @Status Interoperable
- @Notes
 */
 - (void)enumerateObjectsAtIndexes:(NSIndexSet*)indexSet
                           options:(NSEnumerationOptions)opts
@@ -955,7 +948,6 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
 
 /**
  @Status Interoperable
- @Notes
 */
 - (NSIndexSet*)indexesOfObjectsWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(id, NSUInteger, BOOL*))predicate {
     NSIndexSet* fullRange = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, self.count)];
@@ -964,7 +956,6 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
 
 /**
  @Status Interoperable
- @Notes
 */
 - (NSIndexSet*)indexesOfObjectsAtIndexes:(NSIndexSet*)indexSet
                                  options:(NSEnumerationOptions)opts
@@ -983,7 +974,6 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
 
 /**
  @Status Interoperable
- @Notes
 */
 - (NSArray*)initWithContentsOfURL:(NSURL*)aURL {
     NSData* data = [NSData dataWithContentsOfURL:aURL];
@@ -1020,7 +1010,6 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
 
 /**
  @Status Stub
- @Notes
 */
 - (NSArray*)sortedArrayUsingFunction:(NSInteger (*)(id, id, void*))comparator context:(void*)context hint:(NSData*)hint {
     UNIMPLEMENTED();
@@ -1029,15 +1018,19 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
 
 /**
  @Status Interoperable
- @Notes
 */
 - (NSUInteger)indexOfObjectIdenticalTo:(id)anObject inRange:(NSRange)range {
-    if (range.location + range.length > [self count]) {
+    NSUInteger end = NSMaxRange(range);
+    if (end > [self count]) {
         [NSException raise:NSRangeException
-                    format:@"Range {%d, %d} larger than array of size %d.", range.location, range.length, [self count]];
+                    format:@"[%s %s]: range {%d, %d} extends beyond bounds [ 0 .. %d]",
+                           sel_getName(_cmd),
+                           class_getName([self class]),
+                           range.location,
+                           range.length,
+                           [self count]];
     }
 
-    NSUInteger end = NSMaxRange(range);
     for (NSUInteger i = range.location; i < end; ++i) {
         if ([self objectAtIndex:i] == anObject) {
             return i;
@@ -1049,7 +1042,6 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
 
 /**
  @Status Interoperable
- @Notes
 */
 - (NSUInteger)indexOfObjectWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(id, NSUInteger, BOOL*))predicate {
     NSIndexSet* fullRange = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, self.count)];
@@ -1058,7 +1050,6 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
 
 /**
  @Status Interoperable
- @Notes
 */
 - (NSUInteger)indexOfObjectAtIndexes:(NSIndexSet*)indexSet
                              options:(NSEnumerationOptions)opts
