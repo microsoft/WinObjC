@@ -933,20 +933,19 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
  @Status Interoperable
 */
 - (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level {
-    thread_local unsigned int indent = 0;
     NSMutableString* s = [NSMutableString string];
-    NSString* indentStr = (level == 0) ? @"    " : @"\t";
-    for (unsigned int i = 0; i < indent; ++i) {
+    NSString* indentStr = @"    ";
+    for (unsigned int i = 0; i < level; ++i) {
         [s appendString:indentStr];
     }
 
     [s appendString:@"(\n"];
 
     {
-        ++indent;
-        auto deferPop = wil::ScopeExit([]() { --indent; });
+        ++level;
+        auto deferPop = wil::ScopeExit([&level]() { --level; });
         for (id val in self) {
-            for (unsigned int i = 0; i < indent; ++i) {
+            for (unsigned int i = 0; i < level; ++i) {
                 [s appendString:indentStr];
             }
 
@@ -980,7 +979,7 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
         }
     }
 
-    for (unsigned int i = 0; i < indent; ++i) {
+    for (unsigned int i = 0; i < level; ++i) {
         [s appendString:indentStr];
     }
 

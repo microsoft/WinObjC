@@ -273,13 +273,13 @@ TEST(NSArray, Description) {
 
 - (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level {
     if (locale) {
-        if (level) {
+        if (level > 1) {
             return @"Both";
         }
 
         return @"JustLocale";
     } else {
-        if (level) {
+        if (level > 1) {
             return @"JustLevel";
         }
 
@@ -341,9 +341,9 @@ OSX_DISABLED_TEST(NSArray, DescriptionWithLocaleIndent) {
     NSArray* testArray = @[ @"HI", [NSArrayDescriptionTest test] ];
 
     // Should default to descriptionWithLocale:indent:
-    EXPECT_OBJCEQ(@"(\n\tHI,\n\tBoth\n)", [testArray descriptionWithLocale:[NSLocale currentLocale] indent:1]);
+    EXPECT_OBJCEQ(@"    (\n        HI,\n        Both\n    )", [testArray descriptionWithLocale:[NSLocale currentLocale] indent:1]);
     EXPECT_OBJCEQ(@"(\n    HI,\n    JustLocale\n)", [testArray descriptionWithLocale:[NSLocale currentLocale] indent:0]);
-    EXPECT_OBJCEQ(@"(\n\tHI,\n\tJustLevel\n)", [testArray descriptionWithLocale:nil indent:1]);
+    EXPECT_OBJCEQ(@"    (\n        HI,\n        JustLevel\n    )", [testArray descriptionWithLocale:nil indent:1]);
     EXPECT_OBJCEQ(@"(\n    HI,\n    Neither\n)", [testArray descriptionWithLocale:nil indent:0]);
 
     Method originalDescWithLocaleIndent = class_getInstanceMethod([NSArrayDescriptionTest class], @selector(descriptionWithLocale:indent:));
@@ -352,9 +352,9 @@ OSX_DISABLED_TEST(NSArray, DescriptionWithLocaleIndent) {
 
     // Should that fail then to descriptionWithLocale:
     EXPECT_OBJCEQ(@"(\n    HI,\n    Locale\n)", [testArray descriptionWithLocale:[NSLocale currentLocale] indent:0]);
-    EXPECT_OBJCEQ(@"(\n\tHI,\n\tLocale\n)", [testArray descriptionWithLocale:[NSLocale currentLocale] indent:1]);
+    EXPECT_OBJCEQ(@"    (\n        HI,\n        Locale\n    )", [testArray descriptionWithLocale:[NSLocale currentLocale] indent:1]);
     EXPECT_OBJCEQ(@"(\n    HI,\n    NoLocale\n)", [testArray descriptionWithLocale:nil indent:0]);
-    EXPECT_OBJCEQ(@"(\n\tHI,\n\tNoLocale\n)", [testArray descriptionWithLocale:nil indent:1]);
+    EXPECT_OBJCEQ(@"    (\n        HI,\n        NoLocale\n    )", [testArray descriptionWithLocale:nil indent:1]);
 
     Method originalDescWithLocale = class_getInstanceMethod([NSArrayDescriptionTest class], @selector(descriptionWithLocale:));
     Method fakeDescWithLocale = class_getInstanceMethod([NSArrayDescriptionTest class], @selector(fakeDescriptionWithLocale:));
@@ -362,9 +362,9 @@ OSX_DISABLED_TEST(NSArray, DescriptionWithLocaleIndent) {
 
     // Should that fail then to description
     EXPECT_OBJCEQ(@"(\n    HI,\n    Description\n)", [testArray descriptionWithLocale:[NSLocale currentLocale] indent:0]);
-    EXPECT_OBJCEQ(@"(\n\tHI,\n\tDescription\n)", [testArray descriptionWithLocale:[NSLocale currentLocale] indent:1]);
+    EXPECT_OBJCEQ(@"    (\n        HI,\n        Description\n    )", [testArray descriptionWithLocale:[NSLocale currentLocale] indent:1]);
     EXPECT_OBJCEQ(@"(\n    HI,\n    Description\n)", [testArray descriptionWithLocale:nil indent:0]);
-    EXPECT_OBJCEQ(@"(\n\tHI,\n\tDescription\n)", [testArray descriptionWithLocale:nil indent:1]);
+    EXPECT_OBJCEQ(@"    (\n        HI,\n        Description\n    )", [testArray descriptionWithLocale:nil indent:1]);
 
     method_exchangeImplementations(originalDescWithLocaleIndent, fakeDescWithLocaleIndent);
     method_exchangeImplementations(originalDescWithLocale, fakeDescWithLocale);
