@@ -87,7 +87,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
       <HeaderMap>Project</HeaderMap>
-      <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
+      <IncludePaths>$(SolutionPublicHeadersDir);$(MSBuildThisFileDirectory)..\..\CGCatalog;%(IncludePaths)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
       <ObjectiveCModules>true</ObjectiveCModules>
       <OptimizationLevel>Disabled</OptimizationLevel>
@@ -111,7 +111,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
       <HeaderMap>Project</HeaderMap>
-      <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
+      <IncludePaths>$(SolutionPublicHeadersDir);$(MSBuildThisFileDirectory)..\..\CGCatalog;%(IncludePaths)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
       <ObjectiveCModules>true</ObjectiveCModules>
       <OptimizationLevel>Disabled</OptimizationLevel>
@@ -133,7 +133,7 @@
     <ClangCompile>
       <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
       <HeaderMap>Project</HeaderMap>
-      <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
+      <IncludePaths>$(SolutionPublicHeadersDir);$(MSBuildThisFileDirectory)..\..\CGCatalog;%(IncludePaths)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
       <ObjectiveCModules>true</ObjectiveCModules>
       <OptimizationLevel>MinSpace</OptimizationLevel>
@@ -154,7 +154,7 @@
     <ClangCompile>
       <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
       <HeaderMap>Project</HeaderMap>
-      <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
+      <IncludePaths>$(SolutionPublicHeadersDir);$(MSBuildThisFileDirectory)..\..\CGCatalog;%(IncludePaths)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
       <ObjectiveCModules>true</ObjectiveCModules>
       <OptimizationLevel>MinSpace</OptimizationLevel>
