@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TargetOsAndVersion Condition="'$(TargetOsAndVersion)' == ''">Universal Windows</TargetOsAndVersion>
+  </PropertyGroup>
+  <ImportGroup>
+    <Import Project="$(MsBuildThisFileDirectory)msvc\starboard-sdk.targets" Condition="Exists('$(MsBuildThisFileDirectory)msvc\starboard-sdk.targets')" />
+  </ImportGroup>
+</Project>

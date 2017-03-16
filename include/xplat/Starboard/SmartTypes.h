@@ -17,9 +17,9 @@
 #pragma once
 
 #include "Starboard/TypeTraits.h"
-#include "IwMalloc.h"
 
 #if defined(__OBJC__)
+#include "IwMalloc.h"
 #include <Foundation/Foundation.h>
 #include <CoreFoundation/CFBase.h>
 #endif
@@ -567,6 +567,7 @@ StrongCF<T> MakeStrongCF(T val) {
 #endif
 
 #ifdef WINOBJCRT_EXPORT // Quick way to detect WinObjCRT.
+#ifdef __OBJC__
 namespace woc {
 template <typename T>
 class unique_iw : public std::unique_ptr<T, void (*)(T*)> {
@@ -578,6 +579,7 @@ public:
     }
 };
 }
+#endif
 #endif
 
 #else // else(!defined(__cplusplus))

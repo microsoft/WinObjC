@@ -73,20 +73,28 @@ const StringVec& VSTemplateProject::getPlatforms() const
   return m_platforms;
 }
 
-VSTemplateProject* VSTemplateProject::createFromXML(const pugi::xml_node& pNode)
+const VSProjectType VSTemplateProject::getProjectType() const
+{
+  return m_projectType;
+}
+
+VSTemplateProject* VSTemplateProject::createFromXML(const pugi::xml_node& pNode, const VSProjectType projectType)
 {
   // Create a VSTemplate and initialize it
   VSTemplateProject* ret = new VSTemplateProject();
-  if (!ret->initFromXML(pNode)) {
+  if (!ret->initFromXML(pNode, projectType)) {
     delete ret;
     ret = NULL;
   }
   return ret;
 }
 
-bool VSTemplateProject::initFromXML(const pugi::xml_node& pNode)
+bool VSTemplateProject::initFromXML(const pugi::xml_node& pNode, const VSProjectType projectType)
 {
-  // Create a ProjectItem from the project description
+  // Set project type (VC, NuProj, Unknown)
+  m_projectType = projectType;
+
+  // Create a ProjectItem from the Project node description
   ProjectItem* projectDesc = new ProjectItem;
   projectDesc->inFile = pNode.attribute("File").value();
   projectDesc->outFile = pNode.attribute("TargetFileName").value();
@@ -101,7 +109,7 @@ bool VSTemplateProject::initFromXML(const pugi::xml_node& pNode)
     m_outputDir = "$projectname$";
   }
 
-  // Extract project items
+  // Extract each ProjectItem node under Project
   for (pugi::xml_node child = pNode.first_child(); child; child = child.next_sibling()) {
     if (child.name() == std::string("ProjectItem")) {
       bool replaceParams = child.attribute("ReplaceParameters").as_bool();
@@ -127,6 +135,7 @@ bool VSTemplateProject::initFromXML(const pugi::xml_node& pNode)
 static void expandString(std::string& str, const StringMap& params)
 {
   for (auto paramKV : params) {
+    // Replace $vars$ in string with intended parameter
     str = sb_replace(str, paramKV.first, paramKV.second, -1);
   }
 }
@@ -135,7 +144,11 @@ static void expandProjectItem(const std::string& srcDir, const std::string& dest
 {
   // Expand paths to be absolute and pretty
   if (item) {
+    // Replace any variables inside item string
     expandString(item->outFile, params);
+    expandString(item->inFile, params);
+
+    // Set full path of files
     item->outFile = joinPaths(destDir, item->outFile);
     item->outFile = platformPath(sanitizePath(item->outFile));
     item->inFile = joinPaths(srcDir, item->inFile);

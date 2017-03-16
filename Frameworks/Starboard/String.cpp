@@ -34,11 +34,3 @@ std::string woc::string::format[[gnu::format(printf, 1, 2)]](const char* format,
     va_end(arguments2);
     return ret;
 }
-
-/**
-@Status Stub
-*/
-extern "C" const char* strnstr(const char* a, const char* b, int len) {
-    UNIMPLEMENTED();
-    return nullptr;
-}

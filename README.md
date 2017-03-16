@@ -1,14 +1,68 @@
 # Welcome to the Windows Bridge for iOS Project
 The Windows Bridge for iOS (also referred to as WinObjC) is a Microsoft open-source project that provides an Objective-C development environment for Visual Studio and support for iOS APIs. The bridge allows you to create Universal Windows Platform (UWP) apps that will run on many Windows devices by re-using your Objective-C code and iOS APIs alongside Windows 10 features like Cortana and Windows Notifications.
 
+[develop-build-badge]:        https://img.shields.io/vso/build/winobjc/03960378-fe55-4577-a8cc-1a874f7cf008/109.svg?style=flat-square
+[github-rel]:                 https://github.com/Microsoft/WinObjC/releases/latest
+[github-rel-badge]:           https://img.shields.io/github/tag/microsoft/winobjc.svg?style=flat-square
+[choco]:                      https://chocolatey.org/packages/winobjc-tools
+[choco-badge]:                https://img.shields.io/chocolatey/v/winobjc-tools.svg?style=flat-square                 
+[choco-badge-pre]:            https://img.shields.io/chocolatey/vpre/winobjc-tools.svg?style=flat-square
+[nuget-frmwrk]:               https://www.nuget.org/packages/WinObjC.Frameworks
+[nuget-frmwrk-badge]:         https://img.shields.io/nuget/v/WinObjC.Frameworks.svg?style=flat-square
+[nuget-frmwrk-badge-pre]:     https://img.shields.io/nuget/vpre/WinObjC.Frameworks.svg?style=flat-square
+[nuget-lang]:                 https://www.nuget.org/packages/WinObjC.Language
+[nuget-lang-badge]:           https://img.shields.io/nuget/v/WinObjC.Language.svg?style=flat-square
+[nuget-lang-badge-pre]:       https://img.shields.io/nuget/vpre/WinObjC.Language.svg?style=flat-square
+
+|                      |           Stable (master)                        |            Pre-release (develop)          |
+| -------------------: | :----------------------------------------------: | :---------------------------------------: |
+|           **Build**  |                  -                               |       ![VSTS][develop-build-badge]        |
+|  **GitHub Release**  |[![Github Release][github-rel-badge]][github-rel] |               -                           |
+|    **winobjc-tools** |     [![Tools][choco-badge]][choco]               |   [![Tools][choco-badge-pre]][choco]      |
+| **WinObjC.Language** |[![Language][nuget-lang-badge]][nuget-lang]       |[![Language][nuget-lang-badge-pre]][nuget-lang]   |
+|**WinObjC.Frameworks**|[![Frameworks][nuget-frmwrk-badge]][nuget-frmwrk] |[![Frameworks][nuget-frmwrk-badge-pre]][nuget-frmwrk]|
+
 ## Download and Installation
 To use the bridge you'll need:
-- The latest pre-built Windows Bridge for iOS SDK, that you can download [here](https://aka.ms/winobjc_latest). Click on the **winobjc.zip** file under *Downloads* to start the download and extract it to the local directory of your choice (example: C:\winobjc) when complete.
 - **Windows 10**, build 10586 or higher. Validate your version number [here](http://windows.microsoft.com/en-US/windows/which-operating-system).
-- **Visual Studio 2015 Update 3** with Windows developer tools. Visual Studio 2015 Community is available for free [here](https://dev.windows.com/downloads). Select (at least) the following components during installation:
-   1. Programming Languages -> Visual C++
-   2. Universal Windows App Development Tools (all)
-   
+- **Visual Studio 2017** with Windows developer tools. Visual Studio 2017 Community is available for free [here](https://dev.windows.com/downloads).
+
+   Ensure the following individual components are selected during installation (Selecting the **Universal Windows Platform development** workflow should give most of the below):
+  - Visual Studio Core Editor
+  - Nuget Package Manager
+  - C# and Visual Basic Roslyn compilers
+  - Static analysis tools
+  - Windows 10 SDK (10.0.14393.0)
+  - Visual Studio C++ core features
+  - VC++ 2017 v141 toolset (x86, x64)
+  - Visual C++ copmilers and libraries for ARM
+  - Visual C++ runtime for UWP
+  - Windows 10 SDK (10.0.10240.0)
+  - Windows 10 SDK (10.0.10586.0)
+  - MSBuild
+  - Windows Universal CRT SDK
+  - Standard Library Modules
+  - VC++ 2015.3 v140 toolset (x86,x64)
+  - Windows Universal C Runtime
+
+
+To get started with an existing Xcode Project, you will also need:
+- **Chocolatey**, a package manager for windows. See how to install the latest version [here] (https://chocolatey.org/)
+- **winobjc-tools**, the command line tools for WinObjC. Run the below command from **powershell (Admin)** to get the latest version:
+```
+choco upgrade winobjc-tools
+```
+(more information about this command and its options can be found [here](https://chocolatey.org/docs/commands-upgrade))
+
+
+## Advanced Installation for Contributors and Ninjas
+
+Additional Visual Studio Components Needed for Contributors:
+   1. C# and Visual Basic
+   2. Visual Studio SDK
+   3. .NET Framework 4.6 targeting pack
+   4. C++ Profiling Tools
+
 If you want to build the bridge from source instead, you'll also need to install [Git LFS](https://git-lfs.github.com) before cloning the repo. For more detailed instructions, see the [Building From Source](https://github.com/Microsoft/WinObjC/wiki/Building-From-Source) wiki page.
 
 If you're having trouble downloading & installing the bridge, see the [Known Issues](https://github.com/Microsoft/WinObjC#known-issues) section below and check our [FAQ](https://github.com/Microsoft/WinObjC/wiki/FAQ).
@@ -17,15 +71,15 @@ If you're having trouble downloading & installing the bridge, see the [Known Iss
 ### Importing your Xcode Project
 When using the bridge, the first thing you'll want to do is generate a Visual Studio solution from your Xcode project:
 
-1. Open the Windows Command Prompt (type **cmd** in the Start Menu to find it) and navigate to your Xcode project directory using the **cd** command. Note: use the directory containing your .workspace or .xcodeproj folder.
+1. Open Windows PowerShell (type **powershell** in the Start Menu to find it) and navigate to your Xcode project directory using the **cd** command. Note: use the directory containing your .workspace or .xcodeproj folder.
 
   ```
     C:\> cd C:\MyProject
   ```
-2. Run the vsimporter tool from the *bin* directory of the bridge SDK you downloaded. This will generate the Visual Studio Solution:
+2. Run the vsimporter tool. This will generate the Visual Studio Solution:
 
   ```
-    C:\MyProject> C:\winobjc\bin\vsimporter.exe
+    C:\MyProject> vsimporter.exe
   ```
 3. Open the generated Visual Studio solution with the command:
 
@@ -35,25 +89,18 @@ When using the bridge, the first thing you'll want to do is generate a Visual St
 
 For more detailed step by step instructions on how to import a project, see the [Quick Start Tutorial](https://github.com/Microsoft/WinObjC/wiki/Quick-Start-Tutorial) page of the wiki. For vsimporter options and known issues, check the [Using vsimporter](https://github.com/Microsoft/WinObjC/wiki/Using-vsimporter) wiki page.
 
-### Configuring Visual Studio
-Once your solution is opened in Visual Studio, you'll want to enable Objective-C syntax highlighting and debugging.
-
-- Installing the Syntax Highlighting Extension
-  - To enable Objective-C syntax highlighting in Visual Studio, navigate to the *bin* directory of the SDK and double click on **objc-syntax-highlighting.vsix** to launch the installer.
-- Setup Objective-C Debugging
-  - To setup Objective-C debugging in Visual Studio, follow the instructions on the [Debugging](https://github.com/Microsoft/WinObjC/wiki/Debugging) page of the wiki.
-  
 ### Analyzing your App
 After importing your project, we strongly suggest using the [App Analysis Tool](https://developer.microsoft.com/en-us/windows/bridges/ios/app-analyzer-tool) to have a better understanding of the compatibility of your app with the bridge.
 
 ### Building & Running the Samples
 A great way to learn more about the bridge and its features is building and running the samples of the SDK, which contain many code examples. We recommend starting with the **WOCCatalog** sample app, which demonstrates an assortment of iOS and XAML UI controls:
 
-1. Navigate to the *samples/WOCCatalog* directory of the bridge SDK
-2. Double-click on the **WOCCatalog-WinStore10.sln** solution to open it in Visual Studio
-3. In Visual Studio, right-click on the **WOCCatalog (Universal Windows)** project
-4. Select **Set as StartUp project**
-5. Use **Ctrl-F5** to build and run the app
+1. Clone the repo.
+2. Navigate to the *samples/WOCCatalog* directory of the bridge SDK
+3. Double-click on the **WOCCatalog-WinStore10.sln** solution to open it in Visual Studio
+4. In Visual Studio, right-click on the **WOCCatalog (Universal Windows)** project
+5. Select **Set as StartUp project**
+6. Use **Ctrl-F5** to build and run the app
 
 For more detailed step by step instructions, see the [Quick Start Tutorial](https://github.com/Microsoft/WinObjC/wiki/Quick-Start-Tutorial) page of the wiki.
 

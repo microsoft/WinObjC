@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <WinObjCPackageOverridePath Include="$(MSBuildThisFileDirectory)..\build\OutputPackages"/>
+    <WinObjCPackageOverridePath Include="$(MSBuildThisFileDirectory)..\tools\OutputPackages"/>
+  </ItemGroup>
+
+    <UsingTask  
+    TaskName="FixupVersionOfWinObjCProjectReferences"
+    TaskFactory="CodeTaskFactory"  
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll" >
+    <ParameterGroup>
+      <PackageReferences ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
+      <SearchPaths ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
+      <AdjustedPackageReferences  ParameterType="Microsoft.Build.Framework.ITaskItem[]" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Reference Include="System" />
+      <Reference Include="System.IO" />
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+
+          if (PackageReferences.Length > 0) {
+            foreach (var packageItem in PackageReferences) {
+              // Try to find a matching package in one of the search paths.
+              string packageName = packageItem.GetMetadata("Identity");
+              string packageNameSearchPattern =  packageName + "*.nupkg";
+
+              foreach(var pathItem in SearchPaths) {
+                string basePath = pathItem.GetMetadata("FullPath");
+
+                // Check 3 directories in order:
+                // 1. The search path itself
+                // 2. A Release subdir
+                // 3. A Debug subdir
+                string[] paths = new string[] {basePath, basePath + @"\Release", basePath + @"\Debug"};
+
+                bool found = false;
+
+                foreach (var path in paths) {
+                  if (Directory.Exists(path)) {
+                    var file = Directory.GetFiles(path, packageNameSearchPattern).OrderByDescending(f => (new FileInfo(f)).LastWriteTimeUtc).FirstOrDefault();
+
+                    if (file != null) {
+                      // Remove 1 extra for the . in between PackageName and version
+                      string version = Path.GetFileNameWithoutExtension(file).Remove(0, packageName.Length + 1);
+                      Log.LogMessage("Adjusting " + packageName + " to new version " + version);
+                      packageItem.SetMetadata("Version", version);
+                      found = true;
+                      break;
+                    }
+                  }
+                }
+
+                if (found) {
+                  break;
+                }
+              }
+            }
+          }
+
+          AdjustedPackageReferences = PackageReferences;
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <Target Name="FixupWinObjCProjectReferences" BeforeTargets="_GetRestoreProjectStyle">
+      <FixupVersionOfWinObjCProjectReferences PackageReferences="@(PackageReference)"
+         SearchPaths="@(WinObjCPackageOverridePath)">
+         <Output TaskParameter="AdjustedPackageReferences" ItemName="_AdjustedPackageReferences" />
+      </FixupVersionOfWinObjCProjectReferences>
+
+      <ItemGroup>
+        <PackageReference Remove="@(PackageReference)" />
+        <PackageReference Include="@(_AdjustedPackageReferences)" />
+      </ItemGroup>
+  </Target>
+
+  <Import Project="$(MSBuildThisFileDirectory)\workaround\Microsoft.Nuget.Workaround.targets"/>
+</Project>

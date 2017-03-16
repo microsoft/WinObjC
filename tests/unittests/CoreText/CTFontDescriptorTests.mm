@@ -63,3 +63,97 @@ TEST(CTFontDescriptor, CreateCopyWithAttributes) {
     CFDictionaryAddValue(attributesToAdd, kCTFontNameAttribute, name);
     ASSERT_OBJCEQ((id)attributesToAdd, (id)CFAutorelease(CTFontDescriptorCopyAttributes(newFd)));
 }
+
+TEST(CTFontDescriptor, CreateMatchingDescriptors) {
+    auto matching = woc::MakeAutoCF<CFArrayRef>(CTFontDescriptorCreateMatchingFontDescriptors(nullptr, nullptr));
+    EXPECT_EQ(nullptr, matching.get());
+
+    auto descriptor = woc::MakeAutoCF<CTFontDescriptorRef>(CTFontDescriptorCreateWithNameAndSize(CFSTR("ARIALMT"), 25.5));
+    matching = woc::MakeAutoCF<CFArrayRef>(CTFontDescriptorCreateMatchingFontDescriptors(descriptor, nullptr));
+
+    // There should only be one font matching the font name
+    ASSERT_EQ(1, CFArrayGetCount(matching));
+
+    CTFontDescriptorRef first = static_cast<CTFontDescriptorRef>(CFArrayGetValueAtIndex(matching, 0));
+    ASSERT_NE(nullptr, first);
+
+    auto fontName = woc::MakeAutoCF<CFStringRef>(static_cast<CFStringRef>(CTFontDescriptorCopyAttribute(first, kCTFontNameAttribute)));
+    EXPECT_OBJCEQ(@"ArialMT", static_cast<NSString*>(fontName.get()));
+
+    NSDictionary* dict = @{(id)kCTFontFamilyNameAttribute : @"ARIAL" };
+    descriptor = woc::MakeAutoCF<CTFontDescriptorRef>(CTFontDescriptorCreateWithAttributes(static_cast<CFDictionaryRef>(dict)));
+    matching = woc::MakeAutoCF<CFArrayRef>(CTFontDescriptorCreateMatchingFontDescriptors(descriptor, nullptr));
+
+    // There should be at least four fonts in the Arial family (possibly more)
+    CFIndex familyCount = CFArrayGetCount(matching);
+    ASSERT_LE(4, familyCount);
+
+    first = static_cast<CTFontDescriptorRef>(CFArrayGetValueAtIndex(matching, 0));
+    ASSERT_NE(nullptr, first);
+
+    fontName = woc::MakeAutoCF<CFStringRef>(static_cast<CFStringRef>(CTFontDescriptorCopyAttribute(first, kCTFontNameAttribute)));
+
+    // First font should be the "normal" font in the family
+    EXPECT_OBJCEQ(@"ArialMT", static_cast<NSString*>(fontName.get()));
+
+    NSMutableSet* mandatory = [NSMutableSet setWithObject:(id)kCTFontFamilyNameAttribute];
+    dict = @{(id)kCTFontFamilyNameAttribute : @"ARIAL", (id)kCTFontStyleNameAttribute : @"IMPOSSIBLE" };
+
+    descriptor = woc::MakeAutoCF<CTFontDescriptorRef>(CTFontDescriptorCreateWithAttributes(static_cast<CFDictionaryRef>(dict)));
+    matching = woc::MakeAutoCF<CFArrayRef>(CTFontDescriptorCreateMatchingFontDescriptors(descriptor, static_cast<CFSetRef>(mandatory)));
+
+    // No fonts match the style attribute and it's not mandatory so it's ignored
+    ASSERT_LE(familyCount, CFArrayGetCount(matching));
+
+    first = static_cast<CTFontDescriptorRef>(CFArrayGetValueAtIndex(matching, 0));
+    ASSERT_NE(nullptr, first);
+
+    fontName = woc::MakeAutoCF<CFStringRef>(static_cast<CFStringRef>(CTFontDescriptorCopyAttribute(first, kCTFontNameAttribute)));
+    EXPECT_OBJCEQ(@"ArialMT", static_cast<NSString*>(fontName.get()));
+
+    [mandatory addObject:(id)kCTFontStyleNameAttribute];
+    descriptor = woc::MakeAutoCF<CTFontDescriptorRef>(CTFontDescriptorCreateWithAttributes(static_cast<CFDictionaryRef>(dict)));
+    matching = woc::MakeAutoCF<CFArrayRef>(CTFontDescriptorCreateMatchingFontDescriptors(descriptor, static_cast<CFSetRef>(mandatory)));
+
+    // But when it's mandatory no descriptors are returned
+    ASSERT_EQ(0, CFArrayGetCount(matching));
+
+    dict = @{(id)kCTFontFamilyNameAttribute : @"ARIAL", (id)kCTFontStyleNameAttribute : @"ITALIC" };
+    descriptor = woc::MakeAutoCF<CTFontDescriptorRef>(CTFontDescriptorCreateWithAttributes(static_cast<CFDictionaryRef>(dict)));
+    matching = woc::MakeAutoCF<CFArrayRef>(CTFontDescriptorCreateMatchingFontDescriptors(descriptor, static_cast<CFSetRef>(mandatory)));
+
+    // There should only be one matching font
+    EXPECT_EQ(1, CFArrayGetCount(matching));
+
+    first = static_cast<CTFontDescriptorRef>(CFArrayGetValueAtIndex(matching, 0));
+    ASSERT_NE(nullptr, first);
+
+    fontName = woc::MakeAutoCF<CFStringRef>(static_cast<CFStringRef>(CTFontDescriptorCopyAttribute(first, kCTFontNameAttribute)));
+    EXPECT_OBJCEQ(@"Arial-ItalicMT", static_cast<NSString*>(fontName.get()));
+}
+
+TEST(CTFontDescriptor, CreateMatchingDescriptor) {
+    auto match = woc::MakeAutoCF<CTFontDescriptorRef>(CTFontDescriptorCreateMatchingFontDescriptor(nullptr, nullptr));
+    EXPECT_EQ(nullptr, match);
+
+    auto descriptor = woc::MakeAutoCF<CTFontDescriptorRef>(CTFontDescriptorCreateWithNameAndSize(CFSTR("ARIALMT"), 25.5));
+    match = woc::MakeAutoCF<CTFontDescriptorRef>(CTFontDescriptorCreateMatchingFontDescriptor(descriptor, nullptr));
+    ASSERT_NE(nullptr, match);
+
+    auto fontName = woc::MakeAutoCF<CFStringRef>(static_cast<CFStringRef>(CTFontDescriptorCopyAttribute(match, kCTFontNameAttribute)));
+    EXPECT_OBJCEQ(@"ArialMT", static_cast<NSString*>(fontName.get()));
+
+    NSDictionary* dict = @{(id)kCTFontFamilyNameAttribute : @"ARIAL" };
+    descriptor = woc::MakeAutoCF<CTFontDescriptorRef>(CTFontDescriptorCreateWithAttributes(static_cast<CFDictionaryRef>(dict)));
+    match = woc::MakeAutoCF<CTFontDescriptorRef>(CTFontDescriptorCreateMatchingFontDescriptor(descriptor, nullptr));
+    ASSERT_NE(nullptr, match);
+
+    fontName = woc::MakeAutoCF<CFStringRef>(static_cast<CFStringRef>(CTFontDescriptorCopyAttribute(match, kCTFontNameAttribute)));
+    EXPECT_OBJCEQ(@"ArialMT", static_cast<NSString*>(fontName.get()));
+
+    dict = @{(id)kCTFontFamilyNameAttribute : @"ARIAL", (id)kCTFontStyleNameAttribute : @"ITALIC" };
+    descriptor = woc::MakeAutoCF<CTFontDescriptorRef>(CTFontDescriptorCreateWithAttributes(static_cast<CFDictionaryRef>(dict)));
+    match = woc::MakeAutoCF<CTFontDescriptorRef>(CTFontDescriptorCreateMatchingFontDescriptor(descriptor, nullptr));
+    fontName = woc::MakeAutoCF<CFStringRef>(static_cast<CFStringRef>(CTFontDescriptorCopyAttribute(match, kCTFontNameAttribute)));
+    EXPECT_OBJCEQ(@"Arial-ItalicMT", static_cast<NSString*>(fontName.get()));
+}

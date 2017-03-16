@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+
+<!--
+  PACKAGE DEFAULT PROPS
+  Description: Default package properties
+  For Use By: A project that consumes this package
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Categorize files from the package -->
+  <ItemGroup Condition="'$(ConfigurationType)' != 'StaticLibrary'">
+    <_DllsFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\*.dll"/>    
+    <_DllsFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.dll"/>
+      
+    <_ReferencesFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\*.winmd"/>    
+    <_ReferencesFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.winmd"/>
+
+    <_ImportLibsFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\*.lib"/>    
+    <_ImportLibsFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.lib"/>
+
+    <_XamlFilesFromPackage Include="$(MSBuildThisFileDirectory)\xaml\**\*.xaml" />
+    <_BundleFilesFromPackage Include="$(MSBuildThisFileDirectory)\bundle\**\*.*" />
+    <_ContentFilesFromPackage Include="$(MSBuildThisFileDirectory)\content\**\*.*" />
+  </ItemGroup>
+
+  <!-- Add references to package files for projects that consume this package -->
+  <ItemGroup> 
+    <!-- Add each .lib to the linker -->
+    <Link Include="@(_ImportLibsFromPackage->'%(FullPath)')"/>
+  </ItemGroup>
+  <ItemGroup Condition="'$(ConfigurationType)' != 'StaticLibrary'">
+    <!-- Add references for clang -->
+    <ReferenceCopyLocalPaths Include="@(_DllsFromPackage)"/>
+    <Reference Include="@(_ReferencesFromPackage)">
+      <Implementation>%(Filename).dll</Implementation>
+    </Reference>
+
+    <!-- Add references for .xaml files -->
+    <ReferenceCopyLocalPaths Include="@(_XamlFilesFromPackage)">
+      <DestinationSubDirectory>%(RecursiveDir)</DestinationSubDirectory>
+    </ReferenceCopyLocalPaths>
+
+    <!-- Add references for content files -->
+    <ReferenceCopyLocalPaths Include="@(_ContentFilesFromPackage)">
+      <DestinationSubDirectory>%(RecursiveDir)</DestinationSubDirectory>
+    </ReferenceCopyLocalPaths>
+
+    <!-- Add references for bundle files -->
+    <ReferenceCopyLocalPaths Include="@(_BundleFilesFromPackage)">
+      <DestinationSubDirectory>%(RecursiveDir)</DestinationSubDirectory>
+    </ReferenceCopyLocalPaths>
+  </ItemGroup>
+
+  <!-- Add dependency paths needed by projects that consume this package -->
+  <ItemDefinitionGroup>
+    <ClangCompile>
+      <InternalSystemIncludePaths>$(MSBuildThisFileDirectory)\include\;%(InternalSystemIncludePaths);</InternalSystemIncludePaths>
+    </ClangCompile>
+  </ItemDefinitionGroup>
+</Project>

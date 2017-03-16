@@ -16,4 +16,5 @@
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
+  <Target Name="_GenerateRestoreGraphProjectEntry" />
 </Project>

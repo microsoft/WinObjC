@@ -27,6 +27,12 @@ namespace pugi {
 class VSTemplateProject;
 class VSTemplateParameters;
 
+enum VSProjectType {
+  UnknownProj,
+  VcxProj,
+  NuProj
+};
+
 typedef std::vector<VSTemplateProject*> VSTemplateProjectVec;
 
 class VSTemplate {
@@ -41,8 +47,10 @@ public:
 private:
   VSTemplate(const std::string& absPath);
   bool initFromXML(const pugi::xml_document& doc);
+  bool initTemplateData(const pugi::xml_node& tcNode);
   bool initTemplateContents(const pugi::xml_node& tcNode);
 
- std::string m_absPath;
- VSTemplateProjectVec m_projects;
+  std::string m_absPath;
+  VSTemplateProjectVec m_projects;
+  VSProjectType m_projectType;
 };

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -19,16 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
       <Project>{26da08da-d0b9-4579-b168-e7f0a5f20e57}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\UIKit\dll\UIKit.vcxproj">
       <Project>{8e79930b-7ef6-4a4e-b46c-efc0a49c55d9}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
-      <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\SafariServices\lib\SafariServicesLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\SafariServices\lib\SafariServicesLib.vcxproj">
       <Project>{926fbb0b-874f-4f88-84eb-4352d41cf810}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -42,7 +39,7 @@
     <ProjectGuid>{85ae5ec2-24a1-4a23-b176-d89b79e85804}</ProjectGuid>
     <RootNamespace>SafariServices</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>SafariServices</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
@@ -57,7 +54,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>SafariServices.def</ModuleDefinitionFile>
-      <AdditionalDependencies>;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
@@ -69,7 +66,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>SafariServices.def</ModuleDefinitionFile>
-      <AdditionalDependencies>;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
@@ -81,7 +78,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>SafariServices.def</ModuleDefinitionFile>
-      <AdditionalDependencies>;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
@@ -93,7 +90,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>SafariServices.def</ModuleDefinitionFile>
-      <AdditionalDependencies>;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
@@ -102,4 +99,5 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
 </Project>

@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+   <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents" DependsOnTargets="$(GitVersionDependsOn)" Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">
+
+      <ItemGroup>
+        <!-- Include Deps for this project -->
+        <_DepsFiles Include="$(StarboardBasePath)\deps\prebuilt\**\icu*.dll"/>
+        <_DepsFiles Include="$(StarboardBasePath)\deps\prebuilt\**\icu*.lib"/>
+
+        <_DepsFiles Include="$(StarboardBasePath)\deps\prebuilt\**\libxml*.dll"/>
+        <_DepsFiles Include="$(StarboardBasePath)\deps\prebuilt\**\libxml*.lib"/>
+
+        <_DepsFiles Include="$(StarboardBasePath)\deps\prebuilt\**\OpenAl.dll"/>
+        <_DepsFiles Include="$(StarboardBasePath)\deps\prebuilt\**\OpenAl.lib"/>
+
+        <_DepsFiles Include="$(StarboardBasePath)\deps\prebuilt\**\libz.dll"/>
+        <_DepsFiles Include="$(StarboardBasePath)\deps\prebuilt\**\libz.lib"/>
+
+
+        <PackageFile Include="@(_DepsFiles)">
+            <PackagePath>build\deps\prebuilt\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
+        </PackageFile>
+
+        <!-- include folder for project  -->
+        <_LibZIncludeFiles Include="$(StarboardBasePath)\deps\prebuilt\include\z*.*"/>
+
+        <PackageFile Include="@(_LibZIncludeFiles)" Condition="Exists('%(FullPath)')">
+          <PackagePath>build\include\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
+        </PackageFile>
+
+        <_LibXmlIncludeFiles Include="$(StarboardBasePath)\deps\prebuilt\include\libxml\**\*.*"/>
+
+        <PackageFile Include="@(_LibXmlIncludeFiles)" Condition="Exists('%(FullPath)')">
+          <PackagePath>build\include\libxml\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
+        </PackageFile>
+
+        <_ICUIncludeFiles Include="$(StarboardBasePath)\deps\prebuilt\include\icu\**\*.*"/>
+        
+        <PackageFile Include="@(_ICUIncludeFiles)" Condition="Exists('%(FullPath)')">
+          <PackagePath>build\include\icu\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
+        </PackageFile>
+
+        <_OpenAlIncludeFiles Include="$(StarboardBasePath)\deps\prebuilt\include\OpenAL\**\*.*"/>
+        
+        <PackageFile Include="@(_OpenAlIncludeFiles)" Condition="Exists('%(FullPath)')">
+          <PackagePath>build\include\OpenAL\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
+        </PackageFile>
+
+        <PackageFile Include="$(MSBuildThisFileDirectory)$(PackageId).props" Condition="Exists('$(MSBuildThisFileDirectory)$(PackageId).props')">
+            <PackagePath>build\$(PackageId).props</PackagePath>
+        </PackageFile>
+        <PackageFile Include="$(MSBuildThisFileDirectory)$(PackageId).targets" Condition="Exists('$(MSBuildThisFileDirectory)$(PackageId).targets')">
+            <PackagePath>build\$(PackageId).targets</PackagePath>
+        </PackageFile>
+      </ItemGroup>
+  </Target>
+  
+</Project>

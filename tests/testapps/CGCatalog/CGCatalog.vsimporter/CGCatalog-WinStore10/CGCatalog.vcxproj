@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -20,7 +20,6 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>CGCatalog</ProjectName>
-    <RootNamespace>CGCatalog</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
@@ -30,8 +29,8 @@
     <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <Keyword>IslandwoodProj</Keyword>
-    <ProjectGuid>{2E407584-7C8E-433E-A103-3F6126EE26F7}</ProjectGuid>
-    <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">..\..\..\..\..</WINOBJC_SDK_ROOT>
+    <ProjectGuid>{FC1847AC-5E37-496F-801F-32F8911A49A7}</ProjectGuid>
+    <RootNamespace>CGCatalog</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -59,12 +58,8 @@
     <TargetName>CGCatalog</TargetName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-    <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.props" />
-  </ImportGroup>
-  <ImportGroup Label="Shared">
-    <Import Project="../CGCatalog-Headers-WinStore10/CGCatalog-Headers.vcxitems" Label="Shared" />
-  </ImportGroup>
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -92,8 +87,9 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
       <HeaderMap>Project</HeaderMap>
+      <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>false</ObjectiveCModules>
+      <ObjectiveCModules>true</ObjectiveCModules>
       <OptimizationLevel>Disabled</OptimizationLevel>
       <PreprocessorDefinitions>DEBUG=1</PreprocessorDefinitions>
     </ClangCompile>
@@ -115,8 +111,9 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
       <HeaderMap>Project</HeaderMap>
+      <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>false</ObjectiveCModules>
+      <ObjectiveCModules>true</ObjectiveCModules>
       <OptimizationLevel>Disabled</OptimizationLevel>
       <PreprocessorDefinitions>DEBUG=1</PreprocessorDefinitions>
     </ClangCompile>
@@ -136,8 +133,9 @@
     <ClangCompile>
       <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
       <HeaderMap>Project</HeaderMap>
+      <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>false</ObjectiveCModules>
+      <ObjectiveCModules>true</ObjectiveCModules>
       <OptimizationLevel>MinSpace</OptimizationLevel>
     </ClangCompile>
     <Link>
@@ -156,8 +154,9 @@
     <ClangCompile>
       <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
       <HeaderMap>Project</HeaderMap>
+      <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>false</ObjectiveCModules>
+      <ObjectiveCModules>true</ObjectiveCModules>
       <OptimizationLevel>MinSpace</OptimizationLevel>
     </ClangCompile>
     <Link>
@@ -179,6 +178,95 @@
     </AppxManifest>
     <Xml Include="default.rd.xml" />
     <None Include="CGCatalog_TemporaryKey.pfx" />
+    <Image Include="Assets\LockScreenLogo.scale-200.png" />
+    <Image Include="Assets\SplashScreen.scale-200.png" />
+    <Image Include="Assets\Square150x150Logo.scale-200.png" />
+    <Image Include="Assets\Square44x44Logo.scale-200.png" />
+    <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
+    <Image Include="Assets\StoreLogo.png" />
+    <Image Include="Assets\Wide310x150Logo.scale-200.png" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="App.xaml.h">
+      <DependentUpon>App.xaml</DependentUpon>
+    </ClInclude>
+    <ClCompile Include="App.xaml.cpp">
+      <DependentUpon>App.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+    <AssetCatalogCompile Include="..\..\CGCatalog\Resources\Assets.xcassets" />
+    <ClInclude Include="..\..\CGCatalog\AppDelegate.h" />
+    <ClInclude Include="..\..\CGCatalog\CGCBaseViewController.h" />
+    <ClInclude Include="..\..\CGCatalog\CGCRootViewController.h" />
+    <ClInclude Include="..\..\CGCatalog\CGContextSampleRow.h" />
+    <ClInclude Include="..\..\CGCatalog\CGContextSamplesRootViewController.h" />
+    <ClInclude Include="..\..\CGCatalog\CGContextShadowViewController.h" />
+    <ClInclude Include="..\..\CGCatalog\CGDrawOptions.h" />
+    <ClInclude Include="..\..\CGCatalog\CGDrawView.h" />
+    <ClInclude Include="..\..\CGCatalog\CGPathAddArcToPointViewController.h" />
+    <ClInclude Include="..\..\CGCatalog\CGPathAddArcViewController.h" />
+    <ClInclude Include="..\..\CGCatalog\CGPathAddCurveToPointViewController.h" />
+    <ClInclude Include="..\..\CGCatalog\CGPathAddElipseViewController.h" />
+    <ClInclude Include="..\..\CGCatalog\CGPathAddLineToPointViewController.h" />
+    <ClInclude Include="..\..\CGCatalog\CGPathAddPathViewController.h" />
+    <ClInclude Include="..\..\CGCatalog\CGPathAddQuadCurveToPointViewController.h" />
+    <ClInclude Include="..\..\CGCatalog\CGPathAddRectViewController.h" />
+    <ClInclude Include="..\..\CGCatalog\CGPathAddRoundedRectViewController.h" />
+    <ClInclude Include="..\..\CGCatalog\CGPathApplyCurveViewController.h" />
+    <ClInclude Include="..\..\CGCatalog\CGPathApplyViewController.h" />
+    <ClInclude Include="..\..\CGCatalog\CGPathCloseSubpathViewController.h" />
+    <ClInclude Include="..\..\CGCatalog\CGPathContainsPointViewController.h" />
+    <ClInclude Include="..\..\CGCatalog\CGPathGetBoundingBoxViewController.h" />
+    <ClInclude Include="..\..\CGCatalog\CGSamplePage.h" />
+    <ClInclude Include="..\..\CGCatalog\Samples\CGCCGBitmapContentViewController.h" />
+    <ClInclude Include="..\..\CGCatalog\Samples\CGCCGContextBeginEndTransparencyLayer.h" />
+    <ClInclude Include="..\..\CGCatalog\Samples\CGCCGContextBeginTransparencyLayerWithRect.h" />
+    <ClInclude Include="..\..\CGCatalog\Samples\CGCCGContextReplacePathWithStrokedPath.h" />
+    <ClInclude Include="..\..\CGCatalog\Samples\CGCCGContextSetPatternPhase.h" />
+    <ClInclude Include="..\..\CGCatalog\Samples\CGCCGContextViewController.h" />
+    <ClInclude Include="..\..\CGCatalog\Samples\CGCCGPathApplyViewController.h" />
+    <ClInclude Include="..\..\CGCatalog\Samples\CGCCGPathContainsPointViewController.h" />
+    <ClInclude Include="..\..\CGCatalog\Samples\CGContextNewTestsController.h" />
+    <ClangCompile Include="..\..\CGCatalog\AppDelegate.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGCBaseViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGCRootViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGContextSampleRow.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGContextSamplesRootViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGContextShadowViewController.mm" />
+    <ClangCompile Include="..\..\CGCatalog\CGDrawOptions.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGDrawView.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddArcFullCircleViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddArcToPointViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddArcViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddCurveToPointViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddElipseViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddLineToPointViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddPathViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddQuadCurveToPointViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddRectViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddRoundedRectViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathApplyCurveViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathApplyViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathCloseSubpathViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathContainsPointViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\CGPathGetBoundingBoxViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGBitmapContentViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextBeginEndTransparencyLayer.m" />
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextBeginTransparencyLayerWithRect.m" />
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextReplacePathWithStrokedPath.m" />
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextSetPatternPhase.m" />
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGPathApplyViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGPathContainsPointViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGContextNewTestsController.m" />
+    <ClangCompile Include="..\..\CGCatalog\main.m" />
+    <SBInfoPlistCopy Include="..\..\CGCatalog\Info.plist">
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Release'">false</ExcludedFromBuild>
+      <VariableFile Condition="'$(Configuration)'=='Debug'">CGCatalog-Debug-xcvars.txt</VariableFile>
+      <VariableFile Condition="'$(Configuration)'=='Release'">CGCatalog-Release-xcvars.txt</VariableFile>
+    </SBInfoPlistCopy>
     <SBResourceCopy Include="..\..\CGCatalog\Resources\AddArc.png" />
     <SBResourceCopy Include="..\..\CGCatalog\Resources\AddArcToPoint.png" />
     <SBResourceCopy Include="..\..\CGCatalog\Resources\AddCurveToPoint.png" />
@@ -192,54 +280,7 @@
     <SBResourceCopy Include="..\..\CGCatalog\Resources\PathAddRect.png" />
     <SBResourceCopy Include="..\..\CGCatalog\Resources\PathApply.png" />
     <SBResourceCopy Include="..\..\CGCatalog\Resources\RoundedRect.png" />
-    <Image Include="Assets\LockScreenLogo.scale-200.png" />
-    <Image Include="Assets\SplashScreen.scale-200.png" />
-    <Image Include="Assets\Square150x150Logo.scale-200.png" />
-    <Image Include="Assets\Square44x44Logo.scale-200.png" />
-    <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
-    <Image Include="Assets\StoreLogo.png" />
-    <Image Include="Assets\Wide310x150Logo.scale-200.png" />
-    <ClangCompile Include="..\..\CGCatalog\CGContextShadowViewController.mm" />
-    <ClangCompile Include="..\..\CGCatalog\CGDrawOptions.m" />
-    <ClangCompile Include="..\..\CGCatalog\CGPathAddArcFullCircleViewController.m" />
-    <ClangCompile Include="..\..\CGCatalog\CGPathAddArcToPointViewController.m" />
-    <ClangCompile Include="..\..\CGCatalog\CGPathAddArcViewController.m" />
-    <ClangCompile Include="..\..\CGCatalog\CGPathAddRoundedRectViewController.m" />
-    <ClangCompile Include="..\..\CGCatalog\CGPathApplyCurveViewController.m" />
-    <ClangCompile Include="..\..\CGCatalog\CGPathCloseSubpathViewController.m" />
-    <ClangCompile Include="..\..\CGCatalog\Samples\CGContextNewTestsController.m" />
-    <ClangCompile Include="..\..\CGCatalog\CGCRootViewController.m" />
-    <ClangCompile Include="..\..\CGCatalog\CGPathAddCurveToPointViewController.m" />
-    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextReplacePathWithStrokedPath.m" />
-    <ClangCompile Include="..\..\CGCatalog\CGPathAddLineToPointViewController.m" />
-    <ClangCompile Include="..\..\CGCatalog\CGContextSamplesRootViewController.m" />
-    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextBeginEndTransparencyLayer.m" />
-    <ClangCompile Include="..\..\CGCatalog\CGPathAddRectViewController.m" />
-    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextSetPatternPhase.m" />
-    <ClangCompile Include="..\..\CGCatalog\CGPathAddPathViewController.m" />
-    <ClangCompile Include="..\..\CGCatalog\CGDrawView.m" />
-    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextViewController.m" />
-    <ClangCompile Include="..\..\CGCatalog\CGPathContainsPointViewController.m" />
-    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGPathContainsPointViewController.m" />
-    <ClangCompile Include="..\..\CGCatalog\AppDelegate.m" />
-    <ClangCompile Include="..\..\CGCatalog\CGContextSampleRow.m" />
-    <ClangCompile Include="..\..\CGCatalog\CGCBaseViewController.m" />
-    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextBeginTransparencyLayerWithRect.m" />
-    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGBitmapContentViewController.m" />
-    <ClangCompile Include="..\..\CGCatalog\CGPathApplyViewController.m" />
-    <ClangCompile Include="..\..\CGCatalog\CGPathAddQuadCurveToPointViewController.m" />
-    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGPathApplyViewController.m" />
-    <ClangCompile Include="..\..\CGCatalog\main.m" />
-    <ClangCompile Include="..\..\CGCatalog\CGPathGetBoundingBoxViewController.m" />
-    <ClangCompile Include="..\..\CGCatalog\CGPathAddElipseViewController.m" />
     <StoryboardCompile Include="..\..\CGCatalog\Resources\Launch Screen.storyboard" />
-    <AssetCatalogCompile Include="..\..\CGCatalog\Resources\Assets.xcassets" />
-    <SBInfoPlistCopy Include="..\..\CGCatalog\Info.plist">
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Release'">false</ExcludedFromBuild>
-      <VariableFile Condition="'$(Configuration)'=='Debug'">CGCatalog-Debug-xcvars.txt</VariableFile>
-      <VariableFile Condition="'$(Configuration)'=='Release'">CGCatalog-Release-xcvars.txt</VariableFile>
-    </SBInfoPlistCopy>
     <Text Include="CGCatalog-Debug-xcvars.txt">
       <DeploymentContent>false</DeploymentContent>
     </Text>
@@ -247,23 +288,22 @@
       <DeploymentContent>false</DeploymentContent>
     </Text>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="pch.h" />
-    <ClInclude Include="App.xaml.h">
-      <DependentUpon>App.xaml</DependentUpon>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="App.xaml.cpp">
-      <DependentUpon>App.xaml</DependentUpon>
-    </ClCompile>
-    <ClCompile Include="pch.cpp">
-      <PrecompiledHeader>Create</PrecompiledHeader>
-    </ClCompile>
-  </ItemGroup>
   <ItemGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.targets" />
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets" />
+
+  <!-- Begin NuGet Section -->
+  <PropertyGroup>
+    <TargetFramework>uap10.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="WinObjC.Frameworks" Version="*" />
+    <PackageReference Include="WinObjC.Frameworks.UWP" Version="*" />
+    <PackageReference Include="WinObjC.Frameworks.Core" Version="*" />
+    <PackageReference Include="WinObjC.Language" Version="*" />
+    <PackageReference Include="WinObjC.Logging" Version="*" />
+  </ItemGroup>
+  <!-- End NuGet Section -->
+  
+  <Import Project="$(MSBuildThisFileDirectory)\..\..\..\..\..\common\winobjc.packagereference.override.targets" Condition="Exists('$(MSBuildThisFileDirectory)\..\..\..\..\..\common\winobjc.packagereference.override.targets')"/>
 </Project>

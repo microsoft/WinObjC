@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+
+<!--
+  PACKAGING TARGETS
+  Description: The target definitions specific to dependents of the WinObjC.Packaging package
+  For Use By: A NuProj packager or a packageable VcxProj
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Targets for NuGet NuProj packager projects -->
+  <Import Condition="$(MSBuildProjectExtension) == '.nuproj'" Project="WinObjC.Packager.targets" />
+
+  <!-- Targets for WinObjC VcxProj packageable projects -->
+  <Import Condition="$(MSBuildProjectExtension) == '.vcxproj'" Project="WinObjC.Packageable.targets" />
+</Project>

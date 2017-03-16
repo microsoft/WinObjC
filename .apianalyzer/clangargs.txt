@@ -1,0 +1,13 @@
+﻿-target i686-pc-windows-msvc -fblocks -ferror-limit=0 -fobjc-runtime=objfw -x objective-c++ -std=c++14 -DEIGEN_MPL2_ONLY -include WOCStdlib.h -include StubIncludes.h
+-isystem "$(BASE_SEARCH_PATH)\\tools\\msvc\\LLVM-3.6.0\\lib\\clang\\3.7.0\\include"
+-isystem "$(BASE_SEARCH_PATH)\\tools\\include\\WOCStdLib"
+-isystem "$(BASE_SEARCH_PATH)\\tools\\include_next\\WOCStdLib"
+-isystem "$(BASE_SEARCH_PATH)\\tools\\include"
+-isystem "$(BASE_SEARCH_PATH)\\tools\\deps\\prebuilt\\include"
+-isystem "$(BASE_SEARCH_PATH)\\include"
+-isystem "C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\include"
+-isystem "C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\atlmfc\\include"
+-isystem "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.14393.0\\ucrt"
+-isystem "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.14393.0\\um"
+-isystem "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.14393.0\\shared"
+-isystem "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.14393.0\\winrt"

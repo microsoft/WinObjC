@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="b2fb5618-d35f-4405-8851-8db89aa7649a"
+    Name="1f9b12f9-f5cd-49f9-84dc-289435e06021"
     Publisher="CN=islandwood"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="b2fb5618-d35f-4405-8851-8db89aa7649a" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="1f9b12f9-f5cd-49f9-84dc-289435e06021" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>GLKitComplex</DisplayName>
-    <PublisherDisplayName>rajsesh</PublisherDisplayName>
+    <PublisherDisplayName>bbowman</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 

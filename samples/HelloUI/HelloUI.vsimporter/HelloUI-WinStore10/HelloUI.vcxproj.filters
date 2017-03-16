@@ -2,19 +2,19 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{45aaefb1-8a2a-421f-ac02-0ca6daaf8cc0}</UniqueIdentifier>
+      <UniqueIdentifier>{11936f98-f3d4-4b7a-b934-d03479f519e1}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{500bf699-f85f-40ec-8c58-6c9193c05193}</UniqueIdentifier>
+      <UniqueIdentifier>{18e82c4d-23a9-4a75-bc05-f0636b9be8a5}</UniqueIdentifier>
     </Filter>
     <Filter Include="HelloUI">
-      <UniqueIdentifier>{8A14B4B8-922D-4E57-9614-3050469B547A}</UniqueIdentifier>
+      <UniqueIdentifier>{2C27587C-308D-48A5-B64B-79BFDCAB5B2B}</UniqueIdentifier>
     </Filter>
     <Filter Include="HelloUI\Supporting Files">
-      <UniqueIdentifier>{3B17D930-BDAB-4F1F-BFD1-031CEAD4301B}</UniqueIdentifier>
+      <UniqueIdentifier>{50B7120C-FFCC-4CB1-B89F-35FD5F4FADB6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{898025DD-D620-49DE-A9BA-F589D30BA7AC}</UniqueIdentifier>
+      <UniqueIdentifier>{BE26924F-0F35-4598-A903-B1A64F7BA700}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

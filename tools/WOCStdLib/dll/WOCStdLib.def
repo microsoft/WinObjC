@@ -1,0 +1,40 @@
+LIBRARY WOCStdLib
+    EXPORTS
+
+        ; System stuff not in Windows:
+        sleep
+        task_info
+        uname
+        usleep
+        sched_get_priority_max
+        sched_get_priority_min
+        mach_host_self
+        host_statistics
+        srandom
+        random
+        gettimeofday
+        strnstr
+        __inet_ntoa
+        if_indextoname
+        host_page_size
+        mach_task_self
+        sysctl
+        dlopen
+        dlsym
+        dlclose
+        NSVersionOfRunTimeLibrary
+        NSVersionOfLinkTimeLibrary
+
+        OSHostByteOrder
+        OSReadBigInt16
+        OSReadBigInt32
+        OSSwapBigToHostInt16
+        OSSwapBigToHostInt32
+        OSSwapInt16
+        OSSwapInt32
+        OSSwapLittleToHostInt32
+        arc4random
+        arc4random_uniform
+        mach_timebase_info
+        mach_absolute_time
+        sysctlbyname

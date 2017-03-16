@@ -444,7 +444,7 @@ void SBWorkspace::detectProjectCollisions() const
   }
 }
 
-VCProject* SBWorkspace::generateGlueProject() const
+VCProject* SBWorkspace::generateGlueProject(bool packageable) const
 {
   // Get a set of all configurations appearing in all projects
   StringSet slnConfigs;
@@ -461,6 +461,7 @@ VCProject* SBWorkspace::generateGlueProject() const
   string projectName = getName() + "WinRT";
   VSTemplateParameters templateParams;
   templateParams.setProjectName(projectName);
+  templateParams.setIsPackageable(packageable);
 
   // Expand the template and get the template project
   vstemplate->expand(sb_dirname(getPath()), templateParams);
@@ -469,18 +470,6 @@ VCProject* SBWorkspace::generateGlueProject() const
 
   // Create the glue project and add it to the solution
   VCProject* glueProject = new VCProject(projTemplates.front());
-
-  // Get path to WinObjC SDK
-  BuildSettings globalBS(NULL);
-  String useRelativeSdkPath = globalBS.getValue("VSIMPORTER_RELATIVE_SDK_PATH");
-  String sdkDir = globalBS.getValue("WINOBJC_SDK_ROOT");
-
-  // Try to create a relative path to the SDK, if requested
-  if (strToUpper(useRelativeSdkPath) == "YES") {
-    String projectDir = sb_dirname(projTemplates.front()->getPath());
-    sdkDir = getRelativePath(projectDir, sdkDir);
-  }
-  glueProject->addGlobalProperty("WINOBJC_SDK_ROOT", platformPath(sdkDir), "'$(WINOBJC_SDK_ROOT)' == ''");
 
   // Set configuration properties
   for (auto configName : slnConfigs) {
@@ -494,10 +483,55 @@ VCProject* SBWorkspace::generateGlueProject() const
   return glueProject;
 }
 
-void SBWorkspace::generateFiles(bool genProjectionsProj)
+VCProject* SBWorkspace::generatePackageProject() const
+{
+  // Get a set of all configurations appearing in all projects
+  StringSet slnConfigs;
+  for (auto project : m_openProjects) {
+    const StringSet& configs = project.second->getSelectedConfigurations();
+    slnConfigs.insert(configs.begin(), configs.end());
+  }
+
+  // Get the template
+  VSTemplate* vstemplate = VSTemplate::getTemplate("Package");
+  sbAssertWithTelemetry(vstemplate, "Failed to get Packaging VS template");
+
+  // Set up basis template parameters
+  string projectName = getName() + "Package";
+  VSTemplateParameters templateParams;
+  templateParams.setProjectName(projectName);
+
+  // Expand the template and get the template project
+  vstemplate->expand(sb_dirname(getPath()), templateParams);
+  const VSTemplateProjectVec& projTemplates = vstemplate->getProjects();
+  sbAssertWithTelemetry(projTemplates.size() == 1, "Unexpected Package template size");
+
+  // Create the package project and add it to the solution
+  VCProject* packageProject = new VCProject(projTemplates.front());
+
+  // Set configuration properties
+  for (auto configName : slnConfigs) {
+    VCProjectConfiguration *projConfig = packageProject->addConfiguration(configName);
+    projConfig->setProperty("TargetName", getName());
+  }
+
+  // Set RootNamespace
+  packageProject->addGlobalProperty("RootNamespace", getName());
+
+  return packageProject;
+}
+
+void SBWorkspace::generateFiles(bool genProjectionsProj, bool genPackagingProj)
 {
   // Detect and warn about about any collisions
   detectProjectCollisions();
+
+  // Don't generate packaging project if the solution only contains an app
+  bool solutionContainsPackagebleProject = false;
+  for (auto project : m_openProjects) {
+    solutionContainsPackagebleProject = solutionContainsPackagebleProject || project.second->containsPackagebleProject();
+  }
+  genPackagingProj = genPackagingProj && solutionContainsPackagebleProject;
 
   // Get a set of all configurations appearing in all projects
   StringSet slnConfigs;
@@ -520,23 +554,44 @@ void SBWorkspace::generateFiles(bool genProjectionsProj)
   // Construct VS Projects
   std::multimap<SBTarget*, VCProject*> vcProjects;
   for (auto project : m_openProjects) {
-    project.second->constructVCProjects(*sln, slnConfigs, vcProjects);
+    project.second->constructVCProjects(*sln, slnConfigs, vcProjects, genPackagingProj);
   }
 
-  // Construct a projections project, if required
   VCProject* glueProject = nullptr;
   if (genProjectionsProj) {
-    glueProject = generateGlueProject();
+    // Construct a WinRT projections project
+    glueProject = generateGlueProject(genPackagingProj);
     sln->addProject(glueProject);
+  }
+
+  VCProject* packageProject = nullptr;
+  if (genPackagingProj) {
+    // Construct a packaging project
+    packageProject = generatePackageProject();
+    packageProject->addProjectReference(glueProject);
+    sln->addProject(packageProject);
+    sln->addPlatform("AnyCPU");
+
+    // Copy nuget.config into the solution directory
+    String templatesDir = globalBS.getValue("VSIMPORTER_TEMPLATES_DIR");
+    String nugetConfigSource = joinPaths(templatesDir, "nuget.config");
+    String nugetConfigDest = joinPaths(sb_dirname(getPath()), "nuget.config");
+    CopyFile(nugetConfigSource.c_str(), nugetConfigDest.c_str(), false);
   }
 
   // Resolve dependencies
   for (auto proj : vcProjects) {
     proj.first->resolveVCProjectDependecies(proj.second, vcProjects);
 
+    TargetProductType productType = proj.first->getProductType();
     // Add a dependency on all static/framework target projects
-    if (glueProject && proj.first->getProductType() == TargetStaticLib) {
+    if (glueProject && productType == TargetStaticLib) {
       glueProject->addProjectReference(proj.second);
+    }
+
+    // Make the packaging project dependent on all framework components
+    if (packageProject && productType != TargetProductUnknown && productType != TargetApplication) {
+      packageProject->addProjectReference(proj.second);
     }
   }
 

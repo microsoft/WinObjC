@@ -2,19 +2,19 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{770d26b6-1e27-4c20-849d-a21925474b98}</UniqueIdentifier>
+      <UniqueIdentifier>{b417a805-d597-48e7-b8e4-55153d844dd6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{4f975066-7fe5-4c3e-b9ee-185bb3fd3031}</UniqueIdentifier>
+      <UniqueIdentifier>{0cb66740-0866-4645-9de8-eefe40a30c62}</UniqueIdentifier>
     </Filter>
     <Filter Include="Foundation-Dev">
-      <UniqueIdentifier>{2E49F227-968C-4904-A4DB-08BABCE74D34}</UniqueIdentifier>
+      <UniqueIdentifier>{AD406B59-F9C8-477F-A395-D0A4BEC4B568}</UniqueIdentifier>
     </Filter>
     <Filter Include="Foundation-Dev\Supporting Files">
-      <UniqueIdentifier>{B3B16CD8-37A0-4E80-9761-DC22F8158EB7}</UniqueIdentifier>
+      <UniqueIdentifier>{84B46D73-C4A3-4114-B80C-EE71E81351AD}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{5F0A00D4-278B-4D24-B7BE-118F3CBF6201}</UniqueIdentifier>
+      <UniqueIdentifier>{490D7440-3B61-42BB-B608-4FB4F8D624CD}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

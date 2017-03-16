@@ -32,14 +32,11 @@ enum {
   ListMode = 1
 };
 
-static void checkWinObjCSDK()
+static void checkTemplatesRoot()
 {
   const BuildSettings bs(NULL);
-  String sdkRoot = bs.getValue("WINOBJC_SDK_ROOT");
-  sbValidateWithTelemetry(!sb_realpath(sdkRoot).empty(), "The WINOBJC_SDK_ROOT directory does not exist: \"" + platformPath(sdkRoot) + "\"");
-
   String templateDir = bs.getValue("VSIMPORTER_TEMPLATES_DIR");
-  sbValidateWithTelemetry(!sb_realpath(templateDir).empty(),  "The WINOBJC_SDK_ROOT directory is missing vsimporter templates: \"" + platformPath(sdkRoot) + "\"");
+  sbValidateWithTelemetry(!sb_realpath(templateDir).empty(),  "Unable to locate vsimporter templates");
 }
 
 void printVersion(const char *execName)
@@ -66,41 +63,45 @@ void printUsage(const char *execName, bool full)
   std::cout << std::endl;
   std::cout << "\t" << sb_basename(execName) << " ";
   std::cout << "-list [-project projectname | -workspace workspacename]" << std::endl;
+  std::cout << std::endl;
+  std::cout << "\t" << sb_basename(execName) << " ";
+  std::cout << "[-genprojections] [-genpackaging[=0|1]]" << std::endl;
 
   // Don't print option descriptions if brief usage was requested
   if (full) {
     std::cout << std::endl;
     std::cout << "Program Options" << std::endl;
-    std::cout << "    -usage" << "\t\t    print brief usage message" << std::endl;
-    std::cout << "    -help" << "\t\t    print full usage message" << std::endl;
-    std::cout << "    -genprojections" << "\t    generate WinRT projections project" << std::endl;
-    std::cout << "    -interactive" << "\t    enable interactive mode" << std::endl;
-    std::cout << "    -loglevel LEVEL" << "\t    debug | info | warning | error" << std::endl;
-    std::cout << "    -list" << "\t\t    list the targets and configurations in the project" << std::endl;
-    std::cout << "    -sdk SDKROOT" << "\t    specify path to WinObjC SDK root (by default calculated from binary's location)" << std::endl;
-    std::cout << "    -relativepath" << "\t    write a relative WinObjC SDK path to project files" << std::endl;
-    std::cout << "    -project PATH" << "\t    specify project to process" << std::endl;
-    std::cout << "    -workspace PATH" << "\t    specify workspace to process" << std::endl;
-    std::cout << "    -target NAME" << "\t    specify target to process" << std::endl;
     std::cout << "    -alltargets" << "\t\t    process all targets" << std::endl;
-    std::cout << "    -scheme NAME" << "\t    specify scheme to process" << std::endl;
     std::cout << "    -allschemes" << "\t\t    process all schemes" << std::endl;
     std::cout << "    -configuration NAME" << "\t    specify configuration to use" << std::endl;
-    std::cout << "    -xcconfig FILE" << "\t    apply build settings defined in FILE as overrides" << std::endl;
+    std::cout << "    -genpackaging=[0|1]" << "\t    generate project able to package the solution" << std::endl;
+    std::cout << "\t\t\t    enabled by default (set -genpackaging=0 to override)" << std::endl;
+    std::cout << "    -genprojections" << "\t    generate WinRT projections project" << std::endl;
+    std::cout << "    -help" << "\t\t    print full usage message" << std::endl;
+    std::cout << "    -interactive" << "\t    enable interactive mode" << std::endl;
+    std::cout << "    -list" << "\t\t    list the targets and configurations in the project" << std::endl;
+    std::cout << "    -loglevel LEVEL" << "\t    debug | info | warning | error" << std::endl;
+    std::cout << "    -project PATH" << "\t    specify project to process" << std::endl;
+    std::cout << "    -scheme NAME" << "\t    specify scheme to process" << std::endl;
+    std::cout << "    -target NAME" << "\t    specify target to process" << std::endl;
+    std::cout << "    -templates PATH" << "\t    specify path to vsimporter-templates directory (by default calculated from binary's location)" << std::endl;
+    std::cout << "    -usage" << "\t\t    print brief usage message" << std::endl;
     std::cout << "    -version" << "\t\t    print the tool version" << std::endl;
+    std::cout << "    -workspace PATH" << "\t    specify workspace to process" << std::endl;
+    std::cout << "    -xcconfig FILE" << "\t    apply build settings defined in FILE as overrides" << std::endl;
   }
 }
 
 int main(int argc, char* argv[])
 {
   StringSet targets, configurations, schemes;
-  String sdkRoot, projectPath, xcconfigPath, workspacePath;
+  String templatesPath, projectPath, xcconfigPath, workspacePath;
   String logVerbosity("warning");
   int projectSet = 0;
   int workspaceSet = 0;
   int interactiveFlag = 0;
-  int relativeSdkFlag = 0;
   int genProjectionsFlag = 0;
+  int genPackagingFlag = 1;
   int allTargets = 0;
   int allSchemes = 0;
   int mode = GenerateMode;
@@ -111,7 +112,6 @@ int main(int argc, char* argv[])
     {"help", no_argument, 0, 0},
     {"interactive", no_argument, &interactiveFlag, 1},
     {"loglevel", required_argument, 0, 0},
-    {"sdk", required_argument, 0, 0},
     {"list", no_argument, &mode, ListMode},
     {"project", required_argument, &projectSet, 1},
     {"target", required_argument, 0, 0},
@@ -121,8 +121,9 @@ int main(int argc, char* argv[])
     {"workspace", required_argument, &workspaceSet, 1},
     {"scheme", required_argument, 0, 0},
     {"allschemes", required_argument, &allSchemes, 1},
-    {"relativepath", no_argument, &relativeSdkFlag, 1},
-    { "genprojections", no_argument, &genProjectionsFlag, 1 },
+    {"templates", required_argument, 0, 0 },
+    {"genprojections", no_argument, &genProjectionsFlag, 1 },
+    {"genpackaging", optional_argument, &genPackagingFlag, 1 },
     {0, 0, 0, 0}
   };
 
@@ -155,26 +156,29 @@ int main(int argc, char* argv[])
     case 4:
       logVerbosity = strToLower(optarg);
       break;
-    case 5:
-      sdkRoot = optarg;
-      break;
-    case 7:
+    case 6:
       projectPath = optarg;
       break;
-    case 8:
+    case 7:
       targets.insert(optarg);
       break;
-    case 10:
+    case 9:
       configurations.insert(optarg);
       break;
-    case 11:
+    case 10:
       xcconfigPath = optarg;
       break;
-    case 12:
+    case 11:
       workspacePath = optarg;
       break;
-    case 13:
+    case 12:
       schemes.insert(optarg);
+      break;
+    case 14:
+      templatesPath = optarg;
+      break;
+    case 16:
+      genPackagingFlag = optarg ? stoi(optarg) : 1;
       break;
     default:
       // Do nothing
@@ -282,15 +286,11 @@ int main(int argc, char* argv[])
   // Initialize global settings
   String binaryDir = sb_dirname(getBinaryLocation());
   sbValidateWithTelemetry(!binaryDir.empty(), "Failed to resolve binary directory.");
+  if (!templatesPath.empty()) {
+    settingsManager.setGlobalVar("VSIMPORTER_TEMPLATES_DIR", joinPaths(getcwd(), templatesPath));
+  }
   settingsManager.setGlobalVar("VSIMPORTER_BINARY_DIR", binaryDir);
   settingsManager.setGlobalVar("VSIMPORTER_INTERACTIVE", interactiveFlag ? "YES" : "NO");
-  settingsManager.setGlobalVar("VSIMPORTER_RELATIVE_SDK_PATH", relativeSdkFlag ? "YES" : "NO");
-  if (!sdkRoot.empty()) {
-    sdkRoot = joinPaths(getcwd(), sdkRoot);
-  } else {
-    sdkRoot = joinPaths(binaryDir, "..");
-  }
-  settingsManager.setGlobalVar("WINOBJC_SDK_ROOT", sdkRoot);
 
   // Add useful environment variables to global settings
   String username;
@@ -306,8 +306,8 @@ int main(int argc, char* argv[])
   if (sb_getenv("XCODE_XCCONFIG_FILE", xcconfigFile))
     settingsManager.processGlobalConfigFile(xcconfigFile);
 
-  // Validate WinObjC SDK directory
-  checkWinObjCSDK();
+  // Validate vsimporter-templates directory
+  checkTemplatesRoot();
 
   // Create a workspace
   SBWorkspace *mainWorkspace;
@@ -327,7 +327,7 @@ int main(int argc, char* argv[])
     } else {
       mainWorkspace->queueTargets(targets, configurations);
     }
-    mainWorkspace->generateFiles(genProjectionsFlag);
+    mainWorkspace->generateFiles(genProjectionsFlag, genPackagingFlag);
   } else {
 	  sbAssertWithTelemetry(0); // non-reachable
   }

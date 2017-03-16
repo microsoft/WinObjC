@@ -2,28 +2,28 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{d76a9b7b-b5a4-4c53-a5fd-2b27521321c5}</UniqueIdentifier>
+      <UniqueIdentifier>{15cb5cc4-3ef7-46f9-b26d-d17129ef9036}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{d267b6ba-d37a-47b6-aedf-4bc0102d99a7}</UniqueIdentifier>
+      <UniqueIdentifier>{bc1689b0-ae46-4752-bed2-f77ef8a5c10c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Images">
-      <UniqueIdentifier>{7ABC620C-0579-4228-A19D-6ECB213EC019}</UniqueIdentifier>
+      <UniqueIdentifier>{B66D73D2-EA2C-461B-A60C-7C6C3B77134D}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog">
-      <UniqueIdentifier>{2E4E4A68-D2F8-4771-B53F-0BCBF01DF04E}</UniqueIdentifier>
+      <UniqueIdentifier>{0FB83325-B12B-4CA9-B533-8253C1861E44}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog\Supporting Files">
-      <UniqueIdentifier>{6BEFFDB1-5403-4240-B9D9-EC5A0823DD15}</UniqueIdentifier>
+      <UniqueIdentifier>{D55AF837-B81D-475A-9F15-20C4804CC8CB}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog\UIKitControls">
-      <UniqueIdentifier>{26110A8D-9A20-4B21-8767-25180C0F2E94}</UniqueIdentifier>
+      <UniqueIdentifier>{0F24A774-DF18-42AB-AF0F-AD560750685D}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog\XamlControls">
-      <UniqueIdentifier>{2893A9F9-BBAE-4368-BBB3-6DE81541B4F2}</UniqueIdentifier>
+      <UniqueIdentifier>{7199B9C2-ED01-457F-8D9A-DA5A58F395FB}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{A3877577-57D9-47AC-83BE-6D675B72821B}</UniqueIdentifier>
+      <UniqueIdentifier>{524E6E97-9445-4820-BDD3-4E1D0B8F1792}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

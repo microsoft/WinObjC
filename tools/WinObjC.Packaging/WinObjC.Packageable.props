@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+
+<!--
+  PACKAGABLE PROPS
+  Description: The property definitions specific to a WinObjC project intended to be packaged
+  For Use By: A VcxProj that can be packaged into a NuGet
+-->
+
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <!-- NuGet specific properties -->
+    <IncludeOutputsInPackage>false</IncludeOutputsInPackage>
+    <IncludeContentInPackage>false</IncludeContentInPackage>
+
+    <!-- Packaging defaults from WinObjC.Packaging -->
+    <IncludeDefaultPackageContents Condition="'$(IncludeDefaultPackageContents)' == ''">true</IncludeDefaultPackageContents>
+    <!-- If the package is intended to only include WinRT components set IncludeStaticLibraryInPackage to false -->
+    <IncludeStaticLibraryInPackage Condition="'$(IncludeStaticLibraryInPackage)' == ''">true</IncludeStaticLibraryInPackage>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <_MainProjectOutput>
+      <IsPackable>$(IsPackable)</IsPackable>
+      <IsNuGetized>$(IsNuGetized)</IsNuGetized>
+    </_MainProjectOutput>
+  </ItemDefinitionGroup>
+</Project>

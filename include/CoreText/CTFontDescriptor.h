@@ -137,10 +137,9 @@ CORETEXT_EXPORT CTFontDescriptorRef CTFontDescriptorCreateCopyWithVariation(CTFo
 CORETEXT_EXPORT CTFontDescriptorRef CTFontDescriptorCreateCopyWithFeature(CTFontDescriptorRef original,
                                                                           CFNumberRef featureTypeIdentifier,
                                                                           CFNumberRef featureSelectorIdentifier) STUB_METHOD;
-CORETEXT_EXPORT CFArrayRef CTFontDescriptorCreateMatchingFontDescriptors(CTFontDescriptorRef descriptor,
-                                                                         CFSetRef mandatoryAttributes) STUB_METHOD;
+CORETEXT_EXPORT CFArrayRef CTFontDescriptorCreateMatchingFontDescriptors(CTFontDescriptorRef descriptor, CFSetRef mandatoryAttributes);
 CORETEXT_EXPORT CTFontDescriptorRef CTFontDescriptorCreateMatchingFontDescriptor(CTFontDescriptorRef descriptor,
-                                                                                 CFSetRef mandatoryAttributes) STUB_METHOD;
+                                                                                 CFSetRef mandatoryAttributes);
 CORETEXT_EXPORT CFDictionaryRef CTFontDescriptorCopyAttributes(CTFontDescriptorRef descriptor);
 CORETEXT_EXPORT CFTypeRef CTFontDescriptorCopyAttribute(CTFontDescriptorRef descriptor, CFStringRef attribute);
 CORETEXT_EXPORT CFTypeRef CTFontDescriptorCopyLocalizedAttribute(CTFontDescriptorRef descriptor,

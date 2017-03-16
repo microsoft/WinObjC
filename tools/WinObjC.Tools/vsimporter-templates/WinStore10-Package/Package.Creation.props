@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Fill in properties that will identify the package the project creates -->
+  <PropertyGroup>
+    <!-- Required -->
+    <PackageId>$safeprojectname$</PackageId> 
+    <Authors>$username$</Authors>
+    <Description>$projectname$</Description>
+    <!-- Optional -->
+    <Title>$projectname$</Title>
+    <Owners>$username$</Owners>
+    <Summary>$projectname$</Summary>
+    <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageProjectUrl></PackageProjectUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <Copyright>Copyright © $username$</Copyright>
+    <PackageTags>$safeprojectname$</PackageTags>
+    <PackageVersion><!-- Override Package Version Here --></PackageVersion>
+  </PropertyGroup>
+</Project>

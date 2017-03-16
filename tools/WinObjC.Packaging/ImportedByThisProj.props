@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+
+<!--
+  WinObjC.Packaging PROPS
+  Description: The property definitions for WinObjC.Packaging.nuproj
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PackageId>WinObjC.Packaging</PackageId>
+    <Title>WinObjC.Packaging</Title>
+    <Authors>Microsoft</Authors>
+    <Owners>Microsoft</Owners>
+    <Summary>An extension of NuGet.Build.Packaging with WinObjC additions.</Summary>
+    <Description>Include this package in any WinObjC project that you wish to be added to a final NuGet package</Description>
+    <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageProjectUrl></PackageProjectUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <Copyright>Copyright © Microsoft</Copyright>
+    <PackageTags>WinObjC.Packaging</PackageTags>
+    <IsDevelopmentDependency>true</IsDevelopmentDependency>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageFile Include="GitVersionTask">
+      <Kind>Dependency</Kind>
+      <Version>4.0.0-beta0011</Version>
+    </PackageFile>
+    <PackageFile Include="NuGet.Build.Packaging">
+      <Kind>Dependency</Kind>
+      <Version>0.1.186</Version>
+    </PackageFile>
+  </ItemGroup>
+</Project>

@@ -43,6 +43,7 @@ LIBRARY CoreGraphics
         _DWriteGetFamilyNameForFontName
         _DWriteGetFontPropertiesFromName
         _DWriteCreateFontFamilyWithName
+        _DWriteCreateFontWithName
         _DWriteCreateFontFaceWithName
         _DWriteCreateTextFormatWithFontNameAndSize
         _DWriteCreateFontFaceWithData
@@ -53,6 +54,7 @@ LIBRARY CoreGraphics
         _DWriteFontGetBoundingBoxesForGlyphs
         _DWriteRegisterFontsWithDatas
         _DWriteUnregisterFontsWithDatas
+        _DWriteGetAllFonts
 
         ; CGColor.mm
         kCGColorBlack DATA
@@ -264,6 +266,7 @@ LIBRARY CoreGraphics
         CGDataConsumerGetTypeID
         CGDataConsumerRelease
         CGDataConsumerRetain
+        _CGDataConsumerWriteData
 
         ; CGDataProvider.mm
         CGDataProviderCreate

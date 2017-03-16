@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.props" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.props')" />
+  <Import Project="$(SolutionDir)\..\common\winobjc.nuproj.common.props" Condition="Exists('$(SolutionDir)\..\common\winobjc.nuproj.common.props')" />
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|AnyCPU">
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|AnyCPU">
+      <Configuration>Release</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x86">
+      <Configuration>Debug</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x86">
+      <Configuration>Release</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <Import Project="WinObjC.Frameworks.Packaging.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>bef15618-e03f-4a44-a797-9150c979b09f</ProjectGuid>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\</StarboardBasePath>
+  </PropertyGroup>
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(StarboardBasePath)\msvc\package-build.props" />
+  </ImportGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
+  <ItemGroup>
+    <None Include="WinObjC.Frameworks.Packaging.props" />
+    <None Include="WinObjC.Frameworks.Packaging.targets" />
+    <None Include="WinObjC.Frameworks.props" />
+    <None Include="WinObjC.Frameworks.targets" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Readme.txt">
+      <IncludeInPackage>true</IncludeInPackage>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\Accelerate\dll\Accelerate.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\Accounts\dll\Accounts.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\AddressBookUI\dll\AddressBookUI.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\AddressBook\dll\AddressBook.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\AdSupport\dll\AdSupport.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\AssetsLibrary\dll\AssetsLibrary.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\AudioToolbox\dll\AudioToolbox.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\AudioUnit\dll\AudioUnit.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\AutoLayout\dll\AutoLayout.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\AVFoundation\dll\AVFoundation.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\AVKit\dll\AVKit.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\CloudKit\dll\CloudKit.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\Contacts\dll\Contacts.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\CoreAudioKit\dll\CoreAudioKit.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\CoreAudio\dll\CoreAudio.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\CoreBluetooth\dll\CoreBluetooth.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\CoreData\dll\CoreData.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\CoreGraphics\dll\CoreGraphics.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\CoreImage\dll\CoreImage.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\CoreLocation\dll\CoreLocation.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\CoreMedia\dll\CoreMedia.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\CoreMIDI\dll\CoreMIDI.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\CoreMotion\dll\CoreMotion.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\CoreTelephony\dll\CoreTelephony.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\CoreText\dll\CoreText.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\CoreVideo\dll\CoreVideo.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\EventKitUI\dll\EventKitUI.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\EventKit\dll\EventKit.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\GameController\dll\GameController.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\GameKit\dll\GameKit.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\GamePlayKit\dll\GamePlayKit.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\GLKit\dll\GLKit.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\HealthKit\dll\HealthKit.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\HomeKit\dll\HomeKit.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\iAd\dll\iAd.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\ImageIO\dll\ImageIO.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\LocalAuthentication\dll\LocalAuthentication.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\MapKit\dll\MapKit.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\MediaAccessibility\dll\MediaAccessibility.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\MediaPlayer\dll\MediaPlayer.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\MessageUI\dll\MessageUI.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\Metal\dll\Metal.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\OpenGLES\dll\OpenGLES.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\QuartzCore\dll\QuartzCore.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\QuickLook\dll\QuickLook.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\SafariServices\dll\SafariServices.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\Security\dll\Security.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\Social\dll\Social.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\StoreKit\dll\StoreKit.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\SystemConfiguration\dll\SystemConfiguration.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\Twitter\dll\Twitter.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\UIKit.Xaml\dll\UIKit.Xaml.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\UIKit\dll\UIKit.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\WebKit\dll\WebKit.vcxproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\WinObjC.Frameworks.UWP\WinObjC.Frameworks.UWP.nuproj" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
+  <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets')" />
+  <Import Project="WinObjC.Frameworks.Packaging.targets" />
+  <Import Project="$(SolutionDir)\..\common\winobjc.nuproj.common.targets" Condition="Exists('$(SolutionDir)\..\common\winobjc.nuproj.common.targets')" />
+</Project>

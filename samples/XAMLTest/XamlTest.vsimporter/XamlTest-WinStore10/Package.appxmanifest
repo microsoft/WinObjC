@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="d7f358dd-b2f7-4d0d-bc09-fe5bfe73a14c"
+    Name="1e5fc8e3-5a78-46cb-89e8-afe3d9939b95"
     Publisher="CN=islandwood"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="d7f358dd-b2f7-4d0d-bc09-fe5bfe73a14c" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="1e5fc8e3-5a78-46cb-89e8-afe3d9939b95" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>XamlTest</DisplayName>
-    <PublisherDisplayName>pradipd</PublisherDisplayName>
+    <PublisherDisplayName>bbowman</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 

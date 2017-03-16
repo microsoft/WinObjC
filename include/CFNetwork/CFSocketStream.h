@@ -18,7 +18,7 @@
 #import <CFNetwork/CFNetworkExport.h>
 #import <CoreFoundation/CoreFoundation.h>
 #import <CFNetwork/CFHost.h>
-#import <CFNetwork/CFNetServices.h>>
+#import <CFNetwork/CFNetServices.h>
 
 typedef CF_ENUM(CFIndex, CFStreamSocketSecurityProtocol) {
     kCFStreamSocketSecurityNone = 0,

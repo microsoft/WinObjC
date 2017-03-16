@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -25,10 +25,10 @@
     <None Include="StoreKit.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\UIKit\dll\UIKit.vcxproj">
       <Project>{8E79930B-7EF6-4A4E-B46C-EFC0A49C55D9}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\lib\StoreKitLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\StoreKitLib.vcxproj">
       <Project>{CC5BF26B-322D-4E39-9555-39C77C1E70A4}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -36,7 +36,7 @@
     <ProjectGuid>{E3D304DB-7308-4516-808C-EC33CCC69FCF}</ProjectGuid>
     <RootNamespace>StoreKit</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>StoreKit</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
@@ -54,7 +54,8 @@
       <ModuleDefinitionFile>StoreKit.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
-      <IncludePaths></IncludePaths>
+      <IncludePaths>
+      </IncludePaths>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -67,7 +68,8 @@
       <ModuleDefinitionFile>StoreKit.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
-      <IncludePaths></IncludePaths>
+      <IncludePaths>
+      </IncludePaths>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -80,7 +82,8 @@
       <ModuleDefinitionFile>StoreKit.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
-      <IncludePaths></IncludePaths>
+      <IncludePaths>
+      </IncludePaths>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -93,11 +96,13 @@
       <ModuleDefinitionFile>StoreKit.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
-      <IncludePaths></IncludePaths>
+      <IncludePaths>
+      </IncludePaths>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
 </Project>

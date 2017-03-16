@@ -14,7 +14,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 Except as contained in this notice, the name of a copyright holder shall not be used in advertising or otherwise to promote the sale, use or other dealings in this Software without prior written authorization of the copyright holder.
 
 zlib 1.2.5
-Copyright © Jean-loup Gailly and Mark Adler
+Copyright Â© Jean-loup Gailly and Mark Adler
 This software is provided 'as-is', without any express or implied warranty. In no event will the authors be held liable for any damages arising from the use of this software. Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions: 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgement in the product documentation would be appreciated but is not required. 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software. 3. This notice may not be removed or altered from any source distribution.
 
 libxml2 2.7.8
@@ -800,7 +800,7 @@ That's all there is to it!
 --------------------------------------
 Third Party Notices for VS Import Tool
 --------------------------------------
-This Microsoft Open Source project incorporates material from the project(s) listed below (“Third Party Code”). Microsoft is not the original author of the Third Party Code.  Microsoft reserves all other rights not expressly granted, whether by implication, estoppel or otherwise.
+This Microsoft Open Source project incorporates material from the project(s) listed below (â€œThird Party Codeâ€). Microsoft is not the original author of the Third Party Code.  Microsoft reserves all other rights not expressly granted, whether by implication, estoppel or otherwise.
 
 PlistCpp
 Copyright (c) 2011 Animetrics Inc. (marc@animetrics.com)
@@ -1481,7 +1481,7 @@ Pixman
  * Copyright 2007 Luca Barbato
  * Copyright 2008 Aaron Plattner, NVIDIA Corporation
  * Copyright 2008 Rodrigo Kumpera
- * Copyright 2008 Andr Tupinamb‡
+ * Copyright 2008 AndrÅ½ Tupinambâ€¡
  * Copyright 2008 Mozilla Corporation
  * Copyright 2008 Frederic Plourde
  * Copyright 2009, Oracle and/or its affiliates. All rights reserved.
@@ -1594,7 +1594,7 @@ Do Not Translate or Localize
 This file is based on or incorporates material from the projects listed below (Third Party Code). The original copyright notice and the license under which Microsoft received such Third Party Code, are set forth below. Such licenses and notices are provided for informational purposes only. Microsoft licenses the Third Party Code to you under the licensing terms for the Microsoft product. Microsoft reserves all other rights not expressly granted under this agreement, whether by implication, estoppel or otherwise.
 You may find a copy of the Corresponding Source code, if and as required under the Third Party Code License, either bundled with the Microsoft product or at http://3rdpartysource.microsoft.com. If not bundled with the product, you may also obtain a copy of the source code for a period of one year after our last shipment of this product.
 
- -----------------------------------------------------------------------------------------
+Â -----------------------------------------------------------------------------------------
 
 Eigen
 
@@ -1602,7 +1602,7 @@ Eigen
 // Copyright (C) 2009 Hauke Heibel <hauke.heibel@googlemail.com>
 
 Provided for Informational Purposes Only
- 
+Â 
 Mozilla Public License Version 2.0
 ==================================
 
@@ -1610,83 +1610,83 @@ Mozilla Public License Version 2.0
 --------------
 
 1.1. "Contributor"
-    means each individual or legal entity that creates, contributes to
-    the creation of, or owns Covered Software.
+Â Â Â  means each individual or legal entity that creates, contributes to
+Â Â Â  the creation of, or owns Covered Software.
 
 1.2. "Contributor Version"
-    means the combination of the Contributions of others (if any) used
-    by a Contributor and that particular Contributor's Contribution.
+Â Â Â  means the combination of the Contributions of others (if any) used
+Â Â Â  by a Contributor and that particular Contributor's Contribution.
 
 1.3. "Contribution"
-    means Covered Software of a particular Contributor.
+Â Â Â  means Covered Software of a particular Contributor.
 
 1.4. "Covered Software"
-    means Source Code Form to which the initial Contributor has attached
-    the notice in Exhibit A, the Executable Form of such Source Code
-    Form, and Modifications of such Source Code Form, in each case
-    including portions thereof.
+Â Â Â  means Source Code Form to which the initial Contributor has attached
+Â Â Â  the notice in Exhibit A, the Executable Form of such Source Code
+Â Â Â  Form, and Modifications of such Source Code Form, in each case
+Â Â Â  including portions thereof.
 
 1.5. "Incompatible With Secondary Licenses"
-    means
+Â Â Â  means
 
-    (a) that the initial Contributor has attached the notice described
-        in Exhibit B to the Covered Software; or
+Â Â Â  (a) that the initial Contributor has attached the notice described
+Â Â Â Â Â Â Â  in Exhibit B to the Covered Software; or
 
-    (b) that the Covered Software was made available under the terms of
-        version 1.1 or earlier of the License, but not also under the
-        terms of a Secondary License.
+Â Â Â  (b) that the Covered Software was made available under the terms of
+Â Â Â Â Â Â Â  version 1.1 or earlier of the License, but not also under the
+Â Â Â Â Â Â Â  terms of a Secondary License.
 
 1.6. "Executable Form"
-    means any form of the work other than Source Code Form.
+Â Â Â  means any form of the work other than Source Code Form.
 
 1.7. "Larger Work"
-    means a work that combines Covered Software with other material, in
-    a separate file or files, that is not Covered Software.
+Â Â Â  means a work that combines Covered Software with other material, in
+Â Â Â  a separate file or files, that is not Covered Software.
 
 1.8. "License"
-    means this document.
+Â Â Â  means this document.
 
 1.9. "Licensable"
-    means having the right to grant, to the maximum extent possible,
-    whether at the time of the initial grant or subsequently, any and
-    all of the rights conveyed by this License.
+Â Â Â  means having the right to grant, to the maximum extent possible,
+Â Â Â  whether at the time of the initial grant or subsequently, any and
+Â Â Â  all of the rights conveyed by this License.
 
 1.10. "Modifications"
-    means any of the following:
+Â Â Â  means any of the following:
 
-    (a) any file in Source Code Form that results from an addition to,
-        deletion from, or modification of the contents of Covered
-        Software; or
+Â Â Â  (a) any file in Source Code Form that results from an addition to,
+Â Â Â Â Â Â Â  deletion from, or modification of the contents of Covered
+Â Â Â Â Â Â Â  Software; or
 
-    (b) any new file in Source Code Form that contains any Covered
-        Software.
+Â Â Â  (b) any new file in Source Code Form that contains any Covered
+Â Â Â Â Â Â Â  Software.
 
 1.11. "Patent Claims" of a Contributor
-    means any patent claim(s), including without limitation, method,
-    process, and apparatus claims, in any patent Licensable by such
-    Contributor that would be infringed, but for the grant of the
-    License, by the making, using, selling, offering for sale, having
-    made, import, or transfer of either its Contributions or its
-    Contributor Version.
+Â Â Â  means any patent claim(s), including without limitation, method,
+Â Â Â  process, and apparatus claims, in any patent Licensable by such
+Â Â Â  Contributor that would be infringed, but for the grant of the
+Â Â Â  License, by the making, using, selling, offering for sale, having
+Â Â Â  made, import, or transfer of either its Contributions or its
+Â Â Â  Contributor Version.
 
 1.12. "Secondary License"
-    means either the GNU General Public License, Version 2.0, the GNU
-    Lesser General Public License, Version 2.1, the GNU Affero General
-    Public License, Version 3.0, or any later versions of those
-    licenses.
+Â Â Â  means either the GNU General Public License, Version 2.0, the GNU
+Â Â Â  Lesser General Public License, Version 2.1, the GNU Affero General
+Â Â Â  Public License, Version 3.0, or any later versions of those
+Â Â Â  licenses.
 
 1.13. "Source Code Form"
-    means the form of the work preferred for making modifications.
+Â Â Â  means the form of the work preferred for making modifications.
 
 1.14. "You" (or "Your")
-    means an individual or a legal entity exercising rights under this
-    License. For legal entities, "You" includes any entity that
-    controls, is controlled by, or is under common control with You. For
-    purposes of this definition, "control" means (a) the power, direct
-    or indirect, to cause the direction or management of such entity,
-    whether by contract or otherwise, or (b) ownership of more than
-    fifty percent (50%) of the outstanding shares or beneficial
-    ownership of such entity.
+Â Â Â  means an individual or a legal entity exercising rights under this
+Â Â Â  License. For legal entities, "You" includes any entity that
+Â Â Â  controls, is controlled by, or is under common control with You. For
+Â Â Â  purposes of this definition, "control" means (a) the power, direct
+Â Â Â  or indirect, to cause the direction or management of such entity,
+Â Â Â  whether by contract or otherwise, or (b) ownership of more than
+Â Â Â  fifty percent (50%) of the outstanding shares or beneficial
+Â Â Â  ownership of such entity.
 
 2. License Grants and Conditions
 --------------------------------
@@ -1697,14 +1697,14 @@ Each Contributor hereby grants You a world-wide, royalty-free,
 non-exclusive license:
 
 (a) under intellectual property rights (other than patent or trademark)
-    Licensable by such Contributor to use, reproduce, make available,
-    modify, display, perform, distribute, and otherwise exploit its
-    Contributions, either on an unmodified basis, with Modifications, or
-    as part of a Larger Work; and
+Â Â Â  Licensable by such Contributor to use, reproduce, make available,
+Â Â Â  modify, display, perform, distribute, and otherwise exploit its
+Â Â Â  Contributions, either on an unmodified basis, with Modifications, or
+Â Â Â  as part of a Larger Work; and
 
 (b) under Patent Claims of such Contributor to make, use, sell, offer
-    for sale, have made, import, and otherwise transfer either its
-    Contributions or its Contributor Version.
+Â Â Â  for sale, have made, import, and otherwise transfer either its
+Â Â Â  Contributions or its Contributor Version.
 
 2.2. Effective Date
 
@@ -1721,15 +1721,15 @@ Notwithstanding Section 2.1(b) above, no patent license is granted by a
 Contributor:
 
 (a) for any code that a Contributor has removed from Covered Software;
-    or
+Â Â Â  or
 
 (b) for infringements caused by: (i) Your and any other third party's
-    modifications of Covered Software, or (ii) the combination of its
-    Contributions with other software (except as part of its Contributor
-    Version); or
+Â Â Â  modifications of Covered Software, or (ii) the combination of its
+Â Â Â  Contributions with other software (except as part of its Contributor
+Â Â Â  Version); or
 
 (c) under Patent Claims infringed by Covered Software in the absence of
-    its Contributions.
+Â Â Â  its Contributions.
 
 This License does not grant any rights in the trademarks, service marks,
 or logos of any Contributor (except as may be necessary to comply with
@@ -1777,15 +1777,15 @@ Form.
 If You distribute Covered Software in Executable Form then:
 
 (a) such Covered Software must also be made available in Source Code
-    Form, as described in Section 3.1, and You must inform recipients of
-    the Executable Form how they can obtain a copy of such Source Code
-    Form by reasonable means in a timely manner, at a charge no more
-    than the cost of distribution to the recipient; and
+Â Â Â  Form, as described in Section 3.1, and You must inform recipients of
+Â Â Â  the Executable Form how they can obtain a copy of such Source Code
+Â Â Â  Form by reasonable means in a timely manner, at a charge no more
+Â Â Â  than the cost of distribution to the recipient; and
 
 (b) You may distribute such Executable Form under the terms of this
-    License, or sublicense it under different terms, provided that the
-    license for the Executable Form does not attempt to limit or alter
-    the recipients' rights in the Source Code Form under this License.
+Â Â Â  License, or sublicense it under different terms, provided that the
+Â Â Â  license for the Executable Form does not attempt to limit or alter
+Â Â Â  the recipients' rights in the Source Code Form under this License.
 
 3.3. Distribution of a Larger Work
 
@@ -1864,45 +1864,45 @@ have been validly granted by You or Your distributors under this License
 prior to termination shall survive termination.
 
 ************************************************************************
-*                                                                      *
-*  6. Disclaimer of Warranty                                           *
-*  -------------------------                                           *
-*                                                                      *
-*  Covered Software is provided under this License on an "as is"       *
-*  basis, without warranty of any kind, either expressed, implied, or  *
-*  statutory, including, without limitation, warranties that the       *
-*  Covered Software is free of defects, merchantable, fit for a        *
-*  particular purpose or non-infringing. The entire risk as to the     *
-*  quality and performance of the Covered Software is with You.        *
-*  Should any Covered Software prove defective in any respect, You     *
-*  (not any Contributor) assume the cost of any necessary servicing,   *
-*  repair, or correction. This disclaimer of warranty constitutes an   *
-*  essential part of this License. No use of any Covered Software is   *
-*  authorized under this License except under this disclaimer.         *
-*                                                                      *
+*Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â  *
+*Â  6. Disclaimer of WarrantyÂ Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â  *
+*Â  -------------------------Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â  *
+*Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â  *
+*Â  Covered Software is provided under this License on an "as is"Â Â Â Â Â Â  *
+*Â  basis, without warranty of any kind, either expressed, implied, orÂ  *
+*Â  statutory, including, without limitation, warranties that theÂ Â Â Â Â Â  *
+*Â  Covered Software is free of defects, merchantable, fit for aÂ Â Â Â Â Â Â  *
+*Â  particular purpose or non-infringing. The entire risk as to theÂ Â Â Â  *
+*Â  quality and performance of the Covered Software is with You.Â Â Â Â Â Â Â  *
+*Â  Should any Covered Software prove defective in any respect, YouÂ Â Â Â  *
+*Â  (not any Contributor) assume the cost of any necessary servicing,Â Â  *
+*Â  repair, or correction. This disclaimer of warranty constitutes anÂ Â  *
+*Â  essential part of this License. No use of any Covered Software isÂ Â  *
+*Â  authorized under this License except under this disclaimer.Â Â Â Â Â Â Â Â  *
+*Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â  *
 ************************************************************************
 
 ************************************************************************
-*                                                                      *
-*  7. Limitation of Liability                                          *
-*  --------------------------                                          *
-*                                                                      *
-*  Under no circumstances and under no legal theory, whether tort      *
-*  (including negligence), contract, or otherwise, shall any           *
-*  Contributor, or anyone who distributes Covered Software as          *
-*  permitted above, be liable to You for any direct, indirect,         *
-*  special, incidental, or consequential damages of any character      *
-*  including, without limitation, damages for lost profits, loss of    *
-*  goodwill, work stoppage, computer failure or malfunction, or any    *
-*  and all other commercial damages or losses, even if such party      *
-*  shall have been informed of the possibility of such damages. This   *
-*  limitation of liability shall not apply to liability for death or   *
-*  personal injury resulting from such party's negligence to the       *
-*  extent applicable law prohibits such limitation. Some               *
-*  jurisdictions do not allow the exclusion or limitation of           *
-*  incidental or consequential damages, so this exclusion and          *
-*  limitation may not apply to You.                                    *
-*                                                                      *
+*Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â  *
+*Â  7. Limitation of LiabilityÂ Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â  *
+*Â  --------------------------Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â  *
+*Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â  *
+*Â  Under no circumstances and under no legal theory, whether tortÂ Â Â Â Â  *
+*Â  (including negligence), contract, or otherwise, shall anyÂ Â Â Â Â Â Â Â Â Â  *
+*Â  Contributor, or anyone who distributes Covered Software asÂ Â Â Â Â Â Â Â Â  *
+*Â  permitted above, be liable to You for any direct, indirect,Â Â Â Â Â Â Â Â  *
+*Â  special, incidental, or consequential damages of any characterÂ Â Â Â Â  *
+*Â  including, without limitation, damages for lost profits, loss ofÂ Â Â  *
+*Â  goodwill, work stoppage, computer failure or malfunction, or anyÂ Â Â  *
+*Â  and all other commercial damages or losses, even if such partyÂ Â Â Â Â  *
+*Â  shall have been informed of the possibility of such damages. ThisÂ Â  *
+*Â  limitation of liability shall not apply to liability for death orÂ Â  *
+*Â  personal injury resulting from such party's negligence to theÂ Â Â Â Â Â  *
+*Â  extent applicable law prohibits such limitation. SomeÂ Â Â Â Â Â Â Â Â Â Â Â Â Â  *
+*Â  jurisdictions do not allow the exclusion or limitation ofÂ Â Â Â Â Â Â Â Â Â  *
+*Â  incidental or consequential damages, so this exclusion andÂ Â Â Â Â Â Â Â Â  *
+*Â  limitation may not apply to You.Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â  *
+*Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â  *
 ************************************************************************
 
 8. Litigation
@@ -1960,9 +1960,9 @@ notice described in Exhibit B of this License must be attached.
 Exhibit A - Source Code Form License Notice
 -------------------------------------------
 
-  This Source Code Form is subject to the terms of the Mozilla Public
-  License, v. 2.0. If a copy of the MPL was not distributed with this
-  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+Â  This Source Code Form is subject to the terms of the Mozilla Public
+Â  License, v. 2.0. If a copy of the MPL was not distributed with this
+Â  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 If it is not possible or desirable to put the notice in a particular
 file, then You may include the notice in a location (such as a LICENSE
@@ -1974,8 +1974,8 @@ You may add additional accurate notices of copyright ownership.
 Exhibit B - "Incompatible With Secondary Licenses" Notice
 ---------------------------------------------------------
 
-  This Source Code Form is "Incompatible With Secondary Licenses", as
-  defined by the Mozilla Public License, v. 2.0.
+Â  This Source Code Form is "Incompatible With Secondary Licenses", as
+Â  defined by the Mozilla Public License, v. 2.0.
 
 ----------------------------------------------- END OF THIRD PARTY NOTICE ------------------------------------------
 
@@ -2530,7 +2530,7 @@ END OF TERMS AND CONDITIONS
    See the Apache Version 2.0 License for specific language governing permissions and
    limitations under the License.
 
----------------------------------------------  START OF THIRD PARTY NOTICE -----------------------------------------
+--------------------------------------------- Â START OF THIRD PARTY NOTICE -----------------------------------------
 
 This file is based on or incorporates material from the projects listed below (Third Party IP). The original
 copyright notice and the license under which Microsoft received such Third Party IP, are set forth below.
@@ -2542,18 +2542,18 @@ apple-swift-corelibs-foundation
 
 Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
 
-Provided for Informational Purposes Only 
+Provided for Informational Purposes OnlyÂ 
 
-Apache 2.0 License with Runtime Library Exception
+Apache 2.0 LicenseÂ with Runtime Library Exception
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
-the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0Â 
 
 THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR
 IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR
-PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT. 
+PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT.Â 
 
-See the Apache Version 2.0 License for specific language governing permissions and limitations under the License. 
+See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.Â 
 
 See http://swift.org/LICENSE.txt for license information
 See http://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
@@ -2601,7 +2601,7 @@ Version 0.2.2
 
 WYPopoverController is available under the MIT license.
 
-Copyright © 2013 Nicolas CHENG
+Copyright Â© 2013 Nicolas CHENG
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -2623,13 +2623,115 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ------------------------------------------ START OF LICENSE -----------------------------------------
 CALayerSubclassTour
-Copyright © 2016 Optimac, Inc.  All rights reserved.
+Copyright Â© 2016 Optimac, Inc.  All rights reserved.
 
 MIT License
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+----------------------------------------------- END OF LICENSE ------------------------------------------
+
+------------------------------------------ START OF LICENSE -----------------------------------------
+Nugetizer-3000
+
+Copyright (c) .NET Foundation. All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+these files except in compliance with the License. You may obtain a copy of the
+License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed
+under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+CONDITIONS OF ANY KIND, either express or implied. See the License for the
+specific language governing permissions and limitations under the License.
+
+----------------------------------------------- END OF LICENSE ------------------------------------------
+
+------------------------------------------ START OF LICENSE -----------------------------------------
+Nuget.BuildTasks
+
+Copyright (c) .NET Foundation. All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+these files except in compliance with the License. You may obtain a copy of the
+License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed
+under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+CONDITIONS OF ANY KIND, either express or implied. See the License for the
+specific language governing permissions and limitations under the License.
+
+----------------------------------------------- END OF LICENSE ------------------------------------------
+
+------------------------------------------ START OF LICENSE -----------------------------------------
+
+The MIT License (MIT)
+
+Copyright (c) 2007 James Newton-King
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+----------------------------------------------- END OF LICENSE ------------------------------------------
+
+------------------------------------------ START OF LICENSE -----------------------------------------
+GitVersion
+
+
+The MIT License (MIT)
+
+Copyright (c) 2013 NServiceBus Ltd
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+----------------------------------------------- END OF LICENSE ------------------------------------------
+
+------------------------------------------ START OF LICENSE -----------------------------------------
+vswhere
+
+ï»¿The MIT License (MIT) 
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 ----------------------------------------------- END OF LICENSE ------------------------------------------
 
 ----------------------------------------------- END OF THIRD PARTY NOTICES ----------------------------------------

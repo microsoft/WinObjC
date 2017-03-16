@@ -435,3 +435,28 @@ TEST(NSMutableArray, InsertingNilShouldThrow) {
     EXPECT_OBJCEQ(@"hello", arr[0]);
     EXPECT_EQ(1, [arr count]);
 }
+
+TEST(NSArray, ReadWriteURL) {
+    NSURL* url = [NSURL fileURLWithPath:@"arrayTestData.txt" isDirectory:NO];
+    NSArray* arr = @[ @1, @[ @2, @"3" ], @"4", @{ @"5" : @6 } ];
+    EXPECT_TRUE([arr writeToURL:url atomically:NO]);
+    NSArray* read = [NSArray arrayWithContentsOfURL:url];
+    EXPECT_OBJCEQ(arr, read);
+}
+
+TEST(NSArray, ShouldNotBeAbleToWriteInvalidToURL) {
+    NSURL* url = [NSURL fileURLWithPath:@"arrayTestData.txt" isDirectory:NO];
+
+    // Keys in dictionary must be NSString* to be written
+    NSArray* arr = @[ @1, @{ @2 : @"3" } ];
+    EXPECT_FALSE([arr writeToURL:url atomically:NO]);
+
+    // NSURL* is not a PropertyList object so cannot be written
+    NSArray* arr2 = @[ url, @1 ];
+    EXPECT_FALSE([arr2 writeToURL:url atomically:NO]);
+
+    // Array cannot have a circular dependency
+    NSMutableArray* mutableArr = [NSMutableArray arrayWithObject:@1];
+    [mutableArr addObject:mutableArr];
+    EXPECT_FALSE([mutableArr writeToURL:url atomically:NO]);
+}

@@ -15,7 +15,7 @@
 //******************************************************************************
 #pragma once
 
-#include "..\..\..\deps\3rdparty\AppInsights\src\core\TelemetryClient.h" //  ...\ApplicationInsights-CPP-master\src\core\TelemetryClient.h
+#include "..\..\AppInsights\src\core\TelemetryClient.h"
 
 #define TELEMETRY_INIT(ikey) {\
         WBITelemetry::WBITelemetryManager::InitializeAppInsights(ikey);\
