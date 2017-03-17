@@ -317,14 +317,14 @@ static constexpr NSRange sc_unlimitedRange{ 0, LONG_MAX };
  @Status Interoperable
 */
 - (NSUInteger)indexPassingTest:(BOOL (^)(NSUInteger, BOOL*))predicate {
-    return [self indexWithOptions:0 passingTest:predicate];
+    return [self indexInRange:sc_unlimitedRange options:0 passingTest:predicate];
 }
 
 /**
  @Status Interoperable
 */
 - (NSIndexSet*)indexesPassingTest:(BOOL (^)(NSUInteger, BOOL*))predicate {
-    return [self indexesWithOptions:0 passingTest:predicate];
+    return [self indexesInRange:sc_unlimitedRange options:0 passingTest:predicate];
 }
 
 /**
@@ -345,7 +345,16 @@ static constexpr NSRange sc_unlimitedRange{ 0, LONG_MAX };
  @Status Interoperable
 */
 - (NSUInteger)indexInRange:(NSRange)range options:(NSEnumerationOptions)options passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate {
-    NSIndexSet* set = [self indexesInRange:range options:options passingTest:predicate];
+    NSIndexSet* set = [self indexesInRange:range
+                                   options:options
+                               passingTest:^BOOL(NSUInteger index, BOOL* stop) {
+                                   BOOL ret = predicate(index, stop);
+                                   if (ret == YES) {
+                                       *stop = YES;
+                                   }
+
+                                   return ret;
+                               }];
     return (options & NSEnumerationReverse) ? [set lastIndex] : [set firstIndex];
 }
 
@@ -369,7 +378,7 @@ static constexpr NSRange sc_unlimitedRange{ 0, LONG_MAX };
  @Status Interoperable
 */
 - (void)enumerateRangesUsingBlock:(void (^)(NSRange, BOOL*))block {
-    [self enumerateRangesWithOptions:0 usingBlock:block];
+    [self enumerateRangesInRange:sc_unlimitedRange options:0 usingBlock:block];
 }
 
 /**

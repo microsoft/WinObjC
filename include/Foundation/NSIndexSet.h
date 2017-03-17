@@ -37,13 +37,13 @@ FOUNDATION_EXPORT_CLASS
 - (NSUInteger)countOfIndexesInRange:(NSRange)indexRange;
 - (NSUInteger)indexPassingTest:(BOOL (^)(NSUInteger, BOOL*))predicate;
 - (NSIndexSet*)indexesPassingTest:(BOOL (^)(NSUInteger, BOOL*))predicate;
-- (NSUInteger)indexWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate;
-- (NSIndexSet*)indexesWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate;
-- (NSUInteger)indexInRange:(NSRange)range options:(NSEnumerationOptions)opts passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate;
-- (NSIndexSet*)indexesInRange:(NSRange)range options:(NSEnumerationOptions)opts passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate;
-- (void)enumerateRangesInRange:(NSRange)range options:(NSEnumerationOptions)opts usingBlock:(void (^)(NSRange, BOOL*))block;
+- (NSUInteger)indexWithOptions:(NSEnumerationOptions)options passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate;
+- (NSIndexSet*)indexesWithOptions:(NSEnumerationOptions)options passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate;
+- (NSUInteger)indexInRange:(NSRange)range options:(NSEnumerationOptions)options passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate;
+- (NSIndexSet*)indexesInRange:(NSRange)range options:(NSEnumerationOptions)options passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate;
+- (void)enumerateRangesInRange:(NSRange)range options:(NSEnumerationOptions)options usingBlock:(void (^)(NSRange, BOOL*))block;
 - (void)enumerateRangesUsingBlock:(void (^)(NSRange, BOOL*))block;
-- (void)enumerateRangesWithOptions:(NSEnumerationOptions)opts usingBlock:(void (^)(NSRange, BOOL*))block;
+- (void)enumerateRangesWithOptions:(NSEnumerationOptions)options usingBlock:(void (^)(NSRange, BOOL*))block;
 - (BOOL)isEqualToIndexSet:(NSIndexSet*)indexSet;
 @property (readonly) NSUInteger firstIndex;
 @property (readonly) NSUInteger lastIndex;
@@ -53,6 +53,6 @@ FOUNDATION_EXPORT_CLASS
 - (NSUInteger)indexGreaterThanIndex:(NSUInteger)index;
 - (NSUInteger)getIndexes:(NSUInteger*)indexBuffer maxCount:(NSUInteger)bufferSize inIndexRange:(NSRangePointer)indexRange;
 - (void)enumerateIndexesUsingBlock:(void (^)(NSUInteger, BOOL*))block;
-- (void)enumerateIndexesWithOptions:(NSEnumerationOptions)opts usingBlock:(void (^)(NSUInteger, BOOL*))block;
-- (void)enumerateIndexesInRange:(NSRange)range options:(NSEnumerationOptions)opts usingBlock:(void (^)(NSUInteger, BOOL*))block;
+- (void)enumerateIndexesWithOptions:(NSEnumerationOptions)options usingBlock:(void (^)(NSUInteger, BOOL*))block;
+- (void)enumerateIndexesInRange:(NSRange)range options:(NSEnumerationOptions)options usingBlock:(void (^)(NSUInteger, BOOL*))block;
 @end
