@@ -71,11 +71,14 @@ struct _NSOperation_ComparePrioritySTL {
 };
 
 // Used for [NSOperationQueue currentQueue]
-thread_local static StrongId<NSOperationQueue*> tls_currentQueue;
+static StrongId<NSOperationQueue*>& _getCurrentQueue() {
+    thread_local static StrongId<NSOperationQueue*> tls_currentQueue;
+    return tls_currentQueue;
+}
 
-// Used for key-value observing on held operations - faster than comparing keypaths
-static void* _NSOperationQueue_IsFinishedContext = &_NSOperationQueue_IsFinishedContext;
-static void* _NSOperationQueue_IsReadyContext = &_NSOperationQueue_IsReadyContext;
+// Used for key-value observing on held operations - comparing pointers to these is faster than comparing keypaths
+static char _NSOperationQueue_IsFinishedContext;
+static char _NSOperationQueue_IsReadyContext;
 
 // Subclass of NSOperationQueue for [NSOperationQueue mainQueue], with appropriate properties made immutable
 #pragma region _NSOperationQueue_MainQueue
@@ -185,18 +188,19 @@ static void* _NSOperationQueue_IsReadyContext = &_NSOperationQueue_IsReadyContex
         std::lock_guard<std::recursive_mutex> lock(_dispatchQueueLock);
         dispatch_async(_dispatchQueue, ^{
             // Check if currentQueue needs to be changed
-            StrongId<NSOperationQueue> currentQueue = tls_currentQueue;
-            bool needToChangeCurrentQueue = (![[NSThread currentThread] isMainThread]) && (![self isEqual:tls_currentQueue.get()]);
+            StrongId<NSOperationQueue*>& currentQueue = _getCurrentQueue();
+            StrongId<NSOperationQueue*> prevCurrentQueue(currentQueue.get());
+            bool needToChangeCurrentQueue = (![[NSThread currentThread] isMainThread]) && (!(self == currentQueue.get()));
 
             // If so, cache the previous currentQueue stored in the threadDictionary, and store the new currentQueue
             if (needToChangeCurrentQueue) {
-                tls_currentQueue = self;
+                currentQueue = self;
             }
 
             // Restore state once the operation is done, and attempt to start any queued operations
-            auto cleanup = wil::ScopeExit([self, currentQueue, needToChangeCurrentQueue]() {
+            auto cleanup = wil::ScopeExit([self, &currentQueue, &prevCurrentQueue, needToChangeCurrentQueue]() {
                 if (needToChangeCurrentQueue) {
-                    tls_currentQueue = currentQueue;
+                    currentQueue = prevCurrentQueue.get();
                 }
 
                 std::lock_guard<std::recursive_mutex> lock(_concurrentOperationCountLock);
@@ -258,8 +262,8 @@ static void* _NSOperationQueue_IsReadyContext = &_NSOperationQueue_IsReadyContex
     [_name release];
 
     for (NSOperation* op in _operations.get()) {
-        [op removeObserver:self forKeyPath:@"isFinished" context:_NSOperationQueue_IsFinishedContext];
-        [op removeObserver:self forKeyPath:@"isReady" context:_NSOperationQueue_IsReadyContext];
+        [op removeObserver:self forKeyPath:@"isFinished" context:&_NSOperationQueue_IsFinishedContext];
+        [op removeObserver:self forKeyPath:@"isReady" context:&_NSOperationQueue_IsReadyContext];
     }
 
     if (_underlyingQueue) {
@@ -271,11 +275,12 @@ static void* _NSOperationQueue_IsReadyContext = &_NSOperationQueue_IsReadyContex
 
 - (void)observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void*)context {
     NSOperation* op = static_cast<NSOperation*>(object);
-    if ((context == _NSOperationQueue_IsFinishedContext) && (op.finished)) {
+    if ((context == &_NSOperationQueue_IsFinishedContext) && (op.finished)) {
         // Minor optimization:
         // Because of constraints in addOperation:, it is safe to assume that there is exactly one instance of op in the array
         // removeObject: keeps going after finding first instance of object, which is unnecessary work
-        // Use indexOfObject:op instead
+        // indexOfObject: uses isEqual: instead of ==; for NSOperations, pointer equality is probably sufficient
+        // Use indexOfObjectIdentical:op instead
         @synchronized(_operations.get()) {
             NSUInteger index = [_operations indexOfObjectIdenticalTo:op];
             if (index == NSNotFound) {
@@ -291,10 +296,10 @@ static void* _NSOperationQueue_IsReadyContext = &_NSOperationQueue_IsReadyContex
         }
 
         // Clean up state from addOperation:
-        [op removeObserver:self forKeyPath:@"isFinished" context:_NSOperationQueue_IsFinishedContext];
-        [op removeObserver:self forKeyPath:@"isReady" context:_NSOperationQueue_IsReadyContext];
+        [op removeObserver:self forKeyPath:@"isFinished" context:&_NSOperationQueue_IsFinishedContext];
+        [op removeObserver:self forKeyPath:@"isReady" context:&_NSOperationQueue_IsReadyContext];
 
-    } else if ((context == _NSOperationQueue_IsReadyContext) && (op.ready) && !(op.executing)) {
+    } else if ((context == &_NSOperationQueue_IsReadyContext) && (op.ready) && !(op.executing)) {
         NSOperation* op = static_cast<NSOperation*>(object);
         [self _startOperation:op];
     }
@@ -308,7 +313,7 @@ static void* _NSOperationQueue_IsReadyContext = &_NSOperationQueue_IsReadyContex
         return [[self class] mainQueue];
     }
 
-    return tls_currentQueue.get();
+    return _getCurrentQueue().get();
 }
 
 /**
@@ -346,8 +351,8 @@ static void* _NSOperationQueue_IsReadyContext = &_NSOperationQueue_IsReadyContex
         [self didChangeValueForKey:@"operationCount"];
         [self didChangeValueForKey:@"operations"];
 
-        [op addObserver:self forKeyPath:@"isFinished" options:NSKeyValueObservingOptionNew context:_NSOperationQueue_IsFinishedContext];
-        [op addObserver:self forKeyPath:@"isReady" options:NSKeyValueObservingOptionNew context:_NSOperationQueue_IsReadyContext];
+        [op addObserver:self forKeyPath:@"isFinished" options:0 context:&_NSOperationQueue_IsFinishedContext];
+        [op addObserver:self forKeyPath:@"isReady" options:0 context:&_NSOperationQueue_IsReadyContext];
 
         [self _startOperation:op];
     }
