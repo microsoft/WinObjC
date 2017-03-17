@@ -6,7 +6,7 @@
   For Use By: A NuProj packager or a packageable VcxProj
 -->
 
-<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!-- Props for NuGet ***NuProj*** packager projects -->
   <Import Condition="$(MSBuildProjectExtension) == '.nuproj'" Project="WinObjC.Packager.props" />
 

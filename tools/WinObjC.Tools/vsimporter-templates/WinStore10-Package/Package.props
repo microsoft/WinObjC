@@ -6,7 +6,7 @@
   For Use By: A VcxProj that depends on the $projectname$ package
 -->
 
-<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!-- 
     Include any properties specific to the package here
 
