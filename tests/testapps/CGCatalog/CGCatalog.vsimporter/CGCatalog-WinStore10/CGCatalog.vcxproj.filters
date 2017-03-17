@@ -286,6 +286,9 @@
     <SBResourceCopy Include="..\..\CGCatalog\Resources\RoundedRect.png">
       <Filter>CGCatalog\Resources</Filter>
     </SBResourceCopy>
+    <SBResourceCopy Include="..\..\CGCatalog\Resources\FullCircles.png">
+      <Filter>CGCatalog\Resources</Filter>
+    </SBResourceCopy>
     <StoryboardCompile Include="..\..\CGCatalog\Resources\Launch Screen.storyboard">
       <Filter>CGCatalog\Resources</Filter>
     </StoryboardCompile>
