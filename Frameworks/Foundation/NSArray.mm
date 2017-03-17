@@ -1020,10 +1020,9 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
  @Status Interoperable
 */
 - (NSUInteger)indexOfObjectIdenticalTo:(id)anObject inRange:(NSRange)range {
-    NSUInteger end = NSMaxRange(range);
-    if (end > [self count]) {
+    if (NSMaxRange(range) > [self count]) {
         [NSException raise:NSRangeException
-                    format:@"[%s %s]: range {%d, %d} extends beyond bounds [ 0 .. %d]",
+                    format:@"- [%s %s]: range {%d, %d} extends beyond bounds [ 0 .. %d]",
                            sel_getName(_cmd),
                            class_getName([self class]),
                            range.location,
@@ -1033,9 +1032,9 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
 
     id objects[range.length];
     [self getObjects:objects range:range];
-    for (NSUInteger i = range.location; i < end; ++i) {
-        if (objects[i - range.location] == anObject) {
-            return i;
+    for (NSUInteger i = 0; i < range.length; ++i) {
+        if (objects[i] == anObject) {
+            return range.location + i;
         }
     }
 
