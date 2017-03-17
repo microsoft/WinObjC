@@ -22,6 +22,7 @@
 @property (nonatomic, readonly) UIButton* defaultButton;
 @property (nonatomic, readonly) UIButton* customButton;
 @property (nonatomic, readonly) UIButton* systemButton;
+@property (nonatomic, readonly) UIButton* roundedRectButton;
 
 @property (nonatomic, readonly) UISegmentedControl* segmentButtonType;
 
@@ -31,6 +32,10 @@
 
 @property (nonatomic, readonly) UISwitch* switchAdjustsImageWhenHighlighted;
 @property (nonatomic, readonly) UISwitch* switchAdjustsImageWhenDisabled;
+
+@property (nonatomic, readonly) TestEnabledUITextField* textContentEdgeInsets;
+@property (nonatomic, readonly) TestEnabledUITextField* textTitleEdgeInsets;
+@property (nonatomic, readonly) TestEnabledUITextField* textImageEdgeInsets;
 
 @property (nonatomic, readonly) UIControlState titleControlState;
 @property (nonatomic, readonly) TestEnabledUITextField* textTitleStateField;

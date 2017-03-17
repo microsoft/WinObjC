@@ -2,19 +2,19 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{fbe85872-bf7f-46b7-bc36-809357e69b23}</UniqueIdentifier>
+      <UniqueIdentifier>{0b507f42-6358-4917-9ca3-dc3ca658d8a6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{793e6d63-787c-4553-9053-43ee6a7ca670}</UniqueIdentifier>
+      <UniqueIdentifier>{1e694f71-8a6e-451e-9c47-617188eb0246}</UniqueIdentifier>
     </Filter>
     <Filter Include="HelloGLKit">
-      <UniqueIdentifier>{C2D01774-9ACE-4399-8CB2-E1CC7625C369}</UniqueIdentifier>
+      <UniqueIdentifier>{EA2476C5-B427-4041-B92E-25D9A76C65D6}</UniqueIdentifier>
     </Filter>
     <Filter Include="HelloGLKit\Base">
-      <UniqueIdentifier>{8B97283C-8B1F-4785-B872-1C984D2663B2}</UniqueIdentifier>
+      <UniqueIdentifier>{373F3EDA-5063-43D5-97E3-69D09A371BFC}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{8F93AA9A-2C8C-4539-BC65-56CD7DBFB2CF}</UniqueIdentifier>
+      <UniqueIdentifier>{2D0FABC2-CD56-406B-85D0-5B7F9DF07A09}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

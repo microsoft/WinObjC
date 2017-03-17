@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
       <Configuration>Debug</Configuration>
@@ -26,33 +26,36 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <ApplicationType>Windows Store</ApplicationType>
     <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
+    <GenerateManifest>false</GenerateManifest>
+    <LinkWithFoundation>false</LinkWithFoundation>
+    <LinkWithStarboard>false</LinkWithStarboard>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.props" />
@@ -60,21 +63,7 @@
   <ImportGroup Label="Shared">
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <GenerateManifest>false</GenerateManifest>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(TargetOsAndVersion)\</OutDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <GenerateManifest>false</GenerateManifest>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(TargetOsAndVersion)\</OutDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
-    <GenerateManifest>false</GenerateManifest>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(TargetOsAndVersion)\</OutDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
-    <GenerateManifest>false</GenerateManifest>
+  <PropertyGroup>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(TargetOsAndVersion)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -93,10 +82,6 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>true</GenerateWindowsMetadata>
     </Link>
-    <PostBuildEvent>
-      <!-- Recursively copy all .xaml files to OutDir\UIKit.Xaml -->
-      <Command>xcopy /y /s /i "$(MSBuildThisFileDirectory)$(GeneratedFilesDir)*.xaml" "$(OutDir)UIKit.Xaml"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -114,10 +99,6 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>true</GenerateWindowsMetadata>
     </Link>
-    <PostBuildEvent>
-      <!-- Recursively copy all .xaml files to OutDir\UIKit.Xaml -->
-      <Command>xcopy /y /s /i "$(MSBuildThisFileDirectory)$(GeneratedFilesDir)*.xaml" "$(OutDir)UIKit.Xaml"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>
@@ -135,10 +116,6 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>true</GenerateWindowsMetadata>
     </Link>
-    <PostBuildEvent>
-      <!-- Recursively copy all .xaml files to OutDir\UIKit.Xaml -->
-      <Command>xcopy /y /s /i "$(MSBuildThisFileDirectory)$(GeneratedFilesDir)*.xaml" "$(OutDir)UIKit.Xaml"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <ClCompile>
@@ -156,10 +133,6 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>true</GenerateWindowsMetadata>
     </Link>
-    <PostBuildEvent>
-      <!-- Recursively copy all .xaml files to OutDir\UIKit.Xaml -->
-      <Command>xcopy /y /s /i "$(MSBuildThisFileDirectory)$(GeneratedFilesDir)*.xaml" "$(OutDir)UIKit.Xaml"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ILayer.h" />
@@ -250,18 +223,22 @@
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Themes\Generic.xaml" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
-      <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Starboard\dll\Starboard.vcxproj">
-      <Project>{0ac27ecf-e2ab-420b-9359-4843fff4cbfa}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\WinObjCRT\dll\WinObjCRT.vcxproj">
-      <Project>{585b4870-0d6b-43a6-8e7e-ad08f7f507b6}</Project>
-    </ProjectReference>
-  </ItemGroup>
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
+  <ItemGroup>
+    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)$(XamlGeneratedOutputPath)\**\*.xaml">
+      <DestinationSubDirectory>$(OutputName)\%(RecursiveDir)</DestinationSubDirectory>
+    </ReferenceCopyLocalPaths>
+  </ItemGroup>
+  <Target Name="AddExtraPackageItems" BeforeTargets="GetPackageContents">
+    <ItemGroup>
+      <!-- Include Extra Deps for this project -->
+      <_XamlFiles Include="$(MSBuildThisFileDirectory)$(XamlGeneratedOutputPath)\**\*.xaml" />
+      <PackageFile Include="@(_XamlFiles)">
+        <PackagePath>build\xaml\$(MSBuildProjectName)\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+    </ItemGroup>
+  </Target>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
 </Project>

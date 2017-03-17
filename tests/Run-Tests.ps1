@@ -144,8 +144,11 @@ function ExecTest($argList)
     $taefPath = Join-Path $TestDstDirectory te.exe 
     $testPath = Join-Path $TestDstDirectory $ModuleFilter
 
+    $taefPath = "`"$taefPath`""
+
     if ($TargetingDevice)
     {
+        #Note: cmdd or some other tool on the phone does not like "`"$testPath`"" and results in taef not running the test.
         Write-Host -ForegroundColor Cyan  "cmdd $taefPath $testPath $argList"
         cmdd $taefPath $testPath $argList
 
@@ -158,9 +161,11 @@ function ExecTest($argList)
     }
     else
     {
+        $testPath = "`"$testPath`""
+        Write-Host -ForegroundColor Cyan  "Running $taefPath $testPath $argList"
         $arguments = "$testPath" + "$argList"
         if ($RedirectTAEFErrors) {            
-            $output = Invoke-Expression "$taefPath $arguments"
+            $output = Invoke-Expression "& $taefPath $arguments"
             $script:exitCode = $LASTEXITCODE
             foreach ($o in $output) {
                             
@@ -181,7 +186,7 @@ function ExecTest($argList)
                 }
             }
         } else {
-            Invoke-Expression "$taefPath $arguments"
+            Invoke-Expression "& $taefPath $arguments"
             $script:exitCode = $LASTEXITCODE
         }
     }
@@ -191,7 +196,7 @@ function ExecTest($argList)
 if ($TestDirectory -eq "")
 {
     $MyPath = (get-item $MyInvocation.MyCommand.Path).Directory.FullName;
-    $TestSrcDirectory = Join-Path $MyPath "..\build\$Platform\$Config\Tests"
+    $TestSrcDirectory = Join-Path $MyPath "..\build\$Platform\$Config\Universal Windows\"
 }
 else
 {

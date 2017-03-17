@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
       <Configuration>Debug</Configuration>
@@ -19,13 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AddressBook\dll\AddressBook.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\AddressBook\dll\AddressBook.vcxproj">
       <Project>{5F537067-96B8-4D84-A5D2-BF32AAB7A454}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\AddressBookUI\lib\AddressBookUILib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\AddressBookUI\lib\AddressBookUILib.vcxproj">
       <Project>{A4875499-9854-42AA-8B61-35BAD1084B6E}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\UIKit\dll\UIKit.vcxproj">
       <Project>{8E79930B-7EF6-4A4E-B46C-EFC0A49C55D9}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -39,7 +39,7 @@
     <ProjectGuid>{ACA55043-EA1E-4BBF-A5B9-152DAFDD5799}</ProjectGuid>
     <RootNamespace>AddressBookUI</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>AddressBookUI</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
@@ -99,4 +99,5 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
 </Project>

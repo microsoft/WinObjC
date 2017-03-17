@@ -30,7 +30,6 @@
     <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <ProjectGuid>{B3B89DBF-D703-4CC2-8ED2-D71FCADED820}</ProjectGuid>
-    <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">..\..\..\..</WINOBJC_SDK_ROOT>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -58,9 +57,6 @@
     <TargetName>WinRTSample</TargetName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-    <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.props" />
-  </ImportGroup>
   <ImportGroup Label="Shared">
     <Import Project="../WinRTSample-Headers-WinStore10/WinRTSample-Headers.vcxitems" Label="Shared" />
   </ImportGroup>
@@ -163,9 +159,24 @@
     </SBInfoPlistCopy>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+  </ItemGroup>
+  <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="App.xaml.h">
+      <DependentUpon>App.xaml</DependentUpon>
+    </ClInclude>
+    <ClCompile Include="App.xaml.cpp">
+      <DependentUpon>App.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
     <Xml Include="..\..\WinRTSample\in-app-purchase.xml" />
     <Xml Include="default.rd.xml" />
     <None Include="WinRTSample_TemporaryKey.pfx" />
@@ -204,7 +215,19 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.targets" />
-  </ImportGroup>
+
+  <!-- Begin NuGet Section -->
+  <PropertyGroup>
+    <TargetFramework>uap10.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="WinObjC.Frameworks" Version="*" />
+    <PackageReference Include="WinObjC.Frameworks.UWP" Version="*" />
+    <PackageReference Include="WinObjC.Frameworks.Core" Version="*" />
+    <PackageReference Include="WinObjC.Language" Version="*" />
+    <PackageReference Include="WinObjC.Logging" Version="*" />
+  </ItemGroup>
+  <!-- End NuGet Section -->
+  
+  <Import Project="$(MSBuildThisFileDirectory)\..\..\..\..\common\winobjc.packagereference.override.targets" Condition="Exists('$(MSBuildThisFileDirectory)\..\..\..\..\common\winobjc.packagereference.override.targets')"/>
 </Project>

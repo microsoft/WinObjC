@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+
+<!--
+  PACKAGE TARGETS
+  Description: Entry point for package targets imports
+  For Use By: A project that consumes this package
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Defaults from WinObjC.Packaging -->
+  <Import Project="$(MSBuildThisFileDirectory)\$(MSBuildThisFileName).Default.targets" Condition="Exists('$(MSBuildThisFileDirectory)\$(MSBuildThisFileName).Default.targets')" />
+  <!-- Package customizations -->
+  <Import Project="$(MSBuildThisFileDirectory)\$(MSBuildThisFileName).Custom.targets" Condition="Exists('$(MSBuildThisFileDirectory)\$(MSBuildThisFileName).Custom.targets')" />
+</Project>

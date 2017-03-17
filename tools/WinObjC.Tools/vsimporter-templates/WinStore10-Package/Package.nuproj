@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.props" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.props')" />
+  <Import Project="$projectname$.Creation.props" />
+  <ItemGroup Label="ProjectConfigurations" VSImporterLabel="ProjectConfigSummary" />
+  <PropertyGroup Label="Globals" VSImporterLabel="GlobalProperties">
+    <ProjectName>$projectname$</ProjectName>
+    <Keyword>IslandwoodProj</Keyword>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" VSImporterLabel="ConfigurationProperties">
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <ItemGroup VSImporterLabel="ProjectItems">
+    <None Include="project.json" />
+    <None Include="$projectname$.Creation.targets" />
+    <None Include="$projectname$.Creation.props" />
+    <None Include="$projectname$.Custom.targets" />
+    <None Include="$projectname$.Custom.props" />
+    <None Include="Readme.txt">
+      <IncludeInPackage>true</IncludeInPackage>
+    </None>
+  </ItemGroup>
+  <ItemGroup VSImporterLabel="ProjectReferences" />
+  <Import Project="$projectname$.Creation.targets" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
+  <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets')" />
+</Project>

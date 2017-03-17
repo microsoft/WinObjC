@@ -1,0 +1,6 @@
+#!/bin/sh
+#
+# WinObjC pre-push formatter.
+#
+REPO_ROOT=$(git.exe rev-parse --show-toplevel)
+exec powershell.exe -NoLogo -NoProfile -File ${REPO_ROOT}/scripts/git/pre-push.ps1 $@

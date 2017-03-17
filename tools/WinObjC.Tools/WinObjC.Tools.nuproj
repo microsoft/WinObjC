@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.props" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.props')" />
+  <Import Project="$(SolutionDir)\..\common\winobjc.nuproj.common.props" Condition="Exists('$(SolutionDir)\..\common\winobjc.nuproj.common.props')" />
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|AnyCPU">
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|AnyCPU">
+      <Configuration>Release</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Configuration">
+    <PackageId>winobjc-tools</PackageId>
+    <Title>winobjc-tools</Title>
+    <Authors>Microsoft</Authors>
+    <Owners>Microsoft</Owners>
+    <Summary>Command Line tools and Visual Studio Extensions for the WinObjC Project.</Summary>
+    <Description>Command Line tools and Visual Studio Extensions for the WinObjC Project. This package includes vsimporter, the tool to convert an existing Xcode Cbjective-C project to a Visual Studio solution, as well as the Visual Studio Extensions (requires Visual Studio 2017 or later) for Objective C syntax highlighting and Nuget package creation. See https://github.com/Microsoft/WinObjC for more details.</Description>
+    <PackageReleaseNotes>
+    </PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/Microsoft/WinObjC</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/Microsoft/WinObjC/blob/master/license.txt</PackageLicenseUrl>
+    <Copyright>Copyright © Microsoft</Copyright>
+    <PackageTags>winobjc-tools;winobjc;vsimporter;</PackageTags>
+  </PropertyGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>0a23b6b4-94bb-4b3a-ba73-a7cb5ef7d8f9</ProjectGuid>
+    <PackageVersion_PreReleaseFormat>{PackageVersion_PreReleaseLabel}-{PackageVersion_Timestamp}</PackageVersion_PreReleaseFormat>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" />
+  <ItemGroup>
+    <None Include="project.json" />
+    <None Include="WinObjC.Tools.targets" />
+    <None Include="tools\**\*.*" />
+    <None Include="vsimporter-templates\**\*.*" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Readme.txt">
+      <IncludeInPackage>true</IncludeInPackage>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\vsimporter\vsimporter.vcxproj" />
+    <ProjectReference Include="..\VSIX\ObjectiveCVSIX.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageFile Include="vswhere">
+      <Kind>Dependency</Kind>
+      <Version>1.0.50</Version>
+    </PackageFile>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
+  <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets')" />
+  <Import Project="WinObjC.Tools.targets" />
+  <Import Project="$(SolutionDir)\..\common\winobjc.nuproj.common.targets" Condition="Exists('$(SolutionDir)\..\common\winobjc.nuproj.common.targets')" />
+</Project>

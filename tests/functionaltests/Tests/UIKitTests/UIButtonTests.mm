@@ -1102,15 +1102,18 @@ public:
         UIButton* buttonToTest = [buttonVC defaultButton];
 
         __block auto uxEvent = UXEvent::CreateAuto();
-        __block auto xamlWidthSubscriber = std::make_shared<XamlEventSubscription>();
-        __block auto xamlHeightSubscriber = std::make_shared<XamlEventSubscription>();
-        __block auto xamlCanvasLeftSubscriber = std::make_shared<XamlEventSubscription>();
-        __block auto xamlCanvasTopSubscriber = std::make_shared<XamlEventSubscription>();
+        __block auto xamlImageWidthSubscriber = std::make_shared<XamlEventSubscription>();
+        __block auto xamlImageHeightSubscriber = std::make_shared<XamlEventSubscription>();
+        __block auto xamlImageCanvasLeftSubscriber = std::make_shared<XamlEventSubscription>();
+        __block auto xamlImageCanvasTopSubscriber = std::make_shared<XamlEventSubscription>();
+        __block auto xamlTitleWidthSubscriber = std::make_shared<XamlEventSubscription>();
+        __block auto xamlTitleHeightSubscriber = std::make_shared<XamlEventSubscription>();
 
-        WXFrameworkElement* xamlElement = [buttonToTest xamlElement];
-        ASSERT_OBJCNE(xamlElement, nil);
+        WXFrameworkElement* xamlImageElement = [buttonToTest.imageView xamlElement];
+        ASSERT_OBJCNE(xamlImageElement, nil);
 
-        // TODO: Get contentCanvas child
+        WXFrameworkElement* xamlTitleElement = [buttonToTest.titleLabel xamlElement];
+        ASSERT_OBJCNE(xamlTitleElement, nil);
 
         dispatch_sync(dispatch_get_main_queue(), ^{
             [buttonVC textImageStateField].text = @"N;";
@@ -1122,47 +1125,70 @@ public:
             [buttonVC textTitleColor].text = @"redColor";
 
             // Register RAII event subscription handler
-            xamlWidthSubscriber->Set(xamlElement, [WXCCanvas widthProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
+            xamlImageWidthSubscriber->Set(xamlImageElement, [WXCImage widthProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
                 double width = DoubleFromPropertyValue([sender getValue:dp]);
 
                 // Validation
-                EXPECT_EQ(width, 30.0f); // now 0
+                EXPECT_EQ(width, 40.0f);
                 uxEvent->Set();
             });
-            xamlHeightSubscriber->Set(xamlElement, [WXCCanvas heightProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
+            xamlImageHeightSubscriber->Set(xamlImageElement, [WXCImage heightProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
                 double height = DoubleFromPropertyValue([sender getValue:dp]);
 
                 // Validation
-                EXPECT_EQ((int)height, 16); // now 0
+                EXPECT_EQ(height, 40.0f);
                 uxEvent->Set();
             });
-            xamlCanvasLeftSubscriber->Set(xamlElement, [WXCCanvas leftProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
+            xamlImageCanvasLeftSubscriber->Set(xamlImageElement, [WXCCanvas leftProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
                 double left = DoubleFromPropertyValue([sender getValue:dp]);
 
                 // Validation
-                EXPECT_EQ(left, 110.0f); // now 0
+                EXPECT_EQ(left, 80.0f);
                 uxEvent->Set();
             });
-            xamlCanvasTopSubscriber->Set(xamlElement, [WXCCanvas topProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
+            xamlImageCanvasTopSubscriber->Set(xamlImageElement, [WXCCanvas topProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
                 double top = DoubleFromPropertyValue([sender getValue:dp]);
 
                 // Validation
-                EXPECT_EQ(top, 91.0f); // now 0
+                EXPECT_EQ(top, 80.0f);
+                uxEvent->Set();
+            });
+
+            xamlTitleWidthSubscriber->Set(xamlTitleElement, [WXCGrid widthProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
+                double width = DoubleFromPropertyValue([sender getValue:dp]);
+
+                // Validation
+                EXPECT_EQ((int)width, 52);
+                uxEvent->Set();
+            });
+            xamlTitleHeightSubscriber->Set(xamlTitleElement, [WXCGrid heightProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
+                double height = DoubleFromPropertyValue([sender getValue:dp]);
+
+                // Validation
+                EXPECT_EQ((int)height, 18);
                 uxEvent->Set();
             });
 
             // Action
-            buttonToTest.contentEdgeInsets = UIEdgeInsetsMake(0.0f, 60.0f, 0.0f, 60.0f);
+            [buttonVC textContentEdgeInsets].text = @"{80.0f, 80.0f, 80.0f, 80.0f}";
         });
 
-        ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec, 4 /* signal count */), "FAILED: Waiting for property changed events timed out!");
+        ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec, 6 /* signal count */), "FAILED: Waiting for property changed events timed out!");
+
+        // Ideally, we can capture the XAML event when the layout is updated but in testing the layout updated event can happen before the inset was applied.
+        // For now confirm that the values matches the expected frame value after it has been set
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            WUXMTransformGroup* transformGroup = rt_dynamic_cast([WUXMTransformGroup class],[xamlTitleElement renderTransform]);
+            EXPECT_OBJCNE(transformGroup, nil);
+
+            // Compare against the expected frame X and Y
+            WUXMMatrix* matrix = [transformGroup value];
+            EXPECT_EQ([matrix offsetX], 98.0f);
+            EXPECT_EQ([matrix offsetY], 90.0f);
+        });
     }
 
     TEST_METHOD(UIButton_TitleEdgeInsets) {
-        BEGIN_TEST_METHOD_PROPERTIES()
-        TEST_METHOD_PROPERTY(L"ignore", L"true")
-        END_TEST_METHOD_PROPERTIES()
-
         StrongId<UIButtonWithControlsViewController> buttonVC;
         buttonVC.attach([[UIButtonWithControlsViewController alloc] init]);
         UXTestAPI::ViewControllerPresenter testHelper(buttonVC);
@@ -1172,13 +1198,9 @@ public:
         __block auto uxEvent = UXEvent::CreateAuto();
         __block auto xamlWidthSubscriber = std::make_shared<XamlEventSubscription>();
         __block auto xamlHeightSubscriber = std::make_shared<XamlEventSubscription>();
-        __block auto xamlCanvasLeftSubscriber = std::make_shared<XamlEventSubscription>();
-        __block auto xamlCanvasTopSubscriber = std::make_shared<XamlEventSubscription>();
 
-        // TODO: Get UILabel grid
-
-        // Extract UIButton.titleLabel control to verify its visual state
-        WXFrameworkElement* xamlElement = [buttonToTest.titleLabel _getXamlTextBlock];
+        // Extract UIButton.titleLabel "grid" to verify its visual state
+        WXFrameworkElement* xamlElement = [buttonToTest.titleLabel xamlElement];
         ASSERT_OBJCNE(xamlElement, nil);
 
         dispatch_sync(dispatch_get_main_queue(), ^{
@@ -1191,44 +1213,36 @@ public:
             xamlWidthSubscriber->Set(xamlElement, [WXCGrid widthProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
                 double width = DoubleFromPropertyValue([sender getValue:dp]);
 
-                // Validation
-                EXPECT_EQ(width, 40.0f); // should be based on grid value
+                // Validation - see #2155
+                EXPECT_EQ((int)width, 40);
                 uxEvent->Set();
             });
             xamlHeightSubscriber->Set(xamlElement, [WXCGrid heightProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
                 double height = DoubleFromPropertyValue([sender getValue:dp]);
 
                 // Validation
-                EXPECT_EQ((int)height, 16); // should be based on grid value
-                uxEvent->Set();
-            });
-            xamlCanvasLeftSubscriber->Set(xamlElement, [WXCCanvas leftProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                double left = DoubleFromPropertyValue([sender getValue:dp]);
-
-                // Validation
-                EXPECT_EQ(left, 80.0f); // should be based on grid value
-                uxEvent->Set();
-            });
-            xamlCanvasTopSubscriber->Set(xamlElement, [WXCCanvas topProperty], ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                double top = DoubleFromPropertyValue([sender getValue:dp]);
-
-                // Validation
-                EXPECT_EQ(top, 91.0f); // should be based on grid value
+                EXPECT_EQ((int)height, 18);
                 uxEvent->Set();
             });
 
             // Action
-            buttonToTest.titleEdgeInsets = UIEdgeInsetsMake(80.0f, 80.0f, 80.0f, 80.0f);
+            [buttonVC textTitleEdgeInsets].text = @"{80.0f, 80.0f, 80.0f, 80.0f}";
         });
 
-        ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec, 4 /* signal count */), "FAILED: Waiting for property changed events timed out!");
+        ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec, 2 /* signal count */), "FAILED: Waiting for property changed events timed out!");
+
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            WUXMTransformGroup* transformGroup = rt_dynamic_cast([WUXMTransformGroup class],[xamlElement renderTransform]);
+            EXPECT_OBJCNE(transformGroup, nil);
+
+            // Compare against the expected frame X and Y - see #2155
+            WUXMMatrix* matrix = [transformGroup value];
+            EXPECT_EQ([matrix offsetX], 80.0f);
+            EXPECT_EQ([matrix offsetY], 90.0f);
+        });
     }
 
     TEST_METHOD(UIButton_ImageEdgeInsets) {
-        BEGIN_TEST_METHOD_PROPERTIES()
-        TEST_METHOD_PROPERTY(L"ignore", L"true")
-        END_TEST_METHOD_PROPERTIES()
-
         StrongId<UIButtonWithControlsViewController> buttonVC;
         buttonVC.attach([[UIButtonWithControlsViewController alloc] init]);
         UXTestAPI::ViewControllerPresenter testHelper(buttonVC);
@@ -1241,7 +1255,7 @@ public:
         __block auto xamlCanvasLeftSubscriber = std::make_shared<XamlEventSubscription>();
         __block auto xamlCanvasTopSubscriber = std::make_shared<XamlEventSubscription>();
 
-        // Extract UIButton.titleLabel control to verify its visual state
+        // Extract UIButton.imageView control to verify its visual state
         WXFrameworkElement* xamlElement = [buttonToTest.imageView xamlElement];
         ASSERT_OBJCNE(xamlElement, nil);
 
@@ -1280,7 +1294,7 @@ public:
             });
 
             // Action
-            buttonToTest.imageEdgeInsets = UIEdgeInsetsMake(80.0f, 80.0f, 80.0f, 80.0f);
+            [buttonVC textImageEdgeInsets].text = @"{80.0f, 80.0f, 80.0f, 80.0f}";
         });
 
         ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec, 4 /* signal count */), "FAILED: Waiting for property changed events timed out!");
@@ -1457,19 +1471,5 @@ public:
         UIButton* buttonToTest = [buttonVC defaultButton];
         WXFrameworkElement* xamlElement = [buttonToTest.imageView xamlElement];
         ASSERT_OBJCNE(xamlElement, nil);
-    }
-
-    TEST_METHOD(UIButton_ImageViewSystemButton) {
-        BEGIN_TEST_METHOD_PROPERTIES()
-        TEST_METHOD_PROPERTY(L"ignore", L"true")
-        END_TEST_METHOD_PROPERTIES()
-
-        StrongId<UIButtonWithControlsViewController> buttonVC;
-        buttonVC.attach([[UIButtonWithControlsViewController alloc] init]);
-        UXTestAPI::ViewControllerPresenter testHelper(buttonVC);
-
-        // BUGBUG: imageView is nil for system buttons - #1931
-        UIButton* buttonToTest = [buttonVC systemButton];
-        ASSERT_OBJCEQ(buttonToTest.imageView, nil);
     }
 };

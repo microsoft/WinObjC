@@ -120,7 +120,7 @@ COREGRAPHICS_EXPORT bool CGPathEqualToPath(CGPathRef path1, CGPathRef path2);
 
 COREGRAPHICS_EXPORT CGRect CGPathGetBoundingBox(CGPathRef path);
 
-COREGRAPHICS_EXPORT CGRect CGPathGetPathBoundingBox(CGPathRef path) STUB_METHOD;
+COREGRAPHICS_EXPORT CGRect CGPathGetPathBoundingBox(CGPathRef path);
 COREGRAPHICS_EXPORT CGPoint CGPathGetCurrentPoint(CGPathRef path);
 COREGRAPHICS_EXPORT CFTypeID CGPathGetTypeID();
 

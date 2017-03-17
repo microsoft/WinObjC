@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+
+<!--
+  PACKAGABLE TARGETS
+  Description: The target definitions specific to a WinObjC project intended to be packaged
+  For Use By: A VcxProj that can be packaged into a NuGet
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TargetOsAndVersion Condition="'$(TargetOsAndVersion)' == ''">Universal Windows</TargetOsAndVersion>
+  </PropertyGroup>
+
+  <!-- Presets for a file's location in the package -->
+  <PropertyGroup>
+    <ShouldAssignPackageContentBasePath Condition="'$(PackageContentBasePath)' == ''">true</ShouldAssignPackageContentBasePath>
+    <HasConfigurationSpecificPackageContents Condition="'$(HasConfigurationSpecificPackageContents)' == ''">false</HasConfigurationSpecificPackageContents>
+    <PackageContentBasePath Condition="'$(ShouldAssignPackageContentBasePath)' == 'true'">build\lib\$(TargetOsAndVersion)\$(PlatformTarget)</PackageContentBasePath>
+    <PackageContentBasePath Condition="'$(ShouldAssignPackageContentBasePath)' == 'true' and '$(HasConfigurationSpecificPackageContents)' == 'true'">$(PackageContentBasePath)\$(Configuration)</PackageContentBasePath>
+
+    <ShouldAssignPackageHeaderBasePath Condition="'$(PackageHeaderBasePath)' == ''">true</ShouldAssignPackageHeaderBasePath>
+    <PackageHeaderBasePath Condition="'$(ShouldAssignPackageHeaderBasePath)' == 'true'">build\include\$(MSBuildProjectName)</PackageHeaderBasePath>
+
+    <ShouldAssignPackageResourcesBasePath Condition="'$(PackageResourcesBasePath)' == ''">true</ShouldAssignPackageResourcesBasePath>
+    <PackageResourcesBasePath Condition="'$(ShouldAssignPackageResourcesBasePath)' == 'true'">build\content\$(MSBuildProjectName)</PackageResourcesBasePath>
+
+    <ShouldAssignPackageBundleBasePath Condition="'$(PackageBundleBasePath)' == ''">true</ShouldAssignPackageBundleBasePath>
+    <PackageBundleBasePath Condition="'$(ShouldAssignPackageBundleBasePath)' == 'true'">build\bundle\$(MSBuildProjectName)</PackageBundleBasePath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GetPackageContentsDependsOn>$(GetPackageContentsDependsOn);$(ComputeLinkInputsTargets)</GetPackageContentsDependsOn>
+    <GetPackageContentsDependsOn Condition="'$(ConfigurationType)' == 'StaticLibrary'">$(GetPackageContentsDependsOn);FindPublicHeaders</GetPackageContentsDependsOn>
+  </PropertyGroup>
+
+  <!-- Add MSBuild outputs into the package -->
+  <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents"  DependsOnTargets="$(GetPackageContentsDependsOn)" Condition="'$(IncludeDefaultPackageContents)' == 'true'">
+    <!-- Static Library Projects -->
+    <ItemGroup Condition="'$(ConfigurationType)' == 'StaticLibrary' And '$(IncludeStaticLibraryInPackage)' == 'true'">
+      <!-- .lib -->
+      <_BuiltProjectOutputGroupStaticLib Include="@(BuiltProjectOutputGroupKeyOutput -> '%(FinalOutputPath)')" />
+      <PackageFile Include="@(_BuiltProjectOutputGroupStaticLib->Distinct())" Condition="Exists('%(FullPath)')">
+        <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+      <!-- Headers -->
+      <_IncludeFiles Include="@(PublicHeader -> '%(Source)')" />
+      <PackageFile Include="@(_IncludeFiles)" Condition="Exists('%(FullPath)')">
+        <PackagePath>$(PackageHeaderBasePath)\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+      <!-- Resources -->
+      <PackageFile Include="@(SBResourceCopy->'%(FullPath)')" Condition="Exists('%(FullPath)')">
+        <PackagePath>$(PackageResourcesBasePath)\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+    </ItemGroup>
+
+    <!-- WinRT Projects -->
+    <ItemGroup Condition="'$(ConfigurationType)' == 'DynamicLibrary'">
+      <!-- .dll -->
+      <_BuiltProjectOutputImportLib Include="@(BuiltProjectOutputGroupKeyOutput -> '%(FinalOutputPath)')" />
+      <PackageFile Include="@(_BuiltProjectOutputImportLib->Distinct())" Condition="Exists('%(FullPath)')">
+        <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+      <!-- .winmd -->
+      <PackageFile Include="@(WinMDFullPath)" Condition="'@(WinMDFullPath)' != '' And Exists('@(WinMDFullPath)')">
+        <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+      <!-- Resources -->
+      <PackageFile Include="@(SBResourceCopy->'%(FullPath)')" Condition="Exists('%(FullPath)')">
+        <PackagePath>$(PackageResourcesBasePath)\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+    </ItemGroup>
+
+    <!-- Bundle Projects -->
+    <ItemGroup Condition="'$(ConfigurationType)' == 'Utility'">
+      <PackageFile Include="@(SBResourceCopy->'%(FullPath)')" Condition="Exists('%(FullPath)')">
+        <PackagePath>$(PackageBundleBasePath)\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+    </ItemGroup>
+  </Target>
+
+  <!-- Remove WinObjC.Packaging from project dependency in the output package nuspec -->
+  <Target Name="RemovePackageInheritance" DependsOnTargets="ReadLegacyDependencies" BeforeTargets="GetPackageContents" >
+    <ItemGroup>
+      <PackageReference Condition="'%(PackageReference.Identity)' == 'WinObjC.Packaging'">
+        <PrivateAssets>All</PrivateAssets>
+      </PackageReference>
+    </ItemGroup>
+  </Target>
+</Project>

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -20,7 +20,6 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>AddressBookSample</ProjectName>
-    <RootNamespace>AddressBookSample</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
@@ -30,8 +29,8 @@
     <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <Keyword>IslandwoodProj</Keyword>
-    <ProjectGuid>{1BB3B806-F32E-4357-B0A2-61FA9F2F1219}</ProjectGuid>
-    <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">..\..\..\..\..</WINOBJC_SDK_ROOT>
+    <ProjectGuid>{CC1A6702-00CC-4F9A-81DB-A8E80B532B9F}</ProjectGuid>
+    <RootNamespace>AddressBookSample</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -59,12 +58,8 @@
     <TargetName>AddressBookSample</TargetName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-    <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.props" />
-  </ImportGroup>
-  <ImportGroup Label="Shared">
-    <Import Project="../AddressBookSample-Headers-WinStore10/AddressBookSample-Headers.vcxitems" Label="Shared" />
-  </ImportGroup>
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -92,6 +87,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
       <HeaderMap>Project</HeaderMap>
+      <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
       <ObjectiveCModules>false</ObjectiveCModules>
       <OptimizationLevel>Disabled</OptimizationLevel>
@@ -115,6 +111,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
       <HeaderMap>Project</HeaderMap>
+      <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
       <ObjectiveCModules>false</ObjectiveCModules>
       <OptimizationLevel>Disabled</OptimizationLevel>
@@ -136,6 +133,7 @@
     <ClangCompile>
       <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
       <HeaderMap>Project</HeaderMap>
+      <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
       <ObjectiveCModules>false</ObjectiveCModules>
       <OptimizationLevel>MinSpace</OptimizationLevel>
@@ -156,6 +154,7 @@
     <ClangCompile>
       <ExcludedSearchPathSubdirectories>*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
       <HeaderMap>Project</HeaderMap>
+      <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
       <ObjectiveCModules>false</ObjectiveCModules>
       <OptimizationLevel>MinSpace</OptimizationLevel>
@@ -169,6 +168,11 @@
     </SBInfoPlistCopy>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+  </ItemGroup>
+  <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
@@ -181,24 +185,38 @@
     <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Image Include="Assets\StoreLogo.png" />
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
-    <ClangCompile Include="..\..\AddressBook\ViewController.m" />
-    <ClangCompile Include="..\..\AddressBook\SingleContactViewController.m" />
-    <ClangCompile Include="..\..\AddressBook\AppDelegate.m" />
-    <ClangCompile Include="..\..\AddressBook\ViewAllContactsViewController.m" />
-    <ClangCompile Include="..\..\AddressBook\main.m" />
-    <StoryboardCompile Include="..\..\AddressBook\Base.lproj\LaunchScreen.storyboard">
-      <VariantDir>Base.lproj</VariantDir>
-    </StoryboardCompile>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="App.xaml.h">
+      <DependentUpon>App.xaml</DependentUpon>
+    </ClInclude>
+    <ClCompile Include="App.xaml.cpp">
+      <DependentUpon>App.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
     <AssetCatalogCompile Include="..\..\AddressBook\Assets.xcassets" />
-    <StoryboardCompile Include="..\..\AddressBook\Base.lproj\Main.storyboard">
-      <VariantDir>Base.lproj</VariantDir>
-    </StoryboardCompile>
+    <ClInclude Include="..\..\AddressBook\AppDelegate.h" />
+    <ClInclude Include="..\..\AddressBook\SingleContactViewController.h" />
+    <ClInclude Include="..\..\AddressBook\ViewAllContactsViewController.h" />
+    <ClInclude Include="..\..\AddressBook\ViewController.h" />
+    <ClangCompile Include="..\..\AddressBook\AppDelegate.m" />
+    <ClangCompile Include="..\..\AddressBook\SingleContactViewController.m" />
+    <ClangCompile Include="..\..\AddressBook\ViewAllContactsViewController.m" />
+    <ClangCompile Include="..\..\AddressBook\ViewController.m" />
+    <ClangCompile Include="..\..\AddressBook\main.m" />
     <SBInfoPlistCopy Include="..\..\AddressBook\Info.plist">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Debug'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Release'">false</ExcludedFromBuild>
       <VariableFile Condition="'$(Configuration)'=='Debug'">AddressBookSample-Debug-xcvars.txt</VariableFile>
       <VariableFile Condition="'$(Configuration)'=='Release'">AddressBookSample-Release-xcvars.txt</VariableFile>
     </SBInfoPlistCopy>
+    <StoryboardCompile Include="..\..\AddressBook\Base.lproj\LaunchScreen.storyboard">
+      <VariantDir>Base.lproj</VariantDir>
+    </StoryboardCompile>
+    <StoryboardCompile Include="..\..\AddressBook\Base.lproj\Main.storyboard">
+      <VariantDir>Base.lproj</VariantDir>
+    </StoryboardCompile>
     <Text Include="AddressBookSample-Debug-xcvars.txt">
       <DeploymentContent>false</DeploymentContent>
     </Text>
@@ -208,7 +226,20 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.targets" />
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets" />
+
+  <!-- Begin NuGet Section -->
+  <PropertyGroup>
+    <TargetFramework>uap10.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="WinObjC.Frameworks" Version="*" />
+    <PackageReference Include="WinObjC.Frameworks.UWP" Version="*" />
+    <PackageReference Include="WinObjC.Frameworks.Core" Version="*" />
+    <PackageReference Include="WinObjC.Language" Version="*" />
+    <PackageReference Include="WinObjC.Logging" Version="*" />
+  </ItemGroup>
+  <!-- End NuGet Section -->
+  
+  <Import Project="$(MSBuildThisFileDirectory)\..\..\..\..\..\common\winobjc.packagereference.override.targets" Condition="Exists('$(MSBuildThisFileDirectory)\..\..\..\..\..\common\winobjc.packagereference.override.targets')"/>
 </Project>

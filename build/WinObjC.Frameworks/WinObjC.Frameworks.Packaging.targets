@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents" DependsOnTargets="$(GitVersionDependsOn)" Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">
+
+      <ItemGroup>
+
+          <!-- Frameworks without a module that build them also need includes added (though how those still exist is a little curious) -->
+          <_ApplicationServiesIncludes Include="$(MSBuildThisFileDirectory)..\..\include\ApplicationServices\*.*"/>
+          
+          <PackageFile Include="@(_ApplicationServiesIncludes)" Condition="Exists('%(FullPath)')">
+              <PackagePath>build\include\ApplicationServices\%(Filename)%(Extension)</PackagePath>
+          </PackageFile>
+
+          <PackageFile Include="$(MSBuildThisFileDirectory)$(PackageId).props" Condition="Exists('$(MSBuildThisFileDirectory)$(PackageId).props')">
+              <PackagePath>build\$(PackageId).props</PackagePath>
+          </PackageFile>
+          <PackageFile Include="$(MSBuildThisFileDirectory)$(PackageId).targets" Condition="Exists('$(MSBuildThisFileDirectory)$(PackageId).targets')">
+              <PackagePath>build\$(PackageId).targets</PackagePath>
+          </PackageFile>
+      </ItemGroup>
+  </Target>
+  
+</Project>

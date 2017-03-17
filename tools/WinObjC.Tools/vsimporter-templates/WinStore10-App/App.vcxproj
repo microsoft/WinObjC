@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations" VSImporterLabel="ProjectConfigSummary" />
+  <PropertyGroup Label="Globals" VSImporterLabel="GlobalProperties">
+    <ProjectName>$projectname$</ProjectName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <AppContainerApplication>true</AppContainerApplication>
+    <ApplicationType>Windows Store</ApplicationType>
+    <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
+    <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
+    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
+    <Keyword>IslandwoodProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Configuration" VSImporterLabel="ConfigurationProperties">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <UseDotNetNativeToolchain VSImporterConfigName="Release">true</UseDotNetNativeToolchain>
+    <Optimize VSImporterConfigName="Release">true</Optimize>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" VSImporterLabel="BuildExtensionProperties">
+  </ImportGroup>
+  <ImportGroup Label="Shared" VSImporterLabel="SharedProjects" />
+  <ImportGroup Label="PropertySheets" VSImporterLabel="ConfigurationPropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" VSImporterLabel="UserMacros" />
+  <PropertyGroup>
+    <PackageCertificateKeyFile>$projectname$_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>D095ED4071F7A0D93085697ECF15F78E76342CCF</PackageCertificateThumbprint>
+  </PropertyGroup>
+  <ItemDefinitionGroup VSImporterLabel="ConfigurationItemDefinitions">
+    <ClCompile>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
+      <RuntimeLibrary VSImporterConfigName="Debug">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <ClangCompile>
+      <RuntimeLibrary VSImporterConfigName="Debug">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClangCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+  </ItemGroup>
+
+  <ItemGroup VSImporterLabel="ProjectItems">
+    <AppxManifest Include="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
+    <Xml Include="default.rd.xml" />
+    <None Include="$projectname$_TemporaryKey.pfx" />
+    <None Include="project.json" />
+    <Image Include="Assets\LockScreenLogo.scale-200.png" />
+    <Image Include="Assets\SplashScreen.scale-200.png" />
+    <Image Include="Assets\Square150x150Logo.scale-200.png" />
+    <Image Include="Assets\Square44x44Logo.scale-200.png" />
+    <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
+    <Image Include="Assets\StoreLogo.png" />
+    <Image Include="Assets\Wide310x150Logo.scale-200.png" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="App.xaml.h">
+        <DependentUpon>App.xaml</DependentUpon>
+    </ClInclude>
+    <ClCompile Include="App.xaml.cpp">
+        <DependentUpon>App.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+
+  <ItemGroup VSImporterLabel="ProjectReferences" />
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" VSImporterLabel="BuildExtensionTargets">
+  </ImportGroup>  
+</Project>

@@ -96,6 +96,9 @@ const CFStringRef kCTFontDefaultBoldFontName = CFSTR("Arial Bold");
 const CFStringRef kCTFontDefaultItalicFontName = CFSTR("Arial Italic");
 const CFStringRef kCTFontDefaultMonospacedFontName = CFSTR("Courier New");
 
+// Reference platform adds a constant amount of space (scaled by font size) to each glyph's vertical translation
+static const int sc_verticalTranslationSpace = 102;
+
 using namespace Microsoft::WRL;
 
 struct __CTFont {
@@ -709,8 +712,8 @@ CGPathRef CTFontCreatePathForGlyph(CTFontRef font, CGGlyph glyph, const CGAffine
 }
 
 /**
- @Status Stub
- @Notes
+ @Status NotInPlan
+ @Notes Not much usage, can be easily replaced with CTFontGetGlyphsForCharacters in most common uses
 */
 CGGlyph CTFontGetGlyphWithName(CTFontRef font, CFStringRef glyphName) {
     UNIMPLEMENTED();
@@ -795,11 +798,27 @@ double CTFontGetAdvancesForGlyphs(CTFontRef font, CTFontOrientation orientation,
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 void CTFontGetVerticalTranslationsForGlyphs(CTFontRef font, const CGGlyph glyphs[], CGSize translations[], CFIndex count) {
-    UNIMPLEMENTED();
+    if (font && glyphs && translations && count > 0L) {
+        DWRITE_GLYPH_METRICS metrics[count];
+        if (FAILED(font->_dwriteFontFace->GetDesignGlyphMetrics(glyphs, count, metrics, false))) {
+            TraceError(g_logTag, L"Unable to get glyph metrics");
+            return;
+        }
+
+        std::transform(metrics, metrics + count, translations, [font](const DWRITE_GLYPH_METRICS& metrics) {
+            if (metrics.advanceWidth == metrics.rightSideBearing && metrics.verticalOriginY == metrics.topSideBearing) {
+                // Special case of empty glyph, should just return CGRectZero;
+                return CGSizeZero;
+            }
+
+            return CGSize{ -__CTFontScaleMetric(font, (metrics.advanceWidth / 2)),
+                           -__CTFontScaleMetric(font, metrics.verticalOriginY - metrics.topSideBearing + sc_verticalTranslationSpace) };
+        });
+    }
 }
 
 /**

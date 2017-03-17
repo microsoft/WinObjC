@@ -55,34 +55,59 @@ typedef CF_ENUM(CFIndex, CGInterpolationQuality) {
 };
 
 typedef CF_ENUM(CFIndex, CGBlendMode) {
-    kCGBlendModeNormal,
-    kCGBlendModeMultiply,
-    kCGBlendModeScreen,
-    kCGBlendModeOverlay,
-    kCGBlendModeDarken,
-    kCGBlendModeLighten,
-    kCGBlendModeColorDodge,
-    kCGBlendModeColorBurn,
-    kCGBlendModeSoftLight,
-    kCGBlendModeHardLight,
-    kCGBlendModeDifference,
-    kCGBlendModeExclusion,
-    kCGBlendModeHue,
-    kCGBlendModeSaturation,
-    kCGBlendModeColor,
-    kCGBlendModeLuminosity,
-    kCGBlendModeClear,
-    kCGBlendModeCopy,
-    kCGBlendModeSourceIn,
-    kCGBlendModeSourceOut,
-    kCGBlendModeSourceAtop,
-    kCGBlendModeDestinationOver,
-    kCGBlendModeDestinationIn,
-    kCGBlendModeDestinationOut,
-    kCGBlendModeDestinationAtop,
-    kCGBlendModeXOR,
-    kCGBlendModePlusDarker,
-    kCGBlendModePlusLighter
+    // Each of these constants has a Facility and a Facility Value, documented below.
+    // 0xAABB
+    //   ^  ^
+    //   +--|---- Composition Facility (Primitive Composition, Direct2D Blend Effect, Special Operator)
+    //      +---- Composition facility value (usually mapped directly from Direct2D):
+    //            Blends: https://msdn.microsoft.com/en-us/library/windows/desktop/dn934217(v=vs.85).aspx
+    //            Composition: https://msdn.microsoft.com/en-us/library/windows/desktop/hh446995(v=vs.85).aspx
+
+    // D2D Blend Effect Modes
+    kCGBlendModeMultiply = 0x0100,
+    kCGBlendModeScreen = 0x0101,
+    kCGBlendModeDarken = 0x0102,
+    kCGBlendModeLighten = 0x0103,
+
+    kCGBlendModeColorBurn = 0x0105,
+    kCGBlendModeColorDodge = 0x0109,
+
+    kCGBlendModeOverlay = 0x010B,
+    kCGBlendModeSoftLight = 0x010C,
+    kCGBlendModeHardLight = 0x010D,
+
+    kCGBlendModeDifference = 0x0112,
+    kCGBlendModeExclusion = 0x0113,
+
+    kCGBlendModeHue = 0x0114,
+    kCGBlendModeSaturation = 0x0115,
+    kCGBlendModeColor = 0x0116,
+    kCGBlendModeLuminosity = 0x0117,
+
+    // D2D Composite Draw Modes
+    kCGBlendModeSourceOver = 0x0200,
+    kCGBlendModeDestinationOver = 0x0201,
+
+    kCGBlendModeSourceIn = 0x0402,
+    kCGBlendModeDestinationIn = 0x0403,
+
+    kCGBlendModeSourceOut = 0x0404,
+    kCGBlendModeDestinationOut = 0x0205,
+
+    kCGBlendModeSourceAtop = 0x0206,
+    kCGBlendModeDestinationAtop = 0x0407,
+
+    kCGBlendModeXOR = 0x0208,
+    kCGBlendModePlusLighter = 0x0209,
+
+    kCGBlendModeCopy = 0x040A,
+
+    kCGBlendModePlusDarker = kCGBlendModePlusLighter, // [Unsupported right now, maps to kCGBlendModePlusLighter with a warning.]
+
+    // Special mode (clears the affected region)
+    kCGBlendModeClear = 0x0800,
+
+    kCGBlendModeNormal = kCGBlendModeSourceOver,
 };
 
 // clang-format off

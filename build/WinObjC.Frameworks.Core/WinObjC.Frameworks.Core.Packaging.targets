@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents" Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">
+
+      <ItemGroup>
+          <!-- Public includes that aren't framework specific are assumed to be part of core.  -->
+          <_IncludeFiles Include="$(MSBuildThisFileDirectory)..\..\include\*.h"/>
+
+          <PackageFile Include="@(_IncludeFiles)" Condition="Exists('%(FullPath)')">
+              <PackagePath>build\include\%(Filename)%(Extension)</PackagePath>
+          </PackageFile>
+
+          <!-- Extra starboard Includes -->
+          <_VCIncludes Include="$(MSBuildThisFileDirectory)..\..\include\VCInclude\*.*"/>
+          <_CommonCryptoIncludes Include="$(MSBuildThisFileDirectory)..\..\include\CommonCrypto\*.*"/>
+          
+          <PackageFile Include="@(_VCIncludes)" Condition="Exists('%(FullPath)')">
+              <PackagePath>build\include\VCInclude\%(Filename)%(Extension)</PackagePath>
+          </PackageFile>
+
+          <PackageFile Include="@(_CommonCryptoIncludes)" Condition="Exists('%(FullPath)')">
+              <PackagePath>build\include\CommonCrypto\%(Filename)%(Extension)</PackagePath>
+          </PackageFile>
+
+          <PackageFile Include="$(MSBuildThisFileDirectory)$(PackageId).props" Condition="Exists('$(MSBuildThisFileDirectory)$(PackageId).props')">
+              <PackagePath>build\$(PackageId).props</PackagePath>
+          </PackageFile>
+          <PackageFile Include="$(MSBuildThisFileDirectory)$(PackageId).targets" Condition="Exists('$(MSBuildThisFileDirectory)$(PackageId).targets')">
+              <PackagePath>build\$(PackageId).targets</PackagePath>
+          </PackageFile>
+      </ItemGroup>
+  </Target>
+  
+</Project>

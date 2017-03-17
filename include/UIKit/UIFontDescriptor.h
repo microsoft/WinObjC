@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -107,7 +107,7 @@ UIKIT_EXPORT_CLASS
 - (UIFontDescriptor*)fontDescriptorWithSize:(CGFloat)newPointSize;
 - (UIFontDescriptor*)fontDescriptorWithSymbolicTraits:(UIFontDescriptorSymbolicTraits)symbolicTraits STUB_METHOD;
 - (instancetype)initWithFontAttributes:(NSDictionary*)attributes;
-- (NSArray*)matchingFontDescriptorsWithMandatoryKeys:(NSSet*)mandatoryKeys STUB_METHOD;
+- (NSArray*)matchingFontDescriptorsWithMandatoryKeys:(NSSet*)mandatoryKeys;
 - (NSDictionary<NSString*, id>*)fontAttributes;
 @property (readonly, nonatomic) CGAffineTransform matrix;
 - (id)objectForKey:(NSString*)anAttribute;

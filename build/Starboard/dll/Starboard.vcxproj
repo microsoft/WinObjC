@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
       <Configuration>Debug</Configuration>
@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Starboard\lib\StarboardLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\Starboard\lib\StarboardLib.vcxproj">
       <Project>{2A00FC26-2ECF-4DF7-8ECF-2D18C5AC61C9}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -33,14 +33,17 @@
     <ProjectGuid>{0AC27ECF-E2AB-420B-9359-4843FFF4CBFA}</ProjectGuid>
     <RootNamespace>Starboard</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>Starboard</OutputName>
-    <StarboardIncludeDefaultLibs>false</StarboardIncludeDefaultLibs>
+    <BuildingFrameworksCore>true</BuildingFrameworksCore>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <LinkWithFoundation>false</LinkWithFoundation>
+    <LinkWithCoreFoundation>false</LinkWithCoreFoundation>
     <LinkWithStarboard>false</LinkWithStarboard>
+    <LinkWithMobileCoreServices>false</LinkWithMobileCoreServices>
+    <LinkWithCFNetwork>false</LinkWithCFNetwork>
     <StarboardLinkObjCRuntime>false</StarboardLinkObjCRuntime>
   </PropertyGroup>
   <ImportGroup Label="ExtensionSettings">
@@ -113,4 +116,5 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
 </Project>

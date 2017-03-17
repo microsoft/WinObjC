@@ -27,6 +27,8 @@ public:
   void setProjectName(const std::string& val);
   void setPublisherName(const std::string& val);
   void setTargetName(const std::string& val);
+  void setIsPackageable(const bool val);
+  void setPackageConfig(const std::string& val);
 
   void setValue(const std::string& key, const std::string& value);
   const std::string& getValue(const std::string& key) const;

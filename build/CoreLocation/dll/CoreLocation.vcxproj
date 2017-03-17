@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
       <Configuration>Debug</Configuration>
@@ -19,13 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Foundation\dll\Foundation.vcxproj">
-      <Project>{86127226-9A6E-439B-A070-420A572AF0C7}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Starboard\dll\Starboard.vcxproj">
-      <Project>{0AC27ECF-E2AB-420B-9359-4843FFF4CBFA}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\CoreLocation\lib\CoreLocationLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreLocation\lib\CoreLocationLib.vcxproj">
       <Project>{96CEAFB4-5BDC-4972-97D7-302840B3CDA0}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -39,7 +33,7 @@
     <ProjectGuid>{67D1502D-00C8-46B6-AF47-088B7A5199FE}</ProjectGuid>
     <RootNamespace>CoreLocation</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CoreLocation</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
@@ -54,7 +48,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>CoreLocation.def</ModuleDefinitionFile>
-      <AdditionalDependencies>;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -67,7 +61,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>CoreLocation.def</ModuleDefinitionFile>
-      <AdditionalDependencies>;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -80,7 +74,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>CoreLocation.def</ModuleDefinitionFile>
-      <AdditionalDependencies>;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -93,7 +87,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>CoreLocation.def</ModuleDefinitionFile>
-      <AdditionalDependencies>;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -103,4 +97,5 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
 </Project>

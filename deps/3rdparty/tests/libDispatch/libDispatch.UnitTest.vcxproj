@@ -39,8 +39,7 @@
     <WindowsAppContainer>false</WindowsAppContainer>
     <TargetOsAndVersion>Universal Windows</TargetOsAndVersion>
     <StarboardBasePath>..\..\..\..</StarboardBasePath>
-    <UseStarboardSourceSdk>true</UseStarboardSourceSdk>
-    <IslandwoodDRT>false</IslandwoodDRT>
+    
     <OutDir>..\$(Platform)\$(Configuration)\$(RootNamespace)\</OutDir>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -71,9 +70,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-    <Import Project="$(StarboardBasePath)\msvc\starboard-cmdline.props" />
-  </ImportGroup>
+
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(StarboardBasePath)\msvc\ut-build.props" />
   </ImportGroup>
@@ -93,8 +90,6 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros">
-    <CopyStarboardLibraries>true</CopyStarboardLibraries>
-    <SBResourceCopyToAPPX>false</SBResourceCopyToAPPX>
     <StripAppContainerBit>true</StripAppContainerBit>
   </PropertyGroup>
   <PropertyGroup Label="UserMacros" />
@@ -123,7 +118,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>mincore.lib;Foundation.lib;Starboard.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mincore.lib;Foundation.lib;Starboard.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
@@ -146,7 +141,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>mincore.lib;Foundation.lib;Starboard.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mincore.lib;Foundation.lib;Starboard.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>
@@ -172,7 +167,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>mincore.lib;Foundation.lib;Starboard.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mincore.lib;Foundation.lib;Starboard.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>
@@ -198,7 +193,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>mincore.lib;Foundation.lib;Starboard.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mincore.lib;Foundation.lib;Starboard.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
     </Link>
     <ClangCompile>
@@ -237,7 +232,5 @@
     <ClInclude Include="dispatch_test.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="$(StarboardBasePath)\msvc\starboard-cmdline.targets" />
-  </ImportGroup>
+
 </Project>

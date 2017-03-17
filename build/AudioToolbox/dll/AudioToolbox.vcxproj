@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
       <Configuration>Debug</Configuration>
@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\lib\AudioToolboxLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\AudioToolboxLib.vcxproj">
       <Project>{FBB81B8A-F021-4F71-9A07-E4DC835676FD}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -33,7 +33,7 @@
     <ProjectGuid>{32EE9FA0-B8A5-4059-BE82-3A60EC6AE59E}</ProjectGuid>
     <RootNamespace>AudioToolbox</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>AudioToolbox</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
@@ -45,7 +45,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Link>
       <ModuleDefinitionFile>AudioToolbox.def</ModuleDefinitionFile>
-      <AdditionalDependencies>;WindowsApp.lib;libdispatch.lib;mfuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>;WindowsApp.lib;mfuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -55,7 +55,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Link>
       <ModuleDefinitionFile>AudioToolbox.def</ModuleDefinitionFile>
-      <AdditionalDependencies>;WindowsApp.lib;libdispatch.lib;mfuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>;WindowsApp.lib;mfuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -65,7 +65,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
     <Link>
       <ModuleDefinitionFile>AudioToolbox.def</ModuleDefinitionFile>
-      <AdditionalDependencies>;WindowsApp.lib;libdispatch.lib;mfuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>;WindowsApp.lib;mfuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -75,7 +75,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
     <Link>
       <ModuleDefinitionFile>AudioToolbox.def</ModuleDefinitionFile>
-      <AdditionalDependencies>;WindowsApp.lib;libdispatch.lib;mfuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>;WindowsApp.lib;mfuuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\xplat</IncludePaths>
@@ -85,4 +85,5 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
 </Project>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
       <Configuration>Debug</Configuration>
@@ -19,13 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
-      <Project>{81f30af6-eac3-4dfa-929a-c25d69e8080b}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
       <Project>{26DA08DA-D0B9-4579-B168-E7F0A5F20E57}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\lib\CoreImageLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\CoreImageLib.vcxproj">
       <Project>{90A8C3CC-1430-41C8-B9B8-3994C5C118ED}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -39,7 +36,7 @@
     <ProjectGuid>{3EFCDFF3-6013-448F-8611-534D0F819D6B}</ProjectGuid>
     <RootNamespace>CoreImage</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CoreImage</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
@@ -99,4 +96,5 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
 </Project>

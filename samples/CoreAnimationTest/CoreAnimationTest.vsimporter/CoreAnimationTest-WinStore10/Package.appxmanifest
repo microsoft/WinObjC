@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="4b10b58c-5279-4801-a6c2-7a6a1d738703"
+    Name="201d483b-55a2-4be4-a64c-940700084cfc"
     Publisher="CN=islandwood"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="4b10b58c-5279-4801-a6c2-7a6a1d738703" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="201d483b-55a2-4be4-a64c-940700084cfc" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>CoreAnimationTest</DisplayName>
-    <PublisherDisplayName>oliversa</PublisherDisplayName>
+    <PublisherDisplayName>bbowman</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 

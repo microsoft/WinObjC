@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
       <Configuration>Debug</Configuration>
@@ -22,7 +22,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)\dllmain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\lib\CoreTelephonyLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\CoreTelephonyLib.vcxproj">
       <Project>{c693a263-7a21-4170-a292-32628d5d2b5b}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -33,7 +33,7 @@
     <ProjectGuid>{97032E40-90C3-4F19-B0D6-A441E599BBB7}</ProjectGuid>
     <RootNamespace>CoreTelephony</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CoreTelephony</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
@@ -101,4 +101,5 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
 </Project>

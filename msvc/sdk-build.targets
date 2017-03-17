@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup>
-    <Import Project="$(MSBuildThisFileDirectory)starboard.targets" />
-  </ImportGroup>
-  <Target Name="CopyCoreFoundationPublicHeadersToIncludes">
+  <Target Name="CopyCoreFoundationPublicHeadersToIncludes"
+    Inputs="@(CoreFoundationPublicHeader)"  
+    Outputs="@(CoreFoundationPublicHeader -> '$(MSBuildThisFileDirectory)..\Include\CoreFoundation\%(Filename)%(Extension)')">
     <Copy
         SourceFiles="@(CoreFoundationPublicHeader)" 
         DestinationFolder="$(MSBuildThisFileDirectory)..\Include\CoreFoundation\" 
         ContinueOnError="true" 
         SkipUnchangedFiles="true"/>
   </Target>
-  <Target Name="CopyCoreFoundationPrivateHeadersToIncludes">
+  <Target Name="CopyCoreFoundationPrivateHeadersToIncludes"
+    Inputs="@(CoreFoundationPrivateHeader)"  
+    Outputs="@(CoreFoundationPrivateHeader -> '$(MSBuildThisFileDirectory)..\Frameworks\include\%(Filename)%(Extension)')">
     <Copy
         SourceFiles="@(CoreFoundationPrivateHeader)" 
         DestinationFolder="$(MSBuildThisFileDirectory)..\Frameworks\include\" 
@@ -25,4 +26,45 @@
       CopyCoreFoundationPublicHeadersToIncludes;
     </BuildGenerateSourcesTargets>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <HasConfigurationSpecificPackageContents Condition="'$(HasConfigurationSpecificPackageContents)' == '' ">false</HasConfigurationSpecificPackageContents>
+    <ShouldAssignPackageContentBasePath Condition="'$(PackageContentBasePath)' == ''">true</ShouldAssignPackageContentBasePath>
+    <PackageContentBasePath Condition="'$(ShouldAssignPackageContentBasePath)' == 'true'">build\lib\$(TargetOsAndVersion)\$(PlatformTarget)</PackageContentBasePath>
+    <PackageContentBasePath Condition="'$(ShouldAssignPackageContentBasePath)' == 'true' and '$(HasConfigurationSpecificPackageContents)' == 'true'">$(PackageContentBasePath)\$(Configuration)</PackageContentBasePath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(ConfigurationType)' == 'DynamicLibrary' or '$(ConfigurationType)' == 'Application'">
+      <GetPackageContentsDependsOn>$(GetPackageContentsDependsOn);$(ComputeLinkInputsTargets)</GetPackageContentsDependsOn>
+  </PropertyGroup>
+
+  <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents"  DependsOnTargets="$(GetPackageContentsDependsOn)" Condition="'$(ConfigurationType)' == 'DynamicLibrary' or '$(ConfigurationType)' == 'Application'">
+    <ItemGroup>
+      <!-- Public include folder for project  -->
+      <_IncludeFiles Include="$(MSBuildThisFileDirectory)..\include\$(ProjectName)\**\*.*"/>
+
+      <_ImportLibraryFileNames Include="@(Link -> '%(ImportLibrary)')">
+      </_ImportLibraryFileNames>
+
+      <_WinMDFileNames Include="@(Link -> '%(WindowsMetadataFile)')">
+      </_WinMDFileNames>
+
+      <PackageFile Include="@(_IncludeFiles)" Condition="Exists('%(FullPath)')">
+        <PackagePath>build\include\$(MSBuildProjectName)\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+      
+      <PackageFile Include="@(BuiltProjectOutputGroupOutput -> '%(FinalOutputPath)')">
+        <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+      
+      <PackageFile Include="@(_ImportLibraryFileNames->Distinct())" Condition="Exists('%(FullPath)')">
+        <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+
+      <PackageFile Include="@(_WinMDFileNames->Distinct())" Condition="Exists('%(FullPath)')">
+        <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+    </ItemGroup>
+  </Target>
+
 </Project>

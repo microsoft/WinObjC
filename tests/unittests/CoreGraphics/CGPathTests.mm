@@ -982,3 +982,45 @@ TEST(CGPath, CGPathAddArcToPoint) {
     EXPECT_EQ(boundingBox.size, CGSizeMake(50, 50));
     CGPathRelease(thepath);
 }
+
+#define COMPARE_RECTS_WITH_SLACK(lhs, rhs)                   \
+    {                                                        \
+        EXPECT_NEAR(lhs.origin.x, rhs.origin.x, .001);       \
+        EXPECT_NEAR(lhs.origin.y, rhs.origin.y, .001);       \
+        EXPECT_NEAR(lhs.size.width, rhs.size.width, .001);   \
+        EXPECT_NEAR(lhs.size.height, rhs.size.height, .001); \
+    \
+}
+
+TEST(CGPath, GetBoundingBoxes) {
+    CGFloat width = 256;
+    CGFloat height = 128;
+
+    CGMutablePathRef thepath = CGPathCreateMutable();
+
+    CGAffineTransform transformation = CGAffineTransformIdentity;
+    transformation = CGAffineTransformScale(transformation, .8, .8);
+    transformation = CGAffineTransformTranslate(transformation, .1 * width, .1 * height);
+
+    CGPathMoveToPoint(thepath, &transformation, .75 * width, .5 * height);
+    CGPathAddArc(thepath, &transformation, .5 * width, .5 * height, .5 * height, 0, M_PI / 2, true);
+    CGPathAddArc(thepath, &transformation, .5 * width, .5 * height, .5 * height, M_PI / 2, 0, true);
+    CGPathMoveToPoint(thepath, &transformation, .25 * width, .5 * height);
+    CGPathAddArc(thepath, &transformation, .375 * width, .5 * height, .25 * height, M_PI, 0, false);
+    CGPathMoveToPoint(thepath, &transformation, .5 * width, .5 * height);
+    CGPathAddArc(thepath, &transformation, .625 * width, .5 * height, .25 * height, M_PI, 0, true);
+    CGPathMoveToPoint(thepath, &transformation, .4375 * width, .5 * height);
+    CGPathAddArc(thepath, &transformation, .375 * width, .5 * height, .125 * height, 0, M_PI / 2, true);
+    CGPathAddArc(thepath, &transformation, .375 * width, .5 * height, .125 * height, M_PI / 2, 0, true);
+    CGPathMoveToPoint(thepath, &transformation, .6875 * width, .5 * height);
+    CGPathAddArc(thepath, &transformation, .625 * width, .5 * height, .125 * height, 0, M_PI / 2, true);
+    CGPathAddArc(thepath, &transformation, .625 * width, .5 * height, .125 * height, M_PI / 2, 0, true);
+
+    CGRect boundingBox = CGPathGetBoundingBox(thepath);
+    COMPARE_RECTS_WITH_SLACK(boundingBox, CGRectMake(67.6526, 6.21259, 106.43, 106.427));
+
+    boundingBox = CGPathGetPathBoundingBox(thepath);
+    COMPARE_RECTS_WITH_SLACK(boundingBox, CGRectMake(71.6785, 10.2385, 102.401, 102.401));
+
+    CGPathRelease(thepath);
+}

@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
       <Configuration>Debug</Configuration>
@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CoreAudio\lib\CoreAudioLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreAudio\lib\CoreAudioLib.vcxproj">
       <Project>{E9AB5709-44BA-4AA0-8B5F-46FE35F143D5}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -33,7 +33,7 @@
     <ProjectGuid>{7DBBF481-D3D4-4CCC-BC3B-B14B8B99FB59}</ProjectGuid>
     <RootNamespace>CoreAudio</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>CoreAudio</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
@@ -93,4 +93,5 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
 </Project>

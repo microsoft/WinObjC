@@ -3,13 +3,23 @@
 
   <ItemDefinitionGroup>
     <ClangCompile>
-      <AdditionalOptions>-Werror=microsoft %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>_WINOBJC_DO_NOT_USE_NSLOG=;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClangCompile>
+    <ClangCompile Condition="'$(AllowNSLog)' != 'true'">
+      <PreprocessorDefinitions>_WINOBJC_DO_NOT_USE_NSLOG=;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
 
   <PropertyGroup Label="Configuration">
     <StarboardLinkWholeArchive>false</StarboardLinkWholeArchive>
   </PropertyGroup>
+  
+  <PropertyGroup Label="Globals">
+    <TargetFramework>uap10.0</TargetFramework>
+  </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="WinObjC.Language" Version="*" />
+    <PackageReference Include="Taef.Redist.Wlk" Version="1.0.170206001-nativeTargets" />
+  </ItemGroup>
 </Project>

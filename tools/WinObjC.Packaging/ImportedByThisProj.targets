@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+
+<!--
+  WinObjC.Packaging TARGETS
+  Description: The target definitions for WinObjC.Packaging.nuproj
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Add items into the WinObjC.Packaging package -->
+  <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents" Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">
+    <ItemGroup>
+      <!-- Rename ImportedByAnyDependent because it must match the package name -->
+      <PackageFile Include="$(MSBuildThisFileDirectory)ImportedByAnyDependent.props" Condition="Exists('$(MSBuildThisFileDirectory)ImportedByAnyDependent.props')">
+        <PackagePath>build\$(PackageId).props</PackagePath>
+      </PackageFile>
+      <PackageFile Include="$(MSBuildThisFileDirectory)ImportedByAnyDependent.targets" Condition="Exists('$(MSBuildThisFileDirectory)ImportedByAnyDependent.targets')">
+        <PackagePath>build\$(PackageId).targets</PackagePath>
+      </PackageFile>
+
+      <PackageFile Include="$(MSBuildThisFileDirectory)WinObjC.Packager.props" Condition="Exists('$(MSBuildThisFileDirectory)WinObjC.Packager.props')">
+        <PackagePath>build\WinObjC.Packager.props</PackagePath>
+      </PackageFile>
+      <PackageFile Include="$(MSBuildThisFileDirectory)WinObjC.Packager.targets" Condition="Exists('$(MSBuildThisFileDirectory)WinObjC.Packager.targets')">
+        <PackagePath>build\WinObjC.Packager.targets</PackagePath>
+      </PackageFile>
+
+      <PackageFile Include="$(MSBuildThisFileDirectory)WinObjC.Packageable.props" Condition="Exists('$(MSBuildThisFileDirectory)WinObjC.Packageable.props')">
+        <PackagePath>build\WinObjC.Packageable.props</PackagePath>
+      </PackageFile>
+      <PackageFile Include="$(MSBuildThisFileDirectory)WinObjC.Packageable.targets" Condition="Exists('$(MSBuildThisFileDirectory)WinObjC.Packageable.targets')">
+        <PackagePath>build\WinObjC.Packageable.targets</PackagePath>
+      </PackageFile>
+
+      <PackageFile Include="$(MSBuildThisFileDirectory)Package.props" Condition="Exists('$(MSBuildThisFileDirectory)Package.props')">
+        <PackagePath>build\Package.props</PackagePath>
+      </PackageFile>
+      <PackageFile Include="$(MSBuildThisFileDirectory)Package.targets" Condition="Exists('$(MSBuildThisFileDirectory)Package.targets')">
+        <PackagePath>build\Package.targets</PackagePath>
+      </PackageFile>
+
+      <PackageFile Include="$(MSBuildThisFileDirectory)Package.Default.props" Condition="Exists('$(MSBuildThisFileDirectory)Package.Default.props')">
+        <PackagePath>build\Package.Default.props</PackagePath>
+      </PackageFile>
+      <PackageFile Include="$(MSBuildThisFileDirectory)Package.Default.targets" Condition="Exists('$(MSBuildThisFileDirectory)Package.Default.targets')">
+        <PackagePath>build\Package.Default.targets</PackagePath>
+      </PackageFile>
+    </ItemGroup>
+  </Target>
+</Project>

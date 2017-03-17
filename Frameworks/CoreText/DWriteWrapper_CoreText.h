@@ -60,6 +60,7 @@ CFNumberRef _CFNumberCreateFromSymbolicTraits(CTFontSymbolicTraits symbolicTrait
 CTFontSymbolicTraits _CTFontSymbolicTraitsFromCFNumber(CFNumberRef num);
 
 HRESULT _DWriteCreateFontFaceWithFontDescriptor(CTFontDescriptorRef fontDescriptor, IDWriteFontFace** fontFace);
+HRESULT _DWriteCreateMatchingFontDescriptors(CFDictionaryRef attributes, CFSetRef mandatoryKeys, CFArrayRef* matchingNames);
 
 CFDictionaryRef _DWriteFontCreateTraitsDict(const Microsoft::WRL::ComPtr<IDWriteFontFace>& fontFace);
 CFStringRef _DWriteFontCopyName(const Microsoft::WRL::ComPtr<IDWriteFontFace>& fontFace,

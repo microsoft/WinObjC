@@ -17,6 +17,7 @@
 #include "VCProject.h"
 #include "VCProjectConfiguration.h"
 #include "VCProjectItem.h"
+#include "VSTemplate.h"
 #include "VSTemplateProject.h"
 #include "vshelpers.h"
 #include "sole/sole.hpp"
@@ -81,7 +82,20 @@ bool VCProject::isDeployable() const
 
 std::string VCProject::getTypeId() const
 {
-  return "8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942";
+  if (m_template->getProjectType() == VcxProj)
+  {
+    return "8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942";
+  }
+  else if (m_template->getProjectType() == NuProj)
+  {
+    return "5DD5E4FA-CB73-4610-85AB-557B54E96AA9";
+  }
+  else
+  {
+    // Only a warning here because Visual Studio will try and assign a GUID once you open the solution
+    SBLog::warning() << "ProjectType not recognized. Cannot set project type GUID." << std::endl;
+    return "";
+  }
 }
 
 VCProjectSubType VCProject::getSubType() const
@@ -331,7 +345,7 @@ bool VCProject::writeTemplate(const std::string& filePath, const LabelHandlerFnM
   // Open the template
   pugi::xml_document projDoc;
   pugi::xml_parse_result result = projDoc.load_file(filePath.c_str());
-  sbValidateWithTelemetry(result, "Failed to open template file: " + filePath);
+  sbValidateWithTelemetry(result, "Failed to open project file: " + filePath);
   pugi::xml_node projRoot = projDoc.first_child();
 
   for (pugi::xml_node child = projRoot.first_child(); child; child = child.next_sibling()) {

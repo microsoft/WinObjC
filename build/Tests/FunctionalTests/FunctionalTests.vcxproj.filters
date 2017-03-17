@@ -170,9 +170,6 @@
     </Media>
   </ItemGroup>
   <ItemGroup>
-    <None Include="project.json" />
-  </ItemGroup>
-  <ItemGroup>
     <xml Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\UIKitTests\Assets\uilabel-ios.xml">
       <Filter>Tests\UIKitTests\Assets</Filter>
     </xml>

@@ -29,9 +29,8 @@
     <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <Keyword>IslandwoodProj</Keyword>
-    <ProjectGuid>{35213666-E979-4A72-AAE1-0BB309110B0D}</ProjectGuid>
+    <ProjectGuid>{D8A0D1E3-4371-4E1D-B0CE-2C22DBEC62B2}</ProjectGuid>
     <RootNamespace>GLKitComplex</RootNamespace>
-    <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">..\..\..\..</WINOBJC_SDK_ROOT>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -59,9 +58,7 @@
     <TargetName>GLKitComplex</TargetName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-    <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.props" />
-  </ImportGroup>
+  <ImportGroup Label="ExtensionSettings" />
   <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -92,7 +89,7 @@
       <HeaderMap>Project</HeaderMap>
       <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>false</ObjectiveCModules>
+      <ObjectiveCModules>true</ObjectiveCModules>
       <OptimizationLevel>Disabled</OptimizationLevel>
       <PreprocessorDefinitions>DEBUG=1</PreprocessorDefinitions>
     </ClangCompile>
@@ -116,7 +113,7 @@
       <HeaderMap>Project</HeaderMap>
       <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>false</ObjectiveCModules>
+      <ObjectiveCModules>true</ObjectiveCModules>
       <OptimizationLevel>Disabled</OptimizationLevel>
       <PreprocessorDefinitions>DEBUG=1</PreprocessorDefinitions>
     </ClangCompile>
@@ -138,7 +135,7 @@
       <HeaderMap>Project</HeaderMap>
       <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>false</ObjectiveCModules>
+      <ObjectiveCModules>true</ObjectiveCModules>
       <OptimizationLevel>MinSpace</OptimizationLevel>
     </ClangCompile>
     <Link>
@@ -159,7 +156,7 @@
       <HeaderMap>Project</HeaderMap>
       <IncludePaths>$(SolutionPublicHeadersDir)</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
-      <ObjectiveCModules>false</ObjectiveCModules>
+      <ObjectiveCModules>true</ObjectiveCModules>
       <OptimizationLevel>MinSpace</OptimizationLevel>
     </ClangCompile>
     <Link>
@@ -188,6 +185,16 @@
     <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Image Include="Assets\StoreLogo.png" />
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="App.xaml.h">
+      <DependentUpon>App.xaml</DependentUpon>
+    </ClInclude>
+    <ClCompile Include="App.xaml.cpp">
+      <DependentUpon>App.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
     <AssetCatalogCompile Include="..\..\GLKitComplex\Assets.xcassets" />
     <ClInclude Include="..\..\GLKitComplex\GLRenderer.h" />
     <ClInclude Include="..\..\GLKitComplex\Mesh.h" />
@@ -227,23 +234,23 @@
       <DeploymentContent>false</DeploymentContent>
     </Text>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="pch.h" />
-    <ClInclude Include="App.xaml.h">
-      <DependentUpon>App.xaml</DependentUpon>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="App.xaml.cpp">
-      <DependentUpon>App.xaml</DependentUpon>
-    </ClCompile>
-    <ClCompile Include="pch.cpp">
-      <PrecompiledHeader>Create</PrecompiledHeader>
-    </ClCompile>
-  </ItemGroup>
   <ItemGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.targets" />
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets" />
+
+  <!-- Begin NuGet Section -->
+  <PropertyGroup>
+    <TargetFramework>uap10.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="WinObjC.Frameworks" Version="*" />
+    <PackageReference Include="WinObjC.Frameworks.UWP" Version="*" />
+    <PackageReference Include="WinObjC.Frameworks.Core" Version="*" />
+    <PackageReference Include="WinObjC.Language" Version="*" />
+    <PackageReference Include="WinObjC.Logging" Version="*" />
+  </ItemGroup>
+  <!-- End NuGet Section -->
+  
+  <Import Project="$(MSBuildThisFileDirectory)\..\..\..\..\common\winobjc.packagereference.override.targets" Condition="Exists('$(MSBuildThisFileDirectory)\..\..\..\..\common\winobjc.packagereference.override.targets')"/>
+
 </Project>

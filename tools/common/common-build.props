@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <DefaultLanguage Condition="'$(DefaultLanguage)'==''">en-US</DefaultLanguage>
+    <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)'==''">14.0</MinimumVisualStudioVersion>
+    <AppContainerApplication Condition="'$(AppContainerApplication)'==''">true</AppContainerApplication>
+    <ApplicationType Condition="'$(ApplicationType)'==''">Windows Store</ApplicationType>
+    <ApplicationTypeRevision Condition="'$(ApplicationTypeRevision)'==''">10.0</ApplicationTypeRevision>
+    <WindowsTargetPlatformVersion Condition="'$(WindowsTargetPlatformVersion)'==''">10.0.14393.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion Condition="'$(WindowsTargetPlatformMinVersion)'==''">10.0.10586.0</WindowsTargetPlatformMinVersion>
+    <EnableDotNetNativeCompatibleProfile Condition="'$(EnableDotNetNativeCompatibleProfile)'==''">true</EnableDotNetNativeCompatibleProfile>
+    <IncludeOutputsInPackage>false</IncludeOutputsInPackage>
+    <Platform Condition="'$(Platform)' == ''">Win32</Platform>
+    <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(TargetOsAndVersion)\</OutDir>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
+
+  <PropertyGroup>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <UseDebugLibraries Condition="'$(Configuration)'=='Debug'">true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization Condition="'$(Configuration)'=='Release'">true</WholeProgramOptimization>
+    <UseDotNetNativeToolchain Condition="'$(Configuration)'=='Release'">true</UseDotNetNativeToolchain>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
+
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+
+  <PropertyGroup>
+    <GenerateManifest>false</GenerateManifest>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization Condition="'$(Configuration)'=='Debug'">Disabled</Optimization>
+      <WholeProgramOptimization Condition="'$(Configuration)'=='Debug'">false</WholeProgramOptimization>
+      <SDLCheck>true</SDLCheck>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)'=='Debug'">MultiThreadedDebugDLL</RuntimeLibrary>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)..\include\;</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalOptions>/ignore:4087 /ignore:4001 %(AdditionalOptions)</AdditionalOptions>
+      <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
+
+      <!-- Ensure we pick up operator new from our project rather than the C runtime -->
+      <ForceSymbolReferences>??2@YAPAXI@Z</ForceSymbolReferences>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup>  
+    <!-- Design Time is annoying and uses a different output item group to return this. Also adjust nugetizer metadata injection here. -->
+     <_MainProjectOutput>
+       <IsPackable>$(IsPackable)</IsPackable>
+       <IsNuGetized>$(IsNuGetized)</IsNuGetized>
+     </_MainProjectOutput>
+  </ItemDefinitionGroup>
+
+</Project>

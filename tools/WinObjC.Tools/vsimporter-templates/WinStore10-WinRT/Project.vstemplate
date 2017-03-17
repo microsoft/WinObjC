@@ -1,0 +1,12 @@
+<VSTemplate Version="0.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
+  <TemplateData>
+    <Name>WinObjC WinRT</Name>
+    <ProjectType>VC</ProjectType>
+  </TemplateData>
+  <TemplateContent>
+    <Project OutputDirectory="$projectname$" File="WinRT.vcxproj" TargetFileName="$projectname$.vcxproj" Platforms="Win32;ARM" ReplaceParameters="true">
+      <ProjectItem ReplaceParameters="false" TargetFileName="Module.cpp">Module.cpp</ProjectItem>
+      <ProjectItem ReplaceParameters="false" TargetFileName="project.json">..\$packageconfig$project.json</ProjectItem>
+    </Project>
+  </TemplateContent>
+</VSTemplate>

@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
       <Configuration>Debug</Configuration>
@@ -19,13 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
       <Project>{26DA08DA-D0B9-4579-B168-E7F0A5F20E57}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
       <Project>{26DA08DA-D0B9-4579-B168-E7F0A5F20E57}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\lib\AutoLayoutLib.vcxproj">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\AutoLayoutLib.vcxproj">
       <Project>{83CD3839-6A91-4D31-9183-BF6573E016E7}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -36,7 +36,7 @@
     <ProjectGuid>{D036FDB1-F82C-40C7-B1B4-65F499EAE116}</ProjectGuid>
     <RootNamespace>AutoLayout</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
-    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <OutputName>AutoLayout</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
@@ -100,4 +100,5 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
 </Project>
