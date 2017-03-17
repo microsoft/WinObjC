@@ -355,7 +355,7 @@ static constexpr NSRange sc_unlimitedRange{ 0, LONG_MAX };
 
                                    return ret;
                                }];
-    return (options & NSEnumerationReverse) ? [set lastIndex] : [set firstIndex];
+    return [set firstIndex];
 }
 
 /**
