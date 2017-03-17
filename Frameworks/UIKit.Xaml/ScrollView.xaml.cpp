@@ -31,40 +31,36 @@ namespace Xaml {
 ScrollView::ScrollView()
 {
     InitializeComponent();
-
-    SetValue(UIKit::Xaml::Private::CoreAnimation::Layer::LayerContentProperty, LayerContentImage);
-    SetValue(UIKit::Xaml::Private::CoreAnimation::Layer::SublayerCanvasProperty, ContentCanvas);
-
-    Name = L"ScrollView";
 }
 
 // Accessor for our Layer content
 Image^ ScrollView::LayerContent::get() {
-    return LayerContentImage;
+    if (layerContentImage == nullptr) {
+        layerContentImage = safe_cast<Image^>(FindName(L"layerContentImage"));
+        FAIL_FAST_IF(layerContentImage == nullptr);
+    }
+
+    return layerContentImage;
 }
 
-// Accessor for our Layer content
 bool ScrollView::HasLayerContent::get() {
     return true;
 }
 
-// Accessor for our SublayerCanvas
 Canvas^ ScrollView::SublayerCanvas::get() {
-    return ContentCanvas;
+    return contentCanvas;
 }
 
-// Accessor for the LayerProperty that manages the BorderBrush of this label
 Private::CoreAnimation::LayerProperty^ ScrollView::GetBorderBrushProperty() {
     return nullptr;
 }
 
-// Accessor for the LayerProperty that manages the BorderThickness of this label
 Private::CoreAnimation::LayerProperty^ ScrollView::GetBorderThicknessProperty() {
     return nullptr;
 }
 
-ScrollViewer^ ScrollView::scrollViewer::get() {
-    return this->ScrollViewer;
+ScrollViewer^ ScrollView::InnerScrollViewer::get() {
+    return scrollViewer;
 }
 
 } /* Xaml*/
@@ -75,15 +71,20 @@ ScrollViewer^ ScrollView::scrollViewer::get() {
 ////////////////////////////////////////////////////////////////////////////////////
 
 // Returns a UIKit::Xaml::ScrollView as an IInspectable
-UIKIT_XAML_EXPORT void XamlCreateScrollViewer(IInspectable** created) {
+UIKIT_XAML_EXPORT void XamlCreateScrollView(IInspectable** created) {
     ComPtr<IInspectable> inspectable = InspectableFromObject(ref new UIKit::Xaml::ScrollView());
     *created = inspectable.Detach();
 }
 
-// Retrieves the UIKit::Label's backing ScrollViewer as an IInspectable
-UIKIT_XAML_EXPORT IInspectable* XamlGetScrollViewer(const Microsoft::WRL::ComPtr<IInspectable>& scrollView) {
+// Retrieves the UIKit::Xaml::ScrollView as an IInspectable
+UIKIT_XAML_EXPORT IInspectable* XamlScrollViewGetScrollViewer(const Microsoft::WRL::ComPtr<IInspectable>& scrollView) {
     auto scrollViewGrid = safe_cast<UIKit::Xaml::ScrollView^>(reinterpret_cast<Platform::Object^>(scrollView.Get()));
-    return InspectableFromObject(scrollViewGrid->scrollViewer).Detach();
+    return InspectableFromObject(scrollViewGrid->InnerScrollViewer).Detach();
+}
+
+UIKIT_XAML_EXPORT IInspectable* XamlScrollViewGetSubLayerCanvas(const Microsoft::WRL::ComPtr<IInspectable>& scrollView) {
+    auto scrollViewGrid = safe_cast<UIKit::Xaml::ScrollView^>(reinterpret_cast<Platform::Object^>(scrollView.Get()));
+    return InspectableFromObject(scrollViewGrid->SublayerCanvas).Detach();
 }
 
 // clang-format on

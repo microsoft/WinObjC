@@ -1,6 +1,6 @@
 ﻿//******************************************************************************
 //
-// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,53 +17,53 @@
 // clang-format off
 #pragma once
 
-#include "Label.g.h"
-#include "Layer.h"
-
 namespace UIKit {
 namespace Xaml {
+namespace Private {
+namespace CoreAnimation {
+
+// Pairs a DependencyProperty and its associated DependencyObject for setting/getting values on objects within an ILayer instance.
+// For example, can wrap an internal FrameworkElement and its associated BorderBrushProperty.
+[Windows::Foundation::Metadata::WebHostHidden]
+public ref class LayerProperty sealed {
+public:
+    LayerProperty(Windows::UI::Xaml::DependencyObject^ target, Windows::UI::Xaml::DependencyProperty^ property);
+
+    void SetValue(Platform::Object^ value);
+    Platform::Object^ GetValue();
+
+private:
+    Windows::UI::Xaml::DependencyObject^ _target;
+    Windows::UI::Xaml::DependencyProperty^ _property;
+};
 
 [Windows::Foundation::Metadata::WebHostHidden]
-public ref class Label sealed : public Private::CoreAnimation::ILayer {
+public interface class ILayer {
 public:
-    Label();
-    Windows::Foundation::Size ArrangeOverride(Windows::Foundation::Size finalSize) override;
-
     // Accessor for our Layer content; we create one on demand
-    virtual property Windows::UI::Xaml::Controls::Image^ LayerContent {
+    property Windows::UI::Xaml::Controls::Image^ LayerContent {
         Windows::UI::Xaml::Controls::Image^ get();
     }
 
     // Accessor to check for exising Layer content
-    virtual property bool HasLayerContent {
+    property bool HasLayerContent {
         bool get();
     }
 
     // Accessor for our SublayerCanvas; we create one on demand
-    virtual property Windows::UI::Xaml::Controls::Canvas^ SublayerCanvas {
+    property Windows::UI::Xaml::Controls::Canvas^ SublayerCanvas {
         Windows::UI::Xaml::Controls::Canvas^ get();
     }
 
-    // Accessor for the LayerProperty that manages the BorderBrush of this label
-    virtual Private::CoreAnimation::LayerProperty^ GetBorderBrushProperty();
+    // Accessor for the LayerProperty that manages the BorderBrush of this layer
+    LayerProperty^ GetBorderBrushProperty();
 
-    // Accessor for the LayerProperty that manages the BorderThickness of this label
-    virtual Private::CoreAnimation::LayerProperty^ GetBorderThicknessProperty();
-
-internal:
-    property Windows::UI::Xaml::Controls::TextBlock^ TextBlock {
-        Windows::UI::Xaml::Controls::TextBlock^ get();
-    }
-
-private:
-    Windows::UI::Xaml::Controls::Border^ _GetBorder();
-
-    // Layer elements; created on demand
-    Windows::UI::Xaml::Controls::Image^ _content;
-    Windows::UI::Xaml::Controls::Canvas^ _sublayerCanvas;
-    Windows::UI::Xaml::Controls::Border^ _border;
+    // Accessor for the LayerProperty that manages the BorderThickness of this layer
+    LayerProperty^ GetBorderThicknessProperty();
 };
 
+} /* CoreAnimation */
+} /* Private */
 } /* Xaml*/
 } /* UIKit*/
 

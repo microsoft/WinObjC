@@ -18,7 +18,7 @@
 #pragma once
 
 #include "Button.g.h"
-#include "Layer.xaml.h"
+#include "Layer.h"
 #include <windows.ui.xaml.input.h>
 #include "ObjCXamlControls.h"
 

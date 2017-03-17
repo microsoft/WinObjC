@@ -127,3 +127,5 @@ UIKIT_XAML_EXPORT IInspectable* XamlGetLabelTextBlock(const Microsoft::WRL::ComP
     auto labelGrid = safe_cast<UIKit::Xaml::Label^>(reinterpret_cast<Platform::Object^>(label.Get()));
     return InspectableFromObject(labelGrid->TextBlock).Detach();
 }
+
+// clang-format on

@@ -90,11 +90,14 @@ UIKIT_XAML_EXPORT void XamlCreateProgressRing(IInspectable** created);
 // ScrollView.xaml.cpp
 ////////////////////////////////////////////////////////////////////////////////////
 
-// Returns a UIKit::Xaml::ScrollViewer as an IInspectable
-UIKIT_XAML_EXPORT void XamlCreateScrollViewer(IInspectable** created);
+// Returns a UIKit::Xaml::ScrollView as an IInspectable
+UIKIT_XAML_EXPORT void XamlCreateScrollView(IInspectable** created);
 
-// Retrieves the UIKit::ScrollView's backing ScrollViewer as an IInspectable
-UIKIT_XAML_EXPORT IInspectable* XamlGetScrollViewer(const Microsoft::WRL::ComPtr<IInspectable>& scrollView);
+// Retrieves the UIKit::Xaml::ScrollView's backing ScrollViewer as an IInspectable
+UIKIT_XAML_EXPORT IInspectable* XamlScrollViewGetScrollViewer(const Microsoft::WRL::ComPtr<IInspectable>& scrollView);
+
+// Retrieves Canvas inside of UIKit::Xaml::ScrollView's backing ScrollViewer as an IInspectable
+UIKIT_XAML_EXPORT IInspectable* XamlScrollViewGetSubLayerCanvas(const Microsoft::WRL::ComPtr<IInspectable>& scrollView);
 
 ////////////////////////////////////////////////////////////////////////////////////
 // Slider.xaml.cpp

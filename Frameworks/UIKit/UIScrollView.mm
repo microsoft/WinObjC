@@ -161,22 +161,16 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
 }
 
 - (void)_initUIScrollView {
-    // Store a strongly-typed backing scrollviewer
-    WXCGrid* scrollViewGrid = rt_dynamic_cast<WXCGrid>([self xamlElement]);
-    WXCScrollViewer* scrollViewer = nil;
-
-    if (scrollViewGrid) {
-        scrollViewer = XamlControls::GetScrollViewer(scrollViewGrid);
-    } else {
-        scrollViewer = rt_dynamic_cast<WXCScrollViewer>([self xamlElement]);
-    }
-
-    if (!scrollViewer) {
-        // Definitely didn't receive any supported backing xaml elements
+    WXFrameworkElement* scrollView = rt_dynamic_cast<WXFrameworkElement>([self xamlElement]);
+    if (!scrollView) {
         FAIL_FAST();
     }
 
-    _scrollViewer = scrollViewer;
+    _scrollViewer = XamlControls::ScrollViewGetInnerScrollViewer(scrollView);
+    if (!_scrollViewer) {
+        // Definitely didn't receive any supported backing xaml elements
+        FAIL_FAST();
+    }
 
     self->_dManipGesture = [[_UIDMPanGestureRecognizer alloc] initWithTarget:self action:@selector(_dManipGestureCallback:)];
     [self addGestureRecognizer:self->_dManipGesture];
@@ -184,7 +178,7 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
     [self setMultipleTouchEnabled:TRUE];
 
     // Grab the content canvas for our subviews
-    _contentCanvas = XamlControls::GetFrameworkElementSublayerCanvasProperty(scrollViewGrid);
+    _contentCanvas = XamlControls::ScrollViewGetSubLayerCanvas(scrollView);
 
     _loaded = NO;
 
@@ -592,7 +586,7 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
  Microsoft Extension
 */
 + (WXFrameworkElement*)createXamlElement {
-    return XamlControls::CreateScrollViewer();
+    return XamlControls::CreateScrollView();
 }
 
 /**

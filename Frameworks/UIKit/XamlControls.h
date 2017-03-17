@@ -121,10 +121,11 @@ WXCGrid* CreateLabel();
 WXCTextBlock* GetLabelTextBlock(WXCGrid* labelGrid);
 
 ////////////////////////////////////////////////////////////////////////////////////
-// ScrollViewer
+// ScrollView
 ////////////////////////////////////////////////////////////////////////////////////
-WXCGrid* CreateScrollViewer();
-WXCScrollViewer* GetScrollViewer(WXCGrid* labelGrid);
+WXFrameworkElement* CreateScrollView();
+WXCScrollViewer* ScrollViewGetInnerScrollViewer(WXFrameworkElement* scrollView);
+WXCCanvas* ScrollViewGetSubLayerCanvas(WXFrameworkElement* scrollView);
 
 ////////////////////////////////////////////////////////////////////////////////////
 // CoreAnimation Layer Support

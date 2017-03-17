@@ -19,7 +19,7 @@
 #pragma once
 
 #include "ScrollView.g.h"
-#include "Layer.xaml.h"
+#include "Layer.h"
 #include "ObjCXamlControls.h"
 
 namespace UIKit {
@@ -36,24 +36,24 @@ public:
         Windows::UI::Xaml::Controls::Image^ get();
     }
 
-    // Accessor to check for exising Layer content
+    // Accessor to check for existing Layer content
     virtual property bool HasLayerContent {
         bool get();
     }
 
-    // Accessor for our SublayerCanvas
+    // Accessor for SublayerCanvas
     virtual property Windows::UI::Xaml::Controls::Canvas^ SublayerCanvas {
         Windows::UI::Xaml::Controls::Canvas^ get();
     }
 
-    // Accessor for the LayerProperty that manages the BorderBrush of this label
+    // Accessor for the LayerProperty that manages the BorderBrush of this ScrollView
     virtual Private::CoreAnimation::LayerProperty^ GetBorderBrushProperty();
 
-    // Accessor for the LayerProperty that manages the BorderThickness of this label
+    // Accessor for the LayerProperty that manages the BorderThickness of this ScrollView
     virtual Private::CoreAnimation::LayerProperty^ GetBorderThicknessProperty();
 
 internal:
-    property Windows::UI::Xaml::Controls::ScrollViewer^ scrollViewer{
+    property Windows::UI::Xaml::Controls::ScrollViewer^ InnerScrollViewer{
         Windows::UI::Xaml::Controls::ScrollViewer^ get();
     }
 

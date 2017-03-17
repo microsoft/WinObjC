@@ -108,17 +108,22 @@ WXCTextBlock* GetLabelTextBlock(WXCGrid* labelGrid) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
-// ScrollViewer
+// ScrollView
 ////////////////////////////////////////////////////////////////////////////////////
-WXCGrid* CreateScrollViewer() {
+WXFrameworkElement* CreateScrollView() {
     Microsoft::WRL::ComPtr<IInspectable> inspectable;
-    XamlCreateScrollViewer(&inspectable);
-    return _createRtProxy([WXCGrid class], inspectable.Get());
+    XamlCreateScrollView(&inspectable);
+    return _createRtProxy([WXFrameworkElement class], inspectable.Get());
 }
 
-WXCScrollViewer* GetScrollViewer(WXCGrid* labelGrid) {
-    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetScrollViewer([labelGrid comObj]));
+WXCScrollViewer* ScrollViewGetInnerScrollViewer(WXFrameworkElement* scrollView) {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlScrollViewGetScrollViewer([scrollView comObj]));
     return _createRtProxy([WXCScrollViewer class], inspectable.Get());
+}
+
+WXCCanvas* ScrollViewGetSubLayerCanvas(WXFrameworkElement* scrollView) {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlScrollViewGetSubLayerCanvas([scrollView comObj]));
+    return _createRtProxy([WXCCanvas class], inspectable.Get());
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
