@@ -21,14 +21,17 @@ CGLineJoin lineJoins[] = { kCGLineJoinMiter, kCGLineJoinBevel, kCGLineJoinRound 
 CGFloat lineWidths[] = { 0, 1, 10, 20 };
 CGFloat miterLimits[] = { 0, 1, 5 };
 bool shouldUseContext[] = { false, true };
+bool addLineAfterWidening[] = { false, true };
 
-class CGPathCopyByStroking_Lines : public WhiteBackgroundTest<>,
-                                   public ::testing::WithParamInterface<::testing::tuple<CGLineCap, CGLineJoin, CGFloat, CGFloat, bool>> {
+class CGPathCopyByStroking_Lines
+    : public WhiteBackgroundTest<>,
+      public ::testing::WithParamInterface<::testing::tuple<CGLineCap, CGLineJoin, CGFloat, CGFloat, bool, bool>> {
     CFStringRef CreateOutputFilename() {
         CGLineCap lineCap = ::testing::get<0>(GetParam());
         CGLineJoin lineJoin = ::testing::get<1>(GetParam());
         CGFloat lineWidth = ::testing::get<2>(GetParam());
         CGFloat miterLimit = ::testing::get<3>(GetParam());
+        bool addLine = ::testing::get<5>(GetParam());
 
         char* lineCapName;
         switch (lineCap) {
@@ -60,18 +63,26 @@ class CGPathCopyByStroking_Lines : public WhiteBackgroundTest<>,
                 break;
         }
 
-        return CFStringCreateWithFormat(
-            nullptr, nullptr, CFSTR("TestImage.CopyByStroking_Lines.%f.%f.%s.%s.png"), lineWidth, miterLimit, lineJoinName, lineCapName);
+        return CFStringCreateWithFormat(nullptr,
+                                        nullptr,
+                                        CFSTR("TestImage.CopyByStroking_Lines.%f.%f.%s.%s.%s.png"),
+                                        lineWidth,
+                                        miterLimit,
+                                        lineJoinName,
+                                        lineCapName,
+                                        addLine ? "AddLine" : "NoLine");
     }
 };
 
-class CGPathCopyByStroking_Curves : public WhiteBackgroundTest<>,
-                                    public ::testing::WithParamInterface<::testing::tuple<CGLineCap, CGLineJoin, CGFloat, CGFloat, bool>> {
+class CGPathCopyByStroking_Curves
+    : public WhiteBackgroundTest<>,
+      public ::testing::WithParamInterface<::testing::tuple<CGLineCap, CGLineJoin, CGFloat, CGFloat, bool, bool>> {
     CFStringRef CreateOutputFilename() {
         CGLineCap lineCap = ::testing::get<0>(GetParam());
         CGLineJoin lineJoin = ::testing::get<1>(GetParam());
         CGFloat lineWidth = ::testing::get<2>(GetParam());
         CGFloat miterLimit = ::testing::get<3>(GetParam());
+        bool addLine = ::testing::get<5>(GetParam());
 
         char* lineCapName;
         switch (lineCap) {
@@ -103,13 +114,58 @@ class CGPathCopyByStroking_Curves : public WhiteBackgroundTest<>,
                 break;
         }
 
-        return CFStringCreateWithFormat(
-            nullptr, nullptr, CFSTR("TestImage.CopyByStroking_Arcs.%f.%f.%s.%s.png"), lineWidth, miterLimit, lineJoinName, lineCapName);
+        return CFStringCreateWithFormat(nullptr,
+                                        nullptr,
+                                        CFSTR("TestImage.CopyByStroking_Arcs.%f.%f.%s.%s.%s.png"),
+                                        lineWidth,
+                                        miterLimit,
+                                        lineJoinName,
+                                        lineCapName,
+                                        addLine ? "AddLine" : "NoLine");
     }
 };
 
-void drawStrokeTestWithParams(
-    CGContextRef context, CGPathRef path, CGLineCap cap, CGLineJoin join, CGFloat lineWidth, CGFloat miterLimit, bool useContext) {
+class CGPathCopyByStroking_OpenFigure : public WhiteBackgroundTest<>,
+                                        public ::testing::WithParamInterface<::testing::tuple<CGLineJoin, CGFloat, CGFloat, bool, bool>> {
+    CFStringRef CreateOutputFilename() {
+        CGLineJoin lineJoin = ::testing::get<0>(GetParam());
+        CGFloat lineWidth = ::testing::get<1>(GetParam());
+        CGFloat miterLimit = ::testing::get<2>(GetParam());
+        bool addLine = ::testing::get<4>(GetParam());
+
+        char* lineJoinName;
+        switch (lineJoin) {
+            case kCGLineJoinMiter:
+                lineJoinName = "LineJoinMiter";
+                break;
+            case kCGLineJoinBevel:
+                lineJoinName = "LineJoinBevel";
+                break;
+            case kCGLineJoinRound:
+                lineJoinName = "LineJoinRound";
+                break;
+            default:
+                break;
+        }
+
+        return CFStringCreateWithFormat(nullptr,
+                                        nullptr,
+                                        CFSTR("TestImage.CopyByStrokingLinesIndidivudal.%f.%f.%s.%s.png"),
+                                        lineWidth,
+                                        miterLimit,
+                                        lineJoinName,
+                                        addLine ? "AddLine" : "NoLine");
+    }
+};
+
+void drawStrokeTestWithParams(CGContextRef context,
+                              CGPathRef path,
+                              CGLineCap cap,
+                              CGLineJoin join,
+                              CGFloat lineWidth,
+                              CGFloat miterLimit,
+                              bool useContext,
+                              bool addLineAfterWiden) {
     if (useContext) {
         CGContextSaveGState(context);
         CGContextAddPath(context, path);
@@ -119,9 +175,16 @@ void drawStrokeTestWithParams(
         CGContextSetMiterLimit(context, miterLimit);
 
         CGContextReplacePathWithStrokedPath(context);
+        if (addLineAfterWiden) {
+            CGPoint currentPoint = CGContextGetPathCurrentPoint(context);
+            CGContextAddLineToPoint(context, currentPoint.x + 25, currentPoint.y + 25);
+        }
         CGContextRestoreGState(context);
     } else {
-        auto widenedPath = woc::MakeStrongCF<CGPathRef>(CGPathCreateCopyByStrokingPath(path, NULL, lineWidth, cap, join, miterLimit));
+        CGMutablePathRef widenedPath = CGPathCreateMutableCopy(
+            woc::MakeStrongCF<CGPathRef>(CGPathCreateCopyByStrokingPath(path, NULL, lineWidth, cap, join, miterLimit)));
+        CGPoint currentPoint = CGPathGetCurrentPoint(widenedPath);
+        CGPathAddLineToPoint(widenedPath, NULL, currentPoint.x + 25, currentPoint.y + 25);
         CGContextAddPath(context, widenedPath);
     }
     CGContextSetRGBStrokeColor(context, 0, 0, 1, 1);
@@ -155,10 +218,71 @@ DRAW_TEST_P(CGPathCopyByStroking_Lines, PathWiden) {
     CGFloat lineWidth = ::testing::get<2>(GetParam());
     CGFloat miterLimit = ::testing::get<3>(GetParam());
     bool useContext = ::testing::get<4>(GetParam());
+    bool addLine = ::testing::get<5>(GetParam());
 
-    drawStrokeTestWithParams(context, thepath, lineCap, lineJoin, lineWidth, miterLimit, useContext);
+    drawStrokeTestWithParams(context, thepath, lineCap, lineJoin, lineWidth, miterLimit, useContext, addLine);
 
     CGPathRelease(thepath);
+}
+
+DRAW_TEST_P(CGPathCopyByStroking_OpenFigure, PathWiden) {
+    CGContextRef context = GetDrawingContext();
+    CGRect drawingBounds = GetDrawingBounds();
+    CGFloat width = drawingBounds.size.width;
+    CGFloat height = drawingBounds.size.height;
+    CGFloat xstart = drawingBounds.origin.x;
+    CGFloat ystart = drawingBounds.origin.y;
+
+    CGMutablePathRef straightLine1 = CGPathCreateMutable();
+    CGPathMoveToPoint(straightLine1, NULL, xstart + .1 * width, ystart + .5 * height);
+    CGPathAddLineToPoint(straightLine1, NULL, xstart + .1 * width, ystart + .1 * height);
+    CGPathAddLineToPoint(straightLine1, NULL, xstart + .2 * width, ystart + .1 * height);
+
+    CGMutablePathRef straightLine2 = CGPathCreateMutable();
+    CGPathMoveToPoint(straightLine2, NULL, xstart + .2 * width, ystart + .6 * height);
+    CGPathAddLineToPoint(straightLine2, NULL, xstart + .2 * width, ystart + .2 * height);
+    CGPathAddLineToPoint(straightLine2, NULL, xstart + .3 * width, ystart + .2 * height);
+
+    CGMutablePathRef straightLine3 = CGPathCreateMutable();
+    CGPathMoveToPoint(straightLine3, NULL, xstart + .3 * width, ystart + .7 * height);
+    CGPathAddLineToPoint(straightLine3, NULL, xstart + .3 * width, ystart + .3 * height);
+    CGPathAddLineToPoint(straightLine3, NULL, xstart + .4 * width, ystart + .3 * height);
+
+    CGMutablePathRef curvedLine1 = CGPathCreateMutable();
+    CGPathMoveToPoint(curvedLine1, NULL, xstart + .9 * width, ystart + .5 * height);
+    CGPathAddArcToPoint(
+        curvedLine1, NULL, xstart + .9 * width, ystart + .9 * height, xstart + .8 * width, ystart + .9 * height, width * .1);
+
+    CGMutablePathRef curvedLine2 = CGPathCreateMutable();
+    CGPathMoveToPoint(curvedLine2, NULL, xstart + .8 * width, ystart + .4 * height);
+    CGPathAddArcToPoint(
+        curvedLine2, NULL, xstart + .8 * width, ystart + .8 * height, xstart + .7 * width, ystart + .8 * height, width * .1);
+
+    CGMutablePathRef curvedLine3 = CGPathCreateMutable();
+    CGPathMoveToPoint(curvedLine3, NULL, xstart + .7 * width, ystart + .3 * height);
+    CGPathAddArcToPoint(
+        curvedLine3, NULL, xstart + .7 * width, ystart + .7 * height, xstart + .6 * width, ystart + .7 * height, width * .1);
+
+    CGLineJoin lineJoin = ::testing::get<0>(GetParam());
+    CGFloat lineWidth = ::testing::get<1>(GetParam());
+    CGFloat miterLimit = ::testing::get<2>(GetParam());
+    bool useContext = ::testing::get<3>(GetParam());
+    bool addLine = ::testing::get<4>(GetParam());
+
+    drawStrokeTestWithParams(context, straightLine1, kCGLineCapButt, lineJoin, lineWidth, miterLimit, useContext, addLine);
+    drawStrokeTestWithParams(context, straightLine2, kCGLineCapSquare, lineJoin, lineWidth, miterLimit, useContext, addLine);
+    drawStrokeTestWithParams(context, straightLine3, kCGLineCapRound, lineJoin, lineWidth, miterLimit, useContext, addLine);
+
+    drawStrokeTestWithParams(context, curvedLine1, kCGLineCapButt, lineJoin, lineWidth, miterLimit, useContext, addLine);
+    drawStrokeTestWithParams(context, curvedLine2, kCGLineCapSquare, lineJoin, lineWidth, miterLimit, useContext, addLine);
+    drawStrokeTestWithParams(context, curvedLine3, kCGLineCapRound, lineJoin, lineWidth, miterLimit, useContext, addLine);
+
+    CGPathRelease(straightLine1);
+    CGPathRelease(straightLine2);
+    CGPathRelease(straightLine3);
+    CGPathRelease(curvedLine1);
+    CGPathRelease(curvedLine2);
+    CGPathRelease(curvedLine3);
 }
 
 DRAW_TEST_P(CGPathCopyByStroking_Curves, PathWiden) {
@@ -183,8 +307,9 @@ DRAW_TEST_P(CGPathCopyByStroking_Curves, PathWiden) {
     CGFloat lineWidth = ::testing::get<2>(GetParam());
     CGFloat miterLimit = ::testing::get<3>(GetParam());
     bool useContext = ::testing::get<4>(GetParam());
+    bool addLine = ::testing::get<5>(GetParam());
 
-    drawStrokeTestWithParams(context, thepath, lineCap, lineJoin, lineWidth, miterLimit, useContext);
+    drawStrokeTestWithParams(context, thepath, lineCap, lineJoin, lineWidth, miterLimit, useContext, addLine);
 
     CGPathRelease(thepath);
 }
@@ -195,11 +320,22 @@ INSTANTIATE_TEST_CASE_P(CGPathWidenTest,
                                            ::testing::ValuesIn(lineJoins),
                                            ::testing::ValuesIn(lineWidths),
                                            ::testing::ValuesIn(miterLimits),
-                                           ::testing::ValuesIn(shouldUseContext)));
+                                           ::testing::ValuesIn(shouldUseContext),
+                                           ::testing::ValuesIn(addLineAfterWidening)));
+
 INSTANTIATE_TEST_CASE_P(CGPathWidenTest,
                         CGPathCopyByStroking_Curves,
                         ::testing::Combine(::testing::ValuesIn(lineCaps),
                                            ::testing::ValuesIn(lineJoins),
                                            ::testing::ValuesIn(lineWidths),
                                            ::testing::ValuesIn(miterLimits),
-                                           ::testing::ValuesIn(shouldUseContext)));
+                                           ::testing::ValuesIn(shouldUseContext),
+                                           ::testing::ValuesIn(addLineAfterWidening)));
+
+INSTANTIATE_TEST_CASE_P(CGPathWidenTest,
+                        CGPathCopyByStroking_OpenFigure,
+                        ::testing::Combine(::testing::ValuesIn(lineJoins),
+                                           ::testing::ValuesIn(lineWidths),
+                                           ::testing::ValuesIn(miterLimits),
+                                           ::testing::ValuesIn(shouldUseContext),
+                                           ::testing::ValuesIn(addLineAfterWidening)));
