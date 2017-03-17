@@ -19,7 +19,7 @@
 #pragma once
 
 #include "ScrollView.g.h"
-#include "Layer.h"
+#include "ILayer.h"
 #include "ObjCXamlControls.h"
 
 namespace UIKit {
@@ -57,6 +57,9 @@ internal:
         Windows::UI::Xaml::Controls::ScrollViewer^ get();
     }
 
+private:
+    // Layer elements; created on demand
+    Windows::UI::Xaml::Controls::Image^ _content;
 };
 
 } /* Xaml*/

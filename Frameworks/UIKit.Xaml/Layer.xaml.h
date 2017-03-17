@@ -18,7 +18,7 @@
 #pragma once
 
 #include "Layer.g.h"
-#include "Layer.h"
+#include "ILayer.h"
 
 namespace UIKit {
 namespace Xaml {

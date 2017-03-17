@@ -33,18 +33,20 @@ ScrollView::ScrollView()
     InitializeComponent();
 }
 
-// Accessor for our Layer content
 Image^ ScrollView::LayerContent::get() {
-    if (layerContentImage == nullptr) {
-        layerContentImage = safe_cast<Image^>(FindName(L"layerContentImage"));
-        FAIL_FAST_IF(layerContentImage == nullptr);
+    if (!_content) {
+        _content = ref new Image();
+        _content->Name = "LayerContent";
+
+        // Layer content is behind any sublayers
+        Children->InsertAt(0, _content);
     }
 
-    return layerContentImage;
+    return _content;
 }
 
 bool ScrollView::HasLayerContent::get() {
-    return true;
+    return _content != nullptr;
 }
 
 Canvas^ ScrollView::SublayerCanvas::get() {

@@ -7,8 +7,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <!-- Layer content which is a image is behind any sublayers-->
-    <Image x:Name="layerContentImage" x:DeferLoadStrategy="Lazy"></Image>
     <ScrollViewer x:Name="scrollViewer" MaxZoomFactor="1.0" MinZoomFactor="1.0"
                   HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" 
                   IsHorizontalRailEnabled="False" IsVerticalRailEnabled="False" 
