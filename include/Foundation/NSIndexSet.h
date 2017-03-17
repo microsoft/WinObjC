@@ -35,17 +35,15 @@ FOUNDATION_EXPORT_CLASS
 - (BOOL)intersectsIndexesInRange:(NSRange)indexRange;
 @property (readonly) NSUInteger count;
 - (NSUInteger)countOfIndexesInRange:(NSRange)indexRange;
-- (NSUInteger)indexPassingTest:(BOOL (^)(NSUInteger, BOOL*))predicate STUB_METHOD;
-- (NSIndexSet*)indexesPassingTest:(BOOL (^)(NSUInteger, BOOL*))predicate STUB_METHOD;
-- (NSUInteger)indexWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate STUB_METHOD;
-- (NSIndexSet*)indexesWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate STUB_METHOD;
-- (NSUInteger)indexInRange:(NSRange)range options:(NSEnumerationOptions)opts passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate STUB_METHOD;
-- (NSIndexSet*)indexesInRange:(NSRange)range
-                      options:(NSEnumerationOptions)opts
-                  passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate STUB_METHOD;
-- (void)enumerateRangesInRange:(NSRange)range options:(NSEnumerationOptions)opts usingBlock:(void (^)(NSRange, BOOL*))block STUB_METHOD;
-- (void)enumerateRangesUsingBlock:(void (^)(NSRange, BOOL*))block STUB_METHOD;
-- (void)enumerateRangesWithOptions:(NSEnumerationOptions)opts usingBlock:(void (^)(NSRange, BOOL*))block STUB_METHOD;
+- (NSUInteger)indexPassingTest:(BOOL (^)(NSUInteger, BOOL*))predicate;
+- (NSIndexSet*)indexesPassingTest:(BOOL (^)(NSUInteger, BOOL*))predicate;
+- (NSUInteger)indexWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate;
+- (NSIndexSet*)indexesWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate;
+- (NSUInteger)indexInRange:(NSRange)range options:(NSEnumerationOptions)opts passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate;
+- (NSIndexSet*)indexesInRange:(NSRange)range options:(NSEnumerationOptions)opts passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate;
+- (void)enumerateRangesInRange:(NSRange)range options:(NSEnumerationOptions)opts usingBlock:(void (^)(NSRange, BOOL*))block;
+- (void)enumerateRangesUsingBlock:(void (^)(NSRange, BOOL*))block;
+- (void)enumerateRangesWithOptions:(NSEnumerationOptions)opts usingBlock:(void (^)(NSRange, BOOL*))block;
 - (BOOL)isEqualToIndexSet:(NSIndexSet*)indexSet;
 @property (readonly) NSUInteger firstIndex;
 @property (readonly) NSUInteger lastIndex;
@@ -53,8 +51,8 @@ FOUNDATION_EXPORT_CLASS
 - (NSUInteger)indexLessThanOrEqualToIndex:(NSUInteger)index;
 - (NSUInteger)indexGreaterThanOrEqualToIndex:(NSUInteger)index;
 - (NSUInteger)indexGreaterThanIndex:(NSUInteger)index;
-- (NSUInteger)getIndexes:(NSUInteger*)indexBuffer maxCount:(NSUInteger)bufferSize inIndexRange:(NSRangePointer)indexRange STUB_METHOD;
+- (NSUInteger)getIndexes:(NSUInteger*)indexBuffer maxCount:(NSUInteger)bufferSize inIndexRange:(NSRangePointer)indexRange;
 - (void)enumerateIndexesUsingBlock:(void (^)(NSUInteger, BOOL*))block;
 - (void)enumerateIndexesWithOptions:(NSEnumerationOptions)opts usingBlock:(void (^)(NSUInteger, BOOL*))block;
-- (void)enumerateIndexesInRange:(NSRange)range options:(NSEnumerationOptions)opts usingBlock:(void (^)(NSUInteger, BOOL*))block STUB_METHOD;
+- (void)enumerateIndexesInRange:(NSRange)range options:(NSEnumerationOptions)opts usingBlock:(void (^)(NSUInteger, BOOL*))block;
 @end
