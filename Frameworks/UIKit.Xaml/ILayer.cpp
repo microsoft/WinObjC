@@ -1,6 +1,6 @@
 ﻿//******************************************************************************
 //
-// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -15,25 +15,33 @@
 //******************************************************************************
 // clang-format does not like C++/CX
 // clang-format off
+#pragma once
 #include "pch.h"
-#include "ScrollViewer.xaml.h"
+#include "ILayer.h"
+
+using namespace Windows::UI::Xaml;
 
 namespace UIKit {
 namespace Xaml {
+namespace Private {
+namespace CoreAnimation {
 
-ScrollViewer::ScrollViewer() {
-    InitializeComponent();
+LayerProperty::LayerProperty(DependencyObject^ target, DependencyProperty^ property) : _target(target), _property(property) {
 }
 
+void LayerProperty::SetValue(Platform::Object^ value) {
+    // Set the specified value on our underlying target/property pair
+    _target->SetValue(_property, value);
+}
+
+Platform::Object^ LayerProperty::GetValue() {
+    // Retrieve the current value from our underlying target/property pair
+    return _target->GetValue(_property);
+}
+
+} /* CoreAnimation */
+} /* Private */
 } /* Xaml*/
 } /* UIKit*/
-
-////////////////////////////////////////////////////////////////////////////////////
-// ObjectiveC Interop
-////////////////////////////////////////////////////////////////////////////////////
-UIKIT_XAML_EXPORT void XamlCreateScrollViewer(IInspectable** created) {
-    Microsoft::WRL::ComPtr<IInspectable> inspectable = InspectableFromObject(ref new UIKit::Xaml::ScrollViewer());
-    *created = inspectable.Detach();
-}
 
 // clang-format on

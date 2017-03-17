@@ -62,7 +62,6 @@ static const wchar_t* TAG = L"UIScrollView";
 static const bool DEBUG_ALL = false;
 static const bool DEBUG_VERBOSE = DEBUG_ALL || false;
 static const bool DEBUG_DELEGATE = DEBUG_ALL || false;
-static const bool DEBUG_INSETS = DEBUG_ALL || false;
 static const bool DEBUG_ZOOM = DEBUG_ALL || false;
 static const bool DEBUG_DMANIP_GESTURE = DEBUG_ALL || false;
 
@@ -92,13 +91,7 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
 
     // xaml visuals to back UIScrollView - includes Scrollviewer, ContentGrid, Insets, and ContentCanvas
     StrongId<WXCScrollViewer> _scrollViewer;
-    StrongId<WXCGrid> _contentGrid;
-    StrongId<WUXSRectangle> _topInset;
-    StrongId<WUXSRectangle> _rightInset;
-    StrongId<WUXSRectangle> _bottomInset;
-    StrongId<WUXSRectangle> _leftInset;
     StrongId<WXCCanvas> _contentCanvas;
-    StrongId<WXCImage> _contentImage;
 
     EventRegistrationToken _directManipulationStartedEventToken;
     EventRegistrationToken _directManipulationCompletedEventToken;
@@ -168,9 +161,14 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
 }
 
 - (void)_initUIScrollView {
-    // Store a strongly-typed backing scrollviewer
-    _scrollViewer = rt_dynamic_cast<WXCScrollViewer>([self xamlElement]);
+    WXFrameworkElement* scrollView = rt_dynamic_cast<WXFrameworkElement>([self xamlElement]);
+    if (!scrollView) {
+        FAIL_FAST();
+    }
+
+    _scrollViewer = XamlControls::ScrollViewGetInnerScrollViewer(scrollView);
     if (!_scrollViewer) {
+        // Definitely didn't receive any supported backing xaml elements
         FAIL_FAST();
     }
 
@@ -179,77 +177,8 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
 
     [self setMultipleTouchEnabled:TRUE];
 
-    // create insets, assign names to make it easy to debug in visual tree
-    _topInset = [WUXSRectangle make];
-    _topInset.name = @"top";
-    _rightInset = [WUXSRectangle make];
-    _rightInset.name = @"right";
-    _bottomInset = [WUXSRectangle make];
-    _bottomInset.name = @"bottom";
-    _leftInset = [WUXSRectangle make];
-    _leftInset.name = @"left";
-
-    // Grab the content canvas for our subviews - we created it in createXamlElement
-    _contentCanvas = XamlControls::GetFrameworkElementSublayerCanvasProperty(_scrollViewer);
-
-    // Grab the image for our rendered content - we created it in createXamlElement
-    _contentImage = XamlControls::GetFrameworkElementLayerContentProperty(_scrollViewer);
-
-    // creating and build 3 X 3 content grid
-    _contentGrid = [WXCGrid make];
-    WXCColumnDefinition* column0 = [WXCColumnDefinition make];
-    WXCColumnDefinition* column1 = [WXCColumnDefinition make];
-    WXCColumnDefinition* column2 = [WXCColumnDefinition make];
-
-    column0.width = [WXGridLengthHelper fromValueAndType:0 type:WXGridUnitTypeAuto];
-    column1.width = [WXGridLengthHelper fromValueAndType:0 type:WXGridUnitTypeAuto];
-    column2.width = [WXGridLengthHelper fromValueAndType:0 type:WXGridUnitTypeAuto];
-    WXCRowDefinition* row0 = [WXCRowDefinition make];
-    WXCRowDefinition* row1 = [WXCRowDefinition make];
-    WXCRowDefinition* row2 = [WXCRowDefinition make];
-    row0.height = [WXGridLengthHelper fromValueAndType:0 type:WXGridUnitTypeAuto];
-    row1.height = [WXGridLengthHelper fromValueAndType:0 type:WXGridUnitTypeAuto];
-    row2.height = [WXGridLengthHelper fromValueAndType:0 type:WXGridUnitTypeAuto];
-
-    [_contentGrid.columnDefinitions addObject:column0];
-    [_contentGrid.columnDefinitions addObject:column1];
-    [_contentGrid.columnDefinitions addObject:column2];
-    [_contentGrid.rowDefinitions addObject:row0];
-    [_contentGrid.rowDefinitions addObject:row1];
-    [_contentGrid.rowDefinitions addObject:row2];
-
-    // put insets into top/right/bottom/left in Grid
-    [_contentGrid.children addObject:_topInset];
-    [WXCGrid setColumn:_topInset value:1];
-    [WXCGrid setRow:_topInset value:0];
-
-    [_contentGrid.children addObject:_rightInset];
-    [WXCGrid setColumn:_rightInset value:2];
-    [WXCGrid setRow:_rightInset value:1];
-
-    [_contentGrid.children addObject:_bottomInset];
-    [WXCGrid setColumn:_bottomInset value:1];
-    [WXCGrid setRow:_bottomInset value:2];
-
-    [_contentGrid.children addObject:_leftInset];
-    [WXCGrid setColumn:_leftInset value:0];
-    [WXCGrid setRow:_leftInset value:1];
-
-    // put content canvas in the middle
-    [_contentGrid.children addObject:_contentCanvas];
-    [WXCGrid setColumn:_contentCanvas value:1];
-    [WXCGrid setRow:_contentCanvas value:1];
-
-    // set contentGrid as the content of the scrollviewer
-    _scrollViewer.content = _contentGrid;
-
-    // by default enable chaining
-    _scrollViewer.isVerticalScrollChainingEnabled = YES;
-    _scrollViewer.isHorizontalScrollChainingEnabled = YES;
-
-    // by default disable railing
-    _scrollViewer.isHorizontalRailEnabled = NO;
-    _scrollViewer.isVerticalRailEnabled = NO;
+    // Grab the content canvas for our subviews
+    _contentCanvas = XamlControls::ScrollViewGetSubLayerCanvas(scrollView);
 
     _loaded = NO;
 
@@ -270,17 +199,8 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
     _firedDelegatesAfterFingerLifted = NO;
     _contentOffset = CGPointZero;
 
-    // Set up our defaults:
-    [self _setScrollEnabled:YES];
-
     // init zoom scale
     self->_zoomScale = 1.0f;
-    _scrollViewer.maxZoomFactor = 1.0f;
-    _scrollViewer.minZoomFactor = 1.0f;
-    _scrollViewer.zoomMode = WXCZoomModeDisabled;
-
-    // setting transparent background so we can receive touch input
-    _contentCanvas.background = [WUXMSolidColorBrush makeInstanceWithColor:[WUColors transparent]];
 
     // by default, disable direct manipulation on backing scrollviewer
     [self _setManipulationMode:WUXIManipulationModesAll recursive:NO];
@@ -569,24 +489,6 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
     __weak UIScrollView* weakSelf = self;
     _loadEventToken = [self->_scrollViewer addLoadedEvent:^void(RTObject* sender, WXRoutedEventArgs* e) {
         __strong UIScrollView* strongSelf = weakSelf;
-
-        // Now that we're loaded, we need to put our content image within the control's root grid (rather than within its
-        // scrollcontentpresenter),
-        // so we don't double-scroll any rendered content.
-        // Note: This is a temporary solution for UIScrollView-derived rendered content until we can move UIScrollView to an all-xaml
-        // representation.
-        if (strongSelf) {
-            // Add the image to the parent of the scrollcontentpresenter
-            WXFrameworkElement* scrollContentPresenter =
-                XamlUtilities::FindTemplateChild(strongSelf->_scrollViewer, @"ScrollContentPresenter");
-            if (scrollContentPresenter) {
-                WXCGrid* parent = rt_dynamic_cast<WXCGrid>(scrollContentPresenter.parent);
-                [parent.children insertObject:strongSelf->_contentImage atIndex:0];
-            } else {
-                TraceWarning(TAG, L"UIScrollView loaded event failed to find the ScrollContentPresenter child.");
-            }
-        }
-
         if (strongSelf && (strongSelf->_contentOffset != CGPointZero || strongSelf->_zoomScale != strongSelf->_scrollViewer.zoomFactor)) {
             strongSelf->_loaded = YES;
 
@@ -684,26 +586,7 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
  Microsoft Extension
 */
 + (WXFrameworkElement*)createXamlElement {
-    WXCScrollViewer* scrollViewer = [WXCScrollViewer make];
-
-    // Create an image for our rendered content
-    WXCImage* contentImage = [WXCImage make];
-    contentImage.name = @"Content Element";
-
-    // Create a content canvas for our subviews
-    WXCCanvas* contentCanvas = [WXCCanvas make];
-    contentCanvas.name = @"Content Canvas";
-
-    // Set up the CALayer properties for our backing Xaml element so
-    // our subviews are placed within our contentCanvas
-    // Note: It's critical that we do this here in case subviews are added before _initUIScrollView has a chance
-    // to run (during initWithCoder, for example).
-    XamlControls::SetFrameworkElementLayerProperties(scrollViewer,
-        contentImage, // content element
-        contentCanvas); // sublayer canvas
-
-    // No autorelease needed because we compile with ARC
-    return scrollViewer;
+    return XamlControls::CreateScrollView();
 }
 
 /**
@@ -1374,25 +1257,7 @@ static void setContentOffsetKVOed(UIScrollView* self, CGPoint offs) {
     }
 
     _contentInset = inset;
-    _topInset.height = (double)inset.top;
-    _topInset.width = (double)1;
-
-    _rightInset.width = (double)inset.right;
-    _rightInset.height = (double)1;
-
-    _bottomInset.height = (double)inset.bottom;
-    _bottomInset.width = (double)1;
-
-    _leftInset.width = (double)inset.left;
-    _leftInset.height = (double)1;
-
-    if (DEBUG_INSETS) {
-        // setting different color on insets for debugging
-        _topInset.fill = [WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor([UIColor redColor])];
-        _bottomInset.fill = [WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor([UIColor blueColor])];
-        _leftInset.fill = [WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor([UIColor redColor])];
-        _rightInset.fill = [WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor([UIColor blueColor])];
-    }
+    _contentCanvas.margin = [WXThicknessHelper fromLengths:inset.left top:inset.top right:inset.right bottom:inset.bottom];
 }
 
 - (void)_clampOffset {
