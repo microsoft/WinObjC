@@ -67,13 +67,14 @@ MODULE_PROPERTY(L"RunAs", L"UAP")
 END_MODULE()
 
 MODULE_SETUP(ModuleSetup) {
-#else
-int main(int argc, char** argv) {
-#endif
     // Initialize GTest framework.
     int _argc = 1;
     char* _argv[] = { "UnitTests" };
     testing::InitGoogleTest(&_argc, _argv);
+#else
+int main(int argc, char** argv) {
+    testing::InitGoogleTest(&argc, argv);
+#endif
 
 #ifdef WIN32
     if (FAILED(RoInitialize(RO_INIT_MULTITHREADED))) {

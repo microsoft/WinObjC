@@ -19,7 +19,6 @@
 #include "Starboard/TypeTraits.h"
 
 #if defined(__OBJC__)
-#include "IwMalloc.h"
 #include <Foundation/Foundation.h>
 #include <CoreFoundation/CFBase.h>
 #endif
