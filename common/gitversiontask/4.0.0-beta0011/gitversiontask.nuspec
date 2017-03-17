@@ -1,0 +1,19 @@
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata minClientVersion="2.8">
+    <id>GitVersionTask</id>
+    <version>4.0.0-beta0011</version>
+    <title>GitVersionTask</title>
+    <authors>GitTools and Contributors</authors>
+    <owners>GitTools and Contributors</owners>
+    <licenseUrl>http://www.opensource.org/licenses/mit-license.php</licenseUrl>
+    <projectUrl>https://github.com/GitTools/GitVersion</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/GitTools/GitVersion/master/docs/img/package_icon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Stamps an assembly with git information based on SemVer.</description>
+    <language>en-AU</language>
+    <tags>Git Versioning GitVersion GitFlowVersion GitFlow GitHubFlow SemVer</tags>
+    <developmentDependency>true</developmentDependency>
+    <releaseNotes>https://github.com/GitTools/GitVersion/releases</releaseNotes>
+    <copyright>Copyright © 2017 All Rights Reserved.</copyright>
+  </metadata>
+</package>
