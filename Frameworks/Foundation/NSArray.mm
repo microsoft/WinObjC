@@ -1022,7 +1022,7 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
 - (NSUInteger)indexOfObjectIdenticalTo:(id)anObject inRange:(NSRange)range {
     if (NSMaxRange(range) > [self count]) {
         [NSException raise:NSRangeException
-                    format:@"-[%s %s]: range {%d, %d} extends beyond bounds [ 0 .. %d]",
+                    format:@"-[%s %s]: range {%d, %d} extends beyond bounds [0 .. %d]",
                            sel_getName(_cmd),
                            class_getName([self class]),
                            range.location,
