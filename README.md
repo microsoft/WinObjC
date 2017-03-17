@@ -47,7 +47,7 @@ To use the bridge you'll need:
 
 
 To get started with an existing Xcode Project, you will also need:
-- **Chocolatey**, a package manager for windows. See how to install the latest version [here] (https://chocolatey.org/)
+- **Chocolatey**, a package manager for windows. See how to install the latest version [here](https://chocolatey.org/)
 - **winobjc-tools**, the command line tools for WinObjC. Run the below command from **powershell (Admin)** to get the latest version:
 ```
 choco upgrade winobjc-tools
