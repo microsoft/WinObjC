@@ -66,7 +66,7 @@ static NSInteger _compareOperationPriority(NSOperation* op1, NSOperation* op2, v
 // STL compare for NSOperation*, sorting by queuePriority, putting the greatest priority first
 struct _NSOperation_ComparePrioritySTL {
     bool operator()(NSOperation* lhs, NSOperation* rhs) {
-        return lhs.queuePriority > rhs.queuePriority;
+        return lhs.queuePriority < rhs.queuePriority;
     }
 };
 
@@ -190,7 +190,7 @@ static char _NSOperationQueue_IsReadyContext;
             // Check if currentQueue needs to be changed
             StrongId<NSOperationQueue*>& currentQueue = _getCurrentQueue();
             StrongId<NSOperationQueue*> prevCurrentQueue(currentQueue.get());
-            bool needToChangeCurrentQueue = (![[NSThread currentThread] isMainThread]) && (!(self == currentQueue.get()));
+            bool needToChangeCurrentQueue = !([[NSThread currentThread] isMainThread] || (self == currentQueue.get()));
 
             // If so, cache the previous currentQueue stored in the threadDictionary, and store the new currentQueue
             if (needToChangeCurrentQueue) {
