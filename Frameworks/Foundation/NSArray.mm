@@ -1056,7 +1056,16 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
 - (NSUInteger)indexOfObjectAtIndexes:(NSIndexSet*)indexSet
                              options:(NSEnumerationOptions)opts
                          passingTest:(BOOL (^)(id, NSUInteger, BOOL*))predicate {
-    NSIndexSet* matching = [self indexesOfObjectsAtIndexes:indexSet options:opts passingTest:predicate];
+    NSIndexSet* matching = [self indexesOfObjectsAtIndexes:indexSet
+                                                   options:opts
+                                               passingTest:^(id obj, NSUInteger index, BOOL* stop) {
+                                                   BOOL ret = predicate(obj, index, stop);
+                                                   if (ret == YES) {
+                                                       *stop = YES;
+                                                   }
+
+                                                   return ret;
+                                               }];
     return matching.firstIndex;
 }
 
