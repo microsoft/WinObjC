@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import "NSInvocationInternal.h"
+#import <IwMalloc.h>
 
 #import <Starboard/SmartTypes.h>
 #import <objc/runtime.h>
@@ -396,7 +397,7 @@ bool _NSInvocationCallFrame::getRequiresStructReturn() const {
 void _NSInvocationCallFrame::copyInExistingFrame(void* frame) {
     // On x86, we can copy the frame as-is; for ARM we have to only copy the allocated portions.
     uint8_t* base = _buffer;
-    for(auto& extent: _allocationExtents) {
+    for (auto& extent : _allocationExtents) {
         memcpy(base + extent.offset, (uint8_t*)frame + extent.offset, extent.length);
     }
 }
