@@ -778,13 +778,6 @@ void CGPathAddPath(CGMutablePathRef path, const CGAffineTransform* transform, CG
     CGPoint newStart = toAdd->GetStartingPoint();
     CGPathMoveToPoint(path, transform, newStart.x, newStart.y);
     FAIL_FAST_IF_FAILED(path->AddGeometryToPathWithTransformation(toAdd->GetPathGeometry(), transform));
-
-    CGPoint currentPoint = toAdd->GetCurrentPoint();
-    CGPoint startingPoint = toAdd->GetStartingPoint();
-    if (transform) {
-        currentPoint = CGPointApplyAffineTransform(currentPoint, *transform);
-        startingPoint = CGPointApplyAffineTransform(startingPoint, *transform);
-    }
 }
 
 /**
