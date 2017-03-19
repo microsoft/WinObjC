@@ -162,20 +162,21 @@ CGColorSpaceModel CGColorSpaceGetModel(CGColorSpaceRef colorSpace) {
 @Status Caveat
 @Notes Doesn't support all colorSpaces
 */
-size_t CGColorSpaceGetNumberOfComponents(CGColorSpaceRef pSpace) {
-    RETURN_RESULT_IF_NULL(pSpace, 0);
-    CGColorSpaceModel colorSpaceModel = CGColorSpaceGetModel(colorSpace);
-
-    switch (colorSpaceModel) {
+size_t CGColorSpaceGetNumberOfComponents(CGColorSpaceRef colorSpace) {
+    RETURN_RESULT_IF_NULL(colorSpace, 0);
+    CGColorSpaceModel model = CGColorSpaceGetModel(colorSpace);
+    switch (model) {
         case kCGColorSpaceModelRGB:
             return 3;
         case kCGColorSpaceModelPattern:
+            return colorSpace->BaseColorSpace() != nullptr ? CGColorSpaceGetNumberOfComponents(colorSpace->BaseColorSpace()) : 0;
         case kCGColorSpaceModelMonochrome:
+        case kCGColorSpaceModelIndexed:
             return 1;
         case kCGColorSpaceModelCMYK:
             return 4;
         default:
-            UNIMPLEMENTED_WITH_MSG("Colorspace Unsupported. Model: %d", colorSpaceModel);
+            UNIMPLEMENTED_WITH_MSG("Colorspace Unsupported. Model: %d", model);
             return 0;
     }
 }
