@@ -1931,7 +1931,7 @@ static WYPopoverTheme *defaultTheme_ = nil;
         }
     }
 
-    [viewController _setManagesViewEvents:YES];
+    [viewController _setBeingPresented:YES];
     
     CGSize contentViewSize = self.popoverContentSize;
 
@@ -1984,7 +1984,7 @@ static WYPopoverTheme *defaultTheme_ = nil;
             
             strongSelf->backgroundView.appearing = NO;
 
-            [strongSelf->viewController _setManagesViewEvents:NO];
+            [strongSelf->viewController _setBeingPresented:NO];
         }
         
         if (completion)
@@ -2628,8 +2628,6 @@ static WYPopoverTheme *defaultTheme_ = nil;
 
     [viewController _setBeingDismissed:YES];
 
-    [viewController _setManagesViewEvents:YES];
-    
     void (^adjustTintAutomatic)() = ^() {
 #ifdef WY_BASE_SDK_7_ENABLED
         if ([inView.window respondsToSelector:@selector(setTintAdjustmentMode:)]) {
@@ -2665,7 +2663,6 @@ static WYPopoverTheme *defaultTheme_ = nil;
                 [strongSelf->viewController viewDidDisappear:aAnimated];
             }
 
-            [strongSelf->viewController _setManagesViewEvents:NO];
             [strongSelf->viewController _setBeingDismissed:NO];
         }
         

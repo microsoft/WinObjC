@@ -57,7 +57,6 @@ struct UIViewControllerPriv {
     StrongId<UIStoryboard> _storyboard;
     BOOL hasLoaded, isLoading;
     BOOL _isEditing;
-    BOOL _managesViewEvents;
     UIInterfaceOrientation _curOrientation;
     BOOL _didSetRotation;
     BOOL _resizeToScreen;
@@ -101,8 +100,6 @@ struct UIViewControllerPriv {
 - (void)_notifyViewWillDisappear:(BOOL)isAnimated;
 - (void)_notifyViewDidDisappear:(BOOL)isAnimated;
 
-- (BOOL)_managesViewEvents;
-- (void)_setManagesViewEvents:(BOOL)managesViewEvents;
 - (void)_setBeingPresented:(BOOL)beingPresented;
 - (void)_setBeingDismissed:(BOOL)beingDismissed;
 - (void)_unlinkPresentedController;

@@ -1114,14 +1114,6 @@ NSMutableDictionary* _pageMappings;
     [self setToolbarItems:newItems animated:FALSE];
 }
 
-- (BOOL)_managesViewEvents {
-    return priv->_managesViewEvents;
-}
-
-- (void)_setManagesViewEvents:(BOOL)managesViewEvents {
-    priv->_managesViewEvents = managesViewEvents;
-}
-
 - (void)_setBeingPresented:(BOOL)beingPresented {
     _beingPresented = beingPresented;
 }
@@ -1271,14 +1263,8 @@ NSMutableDictionary* _pageMappings;
     [presented->priv->_modalOverlayView removeFromSuperview];
     presented->priv->_modalOverlayView = nil;
 
-    // Prevent default view appearance handling in UIView occuring when we
-    // remove the presented controller's view from its window.
-    presented->priv->_managesViewEvents = YES;
-
     UIView* presentedView = [presented view];
     [presentedView removeFromSuperview];
-
-    presented->priv->_managesViewEvents = NO;
 
     UIView* view = [self view];
     [[view superview] bringSubviewToFront:view];
@@ -1477,16 +1463,8 @@ NSMutableDictionary* _pageMappings;
         [parentWindow addSubview:priv->_modalOverlayView];
     }
 
-    // Avoid default view appearance mechanisms in UIView.mm (which e.g. handle view
-    // appearence events for views with an owning controller manually added to a window).
-    // Note that mechanism in UIView.mm currently overeagerly calls viewDidAppear when adding
-    // a controller owned view to a window.
-    self->priv->_managesViewEvents = YES;
-
     UIView* view = [self view];
     [parentWindow addSubview:view];
-
-    self->priv->_managesViewEvents = NO;
 
     if (animated) {
         CGPoint origPos = [view center];
@@ -2128,8 +2106,10 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
  @Status Caveat
  @Notes  WinObjC-only extension providing access
          to UIModalPresentationFormSheet overlay.
+         Not exposed in header (clients must access
+         via performSelector).
 */
-- (UIView*)modalOverlayView {
+- (UIView*)_modalOverlayView {
     return priv->_modalOverlayView;
 }
 
