@@ -234,6 +234,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics\CGImageTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics\TestUtils.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\UnitTests\CoreGraphics\CGDataConsumerTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics\CGColorSpaceTests.mm" />
   </ItemGroup>
   <Target Name="CopyTestResourcesToOutput" AfterTargets="AfterBuild">
     <ItemGroup>
