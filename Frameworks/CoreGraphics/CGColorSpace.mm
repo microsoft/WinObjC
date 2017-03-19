@@ -261,12 +261,11 @@ CGColorSpaceRef CGColorSpaceCreateWithPlatformColorSpace(const void* ref) {
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 CGColorSpaceRef CGColorSpaceGetBaseColorSpace(CGColorSpaceRef space) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    RETURN_NULL_IF(!space);
+    return space->BaseColorSpace();
 }
 
 /**
