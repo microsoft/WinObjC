@@ -22,7 +22,7 @@ class CGContextFillMode : public WhiteBackgroundTest<>, public ::testing::WithPa
     CFStringRef CreateOutputFilename() {
         CGPathDrawingMode fillMode = GetParam();
 
-        char* fillModeName;
+        const char* fillModeName;
         switch (fillMode) {
             case kCGPathFill:
                 fillModeName = "Fill";
