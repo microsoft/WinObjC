@@ -37,7 +37,7 @@ inline void _ClearColorQuad(__CGColorQuad& color) {
 }
 + (UIColor*)_colorWithCGPattern:(CGPatternRef)pattern;
 + (UIColor*)_windowsTableViewCellSelectionBackgroundColor;
-
 - (const __CGColorQuad*)_getColors;
 - (BrushType)_type;
+@property (nonatomic, assign) CGColorSpaceRef colorSpace;
 @end

@@ -18,7 +18,7 @@
 #pragma once
 
 #include "Label.g.h"
-#include "Layer.xaml.h"
+#include "ILayer.h"
 
 namespace UIKit {
 namespace Xaml {
@@ -66,3 +66,5 @@ private:
 
 } /* Xaml*/
 } /* UIKit*/
+
+// clang-format on

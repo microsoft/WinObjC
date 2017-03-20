@@ -124,7 +124,7 @@ typedef CF_OPTIONS(CFIndex, CGTextDrawingMode) {
 };
 // clang-format on
 
-COREGRAPHICS_EXPORT void CGContextFlush(CGContextRef c) STUB_METHOD;
+COREGRAPHICS_EXPORT void CGContextFlush(CGContextRef c);
 COREGRAPHICS_EXPORT CFTypeID CGContextGetTypeID();
 COREGRAPHICS_EXPORT void CGContextRelease(CGContextRef c);
 COREGRAPHICS_EXPORT CGContextRef CGContextRetain(CGContextRef c);
