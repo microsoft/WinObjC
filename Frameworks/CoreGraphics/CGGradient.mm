@@ -51,12 +51,8 @@ __CGGradient::~__CGGradient() {
 }
 
 void __CGGradient::initWithColorComponents(const float* components, const float* locations, size_t count, CGColorSpaceRef colorspace) {
-    __CGColorSpace* cs = (__CGColorSpace*)colorspace;
     DWORD componentCount = 0;
-
-    _colorSpaceModel = cs->colorSpaceModel;
-
-    switch (_colorSpaceModel) {
+    switch (CGColorSpaceGetModel(colorspace)) {
         case kCGColorSpaceModelRGB:
             componentCount = 4;
             _format = _ColorABGR;
@@ -89,11 +85,8 @@ void __CGGradient::initWithColorComponents(const float* components, const float*
 void __CGGradient::initWithColors(CFArrayRef componentsArr, const float* locations, CGColorSpaceRef colorspace) {
     NSArray* components = (NSArray*)componentsArr;
     size_t componentCount = 0;
-    __CGColorSpace* cs = (__CGColorSpace*)colorspace;
 
-    _colorSpaceModel = cs->colorSpaceModel;
-
-    switch (_colorSpaceModel) {
+    switch (CGColorSpaceGetModel(colorspace)) {
         case kCGColorSpaceModelRGB:
             componentCount = 4;
             _format = _ColorABGR;

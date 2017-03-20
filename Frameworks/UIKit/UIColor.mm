@@ -226,6 +226,8 @@ rgb hsv2rgb(hsv in) {
     UIImage* _image;
     id _pattern;
     __CGColorQuad _components;
+    // Note: This should be part of the CGColor struct
+    woc::StrongCF<CGColorSpaceRef> _colorSpace;
 }
 
 /**
@@ -613,6 +615,14 @@ _pattern = (id) _CGPatternCreateFromImage(pImg);
 
 - (const __CGColorQuad*)_getColors {
     return &_components;
+}
+
+- (CGColorSpaceRef)colorSpace {
+    return _colorSpace;
+}
+
+- (void)setColorSpace:(CGColorSpaceRef)colorSpace {
+    _colorSpace = colorSpace;
 }
 
 /**
