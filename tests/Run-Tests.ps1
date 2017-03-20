@@ -35,6 +35,9 @@
 .PARAMETER WTTLogPath
     Path to find WTTLog dll
 
+.PARAMETER OutputDir
+    Path to write test outptu files to.
+    
 .EXAMPLE
     Desktop: Run-Tests.ps1 -ModuleFilter *unittests.dll
              Run-Tests.ps1 -ModuleFilter functionaltests.dll
@@ -66,8 +69,11 @@ param(
 
     [string]$WTTLogPath,
 
-    [System.Collections.HashTable]$Parameters = $null
+    [System.Collections.HashTable]$Parameters = $null,
+
+    [string]$OutputDir
 )
+
 $script:exitCode = 0
 
 $TargetingDevice = ($Platform -eq "ARM")
@@ -148,6 +154,20 @@ function ExecTest($argList)
 
     if ($TargetingDevice)
     {
+        if ($WTLOutputFile)
+        {
+            $outputLocalName = $WTLOutputFile
+            $outputRemoteName = Join-Path -Path $TestDstDirectory -ChildPath ([system.IO.Fileinfo]$WTLOutputFile).Name
+            $argList += " /logFile:$outputRemoteName /enableWttLogging /enableetwlogging=false"
+        }
+
+        if ($OutputDir)
+        {
+            $localOutputDir = $OutputDir
+            $remoteOutputDir = Join-Path -Path $TestDstDirectory -ChildPath "TAEFOutput"
+            $argList += " /outputFolder=$remoteOutputDir"
+        }
+
         #Note: cmdd or some other tool on the phone does not like "`"$testPath`"" and results in taef not running the test.
         Write-Host -ForegroundColor Cyan  "cmdd $taefPath $testPath $argList"
         cmdd $taefPath $testPath $argList
@@ -158,9 +178,32 @@ function ExecTest($argList)
             getd $outputRemoteName $outputLocalName
             deld $outputRemoteName
         }
+        
+        if ($OutputDir)
+        {
+            if(Test-Path $localOutputDir)
+            {
+                Remove-Item -Recurse -Force $localOutputDir -verbose
+            }
+            New-Item -ItemType directory -Path $localOutputDir
+
+            getd $remoteOutputDir $localOutputDir -recurse
+            deld /s $remoteOutputDir
+        }
     }
     else
     {
+    
+        if ($WTLOutputFile)
+        {
+            $argList += " /logFile:$WTLOutputFile /enableWttLogging /enableetwlogging=false"
+        }
+        
+        if ($OutputDir)
+        {
+            $argList += " /outputFolder=$OutputDir"
+        }
+    
         $testPath = "`"$testPath`""
         Write-Host -ForegroundColor Cyan  "Running $taefPath $testPath $argList"
         $arguments = "$testPath" + "$argList"
@@ -222,26 +265,7 @@ $DefaultTestBinary = "FunctionalTests.dll"
 
 DeployTests
 
-$outputLocalName
-$outputRemoteName
 $argList = "";
-
-# Decide where the WTL output files will live
-if ($WTLOutputFile)
-{
-    if ($TargetingDevice)
-    {
-        $outputLocalName = $WTLOutputFile
-        $outputRemoteName = Join-Path -Path $TestDstDirectory -ChildPath ([system.IO.Fileinfo]$WTLOutputFile).Name
-        $argList += " /logFile:$outputRemoteName /enableWttLogging /enableetwlogging=false"
-    }
-    else
-    {
-        $outputLocalName = $WTLOutputFile
-        $argList += " /logFile:$outputLocalName /enableWttLogging /enableetwlogging=false"
-    }
-}
-
 
 if($TestFilter)
 {
