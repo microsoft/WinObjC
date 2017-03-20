@@ -226,15 +226,6 @@ struct ButtonState {
                                               e.handled = YES;
                                               [weakSelf _processPointerCaptureLostCallback:sender eventArgs:e];
                                           });
-
-    XamlControls::HookLayoutEvent(_xamlButton, ^(RTObject*, WUXIPointerRoutedEventArgs*) {
-        // Since we are using XAML Button behind the scene, the intrinsicContentSize calculation is done
-        // by XAML.
-        // The size of XAML elements(for eg Image) is calculated at runtime and then the
-        // intrinsicContentSize is invalidated.
-        [weakSelf invalidateIntrinsicContentSize];
-        [weakSelf setNeedsLayout];
-    });
 }
 
 /**
@@ -919,7 +910,6 @@ static ComPtr<IInspectable> _currentInspectableBorderBackgroundBrush(UIButton* s
 */
 - (void)dealloc {
     XamlRemovePointerEvents([_xamlButton comObj]);
-    XamlRemoveLayoutEvent([_xamlButton comObj]);
 }
 
 /**

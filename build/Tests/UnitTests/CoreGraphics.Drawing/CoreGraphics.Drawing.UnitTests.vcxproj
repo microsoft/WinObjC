@@ -237,6 +237,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.drawing\CGContextDrawing_FillModeTests.cpp" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.drawing\CGContextDrawing_AntiAliasTests.cpp" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.Drawing\CGContextDrawing_ClearRectTests.cpp" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.Drawing\CGContextDrawing_FlushTests.cpp" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.Drawing\CGPathDrawingTests.cpp" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.Drawing\DrawingTest.cpp" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreGraphics.drawing\ImageComparison.cpp" />

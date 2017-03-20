@@ -13,69 +13,56 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+
 // clang-format does not like C++/CX
 // clang-format off
 #pragma once
 
-#include "Layer.g.h"
+#include "ScrollView.g.h"
 #include "ILayer.h"
+#include "ObjCXamlControls.h"
 
 namespace UIKit {
 namespace Xaml {
-namespace Private {
-namespace CoreAnimation {
 
 [Windows::Foundation::Metadata::WebHostHidden]
-public ref class Layer sealed : public ILayer {
+public ref class ScrollView sealed : public Private::CoreAnimation::ILayer
+{
 public:
-    Layer();
+    ScrollView();
 
     // Accessor for our Layer content; we create one on demand
     virtual property Windows::UI::Xaml::Controls::Image^ LayerContent {
         Windows::UI::Xaml::Controls::Image^ get();
     }
 
-    // Accessor to check for exising Layer content
+    // Accessor to check for existing Layer content
     virtual property bool HasLayerContent {
         bool get();
     }
 
-    // Accessor for our SublayerCanvas; we create one on demand
+    // Accessor for SublayerCanvas
     virtual property Windows::UI::Xaml::Controls::Canvas^ SublayerCanvas {
         Windows::UI::Xaml::Controls::Canvas^ get();
     }
 
-    // Accessor for the LayerProperty that manages the BorderBrush of this layer
-    virtual LayerProperty^ GetBorderBrushProperty();
+    // Accessor for the LayerProperty that manages the BorderBrush of this ScrollView
+    virtual Private::CoreAnimation::LayerProperty^ GetBorderBrushProperty();
 
-    // Accessor for the LayerProperty that manages the BorderThickness of this layer
-    virtual LayerProperty^ GetBorderThicknessProperty();
-
-    // Allows arbitrary framework elements to opt-into hosting layer content
-    static property Windows::UI::Xaml::DependencyProperty^ LayerContentProperty {
-        Windows::UI::Xaml::DependencyProperty^ get();
-    }
-
-    // Allows arbitrary framework elements to opt-into hosting sublayers
-    static property Windows::UI::Xaml::DependencyProperty^ SublayerCanvasProperty {
-        Windows::UI::Xaml::DependencyProperty^ get();
-    }
+    // Accessor for the LayerProperty that manages the BorderThickness of this ScrollView
+    virtual Private::CoreAnimation::LayerProperty^ GetBorderThicknessProperty();
 
 internal:
-    // Static entry point to register our dependency properties
-    static void _RegisterDependencyProperties();
+    property Windows::UI::Xaml::Controls::ScrollViewer^ InnerScrollViewer{
+        Windows::UI::Xaml::Controls::ScrollViewer^ get();
+    }
 
 private:
     // Layer elements; created on demand
     Windows::UI::Xaml::Controls::Image^ _content;
-
-    // Dependency properties for adding layer-like functionality to any FrameworkElement
-    static bool s_dependencyPropertiesRegistered;
-    static Windows::UI::Xaml::DependencyProperty^ s_layerContentProperty;
-    static Windows::UI::Xaml::DependencyProperty^ s_sublayerCanvasProperty;
 };
 
-} /* CoreAnimation */
-} /* Private */
 } /* Xaml*/
 } /* UIKit*/
+
+// clang-format on

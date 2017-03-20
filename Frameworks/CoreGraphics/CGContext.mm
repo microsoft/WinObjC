@@ -373,6 +373,20 @@ public:
         return S_OK;
     }
 
+    inline HRESULT Flush() {
+        // We cannot use use ID2D1::Flush here, mainly due to:
+        // 1. Flush flushes the D2D batch, but does not flush the D3D batch, we do not have a way to flush
+        // the D3D batch for WicBitmapRenderTarget. (Not: During the EndDraw procedure this occurs.)
+        // 2. Sometimes a shadow copy of our buffer can be used to do the actual rendering, Flush does not force the copy
+        // over of the shadow copy into the original buffer (EndDraw does)
+        // Thus the best way is to implement Flush is through EndDraw
+        if (_beginEndDrawDepth > 0) {
+            RETURN_IF_FAILED(PopEndDraw(true));
+            PushBeginDraw(true);
+        }
+        return S_OK;
+    }
+
     inline void SetShouldAntialias(__CGTrinary shouldAntialias) {
         CurrentGState().shouldAntialias = shouldAntialias;
     }
@@ -490,17 +504,17 @@ public:
         return SUCCEEDED(_firstErrorHr) && CurrentGState().ShouldDraw();
     }
 
-    inline void PushBeginDraw() {
-        if ((_beginEndDrawDepth)++ == 0) {
+    inline void PushBeginDraw(bool forceBeginDraw = false) {
+        if (forceBeginDraw || ((_beginEndDrawDepth)++ == 0)) {
             if (SUCCEEDED(_firstErrorHr)) {
                 deviceContext->BeginDraw();
             }
         }
     }
 
-    inline HRESULT PopEndDraw() {
+    inline HRESULT PopEndDraw(bool forceEndDraw = false) {
         HRESULT hr = S_OK;
-        if (--(_beginEndDrawDepth) == 0) {
+        if (forceEndDraw || (--(_beginEndDrawDepth) == 0)) {
             hr = deviceContext->EndDraw();
             if (_useEnhancedErrorHandling && SUCCEEDED(_firstErrorHr) && FAILED(hr)) {
                 // If we haven't yet stored an error, and we're about to return an error (not S_OK), store it.
@@ -612,11 +626,12 @@ void CGContextRestoreGState(CGContextRef context) {
 
 #pragma region Global State - Context Maintenance
 /**
- @Status Stub
+ @Status Interoperable
+ @Notes The flush can operate on a CGBitmapContext.
 */
 void CGContextFlush(CGContextRef context) {
     NOISY_RETURN_IF_NULL(context);
-    UNIMPLEMENTED();
+    FAIL_FAST_IF_FAILED(context->Flush());
 }
 
 /**
@@ -2522,7 +2537,7 @@ public:
             deviceContext->Clear({ 0, 0, 0, 0 }); // Clear the original target to transparent black.
             RETURN_IF_FAILED(inputBitmap.As(&copiedImage));
         }
-        return __super::Stage(context, deviceContext);
+        return __super ::Stage(context, deviceContext);
     }
 };
 
@@ -2570,13 +2585,13 @@ public:
         RETURN_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D1Composite, &_compositeEffect));
         _compositeEffect->SetInputEffect(0, affineTransformEffect.Get());
 
-        return __super::Stage(context, deviceContext);
+        return __super ::Stage(context, deviceContext);
     }
 
     HRESULT Complete(CGContextRef context, ID2D1DeviceContext* deviceContext) override {
-        RETURN_IF_FAILED(__super::Complete(context, deviceContext));
-        _shadowEffect->SetInput(0, __super::commandList.Get());
-        _compositeEffect->SetInput(1, __super::commandList.Get());
+        RETURN_IF_FAILED(__super ::Complete(context, deviceContext));
+        _shadowEffect->SetInput(0, __super ::commandList.Get());
+        _compositeEffect->SetInput(1, __super ::commandList.Get());
         deviceContext->DrawImage(_compositeEffect.Get());
         return S_OK;
     }
@@ -2597,7 +2612,7 @@ public:
     // into the member "copiedImage".
 
     HRESULT Complete(CGContextRef context, ID2D1DeviceContext* deviceContext) override {
-        RETURN_IF_FAILED(__super::Complete(context, deviceContext));
+        RETURN_IF_FAILED(__super ::Complete(context, deviceContext));
 
         // The blend effect takes two images and a blend mode.
         //
@@ -2609,8 +2624,8 @@ public:
         ComPtr<ID2D1Effect> blendEffect;
         RETURN_IF_FAILED(deviceContext->CreateEffect(CLSID_D2D1Blend, &blendEffect));
         blendEffect->SetValue(D2D1_BLEND_PROP_MODE, _blendMode);
-        blendEffect->SetInput(0, __super::copiedImage.Get());
-        blendEffect->SetInput(1, __super::commandList.Get());
+        blendEffect->SetInput(0, __super ::copiedImage.Get());
+        blendEffect->SetInput(1, __super ::commandList.Get());
 
         deviceContext->SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND_COPY);
         deviceContext->DrawImage(blendEffect.Get());
@@ -2638,12 +2653,12 @@ public:
                                                         nullptr,
                                                         D2D1_LAYER_OPTIONS1_INITIALIZE_FROM_BACKGROUND),
                                  nullptr);
-        return __super::Stage(context, deviceContext);
+        return __super ::Stage(context, deviceContext);
     }
 
     HRESULT Complete(CGContextRef context, ID2D1DeviceContext* deviceContext) override {
-        RETURN_IF_FAILED(__super::Complete(context, deviceContext));
-        deviceContext->DrawImage(__super::commandList.Get(), D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR, _compositeMode);
+        RETURN_IF_FAILED(__super ::Complete(context, deviceContext));
+        deviceContext->DrawImage(__super ::commandList.Get(), D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR, _compositeMode);
         deviceContext->PopLayer();
         deviceContext->SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND_SOURCE_OVER);
         return S_OK;
@@ -2660,8 +2675,8 @@ public:
     }
 
     HRESULT Complete(CGContextRef context, ID2D1DeviceContext* deviceContext) override {
-        RETURN_IF_FAILED(__super::Complete(context, deviceContext));
-        deviceContext->DrawImage(__super::commandList.Get(), D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR, _compositeMode);
+        RETURN_IF_FAILED(__super ::Complete(context, deviceContext));
+        deviceContext->DrawImage(__super ::commandList.Get(), D2D1_INTERPOLATION_MODE_NEAREST_NEIGHBOR, _compositeMode);
         return S_OK;
     }
 };

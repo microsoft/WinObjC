@@ -46,10 +46,6 @@ void HookButtonPointerEvents(WXCButton* button,
                                 pointerCaptureLostHook ? Make<WUXIPointerEventHandler_shim>(pointerCaptureLostHook) : nullptr);
 }
 
-void HookLayoutEvent(WXCButton* button, WUXIPointerEventHandler layoutHook) {
-    XamlHookLayoutEvent([button comObj], layoutHook ? Make<WUXIPointerEventHandler_shim>(layoutHook) : nullptr);
-}
-
 ////////////////////////////////////////////////////////////////////////////////////
 // ContentDialog
 ////////////////////////////////////////////////////////////////////////////////////
@@ -105,6 +101,25 @@ WXCGrid* CreateLabel() {
 WXCTextBlock* GetLabelTextBlock(WXCGrid* labelGrid) {
     Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetLabelTextBlock([labelGrid comObj]));
     return _createRtProxy([WXCTextBlock class], inspectable.Get());
+}
+
+////////////////////////////////////////////////////////////////////////////////////
+// ScrollView
+////////////////////////////////////////////////////////////////////////////////////
+WXFrameworkElement* CreateScrollView() {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable;
+    XamlCreateScrollView(&inspectable);
+    return _createRtProxy([WXFrameworkElement class], inspectable.Get());
+}
+
+WXCScrollViewer* ScrollViewGetInnerScrollViewer(WXFrameworkElement* scrollView) {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlScrollViewGetScrollViewer([scrollView comObj]));
+    return _createRtProxy([WXCScrollViewer class], inspectable.Get());
+}
+
+WXCCanvas* ScrollViewGetSubLayerCanvas(WXFrameworkElement* scrollView) {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlScrollViewGetSubLayerCanvas([scrollView comObj]));
+    return _createRtProxy([WXCCanvas class], inspectable.Get());
 }
 
 ////////////////////////////////////////////////////////////////////////////////////

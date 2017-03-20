@@ -35,19 +35,6 @@ DependencyProperty^ Layer::s_layerContentProperty = nullptr;
 DependencyProperty^ Layer::s_sublayerCanvasProperty = nullptr;
 bool Layer::s_dependencyPropertiesRegistered = false;
 
-LayerProperty::LayerProperty(DependencyObject^ target, DependencyProperty^ property) : _target(target), _property(property) {
-}
-
-void LayerProperty::SetValue(Platform::Object^ value) {
-    // Set the specified value on our underlying target/property pair
-    _target->SetValue(_property, value);
-}
-
-Platform::Object^ LayerProperty::GetValue() {
-    // Retrieve the current value from our underlying target/property pair
-    return _target->GetValue(_property);
-}
-
 Layer::Layer() {
     InitializeComponent();
 

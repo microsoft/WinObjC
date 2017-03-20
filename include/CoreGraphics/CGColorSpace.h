@@ -86,8 +86,8 @@ COREGRAPHICS_EXPORT CGColorSpaceRef CGColorSpaceCreateWithPlatformColorSpace(con
 COREGRAPHICS_EXPORT CGColorSpaceRef CGColorSpaceCreateIndexed(CGColorSpaceRef baseSpace, size_t lastIndex, const unsigned char* colorTable);
 COREGRAPHICS_EXPORT CGColorSpaceRef CGColorSpaceCreateWithName(CFStringRef name);
 COREGRAPHICS_EXPORT CFDataRef CGColorSpaceCopyICCProfile(CGColorSpaceRef space) STUB_METHOD;
-COREGRAPHICS_EXPORT CFTypeID CGColorSpaceGetTypeID() STUB_METHOD;
+COREGRAPHICS_EXPORT CFTypeID CGColorSpaceGetTypeID();
 COREGRAPHICS_EXPORT CGColorSpaceModel CGColorSpaceGetModel(CGColorSpaceRef space);
-COREGRAPHICS_EXPORT CGColorSpaceRef CGColorSpaceGetBaseColorSpace(CGColorSpaceRef space) STUB_METHOD;
+COREGRAPHICS_EXPORT CGColorSpaceRef CGColorSpaceGetBaseColorSpace(CGColorSpaceRef space);
 COREGRAPHICS_EXPORT size_t CGColorSpaceGetColorTableCount(CGColorSpaceRef space) STUB_METHOD;
 COREGRAPHICS_EXPORT void CGColorSpaceGetColorTable(CGColorSpaceRef space, uint8_t* table) STUB_METHOD;
