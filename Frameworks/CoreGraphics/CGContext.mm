@@ -1049,7 +1049,7 @@ void CGContextAddPath(CGContextRef context, CGPathRef path) {
     CGAffineTransform userToDeviceTransform = CGContextGetUserSpaceToDeviceSpaceTransform(context);
 
     if (!context->HasPath()) {
-        // If we don't curerntly have a path, take this one in as our own.
+        // If we don't currently have a path, take this one in as our own.
         woc::unique_cf<CGMutablePathRef> copiedPath{ CGPathCreateMutableCopyByTransformingPath(path, &userToDeviceTransform) };
         context->SetPath(copiedPath.get());
         return;

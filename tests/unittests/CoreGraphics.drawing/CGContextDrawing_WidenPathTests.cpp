@@ -155,9 +155,9 @@ void drawStrokeTestWithParams(
         CGContextReplacePathWithStrokedPath(context);
         CGContextRestoreGState(context);
     } else {
-        CGMutablePathRef widenedPath =
-            CGPathCreateMutableCopy(woc::MakeStrongCF<CGPathRef>(CGPathCreateCopyByStrokingPath(path, NULL, 10, cap, join, miterLimit)));
+        CGPathRef widenedPath = CGPathCreateCopyByStrokingPath(path, NULL, 10, cap, join, miterLimit);
         CGContextAddPath(context, widenedPath);
+        CGPathRelease(widenedPath);
     }
     CGContextSetRGBStrokeColor(context, 0, 0, 1, 1);
     CGContextStrokePath(context);
