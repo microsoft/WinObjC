@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -31,25 +31,34 @@ static IWLazyClassLookup __LazyUIColor("UIColor");
  @Notes Limited constants supported
 */
 CGColorRef CGColorGetConstantColor(CFStringRef name) {
+    CGColorRef ret = nullptr;
+    woc::StrongCF<CGColorSpaceRef> colorspace;
     if (CFEqual(kCGColorBlack, name)) {
-        return [[__LazyUIColor blackColor] CGColor];
+        ret = static_cast<CGColorRef>([[__LazyUIColor blackColor] CGColor]);
+        colorspace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceGray());
     } else if (CFEqual(kCGColorWhite, name)) {
-        return [[__LazyUIColor whiteColor] CGColor];
+        ret = static_cast<CGColorRef>([[__LazyUIColor whiteColor] CGColor]);
+        colorspace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceGray());
     } else if (CFEqual(kCGColorClear, name)) {
-        return [[__LazyUIColor clearColor] CGColor];
+        ret = static_cast<CGColorRef>([[__LazyUIColor clearColor] CGColor]);
+        colorspace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceGray());
+    } else {
+        UNIMPLEMENTED_WITH_MSG("CGColorGetConstantColor does not support color %s", CFStringGetCStringPtr(name, kCFStringEncodingUTF8));
     }
 
-    UNIMPLEMENTED_WITH_MSG("CGColorGetConstantColor does not support color %s", CFStringGetCStringPtr(name, kCFStringEncodingUTF8));
-    return nullptr;
+    if (ret) {
+        [static_cast<UIColor*>(ret) setColorSpace:colorspace];
+    }
+
+    return ret;
 }
 
 /**
  @Status Interoperable
 */
 void CGColorRelease(CGColorRef color) {
-    if (color != nullptr) {
-        CFRelease(color);
-    }
+    RETURN_IF(!color);
+    CFRelease(color);
 }
 
 /**
@@ -62,18 +71,20 @@ CGColorRef CGColorRetain(CGColorRef color) {
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes only supports RGB
 */
 CGColorRef CGColorCreate(CGColorSpaceRef colorSpace, const CGFloat* components) {
-    CGColorRef ret =
-        (CGColorRef)[[__LazyUIColor colorWithRed:components[0] green:components[1] blue:components[2] alpha:components[3]] retain];
-
+    RETURN_NULL_IF(!colorSpace);
+    RETURN_NULL_IF(!components);
+    CGColorRef ret = static_cast<CGColorRef>(
+        [[__LazyUIColor colorWithRed:components[0] green:components[1] blue:components[2] alpha:components[3]] retain]);
+    [static_cast<UIColor*>(ret) setColorSpace:colorSpace];
     return ret;
 }
 
 /**
- @Status Caveat
- @Notes TODO: need to revisit if retail is enough for CreateCopy
+ @Status Interoperable
 */
 CGColorRef CGColorCreateCopy(CGColorRef color) {
     return CGColorRetain(color);
@@ -83,21 +94,28 @@ CGColorRef CGColorCreateCopy(CGColorRef color) {
  @Status Interoperable
 */
 CGColorRef CGColorCreateCopyWithAlpha(CGColorRef color, float alpha) {
+    RETURN_NULL_IF(!color);
     static __CGColorQuad defaultColor{ 0.0f, 0.0f, 0.0f, 0.0f };
     const __CGColorQuad* curColor = [(UIColor*)color _getColors];
     if (!curColor) {
         curColor = &defaultColor;
     }
 
-    return static_cast<CGColorRef>([[__LazyUIColor colorWithRed:curColor->r green:curColor->g blue:curColor->b alpha:alpha] retain]);
+    CGColorRef ret =
+        static_cast<CGColorRef>([[__LazyUIColor colorWithRed:curColor->r green:curColor->g blue:curColor->b alpha:alpha] retain]);
+    [static_cast<UIColor*>(ret) setColorSpace:CGColorGetColorSpace(color)];
+    return ret;
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes components are not supported
 */
 CGColorRef CGColorCreateWithPattern(CGColorSpaceRef colorSpace, CGPatternRef pattern, const CGFloat* components) {
-    CGColorRef ret = (CGColorRef)[[__LazyUIColor _colorWithCGPattern:(CGPatternRef)pattern] retain];
-
+    RETURN_NULL_IF(!colorSpace);
+    RETURN_NULL_IF(!pattern);
+    CGColorRef ret = static_cast<CGColorRef>([[__LazyUIColor _colorWithCGPattern:(CGPatternRef)pattern] retain]);
+    [static_cast<UIColor*>(ret) setColorSpace:colorSpace];
     return ret;
 }
 
@@ -115,28 +133,25 @@ bool CGColorEqualToColor(CGColorRef color1, CGColorRef color2) {
     const __CGColorQuad* components2 = [(UIColor*)color2 _getColors];
 
     return ((components1->r == components2->r) && (components1->g == components2->g) && (components1->b == components2->b) &&
-            (components1->a == components2->a));
+            (components1->a == components2->a)) &&
+           (CGColorSpaceGetModel(CGColorGetColorSpace(color1)) == CGColorSpaceGetModel(CGColorGetColorSpace(color2)));
 }
 
 /**
  @Status Interoperable
 */
 CGFloat CGColorGetAlpha(CGColorRef color) {
+    RETURN_RESULT_IF(!color, 0.0f);
     const __CGColorQuad* curColor = [(UIColor*)color _getColors];
-
-    if (curColor) {
-        return curColor->a;
-    }
-    return 0.0f;
+    return curColor->a;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 CGColorSpaceRef CGColorGetColorSpace(CGColorRef color) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    RETURN_NULL_IF(!color);
+    return [static_cast<UIColor*>(color) colorSpace];
 }
 
 /**
