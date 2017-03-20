@@ -2,6 +2,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 15.0.0.0
+=======
+VisualStudioVersion = 15.0.26228.4
+MinimumVisualStudioVersion = 10.0.40219.1
+>>>>>>> ce6bafbee... Add rudimentary Social kit share view controller
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Starboard", "Starboard", "{ADFDC5D9-3048-4E53-A9B7-41731D7AD8CF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Foundation", "Foundation", "{C6DF6B73-CBD1-463E-B69D-2F4B283E69E4}"
@@ -796,6 +800,12 @@ EndProject
 Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "NuprojInitializer", "..\common\NuprojInitializer.msbuildproj", "{417B0D00-F90E-47BB-9085-BE7E412C9DA8}"
 EndProject
 Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "NugetRestore", "..\common\NugetRestore.msbuildproj", "{B2C6186E-B340-49D8-888E-76ED83752E43}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Social.Xaml", "Social.Xaml", "{C881C664-A5BA-455A-AC87-388DC1B69102}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dll", "dll", "{D18BADCF-1870-4DF3-85FD-1498E9605FB5}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Social.Xaml", "Social.Xaml\dll\Social.Xaml.vcxproj", "{22DC23CA-C7F7-4C5E-A7A1-BABA87789386}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -2340,6 +2350,16 @@ Global
 		{B2C6186E-B340-49D8-888E-76ED83752E43}.Release|ARM.Build.0 = Release|Any CPU
 		{B2C6186E-B340-49D8-888E-76ED83752E43}.Release|x86.ActiveCfg = Release|Any CPU
 		{B2C6186E-B340-49D8-888E-76ED83752E43}.Release|x86.Build.0 = Release|Any CPU
+		{22DC23CA-C7F7-4C5E-A7A1-BABA87789386}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{22DC23CA-C7F7-4C5E-A7A1-BABA87789386}.Debug|ARM.ActiveCfg = Debug|ARM
+		{22DC23CA-C7F7-4C5E-A7A1-BABA87789386}.Debug|ARM.Build.0 = Debug|ARM
+		{22DC23CA-C7F7-4C5E-A7A1-BABA87789386}.Debug|x86.ActiveCfg = Debug|Win32
+		{22DC23CA-C7F7-4C5E-A7A1-BABA87789386}.Debug|x86.Build.0 = Debug|Win32
+		{22DC23CA-C7F7-4C5E-A7A1-BABA87789386}.Release|Any CPU.ActiveCfg = Release|Win32
+		{22DC23CA-C7F7-4C5E-A7A1-BABA87789386}.Release|ARM.ActiveCfg = Release|ARM
+		{22DC23CA-C7F7-4C5E-A7A1-BABA87789386}.Release|ARM.Build.0 = Release|ARM
+		{22DC23CA-C7F7-4C5E-A7A1-BABA87789386}.Release|x86.ActiveCfg = Release|Win32
+		{22DC23CA-C7F7-4C5E-A7A1-BABA87789386}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -2704,5 +2724,8 @@ Global
 		{59537C2B-0319-49A8-9E2E-EEA635EEE515} = {6950E151-2219-4A37-9137-0AEAE08428E4}
 		{417B0D00-F90E-47BB-9085-BE7E412C9DA8} = {7B338049-F463-44B0-B7BD-F8EA16750085}
 		{B2C6186E-B340-49D8-888E-76ED83752E43} = {7B338049-F463-44B0-B7BD-F8EA16750085}
+		{C881C664-A5BA-455A-AC87-388DC1B69102} = {E1BA5F74-6863-437D-9AF5-72666F6D25B5}
+		{D18BADCF-1870-4DF3-85FD-1498E9605FB5} = {C881C664-A5BA-455A-AC87-388DC1B69102}
+		{22DC23CA-C7F7-4C5E-A7A1-BABA87789386} = {D18BADCF-1870-4DF3-85FD-1498E9605FB5}
 	EndGlobalSection
 EndGlobal

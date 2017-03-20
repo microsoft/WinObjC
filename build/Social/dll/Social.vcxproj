@@ -28,6 +28,15 @@
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\UIKit\dll\UIKit.vcxproj">
       <Project>{8e79930b-7ef6-4a4e-b46c-efc0a49c55d9}</Project>
     </ProjectReference>
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\Security\dll\Security.vcxproj">
+      <Project>{1B60665D-5A2D-4F96-8D52-06B5E886F29F}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
+      <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
+    </ProjectReference>
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\Social.Xaml\dll\Social.Xaml.vcxproj">
+      <Project>{22dc23ca-c7f7-4c5e-a7a1-baba87789386}</Project>
+    </ProjectReference>
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\lib\SocialLib.vcxproj">
       <Project>{96908fe1-aea3-447e-ba88-ad6b017b6858}</Project>
     </ProjectReference>

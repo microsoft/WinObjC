@@ -1,0 +1,20 @@
+<ContentDialog
+    x:Class="Social.Xaml.ShareSheet"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Social.Xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="Facebook"
+    PrimaryButtonText="Post"
+    SecondaryButtonText="Cancel"
+    PrimaryButtonClick="ShareSheet_Post"
+    SecondaryButtonClick="ShareSheet_Cancel">
+
+    <StackPanel>
+        <TextBlock Text="User Name" />
+        <TextBox PlaceholderText="Say something..." x:Name="Message" />
+        <Image Height="100" />
+    </StackPanel>
+</ContentDialog>
