@@ -95,6 +95,9 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\NSLayoutConstraintTests.mm">
       <Filter>Tests</Filter>
     </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\NSOperationQueueTests.mm">
+      <Filter>Tests</Filter>
+    </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\FileActivationTests.mm">
       <Filter>Tests</Filter>
     </ClangCompile>

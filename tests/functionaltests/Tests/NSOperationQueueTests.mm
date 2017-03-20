@@ -14,9 +14,28 @@
 //
 //******************************************************************************
 
-#import <Foundation/NSOperation.h>
+#import <TestFramework.h>
+#import <Foundation/Foundation.h>
+#import "UIViewInternal.h"
 
-@interface NSOperation ()
-@property (nonatomic, assign, getter=_completionQueue, setter=_setCompletionQueue:) dispatch_queue_t _completionQueue;
-- (BOOL)_markInQueue;
-@end
+class NSOperationQueueTests {
+public:
+    BEGIN_TEST_CLASS(NSOperationQueueTests)
+    END_TEST_CLASS()
+
+    TEST_CLASS_SETUP(NSOperationQueueTestsClassSetup) {
+        return FunctionalTestSetupUIApplication();
+    }
+
+    TEST_CLASS_CLEANUP(NSOperationQueueTestsClassCleanup) {
+        return FunctionalTestCleanupUIApplication();
+    }
+
+    TEST_METHOD(MainQueue_CurrentQueue) {
+        // This test is to verify the currentQueue is mainQueue on the mainThread
+        RunSynchronouslyOnMainThread(^{
+            ASSERT_TRUE([NSThread isMainThread]);
+            ASSERT_OBJCEQ([NSOperationQueue mainQueue], [NSOperationQueue currentQueue]);
+        });
+    }
+};
