@@ -2,6 +2,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 15.0.0.0
+=======
+VisualStudioVersion = 15.0.26228.4
+MinimumVisualStudioVersion = 10.0.40219.1
+>>>>>>> ce6bafbee... Add rudimentary Social kit share view controller
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Starboard", "Starboard", "{ADFDC5D9-3048-4E53-A9B7-41731D7AD8CF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Foundation", "Foundation", "{C6DF6B73-CBD1-463E-B69D-2F4B283E69E4}"
