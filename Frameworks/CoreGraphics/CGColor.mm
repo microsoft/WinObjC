@@ -164,10 +164,10 @@ const CGFloat* CGColorGetComponents(CGColorRef color) {
 
 /**
  @Status Caveat
- @Notes Not all colors have 4 components, but all of the ones we currently support do!
+ @Notes Limited support for colorspace
 */
 size_t CGColorGetNumberOfComponents(CGColorRef color) {
-    return 4;
+    return CGColorSpaceGetNumberOfComponents(CGColorGetColorSpace(color)) + 1;
 }
 
 /**
