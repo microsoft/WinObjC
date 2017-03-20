@@ -309,7 +309,7 @@ static char _NSOperationQueue_IsReadyContext;
  @Status Interoperable
 */
 + (NSOperationQueue*)currentQueue {
-    if ([[NSThread currentThread] isMainThread]) {
+    if ([NSThread isMainThread]) {
         return [[self class] mainQueue];
     }
 

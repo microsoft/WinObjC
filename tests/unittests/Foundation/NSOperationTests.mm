@@ -763,12 +763,6 @@ TEST(NSOperation, MainQueue) {
 }
 
 TEST(NSOperation, CurrentQueue) {
-// TODO #2242: WinObjC's implementation of NSThread does not consider this context the main thread - this is a bug
-#if !WINOBJC
-    // Check that the current queue on the main thread is the main queue
-    EXPECT_OBJCEQ([NSOperationQueue mainQueue], [NSOperationQueue currentQueue]);
-#endif
-
     // Check that the current queue is correct at each stage
     __block NSOperationQueue* currentQueue;
     __block NSOperationQueue* queue = [[NSOperationQueue new] autorelease];
