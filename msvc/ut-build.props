@@ -15,6 +15,7 @@
   </PropertyGroup>
   
   <PropertyGroup Label="Globals">
+    <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
     <TargetFramework>uap10.0</TargetFramework>
   </PropertyGroup>
 
