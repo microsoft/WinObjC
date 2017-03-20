@@ -235,8 +235,7 @@
     <PackageReference Include="WinObjC.Language" Version="*" />
     <PackageReference Include="WinObjC.Logging" Version="*" />
   </ItemGroup>
+  <Import Project="$(MSBuildThisFileDirectory)\..\..\..\..\..\common\winobjc.packagereference.override.targets" Condition="Exists('$(MSBuildThisFileDirectory)\..\..\..\..\..\common\winobjc.packagereference.override.targets')"/>
   <!-- End NuGet Section -->
-  
-  <Import Project="$(MSBuildThisFileDirectory)\..\..\..\..\common\winobjc.packagereference.override.targets" Condition="Exists('$(MSBuildThisFileDirectory)\..\..\..\..\common\winobjc.packagereference.override.targets')"/>
   
 </Project>
