@@ -228,7 +228,7 @@ TEST(NSArray, Description) {
     NSArray* testArray = @[ @1, @2, @3 ];
     EXPECT_OBJCEQ(@"(\n    1,\n    2,\n    3\n)", [testArray description]);
 
-    NSArray* testArray2 = [[NSArray new] autorelease];
+    NSArray* testArray2 = [NSArray array];
     EXPECT_OBJCEQ(@"(\n)", [testArray2 description]);
 
     NSArray* testArray3 = @[ @1 ];
@@ -255,6 +255,119 @@ TEST(NSArray, Description) {
                             "    )\n"
                             ")";
     EXPECT_OBJCEQ(testValue4, [testArray4 description]);
+}
+
+@interface NSArrayDescriptionTest : NSObject
++ (NSArrayDescriptionTest*)test;
+- (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level;
+- (NSString*)fakeDescriptionWithLocale:(id)locale indent:(NSUInteger)level;
+- (NSString*)descriptionWithLocale:(id)locale;
+- (NSString*)fakeDescriptionWithLocale:(id)locale;
+- (NSString*)description;
+@end
+
+@implementation NSArrayDescriptionTest
++ (NSArrayDescriptionTest*)test {
+    return [[NSArrayDescriptionTest new] autorelease];
+}
+
+- (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level {
+    if (locale) {
+        if (level > 1) {
+            return @"Both";
+        }
+
+        return @"JustLocale";
+    } else {
+        if (level > 1) {
+            return @"JustLevel";
+        }
+
+        return @"Neither";
+    }
+}
+- (NSString*)fakeDescriptionWithLocale:(id)locale indent:(NSUInteger)level {
+    return nil;
+}
+
+- (NSString*)descriptionWithLocale:(id)locale {
+    if (locale) {
+        return @"Locale";
+    }
+
+    return @"NoLocale";
+}
+
+- (NSString*)fakeDescriptionWithLocale:(id)locale {
+    return nil;
+}
+
+- (NSString*)description {
+    return @"Description";
+}
+@end
+
+// Unfortunately despite what documentation suggests [NSArray descriptionWithLocale:] and [NSArray descriptionWithLocale:indent:]
+// do not actually call descriptionWithLocale:indent: and descriptionWithLocale: when available (and does not follow the ordering
+// specified to check for availability) so we are opting to implement this correctly and not test on the reference platform
+OSX_DISABLED_TEST(NSArray, DescriptionWithLocale) {
+    NSArray* testArray = @[ @"HI", [NSArrayDescriptionTest test] ];
+
+    // Should default to descriptionWithLocale:indent:
+    EXPECT_OBJCEQ(@"(\n    HI,\n    JustLocale\n)", [testArray descriptionWithLocale:[NSLocale currentLocale]]);
+    EXPECT_OBJCEQ(@"(\n    HI,\n    Neither\n)", [testArray descriptionWithLocale:nil]);
+
+    Method originalDescWithLocaleIndent = class_getInstanceMethod([NSArrayDescriptionTest class], @selector(descriptionWithLocale:indent:));
+    Method fakeDescWithLocaleIndent = class_getInstanceMethod([NSArrayDescriptionTest class], @selector(fakeDescriptionWithLocale:indent:));
+    method_exchangeImplementations(originalDescWithLocaleIndent, fakeDescWithLocaleIndent);
+
+    // Should that fail then to descriptionWithLocale:
+    EXPECT_OBJCEQ(@"(\n    HI,\n    Locale\n)", [testArray descriptionWithLocale:[NSLocale currentLocale]]);
+    EXPECT_OBJCEQ(@"(\n    HI,\n    NoLocale\n)", [testArray descriptionWithLocale:nil]);
+
+    Method originalDescWithLocale = class_getInstanceMethod([NSArrayDescriptionTest class], @selector(descriptionWithLocale:));
+    Method fakeDescWithLocale = class_getInstanceMethod([NSArrayDescriptionTest class], @selector(fakeDescriptionWithLocale:));
+    method_exchangeImplementations(originalDescWithLocale, fakeDescWithLocale);
+
+    // Should that fail then to description
+    EXPECT_OBJCEQ(@"(\n    HI,\n    Description\n)", [testArray descriptionWithLocale:[NSLocale currentLocale]]);
+    EXPECT_OBJCEQ(@"(\n    HI,\n    Description\n)", [testArray descriptionWithLocale:nil]);
+
+    method_exchangeImplementations(originalDescWithLocaleIndent, fakeDescWithLocaleIndent);
+    method_exchangeImplementations(originalDescWithLocale, fakeDescWithLocale);
+}
+
+OSX_DISABLED_TEST(NSArray, DescriptionWithLocaleIndent) {
+    NSArray* testArray = @[ @"HI", [NSArrayDescriptionTest test] ];
+
+    // Should default to descriptionWithLocale:indent:
+    EXPECT_OBJCEQ(@"    (\n        HI,\n        Both\n    )", [testArray descriptionWithLocale:[NSLocale currentLocale] indent:1]);
+    EXPECT_OBJCEQ(@"(\n    HI,\n    JustLocale\n)", [testArray descriptionWithLocale:[NSLocale currentLocale] indent:0]);
+    EXPECT_OBJCEQ(@"    (\n        HI,\n        JustLevel\n    )", [testArray descriptionWithLocale:nil indent:1]);
+    EXPECT_OBJCEQ(@"(\n    HI,\n    Neither\n)", [testArray descriptionWithLocale:nil indent:0]);
+
+    Method originalDescWithLocaleIndent = class_getInstanceMethod([NSArrayDescriptionTest class], @selector(descriptionWithLocale:indent:));
+    Method fakeDescWithLocaleIndent = class_getInstanceMethod([NSArrayDescriptionTest class], @selector(fakeDescriptionWithLocale:indent:));
+    method_exchangeImplementations(originalDescWithLocaleIndent, fakeDescWithLocaleIndent);
+
+    // Should that fail then to descriptionWithLocale:
+    EXPECT_OBJCEQ(@"(\n    HI,\n    Locale\n)", [testArray descriptionWithLocale:[NSLocale currentLocale] indent:0]);
+    EXPECT_OBJCEQ(@"    (\n        HI,\n        Locale\n    )", [testArray descriptionWithLocale:[NSLocale currentLocale] indent:1]);
+    EXPECT_OBJCEQ(@"(\n    HI,\n    NoLocale\n)", [testArray descriptionWithLocale:nil indent:0]);
+    EXPECT_OBJCEQ(@"    (\n        HI,\n        NoLocale\n    )", [testArray descriptionWithLocale:nil indent:1]);
+
+    Method originalDescWithLocale = class_getInstanceMethod([NSArrayDescriptionTest class], @selector(descriptionWithLocale:));
+    Method fakeDescWithLocale = class_getInstanceMethod([NSArrayDescriptionTest class], @selector(fakeDescriptionWithLocale:));
+    method_exchangeImplementations(originalDescWithLocale, fakeDescWithLocale);
+
+    // Should that fail then to description
+    EXPECT_OBJCEQ(@"(\n    HI,\n    Description\n)", [testArray descriptionWithLocale:[NSLocale currentLocale] indent:0]);
+    EXPECT_OBJCEQ(@"    (\n        HI,\n        Description\n    )", [testArray descriptionWithLocale:[NSLocale currentLocale] indent:1]);
+    EXPECT_OBJCEQ(@"(\n    HI,\n    Description\n)", [testArray descriptionWithLocale:nil indent:0]);
+    EXPECT_OBJCEQ(@"    (\n        HI,\n        Description\n    )", [testArray descriptionWithLocale:nil indent:1]);
+
+    method_exchangeImplementations(originalDescWithLocaleIndent, fakeDescWithLocaleIndent);
+    method_exchangeImplementations(originalDescWithLocale, fakeDescWithLocale);
 }
 
 TEST(NSArray, Autorelease) {

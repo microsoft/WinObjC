@@ -107,8 +107,8 @@ FOUNDATION_EXPORT_CLASS
 - (NSArray<ObjectType>*)sortedArrayWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr;
 - (NSString*)componentsJoinedByString:(NSString*)separator;
 @property (readonly, copy) NSString* description;
-- (NSString*)descriptionWithLocale:(id)locale STUB_METHOD;
-- (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level STUB_METHOD;
+- (NSString*)descriptionWithLocale:(id)locale;
+- (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level;
 - (BOOL)writeToFile:(NSString*)path atomically:(BOOL)flag;
 - (BOOL)writeToURL:(NSURL*)aURL atomically:(BOOL)flag;
 - (NSArray<NSString*>*)pathsMatchingExtensions:(NSArray<NSString*>*)filterTypes;
