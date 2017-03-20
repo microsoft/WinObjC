@@ -59,4 +59,5 @@
   <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets')" />
   <Import Project="WinObjC.Frameworks.ThirdParty.Packaging.targets" />
   <Import Project="$(SolutionDir)\..\common\winobjc.nuproj.common.targets" Condition="Exists('$(SolutionDir)\..\common\winobjc.nuproj.common.targets')" />
+  <Import Project="$(SolutionDir)\..\common\winobjc.packagereference.override.targets" Condition="Exists('$(SolutionDir)\..\common\winobjc.packagereference.override.targets')"/>
 </Project>

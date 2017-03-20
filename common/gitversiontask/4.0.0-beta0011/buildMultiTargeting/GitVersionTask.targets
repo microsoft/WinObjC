@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <GitVersion_Task_targets_Imported>True</GitVersion_Task_targets_Imported>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">$(MSBuildProjectDirectory)\..\</SolutionDir>
+    <GitVersionPath Condition="'$(GitVersionPath)' == '' And '$(GitVersionUseSolutionDir)' == 'true'">$(SolutionDir)</GitVersionPath>
+    <GitVersionPath Condition="'$(GitVersionPath)' == ''">$(MSBuildProjectDirectory)</GitVersionPath>
+    <GitVersionCustomizeTargetFile Condition="'$(GitVersionCustomizeTargetFile)' == '' And Exists('$(MSBuildProjectDirectory)\GitVersionTask.targets')">$(SolutionDir)\GitVersionTask.targets</GitVersionCustomizeTargetFile>
+    <GitVersionCustomizeTargetFile Condition="'$(GitVersionCustomizeTargetFile)' == '' And '$(SolutionDir)' != '' And Exists('$(SolutionDir)\GitVersionTask.targets')">$(SolutionDir)\GitVersionTask.targets</GitVersionCustomizeTargetFile>
+    <GitVersion_NoFetchEnabled Condition="$(GitVersion_NoFetchEnabled) == ''">false</GitVersion_NoFetchEnabled>
+
+    <!-- Property that enables WriteVersionInfoToBuildLog -->
+    <WriteVersionInfoToBuildLog Condition=" '$(WriteVersionInfoToBuildLog)' == '' ">true</WriteVersionInfoToBuildLog>
+
+    <!-- Property that enables UpdateAssemblyInfo. Default to off for SDK builds -->
+    <UpdateAssemblyInfo Condition=" '$(UpdateAssemblyInfo)' == '' and '$(TargetFramework)' != '' ">false</UpdateAssemblyInfo>
+    <UpdateAssemblyInfo Condition=" '$(UpdateAssemblyInfo)' == '' ">true</UpdateAssemblyInfo>
+
+    <GetVersion Condition=" '$(GetVersion)' == '' ">true</GetVersion>
+       
+    <!-- Property that enables setting of Version -->
+    <UpdateVersionProperties Condition=" '$(UpdateVersionProperties)' == '' ">true</UpdateVersionProperties>
+    <UseFullSemVerForNuGet Condition=" '$(UseFullSemVerForNuGet)' == '' ">false</UseFullSemVerForNuGet>
+
+    <GitVersionTaskLibrary>$(MSBuildThisFileDirectory)..\build\</GitVersionTaskLibrary>
+  </PropertyGroup>
+
+  <UsingTask
+      TaskName="GitVersionTask.UpdateAssemblyInfo"
+      AssemblyFile="$(GitVersionTaskLibrary)GitVersionTask.dll" />
+  <UsingTask
+    TaskName="GitVersionTask.GetVersion"
+    AssemblyFile="$(GitVersionTaskLibrary)GitVersionTask.dll"  />
+  <UsingTask
+      TaskName="GitVersionTask.WriteVersionInfoToBuildLog"
+      AssemblyFile="$(GitVersionTaskLibrary)GitVersionTask.dll" />
+
+  <Import Project="$(GitVersionCustomizeTargetFile)" Condition="'$(GitVersionCustomizeTargetFile)' != '' and Exists($(GitVersionCustomizeTargetFile))" />
+
+  <Target Name="WriteVersionInfoToBuildLog" BeforeTargets="DispatchToInnerBuilds;GenerateNuspec" Condition="$(WriteVersionInfoToBuildLog) == 'true'">
+    <WriteVersionInfoToBuildLog SolutionDirectory="$(GitVersionPath)" NoFetch="$(GitVersion_NoFetchEnabled)"/>
+  </Target>
+  
+  <Target Name="GetVersion" BeforeTargets="DispatchToInnerBuilds;GenerateNuspec" Condition="$(GetVersion) == 'true'">
+
+    <GetVersion SolutionDirectory="$(GitVersionPath)" NoFetch="$(GitVersion_NoFetchEnabled)">
+      <Output TaskParameter="Major" PropertyName="GitVersion_Major" />
+      <Output TaskParameter="Minor" PropertyName="GitVersion_Minor" />
+      <Output TaskParameter="Patch" PropertyName="GitVersion_Patch" />
+      <Output TaskParameter="BuildMetaData" PropertyName="GitVersion_BuildMetaData" />
+      <Output TaskParameter="BuildMetaDataPadded" PropertyName="GitVersion_BuildMetaDataPadded" />
+      <Output TaskParameter="FullBuildMetaData" PropertyName="GitVersion_FullBuildMetaData" />
+      <Output TaskParameter="BranchName" PropertyName="GitVersion_BranchName" />
+      <Output TaskParameter="Sha" PropertyName="GitVersion_Sha" />
+      <Output TaskParameter="MajorMinorPatch" PropertyName="GitVersion_MajorMinorPatch" />
+      <Output TaskParameter="SemVer" PropertyName="GitVersion_SemVer" />
+      <Output TaskParameter="LegacySemVer" PropertyName="GitVersion_LegacySemVer" />
+      <Output TaskParameter="LegacySemVerPadded" PropertyName="GitVersion_LegacySemVerPadded" />
+      <Output TaskParameter="FullSemVer" PropertyName="GitVersion_FullSemVer" />
+      <Output TaskParameter="AssemblySemVer" PropertyName="GitVersion_AssemblySemVer" />
+      <Output TaskParameter="NuGetVersion" PropertyName="GitVersion_NuGetVersion" />
+      <Output TaskParameter="NuGetPreReleaseTag" PropertyName="GitVersion_NuGetPreReleaseTag" />
+      <Output TaskParameter="PreReleaseTag" PropertyName="GitVersion_PreReleaseTag" />
+      <Output TaskParameter="PreReleaseTagWithDash" PropertyName="GitVersion_PreReleaseTagWithDash" />
+      <Output TaskParameter="PreReleaseLabel" PropertyName="GitVersion_PreReleaseLabel" />
+      <Output TaskParameter="PreReleaseNumber" PropertyName="GitVersion_PreReleaseNumber" />
+      <Output TaskParameter="InformationalVersion" PropertyName="GitVersion_InformationalVersion" />
+      <Output TaskParameter="CommitDate" PropertyName="GitVersion_CommitDate" />
+      <Output TaskParameter="CommitsSinceVersionSource" PropertyName="GitVersion_CommitsSinceVersionSource" />
+      <Output TaskParameter="CommitsSinceVersionSourcePadded" PropertyName="GitVersion_CommitsSinceVersionSourcePadded" />
+    </GetVersion>
+    
+    <PropertyGroup Condition=" '$(UpdateVersionProperties)' == 'true' ">
+      <Version>$(GitVersion_FullSemVer)</Version>
+      <VersionPrefix>$(GitVersion_MajorMinorPatch)</VersionPrefix>
+      <VersionSuffix Condition=" '$(UseFullSemVerForNuGet)' == 'false' ">$(GitVersion_NuGetPreReleaseTag)</VersionSuffix>
+      <VersionSuffix Condition=" '$(UseFullSemVerForNuGet)' == 'true' ">$(GitVersion_PreReleaseTag)</VersionSuffix>
+      <PackageVersion Condition=" '$(UseFullSemVerForNuGet)' == 'false' ">$(GitVersion_NuGetVersion)</PackageVersion>
+      <PackageVersion Condition=" '$(UseFullSemVerForNuGet)' == 'true' ">$(GitVersion_FullSemVer)</PackageVersion>
+      <InformationalVersion Condition=" '$(InformationalVersion)' == '' ">$(GitVersion_InformationalVersion)</InformationalVersion>
+      <AssemblyVersion Condition=" '$(AssemblyVersion)' == '' ">$(GitVersion_AssemblySemVer)</AssemblyVersion>
+      <FileVersion Condition=" '$(FileVersion)' == '' ">$(GitVersion_MajorMinorPatch).$(GitVersion_CommitsSinceVersionSource)</FileVersion>
+    </PropertyGroup>
+
+  </Target>
+</Project>
