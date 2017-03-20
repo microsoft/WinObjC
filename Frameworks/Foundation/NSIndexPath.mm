@@ -18,6 +18,17 @@
 #import "StubReturn.h"
 #import "Foundation/NSIndexPath.h"
 
+#import <vector>
+#import <numeric>
+
+static NSString* c_archiveKey = @"_NS.IP";
+
+@interface NSIndexPath () {
+    std::vector<NSUInteger> _indexes;
+}
+
+@end
+
 @implementation NSIndexPath
 
 /**
@@ -38,17 +49,23 @@
  @Status Interoperable
 */
 + (NSIndexPath*)indexPathForRow:(NSInteger)row inSection:(NSInteger)section {
-    unsigned indexes[] = { section, row };
-
+    NSUInteger indexes[] = { section, row };
     return [[[self alloc] initWithIndexes:indexes length:2] autorelease];
 }
 
 /**
  @Status Interoperable
 */
-+ (NSIndexPath*)indexPathForItem:(NSInteger)row inSection:(NSInteger)section {
-    NSUInteger indexes[] = { section, row };
++ (NSIndexPath*)indexPathForItem:(NSInteger)item inSection:(NSInteger)section {
+    NSUInteger indexes[] = { section, item };
     return [[[self alloc] initWithIndexes:indexes length:2] autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)init {
+    return [self initWithIndexes:nullptr length:0];
 }
 
 /**
@@ -62,16 +79,13 @@
  @Status Interoperable
 */
 - (instancetype)initWithIndexes:(const NSUInteger*)indexes length:(NSUInteger)length {
-    _length = length;
-    _indexes = (unsigned*)IwMalloc(length * sizeof(unsigned));
-    if (_indexes == nil) {
-        [self release];
-        return nil;
+    if (self = [super init]) {
+        if (length != 0 && indexes != nullptr) {
+            _indexes.resize(length);
+            memcpy(_indexes.data(), indexes, length * sizeof(NSUInteger));
+        }
     }
 
-    for (unsigned i = 0; i < length; i++) {
-        _indexes[i] = indexes[i];
-    }
     return self;
 }
 
@@ -81,7 +95,7 @@
 - (BOOL)isEqual:(id)other {
     if ([other isKindOfClass:[NSIndexPath class]]) {
         NSIndexPath* otherPath = other;
-        return _length == otherPath->_length && (memcmp(_indexes, otherPath->_indexes, _length * sizeof(DWORD)) == 0);
+        return _indexes == otherPath->_indexes;
     }
 
     return FALSE;
@@ -90,114 +104,90 @@
 /**
  @Status Interoperable
 */
-- (void)dealloc {
-    if (_indexes) {
-        IwFree(_indexes);
-    }
-    [super dealloc];
-}
-
-/**
- @Status Caveat
- @Notes position must be valid
-*/
-- (unsigned)indexAtPosition:(unsigned)position {
-    if (position >= _length) {
-        assert(0);
-        //[NSException raise:NSInvalidArgumentException format:@"Unable to remove index from zero length path."];
-        return 0;
-    }
-
-    return _indexes[position];
+- (NSUInteger)indexAtPosition:(NSUInteger)position {
+    return position < _indexes.size() ? _indexes[position] : NSNotFound;
 }
 
 /**
  @Status Interoperable
 */
 - (void)getIndexes:(NSUInteger*)indexes {
-    for (unsigned int i = 0; i < _length; i++) {
-        indexes[i] = _indexes[i];
-    }
+    std::copy(_indexes.cbegin(), _indexes.cend(), indexes);
 }
 
 /**
  @Status Interoperable
 */
 - (id)copyWithZone:(NSZone*)zone {
-    return [[[self class] alloc] initWithIndexes:_indexes length:_length];
+    return [[[self class] alloc] initWithIndexes:_indexes.data() length:_indexes.size()];
 }
 
 /**
  @Status Interoperable
 */
 - (NSIndexPath*)indexPathByAddingIndex:(NSUInteger)newIndex {
-    id ret = [[self class] alloc];
+    std::vector<NSUInteger> indexes = _indexes;
+    indexes.emplace_back(newIndex);
+    return [NSIndexPath indexPathWithIndexes:indexes.data() length:indexes.size()];
+}
 
-    NSUInteger* indexCopy = (NSUInteger*)IwMalloc((_length + 1) * sizeof(DWORD));
-    memcpy(indexCopy, _indexes, _length * sizeof(DWORD));
-    indexCopy[_length] = newIndex;
-
-    [ret initWithIndexes:indexCopy length:_length + 1];
-
-    IwFree(indexCopy);
-
-    return [ret autorelease];
+/**
+ @Status Interoperable
+*/
+- (NSIndexPath*)indexPathByRemovingLastIndex {
+    return [NSIndexPath indexPathWithIndexes:_indexes.data() length:(_indexes.empty() ? 0 : _indexes.size() - 1)];
 }
 
 /**
  @Status Interoperable
 */
 - (NSUInteger)length {
-    return _length;
+    return _indexes.size();
 }
 
 /**
  @Status Interoperable
 */
 - (NSUInteger)hash {
-    unsigned ret = 0;
-
-    for (unsigned int i = 0; i < _length; i++) {
-        ret += _indexes[i];
-    }
-
-    return ret;
+    // Allegedly the behavior of the reference platform, does not seem to be so for test machines but it will suffice
+    return std::accumulate(_indexes.cbegin(), _indexes.cend(), 0);
 }
 
 /**
  @Status Interoperable
 */
-- (int)compare:(id)otherObj {
-    int len1 = [self length];
-    int len2 = [otherObj length];
+- (NSComparisonResult)compare:(id)otherObj {
+    NSUInteger len1 = [self length];
+    NSUInteger len2 = [otherObj length];
 
-    for (int i = 0; i < len1 && i < len2; i++) {
-        int val1 = [self indexAtPosition:i];
-        int val2 = [otherObj indexAtPosition:i];
+    for (NSUInteger i = 0; i < len1 && i < len2; i++) {
+        NSUInteger val1 = [self indexAtPosition:i];
+        NSUInteger val2 = [otherObj indexAtPosition:i];
 
         if (val1 < val2) {
-            return -1;
+            return NSOrderedAscending;
         }
+
         if (val1 > val2) {
-            return 1;
+            return NSOrderedDescending;
         }
     }
 
     if (len1 < len2) {
-        return -1;
+        return NSOrderedAscending;
     }
     if (len1 > len2) {
-        return 1;
+        return NSOrderedDescending;
     }
 
-    return 0;
+    return NSOrderedSame;
 }
 
 /**
  @Status Interoperable
 */
 - (NSInteger)item {
-    return [self row];
+    return [self indexAtPosition:1];
 }
 
 /**
@@ -215,54 +205,51 @@
 }
 
 /**
- @Status Stub
-*/
-- (NSIndexPath*)indexPathByRemovingLastIndex {
-    UNIMPLEMENTED();
-    return self;
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (instancetype)init {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)getIndexes:(NSUInteger*)indexes range:(NSRange)positionRange {
-    UNIMPLEMENTED();
+    if (positionRange.location + positionRange.length > [self length]) {
+        [NSException raise:NSRangeException
+                    format:@"-[%s %s]: range {%lu, %lu} beyond bounds (%lu)",
+                           class_getName([self class]),
+                           sel_getName(_cmd),
+                           positionRange.location,
+                           positionRange.length,
+                           [self length]];
+    }
+
+    std::copy(_indexes.cbegin() + positionRange.location, _indexes.cbegin() + positionRange.location + positionRange.length, indexes);
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 + (BOOL)supportsSecureCoding {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return YES;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (id)initWithCoder:(NSCoder*)decoder {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSUInteger length = 0;
+    const NSUInteger* indexes = [decoder isKindOfClass:[NSKeyedUnarchiver class]] ?
+                                    reinterpret_cast<const NSUInteger*>([decoder decodeBytesForKey:c_archiveKey returnedLength:&length]) :
+                                    reinterpret_cast<const NSUInteger*>([decoder decodeBytesWithReturnedLength:&length]);
+    return [self initWithIndexes:indexes length:(length / sizeof(NSUInteger))];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
-    UNIMPLEMENTED();
+    if ([self length] > 0L) {
+        if ([coder isKindOfClass:[NSKeyedArchiver class]]) {
+            [coder encodeBytes:reinterpret_cast<uint8_t*>(_indexes.data()) length:_indexes.size() * sizeof(NSUInteger) forKey:c_archiveKey];
+        } else {
+            [coder encodeBytes:reinterpret_cast<uint8_t*>(_indexes.data()) length:_indexes.size() * sizeof(NSUInteger)];
+        }
+    }
 }
 
 @end
