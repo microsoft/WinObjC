@@ -40,6 +40,9 @@
     <ProjectReference Include="..\..\..\CoreImage\dll\CoreImage.vcxproj">
       <Project>{3EFCDFF3-6013-448F-8611-534D0F819D6B}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\UIKit\dll\UIKit.vcxproj">
+      <Project>{43D2CFE5-0711-4E61-8F5C-F8D3B65D3A49}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{DA6C01EA-A22E-4807-BACE-63C5C6ABAE77}</ProjectGuid>
