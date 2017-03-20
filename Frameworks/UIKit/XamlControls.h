@@ -100,8 +100,6 @@ void HookButtonPointerEvents(WXCButton* button,
                              WUXIPointerEventHandler pointerCanceledHook,
                              WUXIPointerEventHandler pointerCaptureLostHook);
 
-void HookLayoutEvent(WXCButton* button, WUXIPointerEventHandler autoLayoutHook);
-
 ////////////////////////////////////////////////////////////////////////////////////
 // ContentDialog
 ////////////////////////////////////////////////////////////////////////////////////

@@ -46,10 +46,6 @@ void HookButtonPointerEvents(WXCButton* button,
                                 pointerCaptureLostHook ? Make<WUXIPointerEventHandler_shim>(pointerCaptureLostHook) : nullptr);
 }
 
-void HookLayoutEvent(WXCButton* button, WUXIPointerEventHandler layoutHook) {
-    XamlHookLayoutEvent([button comObj], layoutHook ? Make<WUXIPointerEventHandler_shim>(layoutHook) : nullptr);
-}
-
 ////////////////////////////////////////////////////////////////////////////////////
 // ContentDialog
 ////////////////////////////////////////////////////////////////////////////////////
