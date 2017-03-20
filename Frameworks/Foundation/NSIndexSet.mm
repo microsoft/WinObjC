@@ -34,6 +34,7 @@
 @implementation NSIndexSet
 
 static NSString* c_archiveKey = @"_NS.IS";
+static constexpr NSRange sc_unlimitedRange{ 0, LONG_MAX };
 
 /**
  @Status Interoperable
@@ -207,47 +208,10 @@ static NSString* c_archiveKey = @"_NS.IS";
 }
 
 /**
- @Status Caveat
- @Notes NSEnumerationReverse not implemented.
+ @Status Interoperable
 */
 - (void)enumerateIndexesWithOptions:(NSEnumerationOptions)options usingBlock:(void (^)(NSUInteger, BOOL*))block {
-    dispatch_queue_t queue;
-    dispatch_group_t group;
-
-    // Initialize dispatch queue for concurrent enumeration
-    if (options & NSEnumerationConcurrent) {
-        queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-        group = dispatch_group_create();
-    }
-
-    __block BOOL stop = NO;
-    BOOL reverse = options & NSEnumerationReverse;
-    unsigned long count = [static_cast<NSMutableIndexSet*>(self) _count];
-    unsigned long start = (reverse) ? count : 1;
-    unsigned long end = (reverse) ? 0 : count + 1;
-    long step = (reverse) ? -1 : 1;
-    for (unsigned long i = start; i != end && !stop; i += step) {
-        NSRange cur = [static_cast<NSMutableIndexSet*>(self) _itemAtIndex:(i - 1)];
-        __block unsigned long j;
-        unsigned long innerStart = (reverse) ? NSMaxRange(cur) - 1 : cur.location;
-        for (j = innerStart; NSLocationInRange(j, cur) && !stop; j += step) {
-            if (options & NSEnumerationConcurrent) {
-                dispatch_group_async(group,
-                                     queue,
-                                     ^() {
-                                         block(j, &stop);
-                                     });
-            } else {
-                block(j, &stop);
-            }
-        }
-    }
-
-    // Wait for dispatch queue to execute
-    if (options & NSEnumerationConcurrent) {
-        dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-        dispatch_release(group);
-    }
+    [self enumerateIndexesInRange:sc_unlimitedRange options:options usingBlock:block];
 }
 
 /**
@@ -350,72 +314,118 @@ static NSString* c_archiveKey = @"_NS.IS";
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (NSUInteger)indexPassingTest:(BOOL (^)(NSUInteger, BOOL*))predicate {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self indexInRange:sc_unlimitedRange options:0 passingTest:predicate];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (NSIndexSet*)indexesPassingTest:(BOOL (^)(NSUInteger, BOOL*))predicate {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self indexesInRange:sc_unlimitedRange options:0 passingTest:predicate];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
-- (NSUInteger)indexWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (NSUInteger)indexWithOptions:(NSEnumerationOptions)options passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate {
+    return [self indexInRange:sc_unlimitedRange options:options passingTest:predicate];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
-- (NSIndexSet*)indexesWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (NSIndexSet*)indexesWithOptions:(NSEnumerationOptions)options passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate {
+    return [self indexesInRange:sc_unlimitedRange options:options passingTest:predicate];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
-- (NSUInteger)indexInRange:(NSRange)range options:(NSEnumerationOptions)opts passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (NSUInteger)indexInRange:(NSRange)range options:(NSEnumerationOptions)options passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate {
+    NSIndexSet* set = [self indexesInRange:range
+                                   options:options
+                               passingTest:^BOOL(NSUInteger index, BOOL* stop) {
+                                   BOOL ret = predicate(index, stop);
+                                   if (ret == YES) {
+                                       *stop = YES;
+                                   }
+
+                                   return ret;
+                               }];
+    return [set firstIndex];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
-- (NSIndexSet*)indexesInRange:(NSRange)range options:(NSEnumerationOptions)opts passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (NSIndexSet*)indexesInRange:(NSRange)range options:(NSEnumerationOptions)options passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate {
+    __block NSMutableIndexSet* ret = [NSMutableIndexSet indexSet];
+    [self enumerateIndexesInRange:range
+                          options:options
+                       usingBlock:^(NSUInteger index, BOOL* stop) {
+                           if (predicate(index, stop)) {
+                               [ret addIndex:index];
+                           }
+                       }];
+
+    return ret;
 }
 
 /**
- @Status Stub
-*/
-- (void)enumerateRangesInRange:(NSRange)range options:(NSEnumerationOptions)opts usingBlock:(void (^)(NSRange, BOOL*))block {
-    UNIMPLEMENTED();
-}
-
-/**
- @Status Stub
+ @Status Interoperable
 */
 - (void)enumerateRangesUsingBlock:(void (^)(NSRange, BOOL*))block {
-    UNIMPLEMENTED();
+    [self enumerateRangesInRange:sc_unlimitedRange options:0 usingBlock:block];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
-- (void)enumerateRangesWithOptions:(NSEnumerationOptions)opts usingBlock:(void (^)(NSRange, BOOL*))block {
-    UNIMPLEMENTED();
+- (void)enumerateRangesWithOptions:(NSEnumerationOptions)options usingBlock:(void (^)(NSRange, BOOL*))block {
+    [self enumerateRangesInRange:sc_unlimitedRange options:options usingBlock:block];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)enumerateRangesInRange:(NSRange)range options:(NSEnumerationOptions)options usingBlock:(void (^)(NSRange, BOOL*))block {
+    dispatch_queue_t queue;
+    dispatch_group_t group;
+
+    // Initialize dispatch queue for concurrent enumeration
+    if (options & NSEnumerationConcurrent) {
+        queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        group = dispatch_group_create();
+    }
+
+    bool reverse = options & NSEnumerationReverse;
+    NSUInteger count = [static_cast<NSMutableIndexSet*>(self) _count];
+    NSRangePointer ranges = [static_cast<NSMutableIndexSet*>(self) _allRanges];
+    NSUInteger start = (reverse) ? count : 1;
+    NSUInteger end = (reverse) ? 0 : count + 1;
+    NSInteger step = (reverse) ? -1 : 1;
+    __block BOOL stop = NO;
+    for (NSUInteger i = start; i != end && !stop; i += step) {
+        NSRange intersection = NSIntersectionRange(range, ranges[i - 1]);
+        if (intersection.length != 0) {
+            if (options & NSEnumerationConcurrent) {
+                dispatch_group_async(group, queue, ^() {
+                    block(intersection, &stop);
+                });
+            } else {
+                block(intersection, &stop);
+            }
+        }
+    }
+
+    // Wait for dispatch queue to execute
+    if (options & NSEnumerationConcurrent) {
+        dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+        dispatch_release(group);
+    }
 }
 
 /**
@@ -483,18 +493,78 @@ static NSString* c_archiveKey = @"_NS.IS";
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (NSUInteger)getIndexes:(NSUInteger*)indexBuffer maxCount:(NSUInteger)bufferSize inIndexRange:(NSRangePointer)indexRange {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (indexBuffer == nullptr || bufferSize == 0) {
+        return 0;
+    }
+
+    __block NSUInteger index = 0;
+    NSRange enumerationRange = indexRange ? *indexRange : sc_unlimitedRange;
+    [self enumerateRangesInRange:enumerationRange
+                         options:0
+                      usingBlock:^(NSRange range, BOOL* stop) {
+                          NSUInteger j = range.location;
+                          for (; j < range.location + range.length && index < bufferSize; ++j, ++index) {
+                              indexBuffer[index] = j;
+                          }
+
+                          if (indexRange) {
+                              *indexRange = { j, range.location + range.length - j };
+                          }
+
+                          // Should never have case where index > bufferSize but better safe than sorry
+                          if (index >= bufferSize) {
+                              *stop = YES;
+                          }
+                      }];
+
+    return index;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
-- (void)enumerateIndexesInRange:(NSRange)range options:(NSEnumerationOptions)opts usingBlock:(void (^)(NSUInteger, BOOL*))block {
-    UNIMPLEMENTED();
+- (void)enumerateIndexesInRange:(NSRange)range options:(NSEnumerationOptions)options usingBlock:(void (^)(NSUInteger, BOOL*))block {
+    dispatch_queue_t queue;
+    dispatch_group_t group;
+
+    // Initialize dispatch queue for concurrent enumeration
+    if (options & NSEnumerationConcurrent) {
+        queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        group = dispatch_group_create();
+    }
+
+    BOOL reverse = options & NSEnumerationReverse;
+    NSUInteger count = [static_cast<NSMutableIndexSet*>(self) _count];
+    NSRangePointer ranges = [static_cast<NSMutableIndexSet*>(self) _allRanges];
+    NSUInteger start = (reverse) ? count : 1;
+    NSUInteger end = (reverse) ? 0 : count + 1;
+    NSInteger step = (reverse) ? -1 : 1;
+    __block BOOL stop = NO;
+    for (NSUInteger i = start; i != end && stop == NO; i += step) {
+        NSRange intersection = NSIntersectionRange(range, ranges[i - 1]);
+        if (intersection.length != 0) {
+            NSUInteger rangeStart = reverse ? intersection.location + intersection.length : intersection.location + 1;
+            NSUInteger rangeEnd = reverse ? intersection.location : intersection.location + intersection.length + 1;
+            for (NSUInteger j = rangeStart; j != rangeEnd && stop == NO; j += step) {
+                if (options & NSEnumerationConcurrent) {
+                    dispatch_group_async(group, queue, ^() {
+                        block(j - 1, &stop);
+                    });
+                } else {
+                    block(j - 1, &stop);
+                }
+            }
+        }
+    }
+
+    // Wait for dispatch queue to execute
+    if (options & NSEnumerationConcurrent) {
+        dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+        dispatch_release(group);
+    }
 }
 
 /**
