@@ -1,0 +1,28 @@
+﻿<Page
+    x:Class="MinAppCppCx.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MinAppCppCx"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <StackPanel>
+        <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Padding="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="50" />
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0">Slider</TextBlock>
+            <Slider Width="400" Grid.Row="0" Grid.Column="1" VerticalAlignment="Top"></Slider>
+            <TextBlock Grid.Row="1" Grid.Column="0">Button</TextBlock>
+            <Button Width="400" Grid.Row="1" Grid.Column="1" VerticalAlignment="Top">Button</Button>
+            <TextBlock Grid.Row="2" Grid.Column="0">Toggle Switch</TextBlock>
+            <ToggleSwitch Width="400" Grid.Row="2" Grid.Column="1" VerticalAlignment="Top"></ToggleSwitch>
+        </Grid>
+    </StackPanel>
+</Page>

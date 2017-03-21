@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{bc3250e1-74f3-43fe-ab82-828c1a5befb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{31e50c0f-4d99-42de-b292-c67e969b7c30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MinApp">
+      <UniqueIdentifier>{19B3DF7E-B26C-4F57-AE9B-B7C822F45C87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MinApp\Base">
+      <UniqueIdentifier>{C87DC126-EEC3-4942-A7B9-F633E194F253}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MinApp\Supporting Files">
+      <UniqueIdentifier>{6A32F719-529D-4B82-84C7-52EAA3BF6EE1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Xcode Variable Files">
+      <UniqueIdentifier>{363CA8A7-A0DC-4E2B-B3E0-6AE8E188574D}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="default.rd.xml" />
+    <AppxManifest Include="Package.appxmanifest" />
+    <None Include="MinApp_TemporaryKey.pfx" />
+    <Image Include="Assets\LockScreenLogo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SplashScreen.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square150x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\StoreLogo.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Wide310x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <AssetCatalogCompile Include="..\..\MinApp\Assets.xcassets">
+      <Filter>MinApp</Filter>
+    </AssetCatalogCompile>
+    <ClInclude Include="..\..\MinApp\AppDelegate.h">
+      <Filter>MinApp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MinApp\ViewController.h">
+      <Filter>MinApp</Filter>
+    </ClInclude>
+    <ClangCompile Include="..\..\MinApp\AppDelegate.m">
+      <Filter>MinApp</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\MinApp\ViewController.m">
+      <Filter>MinApp</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\MinApp\main.m">
+      <Filter>MinApp\Supporting Files</Filter>
+    </ClangCompile>
+    <SBInfoPlistCopy Include="..\..\MinApp\Info.plist" />
+    <StoryboardCompile Include="..\..\MinApp\Base.lproj\LaunchScreen.storyboard">
+      <Filter>MinApp\Base</Filter>
+    </StoryboardCompile>
+    <StoryboardCompile Include="..\..\MinApp\Base.lproj\Main.storyboard">
+      <Filter>MinApp\Base</Filter>
+    </StoryboardCompile>
+    <Text Include="MinApp-Debug-xcvars.txt">
+      <Filter>Xcode Variable Files</Filter>
+    </Text>
+    <Text Include="MinApp-Release-xcvars.txt">
+      <Filter>Xcode Variable Files</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
