@@ -168,7 +168,7 @@
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ItemGroup>
-    <PackageReference Include="WinObjC.Language" Version="0.2.160915-*" />
+    <PackageReference Include="WinObjC.Language" Version="*" />
     <PackageReference Include="Taef.Redist.Wlk" Version="1.0.170206001-nativeTargets" />
   </ItemGroup>
   <ImportGroup Label="ExtensionTargets">
