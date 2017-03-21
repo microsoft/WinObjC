@@ -28,7 +28,9 @@ To use the bridge you'll need:
 - **Visual Studio 2017** with Windows developer tools. Visual Studio 2017 Community is available for free [here](https://dev.windows.com/downloads).
 
   
-   <details><summary>Ensure the following individual components are selected during installation. Selecting the Universal Windows Platform development workflow should give most of the below (Click to Expand)</summary><p>
+   Ensure the following individual components are selected during installation. Selecting the Universal Windows Platform development workflow should give most of the below 
+
+   <details><summary><b>(Click to Expand)</b></summary><p>
 
   - Visual Studio Core Editor
   - Nuget Package Manager
@@ -37,7 +39,7 @@ To use the bridge you'll need:
   - Windows 10 SDK (10.0.14393.0)
   - Visual Studio C++ core features
   - VC++ 2017 v141 toolset (x86, x64)
-  - Visual C++ copmilers and libraries for ARM
+  - Visual C++ compilers and libraries for ARM
   - Visual C++ runtime for UWP
   - Windows 10 SDK (10.0.10240.0)
   - Windows 10 SDK (10.0.10586.0)
@@ -54,7 +56,7 @@ To get started with an existing Xcode Project, you will also need:
 ```
 choco upgrade winobjc-tools
 ```
-(more information about this command and its options can be found [here](https://chocolatey.org/docs/commands-upgrade))
+(more information about this command and its options can be found [here](https://chocolatey.org/docs/commands-upgrade). If you want to use develop packages add `--pre` to the command.)
 
 ## Getting Started With the Bridge
 ### Importing your Xcode Project
