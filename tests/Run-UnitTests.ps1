@@ -32,6 +32,9 @@
 .PARAMETER WTTLogPath
     Path to find WTTLog dll
 
+.PARAMETER OutputDir
+    Path to write test outptu files to.
+    
 .EXAMPLE
     Run-UnitTests.ps1 
     Run-UnitTests.ps1 -Platform ARM
@@ -58,7 +61,9 @@ param(
 
     [switch]$RedirectTAEFErrors,
 
-    [string]$WTTLogPath
+    [string]$WTTLogPath,
+
+    [string]$OutputDir
 )
 
 $args = @()
@@ -72,6 +77,7 @@ if ($WTLOutputFile) { $args += ("-WTLOutputFile", $WTLOutputFile) }
 if ($NoCopy) { $args += ("-NoCopy") }
 if ($RedirectTAEFErrors) { $args += ("-RedirectTAEFErrors") }
 if ($WTTLogPath) { $args += ("-WTTLogPath", $WTTLogPath) }
+if ($OutputDir) { $args += ("-OutputDir", $OutputDir) }
 
 $cmd = "$PSScriptRoot\Run-Tests.ps1"
 Invoke-Expression "$cmd $args"
