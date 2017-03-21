@@ -6,7 +6,7 @@
   For Use By: A NuProj that is doing the packaging of one or more projects
 -->
 
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <!-- NuGet specific properties -->
     <IsDevelopmentDependency>true</IsDevelopmentDependency>
