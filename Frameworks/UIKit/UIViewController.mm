@@ -666,12 +666,12 @@ NSMutableDictionary* _pageMappings;
     }
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-designated-initializers"
 /**
  @Status Caveat
  @Notes May not be fully implemented
 */
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wobjc-designated-initializers"
 // TODO: File bug
 - (instancetype)initWithCoder:(NSCoder*)coder {
     UIView* view = [coder decodeObjectForKey:@"UIView"];
