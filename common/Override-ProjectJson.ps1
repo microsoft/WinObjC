@@ -6,15 +6,13 @@
 param(  
     #NOTE: using Parameter(Mandatory) will hang the VSO build job since  
     #      powershell will block waiting for user input.  
-    [string] $ProjectJsonSearchPath = $(throw 'Mandatory parameter "Path" is not set.'),
+    [string] $ProjectJsonSearchPath = $(throw 'Mandatory parameter "ProjectJsonSearchPath" is not set.'),
     [string[]] $PackageOverrideSearchPaths =  @("$env:WINOBJC_SDK_ROOT\build\OutputPackages", "$env:WINOBJC_SDK_ROOT\tools\OutputPackages")
     )  
   
 write-host $MyInvocation.Line
 
 $ProjectJsons = gci $ProjectJsonSearchPath -include project.json -recurse
-
-
   
 foreach($ProjectJsonFile in $ProjectJsons)
 {  
@@ -33,9 +31,15 @@ foreach($ProjectJsonFile in $ProjectJsons)
       $newest = ($PackageOverrideSearchPaths | gci -Recurse -File -Filter *.nupkg | Where-Object { $_.Name -match $searchRegex } | Sort-Object -descending -property LastWriteTime | Select-Object -first 1)
 
       if ($newest -ne $null) {
-        # Got a local package. Use it. This script only handles local packages. No Latest daily using git tags.
+        # Got a local package. Use it. 
+        # NOTE: This script only handles local packages; It does not look at git tags to try to get the latest daily builds.
         $newVersion = $newest.Name.Replace(("$packageName" + "."), "").Replace(".nupkg", "")
-        Write-Host "Adjusting $ProjectJsonFile package $packageName to new version $newVersion"
+
+        if ($needsUpdate -ne $true) {
+          Write-Host "Adjusting $ProjectJsonFile"
+        }
+
+        Write-Host "    Changing package $packageName to new version $newVersion"
         $FileAsJson.dependencies."$($packageName)" = $newVersion
         $needsUpdate = $true
       }
