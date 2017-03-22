@@ -38,11 +38,47 @@
 
   </Target>
 
+  <!-- Inline task to check for timestamp file existence and creation-->  
+  <UsingTask  
+    TaskName="CreateTimestampFileIfNeeded"  
+    TaskFactory="CodeTaskFactory"  
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll" >  
+    <ParameterGroup>
+      <TimestampFile ParameterType="System.String" Required="true" />
+      <Timestamp ParameterType="System.String" Output="true" />  
+    </ParameterGroup>
+    <Task>
+      <Reference Include="System" />
+      <Reference Include="System.IO" />
+      <Reference Include="System.Threading" />
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.Threading" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+          var mutex = new Mutex(false, TimestampFile.Replace("\\", "."));
+          try
+          {
+            mutex.WaitOne();
+          } catch (AbandonedMutexException e)
+          {
+          }
+          if (!File.Exists(TimestampFile)) {
+              File.Create(TimestampFile);
+          }  
+
+          Timestamp = File.GetCreationTimeUtc(TimestampFile).ToString("yyyyMMddHHmmss");
+          mutex.ReleaseMutex();
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
   <PropertyGroup>
     <GetPackageVersionDependsOn>SetPackageVersion;$(GetPackageVersionDependsOn);</GetPackageVersionDependsOn>
   </PropertyGroup>
 
-  <Target Name="SetPackageVersion" DependsOnTargets="GetVersion;ResolveReferences" >
+  <Target Name="SetPackageVersion" DependsOnTargets="GetVersion" >
     <PropertyGroup>
         <PackageVersion></PackageVersion>
     </PropertyGroup>
@@ -53,8 +89,14 @@
     <Warning Condition="'$(SolutionPath)' == ''"
            Text="Cannot determine solution build time. Package version dependencies may be inconsistent as a result. Please make sure to build using .sln file." />
 
+    <CreateTimestampFileIfNeeded Condition="'$(SolutionDir)' != ''" 
+                                 TimestampFile="$(SolutionDir)$(SolutionName).timestamp">
+        <Output PropertyName="PackageTimestamp" TaskParameter="Timestamp" />  
+    </CreateTimestampFileIfNeeded>
+
+
+
     <PropertyGroup>
-      <PackageTimestamp Condition="'$(PackageTimestamp)' == '' And Exists('$(SolutionDir)$(SolutionName).timestamp')">$([System.IO.File]::GetLastWriteTime($(SolutionDir)$(SolutionName).timestamp).ToUniversalTime().ToString(yyyyMMddHHmmss))</PackageTimestamp>      
       <PackageTimestamp Condition="'$(PackageTimestamp)' == ''">$([System.DateTime]::Now.ToString(yyyyMMddHHmmss))</PackageTimestamp>
       
       <PackageVersion_Major>$(GitVersion_Major)</PackageVersion_Major>
@@ -79,12 +121,4 @@
       <PackageVersion Condition="'$(PackageVersionOverride)' != ''">$(PackageVersionOverride)</PackageVersion>
     </PropertyGroup>
   </Target>
-
-  <ItemGroup>
-    <ProjectReference Include="$(MsBuildThisFileDirectory)\NuprojInitializer.msbuildproj" Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">
-      <IncludeInPackage>false</IncludeInPackage>
-      <Private>false</Private>
-    </ProjectReference>
-  </ItemGroup>
-
 </Project>
