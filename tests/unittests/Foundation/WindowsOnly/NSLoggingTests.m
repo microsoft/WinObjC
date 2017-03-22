@@ -54,6 +54,10 @@ void validateWideEtl(const wchar_t* tag, const wchar_t* expectedBody, int expect
     ASSERT_STREQ(expectedBody, g_etlBufferTestHook.c_str());
 }
 
+/**
+#2303 - disabling NSLogger tests as they will fail in typical local dev scenario (debug build + release tools nuget)
+*/
+
 DISABLED_TEST(NSLogging, NSLoggingWideBasicTests) {
     g_isTestHookEnabled = true;
     auto reset = wil::ScopeExit([]() { g_isTestHookEnabled = false; });
