@@ -38,7 +38,7 @@
       <GetPackageContentsDependsOn>$(GetPackageContentsDependsOn);$(ComputeLinkInputsTargets)</GetPackageContentsDependsOn>
   </PropertyGroup>
 
-  <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents"  DependsOnTargets="$(GetPackageContentsDependsOn)" Condition="'$(ConfigurationType)' == 'DynamicLibrary' or '$(ConfigurationType)' == 'Application'">
+  <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents" DependsOnTargets="$(GetPackageContentsDependsOn);_GenerateProjectPriFileCore" Condition="'$(ConfigurationType)' == 'DynamicLibrary' or '$(ConfigurationType)' == 'Application'">
     <ItemGroup>
       <!-- Public include folder for project  -->
       <_IncludeFiles Include="$(MSBuildThisFileDirectory)..\include\$(ProjectName)\**\*.*"/>
@@ -64,7 +64,15 @@
       <PackageFile Include="@(_WinMDFileNames->Distinct())" Condition="Exists('%(FullPath)')">
         <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
       </PackageFile>
-    </ItemGroup>
+      
+      <!-- Package up .pri files associated with any .winmds -->
+      <_PriFileNames Include="$(ProjectPriFullPath)">
+      </_PriFileNames>
+      <PackageFile Include="@(_PriFileNames)" Condition="Exists('%(RootDir)%(Directory)%(Filename).winmd')">
+        <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+     
+    </ItemGroup>    
   </Target>
 
 </Project>

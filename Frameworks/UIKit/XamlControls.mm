@@ -32,6 +32,16 @@ WXCButton* CreateButton() {
     return _createRtProxy([WXCButton class], inspectable.Get());
 }
 
+WXFrameworkElement* GetButtonLabel(WXCButton* button) {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetButtonLabel([button comObj]));
+    return _createRtProxy([WXFrameworkElement class], inspectable.Get());
+}
+
+WXCImage* GetButtonImage(WXCButton* button) {
+    Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetButtonImage([button comObj]));
+    return _createRtProxy([WXCImage class], inspectable.Get());
+}
+
 void HookButtonPointerEvents(WXCButton* button,
                              WUXIPointerEventHandler pointerPressedHook,
                              WUXIPointerEventHandler pointerMovedHook,

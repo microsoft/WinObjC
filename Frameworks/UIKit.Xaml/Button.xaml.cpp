@@ -170,6 +170,10 @@ void Button::OnApplyTemplate() {
     _image = safe_cast<Image^>(GetTemplateChild("buttonImage"));
     _border = safe_cast<Border^>(GetTemplateChild("buttonBorder"));
     _contentCanvas = safe_cast<Canvas^>(GetTemplateChild(L"contentCanvas"));
+
+    // TODO: We must currently add this dynamically to work around #1919.
+    _label = ref new Label();
+    _contentCanvas->Children->Append(_label);
 }
 
 } /* Xaml*/
@@ -181,6 +185,33 @@ void Button::OnApplyTemplate() {
 UIKIT_XAML_EXPORT void XamlCreateButton(IInspectable** created) {
     ComPtr<IInspectable> inspectable = InspectableFromObject(ref new UIKit::Xaml::Button());
     *created = inspectable.Detach();
+}
+
+// Retrieves the UIKit::Label's backing TextBlock as an IInspectable
+UIKIT_XAML_EXPORT IInspectable* XamlGetButtonLabel(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton) {
+    auto button = safe_cast<UIKit::Xaml::Button^>(reinterpret_cast<Platform::Object^>(inspectableButton.Get()));
+
+    // Force-load the template so we can access the label.
+    if (!button->_label) {
+        // Force-load the template so we can access the label.
+        button->ApplyTemplate();
+        button->UpdateLayout();
+    }
+
+    return InspectableFromObject(button->_label).Detach();
+}
+
+// Retrieves the UIKit::Label's backing TextBlock as an IInspectable
+UIKIT_XAML_EXPORT IInspectable* XamlGetButtonImage(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton) {
+    auto button = safe_cast<UIKit::Xaml::Button^>(reinterpret_cast<Platform::Object^>(inspectableButton.Get()));
+
+    if (!button->_image) {
+        // Force-load the template so we can access the label.
+        button->ApplyTemplate();
+        button->UpdateLayout();
+    }
+
+    return InspectableFromObject(button->_image).Detach();
 }
 
 UIKIT_XAML_EXPORT void XamlRemovePointerEvents(const ComPtr<IInspectable>& inspectableButton) {

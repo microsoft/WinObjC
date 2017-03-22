@@ -25,8 +25,9 @@
 
       <_ImportLibsFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\*.lib"/>    
       <_ImportLibsFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.lib"/>
-
-      <_XamlFilesFromPackage Include="$(MSBuildThisFileDirectory)\xaml\**\*.xaml" />
+      
+      <_PriFilesFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\*.pri"/>    
+      <_PriFilesFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.pri"/>
     </ItemGroup>
 
     <ItemDefinitionGroup>
@@ -48,9 +49,12 @@
     </Reference>
 
     <ReferenceCopyLocalPaths Include="@(_LibsFromPackage)"/>
-    <ReferenceCopyLocalPaths Include="@(_XamlFilesFromPackage)">
-      <DestinationSubDirectory>%(RecursiveDir)</DestinationSubDirectory>
-    </ReferenceCopyLocalPaths>
+
+    <!-- Ensure that all packaged .pri files are added to the resources.pri of the compiled application -->
+    <_PackagingOutputsOutsideLayout Include="@(_PriFilesFromPackage)">
+      <OutputGroup>WinObjC</OutputGroup>
+      <ProjectName>WinObjC</ProjectName>
+    </_PackagingOutputsOutsideLayout>
 
     <Link Include="@(_ImportLibsFromPackage)"/>
 

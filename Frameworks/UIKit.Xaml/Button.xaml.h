@@ -19,6 +19,7 @@
 
 #include "Button.g.h"
 #include "ILayer.h"
+#include "Label.Xaml.h"
 #include <windows.ui.xaml.input.h>
 #include "ObjCXamlControls.h"
 
@@ -69,6 +70,7 @@ internal:
 
     Windows::UI::Xaml::Controls::Image^ _image;
     Windows::UI::Xaml::Controls::Border^ _border;
+    Label^ _label;
 
 private:
     Windows::UI::Xaml::Controls::Canvas^ _contentCanvas; // Contains pre-canned button content, as well as any sublayers added by CoreAnimation.

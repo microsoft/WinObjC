@@ -92,6 +92,8 @@ public:
 // Button
 ////////////////////////////////////////////////////////////////////////////////////
 WXCButton* CreateButton();
+WXFrameworkElement* GetButtonLabel(WXCButton* button);
+WXCImage* GetButtonImage(WXCButton* button);
 
 void HookButtonPointerEvents(WXCButton* button,
                              WUXIPointerEventHandler pointerPressedHook,

@@ -17,10 +17,6 @@
 // clang-format off
 #pragma once
 
-#ifdef __cplusplus_winrt
-#include "XamlTypeInfoRegistration.h"
-#endif
-
 typedef enum {
     ActivationTypeNone = 0,
     ActivationTypeToast = 1,
@@ -32,23 +28,7 @@ typedef enum {
 
 #ifdef __cplusplus_winrt
 
-ref class App : public Windows::UI::Xaml::Application, Windows::UI::Xaml::Markup::IXamlMetadataProvider {
-public:
-    virtual Windows::UI::Xaml::Markup::IXamlType^ GetXamlType(Windows::UI::Xaml::Interop::TypeName type);
-    virtual Windows::UI::Xaml::Markup::IXamlType^ GetXamlType(Platform::String^ fullName);
-    virtual Platform::Array<Windows::UI::Xaml::Markup::XmlnsDefinition>^ GetXmlnsDefinitions();
-    void InitializeComponent();
-    void Connect(int connectionId, Platform::Object^ target);
-    void OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ args) override;
-    void OnActivated(Windows::ApplicationModel::Activation::IActivatedEventArgs^ args) override;
-    void OnFileActivated(Windows::ApplicationModel::Activation::FileActivatedEventArgs^ args) override;
-#ifdef ENABLE_BACKGROUND_TASK
-    void OnBackgroundActivated(Windows::ApplicationModel::Activation::BackgroundActivatedEventArgs^ args) override;
-#endif
-
-private:
-    XamlTypeInfo::InfoProvider::XamlTypeInfoProvider^ _provider;
-};
+#include <collection.h>
 
 ref class AppEventListener
 {

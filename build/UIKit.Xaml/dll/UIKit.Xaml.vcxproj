@@ -225,18 +225,12 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
-  <ItemGroup>
-    <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)$(XamlGeneratedOutputPath)\**\*.xaml">
-      <DestinationSubDirectory>$(OutputName)\%(RecursiveDir)</DestinationSubDirectory>
-    </ReferenceCopyLocalPaths>
-  </ItemGroup>
-  <Target Name="AddExtraPackageItems" BeforeTargets="GetPackageContents">
+  <Target Name="CopyXbfFiles" BeforeTargets="_CopyFilesMarkedCopyLocal" DependsOnTargets="$(AfterBuildCompileTargets)">
     <ItemGroup>
-      <!-- Include Extra Deps for this project -->
-      <_XamlFiles Include="$(MSBuildThisFileDirectory)$(XamlGeneratedOutputPath)\**\*.xaml" />
-      <PackageFile Include="@(_XamlFiles)">
-        <PackagePath>build\xaml\$(MSBuildProjectName)\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
-      </PackageFile>
+      <_XbfFiles Include="$(MSBuildThisFileDirectory)$(XamlGeneratedOutputPath)\**\*.xbf" />
+      <ReferenceCopyLocalPaths Include="@(_XbfFiles)">
+        <DestinationSubDirectory>$(OutputName)\%(RecursiveDir)</DestinationSubDirectory>
+      </ReferenceCopyLocalPaths>
     </ItemGroup>
   </Target>
   <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
