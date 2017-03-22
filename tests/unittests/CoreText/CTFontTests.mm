@@ -798,7 +798,7 @@ TEST(CTFont, GetCompatibleFamilyName) {
     EXPECT_NE(nil, familyName);
 
     // CompatibleFamilyName returns an absolute path, so can only check prefix and suffix
-    EXPECT_TRUE([static_cast<NSString*>(familyName) hasPrefix:@"ms-appx///"]);
+    EXPECT_TRUE([static_cast<NSString*>(familyName) hasPrefix:@"ms-appx:///"]);
     EXPECT_TRUE([static_cast<NSString*>(familyName) hasSuffix:@"/data/WinObjC.ttf#WinObjC"]);
 
     EXPECT_TRUE(CTFontManagerUnregisterFontsForURL((__bridge CFURLRef)testFileURL, kCTFontManagerScopeSession, &error));

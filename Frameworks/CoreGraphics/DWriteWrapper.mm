@@ -224,20 +224,35 @@ CFStringRef _DWriteGetCompatibleFamilyName(CFStringRef fontName, IDWriteFontFace
             return userFontInfo->familyName.get();
         }
 
-        UINT32 fileCount = 1;
-        ComPtr<IDWriteFontFile> fontFile;
-        RETURN_NULL_IF_FAILED(fontFace->GetFiles(&fileCount, &fontFile));
+        // Retrieve the font file that was used to create this font face
+        UINT32 fileCount;
+        fontFace->GetFiles(&fileCount, nullptr);
+        RETURN_RESULT_IF(fileCount == 0, userFontInfo->familyName.get());
+        if (fileCount > 1) {
+            CFIndex familyNameLength = CFStringGetLength(userFontInfo->familyName.get());
+            std::vector<UniChar> chars(familyNameLength + 1);
+            CFStringGetCharacters(userFontInfo->familyName.get(), { 0, familyNameLength }, chars.data());
+            TraceWarning(TAG, L"The font %ls has %d files, defaulting to the first", chars.data(), fileCount);
+            fileCount = 1;
+        }
 
-        // GetReferenceKey sets the input value to the pointer to fontFile's pointer to the data provider
+        ComPtr<IDWriteFontFile> fontFile;
+        RETURN_RESULT_IF_FAILED(fontFace->GetFiles(&fileCount, &fontFile), userFontInfo->familyName.get());
+
+        // Get the CGDataProvider used to register this font
+        // Note that GetReferenceKey will set fontProvider to a pointer to the file's internal CGDataProviderRef
         CGDataProviderRef* fontProvider = nullptr;
         UINT32 keySize;
         RETURN_RESULT_IF_FAILED(fontFile->GetReferenceKey((const void**)&fontProvider, &keySize), userFontInfo->familyName.get());
         RETURN_RESULT_IF(keySize != sizeof(fontProvider) || !fontProvider || !(*fontProvider), userFontInfo->familyName.get());
 
+        // From the CGDataProvider get the URL
         CFURLRef fontURL = _CGDataProviderGetURL(*fontProvider);
         RETURN_RESULT_IF(!fontURL, userFontInfo->familyName.get());
 
-        static const CFStringRef sc_prefix = CFSTR("ms-appx///");
+        // Now construct the XAML compatible family name, which should be in the format
+        // ms-appx:///[PATH TO FONT FILE]/font_file.ttf#family_name
+        static const CFStringRef sc_prefix = CFSTR("ms-appx:///");
         auto ret = woc::MakeAutoCF<CFMutableStringRef>(CFStringCreateMutableCopy(nullptr, 0, sc_prefix));
         auto path = woc::MakeAutoCF<CFStringRef>(CFURLCopyFileSystemPath(fontURL, kCFURLWindowsPathStyle));
         CFStringAppend(ret, path);
