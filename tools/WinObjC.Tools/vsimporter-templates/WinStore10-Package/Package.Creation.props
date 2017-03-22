@@ -6,6 +6,7 @@
     <PackageId>$safeprojectname$</PackageId> 
     <Authors>$username$</Authors>
     <Description>$projectname$</Description>
+    <PackageVersion>1.0.0</PackageVersion>
     <!-- Optional -->
     <Title>$projectname$</Title>
     <Owners>$username$</Owners>
@@ -15,6 +16,5 @@
     <PackageLicenseUrl></PackageLicenseUrl>
     <Copyright>Copyright © $username$</Copyright>
     <PackageTags>$safeprojectname$</PackageTags>
-    <PackageVersion><!-- Override Package Version Here --></PackageVersion>
   </PropertyGroup>
 </Project>
