@@ -64,6 +64,10 @@ public:
     bool _userInteractionDisabled;
     bool _clearsContextBeforeDrawing;
     int _tag;
+    float _horizontalHuggingPriority;
+    float _verticalHuggingPriority;
+    float _horizontalCompressionResistancePriority;
+    float _verticalCompressionResistancePriority;
 
 public:
     UIView();

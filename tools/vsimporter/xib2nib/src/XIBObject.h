@@ -123,9 +123,19 @@ public:
     const char* GetString(char* pPropName, char* defaultValue);
     int GetInt(char* pPropName, int defaultValue);
     bool GetBool(char* pPropName, bool defaultValue);
+
+    template <typename TData>
+    void AddData(NIBWriter* writer, char* pPropName, const TData& data) {
+        char* dataOut = (char*)malloc(sizeof(TData) + 1);
+        dataOut[0] = 6;
+        memcpy(&dataOut[1], &data, sizeof(TData));
+        AddOutputMember(writer, strdup(pPropName), new XIBObjectDataWriter(dataOut, sizeof(TData) + 1));
+    }
+
     void AddSize(NIBWriter* writer, char* pPropName, CGSize size);
-    void AddPoint(NIBWriter* writer, char* pPropName, UIPoint pt);
-    void AddRect(NIBWriter* writer, char* pPropName, UIRect pt);
+    void AddPoint(NIBWriter* writer, char* pPropName, UIPoint point);
+    void AddRect(NIBWriter* writer, char* pPropName, UIRect rect);
+
     void AddString(NIBWriter* writer, char* pPropNamme, const char* str);
     void AddMutableString(NIBWriter* writer, char* pPropNamme, char* str);
     void AddInt(NIBWriter* writer, char* pPropName, int val);

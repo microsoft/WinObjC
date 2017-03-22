@@ -17,6 +17,20 @@
 #pragma once
 #include "UIControl.h"
 
+struct EdgeInsets {
+    float top;
+    float left;
+    float bottom;
+    float right;
+
+    EdgeInsets() : top (INFINITY), left(INFINITY), bottom(INFINITY), right(INFINITY) {
+    }
+
+    bool IsValid() {
+        return top != INFINITY && left != INFINITY && bottom != INFINITY && right != INFINITY;
+    }
+};
+
 class UIFont;
 class UIButton :
     public UIControl
@@ -24,7 +38,13 @@ class UIButton :
 public:
     int _buttonType;
     UIFont *_font;
-    XIBObject *_statefulContent;
+    XIBObject* _statefulContent;
+    bool _adjustsImageWhenHighlighted;
+    bool _adjustsImageWhenDisabled;
+    EdgeInsets _imageEdgeInsets;
+    EdgeInsets _contentEdgeInsets;
+    EdgeInsets _titleEdgeInsets;
+
     UIButton();
     virtual void InitFromXIB(XIBObject *obj);
     virtual void InitFromStory(XIBObject *obj);
