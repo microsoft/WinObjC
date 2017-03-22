@@ -49,6 +49,11 @@ NSString* const UINibExternalObjects = @"UINibExternalObjects";
         if (data == nil) {
             data = [NSData dataWithContentsOfFile:[name stringByAppendingPathExtension:@"nib"]];
             if (data == nil) {
+                // Look in the mainBundle if no bundle was specified
+                if (!bundle) {
+                    bundle = [NSBundle mainBundle];
+                }
+
                 data = [NSData dataWithContentsOfFile:[bundle pathForResource:name ofType:@"nib"]];
                 if (data == nil) {
                     return nil;
