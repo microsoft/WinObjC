@@ -27,7 +27,11 @@ To use the bridge you'll need:
 - **Windows 10**, build 10586 or higher. Validate your version number [here](http://windows.microsoft.com/en-US/windows/which-operating-system).
 - **Visual Studio 2017** with Windows developer tools. Visual Studio 2017 Community is available for free [here](https://dev.windows.com/downloads).
 
-   Ensure the following individual components are selected during installation (Selecting the **Universal Windows Platform development** workflow should give most of the below):
+  
+   Ensure the following individual components are selected during installation. Selecting the Universal Windows Platform development workflow should give most of the below 
+
+   <details><summary><b>(Click to Expand)</b></summary><p>
+
   - Visual Studio Core Editor
   - Nuget Package Manager
   - C# and Visual Basic Roslyn compilers
@@ -35,7 +39,7 @@ To use the bridge you'll need:
   - Windows 10 SDK (10.0.14393.0)
   - Visual Studio C++ core features
   - VC++ 2017 v141 toolset (x86, x64)
-  - Visual C++ copmilers and libraries for ARM
+  - Visual C++ compilers and libraries for ARM
   - Visual C++ runtime for UWP
   - Windows 10 SDK (10.0.10240.0)
   - Windows 10 SDK (10.0.10586.0)
@@ -44,7 +48,7 @@ To use the bridge you'll need:
   - Standard Library Modules
   - VC++ 2015.3 v140 toolset (x86,x64)
   - Windows Universal C Runtime
-
+</p></details>
 
 To get started with an existing Xcode Project, you will also need:
 - **Chocolatey**, a package manager for windows. See how to install the latest version [here](https://chocolatey.org/)
@@ -52,20 +56,7 @@ To get started with an existing Xcode Project, you will also need:
 ```
 choco upgrade winobjc-tools
 ```
-(more information about this command and its options can be found [here](https://chocolatey.org/docs/commands-upgrade))
-
-
-## Advanced Installation for Contributors and Ninjas
-
-Additional Visual Studio Components Needed for Contributors:
-   1. C# and Visual Basic
-   2. Visual Studio SDK
-   3. .NET Framework 4.6 targeting pack
-   4. C++ Profiling Tools
-
-If you want to build the bridge from source instead, you'll also need to install [Git LFS](https://git-lfs.github.com) before cloning the repo. For more detailed instructions, see the [Building From Source](https://github.com/Microsoft/WinObjC/wiki/Building-From-Source) wiki page.
-
-If you're having trouble downloading & installing the bridge, see the [Known Issues](https://github.com/Microsoft/WinObjC#known-issues) section below and check our [FAQ](https://github.com/Microsoft/WinObjC/wiki/FAQ).
+(more information about this command and its options can be found [here](https://chocolatey.org/docs/commands-upgrade). If you want to use develop packages add `--pre` to the command.)
 
 ## Getting Started With the Bridge
 ### Importing your Xcode Project
@@ -126,6 +117,18 @@ There are many ways to contribute to the Windows Bridge for iOS:
 See our [contribution guidance in the wiki](https://github.com/Microsoft/WinObjC/wiki/How-to-Contribute) for more details on how to contribute to the project.
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+
+## Advanced Installation for Contributors and Ninjas
+
+Additional Visual Studio Components Needed for Contributors:
+   1. C# and Visual Basic
+   2. Visual Studio SDK
+   3. .NET Framework 4.6 targeting pack
+   4. C++ Profiling Tools
+
+If you want to build the bridge from source instead, you'll also need to install [Git LFS](https://git-lfs.github.com) before cloning the repo. For more detailed instructions, see the [Building From Source](https://github.com/Microsoft/WinObjC/wiki/Building-From-Source) wiki page.
+
+If you're having trouble downloading & installing the bridge, see the [Known Issues](https://github.com/Microsoft/WinObjC#known-issues) section below and check our [FAQ](https://github.com/Microsoft/WinObjC/wiki/FAQ).
 
 ## Privacy
 See [Microsoft's privacy statement](https://www.microsoft.com/en-us/privacystatement/default.aspx) for more information.
