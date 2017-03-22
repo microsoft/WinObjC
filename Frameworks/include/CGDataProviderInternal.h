@@ -19,3 +19,4 @@
 #import <CoreGraphics/CGDataProvider.h>
 COREGRAPHICS_EXPORT const void* _CGDataProviderGetData(CGDataProviderRef provider);
 COREGRAPHICS_EXPORT size_t _CGDataProviderGetSize(CGDataProviderRef provider);
+COREGRAPHICS_EXPORT CFURLRef _CGDataProviderGetURL(CGDataProviderRef provider);

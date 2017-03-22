@@ -59,6 +59,11 @@ public:
         return memcmp(GetData(), rhs.GetData(), GetSize()) == 0;
     }
 
+    // Subclasses containing CFURL should override this
+    virtual CFURLRef GetURL() const {
+        return nullptr;
+    }
+
     CFHashCode Hash() const {
         std::call_once(m_hashFlag, &__CGDataProviderInternal::SetHash, this);
         return m_hashValue;
@@ -250,6 +255,10 @@ public:
         std::call_once(m_dataFlag, &__CFURLDataProvider::GenerateData, this);
         return CFDataGetLength(m_data.get());
     }
+
+    CFURLRef GetURL() const override {
+        return m_url.get();
+    }
 };
 #pragma endregion // __CGDataProviderInternal
 
@@ -293,6 +302,10 @@ struct __CGDataProvider : CoreFoundation::CppBase<__CGDataProvider> {
 
     size_t GetSize() const {
         return m_internal->GetSize();
+    }
+
+    CFURLRef GetURL() const {
+        return m_internal->GetURL();
     }
 
     bool operator==(const __CGDataProvider& other) const {
@@ -433,6 +446,10 @@ const void* _CGDataProviderGetData(CGDataProviderRef provider) {
 
 size_t _CGDataProviderGetSize(CGDataProviderRef provider) {
     return provider ? provider->GetSize() : 0;
+}
+
+CFURLRef _CGDataProviderGetURL(CGDataProviderRef provider) {
+    return provider ? provider->GetURL() : nullptr;
 }
 
 #pragma endregion // Internal CGDataProvider Functions

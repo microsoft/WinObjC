@@ -255,7 +255,12 @@
     <PackageReference Include="WinObjC.Language" Version="*" />
     <PackageReference Include="WinObjC.Logging" Version="*" />
   </ItemGroup>
+  <ItemGroup>
+    <Font Include="..\..\CTCatalog\Fonts\WinObjC-Bold.ttf" />
+    <Font Include="..\..\CTCatalog\Fonts\WinObjC-Italic.ttf" />
+    <Font Include="..\..\CTCatalog\Fonts\WinObjC.ttf" />
+  </ItemGroup>
   <!-- End NuGet Section -->
-  
+
   <Import Project="$(MSBuildThisFileDirectory)\..\..\..\..\..\common\winobjc.packagereference.override.targets" Condition="Exists('$(MSBuildThisFileDirectory)\..\..\..\..\..\common\winobjc.packagereference.override.targets')"/>
 </Project>

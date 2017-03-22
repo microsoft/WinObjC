@@ -28,6 +28,7 @@
 #import "DWriteFontBinaryDataLoader.h"
 #import "DWriteFontCollectionHelper.h"
 #import "DWriteFontBinaryDataCollectionLoader.h"
+#import "CGDataProviderInternal.h"
 
 using namespace Microsoft::WRL;
 
@@ -209,8 +210,45 @@ CFArrayRef _DWriteCopyFontNamesForFamilyName(CFStringRef familyName) {
  * Note: This function currently uses a cache, meaning that fonts installed during runtime will not be reflected,
  * unless registered to the user font collection
  */
-CFStringRef _DWriteGetFamilyNameForFontName(CFStringRef fontName) {
-    return _DWriteGetFontPropertiesFromName(fontName)->familyName.get();
+CFStringRef _DWriteGetCompatibleFamilyName(CFStringRef fontName, IDWriteFontFace* fontFace) {
+    woc::unique_cf<CFStringRef> upperFontName(_CFStringCreateUppercaseCopy(fontName));
+
+    const auto& info = __GetSystemFontCollectionHelper()->GetFontPropertiesFromUppercaseFontName(upperFontName);
+    if (info) {
+        return info->familyName.get();
+    }
+
+    const auto& userFontInfo = __GetUserFontCollectionHelper()->GetFontPropertiesFromUppercaseFontName(upperFontName);
+    if (userFontInfo) {
+        if (!fontFace) {
+            return userFontInfo->familyName.get();
+        }
+
+        UINT32 fileCount = 1;
+        ComPtr<IDWriteFontFile> fontFile;
+        RETURN_NULL_IF_FAILED(fontFace->GetFiles(&fileCount, &fontFile));
+
+        // GetReferenceKey sets the input value to the pointer to fontFile's pointer to the data provider
+        CGDataProviderRef* fontProvider = nullptr;
+        UINT32 keySize;
+        RETURN_RESULT_IF_FAILED(fontFile->GetReferenceKey((const void**)&fontProvider, &keySize), userFontInfo->familyName.get());
+        RETURN_RESULT_IF(keySize != sizeof(fontProvider) || !fontProvider || !(*fontProvider), userFontInfo->familyName.get());
+
+        CFURLRef fontURL = _CGDataProviderGetURL(*fontProvider);
+        RETURN_RESULT_IF(!fontURL, userFontInfo->familyName.get());
+
+        static const CFStringRef sc_prefix = CFSTR("ms-appx///");
+        auto ret = woc::MakeAutoCF<CFMutableStringRef>(CFStringCreateMutableCopy(nullptr, 0, sc_prefix));
+        auto path = woc::MakeAutoCF<CFStringRef>(CFURLCopyFileSystemPath(fontURL, kCFURLWindowsPathStyle));
+        CFStringAppend(ret, path);
+
+        static const UniChar numberSign = '#';
+        CFStringAppendCharacters(ret, &numberSign, 1);
+        CFStringAppend(ret, userFontInfo->familyName.get());
+        return (CFStringRef)CFAutorelease(ret.detach());
+    }
+
+    return nullptr;
 }
 
 /**

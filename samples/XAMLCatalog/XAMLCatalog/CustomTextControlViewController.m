@@ -338,7 +338,7 @@
     float angle = 0;
     float scale = 1.0f;
 
-    UIFont* font = [UIFont boldSystemFontOfSize:14];
+    UIFont* font = [UIFont fontWithName:@"WinObjC" size:14];
     UIColor* color = [UIColor blackColor];
     UIColor* selectedColor = [UIColor blueColor];
     NSMutableDictionary* attrs =

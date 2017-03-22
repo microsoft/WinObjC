@@ -183,7 +183,7 @@ HRESULT _DWriteCreateFontFaceWithFontDescriptor(CTFontDescriptorRef fontDescript
 
     // font name takes precedence
     if (fontName.get()) {
-        if (familyName.get() && !CFEqual(familyName.get(), _DWriteGetFamilyNameForFontName(fontName.get()))) {
+        if (familyName.get() && !CFEqual(familyName.get(), _DWriteGetCompatibleFamilyName(fontName.get(), nullptr))) {
             TraceError(TAG,
                        L"Mismatched font name (kCTFontNameAttribute) and family name (kCTFontFamilyNameAttribute) in "
                        L"_DWriteCreateFontFaceWithFontDescriptor");

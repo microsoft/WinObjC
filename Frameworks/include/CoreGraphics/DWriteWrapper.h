@@ -55,7 +55,7 @@ extern "C++" std::shared_ptr<const _DWriteFontProperties> _DWriteGetFontProperti
 
 COREGRAPHICS_EXPORT CFArrayRef _DWriteCopyFontFamilyNames();
 COREGRAPHICS_EXPORT CFArrayRef _DWriteCopyFontNamesForFamilyName(CFStringRef familyName);
-COREGRAPHICS_EXPORT CFStringRef _DWriteGetFamilyNameForFontName(CFStringRef fontName);
+COREGRAPHICS_EXPORT CFStringRef _DWriteGetCompatibleFamilyName(CFStringRef fontName, IDWriteFontFace* fontFace);
 
 // Creation of DWrite font face/family objects
 COREGRAPHICS_EXPORT HRESULT _DWriteCreateFontFamilyWithName(CFStringRef familyName, IDWriteFontFamily** outFontFamily);
