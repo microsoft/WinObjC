@@ -187,14 +187,6 @@ static NSString* _pathFromNSURL(NSURL* url) {
 }
 
 /**
- @Status Stub
-*/
-- (NSArray*)loadNibNamed:(NSString*)name owner:(id)owner options:(NSDictionary*)options {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
  @Status Interoperable
 */
 - (NSURL*)URLForResource:(NSString*)name withExtension:(NSString*)extension subdirectory:(NSString*)subpath {
