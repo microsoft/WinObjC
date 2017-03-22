@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|AnyCPU">
@@ -29,7 +29,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <OutputPath>$(SolutionDir)</OutputPath>
-    <ProjectGuid>4F1D97A4-05B6-4771-81BC-0978840DF429</ProjectGuid>
+    <ProjectGuid>417B0D00-F90E-47BB-9085-BE7E412C9DA8</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" />
@@ -37,21 +37,19 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
-
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-
-  <Target Name="CoreCompile" />
   <Target Name="CreateManifestResourceNames" />
+  <Target Name="CoreCompile" />
   <Target Name="GetReferenceAssemblyPaths" />
   <Target Name="CopyFilesToOutputDirectory" />
   <Target Name="_GenerateCompileDependencyCache" />
-
+  
   <!-- This is where the fun starts. Any custom generic msbuild project goop goes here. -->
-  <ItemGroup>
-    <ProjectReference Include="$(SolutionDir)\**\WinObjC.*.nuproj" />
-  </ItemGroup>
 
-  <Target Name="DeleteTimestampFile" AfterTargets="AfterBuild">
-    <Delete Files="$(SolutionDir)$(SolutionName).timestamp" TreatErrorsAsWarnings="true" />
+  <!-- Inline task to check for timestamp file existence and creation-->
+  <Target Name="CreateTimestampFile" AfterTargets="Build">
+    <Touch Condition="'$(SolutionDir)' != ''" AlwaysCreate="true" Files="$(SolutionDir)$(SolutionName).timestamp" />
+    <Message Condition="'$(SolutionDir)' != ''" Text="NuprojInitializer touched $(SolutionDir)$(SolutionName).timestamp" />
   </Target>
+
 </Project>
