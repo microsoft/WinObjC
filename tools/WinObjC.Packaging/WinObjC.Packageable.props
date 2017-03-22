@@ -6,7 +6,7 @@
   For Use By: A VcxProj that can be packaged into a NuGet
 -->
 
-<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="Globals">
     <!-- NuGet specific properties -->
     <IncludeOutputsInPackage>false</IncludeOutputsInPackage>

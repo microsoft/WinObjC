@@ -42,7 +42,6 @@
     <ProjectGuid>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</ProjectGuid>
     <RootNamespace>CoreFoundation</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
-    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
     <ApplicationType>Windows Store</ApplicationType>
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
