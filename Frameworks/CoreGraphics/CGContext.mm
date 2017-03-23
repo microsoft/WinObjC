@@ -3259,7 +3259,8 @@ void CGContextDrawLinearGradient(
 }
 
 /**
- @Status Stub
+ @Status Interoperable
+ @Notes We do not support cases where startCenter is not equal endCenter
 */
 void CGContextDrawRadialGradient(CGContextRef context,
                                  CGGradientRef gradient,
@@ -3269,9 +3270,45 @@ void CGContextDrawRadialGradient(CGContextRef context,
                                  CGFloat endRadius,
                                  CGGradientDrawingOptions options) {
     NOISY_RETURN_IF_NULL(context);
+    NOISY_RETURN_IF_NULL(gradient);
     RETURN_IF(!context->ShouldDraw());
 
-    UNIMPLEMENTED();
+    // Note: We do not support cases where startCenter != endCenter
+    if (!CGPointEqualToPoint(startCenter, endCenter)) {
+        UNIMPLEMENTED_WITH_MSG("Do not support DrawRadialGradient for start/end centers that are not the same.");
+        return;
+    }
+
+    RETURN_IF(_CGGradientGetCount(gradient) == 0);
+
+    std::vector<D2D1_GRADIENT_STOP> gradientStops = __CGGradientToD2D1GradientStop(context, gradient, options, true);
+
+    ComPtr<ID2D1GradientStopCollection> gradientStopCollection;
+
+    ComPtr<ID2D1DeviceContext> deviceContext = context->DeviceContext();
+    FAIL_FAST_IF_FAILED(deviceContext->CreateGradientStopCollection(gradientStops.data(),
+                                                                    gradientStops.size(),
+                                                                    D2D1_GAMMA_2_2,
+                                                                    D2D1_EXTEND_MODE_CLAMP,
+                                                                    &gradientStopCollection));
+
+    ComPtr<ID2D1RadialGradientBrush> radialGradientBrush;
+    FAIL_FAST_IF_FAILED(deviceContext->CreateRadialGradientBrush(
+        D2D1::RadialGradientBrushProperties(_CGPointToD2D_F(endCenter), D2D1::Point2F(0, 0), (FLOAT)endRadius, (FLOAT)endRadius),
+        D2D1::BrushProperties(context->CurrentGState().alpha,
+                              __CGAffineTransformToD2D_F(CGContextGetUserSpaceToDeviceSpaceTransform(context))),
+        gradientStopCollection.Get(),
+        &radialGradientBrush));
+
+    // Area to fill
+    D2D1_SIZE_F targetSize = deviceContext->GetSize();
+    D2D1_RECT_F region = D2D1::RectF(0, 0, targetSize.width, targetSize.height);
+
+    FAIL_FAST_IF_FAILED(
+        context->Draw(_kCGCoordinateModeDeviceSpace, nullptr, false, [&](CGContextRef context, ID2D1DeviceContext* deviceContext) {
+            deviceContext->FillRectangle(&region, radialGradientBrush.Get());
+            return S_OK;
+        }));
 }
 
 /**
