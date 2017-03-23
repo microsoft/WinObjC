@@ -37,17 +37,10 @@ Brush^ GetDefaultWhiteForegroundBrush() {
 
 Button::Button() {
     InitializeComponent();
-    
+
     // Default to a transparent background brush so we can accept pointer input
     static auto transparentBrush = ref new SolidColorBrush(Windows::UI::Colors::Transparent);
     Background = transparentBrush;
-
-    // In order for our keyboard/accessibility click handling to work in UIButton, we need
-    // pointer-triggered click events to fire on pointer down (so we know to ignore the pointer-triggered 'clicks'
-    // within UIButton since they're already handled by UIControl).  See UIButton's _handleClickEvent for more details.
-    // Note: This results in button 'clicks' happening on keyboard press down, rather than on up.  If we find that we
-    // need to trigger on keyboard press up instead, we'll need to re-work this logic.
-    ClickMode = Windows::UI::Xaml::Controls::ClickMode::Press;
 }
 
 // Accessor for our Layer content

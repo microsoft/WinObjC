@@ -185,26 +185,6 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
     return self;
 }
 
-- (void)_processPointerPressedCallback:(RTObject*)sender eventArgs:(WUXIPointerRoutedEventArgs*)e {
-    [self _processPointerEvent:e forTouchPhase:UITouchPhaseBegan];
-}
-
-- (void)_processPointerMovedCallback:(RTObject*)sender eventArgs:(WUXIPointerRoutedEventArgs*)e {
-    [self _processPointerEvent:e forTouchPhase:UITouchPhaseMoved];
-}
-
-- (void)_processPointerReleasedCallback:(RTObject*)sender eventArgs:(WUXIPointerRoutedEventArgs*)e {
-    [self _processPointerEvent:e forTouchPhase:UITouchPhaseEnded];
-}
-
-- (void)_processPointerCancelledCallback:(RTObject*)sender eventArgs:(WUXIPointerRoutedEventArgs*)e {
-    [self _processPointerEvent:e forTouchPhase:UITouchPhaseCancelled];
-}
-
-- (void)_processPointerCaptureLostCallback:(RTObject*)sender eventArgs:(WUXIPointerRoutedEventArgs*)e {
-    [self _processPointerEvent:e forTouchPhase:UITouchPhaseCancelled];
-}
-
 - (void)_initUIButton {
     // Store a strongly-typed backing button
     _xamlButton = rt_dynamic_cast<WXCButton>([self xamlElement]);
@@ -251,23 +231,23 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
                                               // on the super view, then event remains marked as handled
                                               // and OnPointerPressed is not called on the backing XAML Button.
                                               e.handled = YES;
-                                              [weakSelf _processPointerPressedCallback:sender eventArgs:e];
+                                              [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseBegan];
                                           },
                                           ^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
                                               e.handled = YES;
-                                              [weakSelf _processPointerMovedCallback:sender eventArgs:e];
+                                              [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseMoved];
                                           },
                                           ^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
                                               e.handled = YES;
-                                              [weakSelf _processPointerReleasedCallback:sender eventArgs:e];
+                                              [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseEnded];
                                           },
                                           ^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
                                               e.handled = YES;
-                                              [weakSelf _processPointerCancelledCallback:sender eventArgs:e];
+                                              [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseCancelled];
                                           },
                                           ^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
                                               e.handled = YES;
-                                              [weakSelf _processPointerCaptureLostCallback:sender eventArgs:e];
+                                              [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseCancelled];
                                           });
 
     // Initialize press/click management
@@ -279,13 +259,15 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
             UIButton* strongSelf = weakSelf;
             if (strongSelf) {
                 // Update our highlighted state accordingly
-                [strongSelf _updateHighlightedState];
+                [strongSelf setHighlighted:_xamlButton.isPressed];
             }
     }];
 
     // Register for 'Click' events, to handle keybard and accessibility clicks
     _clickEventRegistration = [_xamlButton addClickEvent:^(RTObject* sender, WXRoutedEventArgs* e) {
-            [weakSelf _handleClickEvent:e];
+            // Simulate a button 'click' for non-pointer-triggered clicks
+            [weakSelf sendActionsForControlEvents:UIControlEventTouchDown];
+            [weakSelf sendActionsForControlEvents:UIControlEventTouchUpInside];
         }];
 }
 
@@ -731,44 +713,22 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
  @Status Interoperable
 */
 - (void)touchesMoved:(NSSet*)touchSet withEvent:(UIEvent*)event {
+    // If the derived UIButton overrides this method and does not call this super implementation, then the
+    // event remains *handled*, which results in the Button.Xaml not calling into its super for further processing.
+    // Else, we mark the event as *not handled*, so Button.Xaml calls into its super for further event processing.
     WUXIPointerRoutedEventArgs* routedEvent = [event _touchEvent]->_routedEventArgs;
     [routedEvent setHandled:NO];
 
-    // We're assuming multitouchenabled = NO; it's a button after all.
-    CGPoint point = [[touchSet anyObject] locationInView:self];
-    BOOL currentTouchInside = [self pointInside:point withEvent:event];
-
-    // Update our highlighted state accordingly
-    [super setHighlighted:currentTouchInside];
-
     [super touchesMoved:touchSet withEvent:event];
-}
-
-// Updates our highlighted state as needed
-- (void)_updateHighlightedState {
-    [self setHighlighted:(_isInTouchSequence || _xamlButton.isPressed)];
-}
-
-// Handles click events that are raised by the button
-- (void)_handleClickEvent:(WXRoutedEventArgs*)e {
-    // We must ignore any pointer-triggered button 'clicks', because they're already handled by UIControl.
-    // Therefore, if we receive a click event when we're *not* in a touch sequence, we know that it's *not* firing due to
-    // a pointer event, so we must simulate a UIButton 'click' below.
-    // This allows us to function properly in most apps via keyboard and accessibility input.
-    // However, keep in mind that this won't interop with gesture recognizers.
-    if (!_isInTouchSequence) {
-        [self sendActionsForControlEvents:UIControlEventTouchDown];
-        [self sendActionsForControlEvents:UIControlEventTouchUpInside];
-    }
 }
 
 /**
  @Status Interoperable
 */
 - (void)touchesBegan:(NSSet*)touchSet withEvent:(UIEvent*)event {
-    // If the derived UIButton overrides this method and does not call super implementation, then the
-    // event remains handled, which results in the button not getting pressed.
-    // Else we mark the event to be not handled so that the XAML implementation of Button can handle the event.
+    // If the derived UIButton overrides this method and does not call this super implementation, then the
+    // event remains *handled*, which results in the Button.Xaml not calling into its super for further processing.
+    // Else, we mark the event as *not handled*, so Button.Xaml calls into its super for further event processing.
     WUXIPointerRoutedEventArgs* routedEvent = [event _touchEvent]->_routedEventArgs;
     [routedEvent setHandled:NO];
 
@@ -776,9 +736,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
         return;
     }
 
-    // Update our highlighted state accordingly
+    // Track that we're currently in a touch sequence
     _isInTouchSequence = true;
-    [self _updateHighlightedState];
 
     [super touchesBegan:touchSet withEvent:event];
 }
@@ -787,6 +746,9 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
  @Status Interoperable
 */
 - (void)touchesEnded:(NSSet*)touchSet withEvent:(UIEvent*)event {
+    // If the derived UIButton overrides this method and does not call this super implementation, then the
+    // event remains *handled*, which results in the Button.Xaml not calling into its super for further processing.
+    // Else, we mark the event as *not handled*, so Button.Xaml calls into its super for further event processing.
     WUXIPointerRoutedEventArgs* routedEvent = [event _touchEvent]->_routedEventArgs;
     [routedEvent setHandled:NO];
 
@@ -794,31 +756,32 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
         return;
     }
 
-    // Update our highlighted state accordingly
+    // Track that we're no longer in a touch sequence
     _isInTouchSequence = false;
-    [self _updateHighlightedState];
 
     [super touchesEnded:touchSet withEvent:event];
+
+    // Release the pointer capture so Xaml knows we're no longer in a pressed state, which
+    // also prevents the button from firing a 'click' event since we already fire one via UIControl's
+    // touch handling.
+    [_xamlButton releasePointerCapture:routedEvent.pointer];
 }
 
 /**
  @Status Interoperable
 */
 - (void)touchesCancelled:(NSSet*)touchSet withEvent:(UIEvent*)event {
-    WUXIPointerRoutedEventArgs* routedEvent = [event _touchEvent]->_routedEventArgs;
-    [routedEvent setHandled:NO];
-
     if (!_isInTouchSequence) {
         return;
     }
 
-    // Update our highlighted state accordingly
+    // Track that we're no longer in a touch sequence
     _isInTouchSequence = false;
-    [self _updateHighlightedState];
 
     [super touchesCancelled:touchSet withEvent:event];
 
     // Release the pointer capture so Xaml knows we're no longer in a pressed state
+    WUXIPointerRoutedEventArgs* routedEvent = [event _touchEvent]->_routedEventArgs;
     [_xamlButton releasePointerCapture:routedEvent.pointer];
 }
 
