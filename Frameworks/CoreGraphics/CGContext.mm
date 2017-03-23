@@ -3189,14 +3189,14 @@ static std::vector<D2D1_GRADIENT_STOP> __CGGradientToD2D1GradientStop(CGContextR
                                                                       CGGradientRef gradient,
                                                                       CGGradientDrawingOptions options,
                                                                       bool radialGradient = false) {
-    unsigned long gradientCount = _CGGradientGetCount(gradient);
+    size_t gradientCount = _CGGradientGetCount(gradient);
     std::vector<D2D1_GRADIENT_STOP> gradientStops(gradientCount);
 
-    CGFloat* colorComponents = _CGGradientGetColorComponents(gradient);
-    CGFloat* locations = _CGGradientGetStopLocation(gradient);
-    for (unsigned long i = 0; i < gradientCount; ++i) {
+    std::vector<CGFloat> colorComponents = std::vector<CGFloat>(_CGGradientGetColorComponents(gradient));
+    std::vector<CGFloat> locations = std::vector<CGFloat>(_CGGradientGetStopLocations(gradient));
+    for (size_t i = 0; i < gradientCount; ++i) {
         // TODO #1541: The indexing needs to get updated based on colorspace (for non RGBA)
-        unsigned int colorIndex = (i * 4);
+        size_t colorIndex = (i * 4);
         gradientStops[i].color = D2D1::ColorF(colorComponents[colorIndex],
                                               colorComponents[colorIndex + 1],
                                               colorComponents[colorIndex + 2],
