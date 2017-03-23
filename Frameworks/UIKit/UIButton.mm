@@ -73,7 +73,13 @@ struct ButtonState {
     StrongId<UILabel> _titleLabel;
     StrongId<_UIImageView_Proxy> _proxyImageView;
 
-    bool _isPressed;
+    // Press handling
+    bool _isInTouchSequence;
+    long long _isPressedChangedRegistration;
+
+    // Click handling
+    EventRegistrationToken _clickEventRegistration;
+
     UIButtonType _buttonType;
 
     ComPtr<IInspectable> _inspectableAdjustsWhenDisabledBrush;
@@ -232,6 +238,7 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
     _contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     _contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
 
+    // Register for cooperative pointer events
     __weak UIButton* weakSelf = self;
     XamlControls::HookButtonPointerEvents(_xamlButton,
                                           ^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
@@ -262,6 +269,24 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
                                               e.handled = YES;
                                               [weakSelf _processPointerCaptureLostCallback:sender eventArgs:e];
                                           });
+
+    // Initialize press/click management
+    _isInTouchSequence = false;
+
+    // Register for IsPressed-changed events to handle keyboard input
+    _isPressedChangedRegistration = [_xamlButton registerPropertyChangedCallback:[WUXCPButtonBase isPressedProperty] 
+        callback:^(WXDependencyObject* sender, WXDependencyProperty* dp) {
+            UIButton* strongSelf = weakSelf;
+            if (strongSelf) {
+                // Update our highlighted state accordingly
+                [strongSelf _updateHighlightedState];
+            }
+    }];
+
+    // Register for 'Click' events, to handle keybard and accessibility clicks
+    _clickEventRegistration = [_xamlButton addClickEvent:^(RTObject* sender, WXRoutedEventArgs* e) {
+            [weakSelf _handleClickEvent:e];
+        }];
 }
 
 /**
@@ -719,6 +744,24 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     [super touchesMoved:touchSet withEvent:event];
 }
 
+// Updates our highlighted state as needed
+- (void)_updateHighlightedState {
+    [self setHighlighted:(_isInTouchSequence || _xamlButton.isPressed)];
+}
+
+// Handles click events that are raised by the button
+- (void)_handleClickEvent:(WXRoutedEventArgs*)e {
+    // We must ignore any pointer-triggered button 'clicks', because they're already handled by UIControl.
+    // Therefore, if we receive a click event when we're *not* in a touch sequence, we know that it's *not* firing due to
+    // a pointer event, so we must simulate a UIButton 'click' below.
+    // This allows us to function properly in most apps via keyboard and accessibility input.
+    // However, keep in mind that this won't interop with gesture recognizers.
+    if (!_isInTouchSequence) {
+        [self sendActionsForControlEvents:UIControlEventTouchDown];
+        [self sendActionsForControlEvents:UIControlEventTouchUpInside];
+    }
+}
+
 /**
  @Status Interoperable
 */
@@ -733,10 +776,9 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
         return;
     }
 
-    _isPressed = true;
-
     // Update our highlighted state accordingly
-    [self setHighlighted:_isPressed];
+    _isInTouchSequence = true;
+    [self _updateHighlightedState];
 
     [super touchesBegan:touchSet withEvent:event];
 }
@@ -748,14 +790,13 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     WUXIPointerRoutedEventArgs* routedEvent = [event _touchEvent]->_routedEventArgs;
     [routedEvent setHandled:NO];
 
-    if (!_isPressed) {
+    if (!_isInTouchSequence) {
         return;
     }
 
-    _isPressed = false;
-
     // Update our highlighted state accordingly
-    [self setHighlighted:_isPressed];
+    _isInTouchSequence = false;
+    [self _updateHighlightedState];
 
     [super touchesEnded:touchSet withEvent:event];
 }
@@ -767,14 +808,13 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     WUXIPointerRoutedEventArgs* routedEvent = [event _touchEvent]->_routedEventArgs;
     [routedEvent setHandled:NO];
 
-    if (!_isPressed) {
+    if (!_isInTouchSequence) {
         return;
     }
 
-    _isPressed = false;
-
     // Update our highlighted state accordingly
-    [self setHighlighted:_isPressed];
+    _isInTouchSequence = false;
+    [self _updateHighlightedState];
 
     [super touchesCancelled:touchSet withEvent:event];
 
@@ -948,6 +988,8 @@ static ComPtr<IInspectable> _currentInspectableBorderBackgroundBrush(UIButton* s
 */
 - (void)dealloc {
     XamlRemovePointerEvents([_xamlButton comObj]);
+    [_xamlButton unregisterPropertyChangedCallback:[WUXCPButtonBase isPressedProperty] token:_isPressedChangedRegistration];
+    [_xamlButton removeClickEvent:_clickEventRegistration];
 }
 
 /**
