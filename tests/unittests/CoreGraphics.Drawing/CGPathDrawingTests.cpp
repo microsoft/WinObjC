@@ -223,7 +223,8 @@ DRAW_TEST_F(CGPath, CloseSubpath, UIKitMimicTest<>) {
     CGPathRelease(thePath);
 }
 
-DRAW_TEST_F(CGPath, GetBoundingBox, UIKitMimicTest<>) {
+// TODO : Enable this test when #2301 is fixed
+DISABLED_DRAW_TEST_F(CGPath, GetBoundingBox, UIKitMimicTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -465,7 +466,8 @@ static void CGPathControlPointCallback(void* context, const CGPathElement* eleme
     }
 }
 
-DRAW_TEST_F(CGPath, PathApplyControlPointsQuadCurve, UIKitMimicTest<>) {
+// TODO : Enable this test when #2301 is fixed
+DISABLED_DRAW_TEST_F(CGPath, PathApplyControlPointsQuadCurve, UIKitMimicTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
     CGFloat width = bounds.size.width;
@@ -491,7 +493,8 @@ DRAW_TEST_F(CGPath, PathApplyControlPointsQuadCurve, UIKitMimicTest<>) {
     CGPathRelease(thepath);
 }
 
-DRAW_TEST_F(CGPath, PathApplyControlPointsArcs, UIKitMimicTest<>) {
+// TODO : Enable this test when #2301 is fixed
+DISABLED_DRAW_TEST_F(CGPath, PathApplyControlPointsArcs, UIKitMimicTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
     CGFloat width = bounds.size.width;
@@ -527,7 +530,8 @@ DRAW_TEST_F(CGPath, PathApplyControlPointsArcs, UIKitMimicTest<>) {
     CGPathRelease(thepath);
 }
 
-DRAW_TEST_F(CGPath, PathApplyControlPointsArcsSimple, UIKitMimicTest<>) {
+// TODO : Enable this test when #2301 is fixed
+DISABLED_DRAW_TEST_F(CGPath, PathApplyControlPointsArcsSimple, UIKitMimicTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
     CGFloat width = bounds.size.width;
@@ -579,7 +583,8 @@ DRAW_TEST_F(CGPath, FillArcsSimple, UIKitMimicTest<>) {
     CGPathRelease(thepath);
 }
 
-DRAW_TEST_F(CGPath, BoundingBoxes, UIKitMimicTest<>) {
+// TODO : Enable this test when #2301 is fixed
+DISABLED_DRAW_TEST_F(CGPath, BoundingBoxes, UIKitMimicTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
     CGFloat width = bounds.size.width;
