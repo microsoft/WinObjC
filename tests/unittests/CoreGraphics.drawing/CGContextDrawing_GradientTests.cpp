@@ -16,6 +16,11 @@
 
 #include "DrawingTest.h"
 
+// TODO #2243: Remove the UIKit dependency
+#if WINOBJC
+#include <UIKit/UIColor.h>
+#endif
+
 #pragma region LinearGradient
 
 static void _drawLinearGradient(CGContextRef context,
@@ -62,6 +67,10 @@ DRAW_TEST_F(CGGradient, LinearGradient, UIKitMimicTest<>) {
 DRAW_TEST_F(CGGradient, LinearGradientDrawWithCGColor, UIKitMimicTest<>) {
     CGFloat locations[2] = { 0, 1 };
     CGFloat components[8] = { 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0 };
+
+#if WINOBJC
+    [UIColor class];
+#endif
 
     auto colorspace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
 
