@@ -82,7 +82,7 @@ struct __CGContextDrawingState {
 
     // Strokes
     ComPtr<ID2D1Brush> strokeBrush{ nullptr };
-    D2D1_STROKE_STYLE_PROPERTIES strokeProperties{
+    D2D1_STROKE_STYLE_PROPERTIES1 strokeProperties{
         D2D1_CAP_STYLE_FLAT,
         D2D1_CAP_STYLE_FLAT,
         D2D1_CAP_STYLE_FLAT,
@@ -90,12 +90,13 @@ struct __CGContextDrawingState {
         10.f, // Default from Reference Docs
         D2D1_DASH_STYLE_SOLID,
         0.f,
+        D2D1_STROKE_TRANSFORM_TYPE_FIXED,
     };
     std::vector<CGFloat> dashes{};
     CGFloat lineWidth = 1.0f;
 
     // Computed from the above at draw time
-    ComPtr<ID2D1StrokeStyle> strokeStyle{ nullptr };
+    ComPtr<ID2D1StrokeStyle1> strokeStyle{ nullptr };
 
     CGFloat flatness = 0.0f;
 
@@ -137,9 +138,7 @@ struct __CGContextDrawingState {
     __CGTrinary shouldSmoothFonts = _kCGTrinaryDefault;
 
     inline void ComputeStrokeStyle(ID2D1DeviceContext* deviceContext) {
-        if (strokeStyle) {
-            return;
-        }
+        RETURN_IF(!deviceContext);
 
         if (std::fpclassify(lineWidth) == FP_ZERO) {
             // Set no stroke style.
@@ -149,9 +148,12 @@ struct __CGContextDrawingState {
         ComPtr<ID2D1Factory> factory;
         deviceContext->GetFactory(&factory);
 
+        ComPtr<ID2D1Factory1> factory1;
+        factory.As(&factory1);
+
         std::vector<float> adjustedDashes(dashes.size());
         std::transform(dashes.cbegin(), dashes.cend(), adjustedDashes.begin(), [this](const CGFloat& f) -> float { return f / lineWidth; });
-        FAIL_FAST_IF_FAILED(factory->CreateStrokeStyle(strokeProperties, adjustedDashes.data(), adjustedDashes.size(), &strokeStyle));
+        FAIL_FAST_IF_FAILED(factory1->CreateStrokeStyle(strokeProperties, adjustedDashes.data(), adjustedDashes.size(), &strokeStyle));
     }
 
     inline void ClearStrokeStyle() {
