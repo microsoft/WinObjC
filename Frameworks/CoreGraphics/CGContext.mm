@@ -2861,6 +2861,19 @@ HRESULT __CGContext::_DrawGeometryInternal(ID2D1Geometry* geometry,
 
 HRESULT __CGContext::DrawGeometry(__CGCoordinateMode coordinateMode, ID2D1Geometry* pGeometry, CGPathDrawingMode drawMode) {
     ComPtr<ID2D1Geometry> geometry(pGeometry);
+    if (coordinateMode == _kCGCoordinateModeUserSpace) {
+        // pre transform the geometry
+        ComPtr<ID2D1TransformedGeometry> transformedGeometry;
+        FAIL_FAST_IF_FAILED(
+            Factory()->CreateTransformedGeometry(geometry.Get(),
+                                                 __CGAffineTransformToD2D_F(CGContextGetUserSpaceToDeviceSpaceTransform(this)),
+                                                 &transformedGeometry));
+
+        // Draw it in device space, so transformation is not applied to the render target.
+        coordinateMode = _kCGCoordinateModeDeviceSpace;
+        geometry.Attach(transformedGeometry.Detach());
+    }
+
     return Draw(coordinateMode, nullptr, false, [geometry, drawMode, this](CGContextRef context, ID2D1DeviceContext* deviceContext) {
         return _DrawGeometryInternal(geometry.Get(), drawMode, context, deviceContext);
     });
