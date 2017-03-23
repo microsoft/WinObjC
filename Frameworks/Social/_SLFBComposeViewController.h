@@ -16,27 +16,7 @@
 
 #pragma once
 
-#include "ShareSheet.g.h"
+#import <Social/SLComposeViewController.h>
 
-namespace Social {
-namespace Xaml {
-
-    [Windows::Foundation::Metadata::WebHostHidden]
-    public ref class ShareSheet sealed
-    {
-    public:
-        ShareSheet(Platform::String^ token);
-
-        void addLink(Platform::String^ url);
-        void addImage(Windows::UI::Xaml::Media::ImageSource^ image);
-
-    private:
-        void ShareSheet_Post(Windows::UI::Xaml::Controls::ContentDialog^ sender, Windows::UI::Xaml::Controls::ContentDialogButtonClickEventArgs^ args);
-        void ShareSheet_Cancel(Windows::UI::Xaml::Controls::ContentDialog^ sender, Windows::UI::Xaml::Controls::ContentDialogButtonClickEventArgs^ args);
-
-        Platform::String^ _token;
-        Windows::UI::Xaml::Media::Imaging::RenderTargetBitmap^ _linkSource;
-    };
-
-}
-}
+@interface _SLFBComposeViewController : SLComposeViewController
+@end

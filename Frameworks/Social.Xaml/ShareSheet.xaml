@@ -15,6 +15,6 @@
     <StackPanel>
         <TextBlock Text="User Name" />
         <TextBox PlaceholderText="Say something..." x:Name="Message" />
-        <Image Height="100" />
+        <Canvas Height="100" x:Name="Preview" />
     </StackPanel>
 </ContentDialog>

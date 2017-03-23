@@ -15,8 +15,18 @@
 //******************************************************************************
 #pragma once
 
+#include <unknwn.h>
 #include "Social.Xaml.Export.h"
 
 struct IInspectable;
 
-SOCIAL_XAML_EXPORT void XamlCreateShareSheet(const wchar_t* token, IInspectable** created);
+class __declspec(novtable) __declspec(uuid("5CF22688-7892-4CE0-ACA4-3EA01A0EDDDB")) ShareSheetControl : public IUnknown {
+public:
+    virtual ~ShareSheetControl() = default;
+
+    virtual void addLink(const wchar_t* url) = 0;
+    virtual void addImage(IInspectable* image) = 0;
+    virtual void show() = 0;
+};
+
+SOCIAL_XAML_EXPORT ShareSheetControl* XamlCreateShareSheet(const wchar_t* token);

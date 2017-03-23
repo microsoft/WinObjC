@@ -33,12 +33,12 @@ typedef void (^SLComposeViewControllerCompletionHandler)(SLComposeViewController
 SOCIAL_EXPORT_CLASS
 @interface SLComposeViewController
     : UIViewController <NSCoding, UIAppearanceContainer, UIContentContainer, UIFocusEnvironment, UITraitEnvironment>
-+ (SLComposeViewController*)composeViewControllerForServiceType:(NSString*)serviceType STUB_METHOD;
-+ (BOOL)isAvailableForServiceType:(NSString*)serviceType STUB_METHOD;
++ (SLComposeViewController*)composeViewControllerForServiceType:(NSString*)serviceType;
++ (BOOL)isAvailableForServiceType:(NSString*)serviceType;
 - (BOOL)setInitialText:(NSString*)text STUB_METHOD;
-- (BOOL)addImage:(UIImage*)image STUB_METHOD;
+- (BOOL)addImage:(UIImage*)image;
 - (BOOL)removeAllImages STUB_METHOD;
-- (BOOL)addURL:(NSURL*)url STUB_METHOD;
+- (BOOL)addURL:(NSURL*)url;
 - (BOOL)removeAllURLs STUB_METHOD;
 @property (readonly, nonatomic) NSString* serviceType STUB_PROPERTY;
 @property (copy, nonatomic) SLComposeViewControllerCompletionHandler completionHandler STUB_PROPERTY;
