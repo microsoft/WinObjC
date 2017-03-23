@@ -139,7 +139,7 @@ LIBRARY CoreText
         _CTFontGetDWriteWeight
         _CTFontGetDWriteStretch
         _CTFontGetDWriteStyle
-        _CTFontGetCompatibleFamilyName
+        _CTFontGetXamlCompatibleFamilyName
 
         ; CTFontCollection Reference.mm
         kCTFontCollectionRemoveDuplicatesOption DATA

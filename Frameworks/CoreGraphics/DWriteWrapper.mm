@@ -210,7 +210,7 @@ CFArrayRef _DWriteCopyFontNamesForFamilyName(CFStringRef familyName) {
  * Note: This function currently uses a cache, meaning that fonts installed during runtime will not be reflected,
  * unless registered to the user font collection
  */
-CFStringRef _DWriteGetCompatibleFamilyName(CFStringRef fontName, IDWriteFontFace* fontFace) {
+CFStringRef _DWriteGetXamlCompatibleFamilyName(CFStringRef fontName, IDWriteFontFace* fontFace) {
     woc::unique_cf<CFStringRef> upperFontName(_CFStringCreateUppercaseCopy(fontName));
 
     const auto& info = __GetSystemFontCollectionHelper()->GetFontPropertiesFromUppercaseFontName(upperFontName);
@@ -220,19 +220,16 @@ CFStringRef _DWriteGetCompatibleFamilyName(CFStringRef fontName, IDWriteFontFace
 
     const auto& userFontInfo = __GetUserFontCollectionHelper()->GetFontPropertiesFromUppercaseFontName(upperFontName);
     if (userFontInfo) {
-        if (!fontFace) {
-            return userFontInfo->familyName.get();
-        }
+        RETURN_RESULT_IF(!fontFace, userFontInfo->familyName.get());
 
         // Retrieve the font file that was used to create this font face
         UINT32 fileCount;
-        fontFace->GetFiles(&fileCount, nullptr);
+        RETURN_RESULT_IF_FAILED(fontFace->GetFiles(&fileCount, nullptr), userFontInfo->familyName.get());
         RETURN_RESULT_IF(fileCount == 0, userFontInfo->familyName.get());
         if (fileCount > 1) {
-            CFIndex familyNameLength = CFStringGetLength(userFontInfo->familyName.get());
-            std::vector<UniChar> chars(familyNameLength + 1);
-            CFStringGetCharacters(userFontInfo->familyName.get(), { 0, familyNameLength }, chars.data());
-            TraceWarning(TAG, L"The font %ls has %d files, defaulting to the first", chars.data(), fileCount);
+            TraceWarning(TAG, L"The font has %d files, defaulting to the first file found", fileCount);
+
+            // Set fileCount to 1 so we just get the first file
             fileCount = 1;
         }
 
@@ -252,14 +249,10 @@ CFStringRef _DWriteGetCompatibleFamilyName(CFStringRef fontName, IDWriteFontFace
 
         // Now construct the XAML compatible family name, which should be in the format
         // ms-appx:///[PATH TO FONT FILE]/font_file.ttf#family_name
-        static const CFStringRef sc_prefix = CFSTR("ms-appx:///");
-        auto ret = woc::MakeAutoCF<CFMutableStringRef>(CFStringCreateMutableCopy(nullptr, 0, sc_prefix));
+        static const CFStringRef sc_format = CFSTR("ms-appx:///%@#%@");
         auto path = woc::MakeAutoCF<CFStringRef>(CFURLCopyFileSystemPath(fontURL, kCFURLWindowsPathStyle));
-        CFStringAppend(ret, path);
-
-        static const UniChar numberSign = '#';
-        CFStringAppendCharacters(ret, &numberSign, 1);
-        CFStringAppend(ret, userFontInfo->familyName.get());
+        auto ret =
+            woc::MakeAutoCF<CFStringRef>(CFStringCreateWithFormat(nullptr, nullptr, sc_format, path.get(), userFontInfo->familyName.get()));
         return (CFStringRef)CFAutorelease(ret.detach());
     }
 

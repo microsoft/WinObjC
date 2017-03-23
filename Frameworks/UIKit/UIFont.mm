@@ -292,7 +292,7 @@ BASE_CLASS_REQUIRED_IMPLS(UIFont, UIFontPrototype, CTFontGetTypeID);
 // WinObjC-only extension for compatibility issues between DWrite and Xaml
 // Returns the family name of the font Xaml can use
 - (NSString*)_compatibleFamilyName {
-    return static_cast<NSString*>(_CTFontGetCompatibleFamilyName(static_cast<CTFontRef>(self)));
+    return static_cast<NSString*>(_CTFontGetXamlCompatibleFamilyName(static_cast<CTFontRef>(self)));
 }
 
 // WinObjC-only extension for compatibility issues between DWrite and Xaml

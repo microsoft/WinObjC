@@ -794,7 +794,7 @@ TEST(CTFont, GetCompatibleFamilyName) {
     auto font = woc::MakeAutoCF<CTFontRef>(CTFontCreateWithName(fontName, 20, nullptr));
     EXPECT_NE(nullptr, font);
 
-    CFStringRef familyName = _CTFontGetCompatibleFamilyName(font);
+    CFStringRef familyName = _CTFontGetXamlCompatibleFamilyName(font);
     EXPECT_NE(nil, familyName);
 
     // CompatibleFamilyName returns an absolute path, so can only check prefix and suffix

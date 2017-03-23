@@ -19,14 +19,14 @@
 #import <CoreGraphics/DWriteWrapper.h>
 
 TEST(DWriteWrapper, FontToFamilyName) {
-    EXPECT_OBJCEQ(@"Arial", (id)_DWriteGetCompatibleFamilyName(CFSTR("Arial"), nullptr));
-    EXPECT_OBJCEQ(@"Arial", (id)_DWriteGetCompatibleFamilyName(CFSTR("Arial Italic"), nullptr));
-    EXPECT_OBJCEQ(@"Arial", (id)_DWriteGetCompatibleFamilyName(CFSTR("Arial Bold"), nullptr));
-    EXPECT_OBJCEQ(@"Arial", (id)_DWriteGetCompatibleFamilyName(CFSTR("Arial Bold Italic"), nullptr));
-    EXPECT_OBJCEQ(@"Arial", (id)_DWriteGetCompatibleFamilyName(CFSTR("Arial Black"), nullptr));
-    EXPECT_OBJCEQ(@"Times New Roman", (id)_DWriteGetCompatibleFamilyName(CFSTR("Times New Roman"), nullptr));
-    EXPECT_OBJCEQ(@"Times New Roman", (id)_DWriteGetCompatibleFamilyName(CFSTR("Times New Roman Italic"), nullptr));
-    EXPECT_OBJCEQ(@"Times New Roman", (id)_DWriteGetCompatibleFamilyName(CFSTR("Times New Roman Bold"), nullptr));
-    EXPECT_OBJCEQ(@"Times New Roman", (id)_DWriteGetCompatibleFamilyName(CFSTR("Times New Roman Bold Italic"), nullptr));
-    EXPECT_OBJCEQ(nil, (id)_DWriteGetCompatibleFamilyName(CFSTR("NotAFont"), nullptr));
+    EXPECT_OBJCEQ(@"Arial", (id)_DWriteGetXamlCompatibleFamilyName(CFSTR("Arial"), nullptr));
+    EXPECT_OBJCEQ(@"Arial", (id)_DWriteGetXamlCompatibleFamilyName(CFSTR("Arial Italic"), nullptr));
+    EXPECT_OBJCEQ(@"Arial", (id)_DWriteGetXamlCompatibleFamilyName(CFSTR("Arial Bold"), nullptr));
+    EXPECT_OBJCEQ(@"Arial", (id)_DWriteGetXamlCompatibleFamilyName(CFSTR("Arial Bold Italic"), nullptr));
+    EXPECT_OBJCEQ(@"Arial", (id)_DWriteGetXamlCompatibleFamilyName(CFSTR("Arial Black"), nullptr));
+    EXPECT_OBJCEQ(@"Times New Roman", (id)_DWriteGetXamlCompatibleFamilyName(CFSTR("Times New Roman"), nullptr));
+    EXPECT_OBJCEQ(@"Times New Roman", (id)_DWriteGetXamlCompatibleFamilyName(CFSTR("Times New Roman Italic"), nullptr));
+    EXPECT_OBJCEQ(@"Times New Roman", (id)_DWriteGetXamlCompatibleFamilyName(CFSTR("Times New Roman Bold"), nullptr));
+    EXPECT_OBJCEQ(@"Times New Roman", (id)_DWriteGetXamlCompatibleFamilyName(CFSTR("Times New Roman Bold Italic"), nullptr));
+    EXPECT_OBJCEQ(nil, (id)_DWriteGetXamlCompatibleFamilyName(CFSTR("NotAFont"), nullptr));
 }
