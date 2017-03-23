@@ -24,6 +24,8 @@
     </ProjectReference>
     <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
       <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
+      <!-- We do not want Logging to show up in the Language pacakge! It should only be in the Logging package. -->
+      <IncludeInPackage>false</IncludeInPackage>
     </ProjectReference>
     <ProjectReference Include="..\..\WinObjCRT\dll\WinObjCRT.vcxproj">
       <Project>{585b4870-0d6b-43a6-8e7e-ad08f7f507b6}</Project>
