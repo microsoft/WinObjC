@@ -54,7 +54,11 @@ void validateWideEtl(const wchar_t* tag, const wchar_t* expectedBody, int expect
     ASSERT_STREQ(expectedBody, g_etlBufferTestHook.c_str());
 }
 
-TEST(NSLogging, NSLoggingWideBasicTests) {
+/**
+#2303 - disabling NSLogger tests as they will fail in typical local dev scenario (debug build + release tools nuget)
+*/
+
+DISABLED_TEST(NSLogging, NSLoggingWideBasicTests) {
     g_isTestHookEnabled = true;
     auto reset = wil::ScopeExit([]() { g_isTestHookEnabled = false; });
 
@@ -88,7 +92,7 @@ TEST(NSLogging, NSLoggingWideBasicTests) {
     validateWideEtl(tag, format, WINEVENT_LEVEL_CRITICAL);
 }
 
-TEST(NSLogging, NSLoggingNSStringBasicTests) {
+DISABLED_TEST(NSLogging, NSLoggingNSStringBasicTests) {
     g_isTestHookEnabled = true;
     auto reset = wil::ScopeExit([]() { g_isTestHookEnabled = false; });
 
@@ -123,7 +127,7 @@ TEST(NSLogging, NSLoggingNSStringBasicTests) {
     validateWideEtl(tag, expectedBody, WINEVENT_LEVEL_CRITICAL);
 }
 
-TEST(NSLogging, NSLoggingWideFormatTests) {
+DISABLED_TEST(NSLogging, NSLoggingWideFormatTests) {
     g_isTestHookEnabled = true;
     auto reset = wil::ScopeExit([]() { g_isTestHookEnabled = false; });
 
@@ -143,7 +147,7 @@ TEST(NSLogging, NSLoggingWideFormatTests) {
     validateWideEtl(tag, expectedBody, WINEVENT_LEVEL_VERBOSE);
 }
 
-TEST(NSLogging, NSLoggingNSStringFormatTests) {
+DISABLED_TEST(NSLogging, NSLoggingNSStringFormatTests) {
     g_isTestHookEnabled = true;
     auto reset = wil::ScopeExit([]() { g_isTestHookEnabled = false; });
 
@@ -163,7 +167,7 @@ TEST(NSLogging, NSLoggingNSStringFormatTests) {
     validateWideEtl(tag, expectedBody, WINEVENT_LEVEL_VERBOSE);
 }
 
-TEST(NSLogging, NSLogTests) {
+DISABLED_TEST(NSLogging, NSLogTests) {
     g_isTestHookEnabled = true;
     g_isNSLogTestHookEnabled = true;
     auto reset = wil::ScopeExit([]() {
