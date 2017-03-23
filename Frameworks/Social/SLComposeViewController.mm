@@ -23,8 +23,8 @@ static const wchar_t* TAG = L"SLComposeViewController";
 
 @implementation SLComposeViewController
 /**
- @Status Interoperable
- @Notes
+ @Status Caveat
+ @Notes Only the Facebook service is supported, and even that is incomplete
 */
 + (SLComposeViewController*)composeViewControllerForServiceType:(NSString*)serviceType {
     SLComposeViewController* vc = nil;
