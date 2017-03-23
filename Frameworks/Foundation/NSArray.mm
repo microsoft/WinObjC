@@ -14,26 +14,27 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "StubReturn.h"
-#include "CFHelpers.h"
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSMutableData.h"
-#include "Foundation/NSEnumerator.h"
-#include "Foundation/NSKeyedArchiver.h"
-#include "Foundation/NSArray.h"
-#include "NSEnumeratorInternal.h"
-#include "CoreFoundation/CFArray.h"
-#include "Foundation/NSMutableString.h"
-#include "NSKeyedArchiverInternal.h"
-#include "Foundation/NSIndexSet.h"
-#include "Foundation/NSNull.h"
-#include "VAListHelper.h"
-#include "LoggingNative.h"
-#include "NSRaise.h"
-#include "NSCFArray.h"
-#include "BridgeHelpers.h"
-#import <_NSKeyValueCodingAggregateFunctions.h>
+#import "Starboard.h"
+#import "StubReturn.h"
+#import "CFHelpers.h"
+#import "Foundation/NSMutableArray.h"
+#import "Foundation/NSMutableData.h"
+#import "Foundation/NSEnumerator.h"
+#import "Foundation/NSKeyedArchiver.h"
+#import "Foundation/NSArray.h"
+#import "NSEnumeratorInternal.h"
+#import "CoreFoundation/CFArray.h"
+#import "Foundation/NSMutableString.h"
+#import "NSKeyedArchiverInternal.h"
+#import "Foundation/NSIndexSet.h"
+#import "Foundation/NSNull.h"
+#import "VAListHelper.h"
+#import "LoggingNative.h"
+#import "NSRaise.h"
+#import "NSCFArray.h"
+#import "BridgeHelpers.h"
+#import "NSKeyValueObserving-Internal.h"
+#import "_NSKeyValueCodingAggregateFunctions.h"
 
 static const wchar_t* TAG = L"NSArray";
 
@@ -863,28 +864,56 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
-- (void)addObserver:(NSObject*)anObserver
+- (void)addObserver:(id)observer forKeyPath:(NSString*)keyPath options:(NSKeyValueObservingOptions)options context:(void*)context {
+    NS_COLLECTION_THROW_ILLEGAL_KVO(keyPath);
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)removeObserver:(id)observer forKeyPath:(NSString*)keyPath context:(void*)context {
+    NS_COLLECTION_THROW_ILLEGAL_KVO(keyPath);
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)removeObserver:(id)observer forKeyPath:(NSString*)keyPath {
+    NS_COLLECTION_THROW_ILLEGAL_KVO(keyPath);
+}
+
+/**
+ @Status Caveat
+ @Notes This is a convenience method, no performance gains for using this over individual calls to addObserver to affected objects
+*/
+- (void)addObserver:(NSObject*)observer
     toObjectsAtIndexes:(NSIndexSet*)indexes
             forKeyPath:(NSString*)keyPath
                options:(NSKeyValueObservingOptions)options
                context:(void*)context {
-    UNIMPLEMENTED();
+    [indexes enumerateIndexesUsingBlock:^(NSUInteger index, BOOL* stop) {
+        [[self objectAtIndex:index] addObserver:observer forKeyPath:keyPath options:options context:context];
+    }];
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes This is a convenience method, no performance gains for using this over individual calls to removeObserver to affected objects
 */
-- (void)removeObserver:(NSObject*)anObserver fromObjectsAtIndexes:(NSIndexSet*)indexes forKeyPath:(NSString*)keyPath {
-    UNIMPLEMENTED();
+- (void)removeObserver:(NSObject*)observer fromObjectsAtIndexes:(NSIndexSet*)indexes forKeyPath:(NSString*)keyPath {
+    [self removeObserver:observer fromObjectsAtIndexes:indexes forKeyPath:keyPath context:nullptr];
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes This is a convenience method, no performance gains for using this over individual calls to removeObserver to affected objects
 */
 - (void)removeObserver:(NSObject*)observer fromObjectsAtIndexes:(NSIndexSet*)indexes forKeyPath:(NSString*)keyPath context:(void*)context {
-    UNIMPLEMENTED();
+    [indexes enumerateIndexesUsingBlock:^(NSUInteger index, BOOL* stop) {
+        [[self objectAtIndex:index] removeObserver:observer forKeyPath:keyPath context:context];
+    }];
 }
 
 /**

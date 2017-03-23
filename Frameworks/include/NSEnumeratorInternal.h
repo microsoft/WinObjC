@@ -45,11 +45,9 @@ __inline void _enumerateWithBlock(id<NSFastEnumeration> enumerator, NSEnumeratio
     __block BOOL stop = FALSE;
     for (id key in enumerator) {
         if (options & NSEnumerationConcurrent) {
-            dispatch_group_async(group,
-                                 queue,
-                                 ^() {
-                                     block(key, &stop);
-                                 });
+            dispatch_group_async(group, queue, ^() {
+                block(key, &stop);
+            });
         } else {
             block(key, &stop);
         }

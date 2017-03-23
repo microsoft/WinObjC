@@ -405,3 +405,62 @@ TEST(KVO, ToMany_KVCMediatedArrayWithHelpers_AggregateFunction) {
         andExpectChangeCallbacks:@[ insertCallbackPost, illegalChangeNotification ]];
     EXPECT_EQ(1, facade.hits);
 }
+
+TEST(KVO, NSArrayShouldNotBeObservable) {
+    NSArray* test = @[ @1, @2, @3 ];
+    _NSFoundationTestKVOObserver* observer = [[_NSFoundationTestKVOObserver new] autorelease];
+    EXPECT_ANY_THROW([test addObserver:observer forKeyPath:@"count" options:0 context:nullptr]);
+
+    // These would throw anyways because there should be no observer for the key path, but test anyways
+    EXPECT_ANY_THROW([test removeObserver:observer forKeyPath:@"count"]);
+    EXPECT_ANY_THROW([test removeObserver:observer forKeyPath:@"count" context:nullptr]);
+}
+
+TEST(KVO, NSArrayShouldThrowWhenTryingToObserveIndexesOutOfRange) {
+    NSArray* test = @[ [[TEST_IDENT(Observee) new] autorelease], [[TEST_IDENT(Observee) new] autorelease] ];
+    _NSFoundationTestKVOObserver* observer = [[_NSFoundationTestKVOObserver new] autorelease];
+    EXPECT_ANY_THROW(
+        [test addObserver:observer toObjectsAtIndexes:[NSIndexSet indexSetWithIndex:4] forKeyPath:@"bareArray" options:0 context:nullptr]);
+}
+
+TEST(KVO, NSArrayObserveElements) {
+    NSArray* observeeArray =
+        @[ [[TEST_IDENT(Observee) new] autorelease], [[TEST_IDENT(Observee) new] autorelease], [[TEST_IDENT(Observee) new] autorelease] ];
+    _NSFoundationTestKVOObserver* observer = [[_NSFoundationTestKVOObserver new] autorelease];
+    EXPECT_NO_THROW([observeeArray addObserver:observer
+                            toObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]
+                                    forKeyPath:@"manualNotificationArray"
+                                       options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew)
+                                       context:nullptr]);
+
+    // First two elements in range for observation so observer will receive changes
+    [observeeArray[0] addObjectToManualArray:@"object1"];
+    [observeeArray[0] addObjectToManualArray:@"object2"];
+    EXPECT_EQ(2, observer.hits);
+
+    [observeeArray[1] addObjectToManualArray:@"object1"];
+    EXPECT_EQ(3, observer.hits);
+
+    // But the third element is not so observer will not receive changes
+    [observeeArray[2] addObjectToManualArray:@"object1"];
+    EXPECT_EQ(3, observer.hits);
+
+    EXPECT_NO_THROW([observeeArray removeObserver:observer
+                             fromObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 1)]
+                                       forKeyPath:@"manualNotificationArray"]);
+
+    // Removed observer from first element, so modifying it will not report a change
+    [observeeArray[0] addObjectToManualArray:@"object3"];
+    EXPECT_EQ(3, observer.hits);
+
+    // But the second element is still being observed
+    [observeeArray[1] addObjectToManualArray:@"object2"];
+    EXPECT_EQ(4, observer.hits);
+
+    EXPECT_NO_THROW([observeeArray removeObserver:observer
+                             fromObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, 1)]
+                                       forKeyPath:@"manualNotificationArray"]);
+
+    [observeeArray[1] addObjectToManualArray:@"object3"];
+    EXPECT_EQ(4, observer.hits);
+}

@@ -117,12 +117,6 @@ BRIDGED_MUTABLE_CLASS_FOR_CODER(CFArrayRef, _CFArrayIsMutable, NSArray, NSMutabl
 - (void)insertObject:(NSObject*)objAddr atIndex:(NSUInteger)index {
     BRIDGED_THROW_IF_IMMUTABLE(_CFArrayIsMutable, CFArrayRef);
     NS_COLLECTION_THROW_IF_NULL_REASON(objAddr, [NSString stringWithFormat:@"*** %@ object cannot be nil", NSStringFromSelector(_cmd)]);
-    if (objAddr == nil) {
-        @throw [NSException exceptionWithName:NSInvalidArgumentException
-                                       reason:[NSString stringWithFormat:@"*** %@ object cannot be nil", NSStringFromSelector(_cmd)]
-                                     userInfo:nil];
-    }
-
     CFArrayInsertValueAtIndex(static_cast<CFMutableArrayRef>(self), index, reinterpret_cast<const void*>(objAddr));
 }
 
