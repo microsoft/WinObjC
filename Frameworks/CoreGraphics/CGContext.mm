@@ -3134,12 +3134,27 @@ void CGContextDrawTiledImage(CGContextRef context, CGRect rect, CGImageRef image
 #pragma endregion
 
 #pragma region Drawing Operations - Gradient + Shading
+static bool __isFloatCloseEnough(float a, float b) {
+    static const float sc_epsilon = 1e-7;
+    return fabsf(a - b) < sc_epsilon;
+}
+
 /**
 * Insert a transparent color at the specified 'location'.
 * This will also move the color at the specified 'location' to the supplied 'position'
 */
 static inline void __CGGradientInsertTransparentColor(std::vector<D2D1_GRADIENT_STOP>& gradientStops, int location, float position) {
-    gradientStops[location].position = position;
+    // Find the Gradient with location.
+    auto res = std::find_if(gradientStops.begin(), gradientStops.end(), [location](const D2D1_GRADIENT_STOP& gradient) {
+        return __isFloatCloseEnough(gradient.position, location);
+    });
+
+    if (res != gradientStops.end()) {
+        (*res).position = position;
+    } else {
+        gradientStops[location].position = position;
+    }
+
     // set the edge location to be transparent
     D2D1_GRADIENT_STOP transparent = { location, D2D1::ColorF(0, 0, 0, 0) };
     gradientStops.push_back(transparent);
