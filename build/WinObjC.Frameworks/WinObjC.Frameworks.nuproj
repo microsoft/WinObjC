@@ -110,6 +110,7 @@
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\UIKit.Xaml\dll\UIKit.Xaml.vcxproj" />
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\UIKit\dll\UIKit.vcxproj" />
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\WebKit\dll\WebKit.vcxproj" />
+  </ItemGroup>
 
   <!-- NuProj Project References. Ensure that these only get evaluated once by checking that this isn't the second time through this project -->
   <ItemGroup Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">
