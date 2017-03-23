@@ -3170,11 +3170,11 @@ static std::vector<D2D1_GRADIENT_STOP> __CGGradientToD2D1GradientStop(CGContextR
     // effect based on the extend mode).   We support that by inserting a point (with transparent color) close to the start/end points, such
     // that d2d will automatically extend the transparent color, thus we obtain the desired effect for CGGradientDrawingOptions.
 
-    if (!(options & kCGGradientDrawsBeforeStartLocation)) {
+    if (!(options & kCGGradientDrawsBeforeStartLocation) && gradientCount > 1) {
         __CGGradientInsertTransparentColor(gradientStops, 0, s_kCGGradientOffsetPoint);
     }
 
-    if (!(options & kCGGradientDrawsAfterEndLocation)) {
+    if (!(options & kCGGradientDrawsAfterEndLocation) && gradientCount > 1) {
         __CGGradientInsertTransparentColor(gradientStops, 1, 1.0f - s_kCGGradientOffsetPoint);
     }
 
