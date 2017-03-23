@@ -23,14 +23,12 @@ static void _drawLinearGradient(CGContextRef context,
                                 CGPoint endPoint,
                                 CGFloat components[],
                                 CGFloat locations[],
+                                size_t count,
                                 CGGradientDrawingOptions options) {
-    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
-    CGGradientRef gradient =
-        CGGradientCreateWithColorComponents(colorspace, components, locations, std::extent<decltype(locations)>::value);
+    auto colorspace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
+    auto gradient = woc::MakeStrongCF<CGGradientRef>(CGGradientCreateWithColorComponents(colorspace, components, locations, count));
 
     CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, options);
-    CFRelease(colorspace);
-    CFRelease(gradient);
 }
 
 static void _drawShortLinearGradientWithOptions(CGContextRef context, CGRect bounds, CGGradientDrawingOptions option) {
@@ -44,29 +42,52 @@ static void _drawShortLinearGradientWithOptions(CGContextRef context, CGRect bou
                         CGPointMake(borderRect.size.width, borderRect.size.height),
                         components,
                         locations,
+                        std::extent<decltype(locations)>::value,
                         option);
 }
 
-DISABLED_DRAW_TEST_F(CGGradient, LinearGradient, UIKitMimicTest<>) {
+DRAW_TEST_F(CGGradient, LinearGradient, UIKitMimicTest<>) {
     CGFloat locations[2] = { 0, 1 };
     CGFloat components[8] = { 0.0, 0.0, 1, 1.0, 1.0, 0, 0, 1.0 };
+
     _drawLinearGradient(GetDrawingContext(),
                         CGPointMake(0, 0),
                         CGPointMake(512, 1024),
                         components,
                         locations,
+                        std::extent<decltype(locations)>::value,
                         kCGGradientDrawsBeforeStartLocation);
 }
 
-DISABLED_DRAW_TEST_F(CGGradient, LinearGradientShortBothSides_Options_0, UIKitMimicTest<>) {
+DRAW_TEST_F(CGGradient, LinearGradientDrawWithCGColor, UIKitMimicTest<>) {
+    CGFloat locations[2] = { 0, 1 };
+    CGFloat components[8] = { 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0 };
+
+    auto colorspace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
+
+    auto red = woc::MakeStrongCF<CGColorRef>(CGColorCreate(colorspace, &components[0]));
+    auto blue = woc::MakeStrongCF<CGColorRef>(CGColorCreate(colorspace, &components[4]));
+
+    CGColorRef colors[] = { red, blue };
+    auto colArray = woc::MakeStrongCF<CFArrayRef>(
+        CFArrayCreate(nullptr, (const void**)colors, std::extent<decltype(colors)>::value, &kCFTypeArrayCallBacks));
+    auto gradient = woc::MakeStrongCF<CGGradientRef>(CGGradientCreateWithColors(colorspace, colArray, locations));
+    CGContextDrawLinearGradient(GetDrawingContext(),
+                                gradient,
+                                CGPointMake(0, 0),
+                                CGPointMake(512, 1024),
+                                kCGGradientDrawsBeforeStartLocation);
+}
+
+DRAW_TEST_F(CGGradient, LinearGradientShortBothSides_Options_0, UIKitMimicTest<>) {
     _drawShortLinearGradientWithOptions(GetDrawingContext(), GetDrawingBounds(), 0);
 }
 
-DISABLED_DRAW_TEST_F(CGGradient, LinearGradientShortBothSides_Options_kCGGradientDrawsBeforeStartLocation, UIKitMimicTest<>) {
+DRAW_TEST_F(CGGradient, LinearGradientShortBothSides_Options_kCGGradientDrawsBeforeStartLocation, UIKitMimicTest<>) {
     _drawShortLinearGradientWithOptions(GetDrawingContext(), GetDrawingBounds(), kCGGradientDrawsBeforeStartLocation);
 }
 
-DISABLED_DRAW_TEST_F(CGGradient, LinearGradientShortBothSides_Options_kCGGradientDrawsAfterEndLocation, UIKitMimicTest<>) {
+DRAW_TEST_F(CGGradient, LinearGradientShortBothSides_Options_kCGGradientDrawsAfterEndLocation, UIKitMimicTest<>) {
     _drawShortLinearGradientWithOptions(GetDrawingContext(), GetDrawingBounds(), kCGGradientDrawsAfterEndLocation);
 }
 
@@ -77,19 +98,36 @@ DRAW_TEST_F(CGGradient, LinearGradientInvalidCount, UIKitMimicTest<>) {
         0.85, 0, 0, 1.0,
     };
 
-    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
-    CGGradientRef gradient = CGGradientCreateWithColorComponents(colorspace, components, locations, 0);
+    auto colorspace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
+    auto gradient = woc::MakeStrongCF<CGGradientRef>(CGGradientCreateWithColorComponents(colorspace, components, locations, 0));
 
     CGContextDrawLinearGradient(GetDrawingContext(),
                                 gradient,
                                 CGPointMake(0, 0),
                                 CGPointMake(512, 1024),
                                 kCGGradientDrawsBeforeStartLocation);
-    CFRelease(colorspace);
-    CFRelease(gradient);
 }
 
-DISABLED_DRAW_TEST_F(CGGradient, LinearGradient2, UIKitMimicTest<>) {
+DRAW_TEST_F(CGGradient, LinearGradientOneLocation, UIKitMimicTest<>) {
+    // Note if the location is 1, the actual value is ignored.
+    CGFloat locations[] = { 0.20 };
+
+    CGFloat components[] = {
+        1, 0, 0, 1,
+    };
+
+    auto colorspace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
+    auto gradient = woc::MakeStrongCF<CGGradientRef>(
+        CGGradientCreateWithColorComponents(colorspace, components, locations, std::extent<decltype(locations)>::value));
+
+    CGContextDrawLinearGradient(GetDrawingContext(),
+                                gradient,
+                                CGPointMake(0, 0),
+                                CGPointMake(512, 1024),
+                                kCGGradientDrawsBeforeStartLocation);
+}
+
+DRAW_TEST_F(CGGradient, LinearGradient2, UIKitMimicTest<>) {
     CGFloat locations[] = { 0.0, 0.33, 0.66, 1.0 };
 
     CGFloat components[] = {
@@ -101,10 +139,26 @@ DISABLED_DRAW_TEST_F(CGGradient, LinearGradient2, UIKitMimicTest<>) {
                         CGPointMake(512, 1024),
                         components,
                         locations,
+                        std::extent<decltype(locations)>::value,
                         kCGGradientDrawsBeforeStartLocation);
 }
 
-DISABLED_DRAW_TEST_F(CGGradient, LinearGradient2Short, UIKitMimicTest<>) {
+DRAW_TEST_F(CGGradient, LinearGradientNullLocations, UIKitMimicTest<>) {
+    CGFloat components[] = {
+        0, 0, 1, 1.0, 1, 0, 0, 1.0, 0.85, 0.3, 0, 1.0, 1, 0, 1, 1.0,
+    };
+
+    auto colorspace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
+    auto gradient = woc::MakeStrongCF<CGGradientRef>(CGGradientCreateWithColorComponents(colorspace, components, NULL, 4));
+
+    CGContextDrawLinearGradient(GetDrawingContext(),
+                                gradient,
+                                CGPointMake(0, 0),
+                                CGPointMake(512, 1024),
+                                kCGGradientDrawsBeforeStartLocation);
+}
+
+DRAW_TEST_F(CGGradient, LinearGradient2Short, UIKitMimicTest<>) {
     CGFloat locations[] = { 0.0, 0.33, 1.0 };
 
     CGFloat components[] = { 0.85, 0, 0, 1.0, 1, 0, 0, 1.0, 0.85, 0.3, 0, 1.0 };
@@ -113,10 +167,11 @@ DISABLED_DRAW_TEST_F(CGGradient, LinearGradient2Short, UIKitMimicTest<>) {
                         CGPointMake(350, 800),
                         components,
                         locations,
+                        std::extent<decltype(locations)>::value,
                         kCGGradientDrawsBeforeStartLocation);
 }
 
-DISABLED_DRAW_TEST_F(CGGradient, LinearGradient3, UIKitMimicTest<>) {
+DRAW_TEST_F(CGGradient, LinearGradient3, UIKitMimicTest<>) {
     CGFloat locations[] = { 0.0, 0.5, 1 };
 
     CGFloat components[] = {
@@ -127,10 +182,11 @@ DISABLED_DRAW_TEST_F(CGGradient, LinearGradient3, UIKitMimicTest<>) {
                         CGPointMake(512, 1024),
                         components,
                         locations,
+                        std::extent<decltype(locations)>::value,
                         kCGGradientDrawsBeforeStartLocation);
 }
 
-DISABLED_DRAW_TEST_F(CGGradient, LinearGradientWithLowOpacity, UIKitMimicTest<>) {
+DRAW_TEST_F(CGGradient, LinearGradientWithLowOpacity, UIKitMimicTest<>) {
     CGFloat locations[] = { 0.0, 0.5, 1 };
 
     CGFloat components[] = {
@@ -142,10 +198,11 @@ DISABLED_DRAW_TEST_F(CGGradient, LinearGradientWithLowOpacity, UIKitMimicTest<>)
                         CGPointMake(0, 0),
                         components,
                         locations,
+                        std::extent<decltype(locations)>::value,
                         kCGGradientDrawsBeforeStartLocation);
 }
 
-DISABLED_DRAW_TEST_F(CGGradient, LinearGradientWithAlpha, UIKitMimicTest<>) {
+DRAW_TEST_F(CGGradient, LinearGradientWithAlpha, UIKitMimicTest<>) {
     CGFloat locations[] = { 0.0, 0.25, 0.5, 0.6, 0.8, 0.9, 1 };
 
     CGFloat components[] = {
@@ -158,10 +215,11 @@ DISABLED_DRAW_TEST_F(CGGradient, LinearGradientWithAlpha, UIKitMimicTest<>) {
                         CGPointMake(512, 1024),
                         components,
                         locations,
+                        std::extent<decltype(locations)>::value,
                         kCGGradientDrawsBeforeStartLocation);
 }
 
-DISABLED_DRAW_TEST_F(CGGradient, LinearGradientWithLowOpacityShort, UIKitMimicTest<>) {
+DRAW_TEST_F(CGGradient, LinearGradientWithLowOpacityShort, UIKitMimicTest<>) {
     CGFloat locations[] = { 0.0, 0.5, 1 };
 
     CGFloat components[] = {
@@ -173,6 +231,7 @@ DISABLED_DRAW_TEST_F(CGGradient, LinearGradientWithLowOpacityShort, UIKitMimicTe
                         CGPointMake(0, 0),
                         components,
                         locations,
+                        std::extent<decltype(locations)>::value,
                         kCGGradientDrawsAfterEndLocation);
 }
 
