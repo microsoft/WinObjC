@@ -150,6 +150,11 @@ const char* XIBObject::getAttrib(const char* name) {
     return _getAttrib(name, false);
 }
 
+const char* _getNodeValue(pugi::xml_node node) {
+    const char* value = node.value();
+    return strlen(value) > 0 ? value : NULL;
+}
+
 XIBObject::XIBObject() {
     _parent = NULL;
     _node = pugi::xml_node();
@@ -482,24 +487,15 @@ bool XIBObject::GetBool(char* pPropName, bool defaultValue) {
 }
 
 void XIBObject::AddSize(NIBWriter* writer, char* pPropName, CGSize size) {
-    char* dataOut = (char*)malloc(sizeof(CGSize) + 1);
-    dataOut[0] = 6;
-    memcpy(&dataOut[1], &size, sizeof(CGSize));
-    AddOutputMember(writer, strdup(pPropName), new XIBObjectDataWriter(dataOut, sizeof(CGSize) + 1));
+    AddData<CGSize>(writer, pPropName, size);
 }
 
-void XIBObject::AddPoint(NIBWriter* writer, char* pPropName, UIPoint pt) {
-    char* dataOut = (char*)malloc(sizeof(UIPoint) + 1);
-    dataOut[0] = 6;
-    memcpy(&dataOut[1], &pt, sizeof(UIPoint));
-    AddOutputMember(writer, strdup(pPropName), new XIBObjectDataWriter(dataOut, sizeof(UIPoint) + 1));
+void XIBObject::AddPoint(NIBWriter* writer, char* pPropName, UIPoint point) {
+    AddData<UIPoint>(writer, pPropName, point);
 }
 
-void XIBObject::AddRect(NIBWriter* writer, char* pPropName, UIRect pt) {
-    char* dataOut = (char*)malloc(sizeof(UIRect) + 1);
-    dataOut[0] = 6;
-    memcpy(&dataOut[1], &pt, sizeof(UIRect));
-    AddOutputMember(writer, strdup(pPropName), new XIBObjectDataWriter(dataOut, sizeof(UIRect) + 1));
+void XIBObject::AddRect(NIBWriter* writer, char* pPropName, UIRect rect) {
+    AddData<UIRect>(writer, pPropName, rect);
 }
 
 void XIBObject::AddString(NIBWriter* writer, char* pPropName, const char* str) {
@@ -638,7 +634,7 @@ void XIBObject::getDocumentCoverage(pugi::xml_document& doc) {
         bool for_each(pugi::xml_node& node) {
             if (!_handledNodes.count(node.hash_value())) {
                 const char* key = _getNodeAttrib(node, "key", false);
-                printf("Unhandled node:%s:%s\n", node.path().c_str(), key);
+                printf("Unhandled node:%s:%s\n", node.path().c_str(), key ? key : _getNodeValue(node));
             }
 
             for (pugi::xml_attribute_iterator iter = node.attributes_begin(); iter != node.attributes_end(); iter++) {

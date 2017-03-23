@@ -768,29 +768,20 @@ static std::string _printViewhierarchy(UIView* leafView) {
             ![coder decodeInt32ForKey:@"UIViewDoesNotTranslateAutoresizingMaskIntoConstraints"];
     }
 
-    if ([coder containsValueForKey:@"UIViewContentCompressionResistancePriority"]) {
-        id sizeObj = [coder decodeObjectForKey:@"UIViewContentCompressionResistancePriority"];
-        if ([sizeObj isKindOfClass:[NSString class]]) {
-            const char* stretchStr = [sizeObj UTF8String];
-            sscanf_s(stretchStr,
-                     "{%f, %f}",
-                     &priv->_contentCompressionResistancePriority.width,
-                     &priv->_contentCompressionResistancePriority.height);
-        } else {
-            CGSize* size = (CGSize*)[sizeObj bytes];
-            memcpy(&priv->_contentCompressionResistancePriority, size, sizeof(CGRect));
-        }
+    if ([coder containsValueForKey:@"UIViewHorizontalHuggingPriority"]) {
+        priv->_contentHuggingPriority.width = [coder decodeFloatForKey:@"UIViewHorizontalHuggingPriority"];
     }
 
-    if ([coder containsValueForKey:@"UIViewContentHuggingPriority"]) {
-        id sizeObj = [coder decodeObjectForKey:@"UIViewContentHuggingPriority"];
-        if ([sizeObj isKindOfClass:[NSString class]]) {
-            const char* stretchStr = [(NSString*)sizeObj UTF8String];
-            sscanf_s(stretchStr, "{%f, %f}", &priv->_contentHuggingPriority.width, &priv->_contentHuggingPriority.height);
-        } else {
-            CGSize* size = (CGSize*)[sizeObj bytes];
-            memcpy(&priv->_contentHuggingPriority, size, sizeof(CGRect));
-        }
+    if ([coder containsValueForKey:@"UIViewVerticalHuggingPriority"]) {
+        priv->_contentHuggingPriority.height = [coder decodeFloatForKey:@"UIViewVerticalHuggingPriority"];
+    }
+
+    if ([coder containsValueForKey:@"UIViewHorizontalCompressionResistancePriority"]) {
+        priv->_contentCompressionResistancePriority.width = [coder decodeFloatForKey:@"UIViewHorizontalCompressionResistancePriority"];
+    }
+
+    if ([coder containsValueForKey:@"UIViewVerticalCompressionResistancePriority"]) {
+        priv->_contentCompressionResistancePriority.height = [coder decodeFloatForKey:@"UIViewVerticalCompressionResistancePriority"];
     }
 
     if ([coder containsValueForKey:@"UIViewAutolayoutConstraints"]) {

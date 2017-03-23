@@ -18,14 +18,4 @@
 
 #import <objc/runtime.h>
 
-class __CGColorSpace : private objc_object {
-public:
-    CGColorSpaceModel colorSpaceModel;
-    char* palette;
-    int lastColor;
-
-    __CGColorSpace(CGColorSpaceModel model);
-    ~__CGColorSpace();
-};
-
 CGColorSpaceRef _CGColorSpaceCreate(CGColorSpaceModel model);

@@ -25,7 +25,6 @@
 #import <Foundation/Foundation.h>
 #import <Starboard/SmartTypes.h>
 #import <TestFramework.h>
-#import <LoggingNative.h>
 
 TEST(NSBundle, Paths) {
     auto bundle = [NSBundle mainBundle];
@@ -116,18 +115,14 @@ protected:
 
         NSError* error = nil;
         [[NSFileManager defaultManager] createDirectoryAtPath:tempDir withIntermediateDirectories:false attributes:nil error:&error];
-        if (error) {
-            TraceError(L"TestNSBundle", L"%hs", [[error description] UTF8String]);
-            return;
-        }
+        // WINOBJC: Change to ASSERT macro to remove LoggingNative reference
+        ASSERT_EQ(nil, error);
 
         // Make a flat bundle in the playground
         auto bundlePath = [tempDir stringByAppendingString:_bundleName];
         [[NSFileManager defaultManager] createDirectoryAtPath:bundlePath withIntermediateDirectories:false attributes:nil error:&error];
-        if (error) {
-            TraceError(L"TestNSBundle", L"%hs", [[error description] UTF8String]);
-            return;
-        }
+        // WINOBJC: Change to ASSERT macro to remove LoggingNative reference
+        ASSERT_EQ(nil, error);
 
         // Put some resources in the bundle
         for (NSString* n in _bundleResourceNames) {
@@ -138,10 +133,9 @@ protected:
         // Add a resource into a subdirectory
         auto subDirPath = [[bundlePath stringByAppendingString:@"/"] stringByAppendingString:_subDirectory];
         [[NSFileManager defaultManager] createDirectoryAtPath:subDirPath withIntermediateDirectories:false attributes:nil error:&error];
-        if (error) {
-            TraceError(L"TestNSBundle", L"%hs", [[error description] UTF8String]);
-            return;
-        }
+        // WINOBJC: Change to ASSERT macro to remove LoggingNative reference
+        ASSERT_EQ(nil, error);
+
         [[NSFileManager defaultManager] createFileAtPath:[@[ subDirPath, @"/", _main, @".", _type ] componentsJoinedByString:@""]
                                                 contents:nil
                                               attributes:nil];

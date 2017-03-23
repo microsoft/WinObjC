@@ -3,7 +3,7 @@
 
   <PropertyGroup>
     <DefaultLanguage Condition="'$(DefaultLanguage)'==''">en-US</DefaultLanguage>
-    <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)'==''">14.0</MinimumVisualStudioVersion>
+    <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)'==''">15.0</MinimumVisualStudioVersion>
     <AppContainerApplication Condition="'$(AppContainerApplication)'==''">true</AppContainerApplication>
     <ApplicationType Condition="'$(ApplicationType)'==''">Windows Store</ApplicationType>
     <ApplicationTypeRevision Condition="'$(ApplicationTypeRevision)'==''">10.0</ApplicationTypeRevision>
@@ -21,7 +21,7 @@
   <PropertyGroup>
     <UseDebugLibraries>false</UseDebugLibraries>
     <UseDebugLibraries Condition="'$(Configuration)'=='Debug'">true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization Condition="'$(Configuration)'=='Release'">true</WholeProgramOptimization>
     <UseDotNetNativeToolchain Condition="'$(Configuration)'=='Release'">true</UseDotNetNativeToolchain>
   </PropertyGroup>

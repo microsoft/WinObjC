@@ -64,8 +64,44 @@
     return state;
 }
 
+- (UIEdgeInsets)getUIEdgeInsetsFromString:(UITextField*)textField {
+    UIEdgeInsets ret = UIEdgeInsetsZero;
+    NSString* edgeInsetsString = textField.text;
+
+    // Inset strings are formated as {A, B, C, D} where A,B,C and D are CGFloats types.
+    // Example: "{80.0f, 80.0f, 80f, 80f}" and "{80, 80, 80, 80}" are a valid edge insets in string format
+    if ([edgeInsetsString length] > 0) {
+        // Strip off curly braces and use the delimiter to separate components
+        NSString* strWithBraces = [edgeInsetsString substringWithRange:NSMakeRange(1, edgeInsetsString.length - 1)];
+        NSArray* components = [strWithBraces componentsSeparatedByString:@","];
+
+        if (components.count < 4) {
+            textField.backgroundColor = [UIColor redColor]; // invalid number of components
+        } else {
+            textField.backgroundColor = [UIColor clearColor];
+            for (int componentIndex = 0; componentIndex < components.count; componentIndex++) {
+                CGFloat value = ((NSString*)[components objectAtIndex:componentIndex]).floatValue;
+                if (componentIndex == 0) {
+                    ret.top = value;
+
+                } else if (componentIndex == 1) {
+                    ret.left = value;
+                } else if (componentIndex == 2) {
+                    ret.bottom = value;
+                } else if (componentIndex == 3) {
+                    ret.right = value;
+                }
+            }
+        }
+    }
+
+    return ret;
+}
+
 - (void)dealloc {
     [_segmentButtonType removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+
+    [_textImageEdgeInsets removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
 
     [_textTitleStateField removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
     [_textTitle removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
@@ -95,12 +131,26 @@
 }
 
 - (void)createButtonWithTypeControls {
-    NSArray* segmentButtonTypeContent = [NSArray arrayWithObjects:@"Default", @"Custom", @"System", nil];
+    NSArray* segmentButtonTypeContent = [NSArray arrayWithObjects:@"Default", @"Custom", @"System", @"RoundedRect", nil];
     _segmentButtonType = [[UISegmentedControl alloc] initWithItems:segmentButtonTypeContent];
     _segmentButtonType.frame = CGRectMake(0.0f, 0.0f, 540.0f, 40.0f);
     [_segmentButtonType addTarget:self action:@selector(onButtonWithTypeChanged:) forControlEvents:UIControlEventValueChanged];
     _segmentButtonType.selectedSegmentIndex = 0;
     [_menuTVC addMenuItemView:_segmentButtonType andTitle:@"Button Type"];
+}
+
+- (void)createInsetControls {
+    _textContentEdgeInsets = [self createTestEnabledUITextField];
+    [_textContentEdgeInsets addTarget:self action:@selector(onContentEdgeInsetsChanged:) forControlEvents:UIControlEventEditingChanged];
+    [_menuTVC addMenuItemView:_textContentEdgeInsets andTitle:@"Content Edge Insets (e.g. {80, 80, 80, 80})"];
+
+    _textTitleEdgeInsets = [self createTestEnabledUITextField];
+    [_textTitleEdgeInsets addTarget:self action:@selector(onTitleEdgeInsetsChanged:) forControlEvents:UIControlEventEditingChanged];
+    [_menuTVC addMenuItemView:_textTitleEdgeInsets andTitle:@"Title Edge Insets (e.g. {80, 80, 80, 80})"];
+
+    _textImageEdgeInsets = [self createTestEnabledUITextField];
+    [_textImageEdgeInsets addTarget:self action:@selector(onImageEdgeInsetsChanged:) forControlEvents:UIControlEventEditingChanged];
+    [_menuTVC addMenuItemView:_textImageEdgeInsets andTitle:@"Image Edge Insets (e.g. {80, 80, 80, 80})"];
 }
 
 - (void)createTitleControls {
@@ -167,8 +217,8 @@
     [self createButtonWithTypeControls];
 
     _switchHighlighted = [[UISwitch alloc] init];
-    [_switchHighlighted addTarget : self action : @selector(onHighlighted)forControlEvents : UIControlEventValueChanged];
-    [_menuTVC addMenuItemView : _switchHighlighted andTitle : @"Highlighted"];
+    [_switchHighlighted addTarget:self action:@selector(onHighlighted) forControlEvents:UIControlEventValueChanged];
+    [_menuTVC addMenuItemView:_switchHighlighted andTitle:@"Highlighted"];
 
     _switchEnabled = [[UISwitch alloc] init];
     _switchEnabled.on = YES;
@@ -181,14 +231,19 @@
 
     _switchAdjustsImageWhenHighlighted = [[UISwitch alloc] init];
     _switchAdjustsImageWhenHighlighted.on = YES;
-    [_switchAdjustsImageWhenHighlighted addTarget:self action:@selector(onAdjustsImageWhenHighlighted) forControlEvents:UIControlEventValueChanged];
+    [_switchAdjustsImageWhenHighlighted addTarget:self
+                                           action:@selector(onAdjustsImageWhenHighlighted)
+                                 forControlEvents:UIControlEventValueChanged];
     [_menuTVC addMenuItemView:_switchAdjustsImageWhenHighlighted andTitle:@"AdjustsImageWhenHighlighted"];
 
     _switchAdjustsImageWhenDisabled = [[UISwitch alloc] init];
     _switchAdjustsImageWhenDisabled.on = YES;
-    [_switchAdjustsImageWhenDisabled addTarget:self action:@selector(onAdjustsImageWhenDisabled) forControlEvents:UIControlEventValueChanged];
+    [_switchAdjustsImageWhenDisabled addTarget:self
+                                        action:@selector(onAdjustsImageWhenDisabled)
+                              forControlEvents:UIControlEventValueChanged];
     [_menuTVC addMenuItemView:_switchAdjustsImageWhenDisabled andTitle:@"AdjustsImageWhenDisabled"];
 
+    [self createInsetControls];
     [self createTitleControls];
     [self createTitleColorControls];
     [self createImageControls];
@@ -198,6 +253,7 @@
 // Initial configuration parameters for the UIButton
 - (void)setupButtons {
     _defaultButton = [[UIButton alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 200.0f, 200.0f)];
+    [_defaultButton setFont:[UIFont fontWithName:@"ArialMT" size:16.0f]];
 
     _customButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _customButton.frame = CGRectMake(200.0f, 0.0f, 200.0f, 200.0f);
@@ -205,9 +261,13 @@
     _systemButton = [UIButton buttonWithType:UIButtonTypeSystem];
     _systemButton.frame = CGRectMake(400.0f, 0.0f, 200.0f, 200.0f);
 
+    _roundedRectButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    _roundedRectButton.frame = CGRectMake(600.0f, 0.0f, 200.0f, 200.0f);
+
     [self.view addSubview:_defaultButton];
     [self.view addSubview:_customButton];
     [self.view addSubview:_systemButton];
+    [self.view addSubview:_roundedRectButton];
 
     _selectedButton = _defaultButton;
 }
@@ -222,6 +282,12 @@
             _segmentButtonType.selectedSegmentIndex = 2;
             _selectedButton = _systemButton;
             break;
+#ifdef WINOBJC
+        case UIButtonTypeRoundedRect:
+            _segmentButtonType.selectedSegmentIndex = 3;
+            _selectedButton = _roundedRectButton;
+            break;
+#endif
         case UIButtonTypeDetailDisclosure:
         case UIButtonTypeInfoLight:
         case UIButtonTypeInfoDark:
@@ -241,7 +307,7 @@
 }
 
 // Toggle if the button is enabled or disabled
--(void)onEnabled {
+- (void)onEnabled {
     _selectedButton.enabled = _switchEnabled.on;
 }
 
@@ -251,12 +317,12 @@
 }
 
 // Toggles the button's adjustsImageWhenHighlighted property
--(void)onAdjustsImageWhenHighlighted {
+- (void)onAdjustsImageWhenHighlighted {
     _selectedButton.adjustsImageWhenHighlighted = _switchAdjustsImageWhenHighlighted.on;
 }
 
 // Toggles the button's adjustsImageWhenDisabled property
--(void)onAdjustsImageWhenDisabled {
+- (void)onAdjustsImageWhenDisabled {
     _selectedButton.adjustsImageWhenDisabled = _switchAdjustsImageWhenDisabled.on;
 }
 
@@ -270,6 +336,56 @@
         _selectedButton = _customButton;
     } else if (segmentedControl.selectedSegmentIndex == 2) {
         _selectedButton = _systemButton;
+    } else if (segmentedControl.selectedSegmentIndex == 3) {
+        _selectedButton = _roundedRectButton;
+    }
+}
+
+//
+// Content Edge Insets
+//
+- (void)onContentEdgeInsetsChanged:(UITextField*)textField {
+    if ([textField.text hasPrefix:@"{"] && [textField.text hasSuffix:@"}"]) {
+        _selectedButton.contentEdgeInsets = [self getUIEdgeInsetsFromString:textField];
+
+        NSString* newFrame = [NSString stringWithFormat:@"{%f, %f, %f, %f}",
+                                                        _selectedButton.imageView.frame.origin.x,
+                                                        _selectedButton.imageView.frame.origin.y,
+                                                        _selectedButton.imageView.frame.size.width,
+                                                        _selectedButton.imageView.frame.size.height];
+        NSLog(newFrame);
+    }
+}
+
+//
+// Title Edge Insets
+//
+- (void)onTitleEdgeInsetsChanged:(UITextField*)textField {
+    if ([textField.text hasPrefix:@"{"] && [textField.text hasSuffix:@"}"]) {
+        _selectedButton.titleEdgeInsets = [self getUIEdgeInsetsFromString:textField];
+
+        NSString* newFrame = [NSString stringWithFormat:@"{%f, %f, %f, %f}",
+                                                        _selectedButton.titleLabel.frame.origin.x,
+                                                        _selectedButton.titleLabel.frame.origin.y,
+                                                        _selectedButton.titleLabel.frame.size.width,
+                                                        _selectedButton.titleLabel.frame.size.height];
+        NSLog(newFrame);
+    }
+}
+
+//
+// Image Edge Insets
+//
+- (void)onImageEdgeInsetsChanged:(UITextField*)textField {
+    if ([textField.text hasPrefix:@"{"] && [textField.text hasSuffix:@"}"]) {
+        _selectedButton.imageEdgeInsets = [self getUIEdgeInsetsFromString:textField];
+
+        NSString* newFrame = [NSString stringWithFormat:@"{%f, %f, %f, %f}",
+                                                        _selectedButton.imageView.frame.origin.x,
+                                                        _selectedButton.imageView.frame.origin.y,
+                                                        _selectedButton.imageView.frame.size.width,
+                                                        _selectedButton.imageView.frame.size.height];
+        NSLog(newFrame);
     }
 }
 

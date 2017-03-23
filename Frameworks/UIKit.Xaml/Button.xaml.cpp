@@ -143,12 +143,6 @@ void Button::OnPointerCaptureLost(PointerRoutedEventArgs^ e) {
     __super::OnPointerCaptureLost(e);
 }
 
-// Hook other events
-void Button::HookLayoutEvent(
-    const Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Input::IPointerEventHandler>& layoutHook) {
-    _layoutHook = std::move(layoutHook);
-}
-
 // Hook pointer events
 void Button::HookPointerEvents(
     const Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Input::IPointerEventHandler>& pointerPressedHook,
@@ -169,21 +163,6 @@ void Button::RemovePointerEvents() {
     _pointerReleasedHook = nullptr;
     _pointerCanceledHook = nullptr;
     _pointerCaptureLostHook = nullptr;
-}
-
-void Button::RemoveLayoutEvent() {
-    _layoutHook = nullptr;
-}
-
-// This method is called multiple times by XAML, and we call back to UIButton to layout the views.
-// This will be used by autolayout to get the intrinsic content size when XAML has done calculating the elements final desired size.
-Windows::Foundation::Size Button::ArrangeOverride(Windows::Foundation::Size finalSize) {
-    __super::ArrangeOverride(finalSize);
-    if (_layoutHook) {
-        _layoutHook->Invoke(nullptr, nullptr);
-    }
-
-    return finalSize;
 }
 
 void Button::OnApplyTemplate() {
@@ -207,11 +186,6 @@ UIKIT_XAML_EXPORT void XamlCreateButton(IInspectable** created) {
 UIKIT_XAML_EXPORT void XamlRemovePointerEvents(const ComPtr<IInspectable>& inspectableButton) {
     auto button = safe_cast<UIKit::Xaml::Button^>(reinterpret_cast<Platform::Object^>(inspectableButton.Get()));
     button->RemovePointerEvents();
-}
-
-UIKIT_XAML_EXPORT void XamlRemoveLayoutEvent(const ComPtr<IInspectable>& inspectableButton) {
-    auto button = safe_cast<UIKit::Xaml::Button^>(reinterpret_cast<Platform::Object^>(inspectableButton.Get()));
-    button->RemoveLayoutEvent();
 }
 
 UIKIT_XAML_EXPORT void XamlButtonApplyVisuals(
@@ -247,14 +221,6 @@ UIKIT_XAML_EXPORT void XamlHookButtonPointerEvents(
         InspectableToType<ABI::Windows::UI::Xaml::Input::IPointerEventHandler>(pointerReleasedHook),
         InspectableToType<ABI::Windows::UI::Xaml::Input::IPointerEventHandler>(pointerCanceledHook),
         InspectableToType<ABI::Windows::UI::Xaml::Input::IPointerEventHandler>(pointerCaptureLostHook));
-}
-
-UIKIT_XAML_EXPORT void XamlHookLayoutEvent(const ComPtr<IInspectable>& inspectableButton,
-                                                   const ComPtr<IInspectable>&  layoutHook) {
-    auto button = safe_cast<UIKit::Xaml::Button^>(reinterpret_cast<Platform::Object^>(inspectableButton.Get()));
-    button->HookLayoutEvent(
-        InspectableToType<ABI::Windows::UI::Xaml::Input::IPointerEventHandler>(layoutHook));
-    
 }
 
 // clang-format on

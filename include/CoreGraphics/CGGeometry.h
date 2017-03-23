@@ -38,12 +38,7 @@ typedef struct {
     CGFloat dy;
 } CGVector;
 
-typedef CF_ENUM(CFIndex, CGRectEdge) {
-    CGRectMinXEdge,
-    CGRectMinYEdge,
-    CGRectMaxXEdge,
-    CGRectMaxYEdge
-};
+typedef CF_ENUM(CFIndex, CGRectEdge) { CGRectMinXEdge, CGRectMinYEdge, CGRectMaxXEdge, CGRectMaxYEdge };
 
 COREGRAPHICS_EXPORT const CGRect CGRectInfinite;
 COREGRAPHICS_EXPORT const CGPoint CGPointZero;
@@ -237,4 +232,4 @@ COREGRAPHICS_EXPORT CFDictionaryRef CGRectCreateDictionaryRepresentation(CGRect)
 COREGRAPHICS_EXPORT bool CGPointMakeWithDictionaryRepresentation(CFDictionaryRef dict, CGPoint* point) STUB_METHOD;
 COREGRAPHICS_EXPORT bool CGSizeMakeWithDictionaryRepresentation(CFDictionaryRef dict, CGSize* size) STUB_METHOD;
 COREGRAPHICS_EXPORT bool CGRectMakeWithDictionaryRepresentation(CFDictionaryRef dict, CGRect* rect) STUB_METHOD;
-COREGRAPHICS_EXPORT void CGRectDivide(CGRect rect, CGRect* slice, CGRect* remainder, CGFloat amount, CGRectEdge edge) STUB_METHOD;
+COREGRAPHICS_EXPORT void CGRectDivide(CGRect rect, CGRect* slice, CGRect* remainder, CGFloat amount, CGRectEdge edge);

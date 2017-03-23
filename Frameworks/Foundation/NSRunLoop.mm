@@ -34,7 +34,6 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import "dispatch/dispatch.h"
 #import "LoggingNative.h"
 #import "NSThread-Internal.h"
-#import "NSOperationQueueInternal.h"
 
 static const wchar_t* TAG = L"NSRunLoop";
 
@@ -498,14 +497,10 @@ static void DispatchMainRunLoopWakeup(void* arg) {
 
     // Wrap code in a autorelease pool so all the auto released objects from calling the event
     // handlers can be manually released.
-    NSAutoreleasePool* pool = [NSAutoreleasePool new];
-
-    [[NSOperationQueue mainQueue] _doMainWork];
-    dispatch_main_queue_callback();
-
-    [state _handleSignaledInput:value];
-
-    [pool release];
+    @autoreleasepool {
+        dispatch_main_queue_callback();
+        [state _handleSignaledInput:value];
+    }
 }
 
 @end

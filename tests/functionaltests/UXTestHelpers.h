@@ -129,4 +129,6 @@ private:
     StrongId<NSCondition> _condition;
 }; // class UXEvent
 
+UIColor* ConvertWUColorToUIColor(WUColor* wuColor);
+
 } // namespace UXTestAPI

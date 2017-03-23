@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
       <Configuration>Debug</Configuration>
@@ -24,7 +24,6 @@
     <RootNamespace>UIKit.Xaml</RootNamespace>
     <OutputName>UIKit.Xaml</OutputName>
     <DefaultLanguage>en-US</DefaultLanguage>
-    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\..</StarboardBasePath>
     <ApplicationType>Windows Store</ApplicationType>
@@ -38,24 +37,24 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.props" />
@@ -135,6 +134,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ILayer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Button.xaml.h">
       <DependentUpon>Button.xaml</DependentUpon>
     </ClInclude>
@@ -148,8 +148,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ProgressRing.xaml.h">
       <DependentUpon>ProgressRing.xaml</DependentUpon>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ScrollViewer.xaml.h">
-      <DependentUpon>ScrollViewer.xaml</DependentUpon>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ScrollView.xaml.h">
+      <DependentUpon>ScrollView.xaml</DependentUpon>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Slider.xaml.h">
       <DependentUpon>Slider.xaml</DependentUpon>
@@ -160,7 +160,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ContentDialog.xaml.h">
       <DependentUpon>ContentDialog.xaml</DependentUpon>
     </ClInclude>
-    <ClInclude Include="..\..\..\Frameworks\UIKit.Xaml\ObjCXamlControls.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ObjCXamlControls.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\pch.cpp">
@@ -169,6 +169,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ILayer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Button.xaml.cpp">
       <DependentUpon>Button.xaml</DependentUpon>
     </ClCompile>
@@ -181,8 +182,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ProgressRing.xaml.cpp">
       <DependentUpon>ProgressRing.xaml</DependentUpon>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ScrollViewer.xaml.cpp">
-      <DependentUpon>ScrollViewer.xaml</DependentUpon>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ScrollView.xaml.cpp">
+      <DependentUpon>ScrollView.xaml</DependentUpon>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Slider.xaml.cpp">
       <DependentUpon>Slider.xaml</DependentUpon>
@@ -207,7 +208,7 @@
     <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ProgressRing.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ScrollViewer.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\ScrollView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit.Xaml\Slider.xaml">

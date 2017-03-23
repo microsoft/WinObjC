@@ -49,8 +49,6 @@ FOUNDATION_EXPORT_CLASS
 - (instancetype)initWithURL:(NSURL*)url;
 - (instancetype)initWithPath:(NSString*)fullPath;
 
-- (NSArray*)loadNibNamed:(NSString*)name owner:(id)owner options:(NSDictionary*)options STUB_METHOD;
-
 + (NSString*)pathForResource:(NSString*)name ofType:(NSString*)extension inDirectory:(NSString*)bundlePath;
 - (NSString*)pathForResource:(NSString*)name ofType:(NSString*)extension;
 - (NSString*)pathForResource:(NSString*)name ofType:(NSString*)extension inDirectory:(NSString*)subpath;

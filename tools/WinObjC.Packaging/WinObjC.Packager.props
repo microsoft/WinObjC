@@ -6,7 +6,7 @@
   For Use By: A NuProj that is doing the packaging of one or more projects
 -->
 
-<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <!-- NuGet specific properties -->
     <IsDevelopmentDependency>true</IsDevelopmentDependency>
@@ -17,22 +17,4 @@
     <!-- WinObjC.Packaging specific properties -->
     <PresetPackageContents Condition="'$(PresetPackageContents)' == ''">true</PresetPackageContents>
   </PropertyGroup>
-
-  <!-- Create package version based on GitInfo (if available) and a timestamp -->
-  <PropertyGroup>
-    <GetPackageVersionDependsOn>SetPackageVersion;$(GetPackageVersionDependsOn);</GetPackageVersionDependsOn>
-  </PropertyGroup>
-  <Target Name="SetPackageVersion" Returns="$(PackageVersion)" DependsOnTargets="$(GitVersionDependsOn)" Condition="'$(PackageVersion)' == ''">
-    <Warning Condition="'$(GitVersion_BranchName)' == ''"
-      Text="Cannot determine git branch - default package version will be applied. Please make sure GitVersionTask is listed as a nuget dependency for this project and that git.exe is part of the PATH environment variable." />
-
-    <PropertyGroup>
-      <PackageTimestamp Condition="'$(PackageTimestamp)' == ''">$([System.DateTime]::Now.ToString(yyyyMMddHHmmss))</PackageTimestamp>
-
-      <PackageVersion Condition="'$(PackageVersion)' == '' And '$(GitVersion_BranchName)' == ''">0.0.1-$(PackageTimestamp).pr</PackageVersion>
-      <PackageVersion Condition="'$(PackageVersion)' == '' And '$(GitVersion_BranchName)' == 'master'">$(GitVersion_Major).$(GitVersion_Minor).0-$(PackageTimestamp)</PackageVersion>
-      <PackageVersion Condition="'$(PackageVersion)' == '' And '$(GitVersion_BranchName)' == 'develop'">$(GitVersion_Major).$(GitVersion_Minor).$([MSBuild]::Add('$(GitVersion_Patch)', '1'))-$(PackageTimestamp).dev</PackageVersion>
-      <PackageVersion Condition="'$(PackageVersion)' == ''">$(GitVersion_Major).$(GitVersion_Minor).$([MSBuild]::Add('$(GitVersion_Patch)', '1'))-$(PackageTimestamp).pr</PackageVersion>
-    </PropertyGroup>
-  </Target>
 </Project>

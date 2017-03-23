@@ -122,7 +122,7 @@ public:
 
 static constexpr CGSize c_sizes[] = { { 0, 0 }, { 0, 512 }, { 256, 0 }, { 256, 512 } };
 static constexpr CGFloat c_mults[] = { .1f, 3.25f, 99.99f, 1234.5f, .00001f };
-;
+
 BENCHMARK_REGISTER_CASE_P(BenchmarkSample,
                           BenchmarkTestMultipleParameters,
                           ::testing::Combine(::testing::ValuesIn(c_sizes), ::testing::ValuesIn(c_mults)),

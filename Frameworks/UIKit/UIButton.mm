@@ -80,6 +80,16 @@ struct ButtonState {
     ComPtr<IInspectable> _inspectableAdjustsWhenHighlightedBrush;
 }
 
+static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
+    id object = [coder decodeObjectForKey:key];
+    UIEdgeInsets* rawInsets = (UIEdgeInsets*)((char *)[object bytes] + 1);
+
+    UIEdgeInsets insets = {};
+    memcpy(&insets, rawInsets, sizeof(UIEdgeInsets));
+
+    return insets;
+}
+
 /**
  @Status Caveat
  @Notes Not all properties are supported.
@@ -94,6 +104,12 @@ struct ButtonState {
                 [self setEnabled:NO];
             }
         }
+
+        UIFont* font = [coder decodeObjectForKey:@"UIFont"];
+        if (!font) {
+            font = [UIFont buttonFont];
+        }
+        self.font = font;
 
         if ([coder containsValueForKey:@"UIBackgroundColor"]) {
             [self setBackgroundColor:[coder decodeObjectForKey:@"UIBackgroundColor"]];
@@ -136,6 +152,27 @@ struct ButtonState {
                 curKey = [keyEnum nextObject];
                 curObj = [objEnum nextObject];
             }
+        }
+
+        if ([coder containsValueForKey:@"UIAdjustsImageWhenHighlighted"]) {
+            self.adjustsImageWhenHighlighted = [coder decodeBoolForKey:@"UIAdjustsImageWhenHighlighted"];
+        }
+
+        if ([coder containsValueForKey:@"UIAdjustsImageWhenDisabled"]) {
+            self.adjustsImageWhenDisabled = [coder decodeBoolForKey :@"UIAdjustsImageWhenDisabled"];
+        }
+
+        // Insets
+        if ([coder containsValueForKey:@"UIImageEdgeInsets"]) {
+            _imageInsets = _decodeUIEdgeInsets(coder, @"UIImageEdgeInsets");
+        }
+
+        if ([coder containsValueForKey:@"UIContentEdgeInsets"]) {
+            _contentInsets = _decodeUIEdgeInsets(coder, @"UIContentEdgeInsets");
+        }
+
+        if ([coder containsValueForKey:@"UITitleEdgeInsets"]) {
+            _titleInsets = _decodeUIEdgeInsets(coder, @"UITitleEdgeInsets");
         }
     }
 
@@ -186,7 +223,6 @@ struct ButtonState {
     //       Tracked as #1919.  When fixed, we'll need to initWithXamlElement we retrieve from the control template, and *not* addSubView.
     _titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     [self addSubview:_titleLabel];
-    _titleLabel.font = [UIFont buttonFont];
     _titleLabel.userInteractionEnabled = NO;
 
     // Create our child UIImageView; its frame will be updated in layoutSubviews
@@ -226,15 +262,6 @@ struct ButtonState {
                                               e.handled = YES;
                                               [weakSelf _processPointerCaptureLostCallback:sender eventArgs:e];
                                           });
-
-    XamlControls::HookLayoutEvent(_xamlButton, ^(RTObject*, WUXIPointerRoutedEventArgs*) {
-        // Since we are using XAML Button behind the scene, the intrinsicContentSize calculation is done
-        // by XAML.
-        // The size of XAML elements(for eg Image) is calculated at runtime and then the
-        // intrinsicContentSize is invalidated.
-        [weakSelf invalidateIntrinsicContentSize];
-        [weakSelf setNeedsLayout];
-    });
 }
 
 /**
@@ -243,6 +270,7 @@ struct ButtonState {
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         [self _initUIButton];
+        self.font = [UIFont buttonFont];
     }
 
     return self;
@@ -254,6 +282,7 @@ Microsoft Extension
 - (instancetype)initWithFrame:(CGRect)frame xamlElement:(WXFrameworkElement*)xamlElement {
     if (self = [super initWithFrame:frame xamlElement:xamlElement]) {
         [self _initUIButton];
+        self.font = [UIFont buttonFont];
     }
 
     return self;
@@ -919,7 +948,6 @@ static ComPtr<IInspectable> _currentInspectableBorderBackgroundBrush(UIButton* s
 */
 - (void)dealloc {
     XamlRemovePointerEvents([_xamlButton comObj]);
-    XamlRemoveLayoutEvent([_xamlButton comObj]);
 }
 
 /**

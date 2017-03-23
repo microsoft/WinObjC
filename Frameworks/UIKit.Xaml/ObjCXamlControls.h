@@ -43,13 +43,7 @@ UIKIT_XAML_EXPORT void XamlHookButtonPointerEvents(const Microsoft::WRL::ComPtr<
                                                    const Microsoft::WRL::ComPtr<IInspectable>& pointerCanceledHook,
                                                    const Microsoft::WRL::ComPtr<IInspectable>& pointerCaptureLostHook);
 
-// Hooks other events on a UIKit::Button passed in as IInspectable
-UIKIT_XAML_EXPORT void XamlHookLayoutEvent(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton,
-                                           const Microsoft::WRL::ComPtr<IInspectable>& layoutHook);
-
 UIKIT_XAML_EXPORT void XamlRemovePointerEvents(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton);
-
-UIKIT_XAML_EXPORT void XamlRemoveLayoutEvent(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton);
 
 ////////////////////////////////////////////////////////////////////////////////////
 // Label.xaml.cpp
@@ -87,11 +81,17 @@ UIKIT_XAML_EXPORT IInspectable* XamlGetFrameworkElementSublayerCanvasProperty(co
 UIKIT_XAML_EXPORT void XamlCreateProgressRing(IInspectable** created);
 
 ////////////////////////////////////////////////////////////////////////////////////
-// ScrollViewer.xaml.cpp
+// ScrollView.xaml.cpp
 ////////////////////////////////////////////////////////////////////////////////////
 
-// Returns a UIKit::ScrollViewer as an IInspectable
-UIKIT_XAML_EXPORT void XamlCreateScrollViewer(IInspectable** created);
+// Returns a UIKit::Xaml::ScrollView as an IInspectable
+UIKIT_XAML_EXPORT void XamlCreateScrollView(IInspectable** created);
+
+// Retrieves the UIKit::Xaml::ScrollView's backing ScrollViewer as an IInspectable
+UIKIT_XAML_EXPORT IInspectable* XamlScrollViewGetScrollViewer(const Microsoft::WRL::ComPtr<IInspectable>& scrollView);
+
+// Retrieves Canvas inside of UIKit::Xaml::ScrollView's backing ScrollViewer as an IInspectable
+UIKIT_XAML_EXPORT IInspectable* XamlScrollViewGetSubLayerCanvas(const Microsoft::WRL::ComPtr<IInspectable>& scrollView);
 
 ////////////////////////////////////////////////////////////////////////////////////
 // Slider.xaml.cpp

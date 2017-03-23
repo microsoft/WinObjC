@@ -331,7 +331,7 @@ TEST(NSIndexSet, NSCodingNonemptySet) {
 }
 
 TEST(NSIndexSet, MutableInstanceArchivesAsMutable) {
-    NSMutableIndexSet* input = [NSMutableIndexSet indexSetWithIndexesInRange:{1, 5}];
+    NSMutableIndexSet* input = [NSMutableIndexSet indexSetWithIndexesInRange:{ 1, 5 }];
 
     NSData* data = [NSKeyedArchiver archivedDataWithRootObject:input];
     ASSERT_OBJCNE(nil, data);
@@ -342,4 +342,265 @@ TEST(NSIndexSet, MutableInstanceArchivesAsMutable) {
     EXPECT_NO_THROW([output addIndex:10]);
 
     EXPECT_OBJCNE(input, output);
+}
+
+TEST(NSIndexSet, IndexPassingTest) {
+    NSMutableIndexSet* set = [NSMutableIndexSet indexSetWithIndexesInRange:{ 1, 1 }];
+    [set addIndexesInRange:{ 5, 3 }];
+
+    NSUInteger index = [set indexPassingTest:^BOOL(NSUInteger index, BOOL* stop) {
+        return (index & 1) ? YES : NO;
+    }];
+    EXPECT_EQ(1, index);
+
+    index = [set indexPassingTest:^BOOL(NSUInteger index, BOOL* stop) {
+        return (index & 1) == 0 ? YES : NO;
+    }];
+    EXPECT_EQ(6, index);
+}
+
+TEST(NSIndexSet, IndexesPassingTest) {
+    NSMutableIndexSet* set = [NSMutableIndexSet indexSetWithIndexesInRange:{ 1, 1 }];
+    [set addIndexesInRange:{ 5, 3 }];
+
+    NSIndexSet* indexes = [set indexesPassingTest:^BOOL(NSUInteger index, BOOL* stop) {
+        return (index & 1) == 0 ? YES : NO;
+    }];
+    NSMutableIndexSet* expected = [NSMutableIndexSet indexSetWithIndex:6];
+    EXPECT_OBJCEQ(expected, indexes);
+
+    indexes = [set indexesPassingTest:^BOOL(NSUInteger index, BOOL* stop) {
+        return (index & 1) ? YES : NO;
+    }];
+
+    expected = [NSMutableIndexSet indexSetWithIndex:1];
+    [expected addIndex:5];
+    [expected addIndex:7];
+    EXPECT_OBJCEQ(expected, indexes);
+}
+
+TEST(NSIndexSet, IndexWithOptionsPassingTest) {
+    NSMutableIndexSet* set = [NSMutableIndexSet indexSetWithIndexesInRange:{ 1, 1 }];
+    [set addIndexesInRange:{ 5, 3 }];
+
+    NSUInteger index = [set indexWithOptions:0
+                                 passingTest:^BOOL(NSUInteger index, BOOL* stop) {
+                                     return (index & 1) ? YES : NO;
+                                 }];
+    EXPECT_EQ(1, index);
+
+    index = [set indexWithOptions:NSEnumerationReverse
+                      passingTest:^BOOL(NSUInteger index, BOOL* stop) {
+                          return (index & 1) ? YES : NO;
+                      }];
+    EXPECT_EQ(7, index);
+
+    index = [set indexWithOptions:0
+                      passingTest:^BOOL(NSUInteger index, BOOL* stop) {
+                          return (index & 1) == 0 ? YES : NO;
+                      }];
+    EXPECT_EQ(6, index);
+
+    index = [set indexWithOptions:NSEnumerationReverse
+                      passingTest:^BOOL(NSUInteger index, BOOL* stop) {
+                          return (index & 1) == 0 ? YES : NO;
+                      }];
+    EXPECT_EQ(6, index);
+}
+
+TEST(NSIndexSet, IndexesWithOptionsPassingTest) {
+    NSMutableIndexSet* set = [NSMutableIndexSet indexSetWithIndexesInRange:{ 1, 1 }];
+    [set addIndexesInRange:{ 5, 3 }];
+
+    NSIndexSet* indexes = [set indexesWithOptions:NSEnumerationReverse
+                                      passingTest:^BOOL(NSUInteger index, BOOL* stop) {
+                                          return (index & 1) == 0 ? YES : NO;
+                                      }];
+    NSMutableIndexSet* expected = [NSMutableIndexSet indexSetWithIndex:6];
+    EXPECT_OBJCEQ(expected, indexes);
+
+    indexes = [set indexesWithOptions:NSEnumerationReverse
+                          passingTest:^BOOL(NSUInteger index, BOOL* stop) {
+                              return (index & 1) ? YES : NO;
+                          }];
+
+    expected = [NSMutableIndexSet indexSetWithIndex:1];
+    [expected addIndex:5];
+    [expected addIndex:7];
+    EXPECT_OBJCEQ(expected, indexes);
+}
+
+TEST(NSIndexSet, IndexInRangeOptionsPassingTest) {
+    NSMutableIndexSet* set = [NSMutableIndexSet indexSetWithIndexesInRange:{ 1, 1 }];
+    [set addIndexesInRange:{ 5, 3 }];
+
+    NSUInteger index = [set indexInRange:{ 1, 5 }
+        options:0
+        passingTest:^BOOL(NSUInteger index, BOOL* stop) {
+            return (index & 1) ? YES : NO;
+        }];
+    EXPECT_EQ(1, index);
+
+    index = [set indexInRange:{ 1, 5 }
+        options:NSEnumerationReverse
+        passingTest:^BOOL(NSUInteger index, BOOL* stop) {
+            return (index & 1) ? YES : NO;
+        }];
+    EXPECT_EQ(5, index);
+
+    index = [set indexInRange:{ 1, 5 }
+        options:NSEnumerationReverse
+        passingTest:^BOOL(NSUInteger index, BOOL* stop) {
+            return (index & 1) == 0 ? YES : NO;
+        }];
+    EXPECT_EQ(NSNotFound, index);
+
+    index = [set indexInRange:{ 1, 5 }
+        options:0
+        passingTest:^BOOL(NSUInteger index, BOOL* stop) {
+            return (index & 1) == 0 ? YES : NO;
+        }];
+    EXPECT_EQ(NSNotFound, index);
+}
+
+TEST(NSIndexSet, IndexesInRangeOptionsPassingTest) {
+    NSMutableIndexSet* set = [NSMutableIndexSet indexSetWithIndexesInRange:{ 1, 1 }];
+    [set addIndexesInRange:{ 5, 3 }];
+
+    NSIndexSet* indexes = [set indexesInRange:{ 1, 5 }
+        options:NSEnumerationReverse
+        passingTest:^BOOL(NSUInteger index, BOOL* stop) {
+            return (index & 1) == 0 ? YES : NO;
+        }];
+    NSMutableIndexSet* expected = [NSMutableIndexSet indexSet];
+    EXPECT_OBJCEQ(expected, indexes);
+
+    indexes = [set indexesInRange:{ 1, 5 }
+        options:NSEnumerationReverse
+        passingTest:^BOOL(NSUInteger index, BOOL* stop) {
+            return (index & 1) ? YES : NO;
+        }];
+
+    [expected addIndex:1];
+    [expected addIndex:5];
+    EXPECT_OBJCEQ(expected, indexes);
+}
+
+TEST(NSIndexSet, EnumerateRangesUsingBlock) {
+    NSMutableIndexSet* set = [NSMutableIndexSet indexSetWithIndexesInRange:{ 1, 1 }];
+    [set addIndexesInRange:{ 5, 3 }];
+
+    __block NSMutableArray* test = [NSMutableArray array];
+    [set enumerateRangesUsingBlock:^(NSRange range, BOOL* stop) {
+        [test addObject:[NSNumber numberWithInt:(range.location * range.length)]];
+    }];
+
+    NSArray* expected = @[ @1, @15 ];
+    EXPECT_OBJCEQ(expected, test);
+}
+
+TEST(NSIndexSet, EnumerateRangesWithOptionsUsingBlock) {
+    NSMutableIndexSet* set = [NSMutableIndexSet indexSetWithIndexesInRange:{ 1, 1 }];
+    [set addIndexesInRange:{ 5, 3 }];
+
+    __block NSMutableArray* test = [NSMutableArray array];
+    [set enumerateRangesWithOptions:NSEnumerationReverse
+                         usingBlock:^(NSRange range, BOOL* stop) {
+                             [test addObject:[NSNumber numberWithInt:(range.location * range.length)]];
+                         }];
+
+    NSArray* expected = @[ @15, @1 ];
+    EXPECT_OBJCEQ(expected, test);
+}
+
+TEST(NSIndexSet, EnumerateRangesInRangeOptionsUsingBlock) {
+    NSMutableIndexSet* set = [NSMutableIndexSet indexSetWithIndexesInRange:{ 1, 1 }];
+    [set addIndexesInRange:{ 5, 3 }];
+
+    __block NSMutableArray* test = [NSMutableArray array];
+    [set enumerateRangesInRange:{ 1, 6 }
+        options:NSEnumerationReverse
+        usingBlock:^(NSRange range, BOOL* stop) {
+            [test addObject:[NSNumber numberWithInt:(range.location * range.length)]];
+        }];
+
+    NSArray* expected = @[ @10, @1 ];
+    EXPECT_OBJCEQ(expected, test);
+}
+
+TEST(NSIndexSet, EnumerateIndexesUsingBlock) {
+    NSMutableIndexSet* set = [NSMutableIndexSet indexSetWithIndexesInRange:{ 1, 1 }];
+    [set addIndexesInRange:{ 5, 3 }];
+
+    __block NSMutableArray* test = [NSMutableArray array];
+    [set enumerateIndexesUsingBlock:^(NSUInteger index, BOOL* stop) {
+        [test addObject:[NSNumber numberWithInt:(index + 1)]];
+    }];
+
+    NSArray* expected = @[ @2, @6, @7, @8 ];
+    EXPECT_OBJCEQ(expected, test);
+}
+
+TEST(NSIndexSet, EnumerateIndexesWithOptionsUsingBlock) {
+    NSMutableIndexSet* set = [NSMutableIndexSet indexSetWithIndexesInRange:{ 1, 1 }];
+    [set addIndexesInRange:{ 5, 3 }];
+
+    __block NSMutableArray* test = [NSMutableArray array];
+    [set enumerateIndexesWithOptions:NSEnumerationReverse
+                          usingBlock:^(NSUInteger index, BOOL* stop) {
+                              [test addObject:[NSNumber numberWithInt:(index + 1)]];
+                          }];
+
+    NSArray* expected = @[ @8, @7, @6, @2 ];
+    EXPECT_OBJCEQ(expected, test);
+}
+
+TEST(NSIndexSet, EnumerateIndexesInRangeOptionsUsingBlock) {
+    NSMutableIndexSet* set = [NSMutableIndexSet indexSetWithIndexesInRange:{ 1, 1 }];
+    [set addIndexesInRange:{ 5, 3 }];
+
+    __block NSMutableArray* test = [NSMutableArray array];
+    [set enumerateIndexesInRange:{ 1, 6 }
+        options:NSEnumerationReverse
+        usingBlock:^(NSUInteger index, BOOL* stop) {
+            [test addObject:[NSNumber numberWithInt:(index + 1)]];
+        }];
+
+    NSArray* expected = @[ @7, @6, @2 ];
+    EXPECT_OBJCEQ(expected, test);
+}
+
+TEST(NSIndexSet, GetIndexesMaxCountInIndexRange) {
+    NSMutableIndexSet* set = [NSMutableIndexSet indexSetWithIndexesInRange:{ 1, 1 }];
+    [set addIndexesInRange:{ 5, 3 }];
+    NSUInteger vals[5]{ 0 };
+
+    EXPECT_EQ(1, [set getIndexes:vals maxCount:1 inIndexRange:nullptr]);
+    EXPECT_EQ(1, vals[0]);
+    EXPECT_EQ(0, vals[1]);
+
+    EXPECT_EQ(4, [set getIndexes:vals maxCount:5 inIndexRange:nullptr]);
+    EXPECT_EQ(1, vals[0]);
+    EXPECT_EQ(5, vals[1]);
+    EXPECT_EQ(6, vals[2]);
+    EXPECT_EQ(7, vals[3]);
+    EXPECT_EQ(0, vals[4]);
+
+    NSRange range{ 1, 7 };
+    EXPECT_EQ(2, [set getIndexes:vals maxCount:2 inIndexRange:&range]);
+    EXPECT_EQ(1, vals[0]);
+    EXPECT_EQ(5, vals[1]);
+    EXPECT_EQ(6, range.location);
+    EXPECT_EQ(2, range.length);
+
+    // Set to an arbitrary value so we can confirm it isn't changed
+    vals[2] = 12345;
+    range = { 1, 5 };
+
+    EXPECT_EQ(2, [set getIndexes:vals maxCount:5 inIndexRange:&range]);
+    EXPECT_EQ(1, vals[0]);
+    EXPECT_EQ(5, vals[1]);
+    EXPECT_EQ(12345, vals[2]);
+    EXPECT_EQ(0, range.length);
+    // location value of range is undefined when length == 0
 }

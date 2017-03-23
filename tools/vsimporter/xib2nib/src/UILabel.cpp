@@ -135,7 +135,7 @@ void UILabel::InitFromStory(XIBObject* obj) {
             _textAlignment = 2;
             getAttrAndHandle(textAlignmentAttributeString);
         } else {
-            printf("invalid textAligment value %s, using default (left)\n", textAlignmentAttributeValue);
+            printf("UILabel: invalid textAligment value %s, using default (left)\n", textAlignmentAttributeValue);
         }
     }
 

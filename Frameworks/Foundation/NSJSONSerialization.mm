@@ -52,7 +52,7 @@ ComPtr<IJsonValue> _NSJSONToWDJJsonValue(id object, BOOL isTop) {
         THROW_NS_IF_FAILED(ActivateInstance(Wrappers::HStringReference(RuntimeClass_Windows_Data_Json_JsonObject).Get(), &jsonObject));
         THROW_NS_IF_FAILED(jsonObject.As(&ret));
 
-        for (id key in(NSDictionary*)object) {
+        for (id key in (NSDictionary*)object) {
             id value = [(NSDictionary*)object objectForKey:key];
             ComPtr<IJsonValue> jsonValue = _NSJSONToWDJJsonValue(value, NO);
 
@@ -63,7 +63,7 @@ ComPtr<IJsonValue> _NSJSONToWDJJsonValue(id object, BOOL isTop) {
         ComPtr<IJsonArray> array;
         THROW_NS_IF_FAILED(ActivateInstance(Wrappers::HStringReference(RuntimeClass_Windows_Data_Json_JsonArray).Get(), &array));
         THROW_NS_IF_FAILED(array.As(&ret));
-        for (id value in(NSArray*)object) {
+        for (id value in (NSArray*)object) {
             ComPtr<IJsonValue> jsonValue = _NSJSONToWDJJsonValue(value, NO);
 
             ComPtr<IVector<IJsonValue*>> jsonArray;
@@ -102,7 +102,7 @@ id _WDJJsonObjectToNSJSON(const ComPtr<IJsonObject>& object, NSError** error) {
     ComPtr<IMap<HSTRING, IJsonValue*>> map;
 
     THROW_NS_IF_FAILED(object.As(&map));
-    NSMutableDictionary* ret = [NSMutableDictionary new];
+    NSMutableDictionary* ret = [NSMutableDictionary dictionary];
 
     // clang-format off
     HRESULT hr = WRLHelpers::ForEach(
@@ -139,7 +139,7 @@ id _WDJJsonObjectToNSJSON(const ComPtr<IJsonObject>& object, NSError** error) {
 
 // Copies ComPtr<IJsonArray> (an array of WDJJsonValue*) to NSMutableArray
 id _WDJJsonArrayToNSJSON(const ComPtr<IJsonArray>& array, NSError** error) {
-    NSMutableArray* ret = [NSMutableArray new];
+    NSMutableArray* ret = [NSMutableArray array];
 
     ComPtr<IVector<IJsonValue*>> vector;
     THROW_NS_IF_FAILED(array.As(&vector));
@@ -322,7 +322,7 @@ static BOOL _isValidLeaf(id value) {
 */
 + (BOOL)isValidJSONObject:(id)object {
     if ([object isKindOfClass:[NSDictionary class]]) {
-        for (id key in(NSDictionary*)object) {
+        for (id key in (NSDictionary*)object) {
             if (![key isKindOfClass:[NSString class]]) {
                 return NO;
             }
@@ -334,7 +334,7 @@ static BOOL _isValidLeaf(id value) {
             }
         }
     } else if ([object isKindOfClass:[NSArray class]]) {
-        for (id value in(NSArray*)object) {
+        for (id value in (NSArray*)object) {
             if (_isValidLeaf(value)) {
                 continue;
             } else if (![NSJSONSerialization isValidJSONObject:value]) {

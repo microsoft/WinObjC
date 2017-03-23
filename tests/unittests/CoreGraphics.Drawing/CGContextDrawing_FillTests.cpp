@@ -130,7 +130,5 @@ static CGPoint sweep[] = { CGPointMake(0, M_PI),
                            CGPointMake(0.3 * M_PI, 0.6 * M_PI),
                            CGPointMake(0, 1.9 * M_PI) };
 static int directions[] = { 0, 1 };
-// TODO: enable when #2062 is fixed.
-INSTANTIATE_TEST_CASE_P(DISABLED_CGContextFill,
-                        CGContextArcFill,
-                        ::testing::Combine(::testing::ValuesIn(sweep), ::testing::ValuesIn(directions)));
+
+INSTANTIATE_TEST_CASE_P(CGContextFill, CGContextArcFill, ::testing::Combine(::testing::ValuesIn(sweep), ::testing::ValuesIn(directions)));

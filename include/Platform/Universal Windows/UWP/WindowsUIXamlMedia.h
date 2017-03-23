@@ -577,7 +577,6 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
 #endif
 @property (readonly) WUXMGeneralTransform* inverse;
-@property (readonly) WUXMGeneralTransform* inverseCore;
 - (WFPoint*)transformPoint:(WFPoint*)point;
 - (BOOL)tryTransform:(WFPoint*)inPoint outPoint:(WFPoint**)outPoint;
 - (WFRect*)transformBounds:(WFRect*)rect;

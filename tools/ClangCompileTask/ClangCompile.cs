@@ -96,6 +96,7 @@ namespace ClangCompile
             public void RunClang(string executable)
             {
                 ProcessStartInfo startInfo = new ProcessStartInfo();
+                startInfo.CreateNoWindow = true;
                 startInfo.FileName = executable;
                 startInfo.Arguments = this.CommandLine;
                 startInfo.UseShellExecute = false;

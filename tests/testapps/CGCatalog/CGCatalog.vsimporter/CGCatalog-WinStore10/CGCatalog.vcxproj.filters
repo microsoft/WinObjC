@@ -295,5 +295,8 @@
     <Text Include="CGCatalog-Release-xcvars.txt">
       <Filter>Xcode Variable Files</Filter>
     </Text>
+    <ClangCompile Include="..\..\CGCatalog\CGPathAddArcFullCircleViewController.m">
+      <Filter>CGCatalog\NewSamples</Filter>
+    </ClangCompile>
   </ItemGroup>
 </Project>

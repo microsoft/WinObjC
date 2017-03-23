@@ -22,6 +22,7 @@
 #import <UIKit/UIImage.h>
 #import <UIKit/UILabel.h>
 #import <UIKit/UISlider.h>
+#import <UIKit/NSString+UIKitAdditions.h>
 
 #import "StarboardXaml/DisplayTexture.h"
 
@@ -376,4 +377,58 @@ void XamlUtilities::ApplyLineBreakModeOnTextBlock(WXCTextBlock* textBlock, UILin
             textBlock.textTrimming = WXTextTrimmingCharacterEllipsis;
             break;
     }
+}
+
+float XamlUtilities::FindMaxFontSizeToFit(
+    CGRect rect, NSString* text, UIFont* font, int numberOfLines, float mininumFontSize, float maximumFontSize) {
+    float upperBound = maximumFontSize;
+    float lowerBound = mininumFontSize;
+
+    // start searching using current font size
+    float curFontSize = [font pointSize];
+    StrongId<UIFont> _targetFont = font;
+
+    // Do binary search on maximum font size that fits the bound
+    do {
+        // Caculating constrains for allowedHeight
+        float lineHeight = [_targetFont ascender] - [_targetFont descender];
+        float allowedHeight = (numberOfLines == 0) ? rect.size.height : std::min(lineHeight * numberOfLines, rect.size.height);
+
+        CGSize size = CGSizeZero;
+        if (numberOfLines == 1) {
+            // In one line case, linebreak mode and allowed height really does not matter because we give it unlimited width for measure
+            size = [text sizeWithFont:_targetFont constrainedToSize:CGSizeMake(0.0f, allowedHeight) lineBreakMode:UILineBreakModeClip];
+        } else {
+            // In multi-line case, we want the line to be wrapping during measure, in this case, we want to give allowed hight as unlimited
+            size =
+                [text sizeWithFont:_targetFont constrainedToSize:CGSizeMake(rect.size.width, 0.0f) lineBreakMode:UILineBreakModeWordWrap];
+        }
+
+        if (size.width <= rect.size.width && size.height <= allowedHeight) {
+            // Find a fit, update lowerBound and continue the search, don't scale up
+            lowerBound = curFontSize;
+
+            if (upperBound - lowerBound <= 1.0f) {
+                // Distance between current font size and upper bound is less than 1.0, break out
+                break;
+            }
+
+            curFontSize = (upperBound + lowerBound) / 2.0f;
+        } else {
+            // Current font size does not fit, update upperBound
+            upperBound = std::min(upperBound, curFontSize);
+            if (curFontSize - lowerBound <= 1.0f) {
+                // Distance between current font size which does not fit
+                // and maximum font size which fits is less than 1.0, break out
+                break;
+            } else {
+                // Retry with middle value between lowerBound and upper bound
+                curFontSize = (lowerBound + upperBound) / 2.0f;
+            }
+        }
+
+        _targetFont = [_targetFont fontWithSize:curFontSize];
+    } while (true);
+
+    return lowerBound;
 }

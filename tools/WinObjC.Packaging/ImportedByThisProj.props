@@ -22,10 +22,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageFile Include="GitVersionTask">
-      <Kind>Dependency</Kind>
-      <Version>4.0.0-beta0011</Version>
-    </PackageFile>
     <PackageFile Include="NuGet.Build.Packaging">
       <Kind>Dependency</Kind>
       <Version>0.1.186</Version>
