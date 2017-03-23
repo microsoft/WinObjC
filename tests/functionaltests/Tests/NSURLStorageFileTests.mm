@@ -88,7 +88,7 @@ public:
         });
 
         // Ok all the logistics are taken care of. Lets get to work on the meat of the test. mmmmm URLs.
-        NSURL* storageUrl = [NSURL URLWithStorageFile:storageFile];
+        NSURL* storageUrl = [NSURL URLWithStorageFile:[storageFile comObj].Get()];
 
         // Lets write some data!!!!
         unsigned char rawDataToWrite[] = { 'a', 'b', 'c' };

@@ -40,8 +40,6 @@
 #include <windows.storage.h>
 #include <COMIncludes_End.h>
 
-#include <UWP/InteropBase.h>
-
 using namespace Microsoft::WRL;
 using namespace ABI::Windows::Storage::AccessCache;
 using namespace ABI::Windows::Storage;
@@ -911,15 +909,15 @@ BASE_CLASS_REQUIRED_IMPLS(NSURL, NSURLPrototype, CFURLGetTypeID);
 /**
  @Status Interoperable
 */
-+ (instancetype)URLWithStorageFile:(RTObject<WSIStorageFile>*)storageFile {
++ (instancetype)URLWithStorageFile:(void*)storageFile {
     return [[[self alloc] initWithStorageFile:storageFile] autorelease];
 }
 
 /**
  @Status Interoperable
 */
-- (instancetype)initWithStorageFile:(RTObject<WSIStorageFile>*)storageFile {
-    ComPtr<IInspectable> comPtr = [storageFile comObj];
+- (instancetype)initWithStorageFile:(void*)storageFile {
+    ComPtr<IInspectable> comPtr = static_cast<IInspectable*>(storageFile);
     ComPtr<IStorageItem> comStorageItem;
     RETURN_NULL_IF_FAILED(comPtr.As(&comStorageItem));
 

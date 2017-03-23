@@ -35,19 +35,19 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
-  <Import Project="WinObjC.Frameworks.UWP.Packaging.props" />
+  <Import Project="WinObjC.Frameworks.UWP.Core.Packaging.props" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>b0f24416-5500-4a60-815b-8e08e9f3717a</ProjectGuid>
+    <ProjectGuid>59537c2b-0319-49a8-9e2e-eea635eee515</ProjectGuid>
     <StarboardBasePath>$(MSBuildThisFileDirectory)..\..\</StarboardBasePath>
   </PropertyGroup>
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(StarboardBasePath)\msvc\package-build.props" />
   </ImportGroup>
   <ItemGroup>
-    <None Include="WinObjC.Frameworks.UWP.Packaging.props" />
-    <None Include="WinObjC.Frameworks.UWP.Packaging.targets" />
-    <None Include="WinObjC.Frameworks.UWP.props" />
-    <None Include="WinObjC.Frameworks.UWP.targets" />
+    <None Include="WinObjC.Frameworks.UWP.Core.Packaging.props" />
+    <None Include="WinObjC.Frameworks.UWP.Core.Packaging.targets" />
+    <None Include="WinObjC.Frameworks.UWP.Core.props" />
+    <None Include="WinObjC.Frameworks.UWP.Core.targets" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt">
@@ -57,11 +57,10 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\WinObjC.Frameworks.Core\WinObjC.Frameworks.Core.nuproj" />
-    <ProjectReference Include="$(MSBuildThisFileDirectory)..\WinObjC.Frameworks.UWP.Core\WinObjC.Frameworks.UWP.Core.nuproj"/>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets')" />
-  <Import Project="WinObjC.Frameworks.UWP.Packaging.targets" />
+  <Import Project="WinObjC.Frameworks.UWP.Core.Packaging.targets" />
   <Import Project="$(SolutionDir)\..\common\winobjc.nuproj.common.targets" Condition="Exists('$(SolutionDir)\..\common\winobjc.nuproj.common.targets')" />
   <Import Project="$(SolutionDir)\..\common\winobjc.packagereference.override.targets" Condition="Exists('$(SolutionDir)\..\common\winobjc.packagereference.override.targets')" />
 </Project>

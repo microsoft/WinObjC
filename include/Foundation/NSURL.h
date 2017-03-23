@@ -234,6 +234,9 @@ FOUNDATION_EXPORT_CLASS
 - (NSDictionary*)promisedItemResourceValuesForKeys:(NSArray*)keys error:(NSError* _Nullable*)error STUB_METHOD;
 
 // WinOBJC Additions
-+ (instancetype)URLWithStorageFile:(RTObject<WSIStorageFile>*)storageFile;
-- (instancetype)initWithStorageFile:(RTObject<WSIStorageFile>*)storageFile;
+// Clang module does not work very well with COM headers.
+// As such we cannot use WRL headers in our public interface.
+// Which leads us to use void* instead of ComPtr or IInspectable*.
++ (instancetype)URLWithStorageFile:(void* /*Windows.Storage.IStorageFile* */)storageFile;
+- (instancetype)initWithStorageFile:(void* /*Windows.Storage.IStorageFile* */)storageFile;
 @end
