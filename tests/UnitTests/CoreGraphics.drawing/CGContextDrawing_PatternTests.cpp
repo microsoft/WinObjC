@@ -339,7 +339,7 @@ DISABLED_DRAW_TEST_F(CGPatternTests, PatternFillWindowsLogoPath, UIKitMimicTest<
     CGPathRelease(thepath);
 }
 
-DISABLED_DRAW_TEST_F(CGPatternTests, PatternDrawPath, UIKitMimicTest<>) {
+DRAW_TEST_F(CGPatternTests, PatternDrawPath, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
@@ -365,22 +365,126 @@ DISABLED_DRAW_TEST_F(CGPatternTests, PatternDrawPath, UIKitMimicTest<>) {
 
     CGContextClosePath(context);
 
-    CGContextSetLineWidth(context, 15);
+    CGContextSetLineWidth(context, 30);
     _SetPatternForFill(context, CGRectMake(0, 0, 100, 100), 100, 100, drawPatternWindowsLogo, 1);
-    _SetPatternForStroke(context, CGRectMake(0, 0, 100, 100), 100, 100, drawStencilStar, 1);
 
     CGContextDrawPath(context, kCGPathEOFillStroke);
     CGPathRelease(theFirstPath);
     CGPathRelease(theSecondPath);
 }
 
-DISABLED_DRAW_TEST_F(CGPatternTests, PatternFillWindowsLogoRotate, UIKitMimicTest<>) {
+static void drawCoolStar(void* info, CGContextRef context) {
+    // Back color
+    CGContextSetRGBFillColor(context, 0.96, 0.32, 0.07, 1);
+    CGContextFillRect(context, CGRectMake(0, 0, 50, 50));
+
+    CGContextSetRGBFillColor(context, 0, 0.63, 0.94, 1);
+    CGContextFillRect(context, CGRectMake(0, 50, 50, 50));
+
+    CGContextSetRGBFillColor(context, 0.48, 0.73, 0, 1);
+    CGContextFillRect(context, CGRectMake(50, 50, 50, 50));
+
+    CGContextSetRGBFillColor(context, 1, 0.73, 0, 1);
+    CGContextFillRect(context, CGRectMake(50, 0, 50, 50));
+
+    double r = 0.8 * 50 / 2;
+    double theta = 2 * M_PI * (2.0 / 5.0); // 144 degrees
+
+    CGContextTranslateCTM(context, 50 / 2, 50 / 2);
+
+    CGContextMoveToPoint(context, 0, r);
+    for (int i = 1; i < 6; i++) {
+        CGContextAddLineToPoint(context, r * sin(i * theta), r * cos(i * theta));
+    }
+    CGContextClosePath(context);
+    CGContextFillPath(context);
+
+    // clipping & arc
+    CGRect cirleRect = CGRectMake(0, 0, 50, 25);
+    CGContextClip(context);
+    CGContextClearRect(context, cirleRect);
+}
+
+DRAW_TEST_F(CGPatternTests, PatternFillTransformationWindowsLogoNoneWhiteBackground, WhiteBackgroundTest<>) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+    _SetPatternForFill(context, CGRectMake(0, 0, 100, 100), 100, 100, drawCoolStar, 1);
+
+    CGContextFillRect(context, bounds);
+}
+
+DRAW_TEST_F(CGPatternTests, PatternFillTransformationWindowsLogoRotateWhiteBackground, WhiteBackgroundTest<>) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+    CGContextRotateCTM(context, 0.4);
+    _SetPatternForFill(context, CGRectMake(0, 0, 100, 100), 100, 100, drawCoolStar, 1);
+
+    CGContextFillRect(context, bounds);
+}
+
+DRAW_TEST_F(CGPatternTests, PatternFillTransformationWindowsLogoTranslateWhiteBackground, WhiteBackgroundTest<>) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+    CGContextTranslateCTM(context, 10, 20);
+    _SetPatternForFill(context, CGRectMake(0, 0, 100, 100), 100, 100, drawCoolStar, 1);
+
+    CGContextFillRect(context, bounds);
+}
+
+DRAW_TEST_F(CGPatternTests, PatternFillTransformationWindowsLogoScaleWhiteBackground, WhiteBackgroundTest<>) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+    CGContextScaleCTM(context, 4, 10);
+    _SetPatternForFill(context, CGRectMake(0, 0, 100, 100), 100, 100, drawCoolStar, 1);
+
+    CGContextFillRect(context, bounds);
+}
+
+DRAW_TEST_F(CGPatternTests, PatternFillTransformationWindowsLogoNone, UIKitMimicTest<>) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+    _SetPatternForFill(context, CGRectMake(0, 0, 100, 100), 100, 100, drawCoolStar, 1);
+
+    CGContextFillRect(context, bounds);
+}
+
+DRAW_TEST_F(CGPatternTests, PatternFillTransformationWindowsLogoRotate, UIKitMimicTest<>) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+    CGContextRotateCTM(context, 0.4);
+    _SetPatternForFill(context, CGRectMake(0, 0, 100, 100), 100, 100, drawCoolStar, 1);
+
+    CGContextFillRect(context, bounds);
+}
+
+DRAW_TEST_F(CGPatternTests, PatternFillTransformationWindowsLogoTranslate, UIKitMimicTest<>) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+    CGContextTranslateCTM(context, 10, 20);
+    _SetPatternForFill(context, CGRectMake(0, 0, 100, 100), 100, 100, drawCoolStar, 1);
+
+    CGContextFillRect(context, bounds);
+}
+
+DRAW_TEST_F(CGPatternTests, PatternFillTransformationWindowsLogoScale, UIKitMimicTest<>) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+    CGContextScaleCTM(context, 4, 10);
+    _SetPatternForFill(context, CGRectMake(0, 0, 100, 100), 100, 100, drawCoolStar, 1);
+
+    CGContextFillRect(context, bounds);
+}
+
+DRAW_TEST_F(CGPatternTests, CGPatternColoredRectBasedStrokeTransform, WhiteBackgroundTest<>) {
     CGContextRef context = GetDrawingContext();
     CGRect bounds = GetDrawingBounds();
 
-    _SetPatternForFill(context, CGRectMake(0, 0, 100, 100), 100, 100, drawPatternWindowsLogo, 1);
-    CGContextRotateCTM(context, 0.4);
-    CGContextFillRect(context, bounds);
+    CGContextRotateCTM(context, 0.5);
+    CGContextTranslateCTM(context, 0, -3);
+    CGContextScaleCTM(context, 2, 2);
+    _SetPatternForStroke(context, CGRectMake(0, 0, 100, 100), 100, 100, drawCoolStar, 1);
+    CGRect borderRect = CGRectInset(bounds, 30, 50);
+    CGContextStrokeRect(context, borderRect);
 }
 
 #pragma endregion Colored Pattern
