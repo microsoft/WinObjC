@@ -32,8 +32,6 @@ using namespace Windows::UI::Xaml::Media::Imaging;
 using namespace Windows::Web::Http;
 using namespace concurrency;
 
-// The Content Dialog item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
-
 ShareSheet::ShareSheet(Platform::String^ token) {
     InitializeComponent();
     _token = token;
@@ -42,10 +40,13 @@ ShareSheet::ShareSheet(Platform::String^ token) {
 void ShareSheet::ShareSheet_Post(ContentDialog^ sender, ContentDialogButtonClickEventArgs^ args) {
     // Rudimentary implementation of posting logic
     Platform::String^ urlStr = "https://graph.facebook.com/v2.8/me/feed"
-        "?link=" + Uri::EscapeComponent(_linkToShare) +
-        "&message=" + Uri::EscapeComponent(Message->Text) +
+        "?message=" + Uri::EscapeComponent(Message->Text) +
         "&privacy=" + Uri::EscapeComponent("{\"value\":\"ALL_FRIENDS\"}") +
         "&access_token=" + Uri::EscapeComponent(_token);
+
+    if (_linkToShare != nullptr) {
+        urlStr += "&link=" + Uri::EscapeComponent(_linkToShare);
+    }
 
     Uri^ url = ref new Uri(urlStr);
     IHttpContent^ content = ref new HttpStringContent("");
@@ -78,6 +79,7 @@ void ShareSheet::addImage(ImageSource^ imageSource) {
     Image^ image = ref new Image;
     image->Source = imageSource;
     Preview->Children->Append(image);
+    _imageToShare = image;
 }
 
 class ShareSheetImpl : public RuntimeClass<RuntimeClassFlags<ClassicCom>, ShareSheetControl> {

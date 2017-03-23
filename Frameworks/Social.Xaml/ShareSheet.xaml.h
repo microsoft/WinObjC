@@ -36,6 +36,7 @@ namespace Xaml {
 
         Platform::String^ _token;
         Platform::String^ _linkToShare;
+        Windows::UI::Xaml::Controls::Image^ _imageToShare;
     };
 
 }
