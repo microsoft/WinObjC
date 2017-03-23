@@ -178,7 +178,7 @@ static const wchar_t* TAG = L"SLComposeViewController";
  @Status Stub
  @Notes
 */
-- (instancetype)initWithCoder:(NSCoder *)decoder {
+- (instancetype)initWithCoder:(NSCoder*)decoder {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -187,7 +187,7 @@ static const wchar_t* TAG = L"SLComposeViewController";
  @Status Stub
  @Notes
 */
-- (void)encodeWithCoder:(NSCoder *)encoder {
+- (void)encodeWithCoder:(NSCoder*)encoder {
     UNIMPLEMENTED();
 }
 

@@ -44,11 +44,11 @@ static NSString* _getAccessToken() {
     NSString* service = [NSString stringWithFormat:@"com.facebook.sdk.tokencache.%@", [[NSBundle mainBundle] bundleIdentifier]];
 
     NSDictionary* query = @{
-        (__bridge id)kSecClass       : (__bridge id)kSecClassGenericPassword,
+        (__bridge id)kSecClass : (__bridge id)kSecClassGenericPassword,
         (__bridge id)kSecAttrService : service,
         (__bridge id)kSecAttrAccount : (__bridge id)kFBSDKAccessTokenKeychainKey,
-        (__bridge id)kSecReturnData  : @YES,
-        (__bridge id)kSecMatchLimit  : (__bridge id)kSecMatchLimitOne
+        (__bridge id)kSecReturnData : @YES,
+        (__bridge id)kSecMatchLimit : (__bridge id)kSecMatchLimitOne
     };
 
     woc::unique_cf<CFTypeRef> data;
@@ -68,7 +68,7 @@ static NSString* _getAccessToken() {
         return nil;
     }
 
-    NSDictionary *dict = [NSKeyedUnarchiver unarchiveObjectWithData:(__bridge NSData*)data.get()];
+    NSDictionary* dict = [NSKeyedUnarchiver unarchiveObjectWithData:(__bridge NSData*)data.get()];
 
     if (![dict isKindOfClass:[NSDictionary class]]) {
         NSTraceError(TAG, @"Cached token data unexpected type: %@", [dict class]);
