@@ -18,27 +18,14 @@
 #pragma once
 
 #import <CoreGraphics/CGGradient.h>
+#import <vector>
 #import "CoreGraphicsInternal.h"
 #include <objc/runtime.h>
 
-class __CGGradient : private objc_object {
-public:
-    __CGSurfaceFormat _format;
-    CGColorSpaceModel _colorSpaceModel;
-    float* _components;
-    float* _locations;
-    DWORD _count;
+size_t _CGGradientGetCount(CGGradientRef gradient);
 
-    __CGGradient();
-    ~__CGGradient();
-    void initWithColorComponents(const float* components, const float* locations, size_t count, CGColorSpaceRef colorspace);
-    void initWithColors(CFArrayRef components, const float* locations, CGColorSpaceRef colorspace);
-};
+const std::vector<CGFloat>& _CGGradientGetStopLocations(CGGradientRef gradient);
 
-unsigned long _CGGradientGetCount(CGGradientRef gradient);
+const std::vector<CGFloat>& _CGGradientGetColorComponents(CGGradientRef gradient);
 
-CGFloat* _CGGradientGetStopLocation(CGGradientRef gradient);
-
-CGFloat* _CGGradientGetColorComponents(CGGradientRef gradient);
-
-CGColorSpaceModel _CGGradientGetColorSpaceModel(CGGradientRef gradient);
+CGColorSpaceRef _CGGradientGetColorSpace(CGGradientRef gradient);

@@ -18,179 +18,147 @@
 #import <StubReturn.h>
 #import <Starboard.h>
 #import <CoreGraphics/CGContext.h>
+#import <CFCppBase.h>
+#import <vector>
+#import <algorithm>
+#import <iterator>
+#import <LoggingNative.h>
 #import "CGColorSpaceInternal.h"
 #import "CGGradientInternal.h"
 #import "UIColorInternal.h"
-#import "_CGLifetimeBridgingType.h"
 
-@interface CGNSGradient : _CGLifetimeBridgingType
-@end
+static const wchar_t* TAG = L"CGGradient";
 
-@implementation CGNSGradient
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wobjc-missing-super-calls"
-- (void)dealloc {
-    delete (__CGGradient*)self;
-}
-#pragma clang diagnostic pop
-@end
-
-__CGGradient::__CGGradient() : _components(NULL), _locations(NULL) {
-    object_setClass((id)this, [CGNSGradient class]);
-}
-
-__CGGradient::~__CGGradient() {
-    if (_components) {
-        delete[] _components;
-        _components = NULL;
-    }
-    if (_locations) {
-        delete[] _locations;
-        _locations = NULL;
-    }
-}
-
-void __CGGradient::initWithColorComponents(const float* components, const float* locations, size_t count, CGColorSpaceRef colorspace) {
-    DWORD componentCount = 0;
-    switch (CGColorSpaceGetModel(colorspace)) {
-        case kCGColorSpaceModelRGB:
-            componentCount = 4;
-            _format = _ColorABGR;
-            break;
-        case kCGColorSpaceModelMonochrome:
-            componentCount = 2;
-            _format = _ColorGrayscale;
-            break;
-        default:
-            UNIMPLEMENTED_WITH_MSG("Unsupported colorspace used to create gradiant.");
-            break;
+struct __CGGradient : CoreFoundation::CppBase<__CGGradient> {
+    __CGGradient(CGColorSpaceRef colorSpace = nullptr) : _colorSpace(colorSpace) {
     }
 
-    _components = new float[count * componentCount];
-    memcpy(_components, components, sizeof(float) * count * componentCount);
-
-    _locations = new float[count];
-
-    if (locations) {
-        memcpy(_locations, locations, sizeof(float) * count);
-    } else {
-        for (unsigned i = 0; i < count; i++) {
-            _locations[i] = (float)i / (float)(count - 1);
-        }
+    __CGGradient(CGColorSpaceRef colorSpace, const CGFloat* components, const CGFloat* locations, size_t count)
+        : _colorSpace(colorSpace),
+          _colorComponents(components, components + count * (CGColorSpaceGetNumberOfComponents(_colorSpace) + 1)),
+          _stopLocations(CopyLocations(locations, count)) {
     }
 
-    _count = count;
-}
-
-void __CGGradient::initWithColors(CFArrayRef componentsArr, const float* locations, CGColorSpaceRef colorspace) {
-    NSArray* components = (NSArray*)componentsArr;
-    size_t componentCount = 0;
-
-    switch (CGColorSpaceGetModel(colorspace)) {
-        case kCGColorSpaceModelRGB:
-            componentCount = 4;
-            _format = _ColorABGR;
-            break;
-        case kCGColorSpaceModelMonochrome:
-            componentCount = 2;
-            _format = _ColorGrayscale;
-            break;
-        default:
-            UNIMPLEMENTED_WITH_MSG("Unsupported colorspace used to create gradiant.");
-            break;
+    __CGGradient(CGColorSpaceRef colorSpace, CFArrayRef components, const CGFloat* locations)
+        : _colorSpace(colorSpace),
+          _colorComponents(CopyColorComponents(colorSpace, components)),
+          _stopLocations(CopyLocations(locations, CFArrayGetCount(components))) {
     }
 
-    int count = [components count];
+    inline CGColorSpaceRef GetColorSpace() const {
+        return _colorSpace;
+    }
 
-    _components = new CGFloat[count * componentCount];
+    inline const std::vector<CGFloat>& GetColorComponents() const {
+        return _colorComponents;
+    }
 
-    for (int i = 0; i < count; i++) {
-        UIColor* curColor = [components objectAtIndex:i];
+    inline const std::vector<CGFloat>& GetStopLocations() const {
+        return _stopLocations;
+    }
 
-        if (curColor) {
-            const __CGColorQuad* color = [curColor _getColors];
-            memcpy(&_components[i * componentCount], color, sizeof(CGFloat) * componentCount);
+    woc::StrongCF<CGColorSpaceRef> _colorSpace;
+    std::vector<CGFloat> _colorComponents;
+    std::vector<CGFloat> _stopLocations;
+
+private:
+    std::vector<CGFloat> CopyLocations(const CGFloat* locations, size_t count) {
+        // locations can be null
+        std::vector<CGFloat> result;
+        RETURN_RESULT_IF(count == 0, result);
+
+        if (locations) {
+            result = std::vector<CGFloat>(locations, locations + count);
         } else {
-            memset(&_components[i * componentCount], 0, sizeof(CGFloat) * componentCount);
+            result.reserve(count);
+
+            for (size_t i = 0; i < count; i++) {
+                result.push_back((CGFloat)i / (CGFloat)(count));
+            }
         }
+
+        return result;
     }
 
-    _locations = new float[count];
+    std::vector<CGFloat> CopyColorComponents(CGColorSpaceRef colorspace, CFArrayRef components) {
+        std::vector<CGFloat> result;
+        size_t componentCount = CGColorSpaceGetNumberOfComponents(colorspace) + 1;
+        CFIndex count = CFArrayGetCount(components);
+        result.reserve(count * componentCount);
+        static const CGFloat defaultColor[4] = { 0, 0, 0, 0 };
 
-    if (locations) {
-        memcpy(_locations, locations, sizeof(float) * count);
-    } else {
-        for (int i = 0; i < count; i++) {
-            _locations[i] = (float)i / (float)(count - 1);
+        for (CFIndex i = 0; i < count; i++) {
+            CGColorRef curColor = (CGColorRef)CFArrayGetValueAtIndex(components, i);
+            const CGFloat* color = curColor ? CGColorGetComponents(curColor) : defaultColor;
+            result.insert(_colorComponents.begin() + i * componentCount, color, color + componentCount);
         }
-    }
 
-    _count = count;
-}
+        return result;
+    }
+};
 
 /**
  @Status Interoperable
 */
-CGGradientRef CGGradientCreateWithColorComponents(CGColorSpaceRef colorSpace,
-                                                  const float* components,
-                                                  const float* locations,
-                                                  size_t count) {
-    CGGradientRef ret = new __CGGradient();
-    ret->initWithColorComponents(components, locations, count, colorSpace);
-
-    return ret;
-}
-
-/**
- @Status Interoperable
-*/
-CGGradientRef CGGradientCreateWithColors(CGColorSpaceRef colorSpace, CFArrayRef colors, const float* locations) {
-    CGGradientRef ret = new __CGGradient();
-    ret->initWithColors(colors, locations, colorSpace);
-
-    return ret;
+CFTypeID CGGradientGetTypeID() {
+    return __CGGradient::GetTypeID();
 }
 
 /**
  @Status Interoperable
 */
 void CGGradientRelease(CGGradientRef gradient) {
-    CFRelease((id)gradient);
+    RETURN_IF(!gradient);
+    CFRelease(static_cast<CFTypeRef>(gradient));
 }
 
 /**
  @Status Interoperable
 */
 CGGradientRef CGGradientRetain(CGGradientRef gradient) {
-    CFRetain((id)gradient);
+    RETURN_NULL_IF(!gradient);
+    CFRetain(static_cast<CFTypeRef>(gradient));
     return gradient;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
-CFTypeID CGGradientGetTypeID() {
-    UNIMPLEMENTED();
-    return StubReturn();
+CGGradientRef CGGradientCreateWithColorComponents(CGColorSpaceRef colorSpace,
+                                                  const CGFloat* components,
+                                                  const CGFloat* locations,
+                                                  size_t count) {
+    RETURN_NULL_IF(!colorSpace);
+    RETURN_NULL_IF(!components);
+    RETURN_NULL_IF(count == 0);
+    // location can be null
+    return __CGGradient::CreateInstance(kCFAllocatorDefault, colorSpace, components, locations, count);
 }
 
-CGFloat* _CGGradientGetStopLocation(CGGradientRef gradient) {
-    RETURN_NULL_IF(!gradient);
-    return gradient->_locations;
+/**
+ @Status Interoperable
+*/
+CGGradientRef CGGradientCreateWithColors(CGColorSpaceRef colorSpace, CFArrayRef colors, const CGFloat* locations) {
+    RETURN_NULL_IF(!colorSpace);
+    RETURN_NULL_IF(!colors);
+    // location can be null
+    return __CGGradient::CreateInstance(kCFAllocatorDefault, colorSpace, colors, locations);
 }
 
-CGFloat* _CGGradientGetColorComponents(CGGradientRef gradient) {
-    RETURN_NULL_IF(!gradient);
-    return gradient->_components;
+const std::vector<CGFloat>& _CGGradientGetStopLocations(CGGradientRef gradient) {
+    return gradient->GetStopLocations();
 }
 
-unsigned long _CGGradientGetCount(CGGradientRef gradient) {
+const std::vector<CGFloat>& _CGGradientGetColorComponents(CGGradientRef gradient) {
+    return gradient->GetColorComponents();
+}
+
+size_t _CGGradientGetCount(CGGradientRef gradient) {
     RETURN_RESULT_IF_NULL(gradient, 0);
-    return gradient->_count;
+    return gradient->GetStopLocations().size();
 }
 
-CGColorSpaceModel _CGGradientGetColorSpaceModel(CGGradientRef gradient) {
-    RETURN_RESULT_IF_NULL(gradient, kCGColorSpaceModelRGB);
-    return gradient->_colorSpaceModel;
+CGColorSpaceRef _CGGradientGetColorSpace(CGGradientRef gradient) {
+    RETURN_NULL_IF(!gradient);
+    return gradient->GetColorSpace();
 }

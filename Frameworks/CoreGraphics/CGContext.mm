@@ -56,7 +56,7 @@ using namespace Microsoft::WRL;
 static const wchar_t* TAG = L"CGContext";
 
 // Coordinate offset to support CGGradientDrawingOptions
-static const float s_kCGGradientOffsetPoint = 1E-45;
+static const float s_kCGGradientOffsetPoint = 1E-45f;
 
 enum __CGCoordinateMode : unsigned int { _kCGCoordinateModeDeviceSpace = 0, _kCGCoordinateModeUserSpace };
 enum __CGTrinary : unsigned int { _kCGTrinaryOff = 0, _kCGTrinaryOn = 1, _kCGTrinaryDefault = 2 };
@@ -3151,14 +3151,14 @@ static inline void __CGGradientInsertTransparentColor(std::vector<D2D1_GRADIENT_
 static std::vector<D2D1_GRADIENT_STOP> __CGGradientToD2D1GradientStop(CGContextRef context,
                                                                       CGGradientRef gradient,
                                                                       CGGradientDrawingOptions options) {
-    unsigned long gradientCount = _CGGradientGetCount(gradient);
+    size_t gradientCount = _CGGradientGetCount(gradient);
     std::vector<D2D1_GRADIENT_STOP> gradientStops(gradientCount);
 
-    CGFloat* colorComponents = _CGGradientGetColorComponents(gradient);
-    CGFloat* locations = _CGGradientGetStopLocation(gradient);
-    for (unsigned long i = 0; i < gradientCount; ++i) {
+    std::vector<CGFloat> colorComponents = std::vector<CGFloat>(_CGGradientGetColorComponents(gradient));
+    std::vector<CGFloat> locations = std::vector<CGFloat>(_CGGradientGetStopLocations(gradient));
+    for (size_t i = 0; i < gradientCount; ++i) {
         // TODO #1541: The indexing needs to get updated based on colorspace (for non RGBA)
-        unsigned int colorIndex = (i * 4);
+        size_t colorIndex = (i * 4);
         gradientStops[i].color = D2D1::ColorF(colorComponents[colorIndex],
                                               colorComponents[colorIndex + 1],
                                               colorComponents[colorIndex + 2],
@@ -3175,11 +3175,12 @@ static std::vector<D2D1_GRADIENT_STOP> __CGGradientToD2D1GradientStop(CGContextR
     }
 
     if (!(options & kCGGradientDrawsAfterEndLocation)) {
-        __CGGradientInsertTransparentColor(gradientStops, 1, 1.f - s_kCGGradientOffsetPoint);
+        __CGGradientInsertTransparentColor(gradientStops, 1, 1.0f - s_kCGGradientOffsetPoint);
     }
 
     return gradientStops;
 }
+
 /**
  @Status Interoperable
 */
@@ -3188,7 +3189,6 @@ void CGContextDrawLinearGradient(
     NOISY_RETURN_IF_NULL(context);
     NOISY_RETURN_IF_NULL(gradient);
     RETURN_IF(!context->ShouldDraw());
-
     RETURN_IF(_CGGradientGetCount(gradient) == 0);
 
     std::vector<D2D1_GRADIENT_STOP> gradientStops = __CGGradientToD2D1GradientStop(context, gradient, options);
