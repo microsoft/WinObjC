@@ -249,3 +249,97 @@ DRAW_TEST_F(CGGradient, LinearGradientWithLowOpacityShort, UIKitMimicTest<PixelB
 }
 
 #pragma endregion LinearGradient
+
+#pragma region RadialGradient
+
+DRAW_TEST_F(CGGradient, RadialSimpleDraw, UIKitMimicTest<>) {
+    CGFloat components[8] = { 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0 };
+    CGPoint centerpoint = { 200.0, 200.0 };
+
+    auto colorspace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
+    auto gradient = woc::MakeStrongCF<CGGradientRef>(CGGradientCreateWithColorComponents(colorspace, components, NULL, 2));
+
+    CGContextDrawRadialGradient(GetDrawingContext(), gradient, centerpoint, 0.0, centerpoint, 50.0, 0);
+}
+
+DRAW_TEST_F(CGGradient, RadialOneColor, UIKitMimicTest<>) {
+    CGFloat components[] = { 0, 1, 0, 1 };
+    CGFloat locations[] = { 0.3 };
+    CGPoint centerpoint = { 200.0, 200.0 };
+
+    auto colorspace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
+    auto gradient = woc::MakeStrongCF<CGGradientRef>(CGGradientCreateWithColorComponents(colorspace, components, locations, 1));
+
+    CGContextDrawRadialGradient(GetDrawingContext(), gradient, centerpoint, 0.0, centerpoint, 50.0, 0);
+}
+
+struct ColorComponents {
+    const char* name;
+    const CGFloat* components;
+    const CGFloat* locations;
+    size_t count;
+};
+class CGGradientRadial
+    : public WhiteBackgroundTest<>,
+      public ::testing::WithParamInterface<::testing::tuple<ColorComponents, CGPoint, CGFloat, CGGradientDrawingOptions>> {
+    CFStringRef CreateOutputFilename() {
+        ColorComponents components = ::testing::get<0>(GetParam());
+        CGPoint startCenter = ::testing::get<1>(GetParam());
+        CGFloat endRadius = ::testing::get<2>(GetParam());
+        CGGradientDrawingOptions options = ::testing::get<3>(GetParam());
+
+        const char* optionsName;
+        if (options == kCGGradientDrawsBeforeStartLocation) {
+            optionsName = "startLocation";
+        } else if (options == kCGGradientDrawsAfterEndLocation) {
+            optionsName = "endLocation";
+        } else {
+            optionsName = "Unknown";
+        }
+
+        return CFStringCreateWithFormat(nullptr,
+                                        nullptr,
+                                        CFSTR("TestImage.CGGradient.Radial.center.(%f, %f).radius.%f.color.%s.options.%s.png"),
+                                        startCenter.x,
+                                        startCenter.y,
+                                        endRadius,
+                                        components.name,
+                                        optionsName);
+    }
+};
+
+DRAW_TEST_P(CGGradientRadial, DrawGradients) {
+    ColorComponents comps = ::testing::get<0>(GetParam());
+    CGPoint startCenter = ::testing::get<1>(GetParam());
+    CGFloat endRadius = ::testing::get<2>(GetParam());
+    CGGradientDrawingOptions options = ::testing::get<3>(GetParam());
+
+    CGContextRef context = GetDrawingContext();
+
+    auto colorspace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
+
+    auto gradient =
+        woc::MakeStrongCF<CGGradientRef>(CGGradientCreateWithColorComponents(colorspace, comps.components, comps.locations, comps.count));
+
+    CGContextDrawRadialGradient(context, gradient, startCenter, 0.0, startCenter, endRadius, options);
+}
+
+static const CGFloat tealPurpleRedBlue[] = { 0, 0.5, 0.5, 1, 0.5, 0, 0.5, 1, 1, 0, 0, 1, 0, 0, 1, 1 };
+static const CGFloat tealPurpleRedBlueLoc[] = { 0.0, 0.3, 1, 0.6 };
+
+static const ColorComponents sc_colorComponents[] = {
+    { "teal.purple.red.blue", tealPurpleRedBlue, tealPurpleRedBlueLoc, 4 },
+};
+
+static const CGPoint sc_CenterPoints[] = { { 60, 80 }, { 200, 10 } };
+static const CGFloat circleRadius[] = { 200, 10, 0.9 };
+static const CGGradientDrawingOptions drawingOptions[] = { kCGGradientDrawsAfterEndLocation, kCGGradientDrawsBeforeStartLocation };
+
+INSTANTIATE_TEST_CASE_P(CGGradient,
+                        CGGradientRadial,
+                        ::testing::Combine(::testing::ValuesIn(sc_colorComponents),
+                                           ::testing::ValuesIn(sc_CenterPoints),
+                                           ::testing::ValuesIn(circleRadius),
+                                           ::testing::ValuesIn(drawingOptions)));
+
+#pragma endregion RadialGradient
