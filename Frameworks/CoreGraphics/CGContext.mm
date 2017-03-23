@@ -158,6 +158,11 @@ struct __CGContextDrawingState {
         strokeStyle.Reset();
     }
 
+    inline void SetLineWidth(CGFloat width) {
+        ClearStrokeStyle();
+        lineWidth = width;
+    }
+
     inline bool HasShadow() {
         return std::fpclassify(shadowColor.w) != FP_ZERO;
     }
@@ -1680,9 +1685,7 @@ void CGContextSetLineCap(CGContextRef context, CGLineCap lineCap) {
 */
 void CGContextSetLineWidth(CGContextRef context, CGFloat width) {
     NOISY_RETURN_IF_NULL(context);
-    auto& state = context->CurrentGState();
-    state.ClearStrokeStyle();
-    state.lineWidth = width;
+    context->CurrentGState().SetLineWidth(width);
 }
 #pragma endregion
 
