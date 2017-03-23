@@ -121,6 +121,19 @@ CGGradientRef CGGradientRetain(CGGradientRef gradient) {
     return gradient;
 }
 
+static inline bool __isValidGradientColorspaceModel(CGColorSpaceRef colorspace) {
+    RETURN_RESULT_IF_NULL(colorspace, false);
+
+    // The colorspace cannot be kCGColorSpaceModelPattern || kCGColorSpaceModelIndexed
+    CGColorSpaceModel colorSpaceModel = CGColorSpaceGetModel(colorspace);
+    if ((colorSpaceModel == kCGColorSpaceModelPattern) || (colorSpaceModel == kCGColorSpaceModelIndexed)) {
+        TraceError(TAG, L"Invalid colorspace %ld for gradient", colorSpaceModel);
+        return false;
+    }
+
+    return true;
+}
+
 /**
  @Status Interoperable
 */
@@ -131,6 +144,7 @@ CGGradientRef CGGradientCreateWithColorComponents(CGColorSpaceRef colorSpace,
     RETURN_NULL_IF(!colorSpace);
     RETURN_NULL_IF(!components);
     RETURN_NULL_IF(count == 0);
+    RETURN_NULL_IF(!__isValidGradientColorspaceModel(colorSpace));
     // location can be null
     return __CGGradient::CreateInstance(kCFAllocatorDefault, colorSpace, components, locations, count);
 }
@@ -141,6 +155,7 @@ CGGradientRef CGGradientCreateWithColorComponents(CGColorSpaceRef colorSpace,
 CGGradientRef CGGradientCreateWithColors(CGColorSpaceRef colorSpace, CFArrayRef colors, const CGFloat* locations) {
     RETURN_NULL_IF(!colorSpace);
     RETURN_NULL_IF(!colors);
+    RETURN_NULL_IF(!__isValidGradientColorspaceModel(colorSpace));
     // location can be null
     return __CGGradient::CreateInstance(kCFAllocatorDefault, colorSpace, colors, locations);
 }
