@@ -88,7 +88,7 @@ struct ButtonState {
 
 static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
     id object = [coder decodeObjectForKey:key];
-    UIEdgeInsets* rawInsets = (UIEdgeInsets*)((char *)[object bytes] + 1);
+    UIEdgeInsets* rawInsets = (UIEdgeInsets*)((char*)[object bytes] + 1);
 
     UIEdgeInsets insets = {};
     memcpy(&insets, rawInsets, sizeof(UIEdgeInsets));
@@ -165,7 +165,7 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
         }
 
         if ([coder containsValueForKey:@"UIAdjustsImageWhenDisabled"]) {
-            self.adjustsImageWhenDisabled = [coder decodeBoolForKey :@"UIAdjustsImageWhenDisabled"];
+            self.adjustsImageWhenDisabled = [coder decodeBoolForKey:@"UIAdjustsImageWhenDisabled"];
         }
 
         // Insets
@@ -253,22 +253,20 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
     // Initialize press/click management
     _isInTouchSequence = false;
 
-    // Register for IsPressed-changed events to handle keyboard input
-    _isPressedChangedRegistration = [_xamlButton registerPropertyChangedCallback:[WUXCPButtonBase isPressedProperty] 
-        callback:^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-            UIButton* strongSelf = weakSelf;
-            if (strongSelf) {
-                // Update our highlighted state accordingly
-                [strongSelf setHighlighted:_xamlButton.isPressed];
-            }
-    }];
+    // Register for IsPressed-changed events to map to UIButton highlighted states
+    _isPressedChangedRegistration =
+        [_xamlButton registerPropertyChangedCallback:[WUXCPButtonBase isPressedProperty]
+                                            callback:^(WXDependencyObject* sender, WXDependencyProperty* dp) {
+                                                // Update our highlighted state accordingly
+                                                [weakSelf setHighlighted:rt_dynamic_cast<WXCButton>(sender).isPressed];
+                                            }];
 
     // Register for 'Click' events, to handle keybard and accessibility clicks
     _clickEventRegistration = [_xamlButton addClickEvent:^(RTObject* sender, WXRoutedEventArgs* e) {
-            // Simulate a button 'click' for non-pointer-triggered clicks
-            [weakSelf sendActionsForControlEvents:UIControlEventTouchDown];
-            [weakSelf sendActionsForControlEvents:UIControlEventTouchUpInside];
-        }];
+        // Simulate a button 'click' for non-pointer-triggered clicks
+        [weakSelf sendActionsForControlEvents:UIControlEventTouchDown];
+        [weakSelf sendActionsForControlEvents:UIControlEventTouchUpInside];
+    }];
 }
 
 /**
@@ -408,7 +406,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 */
 - (CGRect)imageRectForContentRect:(CGRect)contentRect {
     /////////////////////////////////////////////////////////////////////
-    // Note: #1365 All size calculations here must check for nil, 
+    // Note: #1365 All size calculations here must check for nil,
     // as we cannot assume getting a size from nil will return CGSizeZero
     /////////////////////////////////////////////////////////////////////
     UIImage* currentImage = self.currentImage;
@@ -452,7 +450,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 */
 - (CGRect)titleRectForContentRect:(CGRect)contentRect {
     /////////////////////////////////////////////////////////////////////
-    // Note: #1365 All size calculations here must check for nil, 
+    // Note: #1365 All size calculations here must check for nil,
     // as we cannot assume getting a size from nil will return CGSizeZero
     /////////////////////////////////////////////////////////////////////
 
@@ -1011,7 +1009,7 @@ static ComPtr<IInspectable> _currentInspectableImage(UIButton* self) {
     CGSize ret = CGSizeZero;
 
     ////////////////////////////////////////////////////////////////////
-    // Note: #1365 All size calculations here must check for nil, 
+    // Note: #1365 All size calculations here must check for nil,
     // as we cannot assume getting a size from nil will return CGSizeZero
     ////////////////////////////////////////////////////////////////////
 
