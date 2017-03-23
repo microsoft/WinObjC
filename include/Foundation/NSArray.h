@@ -66,19 +66,17 @@ FOUNDATION_EXPORT_CLASS
 - (NSUInteger)indexOfObject:(ObjectType)anObject;
 - (NSUInteger)indexOfObject:(ObjectType)anObject inRange:(NSRange)range;
 - (NSUInteger)indexOfObjectIdenticalTo:(ObjectType)anObject;
-- (NSUInteger)indexOfObjectIdenticalTo:(ObjectType)anObject inRange:(NSRange)range STUB_METHOD;
+- (NSUInteger)indexOfObjectIdenticalTo:(ObjectType)anObject inRange:(NSRange)range;
 - (NSUInteger)indexOfObjectPassingTest:(BOOL (^)(ObjectType, NSUInteger, BOOL*))predicate;
-- (NSUInteger)indexOfObjectWithOptions:(NSEnumerationOptions)opts
-                           passingTest:(BOOL (^)(ObjectType, NSUInteger, BOOL*))predicate STUB_METHOD;
+- (NSUInteger)indexOfObjectWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(ObjectType, NSUInteger, BOOL*))predicate;
 - (NSUInteger)indexOfObjectAtIndexes:(NSIndexSet*)indexSet
                              options:(NSEnumerationOptions)opts
-                         passingTest:(BOOL (^)(ObjectType, NSUInteger, BOOL*))predicate STUB_METHOD;
+                         passingTest:(BOOL (^)(ObjectType, NSUInteger, BOOL*))predicate;
 - (NSIndexSet*)indexesOfObjectsPassingTest:(BOOL (^)(ObjectType, NSUInteger, BOOL*))predicate;
-- (NSIndexSet*)indexesOfObjectsWithOptions:(NSEnumerationOptions)opts
-                               passingTest:(BOOL (^)(ObjectType, NSUInteger, BOOL*))predicate STUB_METHOD;
+- (NSIndexSet*)indexesOfObjectsWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(ObjectType, NSUInteger, BOOL*))predicate;
 - (NSIndexSet*)indexesOfObjectsAtIndexes:(NSIndexSet*)indexSet
                                  options:(NSEnumerationOptions)opts
-                             passingTest:(BOOL (^)(ObjectType, NSUInteger, BOOL*))predicate STUB_METHOD;
+                             passingTest:(BOOL (^)(ObjectType, NSUInteger, BOOL*))predicate;
 - (NSUInteger)indexOfObject:(ObjectType)obj
               inSortedRange:(NSRange)r
                     options:(NSBinarySearchingOptions)opts
@@ -89,7 +87,7 @@ FOUNDATION_EXPORT_CLASS
 - (void)enumerateObjectsWithOptions:(NSEnumerationOptions)opts usingBlock:(void (^)(ObjectType, NSUInteger, BOOL*))block;
 - (void)enumerateObjectsAtIndexes:(NSIndexSet*)indexSet
                           options:(NSEnumerationOptions)opts
-                       usingBlock:(void (^)(ObjectType, NSUInteger, BOOL*))block STUB_METHOD;
+                       usingBlock:(void (^)(ObjectType, NSUInteger, BOOL*))block;
 - (ObjectType)firstObjectCommonWithArray:(NSArray<ObjectType>*)otherArray;
 - (BOOL)isEqualToArray:(NSArray<ObjectType>*)otherArray;
 - (NSArray<ObjectType>*)arrayByAddingObject:(ObjectType)anObject;

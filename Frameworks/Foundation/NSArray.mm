@@ -208,23 +208,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSArray, NSArrayPrototype, CFArrayGetTypeID);
  @Status Interoperable
 */
 - (NSIndexSet*)indexesOfObjectsPassingTest:(BOOL (^)(id, NSUInteger, BOOL*))pred {
-    int count = [self count];
-
-    NSMutableIndexSet* ret = [NSMutableIndexSet indexSet];
-    for (int i = 0; i < count; i++) {
-        id value = [self objectAtIndex:i];
-        BOOL shouldStop = false;
-
-        if (pred(value, i, &shouldStop)) {
-            [ret addIndex:i];
-        }
-
-        if (shouldStop) {
-            break;
-        }
-    }
-
-    return ret;
+    return [self indexesOfObjectsWithOptions:0 passingTest:pred];
 }
 
 /**
@@ -269,15 +253,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSArray, NSArrayPrototype, CFArrayGetTypeID);
  @Status Interoperable
 */
 - (NSUInteger)indexOfObjectIdenticalTo:(id)obj {
-    int count = [self count];
-
-    for (int i = 0; i < count; i++) {
-        if ([self objectAtIndex:i] == obj) {
-            return i;
-        }
-    }
-
-    return NSNotFound;
+    return [self indexOfObjectIdenticalTo:obj inRange:NSMakeRange(0, self.count)];
 }
 
 /**
@@ -888,7 +864,6 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
 
 /**
  @Status Stub
- @Notes
 */
 - (void)addObserver:(NSObject*)anObserver
     toObjectsAtIndexes:(NSIndexSet*)indexes
@@ -900,7 +875,6 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
 
 /**
  @Status Stub
- @Notes
 */
 - (void)removeObserver:(NSObject*)anObserver fromObjectsAtIndexes:(NSIndexSet*)indexes forKeyPath:(NSString*)keyPath {
     UNIMPLEMENTED();
@@ -908,7 +882,6 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
 
 /**
  @Status Stub
- @Notes
 */
 - (void)removeObserver:(NSObject*)observer fromObjectsAtIndexes:(NSIndexSet*)indexes forKeyPath:(NSString*)keyPath context:(void*)context {
     UNIMPLEMENTED();
@@ -916,7 +889,6 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
 
 /**
  @Status Interoperable
- @Notes
 */
 + (NSArray*)arrayWithContentsOfURL:(NSURL*)aURL {
     return [[[self alloc] initWithContentsOfURL:aURL] autorelease];
@@ -988,38 +960,45 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)enumerateObjectsAtIndexes:(NSIndexSet*)indexSet
                           options:(NSEnumerationOptions)opts
                        usingBlock:(void (^)(id, NSUInteger, BOOL*))block {
-    UNIMPLEMENTED();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (NSIndexSet*)indexesOfObjectsWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(id, NSUInteger, BOOL*))predicate {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (NSIndexSet*)indexesOfObjectsAtIndexes:(NSIndexSet*)indexSet
-                                 options:(NSEnumerationOptions)opts
-                             passingTest:(BOOL (^)(id, NSUInteger, BOOL*))predicate {
-    UNIMPLEMENTED();
-    return StubReturn();
+    [indexSet enumerateIndexesWithOptions:opts
+                               usingBlock:^(NSUInteger index, BOOL* stop) {
+                                   block([self objectAtIndex:index], index, stop);
+                               }];
 }
 
 /**
  @Status Interoperable
- @Notes
+*/
+- (NSIndexSet*)indexesOfObjectsWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(id, NSUInteger, BOOL*))predicate {
+    NSIndexSet* fullRange = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, self.count)];
+    return [self indexesOfObjectsAtIndexes:fullRange options:opts passingTest:predicate];
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSIndexSet*)indexesOfObjectsAtIndexes:(NSIndexSet*)indexSet
+                                 options:(NSEnumerationOptions)opts
+                             passingTest:(BOOL (^)(id, NSUInteger, BOOL*))predicate {
+    __block NSMutableIndexSet* ret = [NSMutableIndexSet indexSet];
+    [self enumerateObjectsAtIndexes:indexSet
+                            options:opts
+                         usingBlock:^(id element, NSUInteger index, BOOL* stop) {
+                             if (predicate(element, index, stop)) {
+                                 [ret addIndex:index];
+                             }
+                         }];
+
+    return ret;
+}
+
+/**
+ @Status Interoperable
 */
 - (NSArray*)initWithContentsOfURL:(NSURL*)aURL {
     NSData* data = [NSData dataWithContentsOfURL:aURL];
@@ -1056,7 +1035,6 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
 
 /**
  @Status Stub
- @Notes
 */
 - (NSArray*)sortedArrayUsingFunction:(NSInteger (*)(id, id, void*))comparator context:(void*)context hint:(NSData*)hint {
     UNIMPLEMENTED();
@@ -1064,32 +1042,55 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSUInteger)indexOfObjectIdenticalTo:(id)anObject inRange:(NSRange)range {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (NSMaxRange(range) > [self count]) {
+        [NSException raise:NSRangeException
+                    format:@"-[%s %s]: range {%d, %d} extends beyond bounds [0 .. %d]",
+                           sel_getName(_cmd),
+                           class_getName([self class]),
+                           range.location,
+                           range.length,
+                           [self count]];
+    }
+
+    id objects[range.length];
+    [self getObjects:objects range:range];
+    for (NSUInteger i = 0; i < range.length; ++i) {
+        if (objects[i] == anObject) {
+            return range.location + i;
+        }
+    }
+
+    return NSNotFound;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSUInteger)indexOfObjectWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(id, NSUInteger, BOOL*))predicate {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSIndexSet* fullRange = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, self.count)];
+    return [self indexOfObjectAtIndexes:fullRange options:opts passingTest:predicate];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSUInteger)indexOfObjectAtIndexes:(NSIndexSet*)indexSet
                              options:(NSEnumerationOptions)opts
                          passingTest:(BOOL (^)(id, NSUInteger, BOOL*))predicate {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSIndexSet* matching = [self indexesOfObjectsAtIndexes:indexSet
+                                                   options:opts
+                                               passingTest:^(id obj, NSUInteger index, BOOL* stop) {
+                                                   BOOL ret = predicate(obj, index, stop);
+                                                   if (ret == YES) {
+                                                       *stop = YES;
+                                                   }
+
+                                                   return ret;
+                                               }];
+    return matching.firstIndex;
 }
 
 @end
