@@ -67,7 +67,7 @@ template <>
 HRESULT WRLToNSCollection<ABI::Windows::Foundation::Collections::IMap<HSTRING, HSTRING>>(
     ABI::Windows::Foundation::Collections::IMap<HSTRING, HSTRING>* map, NSDictionary* __autoreleasing* pDictionary) {
     using NSType = Private::CollectionType<ABI::Windows::Foundation::Collections::IMap<HSTRING, HSTRING>>::NSMutableEquivalentType;
-    NSType* collection = [[NSType alloc] init];
+    NSType* collection = [[[NSType alloc] init] autorelease];
     HRESULT hr = WRLHelpers::ForEach(
         map,
         [&collection](const Microsoft::WRL::ComPtr<ABI::Windows::Foundation::Collections::IKeyValuePair<HSTRING, HSTRING>>& pair,
@@ -81,7 +81,7 @@ HRESULT WRLToNSCollection<ABI::Windows::Foundation::Collections::IMap<HSTRING, H
         });
     RETURN_IF_FAILED(hr);
 
-    *pDictionary = [collection autorelease];
+    *pDictionary = collection;
     return S_OK;
 }
 
@@ -91,7 +91,7 @@ template <>
 HRESULT WRLToNSCollection<ABI::Windows::Foundation::Collections::IPropertySet>(ABI::Windows::Foundation::Collections::IPropertySet* map,
                                                                                NSDictionary* __autoreleasing* pDictionary) {
     using NSType = Private::CollectionType<ABI::Windows::Foundation::Collections::IPropertySet>::NSMutableEquivalentType;
-    NSType* collection = [[NSType alloc] init];
+    NSType* collection = [[[NSType alloc] init] autorelease];
     RETURN_IF_FAILED(WRLHelpers::ForEach(
         map,
         [&collection](const Microsoft::WRL::ComPtr<ABI::Windows::Foundation::Collections::IKeyValuePair<HSTRING, IInspectable*>>& pair,
@@ -112,7 +112,7 @@ HRESULT WRLToNSCollection<ABI::Windows::Foundation::Collections::IPropertySet>(A
             return S_OK;
         }));
 
-    *pDictionary = [collection autorelease];
+    *pDictionary = collection;
     return S_OK;
 }
 
