@@ -20,7 +20,6 @@
 #include "Starboard.h"
 
 #import <Foundation/NSString.h>
-#import <UWP/InteropBase.h>
 #include <COMIncludes.h>
 
 #include <wrl\client.h>
