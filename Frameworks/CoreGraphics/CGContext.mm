@@ -1942,14 +1942,10 @@ static HRESULT _CreatePatternBrush(CGContextRef context,
     ComPtr<ID2D1Bitmap> d2dBitmap;
     RETURN_IF_FAILED(__CreateD2DBitmapFromCGImage(context, tileImage.get(), &d2dBitmap));
 
-    // Scale it by the inverted transform
-    // TODO #2108: We have an issue with rotation, the CTM rotation should not affect the brush
-    CGSize size = CGSizeApplyAffineTransform(tileSize.size, CGAffineTransformInvert(context->CurrentGState().transform));
-
-    CGAffineTransform transform = __BitmapBrushTransformation(context,
-                                                              { CGPointZero, size.width, size.height },
-                                                              d2dBitmap->GetPixelSize(),
-                                                              _CGPatternGetTransformation(pattern));
+    CGSize size = CGSizeApplyAffineTransform(tileSize.size, CGAffineTransformMakeScale(1, -1));
+    CGRect dest = { CGPointZero, size.width, size.height };
+    CGAffineTransform transform =
+        CGAffineTransformTranslate(_CGPatternGetTransformation(pattern), dest.origin.x, -(dest.size.height / 2.0));
 
     ComPtr<ID2D1BitmapBrush1> bitmapBrush;
     ComPtr<ID2D1DeviceContext> deviceContext = context->DeviceContext();
@@ -2914,7 +2910,6 @@ void CGContextFillRect(CGContextRef context, CGRect rect) {
 
     ComPtr<ID2D1RectangleGeometry> rectGeometry;
     FAIL_FAST_IF_FAILED(factory->CreateRectangleGeometry(__CGRectToD2D_F(rect), &rectGeometry));
-
     FAIL_FAST_IF_FAILED(context->DrawGeometry(_kCGCoordinateModeUserSpace, rectGeometry.Get(), kCGPathFill));
 
     context->ClearPath();
