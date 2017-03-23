@@ -40,8 +40,9 @@ ShareSheet::ShareSheet(Platform::String^ token) {
 }
 
 void ShareSheet::ShareSheet_Post(ContentDialog^ sender, ContentDialogButtonClickEventArgs^ args) {
+    // Rudimentary implementation of posting logic
     Platform::String^ urlStr = "https://graph.facebook.com/v2.8/me/feed"
-        "?link=http://www.microsoft.com"
+        "?link=" + Uri::EscapeComponent(_linkToShare) +
         "&message=" + Uri::EscapeComponent(Message->Text) +
         "&privacy=" + Uri::EscapeComponent("{\"value\":\"ALL_FRIENDS\"}") +
         "&access_token=" + Uri::EscapeComponent(_token);
@@ -51,23 +52,14 @@ void ShareSheet::ShareSheet_Post(ContentDialog^ sender, ContentDialogButtonClick
     HttpClient^ client = ref new HttpClient;
 
     auto post = create_task(client->PostAsync(url, content));
-    post.then([](task<HttpResponseMessage^> t) {
-        try {
-            HttpResponseMessage^ response = t.get();
-
-            create_task(response->Content->ReadAsStringAsync()).then([=] (Platform::String^ str) {
-                Platform::String^ output = "code: " + response->StatusCode.ToString() + ", content = " + str + "\n";
-                OutputDebugString(L"HttpRequestMessage succeeded\n");
-                OutputDebugString(output->Data());
-            });
-        } catch (Platform::COMException^ e) {
-            OutputDebugString(L"HttpRequestMessage failed\n");
-        }
+    post.then([] (HttpResponseMessage^ response) {
+        // Here's where we would notify our client of the result
     });
     
 }
 
 void ShareSheet::ShareSheet_Cancel(ContentDialog^ sender, ContentDialogButtonClickEventArgs^ args) {
+    // Notify caller of cancellation
 }
 
 void ShareSheet::addLink(Platform::String^ url) {
@@ -79,6 +71,7 @@ void ShareSheet::addLink(Platform::String^ url) {
     text->Text = url;
 
     Preview->Children->Append(text);
+    _linkToShare = url;
 }
 
 void ShareSheet::addImage(ImageSource^ imageSource) {

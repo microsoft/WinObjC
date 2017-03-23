@@ -35,7 +35,7 @@ namespace Xaml {
         void ShareSheet_Cancel(Windows::UI::Xaml::Controls::ContentDialog^ sender, Windows::UI::Xaml::Controls::ContentDialogButtonClickEventArgs^ args);
 
         Platform::String^ _token;
-        Windows::UI::Xaml::Media::Imaging::RenderTargetBitmap^ _linkSource;
+        Platform::String^ _linkToShare;
     };
 
 }
