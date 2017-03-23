@@ -33,20 +33,20 @@ const int64_t NSURLSessionTransferSizeUnknown = -1LL;
 
 #import <StubReturn.h>
 
-#define _THROW_IF_NULL_REQUEST(request)                                        \
-do {                                                                           \
-    if (request == nil) {                                                      \
-      @throw [NSException                                                      \
-          exceptionWithName:NSInvalidArgumentException                         \
-                     reason:[NSString                                          \
-                                stringWithFormat:@"*** %@ Cannot create data " \
-                                                 @"task without request or "   \
-                                                 @"resume data",               \
-                                                 NSStringFromSelector(_cmd)]   \
-                   userInfo:nil];                                              \
-    }                                                                          \
-}                                                                              \
-  while (false)
+#define _THROW_IF_NULL_REQUEST(request)                                                                    \
+    \
+do {                                                                                                       \
+        if (request == nil) {                                                                              \
+            @throw [NSException exceptionWithName:NSInvalidArgumentException                               \
+                                           reason:[NSString stringWithFormat:@"*** %@ Cannot create data " \
+                                                                             @"task without request or "   \
+                                                                             @"resume data",               \
+                                                                             NSStringFromSelector(_cmd)]   \
+                                         userInfo:nil];                                                    \
+        }                                                                                                  \
+    \
+}                                                                                                   \
+    while (false)
 
 NSString* const NSURLErrorBackgroundTaskCancelledReasonKey = @"NSURLErrorBackgroundTaskCancelledReasonKey";
 
@@ -330,7 +330,7 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
                                                                           configuration:_configuration
                                                                                 request:request];
     [self _registerDataTask:newTask withCompletionHandler:completionHandler];
-    return newTask;
+    return [newTask autorelease];
 }
 
 /**
@@ -370,7 +370,7 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
                                                                                   configuration:_configuration
                                                                                         request:request];
     [self _registerDownloadTask:newTask withCompletionHandler:completionHandler];
-    return newTask;
+    return [newTask autorelease];
 }
 
 /**
@@ -395,7 +395,7 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
                                                                                   configuration:_configuration
                                                                                      resumeData:resumeData];
     [self _registerDownloadTask:newTask withCompletionHandler:completionHandler];
-    return newTask;
+    return [newTask autorelease];
 }
 
 /**

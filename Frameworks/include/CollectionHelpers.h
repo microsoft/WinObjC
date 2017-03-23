@@ -81,7 +81,7 @@ HRESULT WRLToNSCollection<ABI::Windows::Foundation::Collections::IMap<HSTRING, H
         });
     RETURN_IF_FAILED(hr);
 
-    *pDictionary = collection;
+    *pDictionary = [collection autorelease];
     return S_OK;
 }
 

@@ -239,7 +239,7 @@ static std::function<R(Args...)> bindObjC(id instance, SEL _cmd) {
     StrongId<NSObject> strongInstance(instance);
     return [strongInstance, _cmd](Args... args) -> R {
         // args are not perfectly forwarded here, as objc_msgSend will not know what to do with them.
-        return ((R (*)(id, SEL, Args...))objc_msgSend)(strongInstance, _cmd, args...);
+        return ((R(*)(id, SEL, Args...))objc_msgSend)(strongInstance, _cmd, args...);
     };
 }
 
@@ -290,150 +290,152 @@ static std::function<R(Args...)> bindObjC(id instance, SEL _cmd) {
 }
 
 - (HRESULT)_asyncHttpOperation:(AsyncHttpOperation*)pOperation completedWithStatus:(AsyncStatus)status {
-    if (status == AsyncStatus::Canceled) {
-        return S_OK;
-    }
-
-    NSError* error = nil;
-    try {
-        ComPtr<AsyncHttpOperation> operation(pOperation);
-        ComPtr<IAsyncInfo> asyncInfo;
-        THROW_IF_FAILED(operation.As(&asyncInfo));
-
-        if (status == AsyncStatus::Error) {
-            HRESULT hr = S_OK;
-            THROW_IF_FAILED(asyncInfo->get_ErrorCode(&hr));
-            THROW_HR(hr);
-        } else if (status != AsyncStatus::Completed) {
-            THROW_HR(E_UNEXPECTED);
+    @autoreleasepool {
+        if (status == AsyncStatus::Canceled) {
+            return S_OK;
         }
 
-        ComPtr<IHttpResponseMessage> responseMessage;
-        THROW_IF_FAILED(operation->GetResults(&responseMessage));
+        NSError* error = nil;
+        try {
+            ComPtr<AsyncHttpOperation> operation(pOperation);
+            ComPtr<IAsyncInfo> asyncInfo;
+            THROW_IF_FAILED(operation.As(&asyncInfo));
 
-        HttpStatusCode statusCode;
-        THROW_IF_FAILED(responseMessage->get_StatusCode(&statusCode));
-        HttpVersion httpVersion;
-        THROW_IF_FAILED(responseMessage->get_Version(&httpVersion));
-
-        ComPtr<IHttpResponseHeaderCollection> headerCollection;
-        THROW_IF_FAILED(responseMessage->get_Headers(&headerCollection));
-        ComPtr<IMap<HSTRING, HSTRING>> headerMap;
-        THROW_IF_FAILED(headerCollection.As(&headerMap));
-
-        if ([_request HTTPShouldHandleCookies]) {
-            NSHTTPCookieStorage* cookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-            NSMutableDictionary* collectedCookies = [NSMutableDictionary dictionary];
-            int index = 0;
-            // VSO 6693060: NSHTTPCookie does not support "Set-Cookie x=y; Path=/, a=b; Path=/ -- multiple cookies separated with ','.
-            // A response may contain multiple Set-Cookie headers, but inserting them into a dictionary will necessarily
-            // flatten them into a single entry. We need to accumulate each cookie separately so that we can provide the
-            // lot of them to NSHTTPCookie's initializer.
-            HRESULT hr =
-                WRLHelpers::ForEach(headerMap.Get(),
-                                    [&collectedCookies, &index](const ComPtr<IKeyValuePair<HSTRING, HSTRING>>& pair, boolean* stop) {
-                                        Wrappers::HString key;
-                                        RETURN_IF_FAILED(pair->get_Key(key.GetAddressOf()));
-                                        unsigned int keyLength = 0;
-                                        const wchar_t* rawKey = key.GetRawBuffer(&keyLength);
-                                        if (_wcsnicmp(rawKey, L"set-cookie", _countof("set-cookie") - 1) !=
-                                            0) { // we want every set-cookie/set-cookie2 header, regardless of case.
-                                            return S_OK;
-                                        }
-
-                                        Wrappers::HString value;
-                                        RETURN_IF_FAILED(pair->get_Value(value.GetAddressOf()));
-                                        [collectedCookies setObject:Strings::WideToNSString(value.Get())
-                                                             forKey:[NSString stringWithFormat:@"%d", ++index]];
-                                        return S_OK;
-                                    });
-            THROW_IF_FAILED(hr);
-
-            NSArray* cookies = [NSHTTPCookie cookiesWithResponseHeaderFields:collectedCookies forURL:[_request URL]];
-            [cookieStorage setCookies:cookies forURL:[_request URL] mainDocumentURL:nil];
-        }
-
-        NSMutableDictionary* nsHeaders = [NSMutableDictionary dictionary];
-        NSDictionary* responseHeaders;
-        THROW_IF_FAILED(Collections::WRLToNSCollection(headerMap, &responseHeaders));
-        [nsHeaders addEntriesFromDictionary:responseHeaders];
-
-        ComPtr<IHttpContent> content;
-        responseMessage->get_Content(&content); // Not guarding this: it would be valid for there to be no content.
-
-        uint64_t contentLength = 0;
-        if (content) {
-            ComPtr<IHttpContentHeaderCollection> contentHeaderCollection;
-            THROW_IF_FAILED(content->get_Headers(&contentHeaderCollection));
-            THROW_IF_FAILED(contentHeaderCollection.As(&headerMap));
-            NSDictionary* contentHeaders = nil;
-            THROW_IF_FAILED(Collections::WRLToNSCollection(headerMap, &contentHeaders));
-
-            ComPtr<IReference<uint64_t>> contentLengthRef;
-            THROW_IF_FAILED(contentHeaderCollection->get_ContentLength(&contentLengthRef));
-            if (contentLengthRef) {
-                THROW_IF_FAILED(contentLengthRef->get_Value(&contentLength));
-            }
-
-            [nsHeaders addEntriesFromDictionary:contentHeaders];
-        }
-
-        NSString* httpVersionStr;
-        switch (httpVersion) {
-            case HttpVersion_Http10:
-                httpVersionStr = @"HTTP/1.0";
-                break;
-            case HttpVersion_Http11:
-                httpVersionStr = @"HTTP/1.1";
-                break;
-            case HttpVersion_Http20:
-                httpVersionStr = @"HTTP/2.0";
-                break;
-            default:
-                httpVersionStr = nil;
-        }
-        NSHTTPURLResponse* nsResponse =
-            [[[NSHTTPURLResponse alloc] initWithURL:[_request URL] statusCode:statusCode HTTPVersion:httpVersionStr headerFields:nsHeaders]
-                autorelease];
-
-        if (statusCode >= 300 && statusCode <= 399) { // redirect code
-            ComPtr<IUriRuntimeClass> uri;
-            THROW_IF_FAILED(headerCollection->get_Location(&uri));
-            if (!uri) {
+            if (status == AsyncStatus::Error) {
+                HRESULT hr = S_OK;
+                THROW_IF_FAILED(asyncInfo->get_ErrorCode(&hr));
+                THROW_HR(hr);
+            } else if (status != AsyncStatus::Completed) {
                 THROW_HR(E_UNEXPECTED);
             }
 
-            Wrappers::HString uriString;
-            THROW_IF_FAILED(uri->get_AbsoluteUri(uriString.GetAddressOf()));
+            ComPtr<IHttpResponseMessage> responseMessage;
+            THROW_IF_FAILED(operation->GetResults(&responseMessage));
 
-            // The location header can specify a relative or absolute URL: attempt to join it with the request URL.
-            NSURL* targetUrl = [NSURL URLWithString:Strings::WideToNSString(uriString.Get()) relativeToURL:[_request URL]];
-            NSURLRequest* req = [NSURLRequest requestWithURL:targetUrl];
-            [_client URLProtocol:self wasRedirectedToRequest:req redirectResponse:nsResponse];
-            // After a redirect, NSURLProtocol ceases to exist: we could redirect to a completely different one.
+            HttpStatusCode statusCode;
+            THROW_IF_FAILED(responseMessage->get_StatusCode(&statusCode));
+            HttpVersion httpVersion;
+            THROW_IF_FAILED(responseMessage->get_Version(&httpVersion));
+
+            ComPtr<IHttpResponseHeaderCollection> headerCollection;
+            THROW_IF_FAILED(responseMessage->get_Headers(&headerCollection));
+            ComPtr<IMap<HSTRING, HSTRING>> headerMap;
+            THROW_IF_FAILED(headerCollection.As(&headerMap));
+
+            if ([_request HTTPShouldHandleCookies]) {
+                NSHTTPCookieStorage* cookieStorage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+                NSMutableDictionary* collectedCookies = [NSMutableDictionary dictionary];
+                int index = 0;
+                // VSO 6693060: NSHTTPCookie does not support "Set-Cookie x=y; Path=/, a=b; Path=/ -- multiple cookies separated with ','.
+                // A response may contain multiple Set-Cookie headers, but inserting them into a dictionary will necessarily
+                // flatten them into a single entry. We need to accumulate each cookie separately so that we can provide the
+                // lot of them to NSHTTPCookie's initializer.
+                HRESULT hr =
+                    WRLHelpers::ForEach(headerMap.Get(),
+                                        [&collectedCookies, &index](const ComPtr<IKeyValuePair<HSTRING, HSTRING>>& pair, boolean* stop) {
+                                            Wrappers::HString key;
+                                            RETURN_IF_FAILED(pair->get_Key(key.GetAddressOf()));
+                                            unsigned int keyLength = 0;
+                                            const wchar_t* rawKey = key.GetRawBuffer(&keyLength);
+                                            if (_wcsnicmp(rawKey, L"set-cookie", _countof("set-cookie") - 1) !=
+                                                0) { // we want every set-cookie/set-cookie2 header, regardless of case.
+                                                return S_OK;
+                                            }
+
+                                            Wrappers::HString value;
+                                            RETURN_IF_FAILED(pair->get_Value(value.GetAddressOf()));
+                                            [collectedCookies setObject:Strings::WideToNSString(value.Get())
+                                                                 forKey:[NSString stringWithFormat:@"%d", ++index]];
+                                            return S_OK;
+                                        });
+                THROW_IF_FAILED(hr);
+
+                NSArray* cookies = [NSHTTPCookie cookiesWithResponseHeaderFields:collectedCookies forURL:[_request URL]];
+                [cookieStorage setCookies:cookies forURL:[_request URL] mainDocumentURL:nil];
+            }
+
+            NSMutableDictionary* nsHeaders = [NSMutableDictionary dictionary];
+            NSDictionary* responseHeaders;
+            THROW_IF_FAILED(Collections::WRLToNSCollection(headerMap, &responseHeaders));
+            [nsHeaders addEntriesFromDictionary:responseHeaders];
+
+            ComPtr<IHttpContent> content;
+            responseMessage->get_Content(&content); // Not guarding this: it would be valid for there to be no content.
+
+            uint64_t contentLength = 0;
+            if (content) {
+                ComPtr<IHttpContentHeaderCollection> contentHeaderCollection;
+                THROW_IF_FAILED(content->get_Headers(&contentHeaderCollection));
+                THROW_IF_FAILED(contentHeaderCollection.As(&headerMap));
+                NSDictionary* contentHeaders = nil;
+                THROW_IF_FAILED(Collections::WRLToNSCollection(headerMap, &contentHeaders));
+
+                ComPtr<IReference<uint64_t>> contentLengthRef;
+                THROW_IF_FAILED(contentHeaderCollection->get_ContentLength(&contentLengthRef));
+                if (contentLengthRef) {
+                    THROW_IF_FAILED(contentLengthRef->get_Value(&contentLength));
+                }
+
+                [nsHeaders addEntriesFromDictionary:contentHeaders];
+            }
+
+            NSString* httpVersionStr;
+            switch (httpVersion) {
+                case HttpVersion_Http10:
+                    httpVersionStr = @"HTTP/1.0";
+                    break;
+                case HttpVersion_Http11:
+                    httpVersionStr = @"HTTP/1.1";
+                    break;
+                case HttpVersion_Http20:
+                    httpVersionStr = @"HTTP/2.0";
+                    break;
+                default:
+                    httpVersionStr = nil;
+            }
+            NSHTTPURLResponse* nsResponse = [[[NSHTTPURLResponse alloc] initWithURL:[_request URL]
+                                                                         statusCode:statusCode
+                                                                        HTTPVersion:httpVersionStr
+                                                                       headerFields:nsHeaders] autorelease];
+
+            if (statusCode >= 300 && statusCode <= 399) { // redirect code
+                ComPtr<IUriRuntimeClass> uri;
+                THROW_IF_FAILED(headerCollection->get_Location(&uri));
+                if (!uri) {
+                    THROW_HR(E_UNEXPECTED);
+                }
+
+                Wrappers::HString uriString;
+                THROW_IF_FAILED(uri->get_AbsoluteUri(uriString.GetAddressOf()));
+
+                // The location header can specify a relative or absolute URL: attempt to join it with the request URL.
+                NSURL* targetUrl = [NSURL URLWithString:Strings::WideToNSString(uriString.Get()) relativeToURL:[_request URL]];
+                NSURLRequest* req = [NSURLRequest requestWithURL:targetUrl];
+                [_client URLProtocol:self wasRedirectedToRequest:req redirectResponse:nsResponse];
+                // After a redirect, NSURLProtocol ceases to exist: we could redirect to a completely different one.
+                return S_OK;
+            } else {
+                [_client URLProtocol:self didReceiveResponse:nsResponse cacheStoragePolicy:NSURLCacheStorageNotAllowed];
+            }
+
+            if (content) {
+                [self retain]; // we could be cancelled mid-operation, but we need to retain the ability to clean up.
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                    [self _consumeDataStreamForIHttpContent:content.Get()];
+                    [self release];
+                });
+            }
+
             return S_OK;
-        } else {
-            [_client URLProtocol:self didReceiveResponse:nsResponse cacheStoragePolicy:NSURLCacheStorageNotAllowed];
         }
+        CATCH_POPULATE_NSERROR(&error);
 
-        if (content) {
-            [self retain]; // we could be cancelled mid-operation, but we need to retain the ability to clean up.
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
-                           ^{
-                               [self _consumeDataStreamForIHttpContent:content.Get()];
-                               [self release];
-                           });
+        if (error) {
+            [self _propagateErrorToClient:error];
         }
 
         return S_OK;
     }
-    CATCH_POPULATE_NSERROR(&error);
-
-    if (error) {
-        [self _propagateErrorToClient:error];
-    }
-
-    return S_OK;
 }
 
 - (void)_propagateErrorToClient:(NSError*)error {
@@ -450,10 +452,11 @@ static std::function<R(Args...)> bindObjC(id instance, SEL _cmd) {
     NSError* error = nil;
     try {
         ComPtr<IInputStream> stream;
-        WRLHelpers::AwaitProgressCompleteHelper<IInputStream*,
-                                                uint64_t>([&](IAsyncOperationWithProgress<IInputStream*, uint64_t>** operation) {
-            return httpContent->ReadAsInputStreamAsync(operation);
-        }, stream.ReleaseAndGetAddressOf());
+        WRLHelpers::AwaitProgressCompleteHelper<IInputStream*, uint64_t>(
+            [&](IAsyncOperationWithProgress<IInputStream*, uint64_t>** operation) {
+                return httpContent->ReadAsInputStreamAsync(operation);
+            },
+            stream.ReleaseAndGetAddressOf());
 
         std::vector<unsigned char> buffer(kHTTPContentBufferSize);
         ComPtr<IBuffer> rawDataBuffer;
@@ -465,11 +468,11 @@ static std::function<R(Args...)> bindObjC(id instance, SEL _cmd) {
                 return;
             }
 
-            HRESULT hr =
-                WRLHelpers::AwaitProgressCompleteHelper<IBuffer*,
-                                                        uint32_t>([&](IAsyncOperationWithProgress<IBuffer*, uint32_t>** operation) {
+            HRESULT hr = WRLHelpers::AwaitProgressCompleteHelper<IBuffer*, uint32_t>(
+                [&](IAsyncOperationWithProgress<IBuffer*, uint32_t>** operation) {
                     return stream->ReadAsync(rawDataBuffer.Get(), buffer.size(), InputStreamOptions::InputStreamOptions_Partial, operation);
-                }, outputBuffer.ReleaseAndGetAddressOf());
+                },
+                outputBuffer.ReleaseAndGetAddressOf());
             THROW_IF_FAILED(hr);
 
             if ([strongSelf cancelled]) { // double check on cancel after a long-running async operation.
