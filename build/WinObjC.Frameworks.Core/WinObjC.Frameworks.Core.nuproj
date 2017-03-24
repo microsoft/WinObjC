@@ -61,8 +61,13 @@
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\Foundation\dll\Foundation.vcxproj" />
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\MobileCoreServices\dll\MobileCoreServices.vcxproj" />
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\Starboard\dll\Starboard.vcxproj" />
+  </ItemGroup>
+
+  <!-- NuProj Project References. Ensure that these only get evaluated once by checking that this isn't the second time through this project -->
+  <ItemGroup Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">
     <ProjectReference Include="$(MSBuildThisFileDirectory)..\WinObjC.Frameworks.ThirdParty\WinObjC.Frameworks.ThirdParty.nuproj" />
   </ItemGroup>
+  
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <Import Project="$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets" Condition="Exists('$(NuGetAuthoringPath)\NuGet.Packaging.Authoring.targets')" />
   <Import Project="WinObjC.Frameworks.Core.Packaging.targets" />
