@@ -80,11 +80,6 @@ BASE_CLASS_REQUIRED_IMPLS(NSData, NSDataPrototype, CFDataGetTypeID);
     Wrappers::HString encodedString;
     RETURN_NULL_IF_FAILED(cryptographicBufferStatics->EncodeToBase64String(wrlBuffer.Get(), encodedString.GetAddressOf()));
 
-    unsigned int rawLength;
-    const wchar_t* rawEncodedString = WindowsGetStringRawBuffer(encodedString.Get(), &rawLength);
-
-    NSString* nsEncodedString = [NSString _stringWithHSTRING:encodedString.Get()];
-
     // Do any necessary post-processing for options
     // If line length specified, place a newline character (/r, /n, or /r/n every (specified number) characters)
     if ((options & NSDataBase64Encoding64CharacterLineLength) || (options & NSDataBase64Encoding76CharacterLineLength)) {
@@ -92,37 +87,49 @@ BASE_CLASS_REQUIRED_IMPLS(NSData, NSDataPrototype, CFDataGetTypeID);
         // Calculate number of times to insert newlines
         // Since no newline is needed at the end if stringLength is evenly divisible by lineLength,
         // subtract 1 from stringLength when dividing
-        size_t stringLength = [nsEncodedString length];
-        size_t newLineCount = (stringLength != 0) ? ((stringLength - 1) / lineLength) : 0;
+        unsigned int rawLength;
+        const wchar_t* rawEncodedString = WindowsGetStringRawBuffer(encodedString.Get(), &rawLength);
+
+        size_t newLineCount = (rawLength != 0) ? ((rawLength - 1) / lineLength) : 0;
 
         if (newLineCount > 0) {
             NSDataBase64EncodingOptions useCR = options & NSDataBase64EncodingEndLineWithCarriageReturn;
             NSDataBase64EncodingOptions useLF = options & NSDataBase64EncodingEndLineWithLineFeed;
 
-            StrongId<NSString> newLineChar;
+            const wchar_t* newLineChar = L"\r\n";
             if (useCR && !useLF) {
-                newLineChar = @"\r";
+                newLineChar = L"\r";
             } else if (!useCR && useLF) {
-                newLineChar = @"\n";
-            } else {
-                // Use CRLF by default, but can also be manually specified
-                newLineChar = @"\r\n";
+                newLineChar = L"\n";
             }
 
-            NSMutableString* mutableEncodedString = [NSMutableString stringWithString:nsEncodedString];
+            const size_t newLineLength = wcslen(newLineChar);
+            const size_t newLength = rawLength + newLineCount * newLineLength;
 
-            // Add new line every (lineLength) chars
-            // Iterate backwards to avoid compensating for changes in length
-            for (size_t i = newLineCount; i > 0; i--) {
-                [mutableEncodedString insertString:newLineChar atIndex:(i * lineLength)];
+            std::unique_ptr<wchar_t> result(new wchar_t[newLength]);
+
+            const wchar_t* source = rawEncodedString;
+            wchar_t* dest = result.get();
+
+            for (size_t i = 0; i < newLineCount; ++i) {
+                memcpy(dest, source, lineLength * sizeof(wchar_t));
+                dest += lineLength;
+                source += lineLength;
+                memcpy(dest, newLineChar, newLineLength * sizeof(wchar_t));
+                dest += newLineLength;
+            }
+            
+            if (rawLength % lineLength != 0) {
+                // finally add the remaining characters
+                memcpy(dest, source, (rawLength % lineLength)*sizeof(wchar_t));
             }
 
-            return [NSString stringWithString:mutableEncodedString];
+            return [NSString stringWithCharacters:reinterpret_cast<unichar*>(result.get()) length:newLength];
         }
-    }
+    } 
 
     // If line length not specified, or newLineCount <= 0, none of the other options matter, just return nsEncodedString
-    return nsEncodedString;
+    return [NSString _stringWithHSTRING: encodedString.Get()];
 }
 
 /**
