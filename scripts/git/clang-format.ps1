@@ -34,7 +34,7 @@ try {
     }
 
     # Process a single file if specified
-    if ($File -ne "True") {
+    if ($File) {
         $result = & $clangPath $clangArgs $File 2>&1
         Check-Result
 
