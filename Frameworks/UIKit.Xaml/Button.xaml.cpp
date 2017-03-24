@@ -37,7 +37,7 @@ Brush^ GetDefaultWhiteForegroundBrush() {
 
 Button::Button() {
     InitializeComponent();
-    
+
     // Default to a transparent background brush so we can accept pointer input
     static auto transparentBrush = ref new SolidColorBrush(Windows::UI::Colors::Transparent);
     Background = transparentBrush;

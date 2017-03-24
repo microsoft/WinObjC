@@ -73,7 +73,13 @@ struct ButtonState {
     StrongId<UILabel> _titleLabel;
     StrongId<_UIImageView_Proxy> _proxyImageView;
 
-    bool _isPressed;
+    // Press handling
+    bool _isInTouchSequence;
+    long long _isPressedChangedRegistration;
+
+    // Click handling
+    EventRegistrationToken _clickEventRegistration;
+
     UIButtonType _buttonType;
 
     ComPtr<IInspectable> _inspectableAdjustsWhenDisabledBrush;
@@ -82,7 +88,7 @@ struct ButtonState {
 
 static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
     id object = [coder decodeObjectForKey:key];
-    UIEdgeInsets* rawInsets = (UIEdgeInsets*)((char *)[object bytes] + 1);
+    UIEdgeInsets* rawInsets = (UIEdgeInsets*)((char*)[object bytes] + 1);
 
     UIEdgeInsets insets = {};
     memcpy(&insets, rawInsets, sizeof(UIEdgeInsets));
@@ -159,7 +165,7 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
         }
 
         if ([coder containsValueForKey:@"UIAdjustsImageWhenDisabled"]) {
-            self.adjustsImageWhenDisabled = [coder decodeBoolForKey :@"UIAdjustsImageWhenDisabled"];
+            self.adjustsImageWhenDisabled = [coder decodeBoolForKey:@"UIAdjustsImageWhenDisabled"];
         }
 
         // Insets
@@ -177,26 +183,6 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
     }
 
     return self;
-}
-
-- (void)_processPointerPressedCallback:(RTObject*)sender eventArgs:(WUXIPointerRoutedEventArgs*)e {
-    [self _processPointerEvent:e forTouchPhase:UITouchPhaseBegan];
-}
-
-- (void)_processPointerMovedCallback:(RTObject*)sender eventArgs:(WUXIPointerRoutedEventArgs*)e {
-    [self _processPointerEvent:e forTouchPhase:UITouchPhaseMoved];
-}
-
-- (void)_processPointerReleasedCallback:(RTObject*)sender eventArgs:(WUXIPointerRoutedEventArgs*)e {
-    [self _processPointerEvent:e forTouchPhase:UITouchPhaseEnded];
-}
-
-- (void)_processPointerCancelledCallback:(RTObject*)sender eventArgs:(WUXIPointerRoutedEventArgs*)e {
-    [self _processPointerEvent:e forTouchPhase:UITouchPhaseCancelled];
-}
-
-- (void)_processPointerCaptureLostCallback:(RTObject*)sender eventArgs:(WUXIPointerRoutedEventArgs*)e {
-    [self _processPointerEvent:e forTouchPhase:UITouchPhaseCancelled];
 }
 
 - (void)_initUIButton {
@@ -232,6 +218,7 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
     _contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     _contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
 
+    // Register for cooperative pointer events
     __weak UIButton* weakSelf = self;
     XamlControls::HookButtonPointerEvents(_xamlButton,
                                           ^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
@@ -244,24 +231,42 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
                                               // on the super view, then event remains marked as handled
                                               // and OnPointerPressed is not called on the backing XAML Button.
                                               e.handled = YES;
-                                              [weakSelf _processPointerPressedCallback:sender eventArgs:e];
+                                              [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseBegan];
                                           },
                                           ^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
                                               e.handled = YES;
-                                              [weakSelf _processPointerMovedCallback:sender eventArgs:e];
+                                              [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseMoved];
                                           },
                                           ^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
                                               e.handled = YES;
-                                              [weakSelf _processPointerReleasedCallback:sender eventArgs:e];
+                                              [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseEnded];
                                           },
                                           ^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
                                               e.handled = YES;
-                                              [weakSelf _processPointerCancelledCallback:sender eventArgs:e];
+                                              [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseCancelled];
                                           },
                                           ^(RTObject* sender, WUXIPointerRoutedEventArgs* e) {
                                               e.handled = YES;
-                                              [weakSelf _processPointerCaptureLostCallback:sender eventArgs:e];
+                                              [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseCancelled];
                                           });
+
+    // Initialize press/click management
+    _isInTouchSequence = false;
+
+    // Register for IsPressed-changed events to map to UIButton highlighted states
+    _isPressedChangedRegistration =
+        [_xamlButton registerPropertyChangedCallback:[WUXCPButtonBase isPressedProperty]
+                                            callback:^(WXDependencyObject* sender, WXDependencyProperty* dp) {
+                                                // Update our highlighted state accordingly
+                                                [weakSelf setHighlighted:rt_dynamic_cast<WXCButton>(sender).isPressed];
+                                            }];
+
+    // Register for 'Click' events, to handle keybard and accessibility clicks
+    _clickEventRegistration = [_xamlButton addClickEvent:^(RTObject* sender, WXRoutedEventArgs* e) {
+        // Simulate a button 'click' for non-pointer-triggered clicks
+        [weakSelf sendActionsForControlEvents:UIControlEventTouchDown];
+        [weakSelf sendActionsForControlEvents:UIControlEventTouchUpInside];
+    }];
 }
 
 /**
@@ -401,7 +406,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 */
 - (CGRect)imageRectForContentRect:(CGRect)contentRect {
     /////////////////////////////////////////////////////////////////////
-    // Note: #1365 All size calculations here must check for nil, 
+    // Note: #1365 All size calculations here must check for nil,
     // as we cannot assume getting a size from nil will return CGSizeZero
     /////////////////////////////////////////////////////////////////////
     UIImage* currentImage = self.currentImage;
@@ -445,7 +450,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
 */
 - (CGRect)titleRectForContentRect:(CGRect)contentRect {
     /////////////////////////////////////////////////////////////////////
-    // Note: #1365 All size calculations here must check for nil, 
+    // Note: #1365 All size calculations here must check for nil,
     // as we cannot assume getting a size from nil will return CGSizeZero
     /////////////////////////////////////////////////////////////////////
 
@@ -706,15 +711,11 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
  @Status Interoperable
 */
 - (void)touchesMoved:(NSSet*)touchSet withEvent:(UIEvent*)event {
+    // If the derived UIButton overrides this method and does not call this super implementation, then the
+    // event remains *handled*, which results in the Button.Xaml not calling into its super for further processing.
+    // Else, we mark the event as *not handled*, so Button.Xaml calls into its super for further event processing.
     WUXIPointerRoutedEventArgs* routedEvent = [event _touchEvent]->_routedEventArgs;
     [routedEvent setHandled:NO];
-
-    // We're assuming multitouchenabled = NO; it's a button after all.
-    CGPoint point = [[touchSet anyObject] locationInView:self];
-    BOOL currentTouchInside = [self pointInside:point withEvent:event];
-
-    // Update our highlighted state accordingly
-    [super setHighlighted:currentTouchInside];
 
     [super touchesMoved:touchSet withEvent:event];
 }
@@ -723,9 +724,9 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
  @Status Interoperable
 */
 - (void)touchesBegan:(NSSet*)touchSet withEvent:(UIEvent*)event {
-    // If the derived UIButton overrides this method and does not call super implementation, then the
-    // event remains handled, which results in the button not getting pressed.
-    // Else we mark the event to be not handled so that the XAML implementation of Button can handle the event.
+    // If the derived UIButton overrides this method and does not call this super implementation, then the
+    // event remains *handled*, which results in the Button.Xaml not calling into its super for further processing.
+    // Else, we mark the event as *not handled*, so Button.Xaml calls into its super for further event processing.
     WUXIPointerRoutedEventArgs* routedEvent = [event _touchEvent]->_routedEventArgs;
     [routedEvent setHandled:NO];
 
@@ -733,10 +734,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
         return;
     }
 
-    _isPressed = true;
-
-    // Update our highlighted state accordingly
-    [self setHighlighted:_isPressed];
+    // Track that we're currently in a touch sequence
+    _isInTouchSequence = true;
 
     [super touchesBegan:touchSet withEvent:event];
 }
@@ -745,40 +744,42 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
  @Status Interoperable
 */
 - (void)touchesEnded:(NSSet*)touchSet withEvent:(UIEvent*)event {
+    // If the derived UIButton overrides this method and does not call this super implementation, then the
+    // event remains *handled*, which results in the Button.Xaml not calling into its super for further processing.
+    // Else, we mark the event as *not handled*, so Button.Xaml calls into its super for further event processing.
     WUXIPointerRoutedEventArgs* routedEvent = [event _touchEvent]->_routedEventArgs;
     [routedEvent setHandled:NO];
 
-    if (!_isPressed) {
+    if (!_isInTouchSequence) {
         return;
     }
 
-    _isPressed = false;
-
-    // Update our highlighted state accordingly
-    [self setHighlighted:_isPressed];
+    // Track that we're no longer in a touch sequence
+    _isInTouchSequence = false;
 
     [super touchesEnded:touchSet withEvent:event];
+
+    // Release the pointer capture so Xaml knows we're no longer in a pressed state, which
+    // also prevents the button from firing a 'click' event since we already fire one via UIControl's
+    // touch handling.
+    [_xamlButton releasePointerCapture:routedEvent.pointer];
 }
 
 /**
  @Status Interoperable
 */
 - (void)touchesCancelled:(NSSet*)touchSet withEvent:(UIEvent*)event {
-    WUXIPointerRoutedEventArgs* routedEvent = [event _touchEvent]->_routedEventArgs;
-    [routedEvent setHandled:NO];
-
-    if (!_isPressed) {
+    if (!_isInTouchSequence) {
         return;
     }
 
-    _isPressed = false;
-
-    // Update our highlighted state accordingly
-    [self setHighlighted:_isPressed];
+    // Track that we're no longer in a touch sequence
+    _isInTouchSequence = false;
 
     [super touchesCancelled:touchSet withEvent:event];
 
     // Release the pointer capture so Xaml knows we're no longer in a pressed state
+    WUXIPointerRoutedEventArgs* routedEvent = [event _touchEvent]->_routedEventArgs;
     [_xamlButton releasePointerCapture:routedEvent.pointer];
 }
 
@@ -948,6 +949,8 @@ static ComPtr<IInspectable> _currentInspectableBorderBackgroundBrush(UIButton* s
 */
 - (void)dealloc {
     XamlRemovePointerEvents([_xamlButton comObj]);
+    [_xamlButton unregisterPropertyChangedCallback:[WUXCPButtonBase isPressedProperty] token:_isPressedChangedRegistration];
+    [_xamlButton removeClickEvent:_clickEventRegistration];
 }
 
 /**
@@ -1006,7 +1009,7 @@ static ComPtr<IInspectable> _currentInspectableImage(UIButton* self) {
     CGSize ret = CGSizeZero;
 
     ////////////////////////////////////////////////////////////////////
-    // Note: #1365 All size calculations here must check for nil, 
+    // Note: #1365 All size calculations here must check for nil,
     // as we cannot assume getting a size from nil will return CGSizeZero
     ////////////////////////////////////////////////////////////////////
 
