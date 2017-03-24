@@ -119,7 +119,7 @@
         <ListView.ItemTemplate>
             <DataTemplate x:DataType="local:Item">
                 <!-- Consider making these buttons for accessibility purposes -->
-                <TextBlock Text="{x:Bind Title}" HorizontalAlignment="Left" TextTrimming="WordEllipsis" />
+                <TextBlock Text="{Binding Title}" HorizontalAlignment="Left" TextTrimming="WordEllipsis" />
             </DataTemplate>
         </ListView.ItemTemplate>
     </ListView>
