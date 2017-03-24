@@ -31,6 +31,9 @@ TEST(NSIndexPath, InitWithIndex) {
     EXPECT_EQ(1, [path length]);
     EXPECT_EQ(5, [path indexAtPosition:0]);
     EXPECT_EQ(NSNotFound, [path indexAtPosition:1]);
+
+    NSIndexPath* other = [NSIndexPath indexPathWithIndex:5];
+    EXPECT_OBJCEQ(path, other);
 }
 
 TEST(NSIndexPath, InitWithIndexes) {
@@ -42,9 +45,12 @@ TEST(NSIndexPath, InitWithIndexes) {
     EXPECT_EQ(2, [path indexAtPosition:1]);
     EXPECT_EQ(3, [path indexAtPosition:2]);
     EXPECT_EQ(NSNotFound, [path indexAtPosition:4]);
+
+    NSIndexPath* other = [NSIndexPath indexPathWithIndexes:indexes length:3];
+    EXPECT_OBJCEQ(path, other);
 }
 
-// These are disabled because the methods are not yet supported on the reference testing platform
+// Reference platform for testing has not yet implemented indexPathForRow:inSection: so this is disabled
 OSX_DISABLED_TEST(NSIndexPath, IndexPathForRowInSection) {
     NSIndexPath* path = [NSIndexPath indexPathForRow:2 inSection:1];
     ASSERT_NE(nil, path);
@@ -54,6 +60,7 @@ OSX_DISABLED_TEST(NSIndexPath, IndexPathForRowInSection) {
     EXPECT_EQ(NSNotFound, [path indexAtPosition:2]);
 }
 
+// Reference platform for testing has not yet implemented indexPathForItem:inSection: so this is disabled
 OSX_DISABLED_TEST(NSIndexPath, IndexPathForItemInSection) {
     NSIndexPath* path = [NSIndexPath indexPathForItem:2 inSection:1];
     ASSERT_NE(nil, path);

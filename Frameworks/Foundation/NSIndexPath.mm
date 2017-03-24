@@ -21,7 +21,7 @@
 #import <vector>
 #import <numeric>
 
-static NSString* c_archiveKey = @"_NS.IP";
+static NSString* s_archiveKey = @"_NS.IP";
 
 @interface NSIndexPath () {
     std::vector<NSUInteger> _indexes;
@@ -49,6 +49,10 @@ static NSString* c_archiveKey = @"_NS.IP";
  @Status Interoperable
 */
 + (NSIndexPath*)indexPathForRow:(NSInteger)row inSection:(NSInteger)section {
+    if (row < 0 || section < 0) {
+        return [[[self alloc] initWithIndexes:nullptr length:0] autorelease];
+    }
+
     NSUInteger indexes[] = { section, row };
     return [[[self alloc] initWithIndexes:indexes length:2] autorelease];
 }
@@ -57,6 +61,10 @@ static NSString* c_archiveKey = @"_NS.IP";
  @Status Interoperable
 */
 + (NSIndexPath*)indexPathForItem:(NSInteger)item inSection:(NSInteger)section {
+    if (item < 0 || section < 0) {
+        return [[[self alloc] initWithIndexes:nullptr length:0] autorelease];
+    }
+
     NSUInteger indexes[] = { section, item };
     return [[[self alloc] initWithIndexes:indexes length:2] autorelease];
 }
@@ -81,8 +89,8 @@ static NSString* c_archiveKey = @"_NS.IP";
 - (instancetype)initWithIndexes:(const NSUInteger*)indexes length:(NSUInteger)length {
     if (self = [super init]) {
         if (length != 0 && indexes != nullptr) {
-            _indexes.resize(length);
-            memcpy(_indexes.data(), indexes, length * sizeof(NSUInteger));
+            _indexes.reserve(length);
+            _indexes.insert(_indexes.begin(), indexes, indexes + length);
         }
     }
 
@@ -149,8 +157,13 @@ static NSString* c_archiveKey = @"_NS.IP";
  @Status Interoperable
 */
 - (NSUInteger)hash {
-    // Allegedly the behavior of the reference platform, does not seem to be so for test machines but it will suffice
-    return std::accumulate(_indexes.cbegin(), _indexes.cend(), 0);
+    if ([self length] == 0L) {
+        return 0;
+    }
+
+    auto dataToHash = woc::MakeAutoCF<CFDataRef>(
+        CFDataCreateWithBytesNoCopy(nullptr, (const UInt8*)_indexes.data(), _indexes.size() * sizeof(NSUInteger), kCFAllocatorNull));
+    return CFHash(dataToHash);
 }
 
 /**
@@ -232,24 +245,18 @@ static NSString* c_archiveKey = @"_NS.IP";
  @Status Interoperable
 */
 - (id)initWithCoder:(NSCoder*)decoder {
-    NSUInteger length = 0;
-    const NSUInteger* indexes = [decoder isKindOfClass:[NSKeyedUnarchiver class]] ?
-                                    reinterpret_cast<const NSUInteger*>([decoder decodeBytesForKey:c_archiveKey returnedLength:&length]) :
-                                    reinterpret_cast<const NSUInteger*>([decoder decodeBytesWithReturnedLength:&length]);
-    return [self initWithIndexes:indexes length:(length / sizeof(NSUInteger))];
+    NSData* data = [decoder decodeObjectOfClass:[NSData class] forKey:s_archiveKey];
+    return [self initWithIndexes:static_cast<const NSUInteger*>([data bytes]) length:([data length] / sizeof(NSUInteger))];
 }
 
 /**
  @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
-    if ([self length] > 0L) {
-        if ([coder isKindOfClass:[NSKeyedArchiver class]]) {
-            [coder encodeBytes:reinterpret_cast<uint8_t*>(_indexes.data()) length:_indexes.size() * sizeof(NSUInteger) forKey:c_archiveKey];
-        } else {
-            [coder encodeBytes:reinterpret_cast<uint8_t*>(_indexes.data()) length:_indexes.size() * sizeof(NSUInteger)];
-        }
-    }
+    NSData* dataToEncode = [self length] > 0L ?
+                               [NSData dataWithBytesNoCopy:_indexes.data() length:_indexes.size() * sizeof(NSUInteger) freeWhenDone:NO] :
+                               [NSData data];
+    [coder encodeObject:dataToEncode forKey:s_archiveKey];
 }
 
 @end
