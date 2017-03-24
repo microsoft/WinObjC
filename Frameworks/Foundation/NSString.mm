@@ -486,6 +486,9 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
  @Status Interoperable
 */
 - (const char*)UTF8String {
+    if (const char* ret = CFStringGetCStringPtr(static_cast<CFStringRef>(self), kCFStringEncodingUTF8)) {
+        return ret;
+    }
     return (const char*)[self cStringUsingEncoding:NSUTF8StringEncoding];
 }
 
@@ -740,13 +743,11 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
  @Status Interoperable
 */
 - (BOOL)isEqualToString:(NSString*)compStr {
-    RETURN_FALSE_IF(!compStr);
-
-    if ([compStr isKindOfClass:[NSString class]]) {
-        return [self compare:compStr options:static_cast<NSStringCompareOptions>(0) range:NSMakeRange(0, [self length])] == 0;
-    } else {
-        return [compStr isEqual:self];
+    if (compStr == self) {
+        return YES;
     }
+
+    return CFStringCompare(static_cast<CFStringRef>(self), static_cast<CFStringRef>(compStr), 0) == kCFCompareEqualTo;
 }
 
 /**
@@ -1781,10 +1782,6 @@ BOOL _isALineSeparatorTypeCharacter(unichar ch) {
         return YES;
     }
 
-    if (objAddr == nil) {
-        return NO;
-    }
-
     if ([objAddr isKindOfClass:[NSString class]]) {
         return [self isEqualToString:objAddr];
     }
@@ -2098,7 +2095,7 @@ static std::vector<NSStringEncoding> _getNSStringEncodings() {
 }
 
 // CF additions for fast paths.
-- (const char*)_fastCStringContents:(BOOL)something {
+- (const char*)_fastCStringContents:(CFStringEncoding)encoding {
     return nullptr;
 }
 
