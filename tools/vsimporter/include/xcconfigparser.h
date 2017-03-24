@@ -22,8 +22,8 @@
 class VariableCollection;
 
 enum AssignStyle {
-  ASSIGN_CMDARG, // starport FOO="foo bar"
-  ASSIGN_MAKE  // FOO = foo bar
+    ASSIGN_CMDARG, // starport FOO="foo bar"
+    ASSIGN_MAKE // FOO = foo bar
 };
 
 VariableCollection* parseXCConfigFile(const String& absFilePath, const String& projectDir);

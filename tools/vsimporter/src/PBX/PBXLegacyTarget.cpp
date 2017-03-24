@@ -19,32 +19,32 @@
 #include "utils.h"
 #include "PBXLegacyTarget.h"
 
-PBXLegacyTarget::~PBXLegacyTarget() {}
-
-PBXLegacyTarget::PBXLegacyTarget() {}
-
-PBXLegacyTarget* PBXLegacyTarget::createFromPlist(const String& id, const Plist::dictionary_type& dict, const PBXDocument* pbxDoc)
-{
-  PBXLegacyTarget* ret = new PBXLegacyTarget;
-  ret->initFromPlist(id, dict, pbxDoc);
-  return ret;
+PBXLegacyTarget::~PBXLegacyTarget() {
 }
 
-void PBXLegacyTarget::initFromPlist(const String& id, const Plist::dictionary_type& dict, const PBXDocument* pbxDoc)
-{
-  // Call super init
-  PBXTarget::initFromPlist(id, dict, pbxDoc);
+PBXLegacyTarget::PBXLegacyTarget() {
+}
 
-  // Get buildArgumentsString
-  getStringForKey(dict, "buildArgumentsString", m_buildArgumentsString, VALUE_REQUIRED, m_parseER);
-  //m_buildArgumentsString = removeQuotes(m_buildArgumentsString);
-  
-  // Get buildToolPath
-  getStringForKey(dict, "buildToolPath", m_buildToolPath, VALUE_REQUIRED, m_parseER);
+PBXLegacyTarget* PBXLegacyTarget::createFromPlist(const String& id, const Plist::dictionary_type& dict, const PBXDocument* pbxDoc) {
+    PBXLegacyTarget* ret = new PBXLegacyTarget;
+    ret->initFromPlist(id, dict, pbxDoc);
+    return ret;
+}
 
-  // Get buildWorkingDirectory
-  getStringForKey(dict, "buildWorkingDirectory", m_buildWorkingDirectory, VALUE_REQUIRED, m_parseER);
-  
-  // Get passBuildSettingsInEnvironment
-  m_passBuildSettingsInEnvironment = getIntForKey(dict, "passBuildSettingsInEnvironment", VALUE_REQUIRED, m_parseER);
+void PBXLegacyTarget::initFromPlist(const String& id, const Plist::dictionary_type& dict, const PBXDocument* pbxDoc) {
+    // Call super init
+    PBXTarget::initFromPlist(id, dict, pbxDoc);
+
+    // Get buildArgumentsString
+    getStringForKey(dict, "buildArgumentsString", m_buildArgumentsString, VALUE_REQUIRED, m_parseER);
+    // m_buildArgumentsString = removeQuotes(m_buildArgumentsString);
+
+    // Get buildToolPath
+    getStringForKey(dict, "buildToolPath", m_buildToolPath, VALUE_REQUIRED, m_parseER);
+
+    // Get buildWorkingDirectory
+    getStringForKey(dict, "buildWorkingDirectory", m_buildWorkingDirectory, VALUE_REQUIRED, m_parseER);
+
+    // Get passBuildSettingsInEnvironment
+    m_passBuildSettingsInEnvironment = getIntForKey(dict, "passBuildSettingsInEnvironment", VALUE_REQUIRED, m_parseER);
 }

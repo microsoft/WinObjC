@@ -16,14 +16,11 @@
 
 #pragma once
 #include "UIControl.h"
-class UISlider :
-    public UIControl
-{
+class UISlider : public UIControl {
 public:
     float _minValue, _maxValue, _value;
     UISlider();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };
-

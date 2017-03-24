@@ -22,7 +22,7 @@
 #include <set>
 
 namespace pugi {
-  class xml_node;
+class xml_node;
 };
 
 class VSTemplateParameters;
@@ -36,28 +36,28 @@ typedef std::set<std::string> StringSet;
 
 class VSTemplateProject {
 public:
-  static VSTemplateProject* createFromXML(const pugi::xml_node& pNode, const VSProjectType projectType);
-  ~VSTemplateProject();
+    static VSTemplateProject* createFromXML(const pugi::xml_node& pNode, const VSProjectType projectType);
+    ~VSTemplateProject();
 
-  void expand(const std::string& srcDir, const std::string& destDir, const VSTemplateParameters& params);
-  void write(const StringSet& urlSchemes) const;
+    void expand(const std::string& srcDir, const std::string& destDir, const VSTemplateParameters& params);
+    void write(const StringSet& urlSchemes) const;
 
-  bool isShared() const;
-  bool isDeployable() const;
-  const std::string& getName() const;
-  const std::string& getPath() const;
-  const StringVec& getPlatforms() const;
-  const VSProjectType getProjectType() const;
+    bool isShared() const;
+    bool isDeployable() const;
+    const std::string& getName() const;
+    const std::string& getPath() const;
+    const StringVec& getPlatforms() const;
+    const VSProjectType getProjectType() const;
 
 private:
-  VSTemplateProject();
-  bool initFromXML(const pugi::xml_node& pNode, const VSProjectType projectType);
+    VSTemplateProject();
+    bool initFromXML(const pugi::xml_node& pNode, const VSProjectType projectType);
 
-  bool m_shared;
-  bool m_deployable;
-  std::string m_outputDir;
-  StringVec m_platforms;
-  ProjectItemVec m_items;
-  StringMap m_params;
-  VSProjectType m_projectType;
+    bool m_shared;
+    bool m_deployable;
+    std::string m_outputDir;
+    StringVec m_platforms;
+    ProjectItemVec m_items;
+    StringMap m_params;
+    VSProjectType m_projectType;
 };

@@ -21,98 +21,91 @@
 #include "vshelpers.h"
 
 VSBuildableSolutionProject::VSBuildableSolutionProject(VCProject* project, VSSolution& parent)
-: VSSolutionProject(parent), m_project(project) {}
-
-VSBuildableSolutionProject::~VSBuildableSolutionProject() {}
-
-std::string VSBuildableSolutionProject::getName() const
-{
-  return m_project->getName();
+    : VSSolutionProject(parent), m_project(project) {
 }
 
-std::string VSBuildableSolutionProject::getPath() const
-{
-  // Return a path relative to the solution directory
-  std::string solutionDir = sb_dirname(m_parent.getPath());
-  std::string relativePath = getRelativePath(solutionDir, m_project->getPath());
-  relativePath = winPath(relativePath);
-  return relativePath;
+VSBuildableSolutionProject::~VSBuildableSolutionProject() {
 }
 
-std::string VSBuildableSolutionProject::getTypeId() const
-{
-  return m_project->getTypeId();
+std::string VSBuildableSolutionProject::getName() const {
+    return m_project->getName();
 }
 
-std::string VSBuildableSolutionProject::getId() const
-{
-  return m_project->getId();
+std::string VSBuildableSolutionProject::getPath() const {
+    // Return a path relative to the solution directory
+    std::string solutionDir = sb_dirname(m_parent.getPath());
+    std::string relativePath = getRelativePath(solutionDir, m_project->getPath());
+    relativePath = winPath(relativePath);
+    return relativePath;
 }
 
-const VCProject* VSBuildableSolutionProject::getProject() const
-{
-  return m_project;
+std::string VSBuildableSolutionProject::getTypeId() const {
+    return m_project->getTypeId();
 }
 
-void VSBuildableSolutionProject::writeProjectDependencies(std::ostream& out) const
-{
-  const VCProjectSet& refs = m_project->getProjectReferences();
-  if (refs.empty())
-    return;
-
-  out << "\t" << "ProjectSection(ProjectDependencies) = postProject" << std::endl;
-  for (auto dep : refs) {
-    std::string depProjId = formatVSGUID(dep->getId());
-    out << "\t\t" << depProjId << " = " << depProjId << std::endl;
-  }
-  out << "\t" << "EndProjectSection" << std::endl;
+std::string VSBuildableSolutionProject::getId() const {
+    return m_project->getId();
 }
 
-void VSBuildableSolutionProject::writeDescription(std::ostream& out) const
-{
-  out << getDescription() << std::endl;
-  writeProjectDependencies(out);
-  out << "EndProject" << std::endl;
+const VCProject* VSBuildableSolutionProject::getProject() const {
+    return m_project;
 }
 
-void VSBuildableSolutionProject::writeSharedProjects(std::ostream& out) const
-{
-  if (m_project->getSubType() == VCShared) {
-    out << "\t\t" << getPath() << "*" << formatVSGUID(m_project->getId()) << "*SharedItemsImports = 9" << std::endl;
-  } else {
-    for (auto sproj : m_project->getSharedProjects()) {
-      VSBuildableSolutionProject* solutionProj = m_parent.findBuildableProject(sproj->getPath());
-      if (solutionProj) {
-        out << "\t\t" << solutionProj->getPath() << "*" << formatVSGUID(m_project->getId()) << "*SharedItemsImports = 4" << std::endl;
-      }
+void VSBuildableSolutionProject::writeProjectDependencies(std::ostream& out) const {
+    const VCProjectSet& refs = m_project->getProjectReferences();
+    if (refs.empty())
+        return;
+
+    out << "\t"
+        << "ProjectSection(ProjectDependencies) = postProject" << std::endl;
+    for (auto dep : refs) {
+        std::string depProjId = formatVSGUID(dep->getId());
+        out << "\t\t" << depProjId << " = " << depProjId << std::endl;
     }
-  }
+    out << "\t"
+        << "EndProjectSection" << std::endl;
 }
 
-void VSBuildableSolutionProject::mapConfiguration(const std::string& slnConfig, const std::string& projConfig)
-{
-  m_configurations[slnConfig] = projConfig;
+void VSBuildableSolutionProject::writeDescription(std::ostream& out) const {
+    out << getDescription() << std::endl;
+    writeProjectDependencies(out);
+    out << "EndProject" << std::endl;
 }
 
-void VSBuildableSolutionProject::mapPlatform(const std::string& slnPlatform, const std::string& projPlatform)
-{
-  m_platforms[slnPlatform] = projPlatform;
+void VSBuildableSolutionProject::writeSharedProjects(std::ostream& out) const {
+    if (m_project->getSubType() == VCShared) {
+        out << "\t\t" << getPath() << "*" << formatVSGUID(m_project->getId()) << "*SharedItemsImports = 9" << std::endl;
+    } else {
+        for (auto sproj : m_project->getSharedProjects()) {
+            VSBuildableSolutionProject* solutionProj = m_parent.findBuildableProject(sproj->getPath());
+            if (solutionProj) {
+                out << "\t\t" << solutionProj->getPath() << "*" << formatVSGUID(m_project->getId()) << "*SharedItemsImports = 4"
+                    << std::endl;
+            }
+        }
+    }
 }
 
-std::string VSBuildableSolutionProject::getMappedConfiguration(const std::string& slnConfig) const
-{
-  StringMap::const_iterator it = m_configurations.find(slnConfig);
-  if (it != m_configurations.end())
-    return it->second;
-  else
-    return slnConfig;
+void VSBuildableSolutionProject::mapConfiguration(const std::string& slnConfig, const std::string& projConfig) {
+    m_configurations[slnConfig] = projConfig;
 }
 
-std::string VSBuildableSolutionProject::getMappedPlatform(const std::string& slnPlatform) const
-{
-  StringMap::const_iterator it = m_platforms.find(slnPlatform);
-  if (it != m_platforms.end())
-    return it->second;
-  else
-    return slnPlatform;
+void VSBuildableSolutionProject::mapPlatform(const std::string& slnPlatform, const std::string& projPlatform) {
+    m_platforms[slnPlatform] = projPlatform;
+}
+
+std::string VSBuildableSolutionProject::getMappedConfiguration(const std::string& slnConfig) const {
+    StringMap::const_iterator it = m_configurations.find(slnConfig);
+    if (it != m_configurations.end())
+        return it->second;
+    else
+        return slnConfig;
+}
+
+std::string VSBuildableSolutionProject::getMappedPlatform(const std::string& slnPlatform) const {
+    StringMap::const_iterator it = m_platforms.find(slnPlatform);
+    if (it != m_platforms.end())
+        return it->second;
+    else
+        return slnPlatform;
 }

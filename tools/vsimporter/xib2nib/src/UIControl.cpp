@@ -16,14 +16,12 @@
 
 #include "UIControl.h"
 
-UIControl::UIControl()
-{
+UIControl::UIControl() {
     _contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
     _contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
 }
 
-void UIControl::InitFromXIB(XIBObject *obj)
-{
+void UIControl::InitFromXIB(XIBObject* obj) {
     UIView::InitFromXIB(obj);
 
     _contentVerticalAlignment = GetInt("IBUIContentVerticalAlignment", 1);
@@ -32,8 +30,7 @@ void UIControl::InitFromXIB(XIBObject *obj)
     _outputClassName = "UIControl";
 }
 
-void UIControl::InitFromStory(XIBObject *obj)
-{
+void UIControl::InitFromStory(XIBObject* obj) {
     UIView::InitFromStory(obj);
 
     const char* horizontalAlign = getAttrAndHandle("contentHorizontalAlignment");
@@ -69,10 +66,11 @@ void UIControl::InitFromStory(XIBObject *obj)
     _outputClassName = "UIControl";
 }
 
-void UIControl::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UIControl::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     UIView::ConvertStaticMappings(writer, obj);
 
-    if (_contentVerticalAlignment != UIControlContentVerticalAlignmentTop) AddInt(writer, "UIContentVerticalAlignment", _contentVerticalAlignment);
-    if (_contentHorizontalAlignment != UIControlContentHorizontalAlignmentLeft) AddInt(writer, "UIContentHorizontalAlignment", _contentHorizontalAlignment);
+    if (_contentVerticalAlignment != UIControlContentVerticalAlignmentTop)
+        AddInt(writer, "UIContentVerticalAlignment", _contentVerticalAlignment);
+    if (_contentHorizontalAlignment != UIControlContentHorizontalAlignmentLeft)
+        AddInt(writer, "UIContentHorizontalAlignment", _contentHorizontalAlignment);
 }

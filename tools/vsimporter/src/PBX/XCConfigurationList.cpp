@@ -20,51 +20,51 @@
 #include "XCBuildConfiguration.h"
 #include "PBXObjectIdConvert.h"
 
-XCConfigurationList::~XCConfigurationList() {}
-
-XCConfigurationList::XCConfigurationList() {}
-
-XCConfigurationList* XCConfigurationList::createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc)
-{
-  XCConfigurationList* ret = new XCConfigurationList;
-  ret->initFromPlist(id, plist, pbxDoc);
-  return ret;
+XCConfigurationList::~XCConfigurationList() {
 }
 
-void XCConfigurationList::initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc)
-{
-  // Call super init
-  PBXObject::initFromPlist(id, plist, pbxDoc);
-  
-  // Get buildConfigurations
-  getStringVectorForKey(plist, "buildConfigurations", m_buildConfigurationIds, VALUE_REQUIRED, m_parseER);
-  
-  // Get defaultConfigurationName
-  getStringForKey(plist, "defaultConfigurationName", m_defaultConfigurationName, VALUE_REQUIRED, m_parseER);
+XCConfigurationList::XCConfigurationList() {
 }
 
-void XCConfigurationList::resolvePointers()
-{
-  // Resolve buildConfigurations ptrs
-  convertObjectIdList(m_pbxDoc, m_buildConfigurationIds, m_buildConfigurationPtrs);
+XCConfigurationList* XCConfigurationList::createFromPlist(const String& id,
+                                                          const Plist::dictionary_type& plist,
+                                                          const PBXDocument* pbxDoc) {
+    XCConfigurationList* ret = new XCConfigurationList;
+    ret->initFromPlist(id, plist, pbxDoc);
+    return ret;
 }
 
-const XCBuildConfiguration* XCConfigurationList::getConfiguration(const String& configName) const
-{
-  for (unsigned i = 0; i < m_buildConfigurationPtrs.size(); i++) {
-    if (m_buildConfigurationPtrs[i]->getName() == configName)
-      return m_buildConfigurationPtrs[i];
-  }
-  
-  SBLog::warning() << "Failed to find \"" << configName << "\" build configuration in \"" << m_pbxDoc->getName() << "\" project." << std::endl;
-  return NULL;
+void XCConfigurationList::initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc) {
+    // Call super init
+    PBXObject::initFromPlist(id, plist, pbxDoc);
+
+    // Get buildConfigurations
+    getStringVectorForKey(plist, "buildConfigurations", m_buildConfigurationIds, VALUE_REQUIRED, m_parseER);
+
+    // Get defaultConfigurationName
+    getStringForKey(plist, "defaultConfigurationName", m_defaultConfigurationName, VALUE_REQUIRED, m_parseER);
 }
 
-void XCConfigurationList::getValidConfigurations(const StringSet& configNames, StringSet& ret) const
-{
-  for (auto configName : configNames) {
-    const XCBuildConfiguration* config = getConfiguration(configName);
-    if (config)
-      ret.insert(configName);
-  }
+void XCConfigurationList::resolvePointers() {
+    // Resolve buildConfigurations ptrs
+    convertObjectIdList(m_pbxDoc, m_buildConfigurationIds, m_buildConfigurationPtrs);
+}
+
+const XCBuildConfiguration* XCConfigurationList::getConfiguration(const String& configName) const {
+    for (unsigned i = 0; i < m_buildConfigurationPtrs.size(); i++) {
+        if (m_buildConfigurationPtrs[i]->getName() == configName)
+            return m_buildConfigurationPtrs[i];
+    }
+
+    SBLog::warning() << "Failed to find \"" << configName << "\" build configuration in \"" << m_pbxDoc->getName() << "\" project."
+                     << std::endl;
+    return NULL;
+}
+
+void XCConfigurationList::getValidConfigurations(const StringSet& configNames, StringSet& ret) const {
+    for (auto configName : configNames) {
+        const XCBuildConfiguration* config = getConfiguration(configName);
+        if (config)
+            ret.insert(configName);
+    }
 }

@@ -34,22 +34,22 @@ try {
     }
 
     # Process a single file if specified
-    if ($File) {
+    if ($File -ne "True") {
         $result = & $clangPath $clangArgs $File 2>&1
         Check-Result
-        
+
         if ($result) {
             return diff (cat "$File") ($result)
         }
-        
+
         return
-        
+
     } elseif ($Directory) {
         # Process a directory if specified
-        
-        $filter = {$_ -like "*.mm" -or $_ -like "*.m" -or $_ -like "*.c" -or $_ -like "*.cpp" -or $_ -like "*.h"}
+
+        $filter = {$_ -like "*.mm" -or $_ -like "*.m" -or $_ -like "*.c" -or $_ -like "*.cpp" -or $_ -like "*.h" -or $_ -like "*.hpp"}
         $filesToFormat = ""
-        
+
         if ($Recursive) {
             $filesToFormat = Get-ChildItem $Directory -recurse |
             Where-Object -FilterScript $filter | Select FullName | ft -hidetableheaders | Out-String

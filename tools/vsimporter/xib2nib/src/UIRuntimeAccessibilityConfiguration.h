@@ -16,14 +16,12 @@
 
 #pragma once
 #include "ObjectConverter.h"
-class UIRuntimeAccessibilityConfiguration :
-    public ObjectConverter
-{
+class UIRuntimeAccessibilityConfiguration : public ObjectConverter {
 private:
     int _traits;
-    XIBObject *_accessibleObject;
-public:
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
-};
+    XIBObject* _accessibleObject;
 
+public:
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
+};

@@ -17,25 +17,23 @@
 #include "PBXAggregateTarget.h"
 #include "SBAggregateTarget.h"
 
-SBAggregateTarget::~SBAggregateTarget() {}
-
-SBAggregateTarget::SBAggregateTarget(const PBXAggregateTarget* target, const StringSet& configNames, SBProject& parentProject)
-  : SBTarget(target, configNames, parentProject),
-    m_target(target)
-{}
-
-SBAggregateTarget* SBAggregateTarget::create(const PBXTarget* target, const StringSet& configNames, SBProject& parentProject)
-{
-  SBAggregateTarget* ret = new SBAggregateTarget(dynamic_cast<const PBXAggregateTarget*>(target), configNames, parentProject);
-  if (!ret->init()) {
-    delete ret;
-    ret = NULL;
-  }
-  
-  return ret;
+SBAggregateTarget::~SBAggregateTarget() {
 }
 
-VCProject* SBAggregateTarget::constructVCProject(VSTemplateProject* projTemplate)
-{
-  return SBTarget::constructVCProject(projTemplate);
+SBAggregateTarget::SBAggregateTarget(const PBXAggregateTarget* target, const StringSet& configNames, SBProject& parentProject)
+    : SBTarget(target, configNames, parentProject), m_target(target) {
+}
+
+SBAggregateTarget* SBAggregateTarget::create(const PBXTarget* target, const StringSet& configNames, SBProject& parentProject) {
+    SBAggregateTarget* ret = new SBAggregateTarget(dynamic_cast<const PBXAggregateTarget*>(target), configNames, parentProject);
+    if (!ret->init()) {
+        delete ret;
+        ret = NULL;
+    }
+
+    return ret;
+}
+
+VCProject* SBAggregateTarget::constructVCProject(VSTemplateProject* projTemplate) {
+    return SBTarget::constructVCProject(projTemplate);
 }

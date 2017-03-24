@@ -16,19 +16,17 @@
 
 #pragma once
 #include "ObjectConverter.h"
-class UIRuntimeOutletCollectionConnection :
-    public ObjectConverter
-{
+class UIRuntimeOutletCollectionConnection : public ObjectConverter {
 public:
-    const char *_label;
+    const char* _label;
     XIBObject *_source, *_destination;
-    const char *_collectionClassName;
+    const char* _collectionClassName;
     bool _addsToExisting;
+
 public:
     UIRuntimeOutletCollectionConnection();
 
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };
-

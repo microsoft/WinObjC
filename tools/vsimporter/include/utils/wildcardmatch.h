@@ -9,6 +9,6 @@
 #ifndef _WILDCARDMATCH_H_
 #define _WILDCARDMATCH_H_
 
-bool WildcardMatch(const char *pszString, const char *pszMatch);
+bool WildcardMatch(const char* pszString, const char* pszMatch);
 
 #endif /* _WILDCARDMATCH_H_ */

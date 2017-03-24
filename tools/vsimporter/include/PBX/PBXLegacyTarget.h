@@ -21,26 +21,36 @@
 
 class PBXLegacyTarget : public PBXTarget {
 public:
-  virtual ~PBXLegacyTarget();
-  virtual String getTargetType() const { return "Legacy";  }
+    virtual ~PBXLegacyTarget();
+    virtual String getTargetType() const {
+        return "Legacy";
+    }
 
-  const String& getBuildArguments() const { return m_buildArgumentsString; }
-  const String& getBuildToolPath() const { return m_buildToolPath; }
-  const String& getBuildWorkingDir() const { return m_buildWorkingDirectory; }
-  bool getPassBuildSettings() const { return m_passBuildSettingsInEnvironment; }
-  
-  static PBXLegacyTarget* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
-  
+    const String& getBuildArguments() const {
+        return m_buildArgumentsString;
+    }
+    const String& getBuildToolPath() const {
+        return m_buildToolPath;
+    }
+    const String& getBuildWorkingDir() const {
+        return m_buildWorkingDirectory;
+    }
+    bool getPassBuildSettings() const {
+        return m_passBuildSettingsInEnvironment;
+    }
+
+    static PBXLegacyTarget* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
+
 private:
-  PBXLegacyTarget();
-  virtual void initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
-  
-/* Start of serialized values */
-  String m_buildArgumentsString;
-  String m_buildToolPath;
-  String m_buildWorkingDirectory;
-  int m_passBuildSettingsInEnvironment;
-/* End of serialized values */
+    PBXLegacyTarget();
+    virtual void initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
+
+    /* Start of serialized values */
+    String m_buildArgumentsString;
+    String m_buildToolPath;
+    String m_buildWorkingDirectory;
+    int m_passBuildSettingsInEnvironment;
+    /* End of serialized values */
 };
 
 #endif /* _PBXLEGACYTARGET_H_ */

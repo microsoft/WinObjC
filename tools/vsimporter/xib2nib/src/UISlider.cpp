@@ -17,30 +17,27 @@
 #include "UISlider.h"
 #include <assert.h>
 
-UISlider::UISlider()
-{
+UISlider::UISlider() {
 }
 
-void UISlider::InitFromXIB(XIBObject *obj)
-{
+void UISlider::InitFromXIB(XIBObject* obj) {
     UIControl::InitFromXIB(obj);
 
     _minValue = _maxValue = _value = 0.0f;
 
-    if ( obj->FindMember("IBUIValue") ) {
+    if (obj->FindMember("IBUIValue")) {
         _value = obj->FindMember("IBUIValue")->floatValue();
     }
-    if ( obj->FindMember("IBUIMinValue") ) {
+    if (obj->FindMember("IBUIMinValue")) {
         _minValue = obj->FindMember("IBUIMinValue")->floatValue();
     }
-    if ( obj->FindMember("IBUIMaxValue") ) {
+    if (obj->FindMember("IBUIMaxValue")) {
         _maxValue = obj->FindMember("IBUIMaxValue")->floatValue();
     }
     _outputClassName = "UISlider";
 }
 
-void UISlider::InitFromStory(XIBObject *obj)
-{
+void UISlider::InitFromStory(XIBObject* obj) {
     UIControl::InitFromStory(obj);
 
     if (getAttrib("minValue")) {
@@ -56,8 +53,7 @@ void UISlider::InitFromStory(XIBObject *obj)
     _outputClassName = "UISlider";
 }
 
-void UISlider::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UISlider::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     UIControl::ConvertStaticMappings(writer, obj);
     AddOutputMember(writer, "UIValue", new XIBObjectFloat(_value));
     AddOutputMember(writer, "UIMinValue", new XIBObjectFloat(_minValue));

@@ -18,28 +18,28 @@
 #include "UIView.h"
 
 enum {
-   UIControlEventTouchDown           = 1 <<  0,
-   UIControlEventTouchDownRepeat     = 1 <<  1,
-   UIControlEventTouchDragInside     = 1 <<  2,
-   UIControlEventTouchDragOutside    = 1 <<  3,
-   UIControlEventTouchDragEnter      = 1 <<  4,
-   UIControlEventTouchDragExit       = 1 <<  5,
-   UIControlEventTouchUpInside       = 1 <<  6,
-   UIControlEventTouchUpOutside      = 1 <<  7,
-   UIControlEventTouchCancel         = 1 <<  8,
-   
-   UIControlEventValueChanged        = 1 << 12,
-   
-   UIControlEventEditingDidBegin     = 1 << 16,
-   UIControlEventEditingChanged      = 1 << 17,
-   UIControlEventEditingDidEnd       = 1 << 18,
-   UIControlEventEditingDidEndOnExit = 1 << 19,
-   
-   UIControlEventAllTouchEvents      = 0x00000FFF,
-   UIControlEventAllEditingEvents    = 0x000F0000,
-   UIControlEventApplicationReserved = 0x0F000000,
-   UIControlEventSystemReserved      = 0xF0000000,
-   UIControlEventAllEvents           = 0xFFFFFFFF
+    UIControlEventTouchDown = 1 << 0,
+    UIControlEventTouchDownRepeat = 1 << 1,
+    UIControlEventTouchDragInside = 1 << 2,
+    UIControlEventTouchDragOutside = 1 << 3,
+    UIControlEventTouchDragEnter = 1 << 4,
+    UIControlEventTouchDragExit = 1 << 5,
+    UIControlEventTouchUpInside = 1 << 6,
+    UIControlEventTouchUpOutside = 1 << 7,
+    UIControlEventTouchCancel = 1 << 8,
+
+    UIControlEventValueChanged = 1 << 12,
+
+    UIControlEventEditingDidBegin = 1 << 16,
+    UIControlEventEditingChanged = 1 << 17,
+    UIControlEventEditingDidEnd = 1 << 18,
+    UIControlEventEditingDidEndOnExit = 1 << 19,
+
+    UIControlEventAllTouchEvents = 0x00000FFF,
+    UIControlEventAllEditingEvents = 0x000F0000,
+    UIControlEventApplicationReserved = 0x0F000000,
+    UIControlEventSystemReserved = 0xF0000000,
+    UIControlEventAllEvents = 0xFFFFFFFF
 };
 
 typedef enum {
@@ -56,15 +56,12 @@ typedef enum {
     UIControlContentVerticalAlignmentFill = 3,
 } UIControlContentVerticalAlignment;
 
-class UIControl :
-    public UIView
-{
+class UIControl : public UIView {
 public:
-    int      _contentVerticalAlignment, _contentHorizontalAlignment;
+    int _contentVerticalAlignment, _contentHorizontalAlignment;
 
     UIControl();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };
-

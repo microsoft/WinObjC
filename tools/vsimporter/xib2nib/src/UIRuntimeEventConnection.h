@@ -16,18 +16,15 @@
 
 #pragma once
 #include "ObjectConverter.h"
-class UIRuntimeEventConnection :
-    public ObjectConverter
-{
+class UIRuntimeEventConnection : public ObjectConverter {
 public:
-    const char *_label;
+    const char* _label;
     XIBObject *_source, *_destination;
     int _eventMask;
 
 public:
     UIRuntimeEventConnection();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };
-

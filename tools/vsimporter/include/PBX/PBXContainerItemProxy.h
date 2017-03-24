@@ -24,25 +24,25 @@ class PBXFileReference;
 
 class PBXContainerItemProxy : public PBXObject {
 public:
-  virtual ~PBXContainerItemProxy();
-  virtual void resolvePointers();
-  String getPortalPath() const;
-  const String& getRemoteId() const;
-  
-  static PBXContainerItemProxy* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
-  
-private:
-  PBXContainerItemProxy();
-  virtual void initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
-  
-/* Start of serialized values */
-  String m_containerPortalId;
-  String m_remoteGlobalIDString;
-/* End of serialized values */
+    virtual ~PBXContainerItemProxy();
+    virtual void resolvePointers();
+    String getPortalPath() const;
+    const String& getRemoteId() const;
 
-  // The portal could be a PBXProject or a PBXFileReference to another project file
-  PBXProject* m_projectPortalPtr;
-  PBXFileReference* m_filePortalPtr;
+    static PBXContainerItemProxy* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
+
+private:
+    PBXContainerItemProxy();
+    virtual void initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
+
+    /* Start of serialized values */
+    String m_containerPortalId;
+    String m_remoteGlobalIDString;
+    /* End of serialized values */
+
+    // The portal could be a PBXProject or a PBXFileReference to another project file
+    PBXProject* m_projectPortalPtr;
+    PBXFileReference* m_filePortalPtr;
 };
 
 #endif /* _PBXCONTAINERITEMPROXY_H_ */

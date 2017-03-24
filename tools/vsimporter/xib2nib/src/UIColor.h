@@ -17,30 +17,21 @@
 #pragma once
 #include "ObjectConverter.h"
 
-enum colorSpace
-{
-    colorSpaceFull,
-    colorSpaceWhite,
-    colorSpaceRGB,
-    colorSpaceName
-};
-class UIColor :
-    public ObjectConverter
-{
+enum colorSpace { colorSpaceFull, colorSpaceWhite, colorSpaceRGB, colorSpaceName };
+class UIColor : public ObjectConverter {
 public:
     UIColor();
-    UIColor(char *systemName);
-    UIColor(int colorSpace, int componentCount, float r, float g, float b, float a, char *systemName);
+    UIColor(char* systemName);
+    UIColor(int colorSpace, int componentCount, float r, float g, float b, float a, char* systemName);
     colorSpace _colorSpaceOut;
     int _colorSpace, _componentCount;
     float _r, _g, _b, _a;
     float _white;
-    const char *_systemName;
+    const char* _systemName;
 
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
-    ObjectConverter *Clone();
-    XIBObject *CreateObject(NIBWriter *writer);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
+    ObjectConverter* Clone();
+    XIBObject* CreateObject(NIBWriter* writer);
 };
-

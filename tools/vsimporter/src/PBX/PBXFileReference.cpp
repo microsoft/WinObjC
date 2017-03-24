@@ -19,29 +19,29 @@
 #include "PBXFileReference.h"
 #include "fileutils.h"
 
-PBXFileReference::~PBXFileReference() {}
-
-PBXFileReference::PBXFileReference() {}
-
-PBXFileReference* PBXFileReference::createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc)
-{
-  PBXFileReference* ret = new PBXFileReference;
-  ret->initFromPlist(id, plist, pbxDoc);
-  return ret;
+PBXFileReference::~PBXFileReference() {
 }
 
-void PBXFileReference::initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc)
-{
-  // Call super init
-  PBXFile::initFromPlist(id, plist, pbxDoc);
-  
-  // Check lastKnownFileType first
-  getStringForKey(plist, "lastKnownFileType", m_fileType, VALUE_OPTIONAL, m_parseER);
-  
-  // Check explicitFileType second, so it can override the lastKnownFileType
-  getStringForKey(plist, "explicitFileType", m_fileType, VALUE_OPTIONAL, m_parseER);
+PBXFileReference::PBXFileReference() {
+}
 
-  // If no filetype was specified, use the extension
-  if (m_fileType.empty())
-    m_fileType = PBXFile::getFileType(m_path);
+PBXFileReference* PBXFileReference::createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc) {
+    PBXFileReference* ret = new PBXFileReference;
+    ret->initFromPlist(id, plist, pbxDoc);
+    return ret;
+}
+
+void PBXFileReference::initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc) {
+    // Call super init
+    PBXFile::initFromPlist(id, plist, pbxDoc);
+
+    // Check lastKnownFileType first
+    getStringForKey(plist, "lastKnownFileType", m_fileType, VALUE_OPTIONAL, m_parseER);
+
+    // Check explicitFileType second, so it can override the lastKnownFileType
+    getStringForKey(plist, "explicitFileType", m_fileType, VALUE_OPTIONAL, m_parseER);
+
+    // If no filetype was specified, use the extension
+    if (m_fileType.empty())
+        m_fileType = PBXFile::getFileType(m_path);
 }

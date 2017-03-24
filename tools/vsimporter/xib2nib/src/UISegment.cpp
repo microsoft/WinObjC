@@ -17,8 +17,7 @@
 #include "UISegment.h"
 #include "UIColor.h"
 
-UISegment::UISegment(XIBObject *info, int style, int position, UIColor *tintColor)
-{
+UISegment::UISegment(XIBObject* info, int style, int position, UIColor* tintColor) {
     _info = info;
     _style = style;
     _position = position;
@@ -28,25 +27,26 @@ UISegment::UISegment(XIBObject *info, int style, int position, UIColor *tintColo
     _connections = nullptr;
 }
 
-void UISegment::InitFromXIB(XIBObject *obj)
-{
+void UISegment::InitFromXIB(XIBObject* obj) {
     UIView::InitFromXIB(obj);
 
     obj->_outputClassName = "UISegment";
 }
 
-void UISegment::InitFromStory(XIBObject *obj)
-{
+void UISegment::InitFromStory(XIBObject* obj) {
     UIView::InitFromStory(obj);
 
     obj->_outputClassName = "UISegment";
 }
 
-void UISegment::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UISegment::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     UIView::ConvertStaticMappings(writer, obj);
-    if ( _info ) AddOutputMember(writer, "UISegmentInfo", _info);
-    if ( _style ) AddInt(writer, "UISegmentStyle", _style);
-    if ( _position ) AddInt(writer, "UISegmentPosition", _position);
-    if ( _tintColor ) AddOutputMember(writer, "UISegmentTintColor", _tintColor);
+    if (_info)
+        AddOutputMember(writer, "UISegmentInfo", _info);
+    if (_style)
+        AddInt(writer, "UISegmentStyle", _style);
+    if (_position)
+        AddInt(writer, "UISegmentPosition", _position);
+    if (_tintColor)
+        AddOutputMember(writer, "UISegmentTintColor", _tintColor);
 }

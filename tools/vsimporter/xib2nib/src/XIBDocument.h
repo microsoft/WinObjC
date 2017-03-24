@@ -17,10 +17,9 @@
 #ifndef __XIBDOCUMENT_H
 #define __XIBDOCUMENT_H
 
-class XIBDocument : public XIBObject
-{
+class XIBDocument : public XIBObject {
 public:
     XIBDocument(pugi::xml_node node);
-    XIBArray *Objects();
+    XIBArray* Objects();
 };
 #endif

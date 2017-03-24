@@ -17,14 +17,11 @@
 #pragma once
 #include "ObjectConverter.h"
 
-class UIProxyObject :
-    public ObjectConverter
-{
+class UIProxyObject : public ObjectConverter {
 public:
-    const char *_identifier;
+    const char* _identifier;
     UIProxyObject();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };
-

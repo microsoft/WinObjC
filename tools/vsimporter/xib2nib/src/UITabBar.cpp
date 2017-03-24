@@ -16,8 +16,7 @@
 
 #include "UITabBar.h"
 
-UITabBar::UITabBar()
-{
+UITabBar::UITabBar() {
     _delegate = NULL;
     _bounds.x = 0.0f;
     _bounds.y = 0.0f;
@@ -30,15 +29,13 @@ UITabBar::UITabBar()
     _items = NULL;
 }
 
-void UITabBar::InitFromXIB(XIBObject *obj)
-{
+void UITabBar::InitFromXIB(XIBObject* obj) {
     UIView::InitFromXIB(obj);
 
     _outputClassName = "UITabBar";
 }
 
-void UITabBar::InitFromStory(XIBObject *obj)
-{
+void UITabBar::InitFromStory(XIBObject* obj) {
     UIView::InitFromStory(obj);
 
     _autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
@@ -46,9 +43,10 @@ void UITabBar::InitFromStory(XIBObject *obj)
     _outputClassName = "UITabBar";
 }
 
-void UITabBar::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UITabBar::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     UIView::ConvertStaticMappings(writer, obj);
-    if ( _delegate ) AddOutputMember(writer, "UIDelegate", _delegate);
-    if ( _items ) AddOutputMember(writer, "UIItems", _items);
+    if (_delegate)
+        AddOutputMember(writer, "UIDelegate", _delegate);
+    if (_items)
+        AddOutputMember(writer, "UIItems", _items);
 }

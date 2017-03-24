@@ -16,13 +16,10 @@
 
 #pragma once
 #include "UIControl.h"
-class UISwitch :
-    public UIControl
-{
+class UISwitch : public UIControl {
 public:
     UISwitch();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };
-

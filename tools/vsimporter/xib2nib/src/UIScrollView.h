@@ -16,19 +16,17 @@
 
 #pragma once
 #include "UIView.h"
-class UIScrollView :
-    public UIView
-{
+class UIScrollView : public UIView {
 private:
     bool _bouncesZoom;
     bool _bounceEnabled;
     bool _canCancelContentTouches;
+
 public:
     UIScrollView();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 
-    ObjectConverter *Clone();
+    ObjectConverter* Clone();
 };
-

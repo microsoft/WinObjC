@@ -22,18 +22,19 @@
 
 class SimpleVariableCollection : public VariableCollection {
 public:
-  virtual ~SimpleVariableCollection() {}
+    virtual ~SimpleVariableCollection() {
+    }
 
-  using VariableCollection::insert;
-  virtual void insert(const String& varName, const String& varValue);
-  virtual void erase(const String& varName);
-  String& operator[](const String& varName);
-  virtual bool getValue(const String& varName, String& ret) const;
-  virtual void getVariableSet(StringSet& ret) const;
-  virtual bool empty() const;
+    using VariableCollection::insert;
+    virtual void insert(const String& varName, const String& varValue);
+    virtual void erase(const String& varName);
+    String& operator[](const String& varName);
+    virtual bool getValue(const String& varName, String& ret) const;
+    virtual void getVariableSet(StringSet& ret) const;
+    virtual bool empty() const;
 
 private:
-  StringMap m_vars;
+    StringMap m_vars;
 };
 
 #endif /* _SIMPLEVARIABLECOLLECTION_H_ */

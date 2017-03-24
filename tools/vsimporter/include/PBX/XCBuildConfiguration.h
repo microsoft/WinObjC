@@ -27,26 +27,32 @@ class PBXFileReference;
 
 class XCBuildConfiguration : public PBXObject {
 public:
-  virtual ~XCBuildConfiguration();
-  virtual void resolvePointers();
-  
-  const String& getName() const { return m_name; }
-  const VariableCollection& getBuildSettings() const { return m_buildSettings; }
-  const PBXFileReference* getBaseConfiguration() const { return m_baseConfigurationPtr; }
-  
-  static XCBuildConfiguration* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
-  
-private:
-  XCBuildConfiguration();
-  virtual void initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
-  
-/* Start of serialized values */
-  String m_baseConfigurationId;
-  SimpleVariableCollection m_buildSettings;
-  String m_name;
-/* End of serialized values */
+    virtual ~XCBuildConfiguration();
+    virtual void resolvePointers();
 
-  PBXFileReference* m_baseConfigurationPtr;
+    const String& getName() const {
+        return m_name;
+    }
+    const VariableCollection& getBuildSettings() const {
+        return m_buildSettings;
+    }
+    const PBXFileReference* getBaseConfiguration() const {
+        return m_baseConfigurationPtr;
+    }
+
+    static XCBuildConfiguration* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
+
+private:
+    XCBuildConfiguration();
+    virtual void initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
+
+    /* Start of serialized values */
+    String m_baseConfigurationId;
+    SimpleVariableCollection m_buildSettings;
+    String m_name;
+    /* End of serialized values */
+
+    PBXFileReference* m_baseConfigurationPtr;
 };
 
 #endif /* _XCBUILDCONFIGURATION_H_ */

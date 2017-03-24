@@ -16,15 +16,13 @@
 
 #include "UIWebView.h"
 
-UIWebView::UIWebView()
-{
+UIWebView::UIWebView() {
     _delegate = new XIBObjectNil();
     _scalesPageToFit = false;
     _dataDetectorTypes = 0;
 }
 
-void UIWebView::InitFromXIB(XIBObject *obj)
-{
+void UIWebView::InitFromXIB(XIBObject* obj) {
     UIView::InitFromXIB(obj);
     _scalesPageToFit = obj->GetBool("IBUIScalesPageToFit", false);
     _dataDetectorTypes = obj->GetInt("IBUIDataDetectorTypes", 0);
@@ -32,17 +30,17 @@ void UIWebView::InitFromXIB(XIBObject *obj)
     _outputClassName = "UIWebView";
 }
 
-void UIWebView::InitFromStory(XIBObject *obj)
-{
+void UIWebView::InitFromStory(XIBObject* obj) {
     UIView::InitFromStory(obj);
 
     _outputClassName = "UIWebView";
 }
 
-void UIWebView::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UIWebView::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     UIView::ConvertStaticMappings(writer, obj);
     AddOutputMember(writer, "UIDelegate", _delegate);
-    if ( _scalesPageToFit ) AddBool(writer, "UIScalesPageToFit", _scalesPageToFit);
-    if ( _dataDetectorTypes ) AddInt(writer, "UIDataDetectorTypes", _dataDetectorTypes);
+    if (_scalesPageToFit)
+        AddBool(writer, "UIScalesPageToFit", _scalesPageToFit);
+    if (_dataDetectorTypes)
+        AddInt(writer, "UIDataDetectorTypes", _dataDetectorTypes);
 }

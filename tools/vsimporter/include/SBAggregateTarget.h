@@ -23,16 +23,16 @@ class PBXAggregateTarget;
 
 class SBAggregateTarget : public SBTarget {
 public:
-  static SBAggregateTarget* create(const PBXTarget* target, const StringSet& configNames, SBProject& parentProject);
-  virtual ~SBAggregateTarget();
+    static SBAggregateTarget* create(const PBXTarget* target, const StringSet& configNames, SBProject& parentProject);
+    virtual ~SBAggregateTarget();
 
 private:
-  SBAggregateTarget(const PBXAggregateTarget* target, const StringSet& configNames, SBProject& parentProject);
-  SBAggregateTarget();
+    SBAggregateTarget(const PBXAggregateTarget* target, const StringSet& configNames, SBProject& parentProject);
+    SBAggregateTarget();
 
-  virtual VCProject* constructVCProject(VSTemplateProject* projTemplate);
+    virtual VCProject* constructVCProject(VSTemplateProject* projTemplate);
 
-  const PBXAggregateTarget* m_target;
+    const PBXAggregateTarget* m_target;
 };
 
 #endif /* _SBAGGREGATETARGET_H_ */

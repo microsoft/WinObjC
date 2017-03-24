@@ -18,26 +18,23 @@
 #include "NSLayoutConstraint.h"
 #include <assert.h>
 
-_UILayoutGuide::_UILayoutGuide()
-{
+_UILayoutGuide::_UILayoutGuide() {
     _translatesAutoresizeToConstraints = false;
     _identifier = NULL;
     _attribute = NSLayoutAttributeNotAnAttribute;
 }
 
-void _UILayoutGuide::InitFromXIB(XIBObject *obj)
-{
+void _UILayoutGuide::InitFromXIB(XIBObject* obj) {
     // Not sure this exists for XIB
     UIView::InitFromXIB(obj);
 
     obj->_outputClassName = "_UILayoutGuide";
 }
 
-void _UILayoutGuide::InitFromStory(XIBObject *obj)
-{
+void _UILayoutGuide::InitFromStory(XIBObject* obj) {
     UIView::InitFromStory(obj);
 
-    const char *identifierType = getAttrib("type");
+    const char* identifierType = getAttrib("type");
     if (identifierType) {
         if (strcmp(identifierType, "top") == 0) {
             _identifier = new XIBObjectString("_UIViewControllerTop");
@@ -53,18 +50,17 @@ void _UILayoutGuide::InitFromStory(XIBObject *obj)
     obj->_outputClassName = "_UILayoutGuide";
 }
 
-void _UILayoutGuide::Awaken()
-{
+void _UILayoutGuide::Awaken() {
     UIView::Awaken();
 
-    UIView *controllerView = (UIView*)_parent->_parent->FindMemberClass("view");
+    UIView* controllerView = (UIView*)_parent->_parent->FindMemberClass("view");
 
     if (!controllerView) {
         assert(0);
     }
 
-    XIBArray *subviews = (XIBArray *)controllerView->_subviews;
-    XIBArray *constraints = (XIBArray *)controllerView->_constraints;
+    XIBArray* subviews = (XIBArray*)controllerView->_subviews;
+    XIBArray* constraints = (XIBArray*)controllerView->_constraints;
 
     if (!subviews || !constraints) {
         assert(0);
@@ -92,9 +88,9 @@ void _UILayoutGuide::Awaken()
     constraints->AddMember(NULL, supportConstraintPos);
 }
 
-void _UILayoutGuide::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void _UILayoutGuide::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     UIView::ConvertStaticMappings(writer, obj);
     // TODO: _UILayoutGuideConstraintsToRemove?
-    if (_identifier) obj->AddOutputMember(writer, "_UILayoutGuideIdentifier", _identifier);
+    if (_identifier)
+        obj->AddOutputMember(writer, "_UILayoutGuideIdentifier", _identifier);
 }

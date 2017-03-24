@@ -16,9 +16,7 @@
 
 #include "UICollectionViewController.h"
 
-
-UICollectionViewController::UICollectionViewController()
-{
+UICollectionViewController::UICollectionViewController() {
     _collectionView = NULL;
 
     // Default values as specified in Apple docs
@@ -29,8 +27,7 @@ UICollectionViewController::UICollectionViewController()
     _useLayoutToLayoutNavigationTransitions = false;
 }
 
-void UICollectionViewController::InitFromXIB(XIBObject *obj)
-{
+void UICollectionViewController::InitFromXIB(XIBObject* obj) {
     UIViewController::InitFromXIB(obj);
 
     // NOTE: Not implementing this portion - difficult to ascertain the pre-XCode5 XIB format.
@@ -39,8 +36,7 @@ void UICollectionViewController::InitFromXIB(XIBObject *obj)
     _outputClassName = "UICollectionViewController";
 }
 
-void UICollectionViewController::InitFromStory(XIBObject *obj)
-{
+void UICollectionViewController::InitFromStory(XIBObject* obj) {
     UIViewController::InitFromStory(obj);
 
     _collectionView = (UICollectionView*)FindMemberAndHandle("view");
@@ -63,18 +59,16 @@ void UICollectionViewController::InitFromStory(XIBObject *obj)
     _outputClassName = "UICollectionViewController";
 }
 
-void UICollectionViewController::Awaken()
-{
+void UICollectionViewController::Awaken() {
     UIViewController::Awaken();
 }
 
-void UICollectionViewController::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UICollectionViewController::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     UIViewController::ConvertStaticMappings(writer, obj);
 
     AddOutputMember(writer, "UICollectionView", _collectionView);
 
-    // NOTE: There is difficulty confirming these keys are correct - NIB files generated were not conclusive in confirming these 
+    // NOTE: There is difficulty confirming these keys are correct - NIB files generated were not conclusive in confirming these
     // keys under the unarchiver
     if (!_clearSelectionOnViewWillAppear) {
         AddBool(writer, "UIClearSelectionOnViewWillAppear", _clearSelectionOnViewWillAppear);

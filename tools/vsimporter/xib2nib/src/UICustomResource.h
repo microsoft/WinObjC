@@ -16,15 +16,12 @@
 
 #pragma once
 #include "ObjectConverter.h"
-class UICustomResource :
-    public ObjectConverter
-{
+class UICustomResource : public ObjectConverter {
 public:
-    const char *_imageName;
+    const char* _imageName;
 
 public:
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };
-

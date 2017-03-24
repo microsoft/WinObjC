@@ -19,17 +19,16 @@
 
 #include "XIBObject.h"
 
-class XIBDictionary : public XIBObject
-{
+class XIBDictionary : public XIBObject {
     XIBObject *_keys, *_values;
+
 public:
     XIBDictionary(pugi::xml_node node);
     XIBDictionary();
-    void InitFromXIB(XIBObject *obj);
-    void EmitObject(NIBWriter *writer);
-    XIBObject *ObjectForKey(char *keyName);
-    void AddObjectForKey(XIBObject *key, XIBObject *value);
+    void InitFromXIB(XIBObject* obj);
+    void EmitObject(NIBWriter* writer);
+    XIBObject* ObjectForKey(char* keyName);
+    void AddObjectForKey(XIBObject* key, XIBObject* value);
 };
-
 
 #endif

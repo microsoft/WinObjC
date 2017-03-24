@@ -28,24 +28,24 @@ class XCBuildConfiguration;
 
 class BuildSettings {
 public:
-  BuildSettings(const PBXProject* project);
-  BuildSettings(const PBXTarget* target, const String& configName);
+    BuildSettings(const PBXProject* project);
+    BuildSettings(const PBXTarget* target, const String& configName);
 
-  void addOverride(const String& varName, const String& varValue);
-  void clearOverride(const String& varName);
+    void addOverride(const String& varName, const String& varValue);
+    void clearOverride(const String& varName);
 
-  String expand(const String& str, ValueType type = StringValue) const;
-  String getValue(const String& varName) const;
-  void getValue(const String& varName, StringVec& ret) const;
-  const VariableCollectionHierarchy& getHierarchy() const;
-  void print(const VarPrintFunc& pf) const;
+    String expand(const String& str, ValueType type = StringValue) const;
+    String getValue(const String& varName) const;
+    void getValue(const String& varName, StringVec& ret) const;
+    const VariableCollectionHierarchy& getHierarchy() const;
+    void print(const VarPrintFunc& pf) const;
 
 private:
-  void addLevel(const VariableCollection* level);
-  void addXCBuildConfiguration(const XCBuildConfiguration* config);
-  
-  VariableCollectionHierarchy m_vch;
-  SimpleVariableCollection m_overrideSettings;
+    void addLevel(const VariableCollection* level);
+    void addXCBuildConfiguration(const XCBuildConfiguration* config);
+
+    VariableCollectionHierarchy m_vch;
+    SimpleVariableCollection m_overrideSettings;
 };
 
 #endif /* _BUILDSETTINGS_H_ */

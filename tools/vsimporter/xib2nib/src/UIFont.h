@@ -17,9 +17,7 @@
 #pragma once
 #include "ObjectConverter.h"
 
-class UIFont :
-    public ObjectConverter
-{
+class UIFont : public ObjectConverter {
 public:
     const char* _fontName;
     const char* _fontFamilyName;
@@ -31,4 +29,3 @@ public:
     virtual void InitFromStory(XIBObject* obj);
     virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };
-

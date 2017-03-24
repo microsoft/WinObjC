@@ -23,19 +23,21 @@ class PBXNativeTarget;
 
 class SBNativeTarget : public SBTarget {
 public:
-  static SBNativeTarget* create(const PBXTarget* target, const StringSet& configNames, SBProject& parentProject);
-  virtual ~SBNativeTarget();
-  virtual TargetProductType getProductType() const { return m_type; }
+    static SBNativeTarget* create(const PBXTarget* target, const StringSet& configNames, SBProject& parentProject);
+    virtual ~SBNativeTarget();
+    virtual TargetProductType getProductType() const {
+        return m_type;
+    }
 
 private:
-  SBNativeTarget(const PBXNativeTarget* target, const StringSet& configNames, SBProject& parentProject);
-  SBNativeTarget();
-  bool init();
+    SBNativeTarget(const PBXNativeTarget* target, const StringSet& configNames, SBProject& parentProject);
+    SBNativeTarget();
+    bool init();
 
-  virtual VCProject* constructVCProject(VSTemplateProject* projTemplate);
+    virtual VCProject* constructVCProject(VSTemplateProject* projTemplate);
 
-  const PBXNativeTarget* m_target;
-  TargetProductType m_type;
+    const PBXNativeTarget* m_target;
+    TargetProductType m_type;
 };
 
 #endif /* _SBNATIVETARGET_H_ */

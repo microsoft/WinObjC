@@ -25,55 +25,50 @@ extern char** environ;
 
 EnvironmentVariableCollection EnvironmentVariableCollection::s_envVC;
 
-void EnvironmentVariableCollection::insert(const String& varName, const String& varValue)
-{
+void EnvironmentVariableCollection::insert(const String& varName, const String& varValue) {
 #if defined(_MSC_VER)
-  _putenv_s(varName.c_str(), varValue.c_str());
+    _putenv_s(varName.c_str(), varValue.c_str());
 #else
-  setenv(varName.c_str(), varValue.c_str(), 1);
+    setenv(varName.c_str(), varValue.c_str(), 1);
 #endif
 }
 
-void EnvironmentVariableCollection::erase(const String& varName)
-{
+void EnvironmentVariableCollection::erase(const String& varName) {
 #if defined(_MSC_VER)
-  _putenv_s(varName.c_str(), "");
+    _putenv_s(varName.c_str(), "");
 #else
-  unsetenv(varName.c_str());
+    unsetenv(varName.c_str());
 #endif
 }
 
-bool EnvironmentVariableCollection::getValue(const String& varName, String& ret) const
-{
-  const char* val = getenv(varName.c_str());
-  if (val)
-    ret = val;
-  return val != NULL;
+bool EnvironmentVariableCollection::getValue(const String& varName, String& ret) const {
+    const char* val = getenv(varName.c_str());
+    if (val)
+        ret = val;
+    return val != NULL;
 }
 
-static void addVarName(const String& assign, StringSet& varSet)
-{
-  String varName = assign.substr(0, assign.find_first_of('='));
-  if (!varName.empty())
-    varSet.insert(varName);
+static void addVarName(const String& assign, StringSet& varSet) {
+    String varName = assign.substr(0, assign.find_first_of('='));
+    if (!varName.empty())
+        varSet.insert(varName);
 }
 
-void EnvironmentVariableCollection::getVariableSet(StringSet& ret) const
-{
+void EnvironmentVariableCollection::getVariableSet(StringSet& ret) const {
 #if defined(_MSC_VER)
-  const char* vars = GetEnvironmentStrings();
-  unsigned i = 0;
-  for (unsigned j = 0; vars[i]; j++) {
-    if (vars[j] == '\0') {
-      String assignment(vars + i, vars + j);
-      addVarName(assignment, ret);
-      i = j + 1;
+    const char* vars = GetEnvironmentStrings();
+    unsigned i = 0;
+    for (unsigned j = 0; vars[i]; j++) {
+        if (vars[j] == '\0') {
+            String assignment(vars + i, vars + j);
+            addVarName(assignment, ret);
+            i = j + 1;
+        }
     }
-  }
 #else
-  unsigned i = 0;
-  while (environ[i]) {
-    addVarName(environ[i++], ret);
-  }
+    unsigned i = 0;
+    while (environ[i]) {
+        addVarName(environ[i++], ret);
+    }
 #endif
 }

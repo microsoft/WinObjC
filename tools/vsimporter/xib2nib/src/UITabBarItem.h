@@ -16,18 +16,15 @@
 
 #pragma once
 #include "ObjectConverter.h"
-class UITabBarItem :
-    public ObjectConverterSwapper
-{
+class UITabBarItem : public ObjectConverterSwapper {
 public:
-    const char *_title;
-    XIBObject *_image;
+    const char* _title;
+    XIBObject* _image;
     bool _enabled;
     int _tag;
 
     UITabBarItem();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };
-

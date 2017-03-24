@@ -16,15 +16,12 @@
 
 #pragma once
 #include "UIView.h"
-class UITabBar :
-    public UIView
-{
+class UITabBar : public UIView {
 public:
-    XIBObject *_delegate;
-    XIBArray *_items;
+    XIBObject* _delegate;
+    XIBArray* _items;
     UITabBar();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };
-

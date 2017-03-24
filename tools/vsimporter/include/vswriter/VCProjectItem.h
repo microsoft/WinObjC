@@ -20,30 +20,30 @@
 #include "ConditionalValue.h"
 
 namespace pugi {
-  class xml_node;
+class xml_node;
 };
 
 class VCProjectItem {
 public:
-  friend class VCProject;
+    friend class VCProject;
 
-  const std::string& getItemName() const;
-  const std::string& getIncludePath() const;
-  const std::string& getFilterPath() const;
-  const ConditionalValueListMap& getDefinitions() const;
+    const std::string& getItemName() const;
+    const std::string& getIncludePath() const;
+    const std::string& getFilterPath() const;
+    const ConditionalValueListMap& getDefinitions() const;
 
-  void setItemName(const std::string& itemName);
-  void setItemPath(const std::string& itemPath);
-  void setFilterPath(const std::string& filterPath);
-  void setDefinition(const std::string& name, const std::string& value, const std::string& condition = "");
+    void setItemName(const std::string& itemName);
+    void setItemPath(const std::string& itemPath);
+    void setFilterPath(const std::string& filterPath);
+    void setDefinition(const std::string& name, const std::string& value, const std::string& condition = "");
 
-  void writeDescription(pugi::xml_node& parent) const;
+    void writeDescription(pugi::xml_node& parent) const;
 
 private:
-  VCProjectItem(const std::string& itemName, const std::string& includePath, const std::string& filterPath = "");
+    VCProjectItem(const std::string& itemName, const std::string& includePath, const std::string& filterPath = "");
 
-  std::string m_itemName;
-  std::string m_includePath;
-  std::string m_filterPath;
-  ConditionalValueListMap m_definitions;
+    std::string m_itemName;
+    std::string m_includePath;
+    std::string m_filterPath;
+    ConditionalValueListMap m_definitions;
 };

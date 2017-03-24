@@ -17,29 +17,25 @@
 #include "UIPickerView.h"
 #include <assert.h>
 
-UIPickerView::UIPickerView()
-{
+UIPickerView::UIPickerView() {
     _showsSelectionBar = false;
     _allowsSelectingCells = true;
 }
 
-void UIPickerView::InitFromXIB(XIBObject *obj)
-{
+void UIPickerView::InitFromXIB(XIBObject* obj) {
     UIView::InitFromXIB(obj);
     _showsSelectionBar = obj->GetBool("IBUIShowsSelectionIndicator", false);
 
     _outputClassName = "UIPickerView";
 }
 
-void UIPickerView::InitFromStory(XIBObject *obj)
-{
+void UIPickerView::InitFromStory(XIBObject* obj) {
     UIView::InitFromStory(obj);
 
     _outputClassName = "UIPickerView";
 }
 
-void UIPickerView::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UIPickerView::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     UIView::ConvertStaticMappings(writer, obj);
     AddBool(writer, "UIShowsSelectionBar", _showsSelectionBar);
     AddBool(writer, "UIAllowSelectingCells", _allowsSelectingCells);

@@ -23,7 +23,9 @@ String getTime();
 double getEpochTime();
 
 template <typename T, unsigned S>
-inline unsigned arraySize(const T (&v)[S]) { return S; }
+inline unsigned arraySize(const T (&v)[S]) {
+    return S;
+}
 
 void removeDupes(StringVec& in);
 bool checkTelemetryOptIn();

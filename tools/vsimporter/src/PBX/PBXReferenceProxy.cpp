@@ -20,33 +20,30 @@
 #include "PBXContainerItemProxy.h"
 #include "PBXObjectIdConvert.h"
 
-PBXReferenceProxy::~PBXReferenceProxy() {}
-
-PBXReferenceProxy::PBXReferenceProxy()
-  : m_remoteRefPtr(NULL)
-{}
-
-PBXReferenceProxy* PBXReferenceProxy::createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc)
-{
-  PBXReferenceProxy* ret = new PBXReferenceProxy;
-  ret->initFromPlist(id, plist, pbxDoc);
-  return ret;
+PBXReferenceProxy::~PBXReferenceProxy() {
 }
 
-void PBXReferenceProxy::initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc)
-{
-  // Call super init
-  PBXFile::initFromPlist(id, plist, pbxDoc);
-
-  // Get fileType
-  getStringForKey(plist, "fileType", m_fileType, VALUE_REQUIRED, m_parseER);
-  
-  // Get remoteRef
-  getStringForKey(plist, "remoteRef", m_remoteRefId, VALUE_REQUIRED, m_parseER);
+PBXReferenceProxy::PBXReferenceProxy() : m_remoteRefPtr(NULL) {
 }
 
-void PBXReferenceProxy::resolvePointers()
-{
-  // Get remoteRef ptr
-  convertObjectId(m_pbxDoc, m_remoteRefId, m_remoteRefPtr);
+PBXReferenceProxy* PBXReferenceProxy::createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc) {
+    PBXReferenceProxy* ret = new PBXReferenceProxy;
+    ret->initFromPlist(id, plist, pbxDoc);
+    return ret;
+}
+
+void PBXReferenceProxy::initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc) {
+    // Call super init
+    PBXFile::initFromPlist(id, plist, pbxDoc);
+
+    // Get fileType
+    getStringForKey(plist, "fileType", m_fileType, VALUE_REQUIRED, m_parseER);
+
+    // Get remoteRef
+    getStringForKey(plist, "remoteRef", m_remoteRefId, VALUE_REQUIRED, m_parseER);
+}
+
+void PBXReferenceProxy::resolvePointers() {
+    // Get remoteRef ptr
+    convertObjectId(m_pbxDoc, m_remoteRefId, m_remoteRefPtr);
 }

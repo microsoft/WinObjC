@@ -21,20 +21,26 @@
 
 class EnvironmentVariableCollection : public VariableCollection {
 public:
-  static EnvironmentVariableCollection& get() { return s_envVC; }
+    static EnvironmentVariableCollection& get() {
+        return s_envVC;
+    }
 
-  using VariableCollection::insert;
-  virtual ~EnvironmentVariableCollection() {}
-  virtual void insert(const String& varName, const String& varValue);
-  virtual void erase(const String& varName);
-  virtual bool getValue(const String& varName, String& ret) const;
-  virtual void getVariableSet(StringSet& ret) const;
-  virtual bool empty() const { return false; }
+    using VariableCollection::insert;
+    virtual ~EnvironmentVariableCollection() {
+    }
+    virtual void insert(const String& varName, const String& varValue);
+    virtual void erase(const String& varName);
+    virtual bool getValue(const String& varName, String& ret) const;
+    virtual void getVariableSet(StringSet& ret) const;
+    virtual bool empty() const {
+        return false;
+    }
 
 private:
-  EnvironmentVariableCollection() {}
+    EnvironmentVariableCollection() {
+    }
 
-  static EnvironmentVariableCollection s_envVC;
+    static EnvironmentVariableCollection s_envVC;
 };
 
 #endif /* _ENVIRONMENTVARIABLECOLLECTION_H_ */

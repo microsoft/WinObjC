@@ -29,26 +29,30 @@ typedef std::vector<const XCBuildConfiguration*> BuildConfigurationList;
 
 class XCConfigurationList : public PBXObject {
 public:
-  virtual ~XCConfigurationList();
-  virtual void resolvePointers();
-  
-  const BuildConfigurationList& getConfigurations() const { return m_buildConfigurationPtrs; }
-  void getValidConfigurations(const StringSet& configNames, StringSet& ret) const;
-  const XCBuildConfiguration* getConfiguration(const String& configName) const;
-  const String& getDefaultConfigurationName() const { return m_defaultConfigurationName; }
-  
-  static XCConfigurationList* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
-  
-private:
-  XCConfigurationList();
-  virtual void initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
-  
-/* Start of serialized values */
-  StringVec m_buildConfigurationIds;
-  String m_defaultConfigurationName;
-/* End of serialized values */
+    virtual ~XCConfigurationList();
+    virtual void resolvePointers();
 
-  BuildConfigurationList m_buildConfigurationPtrs;
+    const BuildConfigurationList& getConfigurations() const {
+        return m_buildConfigurationPtrs;
+    }
+    void getValidConfigurations(const StringSet& configNames, StringSet& ret) const;
+    const XCBuildConfiguration* getConfiguration(const String& configName) const;
+    const String& getDefaultConfigurationName() const {
+        return m_defaultConfigurationName;
+    }
+
+    static XCConfigurationList* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
+
+private:
+    XCConfigurationList();
+    virtual void initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
+
+    /* Start of serialized values */
+    StringVec m_buildConfigurationIds;
+    String m_defaultConfigurationName;
+    /* End of serialized values */
+
+    BuildConfigurationList m_buildConfigurationPtrs;
 };
 
 #endif /* _XCCONFIGURATIONLIST_H_ */

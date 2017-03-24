@@ -21,26 +21,36 @@
 
 class PBXShellScriptBuildPhase : public PBXBuildPhase {
 public:
-  virtual ~PBXShellScriptBuildPhase();
-  const String& getName() const { return m_name; }
-  const StringVec& getInputPaths() const { return m_inputPaths; }
-  const StringVec& getOutputPaths() const { return m_outputPaths; }
-  const String& getShellPath() const { return m_shellPath; }
-  const String& getShellScript() const { return m_shellScript; }
-  
-  static PBXShellScriptBuildPhase* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
-  
+    virtual ~PBXShellScriptBuildPhase();
+    const String& getName() const {
+        return m_name;
+    }
+    const StringVec& getInputPaths() const {
+        return m_inputPaths;
+    }
+    const StringVec& getOutputPaths() const {
+        return m_outputPaths;
+    }
+    const String& getShellPath() const {
+        return m_shellPath;
+    }
+    const String& getShellScript() const {
+        return m_shellScript;
+    }
+
+    static PBXShellScriptBuildPhase* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
+
 private:
-  PBXShellScriptBuildPhase();
-  virtual void initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
-  
-/* Start of serialized values */
-  String m_name;
-  StringVec m_inputPaths;
-  StringVec m_outputPaths;
-  String m_shellPath;
-  String m_shellScript;
-/* End of serialized values */
+    PBXShellScriptBuildPhase();
+    virtual void initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
+
+    /* Start of serialized values */
+    String m_name;
+    StringVec m_inputPaths;
+    StringVec m_outputPaths;
+    String m_shellPath;
+    String m_shellScript;
+    /* End of serialized values */
 };
 
 #endif /* _PBXSHELLSCRIPTBUILDPHASE_H_ */

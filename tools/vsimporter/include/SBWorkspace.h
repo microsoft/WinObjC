@@ -29,62 +29,62 @@ class VCProject;
 
 class SBWorkspace {
 public:
-  /* Factory functions */
-  static SBWorkspace* get();
-  static SBWorkspace* createFromProject(const String& project);
-  static SBWorkspace* createFromWorkspace(const String& workspace);
-  /*********************/
-  
-  String getName() const;
-  String getPath() const;
-  const StringSet& getConfigurations() const;
+    /* Factory functions */
+    static SBWorkspace* get();
+    static SBWorkspace* createFromProject(const String& project);
+    static SBWorkspace* createFromWorkspace(const String& workspace);
+    /*********************/
 
-  /* Called from main */
-  void printSummary() const;
-  void generateFiles(bool genProjectionsProj, bool genPackagingProj);
-  void queueSchemes(const StringSet& schemeNames, const StringSet& configNames);
-  void queueTargets(const StringSet& targetNames, const StringSet& configNames);
-  /********************/
-  
-  SBTarget* queueTargetWithProductName(const String& productName);
-  SBTarget* queueTargetWithName(const String& targetName, const StringSet& configNames);
-  SBProject* openProject(const String& projectPath);
+    String getName() const;
+    String getPath() const;
+    const StringSet& getConfigurations() const;
+
+    /* Called from main */
+    void printSummary() const;
+    void generateFiles(bool genProjectionsProj, bool genPackagingProj);
+    void queueSchemes(const StringSet& schemeNames, const StringSet& configNames);
+    void queueTargets(const StringSet& targetNames, const StringSet& configNames);
+    /********************/
+
+    SBTarget* queueTargetWithProductName(const String& productName);
+    SBTarget* queueTargetWithName(const String& targetName, const StringSet& configNames);
+    SBProject* openProject(const String& projectPath);
 
 private:
-  typedef std::vector<SBTarget*> SBTargetVec;
-  typedef std::map<String, SBProject*> ProjectMap;
-  typedef std::vector<SBProject*> SBProjectVec;
-  typedef std::vector<const XCScheme*> SchemeVec;
-  typedef std::pair<const PBXTarget*, SBProject*> TargetProjectPair;
-  typedef std::vector<TargetProjectPair> PotentialTargetsVec;
+    typedef std::vector<SBTarget*> SBTargetVec;
+    typedef std::map<String, SBProject*> ProjectMap;
+    typedef std::vector<SBProject*> SBProjectVec;
+    typedef std::vector<const XCScheme*> SchemeVec;
+    typedef std::pair<const PBXTarget*, SBProject*> TargetProjectPair;
+    typedef std::vector<TargetProjectPair> PotentialTargetsVec;
 
-  SBWorkspace();
-  
-  void findSchemes(const String& containerAbsPath);
-  void printSchemes() const;
-  
-  SBProject* findOpenProject(const String& absProjPath) const;
-  const XCScheme* getScheme(const String& schemeName) const;
-  void getSchemes(const StringSet& schemeNames, SchemeVec& ret) const;
-  void selectTargets(PotentialTargetsVec& ret);
-  void detectProjectCollisions() const;
-  VCProject* generateGlueProject(bool packageable) const;
-  VCProject* generatePackageProject() const;
-  void getAllTargets(PotentialTargetsVec& targets) const;
-  TargetProjectPair findTargetWithName(const String& targetName) const;
+    SBWorkspace();
 
-  // Relevant if Workspace was constructed from a workspace file
-  XCWorkspace* m_workspace;
-  // Relevant if Workspace was constructed from a project file
-  SBProject* m_mainProject;
-  // All open Projects
-  ProjectMap m_openProjects;
-  // Schemes for all open projects
-  SchemeVec m_schemes;
-  // All user-specified configurations
-  StringSet m_configNames;
-  
-  static SBWorkspace* s_workspace;
+    void findSchemes(const String& containerAbsPath);
+    void printSchemes() const;
+
+    SBProject* findOpenProject(const String& absProjPath) const;
+    const XCScheme* getScheme(const String& schemeName) const;
+    void getSchemes(const StringSet& schemeNames, SchemeVec& ret) const;
+    void selectTargets(PotentialTargetsVec& ret);
+    void detectProjectCollisions() const;
+    VCProject* generateGlueProject(bool packageable) const;
+    VCProject* generatePackageProject() const;
+    void getAllTargets(PotentialTargetsVec& targets) const;
+    TargetProjectPair findTargetWithName(const String& targetName) const;
+
+    // Relevant if Workspace was constructed from a workspace file
+    XCWorkspace* m_workspace;
+    // Relevant if Workspace was constructed from a project file
+    SBProject* m_mainProject;
+    // All open Projects
+    ProjectMap m_openProjects;
+    // Schemes for all open projects
+    SchemeVec m_schemes;
+    // All user-specified configurations
+    StringSet m_configNames;
+
+    static SBWorkspace* s_workspace;
 };
 
 #endif /* _SBWORKSPACE_H_ */

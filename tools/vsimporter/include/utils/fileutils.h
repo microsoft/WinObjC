@@ -29,12 +29,12 @@
 #include "types.h"
 
 typedef enum {
-  WindowsPath = 1,
-  PosixPath = 2,
+    WindowsPath = 1,
+    PosixPath = 2,
 #if defined(_MSC_VER)
-  PlatformPath = WindowsPath
+    PlatformPath = WindowsPath
 #else
-  PlatformPath = PosixPath
+    PlatformPath = PosixPath
 #endif
 } PathStyle;
 
@@ -45,7 +45,7 @@ typedef enum {
  * final '/', and basename() returns the component following the final
  * '/'.  Trailing '/' characters are not counted as part of the
  * pathname.
- * 
+ *
  * If path does not contain a slash, dirname() returns the string "."
  * while basename() returns a copy of path.  If path is the string "/",
  * then both dirname() and basename() return the string "/".  If path is
@@ -98,12 +98,12 @@ String sb_expanduser(const String& path);
  * Does not access the filesystem, or check whether the path exists.
  * Path must not contain any variables.
  */
-String sanitizePath(const String &path);
+String sanitizePath(const String& path);
 
 /*
  * Returns true if the provided path is absolute.
  */
-bool isAbsolutePath(const String &path, PathStyle style = PlatformPath);
+bool isAbsolutePath(const String& path, PathStyle style = PlatformPath);
 
 /*
  * Returns the current working directory.
@@ -120,7 +120,7 @@ String joinPaths(const String& lhs, const String& rhs, bool sanitize = true);
  */
 void getRecursiveDirList(const String& baseDir, StringVec& dirVec, const StringVec& ignoreList);
 
-/* 
+/*
  * Function with behaviour like `mkdir -p'
  * http://niallohiggins.com/2009/01/08/mkpath-mkdir-p-alike-in-c-for-unix/
  */
@@ -136,8 +136,12 @@ const StringVec& getHeaderTypes();
  * Convert between Windows and Posix paths
  */
 String platformPath(const String& path, PathStyle style = PlatformPath);
-inline String winPath(const String& path) { return platformPath(path, WindowsPath); }
-inline String posixPath(const String& path) { return platformPath(path, PosixPath); }
+inline String winPath(const String& path) {
+    return platformPath(path, WindowsPath);
+}
+inline String posixPath(const String& path) {
+    return platformPath(path, PosixPath);
+}
 
 /*
  * Get a relative path from one path to another.
@@ -148,4 +152,3 @@ void getRelativePaths(const String& fromAbsPath, StringVec& toAbsPaths);
 void openOutputFileStream(OFStream& ofs, const String& outFilePath, OFStream::openmode mode = OFStream::out);
 
 #endif /* _FILEUTILS_H_ */
-

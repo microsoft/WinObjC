@@ -20,35 +20,33 @@
 #include "PBXFileReference.h"
 #include "PBXObjectIdConvert.h"
 
-XCVersionGroup::~XCVersionGroup() {}
-
-XCVersionGroup::XCVersionGroup() {}
-
-XCVersionGroup* XCVersionGroup::createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc)
-{
-  XCVersionGroup* ret = new XCVersionGroup;
-  ret->initFromPlist(id, plist, pbxDoc);
-  return ret;
+XCVersionGroup::~XCVersionGroup() {
 }
 
-void XCVersionGroup::initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc)
-{
-  // Call super init
-  PBXGroup::initFromPlist(id, plist, pbxDoc);
-  
-  // Get versionGroupType
-  getStringForKey(plist, "versionGroupType", m_versionGroupType, VALUE_REQUIRED, m_parseER);
-  
-  // Get currentVersion
-  getStringForKey(plist, "currentVersion", m_currentVersionId, VALUE_REQUIRED, m_parseER);
+XCVersionGroup::XCVersionGroup() {
 }
 
-void XCVersionGroup::resolvePointers()
-{
-  // Resolve pointers for super
-  PBXGroup::resolvePointers();
-  
-  // Resolve currentVersion ptr
-  convertObjectId(m_pbxDoc, m_currentVersionId, m_currentVersionPtr);
+XCVersionGroup* XCVersionGroup::createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc) {
+    XCVersionGroup* ret = new XCVersionGroup;
+    ret->initFromPlist(id, plist, pbxDoc);
+    return ret;
 }
 
+void XCVersionGroup::initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc) {
+    // Call super init
+    PBXGroup::initFromPlist(id, plist, pbxDoc);
+
+    // Get versionGroupType
+    getStringForKey(plist, "versionGroupType", m_versionGroupType, VALUE_REQUIRED, m_parseER);
+
+    // Get currentVersion
+    getStringForKey(plist, "currentVersion", m_currentVersionId, VALUE_REQUIRED, m_parseER);
+}
+
+void XCVersionGroup::resolvePointers() {
+    // Resolve pointers for super
+    PBXGroup::resolvePointers();
+
+    // Resolve currentVersion ptr
+    convertObjectId(m_pbxDoc, m_currentVersionId, m_currentVersionPtr);
+}

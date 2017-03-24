@@ -22,116 +22,115 @@
 #include "PBXObjectIdConvert.h"
 #include "VariableCollection.h"
 
-PBXNativeTarget::~PBXNativeTarget() {}
-
-PBXNativeTarget::PBXNativeTarget() {}
-
-PBXNativeTarget* PBXNativeTarget::createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc)
-{
-  PBXNativeTarget* ret = new PBXNativeTarget;
-  ret->initFromPlist(id, plist, pbxDoc);
-  return ret;
+PBXNativeTarget::~PBXNativeTarget() {
 }
 
-void PBXNativeTarget::initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc)
-{
-  // Call super init
-  PBXTarget::initFromPlist(id, plist, pbxDoc);
-
-  // Get productReference
-  getStringForKey(plist, "productReference", m_productReferenceId, VALUE_REQUIRED, m_parseER);
-  
-  // Get productType
-  getStringForKey(plist, "productType", m_productType, VALUE_REQUIRED, m_parseER);
-  
-  // Get buildRules
-  getStringVectorForKey(plist, "buildRules", m_buildRuleIds, VALUE_OPTIONAL, m_parseER);
+PBXNativeTarget::PBXNativeTarget() {
 }
 
-void PBXNativeTarget::resolvePointers()
-{
-  // Call super resolve
-  PBXTarget::resolvePointers();
-  
-  // Resolve productReference ptr
-  convertObjectId(m_pbxDoc, m_productReferenceId, m_productReferencePtr);
-  
-  // Resolve buildRules ptrs
-  convertObjectIdList(m_pbxDoc, m_buildRuleIds, m_buildRulePtrs);
+PBXNativeTarget* PBXNativeTarget::createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc) {
+    PBXNativeTarget* ret = new PBXNativeTarget;
+    ret->initFromPlist(id, plist, pbxDoc);
+    return ret;
 }
 
-String PBXNativeTarget::getProductFileName() const
-{
-  if (m_productReferencePtr)
-    return m_productReferencePtr->getFullPath();
-  else
-    return "";
+void PBXNativeTarget::initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc) {
+    // Call super init
+    PBXTarget::initFromPlist(id, plist, pbxDoc);
+
+    // Get productReference
+    getStringForKey(plist, "productReference", m_productReferenceId, VALUE_REQUIRED, m_parseER);
+
+    // Get productType
+    getStringForKey(plist, "productType", m_productType, VALUE_REQUIRED, m_parseER);
+
+    // Get buildRules
+    getStringVectorForKey(plist, "buildRules", m_buildRuleIds, VALUE_OPTIONAL, m_parseER);
 }
 
-String PBXNativeTarget::getProductFileType() const
-{
-  if (m_productReferencePtr)
-    return m_productReferencePtr->getFileType();
-  else
-    return "";
+void PBXNativeTarget::resolvePointers() {
+    // Call super resolve
+    PBXTarget::resolvePointers();
+
+    // Resolve productReference ptr
+    convertObjectId(m_pbxDoc, m_productReferenceId, m_productReferencePtr);
+
+    // Resolve buildRules ptrs
+    convertObjectIdList(m_pbxDoc, m_buildRuleIds, m_buildRulePtrs);
 }
 
-void PBXNativeTarget::getBuildSettings(VariableCollection& settings) const
-{
-  PBXTarget::getBuildSettings(settings);
+String PBXNativeTarget::getProductFileName() const {
+    if (m_productReferencePtr)
+        return m_productReferencePtr->getFullPath();
+    else
+        return "";
+}
 
-  String productFileType = getProductFileType();
-  String productPath = getProductFileName();
-  String productNameFull = sb_basename(productPath);
-  String productName = sb_fname(productNameFull);
+String PBXNativeTarget::getProductFileType() const {
+    if (m_productReferencePtr)
+        return m_productReferencePtr->getFileType();
+    else
+        return "";
+}
 
-  if (m_productType == "com.apple.product-type.library.static") {
-    if (productFileType != "archive.ar")
-      SBLog::warning() << "Unexpected product file type \"" << productFileType << "\" for \"" << getName() << "\" static lib target." << std::endl;
+void PBXNativeTarget::getBuildSettings(VariableCollection& settings) const {
+    PBXTarget::getBuildSettings(settings);
 
-    settings.insert("EXECUTABLE_NAME", productNameFull);
-    settings.insert("EXECUTABLE_PATH", productNameFull);
-  }  else if (m_productType == "com.apple.product-type.framework") {
-    if (productFileType != "wrapper.framework") {
-      SBLog::warning() << "Unexpected product file type \"" << productFileType << "\" for \"" << getName() << "\" framework target." << std::endl;
+    String productFileType = getProductFileType();
+    String productPath = getProductFileName();
+    String productNameFull = sb_basename(productPath);
+    String productName = sb_fname(productNameFull);
+
+    if (m_productType == "com.apple.product-type.library.static") {
+        if (productFileType != "archive.ar")
+            SBLog::warning() << "Unexpected product file type \"" << productFileType << "\" for \"" << getName() << "\" static lib target."
+                             << std::endl;
+
+        settings.insert("EXECUTABLE_NAME", productNameFull);
+        settings.insert("EXECUTABLE_PATH", productNameFull);
+    } else if (m_productType == "com.apple.product-type.framework") {
+        if (productFileType != "wrapper.framework") {
+            SBLog::warning() << "Unexpected product file type \"" << productFileType << "\" for \"" << getName() << "\" framework target."
+                             << std::endl;
+        }
+
+        settings.insert("EXECUTABLE_NAME", productName);
+        settings.insert("EXECUTABLE_PATH", joinPaths(productNameFull, productName));
+    } else if (m_productType == "com.apple.product-type.application") {
+        // Fix up product name, when necessary
+        if (productFileType == "compiled.mach-o.executable")
+            productNameFull = productName + ".app";
+        else if (productFileType != "wrapper.application")
+            SBLog::warning() << "Unexpected product file type \"" << productFileType << "\" for \"" << getName() << "\" app target."
+                             << std::endl;
+
+        settings.insert("EXECUTABLE_NAME", productName);
+        settings.insert("EXECUTABLE_FOLDER_PATH", productNameFull);
+    } else if (m_productType == "com.apple.product-type.bundle") {
+        if (productFileType != "wrapper.cfbundle") {
+            SBLog::warning() << "Unexpected product file type \"" << productFileType << "\" for \"" << getName() << "\" bundle target."
+                             << std::endl;
+        }
+
+        settings.insert("EXECUTABLE_NAME", productName);
+        settings.insert("EXECUTABLE_FOLDER_PATH", productNameFull);
     }
 
-    settings.insert("EXECUTABLE_NAME", productName);
-    settings.insert("EXECUTABLE_PATH", joinPaths(productNameFull, productName));
-  } else if (m_productType == "com.apple.product-type.application") {
-    // Fix up product name, when necessary
-    if (productFileType == "compiled.mach-o.executable")
-      productNameFull = productName + ".app";
-    else if (productFileType != "wrapper.application")
-      SBLog::warning() << "Unexpected product file type \"" << productFileType << "\" for \"" << getName() << "\" app target." << std::endl;
-
-    settings.insert("EXECUTABLE_NAME", productName);
-    settings.insert("EXECUTABLE_FOLDER_PATH", productNameFull);
-  } else if (m_productType == "com.apple.product-type.bundle") {
-    if (productFileType != "wrapper.cfbundle") {
-      SBLog::warning() << "Unexpected product file type \"" << productFileType << "\" for \"" << getName() << "\" bundle target." << std::endl;
-    }
-
-    settings.insert("EXECUTABLE_NAME", productName);
-    settings.insert("EXECUTABLE_FOLDER_PATH", productNameFull);
-  }
-
-  settings.insert("PRODUCT_NAME", productName);
-  settings.insert("FULL_PRODUCT_NAME", productNameFull);
-  settings.insert("PRODUCT_TYPE", m_productType);
+    settings.insert("PRODUCT_NAME", productName);
+    settings.insert("FULL_PRODUCT_NAME", productNameFull);
+    settings.insert("PRODUCT_TYPE", m_productType);
 }
 
-String PBXNativeTarget::getTargetType() const
-{
-  if (m_productType == "com.apple.product-type.library.static") {
-    return "StaticLib";
-  } else if (m_productType == "com.apple.product-type.framework") {
-    return "Framework";
-  } else if (m_productType == "com.apple.product-type.application") {
-    return "Application";
-  } else if (m_productType == "com.apple.product-type.bundle") {
-    return "Bundle";
-  } else {
-    return "Unknown";
-  }
+String PBXNativeTarget::getTargetType() const {
+    if (m_productType == "com.apple.product-type.library.static") {
+        return "StaticLib";
+    } else if (m_productType == "com.apple.product-type.framework") {
+        return "Framework";
+    } else if (m_productType == "com.apple.product-type.application") {
+        return "Application";
+    } else if (m_productType == "com.apple.product-type.bundle") {
+        return "Bundle";
+    } else {
+        return "Unknown";
+    }
 }

@@ -19,45 +19,42 @@
 #include "UIView.h"
 
 typedef enum {
-   UIBarButtonSystemItemDone,
-   UIBarButtonSystemItemCancel,
-   UIBarButtonSystemItemEdit,
-   UIBarButtonSystemItemSave,
-   UIBarButtonSystemItemAdd,
-   UIBarButtonSystemItemFlexibleSpace,
-   UIBarButtonSystemItemFixedSpace,
-   UIBarButtonSystemItemCompose,
-   UIBarButtonSystemItemReply,
-   UIBarButtonSystemItemAction,
-   UIBarButtonSystemItemOrganize,
-   UIBarButtonSystemItemBookmarks,
-   UIBarButtonSystemItemSearch,
-   UIBarButtonSystemItemRefresh,
-   UIBarButtonSystemItemStop,
-   UIBarButtonSystemItemCamera,
-   UIBarButtonSystemItemTrash,
-   UIBarButtonSystemItemPlay,
-   UIBarButtonSystemItemPause,
-   UIBarButtonSystemItemRewind,
-   UIBarButtonSystemItemFastForward,
-   UIBarButtonSystemItemUndo,
-   UIBarButtonSystemItemRedo,
-   UIBarButtonSystemItemPageCurl,
+    UIBarButtonSystemItemDone,
+    UIBarButtonSystemItemCancel,
+    UIBarButtonSystemItemEdit,
+    UIBarButtonSystemItemSave,
+    UIBarButtonSystemItemAdd,
+    UIBarButtonSystemItemFlexibleSpace,
+    UIBarButtonSystemItemFixedSpace,
+    UIBarButtonSystemItemCompose,
+    UIBarButtonSystemItemReply,
+    UIBarButtonSystemItemAction,
+    UIBarButtonSystemItemOrganize,
+    UIBarButtonSystemItemBookmarks,
+    UIBarButtonSystemItemSearch,
+    UIBarButtonSystemItemRefresh,
+    UIBarButtonSystemItemStop,
+    UIBarButtonSystemItemCamera,
+    UIBarButtonSystemItemTrash,
+    UIBarButtonSystemItemPlay,
+    UIBarButtonSystemItemPause,
+    UIBarButtonSystemItemRewind,
+    UIBarButtonSystemItemFastForward,
+    UIBarButtonSystemItemUndo,
+    UIBarButtonSystemItemRedo,
+    UIBarButtonSystemItemPageCurl,
 } UIBarButtonSystemItem;
 
-class UIBarButtonItem :
-    public ObjectConverterSwapper
-{
+class UIBarButtonItem : public ObjectConverterSwapper {
 public:
     int _systemItem;
     int _style;
-    UIView *_customView;
+    UIView* _customView;
     float _width;
-    const char *_title;
+    const char* _title;
 
     UIBarButtonItem();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };
-

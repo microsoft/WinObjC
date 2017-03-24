@@ -24,14 +24,15 @@ class SBNativeTarget;
 
 class SBHeadersBuildPhase : public SBBuildPhase {
 public:
-  static SBBuildPhase* create(const PBXBuildPhase* phase, SBTarget& parentTarget);
-  virtual ~SBHeadersBuildPhase() {}
-  virtual void writeVCProjectFiles(VCProject& proj) const;
+    static SBBuildPhase* create(const PBXBuildPhase* phase, SBTarget& parentTarget);
+    virtual ~SBHeadersBuildPhase() {
+    }
+    virtual void writeVCProjectFiles(VCProject& proj) const;
 
 private:
-  SBHeadersBuildPhase(const PBXHeadersBuildPhase* phase, const SBNativeTarget& parentTarget);
+    SBHeadersBuildPhase(const PBXHeadersBuildPhase* phase, const SBNativeTarget& parentTarget);
 
-  const PBXHeadersBuildPhase* m_phase;
+    const PBXHeadersBuildPhase* m_phase;
 };
 
 #endif /* _SBHEADERSBUILDPHASE_H_ */

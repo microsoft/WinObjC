@@ -18,34 +18,32 @@
 #include "XIBObjectTypes.h"
 
 typedef struct _PropertyMapper {
-    char *xibName;
-    char *nibName;
-    void (*ConvertProperty)(struct _PropertyMapper *prop, NIBWriter *writer, XIBObject *propObj, XIBObject *obj);
+    char* xibName;
+    char* nibName;
+    void (*ConvertProperty)(struct _PropertyMapper* prop, NIBWriter* writer, XIBObject* propObj, XIBObject* obj);
 } PropertyMapper;
 
-class ObjectConverter : public XIBObject
-{
+class ObjectConverter : public XIBObject {
 public:
-    XIBArray *_connections;
-    XIBArray *_variations;
+    XIBArray* _connections;
+    XIBArray* _variations;
 
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 
-    void Map(NIBWriter *writer, XIBObject *obj, PropertyMapper *properties, int numProperties);
-    virtual ObjectConverter *Clone();
+    void Map(NIBWriter* writer, XIBObject* obj, PropertyMapper* properties, int numProperties);
+    virtual ObjectConverter* Clone();
 
-    static XIBObject *ConverterForObject(const char *className, pugi::xml_node node);
-    static XIBObject *ConverterForStoryObject(const char *className, pugi::xml_node node);
+    static XIBObject* ConverterForObject(const char* className, pugi::xml_node node);
+    static XIBObject* ConverterForStoryObject(const char* className, pugi::xml_node node);
 };
 
-class ObjectConverterSwapper : public ObjectConverter
-{
+class ObjectConverterSwapper : public ObjectConverter {
 public:
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };
 
-void ConvertOffset(struct _PropertyMapper *prop, NIBWriter *writer, XIBObject *propObj, XIBObject *obj);
+void ConvertOffset(struct _PropertyMapper* prop, NIBWriter* writer, XIBObject* propObj, XIBObject* obj);

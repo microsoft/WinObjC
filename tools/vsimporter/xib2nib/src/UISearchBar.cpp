@@ -16,25 +16,21 @@
 
 #include "UISearchBar.h"
 
-UISearchBar::UISearchBar()
-{
+UISearchBar::UISearchBar() {
 }
 
-void UISearchBar::InitFromXIB(XIBObject *obj)
-{
+void UISearchBar::InitFromXIB(XIBObject* obj) {
     UIView::InitFromXIB(obj);
 
     _outputClassName = "UISearchBar";
 }
 
-void UISearchBar::InitFromStory(XIBObject *obj)
-{
+void UISearchBar::InitFromStory(XIBObject* obj) {
     UIView::InitFromStory(obj);
 
     _outputClassName = "UISearchBar";
 }
 
-void UISearchBar::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UISearchBar::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     UIView::ConvertStaticMappings(writer, obj);
 }

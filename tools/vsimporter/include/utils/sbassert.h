@@ -20,10 +20,7 @@
 #include <string>
 #include <assert.h>
 
-enum ValidateBehavior {
-  VALIDATE_FATAL = 0,
-  VALIDATE_NONFATAL = 1
-};
+enum ValidateBehavior { VALIDATE_FATAL = 0, VALIDATE_NONFATAL = 1 };
 
 void sbAssert(bool condition, const std::string& cause = "");
 void sbValidate(bool condition, const std::string& cause = "");

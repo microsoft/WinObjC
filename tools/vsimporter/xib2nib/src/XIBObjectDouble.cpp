@@ -19,14 +19,12 @@
 #include <string.h>
 #include "XIBObjectDouble.h"
 
-XIBObjectDouble::XIBObjectDouble(pugi::xml_node node)
-{
+XIBObjectDouble::XIBObjectDouble(pugi::xml_node node) {
     _val = strtod(node.child_value(), NULL);
     _node = node;
 }
 
-XIBObjectDouble::XIBObjectDouble(double val)
-{
+XIBObjectDouble::XIBObjectDouble(double val) {
     _val = val;
 }
 
@@ -34,13 +32,11 @@ bool XIBObjectDouble::NeedsSerialization() {
     return false;
 }
 
-void XIBObjectDouble::WriteData(NIBWriter *writer)
-{
+void XIBObjectDouble::WriteData(NIBWriter* writer) {
     writer->WriteByte(NIBOBJ_DOUBLE);
     writer->WriteBytes(&_val, 8);
 }
 
-float XIBObjectDouble::floatValue()
-{
-    return (float) _val;
+float XIBObjectDouble::floatValue() {
+    return (float)_val;
 }
