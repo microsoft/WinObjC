@@ -124,7 +124,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSData, NSDataPrototype, CFDataGetTypeID);
                 memcpy(dest, source, (rawLength % lineLength)*sizeof(wchar_t));
             }
 
-            return [NSString stringWithCharacters:reinterpret_cast<unichar*>(result.get()) length:newLength];
+            return [NSString stringWithCharacters:reinterpret_cast<UniChar*>(result.get()) length:newLength];
         }
     } 
 

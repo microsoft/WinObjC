@@ -22,8 +22,8 @@ class EncodeStringWithOptions : public ::benchmark::BenchmarkCaseBase {
     StrongId<NSMutableData> m_data;
 
 public:
-    void PreRun() {
-        m_data = [NSMutableData dataWithLength:3*1024*1024];
+    EncodeStringWithOptions() 
+        : m_data ([NSMutableData dataWithLength : 3 * 1024 * 1024]){
     }
 
     inline void Run() {
