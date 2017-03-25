@@ -121,7 +121,7 @@ BASE_CLASS_REQUIRED_IMPLS(NSData, NSDataPrototype, CFDataGetTypeID);
             
             if (rawLength % lineLength != 0) {
                 // finally add the remaining characters
-                memcpy(dest, source, (rawLength % lineLength)*sizeof(wchar_t));
+                memcpy(dest, source, (rawLength % lineLength) * sizeof(wchar_t));
             }
 
             return [NSString stringWithCharacters:reinterpret_cast<UniChar*>(result.get()) length:newLength];
