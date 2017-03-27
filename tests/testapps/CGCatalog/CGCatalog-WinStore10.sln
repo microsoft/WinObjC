@@ -1,7 +1,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.22823.1
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
+MinimumVisualStudioVersion = 15.0.0.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CGCatalog", "CGCatalog", "{AA2014D1-215B-42F8-A37C-D7BFECD47946}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CGCatalog", "CGCatalog.vsimporter\CGCatalog-WinStore10\CGCatalog.vcxproj", "{FC1847AC-5E37-496F-801F-32F8911A49A7}"
