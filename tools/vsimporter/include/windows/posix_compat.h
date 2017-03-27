@@ -17,7 +17,7 @@
 #ifndef POSIX_COMPAT_H_
 #define POSIX_COMPAT_H_
 
-#ifdef __cplusplus 
+#ifdef __cplusplus
 extern "C" {
 #endif
 

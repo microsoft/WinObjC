@@ -23,52 +23,57 @@
 #include "types.h"
 #include "SplitStream.h"
 
-enum SBLogLevel {
-  SB_DEBUG = 0,
-  SB_INFO = 1,
-  SB_WARN = 2,
-  SB_ERROR = 3
-};
+enum SBLogLevel { SB_DEBUG = 0, SB_INFO = 1, SB_WARN = 2, SB_ERROR = 3 };
 
 class SBLog {
 public:
-  ~SBLog();
+    ~SBLog();
 
-  static void setVerbosity(SBLogLevel level);
-  static void initWithLogDir(const String& logDir);
-  static void printLocation();
-  static SplitStream& log(SBLogLevel level);
-  static SplitStream& error() { return log(SB_ERROR); }
-  static SplitStream& warning() { return log(SB_WARN); }
-  static SplitStream& info() { return log(SB_INFO); }
-  static SplitStream& debug() { return log(SB_DEBUG); }
-  static const String& getLogPath() { return s_logger.m_logPath; }
+    static void setVerbosity(SBLogLevel level);
+    static void initWithLogDir(const String& logDir);
+    static void printLocation();
+    static SplitStream& log(SBLogLevel level);
+    static SplitStream& error() {
+        return log(SB_ERROR);
+    }
+    static SplitStream& warning() {
+        return log(SB_WARN);
+    }
+    static SplitStream& info() {
+        return log(SB_INFO);
+    }
+    static SplitStream& debug() {
+        return log(SB_DEBUG);
+    }
+    static const String& getLogPath() {
+        return s_logger.m_logPath;
+    }
 
-  // Functions for file tracking
-  static void registerWorkspace(const String& absPath);
-  static void registerProject(const String& absPath);
-  static void registerTargetDir(const String& absPath);
-  static void registerFile(const String& absPath);
-  static void writeTrackedFiles();
+    // Functions for file tracking
+    static void registerWorkspace(const String& absPath);
+    static void registerProject(const String& absPath);
+    static void registerTargetDir(const String& absPath);
+    static void registerFile(const String& absPath);
+    static void writeTrackedFiles();
 
 private:
-  SBLog();
-  SplitStream& getStreamForSeverity(SBLogLevel severity);
-  
-  SBLogLevel m_verbosity;
-  SplitStream m_errStream;
-  SplitStream m_logStream;
-  std::ofstream* m_logFile;
-  String m_logPath;
+    SBLog();
+    SplitStream& getStreamForSeverity(SBLogLevel severity);
 
-  // Contrainers for file tracking
-  StringSet m_workspacePaths;
-  StringSet m_projectPaths;
-  StringSet m_targetDirs;
-  StringSet m_miscFiles;
+    SBLogLevel m_verbosity;
+    SplitStream m_errStream;
+    SplitStream m_logStream;
+    std::ofstream* m_logFile;
+    String m_logPath;
 
-  static SplitStream s_nullStream;
-  static SBLog s_logger;
+    // Contrainers for file tracking
+    StringSet m_workspacePaths;
+    StringSet m_projectPaths;
+    StringSet m_targetDirs;
+    StringSet m_miscFiles;
+
+    static SplitStream s_nullStream;
+    static SBLog s_logger;
 };
 
 #endif /* _SBLOG_H_ */

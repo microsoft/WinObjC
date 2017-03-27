@@ -19,12 +19,11 @@
 #include "XMLFuncs.h"
 #include "ErrorReporter.h"
 
-void getXMLProperty(const pugi::xml_node& node, const String& propName, String& ret, GetterBehavior opt, const ErrorReporter& reporter)
-{
-  const pugi::xml_attribute attrib = node.attribute(propName.c_str());
+void getXMLProperty(const pugi::xml_node& node, const String& propName, String& ret, GetterBehavior opt, const ErrorReporter& reporter) {
+    const pugi::xml_attribute attrib = node.attribute(propName.c_str());
 
-  if (attrib)
-    ret = attrib.value();
-  else if (opt == VALUE_REQUIRED)
-    reporter.reportError("Failed reading \"" + propName + "\" property.");
+    if (attrib)
+        ret = attrib.value();
+    else if (opt == VALUE_REQUIRED)
+        reporter.reportError("Failed reading \"" + propName + "\" property.");
 }

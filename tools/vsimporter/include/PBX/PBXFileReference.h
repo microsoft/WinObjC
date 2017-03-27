@@ -21,19 +21,22 @@
 
 class PBXFileReference : public PBXFile {
 public:
-  virtual ~PBXFileReference();
-  virtual void resolvePointers() {}
-  virtual const String& getFileType() const { return m_fileType; }
-  
-  static PBXFileReference* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
-  
+    virtual ~PBXFileReference();
+    virtual void resolvePointers() {
+    }
+    virtual const String& getFileType() const {
+        return m_fileType;
+    }
+
+    static PBXFileReference* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
+
 private:
-  PBXFileReference();
-  virtual void initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
-  
-/* Start of serialized values */
-  String m_fileType;
-/* End of serialized values */
+    PBXFileReference();
+    virtual void initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
+
+    /* Start of serialized values */
+    String m_fileType;
+    /* End of serialized values */
 };
 
 #endif /* _PBXFILEREFERENCE_H_ */

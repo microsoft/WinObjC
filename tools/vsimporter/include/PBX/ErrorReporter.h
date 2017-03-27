@@ -22,19 +22,21 @@
 
 class ErrorReporter {
 public:
-  ErrorReporter(SBLogLevel defaultSeverity);
-  ErrorReporter(SBLogLevel defaultSeverity, const String& errContext);
-  virtual ~ErrorReporter();
-  virtual void reportError(const String& errorMessage) const;
-  virtual void reportError(const String& errorMessage, SBLogLevel severity) const;
-  void setContext(const String& errContext) { m_errorContext = errContext; }
+    ErrorReporter(SBLogLevel defaultSeverity);
+    ErrorReporter(SBLogLevel defaultSeverity, const String& errContext);
+    virtual ~ErrorReporter();
+    virtual void reportError(const String& errorMessage) const;
+    virtual void reportError(const String& errorMessage, SBLogLevel severity) const;
+    void setContext(const String& errContext) {
+        m_errorContext = errContext;
+    }
 
 protected:
-  SBLogLevel m_severity;
-  String m_errorContext;
+    SBLogLevel m_severity;
+    String m_errorContext;
 
 private:
-  ErrorReporter();
+    ErrorReporter();
 };
 
 #endif /* _ERRORREPORTER_H_ */

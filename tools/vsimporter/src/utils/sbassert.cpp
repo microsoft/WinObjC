@@ -20,30 +20,28 @@
 #include "sbassert.h"
 #include "..\WBITelemetry\WBITelemetry.h"
 
-void sbAssert(bool condition, const std::string& cause)
-{
-  if (!condition) {
-    if (!cause.empty())
-      SBLog::error() << cause << std::endl;
-    SBLog::printLocation();
+void sbAssert(bool condition, const std::string& cause) {
+    if (!condition) {
+        if (!cause.empty())
+            SBLog::error() << cause << std::endl;
+        SBLog::printLocation();
 #ifdef _DEBUG
-    abort();
+        abort();
 #else
-    // Due to issue 6715724, flush before exiting
-    TELEMETRY_FLUSH();
-    exit(EXIT_FAILURE);
+        // Due to issue 6715724, flush before exiting
+        TELEMETRY_FLUSH();
+        exit(EXIT_FAILURE);
 #endif
-  }
+    }
 }
 
-void sbValidate(bool condition, const std::string& cause)
-{
-  if (!condition) {
-    if (!cause.empty())
-      SBLog::error() << cause << std::endl;
-    SBLog::printLocation();
-    // Due to issue 6715724, flush before exiting
-    TELEMETRY_FLUSH();
-    exit(EXIT_FAILURE);
-  }
+void sbValidate(bool condition, const std::string& cause) {
+    if (!condition) {
+        if (!cause.empty())
+            SBLog::error() << cause << std::endl;
+        SBLog::printLocation();
+        // Due to issue 6715724, flush before exiting
+        TELEMETRY_FLUSH();
+        exit(EXIT_FAILURE);
+    }
 }

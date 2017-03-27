@@ -17,13 +17,16 @@
 #include "SBLog.h"
 #include "PBXFrameworksBuildPhase.h"
 
-PBXFrameworksBuildPhase::~PBXFrameworksBuildPhase() {}
+PBXFrameworksBuildPhase::~PBXFrameworksBuildPhase() {
+}
 
-PBXFrameworksBuildPhase::PBXFrameworksBuildPhase() {}
+PBXFrameworksBuildPhase::PBXFrameworksBuildPhase() {
+}
 
-PBXFrameworksBuildPhase* PBXFrameworksBuildPhase::createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc)
-{
-  PBXFrameworksBuildPhase* ret = new PBXFrameworksBuildPhase;
-  ret->initFromPlist(id, plist, pbxDoc);
-  return ret;
+PBXFrameworksBuildPhase* PBXFrameworksBuildPhase::createFromPlist(const String& id,
+                                                                  const Plist::dictionary_type& plist,
+                                                                  const PBXDocument* pbxDoc) {
+    PBXFrameworksBuildPhase* ret = new PBXFrameworksBuildPhase;
+    ret->initFromPlist(id, plist, pbxDoc);
+    return ret;
 }

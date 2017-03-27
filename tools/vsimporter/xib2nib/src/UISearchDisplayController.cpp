@@ -16,29 +16,24 @@
 
 #include "UISearchDisplayController.h"
 
-UISearchDisplayController::UISearchDisplayController()
-{
+UISearchDisplayController::UISearchDisplayController() {
 }
 
-void UISearchDisplayController::InitFromXIB(XIBObject *obj)
-{
+void UISearchDisplayController::InitFromXIB(XIBObject* obj) {
     ObjectConverterSwapper::InitFromXIB(obj);
 
     _outputClassName = "UISearchDisplayController";
 }
 
-void UISearchDisplayController::InitFromStory(XIBObject *obj)
-{
+void UISearchDisplayController::InitFromStory(XIBObject* obj) {
     ObjectConverterSwapper::InitFromStory(obj);
 
     _outputClassName = "UISearchDisplayController";
 }
 
-void UISearchDisplayController::Awaken()
-{
+void UISearchDisplayController::Awaken() {
 }
 
-void UISearchDisplayController::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UISearchDisplayController::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     ObjectConverterSwapper::ConvertStaticMappings(writer, obj);
 }

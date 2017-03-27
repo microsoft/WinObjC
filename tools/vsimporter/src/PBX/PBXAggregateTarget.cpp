@@ -17,13 +17,14 @@
 #include "SBLog.h"
 #include "PBXAggregateTarget.h"
 
-PBXAggregateTarget::~PBXAggregateTarget() {}
+PBXAggregateTarget::~PBXAggregateTarget() {
+}
 
-PBXAggregateTarget::PBXAggregateTarget() {}
+PBXAggregateTarget::PBXAggregateTarget() {
+}
 
-PBXAggregateTarget* PBXAggregateTarget::createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc)
-{
-  PBXAggregateTarget* ret = new PBXAggregateTarget;
-  ret->initFromPlist(id, plist, pbxDoc);
-  return ret;
+PBXAggregateTarget* PBXAggregateTarget::createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc) {
+    PBXAggregateTarget* ret = new PBXAggregateTarget;
+    ret->initFromPlist(id, plist, pbxDoc);
+    return ret;
 }

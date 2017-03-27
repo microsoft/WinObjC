@@ -23,17 +23,17 @@ typedef std::map<std::string, std::string> StringMap;
 
 class VSTemplateParameters {
 public:
-  VSTemplateParameters();
-  void setProjectName(const std::string& val);
-  void setPublisherName(const std::string& val);
-  void setTargetName(const std::string& val);
-  void setIsPackageable(const bool val);
-  void setPackageConfig(const std::string& val);
+    VSTemplateParameters();
+    void setProjectName(const std::string& val);
+    void setPublisherName(const std::string& val);
+    void setTargetName(const std::string& val);
+    void setIsPackageable(const bool val);
+    void setPackageConfig(const std::string& val);
 
-  void setValue(const std::string& key, const std::string& value);
-  const std::string& getValue(const std::string& key) const;
-  const StringMap& getValuesMap() const;
+    void setValue(const std::string& key, const std::string& value);
+    const std::string& getValue(const std::string& key) const;
+    const StringMap& getValuesMap() const;
 
 private:
-  StringMap m_params;
+    StringMap m_params;
 };

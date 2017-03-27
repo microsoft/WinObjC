@@ -20,25 +20,25 @@
 #include "types.h"
 
 namespace pugi {
-  class xml_document;
-  class xml_node;
+class xml_document;
+class xml_node;
 };
 
 class XCWorkspace {
 public:
-  static XCWorkspace* createFromFile(const String& workspacePath);
-  const String& getPath() const;
-  String getName() const;
-  const StringVec& getProjectPaths() const;
+    static XCWorkspace* createFromFile(const String& workspacePath);
+    const String& getPath() const;
+    String getName() const;
+    const StringVec& getProjectPaths() const;
 
 private:
-  XCWorkspace(const String& absWorkspacePath);
-  bool initFromXMLDoc(const pugi::xml_document& doc);
-  void processGroup(const pugi::xml_node& groupNode, const String& parentPath);
-  String extractLocation(const pugi::xml_node& node, const String& parentPath);
+    XCWorkspace(const String& absWorkspacePath);
+    bool initFromXMLDoc(const pugi::xml_document& doc);
+    void processGroup(const pugi::xml_node& groupNode, const String& parentPath);
+    String extractLocation(const pugi::xml_node& node, const String& parentPath);
 
-  String m_absPath;
-  StringVec m_projectPaths;
+    String m_absPath;
+    StringVec m_projectPaths;
 };
 
 #endif /* _XCWORKSPACE_H_ */

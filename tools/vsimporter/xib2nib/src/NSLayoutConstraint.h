@@ -19,28 +19,28 @@
 #include "ObjectConverter.h"
 
 enum {
-	NSLayoutPriorityRequired = 1000,
-	NSLayoutPriorityDefaultHigh = 750,
-	NSLayoutPriorityDragThatCanResizeWindow = 510,
-	NSLayoutPriorityWindowSizeStayPut = 500,
-	NSLayoutPriorityDragThatCannotResizeWindow = 490,
-	NSLayoutPriorityDefaultLow = 250,
-	NSLayoutPriorityFittingSizeCompression = 50,
+    NSLayoutPriorityRequired = 1000,
+    NSLayoutPriorityDefaultHigh = 750,
+    NSLayoutPriorityDragThatCanResizeWindow = 510,
+    NSLayoutPriorityWindowSizeStayPut = 500,
+    NSLayoutPriorityDragThatCannotResizeWindow = 490,
+    NSLayoutPriorityDefaultLow = 250,
+    NSLayoutPriorityFittingSizeCompression = 50,
 };
 typedef float NSLayoutPriority;
 
 typedef enum {
-	NSLayoutAttributeLeft = 1,
-	NSLayoutAttributeRight,
-	NSLayoutAttributeTop,
-	NSLayoutAttributeBottom,
-	NSLayoutAttributeLeading,
-	NSLayoutAttributeTrailing,
-	NSLayoutAttributeWidth,
-	NSLayoutAttributeHeight,
-	NSLayoutAttributeCenterX,
-	NSLayoutAttributeCenterY,
-	NSLayoutAttributeBaseline,
+    NSLayoutAttributeLeft = 1,
+    NSLayoutAttributeRight,
+    NSLayoutAttributeTop,
+    NSLayoutAttributeBottom,
+    NSLayoutAttributeLeading,
+    NSLayoutAttributeTrailing,
+    NSLayoutAttributeWidth,
+    NSLayoutAttributeHeight,
+    NSLayoutAttributeCenterX,
+    NSLayoutAttributeCenterY,
+    NSLayoutAttributeBaseline,
 
     NSLayoutAttributeLastBaseline = NSLayoutAttributeBaseline,
     NSLayoutAttributeFirstBaseline,
@@ -54,34 +54,33 @@ typedef enum {
     NSLayoutAttributeCenterXWithinMargins,
     NSLayoutAttributeCenterYWithinMargins,
 
-	NSLayoutAttributeNotAnAttribute = 0
+    NSLayoutAttributeNotAnAttribute = 0
 } NSLayoutAttribute;
 
 typedef enum {
-	NSLayoutRelationLessThanOrEqual = -1,
-	NSLayoutRelationEqual = 0,
-	NSLayoutRelationGreaterThanOrEqual = 1,
+    NSLayoutRelationLessThanOrEqual = -1,
+    NSLayoutRelationEqual = 0,
+    NSLayoutRelationGreaterThanOrEqual = 1,
 } NSLayoutRelation;
 
-class NSLayoutConstraint : public ObjectConverterSwapper 
-{
+class NSLayoutConstraint : public ObjectConverterSwapper {
 public:
-	XIBObject * _firstItem;
-	XIBObject * _secondItem;
-	int _firstAttribute;
-	int _secondAttribute;
-	int _relation;
-	float _multiplier;
-	float _priority;
-	float _constant;
-	float _symbolicConstant;
+    XIBObject* _firstItem;
+    XIBObject* _secondItem;
+    int _firstAttribute;
+    int _secondAttribute;
+    int _relation;
+    float _multiplier;
+    float _priority;
+    float _constant;
+    float _symbolicConstant;
     bool _hasSymbolicConstant;
 
 public:
-	NSLayoutConstraint();
+    NSLayoutConstraint();
 
-	virtual void InitFromXIB(XIBObject *obj);
-	virtual void InitFromStory(XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
     virtual void Awaken();
-	virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };

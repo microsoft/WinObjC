@@ -56,22 +56,22 @@ void UIFont::InitFromXIB(XIBObject* obj) {
     // This overrides "pointSize" and parent->"NSSize"
     if (nsFontDescriptor && nsFontDescriptor->FindMember("size")) {
         switch (nsFontDescriptor->FindMember("size")->intValue()) {
-        case 1: // Label size
-            _fontSize = c_labelFontSize;
-            break;
-        case 2: // Button size
-            _fontSize = c_buttonFontSize;
-            break;
-        case 3: // Small size
-            _fontSize = c_smallSystemFontSize;
-            break;
-        case 4: // System size
-            _fontSize = c_systemFontSize;
-            break;
-        default:
-            printf("Unhandled symbolic font size type: %s\n", nsFontDescriptor->FindMember("size")->stringValue());
-            assert(0);
-            break;
+            case 1: // Label size
+                _fontSize = c_labelFontSize;
+                break;
+            case 2: // Button size
+                _fontSize = c_buttonFontSize;
+                break;
+            case 3: // Small size
+                _fontSize = c_smallSystemFontSize;
+                break;
+            case 4: // System size
+                _fontSize = c_systemFontSize;
+                break;
+            default:
+                printf("Unhandled symbolic font size type: %s\n", nsFontDescriptor->FindMember("size")->stringValue());
+                assert(0);
+                break;
         }
     }
 
@@ -131,7 +131,7 @@ void UIFont::InitFromStory(XIBObject* obj) {
 
 void UIFont::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     ObjectConverter::ConvertStaticMappings(writer, obj);
-    
+
     AddString(writer, "UIFontName", _fontName);
     AddString(writer, "UIFontFamilyName", _fontFamilyName);
     AddOutputMember(writer, "UIFontPointSize", new XIBObjectDouble(_fontSize));

@@ -17,13 +17,14 @@
 #include "SBLog.h"
 #include "PBXVariantGroup.h"
 
-PBXVariantGroup::~PBXVariantGroup() {}
+PBXVariantGroup::~PBXVariantGroup() {
+}
 
-PBXVariantGroup::PBXVariantGroup() {}
+PBXVariantGroup::PBXVariantGroup() {
+}
 
-PBXVariantGroup* PBXVariantGroup::createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc)
-{
-  PBXVariantGroup* ret = new PBXVariantGroup;
-  ret->initFromPlist(id, plist, pbxDoc);
-  return ret;
+PBXVariantGroup* PBXVariantGroup::createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc) {
+    PBXVariantGroup* ret = new PBXVariantGroup;
+    ret->initFromPlist(id, plist, pbxDoc);
+    return ret;
 }

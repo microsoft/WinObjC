@@ -17,39 +17,33 @@
 #include "SimpleVariableCollection.h"
 #include <stdlib.h>
 
-void SimpleVariableCollection::insert(const String& varName, const String& varValue)
-{
-  m_vars[varName] = varValue;
+void SimpleVariableCollection::insert(const String& varName, const String& varValue) {
+    m_vars[varName] = varValue;
 }
 
-void SimpleVariableCollection::erase(const String& varName)
-{
-  m_vars.erase(varName);
+void SimpleVariableCollection::erase(const String& varName) {
+    m_vars.erase(varName);
 }
 
-String& SimpleVariableCollection::operator[](const String& varName)
-{
-  return m_vars[varName];
+String& SimpleVariableCollection::operator[](const String& varName) {
+    return m_vars[varName];
 }
 
-bool SimpleVariableCollection::getValue(const String& varName, String& ret) const
-{
-  StringMap::const_iterator it = m_vars.find(varName);
-  bool found = it != m_vars.end();
-  if (found)
-    ret = it->second;
-  return found;
+bool SimpleVariableCollection::getValue(const String& varName, String& ret) const {
+    StringMap::const_iterator it = m_vars.find(varName);
+    bool found = it != m_vars.end();
+    if (found)
+        ret = it->second;
+    return found;
 }
 
-void SimpleVariableCollection::getVariableSet(StringSet& ret) const
-{
-  StringMap::const_iterator it = m_vars.begin();
-  StringMap::const_iterator itEnd = m_vars.end();
-  for (; it != itEnd; it++)
-    ret.insert(it->first);
+void SimpleVariableCollection::getVariableSet(StringSet& ret) const {
+    StringMap::const_iterator it = m_vars.begin();
+    StringMap::const_iterator itEnd = m_vars.end();
+    for (; it != itEnd; it++)
+        ret.insert(it->first);
 }
 
-bool SimpleVariableCollection::empty() const
-{
-  return m_vars.empty();
+bool SimpleVariableCollection::empty() const {
+    return m_vars.empty();
 }

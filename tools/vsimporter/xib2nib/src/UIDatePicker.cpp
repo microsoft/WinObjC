@@ -17,25 +17,21 @@
 #include "UIDatePicker.h"
 #include <assert.h>
 
-UIDatePicker::UIDatePicker()
-{
+UIDatePicker::UIDatePicker() {
 }
 
-void UIDatePicker::InitFromXIB(XIBObject *obj)
-{
+void UIDatePicker::InitFromXIB(XIBObject* obj) {
     UIControl::InitFromXIB(obj);
 
     _outputClassName = "UIDatePicker";
 }
 
-void UIDatePicker::InitFromStory(XIBObject *obj)
-{
+void UIDatePicker::InitFromStory(XIBObject* obj) {
     UIControl::InitFromStory(obj);
 
     _outputClassName = "UIDatePicker";
 }
 
-void UIDatePicker::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UIDatePicker::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     UIControl::ConvertStaticMappings(writer, obj);
 }

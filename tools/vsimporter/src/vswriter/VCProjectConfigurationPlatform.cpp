@@ -17,36 +17,33 @@
 #include "VCProjectConfigurationPlatform.h"
 
 VCProjectConfigurationPlatform::VCProjectConfigurationPlatform(const std::string& name, const VCProjectConfiguration& parent)
-: m_name(name), m_parent(parent) {}
-
-const std::string& VCProjectConfigurationPlatform::getName() const
-{
-  return m_name;
+    : m_name(name), m_parent(parent) {
 }
 
-const VCProjectConfiguration& VCProjectConfigurationPlatform::getParent() const
-{
-  return m_parent;
+const std::string& VCProjectConfigurationPlatform::getName() const {
+    return m_name;
 }
 
-const StringMap& VCProjectConfigurationPlatform::getProperties() const
-{
-  return m_properties;
+const VCProjectConfiguration& VCProjectConfigurationPlatform::getParent() const {
+    return m_parent;
 }
 
-const ItemDefinitionsMap& VCProjectConfigurationPlatform::getItemDefinitions() const
-{
-  return m_itemDefinitions;
+const StringMap& VCProjectConfigurationPlatform::getProperties() const {
+    return m_properties;
 }
 
-void VCProjectConfigurationPlatform::setProperty(const std::string& name, const std::string& value)
-{
-  if (!name.empty())
-    m_properties[name] = value;
+const ItemDefinitionsMap& VCProjectConfigurationPlatform::getItemDefinitions() const {
+    return m_itemDefinitions;
 }
 
-void VCProjectConfigurationPlatform::setItemDefinition(const std::string& itemName, const std::string& propName, const std::string& propValue)
-{
-  if (!itemName.empty() && !propName.empty())
-    m_itemDefinitions[itemName][propName] = propValue;
+void VCProjectConfigurationPlatform::setProperty(const std::string& name, const std::string& value) {
+    if (!name.empty())
+        m_properties[name] = value;
+}
+
+void VCProjectConfigurationPlatform::setItemDefinition(const std::string& itemName,
+                                                       const std::string& propName,
+                                                       const std::string& propValue) {
+    if (!itemName.empty() && !propName.empty())
+        m_itemDefinitions[itemName][propName] = propValue;
 }

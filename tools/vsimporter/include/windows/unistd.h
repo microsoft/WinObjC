@@ -17,7 +17,7 @@
 #ifndef _COMPAT_UNISTD_H_
 #define _COMPAT_UNISTD_H_
 
-#ifdef __cplusplus 
+#ifdef __cplusplus
 extern "C" {
 #endif
 

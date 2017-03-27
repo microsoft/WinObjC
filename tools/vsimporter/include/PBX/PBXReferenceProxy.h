@@ -23,23 +23,27 @@ class PBXContainerItemProxy;
 
 class PBXReferenceProxy : public PBXFile {
 public:
-  virtual ~PBXReferenceProxy();
-  virtual void resolvePointers();
-  virtual const String& getFileType() const { return m_fileType; }
-  const PBXContainerItemProxy* getContainer() const { return m_remoteRefPtr; }
-  
-  static PBXReferenceProxy* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
-  
-private:
-  PBXReferenceProxy();
-  virtual void initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
-  
-/* Start of serialized values */
-  String m_fileType;
-  String m_remoteRefId;
-/* End of serialized values */
+    virtual ~PBXReferenceProxy();
+    virtual void resolvePointers();
+    virtual const String& getFileType() const {
+        return m_fileType;
+    }
+    const PBXContainerItemProxy* getContainer() const {
+        return m_remoteRefPtr;
+    }
 
-  const PBXContainerItemProxy* m_remoteRefPtr;
+    static PBXReferenceProxy* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
+
+private:
+    PBXReferenceProxy();
+    virtual void initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
+
+    /* Start of serialized values */
+    String m_fileType;
+    String m_remoteRefId;
+    /* End of serialized values */
+
+    const PBXContainerItemProxy* m_remoteRefPtr;
 };
 
 #endif /* _PBXREFERENCEPROXY_H_ */

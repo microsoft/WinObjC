@@ -16,33 +16,29 @@
 
 #include "UITableViewController.h"
 
-UITableViewController::UITableViewController()
-{
+UITableViewController::UITableViewController() {
 }
 
-void UITableViewController::InitFromXIB(XIBObject *obj)
-{
+void UITableViewController::InitFromXIB(XIBObject* obj) {
     UIViewController::InitFromXIB(obj);
 
     _outputClassName = "UITableViewController";
 }
 
-void UITableViewController::InitFromStory(XIBObject *obj)
-{
+void UITableViewController::InitFromStory(XIBObject* obj) {
     UIViewController::InitFromStory(obj);
 
     _outputClassName = "UITableViewController";
 }
 
-void UITableViewController::Awaken()
-{
+void UITableViewController::Awaken() {
     UIViewController::Awaken();
 
     UIRect frame = { 0, 0, 320, 416 };
-    if ( _view ) _view->setFrame(frame);
+    if (_view)
+        _view->setFrame(frame);
 }
 
-void UITableViewController::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UITableViewController::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     UIViewController::ConvertStaticMappings(writer, obj);
 }

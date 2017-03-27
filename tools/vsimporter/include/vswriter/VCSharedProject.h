@@ -20,21 +20,21 @@
 
 class VCSharedProject : public VCProject {
 public:
-  virtual ~VCSharedProject();
-  VCSharedProject(VSTemplateProject* projTemplate);
-  const std::string& getSharedId() const;
+    virtual ~VCSharedProject();
+    VCSharedProject(VSTemplateProject* projTemplate);
+    const std::string& getSharedId() const;
 
-  virtual VCProjectItem* addItem(const std::string& itemName, const std::string& includePath, const std::string& filterPath = "");
+    virtual VCProjectItem* addItem(const std::string& itemName, const std::string& includePath, const std::string& filterPath = "");
 
-  // These functions will do nothing
-  virtual void setUserMacro(const std::string& name, const std::string& value);
-  virtual void addProjectReference(const VCProject* refProj);
-  virtual void addSharedProject(const VCProject* sharedProj);
-  virtual VCProjectConfiguration* addConfiguration(const std::string& name);
-  virtual void addBuildExtension(const std::string& extension);
+    // These functions will do nothing
+    virtual void setUserMacro(const std::string& name, const std::string& value);
+    virtual void addProjectReference(const VCProject* refProj);
+    virtual void addSharedProject(const VCProject* sharedProj);
+    virtual VCProjectConfiguration* addConfiguration(const std::string& name);
+    virtual void addBuildExtension(const std::string& extension);
 
 protected:
-  virtual bool writeProject() const;
+    virtual bool writeProject() const;
 
-  std::string m_sharedId;
+    std::string m_sharedId;
 };

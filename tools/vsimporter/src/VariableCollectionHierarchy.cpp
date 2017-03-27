@@ -19,88 +19,75 @@
 #include "XCVariableExpander.h"
 #include "tokenizer.h"
 
-String VariableCollectionHierarchy::expand(const String& str) const
-{
-  XCVariableExpander varExpander(*this, size()); // XCVariableExpander uses one-based indexing
-  String val;
-  varExpander.expandString(str, val);
-  return val;
+String VariableCollectionHierarchy::expand(const String& str) const {
+    XCVariableExpander varExpander(*this, size()); // XCVariableExpander uses one-based indexing
+    String val;
+    varExpander.expandString(str, val);
+    return val;
 }
 
-String VariableCollectionHierarchy::getValue(const String& varName) const
-{
-  return getValue(varName, size() - 1);
+String VariableCollectionHierarchy::getValue(const String& varName) const {
+    return getValue(varName, size() - 1);
 }
 
-String VariableCollectionHierarchy::getValue(const String& varName, size_t searchLevel) const
-{
-  String val;
-  getValue(varName, searchLevel, val);
-  return val;
+String VariableCollectionHierarchy::getValue(const String& varName, size_t searchLevel) const {
+    String val;
+    getValue(varName, searchLevel, val);
+    return val;
 }
 
-bool VariableCollectionHierarchy::getValue(const String& varName, String& ret) const
-{
-  return getValue(varName, size() - 1, ret);
+bool VariableCollectionHierarchy::getValue(const String& varName, String& ret) const {
+    return getValue(varName, size() - 1, ret);
 }
 
-bool VariableCollectionHierarchy::getValue(const String& varName, size_t searchLevel, String& ret) const
-{
-  if (searchLevel >= size())
-    return false;
+bool VariableCollectionHierarchy::getValue(const String& varName, size_t searchLevel, String& ret) const {
+    if (searchLevel >= size())
+        return false;
 
-  XCVariableExpander varExpander(*this, searchLevel + 1); // XCVariableExpander uses one-based indexing
-  return varExpander.getExpandedValue(varName, ret);
+    XCVariableExpander varExpander(*this, searchLevel + 1); // XCVariableExpander uses one-based indexing
+    return varExpander.getExpandedValue(varName, ret);
 }
 
-bool VariableCollectionHierarchy::getValue(const String& varName, StringVec& ret) const
-{
-  return getValue(varName, size() - 1, ret);
+bool VariableCollectionHierarchy::getValue(const String& varName, StringVec& ret) const {
+    return getValue(varName, size() - 1, ret);
 }
 
-bool VariableCollectionHierarchy::getValue(const String& varName, size_t searchLevel, StringVec& ret) const
-{
-  String val;
-  bool found = getValue(varName, searchLevel, val);
-  tokenize(val, ret, " \t", "", "\"'", "", "", true, false);
-  return found;
+bool VariableCollectionHierarchy::getValue(const String& varName, size_t searchLevel, StringVec& ret) const {
+    String val;
+    bool found = getValue(varName, searchLevel, val);
+    tokenize(val, ret, " \t", "", "\"'", "", "", true, false);
+    return found;
 }
 
-void VariableCollectionHierarchy::push_back(const VariableCollection& vc)
-{
-  m_vcs.push_back(&vc);
+void VariableCollectionHierarchy::push_back(const VariableCollection& vc) {
+    m_vcs.push_back(&vc);
 }
 
-void VariableCollectionHierarchy::pop_back()
-{
-  m_vcs.pop_back();
+void VariableCollectionHierarchy::pop_back() {
+    m_vcs.pop_back();
 }
 
-const VariableCollection& VariableCollectionHierarchy::operator[](size_t level) const
-{
-  return *m_vcs[level];
+const VariableCollection& VariableCollectionHierarchy::operator[](size_t level) const {
+    return *m_vcs[level];
 }
 
-size_t VariableCollectionHierarchy::size() const
-{
-  return m_vcs.size();
+size_t VariableCollectionHierarchy::size() const {
+    return m_vcs.size();
 }
 
-void VariableCollectionHierarchy::getVariableSet(StringSet& ret) const
-{
-  for (size_t i = 0; i < m_vcs.size(); i++)
-    m_vcs[i]->getVariableSet(ret);
+void VariableCollectionHierarchy::getVariableSet(StringSet& ret) const {
+    for (size_t i = 0; i < m_vcs.size(); i++)
+        m_vcs[i]->getVariableSet(ret);
 }
 
-void VariableCollectionHierarchy::print(const VarPrintFunc& pf) const
-{
-  StringSet varSet;
-  getVariableSet(varSet);
+void VariableCollectionHierarchy::print(const VarPrintFunc& pf) const {
+    StringSet varSet;
+    getVariableSet(varSet);
 
-  String tst = getValue("GCC_PREPROCESSOR_DEFINITIONS");
- 
-  StringSet::iterator varsIt = varSet.begin();
-  for (; varsIt != varSet.end(); ++varsIt) {
-    pf.print(*varsIt, getValue(*varsIt));
-  }
+    String tst = getValue("GCC_PREPROCESSOR_DEFINITIONS");
+
+    StringSet::iterator varsIt = varSet.begin();
+    for (; varsIt != varSet.end(); ++varsIt) {
+        pf.print(*varsIt, getValue(*varsIt));
+    }
 }

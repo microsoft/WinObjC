@@ -22,31 +22,35 @@
 
 class SplitStream {
 public:
-  SplitStream() {}
-  SplitStream(std::ostream& s) : m_ostreams(1, &s) {}
-  void addStream(std::ostream& s) { m_ostreams.push_back(&s); }
-  void clear() { m_ostreams.clear(); }
+    SplitStream() {
+    }
+    SplitStream(std::ostream& s) : m_ostreams(1, &s) {
+    }
+    void addStream(std::ostream& s) {
+        m_ostreams.push_back(&s);
+    }
+    void clear() {
+        m_ostreams.clear();
+    }
 
-  SplitStream& operator<<(std::ostream& (*sfun)(std::ostream&))
-  {
-    for (OStreamVecIt it = m_ostreams.begin(); it != m_ostreams.end(); ++it)
-      sfun(**it);
-    return *this;
-  }
+    SplitStream& operator<<(std::ostream& (*sfun)(std::ostream&)) {
+        for (OStreamVecIt it = m_ostreams.begin(); it != m_ostreams.end(); ++it)
+            sfun(**it);
+        return *this;
+    }
 
-  template <class T>
-  inline SplitStream& operator<<(T val)
-  {
-    for (OStreamVecIt it = m_ostreams.begin(); it != m_ostreams.end(); ++it)
-      **it << val;
-    return *this;
-  }
+    template <class T>
+    inline SplitStream& operator<<(T val) {
+        for (OStreamVecIt it = m_ostreams.begin(); it != m_ostreams.end(); ++it)
+            **it << val;
+        return *this;
+    }
 
 private:
-  typedef std::vector<std::ostream*> OStreamVec;
-  typedef OStreamVec::iterator OStreamVecIt;
+    typedef std::vector<std::ostream*> OStreamVec;
+    typedef OStreamVec::iterator OStreamVecIt;
 
-  OStreamVec m_ostreams;
+    OStreamVec m_ostreams;
 };
 
 #endif /* _SPLITSTREAM_H_ */

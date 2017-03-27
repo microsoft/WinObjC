@@ -16,14 +16,11 @@
 
 #pragma once
 #include "UIView.h"
-class UIImageView :
-    public UIView
-{
+class UIImageView : public UIView {
 public:
-	XIBObject *_image;
-	UIImageView();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    XIBObject* _image;
+    UIImageView();
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };
-

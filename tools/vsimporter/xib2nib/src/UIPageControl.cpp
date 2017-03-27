@@ -17,25 +17,21 @@
 #include "UIPageControl.h"
 #include <assert.h>
 
-UIPageControl::UIPageControl()
-{
+UIPageControl::UIPageControl() {
 }
 
-void UIPageControl::InitFromXIB(XIBObject *obj)
-{
+void UIPageControl::InitFromXIB(XIBObject* obj) {
     UIControl::InitFromXIB(obj);
 
     _outputClassName = "UIPageControl";
 }
 
-void UIPageControl::InitFromStory(XIBObject *obj)
-{
+void UIPageControl::InitFromStory(XIBObject* obj) {
     UIControl::InitFromStory(obj);
 
     _outputClassName = "UIPageControl";
 }
 
-void UIPageControl::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UIPageControl::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     UIControl::ConvertStaticMappings(writer, obj);
 }

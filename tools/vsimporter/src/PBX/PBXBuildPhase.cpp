@@ -20,21 +20,21 @@
 #include "PBXBuildFile.h"
 #include "PBXObjectIdConvert.h"
 
-PBXBuildPhase::~PBXBuildPhase() {}
-
-PBXBuildPhase::PBXBuildPhase() {}
-
-void PBXBuildPhase::initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc)
-{
-  // Call super init
-  PBXObject::initFromPlist(id, plist, pbxDoc);
-  
-  // Get files
-  getStringVectorForKey(plist, "files", m_fileIds, VALUE_REQUIRED, m_parseER);
+PBXBuildPhase::~PBXBuildPhase() {
 }
 
-void PBXBuildPhase::resolvePointers()
-{
-  // Get files ptrs
-  convertObjectIdList(m_pbxDoc, m_fileIds, m_filePtrs);
+PBXBuildPhase::PBXBuildPhase() {
+}
+
+void PBXBuildPhase::initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc) {
+    // Call super init
+    PBXObject::initFromPlist(id, plist, pbxDoc);
+
+    // Get files
+    getStringVectorForKey(plist, "files", m_fileIds, VALUE_REQUIRED, m_parseER);
+}
+
+void PBXBuildPhase::resolvePointers() {
+    // Get files ptrs
+    convertObjectIdList(m_pbxDoc, m_fileIds, m_filePtrs);
 }

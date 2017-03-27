@@ -16,25 +16,21 @@
 
 #include "UIProgressView.h"
 
-UIProgressView::UIProgressView()
-{
+UIProgressView::UIProgressView() {
 }
 
-void UIProgressView::InitFromXIB(XIBObject *obj)
-{
+void UIProgressView::InitFromXIB(XIBObject* obj) {
     UIView::InitFromXIB(obj);
 
     _outputClassName = "UIProgressView";
 }
 
-void UIProgressView::InitFromStory(XIBObject *obj)
-{
+void UIProgressView::InitFromStory(XIBObject* obj) {
     UIView::InitFromStory(obj);
 
     _outputClassName = "UIProgressView";
 }
 
-void UIProgressView::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UIProgressView::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     UIView::ConvertStaticMappings(writer, obj);
 }

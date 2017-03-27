@@ -16,13 +16,10 @@
 
 #pragma once
 #include "UIView.h"
-class UIStepper :
-    public UIView
-{
+class UIStepper : public UIView {
 public:
     UIStepper();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };
-

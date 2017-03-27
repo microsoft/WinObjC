@@ -16,14 +16,12 @@
 
 #include "UIWindow.h"
 
-UIWindow::UIWindow()
-{
+UIWindow::UIWindow() {
     _visibleAtLaunch = false;
     _resizesToFullScreen = false;
 }
 
-void UIWindow::InitFromXIB(XIBObject *obj)
-{
+void UIWindow::InitFromXIB(XIBObject* obj) {
     UIView::InitFromXIB(obj);
 
     _visibleAtLaunch = obj->GetBool("IBUIVisibleAtLaunch", false);
@@ -32,8 +30,7 @@ void UIWindow::InitFromXIB(XIBObject *obj)
     _outputClassName = "UIWindow";
 }
 
-void UIWindow::InitFromStory(XIBObject* obj)
-{
+void UIWindow::InitFromStory(XIBObject* obj) {
     UIView::InitFromStory(obj);
 
     const char* visibleAtLaunchAttrib = getAttrib("visibleAtLaunch");
@@ -49,8 +46,7 @@ void UIWindow::InitFromStory(XIBObject* obj)
     _outputClassName = "UIWindow";
 }
 
-void UIWindow::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UIWindow::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     UIView::ConvertStaticMappings(writer, obj);
 
     // NOTE: There is difficulty confirming these keys are correct - NIB files generated were not conclusive in confirming these

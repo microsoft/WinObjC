@@ -16,63 +16,53 @@
 
 #include "UICollectionViewCell.h"
 
-UICollectionReusableView::UICollectionReusableView()
-{
+UICollectionReusableView::UICollectionReusableView() {
 }
 
-void UICollectionReusableView::InitFromXIB(XIBObject *obj)
-{
+void UICollectionReusableView::InitFromXIB(XIBObject* obj) {
     UIView::InitFromXIB(obj);
 
     obj->_outputClassName = "UICollectionReusableView";
 }
 
-void UICollectionReusableView::InitFromStory(XIBObject *obj)
-{
+void UICollectionReusableView::InitFromStory(XIBObject* obj) {
     UIView::InitFromStory(obj);
 
     obj->_outputClassName = "UICollectionReusableView";
 }
 
-void UICollectionReusableView::Awaken()
-{
+void UICollectionReusableView::Awaken() {
     UIView::Awaken();
 }
 
-void UICollectionReusableView::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UICollectionReusableView::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     writer->_allUIObjects->AddMember(NULL, this);
 
     UIView::ConvertStaticMappings(writer, obj);
 }
 
-ObjectConverter *UICollectionReusableView::Clone()
-{
+ObjectConverter* UICollectionReusableView::Clone() {
     return new UICollectionReusableView();
 }
 
-UICollectionViewCell::UICollectionViewCell()
-{
+UICollectionViewCell::UICollectionViewCell() {
 }
 
-void UICollectionViewCell::InitFromXIB(XIBObject *obj)
-{
+void UICollectionViewCell::InitFromXIB(XIBObject* obj) {
     UICollectionReusableView::InitFromXIB(obj);
 
     obj->_outputClassName = "UICollectionViewCell";
-    _contentView = (UIView *)obj->FindMember("IBUIContentView");
+    _contentView = (UIView*)obj->FindMember("IBUIContentView");
 }
 
-void UICollectionViewCell::InitFromStory(XIBObject *obj)
-{
+void UICollectionViewCell::InitFromStory(XIBObject* obj) {
     UICollectionReusableView::InitFromStory(obj);
 
     obj->_outputClassName = "UICollectionViewCell";
-    _contentView = (UIView *)obj->FindMember("contentView");
+    _contentView = (UIView*)obj->FindMember("contentView");
 }
 
-void UICollectionViewCell::Awaken()
-{
+void UICollectionViewCell::Awaken() {
     UICollectionReusableView::Awaken();
     if (_contentView) {
         _contentView->_clipsToBounds = false;
@@ -82,16 +72,15 @@ void UICollectionViewCell::Awaken()
     }
 }
 
-void UICollectionViewCell::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UICollectionViewCell::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     writer->_allUIObjects->AddMember(NULL, this);
     if (_contentView) {
         _contentView->setFrame(getFrame());
         _contentView->_opaque = true;
         int count = _contentView->_subviews->count();
         for (int i = 0; i < count; i++) {
-            UIView *curObj = (UIView *)_contentView->_subviews->objectAtIndex(i);
-            //curObj->_bounds.height  = _contentView->_bounds.height;
+            UIView* curObj = (UIView*)_contentView->_subviews->objectAtIndex(i);
+            // curObj->_bounds.height  = _contentView->_bounds.height;
             writer->_allUIObjects->AddMember(NULL, curObj);
         }
         _contentView->_ignoreUIObject = true;
@@ -104,7 +93,6 @@ void UICollectionViewCell::ConvertStaticMappings(NIBWriter *writer, XIBObject *o
     }
 }
 
-ObjectConverter *UICollectionViewCell::Clone()
-{
+ObjectConverter* UICollectionViewCell::Clone() {
     return new UICollectionViewCell();
 }

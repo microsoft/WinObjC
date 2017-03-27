@@ -16,25 +16,21 @@
 
 #include "MKMapView.h"
 
-MKMapView::MKMapView()
-{
+MKMapView::MKMapView() {
 }
 
-void MKMapView::InitFromXIB(XIBObject *obj)
-{
+void MKMapView::InitFromXIB(XIBObject* obj) {
     UIView::InitFromXIB(obj);
 
     _outputClassName = "MKMapView";
 }
 
-void MKMapView::InitFromStory(XIBObject *obj)
-{
+void MKMapView::InitFromStory(XIBObject* obj) {
     UIView::InitFromStory(obj);
 
     _outputClassName = "MKMapView";
 }
 
-void MKMapView::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void MKMapView::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     UIView::ConvertStaticMappings(writer, obj);
 }

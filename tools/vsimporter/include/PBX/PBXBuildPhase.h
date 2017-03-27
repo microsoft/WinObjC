@@ -25,21 +25,23 @@ typedef std::vector<PBXBuildFile*> BuildFileList;
 
 class PBXBuildPhase : public PBXObject {
 public:
-  virtual ~PBXBuildPhase() = 0;
-  virtual void resolvePointers();
-  const BuildFileList& getBuildFileList() const { return m_filePtrs; }
-  
-  static PBXBuildPhase* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
+    virtual ~PBXBuildPhase() = 0;
+    virtual void resolvePointers();
+    const BuildFileList& getBuildFileList() const {
+        return m_filePtrs;
+    }
+
+    static PBXBuildPhase* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
 
 protected:
-  PBXBuildPhase();
-  virtual void initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
+    PBXBuildPhase();
+    virtual void initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
 
-/* Start of serialized values */
-  StringVec m_fileIds;
-/* End of serialized values */
+    /* Start of serialized values */
+    StringVec m_fileIds;
+    /* End of serialized values */
 
-  BuildFileList m_filePtrs;
+    BuildFileList m_filePtrs;
 };
 
 #endif /* _PBXBUILDPHASE_H_ */

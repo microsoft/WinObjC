@@ -16,25 +16,21 @@
 
 #include "UIStepper.h"
 
-UIStepper::UIStepper()
-{
+UIStepper::UIStepper() {
 }
 
-void UIStepper::InitFromXIB(XIBObject *obj)
-{
+void UIStepper::InitFromXIB(XIBObject* obj) {
     UIView::InitFromXIB(obj);
 
     _outputClassName = "UIStepper";
 }
 
-void UIStepper::InitFromStory(XIBObject *obj)
-{
+void UIStepper::InitFromStory(XIBObject* obj) {
     UIView::InitFromStory(obj);
 
     _outputClassName = "UIStepper";
 }
 
-void UIStepper::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UIStepper::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     UIView::ConvertStaticMappings(writer, obj);
 }

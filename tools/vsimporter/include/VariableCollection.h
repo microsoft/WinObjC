@@ -21,26 +21,28 @@
 
 class VarPrintFunc {
 public:
-  virtual ~VarPrintFunc() {}
-  virtual void print(const String& varName, const String& varValue) const = 0;
+    virtual ~VarPrintFunc() {
+    }
+    virtual void print(const String& varName, const String& varValue) const = 0;
 };
 
 class VariableCollection {
 public:
-  virtual ~VariableCollection() {}
+    virtual ~VariableCollection() {
+    }
 
-  void insert(const VariableCollection& vc);
-  void insert(const StringPair& keyVal);
-  virtual void insert(const String& varName, const String& varValue) = 0;
-  virtual void erase(const String& varName) = 0;
+    void insert(const VariableCollection& vc);
+    void insert(const StringPair& keyVal);
+    virtual void insert(const String& varName, const String& varValue) = 0;
+    virtual void erase(const String& varName) = 0;
 
-  virtual String getValue(const String& varName) const;
-  virtual bool getValue(const String& varName, String& ret) const = 0;
+    virtual String getValue(const String& varName) const;
+    virtual bool getValue(const String& varName, String& ret) const = 0;
 
-  virtual bool empty() const = 0;
-  virtual bool isSet(const String& varName) const;
-  virtual void getVariableSet(StringSet& ret) const = 0;
-  virtual void print(const VarPrintFunc& pf) const;
+    virtual bool empty() const = 0;
+    virtual bool isSet(const String& varName) const;
+    virtual void getVariableSet(StringSet& ret) const = 0;
+    virtual void print(const VarPrintFunc& pf) const;
 };
 
 #endif /* _VARIABLECOLLECTION_H_ */

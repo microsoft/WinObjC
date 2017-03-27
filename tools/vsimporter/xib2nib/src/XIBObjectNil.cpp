@@ -20,13 +20,10 @@ bool XIBObjectNil::NeedsSerialization() {
     return false;
 }
 
-bool XIBObjectNil::isNil()
-{
+bool XIBObjectNil::isNil() {
     return true;
 }
 
-void XIBObjectNil::WriteData(NIBWriter *writer)
-{
+void XIBObjectNil::WriteData(NIBWriter* writer) {
     writer->WriteByte(NIBOBJ_NULL);
 }
-

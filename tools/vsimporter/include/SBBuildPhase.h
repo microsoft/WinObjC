@@ -28,16 +28,18 @@ typedef std::vector<SBBuildPhase*> SBBuildPhaseList;
 
 class SBBuildPhase {
 public:
-  static void create(const BuildPhaseList& buildPhaseList, SBTarget& parentTarget, SBBuildPhaseList& ret);
-  virtual ~SBBuildPhase() {}
-  virtual void writeVCProjectFiles(VCProject& proj) const {}
+    static void create(const BuildPhaseList& buildPhaseList, SBTarget& parentTarget, SBBuildPhaseList& ret);
+    virtual ~SBBuildPhase() {
+    }
+    virtual void writeVCProjectFiles(VCProject& proj) const {
+    }
 
 protected:
-  SBBuildPhase(const PBXBuildPhase* phase, const SBTarget& parentTarget);
-  void writeVSFileDescriptions(VCProject& proj, const String& defaultGroup) const;
+    SBBuildPhase(const PBXBuildPhase* phase, const SBTarget& parentTarget);
+    void writeVSFileDescriptions(VCProject& proj, const String& defaultGroup) const;
 
-  const PBXBuildPhase* m_phase;
-  const SBTarget& m_parentTarget;
+    const PBXBuildPhase* m_phase;
+    const SBTarget& m_parentTarget;
 };
 
 #endif /* _SBBUILDPHASE_H_ */

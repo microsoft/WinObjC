@@ -23,7 +23,7 @@ struct EdgeInsets {
     float bottom;
     float right;
 
-    EdgeInsets() : top (INFINITY), left(INFINITY), bottom(INFINITY), right(INFINITY) {
+    EdgeInsets() : top(INFINITY), left(INFINITY), bottom(INFINITY), right(INFINITY) {
     }
 
     bool IsValid() {
@@ -32,12 +32,10 @@ struct EdgeInsets {
 };
 
 class UIFont;
-class UIButton :
-    public UIControl
-{
+class UIButton : public UIControl {
 public:
     int _buttonType;
-    UIFont *_font;
+    UIFont* _font;
     XIBObject* _statefulContent;
     bool _adjustsImageWhenHighlighted;
     bool _adjustsImageWhenDisabled;
@@ -46,9 +44,8 @@ public:
     EdgeInsets _titleEdgeInsets;
 
     UIButton();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
-    void WriteStatefulContent(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
+    void WriteStatefulContent(NIBWriter* writer, XIBObject* obj);
 };
-

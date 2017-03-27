@@ -18,28 +18,30 @@
 #include "SBLog.h"
 #include "PBXCopyFilesBuildPhase.h"
 
-PBXCopyFilesBuildPhase::~PBXCopyFilesBuildPhase() {}
-
-PBXCopyFilesBuildPhase::PBXCopyFilesBuildPhase() {}
-
-PBXCopyFilesBuildPhase* PBXCopyFilesBuildPhase::createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc)
-{
-  PBXCopyFilesBuildPhase* ret = new PBXCopyFilesBuildPhase;
-  ret->initFromPlist(id, plist, pbxDoc);
-  return ret;
+PBXCopyFilesBuildPhase::~PBXCopyFilesBuildPhase() {
 }
 
-void PBXCopyFilesBuildPhase::initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc)
-{
-  // Call super init
-  PBXBuildPhase::initFromPlist(id, plist, pbxDoc);
-  
-  // Get name
-  getStringForKey(plist, "name", m_name, VALUE_OPTIONAL, m_parseER);
+PBXCopyFilesBuildPhase::PBXCopyFilesBuildPhase() {
+}
 
-  // Get dstPath
-  getStringForKey(plist, "dstPath", m_dstPath, VALUE_REQUIRED, m_parseER);
-  
-  // Get dstSubfolderSpec
-  m_dstSubfolderSpec = getIntForKey(plist, "dstSubfolderSpec", VALUE_REQUIRED, m_parseER);
+PBXCopyFilesBuildPhase* PBXCopyFilesBuildPhase::createFromPlist(const String& id,
+                                                                const Plist::dictionary_type& plist,
+                                                                const PBXDocument* pbxDoc) {
+    PBXCopyFilesBuildPhase* ret = new PBXCopyFilesBuildPhase;
+    ret->initFromPlist(id, plist, pbxDoc);
+    return ret;
+}
+
+void PBXCopyFilesBuildPhase::initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc) {
+    // Call super init
+    PBXBuildPhase::initFromPlist(id, plist, pbxDoc);
+
+    // Get name
+    getStringForKey(plist, "name", m_name, VALUE_OPTIONAL, m_parseER);
+
+    // Get dstPath
+    getStringForKey(plist, "dstPath", m_dstPath, VALUE_REQUIRED, m_parseER);
+
+    // Get dstSubfolderSpec
+    m_dstSubfolderSpec = getIntForKey(plist, "dstSubfolderSpec", VALUE_REQUIRED, m_parseER);
 }

@@ -19,14 +19,12 @@
 
 class UIFont;
 
-class UITextView :
-    public UIScrollView
-{
+class UITextView : public UIScrollView {
 private:
     CGSize _shadowOffset;
-    const char *_text;
-    XIBObject *_textColor;
-    UIFont *_font;
+    const char* _text;
+    XIBObject* _textColor;
+    UIFont* _font;
     int _textAlignment;
     bool _editable;
     int _dataDetectorTypes;
@@ -36,8 +34,7 @@ private:
 
 public:
     UITextView();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
-    virtual void UITextView::InitFromStory(XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
+    virtual void UITextView::InitFromStory(XIBObject* obj);
 };
-

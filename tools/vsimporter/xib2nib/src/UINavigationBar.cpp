@@ -16,33 +16,32 @@
 
 #include "UINavigationBar.h"
 
-UINavigationBar::UINavigationBar()
-{
+UINavigationBar::UINavigationBar() {
     _barStyle = 0;
     _delegate = NULL;
     _items = NULL;
 }
 
-void UINavigationBar::InitFromXIB(XIBObject *obj)
-{
+void UINavigationBar::InitFromXIB(XIBObject* obj) {
     UIView::InitFromXIB(obj);
 
     _barStyle = GetInt("IBUIBarStyle", 0);
-    _items = (XIBArray *) obj->FindMember("IBUIItems");
+    _items = (XIBArray*)obj->FindMember("IBUIItems");
     _outputClassName = "UINavigationBar";
 }
 
-void UINavigationBar::InitFromStory(XIBObject *obj)
-{
+void UINavigationBar::InitFromStory(XIBObject* obj) {
     UIView::InitFromStory(obj);
 
     _outputClassName = "UINavigationBar";
 }
 
-void UINavigationBar::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UINavigationBar::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     UIView::ConvertStaticMappings(writer, obj);
-    if ( _items ) AddOutputMember(writer, "UIItems", _items);
-    if ( _delegate ) AddOutputMember(writer, "UIDelegate", _delegate);
-    if ( _barStyle != 0 ) AddInt(writer, "UIBarStyle", _barStyle);
+    if (_items)
+        AddOutputMember(writer, "UIItems", _items);
+    if (_delegate)
+        AddOutputMember(writer, "UIDelegate", _delegate);
+    if (_barStyle != 0)
+        AddInt(writer, "UIBarStyle", _barStyle);
 }

@@ -19,34 +19,34 @@
 #include "utils.h"
 #include "PBXBuildRule.h"
 
-PBXBuildRule::~PBXBuildRule() {}
-
-PBXBuildRule::PBXBuildRule() {}
-
-PBXBuildRule* PBXBuildRule::createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc)
-{
-  PBXBuildRule* ret = new PBXBuildRule;
-  ret->initFromPlist(id, plist, pbxDoc);
-  return ret;
+PBXBuildRule::~PBXBuildRule() {
 }
 
-void PBXBuildRule::initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc)
-{
-  // Call super init
-  PBXObject::initFromPlist(id, plist, pbxDoc);
-  
-  // Get compilerSpec
-  getStringForKey(plist, "compilerSpec", m_compilerSpec, VALUE_REQUIRED, m_parseER);
-  
-  // Get filePatterns
-  getStringForKey(plist, "filePatterns", m_filePatterns, VALUE_OPTIONAL, m_parseER);
-  
-  // Get fileType
-  getStringForKey(plist, "fileType", m_fileType, VALUE_REQUIRED, m_parseER);
-  
-  // Get outputFiles
-  getStringVectorForKey(plist, "outputFiles", m_outputFiles, VALUE_REQUIRED, m_parseER);
-  
-  // Get script
-  getStringForKey(plist, "script", m_script, VALUE_OPTIONAL, m_parseER);
+PBXBuildRule::PBXBuildRule() {
+}
+
+PBXBuildRule* PBXBuildRule::createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc) {
+    PBXBuildRule* ret = new PBXBuildRule;
+    ret->initFromPlist(id, plist, pbxDoc);
+    return ret;
+}
+
+void PBXBuildRule::initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc) {
+    // Call super init
+    PBXObject::initFromPlist(id, plist, pbxDoc);
+
+    // Get compilerSpec
+    getStringForKey(plist, "compilerSpec", m_compilerSpec, VALUE_REQUIRED, m_parseER);
+
+    // Get filePatterns
+    getStringForKey(plist, "filePatterns", m_filePatterns, VALUE_OPTIONAL, m_parseER);
+
+    // Get fileType
+    getStringForKey(plist, "fileType", m_fileType, VALUE_REQUIRED, m_parseER);
+
+    // Get outputFiles
+    getStringVectorForKey(plist, "outputFiles", m_outputFiles, VALUE_REQUIRED, m_parseER);
+
+    // Get script
+    getStringForKey(plist, "script", m_script, VALUE_OPTIONAL, m_parseER);
 }

@@ -22,58 +22,54 @@
 #include "PBXFileReference.h"
 #include "PBXObjectIdConvert.h"
 
-PBXContainerItemProxy::~PBXContainerItemProxy() {}
-
-PBXContainerItemProxy::PBXContainerItemProxy()
-  : m_projectPortalPtr(NULL),
-    m_filePortalPtr(NULL)
-{}
-
-PBXContainerItemProxy* PBXContainerItemProxy::createFromPlist(const String& id, const Plist::dictionary_type& dict, const PBXDocument* pbxDoc)
-{
-  PBXContainerItemProxy* ret = new PBXContainerItemProxy;
-  ret->initFromPlist(id, dict, pbxDoc);
-  return ret;
+PBXContainerItemProxy::~PBXContainerItemProxy() {
 }
 
-void PBXContainerItemProxy::initFromPlist(const String& id, const Plist::dictionary_type& dict, const PBXDocument* pbxDoc)
-{
-  // Call super init
-  PBXObject::initFromPlist(id, dict, pbxDoc);
-  
-  // Get containerPortal
-  getStringForKey(dict, "containerPortal", m_containerPortalId, VALUE_REQUIRED, m_parseER);
-  
-  // Get remoteGlobalIDString
-  getStringForKey(dict, "remoteGlobalIDString", m_remoteGlobalIDString, VALUE_REQUIRED, m_parseER);
+PBXContainerItemProxy::PBXContainerItemProxy() : m_projectPortalPtr(NULL), m_filePortalPtr(NULL) {
 }
 
-void PBXContainerItemProxy::resolvePointers()
-{
-  // Get containerPortal ptrs
-  convertObjectId(m_pbxDoc, m_containerPortalId, m_projectPortalPtr);
-  convertObjectId(m_pbxDoc, m_containerPortalId, m_filePortalPtr);
+PBXContainerItemProxy* PBXContainerItemProxy::createFromPlist(const String& id,
+                                                              const Plist::dictionary_type& dict,
+                                                              const PBXDocument* pbxDoc) {
+    PBXContainerItemProxy* ret = new PBXContainerItemProxy;
+    ret->initFromPlist(id, dict, pbxDoc);
+    return ret;
 }
 
-String PBXContainerItemProxy::getPortalPath() const
-{
-  checkFieldPtr(m_projectPortalPtr || m_filePortalPtr, "containerPortal");
+void PBXContainerItemProxy::initFromPlist(const String& id, const Plist::dictionary_type& dict, const PBXDocument* pbxDoc) {
+    // Call super init
+    PBXObject::initFromPlist(id, dict, pbxDoc);
 
-  if (m_projectPortalPtr) {
-    const PBXDocument& pbxDoc = getOwner();
-    const PBXProject* project = pbxDoc.getProject();
-    checkFieldVal(m_projectPortalPtr == project, m_containerPortalId, "containerPortal");
-    if (m_projectPortalPtr == project)
-      return pbxDoc.getPath();
-  } else if (m_filePortalPtr) {
-    return m_filePortalPtr->getFullPath();
-  }
+    // Get containerPortal
+    getStringForKey(dict, "containerPortal", m_containerPortalId, VALUE_REQUIRED, m_parseER);
 
-  return "";
+    // Get remoteGlobalIDString
+    getStringForKey(dict, "remoteGlobalIDString", m_remoteGlobalIDString, VALUE_REQUIRED, m_parseER);
 }
 
-const String& PBXContainerItemProxy::getRemoteId() const
-{
-  checkFieldNonEmpty(m_remoteGlobalIDString, "remoteGlobalIDString");
-  return m_remoteGlobalIDString;
+void PBXContainerItemProxy::resolvePointers() {
+    // Get containerPortal ptrs
+    convertObjectId(m_pbxDoc, m_containerPortalId, m_projectPortalPtr);
+    convertObjectId(m_pbxDoc, m_containerPortalId, m_filePortalPtr);
+}
+
+String PBXContainerItemProxy::getPortalPath() const {
+    checkFieldPtr(m_projectPortalPtr || m_filePortalPtr, "containerPortal");
+
+    if (m_projectPortalPtr) {
+        const PBXDocument& pbxDoc = getOwner();
+        const PBXProject* project = pbxDoc.getProject();
+        checkFieldVal(m_projectPortalPtr == project, m_containerPortalId, "containerPortal");
+        if (m_projectPortalPtr == project)
+            return pbxDoc.getPath();
+    } else if (m_filePortalPtr) {
+        return m_filePortalPtr->getFullPath();
+    }
+
+    return "";
+}
+
+const String& PBXContainerItemProxy::getRemoteId() const {
+    checkFieldNonEmpty(m_remoteGlobalIDString, "remoteGlobalIDString");
+    return m_remoteGlobalIDString;
 }

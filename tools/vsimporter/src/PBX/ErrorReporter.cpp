@@ -18,27 +18,24 @@
 #include "telemetryutils.h"
 #include "ErrorReporter.h"
 
-ErrorReporter::~ErrorReporter() {}
-
-ErrorReporter::ErrorReporter(SBLogLevel defaultSeverity)
-  : m_severity(defaultSeverity)
-{}
-
-ErrorReporter::ErrorReporter(SBLogLevel defaultSeverity, const String& errContext)
-  : m_severity(defaultSeverity),
-    m_errorContext(errContext)
-{}
-
-void ErrorReporter::reportError(const String& errorMessage) const
-{
-  reportError(errorMessage, m_severity);
+ErrorReporter::~ErrorReporter() {
 }
 
-void ErrorReporter::reportError(const String& errorMessage, SBLogLevel severity) const
-{
-  String fullError = m_errorContext + errorMessage;
-  if (severity != SB_ERROR)
-    SBLog::log(severity) << fullError << std::endl;
-  else
-    sbValidateWithTelemetry(0, fullError);
+ErrorReporter::ErrorReporter(SBLogLevel defaultSeverity) : m_severity(defaultSeverity) {
+}
+
+ErrorReporter::ErrorReporter(SBLogLevel defaultSeverity, const String& errContext)
+    : m_severity(defaultSeverity), m_errorContext(errContext) {
+}
+
+void ErrorReporter::reportError(const String& errorMessage) const {
+    reportError(errorMessage, m_severity);
+}
+
+void ErrorReporter::reportError(const String& errorMessage, SBLogLevel severity) const {
+    String fullError = m_errorContext + errorMessage;
+    if (severity != SB_ERROR)
+        SBLog::log(severity) << fullError << std::endl;
+    else
+        sbValidateWithTelemetry(0, fullError);
 }

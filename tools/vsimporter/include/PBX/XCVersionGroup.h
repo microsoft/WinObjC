@@ -24,24 +24,26 @@ class PBXDocument;
 
 class XCVersionGroup : public PBXGroup {
 public:
-  virtual ~XCVersionGroup();
-  virtual void resolvePointers();
+    virtual ~XCVersionGroup();
+    virtual void resolvePointers();
 
-  //virtual String getFullPath() const;
-  virtual const String& getFileType() const { return m_versionGroupType; }
-  
-  static XCVersionGroup* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
-  
+    // virtual String getFullPath() const;
+    virtual const String& getFileType() const {
+        return m_versionGroupType;
+    }
+
+    static XCVersionGroup* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
+
 private:
-  XCVersionGroup();
-  virtual void initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
-  
-/* Start of serialized values */
-  String m_versionGroupType;
-  String m_currentVersionId;
-/* End of serialized values */
-  
-  PBXFileReference* m_currentVersionPtr;
+    XCVersionGroup();
+    virtual void initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
+
+    /* Start of serialized values */
+    String m_versionGroupType;
+    String m_currentVersionId;
+    /* End of serialized values */
+
+    PBXFileReference* m_currentVersionPtr;
 };
 
 #endif /* _XCVERSIONGROUP_H_ */

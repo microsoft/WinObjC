@@ -24,23 +24,21 @@ class UITabBarItem;
 
 typedef std::vector<const char*> viewControllerList;
 
-class UIViewController : public ObjectConverterSwapper
-{
+class UIViewController : public ObjectConverterSwapper {
 public:
-    UINavigationItem *_navigationItem;
-    UITabBarItem *_tabBarItem;
+    UINavigationItem* _navigationItem;
+    UITabBarItem* _tabBarItem;
     XIBArray *_childViewControllers, *_viewControllers;
-    UIView *_view;
-    XIBObject *_parentViewController;
-    XIBArray *_segueTemplates;
+    UIView* _view;
+    XIBObject* _parentViewController;
+    XIBArray* _segueTemplates;
     bool _resizesToFullSize;
-    const char *_storyboardIdentifier;
+    const char* _storyboardIdentifier;
     static viewControllerList _viewControllerNames;
 
     UIViewController();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
     virtual void Awaken();
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };
-

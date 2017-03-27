@@ -26,100 +26,100 @@
 #include "VCProjectItem.h"
 #include "..\WBITelemetry\WBITelemetry.h"
 
-SBNativeTarget::~SBNativeTarget() {}
-
-SBNativeTarget::SBNativeTarget(const PBXNativeTarget* target, const StringSet& configNames, SBProject& parentProject)
-  : SBTarget(target, configNames, parentProject),
-    m_target(target)
-{}
-
-SBNativeTarget* SBNativeTarget::create(const PBXTarget* target, const StringSet& configNames, SBProject& parentProject)
-{
-  SBNativeTarget* ret = new SBNativeTarget(dynamic_cast<const PBXNativeTarget*>(target), configNames, parentProject);
-  if (!ret->init()) {
-    delete ret;
-    ret = NULL;
-  }
-  
-  return ret;
+SBNativeTarget::~SBNativeTarget() {
 }
 
-bool SBNativeTarget::init()
-{
-  // Verify that target's build type is valid
-  String productType = m_target->getProductType();
-  if (productType == "com.apple.product-type.library.static") {
-      m_type = TargetStaticLib;
-      TELEMETRY_EVENT(L"VSImporterStaticLibTarget");
-  } else if (productType == "com.apple.product-type.framework") {
-      m_type = TargetStaticLib;
-      SBLog::warning() << "Treating \"" << getName() << "\" framework target as a static library." << std::endl;
-      TELEMETRY_EVENT(L"VSImporterStaticFrameworkTarget");
-  } else if (productType == "com.apple.product-type.application") {
-      m_type = TargetApplication;
-      TELEMETRY_EVENT(L"VSImporterApplicationTarget");
-  } else if (productType == "com.apple.product-type.bundle") {
-      m_type = TargetBundle;
-      TELEMETRY_EVENT(L"VSImporterBundleTarget");
-  } else {
-      SBLog::warning() << "Ignoring \"" << getName() << "\" target with unsupported product type \"" << productType << "\"." << std::endl;
-      TELEMETRY_EVENT_DATA(L"VSImporterUnsupportedTarget", productType.c_str());
-      return false;
-  }
+SBNativeTarget::SBNativeTarget(const PBXNativeTarget* target, const StringSet& configNames, SBProject& parentProject)
+    : SBTarget(target, configNames, parentProject), m_target(target) {
+}
 
-  // Check if any custom build rules are defined
-  const BuildRuleList& buildRules = m_target->getBuildRules();
-  if (!buildRules.empty()) {
-    SBLog::warning() << "Ignoring custom build rules for \"" << getName() << "\" target." << std::endl;
-	TELEMETRY_EVENT(L"VSImporterCustomBuildDetected");
-  }
+SBNativeTarget* SBNativeTarget::create(const PBXTarget* target, const StringSet& configNames, SBProject& parentProject) {
+    SBNativeTarget* ret = new SBNativeTarget(dynamic_cast<const PBXNativeTarget*>(target), configNames, parentProject);
+    if (!ret->init()) {
+        delete ret;
+        ret = NULL;
+    }
 
-  // Call super init
-  return SBTarget::init();
+    return ret;
+}
+
+bool SBNativeTarget::init() {
+    // Verify that target's build type is valid
+    String productType = m_target->getProductType();
+    if (productType == "com.apple.product-type.library.static") {
+        m_type = TargetStaticLib;
+        TELEMETRY_EVENT(L"VSImporterStaticLibTarget");
+    } else if (productType == "com.apple.product-type.framework") {
+        m_type = TargetStaticLib;
+        SBLog::warning() << "Treating \"" << getName() << "\" framework target as a static library." << std::endl;
+        TELEMETRY_EVENT(L"VSImporterStaticFrameworkTarget");
+    } else if (productType == "com.apple.product-type.application") {
+        m_type = TargetApplication;
+        TELEMETRY_EVENT(L"VSImporterApplicationTarget");
+    } else if (productType == "com.apple.product-type.bundle") {
+        m_type = TargetBundle;
+        TELEMETRY_EVENT(L"VSImporterBundleTarget");
+    } else {
+        SBLog::warning() << "Ignoring \"" << getName() << "\" target with unsupported product type \"" << productType << "\"." << std::endl;
+        TELEMETRY_EVENT_DATA(L"VSImporterUnsupportedTarget", productType.c_str());
+        return false;
+    }
+
+    // Check if any custom build rules are defined
+    const BuildRuleList& buildRules = m_target->getBuildRules();
+    if (!buildRules.empty()) {
+        SBLog::warning() << "Ignoring custom build rules for \"" << getName() << "\" target." << std::endl;
+        TELEMETRY_EVENT(L"VSImporterCustomBuildDetected");
+    }
+
+    // Call super init
+    return SBTarget::init();
 }
 
 class XCConfigPrinter : public VarPrintFunc {
 public:
-  virtual ~XCConfigPrinter() {}
-  XCConfigPrinter(OFStream& out) : m_ofs(out) {}
-  void print(const String& varName, const String& varValue) const {
-    if (!strBeginsWith(varName, "VSIMPORTER")) {
-      m_ofs << varName << " = " << trim(varValue) << std::endl;
+    virtual ~XCConfigPrinter() {
     }
-  }
+    XCConfigPrinter(OFStream& out) : m_ofs(out) {
+    }
+    void print(const String& varName, const String& varValue) const {
+        if (!strBeginsWith(varName, "VSIMPORTER")) {
+            m_ofs << varName << " = " << trim(varValue) << std::endl;
+        }
+    }
+
 private:
-  OFStream& m_ofs;
+    OFStream& m_ofs;
 };
 
-VCProject* SBNativeTarget::constructVCProject(VSTemplateProject* projTemplate)
-{
-  VCProject* proj = SBTarget::constructVCProject(projTemplate);
-  String vsProjDir = sb_dirname(proj->getPath());
+VCProject* SBNativeTarget::constructVCProject(VSTemplateProject* projTemplate) {
+    VCProject* proj = SBTarget::constructVCProject(projTemplate);
+    String vsProjDir = sb_dirname(proj->getPath());
 
-  // Write variables file for App targets
-  for (auto bs : m_buildSettings) {
-    if (getProductType() == TargetApplication || getProductType() == TargetBundle) {
-      String configName = bs.first;
-      BuildSettings* configBS = bs.second;
+    // Write variables file for App targets
+    for (auto bs : m_buildSettings) {
+        if (getProductType() == TargetApplication || getProductType() == TargetBundle) {
+            String configName = bs.first;
+            BuildSettings* configBS = bs.second;
 
-      // Figure out where the file should go
-      String varsFilePath = joinPaths(vsProjDir, getName() + "-" + configName + "-xcvars.txt");
+            // Figure out where the file should go
+            String varsFilePath = joinPaths(vsProjDir, getName() + "-" + configName + "-xcvars.txt");
 
-      // Open a file stream to write to
-      OFStream varsOut;
-      openOutputFileStream(varsOut, varsFilePath);
+            // Open a file stream to write to
+            OFStream varsOut;
+            openOutputFileStream(varsOut, varsFilePath);
 
-      // Write the build settings out
-      XCConfigPrinter varsPrinter(varsOut);
-      configBS->print(varsPrinter);
+            // Write the build settings out
+            XCConfigPrinter varsPrinter(varsOut);
+            configBS->print(varsPrinter);
 
-      // Add the variables file to the project
-      VCProjectItem* xcvarsFile = addRelativeFilePathToVS("Text", varsFilePath, "Xcode Variable Files", *proj, *configBS);
+            // Add the variables file to the project
+            VCProjectItem* xcvarsFile = addRelativeFilePathToVS("Text", varsFilePath, "Xcode Variable Files", *proj, *configBS);
 
-      // Mark the file as non-deployable
-      xcvarsFile->setDefinition("DeploymentContent", "false");
+            // Mark the file as non-deployable
+            xcvarsFile->setDefinition("DeploymentContent", "false");
+        }
     }
-  }
 
-  return proj;
+    return proj;
 }

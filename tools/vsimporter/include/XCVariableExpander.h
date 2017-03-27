@@ -23,25 +23,25 @@ class VariableCollectionHierarchy;
 
 class XCVariableExpander {
 public:
-  XCVariableExpander(const VariableCollectionHierarchy& vch, size_t maxSearchLevel);
+    XCVariableExpander(const VariableCollectionHierarchy& vch, size_t maxSearchLevel);
 
-  void expandString(const String& str, String& ret);
-  bool getExpandedValue(const String& varName, String& ret);
+    void expandString(const String& str, String& ret);
+    bool getExpandedValue(const String& varName, String& ret);
 
 private:
-  typedef std::map<const String, size_t> VariableMarkerMap;
-  typedef std::pair<const String, size_t> VariableMarkerPair;
+    typedef std::map<const String, size_t> VariableMarkerMap;
+    typedef std::pair<const String, size_t> VariableMarkerPair;
 
-  XCVariableExpander(); // disallow
-  size_t processPossibleVar(const String& str, size_t posn, String& ret);
-  size_t processBracketedVar(const String& str, size_t posn, String& ret);
-  size_t processSimpleVar(const String& str, size_t posn, String& ret);
-  String getInheritedName(const String& varName);
+    XCVariableExpander(); // disallow
+    size_t processPossibleVar(const String& str, size_t posn, String& ret);
+    size_t processBracketedVar(const String& str, size_t posn, String& ret);
+    size_t processSimpleVar(const String& str, size_t posn, String& ret);
+    String getInheritedName(const String& varName);
 
-  VariableMarkerMap m_varMarkers;
-  String m_currentVar;
-  const VariableCollectionHierarchy& m_vch;
-  size_t m_maxSearchLevel;
+    VariableMarkerMap m_varMarkers;
+    String m_currentVar;
+    const VariableCollectionHierarchy& m_vch;
+    size_t m_maxSearchLevel;
 };
 
 #endif /* _EXPANDVARS_H_ */

@@ -16,8 +16,13 @@ try {
     $repoRootDirectory = Get-RepoRoot
     Set-Location $repoRootDirectory
 
-    $File = "$File".Trim()
-    $Directory = "$Directory".Trim()
+    if ($File) {
+        $File = "$File".Trim()
+    } elseif ($Directory) {
+        $Directory = "$Directory".Trim()
+    } else {
+        throw "You must specify at least one directory or file to format."
+    }
 
     $clangPath = "msvc/LLVM-3.6.0/bin/clang-format.exe"
     [array]$clangArgs = @()
@@ -28,28 +33,23 @@ try {
         $clangArgs += "-i"
     }
 
-    # Validate args
-    if (!$File -and !$Directory) {
-        throw "You must specify at least one directory or file to format."
-    }
-
     # Process a single file if specified
     if ($File) {
         $result = & $clangPath $clangArgs $File 2>&1
         Check-Result
-        
+
         if ($result) {
             return diff (cat "$File") ($result)
         }
-        
+
         return
-        
+
     } elseif ($Directory) {
         # Process a directory if specified
-        
-        $filter = {$_ -like "*.mm" -or $_ -like "*.m" -or $_ -like "*.c" -or $_ -like "*.cpp" -or $_ -like "*.h"}
+
+        $filter = {$_ -like "*.mm" -or $_ -like "*.m" -or $_ -like "*.c" -or $_ -like "*.cpp" -or $_ -like "*.h" -or $_ -like "*.hpp"}
         $filesToFormat = ""
-        
+
         if ($Recursive) {
             $filesToFormat = Get-ChildItem $Directory -recurse |
             Where-Object -FilterScript $filter | Select FullName | ft -hidetableheaders | Out-String

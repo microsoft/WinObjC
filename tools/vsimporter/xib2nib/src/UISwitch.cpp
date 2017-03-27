@@ -17,25 +17,21 @@
 #include "UISwitch.h"
 #include <assert.h>
 
-UISwitch::UISwitch()
-{
+UISwitch::UISwitch() {
 }
 
-void UISwitch::InitFromXIB(XIBObject *obj)
-{
+void UISwitch::InitFromXIB(XIBObject* obj) {
     UIControl::InitFromXIB(obj);
 
     _outputClassName = "UISwitch";
 }
 
-void UISwitch::InitFromStory(XIBObject *obj)
-{
+void UISwitch::InitFromStory(XIBObject* obj) {
     UIControl::InitFromStory(obj);
 
     _outputClassName = "UISwitch";
 }
 
-void UISwitch::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UISwitch::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     UIControl::ConvertStaticMappings(writer, obj);
 }

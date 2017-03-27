@@ -19,34 +19,36 @@
 #include "utils.h"
 #include "PBXShellScriptBuildPhase.h"
 
-PBXShellScriptBuildPhase::~PBXShellScriptBuildPhase() {}
-
-PBXShellScriptBuildPhase::PBXShellScriptBuildPhase() {}
-
-PBXShellScriptBuildPhase* PBXShellScriptBuildPhase::createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc)
-{
-  PBXShellScriptBuildPhase* ret = new PBXShellScriptBuildPhase;
-  ret->initFromPlist(id, plist, pbxDoc);
-  return ret;
+PBXShellScriptBuildPhase::~PBXShellScriptBuildPhase() {
 }
 
-void PBXShellScriptBuildPhase::initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc)
-{
-  // Call super init
-  PBXBuildPhase::initFromPlist(id, plist, pbxDoc);
-  
-  // Get name
-  getStringForKey(plist, "name", m_name, VALUE_OPTIONAL, m_parseER);
+PBXShellScriptBuildPhase::PBXShellScriptBuildPhase() {
+}
 
-  // Get inputPaths
-  getStringVectorForKey(plist, "inputPaths", m_inputPaths, VALUE_OPTIONAL, m_parseER);
-  
-  // Get outputPaths
-  getStringVectorForKey(plist, "outputPaths", m_outputPaths, VALUE_OPTIONAL, m_parseER);
-  
-  // Get shellPath
-  getStringForKey(plist, "shellPath", m_shellPath, VALUE_REQUIRED, m_parseER);
-  
-  // Get shellScript
-  getStringForKey(plist, "shellScript", m_shellScript, VALUE_REQUIRED, m_parseER);
+PBXShellScriptBuildPhase* PBXShellScriptBuildPhase::createFromPlist(const String& id,
+                                                                    const Plist::dictionary_type& plist,
+                                                                    const PBXDocument* pbxDoc) {
+    PBXShellScriptBuildPhase* ret = new PBXShellScriptBuildPhase;
+    ret->initFromPlist(id, plist, pbxDoc);
+    return ret;
+}
+
+void PBXShellScriptBuildPhase::initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc) {
+    // Call super init
+    PBXBuildPhase::initFromPlist(id, plist, pbxDoc);
+
+    // Get name
+    getStringForKey(plist, "name", m_name, VALUE_OPTIONAL, m_parseER);
+
+    // Get inputPaths
+    getStringVectorForKey(plist, "inputPaths", m_inputPaths, VALUE_OPTIONAL, m_parseER);
+
+    // Get outputPaths
+    getStringVectorForKey(plist, "outputPaths", m_outputPaths, VALUE_OPTIONAL, m_parseER);
+
+    // Get shellPath
+    getStringForKey(plist, "shellPath", m_shellPath, VALUE_REQUIRED, m_parseER);
+
+    // Get shellScript
+    getStringForKey(plist, "shellScript", m_shellScript, VALUE_REQUIRED, m_parseER);
 }

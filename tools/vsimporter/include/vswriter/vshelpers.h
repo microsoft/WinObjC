@@ -24,7 +24,10 @@
 std::string getVSConfigurationPlatform(const std::string& configName, const std::string& platformName);
 std::string getVSConfigurationPlatformCond(const std::string& configName, const std::string& platformName);
 std::string formatVSGUID(const std::string& guid);
-pugi::xml_node appendNodeWithText(pugi::xml_node& parent, const std::string& nodeName, const std::string& nodeText, const std::string& nodeCond = "");
+pugi::xml_node appendNodeWithText(pugi::xml_node& parent,
+                                  const std::string& nodeName,
+                                  const std::string& nodeText,
+                                  const std::string& nodeCond = "");
 void writePropertiesMap(const std::map<std::string, std::string>& props, pugi::xml_node& parent);
 void writePropertiesMap(const ConditionalValueListMap& props, pugi::xml_node& parent);
 void removeNode(pugi::xml_node& node);
