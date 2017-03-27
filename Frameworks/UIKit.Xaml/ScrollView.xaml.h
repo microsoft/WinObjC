@@ -31,6 +31,8 @@ public ref class ScrollView sealed : public Private::CoreAnimation::ILayer
 public:
     ScrollView();
 
+    Windows::Foundation::Size ArrangeOverride(Windows::Foundation::Size finalSize) override;
+
     // Accessor for our Layer content; we create one on demand
     virtual property Windows::UI::Xaml::Controls::Image^ LayerContent {
         Windows::UI::Xaml::Controls::Image^ get();
