@@ -14,9 +14,6 @@
   <PropertyGroup Label="Globals">
     <OutputPath>$(SolutionDir)</OutputPath>
     <ProjectGuid>B2C6186E-B340-49D8-888E-76ED83752E43</ProjectGuid>
-    <TargetDir>$(SolutionDir)</TargetDir>
-    <TargetName>$(SolutionName)</TargetName>
-    <TargetExt>.lastrestore</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
@@ -30,11 +27,10 @@
   <Target Name="Build">
     <Message Text="EnsureSolutionRestored: Restoring solution $(SolutionPath)" Importance="High" Condition="'$(SolutionDir)' != '' And '$(BuildingInsideVisualStudio)' == 'true' And '$(BuildingPackage)' != 'true'"/>
     <!-- First check that there is a valid nuget.exe to use -->
-    <Exec Condition="!Exists('$(MSBuildThisFileDirectory)..\.tools\nuget.exe') And '$(SolutionDir)' != '' And '$(BuildingInsideVisualStudio)' == 'true' And '$(BuildingPackage)' != 'true'" Command="$(MSBuildThisFileDirectory)..\init.cmd" /> 
+    <Exec Condition="!Exists('$(MSBuildThisFileDirectory)..\.tools\nuget.exe') And '$(SolutionDir)' != '' And '$(BuildingInsideVisualStudio)' == 'true' And '$(BuildingPackage)' != 'true'" Command="init.cmd" WorkingDirectory="$(MSBuildThisFileDirectory)..\"/> 
 
     <!-- Now restore the solution -->
     <Exec Command="$(MSBuildThisFileDirectory)..\.tools\nuget.exe restore $(SolutionPath)" Condition="'$(SolutionDir)' != '' And '$(BuildingInsideVisualStudio)' == 'true' And '$(BuildingPackage)' != 'true'"/> 
-    <Touch AlwaysCreate="true" Files="$(SolutionDir)$(SolutionName).lastrestore" Condition="'$(SolutionDir)' != '' And '$(BuildingInsideVisualStudio)' == 'true' And '$(BuildingPackage)' != 'true'"/>
   </Target>
 
 </Project>
