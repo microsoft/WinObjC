@@ -99,6 +99,7 @@
     <ProjectReference Include="$(MsBuildThisFileDirectory)\NuprojInitializer.msbuildproj" Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">
       <IncludeInPackage>false</IncludeInPackage>
       <Private>false</Private>
+      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
     </ProjectReference>
   </ItemGroup>
 
