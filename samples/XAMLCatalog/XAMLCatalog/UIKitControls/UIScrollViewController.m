@@ -27,7 +27,7 @@
 // setting up the controls to update the UILabel config
 - (void)_setup {
     // creating scrollview and add it as subview
-    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(28.0f, 20.0f, 319.0f, 183.0f)];
+    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(28.0f, 20.0f, 319.0f, 200.0f)];
     self.scrollView.delegate = self;
     self.scrollView.contentSize = CGSizeMake(600.0f, 600.0f);
     CAGradientLayer* gradient = [CAGradientLayer layer];
@@ -49,23 +49,23 @@
     [self.view addSubview:self.scrollView];
 
     _menuTVC = [[MenuTableViewController alloc] init];
-    _menuTVC.view.frame = CGRectMake(0.0f, 300.0f, 200.0f, 0.0f /* setting it to 0 allows vertical scrolling */);
+    _menuTVC.view.frame = CGRectMake(0.0f, 250.0f, 200.0f, 0.0f /* setting it to 0 allows vertical scrolling */);
     _menuTVC.tableView.allowsSelection = NO;
     [self.view addSubview:_menuTVC.view];
 
-    self.contentSize = [[UITextField alloc] initWithFrame:CGRectMake(105.0f, 20.0f, 400.0f, 30.0f)];
+    self.contentSize = [[UITextField alloc] initWithFrame:CGRectMake(105.0f, 20.0f, 192.0f, 30.0f)];
     [_menuTVC addMenuItemView:self.contentSize andTitle:@"Content Size:"];
     self.contentSize.text = [NSString stringWithFormat:@"%.2f,%.2f", self.scrollView.contentSize.width, self.scrollView.contentSize.height];
     [self.contentSize addTarget:self action:@selector(EditingDidEnd:) forControlEvents:UIControlEventEditingDidEnd];
     self.contentSize.delegate = self;
 
-    self.contentOffset = [[UITextField alloc] initWithFrame:CGRectMake(105.0f, 20.0f, 400.0f, 30.0f)];
+    self.contentOffset = [[UITextField alloc] initWithFrame:CGRectMake(105.0f, 20.0f, 192.0f, 30.0f)];
     [_menuTVC addMenuItemView:self.contentOffset andTitle:@"Content Offset:"];
     self.contentOffset.text = [NSString stringWithFormat:@"%.2f,%.2f", self.scrollView.contentOffset.x, self.scrollView.contentOffset.y];
     [self.contentOffset addTarget:self action:@selector(EditingDidEnd:) forControlEvents:UIControlEventEditingDidEnd];
     self.contentOffset.delegate = self;
 
-    self.contentInsets = [[UITextField alloc] initWithFrame:CGRectMake(105.0f, 20.0f, 400.0f, 30.0f)];
+    self.contentInsets = [[UITextField alloc] initWithFrame:CGRectMake(105.0f, 20.0f, 192.0f, 30.0f)];
     [_menuTVC addMenuItemView:self.contentInsets andTitle:@"Content Insets:"];
     self.contentInsets.text = [NSString stringWithFormat:@"%.2f,%.2f,%.2f,%.2f",
                                                          self.scrollView.contentInset.left,
@@ -95,20 +95,20 @@
     self.showVerticalIndicator.on = self.scrollView.showsVerticalScrollIndicator;
     [self.showVerticalIndicator addTarget:self action:@selector(ValueChanged:) forControlEvents:UIControlEventValueChanged];
 
-    self.zoomScale = [[UISlider alloc] initWithFrame:CGRectMake(101.0f, 54.0f, 187.0f, 31.0f)];
+    self.zoomScale = [[UISlider alloc] initWithFrame:CGRectMake(101.0f, 54.0f, 208.0f, 31.0f)];
     [_menuTVC addMenuItemView:self.zoomScale andTitle:@"Zoom Scale:"];
     self.zoomScale.minimumValue = self.scrollView.minimumZoomScale;
     self.zoomScale.maximumValue = self.scrollView.maximumZoomScale;
     self.zoomScale.value = self.scrollView.zoomScale;
     [self.zoomScale addTarget:self action:@selector(ValueChanged:) forControlEvents:UIControlEventValueChanged];
 
-    self.minmumZoomScale = [[UITextField alloc] initWithFrame:CGRectMake(105.0f, 20.0f, 400.0f, 30.0f)];
+    self.minmumZoomScale = [[UITextField alloc] initWithFrame:CGRectMake(105.0f, 20.0f, 43.0f, 30.0f)];
     [_menuTVC addMenuItemView:self.minmumZoomScale andTitle:@"Minimum zoom scale:"];
     self.minmumZoomScale.text = [NSString stringWithFormat:@"%.2f", self.scrollView.minimumZoomScale];
     [self.minmumZoomScale addTarget:self action:@selector(EditingDidEnd:) forControlEvents:UIControlEventEditingDidEnd];
     self.minmumZoomScale.delegate = self;
 
-    self.maxZoomScale = [[UITextField alloc] initWithFrame:CGRectMake(105.0f, 20.0f, 400.0f, 30.0f)];
+    self.maxZoomScale = [[UITextField alloc] initWithFrame:CGRectMake(105.0f, 20.0f, 43.0f, 30.0f)];
     [_menuTVC addMenuItemView:self.maxZoomScale andTitle:@"Maximum zoom scale:"];
     self.maxZoomScale.text = [NSString stringWithFormat:@"%.2f", self.scrollView.maximumZoomScale];
     [self.maxZoomScale addTarget:self action:@selector(EditingDidEnd:) forControlEvents:UIControlEventEditingDidEnd];

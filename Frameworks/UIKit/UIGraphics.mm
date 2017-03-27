@@ -45,25 +45,24 @@ NSString* NSStringFromCGVector(CGVector vector) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 UIEdgeInsets UIEdgeInsetsFromString(NSString* string) {
-
     UIEdgeInsets ret = UIEdgeInsetsZero;
 
     // Inset strings are formated as {A, B, C, D} where A,B,C and D are CGFloats types.
     // Example: "{80.0f, 80.0f, 80f, 80f}" and "{80, 80, 80, 80}" are a valid edge insets in string format
     if ([string length] > 1) {
         // Strip off curly braces and use the delimiter to separate components
-        NSString* strWithBraces = [string substringWithRange : NSMakeRange(1, string.length - 2)];
-        NSArray* components = [strWithBraces componentsSeparatedByString : @","];
+        NSString* strWithoutBraces = [string substringWithRange : NSMakeRange(1, string.length - 2)];
+        NSArray* components = [strWithoutBraces componentsSeparatedByString : @","];
 
         if (components.count == 4) {
-            ret.top = ((NSString*)[components objectAtIndex : 0]).floatValue;
-            ret.left = ((NSString*)[components objectAtIndex : 1]).floatValue;;
-            ret.bottom = ((NSString*)[components objectAtIndex : 2]).floatValue;;
-            ret.right = ((NSString*)[components objectAtIndex : 3]).floatValue;;
+            ret.top = ((NSString*)[components objectAtIndex:0]).floatValue;
+            ret.left = ((NSString*)[components objectAtIndex:1]).floatValue;
+            ret.bottom = ((NSString*)[components objectAtIndex:2]).floatValue;
+            ret.right = ((NSString*)[components objectAtIndex:3]).floatValue;
         }
     }
 
