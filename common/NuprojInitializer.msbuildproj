@@ -14,6 +14,9 @@
   <PropertyGroup Label="Globals">
     <OutputPath>$(SolutionDir)</OutputPath>
     <ProjectGuid>417B0D00-F90E-47BB-9085-BE7E412C9DA8</ProjectGuid>
+    <TargetDir>$(SolutionDir)</TargetDir>
+    <TargetName>$(SolutionName)</TargetName>
+    <TargetExt>.timestamp</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
@@ -27,9 +30,9 @@
   <!-- This is where the fun starts. Any custom generic msbuild project goop goes here. -->
 
   <!-- Inline task to check for timestamp file existence and creation-->
-  <Target Name="CreateTimestampFile" AfterTargets="Build">
-    <Touch Condition="'$(SolutionDir)' != ''" AlwaysCreate="true" Files="$(SolutionDir)$(SolutionName).timestamp" />
-    <Message Condition="'$(SolutionDir)' != ''" Text="NuprojInitializer touched $(SolutionDir)$(SolutionName).timestamp" />
+  <Target Name="Build">
+    <Touch Condition="'$(SolutionDir)' != '' And '$(BuildingPackage)' != 'true'" AlwaysCreate="true" Files="$(SolutionDir)$(SolutionName).timestamp" />
+    <Message Condition="'$(SolutionDir)' != '' And '$(BuildingPackage)' != 'true'" Text="NuprojInitializer touched $(SolutionDir)$(SolutionName).timestamp" />
   </Target>
 
 </Project>
