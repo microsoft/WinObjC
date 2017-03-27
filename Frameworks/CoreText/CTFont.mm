@@ -945,6 +945,12 @@ CFTypeID CTFontGetTypeID() {
     return __kCTFontTypeID;
 }
 
+// Private function for getting the XAML-compatible family name
+CFStringRef _CTFontGetXamlCompatibleFamilyName(CTFontRef font) {
+    auto fontName = woc::MakeAutoCF<CFStringRef>((CFStringRef)CTFontDescriptorCopyAttribute(font->_descriptor, kCTFontNameAttribute));
+    return _DWriteGetXamlCompatibleFamilyName(fontName, font->_dwriteFontFace.Get());
+}
+
 // Private function for getting font weight for XAML
 DWRITE_FONT_WEIGHT _CTFontGetDWriteWeight(CTFontRef font) {
     ComPtr<IDWriteFontFace3> fontFace3;

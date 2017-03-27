@@ -40,7 +40,7 @@ LIBRARY CoreGraphics
         _CFStringFromLocalizedString
         _DWriteCopyFontFamilyNames
         _DWriteCopyFontNamesForFamilyName
-        _DWriteGetFamilyNameForFontName
+        _DWriteGetXamlCompatibleFamilyName
         _DWriteGetFontPropertiesFromName
         _DWriteCreateFontFamilyWithName
         _DWriteCreateFontWithName

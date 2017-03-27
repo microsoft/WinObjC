@@ -17,6 +17,7 @@
 #import <TestFramework.h>
 #import <Foundation/Foundation.h>
 #import <CoreText/CoreText.h>
+#import <CoreTextInternal.h>
 #import <Starboard/SmartTypes.h>
 #import <vector>
 
@@ -781,4 +782,25 @@ TEST(CTFont, CopyAvailableTables) {
     // Don't want to make test too precise so that it may fail should fonts change, but 'cmap' is a required font table
     // So it should be safe to always test that this value is available
     EXPECT_TRUE(CFArrayContainsValue(availableTables, { 0, count }, (const void*)kCTFontTableCmap));
+}
+
+TEST(CTFont, GetCompatibleFamilyName) {
+    CFStringRef fontName = CFSTR("WinObjC");
+    NSURL* testFileURL = __GetURLFromPathRelativeToModuleDirectory(@"/data/WinObjC.ttf");
+    CFErrorRef error = nullptr;
+    EXPECT_TRUE(CTFontManagerRegisterFontsForURL((__bridge CFURLRef)testFileURL, kCTFontManagerScopeSession, &error));
+    EXPECT_EQ(nullptr, error);
+
+    auto font = woc::MakeAutoCF<CTFontRef>(CTFontCreateWithName(fontName, 20, nullptr));
+    EXPECT_NE(nullptr, font);
+
+    CFStringRef familyName = _CTFontGetXamlCompatibleFamilyName(font);
+    EXPECT_NE(nil, familyName);
+
+    // CompatibleFamilyName returns an absolute path, so can only check prefix and suffix
+    EXPECT_TRUE([static_cast<NSString*>(familyName) hasPrefix:@"ms-appx:///"]);
+    EXPECT_TRUE([static_cast<NSString*>(familyName) hasSuffix:@"/data/WinObjC.ttf#WinObjC"]);
+
+    EXPECT_TRUE(CTFontManagerUnregisterFontsForURL((__bridge CFURLRef)testFileURL, kCTFontManagerScopeSession, &error));
+    EXPECT_EQ(nullptr, error);
 }

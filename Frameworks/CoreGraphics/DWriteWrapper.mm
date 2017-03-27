@@ -28,6 +28,7 @@
 #import "DWriteFontBinaryDataLoader.h"
 #import "DWriteFontCollectionHelper.h"
 #import "DWriteFontBinaryDataCollectionLoader.h"
+#import "CGDataProviderInternal.h"
 
 using namespace Microsoft::WRL;
 
@@ -209,8 +210,53 @@ CFArrayRef _DWriteCopyFontNamesForFamilyName(CFStringRef familyName) {
  * Note: This function currently uses a cache, meaning that fonts installed during runtime will not be reflected,
  * unless registered to the user font collection
  */
-CFStringRef _DWriteGetFamilyNameForFontName(CFStringRef fontName) {
-    return _DWriteGetFontPropertiesFromName(fontName)->familyName.get();
+CFStringRef _DWriteGetXamlCompatibleFamilyName(CFStringRef fontName, IDWriteFontFace* fontFace) {
+    woc::unique_cf<CFStringRef> upperFontName(_CFStringCreateUppercaseCopy(fontName));
+
+    const auto& info = __GetSystemFontCollectionHelper()->GetFontPropertiesFromUppercaseFontName(upperFontName);
+    if (info) {
+        return info->familyName.get();
+    }
+
+    const auto& userFontInfo = __GetUserFontCollectionHelper()->GetFontPropertiesFromUppercaseFontName(upperFontName);
+    if (userFontInfo) {
+        RETURN_RESULT_IF(!fontFace, userFontInfo->familyName.get());
+
+        // Retrieve the font file that was used to create this font face
+        UINT32 fileCount;
+        RETURN_RESULT_IF_FAILED(fontFace->GetFiles(&fileCount, nullptr), userFontInfo->familyName.get());
+        RETURN_RESULT_IF(fileCount == 0, userFontInfo->familyName.get());
+        if (fileCount > 1) {
+            TraceWarning(TAG, L"The font has %d files, defaulting to the first file found", fileCount);
+
+            // Set fileCount to 1 so we just get the first file
+            fileCount = 1;
+        }
+
+        ComPtr<IDWriteFontFile> fontFile;
+        RETURN_RESULT_IF_FAILED(fontFace->GetFiles(&fileCount, &fontFile), userFontInfo->familyName.get());
+
+        // Get the CGDataProvider used to register this font
+        // Note that GetReferenceKey will set fontProvider to a pointer to the file's internal CGDataProviderRef
+        CGDataProviderRef* fontProvider = nullptr;
+        UINT32 keySize;
+        RETURN_RESULT_IF_FAILED(fontFile->GetReferenceKey((const void**)&fontProvider, &keySize), userFontInfo->familyName.get());
+        RETURN_RESULT_IF(keySize != sizeof(fontProvider) || !fontProvider || !(*fontProvider), userFontInfo->familyName.get());
+
+        // From the CGDataProvider get the URL
+        CFURLRef fontURL = _CGDataProviderGetURL(*fontProvider);
+        RETURN_RESULT_IF(!fontURL, userFontInfo->familyName.get());
+
+        // Now construct the XAML compatible family name, which should be in the format
+        // ms-appx:///[PATH TO FONT FILE]/font_file.ttf#family_name
+        static const CFStringRef sc_format = CFSTR("ms-appx:///%@#%@");
+        auto path = woc::MakeAutoCF<CFStringRef>(CFURLCopyFileSystemPath(fontURL, kCFURLWindowsPathStyle));
+        auto ret =
+            woc::MakeAutoCF<CFStringRef>(CFStringCreateWithFormat(nullptr, nullptr, sc_format, path.get(), userFontInfo->familyName.get()));
+        return (CFStringRef)CFAutorelease(ret.detach());
+    }
+
+    return nullptr;
 }
 
 /**

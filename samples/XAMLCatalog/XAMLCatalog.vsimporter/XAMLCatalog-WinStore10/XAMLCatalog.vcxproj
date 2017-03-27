@@ -96,6 +96,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <ShowProgress>NotSet</ShowProgress>
     </Link>
     <SBInfoPlistCopy>
       <ExcludedFromBuild>true</ExcludedFromBuild>
@@ -247,10 +248,8 @@
       <DeploymentContent>false</DeploymentContent>
     </Text>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
-
   <!-- Begin NuGet Section -->
   <PropertyGroup>
     <TargetFramework>uap10.0</TargetFramework>
@@ -262,7 +261,11 @@
     <PackageReference Include="WinObjC.Language" Version="*" />
     <PackageReference Include="WinObjC.Logging" Version="*" />
   </ItemGroup>
+  <ItemGroup>
+    <Font Include="..\..\XamlCatalog\Fonts\WinObjC-Bold.ttf" />
+    <Font Include="..\..\XamlCatalog\Fonts\WinObjC-Italic.ttf" />
+    <Font Include="..\..\XamlCatalog\Fonts\WinObjC.ttf" />
+  </ItemGroup>
   <!-- End NuGet Section -->
-  
-  <Import Project="$(MSBuildThisFileDirectory)\..\..\..\..\common\winobjc.packagereference.override.targets" Condition="Exists('$(MSBuildThisFileDirectory)\..\..\..\..\common\winobjc.packagereference.override.targets')"/>
+  <Import Project="$(MSBuildThisFileDirectory)\..\..\..\..\common\winobjc.packagereference.override.targets" Condition="Exists('$(MSBuildThisFileDirectory)\..\..\..\..\common\winobjc.packagereference.override.targets')" />
 </Project>

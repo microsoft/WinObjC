@@ -174,8 +174,8 @@ HRESULT DWriteFontBinaryDataCollectionLoader::GetFontFileAt(decltype(m_fontDatas
         RETURN_IF_FAILED(MakeAndInitialize<DWriteFontBinaryDataLoader>(&loader, it->first.get()));
         RETURN_IF_FAILED(dwriteFactory->RegisterFontFileLoader(loader.Get()));
 
-        int unused;
-        RETURN_IF_FAILED(dwriteFactory->CreateCustomFontFileReference(&unused, sizeof(unused), loader.Get(), &it->second));
+        CGDataProviderRef reference = it->first.get();
+        RETURN_IF_FAILED(dwriteFactory->CreateCustomFontFileReference(&reference, sizeof(&reference), loader.Get(), &it->second));
     }
 
     return it->second.CopyTo(outFontFile);
