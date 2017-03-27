@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -134,9 +134,14 @@ static NSString* s_archiveKey = @"_NS.IP";
  @Status Interoperable
 */
 - (NSIndexPath*)indexPathByAddingIndex:(NSUInteger)newIndex {
-    std::vector<NSUInteger> indexes = _indexes;
-    indexes.emplace_back(newIndex);
-    return [NSIndexPath indexPathWithIndexes:indexes.data() length:indexes.size()];
+    NSIndexPath* ret = [NSIndexPath indexPathWithIndexes:nullptr length:0];
+    if (ret) {
+        ret->_indexes.reserve(_indexes.size() + 1);
+        ret->_indexes.insert(ret->_indexes.begin(), _indexes.cbegin(), _indexes.cend());
+        ret->_indexes.emplace_back(newIndex);
+    }
+
+    return ret;
 }
 
 /**
