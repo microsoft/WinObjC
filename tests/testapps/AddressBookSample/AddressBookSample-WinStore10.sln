@@ -6,33 +6,52 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AddressBookSample", "Addres
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AddressBookSample", "AddressBookSample.vsimporter\AddressBookSample-WinStore10\AddressBookSample.vcxproj", "{CC1A6702-00CC-4F9A-81DB-A8E80B532B9F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildSupport", "BuildSupport", "{C9B08E52-8E55-41BA-8EFB-935D00233DA9}"
+EndProject
+Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "NugetRestore", "..\..\..\common\NugetRestore.msbuildproj", "{B2C6186E-B340-49D8-888E-76ED83752E43}"
+EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|ARM = Debug|ARM
 		Debug|Win32 = Debug|Win32
+		Release|Any CPU = Release|Any CPU
 		Release|ARM = Release|ARM
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CC1A6702-00CC-4F9A-81DB-A8E80B532B9F}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{CC1A6702-00CC-4F9A-81DB-A8E80B532B9F}.Debug|ARM.ActiveCfg = Debug|ARM
 		{CC1A6702-00CC-4F9A-81DB-A8E80B532B9F}.Debug|ARM.Build.0 = Debug|ARM
 		{CC1A6702-00CC-4F9A-81DB-A8E80B532B9F}.Debug|ARM.Deploy.0 = Debug|ARM
 		{CC1A6702-00CC-4F9A-81DB-A8E80B532B9F}.Debug|Win32.ActiveCfg = Debug|Win32
 		{CC1A6702-00CC-4F9A-81DB-A8E80B532B9F}.Debug|Win32.Build.0 = Debug|Win32
 		{CC1A6702-00CC-4F9A-81DB-A8E80B532B9F}.Debug|Win32.Deploy.0 = Debug|Win32
+		{CC1A6702-00CC-4F9A-81DB-A8E80B532B9F}.Release|Any CPU.ActiveCfg = Release|Win32
 		{CC1A6702-00CC-4F9A-81DB-A8E80B532B9F}.Release|ARM.ActiveCfg = Release|ARM
 		{CC1A6702-00CC-4F9A-81DB-A8E80B532B9F}.Release|ARM.Build.0 = Release|ARM
 		{CC1A6702-00CC-4F9A-81DB-A8E80B532B9F}.Release|ARM.Deploy.0 = Release|ARM
 		{CC1A6702-00CC-4F9A-81DB-A8E80B532B9F}.Release|Win32.ActiveCfg = Release|Win32
 		{CC1A6702-00CC-4F9A-81DB-A8E80B532B9F}.Release|Win32.Build.0 = Release|Win32
 		{CC1A6702-00CC-4F9A-81DB-A8E80B532B9F}.Release|Win32.Deploy.0 = Release|Win32
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Debug|ARM.Build.0 = Debug|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Debug|Win32.Build.0 = Debug|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Release|ARM.ActiveCfg = Release|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Release|ARM.Build.0 = Release|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Release|Win32.ActiveCfg = Release|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Release|Win32.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{CC1A6702-00CC-4F9A-81DB-A8E80B532B9F} = {805A697A-C1C4-460B-A1F4-62329CB293CB}
+		{B2C6186E-B340-49D8-888E-76ED83752E43} = {C9B08E52-8E55-41BA-8EFB-935D00233DA9}
 	EndGlobalSection
 EndGlobal
