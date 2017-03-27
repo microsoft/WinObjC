@@ -234,7 +234,7 @@ static NSSet* _keyPathsForValuesAffectingValueForKey(Class self, NSString* key) 
             // fast path using c string manipulation, will cover most cases, as most keyPaths are short
             char selectorName[sc_bufferSize] = "keyPathsForValuesAffecting"; // 26 chars
             selectorName[sc_prefixLength] = toupper(rawKey[0]);
-            strcat_s(&selectorName[sc_prefixLength + 1], sc_bufferSize - sc_prefixLength - 1, &rawKey[1]);
+            strcpy_s(&selectorName[sc_prefixLength + 1], sc_bufferSize - sc_prefixLength - 1, &rawKey[1]);
             sel = sel_registerName(selectorName);
 
         } else {
