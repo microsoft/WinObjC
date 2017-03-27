@@ -179,4 +179,13 @@
   </Target>
 
 
+  <ItemGroup>
+    <ProjectReference Include="$(MSBuildThisFileDirectory)\NugetRestore.msbuildproj">
+      <Project>{B2C6186E-B340-49D8-888E-76ED83752E43}</Project>
+      <IncludeInPackage>false</IncludeInPackage>
+      <Private>false</Private>
+      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+    </ProjectReference>
+  </ItemGroup>
+
 </Project>
