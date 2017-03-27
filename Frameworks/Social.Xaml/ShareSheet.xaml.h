@@ -27,16 +27,17 @@ namespace Xaml {
     public:
         ShareSheet(Platform::String^ token);
 
-        void addLink(Platform::String^ url);
-        void addImage(Windows::UI::Xaml::Media::ImageSource^ image);
+        void AddLink(Platform::String^ url);
+        void AddImage(Windows::UI::Xaml::Media::ImageSource^ image);
+        void SetInitialText(Platform::String^ text);
 
     private:
-        void ShareSheet_Post(Windows::UI::Xaml::Controls::ContentDialog^ sender, Windows::UI::Xaml::Controls::ContentDialogButtonClickEventArgs^ args);
-        void ShareSheet_Cancel(Windows::UI::Xaml::Controls::ContentDialog^ sender, Windows::UI::Xaml::Controls::ContentDialogButtonClickEventArgs^ args);
+        void Post(Windows::UI::Xaml::Controls::ContentDialog^ sender, Windows::UI::Xaml::Controls::ContentDialogButtonClickEventArgs^ args);
+        void Cancel(Windows::UI::Xaml::Controls::ContentDialog^ sender, Windows::UI::Xaml::Controls::ContentDialogButtonClickEventArgs^ args);
 
         Platform::String^ _token;
         Platform::String^ _linkToShare;
-        Windows::UI::Xaml::Controls::Image^ _imageToShare;
+        Windows::UI::Xaml::Controls::StackPanel^ _imagesToShare;
     };
 
 }

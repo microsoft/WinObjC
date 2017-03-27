@@ -24,6 +24,7 @@
 #import "CACompositor.h"
 #import "StringHelpers.h"
 #import "ErrorHandling.h"
+#import "NSLogging.h"
 
 #include "COMIncludes.h"
 #import <wrl/client.h>
@@ -111,9 +112,18 @@ static NSString* _getAccessToken() {
 - (instancetype)init {
     if (self = [super init]) {
         NSString* token = _getAccessToken();
+
+        if (token == nil) {
+            [self release];
+            return nil;
+        }
+
         std::wstring wtoken = Strings::NarrowToWide<std::wstring>(token);
 
-        _shareSheet.Attach(XamlCreateShareSheet(wtoken.c_str()));
+        if (FAILED(XamlCreateShareSheet(wtoken.c_str(), &_shareSheet))) {
+            [self release];
+            return nil;
+        }
     }
 
     return self;
@@ -124,7 +134,7 @@ static NSString* _getAccessToken() {
  @Notes
 */
 - (void)loadView {
-    _shareSheet->show();
+    (void)_shareSheet->show();
 }
 
 /**
@@ -132,8 +142,15 @@ static NSString* _getAccessToken() {
  @Notes
 */
 - (BOOL)addURL:(NSURL*)url {
+    if (self.isViewLoaded) {
+        TraceError(TAG, L"Can't add URL after view controller is presented");
+        return NO;
+    }
+
     std::wstring urlText = Strings::NarrowToWide<std::wstring>(url.absoluteString);
-    _shareSheet->addLink(urlText.c_str());
+    if (FAILED(_shareSheet->addLink(urlText.c_str()))) {
+        return NO;
+    }
 
     return YES;
 }
@@ -143,8 +160,33 @@ static NSString* _getAccessToken() {
  @Notes
 */
 - (BOOL)addImage:(UIImage*)image {
+    if (self.isViewLoaded) {
+        TraceError(TAG, L"Can't add image after view controller is presented");
+        return NO;
+    }
+
     auto texture = GetCACompositor()->GetDisplayTextureForCGImage(image.CGImage);
-    _shareSheet->addImage(texture->GetContent().Get());
+    if (FAILED(_shareSheet->addImage(texture->GetContent().Get()))) {
+        return NO;
+    }
+
+    return YES;
+}
+
+/**
+@Status Interoperable
+@Notes
+*/
+- (BOOL)setInitialText:(NSString*)text {
+    if (self.isViewLoaded) {
+        TraceError(TAG, L"Can't set initial text after view controller is presented");
+        return NO;
+    }
+
+    std::wstring wtext = Strings::NarrowToWide<std::wstring>(text);
+    if (FAILED(_shareSheet->setInitialText(wtext.c_str()))) {
+        return NO;
+    }
 
     return YES;
 }

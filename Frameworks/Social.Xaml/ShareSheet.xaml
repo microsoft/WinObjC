@@ -9,12 +9,12 @@
     Title="Facebook"
     PrimaryButtonText="Post"
     SecondaryButtonText="Cancel"
-    PrimaryButtonClick="ShareSheet_Post"
-    SecondaryButtonClick="ShareSheet_Cancel">
+    PrimaryButtonClick="Post"
+    SecondaryButtonClick="Cancel">
 
     <StackPanel>
-        <TextBlock Text="User Name" />
-        <TextBox PlaceholderText="Say something..." x:Name="Message" />
-        <Canvas Height="100" x:Name="Preview" />
+        <TextBlock x:Name="_userName" />
+        <TextBox PlaceholderText="Say something..." x:Name="_message" />
+        <Canvas MinHeight="100" x:Name="_preview" />
     </StackPanel>
 </ContentDialog>

@@ -24,9 +24,10 @@ class __declspec(novtable) __declspec(uuid("5CF22688-7892-4CE0-ACA4-3EA01A0EDDDB
 public:
     virtual ~ShareSheetControl() = default;
 
-    virtual void addLink(const wchar_t* url) = 0;
-    virtual void addImage(IInspectable* image) = 0;
-    virtual void show() = 0;
+    STDMETHOD(addLink)(const wchar_t* url) = 0;
+    STDMETHOD(addImage)(IInspectable* image) = 0;
+    STDMETHOD(setInitialText)(const wchar_t* text) = 0;
+    STDMETHOD(show)() = 0;
 };
 
-SOCIAL_XAML_EXPORT ShareSheetControl* XamlCreateShareSheet(const wchar_t* token);
+SOCIAL_XAML_EXPORT HRESULT XamlCreateShareSheet(const wchar_t* token, ShareSheetControl** sheet);

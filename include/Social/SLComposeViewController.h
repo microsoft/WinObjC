@@ -35,7 +35,7 @@ SOCIAL_EXPORT_CLASS
     : UIViewController <NSCoding, UIAppearanceContainer, UIContentContainer, UIFocusEnvironment, UITraitEnvironment>
 + (SLComposeViewController*)composeViewControllerForServiceType:(NSString*)serviceType;
 + (BOOL)isAvailableForServiceType:(NSString*)serviceType;
-- (BOOL)setInitialText:(NSString*)text STUB_METHOD;
+- (BOOL)setInitialText:(NSString*)text;
 - (BOOL)addImage:(UIImage*)image;
 - (BOOL)removeAllImages STUB_METHOD;
 - (BOOL)addURL:(NSURL*)url;
