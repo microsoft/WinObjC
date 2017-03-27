@@ -33,20 +33,20 @@ const int64_t NSURLSessionTransferSizeUnknown = -1LL;
 
 #import <StubReturn.h>
 
-#define _THROW_IF_NULL_REQUEST(request)                                        \
-do {                                                                           \
-    if (request == nil) {                                                      \
-      @throw [NSException                                                      \
-          exceptionWithName:NSInvalidArgumentException                         \
-                     reason:[NSString                                          \
-                                stringWithFormat:@"*** %@ Cannot create data " \
-                                                 @"task without request or "   \
-                                                 @"resume data",               \
-                                                 NSStringFromSelector(_cmd)]   \
-                   userInfo:nil];                                              \
-    }                                                                          \
-}                                                                              \
-  while (false)
+#define _THROW_IF_NULL_REQUEST(request)                                                                    \
+    \
+do {                                                                                                       \
+        if (request == nil) {                                                                              \
+            @throw [NSException exceptionWithName:NSInvalidArgumentException                               \
+                                           reason:[NSString stringWithFormat:@"*** %@ Cannot create data " \
+                                                                             @"task without request or "   \
+                                                                             @"resume data",               \
+                                                                             NSStringFromSelector(_cmd)]   \
+                                         userInfo:nil];                                                    \
+        }                                                                                                  \
+    \
+}                                                                                                   \
+    while (false)
 
 NSString* const NSURLErrorBackgroundTaskCancelledReasonKey = @"NSURLErrorBackgroundTaskCancelledReasonKey";
 
@@ -325,10 +325,10 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
         return nil;
     }
 
-    NSURLSessionDataTask* newTask = [[NSURLSessionDataTask alloc] _initWithTaskDelegate:self
-                                                                             identifier:[self _nextTaskIdentifier]
-                                                                          configuration:_configuration
-                                                                                request:request];
+    NSURLSessionDataTask* newTask = [[[NSURLSessionDataTask alloc] _initWithTaskDelegate:self
+                                                                              identifier:[self _nextTaskIdentifier]
+                                                                           configuration:_configuration
+                                                                                 request:request] autorelease];
     [self _registerDataTask:newTask withCompletionHandler:completionHandler];
     return newTask;
 }
@@ -365,10 +365,10 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
         return nil;
     }
 
-    NSURLSessionDownloadTask* newTask = [[NSURLSessionDownloadTask alloc] _initWithTaskDelegate:self
-                                                                                     identifier:[self _nextTaskIdentifier]
-                                                                                  configuration:_configuration
-                                                                                        request:request];
+    NSURLSessionDownloadTask* newTask = [[[NSURLSessionDownloadTask alloc] _initWithTaskDelegate:self
+                                                                                      identifier:[self _nextTaskIdentifier]
+                                                                                   configuration:_configuration
+                                                                                         request:request] autorelease];
     [self _registerDownloadTask:newTask withCompletionHandler:completionHandler];
     return newTask;
 }
@@ -390,10 +390,10 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
         return nil;
     }
 
-    NSURLSessionDownloadTask* newTask = [[NSURLSessionDownloadTask alloc] _initWithTaskDelegate:self
-                                                                                     identifier:[self _nextTaskIdentifier]
-                                                                                  configuration:_configuration
-                                                                                     resumeData:resumeData];
+    NSURLSessionDownloadTask* newTask = [[[NSURLSessionDownloadTask alloc] _initWithTaskDelegate:self
+                                                                                      identifier:[self _nextTaskIdentifier]
+                                                                                   configuration:_configuration
+                                                                                      resumeData:resumeData] autorelease];
     [self _registerDownloadTask:newTask withCompletionHandler:completionHandler];
     return newTask;
 }
