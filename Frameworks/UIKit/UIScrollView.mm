@@ -605,7 +605,9 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
  @Status Interoperable
 */
 - (BOOL)isScrollEnabled {
-    return _scrollViewer.isEnabled;
+    BOOL dsiabled = (_scrollViewer.horizontalScrollBarVisibility == WXCScrollBarVisibilityDisabled) &&
+                    (_scrollViewer.verticalScrollBarVisibility == WXCScrollBarVisibilityDisabled);
+    return !dsiabled;
 }
 
 /**
@@ -924,6 +926,20 @@ static void changeContentOffset(UIScrollView* self, CGPoint offset, BOOL animate
         _scrollViewer.horizontalScrollBarVisibility = WXCScrollBarVisibilityHidden;
         _previousHorizontalScrollBarVisibility = WXCScrollBarVisibilityHidden;
     }
+}
+
+/**
+@Status Interoperable
+*/
+- (BOOL)showsHorizontalScrollIndicator {
+    return _scrollViewer.horizontalScrollBarVisibility != WXCScrollBarVisibilityHidden;
+}
+
+/**
+@Status Interoperable
+*/
+- (BOOL)showsVerticalScrollIndicator {
+    return _scrollViewer.verticalScrollBarVisibility != WXCScrollBarVisibilityHidden;
 }
 
 /**

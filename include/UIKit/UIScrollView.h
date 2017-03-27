@@ -73,9 +73,9 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic) BOOL scrollsToTop STUB_PROPERTY;
 - (void)scrollRectToVisible:(CGRect)rect animated:(BOOL)animated;
 @property (nonatomic, assign) BOOL pagingEnabled;
-@property (nonatomic) BOOL bounces;
-@property (nonatomic) BOOL alwaysBounceVertical;
-@property (nonatomic) BOOL alwaysBounceHorizontal;
+@property (nonatomic) BOOL bounces STUB_PROPERTY;
+@property (nonatomic) BOOL alwaysBounceVertical STUB_PROPERTY;
+@property (nonatomic) BOOL alwaysBounceHorizontal STUB_PROPERTY;
 - (BOOL)touchesShouldBegin:(NSSet*)touches withEvent:(UIEvent*)event inContentView:(UIView*)view STUB_METHOD;
 - (BOOL)touchesShouldCancelInContentView:(UIView*)view STUB_METHOD;
 @property (nonatomic) BOOL canCancelContentTouches STUB_PROPERTY;
@@ -93,8 +93,8 @@ UIKIT_EXPORT_CLASS
 - (void)flashScrollIndicators STUB_METHOD;
 
 // Zooming and Panning
-@property (nonatomic, readonly) UIPanGestureRecognizer* panGestureRecognizer;
-@property (readonly, nonatomic) UIPinchGestureRecognizer* pinchGestureRecognizer;
+@property (nonatomic, readonly) UIPanGestureRecognizer* panGestureRecognizer STUB_PROPERTY;
+@property (readonly, nonatomic) UIPinchGestureRecognizer* pinchGestureRecognizer STUB_PROPERTY;
 - (void)zoomToRect:(CGRect)rect animated:(BOOL)animated;
 @property (nonatomic) CGFloat zoomScale;
 - (void)setZoomScale:(CGFloat)scale animated:(BOOL)animated;
