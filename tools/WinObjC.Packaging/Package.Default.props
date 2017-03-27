@@ -28,6 +28,14 @@
     <!-- Add each .lib to the linker -->
     <Link Include="@(_ImportLibsFromPackage->'%(FullPath)')"/>
   </ItemGroup>
+
+  <ItemDefinitionGroup>
+    <!-- Add header search path -->
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)\include\;%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
   <ItemGroup Condition="'$(ConfigurationType)' != 'StaticLibrary'">
     <!-- Add references for clang -->
     <ReferenceCopyLocalPaths Include="@(_DllsFromPackage)"/>
@@ -50,11 +58,4 @@
       <DestinationSubDirectory>%(RecursiveDir)</DestinationSubDirectory>
     </ReferenceCopyLocalPaths>
   </ItemGroup>
-
-  <!-- Add dependency paths needed by projects that consume this package -->
-  <ItemDefinitionGroup>
-    <ClangCompile>
-      <InternalSystemIncludePaths>$(MSBuildThisFileDirectory)\include\;%(InternalSystemIncludePaths);</InternalSystemIncludePaths>
-    </ClangCompile>
-  </ItemDefinitionGroup>
 </Project>
