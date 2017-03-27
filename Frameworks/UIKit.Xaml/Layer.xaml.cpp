@@ -48,6 +48,16 @@ Layer::Layer() {
     Background = transparentBrush;
 }
 
+Windows::Foundation::Size Layer::ArrangeOverride(Windows::Foundation::Size finalSize) {
+    // Keep our border dimensions in synch
+    if (_border) {
+        _border->Width = finalSize.Width;
+        _border->Height = finalSize.Height;
+    }
+
+    return __super::ArrangeOverride(finalSize);
+}
+
 // Accessor for our Layer content
 Image^ Layer::LayerContent::get() {
     if (!_content) {
@@ -72,16 +82,28 @@ Canvas^ Layer::SublayerCanvas::get() {
     return this;
 }
 
+void Layer::_EnsureBorder() {
+    // If we don't have a border, create one and add it to our Children collection
+    if (!_border) {
+        _border = ref new Border();
+
+        // Make sure the border is always in front of all other content
+        _border->SetValue(Canvas::ZIndexProperty, 1000);
+
+        Children->Append(_border);
+    }
+}
+
 // Accessor for the LayerProperty that manages the BorderBrush of this layer
 LayerProperty^ Layer::GetBorderBrushProperty() {
-    // We don't support borders on basic layers yet, because Canvas doesn't support one intrinsically
-    return nullptr;
+    _EnsureBorder();
+    return ref new Private::CoreAnimation::LayerProperty(_border, _border->BorderBrushProperty);
 }
 
 // Accessor for the LayerProperty that manages the BorderThickness of this layer
 LayerProperty^ Layer::GetBorderThicknessProperty() {
-    // We don't support borders on basic layers yet, because Canvas doesn't support one intrinsically
-    return nullptr;
+    _EnsureBorder();
+    return ref new Private::CoreAnimation::LayerProperty(_border, _border->BorderThicknessProperty);
 }
 
 DependencyProperty^ Layer::LayerContentProperty::get() {

@@ -30,6 +30,8 @@ public ref class Layer sealed : public ILayer {
 public:
     Layer();
 
+    Windows::Foundation::Size ArrangeOverride(Windows::Foundation::Size finalSize) override;
+
     // Accessor for our Layer content; we create one on demand
     virtual property Windows::UI::Xaml::Controls::Image^ LayerContent {
         Windows::UI::Xaml::Controls::Image^ get();
@@ -68,6 +70,9 @@ internal:
 private:
     // Layer elements; created on demand
     Windows::UI::Xaml::Controls::Image^ _content;
+    Windows::UI::Xaml::Controls::Border^ _border;
+
+    void _EnsureBorder();
 
     // Dependency properties for adding layer-like functionality to any FrameworkElement
     static bool s_dependencyPropertiesRegistered;
