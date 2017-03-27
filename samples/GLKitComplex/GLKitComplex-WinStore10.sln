@@ -1,7 +1,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.22823.1
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
+MinimumVisualStudioVersion = 15.0.0.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GLKitComplex", "GLKitComplex", "{13B9CC41-DB2D-463E-9272-3B8BF93B9BB5}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLKitComplex", "GLKitComplex.vsimporter\GLKitComplex-WinStore10\GLKitComplex.vcxproj", "{D8A0D1E3-4371-4E1D-B0CE-2C22DBEC62B2}"
