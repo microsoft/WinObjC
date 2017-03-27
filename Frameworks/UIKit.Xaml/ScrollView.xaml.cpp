@@ -65,6 +65,17 @@ ScrollViewer^ ScrollView::InnerScrollViewer::get() {
     return scrollViewer;
 }
 
+Windows::Foundation::Size ScrollView::ArrangeOverride(Windows::Foundation::Size finalSize) {
+    if (SublayerCanvas->Width < finalSize.Width) {
+        // if the canvas's width is smaller than that of scrollview
+        // need adjust canvas's width to be same of the scrollview
+        // in order to have proper resizing behavior
+        SublayerCanvas->Width = finalSize.Width;
+    }
+    
+    return __super::ArrangeOverride(finalSize);
+}
+
 } /* Xaml*/
 } /* UIKit*/
 
