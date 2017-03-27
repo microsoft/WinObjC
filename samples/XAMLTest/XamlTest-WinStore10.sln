@@ -1,7 +1,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.22823.1
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
+MinimumVisualStudioVersion = 15.0.0.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XamlTest", "XamlTest", "{DD680EF4-9807-4EDF-B6B4-38F4B9126A91}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XamlTest", "XamlTest.vsimporter\XamlTest-WinStore10\XamlTest.vcxproj", "{40CF9F60-0C81-4A82-9E9F-D1E3E2DCD0CD}"
