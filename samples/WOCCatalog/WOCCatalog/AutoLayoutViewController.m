@@ -98,10 +98,21 @@
     label4.text = @"size.";
     
     label1.backgroundColor = [UIColor colorWithRed:1.0 green:0.8 blue:0.8 alpha:1.0];
+    label1.layer.borderColor = [UIColor blueColor].CGColor;
+    label1.layer.borderWidth = 1.0f;
+
     label2.backgroundColor = [UIColor colorWithRed:0.8 green:1.0 blue:0.8 alpha:1.0];
+    label2.layer.borderColor = [UIColor purpleColor].CGColor;
+    label2.layer.borderWidth = 3.0f;
+
     label3.backgroundColor = [UIColor colorWithRed:0.8 green:0.8 blue:1.0 alpha:1.0];
+    label3.layer.borderColor = [UIColor redColor].CGColor;
+    label3.layer.borderWidth = 5.0f;
+
     label4.backgroundColor = [UIColor colorWithRed:1.0 green:1.0 blue:0.8 alpha:1.0];
-    
+    label4.layer.borderColor = [UIColor greenColor].CGColor;
+    label4.layer.borderWidth = 7.0f;
+
     [self.view addSubview:label1];
     [self.view addSubview:label2];
     [self.view addSubview:label3];

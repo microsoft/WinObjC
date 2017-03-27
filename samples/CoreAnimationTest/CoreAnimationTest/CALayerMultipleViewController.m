@@ -198,7 +198,8 @@ CGFloat const kPadding = 16.0f;
             kTransformRotationProperty,
             kTransformScaleProperty,
             kTransformXProperty,
-            kTransformYProperty
+            kTransformYProperty,
+            kBorderWidthProperty
         ];
     }
 
@@ -630,7 +631,6 @@ CGFloat const kPadding = 16.0f;
                              action:@selector(borderWidthChanged:)];
                 [cell setDisabled:![_enabledProperties containsObject:kBorderWidthProperty]];
                 return cell;
-
             }
 
             // Masks to bounds
@@ -812,6 +812,7 @@ CGFloat const kPadding = 16.0f;
 }
 
 - (void)borderWidthChanged:(UISlider*)sender {
+    _currentLayer.borderColor = [UIColor blueColor].CGColor;
     _currentLayer.borderWidth = sender.value;
 }
 
