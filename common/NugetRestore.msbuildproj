@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|AnyCPU">
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|AnyCPU">
+      <Configuration>Release</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <OutputPath>$(SolutionDir)</OutputPath>
+    <ProjectGuid>B2C6186E-B340-49D8-888E-76ED83752E43</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="CreateManifestResourceNames" />
+  <Target Name="CoreCompile" />
+  <Target Name="GetReferenceAssemblyPaths" />
+  <Target Name="CopyFilesToOutputDirectory" />
+  <Target Name="_GenerateCompileDependencyCache" />
+  
+  <Target Name="Build">
+    <Message Text="EnsureSolutionRestored: Restoring solution $(SolutionPath)" Importance="High" Condition="'$(SolutionDir)' != '' And '$(BuildingInsideVisualStudio)' == 'true' And '$(BuildingPackage)' != 'true'"/>
+    <!-- First check that there is a valid nuget.exe to use -->
+    <Exec Condition="!Exists('$(MSBuildThisFileDirectory)..\.tools\nuget.exe') And '$(SolutionDir)' != '' And '$(BuildingInsideVisualStudio)' == 'true' And '$(BuildingPackage)' != 'true'" Command="init.cmd" WorkingDirectory="$(MSBuildThisFileDirectory)..\"/> 
+
+    <!-- Now restore the solution -->
+    <Exec Command="$(MSBuildThisFileDirectory)..\.tools\nuget.exe restore $(SolutionPath)" Condition="'$(SolutionDir)' != '' And '$(BuildingInsideVisualStudio)' == 'true' And '$(BuildingPackage)' != 'true'"/> 
+  </Target>
+
+</Project>
