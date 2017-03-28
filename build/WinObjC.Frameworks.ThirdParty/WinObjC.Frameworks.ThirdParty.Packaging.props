@@ -16,6 +16,7 @@
       </PackageLicenseUrl>
       <Copyright>Copyright © Microsoft</Copyright>
       <PackageTags>WinObjC.Frameworks.ThirdParty</PackageTags>
+      <PackageIconUrl>https://avatars2.githubusercontent.com/u/6154722?v=3&amp;s=200</PackageIconUrl>
   </PropertyGroup>
 
 </Project>

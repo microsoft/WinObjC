@@ -44,6 +44,7 @@
     </PackageLicenseUrl>
     <Copyright>Copyright © Microsoft</Copyright>
     <PackageTags>WinObjC.Language</PackageTags>
+    <PackageIconUrl>https://avatars2.githubusercontent.com/u/6154722?v=3&amp;s=200</PackageIconUrl>
     <IsDevelopmentDependency>true</IsDevelopmentDependency>
     <IncludeContentInPackage>false</IncludeContentInPackage>
   </PropertyGroup>
