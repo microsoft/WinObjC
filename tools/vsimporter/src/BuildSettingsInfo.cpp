@@ -207,7 +207,11 @@ static SettingDesc _settings[] = {
     { "INFOPLIST_PATH", "${EXECUTABLE_FOLDER_PATH}/Info.plist", PathValue, NULL, AppSetting },
     // Static library variables
     { "PUBLIC_HEADERS_FOLDER_PATH", "/usr/local/include", PathValue, NULL, StaticLibSetting },
-    { "PRIVATE_HEADERS_FOLDER_PATH", "/usr/local/include", PathValue, NULL, StaticLibSetting }
+    { "PRIVATE_HEADERS_FOLDER_PATH", "/usr/local/include", PathValue, NULL, StaticLibSetting },
+    // Project template variables
+    { "TOOLS_VERSION", "15.0", StringValue, NULL, UniversalSetting },
+    { "MINIMUM_VISUAL_STUDIO_VERSION", "15.0", StringValue, NULL, UniversalSetting },
+    { "PLATFORM_TOOLSET", "v141", StringValue, NULL, UniversalSetting }
 };
 
 void getDefaultSettingValues(VariableCollection& vc, ProductMask mask) {
