@@ -38,6 +38,10 @@ VSTemplateParameters::VSTemplateParameters() {
         m_params["$guid" + std::to_string(i) + "$"] = sole::uuid4().str();
     }
     m_params["$targetnametoken$"] = "$targetnametoken$";
+
+    m_params["$ToolsVersion$"] = "15.0";
+    m_params["$MinimumVisualStudioVersion$"] = "15.0";
+    m_params["$PlatformToolset$"] = "v141";
 }
 
 void VSTemplateParameters::setProjectName(const std::string& val) {

@@ -228,11 +228,16 @@ void VSSolution::write(std::ostream& out) const {
     if (m_version == 12) {
         out << "# Visual Studio 2013" << std::endl;
         out << "VisualStudioVersion = 12.0.21005.1" << std::endl;
-    } else {
+        out << "MinimumVisualStudioVersion = 10.0.40219.1" << std::endl;
+    } else if (m_version == 14) {
         out << "# Visual Studio 14" << std::endl;
         out << "VisualStudioVersion = 14.0.22823.1" << std::endl;
+        out << "MinimumVisualStudioVersion = 14.0.22823.1" << std::endl;
+    } else {
+        out << "# Visual Studio 15" << std::endl;
+        out << "VisualStudioVersion = 15.0.26228.4" << std::endl;
+        out << "MinimumVisualStudioVersion = 15.0.26206.0" << std::endl;
     }
-    out << "MinimumVisualStudioVersion = 10.0.40219.1" << std::endl;
 
     // Write project descriptions
     writeProjectDescriptions(out);

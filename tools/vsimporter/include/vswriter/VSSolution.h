@@ -27,7 +27,7 @@ class VCProject;
 
 class VSSolution {
 public:
-    VSSolution(const std::string& absPath, unsigned version = 14);
+    VSSolution(const std::string& absPath, unsigned version = 15);
     ~VSSolution();
     const std::string& getPath();
     VSBuildableSolutionProject* addProject(VCProject* project,
