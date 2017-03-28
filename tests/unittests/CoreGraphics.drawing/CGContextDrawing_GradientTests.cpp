@@ -64,7 +64,7 @@ DRAW_TEST_F(CGGradient, LinearGradient, UIKitMimicTest<>) {
                         kCGGradientDrawsBeforeStartLocation);
 }
 
-DRAW_TEST_F(CGGradient, LinearGradientDrawWithCGColor, UIKitMimicTest<>) {
+DRAW_TEST_F(CGGradient, LinearGradientDrawWithCGColor, UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<64>>>) {
     CGFloat locations[2] = { 0, 1 };
     CGFloat components[8] = { 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0 };
 
@@ -88,15 +88,19 @@ DRAW_TEST_F(CGGradient, LinearGradientDrawWithCGColor, UIKitMimicTest<>) {
                                 kCGGradientDrawsBeforeStartLocation);
 }
 
-DRAW_TEST_F(CGGradient, LinearGradientShortBothSides_Options_0, UIKitMimicTest<>) {
+DRAW_TEST_F(CGGradient, LinearGradientShortBothSides_Options_0, UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<64>>>) {
     _drawShortLinearGradientWithOptions(GetDrawingContext(), GetDrawingBounds(), 0);
 }
 
-DRAW_TEST_F(CGGradient, LinearGradientShortBothSides_Options_kCGGradientDrawsBeforeStartLocation, UIKitMimicTest<>) {
+DRAW_TEST_F(CGGradient,
+            LinearGradientShortBothSides_Options_kCGGradientDrawsBeforeStartLocation,
+            UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<64>>>) {
     _drawShortLinearGradientWithOptions(GetDrawingContext(), GetDrawingBounds(), kCGGradientDrawsBeforeStartLocation);
 }
 
-DRAW_TEST_F(CGGradient, LinearGradientShortBothSides_Options_kCGGradientDrawsAfterEndLocation, UIKitMimicTest<>) {
+DRAW_TEST_F(CGGradient,
+            LinearGradientShortBothSides_Options_kCGGradientDrawsAfterEndLocation,
+            UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<64>>>) {
     _drawShortLinearGradientWithOptions(GetDrawingContext(), GetDrawingBounds(), kCGGradientDrawsAfterEndLocation);
 }
 
@@ -180,7 +184,7 @@ DRAW_TEST_F(CGGradient, LinearGradient2Short, UIKitMimicTest<>) {
                         kCGGradientDrawsBeforeStartLocation);
 }
 
-DRAW_TEST_F(CGGradient, LinearGradient3, UIKitMimicTest<>) {
+DRAW_TEST_F(CGGradient, LinearGradient3, UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<64>>>) {
     CGFloat locations[] = { 0.0, 0.5, 1 };
 
     CGFloat components[] = {
@@ -195,7 +199,7 @@ DRAW_TEST_F(CGGradient, LinearGradient3, UIKitMimicTest<>) {
                         kCGGradientDrawsBeforeStartLocation);
 }
 
-DRAW_TEST_F(CGGradient, LinearGradientWithLowOpacity, UIKitMimicTest<>) {
+DRAW_TEST_F(CGGradient, LinearGradientWithLowOpacity, UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<64>>>) {
     CGFloat locations[] = { 0.0, 0.5, 1 };
 
     CGFloat components[] = {
@@ -228,7 +232,7 @@ DRAW_TEST_F(CGGradient, LinearGradientWithAlpha, UIKitMimicTest<>) {
                         kCGGradientDrawsBeforeStartLocation);
 }
 
-DRAW_TEST_F(CGGradient, LinearGradientWithLowOpacityShort, UIKitMimicTest<>) {
+DRAW_TEST_F(CGGradient, LinearGradientWithLowOpacityShort, UIKitMimicTest<PixelByPixelImageComparator<PixelComparisonModeMask<64>>>) {
     CGFloat locations[] = { 0.0, 0.5, 1 };
 
     CGFloat components[] = {

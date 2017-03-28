@@ -410,23 +410,32 @@ public:
         CurrentGState().shouldSmoothFonts = shouldSmoothFonts;
     }
 
-    __CGContext(ID2D1RenderTarget* renderTarget) {
-        FAIL_FAST_IF_FAILED(renderTarget->QueryInterface(IID_PPV_ARGS(&deviceContext)));
-
-        // CG is a lower-left origin system (LLO), but D2D is upper left (ULO).
-        // We have to translate the render area back onscreen and flip it up to ULO.
-        float height = 0.f;
+    // Obtain the size of the ID2D1DeviceContext.
+    // NOTE: Use this to obtain the size of ID2D1DeviceContext,
+    // as ID2D1DeviceContext::GetSize() on ARM returns garbage.
+    // GH#1769
+    inline D2D1_SIZE_F GetContextSize() {
 #ifdef _M_ARM
         // TODO: GH#1769; GetSize() returns garbage on ARM.
         // We would prefer to allow D2D to do the DPI calculation.
         D2D1_SIZE_U targetPixelSize = deviceContext->GetPixelSize();
         FLOAT dpiX, dpiY;
         deviceContext->GetDpi(&dpiX, &dpiY);
-        height = (targetPixelSize.height * 96.0) / dpiY;
+        FLOAT height = (targetPixelSize.height * 96.0) / dpiY;
+        FLOAT width = (targetPixelSize.width * 96.0) / dpiX;
+        return { width, height };
+
 #else
-        D2D1_SIZE_F targetSize = deviceContext->GetSize();
-        height = targetSize.height;
+        return deviceContext->GetSize();
 #endif
+    }
+
+    __CGContext(ID2D1RenderTarget* renderTarget) {
+        FAIL_FAST_IF_FAILED(renderTarget->QueryInterface(IID_PPV_ARGS(&deviceContext)));
+
+        // CG is a lower-left origin system (LLO), but D2D is upper left (ULO).
+        // We have to translate the render area back onscreen and flip it up to ULO.
+        float height = GetContextSize().height;
         deviceTransform = CGAffineTransformMake(1.f, 0.f, 0.f, -1.f, 0.f, height);
 
         ComPtr<ID2D1Image> baselineTarget;
@@ -3134,7 +3143,7 @@ void CGContextDrawTiledImage(CGContextRef context, CGRect rect, CGImageRef image
                                          &bitmapBrush));
 
     // Area to fill
-    D2D1_SIZE_F targetSize = deviceContext->GetSize();
+    D2D1_SIZE_F targetSize = context->GetContextSize();
     D2D1_RECT_F region = D2D1::RectF(0, 0, targetSize.width, targetSize.height);
 
     FAIL_FAST_IF_FAILED(
@@ -3239,7 +3248,7 @@ void CGContextDrawLinearGradient(
         &linearGradientBrush));
 
     // Area to fill
-    D2D1_SIZE_F targetSize = deviceContext->GetSize();
+    D2D1_SIZE_F targetSize = context->GetContextSize();
     D2D1_RECT_F region = D2D1::RectF(0, 0, targetSize.width, targetSize.height);
 
     FAIL_FAST_IF_FAILED(
