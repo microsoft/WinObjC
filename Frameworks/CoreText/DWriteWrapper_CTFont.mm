@@ -43,9 +43,7 @@ static const struct {
  * Helper function that efficiently compares two CFStringRef and returns true if they are equal (case insensitive)
  */
 static inline bool __CFStringEqual(CFStringRef left, CFStringRef right) {
-    CFIndex leftLength = CFStringGetLength(left);
-    return leftLength == CFStringGetLength(right) &&
-           CFStringFindWithOptions(left, right, { 0, leftLength }, kCFCompareCaseInsensitive, nullptr);
+    return CFStringCompare(left, right, kCFCompareCaseInsensitive) == kCFCompareEqualTo;
 }
 
 /**

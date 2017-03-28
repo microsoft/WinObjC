@@ -1017,7 +1017,6 @@ static Boolean __CFStringEqual(CFTypeRef cf1, CFTypeRef cf2) {
     return true;
 }
 
-
 /* String hashing: Should give the same results whatever the encoding; so we hash UniChars.
 If the length is less than or equal to 96, then the hash function is simply the 
 following (n is the nth UniChar character, starting from 0):
@@ -2146,7 +2145,7 @@ const char * CFStringGetCStringPtr(CFStringRef str, CFStringEncoding encoding) {
     
     // CF_SWIFT_FUNCDISPATCHV(__kCFStringTypeID, const char *, (CFSwiftRef)str, NSString._fastCStringContents);
     // WINOBJC: pass along encoding instead of hardcoded bool.
-    CF_OBJC_FUNCDISPATCHV(__kCFStringTypeID, const char *, (NSString *)str, _fastCStringContents:CFStringConvertEncodingToNSStringEncoding(encoding));
+    CF_OBJC_FUNCDISPATCHV(__kCFStringTypeID, const char *, (NSString *)str, _fastCStringContents:encoding);
 
     __CFAssertIsString(str);
 

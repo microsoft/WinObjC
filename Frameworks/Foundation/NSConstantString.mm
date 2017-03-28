@@ -45,6 +45,23 @@
 }
 #pragma pop
 
+// Override [NSString hash] and [NSString isEqualToString:] for faster perf
+- (NSUInteger)hash {
+    return CFStringHashCString(reinterpret_cast<uint8_t*>(c_string), len);
+}
+
+- (BOOL)isEqualToString:(NSString*)str {
+    if (self == str) {
+        return YES;
+    }
+
+    if ([str isKindOfClass:[NSConstantString class]]) {
+        return __CFStringMakeConstantString(c_string) == __CFStringMakeConstantString(static_cast<NSConstantString*>(str)->c_string);
+    }
+
+    return [super isEqualToString:str];
+}
+
 - INNER_BRIDGE_CALL(static_cast<NSString*>(__CFStringMakeConstantString(c_string)), NSUInteger, length);
 - INNER_BRIDGE_CALL(static_cast<NSString*>(__CFStringMakeConstantString(c_string)), unichar, characterAtIndex:(NSUInteger)index);
 - INNER_BRIDGE_CALL(static_cast<NSString*>(__CFStringMakeConstantString(c_string)), void,
