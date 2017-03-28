@@ -18,6 +18,7 @@
     <PackageLicenseUrl></PackageLicenseUrl>
     <Copyright>Copyright © Microsoft</Copyright>
     <PackageTags>WinObjC.Packaging</PackageTags>
+    <PackageIconUrl>https://avatars2.githubusercontent.com/u/6154722?v=3&amp;s=200</PackageIconUrl>
     <IsDevelopmentDependency>true</IsDevelopmentDependency>
   </PropertyGroup>
 
