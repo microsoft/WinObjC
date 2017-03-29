@@ -201,11 +201,11 @@ bool UXEvent::Wait(int timeOutInSeconds, int signalCountTarget) {
     return Wait(timeOutInSeconds);
 }
 
-UIColor* ConvertWUColorToUIColor(WUColor* wuColor) {
-    CGFloat r = wuColor.r / 255.0;
-    CGFloat g = wuColor.g / 255.0;
-    CGFloat b = wuColor.b / 255.0;
-    CGFloat a = wuColor.a / 255.0;
+UIColor* ConvertWUColorToUIColor(const winrt::Windows::UI::Color& wuColor) {
+    CGFloat r = wuColor.R / 255.0;
+    CGFloat g = wuColor.G / 255.0;
+    CGFloat b = wuColor.B / 255.0;
+    CGFloat a = wuColor.A / 255.0;
     return [UIColor colorWithRed:r green:g blue:b alpha:a];
 }
 

@@ -17,11 +17,21 @@
 #import <UIKit/UIScrollView.h>
 
 #include "ObjCXamlControls.h"
-#import "UWP/WindowsUIXamlControls.h"
+#import "UIViewInternal.h"
 
 #import "FunctionalTestHelpers.h"
 #import "UXTestHelpers.h"
+#import "CppWinRTHelpers.h"
 #import "UIKitControls/UIScrollViewController.h"
+
+#include "COMIncludes.h"
+#import <winrt/Windows.UI.Xaml.Controls.h>
+#import <winrt/Windows.UI.Xaml.h>
+#import <winrt/Windows.Foundation.h>
+#include "COMIncludes_End.h"
+
+using namespace winrt::Windows::UI::Xaml;
+namespace WF = winrt::Windows::Foundation;
 
 class UIScrollViewTests {
 public:
@@ -48,11 +58,8 @@ public:
     TEST_METHOD(GetXamlElement) {
         FrameworkHelper::RunOnUIThread([]() {
             UIView* view = [[[UIScrollView alloc] init] autorelease];
-            WXFrameworkElement* backingElement = [view xamlElement];
+            FrameworkElement backingElement = [view _xamlElementInternal];
             ASSERT_TRUE(backingElement);
-
-            // TODO: Fix up when UIScrollView moves fully to XAML
-            ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
         });
     }
 
@@ -65,48 +72,48 @@ public:
 
         dispatch_sync(dispatch_get_main_queue(), ^{
             // get the backing xaml element
-            WXFrameworkElement* xamlScrollView = [scrollView xamlElement];
-            Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlScrollViewGetScrollViewer([xamlScrollView comObj]));
-            WXCScrollViewer* scrollViewer = _createRtProxy([WXCScrollViewer class], inspectable.Get());
-            ASSERT_OBJCNE(scrollViewer, nil);
+            FrameworkElement xamlScrollView = [scrollView _xamlElementInternal];
+            Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlScrollViewGetScrollViewer(objcwinrt::to_insp(xamlScrollView)));
+            auto scrollViewer = objcwinrt::from_insp<Controls::ScrollViewer>(inspectable);
+            ASSERT_TRUE(scrollViewer);
 
-            Microsoft::WRL::ComPtr<IInspectable> inspectable2(XamlScrollViewGetSubLayerCanvas([xamlScrollView comObj]));
-            WXCCanvas* canvas = _createRtProxy([WXCCanvas class], inspectable2.Get());
+            Microsoft::WRL::ComPtr<IInspectable> inspectable2(XamlScrollViewGetSubLayerCanvas(objcwinrt::to_insp(xamlScrollView)));
+            auto canvas = objcwinrt::from_insp<Controls::Canvas>(inspectable2);
 
             // verify default contentOffset is {0}
             ASSERT_TRUE(scrollView.contentOffset == CGPointZero);
-            ASSERT_TRUE(scrollViewer.horizontalOffset == 0);
-            ASSERT_TRUE(scrollViewer.verticalOffset == 0);
+            ASSERT_TRUE(scrollViewer.HorizontalOffset() == 0);
+            ASSERT_TRUE(scrollViewer.VerticalOffset() == 0);
 
-            // verify default conentInsets is {0}
+            // verify default contentInsets is {0}
             EXPECT_TRUE(UIEdgeInsetsEqualToEdgeInsets(scrollView.contentInset, UIEdgeInsetsZero));
-            ASSERT_TRUE(canvas.margin.top == 0 && canvas.margin.left == 0 && canvas.margin.right == 0 && canvas.margin.bottom == 0);
+            ASSERT_TRUE(canvas.Margin().Top == 0 && canvas.Margin().Left == 0 && canvas.Margin().Right == 0 && canvas.Margin().Bottom == 0);
 
-            // verfiy scrolling default enabled
+            // verify scrolling default enabled
             ASSERT_TRUE(scrollView.scrollEnabled);
-            ASSERT_TRUE(scrollViewer.verticalScrollBarVisibility == WXCScrollBarVisibilityAuto &&
-                        scrollViewer.horizontalScrollBarVisibility == WXCScrollBarVisibilityAuto);
+            ASSERT_TRUE(scrollViewer.VerticalScrollBarVisibility() == Controls::ScrollBarVisibility::Auto &&
+                        scrollViewer.HorizontalScrollBarVisibility() == Controls::ScrollBarVisibility::Auto);
 
-            // verfiy default directional lock disabled
+            // verify default directional lock disabled
             ASSERT_TRUE(!scrollView.directionalLockEnabled);
-            ASSERT_TRUE(!scrollViewer.isVerticalRailEnabled);
-            ASSERT_TRUE(!scrollViewer.isHorizontalRailEnabled);
+            ASSERT_TRUE(!scrollViewer.IsVerticalRailEnabled());
+            ASSERT_TRUE(!scrollViewer.IsHorizontalRailEnabled());
 
-            // verfiy default show horizontal/vertical indicator
+            // verify default show horizontal/vertical indicator
             ASSERT_TRUE(scrollView.showsHorizontalScrollIndicator);
             ASSERT_TRUE(scrollView.showsVerticalScrollIndicator);
-            ASSERT_TRUE(scrollViewer.verticalScrollBarVisibility == WXCScrollBarVisibilityAuto);
-            ASSERT_TRUE(scrollViewer.horizontalScrollBarVisibility == WXCScrollBarVisibilityAuto);
+            ASSERT_TRUE(scrollViewer.VerticalScrollBarVisibility() == Controls::ScrollBarVisibility::Auto);
+            ASSERT_TRUE(scrollViewer.HorizontalScrollBarVisibility() == Controls::ScrollBarVisibility::Auto);
 
-            // verfify default zoomScale and minZoomScale and maxZoomScale is 1
+            // verify default zoomScale and minZoomScale and maxZoomScale is 1
             ASSERT_TRUE(scrollView.zoomScale == 1);
-            ASSERT_TRUE(scrollViewer.zoomFactor == 1);
+            ASSERT_TRUE(scrollViewer.ZoomFactor() == 1);
 
             ASSERT_TRUE(scrollView.maximumZoomScale == 10);
-            ASSERT_TRUE(scrollViewer.maxZoomFactor == 10);
+            ASSERT_TRUE(scrollViewer.MaxZoomFactor() == 10);
 
             ASSERT_TRUE(scrollView.minimumZoomScale == 1);
-            ASSERT_TRUE(scrollViewer.minZoomFactor == 1);
+            ASSERT_TRUE(scrollViewer.MinZoomFactor() == 1);
         });
     }
 
@@ -119,47 +126,47 @@ public:
 
         dispatch_sync(dispatch_get_main_queue(), ^{
             // get the backing xaml element
-            WXFrameworkElement* xamlScrollView = [scrollView xamlElement];
-            Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlScrollViewGetScrollViewer([xamlScrollView comObj]));
-            WXCScrollViewer* scrollViewer = _createRtProxy([WXCScrollViewer class], inspectable.Get());
-            ASSERT_OBJCNE(scrollViewer, nil);
+            FrameworkElement xamlScrollView = [scrollView _xamlElementInternal];
+            Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlScrollViewGetScrollViewer(objcwinrt::to_insp(xamlScrollView)));
+            auto scrollViewer = objcwinrt::from_insp<Controls::ScrollViewer>(inspectable);
+            ASSERT_TRUE(scrollViewer);
 
             ASSERT_TRUE(scrollView.contentOffset == CGPointZero);
-            ASSERT_TRUE(scrollViewer.horizontalOffset == 0);
-            ASSERT_TRUE(scrollViewer.verticalOffset == 0);
+            ASSERT_TRUE(scrollViewer.HorizontalOffset() == 0);
+            ASSERT_TRUE(scrollViewer.VerticalOffset() == 0);
 
             // move x only
             scrollView.contentOffset = CGPointMake(100, 0);
-            LOG_INFO("expected contentOffset {%f, %f}, acutal on xaml {%f, %f}",
+            LOG_INFO("expected contentOffset {%f, %f}, actual on xaml {%f, %f}",
                      scrollView.contentOffset.x,
                      scrollView.contentOffset.y,
-                     scrollViewer.horizontalOffset,
-                     scrollViewer.verticalOffset);
+                     scrollViewer.HorizontalOffset(),
+                     scrollViewer.VerticalOffset());
 
-            EXPECT_TRUE(scrollViewer.horizontalOffset == 100);
-            EXPECT_TRUE(scrollViewer.verticalOffset == 0);
+            EXPECT_TRUE(scrollViewer.HorizontalOffset() == 100);
+            EXPECT_TRUE(scrollViewer.VerticalOffset() == 0);
 
             // move y only
             scrollView.contentOffset = CGPointMake(100, 100);
-            LOG_INFO("expected contentOffset {%f, %f}, acutal on xaml {%f, %f}",
+            LOG_INFO("expected contentOffset {%f, %f}, actual on xaml {%f, %f}",
                      scrollView.contentOffset.x,
                      scrollView.contentOffset.y,
-                     scrollViewer.horizontalOffset,
-                     scrollViewer.verticalOffset);
+                     scrollViewer.HorizontalOffset(),
+                     scrollViewer.VerticalOffset());
 
-            EXPECT_TRUE(scrollViewer.horizontalOffset == 100);
-            EXPECT_TRUE(scrollViewer.verticalOffset == 100);
+            EXPECT_TRUE(scrollViewer.HorizontalOffset() == 100);
+            EXPECT_TRUE(scrollViewer.VerticalOffset() == 100);
 
             // move both x and y
             scrollView.contentOffset = CGPointMake(200, 200);
-            LOG_INFO("expected contentOffset {%f, %f}, acutal on xaml {%f, %f}",
+            LOG_INFO("expected contentOffset {%f, %f}, actual on xaml {%f, %f}",
                      scrollView.contentOffset.x,
                      scrollView.contentOffset.y,
-                     scrollViewer.horizontalOffset,
-                     scrollViewer.verticalOffset);
+                     scrollViewer.HorizontalOffset(),
+                     scrollViewer.VerticalOffset());
 
-            EXPECT_TRUE(scrollViewer.horizontalOffset == 200);
-            EXPECT_TRUE(scrollViewer.verticalOffset == 200);
+            EXPECT_TRUE(scrollViewer.HorizontalOffset() == 200);
+            EXPECT_TRUE(scrollViewer.VerticalOffset() == 200);
         });
     }
 
@@ -172,21 +179,21 @@ public:
 
         dispatch_sync(dispatch_get_main_queue(), ^{
             // get the backing xaml element
-            WXFrameworkElement* xamlScrollView = [scrollView xamlElement];
-            Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlScrollViewGetScrollViewer([xamlScrollView comObj]));
-            WXCScrollViewer* scrollViewer = _createRtProxy([WXCScrollViewer class], inspectable.Get());
-            ASSERT_OBJCNE(scrollViewer, nil);
+            FrameworkElement xamlScrollView = [scrollView _xamlElementInternal];
+            Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlScrollViewGetScrollViewer(objcwinrt::to_insp(xamlScrollView)));
+            auto scrollViewer = objcwinrt::from_insp<Controls::ScrollViewer>(inspectable);
+            ASSERT_TRUE(scrollViewer);
 
-            Microsoft::WRL::ComPtr<IInspectable> inspectable2(XamlScrollViewGetSubLayerCanvas([xamlScrollView comObj]));
-            WXCCanvas* canvas = _createRtProxy([WXCCanvas class], inspectable2.Get());
+            Microsoft::WRL::ComPtr<IInspectable> inspectable2(XamlScrollViewGetSubLayerCanvas(objcwinrt::to_insp(xamlScrollView)));
+            auto canvas = objcwinrt::from_insp<Controls::Canvas>(inspectable2);
 
-            // verify default conentInsets is {0}
+            // verify default contentInsets is {0}
             EXPECT_TRUE(UIEdgeInsetsEqualToEdgeInsets(scrollView.contentInset, UIEdgeInsetsZero));
-            ASSERT_TRUE(canvas.margin.top == 0 && canvas.margin.left == 0 && canvas.margin.right == 0 && canvas.margin.bottom == 0);
+            ASSERT_TRUE(canvas.Margin().Top == 0 && canvas.Margin().Left == 0 && canvas.Margin().Right == 0 && canvas.Margin().Bottom == 0);
 
             // changing contentInsets
             scrollView.contentInset = UIEdgeInsetsMake(100, 200, 300, 400);
-            ASSERT_TRUE(canvas.margin.top == 100 && canvas.margin.left == 200 && canvas.margin.bottom == 300 && canvas.margin.right == 400);
+            ASSERT_TRUE(canvas.Margin().Top == 100 && canvas.Margin().Left == 200 && canvas.Margin().Bottom == 300 && canvas.Margin().Right == 400);
         });
     }
 
@@ -199,51 +206,51 @@ public:
 
         dispatch_sync(dispatch_get_main_queue(), ^{
             // get the backing xaml element
-            WXFrameworkElement* xamlScrollView = [scrollView xamlElement];
-            Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlScrollViewGetScrollViewer([xamlScrollView comObj]));
-            WXCScrollViewer* scrollViewer = _createRtProxy([WXCScrollViewer class], inspectable.Get());
-            ASSERT_OBJCNE(scrollViewer, nil);
+            FrameworkElement xamlScrollView = [scrollView _xamlElementInternal];
+            Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlScrollViewGetScrollViewer(objcwinrt::to_insp(xamlScrollView)));
+            auto scrollViewer = objcwinrt::from_insp<Controls::ScrollViewer>(inspectable);
+            ASSERT_TRUE(scrollViewer);
 
             ASSERT_TRUE(scrollView.scrollEnabled);
-            ASSERT_TRUE(scrollViewer.verticalScrollBarVisibility == WXCScrollBarVisibilityAuto &&
-                        scrollViewer.horizontalScrollBarVisibility == WXCScrollBarVisibilityAuto);
+            ASSERT_TRUE(scrollViewer.VerticalScrollBarVisibility() == Controls::ScrollBarVisibility::Auto &&
+                        scrollViewer.HorizontalScrollBarVisibility() == Controls::ScrollBarVisibility::Auto);
 
             // turn off scrolling
             scrollView.scrollEnabled = NO;
-            ASSERT_TRUE(scrollViewer.verticalScrollBarVisibility == WXCScrollBarVisibilityDisabled &&
-                        scrollViewer.horizontalScrollBarVisibility == WXCScrollBarVisibilityDisabled);
+            ASSERT_TRUE(scrollViewer.VerticalScrollBarVisibility() == Controls::ScrollBarVisibility::Disabled &&
+                        scrollViewer.HorizontalScrollBarVisibility() == Controls::ScrollBarVisibility::Disabled);
 
             // turn back on
             scrollView.scrollEnabled = YES;
-            ASSERT_TRUE(scrollViewer.verticalScrollBarVisibility == WXCScrollBarVisibilityAuto &&
-                        scrollViewer.horizontalScrollBarVisibility == WXCScrollBarVisibilityAuto);
+            ASSERT_TRUE(scrollViewer.VerticalScrollBarVisibility() == Controls::ScrollBarVisibility::Auto &&
+                        scrollViewer.HorizontalScrollBarVisibility() == Controls::ScrollBarVisibility::Auto);
 
-            // now change the horizontal scrolldinciate
+            // now change the horizontal scrollIndicator
             scrollView.showsHorizontalScrollIndicator = NO;
-            ASSERT_TRUE(scrollViewer.verticalScrollBarVisibility == WXCScrollBarVisibilityAuto &&
-                        scrollViewer.horizontalScrollBarVisibility == WXCScrollBarVisibilityHidden);
+            ASSERT_TRUE(scrollViewer.VerticalScrollBarVisibility() == Controls::ScrollBarVisibility::Auto &&
+                        scrollViewer.HorizontalScrollBarVisibility() == Controls::ScrollBarVisibility::Hidden);
 
             scrollView.showsVerticalScrollIndicator = NO;
-            ASSERT_TRUE(scrollViewer.verticalScrollBarVisibility == WXCScrollBarVisibilityHidden &&
-                        scrollViewer.horizontalScrollBarVisibility == WXCScrollBarVisibilityHidden);
+            ASSERT_TRUE(scrollViewer.VerticalScrollBarVisibility() == Controls::ScrollBarVisibility::Hidden &&
+                        scrollViewer.HorizontalScrollBarVisibility() == Controls::ScrollBarVisibility::Hidden);
 
             // turn off scrolling, make sure scrollbar are disabled
             scrollView.scrollEnabled = NO;
-            ASSERT_TRUE(scrollViewer.verticalScrollBarVisibility == WXCScrollBarVisibilityDisabled &&
-                        scrollViewer.horizontalScrollBarVisibility == WXCScrollBarVisibilityDisabled);
+            ASSERT_TRUE(scrollViewer.VerticalScrollBarVisibility() == Controls::ScrollBarVisibility::Disabled &&
+                        scrollViewer.HorizontalScrollBarVisibility() == Controls::ScrollBarVisibility::Disabled);
 
             // turn back on, make sure scrollbar are still hidden
             scrollView.scrollEnabled = YES;
-            ASSERT_TRUE(scrollViewer.verticalScrollBarVisibility == WXCScrollBarVisibilityHidden &&
-                        scrollViewer.horizontalScrollBarVisibility == WXCScrollBarVisibilityHidden);
+            ASSERT_TRUE(scrollViewer.VerticalScrollBarVisibility() == Controls::ScrollBarVisibility::Hidden &&
+                        scrollViewer.HorizontalScrollBarVisibility() == Controls::ScrollBarVisibility::Hidden);
 
             scrollView.showsHorizontalScrollIndicator = YES;
-            ASSERT_TRUE(scrollViewer.verticalScrollBarVisibility == WXCScrollBarVisibilityHidden &&
-                        scrollViewer.horizontalScrollBarVisibility == WXCScrollBarVisibilityAuto);
+            ASSERT_TRUE(scrollViewer.VerticalScrollBarVisibility() == Controls::ScrollBarVisibility::Hidden &&
+                        scrollViewer.HorizontalScrollBarVisibility() == Controls::ScrollBarVisibility::Auto);
 
             scrollView.showsVerticalScrollIndicator = YES;
-            ASSERT_TRUE(scrollViewer.verticalScrollBarVisibility == WXCScrollBarVisibilityAuto &&
-                        scrollViewer.horizontalScrollBarVisibility == WXCScrollBarVisibilityAuto);
+            ASSERT_TRUE(scrollViewer.VerticalScrollBarVisibility() == Controls::ScrollBarVisibility::Auto &&
+                        scrollViewer.HorizontalScrollBarVisibility() == Controls::ScrollBarVisibility::Auto);
         });
     }
 
@@ -256,27 +263,27 @@ public:
 
         dispatch_sync(dispatch_get_main_queue(), ^{
             // get the backing xaml element
-            WXFrameworkElement* xamlScrollView = [scrollView xamlElement];
-            Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlScrollViewGetScrollViewer([xamlScrollView comObj]));
-            WXCScrollViewer* scrollViewer = _createRtProxy([WXCScrollViewer class], inspectable.Get());
-            ASSERT_OBJCNE(scrollViewer, nil);
+            FrameworkElement xamlScrollView = [scrollView _xamlElementInternal];
+            Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlScrollViewGetScrollViewer(objcwinrt::to_insp(xamlScrollView)));
+            auto scrollViewer = objcwinrt::from_insp<Controls::ScrollViewer>(inspectable);
+            ASSERT_TRUE(scrollViewer);
 
-            // verfiy default directional lock disabled
+            // verify default directional lock disabled
             ASSERT_TRUE(!scrollView.directionalLockEnabled);
-            ASSERT_TRUE(!scrollViewer.isVerticalRailEnabled);
-            ASSERT_TRUE(!scrollViewer.isHorizontalRailEnabled);
+            ASSERT_TRUE(!scrollViewer.IsVerticalRailEnabled());
+            ASSERT_TRUE(!scrollViewer.IsHorizontalRailEnabled());
 
             // turn off directional lock
             scrollView.directionalLockEnabled = NO;
             ASSERT_TRUE(!scrollView.directionalLockEnabled);
-            ASSERT_TRUE(!scrollViewer.isVerticalRailEnabled);
-            ASSERT_TRUE(!scrollViewer.isHorizontalRailEnabled);
+            ASSERT_TRUE(!scrollViewer.IsVerticalRailEnabled());
+            ASSERT_TRUE(!scrollViewer.IsHorizontalRailEnabled());
 
             // turn back on again
             scrollView.directionalLockEnabled = YES;
             ASSERT_TRUE(scrollView.directionalLockEnabled);
-            ASSERT_TRUE(scrollViewer.isVerticalRailEnabled);
-            ASSERT_TRUE(scrollViewer.isHorizontalRailEnabled);
+            ASSERT_TRUE(scrollViewer.IsVerticalRailEnabled());
+            ASSERT_TRUE(scrollViewer.IsHorizontalRailEnabled());
         });
     }
 
@@ -286,25 +293,25 @@ public:
         UXTestAPI::ViewControllerPresenter testHelper(scrollViewVC, 2);
 
         UIScrollView* scrollView = [scrollViewVC scrollView];
-        WXFrameworkElement* xamlScrollView = [scrollView xamlElement];
-        Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlScrollViewGetScrollViewer([xamlScrollView comObj]));
-        WXCScrollViewer* scrollViewer = _createRtProxy([WXCScrollViewer class], inspectable.Get());
-        ASSERT_OBJCNE(scrollViewer, nil);
+        FrameworkElement xamlScrollView = [scrollView _xamlElementInternal];
+        Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlScrollViewGetScrollViewer(objcwinrt::to_insp(xamlScrollView)));
+        auto scrollViewer = objcwinrt::from_insp<Controls::ScrollViewer>(inspectable);
+        ASSERT_TRUE(scrollViewer);
 
-        Microsoft::WRL::ComPtr<IInspectable> inspectable2(XamlScrollViewGetSubLayerCanvas([xamlScrollView comObj]));
-        WXCCanvas* canvas = _createRtProxy([WXCCanvas class], inspectable2.Get());
+        Microsoft::WRL::ComPtr<IInspectable> inspectable2(XamlScrollViewGetSubLayerCanvas(objcwinrt::to_insp(xamlScrollView)));
+        auto canvas = objcwinrt::from_insp<Controls::Canvas>(inspectable2);
 
         dispatch_sync(dispatch_get_main_queue(), ^{
             // get the backing xaml element
-            // verfify default zoomScale and minZoomScale and maxZoomScale
+            // verify default zoomScale and minZoomScale and maxZoomScale
             ASSERT_TRUE(scrollView.zoomScale == 1);
-            ASSERT_TRUE(scrollViewer.zoomFactor == 1);
+            ASSERT_TRUE(scrollViewer.ZoomFactor() == 1);
 
             ASSERT_TRUE(scrollView.minimumZoomScale == 1);
-            ASSERT_TRUE(scrollViewer.minZoomFactor == 1);
+            ASSERT_TRUE(scrollViewer.MinZoomFactor() == 1);
 
             ASSERT_TRUE(scrollView.maximumZoomScale == 10);
-            ASSERT_TRUE(scrollViewer.maxZoomFactor == 10);
+            ASSERT_TRUE(scrollViewer.MaxZoomFactor() == 10);
         });
 
         __block auto uxEvent = UXTestAPI::UXEvent::CreateManual();
@@ -315,10 +322,10 @@ public:
 
             // Register RAII event subscription handler
             xamlSubscriber->Set(scrollViewer,
-                                [WXCScrollViewer zoomFactorProperty],
-                                ^(WXDependencyObject* sender, WXDependencyProperty* dp) {
-                                    WFIPropertyValue* actualValue = rt_dynamic_cast([WFIPropertyValue class], [sender getValue:dp]);
-                                    float actualZoomFactor = [actualValue getSingle];
+                                Controls::ScrollViewer::ZoomFactorProperty(),
+                                ^(const DependencyObject& sender, const DependencyProperty& dp) {
+                                    auto actualValue = sender.GetValue(dp).as<WF::IPropertyValue>();
+                                    float actualZoomFactor = actualValue.GetSingle();
 
                                     // Validation
                                     if (scrollView.zoomScale == actualZoomFactor) {
@@ -332,15 +339,15 @@ public:
         ASSERT_TRUE_MSG(uxEvent->Wait(1), "FAILED: Waiting for property changed event state timed out!");
 
         dispatch_sync(dispatch_get_main_queue(), ^{
-            LOG_INFO("expected zoomScale {%f}, acutal on xaml {%f}", scrollView.zoomScale, scrollViewer.zoomFactor);
-            EXPECT_TRUE(scrollViewer.zoomFactor == 2);
+            LOG_INFO("expected zoomScale {%f}, actual on xaml {%f}", scrollView.zoomScale, scrollViewer.ZoomFactor());
+            EXPECT_TRUE(scrollViewer.ZoomFactor() == 2);
             scrollView.minimumZoomScale = 3;
-            LOG_INFO("expected minimumZoomScale {%f}, acutal on xaml {%f}", scrollView.minimumZoomScale, scrollViewer.minZoomFactor);
-            EXPECT_TRUE(scrollViewer.minZoomFactor == 3);
+            LOG_INFO("expected minimumZoomScale {%f}, actual on xaml {%f}", scrollView.minimumZoomScale, scrollViewer.MinZoomFactor());
+            EXPECT_TRUE(scrollViewer.MinZoomFactor() == 3);
 
             scrollView.maximumZoomScale = 20;
-            LOG_INFO("expected maximumZoomScale {%f}, acutal on xaml {%f}", scrollView.maximumZoomScale, scrollViewer.maxZoomFactor);
-            EXPECT_TRUE(scrollViewer.maxZoomFactor == 20);
+            LOG_INFO("expected maximumZoomScale {%f}, actual on xaml {%f}", scrollView.maximumZoomScale, scrollViewer.MaxZoomFactor());
+            EXPECT_TRUE(scrollViewer.MaxZoomFactor() == 20);
         });
     }
 };

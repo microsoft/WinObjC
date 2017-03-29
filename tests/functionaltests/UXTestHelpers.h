@@ -130,6 +130,6 @@ private:
     StrongId<NSCondition> _condition;
 }; // class UXEvent
 
-UIColor* ConvertWUColorToUIColor(WUColor* wuColor);
+UIColor* ConvertWUColorToUIColor(const winrt::Windows::UI::Color& wuColor);
 
 } // namespace UXTestAPI
