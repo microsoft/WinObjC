@@ -33,11 +33,9 @@
 #import "XamlUtilities.h"
 #import "CppWinRTHelpers.h"
 
-<<<<<<< 17c9442ca7373bbb57c3f561cd59160aa9296832
-static const wchar_t* TAG = L"UILabel";
-=======
 using namespace winrt::Windows::UI::Xaml;
->>>>>>> Switch UIKit from projections to C++/WinRT (rough draft)
+
+static const wchar_t* TAG = L"UILabel";
 
 @implementation UILabel {
     idretaintype(NSString) _text;
@@ -91,15 +89,15 @@ using namespace winrt::Windows::UI::Xaml;
 }
 
 - (void)_updateTextBlockWithFont:(UIFont*)font {
-    [_textBlock setFontSize:[font pointSize]];
-    [_textBlock setLineHeight:[font ascender] - [font descender]];
+    _textBlock.FontSize([font pointSize]);
+    _textBlock.LineHeight([font ascender] - [font descender]);
 
-    WUTFontWeight* fontWeight = [WUTFontWeight new];
-    fontWeight.weight = static_cast<unsigned short>([font _fontWeight]);
-    [_textBlock setFontWeight:fontWeight];
-    [_textBlock setFontStyle:static_cast<WUTFontStyle>([font _fontStyle])];
-    [_textBlock setFontStretch:static_cast<WUTFontStretch>([font _fontStretch])];
-    [_textBlock setFontFamily:[WUXMFontFamily makeInstanceWithName:[font _compatibleFamilyName]]];
+    winrt::Windows::UI::Text::FontWeight fontWeight;
+    fontWeight.Weight = static_cast<unsigned short>([font _fontWeight]);
+    _textBlock.FontWeight(fontWeight);
+    _textBlock.FontStyle(static_cast<winrt::Windows::UI::Text::FontStyle>([font _fontStyle]));
+    _textBlock.FontStretch(static_cast<winrt::Windows::UI::Text::FontStretch>([font _fontStretch]));
+    _textBlock.FontFamily(Media::FontFamily(objcwinrt::string([font _compatibleFamilyName])));
 }
 
 /**
@@ -171,7 +169,7 @@ using namespace winrt::Windows::UI::Xaml;
             }
         }
 
-        [self _applyPropertesOnTextBlock];
+        [self _applyPropertiesOnTextBlock];
     }
 
     return self;
@@ -181,7 +179,7 @@ using namespace winrt::Windows::UI::Xaml;
 // Note: This is used for UX testing and won't be necessary when we are projecting
 // UIKit.Label into ObjectiveC, as at that point we can just expose the TextBlock directly
 // off of our UIKit.Label implementation.
-- (WXCTextBlock*)_getXamlTextBlock {
+- (Controls::TextBlock)_getXamlTextBlock {
     return _textBlock;
 }
 
@@ -228,27 +226,27 @@ using namespace winrt::Windows::UI::Xaml;
     [self setContentMode:UIViewContentModeRedraw];
 }
 
-- (void)_applyPropertesOnTextBlock {
-    [_textBlock setText:_text];
-    [_textBlock setTextAlignment:XamlUtilities::ConvertUITextAlignmentToWXTextAlignment(_alignment)];
+- (void)_applyPropertiesOnTextBlock {
+    _textBlock.Text(objcwinrt::string(_text));
+    _textBlock.TextAlignment(XamlUtilities::ConvertUITextAlignmentToWXTextAlignment(_alignment));
     XamlUtilities::ApplyLineBreakModeOnTextBlock(_textBlock, _lineBreakMode, self.numberOfLines);
-    [_textBlock setMaxLines:_numberOfLines];
+    _textBlock.MaxLines(_numberOfLines);
     UIColor* color = _textColor;
     if (_isHighlighted && _highlightedTextColor != nil) {
         color = _highlightedTextColor;
     }
-    [_textBlock setForeground:[WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor(color)]];
+    _textBlock.Foreground(Media::SolidColorBrush(XamlUtilities::ConvertUIColorToWUColor(color)));
     [self _updateTextBlockWithFont:_font];
 
     if (_adjustFontSize) {
         // search for font that can fit - but it might not exist, in which case it return -1.0f
         float adjustedFontSize = [self _searchAdjustedFontSizeToFit];
         if (adjustedFontSize != -1.0f && adjustedFontSize != [_font pointSize]) {
-            [_textBlock setFontSize:adjustedFontSize];
+            _textBlock.FontSize(adjustedFontSize);
             UIFont* adjustFont = [_font fontWithSize:adjustedFontSize]; 
 
             // when updating font size, also need update lineheight
-            [_textBlock setLineHeight:[adjustFont ascender] - [adjustFont descender]];
+            _textBlock.LineHeight([adjustFont ascender] - [adjustFont descender]);
         }
     }
 }
@@ -259,7 +257,7 @@ using namespace winrt::Windows::UI::Xaml;
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         [self _initUILabel];
-        [self _applyPropertesOnTextBlock];
+        [self _applyPropertiesOnTextBlock];
     }
 
     return self;
@@ -271,7 +269,7 @@ using namespace winrt::Windows::UI::Xaml;
 - (instancetype)initWithFrame:(CGRect)frame xamlElement:(RTObject*)xamlElement {
     if (self = [super initWithFrame:frame xamlElement:xamlElement]) {
         [self _initUILabel];
-        [self _applyPropertesOnTextBlock];
+        [self _applyPropertiesOnTextBlock];
     }
 
     return self;
@@ -330,7 +328,8 @@ using namespace winrt::Windows::UI::Xaml;
 
     if (newStr == nil || ![_text isEqual:newStr]) {
         _text = [newStr copy];
-        [_textBlock setText:_text];
+        _textBlock.Text(objcwinrt::string(_text));
+
         self.accessibilityValue = newStr;
         [self _adjustTextBlockFontSizeIfNecessary];
     }
@@ -360,7 +359,7 @@ using namespace winrt::Windows::UI::Xaml;
  @Notes this isn't a property that XAML has available for TextBlock
 */
 - (void)setEnabled:(BOOL)enable {
-    UNIMPLEMENTED_WITH_MSG("eabnled is not a property that XAML has available for TextBlock");
+    UNIMPLEMENTED_WITH_MSG("enabled is not a property that XAML has available for TextBlock");
     _isDisabled = !enable;
 }
 
@@ -369,7 +368,7 @@ using namespace winrt::Windows::UI::Xaml;
  @Notes this isn't a property that XAML has available for TextBlock
 */
 - (BOOL)isEnabled {
-    UNIMPLEMENTED_WITH_MSG("eabnled is not a  property that XAML has available for TextBlock");
+    UNIMPLEMENTED_WITH_MSG("enabled is not a  property that XAML has available for TextBlock");
     return _isDisabled;
 }
 
@@ -386,7 +385,7 @@ using namespace winrt::Windows::UI::Xaml;
 - (void)setTextAlignment:(UITextAlignment)alignment {
     if (alignment != _alignment) {
         _alignment = alignment;
-        [_textBlock setTextAlignment:XamlUtilities::ConvertUITextAlignmentToWXTextAlignment(_alignment)];
+        _textBlock.TextAlignment(XamlUtilities::ConvertUITextAlignmentToWXTextAlignment(_alignment));
 
         [self setNeedsDisplay];
     }
@@ -414,7 +413,7 @@ using namespace winrt::Windows::UI::Xaml;
         // if label is not in highlighted state or it is in highlighted state but without highlighted Color
         // both cases need use normal text color to update the foreground
         if (!_isHighlighted || _highlightedTextColor == nil) {
-            [_textBlock setForeground:[WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor(_textColor)]];
+            _textBlock.Foreground(Media::SolidColorBrush(XamlUtilities::ConvertUIColorToWUColor(_textColor)));
             [self setNeedsDisplay];
         }
     }
@@ -479,7 +478,7 @@ using namespace winrt::Windows::UI::Xaml;
 - (void)setNumberOfLines:(NSInteger)numberOfLines {
     if (numberOfLines != _numberOfLines) {
         _numberOfLines = numberOfLines;
-        [_textBlock setMaxLines:self.numberOfLines];
+        _textBlock.MaxLines(self.numberOfLines);
         [self _adjustTextBlockFontSizeIfNecessary];
     }
 }
@@ -563,12 +562,8 @@ using namespace winrt::Windows::UI::Xaml;
 
         // update textblock foreground when highlighted color is different from textcolor
         if (![_highlightedTextColor isEqual:_textColor]) {
-            if (_isHighlighted) {
-                [_textBlock setForeground:[WUXMSolidColorBrush
-                                              makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor(_highlightedTextColor)]];
-            } else {
-                [_textBlock setForeground:[WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor(_textColor)]];
-            }
+            UIColor* color = _isHighlighted ? _highlightedTextColor : _textColor;
+            _textBlock.Foreground(Media::SolidColorBrush(XamlUtilities::ConvertUIColorToWUColor(color)));
 
             [self setNeedsDisplay];
         }
@@ -593,7 +588,7 @@ using namespace winrt::Windows::UI::Xaml;
     if (![color isEqual:_highlightedTextColor]) {
         _highlightedTextColor = color;
         if (_isHighlighted) {
-            [_textBlock setForeground:[WUXMSolidColorBrush makeInstanceWithColor:XamlUtilities::ConvertUIColorToWUColor(_highlightedTextColor)]];
+            _textBlock.Foreground(Media::SolidColorBrush(XamlUtilities::ConvertUIColorToWUColor(_highlightedTextColor)));
             [self setNeedsDisplay];
         }
     }
@@ -672,7 +667,7 @@ using namespace winrt::Windows::UI::Xaml;
 @Notes allowsDefaultTighteningForTruncation is not supported by xaml
 */
 - (BOOL)allowsDefaultTighteningForTruncation {
-    UNIMPLEMENTED_WITH_MSG("setAllowsDefaultTighteningForTruncation is not a feature currently supported by Xaml.");
+    UNIMPLEMENTED_WITH_MSG("allowsDefaultTighteningForTruncation is not a feature currently supported by Xaml.");
     return StubReturn();
 }
 
@@ -688,16 +683,16 @@ using namespace winrt::Windows::UI::Xaml;
 
 - (BOOL)_adjustTextBlockFontSizeIfNecessary {
     BOOL textBlockFontSizeUpdated = NO;
-    float curTextBlockFontSize = [_textBlock fontSize];
+    float curTextBlockFontSize = _textBlock.FontSize();
     if (_adjustFontSize) {
         // search for font that can fit - but it might not exist, in which case it return -1.0f
         float adjustedFontSize = [self _searchAdjustedFontSizeToFit];
         if (adjustedFontSize != -1.0f && adjustedFontSize != curTextBlockFontSize) {
-            [_textBlock setFontSize:adjustedFontSize];
+            _textBlock.FontSize(adjustedFontSize);
             UIFont* adjustFont = [_font fontWithSize:adjustedFontSize]; 
 
             // when updating font size, also need update lineheight
-            [_textBlock setLineHeight:[adjustFont ascender] - [adjustFont descender]];
+            _textBlock.LineHeight([adjustFont ascender] - [adjustFont descender]);
             textBlockFontSizeUpdated = YES;
         }
     } else {
@@ -705,10 +700,10 @@ using namespace winrt::Windows::UI::Xaml;
         // if so, textBlock fontsize was adjusted, need to swich it back
         float curFontSize = [_font pointSize];
         if (curTextBlockFontSize != curFontSize) {
-            [_textBlock setFontSize:curFontSize];
+            _textBlock.FontSize(curFontSize);
 
             // when updating font size, also need update lineheight
-            [_textBlock setLineHeight:[_font ascender] - [_font descender]];
+            _textBlock.LineHeight([_font ascender] - [_font descender]);
             textBlockFontSizeUpdated = YES;
         }
     }
@@ -764,8 +759,7 @@ using namespace winrt::Windows::UI::Xaml;
                 curSize.width = 0;
             }
         } else {
-            curSize.height = 0;
-        }
+            curSize.height = 0;        }
 
         //  Calculate the size of the text set in our label
         ret = [_text sizeWithFont:_font constrainedToSize:CGSizeMake(curSize.width, curSize.height) lineBreakMode:self.lineBreakMode];

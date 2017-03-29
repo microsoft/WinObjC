@@ -710,6 +710,9 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
  @Status Interoperable
 */
 - (void)touchesMoved:(NSSet*)touchSet withEvent:(UIEvent*)event {
+    // If the derived UIButton overrides this method and does not call this super implementation, then the
+    // event remains *handled*, which results in the Button.Xaml not calling into its super for further processing.
+    // Else, we mark the event as *not handled*, so Button.Xaml calls into its super for further event processing.
     Input::PointerRoutedEventArgs routedEvent = [event _touchEvent]->_routedEventArgs;
     routedEvent.Handled(false);
 
