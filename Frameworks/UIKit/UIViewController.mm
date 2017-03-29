@@ -1854,7 +1854,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
         if (propName) {
             NSString* propNameString = [NSString stringWithCString:propName];
             auto obj = priv->_page.FindName(objcwinrt::string(propNameString));
-            UIView* control = XamlUtilities::GenerateUIKitControlFromXamlType(obj);
+            UIView* control = XamlUtilities::GenerateUIKitControlFromXamlType(objcwinrt::to_rtobj(obj));
             if (control != nil) {
                 [self setValue:control forKey:propNameString];
             }

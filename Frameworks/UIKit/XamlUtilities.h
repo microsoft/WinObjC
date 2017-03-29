@@ -24,8 +24,14 @@
 #import <UIKit/UITextInputTraits.h>
 #import <UIKit/UIFont.h>
 
-#import "UWP/WindowsUIXaml.h"
-#import "UWP/WindowsUIXamlControls.h"
+#include "COMIncludes.h"
+#import "winrt/Windows.UI.Xaml.h"
+#import "winrt/Windows.UI.Xaml.Controls.h"
+#import "winrt/Windows.UI.Xaml.Media.h"
+#import "winrt/Windows.UI.Xaml.Media.Imaging.h"
+#import "winrt/Windows.UI.Xaml.Input.h"
+#import "winrt/Windows.UI.Input.h"
+#include "COMIncludes_End.h"
 
 // NOTE: These need to stay #includes
 #include "COMIncludes.h"
@@ -37,56 +43,51 @@
 namespace XamlUtilities {
 NSString* const XamlAutoGenNamespace = @"IslandwoodAutoGenNamespace";
 
-WUXMFontFamily* WUXFontFamilyFromUIFontName(NSString* uiFontName);
+winrt::Windows::UI::Xaml::Media::FontFamily WUXFontFamilyFromUIFontName(NSString* uiFontName);
 
 // Convert UIColor to Color on windows
-WUColor* ConvertUIColorToWUColor(UIColor* uiColor);
+winrt::Windows::UI::Color ConvertUIColorToWUColor(UIColor* uiColor);
 
 // Convert windows color to UIColor
-UIColor* ConvertWUColorToUIColor(WUColor* wuColor);
+UIColor* ConvertWUColorToUIColor(const winrt::Windows::UI::Color& wuColor);
 
 // Convert UIImage to WUXMImageBrush on windows
-WUXMImageBrush* ConvertUIImageToWUXMImageBrush(UIImage* image);
+winrt::Windows::UI::Xaml::Media::ImageBrush ConvertUIImageToWUXMImageBrush(UIImage* image);
 
 // Convert UIImage to WUXMIBitmapSource on windows
-WUXMIBitmapSource* ConvertUIImageToWUXMIBitmapSource(UIImage* image);
+winrt::Windows::UI::Xaml::Media::Imaging::BitmapSource ConvertUIImageToWUXMIBitmapSource(UIImage* image);
 
 // Convert UITextAlignment to TextAlignment on windows
-WXTextAlignment ConvertUITextAlignmentToWXTextAlignment(UITextAlignment alignment);
+winrt::Windows::UI::Xaml::TextAlignment ConvertUITextAlignmentToWXTextAlignment(UITextAlignment alignment);
 
 // Convert TextAlignment to UITextAlignment
-UITextAlignment ConvertWXTextAlignmentToUITextAlignment(WXTextAlignment alignment);
+UITextAlignment ConvertWXTextAlignmentToUITextAlignment(winrt::Windows::UI::Xaml::TextAlignment alignment);
 
 // Convert ios KeyboardType to Windows InputScope
-WUXIInputScope* ConvertKeyboardTypeToInputScope(UIKeyboardType keyboardType, BOOL secureTextMode);
+winrt::Windows::UI::Xaml::Input::InputScope ConvertKeyboardTypeToInputScope(UIKeyboardType keyboardType, BOOL secureTextMode);
 
 // Convert UIControlContentVerticalAlignment to Windows vertical Alignment
-WXVerticalAlignment ConvertUIControlContentVerticalAlignmentToWXVerticalAlignment(UIControlContentVerticalAlignment alignment);
+winrt::Windows::UI::Xaml::VerticalAlignment ConvertUIControlContentVerticalAlignmentToWXVerticalAlignment(UIControlContentVerticalAlignment alignment);
 
 // Find the named template child in control template of a xaml control
-WXFrameworkElement* FindTemplateChild(WXCControl* control, NSString* name);
+winrt::Windows::UI::Xaml::FrameworkElement FindTemplateChild(const winrt::Windows::UI::Xaml::Controls::Control& control, NSString* name);
 
 // Passing a string between ObjC and WRL requires encasing an NSString within a WFPropertyValue/WFIPropertyValue
 // BUGBUG:8791977 - WFIPropertyValue is not publicly exposed via projections so we used a workaround
 NSString* NSStringFromPropertyValue(const Microsoft::WRL::ComPtr<IInspectable>& inspPropValue);
-NSString* NSStringFromPropertyValue(RTObject* rtPropertyValue);
+NSString* NSStringFromPropertyValue(const winrt::Windows::Foundation::IInspectable& rtPropertyValue);
 
 // Set up border style for a control
-void SetControlBorderStyle(WXCControl* control, UITextBorderStyle style);
+void SetControlBorderStyle(const winrt::Windows::UI::Xaml::Controls::Control& control, UITextBorderStyle style);
 
 // Determine if the XAML type specified by the class name is activatable
 Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Markup::IXamlType> ReturnXamlType(NSString* xamlClassName);
 
 // Determine the type of XAML control and generate the UIKit equivalent
-UIView* GenerateUIKitControlFromXamlType(RTObject* xamlObject);
-
-// TODO: GitHub issue 508 and 509
-// We need a type-safe way to do this with projections.  This is copied verbatim from the projections
-// code and works perfectly for this limited usage, but we don't do any type validation below.
-id CreateRtProxy(Class cls, IInspectable* iface);
+UIView* GenerateUIKitControlFromXamlType(const winrt::Windows::Foundation::IInspectable& xamlObject);
 
 // apply LineBreakMode on xaml TextBock
-void ApplyLineBreakModeOnTextBlock(WXCTextBlock* textBlock, UILineBreakMode mode, int numberOfLines);
+void ApplyLineBreakModeOnTextBlock(const winrt::Windows::UI::Xaml::Controls::TextBlock& textBlock, UILineBreakMode mode, int numberOfLines);
 
 // Helper searches max font size for a string that can fit into given rect using given font/linebreak/numerOfLines config .
 // font size returned must be between mininumFontSize and maximumFontSize.

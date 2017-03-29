@@ -80,7 +80,7 @@ struct ButtonState {
     long long _isPressedChangedRegistration;
 
     // Click handling
-    EventRegistrationToken _clickEventRegistration;
+    winrt::event_token _clickEventRegistration;
 
     UIButtonType _buttonType;
 
@@ -256,18 +256,19 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
 
     // Register for IsPressed-changed events to map to UIButton highlighted states
     _isPressedChangedRegistration =
-        [_xamlButton registerPropertyChangedCallback:[WUXCPButtonBase isPressedProperty]
-                                            callback:^(WXDependencyObject* sender, WXDependencyProperty* dp) {
+        _xamlButton.RegisterPropertyChangedCallback(Controls::Primitives::ButtonBase::IsPressedProperty(),
+                                            [weakSelf] (const DependencyObject& sender, auto&& e) {
                                                 // Update our highlighted state accordingly
-                                                [weakSelf setHighlighted:rt_dynamic_cast<WXCButton>(sender).isPressed];
-                                            }];
+                                                auto button = sender.as<Controls::Primitives::ButtonBase>();
+                                                [weakSelf setHighlighted:button.IsPressed()];
+                                            });
 
     // Register for 'Click' events, to handle keybard and accessibility clicks
-    _clickEventRegistration = [_xamlButton addClickEvent:^(RTObject* sender, WXRoutedEventArgs* e) {
+    _clickEventRegistration = _xamlButton.Click([weakSelf] (auto&& sender, auto&& e) {
         // Simulate a button 'click' for non-pointer-triggered clicks
         [weakSelf sendActionsForControlEvents:UIControlEventTouchDown];
         [weakSelf sendActionsForControlEvents:UIControlEventTouchUpInside];
-    }];
+    });
 }
 
 /**
@@ -709,11 +710,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
  @Status Interoperable
 */
 - (void)touchesMoved:(NSSet*)touchSet withEvent:(UIEvent*)event {
-    // If the derived UIButton overrides this method and does not call this super implementation, then the
-    // event remains *handled*, which results in the Button.Xaml not calling into its super for further processing.
-    // Else, we mark the event as *not handled*, so Button.Xaml calls into its super for further event processing.
-    WUXIPointerRoutedEventArgs* routedEvent = [event _touchEvent]->_routedEventArgs;
-    [routedEvent setHandled:NO];
+    Input::PointerRoutedEventArgs routedEvent = [event _touchEvent]->_routedEventArgs;
+    routedEvent.Handled(false);
 
     [super touchesMoved:touchSet withEvent:event];
 }
@@ -745,8 +743,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     // If the derived UIButton overrides this method and does not call this super implementation, then the
     // event remains *handled*, which results in the Button.Xaml not calling into its super for further processing.
     // Else, we mark the event as *not handled*, so Button.Xaml calls into its super for further event processing.
-    WUXIPointerRoutedEventArgs* routedEvent = [event _touchEvent]->_routedEventArgs;
-    [routedEvent setHandled:NO];
+    Input::PointerRoutedEventArgs routedEvent = [event _touchEvent]->_routedEventArgs;
+    routedEvent.Handled(false);
 
     if (!_isInTouchSequence) {
         return;
@@ -760,7 +758,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     // Release the pointer capture so Xaml knows we're no longer in a pressed state, which
     // also prevents the button from firing a 'click' event since we already fire one via UIControl's
     // touch handling.
-    [_xamlButton releasePointerCapture:routedEvent.pointer];
+    _xamlButton.ReleasePointerCapture(routedEvent.Pointer());
 }
 
 /**
@@ -777,8 +775,8 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
     [super touchesCancelled:touchSet withEvent:event];
 
     // Release the pointer capture so Xaml knows we're no longer in a pressed state
-    WUXIPointerRoutedEventArgs* routedEvent = [event _touchEvent]->_routedEventArgs;
-    [_xamlButton releasePointerCapture:routedEvent.pointer];
+    Input::PointerRoutedEventArgs routedEvent = [event _touchEvent]->_routedEventArgs;
+    _xamlButton.ReleasePointerCapture(routedEvent.Pointer());
 }
 
 static bool _isStateCustomizationSet(UIButton* self, UIControlState state) {
@@ -946,9 +944,9 @@ static ComPtr<IInspectable> _currentInspectableBorderBackgroundBrush(UIButton* s
  @Status Interoperable
 */
 - (void)dealloc {
-    XamlRemovePointerEvents([_xamlButton comObj]);
-    [_xamlButton unregisterPropertyChangedCallback:[WUXCPButtonBase isPressedProperty] token:_isPressedChangedRegistration];
-    [_xamlButton removeClickEvent:_clickEventRegistration];
+    XamlRemovePointerEvents(objcwinrt::to_insp(_xamlButton));
+    _xamlButton.UnregisterPropertyChangedCallback(Controls::Primitives::ButtonBase::IsPressedProperty(), _isPressedChangedRegistration);
+    _xamlButton.Click(_clickEventRegistration);
 }
 
 /**

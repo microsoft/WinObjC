@@ -26,10 +26,10 @@
 #import <wrl/wrappers/corewrappers.h>
 #import <windows.foundation.h>
 #import <windows.ui.xaml.input.h>
+#import <winrt/Windows.UI.Xaml.h>
+#import <winrt/Windows.UI.Xaml.Controls.h>
+#import <winrt/Windows.UI.Xaml.Input.h>
 #include <COMIncludes_end.h>
-
-#import <UWP/WindowsUIXamlControls.h>
-#import <UWP/WindowsUIXamlInput.h>
 
 namespace XamlControls {
 
@@ -37,109 +37,88 @@ namespace XamlControls {
 // Shared Helpers
 ////////////////////////////////////////////////////////////////////////////////////
 #if !__has_feature(objc_arc)
-// TODO: GitHub issue 508 and 509
-// We need a type-safe way to do this with projections.  This is copied verbatim from the projections
-// code and works perfectly for this limited usage, but we don't do any type validation below.
-inline id _createRtProxy(Class cls, IInspectable* iface) {
-    // Oddly, WinRT can hand us back NULL objects from successful function calls. Plumb these through as nil.
-    if (!iface) {
-        return nil;
-    }
-
-    RTObject* ret = [NSAllocateObject(cls, 0, 0) init];
-    [ret setComObj:iface];
-
-    return [ret autorelease];
-}
-
-inline RTObject* _createBareRTObj(IInspectable* obj) {
-    return _createRtProxy(objc_getClass("RTObject"), obj);
-}
-
-template <typename I>
-inline I* _createRtProxy(IInspectable* iface) {
-    return _createRtProxy([I class], iface);
-}
-
 // TODO: Remove when we move our controls over to actual XAML-build control implementations
 class WUXIPointerEventHandler_shim
     : public Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::WinRtClassicComMix>,
                                           ABI::Windows::UI::Xaml::Input::IPointerEventHandler> {
-    void (^_delegate)(RTObject*, WUXIPointerRoutedEventArgs*);
+    winrt::Windows::UI::Xaml::Input::PointerEventHandler _handler;
 
 public:
-    WUXIPointerEventHandler_shim(void (^del)(RTObject*, WUXIPointerRoutedEventArgs*)) : _delegate([del copy]) {
-    }
-    ~WUXIPointerEventHandler_shim() {
-        [_delegate release];
+    WUXIPointerEventHandler_shim(const winrt::Windows::UI::Xaml::Input::PointerEventHandler& handler) : _handler(handler) {
     }
     virtual HRESULT STDMETHODCALLTYPE GetTrustLevel(TrustLevel* trustLevel) override {
         *trustLevel = BaseTrust;
         return S_OK;
     }
     virtual HRESULT STDMETHODCALLTYPE Invoke(IInspectable* arg0, ABI::Windows::UI::Xaml::Input::IPointerRoutedEventArgs* arg1) override {
-        NSAutoreleasePool* p = [NSAutoreleasePool new];
-        _delegate(_createBareRTObj(arg0), _createRtProxy<WUXIPointerRoutedEventArgs>(arg1));
+        winrt::Windows::Foundation::IInspectable sender = nullptr;
+        winrt::copy_from_abi(sender, reinterpret_cast<winrt::ABI::Windows::Foundation::IInspectable*>(arg0));
 
+        winrt::Windows::UI::Xaml::Input::PointerRoutedEventArgs args = nullptr;
+        winrt::copy_from_abi(args, reinterpret_cast<winrt::ABI::Windows::UI::Xaml::Input::IPointerRoutedEventArgs*>(arg1));
+
+        NSAutoreleasePool* p = [NSAutoreleasePool new];
+        _handler(sender, args);
         [p release];
 
         return 0;
     }
 };
+
 #endif // __has_feature(objc_arc)
 
 ////////////////////////////////////////////////////////////////////////////////////
 // Button
 ////////////////////////////////////////////////////////////////////////////////////
-WXCButton* CreateButton();
+winrt::Windows::UI::Xaml::Controls::Button CreateButton();
 WXFrameworkElement* GetButtonLabel(WXCButton* button);
 WXCImage* GetButtonImage(WXCButton* button);
 
-void HookButtonPointerEvents(WXCButton* button,
-                             WUXIPointerEventHandler pointerPressedHook,
-                             WUXIPointerEventHandler pointerMovedHook,
-                             WUXIPointerEventHandler pointerReleasedHook,
-                             WUXIPointerEventHandler pointerCanceledHook,
-                             WUXIPointerEventHandler pointerCaptureLostHook);
+void HookButtonPointerEvents(const winrt::Windows::UI::Xaml::Controls::Button& button,
+                             const winrt::Windows::UI::Xaml::Input::PointerEventHandler& pointerPressedHook,
+                             const winrt::Windows::UI::Xaml::Input::PointerEventHandler& pointerMovedHook,
+                             const winrt::Windows::UI::Xaml::Input::PointerEventHandler& pointerReleasedHook,
+                             const winrt::Windows::UI::Xaml::Input::PointerEventHandler& pointerCanceledHook,
+                             const winrt::Windows::UI::Xaml::Input::PointerEventHandler& pointerCaptureLostHook);
 
 ////////////////////////////////////////////////////////////////////////////////////
 // ContentDialog
 ////////////////////////////////////////////////////////////////////////////////////
-WXCContentDialog* CreateContentDialog();
+winrt::Windows::UI::Xaml::Controls::ContentDialog CreateContentDialog();
 
-int XamlContentDialogPressedIndex(WXCContentDialog* contentDialog);
-unsigned int XamlContentDialogAddButtonWithTitle(WXCContentDialog* contentDialog, NSString* buttonTitle);
-NSString* XamlContentDialogButtonTitleAtIndex(WXCContentDialog* contentDialog, unsigned int buttonIndex);
-unsigned int XamlContentDialogNumberOfButtons(WXCContentDialog* contentDialog);
-void XamlContentDialogSetCancelButtonIndex(WXCContentDialog* contentDialog, unsigned int cancelButtonIndex);
-void XamlContentDialogSetDestructiveButtonIndex(WXCContentDialog* contentDialog, unsigned int destructiveButtonIndex);
+int XamlContentDialogPressedIndex(const winrt::Windows::UI::Xaml::Controls::ContentDialog& contentDialog);
+unsigned int XamlContentDialogAddButtonWithTitle(const winrt::Windows::UI::Xaml::Controls::ContentDialog& contentDialog, NSString* buttonTitle);
+NSString* XamlContentDialogButtonTitleAtIndex(const winrt::Windows::UI::Xaml::Controls::ContentDialog& contentDialog, unsigned int buttonIndex);
+unsigned int XamlContentDialogNumberOfButtons(const winrt::Windows::UI::Xaml::Controls::ContentDialog& contentDialog);
+void XamlContentDialogSetCancelButtonIndex(const winrt::Windows::UI::Xaml::Controls::ContentDialog& contentDialog, unsigned int cancelButtonIndex);
+void XamlContentDialogSetDestructiveButtonIndex(const winrt::Windows::UI::Xaml::Controls::ContentDialog& contentDialog, unsigned int destructiveButtonIndex);
 
 ////////////////////////////////////////////////////////////////////////////////////
 // Label
 ////////////////////////////////////////////////////////////////////////////////////
-WXCGrid* CreateLabel();
-WXCTextBlock* GetLabelTextBlock(WXCGrid* labelGrid);
+winrt::Windows::UI::Xaml::Controls::Grid CreateLabel();
+winrt::Windows::UI::Xaml::Controls::TextBlock GetLabelTextBlock(const winrt::Windows::UI::Xaml::Controls::Grid& labelGrid);
 
 ////////////////////////////////////////////////////////////////////////////////////
 // ScrollView
 ////////////////////////////////////////////////////////////////////////////////////
-WXFrameworkElement* CreateScrollView();
-WXCScrollViewer* ScrollViewGetInnerScrollViewer(WXFrameworkElement* scrollView);
-WXCCanvas* ScrollViewGetSubLayerCanvas(WXFrameworkElement* scrollView);
+winrt::Windows::UI::Xaml::FrameworkElement CreateScrollView();
+winrt::Windows::UI::Xaml::Controls::ScrollViewer ScrollViewGetInnerScrollViewer(const winrt::Windows::UI::Xaml::FrameworkElement& scrollView);
+winrt::Windows::UI::Xaml::Controls::Canvas ScrollViewGetSubLayerCanvas(const winrt::Windows::UI::Xaml::FrameworkElement& scrollView);
 
 ////////////////////////////////////////////////////////////////////////////////////
 // CoreAnimation Layer Support
 ////////////////////////////////////////////////////////////////////////////////////
 
 // Set one or more layer properties for the specified target xaml element
-void SetFrameworkElementLayerProperties(WXFrameworkElement* targetElement,
-                                        WXCImage* layerContentProperty,
-                                        WXCCanvas* sublayerCanvasProperty);
+void SetFrameworkElementLayerProperties(const winrt::Windows::UI::Xaml::FrameworkElement& targetElement,
+                                        const winrt::Windows::UI::Xaml::Controls::Image& layerContentProperty,
+                                        const winrt::Windows::UI::Xaml::Controls::Canvas& sublayerCanvasProperty);
 
 // Get the layerContentProperty for the specified target xaml element
-WXCImage* GetFrameworkElementLayerContentProperty(WXFrameworkElement* targetElement);
+winrt::Windows::UI::Xaml::Controls::Image GetFrameworkElementLayerContentProperty(const winrt::Windows::UI::Xaml::FrameworkElement& targetElement);
 
 // Get the sublayerCanvasProperty for the specified target xaml element
-WXCCanvas* GetFrameworkElementSublayerCanvasProperty(WXFrameworkElement* targetElement);
+winrt::Windows::UI::Xaml::Controls::Canvas GetFrameworkElementSublayerCanvasProperty(const winrt::Windows::UI::Xaml::FrameworkElement& targetElement);
 
 } // namespace XamlControls
