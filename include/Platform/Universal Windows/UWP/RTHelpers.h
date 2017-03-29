@@ -2410,7 +2410,7 @@ public:
     }
 };
 
-WINRT_EXPORT_FN
+OBJCWINRT_EXPORT_FN
 void getPropertyValueArrayInfo(ComPtr<IPropertyValue> comPtr, unsigned int &res, void** resPtr);
 
 template <typename WRLT,
