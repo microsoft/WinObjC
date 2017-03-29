@@ -1371,7 +1371,7 @@ CGRect CGContextGetClipBoundingBox(CGContextRef context) {
 
     auto& state = context->CurrentGState();
     if (!state.clippingGeometry) {
-        D2D1_SIZE_F targetSize = context->DeviceContext()->GetSize();
+        D2D1_SIZE_F targetSize = context->GetContextSize();
         return CGContextConvertRectToUserSpace(context, CGRect{ CGPointZero, { targetSize.width, targetSize.height } });
     }
 
