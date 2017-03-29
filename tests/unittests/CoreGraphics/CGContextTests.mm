@@ -285,7 +285,6 @@ public:
 
     static ComPtr<ID2D1RenderTarget> renderTarget;
     static void SetUpTestCase() {
-        // TODO GH#1124: When CGBitmapContext lands, we don't need to do this manually.
         MULTI_QI multi{
             .pIID = &IID_IWICImagingFactory, .pItf = nullptr,
         };

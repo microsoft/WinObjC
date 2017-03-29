@@ -382,9 +382,6 @@ LIBRARY CoreGraphics
         _CGImageLoadImageWithWICDecoder
         _CGImageGetImageFromData
         _CGImageCreateFromDataProvider
-        _CGImagePNGRepresentation
-        _CGImageJPEGRepresentation
-        _CGImageRepresentation
         _CGImageCreateWithWICBitmap
         _CGImageGetWICImageSource
         _CGImageCreateCopyWithPixelFormat

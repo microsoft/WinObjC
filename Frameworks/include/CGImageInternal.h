@@ -180,10 +180,6 @@ COREGRAPHICS_EXPORT CGImageRef _CGImageLoadImageWithWICDecoder(REFGUID decoderCl
 
 COREGRAPHICS_EXPORT CGImageRef _CGImageGetImageFromData(void* data, int length);
 
-COREGRAPHICS_EXPORT NSData* _CGImagePNGRepresentation(CGImageRef image);
-COREGRAPHICS_EXPORT NSData* _CGImageJPEGRepresentation(CGImageRef image, float quality);
-COREGRAPHICS_EXPORT NSData* _CGImageRepresentation(CGImageRef image, REFGUID guid, float quality);
-
 COREGRAPHICS_EXPORT CGImageRef _CGImageCreateWithWICBitmap(IWICBitmap* bitmap);
 
 COREGRAPHICS_EXPORT HRESULT _CGImageGetWICImageSource(CGImageRef image, IWICBitmap** source);

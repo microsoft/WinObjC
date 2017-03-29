@@ -23,7 +23,6 @@
 #import <CoreGraphics/CGBitmapContext.h>
 #import <CoreGraphics/CGGeometry.h>
 #import <CoreGraphics/CGDataProvider.h>
-#import <Foundation/NSData.h>
 #import <LoggingNative.h>
 #import <CFRuntime.h>
 #import <CFBridgeUtilities.h>
@@ -707,19 +706,6 @@ CGImageRef _CGImageLoadImageWithWICDecoder(REFGUID decoderCls, void* bytes, int 
     CGImageRef imageRef = __CGImage::CreateInstance();
     imageRef->SetImageSource(bitmap);
     return imageRef;
-}
-
-NSData* _CGImagePNGRepresentation(CGImageRef image) {
-    return _CGImageRepresentation(image, GUID_ContainerFormatPng, -1);
-}
-
-NSData* _CGImageJPEGRepresentation(CGImageRef image, float quality) {
-    return _CGImageRepresentation(image, GUID_ContainerFormatJpeg, quality);
-}
-
-NSData* _CGImageRepresentation(CGImageRef image, REFGUID guid, float quality) {
-    // TODO #1124 implement encoder.
-    return nil;
 }
 
 size_t _CGImageImputeBitsPerPixelFromFormat(CGColorSpaceRef colorSpace, size_t bitsPerComponent, CGBitmapInfo bitmapInfo) {
