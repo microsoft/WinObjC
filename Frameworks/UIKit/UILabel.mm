@@ -759,7 +759,8 @@ static const wchar_t* TAG = L"UILabel";
                 curSize.width = 0;
             }
         } else {
-            curSize.height = 0;        }
+            curSize.height = 0;
+        }
 
         //  Calculate the size of the text set in our label
         ret = [_text sizeWithFont:_font constrainedToSize:CGSizeMake(curSize.width, curSize.height) lineBreakMode:self.lineBreakMode];
