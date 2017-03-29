@@ -46,7 +46,7 @@ foreach($ProjectJsonFile in $ProjectJsons)
     }  
 
     if ($needsUpdate -eq $true) {
-        $FileAsJson | ConvertTo-Json | set-content $ProjectJsonFile  
+        $FileAsJson | ConvertTo-Json -Depth 100 | set-content $ProjectJsonFile
     }
 }  
   
