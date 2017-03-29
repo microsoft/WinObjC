@@ -18,7 +18,14 @@
 #import <Foundation/NSThread.h>
 #import <Starboard/SmartTypes.h>
 #import <UIKit/UIView.h>
-#import "UWP/WindowsUIXamlControls.h"
+#import "UIViewInternal.h"
+
+#include "COMIncludes.h"
+#import <winrt/Windows.UI.Xaml.h>
+#import <winrt/Windows.UI.Xaml.Controls.h>
+#include "COMIncludes_End.h"
+
+using namespace winrt::Windows::UI::Xaml;
 
 class UIKitViewTests {
 public:
@@ -43,10 +50,9 @@ public:
     TEST_METHOD(GetXamlElement) {
         FrameworkHelper::RunOnUIThread([]() {
             UIView* view = [[[UIView alloc] init] autorelease];
-            WXFrameworkElement* backingElement = [view xamlElement];
+            FrameworkElement backingElement = [view _xamlElementInternal];
             ASSERT_TRUE(backingElement);
-            ASSERT_TRUE([backingElement isKindOfClass:[WXFrameworkElement class]]);
-            ASSERT_TRUE([backingElement.name isEqualToString:@"UIView"]);
+            ASSERT_EQ(L"UIView", backingElement.Name());
         });
     }
 
