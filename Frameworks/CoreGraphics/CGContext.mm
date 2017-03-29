@@ -3165,7 +3165,10 @@ static bool __isFloatCloseEnough(float a, float b) {
 * Insert a transparent color at the specified 'location'.
 * This will also move the color at the specified 'location' to the supplied 'position'
 */
-static inline void __CGGradientInsertTransparentColor(std::vector<D2D1_GRADIENT_STOP>& gradientStops, int location, float position) {
+static inline void __CGGradientInsertTransparentColor(std::vector<D2D1_GRADIENT_STOP>& gradientStops,
+                                                      int location,
+                                                      float position,
+                                                      bool radial = false) {
     // Find the Gradient with location.
     auto res = std::find_if(gradientStops.begin(), gradientStops.end(), [location](const D2D1_GRADIENT_STOP& gradient) {
         return __isFloatCloseEnough(gradient.position, location);
@@ -3173,6 +3176,8 @@ static inline void __CGGradientInsertTransparentColor(std::vector<D2D1_GRADIENT_
 
     if (res != gradientStops.end()) {
         (*res).position = position;
+    } else if (radial && gradientStops.size() == 1) {
+        gradientStops.front().position = position;
     } else {
         gradientStops[location].position = position;
     }
@@ -3211,14 +3216,14 @@ static std::vector<D2D1_GRADIENT_STOP> __CGGradientToD2D1GradientStop(CGContextR
     // Radial gradients do not need a color offset at the origin, as we only support radial gradients that
     // have the same start and end centers.
     if (!(options & kCGGradientDrawsBeforeStartLocation) && (gradientCount > 1) && !radialGradient) {
-        __CGGradientInsertTransparentColor(gradientStops, 0, s_kCGGradientOffsetPoint);
+        __CGGradientInsertTransparentColor(gradientStops, 0, s_kCGGradientOffsetPoint, radialGradient);
     }
 
     // For Linear Gradients, if the gradientCount is one, the entire area is painted with the same color.
     // For Radial Gradients, if the gradientCount is one, only the area within the radius is painted, thus
     // we need to add transparent stops for radial gradient with only one gradient.
     if (!(options & kCGGradientDrawsAfterEndLocation) && (gradientCount > 1 || radialGradient)) {
-        __CGGradientInsertTransparentColor(gradientStops, 1, 1.0f - s_kCGGradientOffsetPoint);
+        __CGGradientInsertTransparentColor(gradientStops, 1, 1.0f - s_kCGGradientOffsetPoint, radialGradient);
     }
 
     return gradientStops;
@@ -3307,7 +3312,7 @@ void CGContextDrawRadialGradient(CGContextRef context,
         &radialGradientBrush));
 
     // Area to fill
-    D2D1_SIZE_F targetSize = deviceContext->GetSize();
+    D2D1_SIZE_F targetSize = context->GetContextSize();
     D2D1_RECT_F region = D2D1::RectF(0, 0, targetSize.width, targetSize.height);
 
     FAIL_FAST_IF_FAILED(
