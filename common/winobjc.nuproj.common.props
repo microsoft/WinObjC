@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageVersion_PreReleaseFormat>{PackageVersion_Timestamp}-{PackageVersion_PreReleaseLabel}</PackageVersion_PreReleaseFormat>
+    <PackageVersion_PreReleaseFormat>{PackageVersion_PreReleaseLabel}-{PackageVersion_Timestamp}</PackageVersion_PreReleaseFormat>
   </PropertyGroup>
 
   <PropertyGroup>
