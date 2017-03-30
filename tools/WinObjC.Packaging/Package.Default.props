@@ -17,6 +17,9 @@
 
     <_ImportLibsFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\*.lib"/>    
     <_ImportLibsFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.lib"/>
+    
+    <_PriFilesFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\*.pri"/>    
+    <_PriFilesFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.pri"/>
 
     <_BundleFilesFromPackage Include="$(MSBuildThisFileDirectory)\bundle\**\*.*" />
     <_ContentFilesFromPackage Include="$(MSBuildThisFileDirectory)\content\**\*.*" />
@@ -41,6 +44,12 @@
     <Reference Include="@(_ReferencesFromPackage)">
       <Implementation>%(Filename).dll</Implementation>
     </Reference>
+
+    <!-- Ensure that all packaged .pri files are added to the resources.pri of the compiled application -->
+    <_PackagingOutputsOutsideLayout Include="@(_PriFilesFromPackage)">
+      <OutputGroup>WinObjC</OutputGroup>
+      <ProjectName>WinObjC</ProjectName>
+    </_PackagingOutputsOutsideLayout>
 
     <!-- Add references for content files -->
     <ReferenceCopyLocalPaths Include="@(_ContentFilesFromPackage)">

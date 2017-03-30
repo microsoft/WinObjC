@@ -225,6 +225,8 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
+  <!-- Copy the .xbf files into a UIKit.Xaml subdirectory so the FunctionalTests can find them -->
+  <!-- Note: If we can properly package our functional tests into an AppX, this step won't be necessary -->
   <Target Name="CopyXbfFiles" BeforeTargets="_CopyFilesMarkedCopyLocal" DependsOnTargets="$(AfterBuildCompileTargets)">
     <ItemGroup>
       <_XbfFiles Include="$(MSBuildThisFileDirectory)$(XamlGeneratedOutputPath)\**\*.xbf" />
