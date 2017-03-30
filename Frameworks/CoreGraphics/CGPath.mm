@@ -42,10 +42,6 @@ protected:
     InspectableClass(L"Windows.Bridge.Direct2D._CGPathCustomSink", TrustLevel::BaseTrust);
 
 public:
-    ID2D1GeometrySink* GetBackingSink() {
-        return m_geometrySink.Get();
-    }
-
     _CGPathCustomSink(_In_ ID2D1GeometrySink* sink)
         : m_geometrySink(sink),
           m_lastPoint{ 0, 0 },
@@ -53,15 +49,8 @@ public:
           m_allowsFigureCalls(false),
           m_hasGeometryStarted(false),
           m_lastClose(D2D1_FIGURE_END_CLOSED),
-          m_allowsFinalFigureCall(false),
+          m_allowsFigureEndExceptFinal(false),
           m_delayedEndFigure(false) {
-    }
-
-    STDMETHOD_(void, _delayedEndFigureCall)() {
-        if (m_delayedEndFigure) {
-            _EndFigure(m_delayedEndFigureClosure);
-            m_delayedEndFigure = false;
-        }
     }
 
     STDMETHOD_(void, SetFillMode)(D2D1_FILL_MODE fillMode) {
@@ -114,15 +103,9 @@ public:
         m_lastPoint = arc->point;
     }
 
-    STDMETHOD_(void, SetAllowsFigureCalls)(bool allows) {
-        m_allowsFigureCalls = allows;
-    }
-
     STDMETHOD_(void, _BeginFigure)(D2D1_POINT_2F startPoint, D2D1_FIGURE_BEGIN figureBegin) {
         _delayedEndFigureCall();
-        if (m_isFigureOpen) {
-            _EndFigure(D2D1_FIGURE_END_OPEN);
-        }
+        _EndFigure(D2D1_FIGURE_END_OPEN);
         m_geometrySink->BeginFigure(startPoint, figureBegin);
         m_startPoint = startPoint;
         m_lastPoint = startPoint;
@@ -135,10 +118,6 @@ public:
         if (m_allowsFigureCalls) {
             _BeginFigure(startPoint, figureBegin);
         }
-    }
-
-    STDMETHOD_(bool, IsFigureEndClosed)() {
-        return m_lastClose == D2D1_FIGURE_END_CLOSED;
     }
 
     // We are using an internal end figure call to force any simplify call to leave the figure open. Otherwise
@@ -156,16 +135,12 @@ public:
 
     // Only end the figure if we're requesting to actually close a figure, or if we have allowed the backing sink to dictate figure calls.
     STDMETHOD_(void, EndFigure)(D2D1_FIGURE_END figureEnd) {
-        if (m_allowsFinalFigureCall && figureEnd != D2D1_FIGURE_END_CLOSED) {
+        if (m_allowsFigureEndExceptFinal && figureEnd != D2D1_FIGURE_END_CLOSED) {
             m_delayedEndFigure = true;
             m_delayedEndFigureClosure = figureEnd;
         } else if (figureEnd == D2D1_FIGURE_END_CLOSED || m_allowsFigureCalls) {
             _EndFigure(figureEnd);
         }
-    }
-
-    STDMETHOD_(bool, IsSinkAvailable)() {
-        return m_geometrySink != nullptr;
     }
 
     STDMETHOD(_Close)() {
@@ -179,49 +154,82 @@ public:
         return S_OK;
     };
 
-    STDMETHOD_(bool, IsFigureOpen)() {
+    ID2D1GeometrySink* GetBackingSink() {
+        return m_geometrySink.Get();
+    }
+
+    void SetAllowsFigureCalls(bool allows) {
+        m_allowsFigureCalls = allows;
+    }
+
+    bool IsFigureEndClosed() {
+        return m_lastClose == D2D1_FIGURE_END_CLOSED;
+    }
+
+    bool IsSinkAvailable() {
+        return m_geometrySink != nullptr;
+    }
+
+    bool IsFigureOpen() {
         return m_isFigureOpen;
     }
 
-    STDMETHOD_(bool, IsGeometryStarted)() {
+    bool IsGeometryStarted() {
         return m_hasGeometryStarted;
     }
 
-    STDMETHOD_(D2D1_POINT_2F, GetCurrentPoint)() {
+    D2D1_POINT_2F GetCurrentPoint() {
         return m_lastPoint;
     }
 
-    STDMETHOD_(void, SetCurrentPoint)(D2D1_POINT_2F currentPoint) {
+    void SetCurrentPoint(D2D1_POINT_2F currentPoint) {
         m_lastPoint = currentPoint;
     }
 
-    STDMETHOD_(D2D1_POINT_2F, GetStartingPoint)() {
+    D2D1_POINT_2F GetStartingPoint() {
         return m_startPoint;
     }
 
-    STDMETHOD_(void, SetStartingPoint)(D2D1_POINT_2F startPoint) {
+    void SetStartingPoint(D2D1_POINT_2F startPoint) {
         m_startPoint = startPoint;
     }
 
-    STDMETHOD_(void, SetBackingSink)(ID2D1GeometrySink* sink) {
+    void SetBackingSink(ID2D1GeometrySink* sink) {
         m_geometrySink = sink;
     }
 
-    STDMETHOD_(void, AllowAllExceptFinalEndFigure)(bool ignore) {
-        m_allowsFinalFigureCall = ignore;
+    void AllowAllExceptFinalEndFigure(bool allow) {
+        m_allowsFigureEndExceptFinal = allow;
         m_delayedEndFigure = false;
     }
 
 private:
+    void _delayedEndFigureCall() {
+        if (m_delayedEndFigure) {
+            _EndFigure(m_delayedEndFigureClosure);
+            m_delayedEndFigure = false;
+        }
+    }
+
     ComPtr<ID2D1GeometrySink> m_geometrySink;
+    // The last point this geometry has moved to.
     D2D1_POINT_2F m_lastPoint;
+    // The starting point this geometry will move to if it is closed.
     D2D1_POINT_2F m_startPoint;
+    // Whether or not the figure is open and ready to recieve new path information
     bool m_isFigureOpen;
-    bool m_allowsFigureCalls;
-    bool m_allowsFinalFigureCall;
-    bool m_delayedEndFigure;
+    // Whether or not any geometry has been started. This can be inferred from other APIs, but those would require the geometry to be
+    // closed.
     bool m_hasGeometryStarted;
+    // True if this geometry can end its own figures.
+    bool m_allowsFigureCalls;
+    // True if this geometry will leave it's last EndFigure call ignored.
+    bool m_allowsFigureEndExceptFinal;
+    // True when the next figure created should end the previous figure first.
+    bool m_delayedEndFigure;
+    // The figure closure type to end the last figure with.
     D2D1_FIGURE_END m_delayedEndFigureClosure;
+    // The last figure closure type used.
     D2D1_FIGURE_END m_lastClose;
 };
 
@@ -308,7 +316,6 @@ struct __CGPath : CoreFoundation::CppBase<__CGPath> {
     // create a new path with the old path information to edit.
     HRESULT PreparePathForEditing() {
         if (!IsGeometryStarted() && IsSinkAvailable() && !IsLastFigureEndClosed()) {
-            // The geometry has a END_OPEN
             RETURN_IF_FAILED(ClosePath());
         }
         if (!IsSinkAvailable()) {

@@ -29,7 +29,7 @@ class CGPathCopyByStroking_Lines : public WhiteBackgroundTest<>,
         CGFloat miterLimit = ::testing::get<2>(GetParam());
         bool useContext = ::testing::get<3>(GetParam());
 
-        char* lineCapName;
+        const char* lineCapName;
         switch (lineCap) {
             case kCGLineCapButt:
                 lineCapName = "LineCapButt";
@@ -44,7 +44,7 @@ class CGPathCopyByStroking_Lines : public WhiteBackgroundTest<>,
                 break;
         }
 
-        char* lineJoinName;
+        const char* lineJoinName;
         switch (lineJoin) {
             case kCGLineJoinMiter:
                 lineJoinName = "LineJoinMiter";
@@ -76,7 +76,7 @@ class CGPathCopyByStroking_Curves : public WhiteBackgroundTest<>,
         CGFloat miterLimit = ::testing::get<1>(GetParam());
         bool useContext = ::testing::get<2>(GetParam());
 
-        char* lineCapName;
+        const char* lineCapName;
         switch (lineCap) {
             case kCGLineCapButt:
                 lineCapName = "LineCapButt";
@@ -118,7 +118,7 @@ class CGPathCopyByStroking_OpenFigure : public WhiteBackgroundTest<>,
         CGFloat miterLimit = ::testing::get<1>(GetParam());
         bool useContext = ::testing::get<2>(GetParam());
 
-        char* lineJoinName;
+        const char* lineJoinName;
         switch (lineJoin) {
             case kCGLineJoinMiter:
                 lineJoinName = "LineJoinMiter";
@@ -142,7 +142,7 @@ class CGPathCopyByStroking_OpenFigure : public WhiteBackgroundTest<>,
     }
 };
 
-void drawStrokeTestWithParams(
+static void drawStrokeTestWithParams(
     CGContextRef context, CGPathRef path, CGLineCap cap, CGLineJoin join, CGFloat lineWidth, CGFloat miterLimit, bool useContext) {
     if (useContext) {
         CGContextSaveGState(context);
@@ -195,14 +195,14 @@ DRAW_TEST_P(CGPathCopyByStroking_Lines, PathWiden) {
     CGPathRelease(thepath);
 }
 
-void CreateOpenFigurePaths(CGContextRef context,
-                           CGFloat xstart,
-                           CGFloat ystart,
-                           CGFloat width,
-                           CGFloat height,
-                           CGLineJoin lineJoin,
-                           CGFloat miterLimit,
-                           bool useContext) {
+static void CreateOpenFigurePaths(CGContextRef context,
+                                  CGFloat xstart,
+                                  CGFloat ystart,
+                                  CGFloat width,
+                                  CGFloat height,
+                                  CGLineJoin lineJoin,
+                                  CGFloat miterLimit,
+                                  bool useContext) {
     CGMutablePathRef straightLine1 = CGPathCreateMutable();
     CGPathMoveToPoint(straightLine1, NULL, xstart + .1 * width, ystart + .5 * height);
     CGPathAddLineToPoint(straightLine1, NULL, xstart + .1 * width, ystart + .1 * height);
