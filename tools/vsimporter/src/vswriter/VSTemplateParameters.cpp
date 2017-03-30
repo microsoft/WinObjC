@@ -33,13 +33,18 @@ static std::string getSafeString(std::string str, char replacement)
   return str;
 }
 
-VSTemplateParameters::VSTemplateParameters()
-{
-  // Set up basic parameters map
-  for (unsigned i = 1; i <= 10; i++) {
-    m_params["$guid" + std::to_string(i) + "$"] = sole::uuid4().str();
-  }
-  m_params["$targetnametoken$"] = "$targetnametoken$";
+VSTemplateParameters::VSTemplateParameters() {
+    const BuildSettings bs(NULL);
+
+    // Set up basic parameters map
+    for (unsigned i = 1; i <= 10; i++) {
+        m_params["$guid" + std::to_string(i) + "$"] = sole::uuid4().str();
+    }
+    m_params["$targetnametoken$"] = "$targetnametoken$";
+
+    m_params["$ToolsVersion$"] = bs.getValue("TOOLS_VERSION");
+    m_params["$MinimumVisualStudioVersion$"] = bs.getValue("MINIMUM_VISUAL_STUDIO_VERSION");
+    m_params["$PlatformToolset$"] = bs.getValue("PLATFORM_TOOLSET");
 }
 
 void VSTemplateParameters::setProjectName(const std::string& val)

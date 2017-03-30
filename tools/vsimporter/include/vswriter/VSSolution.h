@@ -27,12 +27,13 @@ class VCProject;
 
 class VSSolution {
 public:
-  VSSolution(const std::string& absPath, unsigned version = 14);
-  ~VSSolution();
-  const std::string& getPath();
-  VSBuildableSolutionProject* addProject(VCProject* project, VSSolutionFolderProject* parent = NULL); // own the VSBuildableSolutionProject but not VCProject
-  VSSolutionFolderProject* addFolder(const std::string& name, VSSolutionFolderProject* parent = NULL); // own the VSSolutionFolderProject
-  VSSolutionProject* getProjectWithId(const std::string& id);
+    VSSolution(const std::string& absPath, unsigned version = 15);
+    ~VSSolution();
+    const std::string& getPath();
+    VSBuildableSolutionProject* addProject(VCProject* project,
+                                           VSSolutionFolderProject* parent = NULL); // own the VSBuildableSolutionProject but not VCProject
+    VSSolutionFolderProject* addFolder(const std::string& name, VSSolutionFolderProject* parent = NULL); // own the VSSolutionFolderProject
+    VSSolutionProject* getProjectWithId(const std::string& id);
 
   VSBuildableSolutionProject* findBuildableProject(const std::string& path);
   const VSBuildableSolutionProject* findBuildableProject(const std::string& path) const;

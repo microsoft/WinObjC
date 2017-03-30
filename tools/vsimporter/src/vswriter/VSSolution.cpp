@@ -227,39 +227,43 @@ void VSSolution::validateUUIDs() const
   }
 }
 
-void VSSolution::write(std::ostream& out) const
-{
-  // Ensure that UUIDs are unique
-  validateUUIDs();
+void VSSolution::write(std::ostream& out) const {
+    // Ensure that UUIDs are unique
+    validateUUIDs();
 
-  // Write header
-  out << "Microsoft Visual Studio Solution File, Format Version 12.00" << std::endl;
-  if (m_version == 12) {
-    out << "# Visual Studio 2013" << std::endl;
-    out << "VisualStudioVersion = 12.0.21005.1" << std::endl;
-  } else {
-    out << "# Visual Studio 14" << std::endl;
-    out << "VisualStudioVersion = 14.0.22823.1" << std::endl;
-  }
-  out << "MinimumVisualStudioVersion = 10.0.40219.1" << std::endl;
+    // Write header
+    out << "Microsoft Visual Studio Solution File, Format Version 12.00" << std::endl;
+    if (m_version == 12) {
+        out << "# Visual Studio 2013" << std::endl;
+        out << "VisualStudioVersion = 12.0.21005.1" << std::endl;
+        out << "MinimumVisualStudioVersion = 10.0.40219.1" << std::endl;
+    } else if (m_version == 14) {
+        out << "# Visual Studio 14" << std::endl;
+        out << "VisualStudioVersion = 14.0.22823.1" << std::endl;
+        out << "MinimumVisualStudioVersion = 14.0.22823.1" << std::endl;
+    } else {
+        out << "# Visual Studio 15" << std::endl;
+        out << "VisualStudioVersion = 15.0.26228.4" << std::endl;
+        out << "MinimumVisualStudioVersion = 15.0.26206.0" << std::endl;
+    }
 
-  // Write project descriptions
-  writeProjectDescriptions(out);
+    // Write project descriptions
+    writeProjectDescriptions(out);
 
-  // Write globals
-  out << "Global" << std::endl;
-  writeSharedMSBuildProjectFiles(out);
-  writeSolutionConfigurationPlatforms(out);
-  writeProjectConfigurationPlatforms(out);
-  writeSolutionProperties(out);
-  writeNestedProjects(out);
-  out << "EndGlobal" << std::endl;
+    // Write globals
+    out << "Global" << std::endl;
+    writeSharedMSBuildProjectFiles(out);
+    writeSolutionConfigurationPlatforms(out);
+    writeProjectConfigurationPlatforms(out);
+    writeSolutionProperties(out);
+    writeNestedProjects(out);
+    out << "EndGlobal" << std::endl;
 
-  // Write project files
-  for (auto project : m_buildableProjects) {
-    project.second->getProject()->write();
-    std::cout << "Generated " << project.second->getProject()->getPath() << std::endl;
-  }
+    // Write project files
+    for (auto project : m_buildableProjects) {
+        project.second->getProject()->write();
+        std::cout << "Generated " << project.second->getProject()->getPath() << std::endl;
+    }
 
-  std::cout << "Generated " << m_absFilePath << std::endl;
+    std::cout << "Generated " << m_absFilePath << std::endl;
 }
