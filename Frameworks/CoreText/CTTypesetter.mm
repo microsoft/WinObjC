@@ -25,8 +25,8 @@
 
 static const wchar_t* TAG = L"CTTypesetter";
 
-const CFStringRef kCTTypesetterOptionDisableBidiProcessing = static_cast<CFStringRef>(@"kCTTypesetterOptionDisableBidiProcessing");
-const CFStringRef kCTTypesetterOptionForcedEmbeddingLevel = static_cast<CFStringRef>(@"kCTTypesetterOptionForcedEmbeddingLevel");
+const CFStringRef kCTTypesetterOptionDisableBidiProcessing = CFSTR("kCTTypesetterOptionDisableBidiProcessing");
+const CFStringRef kCTTypesetterOptionForcedEmbeddingLevel = CFSTR("kCTTypesetterOptionForcedEmbeddingLevel");
 
 @implementation _CTTypesetter
 - (instancetype)initWithAttributedString:(NSAttributedString*)str {

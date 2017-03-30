@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,7 +17,7 @@
 #import <CoreText/CTFontCollection.h>
 #import <StubReturn.h>
 
-const CFStringRef kCTFontCollectionRemoveDuplicatesOption = static_cast<CFStringRef>(@"kCTFontCollectionRemoveDuplicatesOption");
+const CFStringRef kCTFontCollectionRemoveDuplicatesOption = CFSTR("kCTFontCollectionRemoveDuplicatesOption");
 
 /**
  @Status NotInPlan

@@ -29,10 +29,10 @@
 #include <algorithm>
 #include <functional>
 
-const CFStringRef kCTBackgroundStrokeColorAttributeName = static_cast<CFStringRef>(@"kCTBackgroundStrokeColorAttributeName");
-const CFStringRef kCTBackgroundFillColorAttributeName = static_cast<CFStringRef>(@"kCTBackgroundFillColorAttributeName");
-const CFStringRef kCTBackgroundCornerRadiusAttributeName = static_cast<CFStringRef>(@"kCTBackgroundCornerRadiusAttributeName");
-const CFStringRef kCTBackgroundLineWidthAttributeName = static_cast<CFStringRef>(@"kCTBackgroundLineWidthAttributeName");
+const CFStringRef kCTBackgroundStrokeColorAttributeName = CFSTR("kCTBackgroundStrokeColorAttributeName");
+const CFStringRef kCTBackgroundFillColorAttributeName = CFSTR("kCTBackgroundFillColorAttributeName");
+const CFStringRef kCTBackgroundCornerRadiusAttributeName = CFSTR("kCTBackgroundCornerRadiusAttributeName");
+const CFStringRef kCTBackgroundLineWidthAttributeName = CFSTR("kCTBackgroundLineWidthAttributeName");
 
 @implementation _CTRun : NSObject
 - (void)dealloc {

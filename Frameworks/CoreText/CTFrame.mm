@@ -22,11 +22,11 @@
 #import "CGContextInternal.h"
 #import "CGPathInternal.h"
 
-const CFStringRef kCTFrameProgressionAttributeName = static_cast<CFStringRef>(@"kCTFrameProgressionAttributeName");
-const CFStringRef kCTFramePathFillRuleAttributeName = static_cast<CFStringRef>(@"kCTFramePathFillRuleAttributeName");
-const CFStringRef kCTFramePathWidthAttributeName = static_cast<CFStringRef>(@"kCTFramePathWidthAttributeName");
-const CFStringRef kCTFrameClippingPathsAttributeName = static_cast<CFStringRef>(@"kCTFrameClippingPathsAttributeName");
-const CFStringRef kCTFramePathClippingPathAttributeName = static_cast<CFStringRef>(@"kCTFramePathClippingPathAttributeName");
+const CFStringRef kCTFrameProgressionAttributeName = CFSTR("kCTFrameProgressionAttributeName");
+const CFStringRef kCTFramePathFillRuleAttributeName = CFSTR("kCTFramePathFillRuleAttributeName");
+const CFStringRef kCTFramePathWidthAttributeName = CFSTR("kCTFramePathWidthAttributeName");
+const CFStringRef kCTFrameClippingPathsAttributeName = CFSTR("kCTFrameClippingPathsAttributeName");
+const CFStringRef kCTFramePathClippingPathAttributeName = CFSTR("kCTFramePathClippingPathAttributeName");
 
 @implementation _CTFrame : NSObject
 - (instancetype)init {

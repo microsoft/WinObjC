@@ -20,10 +20,9 @@
 #import <CoreGraphics/DWriteWrapper.h>
 #import <CoreGraphics/CGFontInternal.h>
 
-const CFStringRef kCTFontManagerRegisteredFontsChangedNotification =
-    static_cast<CFStringRef>(@"kCTFontManagerRegisteredFontsChangedNotification");
-const CFStringRef kCTFontManagerErrorDomain = static_cast<CFStringRef>(@"kCTFontManagerErrorDomain");
-const CFStringRef kCTFontManagerErrorFontURLsKey = static_cast<CFStringRef>(@"kCTFontManagerErrorFontURLsKey");
+const CFStringRef kCTFontManagerRegisteredFontsChangedNotification = CFSTR("kCTFontManagerRegisteredFontsChangedNotification");
+const CFStringRef kCTFontManagerErrorDomain = CFSTR("kCTFontManagerErrorDomain");
+const CFStringRef kCTFontManagerErrorFontURLsKey = CFSTR("kCTFontManagerErrorFontURLsKey");
 
 /**
  @Status Stub
