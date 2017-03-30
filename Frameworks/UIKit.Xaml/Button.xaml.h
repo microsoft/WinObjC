@@ -81,6 +81,9 @@ private:
     Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Input::IPointerEventHandler> _pointerReleasedHook;
     Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Input::IPointerEventHandler> _pointerCanceledHook;
     Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::Input::IPointerEventHandler> _pointerCaptureLostHook;
+
+    // Property-changed notifications
+    void LabelTextChanged(Windows::UI::Xaml::DependencyObject^ object, Windows::UI::Xaml::DependencyProperty^ property);
 };
 
 } /* Xaml*/
