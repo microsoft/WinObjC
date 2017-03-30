@@ -76,7 +76,7 @@ private:
 // Class to set user-supplied block to monitor XAML property changed events
 class XamlEventSubscription {
 public:
-    XamlEventSubscription() : _callbackToken(-1), _xamlObject(nullptr), _propertyToObserve(nullptr) {
+    XamlEventSubscription() : _callbackToken(-1), _xamlObject(nullptr), _propertyToObserve(nullptr), _eventBlock(nil) {
     }
 
     ~XamlEventSubscription() {
@@ -94,6 +94,7 @@ private:
 
     winrt::Windows::UI::Xaml::DependencyObject _xamlObject;
     winrt::Windows::UI::Xaml::DependencyProperty _propertyToObserve;
+    XamlEventBlock _eventBlock;
 }; // class XamlEventSubscription
 
 // Class used to signal and wait during a test run

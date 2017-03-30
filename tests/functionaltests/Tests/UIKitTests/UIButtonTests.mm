@@ -35,7 +35,7 @@ using namespace winrt::Windows::UI::Xaml;
 class LayoutUpdatedCallback
 {
 public:
-    LayoutUpdatedCallback(FrameworkElement* layerContentAddr, std::shared_ptr<UXTestAPI::UXEvent>& uxLayoutEvent, winrt::event_token& ert, const FrameworkElement& xamlElement) :
+    LayoutUpdatedCallback(FrameworkElement* layerContentAddr, std::shared_ptr<UXTestAPI::UXEvent>& uxLayoutEvent, winrt::event_token* ert, const FrameworkElement& xamlElement) :
         _layerContentAddr(layerContentAddr), _uxLayoutEvent(uxLayoutEvent), _ert(ert), _xamlElement(xamlElement) {
     }
 
@@ -49,24 +49,22 @@ public:
 
     template <typename TSender, typename TArgs>
     void operator()(TSender&&, TArgs&&) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            // Initially there is no LayerContent element unless we set a background image
-            if (!*_layerContentAddr) {
-                // Initially there is no LayerContent element
-                *_layerContentAddr = FindXamlChild(_xamlElement, @"LayerContent");
-                if (*_layerContentAddr) {
-                    // Ignore further layout events
-                    _xamlElement.LayoutUpdated(_ert);
-                    _uxLayoutEvent->Set();
-                }
+        // Initially there is no LayerContent element unless we set a background image
+        if (!*_layerContentAddr) {
+            // Initially there is no LayerContent element
+            *_layerContentAddr = FindXamlChild(_xamlElement, @"LayerContent");
+            if (*_layerContentAddr) {
+                // Ignore further layout events
+                _xamlElement.LayoutUpdated(*_ert);
+                _uxLayoutEvent->Set();
             }
-        });
+        }
     }
 
 private:
     FrameworkElement* _layerContentAddr;
     std::shared_ptr<UXTestAPI::UXEvent>& _uxLayoutEvent;
-    winrt::event_token& _ert;
+    winrt::event_token* _ert;
     FrameworkElement _xamlElement;
 };
 
@@ -957,24 +955,25 @@ public:
         EventRegistrationToken ert{};
         EventRegistrationToken* const ertAddr = &ert;
 
+        __block winrt::event_token ert;
+        winrt::event_token* const ertAddr = &ert;
+
         FrameworkElement xamlElement = [buttonToTest _xamlElementInternal];
         ASSERT_TRUE(xamlElement);
 
         // Wait for the layerContent to be part of the visual tree
         dispatch_sync(dispatch_get_main_queue(), ^{
-            winrt::event_token ert = xamlElement.LayoutUpdated([layerContentAddr, uxLayoutEvent, &ert, xamlElement] (auto&&, auto&&) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    // Initially there is no LayerContent element unless we set a background image
-                    if (!*layerContentAddr) {
-                        // Initially there is no LayerContent element
-                        *layerContentAddr = FindXamlChild(xamlElement, @"LayerContent");
-                        if (*layerContentAddr) {
-                            // Ignore further layout events
-                            xamlElement.LayoutUpdated(ert);
-                            uxLayoutEvent->Set();
-                        }
+            ert = xamlElement.LayoutUpdated([layerContentAddr, uxLayoutEvent, ertAddr, xamlElement] (auto&&, auto&&) {
+                // Initially there is no LayerContent element unless we set a background image
+                if (!*layerContentAddr) {
+                    // Initially there is no LayerContent element
+                    *layerContentAddr = FindXamlChild(xamlElement, @"LayerContent");
+                    if (*layerContentAddr) {
+                        // Ignore further layout events
+                        xamlElement.LayoutUpdated(*ertAddr);
+                        uxLayoutEvent->Set();
                     }
-                });
+                }
             });
 
             // Set a default background image so we trigger the LayerContent XAML addition
@@ -1440,6 +1439,7 @@ public:
     }
 
     TEST_METHOD(UIButton_CurrentBackgroundImage) {
+        @autoreleasepool {
         StrongId<UIButtonWithControlsViewController> buttonVC;
         buttonVC.attach([[UIButtonWithControlsViewController alloc] init]);
         UXTestAPI::ViewControllerPresenter testHelper(buttonVC);
@@ -1453,17 +1453,15 @@ public:
         auto uxEvent = UXEvent::CreateAuto();
         auto xamlSubscriber = std::make_shared<XamlEventSubscription>();
         __block NSString* expectedBackgroundImage = @"150x150.png";
-        EventRegistrationToken ert{};
-        EventRegistrationToken* const ertAddr = &ert;
+        __block winrt::event_token ert;
+        winrt::event_token* const ertAddr = &ert;
 
         FrameworkElement xamlElement = [buttonToTest _xamlElementInternal];
         ASSERT_TRUE(xamlElement);
 
-
         // Wait for the layerContent to be part of the visual tree
         dispatch_sync(dispatch_get_main_queue(), ^{
-            winrt::event_token ert;
-            LayoutUpdatedCallback callback(layerContentAddr, uxLayoutEvent, ert, xamlElement);
+            LayoutUpdatedCallback callback(layerContentAddr, uxLayoutEvent, ertAddr, xamlElement);
             ert = xamlElement.LayoutUpdated(callback);
 
             // Set a default background image so we trigger the LayerContent XAML addition
@@ -1495,6 +1493,7 @@ public:
         });
 
         ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event timed out!");
+        }
     }
 
     TEST_METHOD(UIButton_ImageView) {

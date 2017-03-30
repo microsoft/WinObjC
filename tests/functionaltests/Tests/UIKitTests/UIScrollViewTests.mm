@@ -254,7 +254,7 @@ public:
         });
     }
 
-    TEST_METHOD(UIScrollView_VerifyChangingDrectionalLock) {
+    TEST_METHOD(UIScrollView_VerifyChangingDirectionalLock) {
         StrongId<UIScrollViewController> scrollViewVC;
         scrollViewVC.attach([[UIScrollViewController alloc] init]);
         UXTestAPI::ViewControllerPresenter testHelper(scrollViewVC, 2);

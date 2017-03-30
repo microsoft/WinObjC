@@ -125,10 +125,18 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
         _passwordBox.Password(objcwinrt::string(text));
     } else {
         _textBox.Text(objcwinrt::string(text));
-        // Ensure caret at end of field in case we programmatically
-        // gain focus (becomeFirstResponder) after the text is set:
-        _textBox.SelectionStart([text length]);
-        _textBox.SelectionLength(0);
+
+        try {
+            // Ensure caret at end of field in case we programmatically
+            // gain focus (becomeFirstResponder) after the text is set:
+            _textBox.SelectionStart([text length]);
+            _textBox.SelectionLength(0);
+        } catch (const winrt::hresult_error& e) {
+            // Bug in XAML TextBox causes it to return S_FALSE
+            if (e.code() != S_FALSE) {
+                throw;
+            }
+        }
     }
     [_secureModeLock unlock];
 
@@ -230,18 +238,6 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
 
 - (void)_applyFont:(UIFont*)font {
     Media::FontFamily fontFamily(objcwinrt::string([font _compatibleFamilyName]));
-    _textBox.FontFamily(fontFamily);
-    _passwordBox.FontFamily(fontFamily);
-
-    // The following enums map from DWrite directly to Xaml
-    _textBox.FontStretch((FontStretch)[font _fontStretch]);
-    _passwordBox.FontStretch((FontStretch)[font _fontStretch]);
-
-    _textBox.FontStyle((FontStyle)[font _fontStyle]);
-    _passwordBox.FontStyle((FontStyle)[font _fontStyle]);
-
-    _textBox.FontSize(font.pointSize);
-    _passwordBox.FontSize(font.pointSize);
 
     winrt::Windows::UI::Text::FontWeight weight;
 
@@ -290,8 +286,21 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
             break;
     }
 
-    _textBox.FontWeight(weight);
-    _passwordBox.FontWeight(weight);
+    if (_textBox) {
+        _textBox.FontFamily(fontFamily);
+        _textBox.FontStretch((FontStretch)[font _fontStretch]);
+        _textBox.FontStyle((FontStyle)[font _fontStyle]);
+        _textBox.FontSize(font.pointSize);
+        _textBox.FontWeight(weight);
+    }
+
+    if (_passwordBox) {
+        _passwordBox.FontFamily(fontFamily);
+        _passwordBox.FontStretch((FontStretch)[font _fontStretch]);
+        _passwordBox.FontStyle((FontStyle)[font _fontStyle]);
+        _passwordBox.FontSize(font.pointSize);
+        _passwordBox.FontWeight(weight);
+    }
 }
 
 /**

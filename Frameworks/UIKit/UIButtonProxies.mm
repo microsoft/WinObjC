@@ -82,7 +82,7 @@ static const wchar_t* tag = L"UIButtonProxies";
     return self;
 }
 
-- (FrameworkElement)xamlElement {
+- (FrameworkElement)_xamlElementInternal {
     return _xamlElement;
 }
 
@@ -92,7 +92,7 @@ static const wchar_t* tag = L"UIButtonProxies";
     if (!CGRectIsNull(frame)) {
         // We're assuming everything will be held in a Canvas
         Controls::Canvas::SetTop(_xamlElement, frame.origin.y);
-        Controls::Canvas::SetTop(_xamlElement, frame.origin.x);
+        Controls::Canvas::SetLeft(_xamlElement, frame.origin.x);
     }
 
     _xamlElement.Width(frame.size.width);

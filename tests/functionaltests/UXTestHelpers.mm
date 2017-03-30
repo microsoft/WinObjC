@@ -137,10 +137,11 @@ void XamlEventSubscription::Set(const DependencyObject& xamlObject, const Depend
 
     _xamlObject = xamlObject;
     _propertyToObserve = propertyToObserve;
+    _eventBlock = [callbackHandler copy];
 
     // Register callback and wait for the property changed event to trigger
-    _callbackToken = _xamlObject.RegisterPropertyChangedCallback(_propertyToObserve, [callbackHandler] (auto&& sender, auto&& prop) {
-        callbackHandler(sender, prop);
+    _callbackToken = _xamlObject.RegisterPropertyChangedCallback(_propertyToObserve, [this] (auto&& sender, auto&& prop) {
+        this->_eventBlock(sender, prop);
     });
 }
 
@@ -152,6 +153,9 @@ void XamlEventSubscription::Reset() {
 
     _xamlObject = nullptr;
     _propertyToObserve = nullptr;
+
+    [_eventBlock release];
+    _eventBlock = nil;
 }
 
 //
