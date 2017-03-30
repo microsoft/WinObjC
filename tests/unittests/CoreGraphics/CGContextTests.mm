@@ -24,16 +24,9 @@
 #import <CppUtils.h>
 
 #if TARGET_OS_WIN32
-#include <COMIncludes.h>
-#import <wrl/client.h>
-#import <d2d1.h>
-#import <wincodec.h>
-#include <COMIncludes_end.h>
-
 #import "CGContextInternal.h"
 #import "TestUtils.h"
 
-using namespace Microsoft::WRL;
 #endif
 
 static NSString* const kPointsKey = @"PointsKey";
@@ -283,38 +276,12 @@ class ContextCoordinateTest
 public:
     woc::unique_cf<CGContextRef> context;
 
-    static ComPtr<ID2D1RenderTarget> renderTarget;
-    static void SetUpTestCase() {
-        // TODO GH#1124: When CGBitmapContext lands, we don't need to do this manually.
-        MULTI_QI multi{
-            .pIID = &IID_IWICImagingFactory, .pItf = nullptr,
-        };
-
-        CGSize dimensions{ 100, 100 };
-
-        ComPtr<IWICImagingFactory> wicFactory;
-        THROW_IF_FAILED(CoCreateInstanceFromApp(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, nullptr, 1, &multi));
-        wicFactory.Attach(static_cast<IWICImagingFactory*>(multi.pItf));
-
-        ComPtr<IWICBitmap> wicBitmap;
-        THROW_IF_FAILED(wicFactory->CreateBitmap(dimensions.width,
-                                                 dimensions.height,
-                                                 GUID_WICPixelFormat32bppPRGBA,
-                                                 WICBitmapCacheOnDemand,
-                                                 &wicBitmap));
-
-        ComPtr<ID2D1Factory> d2dFactory;
-        FAIL_FAST_IF_FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory), &d2dFactory));
-
-        THROW_IF_FAILED(d2dFactory->CreateWicBitmapRenderTarget(wicBitmap.Get(), D2D1::RenderTargetProperties(), &renderTarget));
-    }
-
-    static void TearDownTestCase() {
-        renderTarget = nullptr;
-    }
-
     virtual void SetUp() {
-        context.reset(_CGContextCreateWithD2DRenderTarget(renderTarget.Get()));
+        auto deviceColorSpace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
+        CGSize dimensions{ 100, 100 };
+        context.reset(CGBitmapContextCreate(
+            nullptr, dimensions.width, dimensions.height, 8, dimensions.width * 4, deviceColorSpace, kCGImageAlphaPremultipliedLast));
+
         ASSERT_NE(nullptr, context);
 
         CGAffineTransform contextTransform = ::testing::get<0>(GetParam());
@@ -323,9 +290,6 @@ public:
         }
     }
 };
-
-/* static */
-ComPtr<ID2D1RenderTarget> ContextCoordinateTest::renderTarget;
 
 static constexpr double c_errorDelta = 0.0001;
 TEST_P(ContextCoordinateTest, ConvertToDeviceSpace) {
