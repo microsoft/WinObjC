@@ -729,6 +729,10 @@ static BOOL numberIsNegative(id number) {
         autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
+
 - (NSString*)stringFromNumber:(NSNumber*)number {
     if (number == nil) {
         return self.nilSymbol;
