@@ -74,7 +74,6 @@ public:
     }
 
     TEST_METHOD(UILabel_VerifyCriticalUILabelSizes) {
-        @autoreleasepool {
         // NOTE: this one test case actually comprises of 6300 sub tests
 
         StrongId<UILabelViewController> labelVC;
@@ -85,7 +84,6 @@ public:
         // setAdjustFontSizeToFitWidth/minmumFontSize/MinimumScaleFactor/NumberOfLines/LineBreakMode/FontSize
         // and then calling IntrinsicContentSize/sizeThatFits/textRectForBounds
         startTests(labelVC);
-        }
     }
 
     void startTests(UILabelViewController* self) {

@@ -1439,7 +1439,6 @@ public:
     }
 
     TEST_METHOD(UIButton_CurrentBackgroundImage) {
-        @autoreleasepool {
         StrongId<UIButtonWithControlsViewController> buttonVC;
         buttonVC.attach([[UIButtonWithControlsViewController alloc] init]);
         UXTestAPI::ViewControllerPresenter testHelper(buttonVC);
@@ -1493,7 +1492,6 @@ public:
         });
 
         ASSERT_TRUE_MSG(uxEvent->Wait(c_testTimeoutInSec), "FAILED: Waiting for property changed event timed out!");
-        }
     }
 
     TEST_METHOD(UIButton_ImageView) {
