@@ -43,26 +43,6 @@ static Platform::String^ g_delegateClassName;
 
 static const wchar_t* TAG = L"StarboardXaml";
 
-Xaml::Markup::IXamlType^ App::GetXamlType(Xaml::Interop::TypeName type) {
-    if (!_provider) {
-        _provider = ref new XamlTypeInfo::InfoProvider::XamlTypeInfoProvider();
-    }
-
-    return _provider->GetXamlTypeByType(type);
-}
-
-Xaml::Markup::IXamlType^ App::GetXamlType(Platform::String^ fullName) {
-    if (!_provider) {
-        _provider = ref new XamlTypeInfo::InfoProvider::XamlTypeInfoProvider();
-    }
-
-    return _provider->GetXamlTypeByName(fullName);
-}
-
-Platform::Array<Xaml::Markup::XmlnsDefinition>^ App::GetXmlnsDefinitions() {
-    return ref new Platform::Array<Xaml::Markup::XmlnsDefinition>(0);
-}
-
 void AppEventListener::_RegisterEventHandlers() {
     Windows::UI::Xaml::Application::Current->Suspending +=
         ref new Xaml::SuspendingEventHandler(this, &AppEventListener::_OnSuspending);
@@ -149,32 +129,6 @@ void AppEventListener::_OnBackgroundTaskCancelled(
 #endif
 
 static AppEventListener ^_appEvents;
-
-void App::InitializeComponent() {
-}
-
-void App::Connect(int connectionId, Platform::Object^ target) {
-}
-
-void App::OnLaunched(LaunchActivatedEventArgs^ args) {
-    UIApplicationLaunched(args);
-}
-
-void App::OnActivated(IActivatedEventArgs^ args) {
-    UIApplicationActivated(args);
-}
-
-void App::OnFileActivated(FileActivatedEventArgs^ args)
-{
-    UIApplicationActivated(args);
-}
-
-#ifdef ENABLE_BACKGROUND_TASK
-void App::OnBackgroundActivated(BackgroundActivatedEventArgs^ args) {
-    __super::OnBackgroundActivated(args);
-    UIApplicationBackgroundActivated(args);
-}
-#endif
 
 extern "C"
 void UIApplicationLaunched(LaunchActivatedEventArgs^ args) {
@@ -329,24 +283,6 @@ int UIApplicationMain(int argc, char* argv[], void* principalClassName, void* de
             g_delegateClassName = reinterpret_cast<Platform::String^>(Strings::NarrowToWide<HSTRING>(rawString).Detach());
         }
 
-        Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::IApplicationStatics> appStatics = nullptr;
-        Microsoft::WRL::ComPtr<ABI::Windows::UI::Xaml::IApplication> currentApplication = nullptr;
-        HRESULT hr = RoGetActivationFactory(Platform::StringReference(RuntimeClass_Windows_UI_Xaml_Application).GetHSTRING(),
-            ABI::Windows::UI::Xaml::IID_IApplicationStatics,
-            reinterpret_cast<void **>(appStatics.GetAddressOf()));
-
-        if (hr == S_OK && appStatics) {
-            appStatics->get_Current(currentApplication.GetAddressOf());
-        }
-
-        if (currentApplication == nullptr) {
-            // Start our application
-            Xaml::Application::Start(
-                ref new Xaml::ApplicationInitializationCallback([](Xaml::ApplicationInitializationCallbackParams^ p) {
-                // Simply creating the app will kick off the rest of the launch sequence
-                auto app = ref new App();
-            }));
-        }
         return 0;
     }();
     return once;

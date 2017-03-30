@@ -38,7 +38,11 @@
       <GetPackageContentsDependsOn>$(GetPackageContentsDependsOn);$(ComputeLinkInputsTargets)</GetPackageContentsDependsOn>
   </PropertyGroup>
 
-  <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents"  DependsOnTargets="$(GetPackageContentsDependsOn)" Condition="'$(ConfigurationType)' == 'DynamicLibrary' or '$(ConfigurationType)' == 'Application'">
+  <PropertyGroup Condition="'$(AppContainerApplication)' == 'true'">
+      <GetPackageContentsDependsOn>$(GetPackageContentsDependsOn);_GenerateProjectPriFileCore</GetPackageContentsDependsOn>
+  </PropertyGroup>
+
+  <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents" DependsOnTargets="$(GetPackageContentsDependsOn)" Condition="'$(ConfigurationType)' == 'DynamicLibrary' or '$(ConfigurationType)' == 'Application'">
     <ItemGroup>
       <!-- Public include folder for project  -->
       <_IncludeFiles Include="$(MSBuildThisFileDirectory)..\include\$(ProjectName)\**\*.*"/>
@@ -64,7 +68,21 @@
       <PackageFile Include="@(_WinMDFileNames->Distinct())" Condition="Exists('%(FullPath)')">
         <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
       </PackageFile>
+
     </ItemGroup>
+    
+    <PropertyGroup>
+      <_WinMDFilePath>@(_WinMDFileNames->FullPath()->Distinct())</_WinMDFilePath>
+    </PropertyGroup>
+    
+    <ItemGroup>
+      <!-- Package up .pri files associated with any .winmds -->
+      <_PriFileNames Include="$(ProjectPriFullPath)">
+      </_PriFileNames>
+      <PackageFile Include="@(_PriFileNames)" Condition="Exists('%(FullPath)') and Exists('$(_WinMDFilePath)')">
+        <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+    </ItemGroup>    
   </Target>
 
 </Project>
