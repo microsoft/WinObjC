@@ -30,6 +30,7 @@
   </PropertyGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>0a23b6b4-94bb-4b3a-ba73-a7cb5ef7d8f9</ProjectGuid>
+    <PackageVersion_PreReleaseFormat>{PackageVersion_PreReleaseLabel}-{PackageVersion_Timestamp}</PackageVersion_PreReleaseFormat>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'" />
