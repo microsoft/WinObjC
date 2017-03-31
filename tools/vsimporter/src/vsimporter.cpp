@@ -101,7 +101,7 @@ int main(int argc, char* argv[])
   int workspaceSet = 0;
   int interactiveFlag = 0;
   int genProjectionsFlag = 0;
-  int genPackagingFlag = 1;
+  int genPackagingFlag = 0;
   int allTargets = 0;
   int allSchemes = 0;
   int mode = GenerateMode;
