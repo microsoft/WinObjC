@@ -86,7 +86,7 @@ struct __CGContextDrawingState {
         D2D1_CAP_STYLE_FLAT,
         D2D1_CAP_STYLE_FLAT,
         D2D1_CAP_STYLE_FLAT,
-        D2D1_LINE_JOIN_MITER,
+        D2D1_LINE_JOIN_MITER_OR_BEVEL,
         10.f, // Default from Reference Docs
         D2D1_DASH_STYLE_SOLID,
         0.f,
