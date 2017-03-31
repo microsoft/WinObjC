@@ -21,22 +21,6 @@
 #import <CoreGraphics/CGContext.h>
 #import "CoreGraphicsInternal.h"
 
-@interface CGPattern : NSObject {
-@public
-    void* info;
-    CGRect bounds;
-    CGAffineTransform matrix;
-    float xStep, yStep;
-    DWORD tiling;
-    BOOL isColored;
-    CGPatternCallbacks callbacks;
-    __CGSurfaceFormat surfaceFmt;
-}
-- (CGImageRef)getPatternImage;
-- (CGAffineTransform)getPatternTransform;
-+ (instancetype)patternWithImage:(CGImageRef)img;
-@end
-
 CGRect _CGPatternGetBounds(CGPatternRef pattern);
 
 /*
