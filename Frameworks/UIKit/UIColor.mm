@@ -224,7 +224,7 @@ rgb hsv2rgb(hsv in) {
 @public
     enum BrushType _type;
     UIImage* _image;
-    id _pattern;
+    woc::StrongCF<CGPatternRef> _pattern;
     __CGColorQuad _components;
     // Note: This should be part of the CGColor struct
     woc::StrongCF<CGColorSpaceRef> _colorSpace;
@@ -509,22 +509,7 @@ rgb hsv2rgb(hsv in) {
         return nil;
     }
 
-#if 0
-if ( bounds.size.width < 256 || bounds.size.height < 256 ) {
-m = CGAffineTransformMakeTranslation(0, 0);
-CGPatternCallbacks callbacks;
-
-callbacks.version = 0;
-callbacks.releaseInfo = 0;
-callbacks.drawPattern = __UIColorPatternFill;
-
-_pattern = (id) CGPatternCreateColorspace(self, bounds, m, bounds.size.width, bounds.size.height, 0, NO, &callbacks, pImg->_has32BitAlpha ? _ColorABGR : _ColorBGR);
-} else {
-_pattern = (id) _CGPatternCreateFromImage(pImg);
-}
-#else
-    _pattern = (id)_CGPatternCreateFromImage(pImg);
-#endif
+    _pattern = _CGPatternCreateFromImage(pImg);
     _image = [image retain];
     _type = cgPatternBrush;
 
@@ -563,7 +548,7 @@ _pattern = (id) _CGPatternCreateFromImage(pImg);
     UIColor* ret = [self alloc];
 
     ret->_type = cgPatternBrush;
-    ret->_pattern = [(id)pattern retain];
+    ret->_pattern = pattern;
 
     return [ret autorelease];
 }
@@ -583,7 +568,7 @@ _pattern = (id) _CGPatternCreateFromImage(pImg);
     UIColor* ret = [self alloc];
 
     ret->_type = copyclr->_type;
-    ret->_pattern = [copyclr->_pattern retain];
+    ret->_pattern = copyclr->_pattern;
     ret->_components.r = copyclr->_components.r;
     ret->_components.g = copyclr->_components.g;
     ret->_components.b = copyclr->_components.b;
@@ -604,7 +589,7 @@ _pattern = (id) _CGPatternCreateFromImage(pImg);
     UIColor* ret = [self alloc];
 
     ret->_type = copyclr->_type;
-    ret->_pattern = [copyclr->_pattern retain];
+    ret->_pattern = copyclr->_pattern;
     ret->_components.r = copyclr->_components.r;
     ret->_components.g = copyclr->_components.g;
     ret->_components.b = copyclr->_components.b;
@@ -640,10 +625,6 @@ _pattern = (id) _CGPatternCreateFromImage(pImg);
 
 - (BrushType)_type {
     return _type;
-}
-
-- (CGImageRef)getPatternImage {
-    return (CGImageRef)[_pattern getPatternImage];
 }
 
 /**
@@ -779,7 +760,6 @@ _pattern = (id) _CGPatternCreateFromImage(pImg);
 */
 - (void)dealloc {
     [_image release];
-    [_pattern release];
     [super dealloc];
 }
 
@@ -845,6 +825,6 @@ DWORD _UIColorPatternFill(UIColor* color, CGContextRef ctx) {
     CGRect bounds = { 0 };
 
     bounds.size = [color->_image size];
-    CGContextDrawImage(ctx, bounds, (CGImageRef)[color->_image CGImage]);
+    CGContextDrawImage(ctx, bounds, static_cast<CGImageRef>([color->_image CGImage]));
     return 0;
 }
