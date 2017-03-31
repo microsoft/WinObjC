@@ -150,7 +150,7 @@
   <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents">
     <ItemGroup>
       <PackageFile Include="@(BuiltProjectOutputGroupOutput -> '%(FinalOutputPath)')">
-        <PackagePath>build\bin\%(Filename)%(Extension)</PackagePath>
+        <PackagePath>build\bin\%(TargetPath)</PackagePath>
       </PackageFile>
     </ItemGroup>
   </Target>
