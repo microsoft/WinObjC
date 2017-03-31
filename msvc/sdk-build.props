@@ -38,11 +38,13 @@
     <IncludeFrameworkReferencesInPackage>false</IncludeFrameworkReferencesInPackage>
     <TargetOsAndVersion Condition="'$(TargetOsAndVersion)' == ''">Universal Windows</TargetOsAndVersion>
     <TargetFramework>uap10.0</TargetFramework>
+    <PackageTargetFallback>native</PackageTargetFallback>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="NuGet.Build.Packaging" Version="0.1.186" />
     <PackageReference Include="WinObjC.Language" Version="*" />
+    <PackageReference Include="cppwinrt" Version="*" />
   </ItemGroup>
 
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -91,7 +93,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeLibrary Condition="'$(Configuration)'=='Debug'">MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
-      <AdditionalOptions>-Werror -Wno-microsoft %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-Werror -Wno-microsoft -Wno-c++1z-extensions -Wno-ignored-attributes -Wno-deprecated-declarations %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>_WINOBJC_DO_NOT_USE_NSLOG=;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <InternalSystemIncludePaths>%(InternalSystemIncludePaths);$(IncludePath);$(MSBuildThisFileDirectory)..\include\;$(MSBuildThisFileDirectory)..\include\xplat;$(MSBuildThisFileDirectory)..\deps\prebuilt\include\;$(MSBuildThisFileDirectory)..\deps\prebuilt\include\icu;$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)..\include\Platform', '$(TargetOsAndVersion)'))</InternalSystemIncludePaths>
       <IncludePaths>%(IncludePaths);$(MSBuildThisFileDirectory)..\Frameworks\include\;</IncludePaths>

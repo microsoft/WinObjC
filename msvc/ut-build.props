@@ -17,10 +17,12 @@
   <PropertyGroup Label="Globals">
     <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
     <TargetFramework>uap10.0</TargetFramework>
+    <PackageTargetFallback>native</PackageTargetFallback>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="WinObjC.Language" Version="*" />
     <PackageReference Include="Taef.Redist.Wlk" Version="1.0.170206001-nativeTargets" />
+    <PackageReference Include="cppwinrt" Version="*" />
   </ItemGroup>
 </Project>

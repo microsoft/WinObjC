@@ -95,10 +95,10 @@ public:
     CGRect _resizeRoundingError;
 
     winrt::event_token _pointerPressedEventRegistration = { };
-    winrt::event_token _pointerMovedEventRegistration = { 0 };
-    winrt::event_token _pointerReleasedEventRegistration = { 0 };
-    winrt::event_token _pointerCanceledEventRegistration = { 0 };
-    winrt::event_token _pointerCaptureLostEventRegistration = { 0 };
+    winrt::event_token _pointerMovedEventRegistration = { };
+    winrt::event_token _pointerReleasedEventRegistration = { };
+    winrt::event_token _pointerCanceledEventRegistration = { };
+    winrt::event_token _pointerCaptureLostEventRegistration = { };
 
     UIViewPrivateState(UIView* owner) {
         setSelf(owner);
