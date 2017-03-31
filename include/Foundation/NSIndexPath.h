@@ -23,11 +23,8 @@
 
 FOUNDATION_EXPORT_CLASS
 @interface NSIndexPath : NSObject <NSCopying, NSSecureCoding>
-
 + (instancetype)indexPathWithIndex:(NSUInteger)index;
 + (instancetype)indexPathWithIndexes:(const NSUInteger[])indexes length:(NSUInteger)length;
-+ (instancetype)indexPathForRow:(NSInteger)row inSection:(NSInteger)section;
-+ (instancetype)indexPathForItem:(NSInteger)item inSection:(NSInteger)section;
 - (instancetype)initWithIndex:(NSUInteger)index;
 - (instancetype)initWithIndexes:(const NSUInteger[])indexes length:(NSUInteger)length;
 - (instancetype)init;
@@ -37,8 +34,5 @@ FOUNDATION_EXPORT_CLASS
 @property (readonly) NSUInteger length;
 - (void)getIndexes:(NSUInteger*)indexes range:(NSRange)positionRange;
 - (void)getIndexes:(NSUInteger*)indexes;
-@property (readonly, nonatomic) NSInteger section;
-@property (readonly, nonatomic) NSInteger row;
-@property (readonly, nonatomic) NSInteger item;
 - (NSComparisonResult)compare:(NSIndexPath*)indexPath;
 @end

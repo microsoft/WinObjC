@@ -252,6 +252,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\NSString+UIKitAdditionsTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\NSTextContainerTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\UIKit\UIImageTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\UnitTests\UIKit\NSIndexPath+UITableViewTests.mm" />
   </ItemGroup>
   <Target Name="CopyTestResourcesToOutput" AfterTargets="AfterBuild">
     <ItemGroup>
@@ -263,5 +264,5 @@
     <ClInclude Include="$(StarboardBasePath)\tests\unittests\UIKit\NullCompositor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')" />
 </Project>

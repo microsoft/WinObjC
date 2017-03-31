@@ -28,6 +28,7 @@
 
 extern "C" void NSObjForceinclude();
 void NSStringForceinclude();
+void NSIndexPathForceInclude();
 void NSValueForceinclude();
 
 // Make sure things are compiled in:
@@ -47,5 +48,6 @@ void ForceInclusion() {
     [UISlider class];
     [UIProxyObject class];
     NSStringForceinclude();
+    NSIndexPathForceInclude();
     NSValueForceinclude();
 }

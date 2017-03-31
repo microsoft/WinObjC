@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
- * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+ * Copyright (c) Microsoft. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,10 +30,12 @@
 
 #pragma once
 
-#import <Foundation/Foundation.h>
+#import <Foundation/NSIndexPath.h>
 
 @interface NSIndexPath (UITableView)
-+ (NSIndexPath*)indexPathForRow:(NSUInteger)row inSection:(NSUInteger)section;
-@property (readonly) NSUInteger row;
-@property (readonly) NSUInteger section;
++ (instancetype)indexPathForRow:(NSInteger)row inSection:(NSInteger)section;
++ (instancetype)indexPathForItem:(NSInteger)item inSection:(NSInteger)section;
+@property (readonly, nonatomic) NSInteger section;
+@property (readonly, nonatomic) NSInteger row;
+@property (readonly, nonatomic) NSInteger item;
 @end

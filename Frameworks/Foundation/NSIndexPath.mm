@@ -48,30 +48,6 @@ static NSString* s_archiveKey = @"_NS.IP";
 /**
  @Status Interoperable
 */
-+ (NSIndexPath*)indexPathForRow:(NSInteger)row inSection:(NSInteger)section {
-    if (row < 0 || section < 0) {
-        return [[[self alloc] initWithIndexes:nullptr length:0] autorelease];
-    }
-
-    NSUInteger indexes[] = { section, row };
-    return [[[self alloc] initWithIndexes:indexes length:2] autorelease];
-}
-
-/**
- @Status Interoperable
-*/
-+ (NSIndexPath*)indexPathForItem:(NSInteger)item inSection:(NSInteger)section {
-    if (item < 0 || section < 0) {
-        return [[[self alloc] initWithIndexes:nullptr length:0] autorelease];
-    }
-
-    NSUInteger indexes[] = { section, item };
-    return [[[self alloc] initWithIndexes:indexes length:2] autorelease];
-}
-
-/**
- @Status Interoperable
-*/
 - (instancetype)init {
     return [self initWithIndexes:nullptr length:0];
 }
@@ -106,7 +82,7 @@ static NSString* s_archiveKey = @"_NS.IP";
         return _indexes == otherPath->_indexes;
     }
 
-    return FALSE;
+    return NO;
 }
 
 /**
@@ -134,14 +110,9 @@ static NSString* s_archiveKey = @"_NS.IP";
  @Status Interoperable
 */
 - (NSIndexPath*)indexPathByAddingIndex:(NSUInteger)newIndex {
-    NSIndexPath* ret = [NSIndexPath indexPathWithIndexes:nullptr length:0];
-    if (ret) {
-        ret->_indexes.reserve(_indexes.size() + 1);
-        ret->_indexes.insert(ret->_indexes.begin(), _indexes.cbegin(), _indexes.cend());
-        ret->_indexes.emplace_back(newIndex);
-    }
-
-    return ret;
+    std::vector<NSUInteger> indexes = _indexes;
+    indexes.emplace_back(newIndex);
+    return [NSIndexPath indexPathWithIndexes:indexes.data() length:indexes.size()];
 }
 
 /**
@@ -175,6 +146,10 @@ static NSString* s_archiveKey = @"_NS.IP";
  @Status Interoperable
 */
 - (NSComparisonResult)compare:(id)otherObj {
+    if (self == otherObj) {
+        return NSOrderedSame;
+    }
+
     NSUInteger len1 = [self length];
     NSUInteger len2 = [otherObj length];
 
@@ -199,27 +174,6 @@ static NSString* s_archiveKey = @"_NS.IP";
     }
 
     return NSOrderedSame;
-}
-
-/**
- @Status Interoperable
-*/
-- (NSInteger)item {
-    return [self indexAtPosition:1];
-}
-
-/**
- @Status Interoperable
-*/
-- (NSInteger)row {
-    return [self indexAtPosition:1];
-}
-
-/**
- @Status Interoperable
-*/
-- (NSInteger)section {
-    return [self indexAtPosition:0];
 }
 
 /**
@@ -250,18 +204,26 @@ static NSString* s_archiveKey = @"_NS.IP";
  @Status Interoperable
 */
 - (id)initWithCoder:(NSCoder*)decoder {
-    NSData* data = [decoder decodeObjectOfClass:[NSData class] forKey:s_archiveKey];
-    return [self initWithIndexes:static_cast<const NSUInteger*>([data bytes]) length:([data length] / sizeof(NSUInteger))];
+    NSArray* indexes = [decoder decodeObjectOfClass:[NSArray class] forKey:s_archiveKey];
+    std::vector<NSUInteger> values;
+    values.reserve([indexes count]);
+    for (NSNumber* index in indexes) {
+        values.emplace_back(index.unsignedIntegerValue);
+    }
+
+    return [self initWithIndexes:values.data() length:values.size()];
 }
 
 /**
  @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
-    NSData* dataToEncode = [self length] > 0L ?
-                               [NSData dataWithBytesNoCopy:_indexes.data() length:_indexes.size() * sizeof(NSUInteger) freeWhenDone:NO] :
-                               [NSData data];
-    [coder encodeObject:dataToEncode forKey:s_archiveKey];
+    NSMutableArray* indexes = [NSMutableArray arrayWithCapacity:[self length]];
+    for (auto index : _indexes) {
+        [indexes addObject:[NSNumber numberWithUnsignedInteger:index]];
+    }
+
+    [coder encodeObject:indexes forKey:s_archiveKey];
 }
 
 @end
