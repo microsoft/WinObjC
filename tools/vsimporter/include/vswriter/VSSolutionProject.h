@@ -24,17 +24,17 @@ class VSSolution;
 
 class VSSolutionProject {
 public:
-  virtual ~VSSolutionProject();
-  virtual std::string getName() const = 0;
-  virtual std::string getPath() const = 0;
-  virtual std::string getTypeId() const = 0;
-  virtual std::string getId() const = 0;
-  virtual const VCProject* getProject() const = 0;
-  virtual void writeDescription(std::ostream& out) const = 0;
+    virtual ~VSSolutionProject();
+    virtual std::string getName() const = 0;
+    virtual std::string getPath() const = 0;
+    virtual std::string getTypeId() const = 0;
+    virtual std::string getId() const = 0;
+    virtual const VCProject* getProject() const = 0;
+    virtual void writeDescription(std::ostream& out) const = 0;
 
 protected:
-  VSSolutionProject(VSSolution& parent);
-  std::string getDescription() const;
+    VSSolutionProject(VSSolution& parent);
+    std::string getDescription() const;
 
-  VSSolution& m_parent;
+    VSSolution& m_parent;
 };

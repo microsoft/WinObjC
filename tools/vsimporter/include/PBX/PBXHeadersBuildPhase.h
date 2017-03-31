@@ -21,12 +21,12 @@
 
 class PBXHeadersBuildPhase : public PBXBuildPhase {
 public:
-  virtual ~PBXHeadersBuildPhase();
-  
-  static PBXHeadersBuildPhase* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
-  
+    virtual ~PBXHeadersBuildPhase();
+
+    static PBXHeadersBuildPhase* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
+
 private:
-  PBXHeadersBuildPhase();
+    PBXHeadersBuildPhase();
 };
 
 #endif /* _PBXHEADERSBUILDPHASE_H_ */

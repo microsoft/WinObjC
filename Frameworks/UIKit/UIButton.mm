@@ -199,21 +199,14 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
     self.adjustsImageWhenDisabled = YES;
     self.adjustsImageWhenHighlighted = YES;
 
-    // Force-load the template, and get the TextBlock and Image for use in our proxies.
-    [_xamlButton applyTemplate];
-    [_xamlButton updateLayout];
-
     // Create our child UILabel; its frame will be updated in layoutSubviews
-    // TODO: Ideally we'd grab this directly from the Xaml, but we're not able to launch some apps when doing so due to a
-    // XamlParseException.
-    //       Tracked as #1919.  When fixed, we'll need to initWithXamlElement we retrieve from the control template, and *not* addSubView.
-    _titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    [self addSubview:_titleLabel];
+    WXFrameworkElement* buttonLabel = XamlControls::GetButtonLabel(_xamlButton);
+    _titleLabel = [[UILabel alloc] initWithFrame:CGRectZero xamlElement:buttonLabel];
     _titleLabel.userInteractionEnabled = NO;
 
     // Create our child UIImageView; its frame will be updated in layoutSubviews
-    WXCImage* templateImage = rt_dynamic_cast([WXCImage class], [_xamlButton getTemplateChild:@"buttonImage"]);
-    _proxyImageView = [[_UIImageView_Proxy alloc] initWithXamlElement:templateImage];
+    WXCImage* buttonImage = XamlControls::GetButtonImage(_xamlButton);
+    _proxyImageView = [[_UIImageView_Proxy alloc] initWithXamlElement:buttonImage];
 
     _contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     _contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;

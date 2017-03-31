@@ -218,7 +218,7 @@ UIButton::UIButton() {
     _font = NULL;
 
     // Default is true for both of these, so no need to write to nib if that's the case
-    _adjustsImageWhenHighlighted = true; 
+    _adjustsImageWhenHighlighted = true;
     _adjustsImageWhenDisabled = true;
 }
 
@@ -251,14 +251,14 @@ void UIButton::InitFromStory(XIBObject* obj) {
     if (type) {
         if (strcmp(type, "roundedRect") == 0) {
             getAttrAndHandle("buttonType");
-             // TODO: Investigate why this value deviates from UIButtonType
+            // TODO: Investigate why this value deviates from UIButtonType
             _buttonType = 1;
         } else {
             printf("Unknown button type <%s>\n", type);
             _buttonType = 0;
         }
     }
-    
+
     _font = (UIFont*)obj->FindMemberAndHandle("fontDescription");
 
     if (getAttrib("adjustsImageWhenDisabled")) {

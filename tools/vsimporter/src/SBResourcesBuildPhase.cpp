@@ -27,8 +27,7 @@
 #include "VCProjectItem.h"
 #include "xc2vs.h"
 
-static void parsePlist(const String& plistPath, VCProject& proj)
-{
+static void parsePlist(const String& plistPath, VCProject& proj) {
     //
     // Find any URL schemes registered to this bundle, in this format:
     //
@@ -103,79 +102,75 @@ static void parsePlist(const String& plistPath, VCProject& proj)
     }
 }
 
-SBBuildPhase* SBResourcesBuildPhase::create(const PBXBuildPhase* phase, SBTarget& parentTarget)
-{
-  const PBXResourcesBuildPhase* resourcesPhase = dynamic_cast<const PBXResourcesBuildPhase*>(phase);
-  SBNativeTarget& nativeParent = dynamic_cast<SBNativeTarget&>(parentTarget);
-  return new SBResourcesBuildPhase(resourcesPhase, nativeParent);
+SBBuildPhase* SBResourcesBuildPhase::create(const PBXBuildPhase* phase, SBTarget& parentTarget) {
+    const PBXResourcesBuildPhase* resourcesPhase = dynamic_cast<const PBXResourcesBuildPhase*>(phase);
+    SBNativeTarget& nativeParent = dynamic_cast<SBNativeTarget&>(parentTarget);
+    return new SBResourcesBuildPhase(resourcesPhase, nativeParent);
 }
 
 // PBXResourcesBuildPhase can be NULL, if it wasn't explicitly specified in the project.
 SBResourcesBuildPhase::SBResourcesBuildPhase(const PBXResourcesBuildPhase* phase, SBNativeTarget& parentTarget)
-  : SBBuildPhase(phase, parentTarget),
-    m_phase(phase)
-{
-  // Check if any of the resources are build products (e.g. bundles)
-  if (m_phase) {
-    for (auto buildFile : m_phase->getBuildFileList()) {
-      m_buildFileTargets.push_back(parentTarget.getPossibleTarget(buildFile));
+    : SBBuildPhase(phase, parentTarget), m_phase(phase) {
+    // Check if any of the resources are build products (e.g. bundles)
+    if (m_phase) {
+        for (auto buildFile : m_phase->getBuildFileList()) {
+            m_buildFileTargets.push_back(parentTarget.getPossibleTarget(buildFile));
+        }
     }
-  }
 }
 
-void SBResourcesBuildPhase::writeVCProjectFiles(VCProject& proj) const
-{
-  TargetProductType productType = m_parentTarget.getProductType();
-  if (productType != TargetApplication && productType != TargetBundle) {
-    return;
-  }
-
-  // Process build files
-  const BuildSettings& projBS = m_parentTarget.getProject().getBuildSettings();
-  const BuildFileList& buildFiles = m_phase->getBuildFileList();
-  sbAssertWithTelemetry(buildFiles.size() == m_buildFileTargets.size(), "Inconsistent number of Resource build files");
-  for (size_t i = 0; i < buildFiles.size(); i++) {
-    // Construct a path for Bundle build products, relative to the SolutionDir,
-    // instead of using the Xcode path
-    String pathOverride;
-    if (m_buildFileTargets[i]) {
-      String productFileName = sb_basename(buildFiles[i]->getFile()->getFullPath());
-      String productFileType = buildFiles[i]->getFile()->getFileType();
-      if (productFileType == "wrapper.cfbundle") {
-        pathOverride = "$(SolutionDir)$(Configuration)\\" + productFileName;
-      } else {
-        SBLog::warning() << "Unexpected build product in ResourceBuildPhase: " << productFileName << std::endl;
-      }
+void SBResourcesBuildPhase::writeVCProjectFiles(VCProject& proj) const {
+    TargetProductType productType = m_parentTarget.getProductType();
+    if (productType != TargetApplication && productType != TargetBundle) {
+        return;
     }
 
-    VCItemHint itemHint = { "SBResourceCopy" , pathOverride, "" };
-    addBuildFileToVS(buildFiles[i], proj, projBS, &itemHint);
-  }
+    // Process build files
+    const BuildSettings& projBS = m_parentTarget.getProject().getBuildSettings();
+    const BuildFileList& buildFiles = m_phase->getBuildFileList();
+    sbAssertWithTelemetry(buildFiles.size() == m_buildFileTargets.size(), "Inconsistent number of Resource build files");
+    for (size_t i = 0; i < buildFiles.size(); i++) {
+        // Construct a path for Bundle build products, relative to the SolutionDir,
+        // instead of using the Xcode path
+        String pathOverride;
+        if (m_buildFileTargets[i]) {
+            String productFileName = sb_basename(buildFiles[i]->getFile()->getFullPath());
+            String productFileType = buildFiles[i]->getFile()->getFileType();
+            if (productFileType == "wrapper.cfbundle") {
+                pathOverride = "$(SolutionDir)$(Configuration)\\" + productFileName;
+            } else {
+                SBLog::warning() << "Unexpected build product in ResourceBuildPhase: " << productFileName << std::endl;
+            }
+        }
 
-  // Process all Info.plist files
-  std::map<std::string, VCProjectItem*> infoPlistMap;
-  for (auto bs : m_parentTarget.getBuildSettings()) {
-    VCProjectConfiguration* config = proj.addConfiguration(bs.first);
-
-    // Exclude all plist from building, by default
-    config->setItemDefinition("SBInfoPlistCopy", "ExcludedFromBuild", "true");
-    
-    // Get absolute path to plist
-    String plistPath = bs.second->getValue("INFOPLIST_FILE");
-    plistPath = m_parentTarget.makeAbsolutePath(plistPath);
-
-    // Add plist file to project (only once)
-    if (infoPlistMap.find(plistPath) == infoPlistMap.end()) {
-      parsePlist(plistPath, proj);
-      infoPlistMap[plistPath] = addRelativeFilePathToVS("SBInfoPlistCopy", plistPath, "", proj, *bs.second);
+        VCItemHint itemHint = { "SBResourceCopy", pathOverride, "" };
+        addBuildFileToVS(buildFiles[i], proj, projBS, &itemHint);
     }
 
-    // Un-exclude building plist for configuration
-    String condition = "'$(Configuration)'=='" + bs.first + "'";
-    infoPlistMap[plistPath]->setDefinition("ExcludedFromBuild", "false", condition);
+    // Process all Info.plist files
+    std::map<std::string, VCProjectItem*> infoPlistMap;
+    for (auto bs : m_parentTarget.getBuildSettings()) {
+        VCProjectConfiguration* config = proj.addConfiguration(bs.first);
 
-    // Specify which variables files to use
-    String varsFile = m_parentTarget.getName() + "-" + bs.first + "-xcvars.txt";
-    infoPlistMap[plistPath]->setDefinition("VariableFile", varsFile, condition);
-  }
+        // Exclude all plist from building, by default
+        config->setItemDefinition("SBInfoPlistCopy", "ExcludedFromBuild", "true");
+
+        // Get absolute path to plist
+        String plistPath = bs.second->getValue("INFOPLIST_FILE");
+        plistPath = m_parentTarget.makeAbsolutePath(plistPath);
+
+        // Add plist file to project (only once)
+        if (infoPlistMap.find(plistPath) == infoPlistMap.end()) {
+            parsePlist(plistPath, proj);
+            infoPlistMap[plistPath] = addRelativeFilePathToVS("SBInfoPlistCopy", plistPath, "", proj, *bs.second);
+        }
+
+        // Un-exclude building plist for configuration
+        String condition = "'$(Configuration)'=='" + bs.first + "'";
+        infoPlistMap[plistPath]->setDefinition("ExcludedFromBuild", "false", condition);
+
+        // Specify which variables files to use
+        String varsFile = m_parentTarget.getName() + "-" + bs.first + "-xcvars.txt";
+        infoPlistMap[plistPath]->setDefinition("VariableFile", varsFile, condition);
+    }
 }

@@ -27,31 +27,39 @@ typedef std::vector<PBXBuildRule*> BuildRuleList;
 
 class PBXNativeTarget : public PBXTarget {
 public:
-  virtual ~PBXNativeTarget();
-  virtual void resolvePointers();
-  virtual String getProductFileName() const;
-  virtual String getProductFileType() const;
-  virtual String getProductReference() const { return m_productReferenceId; }
-  virtual void getBuildSettings(VariableCollection& settings) const;
-  virtual String getTargetType() const;
-  const String& getProductType() const { return m_productType; }
-  const PBXFileReference* getProductFile() const { return m_productReferencePtr; }
-  const BuildRuleList& getBuildRules() const { return m_buildRulePtrs; }
-  
-  static PBXNativeTarget* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
-  
-private:
-  PBXNativeTarget();
-  virtual void initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
-  
-/* Start of serialized values */
-  String m_productReferenceId;
-  String m_productType;
-  StringVec m_buildRuleIds;
-/* End of serialized values */
+    virtual ~PBXNativeTarget();
+    virtual void resolvePointers();
+    virtual String getProductFileName() const;
+    virtual String getProductFileType() const;
+    virtual String getProductReference() const {
+        return m_productReferenceId;
+    }
+    virtual void getBuildSettings(VariableCollection& settings) const;
+    virtual String getTargetType() const;
+    const String& getProductType() const {
+        return m_productType;
+    }
+    const PBXFileReference* getProductFile() const {
+        return m_productReferencePtr;
+    }
+    const BuildRuleList& getBuildRules() const {
+        return m_buildRulePtrs;
+    }
 
-  PBXFileReference* m_productReferencePtr;
-  BuildRuleList m_buildRulePtrs;
+    static PBXNativeTarget* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
+
+private:
+    PBXNativeTarget();
+    virtual void initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
+
+    /* Start of serialized values */
+    String m_productReferenceId;
+    String m_productType;
+    StringVec m_buildRuleIds;
+    /* End of serialized values */
+
+    PBXFileReference* m_productReferencePtr;
+    BuildRuleList m_buildRulePtrs;
 };
 
 #endif /* _PBXNATIVETARGET_H_ */

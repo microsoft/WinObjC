@@ -16,8 +16,7 @@
 
 #include "UIRuntimeAccessibilityConfiguration.h"
 
-void UIRuntimeAccessibilityConfiguration::InitFromXIB(XIBObject *obj)
-{
+void UIRuntimeAccessibilityConfiguration::InitFromXIB(XIBObject* obj) {
     ObjectConverter::InitFromXIB(obj);
 
     _traits = 0;
@@ -28,10 +27,10 @@ void UIRuntimeAccessibilityConfiguration::InitFromXIB(XIBObject *obj)
     obj->_outputClassName = "UIRuntimeAccessibilityConfiguration";
 }
 
-void UIRuntimeAccessibilityConfiguration::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UIRuntimeAccessibilityConfiguration::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     ObjectConverter::ConvertStaticMappings(writer, obj);
-    if ( _traits ) AddOutputMember(writer, "UIAccessibilityTraits", new XIBObjectNumber(_traits));
-    if ( _accessibleObject ) AddOutputMember(writer, "UIAccessibileObject", _accessibleObject);
-
+    if (_traits)
+        AddOutputMember(writer, "UIAccessibilityTraits", new XIBObjectNumber(_traits));
+    if (_accessibleObject)
+        AddOutputMember(writer, "UIAccessibileObject", _accessibleObject);
 }

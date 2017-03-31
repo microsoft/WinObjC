@@ -61,9 +61,13 @@ using namespace std;
 // esc = characters to protect a single character
 //
 
-template<typename T>
-void tokenize ( const string& str, T& result,
-      const string& delimiters, const string& delimiters_preserve = "",
-      const string& quote = "\"", const string& quote_preserve = "",
-      const string& esc = "\\", bool saveQuotedEscapes = false,
-      bool saveEmptyTokens = false );
+template <typename T>
+void tokenize(const string& str,
+              T& result,
+              const string& delimiters,
+              const string& delimiters_preserve = "",
+              const string& quote = "\"",
+              const string& quote_preserve = "",
+              const string& esc = "\\",
+              bool saveQuotedEscapes = false,
+              bool saveEmptyTokens = false);

@@ -21,12 +21,12 @@
 
 class PBXResourcesBuildPhase : public PBXBuildPhase {
 public:
-  virtual ~PBXResourcesBuildPhase();
-  
-  static PBXResourcesBuildPhase* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
-  
+    virtual ~PBXResourcesBuildPhase();
+
+    static PBXResourcesBuildPhase* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
+
 private:
-  PBXResourcesBuildPhase();
+    PBXResourcesBuildPhase();
 };
 
 #endif /* _PBXRESOURCESBUILDPHASE_H_ */

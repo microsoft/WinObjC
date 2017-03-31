@@ -16,13 +16,11 @@
 
 #include "XIBObjectInt.h"
 
-XIBObjectInt::XIBObjectInt(int val)
-{
+XIBObjectInt::XIBObjectInt(int val) {
     _val = val;
 }
 
-int XIBObjectInt::intValue()
-{
+int XIBObjectInt::intValue() {
     return _val;
 }
 
@@ -30,14 +28,13 @@ bool XIBObjectInt::NeedsSerialization() {
     return false;
 }
 
-void XIBObjectInt::WriteData(NIBWriter *writer)
-{
-    unsigned int fullVal = (unsigned int) _val;
+void XIBObjectInt::WriteData(NIBWriter* writer) {
+    unsigned int fullVal = (unsigned int)_val;
 
-    if ( fullVal <= 0xFF ) {
+    if (fullVal <= 0xFF) {
         writer->WriteByte(NIBOBJ_INT8);
         writer->WriteBytes(&fullVal, 1);
-    } else if ( fullVal <= 0xFFFF ) {
+    } else if (fullVal <= 0xFFFF) {
         writer->WriteByte(NIBOBJ_INT16);
         writer->WriteBytes(&fullVal, 2);
     } else {
@@ -46,17 +43,13 @@ void XIBObjectInt::WriteData(NIBWriter *writer)
     }
 }
 
-XIBObjectNumber::XIBObjectNumber(int num)
-{
+XIBObjectNumber::XIBObjectNumber(int num) {
     _val = num;
     _className = "NSNumber";
 }
 
-void XIBObjectNumber::EmitObject(NIBWriter *writer)
-{
+void XIBObjectNumber::EmitObject(NIBWriter* writer) {
     _outputClassName = "NSNumber";
 
     AddOutputMember(writer, "NS.intval", new XIBObjectInt(_val));
 }
-
-

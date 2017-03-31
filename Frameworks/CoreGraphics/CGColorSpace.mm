@@ -27,18 +27,18 @@
 
 static const wchar_t* TAG = L"CGColorSpace";
 
-const CFStringRef kCGColorSpaceGenericGray = static_cast<CFStringRef>(@"kCGColorSpaceGenericGray");
-const CFStringRef kCGColorSpaceGenericRGB = static_cast<CFStringRef>(@"kCGColorSpaceGenericRGB");
-const CFStringRef kCGColorSpaceGenericCMYK = static_cast<CFStringRef>(@"kCGColorSpaceGenericCMYK");
-const CFStringRef kCGColorSpaceGenericRGBLinear = static_cast<CFStringRef>(@"kCGColorSpaceGenericRGBLinear");
-const CFStringRef kCGColorSpaceAdobeRGB1998 = static_cast<CFStringRef>(@"kCGColorSpaceAdobeRGB1998");
-const CFStringRef kCGColorSpaceSRGB = static_cast<CFStringRef>(@"kCGColorSpaceSRGB");
-const CFStringRef kCGColorSpaceGenericGrayGamma2_2 = static_cast<CFStringRef>(@"kCGColorSpaceGenericGrayGamma2_2");
-const CFStringRef kCGColorSpaceGenericXYZ = static_cast<CFStringRef>(@"kCGColorSpaceGenericXYZ");
-const CFStringRef kCGColorSpaceACESCGLinear = static_cast<CFStringRef>(@"kCGColorSpaceACESCGLinear");
-const CFStringRef kCGColorSpaceITUR_709 = static_cast<CFStringRef>(@"kCGColorSpaceITUR_709");
-const CFStringRef kCGColorSpaceITUR_2020 = static_cast<CFStringRef>(@"kCGColorSpaceITUR_2020");
-const CFStringRef kCGColorSpaceROMMRGB = static_cast<CFStringRef>(@"kCGColorSpaceROMMRGB");
+const CFStringRef kCGColorSpaceGenericGray = CFSTR("kCGColorSpaceGenericGray");
+const CFStringRef kCGColorSpaceGenericRGB = CFSTR("kCGColorSpaceGenericRGB");
+const CFStringRef kCGColorSpaceGenericCMYK = CFSTR("kCGColorSpaceGenericCMYK");
+const CFStringRef kCGColorSpaceGenericRGBLinear = CFSTR("kCGColorSpaceGenericRGBLinear");
+const CFStringRef kCGColorSpaceAdobeRGB1998 = CFSTR("kCGColorSpaceAdobeRGB1998");
+const CFStringRef kCGColorSpaceSRGB = CFSTR("kCGColorSpaceSRGB");
+const CFStringRef kCGColorSpaceGenericGrayGamma2_2 = CFSTR("kCGColorSpaceGenericGrayGamma2_2");
+const CFStringRef kCGColorSpaceGenericXYZ = CFSTR("kCGColorSpaceGenericXYZ");
+const CFStringRef kCGColorSpaceACESCGLinear = CFSTR("kCGColorSpaceACESCGLinear");
+const CFStringRef kCGColorSpaceITUR_709 = CFSTR("kCGColorSpaceITUR_709");
+const CFStringRef kCGColorSpaceITUR_2020 = CFSTR("kCGColorSpaceITUR_2020");
+const CFStringRef kCGColorSpaceROMMRGB = CFSTR("kCGColorSpaceROMMRGB");
 
 struct __CGColorSpace : CoreFoundation::CppBase<__CGColorSpace> {
     __CGColorSpace(CGColorSpaceModel model, CGColorSpaceRef baseSpace = nullptr, size_t lastIndex = 0)

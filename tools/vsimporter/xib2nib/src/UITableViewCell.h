@@ -16,12 +16,10 @@
 
 #pragma once
 #include "UIView.h"
-class UITableViewCell :
-    public UIView
-{
+class UITableViewCell : public UIView {
 private:
-    const char *_reuseIdentifier;
-    UIView *_contentView;
+    const char* _reuseIdentifier;
+    UIView* _contentView;
     UIView *_imageView, *_textLabel, *_detailTextLabel;
     bool _backgroundColorSet;
     int _selectionStyle;
@@ -31,10 +29,9 @@ private:
 public:
     UITableViewCell();
     virtual void Awaken();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 
-    ObjectConverter *Clone();
+    ObjectConverter* Clone();
 };
-

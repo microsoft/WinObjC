@@ -20,65 +20,55 @@
 #include "sole/sole.hpp"
 #include "..\WBITelemetry\WBITelemetry.h"
 
-
-VSSolutionFolderProject::VSSolutionFolderProject(const std::string& name, VSSolution& parent)
-: VSSolutionProject(parent), m_name(name)
-{
-  m_id = sole::uuid4().str();
-  std::string guid = formatVSGUID(m_id);
-  TELEMETRY_EVENT_GUID(L"VSImporterSolutionFolderGuid", guid);
+VSSolutionFolderProject::VSSolutionFolderProject(const std::string& name, VSSolution& parent) : VSSolutionProject(parent), m_name(name) {
+    m_id = sole::uuid4().str();
+    std::string guid = formatVSGUID(m_id);
+    TELEMETRY_EVENT_GUID(L"VSImporterSolutionFolderGuid", guid);
 }
 
-std::string VSSolutionFolderProject::getName() const
-{
-  return m_name;
+std::string VSSolutionFolderProject::getName() const {
+    return m_name;
 }
 
-std::string VSSolutionFolderProject::getPath() const
-{
-  return m_name;
+std::string VSSolutionFolderProject::getPath() const {
+    return m_name;
 }
 
-std::string VSSolutionFolderProject::getTypeId() const
-{
-  return "2150E333-8FDC-42A3-9474-1A3956D46DE8";
+std::string VSSolutionFolderProject::getTypeId() const {
+    return "2150E333-8FDC-42A3-9474-1A3956D46DE8";
 }
 
-std::string VSSolutionFolderProject::getId() const
-{
-  return m_id;
+std::string VSSolutionFolderProject::getId() const {
+    return m_id;
 }
 
-void VSSolutionFolderProject::writeFileDescriptions(std::ostream& out) const
-{
-  if (m_files.empty())
-    return;
+void VSSolutionFolderProject::writeFileDescriptions(std::ostream& out) const {
+    if (m_files.empty())
+        return;
 
-  out << "\t" << "ProjectSection(SolutionItems) = preProject" << std::endl;
-  for (auto file : m_files) {
-    out << "\t" << file << " = " << file << std::endl;
-  }
-  out << "\t" << "EndProjectSection" << std::endl;
+    out << "\t"
+        << "ProjectSection(SolutionItems) = preProject" << std::endl;
+    for (auto file : m_files) {
+        out << "\t" << file << " = " << file << std::endl;
+    }
+    out << "\t"
+        << "EndProjectSection" << std::endl;
 }
 
-void VSSolutionFolderProject::writeDescription(std::ostream& out) const
-{
-  out << getDescription() << std::endl;
-  writeFileDescriptions(out);
-  out << "EndProject" << std::endl;
+void VSSolutionFolderProject::writeDescription(std::ostream& out) const {
+    out << getDescription() << std::endl;
+    writeFileDescriptions(out);
+    out << "EndProject" << std::endl;
 }
 
-VSBuildableSolutionProject* VSSolutionFolderProject::addProject(VCProject* project)
-{
-  return m_parent.addProject(project, this);
+VSBuildableSolutionProject* VSSolutionFolderProject::addProject(VCProject* project) {
+    return m_parent.addProject(project, this);
 }
 
-VSSolutionFolderProject* VSSolutionFolderProject::addFolder(const std::string& name)
-{
-  return m_parent.addFolder(name, this);
+VSSolutionFolderProject* VSSolutionFolderProject::addFolder(const std::string& name) {
+    return m_parent.addFolder(name, this);
 }
 
-void VSSolutionFolderProject::addFile(const std::string& filePath)
-{
-  m_files.insert(filePath);
+void VSSolutionFolderProject::addFile(const std::string& filePath) {
+    m_files.insert(filePath);
 }

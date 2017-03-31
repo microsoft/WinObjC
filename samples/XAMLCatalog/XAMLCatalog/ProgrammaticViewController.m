@@ -20,6 +20,7 @@
 #import "UIActivityIndicatorViewController.h"
 #import "UIButtonWithControlsViewController.h"
 #import "UILabelViewController.h"
+#import "UIScrollViewController.h"
 #import "UISliderViewController.h"
 #import "UITextFieldViewController.h"
 #import "UIViewViewController.h"
@@ -43,6 +44,9 @@
 
     // UILabel
     [self addMenuItemViewController:[[UILabelViewController alloc] init] andTitle:@"UILabel"];
+
+    // UIScrollView
+    [self addMenuItemViewController:[[UIScrollViewController alloc] init] andTitle:@"UIScrollView"];
 
     // UISlider
     [self addMenuItemViewController:[[UISliderViewController alloc] init] andTitle:@"UISlider"];

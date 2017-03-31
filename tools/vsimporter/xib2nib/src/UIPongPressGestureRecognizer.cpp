@@ -16,25 +16,21 @@
 
 #include "UIPongPressGestureRecognizer.h"
 
-UIPongPressGestureRecognizer::UIPongPressGestureRecognizer()
-{
+UIPongPressGestureRecognizer::UIPongPressGestureRecognizer() {
 }
 
-void UIPongPressGestureRecognizer::InitFromXIB(XIBObject *obj)
-{
+void UIPongPressGestureRecognizer::InitFromXIB(XIBObject* obj) {
     UIView::InitFromXIB(obj);
 
     _outputClassName = "UIPongPressGestureRecognizer";
 }
 
-void UIPongPressGestureRecognizer::InitFromStory(XIBObject *obj)
-{
+void UIPongPressGestureRecognizer::InitFromStory(XIBObject* obj) {
     UIView::InitFromStory(obj);
 
     _outputClassName = "UIPongPressGestureRecognizer";
 }
 
-void UIPongPressGestureRecognizer::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UIPongPressGestureRecognizer::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     UIView::ConvertStaticMappings(writer, obj);
 }

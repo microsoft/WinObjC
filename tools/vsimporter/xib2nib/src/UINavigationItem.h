@@ -19,17 +19,14 @@
 
 class UINavigationBar;
 
-class UINavigationItem :
-    public ObjectConverterSwapper
-{
+class UINavigationItem : public ObjectConverterSwapper {
 public:
-    const char *_title;
+    const char* _title;
     XIBObject *_leftBarButtonItem, *_rightBarButtonItem;
-    UINavigationBar *_navigationBar;
+    UINavigationBar* _navigationBar;
     UINavigationItem();
 
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };
-

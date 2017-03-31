@@ -16,13 +16,10 @@
 
 #pragma once
 #include "UIControl.h"
-class UIPageControl :
-    public UIControl
-{
+class UIPageControl : public UIControl {
 public:
     UIPageControl();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };
-

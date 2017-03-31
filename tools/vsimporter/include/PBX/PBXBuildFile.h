@@ -22,34 +22,34 @@
 class PBXFile;
 class PBXDocument;
 
-enum BuildFileAttributes {
-  ATTR_NONE = 0,
-  ATTR_PUBLIC = 1,
-  ATTR_PRIVATE = 2
-};
+enum BuildFileAttributes { ATTR_NONE = 0, ATTR_PUBLIC = 1, ATTR_PRIVATE = 2 };
 
 class PBXBuildFile : public PBXObject {
 public:
-  virtual ~PBXBuildFile();
-  virtual void resolvePointers();
+    virtual ~PBXBuildFile();
+    virtual void resolvePointers();
 
-  const PBXFile* getFile() const;
-  int getAttributes() const { return m_attributes; }
-  const String& getCompilerFlags() const { return m_compilerFlags; }
-  
-  static PBXBuildFile* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
-  
+    const PBXFile* getFile() const;
+    int getAttributes() const {
+        return m_attributes;
+    }
+    const String& getCompilerFlags() const {
+        return m_compilerFlags;
+    }
+
+    static PBXBuildFile* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
+
 private:
-  PBXBuildFile();
-  virtual void initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
-  
-/* Start of serialized values */
-  String m_fileRefId;
-  int m_attributes;
-  String m_compilerFlags;
-/* End of serialized values */
-  
-  const PBXFile* m_fileRefPtr;
+    PBXBuildFile();
+    virtual void initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
+
+    /* Start of serialized values */
+    String m_fileRefId;
+    int m_attributes;
+    String m_compilerFlags;
+    /* End of serialized values */
+
+    const PBXFile* m_fileRefPtr;
 };
 
 #endif /* _PBXBUILDFILE_H_ */

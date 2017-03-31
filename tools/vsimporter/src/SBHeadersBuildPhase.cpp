@@ -22,32 +22,29 @@
 #include "sbassert.h"
 #include "xc2vs.h"
 
-SBBuildPhase* SBHeadersBuildPhase::create(const PBXBuildPhase* phase, SBTarget& parentTarget)
-{
-  const PBXHeadersBuildPhase* headersPhase = dynamic_cast<const PBXHeadersBuildPhase*>(phase);
-  SBNativeTarget& nativeParent = dynamic_cast<SBNativeTarget&>(parentTarget);
-  return new SBHeadersBuildPhase(headersPhase, nativeParent);
+SBBuildPhase* SBHeadersBuildPhase::create(const PBXBuildPhase* phase, SBTarget& parentTarget) {
+    const PBXHeadersBuildPhase* headersPhase = dynamic_cast<const PBXHeadersBuildPhase*>(phase);
+    SBNativeTarget& nativeParent = dynamic_cast<SBNativeTarget&>(parentTarget);
+    return new SBHeadersBuildPhase(headersPhase, nativeParent);
 }
 
 SBHeadersBuildPhase::SBHeadersBuildPhase(const PBXHeadersBuildPhase* phase, const SBNativeTarget& parentTarget)
-  : SBBuildPhase(phase, parentTarget),
-  m_phase(phase)
-{}
+    : SBBuildPhase(phase, parentTarget), m_phase(phase) {
+}
 
-void SBHeadersBuildPhase::writeVCProjectFiles(VCProject& proj) const
-{
-  TargetProductType productType = m_parentTarget.getProductType();
-  if (productType != TargetStaticLib) {
-    return;
-  }
-
-  // Process public headers
-  const BuildSettings& projBS = m_parentTarget.getProject().getBuildSettings();
-  const BuildFileList& buildFiles = m_phase->getBuildFileList();
-  for (size_t i = 0; i < buildFiles.size(); i++) {
-    if (buildFiles[i]->getAttributes() & ATTR_PUBLIC) {
-      VCItemHint itemHint = { "ClInclude" , "", "Public Headers" };
-      addBuildFileToVS(buildFiles[i], proj, projBS, &itemHint);
+void SBHeadersBuildPhase::writeVCProjectFiles(VCProject& proj) const {
+    TargetProductType productType = m_parentTarget.getProductType();
+    if (productType != TargetStaticLib) {
+        return;
     }
-  }
+
+    // Process public headers
+    const BuildSettings& projBS = m_parentTarget.getProject().getBuildSettings();
+    const BuildFileList& buildFiles = m_phase->getBuildFileList();
+    for (size_t i = 0; i < buildFiles.size(); i++) {
+        if (buildFiles[i]->getAttributes() & ATTR_PUBLIC) {
+            VCItemHint itemHint = { "ClInclude", "", "Public Headers" };
+            addBuildFileToVS(buildFiles[i], proj, projBS, &itemHint);
+        }
+    }
 }

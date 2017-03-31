@@ -16,16 +16,13 @@
 
 #pragma once
 #include "UIView.h"
-class UINavigationBar :
-    public UIView
-{
+class UINavigationBar : public UIView {
 public:
     int _barStyle;
-    XIBArray *_items;
-    XIBObject *_delegate;
+    XIBArray* _items;
+    XIBObject* _delegate;
     UINavigationBar();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };
-

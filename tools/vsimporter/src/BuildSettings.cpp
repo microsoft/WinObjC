@@ -25,109 +25,98 @@
 #include "VariableCollectionManager.h"
 #include "BuildSettings.h"
 
-BuildSettings::BuildSettings(const PBXProject* project)
-{
-  // Get the VariableCollectionManager for the default and global settings
-  VariableCollectionManager& manager = VariableCollectionManager::get();
+BuildSettings::BuildSettings(const PBXProject* project) {
+    // Get the VariableCollectionManager for the default and global settings
+    VariableCollectionManager& manager = VariableCollectionManager::get();
 
-  // Construct a rudimentary settings hierarchy
-  addLevel(manager.getDefaultSettings());
-  addLevel(manager.getProjectSettings(project));
-  addLevel(manager.getGlobalSettings());
-  addLevel(&m_overrideSettings);
+    // Construct a rudimentary settings hierarchy
+    addLevel(manager.getDefaultSettings());
+    addLevel(manager.getProjectSettings(project));
+    addLevel(manager.getGlobalSettings());
+    addLevel(&m_overrideSettings);
 }
 
-BuildSettings::BuildSettings(const PBXTarget* target, const String& configName)
-{
-  // Get PBXProject for the target
-  const PBXDocument& pbxDoc = target->getOwner();
-  const PBXProject* project = pbxDoc.getProject();
+BuildSettings::BuildSettings(const PBXTarget* target, const String& configName) {
+    // Get PBXProject for the target
+    const PBXDocument& pbxDoc = target->getOwner();
+    const PBXProject* project = pbxDoc.getProject();
 
-  // Find project configuration with specified name
-  const XCBuildConfiguration* projectConfig = NULL;
-  const XCConfigurationList* buildConfigList = project->getBuildConfigurationList();
-  if (buildConfigList)
-    projectConfig = buildConfigList->getConfiguration(configName);
-  sbAssertWithTelemetry(projectConfig, "Failed to get XCBuildConfiguration with name: " + configName);
+    // Find project configuration with specified name
+    const XCBuildConfiguration* projectConfig = NULL;
+    const XCConfigurationList* buildConfigList = project->getBuildConfigurationList();
+    if (buildConfigList)
+        projectConfig = buildConfigList->getConfiguration(configName);
+    sbAssertWithTelemetry(projectConfig, "Failed to get XCBuildConfiguration with name: " + configName);
 
-  // Find target configuration with specified name
-  const XCBuildConfiguration* targetConfig = NULL;
-  buildConfigList = target->getBuildConfigurationList();
-  if (buildConfigList)
-    targetConfig = buildConfigList->getConfiguration(configName);
+    // Find target configuration with specified name
+    const XCBuildConfiguration* targetConfig = NULL;
+    buildConfigList = target->getBuildConfigurationList();
+    if (buildConfigList)
+        targetConfig = buildConfigList->getConfiguration(configName);
 
-  // Get the VariableCollectionManager for the default and global settings
-  VariableCollectionManager& manager = VariableCollectionManager::get();
+    // Get the VariableCollectionManager for the default and global settings
+    VariableCollectionManager& manager = VariableCollectionManager::get();
 
-  // Construct the settings hierarchy
-  addLevel(manager.getDefaultSettings());
-  addLevel(manager.getProjectSettings(project));
-  addLevel(manager.getTargetSettings(target));
-  addXCBuildConfiguration(projectConfig);
-  addXCBuildConfiguration(targetConfig);
-  addLevel(manager.getGlobalSettings());
-  addLevel(&m_overrideSettings);
+    // Construct the settings hierarchy
+    addLevel(manager.getDefaultSettings());
+    addLevel(manager.getProjectSettings(project));
+    addLevel(manager.getTargetSettings(target));
+    addXCBuildConfiguration(projectConfig);
+    addXCBuildConfiguration(targetConfig);
+    addLevel(manager.getGlobalSettings());
+    addLevel(&m_overrideSettings);
 
-  // Insert a few extra variables into the build settings
-  m_overrideSettings["CONFIGURATION"] = configName;
+    // Insert a few extra variables into the build settings
+    m_overrideSettings["CONFIGURATION"] = configName;
 }
 
-void BuildSettings::addLevel(const VariableCollection* vc)
-{
-  if (vc)
-    m_vch.push_back(*vc);
+void BuildSettings::addLevel(const VariableCollection* vc) {
+    if (vc)
+        m_vch.push_back(*vc);
 }
 
-void BuildSettings::addXCBuildConfiguration(const XCBuildConfiguration* config)
-{
-  if (!config)
-    return;
-  
-  // Get the base configuration file
-  const PBXFileReference* baseConfig = config->getBaseConfiguration();
-  
-  // Get the VariableCollectionManager to parse the file
-  VariableCollectionManager& manager = VariableCollectionManager::get();
-  const VariableCollection* baseLevel = manager.getSettingsFromFileRef(baseConfig);
-  
-  // Add the base configuration settings
-  addLevel(baseLevel);
-  
-  // Add the actual build configuration settings
-  addLevel(&config->getBuildSettings());
+void BuildSettings::addXCBuildConfiguration(const XCBuildConfiguration* config) {
+    if (!config)
+        return;
+
+    // Get the base configuration file
+    const PBXFileReference* baseConfig = config->getBaseConfiguration();
+
+    // Get the VariableCollectionManager to parse the file
+    VariableCollectionManager& manager = VariableCollectionManager::get();
+    const VariableCollection* baseLevel = manager.getSettingsFromFileRef(baseConfig);
+
+    // Add the base configuration settings
+    addLevel(baseLevel);
+
+    // Add the actual build configuration settings
+    addLevel(&config->getBuildSettings());
 }
 
-void BuildSettings::addOverride(const String& varName, const String& varValue)
-{
-  m_overrideSettings.insert(varName, varValue);
+void BuildSettings::addOverride(const String& varName, const String& varValue) {
+    m_overrideSettings.insert(varName, varValue);
 }
 
-void BuildSettings::clearOverride(const String& varName)
-{
-  m_overrideSettings.erase(varName);
+void BuildSettings::clearOverride(const String& varName) {
+    m_overrideSettings.erase(varName);
 }
 
-String BuildSettings::expand(const String& str, ValueType type) const
-{
-  return m_vch.expand(str);
+String BuildSettings::expand(const String& str, ValueType type) const {
+    return m_vch.expand(str);
 }
 
-String BuildSettings::getValue(const String& varName) const
-{
-  return m_vch.getValue(varName);
+String BuildSettings::getValue(const String& varName) const {
+    return m_vch.getValue(varName);
 }
 
-void BuildSettings::getValue(const String& varName, StringVec& ret) const
-{
-  m_vch.getValue(varName, ret);
+void BuildSettings::getValue(const String& varName, StringVec& ret) const {
+    m_vch.getValue(varName, ret);
 }
 
-const VariableCollectionHierarchy& BuildSettings::getHierarchy() const
-{
-  return m_vch;
+const VariableCollectionHierarchy& BuildSettings::getHierarchy() const {
+    return m_vch;
 }
 
-void BuildSettings::print(const VarPrintFunc& pf) const
-{
-  m_vch.print(pf);
+void BuildSettings::print(const VarPrintFunc& pf) const {
+    m_vch.print(pf);
 }

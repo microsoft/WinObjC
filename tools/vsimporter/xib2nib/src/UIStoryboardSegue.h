@@ -17,24 +17,16 @@
 #pragma once
 #include "ObjectConverter.h"
 
-typedef enum 
-{
-    segueRelationship,
-    segueModal,
-    seguePush
-} SegueType;
+typedef enum { segueRelationship, segueModal, seguePush } SegueType;
 
-class UIStoryboardSegue :
-    public ObjectConverter
-{
+class UIStoryboardSegue : public ObjectConverter {
 public:
-    const char *_destination;
+    const char* _destination;
     SegueType _type;
-    const char *_identifier;
+    const char* _identifier;
 
     UIStoryboardSegue();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };
-

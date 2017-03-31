@@ -19,52 +19,44 @@
 #include "vshelpers.h"
 
 VCProjectItem::VCProjectItem(const std::string& itemName, const std::string& includePath, const std::string& filterPath)
-: m_itemName(itemName), m_includePath(includePath), m_filterPath(filterPath) {}
-
-const std::string& VCProjectItem::getItemName() const
-{
-  return m_itemName;
+    : m_itemName(itemName), m_includePath(includePath), m_filterPath(filterPath) {
 }
 
-const std::string& VCProjectItem::getIncludePath() const
-{
-  return m_includePath;
+const std::string& VCProjectItem::getItemName() const {
+    return m_itemName;
 }
 
-const std::string& VCProjectItem::getFilterPath() const
-{
-  return m_filterPath;
+const std::string& VCProjectItem::getIncludePath() const {
+    return m_includePath;
 }
 
-void VCProjectItem::setItemName(const std::string& itemName)
-{
-  m_itemName = itemName;
+const std::string& VCProjectItem::getFilterPath() const {
+    return m_filterPath;
 }
 
-void VCProjectItem::setItemPath(const std::string& includePath)
-{
-  m_includePath = includePath;
+void VCProjectItem::setItemName(const std::string& itemName) {
+    m_itemName = itemName;
 }
 
-void VCProjectItem::setFilterPath(const std::string& filterPath)
-{
-  m_filterPath = filterPath;
+void VCProjectItem::setItemPath(const std::string& includePath) {
+    m_includePath = includePath;
 }
 
-const ConditionalValueListMap& VCProjectItem::getDefinitions() const
-{
-  return m_definitions;
+void VCProjectItem::setFilterPath(const std::string& filterPath) {
+    m_filterPath = filterPath;
 }
 
-void VCProjectItem::setDefinition(const std::string& name, const std::string& value, const std::string& condition)
-{
-  if (!name.empty())
-    m_definitions[name].push_back(ConditionalValue(value, condition));
+const ConditionalValueListMap& VCProjectItem::getDefinitions() const {
+    return m_definitions;
 }
 
-void VCProjectItem::writeDescription(pugi::xml_node& parent) const
-{
-  pugi::xml_node item = parent.append_child(m_itemName.c_str());
-  item.append_attribute("Include") = m_includePath.c_str();
-  writePropertiesMap(m_definitions, item);
+void VCProjectItem::setDefinition(const std::string& name, const std::string& value, const std::string& condition) {
+    if (!name.empty())
+        m_definitions[name].push_back(ConditionalValue(value, condition));
+}
+
+void VCProjectItem::writeDescription(pugi::xml_node& parent) const {
+    pugi::xml_node item = parent.append_child(m_itemName.c_str());
+    item.append_attribute("Include") = m_includePath.c_str();
+    writePropertiesMap(m_definitions, item);
 }

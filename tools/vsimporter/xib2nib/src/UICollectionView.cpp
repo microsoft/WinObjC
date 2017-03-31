@@ -16,31 +16,26 @@
 
 #include "UICollectionView.h"
 
-UICollectionView::UICollectionView()
-{
+UICollectionView::UICollectionView() {
 }
 
-void UICollectionView::InitFromXIB(XIBObject *obj)
-{
+void UICollectionView::InitFromXIB(XIBObject* obj) {
     UIView::InitFromXIB(obj);
 
     obj->_outputClassName = "UICollectionView";
 }
 
-void UICollectionView::InitFromStory(XIBObject *obj)
-{
+void UICollectionView::InitFromStory(XIBObject* obj) {
     UIView::InitFromStory(obj);
 
     obj->_outputClassName = "UICollectionView";
 }
 
-void UICollectionView::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UICollectionView::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     writer->_allUIObjects->AddMember(NULL, this);
     UIView::ConvertStaticMappings(writer, obj);
 }
 
-ObjectConverter *UICollectionView::Clone()
-{
+ObjectConverter* UICollectionView::Clone() {
     return new UICollectionView();
 }

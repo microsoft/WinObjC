@@ -25,14 +25,12 @@
 
 class ErrorReporter;
 
-enum GetterBehavior {
-  VALUE_OPTIONAL = 0,
-  VALUE_REQUIRED = 1
-};
+enum GetterBehavior { VALUE_OPTIONAL = 0, VALUE_REQUIRED = 1 };
 
 int getIntForKey(const Plist::dictionary_type& dict, const String& key, GetterBehavior opt, const ErrorReporter& reporter);
 void getStringForKey(const Plist::dictionary_type& dict, const String& key, String& ret, GetterBehavior opt, const ErrorReporter& reporter);
-void getStringVectorForKey(const Plist::dictionary_type& dict, const String& key, StringVec& ret, GetterBehavior opt, const ErrorReporter& reporter);
+void getStringVectorForKey(
+    const Plist::dictionary_type& dict, const String& key, StringVec& ret, GetterBehavior opt, const ErrorReporter& reporter);
 
 template <typename T>
 void getStringMapForKey(const Plist::dictionary_type& dict, const String& key, T& ret, GetterBehavior opt, const ErrorReporter& reporter);
@@ -42,5 +40,5 @@ const T& getContainerForKey(const Plist::dictionary_type& dict, const String& ke
 
 template <typename T>
 const T& castContainer(const boost::any& val, GetterBehavior opt, const ErrorReporter& reporter);
-  
+
 #endif /* _PLISTFUNCS_H_ */

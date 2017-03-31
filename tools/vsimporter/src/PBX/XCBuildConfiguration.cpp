@@ -21,34 +21,35 @@
 #include "PBXFileReference.h"
 #include "PBXObjectIdConvert.h"
 
-XCBuildConfiguration::~XCBuildConfiguration() {}
-
-XCBuildConfiguration::XCBuildConfiguration() {}
-
-XCBuildConfiguration* XCBuildConfiguration::createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc)
-{
-  XCBuildConfiguration* ret = new XCBuildConfiguration;
-  ret->initFromPlist(id, plist, pbxDoc);
-  return ret;
+XCBuildConfiguration::~XCBuildConfiguration() {
 }
 
-void XCBuildConfiguration::initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc)
-{
-  // Call super init
-  PBXObject::initFromPlist(id, plist, pbxDoc);
-  
-  // Get name
-  getStringForKey(plist, "name", m_name, VALUE_REQUIRED, m_parseER);
-  
-  // Get baseConfigurationReference
-  getStringForKey(plist, "baseConfigurationReference", m_baseConfigurationId, VALUE_OPTIONAL, m_parseER);
-
-  // Get buildSettings
-  getStringMapForKey(plist, "buildSettings", m_buildSettings, VALUE_REQUIRED, m_parseER);
+XCBuildConfiguration::XCBuildConfiguration() {
 }
 
-void XCBuildConfiguration::resolvePointers()
-{
-  // Resolve baseConfigurationReference ptr
-  convertObjectId(m_pbxDoc, m_baseConfigurationId, m_baseConfigurationPtr);
+XCBuildConfiguration* XCBuildConfiguration::createFromPlist(const String& id,
+                                                            const Plist::dictionary_type& plist,
+                                                            const PBXDocument* pbxDoc) {
+    XCBuildConfiguration* ret = new XCBuildConfiguration;
+    ret->initFromPlist(id, plist, pbxDoc);
+    return ret;
+}
+
+void XCBuildConfiguration::initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc) {
+    // Call super init
+    PBXObject::initFromPlist(id, plist, pbxDoc);
+
+    // Get name
+    getStringForKey(plist, "name", m_name, VALUE_REQUIRED, m_parseER);
+
+    // Get baseConfigurationReference
+    getStringForKey(plist, "baseConfigurationReference", m_baseConfigurationId, VALUE_OPTIONAL, m_parseER);
+
+    // Get buildSettings
+    getStringMapForKey(plist, "buildSettings", m_buildSettings, VALUE_REQUIRED, m_parseER);
+}
+
+void XCBuildConfiguration::resolvePointers() {
+    // Resolve baseConfigurationReference ptr
+    convertObjectId(m_pbxDoc, m_baseConfigurationId, m_baseConfigurationPtr);
 }

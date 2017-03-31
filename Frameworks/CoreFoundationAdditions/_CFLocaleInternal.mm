@@ -39,11 +39,6 @@ using namespace ABI::Windows::System::UserProfile;
 using namespace ABI::Windows::Foundation::Collections;
 using namespace Windows::Foundation;
 
-#define RETURN_NULL_IF_FAILED(hr) \
-    if (FAILED(hr)) {             \
-        return nullptr;           \
-    }
-
 CFMutableArrayRef EnumerateUserPreferredLanguages() {
     ComPtr<IGlobalizationPreferencesStatics> globalizationPreferences;
     RETURN_NULL_IF_FAILED(

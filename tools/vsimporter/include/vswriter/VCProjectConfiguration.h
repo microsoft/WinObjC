@@ -21,7 +21,7 @@
 #include <set>
 
 namespace pugi {
-  class xml_node;
+class xml_node;
 };
 
 class VCProjectConfigurationPlatform;
@@ -30,24 +30,24 @@ typedef std::map<std::string, VCProjectConfigurationPlatform*> PlatformMap;
 
 class VCProjectConfiguration {
 public:
-  friend class VCProject;
+    friend class VCProject;
 
-  ~VCProjectConfiguration();
-  const std::string& getName() const;
-  const PlatformMap& getPlatforms() const;
-  VCProjectConfigurationPlatform* addPlatform(const std::string& platformName);
-  void removePlatform(const std::string& platform);
-  bool setProperty(const std::string& pName, const std::string& pValue);
-  bool setItemDefinition(const std::string& item, const std::string& pName, const std::string& pValue);
+    ~VCProjectConfiguration();
+    const std::string& getName() const;
+    const PlatformMap& getPlatforms() const;
+    VCProjectConfigurationPlatform* addPlatform(const std::string& platformName);
+    void removePlatform(const std::string& platform);
+    bool setProperty(const std::string& pName, const std::string& pValue);
+    bool setItemDefinition(const std::string& item, const std::string& pName, const std::string& pValue);
 
-  void writeSummary(pugi::xml_node& parent) const;
-  void writeProperties(pugi::xml_node& bookmark) const;
-  void writePropertySheets(pugi::xml_node& bookmark) const;
-  void writeItemDefinitions(pugi::xml_node& bookmark) const;
+    void writeSummary(pugi::xml_node& parent) const;
+    void writeProperties(pugi::xml_node& bookmark) const;
+    void writePropertySheets(pugi::xml_node& bookmark) const;
+    void writeItemDefinitions(pugi::xml_node& bookmark) const;
 
 private:
-  VCProjectConfiguration(const std::string& name);
+    VCProjectConfiguration(const std::string& name);
 
-  std::string m_name;
-  PlatformMap m_platforms;
+    std::string m_name;
+    PlatformMap m_platforms;
 };

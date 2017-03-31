@@ -21,41 +21,39 @@
 #include "PBXContainerItemProxy.h"
 #include "PBXObjectIdConvert.h"
 
-PBXTargetDependency::~PBXTargetDependency() {}
-
-PBXTargetDependency::PBXTargetDependency()
-  : m_targetPtr(NULL),
-    m_targetProxyPtr(NULL)
-{}
-
-PBXTargetDependency* PBXTargetDependency::createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc)
-{
-  PBXTargetDependency* ret = new PBXTargetDependency;
-  ret->initFromPlist(id, plist, pbxDoc);
-  return ret;
+PBXTargetDependency::~PBXTargetDependency() {
 }
 
-void PBXTargetDependency::initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc)
-{
-  // Call super init
-  PBXObject::initFromPlist(id, plist, pbxDoc);
-  
-  // Get name. Not sure about its usefullness though.
-  getStringForKey(plist, "name", m_name, VALUE_OPTIONAL, m_parseER);
-
-  // Get target
-  getStringForKey(plist, "target", m_targetId, VALUE_OPTIONAL, m_parseER);
-  
-  // Get targetProxy
-  // Not sure what it means when targetProxy is not specified, but sometimes it's not.
-  getStringForKey(plist, "targetProxy", m_targetProxyId, VALUE_OPTIONAL, m_parseER);
+PBXTargetDependency::PBXTargetDependency() : m_targetPtr(NULL), m_targetProxyPtr(NULL) {
 }
 
-void PBXTargetDependency::resolvePointers()
-{
-  // Resolve target ptr
-  convertObjectId(m_pbxDoc, m_targetId, m_targetPtr);
-  
-  // Resolve targetProxy ptr
-  convertObjectId(m_pbxDoc, m_targetProxyId, m_targetProxyPtr);
+PBXTargetDependency* PBXTargetDependency::createFromPlist(const String& id,
+                                                          const Plist::dictionary_type& plist,
+                                                          const PBXDocument* pbxDoc) {
+    PBXTargetDependency* ret = new PBXTargetDependency;
+    ret->initFromPlist(id, plist, pbxDoc);
+    return ret;
+}
+
+void PBXTargetDependency::initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc) {
+    // Call super init
+    PBXObject::initFromPlist(id, plist, pbxDoc);
+
+    // Get name. Not sure about its usefullness though.
+    getStringForKey(plist, "name", m_name, VALUE_OPTIONAL, m_parseER);
+
+    // Get target
+    getStringForKey(plist, "target", m_targetId, VALUE_OPTIONAL, m_parseER);
+
+    // Get targetProxy
+    // Not sure what it means when targetProxy is not specified, but sometimes it's not.
+    getStringForKey(plist, "targetProxy", m_targetProxyId, VALUE_OPTIONAL, m_parseER);
+}
+
+void PBXTargetDependency::resolvePointers() {
+    // Resolve target ptr
+    convertObjectId(m_pbxDoc, m_targetId, m_targetPtr);
+
+    // Resolve targetProxy ptr
+    convertObjectId(m_pbxDoc, m_targetProxyId, m_targetProxyPtr);
 }

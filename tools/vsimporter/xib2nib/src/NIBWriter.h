@@ -20,62 +20,60 @@
 #include <stdio.h>
 #include "XIBObject.h"
 
-#define NIBOBJ_INT8     0x00
-#define NIBOBJ_INT16    0x01
-#define NIBOBJ_INT32    0x02
-#define NIBOBJ_INT64    0x03
-#define NIBOBJ_FALSE    0x04
-#define NIBOBJ_TRUE     0x05
-#define NIBOBJ_FLOAT    0x06
-#define NIBOBJ_DOUBLE   0x07
-#define NIBOBJ_DATA     0x08
-#define NIBOBJ_NULL     0x09
-#define NIBOBJ_UID      0x0A
+#define NIBOBJ_INT8 0x00
+#define NIBOBJ_INT16 0x01
+#define NIBOBJ_INT32 0x02
+#define NIBOBJ_INT64 0x03
+#define NIBOBJ_FALSE 0x04
+#define NIBOBJ_TRUE 0x05
+#define NIBOBJ_FLOAT 0x06
+#define NIBOBJ_DOUBLE 0x07
+#define NIBOBJ_DATA 0x08
+#define NIBOBJ_NULL 0x09
+#define NIBOBJ_UID 0x0A
 
-class ProxiedObject
-{
+class ProxiedObject {
 public:
     XIBObject *_obj, *_proxyObj;
-    const char *_name;
+    const char* _name;
 };
 
-typedef std::vector<ProxiedObject *> proxyList;
+typedef std::vector<ProxiedObject*> proxyList;
 class XIBDictionary;
 
-class NIBWriter
-{
+class NIBWriter {
 private:
-    xibList _outputObjects; 
+    xibList _outputObjects;
     proxyList _proxies;
-    FILE *fpOut;
+    FILE* fpOut;
 
 public:
-    XIBObject *_allUIObjects;
-    XIBObject *_connections;
-    XIBObject *_baseObject;
-    XIBObject *_topObjects;
-    XIBObject *_accessibilityObjects;
-    XIBObject *_visibleWindows;
+    XIBObject* _allUIObjects;
+    XIBObject* _connections;
+    XIBObject* _baseObject;
+    XIBObject* _topObjects;
+    XIBObject* _accessibilityObjects;
+    XIBObject* _visibleWindows;
 
-    XIBDictionary *_externalReferencesDictionary;
+    XIBDictionary* _externalReferencesDictionary;
 
-    NIBWriter(FILE *out);
-    NIBWriter(FILE *out, XIBDictionary *externalRefsDict, XIBObject *base);
+    NIBWriter(FILE* out);
+    NIBWriter(FILE* out, XIBDictionary* externalRefsDict, XIBObject* base);
 
-    static void ExportController(const char *controllerId);
+    static void ExportController(const char* controllerId);
     static void ExportAllControllers();
-    void ExportObject(XIBObject *obj);
+    void ExportObject(XIBObject* obj);
     void WriteObjects();
-    XIBObject *AddOutputObject(XIBObject *pObj);
+    XIBObject* AddOutputObject(XIBObject* pObj);
     void WriteData();
 
     void WriteInt(int val, int minlen);
     void WriteByte(int byte);
-    void WriteBytes(void *bytes, int len);
-    void AddOutletConnection(XIBObject *src, XIBObject *dst, char *propName);
-    XIBObject *FindProxy(char *propName);
-    XIBObject *AddProxy(char *propName);
-    XIBObject *GetProxyFor(XIBObject *obj);
+    void WriteBytes(void* bytes, int len);
+    void AddOutletConnection(XIBObject* src, XIBObject* dst, char* propName);
+    XIBObject* FindProxy(char* propName);
+    XIBObject* AddProxy(char* propName);
+    XIBObject* GetProxyFor(XIBObject* obj);
 };
 
 #endif

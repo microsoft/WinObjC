@@ -27,39 +27,43 @@ class PBXTarget;
 
 class VariableCollectionManager {
 public:
-  ~VariableCollectionManager();
+    ~VariableCollectionManager();
 
-  void processGlobalConfigFile(const String& absFilePath);
-  void processGlobalAssignment(const String& assignment);
-  void setGlobalVar(const String& varName, const String& varValue);
+    void processGlobalConfigFile(const String& absFilePath);
+    void processGlobalAssignment(const String& assignment);
+    void setGlobalVar(const String& varName, const String& varValue);
 
-  const VariableCollection* getSettingsFromFileRef(const PBXFileReference* fileRef);
-  const VariableCollection* getSettingsFromFile(const String& absFilePath, const String& projectDir);
-  const VariableCollection* getDefaultSettings() const { return &m_defaultSettings; }
-  const VariableCollection* getGlobalSettings() const { return &m_globalSettings; }
-  const VariableCollection* getTargetSettings(const PBXTarget* target);
-  const VariableCollection* getProjectSettings(const PBXProject* project);
+    const VariableCollection* getSettingsFromFileRef(const PBXFileReference* fileRef);
+    const VariableCollection* getSettingsFromFile(const String& absFilePath, const String& projectDir);
+    const VariableCollection* getDefaultSettings() const {
+        return &m_defaultSettings;
+    }
+    const VariableCollection* getGlobalSettings() const {
+        return &m_globalSettings;
+    }
+    const VariableCollection* getTargetSettings(const PBXTarget* target);
+    const VariableCollection* getProjectSettings(const PBXProject* project);
 
-  static VariableCollectionManager& get();
+    static VariableCollectionManager& get();
 
 private:
-  typedef std::map<String, const VariableCollection*> ConfigFileMap;
-  typedef std::map<const PBXObject*, const VariableCollection*> PBXObjectMap;
+    typedef std::map<String, const VariableCollection*> ConfigFileMap;
+    typedef std::map<const PBXObject*, const VariableCollection*> PBXObjectMap;
 
-  VariableCollectionManager();
+    VariableCollectionManager();
 
-  void cacheCollection(const PBXObject* object, const VariableCollection* vc);
-  void cacheCollection(const String& absFilePath, const VariableCollection* vc);
-  const VariableCollection* getCachedCollection(const PBXObject* object);
-  const VariableCollection* getCachedCollection(const String& absPath);
+    void cacheCollection(const PBXObject* object, const VariableCollection* vc);
+    void cacheCollection(const String& absFilePath, const VariableCollection* vc);
+    const VariableCollection* getCachedCollection(const PBXObject* object);
+    const VariableCollection* getCachedCollection(const String& absPath);
 
-  SimpleVariableCollection m_defaultSettings;
-  SimpleVariableCollection m_globalSettings;
+    SimpleVariableCollection m_defaultSettings;
+    SimpleVariableCollection m_globalSettings;
 
-  ConfigFileMap m_cfileMap;
-  PBXObjectMap m_objectMap;
+    ConfigFileMap m_cfileMap;
+    PBXObjectMap m_objectMap;
 
-  static VariableCollectionManager* s_manager;
+    static VariableCollectionManager* s_manager;
 };
 
 #endif /* _VariableCollectionManager_H_ */

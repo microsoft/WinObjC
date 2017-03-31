@@ -188,10 +188,6 @@ static const wchar_t* TAG = L"UILabel";
     WXCTextBlock* textBlock = nil;
     if (labelGrid) {
         textBlock = XamlControls::GetLabelTextBlock(labelGrid);
-    } else {
-        // If we didn't get a UIKit.Label, that's ok - as long as
-        // we've received a TextBlock directly.
-        textBlock = rt_dynamic_cast<WXCTextBlock>([self xamlElement]);
     }
 
     if (!textBlock) {

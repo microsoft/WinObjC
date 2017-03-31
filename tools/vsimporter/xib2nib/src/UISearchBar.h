@@ -16,13 +16,10 @@
 
 #pragma once
 #include "UIView.h"
-class UISearchBar :
-    public UIView
-{
+class UISearchBar : public UIView {
 public:
     UISearchBar();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };
-

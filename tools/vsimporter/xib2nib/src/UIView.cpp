@@ -123,7 +123,6 @@ void UIView::InitFromXIB(XIBObject* obj) {
     _outputClassName = "UIView";
 }
 
-
 void UIView::InitFromStory(XIBObject* obj) {
     ObjectConverterSwapper::InitFromStory(obj);
 
@@ -389,7 +388,9 @@ void UIView::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     }
 
     if (_horizontalCompressionResistancePriority >= 0.0) {
-        AddOutputMember(writer, "UIViewHorizontalCompressionResistancePriority", new XIBObjectFloat(_horizontalCompressionResistancePriority));
+        AddOutputMember(writer,
+                        "UIViewHorizontalCompressionResistancePriority",
+                        new XIBObjectFloat(_horizontalCompressionResistancePriority));
     }
 
     if (_verticalCompressionResistancePriority >= 0.0) {

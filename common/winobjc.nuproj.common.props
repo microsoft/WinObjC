@@ -17,7 +17,7 @@
 
   <PropertyGroup>
     <_CoreCompileOverrideDependsOn Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">Pack</_CoreCompileOverrideDependsOn>
-    <IsPackable Condition="'$(SkipGetPackageContentsForOtherPlatforms)' != 'true'">true</IsPackable>
+    <IsPackable Condition="'$(SkipGetPackageContentsForOtherPlatforms)' == 'true'">false</IsPackable>
   </PropertyGroup>
 
 </Project>

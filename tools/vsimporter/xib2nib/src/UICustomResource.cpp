@@ -16,8 +16,7 @@
 
 #include "UICustomResource.h"
 
-void UICustomResource::InitFromXIB(XIBObject *obj)
-{
+void UICustomResource::InitFromXIB(XIBObject* obj) {
     ObjectConverter::InitFromXIB(obj);
 
     obj->_outputClassName = "UIImageNibPlaceholder";
@@ -25,16 +24,15 @@ void UICustomResource::InitFromXIB(XIBObject *obj)
     _imageName = obj->GetString("NSResourceName", "");
 }
 
-void UICustomResource::InitFromStory(XIBObject *obj)
-{
+void UICustomResource::InitFromStory(XIBObject* obj) {
     ObjectConverter::InitFromStory(obj);
 
     obj->_outputClassName = "UIImageNibPlaceholder";
 }
 
-void UICustomResource::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
-    if ( !_outputClassName ) _outputClassName = "UIImageNibPlaceholder";
+void UICustomResource::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
+    if (!_outputClassName)
+        _outputClassName = "UIImageNibPlaceholder";
 
     ObjectConverter::ConvertStaticMappings(writer, obj);
     AddOutputMember(writer, "UIImageWidth", new XIBObjectFloat(1.0f));

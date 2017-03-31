@@ -27,143 +27,140 @@
 #include "clangoptparser.h"
 #include "xc2vs.h"
 
-SBBuildPhase* SBSourcesBuildPhase::create(const PBXBuildPhase* phase, SBTarget& parentTarget)
-{
-  const PBXSourcesBuildPhase* compilePhase = dynamic_cast<const PBXSourcesBuildPhase*>(phase);
-  SBNativeTarget& nativeParent = dynamic_cast<SBNativeTarget&>(parentTarget);
-  return new SBSourcesBuildPhase(compilePhase, nativeParent);
+SBBuildPhase* SBSourcesBuildPhase::create(const PBXBuildPhase* phase, SBTarget& parentTarget) {
+    const PBXSourcesBuildPhase* compilePhase = dynamic_cast<const PBXSourcesBuildPhase*>(phase);
+    SBNativeTarget& nativeParent = dynamic_cast<SBNativeTarget&>(parentTarget);
+    return new SBSourcesBuildPhase(compilePhase, nativeParent);
 }
 
 SBSourcesBuildPhase::SBSourcesBuildPhase(const PBXSourcesBuildPhase* phase, const SBNativeTarget& parentTarget)
-  : SBBuildPhase(phase, parentTarget),
-    m_phase(phase)
-{}
+    : SBBuildPhase(phase, parentTarget), m_phase(phase) {
+}
 
-void SBSourcesBuildPhase::writeVCProjectFiles(VCProject& proj) const
-{
-  // We don't support source compilation when building bundles
-  TargetProductType productType = m_parentTarget.getProductType();
-  if (productType == TargetBundle)
-  {
-    if (!m_phase->getBuildFileList().empty()) {
-      SBLog::warning() << "Ignoring all source files in \"" << m_parentTarget.getName() << "\" bundle target." << std::endl;
-    }
-    return;
-  }
-
-  SBBuildPhase::writeVSFileDescriptions(proj, "Text");
-
-  String xcProjectDir = m_parentTarget.getProject().getProjectDir();
-  String vsProjectDir = sb_dirname(proj.getPath());
-  StringSet prefixHeaders;
-  for (auto bs : m_parentTarget.getBuildSettings()) {
-    VCProjectConfiguration* config = proj.addConfiguration(bs.first);
-
-    // Prefix header (recalculate relative path)
-    String prefixHeader = bs.second->getValue("GCC_PREFIX_HEADER");
-    if (!prefixHeader.empty()) {
-      String absHeaderPath = m_parentTarget.makeAbsolutePath(prefixHeader);
-      String relHeaderPath = m_parentTarget.makeRelativePath(prefixHeader, vsProjectDir);;
-      relHeaderPath = winPath(relHeaderPath);
-      config->setItemDefinition("ClangCompile", "PrefixHeader", relHeaderPath);
-
-      // Add plist file to project (only once)
-      if (prefixHeaders.find(absHeaderPath) == prefixHeaders.end()) {
-        addRelativeFilePathToVS("ClInclude", absHeaderPath, "", proj, *bs.second);
-        prefixHeaders.insert(absHeaderPath);
-      }
+void SBSourcesBuildPhase::writeVCProjectFiles(VCProject& proj) const {
+    // We don't support source compilation when building bundles
+    TargetProductType productType = m_parentTarget.getProductType();
+    if (productType == TargetBundle) {
+        if (!m_phase->getBuildFileList().empty()) {
+            SBLog::warning() << "Ignoring all source files in \"" << m_parentTarget.getName() << "\" bundle target." << std::endl;
+        }
+        return;
     }
 
-    // Preprocessor definitions
-    StringVec preprocessorTokens;
-    bs.second->getValue("GCC_PREPROCESSOR_DEFINITIONS", preprocessorTokens);
-    String preprocessorDefs = joinStrings(preprocessorTokens, ";");
-    if (!preprocessorDefs.empty()) {
-      config->setItemDefinition("ClangCompile", "PreprocessorDefinitions", preprocessorDefs);
-    }
+    SBBuildPhase::writeVSFileDescriptions(proj, "Text");
 
-    // Optimization level
-    String optimizationLevel = bs.second->getValue("GCC_OPTIMIZATION_LEVEL");
-    if (!optimizationLevel.empty()) {
-      String vsOptimizationLevel;
-      if (optimizationLevel == "s") {
-        vsOptimizationLevel = "MinSpace";
-      } else if (optimizationLevel == "0") {
-        vsOptimizationLevel = "Disabled";
-      } else {
-        vsOptimizationLevel = "MaxSpeed";
-      }
-      config->setItemDefinition("ClangCompile", "OptimizationLevel", vsOptimizationLevel);
-    }
+    String xcProjectDir = m_parentTarget.getProject().getProjectDir();
+    String vsProjectDir = sb_dirname(proj.getPath());
+    StringSet prefixHeaders;
+    for (auto bs : m_parentTarget.getBuildSettings()) {
+        VCProjectConfiguration* config = proj.addConfiguration(bs.first);
 
-    // ARC
-    String enableARC = bs.second->getValue("CLANG_ENABLE_OBJC_ARC");
-    if (enableARC == "YES") {
-      config->setItemDefinition("ClangCompile", "ObjectiveCARC", "true");
-    }
+        // Prefix header (recalculate relative path)
+        String prefixHeader = bs.second->getValue("GCC_PREFIX_HEADER");
+        if (!prefixHeader.empty()) {
+            String absHeaderPath = m_parentTarget.makeAbsolutePath(prefixHeader);
+            String relHeaderPath = m_parentTarget.makeRelativePath(prefixHeader, vsProjectDir);
+            ;
+            relHeaderPath = winPath(relHeaderPath);
+            config->setItemDefinition("ClangCompile", "PrefixHeader", relHeaderPath);
 
-    // Modules
-    String enableModules = bs.second->getValue("CLANG_ENABLE_MODULES");
-    if (enableModules == "YES") {
-        config->setItemDefinition("ClangCompile", "ObjectiveCModules", "true");
-    }
+            // Add plist file to project (only once)
+            if (prefixHeaders.find(absHeaderPath) == prefixHeaders.end()) {
+                addRelativeFilePathToVS("ClInclude", absHeaderPath, "", proj, *bs.second);
+                prefixHeaders.insert(absHeaderPath);
+            }
+        }
 
-    // Header search paths (make them relative)
-    StringVec includePaths;
-    bs.second->getValue("HEADER_SEARCH_PATHS", includePaths);
-    for (auto &cur : includePaths) {
-      cur = m_parentTarget.makeRelativePath(cur, vsProjectDir);
-      cur = winPath(cur);
-    }
-    includePaths.insert(includePaths.begin(), "$(SolutionPublicHeadersDir)");
-    includePaths.insert(includePaths.begin(), "%(IncludePaths)");
-    config->setItemDefinition("ClangCompile", "IncludePaths", joinStrings(includePaths, ";"));
+        // Preprocessor definitions
+        StringVec preprocessorTokens;
+        bs.second->getValue("GCC_PREPROCESSOR_DEFINITIONS", preprocessorTokens);
+        String preprocessorDefs = joinStrings(preprocessorTokens, ";");
+        if (!preprocessorDefs.empty()) {
+            config->setItemDefinition("ClangCompile", "PreprocessorDefinitions", preprocessorDefs);
+        }
 
-    // User header search paths (make them relative)
-    StringVec userIncludePaths;
-    bs.second->getValue("USER_HEADER_SEARCH_PATHS", userIncludePaths);
-    for (auto &cur : userIncludePaths) {
-      cur = m_parentTarget.makeRelativePath(cur, vsProjectDir);
-      cur = winPath(cur);
-    }
-    if (!userIncludePaths.empty()) {
-      config->setItemDefinition("ClangCompile", "UserIncludePaths", joinStrings(userIncludePaths, ";"));
-    }
+        // Optimization level
+        String optimizationLevel = bs.second->getValue("GCC_OPTIMIZATION_LEVEL");
+        if (!optimizationLevel.empty()) {
+            String vsOptimizationLevel;
+            if (optimizationLevel == "s") {
+                vsOptimizationLevel = "MinSpace";
+            } else if (optimizationLevel == "0") {
+                vsOptimizationLevel = "Disabled";
+            } else {
+                vsOptimizationLevel = "MaxSpeed";
+            }
+            config->setItemDefinition("ClangCompile", "OptimizationLevel", vsOptimizationLevel);
+        }
 
-    // Exclude search path subdirectories
-    StringVec excludeSubDirectories;
-    bs.second->getValue("EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES", excludeSubDirectories);
-    if (!excludeSubDirectories.empty()) {
-        config->setItemDefinition("ClangCompile", "ExcludedSearchPathSubdirectories", joinStrings(excludeSubDirectories, ";"));
-    }
+        // ARC
+        String enableARC = bs.second->getValue("CLANG_ENABLE_OBJC_ARC");
+        if (enableARC == "YES") {
+            config->setItemDefinition("ClangCompile", "ObjectiveCARC", "true");
+        }
 
-    // Header map
-    if (bs.second->getValue("USE_HEADERMAP") == "YES") {
-      if (bs.second->getValue("ALWAYS_SEARCH_USER_PATHS") == "YES") {
-        config->setItemDefinition("ClangCompile", "HeaderMap", "Combined");
-      } else if (bs.second->getValue("HEADERMAP_INCLUDES_PROJECT_HEADERS") == "YES") {
-        config->setItemDefinition("ClangCompile", "HeaderMap", "Project");
-      }
-    }
+        // Modules
+        String enableModules = bs.second->getValue("CLANG_ENABLE_MODULES");
+        if (enableModules == "YES") {
+            config->setItemDefinition("ClangCompile", "ObjectiveCModules", "true");
+        }
 
-    // Other C flags
-    String otherCFlags = bs.second->getValue("OTHER_CFLAGS");
-    processClangFlags(otherCFlags, xcProjectDir, vsProjectDir);
-    if (!otherCFlags.empty()) {
-      config->setItemDefinition("ClangCompile", "OtherCFlags", otherCFlags);
-    }
+        // Header search paths (make them relative)
+        StringVec includePaths;
+        bs.second->getValue("HEADER_SEARCH_PATHS", includePaths);
+        for (auto& cur : includePaths) {
+            cur = m_parentTarget.makeRelativePath(cur, vsProjectDir);
+            cur = winPath(cur);
+        }
+        includePaths.insert(includePaths.begin(), "$(SolutionPublicHeadersDir)");
+        includePaths.insert(includePaths.begin(), "%(IncludePaths)");
+        config->setItemDefinition("ClangCompile", "IncludePaths", joinStrings(includePaths, ";"));
 
-    // Other C++ flags
-    String otherCPlusPlusFlags = bs.second->getValue("OTHER_CPLUSPLUSFLAGS");
-    processClangFlags(otherCPlusPlusFlags, xcProjectDir, vsProjectDir);
-    if (!otherCPlusPlusFlags.empty()) {
-      config->setItemDefinition("ClangCompile", "OtherCPlusPlusFlags", otherCPlusPlusFlags);
-    }
+        // User header search paths (make them relative)
+        StringVec userIncludePaths;
+        bs.second->getValue("USER_HEADER_SEARCH_PATHS", userIncludePaths);
+        for (auto& cur : userIncludePaths) {
+            cur = m_parentTarget.makeRelativePath(cur, vsProjectDir);
+            cur = winPath(cur);
+        }
+        if (!userIncludePaths.empty()) {
+            config->setItemDefinition("ClangCompile", "UserIncludePaths", joinStrings(userIncludePaths, ";"));
+        }
 
-    // CRT
-    String configNameUpper = strToUpper(bs.first);
-    if (configNameUpper.find("DEBUG") != String::npos) {
-      config->setItemDefinition("ClangCompile", "RuntimeLibrary", "MultiThreadedDebugDLL");
+        // Exclude search path subdirectories
+        StringVec excludeSubDirectories;
+        bs.second->getValue("EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES", excludeSubDirectories);
+        if (!excludeSubDirectories.empty()) {
+            config->setItemDefinition("ClangCompile", "ExcludedSearchPathSubdirectories", joinStrings(excludeSubDirectories, ";"));
+        }
+
+        // Header map
+        if (bs.second->getValue("USE_HEADERMAP") == "YES") {
+            if (bs.second->getValue("ALWAYS_SEARCH_USER_PATHS") == "YES") {
+                config->setItemDefinition("ClangCompile", "HeaderMap", "Combined");
+            } else if (bs.second->getValue("HEADERMAP_INCLUDES_PROJECT_HEADERS") == "YES") {
+                config->setItemDefinition("ClangCompile", "HeaderMap", "Project");
+            }
+        }
+
+        // Other C flags
+        String otherCFlags = bs.second->getValue("OTHER_CFLAGS");
+        processClangFlags(otherCFlags, xcProjectDir, vsProjectDir);
+        if (!otherCFlags.empty()) {
+            config->setItemDefinition("ClangCompile", "OtherCFlags", otherCFlags);
+        }
+
+        // Other C++ flags
+        String otherCPlusPlusFlags = bs.second->getValue("OTHER_CPLUSPLUSFLAGS");
+        processClangFlags(otherCPlusPlusFlags, xcProjectDir, vsProjectDir);
+        if (!otherCPlusPlusFlags.empty()) {
+            config->setItemDefinition("ClangCompile", "OtherCPlusPlusFlags", otherCPlusPlusFlags);
+        }
+
+        // CRT
+        String configNameUpper = strToUpper(bs.first);
+        if (configNameUpper.find("DEBUG") != String::npos) {
+            config->setItemDefinition("ClangCompile", "RuntimeLibrary", "MultiThreadedDebugDLL");
+        }
     }
-  }
 }

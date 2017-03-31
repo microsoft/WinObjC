@@ -16,5 +16,5 @@
 
 #include "ConditionalValue.h"
 
-ConditionalValue::ConditionalValue(const std::string& val, const std::string& cond)
-  : value(val), condition(cond) {}
+ConditionalValue::ConditionalValue(const std::string& val, const std::string& cond) : value(val), condition(cond) {
+}

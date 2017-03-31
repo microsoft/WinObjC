@@ -16,19 +16,16 @@
 
 #include "XIBObjectFloat.h"
 
-XIBObjectFloat::XIBObjectFloat(pugi::xml_node node)
-{
+XIBObjectFloat::XIBObjectFloat(pugi::xml_node node) {
     _val = strtod(node.child_value(), NULL);
     _node = node;
 }
 
-XIBObjectFloat::XIBObjectFloat(float val)
-{
+XIBObjectFloat::XIBObjectFloat(float val) {
     _val = val;
 }
 
-float XIBObjectFloat::floatValue()
-{
+float XIBObjectFloat::floatValue() {
     return _val;
 }
 
@@ -36,9 +33,7 @@ bool XIBObjectFloat::NeedsSerialization() {
     return false;
 }
 
-void XIBObjectFloat::WriteData(NIBWriter *writer)
-{
+void XIBObjectFloat::WriteData(NIBWriter* writer) {
     writer->WriteByte(NIBOBJ_FLOAT);
     writer->WriteBytes(&_val, 4);
 }
-

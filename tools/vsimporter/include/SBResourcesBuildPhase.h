@@ -24,17 +24,18 @@ class SBNativeTarget;
 
 class SBResourcesBuildPhase : public SBBuildPhase {
 public:
-  static SBBuildPhase* create(const PBXBuildPhase* phase, SBTarget& parentTarget);
-  virtual ~SBResourcesBuildPhase() {}
-  virtual void writeVCProjectFiles(VCProject& proj) const;
+    static SBBuildPhase* create(const PBXBuildPhase* phase, SBTarget& parentTarget);
+    virtual ~SBResourcesBuildPhase() {
+    }
+    virtual void writeVCProjectFiles(VCProject& proj) const;
 
 private:
-  typedef std::vector<const SBTarget*> SBTargetList;
+    typedef std::vector<const SBTarget*> SBTargetList;
 
-  SBResourcesBuildPhase(const PBXResourcesBuildPhase* phase, SBNativeTarget& parentTarget);
+    SBResourcesBuildPhase(const PBXResourcesBuildPhase* phase, SBNativeTarget& parentTarget);
 
-  const PBXResourcesBuildPhase* m_phase;
-  SBTargetList m_buildFileTargets;
+    const PBXResourcesBuildPhase* m_phase;
+    SBTargetList m_buildFileTargets;
 };
 
 #endif /* _SBRESOURCESBUILDPHASE_H_ */

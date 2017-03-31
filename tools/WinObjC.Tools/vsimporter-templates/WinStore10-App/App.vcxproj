@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="$ToolsVersion$" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations" VSImporterLabel="ProjectConfigSummary" />
   <PropertyGroup Label="Globals" VSImporterLabel="GlobalProperties">
     <ProjectName>$projectname$</ProjectName>
     <DefaultLanguage>en-US</DefaultLanguage>
-    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <MinimumVisualStudioVersion>$MinimumVisualStudioVersion$</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
     <ApplicationType>Windows Store</ApplicationType>
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
@@ -16,7 +16,7 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" VSImporterLabel="ConfigurationProperties">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>$PlatformToolset$</PlatformToolset>
     <UseDotNetNativeToolchain VSImporterConfigName="Release">true</UseDotNetNativeToolchain>
     <Optimize VSImporterConfigName="Release">true</Optimize>
   </PropertyGroup>

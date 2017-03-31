@@ -30,10 +30,10 @@
 
 #import <vector>
 
-const CFStringRef kCGFontVariationAxisName = static_cast<CFStringRef>(@"kCGFontVariationAxisName");
-const CFStringRef kCGFontVariationAxisMinValue = static_cast<CFStringRef>(@"kCGFontVariationAxisMinValue");
-const CFStringRef kCGFontVariationAxisMaxValue = static_cast<CFStringRef>(@"kCGFontVariationAxisMaxValue");
-const CFStringRef kCGFontVariationAxisDefaultValue = static_cast<CFStringRef>(@"kCGFontVariationAxisDefaultValue");
+const CFStringRef kCGFontVariationAxisName = CFSTR("kCGFontVariationAxisName");
+const CFStringRef kCGFontVariationAxisMinValue = CFSTR("kCGFontVariationAxisMinValue");
+const CFStringRef kCGFontVariationAxisMaxValue = CFSTR("kCGFontVariationAxisMaxValue");
+const CFStringRef kCGFontVariationAxisDefaultValue = CFSTR("kCGFontVariationAxisDefaultValue");
 
 using namespace Microsoft::WRL;
 

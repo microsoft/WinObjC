@@ -28,55 +28,50 @@
 #include "xc2vs.h"
 #include "..\WBITelemetry\WBITelemetry.h"
 
-void SBBuildPhase::create(const BuildPhaseList& buildPhaseList, SBTarget& parentTarget, SBBuildPhaseList& ret)
-{
-  SBBuildPhase* frameworksPhase = NULL;
-  SBBuildPhase* sourcesPhase = NULL;
-  SBBuildPhase* resourcesPhase = NULL;
+void SBBuildPhase::create(const BuildPhaseList& buildPhaseList, SBTarget& parentTarget, SBBuildPhaseList& ret) {
+    SBBuildPhase* frameworksPhase = NULL;
+    SBBuildPhase* sourcesPhase = NULL;
+    SBBuildPhase* resourcesPhase = NULL;
 
-  for (unsigned i = 0; i < buildPhaseList.size(); i++) {
-    const String& isa = buildPhaseList[i]->getType();
-    SBBuildPhase* phase = NULL;
+    for (unsigned i = 0; i < buildPhaseList.size(); i++) {
+        const String& isa = buildPhaseList[i]->getType();
+        SBBuildPhase* phase = NULL;
 
-    if (isa == "PBXFrameworksBuildPhase")
-      frameworksPhase = phase = SBFrameworksBuildPhase::create(buildPhaseList[i], parentTarget);
-    else if (isa == "PBXResourcesBuildPhase")
-      resourcesPhase = phase = SBResourcesBuildPhase::create(buildPhaseList[i], parentTarget);
-    else if (isa == "PBXSourcesBuildPhase")
-      sourcesPhase = phase = SBSourcesBuildPhase::create(buildPhaseList[i], parentTarget);
-    else if (isa == "PBXHeadersBuildPhase")
-      phase = SBHeadersBuildPhase::create(buildPhaseList[i], parentTarget);
-    else
-    {
-        SBLog::warning() << "Ignoring unsupported " << isa << " in \"" << parentTarget.getName() << "\" target." << std::endl;
-        TELEMETRY_EVENT_DATA(L"VSImporterUnsupportedBuildPhase", isa.c_str());
+        if (isa == "PBXFrameworksBuildPhase")
+            frameworksPhase = phase = SBFrameworksBuildPhase::create(buildPhaseList[i], parentTarget);
+        else if (isa == "PBXResourcesBuildPhase")
+            resourcesPhase = phase = SBResourcesBuildPhase::create(buildPhaseList[i], parentTarget);
+        else if (isa == "PBXSourcesBuildPhase")
+            sourcesPhase = phase = SBSourcesBuildPhase::create(buildPhaseList[i], parentTarget);
+        else if (isa == "PBXHeadersBuildPhase")
+            phase = SBHeadersBuildPhase::create(buildPhaseList[i], parentTarget);
+        else {
+            SBLog::warning() << "Ignoring unsupported " << isa << " in \"" << parentTarget.getName() << "\" target." << std::endl;
+            TELEMETRY_EVENT_DATA(L"VSImporterUnsupportedBuildPhase", isa.c_str());
+        }
+        if (phase)
+            ret.push_back(phase);
     }
-    if (phase)
-      ret.push_back(phase);
-  }
 
-  // Force creation of a PBXFrameworksBuildPhase and/or PBXResourcesBuildPhase,
-  // if they were not created explicitly.
-  if (sourcesPhase && !frameworksPhase)
-    ret.push_back(SBFrameworksBuildPhase::create(NULL, parentTarget));
-  if (sourcesPhase && !resourcesPhase)
-    ret.push_back(SBResourcesBuildPhase::create(NULL, parentTarget));
+    // Force creation of a PBXFrameworksBuildPhase and/or PBXResourcesBuildPhase,
+    // if they were not created explicitly.
+    if (sourcesPhase && !frameworksPhase)
+        ret.push_back(SBFrameworksBuildPhase::create(NULL, parentTarget));
+    if (sourcesPhase && !resourcesPhase)
+        ret.push_back(SBResourcesBuildPhase::create(NULL, parentTarget));
 }
 
-SBBuildPhase::SBBuildPhase(const PBXBuildPhase* phase, const SBTarget& parentTarget)
-  : m_phase(phase),
-    m_parentTarget(parentTarget)
-{}
+SBBuildPhase::SBBuildPhase(const PBXBuildPhase* phase, const SBTarget& parentTarget) : m_phase(phase), m_parentTarget(parentTarget) {
+}
 
-void SBBuildPhase::writeVSFileDescriptions(VCProject& proj, const String& defaultGroup) const
-{
-  // The m_phase pointer can be NULL for implicit build phases.
-  if (!m_phase)
-    return;
+void SBBuildPhase::writeVSFileDescriptions(VCProject& proj, const String& defaultGroup) const {
+    // The m_phase pointer can be NULL for implicit build phases.
+    if (!m_phase)
+        return;
 
-  const BuildSettings& projBS = m_parentTarget.getProject().getBuildSettings();
-  VCItemHint itemHint = { defaultGroup, "", "" };
-  for (auto buildFile : m_phase->getBuildFileList()) {
-    addBuildFileToVS(buildFile, proj, projBS, &itemHint);
-  }
+    const BuildSettings& projBS = m_parentTarget.getProject().getBuildSettings();
+    VCItemHint itemHint = { defaultGroup, "", "" };
+    for (auto buildFile : m_phase->getBuildFileList()) {
+        addBuildFileToVS(buildFile, proj, projBS, &itemHint);
+    }
 }

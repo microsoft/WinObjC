@@ -410,23 +410,32 @@ public:
         CurrentGState().shouldSmoothFonts = shouldSmoothFonts;
     }
 
-    __CGContext(ID2D1RenderTarget* renderTarget) {
-        FAIL_FAST_IF_FAILED(renderTarget->QueryInterface(IID_PPV_ARGS(&deviceContext)));
-
-        // CG is a lower-left origin system (LLO), but D2D is upper left (ULO).
-        // We have to translate the render area back onscreen and flip it up to ULO.
-        float height = 0.f;
+    // Obtain the size of the ID2D1DeviceContext.
+    // NOTE: Use this to obtain the size of ID2D1DeviceContext,
+    // as ID2D1DeviceContext::GetSize() on ARM returns garbage.
+    // GH#1769
+    inline D2D1_SIZE_F GetContextSize() {
 #ifdef _M_ARM
         // TODO: GH#1769; GetSize() returns garbage on ARM.
         // We would prefer to allow D2D to do the DPI calculation.
         D2D1_SIZE_U targetPixelSize = deviceContext->GetPixelSize();
         FLOAT dpiX, dpiY;
         deviceContext->GetDpi(&dpiX, &dpiY);
-        height = (targetPixelSize.height * 96.0) / dpiY;
+        FLOAT height = (targetPixelSize.height * 96.0) / dpiY;
+        FLOAT width = (targetPixelSize.width * 96.0) / dpiX;
+        return { width, height };
+
 #else
-        D2D1_SIZE_F targetSize = deviceContext->GetSize();
-        height = targetSize.height;
+        return deviceContext->GetSize();
 #endif
+    }
+
+    __CGContext(ID2D1RenderTarget* renderTarget) {
+        FAIL_FAST_IF_FAILED(renderTarget->QueryInterface(IID_PPV_ARGS(&deviceContext)));
+
+        // CG is a lower-left origin system (LLO), but D2D is upper left (ULO).
+        // We have to translate the render area back onscreen and flip it up to ULO.
+        float height = GetContextSize().height;
         deviceTransform = CGAffineTransformMake(1.f, 0.f, 0.f, -1.f, 0.f, height);
 
         ComPtr<ID2D1Image> baselineTarget;
@@ -1362,7 +1371,7 @@ CGRect CGContextGetClipBoundingBox(CGContextRef context) {
 
     auto& state = context->CurrentGState();
     if (!state.clippingGeometry) {
-        D2D1_SIZE_F targetSize = context->DeviceContext()->GetSize();
+        D2D1_SIZE_F targetSize = context->GetContextSize();
         return CGContextConvertRectToUserSpace(context, CGRect{ CGPointZero, { targetSize.width, targetSize.height } });
     }
 
@@ -3134,7 +3143,7 @@ void CGContextDrawTiledImage(CGContextRef context, CGRect rect, CGImageRef image
                                          &bitmapBrush));
 
     // Area to fill
-    D2D1_SIZE_F targetSize = deviceContext->GetSize();
+    D2D1_SIZE_F targetSize = context->GetContextSize();
     D2D1_RECT_F region = D2D1::RectF(0, 0, targetSize.width, targetSize.height);
 
     FAIL_FAST_IF_FAILED(
@@ -3156,7 +3165,10 @@ static bool __isFloatCloseEnough(float a, float b) {
 * Insert a transparent color at the specified 'location'.
 * This will also move the color at the specified 'location' to the supplied 'position'
 */
-static inline void __CGGradientInsertTransparentColor(std::vector<D2D1_GRADIENT_STOP>& gradientStops, int location, float position) {
+static inline void __CGGradientInsertTransparentColor(std::vector<D2D1_GRADIENT_STOP>& gradientStops,
+                                                      int location,
+                                                      float position,
+                                                      bool radial = false) {
     // Find the Gradient with location.
     auto res = std::find_if(gradientStops.begin(), gradientStops.end(), [location](const D2D1_GRADIENT_STOP& gradient) {
         return __isFloatCloseEnough(gradient.position, location);
@@ -3164,6 +3176,8 @@ static inline void __CGGradientInsertTransparentColor(std::vector<D2D1_GRADIENT_
 
     if (res != gradientStops.end()) {
         (*res).position = position;
+    } else if (radial && gradientStops.size() == 1) {
+        gradientStops.front().position = position;
     } else {
         gradientStops[location].position = position;
     }
@@ -3178,7 +3192,8 @@ static inline void __CGGradientInsertTransparentColor(std::vector<D2D1_GRADIENT_
 */
 static std::vector<D2D1_GRADIENT_STOP> __CGGradientToD2D1GradientStop(CGContextRef context,
                                                                       CGGradientRef gradient,
-                                                                      CGGradientDrawingOptions options) {
+                                                                      CGGradientDrawingOptions options,
+                                                                      bool radialGradient = false) {
     size_t gradientCount = _CGGradientGetCount(gradient);
     std::vector<D2D1_GRADIENT_STOP> gradientStops(gradientCount);
 
@@ -3198,12 +3213,17 @@ static std::vector<D2D1_GRADIENT_STOP> __CGGradientToD2D1GradientStop(CGContextR
     // effect based on the extend mode).   We support that by inserting a point (with transparent color) close to the start/end points, such
     // that d2d will automatically extend the transparent color, thus we obtain the desired effect for CGGradientDrawingOptions.
 
-    if (!(options & kCGGradientDrawsBeforeStartLocation) && gradientCount > 1) {
-        __CGGradientInsertTransparentColor(gradientStops, 0, s_kCGGradientOffsetPoint);
+    // Radial gradients do not need a color offset at the origin, as we only support radial gradients that
+    // have the same start and end centers.
+    if (!(options & kCGGradientDrawsBeforeStartLocation) && (gradientCount > 1) && !radialGradient) {
+        __CGGradientInsertTransparentColor(gradientStops, 0, s_kCGGradientOffsetPoint, radialGradient);
     }
 
-    if (!(options & kCGGradientDrawsAfterEndLocation) && gradientCount > 1) {
-        __CGGradientInsertTransparentColor(gradientStops, 1, 1.0f - s_kCGGradientOffsetPoint);
+    // For Linear Gradients, if the gradientCount is one, the entire area is painted with the same color.
+    // For Radial Gradients, if the gradientCount is one, only the area within the radius is painted, thus
+    // we need to add transparent stops for radial gradient with only one gradient.
+    if (!(options & kCGGradientDrawsAfterEndLocation) && (gradientCount > 1 || radialGradient)) {
+        __CGGradientInsertTransparentColor(gradientStops, 1, 1.0f - s_kCGGradientOffsetPoint, radialGradient);
     }
 
     return gradientStops;
@@ -3239,7 +3259,7 @@ void CGContextDrawLinearGradient(
         &linearGradientBrush));
 
     // Area to fill
-    D2D1_SIZE_F targetSize = deviceContext->GetSize();
+    D2D1_SIZE_F targetSize = context->GetContextSize();
     D2D1_RECT_F region = D2D1::RectF(0, 0, targetSize.width, targetSize.height);
 
     FAIL_FAST_IF_FAILED(
@@ -3250,7 +3270,8 @@ void CGContextDrawLinearGradient(
 }
 
 /**
- @Status Stub
+ @Status Interoperable
+ @Notes We do not support cases where startCenter is not equal endCenter
 */
 void CGContextDrawRadialGradient(CGContextRef context,
                                  CGGradientRef gradient,
@@ -3260,9 +3281,45 @@ void CGContextDrawRadialGradient(CGContextRef context,
                                  CGFloat endRadius,
                                  CGGradientDrawingOptions options) {
     NOISY_RETURN_IF_NULL(context);
+    NOISY_RETURN_IF_NULL(gradient);
     RETURN_IF(!context->ShouldDraw());
 
-    UNIMPLEMENTED();
+    // Note: We do not support cases where startCenter != endCenter
+    if (!CGPointEqualToPoint(startCenter, endCenter)) {
+        UNIMPLEMENTED_WITH_MSG("Do not support DrawRadialGradient for start/end centers that are not the same.");
+        return;
+    }
+
+    RETURN_IF(_CGGradientGetCount(gradient) == 0);
+
+    std::vector<D2D1_GRADIENT_STOP> gradientStops = __CGGradientToD2D1GradientStop(context, gradient, options, true);
+
+    ComPtr<ID2D1GradientStopCollection> gradientStopCollection;
+
+    ComPtr<ID2D1DeviceContext> deviceContext = context->DeviceContext();
+    FAIL_FAST_IF_FAILED(deviceContext->CreateGradientStopCollection(gradientStops.data(),
+                                                                    gradientStops.size(),
+                                                                    D2D1_GAMMA_2_2,
+                                                                    D2D1_EXTEND_MODE_CLAMP,
+                                                                    &gradientStopCollection));
+
+    ComPtr<ID2D1RadialGradientBrush> radialGradientBrush;
+    FAIL_FAST_IF_FAILED(deviceContext->CreateRadialGradientBrush(
+        D2D1::RadialGradientBrushProperties(_CGPointToD2D_F(endCenter), D2D1::Point2F(0, 0), (FLOAT)endRadius, (FLOAT)endRadius),
+        D2D1::BrushProperties(context->CurrentGState().alpha,
+                              __CGAffineTransformToD2D_F(CGContextGetUserSpaceToDeviceSpaceTransform(context))),
+        gradientStopCollection.Get(),
+        &radialGradientBrush));
+
+    // Area to fill
+    D2D1_SIZE_F targetSize = context->GetContextSize();
+    D2D1_RECT_F region = D2D1::RectF(0, 0, targetSize.width, targetSize.height);
+
+    FAIL_FAST_IF_FAILED(
+        context->Draw(_kCGCoordinateModeDeviceSpace, nullptr, false, [&](CGContextRef context, ID2D1DeviceContext* deviceContext) {
+            deviceContext->FillRectangle(&region, radialGradientBrush.Get());
+            return S_OK;
+        }));
 }
 
 /**

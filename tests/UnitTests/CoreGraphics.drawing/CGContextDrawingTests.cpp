@@ -261,3 +261,14 @@ DRAW_TEST_F(CGContext, NullColorStroke, WhiteBackgroundTest<>) {
     borderRect = CGRectInset(bounds, 60, 100);
     CGContextStrokeRect(context, borderRect);
 }
+
+DRAW_TEST_F(CGContext, ClipBoundingBox, WhiteBackgroundTest<>) {
+    CGContextRef context = GetDrawingContext();
+    CGRect bounds = GetDrawingBounds();
+
+    CGContextAddArc(context, 150, 150, 50, 0, 1.7 * M_PI, 1);
+    CGContextClip(context);
+
+    CGContextSetRGBFillColor(context, 0.0, 1.0, 0.0, 1.0);
+    CGContextFillRect(context, CGContextGetClipBoundingBox(context));
+}

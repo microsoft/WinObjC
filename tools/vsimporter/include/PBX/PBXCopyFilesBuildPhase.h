@@ -21,22 +21,28 @@
 
 class PBXCopyFilesBuildPhase : public PBXBuildPhase {
 public:
-  virtual ~PBXCopyFilesBuildPhase();
-  const String& getName() const { return m_name; }
-  const String& getDestPath() const { return m_dstPath; }
-  int getDestSubfolderSpec() const { return m_dstSubfolderSpec; }
-  
-  static PBXCopyFilesBuildPhase* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
-  
+    virtual ~PBXCopyFilesBuildPhase();
+    const String& getName() const {
+        return m_name;
+    }
+    const String& getDestPath() const {
+        return m_dstPath;
+    }
+    int getDestSubfolderSpec() const {
+        return m_dstSubfolderSpec;
+    }
+
+    static PBXCopyFilesBuildPhase* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
+
 private:
-  PBXCopyFilesBuildPhase();
-  virtual void initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
-  
-/* Start of serialized values */
-  String m_name;
-  String m_dstPath;
-  int m_dstSubfolderSpec;
-/* End of serialized values */
+    PBXCopyFilesBuildPhase();
+    virtual void initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
+
+    /* Start of serialized values */
+    String m_name;
+    String m_dstPath;
+    int m_dstSubfolderSpec;
+    /* End of serialized values */
 };
 
 #endif /* _PBXCOPYFILESBUILDPHASE_H_ */

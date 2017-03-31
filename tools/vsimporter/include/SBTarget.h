@@ -27,53 +27,50 @@ class SBProject;
 class VSSolution;
 class VSTemplateProject;
 
-enum TargetProductType {
-  TargetProductUnknown = 0,
-  TargetApplication = 1,
-  TargetStaticLib = 2,
-  TargetBundle = 3
-};
+enum TargetProductType { TargetProductUnknown = 0, TargetApplication = 1, TargetStaticLib = 2, TargetBundle = 3 };
 
 typedef std::map<String, BuildSettings*> BuildSettingsMap;
 
 class SBTarget {
 public:
-  static SBTarget* create(const PBXTarget* target, const StringSet& configNames, SBProject& parentProject);
-  virtual ~SBTarget() = 0;
-  virtual TargetProductType getProductType() const { return TargetProductUnknown; }
+    static SBTarget* create(const PBXTarget* target, const StringSet& configNames, SBProject& parentProject);
+    virtual ~SBTarget() = 0;
+    virtual TargetProductType getProductType() const {
+        return TargetProductUnknown;
+    }
 
-  const String& getName() const;
-  const String& getId() const;
-  String getProductFileName() const;
-  const SBProject& getProject() const;
-  const BuildSettingsMap& getBuildSettings() const;
-  String makeAbsolutePath(const String& path) const;
-  String makeRelativePath(const String& path, const String& absRoot = "") const;
-  SBTarget* getPossibleTarget(const PBXBuildFile* buildFile);
-  void markExplicit();
-  
-  virtual VCProject* constructVCProject(VSTemplateProject* projTemplate) = 0;
-  void resolveVCProjectDependecies(VCProject* proj, std::multimap<SBTarget*, VCProject*>& vcProjects);
+    const String& getName() const;
+    const String& getId() const;
+    String getProductFileName() const;
+    const SBProject& getProject() const;
+    const BuildSettingsMap& getBuildSettings() const;
+    String makeAbsolutePath(const String& path) const;
+    String makeRelativePath(const String& path, const String& absRoot = "") const;
+    SBTarget* getPossibleTarget(const PBXBuildFile* buildFile);
+    void markExplicit();
+
+    virtual VCProject* constructVCProject(VSTemplateProject* projTemplate) = 0;
+    void resolveVCProjectDependecies(VCProject* proj, std::multimap<SBTarget*, VCProject*>& vcProjects);
 
 protected:
-  typedef std::vector<SBTarget*> SBDependencyList;
+    typedef std::vector<SBTarget*> SBDependencyList;
 
-  SBTarget(const PBXTarget* target, const StringSet& configNames, SBProject& parentProject);
-  bool init();
-  void validateSDK();
+    SBTarget(const PBXTarget* target, const StringSet& configNames, SBProject& parentProject);
+    bool init();
+    void validateSDK();
 
-  const PBXTarget* m_target;
-  SBProject& m_parentProject;
-  BuildSettingsMap m_buildSettings;
-  SBDependencyList m_dependencies;
-  SBBuildPhaseList m_buildPhases;
+    const PBXTarget* m_target;
+    SBProject& m_parentProject;
+    BuildSettingsMap m_buildSettings;
+    SBDependencyList m_dependencies;
+    SBBuildPhaseList m_buildPhases;
 
 private:
-  void addDependency(SBTarget* depTarget);
-  void processDependencies();
-  bool writeVCProject();
+    void addDependency(SBTarget* depTarget);
+    void processDependencies();
+    bool writeVCProject();
 
-  bool m_explicit;
+    bool m_explicit;
 };
 
 #endif /* _SBTARGET_H_ */

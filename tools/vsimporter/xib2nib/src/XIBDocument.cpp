@@ -19,17 +19,15 @@
 #include "NIBWriter.h"
 #include "XIBDocument.h"
 
-XIBDocument::XIBDocument(pugi::xml_node node)
-{
+XIBDocument::XIBDocument(pugi::xml_node node) {
     ScanStoryObjects(node);
 }
 
-XIBArray *XIBDocument::Objects()
-{
+XIBArray* XIBDocument::Objects() {
     //  Find the objects array
     for (auto curMember : _members) {
-        if ( strcmp(curMember->_obj->_node.name(), "objects") == 0 ) {
-            return (XIBArray *) curMember->_obj;
+        if (strcmp(curMember->_obj->_node.name(), "objects") == 0) {
+            return (XIBArray*)curMember->_obj;
         }
     }
 

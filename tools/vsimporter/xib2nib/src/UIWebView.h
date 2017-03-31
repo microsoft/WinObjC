@@ -16,16 +16,13 @@
 
 #pragma once
 #include "UIView.h"
-class UIWebView :
-    public UIView
-{
+class UIWebView : public UIView {
 public:
-    XIBObject *_delegate;
+    XIBObject* _delegate;
     bool _scalesPageToFit;
     int _dataDetectorTypes;
     UIWebView();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };
-

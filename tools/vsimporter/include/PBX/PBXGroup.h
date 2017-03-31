@@ -27,24 +27,26 @@ typedef bool (*fileMatchFunc)(const PBXFile*);
 
 class PBXGroup : public PBXFile {
 public:
-  virtual ~PBXGroup();
-  virtual void resolvePointers();
+    virtual ~PBXGroup();
+    virtual void resolvePointers();
 
-  const ConstFileList& getChildren() const { return m_childrenPtrs; }
+    const ConstFileList& getChildren() const {
+        return m_childrenPtrs;
+    }
 
-  void getMatchingFiles(fileMatchFunc matchFunc, ConstFileList& ret) const;
-  
-  static PBXGroup* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
-  
+    void getMatchingFiles(fileMatchFunc matchFunc, ConstFileList& ret) const;
+
+    static PBXGroup* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
+
 protected:
-  PBXGroup();
-  virtual void initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
-  
-/* Start of serialized values */
-  StringVec m_childrenIds;
-/* End of serialized values */
+    PBXGroup();
+    virtual void initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
 
-  ConstFileList m_childrenPtrs;
+    /* Start of serialized values */
+    StringVec m_childrenIds;
+    /* End of serialized values */
+
+    ConstFileList m_childrenPtrs;
 };
 
 #endif /* _PBXGROUP_H_ */

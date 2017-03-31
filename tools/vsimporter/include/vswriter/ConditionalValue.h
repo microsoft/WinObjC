@@ -21,10 +21,10 @@
 #include <map>
 
 struct ConditionalValue {
-  ConditionalValue(const std::string& val, const std::string& cond = "");
+    ConditionalValue(const std::string& val, const std::string& cond = "");
 
-  std::string value;
-  std::string condition;
+    std::string value;
+    std::string condition;
 };
 
 typedef std::vector<ConditionalValue> ConditionalValueList;

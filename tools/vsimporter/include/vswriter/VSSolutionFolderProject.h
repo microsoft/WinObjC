@@ -23,28 +23,30 @@
 class VCProject;
 class VSBuildableSolutionProject;
 
-class VSSolutionFolderProject :  public VSSolutionProject {
+class VSSolutionFolderProject : public VSSolutionProject {
 public:
-  friend class VSSolution;
+    friend class VSSolution;
 
-  virtual std::string getName() const;
-  virtual std::string getPath() const;
-  virtual std::string getTypeId() const;
-  virtual std::string getId() const;
-  virtual const VCProject* getProject() const { return NULL; }
-  virtual void writeDescription(std::ostream& out) const;
+    virtual std::string getName() const;
+    virtual std::string getPath() const;
+    virtual std::string getTypeId() const;
+    virtual std::string getId() const;
+    virtual const VCProject* getProject() const {
+        return NULL;
+    }
+    virtual void writeDescription(std::ostream& out) const;
 
-  VSBuildableSolutionProject* addProject(VCProject* project);
-  VSSolutionFolderProject* addFolder(const std::string& name);
-  void addFile(const std::string& filePath);
+    VSBuildableSolutionProject* addProject(VCProject* project);
+    VSSolutionFolderProject* addFolder(const std::string& name);
+    void addFile(const std::string& filePath);
 
 private:
-  typedef std::set<std::string> StringSet;
+    typedef std::set<std::string> StringSet;
 
-  VSSolutionFolderProject(const std::string& name, VSSolution& parent);
-  void writeFileDescriptions(std::ostream& out) const;
+    VSSolutionFolderProject(const std::string& name, VSSolution& parent);
+    void writeFileDescriptions(std::ostream& out) const;
 
-  std::string m_name;
-  std::string m_id;
-  StringSet m_files;
+    std::string m_name;
+    std::string m_id;
+    StringSet m_files;
 };

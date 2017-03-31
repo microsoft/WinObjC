@@ -17,14 +17,14 @@
 #include "VSSolutionProject.h"
 #include "vshelpers.h"
 
-VSSolutionProject::VSSolutionProject(VSSolution& parent)
-: m_parent(parent) {}
+VSSolutionProject::VSSolutionProject(VSSolution& parent) : m_parent(parent) {
+}
 
-VSSolutionProject::~VSSolutionProject() {}
+VSSolutionProject::~VSSolutionProject() {
+}
 
-std::string VSSolutionProject::getDescription() const
-{
-  std::string typeId = formatVSGUID(getTypeId());
-  std::string id = formatVSGUID(getId());
-  return "Project(\"" + typeId + "\") = \"" + getName() + "\", \"" + getPath() + "\", \"" + id + "\"";
+std::string VSSolutionProject::getDescription() const {
+    std::string typeId = formatVSGUID(getTypeId());
+    std::string id = formatVSGUID(getId());
+    return "Project(\"" + typeId + "\") = \"" + getName() + "\", \"" + getPath() + "\", \"" + id + "\"";
 }

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,7 +17,7 @@
 #import <CoreText/CTTextTab.h>
 #import <StubReturn.h>
 
-const CFStringRef kCTTabColumnTerminatorsAttributeName = static_cast<CFStringRef>(@"kCTTabColumnTerminatorsAttributeName");
+const CFStringRef kCTTabColumnTerminatorsAttributeName = CFSTR("kCTTabColumnTerminatorsAttributeName");
 
 /**
  @Status Stub

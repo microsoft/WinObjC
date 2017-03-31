@@ -17,8 +17,10 @@
 
     <_ImportLibsFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\*.lib"/>    
     <_ImportLibsFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.lib"/>
+    
+    <_PriFilesFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\*.pri"/>    
+    <_PriFilesFromPackage Include="$(MSBuildThisFileDirectory)\lib\$(TargetOsAndVersion)\$(PlatformTarget)\$(Configuration)\*.pri"/>
 
-    <_XamlFilesFromPackage Include="$(MSBuildThisFileDirectory)\xaml\**\*.xaml" />
     <_BundleFilesFromPackage Include="$(MSBuildThisFileDirectory)\bundle\**\*.*" />
     <_ContentFilesFromPackage Include="$(MSBuildThisFileDirectory)\content\**\*.*" />
   </ItemGroup>
@@ -28,6 +30,14 @@
     <!-- Add each .lib to the linker -->
     <Link Include="@(_ImportLibsFromPackage->'%(FullPath)')"/>
   </ItemGroup>
+
+  <ItemDefinitionGroup>
+    <!-- Add header search path -->
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)\include\;%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
   <ItemGroup Condition="'$(ConfigurationType)' != 'StaticLibrary'">
     <!-- Add references for clang -->
     <ReferenceCopyLocalPaths Include="@(_DllsFromPackage)"/>
@@ -35,10 +45,11 @@
       <Implementation>%(Filename).dll</Implementation>
     </Reference>
 
-    <!-- Add references for .xaml files -->
-    <ReferenceCopyLocalPaths Include="@(_XamlFilesFromPackage)">
-      <DestinationSubDirectory>%(RecursiveDir)</DestinationSubDirectory>
-    </ReferenceCopyLocalPaths>
+    <!-- Ensure that all packaged .pri files are added to the resources.pri of the compiled application -->
+    <_PackagingOutputsOutsideLayout Include="@(_PriFilesFromPackage)">
+      <OutputGroup>WinObjC</OutputGroup>
+      <ProjectName>WinObjC</ProjectName>
+    </_PackagingOutputsOutsideLayout>
 
     <!-- Add references for content files -->
     <ReferenceCopyLocalPaths Include="@(_ContentFilesFromPackage)">
@@ -50,11 +61,4 @@
       <DestinationSubDirectory>%(RecursiveDir)</DestinationSubDirectory>
     </ReferenceCopyLocalPaths>
   </ItemGroup>
-
-  <!-- Add dependency paths needed by projects that consume this package -->
-  <ItemDefinitionGroup>
-    <ClangCompile>
-      <InternalSystemIncludePaths>$(MSBuildThisFileDirectory)\include\;%(InternalSystemIncludePaths);</InternalSystemIncludePaths>
-    </ClangCompile>
-  </ItemDefinitionGroup>
 </Project>

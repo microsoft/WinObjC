@@ -18,17 +18,15 @@
 #include "UIViewController.h"
 #include "UITabBar.h"
 
-class UITabBarController : public UIViewController
-{
+class UITabBarController : public UIViewController {
 public:
-    XIBObject *_customizableViewControllers;
-    UITabBar *_tabBar;
+    XIBObject* _customizableViewControllers;
+    UITabBar* _tabBar;
 
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 
     UITabBarController();
     virtual void Awaken();
 };
-

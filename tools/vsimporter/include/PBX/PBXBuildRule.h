@@ -21,28 +21,39 @@
 
 class PBXBuildRule : public PBXObject {
 public:
-  virtual ~PBXBuildRule();
-  virtual void resolvePointers() {}
+    virtual ~PBXBuildRule();
+    virtual void resolvePointers() {
+    }
 
-  const String& getCompilerSpec() const { return m_compilerSpec; }
-  const String& getFileType() const { return m_fileType; }
-  const String& getFilePatterns() const { return m_filePatterns; }
-  const StringVec& getOutputFiles() const { return m_outputFiles; }
-  const String& getScript() const { return m_script; }
-  
-  static PBXBuildRule* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
-  
+    const String& getCompilerSpec() const {
+        return m_compilerSpec;
+    }
+    const String& getFileType() const {
+        return m_fileType;
+    }
+    const String& getFilePatterns() const {
+        return m_filePatterns;
+    }
+    const StringVec& getOutputFiles() const {
+        return m_outputFiles;
+    }
+    const String& getScript() const {
+        return m_script;
+    }
+
+    static PBXBuildRule* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
+
 private:
-  PBXBuildRule();
-  virtual void initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
-  
-/* Start of serialized values */
-  String m_compilerSpec;
-  String m_filePatterns;
-  String m_fileType;
-  StringVec m_outputFiles;
-  String m_script;
-/* End of serialized values */
+    PBXBuildRule();
+    virtual void initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
+
+    /* Start of serialized values */
+    String m_compilerSpec;
+    String m_filePatterns;
+    String m_fileType;
+    StringVec m_outputFiles;
+    String m_script;
+    /* End of serialized values */
 };
 
 #endif /* _PBXBUILDRULE_H_ */

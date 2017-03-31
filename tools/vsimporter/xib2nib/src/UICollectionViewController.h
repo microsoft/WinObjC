@@ -18,8 +18,7 @@
 #include "UIViewController.h"
 #include "UICollectionView.h"
 
-class UICollectionViewController : public UIViewController
-{
+class UICollectionViewController : public UIViewController {
 public:
     UICollectionView* _collectionView;
 
@@ -27,11 +26,10 @@ public:
     bool _installStandardGestureForInteractiveMovement;
     bool _useLayoutToLayoutNavigationTransitions;
 
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 
     UICollectionViewController();
     virtual void Awaken();
 };
-

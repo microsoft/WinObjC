@@ -22,37 +22,27 @@
 class VariableCollection;
 class VariableCollectionHierarchy;
 
-enum ValueType {
-  BoolValue,
-  StringValue,
-  StringListValue,
-  PathValue,
-  PathListValue
-};
+enum ValueType { BoolValue, StringValue, StringListValue, PathValue, PathListValue };
 
-enum ProductMask {
-  AppSetting = 1,
-  StaticLibSetting = 2,
-  UniversalSetting = AppSetting | StaticLibSetting
-};
+enum ProductMask { AppSetting = 1, StaticLibSetting = 2, UniversalSetting = AppSetting | StaticLibSetting };
 
 typedef String (*param_func)(const String&, const String&, const VariableCollectionHierarchy&);
 
 struct ParamDesc {
-  ParamDesc(const char* v1, const char* v2, param_func f = NULL)
-    : val1(v1), val2(v2), func(f) {}
+    ParamDesc(const char* v1, const char* v2, param_func f = NULL) : val1(v1), val2(v2), func(f) {
+    }
 
-  const char* val1;
-  const char* val2;
-  param_func func;
+    const char* val1;
+    const char* val2;
+    param_func func;
 };
 
 struct SettingDesc {
-  const char* name;
-  const char* defaultValue;
-  ValueType type;
-  const ParamDesc* paramDesc;
-  ProductMask mask;
+    const char* name;
+    const char* defaultValue;
+    ValueType type;
+    const ParamDesc* paramDesc;
+    ProductMask mask;
 };
 
 void getDefaultSettingValues(VariableCollection& vc, ProductMask mask);

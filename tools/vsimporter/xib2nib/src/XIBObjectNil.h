@@ -19,12 +19,11 @@
 
 #include "XIBObject.h"
 
-class XIBObjectNil : public XIBObject
-{
+class XIBObjectNil : public XIBObject {
 public:
     bool NeedsSerialization();
     bool isNil();
-    void WriteData(NIBWriter *writer);
+    void WriteData(NIBWriter* writer);
 };
 
 #endif

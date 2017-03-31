@@ -16,37 +16,31 @@
 
 #include "UITableViewCellContentView.h"
 
-UITableViewCellContentView::UITableViewCellContentView()
-{
+UITableViewCellContentView::UITableViewCellContentView() {
 }
 
-void UITableViewCellContentView::InitFromXIB(XIBObject *obj)
-{
+void UITableViewCellContentView::InitFromXIB(XIBObject* obj) {
     UIView::InitFromXIB(obj);
 
     obj->_outputClassName = "UITableViewCellContentView";
 }
 
-void UITableViewCellContentView::InitFromStory(XIBObject *obj)
-{
+void UITableViewCellContentView::InitFromStory(XIBObject* obj) {
     UIView::InitFromStory(obj);
 
     obj->_outputClassName = "UITableViewCellContentView";
 }
 
-void UITableViewCellContentView::Awaken()
-{
+void UITableViewCellContentView::Awaken() {
     UIView::Awaken();
 }
 
-void UITableViewCellContentView::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UITableViewCellContentView::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     writer->_allUIObjects->AddMember(NULL, this);
 
     UIView::ConvertStaticMappings(writer, obj);
 }
 
-ObjectConverter *UITableViewCellContentView::Clone()
-{
+ObjectConverter* UITableViewCellContentView::Clone() {
     return new UITableViewCellContentView();
 }

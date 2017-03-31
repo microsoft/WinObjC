@@ -20,37 +20,33 @@
 #include <vector>
 
 namespace pugi {
-  class xml_document;
-  class xml_node;
+class xml_document;
+class xml_node;
 };
 
 class VSTemplateProject;
 class VSTemplateParameters;
 
-enum VSProjectType {
-  UnknownProj,
-  VcxProj,
-  NuProj
-};
+enum VSProjectType { UnknownProj, VcxProj, NuProj };
 
 typedef std::vector<VSTemplateProject*> VSTemplateProjectVec;
 
 class VSTemplate {
 public:
-  static VSTemplate* createFromFile(const std::string& templatePath);
-  static VSTemplate* getTemplate(const std::string& templateName);
-  ~VSTemplate();
+    static VSTemplate* createFromFile(const std::string& templatePath);
+    static VSTemplate* getTemplate(const std::string& templateName);
+    ~VSTemplate();
 
-  void expand(const std::string& destDir, const VSTemplateParameters& params);
-  const VSTemplateProjectVec& getProjects() const;
+    void expand(const std::string& destDir, const VSTemplateParameters& params);
+    const VSTemplateProjectVec& getProjects() const;
 
 private:
-  VSTemplate(const std::string& absPath);
-  bool initFromXML(const pugi::xml_document& doc);
-  bool initTemplateData(const pugi::xml_node& tcNode);
-  bool initTemplateContents(const pugi::xml_node& tcNode);
+    VSTemplate(const std::string& absPath);
+    bool initFromXML(const pugi::xml_document& doc);
+    bool initTemplateData(const pugi::xml_node& tcNode);
+    bool initTemplateContents(const pugi::xml_node& tcNode);
 
-  std::string m_absPath;
-  VSTemplateProjectVec m_projects;
-  VSProjectType m_projectType;
+    std::string m_absPath;
+    VSTemplateProjectVec m_projects;
+    VSProjectType m_projectType;
 };

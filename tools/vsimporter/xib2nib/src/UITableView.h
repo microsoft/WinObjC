@@ -16,9 +16,7 @@
 
 #pragma once
 #include "UIScrollView.h"
-class UITableView :
-    public UIScrollView
-{
+class UITableView : public UIScrollView {
 public:
     XIBObject *_headerView, *_footerView;
     bool _allowsSelectionDuringEditing;
@@ -26,8 +24,7 @@ public:
     int _separatorStyle;
     UITableView();
     virtual void Awaken();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };
-

@@ -32,6 +32,7 @@
 		822F85BF1D8F908C001DC8A5 /* button_image.png in Resources */ = {isa = PBXBuildFile; fileRef = 822F85BC1D8F908C001DC8A5 /* button_image.png */; };
 		822F85C01D8F908C001DC8A5 /* yellow_background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 822F85BD1D8F908C001DC8A5 /* yellow_background.jpg */; };
 		96857DC01D598FB300EB1FD0 /* MiscellaneousViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96857DBD1D598FB300EB1FD0 /* MiscellaneousViewController.m */; };
+		A5180F451E89656400BADAD5 /* UIScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A5180F441E89656400BADAD5 /* UIScrollViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -76,6 +77,8 @@
 		822F85BD1D8F908C001DC8A5 /* yellow_background.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = yellow_background.jpg; path = XAMLCatalog/Images/yellow_background.jpg; sourceTree = "<group>"; };
 		96857DBC1D598FB300EB1FD0 /* MiscellaneousViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MiscellaneousViewController.h; sourceTree = "<group>"; };
 		96857DBD1D598FB300EB1FD0 /* MiscellaneousViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MiscellaneousViewController.m; sourceTree = "<group>"; };
+		A5180F431E89656400BADAD5 /* UIScrollViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIScrollViewController.h; path = UIKitControls/UIScrollViewController.h; sourceTree = "<group>"; };
+		A5180F441E89656400BADAD5 /* UIScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIScrollViewController.m; path = UIKitControls/UIScrollViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +95,8 @@
 		2324634F1CE69E2C00B7AAE4 /* UIKitControls */ = {
 			isa = PBXGroup;
 			children = (
+				A5180F431E89656400BADAD5 /* UIScrollViewController.h */,
+				A5180F441E89656400BADAD5 /* UIScrollViewController.m */,
 				234767181E2EE058006D97CB /* UIActionSheetViewController.h */,
 				234767191E2EE058006D97CB /* UIActionSheetViewController.m */,
 				2347671A1E2EE058006D97CB /* UIActivityIndicatorViewController.h */,
@@ -277,6 +282,7 @@
 				234767271E2EE058006D97CB /* UISliderViewController.m in Sources */,
 				6EEB8A381CE4F4050021021E /* main.m in Sources */,
 				6EEB8A561CE546A80021021E /* MenuTableViewController.m in Sources */,
+				A5180F451E89656400BADAD5 /* UIScrollViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -87,6 +87,9 @@
     <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UILabelViewController.h">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UIScrollViewController.h">
+      <Filter>XAMLCatalog\UIKitControls</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\XAMLCatalog\UIKitControls\UISliderViewController.h">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClInclude>
@@ -129,6 +132,9 @@
     <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UILabelViewController.m">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UIScrollViewController.m">
+      <Filter>XAMLCatalog\UIKitControls</Filter>
+    </ClangCompile>    
     <ClangCompile Include="..\..\XAMLCatalog\UIKitControls\UISliderViewController.m">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClangCompile>

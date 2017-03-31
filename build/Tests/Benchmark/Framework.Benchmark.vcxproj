@@ -221,8 +221,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="$(StarboardBasePath)\tests\Benchmark\BenchmarkSampleTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\Benchmark\KVOBenchmarkTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\Benchmark\NSOperationQueueBenchmarkTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\Benchmark\StringBenchmarkTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\Benchmark\TextBenchmarkTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\Benchmark\NSDataBenchmarkTests.mm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>

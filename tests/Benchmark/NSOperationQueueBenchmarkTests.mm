@@ -25,6 +25,7 @@ BENCHMARK(NSOperationQueue, CreateAndAutorelease, 10) {
         }
     }
 }
+
 class AddOperation : public ::benchmark::BenchmarkCaseBase {
     StrongId<NSOperationQueue> m_queue;
 

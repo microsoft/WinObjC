@@ -16,42 +16,37 @@
 
 #include "VariableCollection.h"
 
-void VariableCollection::insert(const StringPair& keyVal)
-{
-  insert(keyVal.first, keyVal.second);
+void VariableCollection::insert(const StringPair& keyVal) {
+    insert(keyVal.first, keyVal.second);
 }
 
-void VariableCollection::insert(const VariableCollection& vc)
-{
-  StringSet varSet;
-  vc.getVariableSet(varSet);
- 
-  StringSet::iterator varsIt = varSet.begin();
-  for (; varsIt != varSet.end(); ++varsIt) {
-    insert(*varsIt, vc.getValue(*varsIt));
-  }
+void VariableCollection::insert(const VariableCollection& vc) {
+    StringSet varSet;
+    vc.getVariableSet(varSet);
+
+    StringSet::iterator varsIt = varSet.begin();
+    for (; varsIt != varSet.end(); ++varsIt) {
+        insert(*varsIt, vc.getValue(*varsIt));
+    }
 }
 
-String VariableCollection::getValue(const String& varName) const
-{
-  String ret;
-  getValue(varName, ret);
-  return ret;
+String VariableCollection::getValue(const String& varName) const {
+    String ret;
+    getValue(varName, ret);
+    return ret;
 }
 
-bool VariableCollection::isSet(const String& varName) const
-{
-  String ret;
-  return getValue(varName, ret);
+bool VariableCollection::isSet(const String& varName) const {
+    String ret;
+    return getValue(varName, ret);
 }
 
-void VariableCollection::print(const VarPrintFunc& pf) const
-{
-  StringSet varSet;
-  getVariableSet(varSet);
- 
-  StringSet::iterator varsIt = varSet.begin();
-  for (; varsIt != varSet.end(); ++varsIt) {
-    pf.print(*varsIt, getValue(*varsIt));
-  }
+void VariableCollection::print(const VarPrintFunc& pf) const {
+    StringSet varSet;
+    getVariableSet(varSet);
+
+    StringSet::iterator varsIt = varSet.begin();
+    for (; varsIt != varSet.end(); ++varsIt) {
+        pf.print(*varsIt, getValue(*varsIt));
+    }
 }

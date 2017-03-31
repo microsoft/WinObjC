@@ -18,14 +18,12 @@
 #include "UIViewController.h"
 #include "UITableView.h"
 
-class UITableViewController : public UIViewController
-{
+class UITableViewController : public UIViewController {
 public:
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 
     UITableViewController();
     virtual void Awaken();
 };
-

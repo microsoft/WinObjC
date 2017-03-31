@@ -24,23 +24,23 @@ class VarPrintFunc;
 
 class VariableCollectionHierarchy {
 public:
-  void push_back(const VariableCollection& vc);
-  void pop_back();
+    void push_back(const VariableCollection& vc);
+    void pop_back();
 
-  String expand(const String& str) const;
-  String getValue(const String& varName) const;
-  String getValue(const String& varName, size_t searchLevel) const;
-  bool getValue(const String& varName, String& ret) const;
-  bool getValue(const String& varName, size_t searchLevel, String& ret) const;
-  bool getValue(const String& varName, StringVec& ret) const;
-  bool getValue(const String& varName, size_t searchLevel, StringVec& ret) const;
-  const VariableCollection& operator[](size_t level) const;
-  void getVariableSet(StringSet& ret) const;
-  void print(const VarPrintFunc& pf) const;
-  size_t size() const;
+    String expand(const String& str) const;
+    String getValue(const String& varName) const;
+    String getValue(const String& varName, size_t searchLevel) const;
+    bool getValue(const String& varName, String& ret) const;
+    bool getValue(const String& varName, size_t searchLevel, String& ret) const;
+    bool getValue(const String& varName, StringVec& ret) const;
+    bool getValue(const String& varName, size_t searchLevel, StringVec& ret) const;
+    const VariableCollection& operator[](size_t level) const;
+    void getVariableSet(StringSet& ret) const;
+    void print(const VarPrintFunc& pf) const;
+    size_t size() const;
 
 private:
-  std::vector<const VariableCollection*> m_vcs;
+    std::vector<const VariableCollection*> m_vcs;
 };
 
 #endif /* _VARIABLECOLLECTIONHIERARCHY_H_ */

@@ -19,8 +19,7 @@
 
 #include "XIBObject.h"
 
-class XIBObjectFloat : public XIBObject
-{
+class XIBObjectFloat : public XIBObject {
 public:
     float _val;
     XIBObjectFloat(pugi::xml_node node);
@@ -28,7 +27,7 @@ public:
     float floatValue();
 
     bool NeedsSerialization();
-    void WriteData(NIBWriter *writer);
+    void WriteData(NIBWriter* writer);
 };
 
 #endif

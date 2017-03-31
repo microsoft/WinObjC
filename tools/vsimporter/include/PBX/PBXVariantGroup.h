@@ -21,12 +21,12 @@
 
 class PBXVariantGroup : public PBXGroup {
 public:
-  virtual ~PBXVariantGroup();
-  
-  static PBXVariantGroup* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
-  
+    virtual ~PBXVariantGroup();
+
+    static PBXVariantGroup* createFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc);
+
 private:
-  PBXVariantGroup();
+    PBXVariantGroup();
 };
 
 #endif /* _PBXVARIANTGROUP_H_ */

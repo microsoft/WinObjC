@@ -1,38 +1,57 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.22823.1
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
+MinimumVisualStudioVersion = 15.0.0.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MinApp", "MinApp", "{00A79C68-10A2-4983-9E8D-06EABA0D3A70}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MinApp", "MinApp.vsimporter\MinApp-WinStore10\MinApp.vcxproj", "{045517F8-1553-4741-9C9F-F2E6BE64199D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildSupport", "BuildSupport", "{39337988-1B6E-4067-A96C-C3D71BAB733B}"
+EndProject
+Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "NugetRestore", "..\..\..\common\NugetRestore.msbuildproj", "{B2C6186E-B340-49D8-888E-76ED83752E43}"
+EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|ARM = Debug|ARM
 		Debug|Win32 = Debug|Win32
+		Release|Any CPU = Release|Any CPU
 		Release|ARM = Release|ARM
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{045517F8-1553-4741-9C9F-F2E6BE64199D}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{045517F8-1553-4741-9C9F-F2E6BE64199D}.Debug|ARM.ActiveCfg = Debug|ARM
 		{045517F8-1553-4741-9C9F-F2E6BE64199D}.Debug|ARM.Build.0 = Debug|ARM
 		{045517F8-1553-4741-9C9F-F2E6BE64199D}.Debug|ARM.Deploy.0 = Debug|ARM
 		{045517F8-1553-4741-9C9F-F2E6BE64199D}.Debug|Win32.ActiveCfg = Debug|Win32
 		{045517F8-1553-4741-9C9F-F2E6BE64199D}.Debug|Win32.Build.0 = Debug|Win32
 		{045517F8-1553-4741-9C9F-F2E6BE64199D}.Debug|Win32.Deploy.0 = Debug|Win32
+		{045517F8-1553-4741-9C9F-F2E6BE64199D}.Release|Any CPU.ActiveCfg = Release|Win32
 		{045517F8-1553-4741-9C9F-F2E6BE64199D}.Release|ARM.ActiveCfg = Release|ARM
 		{045517F8-1553-4741-9C9F-F2E6BE64199D}.Release|ARM.Build.0 = Release|ARM
 		{045517F8-1553-4741-9C9F-F2E6BE64199D}.Release|ARM.Deploy.0 = Release|ARM
 		{045517F8-1553-4741-9C9F-F2E6BE64199D}.Release|Win32.ActiveCfg = Release|Win32
 		{045517F8-1553-4741-9C9F-F2E6BE64199D}.Release|Win32.Build.0 = Release|Win32
 		{045517F8-1553-4741-9C9F-F2E6BE64199D}.Release|Win32.Deploy.0 = Release|Win32
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Debug|ARM.Build.0 = Debug|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Debug|Win32.Build.0 = Debug|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Release|ARM.ActiveCfg = Release|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Release|ARM.Build.0 = Release|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Release|Win32.ActiveCfg = Release|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Release|Win32.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{045517F8-1553-4741-9C9F-F2E6BE64199D} = {00A79C68-10A2-4983-9E8D-06EABA0D3A70}
+		{B2C6186E-B340-49D8-888E-76ED83752E43} = {39337988-1B6E-4067-A96C-C3D71BAB733B}
 	EndGlobalSection
 EndGlobal

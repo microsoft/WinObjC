@@ -23,45 +23,44 @@
 #include "PBXObjectIdConvert.h"
 #include "VariableCollection.h"
 
-PBXTarget::~PBXTarget() {}
-
-PBXTarget::PBXTarget() {}
-
-void PBXTarget::initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc)
-{
-  // Call super init
-  PBXObject::initFromPlist(id, plist, pbxDoc);
-  
-  // Get buildConfigurationList
-  getStringForKey(plist, "buildConfigurationList", m_buildConfigurationListId, VALUE_REQUIRED, m_parseER);
-  
-  // Get buildPhases
-  getStringVectorForKey(plist, "buildPhases", m_buildPhaseIds, VALUE_REQUIRED, m_parseER);
-  
-  // Get dependencies
-  getStringVectorForKey(plist, "dependencies", m_dependencyIds, VALUE_REQUIRED, m_parseER);
-  
-  // Get name
-  getStringForKey(plist, "name", m_name, VALUE_REQUIRED, m_parseER);
-  
-  // Get productName
-  getStringForKey(plist, "productName", m_productName, VALUE_REQUIRED, m_parseER);
+PBXTarget::~PBXTarget() {
 }
 
-void PBXTarget::resolvePointers()
-{
-  // Resolve buildConfigurationList ptr
-  convertObjectId(m_pbxDoc, m_buildConfigurationListId, m_buildConfigurationListPtr);
-  
-  // Resolve buildPhases ptrs
-  convertObjectIdList(m_pbxDoc, m_buildPhaseIds, m_buildPhasePtrs);
-  
-  // Resolve dependencies ptrs
-  convertObjectIdList(m_pbxDoc, m_dependencyIds, m_dependencyPtrs);
+PBXTarget::PBXTarget() {
 }
 
-void PBXTarget::getBuildSettings(VariableCollection& settings) const
-{
-  settings.insert("TARGET_NAME", m_name);
-  settings.insert("PRODUCT_NAME", m_productName);
+void PBXTarget::initFromPlist(const String& id, const Plist::dictionary_type& plist, const PBXDocument* pbxDoc) {
+    // Call super init
+    PBXObject::initFromPlist(id, plist, pbxDoc);
+
+    // Get buildConfigurationList
+    getStringForKey(plist, "buildConfigurationList", m_buildConfigurationListId, VALUE_REQUIRED, m_parseER);
+
+    // Get buildPhases
+    getStringVectorForKey(plist, "buildPhases", m_buildPhaseIds, VALUE_REQUIRED, m_parseER);
+
+    // Get dependencies
+    getStringVectorForKey(plist, "dependencies", m_dependencyIds, VALUE_REQUIRED, m_parseER);
+
+    // Get name
+    getStringForKey(plist, "name", m_name, VALUE_REQUIRED, m_parseER);
+
+    // Get productName
+    getStringForKey(plist, "productName", m_productName, VALUE_REQUIRED, m_parseER);
+}
+
+void PBXTarget::resolvePointers() {
+    // Resolve buildConfigurationList ptr
+    convertObjectId(m_pbxDoc, m_buildConfigurationListId, m_buildConfigurationListPtr);
+
+    // Resolve buildPhases ptrs
+    convertObjectIdList(m_pbxDoc, m_buildPhaseIds, m_buildPhasePtrs);
+
+    // Resolve dependencies ptrs
+    convertObjectIdList(m_pbxDoc, m_dependencyIds, m_dependencyPtrs);
+}
+
+void PBXTarget::getBuildSettings(VariableCollection& settings) const {
+    settings.insert("TARGET_NAME", m_name);
+    settings.insert("PRODUCT_NAME", m_productName);
 }

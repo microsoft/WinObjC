@@ -17,21 +17,21 @@
 #import <StubReturn.h>
 #import <CoreGraphics/CGPDFContext.h>
 
-const CFStringRef kCGPDFContextAuthor = static_cast<CFStringRef>(@"kCGPDFContextAuthor");
-const CFStringRef kCGPDFContextCreator = static_cast<CFStringRef>(@"kCGPDFContextCreator");
-const CFStringRef kCGPDFContextTitle = static_cast<CFStringRef>(@"kCGPDFContextTitle");
-const CFStringRef kCGPDFContextOwnerPassword = static_cast<CFStringRef>(@"kCGPDFContextOwnerPassword");
-const CFStringRef kCGPDFContextUserPassword = static_cast<CFStringRef>(@"kCGPDFContextUserPassword");
-const CFStringRef kCGPDFContextAllowsPrinting = static_cast<CFStringRef>(@"kCGPDFContextAllowsPrinting");
-const CFStringRef kCGPDFContextAllowsCopying = static_cast<CFStringRef>(@"kCGPDFContextAllowsCopying");
-const CFStringRef kCGPDFContextSubject = static_cast<CFStringRef>(@"kCGPDFContextSubject");
-const CFStringRef kCGPDFContextKeywords = static_cast<CFStringRef>(@"kCGPDFContextKeywords");
-const CFStringRef kCGPDFContextEncryptionKeyLength = static_cast<CFStringRef>(@"kCGPDFContextEncryptionKeyLength");
-const CFStringRef kCGPDFContextMediaBox = static_cast<CFStringRef>(@"kCGPDFContextMediaBox");
-const CFStringRef kCGPDFContextCropBox = static_cast<CFStringRef>(@"kCGPDFContextCropBox");
-const CFStringRef kCGPDFContextBleedBox = static_cast<CFStringRef>(@"kCGPDFContextBleedBox");
-const CFStringRef kCGPDFContextTrimBox = static_cast<CFStringRef>(@"kCGPDFContextTrimBox");
-const CFStringRef kCGPDFContextArtBox = static_cast<CFStringRef>(@"kCGPDFContextArtBox");
+const CFStringRef kCGPDFContextAuthor = CFSTR("kCGPDFContextAuthor");
+const CFStringRef kCGPDFContextCreator = CFSTR("kCGPDFContextCreator");
+const CFStringRef kCGPDFContextTitle = CFSTR("kCGPDFContextTitle");
+const CFStringRef kCGPDFContextOwnerPassword = CFSTR("kCGPDFContextOwnerPassword");
+const CFStringRef kCGPDFContextUserPassword = CFSTR("kCGPDFContextUserPassword");
+const CFStringRef kCGPDFContextAllowsPrinting = CFSTR("kCGPDFContextAllowsPrinting");
+const CFStringRef kCGPDFContextAllowsCopying = CFSTR("kCGPDFContextAllowsCopying");
+const CFStringRef kCGPDFContextSubject = CFSTR("kCGPDFContextSubject");
+const CFStringRef kCGPDFContextKeywords = CFSTR("kCGPDFContextKeywords");
+const CFStringRef kCGPDFContextEncryptionKeyLength = CFSTR("kCGPDFContextEncryptionKeyLength");
+const CFStringRef kCGPDFContextMediaBox = CFSTR("kCGPDFContextMediaBox");
+const CFStringRef kCGPDFContextCropBox = CFSTR("kCGPDFContextCropBox");
+const CFStringRef kCGPDFContextBleedBox = CFSTR("kCGPDFContextBleedBox");
+const CFStringRef kCGPDFContextTrimBox = CFSTR("kCGPDFContextTrimBox");
+const CFStringRef kCGPDFContextArtBox = CFSTR("kCGPDFContextArtBox");
 
 /**
  @Status Stub

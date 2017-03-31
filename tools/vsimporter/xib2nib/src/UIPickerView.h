@@ -16,16 +16,13 @@
 
 #pragma once
 #include "UIView.h"
-class UIPickerView :
-    public UIView
-{
+class UIPickerView : public UIView {
 public:
     bool _showsSelectionBar;
     bool _allowsSelectingCells;
 
     UIPickerView();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };
-

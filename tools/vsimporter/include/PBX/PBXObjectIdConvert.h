@@ -25,27 +25,25 @@
  * pointers of type T.
  */
 template <class T>
-void convertObjectIdList(const PBXDocument* pbxDoc, const StringVec& ids, std::vector<T*>& ret)
-{
-  StringVec::const_iterator it = ids.begin();
-  StringVec::const_iterator itEnd = ids.end();
-  for (; it != itEnd; it++) {
-    PBXObject* foundObject = pbxDoc->findObjectWithId(*it);
-    T* obj = dynamic_cast<T*>(foundObject);
-    if (obj)
-      ret.push_back(obj);
-  }
+void convertObjectIdList(const PBXDocument* pbxDoc, const StringVec& ids, std::vector<T*>& ret) {
+    StringVec::const_iterator it = ids.begin();
+    StringVec::const_iterator itEnd = ids.end();
+    for (; it != itEnd; it++) {
+        PBXObject* foundObject = pbxDoc->findObjectWithId(*it);
+        T* obj = dynamic_cast<T*>(foundObject);
+        if (obj)
+            ret.push_back(obj);
+    }
 }
 
 /*
  * Converts a string id corresponding to an object in the PBXDocument to a pointer of type T.
  */
 template <class T>
-void convertObjectId(const PBXDocument* pbxDoc, const String& id, T*& ret)
-{
-  PBXObject* foundObject = pbxDoc->findObjectWithId(id);
-  T* obj = dynamic_cast<T*>(foundObject);
-  ret = obj;
+void convertObjectId(const PBXDocument* pbxDoc, const String& id, T*& ret) {
+    PBXObject* foundObject = pbxDoc->findObjectWithId(id);
+    T* obj = dynamic_cast<T*>(foundObject);
+    ret = obj;
 }
 
 #endif /* _PBXOBJECTIDCONVERT_H_ */

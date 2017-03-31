@@ -32,6 +32,10 @@
     <GetPackageContentsDependsOn>$(GetPackageContentsDependsOn);$(ComputeLinkInputsTargets)</GetPackageContentsDependsOn>
     <GetPackageContentsDependsOn Condition="'$(ConfigurationType)' == 'StaticLibrary'">$(GetPackageContentsDependsOn);FindPublicHeaders</GetPackageContentsDependsOn>
   </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(AppContainerApplication)' == 'true'">
+      <GetPackageContentsDependsOn>$(GetPackageContentsDependsOn);_GenerateProjectPriFileCore</GetPackageContentsDependsOn>
+  </PropertyGroup>
 
   <!-- Add MSBuild outputs into the package -->
   <Target Name="AddBuiltOutput" BeforeTargets="GetPackageContents"  DependsOnTargets="$(GetPackageContentsDependsOn)" Condition="'$(IncludeDefaultPackageContents)' == 'true'">
@@ -67,6 +71,10 @@
       <!-- Resources -->
       <PackageFile Include="@(SBResourceCopy->'%(FullPath)')" Condition="Exists('%(FullPath)')">
         <PackagePath>$(PackageResourcesBasePath)\%(Filename)%(Extension)</PackagePath>
+      </PackageFile>
+      <!-- Package up .pri files associated with any .winmds -->
+      <PackageFile Include="$(ProjectPriFullPath)" Condition="Exists('$(ProjectPriFullPath)') and Exists('@(WinMDFullPath)')">
+        <PackagePath>$(PackageContentBasePath)\%(Filename)%(Extension)</PackagePath>
       </PackageFile>
     </ItemGroup>
 

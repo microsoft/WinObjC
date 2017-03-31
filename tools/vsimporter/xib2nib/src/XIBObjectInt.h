@@ -19,8 +19,7 @@
 
 #include "XIBObject.h"
 
-class XIBObjectInt : public XIBObject
-{
+class XIBObjectInt : public XIBObject {
 private:
     int _val;
 
@@ -28,27 +27,25 @@ public:
     XIBObjectInt(int val);
     int intValue();
     virtual bool NeedsSerialization();
-    void WriteData(NIBWriter *writer);
+    void WriteData(NIBWriter* writer);
 };
 
-class XIBObjectDataWriter : public XIBObject
-{
+class XIBObjectDataWriter : public XIBObject {
 public:
-    void *_binVal;
-    int   _binLen;
+    void* _binVal;
+    int _binLen;
 
-    XIBObjectDataWriter(const void *bin, int len);
+    XIBObjectDataWriter(const void* bin, int len);
     bool NeedsSerialization();
-    void WriteData(NIBWriter *writer);
+    void WriteData(NIBWriter* writer);
 };
 
-class XIBObjectNumber : public XIBObject
-{
+class XIBObjectNumber : public XIBObject {
     int _val;
 
 public:
     XIBObjectNumber(int val);
-    void EmitObject(NIBWriter *writer);
+    void EmitObject(NIBWriter* writer);
 };
 
 #endif

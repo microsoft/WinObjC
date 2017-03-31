@@ -16,16 +16,13 @@
 
 #pragma once
 #include "UIView.h"
-class _UILayoutGuide :
-    public UIView
-{
+class _UILayoutGuide : public UIView {
 public:
-    XIBObjectString *_identifier;
+    XIBObjectString* _identifier;
     unsigned int _attribute;
     _UILayoutGuide();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
     virtual void Awaken();
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };
-

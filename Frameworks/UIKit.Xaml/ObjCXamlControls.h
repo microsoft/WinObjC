@@ -31,6 +31,12 @@ enum ControlStates { ControlStateNormal = 0, ControlStateHighlighted = 1 << 0, C
 // Returns a UIKit::Button as an IInspectable
 UIKIT_XAML_EXPORT void XamlCreateButton(IInspectable** created);
 
+// Retrieves the UIKit::Button's internal UIKit::Label as an IInspectable
+UIKIT_XAML_EXPORT IInspectable* XamlGetButtonLabel(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton);
+
+// Retrieves the UIKit::Button's internal Xaml Image as an IInspectable
+UIKIT_XAML_EXPORT IInspectable* XamlGetButtonImage(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton);
+
 UIKIT_XAML_EXPORT void XamlButtonApplyVisuals(const Microsoft::WRL::ComPtr<IInspectable>& inspectableButton,
                                               const Microsoft::WRL::ComPtr<IInspectable>& inspectableImage,
                                               const Microsoft::WRL::ComPtr<IInspectable>& inspectableBorderBackgroundBrush);

@@ -16,39 +16,35 @@
 
 #include "XIBObjectTypes.h"
 
-XIBDictionary::XIBDictionary(pugi::xml_node node)
-{
+XIBDictionary::XIBDictionary(pugi::xml_node node) {
     ScanXIBNode(node);
 }
 
-XIBDictionary::XIBDictionary()
-{
+XIBDictionary::XIBDictionary() {
     AddMember("EncodedWithXMLCoder", new XIBObjectBool(true));
 }
 
-void XIBDictionary::InitFromXIB(XIBObject *obj)
-{
+void XIBDictionary::InitFromXIB(XIBObject* obj) {
     _keys = obj->FindMember("dict.sortedKeys");
     _values = obj->FindMember("dict.values");
 }
 
-XIBObject *XIBDictionary::ObjectForKey(char *keyName)
-{
-    if ( _keys ) {
+XIBObject* XIBDictionary::ObjectForKey(char* keyName) {
+    if (_keys) {
         size_t curIdx = 0;
 
-        for ( curIdx = 0; curIdx < _keys->_members.size(); curIdx ++ ) {
-            XIBMember *curKeyObj = _keys->_members[curIdx];
-            if ( curKeyObj->_obj->EqualToString(keyName) ) {
+        for (curIdx = 0; curIdx < _keys->_members.size(); curIdx++) {
+            XIBMember* curKeyObj = _keys->_members[curIdx];
+            if (curKeyObj->_obj->EqualToString(keyName)) {
                 return _values->_members[curIdx]->_obj;
             }
         }
     } else {
         size_t curIdx = 0;
 
-        for ( curIdx = 0; curIdx < _members.size(); curIdx ++ ) {
-            XIBMember *curKeyObj = _members[curIdx];
-            if ( strcmp(curKeyObj->_name, keyName) == 0 ) {
+        for (curIdx = 0; curIdx < _members.size(); curIdx++) {
+            XIBMember* curKeyObj = _members[curIdx];
+            if (strcmp(curKeyObj->_name, keyName) == 0) {
                 return curKeyObj->_obj;
             }
         }
@@ -57,17 +53,17 @@ XIBObject *XIBDictionary::ObjectForKey(char *keyName)
     return NULL;
 }
 
-void XIBDictionary::EmitObject(NIBWriter *writer)
-{
-    if ( !_className ) _className = "NSDictionary";
+void XIBDictionary::EmitObject(NIBWriter* writer) {
+    if (!_className)
+        _className = "NSDictionary";
     this->_outputClassName = _className;
 
-    for ( memberList::iterator cur = _members.begin(); cur != _members.end(); cur ++ ) {
-        XIBMember *pMember = (*cur);
+    for (memberList::iterator cur = _members.begin(); cur != _members.end(); cur++) {
+        XIBMember* pMember = (*cur);
 
-        if ( pMember->_name == NULL ) {
+        if (pMember->_name == NULL) {
             AddOutputMember(writer, "UINibEncoderEmptyKey", pMember->_obj);
-        } else if ( strcmp(pMember->_name, "EncodedWithXMLCoder") == 0 ) {
+        } else if (strcmp(pMember->_name, "EncodedWithXMLCoder") == 0) {
             AddOutputMember(writer, "NSInlinedValue", pMember->_obj);
         } else {
             AddOutputMember(writer, pMember->_name, pMember->_obj);
@@ -75,8 +71,7 @@ void XIBDictionary::EmitObject(NIBWriter *writer)
     }
 }
 
-void XIBDictionary::AddObjectForKey(XIBObject *key, XIBObject *value)
-{
+void XIBDictionary::AddObjectForKey(XIBObject* key, XIBObject* value) {
     AddMember(NULL, key);
     AddMember(NULL, value);
 }

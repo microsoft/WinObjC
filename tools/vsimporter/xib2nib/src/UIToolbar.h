@@ -16,17 +16,14 @@
 
 #pragma once
 #include "UIView.h"
-class UIToolbar :
-    public UIView
-{
+class UIToolbar : public UIView {
 public:
-    XIBArray *_items;
+    XIBArray* _items;
     int _style;
 
     UIToolbar();
     virtual void Awaken();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };
-

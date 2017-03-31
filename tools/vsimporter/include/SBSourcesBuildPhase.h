@@ -24,15 +24,16 @@ class SBNativeTarget;
 
 class SBSourcesBuildPhase : public SBBuildPhase {
 public:
-  static SBBuildPhase* create(const PBXBuildPhase* phase, SBTarget& parentTarget);
-  virtual ~SBSourcesBuildPhase() {}
-  virtual void writeVCProjectFiles(VCProject& proj) const;
+    static SBBuildPhase* create(const PBXBuildPhase* phase, SBTarget& parentTarget);
+    virtual ~SBSourcesBuildPhase() {
+    }
+    virtual void writeVCProjectFiles(VCProject& proj) const;
 
 private:
-  SBSourcesBuildPhase(const PBXSourcesBuildPhase* phase, const SBNativeTarget& parentTarget);
-  void fixOtherFlags(StringVec& otherFlagTokens, const String& vsProjectDir) const;
+    SBSourcesBuildPhase(const PBXSourcesBuildPhase* phase, const SBNativeTarget& parentTarget);
+    void fixOtherFlags(StringVec& otherFlagTokens, const String& vsProjectDir) const;
 
-  const PBXSourcesBuildPhase* m_phase;
+    const PBXSourcesBuildPhase* m_phase;
 };
 
 #endif /* _SBSOURCESBUILDPHASE_H_ */

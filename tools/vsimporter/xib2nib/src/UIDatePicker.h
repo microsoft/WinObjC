@@ -16,13 +16,10 @@
 
 #pragma once
 #include "UIControl.h"
-class UIDatePicker :
-    public UIControl
-{
+class UIDatePicker : public UIControl {
 public:
     UIDatePicker();
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };
-

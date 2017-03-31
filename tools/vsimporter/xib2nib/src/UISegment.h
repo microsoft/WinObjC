@@ -19,17 +19,14 @@
 
 class UIColor;
 
-class UISegment :
-    public UIView
-{
+class UISegment : public UIView {
 public:
-    XIBObject *_info;
+    XIBObject* _info;
     int _style;
     int _position;
-    UIColor *_tintColor;
-    UISegment(XIBObject *info, int style, int position, UIColor *tintColor);
-    virtual void InitFromXIB(XIBObject *obj);
-    virtual void InitFromStory(XIBObject *obj);
-    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+    UIColor* _tintColor;
+    UISegment(XIBObject* info, int style, int position, UIColor* tintColor);
+    virtual void InitFromXIB(XIBObject* obj);
+    virtual void InitFromStory(XIBObject* obj);
+    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
 };
-

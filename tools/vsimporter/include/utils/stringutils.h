@@ -26,18 +26,16 @@
 /*
  * Converts all characters of str to lower case, in place.
  */
-inline String strToLower(const String& str)
-{
-  String tmp(str);
-  std::transform(tmp.begin(), tmp.end(), tmp.begin(), ::tolower);
-  return tmp;
+inline String strToLower(const String& str) {
+    String tmp(str);
+    std::transform(tmp.begin(), tmp.end(), tmp.begin(), ::tolower);
+    return tmp;
 }
 
-inline String strToUpper(const String& str)
-{
-  String tmp(str);
-  std::transform(tmp.begin(), tmp.end(), tmp.begin(), ::toupper);
-  return tmp;
+inline String strToUpper(const String& str) {
+    String tmp(str);
+    std::transform(tmp.begin(), tmp.end(), tmp.begin(), ::toupper);
+    return tmp;
 }
 
 /*
@@ -60,7 +58,7 @@ bool matchWildcardList(const String& str, const StringVec& wildcardList);
 String processEscapes(const String& str);
 
 /*
- * Returns a string with all special characters escaped. 
+ * Returns a string with all special characters escaped.
  */
 String addEscapes(const String& str, const String& specialChars = "\"\\");
 
@@ -69,14 +67,13 @@ String addEscapes(const String& str, const String& specialChars = "\"\\");
  */
 String removeQuotes(const String& str, const String& quotes = "'\"");
 
-
 String quoteIfNeeded(const String& str, bool forceQuote = false);
 
 /*
  * Returns true if str begins (or ends) with the specified needle string.
  */
-bool strBeginsWith(const String &str, const String &needle);
-bool strEndsWith(const String &str, const String &needle);
+bool strBeginsWith(const String& str, const String& needle);
+bool strEndsWith(const String& str, const String& needle);
 
 /*
  * Trims all whitespace characters from the beginning and end of str.
@@ -86,7 +83,7 @@ String trim(const String& str, const String& whitespace = " \t");
 /*
  * Joins a list of strings into one string, with the provided separator.
  */
-template<typename T>
+template <typename T>
 String joinStrings(const T& elements, const String& separator);
 
 /*
@@ -108,10 +105,8 @@ bool sb_getenv(const String& varName, String& varValue);
 /*
  * Escapes all spaces in the string.
  */
-inline String escapeSpaces(const String& str)
-{
-  return sb_replace(str, " ", "\\ ", -1);
+inline String escapeSpaces(const String& str) {
+    return sb_replace(str, " ", "\\ ", -1);
 }
 
 #endif /* _STRINGUTILS_H_ */
-

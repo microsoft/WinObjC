@@ -20,16 +20,13 @@
 #include "types.h"
 
 namespace pugi {
-  class xml_document;
-  class xml_node;
+class xml_document;
+class xml_node;
 };
 
 class ErrorReporter;
 
-enum GetterBehavior {
-  VALUE_OPTIONAL = 0,
-  VALUE_REQUIRED = 1
-};
+enum GetterBehavior { VALUE_OPTIONAL = 0, VALUE_REQUIRED = 1 };
 
 void getXMLProperty(const pugi::xml_node& node, const String& propName, String& ret, GetterBehavior opt, const ErrorReporter& reporter);
 
