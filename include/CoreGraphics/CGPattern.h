@@ -17,9 +17,7 @@
 
 #import <CoreGraphics/CoreGraphicsExport.h>
 
-// TODO: CGPattern is currently an Objective-C object;
-// it cannot be defined as struct __CGPattern*.
-typedef void* CGPatternRef;
+typedef struct __CGPattern* CGPatternRef;
 
 #import <CoreGraphics/CGContext.h>
 #import <CoreGraphics/CGAffineTransform.h>
