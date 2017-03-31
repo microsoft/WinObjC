@@ -1,6 +1,6 @@
 ﻿//******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -724,4 +724,40 @@ TEST(NSString, MutableInstanceArchivesAsMutable) {
     EXPECT_OBJCEQ(@"hello world", output);
 
     EXPECT_OBJCNE(input, output);
+}
+
+TEST(NSString, ContainsString) {
+    EXPECT_FALSE([@"" containsString:@""]);
+    EXPECT_FALSE([@"TÉST" containsString:@""]);
+    EXPECT_TRUE([@"TÉST" containsString:@"T"]);
+    EXPECT_TRUE([@"TÉST" containsString:@"TÉST"]);
+    EXPECT_FALSE([@"TÉST" containsString:@"Y"]);
+    EXPECT_FALSE([@"TÉST" containsString:@"TÉSTY"]);
+    EXPECT_FALSE([@"TÉST" containsString:@"TEST"]);
+    EXPECT_FALSE([@"TÉST" containsString:@"test"]);
+    EXPECT_FALSE([@"TÉST" containsString:@"tést"]);
+}
+
+TEST(NSString, LocalizedCaseInsensitiveContainsString) {
+    EXPECT_FALSE([@"" localizedCaseInsensitiveContainsString:@""]);
+    EXPECT_FALSE([@"TÉST" localizedCaseInsensitiveContainsString:@""]);
+    EXPECT_TRUE([@"TÉST" localizedCaseInsensitiveContainsString:@"T"]);
+    EXPECT_TRUE([@"TÉST" localizedCaseInsensitiveContainsString:@"TÉST"]);
+    EXPECT_TRUE([@"TÉST" localizedCaseInsensitiveContainsString:@"tést"]);
+    EXPECT_FALSE([@"TÉST" localizedCaseInsensitiveContainsString:@"Y"]);
+    EXPECT_FALSE([@"TÉST" localizedCaseInsensitiveContainsString:@"TÉSTY"]);
+    EXPECT_FALSE([@"TÉST" localizedCaseInsensitiveContainsString:@"TEST"]);
+    EXPECT_FALSE([@"TÉST" localizedCaseInsensitiveContainsString:@"test"]);
+}
+
+TEST(NSString, LocalizedStandardContainsString) {
+    EXPECT_FALSE([@"" localizedStandardContainsString:@""]);
+    EXPECT_FALSE([@"TÉST" localizedStandardContainsString:@""]);
+    EXPECT_TRUE([@"TÉST" localizedStandardContainsString:@"T"]);
+    EXPECT_TRUE([@"TÉST" localizedStandardContainsString:@"TÉST"]);
+    EXPECT_FALSE([@"TÉST" localizedStandardContainsString:@"Y"]);
+    EXPECT_FALSE([@"TÉST" localizedStandardContainsString:@"TÉSTY"]);
+    EXPECT_TRUE([@"TÉST" localizedStandardContainsString:@"TEST"]);
+    EXPECT_TRUE([@"TÉST" localizedStandardContainsString:@"test"]);
+    EXPECT_TRUE([@"TÉST" localizedStandardContainsString:@"tést"]);
 }

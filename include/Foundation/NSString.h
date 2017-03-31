@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 // Copyright (c) 2006-2007 Christopher J. W. Lloyd
 //
 // This code is licensed under the MIT License (MIT).
@@ -144,12 +144,12 @@ FOUNDATION_EXPORT_CLASS
 - (void)getCharacters:(unichar*)buffer;
 - (void)getCharacters:(unichar*)buffer range:(NSRange)aRange;
 - (BOOL)getBytes:(void*)buffer
-       maxLength:(NSUInteger)maxBufferCount
-      usedLength:(NSUInteger*)usedBufferCount
-        encoding:(NSStringEncoding)encoding
-         options:(NSStringEncodingConversionOptions)options
-           range:(NSRange)range
-  remainingRange:(NSRangePointer)leftover;
+         maxLength:(NSUInteger)maxBufferCount
+        usedLength:(NSUInteger*)usedBufferCount
+          encoding:(NSStringEncoding)encoding
+           options:(NSStringEncodingConversionOptions)options
+             range:(NSRange)range
+    remainingRange:(NSRangePointer)leftover;
 - (const char*)cStringUsingEncoding:(NSStringEncoding)encoding;
 - (BOOL)getCString:(char*)buffer maxLength:(NSUInteger)maxBufferCount encoding:(NSStringEncoding)encoding;
 @property (readonly) const char* UTF8String;
@@ -178,6 +178,7 @@ FOUNDATION_EXPORT_CLASS
 - (NSRange)rangeOfString:(NSString*)aString options:(NSStringCompareOptions)mask;
 - (NSRange)rangeOfString:(NSString*)aString options:(NSStringCompareOptions)mask range:(NSRange)aRange;
 - (NSRange)rangeOfString:(NSString*)aString options:(NSStringCompareOptions)mask range:(NSRange)aRange locale:(NSLocale*)locale;
+- (NSRange)localizedStandardRangeOfString:(NSString*)str;
 - (void)enumerateLinesUsingBlock:(void (^)(NSString*, BOOL*))block STUB_METHOD;
 - (void)enumerateSubstringsInRange:(NSRange)range
                            options:(NSStringEnumerationOptions)opts
@@ -275,5 +276,8 @@ FOUNDATION_EXPORT_CLASS
                           options:(NSLinguisticTaggerOptions)opts
                       orthography:(NSOrthography*)orthography
                       tokenRanges:(NSArray* _Nullable*)tokenRanges STUB_METHOD;
+- (BOOL)containsString:(NSString*)str;
+- (BOOL)localizedCaseInsensitiveContainsString:(NSString*)str;
+- (BOOL)localizedStandardContainsString:(NSString*)str;
 
 @end

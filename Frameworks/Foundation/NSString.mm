@@ -318,7 +318,6 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
 
 /**
  @Status Interoperable
- @Notes
 */
 - (unsigned)lengthOfBytesUsingEncoding:(NSStringEncoding)encoding {
     CFStringEncoding cfEncoding = CFStringConvertNSStringEncodingToEncoding(encoding);
@@ -377,7 +376,6 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
 
 /**
  @Status Interoperable
- @Notes
 */
 + (instancetype)stringWithContentsOfURL:(NSURL*)url usedEncoding:(NSStringEncoding*)usedEncoding error:(NSError* _Nullable*)error {
     return [[[self alloc] initWithContentsOfURL:url usedEncoding:usedEncoding error:error] autorelease];
@@ -385,7 +383,6 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
 
 /**
  @Status Interoperable
- @Notes
 */
 - (instancetype)initWithContentsOfURL:(NSURL*)url usedEncoding:(NSStringEncoding*)usedEncoding error:(NSError* _Nullable*)error {
     NSData* data = [NSData dataWithContentsOfURL:url options:0 error:error];
@@ -395,7 +392,6 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
 
 /**
  @Status Interoperable
- @Notes
 */
 - (instancetype)initWithContentsOfURL:(NSURL*)url {
     return [self initWithContentsOfURL:url usedEncoding:nullptr error:nullptr];
@@ -494,7 +490,6 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
 
 /**
  @Status Interoperable
- @Notes
 */
 - (BOOL)getBytes:(void*)buffer
          maxLength:(NSUInteger)maxBuf
@@ -752,7 +747,6 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
 
 /**
  @Status Interoperable
- @Notes
 */
 - (NSComparisonResult)localizedCaseInsensitiveCompare:(NSString*)compStr {
     return [self compare:compStr options:NSCaseInsensitiveSearch range:NSMakeRange(0, [self length]) locale:[NSLocale currentLocale]];
@@ -767,7 +761,6 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
 
 /**
  @Status Interoperable
- @Notes
 */
 - (NSComparisonResult)localizedCompare:(NSString*)compStr {
     return [self compare:compStr
@@ -785,7 +778,6 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
 
 /**
  @Status Interoperable
- @Notes
 */
 - (NSComparisonResult)compare:(NSString*)compStr options:(NSStringCompareOptions)options {
     return [self compare:compStr options:options range:NSMakeRange(0, [self length])];
@@ -793,7 +785,6 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
 
 /**
  @Status Interoperable
- @Notes
 */
 - (NSComparisonResult)compare:(NSString*)compStrAddr options:(NSStringCompareOptions)options range:(NSRange)range {
     return [self compare:compStrAddr options:options range:range locale:nil];
@@ -1066,7 +1057,6 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
 
 /**
  @Status Interoperable
- @Notes
 */
 - (NSRange)rangeOfString:(NSString*)subStr options:(NSStringCompareOptions)options {
     return [self rangeOfString:subStr options:options range:NSMakeRange(0, [self length])];
@@ -1074,7 +1064,6 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
 
 /**
  @Status Interoperable
- @Notes
 */
 - (NSRange)rangeOfString:(NSString*)subStr options:(NSStringCompareOptions)options range:(NSRange)range {
     return [self rangeOfString:subStr options:options range:range locale:nil];
@@ -1082,7 +1071,6 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
 
 /**
  @Status Interoperable
- @Notes
 */
 - (NSRange)rangeOfString:(NSString*)searchString options:(NSStringCompareOptions)mask range:(NSRange)range locale:(NSLocale*)locale {
     unsigned int findStringLength = [searchString length];
@@ -1115,6 +1103,44 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
     }
 
     return NSMakeRange(NSNotFound, 0);
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSRange)localizedStandardRangeOfString:(NSString*)str {
+    return [self rangeOfString:str
+                       options:(NSCaseInsensitiveSearch | NSDiacriticInsensitiveSearch)
+                         range:NSMakeRange(0, [self length])
+                        locale:[NSLocale currentLocale]];
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)containsString:(NSString*)str {
+    NSRange range = [self rangeOfString:str options:0 range:NSMakeRange(0, [self length]) locale:nil];
+    return range.location != NSNotFound;
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)localizedCaseInsensitiveContainsString:(NSString*)str {
+    NSRange range =
+        [self rangeOfString:str options:NSCaseInsensitiveSearch range:NSMakeRange(0, [self length]) locale:[NSLocale currentLocale]];
+    return range.location != NSNotFound;
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)localizedStandardContainsString:(NSString*)str {
+    NSRange range = [self rangeOfString:str
+                                options:(NSCaseInsensitiveSearch | NSDiacriticInsensitiveSearch)
+                                  range:NSMakeRange(0, [self length])
+                                 locale:[NSLocale currentLocale]];
+    return range.location != NSNotFound;
 }
 
 /**
@@ -1162,7 +1188,6 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
 
 /**
  @Status Interoperable
- @Notes
 */
 - (const char*)fileSystemRepresentation {
     unsigned int maxLength = CFStringGetMaximumSizeOfFileSystemRepresentation(static_cast<CFStringRef>(self));
@@ -1176,7 +1201,6 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
 
 /**
  @Status Interoperable
- @Notes
 */
 - (BOOL)getFileSystemRepresentation:(char*)dest maxLength:(NSUInteger)destMax {
     return CFStringGetFileSystemRepresentation(static_cast<CFStringRef>(self), dest, destMax);
@@ -1204,7 +1228,6 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
 
 /**
  @Status Interoperable
- @Notes
 */
 - (NSData*)dataUsingEncoding:(NSStringEncoding)encoding {
     return [self dataUsingEncoding:encoding allowLossyConversion:NO];
@@ -1212,7 +1235,6 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
 
 /**
  @Status Interoperable
- @Notes
 */
 - (NSData*)dataUsingEncoding:(NSStringEncoding)encoding allowLossyConversion:(BOOL)lossy {
     int len = [self length];
@@ -1479,7 +1501,6 @@ BOOL _isALineSeparatorTypeCharacter(unichar ch) {
 
 /**
  @Status Interoperable
- @Notes
 */
 - (NSString*)stringByReplacingPercentEscapesUsingEncoding:(NSStringEncoding)encoding {
     return [static_cast<NSString*>(CFURLCreateStringByReplacingPercentEscapesUsingEncoding(
@@ -1534,7 +1555,6 @@ BOOL _isALineSeparatorTypeCharacter(unichar ch) {
 
 /**
  @Status Stub
- @Notes
 */
 - (void)enumerateSubstringsInRange:(NSRange)range
                            options:(NSStringEnumerationOptions)options
@@ -1645,7 +1665,6 @@ BOOL _isALineSeparatorTypeCharacter(unichar ch) {
 
 /**
  @Status Interoperable
- @Notes
 */
 - (NSUInteger)maximumLengthOfBytesUsingEncoding:(NSStringEncoding)enc {
     CFStringEncoding cfEnc = CFStringConvertNSStringEncodingToEncoding(enc);
@@ -1655,7 +1674,6 @@ BOOL _isALineSeparatorTypeCharacter(unichar ch) {
 
 /**
  @Status Stub
- @Notes
 */
 - (const char*)cString {
     UNIMPLEMENTED();
@@ -1664,7 +1682,6 @@ BOOL _isALineSeparatorTypeCharacter(unichar ch) {
 
 /**
  @Status Stub
- @Notes
 */
 - (const char*)lossyCString {
     UNIMPLEMENTED();
@@ -1673,7 +1690,6 @@ BOOL _isALineSeparatorTypeCharacter(unichar ch) {
 
 /**
  @Status Stub
- @Notes
 */
 - (NSUInteger)cStringLength {
     UNIMPLEMENTED();
@@ -1682,7 +1698,6 @@ BOOL _isALineSeparatorTypeCharacter(unichar ch) {
 
 /**
  @Status Stub
- @Notes
 */
 - (void)getCString:(char*)bytes maxLength:(NSUInteger)maxLength range:(NSRange)aRange remainingRange:(NSRangePointer)leftoverRange {
     UNIMPLEMENTED();
@@ -1690,7 +1705,6 @@ BOOL _isALineSeparatorTypeCharacter(unichar ch) {
 
 /**
  @Status Stub
- @Notes
 */
 - (void)enumerateLinesUsingBlock:(void (^)(NSString*, BOOL*))block {
     [self enumerateSubstringsInRange:NSMakeRange(0, [self length])
@@ -1791,7 +1805,6 @@ BOOL _isALineSeparatorTypeCharacter(unichar ch) {
 
 /**
  @Status Interoperable
- @Notes
 */
 - (NSComparisonResult)compare:(NSString*)aString options:(NSStringCompareOptions)mask range:(NSRange)range locale:(id)locale {
     return CFStringCompareWithOptionsAndLocale(static_cast<CFStringRef>(self),
@@ -1822,7 +1835,6 @@ BOOL _isALineSeparatorTypeCharacter(unichar ch) {
 
 /**
  @Status Stub
- @Notes
 */
 - (NSString*)commonPrefixWithString:(NSString*)aString options:(NSStringCompareOptions)mask {
     UNIMPLEMENTED();
@@ -1831,7 +1843,6 @@ BOOL _isALineSeparatorTypeCharacter(unichar ch) {
 
 /**
  @Status Interoperable
- @Notes
 */
 - (NSString*)capitalizedStringWithLocale:(NSLocale*)locale {
     NSMutableString* mutableCopy = [[self mutableCopy] autorelease];
@@ -1841,7 +1852,6 @@ BOOL _isALineSeparatorTypeCharacter(unichar ch) {
 
 /**
  @Status Interoperable
- @Notes
 */
 - (NSString*)lowercaseStringWithLocale:(NSLocale*)locale {
     NSMutableString* mutableCopy = [[self mutableCopy] autorelease];
@@ -1851,7 +1861,6 @@ BOOL _isALineSeparatorTypeCharacter(unichar ch) {
 
 /**
  @Status Interoperable
- @Notes
 */
 - (NSString*)uppercaseStringWithLocale:(NSLocale*)locale {
     NSMutableString* mutableCopy = [[self mutableCopy] autorelease];
@@ -1861,7 +1870,6 @@ BOOL _isALineSeparatorTypeCharacter(unichar ch) {
 
 /**
  @Status Interoperable
- @Notes
 */
 - (NSUInteger)completePathIntoString:(NSString* _Nonnull*)outputName
                        caseSensitive:(BOOL)flag
@@ -1921,7 +1929,6 @@ BOOL _isALineSeparatorTypeCharacter(unichar ch) {
 
 /**
  @Status Stub
- @Notes
 */
 - (NSArray*)stringsByAppendingPaths:(NSArray*)paths {
     UNIMPLEMENTED();
@@ -1930,7 +1937,6 @@ BOOL _isALineSeparatorTypeCharacter(unichar ch) {
 
 /**
  @Status Stub
- @Notes
 */
 - (void)enumerateLinguisticTagsInRange:(NSRange)range
                                 scheme:(NSString*)tagScheme
@@ -1942,7 +1948,6 @@ BOOL _isALineSeparatorTypeCharacter(unichar ch) {
 
 /**
  @Status Stub
- @Notes
 */
 - (NSArray*)linguisticTagsInRange:(NSRange)range
                            scheme:(NSString*)tagScheme
