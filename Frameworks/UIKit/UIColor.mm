@@ -223,7 +223,7 @@ rgb hsv2rgb(hsv in) {
 @implementation UIColor {
 @public
     enum BrushType _type;
-    UIImage* _image;
+    StrongId<UIImage> _image;
     woc::StrongCF<CGPatternRef> _pattern;
     __CGColorQuad _components;
     // Note: This should be part of the CGColor struct
@@ -510,7 +510,7 @@ rgb hsv2rgb(hsv in) {
     }
 
     _pattern = _CGPatternCreateFromImage(pImg);
-    _image = [image retain];
+    _image = image;
     _type = cgPatternBrush;
 
     _components.r = 0.0f;
@@ -753,14 +753,6 @@ rgb hsv2rgb(hsv in) {
     } else {
         return NO;
     }
-}
-
-/**
- @Status Interoperable
-*/
-- (void)dealloc {
-    [_image release];
-    [super dealloc];
 }
 
 /**
