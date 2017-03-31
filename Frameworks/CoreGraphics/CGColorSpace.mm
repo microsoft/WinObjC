@@ -64,6 +64,10 @@ struct __CGColorSpace : CoreFoundation::CppBase<__CGColorSpace> {
         return _lastColorIndex;
     }
 
+    inline void GetTable(uint8_t* table) const {
+        std::copy(_palette.begin(), _palette.end(), table);
+    }
+
 private:
     CGColorSpaceModel _colorSpaceModel;
     woc::StrongCF<CGColorSpaceRef> _baseColorSpace;
@@ -270,18 +274,19 @@ CGColorSpaceRef CGColorSpaceGetBaseColorSpace(CGColorSpaceRef space) {
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 size_t CGColorSpaceGetColorTableCount(CGColorSpaceRef space) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    RETURN_RESULT_IF_NULL(space, 0);
+    RETURN_RESULT_IF(space->ColorSpaceModel() != kCGColorSpaceModelIndexed, 0);
+    return space->LastColorIndex() + 1;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 void CGColorSpaceGetColorTable(CGColorSpaceRef space, uint8_t* table) {
-    UNIMPLEMENTED();
+    RETURN_IF(!space);
+    RETURN_IF(!table);
+    return space->GetTable(table);
 }

@@ -16,6 +16,7 @@
 
 #import <TestFramework.h>
 #import <CoreGraphics/CoreGraphics.h>
+#import <vector>
 
 // TODO #2243: Remove the UIKit dependency
 #if WINOBJC
@@ -128,4 +129,26 @@ TEST(CGColor, GetConstantColor) {
         EXPECT_EQ(CGColorSpaceGetModel(grayColorSpace), CGColorSpaceGetModel(CGColorGetColorSpace(col)));
         EXPECT_EQ(2, CGColorGetNumberOfComponents(col));
     }
+}
+
+TEST(CGColor, CGColorSpaceCreateIndexed) {
+#if WINOBJC
+    [UIColor class];
+#endif
+    auto rgbColorSpace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateDeviceRGB());
+
+    static const unsigned char tableVal[] = { 255, 255, 255, 0, 0, 0, 212, 255, 154 };
+    std::vector<unsigned char> table(tableVal, tableVal + std::extent<decltype(tableVal)>::value);
+
+    auto indexColorSpace = woc::MakeStrongCF<CGColorSpaceRef>(CGColorSpaceCreateIndexed(rgbColorSpace, 2, table.data()));
+    EXPECT_EQ(1, CGColorSpaceGetNumberOfComponents(indexColorSpace));
+    EXPECT_TRUE(CGColorSpaceGetModel(indexColorSpace) == kCGColorSpaceModelIndexed);
+
+    EXPECT_EQ(3, CGColorSpaceGetColorTableCount(indexColorSpace));
+
+    std::vector<unsigned char> resultTable(CGColorSpaceGetColorTableCount(indexColorSpace) *
+                                           CGColorSpaceGetNumberOfComponents(rgbColorSpace));
+    CGColorSpaceGetColorTable(indexColorSpace, resultTable.data());
+
+    EXPECT_EQ(table, resultTable);
 }
