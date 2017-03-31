@@ -1188,7 +1188,9 @@ NSMutableDictionary* _pageMappings;
 
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
 
+    // Ensure viewDidLoad precedes attachment of presentedViewController.
     [controller view];
+
     priv->_presentedViewController = controller;
     controller->priv->_parentViewController = self;
     controller->priv->_presentingViewController = self;
@@ -1201,7 +1203,7 @@ NSMutableDictionary* _pageMappings;
         // popover is dismissed, without animation, in the presentViewController completion block itself.
         UIPopoverPresentationController* popover = [controller->priv->_popoverPresentationController retain];
 
-        dispatch_block_t popoverPresent = ^{
+        dispatch_block_t presentCompletion = ^{
             [controller _setBeingPresented:NO];
 
             [[UIApplication sharedApplication] endIgnoringInteractionEvents];
@@ -1217,7 +1219,7 @@ NSMutableDictionary* _pageMappings;
             // Dispatch the presentation asynchronously so users have the opportunity to configure the
             // popoverPresentationController after presentViewController but before the actual popover is presented.
             [controller _setBeingPresented:YES];
-            [controller->priv->_popoverPresentationController _presentAnimated:animated presentCompletion:popoverPresent];
+            [controller->priv->_popoverPresentationController _presentAnimated:animated presentCompletion:presentCompletion];
         });
     } else {
         [controller _setBeingPresented:YES];
@@ -2103,11 +2105,8 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
 }
 
 /**
- @Status Caveat
- @Notes  WinObjC-only extension providing access
-         to UIModalPresentationFormSheet overlay.
-         Not exposed in header (clients must access
-         via performSelector).
+ WinObjC-only extension providing access to UIModalPresentationFormSheet overlay.
+ It is not exposed in header; clients must access via performSelector.
 */
 - (UIView*)_modalOverlayView {
     return priv->_modalOverlayView;
