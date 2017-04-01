@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
-#define OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Devices_Sensors.lib")
+#ifndef OBJCUWPWINDOWSDEVICESSENSORSEXPORT
+#define OBJCUWPWINDOWSDEVICESSENSORSEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsDevicesSensors.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -131,7 +131,7 @@ typedef unsigned WDSPedometerStepKind;
 @protocol WDSISensorDataThreshold
 @end
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSISensorDataThreshold : RTObject <WDSISensorDataThreshold>
 @end
 
@@ -141,7 +141,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSSensorDataThresholdTriggerDetails_DEFINED__
 #define __WDSSensorDataThresholdTriggerDetails_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSSensorDataThresholdTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -156,7 +156,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSAccelerometer_DEFINED__
 #define __WDSAccelerometer_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSAccelerometer : RTObject
 + (WDSAccelerometer*)getDefault;
 + (WDSAccelerometer*)getDefaultWithAccelerometerReadingType:(WDSAccelerometerReadingType)readingType;
@@ -183,7 +183,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSAccelerometerReading_DEFINED__
 #define __WDSAccelerometerReading_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSAccelerometerReading : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -200,7 +200,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSAccelerometerReadingChangedEventArgs_DEFINED__
 #define __WDSAccelerometerReadingChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSAccelerometerReadingChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -214,7 +214,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSAccelerometerShakenEventArgs_DEFINED__
 #define __WDSAccelerometerShakenEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSAccelerometerShakenEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -228,7 +228,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSInclinometer_DEFINED__
 #define __WDSInclinometer_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSInclinometer : RTObject
 + (WDSInclinometer*)getDefault;
 + (WDSInclinometer*)getDefaultForRelativeReadings;
@@ -252,7 +252,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSInclinometerReading_DEFINED__
 #define __WDSInclinometerReading_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSInclinometerReading : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -270,7 +270,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSInclinometerReadingChangedEventArgs_DEFINED__
 #define __WDSInclinometerReadingChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSInclinometerReadingChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -284,7 +284,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSGyrometer_DEFINED__
 #define __WDSGyrometer_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSGyrometer : RTObject
 + (WDSGyrometer*)getDefault;
 #if defined(__cplusplus)
@@ -305,7 +305,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSGyrometerReading_DEFINED__
 #define __WDSGyrometerReading_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSGyrometerReading : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -322,7 +322,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSGyrometerReadingChangedEventArgs_DEFINED__
 #define __WDSGyrometerReadingChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSGyrometerReadingChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -336,7 +336,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSCompass_DEFINED__
 #define __WDSCompass_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSCompass : RTObject
 + (WDSCompass*)getDefault;
 #if defined(__cplusplus)
@@ -357,7 +357,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSCompassReading_DEFINED__
 #define __WDSCompassReading_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSCompassReading : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -374,7 +374,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSCompassReadingChangedEventArgs_DEFINED__
 #define __WDSCompassReadingChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSCompassReadingChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -388,7 +388,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSLightSensor_DEFINED__
 #define __WDSLightSensor_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSLightSensor : RTObject
 + (WDSLightSensor*)getDefault;
 #if defined(__cplusplus)
@@ -408,7 +408,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSLightSensorReading_DEFINED__
 #define __WDSLightSensorReading_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSLightSensorReading : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -423,7 +423,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSLightSensorReadingChangedEventArgs_DEFINED__
 #define __WDSLightSensorReadingChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSLightSensorReadingChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -437,7 +437,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSSensorRotationMatrix_DEFINED__
 #define __WDSSensorRotationMatrix_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSSensorRotationMatrix : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -459,7 +459,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSSensorQuaternion_DEFINED__
 #define __WDSSensorQuaternion_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSSensorQuaternion : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -476,7 +476,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSOrientationSensor_DEFINED__
 #define __WDSOrientationSensor_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSOrientationSensor : RTObject
 + (WDSOrientationSensor*)getDefault;
 + (WDSOrientationSensor*)getDefaultWithSensorReadingType:(WDSSensorReadingType)sensorReadingtype;
@@ -501,7 +501,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSOrientationSensorReading_DEFINED__
 #define __WDSOrientationSensorReading_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSOrientationSensorReading : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -518,7 +518,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSOrientationSensorReadingChangedEventArgs_DEFINED__
 #define __WDSOrientationSensorReadingChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSOrientationSensorReadingChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -532,7 +532,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSSimpleOrientationSensor_DEFINED__
 #define __WDSSimpleOrientationSensor_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSSimpleOrientationSensor : RTObject
 + (WDSSimpleOrientationSensor*)getDefault;
 #if defined(__cplusplus)
@@ -551,7 +551,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSSimpleOrientationSensorOrientationChangedEventArgs_DEFINED__
 #define __WDSSimpleOrientationSensorOrientationChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSSimpleOrientationSensorOrientationChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -566,7 +566,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSMagnetometer_DEFINED__
 #define __WDSMagnetometer_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSMagnetometer : RTObject
 + (WDSMagnetometer*)getDefault;
 #if defined(__cplusplus)
@@ -587,7 +587,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSMagnetometerReading_DEFINED__
 #define __WDSMagnetometerReading_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSMagnetometerReading : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -605,7 +605,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSMagnetometerReadingChangedEventArgs_DEFINED__
 #define __WDSMagnetometerReadingChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSMagnetometerReadingChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -619,7 +619,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSActivitySensor_DEFINED__
 #define __WDSActivitySensor_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSActivitySensor : RTObject
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDSActivitySensor*))success failure:(void (^)(NSError*))failure;
 + (NSString *)getDeviceSelector;
@@ -645,7 +645,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSActivitySensorReading_DEFINED__
 #define __WDSActivitySensorReading_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSActivitySensorReading : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -661,7 +661,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSActivitySensorReadingChangedEventArgs_DEFINED__
 #define __WDSActivitySensorReadingChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSActivitySensorReadingChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -675,7 +675,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSActivitySensorReadingChangeReport_DEFINED__
 #define __WDSActivitySensorReadingChangeReport_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSActivitySensorReadingChangeReport : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -689,7 +689,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSActivitySensorTriggerDetails_DEFINED__
 #define __WDSActivitySensorTriggerDetails_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSActivitySensorTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -703,7 +703,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSBarometer_DEFINED__
 #define __WDSBarometer_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSBarometer : RTObject
 + (WDSBarometer*)getDefault;
 #if defined(__cplusplus)
@@ -723,7 +723,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSBarometerReading_DEFINED__
 #define __WDSBarometerReading_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSBarometerReading : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -738,7 +738,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSBarometerReadingChangedEventArgs_DEFINED__
 #define __WDSBarometerReadingChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSBarometerReadingChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -752,7 +752,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSPedometerReading_DEFINED__
 #define __WDSPedometerReading_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSPedometerReading : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -769,7 +769,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSPedometer_DEFINED__
 #define __WDSPedometer_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSPedometer : RTObject
 + (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDSPedometer*))success failure:(void (^)(NSError*))failure;
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDSPedometer*))success failure:(void (^)(NSError*))failure;
@@ -795,7 +795,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSPedometerReadingChangedEventArgs_DEFINED__
 #define __WDSPedometerReadingChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSPedometerReadingChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -809,7 +809,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSPedometerDataThreshold_DEFINED__
 #define __WDSPedometerDataThreshold_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSPedometerDataThreshold : RTObject <WDSISensorDataThreshold>
 + (WDSPedometerDataThreshold*)make:(WDSPedometer*)sensor stepGoal:(int)stepGoal ACTIVATOR;
 #if defined(__cplusplus)
@@ -823,7 +823,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSProximitySensor_DEFINED__
 #define __WDSProximitySensor_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSProximitySensor : RTObject
 + (NSString *)getDeviceSelector;
 + (WDSProximitySensor*)fromId:(NSString *)sensorId;
@@ -846,7 +846,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSProximitySensorReading_DEFINED__
 #define __WDSProximitySensorReading_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSProximitySensorReading : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -862,7 +862,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSProximitySensorReadingChangedEventArgs_DEFINED__
 #define __WDSProximitySensorReadingChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSProximitySensorReadingChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -880,7 +880,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -890,7 +890,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSProximitySensorDisplayOnOffController_DEFINED__
 #define __WDSProximitySensorDisplayOnOffController_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSProximitySensorDisplayOnOffController : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -904,7 +904,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSProximitySensorDataThreshold_DEFINED__
 #define __WDSProximitySensorDataThreshold_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSProximitySensorDataThreshold : RTObject <WDSISensorDataThreshold>
 + (WDSProximitySensorDataThreshold*)make:(WDSProximitySensor*)sensor ACTIVATOR;
 #if defined(__cplusplus)
@@ -918,7 +918,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSAltimeter_DEFINED__
 #define __WDSAltimeter_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSAltimeter : RTObject
 + (WDSAltimeter*)getDefault;
 #if defined(__cplusplus)
@@ -938,7 +938,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSAltimeterReading_DEFINED__
 #define __WDSAltimeterReading_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSAltimeterReading : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -953,7 +953,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
 #ifndef __WDSAltimeterReadingChangedEventArgs_DEFINED__
 #define __WDSAltimeterReadingChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSEXPORT
 @interface WDSAltimeterReadingChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

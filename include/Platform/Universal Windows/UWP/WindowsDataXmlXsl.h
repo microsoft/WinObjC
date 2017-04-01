@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_DATA_XML_XSL_EXPORT
-#define OBJCUWP_WINDOWS_DATA_XML_XSL_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Data_Xml_Xsl.lib")
+#ifndef OBJCUWPWINDOWSDATAXMLXSLEXPORT
+#define OBJCUWPWINDOWSDATAXMLXSLEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsDataXmlXsl.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -38,7 +38,7 @@
 #ifndef __WDXXXsltProcessor_DEFINED__
 #define __WDXXXsltProcessor_DEFINED__
 
-OBJCUWP_WINDOWS_DATA_XML_XSL_EXPORT
+OBJCUWPWINDOWSDATAXMLXSLEXPORT
 @interface WDXXXsltProcessor : RTObject
 + (WDXXXsltProcessor*)makeInstance:(WDXDXmlDocument*)document ACTIVATOR;
 #if defined(__cplusplus)

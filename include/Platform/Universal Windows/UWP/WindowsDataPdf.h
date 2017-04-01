@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_DATA_PDF_EXPORT
-#define OBJCUWP_WINDOWS_DATA_PDF_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Data_Pdf.lib")
+#ifndef OBJCUWPWINDOWSDATAPDFEXPORT
+#define OBJCUWPWINDOWSDATAPDFEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsDataPdf.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -50,7 +50,7 @@ typedef unsigned WDPPdfPageRotation;
 #ifndef __WDPPdfPageRenderOptions_DEFINED__
 #define __WDPPdfPageRenderOptions_DEFINED__
 
-OBJCUWP_WINDOWS_DATA_PDF_EXPORT
+OBJCUWPWINDOWSDATAPDFEXPORT
 @interface WDPPdfPageRenderOptions : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -70,7 +70,7 @@ OBJCUWP_WINDOWS_DATA_PDF_EXPORT
 #ifndef __WDPPdfPageDimensions_DEFINED__
 #define __WDPPdfPageDimensions_DEFINED__
 
-OBJCUWP_WINDOWS_DATA_PDF_EXPORT
+OBJCUWPWINDOWSDATAPDFEXPORT
 @interface WDPPdfPageDimensions : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -92,7 +92,7 @@ OBJCUWP_WINDOWS_DATA_PDF_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_DATA_PDF_EXPORT
+OBJCUWPWINDOWSDATAPDFEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -102,7 +102,7 @@ OBJCUWP_WINDOWS_DATA_PDF_EXPORT
 #ifndef __WDPPdfPage_DEFINED__
 #define __WDPPdfPage_DEFINED__
 
-OBJCUWP_WINDOWS_DATA_PDF_EXPORT
+OBJCUWPWINDOWSDATAPDFEXPORT
 @interface WDPPdfPage : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -124,7 +124,7 @@ OBJCUWP_WINDOWS_DATA_PDF_EXPORT
 #ifndef __WDPPdfDocument_DEFINED__
 #define __WDPPdfDocument_DEFINED__
 
-OBJCUWP_WINDOWS_DATA_PDF_EXPORT
+OBJCUWPWINDOWSDATAPDFEXPORT
 @interface WDPPdfDocument : RTObject
 + (void)loadFromFileAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(WDPPdfDocument*))success failure:(void (^)(NSError*))failure;
 + (void)loadFromFileWithPasswordAsync:(RTObject<WSIStorageFile>*)file password:(NSString *)password success:(void (^)(WDPPdfDocument*))success failure:(void (^)(NSError*))failure;

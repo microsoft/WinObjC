@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_XAML_EXPORT
-#define OBJCUWP_WINDOWS_UI_XAML_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml.lib")
+#ifndef OBJCUWPWINDOWSUIXAMLEXPORT
+#define OBJCUWPWINDOWSUIXAMLEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUIXaml.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -58,7 +58,7 @@ typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, W
 @property (readonly) WUXAPIRawElementProviderSimple* target;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIAnnotationProvider : RTObject <WUXAPIAnnotationProvider>
 @end
 
@@ -73,7 +73,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)setDockPosition:(WUXADockPosition)dockPosition;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIDockProvider : RTObject <WUXAPIDockProvider>
 @end
 
@@ -90,7 +90,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (NSArray* /* WUXAPIRawElementProviderSimple* */)getGrabbedItems;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIDragProvider : RTObject <WUXAPIDragProvider>
 @end
 
@@ -105,7 +105,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @property (readonly) NSArray* /* NSString * */ dropEffects;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIDropTargetProvider : RTObject <WUXAPIDropTargetProvider>
 @end
 
@@ -121,7 +121,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)expand;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIExpandCollapseProvider : RTObject <WUXAPIExpandCollapseProvider>
 @end
 
@@ -139,7 +139,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @property (readonly) int rowSpan;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIGridItemProvider : RTObject <WUXAPIGridItemProvider>
 @end
 
@@ -155,7 +155,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (WUXAPIRawElementProviderSimple*)getItem:(int)row column:(int)column;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIGridProvider : RTObject <WUXAPIGridProvider>
 @end
 
@@ -169,7 +169,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)invoke;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIInvokeProvider : RTObject <WUXAPIInvokeProvider>
 @end
 
@@ -183,7 +183,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (WUXAPIRawElementProviderSimple*)findItemByProperty:(WUXAPIRawElementProviderSimple*)startAfter automationProperty:(WUXAAutomationProperty*)automationProperty value:(RTObject*)value;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIItemContainerProvider : RTObject <WUXAPIItemContainerProvider>
 @end
 
@@ -200,7 +200,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)setCurrentView:(int)viewId;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIMultipleViewProvider : RTObject <WUXAPIMultipleViewProvider>
 @end
 
@@ -214,7 +214,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (RTObject*)getUnderlyingObjectModel;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIObjectModelProvider : RTObject <WUXAPIObjectModelProvider>
 @end
 
@@ -234,7 +234,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)setValue:(double)value;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIRangeValueProvider : RTObject <WUXAPIRangeValueProvider>
 @end
 
@@ -248,7 +248,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)scrollIntoView;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIScrollItemProvider : RTObject <WUXAPIScrollItemProvider>
 @end
 
@@ -269,7 +269,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)setScrollPercent:(double)horizontalPercent verticalPercent:(double)verticalPercent;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIScrollProvider : RTObject <WUXAPIScrollProvider>
 @end
 
@@ -287,7 +287,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)select;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPISelectionItemProvider : RTObject <WUXAPISelectionItemProvider>
 @end
 
@@ -303,7 +303,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (NSArray* /* WUXAPIRawElementProviderSimple* */)getSelection;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPISelectionProvider : RTObject <WUXAPISelectionProvider>
 @end
 
@@ -319,7 +319,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (NSArray* /* WUXAAnnotationType */)getAnnotationTypes;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPISpreadsheetItemProvider : RTObject <WUXAPISpreadsheetItemProvider>
 @end
 
@@ -333,7 +333,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (WUXAPIRawElementProviderSimple*)getItemByName:(NSString *)name;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPISpreadsheetProvider : RTObject <WUXAPISpreadsheetProvider>
 @end
 
@@ -353,7 +353,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @property (readonly) NSString * styleName;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIStylesProvider : RTObject <WUXAPIStylesProvider>
 @end
 
@@ -368,7 +368,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)startListening:(WUXASynchronizedInputType)inputType;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPISynchronizedInputProvider : RTObject <WUXAPISynchronizedInputProvider>
 @end
 
@@ -383,7 +383,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (NSArray* /* WUXAPIRawElementProviderSimple* */)getRowHeaderItems;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPITableItemProvider : RTObject <WUXAPITableItemProvider>
 @end
 
@@ -399,7 +399,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (NSArray* /* WUXAPIRawElementProviderSimple* */)getRowHeaders;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPITableProvider : RTObject <WUXAPITableProvider>
 @end
 
@@ -414,7 +414,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @property (readonly) RTObject<WUXAPITextRangeProvider>* textRange;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPITextChildProvider : RTObject <WUXAPITextChildProvider>
 @end
 
@@ -445,7 +445,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (NSArray* /* WUXAPIRawElementProviderSimple* */)getChildren;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPITextRangeProvider : RTObject <WUXAPITextRangeProvider>
 @end
 
@@ -464,7 +464,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (RTObject<WUXAPITextRangeProvider>*)rangeFromPoint:(WFPoint*)screenLocation;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPITextProvider : RTObject <WUXAPITextProvider>
 @end
 
@@ -483,7 +483,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (RTObject<WUXAPITextRangeProvider>*)rangeFromPoint:(WFPoint*)screenLocation;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPITextProvider2 : RTObject <WUXAPITextProvider2>
 @end
 
@@ -515,7 +515,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (NSArray* /* WUXAPIRawElementProviderSimple* */)getChildren;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPITextRangeProvider2 : RTObject <WUXAPITextRangeProvider2>
 @end
 
@@ -530,7 +530,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)toggle;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIToggleProvider : RTObject <WUXAPIToggleProvider>
 @end
 
@@ -549,7 +549,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)rotate:(double)degrees;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPITransformProvider : RTObject <WUXAPITransformProvider>
 @end
 
@@ -571,7 +571,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)rotate:(double)degrees;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPITransformProvider2 : RTObject <WUXAPITransformProvider2>
 @end
 
@@ -587,7 +587,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)setValue:(NSString *)value;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIValueProvider : RTObject <WUXAPIValueProvider>
 @end
 
@@ -601,7 +601,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)realize;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIVirtualizedItemProvider : RTObject <WUXAPIVirtualizedItemProvider>
 @end
 
@@ -623,7 +623,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (BOOL)waitForInputIdle:(int)milliseconds;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIWindowProvider : RTObject <WUXAPIWindowProvider>
 @end
 
@@ -637,7 +637,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (RTObject*)navigateCustom:(WUXAPAutomationNavigationDirection)direction;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPICustomNavigationProvider : RTObject <WUXAPICustomNavigationProvider>
 @end
 
@@ -656,7 +656,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (RTObject<WUXAPITextRangeProvider>*)rangeFromPoint:(WFPoint*)screenLocation;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPITextEditProvider : RTObject <WUXAPITextEditProvider>
 @end
 
@@ -666,7 +666,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -687,7 +687,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPIRawElementProviderSimple_DEFINED__
 #define __WUXAPIRawElementProviderSimple_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIRawElementProviderSimple : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

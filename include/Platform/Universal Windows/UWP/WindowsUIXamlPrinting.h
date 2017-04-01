@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT
-#define OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml_Printing.lib")
+#ifndef OBJCUWPWINDOWSUIXAMLPRINTINGEXPORT
+#define OBJCUWPWINDOWSUIXAMLPRINTINGEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUIXamlPrinting.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -90,7 +90,7 @@ typedef void(^WUXPPaginateEventHandler)(RTObject* sender, WUXPPaginateEventArgs*
 #ifndef __WUXPAddPagesEventArgs_DEFINED__
 #define __WUXPAddPagesEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT
+OBJCUWPWINDOWSUIXAMLPRINTINGEXPORT
 @interface WUXPAddPagesEventArgs : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -105,7 +105,7 @@ OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT
 #ifndef __WUXPGetPreviewPageEventArgs_DEFINED__
 #define __WUXPGetPreviewPageEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT
+OBJCUWPWINDOWSUIXAMLPRINTINGEXPORT
 @interface WUXPGetPreviewPageEventArgs : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -120,7 +120,7 @@ OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT
 #ifndef __WUXPPaginateEventArgs_DEFINED__
 #define __WUXPPaginateEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT
+OBJCUWPWINDOWSUIXAMLPRINTINGEXPORT
 @interface WUXPPaginateEventArgs : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -136,7 +136,7 @@ OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT
+OBJCUWPWINDOWSUIXAMLPRINTINGEXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -157,7 +157,7 @@ OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT
 #ifndef __WUXPPrintDocument_DEFINED__
 #define __WUXPPrintDocument_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_PRINTING_EXPORT
+OBJCUWPWINDOWSUIXAMLPRINTINGEXPORT
 @interface WUXPPrintDocument : WXDependencyObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)

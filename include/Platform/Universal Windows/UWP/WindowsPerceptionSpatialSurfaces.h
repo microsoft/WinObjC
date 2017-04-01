@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_SURFACES_EXPORT
-#define OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_SURFACES_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Perception_Spatial_Surfaces.lib")
+#ifndef OBJCUWPWINDOWSPERCEPTIONSPATIALSURFACESEXPORT
+#define OBJCUWPWINDOWSPERCEPTIONSPATIALSURFACESEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsPerceptionSpatialSurfaces.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -42,7 +42,7 @@
 #ifndef __WPSSSpatialSurfaceInfo_DEFINED__
 #define __WPSSSpatialSurfaceInfo_DEFINED__
 
-OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_SURFACES_EXPORT
+OBJCUWPWINDOWSPERCEPTIONSPATIALSURFACESEXPORT
 @interface WPSSSpatialSurfaceInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -60,7 +60,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_SURFACES_EXPORT
 #ifndef __WPSSSpatialSurfaceMeshBuffer_DEFINED__
 #define __WPSSSpatialSurfaceMeshBuffer_DEFINED__
 
-OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_SURFACES_EXPORT
+OBJCUWPWINDOWSPERCEPTIONSPATIALSURFACESEXPORT
 @interface WPSSSpatialSurfaceMeshBuffer : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -77,7 +77,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_SURFACES_EXPORT
 #ifndef __WPSSSpatialSurfaceMesh_DEFINED__
 #define __WPSSSpatialSurfaceMesh_DEFINED__
 
-OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_SURFACES_EXPORT
+OBJCUWPWINDOWSPERCEPTIONSPATIALSURFACESEXPORT
 @interface WPSSSpatialSurfaceMesh : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -96,7 +96,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_SURFACES_EXPORT
 #ifndef __WPSSSpatialSurfaceMeshOptions_DEFINED__
 #define __WPSSSpatialSurfaceMeshOptions_DEFINED__
 
-OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_SURFACES_EXPORT
+OBJCUWPWINDOWSPERCEPTIONSPATIALSURFACESEXPORT
 @interface WPSSSpatialSurfaceMeshOptions : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -117,7 +117,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_SURFACES_EXPORT
 #ifndef __WPSSSpatialSurfaceObserver_DEFINED__
 #define __WPSSSpatialSurfaceObserver_DEFINED__
 
-OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_SURFACES_EXPORT
+OBJCUWPWINDOWSPERCEPTIONSPATIALSURFACESEXPORT
 @interface WPSSSpatialSurfaceObserver : RTObject
 + (void)requestAccessAsyncWithSuccess:(void (^)(WPSSpatialPerceptionAccessStatus))success failure:(void (^)(NSError*))failure;
 + (instancetype)make __attribute__ ((ns_returns_retained));

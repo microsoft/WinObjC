@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_PHONE_SYSTEM_PROFILE_EXPORT
-#define OBJCUWP_WINDOWS_PHONE_SYSTEM_PROFILE_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Phone_System_Profile.lib")
+#ifndef OBJCUWPWINDOWSPHONESYSTEMPROFILEEXPORT
+#define OBJCUWPWINDOWSPHONESYSTEMPROFILEEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsPhoneSystemProfile.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -36,7 +36,7 @@
 #ifndef __WPSPRetailMode_DEFINED__
 #define __WPSPRetailMode_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_SYSTEM_PROFILE_EXPORT
+OBJCUWPWINDOWSPHONESYSTEMPROFILEEXPORT
 @interface WPSPRetailMode : RTObject
 + (BOOL)retailModeEnabled;
 @end

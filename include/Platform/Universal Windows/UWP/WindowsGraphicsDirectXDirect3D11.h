@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT
-#define OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Graphics_DirectX_Direct3D11.lib")
+#ifndef OBJCUWPWINDOWSGRAPHICSDIRECTXDIRECT3D11EXPORT
+#define OBJCUWPWINDOWSGRAPHICSDIRECTXDIRECT3D11EXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsGraphicsDirectXDirect3D11.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -60,7 +60,7 @@ typedef unsigned WGDDDirect3DBindings;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Graphics.DirectX.Direct3D11.Direct3DMultisampleDescription
-OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT
+OBJCUWPWINDOWSGRAPHICSDIRECTXDIRECT3D11EXPORT
 @interface WGDDDirect3DMultisampleDescription : NSObject
 + (instancetype)new;
 @property int count;
@@ -68,7 +68,7 @@ OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT
 @end
 
 // [struct] Windows.Graphics.DirectX.Direct3D11.Direct3DSurfaceDescription
-OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT
+OBJCUWPWINDOWSGRAPHICSDIRECTXDIRECT3D11EXPORT
 @interface WGDDDirect3DSurfaceDescription : NSObject
 + (instancetype)new;
 @property int width;
@@ -85,7 +85,7 @@ OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT
+OBJCUWPWINDOWSGRAPHICSDIRECTXDIRECT3D11EXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -100,7 +100,7 @@ OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT
+OBJCUWPWINDOWSGRAPHICSDIRECTXDIRECT3D11EXPORT
 @interface WGDDIDirect3DDevice : RTObject <WGDDIDirect3DDevice>
 @end
 
@@ -115,7 +115,7 @@ OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_GRAPHICS_DIRECTX_DIRECT3D11_EXPORT
+OBJCUWPWINDOWSGRAPHICSDIRECTXDIRECT3D11EXPORT
 @interface WGDDIDirect3DSurface : RTObject <WGDDIDirect3DSurface>
 @end
 

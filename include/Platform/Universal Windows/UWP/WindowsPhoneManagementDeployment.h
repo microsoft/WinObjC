@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_PHONE_MANAGEMENT_DEPLOYMENT_EXPORT
-#define OBJCUWP_WINDOWS_PHONE_MANAGEMENT_DEPLOYMENT_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Phone_Management_Deployment.lib")
+#ifndef OBJCUWPWINDOWSPHONEMANAGEMENTDEPLOYMENTEXPORT
+#define OBJCUWPWINDOWSPHONEMANAGEMENTDEPLOYMENTEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsPhoneManagementDeployment.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -57,7 +57,7 @@ typedef unsigned WPMDEnterpriseEnrollmentStatus;
 #ifndef __WPMDEnterprise_DEFINED__
 #define __WPMDEnterprise_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_MANAGEMENT_DEPLOYMENT_EXPORT
+OBJCUWPWINDOWSPHONEMANAGEMENTDEPLOYMENTEXPORT
 @interface WPMDEnterprise : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -76,7 +76,7 @@ OBJCUWP_WINDOWS_PHONE_MANAGEMENT_DEPLOYMENT_EXPORT
 #ifndef __WPMDEnterpriseEnrollmentResult_DEFINED__
 #define __WPMDEnterpriseEnrollmentResult_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_MANAGEMENT_DEPLOYMENT_EXPORT
+OBJCUWPWINDOWSPHONEMANAGEMENTDEPLOYMENTEXPORT
 @interface WPMDEnterpriseEnrollmentResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -91,7 +91,7 @@ OBJCUWP_WINDOWS_PHONE_MANAGEMENT_DEPLOYMENT_EXPORT
 #ifndef __WPMDPackageInstallResult_DEFINED__
 #define __WPMDPackageInstallResult_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_MANAGEMENT_DEPLOYMENT_EXPORT
+OBJCUWPWINDOWSPHONEMANAGEMENTDEPLOYMENTEXPORT
 @interface WPMDPackageInstallResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -107,7 +107,7 @@ OBJCUWP_WINDOWS_PHONE_MANAGEMENT_DEPLOYMENT_EXPORT
 #ifndef __WPMDInstallationManager_DEFINED__
 #define __WPMDInstallationManager_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_MANAGEMENT_DEPLOYMENT_EXPORT
+OBJCUWPWINDOWSPHONEMANAGEMENTDEPLOYMENTEXPORT
 @interface WPMDInstallationManager : RTObject
 + (void)addPackageAsync:(NSString *)title sourceLocation:(WFUri*)sourceLocation success:(void (^)(WPMDPackageInstallResult*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
 + (void)addPackagePreloadedAsync:(NSString *)title sourceLocation:(WFUri*)sourceLocation instanceId:(NSString *)instanceId offerId:(NSString *)offerId license:(WFUri*)license success:(void (^)(WPMDPackageInstallResult*))success progress:(void (^)(unsigned int))progress failure:(void (^)(NSError*))failure;
@@ -125,7 +125,7 @@ OBJCUWP_WINDOWS_PHONE_MANAGEMENT_DEPLOYMENT_EXPORT
 #ifndef __WPMDEnterpriseEnrollmentManager_DEFINED__
 #define __WPMDEnterpriseEnrollmentManager_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_MANAGEMENT_DEPLOYMENT_EXPORT
+OBJCUWPWINDOWSPHONEMANAGEMENTDEPLOYMENTEXPORT
 @interface WPMDEnterpriseEnrollmentManager : RTObject
 + (RTObject<WFIAsyncAction>*)validateEnterprisesAsync;
 + (void)requestEnrollmentAsync:(NSString *)enrollmentToken success:(void (^)(WPMDEnterpriseEnrollmentResult*))success failure:(void (^)(NSError*))failure;

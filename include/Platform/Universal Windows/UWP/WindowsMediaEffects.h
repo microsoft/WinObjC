@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
-#define OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Media_Effects_Editing.lib")
+#ifndef OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
+#define OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsMediaEditingEffects.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -93,7 +93,7 @@ typedef unsigned WMEMediaEffectClosedReason;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
 @interface WMEIVideoCompositorDefinition : RTObject <WMEIVideoCompositorDefinition>
 @end
 
@@ -107,7 +107,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 - (void)setProperties:(RTObject<WFCIPropertySet>*)configuration;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
 @interface WMIMediaExtension : RTObject <WMIMediaExtension>
 @end
 
@@ -126,7 +126,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 - (void)setProperties:(RTObject<WFCIPropertySet>*)configuration;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
 @interface WMEIVideoCompositor : RTObject <WMEIVideoCompositor>
 @end
 
@@ -141,7 +141,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
 @interface WMEIAudioEffectDefinition : RTObject <WMEIAudioEffectDefinition>
 @end
 
@@ -156,7 +156,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
 @interface WMEIVideoEffectDefinition : RTObject <WMEIVideoEffectDefinition>
 @end
 
@@ -178,7 +178,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 - (void)setProperties:(RTObject<WFCIPropertySet>*)configuration;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
 @interface WMEIBasicVideoEffect : RTObject <WMEIBasicVideoEffect>
 @end
 
@@ -198,7 +198,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 - (void)setProperties:(RTObject<WFCIPropertySet>*)configuration;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
 @interface WMEIBasicAudioEffect : RTObject <WMEIBasicAudioEffect>
 @end
 
@@ -208,7 +208,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 #ifndef __WMEVideoCompositorDefinition_DEFINED__
 #define __WMEVideoCompositorDefinition_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
 @interface WMEVideoCompositorDefinition : RTObject <WMEIVideoCompositorDefinition>
 + (WMEVideoCompositorDefinition*)make:(NSString *)activatableClassId ACTIVATOR;
 + (WMEVideoCompositorDefinition*)makeWithProperties:(NSString *)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
@@ -225,7 +225,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 #ifndef __WMECompositeVideoFrameContext_DEFINED__
 #define __WMECompositeVideoFrameContext_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
 @interface WMECompositeVideoFrameContext : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -242,7 +242,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 #ifndef __WMEAudioEffect_DEFINED__
 #define __WMEAudioEffect_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
 @interface WMEAudioEffect : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -256,7 +256,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 #ifndef __WMEAudioRenderEffectsManager_DEFINED__
 #define __WMEAudioRenderEffectsManager_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
 @interface WMEAudioRenderEffectsManager : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -275,7 +275,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 #ifndef __WMEAudioCaptureEffectsManager_DEFINED__
 #define __WMEAudioCaptureEffectsManager_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
 @interface WMEAudioCaptureEffectsManager : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -291,7 +291,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 #ifndef __WMEAudioEffectsManager_DEFINED__
 #define __WMEAudioEffectsManager_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
 @interface WMEAudioEffectsManager : RTObject
 + (WMEAudioRenderEffectsManager*)createAudioRenderEffectsManager:(NSString *)deviceId category:(WMRAudioRenderCategory)category;
 + (WMEAudioRenderEffectsManager*)createAudioRenderEffectsManagerWithMode:(NSString *)deviceId category:(WMRAudioRenderCategory)category mode:(WMAudioProcessing)mode;
@@ -305,7 +305,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 #ifndef __WMEVideoEffectDefinition_DEFINED__
 #define __WMEVideoEffectDefinition_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
 @interface WMEVideoEffectDefinition : RTObject <WMEIVideoEffectDefinition>
 + (WMEVideoEffectDefinition*)make:(NSString *)activatableClassId ACTIVATOR;
 + (WMEVideoEffectDefinition*)makeWithProperties:(NSString *)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
@@ -322,7 +322,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 #ifndef __WMEAudioEffectDefinition_DEFINED__
 #define __WMEAudioEffectDefinition_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
 @interface WMEAudioEffectDefinition : RTObject <WMEIAudioEffectDefinition>
 + (WMEAudioEffectDefinition*)make:(NSString *)activatableClassId ACTIVATOR;
 + (WMEAudioEffectDefinition*)makeWithProperties:(NSString *)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
@@ -339,7 +339,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 #ifndef __WMEProcessVideoFrameContext_DEFINED__
 #define __WMEProcessVideoFrameContext_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
 @interface WMEProcessVideoFrameContext : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -354,7 +354,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 #ifndef __WMEProcessAudioFrameContext_DEFINED__
 #define __WMEProcessAudioFrameContext_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
 @interface WMEProcessAudioFrameContext : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -369,7 +369,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 #ifndef __WMEVideoTransformEffectDefinition_DEFINED__
 #define __WMEVideoTransformEffectDefinition_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
 @interface WMEVideoTransformEffectDefinition : RTObject <WMEIVideoEffectDefinition>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -391,7 +391,7 @@ OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
 #ifndef __WMESlowMotionEffectDefinition_DEFINED__
 #define __WMESlowMotionEffectDefinition_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EFFECTS_EDITING_EXPORT
+OBJCUWPWINDOWSMEDIAEDITINGEFFECTSEXPORT
 @interface WMESlowMotionEffectDefinition : RTObject <WMEIVideoEffectDefinition>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)

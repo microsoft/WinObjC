@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_XAML_EXPORT
-#define OBJCUWP_WINDOWS_UI_XAML_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml.lib")
+#ifndef OBJCUWPWINDOWSUIXAMLEXPORT
+#define OBJCUWPWINDOWSUIXAMLEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUIXaml.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -79,14 +79,14 @@ typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, W
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Xaml.Media.Animation.KeyTime
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAKeyTime : NSObject
 + (instancetype)new;
 @property (retain) WFTimeSpan* timeSpan;
 @end
 
 // [struct] Windows.UI.Xaml.Media.Animation.RepeatBehavior
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMARepeatBehavior : NSObject
 + (instancetype)new;
 @property double count;
@@ -103,7 +103,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)setNavigationStateCore:(NSString *)navigationState;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAINavigationTransitionInfoOverrides : RTObject <WUXMAINavigationTransitionInfoOverrides>
 @end
 
@@ -113,7 +113,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAKeyTimeHelper_DEFINED__
 #define __WUXMAKeyTimeHelper_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAKeyTimeHelper : RTObject
 + (WUXMAKeyTime*)fromTimeSpan:(WFTimeSpan*)timeSpan;
 #if defined(__cplusplus)
@@ -127,7 +127,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMARepeatBehaviorHelper_DEFINED__
 #define __WUXMARepeatBehaviorHelper_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMARepeatBehaviorHelper : RTObject
 + (WUXMARepeatBehavior*)fromCount:(double)count;
 + (WUXMARepeatBehavior*)fromDuration:(WFTimeSpan*)duration;
@@ -146,7 +146,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMATransitionCollection_DEFINED__
 #define __WUXMATransitionCollection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMATransitionCollection : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -173,7 +173,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAColorKeyFrameCollection_DEFINED__
 #define __WUXMAColorKeyFrameCollection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAColorKeyFrameCollection : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -200,7 +200,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMADoubleKeyFrameCollection_DEFINED__
 #define __WUXMADoubleKeyFrameCollection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMADoubleKeyFrameCollection : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -227,7 +227,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAObjectKeyFrameCollection_DEFINED__
 #define __WUXMAObjectKeyFrameCollection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAObjectKeyFrameCollection : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -254,7 +254,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAPointKeyFrameCollection_DEFINED__
 #define __WUXMAPointKeyFrameCollection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAPointKeyFrameCollection : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -281,7 +281,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMATimelineCollection_DEFINED__
 #define __WUXMATimelineCollection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMATimelineCollection : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -308,7 +308,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -329,7 +329,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAColorKeyFrame_DEFINED__
 #define __WUXMAColorKeyFrame_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAColorKeyFrame : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -346,7 +346,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMADoubleKeyFrame_DEFINED__
 #define __WUXMADoubleKeyFrame_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMADoubleKeyFrame : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -363,7 +363,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAEasingFunctionBase_DEFINED__
 #define __WUXMAEasingFunctionBase_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAEasingFunctionBase : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -379,7 +379,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAKeySpline_DEFINED__
 #define __WUXMAKeySpline_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAKeySpline : WXDependencyObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -395,7 +395,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMANavigationTransitionInfo_DEFINED__
 #define __WUXMANavigationTransitionInfo_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMANavigationTransitionInfo : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -410,7 +410,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAObjectKeyFrame_DEFINED__
 #define __WUXMAObjectKeyFrame_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAObjectKeyFrame : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -427,7 +427,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAPointKeyFrame_DEFINED__
 #define __WUXMAPointKeyFrame_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAPointKeyFrame : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -444,7 +444,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMATimeline_DEFINED__
 #define __WUXMATimeline_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMATimeline : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -473,7 +473,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMATransition_DEFINED__
 #define __WUXMATransition_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMATransition : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -486,7 +486,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAAddDeleteThemeTransition_DEFINED__
 #define __WUXMAAddDeleteThemeTransition_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAAddDeleteThemeTransition : WUXMATransition
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -500,7 +500,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMABackEase_DEFINED__
 #define __WUXMABackEase_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMABackEase : WUXMAEasingFunctionBase
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -516,7 +516,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXTriggerAction_DEFINED__
 #define __WXTriggerAction_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXTriggerAction : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -529,7 +529,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMABeginStoryboard_DEFINED__
 #define __WUXMABeginStoryboard_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMABeginStoryboard : WXTriggerAction
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -545,7 +545,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMABounceEase_DEFINED__
 #define __WUXMABounceEase_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMABounceEase : WUXMAEasingFunctionBase
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -563,7 +563,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMACircleEase_DEFINED__
 #define __WUXMACircleEase_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMACircleEase : WUXMAEasingFunctionBase
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -577,7 +577,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAColorAnimation_DEFINED__
 #define __WUXMAColorAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAColorAnimation : WUXMATimeline
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -601,7 +601,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAColorAnimationUsingKeyFrames_DEFINED__
 #define __WUXMAColorAnimationUsingKeyFrames_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAColorAnimationUsingKeyFrames : WUXMATimeline
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -618,7 +618,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAContentThemeTransition_DEFINED__
 #define __WUXMAContentThemeTransition_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAContentThemeTransition : WUXMATransition
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -636,7 +636,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMACubicEase_DEFINED__
 #define __WUXMACubicEase_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMACubicEase : WUXMAEasingFunctionBase
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -650,7 +650,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMADiscreteColorKeyFrame_DEFINED__
 #define __WUXMADiscreteColorKeyFrame_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMADiscreteColorKeyFrame : WUXMAColorKeyFrame
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -664,7 +664,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMADiscreteDoubleKeyFrame_DEFINED__
 #define __WUXMADiscreteDoubleKeyFrame_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMADiscreteDoubleKeyFrame : WUXMADoubleKeyFrame
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -678,7 +678,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMADiscreteObjectKeyFrame_DEFINED__
 #define __WUXMADiscreteObjectKeyFrame_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMADiscreteObjectKeyFrame : WUXMAObjectKeyFrame
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -692,7 +692,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMADiscretePointKeyFrame_DEFINED__
 #define __WUXMADiscretePointKeyFrame_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMADiscretePointKeyFrame : WUXMAPointKeyFrame
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -706,7 +706,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMADoubleAnimation_DEFINED__
 #define __WUXMADoubleAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMADoubleAnimation : WUXMATimeline
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -730,7 +730,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMADoubleAnimationUsingKeyFrames_DEFINED__
 #define __WUXMADoubleAnimationUsingKeyFrames_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMADoubleAnimationUsingKeyFrames : WUXMATimeline
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -747,7 +747,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMADragItemThemeAnimation_DEFINED__
 #define __WUXMADragItemThemeAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMADragItemThemeAnimation : WUXMATimeline
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -763,7 +763,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMADragOverThemeAnimation_DEFINED__
 #define __WUXMADragOverThemeAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMADragOverThemeAnimation : WUXMATimeline
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -783,7 +783,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMADrillInThemeAnimation_DEFINED__
 #define __WUXMADrillInThemeAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMADrillInThemeAnimation : WUXMATimeline
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -805,7 +805,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMADrillOutThemeAnimation_DEFINED__
 #define __WUXMADrillOutThemeAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMADrillOutThemeAnimation : WUXMATimeline
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -827,7 +827,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMADropTargetItemThemeAnimation_DEFINED__
 #define __WUXMADropTargetItemThemeAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMADropTargetItemThemeAnimation : WUXMATimeline
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -843,7 +843,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAEasingColorKeyFrame_DEFINED__
 #define __WUXMAEasingColorKeyFrame_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAEasingColorKeyFrame : WUXMAColorKeyFrame
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -859,7 +859,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAEasingDoubleKeyFrame_DEFINED__
 #define __WUXMAEasingDoubleKeyFrame_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAEasingDoubleKeyFrame : WUXMADoubleKeyFrame
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -875,7 +875,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAEasingPointKeyFrame_DEFINED__
 #define __WUXMAEasingPointKeyFrame_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAEasingPointKeyFrame : WUXMAPointKeyFrame
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -891,7 +891,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAEdgeUIThemeTransition_DEFINED__
 #define __WUXMAEdgeUIThemeTransition_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAEdgeUIThemeTransition : WUXMATransition
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -907,7 +907,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAElasticEase_DEFINED__
 #define __WUXMAElasticEase_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAElasticEase : WUXMAEasingFunctionBase
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -925,7 +925,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAEntranceThemeTransition_DEFINED__
 #define __WUXMAEntranceThemeTransition_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAEntranceThemeTransition : WUXMATransition
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -945,7 +945,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAExponentialEase_DEFINED__
 #define __WUXMAExponentialEase_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAExponentialEase : WUXMAEasingFunctionBase
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -961,7 +961,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAFadeInThemeAnimation_DEFINED__
 #define __WUXMAFadeInThemeAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAFadeInThemeAnimation : WUXMATimeline
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -977,7 +977,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAFadeOutThemeAnimation_DEFINED__
 #define __WUXMAFadeOutThemeAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAFadeOutThemeAnimation : WUXMATimeline
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -993,7 +993,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMALinearColorKeyFrame_DEFINED__
 #define __WUXMALinearColorKeyFrame_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMALinearColorKeyFrame : WUXMAColorKeyFrame
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1007,7 +1007,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMALinearDoubleKeyFrame_DEFINED__
 #define __WUXMALinearDoubleKeyFrame_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMALinearDoubleKeyFrame : WUXMADoubleKeyFrame
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1021,7 +1021,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMALinearPointKeyFrame_DEFINED__
 #define __WUXMALinearPointKeyFrame_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMALinearPointKeyFrame : WUXMAPointKeyFrame
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1035,7 +1035,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAObjectAnimationUsingKeyFrames_DEFINED__
 #define __WUXMAObjectAnimationUsingKeyFrames_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAObjectAnimationUsingKeyFrames : WUXMATimeline
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1052,7 +1052,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAPaneThemeTransition_DEFINED__
 #define __WUXMAPaneThemeTransition_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAPaneThemeTransition : WUXMATransition
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1068,7 +1068,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAPointAnimation_DEFINED__
 #define __WUXMAPointAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAPointAnimation : WUXMATimeline
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1092,7 +1092,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAPointAnimationUsingKeyFrames_DEFINED__
 #define __WUXMAPointAnimationUsingKeyFrames_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAPointAnimationUsingKeyFrames : WUXMATimeline
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1109,7 +1109,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAPointerDownThemeAnimation_DEFINED__
 #define __WUXMAPointerDownThemeAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAPointerDownThemeAnimation : WUXMATimeline
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1125,7 +1125,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAPointerUpThemeAnimation_DEFINED__
 #define __WUXMAPointerUpThemeAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAPointerUpThemeAnimation : WUXMATimeline
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1141,7 +1141,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAPopInThemeAnimation_DEFINED__
 #define __WUXMAPopInThemeAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAPopInThemeAnimation : WUXMATimeline
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1161,7 +1161,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAPopOutThemeAnimation_DEFINED__
 #define __WUXMAPopOutThemeAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAPopOutThemeAnimation : WUXMATimeline
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1177,7 +1177,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAPopupThemeTransition_DEFINED__
 #define __WUXMAPopupThemeTransition_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAPopupThemeTransition : WUXMATransition
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1195,7 +1195,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAPowerEase_DEFINED__
 #define __WUXMAPowerEase_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAPowerEase : WUXMAEasingFunctionBase
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1211,7 +1211,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAQuadraticEase_DEFINED__
 #define __WUXMAQuadraticEase_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAQuadraticEase : WUXMAEasingFunctionBase
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1225,7 +1225,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAQuarticEase_DEFINED__
 #define __WUXMAQuarticEase_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAQuarticEase : WUXMAEasingFunctionBase
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1239,7 +1239,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAQuinticEase_DEFINED__
 #define __WUXMAQuinticEase_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAQuinticEase : WUXMAEasingFunctionBase
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1253,7 +1253,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAReorderThemeTransition_DEFINED__
 #define __WUXMAReorderThemeTransition_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAReorderThemeTransition : WUXMATransition
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1267,7 +1267,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMARepositionThemeAnimation_DEFINED__
 #define __WUXMARepositionThemeAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMARepositionThemeAnimation : WUXMATimeline
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1287,7 +1287,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMARepositionThemeTransition_DEFINED__
 #define __WUXMARepositionThemeTransition_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMARepositionThemeTransition : WUXMATransition
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1303,7 +1303,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMASineEase_DEFINED__
 #define __WUXMASineEase_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMASineEase : WUXMAEasingFunctionBase
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1317,7 +1317,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMASplineColorKeyFrame_DEFINED__
 #define __WUXMASplineColorKeyFrame_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMASplineColorKeyFrame : WUXMAColorKeyFrame
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1333,7 +1333,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMASplineDoubleKeyFrame_DEFINED__
 #define __WUXMASplineDoubleKeyFrame_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMASplineDoubleKeyFrame : WUXMADoubleKeyFrame
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1349,7 +1349,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMASplinePointKeyFrame_DEFINED__
 #define __WUXMASplinePointKeyFrame_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMASplinePointKeyFrame : WUXMAPointKeyFrame
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1365,7 +1365,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMASplitCloseThemeAnimation_DEFINED__
 #define __WUXMASplitCloseThemeAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMASplitCloseThemeAnimation : WUXMATimeline
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1401,7 +1401,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMASplitOpenThemeAnimation_DEFINED__
 #define __WUXMASplitOpenThemeAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMASplitOpenThemeAnimation : WUXMATimeline
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1437,7 +1437,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAStoryboard_DEFINED__
 #define __WUXMAStoryboard_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAStoryboard : WUXMATimeline
 + (NSString *)getTargetProperty:(WUXMATimeline*)element;
 + (void)setTargetProperty:(WUXMATimeline*)element path:(NSString *)path;
@@ -1468,7 +1468,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMASwipeBackThemeAnimation_DEFINED__
 #define __WUXMASwipeBackThemeAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMASwipeBackThemeAnimation : WUXMATimeline
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1488,7 +1488,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMASwipeHintThemeAnimation_DEFINED__
 #define __WUXMASwipeHintThemeAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMASwipeHintThemeAnimation : WUXMATimeline
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1508,7 +1508,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAConnectedAnimation_DEFINED__
 #define __WUXMAConnectedAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAConnectedAnimation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1525,7 +1525,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAConnectedAnimationService_DEFINED__
 #define __WUXMAConnectedAnimationService_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAConnectedAnimationService : RTObject
 + (WUXMAConnectedAnimationService*)getForCurrentView;
 #if defined(__cplusplus)
@@ -1543,7 +1543,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMACommonNavigationTransitionInfo_DEFINED__
 #define __WUXMACommonNavigationTransitionInfo_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMACommonNavigationTransitionInfo : WUXMANavigationTransitionInfo
 + (BOOL)getIsStaggerElement:(WXUIElement*)element;
 + (void)setIsStaggerElement:(WXUIElement*)element value:(BOOL)value;
@@ -1562,7 +1562,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAContinuumNavigationTransitionInfo_DEFINED__
 #define __WUXMAContinuumNavigationTransitionInfo_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAContinuumNavigationTransitionInfo : WUXMANavigationTransitionInfo
 + (BOOL)getIsEntranceElement:(WXUIElement*)element;
 + (void)setIsEntranceElement:(WXUIElement*)element value:(BOOL)value;
@@ -1587,7 +1587,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMADrillInNavigationTransitionInfo_DEFINED__
 #define __WUXMADrillInNavigationTransitionInfo_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMADrillInNavigationTransitionInfo : WUXMANavigationTransitionInfo
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1601,7 +1601,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMAEntranceNavigationTransitionInfo_DEFINED__
 #define __WUXMAEntranceNavigationTransitionInfo_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMAEntranceNavigationTransitionInfo : WUXMANavigationTransitionInfo
 + (BOOL)getIsTargetElement:(WXUIElement*)element;
 + (void)setIsTargetElement:(WXUIElement*)element value:(BOOL)value;
@@ -1618,7 +1618,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMANavigationThemeTransition_DEFINED__
 #define __WUXMANavigationThemeTransition_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMANavigationThemeTransition : WUXMATransition
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1634,7 +1634,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMASlideNavigationTransitionInfo_DEFINED__
 #define __WUXMASlideNavigationTransitionInfo_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMASlideNavigationTransitionInfo : WUXMANavigationTransitionInfo
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1648,7 +1648,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMASuppressNavigationTransitionInfo_DEFINED__
 #define __WUXMASuppressNavigationTransitionInfo_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMASuppressNavigationTransitionInfo : WUXMANavigationTransitionInfo
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)

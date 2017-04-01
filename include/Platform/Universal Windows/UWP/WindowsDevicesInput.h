@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
-#define OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Devices_Input.lib")
+#ifndef OBJCUWPWINDOWSDEVICESINPUTEXPORT
+#define OBJCUWPWINDOWSDEVICESINPUTEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsDevicesInput.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -44,7 +44,7 @@ typedef unsigned WDIPointerDeviceType;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Devices.Input.PointerDeviceUsage
-OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
+OBJCUWPWINDOWSDEVICESINPUTEXPORT
 @interface WDIPointerDeviceUsage : NSObject
 + (instancetype)new;
 @property unsigned int usagePage;
@@ -58,7 +58,7 @@ OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
 @end
 
 // [struct] Windows.Devices.Input.MouseDelta
-OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
+OBJCUWPWINDOWSDEVICESINPUTEXPORT
 @interface WDIMouseDelta : NSObject
 + (instancetype)new;
 @property int x;
@@ -69,7 +69,7 @@ OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
 #ifndef __WDIPointerDevice_DEFINED__
 #define __WDIPointerDevice_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
+OBJCUWPWINDOWSDEVICESINPUTEXPORT
 @interface WDIPointerDevice : RTObject
 + (WDIPointerDevice*)getPointerDevice:(unsigned int)pointerId;
 + (NSArray* /* WDIPointerDevice* */)getPointerDevices;
@@ -91,7 +91,7 @@ OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
 #ifndef __WDIMouseDevice_DEFINED__
 #define __WDIMouseDevice_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
+OBJCUWPWINDOWSDEVICESINPUTEXPORT
 @interface WDIMouseDevice : RTObject
 + (WDIMouseDevice*)getForCurrentView;
 #if defined(__cplusplus)
@@ -107,7 +107,7 @@ OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
 #ifndef __WDIMouseEventArgs_DEFINED__
 #define __WDIMouseEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
+OBJCUWPWINDOWSDEVICESINPUTEXPORT
 @interface WDIMouseEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -121,7 +121,7 @@ OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
 #ifndef __WDIMouseCapabilities_DEFINED__
 #define __WDIMouseCapabilities_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
+OBJCUWPWINDOWSDEVICESINPUTEXPORT
 @interface WDIMouseCapabilities : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -140,7 +140,7 @@ OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
 #ifndef __WDIKeyboardCapabilities_DEFINED__
 #define __WDIKeyboardCapabilities_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
+OBJCUWPWINDOWSDEVICESINPUTEXPORT
 @interface WDIKeyboardCapabilities : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -155,7 +155,7 @@ OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
 #ifndef __WDITouchCapabilities_DEFINED__
 #define __WDITouchCapabilities_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_INPUT_EXPORT
+OBJCUWPWINDOWSDEVICESINPUTEXPORT
 @interface WDITouchCapabilities : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)

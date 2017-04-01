@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
-#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#ifndef OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+#define OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsConsolidatedNamespace.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -114,7 +114,7 @@ typedef unsigned WAAActivationKind;
 @property (readonly) WAASplashScreen* splashScreen;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIActivatedEventArgs : RTObject <WAAIActivatedEventArgs>
 @end
 
@@ -128,7 +128,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) WDPEPrintTaskConfiguration* configuration;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIPrintTaskSettingsActivatedEventArgs : RTObject <WAAIPrintTaskSettingsActivatedEventArgs>
 @end
 
@@ -142,7 +142,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) WDPEPrint3DWorkflow* workflow;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIPrint3DWorkflowActivatedEventArgs : RTObject <WAAIPrint3DWorkflowActivatedEventArgs>
 @end
 
@@ -157,7 +157,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) RTObject* videoDeviceExtension;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAICameraSettingsActivatedEventArgs : RTObject <WAAICameraSettingsActivatedEventArgs>
 @end
 
@@ -171,7 +171,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) WACPContactPickerUI* contactPickerUI;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIContactPickerActivatedEventArgs : RTObject <WAAIContactPickerActivatedEventArgs>
 @end
 
@@ -185,7 +185,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) NSString * verb;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIContactActivatedEventArgs : RTObject <WAAIContactActivatedEventArgs>
 @end
 
@@ -201,7 +201,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) NSString * serviceUserId;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIContactCallActivatedEventArgs : RTObject <WAAIContactCallActivatedEventArgs>
 @end
 
@@ -217,7 +217,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) NSString * serviceUserId;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIContactMessageActivatedEventArgs : RTObject <WAAIContactMessageActivatedEventArgs>
 @end
 
@@ -232,7 +232,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) WACContact* contact;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIContactMapActivatedEventArgs : RTObject <WAAIContactMapActivatedEventArgs>
 @end
 
@@ -248,7 +248,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) NSString * serviceUserId;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIContactPostActivatedEventArgs : RTObject <WAAIContactPostActivatedEventArgs>
 @end
 
@@ -264,7 +264,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) NSString * serviceUserId;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIContactVideoCallActivatedEventArgs : RTObject <WAAIContactVideoCallActivatedEventArgs>
 @end
 
@@ -278,7 +278,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) NSString * verb;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIContactsProviderActivatedEventArgs : RTObject <WAAIContactsProviderActivatedEventArgs>
 @end
 
@@ -294,7 +294,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) NSString * itemId;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIWalletActionActivatedEventArgs : RTObject <WAAIWalletActionActivatedEventArgs>
 @end
 
@@ -308,7 +308,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) NSString * verb;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIAppointmentsProviderActivatedEventArgs : RTObject <WAAIAppointmentsProviderActivatedEventArgs>
 @end
 
@@ -322,7 +322,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) WAAAAddAppointmentOperation* addAppointmentOperation;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIAppointmentsProviderAddAppointmentActivatedEventArgs : RTObject <WAAIAppointmentsProviderAddAppointmentActivatedEventArgs>
 @end
 
@@ -336,7 +336,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) WAAAReplaceAppointmentOperation* replaceAppointmentOperation;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIAppointmentsProviderReplaceAppointmentActivatedEventArgs : RTObject <WAAIAppointmentsProviderReplaceAppointmentActivatedEventArgs>
 @end
 
@@ -350,7 +350,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) WAAARemoveAppointmentOperation* removeAppointmentOperation;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIAppointmentsProviderRemoveAppointmentActivatedEventArgs : RTObject <WAAIAppointmentsProviderRemoveAppointmentActivatedEventArgs>
 @end
 
@@ -366,7 +366,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) NSString * roamingId;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIAppointmentsProviderShowAppointmentDetailsActivatedEventArgs : RTObject <WAAIAppointmentsProviderShowAppointmentDetailsActivatedEventArgs>
 @end
 
@@ -381,7 +381,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) WFDateTime* timeToShow;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIAppointmentsProviderShowTimeFrameActivatedEventArgs : RTObject <WAAIAppointmentsProviderShowTimeFrameActivatedEventArgs>
 @end
 
@@ -395,7 +395,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) RTObject<WAUPIUserDataAccountProviderOperation>* operation;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIUserDataAccountProviderActivatedEventArgs : RTObject <WAAIUserDataAccountProviderActivatedEventArgs>
 @end
 
@@ -409,7 +409,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) WSUser* user;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIActivatedEventArgsWithUser : RTObject <WAAIActivatedEventArgsWithUser>
 @end
 
@@ -423,7 +423,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) int currentlyShownApplicationViewId;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIApplicationViewActivatedEventArgs : RTObject <WAAIApplicationViewActivatedEventArgs>
 @end
 
@@ -437,7 +437,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) WUVActivationViewSwitcher* viewSwitcher;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIViewSwitcherProvider : RTObject <WAAIViewSwitcherProvider>
 @end
 
@@ -451,7 +451,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) BOOL prelaunchActivated;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIPrelaunchActivatedEventArgs : RTObject <WAAIPrelaunchActivatedEventArgs>
 @end
 
@@ -466,7 +466,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) NSString * tileId;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAILaunchActivatedEventArgs : RTObject <WAAILaunchActivatedEventArgs>
 @end
 
@@ -480,7 +480,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) WACLockScreenCallUI* callUI;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAILockScreenCallActivatedEventArgs : RTObject <WAAILockScreenCallActivatedEventArgs>
 @end
 
@@ -494,7 +494,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) WAATileActivatedInfo* tileActivatedInfo;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAILaunchActivatedEventArgs2 : RTObject <WAAILaunchActivatedEventArgs2>
 @end
 
@@ -509,7 +509,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) NSString * queryText;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAISearchActivatedEventArgs : RTObject <WAAISearchActivatedEventArgs>
 @end
 
@@ -523,7 +523,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) WASSearchPaneQueryLinguisticDetails* linguisticDetails;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAISearchActivatedEventArgsWithLinguisticDetails : RTObject <WAAISearchActivatedEventArgsWithLinguisticDetails>
 @end
 
@@ -537,7 +537,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) WADSShareOperation* shareOperation;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIShareTargetActivatedEventArgs : RTObject <WAAIShareTargetActivatedEventArgs>
 @end
 
@@ -552,7 +552,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) NSString * verb;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIFileActivatedEventArgs : RTObject <WAAIFileActivatedEventArgs>
 @end
 
@@ -566,7 +566,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) WSSStorageFileQueryResult* neighboringFilesQuery;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIFileActivatedEventArgsWithNeighboringFiles : RTObject <WAAIFileActivatedEventArgsWithNeighboringFiles>
 @end
 
@@ -580,7 +580,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) NSString * callerPackageFamilyName;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIFileActivatedEventArgsWithCallerPackageFamilyName : RTObject <WAAIFileActivatedEventArgsWithCallerPackageFamilyName>
 @end
 
@@ -594,7 +594,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) WFUri* uri;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIProtocolActivatedEventArgs : RTObject <WAAIProtocolActivatedEventArgs>
 @end
 
@@ -609,7 +609,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) WFCValueSet* data;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIProtocolActivatedEventArgsWithCallerPackageFamilyNameAndData : RTObject <WAAIProtocolActivatedEventArgsWithCallerPackageFamilyNameAndData>
 @end
 
@@ -623,7 +623,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) WSProtocolForResultsOperation* protocolForResultsOperation;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIProtocolForResultsActivatedEventArgs : RTObject <WAAIProtocolForResultsActivatedEventArgs>
 @end
 
@@ -637,7 +637,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) WSPPFileOpenPickerUI* fileOpenPickerUI;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIFileOpenPickerActivatedEventArgs : RTObject <WAAIFileOpenPickerActivatedEventArgs>
 @end
 
@@ -651,7 +651,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) NSString * callerPackageFamilyName;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIFileOpenPickerActivatedEventArgs2 : RTObject <WAAIFileOpenPickerActivatedEventArgs2>
 @end
 
@@ -665,7 +665,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) WSPPFileSavePickerUI* fileSavePickerUI;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIFileSavePickerActivatedEventArgs : RTObject <WAAIFileSavePickerActivatedEventArgs>
 @end
 
@@ -680,7 +680,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) NSString * enterpriseId;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIFileSavePickerActivatedEventArgs2 : RTObject <WAAIFileSavePickerActivatedEventArgs2>
 @end
 
@@ -694,7 +694,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) WSPCachedFileUpdaterUI* cachedFileUpdaterUI;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAICachedFileUpdaterActivatedEventArgs : RTObject <WAAICachedFileUpdaterActivatedEventArgs>
 @end
 
@@ -709,7 +709,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) NSString * verb;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIDeviceActivatedEventArgs : RTObject <WAAIDeviceActivatedEventArgs>
 @end
 
@@ -723,7 +723,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) NSString * pickerOperationId;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIPickerReturnedActivatedEventArgs : RTObject <WAAIPickerReturnedActivatedEventArgs>
 @end
 
@@ -737,7 +737,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) RTObject* sharedContext;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIRestrictedLaunchActivatedEventArgs : RTObject <WAAIRestrictedLaunchActivatedEventArgs>
 @end
 
@@ -751,7 +751,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) RTObject* info;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAILockScreenActivatedEventArgs : RTObject <WAAILockScreenActivatedEventArgs>
 @end
 
@@ -765,7 +765,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) WFCValueSet* continuationData;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIContinuationActivatedEventArgs : RTObject <WAAIContinuationActivatedEventArgs>
 @end
 
@@ -779,7 +779,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) NSArray* /* WSStorageFile* */ files;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIFileOpenPickerContinuationEventArgs : RTObject <WAAIFileOpenPickerContinuationEventArgs>
 @end
 
@@ -793,7 +793,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) WSStorageFile* file;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIFileSavePickerContinuationEventArgs : RTObject <WAAIFileSavePickerContinuationEventArgs>
 @end
 
@@ -807,7 +807,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) WSStorageFolder* folder;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIFolderPickerContinuationEventArgs : RTObject <WAAIFolderPickerContinuationEventArgs>
 @end
 
@@ -821,7 +821,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) WSAWWebAuthenticationResult* webAuthenticationResult;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIWebAuthenticationBrokerContinuationEventArgs : RTObject <WAAIWebAuthenticationBrokerContinuationEventArgs>
 @end
 
@@ -835,7 +835,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) RTObject<WSAWPIWebAccountProviderOperation>* operation;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIWebAccountProviderActivatedEventArgs : RTObject <WAAIWebAccountProviderActivatedEventArgs>
 @end
 
@@ -850,7 +850,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) WFCValueSet* userInput;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIToastNotificationActivatedEventArgs : RTObject <WAAIToastNotificationActivatedEventArgs>
 @end
 
@@ -864,7 +864,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) NSString * appName;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIDialReceiverActivatedEventArgs : RTObject <WAAIDialReceiverActivatedEventArgs>
 @end
 
@@ -878,7 +878,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) RTObject<WABIBackgroundTaskInstance>* taskInstance;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIBackgroundActivatedEventArgs : RTObject <WAAIBackgroundActivatedEventArgs>
 @end
 
@@ -892,7 +892,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) WDEDeviceInformation* deviceInformation;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIDevicePairingActivatedEventArgs : RTObject <WAAIDevicePairingActivatedEventArgs>
 @end
 
@@ -906,7 +906,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) WMSSpeechRecognitionResult* result;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAIVoiceCommandActivatedEventArgs : RTObject <WAAIVoiceCommandActivatedEventArgs>
 @end
 
@@ -916,7 +916,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAPrintTaskSettingsActivatedEventArgs_DEFINED__
 #define __WAAPrintTaskSettingsActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAPrintTaskSettingsActivatedEventArgs : RTObject <WAAIPrintTaskSettingsActivatedEventArgs, WAAIActivatedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -933,7 +933,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAPrint3DWorkflowActivatedEventArgs_DEFINED__
 #define __WAAPrint3DWorkflowActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAPrint3DWorkflowActivatedEventArgs : RTObject <WAAIPrint3DWorkflowActivatedEventArgs, WAAIActivatedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -950,7 +950,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAALockScreenCallActivatedEventArgs_DEFINED__
 #define __WAALockScreenCallActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAALockScreenCallActivatedEventArgs : RTObject <WAAILockScreenCallActivatedEventArgs, WAAILaunchActivatedEventArgs, WAAIActivatedEventArgs, WAAIApplicationViewActivatedEventArgs, WAAIViewSwitcherProvider>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -971,7 +971,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAACameraSettingsActivatedEventArgs_DEFINED__
 #define __WAACameraSettingsActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAACameraSettingsActivatedEventArgs : RTObject <WAAICameraSettingsActivatedEventArgs, WAAIActivatedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -989,7 +989,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAContactPickerActivatedEventArgs_DEFINED__
 #define __WAAContactPickerActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAContactPickerActivatedEventArgs : RTObject <WAAIContactPickerActivatedEventArgs, WAAIActivatedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1006,7 +1006,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAContactCallActivatedEventArgs_DEFINED__
 #define __WAAContactCallActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAContactCallActivatedEventArgs : RTObject <WAAIContactCallActivatedEventArgs, WAAIContactActivatedEventArgs, WAAIActivatedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1026,7 +1026,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAContactMessageActivatedEventArgs_DEFINED__
 #define __WAAContactMessageActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAContactMessageActivatedEventArgs : RTObject <WAAIContactMessageActivatedEventArgs, WAAIContactActivatedEventArgs, WAAIActivatedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1046,7 +1046,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAContactMapActivatedEventArgs_DEFINED__
 #define __WAAContactMapActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAContactMapActivatedEventArgs : RTObject <WAAIContactMapActivatedEventArgs, WAAIContactActivatedEventArgs, WAAIActivatedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1065,7 +1065,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAContactPostActivatedEventArgs_DEFINED__
 #define __WAAContactPostActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAContactPostActivatedEventArgs : RTObject <WAAIContactPostActivatedEventArgs, WAAIContactActivatedEventArgs, WAAIActivatedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1085,7 +1085,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAContactVideoCallActivatedEventArgs_DEFINED__
 #define __WAAContactVideoCallActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAContactVideoCallActivatedEventArgs : RTObject <WAAIContactVideoCallActivatedEventArgs, WAAIContactActivatedEventArgs, WAAIActivatedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1105,7 +1105,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAWalletActionActivatedEventArgs_DEFINED__
 #define __WAAWalletActionActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAWalletActionActivatedEventArgs : RTObject <WAAIWalletActionActivatedEventArgs, WAAIActivatedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1124,7 +1124,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAAppointmentsProviderAddAppointmentActivatedEventArgs_DEFINED__
 #define __WAAAppointmentsProviderAddAppointmentActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAAppointmentsProviderAddAppointmentActivatedEventArgs : RTObject <WAAIAppointmentsProviderAddAppointmentActivatedEventArgs, WAAIAppointmentsProviderActivatedEventArgs, WAAIActivatedEventArgs, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1143,7 +1143,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAAppointmentsProviderReplaceAppointmentActivatedEventArgs_DEFINED__
 #define __WAAAppointmentsProviderReplaceAppointmentActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAAppointmentsProviderReplaceAppointmentActivatedEventArgs : RTObject <WAAIAppointmentsProviderReplaceAppointmentActivatedEventArgs, WAAIAppointmentsProviderActivatedEventArgs, WAAIActivatedEventArgs, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1162,7 +1162,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAAppointmentsProviderRemoveAppointmentActivatedEventArgs_DEFINED__
 #define __WAAAppointmentsProviderRemoveAppointmentActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAAppointmentsProviderRemoveAppointmentActivatedEventArgs : RTObject <WAAIAppointmentsProviderRemoveAppointmentActivatedEventArgs, WAAIAppointmentsProviderActivatedEventArgs, WAAIActivatedEventArgs, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1181,7 +1181,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAAppointmentsProviderShowAppointmentDetailsActivatedEventArgs_DEFINED__
 #define __WAAAppointmentsProviderShowAppointmentDetailsActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAAppointmentsProviderShowAppointmentDetailsActivatedEventArgs : RTObject <WAAIAppointmentsProviderShowAppointmentDetailsActivatedEventArgs, WAAIAppointmentsProviderActivatedEventArgs, WAAIActivatedEventArgs, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1202,7 +1202,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAAppointmentsProviderShowTimeFrameActivatedEventArgs_DEFINED__
 #define __WAAAppointmentsProviderShowTimeFrameActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAAppointmentsProviderShowTimeFrameActivatedEventArgs : RTObject <WAAIAppointmentsProviderShowTimeFrameActivatedEventArgs, WAAIAppointmentsProviderActivatedEventArgs, WAAIActivatedEventArgs, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1222,7 +1222,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAUserDataAccountProviderActivatedEventArgs_DEFINED__
 #define __WAAUserDataAccountProviderActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAUserDataAccountProviderActivatedEventArgs : RTObject <WAAIUserDataAccountProviderActivatedEventArgs, WAAIActivatedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1239,7 +1239,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAASplashScreen_DEFINED__
 #define __WAASplashScreen_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAASplashScreen : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1255,7 +1255,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAATileActivatedInfo_DEFINED__
 #define __WAATileActivatedInfo_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAATileActivatedInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1269,7 +1269,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAALaunchActivatedEventArgs_DEFINED__
 #define __WAALaunchActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAALaunchActivatedEventArgs : RTObject <WAAILaunchActivatedEventArgs, WAAIActivatedEventArgs, WAAIApplicationViewActivatedEventArgs, WAAIPrelaunchActivatedEventArgs, WAAIViewSwitcherProvider, WAAILaunchActivatedEventArgs2, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1292,7 +1292,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAASearchActivatedEventArgs_DEFINED__
 #define __WAASearchActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAASearchActivatedEventArgs : RTObject <WAAISearchActivatedEventArgs, WAAIActivatedEventArgs, WAAIApplicationViewActivatedEventArgs, WAAISearchActivatedEventArgsWithLinguisticDetails, WAAIViewSwitcherProvider, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1314,7 +1314,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAShareTargetActivatedEventArgs_DEFINED__
 #define __WAAShareTargetActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAShareTargetActivatedEventArgs : RTObject <WAAIShareTargetActivatedEventArgs, WAAIActivatedEventArgs, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1332,7 +1332,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAFileActivatedEventArgs_DEFINED__
 #define __WAAFileActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAFileActivatedEventArgs : RTObject <WAAIFileActivatedEventArgs, WAAIActivatedEventArgs, WAAIFileActivatedEventArgsWithNeighboringFiles, WAAIFileActivatedEventArgsWithCallerPackageFamilyName, WAAIApplicationViewActivatedEventArgs, WAAIViewSwitcherProvider, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1355,7 +1355,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAProtocolActivatedEventArgs_DEFINED__
 #define __WAAProtocolActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAProtocolActivatedEventArgs : RTObject <WAAIProtocolActivatedEventArgs, WAAIActivatedEventArgs, WAAIProtocolActivatedEventArgsWithCallerPackageFamilyNameAndData, WAAIApplicationViewActivatedEventArgs, WAAIViewSwitcherProvider, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1377,7 +1377,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAProtocolForResultsActivatedEventArgs_DEFINED__
 #define __WAAProtocolForResultsActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAProtocolForResultsActivatedEventArgs : RTObject <WAAIProtocolForResultsActivatedEventArgs, WAAIActivatedEventArgs, WAAIProtocolActivatedEventArgs, WAAIProtocolActivatedEventArgsWithCallerPackageFamilyNameAndData, WAAIApplicationViewActivatedEventArgs, WAAIViewSwitcherProvider, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1400,7 +1400,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAFileOpenPickerActivatedEventArgs_DEFINED__
 #define __WAAFileOpenPickerActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAFileOpenPickerActivatedEventArgs : RTObject <WAAIFileOpenPickerActivatedEventArgs, WAAIActivatedEventArgs, WAAIFileOpenPickerActivatedEventArgs2, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1419,7 +1419,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAFileSavePickerActivatedEventArgs_DEFINED__
 #define __WAAFileSavePickerActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAFileSavePickerActivatedEventArgs : RTObject <WAAIFileSavePickerActivatedEventArgs, WAAIActivatedEventArgs, WAAIFileSavePickerActivatedEventArgs2, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1439,7 +1439,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAACachedFileUpdaterActivatedEventArgs_DEFINED__
 #define __WAACachedFileUpdaterActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAACachedFileUpdaterActivatedEventArgs : RTObject <WAAICachedFileUpdaterActivatedEventArgs, WAAIActivatedEventArgs, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1457,7 +1457,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAADeviceActivatedEventArgs_DEFINED__
 #define __WAADeviceActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAADeviceActivatedEventArgs : RTObject <WAAIDeviceActivatedEventArgs, WAAIActivatedEventArgs, WAAIApplicationViewActivatedEventArgs, WAAIViewSwitcherProvider, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1478,7 +1478,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAPickerReturnedActivatedEventArgs_DEFINED__
 #define __WAAPickerReturnedActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAPickerReturnedActivatedEventArgs : RTObject <WAAIPickerReturnedActivatedEventArgs, WAAIActivatedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1495,7 +1495,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAARestrictedLaunchActivatedEventArgs_DEFINED__
 #define __WAARestrictedLaunchActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAARestrictedLaunchActivatedEventArgs : RTObject <WAAIRestrictedLaunchActivatedEventArgs, WAAIActivatedEventArgs, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1513,7 +1513,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAALockScreenActivatedEventArgs_DEFINED__
 #define __WAALockScreenActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAALockScreenActivatedEventArgs : RTObject <WAAILockScreenActivatedEventArgs, WAAIActivatedEventArgs, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1531,7 +1531,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAFileOpenPickerContinuationEventArgs_DEFINED__
 #define __WAAFileOpenPickerContinuationEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAFileOpenPickerContinuationEventArgs : RTObject <WAAIFileOpenPickerContinuationEventArgs, WAAIContinuationActivatedEventArgs, WAAIActivatedEventArgs, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1550,7 +1550,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAFileSavePickerContinuationEventArgs_DEFINED__
 #define __WAAFileSavePickerContinuationEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAFileSavePickerContinuationEventArgs : RTObject <WAAIFileSavePickerContinuationEventArgs, WAAIContinuationActivatedEventArgs, WAAIActivatedEventArgs, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1569,7 +1569,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAFolderPickerContinuationEventArgs_DEFINED__
 #define __WAAFolderPickerContinuationEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAFolderPickerContinuationEventArgs : RTObject <WAAIFolderPickerContinuationEventArgs, WAAIContinuationActivatedEventArgs, WAAIActivatedEventArgs, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1588,7 +1588,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAWebAuthenticationBrokerContinuationEventArgs_DEFINED__
 #define __WAAWebAuthenticationBrokerContinuationEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAWebAuthenticationBrokerContinuationEventArgs : RTObject <WAAIWebAuthenticationBrokerContinuationEventArgs, WAAIContinuationActivatedEventArgs, WAAIActivatedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1606,7 +1606,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAWebAccountProviderActivatedEventArgs_DEFINED__
 #define __WAAWebAccountProviderActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAWebAccountProviderActivatedEventArgs : RTObject <WAAIWebAccountProviderActivatedEventArgs, WAAIActivatedEventArgs, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1624,7 +1624,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAToastNotificationActivatedEventArgs_DEFINED__
 #define __WAAToastNotificationActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAToastNotificationActivatedEventArgs : RTObject <WAAIToastNotificationActivatedEventArgs, WAAIActivatedEventArgs, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1643,7 +1643,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAADialReceiverActivatedEventArgs_DEFINED__
 #define __WAADialReceiverActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAADialReceiverActivatedEventArgs : RTObject <WAAIDialReceiverActivatedEventArgs, WAAILaunchActivatedEventArgs, WAAIActivatedEventArgs, WAAIApplicationViewActivatedEventArgs, WAAIViewSwitcherProvider, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1665,7 +1665,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAABackgroundActivatedEventArgs_DEFINED__
 #define __WAABackgroundActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAABackgroundActivatedEventArgs : RTObject <WAAIBackgroundActivatedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1679,7 +1679,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAADevicePairingActivatedEventArgs_DEFINED__
 #define __WAADevicePairingActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAADevicePairingActivatedEventArgs : RTObject <WAAIDevicePairingActivatedEventArgs, WAAIActivatedEventArgs, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1697,7 +1697,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WAAVoiceCommandActivatedEventArgs_DEFINED__
 #define __WAAVoiceCommandActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WAAVoiceCommandActivatedEventArgs : RTObject <WAAIVoiceCommandActivatedEventArgs, WAAIActivatedEventArgs, WAAIActivatedEventArgsWithUser>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

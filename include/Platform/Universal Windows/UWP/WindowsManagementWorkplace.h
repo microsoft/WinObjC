@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_MANAGEMENT_WORKPLACE_EXPORT
-#define OBJCUWP_WINDOWS_MANAGEMENT_WORKPLACE_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Management_Workplace.lib")
+#ifndef OBJCUWPWINDOWSMANAGEMENTWORKPLACEEXPORT
+#define OBJCUWPWINDOWSMANAGEMENTWORKPLACEEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsManagementWorkplace.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -44,7 +44,7 @@ typedef unsigned WMWMessagingSyncPolicy;
 #ifndef __WMWMdmPolicy_DEFINED__
 #define __WMWMdmPolicy_DEFINED__
 
-OBJCUWP_WINDOWS_MANAGEMENT_WORKPLACE_EXPORT
+OBJCUWPWINDOWSMANAGEMENTWORKPLACEEXPORT
 @interface WMWMdmPolicy : RTObject
 + (WMWMessagingSyncPolicy)getMessagingSyncPolicy;
 + (BOOL)isBrowserAllowed;
@@ -59,7 +59,7 @@ OBJCUWP_WINDOWS_MANAGEMENT_WORKPLACE_EXPORT
 #ifndef __WMWWorkplaceSettings_DEFINED__
 #define __WMWWorkplaceSettings_DEFINED__
 
-OBJCUWP_WINDOWS_MANAGEMENT_WORKPLACE_EXPORT
+OBJCUWPWINDOWSMANAGEMENTWORKPLACEEXPORT
 @interface WMWWorkplaceSettings : RTObject
 + (BOOL)isMicrosoftAccountOptional;
 @end

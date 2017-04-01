@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
-#define OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Chat.lib")
+#ifndef OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
+#define OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsApplicationModelChat.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -188,7 +188,7 @@ typedef unsigned WACChatRestoreHistorySpan;
 @property (readonly) WACChatItemKind itemKind;
 @end
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACIChatItem : RTObject <WACIChatItem>
 @end
 
@@ -198,7 +198,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACChatMessageTransportConfiguration_DEFINED__
 #define __WACChatMessageTransportConfiguration_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACChatMessageTransportConfiguration : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -216,7 +216,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACChatMessage_DEFINED__
 #define __WACChatMessage_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACChatMessage : RTObject <WACIChatItem>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -259,7 +259,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACChatMessageChange_DEFINED__
 #define __WACChatMessageChange_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACChatMessageChange : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -274,7 +274,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACChatMessageChangeReader_DEFINED__
 #define __WACChatMessageChangeReader_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACChatMessageChangeReader : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -290,7 +290,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACChatMessageAttachment_DEFINED__
 #define __WACChatMessageAttachment_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACChatMessageAttachment : RTObject
 + (WACChatMessageAttachment*)makeChatMessageAttachment:(NSString *)mimeType dataStreamReference:(RTObject<WSSIRandomAccessStreamReference>*)dataStreamReference ACTIVATOR;
 #if defined(__cplusplus)
@@ -311,7 +311,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACChatConversationThreadingInfo_DEFINED__
 #define __WACChatConversationThreadingInfo_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACChatConversationThreadingInfo : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -330,7 +330,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACChatRecipientDeliveryInfo_DEFINED__
 #define __WACChatRecipientDeliveryInfo_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACChatRecipientDeliveryInfo : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -352,7 +352,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACChatMessageChangeTracker_DEFINED__
 #define __WACChatMessageChangeTracker_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACChatMessageChangeTracker : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -368,7 +368,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACChatMessageReader_DEFINED__
 #define __WACChatMessageReader_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACChatMessageReader : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -383,7 +383,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACChatMessageValidationResult_DEFINED__
 #define __WACChatMessageValidationResult_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACChatMessageValidationResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -400,7 +400,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACChatMessageStore_DEFINED__
 #define __WACChatMessageStore_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACChatMessageStore : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -443,7 +443,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACChatMessageChangedEventArgs_DEFINED__
 #define __WACChatMessageChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACChatMessageChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -457,7 +457,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACChatConversation_DEFINED__
 #define __WACChatConversation_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACChatConversation : RTObject <WACIChatItem>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -488,7 +488,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACChatConversationReader_DEFINED__
 #define __WACChatConversationReader_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACChatConversationReader : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -503,7 +503,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACChatQueryOptions_DEFINED__
 #define __WACChatQueryOptions_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACChatQueryOptions : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -518,7 +518,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACChatSearchReader_DEFINED__
 #define __WACChatSearchReader_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACChatSearchReader : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -533,7 +533,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACChatMessageStoreChangedEventArgs_DEFINED__
 #define __WACChatMessageStoreChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACChatMessageStoreChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -548,7 +548,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACChatMessageChangedDeferral_DEFINED__
 #define __WACChatMessageChangedDeferral_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACChatMessageChangedDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -562,7 +562,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACChatMessageTransport_DEFINED__
 #define __WACChatMessageTransport_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACChatMessageTransport : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -582,7 +582,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACChatSyncManager_DEFINED__
 #define __WACChatSyncManager_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACChatSyncManager : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -601,7 +601,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACChatCapabilities_DEFINED__
 #define __WACChatCapabilities_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACChatCapabilities : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -619,7 +619,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACRemoteParticipantComposingChangedEventArgs_DEFINED__
 #define __WACRemoteParticipantComposingChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACRemoteParticipantComposingChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -635,7 +635,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACChatSyncConfiguration_DEFINED__
 #define __WACChatSyncConfiguration_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACChatSyncConfiguration : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -650,7 +650,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACRcsEndUserMessageManager_DEFINED__
 #define __WACRcsEndUserMessageManager_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACRcsEndUserMessageManager : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -665,7 +665,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACRcsTransport_DEFINED__
 #define __WACRcsTransport_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACRcsTransport : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -687,7 +687,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACRcsTransportConfiguration_DEFINED__
 #define __WACRcsTransportConfiguration_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACRcsTransportConfiguration : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -706,7 +706,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACRcsServiceKindSupportedChangedEventArgs_DEFINED__
 #define __WACRcsServiceKindSupportedChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACRcsServiceKindSupportedChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -720,7 +720,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACRcsEndUserMessageAvailableEventArgs_DEFINED__
 #define __WACRcsEndUserMessageAvailableEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACRcsEndUserMessageAvailableEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -735,7 +735,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACRcsEndUserMessageAction_DEFINED__
 #define __WACRcsEndUserMessageAction_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACRcsEndUserMessageAction : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -749,7 +749,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACRcsEndUserMessage_DEFINED__
 #define __WACRcsEndUserMessage_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACRcsEndUserMessage : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -769,7 +769,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACChatMessageManager_DEFINED__
 #define __WACChatMessageManager_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACChatMessageManager : RTObject
 + (void)registerTransportAsyncWithSuccess:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
 + (void)getTransportAsync:(NSString *)transportId success:(void (^)(WACChatMessageTransport*))success failure:(void (^)(NSError*))failure;
@@ -794,7 +794,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACChatMessageNotificationTriggerDetails_DEFINED__
 #define __WACChatMessageNotificationTriggerDetails_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACChatMessageNotificationTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -812,7 +812,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACChatMessageBlocking_DEFINED__
 #define __WACChatMessageBlocking_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACChatMessageBlocking : RTObject
 + (RTObject<WFIAsyncAction>*)markMessageAsBlockedAsync:(NSString *)localChatMessageId blocked:(BOOL)blocked;
 @end
@@ -823,7 +823,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACChatCapabilitiesManager_DEFINED__
 #define __WACChatCapabilitiesManager_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACChatCapabilitiesManager : RTObject
 + (void)getCachedCapabilitiesAsync:(NSString *)address success:(void (^)(WACChatCapabilities*))success failure:(void (^)(NSError*))failure;
 + (void)getCapabilitiesFromNetworkAsync:(NSString *)address success:(void (^)(WACChatCapabilities*))success failure:(void (^)(NSError*))failure;
@@ -835,7 +835,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACRcsManager_DEFINED__
 #define __WACRcsManager_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACRcsManager : RTObject
 + (WACRcsEndUserMessageManager*)getEndUserMessageManager;
 + (void)getTransportsAsyncWithSuccess:(void (^)(NSArray* /* WACRcsTransport* */))success failure:(void (^)(NSError*))failure;
@@ -849,7 +849,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
 #ifndef __WACRcsEndUserMessageAvailableTriggerDetails_DEFINED__
 #define __WACRcsEndUserMessageAvailableTriggerDetails_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CHAT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCHATEXPORT
 @interface WACRcsEndUserMessageAvailableTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

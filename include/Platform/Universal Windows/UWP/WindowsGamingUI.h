@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_GAMING_UI_EXPORT
-#define OBJCUWP_WINDOWS_GAMING_UI_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Gaming_UI.lib")
+#ifndef OBJCUWPWINDOWSGAMINGUIEXPORT
+#define OBJCUWPWINDOWSGAMINGUIEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsGamingUI.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -38,7 +38,7 @@
 #ifndef __WGUGameBar_DEFINED__
 #define __WGUGameBar_DEFINED__
 
-OBJCUWP_WINDOWS_GAMING_UI_EXPORT
+OBJCUWPWINDOWSGAMINGUIEXPORT
 @interface WGUGameBar : RTObject
 + (BOOL)isInputRedirected;
 + (BOOL)visible;

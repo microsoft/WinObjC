@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_XAML_EXPORT
-#define OBJCUWP_WINDOWS_UI_XAML_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml.lib")
+#ifndef OBJCUWPWINDOWSUIXAMLEXPORT
+#define OBJCUWPWINDOWSUIXAMLEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUIXaml.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -158,7 +158,7 @@ typedef void(^WXSizeChangedEventHandler)(RTObject* sender, WXSizeChangedEventArg
 - (void)onDisconnectVisualChildren;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXDITextElementOverrides : RTObject <WUXDITextElementOverrides>
 @end
 
@@ -168,7 +168,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXDBlockCollection_DEFINED__
 #define __WUXDBlockCollection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXDBlockCollection : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -194,7 +194,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXDInlineCollection_DEFINED__
 #define __WUXDInlineCollection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXDInlineCollection : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -220,7 +220,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXDTextPointer_DEFINED__
 #define __WUXDTextPointer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXDTextPointer : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -239,7 +239,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXDTypography_DEFINED__
 #define __WUXDTypography_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXDTypography : RTObject
 + (int)getAnnotationAlternates:(WXDependencyObject*)element;
 + (void)setAnnotationAlternates:(WXDependencyObject*)element value:(int)value;
@@ -381,7 +381,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -402,7 +402,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXDTextElement_DEFINED__
 #define __WUXDTextElement_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXDTextElement : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -446,7 +446,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXDBlock_DEFINED__
 #define __WUXDBlock_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXDBlock : WUXDTextElement
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -467,7 +467,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXDInline_DEFINED__
 #define __WUXDInline_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXDInline : WUXDTextElement
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -480,7 +480,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXDInlineUIContainer_DEFINED__
 #define __WUXDInlineUIContainer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXDInlineUIContainer : WUXDInline
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -495,7 +495,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXDLineBreak_DEFINED__
 #define __WUXDLineBreak_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXDLineBreak : WUXDInline
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -509,7 +509,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXDParagraph_DEFINED__
 #define __WUXDParagraph_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXDParagraph : WUXDBlock
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -526,7 +526,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXDRun_DEFINED__
 #define __WUXDRun_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXDRun : WUXDInline
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -543,7 +543,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXDSpan_DEFINED__
 #define __WUXDSpan_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXDSpan : WUXDInline
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -558,7 +558,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXDBold_DEFINED__
 #define __WUXDBold_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXDBold : WUXDSpan
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -572,7 +572,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXDItalic_DEFINED__
 #define __WUXDItalic_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXDItalic : WUXDSpan
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -586,7 +586,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXDUnderline_DEFINED__
 #define __WUXDUnderline_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXDUnderline : WUXDSpan
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -600,7 +600,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXDHyperlink_DEFINED__
 #define __WUXDHyperlink_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXDHyperlink : WUXDSpan
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -630,7 +630,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXRoutedEventArgs_DEFINED__
 #define __WXRoutedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXRoutedEventArgs : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -645,7 +645,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXDHyperlinkClickEventArgs_DEFINED__
 #define __WUXDHyperlinkClickEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXDHyperlinkClickEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -664,7 +664,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)onApplyTemplate;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXIFrameworkElementOverrides : RTObject <WXIFrameworkElementOverrides>
 @end
 
@@ -678,7 +678,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (BOOL)goToElementStateCore:(NSString *)stateName useTransitions:(BOOL)useTransitions;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXIFrameworkElementOverrides2 : RTObject <WXIFrameworkElementOverrides2>
 @end
 
@@ -694,7 +694,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (id<NSFastEnumeration> /* id<NSFastEnumeration> < WFPoint* > */)findSubElementsForTouchTargeting:(WFPoint*)point boundingRect:(WFRect*)boundingRect;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXIUIElementOverrides : RTObject <WXIUIElementOverrides>
 @end
 
@@ -704,7 +704,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXUIElement_DEFINED__
 #define __WXUIElement_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXUIElement : WXDependencyObject
 + (BOOL)tryStartDirectManipulation:(WUXIPointer*)value;
 #if defined(__cplusplus)
@@ -873,7 +873,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXFrameworkElement_DEFINED__
 #define __WXFrameworkElement_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXFrameworkElement : WXUIElement
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -959,7 +959,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXDGlyphs_DEFINED__
 #define __WUXDGlyphs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXDGlyphs : WXFrameworkElement
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)

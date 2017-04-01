@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_GAMING_INPUT_FORCEFEEDBACK_EXPORT
-#define OBJCUWP_WINDOWS_GAMING_INPUT_FORCEFEEDBACK_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Gaming_Input_ForceFeedback.lib")
+#ifndef OBJCUWPWINDOWSGAMINGINPUTFORCEFEEDBACKEXPORT
+#define OBJCUWPWINDOWSGAMINGINPUTFORCEFEEDBACKEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsGamingInputForceFeedback.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -91,7 +91,7 @@ typedef unsigned WGIFPeriodicForceEffectKind;
 - (void)stop;
 @end
 
-OBJCUWP_WINDOWS_GAMING_INPUT_FORCEFEEDBACK_EXPORT
+OBJCUWPWINDOWSGAMINGINPUTFORCEFEEDBACKEXPORT
 @interface WGIFIForceFeedbackEffect : RTObject <WGIFIForceFeedbackEffect>
 @end
 
@@ -101,7 +101,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_FORCEFEEDBACK_EXPORT
 #ifndef __WGIFConditionForceEffect_DEFINED__
 #define __WGIFConditionForceEffect_DEFINED__
 
-OBJCUWP_WINDOWS_GAMING_INPUT_FORCEFEEDBACK_EXPORT
+OBJCUWPWINDOWSGAMINGINPUTFORCEFEEDBACKEXPORT
 @interface WGIFConditionForceEffect : RTObject <WGIFIForceFeedbackEffect>
 + (WGIFConditionForceEffect*)makeInstance:(WGIFConditionForceEffectKind)effectKind ACTIVATOR;
 #if defined(__cplusplus)
@@ -121,7 +121,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_FORCEFEEDBACK_EXPORT
 #ifndef __WGIFPeriodicForceEffect_DEFINED__
 #define __WGIFPeriodicForceEffect_DEFINED__
 
-OBJCUWP_WINDOWS_GAMING_INPUT_FORCEFEEDBACK_EXPORT
+OBJCUWPWINDOWSGAMINGINPUTFORCEFEEDBACKEXPORT
 @interface WGIFPeriodicForceEffect : RTObject <WGIFIForceFeedbackEffect>
 + (WGIFPeriodicForceEffect*)makeInstance:(WGIFPeriodicForceEffectKind)effectKind ACTIVATOR;
 #if defined(__cplusplus)
@@ -142,7 +142,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_FORCEFEEDBACK_EXPORT
 #ifndef __WGIFConstantForceEffect_DEFINED__
 #define __WGIFConstantForceEffect_DEFINED__
 
-OBJCUWP_WINDOWS_GAMING_INPUT_FORCEFEEDBACK_EXPORT
+OBJCUWPWINDOWSGAMINGINPUTFORCEFEEDBACKEXPORT
 @interface WGIFConstantForceEffect : RTObject <WGIFIForceFeedbackEffect>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -162,7 +162,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_FORCEFEEDBACK_EXPORT
 #ifndef __WGIFRampForceEffect_DEFINED__
 #define __WGIFRampForceEffect_DEFINED__
 
-OBJCUWP_WINDOWS_GAMING_INPUT_FORCEFEEDBACK_EXPORT
+OBJCUWPWINDOWSGAMINGINPUTFORCEFEEDBACKEXPORT
 @interface WGIFRampForceEffect : RTObject <WGIFIForceFeedbackEffect>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -182,7 +182,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_FORCEFEEDBACK_EXPORT
 #ifndef __WGIFForceFeedbackMotor_DEFINED__
 #define __WGIFForceFeedbackMotor_DEFINED__
 
-OBJCUWP_WINDOWS_GAMING_INPUT_FORCEFEEDBACK_EXPORT
+OBJCUWPWINDOWSGAMINGINPUTFORCEFEEDBACKEXPORT
 @interface WGIFForceFeedbackMotor : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

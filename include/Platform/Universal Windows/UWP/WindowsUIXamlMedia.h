@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_XAML_EXPORT
-#define OBJCUWP_WINDOWS_UI_XAML_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml.lib")
+#ifndef OBJCUWPWINDOWSUIXAMLEXPORT
+#define OBJCUWPWINDOWSUIXAMLEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUIXaml.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -223,7 +223,7 @@ typedef void(^WXRoutedEventHandler)(RTObject* sender, WXRoutedEventArgs* e);
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Xaml.Media.Matrix
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMMatrix : NSObject
 + (instancetype)new;
 @property double m11;
@@ -256,7 +256,7 @@ typedef void(^WUXMTimelineMarkerRoutedEventHandler)(RTObject* sender, WUXMTimeli
 - (WFRect*)transformBoundsCore:(WFRect*)rect;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMIGeneralTransformOverrides : RTObject <WUXMIGeneralTransformOverrides>
 @end
 
@@ -266,7 +266,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMVisualTreeHelper_DEFINED__
 #define __WUXMVisualTreeHelper_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMVisualTreeHelper : RTObject
 + (NSArray* /* WUXCPPopup* */)getOpenPopups:(WXWindow*)window;
 + (id<NSFastEnumeration> /* WXUIElement* */)findElementsInHostCoordinatesPoint:(WFPoint*)intersectingPoint subtree:(WXUIElement*)subtree;
@@ -288,7 +288,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMPartialMediaFailureDetectedEventArgs_DEFINED__
 #define __WUXMPartialMediaFailureDetectedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMPartialMediaFailureDetectedEventArgs : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -304,7 +304,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMMatrixHelper_DEFINED__
 #define __WUXMMatrixHelper_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMMatrixHelper : RTObject
 + (WUXMMatrix*)fromElements:(double)m11 m12:(double)m12 m21:(double)m21 m22:(double)m22 offsetX:(double)offsetX offsetY:(double)offsetY;
 + (BOOL)getIsIdentity:(WUXMMatrix*)target;
@@ -321,7 +321,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMBrushCollection_DEFINED__
 #define __WUXMBrushCollection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMBrushCollection : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -348,7 +348,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMCompositionTarget_DEFINED__
 #define __WUXMCompositionTarget_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMCompositionTarget : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -365,7 +365,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMDoubleCollection_DEFINED__
 #define __WUXMDoubleCollection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMDoubleCollection : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -392,7 +392,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMFontFamily_DEFINED__
 #define __WUXMFontFamily_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMFontFamily : RTObject
 + (WUXMFontFamily*)makeInstanceWithName:(NSString *)familyName ACTIVATOR;
 #if defined(__cplusplus)
@@ -408,7 +408,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMMediaTransportControlsThumbnailRequestedEventArgs_DEFINED__
 #define __WUXMMediaTransportControlsThumbnailRequestedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMMediaTransportControlsThumbnailRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -423,7 +423,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMPointCollection_DEFINED__
 #define __WUXMPointCollection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMPointCollection : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -450,7 +450,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMRenderingEventArgs_DEFINED__
 #define __WUXMRenderingEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMRenderingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -464,7 +464,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMTimelineMarkerCollection_DEFINED__
 #define __WUXMTimelineMarkerCollection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMTimelineMarkerCollection : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -491,7 +491,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMTransformCollection_DEFINED__
 #define __WUXMTransformCollection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMTransformCollection : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -518,7 +518,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -539,7 +539,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMBrush_DEFINED__
 #define __WUXMBrush_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMBrush : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -558,7 +558,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMCacheMode_DEFINED__
 #define __WUXMCacheMode_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMCacheMode : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -571,7 +571,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMGeneralTransform_DEFINED__
 #define __WUXMGeneralTransform_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMGeneralTransform : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -590,7 +590,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMGeometry_DEFINED__
 #define __WUXMGeometry_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMGeometry : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -608,7 +608,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMImageSource_DEFINED__
 #define __WUXMImageSource_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMImageSource : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -621,7 +621,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMPathSegment_DEFINED__
 #define __WUXMPathSegment_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMPathSegment : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -634,7 +634,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMProjection_DEFINED__
 #define __WUXMProjection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMProjection : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -647,7 +647,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXRoutedEventArgs_DEFINED__
 #define __WXRoutedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXRoutedEventArgs : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -662,7 +662,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMRateChangedRoutedEventArgs_DEFINED__
 #define __WUXMRateChangedRoutedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMRateChangedRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -676,7 +676,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMTimelineMarker_DEFINED__
 #define __WUXMTimelineMarker_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMTimelineMarker : WXDependencyObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -696,7 +696,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMTimelineMarkerRoutedEventArgs_DEFINED__
 #define __WUXMTimelineMarkerRoutedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMTimelineMarkerRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -711,7 +711,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMBitmapCache_DEFINED__
 #define __WUXMBitmapCache_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMBitmapCache : WUXMCacheMode
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -725,7 +725,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMMatrix3DProjection_DEFINED__
 #define __WUXMMatrix3DProjection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMMatrix3DProjection : WUXMProjection
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -741,7 +741,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMPlaneProjection_DEFINED__
 #define __WUXMPlaneProjection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMPlaneProjection : WUXMProjection
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -781,7 +781,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMRectangleGeometry_DEFINED__
 #define __WUXMRectangleGeometry_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMRectangleGeometry : WUXMGeometry
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -797,7 +797,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMSolidColorBrush_DEFINED__
 #define __WUXMSolidColorBrush_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMSolidColorBrush : WUXMBrush
 + (instancetype)make __attribute__ ((ns_returns_retained));
 + (WUXMSolidColorBrush*)makeInstanceWithColor:(WUColor*)color ACTIVATOR;
@@ -814,7 +814,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMTransform_DEFINED__
 #define __WUXMTransform_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMTransform : WUXMGeneralTransform
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -827,7 +827,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMCompositeTransform_DEFINED__
 #define __WUXMCompositeTransform_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMCompositeTransform : WUXMTransform
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -859,7 +859,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMMatrixTransform_DEFINED__
 #define __WUXMMatrixTransform_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMMatrixTransform : WUXMTransform
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -875,7 +875,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMRotateTransform_DEFINED__
 #define __WUXMRotateTransform_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMRotateTransform : WUXMTransform
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -895,7 +895,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMScaleTransform_DEFINED__
 #define __WUXMScaleTransform_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMScaleTransform : WUXMTransform
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -917,7 +917,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMSkewTransform_DEFINED__
 #define __WUXMSkewTransform_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMSkewTransform : WUXMTransform
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -939,7 +939,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMTransformGroup_DEFINED__
 #define __WUXMTransformGroup_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMTransformGroup : WUXMTransform
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -956,7 +956,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMTranslateTransform_DEFINED__
 #define __WUXMTranslateTransform_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMTranslateTransform : WUXMTransform
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -974,7 +974,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMGeometryCollection_DEFINED__
 #define __WUXMGeometryCollection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMGeometryCollection : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1001,7 +1001,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMGradientStopCollection_DEFINED__
 #define __WUXMGradientStopCollection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMGradientStopCollection : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1028,7 +1028,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMPathFigureCollection_DEFINED__
 #define __WUXMPathFigureCollection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMPathFigureCollection : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1055,7 +1055,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMPathSegmentCollection_DEFINED__
 #define __WUXMPathSegmentCollection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMPathSegmentCollection : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1082,7 +1082,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMGradientStop_DEFINED__
 #define __WUXMGradientStop_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMGradientStop : WXDependencyObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1100,7 +1100,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMPathFigure_DEFINED__
 #define __WUXMPathFigure_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMPathFigure : WXDependencyObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1122,7 +1122,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMArcSegment_DEFINED__
 #define __WUXMArcSegment_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMArcSegment : WUXMPathSegment
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1146,7 +1146,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMBezierSegment_DEFINED__
 #define __WUXMBezierSegment_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMBezierSegment : WUXMPathSegment
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1166,7 +1166,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMEllipseGeometry_DEFINED__
 #define __WUXMEllipseGeometry_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMEllipseGeometry : WUXMGeometry
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1186,7 +1186,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMGeometryGroup_DEFINED__
 #define __WUXMGeometryGroup_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMGeometryGroup : WUXMGeometry
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1204,7 +1204,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMGradientBrush_DEFINED__
 #define __WUXMGradientBrush_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMGradientBrush : WUXMBrush
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1225,7 +1225,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMLineGeometry_DEFINED__
 #define __WUXMLineGeometry_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMLineGeometry : WUXMGeometry
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1243,7 +1243,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMLineSegment_DEFINED__
 #define __WUXMLineSegment_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMLineSegment : WUXMPathSegment
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1259,7 +1259,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMPathGeometry_DEFINED__
 #define __WUXMPathGeometry_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMPathGeometry : WUXMGeometry
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1277,7 +1277,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMPolyBezierSegment_DEFINED__
 #define __WUXMPolyBezierSegment_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMPolyBezierSegment : WUXMPathSegment
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1293,7 +1293,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMPolyLineSegment_DEFINED__
 #define __WUXMPolyLineSegment_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMPolyLineSegment : WUXMPathSegment
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1309,7 +1309,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMPolyQuadraticBezierSegment_DEFINED__
 #define __WUXMPolyQuadraticBezierSegment_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMPolyQuadraticBezierSegment : WUXMPathSegment
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1325,7 +1325,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMQuadraticBezierSegment_DEFINED__
 #define __WUXMQuadraticBezierSegment_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMQuadraticBezierSegment : WUXMPathSegment
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1343,7 +1343,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMTileBrush_DEFINED__
 #define __WUXMTileBrush_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMTileBrush : WUXMBrush
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1362,7 +1362,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMImageBrush_DEFINED__
 #define __WUXMImageBrush_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMImageBrush : WUXMTileBrush
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1382,7 +1382,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMLinearGradientBrush_DEFINED__
 #define __WUXMLinearGradientBrush_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMLinearGradientBrush : WUXMGradientBrush
 + (instancetype)make __attribute__ ((ns_returns_retained));
 + (WUXMLinearGradientBrush*)makeInstanceWithGradientStopCollectionAndAngle:(WUXMGradientStopCollection*)gradientStopCollection angle:(double)angle ACTIVATOR;

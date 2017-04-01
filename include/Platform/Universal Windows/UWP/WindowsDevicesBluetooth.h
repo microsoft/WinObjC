@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
-#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#ifndef OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+#define OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsConsolidatedNamespace.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -188,7 +188,7 @@ typedef unsigned WDBBluetoothAddressType;
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -198,7 +198,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WDBBluetoothDevice_DEFINED__
 #define __WDBBluetoothDevice_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBBluetoothDevice : RTObject <WFIClosable>
 + (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDBBluetoothDevice*))success failure:(void (^)(NSError*))failure;
 + (void)fromHostNameAsync:(WNHostName*)hostName success:(void (^)(WDBBluetoothDevice*))success failure:(void (^)(NSError*))failure;
@@ -246,7 +246,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WDBBluetoothClassOfDevice_DEFINED__
 #define __WDBBluetoothClassOfDevice_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBBluetoothClassOfDevice : RTObject
 + (WDBBluetoothClassOfDevice*)fromRawValue:(unsigned int)rawValue;
 + (WDBBluetoothClassOfDevice*)fromParts:(WDBBluetoothMajorClass)majorClass minorClass:(WDBBluetoothMinorClass)minorClass serviceCapabilities:(WDBBluetoothServiceCapabilities)serviceCapabilities;
@@ -265,7 +265,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WDBBluetoothLEAppearanceCategories_DEFINED__
 #define __WDBBluetoothLEAppearanceCategories_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBBluetoothLEAppearanceCategories : RTObject
 + (unsigned short)barcodeScanner;
 + (unsigned short)bloodPressure;
@@ -297,7 +297,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WDBBluetoothLEAppearanceSubcategories_DEFINED__
 #define __WDBBluetoothLEAppearanceSubcategories_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBBluetoothLEAppearanceSubcategories : RTObject
 + (unsigned short)barcodeScanner;
 + (unsigned short)bloodPressureArm;
@@ -335,7 +335,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WDBBluetoothLEAppearance_DEFINED__
 #define __WDBBluetoothLEAppearance_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBBluetoothLEAppearance : RTObject
 + (WDBBluetoothLEAppearance*)fromRawValue:(unsigned short)rawValue;
 + (WDBBluetoothLEAppearance*)fromParts:(unsigned short)appearanceCategory appearanceSubCategory:(unsigned short)appearanceSubCategory;
@@ -353,7 +353,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WDBBluetoothLEDevice_DEFINED__
 #define __WDBBluetoothLEDevice_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBBluetoothLEDevice : RTObject <WFIClosable>
 + (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDBBluetoothLEDevice*))success failure:(void (^)(NSError*))failure;
 + (void)fromBluetoothAddressAsync:(uint64_t)bluetoothAddress success:(void (^)(WDBBluetoothLEDevice*))success failure:(void (^)(NSError*))failure;
@@ -392,7 +392,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WDBBluetoothSignalStrengthFilter_DEFINED__
 #define __WDBBluetoothSignalStrengthFilter_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBBluetoothSignalStrengthFilter : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)

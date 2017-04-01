@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_EXPORT
-#define OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Security_Cryptography.lib")
+#ifndef OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYEXPORT
+#define OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsSecurityCryptography.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -46,7 +46,7 @@ typedef unsigned WSCBinaryStringEncoding;
 #ifndef __WSCCryptographicBuffer_DEFINED__
 #define __WSCCryptographicBuffer_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_EXPORT
+OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYEXPORT
 @interface WSCCryptographicBuffer : RTObject
 + (BOOL)compare:(RTObject<WSSIBuffer>*)object1 object2:(RTObject<WSSIBuffer>*)object2;
 + (RTObject<WSSIBuffer>*)generateRandom:(unsigned int)length;

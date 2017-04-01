@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_PHONE_DEVICES_POWER_EXPORT
-#define OBJCUWP_WINDOWS_PHONE_DEVICES_POWER_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Phone_Devices_Power.lib")
+#ifndef OBJCUWPWINDOWSPHONEDEVICESPOWEREXPORT
+#define OBJCUWPWINDOWSPHONEDEVICESPOWEREXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsPhoneDevicesPower.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -38,7 +38,7 @@
 #ifndef __WPDPBattery_DEFINED__
 #define __WPDPBattery_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_DEVICES_POWER_EXPORT
+OBJCUWPWINDOWSPHONEDEVICESPOWEREXPORT
 @interface WPDPBattery : RTObject
 + (WPDPBattery*)getDefault;
 #if defined(__cplusplus)

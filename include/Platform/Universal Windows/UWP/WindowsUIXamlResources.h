@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_XAML_RESOURCES_EXPORT
-#define OBJCUWP_WINDOWS_UI_XAML_RESOURCES_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml_Resources.lib")
+#ifndef OBJCUWPWINDOWSUIXAMLRESOURCESEXPORT
+#define OBJCUWPWINDOWSUIXAMLRESOURCESEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUIXamlResources.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -40,7 +40,7 @@
 - (RTObject*)getResource:(NSString *)resourceId objectType:(NSString *)objectType propertyName:(NSString *)propertyName propertyType:(NSString *)propertyType;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_RESOURCES_EXPORT
+OBJCUWPWINDOWSUIXAMLRESOURCESEXPORT
 @interface WUXRICustomXamlResourceLoaderOverrides : RTObject <WUXRICustomXamlResourceLoaderOverrides>
 @end
 
@@ -50,7 +50,7 @@ OBJCUWP_WINDOWS_UI_XAML_RESOURCES_EXPORT
 #ifndef __WUXRCustomXamlResourceLoader_DEFINED__
 #define __WUXRCustomXamlResourceLoader_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_RESOURCES_EXPORT
+OBJCUWPWINDOWSUIXAMLRESOURCESEXPORT
 @interface WUXRCustomXamlResourceLoader : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)

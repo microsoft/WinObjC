@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_DEVICES_I2C_EXPORT
-#define OBJCUWP_WINDOWS_DEVICES_I2C_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Devices_I2c.lib")
+#ifndef OBJCUWPWINDOWSDEVICESI2CEXPORT
+#define OBJCUWPWINDOWSDEVICESI2CEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsDevicesI2c.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -59,7 +59,7 @@ typedef unsigned WDII2cSharingMode;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Devices.I2c.I2cTransferResult
-OBJCUWP_WINDOWS_DEVICES_I2C_EXPORT
+OBJCUWPWINDOWSDEVICESI2CEXPORT
 @interface WDII2cTransferResult : NSObject
 + (instancetype)new;
 @property WDII2cTransferStatus status;
@@ -76,7 +76,7 @@ OBJCUWP_WINDOWS_DEVICES_I2C_EXPORT
 - (void)fromIdAsync:(NSString *)deviceId settings:(WDII2cConnectionSettings*)settings success:(void (^)(WDII2cDevice*))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_I2C_EXPORT
+OBJCUWPWINDOWSDEVICESI2CEXPORT
 @interface WDIII2cDeviceStatics : RTObject <WDIII2cDeviceStatics>
 @end
 
@@ -86,7 +86,7 @@ OBJCUWP_WINDOWS_DEVICES_I2C_EXPORT
 #ifndef __WDII2cConnectionSettings_DEFINED__
 #define __WDII2cConnectionSettings_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_I2C_EXPORT
+OBJCUWPWINDOWSDEVICESI2CEXPORT
 @interface WDII2cConnectionSettings : RTObject
 + (WDII2cConnectionSettings*)make:(int)slaveAddress ACTIVATOR;
 #if defined(__cplusplus)
@@ -107,7 +107,7 @@ OBJCUWP_WINDOWS_DEVICES_I2C_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_I2C_EXPORT
+OBJCUWPWINDOWSDEVICESI2CEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -117,7 +117,7 @@ OBJCUWP_WINDOWS_DEVICES_I2C_EXPORT
 #ifndef __WDII2cDevice_DEFINED__
 #define __WDII2cDevice_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_I2C_EXPORT
+OBJCUWPWINDOWSDEVICESI2CEXPORT
 @interface WDII2cDevice : RTObject <WFIClosable>
 + (NSString *)getDeviceSelector;
 + (NSString *)getDeviceSelectorFromFriendlyName:(NSString *)friendlyName;
@@ -142,7 +142,7 @@ OBJCUWP_WINDOWS_DEVICES_I2C_EXPORT
 #ifndef __WDII2cController_DEFINED__
 #define __WDII2cController_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_I2C_EXPORT
+OBJCUWPWINDOWSDEVICESI2CEXPORT
 @interface WDII2cController : RTObject
 + (void)getControllersAsync:(RTObject<WDIPII2cProvider>*)provider success:(void (^)(NSArray* /* WDII2cController* */))success failure:(void (^)(NSError*))failure;
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDII2cController*))success failure:(void (^)(NSError*))failure;

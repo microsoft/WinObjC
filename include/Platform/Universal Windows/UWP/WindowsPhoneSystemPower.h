@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_PHONE_SYSTEM_POWER_EXPORT
-#define OBJCUWP_WINDOWS_PHONE_SYSTEM_POWER_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Phone_System_Power.lib")
+#ifndef OBJCUWPWINDOWSPHONESYSTEMPOWEREXPORT
+#define OBJCUWPWINDOWSPHONESYSTEMPOWEREXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsPhoneSystemPower.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -45,7 +45,7 @@ typedef unsigned WPSPPowerSavingMode;
 #ifndef __WPSPPowerManager_DEFINED__
 #define __WPSPPowerManager_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_SYSTEM_POWER_EXPORT
+OBJCUWPWINDOWSPHONESYSTEMPOWEREXPORT
 @interface WPSPPowerManager : RTObject
 + (WPSPPowerSavingMode)powerSavingMode;
 + (BOOL)powerSavingModeEnabled;

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
-#define OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Devices_Geolocation.lib")
+#ifndef OBJCUWPWINDOWSDEVICESGEOLOCATIONEXPORT
+#define OBJCUWPWINDOWSDEVICESGEOLOCATIONEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsDevicesGeolocation.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -93,7 +93,7 @@ typedef unsigned WDGGeolocationAccessStatus;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Devices.Geolocation.BasicGeoposition
-OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
+OBJCUWPWINDOWSDEVICESGEOLOCATIONEXPORT
 @interface WDGBasicGeoposition : NSObject
 + (instancetype)new;
 @property double latitude;
@@ -111,7 +111,7 @@ OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
 @property (readonly) unsigned int spatialReferenceId;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
+OBJCUWPWINDOWSDEVICESGEOLOCATIONEXPORT
 @interface WDGIGeoshape : RTObject <WDGIGeoshape>
 @end
 
@@ -121,7 +121,7 @@ OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
 #ifndef __WDGGeopoint_DEFINED__
 #define __WDGGeopoint_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
+OBJCUWPWINDOWSDEVICESGEOLOCATIONEXPORT
 @interface WDGGeopoint : RTObject <WDGIGeoshape>
 + (WDGGeopoint*)make:(WDGBasicGeoposition*)position ACTIVATOR;
 + (WDGGeopoint*)makeWithAltitudeReferenceSystem:(WDGBasicGeoposition*)position altitudeReferenceSystem:(WDGAltitudeReferenceSystem)altitudeReferenceSystem ACTIVATOR;
@@ -141,7 +141,7 @@ OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
 #ifndef __WDGGeopath_DEFINED__
 #define __WDGGeopath_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
+OBJCUWPWINDOWSDEVICESGEOLOCATIONEXPORT
 @interface WDGGeopath : RTObject <WDGIGeoshape>
 + (WDGGeopath*)make:(id<NSFastEnumeration> /* WDGBasicGeoposition* */)positions ACTIVATOR;
 + (WDGGeopath*)makeWithAltitudeReference:(id<NSFastEnumeration> /* WDGBasicGeoposition* */)positions altitudeReferenceSystem:(WDGAltitudeReferenceSystem)altitudeReferenceSystem ACTIVATOR;
@@ -161,7 +161,7 @@ OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
 #ifndef __WDGGeoboundingBox_DEFINED__
 #define __WDGGeoboundingBox_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
+OBJCUWPWINDOWSDEVICESGEOLOCATIONEXPORT
 @interface WDGGeoboundingBox : RTObject <WDGIGeoshape>
 + (WDGGeoboundingBox*)tryCompute:(id<NSFastEnumeration> /* WDGBasicGeoposition* */)positions;
 + (WDGGeoboundingBox*)tryComputeWithAltitudeReference:(id<NSFastEnumeration> /* WDGBasicGeoposition* */)positions altitudeRefSystem:(WDGAltitudeReferenceSystem)altitudeRefSystem;
@@ -188,7 +188,7 @@ OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
 #ifndef __WDGGeocoordinateSatelliteData_DEFINED__
 #define __WDGGeocoordinateSatelliteData_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
+OBJCUWPWINDOWSDEVICESGEOLOCATIONEXPORT
 @interface WDGGeocoordinateSatelliteData : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -204,7 +204,7 @@ OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
 #ifndef __WDGVenueData_DEFINED__
 #define __WDGVenueData_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
+OBJCUWPWINDOWSDEVICESGEOLOCATIONEXPORT
 @interface WDGVenueData : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -219,7 +219,7 @@ OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
 #ifndef __WDGGeocoordinate_DEFINED__
 #define __WDGGeocoordinate_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
+OBJCUWPWINDOWSDEVICESGEOLOCATIONEXPORT
 @interface WDGGeocoordinate : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -244,7 +244,7 @@ OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
 #ifndef __WDGCivicAddress_DEFINED__
 #define __WDGCivicAddress_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
+OBJCUWPWINDOWSDEVICESGEOLOCATIONEXPORT
 @interface WDGCivicAddress : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -262,7 +262,7 @@ OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
 #ifndef __WDGGeoposition_DEFINED__
 #define __WDGGeoposition_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
+OBJCUWPWINDOWSDEVICESGEOLOCATIONEXPORT
 @interface WDGGeoposition : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -278,7 +278,7 @@ OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
 #ifndef __WDGPositionChangedEventArgs_DEFINED__
 #define __WDGPositionChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
+OBJCUWPWINDOWSDEVICESGEOLOCATIONEXPORT
 @interface WDGPositionChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -292,7 +292,7 @@ OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
 #ifndef __WDGStatusChangedEventArgs_DEFINED__
 #define __WDGStatusChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
+OBJCUWPWINDOWSDEVICESGEOLOCATIONEXPORT
 @interface WDGStatusChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -306,7 +306,7 @@ OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
 #ifndef __WDGGeolocator_DEFINED__
 #define __WDGGeolocator_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
+OBJCUWPWINDOWSDEVICESGEOLOCATIONEXPORT
 @interface WDGGeolocator : RTObject
 + (void)requestAccessAsyncWithSuccess:(void (^)(WDGGeolocationAccessStatus))success failure:(void (^)(NSError*))failure;
 + (void)getGeopositionHistoryAsync:(WFDateTime*)startTime success:(void (^)(NSArray* /* WDGGeoposition* */))success failure:(void (^)(NSError*))failure;
@@ -338,7 +338,7 @@ OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
 #ifndef __WDGGeocircle_DEFINED__
 #define __WDGGeocircle_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_GEOLOCATION_EXPORT
+OBJCUWPWINDOWSDEVICESGEOLOCATIONEXPORT
 @interface WDGGeocircle : RTObject <WDGIGeoshape>
 + (WDGGeocircle*)make:(WDGBasicGeoposition*)position radius:(double)radius ACTIVATOR;
 + (WDGGeocircle*)makeWithAltitudeReferenceSystem:(WDGBasicGeoposition*)position radius:(double)radius altitudeReferenceSystem:(WDGAltitudeReferenceSystem)altitudeReferenceSystem ACTIVATOR;

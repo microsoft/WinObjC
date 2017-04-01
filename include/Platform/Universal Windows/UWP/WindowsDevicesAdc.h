@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_DEVICES_ADC_EXPORT
-#define OBJCUWP_WINDOWS_DEVICES_ADC_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Devices_Adc.lib")
+#ifndef OBJCUWPWINDOWSDEVICESADCEXPORT
+#define OBJCUWPWINDOWSDEVICESADCEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsDevicesAdc.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -50,7 +50,7 @@ typedef unsigned WDAAdcChannelMode;
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_ADC_EXPORT
+OBJCUWPWINDOWSDEVICESADCEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -60,7 +60,7 @@ OBJCUWP_WINDOWS_DEVICES_ADC_EXPORT
 #ifndef __WDAAdcChannel_DEFINED__
 #define __WDAAdcChannel_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_ADC_EXPORT
+OBJCUWPWINDOWSDEVICESADCEXPORT
 @interface WDAAdcChannel : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -77,7 +77,7 @@ OBJCUWP_WINDOWS_DEVICES_ADC_EXPORT
 #ifndef __WDAAdcController_DEFINED__
 #define __WDAAdcController_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_ADC_EXPORT
+OBJCUWPWINDOWSDEVICESADCEXPORT
 @interface WDAAdcController : RTObject
 + (void)getControllersAsync:(RTObject<WDAPIAdcProvider>*)provider success:(void (^)(NSArray* /* WDAAdcController* */))success failure:(void (^)(NSError*))failure;
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDAAdcController*))success failure:(void (^)(NSError*))failure;

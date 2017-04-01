@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
-#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#ifndef OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+#define OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsConsolidatedNamespace.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -81,7 +81,7 @@ typedef unsigned WSAWPWebAccountScope;
 @property (readonly) WSAWPWebAccountProviderOperationKind kind;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSAWPIWebAccountProviderOperation : RTObject <WSAWPIWebAccountProviderOperation>
 @end
 
@@ -96,7 +96,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 - (void)reportError:(WSAWCWebProviderError*)value;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSAWPIWebAccountProviderBaseReportOperation : RTObject <WSAWPIWebAccountProviderBaseReportOperation>
 @end
 
@@ -112,7 +112,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 - (void)reportError:(WSAWCWebProviderError*)value;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSAWPIWebAccountProviderUIReportOperation : RTObject <WSAWPIWebAccountProviderUIReportOperation>
 @end
 
@@ -129,7 +129,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 - (void)reportError:(WSAWCWebProviderError*)value;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSAWPIWebAccountProviderSilentReportOperation : RTObject <WSAWPIWebAccountProviderSilentReportOperation>
 @end
 
@@ -145,7 +145,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) NSMutableArray* /* WSAWPWebProviderTokenResponse* */ providerResponses;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSAWPIWebAccountProviderTokenOperation : RTObject <WSAWPIWebAccountProviderTokenOperation>
 @end
 
@@ -159,7 +159,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) RTObject<WSAWPIWebAccountProviderOperation>* operation;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSAWPIWebAccountProviderTokenObjects : RTObject <WSAWPIWebAccountProviderTokenObjects>
 @end
 
@@ -169,7 +169,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSAWPWebProviderTokenRequest_DEFINED__
 #define __WSAWPWebProviderTokenRequest_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSAWPWebProviderTokenRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -188,7 +188,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSAWPWebProviderTokenResponse_DEFINED__
 #define __WSAWPWebProviderTokenResponse_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSAWPWebProviderTokenResponse : RTObject
 + (WSAWPWebProviderTokenResponse*)make:(WSAWCWebTokenResponse*)webTokenResponse ACTIVATOR;
 #if defined(__cplusplus)
@@ -203,7 +203,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSAWPWebAccountClientView_DEFINED__
 #define __WSAWPWebAccountClientView_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSAWPWebAccountClientView : RTObject
 + (WSAWPWebAccountClientView*)make:(WSAWPWebAccountClientViewType)viewType applicationCallbackUri:(WFUri*)applicationCallbackUri ACTIVATOR;
 + (WSAWPWebAccountClientView*)makeWithPairwiseId:(WSAWPWebAccountClientViewType)viewType applicationCallbackUri:(WFUri*)applicationCallbackUri accountPairwiseId:(NSString *)accountPairwiseId ACTIVATOR;
@@ -221,7 +221,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSAWPWebAccountManager_DEFINED__
 #define __WSAWPWebAccountManager_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSAWPWebAccountManager : RTObject
 + (RTObject<WFIAsyncAction>*)pullCookiesAsync:(NSString *)uriString callerPFN:(NSString *)callerPFN;
 + (void)addWebAccountWithScopeAsync:(NSString *)webAccountId webAccountUserName:(NSString *)webAccountUserName props:(NSDictionary* /* NSString *, NSString * */)props scope:(WSAWPWebAccountScope)scope success:(void (^)(WSCWebAccount*))success failure:(void (^)(NSError*))failure;
@@ -249,7 +249,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSAWPWebAccountProviderRequestTokenOperation_DEFINED__
 #define __WSAWPWebAccountProviderRequestTokenOperation_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSAWPWebAccountProviderRequestTokenOperation : RTObject <WSAWPIWebAccountProviderTokenOperation, WSAWPIWebAccountProviderOperation, WSAWPIWebAccountProviderUIReportOperation, WSAWPIWebAccountProviderBaseReportOperation>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -269,7 +269,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSAWPWebAccountProviderGetTokenSilentOperation_DEFINED__
 #define __WSAWPWebAccountProviderGetTokenSilentOperation_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSAWPWebAccountProviderGetTokenSilentOperation : RTObject <WSAWPIWebAccountProviderTokenOperation, WSAWPIWebAccountProviderOperation, WSAWPIWebAccountProviderSilentReportOperation, WSAWPIWebAccountProviderBaseReportOperation>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -290,7 +290,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSAWPWebAccountProviderAddAccountOperation_DEFINED__
 #define __WSAWPWebAccountProviderAddAccountOperation_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSAWPWebAccountProviderAddAccountOperation : RTObject <WSAWPIWebAccountProviderOperation>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -305,7 +305,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSAWPWebAccountProviderManageAccountOperation_DEFINED__
 #define __WSAWPWebAccountProviderManageAccountOperation_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSAWPWebAccountProviderManageAccountOperation : RTObject <WSAWPIWebAccountProviderOperation>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -321,7 +321,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSAWPWebAccountProviderDeleteAccountOperation_DEFINED__
 #define __WSAWPWebAccountProviderDeleteAccountOperation_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSAWPWebAccountProviderDeleteAccountOperation : RTObject <WSAWPIWebAccountProviderOperation, WSAWPIWebAccountProviderBaseReportOperation>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -338,7 +338,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSAWPWebAccountProviderSignOutAccountOperation_DEFINED__
 #define __WSAWPWebAccountProviderSignOutAccountOperation_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSAWPWebAccountProviderSignOutAccountOperation : RTObject <WSAWPIWebAccountProviderOperation, WSAWPIWebAccountProviderBaseReportOperation>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -357,7 +357,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSAWPWebAccountProviderRetrieveCookiesOperation_DEFINED__
 #define __WSAWPWebAccountProviderRetrieveCookiesOperation_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSAWPWebAccountProviderRetrieveCookiesOperation : RTObject <WSAWPIWebAccountProviderOperation, WSAWPIWebAccountProviderBaseReportOperation>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -377,7 +377,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSAWPWebAccountProviderTriggerDetails_DEFINED__
 #define __WSAWPWebAccountProviderTriggerDetails_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSAWPWebAccountProviderTriggerDetails : RTObject <WSAWPIWebAccountProviderTokenObjects>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

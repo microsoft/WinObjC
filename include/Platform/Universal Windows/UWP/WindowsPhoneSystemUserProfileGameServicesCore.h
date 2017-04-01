@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_PHONE_SYSTEM_USERPROFILE_GAMESERVICES_CORE_EXPORT
-#define OBJCUWP_WINDOWS_PHONE_SYSTEM_USERPROFILE_GAMESERVICES_CORE_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Phone_System_UserProfile_GameServices_Core.lib")
+#ifndef OBJCUWPWINDOWSPHONESYSTEMUSERPROFILEGAMESERVICESCOREEXPORT
+#define OBJCUWPWINDOWSPHONESYSTEMUSERPROFILEGAMESERVICESCOREEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsPhoneSystemUserProfileGameServicesCore.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -55,7 +55,7 @@ typedef unsigned WPSUGCGameServiceGameOutcome;
 #ifndef __WPSUGCGameServicePropertyCollection_DEFINED__
 #define __WPSUGCGameServicePropertyCollection_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_SYSTEM_USERPROFILE_GAMESERVICES_CORE_EXPORT
+OBJCUWPWINDOWSPHONESYSTEMUSERPROFILEGAMESERVICESCOREEXPORT
 @interface WPSUGCGameServicePropertyCollection : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -69,7 +69,7 @@ OBJCUWP_WINDOWS_PHONE_SYSTEM_USERPROFILE_GAMESERVICES_CORE_EXPORT
 #ifndef __WPSUGCGameService_DEFINED__
 #define __WPSUGCGameService_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_SYSTEM_USERPROFILE_GAMESERVICES_CORE_EXPORT
+OBJCUWPWINDOWSPHONESYSTEMUSERPROFILEGAMESERVICESCOREEXPORT
 @interface WPSUGCGameService : RTObject
 + (void)getGamerProfileAsyncWithSuccess:(void (^)(WPSUGCGameServicePropertyCollection*))success failure:(void (^)(NSError*))failure;
 + (void)getInstalledGameItemsAsyncWithSuccess:(void (^)(WPSUGCGameServicePropertyCollection*))success failure:(void (^)(NSError*))failure;

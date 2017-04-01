@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_PREVIEW_NOTES_EXPORT
-#define OBJCUWP_WINDOWS_APPLICATIONMODEL_PREVIEW_NOTES_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Preview_Notes.lib")
+#ifndef OBJCUWPWINDOWSAPPLICATIONMODELPREVIEWNOTESEXPORT
+#define OBJCUWPWINDOWSAPPLICATIONMODELPREVIEWNOTESEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsApplicationModelPreviewNotes.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -39,7 +39,7 @@
 #ifndef __WAPNNotePlacementChangedPreviewEventArgs_DEFINED__
 #define __WAPNNotePlacementChangedPreviewEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_PREVIEW_NOTES_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELPREVIEWNOTESEXPORT
 @interface WAPNNotePlacementChangedPreviewEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -53,7 +53,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_PREVIEW_NOTES_EXPORT
 #ifndef __WAPNNoteVisibilityChangedPreviewEventArgs_DEFINED__
 #define __WAPNNoteVisibilityChangedPreviewEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_PREVIEW_NOTES_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELPREVIEWNOTESEXPORT
 @interface WAPNNoteVisibilityChangedPreviewEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -68,7 +68,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_PREVIEW_NOTES_EXPORT
 #ifndef __WAPNNotesWindowManagerPreview_DEFINED__
 #define __WAPNNotesWindowManagerPreview_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_PREVIEW_NOTES_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELPREVIEWNOTESEXPORT
 @interface WAPNNotesWindowManagerPreview : RTObject
 + (WAPNNotesWindowManagerPreview*)getForCurrentApp;
 #if defined(__cplusplus)

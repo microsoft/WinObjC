@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_XAML_HOSTING_EXPORT
-#define OBJCUWP_WINDOWS_UI_XAML_HOSTING_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml_Hosting.lib")
+#ifndef OBJCUWPWINDOWSUIXAMLHOSTINGEXPORT
+#define OBJCUWPWINDOWSUIXAMLHOSTINGEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUIXamlHosting.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -46,7 +46,7 @@
 - (NSString *)resolveFileResource:(NSString *)path;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_HOSTING_EXPORT
+OBJCUWPWINDOWSUIXAMLHOSTINGEXPORT
 @interface WUXHIXamlUIPresenterHost : RTObject <WUXHIXamlUIPresenterHost>
 @end
 
@@ -60,7 +60,7 @@ OBJCUWP_WINDOWS_UI_XAML_HOSTING_EXPORT
 - (NSString *)getGenericXamlFilePath;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_HOSTING_EXPORT
+OBJCUWPWINDOWSUIXAMLHOSTINGEXPORT
 @interface WUXHIXamlUIPresenterHost2 : RTObject <WUXHIXamlUIPresenterHost2>
 @end
 
@@ -74,7 +74,7 @@ OBJCUWP_WINDOWS_UI_XAML_HOSTING_EXPORT
 - (RTObject*)resolveDictionaryResource:(WXResourceDictionary*)dictionary dictionaryKey:(RTObject*)dictionaryKey suggestedValue:(RTObject*)suggestedValue;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_HOSTING_EXPORT
+OBJCUWPWINDOWSUIXAMLHOSTINGEXPORT
 @interface WUXHIXamlUIPresenterHost3 : RTObject <WUXHIXamlUIPresenterHost3>
 @end
 
@@ -84,7 +84,7 @@ OBJCUWP_WINDOWS_UI_XAML_HOSTING_EXPORT
 #ifndef __WUXHElementCompositionPreview_DEFINED__
 #define __WUXHElementCompositionPreview_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_HOSTING_EXPORT
+OBJCUWPWINDOWSUIXAMLHOSTINGEXPORT
 @interface WUXHElementCompositionPreview : RTObject
 + (WUCVisual*)getElementVisual:(WXUIElement*)element;
 + (WUCVisual*)getElementChildVisual:(WXUIElement*)element;
@@ -101,7 +101,7 @@ OBJCUWP_WINDOWS_UI_XAML_HOSTING_EXPORT
 #ifndef __WUXHXamlUIPresenter_DEFINED__
 #define __WUXHXamlUIPresenter_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_HOSTING_EXPORT
+OBJCUWPWINDOWSUIXAMLHOSTINGEXPORT
 @interface WUXHXamlUIPresenter : RTObject
 + (void)setHost:(RTObject<WUXHIXamlUIPresenterHost>*)host;
 + (void)notifyWindowSizeChanged;

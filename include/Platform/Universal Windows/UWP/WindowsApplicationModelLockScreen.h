@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_LOCKSCREEN_EXPORT
-#define OBJCUWP_WINDOWS_APPLICATIONMODEL_LOCKSCREEN_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_LockScreen.lib")
+#ifndef OBJCUWPWINDOWSAPPLICATIONMODELLOCKSCREENEXPORT
+#define OBJCUWPWINDOWSAPPLICATIONMODELLOCKSCREENEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsApplicationModelLockScreen.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -39,7 +39,7 @@
 #ifndef __WALLockScreenInfo_DEFINED__
 #define __WALLockScreenInfo_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_LOCKSCREEN_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELLOCKSCREENEXPORT
 @interface WALLockScreenInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -64,7 +64,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_LOCKSCREEN_EXPORT
 #ifndef __WALLockScreenBadge_DEFINED__
 #define __WALLockScreenBadge_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_LOCKSCREEN_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELLOCKSCREENEXPORT
 @interface WALLockScreenBadge : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -82,7 +82,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_LOCKSCREEN_EXPORT
 #ifndef __WALLockScreenUnlockingDeferral_DEFINED__
 #define __WALLockScreenUnlockingDeferral_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_LOCKSCREEN_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELLOCKSCREENEXPORT
 @interface WALLockScreenUnlockingDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -96,7 +96,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_LOCKSCREEN_EXPORT
 #ifndef __WALLockApplicationHost_DEFINED__
 #define __WALLockApplicationHost_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_LOCKSCREEN_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELLOCKSCREENEXPORT
 @interface WALLockApplicationHost : RTObject
 + (WALLockApplicationHost*)getForCurrentView;
 #if defined(__cplusplus)
@@ -113,7 +113,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_LOCKSCREEN_EXPORT
 #ifndef __WALLockScreenUnlockingEventArgs_DEFINED__
 #define __WALLockScreenUnlockingEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_LOCKSCREEN_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELLOCKSCREENEXPORT
 @interface WALLockScreenUnlockingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

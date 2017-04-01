@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
-#define OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Search.lib")
+#ifndef OBJCUWPWINDOWSAPPLICATIONMODELSEARCHEXPORT
+#define OBJCUWPWINDOWSAPPLICATIONMODELSEARCHEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsApplicationModelSearch.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -46,7 +46,7 @@
 @property (readonly) NSString * queryText;
 @end
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSEARCHEXPORT
 @interface WASISearchPaneQueryChangedEventArgs : RTObject <WASISearchPaneQueryChangedEventArgs>
 @end
 
@@ -56,7 +56,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 #ifndef __WASSearchPaneVisibilityChangedEventArgs_DEFINED__
 #define __WASSearchPaneVisibilityChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSEARCHEXPORT
 @interface WASSearchPaneVisibilityChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -70,7 +70,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 #ifndef __WASSearchPaneQueryChangedEventArgs_DEFINED__
 #define __WASSearchPaneQueryChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSEARCHEXPORT
 @interface WASSearchPaneQueryChangedEventArgs : RTObject <WASISearchPaneQueryChangedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -86,7 +86,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 #ifndef __WASSearchPaneQuerySubmittedEventArgs_DEFINED__
 #define __WASSearchPaneQuerySubmittedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSEARCHEXPORT
 @interface WASSearchPaneQuerySubmittedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -102,7 +102,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 #ifndef __WASSearchPaneResultSuggestionChosenEventArgs_DEFINED__
 #define __WASSearchPaneResultSuggestionChosenEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSEARCHEXPORT
 @interface WASSearchPaneResultSuggestionChosenEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -116,7 +116,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 #ifndef __WASSearchPaneSuggestionsRequestDeferral_DEFINED__
 #define __WASSearchPaneSuggestionsRequestDeferral_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSEARCHEXPORT
 @interface WASSearchPaneSuggestionsRequestDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -130,7 +130,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 #ifndef __WASSearchPaneSuggestionsRequest_DEFINED__
 #define __WASSearchPaneSuggestionsRequest_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSEARCHEXPORT
 @interface WASSearchPaneSuggestionsRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -146,7 +146,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 #ifndef __WASSearchPaneSuggestionsRequestedEventArgs_DEFINED__
 #define __WASSearchPaneSuggestionsRequestedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSEARCHEXPORT
 @interface WASSearchPaneSuggestionsRequestedEventArgs : RTObject <WASISearchPaneQueryChangedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -163,7 +163,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 #ifndef __WASSearchPane_DEFINED__
 #define __WASSearchPane_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSEARCHEXPORT
 @interface WASSearchPane : RTObject
 + (void)hideThisApplication;
 + (WASSearchPane*)getForCurrentView;
@@ -199,7 +199,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 #ifndef __WASSearchPaneQueryLinguisticDetails_DEFINED__
 #define __WASSearchPaneQueryLinguisticDetails_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSEARCHEXPORT
 @interface WASSearchPaneQueryLinguisticDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -215,7 +215,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 #ifndef __WASSearchSuggestionCollection_DEFINED__
 #define __WASSearchSuggestionCollection_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSEARCHEXPORT
 @interface WASSearchSuggestionCollection : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -233,7 +233,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 #ifndef __WASLocalContentSuggestionSettings_DEFINED__
 #define __WASLocalContentSuggestionSettings_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSEARCHEXPORT
 @interface WASLocalContentSuggestionSettings : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -251,7 +251,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 #ifndef __WASSearchQueryLinguisticDetails_DEFINED__
 #define __WASSearchQueryLinguisticDetails_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSEARCHEXPORT
 @interface WASSearchQueryLinguisticDetails : RTObject
 + (WASSearchQueryLinguisticDetails*)makeInstance:(id<NSFastEnumeration> /* NSString * */)queryTextAlternatives queryTextCompositionStart:(unsigned int)queryTextCompositionStart queryTextCompositionLength:(unsigned int)queryTextCompositionLength ACTIVATOR;
 #if defined(__cplusplus)
@@ -268,7 +268,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 #ifndef __WASSearchSuggestionsRequestDeferral_DEFINED__
 #define __WASSearchSuggestionsRequestDeferral_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSEARCHEXPORT
 @interface WASSearchSuggestionsRequestDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -282,7 +282,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
 #ifndef __WASSearchSuggestionsRequest_DEFINED__
 #define __WASSearchSuggestionsRequest_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSEARCHEXPORT
 @interface WASSearchSuggestionsRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

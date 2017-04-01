@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_GLOBALIZATION_PHONENUMBERFORMATTING_EXPORT
-#define OBJCUWP_WINDOWS_GLOBALIZATION_PHONENUMBERFORMATTING_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Globalization_PhoneNumberFormatting.lib")
+#ifndef OBJCUWPWINDOWSGLOBALIZATIONPHONENUMBERFORMATTINGEXPORT
+#define OBJCUWPWINDOWSGLOBALIZATIONPHONENUMBERFORMATTINGEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsGlobalizationPhoneNumberFormatting.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -87,7 +87,7 @@ typedef unsigned WGPPhoneNumberMatchResult;
 - (NSString *)toString;
 @end
 
-OBJCUWP_WINDOWS_GLOBALIZATION_PHONENUMBERFORMATTING_EXPORT
+OBJCUWPWINDOWSGLOBALIZATIONPHONENUMBERFORMATTINGEXPORT
 @interface WFIStringable : RTObject <WFIStringable>
 @end
 
@@ -97,7 +97,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_PHONENUMBERFORMATTING_EXPORT
 #ifndef __WGPPhoneNumberInfo_DEFINED__
 #define __WGPPhoneNumberInfo_DEFINED__
 
-OBJCUWP_WINDOWS_GLOBALIZATION_PHONENUMBERFORMATTING_EXPORT
+OBJCUWPWINDOWSGLOBALIZATIONPHONENUMBERFORMATTINGEXPORT
 @interface WGPPhoneNumberInfo : RTObject <WFIStringable>
 + (WGPPhoneNumberParseResult)tryParse:(NSString *)input phoneNumber:(WGPPhoneNumberInfo**)phoneNumber;
 + (WGPPhoneNumberParseResult)tryParseWithRegion:(NSString *)input regionCode:(NSString *)regionCode phoneNumber:(WGPPhoneNumberInfo**)phoneNumber;
@@ -122,7 +122,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_PHONENUMBERFORMATTING_EXPORT
 #ifndef __WGPPhoneNumberFormatter_DEFINED__
 #define __WGPPhoneNumberFormatter_DEFINED__
 
-OBJCUWP_WINDOWS_GLOBALIZATION_PHONENUMBERFORMATTING_EXPORT
+OBJCUWPWINDOWSGLOBALIZATIONPHONENUMBERFORMATTINGEXPORT
 @interface WGPPhoneNumberFormatter : RTObject
 + (void)tryCreate:(NSString *)regionCode phoneNumber:(WGPPhoneNumberFormatter**)phoneNumber;
 + (int)getCountryCodeForRegion:(NSString *)regionCode;

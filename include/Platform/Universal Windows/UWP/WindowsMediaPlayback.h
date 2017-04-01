@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
-#define OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Media_Playback_Protection_Core_Capture_Devices.lib")
+#ifndef OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+#define OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsMediaCaptureDevicesCorePlaybackProtection.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -155,7 +155,7 @@ typedef unsigned WMPMediaBreakInsertionMethod;
 @protocol WMPIMediaPlaybackSource
 @end
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPIMediaPlaybackSource : RTObject <WMPIMediaPlaybackSource>
 @end
 
@@ -170,7 +170,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 - (void)setPlaybackSource:(RTObject<WMPIMediaPlaybackSource>*)source;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPIMediaEnginePlaybackSource : RTObject <WMPIMediaEnginePlaybackSource>
 @end
 
@@ -180,7 +180,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPPlaybackMediaMarker_DEFINED__
 #define __WMPPlaybackMediaMarker_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPPlaybackMediaMarker : RTObject
 + (WMPPlaybackMediaMarker*)makeFromTime:(WFTimeSpan*)value ACTIVATOR;
 + (WMPPlaybackMediaMarker*)make:(WFTimeSpan*)value mediaMarketType:(NSString *)mediaMarketType text:(NSString *)text ACTIVATOR;
@@ -198,7 +198,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPPlaybackMediaMarkerSequence_DEFINED__
 #define __WMPPlaybackMediaMarkerSequence_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPPlaybackMediaMarkerSequence : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -214,7 +214,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaPlayerFailedEventArgs_DEFINED__
 #define __WMPMediaPlayerFailedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlayerFailedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -230,7 +230,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaPlayerRateChangedEventArgs_DEFINED__
 #define __WMPMediaPlayerRateChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlayerRateChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -244,7 +244,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPPlaybackMediaMarkerReachedEventArgs_DEFINED__
 #define __WMPPlaybackMediaMarkerReachedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPPlaybackMediaMarkerReachedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -258,7 +258,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaPlayerDataReceivedEventArgs_DEFINED__
 #define __WMPMediaPlayerDataReceivedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlayerDataReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -276,7 +276,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -286,7 +286,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaPlayer_DEFINED__
 #define __WMPMediaPlayer_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlayer : RTObject <WFIClosable>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -366,7 +366,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaBreakManager_DEFINED__
 #define __WMPMediaBreakManager_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaBreakManager : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -391,7 +391,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaPlaybackCommandManager_DEFINED__
 #define __WMPMediaPlaybackCommandManager_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackCommandManager : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -436,7 +436,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaPlaybackSession_DEFINED__
 #define __WMPMediaPlaybackSession_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackSession : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -483,7 +483,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaPlayerSurface_DEFINED__
 #define __WMPMediaPlayerSurface_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlayerSurface : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -500,7 +500,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaBreakSeekedOverEventArgs_DEFINED__
 #define __WMPMediaBreakSeekedOverEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaBreakSeekedOverEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -516,7 +516,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaBreakStartedEventArgs_DEFINED__
 #define __WMPMediaBreakStartedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaBreakStartedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -530,7 +530,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaBreakEndedEventArgs_DEFINED__
 #define __WMPMediaBreakEndedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaBreakEndedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -544,7 +544,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaBreakSkippedEventArgs_DEFINED__
 #define __WMPMediaBreakSkippedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaBreakSkippedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -558,7 +558,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPBackgroundMediaPlayer_DEFINED__
 #define __WMPBackgroundMediaPlayer_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPBackgroundMediaPlayer : RTObject
 + (void)sendMessageToBackground:(WFCValueSet*)value;
 + (void)sendMessageToForeground:(WFCValueSet*)value;
@@ -577,7 +577,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaPlaybackCommandManagerPlayReceivedEventArgs_DEFINED__
 #define __WMPMediaPlaybackCommandManagerPlayReceivedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackCommandManagerPlayReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -592,7 +592,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaPlaybackCommandManagerPauseReceivedEventArgs_DEFINED__
 #define __WMPMediaPlaybackCommandManagerPauseReceivedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackCommandManagerPauseReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -607,7 +607,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaPlaybackCommandManagerNextReceivedEventArgs_DEFINED__
 #define __WMPMediaPlaybackCommandManagerNextReceivedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackCommandManagerNextReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -622,7 +622,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaPlaybackCommandManagerPreviousReceivedEventArgs_DEFINED__
 #define __WMPMediaPlaybackCommandManagerPreviousReceivedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackCommandManagerPreviousReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -637,7 +637,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaPlaybackCommandManagerFastForwardReceivedEventArgs_DEFINED__
 #define __WMPMediaPlaybackCommandManagerFastForwardReceivedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackCommandManagerFastForwardReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -652,7 +652,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaPlaybackCommandManagerRewindReceivedEventArgs_DEFINED__
 #define __WMPMediaPlaybackCommandManagerRewindReceivedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackCommandManagerRewindReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -667,7 +667,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaPlaybackCommandManagerShuffleReceivedEventArgs_DEFINED__
 #define __WMPMediaPlaybackCommandManagerShuffleReceivedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackCommandManagerShuffleReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -683,7 +683,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaPlaybackCommandManagerAutoRepeatModeReceivedEventArgs_DEFINED__
 #define __WMPMediaPlaybackCommandManagerAutoRepeatModeReceivedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackCommandManagerAutoRepeatModeReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -699,7 +699,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaPlaybackCommandManagerPositionReceivedEventArgs_DEFINED__
 #define __WMPMediaPlaybackCommandManagerPositionReceivedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackCommandManagerPositionReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -715,7 +715,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaPlaybackCommandManagerRateReceivedEventArgs_DEFINED__
 #define __WMPMediaPlaybackCommandManagerRateReceivedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackCommandManagerRateReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -731,7 +731,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaPlaybackCommandManagerCommandBehavior_DEFINED__
 #define __WMPMediaPlaybackCommandManagerCommandBehavior_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackCommandManagerCommandBehavior : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -749,7 +749,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaPlaybackItem_DEFINED__
 #define __WMPMediaPlaybackItem_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackItem : RTObject <WMPIMediaPlaybackSource>
 + (WMPMediaPlaybackItem*)findFromMediaSource:(WMCMediaSource*)source;
 + (WMPMediaPlaybackItem*)makeWithStartTime:(WMCMediaSource*)source startTime:(WFTimeSpan*)startTime ACTIVATOR;
@@ -788,7 +788,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 - (void)removeSelectedIndexChangedEvent:(EventRegistrationToken)tok;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMCISingleSelectMediaTrackList : RTObject <WMCISingleSelectMediaTrackList>
 @end
 
@@ -798,7 +798,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaPlaybackAudioTrackList_DEFINED__
 #define __WMPMediaPlaybackAudioTrackList_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackAudioTrackList : RTObject <WMCISingleSelectMediaTrackList>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -821,7 +821,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaPlaybackVideoTrackList_DEFINED__
 #define __WMPMediaPlaybackVideoTrackList_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackVideoTrackList : RTObject <WMCISingleSelectMediaTrackList>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -844,7 +844,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaPlaybackTimedMetadataTrackList_DEFINED__
 #define __WMPMediaPlaybackTimedMetadataTrackList_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackTimedMetadataTrackList : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -868,7 +868,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaBreakSchedule_DEFINED__
 #define __WMPMediaBreakSchedule_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaBreakSchedule : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -889,7 +889,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaItemDisplayProperties_DEFINED__
 #define __WMPMediaItemDisplayProperties_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaItemDisplayProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -907,7 +907,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaBreak_DEFINED__
 #define __WMPMediaBreak_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaBreak : RTObject
 + (WMPMediaBreak*)make:(WMPMediaBreakInsertionMethod)insertionMethod ACTIVATOR;
 + (WMPMediaBreak*)makeWithPresentationPosition:(WMPMediaBreakInsertionMethod)insertionMethod presentationPosition:(WFTimeSpan*)presentationPosition ACTIVATOR;
@@ -927,7 +927,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaPlaybackList_DEFINED__
 #define __WMPMediaPlaybackList_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackList : RTObject <WMPIMediaPlaybackSource>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -959,7 +959,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaPlaybackItemError_DEFINED__
 #define __WMPMediaPlaybackItemError_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackItemError : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -974,7 +974,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaPlaybackItemFailedEventArgs_DEFINED__
 #define __WMPMediaPlaybackItemFailedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackItemFailedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -989,7 +989,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPCurrentMediaPlaybackItemChangedEventArgs_DEFINED__
 #define __WMPCurrentMediaPlaybackItemChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPCurrentMediaPlaybackItemChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1004,7 +1004,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPMediaPlaybackItemOpenedEventArgs_DEFINED__
 #define __WMPMediaPlaybackItemOpenedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPMediaPlaybackItemOpenedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1018,7 +1018,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMPTimedMetadataPresentationModeChangedEventArgs_DEFINED__
 #define __WMPTimedMetadataPresentationModeChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMPTimedMetadataPresentationModeChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

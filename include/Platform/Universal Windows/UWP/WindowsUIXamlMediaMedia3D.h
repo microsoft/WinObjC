@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_XAML_EXPORT
-#define OBJCUWP_WINDOWS_UI_XAML_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml.lib")
+#ifndef OBJCUWPWINDOWSUIXAMLEXPORT
+#define OBJCUWPWINDOWSUIXAMLEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUIXaml.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -43,7 +43,7 @@ typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, W
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Xaml.Media.Media3D.Matrix3D
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMMMatrix3D : NSObject
 + (instancetype)new;
 @property double m11;
@@ -68,7 +68,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMMMatrix3DHelper_DEFINED__
 #define __WUXMMMatrix3DHelper_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMMMatrix3DHelper : RTObject
 + (WUXMMMatrix3D*)multiply:(WUXMMMatrix3D*)matrix1 matrix2:(WUXMMMatrix3D*)matrix2;
 + (WUXMMMatrix3D*)fromElements:(double)m11 m12:(double)m12 m13:(double)m13 m14:(double)m14 m21:(double)m21 m22:(double)m22 m23:(double)m23 m24:(double)m24 m31:(double)m31 m32:(double)m32 m33:(double)m33 m34:(double)m34 offsetX:(double)offsetX offsetY:(double)offsetY offsetZ:(double)offsetZ m44:(double)m44;
@@ -87,7 +87,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -108,7 +108,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMMTransform3D_DEFINED__
 #define __WUXMMTransform3D_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMMTransform3D : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -121,7 +121,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMMCompositeTransform3D_DEFINED__
 #define __WUXMMCompositeTransform3D_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMMCompositeTransform3D : WUXMMTransform3D
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -159,7 +159,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMMPerspectiveTransform3D_DEFINED__
 #define __WUXMMPerspectiveTransform3D_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMMPerspectiveTransform3D : WUXMMTransform3D
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
-#define OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Devices_WiFiDirect_Services.lib")
+#ifndef OBJCUWPWINDOWSDEVICESWIFIDIRECTSERVICESEXPORT
+#define OBJCUWPWINDOWSDEVICESWIFIDIRECTSERVICESEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsDevicesWiFiDirectServices.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -104,7 +104,7 @@ typedef unsigned WDWSWiFiDirectServiceIPProtocol;
 #ifndef __WDWSWiFiDirectServiceProvisioningInfo_DEFINED__
 #define __WDWSWiFiDirectServiceProvisioningInfo_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
+OBJCUWPWINDOWSDEVICESWIFIDIRECTSERVICESEXPORT
 @interface WDWSWiFiDirectServiceProvisioningInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -123,7 +123,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
+OBJCUWPWINDOWSDEVICESWIFIDIRECTSERVICESEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -133,7 +133,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 #ifndef __WDWSWiFiDirectServiceSession_DEFINED__
 #define __WDWSWiFiDirectServiceSession_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
+OBJCUWPWINDOWSDEVICESWIFIDIRECTSERVICESEXPORT
 @interface WDWSWiFiDirectServiceSession : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -161,7 +161,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 #ifndef __WDWSWiFiDirectServiceAutoAcceptSessionConnectedEventArgs_DEFINED__
 #define __WDWSWiFiDirectServiceAutoAcceptSessionConnectedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
+OBJCUWPWINDOWSDEVICESWIFIDIRECTSERVICESEXPORT
 @interface WDWSWiFiDirectServiceAutoAcceptSessionConnectedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -176,7 +176,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 #ifndef __WDWSWiFiDirectServiceRemotePortAddedEventArgs_DEFINED__
 #define __WDWSWiFiDirectServiceRemotePortAddedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
+OBJCUWPWINDOWSDEVICESWIFIDIRECTSERVICESEXPORT
 @interface WDWSWiFiDirectServiceRemotePortAddedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -191,7 +191,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 #ifndef __WDWSWiFiDirectServiceSessionDeferredEventArgs_DEFINED__
 #define __WDWSWiFiDirectServiceSessionDeferredEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
+OBJCUWPWINDOWSDEVICESWIFIDIRECTSERVICESEXPORT
 @interface WDWSWiFiDirectServiceSessionDeferredEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -205,7 +205,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 #ifndef __WDWSWiFiDirectServiceSessionRequest_DEFINED__
 #define __WDWSWiFiDirectServiceSessionRequest_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
+OBJCUWPWINDOWSDEVICESWIFIDIRECTSERVICESEXPORT
 @interface WDWSWiFiDirectServiceSessionRequest : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -222,7 +222,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 #ifndef __WDWSWiFiDirectServiceSessionRequestedEventArgs_DEFINED__
 #define __WDWSWiFiDirectServiceSessionRequestedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
+OBJCUWPWINDOWSDEVICESWIFIDIRECTSERVICESEXPORT
 @interface WDWSWiFiDirectServiceSessionRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -236,7 +236,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 #ifndef __WDWSWiFiDirectServiceAdvertiser_DEFINED__
 #define __WDWSWiFiDirectServiceAdvertiser_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
+OBJCUWPWINDOWSDEVICESWIFIDIRECTSERVICESEXPORT
 @interface WDWSWiFiDirectServiceAdvertiser : RTObject
 + (WDWSWiFiDirectServiceAdvertiser*)makeWiFiDirectServiceAdvertiser:(NSString *)serviceName ACTIVATOR;
 #if defined(__cplusplus)
@@ -271,7 +271,7 @@ OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
 #ifndef __WDWSWiFiDirectService_DEFINED__
 #define __WDWSWiFiDirectService_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_WIFIDIRECT_SERVICES_EXPORT
+OBJCUWPWINDOWSDEVICESWIFIDIRECTSERVICESEXPORT
 @interface WDWSWiFiDirectService : RTObject
 + (NSString *)getSelector:(NSString *)serviceName;
 + (NSString *)getSelectorWithFilter:(NSString *)serviceName serviceInfoFilter:(RTObject<WSSIBuffer>*)serviceInfoFilter;

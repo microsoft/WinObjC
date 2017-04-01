@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_SYSTEM_PROFILE_SYSTEMMANUFACTURERS_EXPORT
-#define OBJCUWP_WINDOWS_SYSTEM_PROFILE_SYSTEMMANUFACTURERS_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_System_Profile_SystemManufacturers.lib")
+#ifndef OBJCUWPWINDOWSSYSTEMPROFILESYSTEMMANUFACTURERSEXPORT
+#define OBJCUWPWINDOWSSYSTEMPROFILESYSTEMMANUFACTURERSEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsSystemProfileSystemManufacturers.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -36,7 +36,7 @@
 #ifndef __WSPSSmbiosInformation_DEFINED__
 #define __WSPSSmbiosInformation_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_PROFILE_SYSTEMMANUFACTURERS_EXPORT
+OBJCUWPWINDOWSSYSTEMPROFILESYSTEMMANUFACTURERSEXPORT
 @interface WSPSSmbiosInformation : RTObject
 + (NSString *)serialNumber;
 @end

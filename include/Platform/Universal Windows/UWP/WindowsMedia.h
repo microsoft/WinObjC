@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_MEDIA_EXPORT
-#define OBJCUWP_WINDOWS_MEDIA_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Media.lib")
+#ifndef OBJCUWPWINDOWSMEDIAEXPORT
+#define OBJCUWPWINDOWSMEDIAEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsMedia.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -125,7 +125,7 @@ typedef unsigned WMMediaTimelineControllerState;
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_EXPORT
+OBJCUWPWINDOWSMEDIAEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -146,7 +146,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_EXPORT
+OBJCUWPWINDOWSMEDIAEXPORT
 @interface WMIMediaFrame : RTObject <WMIMediaFrame>
 @end
 
@@ -162,7 +162,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 @property (readonly) WFTimeSpan* time;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_EXPORT
+OBJCUWPWINDOWSMEDIAEXPORT
 @interface WMIMediaMarker : RTObject <WMIMediaMarker>
 @end
 
@@ -176,7 +176,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 @property (readonly) NSArray* /* RTObject<WMIMediaMarker>* */ markers;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_EXPORT
+OBJCUWPWINDOWSMEDIAEXPORT
 @interface WMIMediaMarkers : RTObject <WMIMediaMarkers>
 @end
 
@@ -190,7 +190,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 - (void)setProperties:(RTObject<WFCIPropertySet>*)configuration;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_EXPORT
+OBJCUWPWINDOWSMEDIAEXPORT
 @interface WMIMediaExtension : RTObject <WMIMediaExtension>
 @end
 
@@ -200,7 +200,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 #ifndef __WMMediaProcessingTriggerDetails_DEFINED__
 #define __WMMediaProcessingTriggerDetails_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EXPORT
+OBJCUWPWINDOWSMEDIAEXPORT
 @interface WMMediaProcessingTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -214,7 +214,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 #ifndef __WMVideoFrame_DEFINED__
 #define __WMVideoFrame_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EXPORT
+OBJCUWPWINDOWSMEDIAEXPORT
 @interface WMVideoFrame : RTObject <WMIMediaFrame, WFIClosable>
 + (WMVideoFrame*)make:(WGIBitmapPixelFormat)format width:(int)width height:(int)height ACTIVATOR;
 + (WMVideoFrame*)makeWithAlpha:(WGIBitmapPixelFormat)format width:(int)width height:(int)height alpha:(WGIBitmapAlphaMode)alpha ACTIVATOR;
@@ -245,7 +245,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_EXPORT
+OBJCUWPWINDOWSMEDIAEXPORT
 @interface WFIMemoryBuffer : RTObject <WFIMemoryBuffer>
 @end
 
@@ -255,7 +255,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 #ifndef __WMAudioBuffer_DEFINED__
 #define __WMAudioBuffer_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EXPORT
+OBJCUWPWINDOWSMEDIAEXPORT
 @interface WMAudioBuffer : RTObject <WFIMemoryBuffer, WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -272,7 +272,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 #ifndef __WMAudioFrame_DEFINED__
 #define __WMAudioFrame_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EXPORT
+OBJCUWPWINDOWSMEDIAEXPORT
 @interface WMAudioFrame : RTObject <WMIMediaFrame, WFIClosable>
 + (WMAudioFrame*)make:(unsigned int)capacity ACTIVATOR;
 #if defined(__cplusplus)
@@ -295,7 +295,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 #ifndef __WMMediaMarkerTypes_DEFINED__
 #define __WMMediaMarkerTypes_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EXPORT
+OBJCUWPWINDOWSMEDIAEXPORT
 @interface WMMediaMarkerTypes : RTObject
 + (NSString *)bookmark;
 @end
@@ -306,7 +306,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 #ifndef __WMSystemMediaTransportControlsTimelineProperties_DEFINED__
 #define __WMSystemMediaTransportControlsTimelineProperties_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EXPORT
+OBJCUWPWINDOWSMEDIAEXPORT
 @interface WMSystemMediaTransportControlsTimelineProperties : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -325,7 +325,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 #ifndef __WMMusicDisplayProperties_DEFINED__
 #define __WMMusicDisplayProperties_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EXPORT
+OBJCUWPWINDOWSMEDIAEXPORT
 @interface WMMusicDisplayProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -345,7 +345,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 #ifndef __WMVideoDisplayProperties_DEFINED__
 #define __WMVideoDisplayProperties_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EXPORT
+OBJCUWPWINDOWSMEDIAEXPORT
 @interface WMVideoDisplayProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -361,7 +361,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 #ifndef __WMImageDisplayProperties_DEFINED__
 #define __WMImageDisplayProperties_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EXPORT
+OBJCUWPWINDOWSMEDIAEXPORT
 @interface WMImageDisplayProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -376,7 +376,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 #ifndef __WMSystemMediaTransportControlsDisplayUpdater_DEFINED__
 #define __WMSystemMediaTransportControlsDisplayUpdater_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EXPORT
+OBJCUWPWINDOWSMEDIAEXPORT
 @interface WMSystemMediaTransportControlsDisplayUpdater : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -398,7 +398,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 #ifndef __WMSystemMediaTransportControlsButtonPressedEventArgs_DEFINED__
 #define __WMSystemMediaTransportControlsButtonPressedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EXPORT
+OBJCUWPWINDOWSMEDIAEXPORT
 @interface WMSystemMediaTransportControlsButtonPressedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -412,7 +412,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 #ifndef __WMSystemMediaTransportControlsPropertyChangedEventArgs_DEFINED__
 #define __WMSystemMediaTransportControlsPropertyChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EXPORT
+OBJCUWPWINDOWSMEDIAEXPORT
 @interface WMSystemMediaTransportControlsPropertyChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -426,7 +426,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 #ifndef __WMPlaybackPositionChangeRequestedEventArgs_DEFINED__
 #define __WMPlaybackPositionChangeRequestedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EXPORT
+OBJCUWPWINDOWSMEDIAEXPORT
 @interface WMPlaybackPositionChangeRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -440,7 +440,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 #ifndef __WMPlaybackRateChangeRequestedEventArgs_DEFINED__
 #define __WMPlaybackRateChangeRequestedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EXPORT
+OBJCUWPWINDOWSMEDIAEXPORT
 @interface WMPlaybackRateChangeRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -454,7 +454,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 #ifndef __WMShuffleEnabledChangeRequestedEventArgs_DEFINED__
 #define __WMShuffleEnabledChangeRequestedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EXPORT
+OBJCUWPWINDOWSMEDIAEXPORT
 @interface WMShuffleEnabledChangeRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -468,7 +468,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 #ifndef __WMAutoRepeatModeChangeRequestedEventArgs_DEFINED__
 #define __WMAutoRepeatModeChangeRequestedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EXPORT
+OBJCUWPWINDOWSMEDIAEXPORT
 @interface WMAutoRepeatModeChangeRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -482,7 +482,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 #ifndef __WMSystemMediaTransportControls_DEFINED__
 #define __WMSystemMediaTransportControls_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EXPORT
+OBJCUWPWINDOWSMEDIAEXPORT
 @interface WMSystemMediaTransportControls : RTObject
 + (WMSystemMediaTransportControls*)getForCurrentView;
 #if defined(__cplusplus)
@@ -526,7 +526,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 #ifndef __WMMediaExtensionManager_DEFINED__
 #define __WMMediaExtensionManager_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EXPORT
+OBJCUWPWINDOWSMEDIAEXPORT
 @interface WMMediaExtensionManager : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -552,7 +552,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 #ifndef __WMVideoEffects_DEFINED__
 #define __WMVideoEffects_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EXPORT
+OBJCUWPWINDOWSMEDIAEXPORT
 @interface WMVideoEffects : RTObject
 + (NSString *)videoStabilization;
 @end
@@ -563,7 +563,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 #ifndef __WMMediaTimelineController_DEFINED__
 #define __WMMediaTimelineController_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EXPORT
+OBJCUWPWINDOWSMEDIAEXPORT
 @interface WMMediaTimelineController : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -587,7 +587,7 @@ OBJCUWP_WINDOWS_MEDIA_EXPORT
 #ifndef __WMMediaControl_DEFINED__
 #define __WMMediaControl_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_EXPORT
+OBJCUWPWINDOWSMEDIAEXPORT
 @interface WMMediaControl : RTObject
 + (NSString *)trackName;
 + (void)setTrackName:(NSString *)value;

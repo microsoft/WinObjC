@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_PHONE_SPEECH_RECOGNITION_EXPORT
-#define OBJCUWP_WINDOWS_PHONE_SPEECH_RECOGNITION_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Phone_Speech_Recognition.lib")
+#ifndef OBJCUWPWINDOWSPHONESPEECHRECOGNITIONEXPORT
+#define OBJCUWPWINDOWSPHONESPEECHRECOGNITIONEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsPhoneSpeechRecognition.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>

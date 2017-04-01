@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
-#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#ifndef OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+#define OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsConsolidatedNamespace.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -58,7 +58,7 @@ typedef unsigned WSAWCWebTokenRequestStatus;
 #ifndef __WSAWCWebAccountEventArgs_DEFINED__
 #define __WSAWCWebAccountEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSAWCWebAccountEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -72,7 +72,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSAWCWebTokenRequest_DEFINED__
 #define __WSAWCWebTokenRequest_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSAWCWebTokenRequest : RTObject
 + (WSAWCWebTokenRequest*)make:(WSCWebAccountProvider*)provider scope:(NSString *)scope clientId:(NSString *)clientId ACTIVATOR;
 + (WSAWCWebTokenRequest*)makeWithPromptType:(WSCWebAccountProvider*)provider scope:(NSString *)scope clientId:(NSString *)clientId promptType:(WSAWCWebTokenRequestPromptType)promptType ACTIVATOR;
@@ -95,7 +95,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSAWCWebAccountMonitor_DEFINED__
 #define __WSAWCWebAccountMonitor_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSAWCWebAccountMonitor : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -114,7 +114,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSAWCWebAuthenticationCoreManager_DEFINED__
 #define __WSAWCWebAuthenticationCoreManager_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSAWCWebAuthenticationCoreManager : RTObject
 + (WSAWCWebAccountMonitor*)createWebAccountMonitor:(id<NSFastEnumeration> /* WSCWebAccount* */)webAccounts;
 + (void)getTokenSilentlyAsync:(WSAWCWebTokenRequest*)request success:(void (^)(WSAWCWebTokenRequestResult*))success failure:(void (^)(NSError*))failure;
@@ -147,7 +147,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSAWCWebProviderError_DEFINED__
 #define __WSAWCWebProviderError_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSAWCWebProviderError : RTObject
 + (WSAWCWebProviderError*)make:(unsigned int)errorCode errorMessage:(NSString *)errorMessage ACTIVATOR;
 #if defined(__cplusplus)
@@ -164,7 +164,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSAWCWebTokenResponse_DEFINED__
 #define __WSAWCWebTokenResponse_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSAWCWebTokenResponse : RTObject
 + (WSAWCWebTokenResponse*)makeWithToken:(NSString *)token ACTIVATOR;
 + (WSAWCWebTokenResponse*)makeWithTokenAndAccount:(NSString *)token webAccount:(WSCWebAccount*)webAccount ACTIVATOR;
@@ -185,7 +185,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSAWCWebTokenRequestResult_DEFINED__
 #define __WSAWCWebTokenRequestResult_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSAWCWebTokenRequestResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

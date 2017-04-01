@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_INPUT_INKING_CORE_EXPORT
-#define OBJCUWP_WINDOWS_UI_INPUT_INKING_CORE_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_Input_Inking_Core.lib")
+#ifndef OBJCUWPWINDOWSUIINPUTINKINGCOREEXPORT
+#define OBJCUWPWINDOWSUIINPUTINKINGCOREEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUIInputInkingCore.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -48,7 +48,7 @@ typedef unsigned WUIICCoreWetStrokeDisposition;
 #ifndef __WUIICCoreInkIndependentInputSource_DEFINED__
 #define __WUIICCoreInkIndependentInputSource_DEFINED__
 
-OBJCUWP_WINDOWS_UI_INPUT_INKING_CORE_EXPORT
+OBJCUWPWINDOWSUIINPUTINKINGCOREEXPORT
 @interface WUIICCoreInkIndependentInputSource : RTObject
 + (WUIICCoreInkIndependentInputSource*)create:(WUIIInkPresenter*)inkPresenter;
 #if defined(__cplusplus)
@@ -77,7 +77,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_CORE_EXPORT
 #ifndef __WUIICCoreWetStrokeUpdateEventArgs_DEFINED__
 #define __WUIICCoreWetStrokeUpdateEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_INPUT_INKING_CORE_EXPORT
+OBJCUWPWINDOWSUIINPUTINKINGCOREEXPORT
 @interface WUIICCoreWetStrokeUpdateEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -93,7 +93,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_CORE_EXPORT
 #ifndef __WUIICCoreWetStrokeUpdateSource_DEFINED__
 #define __WUIICCoreWetStrokeUpdateSource_DEFINED__
 
-OBJCUWP_WINDOWS_UI_INPUT_INKING_CORE_EXPORT
+OBJCUWPWINDOWSUIINPUTINKINGCOREEXPORT
 @interface WUIICCoreWetStrokeUpdateSource : RTObject
 + (WUIICCoreWetStrokeUpdateSource*)create:(WUIIInkPresenter*)inkPresenter;
 #if defined(__cplusplus)

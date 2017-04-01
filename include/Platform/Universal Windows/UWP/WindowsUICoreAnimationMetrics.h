@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_CORE_ANIMATIONMETRICS_EXPORT
-#define OBJCUWP_WINDOWS_UI_CORE_ANIMATIONMETRICS_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_Core_AnimationMetrics.lib")
+#ifndef OBJCUWPWINDOWSUICOREANIMATIONMETRICSEXPORT
+#define OBJCUWPWINDOWSUICOREANIMATIONMETRICSEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUICoreAnimationMetrics.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -120,7 +120,7 @@ typedef unsigned WUCAAnimationEffectTarget;
 @property (readonly) WUCAPropertyAnimationType type;
 @end
 
-OBJCUWP_WINDOWS_UI_CORE_ANIMATIONMETRICS_EXPORT
+OBJCUWPWINDOWSUICOREANIMATIONMETRICSEXPORT
 @interface WUCAIPropertyAnimation : RTObject <WUCAIPropertyAnimation>
 @end
 
@@ -130,7 +130,7 @@ OBJCUWP_WINDOWS_UI_CORE_ANIMATIONMETRICS_EXPORT
 #ifndef __WUCAAnimationDescription_DEFINED__
 #define __WUCAAnimationDescription_DEFINED__
 
-OBJCUWP_WINDOWS_UI_CORE_ANIMATIONMETRICS_EXPORT
+OBJCUWPWINDOWSUICOREANIMATIONMETRICSEXPORT
 @interface WUCAAnimationDescription : RTObject
 + (WUCAAnimationDescription*)makeInstance:(WUCAAnimationEffect)effect target:(WUCAAnimationEffectTarget)target ACTIVATOR;
 #if defined(__cplusplus)
@@ -149,7 +149,7 @@ OBJCUWP_WINDOWS_UI_CORE_ANIMATIONMETRICS_EXPORT
 #ifndef __WUCAPropertyAnimation_DEFINED__
 #define __WUCAPropertyAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_CORE_ANIMATIONMETRICS_EXPORT
+OBJCUWPWINDOWSUICOREANIMATIONMETRICSEXPORT
 @interface WUCAPropertyAnimation : RTObject <WUCAIPropertyAnimation>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -167,7 +167,7 @@ OBJCUWP_WINDOWS_UI_CORE_ANIMATIONMETRICS_EXPORT
 #ifndef __WUCAScaleAnimation_DEFINED__
 #define __WUCAScaleAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_CORE_ANIMATIONMETRICS_EXPORT
+OBJCUWPWINDOWSUICOREANIMATIONMETRICSEXPORT
 @interface WUCAScaleAnimation : RTObject <WUCAIPropertyAnimation>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -190,7 +190,7 @@ OBJCUWP_WINDOWS_UI_CORE_ANIMATIONMETRICS_EXPORT
 #ifndef __WUCATranslationAnimation_DEFINED__
 #define __WUCATranslationAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_CORE_ANIMATIONMETRICS_EXPORT
+OBJCUWPWINDOWSUICOREANIMATIONMETRICSEXPORT
 @interface WUCATranslationAnimation : RTObject <WUCAIPropertyAnimation>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -208,7 +208,7 @@ OBJCUWP_WINDOWS_UI_CORE_ANIMATIONMETRICS_EXPORT
 #ifndef __WUCAOpacityAnimation_DEFINED__
 #define __WUCAOpacityAnimation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_CORE_ANIMATIONMETRICS_EXPORT
+OBJCUWPWINDOWSUICOREANIMATIONMETRICSEXPORT
 @interface WUCAOpacityAnimation : RTObject <WUCAIPropertyAnimation>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

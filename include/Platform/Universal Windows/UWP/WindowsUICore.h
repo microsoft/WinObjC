@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
-#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#ifndef OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+#define OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsConsolidatedNamespace.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -155,7 +155,7 @@ typedef void(^WUPUICommandInvokedHandler)(RTObject<WUPIUICommand>* command);
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Core.CorePhysicalKeyStatus
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCCorePhysicalKeyStatus : NSObject
 + (instancetype)new;
 @property unsigned int repeatCount;
@@ -167,7 +167,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @end
 
 // [struct] Windows.UI.Core.CoreProximityEvaluation
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCCoreProximityEvaluation : NSObject
 + (instancetype)new;
 @property int score;
@@ -194,7 +194,7 @@ typedef void(^WUCIdleDispatchedHandler)(WUCIdleDispatchedHandlerArgs* e);
 @property BOOL handled;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCICoreWindowEventArgs : RTObject <WUCICoreWindowEventArgs>
 @end
 
@@ -256,7 +256,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 - (void)setPointerCapture;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCICoreWindow : RTObject <WUCICoreWindow>
 @end
 
@@ -271,7 +271,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 - (void)removeAcceleratorKeyActivatedEvent:(EventRegistrationToken)tok;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCICoreAcceleratorKeys : RTObject <WUCICoreAcceleratorKeys>
 @end
 
@@ -285,7 +285,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 - (void)Initialize:(WUCCoreWindow*)window;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCIInitializeWithCoreWindow : RTObject <WUCIInitializeWithCoreWindow>
 @end
 
@@ -302,7 +302,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 - (void)removeInputEnabledEvent:(EventRegistrationToken)tok;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCICoreInputSourceBase : RTObject <WUCICoreInputSourceBase>
 @end
 
@@ -334,7 +334,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 - (void)setPointerCapture;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCICorePointerInputSource : RTObject <WUCICorePointerInputSource>
 @end
 
@@ -353,7 +353,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 - (void)removePointerRoutedToEvent:(EventRegistrationToken)tok;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCICorePointerRedirector : RTObject <WUCICorePointerRedirector>
 @end
 
@@ -363,7 +363,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WUCCoreDispatcher_DEFINED__
 #define __WUCCoreDispatcher_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCCoreDispatcher : RTObject <WUCICoreAcceleratorKeys>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -388,7 +388,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WUCCoreCursor_DEFINED__
 #define __WUCCoreCursor_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCCoreCursor : RTObject
 + (WUCCoreCursor*)makeCursor:(WUCCoreCursorType)type id:(unsigned int)id ACTIVATOR;
 #if defined(__cplusplus)
@@ -404,7 +404,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WUCCoreWindow_DEFINED__
 #define __WUCCoreWindow_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCCoreWindow : RTObject <WUCICoreWindow, WUCICorePointerRedirector>
 + (WUCCoreWindow*)getForCurrentThread;
 #if defined(__cplusplus)
@@ -476,7 +476,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WUCWindowActivatedEventArgs_DEFINED__
 #define __WUCWindowActivatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCWindowActivatedEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -491,7 +491,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WUCAutomationProviderRequestedEventArgs_DEFINED__
 #define __WUCAutomationProviderRequestedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCAutomationProviderRequestedEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -506,7 +506,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WUCCharacterReceivedEventArgs_DEFINED__
 #define __WUCCharacterReceivedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCCharacterReceivedEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -522,7 +522,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WUCCoreWindowEventArgs_DEFINED__
 #define __WUCCoreWindowEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCCoreWindowEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -536,7 +536,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WUCInputEnabledEventArgs_DEFINED__
 #define __WUCInputEnabledEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCInputEnabledEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -551,7 +551,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WUCKeyEventArgs_DEFINED__
 #define __WUCKeyEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCKeyEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -568,7 +568,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WUCPointerEventArgs_DEFINED__
 #define __WUCPointerEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCPointerEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -585,7 +585,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WUCTouchHitTestingEventArgs_DEFINED__
 #define __WUCTouchHitTestingEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCTouchHitTestingEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -604,7 +604,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WUCWindowSizeChangedEventArgs_DEFINED__
 #define __WUCWindowSizeChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCWindowSizeChangedEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -619,7 +619,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WUCVisibilityChangedEventArgs_DEFINED__
 #define __WUCVisibilityChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCVisibilityChangedEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -634,7 +634,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WUCClosestInteractiveBoundsRequestedEventArgs_DEFINED__
 #define __WUCClosestInteractiveBoundsRequestedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCClosestInteractiveBoundsRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -650,7 +650,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WUCIdleDispatchedHandlerArgs_DEFINED__
 #define __WUCIdleDispatchedHandlerArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCIdleDispatchedHandlerArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -664,7 +664,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WUCAcceleratorKeyEventArgs_DEFINED__
 #define __WUCAcceleratorKeyEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCAcceleratorKeyEventArgs : RTObject <WUCICoreWindowEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -682,7 +682,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WUCCoreAcceleratorKeys_DEFINED__
 #define __WUCCoreAcceleratorKeys_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCCoreAcceleratorKeys : RTObject <WUCICoreAcceleratorKeys>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -697,7 +697,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WUCCoreWindowResizeManager_DEFINED__
 #define __WUCCoreWindowResizeManager_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCCoreWindowResizeManager : RTObject
 + (WUCCoreWindowResizeManager*)getForCurrentView;
 #if defined(__cplusplus)
@@ -713,7 +713,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WUCCoreComponentInputSource_DEFINED__
 #define __WUCCoreComponentInputSource_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCCoreComponentInputSource : RTObject <WUCICoreInputSourceBase, WUCICorePointerInputSource>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -766,7 +766,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WUCCoreIndependentInputSource_DEFINED__
 #define __WUCCoreIndependentInputSource_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCCoreIndependentInputSource : RTObject <WUCICoreInputSourceBase, WUCICorePointerInputSource>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -802,7 +802,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WUCBackRequestedEventArgs_DEFINED__
 #define __WUCBackRequestedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCBackRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -816,7 +816,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WUCSystemNavigationManager_DEFINED__
 #define __WUCSystemNavigationManager_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCSystemNavigationManager : RTObject
 + (WUCSystemNavigationManager*)getForCurrentView;
 #if defined(__cplusplus)
@@ -833,7 +833,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WUCCoreWindowPopupShowingEventArgs_DEFINED__
 #define __WUCCoreWindowPopupShowingEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCCoreWindowPopupShowingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -847,7 +847,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WUCCoreWindowDialog_DEFINED__
 #define __WUCCoreWindowDialog_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCCoreWindowDialog : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 + (WUCCoreWindowDialog*)makeWithTitle:(NSString *)title ACTIVATOR;
@@ -873,7 +873,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WUCCoreWindowFlyout_DEFINED__
 #define __WUCCoreWindowFlyout_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WUCCoreWindowFlyout : RTObject
 + (WUCCoreWindowFlyout*)make:(WFPoint*)position ACTIVATOR;
 + (WUCCoreWindowFlyout*)makeWithTitle:(WFPoint*)position title:(NSString *)title ACTIVATOR;

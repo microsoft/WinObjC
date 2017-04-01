@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
-#define OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Store_Preview_InstallControl.lib")
+#ifndef OBJCUWPWINDOWSAPPLICATIONMODELSTOREPREVIEWINSTALLCONTROLEXPORT
+#define OBJCUWPWINDOWSAPPLICATIONMODELSTOREPREVIEWINSTALLCONTROLEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsApplicationModelStorePreviewInstallControl.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -76,7 +76,7 @@ typedef unsigned WASPIAutoUpdateSetting;
 #ifndef __WASPIAppInstallStatus_DEFINED__
 #define __WASPIAppInstallStatus_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSTOREPREVIEWINSTALLCONTROLEXPORT
 @interface WASPIAppInstallStatus : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -96,7 +96,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
 #ifndef __WASPIAppInstallItem_DEFINED__
 #define __WASPIAppInstallItem_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSTOREPREVIEWINSTALLCONTROLEXPORT
 @interface WASPIAppInstallItem : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -124,7 +124,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
 #ifndef __WASPIAppInstallManagerItemEventArgs_DEFINED__
 #define __WASPIAppInstallManagerItemEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSTOREPREVIEWINSTALLCONTROLEXPORT
 @interface WASPIAppInstallManagerItemEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -138,7 +138,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
 #ifndef __WASPIAppInstallManager_DEFINED__
 #define __WASPIAppInstallManager_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_INSTALLCONTROL_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSTOREPREVIEWINSTALLCONTROLEXPORT
 @interface WASPIAppInstallManager : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_CORE_EXPORT
-#define OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_CORE_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Search_Core.lib")
+#ifndef OBJCUWPWINDOWSAPPLICATIONMODELSEARCHCOREEXPORT
+#define OBJCUWPWINDOWSAPPLICATIONMODELSEARCHCOREEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsApplicationModelSearchCore.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -48,7 +48,7 @@ typedef unsigned WASCSearchSuggestionKind;
 #ifndef __WASCSearchSuggestion_DEFINED__
 #define __WASCSearchSuggestion_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_CORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSEARCHCOREEXPORT
 @interface WASCSearchSuggestion : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -67,7 +67,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_CORE_EXPORT
 #ifndef __WASCSearchSuggestionManager_DEFINED__
 #define __WASCSearchSuggestionManager_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_CORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSEARCHCOREEXPORT
 @interface WASCSearchSuggestionManager : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -95,7 +95,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_CORE_EXPORT
 #ifndef __WASCSearchSuggestionsRequestedEventArgs_DEFINED__
 #define __WASCSearchSuggestionsRequestedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_CORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSEARCHCOREEXPORT
 @interface WASCSearchSuggestionsRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -112,7 +112,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_CORE_EXPORT
 #ifndef __WASCRequestingFocusOnKeyboardInputEventArgs_DEFINED__
 #define __WASCRequestingFocusOnKeyboardInputEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_SEARCH_CORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSEARCHCOREEXPORT
 @interface WASCRequestingFocusOnKeyboardInputEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

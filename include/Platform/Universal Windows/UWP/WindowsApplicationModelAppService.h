@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
-#define OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_AppService.lib")
+#ifndef OBJCUWPWINDOWSAPPLICATIONMODELAPPSERVICEEXPORT
+#define OBJCUWPWINDOWSAPPLICATIONMODELAPPSERVICEEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsApplicationModelAppService.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -75,7 +75,7 @@ typedef unsigned WAAAppServiceResponseStatus;
 #ifndef __WAAAppServiceRequest_DEFINED__
 #define __WAAAppServiceRequest_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELAPPSERVICEEXPORT
 @interface WAAAppServiceRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -90,7 +90,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
 #ifndef __WAAAppServiceDeferral_DEFINED__
 #define __WAAAppServiceDeferral_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELAPPSERVICEEXPORT
 @interface WAAAppServiceDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -104,7 +104,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
 #ifndef __WAAAppServiceResponse_DEFINED__
 #define __WAAAppServiceResponse_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELAPPSERVICEEXPORT
 @interface WAAAppServiceResponse : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -123,7 +123,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELAPPSERVICEEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -133,7 +133,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
 #ifndef __WAAAppServiceConnection_DEFINED__
 #define __WAAAppServiceConnection_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELAPPSERVICEEXPORT
 @interface WAAAppServiceConnection : RTObject <WFIClosable>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -158,7 +158,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
 #ifndef __WAAAppServiceRequestReceivedEventArgs_DEFINED__
 #define __WAAAppServiceRequestReceivedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELAPPSERVICEEXPORT
 @interface WAAAppServiceRequestReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -173,7 +173,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
 #ifndef __WAAAppServiceClosedEventArgs_DEFINED__
 #define __WAAAppServiceClosedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELAPPSERVICEEXPORT
 @interface WAAAppServiceClosedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -187,7 +187,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
 #ifndef __WAAAppServiceTriggerDetails_DEFINED__
 #define __WAAAppServiceTriggerDetails_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELAPPSERVICEEXPORT
 @interface WAAAppServiceTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -204,7 +204,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
 #ifndef __WAAAppServiceCatalog_DEFINED__
 #define __WAAAppServiceCatalog_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPSERVICE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELAPPSERVICEEXPORT
 @interface WAAAppServiceCatalog : RTObject
 + (void)findAppServiceProvidersAsync:(NSString *)appServiceName success:(void (^)(NSArray* /* WAAppInfo* */))success failure:(void (^)(NSError*))failure;
 @end

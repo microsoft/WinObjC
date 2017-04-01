@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
-#define OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_Input_Inking.lib")
+#ifndef OBJCUWPWINDOWSUIINPUTINKINGEXPORT
+#define OBJCUWPWINDOWSUIINPUTINKINGEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUIInputInking.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -110,7 +110,7 @@ typedef unsigned WUIIInkDrawingAttributesKind;
 @property (retain) WFNMatrix3x2* transform;
 @end
 
-OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 @interface WUIIIInkPresenterStencil : RTObject <WUIIIInkPresenterStencil>
 @end
 
@@ -124,7 +124,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 - (WUIIInkPresenterRuler*)create:(WUIIInkPresenter*)inkPresenter;
 @end
 
-OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 @interface WUIIIInkPresenterRulerFactory : RTObject <WUIIIInkPresenterRulerFactory>
 @end
 
@@ -138,7 +138,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 - (WUIIInkPoint*)createInkPoint:(WFPoint*)position pressure:(float)pressure;
 @end
 
-OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 @interface WUIIIInkPointFactory : RTObject <WUIIIInkPointFactory>
 @end
 
@@ -165,7 +165,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 - (NSArray* /* WUIIInkRecognitionResult* */)getRecognitionResults;
 @end
 
-OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 @interface WUIIIInkStrokeContainer : RTObject <WUIIIInkStrokeContainer>
 @end
 
@@ -181,7 +181,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 - (NSArray* /* WUIIInkRecognizer* */)getRecognizers;
 @end
 
-OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 @interface WUIIIInkRecognizerContainer : RTObject <WUIIIInkRecognizerContainer>
 @end
 
@@ -191,7 +191,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 #ifndef __WUIIInkUnprocessedInput_DEFINED__
 #define __WUIIInkUnprocessedInput_DEFINED__
 
-OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 @interface WUIIInkUnprocessedInput : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -219,7 +219,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 #ifndef __WUIIInkStrokeInput_DEFINED__
 #define __WUIIInkStrokeInput_DEFINED__
 
-OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 @interface WUIIInkStrokeInput : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -241,7 +241,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 #ifndef __WUIIInkInputProcessingConfiguration_DEFINED__
 #define __WUIIInkInputProcessingConfiguration_DEFINED__
 
-OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 @interface WUIIInkInputProcessingConfiguration : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -256,7 +256,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 #ifndef __WUIIInkSynchronizer_DEFINED__
 #define __WUIIInkSynchronizer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 @interface WUIIInkSynchronizer : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -271,7 +271,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 #ifndef __WUIIInkPresenter_DEFINED__
 #define __WUIIInkPresenter_DEFINED__
 
-OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 @interface WUIIInkPresenter : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -298,7 +298,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 #ifndef __WUIIInkStrokesCollectedEventArgs_DEFINED__
 #define __WUIIInkStrokesCollectedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 @interface WUIIInkStrokesCollectedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -312,7 +312,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 #ifndef __WUIIInkStrokesErasedEventArgs_DEFINED__
 #define __WUIIInkStrokesErasedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 @interface WUIIInkStrokesErasedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -326,7 +326,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 #ifndef __WUIIInkPresenterRuler_DEFINED__
 #define __WUIIInkPresenterRuler_DEFINED__
 
-OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 @interface WUIIInkPresenterRuler : RTObject <WUIIIInkPresenterStencil>
 + (WUIIInkPresenterRuler*)make:(WUIIInkPresenter*)inkPresenter ACTIVATOR;
 #if defined(__cplusplus)
@@ -347,7 +347,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 #ifndef __WUIIInkPoint_DEFINED__
 #define __WUIIInkPoint_DEFINED__
 
-OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 @interface WUIIInkPoint : RTObject
 + (WUIIInkPoint*)makeInkPoint:(WFPoint*)position pressure:(float)pressure ACTIVATOR;
 #if defined(__cplusplus)
@@ -363,7 +363,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 #ifndef __WUIIInkDrawingAttributesPencilProperties_DEFINED__
 #define __WUIIInkDrawingAttributesPencilProperties_DEFINED__
 
-OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 @interface WUIIInkDrawingAttributesPencilProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -377,7 +377,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 #ifndef __WUIIInkDrawingAttributes_DEFINED__
 #define __WUIIInkDrawingAttributes_DEFINED__
 
-OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 @interface WUIIInkDrawingAttributes : RTObject
 + (WUIIInkDrawingAttributes*)createForPencil;
 + (instancetype)make __attribute__ ((ns_returns_retained));
@@ -401,7 +401,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 #ifndef __WUIIInkStrokeRenderingSegment_DEFINED__
 #define __WUIIInkStrokeRenderingSegment_DEFINED__
 
-OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 @interface WUIIInkStrokeRenderingSegment : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -421,7 +421,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 #ifndef __WUIIInkStroke_DEFINED__
 #define __WUIIInkStroke_DEFINED__
 
-OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 @interface WUIIInkStroke : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -442,7 +442,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 #ifndef __WUIIInkStrokeBuilder_DEFINED__
 #define __WUIIInkStrokeBuilder_DEFINED__
 
-OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 @interface WUIIInkStrokeBuilder : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -462,7 +462,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 #ifndef __WUIIInkRecognitionResult_DEFINED__
 #define __WUIIInkRecognitionResult_DEFINED__
 
-OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 @interface WUIIInkRecognitionResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -478,7 +478,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 #ifndef __WUIIInkStrokeContainer_DEFINED__
 #define __WUIIInkStrokeContainer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 @interface WUIIInkStrokeContainer : RTObject <WUIIIInkStrokeContainer>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -508,7 +508,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 #ifndef __WUIIInkRecognizer_DEFINED__
 #define __WUIIInkRecognizer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 @interface WUIIInkRecognizer : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -522,7 +522,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 #ifndef __WUIIInkRecognizerContainer_DEFINED__
 #define __WUIIInkRecognizerContainer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 @interface WUIIInkRecognizerContainer : RTObject <WUIIIInkRecognizerContainer>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -539,7 +539,7 @@ OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
 #ifndef __WUIIInkManager_DEFINED__
 #define __WUIIInkManager_DEFINED__
 
-OBJCUWP_WINDOWS_UI_INPUT_INKING_EXPORT
+OBJCUWPWINDOWSUIINPUTINKINGEXPORT
 @interface WUIIInkManager : RTObject <WUIIIInkRecognizerContainer, WUIIIInkStrokeContainer>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)

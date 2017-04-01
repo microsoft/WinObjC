@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
-#define OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Security_EnterpriseData.lib")
+#ifndef OBJCUWPWINDOWSSECURITYENTERPRISEDATAEXPORT
+#define OBJCUWPWINDOWSSECURITYENTERPRISEDATAEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsSecurityEnterpriseData.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -115,7 +115,7 @@ typedef unsigned WSEEnforcementLevel;
 #ifndef __WSEFileProtectionInfo_DEFINED__
 #define __WSEFileProtectionInfo_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
+OBJCUWPWINDOWSSECURITYENTERPRISEDATAEXPORT
 @interface WSEFileProtectionInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -131,7 +131,7 @@ OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 #ifndef __WSEProtectedContainerExportResult_DEFINED__
 #define __WSEProtectedContainerExportResult_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
+OBJCUWPWINDOWSSECURITYENTERPRISEDATAEXPORT
 @interface WSEProtectedContainerExportResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -146,7 +146,7 @@ OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 #ifndef __WSEProtectedContainerImportResult_DEFINED__
 #define __WSEProtectedContainerImportResult_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
+OBJCUWPWINDOWSSECURITYENTERPRISEDATAEXPORT
 @interface WSEProtectedContainerImportResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -161,7 +161,7 @@ OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 #ifndef __WSEProtectedFileCreateResult_DEFINED__
 #define __WSEProtectedFileCreateResult_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
+OBJCUWPWINDOWSSECURITYENTERPRISEDATAEXPORT
 @interface WSEProtectedFileCreateResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -177,7 +177,7 @@ OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 #ifndef __WSEBufferProtectUnprotectResult_DEFINED__
 #define __WSEBufferProtectUnprotectResult_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
+OBJCUWPWINDOWSSECURITYENTERPRISEDATAEXPORT
 @interface WSEBufferProtectUnprotectResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -192,7 +192,7 @@ OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 #ifndef __WSEDataProtectionInfo_DEFINED__
 #define __WSEDataProtectionInfo_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
+OBJCUWPWINDOWSSECURITYENTERPRISEDATAEXPORT
 @interface WSEDataProtectionInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -207,7 +207,7 @@ OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 #ifndef __WSEProtectionPolicyAuditInfo_DEFINED__
 #define __WSEProtectionPolicyAuditInfo_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
+OBJCUWPWINDOWSSECURITYENTERPRISEDATAEXPORT
 @interface WSEProtectionPolicyAuditInfo : RTObject
 + (WSEProtectionPolicyAuditInfo*)make:(WSEProtectionPolicyAuditAction)action dataDescription:(NSString *)dataDescription sourceDescription:(NSString *)sourceDescription targetDescription:(NSString *)targetDescription ACTIVATOR;
 + (WSEProtectionPolicyAuditInfo*)makeWithActionAndDataDescription:(WSEProtectionPolicyAuditAction)action dataDescription:(NSString *)dataDescription ACTIVATOR;
@@ -230,7 +230,7 @@ OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
+OBJCUWPWINDOWSSECURITYENTERPRISEDATAEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -240,7 +240,7 @@ OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 #ifndef __WSEThreadNetworkContext_DEFINED__
 #define __WSEThreadNetworkContext_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
+OBJCUWPWINDOWSSECURITYENTERPRISEDATAEXPORT
 @interface WSEThreadNetworkContext : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -254,7 +254,7 @@ OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 #ifndef __WSEProtectionPolicyManager_DEFINED__
 #define __WSEProtectionPolicyManager_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
+OBJCUWPWINDOWSSECURITYENTERPRISEDATAEXPORT
 @interface WSEProtectionPolicyManager : RTObject
 + (BOOL)isIdentityManaged:(NSString *)identity;
 + (BOOL)tryApplyProcessUIPolicy:(NSString *)identity;
@@ -298,7 +298,7 @@ OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 #ifndef __WSEProtectedAccessSuspendingEventArgs_DEFINED__
 #define __WSEProtectedAccessSuspendingEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
+OBJCUWPWINDOWSSECURITYENTERPRISEDATAEXPORT
 @interface WSEProtectedAccessSuspendingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -314,7 +314,7 @@ OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 #ifndef __WSEProtectedAccessResumedEventArgs_DEFINED__
 #define __WSEProtectedAccessResumedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
+OBJCUWPWINDOWSSECURITYENTERPRISEDATAEXPORT
 @interface WSEProtectedAccessResumedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -328,7 +328,7 @@ OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 #ifndef __WSEProtectedContentRevokedEventArgs_DEFINED__
 #define __WSEProtectedContentRevokedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
+OBJCUWPWINDOWSSECURITYENTERPRISEDATAEXPORT
 @interface WSEProtectedContentRevokedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -342,7 +342,7 @@ OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 #ifndef __WSEFileRevocationManager_DEFINED__
 #define __WSEFileRevocationManager_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
+OBJCUWPWINDOWSSECURITYENTERPRISEDATAEXPORT
 @interface WSEFileRevocationManager : RTObject
 + (void)protectAsync:(RTObject<WSIStorageItem>*)storageItem enterpriseIdentity:(NSString *)enterpriseIdentity success:(void (^)(WSEFileProtectionStatus))success failure:(void (^)(NSError*))failure;
 + (void)copyProtectionAsync:(RTObject<WSIStorageItem>*)sourceStorageItem targetStorageItem:(RTObject<WSIStorageItem>*)targetStorageItem success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
@@ -356,7 +356,7 @@ OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 #ifndef __WSEFileProtectionManager_DEFINED__
 #define __WSEFileProtectionManager_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
+OBJCUWPWINDOWSSECURITYENTERPRISEDATAEXPORT
 @interface WSEFileProtectionManager : RTObject
 + (void)protectAsync:(RTObject<WSIStorageItem>*)target identity:(NSString *)identity success:(void (^)(WSEFileProtectionInfo*))success failure:(void (^)(NSError*))failure;
 + (void)copyProtectionAsync:(RTObject<WSIStorageItem>*)source target:(RTObject<WSIStorageItem>*)target success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
@@ -376,7 +376,7 @@ OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
 #ifndef __WSEDataProtectionManager_DEFINED__
 #define __WSEDataProtectionManager_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_ENTERPRISEDATA_EXPORT
+OBJCUWPWINDOWSSECURITYENTERPRISEDATAEXPORT
 @interface WSEDataProtectionManager : RTObject
 + (void)protectAsync:(RTObject<WSSIBuffer>*)data identity:(NSString *)identity success:(void (^)(WSEBufferProtectUnprotectResult*))success failure:(void (^)(NSError*))failure;
 + (void)unprotectAsync:(RTObject<WSSIBuffer>*)data success:(void (^)(WSEBufferProtectUnprotectResult*))success failure:(void (^)(NSError*))failure;

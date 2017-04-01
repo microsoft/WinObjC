@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_NETWORKING_SERVICEDISCOVERY_DNSSD_EXPORT
-#define OBJCUWP_WINDOWS_NETWORKING_SERVICEDISCOVERY_DNSSD_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Networking_ServiceDiscovery_Dnssd.lib")
+#ifndef OBJCUWPWINDOWSNETWORKINGSERVICEDISCOVERYDNSSDEXPORT
+#define OBJCUWPWINDOWSNETWORKINGSERVICEDISCOVERYDNSSDEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsNetworkingServiceDiscoveryDnssd.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -61,7 +61,7 @@ typedef unsigned WNSDDnssdServiceWatcherStatus;
 #ifndef __WNSDDnssdServiceWatcher_DEFINED__
 #define __WNSDDnssdServiceWatcher_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_SERVICEDISCOVERY_DNSSD_EXPORT
+OBJCUWPWINDOWSNETWORKINGSERVICEDISCOVERYDNSSDEXPORT
 @interface WNSDDnssdServiceWatcher : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -87,7 +87,7 @@ OBJCUWP_WINDOWS_NETWORKING_SERVICEDISCOVERY_DNSSD_EXPORT
 - (NSString *)toString;
 @end
 
-OBJCUWP_WINDOWS_NETWORKING_SERVICEDISCOVERY_DNSSD_EXPORT
+OBJCUWPWINDOWSNETWORKINGSERVICEDISCOVERYDNSSDEXPORT
 @interface WFIStringable : RTObject <WFIStringable>
 @end
 
@@ -97,7 +97,7 @@ OBJCUWP_WINDOWS_NETWORKING_SERVICEDISCOVERY_DNSSD_EXPORT
 #ifndef __WNSDDnssdServiceInstance_DEFINED__
 #define __WNSDDnssdServiceInstance_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_SERVICEDISCOVERY_DNSSD_EXPORT
+OBJCUWPWINDOWSNETWORKINGSERVICEDISCOVERYDNSSDEXPORT
 @interface WNSDDnssdServiceInstance : RTObject <WFIStringable>
 + (WNSDDnssdServiceInstance*)make:(NSString *)dnssdServiceInstanceName hostName:(WNHostName*)hostName port:(unsigned short)port ACTIVATOR;
 #if defined(__cplusplus)
@@ -122,7 +122,7 @@ OBJCUWP_WINDOWS_NETWORKING_SERVICEDISCOVERY_DNSSD_EXPORT
 #ifndef __WNSDDnssdRegistrationResult_DEFINED__
 #define __WNSDDnssdRegistrationResult_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_SERVICEDISCOVERY_DNSSD_EXPORT
+OBJCUWPWINDOWSNETWORKINGSERVICEDISCOVERYDNSSDEXPORT
 @interface WNSDDnssdRegistrationResult : RTObject <WFIStringable>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -140,7 +140,7 @@ OBJCUWP_WINDOWS_NETWORKING_SERVICEDISCOVERY_DNSSD_EXPORT
 #ifndef __WNSDDnssdServiceInstanceCollection_DEFINED__
 #define __WNSDDnssdServiceInstanceCollection_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_SERVICEDISCOVERY_DNSSD_EXPORT
+OBJCUWPWINDOWSNETWORKINGSERVICEDISCOVERYDNSSDEXPORT
 @interface WNSDDnssdServiceInstanceCollection : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

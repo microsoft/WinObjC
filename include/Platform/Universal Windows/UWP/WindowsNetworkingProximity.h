@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
-#define OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Networking_Proximity.lib")
+#ifndef OBJCUWPWINDOWSNETWORKINGPROXIMITYEXPORT
+#define OBJCUWPWINDOWSNETWORKINGPROXIMITYEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsNetworkingProximity.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -127,7 +127,7 @@ typedef void(^WNPDeviceDepartedEventHandler)(WNPProximityDevice* sender);
 #ifndef __WNPProximityMessage_DEFINED__
 #define __WNPProximityMessage_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
+OBJCUWPWINDOWSNETWORKINGPROXIMITYEXPORT
 @interface WNPProximityMessage : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -144,7 +144,7 @@ OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
 #ifndef __WNPProximityDevice_DEFINED__
 #define __WNPProximityDevice_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
+OBJCUWPWINDOWSNETWORKINGPROXIMITYEXPORT
 @interface WNPProximityDevice : RTObject
 + (NSString *)getDeviceSelector;
 + (WNPProximityDevice*)getDefault;
@@ -176,7 +176,7 @@ OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
 #ifndef __WNPTriggeredConnectionStateChangedEventArgs_DEFINED__
 #define __WNPTriggeredConnectionStateChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
+OBJCUWPWINDOWSNETWORKINGPROXIMITYEXPORT
 @interface WNPTriggeredConnectionStateChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -192,7 +192,7 @@ OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
 #ifndef __WNPPeerInformation_DEFINED__
 #define __WNPPeerInformation_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
+OBJCUWPWINDOWSNETWORKINGPROXIMITYEXPORT
 @interface WNPPeerInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -210,7 +210,7 @@ OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
 #ifndef __WNPConnectionRequestedEventArgs_DEFINED__
 #define __WNPConnectionRequestedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
+OBJCUWPWINDOWSNETWORKINGPROXIMITYEXPORT
 @interface WNPConnectionRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -224,7 +224,7 @@ OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
 #ifndef __WNPPeerWatcher_DEFINED__
 #define __WNPPeerWatcher_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
+OBJCUWPWINDOWSNETWORKINGPROXIMITYEXPORT
 @interface WNPPeerWatcher : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -250,7 +250,7 @@ OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
 #ifndef __WNPPeerFinder_DEFINED__
 #define __WNPPeerFinder_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_PROXIMITY_EXPORT
+OBJCUWPWINDOWSNETWORKINGPROXIMITYEXPORT
 @interface WNPPeerFinder : RTObject
 + (WNPPeerWatcher*)createWatcher;
 + (void)start;

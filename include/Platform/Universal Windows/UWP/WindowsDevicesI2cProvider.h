@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_DEVICES_I2C_PROVIDER_EXPORT
-#define OBJCUWP_WINDOWS_DEVICES_I2C_PROVIDER_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Devices_I2c_Provider.lib")
+#ifndef OBJCUWPWINDOWSDEVICESI2CPROVIDEREXPORT
+#define OBJCUWPWINDOWSDEVICESI2CPROVIDEREXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsDevicesI2cProvider.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -58,7 +58,7 @@ typedef unsigned WDIPProviderI2cSharingMode;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Devices.I2c.Provider.ProviderI2cTransferResult
-OBJCUWP_WINDOWS_DEVICES_I2C_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESI2CPROVIDEREXPORT
 @interface WDIPProviderI2cTransferResult : NSObject
 + (instancetype)new;
 @property WDIPProviderI2cTransferStatus status;
@@ -73,7 +73,7 @@ OBJCUWP_WINDOWS_DEVICES_I2C_PROVIDER_EXPORT
 - (RTObject<WDIPII2cDeviceProvider>*)getDeviceProvider:(WDIPProviderI2cConnectionSettings*)settings;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_I2C_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESI2CPROVIDEREXPORT
 @interface WDIPII2cControllerProvider : RTObject <WDIPII2cControllerProvider>
 @end
 
@@ -87,7 +87,7 @@ OBJCUWP_WINDOWS_DEVICES_I2C_PROVIDER_EXPORT
 - (void)getControllersAsyncWithSuccess:(void (^)(NSArray* /* RTObject<WDIPII2cControllerProvider>* */))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_I2C_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESI2CPROVIDEREXPORT
 @interface WDIPII2cProvider : RTObject <WDIPII2cProvider>
 @end
 
@@ -101,7 +101,7 @@ OBJCUWP_WINDOWS_DEVICES_I2C_PROVIDER_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_I2C_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESI2CPROVIDEREXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -122,7 +122,7 @@ OBJCUWP_WINDOWS_DEVICES_I2C_PROVIDER_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_I2C_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESI2CPROVIDEREXPORT
 @interface WDIPII2cDeviceProvider : RTObject <WDIPII2cDeviceProvider>
 @end
 
@@ -132,7 +132,7 @@ OBJCUWP_WINDOWS_DEVICES_I2C_PROVIDER_EXPORT
 #ifndef __WDIPProviderI2cConnectionSettings_DEFINED__
 #define __WDIPProviderI2cConnectionSettings_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_I2C_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESI2CPROVIDEREXPORT
 @interface WDIPProviderI2cConnectionSettings : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

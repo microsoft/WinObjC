@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_LICENSEMANAGEMENT_EXPORT
-#define OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_LICENSEMANAGEMENT_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Store_LicenseManagement.lib")
+#ifndef OBJCUWPWINDOWSAPPLICATIONMODELSTORELICENSEMANAGEMENTEXPORT
+#define OBJCUWPWINDOWSAPPLICATIONMODELSTORELICENSEMANAGEMENTEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsApplicationModelStoreLicenseManagement.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -39,7 +39,7 @@
 #ifndef __WASLLicenseSatisfactionInfo_DEFINED__
 #define __WASLLicenseSatisfactionInfo_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_LICENSEMANAGEMENT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSTORELICENSEMANAGEMENTEXPORT
 @interface WASLLicenseSatisfactionInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -59,7 +59,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_LICENSEMANAGEMENT_EXPORT
 #ifndef __WASLLicenseSatisfactionResult_DEFINED__
 #define __WASLLicenseSatisfactionResult_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_LICENSEMANAGEMENT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSTORELICENSEMANAGEMENTEXPORT
 @interface WASLLicenseSatisfactionResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -74,7 +74,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_LICENSEMANAGEMENT_EXPORT
 #ifndef __WASLLicenseManager_DEFINED__
 #define __WASLLicenseManager_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_LICENSEMANAGEMENT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSTORELICENSEMANAGEMENTEXPORT
 @interface WASLLicenseManager : RTObject
 + (RTObject<WFIAsyncAction>*)addLicenseAsync:(RTObject<WSSIBuffer>*)license;
 + (void)getSatisfactionInfosAsync:(id<NSFastEnumeration> /* NSString * */)contentIds keyIds:(id<NSFastEnumeration> /* NSString * */)keyIds success:(void (^)(WASLLicenseSatisfactionResult*))success failure:(void (^)(NSError*))failure;

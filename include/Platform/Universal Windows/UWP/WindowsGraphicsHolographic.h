@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
-#define OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Graphics_Holographic.lib")
+#ifndef OBJCUWPWINDOWSGRAPHICSHOLOGRAPHICEXPORT
+#define OBJCUWPWINDOWSGRAPHICSHOLOGRAPHICEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsGraphicsHolographic.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -55,7 +55,7 @@ typedef unsigned WGHHolographicFramePresentWaitBehavior;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Graphics.Holographic.HolographicStereoTransform
-OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
+OBJCUWPWINDOWSGRAPHICSHOLOGRAPHICEXPORT
 @interface WGHHolographicStereoTransform : NSObject
 + (instancetype)new;
 @property (retain) WFNMatrix4x4* left;
@@ -63,7 +63,7 @@ OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
 @end
 
 // [struct] Windows.Graphics.Holographic.HolographicAdapterId
-OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
+OBJCUWPWINDOWSGRAPHICSHOLOGRAPHICEXPORT
 @interface WGHHolographicAdapterId : NSObject
 + (instancetype)new;
 @property unsigned int lowPart;
@@ -74,7 +74,7 @@ OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
 #ifndef __WGHHolographicCamera_DEFINED__
 #define __WGHHolographicCamera_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
+OBJCUWPWINDOWSGRAPHICSHOLOGRAPHICEXPORT
 @interface WGHHolographicCamera : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -93,7 +93,7 @@ OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
 #ifndef __WGHHolographicSpace_DEFINED__
 #define __WGHHolographicSpace_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
+OBJCUWPWINDOWSGRAPHICSHOLOGRAPHICEXPORT
 @interface WGHHolographicSpace : RTObject
 + (WGHHolographicSpace*)createForCoreWindow:(WUCCoreWindow*)window;
 #if defined(__cplusplus)
@@ -114,7 +114,7 @@ OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
 #ifndef __WGHHolographicSpaceCameraAddedEventArgs_DEFINED__
 #define __WGHHolographicSpaceCameraAddedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
+OBJCUWPWINDOWSGRAPHICSHOLOGRAPHICEXPORT
 @interface WGHHolographicSpaceCameraAddedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -129,7 +129,7 @@ OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
 #ifndef __WGHHolographicSpaceCameraRemovedEventArgs_DEFINED__
 #define __WGHHolographicSpaceCameraRemovedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
+OBJCUWPWINDOWSGRAPHICSHOLOGRAPHICEXPORT
 @interface WGHHolographicSpaceCameraRemovedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -143,7 +143,7 @@ OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
 #ifndef __WGHHolographicFrame_DEFINED__
 #define __WGHHolographicFrame_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
+OBJCUWPWINDOWSGRAPHICSHOLOGRAPHICEXPORT
 @interface WGHHolographicFrame : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -165,7 +165,7 @@ OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
 #ifndef __WGHHolographicCameraPose_DEFINED__
 #define __WGHHolographicCameraPose_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
+OBJCUWPWINDOWSGRAPHICSHOLOGRAPHICEXPORT
 @interface WGHHolographicCameraPose : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -186,7 +186,7 @@ OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
 #ifndef __WGHHolographicCameraRenderingParameters_DEFINED__
 #define __WGHHolographicCameraRenderingParameters_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
+OBJCUWPWINDOWSGRAPHICSHOLOGRAPHICEXPORT
 @interface WGHHolographicCameraRenderingParameters : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -204,7 +204,7 @@ OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
 #ifndef __WGHHolographicFramePrediction_DEFINED__
 #define __WGHHolographicFramePrediction_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_HOLOGRAPHIC_EXPORT
+OBJCUWPWINDOWSGRAPHICSHOLOGRAPHICEXPORT
 @interface WGHHolographicFramePrediction : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

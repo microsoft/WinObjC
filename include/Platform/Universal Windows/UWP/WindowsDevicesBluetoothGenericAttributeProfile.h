@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
-#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#ifndef OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+#define OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsConsolidatedNamespace.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -91,7 +91,7 @@ typedef unsigned WDBGGattCommunicationStatus;
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -101,7 +101,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WDBGGattDeviceService_DEFINED__
 #define __WDBGGattDeviceService_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBGGattDeviceService : RTObject <WFIClosable>
 + (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDBGGattDeviceService*))success failure:(void (^)(NSError*))failure;
 + (NSString *)getDeviceSelectorFromUuid:(WFGUID*)serviceUuid;
@@ -128,7 +128,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WDBGGattCharacteristic_DEFINED__
 #define __WDBGGattCharacteristic_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBGGattCharacteristic : RTObject
 + (WFGUID*)convertShortIdToUuid:(unsigned short)shortId;
 #if defined(__cplusplus)
@@ -159,7 +159,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WDBGGattDescriptor_DEFINED__
 #define __WDBGGattDescriptor_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBGGattDescriptor : RTObject
 + (WFGUID*)convertShortIdToUuid:(unsigned short)shortId;
 #if defined(__cplusplus)
@@ -179,7 +179,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WDBGGattPresentationFormat_DEFINED__
 #define __WDBGGattPresentationFormat_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBGGattPresentationFormat : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -198,7 +198,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WDBGGattReadResult_DEFINED__
 #define __WDBGGattReadResult_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBGGattReadResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -213,7 +213,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WDBGGattReadClientCharacteristicConfigurationDescriptorResult_DEFINED__
 #define __WDBGGattReadClientCharacteristicConfigurationDescriptorResult_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBGGattReadClientCharacteristicConfigurationDescriptorResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -228,7 +228,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WDBGGattValueChangedEventArgs_DEFINED__
 #define __WDBGGattValueChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBGGattValueChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -243,7 +243,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WDBGGattServiceUuids_DEFINED__
 #define __WDBGGattServiceUuids_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBGGattServiceUuids : RTObject
 + (WFGUID*)cyclingSpeedAndCadence;
 + (WFGUID*)battery;
@@ -275,7 +275,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WDBGGattCharacteristicUuids_DEFINED__
 #define __WDBGGattCharacteristicUuids_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBGGattCharacteristicUuids : RTObject
 + (WFGUID*)batteryLevel;
 + (WFGUID*)bloodPressureFeature;
@@ -366,7 +366,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WDBGGattDescriptorUuids_DEFINED__
 #define __WDBGGattDescriptorUuids_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBGGattDescriptorUuids : RTObject
 + (WFGUID*)characteristicAggregateFormat;
 + (WFGUID*)characteristicExtendedProperties;
@@ -382,7 +382,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WDBGGattReliableWriteTransaction_DEFINED__
 #define __WDBGGattReliableWriteTransaction_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBGGattReliableWriteTransaction : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -398,7 +398,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WDBGGattPresentationFormatTypes_DEFINED__
 #define __WDBGGattPresentationFormatTypes_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBGGattPresentationFormatTypes : RTObject
 + (uint8_t)bit2;
 + (uint8_t)boolean;

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_MANAGEMENT_EXPORT
-#define OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_MANAGEMENT_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Resources_Management.lib")
+#ifndef OBJCUWPWINDOWSAPPLICATIONMODELRESOURCESMANAGEMENTEXPORT
+#define OBJCUWPWINDOWSAPPLICATIONMODELRESOURCESMANAGEMENTEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsApplicationModelResourcesManagement.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -46,7 +46,7 @@ typedef unsigned WARMIndexedResourceType;
 #ifndef __WARMIndexedResourceCandidate_DEFINED__
 #define __WARMIndexedResourceCandidate_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_MANAGEMENT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELRESOURCESMANAGEMENTEXPORT
 @interface WARMIndexedResourceCandidate : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -65,7 +65,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_MANAGEMENT_EXPORT
 #ifndef __WARMResourceIndexer_DEFINED__
 #define __WARMResourceIndexer_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_MANAGEMENT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELRESOURCESMANAGEMENTEXPORT
 @interface WARMResourceIndexer : RTObject
 + (WARMResourceIndexer*)makeResourceIndexer:(WFUri*)projectRoot ACTIVATOR;
 + (WARMResourceIndexer*)makeResourceIndexerWithExtension:(WFUri*)projectRoot extensionDllPath:(WFUri*)extensionDllPath ACTIVATOR;
@@ -82,7 +82,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_MANAGEMENT_EXPORT
 #ifndef __WARMIndexedResourceQualifier_DEFINED__
 #define __WARMIndexedResourceQualifier_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_MANAGEMENT_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELRESOURCESMANAGEMENTEXPORT
 @interface WARMIndexedResourceQualifier : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

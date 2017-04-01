@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
-#define OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Devices_SerialCommunication.lib")
+#ifndef OBJCUWPWINDOWSDEVICESSERIALCOMMUNICATIONEXPORT
+#define OBJCUWPWINDOWSDEVICESSERIALCOMMUNICATIONEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsDevicesSerialCommunication.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -90,7 +90,7 @@ typedef unsigned WDSSerialPinChange;
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
+OBJCUWPWINDOWSDEVICESSERIALCOMMUNICATIONEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -100,7 +100,7 @@ OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
 #ifndef __WDSSerialDevice_DEFINED__
 #define __WDSSerialDevice_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
+OBJCUWPWINDOWSDEVICESSERIALCOMMUNICATIONEXPORT
 @interface WDSSerialDevice : RTObject <WFIClosable>
 + (NSString *)getDeviceSelector;
 + (NSString *)getDeviceSelectorFromPortName:(NSString *)portName;
@@ -141,7 +141,7 @@ OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
 #ifndef __WDSErrorReceivedEventArgs_DEFINED__
 #define __WDSErrorReceivedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
+OBJCUWPWINDOWSDEVICESSERIALCOMMUNICATIONEXPORT
 @interface WDSErrorReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -155,7 +155,7 @@ OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
 #ifndef __WDSPinChangedEventArgs_DEFINED__
 #define __WDSPinChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SERIALCOMMUNICATION_EXPORT
+OBJCUWPWINDOWSDEVICESSERIALCOMMUNICATIONEXPORT
 @interface WDSPinChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

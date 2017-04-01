@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_MANAGEMENT_CORE_EXPORT
-#define OBJCUWP_WINDOWS_MANAGEMENT_CORE_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Management_Core.lib")
+#ifndef OBJCUWPWINDOWSMANAGEMENTCOREEXPORT
+#define OBJCUWPWINDOWSMANAGEMENTCOREEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsManagementCore.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -38,7 +38,7 @@
 #ifndef __WMCApplicationDataManager_DEFINED__
 #define __WMCApplicationDataManager_DEFINED__
 
-OBJCUWP_WINDOWS_MANAGEMENT_CORE_EXPORT
+OBJCUWPWINDOWSMANAGEMENTCOREEXPORT
 @interface WMCApplicationDataManager : RTObject
 + (WSApplicationData*)createForPackageFamily:(NSString *)packageFamilyName;
 #if defined(__cplusplus)

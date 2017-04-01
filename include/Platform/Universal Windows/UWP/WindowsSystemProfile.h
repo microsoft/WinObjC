@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT
-#define OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_System_Profile.lib")
+#ifndef OBJCUWPWINDOWSSYSTEMPROFILEEXPORT
+#define OBJCUWPWINDOWSSYSTEMPROFILEEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsSystemProfile.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -57,7 +57,7 @@ typedef unsigned WSPPlatformDataCollectionLevel;
 #ifndef __WSPAnalyticsVersionInfo_DEFINED__
 #define __WSPAnalyticsVersionInfo_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT
+OBJCUWPWINDOWSSYSTEMPROFILEEXPORT
 @interface WSPAnalyticsVersionInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -72,7 +72,7 @@ OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT
 #ifndef __WSPAnalyticsInfo_DEFINED__
 #define __WSPAnalyticsInfo_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT
+OBJCUWPWINDOWSSYSTEMPROFILEEXPORT
 @interface WSPAnalyticsInfo : RTObject
 + (NSString *)deviceForm;
 + (WSPAnalyticsVersionInfo*)versionInfo;
@@ -84,7 +84,7 @@ OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT
 #ifndef __WSPSystemIdentificationInfo_DEFINED__
 #define __WSPSystemIdentificationInfo_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT
+OBJCUWPWINDOWSSYSTEMPROFILEEXPORT
 @interface WSPSystemIdentificationInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -99,7 +99,7 @@ OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT
 #ifndef __WSPSystemIdentification_DEFINED__
 #define __WSPSystemIdentification_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT
+OBJCUWPWINDOWSSYSTEMPROFILEEXPORT
 @interface WSPSystemIdentification : RTObject
 + (WSPSystemIdentificationInfo*)getSystemIdForPublisher;
 + (WSPSystemIdentificationInfo*)getSystemIdForUser:(WSUser*)user;
@@ -111,7 +111,7 @@ OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT
 #ifndef __WSPPlatformDiagnosticsAndUsageDataSettings_DEFINED__
 #define __WSPPlatformDiagnosticsAndUsageDataSettings_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT
+OBJCUWPWINDOWSSYSTEMPROFILEEXPORT
 @interface WSPPlatformDiagnosticsAndUsageDataSettings : RTObject
 + (BOOL)canCollectDiagnostics:(WSPPlatformDataCollectionLevel)level;
 + (WSPPlatformDataCollectionLevel)collectionLevel;
@@ -125,7 +125,7 @@ OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT
 #ifndef __WSPHardwareToken_DEFINED__
 #define __WSPHardwareToken_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT
+OBJCUWPWINDOWSSYSTEMPROFILEEXPORT
 @interface WSPHardwareToken : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -141,7 +141,7 @@ OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT
 #ifndef __WSPHardwareIdentification_DEFINED__
 #define __WSPHardwareIdentification_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT
+OBJCUWPWINDOWSSYSTEMPROFILEEXPORT
 @interface WSPHardwareIdentification : RTObject
 + (WSPHardwareToken*)getPackageSpecificToken:(RTObject<WSSIBuffer>*)nonce;
 @end
@@ -152,7 +152,7 @@ OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT
 #ifndef __WSPRetailInfo_DEFINED__
 #define __WSPRetailInfo_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT
+OBJCUWPWINDOWSSYSTEMPROFILEEXPORT
 @interface WSPRetailInfo : RTObject
 + (BOOL)isDemoModeEnabled;
 + (NSDictionary* /* NSString *, RTObject* */)properties;
@@ -164,7 +164,7 @@ OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT
 #ifndef __WSPKnownRetailInfoProperties_DEFINED__
 #define __WSPKnownRetailInfoProperties_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT
+OBJCUWPWINDOWSSYSTEMPROFILEEXPORT
 @interface WSPKnownRetailInfoProperties : RTObject
 + (NSString *)batteryLifeDescription;
 + (NSString *)displayDescription;
@@ -196,7 +196,7 @@ OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT
 #ifndef __WSPSharedModeSettings_DEFINED__
 #define __WSPSharedModeSettings_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_PROFILE_EXPORT
+OBJCUWPWINDOWSSYSTEMPROFILEEXPORT
 @interface WSPSharedModeSettings : RTObject
 + (BOOL)isEnabled;
 @end

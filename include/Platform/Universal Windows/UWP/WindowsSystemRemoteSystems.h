@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
-#define OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_System_RemoteSystems.lib")
+#ifndef OBJCUWPWINDOWSSYSTEMREMOTESYSTEMSEXPORT
+#define OBJCUWPWINDOWSSYSTEMREMOTESYSTEMSEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsSystemRemoteSystems.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -75,7 +75,7 @@ typedef unsigned WSRRemoteSystemAccessStatus;
 @protocol WSRIRemoteSystemFilter
 @end
 
-OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
+OBJCUWPWINDOWSSYSTEMREMOTESYSTEMSEXPORT
 @interface WSRIRemoteSystemFilter : RTObject <WSRIRemoteSystemFilter>
 @end
 
@@ -85,7 +85,7 @@ OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
 #ifndef __WSRRemoteSystem_DEFINED__
 #define __WSRRemoteSystem_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
+OBJCUWPWINDOWSSYSTEMREMOTESYSTEMSEXPORT
 @interface WSRRemoteSystem : RTObject
 + (void)findByHostNameAsync:(WNHostName*)hostName success:(void (^)(WSRRemoteSystem*))success failure:(void (^)(NSError*))failure;
 + (WSRRemoteSystemWatcher*)createWatcher;
@@ -107,7 +107,7 @@ OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
 #ifndef __WSRRemoteSystemWatcher_DEFINED__
 #define __WSRRemoteSystemWatcher_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
+OBJCUWPWINDOWSSYSTEMREMOTESYSTEMSEXPORT
 @interface WSRRemoteSystemWatcher : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -128,7 +128,7 @@ OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
 #ifndef __WSRRemoteSystemAddedEventArgs_DEFINED__
 #define __WSRRemoteSystemAddedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
+OBJCUWPWINDOWSSYSTEMREMOTESYSTEMSEXPORT
 @interface WSRRemoteSystemAddedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -142,7 +142,7 @@ OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
 #ifndef __WSRRemoteSystemUpdatedEventArgs_DEFINED__
 #define __WSRRemoteSystemUpdatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
+OBJCUWPWINDOWSSYSTEMREMOTESYSTEMSEXPORT
 @interface WSRRemoteSystemUpdatedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -156,7 +156,7 @@ OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
 #ifndef __WSRRemoteSystemRemovedEventArgs_DEFINED__
 #define __WSRRemoteSystemRemovedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
+OBJCUWPWINDOWSSYSTEMREMOTESYSTEMSEXPORT
 @interface WSRRemoteSystemRemovedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -170,7 +170,7 @@ OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
 #ifndef __WSRRemoteSystemConnectionRequest_DEFINED__
 #define __WSRRemoteSystemConnectionRequest_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
+OBJCUWPWINDOWSSYSTEMREMOTESYSTEMSEXPORT
 @interface WSRRemoteSystemConnectionRequest : RTObject
 + (WSRRemoteSystemConnectionRequest*)make:(WSRRemoteSystem*)remoteSystem ACTIVATOR;
 #if defined(__cplusplus)
@@ -185,7 +185,7 @@ OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
 #ifndef __WSRRemoteSystemKinds_DEFINED__
 #define __WSRRemoteSystemKinds_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
+OBJCUWPWINDOWSSYSTEMREMOTESYSTEMSEXPORT
 @interface WSRRemoteSystemKinds : RTObject
 + (NSString *)desktop;
 + (NSString *)holographic;
@@ -200,7 +200,7 @@ OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
 #ifndef __WSRRemoteSystemKindFilter_DEFINED__
 #define __WSRRemoteSystemKindFilter_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
+OBJCUWPWINDOWSSYSTEMREMOTESYSTEMSEXPORT
 @interface WSRRemoteSystemKindFilter : RTObject <WSRIRemoteSystemFilter>
 + (WSRRemoteSystemKindFilter*)make:(id<NSFastEnumeration> /* NSString * */)remoteSystemKinds ACTIVATOR;
 #if defined(__cplusplus)
@@ -215,7 +215,7 @@ OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
 #ifndef __WSRRemoteSystemDiscoveryTypeFilter_DEFINED__
 #define __WSRRemoteSystemDiscoveryTypeFilter_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
+OBJCUWPWINDOWSSYSTEMREMOTESYSTEMSEXPORT
 @interface WSRRemoteSystemDiscoveryTypeFilter : RTObject <WSRIRemoteSystemFilter>
 + (WSRRemoteSystemDiscoveryTypeFilter*)make:(WSRRemoteSystemDiscoveryType)discoveryType ACTIVATOR;
 #if defined(__cplusplus)
@@ -230,7 +230,7 @@ OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
 #ifndef __WSRRemoteSystemStatusTypeFilter_DEFINED__
 #define __WSRRemoteSystemStatusTypeFilter_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_REMOTESYSTEMS_EXPORT
+OBJCUWPWINDOWSSYSTEMREMOTESYSTEMSEXPORT
 @interface WSRRemoteSystemStatusTypeFilter : RTObject <WSRIRemoteSystemFilter>
 + (WSRRemoteSystemStatusTypeFilter*)make:(WSRRemoteSystemStatusType)remoteSystemStatusType ACTIVATOR;
 #if defined(__cplusplus)

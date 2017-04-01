@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_PHONE_SYSTEM_EXPORT
-#define OBJCUWP_WINDOWS_PHONE_SYSTEM_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Phone_System.lib")
+#ifndef OBJCUWPWINDOWSPHONESYSTEMEXPORT
+#define OBJCUWPWINDOWSPHONESYSTEMEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsPhoneSystem.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -36,7 +36,7 @@
 #ifndef __WPSSystemProtection_DEFINED__
 #define __WPSSystemProtection_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_SYSTEM_EXPORT
+OBJCUWPWINDOWSPHONESYSTEMEXPORT
 @interface WPSSystemProtection : RTObject
 + (void)requestScreenUnlock;
 + (BOOL)screenLocked;

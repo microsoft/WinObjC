@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_XAML_EXPORT
-#define OBJCUWP_WINDOWS_UI_XAML_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml.lib")
+#ifndef OBJCUWPWINDOWSUIXAMLEXPORT
+#define OBJCUWPWINDOWSUIXAMLEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUIXaml.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -512,7 +512,7 @@ typedef void(^WXWindowVisibilityChangedEventHandler)(RTObject* sender, WUCVisibi
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Xaml.CornerRadius
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCornerRadius : NSObject
 + (instancetype)new;
 @property double topLeft;
@@ -522,7 +522,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @end
 
 // [struct] Windows.UI.Xaml.Duration
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXDuration : NSObject
 + (instancetype)new;
 @property (retain) WFTimeSpan* timeSpan;
@@ -530,7 +530,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @end
 
 // [struct] Windows.UI.Xaml.Thickness
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXThickness : NSObject
 + (instancetype)new;
 @property double left;
@@ -540,7 +540,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @end
 
 // [struct] Windows.UI.Xaml.GridLength
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXGridLength : NSObject
 + (instancetype)new;
 @property double value;
@@ -671,7 +671,7 @@ typedef void(^WXBindingFailedEventHandler)(RTObject* sender, WXBindingFailedEven
 - (int)processBindings:(WXCContainerContentChangingEventArgs*)arg;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXIDataTemplateExtension : RTObject <WXIDataTemplateExtension>
 @end
 
@@ -687,7 +687,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (id<NSFastEnumeration> /* id<NSFastEnumeration> < WFPoint* > */)findSubElementsForTouchTargeting:(WFPoint*)point boundingRect:(WFRect*)boundingRect;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXIUIElementOverrides : RTObject <WXIUIElementOverrides>
 @end
 
@@ -701,7 +701,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (BOOL)goToStateCore:(WXCControl*)control templateRoot:(WXFrameworkElement*)templateRoot stateName:(NSString *)stateName group:(WXVisualStateGroup*)group state:(WXVisualState*)state useTransitions:(BOOL)useTransitions;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXIVisualStateManagerOverrides : RTObject <WXIVisualStateManagerOverrides>
 @end
 
@@ -717,7 +717,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)onApplyTemplate;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXIFrameworkElementOverrides : RTObject <WXIFrameworkElementOverrides>
 @end
 
@@ -731,7 +731,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (BOOL)goToElementStateCore:(NSString *)stateName useTransitions:(BOOL)useTransitions;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXIFrameworkElementOverrides2 : RTObject <WXIFrameworkElementOverrides2>
 @end
 
@@ -753,7 +753,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)onWindowCreated:(WXWindowCreatedEventArgs*)args;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXIApplicationOverrides : RTObject <WXIApplicationOverrides>
 @end
 
@@ -767,7 +767,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)onBackgroundActivated:(WAABackgroundActivatedEventArgs*)args;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXIApplicationOverrides2 : RTObject <WXIApplicationOverrides2>
 @end
 
@@ -777,7 +777,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXDispatcherTimer_DEFINED__
 #define __WXDispatcherTimer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXDispatcherTimer : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -797,7 +797,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCornerRadiusHelper_DEFINED__
 #define __WXCornerRadiusHelper_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCornerRadiusHelper : RTObject
 + (WXCornerRadius*)fromRadii:(double)topLeft topRight:(double)topRight bottomRight:(double)bottomRight bottomLeft:(double)bottomLeft;
 + (WXCornerRadius*)fromUniformRadius:(double)uniformRadius;
@@ -812,7 +812,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXDurationHelper_DEFINED__
 #define __WXDurationHelper_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXDurationHelper : RTObject
 + (int)compare:(WXDuration*)duration1 duration2:(WXDuration*)duration2;
 + (WXDuration*)fromTimeSpan:(WFTimeSpan*)timeSpan;
@@ -833,7 +833,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXThicknessHelper_DEFINED__
 #define __WXThicknessHelper_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXThicknessHelper : RTObject
 + (WXThickness*)fromLengths:(double)left top:(double)top right:(double)right bottom:(double)bottom;
 + (WXThickness*)fromUniformLength:(double)uniformLength;
@@ -848,7 +848,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXApplicationInitializationCallbackParams_DEFINED__
 #define __WXApplicationInitializationCallbackParams_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXApplicationInitializationCallbackParams : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -861,7 +861,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -882,7 +882,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXDependencyProperty_DEFINED__
 #define __WXDependencyProperty_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXDependencyProperty : RTObject
 + (WXDependencyProperty*)Register:(NSString *)name propertyType:(WUXITypeName*)propertyType ownerType:(WUXITypeName*)ownerType typeMetadata:(WXPropertyMetadata*)typeMetadata;
 + (WXDependencyProperty*)registerAttached:(NSString *)name propertyType:(WUXITypeName*)propertyType ownerType:(WUXITypeName*)ownerType defaultMetadata:(WXPropertyMetadata*)defaultMetadata;
@@ -899,7 +899,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXDependencyPropertyChangedEventArgs_DEFINED__
 #define __WXDependencyPropertyChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXDependencyPropertyChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -915,7 +915,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXRoutedEventArgs_DEFINED__
 #define __WXRoutedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXRoutedEventArgs : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -930,7 +930,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXUnhandledExceptionEventArgs_DEFINED__
 #define __WXUnhandledExceptionEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXUnhandledExceptionEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -946,7 +946,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXVisualStateChangedEventArgs_DEFINED__
 #define __WXVisualStateChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXVisualStateChangedEventArgs : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -963,7 +963,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXDataContextChangedEventArgs_DEFINED__
 #define __WXDataContextChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXDataContextChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -978,7 +978,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXDataTemplateKey_DEFINED__
 #define __WXDataTemplateKey_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXDataTemplateKey : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -993,7 +993,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXPropertyMetadata_DEFINED__
 #define __WXPropertyMetadata_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXPropertyMetadata : RTObject
 + (WXPropertyMetadata*)createWithDefaultValue:(RTObject*)defaultValue;
 + (WXPropertyMetadata*)createWithDefaultValueAndCallback:(RTObject*)defaultValue propertyChangedCallback:(WXPropertyChangedCallback)propertyChangedCallback;
@@ -1014,7 +1014,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXDragOperationDeferral_DEFINED__
 #define __WXDragOperationDeferral_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXDragOperationDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1028,7 +1028,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXDragUI_DEFINED__
 #define __WXDragUI_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXDragUI : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1046,7 +1046,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXDragUIOverride_DEFINED__
 #define __WXDragUIOverride_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXDragUIOverride : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1068,7 +1068,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXElementSoundPlayer_DEFINED__
 #define __WXElementSoundPlayer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXElementSoundPlayer : RTObject
 + (void)play:(WXElementSoundKind)sound;
 #if defined(__cplusplus)
@@ -1094,7 +1094,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)uninitialize;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WACIFrameworkView : RTObject <WACIFrameworkView>
 @end
 
@@ -1104,7 +1104,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXFrameworkView_DEFINED__
 #define __WXFrameworkView_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXFrameworkView : RTObject <WACIFrameworkView>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1123,7 +1123,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXRoutedEvent_DEFINED__
 #define __WXRoutedEvent_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXRoutedEvent : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1136,7 +1136,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXSetterBaseCollection_DEFINED__
 #define __WXSetterBaseCollection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXSetterBaseCollection : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1164,7 +1164,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXTargetPropertyPath_DEFINED__
 #define __WXTargetPropertyPath_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXTargetPropertyPath : RTObject
 + (WXTargetPropertyPath*)makeInstance:(WXDependencyProperty*)targetProperty ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
@@ -1181,7 +1181,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXTriggerActionCollection_DEFINED__
 #define __WXTriggerActionCollection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXTriggerActionCollection : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1208,7 +1208,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXTriggerCollection_DEFINED__
 #define __WXTriggerCollection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXTriggerCollection : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1234,7 +1234,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXWindow_DEFINED__
 #define __WXWindow_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXWindow : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1264,7 +1264,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXWindowCreatedEventArgs_DEFINED__
 #define __WXWindowCreatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXWindowCreatedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1278,7 +1278,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXDependencyObjectCollection_DEFINED__
 #define __WXDependencyObjectCollection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXDependencyObjectCollection : WXDependencyObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1309,7 +1309,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXDragEventArgs_DEFINED__
 #define __WXDragEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXDragEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1331,7 +1331,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXDragStartingEventArgs_DEFINED__
 #define __WXDragStartingEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXDragStartingEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1350,7 +1350,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXDropCompletedEventArgs_DEFINED__
 #define __WXDropCompletedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXDropCompletedEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1364,7 +1364,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXExceptionRoutedEventArgs_DEFINED__
 #define __WXExceptionRoutedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXExceptionRoutedEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1378,7 +1378,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXFrameworkTemplate_DEFINED__
 #define __WXFrameworkTemplate_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXFrameworkTemplate : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1391,7 +1391,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXDataTemplate_DEFINED__
 #define __WXDataTemplate_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXDataTemplate : WXFrameworkTemplate
 + (RTObject<WXIDataTemplateExtension>*)getExtensionInstance:(WXFrameworkElement*)element;
 + (void)setExtensionInstance:(WXFrameworkElement*)element value:(RTObject<WXIDataTemplateExtension>*)value;
@@ -1409,7 +1409,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXPropertyPath_DEFINED__
 #define __WXPropertyPath_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXPropertyPath : WXDependencyObject
 + (WXPropertyPath*)makeInstance:(NSString *)path ACTIVATOR;
 #if defined(__cplusplus)
@@ -1424,7 +1424,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXResourceDictionary_DEFINED__
 #define __WXResourceDictionary_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXResourceDictionary : WXDependencyObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1457,7 +1457,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXSetterBase_DEFINED__
 #define __WXSetterBase_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXSetterBase : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1471,7 +1471,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXSizeChangedEventArgs_DEFINED__
 #define __WXSizeChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXSizeChangedEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1486,7 +1486,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXStateTriggerBase_DEFINED__
 #define __WXStateTriggerBase_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXStateTriggerBase : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1500,7 +1500,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXStyle_DEFINED__
 #define __WXStyle_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXStyle : WXDependencyObject
 + (WXStyle*)makeInstance:(WUXITypeName*)targetType ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
@@ -1520,7 +1520,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXTriggerAction_DEFINED__
 #define __WXTriggerAction_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXTriggerAction : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1533,7 +1533,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXTriggerBase_DEFINED__
 #define __WXTriggerBase_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXTriggerBase : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1546,7 +1546,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXUIElement_DEFINED__
 #define __WXUIElement_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXUIElement : WXDependencyObject
 + (BOOL)tryStartDirectManipulation:(WUXIPointer*)value;
 #if defined(__cplusplus)
@@ -1715,7 +1715,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXVisualState_DEFINED__
 #define __WXVisualState_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXVisualState : WXDependencyObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1733,7 +1733,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXVisualStateGroup_DEFINED__
 #define __WXVisualStateGroup_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXVisualStateGroup : WXDependencyObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1755,7 +1755,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXVisualStateManager_DEFINED__
 #define __WXVisualStateManager_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXVisualStateManager : WXDependencyObject
 + (NSMutableArray* /* WXVisualStateGroup* */)getVisualStateGroups:(WXFrameworkElement*)obj;
 + (WXVisualStateManager*)getCustomVisualStateManager:(WXFrameworkElement*)obj;
@@ -1777,7 +1777,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXVisualTransition_DEFINED__
 #define __WXVisualTransition_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXVisualTransition : WXDependencyObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1796,7 +1796,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXAdaptiveTrigger_DEFINED__
 #define __WXAdaptiveTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXAdaptiveTrigger : WXStateTriggerBase
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1814,7 +1814,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXEventTrigger_DEFINED__
 #define __WXEventTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXEventTrigger : WXTriggerBase
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1830,7 +1830,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXFrameworkElement_DEFINED__
 #define __WXFrameworkElement_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXFrameworkElement : WXUIElement
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1916,7 +1916,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXMediaFailedRoutedEventArgs_DEFINED__
 #define __WXMediaFailedRoutedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXMediaFailedRoutedEventArgs : WXExceptionRoutedEventArgs
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1930,7 +1930,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXSetter_DEFINED__
 #define __WXSetter_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXSetter : WXSetterBase
 + (WXSetter*)makeInstance:(WXDependencyProperty*)targetProperty value:(RTObject*)value ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
@@ -1948,7 +1948,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXStateTrigger_DEFINED__
 #define __WXStateTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXStateTrigger : WXStateTriggerBase
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1964,7 +1964,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXGridLengthHelper_DEFINED__
 #define __WXGridLengthHelper_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXGridLengthHelper : RTObject
 + (WXGridLength*)fromPixels:(double)pixels;
 + (WXGridLength*)fromValueAndType:(double)value type:(WXGridUnitType)type;
@@ -1984,7 +1984,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXBindingFailedEventArgs_DEFINED__
 #define __WXBindingFailedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXBindingFailedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1998,7 +1998,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXDebugSettings_DEFINED__
 #define __WXDebugSettings_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXDebugSettings : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -2018,7 +2018,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXApplication_DEFINED__
 #define __WXApplication_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXApplication : RTObject
 + (void)start:(WXApplicationInitializationCallback)callback;
 + (void)loadComponent:(RTObject*)component resourceLocator:(WFUri*)resourceLocator;
@@ -2066,7 +2066,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (RTObject<WACIFrameworkView>*)createView;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WACIFrameworkViewSource : RTObject <WACIFrameworkViewSource>
 @end
 
@@ -2076,7 +2076,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXFrameworkViewSource_DEFINED__
 #define __WXFrameworkViewSource_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXFrameworkViewSource : RTObject <WACIFrameworkViewSource>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -2091,7 +2091,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXPointHelper_DEFINED__
 #define __WXPointHelper_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXPointHelper : RTObject
 + (WFPoint*)fromCoordinates:(float)x y:(float)y;
 #if defined(__cplusplus)
@@ -2105,7 +2105,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXRectHelper_DEFINED__
 #define __WXRectHelper_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXRectHelper : RTObject
 + (WFRect*)fromCoordinatesAndDimensions:(float)x y:(float)y width:(float)width height:(float)height;
 + (WFRect*)fromPoints:(WFPoint*)point1 point2:(WFPoint*)point2;
@@ -2132,7 +2132,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXSizeHelper_DEFINED__
 #define __WXSizeHelper_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXSizeHelper : RTObject
 + (WFSize*)fromDimensions:(float)width height:(float)height;
 + (BOOL)getIsEmpty:(WFSize*)target;

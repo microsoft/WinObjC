@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
-#define OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Storage_FileProperties.lib")
+#ifndef OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
+#define OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsStorageFileProperties.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -108,7 +108,7 @@ typedef unsigned WSFVideoOrientation;
 - (RTObject<WFIAsyncAction>*)savePropertiesAsyncOverloadDefault;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
+OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
 @interface WSFIStorageItemExtraProperties : RTObject <WSFIStorageItemExtraProperties>
 @end
 
@@ -118,7 +118,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 #ifndef __WSFGeotagHelper_DEFINED__
 #define __WSFGeotagHelper_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
+OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
 @interface WSFGeotagHelper : RTObject
 + (void)getGeotagAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(WDGGeopoint*))success failure:(void (^)(NSError*))failure;
 + (RTObject<WFIAsyncAction>*)setGeotagFromGeolocatorAsync:(RTObject<WSIStorageFile>*)file geolocator:(WDGGeolocator*)geolocator;
@@ -135,7 +135,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
+OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -150,7 +150,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
+OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
 @interface WSSIInputStream : RTObject <WSSIInputStream>
 @end
 
@@ -166,7 +166,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
+OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
 @interface WSSIOutputStream : RTObject <WSSIOutputStream>
 @end
 
@@ -191,7 +191,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
+OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
 @interface WSSIRandomAccessStream : RTObject <WSSIRandomAccessStream>
 @end
 
@@ -205,7 +205,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 @property (readonly) NSString * contentType;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
+OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
 @interface WSSIContentTypeProvider : RTObject <WSSIContentTypeProvider>
 @end
 
@@ -226,7 +226,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
+OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
 @interface WSSIRandomAccessStreamWithContentType : RTObject <WSSIRandomAccessStreamWithContentType>
 @end
 
@@ -236,7 +236,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 #ifndef __WSFStorageItemThumbnail_DEFINED__
 #define __WSFStorageItemThumbnail_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
+OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
 @interface WSFStorageItemThumbnail : RTObject <WSSIRandomAccessStreamWithContentType, WSSIContentTypeProvider, WSSIRandomAccessStream, WSSIOutputStream, WFIClosable, WSSIInputStream>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -266,7 +266,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 #ifndef __WSFMusicProperties_DEFINED__
 #define __WSFMusicProperties_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
+OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
 @interface WSFMusicProperties : RTObject <WSFIStorageItemExtraProperties>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -298,7 +298,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 #ifndef __WSFVideoProperties_DEFINED__
 #define __WSFVideoProperties_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
+OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
 @interface WSFVideoProperties : RTObject <WSFIStorageItemExtraProperties>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -330,7 +330,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 #ifndef __WSFImageProperties_DEFINED__
 #define __WSFImageProperties_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
+OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
 @interface WSFImageProperties : RTObject <WSFIStorageItemExtraProperties>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -358,7 +358,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 #ifndef __WSFDocumentProperties_DEFINED__
 #define __WSFDocumentProperties_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
+OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
 @interface WSFDocumentProperties : RTObject <WSFIStorageItemExtraProperties>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -378,7 +378,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 #ifndef __WSFStorageItemContentProperties_DEFINED__
 #define __WSFStorageItemContentProperties_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
+OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
 @interface WSFStorageItemContentProperties : RTObject <WSFIStorageItemExtraProperties>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -398,7 +398,7 @@ OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
 #ifndef __WSFBasicProperties_DEFINED__
 #define __WSFBasicProperties_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_FILEPROPERTIES_EXPORT
+OBJCUWPWINDOWSSTORAGEFILEPROPERTIESEXPORT
 @interface WSFBasicProperties : RTObject <WSFIStorageItemExtraProperties>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

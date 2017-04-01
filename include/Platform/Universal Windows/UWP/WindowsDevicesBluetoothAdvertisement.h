@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
-#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#ifndef OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+#define OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsConsolidatedNamespace.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -89,7 +89,7 @@ typedef unsigned WDBABluetoothLEAdvertisementPublisherStatus;
 #ifndef __WDBABluetoothLEManufacturerData_DEFINED__
 #define __WDBABluetoothLEManufacturerData_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBABluetoothLEManufacturerData : RTObject
 + (WDBABluetoothLEManufacturerData*)make:(unsigned short)companyId data:(RTObject<WSSIBuffer>*)data ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
@@ -106,7 +106,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WDBABluetoothLEAdvertisementDataSection_DEFINED__
 #define __WDBABluetoothLEAdvertisementDataSection_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBABluetoothLEAdvertisementDataSection : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 + (WDBABluetoothLEAdvertisementDataSection*)make:(uint8_t)dataType data:(RTObject<WSSIBuffer>*)data ACTIVATOR;
@@ -123,7 +123,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WDBABluetoothLEAdvertisement_DEFINED__
 #define __WDBABluetoothLEAdvertisement_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBABluetoothLEAdvertisement : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -144,7 +144,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WDBABluetoothLEAdvertisementBytePattern_DEFINED__
 #define __WDBABluetoothLEAdvertisementBytePattern_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBABluetoothLEAdvertisementBytePattern : RTObject
 + (WDBABluetoothLEAdvertisementBytePattern*)make:(uint8_t)dataType offset:(int16_t)offset data:(RTObject<WSSIBuffer>*)data ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
@@ -162,7 +162,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WDBABluetoothLEAdvertisementFilter_DEFINED__
 #define __WDBABluetoothLEAdvertisementFilter_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBABluetoothLEAdvertisementFilter : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -178,7 +178,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WDBABluetoothLEAdvertisementWatcherStoppedEventArgs_DEFINED__
 #define __WDBABluetoothLEAdvertisementWatcherStoppedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBABluetoothLEAdvertisementWatcherStoppedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -192,7 +192,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WDBABluetoothLEAdvertisementWatcher_DEFINED__
 #define __WDBABluetoothLEAdvertisementWatcher_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBABluetoothLEAdvertisementWatcher : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 + (WDBABluetoothLEAdvertisementWatcher*)make:(WDBABluetoothLEAdvertisementFilter*)advertisementFilter ACTIVATOR;
@@ -221,7 +221,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WDBABluetoothLEAdvertisementReceivedEventArgs_DEFINED__
 #define __WDBABluetoothLEAdvertisementReceivedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBABluetoothLEAdvertisementReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -239,7 +239,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WDBABluetoothLEAdvertisementDataTypes_DEFINED__
 #define __WDBABluetoothLEAdvertisementDataTypes_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBABluetoothLEAdvertisementDataTypes : RTObject
 + (uint8_t)advertisingInterval;
 + (uint8_t)appearance;
@@ -271,7 +271,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WDBABluetoothLEAdvertisementPublisherStatusChangedEventArgs_DEFINED__
 #define __WDBABluetoothLEAdvertisementPublisherStatusChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBABluetoothLEAdvertisementPublisherStatusChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -286,7 +286,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WDBABluetoothLEAdvertisementPublisher_DEFINED__
 #define __WDBABluetoothLEAdvertisementPublisher_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WDBABluetoothLEAdvertisementPublisher : RTObject
 + (WDBABluetoothLEAdvertisementPublisher*)make:(WDBABluetoothLEAdvertisement*)advertisement ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));

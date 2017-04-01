@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
-#define OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Services_Store.lib")
+#ifndef OBJCUWPWINDOWSSERVICESSTOREEXPORT
+#define OBJCUWPWINDOWSSERVICESSTOREEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsServicesStore.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -82,7 +82,7 @@ typedef unsigned WSSStorePackageUpdateState;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Services.Store.StorePackageUpdateStatus
-OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
+OBJCUWPWINDOWSSERVICESSTOREEXPORT
 @interface WSSStorePackageUpdateStatus : NSObject
 + (instancetype)new;
 @property (retain) NSString * packageFamilyName;
@@ -97,7 +97,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 #ifndef __WSSStoreProduct_DEFINED__
 #define __WSSStoreProduct_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
+OBJCUWPWINDOWSSERVICESSTOREEXPORT
 @interface WSSStoreProduct : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -128,7 +128,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 #ifndef __WSSStoreProductPagedQueryResult_DEFINED__
 #define __WSSStoreProductPagedQueryResult_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
+OBJCUWPWINDOWSSERVICESSTOREEXPORT
 @interface WSSStoreProductPagedQueryResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -145,7 +145,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 #ifndef __WSSStorePurchaseProperties_DEFINED__
 #define __WSSStorePurchaseProperties_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
+OBJCUWPWINDOWSSERVICESSTOREEXPORT
 @interface WSSStorePurchaseProperties : RTObject
 + (WSSStorePurchaseProperties*)make:(NSString *)name ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
@@ -162,7 +162,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 #ifndef __WSSStoreLicense_DEFINED__
 #define __WSSStoreLicense_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
+OBJCUWPWINDOWSSERVICESSTOREEXPORT
 @interface WSSStoreLicense : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -180,7 +180,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 #ifndef __WSSStoreImage_DEFINED__
 #define __WSSStoreImage_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
+OBJCUWPWINDOWSSERVICESSTOREEXPORT
 @interface WSSStoreImage : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -198,7 +198,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 #ifndef __WSSStoreVideo_DEFINED__
 #define __WSSStoreVideo_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
+OBJCUWPWINDOWSSERVICESSTOREEXPORT
 @interface WSSStoreVideo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -217,7 +217,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 #ifndef __WSSStoreSku_DEFINED__
 #define __WSSStoreSku_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
+OBJCUWPWINDOWSSERVICESSTOREEXPORT
 @interface WSSStoreSku : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -249,7 +249,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 #ifndef __WSSStorePrice_DEFINED__
 #define __WSSStorePrice_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
+OBJCUWPWINDOWSSERVICESSTOREEXPORT
 @interface WSSStorePrice : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -268,7 +268,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 #ifndef __WSSStorePurchaseResult_DEFINED__
 #define __WSSStorePurchaseResult_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
+OBJCUWPWINDOWSSERVICESSTOREEXPORT
 @interface WSSStorePurchaseResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -283,7 +283,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 #ifndef __WSSStoreAvailability_DEFINED__
 #define __WSSStoreAvailability_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
+OBJCUWPWINDOWSSERVICESSTOREEXPORT
 @interface WSSStoreAvailability : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -302,7 +302,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 #ifndef __WSSStoreCollectionData_DEFINED__
 #define __WSSStoreCollectionData_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
+OBJCUWPWINDOWSSERVICESSTOREEXPORT
 @interface WSSStoreCollectionData : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -323,7 +323,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 #ifndef __WSSStoreSubscriptionInfo_DEFINED__
 #define __WSSStoreSubscriptionInfo_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
+OBJCUWPWINDOWSSERVICESSTOREEXPORT
 @interface WSSStoreSubscriptionInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -341,7 +341,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 #ifndef __WSSStoreContext_DEFINED__
 #define __WSSStoreContext_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
+OBJCUWPWINDOWSSERVICESSTOREEXPORT
 @interface WSSStoreContext : RTObject
 + (WSSStoreContext*)getDefault;
 + (WSSStoreContext*)getForUser:(WSUser*)user;
@@ -377,7 +377,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 #ifndef __WSSStoreSendRequestResult_DEFINED__
 #define __WSSStoreSendRequestResult_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
+OBJCUWPWINDOWSSERVICESSTOREEXPORT
 @interface WSSStoreSendRequestResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -392,7 +392,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 #ifndef __WSSStoreAppLicense_DEFINED__
 #define __WSSStoreAppLicense_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
+OBJCUWPWINDOWSSERVICESSTOREEXPORT
 @interface WSSStoreAppLicense : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -414,7 +414,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 #ifndef __WSSStoreProductResult_DEFINED__
 #define __WSSStoreProductResult_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
+OBJCUWPWINDOWSSERVICESSTOREEXPORT
 @interface WSSStoreProductResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -429,7 +429,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 #ifndef __WSSStoreProductQueryResult_DEFINED__
 #define __WSSStoreProductQueryResult_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
+OBJCUWPWINDOWSSERVICESSTOREEXPORT
 @interface WSSStoreProductQueryResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -444,7 +444,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 #ifndef __WSSStoreConsumableResult_DEFINED__
 #define __WSSStoreConsumableResult_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
+OBJCUWPWINDOWSSERVICESSTOREEXPORT
 @interface WSSStoreConsumableResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -461,7 +461,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 #ifndef __WSSStoreAcquireLicenseResult_DEFINED__
 #define __WSSStoreAcquireLicenseResult_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
+OBJCUWPWINDOWSSERVICESSTOREEXPORT
 @interface WSSStoreAcquireLicenseResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -476,7 +476,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 #ifndef __WSSStorePackageUpdate_DEFINED__
 #define __WSSStorePackageUpdate_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
+OBJCUWPWINDOWSSERVICESSTOREEXPORT
 @interface WSSStorePackageUpdate : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -491,7 +491,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 #ifndef __WSSStorePackageUpdateResult_DEFINED__
 #define __WSSStorePackageUpdateResult_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
+OBJCUWPWINDOWSSERVICESSTOREEXPORT
 @interface WSSStorePackageUpdateResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -510,7 +510,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
+OBJCUWPWINDOWSSERVICESSTOREEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -520,7 +520,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 #ifndef __WSSStorePackageLicense_DEFINED__
 #define __WSSStorePackageLicense_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
+OBJCUWPWINDOWSSERVICESSTOREEXPORT
 @interface WSSStorePackageLicense : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -539,7 +539,7 @@ OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
 #ifndef __WSSStoreRequestHelper_DEFINED__
 #define __WSSStoreRequestHelper_DEFINED__
 
-OBJCUWP_WINDOWS_SERVICES_STORE_EXPORT
+OBJCUWPWINDOWSSERVICESSTOREEXPORT
 @interface WSSStoreRequestHelper : RTObject
 + (void)sendRequestAsync:(WSSStoreContext*)context requestKind:(unsigned int)requestKind parametersAsJson:(NSString *)parametersAsJson success:(void (^)(WSSStoreSendRequestResult*))success failure:(void (^)(NSError*))failure;
 @end

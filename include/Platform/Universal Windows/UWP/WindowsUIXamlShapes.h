@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
-#define OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml_Shapes.lib")
+#ifndef OBJCUWPWINDOWSUIXAMLSHAPESEXPORT
+#define OBJCUWPWINDOWSUIXAMLSHAPESEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUIXamlShapes.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -146,7 +146,7 @@ typedef void(^WXSizeChangedEventHandler)(RTObject* sender, WXSizeChangedEventArg
 - (void)onApplyTemplate;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
+OBJCUWPWINDOWSUIXAMLSHAPESEXPORT
 @interface WXIFrameworkElementOverrides : RTObject <WXIFrameworkElementOverrides>
 @end
 
@@ -160,7 +160,7 @@ OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 - (BOOL)goToElementStateCore:(NSString *)stateName useTransitions:(BOOL)useTransitions;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
+OBJCUWPWINDOWSUIXAMLSHAPESEXPORT
 @interface WXIFrameworkElementOverrides2 : RTObject <WXIFrameworkElementOverrides2>
 @end
 
@@ -176,7 +176,7 @@ OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 - (id<NSFastEnumeration> /* id<NSFastEnumeration> < WFPoint* > */)findSubElementsForTouchTargeting:(WFPoint*)point boundingRect:(WFRect*)boundingRect;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
+OBJCUWPWINDOWSUIXAMLSHAPESEXPORT
 @interface WXIUIElementOverrides : RTObject <WXIUIElementOverrides>
 @end
 
@@ -186,7 +186,7 @@ OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
+OBJCUWPWINDOWSUIXAMLSHAPESEXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -207,7 +207,7 @@ OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 #ifndef __WXUIElement_DEFINED__
 #define __WXUIElement_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
+OBJCUWPWINDOWSUIXAMLSHAPESEXPORT
 @interface WXUIElement : WXDependencyObject
 + (BOOL)tryStartDirectManipulation:(WUXIPointer*)value;
 #if defined(__cplusplus)
@@ -376,7 +376,7 @@ OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 #ifndef __WXFrameworkElement_DEFINED__
 #define __WXFrameworkElement_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
+OBJCUWPWINDOWSUIXAMLSHAPESEXPORT
 @interface WXFrameworkElement : WXUIElement
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -462,7 +462,7 @@ OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 #ifndef __WUXSShape_DEFINED__
 #define __WUXSShape_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
+OBJCUWPWINDOWSUIXAMLSHAPESEXPORT
 @interface WUXSShape : WXFrameworkElement
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -499,7 +499,7 @@ OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 #ifndef __WUXSEllipse_DEFINED__
 #define __WUXSEllipse_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
+OBJCUWPWINDOWSUIXAMLSHAPESEXPORT
 @interface WUXSEllipse : WUXSShape
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -513,7 +513,7 @@ OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 #ifndef __WUXSLine_DEFINED__
 #define __WUXSLine_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
+OBJCUWPWINDOWSUIXAMLSHAPESEXPORT
 @interface WUXSLine : WUXSShape
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -535,7 +535,7 @@ OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 #ifndef __WUXSPath_DEFINED__
 #define __WUXSPath_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
+OBJCUWPWINDOWSUIXAMLSHAPESEXPORT
 @interface WUXSPath : WUXSShape
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -551,7 +551,7 @@ OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 #ifndef __WUXSPolygon_DEFINED__
 #define __WUXSPolygon_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
+OBJCUWPWINDOWSUIXAMLSHAPESEXPORT
 @interface WUXSPolygon : WUXSShape
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -569,7 +569,7 @@ OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 #ifndef __WUXSPolyline_DEFINED__
 #define __WUXSPolyline_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
+OBJCUWPWINDOWSUIXAMLSHAPESEXPORT
 @interface WUXSPolyline : WUXSShape
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -587,7 +587,7 @@ OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
 #ifndef __WUXSRectangle_DEFINED__
 #define __WUXSRectangle_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_SHAPES_EXPORT
+OBJCUWPWINDOWSUIXAMLSHAPESEXPORT
 @interface WUXSRectangle : WUXSShape
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_STORAGE_EXPORT
-#define OBJCUWP_WINDOWS_STORAGE_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Storage.lib")
+#ifndef OBJCUWPWINDOWSSTORAGEEXPORT
+#define OBJCUWPWINDOWSSTORAGEEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsStorage.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -205,7 +205,7 @@ typedef void(^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersio
 - (BOOL)isOfType:(WSStorageItemTypes)type;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSIStorageItem : RTObject <WSIStorageItem>
 @end
 
@@ -219,7 +219,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 - (void)failAndClose:(WSStreamedFileFailureMode)failureMode;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSIStreamedFileDataRequest : RTObject <WSIStreamedFileDataRequest>
 @end
 
@@ -248,7 +248,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 - (BOOL)isOfType:(WSStorageItemTypes)type;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSIStorageFolder : RTObject <WSIStorageFolder>
 @end
 
@@ -262,7 +262,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 - (void)openReadAsyncWithSuccess:(void (^)(RTObject<WSSIRandomAccessStreamWithContentType>*))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSIRandomAccessStreamReference : RTObject <WSSIRandomAccessStreamReference>
 @end
 
@@ -276,7 +276,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 - (void)openSequentialReadAsyncWithSuccess:(void (^)(RTObject<WSSIInputStream>*))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSIInputStreamReference : RTObject <WSSIInputStreamReference>
 @end
 
@@ -309,7 +309,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 - (void)openSequentialReadAsyncWithSuccess:(void (^)(RTObject<WSSIInputStream>*))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSIStorageFile : RTObject <WSIStorageFile>
 @end
 
@@ -330,7 +330,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 - (BOOL)isOfType:(WSStorageItemTypes)type;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSIStorageItem2 : RTObject <WSIStorageItem2>
 @end
 
@@ -350,7 +350,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 - (void)getThumbnailAsync:(WSFThumbnailMode)mode requestedSize:(unsigned int)requestedSize options:(WSFThumbnailOptions)options success:(void (^)(WSFStorageItemThumbnail*))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSIStorageItemProperties : RTObject <WSIStorageItemProperties>
 @end
 
@@ -369,7 +369,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 - (void)getThumbnailAsync:(WSFThumbnailMode)mode requestedSize:(unsigned int)requestedSize options:(WSFThumbnailOptions)options success:(void (^)(WSFStorageItemThumbnail*))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSIStorageItemProperties2 : RTObject <WSIStorageItemProperties2>
 @end
 
@@ -386,7 +386,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 - (void)getThumbnailAsync:(WSFThumbnailMode)mode requestedSize:(unsigned int)requestedSize options:(WSFThumbnailOptions)options success:(void (^)(WSFStorageItemThumbnail*))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSIStorageItemPropertiesWithProvider : RTObject <WSIStorageItemPropertiesWithProvider>
 @end
 
@@ -400,7 +400,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 @property (readonly) BOOL isAvailable;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSIStorageFilePropertiesWithAvailability : RTObject <WSIStorageFilePropertiesWithAvailability>
 @end
 
@@ -414,7 +414,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 - (void)tryGetItemAsync:(NSString *)name success:(void (^)(RTObject<WSIStorageItem>*))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSIStorageFolder2 : RTObject <WSIStorageFolder2>
 @end
 
@@ -429,7 +429,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 - (void)openTransactedWriteWithOptionsAsync:(WSStorageOpenOptions)options success:(void (^)(WSStorageStreamTransaction*))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSIStorageFile2 : RTObject <WSIStorageFile2>
 @end
 
@@ -439,7 +439,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSStorageLibrary_DEFINED__
 #define __WSStorageLibrary_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSStorageLibrary : RTObject
 + (void)getLibraryAsync:(WSKnownLibraryId)libraryId success:(void (^)(WSStorageLibrary*))success failure:(void (^)(NSError*))failure;
 + (void)getLibraryForUserAsync:(WSUser*)user libraryId:(WSKnownLibraryId)libraryId success:(void (^)(WSStorageLibrary*))success failure:(void (^)(NSError*))failure;
@@ -481,7 +481,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 - (BOOL)isCommonFileQuerySupported:(WSSCommonFileQuery)query;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSIStorageFolderQueryOperations : RTObject <WSSIStorageFolderQueryOperations>
 @end
 
@@ -491,7 +491,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSStorageFolder_DEFINED__
 #define __WSStorageFolder_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSStorageFolder : RTObject <WSIStorageFolder, WSIStorageItem, WSSIStorageFolderQueryOperations, WSIStorageItemProperties, WSIStorageItemProperties2, WSIStorageItem2, WSIStorageFolder2, WSIStorageItemPropertiesWithProvider>
 + (void)getFolderFromPathAsync:(NSString *)path success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
@@ -556,7 +556,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSStorageLibraryChangeTracker_DEFINED__
 #define __WSStorageLibraryChangeTracker_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSStorageLibraryChangeTracker : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -572,7 +572,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSKnownFolders_DEFINED__
 #define __WSKnownFolders_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSKnownFolders : RTObject
 + (void)getFolderForUserAsync:(WSUser*)user folderId:(WSKnownFolderId)folderId success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
 + (WSStorageFolder*)cameraRoll;
@@ -596,7 +596,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSStorageFile_DEFINED__
 #define __WSStorageFile_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSStorageFile : RTObject <WSIStorageFile, WSSIInputStreamReference, WSSIRandomAccessStreamReference, WSIStorageItem, WSIStorageItemProperties, WSIStorageItemProperties2, WSIStorageItem2, WSIStorageItemPropertiesWithProvider, WSIStorageFilePropertiesWithAvailability, WSIStorageFile2>
 + (void)getFileFromPathAsync:(NSString *)path success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 + (void)getFileFromApplicationUriAsync:(WFUri*)uri success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
@@ -655,7 +655,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSDownloadsFolder_DEFINED__
 #define __WSDownloadsFolder_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSDownloadsFolder : RTObject
 + (void)createFileForUserAsync:(WSUser*)user desiredName:(NSString *)desiredName success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 + (void)createFolderForUserAsync:(WSUser*)user desiredName:(NSString *)desiredName success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
@@ -673,7 +673,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSStorageLibraryChange_DEFINED__
 #define __WSStorageLibraryChange_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSStorageLibraryChange : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -691,7 +691,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSStorageLibraryChangeReader_DEFINED__
 #define __WSStorageLibraryChangeReader_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSStorageLibraryChangeReader : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -710,7 +710,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -726,7 +726,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSIOutputStream : RTObject <WSSIOutputStream>
 @end
 
@@ -736,7 +736,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSStreamedFileDataRequest_DEFINED__
 #define __WSStreamedFileDataRequest_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSStreamedFileDataRequest : RTObject <WSSIOutputStream, WFIClosable, WSIStreamedFileDataRequest>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -753,7 +753,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSStorageStreamTransaction_DEFINED__
 #define __WSStorageStreamTransaction_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSStorageStreamTransaction : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -769,7 +769,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSStorageProvider_DEFINED__
 #define __WSStorageProvider_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSStorageProvider : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -784,7 +784,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSFileIO_DEFINED__
 #define __WSFileIO_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSFileIO : RTObject
 + (void)readTextAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
 + (void)readTextWithEncodingAsync:(RTObject<WSIStorageFile>*)file encoding:(WSSUnicodeEncoding)encoding success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
@@ -809,7 +809,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSPathIO_DEFINED__
 #define __WSPathIO_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSPathIO : RTObject
 + (void)readTextAsync:(NSString *)absolutePath success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
 + (void)readTextWithEncodingAsync:(NSString *)absolutePath encoding:(WSSUnicodeEncoding)encoding success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
@@ -834,7 +834,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSCachedFileManager_DEFINED__
 #define __WSCachedFileManager_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSCachedFileManager : RTObject
 + (void)deferUpdates:(RTObject<WSIStorageFile>*)file;
 + (void)completeUpdatesAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(WSPFileUpdateStatus))success failure:(void (^)(NSError*))failure;
@@ -846,7 +846,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSSystemAudioProperties_DEFINED__
 #define __WSSystemAudioProperties_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSystemAudioProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -860,7 +860,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSSystemGPSProperties_DEFINED__
 #define __WSSystemGPSProperties_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSystemGPSProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -875,7 +875,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSSystemImageProperties_DEFINED__
 #define __WSSystemImageProperties_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSystemImageProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -890,7 +890,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSSystemMediaProperties_DEFINED__
 #define __WSSystemMediaProperties_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSystemMediaProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -909,7 +909,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSSystemMusicProperties_DEFINED__
 #define __WSSystemMusicProperties_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSystemMusicProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -930,7 +930,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSSystemPhotoProperties_DEFINED__
 #define __WSSystemPhotoProperties_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSystemPhotoProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -948,7 +948,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSSystemVideoProperties_DEFINED__
 #define __WSSystemVideoProperties_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSystemVideoProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -966,7 +966,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSSystemProperties_DEFINED__
 #define __WSSystemProperties_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSystemProperties : RTObject
 + (WSSystemAudioProperties*)audio;
 + (NSString *)author;
@@ -989,7 +989,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSApplicationData_DEFINED__
 #define __WSApplicationData_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSApplicationData : RTObject
 + (void)getForUserAsync:(WSUser*)user success:(void (^)(WSApplicationData*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
@@ -1021,7 +1021,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSSetVersionRequest_DEFINED__
 #define __WSSetVersionRequest_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSetVersionRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1037,7 +1037,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSApplicationDataContainer_DEFINED__
 #define __WSApplicationDataContainer_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSApplicationDataContainer : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1056,7 +1056,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSSetVersionDeferral_DEFINED__
 #define __WSSetVersionDeferral_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSSetVersionDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1090,7 +1090,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 -(void)removeObserver: (EventRegistrationToken)receiverToken;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WFCIPropertySet : RTObject <WFCIPropertySet>
 @end
 
@@ -1100,7 +1100,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSApplicationDataContainerSettings_DEFINED__
 #define __WSApplicationDataContainerSettings_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSApplicationDataContainerSettings : RTObject <WFCIPropertySet>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1133,7 +1133,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSApplicationDataCompositeValue_DEFINED__
 #define __WSApplicationDataCompositeValue_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSApplicationDataCompositeValue : RTObject <WFCIPropertySet>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
