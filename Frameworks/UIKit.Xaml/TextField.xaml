@@ -1,0 +1,55 @@
+﻿<UserControl
+    x:Class="UIKit.Xaml.TextField"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UIKit.Xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">
+    <Canvas x:Name="textFieldCanvas">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="TextFieldStates">
+                <VisualState x:Name="TextBoxVisible">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="textFieldTB">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Visible</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="textFieldPB">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Collapsed</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="PasswordBoxVisible">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="textFieldTB">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Collapsed</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="textFieldPB">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Visible</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <TextBox x:Name="textFieldTB" x:DeferLoadStrategy="Lazy" VerticalAlignment="Center" 
+                 Width="{Binding ElementName=textFieldCanvas, Path=ActualWidth}" 
+                 Height="{Binding ElementName=textFieldCanvas, Path=ActualHeight}" />
+        <PasswordBox x:Name="textFieldPB" x:DeferLoadStrategy="Lazy" VerticalAlignment="Center" Visibility="Collapsed"
+                     Width="{Binding ElementName=textFieldCanvas, Path=ActualWidth}"
+                     Height="{Binding ElementName=textFieldCanvas, Path=ActualHeight}" />
+    </Canvas>
+</UserControl>

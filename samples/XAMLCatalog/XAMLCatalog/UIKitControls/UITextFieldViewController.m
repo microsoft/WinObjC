@@ -221,7 +221,7 @@ static const int TAG_SUBVIEW_UITEXTFIELD = 1;
     [_textFields addObject:[self _createTextFieldWithColor:[UIColor redColor]
                                                placeHolder:@"Background image"
                                                borderStyle:UITextBorderStyleLine
-                                           backgroundImage:[UIImage imageNamed:@"photo1.jpg"]]];
+                                           backgroundImage:[UIImage imageNamed:@"blue_background.jpg"]]];
 
     // Row 12. Adjusts font size to fit width (should clamp to 14.0f)
     [_textFields addObject:[self _createTextFieldWithColor:[UIColor blackColor]

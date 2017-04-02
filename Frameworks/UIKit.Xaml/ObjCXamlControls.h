@@ -55,7 +55,7 @@ UIKIT_XAML_EXPORT void XamlRemovePointerEvents(const Microsoft::WRL::ComPtr<IIns
 // Label.xaml.cpp
 ////////////////////////////////////////////////////////////////////////////////////
 
-// Returns a UIKit::Label as an IInspectable
+// Returns a UIKit::Xaml::Label as an IInspectable
 UIKIT_XAML_EXPORT void XamlCreateLabel(IInspectable** created);
 
 // Retrieves the UIKit::Label's backing TextBlock as an IInspectable
@@ -83,7 +83,7 @@ UIKIT_XAML_EXPORT IInspectable* XamlGetFrameworkElementSublayerCanvasProperty(co
 // ProgressRing.xaml.cpp
 ////////////////////////////////////////////////////////////////////////////////////
 
-// Returns a UIKit::ProgressRing as an IInspectable
+// Returns a UIKit::Xaml::ProgressRing as an IInspectable
 UIKIT_XAML_EXPORT void XamlCreateProgressRing(IInspectable** created);
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -103,8 +103,28 @@ UIKIT_XAML_EXPORT IInspectable* XamlScrollViewGetSubLayerCanvas(const Microsoft:
 // Slider.xaml.cpp
 ////////////////////////////////////////////////////////////////////////////////////
 
-// Returns a UIKit::Slider as an IInspectable
+// Returns a UIKit::Xaml::Slider as an IInspectable
 UIKIT_XAML_EXPORT void XamlCreateSlider(IInspectable** created);
+
+////////////////////////////////////////////////////////////////////////////////////
+// TextField.xaml.cpp
+////////////////////////////////////////////////////////////////////////////////////
+
+// Returns a UIKit::Xaml::TextField as an IInspectable
+UIKIT_XAML_EXPORT void XamlCreateTextField(IInspectable** created);
+
+// Returns the UIKit::Xaml::TextField's backing Canvas as an IInspectable
+UIKIT_XAML_EXPORT IInspectable* XamlGetTextFieldSubLayerCanvas(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField);
+
+// Retrieves the UIKit::Xaml::TextField's backing TextBox as an IInspectable
+UIKIT_XAML_EXPORT IInspectable* XamlGetTextFieldTextBox(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField);
+
+// Retrieves the UIKit::Xaml::TextField's backing PasswordBox as an IInspectable
+UIKIT_XAML_EXPORT IInspectable* XamlGetTextFieldPasswordBox(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField);
+
+// Toggle the secure text entry value allowing the switch to either the TextBox or PasswordBox backing element
+UIKIT_XAML_EXPORT void XamlSetTextFieldSecureTextEntryValue(const Microsoft::WRL::ComPtr<IInspectable>& inspectableTextField,
+                                                            bool secureTextEntry);
 
 ////////////////////////////////////////////////////////////////////////////////////
 // TextBox.xaml.cpp
