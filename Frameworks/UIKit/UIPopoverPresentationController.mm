@@ -23,12 +23,6 @@
 #import "UIPopoverPresentationControllerInternal.h"
 #import "UIPopoverControllerInternal.h"
 
-@interface UIPopoverPresentationController ()
-
-- (void)_handleDismiss;
-
-@end
-
 @interface _UIPopoverControllerDelegateInternal : NSObject <UIPopoverControllerDelegate>
 
 @property (nonatomic, assign) UIPopoverPresentationController* controller;
@@ -66,8 +60,6 @@
     if ([_delegate respondsToSelector:@selector(popoverPresentationControllerDidDismissPopover:)]) {
         [_delegate popoverPresentationControllerDidDismissPopover:_controller];
     }
-
-    [_controller _handleDismiss];
 }
 
 @end
@@ -79,7 +71,6 @@
     StrongId<UIBarButtonItem*> _barButtonItem;
     StrongId<UIView*> _sourceView;
     CGRect _sourceRect;
-    StrongId<dispatch_block_t> _dismissCompletion;
 }
 
 /**
@@ -97,9 +88,8 @@
     return self;
 }
 
-- (void)_presentAnimated:(BOOL)animated presentCompletion:(dispatch_block_t)presentCompletion dismissCompletion:(dispatch_block_t)dismissCompletion {
+- (void)_presentAnimated:(BOOL)animated presentCompletion:(dispatch_block_t)presentCompletion {
     _popoverControllerInternal->_presentCompletion.attach([presentCompletion copy]);
-    _dismissCompletion.attach([dismissCompletion copy]);
 
     if ([[_delegateInternal delegate] respondsToSelector:@selector(prepareForPopoverPresentation:)]) {
         [[_delegateInternal delegate] prepareForPopoverPresentation:self];
@@ -119,16 +109,6 @@
 
 - (void)_dismissAnimated:(BOOL)animated completion:(dispatch_block_t)dismissCompletion {
     [_popoverControllerInternal _dismissPopoverAnimated:animated completion:dismissCompletion];
-}
-
-- (void)_handleDismiss {
-    // Stay alive while we invoke _dismissCompletion (UIViewController tears
-    // down its strong ref to us in this completion; we must avoid our
-    // deallocation while this block we own is executing).
-    StrongId<UIPopoverPresentationController> strongSelf = self;
-
-    _dismissCompletion();
-    _dismissCompletion = nil;
 }
 
 /**
