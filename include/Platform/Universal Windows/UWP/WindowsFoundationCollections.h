@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_FOUNDATION_COLLECTIONS_EXPORT
-#define OBJCUWP_WINDOWS_FOUNDATION_COLLECTIONS_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Foundation_Collections.lib")
+#ifndef OBJCUWPWINDOWSFOUNDATIONCOLLECTIONSEXPORT
+#define OBJCUWPWINDOWSFOUNDATIONCOLLECTIONSEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsFoundationCollections.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -54,7 +54,7 @@ typedef unsigned WFCCollectionChange;
 @property (readonly) unsigned int index;
 @end
 
-OBJCUWP_WINDOWS_FOUNDATION_COLLECTIONS_EXPORT
+OBJCUWPWINDOWSFOUNDATIONCOLLECTIONSEXPORT
 @interface WFCIVectorChangedEventArgs : RTObject <WFCIVectorChangedEventArgs>
 @end
 
@@ -84,7 +84,7 @@ OBJCUWP_WINDOWS_FOUNDATION_COLLECTIONS_EXPORT
 -(void)removeObserver: (EventRegistrationToken)receiverToken;
 @end
 
-OBJCUWP_WINDOWS_FOUNDATION_COLLECTIONS_EXPORT
+OBJCUWPWINDOWSFOUNDATIONCOLLECTIONSEXPORT
 @interface WFCIPropertySet : RTObject <WFCIPropertySet>
 @end
 
@@ -94,7 +94,7 @@ OBJCUWP_WINDOWS_FOUNDATION_COLLECTIONS_EXPORT
 #ifndef __WFCPropertySet_DEFINED__
 #define __WFCPropertySet_DEFINED__
 
-OBJCUWP_WINDOWS_FOUNDATION_COLLECTIONS_EXPORT
+OBJCUWPWINDOWSFOUNDATIONCOLLECTIONSEXPORT
 @interface WFCPropertySet : RTObject <WFCIPropertySet>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -128,7 +128,7 @@ OBJCUWP_WINDOWS_FOUNDATION_COLLECTIONS_EXPORT
 #ifndef __WFCValueSet_DEFINED__
 #define __WFCValueSet_DEFINED__
 
-OBJCUWP_WINDOWS_FOUNDATION_COLLECTIONS_EXPORT
+OBJCUWPWINDOWSFOUNDATIONCOLLECTIONSEXPORT
 @interface WFCValueSet : RTObject <WFCIPropertySet>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -162,7 +162,7 @@ OBJCUWP_WINDOWS_FOUNDATION_COLLECTIONS_EXPORT
 #ifndef __WFCStringMap_DEFINED__
 #define __WFCStringMap_DEFINED__
 
-OBJCUWP_WINDOWS_FOUNDATION_COLLECTIONS_EXPORT
+OBJCUWPWINDOWSFOUNDATIONCOLLECTIONSEXPORT
 @interface WFCStringMap : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
-#define OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Graphics_Imaging.lib")
+#ifndef OBJCUWPWINDOWSGRAPHICSIMAGINGEXPORT
+#define OBJCUWPWINDOWSGRAPHICSIMAGINGEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsGraphicsImaging.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -141,7 +141,7 @@ typedef unsigned WGIBitmapBufferAccessMode;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Graphics.Imaging.BitmapBounds
-OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+OBJCUWPWINDOWSGRAPHICSIMAGINGEXPORT
 @interface WGIBitmapBounds : NSObject
 + (instancetype)new;
 @property unsigned int x;
@@ -151,7 +151,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 @end
 
 // [struct] Windows.Graphics.Imaging.BitmapSize
-OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+OBJCUWPWINDOWSGRAPHICSIMAGINGEXPORT
 @interface WGIBitmapSize : NSObject
 + (instancetype)new;
 @property unsigned int width;
@@ -159,7 +159,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 @end
 
 // [struct] Windows.Graphics.Imaging.BitmapPlaneDescription
-OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+OBJCUWPWINDOWSGRAPHICSIMAGINGEXPORT
 @interface WGIBitmapPlaneDescription : NSObject
 + (instancetype)new;
 @property int startIndex;
@@ -176,7 +176,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 - (void)getPropertiesAsync:(id<NSFastEnumeration> /* NSString * */)propertiesToRetrieve success:(void (^)(WGIBitmapPropertySet*))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+OBJCUWPWINDOWSGRAPHICSIMAGINGEXPORT
 @interface WGIIBitmapPropertiesView : RTObject <WGIIBitmapPropertiesView>
 @end
 
@@ -201,7 +201,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 - (void)getPixelDataTransformedAsync:(WGIBitmapPixelFormat)pixelFormat alphaMode:(WGIBitmapAlphaMode)alphaMode transform:(WGIBitmapTransform*)transform exifOrientationMode:(WGIExifOrientationMode)exifOrientationMode colorManagementMode:(WGIColorManagementMode)colorManagementMode success:(void (^)(WGIPixelDataProvider*))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+OBJCUWPWINDOWSGRAPHICSIMAGINGEXPORT
 @interface WGIIBitmapFrame : RTObject <WGIIBitmapFrame>
 @end
 
@@ -220,7 +220,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 - (void)getPixelDataTransformedAsync:(WGIBitmapPixelFormat)pixelFormat alphaMode:(WGIBitmapAlphaMode)alphaMode transform:(WGIBitmapTransform*)transform exifOrientationMode:(WGIExifOrientationMode)exifOrientationMode colorManagementMode:(WGIColorManagementMode)colorManagementMode success:(void (^)(WGIPixelDataProvider*))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+OBJCUWPWINDOWSGRAPHICSIMAGINGEXPORT
 @interface WGIIBitmapFrameWithSoftwareBitmap : RTObject <WGIIBitmapFrameWithSoftwareBitmap>
 @end
 
@@ -230,7 +230,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 #ifndef __WGIBitmapTransform_DEFINED__
 #define __WGIBitmapTransform_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+OBJCUWPWINDOWSGRAPHICSIMAGINGEXPORT
 @interface WGIBitmapTransform : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -250,7 +250,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 #ifndef __WGIBitmapTypedValue_DEFINED__
 #define __WGIBitmapTypedValue_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+OBJCUWPWINDOWSGRAPHICSIMAGINGEXPORT
 @interface WGIBitmapTypedValue : RTObject
 + (WGIBitmapTypedValue*)make:(RTObject*)value type:(WFPropertyType)type ACTIVATOR;
 #if defined(__cplusplus)
@@ -266,7 +266,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 #ifndef __WGIBitmapPropertySet_DEFINED__
 #define __WGIBitmapPropertySet_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+OBJCUWPWINDOWSGRAPHICSIMAGINGEXPORT
 @interface WGIBitmapPropertySet : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -296,7 +296,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 #ifndef __WGIBitmapPropertiesView_DEFINED__
 #define __WGIBitmapPropertiesView_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+OBJCUWPWINDOWSGRAPHICSIMAGINGEXPORT
 @interface WGIBitmapPropertiesView : RTObject <WGIIBitmapPropertiesView>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -310,7 +310,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 #ifndef __WGIBitmapProperties_DEFINED__
 #define __WGIBitmapProperties_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+OBJCUWPWINDOWSGRAPHICSIMAGINGEXPORT
 @interface WGIBitmapProperties : RTObject <WGIIBitmapPropertiesView>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -325,7 +325,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 #ifndef __WGIPixelDataProvider_DEFINED__
 #define __WGIPixelDataProvider_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+OBJCUWPWINDOWSGRAPHICSIMAGINGEXPORT
 @interface WGIPixelDataProvider : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -343,7 +343,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+OBJCUWPWINDOWSGRAPHICSIMAGINGEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -358,7 +358,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+OBJCUWPWINDOWSGRAPHICSIMAGINGEXPORT
 @interface WSSIInputStream : RTObject <WSSIInputStream>
 @end
 
@@ -374,7 +374,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+OBJCUWPWINDOWSGRAPHICSIMAGINGEXPORT
 @interface WSSIOutputStream : RTObject <WSSIOutputStream>
 @end
 
@@ -399,7 +399,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+OBJCUWPWINDOWSGRAPHICSIMAGINGEXPORT
 @interface WSSIRandomAccessStream : RTObject <WSSIRandomAccessStream>
 @end
 
@@ -413,7 +413,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 @property (readonly) NSString * contentType;
 @end
 
-OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+OBJCUWPWINDOWSGRAPHICSIMAGINGEXPORT
 @interface WSSIContentTypeProvider : RTObject <WSSIContentTypeProvider>
 @end
 
@@ -434,7 +434,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+OBJCUWPWINDOWSGRAPHICSIMAGINGEXPORT
 @interface WSSIRandomAccessStreamWithContentType : RTObject <WSSIRandomAccessStreamWithContentType>
 @end
 
@@ -444,7 +444,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 #ifndef __WGIImageStream_DEFINED__
 #define __WGIImageStream_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+OBJCUWPWINDOWSGRAPHICSIMAGINGEXPORT
 @interface WGIImageStream : RTObject <WSSIRandomAccessStreamWithContentType, WSSIContentTypeProvider, WSSIRandomAccessStream, WSSIOutputStream, WFIClosable, WSSIInputStream>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -470,7 +470,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 #ifndef __WGIBitmapFrame_DEFINED__
 #define __WGIBitmapFrame_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+OBJCUWPWINDOWSGRAPHICSIMAGINGEXPORT
 @interface WGIBitmapFrame : RTObject <WGIIBitmapFrame, WGIIBitmapFrameWithSoftwareBitmap>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -498,7 +498,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 #ifndef __WGIBitmapCodecInformation_DEFINED__
 #define __WGIBitmapCodecInformation_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+OBJCUWPWINDOWSGRAPHICSIMAGINGEXPORT
 @interface WGIBitmapCodecInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -515,7 +515,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 #ifndef __WGIBitmapDecoder_DEFINED__
 #define __WGIBitmapDecoder_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+OBJCUWPWINDOWSGRAPHICSIMAGINGEXPORT
 @interface WGIBitmapDecoder : RTObject <WGIIBitmapFrame, WGIIBitmapFrameWithSoftwareBitmap>
 + (NSArray* /* WGIBitmapCodecInformation* */)getDecoderInformationEnumerator;
 + (void)createAsync:(RTObject<WSSIRandomAccessStream>*)stream success:(void (^)(WGIBitmapDecoder*))success failure:(void (^)(NSError*))failure;
@@ -558,7 +558,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 #ifndef __WGIBitmapEncoder_DEFINED__
 #define __WGIBitmapEncoder_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+OBJCUWPWINDOWSGRAPHICSIMAGINGEXPORT
 @interface WGIBitmapEncoder : RTObject
 + (NSArray* /* WGIBitmapCodecInformation* */)getEncoderInformationEnumerator;
 + (void)createAsync:(WFGUID*)encoderId stream:(RTObject<WSSIRandomAccessStream>*)stream success:(void (^)(WGIBitmapEncoder*))success failure:(void (^)(NSError*))failure;
@@ -599,7 +599,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+OBJCUWPWINDOWSGRAPHICSIMAGINGEXPORT
 @interface WFIMemoryBuffer : RTObject <WFIMemoryBuffer>
 @end
 
@@ -609,7 +609,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 #ifndef __WGIBitmapBuffer_DEFINED__
 #define __WGIBitmapBuffer_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+OBJCUWPWINDOWSGRAPHICSIMAGINGEXPORT
 @interface WGIBitmapBuffer : RTObject <WFIMemoryBuffer, WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -626,7 +626,7 @@ OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
 #ifndef __WGISoftwareBitmap_DEFINED__
 #define __WGISoftwareBitmap_DEFINED__
 
-OBJCUWP_WINDOWS_GRAPHICS_IMAGING_EXPORT
+OBJCUWPWINDOWSGRAPHICSIMAGINGEXPORT
 @interface WGISoftwareBitmap : RTObject <WFIClosable>
 + (WGISoftwareBitmap*)Copy:(WGISoftwareBitmap*)source;
 + (WGISoftwareBitmap*)convert:(WGISoftwareBitmap*)source format:(WGIBitmapPixelFormat)format;

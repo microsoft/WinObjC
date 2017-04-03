@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_NETWORKING_EXPORT
-#define OBJCUWP_WINDOWS_NETWORKING_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Networking.lib")
+#ifndef OBJCUWPWINDOWSNETWORKINGEXPORT
+#define OBJCUWPWINDOWSNETWORKINGEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsNetworking.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -174,7 +174,7 @@ typedef void(^WNCNetworkStatusChangedEventHandler)(RTObject* sender);
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Networking.Connectivity.NetworkUsageStates
-OBJCUWP_WINDOWS_NETWORKING_EXPORT
+OBJCUWPWINDOWSNETWORKINGEXPORT
 @interface WNCNetworkUsageStates : NSObject
 + (instancetype)new;
 @property WNCTriStates roaming;
@@ -191,7 +191,7 @@ typedef void(^WNCNetworkStatusChangedEventHandler)(RTObject* sender);
 #ifndef __WNCIPInformation_DEFINED__
 #define __WNCIPInformation_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_EXPORT
+OBJCUWPWINDOWSNETWORKINGEXPORT
 @interface WNCIPInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -206,7 +206,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 #ifndef __WNCDataPlanUsage_DEFINED__
 #define __WNCDataPlanUsage_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_EXPORT
+OBJCUWPWINDOWSNETWORKINGEXPORT
 @interface WNCDataPlanUsage : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -221,7 +221,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 #ifndef __WNCConnectionCost_DEFINED__
 #define __WNCConnectionCost_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_EXPORT
+OBJCUWPWINDOWSNETWORKINGEXPORT
 @interface WNCConnectionCost : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -239,7 +239,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 #ifndef __WNCDataPlanStatus_DEFINED__
 #define __WNCDataPlanStatus_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_EXPORT
+OBJCUWPWINDOWSNETWORKINGEXPORT
 @interface WNCDataPlanStatus : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -258,7 +258,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 #ifndef __WNCNetworkAdapter_DEFINED__
 #define __WNCNetworkAdapter_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_EXPORT
+OBJCUWPWINDOWSNETWORKINGEXPORT
 @interface WNCNetworkAdapter : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -277,7 +277,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 #ifndef __WNCDataUsage_DEFINED__
 #define __WNCDataUsage_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_EXPORT
+OBJCUWPWINDOWSNETWORKINGEXPORT
 @interface WNCDataUsage : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -292,7 +292,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 #ifndef __WNCNetworkSecuritySettings_DEFINED__
 #define __WNCNetworkSecuritySettings_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_EXPORT
+OBJCUWPWINDOWSNETWORKINGEXPORT
 @interface WNCNetworkSecuritySettings : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -307,7 +307,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 #ifndef __WNCWlanConnectionProfileDetails_DEFINED__
 #define __WNCWlanConnectionProfileDetails_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_EXPORT
+OBJCUWPWINDOWSNETWORKINGEXPORT
 @interface WNCWlanConnectionProfileDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -321,7 +321,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 #ifndef __WNCNetworkUsage_DEFINED__
 #define __WNCNetworkUsage_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_EXPORT
+OBJCUWPWINDOWSNETWORKINGEXPORT
 @interface WNCNetworkUsage : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -337,7 +337,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 #ifndef __WNCConnectivityInterval_DEFINED__
 #define __WNCConnectivityInterval_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_EXPORT
+OBJCUWPWINDOWSNETWORKINGEXPORT
 @interface WNCConnectivityInterval : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -352,7 +352,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 #ifndef __WNCAttributedNetworkUsage_DEFINED__
 #define __WNCAttributedNetworkUsage_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_EXPORT
+OBJCUWPWINDOWSNETWORKINGEXPORT
 @interface WNCAttributedNetworkUsage : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -370,7 +370,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 #ifndef __WNCLanIdentifierData_DEFINED__
 #define __WNCLanIdentifierData_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_EXPORT
+OBJCUWPWINDOWSNETWORKINGEXPORT
 @interface WNCLanIdentifierData : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -385,7 +385,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 #ifndef __WNCConnectionProfile_DEFINED__
 #define __WNCConnectionProfile_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_EXPORT
+OBJCUWPWINDOWSNETWORKINGEXPORT
 @interface WNCConnectionProfile : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -417,7 +417,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 #ifndef __WNCLanIdentifier_DEFINED__
 #define __WNCLanIdentifier_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_EXPORT
+OBJCUWPWINDOWSNETWORKINGEXPORT
 @interface WNCLanIdentifier : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -433,7 +433,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 #ifndef __WNCProxyConfiguration_DEFINED__
 #define __WNCProxyConfiguration_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_EXPORT
+OBJCUWPWINDOWSNETWORKINGEXPORT
 @interface WNCProxyConfiguration : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -448,7 +448,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 #ifndef __WNCConnectionProfileFilter_DEFINED__
 #define __WNCConnectionProfileFilter_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_EXPORT
+OBJCUWPWINDOWSNETWORKINGEXPORT
 @interface WNCConnectionProfileFilter : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -471,7 +471,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 #ifndef __WNCNetworkItem_DEFINED__
 #define __WNCNetworkItem_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_EXPORT
+OBJCUWPWINDOWSNETWORKINGEXPORT
 @interface WNCNetworkItem : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -486,7 +486,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 #ifndef __WNCRoutePolicy_DEFINED__
 #define __WNCRoutePolicy_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_EXPORT
+OBJCUWPWINDOWSNETWORKINGEXPORT
 @interface WNCRoutePolicy : RTObject
 + (WNCRoutePolicy*)makeRoutePolicy:(WNCConnectionProfile*)connectionProfile hostName:(WNHostName*)hostName type:(WNDomainNameType)type ACTIVATOR;
 #if defined(__cplusplus)
@@ -503,7 +503,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 #ifndef __WNCCellularApnContext_DEFINED__
 #define __WNCCellularApnContext_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_EXPORT
+OBJCUWPWINDOWSNETWORKINGEXPORT
 @interface WNCCellularApnContext : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -527,7 +527,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_NETWORKING_EXPORT
+OBJCUWPWINDOWSNETWORKINGEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -537,7 +537,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 #ifndef __WNCConnectionSession_DEFINED__
 #define __WNCConnectionSession_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_EXPORT
+OBJCUWPWINDOWSNETWORKINGEXPORT
 @interface WNCConnectionSession : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -552,7 +552,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 #ifndef __WNCNetworkInformation_DEFINED__
 #define __WNCNetworkInformation_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_EXPORT
+OBJCUWPWINDOWSNETWORKINGEXPORT
 @interface WNCNetworkInformation : RTObject
 + (void)findConnectionProfilesAsync:(WNCConnectionProfileFilter*)pProfileFilter success:(void (^)(NSArray* /* WNCConnectionProfile* */))success failure:(void (^)(NSError*))failure;
 + (NSArray* /* WNCConnectionProfile* */)getConnectionProfiles;
@@ -571,7 +571,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 #ifndef __WNCConnectivityManager_DEFINED__
 #define __WNCConnectivityManager_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_EXPORT
+OBJCUWPWINDOWSNETWORKINGEXPORT
 @interface WNCConnectivityManager : RTObject
 + (void)acquireConnectionAsync:(WNCCellularApnContext*)cellularApnContext success:(void (^)(WNCConnectionSession*))success failure:(void (^)(NSError*))failure;
 + (void)addHttpRoutePolicy:(WNCRoutePolicy*)routePolicy;
@@ -584,7 +584,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 #ifndef __WNCNetworkStateChangeEventDetails_DEFINED__
 #define __WNCNetworkStateChangeEventDetails_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_EXPORT
+OBJCUWPWINDOWSNETWORKINGEXPORT
 @interface WNCNetworkStateChangeEventDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -605,7 +605,7 @@ OBJCUWP_WINDOWS_NETWORKING_EXPORT
 #ifndef __WNCWwanConnectionProfileDetails_DEFINED__
 #define __WNCWwanConnectionProfileDetails_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_EXPORT
+OBJCUWPWINDOWSNETWORKINGEXPORT
 @interface WNCWwanConnectionProfileDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

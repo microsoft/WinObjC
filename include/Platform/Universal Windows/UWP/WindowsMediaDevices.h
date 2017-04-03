@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
-#define OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Media_Playback_Protection_Core_Capture_Devices.lib")
+#ifndef OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
+#define OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsMediaCaptureDevicesCorePlaybackProtection.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -292,7 +292,7 @@ typedef void(^WMDKeypadPressedEventHandler)(WMDCallControl* sender, WMDKeypadPre
 @property (readonly) WMDAudioDeviceRole role;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDIDefaultAudioDeviceChangedEventArgs : RTObject <WMDIDefaultAudioDeviceChangedEventArgs>
 @end
 
@@ -308,7 +308,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 - (RTObject<WFIAsyncAction>*)setMediaStreamPropertiesAsync:(WMCMediaStreamType)mediaStreamType mediaEncodingProperties:(RTObject<WMMIMediaEncodingProperties>*)mediaEncodingProperties;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDIMediaDeviceController : RTObject <WMDIMediaDeviceController>
 @end
 
@@ -318,7 +318,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDDefaultAudioCaptureDeviceChangedEventArgs_DEFINED__
 #define __WMDDefaultAudioCaptureDeviceChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDDefaultAudioCaptureDeviceChangedEventArgs : RTObject <WMDIDefaultAudioDeviceChangedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -333,7 +333,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDDefaultAudioRenderDeviceChangedEventArgs_DEFINED__
 #define __WMDDefaultAudioRenderDeviceChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDDefaultAudioRenderDeviceChangedEventArgs : RTObject <WMDIDefaultAudioDeviceChangedEventArgs>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -348,7 +348,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDMediaDevice_DEFINED__
 #define __WMDMediaDevice_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDMediaDevice : RTObject
 + (NSString *)getAudioCaptureSelector;
 + (NSString *)getAudioRenderSelector;
@@ -367,7 +367,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDAudioDeviceController_DEFINED__
 #define __WMDAudioDeviceController_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDAudioDeviceController : RTObject <WMDIMediaDeviceController>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -385,7 +385,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDVideoDeviceController_DEFINED__
 #define __WMDVideoDeviceController_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDVideoDeviceController : RTObject <WMDIMediaDeviceController>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -436,7 +436,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDSceneModeControl_DEFINED__
 #define __WMDSceneModeControl_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDSceneModeControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -452,7 +452,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDTorchControl_DEFINED__
 #define __WMDTorchControl_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDTorchControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -469,7 +469,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDFlashControl_DEFINED__
 #define __WMDFlashControl_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDFlashControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -491,7 +491,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDExposureCompensationControl_DEFINED__
 #define __WMDExposureCompensationControl_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDExposureCompensationControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -510,7 +510,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDIsoSpeedControl_DEFINED__
 #define __WMDIsoSpeedControl_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDIsoSpeedControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -534,7 +534,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDWhiteBalanceControl_DEFINED__
 #define __WMDWhiteBalanceControl_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDWhiteBalanceControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -555,7 +555,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDExposureControl_DEFINED__
 #define __WMDExposureControl_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDExposureControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -576,7 +576,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDZoomSettings_DEFINED__
 #define __WMDZoomSettings_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDZoomSettings : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -592,7 +592,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDZoomControl_DEFINED__
 #define __WMDZoomControl_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDZoomControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -613,7 +613,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDFocusSettings_DEFINED__
 #define __WMDFocusSettings_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDFocusSettings : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -633,7 +633,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDFocusControl_DEFINED__
 #define __WMDFocusControl_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDFocusControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -667,7 +667,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDRegionOfInterest_DEFINED__
 #define __WMDRegionOfInterest_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDRegionOfInterest : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -688,7 +688,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDRegionsOfInterestControl_DEFINED__
 #define __WMDRegionsOfInterestControl_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDRegionsOfInterestControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -708,7 +708,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDExposurePriorityVideoControl_DEFINED__
 #define __WMDExposurePriorityVideoControl_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDExposurePriorityVideoControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -723,7 +723,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDHdrVideoControl_DEFINED__
 #define __WMDHdrVideoControl_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDHdrVideoControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -739,7 +739,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDAdvancedPhotoCaptureSettings_DEFINED__
 #define __WMDAdvancedPhotoCaptureSettings_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDAdvancedPhotoCaptureSettings : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -754,7 +754,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDAdvancedPhotoControl_DEFINED__
 #define __WMDAdvancedPhotoControl_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDAdvancedPhotoControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -771,7 +771,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDOpticalImageStabilizationControl_DEFINED__
 #define __WMDOpticalImageStabilizationControl_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDOpticalImageStabilizationControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -787,7 +787,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDMediaDeviceControl_DEFINED__
 #define __WMDMediaDeviceControl_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDMediaDeviceControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -805,7 +805,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDLowLagPhotoSequenceControl_DEFINED__
 #define __WMDLowLagPhotoSequenceControl_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDLowLagPhotoSequenceControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -829,7 +829,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDLowLagPhotoControl_DEFINED__
 #define __WMDLowLagPhotoControl_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDLowLagPhotoControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -848,7 +848,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDPhotoConfirmationControl_DEFINED__
 #define __WMDPhotoConfirmationControl_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDPhotoConfirmationControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -864,7 +864,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDMediaDeviceControlCapabilities_DEFINED__
 #define __WMDMediaDeviceControlCapabilities_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDMediaDeviceControlCapabilities : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -883,7 +883,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDDialRequestedEventArgs_DEFINED__
 #define __WMDDialRequestedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDDialRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -898,7 +898,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDRedialRequestedEventArgs_DEFINED__
 #define __WMDRedialRequestedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDRedialRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -912,7 +912,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDKeypadPressedEventArgs_DEFINED__
 #define __WMDKeypadPressedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDKeypadPressedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -926,7 +926,7 @@ OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
 #ifndef __WMDCallControl_DEFINED__
 #define __WMDCallControl_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_PLAYBACK_PROTECTION_CORE_CAPTURE_DEVICES_EXPORT
+OBJCUWPWINDOWSMEDIACAPTUREDEVICESCOREPLAYBACKPROTECTIONEXPORT
 @interface WMDCallControl : RTObject
 + (WMDCallControl*)getDefault;
 + (WMDCallControl*)fromId:(NSString *)deviceId;

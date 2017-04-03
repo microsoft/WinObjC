@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_NETWORKING_PUSHNOTIFICATIONS_EXPORT
-#define OBJCUWP_WINDOWS_NETWORKING_PUSHNOTIFICATIONS_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Networking_PushNotifications.lib")
+#ifndef OBJCUWPWINDOWSNETWORKINGPUSHNOTIFICATIONSEXPORT
+#define OBJCUWPWINDOWSNETWORKINGPUSHNOTIFICATIONSEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsNetworkingPushNotifications.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -50,7 +50,7 @@ typedef unsigned WNPPushNotificationType;
 #ifndef __WNPPushNotificationChannel_DEFINED__
 #define __WNPPushNotificationChannel_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_PUSHNOTIFICATIONS_EXPORT
+OBJCUWPWINDOWSNETWORKINGPUSHNOTIFICATIONSEXPORT
 @interface WNPPushNotificationChannel : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -68,7 +68,7 @@ OBJCUWP_WINDOWS_NETWORKING_PUSHNOTIFICATIONS_EXPORT
 #ifndef __WNPPushNotificationChannelManagerForUser_DEFINED__
 #define __WNPPushNotificationChannelManagerForUser_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_PUSHNOTIFICATIONS_EXPORT
+OBJCUWPWINDOWSNETWORKINGPUSHNOTIFICATIONSEXPORT
 @interface WNPPushNotificationChannelManagerForUser : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -85,7 +85,7 @@ OBJCUWP_WINDOWS_NETWORKING_PUSHNOTIFICATIONS_EXPORT
 #ifndef __WNPPushNotificationReceivedEventArgs_DEFINED__
 #define __WNPPushNotificationReceivedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_PUSHNOTIFICATIONS_EXPORT
+OBJCUWPWINDOWSNETWORKINGPUSHNOTIFICATIONSEXPORT
 @interface WNPPushNotificationReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -104,7 +104,7 @@ OBJCUWP_WINDOWS_NETWORKING_PUSHNOTIFICATIONS_EXPORT
 #ifndef __WNPRawNotification_DEFINED__
 #define __WNPRawNotification_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_PUSHNOTIFICATIONS_EXPORT
+OBJCUWPWINDOWSNETWORKINGPUSHNOTIFICATIONSEXPORT
 @interface WNPRawNotification : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -118,7 +118,7 @@ OBJCUWP_WINDOWS_NETWORKING_PUSHNOTIFICATIONS_EXPORT
 #ifndef __WNPPushNotificationChannelManager_DEFINED__
 #define __WNPPushNotificationChannelManager_DEFINED__
 
-OBJCUWP_WINDOWS_NETWORKING_PUSHNOTIFICATIONS_EXPORT
+OBJCUWPWINDOWSNETWORKINGPUSHNOTIFICATIONSEXPORT
 @interface WNPPushNotificationChannelManager : RTObject
 + (WNPPushNotificationChannelManagerForUser*)getForUser:(WSUser*)user;
 + (void)createPushNotificationChannelForApplicationAsyncWithSuccess:(void (^)(WNPPushNotificationChannel*))success failure:(void (^)(NSError*))failure;

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_PHONE_UI_INPUT_EXPORT
-#define OBJCUWP_WINDOWS_PHONE_UI_INPUT_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Phone_UI_Input.lib")
+#ifndef OBJCUWPWINDOWSPHONEUIINPUTEXPORT
+#define OBJCUWPWINDOWSPHONEUIINPUTEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsPhoneUIInput.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -38,7 +38,7 @@
 #ifndef __WPUIBackPressedEventArgs_DEFINED__
 #define __WPUIBackPressedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_UI_INPUT_EXPORT
+OBJCUWPWINDOWSPHONEUIINPUTEXPORT
 @interface WPUIBackPressedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -52,7 +52,7 @@ OBJCUWP_WINDOWS_PHONE_UI_INPUT_EXPORT
 #ifndef __WPUICameraEventArgs_DEFINED__
 #define __WPUICameraEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_UI_INPUT_EXPORT
+OBJCUWPWINDOWSPHONEUIINPUTEXPORT
 @interface WPUICameraEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -65,7 +65,7 @@ OBJCUWP_WINDOWS_PHONE_UI_INPUT_EXPORT
 #ifndef __WPUIHardwareButtons_DEFINED__
 #define __WPUIHardwareButtons_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_UI_INPUT_EXPORT
+OBJCUWPWINDOWSPHONEUIINPUTEXPORT
 @interface WPUIHardwareButtons : RTObject
 + (EventRegistrationToken)addBackPressedEvent:(void(^)(RTObject*, WPUIBackPressedEventArgs*))del;
 + (void)removeBackPressedEvent:(EventRegistrationToken)tok;

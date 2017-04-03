@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_EXPORT
-#define OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_SocialInfo.lib")
+#ifndef OBJCUWPWINDOWSAPPLICATIONMODELSOCIALINFOEXPORT
+#define OBJCUWPWINDOWSAPPLICATIONMODELSOCIALINFOEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsApplicationModelSocialInfo.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -70,7 +70,7 @@ typedef unsigned WASSocialFeedUpdateMode;
 #ifndef __WASSocialUserInfo_DEFINED__
 #define __WASSocialUserInfo_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSOCIALINFOEXPORT
 @interface WASSocialUserInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -87,7 +87,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_EXPORT
 #ifndef __WASSocialFeedContent_DEFINED__
 #define __WASSocialFeedContent_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSOCIALINFOEXPORT
 @interface WASSocialFeedContent : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -103,7 +103,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_EXPORT
 #ifndef __WASSocialItemThumbnail_DEFINED__
 #define __WASSocialItemThumbnail_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSOCIALINFOEXPORT
 @interface WASSocialItemThumbnail : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -121,7 +121,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_EXPORT
 #ifndef __WASSocialFeedSharedItem_DEFINED__
 #define __WASSocialFeedSharedItem_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSOCIALINFOEXPORT
 @interface WASSocialFeedSharedItem : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -140,7 +140,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_EXPORT
 #ifndef __WASSocialFeedChildItem_DEFINED__
 #define __WASSocialFeedChildItem_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSOCIALINFOEXPORT
 @interface WASSocialFeedChildItem : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -161,7 +161,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_EXPORT
 #ifndef __WASSocialFeedItem_DEFINED__
 #define __WASSocialFeedItem_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSOCIALINFOEXPORT
 @interface WASSocialFeedItem : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)

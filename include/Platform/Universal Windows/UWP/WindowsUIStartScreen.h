@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
-#define OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_StartScreen.lib")
+#ifndef OBJCUWPWINDOWSUISTARTSCREENEXPORT
+#define OBJCUWPWINDOWSUISTARTSCREENEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUIStartScreen.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -84,7 +84,7 @@ typedef unsigned WUSForegroundText;
 #ifndef __WUSJumpListItem_DEFINED__
 #define __WUSJumpListItem_DEFINED__
 
-OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
+OBJCUWPWINDOWSUISTARTSCREENEXPORT
 @interface WUSJumpListItem : RTObject
 + (WUSJumpListItem*)createWithArguments:(NSString *)arguments displayName:(NSString *)displayName;
 + (WUSJumpListItem*)createSeparator;
@@ -106,7 +106,7 @@ OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
 #ifndef __WUSJumpList_DEFINED__
 #define __WUSJumpList_DEFINED__
 
-OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
+OBJCUWPWINDOWSUISTARTSCREENEXPORT
 @interface WUSJumpList : RTObject
 + (void)loadCurrentAsyncWithSuccess:(void (^)(WUSJumpList*))success failure:(void (^)(NSError*))failure;
 + (BOOL)isSupported;
@@ -124,7 +124,7 @@ OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
 #ifndef __WUSSecondaryTileVisualElements_DEFINED__
 #define __WUSSecondaryTileVisualElements_DEFINED__
 
-OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
+OBJCUWPWINDOWSUISTARTSCREENEXPORT
 @interface WUSSecondaryTileVisualElements : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -149,7 +149,7 @@ OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
 #ifndef __WUSSecondaryTile_DEFINED__
 #define __WUSSecondaryTile_DEFINED__
 
-OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
+OBJCUWPWINDOWSUISTARTSCREENEXPORT
 @interface WUSSecondaryTile : RTObject
 + (BOOL)exists:(NSString *)tileId;
 + (void)findAllAsyncWithSuccess:(void (^)(NSArray* /* WUSSecondaryTile* */))success failure:(void (^)(NSError*))failure;
@@ -197,7 +197,7 @@ OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
 #ifndef __WUSVisualElementsRequestedEventArgs_DEFINED__
 #define __WUSVisualElementsRequestedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
+OBJCUWPWINDOWSUISTARTSCREENEXPORT
 @interface WUSVisualElementsRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -211,7 +211,7 @@ OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
 #ifndef __WUSVisualElementsRequest_DEFINED__
 #define __WUSVisualElementsRequest_DEFINED__
 
-OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
+OBJCUWPWINDOWSUISTARTSCREENEXPORT
 @interface WUSVisualElementsRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -228,7 +228,7 @@ OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
 #ifndef __WUSVisualElementsRequestDeferral_DEFINED__
 #define __WUSVisualElementsRequestDeferral_DEFINED__
 
-OBJCUWP_WINDOWS_UI_STARTSCREEN_EXPORT
+OBJCUWPWINDOWSUISTARTSCREENEXPORT
 @interface WUSVisualElementsRequestDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

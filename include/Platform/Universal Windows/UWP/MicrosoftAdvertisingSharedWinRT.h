@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
-#define OBJCUWP_MICROSOFT_ADVERTISING_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Microsoft_Advertising.lib")
+#ifndef OBJCUWPMICROSOFTADVERTISINGEXPORT
+#define OBJCUWPMICROSOFTADVERTISINGEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_MSAds_BUILD
+#pragma comment(lib, "ObjCUWPMicrosoftAdvertising.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -48,7 +48,7 @@ typedef unsigned MASWSdkType;
 #import <Foundation/Foundation.h>
 
 // [struct] Microsoft.Advertising.Shared.WinRT.SdkInfo
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MASWSdkInfo : NSObject
 + (instancetype)new;
 @property (retain) NSString * sdkVersion;
@@ -60,7 +60,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __MASWAdvertisement_DEFINED__
 #define __MASWAdvertisement_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MASWAdvertisement : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -77,7 +77,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __MASWAdErrorEventArgs_DEFINED__
 #define __MASWAdErrorEventArgs_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MASWAdErrorEventArgs : RTObject
 + (MASWAdErrorEventArgs*)makeInstance1:(NSString *)msg code:(NSString *)code ACTIVATOR;
 #if defined(__cplusplus)
@@ -94,7 +94,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __MASWAdTagCollection_DEFINED__
 #define __MASWAdTagCollection_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MASWAdTagCollection : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -113,7 +113,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __MASWProjectedContext_DEFINED__
 #define __MASWProjectedContext_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MASWProjectedContext : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -128,7 +128,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __MASWAdPlacement_DEFINED__
 #define __MASWAdPlacement_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MASWAdPlacement : RTObject
 + (MASWAdPlacement*)makeInstance3:(MASWSdkType)sdkType ACTIVATOR;
 + (MASWAdPlacement*)makeInstance2:(MASWSdkType)sdkType serviceUrl:(NSString *)serviceUrl ACTIVATOR;
@@ -158,7 +158,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __MASWVideoResource_DEFINED__
 #define __MASWVideoResource_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MASWVideoResource : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -184,7 +184,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __MASWAdExtension_DEFINED__
 #define __MASWAdExtension_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MASWAdExtension : RTObject
 + (MASWAdExtension*)makeInstance1:(NSString *)type xmlData:(NSString *)xmlData ACTIVATOR;
 #if defined(__cplusplus)
@@ -201,7 +201,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __MASWActivityReporter_DEFINED__
 #define __MASWActivityReporter_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MASWActivityReporter : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -216,7 +216,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __MASWAdPackage_DEFINED__
 #define __MASWAdPackage_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MASWAdPackage : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -238,7 +238,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __MASWAdPod_DEFINED__
 #define __MASWAdPod_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MASWAdPod : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -258,7 +258,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __MASWAdSchedule_DEFINED__
 #define __MASWAdSchedule_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MASWAdSchedule : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -272,7 +272,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __MASWProjectedMediaConstraints_DEFINED__
 #define __MASWProjectedMediaConstraints_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MASWProjectedMediaConstraints : RTObject
 + (MASWProjectedMediaConstraints*)makeInstance1:(NSArray* /* NSString * */)supportedMimeTypes ACTIVATOR;
 #if defined(__cplusplus)
@@ -288,7 +288,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __MASWAdScheduleResult_DEFINED__
 #define __MASWAdScheduleResult_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MASWAdScheduleResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -303,7 +303,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __MASWAdScheduler_DEFINED__
 #define __MASWAdScheduler_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MASWAdScheduler : RTObject
 + (void)getScheduleAsync2:(NSString *)appId adId:(NSString *)adId timeoutMS:(unsigned int)timeoutMS sdkType:(MASWSdkType)sdkType adTags:(MASWAdTagCollection*)adTags success:(void (^)(MASWAdScheduleResult*))success failure:(void (^)(NSError*))failure;
 + (void)getScheduleAsync1:(NSString *)serviceUrl timeoutMS:(unsigned int)timeoutMS sdkType:(MASWSdkType)sdkType success:(void (^)(MASWAdScheduleResult*))success failure:(void (^)(NSError*))failure;
@@ -323,7 +323,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __MASWSdkInfoProvider_DEFINED__
 #define __MASWSdkInfoProvider_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MASWSdkInfoProvider : RTObject
 + (MASWSdkInfo*)getSdkInfo;
 + (instancetype)make __attribute__ ((ns_returns_retained));
@@ -338,7 +338,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __MASWEventLogging_DEFINED__
 #define __MASWEventLogging_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MASWEventLogging : RTObject
 + (unsigned int)adRendererPageAction;
 + (unsigned int)adRendererPageView;
@@ -354,7 +354,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __MASWProjectedIAdLogger_DEFINED__
 #define __MASWProjectedIAdLogger_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MASWProjectedIAdLogger : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -373,7 +373,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __MASWPlatformDependency_DEFINED__
 #define __MASWPlatformDependency_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MASWPlatformDependency : RTObject
 + (NSString *)getBootstrapZoomStyle;
 + (BOOL)isMobile;

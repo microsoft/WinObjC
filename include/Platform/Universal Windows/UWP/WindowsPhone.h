@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_PHONE_EXPORT
-#define OBJCUWP_WINDOWS_PHONE_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Phone.lib")
+#ifndef OBJCUWPWINDOWSPHONEEXPORT
+#define OBJCUWPWINDOWSPHONEEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsPhone.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_XAML_EXPORT
-#define OBJCUWP_WINDOWS_UI_XAML_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml.lib")
+#ifndef OBJCUWPWINDOWSUIXAMLEXPORT
+#define OBJCUWPWINDOWSUIXAMLEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUIXaml.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -943,7 +943,7 @@ typedef void(^WXCWebViewNavigationFailedEventHandler)(RTObject* sender, WXCWebVi
 - (void)getInsertionIndexes:(WFPoint*)position first:(int*)first second:(int*)second;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCIInsertionPanel : RTObject <WXCIInsertionPanel>
 @end
 
@@ -960,7 +960,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (WXDependencyObject*)containerFromIndex:(int)index;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCIItemContainerMapping : RTObject <WXCIItemContainerMapping>
 @end
 
@@ -974,7 +974,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (BOOL)navigate:(WUXITypeName*)sourcePageType;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCINavigate : RTObject <WXCINavigate>
 @end
 
@@ -997,7 +997,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)completeViewChangeTo:(WXCSemanticZoomLocation*)source destination:(WXCSemanticZoomLocation*)destination;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCISemanticZoomInformation : RTObject <WXCISemanticZoomInformation>
 @end
 
@@ -1011,7 +1011,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (WXDataTemplate*)selectTemplateCore:(RTObject*)item container:(WXDependencyObject*)container;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCIDataTemplateSelectorOverrides : RTObject <WXCIDataTemplateSelectorOverrides>
 @end
 
@@ -1025,7 +1025,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (WXDataTemplate*)selectTemplateForItemCore:(RTObject*)item;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCIDataTemplateSelectorOverrides2 : RTObject <WXCIDataTemplateSelectorOverrides2>
 @end
 
@@ -1039,7 +1039,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (WXCGroupStyle*)selectGroupStyleCore:(RTObject*)group level:(unsigned int)level;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCIGroupStyleSelectorOverrides : RTObject <WXCIGroupStyleSelectorOverrides>
 @end
 
@@ -1053,7 +1053,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (WXStyle*)selectStyleCore:(RTObject*)item container:(WXDependencyObject*)container;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCIStyleSelectorOverrides : RTObject <WXCIStyleSelectorOverrides>
 @end
 
@@ -1068,7 +1068,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)onContentTemplateSelectorChanged:(WXCDataTemplateSelector*)oldContentTemplateSelector newContentTemplateSelector:(WXCDataTemplateSelector*)newContentTemplateSelector;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCIContentPresenterOverrides : RTObject <WXCIContentPresenterOverrides>
 @end
 
@@ -1084,7 +1084,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)onContentTemplateSelectorChanged:(WXCDataTemplateSelector*)oldContentTemplateSelector newContentTemplateSelector:(WXCDataTemplateSelector*)newContentTemplateSelector;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCIContentControlOverrides : RTObject <WXCIContentControlOverrides>
 @end
 
@@ -1107,7 +1107,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)onGroupStyleSelectorChanged:(WXCGroupStyleSelector*)oldGroupStyleSelector newGroupStyleSelector:(WXCGroupStyleSelector*)newGroupStyleSelector;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCIItemsControlOverrides : RTObject <WXCIItemsControlOverrides>
 @end
 
@@ -1124,7 +1124,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)onHeaderChanged:(RTObject*)oldContent newContent:(RTObject*)newContent;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCIToggleSwitchOverrides : RTObject <WXCIToggleSwitchOverrides>
 @end
 
@@ -1140,7 +1140,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)bringIndexIntoView:(int)index;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCIVirtualizingPanelOverrides : RTObject <WXCIVirtualizingPanelOverrides>
 @end
 
@@ -1155,7 +1155,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)onDropDownOpened:(RTObject*)e;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCIComboBoxOverrides : RTObject <WXCIComboBoxOverrides>
 @end
 
@@ -1169,7 +1169,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)onCleanUpVirtualizedItem:(WXCCleanUpVirtualizedItemEventArgs*)e;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCIVirtualizingStackPanelOverrides : RTObject <WXCIVirtualizingStackPanelOverrides>
 @end
 
@@ -1183,7 +1183,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @property BOOL isCompact;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCICommandBarElement : RTObject <WXCICommandBarElement>
 @end
 
@@ -1198,7 +1198,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @property (readonly) BOOL isInOverflow;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCICommandBarElement2 : RTObject <WXCICommandBarElement2>
 @end
 
@@ -1213,7 +1213,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)onOpened:(RTObject*)e;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCIAppBarOverrides : RTObject <WXCIAppBarOverrides>
 @end
 
@@ -1228,7 +1228,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)onOpening:(RTObject*)e;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCIAppBarOverrides3 : RTObject <WXCIAppBarOverrides3>
 @end
 
@@ -1244,7 +1244,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)onNavigatingFrom:(WUXNNavigatingCancelEventArgs*)e;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCIPageOverrides : RTObject <WXCIPageOverrides>
 @end
 
@@ -1282,7 +1282,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)onDrop:(WXDragEventArgs*)e;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCIControlOverrides : RTObject <WXCIControlOverrides>
 @end
 
@@ -1296,7 +1296,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (WUIIInkDrawingAttributes*)createInkDrawingAttributesCore:(WUXMBrush*)brush strokeWidth:(double)strokeWidth;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCIInkToolbarCustomPenOverrides : RTObject <WXCIInkToolbarCustomPenOverrides>
 @end
 
@@ -1306,7 +1306,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCBackClickEventArgs_DEFINED__
 #define __WXCBackClickEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCBackClickEventArgs : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1321,7 +1321,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCDragItemsStartingEventArgs_DEFINED__
 #define __WXCDragItemsStartingEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCDragItemsStartingEventArgs : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1338,7 +1338,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCNotifyEventArgs_DEFINED__
 #define __WXCNotifyEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCNotifyEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1353,7 +1353,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCSemanticZoomViewChangedEventArgs_DEFINED__
 #define __WXCSemanticZoomViewChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCSemanticZoomViewChangedEventArgs : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1370,7 +1370,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCTextControlPasteEventArgs_DEFINED__
 #define __WXCTextControlPasteEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCTextControlPasteEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1384,7 +1384,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCContainerContentChangingEventArgs_DEFINED__
 #define __WXCContainerContentChangingEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCContainerContentChangingEventArgs : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1406,7 +1406,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCSemanticZoomLocation_DEFINED__
 #define __WXCSemanticZoomLocation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCSemanticZoomLocation : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1422,7 +1422,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCCandidateWindowBoundsChangedEventArgs_DEFINED__
 #define __WXCCandidateWindowBoundsChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCCandidateWindowBoundsChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1436,7 +1436,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCChoosingGroupHeaderContainerEventArgs_DEFINED__
 #define __WXCChoosingGroupHeaderContainerEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCChoosingGroupHeaderContainerEventArgs : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1453,7 +1453,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCChoosingItemContainerEventArgs_DEFINED__
 #define __WXCChoosingItemContainerEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCChoosingItemContainerEventArgs : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1471,7 +1471,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCColumnDefinitionCollection_DEFINED__
 #define __WXCColumnDefinitionCollection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCColumnDefinitionCollection : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1497,7 +1497,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCDataTemplateSelector_DEFINED__
 #define __WXCDataTemplateSelector_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCDataTemplateSelector : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1515,7 +1515,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCDragItemsCompletedEventArgs_DEFINED__
 #define __WXCDragItemsCompletedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCDragItemsCompletedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1530,7 +1530,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCStyleSelector_DEFINED__
 #define __WXCStyleSelector_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCStyleSelector : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1551,7 +1551,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)removePropertyChangedEvent:(EventRegistrationToken)tok;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXDINotifyPropertyChanged : RTObject <WUXDINotifyPropertyChanged>
 @end
 
@@ -1561,7 +1561,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCGroupStyle_DEFINED__
 #define __WXCGroupStyle_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCGroupStyle : RTObject <WUXDINotifyPropertyChanged>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1584,7 +1584,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCGroupStyleSelector_DEFINED__
 #define __WXCGroupStyleSelector_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCGroupStyleSelector : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1600,7 +1600,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCItemCollection_DEFINED__
 #define __WXCItemCollection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCItemCollection : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1630,7 +1630,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCItemContainerGenerator_DEFINED__
 #define __WXCItemContainerGenerator_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCItemContainerGenerator : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1659,7 +1659,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCMediaTransportControlsHelper_DEFINED__
 #define __WXCMediaTransportControlsHelper_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCMediaTransportControlsHelper : RTObject
 + (id /* int */)getDropoutOrder:(WXUIElement*)element;
 + (void)setDropoutOrder:(WXUIElement*)element value:(id /* int */)value;
@@ -1675,7 +1675,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCRichEditBoxTextChangingEventArgs_DEFINED__
 #define __WXCRichEditBoxTextChangingEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCRichEditBoxTextChangingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1688,7 +1688,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCRowDefinitionCollection_DEFINED__
 #define __WXCRowDefinitionCollection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCRowDefinitionCollection : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1714,7 +1714,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCTextBoxTextChangingEventArgs_DEFINED__
 #define __WXCTextBoxTextChangingEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCTextBoxTextChangingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1727,7 +1727,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCTextCompositionChangedEventArgs_DEFINED__
 #define __WXCTextCompositionChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCTextCompositionChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1742,7 +1742,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCTextCompositionEndedEventArgs_DEFINED__
 #define __WXCTextCompositionEndedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCTextCompositionEndedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1757,7 +1757,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCTextCompositionStartedEventArgs_DEFINED__
 #define __WXCTextCompositionStartedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCTextCompositionStartedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1772,7 +1772,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCToolTipService_DEFINED__
 #define __WXCToolTipService_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCToolTipService : RTObject
 + (WUXCPPlacementMode)getPlacement:(WXDependencyObject*)element;
 + (void)setPlacement:(WXDependencyObject*)element value:(WUXCPPlacementMode)value;
@@ -1794,7 +1794,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCUIElementCollection_DEFINED__
 #define __WXCUIElementCollection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCUIElementCollection : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1821,7 +1821,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCCalendarViewDayItemChangingEventArgs_DEFINED__
 #define __WXCCalendarViewDayItemChangingEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCCalendarViewDayItemChangingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1839,7 +1839,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCHubSectionHeaderClickEventArgs_DEFINED__
 #define __WXCHubSectionHeaderClickEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCHubSectionHeaderClickEventArgs : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -1854,7 +1854,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCSectionsInViewChangedEventArgs_DEFINED__
 #define __WXCSectionsInViewChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCSectionsInViewChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1869,7 +1869,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCWebViewNavigationFailedEventArgs_DEFINED__
 #define __WXCWebViewNavigationFailedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCWebViewNavigationFailedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1884,7 +1884,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCCalendarDatePickerDateChangedEventArgs_DEFINED__
 #define __WXCCalendarDatePickerDateChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCCalendarDatePickerDateChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1899,7 +1899,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCCalendarViewSelectedDatesChangedEventArgs_DEFINED__
 #define __WXCCalendarViewSelectedDatesChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCCalendarViewSelectedDatesChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1914,7 +1914,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCContentDialogButtonClickDeferral_DEFINED__
 #define __WXCContentDialogButtonClickDeferral_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCContentDialogButtonClickDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1928,7 +1928,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCContentDialogButtonClickEventArgs_DEFINED__
 #define __WXCContentDialogButtonClickEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCContentDialogButtonClickEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1943,7 +1943,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCContentDialogClosedEventArgs_DEFINED__
 #define __WXCContentDialogClosedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCContentDialogClosedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1957,7 +1957,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCContentDialogClosingDeferral_DEFINED__
 #define __WXCContentDialogClosingDeferral_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCContentDialogClosingDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1971,7 +1971,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCContentDialogClosingEventArgs_DEFINED__
 #define __WXCContentDialogClosingEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCContentDialogClosingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1987,7 +1987,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCContentDialogOpenedEventArgs_DEFINED__
 #define __WXCContentDialogOpenedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCContentDialogOpenedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -2000,7 +2000,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCDatePickerValueChangedEventArgs_DEFINED__
 #define __WXCDatePickerValueChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCDatePickerValueChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -2015,7 +2015,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCDynamicOverflowItemsChangingEventArgs_DEFINED__
 #define __WXCDynamicOverflowItemsChangingEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCDynamicOverflowItemsChangingEventArgs : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -2030,7 +2030,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCHubSectionCollection_DEFINED__
 #define __WXCHubSectionCollection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCHubSectionCollection : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -2056,7 +2056,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCListViewPersistenceHelper_DEFINED__
 #define __WXCListViewPersistenceHelper_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCListViewPersistenceHelper : RTObject
 + (NSString *)getRelativeScrollPosition:(WXCListViewBase*)listViewBase itemToKeyHandler:(WXCListViewItemToKeyHandler)itemToKeyHandler;
 // Failed to generate member SetRelativeScrollPositionAsync (Can't marshal Windows.Foundation.IAsyncOperation`1<System.Object>)
@@ -2071,7 +2071,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCScrollViewerView_DEFINED__
 #define __WXCScrollViewerView_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCScrollViewerView : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -2087,7 +2087,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCScrollViewerViewChangedEventArgs_DEFINED__
 #define __WXCScrollViewerViewChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCScrollViewerViewChangedEventArgs : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -2102,7 +2102,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCScrollViewerViewChangingEventArgs_DEFINED__
 #define __WXCScrollViewerViewChangingEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCScrollViewerViewChangingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -2118,7 +2118,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCSearchBoxQueryChangedEventArgs_DEFINED__
 #define __WXCSearchBoxQueryChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCSearchBoxQueryChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -2134,7 +2134,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCSearchBoxQuerySubmittedEventArgs_DEFINED__
 #define __WXCSearchBoxQuerySubmittedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCSearchBoxQuerySubmittedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -2151,7 +2151,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCSearchBoxResultSuggestionChosenEventArgs_DEFINED__
 #define __WXCSearchBoxResultSuggestionChosenEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCSearchBoxResultSuggestionChosenEventArgs : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -2167,7 +2167,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCSearchBoxSuggestionsRequestedEventArgs_DEFINED__
 #define __WXCSearchBoxSuggestionsRequestedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCSearchBoxSuggestionsRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -2184,7 +2184,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCSplitViewPaneClosingEventArgs_DEFINED__
 #define __WXCSplitViewPaneClosingEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCSplitViewPaneClosingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -2198,7 +2198,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCTimePickerValueChangedEventArgs_DEFINED__
 #define __WXCTimePickerValueChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCTimePickerValueChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -2213,7 +2213,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCWebViewContentLoadingEventArgs_DEFINED__
 #define __WXCWebViewContentLoadingEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCWebViewContentLoadingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -2227,7 +2227,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCWebViewDeferredPermissionRequest_DEFINED__
 #define __WXCWebViewDeferredPermissionRequest_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCWebViewDeferredPermissionRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -2245,7 +2245,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCWebViewDOMContentLoadedEventArgs_DEFINED__
 #define __WXCWebViewDOMContentLoadedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCWebViewDOMContentLoadedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -2259,7 +2259,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCWebViewLongRunningScriptDetectedEventArgs_DEFINED__
 #define __WXCWebViewLongRunningScriptDetectedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCWebViewLongRunningScriptDetectedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -2274,7 +2274,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCWebViewNavigationCompletedEventArgs_DEFINED__
 #define __WXCWebViewNavigationCompletedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCWebViewNavigationCompletedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -2290,7 +2290,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCWebViewNavigationStartingEventArgs_DEFINED__
 #define __WXCWebViewNavigationStartingEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCWebViewNavigationStartingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -2305,7 +2305,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCWebViewNewWindowRequestedEventArgs_DEFINED__
 #define __WXCWebViewNewWindowRequestedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCWebViewNewWindowRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -2321,7 +2321,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCWebViewPermissionRequest_DEFINED__
 #define __WXCWebViewPermissionRequest_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCWebViewPermissionRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -2341,7 +2341,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCWebViewPermissionRequestedEventArgs_DEFINED__
 #define __WXCWebViewPermissionRequestedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCWebViewPermissionRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -2355,7 +2355,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCWebViewSettings_DEFINED__
 #define __WXCWebViewSettings_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCWebViewSettings : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -2370,7 +2370,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCWebViewUnsupportedUriSchemeIdentifiedEventArgs_DEFINED__
 #define __WXCWebViewUnsupportedUriSchemeIdentifiedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCWebViewUnsupportedUriSchemeIdentifiedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -2385,7 +2385,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCWebViewUnviewableContentIdentifiedEventArgs_DEFINED__
 #define __WXCWebViewUnviewableContentIdentifiedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCWebViewUnviewableContentIdentifiedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -2401,7 +2401,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -2422,7 +2422,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCColumnDefinition_DEFINED__
 #define __WXCColumnDefinition_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCColumnDefinition : WXDependencyObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -2443,7 +2443,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCRowDefinition_DEFINED__
 #define __WXCRowDefinition_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCRowDefinition : WXDependencyObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -2464,7 +2464,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCAutoSuggestBoxQuerySubmittedEventArgs_DEFINED__
 #define __WXCAutoSuggestBoxQuerySubmittedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCAutoSuggestBoxQuerySubmittedEventArgs : WXDependencyObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -2480,7 +2480,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCAutoSuggestBoxSuggestionChosenEventArgs_DEFINED__
 #define __WXCAutoSuggestBoxSuggestionChosenEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCAutoSuggestBoxSuggestionChosenEventArgs : WXDependencyObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -2495,7 +2495,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCAutoSuggestBoxTextChangedEventArgs_DEFINED__
 #define __WXCAutoSuggestBoxTextChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCAutoSuggestBoxTextChangedEventArgs : WXDependencyObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -2512,7 +2512,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXRoutedEventArgs_DEFINED__
 #define __WXRoutedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXRoutedEventArgs : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -2527,7 +2527,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCCleanUpVirtualizedItemEventArgs_DEFINED__
 #define __WXCCleanUpVirtualizedItemEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCCleanUpVirtualizedItemEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -2543,7 +2543,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCContextMenuEventArgs_DEFINED__
 #define __WXCContextMenuEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCContextMenuEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -2559,7 +2559,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCItemClickEventArgs_DEFINED__
 #define __WXCItemClickEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCItemClickEventArgs : WXRoutedEventArgs
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -2574,7 +2574,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCSelectionChangedEventArgs_DEFINED__
 #define __WXCSelectionChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCSelectionChangedEventArgs : WXRoutedEventArgs
 + (WXCSelectionChangedEventArgs*)makeInstanceWithRemovedItemsAndAddedItems:(NSMutableArray* /* RTObject* */)removedItems addedItems:(NSMutableArray* /* RTObject* */)addedItems ACTIVATOR;
 #if defined(__cplusplus)
@@ -2590,7 +2590,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCTextChangedEventArgs_DEFINED__
 #define __WXCTextChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCTextChangedEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -2603,7 +2603,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXFrameworkTemplate_DEFINED__
 #define __WXFrameworkTemplate_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXFrameworkTemplate : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -2616,7 +2616,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCItemsPanelTemplate_DEFINED__
 #define __WXCItemsPanelTemplate_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCItemsPanelTemplate : WXFrameworkTemplate
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -2636,7 +2636,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)onApplyTemplate;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXIFrameworkElementOverrides : RTObject <WXIFrameworkElementOverrides>
 @end
 
@@ -2650,7 +2650,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (BOOL)goToElementStateCore:(NSString *)stateName useTransitions:(BOOL)useTransitions;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXIFrameworkElementOverrides2 : RTObject <WXIFrameworkElementOverrides2>
 @end
 
@@ -2666,7 +2666,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (id<NSFastEnumeration> /* id<NSFastEnumeration> < WFPoint* > */)findSubElementsForTouchTargeting:(WFPoint*)point boundingRect:(WFRect*)boundingRect;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXIUIElementOverrides : RTObject <WXIUIElementOverrides>
 @end
 
@@ -2676,7 +2676,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXUIElement_DEFINED__
 #define __WXUIElement_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXUIElement : WXDependencyObject
 + (BOOL)tryStartDirectManipulation:(WUXIPointer*)value;
 #if defined(__cplusplus)
@@ -2845,7 +2845,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXFrameworkElement_DEFINED__
 #define __WXFrameworkElement_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXFrameworkElement : WXUIElement
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -2931,7 +2931,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCPanel_DEFINED__
 #define __WXCPanel_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCPanel : WXFrameworkElement
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -2951,7 +2951,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCBorder_DEFINED__
 #define __WXCBorder_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCBorder : WXFrameworkElement
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -2978,7 +2978,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCCaptureElement_DEFINED__
 #define __WXCCaptureElement_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCCaptureElement : WXFrameworkElement
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -2996,7 +2996,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCContentPresenter_DEFINED__
 #define __WXCContentPresenter_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCContentPresenter : WXFrameworkElement
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -3062,7 +3062,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCImage_DEFINED__
 #define __WXCImage_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCImage : WXFrameworkElement
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -3101,7 +3101,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (float)getRegularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment offset:(float*)offset;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXCPIScrollSnapPointsInfo : RTObject <WUXCPIScrollSnapPointsInfo>
 @end
 
@@ -3111,7 +3111,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCItemsPresenter_DEFINED__
 #define __WXCItemsPresenter_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCItemsPresenter : WXFrameworkElement <WUXCPIScrollSnapPointsInfo>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -3147,7 +3147,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCRichTextBlockOverflow_DEFINED__
 #define __WXCRichTextBlockOverflow_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCRichTextBlockOverflow : WXFrameworkElement
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -3175,7 +3175,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCRichTextBlock_DEFINED__
 #define __WXCRichTextBlock_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCRichTextBlock : WXFrameworkElement
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -3253,7 +3253,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCTextBlock_DEFINED__
 #define __WXCTextBlock_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCTextBlock : WXFrameworkElement
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -3327,7 +3327,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCViewbox_DEFINED__
 #define __WXCViewbox_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCViewbox : WXFrameworkElement
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -3346,7 +3346,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCCanvas_DEFINED__
 #define __WXCCanvas_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCCanvas : WXCPanel
 + (double)getLeft:(WXUIElement*)element;
 + (void)setLeft:(WXUIElement*)element length:(double)length;
@@ -3369,7 +3369,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCGrid_DEFINED__
 #define __WXCGrid_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCGrid : WXCPanel
 + (int)getRow:(WXFrameworkElement*)element;
 + (void)setRow:(WXFrameworkElement*)element value:(int)value;
@@ -3405,7 +3405,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCRelativePanel_DEFINED__
 #define __WXCRelativePanel_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCRelativePanel : WXCPanel
 + (RTObject*)getLeftOf:(WXUIElement*)element;
 + (void)setLeftOf:(WXUIElement*)element value:(RTObject*)value;
@@ -3475,7 +3475,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCStackPanel_DEFINED__
 #define __WXCStackPanel_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCStackPanel : WXCPanel <WUXCPIScrollSnapPointsInfo, WXCIInsertionPanel>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -3510,7 +3510,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCVariableSizedWrapGrid_DEFINED__
 #define __WXCVariableSizedWrapGrid_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCVariableSizedWrapGrid : WXCPanel
 + (int)getRowSpan:(WXUIElement*)element;
 + (void)setRowSpan:(WXUIElement*)element value:(int)value;
@@ -3542,7 +3542,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCVirtualizingPanel_DEFINED__
 #define __WXCVirtualizingPanel_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCVirtualizingPanel : WXCPanel
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -3562,7 +3562,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXCPOrientedVirtualizingPanel_DEFINED__
 #define __WUXCPOrientedVirtualizingPanel_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXCPOrientedVirtualizingPanel : WXCVirtualizingPanel <WUXCPIScrollSnapPointsInfo, WXCIInsertionPanel>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -3608,7 +3608,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCVirtualizingStackPanel_DEFINED__
 #define __WXCVirtualizingStackPanel_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCVirtualizingStackPanel : WUXCPOrientedVirtualizingPanel
 + (WXCVirtualizationMode)getVirtualizationMode:(WXDependencyObject*)element;
 + (void)setVirtualizationMode:(WXDependencyObject*)element value:(WXCVirtualizationMode)value;
@@ -3634,7 +3634,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCIconElement_DEFINED__
 #define __WXCIconElement_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCIconElement : WXFrameworkElement
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -3649,7 +3649,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCInkCanvas_DEFINED__
 #define __WXCInkCanvas_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCInkCanvas : WXFrameworkElement
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -3664,7 +3664,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCMediaElement_DEFINED__
 #define __WXCMediaElement_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCMediaElement : WXFrameworkElement
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -3788,7 +3788,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCMediaPlayerPresenter_DEFINED__
 #define __WXCMediaPlayerPresenter_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCMediaPlayerPresenter : WXFrameworkElement
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -3808,7 +3808,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCWebView_DEFINED__
 #define __WXCWebView_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCWebView : WXFrameworkElement
 + (RTObject<WFIAsyncAction>*)clearTemporaryWebDataAsync;
 + (instancetype)make __attribute__ ((ns_returns_retained));
@@ -3905,7 +3905,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCBitmapIcon_DEFINED__
 #define __WXCBitmapIcon_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCBitmapIcon : WXCIconElement
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -3921,7 +3921,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCFontIcon_DEFINED__
 #define __WXCFontIcon_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCFontIcon : WXCIconElement
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -3949,7 +3949,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCItemsStackPanel_DEFINED__
 #define __WXCItemsStackPanel_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCItemsStackPanel : WXCPanel
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -3979,7 +3979,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCItemsWrapGrid_DEFINED__
 #define __WXCItemsWrapGrid_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCItemsWrapGrid : WXCPanel
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -4014,7 +4014,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCPathIcon_DEFINED__
 #define __WXCPathIcon_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCPathIcon : WXCIconElement
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -4030,7 +4030,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCScrollContentPresenter_DEFINED__
 #define __WXCScrollContentPresenter_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCScrollContentPresenter : WXCContentPresenter
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -4068,7 +4068,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCSymbolIcon_DEFINED__
 #define __WXCSymbolIcon_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCSymbolIcon : WXCIconElement
 + (WXCSymbolIcon*)makeInstanceWithSymbol:(WXCSymbol)symbol ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
@@ -4085,7 +4085,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCSwapChainBackgroundPanel_DEFINED__
 #define __WXCSwapChainBackgroundPanel_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCSwapChainBackgroundPanel : WXCGrid
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -4100,7 +4100,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCSwapChainPanel_DEFINED__
 #define __WXCSwapChainPanel_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCSwapChainPanel : WXCGrid
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -4121,7 +4121,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCWrapGrid_DEFINED__
 #define __WXCWrapGrid_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCWrapGrid : WUXCPOrientedVirtualizingPanel
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -4147,7 +4147,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCFocusDisengagedEventArgs_DEFINED__
 #define __WXCFocusDisengagedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCFocusDisengagedEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -4160,7 +4160,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCFocusEngagedEventArgs_DEFINED__
 #define __WXCFocusEngagedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCFocusEngagedEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -4173,7 +4173,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCControlTemplate_DEFINED__
 #define __WXCControlTemplate_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCControlTemplate : WXFrameworkTemplate
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -4188,7 +4188,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCControl_DEFINED__
 #define __WXCControl_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCControl : WXFrameworkElement
 + (BOOL)getIsTemplateFocusTarget:(WXFrameworkElement*)element;
 + (void)setIsTemplateFocusTarget:(WXFrameworkElement*)element value:(BOOL)value;
@@ -4298,7 +4298,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCSemanticZoom_DEFINED__
 #define __WXCSemanticZoom_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCSemanticZoom : WXCControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -4327,7 +4327,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCContentControl_DEFINED__
 #define __WXCContentControl_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCContentControl : WXCControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -4353,7 +4353,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCListViewBaseHeaderItem_DEFINED__
 #define __WXCListViewBaseHeaderItem_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCListViewBaseHeaderItem : WXCContentControl
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -4366,7 +4366,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCItemsControl_DEFINED__
 #define __WXCItemsControl_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCItemsControl : WXCControl <WXCIItemContainerMapping>
 + (WXCItemsControl*)getItemsOwner:(WXDependencyObject*)element;
 + (WXCItemsControl*)itemsControlFromItemContainer:(WXDependencyObject*)container;
@@ -4421,7 +4421,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCMediaTransportControls_DEFINED__
 #define __WXCMediaTransportControls_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCMediaTransportControls : WXCControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -4485,7 +4485,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCPasswordBox_DEFINED__
 #define __WXCPasswordBox_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCPasswordBox : WXCControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -4530,7 +4530,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCProgressRing_DEFINED__
 #define __WXCProgressRing_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCProgressRing : WXCControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -4547,7 +4547,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCRichEditBox_DEFINED__
 #define __WXCRichEditBox_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCRichEditBox : WXCControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -4613,7 +4613,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCTextBox_DEFINED__
 #define __WXCTextBox_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCTextBox : WXCControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -4686,7 +4686,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCToggleSwitch_DEFINED__
 #define __WXCToggleSwitch_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCToggleSwitch : WXCControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -4721,7 +4721,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCUserControl_DEFINED__
 #define __WXCUserControl_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCUserControl : WXCControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -4737,7 +4737,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCGroupItem_DEFINED__
 #define __WXCGroupItem_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCGroupItem : WXCContentControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -4751,7 +4751,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCSettingsFlyout_DEFINED__
 #define __WXCSettingsFlyout_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCSettingsFlyout : WXCContentControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -4779,7 +4779,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCToolTip_DEFINED__
 #define __WXCToolTip_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCToolTip : WXCContentControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -4808,7 +4808,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXCPSelectorItem_DEFINED__
 #define __WUXCPSelectorItem_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXCPSelectorItem : WXCContentControl
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -4823,7 +4823,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCComboBoxItem_DEFINED__
 #define __WXCComboBoxItem_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCComboBoxItem : WUXCPSelectorItem
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -4837,7 +4837,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCFlipViewItem_DEFINED__
 #define __WXCFlipViewItem_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCFlipViewItem : WUXCPSelectorItem
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -4851,7 +4851,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCListBoxItem_DEFINED__
 #define __WXCListBoxItem_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCListBoxItem : WUXCPSelectorItem
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -4871,7 +4871,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)onValueChanged:(double)oldValue newValue:(double)newValue;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXCPIRangeBaseOverrides : RTObject <WUXCPIRangeBaseOverrides>
 @end
 
@@ -4881,7 +4881,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXCPRangeBase_DEFINED__
 #define __WUXCPRangeBase_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXCPRangeBase : WXCControl
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -4909,7 +4909,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCProgressBar_DEFINED__
 #define __WXCProgressBar_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCProgressBar : WUXCPRangeBase
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -4930,7 +4930,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCSlider_DEFINED__
 #define __WXCSlider_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCSlider : WUXCPRangeBase
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -4966,7 +4966,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXCPButtonBase_DEFINED__
 #define __WUXCPButtonBase_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXCPButtonBase : WXCContentControl
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -4991,7 +4991,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCButton_DEFINED__
 #define __WXCButton_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCButton : WUXCPButtonBase
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -5007,7 +5007,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCHyperlinkButton_DEFINED__
 #define __WXCHyperlinkButton_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCHyperlinkButton : WUXCPButtonBase
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -5023,7 +5023,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXCPSelector_DEFINED__
 #define __WUXCPSelector_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXCPSelector : WXCItemsControl
 + (BOOL)getIsSelectionActive:(WXDependencyObject*)element;
 #if defined(__cplusplus)
@@ -5049,7 +5049,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCListViewBase_DEFINED__
 #define __WXCListViewBase_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCListViewBase : WUXCPSelector <WXCISemanticZoomInformation>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -5133,7 +5133,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCComboBox_DEFINED__
 #define __WXCComboBox_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCComboBox : WUXCPSelector
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -5172,7 +5172,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCFlipView_DEFINED__
 #define __WXCFlipView_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCFlipView : WUXCPSelector
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -5188,7 +5188,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCListBox_DEFINED__
 #define __WXCListBox_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCListBox : WUXCPSelector
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -5213,7 +5213,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)onToggle;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXCPIToggleButtonOverrides : RTObject <WUXCPIToggleButtonOverrides>
 @end
 
@@ -5223,7 +5223,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXCPToggleButton_DEFINED__
 #define __WUXCPToggleButton_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXCPToggleButton : WUXCPButtonBase
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -5248,7 +5248,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCCheckBox_DEFINED__
 #define __WXCCheckBox_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCCheckBox : WUXCPToggleButton
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -5262,7 +5262,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCRadioButton_DEFINED__
 #define __WXCRadioButton_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCRadioButton : WUXCPToggleButton
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -5278,7 +5278,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCCalendarView_DEFINED__
 #define __WXCCalendarView_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCCalendarView : WXCControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -5400,7 +5400,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCCalendarViewDayItem_DEFINED__
 #define __WXCCalendarViewDayItem_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCCalendarViewDayItem : WXCControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -5419,7 +5419,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCHubSection_DEFINED__
 #define __WXCHubSection_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCHubSection : WXCControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -5441,7 +5441,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCMenuFlyoutItemBase_DEFINED__
 #define __WXCMenuFlyoutItemBase_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCMenuFlyoutItemBase : WXCControl
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -5454,7 +5454,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCAppBarSeparator_DEFINED__
 #define __WXCAppBarSeparator_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCAppBarSeparator : WXCControl <WXCICommandBarElement, WXCICommandBarElement2>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -5474,7 +5474,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCCalendarDatePicker_DEFINED__
 #define __WXCCalendarDatePicker_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCCalendarDatePicker : WXCControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -5532,7 +5532,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCDatePicker_DEFINED__
 #define __WXCDatePicker_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCDatePicker : WXCControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -5576,7 +5576,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCHub_DEFINED__
 #define __WXCHub_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCHub : WXCControl <WXCISemanticZoomInformation>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -5619,7 +5619,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCMediaPlayerElement_DEFINED__
 #define __WXCMediaPlayerElement_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCMediaPlayerElement : WXCControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -5649,7 +5649,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCSearchBox_DEFINED__
 #define __WXCSearchBox_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCSearchBox : WXCControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -5686,7 +5686,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCSplitView_DEFINED__
 #define __WXCSplitView_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCSplitView : WXCControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -5724,7 +5724,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCTimePicker_DEFINED__
 #define __WXCTimePicker_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCTimePicker : WXCControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -5752,7 +5752,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCAppBar_DEFINED__
 #define __WXCAppBar_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCAppBar : WXCContentControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -5787,7 +5787,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCAutoSuggestBox_DEFINED__
 #define __WXCAutoSuggestBox_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCAutoSuggestBox : WXCItemsControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -5829,7 +5829,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCCommandBarOverflowPresenter_DEFINED__
 #define __WXCCommandBarOverflowPresenter_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCCommandBarOverflowPresenter : WXCItemsControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -5843,7 +5843,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCContentDialog_DEFINED__
 #define __WXCContentDialog_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCContentDialog : WXCContentControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -5891,7 +5891,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCFlyoutPresenter_DEFINED__
 #define __WXCFlyoutPresenter_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCFlyoutPresenter : WXCContentControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -5905,7 +5905,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCFrame_DEFINED__
 #define __WXCFrame_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCFrame : WXCContentControl <WXCINavigate>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -5951,7 +5951,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCMenuFlyoutItem_DEFINED__
 #define __WXCMenuFlyoutItem_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCMenuFlyoutItem : WXCMenuFlyoutItemBase
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -5973,7 +5973,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCMenuFlyoutPresenter_DEFINED__
 #define __WXCMenuFlyoutPresenter_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCMenuFlyoutPresenter : WXCItemsControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -5988,7 +5988,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCMenuFlyoutSeparator_DEFINED__
 #define __WXCMenuFlyoutSeparator_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCMenuFlyoutSeparator : WXCMenuFlyoutItemBase
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6002,7 +6002,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCMenuFlyoutSubItem_DEFINED__
 #define __WXCMenuFlyoutSubItem_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCMenuFlyoutSubItem : WXCMenuFlyoutItemBase
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6019,7 +6019,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCPage_DEFINED__
 #define __WXCPage_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCPage : WXCUserControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6043,7 +6043,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCScrollViewer_DEFINED__
 #define __WXCScrollViewer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCScrollViewer : WXCContentControl
 + (WXCScrollBarVisibility)getHorizontalScrollBarVisibility:(WXDependencyObject*)element;
 + (void)setHorizontalScrollBarVisibility:(WXDependencyObject*)element horizontalScrollBarVisibility:(WXCScrollBarVisibility)horizontalScrollBarVisibility;
@@ -6171,7 +6171,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCCommandBar_DEFINED__
 #define __WXCCommandBar_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCCommandBar : WXCAppBar
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6200,7 +6200,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCGridViewHeaderItem_DEFINED__
 #define __WXCGridViewHeaderItem_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCGridViewHeaderItem : WXCListViewBaseHeaderItem
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6214,7 +6214,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCGridViewItem_DEFINED__
 #define __WXCGridViewItem_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCGridViewItem : WUXCPSelectorItem
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6229,7 +6229,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCListViewHeaderItem_DEFINED__
 #define __WXCListViewHeaderItem_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCListViewHeaderItem : WXCListViewBaseHeaderItem
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6243,7 +6243,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCListViewItem_DEFINED__
 #define __WXCListViewItem_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCListViewItem : WUXCPSelectorItem
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6258,7 +6258,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCToggleMenuFlyoutItem_DEFINED__
 #define __WXCToggleMenuFlyoutItem_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCToggleMenuFlyoutItem : WXCMenuFlyoutItem
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6274,7 +6274,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCAppBarButton_DEFINED__
 #define __WXCAppBarButton_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCAppBarButton : WXCButton <WXCICommandBarElement, WXCICommandBarElement2>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6300,7 +6300,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCAppBarToggleButton_DEFINED__
 #define __WXCAppBarToggleButton_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCAppBarToggleButton : WUXCPToggleButton <WXCICommandBarElement, WXCICommandBarElement2>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6326,7 +6326,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCGridView_DEFINED__
 #define __WXCGridView_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCGridView : WXCListViewBase
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6340,7 +6340,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCListView_DEFINED__
 #define __WXCListView_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCListView : WXCListViewBase
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6358,7 +6358,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (WXCControl*)createPresenter;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXCPIFlyoutBaseOverrides : RTObject <WUXCPIFlyoutBaseOverrides>
 @end
 
@@ -6368,7 +6368,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXCPFlyoutBase_DEFINED__
 #define __WUXCPFlyoutBase_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXCPFlyoutBase : WXDependencyObject
 + (WUXCPFlyoutBase*)getAttachedFlyout:(WXFrameworkElement*)element;
 + (void)setAttachedFlyout:(WXFrameworkElement*)element value:(WUXCPFlyoutBase*)value;
@@ -6407,7 +6407,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCFlyout_DEFINED__
 #define __WXCFlyout_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCFlyout : WUXCPFlyoutBase
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6425,7 +6425,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCMenuFlyout_DEFINED__
 #define __WXCMenuFlyout_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCMenuFlyout : WUXCPFlyoutBase
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6443,7 +6443,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMBrush_DEFINED__
 #define __WUXMBrush_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMBrush : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -6462,7 +6462,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXMTileBrush_DEFINED__
 #define __WUXMTileBrush_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXMTileBrush : WUXMBrush
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -6481,7 +6481,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCWebViewBrush_DEFINED__
 #define __WXCWebViewBrush_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCWebViewBrush : WUXMTileBrush
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6499,7 +6499,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCInkToolbarCustomPen_DEFINED__
 #define __WXCInkToolbarCustomPen_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCInkToolbarCustomPen : WXDependencyObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -6514,7 +6514,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCInkToolbar_DEFINED__
 #define __WXCInkToolbar_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCInkToolbar : WXCControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6550,7 +6550,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCInkToolbarPenConfigurationControl_DEFINED__
 #define __WXCInkToolbarPenConfigurationControl_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCInkToolbarPenConfigurationControl : WXCControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6566,7 +6566,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCInkToolbarToggleButton_DEFINED__
 #define __WXCInkToolbarToggleButton_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCInkToolbarToggleButton : WXCCheckBox
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -6580,7 +6580,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCInkToolbarToolButton_DEFINED__
 #define __WXCInkToolbarToolButton_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCInkToolbarToolButton : WXCRadioButton
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -6596,7 +6596,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCInkToolbarCustomToggleButton_DEFINED__
 #define __WXCInkToolbarCustomToggleButton_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCInkToolbarCustomToggleButton : WXCInkToolbarToggleButton
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6610,7 +6610,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCInkToolbarCustomToolButton_DEFINED__
 #define __WXCInkToolbarCustomToolButton_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCInkToolbarCustomToolButton : WXCInkToolbarToolButton
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6626,7 +6626,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCInkToolbarEraserButton_DEFINED__
 #define __WXCInkToolbarEraserButton_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCInkToolbarEraserButton : WXCInkToolbarToolButton
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6640,7 +6640,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCInkToolbarPenButton_DEFINED__
 #define __WXCInkToolbarPenButton_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCInkToolbarPenButton : WXCInkToolbarToolButton
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -6665,7 +6665,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCInkToolbarRulerButton_DEFINED__
 #define __WXCInkToolbarRulerButton_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCInkToolbarRulerButton : WXCInkToolbarToggleButton
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6681,7 +6681,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCInkToolbarBallpointPenButton_DEFINED__
 #define __WXCInkToolbarBallpointPenButton_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCInkToolbarBallpointPenButton : WXCInkToolbarPenButton
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6695,7 +6695,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCInkToolbarCustomPenButton_DEFINED__
 #define __WXCInkToolbarCustomPenButton_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCInkToolbarCustomPenButton : WXCInkToolbarPenButton
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6713,7 +6713,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCInkToolbarHighlighterButton_DEFINED__
 #define __WXCInkToolbarHighlighterButton_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCInkToolbarHighlighterButton : WXCInkToolbarPenButton
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6727,7 +6727,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCInkToolbarPencilButton_DEFINED__
 #define __WXCInkToolbarPencilButton_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCInkToolbarPencilButton : WXCInkToolbarPenButton
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6741,7 +6741,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCPivotItemEventArgs_DEFINED__
 #define __WXCPivotItemEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCPivotItemEventArgs : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6756,7 +6756,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCDatePickedEventArgs_DEFINED__
 #define __WXCDatePickedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCDatePickedEventArgs : WXDependencyObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6779,7 +6779,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (NSString *)getStringRepresentation;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXDICustomPropertyProvider : RTObject <WUXDICustomPropertyProvider>
 @end
 
@@ -6789,7 +6789,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCDatePickerFlyoutItem_DEFINED__
 #define __WXCDatePickerFlyoutItem_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCDatePickerFlyoutItem : WXDependencyObject <WUXDICustomPropertyProvider>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -6810,7 +6810,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCItemsPickedEventArgs_DEFINED__
 #define __WXCItemsPickedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCItemsPickedEventArgs : WXDependencyObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6826,7 +6826,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCPickerConfirmedEventArgs_DEFINED__
 #define __WXCPickerConfirmedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCPickerConfirmedEventArgs : WXDependencyObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6840,7 +6840,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCTimePickedEventArgs_DEFINED__
 #define __WXCTimePickedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCTimePickedEventArgs : WXDependencyObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6856,7 +6856,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCDatePickerFlyoutPresenter_DEFINED__
 #define __WXCDatePickerFlyoutPresenter_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCDatePickerFlyoutPresenter : WXCControl
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -6869,7 +6869,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCListPickerFlyoutPresenter_DEFINED__
 #define __WXCListPickerFlyoutPresenter_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCListPickerFlyoutPresenter : WXCControl
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -6882,7 +6882,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCTimePickerFlyoutPresenter_DEFINED__
 #define __WXCTimePickerFlyoutPresenter_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCTimePickerFlyoutPresenter : WXCControl
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -6895,7 +6895,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCPickerFlyoutPresenter_DEFINED__
 #define __WXCPickerFlyoutPresenter_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCPickerFlyoutPresenter : WXCContentControl
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -6908,7 +6908,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCPivot_DEFINED__
 #define __WXCPivot_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCPivot : WXCItemsControl
 + (WXCPivotSlideInAnimationGroup)getSlideInAnimationGroup:(WXFrameworkElement*)element;
 + (void)setSlideInAnimationGroup:(WXFrameworkElement*)element value:(WXCPivotSlideInAnimationGroup)value;
@@ -6959,7 +6959,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCPivotItem_DEFINED__
 #define __WXCPivotItem_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCPivotItem : WXCContentControl
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -6980,7 +6980,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (BOOL)shouldShowConfirmationButtons;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXCPIPickerFlyoutBaseOverrides : RTObject <WUXCPIPickerFlyoutBaseOverrides>
 @end
 
@@ -6990,7 +6990,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXCPPickerFlyoutBase_DEFINED__
 #define __WUXCPPickerFlyoutBase_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXCPPickerFlyoutBase : WUXCPFlyoutBase
 + (NSString *)getTitle:(WXDependencyObject*)element;
 + (void)setTitle:(WXDependencyObject*)element value:(NSString *)value;
@@ -7008,7 +7008,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCDatePickerFlyout_DEFINED__
 #define __WXCDatePickerFlyout_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCDatePickerFlyout : WUXCPPickerFlyoutBase
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -7045,7 +7045,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCListPickerFlyout_DEFINED__
 #define __WXCListPickerFlyout_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCListPickerFlyout : WUXCPPickerFlyoutBase
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -7079,7 +7079,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCPickerFlyout_DEFINED__
 #define __WXCPickerFlyout_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCPickerFlyout : WUXCPPickerFlyoutBase
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -7100,7 +7100,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXCTimePickerFlyout_DEFINED__
 #define __WXCTimePickerFlyout_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXCTimePickerFlyout : WUXCPPickerFlyoutBase
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
-#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#ifndef OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+#define OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsConsolidatedNamespace.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -347,7 +347,7 @@ typedef unsigned WSShutdownKind;
 @property WUVViewSizePreference desiredRemainingView;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSILauncherViewOptions : RTObject <WSILauncherViewOptions>
 @end
 
@@ -357,7 +357,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSAppMemoryUsageLimitChangingEventArgs_DEFINED__
 #define __WSAppMemoryUsageLimitChangingEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSAppMemoryUsageLimitChangingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -372,7 +372,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSAppMemoryReport_DEFINED__
 #define __WSAppMemoryReport_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSAppMemoryReport : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -389,7 +389,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSProcessMemoryReport_DEFINED__
 #define __WSProcessMemoryReport_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSProcessMemoryReport : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -404,7 +404,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSMemoryManager_DEFINED__
 #define __WSMemoryManager_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSMemoryManager : RTObject
 + (WSAppMemoryReport*)getAppMemoryReport;
 + (WSProcessMemoryReport*)getProcessMemoryReport;
@@ -426,7 +426,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSProtocolForResultsOperation_DEFINED__
 #define __WSProtocolForResultsOperation_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSProtocolForResultsOperation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -440,7 +440,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSUserWatcher_DEFINED__
 #define __WSUserWatcher_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSUserWatcher : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -470,7 +470,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSUser_DEFINED__
 #define __WSUser_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSUser : RTObject
 + (WSUserWatcher*)createWatcher;
 + (void)findAllAsyncWithSuccess:(void (^)(NSArray* /* WSUser* */))success failure:(void (^)(NSError*))failure;
@@ -494,7 +494,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSUserChangedEventArgs_DEFINED__
 #define __WSUserChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSUserChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -508,7 +508,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSUserAuthenticationStatusChangingEventArgs_DEFINED__
 #define __WSUserAuthenticationStatusChangingEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSUserAuthenticationStatusChangingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -525,7 +525,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSUserAuthenticationStatusChangeDeferral_DEFINED__
 #define __WSUserAuthenticationStatusChangeDeferral_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSUserAuthenticationStatusChangeDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -539,7 +539,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSKnownUserProperties_DEFINED__
 #define __WSKnownUserProperties_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSKnownUserProperties : RTObject
 + (NSString *)accountName;
 + (NSString *)displayName;
@@ -558,7 +558,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSUserPicker_DEFINED__
 #define __WSUserPicker_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSUserPicker : RTObject
 + (BOOL)isSupported;
 + (instancetype)make __attribute__ ((ns_returns_retained));
@@ -576,7 +576,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSUserDeviceAssociationChangedEventArgs_DEFINED__
 #define __WSUserDeviceAssociationChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSUserDeviceAssociationChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -592,7 +592,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSUserDeviceAssociation_DEFINED__
 #define __WSUserDeviceAssociation_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSUserDeviceAssociation : RTObject
 + (WSUser*)findUserFromDeviceId:(NSString *)deviceId;
 + (EventRegistrationToken)addUserDeviceAssociationChangedEvent:(void(^)(RTObject*, WSUserDeviceAssociationChangedEventArgs*))del;
@@ -605,7 +605,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSLaunchUriResult_DEFINED__
 #define __WSLaunchUriResult_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSLaunchUriResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -620,7 +620,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSLauncherUIOptions_DEFINED__
 #define __WSLauncherUIOptions_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSLauncherUIOptions : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -636,7 +636,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSLauncherOptions_DEFINED__
 #define __WSLauncherOptions_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSLauncherOptions : RTObject <WSILauncherViewOptions>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -661,7 +661,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSRemoteLauncherOptions_DEFINED__
 #define __WSRemoteLauncherOptions_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSRemoteLauncherOptions : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -677,7 +677,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSFolderLauncherOptions_DEFINED__
 #define __WSFolderLauncherOptions_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSFolderLauncherOptions : RTObject <WSILauncherViewOptions>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -693,7 +693,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSLauncher_DEFINED__
 #define __WSLauncher_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSLauncher : RTObject
 + (void)launchFileAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 + (void)launchFileWithOptionsAsync:(RTObject<WSIStorageFile>*)file options:(WSLauncherOptions*)options success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
@@ -727,7 +727,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSRemoteLauncher_DEFINED__
 #define __WSRemoteLauncher_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSRemoteLauncher : RTObject
 + (void)launchUriAsync:(WSRRemoteSystemConnectionRequest*)remoteSystemConnectionRequest uri:(WFUri*)uri success:(void (^)(WSRemoteLaunchUriStatus))success failure:(void (^)(NSError*))failure;
 + (void)launchUriWithOptionsAsync:(WSRRemoteSystemConnectionRequest*)remoteSystemConnectionRequest uri:(WFUri*)uri options:(WSRemoteLauncherOptions*)options success:(void (^)(WSRemoteLaunchUriStatus))success failure:(void (^)(NSError*))failure;
@@ -740,7 +740,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSProcessLauncherOptions_DEFINED__
 #define __WSProcessLauncherOptions_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSProcessLauncherOptions : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -758,7 +758,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSProcessLauncherResult_DEFINED__
 #define __WSProcessLauncherResult_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSProcessLauncherResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -772,7 +772,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSProcessLauncher_DEFINED__
 #define __WSProcessLauncher_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSProcessLauncher : RTObject
 + (void)runToCompletionAsync:(NSString *)fileName args:(NSString *)args success:(void (^)(WSProcessLauncherResult*))success failure:(void (^)(NSError*))failure;
 + (void)runToCompletionAsyncWithOptions:(NSString *)fileName args:(NSString *)args options:(WSProcessLauncherOptions*)options success:(void (^)(WSProcessLauncherResult*))success failure:(void (^)(NSError*))failure;
@@ -784,7 +784,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSShutdownManager_DEFINED__
 #define __WSShutdownManager_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSShutdownManager : RTObject
 + (void)beginShutdown:(WSShutdownKind)shutdownKind timeout:(WFTimeSpan*)timeout;
 + (void)cancelShutdown;
@@ -796,7 +796,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WSTimeZoneSettings_DEFINED__
 #define __WSTimeZoneSettings_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WSTimeZoneSettings : RTObject
 + (void)changeTimeZoneByDisplayName:(NSString *)timeZoneDisplayName;
 + (BOOL)canChangeTimeZone;

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
-#define OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Media_DialProtocol.lib")
+#ifndef OBJCUWPWINDOWSMEDIADIALPROTOCOLEXPORT
+#define OBJCUWPWINDOWSMEDIADIALPROTOCOLEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsMediaDialProtocol.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -79,7 +79,7 @@ typedef unsigned WMDDialDeviceDisplayStatus;
 #ifndef __WMDDialAppStateDetails_DEFINED__
 #define __WMDDialAppStateDetails_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
+OBJCUWPWINDOWSMEDIADIALPROTOCOLEXPORT
 @interface WMDDialAppStateDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -94,7 +94,7 @@ OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
 #ifndef __WMDDialApp_DEFINED__
 #define __WMDDialApp_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
+OBJCUWPWINDOWSMEDIADIALPROTOCOLEXPORT
 @interface WMDDialApp : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -111,7 +111,7 @@ OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
 #ifndef __WMDDialDevice_DEFINED__
 #define __WMDDialDevice_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
+OBJCUWPWINDOWSMEDIADIALPROTOCOLEXPORT
 @interface WMDDialDevice : RTObject
 + (NSString *)getDeviceSelector:(NSString *)appName;
 + (void)fromIdAsync:(NSString *)value success:(void (^)(WMDDialDevice*))success failure:(void (^)(NSError*))failure;
@@ -131,7 +131,7 @@ OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
 #ifndef __WMDDialDeviceSelectedEventArgs_DEFINED__
 #define __WMDDialDeviceSelectedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
+OBJCUWPWINDOWSMEDIADIALPROTOCOLEXPORT
 @interface WMDDialDeviceSelectedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -145,7 +145,7 @@ OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
 #ifndef __WMDDialDisconnectButtonClickedEventArgs_DEFINED__
 #define __WMDDialDisconnectButtonClickedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
+OBJCUWPWINDOWSMEDIADIALPROTOCOLEXPORT
 @interface WMDDialDisconnectButtonClickedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -159,7 +159,7 @@ OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
 #ifndef __WMDDialDevicePickerFilter_DEFINED__
 #define __WMDDialDevicePickerFilter_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
+OBJCUWPWINDOWSMEDIADIALPROTOCOLEXPORT
 @interface WMDDialDevicePickerFilter : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -173,7 +173,7 @@ OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
 #ifndef __WMDDialDevicePicker_DEFINED__
 #define __WMDDialDevicePicker_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_DIALPROTOCOL_EXPORT
+OBJCUWPWINDOWSMEDIADIALPROTOCOLEXPORT
 @interface WMDDialDevicePicker : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)

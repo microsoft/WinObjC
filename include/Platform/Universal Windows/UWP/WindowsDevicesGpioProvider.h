@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_DEVICES_GPIO_PROVIDER_EXPORT
-#define OBJCUWP_WINDOWS_DEVICES_GPIO_PROVIDER_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Devices_Gpio_Provider.lib")
+#ifndef OBJCUWPWINDOWSDEVICESGPIOPROVIDEREXPORT
+#define OBJCUWPWINDOWSDEVICESGPIOPROVIDEREXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsDevicesGpioProvider.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -85,7 +85,7 @@ typedef unsigned WDGPProviderGpioPinEdge;
 - (WDGPProviderGpioPinValue)read;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_GPIO_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESGPIOPROVIDEREXPORT
 @interface WDGPIGpioPinProvider : RTObject <WDGPIGpioPinProvider>
 @end
 
@@ -100,7 +100,7 @@ OBJCUWP_WINDOWS_DEVICES_GPIO_PROVIDER_EXPORT
 - (RTObject<WDGPIGpioPinProvider>*)openPinProvider:(int)pin sharingMode:(WDGPProviderGpioSharingMode)sharingMode;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_GPIO_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESGPIOPROVIDEREXPORT
 @interface WDGPIGpioControllerProvider : RTObject <WDGPIGpioControllerProvider>
 @end
 
@@ -114,7 +114,7 @@ OBJCUWP_WINDOWS_DEVICES_GPIO_PROVIDER_EXPORT
 - (NSArray* /* RTObject<WDGPIGpioControllerProvider>* */)getControllers;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_GPIO_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESGPIOPROVIDEREXPORT
 @interface WDGPIGpioProvider : RTObject <WDGPIGpioProvider>
 @end
 
@@ -124,7 +124,7 @@ OBJCUWP_WINDOWS_DEVICES_GPIO_PROVIDER_EXPORT
 #ifndef __WDGPGpioPinProviderValueChangedEventArgs_DEFINED__
 #define __WDGPGpioPinProviderValueChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_GPIO_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESGPIOPROVIDEREXPORT
 @interface WDGPGpioPinProviderValueChangedEventArgs : RTObject
 + (WDGPGpioPinProviderValueChangedEventArgs*)make:(WDGPProviderGpioPinEdge)edge ACTIVATOR;
 #if defined(__cplusplus)

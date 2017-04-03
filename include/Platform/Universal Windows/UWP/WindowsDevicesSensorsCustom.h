@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_DEVICES_SENSORS_CUSTOM_EXPORT
-#define OBJCUWP_WINDOWS_DEVICES_SENSORS_CUSTOM_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Devices_Sensors_Custom.lib")
+#ifndef OBJCUWPWINDOWSDEVICESSENSORSCUSTOMEXPORT
+#define OBJCUWPWINDOWSDEVICESSENSORSCUSTOMEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsDevicesSensorsCustom.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -38,7 +38,7 @@
 #ifndef __WDSCCustomSensor_DEFINED__
 #define __WDSCCustomSensor_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_CUSTOM_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSCUSTOMEXPORT
 @interface WDSCCustomSensor : RTObject
 + (NSString *)getDeviceSelector:(WFGUID*)interfaceId;
 + (void)fromIdAsync:(NSString *)sensorId success:(void (^)(WDSCCustomSensor*))success failure:(void (^)(NSError*))failure;
@@ -59,7 +59,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_CUSTOM_EXPORT
 #ifndef __WDSCCustomSensorReading_DEFINED__
 #define __WDSCCustomSensorReading_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_CUSTOM_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSCUSTOMEXPORT
 @interface WDSCCustomSensorReading : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -74,7 +74,7 @@ OBJCUWP_WINDOWS_DEVICES_SENSORS_CUSTOM_EXPORT
 #ifndef __WDSCCustomSensorReadingChangedEventArgs_DEFINED__
 #define __WDSCCustomSensorReadingChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_SENSORS_CUSTOM_EXPORT
+OBJCUWPWINDOWSDEVICESSENSORSCUSTOMEXPORT
 @interface WDSCCustomSensorReadingChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_APPEXTENSIONS_EXPORT
-#define OBJCUWP_WINDOWS_APPLICATIONMODEL_APPEXTENSIONS_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_AppExtensions.lib")
+#ifndef OBJCUWPWINDOWSAPPLICATIONMODELAPPEXTENSIONSEXPORT
+#define OBJCUWPWINDOWSAPPLICATIONMODELAPPEXTENSIONSEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsApplicationModelAppExtensions.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -41,7 +41,7 @@
 #ifndef __WAAAppExtensionCatalog_DEFINED__
 #define __WAAAppExtensionCatalog_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPEXTENSIONS_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELAPPEXTENSIONSEXPORT
 @interface WAAAppExtensionCatalog : RTObject
 + (WAAAppExtensionCatalog*)open:(NSString *)appExtensionName;
 #if defined(__cplusplus)
@@ -67,7 +67,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPEXTENSIONS_EXPORT
 #ifndef __WAAAppExtension_DEFINED__
 #define __WAAAppExtension_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPEXTENSIONS_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELAPPEXTENSIONSEXPORT
 @interface WAAAppExtension : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -87,7 +87,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPEXTENSIONS_EXPORT
 #ifndef __WAAAppExtensionPackageInstalledEventArgs_DEFINED__
 #define __WAAAppExtensionPackageInstalledEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPEXTENSIONS_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELAPPEXTENSIONSEXPORT
 @interface WAAAppExtensionPackageInstalledEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -103,7 +103,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPEXTENSIONS_EXPORT
 #ifndef __WAAAppExtensionPackageUpdatingEventArgs_DEFINED__
 #define __WAAAppExtensionPackageUpdatingEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPEXTENSIONS_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELAPPEXTENSIONSEXPORT
 @interface WAAAppExtensionPackageUpdatingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -118,7 +118,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPEXTENSIONS_EXPORT
 #ifndef __WAAAppExtensionPackageUpdatedEventArgs_DEFINED__
 #define __WAAAppExtensionPackageUpdatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPEXTENSIONS_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELAPPEXTENSIONSEXPORT
 @interface WAAAppExtensionPackageUpdatedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -134,7 +134,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPEXTENSIONS_EXPORT
 #ifndef __WAAAppExtensionPackageUninstallingEventArgs_DEFINED__
 #define __WAAAppExtensionPackageUninstallingEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPEXTENSIONS_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELAPPEXTENSIONSEXPORT
 @interface WAAAppExtensionPackageUninstallingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -149,7 +149,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPEXTENSIONS_EXPORT
 #ifndef __WAAAppExtensionPackageStatusChangedEventArgs_DEFINED__
 #define __WAAAppExtensionPackageStatusChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPEXTENSIONS_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELAPPEXTENSIONSEXPORT
 @interface WAAAppExtensionPackageStatusChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

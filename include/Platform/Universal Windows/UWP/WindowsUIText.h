@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_TEXT_EXPORT
-#define OBJCUWP_WINDOWS_UI_TEXT_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_Text.lib")
+#ifndef OBJCUWPWINDOWSUITEXTEXPORT
+#define OBJCUWPWINDOWSUITEXTEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUIText.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -433,7 +433,7 @@ typedef unsigned WUTFontStyle;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Text.FontWeight
-OBJCUWP_WINDOWS_UI_TEXT_EXPORT
+OBJCUWPWINDOWSUITEXTEXPORT
 @interface WUTFontWeight : NSObject
 + (instancetype)new;
 @property unsigned short weight;
@@ -470,7 +470,7 @@ OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 - (void)undo;
 @end
 
-OBJCUWP_WINDOWS_UI_TEXT_EXPORT
+OBJCUWPWINDOWSUITEXTEXPORT
 @interface WUTITextDocument : RTObject <WUTITextDocument>
 @end
 
@@ -526,7 +526,7 @@ OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 - (int)startOf:(WUTTextRangeUnit)unit extend:(BOOL)extend;
 @end
 
-OBJCUWP_WINDOWS_UI_TEXT_EXPORT
+OBJCUWPWINDOWSUITEXTEXPORT
 @interface WUTITextRange : RTObject <WUTITextRange>
 @end
 
@@ -580,7 +580,7 @@ OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 - (int)startOf:(WUTTextRangeUnit)unit extend:(BOOL)extend;
 @end
 
-OBJCUWP_WINDOWS_UI_TEXT_EXPORT
+OBJCUWPWINDOWSUITEXTEXPORT
 @interface WUTITextSelection : RTObject <WUTITextSelection>
 @end
 
@@ -620,7 +620,7 @@ OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 - (BOOL)IsEqual:(RTObject<WUTITextCharacterFormat>*)format;
 @end
 
-OBJCUWP_WINDOWS_UI_TEXT_EXPORT
+OBJCUWPWINDOWSUITEXTEXPORT
 @interface WUTITextCharacterFormat : RTObject <WUTITextCharacterFormat>
 @end
 
@@ -664,7 +664,7 @@ OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 - (void)setLineSpacing:(WUTLineSpacingRule)rule spacing:(float)spacing;
 @end
 
-OBJCUWP_WINDOWS_UI_TEXT_EXPORT
+OBJCUWPWINDOWSUITEXTEXPORT
 @interface WUTITextParagraphFormat : RTObject <WUTITextParagraphFormat>
 @end
 
@@ -674,7 +674,7 @@ OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 #ifndef __WUTTextConstants_DEFINED__
 #define __WUTTextConstants_DEFINED__
 
-OBJCUWP_WINDOWS_UI_TEXT_EXPORT
+OBJCUWPWINDOWSUITEXTEXPORT
 @interface WUTTextConstants : RTObject
 + (WUColor*)autoColor;
 + (int)maxUnitCount;
@@ -692,7 +692,7 @@ OBJCUWP_WINDOWS_UI_TEXT_EXPORT
 #ifndef __WUTFontWeights_DEFINED__
 #define __WUTFontWeights_DEFINED__
 
-OBJCUWP_WINDOWS_UI_TEXT_EXPORT
+OBJCUWPWINDOWSUITEXTEXPORT
 @interface WUTFontWeights : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

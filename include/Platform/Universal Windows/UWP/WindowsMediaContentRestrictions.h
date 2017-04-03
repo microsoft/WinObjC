@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_MEDIA_CONTENTRESTRICTIONS_EXPORT
-#define OBJCUWP_WINDOWS_MEDIA_CONTENTRESTRICTIONS_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Media_ContentRestrictions.lib")
+#ifndef OBJCUWPWINDOWSMEDIACONTENTRESTRICTIONSEXPORT
+#define OBJCUWPWINDOWSMEDIACONTENTRESTRICTIONSEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsMediaContentRestrictions.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -59,7 +59,7 @@ typedef unsigned WMCContentAccessRestrictionLevel;
 #ifndef __WMCRatedContentDescription_DEFINED__
 #define __WMCRatedContentDescription_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_CONTENTRESTRICTIONS_EXPORT
+OBJCUWPWINDOWSMEDIACONTENTRESTRICTIONSEXPORT
 @interface WMCRatedContentDescription : RTObject
 + (WMCRatedContentDescription*)make:(NSString *)id title:(NSString *)title category:(WMCRatedContentCategory)category ACTIVATOR;
 #if defined(__cplusplus)
@@ -78,7 +78,7 @@ OBJCUWP_WINDOWS_MEDIA_CONTENTRESTRICTIONS_EXPORT
 #ifndef __WMCContentRestrictionsBrowsePolicy_DEFINED__
 #define __WMCContentRestrictionsBrowsePolicy_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_CONTENTRESTRICTIONS_EXPORT
+OBJCUWPWINDOWSMEDIACONTENTRESTRICTIONSEXPORT
 @interface WMCContentRestrictionsBrowsePolicy : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -94,7 +94,7 @@ OBJCUWP_WINDOWS_MEDIA_CONTENTRESTRICTIONS_EXPORT
 #ifndef __WMCRatedContentRestrictions_DEFINED__
 #define __WMCRatedContentRestrictions_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_CONTENTRESTRICTIONS_EXPORT
+OBJCUWPWINDOWSMEDIACONTENTRESTRICTIONSEXPORT
 @interface WMCRatedContentRestrictions : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 + (WMCRatedContentRestrictions*)makeWithMaxAgeRating:(unsigned int)maxAgeRating ACTIVATOR;

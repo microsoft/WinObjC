@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
-#define OBJCUWP_MICROSOFT_ADVERTISING_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Microsoft_Advertising.lib")
+#ifndef OBJCUWPMICROSOFTADVERTISINGEXPORT
+#define OBJCUWPMICROSOFTADVERTISINGEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_MSAds_BUILD
+#pragma comment(lib, "ObjCUWPMicrosoftAdvertising.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -30,9 +30,8 @@
 @class MAMXamlMetaDataProvider;
 @protocol MAM__IXamlMetaDataProviderPublicNonVirtuals;
 
-#include "WindowsUIXamlMarkup.h"
-#include "WindowsUIXamlInterop.h"
-
+#include "UWP/WindowsUIXamlMarkup.h"
+#include "UWP/WindowsUIXamlInterop.h"
 #import <Foundation/Foundation.h>
 
 // Windows.UI.Xaml.Markup.IXamlMetadataProvider
@@ -45,7 +44,7 @@
 - (NSArray* /* WUXMXmlnsDefinition* */)getXmlnsDefinitions;
 @end
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface WUXMIXamlMetadataProvider : RTObject <WUXMIXamlMetadataProvider>
 @end
 
@@ -55,7 +54,7 @@ OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
 #ifndef __MAMXamlMetaDataProvider_DEFINED__
 #define __MAMXamlMetaDataProvider_DEFINED__
 
-OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
+OBJCUWPMICROSOFTADVERTISINGEXPORT
 @interface MAMXamlMetaDataProvider : RTObject <WUXMIXamlMetadataProvider>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)

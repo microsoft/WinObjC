@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT
-#define OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Store_Preview.lib")
+#ifndef OBJCUWPWINDOWSAPPLICATIONMODELSTOREPREVIEWEXPORT
+#define OBJCUWPWINDOWSAPPLICATIONMODELSTOREPREVIEWEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsApplicationModelStorePreview.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -95,7 +95,7 @@ typedef unsigned WASPStoreLogOptions;
 #ifndef __WASPStorePreviewSkuInfo_DEFINED__
 #define __WASPStorePreviewSkuInfo_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSTOREPREVIEWEXPORT
 @interface WASPStorePreviewSkuInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -117,7 +117,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT
 #ifndef __WASPStorePreviewPurchaseResults_DEFINED__
 #define __WASPStorePreviewPurchaseResults_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSTOREPREVIEWEXPORT
 @interface WASPStorePreviewPurchaseResults : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -131,7 +131,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT
 #ifndef __WASPStorePreviewProductInfo_DEFINED__
 #define __WASPStorePreviewProductInfo_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSTOREPREVIEWEXPORT
 @interface WASPStorePreviewProductInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -149,7 +149,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT
 #ifndef __WASPStoreHardwareManufacturerInfo_DEFINED__
 #define __WASPStoreHardwareManufacturerInfo_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSTOREPREVIEWEXPORT
 @interface WASPStoreHardwareManufacturerInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -166,7 +166,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT
 #ifndef __WASPStorePreview_DEFINED__
 #define __WASPStorePreview_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSTOREPREVIEWEXPORT
 @interface WASPStorePreview : RTObject
 + (void)requestProductPurchaseByProductIdAndSkuIdAsync:(NSString *)productId skuId:(NSString *)skuId success:(void (^)(WASPStorePreviewPurchaseResults*))success failure:(void (^)(NSError*))failure;
 + (void)loadAddOnProductInfosAsyncWithSuccess:(void (^)(NSArray* /* WASPStorePreviewProductInfo* */))success failure:(void (^)(NSError*))failure;
@@ -178,7 +178,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT
 #ifndef __WASPStoreConfiguration_DEFINED__
 #define __WASPStoreConfiguration_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_STORE_PREVIEW_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSTOREPREVIEWEXPORT
 @interface WASPStoreConfiguration : RTObject
 + (void)setSystemConfiguration:(NSString *)catalogHardwareManufacturerId catalogStoreContentModifierId:(NSString *)catalogStoreContentModifierId systemConfigurationExpiration:(WFDateTime*)systemConfigurationExpiration catalogHardwareDescriptor:(NSString *)catalogHardwareDescriptor;
 + (void)setMobileOperatorConfiguration:(NSString *)mobileOperatorId appDownloadLimitInMegabytes:(unsigned int)appDownloadLimitInMegabytes updateDownloadLimitInMegabytes:(unsigned int)updateDownloadLimitInMegabytes;

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_DATA_JSON_EXPORT
-#define OBJCUWP_WINDOWS_DATA_JSON_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Data_Json.lib")
+#ifndef OBJCUWPWINDOWSDATAJSONEXPORT
+#define OBJCUWPWINDOWSDATAJSONEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsDataJson.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -69,7 +69,7 @@ typedef unsigned WDJJsonErrorStatus;
 - (WDJJsonObject*)getObject;
 @end
 
-OBJCUWP_WINDOWS_DATA_JSON_EXPORT
+OBJCUWPWINDOWSDATAJSONEXPORT
 @interface WDJIJsonValue : RTObject <WDJIJsonValue>
 @end
 
@@ -83,7 +83,7 @@ OBJCUWP_WINDOWS_DATA_JSON_EXPORT
 - (NSString *)toString;
 @end
 
-OBJCUWP_WINDOWS_DATA_JSON_EXPORT
+OBJCUWPWINDOWSDATAJSONEXPORT
 @interface WFIStringable : RTObject <WFIStringable>
 @end
 
@@ -93,7 +93,7 @@ OBJCUWP_WINDOWS_DATA_JSON_EXPORT
 #ifndef __WDJJsonArray_DEFINED__
 #define __WDJJsonArray_DEFINED__
 
-OBJCUWP_WINDOWS_DATA_JSON_EXPORT
+OBJCUWPWINDOWSDATAJSONEXPORT
 @interface WDJJsonArray : RTObject <WDJIJsonValue, WFIStringable>
 + (WDJJsonArray*)parse:(NSString *)input;
 + (BOOL)tryParse:(NSString *)input result:(WDJJsonArray**)result;
@@ -135,7 +135,7 @@ OBJCUWP_WINDOWS_DATA_JSON_EXPORT
 #ifndef __WDJJsonObject_DEFINED__
 #define __WDJJsonObject_DEFINED__
 
-OBJCUWP_WINDOWS_DATA_JSON_EXPORT
+OBJCUWPWINDOWSDATAJSONEXPORT
 @interface WDJJsonObject : RTObject <WDJIJsonValue, WFIStringable>
 + (WDJJsonObject*)parse:(NSString *)input;
 + (BOOL)tryParse:(NSString *)input result:(WDJJsonObject**)result;
@@ -188,7 +188,7 @@ OBJCUWP_WINDOWS_DATA_JSON_EXPORT
 #ifndef __WDJJsonValue_DEFINED__
 #define __WDJJsonValue_DEFINED__
 
-OBJCUWP_WINDOWS_DATA_JSON_EXPORT
+OBJCUWPWINDOWSDATAJSONEXPORT
 @interface WDJJsonValue : RTObject <WDJIJsonValue, WFIStringable>
 + (WDJJsonValue*)createNullValue;
 + (WDJJsonValue*)parse:(NSString *)input;
@@ -215,7 +215,7 @@ OBJCUWP_WINDOWS_DATA_JSON_EXPORT
 #ifndef __WDJJsonError_DEFINED__
 #define __WDJJsonError_DEFINED__
 
-OBJCUWP_WINDOWS_DATA_JSON_EXPORT
+OBJCUWPWINDOWSDATAJSONEXPORT
 @interface WDJJsonError : RTObject
 + (WDJJsonErrorStatus)getJsonStatus:(int)hresult;
 @end

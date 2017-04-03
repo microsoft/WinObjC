@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_GLOBALIZATION_COLLATION_EXPORT
-#define OBJCUWP_WINDOWS_GLOBALIZATION_COLLATION_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Globalization_Collation.lib")
+#ifndef OBJCUWPWINDOWSGLOBALIZATIONCOLLATIONEXPORT
+#define OBJCUWPWINDOWSGLOBALIZATIONCOLLATIONEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsGlobalizationCollation.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -36,7 +36,7 @@
 #ifndef __WGCCharacterGrouping_DEFINED__
 #define __WGCCharacterGrouping_DEFINED__
 
-OBJCUWP_WINDOWS_GLOBALIZATION_COLLATION_EXPORT
+OBJCUWPWINDOWSGLOBALIZATIONCOLLATIONEXPORT
 @interface WGCCharacterGrouping : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -51,7 +51,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_COLLATION_EXPORT
 #ifndef __WGCCharacterGroupings_DEFINED__
 #define __WGCCharacterGroupings_DEFINED__
 
-OBJCUWP_WINDOWS_GLOBALIZATION_COLLATION_EXPORT
+OBJCUWPWINDOWSGLOBALIZATIONCOLLATIONEXPORT
 @interface WGCCharacterGroupings : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)

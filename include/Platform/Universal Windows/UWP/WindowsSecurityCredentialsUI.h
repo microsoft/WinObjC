@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_SECURITY_CREDENTIALS_UI_EXPORT
-#define OBJCUWP_WINDOWS_SECURITY_CREDENTIALS_UI_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Security_Credentials_UI.lib")
+#ifndef OBJCUWPWINDOWSSECURITYCREDENTIALSUIEXPORT
+#define OBJCUWPWINDOWSSECURITYCREDENTIALSUIEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsSecurityCredentialsUI.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -80,7 +80,7 @@ typedef unsigned WSCUUserConsentVerificationResult;
 #ifndef __WSCUCredentialPickerOptions_DEFINED__
 #define __WSCUCredentialPickerOptions_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_CREDENTIALS_UI_EXPORT
+OBJCUWPWINDOWSSECURITYCREDENTIALSUIEXPORT
 @interface WSCUCredentialPickerOptions : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -104,7 +104,7 @@ OBJCUWP_WINDOWS_SECURITY_CREDENTIALS_UI_EXPORT
 #ifndef __WSCUCredentialPickerResults_DEFINED__
 #define __WSCUCredentialPickerResults_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_CREDENTIALS_UI_EXPORT
+OBJCUWPWINDOWSSECURITYCREDENTIALSUIEXPORT
 @interface WSCUCredentialPickerResults : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -124,7 +124,7 @@ OBJCUWP_WINDOWS_SECURITY_CREDENTIALS_UI_EXPORT
 #ifndef __WSCUCredentialPicker_DEFINED__
 #define __WSCUCredentialPicker_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_CREDENTIALS_UI_EXPORT
+OBJCUWPWINDOWSSECURITYCREDENTIALSUIEXPORT
 @interface WSCUCredentialPicker : RTObject
 + (void)pickWithOptionsAsync:(WSCUCredentialPickerOptions*)options success:(void (^)(WSCUCredentialPickerResults*))success failure:(void (^)(NSError*))failure;
 + (void)pickWithMessageAsync:(NSString *)targetName message:(NSString *)message success:(void (^)(WSCUCredentialPickerResults*))success failure:(void (^)(NSError*))failure;
@@ -137,7 +137,7 @@ OBJCUWP_WINDOWS_SECURITY_CREDENTIALS_UI_EXPORT
 #ifndef __WSCUUserConsentVerifier_DEFINED__
 #define __WSCUUserConsentVerifier_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_CREDENTIALS_UI_EXPORT
+OBJCUWPWINDOWSSECURITYCREDENTIALSUIEXPORT
 @interface WSCUUserConsentVerifier : RTObject
 + (void)checkAvailabilityAsyncWithSuccess:(void (^)(WSCUUserConsentVerifierAvailability))success failure:(void (^)(NSError*))failure;
 + (void)requestVerificationAsync:(NSString *)message success:(void (^)(WSCUUserConsentVerificationResult))success failure:(void (^)(NSError*))failure;

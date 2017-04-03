@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_STORAGE_EXPORT
-#define OBJCUWP_WINDOWS_STORAGE_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Storage.lib")
+#ifndef OBJCUWPWINDOWSSTORAGEEXPORT
+#define OBJCUWPWINDOWSSTORAGEEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsStorage.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -90,7 +90,7 @@ typedef unsigned WSPWriteActivationMode;
 #ifndef __WSPCachedFileUpdaterUI_DEFINED__
 #define __WSPCachedFileUpdaterUI_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSPCachedFileUpdaterUI : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -112,7 +112,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSPFileUpdateRequestedEventArgs_DEFINED__
 #define __WSPFileUpdateRequestedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSPFileUpdateRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -126,7 +126,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSPFileUpdateRequest_DEFINED__
 #define __WSPFileUpdateRequest_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSPFileUpdateRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -145,7 +145,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSPFileUpdateRequestDeferral_DEFINED__
 #define __WSPFileUpdateRequestDeferral_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSPFileUpdateRequestDeferral : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -159,7 +159,7 @@ OBJCUWP_WINDOWS_STORAGE_EXPORT
 #ifndef __WSPCachedFileUpdater_DEFINED__
 #define __WSPCachedFileUpdater_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_EXPORT
+OBJCUWPWINDOWSSTORAGEEXPORT
 @interface WSPCachedFileUpdater : RTObject
 + (void)setUpdateInformation:(RTObject<WSIStorageFile>*)file contentId:(NSString *)contentId readMode:(WSPReadActivationMode)readMode writeMode:(WSPWriteActivationMode)writeMode options:(WSPCachedFileOptions)options;
 @end

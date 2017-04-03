@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
-#define OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Media_Audio.lib")
+#ifndef OBJCUWPWINDOWSMEDIAAUDIOEXPORT
+#define OBJCUWPWINDOWSMEDIAAUDIOEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsMediaAudio.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -126,7 +126,7 @@ typedef unsigned WMASpatialAudioModel;
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -149,7 +149,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMAIAudioNode : RTObject <WMAIAudioNode>
 @end
 
@@ -169,7 +169,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 - (void)enableEffectsByDefinition:(RTObject<WMEIAudioEffectDefinition>*)definition;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMAIAudioNodeWithListener : RTObject <WMAIAudioNodeWithListener>
 @end
 
@@ -192,7 +192,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMAIAudioInputNode : RTObject <WMAIAudioInputNode>
 @end
 
@@ -215,7 +215,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 - (void)removeOutgoingConnection:(RTObject<WMAIAudioNode>*)destination;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMAIAudioInputNode2 : RTObject <WMAIAudioInputNode2>
 @end
 
@@ -225,7 +225,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #ifndef __WMAAudioGraph_DEFINED__
 #define __WMAAudioGraph_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMAAudioGraph : RTObject <WFIClosable>
 + (void)createAsync:(WMAAudioGraphSettings*)settings success:(void (^)(WMACreateAudioGraphResult*))success failure:(void (^)(NSError*))failure;
 #if defined(__cplusplus)
@@ -273,7 +273,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #ifndef __WMACreateAudioGraphResult_DEFINED__
 #define __WMACreateAudioGraphResult_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMACreateAudioGraphResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -288,7 +288,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #ifndef __WMAAudioGraphSettings_DEFINED__
 #define __WMAAudioGraphSettings_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMAAudioGraphSettings : RTObject
 + (WMAAudioGraphSettings*)make:(WMRAudioRenderCategory)audioRenderCategory ACTIVATOR;
 #if defined(__cplusplus)
@@ -308,7 +308,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #ifndef __WMAAudioDeviceInputNode_DEFINED__
 #define __WMAAudioDeviceInputNode_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMAAudioDeviceInputNode : RTObject <WMAIAudioInputNode, WMAIAudioNode, WFIClosable, WMAIAudioInputNode2>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -337,7 +337,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #ifndef __WMACreateAudioDeviceInputNodeResult_DEFINED__
 #define __WMACreateAudioDeviceInputNodeResult_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMACreateAudioDeviceInputNodeResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -352,7 +352,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #ifndef __WMAAudioDeviceOutputNode_DEFINED__
 #define __WMAAudioDeviceOutputNode_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMAAudioDeviceOutputNode : RTObject <WMAIAudioNode, WFIClosable, WMAIAudioNodeWithListener>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -377,7 +377,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #ifndef __WMACreateAudioDeviceOutputNodeResult_DEFINED__
 #define __WMACreateAudioDeviceOutputNodeResult_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMACreateAudioDeviceOutputNodeResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -392,7 +392,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #ifndef __WMAAudioFileInputNode_DEFINED__
 #define __WMAAudioFileInputNode_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMAAudioFileInputNode : RTObject <WMAIAudioInputNode, WMAIAudioNode, WFIClosable, WMAIAudioInputNode2>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -430,7 +430,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #ifndef __WMACreateAudioFileInputNodeResult_DEFINED__
 #define __WMACreateAudioFileInputNodeResult_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMACreateAudioFileInputNodeResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -445,7 +445,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #ifndef __WMAAudioFileOutputNode_DEFINED__
 #define __WMAAudioFileOutputNode_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMAAudioFileOutputNode : RTObject <WMAIAudioNode, WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -471,7 +471,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #ifndef __WMACreateAudioFileOutputNodeResult_DEFINED__
 #define __WMACreateAudioFileOutputNodeResult_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMACreateAudioFileOutputNodeResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -486,7 +486,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #ifndef __WMAAudioGraphUnrecoverableErrorOccurredEventArgs_DEFINED__
 #define __WMAAudioGraphUnrecoverableErrorOccurredEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMAAudioGraphUnrecoverableErrorOccurredEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -500,7 +500,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #ifndef __WMAAudioGraphBatchUpdater_DEFINED__
 #define __WMAAudioGraphBatchUpdater_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMAAudioGraphBatchUpdater : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -514,7 +514,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #ifndef __WMAAudioFrameInputNode_DEFINED__
 #define __WMAAudioFrameInputNode_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMAAudioFrameInputNode : RTObject <WMAIAudioInputNode, WMAIAudioNode, WFIClosable, WMAIAudioInputNode2>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -550,7 +550,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #ifndef __WMAAudioFrameOutputNode_DEFINED__
 #define __WMAAudioFrameOutputNode_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMAAudioFrameOutputNode : RTObject <WMAIAudioNode, WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -574,7 +574,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #ifndef __WMAAudioSubmixNode_DEFINED__
 #define __WMAAudioSubmixNode_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMAAudioSubmixNode : RTObject <WMAIAudioInputNode, WMAIAudioNode, WFIClosable, WMAIAudioInputNode2>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -602,7 +602,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #ifndef __WMAAudioNodeEmitter_DEFINED__
 #define __WMAAudioNodeEmitter_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMAAudioNodeEmitter : RTObject
 + (WMAAudioNodeEmitter*)makeAudioNodeEmitter:(WMAAudioNodeEmitterShape*)shape decayModel:(WMAAudioNodeEmitterDecayModel*)decayModel settings:(WMAAudioNodeEmitterSettings)settings ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
@@ -627,7 +627,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #ifndef __WMAAudioNodeListener_DEFINED__
 #define __WMAAudioNodeListener_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMAAudioNodeListener : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -645,7 +645,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #ifndef __WMAAudioGraphConnection_DEFINED__
 #define __WMAAudioGraphConnection_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMAAudioGraphConnection : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -660,7 +660,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #ifndef __WMAAudioFrameCompletedEventArgs_DEFINED__
 #define __WMAAudioFrameCompletedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMAAudioFrameCompletedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -674,7 +674,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #ifndef __WMAFrameInputNodeQuantumStartedEventArgs_DEFINED__
 #define __WMAFrameInputNodeQuantumStartedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMAFrameInputNodeQuantumStartedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -688,7 +688,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #ifndef __WMAEqualizerBand_DEFINED__
 #define __WMAEqualizerBand_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMAEqualizerBand : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -709,7 +709,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMEIAudioEffectDefinition : RTObject <WMEIAudioEffectDefinition>
 @end
 
@@ -719,7 +719,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #ifndef __WMAEqualizerEffectDefinition_DEFINED__
 #define __WMAEqualizerEffectDefinition_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMAEqualizerEffectDefinition : RTObject <WMEIAudioEffectDefinition>
 + (WMAEqualizerEffectDefinition*)make:(WMAAudioGraph*)audioGraph ACTIVATOR;
 #if defined(__cplusplus)
@@ -736,7 +736,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #ifndef __WMAReverbEffectDefinition_DEFINED__
 #define __WMAReverbEffectDefinition_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMAReverbEffectDefinition : RTObject <WMEIAudioEffectDefinition>
 + (WMAReverbEffectDefinition*)make:(WMAAudioGraph*)audioGraph ACTIVATOR;
 #if defined(__cplusplus)
@@ -775,7 +775,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #ifndef __WMAEchoEffectDefinition_DEFINED__
 #define __WMAEchoEffectDefinition_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMAEchoEffectDefinition : RTObject <WMEIAudioEffectDefinition>
 + (WMAEchoEffectDefinition*)make:(WMAAudioGraph*)audioGraph ACTIVATOR;
 #if defined(__cplusplus)
@@ -794,7 +794,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #ifndef __WMALimiterEffectDefinition_DEFINED__
 #define __WMALimiterEffectDefinition_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMALimiterEffectDefinition : RTObject <WMEIAudioEffectDefinition>
 + (WMALimiterEffectDefinition*)make:(WMAAudioGraph*)audioGraph ACTIVATOR;
 #if defined(__cplusplus)
@@ -812,7 +812,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #ifndef __WMAAudioNodeEmitterConeProperties_DEFINED__
 #define __WMAAudioNodeEmitterConeProperties_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMAAudioNodeEmitterConeProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -828,7 +828,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #ifndef __WMAAudioNodeEmitterShape_DEFINED__
 #define __WMAAudioNodeEmitterShape_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMAAudioNodeEmitterShape : RTObject
 + (WMAAudioNodeEmitterShape*)createCone:(double)innerAngle outerAngle:(double)outerAngle outerAngleGain:(double)outerAngleGain;
 + (WMAAudioNodeEmitterShape*)createOmnidirectional;
@@ -845,7 +845,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #ifndef __WMAAudioNodeEmitterNaturalDecayModelProperties_DEFINED__
 #define __WMAAudioNodeEmitterNaturalDecayModelProperties_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMAAudioNodeEmitterNaturalDecayModelProperties : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -860,7 +860,7 @@ OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
 #ifndef __WMAAudioNodeEmitterDecayModel_DEFINED__
 #define __WMAAudioNodeEmitterDecayModel_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_AUDIO_EXPORT
+OBJCUWPWINDOWSMEDIAAUDIOEXPORT
 @interface WMAAudioNodeEmitterDecayModel : RTObject
 + (WMAAudioNodeEmitterDecayModel*)createNatural:(double)minGain maxGain:(double)maxGain unityGainDistance:(double)unityGainDistance cutoffDistance:(double)cutoffDistance;
 + (WMAAudioNodeEmitterDecayModel*)createCustom:(double)minGain maxGain:(double)maxGain;

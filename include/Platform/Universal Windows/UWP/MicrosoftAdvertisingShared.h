@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_MICROSOFT_ADVERTISING_EXPORT
-#define OBJCUWP_MICROSOFT_ADVERTISING_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Microsoft_Advertising.lib")
+#ifndef OBJCUWPMICROSOFTADVERTISINGEXPORT
+#define OBJCUWPMICROSOFTADVERTISINGEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_MSAds_BUILD
+#pragma comment(lib, "ObjCUWPMicrosoftAdvertising.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>

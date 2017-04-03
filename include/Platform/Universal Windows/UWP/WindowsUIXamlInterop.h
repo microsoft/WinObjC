@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
-#define OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml_Interop.lib")
+#ifndef OBJCUWPWINDOWSUIXAMLINTEROPEXPORT
+#define OBJCUWPWINDOWSUIXAMLINTEROPEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUIXamlInterop.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -66,7 +66,7 @@ typedef void(^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINot
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Xaml.Interop.TypeName
-OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
+OBJCUWPWINDOWSUIXAMLINTEROPEXPORT
 @interface WUXITypeName : NSObject
 + (instancetype)new;
 @property (retain) NSString * name;
@@ -93,7 +93,7 @@ typedef void(^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINot
 - (RTObject<WUXIIBindableIterator>*)first;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
+OBJCUWPWINDOWSUIXAMLINTEROPEXPORT
 @interface WUXIIBindableIterable : RTObject <WUXIIBindableIterable>
 @end
 
@@ -117,7 +117,7 @@ OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
 - (RTObject<WUXIIBindableIterator>*)first;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
+OBJCUWPWINDOWSUIXAMLINTEROPEXPORT
 @interface WUXIIBindableVector : RTObject <WUXIIBindableVector>
 @end
 
@@ -142,7 +142,7 @@ OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
 - (RTObject<WUXIIBindableIterator>*)first;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
+OBJCUWPWINDOWSUIXAMLINTEROPEXPORT
 @interface WUXIIBindableObservableVector : RTObject <WUXIIBindableObservableVector>
 @end
 
@@ -159,7 +159,7 @@ OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
 - (RTObject<WUXIIBindableIterator>*)first;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
+OBJCUWPWINDOWSUIXAMLINTEROPEXPORT
 @interface WUXIIBindableVectorView : RTObject <WUXIIBindableVectorView>
 @end
 
@@ -175,7 +175,7 @@ OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
 - (BOOL)moveNext;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
+OBJCUWPWINDOWSUIXAMLINTEROPEXPORT
 @interface WUXIIBindableIterator : RTObject <WUXIIBindableIterator>
 @end
 
@@ -190,7 +190,7 @@ OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
 - (void)removeCollectionChangedEvent:(EventRegistrationToken)tok;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
+OBJCUWPWINDOWSUIXAMLINTEROPEXPORT
 @interface WUXIINotifyCollectionChanged : RTObject <WUXIINotifyCollectionChanged>
 @end
 
@@ -200,7 +200,7 @@ OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
 #ifndef __WUXINotifyCollectionChangedEventArgs_DEFINED__
 #define __WUXINotifyCollectionChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_INTEROP_EXPORT
+OBJCUWPWINDOWSUIXAMLINTEROPEXPORT
 @interface WUXINotifyCollectionChangedEventArgs : RTObject
 + (WUXINotifyCollectionChangedEventArgs*)makeInstanceWithAllParameters:(WUXINotifyCollectionChangedAction)action newItems:(RTObject<WUXIIBindableVector>*)newItems oldItems:(RTObject<WUXIIBindableVector>*)oldItems newIndex:(int)newIndex oldIndex:(int)oldIndex ACTIVATOR;
 #if defined(__cplusplus)

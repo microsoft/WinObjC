@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_DEVICES_PORTABLE_EXPORT
-#define OBJCUWP_WINDOWS_DEVICES_PORTABLE_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Devices_Portable.lib")
+#ifndef OBJCUWPWINDOWSDEVICESPORTABLEEXPORT
+#define OBJCUWPWINDOWSDEVICESPORTABLEEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsDevicesPortable.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -50,7 +50,7 @@ typedef unsigned WDPServiceDeviceType;
 #ifndef __WDPStorageDevice_DEFINED__
 #define __WDPStorageDevice_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_PORTABLE_EXPORT
+OBJCUWPWINDOWSDEVICESPORTABLEEXPORT
 @interface WDPStorageDevice : RTObject
 + (WSStorageFolder*)fromId:(NSString *)deviceId;
 + (NSString *)getDeviceSelector;
@@ -62,7 +62,7 @@ OBJCUWP_WINDOWS_DEVICES_PORTABLE_EXPORT
 #ifndef __WDPServiceDevice_DEFINED__
 #define __WDPServiceDevice_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_PORTABLE_EXPORT
+OBJCUWPWINDOWSDEVICESPORTABLEEXPORT
 @interface WDPServiceDevice : RTObject
 + (NSString *)getDeviceSelector:(WDPServiceDeviceType)serviceType;
 + (NSString *)getDeviceSelectorFromServiceId:(WFGUID*)serviceId;

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_EXPORT
-#define OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Wallet.lib")
+#ifndef OBJCUWPWINDOWSAPPLICATIONMODELWALLETEXPORT
+#define OBJCUWPWINDOWSAPPLICATIONMODELWALLETEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsApplicationModelWallet.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -108,7 +108,7 @@ typedef unsigned WAWWalletItemKind;
 #ifndef __WAWWalletBarcode_DEFINED__
 #define __WAWWalletBarcode_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELWALLETEXPORT
 @interface WAWWalletBarcode : RTObject
 + (WAWWalletBarcode*)makeWalletBarcode:(WAWWalletBarcodeSymbology)symbology value:(NSString *)value ACTIVATOR;
 + (WAWWalletBarcode*)makeCustomWalletBarcode:(RTObject<WSSIRandomAccessStreamReference>*)streamToBarcodeImage ACTIVATOR;
@@ -126,7 +126,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_EXPORT
 #ifndef __WAWWalletTransaction_DEFINED__
 #define __WAWWalletTransaction_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELWALLETEXPORT
 @interface WAWWalletTransaction : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -146,7 +146,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_EXPORT
 #ifndef __WAWWalletRelevantLocation_DEFINED__
 #define __WAWWalletRelevantLocation_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELWALLETEXPORT
 @interface WAWWalletRelevantLocation : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -162,7 +162,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_EXPORT
 #ifndef __WAWWalletItemCustomProperty_DEFINED__
 #define __WAWWalletItemCustomProperty_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELWALLETEXPORT
 @interface WAWWalletItemCustomProperty : RTObject
 + (WAWWalletItemCustomProperty*)makeWalletItemCustomProperty:(NSString *)name value:(NSString *)value ACTIVATOR;
 #if defined(__cplusplus)
@@ -181,7 +181,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_EXPORT
 #ifndef __WAWWalletVerb_DEFINED__
 #define __WAWWalletVerb_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELWALLETEXPORT
 @interface WAWWalletVerb : RTObject
 + (WAWWalletVerb*)makeWalletVerb:(NSString *)name ACTIVATOR;
 #if defined(__cplusplus)
@@ -196,7 +196,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_EXPORT
 #ifndef __WAWWalletItem_DEFINED__
 #define __WAWWalletItem_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELWALLETEXPORT
 @interface WAWWalletItem : RTObject
 + (WAWWalletItem*)makeWalletItem:(WAWWalletItemKind)kind displayName:(NSString *)displayName ACTIVATOR;
 #if defined(__cplusplus)
@@ -239,7 +239,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_EXPORT
 #ifndef __WAWWalletItemStore_DEFINED__
 #define __WAWWalletItemStore_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELWALLETEXPORT
 @interface WAWWalletItemStore : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -262,7 +262,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_EXPORT
 #ifndef __WAWWalletManager_DEFINED__
 #define __WAWWalletManager_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_WALLET_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELWALLETEXPORT
 @interface WAWWalletManager : RTObject
 + (void)requestStoreAsyncWithSuccess:(void (^)(WAWWalletItemStore*))success failure:(void (^)(NSError*))failure;
 @end

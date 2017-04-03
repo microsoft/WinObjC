@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_PROVIDER_EXPORT
-#define OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_PROVIDER_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_SocialInfo_Provider.lib")
+#ifndef OBJCUWPWINDOWSAPPLICATIONMODELSOCIALINFOPROVIDEREXPORT
+#define OBJCUWPWINDOWSAPPLICATIONMODELSOCIALINFOPROVIDEREXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsApplicationModelSocialInfoProvider.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -39,7 +39,7 @@
 #ifndef __WASPSocialFeedUpdater_DEFINED__
 #define __WASPSocialFeedUpdater_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_PROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSOCIALINFOPROVIDEREXPORT
 @interface WASPSocialFeedUpdater : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -56,7 +56,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_PROVIDER_EXPORT
 #ifndef __WASPSocialDashboardItemUpdater_DEFINED__
 #define __WASPSocialDashboardItemUpdater_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_PROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSOCIALINFOPROVIDEREXPORT
 @interface WASPSocialDashboardItemUpdater : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -75,7 +75,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_PROVIDER_EXPORT
 #ifndef __WASPSocialInfoProviderManager_DEFINED__
 #define __WASPSocialInfoProviderManager_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_SOCIALINFO_PROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELSOCIALINFOPROVIDEREXPORT
 @interface WASPSocialInfoProviderManager : RTObject
 + (void)createSocialFeedUpdaterAsync:(WASSocialFeedKind)kind mode:(WASSocialFeedUpdateMode)mode ownerRemoteId:(NSString *)ownerRemoteId success:(void (^)(WASPSocialFeedUpdater*))success failure:(void (^)(NSError*))failure;
 + (void)createDashboardItemUpdaterAsync:(NSString *)ownerRemoteId success:(void (^)(WASPSocialDashboardItemUpdater*))success failure:(void (^)(NSError*))failure;

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
-#define OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_ViewManagement.lib")
+#ifndef OBJCUWPWINDOWSUIVIEWMANAGEMENTEXPORT
+#define OBJCUWPWINDOWSUIVIEWMANAGEMENTEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUIViewManagement.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -146,7 +146,7 @@ typedef unsigned WUVUIElementType;
 #ifndef __WUVApplicationView_DEFINED__
 #define __WUVApplicationView_DEFINED__
 
-OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
+OBJCUWPWINDOWSUIVIEWMANAGEMENTEXPORT
 @interface WUVApplicationView : RTObject
 + (WUVApplicationView*)getForCurrentView;
 + (BOOL)tryUnsnapToFullscreen;
@@ -194,7 +194,7 @@ OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 #ifndef __WUVApplicationViewConsolidatedEventArgs_DEFINED__
 #define __WUVApplicationViewConsolidatedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
+OBJCUWPWINDOWSUIVIEWMANAGEMENTEXPORT
 @interface WUVApplicationViewConsolidatedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -208,7 +208,7 @@ OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 #ifndef __WUVApplicationViewTitleBar_DEFINED__
 #define __WUVApplicationViewTitleBar_DEFINED__
 
-OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
+OBJCUWPWINDOWSUIVIEWMANAGEMENTEXPORT
 @interface WUVApplicationViewTitleBar : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -233,7 +233,7 @@ OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 #ifndef __WUVApplicationViewSwitcher_DEFINED__
 #define __WUVApplicationViewSwitcher_DEFINED__
 
-OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
+OBJCUWPWINDOWSUIVIEWMANAGEMENTEXPORT
 @interface WUVApplicationViewSwitcher : RTObject
 + (void)disableShowingMainViewOnActivation;
 + (void)tryShowAsStandaloneAsync:(int)viewId success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
@@ -252,7 +252,7 @@ OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 #ifndef __WUVActivationViewSwitcher_DEFINED__
 #define __WUVActivationViewSwitcher_DEFINED__
 
-OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
+OBJCUWPWINDOWSUIVIEWMANAGEMENTEXPORT
 @interface WUVActivationViewSwitcher : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -268,7 +268,7 @@ OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 #ifndef __WUVApplicationViewTransferContext_DEFINED__
 #define __WUVApplicationViewTransferContext_DEFINED__
 
-OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
+OBJCUWPWINDOWSUIVIEWMANAGEMENTEXPORT
 @interface WUVApplicationViewTransferContext : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -284,7 +284,7 @@ OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 #ifndef __WUVInputPaneVisibilityEventArgs_DEFINED__
 #define __WUVInputPaneVisibilityEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
+OBJCUWPWINDOWSUIVIEWMANAGEMENTEXPORT
 @interface WUVInputPaneVisibilityEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -299,7 +299,7 @@ OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 #ifndef __WUVInputPane_DEFINED__
 #define __WUVInputPane_DEFINED__
 
-OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
+OBJCUWPWINDOWSUIVIEWMANAGEMENTEXPORT
 @interface WUVInputPane : RTObject
 + (WUVInputPane*)getForCurrentView;
 #if defined(__cplusplus)
@@ -321,7 +321,7 @@ OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 #ifndef __WUVProjectionManager_DEFINED__
 #define __WUVProjectionManager_DEFINED__
 
-OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
+OBJCUWPWINDOWSUIVIEWMANAGEMENTEXPORT
 @interface WUVProjectionManager : RTObject
 + (RTObject<WFIAsyncAction>*)startProjectingAsync:(int)projectionViewId anchorViewId:(int)anchorViewId;
 + (RTObject<WFIAsyncAction>*)swapDisplaysForViewsAsync:(int)projectionViewId anchorViewId:(int)anchorViewId;
@@ -341,7 +341,7 @@ OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 #ifndef __WUVUIViewSettings_DEFINED__
 #define __WUVUIViewSettings_DEFINED__
 
-OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
+OBJCUWPWINDOWSUIVIEWMANAGEMENTEXPORT
 @interface WUVUIViewSettings : RTObject
 + (WUVUIViewSettings*)getForCurrentView;
 #if defined(__cplusplus)
@@ -356,7 +356,7 @@ OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 #ifndef __WUVAccessibilitySettings_DEFINED__
 #define __WUVAccessibilitySettings_DEFINED__
 
-OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
+OBJCUWPWINDOWSUIVIEWMANAGEMENTEXPORT
 @interface WUVAccessibilitySettings : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -374,7 +374,7 @@ OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 #ifndef __WUVUISettings_DEFINED__
 #define __WUVUISettings_DEFINED__
 
-OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
+OBJCUWPWINDOWSUIVIEWMANAGEMENTEXPORT
 @interface WUVUISettings : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -407,7 +407,7 @@ OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 #ifndef __WUVStatusBar_DEFINED__
 #define __WUVStatusBar_DEFINED__
 
-OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
+OBJCUWPWINDOWSUIVIEWMANAGEMENTEXPORT
 @interface WUVStatusBar : RTObject
 + (WUVStatusBar*)getForCurrentView;
 #if defined(__cplusplus)
@@ -432,7 +432,7 @@ OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 #ifndef __WUVStatusBarProgressIndicator_DEFINED__
 #define __WUVStatusBarProgressIndicator_DEFINED__
 
-OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
+OBJCUWPWINDOWSUIVIEWMANAGEMENTEXPORT
 @interface WUVStatusBarProgressIndicator : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -449,7 +449,7 @@ OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
 #ifndef __WUVApplicationViewScaling_DEFINED__
 #define __WUVApplicationViewScaling_DEFINED__
 
-OBJCUWP_WINDOWS_UI_VIEWMANAGEMENT_EXPORT
+OBJCUWPWINDOWSUIVIEWMANAGEMENTEXPORT
 @interface WUVApplicationViewScaling : RTObject
 + (BOOL)trySetDisableLayoutScaling:(BOOL)disableLayoutScaling;
 #if defined(__cplusplus)

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
-#define OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Web_Syndication.lib")
+#ifndef OBJCUWPWINDOWSWEBSYNDICATIONEXPORT
+#define OBJCUWPWINDOWSWEBSYNDICATIONEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsWebSyndication.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -68,7 +68,7 @@ typedef unsigned WWSSyndicationTextType;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Web.Syndication.RetrievalProgress
-OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
+OBJCUWPWINDOWSWEBSYNDICATIONEXPORT
 @interface WWSRetrievalProgress : NSObject
 + (instancetype)new;
 @property unsigned int bytesRetrieved;
@@ -76,7 +76,7 @@ OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
 @end
 
 // [struct] Windows.Web.Syndication.TransferProgress
-OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
+OBJCUWPWINDOWSWEBSYNDICATIONEXPORT
 @interface WWSTransferProgress : NSObject
 + (instancetype)new;
 @property unsigned int bytesSent;
@@ -100,7 +100,7 @@ OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
 - (WDXDXmlDocument*)getXmlDocument:(WWSSyndicationFormat)format;
 @end
 
-OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
+OBJCUWPWINDOWSWEBSYNDICATIONEXPORT
 @interface WWSISyndicationNode : RTObject <WWSISyndicationNode>
 @end
 
@@ -117,7 +117,7 @@ OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
 - (WDXDXmlDocument*)getXmlDocument:(WWSSyndicationFormat)format;
 @end
 
-OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
+OBJCUWPWINDOWSWEBSYNDICATIONEXPORT
 @interface WWSISyndicationText : RTObject <WWSISyndicationText>
 @end
 
@@ -137,7 +137,7 @@ OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
 - (void)retrieveFeedAsync:(WFUri*)uri success:(void (^)(WWSSyndicationFeed*))success progress:(void (^)(WWSRetrievalProgress*))progress failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
+OBJCUWPWINDOWSWEBSYNDICATIONEXPORT
 @interface WWSISyndicationClient : RTObject <WWSISyndicationClient>
 @end
 
@@ -147,7 +147,7 @@ OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
 #ifndef __WWSSyndicationAttribute_DEFINED__
 #define __WWSSyndicationAttribute_DEFINED__
 
-OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
+OBJCUWPWINDOWSWEBSYNDICATIONEXPORT
 @interface WWSSyndicationAttribute : RTObject
 + (WWSSyndicationAttribute*)makeSyndicationAttribute:(NSString *)attributeName attributeNamespace:(NSString *)attributeNamespace attributeValue:(NSString *)attributeValue ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
@@ -165,7 +165,7 @@ OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
 #ifndef __WWSSyndicationNode_DEFINED__
 #define __WWSSyndicationNode_DEFINED__
 
-OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
+OBJCUWPWINDOWSWEBSYNDICATIONEXPORT
 @interface WWSSyndicationNode : RTObject <WWSISyndicationNode>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 + (WWSSyndicationNode*)makeSyndicationNode:(NSString *)nodeName nodeNamespace:(NSString *)nodeNamespace nodeValue:(NSString *)nodeValue ACTIVATOR;
@@ -188,7 +188,7 @@ OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
 #ifndef __WWSSyndicationGenerator_DEFINED__
 #define __WWSSyndicationGenerator_DEFINED__
 
-OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
+OBJCUWPWINDOWSWEBSYNDICATIONEXPORT
 @interface WWSSyndicationGenerator : RTObject <WWSISyndicationNode>
 + (WWSSyndicationGenerator*)makeSyndicationGenerator:(NSString *)text ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
@@ -214,7 +214,7 @@ OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
 #ifndef __WWSSyndicationText_DEFINED__
 #define __WWSSyndicationText_DEFINED__
 
-OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
+OBJCUWPWINDOWSWEBSYNDICATIONEXPORT
 @interface WWSSyndicationText : RTObject <WWSISyndicationText, WWSISyndicationNode>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 + (WWSSyndicationText*)makeSyndicationText:(NSString *)text ACTIVATOR;
@@ -241,7 +241,7 @@ OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
 #ifndef __WWSSyndicationContent_DEFINED__
 #define __WWSSyndicationContent_DEFINED__
 
-OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
+OBJCUWPWINDOWSWEBSYNDICATIONEXPORT
 @interface WWSSyndicationContent : RTObject <WWSISyndicationText, WWSISyndicationNode>
 + (WWSSyndicationContent*)makeSyndicationContent:(NSString *)text type:(WWSSyndicationTextType)type ACTIVATOR;
 + (WWSSyndicationContent*)makeSyndicationContentWithSourceUri:(WFUri*)sourceUri ACTIVATOR;
@@ -269,7 +269,7 @@ OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
 #ifndef __WWSSyndicationLink_DEFINED__
 #define __WWSSyndicationLink_DEFINED__
 
-OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
+OBJCUWPWINDOWSWEBSYNDICATIONEXPORT
 @interface WWSSyndicationLink : RTObject <WWSISyndicationNode>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 + (WWSSyndicationLink*)makeSyndicationLink:(WFUri*)uri ACTIVATOR;
@@ -299,7 +299,7 @@ OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
 #ifndef __WWSSyndicationPerson_DEFINED__
 #define __WWSSyndicationPerson_DEFINED__
 
-OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
+OBJCUWPWINDOWSWEBSYNDICATIONEXPORT
 @interface WWSSyndicationPerson : RTObject <WWSISyndicationNode>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 + (WWSSyndicationPerson*)makeSyndicationPerson:(NSString *)name ACTIVATOR;
@@ -326,7 +326,7 @@ OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
 #ifndef __WWSSyndicationCategory_DEFINED__
 #define __WWSSyndicationCategory_DEFINED__
 
-OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
+OBJCUWPWINDOWSWEBSYNDICATIONEXPORT
 @interface WWSSyndicationCategory : RTObject <WWSISyndicationNode>
 + (WWSSyndicationCategory*)makeSyndicationCategory:(NSString *)term ACTIVATOR;
 + (WWSSyndicationCategory*)makeSyndicationCategoryEx:(NSString *)term scheme:(NSString *)scheme label:(NSString *)label ACTIVATOR;
@@ -353,7 +353,7 @@ OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
 #ifndef __WWSSyndicationFeed_DEFINED__
 #define __WWSSyndicationFeed_DEFINED__
 
-OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
+OBJCUWPWINDOWSWEBSYNDICATIONEXPORT
 @interface WWSSyndicationFeed : RTObject <WWSISyndicationNode>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 + (WWSSyndicationFeed*)makeSyndicationFeed:(NSString *)title subtitle:(NSString *)subtitle uri:(WFUri*)uri ACTIVATOR;
@@ -396,7 +396,7 @@ OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
 #ifndef __WWSSyndicationItem_DEFINED__
 #define __WWSSyndicationItem_DEFINED__
 
-OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
+OBJCUWPWINDOWSWEBSYNDICATIONEXPORT
 @interface WWSSyndicationItem : RTObject <WWSISyndicationNode>
 + (WWSSyndicationItem*)makeSyndicationItem:(NSString *)title content:(WWSSyndicationContent*)content uri:(WFUri*)uri ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
@@ -438,7 +438,7 @@ OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
 #ifndef __WWSSyndicationClient_DEFINED__
 #define __WWSSyndicationClient_DEFINED__
 
-OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
+OBJCUWPWINDOWSWEBSYNDICATIONEXPORT
 @interface WWSSyndicationClient : RTObject <WWSISyndicationClient>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 + (WWSSyndicationClient*)makeSyndicationClient:(WSCPasswordCredential*)serverCredential ACTIVATOR;
@@ -460,7 +460,7 @@ OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
 #ifndef __WWSSyndicationError_DEFINED__
 #define __WWSSyndicationError_DEFINED__
 
-OBJCUWP_WINDOWS_WEB_SYNDICATION_EXPORT
+OBJCUWPWINDOWSWEBSYNDICATIONEXPORT
 @interface WWSSyndicationError : RTObject
 + (WWSSyndicationErrorStatus)getStatus:(int)hresult;
 @end

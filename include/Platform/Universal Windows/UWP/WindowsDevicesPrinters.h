@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_DEVICES_PRINTERS_EXPORT
-#define OBJCUWP_WINDOWS_DEVICES_PRINTERS_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Devices_Printers.lib")
+#ifndef OBJCUWPWINDOWSDEVICESPRINTERSEXPORT
+#define OBJCUWPWINDOWSDEVICESPRINTERSEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsDevicesPrinters.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -38,7 +38,7 @@
 #ifndef __WDPPrint3DDevice_DEFINED__
 #define __WDPPrint3DDevice_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_PRINTERS_EXPORT
+OBJCUWPWINDOWSDEVICESPRINTERSEXPORT
 @interface WDPPrint3DDevice : RTObject
 + (void)fromIdAsync:(NSString *)deviceId success:(void (^)(WDPPrint3DDevice*))success failure:(void (^)(NSError*))failure;
 + (NSString *)getDeviceSelector;
@@ -54,7 +54,7 @@ OBJCUWP_WINDOWS_DEVICES_PRINTERS_EXPORT
 #ifndef __WDPPrintSchema_DEFINED__
 #define __WDPPrintSchema_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_PRINTERS_EXPORT
+OBJCUWPWINDOWSDEVICESPRINTERSEXPORT
 @interface WDPPrintSchema : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_COMMUNICATIONBLOCKING_EXPORT
-#define OBJCUWP_WINDOWS_APPLICATIONMODEL_COMMUNICATIONBLOCKING_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_CommunicationBlocking.lib")
+#ifndef OBJCUWPWINDOWSAPPLICATIONMODELCOMMUNICATIONBLOCKINGEXPORT
+#define OBJCUWPWINDOWSAPPLICATIONMODELCOMMUNICATIONBLOCKINGEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsApplicationModelCommunicationBlocking.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -36,7 +36,7 @@
 #ifndef __WACCommunicationBlockingAppManager_DEFINED__
 #define __WACCommunicationBlockingAppManager_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_COMMUNICATIONBLOCKING_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCOMMUNICATIONBLOCKINGEXPORT
 @interface WACCommunicationBlockingAppManager : RTObject
 + (void)requestSetAsActiveBlockingAppAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 + (void)showCommunicationBlockingSettingsUI;
@@ -50,7 +50,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_COMMUNICATIONBLOCKING_EXPORT
 #ifndef __WACCommunicationBlockingAccessManager_DEFINED__
 #define __WACCommunicationBlockingAccessManager_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_COMMUNICATIONBLOCKING_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCOMMUNICATIONBLOCKINGEXPORT
 @interface WACCommunicationBlockingAccessManager : RTObject
 + (void)isBlockedNumberAsync:(NSString *)number success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 + (BOOL)showBlockNumbersUI:(id<NSFastEnumeration> /* NSString * */)phoneNumbers;

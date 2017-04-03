@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
-#define OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_RandomStuff.lib")
+#ifndef OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
+#define OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsConsolidatedNamespace.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -169,7 +169,7 @@ typedef unsigned WNSControlChannelTriggerResetReason;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Networking.Sockets.RoundTripTimeStatistics
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSRoundTripTimeStatistics : NSObject
 + (instancetype)new;
 @property unsigned int variance;
@@ -179,7 +179,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @end
 
 // [struct] Windows.Networking.Sockets.BandwidthStatistics
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSBandwidthStatistics : NSObject
 + (instancetype)new;
 @property uint64_t outboundBitsPerSecond;
@@ -201,7 +201,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) NSMutableArray* /* NSString * */ supportedProtocols;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSIWebSocketControl : RTObject <WNSIWebSocketControl>
 @end
 
@@ -215,7 +215,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) NSMutableArray* /* WSCCChainValidationResult */ ignorableServerCertificateErrors;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSIWebSocketControl2 : RTObject <WNSIWebSocketControl2>
 @end
 
@@ -231,7 +231,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) NSString * protocol;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSIWebSocketInformation : RTObject <WNSIWebSocketInformation>
 @end
 
@@ -248,7 +248,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) NSArray* /* WSCCCertificate* */ serverIntermediateCertificates;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSIWebSocketInformation2 : RTObject <WNSIWebSocketInformation2>
 @end
 
@@ -262,7 +262,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -282,7 +282,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSIWebSocket : RTObject <WNSIWebSocket>
 @end
 
@@ -296,7 +296,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) WNSControlChannelTrigger* controlChannelTrigger;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSIControlChannelTriggerEventDetails : RTObject <WNSIControlChannelTriggerEventDetails>
 @end
 
@@ -312,7 +312,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 @property (readonly) BOOL softwareSlotReset;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSIControlChannelTriggerResetEventDetails : RTObject <WNSIControlChannelTriggerResetEventDetails>
 @end
 
@@ -322,7 +322,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WNSSocketActivityContext_DEFINED__
 #define __WNSSocketActivityContext_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSSocketActivityContext : RTObject
 + (WNSSocketActivityContext*)make:(RTObject<WSSIBuffer>*)data ACTIVATOR;
 #if defined(__cplusplus)
@@ -337,7 +337,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WNSDatagramSocket_DEFINED__
 #define __WNSDatagramSocket_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSDatagramSocket : RTObject <WFIClosable>
 + (void)getEndpointPairsAsync:(WNHostName*)remoteHostName remoteServiceName:(NSString *)remoteServiceName success:(void (^)(NSArray* /* WNEndpointPair* */))success failure:(void (^)(NSError*))failure;
 + (void)getEndpointPairsWithSortOptionsAsync:(WNHostName*)remoteHostName remoteServiceName:(NSString *)remoteServiceName sortOptions:(WNHostNameSortOptions)sortOptions success:(void (^)(NSArray* /* WNEndpointPair* */))success failure:(void (^)(NSError*))failure;
@@ -373,7 +373,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WNSStreamSocket_DEFINED__
 #define __WNSStreamSocket_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSStreamSocket : RTObject <WFIClosable>
 + (void)getEndpointPairsAsync:(WNHostName*)remoteHostName remoteServiceName:(NSString *)remoteServiceName success:(void (^)(NSArray* /* WNEndpointPair* */))success failure:(void (^)(NSError*))failure;
 + (void)getEndpointPairsWithSortOptionsAsync:(WNHostName*)remoteHostName remoteServiceName:(NSString *)remoteServiceName sortOptions:(WNHostNameSortOptions)sortOptions success:(void (^)(NSArray* /* WNEndpointPair* */))success failure:(void (^)(NSError*))failure;
@@ -406,7 +406,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WNSStreamSocketListener_DEFINED__
 #define __WNSStreamSocketListener_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSStreamSocketListener : RTObject <WFIClosable>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -434,7 +434,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WNSSocketActivityInformation_DEFINED__
 #define __WNSSocketActivityInformation_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSSocketActivityInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -455,7 +455,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WNSDatagramSocketControl_DEFINED__
 #define __WNSDatagramSocketControl_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSDatagramSocketControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -473,7 +473,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WNSDatagramSocketInformation_DEFINED__
 #define __WNSDatagramSocketInformation_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSDatagramSocketInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -490,7 +490,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WNSDatagramSocketMessageReceivedEventArgs_DEFINED__
 #define __WNSDatagramSocketMessageReceivedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSDatagramSocketMessageReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -508,7 +508,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WNSStreamSocketControl_DEFINED__
 #define __WNSStreamSocketControl_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSStreamSocketControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -529,7 +529,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WNSStreamSocketInformation_DEFINED__
 #define __WNSStreamSocketInformation_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSStreamSocketInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -556,7 +556,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WNSStreamSocketListenerControl_DEFINED__
 #define __WNSStreamSocketListenerControl_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSStreamSocketListenerControl : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -574,7 +574,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WNSStreamSocketListenerInformation_DEFINED__
 #define __WNSStreamSocketListenerInformation_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSStreamSocketListenerInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -588,7 +588,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WNSStreamSocketListenerConnectionReceivedEventArgs_DEFINED__
 #define __WNSStreamSocketListenerConnectionReceivedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSStreamSocketListenerConnectionReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -602,7 +602,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WNSWebSocketClosedEventArgs_DEFINED__
 #define __WNSWebSocketClosedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSWebSocketClosedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -617,7 +617,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WNSMessageWebSocketControl_DEFINED__
 #define __WNSMessageWebSocketControl_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSMessageWebSocketControl : RTObject <WNSIWebSocketControl, WNSIWebSocketControl2>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -637,7 +637,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WNSMessageWebSocketInformation_DEFINED__
 #define __WNSMessageWebSocketInformation_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSMessageWebSocketInformation : RTObject <WNSIWebSocketInformation, WNSIWebSocketInformation2>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -657,7 +657,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WNSMessageWebSocket_DEFINED__
 #define __WNSMessageWebSocket_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSMessageWebSocket : RTObject <WNSIWebSocket, WFIClosable>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -684,7 +684,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WNSMessageWebSocketMessageReceivedEventArgs_DEFINED__
 #define __WNSMessageWebSocketMessageReceivedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSMessageWebSocketMessageReceivedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -700,7 +700,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WNSWebSocketServerCustomValidationRequestedEventArgs_DEFINED__
 #define __WNSWebSocketServerCustomValidationRequestedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSWebSocketServerCustomValidationRequestedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -719,7 +719,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WNSStreamWebSocketControl_DEFINED__
 #define __WNSStreamWebSocketControl_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSStreamWebSocketControl : RTObject <WNSIWebSocketControl, WNSIWebSocketControl2>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -738,7 +738,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WNSStreamWebSocketInformation_DEFINED__
 #define __WNSStreamWebSocketInformation_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSStreamWebSocketInformation : RTObject <WNSIWebSocketInformation, WNSIWebSocketInformation2>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -758,7 +758,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WNSStreamWebSocket_DEFINED__
 #define __WNSStreamWebSocket_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSStreamWebSocket : RTObject <WNSIWebSocket, WFIClosable>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -788,7 +788,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 - (void)run:(RTObject<WABIBackgroundTaskInstance>*)taskInstance;
 @end
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WABIBackgroundTask : RTObject <WABIBackgroundTask>
 @end
 
@@ -798,7 +798,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WNSWebSocketKeepAlive_DEFINED__
 #define __WNSWebSocketKeepAlive_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSWebSocketKeepAlive : RTObject <WABIBackgroundTask>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -813,7 +813,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WNSSocketError_DEFINED__
 #define __WNSSocketError_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSSocketError : RTObject
 + (WNSSocketErrorStatus)getStatus:(int)hresult;
 @end
@@ -824,7 +824,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WNSWebSocketError_DEFINED__
 #define __WNSWebSocketError_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSWebSocketError : RTObject
 + (WWWebErrorStatus)getStatus:(int)hresult;
 @end
@@ -835,7 +835,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WNSSocketActivityTriggerDetails_DEFINED__
 #define __WNSSocketActivityTriggerDetails_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSSocketActivityTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -850,7 +850,7 @@ OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
 #ifndef __WNSControlChannelTrigger_DEFINED__
 #define __WNSControlChannelTrigger_DEFINED__
 
-OBJCUWP_WINDOWS_RANDOMSTUFF_EXPORT
+OBJCUWPWINDOWSCONSOLIDATEDNAMESPACEEXPORT
 @interface WNSControlChannelTrigger : RTObject <WFIClosable>
 + (WNSControlChannelTrigger*)makeControlChannelTrigger:(NSString *)channelId serverKeepAliveIntervalInMinutes:(unsigned int)serverKeepAliveIntervalInMinutes ACTIVATOR;
 + (WNSControlChannelTrigger*)makeControlChannelTriggerEx:(NSString *)channelId serverKeepAliveIntervalInMinutes:(unsigned int)serverKeepAliveIntervalInMinutes resourceRequestType:(WNSControlChannelTriggerResourceType)resourceRequestType ACTIVATOR;

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_XAML_EXPORT
-#define OBJCUWP_WINDOWS_UI_XAML_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml.lib")
+#ifndef OBJCUWPWINDOWSUIXAMLEXPORT
+#define OBJCUWPWINDOWSUIXAMLEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUIXaml.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -224,7 +224,7 @@ typedef void(^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, W
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.UI.Xaml.Automation.Peers.RawElementProviderRuntimeId
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPRawElementProviderRuntimeId : NSObject
 + (instancetype)new;
 @property unsigned int part1;
@@ -239,7 +239,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (WUXAPItemAutomationPeer*)onCreateItemAutomationPeer:(RTObject*)item;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIItemsControlAutomationPeerOverrides2 : RTObject <WUXAPIItemsControlAutomationPeerOverrides2>
 @end
 
@@ -279,7 +279,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (WUXAPAutomationLiveSetting)getLiveSettingCore;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIAutomationPeerOverrides : RTObject <WUXAPIAutomationPeerOverrides>
 @end
 
@@ -294,7 +294,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (NSArray* /* WUXAPAutomationPeer* */)getControlledPeersCore;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIAutomationPeerOverrides2 : RTObject <WUXAPIAutomationPeerOverrides2>
 @end
 
@@ -314,7 +314,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (int)getLevelCore;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIAutomationPeerOverrides3 : RTObject <WUXAPIAutomationPeerOverrides3>
 @end
 
@@ -329,7 +329,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (NSString *)getLocalizedLandmarkTypeCore;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIAutomationPeerOverrides4 : RTObject <WUXAPIAutomationPeerOverrides4>
 @end
 
@@ -348,7 +348,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (id<NSFastEnumeration> /* WUXAPAutomationPeer* */)getFlowsFromCore;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIAutomationPeerOverrides5 : RTObject <WUXAPIAutomationPeerOverrides5>
 @end
 
@@ -358,7 +358,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -379,7 +379,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPAutomationPeer_DEFINED__
 #define __WUXAPAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPAutomationPeer : WXDependencyObject
 + (WUXAPRawElementProviderRuntimeId*)generateRawElementProviderRuntimeId;
 + (BOOL)listenerExists:(WUXAPAutomationEvents)eventId;
@@ -489,7 +489,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPAutomationPeerAnnotation_DEFINED__
 #define __WUXAPAutomationPeerAnnotation_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPAutomationPeerAnnotation : WXDependencyObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 + (WUXAPAutomationPeerAnnotation*)makeInstance:(WUXAAnnotationType)type ACTIVATOR;
@@ -509,7 +509,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPFrameworkElementAutomationPeer_DEFINED__
 #define __WUXAPFrameworkElementAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPFrameworkElementAutomationPeer : WUXAPAutomationPeer
 + (WUXAPAutomationPeer*)fromElement:(WXUIElement*)element;
 + (WUXAPAutomationPeer*)createPeerForElement:(WXUIElement*)element;
@@ -526,7 +526,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPButtonBaseAutomationPeer_DEFINED__
 #define __WUXAPButtonBaseAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPButtonBaseAutomationPeer : WUXAPFrameworkElementAutomationPeer
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -539,7 +539,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPCaptureElementAutomationPeer_DEFINED__
 #define __WUXAPCaptureElementAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPCaptureElementAutomationPeer : WUXAPFrameworkElementAutomationPeer
 + (WUXAPCaptureElementAutomationPeer*)makeInstanceWithOwner:(WXCCaptureElement*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -553,7 +553,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPComboBoxItemAutomationPeer_DEFINED__
 #define __WUXAPComboBoxItemAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPComboBoxItemAutomationPeer : WUXAPFrameworkElementAutomationPeer
 + (WUXAPComboBoxItemAutomationPeer*)makeInstanceWithOwner:(WXCComboBoxItem*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -567,7 +567,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPFlipViewItemAutomationPeer_DEFINED__
 #define __WUXAPFlipViewItemAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPFlipViewItemAutomationPeer : WUXAPFrameworkElementAutomationPeer
 + (WUXAPFlipViewItemAutomationPeer*)makeInstanceWithOwner:(WXCFlipViewItem*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -581,7 +581,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPGroupItemAutomationPeer_DEFINED__
 #define __WUXAPGroupItemAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPGroupItemAutomationPeer : WUXAPFrameworkElementAutomationPeer
 + (WUXAPGroupItemAutomationPeer*)makeInstanceWithOwner:(WXCGroupItem*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -595,7 +595,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPImageAutomationPeer_DEFINED__
 #define __WUXAPImageAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPImageAutomationPeer : WUXAPFrameworkElementAutomationPeer
 + (WUXAPImageAutomationPeer*)makeInstanceWithOwner:(WXCImage*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -609,7 +609,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPListBoxItemAutomationPeer_DEFINED__
 #define __WUXAPListBoxItemAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPListBoxItemAutomationPeer : WUXAPFrameworkElementAutomationPeer
 + (WUXAPListBoxItemAutomationPeer*)makeInstanceWithOwner:(WXCListBoxItem*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -623,7 +623,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPMediaTransportControlsAutomationPeer_DEFINED__
 #define __WUXAPMediaTransportControlsAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPMediaTransportControlsAutomationPeer : WUXAPFrameworkElementAutomationPeer
 + (WUXAPMediaTransportControlsAutomationPeer*)makeInstanceWithOwner:(WXCMediaTransportControls*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -637,7 +637,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPPasswordBoxAutomationPeer_DEFINED__
 #define __WUXAPPasswordBoxAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPPasswordBoxAutomationPeer : WUXAPFrameworkElementAutomationPeer
 + (WUXAPPasswordBoxAutomationPeer*)makeInstanceWithOwner:(WXCPasswordBox*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -651,7 +651,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPProgressRingAutomationPeer_DEFINED__
 #define __WUXAPProgressRingAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPProgressRingAutomationPeer : WUXAPFrameworkElementAutomationPeer
 + (WUXAPProgressRingAutomationPeer*)makeInstanceWithOwner:(WXCProgressRing*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -665,7 +665,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPRichEditBoxAutomationPeer_DEFINED__
 #define __WUXAPRichEditBoxAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPRichEditBoxAutomationPeer : WUXAPFrameworkElementAutomationPeer
 + (WUXAPRichEditBoxAutomationPeer*)makeInstanceWithOwner:(WXCRichEditBox*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -679,7 +679,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPRichTextBlockAutomationPeer_DEFINED__
 #define __WUXAPRichTextBlockAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPRichTextBlockAutomationPeer : WUXAPFrameworkElementAutomationPeer
 + (WUXAPRichTextBlockAutomationPeer*)makeInstanceWithOwner:(WXCRichTextBlock*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -693,7 +693,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPRichTextBlockOverflowAutomationPeer_DEFINED__
 #define __WUXAPRichTextBlockOverflowAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPRichTextBlockOverflowAutomationPeer : WUXAPFrameworkElementAutomationPeer
 + (WUXAPRichTextBlockOverflowAutomationPeer*)makeInstanceWithOwner:(WXCRichTextBlockOverflow*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -707,7 +707,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPSettingsFlyoutAutomationPeer_DEFINED__
 #define __WUXAPSettingsFlyoutAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPSettingsFlyoutAutomationPeer : WUXAPFrameworkElementAutomationPeer
 + (WUXAPSettingsFlyoutAutomationPeer*)makeInstanceWithOwner:(WXCSettingsFlyout*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -721,7 +721,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPTextBlockAutomationPeer_DEFINED__
 #define __WUXAPTextBlockAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPTextBlockAutomationPeer : WUXAPFrameworkElementAutomationPeer
 + (WUXAPTextBlockAutomationPeer*)makeInstanceWithOwner:(WXCTextBlock*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -735,7 +735,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPTextBoxAutomationPeer_DEFINED__
 #define __WUXAPTextBoxAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPTextBoxAutomationPeer : WUXAPFrameworkElementAutomationPeer
 + (WUXAPTextBoxAutomationPeer*)makeInstanceWithOwner:(WXCTextBox*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -749,7 +749,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPThumbAutomationPeer_DEFINED__
 #define __WUXAPThumbAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPThumbAutomationPeer : WUXAPFrameworkElementAutomationPeer
 + (WUXAPThumbAutomationPeer*)makeInstanceWithOwner:(WUXCPThumb*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -763,7 +763,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPAutoSuggestBoxAutomationPeer_DEFINED__
 #define __WUXAPAutoSuggestBoxAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPAutoSuggestBoxAutomationPeer : WUXAPFrameworkElementAutomationPeer
 + (WUXAPAutoSuggestBoxAutomationPeer*)makeInstanceWithOwner:(WXCAutoSuggestBox*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -777,7 +777,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPDatePickerAutomationPeer_DEFINED__
 #define __WUXAPDatePickerAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPDatePickerAutomationPeer : WUXAPFrameworkElementAutomationPeer
 + (WUXAPDatePickerAutomationPeer*)makeInstanceWithOwner:(WXCDatePicker*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -791,7 +791,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPFlyoutPresenterAutomationPeer_DEFINED__
 #define __WUXAPFlyoutPresenterAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPFlyoutPresenterAutomationPeer : WUXAPFrameworkElementAutomationPeer
 + (WUXAPFlyoutPresenterAutomationPeer*)makeInstanceWithOwner:(WXCFlyoutPresenter*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -805,7 +805,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPGridViewItemAutomationPeer_DEFINED__
 #define __WUXAPGridViewItemAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPGridViewItemAutomationPeer : WUXAPFrameworkElementAutomationPeer
 + (WUXAPGridViewItemAutomationPeer*)makeInstanceWithOwner:(WXCGridViewItem*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -819,7 +819,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPHubAutomationPeer_DEFINED__
 #define __WUXAPHubAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPHubAutomationPeer : WUXAPFrameworkElementAutomationPeer
 + (WUXAPHubAutomationPeer*)makeInstanceWithOwner:(WXCHub*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -833,7 +833,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPListViewBaseHeaderItemAutomationPeer_DEFINED__
 #define __WUXAPListViewBaseHeaderItemAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPListViewBaseHeaderItemAutomationPeer : WUXAPFrameworkElementAutomationPeer
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -846,7 +846,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPListViewItemAutomationPeer_DEFINED__
 #define __WUXAPListViewItemAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPListViewItemAutomationPeer : WUXAPFrameworkElementAutomationPeer
 + (WUXAPListViewItemAutomationPeer*)makeInstanceWithOwner:(WXCListViewItem*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -860,7 +860,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPMediaElementAutomationPeer_DEFINED__
 #define __WUXAPMediaElementAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPMediaElementAutomationPeer : WUXAPFrameworkElementAutomationPeer
 + (WUXAPMediaElementAutomationPeer*)makeInstanceWithOwner:(WXCMediaElement*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -874,7 +874,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPMediaPlayerElementAutomationPeer_DEFINED__
 #define __WUXAPMediaPlayerElementAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPMediaPlayerElementAutomationPeer : WUXAPFrameworkElementAutomationPeer
 + (WUXAPMediaPlayerElementAutomationPeer*)makeInstanceWithOwner:(WXCMediaPlayerElement*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -888,7 +888,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPSearchBoxAutomationPeer_DEFINED__
 #define __WUXAPSearchBoxAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPSearchBoxAutomationPeer : WUXAPFrameworkElementAutomationPeer
 + (WUXAPSearchBoxAutomationPeer*)makeInstanceWithOwner:(WXCSearchBox*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -902,7 +902,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPTimePickerAutomationPeer_DEFINED__
 #define __WUXAPTimePickerAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPTimePickerAutomationPeer : WUXAPFrameworkElementAutomationPeer
 + (WUXAPTimePickerAutomationPeer*)makeInstanceWithOwner:(WXCTimePicker*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -916,7 +916,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPGridViewHeaderItemAutomationPeer_DEFINED__
 #define __WUXAPGridViewHeaderItemAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPGridViewHeaderItemAutomationPeer : WUXAPListViewBaseHeaderItemAutomationPeer
 + (WUXAPGridViewHeaderItemAutomationPeer*)makeInstanceWithOwner:(WXCGridViewHeaderItem*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -930,7 +930,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPListViewHeaderItemAutomationPeer_DEFINED__
 #define __WUXAPListViewHeaderItemAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPListViewHeaderItemAutomationPeer : WUXAPListViewBaseHeaderItemAutomationPeer
 + (WUXAPListViewHeaderItemAutomationPeer*)makeInstanceWithOwner:(WXCListViewHeaderItem*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -948,7 +948,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)invoke;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIInvokeProvider : RTObject <WUXAPIInvokeProvider>
 @end
 
@@ -958,7 +958,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPButtonAutomationPeer_DEFINED__
 #define __WUXAPButtonAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPButtonAutomationPeer : WUXAPButtonBaseAutomationPeer <WUXAPIInvokeProvider>
 + (WUXAPButtonAutomationPeer*)makeInstanceWithOwner:(WXCButton*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -973,7 +973,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPHyperlinkButtonAutomationPeer_DEFINED__
 #define __WUXAPHyperlinkButtonAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPHyperlinkButtonAutomationPeer : WUXAPButtonBaseAutomationPeer <WUXAPIInvokeProvider>
 + (WUXAPHyperlinkButtonAutomationPeer*)makeInstanceWithOwner:(WXCHyperlinkButton*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -988,7 +988,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPRepeatButtonAutomationPeer_DEFINED__
 #define __WUXAPRepeatButtonAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPRepeatButtonAutomationPeer : WUXAPButtonBaseAutomationPeer <WUXAPIInvokeProvider>
 + (WUXAPRepeatButtonAutomationPeer*)makeInstanceWithOwner:(WUXCPRepeatButton*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -1003,7 +1003,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPMenuFlyoutItemAutomationPeer_DEFINED__
 #define __WUXAPMenuFlyoutItemAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPMenuFlyoutItemAutomationPeer : WUXAPFrameworkElementAutomationPeer <WUXAPIInvokeProvider>
 + (WUXAPMenuFlyoutItemAutomationPeer*)makeInstanceWithOwner:(WXCMenuFlyoutItem*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -1018,7 +1018,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPAppBarButtonAutomationPeer_DEFINED__
 #define __WUXAPAppBarButtonAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPAppBarButtonAutomationPeer : WUXAPButtonAutomationPeer
 + (WUXAPAppBarButtonAutomationPeer*)makeInstanceWithOwner:(WXCAppBarButton*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -1036,7 +1036,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (WUXAPIRawElementProviderSimple*)findItemByProperty:(WUXAPIRawElementProviderSimple*)startAfter automationProperty:(WUXAAutomationProperty*)automationProperty value:(RTObject*)value;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIItemContainerProvider : RTObject <WUXAPIItemContainerProvider>
 @end
 
@@ -1046,7 +1046,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPItemsControlAutomationPeer_DEFINED__
 #define __WUXAPItemsControlAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPItemsControlAutomationPeer : WUXAPFrameworkElementAutomationPeer <WUXAPIItemContainerProvider>
 + (WUXAPItemsControlAutomationPeer*)makeInstanceWithOwner:(WXCItemsControl*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -1063,7 +1063,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPMenuFlyoutPresenterAutomationPeer_DEFINED__
 #define __WUXAPMenuFlyoutPresenterAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPMenuFlyoutPresenterAutomationPeer : WUXAPItemsControlAutomationPeer
 + (WUXAPMenuFlyoutPresenterAutomationPeer*)makeInstanceWithOwner:(WXCMenuFlyoutPresenter*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -1087,7 +1087,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)setValue:(double)value;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIRangeValueProvider : RTObject <WUXAPIRangeValueProvider>
 @end
 
@@ -1097,7 +1097,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPRangeBaseAutomationPeer_DEFINED__
 #define __WUXAPRangeBaseAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPRangeBaseAutomationPeer : WUXAPFrameworkElementAutomationPeer <WUXAPIRangeValueProvider>
 + (WUXAPRangeBaseAutomationPeer*)makeInstanceWithOwner:(WUXCPRangeBase*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -1118,7 +1118,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPProgressBarAutomationPeer_DEFINED__
 #define __WUXAPProgressBarAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPProgressBarAutomationPeer : WUXAPRangeBaseAutomationPeer
 + (WUXAPProgressBarAutomationPeer*)makeInstanceWithOwner:(WXCProgressBar*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -1132,7 +1132,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPScrollBarAutomationPeer_DEFINED__
 #define __WUXAPScrollBarAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPScrollBarAutomationPeer : WUXAPRangeBaseAutomationPeer
 + (WUXAPScrollBarAutomationPeer*)makeInstanceWithOwner:(WUXCPScrollBar*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -1146,7 +1146,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPSliderAutomationPeer_DEFINED__
 #define __WUXAPSliderAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPSliderAutomationPeer : WUXAPRangeBaseAutomationPeer
 + (WUXAPSliderAutomationPeer*)makeInstanceWithOwner:(WXCSlider*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -1164,7 +1164,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)scrollIntoView;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIScrollItemProvider : RTObject <WUXAPIScrollItemProvider>
 @end
 
@@ -1174,7 +1174,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPHubSectionAutomationPeer_DEFINED__
 #define __WUXAPHubSectionAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPHubSectionAutomationPeer : WUXAPFrameworkElementAutomationPeer <WUXAPIScrollItemProvider>
 + (WUXAPHubSectionAutomationPeer*)makeInstanceWithOwner:(WXCHubSection*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -1200,7 +1200,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)setScrollPercent:(double)horizontalPercent verticalPercent:(double)verticalPercent;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIScrollProvider : RTObject <WUXAPIScrollProvider>
 @end
 
@@ -1210,7 +1210,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPScrollViewerAutomationPeer_DEFINED__
 #define __WUXAPScrollViewerAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPScrollViewerAutomationPeer : WUXAPFrameworkElementAutomationPeer <WUXAPIScrollProvider>
 + (WUXAPScrollViewerAutomationPeer*)makeInstanceWithOwner:(WXCScrollViewer*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -1238,7 +1238,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (NSArray* /* WUXAPIRawElementProviderSimple* */)getSelection;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPISelectionProvider : RTObject <WUXAPISelectionProvider>
 @end
 
@@ -1248,7 +1248,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPSelectorAutomationPeer_DEFINED__
 #define __WUXAPSelectorAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPSelectorAutomationPeer : WUXAPItemsControlAutomationPeer <WUXAPISelectionProvider>
 + (WUXAPSelectorAutomationPeer*)makeInstanceWithOwner:(WUXCPSelector*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -1265,7 +1265,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPFlipViewAutomationPeer_DEFINED__
 #define __WUXAPFlipViewAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPFlipViewAutomationPeer : WUXAPSelectorAutomationPeer
 + (WUXAPFlipViewAutomationPeer*)makeInstanceWithOwner:(WXCFlipView*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -1279,7 +1279,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPListBoxAutomationPeer_DEFINED__
 #define __WUXAPListBoxAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPListBoxAutomationPeer : WUXAPSelectorAutomationPeer
 + (WUXAPListBoxAutomationPeer*)makeInstanceWithOwner:(WXCListBox*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -1298,7 +1298,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 @property (readonly) NSArray* /* NSString * */ dropEffects;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIDropTargetProvider : RTObject <WUXAPIDropTargetProvider>
 @end
 
@@ -1308,7 +1308,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPListViewBaseAutomationPeer_DEFINED__
 #define __WUXAPListViewBaseAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPListViewBaseAutomationPeer : WUXAPSelectorAutomationPeer <WUXAPIDropTargetProvider>
 + (WUXAPListViewBaseAutomationPeer*)makeInstanceWithOwner:(WXCListViewBase*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -1324,7 +1324,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPGridViewAutomationPeer_DEFINED__
 #define __WUXAPGridViewAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPGridViewAutomationPeer : WUXAPListViewBaseAutomationPeer
 + (WUXAPGridViewAutomationPeer*)makeInstanceWithOwner:(WXCGridView*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -1338,7 +1338,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPListViewAutomationPeer_DEFINED__
 #define __WUXAPListViewAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPListViewAutomationPeer : WUXAPListViewBaseAutomationPeer
 + (WUXAPListViewAutomationPeer*)makeInstanceWithOwner:(WXCListView*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -1357,7 +1357,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)toggle;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIToggleProvider : RTObject <WUXAPIToggleProvider>
 @end
 
@@ -1367,7 +1367,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPSemanticZoomAutomationPeer_DEFINED__
 #define __WUXAPSemanticZoomAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPSemanticZoomAutomationPeer : WUXAPFrameworkElementAutomationPeer <WUXAPIToggleProvider>
 + (WUXAPSemanticZoomAutomationPeer*)makeInstanceWithOwner:(WXCSemanticZoom*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -1383,7 +1383,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPToggleSwitchAutomationPeer_DEFINED__
 #define __WUXAPToggleSwitchAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPToggleSwitchAutomationPeer : WUXAPFrameworkElementAutomationPeer <WUXAPIToggleProvider>
 + (WUXAPToggleSwitchAutomationPeer*)makeInstanceWithOwner:(WXCToggleSwitch*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -1399,7 +1399,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPToggleButtonAutomationPeer_DEFINED__
 #define __WUXAPToggleButtonAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPToggleButtonAutomationPeer : WUXAPButtonBaseAutomationPeer <WUXAPIToggleProvider>
 + (WUXAPToggleButtonAutomationPeer*)makeInstanceWithOwner:(WUXCPToggleButton*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -1415,7 +1415,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPCheckBoxAutomationPeer_DEFINED__
 #define __WUXAPCheckBoxAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPCheckBoxAutomationPeer : WUXAPToggleButtonAutomationPeer
 + (WUXAPCheckBoxAutomationPeer*)makeInstanceWithOwner:(WXCCheckBox*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -1437,7 +1437,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)select;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPISelectionItemProvider : RTObject <WUXAPISelectionItemProvider>
 @end
 
@@ -1447,7 +1447,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPRadioButtonAutomationPeer_DEFINED__
 #define __WUXAPRadioButtonAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPRadioButtonAutomationPeer : WUXAPToggleButtonAutomationPeer <WUXAPISelectionItemProvider>
 + (WUXAPRadioButtonAutomationPeer*)makeInstanceWithOwner:(WXCRadioButton*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -1466,7 +1466,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPToggleMenuFlyoutItemAutomationPeer_DEFINED__
 #define __WUXAPToggleMenuFlyoutItemAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPToggleMenuFlyoutItemAutomationPeer : WUXAPFrameworkElementAutomationPeer <WUXAPIToggleProvider>
 + (WUXAPToggleMenuFlyoutItemAutomationPeer*)makeInstanceWithOwner:(WXCToggleMenuFlyoutItem*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -1482,7 +1482,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPAppBarToggleButtonAutomationPeer_DEFINED__
 #define __WUXAPAppBarToggleButtonAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPAppBarToggleButtonAutomationPeer : WUXAPToggleButtonAutomationPeer
 + (WUXAPAppBarToggleButtonAutomationPeer*)makeInstanceWithOwner:(WXCAppBarToggleButton*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -1500,7 +1500,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)realize;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIVirtualizedItemProvider : RTObject <WUXAPIVirtualizedItemProvider>
 @end
 
@@ -1510,7 +1510,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPItemAutomationPeer_DEFINED__
 #define __WUXAPItemAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPItemAutomationPeer : WUXAPAutomationPeer <WUXAPIVirtualizedItemProvider>
 + (WUXAPItemAutomationPeer*)makeInstanceWithParentAndItem:(RTObject*)item parent:(WUXAPItemsControlAutomationPeer*)parent ACTIVATOR;
 #if defined(__cplusplus)
@@ -1527,7 +1527,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPSelectorItemAutomationPeer_DEFINED__
 #define __WUXAPSelectorItemAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPSelectorItemAutomationPeer : WUXAPItemAutomationPeer <WUXAPISelectionItemProvider>
 + (WUXAPSelectorItemAutomationPeer*)makeInstanceWithParentAndItem:(RTObject*)item parent:(WUXAPSelectorAutomationPeer*)parent ACTIVATOR;
 #if defined(__cplusplus)
@@ -1546,7 +1546,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPComboBoxItemDataAutomationPeer_DEFINED__
 #define __WUXAPComboBoxItemDataAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPComboBoxItemDataAutomationPeer : WUXAPSelectorItemAutomationPeer <WUXAPIScrollItemProvider>
 + (WUXAPComboBoxItemDataAutomationPeer*)makeInstanceWithParentAndItem:(RTObject*)item parent:(WUXAPComboBoxAutomationPeer*)parent ACTIVATOR;
 #if defined(__cplusplus)
@@ -1561,7 +1561,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPFlipViewItemDataAutomationPeer_DEFINED__
 #define __WUXAPFlipViewItemDataAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPFlipViewItemDataAutomationPeer : WUXAPSelectorItemAutomationPeer <WUXAPIScrollItemProvider>
 + (WUXAPFlipViewItemDataAutomationPeer*)makeInstanceWithParentAndItem:(RTObject*)item parent:(WUXAPFlipViewAutomationPeer*)parent ACTIVATOR;
 #if defined(__cplusplus)
@@ -1576,7 +1576,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPListBoxItemDataAutomationPeer_DEFINED__
 #define __WUXAPListBoxItemDataAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPListBoxItemDataAutomationPeer : WUXAPSelectorItemAutomationPeer <WUXAPIScrollItemProvider>
 + (WUXAPListBoxItemDataAutomationPeer*)makeInstanceWithParentAndItem:(RTObject*)item parent:(WUXAPListBoxAutomationPeer*)parent ACTIVATOR;
 #if defined(__cplusplus)
@@ -1591,7 +1591,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPGridViewItemDataAutomationPeer_DEFINED__
 #define __WUXAPGridViewItemDataAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPGridViewItemDataAutomationPeer : WUXAPSelectorItemAutomationPeer <WUXAPIScrollItemProvider>
 + (WUXAPGridViewItemDataAutomationPeer*)makeInstanceWithParentAndItem:(RTObject*)item parent:(WUXAPGridViewAutomationPeer*)parent ACTIVATOR;
 #if defined(__cplusplus)
@@ -1606,7 +1606,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPListViewItemDataAutomationPeer_DEFINED__
 #define __WUXAPListViewItemDataAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPListViewItemDataAutomationPeer : WUXAPSelectorItemAutomationPeer <WUXAPIScrollItemProvider>
 + (WUXAPListViewItemDataAutomationPeer*)makeInstanceWithParentAndItem:(RTObject*)item parent:(WUXAPListViewBaseAutomationPeer*)parent ACTIVATOR;
 #if defined(__cplusplus)
@@ -1627,7 +1627,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)expand;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIExpandCollapseProvider : RTObject <WUXAPIExpandCollapseProvider>
 @end
 
@@ -1643,7 +1643,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (void)setValue:(NSString *)value;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIValueProvider : RTObject <WUXAPIValueProvider>
 @end
 
@@ -1665,7 +1665,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 - (BOOL)waitForInputIdle:(int)milliseconds;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPIWindowProvider : RTObject <WUXAPIWindowProvider>
 @end
 
@@ -1675,7 +1675,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPComboBoxAutomationPeer_DEFINED__
 #define __WUXAPComboBoxAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPComboBoxAutomationPeer : WUXAPSelectorAutomationPeer <WUXAPIExpandCollapseProvider, WUXAPIValueProvider, WUXAPIWindowProvider>
 + (WUXAPComboBoxAutomationPeer*)makeInstanceWithOwner:(WXCComboBox*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -1704,7 +1704,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPAppBarAutomationPeer_DEFINED__
 #define __WUXAPAppBarAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPAppBarAutomationPeer : WUXAPFrameworkElementAutomationPeer <WUXAPIToggleProvider, WUXAPIExpandCollapseProvider, WUXAPIWindowProvider>
 + (WUXAPAppBarAutomationPeer*)makeInstanceWithOwner:(WXCAppBar*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -1732,7 +1732,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPInkToolbarAutomationPeer_DEFINED__
 #define __WUXAPInkToolbarAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPInkToolbarAutomationPeer : WUXAPFrameworkElementAutomationPeer
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1745,7 +1745,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPMapControlAutomationPeer_DEFINED__
 #define __WUXAPMapControlAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPMapControlAutomationPeer : WUXAPFrameworkElementAutomationPeer <WUXAPIScrollProvider>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1766,7 +1766,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPLoopingSelectorItemDataAutomationPeer_DEFINED__
 #define __WUXAPLoopingSelectorItemDataAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPLoopingSelectorItemDataAutomationPeer : WUXAPAutomationPeer <WUXAPIVirtualizedItemProvider>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1780,7 +1780,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPDatePickerFlyoutPresenterAutomationPeer_DEFINED__
 #define __WUXAPDatePickerFlyoutPresenterAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPDatePickerFlyoutPresenterAutomationPeer : WUXAPFrameworkElementAutomationPeer
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1793,7 +1793,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPListPickerFlyoutPresenterAutomationPeer_DEFINED__
 #define __WUXAPListPickerFlyoutPresenterAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPListPickerFlyoutPresenterAutomationPeer : WUXAPFrameworkElementAutomationPeer
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1806,7 +1806,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPLoopingSelectorAutomationPeer_DEFINED__
 #define __WUXAPLoopingSelectorAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPLoopingSelectorAutomationPeer : WUXAPFrameworkElementAutomationPeer <WUXAPIExpandCollapseProvider, WUXAPIItemContainerProvider, WUXAPIScrollProvider, WUXAPISelectionProvider>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1834,7 +1834,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPLoopingSelectorItemAutomationPeer_DEFINED__
 #define __WUXAPLoopingSelectorItemAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPLoopingSelectorItemAutomationPeer : WUXAPFrameworkElementAutomationPeer <WUXAPIScrollItemProvider, WUXAPISelectionItemProvider>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1853,7 +1853,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPPickerFlyoutPresenterAutomationPeer_DEFINED__
 #define __WUXAPPickerFlyoutPresenterAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPPickerFlyoutPresenterAutomationPeer : WUXAPFrameworkElementAutomationPeer
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1866,7 +1866,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPPivotItemAutomationPeer_DEFINED__
 #define __WUXAPPivotItemAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPPivotItemAutomationPeer : WUXAPFrameworkElementAutomationPeer
 + (WUXAPPivotItemAutomationPeer*)makeInstanceWithOwner:(WXCPivotItem*)owner ACTIVATOR;
 #if defined(__cplusplus)
@@ -1880,7 +1880,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPPivotItemDataAutomationPeer_DEFINED__
 #define __WUXAPPivotItemDataAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPPivotItemDataAutomationPeer : WUXAPItemAutomationPeer <WUXAPIScrollItemProvider, WUXAPISelectionItemProvider, WUXAPIVirtualizedItemProvider>
 + (WUXAPPivotItemDataAutomationPeer*)makeInstanceWithParentAndItem:(RTObject*)item parent:(WUXAPPivotAutomationPeer*)parent ACTIVATOR;
 #if defined(__cplusplus)
@@ -1901,7 +1901,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPTimePickerFlyoutPresenterAutomationPeer_DEFINED__
 #define __WUXAPTimePickerFlyoutPresenterAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPTimePickerFlyoutPresenterAutomationPeer : WUXAPFrameworkElementAutomationPeer
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -1914,7 +1914,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXAPPivotAutomationPeer_DEFINED__
 #define __WUXAPPivotAutomationPeer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXAPPivotAutomationPeer : WUXAPItemsControlAutomationPeer <WUXAPIScrollProvider, WUXAPISelectionProvider>
 + (WUXAPPivotAutomationPeer*)makeInstanceWithOwner:(WXCPivot*)owner ACTIVATOR;
 #if defined(__cplusplus)

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
-#define OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Media_Casting.lib")
+#ifndef OBJCUWPWINDOWSMEDIACASTINGEXPORT
+#define OBJCUWPWINDOWSMEDIACASTINGEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsMediaCasting.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -72,7 +72,7 @@ typedef unsigned WMCCastingConnectionState;
 #ifndef __WMCCastingSource_DEFINED__
 #define __WMCCastingSource_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
+OBJCUWPWINDOWSMEDIACASTINGEXPORT
 @interface WMCCastingSource : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -86,7 +86,7 @@ OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 #ifndef __WMCCastingConnectionErrorOccurredEventArgs_DEFINED__
 #define __WMCCastingConnectionErrorOccurredEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
+OBJCUWPWINDOWSMEDIACASTINGEXPORT
 @interface WMCCastingConnectionErrorOccurredEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -101,7 +101,7 @@ OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 #ifndef __WMCCastingDevice_DEFINED__
 #define __WMCCastingDevice_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
+OBJCUWPWINDOWSMEDIACASTINGEXPORT
 @interface WMCCastingDevice : RTObject
 + (NSString *)getDeviceSelector:(WMCCastingPlaybackTypes)type;
 + (void)getDeviceSelectorFromCastingSourceAsync:(WMCCastingSource*)castingSource success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
@@ -127,7 +127,7 @@ OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
+OBJCUWPWINDOWSMEDIACASTINGEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -137,7 +137,7 @@ OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 #ifndef __WMCCastingConnection_DEFINED__
 #define __WMCCastingConnection_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
+OBJCUWPWINDOWSMEDIACASTINGEXPORT
 @interface WMCCastingConnection : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -160,7 +160,7 @@ OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 #ifndef __WMCCastingDeviceSelectedEventArgs_DEFINED__
 #define __WMCCastingDeviceSelectedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
+OBJCUWPWINDOWSMEDIACASTINGEXPORT
 @interface WMCCastingDeviceSelectedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -174,7 +174,7 @@ OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 #ifndef __WMCCastingDevicePickerFilter_DEFINED__
 #define __WMCCastingDevicePickerFilter_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
+OBJCUWPWINDOWSMEDIACASTINGEXPORT
 @interface WMCCastingDevicePickerFilter : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -191,7 +191,7 @@ OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
 #ifndef __WMCCastingDevicePicker_DEFINED__
 #define __WMCCastingDevicePicker_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_CASTING_EXPORT
+OBJCUWPWINDOWSMEDIACASTINGEXPORT
 @interface WMCCastingDevicePicker : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)

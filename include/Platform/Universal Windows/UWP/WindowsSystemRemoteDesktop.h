@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_SYSTEM_REMOTEDESKTOP_EXPORT
-#define OBJCUWP_WINDOWS_SYSTEM_REMOTEDESKTOP_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_System_RemoteDesktop.lib")
+#ifndef OBJCUWPWINDOWSSYSTEMREMOTEDESKTOPEXPORT
+#define OBJCUWPWINDOWSSYSTEMREMOTEDESKTOPEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsSystemRemoteDesktop.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -36,7 +36,7 @@
 #ifndef __WSRInteractiveSession_DEFINED__
 #define __WSRInteractiveSession_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_REMOTEDESKTOP_EXPORT
+OBJCUWPWINDOWSSYSTEMREMOTEDESKTOPEXPORT
 @interface WSRInteractiveSession : RTObject
 + (BOOL)isRemote;
 @end

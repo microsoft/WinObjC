@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
-#define OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Storage_AccessCache.lib")
+#ifndef OBJCUWPWINDOWSSTORAGEACCESSCACHEEXPORT
+#define OBJCUWPWINDOWSSTORAGEACCESSCACHEEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsStorageAccessCache.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -54,7 +54,7 @@ typedef unsigned WSARecentStorageItemVisibility;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Storage.AccessCache.AccessListEntry
-OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
+OBJCUWPWINDOWSSTORAGEACCESSCACHEEXPORT
 @interface WSAAccessListEntry : NSObject
 + (instancetype)new;
 @property (retain) NSString * token;
@@ -84,7 +84,7 @@ OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
 - (BOOL)checkAccess:(RTObject<WSIStorageItem>*)file;
 @end
 
-OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
+OBJCUWPWINDOWSSTORAGEACCESSCACHEEXPORT
 @interface WSAIStorageItemAccessList : RTObject <WSAIStorageItemAccessList>
 @end
 
@@ -94,7 +94,7 @@ OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
 #ifndef __WSAAccessListEntryView_DEFINED__
 #define __WSAAccessListEntryView_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
+OBJCUWPWINDOWSSTORAGEACCESSCACHEEXPORT
 @interface WSAAccessListEntryView : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -114,7 +114,7 @@ OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
 #ifndef __WSAStorageItemMostRecentlyUsedList_DEFINED__
 #define __WSAStorageItemMostRecentlyUsedList_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
+OBJCUWPWINDOWSSTORAGEACCESSCACHEEXPORT
 @interface WSAStorageItemMostRecentlyUsedList : RTObject <WSAIStorageItemAccessList>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -147,7 +147,7 @@ OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
 #ifndef __WSAItemRemovedEventArgs_DEFINED__
 #define __WSAItemRemovedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
+OBJCUWPWINDOWSSTORAGEACCESSCACHEEXPORT
 @interface WSAItemRemovedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -161,7 +161,7 @@ OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
 #ifndef __WSAStorageItemAccessList_DEFINED__
 #define __WSAStorageItemAccessList_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
+OBJCUWPWINDOWSSTORAGEACCESSCACHEEXPORT
 @interface WSAStorageItemAccessList : RTObject <WSAIStorageItemAccessList>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -190,7 +190,7 @@ OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
 #ifndef __WSAStorageApplicationPermissions_DEFINED__
 #define __WSAStorageApplicationPermissions_DEFINED__
 
-OBJCUWP_WINDOWS_STORAGE_ACCESSCACHE_EXPORT
+OBJCUWPWINDOWSSTORAGEACCESSCACHEEXPORT
 @interface WSAStorageApplicationPermissions : RTObject
 + (WSAStorageItemAccessList*)futureAccessList;
 + (WSAStorageItemMostRecentlyUsedList*)mostRecentlyUsedList;

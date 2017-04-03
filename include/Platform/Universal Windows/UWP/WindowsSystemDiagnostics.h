@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
-#define OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_System_Diagnostics.lib")
+#ifndef OBJCUWPWINDOWSSYSTEMDIAGNOSTICSEXPORT
+#define OBJCUWPWINDOWSSYSTEMDIAGNOSTICSEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsSystemDiagnostics.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -38,7 +38,7 @@
 #ifndef __WSDProcessDiagnosticInfo_DEFINED__
 #define __WSDProcessDiagnosticInfo_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
+OBJCUWPWINDOWSSYSTEMDIAGNOSTICSEXPORT
 @interface WSDProcessDiagnosticInfo : RTObject
 + (NSArray* /* WSDProcessDiagnosticInfo* */)getForProcesses;
 + (WSDProcessDiagnosticInfo*)getForCurrentProcess;
@@ -60,7 +60,7 @@ OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
 #ifndef __WSDProcessDiskUsage_DEFINED__
 #define __WSDProcessDiskUsage_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
+OBJCUWPWINDOWSSYSTEMDIAGNOSTICSEXPORT
 @interface WSDProcessDiskUsage : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -74,7 +74,7 @@ OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
 #ifndef __WSDProcessMemoryUsage_DEFINED__
 #define __WSDProcessMemoryUsage_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
+OBJCUWPWINDOWSSYSTEMDIAGNOSTICSEXPORT
 @interface WSDProcessMemoryUsage : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -88,7 +88,7 @@ OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
 #ifndef __WSDProcessCpuUsage_DEFINED__
 #define __WSDProcessCpuUsage_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
+OBJCUWPWINDOWSSYSTEMDIAGNOSTICSEXPORT
 @interface WSDProcessCpuUsage : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -102,7 +102,7 @@ OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
 #ifndef __WSDProcessMemoryUsageReport_DEFINED__
 #define __WSDProcessMemoryUsageReport_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
+OBJCUWPWINDOWSSYSTEMDIAGNOSTICSEXPORT
 @interface WSDProcessMemoryUsageReport : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -127,7 +127,7 @@ OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
 #ifndef __WSDProcessDiskUsageReport_DEFINED__
 #define __WSDProcessDiskUsageReport_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
+OBJCUWPWINDOWSSYSTEMDIAGNOSTICSEXPORT
 @interface WSDProcessDiskUsageReport : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -146,7 +146,7 @@ OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
 #ifndef __WSDProcessCpuUsageReport_DEFINED__
 #define __WSDProcessCpuUsageReport_DEFINED__
 
-OBJCUWP_WINDOWS_SYSTEM_DIAGNOSTICS_EXPORT
+OBJCUWPWINDOWSSYSTEMDIAGNOSTICSEXPORT
 @interface WSDProcessCpuUsageReport : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

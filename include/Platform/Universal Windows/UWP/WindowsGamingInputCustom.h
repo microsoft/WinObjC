@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_GAMING_INPUT_CUSTOM_EXPORT
-#define OBJCUWP_WINDOWS_GAMING_INPUT_CUSTOM_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Gaming_Input_Custom.lib")
+#ifndef OBJCUWPWINDOWSGAMINGINPUTCUSTOMEXPORT
+#define OBJCUWPWINDOWSGAMINGINPUTCUSTOMEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsGamingInputCustom.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -76,7 +76,7 @@ typedef unsigned WGICXusbDeviceSubtype;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Gaming.Input.Custom.GameControllerVersionInfo
-OBJCUWP_WINDOWS_GAMING_INPUT_CUSTOM_EXPORT
+OBJCUWPWINDOWSGAMINGINPUTCUSTOMEXPORT
 @interface WGICGameControllerVersionInfo : NSObject
 + (instancetype)new;
 @property unsigned short major;
@@ -86,7 +86,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_CUSTOM_EXPORT
 @end
 
 // [struct] Windows.Gaming.Input.Custom.GipFirmwareUpdateProgress
-OBJCUWP_WINDOWS_GAMING_INPUT_CUSTOM_EXPORT
+OBJCUWPWINDOWSGAMINGINPUTCUSTOMEXPORT
 @interface WGICGipFirmwareUpdateProgress : NSObject
 + (instancetype)new;
 @property double percentCompleted;
@@ -102,7 +102,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_CUSTOM_EXPORT
 - (void)onInputSuspended:(uint64_t)timestamp;
 @end
 
-OBJCUWP_WINDOWS_GAMING_INPUT_CUSTOM_EXPORT
+OBJCUWPWINDOWSGAMINGINPUTCUSTOMEXPORT
 @interface WGICIGameControllerInputSink : RTObject <WGICIGameControllerInputSink>
 @end
 
@@ -119,7 +119,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_CUSTOM_EXPORT
 - (void)onInputSuspended:(uint64_t)timestamp;
 @end
 
-OBJCUWP_WINDOWS_GAMING_INPUT_CUSTOM_EXPORT
+OBJCUWPWINDOWSGAMINGINPUTCUSTOMEXPORT
 @interface WGICIGipGameControllerInputSink : RTObject <WGICIGipGameControllerInputSink>
 @end
 
@@ -135,7 +135,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_CUSTOM_EXPORT
 - (void)onInputSuspended:(uint64_t)timestamp;
 @end
 
-OBJCUWP_WINDOWS_GAMING_INPUT_CUSTOM_EXPORT
+OBJCUWPWINDOWSGAMINGINPUTCUSTOMEXPORT
 @interface WGICIXusbGameControllerInputSink : RTObject <WGICIXusbGameControllerInputSink>
 @end
 
@@ -153,7 +153,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_CUSTOM_EXPORT
 @property (readonly) BOOL isConnected;
 @end
 
-OBJCUWP_WINDOWS_GAMING_INPUT_CUSTOM_EXPORT
+OBJCUWPWINDOWSGAMINGINPUTCUSTOMEXPORT
 @interface WGICIGameControllerProvider : RTObject <WGICIGameControllerProvider>
 @end
 
@@ -169,7 +169,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_CUSTOM_EXPORT
 - (void)onGameControllerRemoved:(RTObject<WGIIGameController>*)value;
 @end
 
-OBJCUWP_WINDOWS_GAMING_INPUT_CUSTOM_EXPORT
+OBJCUWPWINDOWSGAMINGINPUTCUSTOMEXPORT
 @interface WGICICustomGameControllerFactory : RTObject <WGICICustomGameControllerFactory>
 @end
 
@@ -179,7 +179,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_CUSTOM_EXPORT
 #ifndef __WGICGipFirmwareUpdateResult_DEFINED__
 #define __WGICGipFirmwareUpdateResult_DEFINED__
 
-OBJCUWP_WINDOWS_GAMING_INPUT_CUSTOM_EXPORT
+OBJCUWPWINDOWSGAMINGINPUTCUSTOMEXPORT
 @interface WGICGipFirmwareUpdateResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -195,7 +195,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_CUSTOM_EXPORT
 #ifndef __WGICGipGameControllerProvider_DEFINED__
 #define __WGICGipGameControllerProvider_DEFINED__
 
-OBJCUWP_WINDOWS_GAMING_INPUT_CUSTOM_EXPORT
+OBJCUWPWINDOWSGAMINGINPUTCUSTOMEXPORT
 @interface WGICGipGameControllerProvider : RTObject <WGICIGameControllerProvider>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -216,7 +216,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_CUSTOM_EXPORT
 #ifndef __WGICXusbGameControllerProvider_DEFINED__
 #define __WGICXusbGameControllerProvider_DEFINED__
 
-OBJCUWP_WINDOWS_GAMING_INPUT_CUSTOM_EXPORT
+OBJCUWPWINDOWSGAMINGINPUTCUSTOMEXPORT
 @interface WGICXusbGameControllerProvider : RTObject <WGICIGameControllerProvider>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -235,7 +235,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_CUSTOM_EXPORT
 #ifndef __WGICGameControllerFactoryManager_DEFINED__
 #define __WGICGameControllerFactoryManager_DEFINED__
 
-OBJCUWP_WINDOWS_GAMING_INPUT_CUSTOM_EXPORT
+OBJCUWPWINDOWSGAMINGINPUTCUSTOMEXPORT
 @interface WGICGameControllerFactoryManager : RTObject
 + (void)registerCustomFactoryForGipInterface:(RTObject<WGICICustomGameControllerFactory>*)factory interfaceId:(WFGUID*)interfaceId;
 + (void)registerCustomFactoryForHardwareId:(RTObject<WGICICustomGameControllerFactory>*)factory hardwareVendorId:(unsigned short)hardwareVendorId hardwareProductId:(unsigned short)hardwareProductId;

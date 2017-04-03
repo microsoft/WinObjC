@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_DATAPROVIDER_EXPORT
-#define OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_DATAPROVIDER_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Contacts_DataProvider.lib")
+#ifndef OBJCUWPWINDOWSAPPLICATIONMODELCONTACTSDATAPROVIDEREXPORT
+#define OBJCUWPWINDOWSAPPLICATIONMODELCONTACTSDATAPROVIDEREXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsApplicationModelContactsDataProvider.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -39,7 +39,7 @@
 #ifndef __WACDContactDataProviderConnection_DEFINED__
 #define __WACDContactDataProviderConnection_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCONTACTSDATAPROVIDEREXPORT
 @interface WACDContactDataProviderConnection : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -57,7 +57,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_DATAPROVIDER_EXPORT
 #ifndef __WACDContactListSyncManagerSyncRequestEventArgs_DEFINED__
 #define __WACDContactListSyncManagerSyncRequestEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCONTACTSDATAPROVIDEREXPORT
 @interface WACDContactListSyncManagerSyncRequestEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -72,7 +72,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_DATAPROVIDER_EXPORT
 #ifndef __WACDContactListServerSearchReadBatchRequestEventArgs_DEFINED__
 #define __WACDContactListServerSearchReadBatchRequestEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCONTACTSDATAPROVIDEREXPORT
 @interface WACDContactListServerSearchReadBatchRequestEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -87,7 +87,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_DATAPROVIDER_EXPORT
 #ifndef __WACDContactDataProviderTriggerDetails_DEFINED__
 #define __WACDContactDataProviderTriggerDetails_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCONTACTSDATAPROVIDEREXPORT
 @interface WACDContactDataProviderTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -101,7 +101,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_DATAPROVIDER_EXPORT
 #ifndef __WACDContactListSyncManagerSyncRequest_DEFINED__
 #define __WACDContactListSyncManagerSyncRequest_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCONTACTSDATAPROVIDEREXPORT
 @interface WACDContactListSyncManagerSyncRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -117,7 +117,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_DATAPROVIDER_EXPORT
 #ifndef __WACDContactListServerSearchReadBatchRequest_DEFINED__
 #define __WACDContactListServerSearchReadBatchRequest_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_CONTACTS_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELCONTACTSDATAPROVIDEREXPORT
 @interface WACDContactListServerSearchReadBatchRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

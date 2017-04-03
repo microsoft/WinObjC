@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_MEDIA_FACEANALYSIS_EXPORT
-#define OBJCUWP_WINDOWS_MEDIA_FACEANALYSIS_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Media_FaceAnalysis.lib")
+#ifndef OBJCUWPWINDOWSMEDIAFACEANALYSISEXPORT
+#define OBJCUWPWINDOWSMEDIAFACEANALYSISEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsMediaFaceAnalysis.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -39,7 +39,7 @@
 #ifndef __WMFDetectedFace_DEFINED__
 #define __WMFDetectedFace_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_FACEANALYSIS_EXPORT
+OBJCUWPWINDOWSMEDIAFACEANALYSISEXPORT
 @interface WMFDetectedFace : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -53,7 +53,7 @@ OBJCUWP_WINDOWS_MEDIA_FACEANALYSIS_EXPORT
 #ifndef __WMFFaceTracker_DEFINED__
 #define __WMFFaceTracker_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_FACEANALYSIS_EXPORT
+OBJCUWPWINDOWSMEDIAFACEANALYSISEXPORT
 @interface WMFFaceTracker : RTObject
 + (void)createAsyncWithSuccess:(void (^)(WMFFaceTracker*))success failure:(void (^)(NSError*))failure;
 + (NSArray* /* WGIBitmapPixelFormat */)getSupportedBitmapPixelFormats;
@@ -73,7 +73,7 @@ OBJCUWP_WINDOWS_MEDIA_FACEANALYSIS_EXPORT
 #ifndef __WMFFaceDetector_DEFINED__
 #define __WMFFaceDetector_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_FACEANALYSIS_EXPORT
+OBJCUWPWINDOWSMEDIAFACEANALYSISEXPORT
 @interface WMFFaceDetector : RTObject
 + (void)createAsyncWithSuccess:(void (^)(WMFFaceDetector*))success failure:(void (^)(NSError*))failure;
 + (NSArray* /* WGIBitmapPixelFormat */)getSupportedBitmapPixelFormats;

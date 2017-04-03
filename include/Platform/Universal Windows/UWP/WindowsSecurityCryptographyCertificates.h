@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
-#define OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Security_Cryptography_Certificates.lib")
+#ifndef OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
+#define OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsSecurityCryptographyCertificates.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -119,7 +119,7 @@ typedef unsigned WSCCSignatureValidationResult;
 #ifndef __WSCCCertificate_DEFINED__
 #define __WSCCCertificate_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
+OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
 @interface WSCCCertificate : RTObject
 + (WSCCCertificate*)makeCertificate:(RTObject<WSSIBuffer>*)certBlob ACTIVATOR;
 #if defined(__cplusplus)
@@ -156,7 +156,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
 #ifndef __WSCCCertificateRequestProperties_DEFINED__
 #define __WSCCCertificateRequestProperties_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
+OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
 @interface WSCCCertificateRequestProperties : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -187,7 +187,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
 #ifndef __WSCCUserCertificateEnrollmentManager_DEFINED__
 #define __WSCCUserCertificateEnrollmentManager_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
+OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
 @interface WSCCUserCertificateEnrollmentManager : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -205,7 +205,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
 #ifndef __WSCCPfxImportParameters_DEFINED__
 #define __WSCCPfxImportParameters_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
+OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
 @interface WSCCPfxImportParameters : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -226,7 +226,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
 #ifndef __WSCCCertificateEnrollmentManager_DEFINED__
 #define __WSCCCertificateEnrollmentManager_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
+OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
 @interface WSCCCertificateEnrollmentManager : RTObject
 + (RTObject<WFIAsyncAction>*)importPfxDataToKspAsync:(NSString *)pfxData password:(NSString *)password exportable:(WSCCExportOption)exportable keyProtectionLevel:(WSCCKeyProtectionLevel)keyProtectionLevel installOption:(WSCCInstallOptions)installOption friendlyName:(NSString *)friendlyName keyStorageProvider:(NSString *)keyStorageProvider;
 + (void)createRequestAsync:(WSCCCertificateRequestProperties*)request success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
@@ -242,7 +242,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
 #ifndef __WSCCKeyAttestationHelper_DEFINED__
 #define __WSCCKeyAttestationHelper_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
+OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
 @interface WSCCKeyAttestationHelper : RTObject
 + (void)decryptTpmAttestationCredentialWithContainerNameAsync:(NSString *)credential containerName:(NSString *)containerName success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
 + (void)decryptTpmAttestationCredentialAsync:(NSString *)credential success:(void (^)(NSString *))success failure:(void (^)(NSError*))failure;
@@ -255,7 +255,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
 #ifndef __WSCCCertificateQuery_DEFINED__
 #define __WSCCCertificateQuery_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
+OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
 @interface WSCCCertificateQuery : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -277,7 +277,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
 #ifndef __WSCCCertificateStore_DEFINED__
 #define __WSCCCertificateStore_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
+OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
 @interface WSCCCertificateStore : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -293,7 +293,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
 #ifndef __WSCCUserCertificateStore_DEFINED__
 #define __WSCCUserCertificateStore_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
+OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
 @interface WSCCUserCertificateStore : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -309,7 +309,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
 #ifndef __WSCCCertificateStores_DEFINED__
 #define __WSCCCertificateStores_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
+OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
 @interface WSCCCertificateStores : RTObject
 + (void)findAllAsyncWithSuccess:(void (^)(NSArray* /* WSCCCertificate* */))success failure:(void (^)(NSError*))failure;
 + (void)findAllWithQueryAsync:(WSCCCertificateQuery*)query success:(void (^)(NSArray* /* WSCCCertificate* */))success failure:(void (^)(NSError*))failure;
@@ -325,7 +325,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
 #ifndef __WSCCStandardCertificateStoreNames_DEFINED__
 #define __WSCCStandardCertificateStoreNames_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
+OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
 @interface WSCCStandardCertificateStoreNames : RTObject
 + (NSString *)intermediateCertificationAuthorities;
 + (NSString *)personal;
@@ -338,7 +338,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
 #ifndef __WSCCKeyAlgorithmNames_DEFINED__
 #define __WSCCKeyAlgorithmNames_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
+OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
 @interface WSCCKeyAlgorithmNames : RTObject
 + (NSString *)dsa;
 + (NSString *)ecdh256;
@@ -358,7 +358,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
 #ifndef __WSCCKeyStorageProviderNames_DEFINED__
 #define __WSCCKeyStorageProviderNames_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
+OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
 @interface WSCCKeyStorageProviderNames : RTObject
 + (NSString *)platformKeyStorageProvider;
 + (NSString *)smartcardKeyStorageProvider;
@@ -372,7 +372,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
 #ifndef __WSCCChainBuildingParameters_DEFINED__
 #define __WSCCChainBuildingParameters_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
+OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
 @interface WSCCChainBuildingParameters : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -393,7 +393,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
 #ifndef __WSCCChainValidationParameters_DEFINED__
 #define __WSCCChainValidationParameters_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
+OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
 @interface WSCCChainValidationParameters : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -409,7 +409,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
 #ifndef __WSCCCertificateChain_DEFINED__
 #define __WSCCCertificateChain_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
+OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
 @interface WSCCCertificateChain : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -425,7 +425,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
 #ifndef __WSCCCertificateKeyUsages_DEFINED__
 #define __WSCCCertificateKeyUsages_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
+OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
 @interface WSCCCertificateKeyUsages : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -447,7 +447,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
 #ifndef __WSCCSubjectAlternativeNameInfo_DEFINED__
 #define __WSCCSubjectAlternativeNameInfo_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
+OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
 @interface WSCCSubjectAlternativeNameInfo : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -467,7 +467,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
 #ifndef __WSCCCmsTimestampInfo_DEFINED__
 #define __WSCCCmsTimestampInfo_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
+OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
 @interface WSCCCmsTimestampInfo : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -483,7 +483,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
 #ifndef __WSCCCmsSignerInfo_DEFINED__
 #define __WSCCCmsSignerInfo_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
+OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
 @interface WSCCCmsSignerInfo : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -500,7 +500,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
 #ifndef __WSCCCmsAttachedSignature_DEFINED__
 #define __WSCCCmsAttachedSignature_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
+OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
 @interface WSCCCmsAttachedSignature : RTObject
 + (void)generateSignatureAsync:(RTObject<WSSIBuffer>*)data signers:(id<NSFastEnumeration> /* WSCCCmsSignerInfo* */)signers certificates:(id<NSFastEnumeration> /* WSCCCertificate* */)certificates success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
 + (WSCCCmsAttachedSignature*)makeCmsAttachedSignature:(RTObject<WSSIBuffer>*)inputBlob ACTIVATOR;
@@ -519,7 +519,7 @@ OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
 #ifndef __WSCCCmsDetachedSignature_DEFINED__
 #define __WSCCCmsDetachedSignature_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_CERTIFICATES_EXPORT
+OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYCERTIFICATESEXPORT
 @interface WSCCCmsDetachedSignature : RTObject
 + (void)generateSignatureAsync:(RTObject<WSSIInputStream>*)data signers:(id<NSFastEnumeration> /* WSCCCmsSignerInfo* */)signers certificates:(id<NSFastEnumeration> /* WSCCCertificate* */)certificates success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
 + (WSCCCmsDetachedSignature*)makeCmsDetachedSignature:(RTObject<WSSIBuffer>*)inputBlob ACTIVATOR;

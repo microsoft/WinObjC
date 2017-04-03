@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
-#define OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Resources_Core.lib")
+#ifndef OBJCUWPWINDOWSAPPLICATIONMODELRESOURCESCOREEXPORT
+#define OBJCUWPWINDOWSAPPLICATIONMODELRESOURCESCOREEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsApplicationModelResourcesCore.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -45,7 +45,7 @@ typedef unsigned WARCResourceQualifierPersistence;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.ApplicationModel.Resources.Core.ResourceLayoutInfo
-OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELRESOURCESCOREEXPORT
 @interface WARCResourceLayoutInfo : NSObject
 + (instancetype)new;
 @property unsigned int majorVersion;
@@ -59,7 +59,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 #ifndef __WARCResourceMap_DEFINED__
 #define __WARCResourceMap_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELRESOURCESCOREEXPORT
 @interface WARCResourceMap : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -84,7 +84,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 #ifndef __WARCResourceContext_DEFINED__
 #define __WARCResourceContext_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELRESOURCESCOREEXPORT
 @interface WARCResourceContext : RTObject
 + (void)setGlobalQualifierValueWithPersistence:(NSString *)key value:(NSString *)value persistence:(WARCResourceQualifierPersistence)persistence;
 + (WARCResourceContext*)createMatchingContext:(id<NSFastEnumeration> /* WARCResourceQualifier* */)result;
@@ -111,7 +111,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 #ifndef __WARCNamedResource_DEFINED__
 #define __WARCNamedResource_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELRESOURCESCOREEXPORT
 @interface WARCNamedResource : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -130,7 +130,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 #ifndef __WARCResourceManager_DEFINED__
 #define __WARCResourceManager_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELRESOURCESCOREEXPORT
 @interface WARCResourceManager : RTObject
 + (BOOL)isResourceReference:(NSString *)resourceReference;
 #if defined(__cplusplus)
@@ -152,7 +152,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 #ifndef __WARCResourceQualifier_DEFINED__
 #define __WARCResourceQualifier_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELRESOURCESCOREEXPORT
 @interface WARCResourceQualifier : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -170,7 +170,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 #ifndef __WARCResourceCandidate_DEFINED__
 #define __WARCResourceCandidate_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELRESOURCESCOREEXPORT
 @interface WARCResourceCandidate : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -191,7 +191,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 #ifndef __WARCResourceMapIterator_DEFINED__
 #define __WARCResourceMapIterator_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELRESOURCESCOREEXPORT
 @interface WARCResourceMapIterator : RTObject
  // Failed to get type for default interface: Can't marshal Windows.Foundation.Collections.IIterator`1<Windows.Foundation.Collections.IKeyValuePair`2<String,Windows.ApplicationModel.Resources.Core.NamedResource>>
 @property (readonly) RTKeyValuePair* /* NSString *, WARCNamedResource* */ current;
@@ -205,7 +205,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 #ifndef __WARCResourceMapMapView_DEFINED__
 #define __WARCResourceMapMapView_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELRESOURCESCOREEXPORT
 @interface WARCResourceMapMapView : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -226,7 +226,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 #ifndef __WARCResourceMapMapViewIterator_DEFINED__
 #define __WARCResourceMapMapViewIterator_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELRESOURCESCOREEXPORT
 @interface WARCResourceMapMapViewIterator : RTObject
  // Failed to get type for default interface: Can't marshal Windows.Foundation.Collections.IIterator`1<Windows.Foundation.Collections.IKeyValuePair`2<String,Windows.ApplicationModel.Resources.Core.ResourceMap>>
 @property (readonly) RTKeyValuePair* /* NSString *, WARCResourceMap* */ current;
@@ -240,7 +240,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 #ifndef __WARCResourceQualifierObservableMap_DEFINED__
 #define __WARCResourceQualifierObservableMap_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELRESOURCESCOREEXPORT
 @interface WARCResourceQualifierObservableMap : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -273,7 +273,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 #ifndef __WARCResourceQualifierMapView_DEFINED__
 #define __WARCResourceQualifierMapView_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELRESOURCESCOREEXPORT
 @interface WARCResourceQualifierMapView : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -294,7 +294,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 #ifndef __WARCResourceQualifierVectorView_DEFINED__
 #define __WARCResourceQualifierVectorView_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELRESOURCESCOREEXPORT
 @interface WARCResourceQualifierVectorView : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -314,7 +314,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 #ifndef __WARCResourceCandidateVectorView_DEFINED__
 #define __WARCResourceCandidateVectorView_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELRESOURCESCOREEXPORT
 @interface WARCResourceCandidateVectorView : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -334,7 +334,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
 #ifndef __WARCResourceContextLanguagesVectorView_DEFINED__
 #define __WARCResourceContextLanguagesVectorView_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_RESOURCES_CORE_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELRESOURCESCOREEXPORT
 @interface WARCResourceContextLanguagesVectorView : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_DEVICES_ADC_PROVIDER_EXPORT
-#define OBJCUWP_WINDOWS_DEVICES_ADC_PROVIDER_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Devices_Adc_Provider.lib")
+#ifndef OBJCUWPWINDOWSDEVICESADCPROVIDEREXPORT
+#define OBJCUWPWINDOWSDEVICESADCPROVIDEREXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsDevicesAdcProvider.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -54,7 +54,7 @@ typedef unsigned WDAPProviderAdcChannelMode;
 - (int)readValue:(int)channelNumber;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_ADC_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESADCPROVIDEREXPORT
 @interface WDAPIAdcControllerProvider : RTObject <WDAPIAdcControllerProvider>
 @end
 
@@ -68,7 +68,7 @@ OBJCUWP_WINDOWS_DEVICES_ADC_PROVIDER_EXPORT
 - (NSArray* /* RTObject<WDAPIAdcControllerProvider>* */)getControllers;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_ADC_PROVIDER_EXPORT
+OBJCUWPWINDOWSDEVICESADCPROVIDEREXPORT
 @interface WDAPIAdcProvider : RTObject <WDAPIAdcProvider>
 @end
 

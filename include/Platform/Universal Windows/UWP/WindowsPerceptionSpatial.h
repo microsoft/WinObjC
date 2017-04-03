@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
-#define OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Perception_Spatial.lib")
+#ifndef OBJCUWPWINDOWSPERCEPTIONSPATIALEXPORT
+#define OBJCUWPWINDOWSPERCEPTIONSPATIALEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsPerceptionSpatial.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -58,7 +58,7 @@ typedef unsigned WPSSpatialLocatability;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Perception.Spatial.SpatialBoundingFrustum
-OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
+OBJCUWPWINDOWSPERCEPTIONSPATIALEXPORT
 @interface WPSSpatialBoundingFrustum : NSObject
 + (instancetype)new;
 @property (retain) WFNPlane* near;
@@ -70,7 +70,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 @end
 
 // [struct] Windows.Perception.Spatial.SpatialBoundingBox
-OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
+OBJCUWPWINDOWSPERCEPTIONSPATIALEXPORT
 @interface WPSSpatialBoundingBox : NSObject
 + (instancetype)new;
 @property (retain) WFNVector3* center;
@@ -78,7 +78,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 @end
 
 // [struct] Windows.Perception.Spatial.SpatialBoundingOrientedBox
-OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
+OBJCUWPWINDOWSPERCEPTIONSPATIALEXPORT
 @interface WPSSpatialBoundingOrientedBox : NSObject
 + (instancetype)new;
 @property (retain) WFNVector3* center;
@@ -87,7 +87,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 @end
 
 // [struct] Windows.Perception.Spatial.SpatialBoundingSphere
-OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
+OBJCUWPWINDOWSPERCEPTIONSPATIALEXPORT
 @interface WPSSpatialBoundingSphere : NSObject
 + (instancetype)new;
 @property (retain) WFNVector3* center;
@@ -98,7 +98,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 #ifndef __WPSSpatialCoordinateSystem_DEFINED__
 #define __WPSSpatialCoordinateSystem_DEFINED__
 
-OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
+OBJCUWPWINDOWSPERCEPTIONSPATIALEXPORT
 @interface WPSSpatialCoordinateSystem : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -112,7 +112,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 #ifndef __WPSSpatialAnchor_DEFINED__
 #define __WPSSpatialAnchor_DEFINED__
 
-OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
+OBJCUWPWINDOWSPERCEPTIONSPATIALEXPORT
 @interface WPSSpatialAnchor : RTObject
 + (WPSSpatialAnchor*)tryCreateRelativeTo:(WPSSpatialCoordinateSystem*)coordinateSystem;
 + (WPSSpatialAnchor*)tryCreateWithPositionRelativeTo:(WPSSpatialCoordinateSystem*)coordinateSystem position:(WFNVector3*)position;
@@ -133,7 +133,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 #ifndef __WPSSpatialAnchorRawCoordinateSystemAdjustedEventArgs_DEFINED__
 #define __WPSSpatialAnchorRawCoordinateSystemAdjustedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
+OBJCUWPWINDOWSPERCEPTIONSPATIALEXPORT
 @interface WPSSpatialAnchorRawCoordinateSystemAdjustedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -147,7 +147,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 #ifndef __WPSSpatialAnchorStore_DEFINED__
 #define __WPSSpatialAnchorStore_DEFINED__
 
-OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
+OBJCUWPWINDOWSPERCEPTIONSPATIALEXPORT
 @interface WPSSpatialAnchorStore : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -164,7 +164,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 #ifndef __WPSSpatialLocator_DEFINED__
 #define __WPSSpatialLocator_DEFINED__
 
-OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
+OBJCUWPWINDOWSPERCEPTIONSPATIALEXPORT
 @interface WPSSpatialLocator : RTObject
 + (WPSSpatialLocator*)getDefault;
 #if defined(__cplusplus)
@@ -192,7 +192,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 #ifndef __WPSSpatialLocatorPositionalTrackingDeactivatingEventArgs_DEFINED__
 #define __WPSSpatialLocatorPositionalTrackingDeactivatingEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
+OBJCUWPWINDOWSPERCEPTIONSPATIALEXPORT
 @interface WPSSpatialLocatorPositionalTrackingDeactivatingEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -206,7 +206,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 #ifndef __WPSSpatialLocation_DEFINED__
 #define __WPSSpatialLocation_DEFINED__
 
-OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
+OBJCUWPWINDOWSPERCEPTIONSPATIALEXPORT
 @interface WPSSpatialLocation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -225,7 +225,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 #ifndef __WPSSpatialLocatorAttachedFrameOfReference_DEFINED__
 #define __WPSSpatialLocatorAttachedFrameOfReference_DEFINED__
 
-OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
+OBJCUWPWINDOWSPERCEPTIONSPATIALEXPORT
 @interface WPSSpatialLocatorAttachedFrameOfReference : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -243,7 +243,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 #ifndef __WPSSpatialStationaryFrameOfReference_DEFINED__
 #define __WPSSpatialStationaryFrameOfReference_DEFINED__
 
-OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
+OBJCUWPWINDOWSPERCEPTIONSPATIALEXPORT
 @interface WPSSpatialStationaryFrameOfReference : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -257,7 +257,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 #ifndef __WPSSpatialAnchorManager_DEFINED__
 #define __WPSSpatialAnchorManager_DEFINED__
 
-OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
+OBJCUWPWINDOWSPERCEPTIONSPATIALEXPORT
 @interface WPSSpatialAnchorManager : RTObject
 + (void)requestStoreAsyncWithSuccess:(void (^)(WPSSpatialAnchorStore*))success failure:(void (^)(NSError*))failure;
 @end
@@ -268,7 +268,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 #ifndef __WPSSpatialAnchorTransferManager_DEFINED__
 #define __WPSSpatialAnchorTransferManager_DEFINED__
 
-OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
+OBJCUWPWINDOWSPERCEPTIONSPATIALEXPORT
 @interface WPSSpatialAnchorTransferManager : RTObject
 + (void)tryImportAnchorsAsync:(RTObject<WSSIInputStream>*)stream success:(void (^)(NSDictionary* /* NSString *, WPSSpatialAnchor* */))success failure:(void (^)(NSError*))failure;
 + (void)tryExportAnchorsAsync:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, WPSSpatialAnchor* > */)anchors stream:(RTObject<WSSIOutputStream>*)stream success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
@@ -281,7 +281,7 @@ OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
 #ifndef __WPSSpatialBoundingVolume_DEFINED__
 #define __WPSSpatialBoundingVolume_DEFINED__
 
-OBJCUWP_WINDOWS_PERCEPTION_SPATIAL_EXPORT
+OBJCUWPWINDOWSPERCEPTIONSPATIALEXPORT
 @interface WPSSpatialBoundingVolume : RTObject
 + (WPSSpatialBoundingVolume*)fromBox:(WPSSpatialCoordinateSystem*)coordinateSystem box:(WPSSpatialBoundingBox*)box;
 + (WPSSpatialBoundingVolume*)fromOrientedBox:(WPSSpatialCoordinateSystem*)coordinateSystem box:(WPSSpatialBoundingOrientedBox*)box;

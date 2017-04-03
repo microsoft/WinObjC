@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
-#define OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Media_SpeechSynthesis.lib")
+#ifndef OBJCUWPWINDOWSMEDIASPEECHSYNTHESISEXPORT
+#define OBJCUWPWINDOWSMEDIASPEECHSYNTHESISEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsMediaSpeechSynthesis.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -47,7 +47,7 @@ typedef unsigned WMSVoiceGender;
 #ifndef __WMSVoiceInformation_DEFINED__
 #define __WMSVoiceInformation_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
+OBJCUWPWINDOWSMEDIASPEECHSYNTHESISEXPORT
 @interface WMSVoiceInformation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -69,7 +69,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
+OBJCUWPWINDOWSMEDIASPEECHSYNTHESISEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -84,7 +84,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
+OBJCUWPWINDOWSMEDIASPEECHSYNTHESISEXPORT
 @interface WSSIInputStream : RTObject <WSSIInputStream>
 @end
 
@@ -100,7 +100,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
+OBJCUWPWINDOWSMEDIASPEECHSYNTHESISEXPORT
 @interface WSSIOutputStream : RTObject <WSSIOutputStream>
 @end
 
@@ -125,7 +125,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
+OBJCUWPWINDOWSMEDIASPEECHSYNTHESISEXPORT
 @interface WSSIRandomAccessStream : RTObject <WSSIRandomAccessStream>
 @end
 
@@ -139,7 +139,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
 @property (readonly) NSString * contentType;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
+OBJCUWPWINDOWSMEDIASPEECHSYNTHESISEXPORT
 @interface WSSIContentTypeProvider : RTObject <WSSIContentTypeProvider>
 @end
 
@@ -160,7 +160,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
 - (void)flushAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
+OBJCUWPWINDOWSMEDIASPEECHSYNTHESISEXPORT
 @interface WSSIRandomAccessStreamWithContentType : RTObject <WSSIRandomAccessStreamWithContentType>
 @end
 
@@ -170,7 +170,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
 #ifndef __WMSSpeechSynthesisStream_DEFINED__
 #define __WMSSpeechSynthesisStream_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
+OBJCUWPWINDOWSMEDIASPEECHSYNTHESISEXPORT
 @interface WMSSpeechSynthesisStream : RTObject <WSSIRandomAccessStreamWithContentType, WSSIContentTypeProvider, WSSIRandomAccessStream, WSSIOutputStream, WFIClosable, WSSIInputStream>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -197,7 +197,7 @@ OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
 #ifndef __WMSSpeechSynthesizer_DEFINED__
 #define __WMSSpeechSynthesizer_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_SPEECHSYNTHESIS_EXPORT
+OBJCUWPWINDOWSMEDIASPEECHSYNTHESISEXPORT
 @interface WMSSpeechSynthesizer : RTObject <WFIClosable>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)

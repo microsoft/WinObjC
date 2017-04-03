@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
-#define OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Globalization.lib")
+#ifndef OBJCUWPWINDOWSGLOBALIZATIONEXPORT
+#define OBJCUWPWINDOWSGLOBALIZATIONEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsGlobalization.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -50,7 +50,7 @@ typedef unsigned WGDayOfWeek;
 #ifndef __WGCalendarIdentifiers_DEFINED__
 #define __WGCalendarIdentifiers_DEFINED__
 
-OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
+OBJCUWPWINDOWSGLOBALIZATIONEXPORT
 @interface WGCalendarIdentifiers : RTObject
 + (NSString *)julian;
 + (NSString *)gregorian;
@@ -75,7 +75,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
 #ifndef __WGClockIdentifiers_DEFINED__
 #define __WGClockIdentifiers_DEFINED__
 
-OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
+OBJCUWPWINDOWSGLOBALIZATIONEXPORT
 @interface WGClockIdentifiers : RTObject
 + (NSString *)twelveHour;
 + (NSString *)twentyFourHour;
@@ -87,7 +87,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
 #ifndef __WGNumeralSystemIdentifiers_DEFINED__
 #define __WGNumeralSystemIdentifiers_DEFINED__
 
-OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
+OBJCUWPWINDOWSGLOBALIZATIONEXPORT
 @interface WGNumeralSystemIdentifiers : RTObject
 + (NSString *)fullWide;
 + (NSString *)arab;
@@ -145,7 +145,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
 #ifndef __WGCurrencyIdentifiers_DEFINED__
 #define __WGCurrencyIdentifiers_DEFINED__
 
-OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
+OBJCUWPWINDOWSGLOBALIZATIONEXPORT
 @interface WGCurrencyIdentifiers : RTObject
 + (NSString *)aED;
 + (NSString *)aFN;
@@ -312,7 +312,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
 #ifndef __WGGeographicRegion_DEFINED__
 #define __WGGeographicRegion_DEFINED__
 
-OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
+OBJCUWPWINDOWSGLOBALIZATIONEXPORT
 @interface WGGeographicRegion : RTObject
 + (BOOL)isSupported:(NSString *)geographicRegionCode;
 + (instancetype)make __attribute__ ((ns_returns_retained));
@@ -335,7 +335,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
 #ifndef __WGLanguage_DEFINED__
 #define __WGLanguage_DEFINED__
 
-OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
+OBJCUWPWINDOWSGLOBALIZATIONEXPORT
 @interface WGLanguage : RTObject
 + (BOOL)trySetInputMethodLanguageTag:(NSString *)languageTag;
 + (BOOL)isWellFormed:(NSString *)languageTag;
@@ -357,7 +357,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
 #ifndef __WGCalendar_DEFINED__
 #define __WGCalendar_DEFINED__
 
-OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
+OBJCUWPWINDOWSGLOBALIZATIONEXPORT
 @interface WGCalendar : RTObject
 + (WGCalendar*)makeCalendarWithTimeZone:(id<NSFastEnumeration> /* NSString * */)languages calendar:(NSString *)calendar clock:(NSString *)clock timeZoneId:(NSString *)timeZoneId ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
@@ -466,7 +466,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
 #ifndef __WGApplicationLanguages_DEFINED__
 #define __WGApplicationLanguages_DEFINED__
 
-OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
+OBJCUWPWINDOWSGLOBALIZATIONEXPORT
 @interface WGApplicationLanguages : RTObject
 + (NSString *)primaryLanguageOverride;
 + (void)setPrimaryLanguageOverride:(NSString *)value;
@@ -480,7 +480,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
 #ifndef __WGJapanesePhoneme_DEFINED__
 #define __WGJapanesePhoneme_DEFINED__
 
-OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
+OBJCUWPWINDOWSGLOBALIZATIONEXPORT
 @interface WGJapanesePhoneme : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -496,7 +496,7 @@ OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
 #ifndef __WGJapanesePhoneticAnalyzer_DEFINED__
 #define __WGJapanesePhoneticAnalyzer_DEFINED__
 
-OBJCUWP_WINDOWS_GLOBALIZATION_EXPORT
+OBJCUWPWINDOWSGLOBALIZATIONEXPORT
 @interface WGJapanesePhoneticAnalyzer : RTObject
 + (NSArray* /* WGJapanesePhoneme* */)getWords:(NSString *)input;
 + (NSArray* /* WGJapanesePhoneme* */)getWordsWithMonoRubyOption:(NSString *)input monoRuby:(BOOL)monoRuby;

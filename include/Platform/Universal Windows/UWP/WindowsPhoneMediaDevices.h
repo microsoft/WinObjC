@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_PHONE_MEDIA_DEVICES_EXPORT
-#define OBJCUWP_WINDOWS_PHONE_MEDIA_DEVICES_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Phone_Media_Devices.lib")
+#ifndef OBJCUWPWINDOWSPHONEMEDIADEVICESEXPORT
+#define OBJCUWPWINDOWSPHONEMEDIADEVICESEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsPhoneMediaDevices.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -60,7 +60,7 @@ typedef unsigned WPMDAvailableAudioRoutingEndpoints;
 #ifndef __WPMDAudioRoutingManager_DEFINED__
 #define __WPMDAudioRoutingManager_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_MEDIA_DEVICES_EXPORT
+OBJCUWPWINDOWSPHONEMEDIADEVICESEXPORT
 @interface WPMDAudioRoutingManager : RTObject
 + (WPMDAudioRoutingManager*)getDefault;
 #if defined(__cplusplus)

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_SECURITY_EXCHANGEACTIVESYNCPROVISIONING_EXPORT
-#define OBJCUWP_WINDOWS_SECURITY_EXCHANGEACTIVESYNCPROVISIONING_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Security_ExchangeActiveSyncProvisioning.lib")
+#ifndef OBJCUWPWINDOWSSECURITYEXCHANGEACTIVESYNCPROVISIONINGEXPORT
+#define OBJCUWPWINDOWSSECURITYEXCHANGEACTIVESYNCPROVISIONINGEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsSecurityExchangeActiveSyncProvisioning.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -163,7 +163,7 @@ typedef unsigned WSEEasMaxInactivityTimeLockResult;
 #ifndef __WSEEasClientDeviceInformation_DEFINED__
 #define __WSEEasClientDeviceInformation_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_EXCHANGEACTIVESYNCPROVISIONING_EXPORT
+OBJCUWPWINDOWSSECURITYEXCHANGEACTIVESYNCPROVISIONINGEXPORT
 @interface WSEEasClientDeviceInformation : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -185,7 +185,7 @@ OBJCUWP_WINDOWS_SECURITY_EXCHANGEACTIVESYNCPROVISIONING_EXPORT
 #ifndef __WSEEasComplianceResults_DEFINED__
 #define __WSEEasComplianceResults_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_EXCHANGEACTIVESYNCPROVISIONING_EXPORT
+OBJCUWPWINDOWSSECURITYEXCHANGEACTIVESYNCPROVISIONINGEXPORT
 @interface WSEEasComplianceResults : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -208,7 +208,7 @@ OBJCUWP_WINDOWS_SECURITY_EXCHANGEACTIVESYNCPROVISIONING_EXPORT
 #ifndef __WSEEasClientSecurityPolicy_DEFINED__
 #define __WSEEasClientSecurityPolicy_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_EXCHANGEACTIVESYNCPROVISIONING_EXPORT
+OBJCUWPWINDOWSSECURITYEXCHANGEACTIVESYNCPROVISIONINGEXPORT
 @interface WSEEasClientSecurityPolicy : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)

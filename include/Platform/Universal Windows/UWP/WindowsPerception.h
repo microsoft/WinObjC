@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_PERCEPTION_EXPORT
-#define OBJCUWP_WINDOWS_PERCEPTION_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Perception.lib")
+#ifndef OBJCUWPWINDOWSPERCEPTIONEXPORT
+#define OBJCUWPWINDOWSPERCEPTIONEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsPerception.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -38,7 +38,7 @@
 #ifndef __WPPerceptionTimestamp_DEFINED__
 #define __WPPerceptionTimestamp_DEFINED__
 
-OBJCUWP_WINDOWS_PERCEPTION_EXPORT
+OBJCUWPWINDOWSPERCEPTIONEXPORT
 @interface WPPerceptionTimestamp : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -53,7 +53,7 @@ OBJCUWP_WINDOWS_PERCEPTION_EXPORT
 #ifndef __WPPerceptionTimestampHelper_DEFINED__
 #define __WPPerceptionTimestampHelper_DEFINED__
 
-OBJCUWP_WINDOWS_PERCEPTION_EXPORT
+OBJCUWPWINDOWSPERCEPTIONEXPORT
 @interface WPPerceptionTimestampHelper : RTObject
 + (WPPerceptionTimestamp*)fromHistoricalTargetTime:(WFDateTime*)targetTime;
 @end

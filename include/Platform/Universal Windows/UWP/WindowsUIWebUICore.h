@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
-#define OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_WebUI_Core.lib")
+#ifndef OBJCUWPWINDOWSUIWEBUICOREEXPORT
+#define OBJCUWPWINDOWSUIWEBUICOREEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUIWebUICore.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -86,7 +86,7 @@ typedef void(^WUWCSizeChangedEventHandler)(WUWCWebUICommandBarSizeChangedEventAr
 @protocol WUWCIWebUICommandBarElement
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
+OBJCUWPWINDOWSUIWEBUICOREEXPORT
 @interface WUWCIWebUICommandBarElement : RTObject <WUWCIWebUICommandBarElement>
 @end
 
@@ -99,7 +99,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
 @protocol WUWCIWebUICommandBarIcon
 @end
 
-OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
+OBJCUWPWINDOWSUIWEBUICOREEXPORT
 @interface WUWCIWebUICommandBarIcon : RTObject <WUWCIWebUICommandBarIcon>
 @end
 
@@ -109,7 +109,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
 #ifndef __WUWCWebUICommandBarItemInvokedEventArgs_DEFINED__
 #define __WUWCWebUICommandBarItemInvokedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
+OBJCUWPWINDOWSUIWEBUICOREEXPORT
 @interface WUWCWebUICommandBarItemInvokedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -123,7 +123,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
 #ifndef __WUWCWebUICommandBarIconButton_DEFINED__
 #define __WUWCWebUICommandBarIconButton_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
+OBJCUWPWINDOWSUIWEBUICOREEXPORT
 @interface WUWCWebUICommandBarIconButton : RTObject <WUWCIWebUICommandBarElement>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -144,7 +144,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
 #ifndef __WUWCWebUICommandBarConfirmationButton_DEFINED__
 #define __WUWCWebUICommandBarConfirmationButton_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
+OBJCUWPWINDOWSUIWEBUICOREEXPORT
 @interface WUWCWebUICommandBarConfirmationButton : RTObject <WUWCIWebUICommandBarElement>
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -161,7 +161,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
 #ifndef __WUWCWebUICommandBarBitmapIcon_DEFINED__
 #define __WUWCWebUICommandBarBitmapIcon_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
+OBJCUWPWINDOWSUIWEBUICOREEXPORT
 @interface WUWCWebUICommandBarBitmapIcon : RTObject <WUWCIWebUICommandBarIcon>
 + (WUWCWebUICommandBarBitmapIcon*)make:(WFUri*)uri ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
@@ -177,7 +177,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
 #ifndef __WUWCWebUICommandBarSymbolIcon_DEFINED__
 #define __WUWCWebUICommandBarSymbolIcon_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
+OBJCUWPWINDOWSUIWEBUICOREEXPORT
 @interface WUWCWebUICommandBarSymbolIcon : RTObject <WUWCIWebUICommandBarIcon>
 + (WUWCWebUICommandBarSymbolIcon*)make:(NSString *)symbol ACTIVATOR;
 + (instancetype)make __attribute__ ((ns_returns_retained));
@@ -193,7 +193,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
 #ifndef __WUWCWebUICommandBarSizeChangedEventArgs_DEFINED__
 #define __WUWCWebUICommandBarSizeChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
+OBJCUWPWINDOWSUIWEBUICOREEXPORT
 @interface WUWCWebUICommandBarSizeChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -207,7 +207,7 @@ OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
 #ifndef __WUWCWebUICommandBar_DEFINED__
 #define __WUWCWebUICommandBar_DEFINED__
 
-OBJCUWP_WINDOWS_UI_WEBUI_CORE_EXPORT
+OBJCUWPWINDOWSUIWEBUICOREEXPORT
 @interface WUWCWebUICommandBar : RTObject
 + (WUWCWebUICommandBar*)getForCurrentView;
 #if defined(__cplusplus)

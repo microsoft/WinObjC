@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
-#define OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_Appointments_DataProvider.lib")
+#ifndef OBJCUWPWINDOWSAPPLICATIONMODELAPPOINTMENTSDATAPROVIDEREXPORT
+#define OBJCUWPWINDOWSAPPLICATIONMODELAPPOINTMENTSDATAPROVIDEREXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsApplicationModelAppointmentsDataProvider.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -39,7 +39,7 @@
 #ifndef __WAADAppointmentDataProviderConnection_DEFINED__
 #define __WAADAppointmentDataProviderConnection_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELAPPOINTMENTSDATAPROVIDEREXPORT
 @interface WAADAppointmentDataProviderConnection : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -65,7 +65,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 #ifndef __WAADAppointmentCalendarSyncManagerSyncRequestEventArgs_DEFINED__
 #define __WAADAppointmentCalendarSyncManagerSyncRequestEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELAPPOINTMENTSDATAPROVIDEREXPORT
 @interface WAADAppointmentCalendarSyncManagerSyncRequestEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -80,7 +80,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 #ifndef __WAADAppointmentCalendarCreateOrUpdateAppointmentRequestEventArgs_DEFINED__
 #define __WAADAppointmentCalendarCreateOrUpdateAppointmentRequestEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELAPPOINTMENTSDATAPROVIDEREXPORT
 @interface WAADAppointmentCalendarCreateOrUpdateAppointmentRequestEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -95,7 +95,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 #ifndef __WAADAppointmentCalendarCancelMeetingRequestEventArgs_DEFINED__
 #define __WAADAppointmentCalendarCancelMeetingRequestEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELAPPOINTMENTSDATAPROVIDEREXPORT
 @interface WAADAppointmentCalendarCancelMeetingRequestEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -110,7 +110,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 #ifndef __WAADAppointmentCalendarForwardMeetingRequestEventArgs_DEFINED__
 #define __WAADAppointmentCalendarForwardMeetingRequestEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELAPPOINTMENTSDATAPROVIDEREXPORT
 @interface WAADAppointmentCalendarForwardMeetingRequestEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -125,7 +125,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 #ifndef __WAADAppointmentCalendarProposeNewTimeForMeetingRequestEventArgs_DEFINED__
 #define __WAADAppointmentCalendarProposeNewTimeForMeetingRequestEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELAPPOINTMENTSDATAPROVIDEREXPORT
 @interface WAADAppointmentCalendarProposeNewTimeForMeetingRequestEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -140,7 +140,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 #ifndef __WAADAppointmentCalendarUpdateMeetingResponseRequestEventArgs_DEFINED__
 #define __WAADAppointmentCalendarUpdateMeetingResponseRequestEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELAPPOINTMENTSDATAPROVIDEREXPORT
 @interface WAADAppointmentCalendarUpdateMeetingResponseRequestEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -155,7 +155,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 #ifndef __WAADAppointmentDataProviderTriggerDetails_DEFINED__
 #define __WAADAppointmentDataProviderTriggerDetails_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELAPPOINTMENTSDATAPROVIDEREXPORT
 @interface WAADAppointmentDataProviderTriggerDetails : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -169,7 +169,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 #ifndef __WAADAppointmentCalendarSyncManagerSyncRequest_DEFINED__
 #define __WAADAppointmentCalendarSyncManagerSyncRequest_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELAPPOINTMENTSDATAPROVIDEREXPORT
 @interface WAADAppointmentCalendarSyncManagerSyncRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -185,7 +185,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 #ifndef __WAADAppointmentCalendarCreateOrUpdateAppointmentRequest_DEFINED__
 #define __WAADAppointmentCalendarCreateOrUpdateAppointmentRequest_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELAPPOINTMENTSDATAPROVIDEREXPORT
 @interface WAADAppointmentCalendarCreateOrUpdateAppointmentRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -204,7 +204,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 #ifndef __WAADAppointmentCalendarCancelMeetingRequest_DEFINED__
 #define __WAADAppointmentCalendarCancelMeetingRequest_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELAPPOINTMENTSDATAPROVIDEREXPORT
 @interface WAADAppointmentCalendarCancelMeetingRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -225,7 +225,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 #ifndef __WAADAppointmentCalendarForwardMeetingRequest_DEFINED__
 #define __WAADAppointmentCalendarForwardMeetingRequest_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELAPPOINTMENTSDATAPROVIDEREXPORT
 @interface WAADAppointmentCalendarForwardMeetingRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -247,7 +247,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 #ifndef __WAADAppointmentCalendarProposeNewTimeForMeetingRequest_DEFINED__
 #define __WAADAppointmentCalendarProposeNewTimeForMeetingRequest_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELAPPOINTMENTSDATAPROVIDEREXPORT
 @interface WAADAppointmentCalendarProposeNewTimeForMeetingRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -269,7 +269,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
 #ifndef __WAADAppointmentCalendarUpdateMeetingResponseRequest_DEFINED__
 #define __WAADAppointmentCalendarUpdateMeetingResponseRequest_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_APPOINTMENTS_DATAPROVIDER_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELAPPOINTMENTSDATAPROVIDEREXPORT
 @interface WAADAppointmentCalendarUpdateMeetingResponseRequest : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_UI_XAML_EXPORT
-#define OBJCUWP_WINDOWS_UI_XAML_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_UI_Xaml.lib")
+#ifndef OBJCUWPWINDOWSUIXAMLEXPORT
+#define OBJCUWPWINDOWSUIXAMLEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsUIXaml.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -207,7 +207,7 @@ typedef void(^WUXITappedEventHandler)(RTObject* sender, WUXITappedRoutedEventArg
 - (void)execute:(RTObject*)parameter;
 @end
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXIICommand : RTObject <WUXIICommand>
 @end
 
@@ -217,7 +217,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXIPointer_DEFINED__
 #define __WUXIPointer_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXIPointer : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -234,7 +234,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXIAccessKeyDisplayRequestedEventArgs_DEFINED__
 #define __WUXIAccessKeyDisplayRequestedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXIAccessKeyDisplayRequestedEventArgs : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -249,7 +249,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXIAccessKeyDisplayDismissedEventArgs_DEFINED__
 #define __WUXIAccessKeyDisplayDismissedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXIAccessKeyDisplayDismissedEventArgs : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -263,7 +263,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXIAccessKeyInvokedEventArgs_DEFINED__
 #define __WUXIAccessKeyInvokedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXIAccessKeyInvokedEventArgs : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -278,7 +278,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXIAccessKeyManager_DEFINED__
 #define __WUXIAccessKeyManager_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXIAccessKeyManager : RTObject
 + (void)exitDisplayMode;
 #if defined(__cplusplus)
@@ -295,7 +295,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXIFocusManager_DEFINED__
 #define __WUXIFocusManager_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXIFocusManager : RTObject
 + (RTObject*)getFocusedElement;
 + (BOOL)tryMoveFocus:(WUXIFocusNavigationDirection)focusNavigationDirection;
@@ -312,7 +312,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXIInertiaExpansionBehavior_DEFINED__
 #define __WUXIInertiaExpansionBehavior_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXIInertiaExpansionBehavior : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -327,7 +327,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXIInertiaRotationBehavior_DEFINED__
 #define __WUXIInertiaRotationBehavior_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXIInertiaRotationBehavior : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -342,7 +342,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXIInertiaTranslationBehavior_DEFINED__
 #define __WUXIInertiaTranslationBehavior_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXIInertiaTranslationBehavior : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -357,7 +357,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXIManipulationPivot_DEFINED__
 #define __WUXIManipulationPivot_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXIManipulationPivot : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 + (WUXIManipulationPivot*)makeInstanceWithCenterAndRadius:(WFPoint*)center radius:(double)radius ACTIVATOR;
@@ -374,7 +374,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXRoutedEventArgs_DEFINED__
 #define __WXRoutedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXRoutedEventArgs : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -389,7 +389,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXIContextRequestedEventArgs_DEFINED__
 #define __WUXIContextRequestedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXIContextRequestedEventArgs : WXRoutedEventArgs
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -405,7 +405,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXIDoubleTappedRoutedEventArgs_DEFINED__
 #define __WUXIDoubleTappedRoutedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXIDoubleTappedRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -422,7 +422,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXIHoldingRoutedEventArgs_DEFINED__
 #define __WUXIHoldingRoutedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXIHoldingRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -440,7 +440,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WXDependencyObject_DEFINED__
 #define __WXDependencyObject_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WXDependencyObject : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -461,7 +461,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXIInputScope_DEFINED__
 #define __WUXIInputScope_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXIInputScope : WXDependencyObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -476,7 +476,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXIInputScopeName_DEFINED__
 #define __WUXIInputScopeName_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXIInputScopeName : WXDependencyObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 + (WUXIInputScopeName*)makeInstance:(WUXIInputScopeNameValue)nameValue ACTIVATOR;
@@ -492,7 +492,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXIKeyRoutedEventArgs_DEFINED__
 #define __WUXIKeyRoutedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXIKeyRoutedEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -510,7 +510,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXIManipulationCompletedRoutedEventArgs_DEFINED__
 #define __WUXIManipulationCompletedRoutedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXIManipulationCompletedRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -531,7 +531,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXIManipulationDeltaRoutedEventArgs_DEFINED__
 #define __WUXIManipulationDeltaRoutedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXIManipulationDeltaRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -554,7 +554,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXIManipulationInertiaStartingRoutedEventArgs_DEFINED__
 #define __WUXIManipulationInertiaStartingRoutedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXIManipulationInertiaStartingRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -577,7 +577,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXIManipulationStartedRoutedEventArgs_DEFINED__
 #define __WUXIManipulationStartedRoutedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXIManipulationStartedRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -597,7 +597,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXIManipulationStartingRoutedEventArgs_DEFINED__
 #define __WUXIManipulationStartingRoutedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXIManipulationStartingRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -615,7 +615,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXIPointerRoutedEventArgs_DEFINED__
 #define __WUXIPointerRoutedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXIPointerRoutedEventArgs : WXRoutedEventArgs
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -633,7 +633,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXIRightTappedRoutedEventArgs_DEFINED__
 #define __WUXIRightTappedRoutedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXIRightTappedRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -650,7 +650,7 @@ OBJCUWP_WINDOWS_UI_XAML_EXPORT
 #ifndef __WUXITappedRoutedEventArgs_DEFINED__
 #define __WUXITappedRoutedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_UI_XAML_EXPORT
+OBJCUWPWINDOWSUIXAMLEXPORT
 @interface WUXITappedRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)

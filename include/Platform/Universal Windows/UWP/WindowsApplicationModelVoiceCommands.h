@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
-#define OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_VoiceCommands.lib")
+#ifndef OBJCUWPWINDOWSAPPLICATIONMODELVOICECOMMANDSEXPORT
+#define OBJCUWPWINDOWSAPPLICATIONMODELVOICECOMMANDSEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsApplicationModelVoiceCommands.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -67,7 +67,7 @@ typedef unsigned WAVVoiceCommandCompletionReason;
 #ifndef __WAVVoiceCommandDefinition_DEFINED__
 #define __WAVVoiceCommandDefinition_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELVOICECOMMANDSEXPORT
 @interface WAVVoiceCommandDefinition : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -83,7 +83,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
 #ifndef __WAVVoiceCommandDefinitionManager_DEFINED__
 #define __WAVVoiceCommandDefinitionManager_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELVOICECOMMANDSEXPORT
 @interface WAVVoiceCommandDefinitionManager : RTObject
 + (RTObject<WFIAsyncAction>*)installCommandDefinitionsFromStorageFileAsync:(WSStorageFile*)file;
 + (NSDictionary* /* NSString *, WAVVoiceCommandDefinition* */)installedCommandDefinitions;
@@ -95,7 +95,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
 #ifndef __WAVVoiceCommandContentTile_DEFINED__
 #define __WAVVoiceCommandContentTile_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELVOICECOMMANDSEXPORT
 @interface WAVVoiceCommandContentTile : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -117,7 +117,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
 #ifndef __WAVVoiceCommandUserMessage_DEFINED__
 #define __WAVVoiceCommandUserMessage_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELVOICECOMMANDSEXPORT
 @interface WAVVoiceCommandUserMessage : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -133,7 +133,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
 #ifndef __WAVVoiceCommand_DEFINED__
 #define __WAVVoiceCommand_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELVOICECOMMANDSEXPORT
 @interface WAVVoiceCommand : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -149,7 +149,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
 #ifndef __WAVVoiceCommandResponse_DEFINED__
 #define __WAVVoiceCommandResponse_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELVOICECOMMANDSEXPORT
 @interface WAVVoiceCommandResponse : RTObject
 + (WAVVoiceCommandResponse*)createResponse:(WAVVoiceCommandUserMessage*)userMessage;
 + (WAVVoiceCommandResponse*)createResponseWithTiles:(WAVVoiceCommandUserMessage*)message contentTiles:(id<NSFastEnumeration> /* WAVVoiceCommandContentTile* */)contentTiles;
@@ -171,7 +171,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
 #ifndef __WAVVoiceCommandConfirmationResult_DEFINED__
 #define __WAVVoiceCommandConfirmationResult_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELVOICECOMMANDSEXPORT
 @interface WAVVoiceCommandConfirmationResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -185,7 +185,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
 #ifndef __WAVVoiceCommandDisambiguationResult_DEFINED__
 #define __WAVVoiceCommandDisambiguationResult_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELVOICECOMMANDSEXPORT
 @interface WAVVoiceCommandDisambiguationResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -199,7 +199,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
 #ifndef __WAVVoiceCommandServiceConnection_DEFINED__
 #define __WAVVoiceCommandServiceConnection_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELVOICECOMMANDSEXPORT
 @interface WAVVoiceCommandServiceConnection : RTObject
 + (WAVVoiceCommandServiceConnection*)fromAppServiceTriggerDetails:(WAAAppServiceTriggerDetails*)triggerDetails;
 #if defined(__cplusplus)
@@ -223,7 +223,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
 #ifndef __WAVVoiceCommandCompletedEventArgs_DEFINED__
 #define __WAVVoiceCommandCompletedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_VOICECOMMANDS_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELVOICECOMMANDSEXPORT
 @interface WAVVoiceCommandCompletedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

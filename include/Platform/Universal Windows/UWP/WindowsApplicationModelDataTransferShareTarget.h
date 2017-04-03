@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_SHARETARGET_EXPORT
-#define OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_SHARETARGET_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_ApplicationModel_DataTransfer_ShareTarget.lib")
+#ifndef OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFERSHARETARGETEXPORT
+#define OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFERSHARETARGETEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsApplicationModelDataTransferShareTarget.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -39,7 +39,7 @@
 #ifndef __WADSQuickLink_DEFINED__
 #define __WADSQuickLink_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_SHARETARGET_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFERSHARETARGETEXPORT
 @interface WADSQuickLink : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 #if defined(__cplusplus)
@@ -58,7 +58,7 @@ OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_SHARETARGET_EXPORT
 #ifndef __WADSShareOperation_DEFINED__
 #define __WADSShareOperation_DEFINED__
 
-OBJCUWP_WINDOWS_APPLICATIONMODEL_DATATRANSFER_SHARETARGET_EXPORT
+OBJCUWPWINDOWSAPPLICATIONMODELDATATRANSFERSHARETARGETEXPORT
 @interface WADSShareOperation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

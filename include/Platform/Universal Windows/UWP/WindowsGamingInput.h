@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
-#define OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Gaming_Input.lib")
+#ifndef OBJCUWPWINDOWSGAMINGINPUTEXPORT
+#define OBJCUWPWINDOWSGAMINGINPUTEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsGamingInput.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -214,7 +214,7 @@ typedef unsigned WGIOptionalUINavigationButtons;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Gaming.Input.ArcadeStickReading
-OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
+OBJCUWPWINDOWSGAMINGINPUTEXPORT
 @interface WGIArcadeStickReading : NSObject
 + (instancetype)new;
 @property uint64_t timestamp;
@@ -222,7 +222,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
 @end
 
 // [struct] Windows.Gaming.Input.GamepadReading
-OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
+OBJCUWPWINDOWSGAMINGINPUTEXPORT
 @interface WGIGamepadReading : NSObject
 + (instancetype)new;
 @property uint64_t timestamp;
@@ -236,7 +236,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
 @end
 
 // [struct] Windows.Gaming.Input.GamepadVibration
-OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
+OBJCUWPWINDOWSGAMINGINPUTEXPORT
 @interface WGIGamepadVibration : NSObject
 + (instancetype)new;
 @property double leftMotor;
@@ -246,7 +246,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
 @end
 
 // [struct] Windows.Gaming.Input.RacingWheelReading
-OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
+OBJCUWPWINDOWSGAMINGINPUTEXPORT
 @interface WGIRacingWheelReading : NSObject
 + (instancetype)new;
 @property uint64_t timestamp;
@@ -260,7 +260,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
 @end
 
 // [struct] Windows.Gaming.Input.UINavigationReading
-OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
+OBJCUWPWINDOWSGAMINGINPUTEXPORT
 @interface WGIUINavigationReading : NSObject
 + (instancetype)new;
 @property uint64_t timestamp;
@@ -284,7 +284,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
 - (void)removeUserChangedEvent:(EventRegistrationToken)tok;
 @end
 
-OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
+OBJCUWPWINDOWSGAMINGINPUTEXPORT
 @interface WGIIGameController : RTObject <WGIIGameController>
 @end
 
@@ -294,7 +294,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
 #ifndef __WGIHeadset_DEFINED__
 #define __WGIHeadset_DEFINED__
 
-OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
+OBJCUWPWINDOWSGAMINGINPUTEXPORT
 @interface WGIHeadset : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -309,7 +309,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
 #ifndef __WGIArcadeStick_DEFINED__
 #define __WGIArcadeStick_DEFINED__
 
-OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
+OBJCUWPWINDOWSGAMINGINPUTEXPORT
 @interface WGIArcadeStick : RTObject <WGIIGameController>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -338,7 +338,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
 #ifndef __WGIGamepad_DEFINED__
 #define __WGIGamepad_DEFINED__
 
-OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
+OBJCUWPWINDOWSGAMINGINPUTEXPORT
 @interface WGIGamepad : RTObject <WGIIGameController>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -368,7 +368,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
 #ifndef __WGIRacingWheel_DEFINED__
 #define __WGIRacingWheel_DEFINED__
 
-OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
+OBJCUWPWINDOWSGAMINGINPUTEXPORT
 @interface WGIRacingWheel : RTObject <WGIIGameController>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -403,7 +403,7 @@ OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
 #ifndef __WGIUINavigationController_DEFINED__
 #define __WGIUINavigationController_DEFINED__
 
-OBJCUWP_WINDOWS_GAMING_INPUT_EXPORT
+OBJCUWPWINDOWSGAMINGINPUTEXPORT
 @interface WGIUINavigationController : RTObject <WGIIGameController>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

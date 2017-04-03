@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
-#define OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Media_Import.lib")
+#ifndef OBJCUWPWINDOWSMEDIAIMPORTEXPORT
+#define OBJCUWPWINDOWSMEDIAIMPORTEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsMediaImport.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -142,7 +142,7 @@ typedef unsigned WMIPhotoImportSubfolderCreationMode;
 #import <Foundation/Foundation.h>
 
 // [struct] Windows.Media.Import.PhotoImportProgress
-OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
+OBJCUWPWINDOWSMEDIAIMPORTEXPORT
 @interface WMIPhotoImportProgress : NSObject
 + (instancetype)new;
 @property unsigned int itemsImported;
@@ -156,7 +156,7 @@ OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 #ifndef __WMIPhotoImportSource_DEFINED__
 #define __WMIPhotoImportSource_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
+OBJCUWPWINDOWSMEDIAIMPORTEXPORT
 @interface WMIPhotoImportSource : RTObject
 + (void)fromIdAsync:(NSString *)sourceId success:(void (^)(WMIPhotoImportSource*))success failure:(void (^)(NSError*))failure;
 + (void)fromFolderAsync:(RTObject<WSIStorageFolder>*)sourceRootFolder success:(void (^)(WMIPhotoImportSource*))success failure:(void (^)(NSError*))failure;
@@ -188,7 +188,7 @@ OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 #ifndef __WMIPhotoImportOperation_DEFINED__
 #define __WMIPhotoImportOperation_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
+OBJCUWPWINDOWSMEDIAIMPORTEXPORT
 @interface WMIPhotoImportOperation : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -206,7 +206,7 @@ OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 #ifndef __WMIPhotoImportManager_DEFINED__
 #define __WMIPhotoImportManager_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
+OBJCUWPWINDOWSMEDIAIMPORTEXPORT
 @interface WMIPhotoImportManager : RTObject
 + (void)isSupportedAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 + (void)findAllSourcesAsyncWithSuccess:(void (^)(NSArray* /* WMIPhotoImportSource* */))success failure:(void (^)(NSError*))failure;
@@ -223,7 +223,7 @@ OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 - (void)close;
 @end
 
-OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
+OBJCUWPWINDOWSMEDIAIMPORTEXPORT
 @interface WFIClosable : RTObject <WFIClosable>
 @end
 
@@ -233,7 +233,7 @@ OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 #ifndef __WMIPhotoImportSession_DEFINED__
 #define __WMIPhotoImportSession_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
+OBJCUWPWINDOWSMEDIAIMPORTEXPORT
 @interface WMIPhotoImportSession : RTObject <WFIClosable>
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -256,7 +256,7 @@ OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 #ifndef __WMIPhotoImportFindItemsResult_DEFINED__
 #define __WMIPhotoImportFindItemsResult_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
+OBJCUWPWINDOWSMEDIAIMPORTEXPORT
 @interface WMIPhotoImportFindItemsResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -303,7 +303,7 @@ OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 #ifndef __WMIPhotoImportImportItemsResult_DEFINED__
 #define __WMIPhotoImportImportItemsResult_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
+OBJCUWPWINDOWSMEDIAIMPORTEXPORT
 @interface WMIPhotoImportImportItemsResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -330,7 +330,7 @@ OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 #ifndef __WMIPhotoImportDeleteImportedItemsFromSourceResult_DEFINED__
 #define __WMIPhotoImportDeleteImportedItemsFromSourceResult_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
+OBJCUWPWINDOWSMEDIAIMPORTEXPORT
 @interface WMIPhotoImportDeleteImportedItemsFromSourceResult : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -356,7 +356,7 @@ OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 #ifndef __WMIPhotoImportStorageMedium_DEFINED__
 #define __WMIPhotoImportStorageMedium_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
+OBJCUWPWINDOWSMEDIAIMPORTEXPORT
 @interface WMIPhotoImportStorageMedium : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -377,7 +377,7 @@ OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 #ifndef __WMIPhotoImportSidecar_DEFINED__
 #define __WMIPhotoImportSidecar_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
+OBJCUWPWINDOWSMEDIAIMPORTEXPORT
 @interface WMIPhotoImportSidecar : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -393,7 +393,7 @@ OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 #ifndef __WMIPhotoImportVideoSegment_DEFINED__
 #define __WMIPhotoImportVideoSegment_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
+OBJCUWPWINDOWSMEDIAIMPORTEXPORT
 @interface WMIPhotoImportVideoSegment : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -411,7 +411,7 @@ OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 #ifndef __WMIPhotoImportItem_DEFINED__
 #define __WMIPhotoImportItem_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
+OBJCUWPWINDOWSMEDIAIMPORTEXPORT
 @interface WMIPhotoImportItem : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -436,7 +436,7 @@ OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 #ifndef __WMIPhotoImportSelectionChangedEventArgs_DEFINED__
 #define __WMIPhotoImportSelectionChangedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
+OBJCUWPWINDOWSMEDIAIMPORTEXPORT
 @interface WMIPhotoImportSelectionChangedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));
@@ -450,7 +450,7 @@ OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
 #ifndef __WMIPhotoImportItemImportedEventArgs_DEFINED__
 #define __WMIPhotoImportItemImportedEventArgs_DEFINED__
 
-OBJCUWP_WINDOWS_MEDIA_IMPORT_EXPORT
+OBJCUWPWINDOWSMEDIAIMPORTEXPORT
 @interface WMIPhotoImportItemImportedEventArgs : RTObject
 #if defined(__cplusplus)
 + (instancetype)createWith:(IInspectable*)obj __attribute__ ((ns_returns_autoreleased));

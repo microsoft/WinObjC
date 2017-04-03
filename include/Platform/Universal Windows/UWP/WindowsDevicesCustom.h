@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_DEVICES_CUSTOM_EXPORT
-#define OBJCUWP_WINDOWS_DEVICES_CUSTOM_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Devices_Custom.lib")
+#ifndef OBJCUWPWINDOWSDEVICESCUSTOMEXPORT
+#define OBJCUWPWINDOWSDEVICESCUSTOMEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsDevicesCustom.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -79,7 +79,7 @@ typedef unsigned WDCDeviceSharingMode;
 @property (readonly) unsigned short function;
 @end
 
-OBJCUWP_WINDOWS_DEVICES_CUSTOM_EXPORT
+OBJCUWPWINDOWSDEVICESCUSTOMEXPORT
 @interface WDCIIOControlCode : RTObject <WDCIIOControlCode>
 @end
 
@@ -89,7 +89,7 @@ OBJCUWP_WINDOWS_DEVICES_CUSTOM_EXPORT
 #ifndef __WDCKnownDeviceTypes_DEFINED__
 #define __WDCKnownDeviceTypes_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_CUSTOM_EXPORT
+OBJCUWPWINDOWSDEVICESCUSTOMEXPORT
 @interface WDCKnownDeviceTypes : RTObject
 + (unsigned short)unknown;
 @end
@@ -100,7 +100,7 @@ OBJCUWP_WINDOWS_DEVICES_CUSTOM_EXPORT
 #ifndef __WDCIOControlCode_DEFINED__
 #define __WDCIOControlCode_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_CUSTOM_EXPORT
+OBJCUWPWINDOWSDEVICESCUSTOMEXPORT
 @interface WDCIOControlCode : RTObject <WDCIIOControlCode>
 + (WDCIOControlCode*)makeIOControlCode:(unsigned short)deviceType function:(unsigned short)function accessMode:(WDCIOControlAccessMode)accessMode bufferingMethod:(WDCIOControlBufferingMethod)bufferingMethod ACTIVATOR;
 #if defined(__cplusplus)
@@ -119,7 +119,7 @@ OBJCUWP_WINDOWS_DEVICES_CUSTOM_EXPORT
 #ifndef __WDCCustomDevice_DEFINED__
 #define __WDCCustomDevice_DEFINED__
 
-OBJCUWP_WINDOWS_DEVICES_CUSTOM_EXPORT
+OBJCUWPWINDOWSDEVICESCUSTOMEXPORT
 @interface WDCCustomDevice : RTObject
 + (NSString *)getDeviceSelector:(WFGUID*)classGuid;
 + (void)fromIdAsync:(NSString *)deviceId desiredAccess:(WDCDeviceAccessMode)desiredAccess sharingMode:(WDCDeviceSharingMode)sharingMode success:(void (^)(WDCCustomDevice*))success failure:(void (^)(NSError*))failure;

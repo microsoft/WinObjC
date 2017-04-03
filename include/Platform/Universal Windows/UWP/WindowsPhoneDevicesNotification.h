@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_PHONE_DEVICES_NOTIFICATION_EXPORT
-#define OBJCUWP_WINDOWS_PHONE_DEVICES_NOTIFICATION_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Phone_Devices_Notification.lib")
+#ifndef OBJCUWPWINDOWSPHONEDEVICESNOTIFICATIONEXPORT
+#define OBJCUWPWINDOWSPHONEDEVICESNOTIFICATIONEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsPhoneDevicesNotification.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -38,7 +38,7 @@
 #ifndef __WPDNVibrationDevice_DEFINED__
 #define __WPDNVibrationDevice_DEFINED__
 
-OBJCUWP_WINDOWS_PHONE_DEVICES_NOTIFICATION_EXPORT
+OBJCUWPWINDOWSPHONEDEVICESNOTIFICATIONEXPORT
 @interface WPDNVibrationDevice : RTObject
 + (WPDNVibrationDevice*)getDefault;
 #if defined(__cplusplus)

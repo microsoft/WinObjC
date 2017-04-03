@@ -19,10 +19,10 @@
 
 #pragma once
 
-#ifndef OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_DATAPROTECTION_EXPORT
-#define OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_DATAPROTECTION_EXPORT __declspec(dllimport)
-#ifndef IN_OBJCUWP_BUILD
-#pragma comment(lib, "ObjCUWP_Windows_Security_Cryptography_DataProtection.lib")
+#ifndef OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYDATAPROTECTIONEXPORT
+#define OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYDATAPROTECTIONEXPORT __declspec(dllimport)
+#ifndef IN_WinObjC_Frameworks_UWP_BUILD
+#pragma comment(lib, "ObjCUWPWindowsSecurityCryptographyDataProtection.lib")
 #endif
 #endif
 #include <UWP/interopBase.h>
@@ -39,7 +39,7 @@
 #ifndef __WSCDDataProtectionProvider_DEFINED__
 #define __WSCDDataProtectionProvider_DEFINED__
 
-OBJCUWP_WINDOWS_SECURITY_CRYPTOGRAPHY_DATAPROTECTION_EXPORT
+OBJCUWPWINDOWSSECURITYCRYPTOGRAPHYDATAPROTECTIONEXPORT
 @interface WSCDDataProtectionProvider : RTObject
 + (instancetype)make __attribute__ ((ns_returns_retained));
 + (WSCDDataProtectionProvider*)makeOverloadExplicit:(NSString *)protectionDescriptor ACTIVATOR;
