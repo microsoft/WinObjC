@@ -58,7 +58,7 @@ public:
     TEST_METHOD(GetXamlElement) {
         FrameworkHelper::RunOnUIThread([]() {
             UIView* view = [[[UIScrollView alloc] init] autorelease];
-            FrameworkElement backingElement = [view _xamlElementInternal];
+            FrameworkElement backingElement = [view _winrtXamlElement];
             ASSERT_TRUE(backingElement);
         });
     }
@@ -72,7 +72,7 @@ public:
 
         dispatch_sync(dispatch_get_main_queue(), ^{
             // get the backing xaml element
-            FrameworkElement xamlScrollView = [scrollView _xamlElementInternal];
+            FrameworkElement xamlScrollView = [scrollView _winrtXamlElement];
             Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlScrollViewGetScrollViewer(objcwinrt::to_insp(xamlScrollView)));
             auto scrollViewer = objcwinrt::from_insp<Controls::ScrollViewer>(inspectable);
             ASSERT_TRUE(scrollViewer);
@@ -126,7 +126,7 @@ public:
 
         dispatch_sync(dispatch_get_main_queue(), ^{
             // get the backing xaml element
-            FrameworkElement xamlScrollView = [scrollView _xamlElementInternal];
+            FrameworkElement xamlScrollView = [scrollView _winrtXamlElement];
             Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlScrollViewGetScrollViewer(objcwinrt::to_insp(xamlScrollView)));
             auto scrollViewer = objcwinrt::from_insp<Controls::ScrollViewer>(inspectable);
             ASSERT_TRUE(scrollViewer);
@@ -179,7 +179,7 @@ public:
 
         dispatch_sync(dispatch_get_main_queue(), ^{
             // get the backing xaml element
-            FrameworkElement xamlScrollView = [scrollView _xamlElementInternal];
+            FrameworkElement xamlScrollView = [scrollView _winrtXamlElement];
             Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlScrollViewGetScrollViewer(objcwinrt::to_insp(xamlScrollView)));
             auto scrollViewer = objcwinrt::from_insp<Controls::ScrollViewer>(inspectable);
             ASSERT_TRUE(scrollViewer);
@@ -206,7 +206,7 @@ public:
 
         dispatch_sync(dispatch_get_main_queue(), ^{
             // get the backing xaml element
-            FrameworkElement xamlScrollView = [scrollView _xamlElementInternal];
+            FrameworkElement xamlScrollView = [scrollView _winrtXamlElement];
             Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlScrollViewGetScrollViewer(objcwinrt::to_insp(xamlScrollView)));
             auto scrollViewer = objcwinrt::from_insp<Controls::ScrollViewer>(inspectable);
             ASSERT_TRUE(scrollViewer);
@@ -263,7 +263,7 @@ public:
 
         dispatch_sync(dispatch_get_main_queue(), ^{
             // get the backing xaml element
-            FrameworkElement xamlScrollView = [scrollView _xamlElementInternal];
+            FrameworkElement xamlScrollView = [scrollView _winrtXamlElement];
             Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlScrollViewGetScrollViewer(objcwinrt::to_insp(xamlScrollView)));
             auto scrollViewer = objcwinrt::from_insp<Controls::ScrollViewer>(inspectable);
             ASSERT_TRUE(scrollViewer);
@@ -293,7 +293,7 @@ public:
         UXTestAPI::ViewControllerPresenter testHelper(scrollViewVC, 2);
 
         UIScrollView* scrollView = [scrollViewVC scrollView];
-        FrameworkElement xamlScrollView = [scrollView _xamlElementInternal];
+        FrameworkElement xamlScrollView = [scrollView _winrtXamlElement];
         Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlScrollViewGetScrollViewer(objcwinrt::to_insp(xamlScrollView)));
         auto scrollViewer = objcwinrt::from_insp<Controls::ScrollViewer>(inspectable);
         ASSERT_TRUE(scrollViewer);

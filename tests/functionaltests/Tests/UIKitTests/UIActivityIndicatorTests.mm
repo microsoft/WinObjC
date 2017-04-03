@@ -59,7 +59,7 @@ public:
     TEST_METHOD(GetXamlElement) {
         FrameworkHelper::RunOnUIThread([]() {
             UIView* view = [[[UIActivityIndicatorView alloc] init] autorelease];
-            FrameworkElement backingElement = [view _xamlElementInternal];
+            FrameworkElement backingElement = [view _winrtXamlElement];
             ASSERT_TRUE(backingElement);
         });
     }

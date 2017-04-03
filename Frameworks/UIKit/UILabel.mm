@@ -189,14 +189,14 @@ static const wchar_t* TAG = L"UILabel";
     // it will expose its backing TextBlock.  For now, we'll have to
     // know that it's truly backed by a Grid and we must reach down
     // to retrieve its TextBlock.
-    auto labelGrid = [self _xamlElementInternal].try_as<Controls::Grid>();
+    auto labelGrid = [self _winrtXamlElement].try_as<Controls::Grid>();
     Controls::TextBlock textBlock = nullptr;
     if (labelGrid) {
         textBlock = XamlControls::GetLabelTextBlock(labelGrid);
     } else {
         // If we didn't get a UIKit.Label, that's ok - as long as
         // we've received a TextBlock directly.
-        textBlock = [self _xamlElementInternal].try_as<Controls::TextBlock>();
+        textBlock = [self _winrtXamlElement].try_as<Controls::TextBlock>();
     }
 
     if (!textBlock) {

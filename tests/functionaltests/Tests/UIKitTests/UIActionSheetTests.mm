@@ -58,7 +58,7 @@ public:
     TEST_METHOD(GetXamlElement) {
         FrameworkHelper::RunOnUIThread([]() {
             UIActionSheet* actionSheet = [[[UIActionSheet alloc] init] autorelease];
-            FrameworkElement backingElement = [actionSheet _xamlElementInternal];
+            FrameworkElement backingElement = [actionSheet _winrtXamlElement];
             ASSERT_TRUE(backingElement);
 
             ASSERT_TRUE(backingElement.as<FrameworkElement>());
@@ -72,7 +72,7 @@ public:
                                                              cancelButtonTitle:nil
                                                         destructiveButtonTitle:nil
                                                              otherButtonTitles:nil] autorelease];
-            FrameworkElement backingElement = [actionSheet _xamlElementInternal];
+            FrameworkElement backingElement = [actionSheet _winrtXamlElement];
             ASSERT_TRUE(backingElement);
 
             // Check that cancel button index, destructive button index, other button index are correct

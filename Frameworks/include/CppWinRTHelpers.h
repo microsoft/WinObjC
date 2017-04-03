@@ -40,6 +40,26 @@
 #import <wrl/client.h>
 #include "COMIncludes_End.h"
 
+// C++/WinRT types have a default constructor that instantiates the underlying object,
+// and another constructor that takes nullptr_t and doesn't instantiate the underlying
+// object. This is problematic when C++/WinRT objects are fields in an Objective-C
+// class, because Objective-C class fields can only be constructed using the default
+// constructor, which is often not what you want. Therefore, this type exists to wrap
+// a C++/WinRT type and forward the default constructor to the (nullptr_t) constructor.
+template <typename T>
+class TrivialDefaultConstructor : public T {
+public:
+    TrivialDefaultConstructor() : T(nullptr) { }
+
+    auto operator=(const T& other) {
+        return T::operator=(other);
+    }
+
+    auto operator=(T&& other) {
+        return T::operator=(std::forward<T>(other));
+    }
+};
+
 namespace objcwinrt {
 
 //
@@ -118,8 +138,7 @@ NSString* string(winrt::hstring_view str) {
 
 template <typename T>
 winrt::Windows::Foundation::IReference<T> optional(const T& t) {
-    extern int not_implemented;
-    return not_implemented;
+    static_assert(false, "objcwinrt::optional<T> not specialized");
 }
 
 template <>

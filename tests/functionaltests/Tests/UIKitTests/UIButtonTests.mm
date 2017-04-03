@@ -110,7 +110,7 @@ public:
     TEST_METHOD(UIButton_GetXamlElement) {
         FrameworkHelper::RunOnUIThread([]() {
             UIView* view = [[[UIButton alloc] init] autorelease];
-            FrameworkElement backingElement = [view _xamlElementInternal];
+            FrameworkElement backingElement = [view _winrtXamlElement];
             ASSERT_TRUE(backingElement);
         });
     }
@@ -168,7 +168,7 @@ public:
 
         UIButton* buttonToTest = [buttonVC defaultButton];
 
-        Controls::Control xamlControl = [buttonToTest _xamlElementInternal].as<Controls::Control>();
+        Controls::Control xamlControl = [buttonToTest _winrtXamlElement].as<Controls::Control>();
         ASSERT_TRUE(xamlControl);
 
         // Extract UIButton.titleLabel control to verify its visual state
@@ -227,7 +227,7 @@ public:
 
         UIButton* buttonToTest = [buttonVC customButton];
 
-        auto xamlControl = [buttonToTest _xamlElementInternal].as<Controls::Control>();
+        auto xamlControl = [buttonToTest _winrtXamlElement].as<Controls::Control>();
         ASSERT_TRUE(xamlControl);
 
         // Extract UIButton.titleLabel control to verify its visual state
@@ -288,7 +288,7 @@ public:
         // Change to the UIButtonTypeSystem
         UIButton* buttonToTest = [buttonVC systemButton];
 
-        auto xamlControl = [buttonToTest _xamlElementInternal].as<Controls::Control>();
+        auto xamlControl = [buttonToTest _winrtXamlElement].as<Controls::Control>();
         ASSERT_TRUE(xamlControl);
 
         // Extract UIButton.titleLabel control to verify its visual state
@@ -353,7 +353,7 @@ public:
         __block FrameworkElement buttonBorder = nullptr;
         __block StrongId<UIColor> expectedColor;
 
-        FrameworkElement xamlElement = [buttonToTest _xamlElementInternal];
+        FrameworkElement xamlElement = [buttonToTest _winrtXamlElement];
         ASSERT_TRUE(xamlElement);
 
         // Find buttonBorder in the visual tree
@@ -428,7 +428,7 @@ public:
         __block FrameworkElement buttonBorder = nullptr;
         __block StrongId<UIColor> expectedColor;
 
-        FrameworkElement xamlElement = [buttonToTest _xamlElementInternal];
+        FrameworkElement xamlElement = [buttonToTest _winrtXamlElement];
         ASSERT_TRUE(xamlElement);
 
         // Find buttonBorder in the visual tree
@@ -802,7 +802,7 @@ public:
         __block NSString* expectedImage;
 
         // Extract UIButton.imageView control to verify its visual state
-        FrameworkElement xamlElement = [buttonToTest.imageView _xamlElementInternal];
+        FrameworkElement xamlElement = [buttonToTest.imageView _winrtXamlElement];
         ASSERT_TRUE(xamlElement);
 
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -958,7 +958,7 @@ public:
         __block winrt::event_token ert;
         winrt::event_token* const ertAddr = &ert;
 
-        FrameworkElement xamlElement = [buttonToTest _xamlElementInternal];
+        FrameworkElement xamlElement = [buttonToTest _winrtXamlElement];
         ASSERT_TRUE(xamlElement);
 
         // Wait for the layerContent to be part of the visual tree
@@ -1151,10 +1151,10 @@ public:
         __block auto xamlTitleWidthSubscriber = std::make_shared<XamlEventSubscription>();
         __block auto xamlTitleHeightSubscriber = std::make_shared<XamlEventSubscription>();
 
-        FrameworkElement xamlImageElement = [buttonToTest.imageView _xamlElementInternal];
+        FrameworkElement xamlImageElement = [buttonToTest.imageView _winrtXamlElement];
         ASSERT_TRUE(xamlImageElement);
 
-        FrameworkElement xamlTitleElement = [buttonToTest.titleLabel _xamlElementInternal];
+        FrameworkElement xamlTitleElement = [buttonToTest.titleLabel _winrtXamlElement];
         ASSERT_TRUE(xamlTitleElement);
 
         dispatch_sync(dispatch_get_main_queue(), ^{
@@ -1240,7 +1240,7 @@ public:
         __block auto xamlWidthSubscriber = std::make_shared<XamlEventSubscription>();
         __block auto xamlHeightSubscriber = std::make_shared<XamlEventSubscription>();
 
-        FrameworkElement xamlElement = [buttonToTest.titleLabel _xamlElementInternal];
+        FrameworkElement xamlElement = [buttonToTest.titleLabel _winrtXamlElement];
         ASSERT_TRUE(xamlElement);
 
         dispatch_sync(dispatch_get_main_queue(), ^{
@@ -1296,7 +1296,7 @@ public:
         __block auto xamlCanvasTopSubscriber = std::make_shared<XamlEventSubscription>();
 
         // Extract UIButton.imageView control to verify its visual state
-        FrameworkElement xamlElement = [buttonToTest.imageView _xamlElementInternal];
+        FrameworkElement xamlElement = [buttonToTest.imageView _winrtXamlElement];
         ASSERT_TRUE(xamlElement);
 
         dispatch_sync(dispatch_get_main_queue(), ^{
@@ -1416,7 +1416,7 @@ public:
         __block NSString* expectedImage = @"50x50.png";
 
         // Extract UIButton.imageView control to verify its visual state
-        FrameworkElement xamlElement = [buttonToTest.imageView _xamlElementInternal];
+        FrameworkElement xamlElement = [buttonToTest.imageView _winrtXamlElement];
         ASSERT_TRUE(xamlElement);
 
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -1455,7 +1455,7 @@ public:
         __block winrt::event_token ert;
         winrt::event_token* const ertAddr = &ert;
 
-        FrameworkElement xamlElement = [buttonToTest _xamlElementInternal];
+        FrameworkElement xamlElement = [buttonToTest _winrtXamlElement];
         ASSERT_TRUE(xamlElement);
 
         // Wait for the layerContent to be part of the visual tree
@@ -1500,7 +1500,7 @@ public:
         UXTestAPI::ViewControllerPresenter testHelper(buttonVC);
 
         UIButton* buttonToTest = [buttonVC defaultButton];
-        FrameworkElement xamlElement = [buttonToTest.imageView _xamlElementInternal];
+        FrameworkElement xamlElement = [buttonToTest.imageView _winrtXamlElement];
         ASSERT_TRUE(xamlElement);
     }
 };

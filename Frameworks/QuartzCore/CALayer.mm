@@ -290,8 +290,7 @@ CAPrivateInfo::CAPrivateInfo(CALayer* self, const FrameworkElement& xamlElement)
     _name = nil;
 
     // Create our backing layer proxy
-    auto rawElement = reinterpret_cast<ABI::Windows::UI::Xaml::IFrameworkElement*>(winrt::get_abi(xamlElement));
-    _layerProxy = GetCACompositor()->CreateLayerProxy(rawElement);
+    _layerProxy = GetCACompositor()->CreateLayerProxy(objcwinrt::to_insp(xamlElement));
 
     // Query for our backing XAML node.
     // ILayerProxy will have created one if the xamlElement passed into the previous CreateLayerProxy call was nullptr.

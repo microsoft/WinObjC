@@ -82,7 +82,7 @@ static const wchar_t* tag = L"UIButtonProxies";
     return self;
 }
 
-- (FrameworkElement)_xamlElementInternal {
+- (FrameworkElement)_winrtXamlElement {
     return _xamlElement;
 }
 

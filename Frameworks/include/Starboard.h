@@ -205,19 +205,4 @@ inline CAPoint3D operator*(float f, const CAPoint3D& v) {
     return CAPoint3D(v.x * f, v.y * f, v.z * f);
 }
 
-// Wrapper for C++/WinRT types when you need a trivial default constructor
-template <typename T>
-class TrivialDefaultConstructor : public T {
-public:
-    TrivialDefaultConstructor() : T(nullptr) { }
-
-    auto operator=(const T& other) {
-        return T::operator=(other);
-    }
-
-    auto operator=(T&& other) {
-        return T::operator=(other);
-    }
-};
-
 #include "Starboard/SmartTypes.h"

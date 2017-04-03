@@ -122,7 +122,7 @@ namespace WF = winrt::Windows::Foundation;
 
 static void _initUIWebView(UIWebView* self) {
     // Store a strongly-typed backing scrollviewer
-    self->_xamlWebControl = [self _xamlElementInternal].try_as<Controls::WebView>();
+    self->_xamlWebControl = [self _winrtXamlElement].try_as<Controls::WebView>();
     if (!self->_xamlWebControl) {
         FAIL_FAST();
     }

@@ -43,6 +43,7 @@ using namespace ABI::Windows::Foundation;
 using namespace ABI::Windows::Storage::Streams;
 
 using namespace Microsoft::WRL;
+namespace WF = winrt::Windows::Foundation;
 namespace WSS = winrt::Windows::Storage::Streams;
 
 @interface _UIHiddenMediaView : UIView
@@ -80,13 +81,13 @@ namespace WSS = winrt::Windows::Storage::Streams;
         // Set up events
         __weak AVAudioPlayer* weakSelf = self;
 
-        _mediaElement.CurrentStateChanged([weakSelf] (auto&& sender, auto&& e) {
+        _mediaElement.CurrentStateChanged([weakSelf] (const WF::IInspectable& sender, const RoutedEventArgs& e) {
             [weakSelf _handleMediaElementStateChange:sender args:e];
         });
-        _mediaElement.MediaEnded([weakSelf] (auto&& sender, auto&& e) {
+        _mediaElement.MediaEnded([weakSelf] (const WF::IInspectable& sender, const RoutedEventArgs& e) {
             [weakSelf _handleMediaElementMediaEnded:sender args:e];
         });
-        _mediaElement.MediaFailed([weakSelf] (auto&& sender, auto&& e) {
+        _mediaElement.MediaFailed([weakSelf] (const WF::IInspectable& sender, const RoutedEventArgs& e) {
             [weakSelf _handleMediaElementMediaFailed:sender args:e];
         });
 
@@ -124,7 +125,7 @@ namespace WSS = winrt::Windows::Storage::Streams;
         }
 
         _url = [[NSBundle mainBundle] _msAppxURLForResourceWithURL:url];
-        winrt::Windows::Foundation::Uri mediaUri = winrt::hstring_view(objcwinrt::string(_url.absoluteString));
+        WF::Uri mediaUri = winrt::hstring_view(objcwinrt::string(_url.absoluteString));
 
         TraceInfo(TAG, L"Loading media at URI: %ls\n", mediaUri.AbsoluteUri().c_str());
         _mediaElement.Source(mediaUri);
@@ -168,11 +169,11 @@ namespace WSS = winrt::Windows::Storage::Streams;
         winrt::attach_abi(buffer, reinterpret_cast<winrt::ABI::Windows::Storage::Streams::IBuffer*>(rawBuffer));
 
         rw.WriteBuffer(buffer);
-        auto async = rw.StoreAsync();
+        WSS::DataWriterStoreOperation async = rw.StoreAsync();
 
         // Hook the stream up to the media control when the load is complete
-        async.Completed([self] (auto&& operation, auto&& status) {
-            if (status == winrt::Windows::Foundation::AsyncStatus::Completed) {
+        async.Completed([self] (const WF::IAsyncOperation<unsigned int>& operation, WF::AsyncStatus status) {
+            if (status == WF::AsyncStatus::Completed) {
                 // Access XAML control on main thread
                 dispatch_sync(dispatch_get_main_queue(), ^{
                     self->_mediaElement.SetSource(self->_stream, L"");
@@ -191,7 +192,7 @@ namespace WSS = winrt::Windows::Storage::Streams;
     return self;
 }
 
-- (void)_handleMediaElementStateChange:(const winrt::Windows::Foundation::IInspectable&)sender args:(const RoutedEventArgs&)e {
+- (void)_handleMediaElementStateChange:(const WF::IInspectable&)sender args:(const RoutedEventArgs&)e {
     if (_mediaElement.CurrentState() != _lastState) {
         switch (_mediaElement.CurrentState()) {
             case Media::MediaElementState::Opening:
@@ -233,11 +234,11 @@ namespace WSS = winrt::Windows::Storage::Streams;
     }
 }
 
-- (void)_handleMediaElementMediaEnded:(const winrt::Windows::Foundation::IInspectable&)sender args:(const RoutedEventArgs&)e {
+- (void)_handleMediaElementMediaEnded:(const WF::IInspectable&)sender args:(const RoutedEventArgs&)e {
     TraceInfo(TAG, L"Media ended\n");
 }
 
-- (void)_handleMediaElementMediaFailed:(const winrt::Windows::Foundation::IInspectable&)sender args:(const RoutedEventArgs&)e {
+- (void)_handleMediaElementMediaFailed:(const WF::IInspectable&)sender args:(const RoutedEventArgs&)e {
     TraceWarning(TAG, L"Media failed\n");
 }
 
@@ -381,7 +382,7 @@ namespace WSS = winrt::Windows::Storage::Streams;
  @Status Interoperable
 */
 - (NSTimeInterval)duration {
-    auto duration = _mediaElement.NaturalDuration().TimeSpan;
+    WF::TimeSpan duration = _mediaElement.NaturalDuration().TimeSpan;
     auto seconds = std::chrono::duration_cast<std::chrono::seconds>(duration);
     NSTimeInterval interval = seconds.count();
 
@@ -397,7 +398,7 @@ namespace WSS = winrt::Windows::Storage::Streams;
  @Status Interoperable
 */
 - (NSTimeInterval)currentTime {
-    auto position = _mediaElement.Position();
+    WF::TimeSpan position = _mediaElement.Position();
     auto seconds = std::chrono::duration_cast<std::chrono::seconds>(position);
 
     return seconds.count();
@@ -408,7 +409,7 @@ namespace WSS = winrt::Windows::Storage::Streams;
 */
 - (void)setCurrentTime:(NSTimeInterval)currentTime {
     std::chrono::seconds time(static_cast<std::chrono::seconds::rep>(currentTime));
-    _mediaElement.Position(std::chrono::duration_cast<winrt::Windows::Foundation::TimeSpan>(time));
+    _mediaElement.Position(std::chrono::duration_cast<WF::TimeSpan>(time));
 }
 
 /**

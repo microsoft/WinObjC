@@ -120,10 +120,14 @@ static const wchar_t* TAG = L"SFSafariOAuthViewController";
     WF::Uri requestUri(objcwinrt::string(mangledURL));
     WF::Uri callbackUri(objcwinrt::string(_substituteRedirectURL));
 
-    auto async = WebAuthenticationBroker::AuthenticateAsync(WebAuthenticationOptions::None, requestUri, callbackUri);
+    WF::IAsyncOperation<WebAuthenticationResult> async =
+        WebAuthenticationBroker::AuthenticateAsync(
+            WebAuthenticationOptions::None,
+            requestUri,
+            callbackUri);
 
     // Register async completion handler
-    async.Completed([self](auto&& operation, auto&& status) {
+    async.Completed([self] (const WF::IAsyncOperation<WebAuthenticationResult>& operation, WF::AsyncStatus status) {
         BOOL completed = NO;
 
         // Check if AsyncOperation completed
@@ -132,7 +136,7 @@ static const wchar_t* TAG = L"SFSafariOAuthViewController";
 
         // Check if WebAuth call succeeded
         } else if (operation.get().ResponseStatus() != WebAuthenticationStatus::Success) {
-            auto result = operation.get();
+            WebAuthenticationResult result = operation.get();
 
             switch (result.ResponseStatus()) {
                 case WebAuthenticationStatus::UserCancel:
@@ -160,7 +164,7 @@ static const wchar_t* TAG = L"SFSafariOAuthViewController";
             return;
         }
 
-        auto result = operation.get();
+        WebAuthenticationResult result = operation.get();
         NSString* redirectUri = objcwinrt::string(result.ResponseData());
 
         if (_substituteRedirectURL != nil) {

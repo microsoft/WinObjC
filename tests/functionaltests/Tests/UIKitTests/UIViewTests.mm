@@ -50,7 +50,7 @@ public:
     TEST_METHOD(GetXamlElement) {
         FrameworkHelper::RunOnUIThread([]() {
             UIView* view = [[[UIView alloc] init] autorelease];
-            FrameworkElement backingElement = [view _xamlElementInternal];
+            FrameworkElement backingElement = [view _winrtXamlElement];
             ASSERT_TRUE(backingElement);
             ASSERT_EQ(L"UIView", backingElement.Name());
         });

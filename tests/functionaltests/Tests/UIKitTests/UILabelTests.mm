@@ -307,7 +307,7 @@ public:
 
         dispatch_sync(dispatch_get_main_queue(), ^{
             // get the backing xaml element, which is Grid contains textBlock
-            auto labelGrid = [label _xamlElementInternal].as<Controls::Grid>();
+            auto labelGrid = [label _winrtXamlElement].as<Controls::Grid>();
             Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetLabelTextBlock(objcwinrt::to_insp(labelGrid)));
             auto textBlock = objcwinrt::from_insp<Controls::TextBlock>(inspectable);
             ASSERT_TRUE(textBlock);
@@ -339,7 +339,7 @@ public:
 
         dispatch_sync(dispatch_get_main_queue(), ^{
             // get the backing xaml element, which is Grid contains textBlock
-            auto labelGrid = [label _xamlElementInternal].as<Controls::Grid>();
+            auto labelGrid = [label _winrtXamlElement].as<Controls::Grid>();
             Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetLabelTextBlock(objcwinrt::to_insp(labelGrid)));
             auto textBlock = objcwinrt::from_insp<Controls::TextBlock>(inspectable);
             ASSERT_TRUE(textBlock);
@@ -396,7 +396,7 @@ public:
 
         dispatch_sync(dispatch_get_main_queue(), ^{
             // get the backing xaml element, which is Grid contains textBlock
-            auto labelGrid = [label _xamlElementInternal].as<Controls::Grid>();
+            auto labelGrid = [label _winrtXamlElement].as<Controls::Grid>();
             Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetLabelTextBlock(objcwinrt::to_insp(labelGrid)));
             auto textBlock = objcwinrt::from_insp<Controls::TextBlock>(inspectable);
             ASSERT_TRUE(textBlock);
@@ -425,7 +425,7 @@ public:
 
         dispatch_sync(dispatch_get_main_queue(), ^{
             // get the backing xaml element, which is Grid contains textBlock
-            auto labelGrid = [label _xamlElementInternal].as<Controls::Grid>();
+            auto labelGrid = [label _winrtXamlElement].as<Controls::Grid>();
             Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetLabelTextBlock(objcwinrt::to_insp(labelGrid)));
             auto textBlock = objcwinrt::from_insp<Controls::TextBlock>(inspectable);
             ASSERT_TRUE(textBlock);
@@ -455,7 +455,7 @@ public:
 
         dispatch_sync(dispatch_get_main_queue(), ^{
             // get the backing xaml element, which is Grid contains textBlock
-            auto labelGrid = [label _xamlElementInternal].as<Controls::Grid>();
+            auto labelGrid = [label _winrtXamlElement].as<Controls::Grid>();
             Microsoft::WRL::ComPtr<IInspectable> inspectable(XamlGetLabelTextBlock(objcwinrt::to_insp(labelGrid)));
             auto textBlock = objcwinrt::from_insp<Controls::TextBlock>(inspectable);
 
@@ -511,7 +511,7 @@ public:
 
         dispatch_sync(dispatch_get_main_queue(), ^{
             // get the backing xaml element, which is Grid contains textBlock
-            auto labelGrid = [label _xamlElementInternal].as<Controls::Grid>();
+            auto labelGrid = [label _winrtXamlElement].as<Controls::Grid>();
 
             // verify default label font size
             ASSERT_TRUE([label.font pointSize] == [UIFont labelFontSize]);

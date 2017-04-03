@@ -150,7 +150,7 @@ public:
 - (void)__setContentsImage:(id)image;
 - (UIWindow*)_getWindowInternal;
 - (BOOL)_isEnabled;
-- (winrt::Windows::UI::Xaml::FrameworkElement)_xamlElementInternal;
+- (winrt::Windows::UI::Xaml::FrameworkElement)_winrtXamlElement;
 @end
 
 @interface NSLayoutConstraint ()

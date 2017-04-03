@@ -16,6 +16,7 @@
 #pragma once
 
 #import <UIKit/UITouch.h>
+#import "CppWinRTHelpers.h"
 
 #include "COMIncludes.h"
 #import <winrt/Windows.UI.Input.h>

@@ -60,6 +60,7 @@
 #import <cmath>
 
 using namespace winrt::Windows::UI::Xaml;
+namespace WF = winrt::Windows::Foundation;
 
 static const wchar_t* TAG = L"UIScrollView";
 
@@ -165,7 +166,7 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
 }
 
 - (void)_initUIScrollView {
-    FrameworkElement scrollView = [self _xamlElementInternal];
+    FrameworkElement scrollView = [self _winrtXamlElement];
     if (!scrollView) {
         FAIL_FAST();
     }
@@ -216,7 +217,7 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
 
 - (void)_setupViewChangingHandler {
     __weak UIScrollView* weakself = self;
-    _viewChangingEventToken = _scrollViewer.ViewChanging([weakself] (auto&& sender, auto&& arg) {
+    _viewChangingEventToken = _scrollViewer.ViewChanging([weakself] (const WF::IInspectable&, const Controls::ScrollViewerViewChangingEventArgs& arg) {
         __strong UIScrollView* strongSelf = weakself;
         if (strongSelf) {
             if (DEBUG_VERBOSE) {
@@ -360,7 +361,7 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
 
 - (void)_setupViewChangedHandler {
     __weak UIScrollView* weakself = self;
-    _viewChangedEventToken = _scrollViewer.ViewChanged([weakself] (auto&& sender, auto&& arg) {
+    _viewChangedEventToken = _scrollViewer.ViewChanged([weakself] (const WF::IInspectable&, const Controls::ScrollViewerViewChangedEventArgs& arg) {
         __strong UIScrollView* strongSelf = weakself;
         if (strongSelf) {
             // when we get notification from scrollviewer, associated offset contains insets
@@ -461,7 +462,7 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
 
 - (void)_setupManipulationEventHandlers {
     __weak UIScrollView* weakself = self;
-    _directManipulationStartedEventToken = _scrollViewer.DirectManipulationStarted([weakself] (auto&&, auto&&) {
+    _directManipulationStartedEventToken = _scrollViewer.DirectManipulationStarted([weakself] (const WF::IInspectable&, const WF::IInspectable&) {
         __strong UIScrollView* strongSelf = weakself;
         if (DEBUG_VERBOSE) {
             TraceVerbose(TAG, L"DirectManipulation----Started");
@@ -472,7 +473,7 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
         }
     });
 
-    _directManipulationCompletedEventToken = _scrollViewer.DirectManipulationCompleted([weakself] (auto&&, auto&&) {
+    _directManipulationCompletedEventToken = _scrollViewer.DirectManipulationCompleted([weakself] (const WF::IInspectable&, const WF::IInspectable&) {
         __strong UIScrollView* strongSelf = weakself;
         if (DEBUG_VERBOSE) {
             TraceVerbose(TAG, L"DirectManipulation----Completed");
@@ -491,7 +492,7 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
 
 - (void)_setupLoadedEventHandler {
     __weak UIScrollView* weakSelf = self;
-    _loadEventToken = self->_scrollViewer.Loaded([weakSelf] (auto&&, auto&&) {
+    _loadEventToken = self->_scrollViewer.Loaded([weakSelf] (const WF::IInspectable&, const RoutedEventArgs&) {
         __strong UIScrollView* strongSelf = weakSelf;
         if (strongSelf && (strongSelf->_contentOffset != CGPointZero || strongSelf->_zoomScale != strongSelf->_scrollViewer.ZoomFactor())) {
             strongSelf->_loaded = YES;

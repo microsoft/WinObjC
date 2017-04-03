@@ -35,6 +35,7 @@
 #include "COMIncludes_End.h"
 
 using namespace winrt::Windows::UI::Xaml;
+namespace WF = winrt::Windows::Foundation;
 
 static const double c_defaultStepFrequency = 0.1;
 
@@ -49,7 +50,7 @@ static const double c_defaultStepFrequency = 0.1;
 
 - (void)_initUISlider {
     // Store a strongly-typed backing slider
-    _xamlSlider = [self _xamlElementInternal].try_as<Controls::Slider>();
+    _xamlSlider = [self _winrtXamlElement].try_as<Controls::Slider>();
     if (!_xamlSlider) {
         FAIL_FAST();
     }
@@ -154,7 +155,7 @@ static const double c_defaultStepFrequency = 0.1;
 - (void)_registerForEventsWithXaml {
     __weak UISlider* weakSelf = self;
 
-    _valueChangedEvent = _xamlSlider.ValueChanged([weakSelf] (auto&& sender, auto&& e) {
+    _valueChangedEvent = _xamlSlider.ValueChanged([weakSelf] (const WF::IInspectable&, const RoutedEventArgs&) {
         __strong UISlider* strongSelf = weakSelf;
 
         if (strongSelf && strongSelf->_continuous) {
@@ -171,7 +172,7 @@ static const double c_defaultStepFrequency = 0.1;
     // the track and not by dragging the thumb.
     // TODO: 7877568- Move to handling pointer events when available with projections, instead of manipulation events.
     _manipulationStartingEvent =
-        _xamlSlider.ManipulationStarting([weakSelf] (auto&& sender, auto&& e) {
+        _xamlSlider.ManipulationStarting([weakSelf] (const WF::IInspectable&, const RoutedEventArgs&) {
             __strong UISlider* strongSelf = weakSelf;
 
             if (strongSelf && strongSelf->_continuous == NO) {
@@ -182,7 +183,7 @@ static const double c_defaultStepFrequency = 0.1;
     // ManipulationCompleted will be fired when dragging has been completed
     // This allows us to fire UIControlEventValueChanged event and UIControlEventTouchUpInside event
     _manipulationCompletedEvent =
-        _xamlSlider.ManipulationCompleted([weakSelf] (auto&& sender, auto&& e) {
+        _xamlSlider.ManipulationCompleted([weakSelf] (const WF::IInspectable&, const RoutedEventArgs&) {
             __strong UISlider* strongSelf = weakSelf;
 
             if (strongSelf && strongSelf->_continuous == NO) {

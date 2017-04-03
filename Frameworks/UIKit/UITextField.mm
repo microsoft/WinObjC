@@ -45,10 +45,12 @@
 
 #include "COMIncludes.h"
 #import <winrt/Windows.UI.Text.h>
+#import <winrt/Windows.UI.Xaml.Input.h>
 #include "COMIncludes_End.h"
 
 using namespace winrt::Windows::UI::Xaml;
 using namespace winrt::Windows::UI::Text;
+namespace WF = winrt::Windows::Foundation;
 
 // Empirically discovered global minimum font size
 static const CGFloat g_minimumFontSize = 14.0f;
@@ -1255,7 +1257,7 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
 // Handler when control GotFocus
 - (void)_setupControlGotFocusHandler:(const Controls::Control&)control {
     __weak UITextField* weakSelf = self;
-    control.GotFocus([weakSelf] (const winrt::Windows::Foundation::IInspectable& sender, auto&&) {
+    control.GotFocus([weakSelf] (const WF::IInspectable& sender, const RoutedEventArgs&) {
         __strong UITextField* strongSelf = weakSelf;
         if (strongSelf) {
             // when GotFocus, check delegate (if exists) to see if it allows start editing
@@ -1291,7 +1293,7 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
 - (void)_setupControlLostFocusHandler:(const Controls::Control&)control {
     __weak UITextField* weakSelf = self;
 
-    control.LostFocus([weakSelf] (const winrt::Windows::Foundation::IInspectable& sender, auto&&) {
+    control.LostFocus([weakSelf] (const WF::IInspectable& sender, const RoutedEventArgs&) {
         __strong UITextField* strongSelf = weakSelf;
         auto control = sender.as<Controls::Control>();
 
@@ -1332,7 +1334,7 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
     __weak UITextField* weakSelf = self;
 
     // hooking up keydown event to process ENTER key
-    control.KeyDown([weakSelf] (auto&& sender, auto&& e) {
+    control.KeyDown([weakSelf] (const WF::IInspectable& sender, const Input::KeyRoutedEventArgs& e) {
         __strong UITextField* strongSelf = weakSelf;
         if (strongSelf && e.Key() == winrt::Windows::System::VirtualKey::Enter) {
             BOOL dismissKeyboard = TRUE;
@@ -1395,7 +1397,7 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
 
     // setting up addtional textbox properties in loaded listener that requires looking into control template
     __weak UITextField* weakSelf = self;
-    self->_textBox.Loaded([weakSelf] (auto&& sender, auto&& e) {
+    self->_textBox.Loaded([weakSelf] (const WF::IInspectable&, const RoutedEventArgs&) {
         __strong UITextField* strongSelf = weakSelf;
         XamlUtilities::SetControlBorderStyle(strongSelf->_textBox, strongSelf.borderStyle);
         VerticalAlignment verticalAlignment =
@@ -1414,7 +1416,7 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
     });
 
     // set up text change event handler
-    self->_textBox.TextChanged([weakSelf] (auto&& sender, auto&& e) {
+    self->_textBox.TextChanged([weakSelf] (const WF::IInspectable&, const Controls::TextChangedEventArgs&) {
         __strong UITextField* strongSelf = weakSelf;
         if (strongSelf) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -1477,7 +1479,7 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
     // set up password change handler
     __weak UITextField* weakSelf = self;
 
-    self->_passwordBox.Loaded([weakSelf] (auto&& sender, auto&& e) {
+    self->_passwordBox.Loaded([weakSelf] (const WF::IInspectable&, const RoutedEventArgs&) {
         __strong UITextField* strongSelf = weakSelf;
         XamlUtilities::SetControlBorderStyle(strongSelf->_passwordBox, strongSelf.borderStyle);
         VerticalAlignment verticalAlignment =
@@ -1495,7 +1497,7 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
         [strongSelf _adjustFontSizeToFitWidthOrApplyCurrentFont];
     });
 
-    self->_passwordBox.PasswordChanged([weakSelf] (auto&& sender, auto&& e) {
+    self->_passwordBox.PasswordChanged([weakSelf] (const WF::IInspectable&, const RoutedEventArgs&) {
         __strong UITextField* strongSelf = weakSelf;
         if (strongSelf) {
             dispatch_async(dispatch_get_main_queue(), ^{

@@ -34,7 +34,7 @@
 @interface _UIView_Proxy : _MockObjectBase
 
 - (instancetype)initWithXamlElement:(const winrt::Windows::UI::Xaml::FrameworkElement&)xamlElement;
-- (winrt::Windows::UI::Xaml::FrameworkElement)_xamlElementInternal;
+- (winrt::Windows::UI::Xaml::FrameworkElement)_winrtXamlElement;
 
 @end
 

@@ -58,7 +58,7 @@ public:
     TEST_METHOD(GetXamlElement) {
         FrameworkHelper::RunOnUIThread([]() {
             UIView* view = [[[UISlider alloc] init] autorelease];
-            FrameworkElement backingElement = [view _xamlElementInternal];
+            FrameworkElement backingElement = [view _winrtXamlElement];
             ASSERT_TRUE(backingElement);
 
             // TODO: Fix up when UISlider moves fully to XAML

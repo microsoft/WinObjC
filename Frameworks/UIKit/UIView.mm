@@ -3462,7 +3462,7 @@ static void adjustSubviews(UIView* self, CGSize parentSize, CGSize delta) {
     return [viewScreenShot autorelease];
 }
 
-- (FrameworkElement)_xamlElementInternal {
+- (FrameworkElement)_winrtXamlElement {
     return self.layer._xamlElement;
 }
 
@@ -3471,7 +3471,7 @@ static void adjustSubviews(UIView* self, CGSize parentSize, CGSize delta) {
  Retrieves the XAML FrameworkElement backing this UIView.
 */
 - (RTObject*)xamlElement {
-    return objcwinrt::to_rtobj([self _xamlElementInternal]);
+    return objcwinrt::to_rtobj([self _winrtXamlElement]);
 }
 
 /**
@@ -3484,14 +3484,14 @@ static void adjustSubviews(UIView* self, CGSize parentSize, CGSize delta) {
 
 // Retrieve the backing XAML element's Automation Id
 - (NSString*)accessibilityIdentifier {
-    auto identifier = Automation::AutomationProperties::GetAutomationId([self _xamlElementInternal]);
+    auto identifier = Automation::AutomationProperties::GetAutomationId([self _winrtXamlElement]);
     return objcwinrt::string(identifier);
 }
 
 // Set the backing XAML element's Automation Id
 - (void)setAccessibilityIdentifier:(NSString*)accessibilityId {
     Automation::AutomationProperties::SetAutomationId(
-        [self _xamlElementInternal],
+        [self _winrtXamlElement],
         objcwinrt::string(accessibilityId));
 }
 
