@@ -35,12 +35,17 @@
 #import <CFFoundationInternal.h>
 #import <ForFoundationOnly.h>
 #import "NSDirectoryEnumeratorInternal.h"
+#import <StringHelpers.h>
+
+#include <COMIncludes.h>
+#import <windows.storage.h>
+#import <wrl/client.h>
+#include <COMIncludes_End.h>
 
 static const wchar_t* TAG = L"NSFileManager";
 
-#ifdef __linux__
-#define _S_IFDIR S_IFDIR
-#endif
+using namespace Microsoft::WRL;
+using namespace ABI::Windows::Storage;
 
 // file attribute keys
 NSString* const NSFileType = @"NSFileType";
@@ -142,11 +147,32 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 // Locating Application Group Container Directories
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Container is contained within a Publisher Cache Folder, so a user could erase the data
 */
 - (NSURL*)containerURLForSecurityApplicationGroupIdentifier:(NSString*)groupIdentifier {
-    UNIMPLEMENTED();
-    return nil;
+    ComPtr<IApplicationDataStatics> applicationDataStatics;
+    RETURN_NULL_IF_FAILED(Windows::Foundation::GetActivationFactory(
+        Microsoft::WRL::Wrappers::HStringReference(RuntimeClass_Windows_Storage_ApplicationData).Get(), &applicationDataStatics));
+
+    ComPtr<IApplicationData> applicationData;
+    RETURN_NULL_IF_FAILED(applicationDataStatics->get_Current(&applicationData));
+
+    // IApplicationData3 has the method needed for container URL
+    ComPtr<IApplicationData3> applicationData3;
+    RETURN_NULL_IF_FAILED(applicationData.As(&applicationData3));
+
+    ComPtr<IStorageFolder> folder;
+    RETURN_NULL_IF_FAILED(applicationData3->GetPublisherCacheFolder(Strings::NarrowToWide<HSTRING>(groupIdentifier).Get(), &folder));
+
+    // Convert to IStorageItem to get the path
+    ComPtr<IStorageItem> storageItem;
+    RETURN_NULL_IF_FAILED(folder.As(&storageItem));
+
+    Wrappers::HString folderPath;
+    RETURN_NULL_IF_FAILED(storageItem->get_Path(folderPath.GetAddressOf()));
+
+    return [NSURL fileURLWithPath:Strings::WideToNSString(folderPath.Get()) isDirectory:YES];
 }
 
 // Discovering Directory Contents

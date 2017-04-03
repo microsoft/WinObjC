@@ -94,6 +94,7 @@ private:
 
 VCProject* SBNativeTarget::constructVCProject(VSTemplateProject* projTemplate) {
     VCProject* proj = SBTarget::constructVCProject(projTemplate);
+    proj->setBuildSettings(getBuildSettings());
     String vsProjDir = sb_dirname(proj->getPath());
 
     // Write variables file for App targets

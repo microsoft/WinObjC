@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="$guid9$"
+    Name="7a66f3a8-0911-48d9-923d-97f31acde5cb"
     Publisher="CN=islandwood"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="$guid9$" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="7a66f3a8-0911-48d9-923d-97f31acde5cb" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>$projectname$</DisplayName>
-    <PublisherDisplayName>$XmlEscapedPublisher$</PublisherDisplayName>
+    <DisplayName>ApplicationGroupFolderWrite</DisplayName>
+    <PublisherDisplayName>alballw</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -30,12 +30,12 @@
   <Applications>
     <Application Id="App"
       Executable="$targetnametoken$.exe"
-      EntryPoint="$safeprojectname$.App">
+      EntryPoint="ApplicationGroupFolderWrite.App">
       <uap:VisualElements
-        DisplayName="$projectname$"
+        DisplayName="ApplicationGroupFolderWrite"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="$projectname$"
+        Description="ApplicationGroupFolderWrite"
         BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
@@ -43,7 +43,15 @@
     </Application>
   </Applications>
 
-  <Extensions />
+  <Extensions>
+    <Extension Category="windows.publisherCacheFolders">
+      <PublisherCacheFolders>
+        <Folder Name="group.Folder1"/>
+        <Folder Name="group.Folder2"/>
+      </PublisherCacheFolders>
+    </Extension>
+  </Extensions>
+
 
   <Capabilities>
     <Capability Name="internetClient" />

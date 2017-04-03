@@ -67,6 +67,7 @@ private:
     void queryBuildConfigurations();
     void selectBuildConfigurations(const StringSet* configNames);
     void getMatchingFiles(fileMatchFunc matchFunc, ConstFileList& ret) const;
+    std::vector<std::string> SBProject::getPublisherCacheFolderNames() const;
 
     static bool checkTargetCycle(const PBXTarget* target);
 

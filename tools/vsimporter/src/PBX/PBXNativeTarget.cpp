@@ -21,6 +21,8 @@
 #include "PBXBuildRule.h"
 #include "PBXObjectIdConvert.h"
 #include "VariableCollection.h"
+#include "XCBuildConfiguration.h"
+#include "XCConfigurationList.h"
 
 PBXNativeTarget::~PBXNativeTarget() {
 }

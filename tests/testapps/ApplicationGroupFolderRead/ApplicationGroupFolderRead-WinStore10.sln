@@ -1,0 +1,57 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApplicationGroupFolderRead", "ApplicationGroupFolderRead", "{5C02A474-AC91-49A7-AC66-28897E1DC6A4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ApplicationGroupFolderRead", "ApplicationGroupFolderRead.vsimporter\ApplicationGroupFolderRead-WinStore10\ApplicationGroupFolderRead.vcxproj", "{E32A9C72-ADE6-40FD-B382-9F0F7E882273}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build Support", "Build Support", "{EEB3D11F-8511-4839-BE24-3BAD64499260}"
+EndProject
+Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "NugetRestore", "..\..\..\common\NugetRestore.msbuildproj", "{B2C6186E-B340-49D8-888E-76ED83752E43}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|ARM = Debug|ARM
+		Debug|Win32 = Debug|Win32
+		Release|Any CPU = Release|Any CPU
+		Release|ARM = Release|ARM
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E32A9C72-ADE6-40FD-B382-9F0F7E882273}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{E32A9C72-ADE6-40FD-B382-9F0F7E882273}.Debug|ARM.ActiveCfg = Debug|ARM
+		{E32A9C72-ADE6-40FD-B382-9F0F7E882273}.Debug|ARM.Build.0 = Debug|ARM
+		{E32A9C72-ADE6-40FD-B382-9F0F7E882273}.Debug|ARM.Deploy.0 = Debug|ARM
+		{E32A9C72-ADE6-40FD-B382-9F0F7E882273}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E32A9C72-ADE6-40FD-B382-9F0F7E882273}.Debug|Win32.Build.0 = Debug|Win32
+		{E32A9C72-ADE6-40FD-B382-9F0F7E882273}.Debug|Win32.Deploy.0 = Debug|Win32
+		{E32A9C72-ADE6-40FD-B382-9F0F7E882273}.Release|Any CPU.ActiveCfg = Release|Win32
+		{E32A9C72-ADE6-40FD-B382-9F0F7E882273}.Release|ARM.ActiveCfg = Release|ARM
+		{E32A9C72-ADE6-40FD-B382-9F0F7E882273}.Release|ARM.Build.0 = Release|ARM
+		{E32A9C72-ADE6-40FD-B382-9F0F7E882273}.Release|ARM.Deploy.0 = Release|ARM
+		{E32A9C72-ADE6-40FD-B382-9F0F7E882273}.Release|Win32.ActiveCfg = Release|Win32
+		{E32A9C72-ADE6-40FD-B382-9F0F7E882273}.Release|Win32.Build.0 = Release|Win32
+		{E32A9C72-ADE6-40FD-B382-9F0F7E882273}.Release|Win32.Deploy.0 = Release|Win32
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Debug|ARM.Build.0 = Debug|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Debug|Win32.Build.0 = Debug|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Release|ARM.ActiveCfg = Release|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Release|ARM.Build.0 = Release|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Release|Win32.ActiveCfg = Release|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Release|Win32.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E32A9C72-ADE6-40FD-B382-9F0F7E882273} = {5C02A474-AC91-49A7-AC66-28897E1DC6A4}
+		{B2C6186E-B340-49D8-888E-76ED83752E43} = {EEB3D11F-8511-4839-BE24-3BAD64499260}
+	EndGlobalSection
+EndGlobal

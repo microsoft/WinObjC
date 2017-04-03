@@ -20,6 +20,7 @@
 #include <vector>
 #include <map>
 #include <set>
+#include "BuildSettings.h"
 
 namespace pugi {
 class xml_node;
@@ -32,6 +33,7 @@ enum VSProjectType;
 typedef std::vector<ProjectItem*> ProjectItemVec;
 typedef std::vector<std::string> StringVec;
 typedef std::map<std::string, std::string> StringMap;
+typedef std::map<std::string, BuildSettings*> BuildSettingsMap;
 typedef std::set<std::string> StringSet;
 
 class VSTemplateProject {
@@ -40,7 +42,7 @@ public:
     ~VSTemplateProject();
 
     void expand(const std::string& srcDir, const std::string& destDir, const VSTemplateParameters& params);
-    void write(const StringSet& urlSchemes) const;
+    void write(const StringSet& urlSchemes, const BuildSettingsMap& buildSettings) const;
 
     bool isShared() const;
     bool isDeployable() const;
@@ -52,6 +54,11 @@ public:
 private:
     VSTemplateProject();
     bool initFromXML(const pugi::xml_node& pNode, const VSProjectType projectType);
+    void writeProjectItem(const ProjectItem* item,
+                          const StringMap& params,
+                          const StringSet& urlSchemes,
+                          const BuildSettingsMap& buildSettings) const;
+    void VSTemplateProject::insertExtensions(const String& file, const StringSet& schemes, const BuildSettingsMap& buildSettings) const;
 
     bool m_shared;
     bool m_deployable;

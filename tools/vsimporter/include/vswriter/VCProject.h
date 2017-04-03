@@ -30,6 +30,7 @@ class VCProject;
 class VCProjectConfiguration;
 class VCProjectItem;
 class VSTemplateProject;
+class BuildSettings;
 
 enum VCProjectSubType {
     VCShared,
@@ -40,6 +41,7 @@ typedef std::set<const VCProject*> VCProjectSet;
 typedef std::set<std::string> StringSet;
 typedef std::vector<std::string> StringVec;
 typedef std::map<std::string, std::string> StringMap;
+typedef std::map<std::string, BuildSettings*> BuildSettingsMap;
 
 class VCProject {
 public:
@@ -69,6 +71,7 @@ public:
     virtual VCProjectItem* addItem(const std::string& itemName, const std::string& itemPath, const std::string& filterPath = "");
     virtual void addBuildExtension(const std::string& extension);
     virtual void setUrlSchemes(const StringSet& schemes);
+    virtual void setBuildSettings(const BuildSettingsMap& settings);
 
 protected:
     typedef std::map<std::string, VCProjectConfiguration*> ConfigurationMap;
@@ -104,5 +107,6 @@ protected:
     StringVec m_buildExtensions;
     ConfigurationMap m_configurations;
     StringSet m_urlSchemes;
+    BuildSettingsMap m_buildSettings;
     ItemList m_items;
 };
