@@ -106,34 +106,37 @@ static const int s_InvalidButtonIndex = -1;
 
     // Only used to update _isContentDialogVisible - if we move to XAML Popup, we might be able to leverage isOpen property instead
     __weak UIActionSheet* weakSelf = self;
-    _contentDialogOpenedEventToken = _contentDialog.Opened([weakSelf] (const Controls::ContentDialog&, const Controls::ContentDialogOpenedEventArgs&) {
-        __strong UIActionSheet* strongSelf = weakSelf;
+    _contentDialogOpenedEventToken = _contentDialog.Opened(
+        objcwinrt::callback([weakSelf] (const Controls::ContentDialog&, const Controls::ContentDialogOpenedEventArgs&) {
+            __strong UIActionSheet* strongSelf = weakSelf;
 
-        strongSelf->_isContentDialogVisible = YES;
+            strongSelf->_isContentDialogVisible = YES;
 
-        if ([strongSelf->_delegate respondsToSelector:@selector(didPresentActionSheet:)]) {
-            [strongSelf->_delegate didPresentActionSheet:strongSelf];
-        }
-    });
+            if ([strongSelf->_delegate respondsToSelector:@selector(didPresentActionSheet:)]) {
+                [strongSelf->_delegate didPresentActionSheet:strongSelf];
+            }
+        }));
 
     // Block the closing of the dialog via ESC if _cancelButtonIndex is invalid
-    _contentDialogClosingEventToken = _contentDialog.Closing([weakSelf] (const Controls::ContentDialog&, const Controls::ContentDialogClosingEventArgs& e) {
-        __strong UIActionSheet* strongSelf = weakSelf;
+    _contentDialogClosingEventToken = _contentDialog.Closing(
+        objcwinrt::callback([weakSelf] (const Controls::ContentDialog&, const Controls::ContentDialogClosingEventArgs& e) {
+            __strong UIActionSheet* strongSelf = weakSelf;
 
-        // Verify whether a button was pressed or if we dismissed the dialog via ESC
-        int pressedIndex = XamlControls::XamlContentDialogPressedIndex(strongSelf->_contentDialog);
-        if (pressedIndex == s_InvalidButtonIndex && strongSelf->_cancelButtonIndex == s_InvalidButtonIndex) {
-            // Cancel closing the dialog if ESC was pressed and cancelButtonIndex is invalid
-            e.Cancel(true);
-        }
-    });
+            // Verify whether a button was pressed or if we dismissed the dialog via ESC
+            int pressedIndex = XamlControls::XamlContentDialogPressedIndex(strongSelf->_contentDialog);
+            if (pressedIndex == s_InvalidButtonIndex && strongSelf->_cancelButtonIndex == s_InvalidButtonIndex) {
+                // Cancel closing the dialog if ESC was pressed and cancelButtonIndex is invalid
+                e.Cancel(true);
+            }
+        }));
 
     // Only used to update _isContentDialogVisible - if we move to XAML Popup, we might be able to leverage isOpen property instead
-    _contentDialogClosedEventToken = _contentDialog.Closed([weakSelf] (const Controls::ContentDialog&, const Controls::ContentDialogClosedEventArgs&) {
-        __strong UIActionSheet* strongSelf = weakSelf;
+    _contentDialogClosedEventToken = _contentDialog.Closed(
+        objcwinrt::callback([weakSelf] (const Controls::ContentDialog&, const Controls::ContentDialogClosedEventArgs&) {
+            __strong UIActionSheet* strongSelf = weakSelf;
 
-        strongSelf->_isContentDialogVisible = NO;
-    });
+            strongSelf->_isContentDialogVisible = NO;
+        }));
 }
 
 /**
@@ -245,7 +248,7 @@ static const int s_InvalidButtonIndex = -1;
     __weak UIActionSheet* weakSelf = self;
     WF::IAsyncOperation<Controls::ContentDialogResult> async = _contentDialog.ShowAsync();
 
-    async.Completed([weakSelf] (const WF::IAsyncOperation<Controls::ContentDialogResult>& operation, WF::AsyncStatus status) {
+    async.Completed(objcwinrt::callback([weakSelf] (const WF::IAsyncOperation<Controls::ContentDialogResult>& operation, WF::AsyncStatus status) {
         __strong UIActionSheet* strongSelf = weakSelf;
 
         if (status == WF::AsyncStatus::Completed) {
@@ -260,7 +263,7 @@ static const int s_InvalidButtonIndex = -1;
             TraceVerbose(TAG, L"Failed with error code %u", (unsigned)status);
             strongSelf->_isContentDialogVisible = NO;
         }
-    });
+    }));
 }
 
 /**

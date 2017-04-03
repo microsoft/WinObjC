@@ -25,6 +25,7 @@
 
 using namespace winrt::Windows::UI::Xaml;
 using winrt::Windows::UI::Xaml::Controls::Primitives::Popup;
+namespace WF = winrt::Windows::Foundation;
 
 static const wchar_t* TAG = L"_UIPopupViewController";
 
@@ -40,7 +41,7 @@ static const wchar_t* TAG = L"_UIPopupViewController";
     __weak _UIPopupViewController* weakSelf = self;
 
     // Keep the popup's contents sized to fit the window
-    _layoutUpdated = _popup.LayoutUpdated([weakSelf] (auto&& sender, auto&& e) {
+    _layoutUpdated = _popup.LayoutUpdated(objcwinrt::callback([weakSelf] (const WF::IInspectable& sender, const WF::IInspectable& e) {
         _UIPopupViewController* strongSelf = weakSelf;
 
         if (strongSelf == nil) {
@@ -58,7 +59,7 @@ static const wchar_t* TAG = L"_UIPopupViewController";
             child.Width(appFrame.Width);
             child.Height(appFrame.Height);
         }
-    });
+    }));
 }
 
 - (void)dealloc {

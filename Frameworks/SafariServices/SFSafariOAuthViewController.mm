@@ -127,7 +127,7 @@ static const wchar_t* TAG = L"SFSafariOAuthViewController";
             callbackUri);
 
     // Register async completion handler
-    async.Completed([self] (const WF::IAsyncOperation<WebAuthenticationResult>& operation, WF::AsyncStatus status) {
+    async.Completed(objcwinrt::callback([self] (const WF::IAsyncOperation<WebAuthenticationResult>& operation, WF::AsyncStatus status) {
         BOOL completed = NO;
 
         // Check if AsyncOperation completed
@@ -186,7 +186,7 @@ static const wchar_t* TAG = L"SFSafariOAuthViewController";
                                             annotation:nil];
                             });
         }
-    });
+    }));
 
     self.view = [UIView new];
 }

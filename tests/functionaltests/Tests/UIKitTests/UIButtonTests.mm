@@ -18,6 +18,7 @@
 #import "UXTestHelpers.h"
 #import "UILabelInternal.h"
 #import "UIViewInternal.h"
+#include "CppWinRTHelpers.h"
 
 // Re-use existing sample code for validation
 #import "UIKitControls/UIButtonWithControlsViewController.h"
@@ -50,14 +51,16 @@ public:
 
     template <typename TSender, typename TArgs>
     void operator()(TSender&&, TArgs&&) {
-        // Initially there is no LayerContent element unless we set a background image
-        if (!*_layerContentAddr) {
-            // Initially there is no LayerContent element
-            *_layerContentAddr = FindXamlChild(_xamlElement, @"LayerContent");
-            if (*_layerContentAddr) {
-                // Ignore further layout events
-                _xamlElement.LayoutUpdated(*_ert);
-                _uxLayoutEvent->Set();
+        @autoreleasepool {
+            // Initially there is no LayerContent element unless we set a background image
+            if (!*_layerContentAddr) {
+                // Initially there is no LayerContent element
+                *_layerContentAddr = FindXamlChild(_xamlElement, @"LayerContent");
+                if (*_layerContentAddr) {
+                    // Ignore further layout events
+                    _xamlElement.LayoutUpdated(*_ert);
+                    _uxLayoutEvent->Set();
+                }
             }
         }
     }
@@ -964,7 +967,7 @@ public:
 
         // Wait for the layerContent to be part of the visual tree
         dispatch_sync(dispatch_get_main_queue(), ^{
-            ert = xamlElement.LayoutUpdated([layerContentAddr, uxLayoutEvent, ertAddr, xamlElement] (auto&&, auto&&) {
+            ert = xamlElement.LayoutUpdated(objcwinrt::callback([layerContentAddr, uxLayoutEvent, ertAddr, xamlElement] (const WF::IInspectable&, const WF::IInspectable&) {
                 // Initially there is no LayerContent element unless we set a background image
                 if (!*layerContentAddr) {
                     // Initially there is no LayerContent element
@@ -975,7 +978,7 @@ public:
                         uxLayoutEvent->Set();
                     }
                 }
-            });
+            }));
 
             // Set a default background image so we trigger the LayerContent XAML addition
             [buttonVC textBackgroundImage].text = @"yellow_background.jpg";

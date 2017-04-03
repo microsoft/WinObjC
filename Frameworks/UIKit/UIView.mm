@@ -574,7 +574,7 @@ static std::string _printViewhierarchy(UIView* leafView) {
 
     // Subscribe to the XAML node's input events
     self->priv->_pointerPressedEventRegistration =
-        self.layer._xamlElement.PointerPressed([self] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
+        self.layer._xamlElement.PointerPressed(objcwinrt::callback([self] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
             // Capture the pointer within this xaml element
             if (!self.layer._xamlElement.CapturePointer(e.Pointer())) {
                 TraceWarning(TAG, L"Failed to capture pointer...");
@@ -583,40 +583,40 @@ static std::string _printViewhierarchy(UIView* leafView) {
             // Set the event to handled, then process it as a UITouch
             e.Handled(true);
             [self _processPointerEvent:e forTouchPhase:UITouchPhaseBegan];
-        });
+        }));
 
     self->priv->_pointerMovedEventRegistration =
-        self.layer._xamlElement.PointerMoved([self] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
+        self.layer._xamlElement.PointerMoved(objcwinrt::callback([self] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
             // Set the event to handled, then process it as a UITouch
             e.Handled(true);
             [self _processPointerEvent:e forTouchPhase:UITouchPhaseMoved];
-        });
+        }));
 
     self->priv->_pointerReleasedEventRegistration =
-        self.layer._xamlElement.PointerReleased([self] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
+        self.layer._xamlElement.PointerReleased(objcwinrt::callback([self] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
             // Set the event to handled, then process it as a UITouch
             e.Handled(true);
             [self _processPointerEvent:e forTouchPhase:UITouchPhaseEnded];
 
             // release the pointer capture
             self.layer._xamlElement.ReleasePointerCapture(e.Pointer());
-        });
+        }));
 
     self->priv->_pointerCanceledEventRegistration =
-        self.layer._xamlElement.PointerCanceled([self] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
+        self.layer._xamlElement.PointerCanceled(objcwinrt::callback([self] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
             // Set the event to handled, then process it as a UITouch
             e.Handled(true);
             // Uncommon event; we'll use the same handling as pointer capture lost (below)
             [self _processPointerEvent:e forTouchPhase:UITouchPhaseCancelled];
-        });
+        }));
 
     self->priv->_pointerCaptureLostEventRegistration =
-        self.layer._xamlElement.PointerCaptureLost([self] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
+        self.layer._xamlElement.PointerCaptureLost(objcwinrt::callback([self] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
             // Set the event to handled, then process it as a UITouch
             e.Handled(true);
             // Treat capture lost just like a pointer canceled (which is actually quite uncommon)
             [self _processPointerEvent:e forTouchPhase:UITouchPhaseCancelled];
-        });
+        }));
 }
 
 /**

@@ -1257,7 +1257,7 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
 // Handler when control GotFocus
 - (void)_setupControlGotFocusHandler:(const Controls::Control&)control {
     __weak UITextField* weakSelf = self;
-    control.GotFocus([weakSelf] (const WF::IInspectable& sender, const RoutedEventArgs&) {
+    control.GotFocus(objcwinrt::callback([weakSelf] (const WF::IInspectable& sender, const RoutedEventArgs&) {
         __strong UITextField* strongSelf = weakSelf;
         if (strongSelf) {
             // when GotFocus, check delegate (if exists) to see if it allows start editing
@@ -1286,14 +1286,14 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
             sender.as<Controls::Control>().UpdateLayout();
             [strongSelf _adjustFontSizeToFitWidthOrApplyCurrentFont];
         }
-    });
+    }));
 }
 
 // Handler when control LostFocus
 - (void)_setupControlLostFocusHandler:(const Controls::Control&)control {
     __weak UITextField* weakSelf = self;
 
-    control.LostFocus([weakSelf] (const WF::IInspectable& sender, const RoutedEventArgs&) {
+    control.LostFocus(objcwinrt::callback([weakSelf] (const WF::IInspectable& sender, const RoutedEventArgs&) {
         __strong UITextField* strongSelf = weakSelf;
         auto control = sender.as<Controls::Control>();
 
@@ -1326,7 +1326,7 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
             control.UpdateLayout();
             [strongSelf _adjustFontSizeToFitWidthOrApplyCurrentFont];
         }
-    });
+    }));
 }
 
 // Handler when KeyDown
@@ -1334,7 +1334,7 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
     __weak UITextField* weakSelf = self;
 
     // hooking up keydown event to process ENTER key
-    control.KeyDown([weakSelf] (const WF::IInspectable& sender, const Input::KeyRoutedEventArgs& e) {
+    control.KeyDown(objcwinrt::callback([weakSelf] (const WF::IInspectable& sender, const Input::KeyRoutedEventArgs& e) {
         __strong UITextField* strongSelf = weakSelf;
         if (strongSelf && e.Key() == winrt::Windows::System::VirtualKey::Enter) {
             BOOL dismissKeyboard = TRUE;
@@ -1352,7 +1352,7 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
         } else {
             e.Handled(false);
         }
-    });
+    }));
 }
 
 // Helper to initialize textbox

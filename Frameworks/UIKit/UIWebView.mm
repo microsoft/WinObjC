@@ -124,16 +124,16 @@ static void _initUIWebView(UIWebView* self) {
     // Store a strongly-typed backing scrollviewer
     self->_xamlWebControl = [self _winrtXamlElement].as<Controls::WebView>();
 
-    self->_xamlLoadCompletedEventCookie = self->_xamlWebControl.LoadCompleted([self] (const WF::IInspectable&, const Navigation::NavigationEventArgs&) {
+    self->_xamlLoadCompletedEventCookie = self->_xamlWebControl.LoadCompleted(objcwinrt::callback([self] (const WF::IInspectable&, const Navigation::NavigationEventArgs&) {
         self.loading = NO;
 
         if ([self.delegate respondsToSelector:@selector(webViewDidFinishLoad:)]) {
             [self.delegate webViewDidFinishLoad:self];
         }
-    });
+    }));
 
     self->_xamlLoadStartedEventCookie =
-        self->_xamlWebControl.NavigationStarting([self] (const Controls::WebView&, const Controls::WebViewNavigationStartingEventArgs& e) {
+        self->_xamlWebControl.NavigationStarting(objcwinrt::callback([self] (const Controls::WebView&, const Controls::WebViewNavigationStartingEventArgs& e) {
             // Give the client a chance to cancel the navigation
             if ([self.delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
                 NSString* urlStr = objcwinrt::string(e.Uri().AbsoluteUri());
@@ -153,10 +153,10 @@ static void _initUIWebView(UIWebView* self) {
             if ([self.delegate respondsToSelector:@selector(webViewDidStartLoad:)]) {
                 [self.delegate webViewDidStartLoad:self];
             }
-        });
+        }));
 
     self->_xamlUnsupportedUriSchemeEventCookie =
-        self->_xamlWebControl.UnsupportedUriSchemeIdentified([self] (const Controls::WebView&, const Controls::WebViewUnsupportedUriSchemeIdentifiedEventArgs& e) {
+        self->_xamlWebControl.UnsupportedUriSchemeIdentified(objcwinrt::callback([self] (const Controls::WebView&, const Controls::WebViewUnsupportedUriSchemeIdentifiedEventArgs& e) {
             if ([self.delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
                 NSString* urlStr = objcwinrt::string(e.Uri().AbsoluteUri());
                 NSURL* url = [NSURL URLWithString:urlStr];
@@ -171,17 +171,17 @@ static void _initUIWebView(UIWebView* self) {
                     e.Handled(true);
                 }
             }
-        });
+        }));
 
     // Add handler which will be invoked when user calls window.external.notify(msg) function in javascript
-    self->_xamlWebControl.ScriptNotify([self] (const WF::IInspectable& sender, const Controls::NotifyEventArgs& e) {
+    self->_xamlWebControl.ScriptNotify(objcwinrt::callback([self] (const WF::IInspectable& sender, const Controls::NotifyEventArgs& e) {
         // Send event to webView delegate
         NSString* urlStr = objcwinrt::string(e.CallingUri().AbsoluteUri());
         NSURL* url = [NSURL URLWithString:urlStr];
         if ([self.delegate respondsToSelector:@selector(webView:scriptNotify:value:)]) {
             [self.delegate webView:self scriptNotify:url value:objcwinrt::string(e.Value())];
         }
-    });
+    }));
 
     CGRect bounds;
     bounds = [self bounds];
@@ -288,7 +288,7 @@ static void _initUIWebView(UIWebView* self) {
     WF::IAsyncOperation<winrt::hstring> async = _xamlWebControl.InvokeScriptAsync(L"eval", { objcwinrt::string(javaScriptString) });
 
     [completionHandler retain];
-    async.Completed([completionHandler] (const WF::IAsyncOperation<winrt::hstring>& operation, WF::AsyncStatus status) {
+    async.Completed(objcwinrt::callback([completionHandler] (const WF::IAsyncOperation<winrt::hstring>& operation, WF::AsyncStatus status) {
         if (status == WF::AsyncStatus::Completed) {
             completionHandler(objcwinrt::string(operation.GetResults()), nil);
         } else {
@@ -297,7 +297,7 @@ static void _initUIWebView(UIWebView* self) {
         }
 
         [completionHandler release];
-    });
+    }));
 }
 
 /**

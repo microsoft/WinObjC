@@ -172,7 +172,7 @@ namespace WSS = winrt::Windows::Storage::Streams;
         WSS::DataWriterStoreOperation async = rw.StoreAsync();
 
         // Hook the stream up to the media control when the load is complete
-        async.Completed([self] (const WF::IAsyncOperation<unsigned int>& operation, WF::AsyncStatus status) {
+        async.Completed(objcwinrt::callback([self] (const WF::IAsyncOperation<unsigned int>& operation, WF::AsyncStatus status) {
             if (status == WF::AsyncStatus::Completed) {
                 // Access XAML control on main thread
                 dispatch_sync(dispatch_get_main_queue(), ^{
@@ -180,7 +180,7 @@ namespace WSS = winrt::Windows::Storage::Streams;
                     self->_stream = nullptr;
                 });
             }
-        });
+        }));
 
         if (outError) {
             // TODO: Some modicum of failure returns. Right now everything is async and bound to the Xaml thread, so

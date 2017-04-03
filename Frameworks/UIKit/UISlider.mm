@@ -152,13 +152,13 @@ static const double c_defaultStepFrequency = 0.1;
 - (void)_registerForEventsWithXaml {
     __weak UISlider* weakSelf = self;
 
-    _valueChangedEvent = _xamlSlider.ValueChanged([weakSelf] (const WF::IInspectable&, const RoutedEventArgs&) {
+    _valueChangedEvent = _xamlSlider.ValueChanged(objcwinrt::callback([weakSelf] (const WF::IInspectable&, const RoutedEventArgs&) {
         __strong UISlider* strongSelf = weakSelf;
 
         if (strongSelf && strongSelf->_continuous) {
             [strongSelf _sendValueChangedEvents];
         }
-    });
+    }));
 
     _xamlSlider.ManipulationMode(Input::ManipulationModes::All);
 
@@ -169,25 +169,25 @@ static const double c_defaultStepFrequency = 0.1;
     // the track and not by dragging the thumb.
     // TODO: 7877568- Move to handling pointer events when available with projections, instead of manipulation events.
     _manipulationStartingEvent =
-        _xamlSlider.ManipulationStarting([weakSelf] (const WF::IInspectable&, const RoutedEventArgs&) {
+        _xamlSlider.ManipulationStarting(objcwinrt::callback([weakSelf] (const WF::IInspectable&, const RoutedEventArgs&) {
             __strong UISlider* strongSelf = weakSelf;
 
             if (strongSelf && strongSelf->_continuous == NO) {
                 [strongSelf _sendValueChangedEvents];
             }
-        });
+        }));
 
     // ManipulationCompleted will be fired when dragging has been completed
     // This allows us to fire UIControlEventValueChanged event and UIControlEventTouchUpInside event
     _manipulationCompletedEvent =
-        _xamlSlider.ManipulationCompleted([weakSelf] (const WF::IInspectable&, const RoutedEventArgs&) {
+        _xamlSlider.ManipulationCompleted(objcwinrt::callback([weakSelf] (const WF::IInspectable&, const RoutedEventArgs&) {
             __strong UISlider* strongSelf = weakSelf;
 
             if (strongSelf && strongSelf->_continuous == NO) {
                 [strongSelf _sendValueChangedEvents];
                 [strongSelf sendActionsForControlEvents:UIControlEventTouchUpInside];
             }
-        });
+        }));
 }
 
 - (void)_sendValueChangedEvents {

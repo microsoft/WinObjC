@@ -220,7 +220,7 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
     // Register for cooperative pointer events
     __weak UIButton* weakSelf = self;
     XamlControls::HookButtonPointerEvents(_xamlButton,
-                                          [weakSelf] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
+                                          objcwinrt::callback([weakSelf] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
                                               // We mark the event as handled here. The method _processPointerPressedCallback
                                               // generates a call to touchesBegan:withEvent method,
                                               // and we mark it unhandled there, and then OnPointerPressed
@@ -231,23 +231,23 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
                                               // and OnPointerPressed is not called on the backing XAML Button.
                                               e.Handled(true);
                                               [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseBegan];
-                                          },
-                                          [weakSelf] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
+                                          }),
+                                          objcwinrt::callback([weakSelf] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
                                               e.Handled(true);
                                               [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseMoved];
-                                          },
-                                          [weakSelf] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
+                                          }),
+                                          objcwinrt::callback([weakSelf] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
                                               e.Handled(true);
                                               [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseEnded];
-                                          },
-                                          [weakSelf] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
+                                          }),
+                                          objcwinrt::callback([weakSelf] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
                                               e.Handled(true);
                                               [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseCancelled];
-                                          },
-                                          [weakSelf] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
+                                          }),
+                                          objcwinrt::callback([weakSelf] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
                                               e.Handled(true);
                                               [weakSelf _processPointerEvent:e forTouchPhase:UITouchPhaseCancelled];
-                                          });
+                                          }));
 
     // Initialize press/click management
     _isInTouchSequence = false;
@@ -255,18 +255,18 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
     // Register for IsPressed-changed events to map to UIButton highlighted states
     _isPressedChangedRegistration =
         _xamlButton.RegisterPropertyChangedCallback(Controls::Primitives::ButtonBase::IsPressedProperty(),
-                                            [weakSelf] (const DependencyObject& sender, const DependencyProperty& p) {
+                                            objcwinrt::callback([weakSelf] (const DependencyObject& sender, const DependencyProperty& p) {
                                                 // Update our highlighted state accordingly
                                                 auto button = sender.as<Controls::Primitives::ButtonBase>();
                                                 [weakSelf setHighlighted:button.IsPressed()];
-                                            });
+                                            }));
 
     // Register for 'Click' events, to handle keybard and accessibility clicks
-    _clickEventRegistration = _xamlButton.Click([weakSelf] (const WF::IInspectable&, const RoutedEventArgs&) {
+    _clickEventRegistration = _xamlButton.Click(objcwinrt::callback([weakSelf] (const WF::IInspectable&, const RoutedEventArgs&) {
         // Simulate a button 'click' for non-pointer-triggered clicks
         [weakSelf sendActionsForControlEvents:UIControlEventTouchDown];
         [weakSelf sendActionsForControlEvents:UIControlEventTouchUpInside];
-    });
+    }));
 }
 
 /**

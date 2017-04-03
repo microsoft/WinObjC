@@ -18,6 +18,7 @@
 
 #import <Foundation/Foundation.h>
 #import "StringHelpers.h"
+#import <utility>
 
 // TODO: Make RTHelpers.h includable from Objective-C++ without these gymnastics
 #ifdef __OBJC__
@@ -153,6 +154,34 @@ inline
 winrt::Windows::Foundation::IReference<float> optional<float>(const float& f) {
     auto ref = winrt::Windows::Foundation::PropertyValue::CreateSingle(f);
     return ref.as<winrt::Windows::Foundation::IReference<float>>();
+}
+
+//
+// Callback wrapper
+//
+namespace impl {
+    template <typename TCallable>
+    class callback {
+    public:
+        callback(const TCallable& c) : _callback(c) { }
+        callback(callback&& other) : _callback(std::move(other._callback)) { }
+
+        // Make sure all callback operations are wrapped in an autorelease pool
+        template <typename... TArgs>
+        auto operator()(TArgs&& ...args) {
+            @autoreleasepool {
+                return _callback(std::forward<TArgs>(args)...);
+            }
+        }
+
+    private:
+        const TCallable& _callback;
+    };
+}
+
+template <typename TCallable>
+impl::callback<TCallable> callback(const TCallable& c) {
+    return impl::callback<TCallable>(c);
 }
 
 }
