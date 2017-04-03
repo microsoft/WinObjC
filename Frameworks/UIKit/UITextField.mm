@@ -128,17 +128,10 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
     } else {
         _textBox.Text(objcwinrt::string(text));
 
-        try {
-            // Ensure caret at end of field in case we programmatically
-            // gain focus (becomeFirstResponder) after the text is set:
-            _textBox.SelectionStart([text length]);
-            _textBox.SelectionLength(0);
-        } catch (const winrt::hresult_error& e) {
-            // Bug in XAML TextBox causes it to return S_FALSE
-            if (e.code() != S_FALSE) {
-                throw;
-            }
-        }
+        // Ensure caret at end of field in case we programmatically
+        // gain focus (becomeFirstResponder) after the text is set:
+        _textBox.SelectionStart([text length]);
+        _textBox.SelectionLength(0);
     }
     [_secureModeLock unlock];
 
