@@ -133,8 +133,8 @@ static NSLock* _allReachabilityOperationsLock;
 }
 
 + (void)_checkGlobalReachability {
-    WNCConnectionProfile* internetConnectionProfile = [WNCNetworkInformation getInternetConnectionProfile];
     @try {
+        WNCConnectionProfile* internetConnectionProfile = [WNCNetworkInformation getInternetConnectionProfile];
         if (internetConnectionProfile &&
             [internetConnectionProfile getNetworkConnectivityLevel] == WNCNetworkConnectivityLevelInternetAccess) {
             SCNetworkReachabilityFlags newFlags = kSCNetworkReachabilityFlagsReachable;
