@@ -31,6 +31,7 @@ class VCProjectConfiguration;
 class VCProjectItem;
 class VSTemplateProject;
 class BuildSettings;
+class SBNativeTarget;
 
 enum VCProjectSubType {
     VCShared,
@@ -72,6 +73,7 @@ public:
     virtual void addBuildExtension(const std::string& extension);
     virtual void setUrlSchemes(const StringSet& schemes);
     virtual void setBuildSettings(const BuildSettingsMap& settings);
+    virtual void setNativeTarget(const SBNativeTarget* target);
 
 protected:
     typedef std::map<std::string, VCProjectConfiguration*> ConfigurationMap;
@@ -109,4 +111,5 @@ protected:
     StringSet m_urlSchemes;
     BuildSettingsMap m_buildSettings;
     ItemList m_items;
+    const SBNativeTarget* m_nativeTarget;
 };

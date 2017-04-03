@@ -28,6 +28,7 @@ class xml_node;
 
 class VSTemplateParameters;
 class ProjectItem;
+class SBNativeTarget;
 enum VSProjectType;
 
 typedef std::vector<ProjectItem*> ProjectItemVec;
@@ -42,7 +43,7 @@ public:
     ~VSTemplateProject();
 
     void expand(const std::string& srcDir, const std::string& destDir, const VSTemplateParameters& params);
-    void write(const StringSet& urlSchemes, const BuildSettingsMap& buildSettings) const;
+    void write(const StringSet& urlSchemes, const BuildSettingsMap& buildSettings, const SBNativeTarget* target) const;
 
     bool isShared() const;
     bool isDeployable() const;
@@ -57,8 +58,12 @@ private:
     void writeProjectItem(const ProjectItem* item,
                           const StringMap& params,
                           const StringSet& urlSchemes,
-                          const BuildSettingsMap& buildSettings) const;
-    void VSTemplateProject::insertExtensions(const String& file, const StringSet& schemes, const BuildSettingsMap& buildSettings) const;
+                          const BuildSettingsMap& buildSettings,
+                          const SBNativeTarget* target) const;
+    void VSTemplateProject::insertExtensions(const String& file,
+                                             const StringSet& schemes,
+                                             const BuildSettingsMap& buildSettings,
+                                             const SBNativeTarget* target) const;
 
     bool m_shared;
     bool m_deployable;

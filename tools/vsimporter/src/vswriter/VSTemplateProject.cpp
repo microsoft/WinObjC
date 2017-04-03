@@ -24,6 +24,7 @@
 #include "PlistFuncs.h"
 #include "BuildSettings.h"
 #include "SBTarget.h"
+#include "SBNativeTarget.h"
 
 struct ProjectItem {
     ProjectItem(const std::string& input, const std::string& output, bool replace)
@@ -191,7 +192,10 @@ static std::vector<String> getCacheFolders(const String& entitlementsPath) {
     return {};
 }
 
-void VSTemplateProject::insertExtensions(const String& file, const StringSet& schemes, const BuildSettingsMap& buildSettings) const {
+void VSTemplateProject::insertExtensions(const String& file,
+                                         const StringSet& schemes,
+                                         const BuildSettingsMap& buildSettings,
+                                         const SBNativeTarget* target) const {
     pugi::xml_document doc;
     if (!doc.load_file(file.c_str())) {
         SBLog::error() << "Failed to parse AppX manifest file " << file << std::endl;
@@ -253,7 +257,7 @@ void VSTemplateProject::insertExtensions(const String& file, const StringSet& sc
     for (auto settings : buildSettings) {
         String entitlementsPath = settings.second->getValue("CODE_SIGN_ENTITLEMENTS");
         if (!entitlementsPath.empty()) {
-            std::vector<String> cacheFolderNames = getCacheFolders(joinPaths(getPath(), entitlementsPath));
+            std::vector<String> cacheFolderNames = getCacheFolders(target->makeAbsolutePath(entitlementsPath));
             if (!cacheFolderNames.empty()) {
                 pugi::xpath_node extensions = doc.select_single_node(PUGIXML_TEXT("Package/Extensions"));
                 pugi::xml_node extension = extensions.node().append_child(PUGIXML_TEXT("Extension"));
@@ -276,7 +280,8 @@ void VSTemplateProject::insertExtensions(const String& file, const StringSet& sc
 void VSTemplateProject::writeProjectItem(const ProjectItem* item,
                                          const StringMap& params,
                                          const StringSet& urlSchemes,
-                                         const BuildSettingsMap& buildSettings) const {
+                                         const BuildSettingsMap& buildSettings,
+                                         const SBNativeTarget* target) const {
     if (!item)
         return;
 
@@ -307,7 +312,7 @@ void VSTemplateProject::writeProjectItem(const ProjectItem* item,
 
     if (isAppxManifestFileName(item->inFile)) {
         ofs.close();
-        insertExtensions(item->outFile, urlSchemes, buildSettings);
+        insertExtensions(item->outFile, urlSchemes, buildSettings, target);
     }
 }
 
@@ -325,8 +330,8 @@ void VSTemplateProject::expand(const std::string& srcDir, const std::string& des
     }
 }
 
-void VSTemplateProject::write(const StringSet& urlSchemes, const BuildSettingsMap& buildSettings) const {
+void VSTemplateProject::write(const StringSet& urlSchemes, const BuildSettingsMap& buildSettings, const SBNativeTarget* target) const {
     for (auto item : m_items) {
-        writeProjectItem(item, m_params, urlSchemes, buildSettings);
+        writeProjectItem(item, m_params, urlSchemes, buildSettings, target);
     }
 }

@@ -197,9 +197,13 @@ void VCProject::setBuildSettings(const BuildSettingsMap& settings) {
     m_buildSettings = settings;
 }
 
+void VCProject::setNativeTarget(const SBNativeTarget* target) {
+    m_nativeTarget = target;
+}
+
 bool VCProject::write() const {
     // Write the template
-    m_template->write(m_urlSchemes, m_buildSettings);
+    m_template->write(m_urlSchemes, m_buildSettings, m_nativeTarget);
 
     return writeProject() && writeFilters();
 }
