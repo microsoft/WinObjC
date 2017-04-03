@@ -26,6 +26,8 @@ const CFStringRef kCGColorClear = CFSTR("CLEAR");
 
 static IWLazyClassLookup __LazyUIColor("UIColor");
 
+static const wchar_t* TAG = L"CGColor";
+
 /**
  @Status Interoperable
 */
@@ -39,7 +41,7 @@ CGColorRef CGColorGetConstantColor(CFStringRef name) {
     } else if (CFEqual(kCGColorClear, name)) {
         ret = static_cast<CGColorRef>([[__LazyUIColor clearColor] CGColor]);
     } else {
-        UNIMPLEMENTED_WITH_MSG("CGColorGetConstantColor does not support color %s", CFStringGetCStringPtr(name, kCFStringEncodingUTF8));
+        TraceError(TAG, L"Unknown constant color name: %s", CFStringGetCStringPtr(name, kCFStringEncodingUTF8));
     }
 
     if (ret) {
