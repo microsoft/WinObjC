@@ -64,7 +64,7 @@ struct __CGColorSpace : CoreFoundation::CppBase<__CGColorSpace> {
         return _lastColorIndex;
     }
 
-    inline void GetTable(uint8_t* table) const {
+    inline void CopyColorTableToBuffer(uint8_t* table) const {
         std::copy(_palette.begin(), _palette.end(), table);
     }
 
@@ -288,5 +288,5 @@ size_t CGColorSpaceGetColorTableCount(CGColorSpaceRef space) {
 void CGColorSpaceGetColorTable(CGColorSpaceRef space, uint8_t* table) {
     RETURN_IF(!space);
     RETURN_IF(!table);
-    return space->GetTable(table);
+    return space->CopyColorTableToBuffer(table);
 }
