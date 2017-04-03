@@ -73,6 +73,8 @@
 #import <string>
 
 using namespace winrt::Windows::UI::Xaml;
+using namespace winrt::Windows::UI::Input;
+namespace WF = winrt::Windows::Foundation;
 
 @class UIAppearanceSetter;
 
@@ -270,7 +272,7 @@ static std::string _printViewhierarchy(UIView* leafView) {
         owningWindowElement = owningWindow.layer._xamlElement;
     }
 
-    auto pointerPoint = pointerEventArgs.GetCurrentPoint(owningWindowElement);
+    PointerPoint pointerPoint = pointerEventArgs.GetCurrentPoint(owningWindowElement);
 
     // Locate the static TouchPoint object for this pointerId
     TouchPoint& touchPoint = _touchPointFromPointerId(pointerPoint.PointerId());
@@ -543,12 +545,12 @@ static std::string _printViewhierarchy(UIView* leafView) {
     viewCount++;
 
     // If we don't have a backing xamlElement, create one for this UIView type
-    if (xamlElement == nil) {
+    if (!xamlElement) {
         xamlElement = [[self class] createXamlElement];
     }
 
     // Create and initialize our backing presentation layer
-    if (xamlElement == nil) {
+    if (!xamlElement) {
         // No Xaml element was specified, so default layer init is fine
         self->layer.attach([[[[self class] layerClass] alloc] init]);
     } else {
@@ -572,7 +574,7 @@ static std::string _printViewhierarchy(UIView* leafView) {
 
     // Subscribe to the XAML node's input events
     self->priv->_pointerPressedEventRegistration =
-        self.layer._xamlElement.PointerPressed([self] (auto&& sender, auto&& e) {
+        self.layer._xamlElement.PointerPressed([self] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
             // Capture the pointer within this xaml element
             if (!self.layer._xamlElement.CapturePointer(e.Pointer())) {
                 TraceWarning(TAG, L"Failed to capture pointer...");
@@ -584,14 +586,14 @@ static std::string _printViewhierarchy(UIView* leafView) {
         });
 
     self->priv->_pointerMovedEventRegistration =
-        self.layer._xamlElement.PointerMoved([self] (auto&& sender, auto&& e) {
+        self.layer._xamlElement.PointerMoved([self] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
             // Set the event to handled, then process it as a UITouch
             e.Handled(true);
             [self _processPointerEvent:e forTouchPhase:UITouchPhaseMoved];
         });
 
     self->priv->_pointerReleasedEventRegistration =
-        self.layer._xamlElement.PointerReleased([self] (auto&& sender, auto&& e) {
+        self.layer._xamlElement.PointerReleased([self] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
             // Set the event to handled, then process it as a UITouch
             e.Handled(true);
             [self _processPointerEvent:e forTouchPhase:UITouchPhaseEnded];
@@ -601,7 +603,7 @@ static std::string _printViewhierarchy(UIView* leafView) {
         });
 
     self->priv->_pointerCanceledEventRegistration =
-        self.layer._xamlElement.PointerCanceled([self] (auto&& sender, auto&& e) {
+        self.layer._xamlElement.PointerCanceled([self] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
             // Set the event to handled, then process it as a UITouch
             e.Handled(true);
             // Uncommon event; we'll use the same handling as pointer capture lost (below)
@@ -609,7 +611,7 @@ static std::string _printViewhierarchy(UIView* leafView) {
         });
 
     self->priv->_pointerCaptureLostEventRegistration =
-        self.layer._xamlElement.PointerCaptureLost([self] (auto&& sender, auto&& e) {
+        self.layer._xamlElement.PointerCaptureLost([self] (const WF::IInspectable& sender, const Input::PointerRoutedEventArgs& e) {
             // Set the event to handled, then process it as a UITouch
             e.Handled(true);
             // Treat capture lost just like a pointer canceled (which is actually quite uncommon)
@@ -3484,7 +3486,7 @@ static void adjustSubviews(UIView* self, CGSize parentSize, CGSize delta) {
 
 // Retrieve the backing XAML element's Automation Id
 - (NSString*)accessibilityIdentifier {
-    auto identifier = Automation::AutomationProperties::GetAutomationId([self _winrtXamlElement]);
+    winrt::hstring identifier = Automation::AutomationProperties::GetAutomationId([self _winrtXamlElement]);
     return objcwinrt::string(identifier);
 }
 

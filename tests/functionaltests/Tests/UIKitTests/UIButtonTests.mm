@@ -28,6 +28,7 @@
 
 using namespace UXTestAPI;
 using namespace winrt::Windows::UI::Xaml;
+namespace WF = winrt::Windows::Foundation;
 
 // Callback object for the CurrentBackgroundImage test.
 // Normally a closure can be created with a lambda, but a compiler issue prevents that in
@@ -987,7 +988,7 @@ public:
         dispatch_sync(dispatch_get_main_queue(), ^{
             xamlSubscriber->Set(layerContent, Controls::Image::SourceProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
                 // Upon cleanup or dismissal of the view, LayerCoordinator sets the source to NULL which we should avoid
-                auto rtObject = sender.GetValue(dp);
+                WF::IInspectable rtObject = sender.GetValue(dp);
                 if (rtObject) {
                     auto bitmapSource = rtObject.as<Media::Imaging::BitmapSource>();
                     LOG_INFO("XAML bitmap dimensions: %dx%d", bitmapSource.PixelWidth(), bitmapSource.PixelHeight());
@@ -1474,7 +1475,7 @@ public:
         dispatch_sync(dispatch_get_main_queue(), ^{
             xamlSubscriber->Set(layerContent, Controls::Image::SourceProperty(), ^(const DependencyObject& sender, const DependencyProperty& dp) {
                 // Upon cleanup or dismissal of the view, LayerCoordinator sets the source to NULL which we should avoid
-                auto rtObject = sender.GetValue(dp);
+                WF::IInspectable rtObject = sender.GetValue(dp);
                 if (rtObject) {
                     auto bitmapSource = rtObject.as<Media::Imaging::BitmapSource>();
 

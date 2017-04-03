@@ -28,6 +28,7 @@
 #import "StarboardXaml/DisplayProperties.h"
 
 using namespace winrt::Windows::UI;
+namespace WF = winrt::Windows::Foundation;
 
 static const wchar_t* TAG = L"UITouch";
 static const bool INPUT_TRACING_ENABLED = false;
@@ -171,7 +172,7 @@ static void recordTouchVelocity(RingBuffer<TouchRecord, 50>& touchHistory, CGPoi
     _routedEventArgs = routedEventArgs;
 
     // Grab the postion of the event
-    auto position = pointerPoint.Position();
+    WF::Point position = pointerPoint.Position();
     CGPoint point = CGPointMake(position.X, position.Y);
 
     // First update the tapcount

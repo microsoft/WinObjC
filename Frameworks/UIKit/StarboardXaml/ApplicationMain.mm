@@ -45,6 +45,7 @@
 
 using namespace Microsoft::WRL;
 using namespace winrt::Windows::UI::Xaml;
+namespace WF = winrt::Windows::Foundation;
 
 static CACompositorClientInterface* _compositorClient = NULL;
 
@@ -161,7 +162,7 @@ int ApplicationMainStart(const char* principalName,
         // Create a top-level UIWindow with popup view controller, which will not normally be visible.
         // If some other view controller tries to present to it, the popup view controller will make
         // the desired UI visible inside a XAML Popup.
-        auto appFrame = Window::Current().Bounds();
+        WF::Rect appFrame = Window::Current().Bounds();
         CGRect windowFrame = CGRectMake(0, 0, appFrame.Width, appFrame.Height);
 
         UIWindow* keyWindow = [[UIWindow alloc] initWithFrame:windowFrame];

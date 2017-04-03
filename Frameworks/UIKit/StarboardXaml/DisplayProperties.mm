@@ -27,6 +27,9 @@
 #import "winrt/Windows.Devices.Input.h"
 #include "COMIncludes_End.h"
 
+using namespace winrt::Windows::Devices::Input;
+namespace WF = winrt::Windows::Foundation;
+
 static const wchar_t* TAG = L"DisplayProperties";
 
 static float s_screenWidth = 320.0f;
@@ -91,10 +94,10 @@ float ScreenScale() {
             prevHeight = [UIApplication displayMode].fixedHeight;
 
             float maxDimension = 0;
-            auto pointerDevices = winrt::Windows::Devices::Input::PointerDevice::GetPointerDevices();
+            WF::Collections::IVectorView<PointerDevice> pointerDevices = PointerDevice::GetPointerDevices();
 
             for (int i = 0; i < pointerDevices.Size(); i++) {
-                auto screenRect = pointerDevices.GetAt(i).ScreenRect();
+                WF::Rect screenRect = pointerDevices.GetAt(i).ScreenRect();
                 float hostScreenScale = [UIApplication displayMode].hostScreenScale;
                 maxDimension = std::max(maxDimension, std::max(screenRect.Width * hostScreenScale, screenRect.Height * hostScreenScale));
             }
