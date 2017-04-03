@@ -152,3 +152,8 @@ TEST(NSIndexPath, EncodeDecodeNonempty) {
     NSIndexPath* decoded = [[[NSIndexPath alloc] initWithCoder:decoder] autorelease];
     EXPECT_OBJCEQ(path, decoded);
 }
+
+TEST(NSIndexPath, InitInvalid) {
+    NSIndexPath* invalid = [[[NSIndexPath alloc] initWithIndexes:nullptr length:0] autorelease];
+    EXPECT_NE(nil, invalid);
+}

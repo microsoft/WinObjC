@@ -19,6 +19,7 @@
 
 TEST(NSIndexPath, IndexPathForRowInSection) {
     NSIndexPath* invalid = [NSIndexPath indexPathForRow:-1 inSection:-1];
+    EXPECT_NE(nil, invalid);
     EXPECT_EQ(0, invalid.length);
 
     NSIndexPath* path = [NSIndexPath indexPathForRow:1 inSection:2];
