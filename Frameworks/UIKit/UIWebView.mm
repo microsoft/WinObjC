@@ -122,12 +122,9 @@ namespace WF = winrt::Windows::Foundation;
 
 static void _initUIWebView(UIWebView* self) {
     // Store a strongly-typed backing scrollviewer
-    self->_xamlWebControl = [self _winrtXamlElement].try_as<Controls::WebView>();
-    if (!self->_xamlWebControl) {
-        FAIL_FAST();
-    }
+    self->_xamlWebControl = [self _winrtXamlElement].as<Controls::WebView>();
 
-    self->_xamlLoadCompletedEventCookie = self->_xamlWebControl.LoadCompleted([self] (auto&& sender, auto&& e) {
+    self->_xamlLoadCompletedEventCookie = self->_xamlWebControl.LoadCompleted([self] (const WF::IInspectable&, const Navigation::NavigationEventArgs&) {
         self.loading = NO;
 
         if ([self.delegate respondsToSelector:@selector(webViewDidFinishLoad:)]) {
@@ -136,7 +133,7 @@ static void _initUIWebView(UIWebView* self) {
     });
 
     self->_xamlLoadStartedEventCookie =
-        self->_xamlWebControl.NavigationStarting([self] (auto&& sender, auto&& e) {
+        self->_xamlWebControl.NavigationStarting([self] (const Controls::WebView&, const Controls::WebViewNavigationStartingEventArgs& e) {
             // Give the client a chance to cancel the navigation
             if ([self.delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
                 NSString* urlStr = objcwinrt::string(e.Uri().AbsoluteUri());
@@ -159,7 +156,7 @@ static void _initUIWebView(UIWebView* self) {
         });
 
     self->_xamlUnsupportedUriSchemeEventCookie =
-        self->_xamlWebControl.UnsupportedUriSchemeIdentified([self] (auto&& sender, auto&& e) {
+        self->_xamlWebControl.UnsupportedUriSchemeIdentified([self] (const Controls::WebView&, const Controls::WebViewUnsupportedUriSchemeIdentifiedEventArgs& e) {
             if ([self.delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
                 NSString* urlStr = objcwinrt::string(e.Uri().AbsoluteUri());
                 NSURL* url = [NSURL URLWithString:urlStr];
@@ -177,7 +174,7 @@ static void _initUIWebView(UIWebView* self) {
         });
 
     // Add handler which will be invoked when user calls window.external.notify(msg) function in javascript
-    self->_xamlWebControl.ScriptNotify([self] (auto&& sender, auto&& e) {
+    self->_xamlWebControl.ScriptNotify([self] (const WF::IInspectable& sender, const Controls::NotifyEventArgs& e) {
         // Send event to webView delegate
         NSString* urlStr = objcwinrt::string(e.CallingUri().AbsoluteUri());
         NSURL* url = [NSURL URLWithString:urlStr];
@@ -288,10 +285,10 @@ static void _initUIWebView(UIWebView* self) {
   @Notes This is a workaround. Original UIWebView does not have this method
 */
 - (void)evaluateJavaScript:(NSString*)javaScriptString completionHandler:(void (^)(id, NSError*))completionHandler {
-    auto async = _xamlWebControl.InvokeScriptAsync(L"eval", { objcwinrt::string(javaScriptString) });
+    WF::IAsyncOperation<winrt::hstring> async = _xamlWebControl.InvokeScriptAsync(L"eval", { objcwinrt::string(javaScriptString) });
 
     [completionHandler retain];
-    async.Completed([completionHandler] (auto&& operation, auto&& status) {
+    async.Completed([completionHandler] (const WF::IAsyncOperation<winrt::hstring>& operation, WF::AsyncStatus status) {
         if (status == WF::AsyncStatus::Completed) {
             completionHandler(objcwinrt::string(operation.GetResults()), nil);
         } else {
@@ -314,14 +311,14 @@ static void _initUIWebView(UIWebView* self) {
  @Status Interoperable
 */
 - (BOOL)canGoBack {
-    return _xamlWebControl.CanGoBack() ? YES : NO;
+    return static_cast<BOOL>(_xamlWebControl.CanGoBack());
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)canGoForward {
-    return _xamlWebControl.CanGoForward() ? YES : NO;
+    return static_cast<BOOL>(_xamlWebControl.CanGoForward());
 }
 
 /**

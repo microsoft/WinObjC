@@ -1108,9 +1108,9 @@ void SetTextControlContentVerticalAlignment(const Controls::Control& control, Ve
 */
 - (BOOL)isEnabled {
     if (self.secureTextEntry) {
-        return self->_passwordBox.IsEnabled() ? YES : NO;
+        return static_cast<BOOL>(self->_passwordBox.IsEnabled());
     } else {
-        return self->_textBox.IsEnabled() ? YES : NO;
+        return static_cast<BOOL>(self->_textBox.IsEnabled());
     }
 }
 

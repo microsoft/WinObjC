@@ -1319,7 +1319,7 @@ static void setContentOffsetKVOed(UIScrollView* self, CGPoint offs) {
 */
 - (BOOL)isDirectionalLockEnabled {
     assert(_scrollViewer.IsHorizontalRailEnabled() == _scrollViewer.IsVerticalRailEnabled());
-    return _scrollViewer.IsHorizontalRailEnabled() ? YES : NO;
+    return static_cast<BOOL>(_scrollViewer.IsHorizontalRailEnabled());
 }
 
 /**

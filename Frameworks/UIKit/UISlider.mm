@@ -50,10 +50,7 @@ static const double c_defaultStepFrequency = 0.1;
 
 - (void)_initUISlider {
     // Store a strongly-typed backing slider
-    _xamlSlider = [self _winrtXamlElement].try_as<Controls::Slider>();
-    if (!_xamlSlider) {
-        FAIL_FAST();
-    }
+    _xamlSlider = [self _winrtXamlElement].as<Controls::Slider>();
 
     _xamlSlider.Maximum(1.0f);
     _xamlSlider.Minimum(0.0f);

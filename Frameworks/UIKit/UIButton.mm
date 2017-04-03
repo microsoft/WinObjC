@@ -190,10 +190,7 @@ static UIEdgeInsets _decodeUIEdgeInsets(NSCoder* coder, NSString* key) {
 
 - (void)_initUIButton {
     // Store a strongly-typed backing button
-    _xamlButton = [self _winrtXamlElement].try_as<Controls::Button>();
-    if (!_xamlButton) {
-        FAIL_FAST();
-    }
+    _xamlButton = [self _winrtXamlElement].as<Controls::Button>();
 
     // Default to a custom button type
     _buttonType = UIButtonTypeCustom;
@@ -512,7 +509,7 @@ static CGRect calculateContentRect(UIButton* self, CGSize size, CGRect contentRe
  @Status Interoperable
 */
 - (BOOL)isEnabled {
-    return _xamlButton.IsEnabled() ? YES : NO;
+    return static_cast<BOOL>(_xamlButton.IsEnabled());
 }
 
 /**

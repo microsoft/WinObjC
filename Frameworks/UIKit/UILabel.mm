@@ -196,7 +196,7 @@ static const wchar_t* TAG = L"UILabel";
     } else {
         // If we didn't get a UIKit.Label, that's ok - as long as
         // we've received a TextBlock directly.
-        textBlock = [self _winrtXamlElement].try_as<Controls::TextBlock>();
+        textBlock = [self _winrtXamlElement].as<Controls::TextBlock>();
     }
 
     if (!textBlock) {
