@@ -1,0 +1,57 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApplicationGroupFolderWrite", "ApplicationGroupFolderWrite", "{71FC86F6-3C06-477D-BA64-9221679BF223}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ApplicationGroupFolderWrite", "ApplicationGroupFolderWrite.vsimporter\ApplicationGroupFolderWrite-WinStore10\ApplicationGroupFolderWrite.vcxproj", "{D49D272C-46D6-427D-86AB-52C8F54AD140}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildSupport", "BuildSupport", "{4E2BC240-5616-4FEE-9A95-9B373923CC51}"
+EndProject
+Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "NugetRestore", "..\..\..\common\NugetRestore.msbuildproj", "{B2C6186E-B340-49D8-888E-76ED83752E43}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|ARM = Debug|ARM
+		Debug|Win32 = Debug|Win32
+		Release|Any CPU = Release|Any CPU
+		Release|ARM = Release|ARM
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D49D272C-46D6-427D-86AB-52C8F54AD140}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{D49D272C-46D6-427D-86AB-52C8F54AD140}.Debug|ARM.ActiveCfg = Debug|ARM
+		{D49D272C-46D6-427D-86AB-52C8F54AD140}.Debug|ARM.Build.0 = Debug|ARM
+		{D49D272C-46D6-427D-86AB-52C8F54AD140}.Debug|ARM.Deploy.0 = Debug|ARM
+		{D49D272C-46D6-427D-86AB-52C8F54AD140}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D49D272C-46D6-427D-86AB-52C8F54AD140}.Debug|Win32.Build.0 = Debug|Win32
+		{D49D272C-46D6-427D-86AB-52C8F54AD140}.Debug|Win32.Deploy.0 = Debug|Win32
+		{D49D272C-46D6-427D-86AB-52C8F54AD140}.Release|Any CPU.ActiveCfg = Release|Win32
+		{D49D272C-46D6-427D-86AB-52C8F54AD140}.Release|ARM.ActiveCfg = Release|ARM
+		{D49D272C-46D6-427D-86AB-52C8F54AD140}.Release|ARM.Build.0 = Release|ARM
+		{D49D272C-46D6-427D-86AB-52C8F54AD140}.Release|ARM.Deploy.0 = Release|ARM
+		{D49D272C-46D6-427D-86AB-52C8F54AD140}.Release|Win32.ActiveCfg = Release|Win32
+		{D49D272C-46D6-427D-86AB-52C8F54AD140}.Release|Win32.Build.0 = Release|Win32
+		{D49D272C-46D6-427D-86AB-52C8F54AD140}.Release|Win32.Deploy.0 = Release|Win32
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Debug|ARM.Build.0 = Debug|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Debug|Win32.Build.0 = Debug|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Release|ARM.ActiveCfg = Release|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Release|ARM.Build.0 = Release|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Release|Win32.ActiveCfg = Release|Any CPU
+		{B2C6186E-B340-49D8-888E-76ED83752E43}.Release|Win32.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D49D272C-46D6-427D-86AB-52C8F54AD140} = {71FC86F6-3C06-477D-BA64-9221679BF223}
+		{B2C6186E-B340-49D8-888E-76ED83752E43} = {4E2BC240-5616-4FEE-9A95-9B373923CC51}
+	EndGlobalSection
+EndGlobal

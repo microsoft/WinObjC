@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{648fe4fc-1f7e-40e0-a7bb-c52303cdfd69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{792ccdd8-30ea-428b-a140-0532606302df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ApplicationGroupFolderWrite">
+      <UniqueIdentifier>{A10B7175-D00C-4C64-85EC-503F3DCE2381}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ApplicationGroupFolderWrite\Base">
+      <UniqueIdentifier>{F7070FA6-D07D-40BC-A392-EE0FA3EE7D80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ApplicationGroupFolderWrite\Supporting Files">
+      <UniqueIdentifier>{5FF3C38B-1344-4619-9B9E-0434B0A21333}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Xcode Variable Files">
+      <UniqueIdentifier>{4D29A3BB-97AA-45B8-91C9-8E0C33AF1E0C}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="default.rd.xml" />
+    <AppxManifest Include="Package.appxmanifest" />
+    <None Include="ApplicationGroupFolderWrite_TemporaryKey.pfx" />
+    <Image Include="Assets\LockScreenLogo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SplashScreen.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square150x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\StoreLogo.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Wide310x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <AssetCatalogCompile Include="..\..\ApplicationGroupFolderWrite\Assets.xcassets">
+      <Filter>ApplicationGroupFolderWrite</Filter>
+    </AssetCatalogCompile>
+    <ClInclude Include="..\..\ApplicationGroupFolderWrite\AppDelegate.h">
+      <Filter>ApplicationGroupFolderWrite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ApplicationGroupFolderWrite\ViewController.h">
+      <Filter>ApplicationGroupFolderWrite</Filter>
+    </ClInclude>
+    <ClangCompile Include="..\..\ApplicationGroupFolderWrite\AppDelegate.m">
+      <Filter>ApplicationGroupFolderWrite</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\ApplicationGroupFolderWrite\ViewController.m">
+      <Filter>ApplicationGroupFolderWrite</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\ApplicationGroupFolderWrite\main.m">
+      <Filter>ApplicationGroupFolderWrite\Supporting Files</Filter>
+    </ClangCompile>
+    <SBInfoPlistCopy Include="..\..\ApplicationGroupFolderWrite\Info.plist" />
+    <StoryboardCompile Include="..\..\ApplicationGroupFolderWrite\Base.lproj\LaunchScreen.storyboard">
+      <Filter>ApplicationGroupFolderWrite\Base</Filter>
+    </StoryboardCompile>
+    <StoryboardCompile Include="..\..\ApplicationGroupFolderWrite\Base.lproj\Main.storyboard">
+      <Filter>ApplicationGroupFolderWrite\Base</Filter>
+    </StoryboardCompile>
+    <Text Include="ApplicationGroupFolderWrite-Debug-xcvars.txt">
+      <Filter>Xcode Variable Files</Filter>
+    </Text>
+    <Text Include="ApplicationGroupFolderWrite-Release-xcvars.txt">
+      <Filter>Xcode Variable Files</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="App.xaml.cpp" />
+    <ClCompile Include="pch.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="App.xaml.h" />
+  </ItemGroup>
+</Project>

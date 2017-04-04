@@ -188,9 +188,22 @@ void VCProject::setUrlSchemes(const StringSet& schemes) {
     m_urlSchemes = schemes;
 }
 
+void VCProject::setBuildSettings(const BuildSettingsMap& settings) {
+    if (!m_buildSettings.empty() && (m_buildSettings != settings)) {
+        SBLog::warning() << "Inconsistent build settings across configurations; using first set only" << std::endl;
+        return;
+    }
+
+    m_buildSettings = settings;
+}
+
+void VCProject::setNativeTarget(const SBNativeTarget* target) {
+    m_nativeTarget = target;
+}
+
 bool VCProject::write() const {
     // Write the template
-    m_template->write(m_urlSchemes);
+    m_template->write(m_urlSchemes, m_buildSettings, m_nativeTarget);
 
     return writeProject() && writeFilters();
 }

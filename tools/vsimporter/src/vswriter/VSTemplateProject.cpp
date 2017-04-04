@@ -21,6 +21,10 @@
 #include "SBLog.h"
 #include "utils.h"
 #include "tokenizer.h"
+#include "PlistFuncs.h"
+#include "BuildSettings.h"
+#include "SBTarget.h"
+#include "SBNativeTarget.h"
 
 struct ProjectItem {
     ProjectItem(const std::string& input, const std::string& output, bool replace)
@@ -157,9 +161,50 @@ static bool isAppxManifestFileName(const String& fileName) {
     return 0 == fileName.compare(fileName.length() - extension.length(), String::npos, extension);
 }
 
-static void insertUrlSchemes(const String& file, const StringSet& schemes) {
-    //
-    // Inject registered URL schemes into the AppX manifest file, in this format:
+static std::vector<String> getCacheFolders(const String& entitlementsPath) {
+    Plist::dictionary_type* pDict = nullptr;
+    boost::any pAny;
+    try {
+        Plist::readPlist(entitlementsPath.c_str(), pAny);
+        pDict = boost::any_cast<Plist::dictionary_type>(&pAny);
+    } catch (const std::exception& e) {
+        SBLog::error() << e.what() << std::endl;
+    }
+
+    if (pDict) {
+        // Successfully read the entitlements file, now check for application-groups which holds folder names
+        auto applicationGroups = pDict->find("com.apple.security.application-groups");
+        if (applicationGroups != pDict->end()) {
+            Plist::array_type* folders = boost::any_cast<Plist::array_type>(&applicationGroups->second);
+            // Read the list of folder names if they exist
+            if (folders) {
+                std::vector<std::string> ret;
+                for (auto& folder : *folders) {
+                    Plist::string_type* folderName = boost::any_cast<Plist::string_type>(&folder);
+                    if (folderName) {
+                        ret.emplace_back(*folderName);
+                    }
+                }
+
+                return ret;
+            }
+        }
+    }
+
+    return {};
+}
+
+void VSTemplateProject::insertExtensions(const String& file,
+                                         const StringSet& schemes,
+                                         const BuildSettingsMap& buildSettings,
+                                         const SBNativeTarget* target) const {
+    pugi::xml_document doc;
+    if (!doc.load_file(file.c_str())) {
+        SBLog::error() << "Failed to parse AppX manifest file " << file << std::endl;
+        return;
+    }
+
+    // Inject registered URL schemes into the AppX manifest file in this format:
     //
     // <Application>
     //     <Application ...>
@@ -173,40 +218,72 @@ static void insertUrlSchemes(const String& file, const StringSet& schemes) {
     //         </Extensions>
     //     </Application>
     // </Application>
+
+    if (!schemes.empty()) {
+        pugi::xpath_node app = doc.select_single_node(PUGIXML_TEXT("/Package/Applications/Application"));
+        if (!app) {
+            SBLog::error() << "Failed to find Application element in AppX manifest file " << file << std::endl;
+            return;
+        }
+
+        pugi::xml_node appExtensions = app.node().append_child(PUGIXML_TEXT("Extensions"));
+
+        for (const String& scheme : schemes) {
+            // pugixml doesn't have great support for handling namespaces. We just better hope
+            // that our template manifests have the uap prefix mapped to the namespace
+            // "http://schemas.microsoft.com/appx/manifest/uap/windows10".
+            pugi::xml_node extension = appExtensions.append_child(PUGIXML_TEXT("uap:Extension"));
+
+            extension.append_attribute(PUGIXML_TEXT("Category")).set_value(PUGIXML_TEXT("windows.protocol"));
+
+            pugi::string_t schemeValue(scheme.begin(), scheme.end());
+
+            pugi::xml_node protocol = extension.append_child(PUGIXML_TEXT("uap:Protocol"));
+            protocol.append_attribute(PUGIXML_TEXT("Name")).set_value(schemeValue.c_str());
+        }
+    }
+
+    // Inject Publisher Cache Folders into the AppX manifest file in this format
     //
+    // <Extensions>
+    //   <Extension Category="windows.publisherCacheFolders">
+    //     <PublisherCacheFolders>
+    //       <Folder name="FolderName0" />
+    //       <Folder name="FolderName1" />
+    //        ...
+    //       <Folder name="FolderNameN" />
+    //     </>
+    //   </>
+    // </>
 
-    pugi::xml_document doc;
-    if (!doc.load_file(file.c_str())) {
-        SBLog::error() << "Failed to parse AppX manifest file " << file << std::endl;
-        return;
-    }
+    for (auto settings : buildSettings) {
+        String entitlementsPath = settings.second->getValue("CODE_SIGN_ENTITLEMENTS");
+        if (!entitlementsPath.empty()) {
+            std::vector<String> cacheFolderNames = getCacheFolders(target->makeAbsolutePath(entitlementsPath));
+            if (!cacheFolderNames.empty()) {
+                pugi::xpath_node extensions = doc.select_single_node(PUGIXML_TEXT("Package/Extensions"));
+                pugi::xml_node extension = extensions.node().append_child(PUGIXML_TEXT("Extension"));
+                extension.append_attribute(PUGIXML_TEXT("Category")).set_value(PUGIXML_TEXT("windows.publisherCacheFolders"));
+                pugi::xml_node publisherCacheFolders = extension.append_child(PUGIXML_TEXT("PublisherCacheFolders"));
+                for (auto folderName : cacheFolderNames) {
+                    pugi::xml_node folder = publisherCacheFolders.append_child(PUGIXML_TEXT("Folder"));
+                    folder.append_attribute(PUGIXML_TEXT("Name")).set_value(folderName.c_str());
+                }
+            }
 
-    pugi::xpath_node app = doc.select_single_node(PUGIXML_TEXT("/Package/Applications/Application"));
-    if (!app) {
-        SBLog::error() << "Failed to find Application element in AppX manifest file " << file << std::endl;
-        return;
-    }
-
-    pugi::xml_node extensions = app.node().append_child(PUGIXML_TEXT("Extensions"));
-
-    for (const String& scheme : schemes) {
-        // pugixml doesn't have great support for handling namespaces. We just better hope
-        // that our template manifests have the uap prefix mapped to the namespace
-        // "http://schemas.microsoft.com/appx/manifest/uap/windows10".
-        pugi::xml_node extension = extensions.append_child(PUGIXML_TEXT("uap:Extension"));
-
-        extension.append_attribute(PUGIXML_TEXT("Category")).set_value(PUGIXML_TEXT("windows.protocol"));
-
-        pugi::string_t schemeValue(scheme.begin(), scheme.end());
-
-        pugi::xml_node protocol = extension.append_child(PUGIXML_TEXT("uap:Protocol"));
-        protocol.append_attribute(PUGIXML_TEXT("Name")).set_value(schemeValue.c_str());
+            // Already read from entitlementsPath, no need to check other settings
+            break;
+        }
     }
 
     doc.save_file(file.c_str());
 }
 
-static void writeProjectItem(const ProjectItem* item, const StringMap& params, const StringSet& urlSchemes) {
+void VSTemplateProject::writeProjectItem(const ProjectItem* item,
+                                         const StringMap& params,
+                                         const StringSet& urlSchemes,
+                                         const BuildSettingsMap& buildSettings,
+                                         const SBNativeTarget* target) const {
     if (!item)
         return;
 
@@ -235,9 +312,9 @@ static void writeProjectItem(const ProjectItem* item, const StringMap& params, c
         ofs << ifs.rdbuf();
     }
 
-    if (!urlSchemes.empty() && isAppxManifestFileName(item->inFile)) {
+    if (isAppxManifestFileName(item->inFile)) {
         ofs.close();
-        insertUrlSchemes(item->outFile, urlSchemes);
+        insertExtensions(item->outFile, urlSchemes, buildSettings, target);
     }
 }
 
@@ -252,12 +329,11 @@ void VSTemplateProject::expand(const std::string& srcDir, const std::string& des
     // Handle the project items
     for (auto item : m_items) {
         expandProjectItem(srcDir, updatedDestDir, m_params, item);
-        ;
     }
 }
 
-void VSTemplateProject::write(const StringSet& urlSchemes) const {
+void VSTemplateProject::write(const StringSet& urlSchemes, const BuildSettingsMap& buildSettings, const SBNativeTarget* target) const {
     for (auto item : m_items) {
-        writeProjectItem(item, m_params, urlSchemes);
+        writeProjectItem(item, m_params, urlSchemes, buildSettings, target);
     }
 }
