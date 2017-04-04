@@ -739,6 +739,8 @@ TEST(NSString, ContainsString) {
     EXPECT_TRUE([@"اختبار النص" containsString:@"اختبار النص"]);
     EXPECT_TRUE([@"اختبار النص" containsString:@"اختبار ال"]);
 
+    EXPECT_FALSE([@"TE\u0301ST" containsString:@"TéST"]);
+    EXPECT_FALSE([@"TÉST" containsString:@"Te\u0301ST"]);
     EXPECT_FALSE([@"TÉST" containsString:@"Y"]);
     EXPECT_FALSE([@"TÉST" containsString:@"TÉSTY"]);
     EXPECT_FALSE([@"TÉST" containsString:@"TEST"]);
@@ -756,9 +758,11 @@ TEST(NSString, LocalizedCaseInsensitiveContainsString) {
     EXPECT_TRUE([@"TÉST" localizedCaseInsensitiveContainsString:@"TÉST"]);
     EXPECT_TRUE([@"TÉST" localizedCaseInsensitiveContainsString:@"tést"]);
     EXPECT_TRUE([@"TE\u0301ST" localizedCaseInsensitiveContainsString:@"TÉST"]);
+    EXPECT_TRUE([@"TÉST" localizedCaseInsensitiveContainsString:@"TE\u0301ST"]);
     EXPECT_TRUE([@"اختبار النص" localizedCaseInsensitiveContainsString:@"اختبار النص"]);
     EXPECT_TRUE([@"اختبار النص" localizedCaseInsensitiveContainsString:@"اختبار ال"]);
-    EXPECT_TRUE([@"TÉST" localizedCaseInsensitiveContainsString:@"TE\u0301ST"]);
+    EXPECT_TRUE([@"TE\u0301ST" localizedCaseInsensitiveContainsString:@"TéST"]);
+    EXPECT_TRUE([@"TÉST" localizedCaseInsensitiveContainsString:@"Te\u0301ST"]);
 
     EXPECT_FALSE([@"TÉST" localizedCaseInsensitiveContainsString:@"Y"]);
     EXPECT_FALSE([@"TÉST" localizedCaseInsensitiveContainsString:@"TÉSTY"]);
@@ -778,6 +782,8 @@ TEST(NSString, LocalizedStandardContainsString) {
     EXPECT_TRUE([@"TÉST" localizedStandardContainsString:@"TE\u0301ST"]);
     EXPECT_TRUE([@"اختبار النص" localizedStandardContainsString:@"اختبار النص"]);
     EXPECT_TRUE([@"اختبار النص" localizedStandardContainsString:@"اختبار ال"]);
+    EXPECT_TRUE([@"TE\u0301ST" localizedStandardContainsString:@"TéST"]);
+    EXPECT_TRUE([@"TÉST" localizedStandardContainsString:@"Te\u0301ST"]);
 
     EXPECT_FALSE([@"TÉST" localizedStandardContainsString:@"Y"]);
     EXPECT_FALSE([@"TÉST" localizedStandardContainsString:@"TÉSTY"]);
