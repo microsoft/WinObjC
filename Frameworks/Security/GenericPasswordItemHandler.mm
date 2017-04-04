@@ -21,7 +21,6 @@
 #import "Starboard.h"
 
 #import "GenericPasswordItemHandler.h"
-#import "FoundationErrorHandling.h"
 
 #import <CoreFoundation/CoreFoundation.h>
 #import <Security/SecItem.h>

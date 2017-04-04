@@ -19,6 +19,7 @@
 #import <CoreFoundation/CoreFoundation.h>
 #import <Foundation/FoundationExport.h>
 #import <Foundation/NSObject.h>
+#include <WinError.h>
 
 @class NSString;
 @class NSDictionary;
@@ -58,6 +59,12 @@ FOUNDATION_EXPORT_CLASS
 
 @interface NSException (WinObjC)
 + (void)raiseWithLogging:(NSString*)name format:(NSString*)format, ...;
++(NSString*)_exceptionNameForHRESULT:(int)errorCode;
++(HRESULT)_HRESULTForExceptionName:(NSString *)exceptionName;
++(instancetype)_exceptionWithHRESULT:(int)errorCode reason : (NSString*)reason userInfo : (NSDictionary*)userInfo;
+
+-(HRESULT)_hresult;
+-(void)_processException;
 @end
 
 typedef void NSUncaughtExceptionHandler(NSException* exception);
