@@ -1,6 +1,6 @@
 ﻿//******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -724,6 +724,73 @@ TEST(NSString, MutableInstanceArchivesAsMutable) {
     EXPECT_OBJCEQ(@"hello world", output);
 
     EXPECT_OBJCNE(input, output);
+}
+
+TEST(NSString, ContainsString) {
+    EXPECT_ANY_THROW([@"" containsString:nil]);
+
+    EXPECT_FALSE([@"" containsString:@""]);
+    EXPECT_FALSE([@"TÉST" containsString:@""]);
+
+    EXPECT_TRUE([@"TÉST" containsString:@"T"]);
+    EXPECT_TRUE([@"TÉST" containsString:@"TÉST"]);
+    EXPECT_TRUE([@"TE\u0301ST" containsString:@"TÉST"]);
+    EXPECT_TRUE([@"TÉST" containsString:@"TE\u0301ST"]);
+    EXPECT_TRUE([@"اختبار النص" containsString:@"اختبار النص"]);
+    EXPECT_TRUE([@"اختبار النص" containsString:@"اختبار ال"]);
+
+    EXPECT_FALSE([@"TE\u0301ST" containsString:@"TéST"]);
+    EXPECT_FALSE([@"TÉST" containsString:@"Te\u0301ST"]);
+    EXPECT_FALSE([@"TÉST" containsString:@"Y"]);
+    EXPECT_FALSE([@"TÉST" containsString:@"TÉSTY"]);
+    EXPECT_FALSE([@"TÉST" containsString:@"TEST"]);
+    EXPECT_FALSE([@"TÉST" containsString:@"test"]);
+    EXPECT_FALSE([@"TÉST" containsString:@"tést"]);
+}
+
+TEST(NSString, LocalizedCaseInsensitiveContainsString) {
+    EXPECT_ANY_THROW([@"" localizedCaseInsensitiveContainsString:nil]);
+
+    EXPECT_FALSE([@"" localizedCaseInsensitiveContainsString:@""]);
+    EXPECT_FALSE([@"TÉST" localizedCaseInsensitiveContainsString:@""]);
+
+    EXPECT_TRUE([@"TÉST" localizedCaseInsensitiveContainsString:@"T"]);
+    EXPECT_TRUE([@"TÉST" localizedCaseInsensitiveContainsString:@"TÉST"]);
+    EXPECT_TRUE([@"TÉST" localizedCaseInsensitiveContainsString:@"tést"]);
+    EXPECT_TRUE([@"TE\u0301ST" localizedCaseInsensitiveContainsString:@"TÉST"]);
+    EXPECT_TRUE([@"TÉST" localizedCaseInsensitiveContainsString:@"TE\u0301ST"]);
+    EXPECT_TRUE([@"اختبار النص" localizedCaseInsensitiveContainsString:@"اختبار النص"]);
+    EXPECT_TRUE([@"اختبار النص" localizedCaseInsensitiveContainsString:@"اختبار ال"]);
+    EXPECT_TRUE([@"TE\u0301ST" localizedCaseInsensitiveContainsString:@"TéST"]);
+    EXPECT_TRUE([@"TÉST" localizedCaseInsensitiveContainsString:@"Te\u0301ST"]);
+
+    EXPECT_FALSE([@"TÉST" localizedCaseInsensitiveContainsString:@"Y"]);
+    EXPECT_FALSE([@"TÉST" localizedCaseInsensitiveContainsString:@"TÉSTY"]);
+    EXPECT_FALSE([@"TÉST" localizedCaseInsensitiveContainsString:@"TEST"]);
+    EXPECT_FALSE([@"TÉST" localizedCaseInsensitiveContainsString:@"test"]);
+}
+
+TEST(NSString, LocalizedStandardContainsString) {
+    EXPECT_ANY_THROW([@"" localizedStandardContainsString:nil]);
+
+    EXPECT_FALSE([@"" localizedStandardContainsString:@""]);
+    EXPECT_FALSE([@"TÉST" localizedStandardContainsString:@""]);
+
+    EXPECT_TRUE([@"TÉST" localizedStandardContainsString:@"T"]);
+    EXPECT_TRUE([@"TÉST" localizedStandardContainsString:@"TÉST"]);
+    EXPECT_TRUE([@"TE\u0301ST" localizedStandardContainsString:@"TÉST"]);
+    EXPECT_TRUE([@"TÉST" localizedStandardContainsString:@"TE\u0301ST"]);
+    EXPECT_TRUE([@"اختبار النص" localizedStandardContainsString:@"اختبار النص"]);
+    EXPECT_TRUE([@"اختبار النص" localizedStandardContainsString:@"اختبار ال"]);
+    EXPECT_TRUE([@"TE\u0301ST" localizedStandardContainsString:@"TéST"]);
+    EXPECT_TRUE([@"TÉST" localizedStandardContainsString:@"Te\u0301ST"]);
+
+    EXPECT_FALSE([@"TÉST" localizedStandardContainsString:@"Y"]);
+    EXPECT_FALSE([@"TÉST" localizedStandardContainsString:@"TÉSTY"]);
+
+    EXPECT_TRUE([@"TÉST" localizedStandardContainsString:@"TEST"]);
+    EXPECT_TRUE([@"TÉST" localizedStandardContainsString:@"test"]);
+    EXPECT_TRUE([@"TÉST" localizedStandardContainsString:@"tést"]);
 }
 
 TEST(NSString, ComparingDifferentTypes) {
