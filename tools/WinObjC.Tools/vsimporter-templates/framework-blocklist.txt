@@ -1,2 +1,0 @@
-CoreFoundation.lib->Foundation.lib
-CFNetwork.lib->Foundation.lib

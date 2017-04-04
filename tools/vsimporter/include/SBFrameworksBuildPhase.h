@@ -44,19 +44,13 @@ private:
 
     SBFrameworksBuildPhase(const PBXFrameworksBuildPhase* phase, SBNativeTarget& parentTarget);
 
-    // We no longer have one-one mapping between Apple Framework Components and WinObjC Framework Components.
-    // We therefore maintain a list of blocked libraries to avoid adding libraries which are no longer part of
-    // WinObjC Framework as additional dependencies.
-    // The list of blocked libraries is maintained in a text file named 'framework-blocklist.txt' under
-    // 'VSIMPORTER_TEMPLATES_DIR'. A new addition to this list can be made by adding the name of the blocked library
-    // on a new line along with an optional replacement library name with a '->' separator between them.
-    // e.g.
-    // blockedLibrary1
-    // blockedLibrary2->replacementLibrary2
-    void loadFrameworkBlockListFromFile(const String& fileName);
+    // Frameworks included from WinObjC packages are already added as dependencies from the package's
+    // consumption targets. Therefore, the imported project should skip adding those libraries as
+    // dependencies as it would be redundant.
+    void loadFrameworksListFromFile(const String& fileName);
 
-    // Load the blocked libraries and their replacements in a map so that it is easier to lookup.
-    static std::map<String, String, CaseInsensitiveComparator> s_blockedLibraries;
+    // Static list of libraries from WinObjC.Frameworks and WinObjC.Frameworks.Core packages
+    static StringSet s_WinObjCLibraries;
 
     const PBXFrameworksBuildPhase* m_phase;
     SBTargetList m_buildFileTargets;
