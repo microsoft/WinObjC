@@ -1073,6 +1073,8 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
  @Status Interoperable
 */
 - (NSRange)rangeOfString:(NSString*)searchString options:(NSStringCompareOptions)mask range:(NSRange)range locale:(NSLocale*)locale {
+    THROW_NS_IF_NULL(E_INVALIDARG, searchString);
+
     unsigned int findStringLength = [searchString length];
     unsigned int length = [self length];
 
@@ -1088,18 +1090,21 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
         return matchedRange;
     }
 
-    if (range.length == 0 || findStringLength == 0) { // ??? This last item can't be here for correct Unicode compares
-        return NSMakeRange(NSNotFound, 0);
-    }
+    if (range.length > 0 && findStringLength > 0) {
+        if ((mask & NSLiteralSearch) == 0) {
+            // NSString rangeOfString defaults to non-literal search, but CFStringFindWithOptionsAndLocale defaults to literal
+            mask ^= NSLiteralSearch | kCFCompareNonliteral;
+        }
 
-    CFRange result{};
-    if (CFStringFindWithOptionsAndLocale(static_cast<CFStringRef>(self),
-                                         static_cast<CFStringRef>(searchString),
-                                         CFRange{ range.location, range.length },
-                                         mask,
-                                         static_cast<CFLocaleRef>(locale),
-                                         &result)) {
-        return NSMakeRange(result.location, result.length);
+        CFRange result{};
+        if (CFStringFindWithOptionsAndLocale(static_cast<CFStringRef>(self),
+                                             static_cast<CFStringRef>(searchString),
+                                             CFRange{ range.location, range.length },
+                                             mask,
+                                             static_cast<CFLocaleRef>(locale),
+                                             &result)) {
+            return NSMakeRange(result.location, result.length);
+        }
     }
 
     return NSMakeRange(NSNotFound, 0);
