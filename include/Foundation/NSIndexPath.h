@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 // Copyright (c) 2007 Dirk Theisen
 // Portions Copyright (c) 2013 Peter Steinberger. All rights reserved.
 //
@@ -22,26 +22,17 @@
 #import <Foundation/NSRange.h>
 
 FOUNDATION_EXPORT_CLASS
-@interface NSIndexPath : NSObject <NSCopying, NSSecureCoding> {
-    NSUInteger _length;
-    NSUInteger* _indexes;
-}
-
+@interface NSIndexPath : NSObject <NSCopying, NSSecureCoding>
 + (instancetype)indexPathWithIndex:(NSUInteger)index;
 + (instancetype)indexPathWithIndexes:(const NSUInteger[])indexes length:(NSUInteger)length;
-+ (instancetype)indexPathForRow:(NSInteger)row inSection:(NSInteger)section;
-+ (instancetype)indexPathForItem:(NSInteger)item inSection:(NSInteger)section;
 - (instancetype)initWithIndex:(NSUInteger)index;
 - (instancetype)initWithIndexes:(const NSUInteger[])indexes length:(NSUInteger)length;
-- (instancetype)init STUB_METHOD;
+- (instancetype)init;
 - (NSUInteger)indexAtPosition:(NSUInteger)node;
 - (NSIndexPath*)indexPathByAddingIndex:(NSUInteger)index;
-- (NSIndexPath*)indexPathByRemovingLastIndex STUB_METHOD;
+- (NSIndexPath*)indexPathByRemovingLastIndex;
 @property (readonly) NSUInteger length;
-- (void)getIndexes:(NSUInteger*)indexes range:(NSRange)positionRange STUB_METHOD;
+- (void)getIndexes:(NSUInteger*)indexes range:(NSRange)positionRange;
 - (void)getIndexes:(NSUInteger*)indexes;
-@property (readonly, nonatomic) NSInteger section;
-@property (readonly, nonatomic) NSInteger row;
-@property (readonly, nonatomic) NSInteger item;
 - (NSComparisonResult)compare:(NSIndexPath*)indexPath;
 @end

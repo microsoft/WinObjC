@@ -305,6 +305,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSUndoManagerTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\UnitTests\Foundation\NSURLSessionTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\UnitTests\Foundation\NSRunLoopTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\UnitTests\Foundation\NSIndexPathTests.mm" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt">
@@ -336,5 +337,5 @@
     </ItemGroup>
     <Copy SourceFiles="@(ReferenceFoundationTestResourceFile)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="True" />
   </Target>
-  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')"/>
+  <Import Project="$(StarboardBasePath)\common\winobjc.packagereference.override.targets" Condition="Exists('$(StarboardBasePath)\common\winobjc.packagereference.override.targets')" />
 </Project>
